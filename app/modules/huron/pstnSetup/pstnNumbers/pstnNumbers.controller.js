@@ -448,7 +448,7 @@
       $q.all(promises).then(function (results) {
         // sort our successful indexes and process from high to low
         _.forInRight(_.sortBy(results), function (indices) {
-          if (angular.isObject(indices) && angular.isNumber(indices.searchResultsIndex) && angular.isNumber(indices.searchResultsModelIndex)) {
+          if (_.isObject(indices) && _.isNumber(indices.searchResultsIndex) && _.isNumber(indices.searchResultsModelIndex)) {
             // clear the checkbox
             _.set(model.searchResultsModel, indices.searchResultsModelIndex, false);
             // remove from search result
@@ -527,7 +527,7 @@
     }
 
     function getCommonPattern(telephoneNumber) {
-      if (angular.isString(telephoneNumber)) {
+      if (_.isString(telephoneNumber)) {
         return TelephoneNumberService.getDIDLabel(telephoneNumber);
       } else {
         var firstNumber = TelephoneNumberService.getDIDLabel(_.head(telephoneNumber));
@@ -669,7 +669,7 @@
     }
 
     function getLongestCommonSubstring(x, y) {
-      if (!angular.isString(x) || !angular.isString(y)) {
+      if (!_.isString(x) || !_.isString(y)) {
         return '';
       }
       var i = 0;

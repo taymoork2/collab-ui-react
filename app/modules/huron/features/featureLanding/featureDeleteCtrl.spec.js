@@ -2,7 +2,7 @@
 
 describe('Huron Feature DeleteCtrl for AA', function () {
   var controller, Notification, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAModelService, featDefer, AACalendarService;
-  var $rootScope, $scope, $stateParams, $q, $timeout;
+  var $rootScope, $scope, $stateParams, $q, $timeout, $document;
 
   var cesWithNumber = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
   var aaModel = {};
@@ -15,7 +15,7 @@ describe('Huron Feature DeleteCtrl for AA', function () {
       _resource.setId(rawCeInfo.assignedResources[j].id);
       _resource.setTrigger(rawCeInfo.assignedResources[j].trigger);
       _resource.setType(rawCeInfo.assignedResources[j].type);
-      if (angular.isDefined(rawCeInfo.assignedResources[j].number)) {
+      if (!_.isUndefined(rawCeInfo.assignedResources[j].number)) {
         _resource.setNumber(rawCeInfo.assignedResources[j].number);
       }
       _ceInfo.addResource(_resource);
@@ -28,6 +28,12 @@ describe('Huron Feature DeleteCtrl for AA', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
+
+  beforeEach(function () {
+    /* global document */
+    $document = angular.element(document);
+    $document.find('body').append('<div class="cs-card-layout"></div>');
+  });
 
   beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$timeout_, _Notification_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeService_, _AAModelService_, _AACalendarService_) {
     $rootScope = _$rootScope_;

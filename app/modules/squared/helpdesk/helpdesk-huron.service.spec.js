@@ -1,6 +1,7 @@
 'use strict';
 
 describe('HelpdeskHuronService', function () {
+
   beforeEach(angular.mock.module('Hercules'));
 
   var numbersResult = {
@@ -109,11 +110,11 @@ describe('HelpdeskHuronService', function () {
   var searchString = 'SEP';
   var limit = 20;
 
-  var HelpdeskHuronService, httpBackend, HuronConfig;
+  var HelpdeskHuronService, $httpBackend, HuronConfig;
 
-  beforeEach(inject(function (_HelpdeskHuronService_, $httpBackend, _HuronConfig_) {
+  beforeEach(inject(function (_HelpdeskHuronService_, _$httpBackend_, _HuronConfig_) {
     HelpdeskHuronService = _HelpdeskHuronService_;
-    httpBackend = $httpBackend;
+    $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
 
     $httpBackend
@@ -154,8 +155,8 @@ describe('HelpdeskHuronService', function () {
   }));
 
   afterEach(function () {
-    httpBackend.verifyNoOutstandingExpectation();
-    httpBackend.verifyNoOutstandingRequest();
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
   });
 
   it('searching devices matching numbers works as expected', function () {
@@ -166,7 +167,7 @@ describe('HelpdeskHuronService', function () {
       HelpdeskHuronService.setOwnerAndDeviceDetails(devices);
     });
 
-    httpBackend.flush();
+    $httpBackend.flush();
 
     expect(devices.length).toBe(1);
     expect(devices[0].displayName).toBe('SEP5ABCD7DB89F6');
@@ -185,7 +186,7 @@ describe('HelpdeskHuronService', function () {
       HelpdeskHuronService.setOwnerAndDeviceDetails(devices);
     });
 
-    httpBackend.flush();
+    $httpBackend.flush();
 
     expect(devices.length).toBe(1);
     expect(devices[0].displayName).toBe('SEP1CDEA7DBF740');
@@ -202,7 +203,7 @@ describe('HelpdeskHuronService', function () {
       numbers = res;
     });
 
-    httpBackend.flush();
+    $httpBackend.flush();
 
     expect(numbers.length).toBe(1);
     expect(numbers[0].internal).toBe('1234');
@@ -229,5 +230,88 @@ describe('HelpdeskHuronService', function () {
       };
     });
   }
+
+  describe('getOrgSiteInfo', function () {
+    var validResult, validSiteResult, emptyResult;
+
+    beforeEach(function () {
+      validResult = [{ "steeringDigit": "9", "siteSteeringDigit": "8", "mediaTraversalMode": "TURNOnly", "vmCluster": null, "uuid": "8f667dfe-a3f7-4911-9947-ab985075dceb", "url": "https://cmi.huron-int.com/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb", "links": [{ "rel": "voice", "href": "/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb" }] }];
+
+      validSiteResult = { "customer": { "uuid": "d16100fe-8039-4170-8407-f87eb58382ef", "name": "Atlas-Stoy-Test-4" }, "siteIndex": "000001", "siteCode": "100", "steeringDigit": "9", "siteSteeringDigit": "8", "timeZone": "America/Los_Angeles", "voicemailPilotNumber": null, "mediaTraversalMode": "TURNOnly", "siteDescription": "", "vmCluster": null, "allowInternationalDialing": "false", "emergencyCallBackNumber": null, "extensionLength": "4", "voicemailPilotNumberGenerated": null, "uuid": "8f667dfe-a3f7-4911-9947-ab985075dceb", "url": "https://cmi.huron-int.com/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb", "links": [{ "rel": "voice", "href": "/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb" }] };
+
+      emptyResult = [];
+    });
+
+    afterEach(function () {
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should handle valid result for org', function () {
+
+      $httpBackend
+        .expect('GET', HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sites/')
+        .respond(validResult);
+
+      $httpBackend
+        .expect('GET', HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sites/8f667dfe-a3f7-4911-9947-ab985075dceb')
+        .respond(validSiteResult);
+
+      HelpdeskHuronService.getOrgSiteInfo(orgId)
+        .then(function (data) {
+          expect(data).not.toBeNull();
+          expect(data).toEqual(validSiteResult);
+        })
+        .catch(function () {
+          expect('reject promise').toBeFalsy();
+        });
+
+      $httpBackend.flush();
+    });
+
+    it('should reject promise if no site available', function () {
+      $httpBackend
+        .expect('GET', HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sites/')
+        .respond(emptyResult);
+
+      var caughtError = false;
+      HelpdeskHuronService.getOrgSiteInfo(orgId)
+        .then(function () {
+          expect('resolved promise').toBeFalsy();
+        })
+        .catch(function () {
+          caughtError = true;
+        })
+        .finally(function () {
+          expect(caughtError).toBeTruthy();
+        });
+
+      $httpBackend.flush();
+    });
+
+    it('should reject promise if no uuid', function () {
+
+      var noUUIDResult = validResult;
+      noUUIDResult[0].uuid = undefined;
+
+      $httpBackend
+        .expect('GET', HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sites/')
+        .respond(noUUIDResult);
+
+      var caughtError = false;
+      HelpdeskHuronService.getOrgSiteInfo(orgId)
+        .then(function () {
+          expect('resolved promise').toBeFalsy();
+        })
+        .catch(function () {
+          caughtError = true;
+        })
+        .finally(function () {
+          expect(caughtError).toBeTruthy();
+        });
+
+      $httpBackend.flush();
+    });
+  });
 
 });

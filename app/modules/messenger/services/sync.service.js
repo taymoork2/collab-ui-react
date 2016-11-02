@@ -408,7 +408,7 @@
         keyValue += "0";
       }
       if (syncString.includes(key + "=", 0)) {
-        return syncString.replace(re, keyValue);
+        return _.replace(syncString, re, keyValue);
       } else {
         return syncString.concat(":" + keyValue);
       }

@@ -56,7 +56,7 @@
         if (_.find(vm.currentCustomer.offers, { id: Config.offerTypes.roomSystems })) {
           vm.showRoomSystems = true;
         }
-        var isCareEnabled = result && Authinfo.isCare();
+        var isCareEnabled = result;
         setOffers(isCareEnabled);
       });
 
@@ -137,7 +137,7 @@
     }
 
     function initCustomer() {
-      if (angular.isUndefined(vm.currentCustomer.customerEmail)) {
+      if (_.isUndefined(vm.currentCustomer.customerEmail)) {
         vm.currentCustomer.customerEmail = identityCustomer.email;
       }
     }
@@ -260,7 +260,7 @@
     }
 
     function isSquaredUC() {
-      if (angular.isArray(identityCustomer.services)) {
+      if (_.isArray(identityCustomer.services)) {
         return _.includes(identityCustomer.services, Config.entitlements.huron);
       }
       return false;
@@ -291,7 +291,7 @@
       if (!newCustomerViewToggle) {
         return false;
       } else {
-        return hasWebexOrMultMeeting;
+        return hasWebexOrMultMeeting || service.isRoom;
       }
     }
 
@@ -300,6 +300,8 @@
         var isTrial = _.get(options, 'isTrial', false);
         var services = isTrial ? PartnerService.getTrialMeetingServices(vm.currentCustomer.licenseList) : service.sub;
         $state.go('customer-overview.meetingDetail', { meetingLicenses: services });
+      } else if (service.isRoom) {
+        $state.go('customer-overview.sharedDeviceDetail', { sharedDeviceLicenses: service.sub });
       }
     }
 

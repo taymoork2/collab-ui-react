@@ -59,7 +59,7 @@
             var org2 = b.label;
             return org1.localeCompare(org2);
           });
-          angular.forEach(customerList, function (item) {
+          _.forEach(customerList, function (item) {
             $scope.totalOrgsData.push(item);
           });
           $scope.getCustomerReports();
@@ -183,7 +183,7 @@
       });
       Log.debug(errorMessage + ' Status: ' + error.status);
 
-      if ((error.data !== null) && angular.isDefined(error.data) && angular.isDefined(error.data.trackingId) && (error.data.trackingId !== null)) {
+      if ((error.data !== null) && !_.isUndefined(error.data) && !_.isUndefined(error.data.trackingId) && (error.data.trackingId !== null)) {
         errorMessage += '<br>' + $translate.instant('reportsPage.trackingId') + error.data.trackingId;
       }
       Notification.notify(errorMessage, error);

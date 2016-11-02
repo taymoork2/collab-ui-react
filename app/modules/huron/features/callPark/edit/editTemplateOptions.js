@@ -15,7 +15,7 @@
       },
       templateUrl: 'modules/huron/features/callPark/edit/editTemplateOptions.tpl.html',
       link: function (scope, element) {
-        angular.forEach(scope.options, function (option) {
+        _.forEach(scope.options, function (option) {
           option.currentInput = _.get(option, 'currentInput') || 0;
         });
 

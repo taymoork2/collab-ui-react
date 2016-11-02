@@ -56,7 +56,7 @@
           order: 'pattern',
           pattern: patternQuery
         }, angular.bind(this, function (extPool) {
-          angular.forEach(extPool, function (extNum) {
+          _.forEach(extPool, function (extNum) {
             extNumPool.push({
               uuid: extNum.uuid,
               pattern: extNum.pattern
@@ -111,7 +111,7 @@
       },
 
       createInternalNumberRange: function (internalNumberRange) {
-        if (angular.isUndefined(internalNumberRange.uuid)) {
+        if (_.isUndefined(internalNumberRange.uuid)) {
           internalNumberRange.name = internalNumberRange.description = internalNumberRange.beginNumber + ' - ' + internalNumberRange.endNumber;
           internalNumberRange.patternUsage = "Device";
           return InternalNumberRangeService.save({
@@ -125,7 +125,7 @@
       },
 
       updateInternalNumberRange: function (internalNumberRange) {
-        if (angular.isDefined(internalNumberRange.uuid)) {
+        if (!_.isUndefined(internalNumberRange.uuid)) {
           internalNumberRange.name = internalNumberRange.description = internalNumberRange.beginNumber + ' - ' + internalNumberRange.endNumber;
           internalNumberRange.patternUsage = "Device";
           return InternalNumberRangeService.save({
@@ -196,13 +196,13 @@
       },
 
       generateVoiceMailNumber: function (customerId, countrycode) {
-        var customerUuid = customerId.replace(/-/g, "");
+        var customerUuid = _.replace(customerId, /-/g, "");
         var str = '';
         for (var i = 0; i < customerUuid.length; i++) {
           var hextodec = parseInt(customerUuid[i], 16).toString(10);
           str += parseInt(hextodec, 10) >= 10 ? hextodec : "0" + hextodec;
         }
-        str = countrycode + str.replace(/^0+/, "");
+        str = countrycode + _.replace(str, /^0+/, "");
         var generatedVoicemailNumber = $filter('limitTo')(str, 40, 0);
         return generatedVoicemailNumber;
       }

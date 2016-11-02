@@ -8,11 +8,10 @@
 
   function CsdmHuronUserDeviceService($injector, Authinfo, CsdmConfigService) {
     function create(userId) {
-      var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/users/' + userId + '/huronDevices';
-      var service = $injector.instantiate(CsdmHuronDeviceService, {
+      var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?cisUuid=' + userId + '&type=huron';
+      return $injector.instantiate(CsdmHuronDeviceService, {
         devicesUrl: devicesUrl
       });
-      return service;
     }
 
     return {
@@ -22,7 +21,7 @@
 
   function CsdmHuronOrgDeviceService($injector, Authinfo, CsdmConfigService) {
     function create() {
-      var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/huronDevices';
+      var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?type=huron';
       return $injector.instantiate(CsdmHuronDeviceService, {
         devicesUrl: devicesUrl
       });
@@ -34,10 +33,14 @@
   }
 
   /* @ngInject  */
-  function CsdmHuronDeviceService($http, $q, $translate, Authinfo, HuronConfig, CsdmConverter, CmiKemService, KemService, Notification, devicesUrl) {
+  function CsdmHuronDeviceService($http, $q, Authinfo, HuronConfig, CsdmConverter, CsdmConfigService, devicesUrl) {
 
     function huronEnabled() {
       return $q.when(Authinfo.isSquaredUC());
+    }
+
+    function getFindDevicesUrl(userId) {
+      return CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?cisUuid=' + userId + '&type=huron';
     }
 
     function getCmiUploadLogsUrl(userId, deviceId) {
@@ -57,7 +60,7 @@
     }
 
     function encodeHuronTags(description) {
-      return (description || "").replace(/"/g, "'");
+      return _.replace(description, /"/g, "'");
     }
 
     var deviceList = {};
@@ -94,6 +97,12 @@
 
     function deleteDevice(deviceUrl) {
       return $http.delete(deviceUrl);
+    }
+
+    function getDevicesForPlace(cisUuid) {
+      return $http.get(getFindDevicesUrl(cisUuid)).then(function (res) {
+        return CsdmConverter.convertHuronDevices(res.data);
+      });
     }
 
     function getLinesForDevice(huronDevice) {
@@ -166,14 +175,14 @@
       updateTags: updateTags,
       dataLoaded: dataLoaded,
       getDeviceList: getDeviceList,
+      getDevicesForPlace: getDevicesForPlace,
       deleteDevice: deleteDevice,
       getLinesForDevice: getLinesForDevice,
       getTimezoneForDevice: getTimezoneForDevice,
       setTimezoneForDevice: setTimezoneForDevice,
       resetDevice: resetDevice,
       uploadLogs: uploadLogs,
-
-      fetch: fetch,
+      fetch: fetch
     };
   }
 })();

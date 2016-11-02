@@ -37,10 +37,10 @@
       atlasReadOnlyAdmin: 'atlas-read-only-admin',
       atlasReportsUpdate: 'atlas-reports-update',
       atlasComplianceRole: 'atlas-compliance-role',
-      atlasSettingsPage: 'atlas-settings-page',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasUserPendingStatus: 'atlas-user-pending-status',
+      atlasTrialsShipDevices: 'atlasTrialsShipDevices',
       atlasWebexTrials: 'atlas-webex-trials',
       atlasDeviceUsageReport: 'atlas-device-usage-report',
       androidAddGuestRelease: 'android-add-guest-release',
@@ -157,7 +157,9 @@
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
       huronLocalDialing: 'huron-local-dialing',
       huronDeviceE911: 'huron-device-e911-address',
-      atlasHybridDataSecurity: 'atlas-data-security'
+      gemCCA: 'gem-cloud-connected-audio',
+      atlasHybridDataSecurity: 'atlas-data-security',
+      atlasHerculesEmergencyUpgrade: 'atlas-hercules-emergency-upgrade',
     };
 
     var toggles = {};
@@ -333,7 +335,7 @@
           supportsDirSync().then(function (enabled) {
             resolve(enabled);
           });
-        } else if (angular.isDefined(toggles[feature])) {
+        } else if (!_.isUndefined(toggles[feature])) {
           resolve(toggles[feature]);
         } else {
           $http.get(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/me', {

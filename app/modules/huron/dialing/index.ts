@@ -5,7 +5,7 @@ export * from './dialing.service';
 export default angular
   .module('huron.dialing', [
     'atlas.templates',
-    'cisco.ui',
+    'collab.ui',
     'pascalprecht.translate',
     require('angular-resource'),
     require('modules/core/scripts/services/authinfo'),

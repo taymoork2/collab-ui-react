@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var Masonry = require('masonry-layout');
+
   angular.module('Core')
     .controller('PartnerHomeCtrl', PartnerHomeCtrl);
 
@@ -43,7 +45,7 @@
 
     function openAddTrialModal() {
       if ($scope.isTestOrg) {
-        Analytics.trackTrialSteps('start', $state.current.name);
+        Analytics.trackTrialSteps(Analytics.sections.TRIAL.eventNames.START_SETUP);
       }
       $state.go('trialAdd.info').then(function () {
         $state.modal.result.finally(getTrialsList);
@@ -102,13 +104,13 @@
 
     function resizeCards() {
       $timeout(function () {
-        $('.cs-card-layout').masonry('destroy');
-        $('.cs-card-layout').masonry({
+        var $cardlayout = new Masonry('.cs-card-layout', {
           itemSelector: '.cs-card',
           columnWidth: '.cs-card',
-          isResizable: true,
-          percentPosition: true
+          resize: true,
+          percentPosition: true,
         });
+        $cardlayout.layout();
       }, 0);
     }
   }

@@ -59,30 +59,26 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       routerState: 'media-service-v2.settings',
       buttonClass: 'btn-link',
       completed: false,
-    }];
+    },
+  ];
 
-    public getButtons(): Array<IHdsCardButton> {
-      if (this.active) {
-        return this._clusterActiveModeButtons;
-      }
-      this.enableButtons(this._clusterSetupModeButtons);
-      console.log(this._clusterSetupModeButtons);
-      return this._clusterSetupModeButtons;
+  public getButtons(): Array<IHdsCardButton> {
+    if (this.active) {
+      return this._clusterActiveModeButtons;
     }
+    this.enableButtons(this._clusterSetupModeButtons);
+    return this._clusterSetupModeButtons;
+  }
 
-    private enableButtons (buttons: Array<IHdsCardButton>) {
-      for (let i = 0; i < buttons.length; i++) {
-        if (i !== this._step) {
-           buttons[i].routerState = undefined;
-        }
-        if (i < this._step) {
-           buttons[i].completed = true;
-        }
+  private enableButtons(buttons: Array<IHdsCardButton>) {
+    for (let i = 0; i < buttons.length; i++) {
+      if (i !== this._step) {
+          buttons[i].routerState = undefined;
+      }
+      if (i < this._step) {
+          buttons[i].completed = true;
       }
     }
-
-  public hybridMediaFeatureToggleEventHandler(hasFeature: boolean) {
-    this._display = hasFeature;
   }
 
   /* @ngInject */

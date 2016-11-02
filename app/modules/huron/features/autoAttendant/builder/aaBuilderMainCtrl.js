@@ -84,7 +84,7 @@
     }
 
     function sendMetrics(metric) {
-      if (vm.isAANameDefined && angular.isDefined(metric)) {
+      if (vm.isAANameDefined && !_.isUndefined(metric)) {
         Analytics.trackEvent(AAMetricNameService.BUILDER_PAGE, {
           type: metric
         });
@@ -114,7 +114,7 @@
     // Save the phone number resources originally in the CE (used on exit with no save, and on save error)
     function unAssignAssigned() {
       // check to see if the local assigned list of resources is different than in CE info
-      if (angular.isDefined(vm.aaModel.aaRecord) && areAssignedResourcesDifferent(vm.aaModel.aaRecord.assignedResources, vm.ui.ceInfo.getResources(), 'id')) {
+      if (!_.isUndefined(vm.aaModel.aaRecord) && areAssignedResourcesDifferent(vm.aaModel.aaRecord.assignedResources, vm.ui.ceInfo.getResources(), 'id')) {
         var ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
         return AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, ceInfo.getResources()).then(
           function (response) {
@@ -148,30 +148,30 @@
       vm.ui.closedHours = vm.ui.closedHours || AutoAttendantCeMenuModelService.getCombinedMenu(vm.aaModel.aaRecord, 'closedHours');
       vm.ui.holidays = vm.ui.holidays || AutoAttendantCeMenuModelService.getCombinedMenu(vm.aaModel.aaRecord, 'holidays');
       vm.ui.isOpenHours = true;
-      if (!angular.isDefined(vm.ui.openHours)) {
+      if (_.isUndefined(vm.ui.openHours)) {
         vm.ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
         vm.ui.openHours.setType('MENU_WELCOME');
       }
-      if (angular.isUndefined(vm.aaModel.aaRecord.scheduleEventTypeMap)) {
+      if (_.isUndefined(vm.aaModel.aaRecord.scheduleEventTypeMap)) {
         vm.aaModel.aaRecord.scheduleEventTypeMap = {};
       }
 
-      if (angular.isDefined(vm.aaModel.aaRecord.scheduleEventTypeMap.holiday)) {
+      if (!_.isUndefined(vm.aaModel.aaRecord.scheduleEventTypeMap.holiday)) {
         vm.ui.isHolidays = true;
         vm.ui.holidaysValue = vm.aaModel.aaRecord.scheduleEventTypeMap.holiday;
       } else {
         vm.ui.isHolidays = false;
-        if (angular.isUndefined(vm.ui.holidays)) {
+        if (_.isUndefined(vm.ui.holidays)) {
           vm.ui.holidays = AutoAttendantCeMenuModelService.newCeMenu();
           vm.ui.holidays.setType('MENU_WELCOME');
         }
       }
 
-      if (angular.isDefined(vm.aaModel.aaRecord.scheduleEventTypeMap.closed)) {
+      if (!_.isUndefined(vm.aaModel.aaRecord.scheduleEventTypeMap.closed)) {
         vm.ui.isClosedHours = true;
       } else {
         vm.ui.isClosedHours = false;
-        if (angular.isUndefined(vm.ui.closedHours)) {
+        if (_.isUndefined(vm.ui.closedHours)) {
           vm.ui.closedHours = AutoAttendantCeMenuModelService.newCeMenu();
           vm.ui.closedHours.setType('MENU_WELCOME');
         }
@@ -189,23 +189,23 @@
     }
 
     function saveUiModel() {
-      if (angular.isDefined(vm.ui.ceInfo) && angular.isDefined(vm.ui.ceInfo.getName()) && vm.ui.ceInfo.getName().length > 0) {
-        if (angular.isDefined(vm.ui.builder.ceInfo_name) && (vm.ui.builder.ceInfo_name.length > 0)) {
+      if (!_.isUndefined(vm.ui.ceInfo) && !_.isUndefined(vm.ui.ceInfo.getName()) && vm.ui.ceInfo.getName().length > 0) {
+        if (!_.isUndefined(vm.ui.builder.ceInfo_name) && (vm.ui.builder.ceInfo_name.length > 0)) {
           vm.ui.ceInfo.setName(angular.copy(vm.ui.builder.ceInfo_name));
         }
         AutoAttendantCeInfoModelService.setCeInfo(vm.aaModel.aaRecord, vm.ui.ceInfo);
       }
-      if (vm.ui.isOpenHours && angular.isDefined(vm.ui.openHours)) {
+      if (vm.ui.isOpenHours && !_.isUndefined(vm.ui.openHours)) {
         AutoAttendantCeMenuModelService.updateCombinedMenu(vm.aaModel.aaRecord, 'openHours', vm.ui.openHours);
       }
-      if (vm.ui.isClosedHours && angular.isDefined(vm.ui.closedHours)) {
+      if (vm.ui.isClosedHours && !_.isUndefined(vm.ui.closedHours)) {
         AutoAttendantCeMenuModelService.updateCombinedMenu(vm.aaModel.aaRecord, 'closedHours', vm.ui.closedHours);
       } else {
         AutoAttendantCeMenuModelService.deleteCombinedMenu(vm.aaModel.aaRecord, 'closedHours');
         vm.ui.closedHours = AutoAttendantCeMenuModelService.newCeMenu();
         vm.ui.closedHours.setType('MENU_WELCOME');
       }
-      if (vm.ui.isHolidays && angular.isDefined(vm.ui.holidays)) {
+      if (vm.ui.isHolidays && !_.isUndefined(vm.ui.holidays)) {
         AutoAttendantCeMenuModelService.updateCombinedMenu(vm.aaModel.aaRecord, 'holidays', vm.ui.holidays, vm.ui.holidaysValue);
       } else {
         AutoAttendantCeMenuModelService.deleteCombinedMenu(vm.aaModel.aaRecord, 'holidays');
@@ -330,7 +330,7 @@
           // 2) When an empty menuEntry {} is read from CE definition, it is translated into
           // the UI model as a menuEntry with an un-configured action in actions array and
           // action.name set to "".
-          return angular.isDefined(entry.actions) &&
+          return !_.isUndefined(entry.actions) &&
             (entry.actions.length === 0 ||
               (entry.actions.length === 1 && entry.actions[0].name.length === 0));
         });
@@ -437,14 +437,14 @@
         tname: vm.templateName
       });
 
-      if (angular.isUndefined(specifiedTemplate) || angular.isUndefined(specifiedTemplate.tname) || specifiedTemplate.tname.length === 0) {
+      if (_.isUndefined(specifiedTemplate) || _.isUndefined(specifiedTemplate.tname) || specifiedTemplate.tname.length === 0) {
         AANotificationService.error('autoAttendant.errorInvalidTemplate', {
           template: vm.templateName
         });
         return;
       }
 
-      if (angular.isUndefined(specifiedTemplate.actions) || specifiedTemplate.actions.length === 0) {
+      if (_.isUndefined(specifiedTemplate.actions) || specifiedTemplate.actions.length === 0) {
         AANotificationService.error('autoAttendant.errorInvalidTemplateDef', {
           template: vm.templateName
         });
@@ -462,7 +462,7 @@
           vm.ui.isClosedHours = true;
         }
 
-        if (angular.isUndefined(action.actionset)) {
+        if (_.isUndefined(action.actionset)) {
           AANotificationService.error('autoAttendant.errorInvalidTemplateDef', {
             template: vm.templateName
           });
@@ -496,7 +496,7 @@
 
     function selectAA(aaName) {
       vm.aaModel.aaName = aaName;
-      if (angular.isUndefined(vm.aaModel.aaRecord)) {
+      if (_.isUndefined(vm.aaModel.aaRecord)) {
         if (aaName === '') {
           vm.aaModel.aaRecord = AAModelService.getNewAARecord();
           vm.aaModel.aaRecordUUID = "";
@@ -507,7 +507,7 @@
             callExperienceName: aaName
           });
 
-          if (angular.isDefined(aaRecord)) {
+          if (!_.isUndefined(aaRecord)) {
             AutoAttendantCeService.readCe(aaRecord.callExperienceURL).then(
               function (data) {
                 vm.aaModel.aaRecord = data;

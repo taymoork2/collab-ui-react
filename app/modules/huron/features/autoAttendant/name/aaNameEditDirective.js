@@ -46,7 +46,7 @@
 
         if (!ngModel) return;
 
-        if (angular.isDefined(scope.aaMaxLength)) {
+        if (!_.isUndefined(scope.aaMaxLength)) {
           len = Number(scope.aaMaxLength);
         }
 
@@ -71,7 +71,7 @@
           }
           // when input length limit is reached, do not accept
           // any more key input, except arrow keys, delete key and backspace
-          if (angular.isDefined(len) && (text.length >= len)) {
+          if (!_.isUndefined(len) && (text.length >= len)) {
             if (!isKeyInList(e.keyCode, allowKeySet)) {
               e.preventDefault();
             }

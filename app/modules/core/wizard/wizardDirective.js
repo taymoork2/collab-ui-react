@@ -98,7 +98,7 @@
 
     // If tabs change (feature support in SetupWizard) and a step is not defined, re-initialize
     $scope.$watchCollection('tabs', function (tabs) {
-      if (tabs && tabs.length > 0 && angular.isUndefined(vm.current.step)) {
+      if (tabs && tabs.length > 0 && _.isUndefined(vm.current.step)) {
         init();
       }
     });
@@ -145,11 +145,11 @@
 
     function getSteps() {
       var tab = getTab();
-      if (angular.isDefined(tab) && angular.isArray(tab.steps)) {
+      if (!_.isUndefined(tab) && _.isArray(tab.steps)) {
         return tab.steps;
-      } else if (angular.isDefined(tab) && angular.isArray(tab.subTabs) && tab.subTabs.length > 0) {
+      } else if (!_.isUndefined(tab) && _.isArray(tab.subTabs) && tab.subTabs.length > 0) {
         for (var i = 0; i < tab.subTabs.length; i++) {
-          if (angular.isUndefined(getSubTab()) || tab.subTabs[i] === getSubTab()) {
+          if (_.isUndefined(getSubTab()) || tab.subTabs[i] === getSubTab()) {
             vm.current.subTab = tab.subTabs[i];
             return tab.subTabs[i].steps;
           }
@@ -182,7 +182,7 @@
 
     function setSubTab(subTab) {
       vm.current.subTab = subTab;
-      if (angular.isDefined(subTab)) {
+      if (!_.isUndefined(subTab)) {
         setStep(getSteps()[0]);
       }
     }
@@ -243,7 +243,7 @@
 
     function previousTab() {
       var tabs = getTabs();
-      if (angular.isArray(tabs)) {
+      if (_.isArray(tabs)) {
         var tabIndex = tabs.indexOf(getTab());
         if (tabIndex > 0) {
           setTab(tabs[tabIndex - 1]);
@@ -254,12 +254,12 @@
     function nextTab() {
       var tabs = getTabs();
       vm.wizardNextLoad = false;
-      if (angular.isArray(tabs)) {
+      if (_.isArray(tabs)) {
         var tabIndex = tabs.indexOf(getTab());
         $scope.tabs[tabIndex].required = false;
         if (tabIndex + 1 < tabs.length) {
           setTab(tabs[tabIndex + 1]);
-        } else if (tabIndex + 1 === tabs.length && angular.isFunction($scope.finish)) {
+        } else if (tabIndex + 1 === tabs.length && _.isFunction($scope.finish)) {
           $scope.finish();
         }
       }
@@ -267,7 +267,7 @@
 
     function previousStep() {
       var steps = getSteps();
-      if (angular.isArray(steps)) {
+      if (_.isArray(steps)) {
         var index = steps.indexOf(getStep());
         if (index > 0) {
           setStep(steps[index - 1]);
@@ -301,7 +301,7 @@
           $rootScope.$broadcast('wizard-enterprise-sip-url-event');
         }
         var steps = getSteps();
-        if (angular.isArray(steps)) {
+        if (_.isArray(steps)) {
           var index = steps.indexOf(getStep());
           if (index + 1 < steps.length) {
             setStep(steps[index + 1]);
@@ -316,7 +316,7 @@
 
     function goToStep(requestedStep) {
       var steps = getSteps();
-      if (angular.isArray(steps)) {
+      if (_.isArray(steps)) {
         var index = _.map(steps, function (step) {
           return step.name;
         }).indexOf(requestedStep);
@@ -406,7 +406,7 @@
 
     function hasDefaultButtons() {
       if (vm.current.step) {
-        return angular.isUndefined(vm.current.step.buttons);
+        return _.isUndefined(vm.current.step.buttons);
       }
       return false;
     }

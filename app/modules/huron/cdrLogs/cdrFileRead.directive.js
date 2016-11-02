@@ -21,25 +21,25 @@
 
     function link(scope, element, attrs) {
       function checkSize(size) {
-        if (angular.isUndefined(attrs.fileMaxSize) || (size / 1024) / 1024 < attrs.fileMaxSize) {
+        if (_.isUndefined(attrs.fileMaxSize) || (size / 1024) / 1024 < attrs.fileMaxSize) {
           return true;
-        } else if (angular.isFunction(scope.fileMaxSizeError)) {
+        } else if (_.isFunction(scope.fileMaxSizeError)) {
           scope.fileMaxSizeError();
         }
         return false;
       }
 
       function isTypeValid(type, name) {
-        if (angular.isUndefined(attrs.fileType) || (type && attrs.fileType.indexOf(type) > -1) || isSuffixValid(name)) {
+        if (_.isUndefined(attrs.fileType) || (type && attrs.fileType.indexOf(type) > -1) || isSuffixValid(name)) {
           return true;
-        } else if (angular.isFunction(scope.fileTypeError)) {
+        } else if (_.isFunction(scope.fileTypeError)) {
           scope.fileTypeError();
         }
         return false;
       }
 
       function isSuffixValid(name) {
-        if (angular.isString(name)) {
+        if (_.isString(name)) {
           var nameParts = name.split('.');
           var suffix = nameParts[nameParts.length - 1];
           if (attrs.fileSuffix && attrs.fileSuffix.indexOf(suffix) > -1) {

@@ -20,7 +20,7 @@ describe('Service: AAUiModelService', function () {
       var aaUiModel = AAUiModelService.getUiModel();
       aaUiModel.ui = {};
       var aaUiModel2 = AAUiModelService.getUiModel();
-      expect(angular.isDefined(aaUiModel2.ui)).toEqual(true);
+      expect(!_.isUndefined(aaUiModel2.ui)).toEqual(true);
     });
   });
 });

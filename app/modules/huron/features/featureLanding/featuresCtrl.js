@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var Masonry = require('masonry-layout');
+
   angular
     .module('Huron')
     .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
@@ -253,13 +255,13 @@
 
     function reInstantiateMasonry() {
       $timeout(function () {
-        $('.cs-card-layout').masonry('destroy');
-        $('.cs-card-layout').masonry({
+        var $cardlayout = new Masonry('.cs-card-layout', {
           itemSelector: '.cs-card',
           columnWidth: '.cs-card',
-          isResizable: true,
-          percentPosition: true
+          resize: true,
+          percentPosition: true,
         });
+        $cardlayout.layout();
       }, 0);
     }
 
@@ -279,7 +281,7 @@
           var cardToRefresh = _.find(listOfAllFeatures, function (feature) {
             return feature.cardName === ref;
           });
-          if (angular.isDefined(cardToRefresh)) {
+          if (!_.isUndefined(cardToRefresh)) {
             cardToRefresh.dependsNames.splice(cardToRefresh.dependsNames.indexOf(featureToBeDeleted.cardName), 1);
             if (cardToRefresh.dependsNames.length === 0) {
               cardToRefresh.hasDepends = false;

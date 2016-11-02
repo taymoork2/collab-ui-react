@@ -347,7 +347,7 @@
     function parseSayObject(menuEntry, inObject) {
       var action;
       action = new Action('say', decodeUtf8(inObject.value));
-      if (angular.isDefined(inObject.voice)) {
+      if (!_.isUndefined(inObject.voice)) {
         action.setVoice(inObject.voice);
       }
       menuEntry.addAction(action);
@@ -364,7 +364,7 @@
       for (var i = 0; i < actions.length; i++) {
         newActionArray[i] = {};
         newActionArray[i].value = (actions[i].getValue() ? encodeUtf8(actions[i].getValue()) : '');
-        if (angular.isDefined(actions[i].voice) && actions[i].voice.length > 0) {
+        if (!_.isUndefined(actions[i].voice) && actions[i].voice.length > 0) {
           newActionArray[i].voice = actions[i].voice;
         }
       }
@@ -372,31 +372,31 @@
     }
 
     function setDescription(action, task) {
-      if (angular.isDefined(task.description)) {
+      if (!_.isUndefined(task.description)) {
         action.setDescription(task.description);
       }
     }
 
     function parseAction(menuEntry, inAction) {
       var action;
-      if (angular.isDefined(inAction.play)) {
+      if (!_.isUndefined(inAction.play)) {
         // convert file url to unique filename
         // var filename = MediaResourceService.getFileName(inAction.play.url);
         action = new Action('play', inAction.play.url);
         setDescription(action, inAction.play);
         menuEntry.addAction(action);
-      } else if (angular.isDefined(inAction.say)) {
+      } else if (!_.isUndefined(inAction.say)) {
         action = new Action('say', decodeUtf8(inAction.say.value));
         setDescription(action, inAction.say);
-        if (angular.isDefined(inAction.say.voice)) {
+        if (!_.isUndefined(inAction.say.voice)) {
           action.setVoice(inAction.say.voice);
         }
         menuEntry.addAction(action);
-      } else if (angular.isDefined(inAction.route)) {
+      } else if (!_.isUndefined(inAction.route)) {
         action = new Action('route', inAction.route.destination);
         setDescription(action, inAction.route);
         menuEntry.addAction(action);
-      } else if (angular.isDefined(inAction.routeToExtension)) {
+      } else if (!_.isUndefined(inAction.routeToExtension)) {
 
         action = new Action('routeToExtension', inAction.routeToExtension.destination);
 
@@ -404,19 +404,19 @@
 
         menuEntry.addAction(action);
 
-      } else if (angular.isDefined(inAction.routeToHuntGroup)) {
+      } else if (!_.isUndefined(inAction.routeToHuntGroup)) {
         action = new Action('routeToHuntGroup', inAction.routeToHuntGroup.id);
         setDescription(action, inAction.routeToHuntGroup);
         menuEntry.addAction(action);
-      } else if (angular.isDefined(inAction.routeToUser)) {
+      } else if (!_.isUndefined(inAction.routeToUser)) {
         action = new Action('routeToUser', inAction.routeToUser.id);
         setDescription(action, inAction.routeToUser);
         menuEntry.addAction(action);
-      } else if (angular.isDefined(inAction.routeToVoiceMail)) {
+      } else if (!_.isUndefined(inAction.routeToVoiceMail)) {
         action = new Action('routeToVoiceMail', inAction.routeToVoiceMail.id);
         setDescription(action, inAction.routeToVoiceMail);
         menuEntry.addAction(action);
-      } else if (angular.isDefined(inAction.repeatActionsOnInput)) {
+      } else if (!_.isUndefined(inAction.repeatActionsOnInput)) {
         action = new Action('repeatActionsOnInput', '');
         setDescription(action, inAction.repeatActionsOnInput);
         if (_.has(inAction.repeatActionsOnInput, 'level')) {
@@ -425,38 +425,38 @@
           action.level = 0;
         }
         menuEntry.addAction(action);
-      } else if (angular.isDefined(inAction.routeToCollectedNumber)) {
+      } else if (!_.isUndefined(inAction.routeToCollectedNumber)) {
         action = new Action('routeToCollectedNumber', '');
         setDescription(action, inAction.routeToCollectedNumber);
         menuEntry.addAction(action);
-      } else if (angular.isDefined(inAction.routeToDialedMailbox)) {
+      } else if (!_.isUndefined(inAction.routeToDialedMailbox)) {
         action = new Action('routeToDialedMailbox', '');
         setDescription(action, inAction.routeToDialedMailbox);
         menuEntry.addAction(action);
-      } else if (angular.isDefined(inAction.disconnect)) {
+      } else if (!_.isUndefined(inAction.disconnect)) {
         action = new Action('disconnect', '');
-        if (angular.isDefined(inAction.disconnect.treatment)) {
+        if (!_.isUndefined(inAction.disconnect.treatment)) {
           action.setValue(inAction.disconnect.treatment);
         } else {
           action.setValue('none');
         }
-        if (angular.isDefined(inAction.disconnect.description)) {
+        if (!_.isUndefined(inAction.disconnect.description)) {
           action.setDescription(inAction.disconnect.description);
         }
         menuEntry.addAction(action);
-      } else if (angular.isDefined(inAction.routeToDialed)) {
+      } else if (!_.isUndefined(inAction.routeToDialed)) {
         action = new Action('routeToDialed', '');
         setDescription(action, inAction.routeToDialed);
         menuEntry.addAction(action);
-      } else if (angular.isDefined(inAction.runActionsOnInput)) {
+      } else if (!_.isUndefined(inAction.runActionsOnInput)) {
         action = new Action('runActionsOnInput', '');
-        if (angular.isDefined(inAction.runActionsOnInput.inputType)) {
+        if (!_.isUndefined(inAction.runActionsOnInput.inputType)) {
           action.inputType = inAction.runActionsOnInput.inputType;
           // check if this dial-by-extension
           if (action.inputType === 2 &&
-            angular.isDefined(inAction.runActionsOnInput.prompts.sayList)) {
+            !_.isUndefined(inAction.runActionsOnInput.prompts.sayList)) {
             var sayList = inAction.runActionsOnInput.prompts.sayList;
-            if (sayList.length > 0 && angular.isDefined(sayList[0].value)) {
+            if (sayList.length > 0 && !_.isUndefined(sayList[0].value)) {
               action.value = decodeUtf8(inAction.runActionsOnInput.prompts.sayList[0].value);
               action.voice = inAction.runActionsOnInput.voice;
               action.description = inAction.runActionsOnInput.description;
@@ -471,14 +471,14 @@
             }
           }
         }
-      } else if (angular.isDefined(inAction.goto)) {
+      } else if (!_.isUndefined(inAction.goto)) {
         action = new Action('goto', inAction.goto.ceid);
-        if (angular.isDefined(inAction.goto.description)) {
+        if (!_.isUndefined(inAction.goto.description)) {
           setDescription(action, inAction.goto.description);
         }
 
         menuEntry.addAction(action);
-      } else if (angular.isDefined(inAction.routeToQueue)) {
+      } else if (!_.isUndefined(inAction.routeToQueue)) {
         //this occurs on the way in from the db
         action = new Action('routeToQueue', inAction.routeToQueue.id);
         setDescription(action, inAction.routeToQueue);
@@ -489,7 +489,7 @@
       } else {
         // insert an empty action
         action = new Action('', '');
-        if (angular.isDefined(inAction.description)) {
+        if (!_.isUndefined(inAction.description)) {
           action.setDescription(inAction.description);
         }
         menuEntry.addAction(action);
@@ -500,9 +500,9 @@
     * temporary solution to write to db until ces ready
     */
     function cesTempMoh(action) {
-      if (angular.isDefined(action.description)) {
+      if (!_.isUndefined(action.description)) {
         try {
-          if (angular.isUndefined(action.queueSettings)) {
+          if (_.isUndefined(action.queueSettings)) {
             action.description = JSON.parse(action.description);
             action.queueSettings = {};
           }
@@ -517,9 +517,9 @@
     * temporary solution to write to db until ces ready
     */
     function cesTempIa(action) {
-      if (angular.isDefined(action.description)) {
+      if (!_.isUndefined(action.description)) {
         try {
-          if (angular.isUndefined(action.queueSettings)) {
+          if (_.isUndefined(action.queueSettings)) {
             action.description = JSON.parse(action.description);
             action.queueSettings = {};
           }
@@ -534,7 +534,7 @@
     * temporary solution to write to db until ces ready
     */
     function cesTempfallBack(action) {
-      if (angular.isDefined(action.description)) {
+      if (!_.isUndefined(action.description)) {
         try {
           if (angular.isUnDefined(action.queueSettings)) {
             action.description = JSON.parse(action.description);
@@ -593,16 +593,16 @@
 
     function getWelcomeMenu(ceRecord, actionSetName) {
 
-      if (angular.isUndefined(ceRecord) || angular.isUndefined(actionSetName)) {
+      if (_.isUndefined(ceRecord) || _.isUndefined(actionSetName)) {
         return undefined;
       }
 
       var actionSet = getActionSet(ceRecord, actionSetName);
-      if (angular.isUndefined(actionSet)) {
+      if (_.isUndefined(actionSet)) {
         return undefined;
       }
 
-      if (angular.isUndefined(actionSet.actions)) {
+      if (_.isUndefined(actionSet.actions)) {
         return undefined;
       }
       var ceActionArray = actionSet.actions;
@@ -615,7 +615,7 @@
         // dial by extension(runActionsOnInput) and is now ok in the Welcome menu.
         // if inputType is 2 then dial by extension, else make an option menu.
 
-        if (angular.isUndefined(ceActionArray[i].runActionsOnInput) && angular.isUndefined(ceActionArray[i].runCustomActions)) {
+        if (_.isUndefined(ceActionArray[i].runActionsOnInput) && _.isUndefined(ceActionArray[i].runCustomActions)) {
 
           menuEntry = new CeMenuEntry();
           parseAction(menuEntry, ceActionArray[i]);
@@ -633,7 +633,7 @@
             }
           } else {
             var optionMenu = getOptionMenuFromAction(ceActionArray[i], actionSetName);
-            if (angular.isDefined(optionMenu)) {
+            if (!_.isUndefined(optionMenu)) {
               menu.addEntry(optionMenu);
             }
           }
@@ -647,17 +647,17 @@
      */
     function getOptionMenu(ceRecord, actionSetName) {
 
-      if (angular.isUndefined(ceRecord) || angular.isUndefined(actionSetName)) {
+      if (_.isUndefined(ceRecord) || _.isUndefined(actionSetName)) {
         return undefined;
       }
 
       var actionSet = getActionSet(ceRecord, actionSetName);
 
-      if (angular.isUndefined(actionSet)) {
+      if (_.isUndefined(actionSet)) {
         return undefined;
       }
 
-      if (angular.isUndefined(actionSet.actions)) {
+      if (_.isUndefined(actionSet.actions)) {
         return undefined;
       }
       var ceActionArray = actionSet.actions;
@@ -670,7 +670,7 @@
       // returns only the first menu it finds
       var i = getActionIndex(ceActionArray, 'runActionsOnInput');
       if (i >= 0) {
-        if (angular.isDefined(ceActionArray[i]['runActionsOnInput'])) {
+        if (!_.isUndefined(ceActionArray[i]['runActionsOnInput'])) {
           return getOptionMenuFromAction(ceActionArray[i], actionSetName);
         }
       }
@@ -679,7 +679,7 @@
 
     function getOptionMenuFromAction(optionMenuAction, actionSetName) {
 
-      if (angular.isDefined(optionMenuAction) && angular.isDefined(optionMenuAction.runActionsOnInput)) {
+      if (!_.isUndefined(optionMenuAction) && !_.isUndefined(optionMenuAction.runActionsOnInput)) {
         var menu = new CeMenu();
         menu.setType('MENU_OPTION');
         var ceActionsOnInput = optionMenuAction.runActionsOnInput;
@@ -689,19 +689,19 @@
         var announcementMenuEntry = new CeMenuEntry();
         announcementMenuEntry.setType('MENU_OPTION_ANNOUNCEMENT');
         menu.addHeader(announcementMenuEntry);
-        if (angular.isDefined(ceActionsOnInput) && angular.isDefined(ceActionsOnInput.prompts)) {
-          if (angular.isDefined(ceActionsOnInput.prompts.description)) {
+        if (!_.isUndefined(ceActionsOnInput) && !_.isUndefined(ceActionsOnInput.prompts)) {
+          if (!_.isUndefined(ceActionsOnInput.prompts.description)) {
             announcementMenuEntry.setDescription(ceActionsOnInput.prompts.description);
           }
-          if (angular.isDefined(ceActionsOnInput.prompts.sayList)) {
+          if (!_.isUndefined(ceActionsOnInput.prompts.sayList)) {
             parseSayList(announcementMenuEntry, ceActionsOnInput.prompts.sayList);
           }
         }
 
-        if (angular.isDefined(ceActionsOnInput.language)) {
+        if (!_.isUndefined(ceActionsOnInput.language)) {
           announcementMenuEntry.setLanguage(ceActionsOnInput.language);
         }
-        if (angular.isDefined(ceActionsOnInput.voice)) {
+        if (!_.isUndefined(ceActionsOnInput.voice)) {
           announcementMenuEntry.setVoice(ceActionsOnInput.voice);
         }
 
@@ -715,18 +715,18 @@
         timeoutMenuEntry.setType('MENU_OPTION_TIMEOUT');
         timeoutMenuEntry.setTimeout(ceActionsOnInput.timeoutInSeconds || 5);
 
-        if (angular.isDefined(ceActionsOnInput.attempts)) {
+        if (!_.isUndefined(ceActionsOnInput.attempts)) {
           menu.attempts = ceActionsOnInput.attempts;
         }
 
         // Collect the main menu's options
-        if (angular.isDefined(ceActionsOnInput.inputs)) {
+        if (!_.isUndefined(ceActionsOnInput.inputs)) {
           for (var j = 0; j < ceActionsOnInput.inputs.length; j++) {
             var menuOption = ceActionsOnInput.inputs[j];
-            if (angular.isDefined(menuOption.input) && menuOption.input === 'default') {
+            if (!_.isUndefined(menuOption.input) && menuOption.input === 'default') {
               defaultMenuEntry.setDescription(menuOption.description || '');
               parseActions(defaultMenuEntry, menuOption.actions);
-            } else if (angular.isDefined(menuOption.input) && menuOption.input === 'timeout') {
+            } else if (!_.isUndefined(menuOption.input) && menuOption.input === 'timeout') {
               timeoutMenuEntry.setDescription(menuOption.description || '');
               parseActions(timeoutMenuEntry, menuOption.actions);
               // do not expose timeout entry by default
@@ -763,16 +763,16 @@
 
     function getCustomMenu(ceRecord, actionSetName) {
 
-      if (angular.isUndefined(ceRecord) || angular.isUndefined(actionSetName)) {
+      if (_.isUndefined(ceRecord) || _.isUndefined(actionSetName)) {
         return undefined;
       }
 
       var actionSet = getActionSet(ceRecord, actionSetName);
-      if (angular.isUndefined(actionSet)) {
+      if (_.isUndefined(actionSet)) {
         return undefined;
       }
 
-      if (angular.isUndefined(actionSet.actions)) {
+      if (_.isUndefined(actionSet.actions)) {
         return undefined;
       }
 
@@ -799,12 +799,12 @@
     function getCombinedMenu(ceRecord, actionSetName) {
 
       var welcomeMenu = getWelcomeMenu(ceRecord, actionSetName);
-      if (angular.isDefined(welcomeMenu)) {
+      if (!_.isUndefined(welcomeMenu)) {
         // remove the disconnect action because we manually add it to the UI
         var entries = welcomeMenu.entries;
         if (entries.length > 0) {
           var lastMenuEntry = entries[entries.length - 1];
-          if (angular.isDefined(lastMenuEntry.actions) && lastMenuEntry.actions.length > 0) {
+          if (!_.isUndefined(lastMenuEntry.actions) && lastMenuEntry.actions.length > 0) {
             var action = lastMenuEntry.actions[0];
             if (action.name === 'disconnect') {
               entries = entries.pop();
@@ -836,7 +836,7 @@
     }
 
     function updateDefaultActionSet(ceRecord, hasClosedHours) {
-      if (angular.isUndefined(hasClosedHours) && !_.isEmpty(ceRecord.defaultActionSet)) {
+      if (_.isUndefined(hasClosedHours) && !_.isEmpty(ceRecord.defaultActionSet)) {
         return;
       }
       if (hasClosedHours) {
@@ -861,7 +861,7 @@
       // manually add a disconnect action to each defined actionSet
       var actionSet = getActionSet(ceRecord, actionSetName);
       if (actionSet.actions && actionSet.actions.length > 0) {
-        if (angular.isUndefined(actionSet.actions[actionSet.actions.length - 1].disconnect)) {
+        if (_.isUndefined(actionSet.actions[actionSet.actions.length - 1].disconnect)) {
           addDisconnectAction(actionSet.actions);
         }
       }
@@ -874,20 +874,20 @@
      * actionName: 'play', 'route', etc.
      */
     function getActionIndex(actionArray, actionName) {
-      if (angular.isUndefined(actionArray) || actionArray === null) {
+      if (_.isUndefined(actionArray) || actionArray === null) {
         return -1;
       }
 
-      if (angular.isUndefined(actionName) || actionName === null) {
+      if (_.isUndefined(actionName) || actionName === null) {
         return -1;
       }
 
-      if (!angular.isArray(actionArray)) {
+      if (!_.isArray(actionArray)) {
         return -1;
       }
 
       for (var i = 0; i < actionArray.length; i++) {
-        if (angular.isDefined(actionArray[i][actionName])) {
+        if (!_.isUndefined(actionArray[i][actionName])) {
           return i;
         }
       }
@@ -907,11 +907,11 @@
      * Walk the ceRecord and return the actionSet actionSetName.
      */
     function getActionSet(ceRecord, actionSetName) {
-      if (!angular.isArray(ceRecord.actionSets)) {
+      if (!_.isArray(ceRecord.actionSets)) {
         return undefined;
       }
       for (var i = 0; i < ceRecord.actionSets.length; i++) {
-        if (angular.isDefined(ceRecord.actionSets[i].name) && ceRecord.actionSets[i].name === actionSetName) {
+        if (!_.isUndefined(ceRecord.actionSets[i].name) && ceRecord.actionSets[i].name === actionSetName) {
           return ceRecord.actionSets[i];
         }
       }
@@ -923,12 +923,12 @@
      * Construct and return one if not found.
      */
     function getAndCreateActionSet(ceRecord, actionSetName) {
-      if (angular.isUndefined(ceRecord.actionSets)) {
+      if (_.isUndefined(ceRecord.actionSets)) {
         ceRecord.actionSets = [];
       }
 
       var actionSet = getActionSet(ceRecord, actionSetName);
-      if (angular.isUndefined(actionSet)) {
+      if (_.isUndefined(actionSet)) {
         var i = ceRecord.actionSets.length;
         // add new actionSetName into actions array
         ceRecord.actionSets[i] = {};
@@ -941,14 +941,14 @@
     }
 
     function updateCustomMenu(ceRecord, actionSetName, aaMenu) {
-      if (angular.isUndefined(aaMenu.type) || aaMenu.type !== 'MENU_CUSTOM') {
+      if (_.isUndefined(aaMenu.type) || aaMenu.type !== 'MENU_CUSTOM') {
         return false;
       }
 
       var actionSet = getAndCreateActionSet(ceRecord, actionSetName);
 
       var customAction = getActionObject(actionSet.actions, 'runCustomActions');
-      if (angular.isUndefined(customAction)) {
+      if (_.isUndefined(customAction)) {
         var i = actionSet.actions.length;
         actionSet.actions[i] = {};
         actionSet.actions[i].runCustomActions = new CustomAction();
@@ -970,10 +970,10 @@
           newActionArray[i].runActionsOnInput = newRunActionsOnInput();
           createOptionMenu(newActionArray[i].runActionsOnInput, menuEntry);
         } else {
-          if (angular.isDefined(menuEntry.actions) && menuEntry.actions.length > 0) {
+          if (!_.isUndefined(menuEntry.actions) && menuEntry.actions.length > 0) {
             var actionName = menuEntry.actions[0].getName();
             newActionArray[i][actionName] = {};
-            if (angular.isDefined(menuEntry.actions[0].description) && menuEntry.actions[0].description.length > 0) {
+            if (!_.isUndefined(menuEntry.actions[0].description) && menuEntry.actions[0].description.length > 0) {
               newActionArray[i][actionName].description = menuEntry.actions[0].description;
             }
             if (actionName === 'say') {
@@ -1018,11 +1018,11 @@
     }
 
     function updateWelcomeMenu(ceRecord, actionSetName, aaMenu) {
-      if (angular.isUndefined(aaMenu.type) || aaMenu.type !== 'MENU_WELCOME') {
+      if (_.isUndefined(aaMenu.type) || aaMenu.type !== 'MENU_WELCOME') {
         return false;
       }
 
-      if (angular.isUndefined(ceRecord.actionSets)) {
+      if (_.isUndefined(ceRecord.actionSets)) {
         ceRecord.actionSets = [];
       }
 
@@ -1074,7 +1074,7 @@
           newActionArray[i][actionName].level = actions[i].level;
         }
 
-        if (angular.isDefined(actions[i].description) && actions[i].description.length > 0) {
+        if (!_.isUndefined(actions[i].description) && actions[i].description.length > 0) {
           newActionArray[i][actionName].description = actions[i].description;
         }
       }
@@ -1085,7 +1085,7 @@
     */
     function populateRouteToQueue(action) {
       var newAction = {};
-      if (angular.isDefined(action.description)) {
+      if (!_.isUndefined(action.description)) {
         newAction.id = action.value;
         newAction.description = JSON.stringify(action.description);
       }
@@ -1096,9 +1096,9 @@
      */
     function populateRunActionsOnInput(action) {
       var newAction = {};
-      if (angular.isDefined(action.inputType)) {
+      if (!_.isUndefined(action.inputType)) {
         newAction.inputType = action.inputType;
-        if (newAction.inputType == 2 && angular.isDefined(action.value)) {
+        if (newAction.inputType == 2 && !_.isUndefined(action.value)) {
           var prompts = {};
           var sayListArr = [];
           var sayList = {};
@@ -1142,7 +1142,7 @@
           newOptionArray.push(newOption);
         } else if (menuEntry.key && _.has(menuEntry, 'entries') && _.has(menuEntry, 'headers')) {
           newOption = {};
-          if (angular.isDefined(menuEntry.description)) {
+          if (!_.isUndefined(menuEntry.description)) {
             newOption.description = menuEntry.description;
           }
           newOption.input = menuEntry.key;
@@ -1191,7 +1191,7 @@
         // create default action
         i = aaMenu.entries.length;
         menuEntry = aaMenu.headers[1];
-        if (angular.isDefined(menuEntry.actions) && menuEntry.actions.length > 0) {
+        if (!_.isUndefined(menuEntry.actions) && menuEntry.actions.length > 0) {
           newOptionArray[i] = {};
           newOptionArray[i].description = menuEntry.description;
           newOptionArray[i].input = 'default';
@@ -1212,13 +1212,13 @@
     }
 
     function updateOptionMenu(ceRecord, actionSetName, aaMenu) {
-      if (angular.isUndefined(aaMenu.type) || aaMenu.type !== 'MENU_OPTION') {
+      if (_.isUndefined(aaMenu.type) || aaMenu.type !== 'MENU_OPTION') {
         return false;
       }
 
       var actionSet = getAndCreateActionSet(ceRecord, actionSetName);
       var inputAction = getActionObject(actionSet.actions, 'runActionsOnInput');
-      if (angular.isUndefined(inputAction)) {
+      if (_.isUndefined(inputAction)) {
         var i = actionSet.actions.length;
         actionSet.actions[i] = {};
         actionSet.actions[i].runActionsOnInput = newRunActionsOnInput();
@@ -1230,7 +1230,7 @@
     }
 
     function updateMenu(ceRecord, actionSetName, aaMenu) {
-      if (angular.isUndefined(aaMenu.type) || aaMenu.type === null) {
+      if (_.isUndefined(aaMenu.type) || aaMenu.type === null) {
         return false;
       }
       if (aaMenu.type === 'MENU_WELCOME') {
@@ -1250,26 +1250,26 @@
      */
     function deleteMenu(ceRecord, actionSetName, aaMenuType) {
 
-      if (angular.isUndefined(actionSetName) || actionSetName === null) {
+      if (_.isUndefined(actionSetName) || actionSetName === null) {
         return false;
       }
 
-      if (angular.isUndefined(aaMenuType) || aaMenuType === null) {
+      if (_.isUndefined(aaMenuType) || aaMenuType === null) {
         return false;
       }
 
-      if (angular.isUndefined(ceRecord) || ceRecord === null) {
+      if (_.isUndefined(ceRecord) || ceRecord === null) {
         return false;
       }
 
       // get the action object of actionSetName
       //
       var actionSet = getActionSet(ceRecord, actionSetName);
-      if (angular.isUndefined(actionSet)) {
+      if (_.isUndefined(actionSet)) {
         return false;
       }
 
-      if (angular.isUndefined(actionSet.actions)) {
+      if (_.isUndefined(actionSet.actions)) {
         return false;
       }
 
@@ -1315,11 +1315,11 @@
      */
     function deleteCombinedMenu(ceRecord, actionSetName) {
 
-      if (angular.isUndefined(actionSetName) || actionSetName === null) {
+      if (_.isUndefined(actionSetName) || actionSetName === null) {
         return false;
       }
 
-      if (angular.isUndefined(ceRecord) || ceRecord === null) {
+      if (_.isUndefined(ceRecord) || ceRecord === null) {
         return false;
       }
 

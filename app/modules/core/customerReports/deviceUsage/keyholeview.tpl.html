@@ -1,14 +1,18 @@
-<div class="row">
-  <div class="columns medium-4" style="padding-left:2rem">
-    <h4><b>Calls</b></h4>
-    <div style="font-size:3rem;color:#0387B8"> 410 </div>
+<div class="row full total-usage-table small-padding">
+
+  <div class="columns medium-4 center">
+    <div class="digit">{{deviceUsage.noOfDevices}}</div>
+    <div class="text">Devices Used</div>
   </div>
-  <div class="columns medium-4" style="padding-left:1rem">
-    <h4><b>Minutes</b></h4>
-    <div style="font-size:3rem;color:#0387B8"> 1250 </div>
+
+  <div class="columns medium-4 center">
+    <div class="digit">{{deviceUsage.totalDuration}}</div>
+    <div class="text">Total Call Duration</div>
   </div>
-  <div class="columns medium-4" style="padding-left:1rem">
-    <h4><b>Devices</b></h4>
-    <div style="font-size:3rem;color:#0387B8"> 450 </div>
+
+  <div class="columns medium-4 center">
+    <div class="digit">{{deviceUsage.noOfCalls}}</div>
+    <div class="text">Number of Calls</div>
   </div>
+
 </div>

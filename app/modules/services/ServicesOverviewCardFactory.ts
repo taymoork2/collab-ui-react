@@ -14,13 +14,13 @@ angular
   .factory('ServicesOverviewCardFactory', ServicesOverviewCardFactory);
 
 /* @ngInject */
-function ServicesOverviewCardFactory(Authinfo, FusionClusterStatesService) {
+function ServicesOverviewCardFactory(Authinfo, FusionClusterStatesService, FeatureToggleService) {
   return {
     createCards: function (): Array<ServicesOverviewCard> {
       return [
         new ServicesOverviewMessageCard(Authinfo),
         new ServicesOverviewMeetingCard(Authinfo),
-        new ServicesOverviewCallCard(Authinfo),
+        new ServicesOverviewCallCard(Authinfo, FeatureToggleService),
         new ServicesOverviewCareCard(Authinfo),
         new ServicesOverviewHybridServicesCard(),
         new ServicesOverviewHybridCalendarCard(FusionClusterStatesService),

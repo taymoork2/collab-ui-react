@@ -7,7 +7,7 @@
 
   /* @ngInject */
   function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
-    AAModelService, AACommonService, Authinfo, AANotificationService, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService, AAScrollBar) {
+    AAModelService, AACommonService, Authinfo, AANotificationService, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService) {
     var vm = this;
 
     vm.addNumber = addNumber;
@@ -47,7 +47,7 @@
     // Add Number, top-level method called by UI
     function addNumber(number) {
 
-      if (angular.isUndefined(number) || number === '') {
+      if (_.isUndefined(number) || number === '') {
         return;
       }
 
@@ -57,7 +57,7 @@
       });
 
       // if it's in the available list, take it out, and add to CE resources
-      if (!angular.isUndefined(numobj) && numobj.length > 0) {
+      if (!_.isUndefined(numobj) && numobj.length > 0) {
 
         vm.availablePhoneNums = vm.availablePhoneNums.filter(function (obj) {
           return obj.value != number;
@@ -78,7 +78,7 @@
     // Remove number, top-level method called by UI
     function removeNumber(number) {
 
-      if (angular.isUndefined(number) || number === '') {
+      if (_.isUndefined(number) || number === '') {
         return;
       }
 
@@ -153,7 +153,7 @@
               return (TelephoneNumberService.validateDID(resource.number));
             });
 
-            if (angular.isDefined(r)) {
+            if (!_.isUndefined(r)) {
               var index = _.indexOf(resources, r);
 
                 // if e164 number is already the 0th element, all done
@@ -165,7 +165,6 @@
 
             sortAssignedResources(resources);
             AACommonService.setCENumberStatus(true);
-            AAScrollBar.resizeBuilderScrollBar();
           },
             function (response) {
               AANotificationService.errorResponse(response, 'autoAttendant.errorAddCMI', {
@@ -207,7 +206,6 @@
       saveAANumberAssignments(Authinfo.getOrgId(),
         vm.aaModel.aaRecordUUID, resources).then(function () {
           AACommonService.setCENumberStatus(true);
-          AAScrollBar.resizeBuilderScrollBar();
         }).catch(
         function (response) {
           /* Use AACommonService to thwart the saving when it is in this state. */
@@ -302,7 +300,7 @@
       return TelephonyInfoService.loadInternalNumberPool(pattern).then(function (intPool) {
         for (var i = 0; i < intPool.length; i++) {
 
-          var number = intPool[i].pattern.replace(/\D/g, '');
+          var number = _.replace(intPool[i].pattern, /\D/g, '');
 
           vm.numberTypeList[number] = AANumberAssignmentService.DIRECTORY_NUMBER;
 
@@ -335,7 +333,7 @@
           // the externalNumberList will contain the info as it came from CMI
           vm.externalNumberList.push(dn);
 
-          var number = extPool[i].pattern.replace(/\D/g, '');
+          var number = _.replace(extPool[i].pattern, /\D/g, '');
 
           vm.numberTypeList[number] = AANumberAssignmentService.EXTERNAL_NUMBER;
 
@@ -362,7 +360,7 @@
       }
 
       var currentResources = [];
-      if (angular.isDefined(vm.ui.ceInfo) && angular.isDefined(vm.ui.ceInfo.resources)) {
+      if (!_.isUndefined(vm.ui.ceInfo) && !_.isUndefined(vm.ui.ceInfo.resources)) {
         currentResources = vm.ui.ceInfo.getResources();
       }
 

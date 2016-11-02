@@ -6,7 +6,7 @@
   angular.module('Core', [
     'angular-cache',
     'atlas.templates',
-    'cisco.ui',
+    'collab.ui',
     'cisco.formly',
     'core.auth',
     'core.body',
@@ -69,6 +69,7 @@
     'ngIcal',
     'huron.paging-group',
     'huron.telephoneNumber',
+    'huron.call-park',
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
   ]);
@@ -92,6 +93,8 @@
 
   angular.module('Status', ['Core']);
 
+  angular.module('Gemini', ['Core']);
+
   module.exports = angular.module('Main', [
     'Core',
     'Squared',
@@ -106,6 +109,7 @@
     'Sunlight',
     'Status',
     'oc.lazyLoad',
+    'Gemini'
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;

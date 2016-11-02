@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('EditServicesCtrl', EditServicesCtrl);
   /* @ngInject */
-  function EditServicesCtrl($stateParams, $scope, CsdmDataModelService) {
+  function EditServicesCtrl($stateParams, $scope, Notification, CsdmDataModelService) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
     vm.service = (vm.wizardData.entitlements || []).indexOf('ciscouc') > -1 ? 'sparkCall' : 'sparkOnly';
@@ -17,13 +17,17 @@
 
     vm.save = function () {
       vm.isLoading = true;
-      var entitlements = vm.wizardData.entitlements;
+      var entitlements = (vm.wizardData.entitlements || []);
       var sparkCallIndex = entitlements.indexOf('ciscouc');
       if (sparkCallIndex > -1) {
         entitlements.splice(sparkCallIndex, 1);
         CsdmDataModelService.updateCloudberryPlace(vm.wizardData.selectedPlace, entitlements)
           .then(function () {
             $scope.$dismiss();
+            Notification.success("addDeviceWizard.editServices.servicesSaved");
+          })
+          .catch(function (error) {
+            Notification.errorResponse(error, 'addDeviceWizard.assignPhoneNumber.placeEditError');
           });
       } else {
         $scope.$dismiss();

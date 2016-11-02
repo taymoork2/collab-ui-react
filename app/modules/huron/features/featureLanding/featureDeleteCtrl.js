@@ -4,6 +4,8 @@
 (function () {
   'use strict';
 
+  var Masonry = require('masonry-layout');
+
   angular
     .module('Huron')
     .controller('HuronFeatureDeleteCtrl', HuronFeatureDeleteCtrl);
@@ -35,13 +37,13 @@
 
     function reInstantiateMasonry() {
       $timeout(function () {
-        $('.cs-card-layout').masonry('destroy');
-        $('.cs-card-layout').masonry({
+        var $cardlayout = new Masonry('.cs-card-layout', {
           itemSelector: '.cs-card',
           columnWidth: '.cs-card',
-          isResizable: true,
-          percentPosition: true
+          resize: true,
+          percentPosition: true,
         });
+        $cardlayout.layout();
       }, 0);
     }
 
@@ -76,7 +78,7 @@
               .then(function () {
                 aaModel.ceInfos.splice(delPosition, 1);
                 AutoAttendantCeInfoModelService.deleteCeInfo(aaModel.aaRecords, ceInfoToDelete);
-                if (angular.isDefined(scheduleId)) {
+                if (!_.isUndefined(scheduleId)) {
                   AACalendarService.deleteCalendar(scheduleId);
                 }
                 deleteSuccess();
@@ -120,7 +122,7 @@
     function deleteSuccess() {
       vm.deleteBtnDisabled = false;
 
-      if (angular.isFunction($scope.$dismiss)) {
+      if (_.isFunction($scope.$dismiss)) {
         $scope.$dismiss();
       }
 
@@ -137,7 +139,7 @@
     function deleteError(response) {
       vm.deleteBtnDisabled = false;
 
-      if (angular.isFunction($scope.$dismiss)) {
+      if (_.isFunction($scope.$dismiss)) {
         $scope.$dismiss();
       }
       Log.warn('Failed to delete the ' + vm.featureType + ' with name: ' + vm.featureName + ' and id:' + vm.featureId);
@@ -151,14 +153,14 @@
           error += $translate.instant('errors.statusError', {
             status: response.status
           });
-          if (response.data && angular.isString(response.data)) {
+          if (response.data && _.isString(response.data)) {
             error += ' ' + $translate.instant('huronFeatureDetails.messageError', {
               message: response.data
             });
           }
         } else {
           error += 'Request failed.';
-          if (angular.isString(response.data)) {
+          if (_.isString(response.data)) {
             error += ' ' + response.data;
           }
         }

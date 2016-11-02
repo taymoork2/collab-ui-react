@@ -26,7 +26,7 @@
         var value = modelValue || viewValue;
         scope.model.rangeMax = value;
         // we only validate this if rangeMin is valid or populated
-        if (angular.isUndefined(scope.model.rangeMin) || scope.model.rangeMin === "") {
+        if (_.isUndefined(scope.model.rangeMin) || scope.model.rangeMin === "") {
           return true;
         } else {
           return parseInt(value, 10) >= parseInt(scope.model.rangeMin, 10);
@@ -35,7 +35,7 @@
       lessThan: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
         // we only validate this if rangeMin is valid or populated
-        if (angular.isUndefined(scope.model.rangeMax) || scope.model.rangeMax === "") {
+        if (_.isUndefined(scope.model.rangeMax) || scope.model.rangeMax === "") {
           return true;
         } else {
           return parseInt(value, 10) <= parseInt(scope.model.rangeMax, 10);
@@ -43,7 +43,7 @@
       },
       checkNumeric: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
-        if (angular.isUndefined(value)) {
+        if (_.isUndefined(value)) {
           return true;
         }
         return ValidationService.numeric(viewValue, modelValue, scope);
@@ -53,7 +53,7 @@
         if (scope.model.patternOption !== 'range') {
           return true;
         }
-        return angular.isDefined(value) && value !== '';
+        return !_.isUndefined(value) && value !== '';
       }
     };
     vm.nameFields = [{

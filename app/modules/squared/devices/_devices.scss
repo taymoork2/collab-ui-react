@@ -114,7 +114,6 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-
     @include vr-spacing(pt, 1.5);
   }
 
@@ -137,19 +136,6 @@
 
   .timeZoneSelector {
     width: 280px;
-  }
-
-  .button-container {
-    right: 0;
-  }
-
-  .dropdown-container {
-    @include vr-spacing(mt, 1);
-    @include vr-spacing(mb, 1);
-  }
-
-  .select-list.alert {
-    @include vr-spacing(m, 0);
   }
 }
 
@@ -433,6 +419,12 @@
   }
 }
 
+.add-lines {
+  .page-option-buttons {
+    margin-top: 16px;
+  }
+}
+
 .view-activation-code {
   display: flex;
   flex-direction: column;
@@ -576,4 +568,18 @@
 
 .accordion {
   margin-bottom: 10px;
+}
+
+.kem-wrapper {
+  display: flex;
+  justify-content: space-between;
+  color: $gray-dark-1;
+
+  .kem-description {
+    width: 25em;
+  }
+
+  .kem-number {
+    @include vr-spacing(pr, 2);
+  }
 }

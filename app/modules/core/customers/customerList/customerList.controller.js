@@ -5,7 +5,7 @@
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Analytics, Authinfo, Config, customerListToggle, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, TrialService, CsdmPlaceService) {
+  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Analytics, Authinfo, Config, customerListToggle, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, TrialService) {
     $scope.isCustomerPartner = !!Authinfo.isCustomerPartner;
     $scope.isPartnerAdmin = Authinfo.isPartnerAdmin();
     $scope.activeBadge = false;
@@ -334,7 +334,7 @@
       setNotesTextOrder();
       initColumns();
       FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
-        $scope.isCareEnabled = careStatus && Authinfo.isCare();
+        $scope.isCareEnabled = careStatus;
         // FIXME: Remove this if block once the customer list refactor goes live
         // (This check is taken care of in the compactServiceColumn directive)
         if (!$scope.isCareEnabled) {
@@ -354,7 +354,7 @@
         });
       });
 
-      CsdmPlaceService.placesFeatureIsEnabled().then(function (result) {
+      FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (result) {
         $scope.placesEnabled = result;
       });
 
@@ -499,7 +499,7 @@
         textLicenseInfoNotAvailable
       ];
       textArray.sort();
-      angular.forEach(textArray, function (text, index) {
+      _.forEach(textArray, function (text, index) {
         if (text === textSuspended) {
           PartnerService.customerStatus.NOTE_CANCELED = index;
         } else if (text === textExpiringToday) {

@@ -120,7 +120,7 @@
 
     var getMediaServiceState = function () {
       var isMediaService = $q.defer();
-      if (angular.isDefined(vm.isMediaServiceEnabled)) {
+      if (!_.isUndefined(vm.isMediaServiceEnabled)) {
         isMediaService.resolve(vm.isMediaServiceEnabled);
       } else {
         FusionClusterService.serviceIsSetUp(vm.mediaServiceId).then(function (enabled) {

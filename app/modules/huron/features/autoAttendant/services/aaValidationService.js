@@ -53,12 +53,12 @@
     function isNameValidationSuccess(name, uuid) {
       var aaModel = AAModelService.getAAModel();
 
-      if (!angular.isDefined(name) || name.trim().length === 0) {
+      if (_.isUndefined(name) || name.trim().length === 0) {
         AANotificationService.error('autoAttendant.invalidBuilderNameMissing');
         return false;
       }
 
-      if (!angular.isDefined(uuid)) {
+      if (_.isUndefined(uuid)) {
         return false;
       }
 
@@ -100,7 +100,7 @@
 
         var ret = AACommonService.getInvalid(AACommonService.makeKey(whichLane, entry.routeToId));
         /* getInvalid returns false if an error, undefined if no error */
-        return angular.isUndefined(ret);
+        return _.isUndefined(ret);
 
       }
 
@@ -161,7 +161,7 @@
 
         _.find(routeToCalls, function (routeTo) {
           if (routeTo.name === entry.actions[0].name) {
-            if (angular.isUndefined(saveKey)) {
+            if (_.isUndefined(saveKey)) {
               outErrors.push({
                 msg: routeTo.errPhoneMsg,
                 key: entry.key

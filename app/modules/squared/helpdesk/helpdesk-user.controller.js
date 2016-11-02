@@ -162,7 +162,7 @@
       if (isAuthorizedForLog()) {
         HelpdeskLogService.searchForLastPushedLog(vm.userId).then(function (log) {
           vm.lastPushedLog = log;
-        }, angular.noop);
+        }, _.noop);
       }
 
       vm.cardsAvailable = true;

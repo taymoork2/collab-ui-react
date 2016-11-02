@@ -73,6 +73,9 @@
         "MODEL_CISCO_7821": {
           displayName: "Cisco 7821"
         },
+        "MODEL_CISCO_7832": {
+          displayName: "Cisco 7832"
+        },
         "MODEL_CISCO_7841": {
           displayName: "Cisco 7841"
         },
@@ -102,6 +105,12 @@
         },
         "MODEL_CISCO_8865": {
           displayName: "Cisco 8865"
+        },
+        "MODEL_CISCO_8865NR": {
+          displayName: "Cisco 8865NR"
+        },
+        "MODEL_CISCO_ATA_190": {
+          displayName: "Cisco ATA 190"
         }
       };
 
@@ -133,7 +142,7 @@
         this.isCode = true;
 
         this.url = obj.url;
-        this.type = 'cloudberry';
+        this.type = obj.type || 'cloudberry';
         this.cisUuid = obj.id;
         this.tags = getTags(obj.description);
         this.expiryTime = obj.expiryTime;
@@ -201,23 +210,20 @@
       function Place(obj) {
         this.url = obj.url;
         this.isPlace = true;
-        this.type = obj.type || 'cloudberry';
+        this.type = obj.type || (obj.machineType == 'lyra_space' ? 'cloudberry' : 'huron');
         this.readableType = getLocalizedType(obj.type);
         this.entitlements = obj.entitlements;
         this.cisUuid = obj.cisUuid || obj.uuid;
         this.displayName = obj.displayName;
         this.sipUrl = obj.sipUrl;
-        this.devices = obj.type === 'huron' ? obj.phones : convertCloudberryDevices(obj.devices);
-        this.codes = obj.type === 'huron' ? null : convertCodes(obj.codes);
         this.numbers = obj.numbers;
-        this.isUnused = obj.devices || false;
         this.canDelete = true;
         this.accountType = obj.placeType || 'MACHINE';
         this.image = "images/devices-hi/unknown.png";
       }
 
       function decodeHuronTags(description) {
-        var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
+        var tagString = _.replace(description, /\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
         return tagString;
       }
 

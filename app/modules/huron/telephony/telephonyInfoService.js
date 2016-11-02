@@ -88,7 +88,7 @@
       if (telephonyInfo.siteSteeringDigit === '') {
         getPrimarySiteInfo();
       }
-      if (angular.isUndefined(telephonyInfo.hasCustomerVoicemail)) {
+      if (_.isUndefined(telephonyInfo.hasCustomerVoicemail)) {
         checkCustomerVoicemail();
       }
 
@@ -240,7 +240,7 @@
 
               // get External (alternate) number if exists
               DirectoryNumber.getAlternateNumbers(userLine.uuid).then(function (altNumList) {
-                if (angular.isArray(altNumList) && altNumList[0]) {
+                if (_.isArray(altNumList) && altNumList[0]) {
                   this.altDnUuid = altNumList[0].uuid;
                   this.altDnPattern = altNumList[0].numMask;
                 }
@@ -397,11 +397,11 @@
     }
 
     function checkCustomerVoicemail() {
-      if (angular.isUndefined(telephonyInfo.hasCustomerVoicemail)) {
+      if (_.isUndefined(telephonyInfo.hasCustomerVoicemail)) {
         telephonyInfo.hasCustomerVoicemail = false;
       }
       return HuronCustomer.get().then(function (customer) {
-        angular.forEach(customer.links, function (service) {
+        _.forEach(customer.links, function (service) {
           if (service.rel === 'voicemail') {
             telephonyInfo.hasCustomerVoicemail = true;
           }

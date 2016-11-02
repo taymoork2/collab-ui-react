@@ -149,7 +149,7 @@
       };
       var closedHours = angular.copy(AAICalService.getDefaultDayHours());
       _.each(vm.days, function (day, index) {
-        if (angular.isUndefined(day.hours) || day.hours.length === 0) {
+        if (_.isUndefined(day.hours) || day.hours.length === 0) {
           //Inactive days will have all day closed 12:00am  - 12:00am
           dayhour.starttime = hh;
           dayhour.endtime = hh;
@@ -241,7 +241,7 @@
 
           getScheduleTitle();
 
-          if (angular.isDefined(vm.holidays) && vm.holidays.length && vm.openhours.length === 0) {
+          if (!_.isUndefined(vm.holidays) && vm.holidays.length && vm.openhours.length === 0) {
             var open24hours = AAICalService.getDefaultRange();
             _.forEach(open24hours.days, function (day) {
               day.active = true;
@@ -251,7 +251,7 @@
             vm.openhours = [open24hours];
           }
 
-          if (vm.isOpenClosed() && angular.isDefined(vm.openhours) && vm.openhours.length) {
+          if (vm.isOpenClosed() && !_.isUndefined(vm.openhours) && vm.openhours.length) {
             getHoursInfo();
             prepareDayHourReport();
           }
@@ -280,7 +280,7 @@
     }
 
     function isHolidays() {
-      return (vm.schedule === 'holidays' && angular.isDefined(vm.holidays) && vm.holidays.length) || (vm.schedule === 'closedHours' && vm.ui.holidaysValue === 'closedHours');
+      return (vm.schedule === 'holidays' && !_.isUndefined(vm.holidays) && vm.holidays.length) || (vm.schedule === 'closedHours' && vm.ui.holidaysValue === 'closedHours');
     }
 
     function formatDate(dt) {

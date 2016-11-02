@@ -61,6 +61,9 @@
     var service = {
       _init: _init,
       _track: _track,
+      _buildTrialServicesArray: _buildTrialServicesArray,
+      _buildTrialDevicesArray: _buildTrialDevicesArray,
+      _getSelectedTrialDevices: _getSelectedTrialDevices,
       checkIfTestOrg: checkIfTestOrg,
       eventNames: eventNames,
       sections: sections,
@@ -122,9 +125,16 @@
     /**
      *  Tracks the Event
      */
-    function trackEvent(sectionName, eventName, properties) {
+    function trackEvent(eventName, properties) {
+      var prefix = 'cisco_';
       properties = properties || {};
-      properties.section = sectionName;
+      //prepending properties with cisco
+      _.each(properties, function (value, key) {
+        if (key.indexOf(prefix) !== 0) {
+          delete properties[key];
+          properties[prefix + key] = value;
+        }
+      });
       return _init().then(function () {
         return service._track(eventName, properties);
       });
@@ -133,76 +143,73 @@
     /**
      * Trial Events
      */
-    function trackTrialSteps(eventName, fromState, orgId, trialData, additionalPayload) {
-      if (!eventName || !fromState || !orgId) {
-        return $q.reject('eventName, fromState or id not passed');
+    function trackTrialSteps(eventName, trialData, additionalPayload) {
+      if (!eventName) {
+        return $q.reject('eventName not passed');
       }
 
-      var event = sections.TRIAL.name + ':  ' + eventName;
       var properties = {
-        from: fromState,
-        orgId: orgId,
+        from: _.get($state, '$current.name'),
+        orgId: Authinfo.getOrgId(),
+        section: sections.TRIAL.name,
       };
-
       if (trialData) {
-        properties.servicesArray = _buildTrialDataArray(trialData.trials);
-        properties.duration = trialData.details.licenseDuration;
-        properties.licenseQty = trialData.details.licenseCount;
+        properties.servicesArray = _buildTrialServicesArray(trialData.trials);
+        properties.duration = _.get(trialData, 'details.licenseDuration');
+        properties.licenseQty = _.get(trialData, 'details.licenseCount');
+        /* TODO: add this once we have a clear strategy
+        if (properties.from === 'trialAdd.call' || properties.from === 'trialEdit.call') {
+          properties.devicesArray = _buildTrialDevicesArray(trialData.trials);
+        }*/
       }
       _.extend(properties, additionalPayload);
-      return trackEvent(sections.TRIAL.name, event, properties);
+      return trackEvent(eventName, properties);
     }
 
 
     /**
      * Partner Events
      */
-    function trackPartnerActions(state, orgId, UUID) {
-      if (!state || !UUID || !orgId) {
-        return $q.reject('state, uuid or orgId not passed');
+    function trackPartnerActions(eventName, orgId, UUID) {
+      if (!eventName || !UUID || !orgId) {
+        return $q.reject('eventName, uuid or orgId not passed');
       }
-      state = sections.PARTNER.name + ': ' + state;
       var properties = {
         uuid: UUID,
-        orgId: orgId
+        orgId: orgId,
+        section: sections.PARTNER.name
       };
-      return trackEvent(sections.PARTNER.name, state, properties);
+      return trackEvent(eventName, properties);
     }
 
     /**
     * Onboarding. First Time Wizard Events
     */
 
-    function trackUserOnboarding(state, name, orgId, additionalData) {
-      if (!state || !name || !orgId) {
-        return $q.reject('state, uuid or orgId not passed');
+    function trackUserOnboarding(eventName, name, orgId, additionalData) {
+      if (!eventName || !name || !orgId) {
+        return $q.reject('eventName, uuid or orgId not passed');
       }
 
       var properties = {
         from: name,
-        orgId: orgId
+        orgId: orgId,
+        section: sections.USER_ONBOARDING.name,
       };
 
-      if (state === sections.USER_ONBOARDING.eventNames.CMR_CHECKBOX) {
+      if (eventName === sections.USER_ONBOARDING.eventNames.CMR_CHECKBOX) {
         if (!additionalData.licenseId) {
           $q.reject('license id not passed');
         } else {
           properties.licenseId = additionalData.licenseId;
         }
       }
-      state = sections.USER_ONBOARDING.name + ': ' + state;
-      return trackEvent(sections.USER_ONBOARDING.name, state, properties);
+      return trackEvent(eventName, properties);
     }
 
-
-    /* trial */
-
-    function _buildTrialDataArray(trialServices) {
-      return _.chain(trialServices).filter({ enabled: true }).map('type').value();
-    }
 
     function trackError(errorObj, cause) {
-      trackEvent(undefined, eventNames.RUNTIME_ERROR, {
+      trackEvent(eventNames.RUNTIME_ERROR, {
         message: _.get(errorObj, 'message'),
         stack: _.get(errorObj, 'stack'),
         cause: cause,
@@ -211,6 +218,35 @@
         state: _.get($state, '$current.name')
       });
     }
+
+    /* Trial Helpers */
+
+    function _buildTrialServicesArray(trialServices) {
+      return _.chain(trialServices).filter({ enabled: true }).map('type').value();
+    }
+
+    function _buildTrialDevicesArray(trialServices) {
+      var selectedPhones = _getSelectedTrialDevices(trialServices, 'callTrial', 'phones');
+      var selectedRoomSystems = _getSelectedTrialDevices(trialServices, 'roomSystemTrial', 'roomSystems');
+      return _.concat(selectedPhones, selectedRoomSystems);
+    }
+
+    function _getSelectedTrialDevices(trialServices, trialType, deviceType) {
+      var enabledProp = trialType + '.enabled';
+      var devicesPath = 'details.' + deviceType;
+
+      if (_.get(trialServices, enabledProp)) {
+        return _.chain(trialServices[trialType])
+        .get(devicesPath, [])
+        .filter(function (device) { return device.quantity > 0; })
+        .map(function (device) { return { model: device.model, qty: device.quantity }; })
+        .value();
+      } else {
+        return [];
+      }
+    }
+
+
   }
 
 })();

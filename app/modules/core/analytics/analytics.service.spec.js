@@ -64,17 +64,42 @@ describe('Service: Analytics', function () {
 
   describe('when calling trial events', function () {
     it('should call _track when trackTrialSteps is called', function () {
-      Analytics.trackTrialSteps(Analytics.eventNames.START, 'someState', '123');
+      Analytics.trackTrialSteps(Analytics.eventNames.START, {});
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
     });
+    it('should not cause an error if duration or license count data is missing', function () {
+      var fakeTrialDataMissingDetails = {
+        randomValue: 'something',
+        details: {
+          licenseDuration: 1,
+          licenseCount: 1
+        }
+      };
+      delete fakeTrialDataMissingDetails.details;
+
+      Analytics.trackTrialSteps(Analytics.eventNames.START, 'someState', '123', fakeTrialDataMissingDetails);
+      $scope.$apply();
+      expect(Analytics.trackTrialSteps).not.toThrow();
+      expect(Analytics._track).toHaveBeenCalled();
+      var props = Analytics._track.calls.mostRecent().args[1];
+      expect(props.duration).toBeUndefined();
+      expect(props.licenseCount).toBeUndefined();
+    });
     it('should send correct trial data', function () {
-      Analytics.trackTrialSteps(Analytics.eventNames.START, 'someState', '123', trialData.enabled);
+      Analytics.trackTrialSteps(Analytics.eventNames.START, trialData.enabled);
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
       var props = Analytics._track.calls.mostRecent().args[1];
-      expect(props.duration).toBeDefined();
-      expect(props.servicesArray).toBeDefined();
+      expect(props.cisco_duration).toBeDefined();
+      expect(props.cisco_servicesArray).toBeDefined();
+    });
+    it('should return selected phone and room systems devices', function () {
+      var result = Analytics._buildTrialDevicesArray(trialData.enabled.trials);
+      $scope.$apply();
+      expect(result.length).toBe(2);
+      expect(result).toContain({ model: 'CISCO_8865', qty: 3 });
+
     });
   });
 
@@ -117,11 +142,11 @@ describe('Service: Analytics', function () {
       Analytics.trackError(error, 'some cause');
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalledWith('Runtime Error', jasmine.objectContaining({
-        message: 'Something went wrong',
-        cause: 'some cause',
-        userId: '111',
-        orgId: '999',
-        state: 'my-state'
+        cisco_message: 'Something went wrong',
+        cisco_cause: 'some cause',
+        cisco_userId: '111',
+        cisco_orgId: '999',
+        cisco_state: 'my-state'
       }));
     });
   });

@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var Masonry = require('masonry-layout');
+
   /* global Bloodhound */
 
   angular.module('Squared')
@@ -62,13 +64,13 @@
 
     function reInstantiateMasonry() {
       $timeout(function () {
-        $('.cs-card-layout').masonry('destroy');
-        $('.cs-card-layout').masonry({
+        var $cardlayout = new Masonry('.cs-card-layout', {
           itemSelector: '.cs-card',
           columnWidth: '.cs-card',
-          isResizable: true,
-          percentPosition: true
+          resize: true,
+          percentPosition: true,
         });
+        $cardlayout.layout();
       }, 0);
       vm.masonryRefreshed = true;
     }
@@ -378,14 +380,15 @@
     };
 
     $scope.getCallflowCharts = function (orgId, userId, locusId, callStart, filename, isGetCallLogs) {
-      CallflowService.getCallflowCharts(orgId, userId, locusId, callStart, filename, isGetCallLogs, function (data, status) {
-        if (data.success) {
-          WindowLocation.set(data.resultsUrl);
-        } else {
+      CallflowService.getCallflowCharts(orgId, userId, locusId, callStart, filename, isGetCallLogs)
+        .then(function (data) {
+          WindowLocation.set(_.get(data, 'resultsUrl'));
+        })
+        .catch(function (response) {
+          var status = _.get(response, 'status', 'Unknown');
           Log.debug('Failed to download the callflow results corresponding to logFile: ' + filename + '. Status: ' + status);
           Notification.notify([$translate.instant('supportPage.callflowResultsFailed') + ': ' + filename + '. Status: ' + status], 'error');
-        }
-      });
+        });
     };
 
     $scope.downloadFlow = function (downloadUrl) {
@@ -441,6 +444,7 @@
       multiSelect: false,
       rowHeight: 45,
       enableRowHeaderSelection: false,
+      enableRowSelection: false,
       enableColumnResize: true,
       enableColumnMenus: false,
       onRegisterApi: function (gridApi) {
@@ -487,4 +491,4 @@
       }]
     };
   }
-}());
+})();

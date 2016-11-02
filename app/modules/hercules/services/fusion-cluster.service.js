@@ -46,9 +46,9 @@
         .then(extractDataFromResponse);
     }
 
-    function getAll() {
+    function getAll(orgId) {
       return $http
-        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '?fields=@wide')
         .then(extractClustersFromResponse)
         .then(addServicesStatuses)
         .then(sort);
@@ -109,7 +109,7 @@
     }
 
     function extractData(response) {
-      return response.data;
+      return _.get(response, 'data');
     }
 
     function extractClustersFromResponse(response) {
@@ -117,7 +117,7 @@
     }
 
     function extractDataFromResponse(res) {
-      return res.data;
+      return _.get(res, 'data');
     }
 
     function addServicesStatuses(clusters) {
@@ -126,6 +126,10 @@
           var mgmtConnectors = _.filter(cluster.connectors, { connectorType: 'c_mgmt' });
           var ucmcConnectors = _.filter(cluster.connectors, { connectorType: 'c_ucmc' });
           var calConnectors = _.filter(cluster.connectors, { connectorType: 'c_cal' });
+          cluster.provisioning = _.map(cluster.provisioning, function (p) {
+            p.availablePackageIsUrgent = true;
+            return p;
+          });
           cluster.servicesStatuses = [{
             serviceId: 'squared-fusion-mgmt',
             state: FusionClusterStatesService.getMergedStateSeverity(mgmtConnectors),

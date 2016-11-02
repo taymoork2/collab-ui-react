@@ -64,6 +64,7 @@
     findAndPopulateExistingExpressways(vm.connectorType);
 
     vm.preregisterAndProvisionExpressway = function (connectorType) {
+      vm.loading = true;
       preregisterCluster(vm.clustername)
         .then(_.partialRight(_.get, 'id'))
         .then(_.partial(provisionConnector, connectorType))
@@ -71,6 +72,9 @@
         .then(displayResourceGroupsOrEndWizard)
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        })
+        .finally(function () {
+          vm.loading = false;
         });
     };
 
@@ -161,14 +165,19 @@
     }
 
     function provisionExpresswayWithNewConnector(clusterId, connectorType) {
+      vm.loading = true;
       FusionClusterService.provisionConnector(clusterId, connectorType)
         .then(function () {
           vm.provisioningToExistingExpresswayCompleted = true;
           setHostNameForCluster(clusterId);
-        }, function (response) {
+        })
+        .catch(function (response) {
           Notification.errorWithTrackingId(response, 'hercules.addResourceDialog.cannotProvisionConnector', {
             ConnectorName: vm.localizedConnectorName
           });
+        })
+        .finally(function () {
+          vm.loading = false;
         });
     }
 
@@ -270,8 +279,8 @@
     vm.saveResourceGroup = function () {
       if (vm.selectedResourceGroup.value !== '') {
         ResourceGroupService.assign(vm.clusterId, vm.selectedResourceGroup.value)
-          .catch(function () {
-            Notification.errorWithTrackingId('hercules.addResourceDialog.couldNotSaveResourceGroup');
+          .catch(function (error) {
+            Notification.errorWithTrackingId(error, 'hercules.addResourceDialog.couldNotSaveResourceGroup');
           })
           .finally(function () {
             vm.preregistrationCompletedGoToExpressway = true;

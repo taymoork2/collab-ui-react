@@ -12,6 +12,7 @@ import {
   ITimespan,
   ISecondaryReport,
 } from './partnerReportInterfaces';
+let Masonry = require('masonry-layout');
 
 class PartnerReportCtrl {
   // tracking when initialization has completed
@@ -79,7 +80,7 @@ class PartnerReportCtrl {
 
   // Active User Options
   public activeUserReportOptions: IReportCard = {
-    animate: false,
+    animate: true,
     description: 'activeUsers.description',
     headerTitle: 'activeUsers.activeUsers',
     id: 'activeUsers',
@@ -90,9 +91,13 @@ class PartnerReportCtrl {
   };
 
   public activeUserSecondaryReportOptions: ISecondaryReport = {
+    alternateTranslations: false,
     broadcast: 'ReportCard::UpdateSecondaryReport',
     description: 'activeUsers.mostActiveDescription',
     display: false,
+    emptyDescription: 'activeUsers.noActiveUsers',
+    errorDescription: 'activeUsers.errorActiveUsers',
+    search: false,
     state: this.ReportConstants.REFRESH,
     sortOptions: [{
       option: 'userName',
@@ -218,13 +223,13 @@ class PartnerReportCtrl {
       if (_.isArray(response.popData) && _.isArray(response.graphData)) {
         this.activeUserReportOptions.state = this.ReportConstants.EMPTY;
         this.populationReportOptions.state = this.ReportConstants.EMPTY;
-        if (angular.isArray(response.graphData) && response.graphData.length > 0) {
+        if (_.isArray(response.graphData) && response.graphData.length > 0) {
           this.activeUserReportOptions.state = this.ReportConstants.SET;
           this.setActiveUserGraph(response.graphData);
           this.activeUserSecondaryReportOptions.display = response.isActiveUsers;
 
           // only display population graph if there is data in the active user graph
-          if (angular.isArray(response.popData) && response.popData.length > 0 && response.isActiveUsers) {
+          if (_.isArray(response.popData) && response.popData.length > 0 && response.isActiveUsers) {
             this.setActivePopulationGraph(response.popData);
             this.populationReportOptions.state = this.ReportConstants.SET;
           }
@@ -270,7 +275,7 @@ class PartnerReportCtrl {
   private getRegisteredEndpoints(): void {
     this.ReportService.getRegisteredEndpoints(this.customerSelected, this.timeSelected).then((response: Array<Array<IEndpointData>>) => {
       if (_.isArray(response)) {
-        if (!angular.isArray(response) || response.length === 0) {
+        if (!_.isArray(response) || response.length === 0) {
           this.endpointReportOptions.state = this.ReportConstants.EMPTY;
         } else {
           this.endpointReportOptions.table.dummy = false;
@@ -309,7 +314,7 @@ class PartnerReportCtrl {
     return this.ReportService.getCallMetricsData(this.customerSelected, this.timeSelected).then((response: ICallMetricsData) => {
       if (response) {
         this.callMetricsReportOptions.state = this.ReportConstants.EMPTY;
-        if (angular.isArray(response.dataProvider) && response.dataProvider.length > 0) {
+        if (_.isArray(response.dataProvider) && response.dataProvider.length > 0) {
           this.setCallMetricsGraph(response);
           this.callMetricsReportOptions.state = this.ReportConstants.SET;
         }
@@ -390,7 +395,13 @@ class PartnerReportCtrl {
   private resize(delay: number): void {
     // delayed resize necessary to fix any overlapping cards on smaller screens
     this.$timeout((): void => {
-      $('.cs-card-layout').masonry('layout');
+      const $cardlayout = new Masonry('.cs-card-layout', {
+        itemSelector: '.cs-card',
+        columnWidth: '.cs-card',
+        resize: true,
+        percentPosition: true,
+      });
+      $cardlayout.layout();
     }, delay);
   }
 

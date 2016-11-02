@@ -3,7 +3,7 @@ import { CallPickupNameComponent } from './callPickupName.component';
 export default angular
   .module('huron.call-pickup.name', [
     'atlas.templates',
-    'cisco.ui',
+    'collab.ui',
     'pascalprecht.translate',
   ])
   .component('callPickupName',  new CallPickupNameComponent())

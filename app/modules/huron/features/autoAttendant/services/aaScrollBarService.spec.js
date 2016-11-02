@@ -14,7 +14,7 @@
 
       AAScrollBar = _AAScrollBar_;
 
-      container = angular.element("<><div style='height:100px;' id='builderScrollContainer' cs-scroll></div></body>");
+      container = angular.element("<><div style='height:100px;' id='builderScrollContainer' ></div></body>");
       target0 = angular.element("<div style='height:20px;' id='testTarget0'></div>");
       target1 = angular.element("<div style='height:200px;' id='testTarget1'></div>");
       container.appendTo(target0);
@@ -24,76 +24,35 @@
       $scope.$apply();
 
       // spies on jquery functions
-      spyOn($.fn, 'getNiceScroll');
       spyOn($.fn, 'animate');
     }));
 
     afterEach(function () {});
 
-    describe('resizeBuilderScrollBar: ', function () {
-
-      it('resize the scrollbar', function () {
-        expect(container.getNiceScroll).not.toHaveBeenCalled();
-
-        AAScrollBar.resizeBuilderScrollBar();
-        expect(container.getNiceScroll).not.toHaveBeenCalled();
-
-        $timeout.flush();
-        expect(container.getNiceScroll).toHaveBeenCalled();
-      });
-
-      it('resize the scrollbar after given delay', function () {
-        expect(container.getNiceScroll).not.toHaveBeenCalled();
-
-        AAScrollBar.resizeBuilderScrollBar(500);
-        expect(container.getNiceScroll).not.toHaveBeenCalled();
-        $timeout.flush(499);
-        expect(container.getNiceScroll).not.toHaveBeenCalled();
-
-        $timeout.flush();
-        expect(container.getNiceScroll).toHaveBeenCalled();
-      });
-
-    });
-
     describe('scrollBuilderToTarget:', function () {
 
       it('just return if there is no target', function () {
         AAScrollBar.scrollBuilderToTarget();
-        expect(container.getNiceScroll).not.toHaveBeenCalled();
         expect(container.animate).not.toHaveBeenCalled();
 
         $timeout.flush();
-        expect(container.getNiceScroll).not.toHaveBeenCalled();
         expect(container.animate).not.toHaveBeenCalled();
       });
 
       it('handle a valid target that does not need scrolling, return after given delay', function () {
-        AAScrollBar.scrollBuilderToTarget("#testTarget0", AAScrollBar.delay.LONG);
-        expect(container.getNiceScroll).not.toHaveBeenCalled();
-        expect(container.animate).not.toHaveBeenCalled();
-
-        $timeout.flush(AAScrollBar.delay.LONG - 1);
-        expect(container.getNiceScroll).not.toHaveBeenCalled();
+        AAScrollBar.scrollBuilderToTarget("#testTarget0");
         expect(container.animate).not.toHaveBeenCalled();
 
         $timeout.flush();
-        expect(container.getNiceScroll).toHaveBeenCalled();
         expect(container.animate).not.toHaveBeenCalled();
       });
 
       it('handle valid target that needs scrolling', function () {
-        spyOn($.fn, 'outerHeight').and.returnValue(AAScrollBar.delay.SHORT);
-
-        expect(container.getNiceScroll).not.toHaveBeenCalled();
-        expect(container.animate).not.toHaveBeenCalled();
-
+        spyOn($.fn, 'outerHeight').and.returnValue(400);
         AAScrollBar.scrollBuilderToTarget("#testTarget1");
-        expect(container.getNiceScroll).not.toHaveBeenCalled();
         expect(container.animate).not.toHaveBeenCalled();
 
         $timeout.flush();
-        expect(container.getNiceScroll).toHaveBeenCalled();
         expect(container.animate).toHaveBeenCalled();
       });
 

@@ -6,13 +6,13 @@
 
 <table class="table-condensed table">
   <thead>
-    <th>Device</th>
-    <th>Hours Used</th>
-    <th>Last Used</th>
+    <th class="extreme-table-entry">Device Name</th>
+    <th class="extreme-table-entry">Hours Used</th>
+    <th class="extreme-table-entry"># Calls</th>
   </thead>
   <tr class="no-border" ng-repeat="device in deviceUsage.leastUsedDevices">
-    <td>{{device.name}}</td>
-    <td>{{device.hours}} hours</td>
-    <td>{{device.lastTime}})</td>
+    <td class="extreme-table-entry">{{device.name}}</td>
+    <td class="extreme-table-entry">{{device.duration}}</td>
+    <td class="extreme-table-entry">{{device.calls}}</td>
   </tr>
 </table>

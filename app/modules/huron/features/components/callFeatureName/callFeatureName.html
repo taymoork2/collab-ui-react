@@ -1,0 +1,10 @@
+<div class="typeahead-large">
+  <input
+    class="form-control"
+    placeholder={{::$ctrl.placeholder}}
+    ng-model="$ctrl.name"
+    ng-change="$ctrl.onNameChange()"
+    ng-keypress="$ctrl.onHandleKeyPress($event.keyCode)"
+    focus-on>
+  <p class="input-hint">{{::$ctrl.nameHint}}</p>
+</div>

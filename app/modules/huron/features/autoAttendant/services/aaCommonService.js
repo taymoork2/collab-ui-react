@@ -143,7 +143,7 @@
       var closedHours = AutoAttendantCeMenuModelService.getCombinedMenu(aaRecord, 'closedHours');
       var holidays = AutoAttendantCeMenuModelService.getCombinedMenu(aaRecord, 'holidays');
       if (ui.isOpenHours) {
-        if (angular.isUndefined(openHours)) {
+        if (_.isUndefined(openHours)) {
           openHours = AutoAttendantCeMenuModelService.newCeMenu();
           openHours.setType('MENU_WELCOME');
         }
@@ -151,7 +151,7 @@
       }
 
       if (ui.isClosedHours || (ui.holidaysValue === 'closedHours' && ui.isHolidays)) {
-        if (angular.isUndefined(closedHours)) { //New
+        if (_.isUndefined(closedHours)) { //New
           closedHours = AutoAttendantCeMenuModelService.newCeMenu();
           closedHours.setType('MENU_WELCOME');
         }
@@ -161,7 +161,7 @@
       }
 
       if (ui.isHolidays && ui.holidaysValue !== 'closedHours') {
-        if (angular.isUndefined(holidays)) { //New
+        if (_.isUndefined(holidays)) { //New
           holidays = AutoAttendantCeMenuModelService.newCeMenu();
           holidays.setType('MENU_WELCOME');
         }

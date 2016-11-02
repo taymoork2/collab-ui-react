@@ -147,7 +147,7 @@
         if (secondPass) {
           // This means we've done a refresh and it didn't help so we give up with a cryptic error message
           service.status = { state: 'unknown', entitled: true };
-          Notification.errorWithTrackingId('hercules.userSidepanel.refreshUserDidNoGood');
+          Notification.error('hercules.userSidepanel.refreshUserDidNoGood');
         } else {
           refreshUserInUss();
         }
@@ -290,8 +290,8 @@
         $scope.setShouldShowButtons();
         $scope.resourceGroup.cannotFindResouceGroup = false;
         Notification.success('hercules.resourceGroups.resourceGroupSaved');
-      }).catch(function () {
-        Notification.errorWithTrackingId('hercules.resourceGroups.failedToSetGroup');
+      }).catch(function (error) {
+        Notification.errorWithTrackingId(error, 'hercules.resourceGroups.failedToSetGroup');
       }).finally(function () {
         $scope.resourceGroup.saving = false;
         $scope.saving = $scope.savingEntitlements;

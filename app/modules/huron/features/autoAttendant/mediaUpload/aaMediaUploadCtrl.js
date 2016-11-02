@@ -42,7 +42,7 @@
     //////////////////////////////////////////////////////
 
     function upload(file) {
-      if (angular.isDefined(file)) {
+      if (!_.isUndefined(file)) {
         if (AAMediaUploadService.validateFile(file.name)) {
           if (isOverwrite()) {
             confirmOverwrite(file);
@@ -108,7 +108,7 @@
 
     function uploadProgress(evt) {
       //dont divide by zero for progress calculation
-      if (angular.isDefined(evt) && !_.isEqual(evt.total, 0)) {
+      if (!_.isUndefined(evt) && !_.isEqual(evt.total, 0)) {
         vm.progress = parseInt((100.0 * ((evt.loaded - 1) / evt.total)), 10);
       } else {
         vm.progress = 0;
@@ -168,12 +168,12 @@
 
     //roll back, revert if history exists, else hard reset
     function rollBack() {
-      if (angular.isDefined(uploadServProm)) {
+      if (!_.isUndefined(uploadServProm)) {
         uploadServProm.abort();
         uploadServProm = undefined;
       }
       var playAction = getPlayAction(vm.menuEntry);
-      if (angular.isDefined(vm.actionCopy)) {
+      if (!_.isUndefined(vm.actionCopy)) {
         revert(playAction);
       } else {
         reset(playAction);
@@ -186,7 +186,7 @@
         vm.uploadFile = desc.uploadFile;
         vm.uploadDate = desc.uploadDate;
         vm.uploadDuration = desc.uploadDuration;
-        if (angular.isDefined(playAction)) {
+        if (!_.isUndefined(playAction)) {
           playAction.setDescription(vm.actionCopy.description);
           playAction.setValue(vm.actionCopy.value);
         }
@@ -201,7 +201,7 @@
       vm.uploadFile = '';
       vm.uploadDate = '';
       vm.uploadDuration = '';
-      if (angular.isDefined(playAction)) {
+      if (!_.isUndefined(playAction)) {
         playAction.setDescription('');
         playAction.setValue('');
       }
@@ -214,7 +214,7 @@
     function setActionCopy() {
       if (!modalOpen) {
         var playAction = getPlayAction(vm.menuEntry);
-        if (angular.isDefined(playAction)) {
+        if (!_.isUndefined(playAction)) {
           if (!_.isEmpty(playAction.getValue())) {
             vm.actionCopy = {};
             vm.actionCopy.description = playAction.getDescription();
@@ -280,7 +280,7 @@
     function populateUiModel() {
       gatherMediaSource();
       var action = getPlayAction(vm.menuEntry);
-      if (angular.isDefined(action)) {
+      if (!_.isUndefined(action)) {
         setUpEntry(action);
       } else {
         // should not happen, created earlier but ..
@@ -294,7 +294,7 @@
     }
 
     $scope.$on('$destroy', function () {
-      if (angular.isDefined(uploadServProm)) {
+      if (!_.isUndefined(uploadServProm)) {
         modalCanceled = true;
         uploadServProm.abort();
       }

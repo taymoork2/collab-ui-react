@@ -28,7 +28,7 @@ describe('Controller: aaBuilderNameCtrl', function () {
       _resource.setId(rawCeInfo.assignedResources[j].id);
       _resource.setTrigger(rawCeInfo.assignedResources[j].trigger);
       _resource.setType(rawCeInfo.assignedResources[j].type);
-      if (angular.isDefined(rawCeInfo.assignedResources[j].number)) {
+      if (!_.isUndefined(rawCeInfo.assignedResources[j].number)) {
         _resource.setNumber(rawCeInfo.assignedResources[j].number);
       }
       _ceInfo.addResource(_resource);

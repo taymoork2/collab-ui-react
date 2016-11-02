@@ -26,7 +26,8 @@
     vm.isLoading = false;
     vm.isDisabled = true;
 
-    $scope.returnInternalNumberlist = CommonLineService.returnInternalNumberlist;
+    $scope.returnInternalNumberlist = CommonLineService.returnInternalNumberList;
+    $scope.returnExternalNumberList = CommonLineService.returnExternalNumberList;
     $scope.syncGridDidDn = syncGridDidDn;
     $scope.checkDnOverlapsSteeringDigit = CommonLineService.checkDnOverlapsSteeringDigit;
 
@@ -68,7 +69,7 @@
           CsdmDataModelService.createCmiPlace(entity.name, entity.assignedDn.pattern, placeEntity.externalNumber)
             .then(successcb)
             .catch(function (error) {
-              Notification.errorResponse(error, 'placesPage.placeError');
+              Notification.errorResponse(error, 'addDeviceWizard.assignPhoneNumber.placeError');
             });
         });
       }
@@ -102,6 +103,10 @@
         CsdmDataModelService.updateCloudberryPlace(vm.wizardData.selectedPlace, entitlements, entity.assignedDn.pattern, placeEntity.externalNumber)
           .then(function () {
             $scope.$dismiss();
+            Notification.success("addDeviceWizard.assignPhoneNumber.linesSaved");
+          })
+          .catch(function (error) {
+            Notification.errorResponse(error, 'addDeviceWizard.assignPhoneNumber.placeEditError');
           });
       });
     };
@@ -241,12 +246,12 @@
     var externalExtensionTemplate = '<div ng-show="row.entity.didDnMapMsg === undefined"> ' +
       '<cs-select name="externalNumber" ' +
       'ng-model="row.entity.externalNumber" options="grid.appScope.externalNumberPool" ' +
-      'refresh-data-fn="grid.appScope.loadExternalNumberPool(filter)" wait-time="0" ' +
+      'refresh-data-fn="grid.appScope.returnExternalNumberList(filter)" wait-time="0" ' +
       'placeholder= "placeholder" input-placeholder="inputPlaceholder" ' +
       'on-change-fn="grid.appScope.syncGridDidDn(row.entity, \'externalNumber\')"' +
       'labelfield="pattern" valuefield="uuid" required="true" filter="true"> </cs-select></div> ' +
       '<div ng-show="row.entity.didDnMapMsg !== undefined"> ' +
-      '<cs-select name="grid.appScope.noExternalNumber" ' +
+      '<cs-select name="noExternalNumber" ' +
       'ng-model="row.entity.externalNumber" options="grid.appScope.externalNumberPool" class="select-warning"' +
       'labelfield="pattern" valuefield="uuid" required="true" filter="true"> </cs-select>' +
       '<span class="warning did-map-error">{{row.entity.didDnMapMsg | translate }}</span> </div> ';

@@ -17,14 +17,13 @@ require('bmmp/cisco-bmmp.js');
 
 require('typeahead.js/dist/typeahead.bundle.js');
 require('draggable.js/draggable.js');
-require('jquery.nicescroll/jquery.nicescroll.js');
 
 require('ng-csv/build/ng-csv.js');
 
 require('api-check/dist/api-check.js');
 require('angular-formly/dist/formly.js');
-require('collab-ui-angular/dist/collab-ui.js');
-require('collab-ui-angular/dist/collab-formly.js');
+require('collab-ui-ng/dist/collab-ui-ng');
+require('collab-ui-formly/dist/collab-formly.js');
 
 require('angular-ui-grid/ui-grid.js');
 
@@ -40,10 +39,6 @@ require('angularjs-toaster/toaster.js');
 require('ng-file-upload/dist/ng-file-upload.js');
 
 require('jstimezonedetect');
-
-require('masonry-layout/dist/masonry.pkgd.js');
-
-require('imagesloaded/imagesloaded.pkgd.js');
 
 require('ng-tags-input/build/ng-tags-input.js');
 

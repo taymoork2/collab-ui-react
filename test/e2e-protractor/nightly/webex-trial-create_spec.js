@@ -20,9 +20,10 @@ describe('WebEx Trial Creation', function () {
     utils.setCheckboxIfDisplayed(partner.squaredUCTrialCheckbox, false, 100);
     utils.setCheckboxIfDisplayed(partner.careTrialCheckbox, false, 100);
     utils.setCheckboxIfDisplayed(partner.roomSystemsTrialCheckbox, false, 100);
+    utils.setCheckboxIfDisplayed(partner.sparkBoardTrialCheckbox, false, 100);
     utils.click(partner.startTrialButton);
 
-    // send in well know in-use URL 
+    // send in well know in-use URL
     utils.sendKeys(partner.webexSiteURL, 'cisco.webex.com' + protractor.Key.ENTER);
     utils.waitClass(partner.webexSiteURL, 'ng-invalid-site-url');
     utils.clear(partner.webexSiteURL);
@@ -80,12 +81,12 @@ describe('WebEx Trial Creation', function () {
       utils.click(wizard.saveBtn);
 
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
-      utils.expectTextToBeSet(wizard.sipURLExample, 'These subdomains will be reserved for you:'); 
+      utils.expectTextToBeSet(wizard.sipURLExample, 'These subdomains will be reserved for you:');
       utils.sendKeys(wizard.sipDomain, partner.newTrial.sipDomain + protractor.Key.ENTER);
       utils.click(wizard.saveCheckbox);
       utils.click(wizard.nextBtn);
       notifications.assertSuccess('The Spark SIP Address has been successfully saved');
-      
+
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
       utils.click(wizard.nextBtn);
 
