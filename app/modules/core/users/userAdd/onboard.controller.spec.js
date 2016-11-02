@@ -736,7 +736,7 @@ describe('OnboardCtrl: Ctrl', function () {
     beforeEach(initCurrentUserAndController);
 
     beforeEach(function () {
-      this.$scope.$dismiss = angular.noop;
+      this.$scope.$dismiss = _.noop;
       this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(200, '')));
     });
 

@@ -20,7 +20,7 @@
 
       if (_.isString(code)) {
         code = code.toLowerCase();
-        angular.forEach(CountryCodes, function (value) {
+        _.forEach(CountryCodes, function (value) {
           if (code === value.code) {
             deferred.resolve(value);
             isCountryCodeFound = true;

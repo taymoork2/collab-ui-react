@@ -2,9 +2,9 @@
   'use strict';
 
   /* @ngInject */
-  function UpgradeNowControllerV2(MediaClusterServiceV2, Notification, $modalInstance, clusterId, XhrNotificationService, $translate) {
+  function UpgradeNowControllerV2(MediaClusterServiceV2, Notification, $modalInstance, clusterId, $translate) {
     var vm = this;
-    //clusterId, connector, MediaClusterServiceV2, XhrNotificationService, $translate, $modalInstance, Notification
+    //clusterId, connector, MediaClusterServiceV2, $translate, $modalInstance, Notification
 
     vm.upgrade = function () {
       vm.saving = true;
@@ -16,9 +16,9 @@
           Notification.success('mediaFusion.upgradeClusters.success');
         }, function (err) {
           vm.error = $translate.instant('mediaFusion.upgradeClusters.error', {
-            //clusterName: cluster.name,
-            errorMessage: XhrNotificationService.getMessages(err).join(', ')
+            //clusterName: cluster.name
           });
+          Notification.errorWithTrackingId(err, vm.error);
           vm.saving = false;
         });
       return false;

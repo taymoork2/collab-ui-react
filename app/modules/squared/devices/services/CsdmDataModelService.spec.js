@@ -833,7 +833,7 @@ describe('Service: CsdmDataModelService', function () {
       $httpBackend.expectGET(devicesUrl);
       $rootScope.$apply();
 
-      CsdmDataModelService.devicePollerOn('data', angular.noop, {
+      CsdmDataModelService.devicePollerOn('data', _.noop, {
         scope: scope
       });
 

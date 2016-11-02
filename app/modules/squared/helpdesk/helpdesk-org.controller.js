@@ -140,7 +140,7 @@
                 displayName: displayName
               });
             }
-          }, angular.noop);
+          }, _.noop);
         });
       }
     }
@@ -186,7 +186,7 @@
           vm.callCard = HelpdeskCardsOrgService.getCallCardForOrg(vm.org, licenses);
           vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
           vm.licenseUsageReady = true;
-        }, angular.noop);
+        }, _.noop);
       }
     }
 

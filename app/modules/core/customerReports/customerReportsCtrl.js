@@ -46,13 +46,7 @@
     vm.displayActiveLineGraph = false;
 
     // Active User Options
-    var activeArray = [{
-      value: 0,
-      label: $translate.instant('activeUsers.allUsers')
-    }, {
-      value: 1,
-      label: $translate.instant('activeUsers.activeUsers')
-    }];
+    var activeArray = _.cloneDeep(ReportConstants.activeFilter);
     vm.activeOptions = {
       animate: true,
       description: 'activeUsers.customerPortalDescription',
@@ -133,16 +127,7 @@
 
     var mediaChart = null;
     var mediaData = [];
-    var mediaArray = [{
-      value: 0,
-      label: $translate.instant('reportsPage.allCalls')
-    }, {
-      value: 1,
-      label: $translate.instant('reportsPage.audioCalls')
-    }, {
-      value: 2,
-      label: $translate.instant('reportsPage.videoCalls')
-    }];
+    var mediaArray = _.cloneDeep(ReportConstants.mediaFilter);
     vm.mediaOptions = {
       animate: true,
       description: 'mediaQuality.descriptionCustomer',

@@ -1007,7 +1007,7 @@
       var isVoiceUser = false;
       var isValidUser = true;
 
-      angular.forEach(userInfo.entitlements, function (e) {
+      _.forEach(userInfo.entitlements, function (e) {
         if (e === 'ciscouc') {
           isVoiceUser = true;
         }
@@ -1025,14 +1025,14 @@
       }
       if (isValidUser) {
         // Exclude selection of already selected users
-        angular.forEach(vm.selectedUsers, function (user) {
+        _.forEach(vm.selectedUsers, function (user) {
           if (user.uuid === userInfo.uuid) {
             isValidUser = false;
           }
         });
         if (isValidUser) {
           //Exclude current sharedLine users
-          angular.forEach(vm.sharedLineUsers, function (user) {
+          _.forEach(vm.sharedLineUsers, function (user) {
             if (user.uuid === userInfo.uuid) {
               isValidUser = false;
             }
@@ -1048,7 +1048,7 @@
       var promises = [];
       var promise;
       if (vm.selectedUsers) {
-        angular.forEach(vm.selectedUsers, function (user) {
+        _.forEach(vm.selectedUsers, function (user) {
           promise = SharedLineInfoService.getUserLineCount(user.uuid)
             .then(function (totalLines) {
               if (totalLines < vm.maxLines) {
@@ -1133,14 +1133,14 @@
 
     function removeLocal(userUuid) {
       var isRemoveLocal = false;
-      angular.forEach(vm.selectedUsers, function (user, index) {
+      _.forEach(vm.selectedUsers, function (user, index) {
         if (userUuid === user.uuid) {
           isRemoveLocal = true;
           vm.selectedUsers.splice(index, 1);
         }
       });
       if (isRemoveLocal) {
-        angular.forEach(vm.sharedLineUsers, function (user, index) {
+        _.forEach(vm.sharedLineUsers, function (user, index) {
           if (userUuid === user.uuid) {
             vm.sharedLineUsers.splice(index, 1);
           }
@@ -1156,7 +1156,7 @@
       var promises = [];
       if (vm.sharedLineUsers && vm.sharedLineUsers.length > 1 && deleteLineSettings) {
         //Disassociate SharedLine user on toggle/delete line
-        angular.forEach(vm.sharedLineUsers, function (user) {
+        _.forEach(vm.sharedLineUsers, function (user) {
           if (user.dnUsage !== 'Primary' && user.uuid !== vm.currentUser.id && user.dnUuid === vm.directoryNumber.uuid) {
             promise = disassociateSharedLineUser(user, true);
             promises.push(promise);
@@ -1213,7 +1213,7 @@
       var sharedCount = 0;
       var deviceCount = 0;
 
-      angular.forEach(userDeviceList, function (device) {
+      _.forEach(userDeviceList, function (device) {
         if (device.userUuid == userUuid) {
           deviceCount++;
           if (device.isSharedLine) {
@@ -1242,7 +1242,7 @@
     function getSharedLinePrimaryUserName() {
       var sharedLinePrimaryUserName = '';
       if (vm.telephonyInfo.currentDirectoryNumber.dnSharedUsage && vm.telephonyInfo.currentDirectoryNumber.dnSharedUsage.indexOf('Shared') !== -1) {
-        angular.forEach(vm.sharedLineUsers, function (sharedLineUser) {
+        _.forEach(vm.sharedLineUsers, function (sharedLineUser) {
           if (sharedLineUser.dnUsage === 'Primary') {
             sharedLinePrimaryUserName = sharedLineUser.name;
           }

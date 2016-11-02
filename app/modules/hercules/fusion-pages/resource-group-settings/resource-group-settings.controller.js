@@ -57,7 +57,7 @@
           vm.allowRemove = _.every(clusters, function (c) {
             return c.resourceGroupId !== $stateParams.id;
           });
-        }, angular.noop);
+        }, _.noop);
     }
 
     function setGroupName(newName) {

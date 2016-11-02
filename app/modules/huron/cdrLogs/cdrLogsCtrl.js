@@ -273,8 +273,8 @@
 
     function addNames(cdrArray) {
       var x = 0;
-      angular.forEach(cdrArray, function (cdr) {
-        angular.forEach(cdr, function (item) {
+      _.forEach(cdrArray, function (cdr) {
+        _.forEach(cdr, function (item) {
           item.name = "call0CDR" + x;
           x++;
         });
@@ -337,8 +337,8 @@
       vm.selectedCDR = selectedCDR;
       var callCopy = angular.copy(call);
 
-      angular.forEach(callCopy, function (item) {
-        angular.forEach(item, function (cdr) {
+      _.forEach(callCopy, function (item) {
+        _.forEach(item, function (cdr) {
           delete cdr['name'];
         });
       });

@@ -60,7 +60,7 @@
       }
       Orgservice.getHybridServiceAcknowledged().then(function (response) {
         if (response.status === 200) {
-          angular.forEach(response.data.items, function (item) {
+          _.forEach(response.data.items, function (item) {
             if (!item.acknowledged) {
               if (item.id === Config.entitlements.fusion_cal) {
                 vm.notifications.push(OverviewNotificationFactory.createCalendarNotification());

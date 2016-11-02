@@ -168,7 +168,7 @@
           return true;
         } else {
           var found = false;
-          angular.forEach(vm.model.numberRanges, function (range) {
+          _.forEach(vm.model.numberRanges, function (range) {
             if (range[property] === value) {
               found = true;
             }
@@ -498,7 +498,7 @@
           return vm.hideFieldInternalNumberRange;
         }
       },
-      controller: function ($scope) {
+      controller: /* @ngInject */ function ($scope) {
         $scope.$watch(function () {
           return vm.form.$invalid;
         }, function () {
@@ -534,7 +534,7 @@
         'templateOptions.isWarn': vm.siteSteeringDigitWarningValidation,
         'templateOptions.isError': vm.siteAndSteeringDigitErrorValidation
       },
-      controller: function ($scope) {
+      controller: /* @ngInject */ function ($scope) {
         _buildVoicemailPrefixOptions($scope);
       }
     }];
@@ -629,7 +629,7 @@
           }
         }
       },
-      controller: function ($scope) {
+      controller: /* @ngInject */ function ($scope) {
         $scope.$watchCollection(function () {
           return vm.externalNumberPool;
         }, function (externalNumberPool) {
@@ -692,7 +692,7 @@
       var errors = [];
       return HuronCustomer.get().then(function (customer) {
         vm.customer = customer;
-        angular.forEach(customer.links, function (service) {
+        _.forEach(customer.links, function (service) {
           if (service.rel === 'voicemail') {
             vm.hasVoicemailService = true;
           } else if (service.rel === 'voice') {
@@ -1356,7 +1356,7 @@
       function saveInternalNumbers() {
         return $q.when(true).then(function () {
           if (vm.hideFieldInternalNumberRange === false && (_.isArray(_.get(vm, 'model.displayNumberRanges')))) {
-            angular.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
+            _.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
               if (_.isUndefined(internalNumberRange.uuid)) {
                 return createInternalNumbers(internalNumberRange);
               } else if (vm.extensionLengthChanged) {
@@ -1473,7 +1473,6 @@
             extensionLength9 = '999';
             break;
         }
-
         var values = [];
         _.forEach(vm.steeringDigits, function (digit) {
           values.push({

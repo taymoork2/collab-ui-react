@@ -258,7 +258,7 @@
         'time': timeStamp
       };
       var exportFields = [];
-      angular.forEach(graphs, function (value) {
+      _.forEach(graphs, function (value) {
         if (value.title !== average_utilzation) {
           columnNames[value.valueField] = value.title + ' ' + 'Utilization';
         } else {
@@ -365,7 +365,7 @@
         legend = angular.copy(availabilityLegendCluster);
       }
       if (!_.isUndefined(data.data[0].isDummy) && data.data[0].isDummy) {
-        angular.forEach(legend, function (value, key) {
+        _.forEach(legend, function (value, key) {
           legend[key].color = '#AAB3B3';
         });
       }

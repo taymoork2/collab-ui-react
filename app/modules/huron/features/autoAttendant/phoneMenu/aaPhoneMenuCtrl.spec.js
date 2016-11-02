@@ -23,11 +23,11 @@ describe('Controller: AAPhoneMenuCtrl', function () {
 
   function raw2MenuEntry(raw) {
     var _menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-    angular.extend(_menuEntry, raw);
+    _.assign(_menuEntry, raw);
     _menuEntry.actions = [];
     for (var j = 0; j < raw.actions.length; j++) {
       var _action = AutoAttendantCeMenuModelService.newCeActionEntry();
-      angular.extend(_action, raw.actions[j]);
+      _.assign(_action, raw.actions[j]);
       _menuEntry.addAction(_action);
     }
     return _menuEntry;
@@ -35,7 +35,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
 
   function raw2Menu(raw) {
     var _menu = AutoAttendantCeMenuModelService.newCeMenu();
-    angular.extend(_menu, raw);
+    _.assign(_menu, raw);
     _menu.headers = [];
     _menu.entries = [];
     for (var i = 0; i < raw.headers.length; i++) {

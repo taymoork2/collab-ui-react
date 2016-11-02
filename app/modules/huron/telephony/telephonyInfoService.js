@@ -401,7 +401,7 @@
         telephonyInfo.hasCustomerVoicemail = false;
       }
       return HuronCustomer.get().then(function (customer) {
-        angular.forEach(customer.links, function (service) {
+        _.forEach(customer.links, function (service) {
           if (service.rel === 'voicemail') {
             telephonyInfo.hasCustomerVoicemail = true;
           }

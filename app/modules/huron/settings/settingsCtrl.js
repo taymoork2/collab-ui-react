@@ -183,7 +183,7 @@
           return true;
         } else {
           var found = false;
-          angular.forEach(vm.model.numberRanges, function (range) {
+          _.forEach(vm.model.numberRanges, function (range) {
             if (range[property] === value) {
               found = true;
             }
@@ -241,9 +241,10 @@
       if (_.get(vm, 'model.site.siteSteeringDigit.siteDialDigit') === _.get(vm, 'model.site.steeringDigit')) {
         scope.fields[0].formControl.$setValidity('', false);
         return true;
+      } else {
+        scope.fields[0].formControl.$setValidity('', true);
+        return false;
       }
-      scope.fields[0].formControl.$setValidity('', true);
-      return false;
     };
 
     vm.steeringDigitWarningValidation = function () {
@@ -1829,8 +1830,8 @@
       });
     }
 
-    function _buildVoicemailPrefixOptions($scope) {
-      $scope.$watchCollection(function () {
+    function _buildVoicemailPrefixOptions(localScope) {
+      localScope.$watchCollection(function () {
         return [vm.model.site.siteSteeringDigit, vm.model.site.extensionLength, vm.model.site.steeringDigit];
       }, function () {
         var extensionLength0, extensionLength9;
@@ -1874,7 +1875,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (extensionList) {
-          if (_.isArray(extensionList) && extensionList.length > 0) {
+          if (angular.isArray(extensionList) && extensionList.length > -1) {
             vm.model.disableExtensions = true;
           }
         });

@@ -287,7 +287,7 @@
     }
 
     function replaceOrTweakServices(res) {
-      var authData = res.data;
+      var authData = _.get(res, 'data');
       var isAdmin = _.intersection(['Full_Admin', 'PARTNER_ADMIN', 'Readonly_Admin', 'PARTNER_READ_ONLY_ADMIN'], authData.roles).length;
       if (isAdmin) {
         return replaceServices(authData);

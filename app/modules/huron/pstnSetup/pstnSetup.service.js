@@ -146,7 +146,7 @@
 
     function getCarrierDetails(carriers) {
       var promises = [];
-      angular.forEach(carriers, function (carrier) {
+      _.forEach(carriers, function (carrier) {
         var promise = TerminusCarrierService.get({
           carrierId: carrier.uuid
         }).$promise;

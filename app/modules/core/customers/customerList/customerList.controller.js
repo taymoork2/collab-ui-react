@@ -499,7 +499,7 @@
         textLicenseInfoNotAvailable
       ];
       textArray.sort();
-      angular.forEach(textArray, function (text, index) {
+      _.forEach(textArray, function (text, index) {
         if (text === textSuspended) {
           PartnerService.customerStatus.NOTE_CANCELED = index;
         } else if (text === textExpiringToday) {

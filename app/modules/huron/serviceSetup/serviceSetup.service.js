@@ -56,7 +56,7 @@
           order: 'pattern',
           pattern: patternQuery
         }, angular.bind(this, function (extPool) {
-          angular.forEach(extPool, function (extNum) {
+          _.forEach(extPool, function (extNum) {
             extNumPool.push({
               uuid: extNum.uuid,
               pattern: extNum.pattern

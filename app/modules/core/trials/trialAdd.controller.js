@@ -729,7 +729,7 @@
           return response;
         })
         .then(function (response) {
-          if (vm.callTrial.enabled || vm.roomSystemTrial.enabled) {
+          if (vm.callTrial.enabled) {
             return HuronCustomer.create(vm.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
                 vm.loading = false;
@@ -816,7 +816,7 @@
       sendToAnalytics(Analytics.eventNames.CANCEL_MODAL);
     }
     function sendToAnalytics(eventName, extraData) {
-      TrialService.sendToAnalytics(eventName, vm.trialData, extraData);
+      Analytics.trackTrialSteps(eventName, vm.trialData, extraData);
     }
   }
 })();

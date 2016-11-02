@@ -669,7 +669,7 @@
         })
         .then(function () {
           vm.loading = false;
-          angular.extend($stateParams.currentTrial, vm.currentTrial);
+          _.assign($stateParams.currentTrial, vm.currentTrial);
           Notification.success('trialModal.editSuccess', {
             customerName: vm.currentTrial.customerName
           });
@@ -836,7 +836,7 @@
       sendToAnalytics(Analytics.eventNames.CANCEL_MODAL);
     }
     function sendToAnalytics(eventName, extraData) {
-      TrialService.sendToAnalytics(eventName, vm.trialData, extraData);
+      Analytics.trackTrialSteps(eventName, vm.trialData, extraData);
     }
   }
 })();
