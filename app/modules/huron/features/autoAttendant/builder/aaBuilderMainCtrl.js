@@ -603,11 +603,15 @@
       if (vm.ui.aaTemplate && vm.ui.aaTemplate === 'BusinessHours') {
         vm.save8To5Schedule(vm.ui.ceInfo.name).then(vm.saveCeDefinition).catch(vm.delete8To5Schedule);
       } else {
-        vm.saveAARecords().then(function () {
-          // Sucessfully created new CE Definition, time to move from Name-assignment page
-          // to the overlay panel.
-          vm.isAANameDefined = true;
-        });
+        vm.saveAARecords().then(
+          function () {
+            // Sucessfully created new CE Definition, time to move from Name-assignment page
+            // to the overlay panel.
+            vm.isAANameDefined = true;
+          },
+          function () {
+            $rootScope.$broadcast('AACreationFailed');
+          });
       }
     });
 

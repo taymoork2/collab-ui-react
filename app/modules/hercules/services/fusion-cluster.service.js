@@ -126,10 +126,6 @@
           var mgmtConnectors = _.filter(cluster.connectors, { connectorType: 'c_mgmt' });
           var ucmcConnectors = _.filter(cluster.connectors, { connectorType: 'c_ucmc' });
           var calConnectors = _.filter(cluster.connectors, { connectorType: 'c_cal' });
-          cluster.provisioning = _.map(cluster.provisioning, function (p) {
-            p.availablePackageIsUrgent = true;
-            return p;
-          });
           cluster.servicesStatuses = [{
             serviceId: 'squared-fusion-mgmt',
             state: FusionClusterStatesService.getMergedStateSeverity(mgmtConnectors),
