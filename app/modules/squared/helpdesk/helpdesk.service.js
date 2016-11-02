@@ -11,6 +11,7 @@
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
       searchOrders: searchOrders,
+      resendAdminEmail: resendAdminEmail,
       getUser: getUser,
       getOrg: getOrg,
       isEmailBlocked: isEmailBlocked,
@@ -34,7 +35,6 @@
       getInviteResendUrl: getInviteResendUrl,
       getInviteResendPayload: getInviteResendPayload,
       invokeInviteEmail: invokeInviteEmail,
-      searchOrder: searchOrder,
       getAccount: getAccount,
       getOrder: getOrder,
       getEmailStatus: getEmailStatus
@@ -194,6 +194,16 @@
 
       return cancelableHttpGET(urlBase + 'commerce/orders/search?webOrderId=' + encodeURIComponent(searchString))
         .then(extractData);
+    }
+
+    function resendAdminEmail(orderUUID, toCustomer) {
+      var url;
+      if (toCustomer === true) {
+        url = urlBase + "helpdesk/orders/" + orderUUID + "/actions/resendcustomeradminemail/invoke";
+      } else {
+        url = urlBase + "helpdesk/orders/" + orderUUID + "/actions/resendpartneradminemail/invoke";
+      }
+      return $http.post(url).then(extractData);
     }
 
     function getUser(orgId, userId) {
@@ -478,28 +488,22 @@
       return HelpdeskHttpRequestCanceller.empty();
     }
 
-    function searchOrder(orderId) {
-      return $http
-        .get(urlBase + 'commerce/orders/search?webOrderId=' + orderId)
-        .then(extractData);
-    }
-
     function getAccount(accountId) {
       return $http
-        .get(urlBase + 'accounts/' + accountId)
+        .get(urlBase + 'accounts/' + encodeURIComponent(accountId))
         .then(extractData);
     }
 
     function getOrder(orderId) {
       return $http
-        .get(urlBase + 'orders/' + orderId)
+        .get(urlBase + 'orders/' + encodeURIComponent(orderId))
         .then(extractData);
     }
 
     function getEmailStatus(email) {
       return $http
-        .get(urlBase + "email?email=" + email)
-        .then(extractData);
+        .get(urlBase + "email?email=" + encodeURIComponent(email))
+        .then(extractItems);
     }
 
     return service;

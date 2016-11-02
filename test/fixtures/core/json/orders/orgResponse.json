@@ -1,0 +1,25 @@
+{
+  "id": "bbbc797b-f8a4-424b-9e1d-927e222f532e",
+  "displayName": "All_Pizza_And_Ice_Cream_You_Can_Eatery",
+  "meta": {
+    "created": "2016-10-20T18:22:31.093Z",
+    "uri": "https://identitysj-s.webex.com/organization/scim/v1/Orgs/bbbc797b-f8a4-424b-9e1d-927e222f532e"
+  },
+  "zone": "AllZone",
+  "ssoEnabled": false,
+  "dirsyncEnabled": false,
+  "schemas": ["urn:cisco:codev:identity:organization:core:1.0"],
+  "services": ["squared-fusion-cal", "squared-call-initiation", "spark-admin", "atlas-portal", "spark", "squared-fusion-uc", "squared-fusion-ec", "squared-fusion-mgmt", "meetings", "squared-room-moderation", "squared-onbehalf-of", "webex-squared"],
+  "selfSubscribeServices": ["squared-fusion-cal", "squared-call-initiation", "spark-admin", "spark", "squared-fusion-ec", "squared-fusion-mgmt", "squared-fusion-uc", "meetings", "squared-onbehalf-of", "squared-room-moderation", "webex-squared"],
+  "managedBy": [{
+  "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
+  "roles": ["id_full_admin"]
+  }, {
+  "orgId": "453e0f7f-9117-4fd9-8369-71d86cdfeb25",
+  "roles": ["id_full_admin"]
+  }],
+  "isPartner": false,
+  "isTestOrg": false,
+  "orgSettings": ["{\"reportingSiteUrl\":\"\",\"reportingSiteDesc\":\"\",\"allowOnBehalfFromDifferentOrg\":true,\"isCiscoSupport\":false,\"isCiscoHelp\":false,\"logoUrl\":\"https://2018215606e6c131b7de-c50360586b2877758e015bf318f78e03.ssl.cf1.rackcdn.com/453e0f7f-9117-4fd9-8369-71d86cdfeb25/branding/logos/customerLogo.png\",\"usePartnerLogo\":false,\"allowCustomerLogos\":false,\"supportProviderLogoUrl\":\"https://2018215606e6c131b7de-c50360586b2877758e015bf318f78e03.ssl.cf1.rackcdn.com/c1e59258-29e1-42d7-bfa7-84ab26632b46/branding/logos/customerLogo.png\",\"supportProviderCompanyName\":\"DND - CS Rep Integration Test Org\",\"isEFT\":false,\"allowReadOnlyAccess\":false,\"calSvcDisableEmailSendingToEndUser\":false,\"allowCrashLogUpload\":true,\"useCiscoUrlForCloudFiles\":false,\"kmsServer\":\"example.com\",\"sparkDataRetentionDays\":-1}"],
+  "licenses": []
+}
