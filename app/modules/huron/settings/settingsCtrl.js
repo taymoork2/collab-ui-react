@@ -8,13 +8,20 @@
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService,
-    ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing, VoicemailMessageAction) {
+    ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing, VoicemailMessageAction, FeatureToggleService, Config) {
     var vm = this;
     vm.loading = true;
 
     vm.NATIONAL = 'national';
     vm.LOCAL = 'local';
-
+    vm.isTimezoneAndVoicemail = function (enabled) {
+      return Authinfo.getLicenses().filter(function (license) {
+        return enabled ? (license.licenseType !== Config.licenseTypes.SHARED_DEVICES || license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
+      }).length > 0;
+    };
+    FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
+      vm.showTimezoneAndVoicemail = vm.isTimezoneAndVoicemail(pstnEnabled);
+    });
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
       id: 'America/Los_Angeles',
@@ -176,7 +183,7 @@
           return true;
         } else {
           var found = false;
-          angular.forEach(vm.model.numberRanges, function (range) {
+          _.forEach(vm.model.numberRanges, function (range) {
             if (range[property] === value) {
               found = true;
             }
@@ -234,9 +241,10 @@
       if (_.get(vm, 'model.site.siteSteeringDigit.siteDialDigit') === _.get(vm, 'model.site.steeringDigit')) {
         scope.fields[0].formControl.$setValidity('', false);
         return true;
+      } else {
+        scope.fields[0].formControl.$setValidity('', true);
+        return false;
       }
-      scope.fields[0].formControl.$setValidity('', true);
-      return false;
     };
 
     vm.steeringDigitWarningValidation = function () {
@@ -1356,7 +1364,7 @@
           var promises = [];
           var hasNewInternalNumberRange = false;
 
-          if (angular.isArray(vm.model.displayNumberRanges)) {
+          if (_.isArray(vm.model.displayNumberRanges)) {
             _.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
               if (_.isUndefined(internalNumberRange.uuid)) {
                 hasNewInternalNumberRange = true;
@@ -1822,8 +1830,8 @@
       });
     }
 
-    function _buildVoicemailPrefixOptions($scope) {
-      $scope.$watchCollection(function () {
+    function _buildVoicemailPrefixOptions(localScope) {
+      localScope.$watchCollection(function () {
         return [vm.model.site.siteSteeringDigit, vm.model.site.extensionLength, vm.model.site.steeringDigit];
       }, function () {
         var extensionLength0, extensionLength9;
@@ -1867,7 +1875,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (extensionList) {
-          if (angular.isArray(extensionList) && extensionList.length > 0) {
+          if (angular.isArray(extensionList) && extensionList.length > -1) {
             vm.model.disableExtensions = true;
           }
         });
@@ -1878,7 +1886,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (autoAttendant) {
-          if (angular.isArray(autoAttendant) && autoAttendant.length > 0) {
+          if (_.isArray(autoAttendant) && autoAttendant.length > 0) {
             vm.model.disableExtensions = true;
           }
         }).catch(function () {
@@ -1891,7 +1899,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (huntGroup) {
-          if (angular.isArray(huntGroup) && huntGroup.length > 0) {
+          if (_.isArray(huntGroup) && huntGroup.length > 0) {
             vm.model.disableExtensions = true;
           }
         }).catch(function () {

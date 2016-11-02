@@ -14,8 +14,9 @@
 
     //TODO: Replace by range selector
     var now = new moment().format("YYYY-MM-DD");
-    var from = moment(now).subtract(30, "days").format("YYYY-MM-DD");
-    var to = moment(now).subtract(23, "days").format("YYYY-MM-DD");
+    var from = moment(now).subtract(7, "days").format("YYYY-MM-DD");
+    var to = moment(now).subtract(1, "days").format("YYYY-MM-DD");
+
 
     if (!deviceUsageFeatureToggle) {
       // simulate a 404

@@ -1,7 +1,6 @@
 import { ServicesOverviewCard, ICardButton } from './ServicesOverviewCard';
 
 export class ServicesOverviewCallCard extends ServicesOverviewCard {
-
   public getShowMoreButton(): ICardButton | undefined {
     return undefined;
   }
@@ -10,11 +9,6 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
     {
       name: 'servicesOverview.cards.call.buttons.numbers',
       routerState: 'huronlines',
-      buttonClass: 'btn-link',
-    },
-    {
-      name: 'servicesOverview.cards.call.buttons.features',
-      routerState: 'huronfeatures',
       buttonClass: 'btn-link',
     },
     {
@@ -32,7 +26,7 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
   }
 
   /* @ngInject */
-  public constructor(Authinfo) {
+  public constructor(Authinfo, FeatureToggleService) {
     super({
       name: 'servicesOverview.cards.call.title',
       description: 'servicesOverview.cards.call.description',
@@ -41,5 +35,11 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
       cardClass: 'cta-bar',
     });
     this._loading = false;
+    FeatureToggleService.supports(FeatureToggleService.features.csdmPstn)
+      .then((pstnEnabled) => {
+        if (!pstnEnabled || (!Authinfo.isDeviceMgmt() || Authinfo.isSquaredUC())) {
+          this._buttons.splice(1, 0, { name: 'servicesOverview.cards.call.buttons.features', routerState: 'huronfeatures', buttonClass: 'btn-link' });
+        }
+      });
   }
 }

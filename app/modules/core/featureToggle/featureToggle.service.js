@@ -158,7 +158,8 @@
       huronLocalDialing: 'huron-local-dialing',
       huronDeviceE911: 'huron-device-e911-address',
       gemCCA: 'gem-cloud-connected-audio',
-      atlasHybridDataSecurity: 'atlas-data-security'
+      atlasHybridDataSecurity: 'atlas-data-security',
+      atlasHerculesEmergencyUpgrade: 'atlas-hercules-emergency-upgrade',
     };
 
     var toggles = {};

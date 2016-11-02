@@ -33,10 +33,11 @@ describe('Controller: TrialAddCtrl', function () {
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
-      if (param != 'csdm-places') {
-        fail('the following toggle wasn\'t expected ' + param);  //taking control of which toggles this controller are using (explicit or implicit)
+      if (param == 'csdm-places' || param == 'csdm-pstn') {
+        return $q.when(false);
+      } else if (param != 'csdm-pstn') {
+        fail('the following toggle wasn\'t expected ' + param);
       }
-      return $q.when(false);
     });
 
     spyOn(Notification, 'notify');
@@ -144,7 +145,6 @@ describe('Controller: TrialAddCtrl', function () {
       beforeEach(function () {
         controller.callTrial.enabled = false;
         controller.pstnTrial.enabled = false;
-        controller.roomSystemTrial.enabled = false;
         controller.startTrial();
         $scope.$apply();
       });
@@ -162,7 +162,6 @@ describe('Controller: TrialAddCtrl', function () {
       beforeEach(function () {
         controller.callTrial.enabled = false;
         controller.pstnTrial.enabled = false;
-        controller.roomSystemTrial.enabled = false;
         controller.webexTrial.enabled = true;
         controller.startTrial(callback);
         $scope.$apply();
@@ -177,7 +176,6 @@ describe('Controller: TrialAddCtrl', function () {
       beforeEach(function () {
         controller.callTrial.enabled = false;
         controller.pstnTrial.enabled = false;
-        controller.roomSystemTrial.enabled = false;
         controller.webexTrial.enabled = false;
         controller.startTrial(callback);
         $scope.$apply();
@@ -192,7 +190,6 @@ describe('Controller: TrialAddCtrl', function () {
       beforeEach(function () {
         controller.callTrial.enabled = false;
         controller.pstnTrial.enabled = false;
-        controller.roomSystemTrial.enabled = false;
         controller.startTrial(callback);
         $scope.$apply();
       });
@@ -210,7 +207,6 @@ describe('Controller: TrialAddCtrl', function () {
       beforeEach(function () {
         controller.callTrial.enabled = false;
         controller.pstnTrial.enabled = false;
-        controller.roomSystemTrial.enabled = false;
         controller.startTrial();
         $scope.$apply();
       });
@@ -322,7 +318,6 @@ describe('Controller: TrialAddCtrl', function () {
       it('should enable context service', function () {
         controller.contextTrial.enabled = true;
         controller.callTrial.enabled = false;
-        controller.roomSystemTrial.enabled = false;
         controller.startTrial();
         $scope.$apply();
         expect(TrialContextService.addService).toHaveBeenCalled();
@@ -333,7 +328,6 @@ describe('Controller: TrialAddCtrl', function () {
         addContextSpy.and.returnValue($q.reject('rejected'));
         controller.contextTrial.enabled = true;
         controller.callTrial.enabled = false;
-        controller.roomSystemTrial.enabled = false;
         controller.startTrial();
         $scope.$apply();
         expect(TrialContextService.addService).toHaveBeenCalled();
@@ -353,7 +347,6 @@ describe('Controller: TrialAddCtrl', function () {
       beforeEach(function () {
         controller.contextTrial.enabled = false;
         controller.callTrial.enabled = false;
-        controller.roomSystemTrial.enabled = false;
         controller.startTrial();
         $scope.$apply();
       });

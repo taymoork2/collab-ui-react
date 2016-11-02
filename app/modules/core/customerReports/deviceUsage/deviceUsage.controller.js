@@ -6,7 +6,7 @@
     .controller('DeviceUsageCtrl', DeviceUsageCtrl);
 
   /* @ngInject */
-  function DeviceUsageCtrl($log, $state, $scope, DeviceUsageTotalService, Notification, deviceUsageFeatureToggle, DeviceUsageCommonService, DeviceUsageDistributionReportService) {
+  function DeviceUsageCtrl($log, $state, $scope, DeviceUsageTotalService, Notification, deviceUsageFeatureToggle, DeviceUsageCommonService) {
     var vm = this;
     var amChart;
     var apiToUse = 'mock';
@@ -21,6 +21,68 @@
     vm.loading = true;
     vm.exporting = false;
 
+    vm.deviceOptions = [
+      {
+        value: 0,
+        label: 'All',
+        description: 'All CE and SparkBoard devices'
+      },
+      {
+        value: 1,
+        label: 'CE',
+        description: 'All CE devices'
+      },
+      {
+        value: 2,
+        label: 'SparkBoard',
+        description: 'All SparkBoard devices'
+      }
+    ];
+    vm.deviceFilter = vm.deviceOptions[0];
+    //vm.currentFilter = vm.deviceOptions[0].value;
+
+    vm.deviceUpdate = function () {
+      //$log.info('deviceFilter', vm.deviceFilter);
+      switch (vm.deviceFilter.value) {
+        case 0:
+          loadChartDataForDeviceType(vm.reportData);
+          break;
+        case 1:
+          loadChartDataForDeviceType(extractDeviceType('ce'));
+          break;
+        case 2:
+          loadChartDataForDeviceType(extractDeviceType('sparkboard'));
+          break;
+      }
+    };
+
+    function extractDeviceType(deviceCategory) {
+      //$log.info('extract device type', deviceCategory);
+      $log.info('extractDeviceType data', vm.reportData);
+      var extract = _.chain(vm.reportData).reduce(function (result, item) {
+        if (typeof result[item.time] === 'undefined') {
+          result[item.time] = {
+            callCount: 0,
+            totalDuration: 0,
+            pairedCount: 0,
+          };
+        }
+        if (item.deviceCategories[deviceCategory]) {
+          result[item.time].callCount += item.deviceCategories[deviceCategory].callCount;
+          result[item.time].totalDuration += item.deviceCategories[deviceCategory].totalDuration;
+          result[item.time].pairedCount += item.deviceCategories[deviceCategory].pairedCount;
+        }
+        return result;
+      }, {}).map(function (value, key) {
+        value.totalDuration = (value.totalDuration / 60).toFixed(2);
+        // var timeFormatted = key.substr(0, 4) + '-' + key.substr(4, 2) + '-' + key.substr(6, 2);
+        value.time = key;
+        return value;
+      }).value();
+      $log.info('extractDeviceType extract', extract);
+      return extract;
+    }
+
     var startDate;
     var endDate;
 
@@ -33,6 +95,7 @@
 
     $scope.$on('time-range-changed', function (event, timeSelected) {
       var dateRange;
+      vm.deviceFilter = vm.deviceOptions[0];
       switch (timeSelected.value) {
         case 0:
           dateRange = DeviceUsageTotalService.getDatesForLastWeek();
@@ -51,7 +114,6 @@
       }
       startDate = dateRange.start;
       endDate = dateRange.end;
-      fillInHighScore();
     });
 
     $scope.$watch(function () {
@@ -64,7 +126,6 @@
       { event: 'rollOverGraphItem', method: rollOverGraphItem },
       { event: 'rollOutGraphItem', method: rollOutGraphItem },
       { event: 'dataUpdated', method: graphRendered }
-      //{ event: 'clickGraphItem', method: clickGraphItem }
       ];
 
       amChart = AmCharts.makeChart('device-usage-total-chart', chart);
@@ -72,14 +133,8 @@
         graph.balloonFunction = renderBalloon;
       });
       loadInitData();
-      fillInHighScore();
     }
 
-    function loadChartData(data) {
-      amChart.dataProvider = data;
-      amChart.validateData();
-      vm.showDevices = false;
-    }
 
     function loadInitData() {
       var dateRange;
@@ -123,33 +178,40 @@
       Notification.notify(errors, 'error');
     }
 
+    function loadChartData(data, title) {
+      vm.reportData = data;
+      amChart.dataProvider = data;
+      amChart.validateData();
+      if (title) {
+        amChart.categoryAxis.title = title;
+      }
+      vm.showDevices = false;
+      fillInStats(data);
+    }
+
+    function loadChartDataForDeviceType(data) {
+      amChart.dataProvider = data;
+      amChart.validateData();
+    }
+
     function loadLastWeek() {
       vm.loading = true;
       DeviceUsageTotalService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(function (data) {
-        amChart.dataProvider = data;
-        amChart.categoryAxis.title = 'Daily in Week';
-        amChart.validateData();
-        vm.showDevices = false;
+        loadChartData(data, 'Daily in Week');
       }, handleReject);
     }
 
     function loadLastMonth() {
       vm.loading = true;
       DeviceUsageTotalService.getDataForLastMonth(['ce', 'sparkboard'], apiToUse).then(function (data) {
-        amChart.dataProvider = data;
-        amChart.categoryAxis.title = 'Weekly Last Month';
-        amChart.validateData();
-        vm.showDevices = false;
+        loadChartData(data, 'Weekly Last Month');
       }, handleReject);
     }
 
     function loadLast3Months() {
       vm.loading = true;
       DeviceUsageTotalService.getDataForLastMonths(3, 'month', ['ce', 'sparkboard'], apiToUse).then(function (data) {
-        amChart.dataProvider = data;
-        amChart.categoryAxis.title = 'Monthly';
-        amChart.validateData();
-        vm.showDevices = false;
+        loadChartData(data, 'Monthly');
       }, handleReject);
     }
 
@@ -164,18 +226,6 @@
       $scope.$apply();
     }
 
-    // function clickGraphItem(event) {
-    //   if (lastDataPointIndex === event.index) {
-    //     vm.showDevices = !vm.showDevices;
-    //   } else {
-    //     lastDataPointIndex = event.index;
-    //     vm.devices = event.item.dataContext.devices;
-    //     vm.dateForDevices = event.item.dataContext.time;
-    //     vm.showDevices = true;
-    //   }
-    //   $scope.$apply();
-    // }
-
     function renderBalloon(graphDataItem) {
       var text = '<div><h5>Call Duration: ' + graphDataItem.dataContext.totalDuration + '</h5>';
       text = text + 'Call Count:  ' + graphDataItem.dataContext.callCount + ' <br/> ';
@@ -184,49 +234,27 @@
       return text;
     }
 
-    function fillInHighScore() {
+    function fillInStats(data) {
+      var stats = DeviceUsageTotalService.extractStats(data);
+      vm.totalDuration = formatSecondsToHrsMinSec(stats.totalDuration);
+      vm.noOfCalls = stats.noOfCalls;
+      vm.noOfDevices = stats.noOfDevices;
 
-      $log.info("Calculating highscore based on dates:" + startDate + " to " + endDate);
-
-      DeviceUsageDistributionReportService.getAllDevicesSorted(startDate, endDate).then(function (devices) {
-
-        vm.leastUsedDevices = [];
-        vm.mostUsedDevices = [];
-
-        $log.warn("Calculate higscore based on all devices", devices);
-        vm.noOfDevices = devices.length;
-        var totalDuration = 0;
-        var noOfCalls = 0;
-
-        _.each(devices, function (d) {
-          totalDuration += d.totalDuration;
-          noOfCalls += d.callCount;
+      DeviceUsageTotalService.resolveDeviceData(stats.most)
+        .then(function (deviceInfo) {
+          vm.mostUsedDevices = [];
+          _.each(stats.most, function (topDevice, index) {
+            vm.mostUsedDevices.push({ "name": deviceInfo[index].displayName, "duration": formatSecondsToHrsMinSec(topDevice.totalDuration), "calls": topDevice.callCount });
+          });
         });
 
-        vm.totalDuration = formatSecondsToHrsMinSec(totalDuration);
-        vm.noOfCalls = noOfCalls;
-
-        $log.warn("top5", _.takeRight(devices, 5).reverse());
-        $log.warn("bottom5", _.take(devices, 5));
-
-        var top5 = _.takeRight(devices, 5).reverse();
-        var bottom5 = _.take(devices, 5);
-
-        DeviceUsageDistributionReportService.resolveDeviceData(top5)
-          .then(function (deviceInfo) {
-            _.each(top5, function (topDevice, index) {
-              vm.mostUsedDevices.push({ "name": deviceInfo[index].displayName, "duration": formatSecondsToHrsMinSec(topDevice.totalDuration), "calls": topDevice.callCount });
-            });
+      DeviceUsageTotalService.resolveDeviceData(stats.least)
+        .then(function (deviceInfo) {
+          vm.leastUsedDevices = [];
+          _.each(stats.least, function (bottomDevice, index) {
+            vm.leastUsedDevices.push({ "name": deviceInfo[index].displayName, "duration": formatSecondsToHrsMinSec(bottomDevice.totalDuration), "calls": bottomDevice.callCount });
           });
-
-        DeviceUsageDistributionReportService.resolveDeviceData(bottom5)
-          .then(function (deviceInfo) {
-            _.each(bottom5, function (bottomDevice, index) {
-              vm.leastUsedDevices.push({ "name": deviceInfo[index].displayName, "duration": formatSecondsToHrsMinSec(bottomDevice.totalDuration), "calls": bottomDevice.callCount });
-            });
-          });
-      });
-
+        });
     }
 
     function pad(num, size) {

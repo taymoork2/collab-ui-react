@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: RemPlaceController', function () {
-  var controller, $q, $rootScope, $httpBackend, CsdmHuronPlaceService, CsdmPlaceService, place;
+  var controller, $q, $rootScope, $httpBackend, CsdmPlaceService, place;
   var fakeModal = {
     close: sinon.stub()
   };
@@ -22,18 +22,15 @@ describe('Controller: RemPlaceController', function () {
   }));
 
   describe('Expected Responses', function () {
-    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$httpBackend_, _CsdmHuronPlaceService_, CsdmDataModelService, _CsdmPlaceService_) {
+    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$httpBackend_, CsdmDataModelService, _CsdmPlaceService_) {
       var initialDevices = getJSONFixture('squared/json/devices.json');
       var codes = getJSONFixture('squared/json/activationCodes.json');
       var accounts = getJSONFixture('squared/json/accounts.json');
-      var initialHuronPlaces = getJSONFixture('squared/json/huronPlaces.json');
-      var huronPlacesUrl = 'https://cmi.huron-int.com/api/v2/customers/testOrg/places/';
 
       $q = _$q_;
       $rootScope = _$rootScope_;
       $httpBackend = _$httpBackend_;
       CsdmPlaceService = _CsdmPlaceService_;
-      CsdmHuronPlaceService = _CsdmHuronPlaceService_;
 
       $httpBackend.whenGET('https://identity.webex.com/identity/scim/testOrg/v1/Users/me').respond({});
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices/?type=huron&checkDisplayName=false').respond([]);
@@ -41,12 +38,10 @@ describe('Controller: RemPlaceController', function () {
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices').respond(initialDevices);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/nonExistingDevices').respond([]);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/codes').respond(codes);
-      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/').respond(accounts);
+      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/?shallow=true&type=all').respond(accounts);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices/?type=huron').respond([]);
-      $httpBackend.whenGET(huronPlacesUrl).respond(initialHuronPlaces);
 
       spyOn(CsdmPlaceService, 'deleteItem').and.returnValue($q.when());
-      spyOn(CsdmHuronPlaceService, 'deletePlace').and.returnValue($q.when());
       spyOn(fakeModal, 'close');
 
       controller = $controller('RemPlaceController', {

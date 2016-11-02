@@ -294,7 +294,7 @@
     }
 
     function isLicenseInfoAvailable(licenses) {
-      return angular.isArray(licenses);
+      return _.isArray(licenses);
     }
 
     function setServiceSortOrder(license) {
@@ -402,7 +402,7 @@
       };
 
       var licensesAndOffersData = parseLicensesAndOffers(customer, { isCareEnabled: isCareEnabled });
-      angular.extend(dataObj, licensesAndOffersData);
+      _.assign(dataObj, licensesAndOffersData);
 
       dataObj.isAllowedToManage = isTrialData || customer.isAllowedToManage;
       dataObj.isPartner = _.get(customer, 'isPartner', false);
@@ -505,12 +505,12 @@
     function initializeService(licenses, offerCode, serviceEntry, customerListToggle) {
       var licensesGotten = getLicense(licenses, offerCode, customerListToggle);
       if (!_.isArray(licensesGotten)) {
-        angular.extend(licensesGotten, serviceEntry);
+        _.assign(licensesGotten, serviceEntry);
         setServiceSortOrder(licensesGotten);
         return licensesGotten;
       } else {
         var result = {};
-        angular.extend(result, licensesGotten[0], serviceEntry);
+        _.assign(result, licensesGotten[0], serviceEntry);
         var qty = _.reduce(licensesGotten, function (volume, license) {
           return volume + license.volume;
         }, 0);
@@ -556,20 +556,20 @@
               licenseType: Config.licenseTypes.CARE
             });
 
-            if (messagingLicense && angular.isArray(messagingLicense.features)) {
+            if (messagingLicense && _.isArray(messagingLicense.features)) {
               exportedCustomer.messagingEntitlements = messagingLicense.features.join(' ');
             }
-            if (conferenceLicense && angular.isArray(conferenceLicense.features)) {
+            if (conferenceLicense && _.isArray(conferenceLicense.features)) {
               exportedCustomer.conferenceEntitlements = conferenceLicense.features.join(' ');
             }
-            if (communicationsLicense && angular.isArray(communicationsLicense.features)) {
+            if (communicationsLicense && _.isArray(communicationsLicense.features)) {
               exportedCustomer.communicationsEntitlements = communicationsLicense.features.join(' ');
             }
-            if (roomSystemsLicense && angular.isArray(roomSystemsLicense.features)) {
+            if (roomSystemsLicense && _.isArray(roomSystemsLicense.features)) {
               exportedCustomer.roomSystemsEntitlements = roomSystemsLicense.features.join(' ');
             }
             if (isCareEnabled) {
-              if (careLicense && angular.isArray(careLicense.features)) {
+              if (careLicense && _.isArray(careLicense.features)) {
                 exportedCustomer.careEntitlements = careLicense.features.join(' ');
               }
             }

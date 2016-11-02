@@ -53,7 +53,7 @@
     }
 
     function setRegionCode(region) {
-      regionCode = angular.isString(region) ? region.toLowerCase() : '';
+      regionCode = _.isString(region) ? region.toLowerCase() : '';
       countryCode = _.result(_.find(CountryCodes, {
         code: regionCode
       }), 'number');
@@ -107,7 +107,7 @@
     function getDIDValue(number) {
       if (validateDID(number)) {
         return phoneUtils.formatE164(number, regionCode);
-      } else if (angular.isString(number)) {
+      } else if (_.isString(number)) {
         return _.replace(number, filterRegex, '');
       } else {
         return number;

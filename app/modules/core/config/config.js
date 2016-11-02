@@ -413,6 +413,8 @@
         'devices',
         'place-overview',
         'places',
+        'huronsettings',
+        'huronlines',
       ],
       'squared-fusion-uc': [
         'add-resource',
@@ -429,7 +431,7 @@
         'services-overview',
       ],
       'squared-team-member': [
-        'organization'
+        'organization',
       ],
       'hybrid-data-security': [
         'hds-settings'
@@ -444,14 +446,14 @@
         'metrics',
         'reports-metrics',
         'services-overview',
-        'cluster-list'
+        'cluster-list',
       ],
       'webex-messenger': [
         'messenger',
         'services-overview',
       ],
       'cloud-contact-center': [
-        'care'
+        'care',
       ]
     };
 

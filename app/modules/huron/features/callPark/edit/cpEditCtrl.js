@@ -132,8 +132,8 @@
     function areOptionsInvalid() {
       var valid = false;
       var input;
-      angular.forEach(vm.templateRadios, function (radio) {
-        angular.forEach(radio, function (option) {
+      _.forEach(vm.templateRadios, function (radio) {
+        _.forEach(radio, function (option) {
           input = option.inputs[option.currentInput];
           switch (input.type) {
             case 'range': valid = (vm.isStringValid(input.range_1, 'value', "") === "" || vm.isStringValid(input.range_2, 'value', "") === "") || valid;
@@ -249,10 +249,10 @@
 
       $scope.$watch('numberOption', function () {
         // var newLength = getExtensionLength(vm.cpNumberOptions[0].currentInput);
-        angular.forEach(vm.cpNumberOptions[0].inputs, function (input) {
+        _.forEach(vm.cpNumberOptions[0].inputs, function (input) {
           // var length = index === vm.cpNumberOptions[0].currentInput ? newLength : null;
           var values = (input.type === 'range') ? [input.range_1, input.range_2] : [input];
-          angular.forEach(values, function (value) {
+          _.forEach(values, function (value) {
             value.minlength = 3;
             value.maxlength = 5;
           });

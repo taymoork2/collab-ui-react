@@ -11,7 +11,7 @@ describe('Controller: DidService', function () {
       function (_DidService_) {
         DidService = _DidService_;
 
-        angular.forEach(didTestData, function (did) {
+        _.forEach(didTestData, function (did) {
           DidService.addDid(did);
         });
       }));

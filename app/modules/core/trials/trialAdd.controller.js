@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($q, $scope, $state, $translate, $window, Analytics, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialContextService, TrialPstnService, TrialService, ValidationService, Orgservice, CsdmPlaceService) {
+  function TrialAddCtrl($q, $scope, $state, $translate, $window, Analytics, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialContextService, TrialPstnService, TrialService, ValidationService, Orgservice) {
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
     var _careDefaultQuantity = 15;
@@ -476,7 +476,7 @@
         atlasCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         atlasContextServiceTrials: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
-        placesEnabled: CsdmPlaceService.placesFeatureIsEnabled()
+        placesEnabled: FeatureToggleService.supports(FeatureToggleService.features.csdmPstn)
       })
         .then(function (results) {
           vm.showRoomSystems = true;
@@ -729,7 +729,7 @@
           return response;
         })
         .then(function (response) {
-          if (vm.callTrial.enabled || vm.roomSystemTrial.enabled) {
+          if (vm.callTrial.enabled) {
             return HuronCustomer.create(vm.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
                 vm.loading = false;
@@ -816,7 +816,7 @@
       sendToAnalytics(Analytics.eventNames.CANCEL_MODAL);
     }
     function sendToAnalytics(eventName, extraData) {
-      TrialService.sendToAnalytics(eventName, vm.trialData, extraData);
+      Analytics.trackTrialSteps(eventName, vm.trialData, extraData);
     }
   }
 })();

@@ -1252,22 +1252,6 @@
               displayName: 'Beta Features'
             }
           })
-          .state('organization-overview.add', {
-            parent: 'modal',
-            views: {
-              'modal@': {
-                controller: 'OrganizationAddCtrl',
-                controllerAs: 'orgAdd',
-                template: '<div ui-view="orgAdd"></div>'
-              },
-              'orgAdd@organization-overview.add': {
-                templateUrl: 'modules/core/organizations/organizationAdd/organizationAdd.tpl.html'
-              }
-            }
-          })
-          .state('organization-overview.add.info', {
-            templateUrl: 'modules/core/organizations/organizationAdd/organizationAdd.tpl.html'
-          })
           .state('organization-overview.add.addNumbers', {
             templateUrl: 'modules/core/organizations/organizationAdd/addNumbers.tpl.html',
             controller: 'DidAddCtrl',
@@ -1380,7 +1364,7 @@
           })
           .state('reports.device-usage.distribution', {
             url: '/distribution',
-            templateUrl: 'modules/core/customerReports/deviceUsage/distribution.tpl.html',
+            templateUrl: 'modules/core/customerReports/deviceUsage/distribution/distribution.tpl.html',
             controller: 'DeviceUsageDistributionCtrl',
             controllerAs: 'deviceUsage',
             params: {
@@ -1393,7 +1377,7 @@
           })
           .state('reports.device-usage.timeline', {
             url: '/timeline',
-            templateUrl: 'modules/core/customerReports/deviceUsage/timeline.tpl.html',
+            templateUrl: 'modules/core/customerReports/deviceUsage/timeline/timeline.tpl.html',
             controller: 'DeviceUsageTimelineCtrl',
             controllerAs: 'deviceUsage',
             params: {
@@ -2507,7 +2491,13 @@
             resolve: {
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
-              }
+              },
+              hasEmergencyUpgradeFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade)
+                  .then(function (support) {
+                    return support;
+                  });
+              },
             }
           })
           .state('hds-settings', {
@@ -2527,7 +2517,12 @@
             templateUrl: 'modules/hercules/fusion-pages/mediafusion-settings.html',
             controller: 'MediafusionClusterSettingsController',
             controllerAs: 'clusterSettings',
-            parent: 'main'
+            parent: 'main',
+            resolve: {
+              hasEmergencyUpgradeFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade);
+              },
+            }
           })
           // Add Resource modal
           .state('add-resource', {
@@ -2782,7 +2777,13 @@
             resolve: {
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
-              }
+              },
+              hasEmergencyUpgradeFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade)
+                  .then(function (support) {
+                    return support;
+                  });
+              },
             }
           })
           .state('management-connector-details', {

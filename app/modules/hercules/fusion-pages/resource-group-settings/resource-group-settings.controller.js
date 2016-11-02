@@ -57,7 +57,7 @@
           vm.allowRemove = _.every(clusters, function (c) {
             return c.resourceGroupId !== $stateParams.id;
           });
-        }, angular.noop);
+        }, _.noop);
     }
 
     function setGroupName(newName) {
@@ -148,6 +148,10 @@
         templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/assign-clusters.html',
         type: 'full',
         windowClass: 'assign-clusters-modal',
+      }).result.then(function (result) {
+        if (result.change) {
+          Notification.success('hercules.resourceGroupSettings.assignSuccess');
+        }
       });
     }
 

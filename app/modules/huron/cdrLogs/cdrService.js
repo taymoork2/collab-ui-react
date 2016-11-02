@@ -39,7 +39,7 @@
       var url = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?filter=username eq "' + name + '"';
 
       $http.get(url).success(function (data) {
-        if (angular.isArray(data.Resources) && (data.Resources.length > 0)) {
+        if (_.isArray(data.Resources) && (data.Resources.length > 0)) {
           defer.resolve(data.Resources[0].id);
         } else {
           Log.debug('User does not exist in this org.');
@@ -211,7 +211,7 @@
 
     function generateHosts() {
       var hostsJson = '{"query_string":{"query":"id:CDR.CDR"}},';
-      angular.forEach(serverHosts, function (host, index) {
+      _.forEach(serverHosts, function (host, index) {
         hostsJson += '{"query_string":{"query":"id:CDR.CDR AND eventSource.hostname:\\"' + host + '\\""}}';
         if (index + 1 < serverHosts.length) {
           hostsJson += ',';

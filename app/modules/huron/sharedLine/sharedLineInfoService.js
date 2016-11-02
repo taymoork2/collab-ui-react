@@ -141,7 +141,7 @@
     function loadSharedLineUserDevices(dnUuid) {
       userDeviceInfo = [];
       var promises = [];
-      angular.forEach(sharedLineUsers, function (user) {
+      _.forEach(sharedLineUsers, function (user) {
         var promise;
         promise = loadUserDevices(user.uuid, dnUuid);
         promises.push(promise);
@@ -166,7 +166,7 @@
       }).$promise
         .then(function (endpointDn) {
           if (!_.isUndefined(endpointDn)) {
-            angular.forEach(endpointDn, function (d) {
+            _.forEach(endpointDn, function (d) {
               if (d.directoryNumber.uuid === dnuuid) {
                 info.isSharedLine = true;
                 info.endpointDnUuid = d.uuid;

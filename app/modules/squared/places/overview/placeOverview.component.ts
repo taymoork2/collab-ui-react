@@ -126,14 +126,9 @@ class PlaceOverview implements ng.IComponentController {
   }
 
   public save(newName: string) {
-    if (this.currentPlace.type === 'cloudberry') {
-      return this.CsdmDataModelService
+    return this.CsdmDataModelService
         .updateItemName(this.currentPlace, newName)
         .catch(this.XhrNotificationService.notify);
-    }
-    return this.CsdmHuronPlaceService
-      .updatePlaceName(this.currentPlace.url, newName)
-      .catch(this.XhrNotificationService.notify);
   }
 
   public showDeviceDetails(device: IDevice): void {

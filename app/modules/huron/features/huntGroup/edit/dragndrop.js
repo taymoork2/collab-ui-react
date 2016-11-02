@@ -200,7 +200,7 @@
           var index = getPlaceholderIndex();
           var targetArray = scope.dropList;
           var objIndex;
-          angular.forEach(targetArray, function (value, key) {
+          _.forEach(targetArray, function (value, key) {
             if (value[scope.unique] === transferredObject[scope.unique]) {
               objIndex = key;
             }

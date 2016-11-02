@@ -10,7 +10,7 @@
       <cs-card class="full side-info-card">
         <article>
           <header>
-            <div translate="homePage.notifications"/>
+            <div translate="homePage.notifications"></div>
           </header>
 
           <section class="monitoring-panel small-3 medium-12 column" ng-if="overview.notifications.length === 0">
@@ -22,7 +22,7 @@
             <div class="notification-style" ng-repeat="notification in overview.notifications">
               <span class="badge {{notification.badgeType}}" translate="{{notification.badgeText}}"></span>
               <span class="notification-spacing">
-                <span translate="{{notification.text}}"></span>
+                <span translate="{{notification.text}}" translate-values="{{notification.textValues}}"></span>
                 <div>
                   <a ng-if="notification.linkText.length > 0" ng-click="notification.link()" translate="{{notification.linkText}}"></a>
                 </div>

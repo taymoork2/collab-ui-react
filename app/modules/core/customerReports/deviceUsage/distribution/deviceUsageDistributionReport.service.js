@@ -5,14 +5,10 @@
     .service('DeviceUsageDistributionReportService', DeviceUsageDistributionReportService);
 
   /* @ngInject */
-  function DeviceUsageDistributionReportService($http, $q, $log, DeviceUsageRawService) {
-
-    var csdmUrl = "https://csdm-a.wbx2.com/csdm/api/v1/organization/1eb65fdf-9643-417f-9974-ad72cae0e10f/places/";
+  function DeviceUsageDistributionReportService($log, DeviceUsageRawService) {
 
     return {
       getDeviceUsageReportData: getDeviceUsageReportData,
-      getAllDevicesSorted: getAllDevicesSorted,
-      resolveDeviceData: resolveDeviceData
     };
 
     function secondsToHours(s) {
@@ -59,18 +55,6 @@
       return updatedList;
     }
 
-    function getAllDevicesSorted(startDate, endDate) {
-      return DeviceUsageRawService.getData(startDate, endDate, true)
-        .then(sumUsageDataFromSameDevice)
-        .then(sortDevicesByDuration);
-    }
-
-    function sortDevicesByDuration(devices) {
-      return devices.sort(function (a, b) {
-        return a.totalDuration - b.totalDuration;
-      });
-    }
-
     function getDeviceUsageReportData(startDate, endDate, minDuration, maxDuration) {
       return DeviceUsageRawService.getData(startDate, endDate, true)
         .then(convertTimeAndDuration)
@@ -85,26 +69,6 @@
             });
           }
         });
-    }
-
-    function resolveDeviceData(devices) {
-      var promises = [];
-      _.each(devices, function (device) {
-        promises.push($http.get(csdmUrl + device.accountId)
-          .then(function (res) {
-            $log.info("resolving", res);
-            return res.data;
-          })
-          .catch(function (err) {
-            $log.info("Problems resolving device", err);
-            return {
-              "displayName": "Unknown [" + device.accountId + "}"
-            };
-          })
-
-          );
-      });
-      return $q.all(promises);
     }
 
   }

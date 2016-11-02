@@ -494,7 +494,7 @@ describe('orgService', function () {
     httpBackend.when('GET', UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services').respond(200, items);
     var response = Orgservice.getHybridServiceAcknowledged();
     httpBackend.flush();
-    angular.forEach(response.items, function (items) {
+    _.forEach(response.items, function (items) {
       if (items.id === Config.entitlements.fusion_cal) {
         expect(items.acknowledged).toBe(true);
       } else if (items.id === Config.entitlements.fusion_uc) {

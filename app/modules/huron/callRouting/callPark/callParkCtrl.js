@@ -23,7 +23,7 @@
         vm.showInformation = vm.callParks.length === 0;
         var totalLength = 0;
         for (var i = 0; i < vm.callParks.length; i++) {
-          if (!_.isUndefined(vm.callParks[i].data) && angular.isArray(vm.callParks[i].data)) {
+          if (!_.isUndefined(vm.callParks[i].data) && _.isArray(vm.callParks[i].data)) {
             totalLength += vm.callParks[i].data.length;
           }
         }

@@ -1,4 +1,5 @@
 import {
+  IDropdownBase,
   IFilterObject,
   ITimespan,
 } from '../partnerReportInterfaces';
@@ -82,6 +83,32 @@ export class ReportConstants {
     description: this.$translate.instant('reportsPage.threeMonths2'),
   };
   public timeFilter: Array<ITimespan> = [this.FILTER_ONE, this.FILTER_TWO, this.FILTER_THREE];
+
+  // active user line graph filterArray
+  public ACTIVE_FILTER_ONE: IDropdownBase = {
+    value: 0,
+    label: this.$translate.instant('activeUsers.allUsers'),
+  };
+  public ACTIVE_FILTER_TWO: IDropdownBase = {
+    value: 1,
+    label: this.$translate.instant('activeUsers.activeUsers'),
+  };
+  public activeFilter: Array<IDropdownBase> = [this.ACTIVE_FILTER_ONE, this.ACTIVE_FILTER_TWO];
+
+  // media graph filter
+  public MEDIA_FILTER_ONE: IDropdownBase = {
+    value: 0,
+    label: this.$translate.instant('reportsPage.allCalls'),
+  };
+  public MEDIA_FILTER_TWO: IDropdownBase = {
+    value: 1,
+    label: this.$translate.instant('reportsPage.audioCalls'),
+  };
+  public MEDIA_FILTER_THREE: IDropdownBase = {
+    value: 2,
+    label: this.$translate.instant('reportsPage.videoCalls'),
+  };
+  public mediaFilter: Array<IDropdownBase> = [this.MEDIA_FILTER_ONE, this.MEDIA_FILTER_TWO, this.MEDIA_FILTER_THREE];
 }
 
 angular.module('Core')

@@ -39,7 +39,7 @@
         graphs: []
       };
       return getService(urlBase + getQuerys(utilizationUrl, cluster, time), activePromiseForUtilization).then(function (response) {
-        if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && angular.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
           returnData.graphData.push(response.data.chartData);
           return adjustUtilizationData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
         } else {
@@ -60,7 +60,7 @@
         graphData: []
       };
       return getService(urlBase + getQuerys(callVolumeUrl, cluster, time), activePromise).then(function (response) {
-        if (!_.isUndefined(response) && !_.isUndefined(response.data[0]) && !_.isUndefined(response.data[0].values) && angular.isArray(response.data[0].values) && !_.isUndefined(response.data[0])) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data[0]) && !_.isUndefined(response.data[0].values) && _.isArray(response.data[0].values) && !_.isUndefined(response.data[0])) {
           returnData.graphData.push(response.data[0].values);
           return adjustCallVolumeData(response.data[0].values, returnData, response.data[0].startTime, response.data[0].endTime);
         } else {
@@ -79,7 +79,7 @@
       activePromiseForAvailability = $q.defer();
       var returnData = [];
       return getService(urlBase + getQuerys(clusterAvailability, cluster, time), activePromiseForAvailability).then(function (response) {
-        if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data[0]) && !_.isUndefined(response.data[0].clusterCategories) && angular.isArray(response.data[0].clusterCategories)) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data[0]) && !_.isUndefined(response.data[0].clusterCategories) && _.isArray(response.data[0].clusterCategories)) {
           return response;
         } else {
           return returnData;

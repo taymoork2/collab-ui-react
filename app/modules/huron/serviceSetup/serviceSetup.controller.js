@@ -9,12 +9,18 @@
   function ServiceSetupCtrl($q, $state, $scope, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
     ValidationService, DialPlanService, TelephoneNumberService, ExternalNumberService,
     CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction,
-    PstnSetupService, Orgservice) {
+    PstnSetupService, Orgservice, FeatureToggleService, Config) {
     var vm = this;
-
+    vm.isTimezoneAndVoicemail = function (enabled) {
+      return Authinfo.getLicenses().filter(function (license) {
+        return enabled ? (license.licenseType !== Config.licenseTypes.SHARED_DEVICES || license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
+      }).length > 0;
+    };
+    FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
+      vm.showTimezoneAndVoicemail = vm.isTimezoneAndVoicemail(pstnEnabled);
+    });
     vm.NATIONAL = 'national';
     vm.LOCAL = 'local';
-
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
       id: 'America/Los_Angeles',
@@ -162,7 +168,7 @@
           return true;
         } else {
           var found = false;
-          angular.forEach(vm.model.numberRanges, function (range) {
+          _.forEach(vm.model.numberRanges, function (range) {
             if (range[property] === value) {
               found = true;
             }
@@ -492,7 +498,7 @@
           return vm.hideFieldInternalNumberRange;
         }
       },
-      controller: function ($scope) {
+      controller: /* @ngInject */ function ($scope) {
         $scope.$watch(function () {
           return vm.form.$invalid;
         }, function () {
@@ -528,7 +534,7 @@
         'templateOptions.isWarn': vm.siteSteeringDigitWarningValidation,
         'templateOptions.isError': vm.siteAndSteeringDigitErrorValidation
       },
-      controller: function ($scope) {
+      controller: /* @ngInject */ function ($scope) {
         _buildVoicemailPrefixOptions($scope);
       }
     }];
@@ -623,7 +629,7 @@
           }
         }
       },
-      controller: function ($scope) {
+      controller: /* @ngInject */ function ($scope) {
         $scope.$watchCollection(function () {
           return vm.externalNumberPool;
         }, function (externalNumberPool) {
@@ -686,7 +692,7 @@
       var errors = [];
       return HuronCustomer.get().then(function (customer) {
         vm.customer = customer;
-        angular.forEach(customer.links, function (service) {
+        _.forEach(customer.links, function (service) {
           if (service.rel === 'voicemail') {
             vm.hasVoicemailService = true;
           } else if (service.rel === 'voice') {
@@ -822,7 +828,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (extensionList) {
-          if (angular.isArray(extensionList) && extensionList.length > 0) {
+          if (_.isArray(extensionList) && extensionList.length > 0) {
             vm.model.disableExtensions = true;
           }
         });
@@ -833,7 +839,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (autoAttendant) {
-          if (angular.isArray(autoAttendant) && autoAttendant.length > 0) {
+          if (_.isArray(autoAttendant) && autoAttendant.length > 0) {
             vm.model.disableExtensions = true;
           }
         }).catch(function () {
@@ -846,7 +852,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (huntGroup) {
-          if (angular.isArray(huntGroup) && huntGroup.length > 0) {
+          if (_.isArray(huntGroup) && huntGroup.length > 0) {
             vm.model.disableExtensions = true;
           }
         }).catch(function () {
@@ -1268,7 +1274,7 @@
           return $q.reject('No timeZone Id set');
         }
 
-        if (!angular.isString(timeZone)) {
+        if (!_.isString(timeZone)) {
           errors.push(Notification.error('serviceSetupModal.timezoneUpdateError'));
           return $q.reject('TimeZone Id is not a String');
         }
@@ -1349,8 +1355,8 @@
 
       function saveInternalNumbers() {
         return $q.when(true).then(function () {
-          if (vm.hideFieldInternalNumberRange === false && (angular.isArray(_.get(vm, 'model.displayNumberRanges')))) {
-            angular.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
+          if (vm.hideFieldInternalNumberRange === false && (_.isArray(_.get(vm, 'model.displayNumberRanges')))) {
+            _.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
               if (_.isUndefined(internalNumberRange.uuid)) {
                 return createInternalNumbers(internalNumberRange);
               } else if (vm.extensionLengthChanged) {
@@ -1363,7 +1369,7 @@
 
       function setupVoiceService() {
         if (!vm.hasVoiceService) {
-          return HuronCustomer.put(vm.customer.name)
+          return HuronCustomer.put(_.get(vm.customer, 'name', undefined))
             .then(function () {
               vm.hasVoiceService = true;
             })
@@ -1467,7 +1473,6 @@
             extensionLength9 = '999';
             break;
         }
-
         var values = [];
         _.forEach(vm.steeringDigits, function (digit) {
           values.push({

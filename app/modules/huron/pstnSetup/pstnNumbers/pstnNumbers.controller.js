@@ -527,7 +527,7 @@
     }
 
     function getCommonPattern(telephoneNumber) {
-      if (angular.isString(telephoneNumber)) {
+      if (_.isString(telephoneNumber)) {
         return TelephoneNumberService.getDIDLabel(telephoneNumber);
       } else {
         var firstNumber = TelephoneNumberService.getDIDLabel(_.head(telephoneNumber));
@@ -669,7 +669,7 @@
     }
 
     function getLongestCommonSubstring(x, y) {
-      if (!angular.isString(x) || !angular.isString(y)) {
+      if (!_.isString(x) || !_.isString(y)) {
         return '';
       }
       var i = 0;

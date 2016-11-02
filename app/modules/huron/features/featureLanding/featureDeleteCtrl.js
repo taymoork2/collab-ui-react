@@ -122,7 +122,7 @@
     function deleteSuccess() {
       vm.deleteBtnDisabled = false;
 
-      if (angular.isFunction($scope.$dismiss)) {
+      if (_.isFunction($scope.$dismiss)) {
         $scope.$dismiss();
       }
 
@@ -139,7 +139,7 @@
     function deleteError(response) {
       vm.deleteBtnDisabled = false;
 
-      if (angular.isFunction($scope.$dismiss)) {
+      if (_.isFunction($scope.$dismiss)) {
         $scope.$dismiss();
       }
       Log.warn('Failed to delete the ' + vm.featureType + ' with name: ' + vm.featureName + ' and id:' + vm.featureId);
@@ -153,14 +153,14 @@
           error += $translate.instant('errors.statusError', {
             status: response.status
           });
-          if (response.data && angular.isString(response.data)) {
+          if (response.data && _.isString(response.data)) {
             error += ' ' + $translate.instant('huronFeatureDetails.messageError', {
               message: response.data
             });
           }
         } else {
           error += 'Request failed.';
-          if (angular.isString(response.data)) {
+          if (_.isString(response.data)) {
             error += ' ' + response.data;
           }
         }

@@ -8,7 +8,7 @@
   /* @ngInject */
   function DeviceUsageRawService(DeviceUsageMockData, $timeout, $http, $log, $location) {
 
-    var deviceReportsUrlBase = "http://localhost:8080/atlas-server-1.0-SNAPSHOT/admin/api/v1/";
+    var deviceReportsUrlBase = "http://localhost:8080/atlas-server/admin/api/v1/";
 
     var service = {
       getData: getData
