@@ -39,7 +39,7 @@
           $state.go('overview');
           Notification.success('mediaFusion.deactivate.success');
         } else {
-          Notification.errorWithTrackingId('', 'mediaFusion.deactivate.error');
+          Notification.error('mediaFusion.deactivate.error');
         }
       });
     };

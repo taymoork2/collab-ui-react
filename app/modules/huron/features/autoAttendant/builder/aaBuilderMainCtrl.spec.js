@@ -1027,6 +1027,5 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(controller.saveCeDefinition).not.toHaveBeenCalled();
       expect(controller.delete8To5Schedule).toHaveBeenCalled();
     });
-
   });
 });

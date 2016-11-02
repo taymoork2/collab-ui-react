@@ -100,11 +100,11 @@ describe('Controller: ReassignClusterControllerV2', function () {
   it('should notify error when createClusterV2 call fails', function () {
     httpMock.when('POST', /^\w+.*/).respond(500, null);
     controller.clusterDetail = null;
-    spyOn(Notification, 'errorWithTrackingId');
+    spyOn(Notification, 'error');
     spyOn(MediaClusterServiceV2, 'createClusterV2').and.returnValue($q.reject());
     controller.reassign();
     httpMock.verifyNoOutstandingExpectation();
-    expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+    expect(Notification.error).toHaveBeenCalled();
   });
   it('check if mf_mgmt is filtered into options', function () {
     httpMock.verifyNoOutstandingExpectation();

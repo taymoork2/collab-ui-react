@@ -55,7 +55,7 @@
           vm.error = $translate.instant('mediaFusion.reassign.reassignErrorMessage', {
             hostName: vm.selectedCluster
           });
-          Notification.errorWithTrackingId('', vm.error);
+          Notification.error(vm.error);
 
         });
       } else {
