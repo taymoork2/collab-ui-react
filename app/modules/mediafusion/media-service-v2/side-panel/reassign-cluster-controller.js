@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function ReassignClusterControllerV2(cluster, connector, MediaClusterServiceV2, XhrNotificationService, $translate, $modalInstance, Notification) {
+  function ReassignClusterControllerV2(cluster, connector, MediaClusterServiceV2, $translate, $modalInstance, Notification) {
     var vm = this;
 
     vm.options = [];
@@ -18,7 +18,10 @@
           vm.clusters = _.filter(clusters, { targetType: 'mf_mgmt' });
           vm.options = _.map(vm.clusters, 'name');
           vm.options.sort();
-        }, XhrNotificationService.notify);
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'mediaFusion.genericError');
+        });
     };
     vm.getCluster();
 
@@ -65,9 +68,9 @@
         Notification.success('mediaFusion.moveHostSuccess');
       }, function (err) {
         vm.error = $translate.instant('mediaFusion.reassign.reassignErrorMessage', {
-          hostName: vm.selectedCluster,
-          errorMessage: XhrNotificationService.getMessages(err).join(', ')
+          hostName: vm.selectedCluster
         });
+        Notification.errorWithTrackingId(err, vm.error);
       });
 
     }

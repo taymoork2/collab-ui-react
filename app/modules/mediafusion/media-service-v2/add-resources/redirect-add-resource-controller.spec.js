@@ -2,7 +2,7 @@
 
 describe('RedirectAddResourceControllerV2', function () {
   beforeEach(angular.mock.module('Mediafusion'));
-  var redirectTargetPromise, $q, httpBackend, controller, $state, $stateParams, AddResourceCommonServiceV2, XhrNotificationService, $translate, $modalInstance, $modal, firstTimeSetup, yesProceed;
+  var redirectTargetPromise, $q, httpBackend, controller, $state, $stateParams, AddResourceCommonServiceV2, Notification, $translate, $modalInstance, $modal, firstTimeSetup, yesProceed;
   var fakeModal = {
     result: {
       then: function (confirmCallback, cancelCallback) {
@@ -17,7 +17,7 @@ describe('RedirectAddResourceControllerV2', function () {
       this.result.cancelCallback(type);
     }
   };
-  beforeEach(inject(function (_XhrNotificationService_, _$translate_, _$state_, _$stateParams_, _AddResourceCommonServiceV2_, $httpBackend, $controller, _$q_, _$modal_) {
+  beforeEach(inject(function (_Notification_, _$translate_, _$state_, _$stateParams_, _AddResourceCommonServiceV2_, $httpBackend, $controller, _$q_, _$modal_) {
     $q = _$q_;
     httpBackend = $httpBackend;
     httpBackend.when('GET', /^\w+.*/).respond({});
@@ -28,7 +28,7 @@ describe('RedirectAddResourceControllerV2', function () {
     $stateParams = _$stateParams_;
     AddResourceCommonServiceV2 = _AddResourceCommonServiceV2_;
     $translate = _$translate_;
-    XhrNotificationService = _XhrNotificationService_;
+    Notification = _Notification_;
     $modalInstance = {
       close: sinon.stub()
     };
@@ -37,7 +37,7 @@ describe('RedirectAddResourceControllerV2', function () {
     firstTimeSetup = true;
     controller = $controller('RedirectAddResourceControllerV2', {
       $q: $q,
-      XhrNotificationService: XhrNotificationService,
+      Notification: Notification,
       $translate: $translate,
       $state: $state,
       $stateParams: $stateParams,
