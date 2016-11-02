@@ -17,7 +17,7 @@ describe('Controller: ResetDeviceController', function () {
       Notification = _Notification_;
       $httpBackend = _$httpBackend_;
 
-      spyOn(Notification, 'notify');
+      spyOn(Notification, 'errorResponse');
       spyOn(fakeModal, 'close');
 
       controller = $controller('ResetDeviceController', {
@@ -39,7 +39,7 @@ describe('Controller: ResetDeviceController', function () {
       $httpBackend.flush();
 
       expect(fakeModal.close).toHaveBeenCalled();
-      expect(Notification.notify).not.toHaveBeenCalled();
+      expect(Notification.errorResponse).not.toHaveBeenCalled();
     });
 
     it('should notify on failed reset', function () {
@@ -48,7 +48,7 @@ describe('Controller: ResetDeviceController', function () {
       $httpBackend.flush();
 
       expect(fakeModal.close).not.toHaveBeenCalled();
-      expect(Notification.notify).toHaveBeenCalled();
+      expect(Notification.errorResponse).toHaveBeenCalled();
     });
   });
 });
