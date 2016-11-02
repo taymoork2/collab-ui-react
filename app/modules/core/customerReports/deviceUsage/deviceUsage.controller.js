@@ -21,6 +21,9 @@
     vm.loading = true;
     vm.exporting = false;
 
+    var dateRange;
+    vm.exportRawData = exportRawData;
+
     vm.deviceOptions = [
       {
         value: 0,
@@ -83,37 +86,29 @@
       return extract;
     }
 
-    var startDate;
-    var endDate;
-
-    vm.exportRawData = exportRawData;
-
     if (!deviceUsageFeatureToggle) {
       // simulate a 404
       $state.go('login');
     }
 
     $scope.$on('time-range-changed', function (event, timeSelected) {
-      var dateRange;
       vm.deviceFilter = vm.deviceOptions[0];
       switch (timeSelected.value) {
         case 0:
-          dateRange = DeviceUsageTotalService.getDatesForLastWeek(); // TODO Fix
           loadLastWeek();
+          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
           break;
         case 1:
-          dateRange = DeviceUsageTotalService.getDatesForLastMonths(1); // TODO Fix
           loadLastMonth();
+          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(4, 'week');
           break;
         case 2:
-          dateRange = DeviceUsageTotalService.getDatesForLastMonths(3); // TODO Fix
           loadLast3Months();
+          dateRange = DeviceUsageTotalService.getDateRangeForPeriod(3, 'month');
           break;
         default:
           loadLastWeek();
       }
-      startDate = dateRange.start;
-      endDate = dateRange.end;
     });
 
     $scope.$watch(function () {
@@ -137,29 +132,26 @@
 
 
     function loadInitData() {
-      var dateRange;
       switch (DeviceUsageCommonService.getTimeSelected()) {
         case 0:
-          dateRange = DeviceUsageTotalService.getDatesForLastWeek(); //TODO Fix
           //DeviceUsageTotalService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
           DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
           break;
         case 1:
-          dateRange = DeviceUsageTotalService.getDatesForLastMonths(1); // TODO Fix
           //DeviceUsageTotalService.getDataForLastMonth(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
           DeviceUsageTotalService.getDataForLastNTimeUnits(4, 'week', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(4, 'week');
           break;
         case 2:
-          dateRange = DeviceUsageTotalService.getDatesForLastMonths(3); // TODO Fix
           DeviceUsageTotalService.getDataForLastMonths(3, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          dateRange = DeviceUsageTotalService.getDateRangeForPeriod(3, 'month');
           break;
         default:
-          dateRange = DeviceUsageTotalService.getDatesForLastWeek(); // TODO Fix
-          //DeviceUsageTotalService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          $log.warn("Unknown time period selected");
           DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
       }
-      startDate = dateRange.start;
-      endDate = dateRange.end;
 
     }
 
@@ -293,7 +285,8 @@
 
     function exportRawData() {
       vm.exporting = true;
-      DeviceUsageTotalService.exportRawData(startDate, endDate).then(function () {
+      $log.info("Exporting data for range", dateRange);
+      DeviceUsageTotalService.exportRawData(dateRange.start, dateRange.end).then(function () {
         $log.info("export finished");
         vm.exporting = false;
       })

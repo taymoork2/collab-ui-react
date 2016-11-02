@@ -20,7 +20,7 @@
       return getDataForPeriod('week', 1, 'day', deviceCategories, api);
     }
 
-    function getDataForLastNTimeUnits(count, granularity, deviceCategories, api) {
+    function getDateRangeForLastNTimeUnits(count, granularity) {
       var start, end;
       if (granularity === 'day') {
         start = moment().subtract(count, granularity + 's').format('YYYY-MM-DD');
@@ -32,7 +32,11 @@
         start = moment().startOf('isoWeek').subtract(count, granularity + 's').format('YYYY-MM-DD');
         end = moment().subtract(1, granularity + 's').format('YYYY-MM-DD');
       }
-      return getDataForRange(start, end, granularity, deviceCategories, api);
+      return { start: start, end: end };
+    }
+    function getDataForLastNTimeUnits(count, granularity, deviceCategories, api) {
+      var dateRange = getDateRangeForLastNTimeUnits(count, granularity);
+      return getDataForRange(dateRange.start, dateRange.end, granularity, deviceCategories, api);
     }
 
     function getDataForLastMonth(deviceCategories, api) {
@@ -91,9 +95,17 @@
 
     }
 
-    function loadPeriodCallData(period, count, granularity, deviceCategories, api) {
+    function getDateRangeForPeriod(count, period) {
       var start = moment().startOf(period).subtract(count, period + 's').format('YYYY-MM-DD');
       var end = moment().startOf(period).subtract(1, 'days').format('YYYY-MM-DD');
+      return { start: start, end: end };
+    }
+
+    function loadPeriodCallData(period, count, granularity, deviceCategories, api) {
+      var dateRange = getDateRangeForPeriod(count, period);
+      var start = dateRange.start;
+      var end = dateRange.end;
+
       if (api === 'mock') {
         return DeviceUsageMockData.getRawDataPromise(start, end).then(function (data) {
           return reduceAllData(data, granularity);
@@ -444,7 +456,9 @@
       exportRawData: exportRawData,
       extractStats: extractStats,
       resolveDeviceData: resolveDeviceData,
-      getDataForLastNTimeUnits: getDataForLastNTimeUnits
+      getDataForLastNTimeUnits: getDataForLastNTimeUnits,
+      getDateRangeForPeriod: getDateRangeForPeriod,
+      getDateRangeForLastNTimeUnits: getDateRangeForLastNTimeUnits
     };
   }
 }());
