@@ -7,7 +7,7 @@
 
   /* @ngInject */
   function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
-    AAModelService, AACommonService, Authinfo, AANotificationService, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService, AAScrollBar) {
+    AAModelService, AACommonService, Authinfo, AANotificationService, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService) {
     var vm = this;
 
     vm.addNumber = addNumber;
@@ -153,7 +153,7 @@
               return (TelephoneNumberService.validateDID(resource.number));
             });
 
-            if (angular.isDefined(r)) {
+            if (!_.isUndefined(r)) {
               var index = _.indexOf(resources, r);
 
                 // if e164 number is already the 0th element, all done
@@ -165,7 +165,6 @@
 
             sortAssignedResources(resources);
             AACommonService.setCENumberStatus(true);
-            AAScrollBar.resizeBuilderScrollBar();
           },
             function (response) {
               AANotificationService.errorResponse(response, 'autoAttendant.errorAddCMI', {
@@ -207,7 +206,6 @@
       saveAANumberAssignments(Authinfo.getOrgId(),
         vm.aaModel.aaRecordUUID, resources).then(function () {
           AACommonService.setCENumberStatus(true);
-          AAScrollBar.resizeBuilderScrollBar();
         }).catch(
         function (response) {
           /* Use AACommonService to thwart the saving when it is in this state. */
@@ -362,7 +360,7 @@
       }
 
       var currentResources = [];
-      if (angular.isDefined(vm.ui.ceInfo) && angular.isDefined(vm.ui.ceInfo.resources)) {
+      if (!_.isUndefined(vm.ui.ceInfo) && !_.isUndefined(vm.ui.ceInfo.resources)) {
         currentResources = vm.ui.ceInfo.getResources();
       }
 

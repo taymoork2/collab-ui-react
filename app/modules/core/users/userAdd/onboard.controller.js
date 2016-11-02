@@ -138,11 +138,8 @@
           type: "dialog",
           templateUrl: "modules/core/users/userAdd/licenseErrorModal.tpl.html",
         }).result.then(function () {
-          FeatureToggleService.atlasSettingsPageGetStatus()
-            .then(function () {
-              $previousState.forget('modalMemo');
-              $state.go('my-company.subscriptions');
-            });
+          $previousState.forget('modalMemo');
+          $state.go('my-company.subscriptions');
         });
       }
     };
@@ -200,8 +197,7 @@
     // Check to see if the currently selected directory number's first digit is
     // the same as the company steering digit.
     function checkDnOverlapsSteeringDigit(userEntity) {
-      var steeringDigit = $scope.telephonyInfo.steeringDigit;
-      return _.startsWith(_.get(userEntity, 'assignedDn.pattern'), steeringDigit);
+      return _.startsWith(_.get(userEntity, 'assignedDn.pattern'), _.get($scope, 'telephonyInfo.steeringDigit'));
     }
 
     function returnInternalNumberlist(pattern) {
@@ -304,10 +300,10 @@
       };
       for (var i = 0; i < $scope.usrlist.length - 1; i++) {
         for (var j = i + 1; j < $scope.usrlist.length; j++) {
-          if (angular.isDefined($scope.usrlist[i].assignedDn) && angular.isDefined($scope.usrlist[j].assignedDn) && ($scope.usrlist[i].assignedDn.uuid !== 'none') && ($scope.usrlist[i].assignedDn.pattern === $scope.usrlist[j].assignedDn.pattern)) {
+          if (!_.isUndefined($scope.usrlist[i].assignedDn) && !_.isUndefined($scope.usrlist[j].assignedDn) && ($scope.usrlist[i].assignedDn.uuid !== 'none') && ($scope.usrlist[i].assignedDn.pattern === $scope.usrlist[j].assignedDn.pattern)) {
             didDnDupe.dnDupe = true;
           }
-          if (angular.isDefined($scope.usrlist[i].externalNumber) && angular.isDefined($scope.usrlist[j].externalNumber) && ($scope.usrlist[i].externalNumber.uuid !== 'none') && ($scope.usrlist[i].externalNumber.pattern === $scope.usrlist[j].externalNumber.pattern)) {
+          if (!_.isUndefined($scope.usrlist[i].externalNumber) && !_.isUndefined($scope.usrlist[j].externalNumber) && ($scope.usrlist[i].externalNumber.uuid !== 'none') && ($scope.usrlist[i].externalNumber.pattern === $scope.usrlist[j].externalNumber.pattern)) {
             didDnDupe.didDupe = true;
           }
           if (didDnDupe.dnDupe && didDnDupe.didDupe) {
@@ -811,13 +807,6 @@
       autohidemode: "leave"
     };
 
-    angular.element('.wizard-main-wrapper').bind('resize', function () {
-      var nice = $('#errorTable').getNiceScroll();
-      if (nice !== null && nice !== undefined) {
-        nice.resize();
-      }
-    });
-
     var nameTemplate = '<div class="ui-grid-cell-contents"><span class="name-display-style">{{row.entity.name}}</span>' +
       '<span class="email-display-style">{{row.entity.address}}</span></div>';
 
@@ -878,7 +867,7 @@
         OnboardService.huronCallEntitlement = !!newVal;
 
         // Do not change wizard text when configuring bulk user services
-        if (angular.isDefined($scope.wizard) && !($scope.wizard.current.step.name === 'csvServices' || $scope.wizard.current.step.name === 'dirsyncServices')) {
+        if (!_.isUndefined($scope.wizard) && !($scope.wizard.current.step.name === 'csvServices' || $scope.wizard.current.step.name === 'dirsyncServices')) {
           if (shouldAddCallService()) {
             $scope.$emit('wizardNextText', 'next');
           } else {
@@ -889,13 +878,13 @@
     });
 
     $scope.$watch('wizard.current.step', function () {
-      if (angular.isDefined($scope.wizard) && $scope.wizard.current.step.name === 'assignServices') {
+      if (!_.isUndefined($scope.wizard) && $scope.wizard.current.step.name === 'assignServices') {
         if (shouldAddCallService()) {
           $scope.$emit('wizardNextText', 'next');
         } else {
           $scope.$emit('wizardNextText', 'finish');
         }
-      } else if (angular.isDefined($scope.wizard) && $scope.wizard.current.step.name === 'assignDnAndDirectLines') {
+      } else if (!_.isUndefined($scope.wizard) && $scope.wizard.current.step.name === 'assignDnAndDirectLines') {
         if (!shouldAddCallService()) {
           // we don't have call service, so skip to previous step
           $scope.wizard.previousStep();
@@ -1648,7 +1637,7 @@
         deferred.reject();
       };
 
-      if (angular.isArray(usersList) && usersList.length > 0) {
+      if (_.isArray(usersList) && usersList.length > 0) {
         $scope.btnOnboardLoading = true;
 
         _.each(usersList, function (userItem) {
@@ -1798,14 +1787,14 @@
           error = $translate.instant('errors.statusError', {
             status: status
           });
-          if (data && angular.isString(data.message)) {
+          if (data && _.isString(data.message)) {
             error += ' ' + $translate.instant('usersPage.messageError', {
               message: data.message
             });
           }
         } else {
           error = 'Request failed.';
-          if (angular.isString(data)) {
+          if (_.isString(data)) {
             error += ' ' + data;
           }
         }
@@ -1848,7 +1837,7 @@
     //radio group
     $scope.entitlements = {};
     var setEntitlementList = function () {
-      if (angular.isArray($rootScope.services)) {
+      if (_.isArray($rootScope.services)) {
         for (var i = 0; i < $rootScope.services.length; i++) {
           var svc = $rootScope.services[i].serviceId;
 
@@ -1862,7 +1851,7 @@
     };
 
     $scope.$on('AuthinfoUpdated', function () {
-      if (angular.isArray($rootScope.services) && $rootScope.services.length === 0) {
+      if (_.isArray($rootScope.services) && $rootScope.services.length === 0) {
         $rootScope.services = Authinfo.getServices();
       }
       setEntitlementList();
@@ -2051,15 +2040,15 @@
           var user = {};
           var givenName = "";
           var familyName = "";
-          if (angular.isDefined(selectedUser.name)) {
-            if (angular.isDefined(selectedUser.name.givenName)) {
+          if (!_.isUndefined(selectedUser.name)) {
+            if (!_.isUndefined(selectedUser.name.givenName)) {
               givenName = selectedUser.name.givenName;
             }
-            if (angular.isDefined(selectedUser.name.familyName)) {
+            if (!_.isUndefined(selectedUser.name.familyName)) {
               familyName = selectedUser.name.familyName;
             }
           }
-          if (angular.isDefined(givenName) || angular.isDefined(familyName)) {
+          if (!_.isUndefined(givenName) || !_.isUndefined(familyName)) {
             user.name = givenName + ' ' + familyName;
           }
           user.address = selectedUser.userName;
@@ -2148,9 +2137,6 @@
           if (data.totalResults) {
             $scope.unlicensed = data.totalResults;
             $scope.unlicensedUsersList = data.resources;
-            $('.ui-grid-viewport').mouseover(function () {
-              $('.ui-grid-viewport').getNiceScroll().resize();
-            });
           }
         }
       }, null, $scope.searchStr);
@@ -2226,7 +2212,7 @@
       var data = {
         'newUsersCount': $scope.model.numNewUsers || 0,
         'updatedUsersCount': $scope.model.numExistingUsers || 0,
-        'errorUsersCount': angular.isArray($scope.model.userErrorArray) ? $scope.model.userErrorArray.length : 0
+        'errorUsersCount': _.isArray($scope.model.userErrorArray) ? $scope.model.userErrorArray.length : 0
       };
       LogMetricsService.logMetrics('Finished bulk processing', eType, LogMetricsService.getEventAction('buttonClick'), 200, bulkStartLog, 1, data);
     }
@@ -2244,7 +2230,7 @@
         return $q(function (resolve, reject) {
           if (dirSyncEnabled) {
             // getStatus() is in the parent scope - AddUserCtrl
-            if (angular.isFunction($scope.getStatus)) {
+            if (_.isFunction($scope.getStatus)) {
               return $scope.getStatus().then(function () {
                 resolve();
               });

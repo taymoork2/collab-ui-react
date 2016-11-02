@@ -23,7 +23,7 @@
     }
 
     function isChanged(key, value) {
-      if (angular.isDefined(trackStore[key])) {
+      if (!_.isUndefined(trackStore[key])) {
         return !angular.equals(trackStore[key], value);
       }
 

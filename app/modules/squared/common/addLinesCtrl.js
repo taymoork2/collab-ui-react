@@ -26,7 +26,7 @@
     vm.isLoading = false;
     vm.isDisabled = true;
 
-    $scope.returnInternalNumberlist = CommonLineService.returnInternalNumberlist;
+    $scope.returnInternalNumberlist = CommonLineService.returnInternalNumberList;
     $scope.returnExternalNumberList = CommonLineService.returnExternalNumberList;
     $scope.syncGridDidDn = syncGridDidDn;
     $scope.checkDnOverlapsSteeringDigit = CommonLineService.checkDnOverlapsSteeringDigit;
@@ -69,7 +69,7 @@
           CsdmDataModelService.createCmiPlace(entity.name, entity.assignedDn.pattern, placeEntity.externalNumber)
             .then(successcb)
             .catch(function (error) {
-              Notification.errorResponse(error, 'placesPage.placeError');
+              Notification.errorResponse(error, 'addDeviceWizard.assignPhoneNumber.placeError');
             });
         });
       }
@@ -103,6 +103,10 @@
         CsdmDataModelService.updateCloudberryPlace(vm.wizardData.selectedPlace, entitlements, entity.assignedDn.pattern, placeEntity.externalNumber)
           .then(function () {
             $scope.$dismiss();
+            Notification.success("addDeviceWizard.assignPhoneNumber.linesSaved");
+          })
+          .catch(function (error) {
+            Notification.errorResponse(error, 'addDeviceWizard.assignPhoneNumber.placeEditError');
           });
       });
     };

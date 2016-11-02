@@ -2,7 +2,7 @@ describe('DomainManagementService', () => {
 
   beforeEach(angular.mock.module('Core'));
 
-  let $httpBackend, DomainManagementService: any, UrlConfig, Authinfo, XhrNotificationService, $rootScope;
+  let $httpBackend, DomainManagementService: any, UrlConfig, Authinfo, $rootScope;
 
   beforeEach(() => {
     angular.mock.module($provide => {
@@ -12,14 +12,7 @@ describe('DomainManagementService', () => {
         },
       };
 
-      XhrNotificationService = {
-        getMessages: ar => {
-          return ['formatted err msg: ' + ar[0]];
-        },
-      };
-
       $provide.value('Authinfo', Authinfo);
-      $provide.value('XhrNotificationService', XhrNotificationService);
     });
   });
 

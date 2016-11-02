@@ -164,6 +164,12 @@
       integration: 'https://bmmp.dmz.ciscospark.com/api/v1',
       prod: 'https://bmmp.ciscospark.com/api/v1'
     },
+    GeminiUrl: {
+      dev: 'https://hfccap12.qa.webex.com/ccaportal/api/v2/',
+      cfe: 'https://hfccap12.qa.webex.com/ccaportal/api/v2/',
+      integration: 'https://ccaportalbts.webex.com/ccaportal/api/v2/',
+      prod: 'https://ccaportal.webex.com/ccaportal/api/v2/'
+    },
 
     // urls same for all environments
 

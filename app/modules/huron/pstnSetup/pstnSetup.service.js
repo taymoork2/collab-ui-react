@@ -146,7 +146,7 @@
 
     function getCarrierDetails(carriers) {
       var promises = [];
-      angular.forEach(carriers, function (carrier) {
+      _.forEach(carriers, function (carrier) {
         var promise = TerminusCarrierService.get({
           carrierId: carrier.uuid
         }).$promise;
@@ -194,7 +194,7 @@
     }
 
     function reserveCarrierInventory(customerId, carrierId, numbers, isCustomerExists) {
-      if (!angular.isArray(numbers)) {
+      if (!_.isArray(numbers)) {
         numbers = [numbers];
       }
 
@@ -217,7 +217,7 @@
     }
 
     function releaseCarrierInventory(customerId, carrierId, numbers, isCustomerExists) {
-      if (!angular.isArray(numbers)) {
+      if (!_.isArray(numbers)) {
         numbers = [numbers];
       }
       if (isCustomerExists) {
@@ -239,7 +239,7 @@
     }
 
     function releaseCarrierTollFreeInventory(customerId, carrierId, numbers, isCustomerExists) {
-      if (!angular.isArray(numbers)) {
+      if (!_.isArray(numbers)) {
         numbers = [numbers];
       }
       if (isCustomerExists) {
@@ -261,7 +261,7 @@
     }
 
     function reserveCarrierTollFreeInventory(customerId, carrierId, numbers, isCustomerExists) {
-      if (!angular.isArray(numbers)) {
+      if (!_.isArray(numbers)) {
         numbers = [numbers];
       }
 
@@ -285,7 +285,7 @@
 
     function isCarrierSwivel(customerId) {
       return listCustomerCarriers(customerId).then(function (carriers) {
-        if (angular.isArray(carriers)) {
+        if (_.isArray(carriers)) {
           var carrier = _.find(carriers, {
             name: TATA
           });
@@ -453,7 +453,7 @@
         'Rejected': $translate.instant('pstnSetup.orderStatus.rejected')
       };
 
-      if (angular.isDefined(translations[order.statusMessage])) {
+      if (!_.isUndefined(translations[order.statusMessage])) {
         return translations[order.statusMessage];
       } else if (order.statusMessage !== 'None') {
         return order.statusMessage;

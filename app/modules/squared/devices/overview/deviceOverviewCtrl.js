@@ -6,7 +6,7 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService) {
     var deviceOverview = this;
     deviceOverview.currentDevice = $stateParams.currentDevice;
     var huronDeviceService = $stateParams.huronDeviceService;
@@ -60,7 +60,7 @@
     deviceOverview.save = function (newName) {
       return CsdmDataModelService
         .updateItemName(deviceOverview.currentDevice, newName)
-        .catch(XhrNotificationService.notify);
+        .catch(Notification.errorWithTrackingId);
     };
 
     function setTimeZone(timezone) {
@@ -76,7 +76,7 @@
         setTimeZone(newValue)
           .then(_.partial(waitForDeviceToUpdateTimeZone, newValue))
           .catch(function (error) {
-            XhrNotificationService.notify(error);
+            Notification.errorWithTrackingId(error);
             loadDeviceTimeZone();
           })
           .finally(function () {
@@ -128,7 +128,7 @@
         .then(function (res) {
           $window.open(res.data.url, '_blank');
         })
-        .catch(XhrNotificationService.notify);
+        .catch(Notification.errorWithTrackingId);
     };
 
     deviceOverview.deleteDevice = function () {
@@ -190,7 +190,7 @@
 
         return CsdmDataModelService
           .updateTags(deviceOverview.currentDevice, deviceOverview.currentDevice.tags.concat(tag))
-          .catch(XhrNotificationService.notify);
+          .catch(Notification.errorWithTrackingId);
 
       } else {
         deviceOverview.isAddingTag = false;
@@ -207,7 +207,7 @@
     deviceOverview.removeTag = function (tag) {
       var tags = _.without(deviceOverview.currentDevice.tags, tag);
       return CsdmDataModelService.updateTags(deviceOverview.currentDevice, tags)
-        .catch(XhrNotificationService.notify);
+        .catch(Notification.errorWithTrackingId);
     };
 
     deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport || deviceOverview.currentDevice.needsActivation;
@@ -243,7 +243,7 @@
         saveUpgradeChannel(newValue)
           .then(_.partial(waitForDeviceToUpdateUpgradeChannel, newValue))
           .catch(function (error) {
-            XhrNotificationService.notify(error);
+            Notification.errorWithTrackingId(error);
             resetSelectedChannel();
           })
           .finally(function () {
@@ -263,7 +263,7 @@
     }
 
     function pollDeviceForNewChannel(newValue, endTime, deferred) {
-      CsdmDataModelService.reloadDevice(deviceOverview.currentDevice).then(function (device) {
+      CsdmDataModelService.reloadItem(deviceOverview.currentDevice).then(function (device) {
         if (device.upgradeChannel.value == newValue) {
           Notification.success('deviceOverviewPage.channelUpdated');
           return deferred.resolve();

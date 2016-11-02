@@ -35,8 +35,8 @@
           vm.newData = angular.copy(vm.originalData);
           vm.loadingState = false;
         })
-        .catch(function () {
-          Notification.errorWithTrackingId('hercules.assignClustersModal.errorLoading');
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.assignClustersModal.errorLoading');
         });
     }
 
@@ -88,25 +88,32 @@
 
     function save() {
       vm.savingState = true;
+      var someClustersAreChangingReleaseChannel = false;
       var promises = [];
       _.forEach(vm.newData.clustersInResourceGroup, function (cluster) {
-        if (!_.find(vm.originalData.clustersInResourceGroup, { 'id': cluster.id })) {
+        if (!_.find(vm.originalData.clustersInResourceGroup, { id: cluster.id })) {
           // assign
           promises.push(ResourceGroupService.assign(cluster.id, vm.resourceGroup.id));
+          if (cluster.releaseChannel !== vm.resourceGroup.releaseChannel) {
+            someClustersAreChangingReleaseChannel = true;
+          }
         }
       });
       _.forEach(vm.newData.availableClusters, function (cluster) {
-        if (!_.find(vm.originalData.availableClusters, { 'id': cluster.id })) {
+        if (!_.find(vm.originalData.availableClusters, { id: cluster.id })) {
           // unassign
           promises.push(ResourceGroupService.assign(cluster.id, ''));
+          if (cluster.releaseChannel !== 'stable') {
+            someClustersAreChangingReleaseChannel = true;
+          }
         }
       });
       return $q.all(promises)
         .then(function () {
-          $modalInstance.close();
+          $modalInstance.close({ change: someClustersAreChangingReleaseChannel });
         })
-        .catch(function () {
-          Notification.errorWithTrackingId('hercules.genericFailure');
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
           vm.savingState = false;
           // refresh data with what worked
           return loadData();

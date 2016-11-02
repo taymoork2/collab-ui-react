@@ -32,7 +32,7 @@
       if (isAuthorizedForLog()) {
         HelpdeskLogService.searchForLastPushedLog(vm.device.cisUuid).then(function (log) {
           vm.lastPushedLog = log;
-        }, angular.noop);
+        }, _.noop);
       }
 
       angular.element(".helpdesk-details").focus();

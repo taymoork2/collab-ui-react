@@ -11,7 +11,7 @@
     </div>
 
     <!-- time zone selection -->
-    <div class="cs-form__section">
+    <div class="cs-form__section" ng-if="settings.showTimezoneAndVoicemail">
       <div class="section__info">
         <h4 class="section__title" translate="serviceSetupModal.timeZone"></h4>
         <h6 class="section__description" translate="serviceSetupModal.tzDescription"></h6>
@@ -52,10 +52,10 @@
           <label class="cs-input__label" for="areacode-input" translate="serviceSetupModal.localDialingNumberTitle"></label>
           <input
             warning
-            ng-model="settings.model.regionCode" 
-            id="areacode-input" 
-            class="medium-4 columns text-center" 
-            type="text" 
+            ng-model="settings.model.regionCode"
+            id="areacode-input"
+            class="medium-4 columns text-center"
+            type="text"
             ng-disabled="settings.model.dialingHabit === settings.NATIONAL">
         </div>
         <p class="row columns warning terminus-warning indent-area-code" ng-if="!settings.isTerminusCustomer"><i class="icon icon-warning"></i>{{::'serviceSetupModal.warning.localDialing' | translate}}</p>
@@ -128,7 +128,7 @@
     </div>
 
     <!-- company voicemail selection -->
-    <div class="cs-form__section">
+    <div class="cs-form__section" ng-if="settings.showTimezoneAndVoicemail">
       <div class="section__info">
         <h4 class="section__title" translate="serviceSetupModal.companyVoicemail"></h4>
       </div>

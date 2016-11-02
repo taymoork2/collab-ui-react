@@ -176,6 +176,19 @@
           }]
         }
       },
+      "sparkBoardTrial": {
+        "type": "SPARKBOARDS",
+        "enabled": true,
+        "details": {
+          "roomSystems": [
+            {
+              "model": "CISCO_SPARK_BOARD",
+              "enabled": false,
+              "quantity": 0
+            }
+          ]
+        }
+      },
       "skipDeviceTrial": {
         "skipDevices": true,
         "shippingInfo": {

@@ -51,7 +51,7 @@
         var chr1, chr2, chr3;
         var enc1, enc2, enc3, enc4;
         var i = 0;
-        input = _.replace(input, /[^A-Za-z0-9\+\/=]/g, '');
+        input = _.replace(input, /[^A-Za-z0-9+/=]/g, '');
         while (i < input.length) {
           enc1 = this._keyStr.indexOf(input.charAt(i++));
           enc2 = this._keyStr.indexOf(input.charAt(i++));
@@ -258,11 +258,11 @@
 
       getSqEntitlements: function (user) {
         var entitlements = {};
-        if (angular.isArray($rootScope.services)) {
+        if (_.isArray($rootScope.services)) {
           for (var i = $rootScope.services.length - 1; i >= 0; i--) {
             var service = $rootScope.services[i].serviceId;
             var ciName = $rootScope.services[i].ciName;
-            if (angular.isDefined(user) && angular.isArray(user.entitlements) && user.entitlements.indexOf(ciName) > -1) {
+            if (!_.isUndefined(user) && _.isArray(user.entitlements) && user.entitlements.indexOf(ciName) > -1) {
               entitlements[service] = true;
               entitlements.webExSquared = true;
             } else {

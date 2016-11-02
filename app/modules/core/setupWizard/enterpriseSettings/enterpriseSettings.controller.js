@@ -5,7 +5,7 @@
     .controller('EnterpriseSettingsCtrl', EnterpriseSettingsCtrl);
 
   /* @ngInject */
-  function EnterpriseSettingsCtrl($scope, $rootScope, $q, $timeout, SSOService, Authinfo, Log, Notification, $translate, $window, UrlConfig) {
+  function EnterpriseSettingsCtrl($q, $rootScope, $scope, $timeout, $translate, $window, Authinfo, Config, Log, Notification, ServiceSetup, SSOService, Orgservice, UrlConfig) {
     var strEntityDesc = '<EntityDescriptor ';
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
@@ -24,9 +24,44 @@
       deleteSSOBySwitchingRadio: false
     };
 
+    var DEFAULT_TZ = {
+      id: 'America/Los_Angeles',
+      label: $translate.instant('timeZones.America/Los_Angeles')
+    };
+    var vm = this;
+    vm.inputValue = '';
+    vm.timeZoneOptions = [];
+    vm._buildTimeZoneOptions = _buildTimeZoneOptions;
+    vm.loadTimeZoneOptions = loadTimeZoneOptions;
+    vm.model = {
+      site: {
+        timeZone: DEFAULT_TZ
+      }
+    };
+
+    vm.timeZoneSelection = [{
+      model: vm.model.site,
+      key: 'timeZone',
+      type: 'select',
+      templateOptions: {
+        inputClass: 'medium-4',
+        label: $translate.instant('serviceSetupModal.timeZone'),
+        options: [],
+        labelfield: 'label',
+        valuefield: 'id',
+        inputPlaceholder: $translate.instant('serviceSetupModal.searchTimeZone'),
+        filter: true
+      },
+      controller: /* @ngInject */ function ($scope) {
+        _buildTimeZoneOptions($scope);
+        loadTimeZoneOptions();
+      }
+    }];
+
     init();
 
     function init() {
+      validatePMRSiteURL();
       updateSSO();
     }
 
@@ -77,6 +112,23 @@
       name: 'finalssoOptions',
       id: 'finalSsoNoProvider'
     }];
+
+    function validatePMRSiteURL() {
+      var pmrSiteUrl = '';
+      Orgservice.getOrg(function (data, status) {
+        if (status == 200) {
+          var sparkDomainStr = UrlConfig.getSparkDomainCheckUrl();
+          pmrSiteUrl = data.orgSettings.sipCloudDomain.replace(sparkDomainStr, Config.siteDomainUrl.webexUrl);
+          Orgservice.validateSiteUrl(pmrSiteUrl).then(function (response) {
+            if (response.isValid) {
+              vm.inputValue = pmrSiteUrl.replace(Config.siteDomainUrl.webexUrl, '');
+            } else {
+              vm.inputValue = '';
+            }
+          });
+        }
+      });
+    }
 
     $scope.$watch('options.configureSSO', function (updatedConfigureSSOValue) {
       if ($rootScope.ssoEnabled && updatedConfigureSSOValue === 1) {
@@ -247,6 +299,21 @@
         }
         $scope.wizard.wizardNextLoad = false;
       });
+    }
+
+    function _buildTimeZoneOptions(localScope) {
+      localScope.$watchCollection(function () {
+        return vm.timeZoneOptions;
+      }, function (timeZones) {
+        localScope.to.options = timeZones;
+      });
+    }
+
+    function loadTimeZoneOptions() {
+      return ServiceSetup.getTimeZones()
+        .then(function (timeZones) {
+          vm.timeZoneOptions = ServiceSetup.getTranslatedTimeZones(timeZones);
+        });
     }
 
     function reEnableSSO() {

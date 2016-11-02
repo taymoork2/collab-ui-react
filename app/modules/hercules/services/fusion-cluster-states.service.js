@@ -57,7 +57,7 @@
 
       // Also note that this function accepts both a connector or just a string
       var state = data;
-      if (angular.isString(data.state)) {
+      if (_.isString(data.state)) {
         // Duck typing, if it has a state it must be a connector!
         // Override the state with 'has_alarms' if necessary
         if (connectorHasAlarms(data)) {

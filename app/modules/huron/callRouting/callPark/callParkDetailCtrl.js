@@ -53,7 +53,7 @@
         if (scope.model.patternOption !== 'range') {
           return true;
         }
-        return angular.isDefined(value) && value !== '';
+        return !_.isUndefined(value) && value !== '';
       }
     };
     vm.nameFields = [{

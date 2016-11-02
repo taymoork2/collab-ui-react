@@ -6,7 +6,7 @@
     .controller('AARouteCallMenuCtrl', AARouteCallMenuCtrl);
 
   /* @ngInject */
-  function AARouteCallMenuCtrl($scope, $translate, AAUiModelService, AACommonService, AAScrollBar) {
+  function AARouteCallMenuCtrl($scope, $translate, AAUiModelService, AACommonService) {
 
     var vm = this;
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
@@ -34,7 +34,6 @@
     };
 
     vm.setSelects = setSelects;
-    vm.selectChanged = selectChanged;
 
     function setSelects() {
 
@@ -49,7 +48,7 @@
         val = _.find(vm.menuEntry.actions, {
           name: option.value
         });
-        if (angular.isDefined(val)) {
+        if (!_.isUndefined(val)) {
           if (val.name === option.value) {
             vm.selected = option;
             return true;
@@ -58,10 +57,6 @@
 
       });
 
-    }
-
-    function selectChanged() {
-      AAScrollBar.resizeBuilderScrollBar();
     }
 
     function activate() {

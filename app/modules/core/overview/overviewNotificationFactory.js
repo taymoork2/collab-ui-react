@@ -6,9 +6,10 @@
     .factory('OverviewNotificationFactory', OverviewNotificationFactory);
 
   /* @ngInject */
-  function OverviewNotificationFactory(OverviewSetupNotification, OverviewCalendarNotification, OverviewCallConnectNotification, OverviewCallAwareNotification, OverviewCloudSipUriNotification, OverviewDevicesNotification, OverviewHybridMediaNotification, OverviewPMRNotification) {
+  function OverviewNotificationFactory(OverviewSetupNotification, OverviewUrgentUpgradeNotification, OverviewCalendarNotification, OverviewCallConnectNotification, OverviewCallAwareNotification, OverviewCloudSipUriNotification, OverviewDevicesNotification, OverviewHybridMediaNotification, OverviewPMRNotification) {
     return {
       createSetupNotification: OverviewSetupNotification.createNotification,
+      createUrgentUpgradeNotification: OverviewUrgentUpgradeNotification.createNotification,
       createCalendarNotification: OverviewCalendarNotification.createNotification,
       createCallConnectNotification: OverviewCallConnectNotification.createNotification,
       createCallAwareNotification: OverviewCallAwareNotification.createNotification,

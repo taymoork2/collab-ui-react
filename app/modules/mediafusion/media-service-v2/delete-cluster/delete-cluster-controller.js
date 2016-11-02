@@ -106,7 +106,7 @@
         }, true)[0];
 
         if (!_.includes(clusterListNames, toClusterName)) {
-          if (angular.isDefined(toCluster)) {
+          if (!_.isUndefined(toCluster)) {
             var deferred = $q.defer();
             loopPromises.push(deferred.promise.catch(recoverPromise));
             var response = { 'data': toCluster };
@@ -134,7 +134,7 @@
         'hostname': hostname
       }, true)[0];
 
-      if (!angular.isDefined(toCluster)) {
+      if (_.isUndefined(toCluster)) {
         vm.errorCount++;
         vm.failedHostMove.push(host.hostname);
         deleteCluster();
@@ -192,7 +192,7 @@
         vm.failedToDelete = true;
         vm.ngDisable = true;
         var nodesString = '';
-        angular.forEach(vm.failedHostMove, function (value) {
+        _.forEach(vm.failedHostMove, function (value) {
           nodesString = value + ', ' + nodesString;
         });
         vm.unableToMoveNodes = $translate.instant(

@@ -56,7 +56,7 @@
           order: 'pattern',
           pattern: patternQuery
         }, angular.bind(this, function (extPool) {
-          angular.forEach(extPool, function (extNum) {
+          _.forEach(extPool, function (extNum) {
             extNumPool.push({
               uuid: extNum.uuid,
               pattern: extNum.pattern
@@ -125,7 +125,7 @@
       },
 
       updateInternalNumberRange: function (internalNumberRange) {
-        if (angular.isDefined(internalNumberRange.uuid)) {
+        if (!_.isUndefined(internalNumberRange.uuid)) {
           internalNumberRange.name = internalNumberRange.description = internalNumberRange.beginNumber + ' - ' + internalNumberRange.endNumber;
           internalNumberRange.patternUsage = "Device";
           return InternalNumberRangeService.save({

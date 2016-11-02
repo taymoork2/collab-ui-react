@@ -67,7 +67,7 @@
         error.push(response.pattern + ' not deleted correctly');
       };
 
-      if (angular.isDefined(callPark.data) && angular.isArray(callPark.data)) {
+      if (!_.isUndefined(callPark.data) && _.isArray(callPark.data)) {
         for (var i = 0; i < callPark.data.length; i++) {
           var data = angular.copy(callPark.data[i]);
           deferreds.push(CallParkService.remove({

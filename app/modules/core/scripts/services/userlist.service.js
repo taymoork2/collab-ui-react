@@ -238,7 +238,7 @@
                   exportedUser.lastName = (users[i].name && users[i].name.familyName) ? users[i].name.familyName : '';
                   exportedUser.displayName = users[i].displayName || '';
                   exportedUser.email = users[i].userName;
-                  exportedUser.entitlements = angular.isArray(users[i].entitlements) ? users[i].entitlements.join(' ') : '';
+                  exportedUser.entitlements = _.isArray(users[i].entitlements) ? users[i].entitlements.join(' ') : '';
                   exportedUsers.push(exportedUser);
                 }
               }

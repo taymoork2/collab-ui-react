@@ -19,7 +19,7 @@
       getTelephonyInfo: getTelephonyInfo,
       loadInternalNumberPool: loadInternalNumberPool,
       loadExternalNumberPool: loadExternalNumberPool,
-      returnInternalNumberlist: returnInternalNumberlist,
+      returnInternalNumberList: returnInternalNumberList,
       returnExternalNumberList: returnExternalNumberList,
       checkDnOverlapsSteeringDigit: checkDnOverlapsSteeringDigit,
       assignDNForUserList: assignDNForUserList,
@@ -54,8 +54,7 @@
     // Check to see if the currently selected directory number's first digit is
     // the same as the company steering digit.
     function checkDnOverlapsSteeringDigit(entity) {
-      var steeringDigit = telephonyInfo.steeringDigit;
-      return _.startsWith(_.get(entity, 'assignedDn.pattern'), steeringDigit);
+      return _.startsWith(_.get(entity, 'assignedDn.pattern'), _.get(telephonyInfo, 'steeringDigit'));
     }
 
     function getEntitylist() {
@@ -147,7 +146,7 @@
       return nameTemplate;
     }
 
-    function returnInternalNumberlist(pattern) {
+    function returnInternalNumberList(pattern) {
       if (pattern) {
         loadInternalNumberPool(pattern);
       } else {

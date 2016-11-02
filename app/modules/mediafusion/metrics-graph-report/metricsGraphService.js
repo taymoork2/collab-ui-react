@@ -190,7 +190,7 @@
     function setCallVolumeGraph(data, callVolumeChart, cluster, daterange) {
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
-      } else if (callVolumeChart !== null && angular.isDefined(callVolumeChart)) {
+      } else if (callVolumeChart !== null && !_.isUndefined(callVolumeChart)) {
         var startDuration = 1;
         if (!data[0].balloon) {
           startDuration = 0;
@@ -258,7 +258,7 @@
         'time': timeStamp
       };
       var exportFields = [];
-      angular.forEach(graphs, function (value) {
+      _.forEach(graphs, function (value) {
         if (value.title !== average_utilzation) {
           columnNames[value.valueField] = value.title + ' ' + 'Utilization';
         } else {
@@ -287,7 +287,7 @@
       var isDummy = false;
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
-      } else if (utilizationChart !== null && angular.isDefined(utilizationChart)) {
+      } else if (utilizationChart !== null && !_.isUndefined(utilizationChart)) {
         if (data[0].colorTwo === chartColors.dummyGray) {
           isDummy = true;
         }
@@ -303,6 +303,7 @@
         utilizationChart.chartCursor.valueLineBalloonEnabled = true;
         utilizationChart.chartCursor.valueLineEnabled = true;
         utilizationChart.chartCursor.categoryBalloonEnabled = true;
+        utilizationChart.chartCursor.oneBalloonOnly = true;
         if (isDummy) {
           utilizationChart.chartCursor.valueLineBalloonEnabled = false;
           utilizationChart.chartCursor.valueLineEnabled = false;
@@ -324,6 +325,7 @@
         utilizationChart.chartCursor.valueLineBalloonEnabled = true;
         utilizationChart.chartCursor.valueLineEnabled = true;
         utilizationChart.chartCursor.valueBalloonsEnabled = true;
+        utilizationChart.chartCursor.oneBalloonOnly = true;
         utilizationChart.chartCursor.balloonColor = chartColors.grayLight;
         if (isDummy) {
           utilizationChart.chartCursor.valueLineBalloonEnabled = false;
@@ -362,8 +364,8 @@
       } else {
         legend = angular.copy(availabilityLegendCluster);
       }
-      if (angular.isDefined(data.data[0].isDummy) && data.data[0].isDummy) {
-        angular.forEach(legend, function (value, key) {
+      if (!_.isUndefined(data.data[0].isDummy) && data.data[0].isDummy) {
+        _.forEach(legend, function (value, key) {
           legend[key].color = '#AAB3B3';
         });
       }

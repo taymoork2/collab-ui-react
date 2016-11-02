@@ -12,7 +12,7 @@
 
       _.each(res, function (result) {
         var details = result.details;
-        if (angular.isArray(details)) {
+        if (_.isArray(details)) {
           results.push(result.searchType + " returned " + result.details.length + " results.");
         } else {
           errors.push(result.searchType + " returned errors:" + result.details);
