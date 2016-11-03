@@ -443,8 +443,7 @@
       var graphItem = {
         balloon: true,
         contentShared: 0,
-        contentShareSizes: 0,
-        color: chartColors.brandSuccess
+        contentShareSizes: 0
       };
 
       var date = '';

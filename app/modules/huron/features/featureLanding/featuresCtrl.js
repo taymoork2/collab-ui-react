@@ -6,7 +6,7 @@
     .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeInfoModelService, Notification, Log, FeatureToggleService) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeInfoModelService, Notification, Log, FeatureToggleService, CardUtils) {
 
     var vm = this;
     vm.searchData = searchData;
@@ -252,15 +252,7 @@
     }
 
     function reInstantiateMasonry() {
-      $timeout(function () {
-        $('.cs-card-layout').masonry('destroy');
-        $('.cs-card-layout').masonry({
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          isResizable: true,
-          percentPosition: true
-        });
-      }, 0);
+      CardUtils.resize();
     }
 
     function showReloadPageIfNeeded() {
@@ -279,7 +271,7 @@
           var cardToRefresh = _.find(listOfAllFeatures, function (feature) {
             return feature.cardName === ref;
           });
-          if (angular.isDefined(cardToRefresh)) {
+          if (!_.isUndefined(cardToRefresh)) {
             cardToRefresh.dependsNames.splice(cardToRefresh.dependsNames.indexOf(featureToBeDeleted.cardName), 1);
             if (cardToRefresh.dependsNames.length === 0) {
               cardToRefresh.hasDepends = false;

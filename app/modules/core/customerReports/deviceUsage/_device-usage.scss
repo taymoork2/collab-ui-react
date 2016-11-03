@@ -3,12 +3,48 @@
       width: 12.5rem;
   }
 
-  .total-report {
-    .device-usage-total-chart {
-      height: 400px;
-      margin: 0 auto;
+  .extreme-table-entry {
+    font-size: 1.0rem;
+    padding-bottom: 0.3rem;
+    padding-top: 0.3rem;
+  }
+
+  .total-usage-table {
+    .digit {
+      font-family: "CiscoSansTT Thin";
+      font-size: 3rem;
+      color: $brand-primary;
+    }
+    .text {
+      font-size: 0.875rem;
     }
   }
+
+  .card-look {
+    margin-top: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 2px;
+    background-color: #FFF;
+    box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
+
+    .device-usage-total-chart {
+      height: 400px;
+      //width: 90%;
+      padding: 1rem 1rem;
+      //margin: 0 auto;
+      padding-top: 3rem;
+    }
+
+    .device-select {
+      width:8rem;
+      margin-right:1rem;
+      margin-top: 0.5rem;
+}
+
+  }
+
 
   .timeline-report {
 

@@ -18,13 +18,13 @@
       </ul>
     </cs-page-sub-header-left>
     <!-- end of breadcrumbs -->
-    
+
     <cs-page-sub-header-right ng-if="siteSettingsObj.viewReady">
       <button id="{{siteSettingsObj.emailAllHostsBtnObj.id}}" name="{{siteSettingsObj.emailAllHostsBtnObj.id}}" ui-sref="{{siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}" class="btn btn--people" translate="webexSiteSettingsLabels.emailAllHostsBtnTitle">
       </button>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
-  <div class="content-container" cs-scroll>
+  <div class="content-container">
     <!-- start of loading info -->
     <div ng-if="!siteSettingsObj.viewReady" id="loadingSection" name="loadingSection" align="center">
       <div id="loadingInprogressSection" name="loadingInprogressSection" ng-if="!siteSettingsObj.hasLoadError">

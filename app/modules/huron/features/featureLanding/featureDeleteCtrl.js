@@ -9,7 +9,7 @@
     .controller('HuronFeatureDeleteCtrl', HuronFeatureDeleteCtrl);
 
   /* @ngInject */
-  function HuronFeatureDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, AAModelService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeService, AutoAttendantCeInfoModelService, Notification, Log, AACalendarService) {
+  function HuronFeatureDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, AAModelService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeService, AutoAttendantCeInfoModelService, Notification, Log, AACalendarService, CardUtils) {
     var vm = this;
     vm.deleteBtnDisabled = false;
     vm.deleteFeature = deleteFeature;
@@ -34,15 +34,7 @@
     vm.deleteError = deleteError;
 
     function reInstantiateMasonry() {
-      $timeout(function () {
-        $('.cs-card-layout').masonry('destroy');
-        $('.cs-card-layout').masonry({
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          isResizable: true,
-          percentPosition: true
-        });
-      }, 0);
+      CardUtils.resize();
     }
 
     function deleteFeature() {
@@ -76,7 +68,7 @@
               .then(function () {
                 aaModel.ceInfos.splice(delPosition, 1);
                 AutoAttendantCeInfoModelService.deleteCeInfo(aaModel.aaRecords, ceInfoToDelete);
-                if (angular.isDefined(scheduleId)) {
+                if (!_.isUndefined(scheduleId)) {
                   AACalendarService.deleteCalendar(scheduleId);
                 }
                 deleteSuccess();
@@ -120,7 +112,7 @@
     function deleteSuccess() {
       vm.deleteBtnDisabled = false;
 
-      if (angular.isFunction($scope.$dismiss)) {
+      if (_.isFunction($scope.$dismiss)) {
         $scope.$dismiss();
       }
 
@@ -137,7 +129,7 @@
     function deleteError(response) {
       vm.deleteBtnDisabled = false;
 
-      if (angular.isFunction($scope.$dismiss)) {
+      if (_.isFunction($scope.$dismiss)) {
         $scope.$dismiss();
       }
       Log.warn('Failed to delete the ' + vm.featureType + ' with name: ' + vm.featureName + ' and id:' + vm.featureId);
@@ -151,14 +143,14 @@
           error += $translate.instant('errors.statusError', {
             status: response.status
           });
-          if (response.data && angular.isString(response.data)) {
+          if (response.data && _.isString(response.data)) {
             error += ' ' + $translate.instant('huronFeatureDetails.messageError', {
               message: response.data
             });
           }
         } else {
           error += 'Request failed.';
-          if (angular.isString(response.data)) {
+          if (_.isString(response.data)) {
             error += ' ' + response.data;
           }
         }

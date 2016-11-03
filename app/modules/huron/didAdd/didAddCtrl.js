@@ -209,7 +209,7 @@
       var didList = [];
       var tokens = vm.unsavedTokens;
 
-      if (angular.isString(tokens) && tokens.length > 0) {
+      if (_.isString(tokens) && tokens.length > 0) {
         didList = tokens.split(',');
       }
 
@@ -301,7 +301,7 @@
     }
 
     function emailNotifyTrialCustomer() {
-      if (angular.isDefined($scope.trial)) {
+      if (!_.isUndefined($scope.trial)) {
         EmailService.emailNotifyTrialCustomer(
             $scope.trial.model.customerEmail,
             $scope.trial.model.licenseDuration,

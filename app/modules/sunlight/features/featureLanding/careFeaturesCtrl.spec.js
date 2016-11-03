@@ -27,7 +27,6 @@ describe('Care Feature Ctrl should ', function () {
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
-
   beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _$timeout_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_) {
     $rootScope = _$rootScope_;
     $filter = _$filter_;

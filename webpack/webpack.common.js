@@ -114,6 +114,8 @@ module.exports = (function makeWebpackConfig() {
       x2js: 'x2js/xml2json.js',
       // Test aliases
       sinon: 'sinon/pkg/sinon.js',
+      imagesloaded: 'imagesloaded/imagesloaded.pkgd.js',
+      'masonry-layout': 'masonry-layout/dist/masonry.pkgd.js',
     },
     root: [
       path.resolve('./app'),

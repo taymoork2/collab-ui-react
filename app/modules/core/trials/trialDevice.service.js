@@ -121,8 +121,8 @@
     var _countries = {
       US: ['United States'],
       ROLLOUT1: ['United States', 'Argentina', 'Australia', 'Austria', 'Belgium', 'Canada', 'Chile', 'Colombia', 'Costa Rica', 'Czech Republic',
-      'Denmark', 'Finland', 'France', 'Germany', 'Ireland', 'Italy', 'Luxembourg', 'Netherlands', 'Norway', 'Peru', 'Poland',
-      'Portugal', 'Slovakia', 'Spain', 'Sweden', 'Switzerland', 'United Kingdom']
+        'Denmark', 'Finland', 'France', 'Germany', 'Ireland', 'Italy', 'Luxembourg', 'Netherlands', 'Norway', 'Peru', 'Poland',
+        'Portugal', 'Slovakia', 'Spain', 'Sweden', 'Switzerland', 'United Kingdom']
 
     };
 

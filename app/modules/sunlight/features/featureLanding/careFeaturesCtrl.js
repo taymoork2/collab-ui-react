@@ -6,7 +6,7 @@
     .controller('CareFeaturesCtrl', CareFeaturesCtrl);
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $q, $state, $scope, $timeout, Authinfo, CareFeatureList, CTService, Log, Notification) {
+  function CareFeaturesCtrl($filter, $q, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification) {
     var vm = this;
     vm.init = init;
     var pageStates = {
@@ -120,15 +120,7 @@
     }
 
     function reInstantiateMasonry() {
-      $timeout(function () {
-        $('.cs-card-layout').masonry('destroy');
-        $('.cs-card-layout').masonry({
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          isResizable: true,
-          percentPosition: true
-        });
-      }, 0);
+      CardUtils.resize();
     }
 
     function showReloadPageIfNeeded() {

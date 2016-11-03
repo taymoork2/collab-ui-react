@@ -14,7 +14,7 @@
       return placesFeatureIsEnabled()
         .then(function (res) {
           if (res) {
-            return $http.get(csdmPlacesUrl)
+            return $http.get(csdmPlacesUrl + "?shallow=true&type=all")
               .then(function (res) {
                 return CsdmConverter.convertPlaces(res.data);
               });
@@ -32,18 +32,16 @@
       }
     }
 
-    function pstnFeatureIsEnabled() {
-      if ($window.location.search.indexOf("enablePstn=true") > -1) {
-        return $q.when(true);
-      } else {
-        return FeatureToggleService.supports(FeatureToggleService.features.csdmPstn);
-      }
-    }
-
-    function updatePlaceName(placeUrl, name) {
-      return $http.patch(placeUrl, {
+    function updateItemName(place, name) {
+      return $http.patch(place.url, {
         name: name
       }).then(function (res) {
+        return CsdmConverter.convertPlace(res.data);
+      });
+    }
+
+    function fetchPlace(placeUrl) {
+      return $http.get(placeUrl).then(function (res) {
         return CsdmConverter.convertPlace(res.data);
       });
     }
@@ -73,12 +71,12 @@
 
     return {
       placesFeatureIsEnabled: placesFeatureIsEnabled,
-      pstnFeatureIsEnabled: pstnFeatureIsEnabled,
       deletePlace: deletePlace,
       deleteItem: deletePlace,
+      fetchItem: fetchPlace,
       createCsdmPlace: createCsdmPlace,
       getPlacesList: getPlacesList,
-      updatePlaceName: updatePlaceName,
+      updateItemName: updateItemName,
       getPlacesUrl: getPlacesUrl,
       updatePlace: updatePlace
     };

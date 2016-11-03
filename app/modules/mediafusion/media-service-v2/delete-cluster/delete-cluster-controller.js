@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function DeleteClusterSettingControllerV2($q, cluster, $modalInstance, $filter, MediaClusterServiceV2, $state, $translate, XhrNotificationService, Notification) {
+  function DeleteClusterSettingControllerV2($q, cluster, $modalInstance, $filter, MediaClusterServiceV2, $state, $translate, Notification) {
     var vm = this;
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
     vm.options = [];
@@ -106,7 +106,7 @@
         }, true)[0];
 
         if (!_.includes(clusterListNames, toClusterName)) {
-          if (angular.isDefined(toCluster)) {
+          if (!_.isUndefined(toCluster)) {
             var deferred = $q.defer();
             loopPromises.push(deferred.promise.catch(recoverPromise));
             var response = { 'data': toCluster };
@@ -134,7 +134,7 @@
         'hostname': hostname
       }, true)[0];
 
-      if (!angular.isDefined(toCluster)) {
+      if (_.isUndefined(toCluster)) {
         vm.errorCount++;
         vm.failedHostMove.push(host.hostname);
         deleteCluster();
@@ -158,7 +158,7 @@
           nodeName: host.hostname,
           clusterName: toCluster.data.name
         });
-        Notification.notify(vm.successMove, 'success');
+        Notification.success(vm.successMove);
         deleteCluster();
       };
     }
@@ -173,26 +173,24 @@
 
     function deleteCluster() {
       if (vm.successCount == vm.noOfHost) {
-        MediaClusterServiceV2.deleteV2Cluster(vm.cluster.id).then(function (res) {
+        MediaClusterServiceV2.deleteV2Cluster(vm.cluster.id).then(function () {
           vm.success = $translate.instant('mediaFusion.clusters.clusterdeleteSuccess', {
-            clustername: vm.cluster.name,
-            errorMessage: XhrNotificationService.getMessages(res).join(', ')
+            clustername: vm.cluster.name
           });
-          Notification.notify(vm.success, 'success');
+          Notification.success(vm.success);
           $modalInstance.close();
           $state.go("media-service-v2.list");
         }, function (err) {
           vm.error = $translate.instant('mediaFusion.deleteGroup.errorMessage', {
-            groupName: vm.cluster.name,
-            errorMessage: XhrNotificationService.getMessages(err).join(', ')
+            groupName: vm.cluster.name
           });
-          Notification.notify(vm.error, 'error');
+          Notification.errorWithTrackingId(err, vm.error);
         });
       } else if ((vm.successCount + vm.errorCount) == vm.noOfHost) {
         vm.failedToDelete = true;
         vm.ngDisable = true;
         var nodesString = '';
-        angular.forEach(vm.failedHostMove, function (value) {
+        _.forEach(vm.failedHostMove, function (value) {
           nodesString = value + ', ' + nodesString;
         });
         vm.unableToMoveNodes = $translate.instant(

@@ -6,6 +6,10 @@
 
   function SetupWizardCtrl($http, $scope, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, UrlConfig, Utils) {
 
+    FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
+      $scope.pstnEnabled = pstnEnabled;
+    });
+
     $scope.tabs = [];
     var tabs = [{
       name: 'planReview',
@@ -35,7 +39,7 @@
       description: 'firstTimeWizard.enterpriseSettingsSub',
       icon: 'icon-settings',
       title: 'firstTimeWizard.enterpriseSettings',
-      controller: 'EnterpriseSettingsCtrl',
+      controller: 'EnterpriseSettingsCtrl as entprCtrl',
       steps: [{
         name: 'enterpriseSipUrl',
         template: 'modules/core/setupWizard/enterpriseSettings/enterprise.setSipDomain.tpl.html'
@@ -111,13 +115,19 @@
         }).finally(init);
     }
 
+    function showCallSettings() {
+      return Authinfo.getLicenses().filter(function (license) {
+        return license.licenseType === Config.licenseTypes.COMMUNICATION || ($scope.pstnEnabled && license.licenseType === Config.licenseTypes.SHARED_DEVICES);
+      }).length > 0;
+    }
+
     function init() {
 
       $scope.tabs = filterTabs(tabs);
 
       setupAddUserSubTabs();
 
-      if (Authinfo.isSquaredUC()) {
+      if (showCallSettings()) {
         $scope.tabs.splice(1, 0, {
           name: 'serviceSetup',
           required: true,
@@ -185,6 +195,20 @@
                 });
               }
             });
+        }
+      });
+
+      FeatureToggleService.atlasPMRonM2GetStatus().then(function (response) {
+        if (response) {
+          var step = {
+            name: 'enterprisePmrSetup',
+            template: 'modules/core/setupWizard/enterpriseSettings/enterprise.pmrSetup.tpl.html'
+          };
+          $scope.tabs = _.each($scope.tabs, function (tab) {
+            if (tab.name === 'enterpriseSettings') {
+              tab.steps.splice(1, 0, step);
+            }
+          });
         }
       });
 

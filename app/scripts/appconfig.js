@@ -78,7 +78,13 @@
               $state.modal = $modal.open({
                 template: '<div ui-view="modal"></div>',
                 controller: 'ModalWizardCtrl',
-                windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html',
+                // TODO(pajeter): remove inline template when cs-modal is updated
+                windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="modal-alt"' +
+                    'modal-animation-class="fade"' +
+                    'modal-in-class="in"' +
+                    'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\', position: \'relative\'}">' +
+                    '<div class="modal-content" modal-transclude></div>' +
+                '</div>',
                 backdrop: 'static'
               });
               $state.modal.result.finally(function () {
@@ -285,7 +291,13 @@
               }
               $state.sidepanel = $modal.open({
                 template: '<cs-sidepanel></cs-sidepanel>',
-                windowTemplateUrl: 'sidepanel/sidepanel-modal.tpl.html',
+                // TODO(pajeter): remove inline template when cs-modal is updated
+                windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="sidepanel-modal"' +
+                      'modal-animation-class="fade"' +
+                      'modal-in-class="in"' +
+                      'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\'}">' +
+                      '<div class="modal-content" modal-transclude></div>' +
+                 ' </div>',
                 backdrop: false,
                 keyboard: false
               });
@@ -440,19 +452,6 @@
                 controller: 'NewSharedSpaceCtrl',
                 controllerAs: 'newPlace',
                 templateUrl: 'modules/squared/devices/addPlace/NewSharedSpaceTemplate.tpl.html'
-              }
-            },
-            params: {
-              wizard: null
-            }
-          })
-          .state('addDeviceFlow.addServices', {
-            parent: 'modal',
-            views: {
-              'modal@': {
-                controller: 'AddServicesCtrl',
-                controllerAs: 'addServices',
-                templateUrl: 'modules/squared/devices/addDeviceNew/AddServicesTemplate.tpl.html'
               }
             },
             params: {
@@ -626,12 +625,7 @@
             templateUrl: 'modules/core/settings/settings.tpl.html',
             controller: 'SettingsCtrl',
             controllerAs: 'settingsCtrl',
-            parent: 'main',
-            resolve: {
-              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.atlasSettingsPageGetStatus();
-              }
-            }
+            parent: 'main'
           })
           .state('status', {
             url: '/status',
@@ -719,12 +713,7 @@
             controller: 'MyCompanyPageCtrl',
             controllerAs: 'mcp',
             parent: 'main',
-            abstract: true,
-            resolve: {
-              supportsMyCompany: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.stateSupportsFeature(FeatureToggleService.features.atlasSettingsPage);
-              }
-            }
+            abstract: true
           })
           .state('my-company.subscriptions', {
             url: '/my-company/subscriptions',
@@ -1263,22 +1252,6 @@
               displayName: 'Beta Features'
             }
           })
-          .state('organization-overview.add', {
-            parent: 'modal',
-            views: {
-              'modal@': {
-                controller: 'OrganizationAddCtrl',
-                controllerAs: 'orgAdd',
-                template: '<div ui-view="orgAdd"></div>'
-              },
-              'orgAdd@organization-overview.add': {
-                templateUrl: 'modules/core/organizations/organizationAdd/organizationAdd.tpl.html'
-              }
-            }
-          })
-          .state('organization-overview.add.info', {
-            templateUrl: 'modules/core/organizations/organizationAdd/organizationAdd.tpl.html'
-          })
           .state('organization-overview.add.addNumbers', {
             templateUrl: 'modules/core/organizations/organizationAdd/addNumbers.tpl.html',
             controller: 'DidAddCtrl',
@@ -1391,7 +1364,7 @@
           })
           .state('reports.device-usage.distribution', {
             url: '/distribution',
-            templateUrl: 'modules/core/customerReports/deviceUsage/distribution.tpl.html',
+            templateUrl: 'modules/core/customerReports/deviceUsage/distribution/distribution.tpl.html',
             controller: 'DeviceUsageDistributionCtrl',
             controllerAs: 'deviceUsage',
             params: {
@@ -1404,7 +1377,7 @@
           })
           .state('reports.device-usage.timeline', {
             url: '/timeline',
-            templateUrl: 'modules/core/customerReports/deviceUsage/timeline.tpl.html',
+            templateUrl: 'modules/core/customerReports/deviceUsage/timeline/timeline.tpl.html',
             controller: 'DeviceUsageTimelineCtrl',
             controllerAs: 'deviceUsage',
             params: {
@@ -1631,7 +1604,7 @@
             },
           })
           .state('place-overview.communication.line-overview', {
-            template: '<uc-line-overview owner-type="place" owner-name="$resolve.ownerName" owner-id="$resolve.ownerId" number-id="$resolve.numberId"></uc-line-overview>',
+            template: '<uc-line-overview owner-type="place" owner-name="$resolve.ownerName" owner-id="$resolve.ownerId" owner-place-type="$resolve.ownerPlaceType" number-id="$resolve.numberId"></uc-line-overview>',
             params: {
               numberId: '',
             },
@@ -1649,6 +1622,9 @@
               },
               ownerName: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentPlace, 'displayName');
+              },
+              ownerPlaceType: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentPlace, 'type');
               },
               numberId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'numberId', '');
@@ -1735,6 +1711,18 @@
             parent: 'partner',
             template: '<div ui-view></div>',
             absract: true
+          })
+          .state('gem-services', {
+            parent: 'partner',
+            url: '/services/index',
+            template: '<cca-card></cca-card>'
+          })
+          .state('gem-spList', {
+            parent: 'partner',
+            url: '/services/gemSPList',
+            templateUrl: "modules/gemini/common/gemspList.tpl.html",
+            controller: 'GemspListCtrl',
+            controllerAs: 'gsls'
           })
           .state('partnercustomers.list', {
             url: '/customers',
@@ -1839,6 +1827,20 @@
             data: {},
             params: {
               meetingLicenses: {}
+            }
+          })
+          .state('customer-overview.sharedDeviceDetail', {
+            controller: 'SharedDeviceDetailCtrl',
+            controllerAs: 'sharedDeviceDetail',
+            templateUrl: 'modules/core/customers/customerOverview/sharedDeviceDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.sharedDeviceDetail').data.displayName = $translate.instant('customerPage.sharedDeviceLicenses');
+              }
+            },
+            data: {},
+            params: {
+              sharedDeviceLicenses: {}
             }
           })
           .state('customer-overview.externalNumbers', {
@@ -2489,7 +2491,13 @@
             resolve: {
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
-              }
+              },
+              hasEmergencyUpgradeFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade)
+                  .then(function (support) {
+                    return support;
+                  });
+              },
             }
           })
           .state('hds-settings', {
@@ -2509,7 +2517,12 @@
             templateUrl: 'modules/hercules/fusion-pages/mediafusion-settings.html',
             controller: 'MediafusionClusterSettingsController',
             controllerAs: 'clusterSettings',
-            parent: 'main'
+            parent: 'main',
+            resolve: {
+              hasEmergencyUpgradeFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade);
+              },
+            }
           })
           // Add Resource modal
           .state('add-resource', {
@@ -2764,7 +2777,13 @@
             resolve: {
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
-              }
+              },
+              hasEmergencyUpgradeFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade)
+                  .then(function (support) {
+                    return support;
+                  });
+              },
             }
           })
           .state('management-connector-details', {

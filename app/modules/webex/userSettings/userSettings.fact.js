@@ -561,7 +561,7 @@
             //   "userLicenses=" + JSON.stringify(userLicenses);
             // $log.log(logMsg);
 
-            userLicenses.forEach(
+            _.forEach(userLicenses,
               function checkLicense(userLicense) {
                 // var funcName = "checkLicense()";
                 // var logMsg = "";

@@ -3,13 +3,12 @@
 describe('Auth Service', function () {
   beforeEach(angular.mock.module('core.auth'));
 
-  var Auth, Authinfo, $httpBackend, Storage, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig, WindowLocation, TokenService;
+  var Auth, Authinfo, $httpBackend, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig, WindowLocation, TokenService;
 
-  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Storage_, _SessionStorage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
+  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _SessionStorage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
     $q = _$q_;
     Auth = _Auth_;
     $state = _$state_;
-    Storage = _Storage_;
     Authinfo = _Authinfo_;
     UrlConfig = _UrlConfig_;
     $rootScope = _$rootScope_;
@@ -28,240 +27,323 @@ describe('Auth Service', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should redirect to login if redirectToLogin method is called without email else to oauthURL', function () {
-    Auth.redirectToLogin();
-    expect($state.go).toHaveBeenCalled();
-  });
+  beforeEach(installPromiseMatchers);
 
-  it('should redirect to oauthUrl if redirectToLogin method is called with email', function () {
-    OAuthConfig.getOauthLoginUrl = sinon.stub().returns('oauthURL');
-    Auth.redirectToLogin('email@email.com');
-    expect(WindowLocation.set).toHaveBeenCalledWith('oauthURL');
-  });
-
-  it('should login if redirectToLogin method is called with sso=true', function () {
-    OAuthConfig.getOauthLoginUrl = sinon.stub().returns('oauthURL');
-    Auth.redirectToLogin(null, true);
-    expect(WindowLocation.set).toHaveBeenCalledWith('oauthURL');
-  });
-
-  it('should get customer account info using correct API', function (done) {
-    UrlConfig.getAdminServiceUrl = sinon.stub().returns('foo/');
-
-    $httpBackend
-      .expectGET('foo/customers?orgId=bar')
-      .respond(200, {
-        foo: 'bar'
-      });
-
-    Auth.getCustomerAccount('bar').then(function (res) {
-      expect(res.data.foo).toBe('bar');
-      _.defer(done);
+  describe('redirectToLogin()', function () {
+    it('should redirect to login if redirectToLogin method is called without email else to oauthURL', function () {
+      Auth.redirectToLogin();
+      expect($state.go).toHaveBeenCalled();
     });
 
-    $httpBackend.flush();
+    it('should redirect to oauthUrl if redirectToLogin method is called with email', function () {
+      OAuthConfig.getOauthLoginUrl = sinon.stub().returns('oauthURL');
+      Auth.redirectToLogin('email@email.com');
+      expect(WindowLocation.set).toHaveBeenCalledWith('oauthURL');
+    });
+
+    it('should login if redirectToLogin method is called with sso=true', function () {
+      OAuthConfig.getOauthLoginUrl = sinon.stub().returns('oauthURL');
+      Auth.redirectToLogin(null, true);
+      expect(WindowLocation.set).toHaveBeenCalledWith('oauthURL');
+    });
   });
 
-  it('should get new access token', function (done) {
-    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
-    OAuthConfig.getNewAccessTokenPostData = sinon.stub().returns('data');
-    OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
-    spyOn(Auth, 'verifyOauthState').and.returnValue(true);
+  describe('getCustomerAccount()', function () {
+    it('should get customer account info using correct API', function () {
+      UrlConfig.getAdminServiceUrl = sinon.stub().returns('foo/');
 
-    $httpBackend
-      .expectPOST('url', 'data', assertCredentials)
-      .respond(200, {
-        access_token: 'accessTokenFromAPI'
+      $httpBackend
+        .expectGET('foo/customers?orgId=bar')
+        .respond(200, {
+          foo: 'bar'
+        });
+
+      var promise = Auth.getCustomerAccount('bar');
+
+      $httpBackend.flush();
+      expect(promise).toBeResolvedWith(jasmine.objectContaining({
+        data: {
+          foo: 'bar',
+        },
+      }));
+    });
+  });
+
+  describe('getNewAccessToken()', function () {
+    beforeEach(function () {
+      OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
+      OAuthConfig.getNewAccessTokenPostData = sinon.stub().returns('data');
+      OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
+      spyOn(Auth, 'verifyOauthState').and.returnValue(true);
+    });
+
+    it('should get new access token', function () {
+      $httpBackend
+        .expectPOST('url', 'data', assertCredentials)
+        .respond(200, {
+          access_token: 'accessTokenFromAPI'
+        });
+
+      var promise = Auth.getNewAccessToken({
+        code: 'argToGetNewAccessToken',
+        state: '123-abc-456'
       });
 
-    Auth.getNewAccessToken({
-      code: 'argToGetNewAccessToken',
-      state: '123-abc-456'
-    }).then(function (accessToken) {
-      expect(accessToken).toBe('accessTokenFromAPI');
+      $httpBackend.flush();
+      expect(promise).toBeResolvedWith('accessTokenFromAPI');
       expect(OAuthConfig.getNewAccessTokenPostData.getCall(0).args[0]).toBe('argToGetNewAccessToken');
-      _.defer(done);
     });
 
-    $httpBackend.flush();
-  });
+    it('should not get new access token if failure', function () {
+      Auth.verifyOauthState.and.returnValue(true);
 
-  it('should not get new access token', function () {
-    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
-    OAuthConfig.getNewAccessTokenPostData = sinon.stub().returns('data');
-    OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
-    spyOn(Auth, 'verifyOauthState').and.returnValue(false);
+      $httpBackend
+        .expectPOST('url', 'data', assertCredentials)
+        .respond(500);
 
-    Auth.getNewAccessToken({
-      code: 'argToGetNewAccessToken',
-      state: '123-abc-456'
-    }).catch(function (error) {
-      expect(error).toBeUndefined();
-    });
-    $rootScope.$apply();
-  });
-
-  it('should refresh access token', function (done) {
-    SessionStorage.get = sinon.stub().returns('fromStorage');
-    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
-    OAuthConfig.getOauthAccessCodeUrl = sinon.stub().returns('accessCodeUrl');
-    OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
-
-    $httpBackend
-      .expectPOST('url', 'accessCodeUrl', assertCredentials)
-      .respond(200, {
-        access_token: 'accessTokenFromAPI'
+      var promise = Auth.getNewAccessToken({
+        code: 'argToGetNewAccessToken',
+        state: '123-abc-456'
       });
+      $httpBackend.flush();
+      expect(promise).toBeRejectedWith(mockResponse(500));
+    });
 
-    Auth.refreshAccessToken('argToGetNewAccessToken').then(function (accessToken) {
-      expect(accessToken).toBe('accessTokenFromAPI');
+    it('should not get new access token if not oauth state', function () {
+      Auth.verifyOauthState.and.returnValue(false);
+
+      var promise = Auth.getNewAccessToken({
+        code: 'argToGetNewAccessToken',
+        state: '123-abc-456'
+      });
+      $rootScope.$apply();
+      expect(promise).toBeRejectedWith(undefined);
+    });
+  });
+
+  describe('refreshAccessToken()', function () {
+    beforeEach(function () {
+      SessionStorage.get = sinon.stub().returns('fromStorage');
+      OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
+      OAuthConfig.getOauthAccessCodeUrl = sinon.stub().returns('accessCodeUrl');
+      OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
+      spyOn(TokenService, 'completeLogout');
+    });
+
+    it('should refresh access token', function () {
+      $httpBackend
+        .expectPOST('url', 'accessCodeUrl', assertCredentials)
+        .respond(200, {
+          access_token: 'accessTokenFromAPI'
+        });
+
+      var promise = Auth.refreshAccessToken();
+
+      $httpBackend.flush();
+      expect(promise).toBeResolvedWith('accessTokenFromAPI');
       expect(SessionStorage.get.getCall(0).args[0]).toBe('refreshToken');
       expect(OAuthConfig.getOauthAccessCodeUrl.getCall(0).args[0]).toBe('fromStorage');
-      _.defer(done);
     });
 
-    $httpBackend.flush();
+    it('should reject refresh access token if failure', function () {
+      $httpBackend
+        .expectPOST('url', 'accessCodeUrl', assertCredentials)
+        .respond(500);
+
+      var promise = Auth.refreshAccessToken();
+
+      $httpBackend.flush();
+      expect(promise).toBeRejectedWith(mockResponse(500));
+      expect(SessionStorage.get.getCall(0).args[0]).toBe('refreshToken');
+      expect(OAuthConfig.getOauthAccessCodeUrl.getCall(0).args[0]).toBe('fromStorage');
+      expect(TokenService.completeLogout).toHaveBeenCalled();
+    });
+
+    it('should reject refresh access token if no refresh token', function () {
+      SessionStorage.get.returns(undefined);
+
+      var promise = Auth.refreshAccessToken();
+
+      $rootScope.$apply();
+      expect(promise).toBeRejectedWith('refreshtoken not found');
+      expect(SessionStorage.get.getCall(0).args[0]).toBe('refreshToken');
+      expect(OAuthConfig.getOauthAccessCodeUrl.getCall(0).args[0]).toBe(undefined);
+      expect(TokenService.completeLogout).toHaveBeenCalled();
+    });
   });
 
-  it('should set access token', function (done) {
-    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
-    OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
-    OAuthConfig.getAccessTokenPostData = sinon.stub().returns('data');
+  describe('refreshAccessTokenAndResendRequest()', function () {
+    beforeEach(function () {
+      OAuthConfig.getOauth2Url = sinon.stub().returns('');
+      OAuthConfig.getAccessTokenUrl = sinon.stub().returns('access_token_url');
+      TokenService.getRefreshToken = sinon.stub().returns('refresh_token');
+      spyOn(TokenService, 'completeLogout');
+    });
 
-    $httpBackend
-      .expectPOST('url', 'data', assertCredentials)
-      .respond(200, {
-        access_token: 'accessTokenFromAPI'
+    it('should refresh token and resend request', function () {
+      $httpBackend
+        .expectPOST('access_token_url')
+        .respond(200, {
+          access_token: ''
+        });
+
+      $httpBackend
+        .expectGET('foo')
+        .respond(200, {
+          bar: 'baz'
+        });
+
+      var promise = Auth.refreshAccessTokenAndResendRequest({
+        config: {
+          method: 'GET',
+          url: 'foo'
+        }
       });
 
-    Auth.setAccessToken().then(function (accessToken) {
-      expect(accessToken).toBe('accessTokenFromAPI');
-      _.defer(done);
+      $httpBackend.flush();
+      expect(promise).toBeResolvedWith(jasmine.objectContaining({
+        data: {
+          bar: 'baz'
+        }
+      }));
     });
 
-    $httpBackend.flush();
-  });
+    it('should not refresh token and resend request, should redirect to login', function () {
+      OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
+      $httpBackend
+        .expectPOST('access_token_url')
+        .respond(500);
 
-  it('should return rejected promise if setAccessToken fails', function (done) {
-    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
-    OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
-    OAuthConfig.getAccessTokenPostData = sinon.stub().returns('data');
+      var promise = Auth.refreshAccessTokenAndResendRequest();
 
-    $httpBackend
-      .expectPOST('url', 'data', assertCredentials)
-      .respond(500, {});
-
-    Auth.setAccessToken().catch(function () {
-      _.defer(done);
-    });
-
-    $httpBackend.flush();
-  });
-
-  it('should refresh token and resend request', function (done) {
-    OAuthConfig.getOauth2Url = sinon.stub().returns('');
-    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('access_token_url');
-    TokenService.getRefreshToken = sinon.stub().returns('refresh_token');
-
-    $httpBackend
-      .expectPOST('access_token_url')
-      .respond(200, {
-        access_token: ''
-      });
-
-    $httpBackend
-      .expectGET('foo')
-      .respond(200, {
-        bar: 'baz'
-      });
-
-    Auth.refreshAccessTokenAndResendRequest({
-      config: {
-        method: 'GET',
-        url: 'foo'
-      }
-    }).then(function (res) {
-      expect(res.data.bar).toBe('baz');
-      _.defer(done);
-    });
-
-    $httpBackend.flush();
-  });
-
-  it('should not refresh token and resend request, should redirect to login', function () {
-    OAuthConfig.getOauth2Url = sinon.stub().returns('');
-    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('access_token_url');
-    TokenService.getRefreshToken = sinon.stub().returns(null);
-    OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
-
-    Auth.refreshAccessTokenAndResendRequest().catch(function () {
-      expect(WindowLocation.set).toHaveBeenCalledWith('logoutUrl');
+      $httpBackend.flush();
+      expect(promise).toBeRejectedWith(mockResponse(500));
+      expect(TokenService.completeLogout).toHaveBeenCalledWith('logoutUrl');
     });
   });
 
-  it('should set refresh token', function () {
-    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
-    OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
-    OAuthConfig.getAccessTokenPostData = sinon.stub().returns('data');
+  describe('setAccessToken()', function () {
+    beforeEach(function () {
+      OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
+      OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
+      OAuthConfig.getAccessTokenPostData = sinon.stub().returns('data');
+    });
 
-    $httpBackend
-      .expectPOST('url', 'data', assertCredentials)
-      .respond(200, {
-        refresh_token: 'refreshTokenFromAPI'
-      });
+    it('should set access and refresh token', function () {
+      $httpBackend
+        .expectPOST('url', 'data', assertCredentials)
+        .respond(200, {
+          access_token: 'accessTokenFromAPI',
+          refresh_token: 'refreshTokenFromAPI',
+        });
 
-    Storage.clear();
-    Auth.setAccessToken().then(function () {
+      var promise = Auth.setAccessToken();
+
+      $httpBackend.flush();
+      expect(promise).toBeResolvedWith('accessTokenFromAPI');
       expect(TokenService.getRefreshToken()).toBe('refreshTokenFromAPI');
     });
 
-    $httpBackend.flush();
+    it('should return rejected promise if setAccessToken fails', function () {
+      $httpBackend
+        .expectPOST('url', 'data', assertCredentials)
+        .respond(500);
+
+      var promise = Auth.setAccessToken();
+
+      $httpBackend.flush();
+      expect(promise).toBeRejectedWith(mockResponse(500));
+    });
   });
 
-  it('should logout and redirect to a provided url', function () {
-    var loggedOut = sinon.stub();
-    Storage.clear = sinon.stub();
-    SessionStorage.get = sinon.stub().returns('accessToken');
-    OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
-    OAuthConfig.getOauthListTokenUrl = sinon.stub().returns('OauthListTokenUrl');
-    OAuthConfig.getOauthDeleteRefreshTokenUrl = sinon.stub().returns('refreshtoken=');
-    OAuthConfig.getClientId = sinon.stub().returns('ewvmpibn34inbr433f23f4');
+  describe('logoutAndRedirectTo()', function () {
+    beforeEach(function () {
+      OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
+      OAuthConfig.getOauthListTokenUrl = sinon.stub().returns('OauthListTokenUrl');
+      OAuthConfig.getOauthDeleteRefreshTokenUrl = sinon.stub().returns('refreshtoken=');
+      OAuthConfig.getClientId = sinon.stub().returns('ewvmpibn34inbr433f23f4');
+      spyOn(TokenService, 'completeLogout');
+    });
 
-    $httpBackend
-      .expectGET('OauthListTokenUrl')
-      .respond(200, {
-        total: 1,
-        data: [{
-          device_type: null,
-          create_time: '2016-07-28 21:39:06',
-          client_id: 'ewvmpibn34inbr433f23f4',
-          last_used_time: '2016-07-28 21:39:06',
-          token_id: 'OauthDeleteRefreshTokenUrl',
-          client_name: 'Admin Portal'
-        }]
-      });
+    it('should delete access tokens, logout, and redirect to a provided url', function () {
+      $httpBackend
+        .expectGET('OauthListTokenUrl')
+        .respond(200, {
+          total: 1,
+          data: [{
+            device_type: null,
+            create_time: '2016-07-28 21:39:06',
+            client_id: 'ewvmpibn34inbr433f23f4',
+            last_used_time: '2016-07-28 21:39:06',
+            token_id: 'OauthDeleteRefreshTokenUrl',
+            client_name: 'Admin Portal'
+          }]
+        });
 
-    $httpBackend
-      .expectDELETE('refreshtoken=OauthDeleteRefreshTokenUrl')
-      .respond(204, 'No Content');
+      $httpBackend
+        .expectDELETE('refreshtoken=OauthDeleteRefreshTokenUrl')
+        .respond(204, 'No Content');
 
-    Auth.logoutAndRedirectTo().then(loggedOut);
+      var promise = Auth.logoutAndRedirectTo('customLogoutUrl');
 
-    $httpBackend.flush();
+      $httpBackend.flush();
+      expect(promise).toBeResolved();
+      expect(TokenService.completeLogout).toHaveBeenCalledWith('customLogoutUrl');
+    });
 
-    expect(loggedOut.callCount).toBe(1);
-    expect(Storage.clear.callCount).toBe(1);
-    expect(WindowLocation.set).toHaveBeenCalled();
+    it('should logout and redirect to a provided url even if delete access tokens fail', function () {
+      $httpBackend
+        .expectGET('OauthListTokenUrl')
+        .respond(200, {
+          total: 1,
+          data: [{
+            device_type: null,
+            create_time: '2016-07-28 21:39:06',
+            client_id: 'ewvmpibn34inbr433f23f4',
+            last_used_time: '2016-07-28 21:39:06',
+            token_id: 'OauthDeleteRefreshTokenUrl',
+            client_name: 'Admin Portal'
+          }]
+        });
+
+      $httpBackend
+        .expectDELETE('refreshtoken=OauthDeleteRefreshTokenUrl')
+        .respond(500);
+
+      var promise = Auth.logoutAndRedirectTo('customLogoutUrl');
+
+      $httpBackend.flush();
+      expect(promise).toBeRejectedWith(mockResponse(500));
+      expect(TokenService.completeLogout).toHaveBeenCalledWith('customLogoutUrl');
+    });
+
+    it('should logout and redirect to a provided url even if getting the access tokens fails', function () {
+      $httpBackend
+        .expectGET('OauthListTokenUrl')
+        .respond(500);
+
+      var promise = Auth.logoutAndRedirectTo('customLogoutUrl');
+
+      $httpBackend.flush();
+      expect(promise).toBeRejectedWith(mockResponse(500));
+      expect(TokenService.completeLogout).toHaveBeenCalledWith('customLogoutUrl');
+    });
   });
 
-  it('should logout and redirect to the default logout url', function () {
-    OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
-    Auth.logoutAndRedirectTo = sinon.stub();
-    Auth.logout();
-    expect(Auth.logoutAndRedirectTo.calledWith('logoutUrl')).toBe(true);
+  describe('logout()', function () {
+    it('should logout and redirect to the default logout url', function () {
+      var logoutDefer = $q.defer();
+      OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
+      Auth.logoutAndRedirectTo = sinon.stub().returns(logoutDefer.promise);
+      var promise = Auth.logout();
+
+      logoutDefer.resolve();
+      expect(promise).toBeResolved();  // seems unnecessary, but should be the same promise returned from logoutAndRedirectTo()
+      expect(Auth.logoutAndRedirectTo.calledWith('logoutUrl')).toBe(true);
+    });
   });
 
-  describe('authorize', function () {
+  describe('authorize()', function () {
 
     beforeEach(function () {
       SessionStorage.get = sinon.stub();
@@ -594,6 +676,12 @@ describe('Auth Service', function () {
 
   function assertCredentials(headers) {
     return headers['Authorization'] === 'Basic clientRegistrationCredentials';
+  }
+
+  function mockResponse(status) {
+    return jasmine.objectContaining({
+      status: status,
+    });
   }
 
 });

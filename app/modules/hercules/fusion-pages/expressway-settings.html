@@ -9,14 +9,17 @@
         <h5 class="sub-section__label" translate="hercules.settings.scheduleUpgrade.title"></h5>
         <p class="sub-section__description" translate="hercules.settings.scheduleUpgrade.description"></p>
         <upgrade-schedule-configuration cluster-id="clusterSettings.cluster.id"></upgrade-schedule-configuration>
+        <div class="emergency-upgrade-section" ng-if="clusterSettings.showEmergencyUpgrade">
+          <h5 class="sub-section__label" translate="hercules.settings.emergencyUpgrade.expressway.title"></h5>
+          <p class="sub-section__description" translate="hercules.settings.emergencyUpgrade.expressway.description"></p>
+          <emergency-upgrade-configuration cluster-id="clusterSettings.cluster.id"></emergency-upgrade-configuration>
+        </div>
       </div>
     </setting-section>
 
     <setting-section setting="clusterSettings.resourceGroup" ng-if="clusterSettings.showResourceGroups">
-
       <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.resourceGroupsSubHeader" id="RG-section-test"></h5>
       <p class="sub-section__description" translate="hercules.expresswayClusterSettings.resourcegroupsParagraph"></p>
-
       <div class="medium-8">
         <cs-select
           ng-model="clusterSettings.selectedResourceGroup"
@@ -28,7 +31,6 @@
     </setting-section>
 
     <setting-section setting="clusterSettings.releasechannel" ng-if="clusterSettings.showResourceGroups && clusterSettings.allowedChannels.length > 1">
-
       <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.releasechannelSubHeader" id="RC-section-test"></h5>
       <p class="sub-section__description" translate="hercules.expresswayClusterSettings.releasechannelParagraph"></p>
       <div class="medium-8">
@@ -64,7 +66,6 @@
     </setting-section>
 
     <setting-section setting="clusterSettings.renameClusterSection">
-
       <div class="sub-section">
         <h5 class="sub-section__label" translate="common.rename"></h5>
         <p class="sub-section__description" translate="hercules.expresswayClusterSettings.renameClusterParagraph"></p>
@@ -85,9 +86,7 @@
             translate="common.save"
           ></button>
         </div>
-
       </div>
-
       <div class="sub-section">
         <h5 class="sub-section__label cap-long-names" translate="common.remove"></h5>
         <p class="sub-section__description" translate="hercules.expresswayClusterSettings.deregisterClusterExplanation"></p>

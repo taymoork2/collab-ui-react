@@ -83,7 +83,7 @@
 
 
       vm.messagingServices.services = Authinfo.getMessageServices() || [];
-      angular.forEach(vm.messagingServices.services, function (service) {
+      _.forEach(vm.messagingServices.services, function (service) {
         if (service.license.isTrial) {
           vm.trialExists = true;
           vm.trialId = service.license.trialId;
@@ -95,7 +95,7 @@
       });
 
       vm.confServices.services = Authinfo.getConferenceServices() || [];
-      angular.forEach(vm.confServices.services, function (service) {
+      _.forEach(vm.confServices.services, function (service) {
         var siteUrl = service.license.siteUrl;
         var isCISite = WebExUtilsFact.isCIEnabledSite(siteUrl);
 
@@ -115,7 +115,7 @@
       });
 
       vm.commServices.services = Authinfo.getCommunicationServices() || [];
-      angular.forEach(vm.commServices.services, function (service) {
+      _.forEach(vm.commServices.services, function (service) {
         if (service.license.isTrial) {
           vm.trialExists = true;
           vm.trialId = service.license.trialId;
@@ -145,7 +145,7 @@
       }
 
       vm.roomServices.services = Authinfo.getLicenses() || [];
-      angular.forEach(vm.roomServices.services, function (service) {
+      _.forEach(vm.roomServices.services, function (service) {
         if (service.licenseType === Config.licenseTypes.SHARED_DEVICES) {
           vm.roomSystemsCount += service.volume;
           if (service.isTrial) {
@@ -173,7 +173,7 @@
       vm.cmrServices.services = Authinfo.getCmrServices();
 
       vm.sites = {};
-      angular.forEach(vm.confServices.services, function (service) {
+      _.forEach(vm.confServices.services, function (service) {
         if (service.license) {
           if (service.license.siteUrl) {
             if (!vm.sites[service.license.siteUrl]) {
@@ -184,7 +184,7 @@
         }
       });
       if (Object.prototype.toString.call(vm.cmrServices.services) == '[object Array]') {
-        angular.forEach(vm.cmrServices.services, function (service) {
+        _.forEach(vm.cmrServices.services, function (service) {
           if (service.license) {
             if (service.license.siteUrl) {
               if (!vm.sites[service.license.siteUrl]) {

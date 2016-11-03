@@ -89,7 +89,7 @@
     require('modules/online/analytics').default,
     require('modules/online/upgrade').default,
     'atlas.templates',
-    'cisco.ui',
+    'collab.ui',
     'ct.ui.router.extras.sticky',
     'ct.ui.router.extras.future',
     'ct.ui.router.extras.previous',

@@ -6,7 +6,7 @@
     .controller('CustomerReportsCtrl', CustomerReportsCtrl);
 
   /* @ngInject */
-  function CustomerReportsCtrl($rootScope, $stateParams, $q, $timeout, $translate, Log, Authinfo, CustomerReportService, ReportConstants, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage, FeatureToggleService, MediaServiceActivationV2) {
+  function CustomerReportsCtrl($rootScope, $stateParams, $q, $timeout, $translate, Log, Authinfo, CustomerReportService, ReportConstants, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage, FeatureToggleService, MediaServiceActivationV2, CardUtils) {
     var vm = this;
     var ABORT = 'ABORT';
 
@@ -44,13 +44,7 @@
     vm.displayActiveLineGraph = false;
 
     // Active User Options
-    var activeArray = [{
-      value: 0,
-      label: $translate.instant('activeUsers.allUsers')
-    }, {
-      value: 1,
-      label: $translate.instant('activeUsers.activeUsers')
-    }];
+    var activeArray = _.cloneDeep(ReportConstants.activeFilter);
     vm.activeOptions = {
       animate: true,
       description: 'activeUsers.customerPortalDescription',
@@ -102,7 +96,7 @@
     };
 
     vm.resizeMostActive = function () {
-      resize(0);
+      CardUtils.resize(0);
     };
 
     var avgRoomsChart = null;
@@ -131,16 +125,7 @@
 
     var mediaChart = null;
     var mediaData = [];
-    var mediaArray = [{
-      value: 0,
-      label: $translate.instant('reportsPage.allCalls')
-    }, {
-      value: 1,
-      label: $translate.instant('reportsPage.audioCalls')
-    }, {
-      value: 2,
-      label: $translate.instant('reportsPage.videoCalls')
-    }];
+    var mediaArray = _.cloneDeep(ReportConstants.mediaFilter);
     vm.mediaOptions = {
       animate: true,
       description: 'mediaQuality.descriptionCustomer',
@@ -259,7 +244,7 @@
         if (response) {
           vm.headerTabs.push({
             title: $translate.instant('reportsPage.usageReports.usageReportTitle'),
-            state: 'reports.device-usage.timeline'
+            state: 'reports.device-usage.total'
           });
         }
       });
@@ -319,12 +304,6 @@
       setDeviceData();
     }
 
-    function resize(delay) {
-      $timeout(function () {
-        $('.cs-card-layout').masonry('layout');
-      }, delay);
-    }
-
     function resetCards(filter) {
       if (vm.currentFilter !== filter) {
         vm.displayEngagement = false;
@@ -335,7 +314,7 @@
         if (filter === vm.ALL || filter === vm.QUALITY) {
           vm.displayQuality = true;
         }
-        resize(500);
+        CardUtils.resize(500);
         vm.currentFilter = filter;
       }
     }
@@ -360,7 +339,7 @@
       setDeviceGraph(DummyCustomerReportService.dummyDeviceData(vm.timeSelected));
       setMediaGraph(DummyCustomerReportService.dummyMediaData(vm.timeSelected));
 
-      resize(0);
+      CardUtils.resize(0);
     }
 
     function setActiveGraph(data) {
@@ -400,7 +379,7 @@
             vm.activeDropdown.disabled = !response.isActiveUsers;
           }
         }
-        resize(0);
+        CardUtils.resize(0);
       });
 
       CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {

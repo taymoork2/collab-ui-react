@@ -16,6 +16,16 @@
     <p ng-if="clusterDetailsCtrl.cluster.aggregates.alarms.length === 0" translate="hercules.alarms.noAlarms"></p>
   </cs-sp-section>
 
+  <cs-sp-section ng-if="clusterDetailsCtrl.hasF237FeatureToggle && clusterDetailsCtrl.resourceGroupName">
+    <div class="section-title-row section-name" translate="hercules.resourceGroups.resourceGroupHeading"></div>
+    <p>{{clusterDetailsCtrl.resourceGroupName}}</p>
+  </cs-sp-section>
+
+  <cs-sp-section ng-if="clusterDetailsCtrl.hasF237FeatureToggle">
+    <div class="section-title-row section-name" translate="hercules.expresswayClusterSettings.releasechannelHeader"></div>
+    <p>{{clusterDetailsCtrl.releaseChannel}}</p>
+  </cs-sp-section>
+
   <cs-sp-section ng-if="clusterDetailsCtrl.schedule">
     <div class="section-title-row section-name" translate="hercules.expresswayClusterSettings.upgradeScheduleSubHeader"></div>
     <p>
@@ -24,9 +34,12 @@
     </p>
   </cs-sp-section>
 
-  <cs-sp-section ng-if="clusterDetailsCtrl.hasF237FeatureToggle">
-    <div class="section-title-row section-name" translate="hercules.expresswayClusterSettings.releasechannelHeader"></div>
-      <p class="hercules-capitalize">{{clusterDetailsCtrl.releaseChannel}}</p>
+  <cs-sp-section ng-if="clusterDetailsCtrl.schedule && clusterDetailsCtrl.hasEmergencyUpgradeFeatureToggle">
+    <div class="section-title-row section-name" translate="hercules.fusion.urgentUpgrade.title"></div>
+    <p>
+      <span>{{clusterDetailsCtrl.schedule.urgentScheduleTime}}, </span>
+      <span>{{clusterDetailsCtrl.schedule.timeZone}}</span>
+    </p>
   </cs-sp-section>
 
   <cs-sp-section>
@@ -35,7 +48,8 @@
     <div class="hercules-upgrade-section">
       <div ng-if="!clusterDetailsCtrl.showManagementUpgradeProgress">
         <p ng-if="!clusterDetailsCtrl.softwareUpgrade.isManagementUpgradeAvailable" translate="hercules.softwareUpgrade.upToDate" translate-values="{connectorType: clusterDetailsCtrl.localizedManagementConnectorName}"></p>
-        <p ng-if="clusterDetailsCtrl.softwareUpgrade.isManagementUpgradeAvailable" translate="hercules.softwareUpgrade.upgradePossible" translate-values="{connectorType: clusterDetailsCtrl.localizedManagementConnectorName, availableVersion: clusterDetailsCtrl.softwareUpgrade.availableManagementVersion}"></p>
+        <p ng-if="clusterDetailsCtrl.softwareUpgrade.isManagementUpgradeAvailable && !clusterDetailsCtrl.softwareUpgrade.isManagementUrgent" translate="hercules.softwareUpgrade.upgradePossible" translate-values="{connectorType: clusterDetailsCtrl.localizedManagementConnectorName, availableVersion: clusterDetailsCtrl.softwareUpgrade.availableManagementVersion}"></p>
+        <p ng-if="clusterDetailsCtrl.softwareUpgrade.isManagementUpgradeAvailable && clusterDetailsCtrl.softwareUpgrade.isManagementUrgent" translate="hercules.softwareUpgrade.urgentUpgrade" translate-values="{connectorType: clusterDetailsCtrl.localizedManagementConnectorName, availableVersion: clusterDetailsCtrl.softwareUpgrade.availableManagementVersion}"></p>
         <button class="btn btn--primary"
                 ng-click="clusterDetailsCtrl.showUpgradeDialog(['squared-fusion-mgmt'],'c_mgmt', clusterDetailsCtrl.softwareUpgrade.availableManagementVersion)"
                 ng-disabled="!clusterDetailsCtrl.softwareUpgrade.isManagementUpgradeAvailable"
@@ -66,7 +80,8 @@
     <div class="hercules-upgrade-section">
       <div ng-if="!clusterDetailsCtrl.showUpgradeProgress">
         <p ng-if="!clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable" translate="hercules.softwareUpgrade.upToDate" translate-values="{connectorType: clusterDetailsCtrl.connectorName}"></p>
-        <p ng-if="clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable" translate="hercules.softwareUpgrade.upgradePossible" translate-values="{connectorType: clusterDetailsCtrl.connectorName, availableVersion: clusterDetailsCtrl.softwareUpgrade.availableVersion}"></p>
+        <p ng-if="clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable && !clusterDetailsCtrl.softwareUpgrade.isUrgent" translate="hercules.softwareUpgrade.upgradePossible" translate-values="{connectorType: clusterDetailsCtrl.connectorName, availableVersion: clusterDetailsCtrl.softwareUpgrade.availableVersion}"></p>
+        <p ng-if="clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable && clusterDetailsCtrl.softwareUpgrade.isUrgent" translate="hercules.softwareUpgrade.urgentUpgrade" translate-values="{connectorType: clusterDetailsCtrl.localizedManagementConnectorName, availableVersion: clusterDetailsCtrl.softwareUpgrade.availableManagementVersion}"></p>
         <button class="btn btn--primary"
                 ng-click="clusterDetailsCtrl.showUpgradeDialog(clusterDetailsCtrl.servicesId, clusterDetailsCtrl.connectorType, clusterDetailsCtrl.softwareUpgrade.availableVersion)"
                 ng-disabled="!clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable"

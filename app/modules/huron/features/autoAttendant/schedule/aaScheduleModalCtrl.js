@@ -197,7 +197,7 @@
           vm.holidaysForm[indexForm].holidayName.$setDirty();
           vm.holidaysForm[indexForm].holidayStart.$setDirty();
           vm.holidaysForm[indexForm].holidayEnd.$setDirty();
-          if (angular.isDefined(vm.holidaysForm[indexForm].holidayDate)) {
+          if (!_.isUndefined(vm.holidaysForm[indexForm].holidayDate)) {
             vm.holidaysForm[indexForm].holidayDate.$setDirty();
           }
         }

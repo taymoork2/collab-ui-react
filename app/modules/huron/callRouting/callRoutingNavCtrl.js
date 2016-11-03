@@ -63,7 +63,7 @@
     }
 
     function updateCount(args) {
-      angular.forEach(vm.tabs, function (tab) {
+      _.forEach(vm.tabs, function (tab) {
         if (tab.state === args.state) {
           tab.count = args.count;
         }

@@ -3,7 +3,7 @@
 
   angular.module('Sunlight').controller('CareReportsController', CareReportsController);
   /* @ngInject */
-  function CareReportsController($timeout, $translate, CareReportsService, DummyCareReportService, Notification, ReportConstants, SunlightReportService) {
+  function CareReportsController($timeout, $translate, CardUtils, CareReportsService, DummyCareReportService, Notification, ReportConstants, SunlightReportService) {
     var vm = this;
     var REFRESH = 'refresh';
     var SET = 'set';
@@ -140,22 +140,11 @@
     }
 
     function resizeCards() {
-      $timeout(function () {
-        $('.cs-card-layout').masonry('destroy');
-        $('.cs-card-layout').masonry({
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          isResizable: true,
-          percentPosition: true
-        });
-      }, 0);
+      CardUtils.resize();
     }
 
     function delayedResize() {
-      // delayed resize necessary to fix any overlapping cards on smaller screens
-      $timeout(function () {
-        $('.cs-card-layout').masonry('layout');
-      }, 500);
+      CardUtils.resize(500);
     }
 
     function resetCards(filter) {

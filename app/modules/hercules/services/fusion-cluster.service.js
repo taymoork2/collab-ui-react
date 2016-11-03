@@ -46,9 +46,9 @@
         .then(extractDataFromResponse);
     }
 
-    function getAll() {
+    function getAll(orgId) {
       return $http
-        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '?fields=@wide')
         .then(extractClustersFromResponse)
         .then(addServicesStatuses)
         .then(sort);
@@ -113,7 +113,7 @@
     }
 
     function extractClustersFromResponse(response) {
-      return extractData(response).clusters;
+      return _.get(extractData(response), 'clusters', []);
     }
 
     function extractDataFromResponse(res) {
@@ -238,7 +238,7 @@
       return $http.get(url)
         .then(extractDataFromResponse)
         .then(function (data) {
-          return data.releaseNotes;
+          return _.get(data, 'releaseNotes', '');
         });
     }
 

@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ChooseSharedSpaceCtrl', ChooseSharedSpaceCtrl);
   /* @ngInject */
-  function ChooseSharedSpaceCtrl(Userservice, CsdmDataModelService, CsdmHuronPlaceService, XhrNotificationService, $stateParams, $translate, Authinfo) {
+  function ChooseSharedSpaceCtrl(Userservice, CsdmDataModelService, CsdmHuronPlaceService, Notification, $stateParams, $translate, Authinfo) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
 
@@ -51,14 +51,16 @@
         if (vm.wizardData.deviceType == 'cloudberry') {
           CsdmDataModelService.getPlacesMap().then(function (placesList) {
             vm.rooms = _(placesList).filter(function (place) {
-              return _.isEmpty(place.devices);
+              return _.isEmpty(place.devices) && place.type == 'cloudberry';
             }).sortBy('displayName').value();
             vm.hasRooms = vm.rooms.length > 0;
             vm.placesLoaded = true;
           });
         } else {
-          CsdmHuronPlaceService.getPlacesList().then(function (placesList) {
-            vm.rooms = _(placesList).sortBy('displayName').value();
+          CsdmDataModelService.getPlacesMap().then(function (placesList) {
+            vm.rooms = _(placesList).filter(function (place) {
+              return place.type == 'huron';
+            }).sortBy('displayName').value();
             vm.hasRooms = vm.rooms.length > 0;
             vm.placesLoaded = true;
           });
@@ -128,7 +130,7 @@
       }
 
       function error(err) {
-        XhrNotificationService.notify(err);
+        Notification.error(err);
         vm.isLoading = false;
       }
 

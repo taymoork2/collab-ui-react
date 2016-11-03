@@ -36,7 +36,7 @@
       // if icon attribute is defined, set the icon
       if (attrs.icon) {
         downloadIcon.removeClass('icon-circle-download').addClass(attrs.icon);
-      } else if (angular.isDefined(attrs.noIcon)) {
+      } else if (!_.isUndefined(attrs.noIcon)) {
         downloadIcon.removeClass('icon-circle-download');
       }
 

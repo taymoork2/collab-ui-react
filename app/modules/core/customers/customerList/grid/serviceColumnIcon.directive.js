@@ -89,7 +89,7 @@
         _.forEach(webexTypes, function (licenseType) {
           var licenseData = rowData[licenseType];
           var isLicenseAny = PartnerService.isLicenseTypeAny(rowData, licenseType);
-          var hasLicenseId = angular.isDefined(licenseData.licenseId);
+          var hasLicenseId = !_.isUndefined(licenseData.licenseId);
           var isUniqueUrl = !_.includes(sitesFound, licenseData.siteUrl);
 
           if (isLicenseAny && hasLicenseId && isUniqueUrl) {

@@ -6,7 +6,7 @@
     .controller('CareFeaturesDeleteCtrl', CareFeaturesDeleteCtrl);
 
   /* @ngInject */
-  function CareFeaturesDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, CareFeatureList, Log, Notification) {
+  function CareFeaturesDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, CardUtils, CareFeatureList, Log, Notification) {
     var vm = this;
     vm.deleteFeature = deleteFeature;
     vm.deleteBtnDisabled = false;
@@ -27,21 +27,13 @@
     }
 
     function reInstantiateMasonry() {
-      $timeout(function () {
-        $('.cs-card-layout').masonry('destroy');
-        $('.cs-card-layout').masonry({
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          isResizable: true,
-          percentPosition: true
-        });
-      }, 0);
+      CardUtils.resize();
     }
 
     function deleteSuccess() {
       vm.deleteBtnDisabled = false;
 
-      if (angular.isFunction($scope.$dismiss)) {
+      if (_.isFunction($scope.$dismiss)) {
         $scope.$dismiss();
       }
 
@@ -58,7 +50,7 @@
     function deleteError(response) {
       vm.deleteBtnDisabled = false;
 
-      if (angular.isFunction($scope.$dismiss)) {
+      if (_.isFunction($scope.$dismiss)) {
         $scope.$dismiss();
       }
       Log.warn('Failed to delete the ' + vm.featureText + ' with name: ' + vm.featureName + ' and id:' + vm.featureId);
@@ -72,14 +64,14 @@
           error += ' ' + $translate.instant('errors.statusError', {
             status: response.status
           });
-          if (response.data && angular.isString(response.data)) {
+          if (response.data && _.isString(response.data)) {
             error += ' ' + $translate.instant('careChatTpl.messageError', {
               message: response.data
             });
           }
         } else {
           error += ' Request failed.';
-          if (angular.isString(response.data)) {
+          if (_.isString(response.data)) {
             error += ' ' + response.data;
           }
         }

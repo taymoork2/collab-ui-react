@@ -8,7 +8,7 @@
         </div>
       </div>
 
-      <form name="cdr.searchAndUploadForm" novalidate>      
+      <form name="cdr.searchAndUploadForm" novalidate>
         <div ng-show="cdr.radioSelected === cdr.UPLOAD">
          <div class="row showgrid">
             <div class="columns">
@@ -61,15 +61,15 @@
                 id="startTime" name="startTime"
                 ng-model="cdr.model.startTime"
                 cs-input-label='{{::"cdrLogs.startTime" | translate}}'
-                cs-input-messages="cdr.messages.time" 
+                cs-input-messages="cdr.messages.time"
                 ng-pattern="cdr.patterns.time"
                 ng-model-options="{updateOn: 'blur'}"
                 ng-required="true">
-            </div> 
+            </div>
             <div class="columns medium-2 medium-pull-8">
               <input cs-input
                 type="text" maxlength="11"
-                id="endTime" name="endTime" 
+                id="endTime" name="endTime"
                 ng-model="cdr.model.endTime"
                 cs-input-label='{{::"cdrLogs.endTime" | translate}}'
                 cs-input-messages="cdr.messages.time"
@@ -82,8 +82,8 @@
           <div class="row showgrid" id="callDate">
             <div class="columns columns medium-2" ng-class="{'error': cdr.searchAndUploadForm.startDate.$invalid}">
               <label class="cs-input__label">{{::"cdrLogs.startDate" | translate}}</label>
-              <cs-datepicker 
-                id="startDate" name="startDate"  
+              <cs-datepicker
+                id="startDate" name="startDate"
                 ng-model="cdr.model.startDate"
                 ng-messages="cdr.messages.date"
                 ng-required="true">
@@ -92,12 +92,12 @@
                 <div class="message" ng-message="invalidRange">{{cdr.messages.date.invalidStartDate}}</div>
                 <div class="message" ng-message="invalidDate">{{cdr.messages.date.invalidFutureDate}}</div>
               </div>
-            </div>    
+            </div>
             <div  class="columns medium-2 medium-pull-8" ng-class="{'error': cdr.searchAndUploadForm.endDate.$invalid}">
               <label class="cs-input__label">{{::"cdrLogs.endDate" | translate}}</label>
-              <cs-datepicker 
+              <cs-datepicker
                 id="endDate" name="endDate"
-                ng-model="cdr.model.endDate" 
+                ng-model="cdr.model.endDate"
                 ng-messages="cdr.messages.date"
                 ng-required="true">
               </cs-datepicker>
@@ -110,22 +110,22 @@
 
           <div class="row showgrid hitSize">
             <div class="columns medium-2">
-              <input cs-input 
+              <input cs-input
                 type="number" id="hitSize" name="hitSize"
                 min="1" max="50"
-                ng-model="cdr.model.hitSize"  
+                ng-model="cdr.model.hitSize"
                 cs-input-label='{{::"cdrLogs.size" | translate}}'
                 cs-input-messages="cdr.messages.hitSize"
-                ng-required="true">   
+                ng-required="true">
             </div>
           </div>
 
             <div class="row showgrid">
               <div class="columns">
-                <button type="button" class="button btn--primary" 
+                <button type="button" class="button btn--primary"
                   ng-disabled="cdr.searchAndUploadForm.$invalid || cdr.searchDisabled"
-                  ng-click="cdr.search()">{{::"cdrLogs.search" | translate}}</button> 
-                <button type="button" class="button btn--primary" 
+                  ng-click="cdr.search()">{{::"cdrLogs.search" | translate}}</button>
+                <button type="button" class="button btn--primary"
                   ng-click="cdr.reset()">{{::"cdrLogs.reset" | translate}}</button>
               </div>
             </div>
@@ -141,7 +141,7 @@
           <span class="cdr-no-data" translate="cdrLogs.noData"></span>
         </div>
         <cs-accordion close-others="true">
-          <cs-accordion-group ng-repeat="call in cdr.gridData" display-status="{{cdr.statusAvalibility(call)}}" show-caret="true" ng-click="cdr.accordionClicked('cdrtable' + $index)">
+          <cs-accordion-group ng-repeat="call in cdr.gridData" display-status="{{cdr.statusAvalibility(call)}}" show-caret="true">
             <cs-accordion-heading>
               <span ng-click="cdr.resize()">
                 <span class="icon " ng-class="{ 'icon-error' : cdr.statusAvalibility(call) == 'danger'}"></span> {{cdr.getAccordionHeader(call)}}

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: ResetDeviceController', function () {
-  var $httpBackend, controller, XhrNotificationService;
+  var $httpBackend, controller, Notification;
   var url = "http://dummyUrl";
   var fakeModal = {
     close: sinon.stub()
@@ -13,11 +13,11 @@ describe('Controller: ResetDeviceController', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
   describe('Expected Responses', function () {
-    beforeEach(inject(function ($controller, _$httpBackend_, _XhrNotificationService_) {
-      XhrNotificationService = _XhrNotificationService_;
+    beforeEach(inject(function ($controller, _$httpBackend_, _Notification_) {
+      Notification = _Notification_;
       $httpBackend = _$httpBackend_;
 
-      spyOn(XhrNotificationService, 'notify');
+      spyOn(Notification, 'errorResponse');
       spyOn(fakeModal, 'close');
 
       controller = $controller('ResetDeviceController', {
@@ -39,7 +39,7 @@ describe('Controller: ResetDeviceController', function () {
       $httpBackend.flush();
 
       expect(fakeModal.close).toHaveBeenCalled();
-      expect(XhrNotificationService.notify).not.toHaveBeenCalled();
+      expect(Notification.errorResponse).not.toHaveBeenCalled();
     });
 
     it('should notify on failed reset', function () {
@@ -48,7 +48,7 @@ describe('Controller: ResetDeviceController', function () {
       $httpBackend.flush();
 
       expect(fakeModal.close).not.toHaveBeenCalled();
-      expect(XhrNotificationService.notify).toHaveBeenCalled();
+      expect(Notification.errorResponse).toHaveBeenCalled();
     });
   });
 });

@@ -40,9 +40,8 @@ describe('Controller: Partner Reports', () => {
 
     beforeEach(function () {
       this.initModules('Core', 'Huron');
-      this.injectDependencies('$rootScope', '$controller', '$q', '$timeout', 'ReportService', 'GraphService', 'DummyReportService');
+      this.injectDependencies('$rootScope', '$controller', '$q', '$timeout', 'CardUtils', 'ReportService', 'GraphService', 'DummyReportService');
       $scope = this.$rootScope.$new();
-
       spyOn(this.$rootScope, '$broadcast').and.returnValue({});
       spyOn(this, '$timeout').and.callThrough();
       spyOn(this.ReportService, 'getOverallActiveUserData').and.returnValue(this.$q.when({}));
@@ -76,6 +75,8 @@ describe('Controller: Partner Reports', () => {
       spyOn(this.DummyReportService, 'dummyMediaQualityData').and.returnValue(_.cloneDeep(dummyData.mediaQuality.one));
       spyOn(this.DummyReportService, 'dummyCallMetricsData').and.returnValue(_.cloneDeep(dummyData.callMetrics));
       spyOn(this.DummyReportService, 'dummyEndpointData').and.returnValue(_.cloneDeep(dummyData.endpoints));
+
+      spyOn(this.CardUtils, 'resize');
 
       controller = this.$controller('PartnerReportCtrl', {
         $scope: $scope,
@@ -143,9 +144,9 @@ describe('Controller: Partner Reports', () => {
     });
 
     it('should resize page when resizeMostActive is called', function () {
-      expect(this.$timeout.calls.count()).toBe(14);
       controller.resizeMostActive();
-      expect(this.$timeout.calls.count()).toBe(15);
+
+      expect(this.CardUtils.resize).toHaveBeenCalled();
     });
 
     it('should update all graphs when updateReports is called', function () {

@@ -347,7 +347,7 @@
 
         var _this = this;
 
-        var locale = $translate.use().replace("_", "-");
+        var locale = _.replace($translate.use(), "_", "-");
         var webexPageId = categoryId + "_" + pageId;
         var indexPageLabelId = "webexSiteSettingsLabels.indexPageLabel_" + webexPageId;
         var indexPageLabel = $translate.instant(indexPageLabelId);
