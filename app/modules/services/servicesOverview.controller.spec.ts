@@ -20,6 +20,7 @@ describe('ServiceOverviewCtrl', () => {
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.when('GET', /\/hercules\/api\/v2\/organizations/).respond({});
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.when(true));
   }));
 
   function initController({ F288 = true, MEDIA = true }) {
@@ -37,6 +38,9 @@ describe('ServiceOverviewCtrl', () => {
           }
         },
         atlasCareTrialsGetStatus: function () {
+          return $q.resolve(true);
+        },
+        atlasPMRonM2GetStatus: function () {
           return $q.resolve(true);
         },
       },
