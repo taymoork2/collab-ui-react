@@ -1252,22 +1252,6 @@
               displayName: 'Beta Features'
             }
           })
-          .state('organization-overview.add', {
-            parent: 'modal',
-            views: {
-              'modal@': {
-                controller: 'OrganizationAddCtrl',
-                controllerAs: 'orgAdd',
-                template: '<div ui-view="orgAdd"></div>'
-              },
-              'orgAdd@organization-overview.add': {
-                templateUrl: 'modules/core/organizations/organizationAdd/organizationAdd.tpl.html'
-              }
-            }
-          })
-          .state('organization-overview.add.info', {
-            templateUrl: 'modules/core/organizations/organizationAdd/organizationAdd.tpl.html'
-          })
           .state('organization-overview.add.addNumbers', {
             templateUrl: 'modules/core/organizations/organizationAdd/addNumbers.tpl.html',
             controller: 'DidAddCtrl',
@@ -1380,7 +1364,7 @@
           })
           .state('reports.device-usage.distribution', {
             url: '/distribution',
-            templateUrl: 'modules/core/customerReports/deviceUsage/distribution.tpl.html',
+            templateUrl: 'modules/core/customerReports/deviceUsage/distribution/distribution.tpl.html',
             controller: 'DeviceUsageDistributionCtrl',
             controllerAs: 'deviceUsage',
             params: {
@@ -1393,7 +1377,7 @@
           })
           .state('reports.device-usage.timeline', {
             url: '/timeline',
-            templateUrl: 'modules/core/customerReports/deviceUsage/timeline.tpl.html',
+            templateUrl: 'modules/core/customerReports/deviceUsage/timeline/timeline.tpl.html',
             controller: 'DeviceUsageTimelineCtrl',
             controllerAs: 'deviceUsage',
             params: {
@@ -1620,7 +1604,7 @@
             },
           })
           .state('place-overview.communication.line-overview', {
-            template: '<uc-line-overview owner-type="place" owner-name="$resolve.ownerName" owner-id="$resolve.ownerId" number-id="$resolve.numberId"></uc-line-overview>',
+            template: '<uc-line-overview owner-type="place" owner-name="$resolve.ownerName" owner-id="$resolve.ownerId" owner-place-type="$resolve.ownerPlaceType" number-id="$resolve.numberId"></uc-line-overview>',
             params: {
               numberId: '',
             },
@@ -1638,6 +1622,9 @@
               },
               ownerName: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentPlace, 'displayName');
+              },
+              ownerPlaceType: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentPlace, 'type');
               },
               numberId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'numberId', '');
@@ -1840,6 +1827,20 @@
             data: {},
             params: {
               meetingLicenses: {}
+            }
+          })
+          .state('customer-overview.sharedDeviceDetail', {
+            controller: 'SharedDeviceDetailCtrl',
+            controllerAs: 'sharedDeviceDetail',
+            templateUrl: 'modules/core/customers/customerOverview/sharedDeviceDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.sharedDeviceDetail').data.displayName = $translate.instant('customerPage.sharedDeviceLicenses');
+              }
+            },
+            data: {},
+            params: {
+              sharedDeviceLicenses: {}
             }
           })
           .state('customer-overview.externalNumbers', {
@@ -2490,7 +2491,13 @@
             resolve: {
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
-              }
+              },
+              hasEmergencyUpgradeFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade)
+                  .then(function (support) {
+                    return support;
+                  });
+              },
             }
           })
           .state('hds-settings', {
@@ -2510,7 +2517,12 @@
             templateUrl: 'modules/hercules/fusion-pages/mediafusion-settings.html',
             controller: 'MediafusionClusterSettingsController',
             controllerAs: 'clusterSettings',
-            parent: 'main'
+            parent: 'main',
+            resolve: {
+              hasEmergencyUpgradeFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade);
+              },
+            }
           })
           // Add Resource modal
           .state('add-resource', {
@@ -2765,7 +2777,13 @@
             resolve: {
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
-              }
+              },
+              hasEmergencyUpgradeFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade)
+                  .then(function (support) {
+                    return support;
+                  });
+              },
             }
           })
           .state('management-connector-details', {
@@ -2980,7 +2998,10 @@
           })
           .state('care.Settings', {
             url: '/settings',
-            parent: 'care.Details'
+            parent: 'care.Details',
+            templateUrl: 'modules/sunlight/settings/careSettings.tpl.html',
+            controller: 'CareLocalSettingsCtrl',
+            controllerAs: 'localCareSettings'
           })
           .state('care.Features', {
             url: '/features',

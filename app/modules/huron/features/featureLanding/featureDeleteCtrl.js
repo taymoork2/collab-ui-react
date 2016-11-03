@@ -4,14 +4,12 @@
 (function () {
   'use strict';
 
-  var Masonry = require('masonry-layout');
-
   angular
     .module('Huron')
     .controller('HuronFeatureDeleteCtrl', HuronFeatureDeleteCtrl);
 
   /* @ngInject */
-  function HuronFeatureDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, AAModelService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeService, AutoAttendantCeInfoModelService, Notification, Log, AACalendarService) {
+  function HuronFeatureDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, AAModelService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeService, AutoAttendantCeInfoModelService, Notification, Log, AACalendarService, CardUtils) {
     var vm = this;
     vm.deleteBtnDisabled = false;
     vm.deleteFeature = deleteFeature;
@@ -36,15 +34,7 @@
     vm.deleteError = deleteError;
 
     function reInstantiateMasonry() {
-      $timeout(function () {
-        var $cardlayout = new Masonry('.cs-card-layout', {
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          resize: true,
-          percentPosition: true,
-        });
-        $cardlayout.layout();
-      }, 0);
+      CardUtils.resize();
     }
 
     function deleteFeature() {
@@ -122,7 +112,7 @@
     function deleteSuccess() {
       vm.deleteBtnDisabled = false;
 
-      if (angular.isFunction($scope.$dismiss)) {
+      if (_.isFunction($scope.$dismiss)) {
         $scope.$dismiss();
       }
 
@@ -139,7 +129,7 @@
     function deleteError(response) {
       vm.deleteBtnDisabled = false;
 
-      if (angular.isFunction($scope.$dismiss)) {
+      if (_.isFunction($scope.$dismiss)) {
         $scope.$dismiss();
       }
       Log.warn('Failed to delete the ' + vm.featureType + ' with name: ' + vm.featureName + ' and id:' + vm.featureId);
@@ -153,14 +143,14 @@
           error += $translate.instant('errors.statusError', {
             status: response.status
           });
-          if (response.data && angular.isString(response.data)) {
+          if (response.data && _.isString(response.data)) {
             error += ' ' + $translate.instant('huronFeatureDetails.messageError', {
               message: response.data
             });
           }
         } else {
           error += 'Request failed.';
-          if (angular.isString(response.data)) {
+          if (_.isString(response.data)) {
             error += ' ' + response.data;
           }
         }

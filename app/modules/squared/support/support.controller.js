@@ -1,15 +1,13 @@
 (function () {
   'use strict';
 
-  var Masonry = require('masonry-layout');
-
   /* global Bloodhound */
 
   angular.module('Squared')
     .controller('SupportCtrl', SupportCtrl);
 
   /* @ngInject */
-  function SupportCtrl($filter, $scope, $timeout, $translate, $state, $stateParams, $window, Authinfo, CallflowService, Config, FeedbackService, Log, LogService, ModalService, Notification, Orgservice, PageParam, ReportsService, UrlConfig, Userservice, Utils, WindowLocation) {
+  function SupportCtrl($filter, $scope, $translate, $state, $stateParams, $window, Authinfo, CallflowService, CardUtils, Config, FeedbackService, Log, LogService, ModalService, Notification, Orgservice, PageParam, ReportsService, UrlConfig, Userservice, Utils, WindowLocation) {
     $scope.showSupportDetails = false;
     $scope.showSystemDetails = false;
     $scope.problemHandler = ' by Cisco';
@@ -63,15 +61,7 @@
     }
 
     function reInstantiateMasonry() {
-      $timeout(function () {
-        var $cardlayout = new Masonry('.cs-card-layout', {
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          resize: true,
-          percentPosition: true,
-        });
-        $cardlayout.layout();
-      }, 0);
+      CardUtils.resize();
       vm.masonryRefreshed = true;
     }
 
@@ -380,14 +370,15 @@
     };
 
     $scope.getCallflowCharts = function (orgId, userId, locusId, callStart, filename, isGetCallLogs) {
-      CallflowService.getCallflowCharts(orgId, userId, locusId, callStart, filename, isGetCallLogs, function (data, status) {
-        if (data.success) {
-          WindowLocation.set(data.resultsUrl);
-        } else {
+      CallflowService.getCallflowCharts(orgId, userId, locusId, callStart, filename, isGetCallLogs)
+        .then(function (data) {
+          WindowLocation.set(_.get(data, 'resultsUrl'));
+        })
+        .catch(function (response) {
+          var status = _.get(response, 'status', 'Unknown');
           Log.debug('Failed to download the callflow results corresponding to logFile: ' + filename + '. Status: ' + status);
           Notification.notify([$translate.instant('supportPage.callflowResultsFailed') + ': ' + filename + '. Status: ' + status], 'error');
-        }
-      });
+        });
     };
 
     $scope.downloadFlow = function (downloadUrl) {
@@ -490,4 +481,4 @@
       }]
     };
   }
-}());
+})();

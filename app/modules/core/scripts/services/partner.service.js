@@ -25,6 +25,7 @@
 
     var helpers = {
       createConferenceMapping: _createConferenceMapping,
+      createRoomMapping: _createRoomMapping,
       createLicenseMapping: _createLicenseMapping,
       createFreeServicesMapping: _createFreeServicesMapping,
       LicensedService: _LicensedService,
@@ -99,7 +100,20 @@
         };
       });
       return conferenceMapping;
+    }
 
+    function _createRoomMapping() {
+      var offerMapping = {};
+      offerMapping[Config.offerCodes.SD] = {
+        translatedOfferCode: $translate.instant('trials.sharedDevice'),
+        icon: 'icon-circle-telepresence',
+        order: 6
+      };
+      offerMapping[Config.offerCodes.SB] = {
+        translatedOfferCode: $translate.instant('trials.sparkBoardSystem'),
+        icon: 'icon-circle-telepresence',
+        order: 6
+      };
     }
 
     function _createLicenseMapping() {
@@ -117,8 +131,9 @@
       };
 
       licenseMapping[Config.licenseTypes.SHARED_DEVICES] = {
-        name: $translate.instant('trials.roomSystem'),
+        name: $translate.instant('subscriptions.room'),
         icon: 'icon-circle-telepresence',
+        isRoom: true,
         order: 6
       };
 
@@ -172,7 +187,7 @@
       }
 
       _.assign(this, service);
-      this.qty = licenseInfo.volume;
+      this.qty = licenseInfo.volume || 0;
 
     }
 
@@ -279,7 +294,7 @@
     }
 
     function isLicenseInfoAvailable(licenses) {
-      return angular.isArray(licenses);
+      return _.isArray(licenses);
     }
 
     function setServiceSortOrder(license) {
@@ -387,7 +402,7 @@
       };
 
       var licensesAndOffersData = parseLicensesAndOffers(customer, { isCareEnabled: isCareEnabled });
-      angular.extend(dataObj, licensesAndOffersData);
+      _.assign(dataObj, licensesAndOffersData);
 
       dataObj.isAllowedToManage = isTrialData || customer.isAllowedToManage;
       dataObj.isPartner = _.get(customer, 'isPartner', false);
@@ -457,7 +472,7 @@
           if (!helpers.isDisplayableService(license, { isTrial: undefined, isShowCMR: false, isCareEnabled: isCareEnabled })) {
             return 0;
           } else {
-            return license.volume;
+            return license.volume || 0;
           }
         });
       } else {
@@ -490,12 +505,12 @@
     function initializeService(licenses, offerCode, serviceEntry, customerListToggle) {
       var licensesGotten = getLicense(licenses, offerCode, customerListToggle);
       if (!_.isArray(licensesGotten)) {
-        angular.extend(licensesGotten, serviceEntry);
+        _.assign(licensesGotten, serviceEntry);
         setServiceSortOrder(licensesGotten);
         return licensesGotten;
       } else {
         var result = {};
-        angular.extend(result, licensesGotten[0], serviceEntry);
+        _.assign(result, licensesGotten[0], serviceEntry);
         var qty = _.reduce(licensesGotten, function (volume, license) {
           return volume + license.volume;
         }, 0);
@@ -541,20 +556,20 @@
               licenseType: Config.licenseTypes.CARE
             });
 
-            if (messagingLicense && angular.isArray(messagingLicense.features)) {
+            if (messagingLicense && _.isArray(messagingLicense.features)) {
               exportedCustomer.messagingEntitlements = messagingLicense.features.join(' ');
             }
-            if (conferenceLicense && angular.isArray(conferenceLicense.features)) {
+            if (conferenceLicense && _.isArray(conferenceLicense.features)) {
               exportedCustomer.conferenceEntitlements = conferenceLicense.features.join(' ');
             }
-            if (communicationsLicense && angular.isArray(communicationsLicense.features)) {
+            if (communicationsLicense && _.isArray(communicationsLicense.features)) {
               exportedCustomer.communicationsEntitlements = communicationsLicense.features.join(' ');
             }
-            if (roomSystemsLicense && angular.isArray(roomSystemsLicense.features)) {
+            if (roomSystemsLicense && _.isArray(roomSystemsLicense.features)) {
               exportedCustomer.roomSystemsEntitlements = roomSystemsLicense.features.join(' ');
             }
             if (isCareEnabled) {
-              if (careLicense && angular.isArray(careLicense.features)) {
+              if (careLicense && _.isArray(careLicense.features)) {
                 exportedCustomer.careEntitlements = careLicense.features.join(' ');
               }
             }
@@ -606,6 +621,7 @@
       var isCareEnabled = _.get(options, 'isCareEnabled', true);
       var userServiceMapping = helpers.createLicenseMapping();
       var conferenceServices = [];
+      var roomServices = [];
       var trialService;
       var trialServices = [];
 
@@ -653,15 +669,27 @@
             break;
           case Config.offerTypes.meeting:
             conferenceServices.push({
+              offerType: offerInfo.id,
               name: $translate.instant('trials.meeting'),
               order: 1,
               qty: offerInfo.licenseCount
             });
             break;
           case Config.offerTypes.roomSystems:
-            trialService = userServiceMapping[Config.licenseTypes.SHARED_DEVICES];
-            partial.deviceLicenses = offerInfo.licenseCount;
-            partial.isRoomSystems = true;
+            roomServices.push({
+              offerType: offerInfo.id,
+              name: $translate.instant('trials.roomSystem'),
+              order: 1,
+              qty: offerInfo.licenseCount,
+            });
+            break;
+          case Config.offerTypes.sparkBoard:
+            roomServices.push({
+              offerType: offerInfo.id,
+              name: $translate.instant('trials.sparkBoardSystem'),
+              order: 2,
+              qty: offerInfo.licenseCount,
+            });
             break;
           case Config.offerTypes.care:
             if (isCareEnabled) {
@@ -686,6 +714,30 @@
         var licenseQty = conferenceServices[0].qty;
         var hasWebex = _.some(conferenceServices, { isWebex: true });
         trialServices.push({ name: name, sub: conferenceServices, qty: licenseQty, icon: 'icon-circle-group', order: 1, hasWebex: hasWebex });
+      }
+
+      if (roomServices.length > 0) {
+        trialService = userServiceMapping[Config.licenseTypes.SHARED_DEVICES];
+        partial.isRoomSystems = true;
+        var sbTrial = _.chain(roomServices)
+          .filter({ offerType: Config.offerTypes.sparkBoard })
+          .last()
+          .value();
+        var sdTrial = _.chain(roomServices)
+          .filter({ offerType: Config.offerTypes.roomSystems })
+          .last()
+          .value();
+        trialService.sub = [];
+        if (sbTrial) {
+          partial.deviceLicenses += sbTrial.qty || 0;
+          trialService.sub.push(sbTrial);
+        }
+        if (sdTrial) {
+          partial.deviceLicenses += sdTrial.qty || 0;
+          trialService.sub.push(sdTrial);
+        }
+        trialService.qty = partial.deviceLicenses;
+        trialServices.push(trialService);
       }
 
       partial.offer.trialServices = _.chain(trialServices).sortBy('order').uniq().value();

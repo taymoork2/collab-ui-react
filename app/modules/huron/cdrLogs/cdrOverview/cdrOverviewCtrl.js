@@ -23,7 +23,7 @@
     vm.remoteSessionID = cdrData.remoteSessionID;
     vm.cdr = [];
     // build an array to use with angular filter
-    angular.forEach(cdrData, function (value, key) {
+    _.forEach(cdrData, function (value, key) {
       if (key.toLowerCase() !== '$$hashkey') {
         vm.cdr.push({
           'key': key,

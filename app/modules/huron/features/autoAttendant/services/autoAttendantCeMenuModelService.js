@@ -892,7 +892,7 @@
         return -1;
       }
 
-      if (!angular.isArray(actionArray)) {
+      if (!_.isArray(actionArray)) {
         return -1;
       }
 
@@ -917,7 +917,7 @@
      * Walk the ceRecord and return the actionSet actionSetName.
      */
     function getActionSet(ceRecord, actionSetName) {
-      if (!angular.isArray(ceRecord.actionSets)) {
+      if (!_.isArray(ceRecord.actionSets)) {
         return undefined;
       }
       for (var i = 0; i < ceRecord.actionSets.length; i++) {

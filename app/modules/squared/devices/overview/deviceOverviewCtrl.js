@@ -60,7 +60,9 @@
     deviceOverview.save = function (newName) {
       return CsdmDataModelService
         .updateItemName(deviceOverview.currentDevice, newName)
-        .catch(Notification.errorWithTrackingId);
+        .catch(function (response) {
+          Notification.errorWithTrackingId(response);
+        });
     };
 
     function setTimeZone(timezone) {
@@ -128,7 +130,9 @@
         .then(function (res) {
           $window.open(res.data.url, '_blank');
         })
-        .catch(Notification.errorWithTrackingId);
+        .catch(function (response) {
+          Notification.errorWithTrackingId(response);
+        });
     };
 
     deviceOverview.deleteDevice = function () {
@@ -190,7 +194,9 @@
 
         return CsdmDataModelService
           .updateTags(deviceOverview.currentDevice, deviceOverview.currentDevice.tags.concat(tag))
-          .catch(Notification.errorWithTrackingId);
+          .catch(function (response) {
+            Notification.errorWithTrackingId(response);
+          });
 
       } else {
         deviceOverview.isAddingTag = false;
@@ -207,7 +213,9 @@
     deviceOverview.removeTag = function (tag) {
       var tags = _.without(deviceOverview.currentDevice.tags, tag);
       return CsdmDataModelService.updateTags(deviceOverview.currentDevice, tags)
-        .catch(Notification.errorWithTrackingId);
+        .catch(function (response) {
+          Notification.errorWithTrackingId(response);
+        });
     };
 
     deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport || deviceOverview.currentDevice.needsActivation;

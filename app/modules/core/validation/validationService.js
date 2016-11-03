@@ -48,7 +48,7 @@
 
     function alertingName(viewValue, modelValue) {
       var value = modelValue || viewValue;
-      return /^[^\]"%<>\[&|{}]{0,}$/.test(value);
+      return /^[^\]"%<>[&|{}]{0,}$/.test(value);
     }
 
     function callForward(viewValue, modelValue) {
@@ -63,7 +63,7 @@
 
     function positiveNumber(viewValue, modelValue) {
       var value = modelValue || viewValue;
-      return (angular.isString(value) && value.length === 0) || value > 0;
+      return (_.isString(value) && value.length === 0) || value > 0;
     }
 
     function maxNumber100(viewValue, modelValue) {

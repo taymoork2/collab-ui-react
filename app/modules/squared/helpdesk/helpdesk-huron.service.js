@@ -222,7 +222,7 @@
           if (!device.user && device.ownerUser) {
             HelpdeskService.getUser(device.organization.id, device.ownerUser.uuid).then(function (user) {
               device.user = user;
-            }, angular.noop);
+            }, _.noop);
           } else {
             SipEndpointService.get({
               customerId: device.organization.id,
@@ -237,7 +237,7 @@
                 if (this.ownerUser) {
                   HelpdeskService.getUser(this.organization.id, this.ownerUser.uuid).then(function (user) {
                     this.user = user;
-                  }.bind(device), angular.noop);
+                  }.bind(device), _.noop);
                 }
               }.bind(device));
           }

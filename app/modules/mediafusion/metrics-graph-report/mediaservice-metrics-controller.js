@@ -1,11 +1,9 @@
 (function () {
   'use strict';
 
-  var Masonry = require('masonry-layout');
-
   angular.module('Mediafusion').controller('MediaServiceMetricsContoller', MediaServiceMetricsContoller);
   /* @ngInject */
-  function MediaServiceMetricsContoller($timeout, $translate, MediaClusterServiceV2, $q, MetricsReportService, XhrNotificationService, MetricsGraphService, DummyMetricsReportService, $interval, $scope) {
+  function MediaServiceMetricsContoller($translate, MediaClusterServiceV2, $q, MetricsReportService, Notification, MetricsGraphService, DummyMetricsReportService, $interval, $scope, CardUtils) {
     var vm = this;
     vm.ABORT = 'ABORT';
     vm.REFRESH = 'refresh';
@@ -114,8 +112,8 @@
           vm.clusterId = vm.clusterOptions[0];
           vm.clusterSelected = vm.clusterOptions[0];
 
-        }).catch(function () {
-          XhrNotificationService.notify(vm.errorData);
+        }).catch(function (err) {
+          Notification.errorWithTrackingId(err, vm.errorData);
         });
       return deferred.promise;
     }
@@ -203,28 +201,12 @@
     }
 
     function resizeCards() {
-      $timeout(function () {
-        var $cardlayout = new Masonry('.cs-card-layout', {
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          resize: true,
-          percentPosition: true,
-        });
-        $cardlayout.layout();
-      }, 0);
+      CardUtils.resize();
     }
 
     function delayedResize() {
       // delayed resize necessary to fix any overlapping cards on smaller screens
-      $timeout(function () {
-        var $cardlayout = new Masonry('.cs-card-layout', {
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          resize: true,
-          percentPosition: true,
-        });
-        $cardlayout.layout();
-      }, 500);
+      CardUtils.resize(500);
     }
 
     function setDummyData() {
@@ -286,7 +268,7 @@
       MetricsReportService.getAvailabilityData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (response === vm.ABORT) {
           return;
-        } else if (_.isUndefined(response.data) || !angular.isArray(response.data) || response.data.length === 0 || _.isUndefined(response.data[0].clusterCategories) || response.data[0].clusterCategories.length === 0) {
+        } else if (_.isUndefined(response.data) || !_.isArray(response.data) || response.data.length === 0 || _.isUndefined(response.data[0].clusterCategories) || response.data[0].clusterCategories.length === 0) {
           vm.availabilityStatus = vm.EMPTY;
         } else {
           deferred.promise.then(function () {

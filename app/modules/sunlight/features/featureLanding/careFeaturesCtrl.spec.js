@@ -2,7 +2,7 @@
 
 describe('Care Feature Ctrl should ', function () {
 
-  var controller, $filter, $q, $rootScope, $state, $scope, $timeout, Authinfo, CareFeatureList, Log, Notification, deferred, $document;
+  var controller, $filter, $q, $rootScope, $state, $scope, $timeout, Authinfo, CareFeatureList, Log, Notification, deferred;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('Test-Org-Id')
   };
@@ -27,11 +27,6 @@ describe('Care Feature Ctrl should ', function () {
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
-  beforeEach(function () {
-    /* global document */
-    $document = angular.element(document);
-    $document.find('body').append('<div class="cs-card-layout"></div>');
-  });
   beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _$timeout_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_) {
     $rootScope = _$rootScope_;
     $filter = _$filter_;

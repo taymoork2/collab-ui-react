@@ -59,7 +59,7 @@
             var org2 = b.label;
             return org1.localeCompare(org2);
           });
-          angular.forEach(customerList, function (item) {
+          _.forEach(customerList, function (item) {
             $scope.totalOrgsData.push(item);
           });
           $scope.getCustomerReports();

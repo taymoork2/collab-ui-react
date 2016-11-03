@@ -51,6 +51,10 @@
         refreshDelay: 900000 // 15 mins
       },
 
+      siteDomainUrl: {
+        webexUrl: '.webex.com'
+      },
+
       entitlements: {
         huron: 'ciscouc',
         squared: 'webex-squared',
@@ -76,6 +80,7 @@
         meeting: 'MEETING',
         call: 'CALL',
         roomSystems: 'ROOMSYSTEMS',
+        sparkBoard: 'SPARKBOARDS',
         pstn: 'PSTN',
         care: 'CARE',
         context: 'CONTEXT'
@@ -181,7 +186,7 @@
         EC: 'EC', // Event Center (WebEx)
         CO: 'CO', // Communication
         SD: 'SD', // Spark Room System
-        SB: 'SB', // Seagull
+        SB: 'SB', // Spark Board
         CMR: 'CMR', // Collaboration Meeting Room (WebEx)
         CDC: 'CDC' // Care Digital Channel
       },
@@ -408,6 +413,8 @@
         'devices',
         'place-overview',
         'places',
+        'huronsettings',
+        'huronlines',
       ],
       'squared-fusion-uc': [
         'add-resource',
@@ -424,7 +431,7 @@
         'services-overview',
       ],
       'squared-team-member': [
-        'organization'
+        'organization',
       ],
       'hybrid-data-security': [
         'hds-settings'
@@ -439,14 +446,14 @@
         'metrics',
         'reports-metrics',
         'services-overview',
-        'cluster-list'
+        'cluster-list',
       ],
       'webex-messenger': [
         'messenger',
         'services-overview',
       ],
       'cloud-contact-center': [
-        'care'
+        'care',
       ]
     };
 

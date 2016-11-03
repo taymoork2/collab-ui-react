@@ -6,7 +6,7 @@
     .controller('CdrLogsCtrl', CdrLogsCtrl);
 
   /* @ngInject */
-  function CdrLogsCtrl($scope, $state, $translate, $timeout, formlyConfig, CdrService, Notification, chartColors) {
+  function CdrLogsCtrl($scope, $state, $translate, formlyConfig, CdrService, Notification) {
     var vm = this;
     var ABORT = 'ABORT';
     vm.SEARCH = 1;
@@ -108,9 +108,7 @@
       CdrService.query(vm.model, vm.logstashPath).then(function (response) {
         if (response !== ABORT) {
           vm.gridData = response;
-          if (!_.isUndefined(vm.gridData) && (vm.gridData.length > 0)) {
-            setupScrolling(vm.gridData);
-          } else {
+          if (_.isUndefined(vm.gridData) || (vm.gridData.length === 0)) {
             vm.dataState = 0;
           }
         }
@@ -248,9 +246,9 @@
             try {
               var jsonData = JSON.parse(scope.model.uploadFile);
               vm.gridData = [];
-              if (angular.isArray(jsonData.cdrs) && angular.isArray(jsonData.cdrs[0])) {
+              if (_.isArray(jsonData.cdrs) && _.isArray(jsonData.cdrs[0])) {
                 vm.gridData.push(addNames(jsonData.cdrs));
-              } else if (angular.isArray(jsonData.cdrs)) {
+              } else if (_.isArray(jsonData.cdrs)) {
                 vm.gridData.push(addNames([jsonData.cdrs]));
               } else {
                 vm.dataState = 0;
@@ -272,12 +270,11 @@
     vm.statusAvalibility = statusAvalibility;
     vm.getAccordionHeader = getAccordionHeader;
     vm.selectCDR = selectCDR;
-    vm.accordionClicked = accordionClicked;
 
     function addNames(cdrArray) {
       var x = 0;
-      angular.forEach(cdrArray, function (cdr) {
-        angular.forEach(cdr, function (item) {
+      _.forEach(cdrArray, function (cdr) {
+        _.forEach(cdr, function (item) {
           item.name = "call0CDR" + x;
           x++;
         });
@@ -336,37 +333,12 @@
       return header;
     }
 
-    function setupScrolling(gridData) {
-      $timeout(function () {
-        angular.forEach(gridData, function (item, index) {
-          var scroll = $('#cdrtable' + index).getNiceScroll();
-          if (scroll.length > 0) {
-            scroll.remove();
-          }
-
-          $('#cdrtable' + index).niceScroll({
-            cursorcolor: chartColors.gray,
-            cursorborder: "0px",
-            cursorwidth: "7px",
-            railpadding: {
-              top: 0,
-              right: 3,
-              left: 0,
-              bottom: 0
-            },
-            autohidemode: "leave"
-          });
-          $('#cdrtable' + index).getNiceScroll().resize();
-        });
-      }, 2000);
-    }
-
     function selectCDR(selectedCDR, call) {
       vm.selectedCDR = selectedCDR;
       var callCopy = angular.copy(call);
 
-      angular.forEach(callCopy, function (item) {
-        angular.forEach(item, function (cdr) {
+      _.forEach(callCopy, function (item) {
+        _.forEach(item, function (cdr) {
           delete cdr['name'];
         });
       });
@@ -379,10 +351,6 @@
         imported: vm.imported,
         logstashPath: vm.logstashPath
       });
-    }
-
-    function accordionClicked(tableName) {
-      $('#' + tableName).getNiceScroll().resize();
     }
   }
 })();

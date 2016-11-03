@@ -13,7 +13,7 @@
     };
 
     $scope.getId = function (url) {
-      var match = url.match(/^https?:\/\/([^:\/?#]*)/);
+      var match = url.match(/^https?:\/\/([^:/?#]*)/);
       return _.replace(match[1], /\./g, '-');
     };
 

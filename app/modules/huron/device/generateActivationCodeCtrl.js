@@ -52,7 +52,7 @@
     }
 
     function setQRCode(code) {
-      if (angular.isString(code) && code.length > 0) {
+      if (_.isString(code) && code.length > 0) {
         OtpService.getQrCodeUrl(code).then(function (qrcode) {
           var arrayData = '';
           for (var i in Object.keys(qrcode)) {
@@ -98,7 +98,7 @@
 
         Notification.notify([entitleResult.msg], entitleResult.type);
 
-        if (!_.isUndefined($state.modal) && angular.isFunction($state.modal.close)) {
+        if (!_.isUndefined($state.modal) && _.isFunction($state.modal.close)) {
           $state.modal.close();
         }
       }, function (error) {

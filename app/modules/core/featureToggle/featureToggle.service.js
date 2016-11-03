@@ -17,6 +17,7 @@
       dirSync: 'atlas-dir-sync',
       atlasBrandingWordingChange: 'atlas-branding-wording-change',
       atlasCareTrials: 'atlas-care-trials',
+      atlasCareCallbackTrials: 'atlas-care-callback-trials',
       atlasContextServiceTrials: 'atlas-context-service-trials',
       atlasCsvEnhancement: 'atlas-csv-enhancement',
       atlasCustomerListUpdate: 'atlas-customer-list-update',
@@ -40,6 +41,7 @@
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasUserPendingStatus: 'atlas-user-pending-status',
+      atlasTrialsShipDevices: 'atlasTrialsShipDevices',
       atlasWebexTrials: 'atlas-webex-trials',
       atlasDeviceUsageReport: 'atlas-device-usage-report',
       androidAddGuestRelease: 'android-add-guest-release',
@@ -157,7 +159,8 @@
       huronLocalDialing: 'huron-local-dialing',
       huronDeviceE911: 'huron-device-e911-address',
       gemCCA: 'gem-cloud-connected-audio',
-      atlasHybridDataSecurity: 'atlas-data-security'
+      atlasHybridDataSecurity: 'atlas-data-security',
+      atlasHerculesEmergencyUpgrade: 'atlas-hercules-emergency-upgrade',
     };
 
     var toggles = {};

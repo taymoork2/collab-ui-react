@@ -384,8 +384,6 @@
     "developmentTab": "Development",
     "organizationTab": "Manage Organizations",
     "organizationTabDesc": "Manage Organization Details, View Assigned Services, And Access Tools.",
-    "addOrganizationTab": "Create an Organization",
-    "addOrganizationTabDesc": "Add a new organization to this account",
     "callRoutingTab": "Call Routing",
     "callRoutingTabDesc": "Manage Call Routing Features Such As Call Park",
     "mediaOnHoldTab": "Media On Hold",
@@ -553,7 +551,7 @@
     "customers": "Customers",
     "customerSelect": "Select a customer",
     "usageReports": {
-      "usageReportTitle": "Usage Reports",
+      "usageReportTitle": "Device Usage Reports",
       "peakHour": "Peak Hour",
       "distribution": "Distribution",
       "timeline": "Timeline",
@@ -1036,7 +1034,8 @@
     "overview": "Overview",
     "notAvailable": "N/A",
     "ciscoCollaborationCloud": "Cisco Collaboration Cloud",
-    "trackingId": "Tracking Id: {{trackingId}}."
+    "trackingId": "Tracking Id: {{trackingId}}.",
+    "alert": "Alert"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1103,11 +1102,11 @@
     "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Spark clients, and place calls to others' work phones from their Cisco Spark clients.",
     "setUpDevices": "Activate your devices when they arrive.",
     "setUpSharedDevices": "Activate your collaboration devices when they arrive.",
-    "setUpSeaGullDevices": "Activate your Seagull devices when they arrive.",
+    "setUpSparkBoardDevices": "Activate your Cisco Spark Board devices when they arrive.",
     "setUpPMRDescription": "The Personal Meeting Rooms feature has been added to your subscription.",
     "setUpPMRUrl": "Set Up PMR Now",
     "setUpHybridMediaService": "Hybrid Media Service is available. Extend cloud media to use premises-based resources for calls and meetings.",
-    "getStarted": "Get Started"
+    "urgentUpgrade": "An urgent upgrade is available for <a ui-sref='{{link}}'>{{connector}}</a> and it will upgrade during the next scheduled upgrade."
   },
   "inviteModal": {
     "title": "Service Entitlement",
@@ -1225,7 +1224,7 @@
     "voicemailPilotHelpText": "Usage of this E164 number incurs usage cost.",
     "errorGettingOptionaVmDidToggle": "There was a problem getting the optionalVmDid toggle.",
     "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network.",
-    "voicemailPrefixTitle": "Voicemail Access Prefix",
+    "voicemailPrefixTitle": "Voicemail ID Prefix",
     "voicemailPrefixDesc": "Select a prefix to reserve for dialing mailboxes from a device. Extensions between {{number}}{{extensionLength0}} and {{number}}{{extensionLength9}} are not recommended for assignment.",
     "dialing": "Dialing",
     "nationalDialingTitle": "National Dialing",
@@ -1498,7 +1497,8 @@
       "upgraded": "Upgraded",
       "pending": "Pending",
       "initializing": "Initializing",
-      "not_operational": "Not Operational"
+      "not_operational": "Not Operational",
+      "urgentUpgradeAvailable": "Urgent upgrade available"
     },
     "userSidepanel": {
       "warningInvitePending": "This user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but activation will not succeed until the user signs in.",
@@ -1616,20 +1616,21 @@
       "upgradeDone": "Upgrade completed!",
       "upToDate": "{{connectorType}} is up to date on this cluster.",
       "upgradePossible": "A new version is available for {{connectorType}}: {{availableVersion}}.",
+      "urgentUpgrade": "An urgent upgrade is available for {{connectorType}}: {{availableVersion}}.",
       "upgradeWarning": "This cluster has one or more nodes where {{ManagementConnector}} is not sending updates to {{CiscoCollaborationCloud}}. It is recommended to bring {{ManagementConnector}} online before initiating an upgrade."
     },
     "expresswayClusterSettings": {
       "pageTitle": "{{clusterName}} settings",
       "upgradeScheduleHeader": "Upgrade",
       "upgradeScheduleSubHeader": "Upgrade Schedule",
-      "resourceGroupsHeader": "Resource Groups",
+      "resourceGroupsHeader": "Resource Group",
       "resourceGroupsSubHeader": "Resource Group",
       "resourcegroupsParagraph": "Select the resource group this cluster belongs to.",
       "removeFromResourceGroupDialogHeader": "Remove from Resource Group",
       "removeFromResourceGroupDialogParagraph": "{{ClusterName}} will be removed from \"{{CurrentResourceGroup}}\".",
       "removeFromResourceGroupDialogConnectorsList": "The following connectors will be upgraded to \"Stable\" in the next upgrade window: ",
       "removeFromResourceGroupSuccess": "{{ClusterName}} has been removed from \"{{ResourceGroup}}\".",
-      "allConnectorsWillBeUpgraded": "All connectors will be upgraded in the next upgrade window.",
+      "allConnectorsWillBeUpgraded": "All connectors will be upgraded in the next scheduled upgrade.",
       "moveResourceGroupDialogHeader": "Assign Resource Group",
       "moveResourceGroupDialogParagraph": "{{ClusterName}} will be moved to \"{{NewResourceGroup}}\".",
       "moveResourceGroupDialogConnectorsList": "The following connectors will be upgraded in the next upgrade window: ",
@@ -1711,6 +1712,17 @@
         "postponeAction": "Postpone",
         "postponeModalTitle": "Postpone Upgrade",
         "postponeModalText": "Are you sure you want to postpone the scheduled upgrade to begin:"
+      },
+      "emergencyUpgrade": {
+        "expressway": {
+          "title": "Urgent upgrade schedule",
+          "description": "Select the urgent upgrade schedule for this cluster. When an upgrade is available, the connectors automatically upgrade during time that you select.",
+          "when": "Daily, on {{timezone}}"
+        },
+        "mediafusion": {
+          "title": "Urgent upgrade schedule",
+          "description": "Urgent upgrades for this cluster are applied as soon as they are available."
+        }
       }
     },
     "notifications": {
@@ -1767,6 +1779,9 @@
       "types": {
         "expressway": "Expressway",
         "mediafusion": "Media"
+      },
+      "urgentUpgrade": {
+        "title": "Urgent Upgrade Schedule"
       },
       "list": {
         "title": "Clusters",
@@ -1876,7 +1891,8 @@
       "deleteSuccess": "Resource group successfully removed",
       "orgHasNoAccessToChannel": "The resource group is configured with the “{{currentReleaseChannel}}” release channel, which is no longer available to your organization. Set the release channel to “{{stableReleaseChannel}}” to restore service.",
       "setToStable": "Set to {{stableReleaseChannel}}",
-      "failedToRemoveUsersFromGroup": "Remove group failed, unable to clear the existing user assignments"
+      "failedToRemoveUsersFromGroup": "Remove group failed, unable to clear the existing user assignments",
+      "assignSuccess": "The selected clusters are being moved. The connectors will be upgraded in the next upgrade window."
     },
     "assignClustersModal": {
       "title": "Assign Clusters to <q>{{groupName}}</q>",
@@ -2122,7 +2138,7 @@
     "careSettings": "Care Settings",
     "careSettingsSub": "Setup Care Service",
     "careSettingsDescription": "Click here to complete Care setup.",
-    "careSettingsComplete": "Care setup is complete.",
+    "careSettingsComplete": "Care service has been setup successfully.",
     "careSettingsButton": "Setup Care",
     "careSettingsFetchFailed": "Error retrieving onboarding status.",
     "careSettingsTimeout": "Request timed out while checking Care setup status.",
@@ -2473,6 +2489,8 @@
       "felipe": "Felipe",
       "alva": "Alva",
       "klara": "Klara",
+      "kyoko": "Kyoko",
+      "otoya": "Otoya",
       "oskar": "Oskar",
       "empar": "Empar"
     },
@@ -3098,7 +3116,8 @@
     "callUsOnly": "Call (Currently U.S. only)",
     "supportSelectLocations": "Cisco Spark is supported in selected locations.  <a href='http://www.cisco.com/go/spark-availability' target='_blank' ng-click='{{click}}'>Learn more</a>",
     "context": "Enable Context Service for Cisco Unified Contact Center.",
-    "roomSystem": "Spark Collaboration Device",
+    "roomSystem": "DX, MX or SX system",
+    "sparkBoardSystem": "Cisco Spark Board",
     "roomSysUsOnly": "Spark Collaboration Device (Currently U.S. only)",
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
     "expiredMsg": "Your trial has expired.",
@@ -3218,6 +3237,7 @@
     "isSetupDoneError": "Unable to determine if {{orgName}} is setup. Message: {{message}}",
     "launchCustomerPortalError": "Unable to launch the customer portal.",
     "meetingLicenses": "Meeting Licenses",
+    "sharedDeviceLicenses": "Collaboration Device Licenses",
     "accountStatus": "Account Status",
     "totalUsers": "Total Users",
     "purchased": "Purchased",
@@ -3429,7 +3449,7 @@
       "placeEditError": "Edit Place failed"
     },
     "editServices": {
-      "whichServices": "Which services are needed in this place?",
+      "whichServices": "Which service is needed in this place?",
       "sparkOnly": "Spark only (default)",
       "sparkOnlyHelp": "Calling to/from this place will only work through Cisco Spark or using SIP addresses.",
       "sparkCall": "Spark Call (phone numbers)",
@@ -3588,6 +3608,7 @@
   "mediaFusion": {
     "page_title": "Hybrid Media Service",
     "add-resource-button": "Add Resource",
+    "genericError": "An unexpected error occurred. Please try again later.",
     "connectors": {
       "group_by": "Group services by:",
       "cluster_id": "Cluster",
@@ -3868,7 +3889,7 @@
       "cancel": "Cancel",
       "cluster-placeholder": "Create or select cluster",
       "hostname-placeholder": "Enter hostname or IP address",
-      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud.<br> Node IP address: {{hostname}}<br>Cluster: {{clustername}}",
+      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud.<br> Node IP Address/FQDN: {{hostname}}<br>Cluster: {{clustername}}",
       "grant-registration-success-header-new-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, assigned to the new cluster <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
       "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration.",
       "next": "Next",
@@ -4640,6 +4661,12 @@
     "sorryMessage": "Sorry, something went wrong ",
     "reloadMessage": "Please try reloading the page",
     "newFeatureButtonText": "New",
+    "settings": {
+      "setUpCare": "Care",
+      "setUpDescription": "Setup Care to add this license for your users so that your organization can take advantage of Care service.",
+      "setUpCareSuccess": "Care service has been setup successfully.",
+      "setUpCareFailure": "Failed to setup Care service. Please try again. Users cannot have Care license till this setup is complete."
+    },
     "featuresNotYetConfiguredPage": {
       "createCT": "Create a Chat Template",
       "createCTDesc": "A chat template is what your customer sees when chatting with an agent.",
@@ -4683,6 +4710,8 @@
     "noneFound": "No Places Found",
     "actionHeader": "Actions",
     "servicesHeader": "Services",
+    "sparkCall": "Spark Call",
+    "sparkOnly": "Spark only",
     "placeAdd": "Add Place",
     "placesDefinition": "A place represents a physical location containing a device not owned by a specific user, such as a meeting room with a collaboration device or a reception with shared phones.",
     "placesUses": "You'll be able to view your places here - and the devices and configurations that belong to them.",
@@ -5219,8 +5248,8 @@
       "EE": "Webex Enterprise Edition",
       "CMR": "WebEx Collaboration Meeting Rooms",
       "CO": "Spark Call",
-      "SD": "Spark Shared Devices",
-      "SB": "Cisco Seagull"
+      "SD": "DX, MX or SX system",
+      "SB": "Spark Board"
     }
   },
   "onlineUpgradeModal": {
@@ -5446,7 +5475,7 @@
       "national": "National",
       "local": "Local"
     },
-    "vmprefix": "Voicemail Access Prefix",
+    "vmprefix": "Voicemail ID Prefix",
     "outboundDigit": "Outbound Dial Digit",
     "areaCode": "Area Code",
     "customerInfo": "Customer Information",
@@ -5458,8 +5487,13 @@
     "adminEmail": "Admin Email",
     "emailSent": "Last Email Sent",
     "partnerInfo": "Partner Information",
+    "hybridServicesDetails": "Hybrid Services Details",
     "partnerEmail": "Partner Email",
-    "hybridServicesDetails": "Hybrid Services Details"
+    "resendAdminEmail": "Resend",
+    "editAdminEmail": "Edit",
+    "resendTooltip": "Resends the welcome email.",
+    "resendMailSuccess": "Welcome email was successfully sent.",
+    "resendMailFailure": "Failed to resend welcome email."
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -5573,7 +5607,8 @@
         "title": "Care",
         "description": "Customer Care channel configurations for your organization.",
         "buttons": {
-          "features": "Features"
+          "features": "Features",
+          "settings": "Settings"
         }
       },
       "clusterList": {
