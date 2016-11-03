@@ -6,7 +6,10 @@
     .controller('LineSettingsCtrl', LineSettingsCtrl);
 
   /* @ngInject */
-  function LineSettingsCtrl($scope, $state, $stateParams, $translate, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, UserListService, SharedLineInfoService, ValidationService, CallerId, DialPlanService) {
+  function LineSettingsCtrl($scope, $state, $stateParams, $translate, $q, $modal, Notification,
+      DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser,
+      UserListService, SharedLineInfoService, ValidationService, CallerId, DialPlanService,
+      ExternalNumberPool) {
     var vm = this;
 
     vm.actionList = [{
@@ -403,7 +406,11 @@
           vm.assignedExternalNumber = vm.telephonyInfo.alternateDirectoryNumber;
 
           if (vm.externalNumberPool.length === 0) {
-            TelephonyInfoService.loadExternalNumberPool().then(function (externalNumberPool) {
+            TelephonyInfoService.loadExternalNumberPool(
+              ExternalNumberPool.NO_PATTERN_MATCHING,
+              ExternalNumberPool.FIXED_LINE_OR_MOBILE
+            )
+            .then(function (externalNumberPool) {
               vm.externalNumberPool = externalNumberPool;
             }).catch(function (response) {
               vm.externalNumberPool = [];
