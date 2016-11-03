@@ -25,7 +25,7 @@
           type: 'huron',
           activationCode: res.data.password,
           expiryTime: res.data.expiresOn,
-          cisUuid: machineUuid,
+          id: machineUuid,
           state: 'UNCLAIMED'
         });
       });

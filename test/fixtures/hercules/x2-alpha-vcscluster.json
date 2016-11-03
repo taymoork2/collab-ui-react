@@ -1,0 +1,477 @@
+{
+  "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4",
+  "id": "5689c2fc-dbe8-11e5-95a9-0050568c73c4",
+  "name": "x2-alpha-vcscluster",
+  "connectors": [
+    {
+      "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/connectors/c_mgmt@0A6B8658",
+      "id": "c_mgmt@0A6B8658",
+      "connectorType": "c_mgmt",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "x2-alpha-vcsc3.cisco.com",
+      "hostSerial": "0A6B8658",
+      "alarms": [],
+      "runningVersion": "8.7-1.0.321195",
+      "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_mgmt",
+      "registered": true
+    },
+    {
+      "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/connectors/c_cal@08D470AC",
+      "id": "c_cal@08D470AC",
+      "connectorType": "c_cal",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "x2-alpha-vcsc6.cisco.com",
+      "hostSerial": "08D470AC",
+      "alarms": [],
+      "runningVersion": "8.7-1.0.3490",
+      "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_cal",
+      "registered": true
+    },
+    {
+      "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/connectors/c_cal@031A2401",
+      "id": "c_cal@031A2401",
+      "connectorType": "c_cal",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "x2-alpha-vcsc5.cisco.com",
+      "hostSerial": "031A2401",
+      "alarms": [],
+      "runningVersion": "8.7-1.0.3490",
+      "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_cal",
+      "registered": true
+    },
+    {
+      "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/connectors/c_ucmc@031A2401",
+      "id": "c_ucmc@031A2401",
+      "connectorType": "c_ucmc",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "x2-alpha-vcsc5.cisco.com",
+      "hostSerial": "031A2401",
+      "alarms": [
+        {
+          "id": "60303",
+          "firstReported": "1476998385",
+          "lastReported": "1477481870",
+          "severity": "warning",
+          "title": "Could not find a user with this email address.",
+          "description": "Could not find a user with this email address - user[35ab3eca-f35d-49f5-8683-758d6083ddbd]: mklotzba@cisco.com",
+          "solution": "Enter an email address for the user in Cisco Unified CM",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60301",
+          "firstReported": "1476997827",
+          "lastReported": "1477481051",
+          "severity": "warning",
+          "title": "The user has no valid devices in the control list.",
+          "description": "The user has no valid devices in the control list - user[d5ed191d-ba93-421c-a3fb-6e092b4ca8e1]: xiangxwa@cisco.com",
+          "solution": "Associate at least one valid device with at least one line with the user in Cisco Unified CM",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60339",
+          "firstReported": "1476998859",
+          "lastReported": "1477284901",
+          "severity": "warning",
+          "title": "The user exceeds the remote destination limit at Unified CM.",
+          "description": "Unable to add cloud calling URI for user in Unified CM. The user exceeds the remote destination limit - for user[5641510e-553a-4344-a483-02e5e79d6bff]: escherme@cisco.com",
+          "solution": "Remove unused remote destination or increase the limit.",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60320",
+          "firstReported": "1477096280",
+          "lastReported": "1477374597",
+          "severity": "warning",
+          "title": "Connectivity to CUCM CTIManager Service lost",
+          "description": "Connectivity to CTIManager Service lost - for CUCM [gigantic-6.cisco.com]",
+          "solution": "Check if CTIManager service is running on CUCM and resolve any networking issues",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60317",
+          "firstReported": "1476997539",
+          "lastReported": "1477286229",
+          "severity": "warning",
+          "title": "Call connector is unable to create a CTI Remote Revice in Unified CM.",
+          "description": "Call connector is unable to create a CTI Remote Device in Unified CM - user[eb7512b9-6941-4777-898d-0efc9f79a4bf]: prdommar@cisco.com",
+          "solution": "Check for any potentially conflicting device names",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60311",
+          "firstReported": "1477000667",
+          "lastReported": "1477001137",
+          "severity": "warning",
+          "title": "The user is not configured with a primary directory number.",
+          "description": "The user is not configured with a primary directory number - [81eb2b09-fa22-4fe0-aa01-ff1bd0140df7]: joecoz@cisco.com",
+          "solution": "Configure a Primary DN for the user from Unified CM Administration UI.",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60328",
+          "firstReported": "1476997716",
+          "lastReported": "1477474391",
+          "severity": "warning",
+          "title": "The user is configured for more than one Unified CM cluster.",
+          "description": "The user is configured for more than one Unified CM cluster - user[%s]",
+          "solution": "Check the Home Cluster setting for this user on all Unified Communication Managers configured on this Call Connector.",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60319",
+          "firstReported": "1477095563",
+          "lastReported": "1477373325",
+          "severity": "warning",
+          "title": "Connectivity to CUCM AXL Service lost",
+          "description": "Connectivity to AXL Service lost - for CUCM [gigantic-6.cisco.com]",
+          "solution": "Check if AXL service is running on CUCM and resolve any networking issues",
+          "solutionReplacementValues": []
+        }
+      ],
+      "runningVersion": "8.7-1.2818",
+      "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_ucmc",
+      "registered": true
+    },
+    {
+      "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/connectors/c_ucmc@0F18B6D9",
+      "id": "c_ucmc@0F18B6D9",
+      "connectorType": "c_ucmc",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "x2-alpha-vcsc4.cisco.com",
+      "hostSerial": "0F18B6D9",
+      "alarms": [
+        {
+          "id": "60303",
+          "firstReported": "1477117556",
+          "lastReported": "1477481871",
+          "severity": "warning",
+          "title": "Could not find a user with this email address.",
+          "description": "Could not find a user with this email address - user[35ab3eca-f35d-49f5-8683-758d6083ddbd]: mklotzba@cisco.com",
+          "solution": "Enter an email address for the user in Cisco Unified CM",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60301",
+          "firstReported": "1477117711",
+          "lastReported": "1477481051",
+          "severity": "warning",
+          "title": "The user has no valid devices in the control list.",
+          "description": "The user has no valid devices in the control list - user[d5ed191d-ba93-421c-a3fb-6e092b4ca8e1]: xiangxwa@cisco.com",
+          "solution": "Associate at least one valid device with at least one line with the user in Cisco Unified CM",
+          "solutionReplacementValues": []
+        }
+      ],
+      "runningVersion": "8.7-1.2818",
+      "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_ucmc",
+      "registered": true
+    },
+    {
+      "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/connectors/c_ucmc@08D470AC",
+      "id": "c_ucmc@08D470AC",
+      "connectorType": "c_ucmc",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "x2-alpha-vcsc6.cisco.com",
+      "hostSerial": "08D470AC",
+      "alarms": [
+        {
+          "id": "60318",
+          "firstReported": "1476998824",
+          "lastReported": "1477286154",
+          "severity": "warning",
+          "title": "Users must have mobility enabled for call connector to create a CTI remote device.",
+          "description": "Users must have mobility enabled for call connector to create a Spark Remote Device - user[c2821738-1cd1-4855-a201-f531c9cbe4dc]: sfriedl@cisco.com",
+          "solution": "Check if the user is mobility enabled",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60319",
+          "firstReported": "1477095518",
+          "lastReported": "1477374823",
+          "severity": "warning",
+          "title": "Connectivity to CUCM AXL Service lost",
+          "description": "Connectivity to AXL Service lost - for CUCM [gigantic-6.cisco.com]",
+          "solution": "Check if AXL service is running on CUCM and resolve any networking issues",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60301",
+          "firstReported": "1476997827",
+          "lastReported": "1477481051",
+          "severity": "warning",
+          "title": "The user has no valid devices in the control list.",
+          "description": "The user has no valid devices in the control list - user[d5ed191d-ba93-421c-a3fb-6e092b4ca8e1]: xiangxwa@cisco.com",
+          "solution": "Associate at least one valid device with at least one line with the user in Cisco Unified CM",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60317",
+          "firstReported": "1476997487",
+          "lastReported": "1477286228",
+          "severity": "warning",
+          "title": "Call connector is unable to create a CTI Remote Revice in Unified CM.",
+          "description": "Call connector is unable to create a CTI Remote Device in Unified CM - user[eb7512b9-6941-4777-898d-0efc9f79a4bf]: prdommar@cisco.com",
+          "solution": "Check for any potentially conflicting device names",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60311",
+          "firstReported": "1477000667",
+          "lastReported": "1477001138",
+          "severity": "warning",
+          "title": "The user is not configured with a primary directory number.",
+          "description": "The user is not configured with a primary directory number - [81eb2b09-fa22-4fe0-aa01-ff1bd0140df7]: joecoz@cisco.com",
+          "solution": "Configure a Primary DN for the user from Unified CM Administration UI.",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60328",
+          "firstReported": "1476997716",
+          "lastReported": "1477474392",
+          "severity": "warning",
+          "title": "The user is configured for more than one Unified CM cluster.",
+          "description": "The user is configured for more than one Unified CM cluster - user[%s]",
+          "solution": "Check the Home Cluster setting for this user on all Unified Communication Managers configured on this Call Connector.",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60303",
+          "firstReported": "1476997676",
+          "lastReported": "1477481871",
+          "severity": "warning",
+          "title": "Could not find a user with this email address.",
+          "description": "Could not find a user with this email address - user[35ab3eca-f35d-49f5-8683-758d6083ddbd]: mklotzba@cisco.com",
+          "solution": "Enter an email address for the user in Cisco Unified CM",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60320",
+          "firstReported": "1477062370",
+          "lastReported": "1477373260",
+          "severity": "warning",
+          "title": "Connectivity to CUCM CTIManager Service lost",
+          "description": "Connectivity to CTIManager Service lost - for CUCM [ccm-bldvtg-011.cisco.com]",
+          "solution": "Check if CTIManager service is running on CUCM and resolve any networking issues",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60339",
+          "firstReported": "1476997483",
+          "lastReported": "1477286993",
+          "severity": "warning",
+          "title": "The user exceeds the remote destination limit at Unified CM.",
+          "description": "Unable to add cloud calling URI for user in Unified CM. The user exceeds the remote destination limit - for user[ac9b77aa-537f-4562-8b1a-d0014e3e8633]: mvild@cisco.com",
+          "solution": "Remove unused remote destination or increase the limit.",
+          "solutionReplacementValues": []
+        }
+      ],
+      "runningVersion": "8.7-1.2818",
+      "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_ucmc",
+      "registered": true
+    },
+    {
+      "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/connectors/c_cal@0A6B8658",
+      "id": "c_cal@0A6B8658",
+      "connectorType": "c_cal",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "x2-alpha-vcsc3.cisco.com",
+      "hostSerial": "0A6B8658",
+      "alarms": [],
+      "runningVersion": "8.7-1.0.3490",
+      "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_cal",
+      "registered": true
+    },
+    {
+      "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/connectors/c_mgmt@031A2401",
+      "id": "c_mgmt@031A2401",
+      "connectorType": "c_mgmt",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "x2-alpha-vcsc5.cisco.com",
+      "hostSerial": "031A2401",
+      "alarms": [],
+      "runningVersion": "8.7-1.0.321195",
+      "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_mgmt",
+      "registered": true
+    },
+    {
+      "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/connectors/c_mgmt@08D470AC",
+      "id": "c_mgmt@08D470AC",
+      "connectorType": "c_mgmt",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "x2-alpha-vcsc6.cisco.com",
+      "hostSerial": "08D470AC",
+      "alarms": [],
+      "runningVersion": "8.7-1.0.321195",
+      "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_mgmt",
+      "registered": true
+    },
+    {
+      "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/connectors/c_mgmt@0F18B6D9",
+      "id": "c_mgmt@0F18B6D9",
+      "connectorType": "c_mgmt",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "x2-alpha-vcsc4.cisco.com",
+      "hostSerial": "0F18B6D9",
+      "alarms": [],
+      "runningVersion": "8.7-1.0.321195",
+      "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_mgmt",
+      "registered": true
+    },
+    {
+      "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/connectors/c_ucmc@0A6B8658",
+      "id": "c_ucmc@0A6B8658",
+      "connectorType": "c_ucmc",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "x2-alpha-vcsc3.cisco.com",
+      "hostSerial": "0A6B8658",
+      "alarms": [
+        {
+          "id": "60320",
+          "firstReported": "1477051374",
+          "lastReported": "1477374597",
+          "severity": "warning",
+          "title": "Connectivity to CUCM CTIManager Service lost",
+          "description": "Connectivity to CTIManager Service lost - for CUCM [gigantic-6.cisco.com]",
+          "solution": "Check if CTIManager service is running on CUCM and resolve any networking issues",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60311",
+          "firstReported": "1477000667",
+          "lastReported": "1477287302",
+          "severity": "warning",
+          "title": "The user is not configured with a primary directory number.",
+          "description": "The user is not configured with a primary directory number - [81eb2b09-fa22-4fe0-aa01-ff1bd0140df7]: joecoz@cisco.com",
+          "solution": "Configure a Primary DN for the user from Unified CM Administration UI.",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60303",
+          "firstReported": "1476999104",
+          "lastReported": "1477481870",
+          "severity": "warning",
+          "title": "Could not find a user with this email address.",
+          "description": "Could not find a user with this email address - user[35ab3eca-f35d-49f5-8683-758d6083ddbd]: mklotzba@cisco.com",
+          "solution": "Enter an email address for the user in Cisco Unified CM",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60317",
+          "firstReported": "1476997758",
+          "lastReported": "1477285855",
+          "severity": "warning",
+          "title": "Call connector is unable to create a CTI Remote Revice in Unified CM.",
+          "description": "Call connector is unable to create a CTI Remote Device in Unified CM - user[90b9f815-e8dd-4e42-9bf4-89f32f44e112]: nielsen@cisco.com",
+          "solution": "Check for any potentially conflicting device names",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60319",
+          "firstReported": "1477095031",
+          "lastReported": "1477372123",
+          "severity": "warning",
+          "title": "Connectivity to CUCM AXL Service lost",
+          "description": "Connectivity to AXL Service lost - for CUCM [ccm-bldvtg-011.cisco.com]",
+          "solution": "Check if AXL service is running on CUCM and resolve any networking issues",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60328",
+          "firstReported": "1476997714",
+          "lastReported": "1477474390",
+          "severity": "warning",
+          "title": "The user is configured for more than one Unified CM cluster.",
+          "description": "The user is configured for more than one Unified CM cluster - user[%s]",
+          "solution": "Check the Home Cluster setting for this user on all Unified Communication Managers configured on this Call Connector.",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60339",
+          "firstReported": "1477286758",
+          "lastReported": "1477286915",
+          "severity": "warning",
+          "title": "The user exceeds the remote destination limit at Unified CM.",
+          "description": "Unable to add cloud calling URI for user in Unified CM. The user exceeds the remote destination limit - for user[ac9b77aa-537f-4562-8b1a-d0014e3e8633]: mvild@cisco.com",
+          "solution": "Remove unused remote destination or increase the limit.",
+          "solutionReplacementValues": []
+        },
+        {
+          "id": "60301",
+          "firstReported": "1476997826",
+          "lastReported": "1477481050",
+          "severity": "warning",
+          "title": "The user has no valid devices in the control list.",
+          "description": "The user has no valid devices in the control list - user[d5ed191d-ba93-421c-a3fb-6e092b4ca8e1]: xiangxwa@cisco.com",
+          "solution": "Associate at least one valid device with at least one line with the user in Cisco Unified CM",
+          "solutionReplacementValues": []
+        }
+      ],
+      "runningVersion": "8.7-1.2818",
+      "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_ucmc",
+      "registered": true
+    },
+    {
+      "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/connectors/c_cal@0F18B6D9",
+      "id": "c_cal@0F18B6D9",
+      "connectorType": "c_cal",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "x2-alpha-vcsc4.cisco.com",
+      "hostSerial": "0F18B6D9",
+      "alarms": [],
+      "runningVersion": "8.7-1.0.3490",
+      "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_cal",
+      "registered": true
+    }
+  ],
+  "releaseChannel": "beta",
+  "provisioning": [
+    {
+      "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/provisioning/c_ucmc",
+      "connectorType": "c_ucmc",
+      "provisionedVersion": "8.7-1.2818",
+      "availableVersion": "8.7-1.2818",
+      "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_ucmc"
+    },
+    {
+      "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/provisioning/c_cal",
+      "connectorType": "c_cal",
+      "provisionedVersion": "8.7-1.0.3490",
+      "availableVersion": "8.7-1.0.3490",
+      "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_cal"
+    },
+    {
+      "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/provisioning/c_mgmt",
+      "connectorType": "c_mgmt",
+      "provisionedVersion": "8.7-1.0.321195",
+      "availableVersion": "8.7-1.0.321198",
+      "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_mgmt"
+    }
+  ],
+  "registered": true,
+  "targetType": "c_mgmt",
+  "upgradeScheduleUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/upgradeSchedule",
+  "upgradeSchedule": {
+    "scheduleDays": [
+      "thursday"
+    ],
+    "scheduleTime": "14:00",
+    "scheduleTimeZone": "America/Los_Angeles",
+    "moratoria": [],
+    "nextUpgradeWindow": {
+      "startTime": "2016-10-27T21:00:37.813Z",
+      "endTime": "2016-10-27T22:00:37.813Z"
+    },
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/upgradeSchedule"
+  }
+}

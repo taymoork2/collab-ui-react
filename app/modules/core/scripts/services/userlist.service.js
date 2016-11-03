@@ -257,24 +257,21 @@
     }
 
     function getUserCount() {
-      var deferred = $q.defer();
-      userCountResource.get().$promise.then(function (response) {
-        var count = -1;
-        if (_.isArray(response.data[0].data)) {
-          count = _.chain(response.data[0].data)
-            .dropRightWhile(function (d) { // skip '0' count
-              return d.details.totalRegisteredUsers === '0';
-            })
-            .last()
-            .get('details.totalRegisteredUsers')
-            .parseInt()
-            .value();
-        }
-        deferred.resolve(count);
-      }).catch(function () {
-        deferred.reject();
-      });
-      return deferred.promise;
+      return userCountResource.get().$promise
+        .then(function (response) {
+          var count = -1;
+          if (_.isArray(_.get(response, 'data[0].data'))) {
+            count = _.chain(response.data[0].data)
+              .dropRightWhile(function (d) { // skip '0' count
+                return d.details.totalRegisteredUsers === '0';
+              })
+              .last()
+              .get('details.totalRegisteredUsers')
+              .parseInt()
+              .value();
+          }
+          return count;
+        });
     }
 
     // TODO: rm this after replacing all instances of usage to listPartnersAsPromise

@@ -49,6 +49,11 @@
       if (!customerOrgId) {
         return $q.reject('A Customer Organization Id must be passed');
       }
+
+      if (!_.isObject(user)) {
+        return $q.reject('A User must be passed');
+      }
+
       var userName = _.get(user, 'userName');
 
       // notes:

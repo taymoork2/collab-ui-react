@@ -35,13 +35,16 @@
       {
         title: $translate.instant('reportsPage.usageReports.all'),
         state: 'reports.device-usage.total'
-      }, {
-        title: $translate.instant('reportsPage.usageReports.timeline'),
-        state: 'reports.device-usage.timeline'
-      }, {
-        title: $translate.instant('reportsPage.usageReports.distribution'),
-        state: 'reports.device-usage.distribution'
-      }];
+      }
+      // ,
+      // {
+      //   title: $translate.instant('reportsPage.usageReports.timeline'),
+      //   state: 'reports.device-usage.timeline'
+      // }, {
+      //   title: $translate.instant('reportsPage.usageReports.distribution'),
+      //   state: 'reports.device-usage.distribution'
+      // }
+    ];
 
     vm.pageTitle = $translate.instant('reportsPage.usageReports.usageReportTitle');
 
