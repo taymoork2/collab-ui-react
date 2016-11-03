@@ -7,7 +7,7 @@
 
   /*@ngInject*/
   function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate,
-                       addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService,
+                       addressparser, Analytics, Authinfo, chartColors, Config, DialPlanService, FeatureToggleService,
                        Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice,
                        SunlightConfigService, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup) {
     var vm = this;
@@ -458,7 +458,9 @@
     $scope.communicationFeatures = [];
     $scope.careFeatures = [];
     $scope.licenses = [];
+    $scope.licenseStatus = [];
     $scope.populateConf = populateConf;
+    $scope.disableCheckbox = disableCheckbox;
     $scope.populateConfInvitations = populateConfInvitations;
     $scope.getAccountLicenses = getAccountLicenses;
     $scope.checkMessageVisibility = checkMessageVisibility;
@@ -504,6 +506,14 @@
         return true;
       }
       return false;
+    }
+
+    function disableCheckbox(lic) {
+      if (_.isArray(lic)) {
+        return _.get(lic[0], 'status') === 'DISABLED';
+      } else {
+        return _.get(lic, 'status') === 'DISABLED';
+      }
     }
 
     function populateConf() {
@@ -610,6 +620,7 @@
         offerName: _.get(obj, 'license.offerName', ''),
         label: obj.label,
         isTrial: _.get(obj, 'license.isTrial', false),
+        status: _.get(obj, 'license.status', ''),
         confModel: false,
         cmrModel: false
       };
