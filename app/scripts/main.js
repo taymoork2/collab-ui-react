@@ -47,6 +47,7 @@
     require('modules/core/analytics'),
     require('modules/core/featureToggle/featureToggle.service'),
     require('modules/core/scripts/services/org.service'),
+    require('modules/core/cards').default,
     require('modules/online/digitalRiver').default // TODO make core.myCompany independent module
   ])
     .constant('pako', require('pako'))

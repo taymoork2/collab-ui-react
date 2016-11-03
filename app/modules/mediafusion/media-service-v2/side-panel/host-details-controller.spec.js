@@ -4,7 +4,7 @@ describe('Controller: HostDetailsControllerV2', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var $selectedRole, $q, $clusterId, httpBackend, $rootScope, $modal, controller, $stateParams, $state, MediaClusterServiceV2, XhrNotificationService;
+  var $selectedRole, $q, $clusterId, httpBackend, $rootScope, $modal, controller, $stateParams, $state, MediaClusterServiceV2, Notification;
   var actualOptions;
   var fakeModal = {
     result: {
@@ -20,7 +20,7 @@ describe('Controller: HostDetailsControllerV2', function () {
       this.result.cancelCallback(type);
     }
   };
-  beforeEach(inject(function ($httpBackend, _$rootScope_, _$q_, $controller, _MediaClusterServiceV2_, _XhrNotificationService_, $translate) {
+  beforeEach(inject(function ($httpBackend, _$rootScope_, _$q_, $controller, _MediaClusterServiceV2_, _Notification_, $translate) {
     $rootScope = _$rootScope_;
     $q = _$q_;
     $stateParams = {
@@ -162,7 +162,7 @@ describe('Controller: HostDetailsControllerV2', function () {
     };
 
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
-    XhrNotificationService = _XhrNotificationService_;
+    Notification = _Notification_;
 
     $modal = {
       open: sinon.stub().returns({
@@ -184,7 +184,7 @@ describe('Controller: HostDetailsControllerV2', function () {
       $stateParams: $stateParams,
       $state: $state,
       MediaClusterServiceV2: MediaClusterServiceV2,
-      XhrNotificationService: XhrNotificationService,
+      Notification: Notification,
       $translate: $translate,
       $selectedRole: $selectedRole,
       $clusterId: $clusterId

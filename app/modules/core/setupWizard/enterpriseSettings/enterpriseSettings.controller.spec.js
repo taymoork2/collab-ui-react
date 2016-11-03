@@ -31,30 +31,39 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     $scope.wizard = {
       nextTab: sinon.stub()
     };
+  }));
 
+  function initSpies() {
     spyOn($scope.wizard, 'nextTab');
 
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(orgServiceJSONFixture.getOrg, getOrgStatus);
     });
     spyOn(Orgservice, 'validateSiteUrl').and.returnValue($q.when({ isValid: true }));
+
     spyOn(Notification, 'error');
+
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when());
     spyOn(ServiceSetup, 'getTranslatedTimeZones').and.returnValue(['1', '2', '3']);
-  }));
+  }
 
   function initController() {
-    $controller('EnterpriseSettingsCtrl', {
+    var ctrl = $controller('EnterpriseSettingsCtrl', {
       $scope: $scope,
       $rootScope: rootScope,
       Authinfo: authInfo
     });
 
     $scope.$apply();
+
+    return ctrl;
   }
 
   describe('test the ssoEnabled settings', function () {
-    beforeEach(initController);
+    beforeEach(function () {
+      initSpies();
+      initController();
+    });
 
     it('should set ssoEnabled field to true in the scope', function () {
       rootScope.ssoEnabled = true;
@@ -121,10 +130,52 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
   });
 
   describe('test Personal Meeting Room Setup', function () {
-    beforeEach(initController);
+
+    it('should handle valid org settings', function () {
+
+      spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
+        callback(orgServiceJSONFixture.getOrg, getOrgStatus);
+      });
+
+      spyOn(Orgservice, 'validateSiteUrl').and.callFake(function () {
+        return $q.when({
+          isValid: true,
+        });
+      });
+
+      var ctrl = initController();
+
+      expect(ctrl.inputValue).toEqual('amtest2.ciscospark.com');
+
+    });
+
+    it('should handle org data not having a sipCloudDomain in orgSettings', function () {
+
+      spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
+        var org = _.cloneDeep(orgServiceJSONFixture.getOrg);
+        org.orgSettings.sipCloudDomain = undefined;
+        callback(org, getOrgStatus);
+      });
+
+      spyOn(Orgservice, 'validateSiteUrl').and.callFake(function () {
+        return $q.when({
+          isValid: true,
+        });
+      });
+
+      var ctrl = initController();
+
+      expect(ctrl.inputValue).toEqual('');
+
+    });
 
     it('should shallow validate the Sip Domain', function () {
+
+      initSpies();
+      initController();
+
       expect(Orgservice.validateSiteUrl).toHaveBeenCalledWith('amtest2.ciscospark.com');
     });
+
   });
 });

@@ -21,6 +21,9 @@
     vm.loading = true;
     vm.exporting = false;
 
+    var dateRange;
+    vm.exportRawData = exportRawData;
+
     vm.deviceOptions = [
       {
         value: 0,
@@ -29,7 +32,7 @@
       },
       {
         value: 1,
-        label: 'CE',
+        label: 'Room Systems',
         description: 'All CE devices'
       },
       {
@@ -39,7 +42,6 @@
       }
     ];
     vm.deviceFilter = vm.deviceOptions[0];
-    //vm.currentFilter = vm.deviceOptions[0].value;
 
     vm.deviceUpdate = function () {
       //$log.info('deviceFilter', vm.deviceFilter);
@@ -75,7 +77,6 @@
         return result;
       }, {}).map(function (value, key) {
         value.totalDuration = (value.totalDuration / 60).toFixed(2);
-        // var timeFormatted = key.substr(0, 4) + '-' + key.substr(4, 2) + '-' + key.substr(6, 2);
         value.time = key;
         return value;
       }).value();
@@ -83,37 +84,29 @@
       return extract;
     }
 
-    var startDate;
-    var endDate;
-
-    vm.exportRawData = exportRawData;
-
     if (!deviceUsageFeatureToggle) {
       // simulate a 404
       $state.go('login');
     }
 
     $scope.$on('time-range-changed', function (event, timeSelected) {
-      var dateRange;
       vm.deviceFilter = vm.deviceOptions[0];
       switch (timeSelected.value) {
         case 0:
-          dateRange = DeviceUsageTotalService.getDatesForLastWeek();
           loadLastWeek();
+          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
           break;
         case 1:
-          dateRange = DeviceUsageTotalService.getDatesForLastMonths(1);
           loadLastMonth();
+          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(4, 'week');
           break;
         case 2:
-          dateRange = DeviceUsageTotalService.getDatesForLastMonths(3);
           loadLast3Months();
+          dateRange = DeviceUsageTotalService.getDateRangeForPeriod(3, 'month');
           break;
         default:
           loadLastWeek();
       }
-      startDate = dateRange.start;
-      endDate = dateRange.end;
     });
 
     $scope.$watch(function () {
@@ -137,26 +130,24 @@
 
 
     function loadInitData() {
-      var dateRange;
       switch (DeviceUsageCommonService.getTimeSelected()) {
         case 0:
-          dateRange = DeviceUsageTotalService.getDatesForLastWeek();
-          DeviceUsageTotalService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
           break;
         case 1:
-          dateRange = DeviceUsageTotalService.getDatesForLastMonths(1);
-          DeviceUsageTotalService.getDataForLastMonth(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          DeviceUsageTotalService.getDataForLastNTimeUnits(4, 'week', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(4, 'week');
           break;
         case 2:
-          dateRange = DeviceUsageTotalService.getDatesForLastMonths(3);
           DeviceUsageTotalService.getDataForLastMonths(3, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          dateRange = DeviceUsageTotalService.getDateRangeForPeriod(3, 'month');
           break;
         default:
-          dateRange = DeviceUsageTotalService.getDatesForLastWeek();
-          DeviceUsageTotalService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          $log.warn("Unknown time period selected");
+          DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
       }
-      startDate = dateRange.start;
-      endDate = dateRange.end;
 
     }
 
@@ -181,10 +172,10 @@
     function loadChartData(data, title) {
       vm.reportData = data;
       amChart.dataProvider = data;
-      amChart.validateData();
       if (title) {
         amChart.categoryAxis.title = title;
       }
+      amChart.validateData();
       vm.showDevices = false;
       fillInStats(data);
     }
@@ -196,15 +187,15 @@
 
     function loadLastWeek() {
       vm.loading = true;
-      DeviceUsageTotalService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(function (data) {
-        loadChartData(data, 'Daily in Week');
+      DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(function (data) {
+        loadChartData(data, 'Last 7 Days');
       }, handleReject);
     }
 
     function loadLastMonth() {
       vm.loading = true;
-      DeviceUsageTotalService.getDataForLastMonth(['ce', 'sparkboard'], apiToUse).then(function (data) {
-        loadChartData(data, 'Weekly Last Month');
+      DeviceUsageTotalService.getDataForLastNTimeUnits(4, 'week', ['ce', 'sparkboard'], apiToUse).then(function (data) {
+        loadChartData(data, 'Weekly Last 4 Weeks');
       }, handleReject);
     }
 
@@ -230,7 +221,6 @@
       var text = '<div><h5>Call Duration: ' + graphDataItem.dataContext.totalDuration + '</h5>';
       text = text + 'Call Count:  ' + graphDataItem.dataContext.callCount + ' <br/> ';
       text = text + 'Paired Count: ' + graphDataItem.dataContext.pairedCount + '<br/>';
-      //text = text + 'Devices: ' + graphDataItem.dataContext.devices.length + '</div>';
       return text;
     }
 
@@ -283,7 +273,8 @@
 
     function exportRawData() {
       vm.exporting = true;
-      DeviceUsageTotalService.exportRawData(startDate, endDate).then(function () {
+      $log.info("Exporting data for range", dateRange);
+      DeviceUsageTotalService.exportRawData(dateRange.start, dateRange.end).then(function () {
         $log.info("export finished");
         vm.exporting = false;
       })

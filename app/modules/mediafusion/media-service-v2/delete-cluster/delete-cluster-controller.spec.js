@@ -4,8 +4,8 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var $q, httpBackend, controller, cluster, $modalInstance, $filter, MediaClusterServiceV2, $state, $translate, XhrNotificationService, Notification;
-  beforeEach(inject(function ($httpBackend, _MediaClusterServiceV2_, $controller, _$filter_, _$state_, _$translate_, _XhrNotificationService_, _Notification_, _$q_) {
+  var $q, httpBackend, controller, cluster, $modalInstance, $filter, MediaClusterServiceV2, $state, $translate, Notification;
+  beforeEach(inject(function ($httpBackend, _MediaClusterServiceV2_, $controller, _$filter_, _$state_, _$translate_, _Notification_, _$q_) {
     cluster = {
       "id": "a050fcc7-9ade-4790-a06d-cca596910421",
       "name": "MFA_TEST1",
@@ -34,7 +34,6 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
     $state = _$state_;
     $translate = _$translate_;
-    XhrNotificationService = _XhrNotificationService_;
     Notification = _Notification_;
     $q = _$q_;
     httpBackend = $httpBackend;
@@ -54,7 +53,6 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
       MediaClusterServiceV2: MediaClusterServiceV2,
       $state: $state,
       $translate: $translate,
-      XhrNotificationService: XhrNotificationService,
       Notification: Notification,
       $q: $q
     });

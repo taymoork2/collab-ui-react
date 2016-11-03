@@ -1,6 +1,5 @@
 import {
   IActiveUserData,
-  IMediaQualityData,
   ITimespan,
 } from '../partnerReports/partnerReportInterfaces';
 
@@ -9,6 +8,7 @@ import {
   IEndpointData,
   IEndpointWrapper,
   IFilesShared,
+  IMediaData,
   IMetricsData,
 } from './customerReportInterfaces';
 
@@ -156,11 +156,11 @@ class DummyCustomerReportService {
     };
   }
 
-  public dummyMediaData(filter: ITimespan): Array<IMediaQualityData> {
+  public dummyMediaData(filter: ITimespan): Array<IMediaData> {
     return this.getDummyData(filter, this.getMediaDataPoint);
   }
 
-  private getMediaDataPoint(filter: ITimespan, index: number, constants: any): IMediaQualityData {
+  private getMediaDataPoint(filter: ITimespan, index: number, constants: any): IMediaData {
     let commonData: ICommonData = DummyCustomerReportService.getCommonData(filter, index, constants);
     let goodQualityDurationSum = 25 + (15 * commonData.count);
     let fairQualityDurationSum = 15 + (10 * commonData.count);
@@ -173,6 +173,16 @@ class DummyCustomerReportService {
       goodQualityDurationSum: goodQualityDurationSum,
       fairQualityDurationSum: fairQualityDurationSum,
       poorQualityDurationSum: poorQualityDurationSum,
+      totalAudioDurationSum: 0,
+      goodAudioQualityDurationSum: 0,
+      fairAudioQualityDurationSum: 0,
+      poorAudioQualityDurationSum: 0,
+      partialAudioSum: 0,
+      totalVideoDurationSum: 0,
+      goodVideoQualityDurationSum: 0,
+      fairVideoQualityDurationSum: 0,
+      poorVideoQualityDurationSum: 0,
+      partialVideoSum: 0,
       balloon: false,
     };
   }

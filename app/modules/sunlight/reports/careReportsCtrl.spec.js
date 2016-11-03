@@ -35,11 +35,6 @@ describe('Controller: Care Reports Controller', function () {
   }];
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Sunlight'));
-  beforeEach(function () {
-    /* global document */
-    var $document = angular.element(document);
-    $document.find('body').append('<div class="cs-card-layout"></div>');
-  });
   beforeEach(
     inject(function ($controller, _$q_, _$translate_, _$timeout_, _SunlightReportService_,
                      _DummyCareReportService_, _CareReportsService_) {

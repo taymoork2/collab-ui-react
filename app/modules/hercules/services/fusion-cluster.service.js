@@ -109,15 +109,15 @@
     }
 
     function extractData(response) {
-      return _.get(response, 'data');
+      return response.data;
     }
 
     function extractClustersFromResponse(response) {
-      return extractData(response).clusters;
+      return _.get(extractData(response), 'clusters', []);
     }
 
     function extractDataFromResponse(res) {
-      return _.get(res, 'data');
+      return res.data;
     }
 
     function addServicesStatuses(clusters) {
@@ -126,10 +126,6 @@
           var mgmtConnectors = _.filter(cluster.connectors, { connectorType: 'c_mgmt' });
           var ucmcConnectors = _.filter(cluster.connectors, { connectorType: 'c_ucmc' });
           var calConnectors = _.filter(cluster.connectors, { connectorType: 'c_cal' });
-          cluster.provisioning = _.map(cluster.provisioning, function (p) {
-            p.availablePackageIsUrgent = true;
-            return p;
-          });
           cluster.servicesStatuses = [{
             serviceId: 'squared-fusion-mgmt',
             state: FusionClusterStatesService.getMergedStateSeverity(mgmtConnectors),
@@ -242,7 +238,7 @@
       return $http.get(url)
         .then(extractDataFromResponse)
         .then(function (data) {
-          return data.releaseNotes;
+          return _.get(data, 'releaseNotes', '');
         });
     }
 

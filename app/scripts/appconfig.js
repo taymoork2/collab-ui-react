@@ -1252,22 +1252,6 @@
               displayName: 'Beta Features'
             }
           })
-          .state('organization-overview.add', {
-            parent: 'modal',
-            views: {
-              'modal@': {
-                controller: 'OrganizationAddCtrl',
-                controllerAs: 'orgAdd',
-                template: '<div ui-view="orgAdd"></div>'
-              },
-              'orgAdd@organization-overview.add': {
-                templateUrl: 'modules/core/organizations/organizationAdd/organizationAdd.tpl.html'
-              }
-            }
-          })
-          .state('organization-overview.add.info', {
-            templateUrl: 'modules/core/organizations/organizationAdd/organizationAdd.tpl.html'
-          })
           .state('organization-overview.add.addNumbers', {
             templateUrl: 'modules/core/organizations/organizationAdd/addNumbers.tpl.html',
             controller: 'DidAddCtrl',
@@ -3014,7 +2998,10 @@
           })
           .state('care.Settings', {
             url: '/settings',
-            parent: 'care.Details'
+            parent: 'care.Details',
+            templateUrl: 'modules/sunlight/settings/careSettings.tpl.html',
+            controller: 'CareLocalSettingsCtrl',
+            controllerAs: 'localCareSettings'
           })
           .state('care.Features', {
             url: '/features',

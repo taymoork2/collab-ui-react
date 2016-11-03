@@ -1,6 +1,7 @@
 {
-  "accountId": "4895afc9-83e9-44cb-b78a-05e541d41661",
-  "accountName": "Atlas_Test_int_suneng2",
+  "accountId": "d455a707-8d73-443c-9ff7-3090b9be0e81",
+  "accountName": "All_Pizza_And_Ice_Cream_You_Can_Eatery",
+  "accountOrgId": "bbbc797b-f8a4-424b-9e1d-927e222f532e",
   "customerAdminEmail": "snzhuoatlas+inttest_sn30@gmail.com",
   "partnerId": "bff8dcbb-add8-4e12-9fc8-a4e0703ab536",
   "partnerOrgId": "453e0f7f-9117-4fd9-8369-71d86cdfeb25",
@@ -99,7 +100,7 @@
   ],
   "isTestAccount": true,
   "customerType": "Enterprise",
-  "customerId": "CUID-Atlas_Test_int_suneng2",
+  "customerId": "Atlas_Test_Order_Search_Admin",
   "commerceRelation": "Partner",
   "licenseEnforcement": {
     "licenseExceedAction": "NOTHING",

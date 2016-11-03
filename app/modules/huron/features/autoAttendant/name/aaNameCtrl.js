@@ -6,7 +6,7 @@
     .controller('aaBuilderNameCtrl', AutoAttendantNameBuilderCtrl);
 
   /* @ngInject */
-  function AutoAttendantNameBuilderCtrl($rootScope, AAUiModelService, AAValidationService) {
+  function AutoAttendantNameBuilderCtrl($scope, $rootScope, AAUiModelService, AAValidationService) {
 
     var vm = this;
 
@@ -21,19 +21,26 @@
     vm.nextPage = nextPage;
     vm.evalKeyPress = evalKeyPress;
     vm.name = '';
+    var canCreateAA = true;
 
     /////////////////////
 
     function saveAARecord() {
 
-      if (!AAValidationService.isNameValidationSuccess(vm.name, '')) {
+      if (!AAValidationService.isNameValidationSuccess(vm.name, '') || !canCreateAA) {
         return;
       }
 
-      saveUiModel();
-
-      $rootScope.$broadcast('AANameCreated');
+      if (canCreateAA) {
+        saveUiModel();
+        canCreateAA = false;
+        $rootScope.$broadcast('AANameCreated');
+      }
     }
+
+    $scope.$on('AACreationFailed', function () {
+      canCreateAA = true;
+    });
 
     function saveUiModel() {
       vm.ui.builder.ceInfo_name = vm.name;
@@ -51,7 +58,7 @@
     }
 
     function nextButton() {
-      if (vm.name === '') {
+      if (vm.name === '' || canCreateAA === false) {
         return false;
       } else {
         return true;

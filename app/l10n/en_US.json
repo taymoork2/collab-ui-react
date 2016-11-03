@@ -384,8 +384,6 @@
     "developmentTab": "Development",
     "organizationTab": "Manage Organizations",
     "organizationTabDesc": "Manage Organization Details, View Assigned Services, And Access Tools.",
-    "addOrganizationTab": "Create an Organization",
-    "addOrganizationTabDesc": "Add a new organization to this account",
     "callRoutingTab": "Call Routing",
     "callRoutingTabDesc": "Manage Call Routing Features Such As Call Park",
     "mediaOnHoldTab": "Media On Hold",
@@ -553,7 +551,7 @@
     "customers": "Customers",
     "customerSelect": "Select a customer",
     "usageReports": {
-      "usageReportTitle": "Usage Reports",
+      "usageReportTitle": "Device Usage Reports",
       "peakHour": "Peak Hour",
       "distribution": "Distribution",
       "timeline": "Timeline",
@@ -1104,12 +1102,11 @@
     "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Spark clients, and place calls to others' work phones from their Cisco Spark clients.",
     "setUpDevices": "Activate your devices when they arrive.",
     "setUpSharedDevices": "Activate your collaboration devices when they arrive.",
-    "setUpSeaGullDevices": "Activate your Seagull devices when they arrive.",
+    "setUpSparkBoardDevices": "Activate your Cisco Spark Board devices when they arrive.",
     "setUpPMRDescription": "The Personal Meeting Rooms feature has been added to your subscription.",
     "setUpPMRUrl": "Set Up PMR Now",
     "setUpHybridMediaService": "Hybrid Media Service is available. Extend cloud media to use premises-based resources for calls and meetings.",
-    "urgentUpgrade": "An urgent upgrade is available for {{connector}} and it will upgrade during the next scheduled upgrade.",
-    "upgrade": "Upgrade now?"
+    "urgentUpgrade": "An urgent upgrade is available for <a ui-sref='{{link}}'>{{connector}}</a> and it will upgrade during the next scheduled upgrade."
   },
   "inviteModal": {
     "title": "Service Entitlement",
@@ -2144,7 +2141,7 @@
     "careSettings": "Care Settings",
     "careSettingsSub": "Setup Care Service",
     "careSettingsDescription": "Click here to complete Care setup.",
-    "careSettingsComplete": "Care setup is complete.",
+    "careSettingsComplete": "Care service has been setup successfully.",
     "careSettingsButton": "Setup Care",
     "careSettingsFetchFailed": "Error retrieving onboarding status.",
     "careSettingsTimeout": "Request timed out while checking Care setup status.",
@@ -2495,6 +2492,8 @@
       "felipe": "Felipe",
       "alva": "Alva",
       "klara": "Klara",
+      "kyoko": "Kyoko",
+      "otoya": "Otoya",
       "oskar": "Oskar",
       "empar": "Empar"
     },
@@ -3612,6 +3611,7 @@
   "mediaFusion": {
     "page_title": "Hybrid Media Service",
     "add-resource-button": "Add Resource",
+    "genericError": "An unexpected error occurred. Please try again later.",
     "connectors": {
       "group_by": "Group services by:",
       "cluster_id": "Cluster",
@@ -3892,7 +3892,7 @@
       "cancel": "Cancel",
       "cluster-placeholder": "Create or select cluster",
       "hostname-placeholder": "Enter hostname or IP address",
-      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud.<br> Node IP address: {{hostname}}<br>Cluster: {{clustername}}",
+      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud.<br> Node IP Address/FQDN: {{hostname}}<br>Cluster: {{clustername}}",
       "grant-registration-success-header-new-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, assigned to the new cluster <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
       "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration.",
       "next": "Next",
@@ -4664,6 +4664,12 @@
     "sorryMessage": "Sorry, something went wrong ",
     "reloadMessage": "Please try reloading the page",
     "newFeatureButtonText": "New",
+    "settings": {
+      "setUpCare": "Care",
+      "setUpDescription": "Setup Care to add this license for your users so that your organization can take advantage of Care service.",
+      "setUpCareSuccess": "Care service has been setup successfully.",
+      "setUpCareFailure": "Failed to setup Care service. Please try again. Users cannot have Care license till this setup is complete."
+    },
     "featuresNotYetConfiguredPage": {
       "createCT": "Create a Chat Template",
       "createCTDesc": "A chat template is what your customer sees when chatting with an agent.",
@@ -5245,8 +5251,8 @@
       "EE": "Webex Enterprise Edition",
       "CMR": "WebEx Collaboration Meeting Rooms",
       "CO": "Spark Call",
-      "SD": "Spark Shared Devices",
-      "SB": "Cisco Seagull"
+      "SD": "DX, MX or SX system",
+      "SB": "Spark Board"
     }
   },
   "onlineUpgradeModal": {
@@ -5484,8 +5490,13 @@
     "adminEmail": "Admin Email",
     "emailSent": "Last Email Sent",
     "partnerInfo": "Partner Information",
+    "hybridServicesDetails": "Hybrid Services Details",
     "partnerEmail": "Partner Email",
-    "hybridServicesDetails": "Hybrid Services Details"
+    "resendAdminEmail": "Resend",
+    "editAdminEmail": "Edit",
+    "resendTooltip": "Resends the welcome email.",
+    "resendMailSuccess": "Welcome email was successfully sent.",
+    "resendMailFailure": "Failed to resend welcome email."
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -5584,7 +5595,8 @@
       },
       "meeting": {
         "title": "Meeting",
-        "description": "WebEx Meeting Center and Cisco Spark configurations for your organization and individuals."
+        "description": "WebEx Meeting Center and Cisco Spark configurations for your organization and individuals.",
+        "pmrText": "Configure your Personal Meeting Room"
       },
       "call": {
         "title": "Call",
@@ -5599,7 +5611,8 @@
         "title": "Care",
         "description": "Customer Care channel configurations for your organization.",
         "buttons": {
-          "features": "Features"
+          "features": "Features",
+          "settings": "Settings"
         }
       },
       "clusterList": {

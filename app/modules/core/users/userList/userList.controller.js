@@ -308,7 +308,7 @@
                   // email status
                   if (!user.active && $scope.isEmailStatusToggled) {
                     Userservice.getUsersEmailStatus(Authinfo.getOrgId(), user.id).then(function (response) {
-                      var eventStatus = response.data.items[0].event;
+                      var eventStatus = _.get(response, 'data.items[0].event');
                       if (eventStatus === 'rejected' || eventStatus === 'failed') {
                         user.userStatus = 'error';
                       }
@@ -354,14 +354,20 @@
                 $scope.totalUsers = $scope.userExportThreshold;
                 $scope.obtainedTotalUserCount = true;
               } else {
-                UserListService.getUserCount().then(function (count) {
-                  if (_.isNull(count) || _.isNaN(count) || count === -1) {
-                    // can't determine number of users, so assume over threshold
-                    count = $scope.userExportThreshold + 1;
-                  }
-                  $scope.totalUsers = count;
-                  $scope.obtainedTotalUserCount = true;
-                });
+                UserListService.getUserCount()
+                  .then(function (count) {
+                    if (_.isNull(count) || _.isNaN(count) || count === -1) {
+                      // can't determine number of users, so assume over threshold
+                      count = $scope.userExportThreshold + 1;
+                    }
+                    $scope.totalUsers = count;
+                    $scope.obtainedTotalUserCount = true;
+                  })
+                  .catch(function (response) {
+                    Log.debug('Failed to get User Count. Status: ' + response);
+                    $scope.totalUsers = $scope.userExportThreshold + 1;
+                    $scope.obtainedTotalUserCount = false;
+                  });
               }
             }
             deferred.reject(data);
