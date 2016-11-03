@@ -11,12 +11,12 @@
     </div>
 
     <!-- regional settings -->
-    <div class="cs-form__section">
+    <div class="cs-form__section" ng-if="settings.showRegionAndVoicemail">
       <div class="section__info">
         <h4 class="section__title" translate="serviceSetupModal.regionalSettings"></h4>
       </div>
       <div class="section__content">
-        <div class="sub-section" ng-if="settings.showTimezoneAndVoicemail">
+        <div class="sub-section">
           <label class="control-label" for="timeZoneSelect" translate="serviceSetupModal.timeZone"></label>
           <p class="description-block" translate="serviceSetupModal.tzDescription"></p>
           <div class="medium-5">
