@@ -7,14 +7,8 @@ describe('Controller: SupportCtrl', function () {
   beforeEach(angular.mock.module('Squared'));
 
   var controller, Authinfo, Userservice, currentUser, Config,
-    $scope, $document, $httpBackend, WindowLocation, UrlConfig, Notification;
+    $scope, $httpBackend, WindowLocation, UrlConfig, Notification;
   var roles = ["ciscouc.devsupport", "atlas-portal.support"];
-
-  beforeEach(function () {
-    /* global document */
-    $document = angular.element(document);
-    $document.find('body').append('<div class="cs-card-layout"></div>');
-  });
 
   beforeEach(inject(function ($rootScope, $controller, _Userservice_, _Authinfo_, _Config_, _WindowLocation_, _UrlConfig_, _$httpBackend_, _Notification_) {
     Userservice = _Userservice_;

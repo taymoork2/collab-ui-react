@@ -551,7 +551,7 @@
     "customers": "Customers",
     "customerSelect": "Select a customer",
     "usageReports": {
-      "usageReportTitle": "Usage Reports",
+      "usageReportTitle": "Device Usage Reports",
       "peakHour": "Peak Hour",
       "distribution": "Distribution",
       "timeline": "Timeline",
@@ -1106,8 +1106,7 @@
     "setUpPMRDescription": "The Personal Meeting Rooms feature has been added to your subscription.",
     "setUpPMRUrl": "Set Up PMR Now",
     "setUpHybridMediaService": "Hybrid Media Service is available. Extend cloud media to use premises-based resources for calls and meetings.",
-    "urgentUpgrade": "An urgent upgrade is available for {{connector}} and it will upgrade during the next scheduled upgrade.",
-    "upgrade": "Upgrade now?"
+    "urgentUpgrade": "An urgent upgrade is available for <a ui-sref='{{link}}'>{{connector}}</a> and it will upgrade during the next scheduled upgrade."
   },
   "inviteModal": {
     "title": "Service Entitlement",
@@ -2139,7 +2138,7 @@
     "careSettings": "Care Settings",
     "careSettingsSub": "Setup Care Service",
     "careSettingsDescription": "Click here to complete Care setup.",
-    "careSettingsComplete": "Care setup is complete.",
+    "careSettingsComplete": "Care service has been setup successfully.",
     "careSettingsButton": "Setup Care",
     "careSettingsFetchFailed": "Error retrieving onboarding status.",
     "careSettingsTimeout": "Request timed out while checking Care setup status.",
@@ -3890,7 +3889,7 @@
       "cancel": "Cancel",
       "cluster-placeholder": "Create or select cluster",
       "hostname-placeholder": "Enter hostname or IP address",
-      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud.<br> Node IP address: {{hostname}}<br>Cluster: {{clustername}}",
+      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud.<br> Node IP Address/FQDN: {{hostname}}<br>Cluster: {{clustername}}",
       "grant-registration-success-header-new-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, assigned to the new cluster <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
       "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration.",
       "next": "Next",
@@ -4662,6 +4661,12 @@
     "sorryMessage": "Sorry, something went wrong ",
     "reloadMessage": "Please try reloading the page",
     "newFeatureButtonText": "New",
+    "settings": {
+      "setUpCare": "Care",
+      "setUpDescription": "Setup Care to add this license for your users so that your organization can take advantage of Care service.",
+      "setUpCareSuccess": "Care service has been setup successfully.",
+      "setUpCareFailure": "Failed to setup Care service. Please try again. Users cannot have Care license till this setup is complete."
+    },
     "featuresNotYetConfiguredPage": {
       "createCT": "Create a Chat Template",
       "createCTDesc": "A chat template is what your customer sees when chatting with an agent.",
@@ -5243,7 +5248,7 @@
       "EE": "Webex Enterprise Edition",
       "CMR": "WebEx Collaboration Meeting Rooms",
       "CO": "Spark Call",
-      "SD": "Spark Shared Devices",
+      "SD": "DX, MX or SX system",
       "SB": "Spark Board"
     }
   },
@@ -5602,7 +5607,8 @@
         "title": "Care",
         "description": "Customer Care channel configurations for your organization.",
         "buttons": {
-          "features": "Features"
+          "features": "Features",
+          "settings": "Settings"
         }
       },
       "clusterList": {

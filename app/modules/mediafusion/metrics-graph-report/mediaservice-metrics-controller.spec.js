@@ -3,7 +3,7 @@
 describe('Controller:MediaServiceMetricsContoller', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var controller, $scope, httpMock, $stateParams, $q, $translate, $timeout, $interval, Log, Config, MediaClusterServiceV2, Notification, DummyMetricsReportService, MetricsReportService, MetricsGraphService, $document;
+  var controller, $scope, httpMock, $stateParams, $q, $translate, $timeout, $interval, Log, Config, MediaClusterServiceV2, Notification, DummyMetricsReportService, MetricsReportService, MetricsGraphService;
 
   var dummydata = getJSONFixture('mediafusion/json/metrics-graph-report/UtilizationGraphData.json');
 
@@ -31,12 +31,6 @@ describe('Controller:MediaServiceMetricsContoller', function () {
 
   var allClusters = 'mediaFusion.metrics.allclusters';
   var sampleClusters = 'mediaFusion.metrics.samplecluster';
-
-  beforeEach(function () {
-    /* global document */
-    $document = angular.element(document);
-    $document.find('body').append('<div class="cs-card-layout"></div>');
-  });
 
   beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$stateParams_, _$timeout_, _$translate_, _MediaClusterServiceV2_, _$q_, _MetricsReportService_, _Notification_, _MetricsGraphService_, _DummyMetricsReportService_, _$interval_, _Log_, _Config_) {
     $scope = $rootScope.$new();

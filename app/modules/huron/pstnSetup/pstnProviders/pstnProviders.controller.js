@@ -92,7 +92,9 @@
         })
         // process carriers
         .then(_.partialRight(_.forEach, initCarrier))
-        .catch(_.partialRight(Notification.errorResponse, 'pstnSetup.carrierListError'));
+        .catch(function (response) {
+          Notification.errorResponse(response, 'pstnSetup.carrierListError');
+        });
     }
 
     function processSelectedProviders() {

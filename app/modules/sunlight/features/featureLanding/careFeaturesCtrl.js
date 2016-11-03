@@ -1,14 +1,12 @@
 (function () {
   'use strict';
 
-  var Masonry = require('masonry-layout');
-
   angular
     .module('Sunlight')
     .controller('CareFeaturesCtrl', CareFeaturesCtrl);
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $q, $state, $scope, $timeout, Authinfo, CareFeatureList, CTService, Log, Notification) {
+  function CareFeaturesCtrl($filter, $q, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification) {
     var vm = this;
     vm.init = init;
     var pageStates = {
@@ -122,15 +120,7 @@
     }
 
     function reInstantiateMasonry() {
-      $timeout(function () {
-        var $cardlayout = new Masonry('.cs-card-layout', {
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          resize: true,
-          percentPosition: true,
-        });
-        $cardlayout.layout();
-      }, 0);
+      CardUtils.resize();
     }
 
     function showReloadPageIfNeeded() {

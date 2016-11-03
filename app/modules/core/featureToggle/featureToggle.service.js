@@ -17,6 +17,7 @@
       dirSync: 'atlas-dir-sync',
       atlasBrandingWordingChange: 'atlas-branding-wording-change',
       atlasCareTrials: 'atlas-care-trials',
+      atlasCareCallbackTrials: 'atlas-care-callback-trials',
       atlasContextServiceTrials: 'atlas-context-service-trials',
       atlasCsvEnhancement: 'atlas-csv-enhancement',
       atlasCustomerListUpdate: 'atlas-customer-list-update',

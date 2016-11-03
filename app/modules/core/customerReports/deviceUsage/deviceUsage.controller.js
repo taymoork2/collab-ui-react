@@ -32,7 +32,7 @@
       },
       {
         value: 1,
-        label: 'CE',
+        label: 'Room Systems',
         description: 'All CE devices'
       },
       {
@@ -42,7 +42,6 @@
       }
     ];
     vm.deviceFilter = vm.deviceOptions[0];
-    //vm.currentFilter = vm.deviceOptions[0].value;
 
     vm.deviceUpdate = function () {
       //$log.info('deviceFilter', vm.deviceFilter);
@@ -78,7 +77,6 @@
         return result;
       }, {}).map(function (value, key) {
         value.totalDuration = (value.totalDuration / 60).toFixed(2);
-        // var timeFormatted = key.substr(0, 4) + '-' + key.substr(4, 2) + '-' + key.substr(6, 2);
         value.time = key;
         return value;
       }).value();
@@ -134,12 +132,10 @@
     function loadInitData() {
       switch (DeviceUsageCommonService.getTimeSelected()) {
         case 0:
-          //DeviceUsageTotalService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
           DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
           dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
           break;
         case 1:
-          //DeviceUsageTotalService.getDataForLastMonth(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
           DeviceUsageTotalService.getDataForLastNTimeUnits(4, 'week', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
           dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(4, 'week');
           break;
@@ -191,20 +187,13 @@
 
     function loadLastWeek() {
       vm.loading = true;
-      // DeviceUsageTotalService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(function (data) {
-      //   loadChartData(data, 'Daily in Week');
-      // }, handleReject);
-
       DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(function (data) {
-        loadChartData(data, 'Daily in Week');
+        loadChartData(data, 'Last 7 Days');
       }, handleReject);
     }
 
     function loadLastMonth() {
       vm.loading = true;
-      // DeviceUsageTotalService.getDataForLastMonth(['ce', 'sparkboard'], apiToUse).then(function (data) {
-      //   loadChartData(data, 'Weekly Last Month');
-      // }, handleReject);
       DeviceUsageTotalService.getDataForLastNTimeUnits(4, 'week', ['ce', 'sparkboard'], apiToUse).then(function (data) {
         loadChartData(data, 'Weekly Last 4 Weeks');
       }, handleReject);
@@ -232,7 +221,6 @@
       var text = '<div><h5>Call Duration: ' + graphDataItem.dataContext.totalDuration + '</h5>';
       text = text + 'Call Count:  ' + graphDataItem.dataContext.callCount + ' <br/> ';
       text = text + 'Paired Count: ' + graphDataItem.dataContext.pairedCount + '<br/>';
-      //text = text + 'Devices: ' + graphDataItem.dataContext.devices.length + '</div>';
       return text;
     }
 

@@ -26,11 +26,10 @@
         start = moment().subtract(count, granularity + 's').format('YYYY-MM-DD');
         end = moment().subtract(1, granularity + 's').format('YYYY-MM-DD');
       } else if (granularity === 'week') {
-        //var test = moment().startOf('isoWeek').subtract(count, granularity's').format('YYYY-MM-DD');
-        //$log.info('test', test);
-        //start = moment().subtract(count, granularity + 's').isoWeekday(1).format('YYYY-MM-DD');
-        start = moment().startOf('isoWeek').subtract(count, granularity + 's').format('YYYY-MM-DD');
-        end = moment().subtract(1, granularity + 's').format('YYYY-MM-DD');
+        //start = moment().startOf('isoWeek').subtract(count, granularity + 's').format('YYYY-MM-DD');
+        start = moment().isoWeekday(1).subtract(count, granularity + 's').format("YYYY-MM-DD");
+        //end = moment().subtract(1, granularity + 's').format('YYYY-MM-DD');
+        end = moment().isoWeekday(7).subtract(1, granularity + 's').format("YYYY-MM-DD");
       }
       return { start: start, end: end };
     }
@@ -196,7 +195,7 @@
         }
         return result;
       }, {}).map(function (value, key) {
-        value.totalDuration = (value.totalDuration / 60).toFixed(2);
+        value.totalDuration = (value.totalDuration / 3600).toFixed(2);
         var timeFormatted = key.substr(0, 4) + '-' + key.substr(4, 2) + '-' + key.substr(6, 2);
         value.time = timeFormatted;
         return value;
@@ -269,11 +268,6 @@
           return date.format('YYYYMMDD');
         case 'week':
           return moment(formattedDate).startOf('isoWeek').format('YYYYMMDD');
-          // var startOfMonth = moment(formattedDate).startOf('month');
-          // if (date.isBefore(startOfMonth)) {
-          //   return startOfMonth.format('YYYYMMDD');
-          // }
-          // return date.format('YYYYMMDD');
         case 'month':
           return date.format('YYYYMMDD');
       }
@@ -288,7 +282,7 @@
           'minPeriod': 'DD',
           'parseDates': true,
           'autoGridCount': true,
-          'title': 'Daily in Week',
+          'title': 'Last 7 Days',
           'centerLabels': true,
           'equalSpacing': true
         },
@@ -320,7 +314,7 @@
           {
             'type': 'column', //line', //smoothedLine', //column',
             'labelText': '[[value]]',
-            'labelPosition': 'inside',
+            'labelPosition': 'top',
             //'bullet': 'round',
             'id': 'video',
             'title': 'Call Duration',
@@ -352,7 +346,7 @@
         'valueAxes': [
           {
             'id': 'ValueAxis-1',
-            'title': 'Call Minutes'
+            'title': 'Call Hours'
           }
         ],
         'allLabels': [
@@ -362,7 +356,7 @@
           'cornerRadius': 4
         },
         'legend': {
-          'enabled': true,
+          'enabled': false,
           'useGraphSettings': true,
           'valueWidth': 100
         },
