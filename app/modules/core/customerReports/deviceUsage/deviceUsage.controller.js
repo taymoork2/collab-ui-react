@@ -32,7 +32,7 @@
       },
       {
         value: 1,
-        label: 'CE',
+        label: 'Room Systems',
         description: 'All CE devices'
       },
       {
