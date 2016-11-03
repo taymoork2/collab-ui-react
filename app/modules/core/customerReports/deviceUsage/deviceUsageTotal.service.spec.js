@@ -54,7 +54,7 @@ describe('DeviceUsageTotalService', function () {
       var expectedFullResult = [
         {
           "callCount": 10,
-          "totalDuration": "1.67",
+          "totalDuration": "0.03",
           "pairedCount": 10,
           "deviceCategories": {
             "ce": {
