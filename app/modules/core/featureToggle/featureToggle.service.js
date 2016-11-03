@@ -161,6 +161,7 @@
       gemCCA: 'gem-cloud-connected-audio',
       atlasHybridDataSecurity: 'atlas-data-security',
       atlasHerculesEmergencyUpgrade: 'atlas-hercules-emergency-upgrade',
+      avrilVmEnable: 'avril-vm-enable',
     };
 
     var toggles = {};
