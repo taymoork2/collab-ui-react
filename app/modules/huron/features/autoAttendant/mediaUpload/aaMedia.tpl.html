@@ -58,7 +58,6 @@
       <div class="row">
         <div class="small-11 columns">
          <!-- if sub menu header say message (no menukey and not a menuheader then move margin up a little to fit (aa-upload-squish) -->
-
           <div class="aa-top-bottom-push" ng-class="{'aa-upload-squish' : aaMediaUpload.isSquishable()}">
             <span>{{ aaMediaUpload.uploadFile | limitTo: aaMediaUpload.fileLengthLowerLimit }}{{ aaMediaUpload.uploadFile.length > aaMediaUpload.fileLengthUpperLimit ? '...' : '' }}</span>
             <span>{{ aaMediaUpload.uploadDuration }}</span>

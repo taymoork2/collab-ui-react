@@ -498,13 +498,17 @@ describe('Controller: AAMediaUploadCtrl', function () {
     });
   });
   describe('Squishability', function () {
+    // special case of sub menu header needs to be a little bit tighter
+    // So.. if three lanes and no key action and it is a menu header then
+    // it needs some squishing
+
     var controller;
 
     beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       controller = $controller;
 
-      spyOn(AutoAttendantCeMenuModelService, 'getCeMenu').and.returnValue(menuEntry);
+      spyOn(AutoAttendantCeMenuModelService, 'getCeMenu').and.returnValue(ui);
     }));
 
     it('should test Squishabilty for one lane', function () {
@@ -535,11 +539,11 @@ describe('Controller: AAMediaUploadCtrl', function () {
       expect(c.isSquishable()).toBeFalsy();
 
     });
-
-    it('should test Squishabilty for three lanes', function () {
+    it('should test Squishabilty for two lanes (holiday follows closedHours)', function () {
       var c;
 
       ui.isClosedHours = true;
+      ui.holidaysValue = 'closedHours';
       ui.isHolidays = true;
 
       $scope.menuKeyIndex = '';
@@ -550,6 +554,55 @@ describe('Controller: AAMediaUploadCtrl', function () {
       });
 
       expect(c.isSquishable()).toBeFalsy();
+
+    });
+
+    it('should test Squishabilty for three lanes', function () {
+      var c;
+
+      ui.isClosedHours = true;
+      ui.isHolidays = true;
+      ui.holidaysValue = '';
+
+      $scope.menuKeyIndex = '';
+      $scope.isMenuHeader = '';
+
+      c = controller('AAMediaUploadCtrl', {
+        $scope: $scope
+      });
+
+      expect(c.isSquishable()).toBeFalsy();
+
+    });
+
+    it('should test Squishabilty for three lanes should be squished', function () {
+      // here is the one case where it needs squishing
+
+      var c;
+
+      ui.isClosedHours = true;
+      ui.isHolidays = true;
+      ui.holidaysValue = '';
+
+      menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      var action = (AutoAttendantCeMenuModelService.newCeActionEntry('play', ''));
+
+      menuEntry.actions.push(action);
+
+      ui.type = "MENU_OPTION_ANNOUNCEMENT";
+      ui.headers = [];
+      ui.headers[0] = menuEntry;
+      ui.headers[0].type = "MENU_OPTION_ANNOUNCEMENT";
+
+      $scope.menuKeyIndex = '';
+      $scope.isMenuHeader = 'false';
+
+      c = controller('AAMediaUploadCtrl', {
+        $scope: $scope
+      });
+
+      expect(c.isSquishable()).toBeTruthy();
 
     });
   });

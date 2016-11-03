@@ -38,8 +38,8 @@
     };
 
     var properties = {
-      NAME: ["play", "say", "runActionsOnInput"],
-      HEADER_TYPE: "MENU_OPTION_ANNOUNCEMENT"
+      NAME: ['play', 'say', 'runActionsOnInput'],
+      HEADER_TYPE: 'MENU_OPTION_ANNOUNCEMENT'
     };
 
     var messageType = {
@@ -386,9 +386,6 @@
 
       var toSquish = (numLanes == maxLanes) && ((menuKeyIndex !== '') || (_.isEmpty(menuKeyIndex) && (isMenuHeader === 'false')));
       return toSquish;
-
-//       return (numLanes == maxLanes) && (menuKeyIndex || ((!menuKeyIndex) && (isMenuHeader === 'false')));
-
     }
 
     function countLanes(ui) {
@@ -408,7 +405,9 @@
 
     function determineSquishability() {
       var ui = AAUiModelService.getUiModel();
+
       numLanes = countLanes(ui);
+
       menuKeyIndex = $scope.menuKeyIndex;
       isMenuHeader = $scope.isMenuHeader;
     }
