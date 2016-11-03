@@ -1106,8 +1106,7 @@
     "setUpPMRDescription": "The Personal Meeting Rooms feature has been added to your subscription.",
     "setUpPMRUrl": "Set Up PMR Now",
     "setUpHybridMediaService": "Hybrid Media Service is available. Extend cloud media to use premises-based resources for calls and meetings.",
-    "urgentUpgrade": "An urgent upgrade is available for {{connector}} and it will upgrade during the next scheduled upgrade.",
-    "upgrade": "Upgrade now?"
+    "urgentUpgrade": "An urgent upgrade is available for <a ui-sref='{{link}}'>{{connector}}</a> and it will upgrade during the next scheduled upgrade."
   },
   "inviteModal": {
     "title": "Service Entitlement",
