@@ -26,8 +26,10 @@
         start = moment().subtract(count, granularity + 's').format('YYYY-MM-DD');
         end = moment().subtract(1, granularity + 's').format('YYYY-MM-DD');
       } else if (granularity === 'week') {
-        start = moment().startOf('isoWeek').subtract(count, granularity + 's').format('YYYY-MM-DD');
-        end = moment().subtract(1, granularity + 's').format('YYYY-MM-DD');
+        //start = moment().startOf('isoWeek').subtract(count, granularity + 's').format('YYYY-MM-DD');
+        start = moment().isoWeekday(1).subtract(count, granularity + 's').format("YYYY-MM-DD");
+        //end = moment().subtract(1, granularity + 's').format('YYYY-MM-DD');
+        end = moment().isoWeekday(7).subtract(1, granularity + 's').format("YYYY-MM-DD");
       }
       return { start: start, end: end };
     }
@@ -280,7 +282,7 @@
           'minPeriod': 'DD',
           'parseDates': true,
           'autoGridCount': true,
-          'title': 'Daily in Week',
+          'title': 'Last 7 Days',
           'centerLabels': true,
           'equalSpacing': true
         },

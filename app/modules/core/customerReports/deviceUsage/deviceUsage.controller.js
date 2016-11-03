@@ -188,7 +188,7 @@
     function loadLastWeek() {
       vm.loading = true;
       DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(function (data) {
-        loadChartData(data, 'Daily in Week');
+        loadChartData(data, 'Last 7 Days');
       }, handleReject);
     }
 
