@@ -4,8 +4,12 @@
   "version": "0.0.0",
   "description": "",
   "author": "Cisco Systems, Inc.",
-  "homepage": "",
   "license": "Copyright 2013-2016 Cisco Systems, Inc.",
+  "homepage": "https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client",
+  "repository": {
+    "type": "git",
+    "url": "git@sqbu-github.cisco.com:WebExSquared/wx2-admin-web-client.git"
+  },
   "scripts": {
     "build": "npm run clean && webpack --bail --progress --profile",
     "clean-install": "npm cache clean && rimraf node_modules && npm install",

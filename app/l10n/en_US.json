@@ -1,23 +1,4 @@
 {
-  "statusPage": {
-    "pageTitle": "Status Management",
-    "dashboard": "Dashboard",
-    "incidents": "Incidents",
-    "components": "Components",
-    "addComponents": "Add A Component",
-    "componentName": "Component Name",
-    "componentDesc": "Description (optional)",
-    "componentGroup": "Component Group",
-    "nameCannotBeBlank": "Name can't be blank",
-    "createNewComponentGroup": "Create new component group",
-    "createComponent": "Create Component",
-    "componentInfo": "Component Info",
-    "editAction": "Edit",
-    "deleteAction": "Delete",
-    "update": "Update",
-    "deleteWarning": "WARNING! Deleting a component cannot be undone. All associated data will be deleted as well. Please be absolutely sure this is what you want. <br /> Type DELETE in the box below for final confirmation, then hit the delete button.",
-    "permanentlyDelete": "Permanently DELETE {{componentName}}"
-  },
   "loginPage": {
     "title": "Cloud Collaboration Management",
     "login": "Sign In",
@@ -408,8 +389,8 @@
     "eventsTab": "Events",
     "eventsTabDesc": "Event Management",
     "helpdesk": "Help Desk",
-    "statusTab": "Status",
-    "statusTabDesc": "Status Mannagement",
+    "gssTab": "Status",
+    "gssTabDesc": "Global Service Status Management",
     "careTab": "Care",
     "careTabDesc": "Cloud Contact Center"
   },
@@ -731,6 +712,7 @@
     "rolesSuccess": "Successfully updated user's roles.",
     "error": "Update user failed.",
     "rolesError": "Error updating user's roles.",
+    "displayNameEmptyError": "Display Name cannot be empty",
     "complianceError": "Error updating compliance entitlement"
   },
   "supportPage": {
@@ -1164,6 +1146,9 @@
     "ssoDisableSuccessNotification": "SSO is disabled <br/> User authentication configuration is now using simple built-in identity service."
   },
   "serviceSetupModal": {
+    "regionalSettings": "Regional Settings",
+    "preferredLanguage": "Preferred Language",
+    "preferredLanguageDescription": "Specify the language to use for Spark Call Services. Preferred language only applies to new users.",
     "timeZone": "Time Zone",
     "searchTimeZone": "Search for a time zone...",
     "tzDescription": "Specify the time zone to use for schedule-based call routing. For example, this time zone applies to calls routed based on business hours and holiday schedules.",
@@ -5592,7 +5577,8 @@
       },
       "meeting": {
         "title": "Meeting",
-        "description": "WebEx Meeting Center and Cisco Spark configurations for your organization and individuals."
+        "description": "WebEx Meeting Center and Cisco Spark configurations for your organization and individuals.",
+        "pmrText": "Configure your Personal Meeting Room"
       },
       "call": {
         "title": "Call",
@@ -6129,5 +6115,96 @@
     "Pacific/Tongatapu": "Pacific/Tongatapu",
     "Etc/GMT-14": "Etc/GMT-14",
     "Pacific/Kiritimati": "Pacific/Kiritimati"
+  },
+  "gss": {
+    "pageTitle": "Status Management",
+    "services": "Services",
+    "dashboard": "Dashboard",
+    "incidents": "Incidents",
+    "components": "Components",
+    "servicesPlaceholder": "Please choose a service",
+    "componentStatuses": "Component Statuses",
+    "updateIncident": "Update Incident",
+    "deleteIncident": "Delete Incident",
+    "addStatusPage": "Add Another Service",
+    "previousUpdated": "Previous Updates",
+    "hideAffectedComponents": "Hide Affected Components",
+    "showAffectedComponents": "Show Affected Components",
+    "successfully": "Successfully modify the message",
+    "setComponentTips": "You can also",
+    "setComponentTipsLink": "set your components to operational.",
+    "setComponentText": "Components will be set to operational upon submission of this incident update.",
+    "updateComponentTipsLink": "update a component's status.",
+    "useDerivedStatus": "Use Derived Status",
+    "overrideStatus": "Override this status",
+    "permanentlyDeleteComponent": "Permanently DELETE {{componentName}}",
+    "newService": "New Service",
+    "serviceName": "Service Name",
+    "serviceDescription": "Service Description",
+    "deleteService": "Delete {{serviceName}}",
+    "editService": "Edit Service",
+    "deletingComponentCannotBeUndone": "Deleting a component cannot be undone.",
+    "deletingServiceCannotBeUndone": "Deleting a service cannot be undone.",
+    "deletingIncidentCannotBeUndone": "Deleting an incident cannot be undone.",
+    "deleteEnsureAction": "All associated data will be deleted as well. Please be absolutely sure this is what you want.",
+    "deleteConfirmation": "Type <em>DELETE</em> in the box below for final confirmation, then hit the delete button.",
+    "componentsPage": {
+      "listing": {
+        "noComponentHeading": "No Component Added",
+        "noComponentText": "Click the ADD botton to get started."
+      },
+      "addComponentTitle": "ADD A COMPONENT",
+      "updateComponentTitle": "Update A Component",
+      "componentName": "Component Name",
+      "componentDesc": "Description (optional)",
+      "componentDesc-placeholder": "Frontend application and API servers",
+      "componentGroup": "Component Group",
+      "nameCannotBeBlank": "Name can't be blank",
+      "createNewComponentGroup": "Create new component group",
+      "createComponent": "Create Component",
+      "updateComponent": "Update Component",
+      "componentInfo": "Component Info",
+      "selectPlaceholder": "Select or Create group",
+      "groupName": "Group name",
+      "cancelCreateNewGroup": "Cancel new group creation"
+    },
+    "createIncident": {
+      "newIncident": "New Incident",
+      "incidentName": "Incident Name",
+      "createIncidentBtn": "Create Incident"
+    },
+    "incidentsPage":{
+      "incidentStatus": "Incident Status",
+      "message": "Message",
+      "messagePlaceholder": "Message",
+      "viewIncident": "View Incident",
+      "newIncidentBtn": "+ NEW INCIDENT",
+      "noIncidentContent1": "Looks like you've got a clean record",
+      "noIncidentContent2":"When you have downtime: ", 
+      "noIncidentContentLink": "Create your first incident",
+      "lastUpdatedOn": "Last updated on ",
+      "resolvedOn": "Resolved on ",
+      "noAffectedComponent": "No components were affected by this update."
+    },
+    "incidentStatus": {
+      "investigating": "Investigating",
+      "identified": "Identified",
+      "monitoring": "Monitoring",
+      "resolved": "Resolved"
+    },    
+    "impactStatus":{
+      "none": "Override impact to None",
+      "Minor": "Override impact to Minor",
+      "major": "Override impact to Major",
+      "critical": "Override impact to Critical",
+      "maintenance": "Override impact to Maintenance"
+    },
+    "componentStatus":{
+      "operational": "Operational",
+      "degradedPerformance": "Degraded Performance",
+      "partialOutage": "Partial Outage",
+      "majorOutage": "Major Outage",
+      "underMaintenance": "Under Maintenance"
+    }
   }
 }

@@ -14,6 +14,9 @@ export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
     return undefined;
   }
 
+  public text = 'servicesOverview.cards.meeting.pmrText';
+  public showText = false;
+
   private _buttons: Array<ICardButton> = [];
 
   public getButtons(): Array<ICardButton> {
@@ -26,6 +29,7 @@ export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
   /* @ngInject */
   public constructor(Authinfo) {
     super({
+      template: 'modules/services/meetingCard.tpl.html',
       name: 'servicesOverview.cards.meeting.title',
       description: 'servicesOverview.cards.meeting.description',
       icon: 'icon-circle-group',
@@ -56,5 +60,21 @@ export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
         })
         .value();
     this._loading = false;
+  }
+
+  public updatePMRStatus(promise: any) {
+    if (!promise) {
+      return false;
+    }
+
+    promise.then((response) => {
+      let customerLicenses = _.get(response, 'data.customers[0].licenses', '');
+      _.forEach(customerLicenses, (license) => {
+        if (license['licenseType'] === 'CONFERENCING') {
+          return this.showText = _.has(license, 'siteUrl');
+        }
+      });
+      return false;
+    });
   }
 }

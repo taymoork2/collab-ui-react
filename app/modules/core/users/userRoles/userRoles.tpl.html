@@ -1,6 +1,6 @@
 <form name="rolesEdit.form" role="form">
   <cs-sp-buttons  ng-show="rolesEdit.form.$dirty" title="{{'rolesPanel.editUser' | translate}}">
-    <button id="saveButton" class="btn btn--primary" translate="common.save" ng-click="updateRoles()" type="button"></button>
+    <button id="saveButton" class="btn btn--primary" translate="common.save" ng-click="updateRoles()" type="button" ng-disabled="rolesEdit.form.$invalid"></button>
     <button id="cancelButton" translate="common.cancel" ng-click="resetRoles()" type="button"></button>
   </cs-sp-buttons>
   <cs-sp-container>
@@ -9,15 +9,21 @@
         <form name="rolesObj.form" role="form">
           <div class="form-group">
             <label for="firstNameInput" translate="rolesPanel.firstName"></label>
-            <input id="firstNameInput" type="text" class="form-control" name="firstName" ng-disabled="dirsyncEnabled" ng-model="currentUser.name.givenName">
+            <input id="firstNameInput" type="text" class="form-control" name="firstName" ng-disabled="dirsyncEnabled" ng-model="currentUser.name.givenName" ng-change="checkAdminDisplayName()">
           </div>
           <div class="form-group">
             <label for="lastNameInput" translate="rolesPanel.lastName"></label>
-            <input id="lastNameInput" type="text" class="form-control" name="lastName" ng-disabled="dirsyncEnabled" ng-model="currentUser.name.familyName">
+            <input id="lastNameInput" type="text" class="form-control" name="lastName" ng-disabled="dirsyncEnabled" ng-model="currentUser.name.familyName" ng-change="checkAdminDisplayName()">
           </div>
           <div class="form-group">
-            <label for="displayNameInput" translate="usersPage.displayNameHeader"></label>
-            <input id="displayNameInput" type="text" class="form-control" name="displayName" ng-disabled="dirsyncEnabled" ng-model="currentUser.displayName">
+            <input cs-input
+              type="text"
+              id="displayNameInput" name="displayName"
+              ng-disabled="dirsyncEnabled"
+              ng-model="currentUser.displayName"
+              cs-input-label='{{::"usersPage.displayNameHeader" | translate}}'
+              ng-change="checkAdminDisplayName()"
+              cs-input-messages="messages.displayName">
           </div>
 
           <div class="form-group">
