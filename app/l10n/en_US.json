@@ -542,7 +542,13 @@
       "downloadFullReport": "Download Full Report",
       "mostUsed": "Most Used",
       "leastUsed": "Least Used",
-      "collectingData": "Collecting Data"
+      "collectingData": "Collecting Data",
+      "devicesUsed": "Devices Used",
+      "totalCallDuration": "Total Call Duration",
+      "numberOfCalls": "Number of Calls",
+      "deviceName": "Device Name",
+      "hoursUsed": "Hours Used",
+      "callCount": "# Calls"
     }
   },
   "careReportsPage": {
