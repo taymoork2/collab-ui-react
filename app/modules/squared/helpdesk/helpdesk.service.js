@@ -459,7 +459,7 @@
 
     function getServiceOrders(orgId) {
       if (useMock()) {
-        return deferredResolve(HelpdeskMockData.serviceOrder);
+        return deferredResolve(HelpdeskMockData.serviceOrders);
       }
       return $http
         .get(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/serviceorders')

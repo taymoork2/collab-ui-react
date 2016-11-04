@@ -307,6 +307,11 @@
     serviceOrder: {
       "orderingTool": "Fancy Ordering Tool"
     },
+    serviceOrders: [{
+      "orderingTool": "Fancy Ordering Tool1"
+    }, {
+      "orderingTool": "Fancy Ordering Tool2"
+    }],
     licenses: [{
       "offerCode": "MS",
       "type": "MESSAGING",
