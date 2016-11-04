@@ -6194,6 +6194,7 @@
     "deletingIncidentCannotBeUndone": "Deleting an incident cannot be undone.",
     "deleteEnsureAction": "All associated data will be deleted as well. Please be absolutely sure this is what you want.",
     "deleteConfirmation": "Type <em>DELETE</em> in the box below for final confirmation, then hit the delete button.",
+    "componentStatusChanged": "Status of {{componentName}} has been changed to {{status}}",
     "componentsPage": {
       "listing": {
         "noComponentHeading": "No Component Added",
