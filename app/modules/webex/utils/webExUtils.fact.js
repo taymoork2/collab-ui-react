@@ -388,7 +388,7 @@
       var siteUrl = $rootScope.lastSite;
 
       var promise;
-      if (_.isUndefined(siteUrl)) {
+      if (!angular.isDefined(siteUrl)) {
         $log.log('No WebEx site visited.');
         var deferred = $q.defer();
         deferred.resolve('OK');
@@ -396,7 +396,7 @@
       } else {
         var siteName = obj.getSiteName(siteUrl);
 
-        var logoutUrl = "https://" + $rootScope.nginxHost + "/wbxadmin/clearcookie.do?proxyfrom=atlas&siteurl=" + siteName;
+        var logoutUrl = "https://" + $rootScope.nginxHost + "/wbxadmin/clearcookie.do?proxyfrom=atlas&siteurl=" + siteName.toLowerCase();
         $log.log('Logout from WebEx site ' + siteName + ", " + logoutUrl);
 
         var jqpromise = $.ajax({

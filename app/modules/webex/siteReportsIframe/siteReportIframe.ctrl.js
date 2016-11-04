@@ -23,19 +23,39 @@
     _this.funcName = "ReportsIframeCtrl()";
     _this.logMsg = "";
 
+    var siteName = WebExUtilsFact.getSiteName($stateParams.siteUrl);
+    var iframeUrlOrig = $stateParams.reportPageIframeUrl;
+    // var siteName = "SJSITE14";
+    // var iframeUrlOrig = "https://wbxdmz.admin.ciscospark.com/wbxadmin/MeetingsInProgress.do?proxyfrom=atlas&siteurl=SJSITE14";
+
+    $log.log("iframeUrlOrig=" + iframeUrlOrig);
+
     $scope.isIframeLoaded = false;
     $scope.siteUrl = $stateParams.siteUrl;
     $scope.indexPageSref = "webex-reports({siteUrl:'" + $stateParams.siteUrl + "'})";
     $scope.reportPageId = $stateParams.reportPageId;
     $scope.reportPageTitle = $translate.instant("webexReportsPageTitles." + $scope.reportPageId);
-    $scope.reportPageIframeUrl = $stateParams.reportPageIframeUrl;
-    $scope.iframeUrl = $stateParams.reportPageIframeUrl;
+    $scope.reportPageIframeUrl = iframeUrlOrig;
+
+    var iframeUrl = iframeUrlOrig.replace(siteName, siteName.toLowerCase());
+
+    if (iframeUrlOrig != iframeUrl) {
+      _this.logMsg = _this.funcName + "\n" +
+        "WARNING: mixed case iframe url detected" + "\n" +
+        "iframeUrlOrig=" + iframeUrlOrig + "\n" +
+        "iframeUrl=" + iframeUrl + "\n" +
+        "";
+      $log.log(_this.logMsg);
+    }
+
+    if (iframeUrl.indexOf("cibtsgsbt31.webex.com") > 0) {
+      iframeUrl = iframeUrl.replace($stateParams.siteUrl, "wbxbts.admin.ciscospark.com");
+    }
+
+    $scope.reportPageIframeUrl = iframeUrlOrig;
 
     // for iframe request
-    if ($scope.iframeUrl.indexOf("cibtsgsbt31.webex.com") > 0) {
-      $scope.iframeUrl = _.replace($scope.iframeUrl, $stateParams.siteUrl, "wbxbts.admin.ciscospark.com");
-    }
-    $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
+    $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
     $scope.adminEmail = Authinfo.getPrimaryEmail();
     $scope.authToken = TokenService.getAccessToken();
     $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
