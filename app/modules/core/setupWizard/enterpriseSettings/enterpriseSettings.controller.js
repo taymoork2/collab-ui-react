@@ -118,7 +118,8 @@
       Orgservice.getOrg(function (data, status) {
         if (status == 200) {
           var sparkDomainStr = UrlConfig.getSparkDomainCheckUrl();
-          pmrSiteUrl = data.orgSettings.sipCloudDomain.replace(sparkDomainStr, Config.siteDomainUrl.webexUrl);
+          var cloudDomain = _.get(data, 'orgSettings.sipCloudDomain', '');
+          pmrSiteUrl = _.replace(cloudDomain, sparkDomainStr, Config.siteDomainUrl.webexUrl);
           Orgservice.validateSiteUrl(pmrSiteUrl).then(function (response) {
             if (response.isValid) {
               vm.inputValue = pmrSiteUrl.replace(Config.siteDomainUrl.webexUrl, '');

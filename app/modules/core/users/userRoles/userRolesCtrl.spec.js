@@ -40,6 +40,13 @@ describe('Controller: UserRolesCtrl', function () {
     });
 
     $scope.$apply();
+    $scope.rolesEdit = {
+      form: {
+        displayName: {
+          $setValidity: jasmine.createSpy('$setValidity')
+        }
+      }
+    };
   }
 
   describe('UserRolesCtrl Initialization: ', function () {
@@ -294,4 +301,41 @@ describe('Controller: UserRolesCtrl', function () {
       });
     });
   });
+
+  describe('Verify Admin names: ', function () {
+    beforeEach(function () {
+      $stateParams.currentUser = fakeUserJSONFixture.fakeUser2;
+      initController();
+    });
+
+    it('should invalidate display name if first name, last name and doisplay name are all blank', function () {
+      $scope.currentUser.name.givenName = '';
+      $scope.currentUser.name.familyName = '';
+      $scope.currentUser.displayName = '';
+      $scope.checkAdminDisplayName();
+      expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith("notblank", false);
+    });
+
+    it('should invalidate display name if not first name, last name and doisplay name are all blank', function () {
+      $scope.currentUser.displayName = 'DN';
+      $scope.checkAdminDisplayName();
+      expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith("notblank", true);
+    });
+  });
+
+  describe('Verify non-Admin names: ', function () {
+    beforeEach(function () {
+      $stateParams.currentUser = fakeUserJSONFixture.fakeNonAdminUser;
+      initController();
+    });
+
+    it('should validate display name if first name, last name and doisplay name are all blank', function () {
+      $scope.currentUser.name.givenName = '';
+      $scope.currentUser.name.familyName = '';
+      $scope.currentUser.displayName = '';
+      $scope.checkAdminDisplayName();
+      expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith("notblank", true);
+    });
+  });
+
 });

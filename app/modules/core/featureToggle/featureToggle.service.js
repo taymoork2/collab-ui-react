@@ -77,6 +77,8 @@
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       huronPagingGroup: 'huronPagingGroup',
       huronNxxSearch: 'huron-nxx-search',
+      huronNetworkLocale: 'huron-l10n-network-locale',
+      huronUserLocale: 'huron-l10n-user-locale',
       iosActionBar: 'ios-action-bar',
       iosAecType: 'ios-aec-type',
       iosCameraview: 'ios-cameraview',
@@ -154,13 +156,14 @@
       csdmPlaces: 'csdm-places',
       csdmPstn: 'csdm-pstn',
       csdmATA: 'csdm-ata',
-      globalStatus: 'global-status',
+      atlasGlobalServiceStatus: 'atlas-global-service-status',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
       huronLocalDialing: 'huron-local-dialing',
       huronDeviceE911: 'huron-device-e911-address',
       gemCCA: 'gem-cloud-connected-audio',
       atlasHybridDataSecurity: 'atlas-data-security',
       atlasHerculesEmergencyUpgrade: 'atlas-hercules-emergency-upgrade',
+      avrilVmEnable: 'avril-vm-enable',
     };
 
     var toggles = {};

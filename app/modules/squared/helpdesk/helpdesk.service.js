@@ -108,8 +108,11 @@
 
     function extractOrg(res) {
       var org = extractData(res);
-      orgCache.put(org.id, org);
-      orgDisplayNameCache.put(org.id, org.displayName);
+      var id = _.get(org, 'id');
+      if (id) {
+        orgCache.put(id, org);
+        orgDisplayNameCache.put(id, _.get(org, 'displayName'));
+      }
       return org;
     }
 
