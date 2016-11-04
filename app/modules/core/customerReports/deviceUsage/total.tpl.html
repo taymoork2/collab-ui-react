@@ -5,10 +5,11 @@
 
     <article>
       <header class="align-center">
-        <h4>Device Metrics</h4>
+        <h4 translate="reportsPage.usageReports.deviceMetrics"></h4>
         <div class="right" style="position:absolute; top:1rem; right:3rem">
 
-          <button class="btn btn-primary" ng-disabled="deviceUsage.exporting" ng-click="deviceUsage.exportRawData()">Download Full Report</button>
+          <button class="btn btn-primary" ng-disabled="deviceUsage.exporting" ng-click="deviceUsage.exportRawData()" translate="reportsPage.usageReports.downloadFullReport">
+          </button>
 
           <div cs-loader ng-show="deviceUsage.exporting" class="loader-example--small"></div>
 
@@ -24,7 +25,7 @@
   <cs-card class="large header-border">
     <article>
       <header class="align-center">
-        <h4>Least Used</h4>
+        <h4 translate="reportsPage.usageReports.leastUsed"></h4>
       </header>
       <section class="small-padding">
 
@@ -38,7 +39,7 @@
   <cs-card class="large header-border">
     <article>
       <header class="align-center">
-        <h4>Most Used</h4>
+        <h4 translate="reportsPage.usageReports.mostUsed"></h4>
       </header>
       <section class="small-padding">
         <div ng-include="'modules/core/customerReports/deviceUsage/mostUsedDevices.tpl.html'" />
@@ -60,7 +61,7 @@
 
 <div ng-show="deviceUsage.loading" class="loading-indicator">
   <div class="loading-text">
-    Collecting data
+    <span translate="reportsPage.usageReports.collectingData"></span>
     <div cs-loader class="loader-example--small"></div>
   </div>
 </div>
