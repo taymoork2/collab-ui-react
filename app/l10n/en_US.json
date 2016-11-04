@@ -1057,6 +1057,19 @@
     "minutes": "{time, plural, one{# minute} other{# minutes}}",
     "hours": "{time, plural, one{# hour} other{# hours}}"
   },
+  "callDestination": {
+    "numberFormat": "Number Format",
+    "internal": "Internal",
+    "external": "External",
+    "uri": "URI Address",
+    "custom": "Custom",
+    "internalPlaceholder": "e.g. 5555, jsmith, jsmith@email.com",
+    "internalHelpText": "Extension, User ID, or Email",
+    "externalHelpText": "National or International Number",
+    "uriPlaceholder": "example@site.domain.com",
+    "customPlaceholder": "e.g. 81095555",
+    "customHelpText": "Site-to-Site to External Site"
+  },
   "homePage": {
     "overview": "Last 4 weeks",
     "activeUsers": "Active Users",
@@ -2710,7 +2723,8 @@
     "forwardNoAnswer": "When there is no answer, send calls to:",
     "forwardExternal": "Forward external calls differently",
     "addNew": "Add New",
-    "forwardVoicemailDisabled": "Call Forwarding is set to Voicemail, which is currently disabled. Please update the Call Forwarding settings."
+    "forwardVoicemailDisabled": "Call Forwarding is set to Voicemail, which is currently disabled. Please update the Call Forwarding settings.",
+    "directVoicemail": "Forward directly to Voicemail"
   },
   "multipleCalls": {
     "title": "Simultaneous Calls",
