@@ -6,7 +6,7 @@
     .service('DeviceUsageTotalService', DeviceUsageTotalService);
 
   /* @ngInject */
-  function DeviceUsageTotalService($document, $window, $log, $q, $timeout, $http, chartColors, DeviceUsageMockData, UrlConfig, Authinfo) {
+  function DeviceUsageTotalService($translate, $document, $window, $log, $q, $timeout, $http, chartColors, DeviceUsageMockData, UrlConfig, Authinfo) {
     var localUrlBase = 'http://localhost:8080/atlas-server/admin/api/v1/organization';
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organizations';
 
@@ -144,7 +144,6 @@
     }
 
     function analyseReject(reject) {
-      $log.info("Argh! Problems rejectinh", reject);
       if (reject.status === -1) {
         reject.statusText = 'Operation timed Out';
         reject.data = {
@@ -317,7 +316,7 @@
             'labelPosition': 'top',
             //'bullet': 'round',
             'id': 'video',
-            'title': 'Call Duration',
+            'title': $translate.instant('reportsPage.usageReports.callDuration'),
             'valueField': 'totalDuration',
             'lineThickness': 2,
             'fillAlphas': 0.6,
@@ -346,7 +345,7 @@
         'valueAxes': [
           {
             'id': 'ValueAxis-1',
-            'title': 'Call Hours'
+            'title': $translate.instant('reportsPage.usageReports.callHours')
           }
         ],
         'allLabels': [
@@ -364,7 +363,7 @@
           {
             'id': 'Title-1',
             'size': 15,
-            'text': 'Device Usage'
+            'text': $translate.instant('reportsPage.usageReports.deviceUsage')
           }
         ]
       };

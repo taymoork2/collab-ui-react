@@ -532,12 +532,35 @@
     "customers": "Customers",
     "customerSelect": "Select a customer",
     "usageReports": {
-      "usageReportTitle": "Device Usage Reports",
+      "usageReportTitle": "Room Device Usage Reports",
       "peakHour": "Peak Hour",
       "distribution": "Distribution",
       "timeline": "Timeline",
       "overview": "Overview",
-      "all": "All"
+      "all": "All",
+      "deviceMetrics": "Room Device Metrics",
+      "downloadFullReport": "Download Full Report",
+      "mostUsed": "Most Used",
+      "leastUsed": "Least Used",
+      "collectingData": "Collecting Data",
+      "devicesUsed": "Devices Used",
+      "totalCallDuration": "Total Call Duration",
+      "callDuration": "Call Duration",
+      "numberOfCalls": "Number of Calls",
+      "deviceName": "Device Name",
+      "hoursUsed": "Hours Used",
+      "callCount": "# Calls",
+      "callHours": "Call Hours",
+      "deviceUsage": "Room Device Usage",
+      "pairedCount": "# Paired",
+      "last7Days": "Last 7 Days",
+      "last4Weeks": "Weekly Last 4 weeks ",
+      "last3Months": "Monthly Last 3 Months",
+      "deviceOptions": {
+        "all": "All",
+        "roomSystems": "Room Systems",
+        "sparkBoard": "SparkBoard"
+      }
     }
   },
   "careReportsPage": {
@@ -1088,6 +1111,7 @@
     "setUpPMRDescription": "The Personal Meeting Rooms feature has been added to your subscription.",
     "setUpPMRUrl": "Set Up PMR Now",
     "setUpHybridMediaService": "Hybrid Media Service is available. Extend cloud media to use premises-based resources for calls and meetings.",
+    "getStarted": "Get Started",
     "urgentUpgrade": "An urgent upgrade is available for <a ui-sref='{{link}}'>{{connector}}</a> and it will upgrade during the next scheduled upgrade."
   },
   "inviteModal": {
@@ -6180,7 +6204,7 @@
       "viewIncident": "View Incident",
       "newIncidentBtn": "+ NEW INCIDENT",
       "noIncidentContent1": "Looks like you've got a clean record",
-      "noIncidentContent2":"When you have downtime: ", 
+      "noIncidentContent2":"When you have downtime: ",
       "noIncidentContentLink": "Create your first incident",
       "lastUpdatedOn": "Last updated on ",
       "resolvedOn": "Resolved on ",
@@ -6191,7 +6215,7 @@
       "identified": "Identified",
       "monitoring": "Monitoring",
       "resolved": "Resolved"
-    },    
+    },
     "impactStatus":{
       "none": "Override impact to None",
       "Minor": "Override impact to Minor",
