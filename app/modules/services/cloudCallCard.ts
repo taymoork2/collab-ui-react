@@ -26,7 +26,7 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
   }
 
   /* @ngInject */
-  public constructor(Authinfo, FeatureToggleService) {
+  public constructor(Authinfo, FeatureToggleService, Config) {
     super({
       name: 'servicesOverview.cards.call.title',
       description: 'servicesOverview.cards.call.description',
@@ -35,9 +35,15 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
       cardClass: 'cta-bar',
     });
     this._loading = false;
+    function showFeatureTab(pstnEnabled) {
+      return Authinfo.getLicenses().filter(function (license) {
+        return !pstnEnabled || (license.licenseType === Config.licenseTypes.COMMUNICATION);
+      }).length > 0;
+    }
+
     FeatureToggleService.supports(FeatureToggleService.features.csdmPstn)
       .then((pstnEnabled) => {
-        if (!pstnEnabled || (!Authinfo.isDeviceMgmt() || Authinfo.isSquaredUC())) {
+        if (showFeatureTab(pstnEnabled)) {
           this._buttons.splice(1, 0, { name: 'servicesOverview.cards.call.buttons.features', routerState: 'huronfeatures', buttonClass: 'btn-link' });
         }
       });
