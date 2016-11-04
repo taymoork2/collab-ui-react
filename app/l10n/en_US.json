@@ -545,10 +545,20 @@
       "collectingData": "Collecting Data",
       "devicesUsed": "Devices Used",
       "totalCallDuration": "Total Call Duration",
+      "callDuration": "Call Duration",
       "numberOfCalls": "Number of Calls",
       "deviceName": "Device Name",
       "hoursUsed": "Hours Used",
-      "callCount": "# Calls"
+      "callCount": "# Calls",
+      "pairedCount": "# Paired",
+      "last7Days": "Last 7 Days",
+      "last4Weeks": "Weekly Last 4 weeks ",
+      "last3Months": "Monthly Last 3 Months",
+      "deviceOptions": {
+        "all": "All",
+        "roomSystems": "Room Systems",
+        "sparkBoard": "SparkBoard"
+      }
     }
   },
   "careReportsPage": {

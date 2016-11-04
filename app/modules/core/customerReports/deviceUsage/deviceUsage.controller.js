@@ -6,7 +6,7 @@
     .controller('DeviceUsageCtrl', DeviceUsageCtrl);
 
   /* @ngInject */
-  function DeviceUsageCtrl($log, $state, $scope, DeviceUsageTotalService, Notification, deviceUsageFeatureToggle, DeviceUsageCommonService) {
+  function DeviceUsageCtrl($log, $translate, $state, $scope, DeviceUsageTotalService, Notification, deviceUsageFeatureToggle, DeviceUsageCommonService) {
     var vm = this;
     var amChart;
     var apiToUse = 'mock';
@@ -27,18 +27,15 @@
     vm.deviceOptions = [
       {
         value: 0,
-        label: 'All',
-        description: 'All CE and SparkBoard devices'
+        label: $translate.instant('reportsPage.usageReports.deviceOptions.all')
       },
       {
         value: 1,
-        label: 'Room Systems',
-        description: 'All CE devices'
+        label: $translate.instant('reportsPage.usageReports.deviceOptions.roomSystems')
       },
       {
         value: 2,
-        label: 'SparkBoard',
-        description: 'All SparkBoard devices'
+        label: $translate.instant('reportsPage.usageReports.deviceOptions.sparkBoard')
       }
     ];
     vm.deviceFilter = vm.deviceOptions[0];
@@ -188,21 +185,21 @@
     function loadLastWeek() {
       vm.loading = true;
       DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(function (data) {
-        loadChartData(data, 'Last 7 Days');
+        loadChartData(data, $translate.instant('reportsPage.usageReports.last7Days'));
       }, handleReject);
     }
 
     function loadLastMonth() {
       vm.loading = true;
       DeviceUsageTotalService.getDataForLastNTimeUnits(4, 'week', ['ce', 'sparkboard'], apiToUse).then(function (data) {
-        loadChartData(data, 'Weekly Last 4 Weeks');
+        loadChartData(data, $translate.instant('reportsPage.usageReports.last4Weeks'));
       }, handleReject);
     }
 
     function loadLast3Months() {
       vm.loading = true;
       DeviceUsageTotalService.getDataForLastMonths(3, 'month', ['ce', 'sparkboard'], apiToUse).then(function (data) {
-        loadChartData(data, 'Monthly');
+        loadChartData(data, $translate.instant('reportsPage.usageReports.last3Months'));
       }, handleReject);
     }
 
@@ -218,9 +215,9 @@
     }
 
     function renderBalloon(graphDataItem) {
-      var text = '<div><h5>Call Duration: ' + graphDataItem.dataContext.totalDuration + '</h5>';
-      text = text + 'Call Count:  ' + graphDataItem.dataContext.callCount + ' <br/> ';
-      text = text + 'Paired Count: ' + graphDataItem.dataContext.pairedCount + '<br/>';
+      var text = '<div><h5>' + $translate.instant('reportsPage.usageReports.callDuration') + ' : ' + graphDataItem.dataContext.totalDuration + '</h5>';
+      text = text + $translate.instant('reportsPage.usageReports.callCount') + ' : ' + graphDataItem.dataContext.callCount + ' <br/> ';
+      text = text + $translate.instant('reportsPage.usageReports.pairedCount') + ' : ' + graphDataItem.dataContext.pairedCount + '<br/>';
       return text;
     }
 
