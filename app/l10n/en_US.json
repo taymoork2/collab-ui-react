@@ -550,6 +550,8 @@
       "deviceName": "Device Name",
       "hoursUsed": "Hours Used",
       "callCount": "# Calls",
+      "callHours": "Call Hours",
+      "deviceUsage": "Room Device Usage",
       "pairedCount": "# Paired",
       "last7Days": "Last 7 Days",
       "last4Weeks": "Weekly Last 4 weeks ",
