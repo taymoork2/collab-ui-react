@@ -92,7 +92,7 @@
     'CareDetails'
   ]);
 
-  angular.module('Status', ['Core']);
+  angular.module('GSS', ['Core']);
 
   angular.module('Gemini', ['Core']);
 
@@ -108,7 +108,7 @@
     'WebExApp',
     'Messenger',
     'Sunlight',
-    'Status',
+    'GSS',
     'oc.lazyLoad',
     'Gemini'
   ]).config(require('./main.config'))
