@@ -31,19 +31,20 @@
       "stateParams=" + JSON.stringify($stateParams);
     Log.debug(_this.logMsg);
 
-    var siteName = WebExUtilsFact.getSiteName($stateParams.siteUrl);
-    var iframeUrlOrig = $stateParams.settingPageIframeUrl;
-    // var siteName = WebExUtilsFact.getSiteName("SJSITE14.webex.com");
-    // var iframeUrlOrig = "https://wbxbts.admin.ciscospark.com/wbxadmin/sitesetting.do?proxyfrom=atlas&siteurl=SJSITE14#anchor_site_option";
+    // var iframeUrlOrig = $stateParams.settingPageIframeUrl;
+    // var siteUrl = $stateParams.siteUrl;
+    var iframeUrlOrig = "https://wbxbts.admin.ciscospark.com/wbxadmin/sitesetting.do?proxyfrom=atlas&siteurl=SJSITE14#anchor_site_option";
+    var siteUrl = "SJSITE14.webex.com";
+    var siteName = WebExUtilsFact.getSiteName(siteUrl);
 
     $scope.isIframeLoaded = false;
     $scope.siteSettingId = $stateParams.webexPageId;
     $scope.siteSettingLabel = $translate.instant("webexSiteSettingsLabels.settingPageLabel_" + $stateParams.webexPageId);
 
-    $scope.siteSettingsBreadcrumbUiSref = "site-list.site-settings({siteUrl:" + "'" + $stateParams.siteUrl + "'" + "})";
+    $scope.siteSettingsBreadcrumbUiSref = "site-list.site-settings({siteUrl:" + "'" + siteUrl + "'" + "})";
     $scope.siteSettingsBreadcrumbLabel = $translate.instant(
       "webexSiteSettingsLabels.siteSettingsIndexPageTitleFull", {
-        siteUrl: $stateParams.siteUrl
+        siteUrl: siteUrl
       }
     );
 
@@ -59,15 +60,15 @@
     }
 
     if (iframeUrl.indexOf("cibtsgsbt31.webex.com") > 0) {
-      iframeUrl = iframeUrl.replace($stateParams.siteUrl, "wbxbts.admin.ciscospark.com");
+      iframeUrl = _.replace(iframeUrl, siteUrl, "wbxbts.admin.ciscospark.com");
     }
 
     // iframe request variables
     $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
     $scope.adminEmail = Authinfo.getPrimaryEmail();
     $scope.authToken = TokenService.getAccessToken();
-    $scope.siteName = $stateParams.siteUrl;
-    $scope.siteName2 = siteName;
+    $scope.siteName = siteUrl.toLowerCase();
+    $scope.siteName2 = siteName.toLowerCase();
     $scope.fullSparkDNS = $window.location.origin;
     $scope.locale = ("es_LA" == translateUse) ? "es_MX" : translateUse;
 
@@ -81,7 +82,7 @@
       "scope.siteSettingsBreadcrumbLabel=" + $scope.siteSettingsBreadcrumbLabel;
     Log.debug(_this.logMsg);
 
-    $rootScope.lastSite = $stateParams.siteUrl;
+    $rootScope.lastSite = siteUrl;
     $log.log("last site " + $rootScope.lastSite);
 
     var parser = $window.document.createElement('a');

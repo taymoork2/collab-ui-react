@@ -385,9 +385,9 @@
     }; // setInfoCardLicenseInfo();
 
     obj.logoutSite = function () {
+      var promise = null;
       var siteUrl = $rootScope.lastSite;
 
-      var promise;
       if (!angular.isDefined(siteUrl)) {
         $log.log('No WebEx site visited.');
         var deferred = $q.defer();
@@ -395,15 +395,15 @@
         promise = deferred.promise;
       } else {
         var siteName = obj.getSiteName(siteUrl);
-
         var logoutUrl = "https://" + $rootScope.nginxHost + "/wbxadmin/clearcookie.do?proxyfrom=atlas&siteurl=" + siteName.toLowerCase();
+
         $log.log('Logout from WebEx site ' + siteName + ", " + logoutUrl);
 
         var jqpromise = $.ajax({
           type: 'POST',
           url: logoutUrl,
           data: $.param({
-            ngxsiteurl: siteUrl
+            ngxsiteurl: siteUrl.toLowerCase()
           }),
           xhrFields: {
             withCredentials: true
@@ -413,6 +413,7 @@
           },
           timeout: 250
         });
+
         promise = $q.when(jqpromise); //convert into angularjs promise
       }
 

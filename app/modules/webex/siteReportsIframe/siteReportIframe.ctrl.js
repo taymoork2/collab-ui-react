@@ -13,6 +13,7 @@
     $sce,
     $timeout,
     $window,
+    Log,
     Authinfo,
     TokenService,
     WebExUtilsFact
@@ -23,16 +24,17 @@
     _this.funcName = "ReportsIframeCtrl()";
     _this.logMsg = "";
 
-    var siteName = WebExUtilsFact.getSiteName($stateParams.siteUrl);
-    var iframeUrlOrig = $stateParams.reportPageIframeUrl;
-    // var siteName = "SJSITE14";
-    // var iframeUrlOrig = "https://wbxdmz.admin.ciscospark.com/wbxadmin/MeetingsInProgress.do?proxyfrom=atlas&siteurl=SJSITE14";
+    // var iframeUrlOrig = $stateParams.reportPageIframeUrl;
+    // var siteUrl = $stateParams.siteUrl;
+    var iframeUrlOrig = "https://wbxdmz.admin.ciscospark.com/wbxadmin/MeetingsInProgress.do?proxyfrom=atlas&siteurl=SJSITE14";
+    var siteUrl = "SJSITE14.webex.com";
+    var siteName = WebExUtilsFact.getSiteName(siteUrl);
 
     $log.log("iframeUrlOrig=" + iframeUrlOrig);
 
     $scope.isIframeLoaded = false;
-    $scope.siteUrl = $stateParams.siteUrl;
-    $scope.indexPageSref = "webex-reports({siteUrl:'" + $stateParams.siteUrl + "'})";
+    $scope.siteUrl = siteUrl;
+    $scope.indexPageSref = "webex-reports({siteUrl:'" + siteUrl + "'})";
     $scope.reportPageId = $stateParams.reportPageId;
     $scope.reportPageTitle = $translate.instant("webexReportsPageTitles." + $scope.reportPageId);
     $scope.reportPageIframeUrl = iframeUrlOrig;
@@ -49,18 +51,16 @@
     }
 
     if (iframeUrl.indexOf("cibtsgsbt31.webex.com") > 0) {
-      iframeUrl = iframeUrl.replace($stateParams.siteUrl, "wbxbts.admin.ciscospark.com");
+      iframeUrl = _.replace(iframeUrl, siteUrl, "wbxbts.admin.ciscospark.com");
     }
 
-    $scope.reportPageIframeUrl = iframeUrlOrig;
-
-    // for iframe request
+    // iframe request variables
     $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
     $scope.adminEmail = Authinfo.getPrimaryEmail();
     $scope.authToken = TokenService.getAccessToken();
     $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
-    $scope.siteName = $stateParams.siteUrl;
-    $scope.siteName2 = WebExUtilsFact.getSiteName($stateParams.siteUrl);
+    $scope.siteName = siteUrl.toLowerCase();
+    $scope.siteName2 = siteName.toLowerCase();
     $scope.fullSparkDNS = $window.location.origin;
 
     _this.logMsg = _this.funcName + ": " + "\n" +
@@ -72,15 +72,15 @@
       "adminEmail=" + $scope.adminEmail + "\n" +
       "locale=" + $scope.locale + "\n" +
       "trustIframeUrl=" + $scope.trustIframeUrl;
-    $log.log(_this.logMsg);
+    Log.debug(_this.logMsg);
 
-    $rootScope.lastSite = $stateParams.siteUrl;
+    $rootScope.lastSite = siteUrl;
     $log.log("last site " + $rootScope.lastSite);
 
     var parser = $window.document.createElement('a');
     parser.href = $scope.iframeUrl;
     $rootScope.nginxHost = parser.hostname;
-    $log.log("nginxHost " + $rootScope.nginxHost);
+    Log.debug("nginxHost " + $rootScope.nginxHost);
 
     $timeout(
       function loadIframe() {
