@@ -45,7 +45,6 @@ describe('Controller: TrialEditCtrl:', function () {
     addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.when());
     removeContextSpy = spyOn(TrialContextService, 'removeService').and.returnValue($q.when());
     spyOn(TrialContextService, 'trialHasService').and.returnValue(false);
-    spyOn(FeatureToggleService, 'atlasWebexTrialsGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.when(false));
