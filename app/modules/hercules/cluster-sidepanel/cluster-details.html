@@ -81,7 +81,7 @@
       <div ng-if="!clusterDetailsCtrl.showUpgradeProgress">
         <p ng-if="!clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable" translate="hercules.softwareUpgrade.upToDate" translate-values="{connectorType: clusterDetailsCtrl.connectorName}"></p>
         <p ng-if="clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable && !clusterDetailsCtrl.softwareUpgrade.isUrgent" translate="hercules.softwareUpgrade.upgradePossible" translate-values="{connectorType: clusterDetailsCtrl.connectorName, availableVersion: clusterDetailsCtrl.softwareUpgrade.availableVersion}"></p>
-        <p ng-if="clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable && clusterDetailsCtrl.softwareUpgrade.isUrgent" translate="hercules.softwareUpgrade.urgentUpgrade" translate-values="{connectorType: clusterDetailsCtrl.localizedManagementConnectorName, availableVersion: clusterDetailsCtrl.softwareUpgrade.availableManagementVersion}"></p>
+        <p ng-if="clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable && clusterDetailsCtrl.softwareUpgrade.isUrgent" translate="hercules.softwareUpgrade.urgentUpgrade" translate-values="{connectorType: clusterDetailsCtrl.localizedConnectorName, availableVersion: clusterDetailsCtrl.softwareUpgrade.availableVersion}"></p>
         <button class="btn btn--primary"
                 ng-click="clusterDetailsCtrl.showUpgradeDialog(clusterDetailsCtrl.servicesId, clusterDetailsCtrl.connectorType, clusterDetailsCtrl.softwareUpgrade.availableVersion)"
                 ng-disabled="!clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable"
