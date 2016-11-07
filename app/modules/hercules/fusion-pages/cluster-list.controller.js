@@ -114,7 +114,7 @@
           _.each(emptyExpresswayClusters, function (cluster) {
             cluster.isEmptyExpresswayCluster = true;
             cluster.allowedRedirectTarget = _.find(allowList, function (entry) {
-              return entry.clusterId === cluster.id || cluster.id === "40b4cc27-e058-40b2-8102-595d9eb33d5a";
+              return entry.clusterId === cluster.id;
             });
           });
         })

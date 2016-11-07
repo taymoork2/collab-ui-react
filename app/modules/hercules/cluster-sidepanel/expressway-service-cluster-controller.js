@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceClusterController', ExpresswayServiceClusterController);
 
   /* @ngInject */
-  function ExpresswayServiceClusterController($scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout, hasF237FeatureToggle, FusionClusterService, Notification, $window) {
+  function ExpresswayServiceClusterController($scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout, hasF237FeatureToggle, hasEmergencyUpgradeFeatureToggle, FusionClusterService, Notification, $window) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.clusterId;
@@ -23,6 +23,7 @@
     vm.fakeUpgrade = false;
     vm.fakeManagementUpgrade = false;
     vm.hasF237FeatureToggle = hasF237FeatureToggle;
+    vm.hasEmergencyUpgradeFeatureToggle = hasEmergencyUpgradeFeatureToggle;
     vm.hasConnectorAlarm = hasConnectorAlarm;
     vm.openDeleteConfirm = openDeleteConfirm;
     vm.goToExpressway = goToExpressway;
@@ -45,7 +46,7 @@
         FusionClusterService.getPreregisteredClusterAllowList()
           .then(function (allowList) {
             vm.cluster.allowedRedirectTarget = _.find(allowList, function (entry) {
-              return entry.clusterId === vm.cluster.id || vm.cluster.id === "40b4cc27-e058-40b2-8102-595d9eb33d5a";
+              return entry.clusterId === vm.cluster.id;
             });
           })
           .catch(function (error) {
@@ -53,14 +54,25 @@
           });
       }
       vm.releaseChannel = $translate.instant('hercules.fusion.add-resource-group.release-channel.' + vm.cluster.releaseChannel);
+      if (vm.cluster.resourceGroupId) {
+        findResourceGroupName(vm.cluster.resourceGroupId)
+          .then(function (name) {
+            vm.resourceGroupName = name;
+          });
+      } else {
+        vm.resourceGroupName = undefined;
+      }
+
       var isUpgrading = vm.cluster.aggregates.upgradeState === 'upgrading';
       var isUpgradingManagement = vm.managementCluster.aggregates.upgradeState === 'upgrading';
       vm.softwareUpgrade = {
         provisionedVersion: vm.cluster.aggregates.provisioning.provisionedVersion,
         availableVersion: vm.cluster.aggregates.provisioning.availableVersion,
+        isUrgent: vm.cluster.aggregates.provisioning.availablePackageIsUrgent,
         isUpgradeAvailable: vm.cluster.aggregates.upgradeAvailable,
         provisionedManagementVersion: vm.managementCluster.aggregates.provisioning.provisionedVersion,
         availableManagementVersion: vm.managementCluster.aggregates.provisioning.availableVersion,
+        isManagementUrgent: vm.managementCluster.aggregates.provisioning.availablePackageIsUrgent,
         isManagementUpgradeAvailable: vm.managementCluster.aggregates.upgradeAvailable,
         hasManagementUpgradeWarning: vm.managementCluster.aggregates.upgradeWarning,
         numberOfHosts: _.size(vm.cluster.aggregates.hosts),
@@ -113,6 +125,16 @@
       vm.showManagementUpgradeProgress = vm.fakeManagementUpgrade || isUpgradingManagement || vm.managementUpgradeJustFinished;
     }, true);
 
+    function findResourceGroupName(groupId) {
+      return FusionClusterService.getResourceGroups()
+        .then(function (response) {
+          var group = _.find(response.groups, { id: groupId });
+          if (group) {
+            return group.name;
+          }
+          return undefined;
+        });
+    }
 
     function showUpgradeDialog(servicesId, connectorType, availableVersion) {
       $modal.open({
@@ -161,6 +183,11 @@
         .then(function (cluster) {
           vm.hosts = FusionClusterService.buildSidepanelConnectorList(cluster, vm.connectorType);
           vm.schedule.dateTime = FusionClusterService.formatTimeAndDate(cluster.upgradeSchedule);
+          vm.schedule.urgentScheduleTime = FusionClusterService.formatTimeAndDate({
+            scheduleTime: cluster.upgradeSchedule.urgentScheduleTime,
+            // Simulate every day
+            scheduleDays: { length: 7 },
+          });
           vm.schedule.timeZone = cluster.upgradeSchedule.scheduleTimeZone;
         });
     }

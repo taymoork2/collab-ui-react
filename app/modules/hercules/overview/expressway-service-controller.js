@@ -51,7 +51,7 @@
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
           $scope.exp.showClusterSidepanel(row.entity);
         });
-        if (angular.isDefined($stateParams.clusterId) && $stateParams.clusterId !== null) {
+        if (!_.isUndefined($stateParams.clusterId) && $stateParams.clusterId !== null) {
           showClusterSidepanel(ClusterService.getCluster(vm.connectorType, $stateParams.clusterId));
         }
       },

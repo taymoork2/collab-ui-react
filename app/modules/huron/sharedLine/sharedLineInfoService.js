@@ -121,7 +121,7 @@
             promise =
               setDeviceSharedLine(device.uuid, dnuuid)
               .then(function (info) {
-                if (angular.isDefined(info)) {
+                if (!_.isUndefined(info)) {
                   this.isSharedLine = info.isSharedLine;
                   this.maxIndex = info.maxIndex;
                   this.endpointDnUuid = info.endpointDnUuid;
@@ -141,7 +141,7 @@
     function loadSharedLineUserDevices(dnUuid) {
       userDeviceInfo = [];
       var promises = [];
-      angular.forEach(sharedLineUsers, function (user) {
+      _.forEach(sharedLineUsers, function (user) {
         var promise;
         promise = loadUserDevices(user.uuid, dnUuid);
         promises.push(promise);
@@ -165,8 +165,8 @@
         'sipendpointId': deviceUuid
       }).$promise
         .then(function (endpointDn) {
-          if (angular.isDefined(endpointDn)) {
-            angular.forEach(endpointDn, function (d) {
+          if (!_.isUndefined(endpointDn)) {
+            _.forEach(endpointDn, function (d) {
               if (d.directoryNumber.uuid === dnuuid) {
                 info.isSharedLine = true;
                 info.endpointDnUuid = d.uuid;

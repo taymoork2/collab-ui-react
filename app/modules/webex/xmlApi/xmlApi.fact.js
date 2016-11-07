@@ -499,7 +499,7 @@
         }
 
         WebExXmlApiConstsSvc.replaceSets.forEach(function (replaceSet) {
-          bodySliceXml = bodySliceXml.replace(replaceSet.replaceThis, replaceSet.withThis);
+          bodySliceXml = _.replace(bodySliceXml, replaceSet.replaceThis, replaceSet.withThis);
         });
 
         logMsg = funcName + ": " + commentText + "\n" +

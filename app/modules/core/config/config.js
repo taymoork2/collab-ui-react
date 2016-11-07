@@ -51,6 +51,10 @@
         refreshDelay: 900000 // 15 mins
       },
 
+      siteDomainUrl: {
+        webexUrl: '.webex.com'
+      },
+
       entitlements: {
         huron: 'ciscouc',
         squared: 'webex-squared',
@@ -76,6 +80,7 @@
         meeting: 'MEETING',
         call: 'CALL',
         roomSystems: 'ROOMSYSTEMS',
+        sparkBoard: 'SPARKBOARDS',
         pstn: 'PSTN',
         care: 'CARE',
         context: 'CONTEXT'
@@ -181,7 +186,7 @@
         EC: 'EC', // Event Center (WebEx)
         CO: 'CO', // Communication
         SD: 'SD', // Spark Room System
-        SB: 'SB', // Seagull
+        SB: 'SB', // Spark Board
         CMR: 'CMR', // Collaboration Meeting Room (WebEx)
         CDC: 'CDC' // Care Digital Channel
       },
@@ -332,17 +337,17 @@
         'userRedirect',
         'userprofile',
         'users',
-        'status'
+        'gss'
       ],
-      Support: ['status', 'support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'reports-metrics'],
-      WX2_User: ['status', 'overview', 'support', 'activateProduct'],
-      WX2_Support: ['status', 'overview', 'reports', 'support'],
+      Support: ['gss', 'support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'reports-metrics'],
+      WX2_User: ['overview', 'support', 'activateProduct'],
+      WX2_Support: ['gss', 'overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
-      PARTNER_ADMIN: ['status', 'partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
-      PARTNER_SALES_ADMIN: ['status', 'overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
-      CUSTOMER_PARTNER: ['status', 'overview', 'partnercustomers', 'customer-overview'],
+      PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
+      PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
+      CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
       //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
-      User: ['status', 'drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
+      User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
       Site_Admin: [
         'site-list',
         'site-csv-import',
@@ -408,6 +413,8 @@
         'devices',
         'place-overview',
         'places',
+        'huronsettings',
+        'huronlines',
       ],
       'squared-fusion-uc': [
         'add-resource',
@@ -424,7 +431,7 @@
         'services-overview',
       ],
       'squared-team-member': [
-        'organization'
+        'organization',
       ],
       'hybrid-data-security': [
         'hds-settings'
@@ -439,14 +446,14 @@
         'metrics',
         'reports-metrics',
         'services-overview',
-        'cluster-list'
+        'cluster-list',
       ],
       'webex-messenger': [
         'messenger',
         'services-overview',
       ],
       'cloud-contact-center': [
-        'care'
+        'care',
       ]
     };
 

@@ -6,7 +6,7 @@
     .service('DeviceUsageMockData', DeviceUsageMockData);
 
   /* @ngInject */
-  function DeviceUsageMockData($log) {
+  function DeviceUsageMockData($log, $timeout) {
 
     var apiDataFormat = "YYYYMMDD";
 
@@ -14,16 +14,17 @@
 
     var maxCallsPrDay = 10;
     var maxPairedCallsPrDay = 5;
-    var existingUniqueDeviceIds = createSetOfUniqueDeviceIds(1000);
+    var existingUniqueDeviceIds = createSetOfUniqueDeviceIds(100);
 
     var service = {
-      getRawData: getRawData
+      getRawData: getRawData,
+      getRawDataPromise: getRawDataPromise
     };
     return service;
 
 
-    function secondsFromDays(days) {
-      return days * 60 * 60;
+    function secondsFromMinutes(days) {
+      return days * 60;
     }
 
     function deviceDaySample(date, accountId, deviceCategory) {
@@ -33,7 +34,7 @@
         'accountId': accountId,
         'pairedCount': _.random(0, maxPairedCallsPrDay),
         'deviceCategory': deviceCategory,
-        'totalDuration': secondsFromDays(_.random(1, 24))
+        'totalDuration': secondsFromMinutes(_.random(1, 300))
       };
     }
 
@@ -65,6 +66,12 @@
       return _.cloneDeep(rawDataWithinRange);
     }
 
+    function getRawDataPromise(startDate, endDate) {
+      return $timeout(function () {
+        return getRawData(startDate, endDate);
+      }, 2000);
+    }
+
     function assembleRawData(startDate, endDate) {
       var data = [];
       var start = moment(startDate);
@@ -75,7 +82,7 @@
         for (var i = 0; i < noOfActiveDevicesToday; i++) {
           var accountId = existingUniqueDeviceIds[i];
           //data.push(deviceDaySample(time, accountId, "ce"));
-          data.push(deviceDaySample(time, accountId, "darling"));
+          data.push(deviceDaySample(time, accountId, "sparkboard"));
         }
         start.add(1, "days");
       }

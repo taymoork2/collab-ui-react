@@ -36,8 +36,8 @@
       }).$promise
         .then(function (lineTemplates) {
           var siteId = Authinfo.getOrgId() + '_000001_ULT';
-          if (angular.isArray(lineTemplates.choice) && lineTemplates.choice.length > 0) {
-            angular.forEach(lineTemplates.choice, function (dataset) {
+          if (_.isArray(lineTemplates.choice) && lineTemplates.choice.length > 0) {
+            _.forEach(lineTemplates.choice, function (dataset) {
               if (siteId === dataset.value) {
                 lineTemplate = dataset;
               }
@@ -65,7 +65,7 @@
       }).$promise
         .then(function (lineTemplates) {
           var siteId = Authinfo.getOrgId() + '_000001_ULT';
-          if (angular.isArray(lineTemplates.choice) && lineTemplates.choice.length > 0) {
+          if (_.isArray(lineTemplates.choice) && lineTemplates.choice.length > 0) {
             for (var i = 0; i < lineTemplates.choice.length; i++) {
               if (siteId === lineTemplates.choice[i].value) {
                 lineTemplate = lineTemplates.choice[i];
@@ -86,7 +86,7 @@
         directorynumber: ''
       }).$promise
         .then(function (directoryNumbers) {
-          if (angular.isArray(directoryNumbers) && directoryNumbers.length > 0) {
+          if (_.isArray(directoryNumbers) && directoryNumbers.length > 0) {
             var randomIndex = Math.floor(Math.random() * directoryNumbers.length);
             return directoryNumbers[randomIndex];
           }

@@ -167,7 +167,7 @@
       // Workaround atob issue (InvalidCharacterError: DOM Exception 5
       // atob@[native code]) for Safari browser on how it handles
       // base64 encoded text string by removing all the whitespaces.
-      userReportData = userReportData.replace(/\s/g, '');
+      userReportData = _.replace(userReportData, /\s/g, '');
 
       // Decode base64 (convert ascii phbinary)
       var binData = $window.atob(userReportData);
@@ -238,7 +238,7 @@
                   exportedUser.lastName = (users[i].name && users[i].name.familyName) ? users[i].name.familyName : '';
                   exportedUser.displayName = users[i].displayName || '';
                   exportedUser.email = users[i].userName;
-                  exportedUser.entitlements = angular.isArray(users[i].entitlements) ? users[i].entitlements.join(' ') : '';
+                  exportedUser.entitlements = _.isArray(users[i].entitlements) ? users[i].entitlements.join(' ') : '';
                   exportedUsers.push(exportedUser);
                 }
               }
@@ -257,24 +257,21 @@
     }
 
     function getUserCount() {
-      var deferred = $q.defer();
-      userCountResource.get().$promise.then(function (response) {
-        var count = -1;
-        if (_.isArray(response.data[0].data)) {
-          count = _.chain(response.data[0].data)
-            .dropRightWhile(function (d) { // skip '0' count
-              return d.details.totalRegisteredUsers === '0';
-            })
-            .last()
-            .get('details.totalRegisteredUsers')
-            .parseInt()
-            .value();
-        }
-        deferred.resolve(count);
-      }).catch(function () {
-        deferred.reject();
-      });
-      return deferred.promise;
+      return userCountResource.get().$promise
+        .then(function (response) {
+          var count = -1;
+          if (_.isArray(_.get(response, 'data[0].data'))) {
+            count = _.chain(response.data[0].data)
+              .dropRightWhile(function (d) { // skip '0' count
+                return d.details.totalRegisteredUsers === '0';
+              })
+              .last()
+              .get('details.totalRegisteredUsers')
+              .parseInt()
+              .value();
+          }
+          return count;
+        });
     }
 
     // TODO: rm this after replacing all instances of usage to listPartnersAsPromise

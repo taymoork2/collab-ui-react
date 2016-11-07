@@ -76,7 +76,7 @@ describe('Controller: CdrService', function () {
 
     it('should create jsonblob and url from call data', function () {
       var downloadData = CdrService.createDownload('blob');
-      expect(angular.isDefined(downloadData.jsonBlob)).toBeTruthy();
+      expect(!_.isUndefined(downloadData.jsonBlob)).toBeTruthy();
       expect(downloadData.jsonUrl).toEqual('blob');
     });
   });
@@ -92,7 +92,7 @@ describe('Controller: CdrService', function () {
 
     it('should only create the jsonblob from call data', function () {
       var downloadData = CdrService.createDownload('blob');
-      expect(angular.isDefined(downloadData.jsonBlob)).toBeTruthy();
+      expect(!_.isUndefined(downloadData.jsonBlob)).toBeTruthy();
       expect(downloadData.jsonUrl).not.toBeDefined();
     });
 

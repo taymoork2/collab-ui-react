@@ -388,6 +388,18 @@
         "voice": "Empar",
         "gender": "autoAttendant.voices.female"
       }]
+    }, {
+      "code": "ja_JP",
+      "label": "languages.japanese",
+      "voices": [{
+        "label": "autoAttendant.voices.kyoko",
+        "voice": "Kyoko",
+        "gender": "autoAttendant.voices.female"
+      }, {
+        "label": "autoAttendant.voices.otoya",
+        "voice": "Otoya",
+        "gender": "autoAttendant.voices.male"
+      }]
     }];
 
     var service = {
@@ -404,7 +416,7 @@
 
     function setLanguageOptions() {
       languageOptions = [];
-      if (angular.isDefined(languages)) {
+      if (!_.isUndefined(languages)) {
         _.each(languages, function (language) {
           languageOptions.push(createLanguageOption(language));
         });

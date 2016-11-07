@@ -82,14 +82,14 @@
           data = _.isObject(data) ? data : {};
           $rootScope.$broadcast('Userservice::updateUsers');
           data.success = true;
-          if (angular.isFunction(callback)) {
+          if (_.isFunction(callback)) {
             callback(data, status, method, headers);
           }
         }).error(function (data, status, headers) {
           data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
-          if (angular.isFunction(callback)) {
+          if (_.isFunction(callback)) {
             callback(data, status, method, headers);
           }
         });

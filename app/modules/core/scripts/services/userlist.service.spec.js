@@ -41,7 +41,7 @@ describe('User List Service', function () {
       '&sortBy=' + testData.listUsers.sortBy +
       '&sortOrder=' + testData.listUsers.sortOrder;
 
-    $httpBackend.whenGET(listUsersUrl).respond(200, {
+    $httpBackend.expectGET(listUsersUrl).respond(200, {
       TotalResults: "2",
       itemsPerPage: "2",
       startIndex: "1",
@@ -68,7 +68,7 @@ describe('User List Service', function () {
   it('should include entitlements in query when specified', function () {
     var listUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + "?filter=active%20eq%20true%20and%20entitlements%20eq%20%22everything%22%20and%20(userName%20sw%20%22test%22%20or%20name.givenName%20sw%20%22test%22%20or%20name.familyName%20sw%20%22test%22%20or%20displayName%20sw%20%22test%22)&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings&count=10";
 
-    $httpBackend.whenGET(listUsersUrl).respond(200, {
+    $httpBackend.expectGET(listUsersUrl).respond(200, {
       TotalResults: "2",
       itemsPerPage: "2",
       startIndex: "1",
@@ -95,7 +95,7 @@ describe('User List Service', function () {
   it('should leave out entitlements in query when not specified', function () {
     var listUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + "?filter=active%20eq%20true%20and%20(userName%20sw%20%22test%22%20or%20name.givenName%20sw%20%22test%22%20or%20name.familyName%20sw%20%22test%22%20or%20displayName%20sw%20%22test%22)&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings&count=10";
 
-    $httpBackend.whenGET(listUsersUrl).respond(200, {
+    $httpBackend.expectGET(listUsersUrl).respond(200, {
       TotalResults: "2",
       itemsPerPage: "2",
       startIndex: "1",
@@ -122,7 +122,7 @@ describe('User List Service', function () {
   it('should include entitlements in query when specified without search filter', function () {
     var listUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + "?filter=active%20eq%20true%20and%20entitlements%20eq%20%22everything%22&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings&count=10";
 
-    $httpBackend.whenGET(listUsersUrl).respond(200, {
+    $httpBackend.expectGET(listUsersUrl).respond(200, {
       TotalResults: "2",
       itemsPerPage: "2",
       startIndex: "1",
@@ -149,7 +149,7 @@ describe('User List Service', function () {
   it('should successfully return the user reports ID from calling generateUserReports', function () {
     var generateUserReportsUrl = UrlConfig.getUserReportsUrl(Authinfo.getOrgId());
 
-    $httpBackend.whenPOST(generateUserReportsUrl).respond(202, {
+    $httpBackend.expectPOST(generateUserReportsUrl).respond(202, {
       id: testData.exportCSV.id,
       status: 'pending'
     });
@@ -166,13 +166,13 @@ describe('User List Service', function () {
   it('should successfully return the user reports data from calling getUserReports', function () {
     var userReportsUrl = UrlConfig.getUserReportsUrl(Authinfo.getOrgId()) + '/' + testData.exportCSV.id;
 
-    $httpBackend.whenGET(userReportsUrl).respond(200, {
+    $httpBackend.expectGET(userReportsUrl).respond(200, {
       report: testData.exportCSV.report,
       id: testData.exportCSV.id,
       status: 'success'
     });
 
-    $httpBackend.whenDELETE(userReportsUrl).respond(204);
+    $httpBackend.expectDELETE(userReportsUrl).respond(204);
 
     UserListService.getUserReports(testData.exportCSV.id, function (data, status) {
       expect(status).toBe(200);
@@ -195,18 +195,18 @@ describe('User List Service', function () {
     var generateUserReportsUrl = UrlConfig.getUserReportsUrl(Authinfo.getOrgId());
     var getUserReportsUrl = generateUserReportsUrl + '/' + testData.exportCSV.id;
 
-    $httpBackend.whenPOST(generateUserReportsUrl).respond(202, {
+    $httpBackend.expectPOST(generateUserReportsUrl).respond(202, {
       id: testData.exportCSV.id,
       status: 'pending'
     });
 
-    $httpBackend.whenGET(getUserReportsUrl).respond(200, {
+    $httpBackend.expectGET(getUserReportsUrl).respond(200, {
       report: testData.exportCSV.report,
       id: testData.exportCSV.id,
       status: 'success'
     });
 
-    $httpBackend.whenDELETE(getUserReportsUrl).respond(204);
+    $httpBackend.expectDELETE(getUserReportsUrl).respond(204);
 
     var promise = UserListService.exportCSV(testData.exportCSV.filter);
 
@@ -217,23 +217,69 @@ describe('User List Service', function () {
     $httpBackend.flush();
   });
 
-  it('should successfully return user count 2 from calling getUserCount', function () {
-    var userCountUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day';
-    $httpBackend.whenGET(userCountUrl).respond(200, {
-      data: [{
+  describe('getUserCount', function () {
+
+    it('should successfully return user count', function () {
+      var userCountUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day';
+      $httpBackend.expectGET(userCountUrl).respond(200, {
         data: [{
-          details: {
-            totalRegisteredUsers: 2
-          }
+          data: [{
+            "details": {
+              "activeUsers": "0",
+              "totalRegisteredUsers": "2"
+            }
+          }]
         }]
-      }]
+      });
+
+      UserListService.getUserCount()
+        .then(function (count) {
+          expect(count).toEqual(2);
+        })
+        .catch(function () {
+          expect('reject called').toBeFalsy();
+        });
+
+      $httpBackend.flush();
     });
 
-    UserListService.getUserCount().then(function (count) {
-      expect(count).toEqual(2);
+    it('should return -1 for empty response', function () {
+      var userCountUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day';
+      $httpBackend.expectGET(userCountUrl).respond(200, {
+      });
+
+      UserListService.getUserCount()
+        .then(function (count) {
+          expect(count).toEqual(-1);
+        })
+        .catch(function () {
+          expect('reject called').toBeFalsy();
+        });
+
+      $httpBackend.flush();
     });
 
-    $httpBackend.flush();
+
+    it('should reject promise when error occurs', function () {
+      var userCountUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day';
+      $httpBackend.expectGET(userCountUrl).respond(503, 'error occurred');
+
+      var catchCalled = false;
+      UserListService.getUserCount()
+        .then(function () {
+          expect('resolve called').toBeFalsy();
+        })
+        .catch(function (response) {
+          expect(response.status).toEqual(503);
+          catchCalled = true;
+        })
+        .finally(function () {
+          expect(catchCalled).toBeTruthy();
+        });
+
+      $httpBackend.flush();
+    });
+
   });
 
   it('should successfully return an array of 2 partners from calling listPartners', function () {
@@ -241,7 +287,7 @@ describe('User List Service', function () {
     var adminUrl = UrlConfig.getAdminServiceUrl() +
       'organization/' + orgId + '/users/partneradmins';
 
-    $httpBackend.whenGET(adminUrl).respond(200, {
+    $httpBackend.expectGET(adminUrl).respond(200, {
       partners: testData.listPartners.partners,
       status: true
     });

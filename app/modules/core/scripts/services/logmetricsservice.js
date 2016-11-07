@@ -116,10 +116,6 @@
             msg = "In trial DID page";
             eType = this.getEventType('trialDidPage');
             break;
-          case 'organization-overview.add.info':
-            msg = "In organization creation page";
-            eType = this.getEventType('organizationPage');
-            break;
           case 'overview':
             msg = "In customer overview page";
             eType = this.getEventType('customerOverviewPage');

@@ -28,10 +28,12 @@
       <uc-call-forward
         call-forward="$ctrl.lineOverviewData.callForward"
         voicemail-enabled="$ctrl.voicemailEnabled"
+        ng-if="!$ctrl.isCloudberryPlace()"
         on-change-fn="$ctrl.setCallForward(callForward)">
       </uc-call-forward>
       <uc-simultaneous-calls
         incoming-call-maximum="$ctrl.lineOverviewData.line.incomingCallMaximum"
+        ng-if="!$ctrl.isCloudberryPlace()"
         on-change-fn="$ctrl.setSimultaneousCalls(incomingCallMaximum)">
       </uc-simultaneous-calls>
       <uc-caller-id
@@ -46,6 +48,7 @@
       <uc-shared-line
         shared-lines="$ctrl.lineOverviewData.sharedLines"
         new-shared-line-members="$ctrl.newSharedLineMembers"
+        ng-if="!$ctrl.isCloudberryPlace()"
         select-shared-line-user-fn="$ctrl.setNewSharedLineMembers(members)"
         get-user-list-fn="$ctrl.getUserList(filter)"
         on-shared-line-change-fn="$ctrl.setSharedLines(sharedLines)"

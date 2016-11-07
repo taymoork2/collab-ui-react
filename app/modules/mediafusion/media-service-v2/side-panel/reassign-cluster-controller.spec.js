@@ -2,8 +2,8 @@
 
 describe('Controller: ReassignClusterControllerV2', function () {
   beforeEach(angular.mock.module('Mediafusion'));
-  var connector, controller, cluster, MediaClusterServiceV2, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock, clusterList, httpMock, Notification;
-  beforeEach(inject(function ($controller, _MediaClusterServiceV2_, _Notification_, _XhrNotificationService_, _$q_, _$translate_, _$httpBackend_) {
+  var connector, controller, cluster, MediaClusterServiceV2, $q, $translate, modalInstanceMock, windowMock, clusterList, httpMock, Notification;
+  beforeEach(inject(function ($controller, _MediaClusterServiceV2_, _Notification_, _$q_, _$translate_, _$httpBackend_) {
     connector = {
       hostname: 'hostname',
       id: 'id'
@@ -28,7 +28,6 @@ describe('Controller: ReassignClusterControllerV2', function () {
     }];
 
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
-    XhrNotificationService = _XhrNotificationService_;
     Notification = _Notification_;
     httpMock = _$httpBackend_;
     httpMock.when('GET', /^\w+.*/).respond({});
@@ -45,7 +44,6 @@ describe('Controller: ReassignClusterControllerV2', function () {
     controller = $controller('ReassignClusterControllerV2', {
       cluster: cluster,
       MediaClusterServiceV2: MediaClusterServiceV2,
-      XhrNotificationService: XhrNotificationService,
       Notification: Notification,
       $q: $q,
       $translate: $translate,

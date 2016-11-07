@@ -5,7 +5,7 @@
 "use strict";
 
 describe(' sunlightConfigService', function () {
-  var sunlightConfigService, $httpBackend, sunlightUserConfigUrl,
+  var sunlightConfigService, $httpBackend, sunlightUserConfigUrl, $window,
     sunlightChatConfigUrl, sunlightChatTemplateUrl, chatConfig, userData, userId, orgId, csConnString, templateId;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456')
@@ -19,9 +19,10 @@ describe(' sunlightConfigService', function () {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 
-  beforeEach(inject(function (_SunlightConfigService_, _$httpBackend_, UrlConfig) {
+  beforeEach(inject(function (_SunlightConfigService_, _$httpBackend_, UrlConfig, _$window_) {
     sunlightConfigService = _SunlightConfigService_;
     $httpBackend = _$httpBackend_;
+    $window = _$window_;
     sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/user';
     userData = getJSONFixture('sunlight/json/sunlightTestUser.json');
     chatConfig = getJSONFixture('sunlight/json/features/config/sunlightTestChatConfig.json');
@@ -154,5 +155,13 @@ describe(' sunlightConfigService', function () {
     sunlightConfigService.deleteUser(undefined).then(function () {}, function (data) {
       expect(data).toBe('usedId cannot be null or undefined');
     });
+  });
+
+  it('should open a new tab, when onBoardCare is called', function () {
+    spyOn($window, 'open').and.callFake(function () {
+      return true;
+    });
+    sunlightConfigService.onBoardCare();
+    expect($window.open).toHaveBeenCalled();
   });
 });

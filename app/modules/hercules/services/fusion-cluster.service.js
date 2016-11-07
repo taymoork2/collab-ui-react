@@ -120,7 +120,7 @@
     }
 
     function extractClustersFromResponse(response) {
-      return extractData(response).clusters;
+      return _.get(extractData(response), 'clusters', []);
     }
 
     function extractDataFromResponse(res) {
@@ -251,7 +251,7 @@
       return $http.get(url)
         .then(extractDataFromResponse)
         .then(function (data) {
-          return data.releaseNotes;
+          return _.get(data, 'releaseNotes', '');
         });
     }
 

@@ -164,7 +164,7 @@
     function getTotal(newOrders, advancedOrders) {
       var total = 0;
       _.forEach(newOrders, function (order) {
-        if (angular.isString(order.data.numbers)) {
+        if (_.isString(order.data.numbers)) {
           total += 1;
         } else {
           total += order.data.numbers.length;

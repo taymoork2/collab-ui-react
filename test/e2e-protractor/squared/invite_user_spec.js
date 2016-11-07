@@ -103,6 +103,7 @@ describe('Squared Add User Flow', function () {
       utils.click(partner.squaredUCTrialCheckbox);
       utils.click(partner.careTrialCheckbox);
       utils.click(partner.roomSystemsTrialCheckbox);
+      utils.setCheckboxIfDisplayed(partner.sparkBoardTrialCheckbox, false, 100);
       utils.setCheckboxIfDisplayed(partner.webexTrialCheckbox, false, 100);
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);

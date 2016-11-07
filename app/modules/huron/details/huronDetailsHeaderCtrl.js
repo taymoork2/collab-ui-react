@@ -6,20 +6,31 @@
     .controller('HuronDetailsHeaderCtrl', HuronDetailsHeaderCtrl);
 
   /* @ngInject */
-  function HuronDetailsHeaderCtrl() {
+  function HuronDetailsHeaderCtrl(Authinfo, FeatureToggleService, Config) {
     var vm = this;
     vm.title = 'huronDetails.title';
     vm.back = false;
+
+    function showFeatureTab(pstnEnabled) {
+      return Authinfo.getLicenses().filter(function (license) {
+        return !pstnEnabled || (license.licenseType === Config.licenseTypes.COMMUNICATION || license.licenseType === Config.licenseTypes.SHARED_DEVICES);
+      }).length > 0;
+    }
 
     vm.tabs = [{
       title: 'huronDetails.linesTitle',
       state: 'huronlines'
     }, {
-      title: 'huronDetails.featuresTitle',
-      state: 'huronfeatures'
-    }, {
       title: 'huronDetails.settingsTitle',
       state: 'huronsettings'
     }];
+    FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
+      if (showFeatureTab(pstnEnabled)) {
+        vm.tabs.splice(1, 0, {
+          title: 'huronDetails.featuresTitle',
+          state: 'huronfeatures'
+        });
+      }
+    });
   }
 })();

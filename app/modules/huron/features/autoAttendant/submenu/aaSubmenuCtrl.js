@@ -16,7 +16,7 @@
   }
 
   /* @ngInject */
-  function AASubmenuCtrl($scope, $translate, AutoAttendantCeMenuModelService, AACommonService, AAScrollBar) {
+  function AASubmenuCtrl($scope, $translate, AutoAttendantCeMenuModelService, AACommonService) {
 
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
@@ -111,7 +111,6 @@
       // remove key that is in use from creating the new key entry
       setAvailableKeys();
       setPhonemenuFormDirty();
-      AAScrollBar.resizeBuilderScrollBar();
     }
 
     // the user has pressed the trash can icon for a key/action pair
@@ -120,7 +119,6 @@
       vm.menuEntry.entries.splice(index, 1);
       setAvailableKeys();
       setPhonemenuFormDirty();
-      AAScrollBar.resizeBuilderScrollBar();
     }
 
     // the user has changed the key for an existing action
@@ -134,7 +132,7 @@
     // the user has changed the action for an existing key
     function keyActionChanged(index, keyAction) {
       var _keyAction = findKeyAction(keyAction.name);
-      if (angular.isDefined(_keyAction)) {
+      if (!_.isUndefined(_keyAction)) {
         var phoneMenuEntry = vm.menuEntry.entries[index];
         // Phone menu option now could have multiple actions in it, e.g., say message.
         // When switching between phone menu options, clear the actions array to
@@ -143,7 +141,7 @@
         phoneMenuEntry.actions[0] = AutoAttendantCeMenuModelService.newCeActionEntry('', '');
         var action = phoneMenuEntry.actions[0];
         action.name = keyAction.action;
-        if (angular.isDefined(_keyAction.inputType)) {
+        if (!_.isUndefined(_keyAction.inputType)) {
           // some action names are overloaded and are distinguished
           // by inputType
           action.inputType = _keyAction.inputType;
@@ -151,7 +149,6 @@
           action.level = _keyAction.level;
         }
         setPhonemenuFormDirty();
-        AAScrollBar.resizeBuilderScrollBar();
       }
     }
 
@@ -192,7 +189,7 @@
             if (menuEntry.actions.length > 0 && menuEntry.type == "MENU_OPTION") {
               var keyAction = new KeyAction();
               keyAction.key = menuEntry.key;
-              if (angular.isDefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
+              if (!_.isUndefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
                 keyAction.action = _.find(vm.keyActions, _.bind(function (keyAction) {
                   if (this.name === 'repeatActionsOnInput') {
                     return (this.name === keyAction.action && this.level === keyAction.level);
@@ -224,7 +221,6 @@
 
       // remove key that is in use from creating the new key entry
       setAvailableKeys();
-      AAScrollBar.resizeBuilderScrollBar();
     }
 
     function setPhonemenuFormDirty() {

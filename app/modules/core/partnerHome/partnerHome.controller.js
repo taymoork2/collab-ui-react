@@ -1,13 +1,11 @@
 (function () {
   'use strict';
 
-  var Masonry = require('masonry-layout');
-
   angular.module('Core')
     .controller('PartnerHomeCtrl', PartnerHomeCtrl);
 
   /* @ngInject */
-  function PartnerHomeCtrl($scope, $timeout, $state, $window, Analytics, Authinfo, Log, Notification, Orgservice, PartnerService, TrialService) {
+  function PartnerHomeCtrl($scope, $state, $window, Analytics, Authinfo, CardUtils, Log, Notification, Orgservice, PartnerService, TrialService) {
     $scope.currentDataPosition = 0;
 
     $scope.daysExpired = 5;
@@ -45,7 +43,7 @@
 
     function openAddTrialModal() {
       if ($scope.isTestOrg) {
-        Analytics.trackTrialSteps('start', $state.current.name);
+        Analytics.trackTrialSteps(Analytics.sections.TRIAL.eventNames.START_SETUP);
       }
       $state.go('trialAdd.info').then(function () {
         $state.modal.result.finally(getTrialsList);
@@ -91,7 +89,7 @@
         })
         .finally(function () {
           $scope.showTrialsRefresh = false;
-          resizeCards();
+          CardUtils.resize();
         });
     }
 
@@ -100,18 +98,6 @@
         customerOrgId: trial.customerOrgId,
         customerOrgName: trial.customerName
       }));
-    }
-
-    function resizeCards() {
-      $timeout(function () {
-        var $cardlayout = new Masonry('.cs-card-layout', {
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          resize: true,
-          percentPosition: true,
-        });
-        $cardlayout.layout();
-      }, 0);
     }
   }
 })();

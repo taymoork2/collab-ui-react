@@ -1,0 +1,26 @@
+<div class="settings">
+  <div class="cs-form">
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="sunlightDetails.settings.setUpCare"></h4>
+
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="sunlightDetails.settings.setUpCare"></h5>
+          <p class="sub-section__description ng-scope" translate="sunlightDetails.settings.setUpDescription"></p>
+          <br>
+          <button id="ccfsBtn" cs-btn class="btn--primary loading-button" loading="localCareSettings.state === localCareSettings.IN_PROGRESS"
+            ng-click="localCareSettings.onboardToCs()"
+            ng-disabled="localCareSettings.isPartner ||
+            localCareSettings.state === localCareSettings.IN_PROGRESS ||
+            localCareSettings.state === localCareSettings.ONBOARDED">
+          <span translate="firstTimeWizard.careSettingsButton"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

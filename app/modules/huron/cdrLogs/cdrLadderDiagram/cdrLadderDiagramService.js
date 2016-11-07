@@ -91,7 +91,7 @@
         } else if ((event.eventSource.hostname.indexOf('trunk') > -1 && event.eventSource.hostname.indexOf('hedge') > -1) || event.eventSource.hostname.indexOf('cisco') === 0) {
           return 'Trunk Hedge';
         } else {
-          return event.eventSource.hostname.replace(/-/g, '\\-');
+          return _.replace(event.eventSource.hostname, /-/g, '\\-');
         }
       }
     }
@@ -114,7 +114,7 @@
         } else if (event.dataParam.remoteName.indexOf('COMMON') > -1 && event.dataParam.remoteName.indexOf('CISCO') > -1) {
           return 'Trunk Hedge';
         } else {
-          return event.dataParam.remoteName.replace(/-/g, '\\-');
+          return _.replace(event.dataParam.remoteName, /-/g, '\\-');
         }
       } else if (!_.isUndefined(event.eventSource.hostname)) {
         if (event.eventSource.hostname.indexOf('line') > -1) {

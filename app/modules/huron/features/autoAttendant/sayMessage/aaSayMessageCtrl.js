@@ -297,7 +297,7 @@
             if (!vm.actionEntry.getVoice()) {
               var sayHeader = getSayActionHeader(vm.menuEntry);
               var headerSayAction = getSayAction(sayHeader);
-              if (angular.isDefined(headerSayAction)) {
+              if (!_.isUndefined(headerSayAction)) {
                 vm.actionEntry.setVoice(headerSayAction.getVoice());
               }
             }

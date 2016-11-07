@@ -87,7 +87,7 @@
     };
 
     function getBaseVariable(key) {
-      if (baseVariables[key] !== null && angular.isDefined(baseVariables[key])) {
+      if (baseVariables[key] !== null && !_.isUndefined(baseVariables[key])) {
         return angular.copy(baseVariables[key]);
       } else {
         return {};

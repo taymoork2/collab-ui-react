@@ -47,6 +47,7 @@
     require('modules/core/analytics'),
     require('modules/core/featureToggle/featureToggle.service'),
     require('modules/core/scripts/services/org.service'),
+    require('modules/core/cards').default,
     require('modules/online/digitalRiver').default // TODO make core.myCompany independent module
   ])
     .constant('pako', require('pako'))
@@ -69,6 +70,7 @@
     'ngIcal',
     'huron.paging-group',
     'huron.telephoneNumber',
+    'huron.call-park',
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
   ]);
@@ -90,7 +92,9 @@
     'CareDetails'
   ]);
 
-  angular.module('Status', ['Core']);
+  angular.module('GSS', ['Core']);
+
+  angular.module('Gemini', ['Core']);
 
   module.exports = angular.module('Main', [
     'Core',
@@ -104,8 +108,9 @@
     'WebExApp',
     'Messenger',
     'Sunlight',
-    'Status',
+    'GSS',
     'oc.lazyLoad',
+    'Gemini'
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;

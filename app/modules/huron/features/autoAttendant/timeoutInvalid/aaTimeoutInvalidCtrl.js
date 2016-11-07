@@ -83,7 +83,7 @@
         vm.updateTimeoutInvalidChangedInSubmenu(entry.attempts);
         type = vm.selectedTimeout.name;
       } else if (vm.selectedTimeout.value === 2) {
-        if (angular.isDefined(vm.selectedTimeout.selectedChild)) {
+        if (!_.isUndefined(vm.selectedTimeout.selectedChild)) {
           entry.attempts = vm.selectedTimeout.selectedChild.value;
           vm.updateTimeoutInvalidChangedInSubmenu(entry.attempts);
           type = vm.selectedTimeout.selectedChild.name;
@@ -111,7 +111,7 @@
       // populate with data from an existing AA
       var entry = vm.menuEntry;
 
-      if (angular.isDefined(entry.attempts)) {
+      if (!_.isUndefined(entry.attempts)) {
         // both timeout options have the same action name so
         // we distinguish by the number of attempts allowed
         if (entry.attempts === 1) {

@@ -8,17 +8,28 @@
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService,
-    ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing, VoicemailMessageAction) {
+    ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing, VoicemailMessageAction, FeatureToggleService, Config) {
     var vm = this;
     vm.loading = true;
 
     vm.NATIONAL = 'national';
     vm.LOCAL = 'local';
-
+    vm.isRegionAndVoicemail = function (enabled) {
+      return Authinfo.getLicenses().filter(function (license) {
+        return enabled ? (license.licenseType !== Config.licenseTypes.SHARED_DEVICES || license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
+      }).length > 0;
+    };
+    FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
+      vm.showRegionAndVoicemail = vm.isRegionAndVoicemail(pstnEnabled);
+    });
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
       id: 'America/Los_Angeles',
       label: $translate.instant('timeZones.America/Los_Angeles')
+    };
+    var DEFAULT_LANG = {
+      label: $translate.instant('languages.englishAmerican'),
+      value: 'en_US'
     };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
@@ -45,6 +56,7 @@
     vm._voicemailNumberWatcher = _voicemailNumberWatcher;
     vm._voicemailEnabledWatcher = _voicemailEnabledWatcher;
     vm._buildTimeZoneOptions = _buildTimeZoneOptions;
+    vm._buildPreferredLanguageOptions = _buildPreferredLanguageOptions;
     vm._buildServiceNumberOptions = _buildServiceNumberOptions;
     vm._buildVoicemailNumberOptions = _buildVoicemailNumberOptions;
     vm._buildCallerIdOptions = _buildCallerIdOptions;
@@ -59,6 +71,8 @@
     vm.hasVoiceService = false;
     vm.assignedNumbers = [];
     vm.timeZoneOptions = [];
+    vm.timeZoneInputPlaceholder = $translate.instant('serviceSetupModal.searchTimeZone');
+    vm.preferredLanguageOptions = [];
     vm.unassignedExternalNumbers = [];
     vm.allExternalNumbers = [];
     vm.extensionLengthChanged = false;
@@ -86,7 +100,8 @@
         vmCluster: undefined,
         emergencyCallBackNumber: undefined,
         uuid: undefined,
-        voicemailPilotNumberGenerated: 'false'
+        voicemailPilotNumberGenerated: 'false',
+        preferredLanguage: DEFAULT_LANG
       },
       numberRanges: [],
       previousLength: DEFAULT_EXT_LEN,
@@ -172,11 +187,11 @@
           property = 'endNumber';
         }
 
-        if (angular.isDefined(scope.model[property])) {
+        if (!_.isUndefined(scope.model[property])) {
           return true;
         } else {
           var found = false;
-          angular.forEach(vm.model.numberRanges, function (range) {
+          _.forEach(vm.model.numberRanges, function (range) {
             if (range[property] === value) {
               found = true;
             }
@@ -234,9 +249,10 @@
       if (_.get(vm, 'model.site.siteSteeringDigit.siteDialDigit') === _.get(vm, 'model.site.steeringDigit')) {
         scope.fields[0].formControl.$setValidity('', false);
         return true;
+      } else {
+        scope.fields[0].formControl.$setValidity('', true);
+        return false;
       }
-      scope.fields[0].formControl.$setValidity('', true);
-      return false;
     };
 
     vm.steeringDigitWarningValidation = function () {
@@ -257,25 +273,6 @@
       }
       return false;
     };
-
-    vm.timeZoneSelection = [{
-      model: vm.model.site,
-      key: 'timeZone',
-      type: 'select',
-      templateOptions: {
-        inputClass: 'medium-5',
-        label: $translate.instant('serviceSetupModal.timeZone'),
-        options: [],
-        labelfield: 'label',
-        valuefield: 'id',
-        inputPlaceholder: $translate.instant('serviceSetupModal.searchTimeZone'),
-        filter: true
-      },
-      controller: /* @ngInject */ function ($scope) {
-        _buildTimeZoneOptions($scope);
-      }
-
-    }];
 
     vm.extensionLengthSelection = [{
       model: vm.model.site,
@@ -371,7 +368,7 @@
               },
               expressionProperties: {
                 'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                  return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
+                  return vm.model.disableExtensions && !_.isUndefined(scope.model.uuid);
                 },
                 'templateOptions.isWarn': vm.steerDigitOverLapValidation,
                 'templateOptions.minlength': function () {
@@ -431,7 +428,7 @@
               },
               expressionProperties: {
                 'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                  return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
+                  return vm.model.disableExtensions && !_.isUndefined(scope.model.uuid);
                 },
                 'data.validate': function (viewValue, modelValue, scope) {
                   return scope.fc && scope.fc.$validate();
@@ -465,7 +462,7 @@
                   } else if (displayNumberRanges.length > 1 && vm.firstTimeSetup && _.isUndefined($scope.model.uuid)) {
                     $scope.to.btnClass = 'trash-icon';
                   } else if (vm.model.numberRanges.length === 1 && displayNumberRanges.length !== 1) {
-                    if (angular.isDefined(vm.model.numberRanges[0].uuid)) {
+                    if (!_.isUndefined(vm.model.numberRanges[0].uuid)) {
                       $scope.to.btnClass = 'trash-icon hide-delete';
                     }
                   }
@@ -491,7 +488,7 @@
             return vm.hideFieldInternalNumberRange;
           }
         },
-        controller: function ($scope) {
+        controller: /* @ngInject */ function ($scope) {
           $scope.$watch(function () {
             return vm.form.$invalid;
           }, function () {
@@ -531,7 +528,7 @@
         'templateOptions.isWarn': vm.siteSteeringDigitWarningValidation,
         'templateOptions.isError': vm.siteAndSteeringDigitErrorValidation
       },
-      controller: function ($scope) {
+      controller: /* @ngInject */ function ($scope) {
         _buildVoicemailPrefixOptions($scope, vm.steeringDigitSelection[0].templateOptions);
       }
     }];
@@ -606,7 +603,7 @@
         filter: true,
         warnMsg: $translate.instant('settingsServiceNumber.warning')
       },
-      controller: function ($scope) {
+      controller: /* @ngInject */ function ($scope) {
         _buildServiceNumberOptions($scope);
       },
       hideExpression: '!model.showServiceAddress',
@@ -671,7 +668,7 @@
               }
             }
           },
-          controller: function ($scope) {
+          controller: /* @ngInject */ function ($scope) {
             _buildCallerIdOptions($scope);
             _callerIdEnabledWatcher($scope);
             _voicemailNumberWatcher($scope);
@@ -738,7 +735,7 @@
           }
         }
       },
-      controller: function ($scope) {
+      controller: /* @ngInject */ function ($scope) {
         _buildVoicemailNumberOptions($scope);
         _voicemailEnabledWatcher($scope);
         _callerIdNumberWatcher($scope);
@@ -774,7 +771,7 @@
     }
 
     function deleteInternalNumberRange(internalNumberRange) {
-      if (angular.isDefined(internalNumberRange.uuid)) {
+      if (!_.isUndefined(internalNumberRange.uuid)) {
         ServiceSetup.deleteInternalNumberRange(internalNumberRange).then(function () {
           // delete the range from DB list
           var index = _.findIndex(vm.model.numberRanges, function (chr) {
@@ -929,6 +926,10 @@
         siteData.timeZone = vm.model.site.timeZone.id;
       }
 
+      if (vm.model.site.preferredLanguage.value !== savedModel.site.preferredLanguage.value) {
+        siteData.preferredLanguage = vm.model.site.preferredLanguage.value;
+      }
+
       if (vm.model.site.extensionLength !== savedModel.site.extensionLength) {
         siteData.extensionLength = vm.model.site.extensionLength;
       }
@@ -1072,6 +1073,11 @@
               vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
                 return timezone.id === site.timeZone;
               });
+              if (site.preferredLanguage) {
+                vm.model.site.preferredLanguage = _.find(vm.preferredLanguageOptions, function (language) {
+                  return language.value === site.preferredLanguage;
+                });
+              }
               vm.model.site.siteCode = site.siteCode;
               vm.model.site.vmCluster = site.vmCluster;
               vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
@@ -1116,7 +1122,14 @@
     function loadTimeZoneOptions() {
       return ServiceSetup.getTimeZones()
         .then(function (timeZones) {
-          vm.timeZoneOptions = ServiceSetup.getTranslatedTimeZones(timeZones);
+          vm.timeZoneOptions = _.sortBy(ServiceSetup.getTranslatedTimeZones(timeZones), 'label');
+        });
+    }
+
+    function loadPreferredLanguageOptions() {
+      return ServiceSetup.getSiteLanguages()
+        .then(function (languages) {
+          vm.preferredLanguageOptions = _.sortBy(ServiceSetup.getTranslatedSiteLanguages(languages), 'label');
         });
     }
 
@@ -1309,6 +1322,7 @@
             promises.push(loadInternationalDialing());
             promises.push(loadDialPlan());
             promises.push(loadCallerId());
+            promises.push(loadPreferredLanguageOptions());
           }
 
           if (vm.hasVoicemailService) {
@@ -1356,7 +1370,7 @@
           var promises = [];
           var hasNewInternalNumberRange = false;
 
-          if (angular.isArray(vm.model.displayNumberRanges)) {
+          if (_.isArray(vm.model.displayNumberRanges)) {
             _.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
               if (_.isUndefined(internalNumberRange.uuid)) {
                 hasNewInternalNumberRange = true;
@@ -1413,16 +1427,14 @@
 
     function saveCallerId() {
       var rawPattern = TelephoneNumberService.getDIDValue(vm.model.callerId.callerIdNumber);
-
-      var existingCallerIdNumber = _.find(vm.allExternalNumbers, function (externalNumber) {
-        return externalNumber.uuid === _.get(vm, 'model.callerId.externalNumber.uuid');
+      var newCallerIdNumber = _.find(vm.allExternalNumbers, function (externalNumber) {
+        return externalNumber.pattern === rawPattern;
       });
-
       return $q.when(true)
         .then(function () {
           if (vm.model.callerId.callerIdEnabled && (vm.model.callerId.callerIdName && vm.model.callerId.callerIdNumber)) {
-            // save if unable to find a matching existing number OR if the number is changing
-            if (_.isUndefined(existingCallerIdNumber) || existingCallerIdNumber.pattern !== rawPattern) {
+            if (!(savedModel.callerId.callerIdEnabled) ||
+               (vm.model.callerId.uuid == "")) {
               var data = {
                 name: vm.model.callerId.callerIdName,
                 externalCallerIdType: COMPANY_CALLER_ID_TYPE,
@@ -1438,6 +1450,18 @@
                 .catch(function (response) {
                   return $q.reject(response);
                 });
+            } else if ((savedModel.callerId.callerIdEnabled) &&
+                      (savedModel.callerId.callerIdNumber !== vm.model.callerId.callerIdNumber)) {
+              var externalNumberData = {
+                uuid: newCallerIdNumber != null ? newCallerIdNumber.uuid : null
+              };
+              data = {
+                name: vm.model.callerId.callerIdName,
+                externalCallerIdType: COMPANY_CALLER_ID_TYPE,
+                pattern: rawPattern,
+                externalNumber: externalNumberData
+              };
+              return CallerId.updateCompanyNumber(savedModel.callerId.uuid, data);
             } else {
               // update if the name is changing
               if (vm.model.callerId.uuid && (vm.existingCallerIdName !== vm.model.callerId.callerIdName)) {
@@ -1599,6 +1623,7 @@
       vm.model.site.siteSteeringDigit = savedModel.site.siteSteeringDigit;
       vm.model.site.siteCode = savedModel.site.siteCode;
       vm.model.site.timeZone = savedModel.site.timeZone;
+      vm.model.site.preferredLanguage = savedModel.site.preferredLanguage;
       vm.model.site.voicemailPilotNumber = savedModel.site.voicemailPilotNumber;
       vm.model.site.vmCluster = savedModel.site.vmCluster;
       vm.model.site.emergencyCallBackNumber = savedModel.site.emergencyCallBackNumber;
@@ -1628,7 +1653,6 @@
     $scope.$watchCollection(function () {
       return [vm.model.serviceNumber, vm.unassignedExternalNumbers];
     }, function (serviceNumber) {
-
       // indication that the service number is set, but not assigned to any device
       var found = Boolean(_.find(vm.unassignedExternalNumbers, function (externalNumber) {
         return externalNumber.pattern === _.get(serviceNumber[0], 'pattern');
@@ -1743,6 +1767,14 @@
       });
     }
 
+    function _buildPreferredLanguageOptions(localScope) {
+      localScope.$watchCollection(function () {
+        return vm.preferredLanguageOptions;
+      }, function (languages) {
+        localScope.to.options = languages;
+      });
+    }
+
     function _buildServiceNumberOptions(localScope) {
       localScope.$watchCollection(function () {
         return vm.assignedExternalNumbers;
@@ -1813,8 +1845,8 @@
       });
     }
 
-    function _buildVoicemailPrefixOptions($scope) {
-      $scope.$watchCollection(function () {
+    function _buildVoicemailPrefixOptions(localScope) {
+      localScope.$watchCollection(function () {
         return [vm.model.site.siteSteeringDigit, vm.model.site.extensionLength, vm.model.site.steeringDigit];
       }, function () {
         var extensionLength0, extensionLength9;
@@ -1858,7 +1890,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (extensionList) {
-          if (angular.isArray(extensionList) && extensionList.length > 0) {
+          if (angular.isArray(extensionList) && extensionList.length > -1) {
             vm.model.disableExtensions = true;
           }
         });
@@ -1869,7 +1901,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (autoAttendant) {
-          if (angular.isArray(autoAttendant) && autoAttendant.length > 0) {
+          if (_.isArray(autoAttendant) && autoAttendant.length > 0) {
             vm.model.disableExtensions = true;
           }
         }).catch(function () {
@@ -1882,7 +1914,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (huntGroup) {
-          if (angular.isArray(huntGroup) && huntGroup.length > 0) {
+          if (_.isArray(huntGroup) && huntGroup.length > 0) {
             vm.model.disableExtensions = true;
           }
         }).catch(function () {
