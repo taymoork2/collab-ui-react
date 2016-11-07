@@ -3,7 +3,7 @@ import {
   ICustomerIntervalQuery,
   ITimespan,
   ITypeQuery,
-} from '../partnerReports/partnerReportInterfaces';
+} from '../../partnerReports/partnerReportInterfaces';
 
 import {
   IActiveUserWrapper,
@@ -15,9 +15,9 @@ import {
   IFilesShared,
   IMediaData,
   IMetricsData,
-} from './customerReportInterfaces';
+} from './sparkReportInterfaces';
 
-class CustomerReportService {
+class SparkReportService {
   // Promise Tracking
   private activePromise: ng.IDeferred<any>;
   private mostActivePromise: ng.IDeferred<any>;
@@ -109,11 +109,11 @@ class CustomerReportService {
         let activeUsers: number;
         let totalRegisteredUsers: number;
         if (linegraph) {
-          activeUsers = this.CommonReportService.getInt(details.combinedActiveUsers);
-          totalRegisteredUsers = this.CommonReportService.getInt(details.totalSparkEntitled);
+          activeUsers = _.toInteger(details.combinedActiveUsers);
+          totalRegisteredUsers = _.toInteger(details.totalSparkEntitled);
         } else {
-          activeUsers = this.CommonReportService.getInt(details.activeUsers);
-          totalRegisteredUsers = this.CommonReportService.getInt(details.totalRegisteredUsers);
+          activeUsers = _.toInteger(details.activeUsers);
+          totalRegisteredUsers = _.toInteger(details.totalRegisteredUsers);
         }
 
         if (activeUsers > 0 || totalRegisteredUsers > 0) {
@@ -182,9 +182,9 @@ class CustomerReportService {
           let details: any = _.get(item, 'details');
           if (details) {
             returnObject.tableData.push({
-              numCalls: this.CommonReportService.getInt(details.sparkCalls) + this.CommonReportService.getInt(item.details.sparkUcCalls),
-              totalActivity: this.CommonReportService.getInt(details.totalActivity),
-              sparkMessages: this.CommonReportService.getInt(details.sparkMessages),
+              numCalls: _.toInteger(details.sparkCalls) + _.toInteger(item.details.sparkUcCalls),
+              totalActivity: _.toInteger(details.totalActivity),
+              sparkMessages: _.toInteger(details.sparkMessages),
               userName: details.userName,
             });
           }
@@ -284,8 +284,8 @@ class CustomerReportService {
 
       _.forEach(returnGraph, (returnItem: IAvgRoomData): void => {
         if (returnItem.date === modDate) {
-          returnItem.groupRooms = this.CommonReportService.getInt(groupItem.count);
-          returnItem.totalRooms += this.CommonReportService.getInt(groupItem.count);
+          returnItem.groupRooms = _.toInteger(groupItem.count);
+          returnItem.totalRooms += _.toInteger(groupItem.count);
           if (returnItem.groupRooms > 0) {
             emptyGraph = false;
           }
@@ -298,8 +298,8 @@ class CustomerReportService {
 
       _.forEach(returnGraph, (returnItem: IAvgRoomData): void => {
         if (returnItem.date === modDate) {
-          returnItem.oneToOneRooms = this.CommonReportService.getInt(oneToOneItem.count);
-          returnItem.totalRooms += this.CommonReportService.getInt(oneToOneItem.count);
+          returnItem.oneToOneRooms = _.toInteger(oneToOneItem.count);
+          returnItem.totalRooms += _.toInteger(oneToOneItem.count);
           if (returnItem.oneToOneRooms > 0) {
             emptyGraph = false;
           }
@@ -390,7 +390,7 @@ class CustomerReportService {
 
       _.forEach(returnGraph, (returnItem: IFilesShared): void => {
         if (returnItem.date === modDate) {
-          returnItem.contentShared = this.CommonReportService.getInt(contentItem.count);
+          returnItem.contentShared = _.toInteger(contentItem.count);
           if (returnItem.contentShared !== 0) {
             emptyGraph = false;
           }
@@ -442,12 +442,12 @@ class CustomerReportService {
     return this.CommonReportService.getCustomerReport(options, this.metricsCancelPromise).then((response: any): IMetricsData => {
       let details: any = _.get(response, 'data.data[0].data[0].details');
       if (details) {
-        let totalCalls: number = this.CommonReportService.getInt(details.totalCalls);
+        let totalCalls: number = _.toInteger(details.totalCalls);
         if (totalCalls > 0) {
-          let audioCalls: number = this.CommonReportService.getInt(details.sparkUcAudioCalls);
-          let successfulCalls: number = this.CommonReportService.getInt(details.totalSuccessfulCalls);
-          let videoCalls: number = this.CommonReportService.getInt(details.sparkUcVideoCalls) + this.CommonReportService.getInt(details.sparkVideoCalls);
-          let totalFailedCalls: number = this.CommonReportService.getInt(details.totalFailedCalls);
+          let audioCalls: number = _.toInteger(details.sparkUcAudioCalls);
+          let successfulCalls: number = _.toInteger(details.totalSuccessfulCalls);
+          let videoCalls: number = _.toInteger(details.sparkUcVideoCalls) + _.toInteger(details.sparkVideoCalls);
+          let totalFailedCalls: number = _.toInteger(details.totalFailedCalls);
 
           returnArray.dataProvider[0].numCalls = audioCalls;
           returnArray.dataProvider[0].percentage = this.CommonReportService.getPercentage(audioCalls, successfulCalls);
@@ -456,7 +456,7 @@ class CustomerReportService {
 
           returnArray.displayData = {
             totalCalls: totalCalls,
-            totalAudioDuration: this.CommonReportService.getInt(details.totalAudioDuration),
+            totalAudioDuration: _.toInteger(details.totalAudioDuration),
             totalFailedCalls: ((totalFailedCalls / totalCalls) * this.ReportConstants.PERCENTAGE_MULTIPLIER).toFixed(this.ReportConstants.FIXED),
           };
 
@@ -502,13 +502,13 @@ class CustomerReportService {
       let graph: Array<IMediaData> = this.CommonReportService.getReturnGraph(filter, data[data.length - 1].date, graphItem);
 
       _.forEach(data, (item: any): void => {
-        const goodSum: number = this.CommonReportService.getInt(item.details.goodQualityDurationSum);
-        const fairSum: number = this.CommonReportService.getInt(item.details.fairQualityDurationSum);
-        const poorSum: number = this.CommonReportService.getInt(item.details.poorQualityDurationSum);
+        const goodSum: number = _.toInteger(item.details.goodQualityDurationSum);
+        const fairSum: number = _.toInteger(item.details.fairQualityDurationSum);
+        const poorSum: number = _.toInteger(item.details.poorQualityDurationSum);
 
-        const goodVideoQualityDurationSum: number = this.CommonReportService.getInt(item.details.sparkGoodVideoDurationSum) + this.CommonReportService.getInt(item.details.sparkUcGoodVideoDurationSum);
-        const fairVideoQualityDurationSum: number = this.CommonReportService.getInt(item.details.sparkFairVideoDurationSum) + this.CommonReportService.getInt(item.details.sparkUcFairVideoDurationSum);
-        const poorVideoQualityDurationSum: number = this.CommonReportService.getInt(item.details.sparkPoorVideoDurationSum) + this.CommonReportService.getInt(item.details.sparkUcPoorVideoDurationSum);
+        const goodVideoQualityDurationSum: number = _.toInteger(item.details.sparkGoodVideoDurationSum) + _.toInteger(item.details.sparkUcGoodVideoDurationSum);
+        const fairVideoQualityDurationSum: number = _.toInteger(item.details.sparkFairVideoDurationSum) + _.toInteger(item.details.sparkUcFairVideoDurationSum);
+        const poorVideoQualityDurationSum: number = _.toInteger(item.details.sparkPoorVideoDurationSum) + _.toInteger(item.details.sparkUcPoorVideoDurationSum);
 
         const goodAudioQualityDurationSum: number = goodSum - goodVideoQualityDurationSum;
         const fairAudioQualityDurationSum: number = fairSum - fairVideoQualityDurationSum;
@@ -553,7 +553,7 @@ class CustomerReportService {
   }
 
   // Registered Endpoints Data
-  public getDeviceData(filter: ITimespan): ng.IHttpPromise<any> {
+  public getDeviceData(filter: ITimespan): ng.IHttpPromise<IEndpointContainer> {
     // cancel any currently running jobs
     if (this.deviceCancelPromise) {
       this.deviceCancelPromise.resolve(this.ReportConstants.ABORT);
@@ -611,7 +611,7 @@ class CustomerReportService {
       };
 
       _.forEach(item.details, (detail: any): void => {
-        let registeredDevices: number = this.CommonReportService.getInt(detail.totalRegisteredDevices);
+        let registeredDevices: number = _.toInteger(detail.totalRegisteredDevices);
         let modifiedDate: string = this.CommonReportService.getModifiedDate(detail.recordTime, filter);
 
         _.forEach(tempGraph.graph, (graphPoint: IEndpointData, index: number): void => {
@@ -631,4 +631,4 @@ class CustomerReportService {
 }
 
 angular.module('Core')
-  .service('CustomerReportService', CustomerReportService);
+  .service('SparkReportService', SparkReportService);

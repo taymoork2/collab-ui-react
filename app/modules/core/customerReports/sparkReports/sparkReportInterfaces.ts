@@ -4,7 +4,7 @@ import {
   IDropdownBase,
   IGraphBase,
   IMediaQualityData,
-} from '../partnerReports/partnerReportInterfaces';
+} from '../../partnerReports/partnerReportInterfaces';
 
 export interface IActiveUserWrapper {
   graphData: Array<IActiveUserData>;

@@ -1293,26 +1293,42 @@
               settingPageIframeUrl: null
             }
           })
+
           .state('reports', {
-            url: '/reports',
-            templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
-            controller: 'CustomerReportsCtrl',
-            controllerAs: 'nav',
+            templateUrl: 'modules/core/customerReports/customerReportsHeader.tpl.html',
+            controller: 'CustomerReportsHeaderCtrl',
+            controllerAs: 'header',
             parent: 'main',
-            params: {
-              tab: null,
-              siteUrl: null
+            abstract: true
+          })
+          .state('reports.spark', {
+            url: '/reports',
+            views: {
+              'tabContent': {
+                controllerAs: 'nav',
+                controller: 'SparkReportCtrl',
+                templateUrl: 'modules/core/customerReports/sparkReports/sparkReports.tpl.html',
+              }
             }
           })
-          .state('reports-metrics', {
+          .state('reports.metrics', {
             url: '/reports/metrics',
-            templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
-            controller: 'CustomerReportsCtrl',
-            controllerAs: 'nav',
-            parent: 'main',
-            params: {
-              tab: 'metrics',
-              siteUrl: null
+            views: {
+              'tabContent': {
+                controllerAs: 'nav',
+                controller: 'MediaServiceMetricsContoller',
+                templateUrl: 'modules/mediafusion/metrics-graph-report/mediaServiceMetricsReports.tpl.html'
+              }
+            }
+          })
+          .state('reports.care', {
+            url: '/reports/care',
+            views: {
+              'tabContent': {
+                controllerAs: 'nav',
+                controller: 'CareReportsController',
+                templateUrl: 'modules/sunlight/reports/careReports.tpl.html',
+              }
             }
           })
 
@@ -1382,25 +1398,15 @@
               },
             }
           })
-          .state('webex-reports', {
+
+          .state('reports.webex', {
             url: '/reports/webex',
-            templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
-            controller: 'CustomerReportsCtrl',
-            controllerAs: 'nav',
-            parent: 'main',
-            params: {
-              tab: 'webex',
-              siteUrl: null
-            }
-          })
-          .state('reports.care', {
-            templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
-            controller: 'CustomerReportsCtrl',
-            controllerAs: 'nav',
-            parent: 'main',
-            params: {
-              tab: 'care',
-              siteUrl: null
+            views: {
+              'tabContent': {
+                controllerAs: 'nav',
+                controller: 'WebexReportsCtrl',
+                templateUrl: 'modules/core/customerReports/webexReports/webexReports.tpl.html',
+              }
             }
           })
           .state('webex-reports.webex-reports-iframe', {
