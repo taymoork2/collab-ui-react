@@ -31,16 +31,14 @@
       "stateParams=" + JSON.stringify($stateParams);
     Log.debug(_this.logMsg);
 
-    // var iframeUrlOrig = $stateParams.settingPageIframeUrl;
-    // var siteUrl = $stateParams.siteUrl;
-    var iframeUrlOrig = "https://wbxbts.admin.ciscospark.com/wbxadmin/sitesetting.do?proxyfrom=atlas&siteurl=SJSITE14#anchor_site_option";
-    var siteUrl = "SJSITE14.webex.com";
-    var siteName = WebExUtilsFact.getSiteName(siteUrl);
+    var iframeUrlOrig = $stateParams.settingPageIframeUrl;
+    var siteUrl = $stateParams.siteUrl;
+    // var iframeUrlOrig = "https://wbxbts.admin.ciscospark.com/wbxadmin/sitesetting.do?proxyfrom=atlas&siteurl=T31TEST-ee#anchor_site_option";
+    // var siteUrl = "T31TEST-ee.webex.com";
 
     $scope.isIframeLoaded = false;
     $scope.siteSettingId = $stateParams.webexPageId;
     $scope.siteSettingLabel = $translate.instant("webexSiteSettingsLabels.settingPageLabel_" + $stateParams.webexPageId);
-
     $scope.siteSettingsBreadcrumbUiSref = "site-list.site-settings({siteUrl:" + "'" + siteUrl + "'" + "})";
     $scope.siteSettingsBreadcrumbLabel = $translate.instant(
       "webexSiteSettingsLabels.siteSettingsIndexPageTitleFull", {
@@ -48,7 +46,8 @@
       }
     );
 
-    var iframeUrl = iframeUrlOrig.replace(siteName, siteName.toLowerCase());
+    var siteName = WebExUtilsFact.getSiteName(siteUrl);
+    var iframeUrl = _.replace(iframeUrlOrig, siteName, siteName.toLowerCase());
 
     if (iframeUrlOrig != iframeUrl) {
       _this.logMsg = _this.funcName + "\n" +
@@ -59,16 +58,11 @@
       $log.log(_this.logMsg);
     }
 
-    if (iframeUrl.indexOf("cibtsgsbt31.webex.com") > 0) {
-      iframeUrl = _.replace(iframeUrl, siteUrl, "wbxbts.admin.ciscospark.com");
-    }
-
     // iframe request variables
     $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
     $scope.adminEmail = Authinfo.getPrimaryEmail();
     $scope.authToken = TokenService.getAccessToken();
     $scope.siteName = siteUrl.toLowerCase();
-    $scope.siteName2 = siteName.toLowerCase();
     $scope.fullSparkDNS = $window.location.origin;
     $scope.locale = ("es_LA" == translateUse) ? "es_MX" : translateUse;
 

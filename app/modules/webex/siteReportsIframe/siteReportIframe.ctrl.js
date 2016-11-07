@@ -24,13 +24,17 @@
     _this.funcName = "ReportsIframeCtrl()";
     _this.logMsg = "";
 
-    // var iframeUrlOrig = $stateParams.reportPageIframeUrl;
-    // var siteUrl = $stateParams.siteUrl;
-    var iframeUrlOrig = "https://wbxdmz.admin.ciscospark.com/wbxadmin/MeetingsInProgress.do?proxyfrom=atlas&siteurl=SJSITE14";
-    var siteUrl = "SJSITE14.webex.com";
-    var siteName = WebExUtilsFact.getSiteName(siteUrl);
+    var translateUse = $translate.use();
 
-    $log.log("iframeUrlOrig=" + iframeUrlOrig);
+    _this.logMsg = _this.funcName + "\n" +
+      "translateUse=" + translateUse + "\n" +
+      "stateParams=" + JSON.stringify($stateParams);
+    Log.debug(_this.logMsg);
+
+    var iframeUrlOrig = $stateParams.reportPageIframeUrl;
+    var siteUrl = $stateParams.siteUrl;
+    // var iframeUrlOrig = "https://wbxbts.admin.ciscospark.com/wbxadmin/MeetingsInProgress.do?proxyfrom=atlas&siteurl=T31Test-ee";
+    // var siteUrl = "T31Test-ee.webex.com";
 
     $scope.isIframeLoaded = false;
     $scope.siteUrl = siteUrl;
@@ -39,7 +43,8 @@
     $scope.reportPageTitle = $translate.instant("webexReportsPageTitles." + $scope.reportPageId);
     $scope.reportPageIframeUrl = iframeUrlOrig;
 
-    var iframeUrl = iframeUrlOrig.replace(siteName, siteName.toLowerCase());
+    var siteName = WebExUtilsFact.getSiteName(siteUrl);
+    var iframeUrl = _.replace(iframeUrlOrig, siteName, siteName.toLowerCase());
 
     if (iframeUrlOrig != iframeUrl) {
       _this.logMsg = _this.funcName + "\n" +
@@ -50,17 +55,12 @@
       $log.log(_this.logMsg);
     }
 
-    if (iframeUrl.indexOf("cibtsgsbt31.webex.com") > 0) {
-      iframeUrl = _.replace(iframeUrl, siteUrl, "wbxbts.admin.ciscospark.com");
-    }
-
     // iframe request variables
     $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
     $scope.adminEmail = Authinfo.getPrimaryEmail();
     $scope.authToken = TokenService.getAccessToken();
-    $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
+    $scope.locale = ("es_LA" == translateUse) ? "es_MX" : translateUse;
     $scope.siteName = siteUrl.toLowerCase();
-    $scope.siteName2 = siteName.toLowerCase();
     $scope.fullSparkDNS = $window.location.origin;
 
     _this.logMsg = _this.funcName + ": " + "\n" +
