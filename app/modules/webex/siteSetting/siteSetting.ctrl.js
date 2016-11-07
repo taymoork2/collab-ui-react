@@ -13,6 +13,7 @@
     $sce,
     $timeout,
     $window,
+    Log,
     Authinfo,
     TokenService,
     WebExUtilsFact
@@ -24,53 +25,46 @@
     _this.logMsg = "";
 
     var translateUse = $translate.use();
-    var iframeUrl = $stateParams.settingPageIframeUrl;
 
     _this.logMsg = _this.funcName + "\n" +
       "translateUse=" + translateUse + "\n" +
       "stateParams=" + JSON.stringify($stateParams);
-    $log.log(_this.logMsg);
+    Log.debug(_this.logMsg);
+
+    var iframeUrlOrig = $stateParams.settingPageIframeUrl;
+    var siteUrl = $stateParams.siteUrl;
+    // var iframeUrlOrig = "https://wbxbts.admin.ciscospark.com/wbxadmin/sitesetting.do?proxyfrom=atlas&siteurl=T31TEST-ee#anchor_site_option";
+    // var siteUrl = "T31TEST-ee.webex.com";
 
     $scope.isIframeLoaded = false;
     $scope.siteSettingId = $stateParams.webexPageId;
     $scope.siteSettingLabel = $translate.instant("webexSiteSettingsLabels.settingPageLabel_" + $stateParams.webexPageId);
-
-    $scope.siteSettingsBreadcrumbUiSref = "site-list.site-settings({siteUrl:" + "'" + $stateParams.siteUrl + "'" + "})";
+    $scope.siteSettingsBreadcrumbUiSref = "site-list.site-settings({siteUrl:" + "'" + siteUrl + "'" + "})";
     $scope.siteSettingsBreadcrumbLabel = $translate.instant(
       "webexSiteSettingsLabels.siteSettingsIndexPageTitleFull", {
-        siteUrl: $stateParams.siteUrl
+        siteUrl: siteUrl
       }
     );
 
-    if (
-      (null != iframeUrl) &&
-      ("null" !== iframeUrl) &&
-      ("" !== iframeUrl)
-    ) {
-      $scope.iframeUrlType = "validIframeUrl";
-    } else {
-      _this.logMsg = _this.funcName + "\n" +
-        "ERROR!!! Iframe URL is empty";
-      $log.log(_this.logMsg);
+    var siteName = WebExUtilsFact.getSiteName(siteUrl);
+    var iframeUrl = _.replace(iframeUrlOrig, siteName, siteName.toLowerCase());
 
-      $scope.iframeUrlType = "invalidIframeUrl";
-      iframeUrl = "https://" + $stateParams.siteUrl + "/igotnuthin";
+    if (iframeUrlOrig != iframeUrl) {
+      _this.logMsg = _this.funcName + "\n" +
+        "WARNING: mixed case iframe url detected" + "\n" +
+        "iframeUrlOrig=" + iframeUrlOrig + "\n" +
+        "iframeUrl=" + iframeUrl + "\n" +
+        "";
+      $log.log(_this.logMsg);
     }
 
     // iframe request variables
-    if (iframeUrl.indexOf("cibtsgsbt31.webex.com") > 0) {
-      iframeUrl = _.replace(iframeUrl, $stateParams.siteUrl, "wbxbts.admin.ciscospark.com");
-    }
     $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
     $scope.adminEmail = Authinfo.getPrimaryEmail();
     $scope.authToken = TokenService.getAccessToken();
-    $scope.siteName = $stateParams.siteUrl;
-    $scope.siteName2 = WebExUtilsFact.getSiteName($stateParams.siteUrl);
+    $scope.siteName = siteUrl.toLowerCase();
     $scope.fullSparkDNS = $window.location.origin;
-
-    $scope.locale = (
-      "es_LA" == translateUse
-    ) ? "es_MX" : translateUse;
+    $scope.locale = ("es_LA" == translateUse) ? "es_MX" : translateUse;
 
     _this.logMsg = _this.funcName + "\n" +
       "scope.siteSettingLabel=" + $scope.siteSettingLabel + "\n" +
@@ -80,15 +74,15 @@
       "scope.locale=" + $scope.locale + "\n" +
       "scope.siteSettingsBreadcrumbUiSref=" + $scope.siteSettingsBreadcrumbUiSref + "\n" +
       "scope.siteSettingsBreadcrumbLabel=" + $scope.siteSettingsBreadcrumbLabel;
-    // $log.log(_this.logMsg);
+    Log.debug(_this.logMsg);
 
-    $rootScope.lastSite = $stateParams.siteUrl;
+    $rootScope.lastSite = siteUrl;
     $log.log("last site " + $rootScope.lastSite);
 
     var parser = $window.document.createElement('a');
     parser.href = iframeUrl;
     $rootScope.nginxHost = parser.hostname;
-    $log.log("nginxHost " + $rootScope.nginxHost);
+    Log.debug("nginxHost " + $rootScope.nginxHost);
 
     $timeout(
       function loadIframe() {
