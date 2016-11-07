@@ -170,7 +170,7 @@ describe(' sunlightReportService', function () {
     $httpBackend.flush();
   });
 
-  it('should get ReportingData for org for time selected yesterday for mediaType chat', function () {
+  xit('should get ReportingData for org for time selected yesterday for mediaType chat', function () {
     sunlightReportService.getReportingData('org_stats', 1, 'chat').then(function (response) {
       expect(response.length).toBe(24);
       _.each(response, function (reportData) {
