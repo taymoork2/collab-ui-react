@@ -354,4 +354,14 @@ describe('Service: Common Report Service', () => {
       expect(date).toEqual(responseDate);
     });
   });
+
+  describe('number helper functions - ', function () {
+    it('getPercentage should return percentage of two numbers', function () {
+      expect(this.CommonReportService.getPercentage(1, 2)).toEqual(50);
+    });
+
+    it('getInt should return an integer from a string', function () {
+      expect(this.CommonReportService.getInt('2')).toEqual(2);
+    });
+  });
 });

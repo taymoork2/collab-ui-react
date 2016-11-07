@@ -10,7 +10,6 @@ export class ReportConstants {
   // Numerical Constants
   public readonly DAYS: number = 7;
   public readonly FIXED: number = 2;
-  public readonly INTEGER_BASE = 10;
   public readonly LINE_WEEKS: number = 4;
   public readonly MONTHS: number = 2;
   public readonly PERCENTAGE_MULTIPLIER: number = 100;
