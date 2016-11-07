@@ -1507,7 +1507,7 @@
       "pending": "Pending",
       "initializing": "Initializing",
       "not_operational": "Not operational",
-      "not_registered": "Registration not completed"
+      "not_registered": "Registration not completed",
       "urgentUpgradeAvailable": "Urgent upgrade available"
     },
     "userSidepanel": {
