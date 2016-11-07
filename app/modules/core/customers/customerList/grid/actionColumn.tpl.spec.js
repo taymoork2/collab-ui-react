@@ -32,7 +32,7 @@
         CUSTOMER: 2
       };
 
-      customerListToggle = false;
+      customerListToggle = true;
 
       spyOn(TrialService, 'getTrialsList').and.returnValue($q.when({
         data: {}

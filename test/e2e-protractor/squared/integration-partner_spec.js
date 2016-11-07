@@ -59,7 +59,7 @@ describe('Partner flow', function () {
     });
 
     it('should add a new trial', function () {
-      utils.click(partner.trialFilter);
+      //utils.click(partner.trialFilter);
       utils.click(partner.addButton);
       utils.expectIsDisplayed(partner.addTrialForm);
 
@@ -84,7 +84,7 @@ describe('Partner flow', function () {
     });
 
     it('should find new trial', function (done) {
-      utils.click(partner.trialFilter);
+      //utils.click(partner.trialFilter);
       utils.search(partner.newTrial.customerName, -1);
       utils.expectIsDisplayed(partner.newTrialRow);
 
@@ -109,7 +109,7 @@ describe('Partner flow', function () {
         utils.sendKeys(partner.licenseCountInput, partner.editTrial.licenseCount);
         utils.click(partner.saveUpdateButton);
         notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
-        utils.click(partner.trialFilter);
+        //utils.click(partner.trialFilter);
         utils.expectIsDisplayed(partner.newTrialRow);
       });
     }, LONG_TIMEOUT);
@@ -186,7 +186,7 @@ describe('Partner flow', function () {
       appWindow = browser.getWindowHandle();
 
       utils.search('', -1); // clear search
-      utils.click(partner.allFilter);
+      //utils.click(partner.allFilter);
       utils.click(partner.myOrganization);
       utils.click(partner.launchButton);
 
@@ -206,7 +206,7 @@ describe('Partner flow', function () {
 
   describe("Delete the test customer", function () {
     it('should login navigate to the test customer', function () {
-      utils.click(partner.trialFilter);
+      //utils.click(partner.trialFilter);
       utils.search(partner.newTrial.customerName, -1);
       utils.click(partner.newTrialRow);
       utils.expectIsDisplayed(partner.previewPanel);

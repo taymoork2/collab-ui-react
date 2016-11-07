@@ -48,6 +48,7 @@
     $scope.exportType = $rootScope.typeOfExport.CUSTOMER;
     $scope.filterList = _.debounce(filterAction, $scope.timeoutVal);
 
+    // TODO:  atlasCustomerListUpdate toggle is globally set to true. Needs refactoring to remove unused code
     $scope.customerListToggle = customerListToggle;
 
     // expecting this guy to be unset on init, and set every time after
@@ -528,7 +529,7 @@
     // No changes to the length of rows can be made here, only visibility
 
     function rowFilter(rows) {
-      if (!customerListToggle) {
+      if (!$scope.customerListToggle) {
         // never want to filter with old design
         return rows;
       }
