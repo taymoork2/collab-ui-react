@@ -26,7 +26,7 @@
     "add": "Add Users",
     "entitle": "Entitle",
     "invitePending": "Invite Pending",
-    "inviteMsg": "This user has not set their password yet",
+    "inviteMsg": "This user has not signed in yet",
     "resendInvitation": "Re-send Invitation",
     "firstnameHeader": "First Name",
     "lastnameHeader": "Last Name",
