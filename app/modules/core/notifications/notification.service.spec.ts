@@ -218,22 +218,6 @@ describe('Service: Notification', function () {
     });
   });
 
-  describe('Yes/No Confirmation Notifications', function () {
-
-    it('creates toaster with yes/no confirmation', function () {
-
-      let message = 'confirmation was successful';
-      Notification.confirmation(message);
-      expect(toaster.pop).toHaveBeenCalledWith({
-        type: 'warning',
-        body: 'cr-confirmation',
-        bodyOutputType: 'directive',
-        showCloseButton: false,
-      });
-      expect(toaster.pop.calls.count()).toEqual(1);
-    });
-  });
-
   // TODO: rip out 'stringify()' usage once ATLAS-1338 is resolved
   describe('helper functions:', function () {
     describe('stringify():', function () {

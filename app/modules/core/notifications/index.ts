@@ -1,6 +1,4 @@
-import { AlertService } from './alert.service';
 import { BindUnsafeHtml } from './bindUnsafeHtml.directive';
-import { Confirmation } from './confirmation.directive';
 import { Notification } from './notification.service';
 import { ToasterConfig } from './toaster.config';
 
@@ -16,7 +14,5 @@ export default angular
   ])
     .config(ToasterConfig)
     .directive('crBindUnsafeHtml', BindUnsafeHtml.directive)
-    .directive('crConfirmation', Confirmation.directive)
-    .service('AlertService', AlertService)
     .service('Notification', Notification)
     .name;
