@@ -66,7 +66,6 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
         return this._clusterActiveModeButtons;
       }
       this.enableButtons(this._clusterSetupModeButtons);
-      console.log(this._clusterSetupModeButtons);
       return this._clusterSetupModeButtons;
     }
 

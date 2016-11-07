@@ -12,6 +12,7 @@
     var service = {
       preregisterCluster: preregisterCluster,
       addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList,
+      getPreregisteredClusterAllowList: getPreregisteredClusterAllowList,
       provisionConnector: provisionConnector,
       deprovisionConnector: deprovisionConnector,
       getAll: getAll,
@@ -44,6 +45,10 @@
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '?fields=@wide')
         .then(extractDataFromResponse);
+        /*.then(function(cluster) { // REMOVE ME, TESTING no connectors handling
+          cluster.connectors = [];
+          return cluster;
+        });*/
     }
 
     function getAll(orgId) {
@@ -73,8 +78,10 @@
                 clusters: sort(getClustersForResourceGroup(resourceGroup.id, org.clusters)),
               };
             }),
-            unassigned: sort(getUnassignedClusters(org.clusters))
+            unassigned: sort(getUnassignedClusters(org.clusters)),
+            clusters: org.clusters
           };
+
         })
         .then(addUserCount);
     }
@@ -123,6 +130,7 @@
     function addServicesStatuses(clusters) {
       return _.map(clusters, function (cluster) {
         if (cluster.targetType === 'c_mgmt') {
+          // cluster.connectors = []; // REMOVE ME, TESTING no connectors handling
           var mgmtConnectors = _.filter(cluster.connectors, { connectorType: 'c_mgmt' });
           var ucmcConnectors = _.filter(cluster.connectors, { connectorType: 'c_ucmc' });
           var calConnectors = _.filter(cluster.connectors, { connectorType: 'c_cal' });
@@ -173,6 +181,11 @@
         ttlInSeconds: ttlInSeconds,
         clusterId: clusterId
       });
+    }
+
+    function getPreregisteredClusterAllowList() {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/allowedRedirectTargets';
+      return $http.get(url).then(extractDataFromResponse);
     }
 
     function provisionConnector(clusterId, connectorType) {
@@ -255,24 +268,26 @@
     }
 
     function processClustersToAggregateStatusForService(serviceId, clusterList) {
-
       // get the aggregated statuses per cluster, and transform them into a flat array that
       // represents the state of each cluster for only that service, e.g. ['stopped', 'running']
-      var allServicesStatuses = _.map(clusterList, 'servicesStatuses');
-      var statuses = _.map(allServicesStatuses, function (services) {
-        var matchingService = _.find(services, function (service) {
-          return service.serviceId === serviceId;
-        });
-        if (matchingService && matchingService.state) {
-          return matchingService.state.name;
-        } else {
-          return 'unknown';
-        }
-      });
+      var statuses = _.chain(clusterList)
+        .map('servicesStatuses')
+        .flatten()
+        .filter({ serviceId: serviceId })
+        .map(function (service) {
+          return service.state ? service.state.name : 'unknown';
+        })
+        .value();
 
       // if no data or invalid data, assume that something is wrong
       if (statuses.length === 0) {
         return 'outage';
+      }
+
+      if (_.every(statuses, function (value) {
+        return value === 'not_installed';
+      })) {
+        return 'setupNotComplete';
       }
 
       // For Hybrid Media we have to handle upgrading scenario differently than expressway
@@ -322,14 +337,12 @@
     }
 
     function processClustersToSeeIfServiceIsSetup(serviceId, clusterList) {
-
       if (!Authinfo.isEntitled(serviceId)) {
         return false;
       }
 
-      var target_connector = FusionUtils.serviceId2ConnectorType(serviceId);
-
-      if (target_connector === '') {
+      var connectorType = FusionUtils.serviceId2ConnectorType(serviceId);
+      if (connectorType === '') {
         return false; // Cannot recognize service, default to *not* enabled
       }
 
@@ -337,9 +350,9 @@
         return _.some(clusterList, { targetType: 'mf_mgmt' });
       } else {
         return _.chain(clusterList)
-          .map('connectors')
+          .map('provisioning')
           .flatten()
-          .some({ connectorType: target_connector })
+          .some({ connectorType: connectorType })
           .value();
       }
     }
@@ -401,6 +414,7 @@
               return group;
             }),
             unassigned: response.unassigned,
+            clusters: response.clusters
           };
         });
     }

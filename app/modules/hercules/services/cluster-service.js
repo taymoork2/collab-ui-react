@@ -20,7 +20,6 @@
       fetch: fetch,
       getCluster: getCluster,
       getClustersByConnectorType: getClustersByConnectorType,
-      getAll: getAll,
       getConnector: getConnector,
       getRunningStateSeverity: getRunningStateSeverity,
       subscribe: hub.on,
@@ -58,6 +57,7 @@
           cssClass = 'success';
           break;
         case 'not_installed':
+        case 'not_registered':
           label = 'neutral';
           value = 1;
           cssClass = 'disabled';
@@ -139,12 +139,18 @@
     }
 
     function mergeRunningState(connectors) {
+      if (_.size(connectors) === 0) {
+        return {
+          state: 'not_registered',
+          stateSeverity: 'neutral',
+          stateSeverityValue: 1
+        };
+      }
       return _.chain(connectors)
         .map(overrideStateIfAlarms)
         .reduce(getMostSevereRunningState, {
           stateSeverityValue: -1
         })
-        // .get('state')
         .value();
     }
 
@@ -194,7 +200,7 @@
           return cluster;
         })
         .filter(function (cluster) {
-          return cluster.connectors.length > 0;
+          return _.find(cluster.provisioning, { connectorType: type });
         })
         .value();
     }
@@ -206,6 +212,7 @@
         .then(function (response) {
           // only keep fused clusters
           return _.filter(response.clusters, function (cluster) {
+            // cluster.connectors = []; // REMOVE ME, TESTING no connectors behavior!!
             return cluster.state ? cluster.state === 'fused' : true;
           });
         })
@@ -238,16 +245,6 @@
           CsdmCacheUpdater.update(clusterCache.c_ucmc, clusters.c_ucmc);
           CsdmCacheUpdater.update(clusterCache.c_cal, clusters.c_cal);
           return clusterCache;
-        });
-    }
-
-    function getAll() {
-      return $http
-        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
-        .then(extractDataFromResponse)
-        .then(function (data) {
-          // only keep fused clusters
-          return _.filter(data.clusters, { state: 'fused' });
         });
     }
 

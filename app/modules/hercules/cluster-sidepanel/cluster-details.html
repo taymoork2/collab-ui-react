@@ -1,6 +1,7 @@
 <div ui-view="header"></div>
+
 <cs-sp-container class="hercules-fix-paragraphs hercules-settings-table">
-  <cs-sp-section>
+  <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0">
     <div class="section-title-row section-name" translate="hercules.alarms.alarms"></div>
     <div class="feature-list" ng-if="clusterDetailsCtrl.cluster.aggregates.alarms.length > 0">
       <ul>
@@ -16,7 +17,7 @@
     <p ng-if="clusterDetailsCtrl.cluster.aggregates.alarms.length === 0" translate="hercules.alarms.noAlarms"></p>
   </cs-sp-section>
 
-  <cs-sp-section ng-if="clusterDetailsCtrl.schedule">
+  <cs-sp-section ng-if="clusterDetailsCtrl.schedule && clusterDetailsCtrl.cluster.connectors.length > 0">
     <div class="section-title-row section-name" translate="hercules.expresswayClusterSettings.upgradeScheduleSubHeader"></div>
     <p>
       <span>{{clusterDetailsCtrl.schedule.dateTime}}, </span>
@@ -24,14 +25,13 @@
     </p>
   </cs-sp-section>
 
-  <cs-sp-section ng-if="clusterDetailsCtrl.hasF237FeatureToggle">
+  <cs-sp-section ng-if="clusterDetailsCtrl.hasF237FeatureToggle && clusterDetailsCtrl.cluster.connectors.length > 0">
     <div class="section-title-row section-name" translate="hercules.expresswayClusterSettings.releasechannelHeader"></div>
       <p class="hercules-capitalize">{{clusterDetailsCtrl.releaseChannel}}</p>
   </cs-sp-section>
 
-  <cs-sp-section>
+  <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0">
     <div class="section-title-row section-name" translate="hercules.softwareUpgrade.softwareUpgrade"></div>
-
     <div class="hercules-upgrade-section">
       <div ng-if="!clusterDetailsCtrl.showManagementUpgradeProgress">
         <p ng-if="!clusterDetailsCtrl.softwareUpgrade.isManagementUpgradeAvailable" translate="hercules.softwareUpgrade.upToDate" translate-values="{connectorType: clusterDetailsCtrl.localizedManagementConnectorName}"></p>
@@ -101,10 +101,9 @@
               translate-values="{ManagementConnector: clusterDetailsCtrl.localizedManagementConnectorName, CiscoCollaborationCloud: clusterDetailsCtrl.localizedCCCName}"></span>
       </p>
     </div>
-
   </cs-sp-section>
 
-  <cs-sp-section>
+  <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0">
     <div class="section-title-row section-name" translate="hercules.connectors.hosts"></div>
     <div class="feature-list">
       <div ng-repeat="host in clusterDetailsCtrl.hosts | orderBy: 'hostname'">
@@ -139,6 +138,28 @@
           </li>
         </ul>
       </div>
+    </div>
+  </cs-sp-section>
+
+  <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length === 0 && clusterDetailsCtrl.cluster.allowedRedirectTarget">
+    <div class="section-title-row section-name" translate="hercules.registration.heading"></div>
+    <p translate="hercules.fusion.list.completeRegistration"></p>
+    <div class="center">
+      <button class="btn" ng-click="clusterDetailsCtrl.openDeleteConfirm($ctrl.cluster)" translate="common.remove"></button>
+      <button class="btn btn--primary" ng-click="clusterDetailsCtrl.goToExpresswayCluster($ctrl.cluster.allowedRedirectTarget.hostname)" translate="hercules.redirect-target-dialog.register-resource-button"></button>
+    </div>
+  </cs-sp-section>
+
+  <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length === 0 && !clusterDetailsCtrl.cluster.allowedRedirectTarget">
+    <div class="section-title-row section-name" translate="hercules.registration.heading"></div>
+    <div ng-if="!$ctrl.cluster.allowedRedirectTarget" class="columns medium-12">
+      <div class="error-message">
+        <i class="icon icon-warning"></i>
+        <p class="message" translate="hercules.fusion.list.registrationTimeoutExtended"></p>
+      </div>
+    </div>
+    <div class="center">
+      <button class="btn" ng-click="clusterDetailsCtrl.openDeleteConfirm()" translate="common.remove"></button>
     </div>
   </cs-sp-section>
 

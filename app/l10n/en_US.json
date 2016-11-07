@@ -1520,7 +1520,8 @@
       "upgraded": "Upgraded",
       "pending": "Pending",
       "initializing": "Initializing",
-      "not_operational": "Not Operational"
+      "not_operational": "Not operational",
+      "not_registered": "Registration not completed"
     },
     "userSidepanel": {
       "warningInvitePending": "This user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but activation will not succeed until the user signs in.",
@@ -1785,6 +1786,9 @@
         "description-already-in-settings-page": "Activate Call Service Connect and add the SIP Destination for call routing below."
       }
     },
+    "registration": {
+      "heading": "Registration"
+    },
     "fusion": {
       "types": {
         "expressway": "Expressway",
@@ -1807,7 +1811,10 @@
         "no-services": "No services",
         "missing-clusters": "<a ng-click=\"{{onclick}}\">Assign clusters</a> and users to complete this group",
         "missing-users": "<a ng-click=\"{{onclick}}\">Assign users</a> to complete this group",
-        "users-in-limbo": "Either <a ng-click=\"{{onclick}}\">remove</a> this group to reset user assignments or <a ng-click=\"{{onclick}}\">assign clusters</a> to restore services."
+        "users-in-limbo": "Either <a ng-click=\"{{onclick}}\">remove</a> this group to reset user assignments or <a ng-click=\"{{onclick}}\">assign clusters</a> to restore services.",
+        "completeRegistration": "Go to your Expressway to complete the registration.",
+        "registrationTimeout": "The registration timed out, please register the Expressway again.",
+        "registrationTimeoutExtended": "The registration timed out. Please remove this cluster and register the Expressway again in the Add Resource dialog."
       },
       "add-resource": {
         "title": "Add Resource",
@@ -5655,7 +5662,8 @@
       "impaired": "Impaired Service",
       "outage": "Outage",
       "unknown": "Unknown",
-      "disabled": "Disabled"
+      "disabled": "Disabled",
+      "setupNotComplete": "Setup not completed"
     }
   },
   "readOnlyModal": {

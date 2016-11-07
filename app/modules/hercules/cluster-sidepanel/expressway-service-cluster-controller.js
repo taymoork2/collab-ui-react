@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceClusterController', ExpresswayServiceClusterController);
 
   /* @ngInject */
-  function ExpresswayServiceClusterController($scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout, hasF237FeatureToggle, FusionClusterService) {
+  function ExpresswayServiceClusterController($scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout, hasF237FeatureToggle, FusionClusterService, Notification, $window) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.clusterId;
@@ -24,6 +24,8 @@
     vm.fakeManagementUpgrade = false;
     vm.hasF237FeatureToggle = hasF237FeatureToggle;
     vm.hasConnectorAlarm = hasConnectorAlarm;
+    vm.openDeleteConfirm = openDeleteConfirm;
+    vm.goToExpressway = goToExpressway;
 
     var promise = null;
     if (!vm.connectorType || !vm.clusterId) {
@@ -39,6 +41,17 @@
       vm.cluster = newValue[0];
       vm.managementCluster = newValue[1];
 
+      if (vm.cluster && _.size(vm.cluster.connectors) === 0) {
+        FusionClusterService.getPreregisteredClusterAllowList()
+          .then(function (allowList) {
+            vm.cluster.allowedRedirectTarget = _.find(allowList, function (entry) {
+              return entry.clusterId === vm.cluster.id || vm.cluster.id === "40b4cc27-e058-40b2-8102-595d9eb33d5a";
+            });
+          })
+          .catch(function (error) {
+            Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+          });
+      }
       vm.releaseChannel = $translate.instant('hercules.fusion.add-resource-group.release-channel.' + vm.cluster.releaseChannel);
       var isUpgrading = vm.cluster.aggregates.upgradeState === 'upgrading';
       var isUpgradingManagement = vm.managementCluster.aggregates.upgradeState === 'upgrading';
@@ -169,5 +182,24 @@
       }
     };
 
+    function openDeleteConfirm() {
+      $modal.open({
+        resolve: {
+          cluster: function () {
+            return vm.cluster;
+          }
+        },
+        controller: 'ClusterDeregisterController',
+        controllerAs: 'clusterDeregister',
+        templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html',
+        type: 'small'
+      }).result.then(function () {
+        $state.go('cluster-list');
+      });
+    }
+
+    function goToExpressway(hostname) {
+      $window.open('https://' + encodeURIComponent(hostname) + '/fusionregistration');
+    }
   }
 }());

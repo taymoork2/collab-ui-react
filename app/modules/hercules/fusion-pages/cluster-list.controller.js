@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function FusionClusterListController($filter, $modal, $state, $translate, Authinfo, Config, hasF237FeatureToggle, hasMediaFeatureToggle, FusionClusterService, Notification, WizardFactory) {
-
     var vm = this;
     if (hasF237FeatureToggle) {
       var groupsCache = {};
@@ -72,6 +71,7 @@
           return clusters;
         })
         .then(function (clusters) {
+          setClusterAllowListInfoForExpressway(clusters);
           clustersCache = clusters;
           updateFilters();
           vm.displayedClusters = clusters;
@@ -89,6 +89,7 @@
       FusionClusterService.getResourceGroups()
         .then(removeHybridMediaClustersIfNecessary)
         .then(function (groups) {
+          setClusterAllowListInfoForExpressway(groups.clusters);
           groupsCache = groups;
           updateFilters();
           vm.displayedGroups = groups;
@@ -98,6 +99,27 @@
         })
         .finally(function () {
           vm.loading = false;
+        });
+    }
+
+    function setClusterAllowListInfoForExpressway(clusters) {
+      var emptyExpresswayClusters = _.filter(clusters, function (cluster) {
+        return cluster.targetType === 'c_mgmt' && _.size(cluster.connectors) === 0;
+      });
+      if (_.size(emptyExpresswayClusters) === 0) {
+        return;
+      }
+      FusionClusterService.getPreregisteredClusterAllowList()
+        .then(function (allowList) {
+          _.each(emptyExpresswayClusters, function (cluster) {
+            cluster.isEmptyExpresswayCluster = true;
+            cluster.allowedRedirectTarget = _.find(allowList, function (entry) {
+              return entry.clusterId === cluster.id || cluster.id === "40b4cc27-e058-40b2-8102-595d9eb33d5a";
+            });
+          });
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
         });
     }
 
@@ -111,7 +133,8 @@
             response.clusters = filterHMClusters(response.clusters);
             return response;
           }),
-          unassigned: filterHMClusters(response.unassigned)
+          unassigned: filterHMClusters(response.unassigned),
+          clusters: filterHMClusters(response.clusters)
         };
       }
       return response;

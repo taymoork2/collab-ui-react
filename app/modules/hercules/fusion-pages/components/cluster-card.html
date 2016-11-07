@@ -2,11 +2,11 @@
   <article>
     <header>
       <h4>{{::$ctrl.cluster.name}}</h4>
-      <div class="cluster-list-hosts" tooltip-html-unsafe="{{$ctrl.getHostnames($ctrl.cluster)}}" tooltip-trigger="mouseenter" tooltip-placement="bottom">
+      <div ng-if="!$ctrl.cluster.isEmptyExpresswayCluster" class="cluster-list-hosts" tooltip-html-unsafe="{{$ctrl.getHostnames($ctrl.cluster)}}" tooltip-trigger="mouseenter" tooltip-placement="bottom">
         <div translate="hercules.fusion.list.nodes" translate-values="{count: $ctrl.countHosts($ctrl.cluster)}" translate-interpolation="messageformat"></div>
       </div>
     </header>
-    <div class="row cluster-list-body">
+    <div class="row cluster-list-body" ng-if="!$ctrl.cluster.isEmptyExpresswayCluster">
       <div class="columns medium-6">
         <div>
           <div class="cluster-list-cat" translate="hercules.fusion.list.upgrade-schedule"></div>
@@ -48,8 +48,23 @@
         </div>
       </div>
     </div>
-    <footer>
+    <div class="row cluster-list-body" ng-if="$ctrl.cluster.isEmptyExpresswayCluster">
+      <div ng-if="$ctrl.cluster.allowedRedirectTarget" class="columns medium-12">
+        <p translate="hercules.fusion.list.completeRegistration"></p>
+        <div class="center" style="padding-bottom: 1rem;">
+          <button class="btn" ng-click="$ctrl.openDeleteConfirm($ctrl.cluster)" translate="common.remove"></button>
+          <button class="btn btn--primary" ng-click="$ctrl.goToExpressway($ctrl.cluster.allowedRedirectTarget.hostname)" translate="hercules.redirect-target-dialog.register-resource-button"></button>
+        </div>
+      </div>
+      <div ng-if="!$ctrl.cluster.allowedRedirectTarget" class="columns medium-12">
+        <p translate="hercules.fusion.list.registrationTimeout"></p>
+      </div>
+    </div>
+    <footer ng-if="!$ctrl.cluster.isEmptyExpresswayCluster">
       <a ng-click="$ctrl.openSettings($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.settings"></a>
+    </footer>
+    <footer ng-if="$ctrl.cluster.isEmptyExpresswayCluster && !$ctrl.cluster.allowedRedirectTarget" style="padding-bottom: 1rem;">
+      <button class="btn" ng-click="$ctrl.openDeleteConfirm($ctrl.cluster)" translate="common.remove"></button>
     </footer>
   </article>
 </cs-card>

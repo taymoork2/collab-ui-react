@@ -150,6 +150,9 @@
         case 'outage':
           cssClass = 'danger';
           break;
+        case 'setupNotComplete':
+          cssClass = 'default';
+          break;
         case 'impaired':
         case 'unknown':
         default:
