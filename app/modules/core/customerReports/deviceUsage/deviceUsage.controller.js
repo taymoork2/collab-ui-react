@@ -9,7 +9,7 @@
   function DeviceUsageCtrl($log, $translate, $state, $scope, DeviceUsageTotalService, Notification, deviceUsageFeatureToggle, DeviceUsageCommonService) {
     var vm = this;
     var amChart;
-    var apiToUse = 'mock';
+    var apiToUse = 'local';
 
     vm.leastUsedDevices = [];
     vm.mostUsedDevices = [];
@@ -20,6 +20,7 @@
 
     vm.loading = true;
     vm.exporting = false;
+    vm.noDataForRange = false;
 
     var dateRange;
     vm.exportRawData = exportRawData;
@@ -167,6 +168,13 @@
     }
 
     function loadChartData(data, title) {
+      if (data.length === 0) {
+        vm.noDataForRange = true;
+        var warning = 'No report data available for : \n' + dateRange.start + ' to ' + dateRange.end;
+        Notification.notify([warning], 'warning');
+      } else {
+        vm.noDataForRange = false;
+      }
       vm.reportData = data;
       amChart.dataProvider = data;
       if (title) {
