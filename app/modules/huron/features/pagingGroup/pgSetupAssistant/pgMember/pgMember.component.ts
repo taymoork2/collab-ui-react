@@ -1,4 +1,4 @@
-import { Member, USER_REAL_USER, USER_PLACE } from 'modules/huron/members';
+import { Member, USER_REAL_USER } from 'modules/huron/members';
 import { IMemberWithPicture } from 'modules/huron/features/pagingGroup';
 
 class PagingGroupMemberCtrl implements ng.IComponentController {
@@ -23,16 +23,22 @@ class PagingGroupMemberCtrl implements ng.IComponentController {
         picturePath: '',
       };
 
-      this.FeatureMemberService.getMemberPicture(member.uuid).then(
-        (avatar) => {
-          memberWithPicture.picturePath = avatar;
-      });
-
+      if (member.type === USER_REAL_USER) {
+        this.FeatureMemberService.getUser(member.uuid).then(
+          (user) => {
+            memberWithPicture.member.firstName = this.FeatureMemberService.getFirstNameFromUser(user);
+            memberWithPicture.member.lastName = this.FeatureMemberService.getLastNameFromUser(user);
+            memberWithPicture.member.displayName = this.FeatureMemberService.getDisplayNameFromUser(user);
+            memberWithPicture.member.userName = this.FeatureMemberService.getUserNameFromUser(user);
+            memberWithPicture.picturePath = this.FeatureMemberService.getUserPhoto(user);
+          });
+      }
       this.selectedMembers.unshift(memberWithPicture);
       this.onUpdate({
         members: this.selectedMembers,
       });
     }
+    this.availableMembers = [];
   }
 
   public getMembersPictures(member: Member): string {
@@ -55,83 +61,20 @@ class PagingGroupMemberCtrl implements ng.IComponentController {
     }
   }
 
-  public getFirstLastName(member: Member) {
-    if (!member) {
-      return '';
-    }
-
-    if (member.firstName && member.lastName) {
-      return member.firstName + ' ' + member.lastName;
-    } else if (member.firstName) {
-      return member.firstName;
-    } else if (member.lastName) {
-      return member.lastName;
-    } else {
-      return '';
-    }
-  }
-
-  public getUserName(member: Member) {
-    if (!member) {
-      return '';
-    }
-
-    if (member.userName) {
-      return member.userName;
-    } else {
-      return '';
-    }
-  }
-
   public getMemberType(member: Member) {
-    if (!member) {
-      return '';
-    }
-
-    if (member.type === USER_REAL_USER) {
-      return 'user';
-    } else if (member.type === USER_PLACE) {
-      return 'place';
-    } else {
-      return '';
-    }
+    return this.FeatureMemberService.getMemberType(member);
   }
 
   public getDisplayNameInDropdown(member: Member) {
-    if (!member) {
-      return '';
-    }
-    let name = '';
-
-    if (member.type === USER_REAL_USER) {
-      let firstLastName = this.getFirstLastName(member);
-      if (firstLastName !== '') {
-        name = (firstLastName + ' (' + this.getUserName(member) + ')');
-      } else {
-        name = this.getUserName(member);
-      }
-    } else if (member.type === USER_PLACE && member.displayName) {
-      name = member.displayName;
-    }
-    return name;
+    return this.FeatureMemberService.getFullNameFromMember(member);
   }
 
   public getDisplayNameOnCard(member: Member) {
-    if (!member) {
-      return '';
-    }
+    return this.FeatureMemberService.getDisplayNameFromMember(member);
+  }
 
-    let name = '';
-    if (member.type === USER_REAL_USER) {
-      if (this.getFirstLastName(member) !== '') {
-        name = (this.getFirstLastName(member));
-      } else {
-        name = this.getUserName(member);
-      }
-    } else if (member.type === USER_PLACE && member.displayName) {
-      name = member.displayName;
-    }
-    return name;
+  public getUserName(member: Member) {
+    return this.FeatureMemberService.getUserName(member);
   }
 
   public fetchMembers(): void {
@@ -139,8 +82,10 @@ class PagingGroupMemberCtrl implements ng.IComponentController {
       this.FeatureMemberService.getMemberSuggestions(this.memberName).then(
         (data: Member[]) => {
           this.availableMembers = _.reject(data, (mem) => {
-            return _.some(this.selectedMembers, { member: mem });
-          });
+              return _.some(this.selectedMembers, (member) => {
+                return _.get(member, 'member.uuid') === mem.uuid;
+              });
+            });
           this.errorMemberInput = (this.availableMembers && this.availableMembers.length === 0);
         }, (response) => {
           this.Notification.errorResponse(response, 'pagingGroup.memberFetchFailure');
