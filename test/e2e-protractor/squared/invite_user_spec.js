@@ -169,7 +169,7 @@ describe('Squared Add User Flow', function () {
       browser.switchTo().window(appWindow);
 
       // make sure we delete the partner org we created
-      utils.click(partner.trialFilter);
+      //utils.click(partner.trialFilter);
       utils.search(partner.newTrial.customerName, -1);
       utils.click(partner.newTrialRow);
       utils.expectIsDisplayed(partner.previewPanel);
