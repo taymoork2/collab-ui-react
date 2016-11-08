@@ -588,7 +588,8 @@
         "date": "Feb 01",
         "totalRegisteredDevices": 105
       }],
-      "balloon": false
+      "balloon": false,
+      "emptyGraph": false
     }],
     "two": [{
       "deviceType": "registeredEndpoints.allDevices",
@@ -605,7 +606,8 @@
         "date": "Jan 30",
         "totalRegisteredDevices": 60
       }],
-      "balloon": false
+      "balloon": false,
+      "emptyGraph": false
     }],
     "three": [{
       "deviceType": "registeredEndpoints.allDevices",
@@ -619,7 +621,20 @@
         "date": "February",
         "totalRegisteredDevices": 45
       }],
-      "balloon": false
+      "balloon": false,
+      "emptyGraph": false
+    }]
+  },
+  "emptyData": {
+    "graphData": [{
+      "deviceType": "registeredEndpoints.allDevices",
+      "graph": [],
+      "emptyGraph": true,
+      "balloon": true
+    }],
+    "filterArray": [{
+      "value": 0,
+      "label": "registeredEndpoints.allDevices"
     }]
   }
 }

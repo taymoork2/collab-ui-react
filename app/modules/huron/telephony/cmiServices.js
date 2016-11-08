@@ -45,6 +45,7 @@
     .factory('DirectoryNumberSipEndPointService', DirectoryNumberSipEndPointService)
     .factory('SipEndpointDirectoryNumberService', SipEndpointDirectoryNumberService)
     .factory('TimeZoneService', TimeZoneService)
+    .factory('SiteLanguageService', SiteLanguageService)
     .factory('HermesQRCodeService', HermesQRCodeService)
     .factory('DeviceLogApiService', DeviceLogApiService)
     .factory('UserLineAssociationService', UserLineAssociationService)
@@ -436,6 +437,12 @@
   /* @ngInject */
   function TimeZoneService($resource) {
     return $resource('modules/huron/serviceSetup/jodaTimeZones.json', {}, {});
+  }
+
+
+  /* @ngInject */
+  function SiteLanguageService($resource) {
+    return $resource('modules/huron/serviceSetup/siteLanguages.json', {}, {});
   }
 
   /* @ngInject */

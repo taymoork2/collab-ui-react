@@ -37,6 +37,7 @@
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
 
+    vm.voicemailAvrilCustomer = false;
     vm.addInternalNumberRange = addInternalNumberRange;
     vm.deleteInternalNumberRange = deleteInternalNumberRange;
     vm.loadExternalNumberPool = loadExternalNumberPool;
@@ -111,6 +112,10 @@
 
     PstnSetupService.getCustomer(Authinfo.getOrgId()).then(function () {
       vm.isTerminusCustomer = true;
+    });
+
+    FeatureToggleService.getCustomerHuronToggle(Authinfo.getOrgId(), FeatureToggleService.features.avrilVmEnable).then(function (result) {
+      vm.voicemailAvrilCustomer = result;
     });
 
     vm.validations = {
@@ -1480,13 +1485,15 @@
             label: digit.concat(vm.model.site.siteCode)
           });
         });
-        $scope.to.description = $translate.instant('serviceSetupModal.voicemailPrefixDesc',
-          {
-            'number': vm.model.voicemailPrefix.value,
-            'extensionLength0': extensionLength0,
-            'extensionLength9': extensionLength9
-          });
-        $scope.to.options = values;
+        if ($scope.to) {
+          $scope.to.description = $translate.instant('serviceSetupModal.voicemailPrefixDesc',
+            {
+              'number': vm.model.voicemailPrefix.value,
+              'extensionLength0': extensionLength0,
+              'extensionLength9': extensionLength9
+            });
+          $scope.to.options = values;
+        }
       });
     }
 

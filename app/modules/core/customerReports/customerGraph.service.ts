@@ -1,6 +1,5 @@
 import {
   IActiveUserData,
-  IMediaQualityData,
   ITimespan,
   IDropdownBase,
 } from '../partnerReports/partnerReportInterfaces';
@@ -9,6 +8,7 @@ import {
   IAvgRoomData,
   IEndpointWrapper,
   IFilesShared,
+  IMediaData,
   IMetricsData,
 } from './customerReportInterfaces';
 
@@ -74,17 +74,15 @@ class CustomerGraphService {
       chart.validateNow();
     } else if (data.length > 0) {
       chart = this.createActiveLineGraph(data);
-      chart.addListener('rendered', this.zoomActiveUserChart);
+      chart.addListener('rendered', (event: any): void => {
+        let chart: any = _.get(event, 'chart', {});
+        let chartData: Array<any> = _.get(event, 'chart.dataProvider', []);
+        if (chart.zoomToIndexes && (chartData.length > this.ReportConstants.THIRTEEN_WEEKS) && this.timeFilter === this.ReportConstants.FILTER_THREE) {
+          chart.zoomToIndexes(chartData.length - this.ReportConstants.THIRTEEN_WEEKS, chartData.length - 1);
+        }
+      });
     }
     return chart;
-  }
-
-  private zoomActiveUserChart(event: any) {
-    let chart: any = _.get(event, 'chart', {});
-    let chartData: Array<any> = _.get(event, 'chart.dataProvider', []);
-    if (chart.zoomToIndexes && (chartData.length > this.ReportConstants.THIRTEEN_WEEKS) && this.timeFilter === this.ReportConstants.FILTER_THREE) {
-      chart.zoomToIndexes(chartData.length - this.ReportConstants.THIRTEEN_WEEKS, chartData.length - 1);
-    }
   }
 
   private createActiveLineGraph(data: Array<IActiveUserData>): any {
@@ -133,9 +131,6 @@ class CustomerGraphService {
     const registeredUsers: string = this.$translate.instant('activeUsers.registeredUsers');
     const activeUsers: string = this.$translate.instant('activeUsers.activeUsers');
     const users: string = this.$translate.instant('activeUsers.users');
-    const constants: any = this.ReportConstants;
-    const filter: IDropdownBase = this.activeUserFilter;
-    const line: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LINE);
 
     let colors: Array<string> = [this.chartColors.colorPeopleLighter, this.chartColors.colorPeopleLight];
     let balloons: Array<boolean> = [true, true];
@@ -150,24 +145,24 @@ class CustomerGraphService {
     }
 
     let colorsTwo: Array<string> = _.clone(colors);
-    _.forEach(values, function (value: string, index: number): void {
-      graphs.push(_.cloneDeep(line));
+    _.forEach(values, (value: string, index: number): void => {
+      graphs.push(this.CommonGraphService.getBaseVariable(this.CommonGraphService.LINE));
       graphs[index].bullet = 'none';
       graphs[index].title = titles[index];
       graphs[index].lineColor = colorsTwo[index];
       graphs[index].legendColor = colors[index];
       graphs[index].valueField = value;
-      graphs[index].balloonFunction = function (graphDataItem: any, graph: any): string {
+      graphs[index].balloonFunction = (graphDataItem: any, graph: any): string | undefined => {
         let data: any = _.get(graphDataItem, 'dataContext', {});
         let hiddenData: string = _.get(graph, 'data[0].category', '');
         let title: string = _.get(graph, 'title', '');
-        let balloonText: string = CustomerGraphService.graphTextSpan;
+        let balloonText: string | undefined = undefined;
 
         if (title === users && data.date !== hiddenData) {
-          balloonText += registeredUsers + CustomerGraphService.boldNumberSpan + ' ' + data.totalRegisteredUsers + '</span></span>';
+          balloonText = CustomerGraphService.graphTextSpan + registeredUsers + CustomerGraphService.boldNumberSpan + ' ' + data.totalRegisteredUsers + '</span></span>';
         } else if (data.date !== hiddenData) {
-          balloonText += activeUsers + CustomerGraphService.boldNumberSpan + ' ' + data.activeUsers;
-          if (filter.value === constants.FILTER_ONE.value) {
+          balloonText = CustomerGraphService.graphTextSpan + activeUsers + CustomerGraphService.boldNumberSpan + ' ' + data.activeUsers;
+          if (this.activeUserFilter.value === this.ReportConstants.FILTER_ONE.value) {
             balloonText += ' (' + data.percentage + '%)';
           }
           balloonText += '</span></span>';
@@ -224,7 +219,6 @@ class CustomerGraphService {
 
   private activeUserGraphs(data: Array<IActiveUserData>): Array<any> {
     const balloonText: string = CustomerGraphService.graphTextSpan + this.$translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br>' + CustomerGraphService.graphTextSpan +  this.$translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
-    const column: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.COLUMN);
 
     let colors: Array<string> = [this.chartColors.brandSuccessLight, this.chartColors.brandSuccessDark];
     if (!data[0].balloon) {
@@ -234,8 +228,8 @@ class CustomerGraphService {
     let titles = [this.$translate.instant('activeUsers.users'), this.$translate.instant('activeUsers.activeUsers')];
 
     let graphs: Array<any> = [];
-    _.forEach(values, function (value, index) {
-      graphs.push(_.cloneDeep(column));
+    _.forEach(values, (value: string, index: number): void => {
+      graphs.push(this.CommonGraphService.getBaseVariable(this.CommonGraphService.COLUMN));
       graphs[index].title = titles[index];
       graphs[index].fillColors = colors[index];
       graphs[index].legendColor = colors[index];
@@ -293,7 +287,6 @@ class CustomerGraphService {
 
     // graph variables
     const balloonText: string = CustomerGraphService.graphTextSpan + group + ' <span class="room-number">[[groupRooms]]</span><br>' + oneToOne + ' <span class="room-number">[[oneToOneRooms]]</span><br>' + total + ' <span class="room-number">[[avgRooms]]</span></span>';
-    const column: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.COLUMN);
 
     let titles: Array<string> = [group, oneToOne];
     let values: Array<string> = ['totalRooms', 'oneToOneRooms'];
@@ -303,8 +296,8 @@ class CustomerGraphService {
     }
 
     let graphs: Array<any> = [];
-    _.forEach(values, function (value, index) {
-      graphs.push(_.cloneDeep(column));
+    _.forEach(values, (value: string, index: number): void => {
+      graphs.push(this.CommonGraphService.getBaseVariable(this.CommonGraphService.COLUMN));
       graphs[index].title = titles[index];
       graphs[index].fillColors = colors[index];
       graphs[index].valueField = value;
@@ -377,7 +370,7 @@ class CustomerGraphService {
   }
 
   // Media Quality Column Graph
-  public setMediaQualityGraph(data: Array<IMediaQualityData>, chart: any, filter: IDropdownBase): any {
+  public setMediaQualityGraph(data: Array<IMediaData>, chart: any, filter: IDropdownBase): any {
     if (data.length > 0 && chart) {
       chart.startDuration = 1;
       if (!data[0].balloon) {
@@ -414,9 +407,8 @@ class CustomerGraphService {
     return AmCharts.makeChart(this.mediaQualityDiv, chartData);
   }
 
-  private mediaGraphs(data: Array<IMediaQualityData>, filter: IDropdownBase): Array<any> {
+  private mediaGraphs(data: Array<IMediaData>, filter: IDropdownBase): Array<any> {
     const totalCalls: string = this.$translate.instant('mediaQuality.totalCalls');
-    const column: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.COLUMN);
 
     let values = ['totalDurationSum', 'partialSum', 'poorQualityDurationSum'];
     let balloonValues = ['goodQualityDurationSum', 'fairQualityDurationSum', 'poorQualityDurationSum'];
@@ -435,8 +427,8 @@ class CustomerGraphService {
     }
 
     let graphs: Array<any> = [];
-    _.forEach(colors, function (color, index) {
-      graphs.push(_.cloneDeep(column));
+    _.forEach(colors, (color: string, index: number): void => {
+      graphs.push(this.CommonGraphService.getBaseVariable(this.CommonGraphService.COLUMN));
       graphs[index].title = titles[index];
       graphs[index].fillColors = color;
       graphs[index].colorField = color;

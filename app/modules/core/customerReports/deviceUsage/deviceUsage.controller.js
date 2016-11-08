@@ -6,7 +6,7 @@
     .controller('DeviceUsageCtrl', DeviceUsageCtrl);
 
   /* @ngInject */
-  function DeviceUsageCtrl($log, $state, $scope, DeviceUsageTotalService, Notification, deviceUsageFeatureToggle, DeviceUsageCommonService) {
+  function DeviceUsageCtrl($log, $translate, $state, $scope, DeviceUsageTotalService, Notification, deviceUsageFeatureToggle, DeviceUsageCommonService) {
     var vm = this;
     var amChart;
     var apiToUse = 'mock';
@@ -27,22 +27,18 @@
     vm.deviceOptions = [
       {
         value: 0,
-        label: 'All',
-        description: 'All CE and SparkBoard devices'
+        label: $translate.instant('reportsPage.usageReports.deviceOptions.all')
       },
       {
         value: 1,
-        label: 'CE',
-        description: 'All CE devices'
+        label: $translate.instant('reportsPage.usageReports.deviceOptions.roomSystems')
       },
       {
         value: 2,
-        label: 'SparkBoard',
-        description: 'All SparkBoard devices'
+        label: $translate.instant('reportsPage.usageReports.deviceOptions.sparkBoard')
       }
     ];
     vm.deviceFilter = vm.deviceOptions[0];
-    //vm.currentFilter = vm.deviceOptions[0].value;
 
     vm.deviceUpdate = function () {
       //$log.info('deviceFilter', vm.deviceFilter);
@@ -78,7 +74,6 @@
         return result;
       }, {}).map(function (value, key) {
         value.totalDuration = (value.totalDuration / 60).toFixed(2);
-        // var timeFormatted = key.substr(0, 4) + '-' + key.substr(4, 2) + '-' + key.substr(6, 2);
         value.time = key;
         return value;
       }).value();
@@ -134,12 +129,10 @@
     function loadInitData() {
       switch (DeviceUsageCommonService.getTimeSelected()) {
         case 0:
-          //DeviceUsageTotalService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
           DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
           dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
           break;
         case 1:
-          //DeviceUsageTotalService.getDataForLastMonth(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
           DeviceUsageTotalService.getDataForLastNTimeUnits(4, 'week', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
           dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(4, 'week');
           break;
@@ -191,29 +184,22 @@
 
     function loadLastWeek() {
       vm.loading = true;
-      // DeviceUsageTotalService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(function (data) {
-      //   loadChartData(data, 'Daily in Week');
-      // }, handleReject);
-
       DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(function (data) {
-        loadChartData(data, 'Daily in Week');
+        loadChartData(data, $translate.instant('reportsPage.usageReports.last7Days'));
       }, handleReject);
     }
 
     function loadLastMonth() {
       vm.loading = true;
-      // DeviceUsageTotalService.getDataForLastMonth(['ce', 'sparkboard'], apiToUse).then(function (data) {
-      //   loadChartData(data, 'Weekly Last Month');
-      // }, handleReject);
       DeviceUsageTotalService.getDataForLastNTimeUnits(4, 'week', ['ce', 'sparkboard'], apiToUse).then(function (data) {
-        loadChartData(data, 'Weekly Last 4 Weeks');
+        loadChartData(data, $translate.instant('reportsPage.usageReports.last4Weeks'));
       }, handleReject);
     }
 
     function loadLast3Months() {
       vm.loading = true;
       DeviceUsageTotalService.getDataForLastMonths(3, 'month', ['ce', 'sparkboard'], apiToUse).then(function (data) {
-        loadChartData(data, 'Monthly');
+        loadChartData(data, $translate.instant('reportsPage.usageReports.last3Months'));
       }, handleReject);
     }
 
@@ -229,10 +215,9 @@
     }
 
     function renderBalloon(graphDataItem) {
-      var text = '<div><h5>Call Duration: ' + graphDataItem.dataContext.totalDuration + '</h5>';
-      text = text + 'Call Count:  ' + graphDataItem.dataContext.callCount + ' <br/> ';
-      text = text + 'Paired Count: ' + graphDataItem.dataContext.pairedCount + '<br/>';
-      //text = text + 'Devices: ' + graphDataItem.dataContext.devices.length + '</div>';
+      var text = '<div><h5>' + $translate.instant('reportsPage.usageReports.callDuration') + ' : ' + graphDataItem.dataContext.totalDuration + '</h5>';
+      text = text + $translate.instant('reportsPage.usageReports.callCount') + ' : ' + graphDataItem.dataContext.callCount + ' <br/> ';
+      text = text + $translate.instant('reportsPage.usageReports.pairedCount') + ' : ' + graphDataItem.dataContext.pairedCount + '<br/>';
       return text;
     }
 

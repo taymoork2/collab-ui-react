@@ -118,16 +118,19 @@
         vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, vm.menuEntry.routeToId);
 
       } else {
+        var action;
         vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-        if ($scope.keyIndex < vm.menuEntry.entries.length) {
-          if (vm.menuEntry.entries[$scope.keyIndex].actions[$scope.keyIndex].name == 'routeToQueue') {
-            vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex].actions[0].queueSettings.fallBack;
+        if ($scope.keyIndex < _.size(_.get(vm.menuEntry, 'entries', []))) {
+          var entry = vm.menuEntry.entries[$scope.keyIndex];
+          action = _.get(entry, 'actions[0]');
+          if (action && _.get(action, 'name') === 'routeToQueue') {
+            vm.menuKeyEntry = action.queueSettings.fallBack;
           } else {
-            vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
+            vm.menuKeyEntry = entry;
           }
         } else {
           vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtExtNum, '');
+          action = AutoAttendantCeMenuModelService.newCeActionEntry(rtExtNum, '');
           vm.menuKeyEntry.addAction(action);
         }
 

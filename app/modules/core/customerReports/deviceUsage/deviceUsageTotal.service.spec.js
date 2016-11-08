@@ -54,7 +54,7 @@ describe('DeviceUsageTotalService', function () {
       var expectedFullResult = [
         {
           "callCount": 10,
-          "totalDuration": "1.67",
+          "totalDuration": "0.03",
           "pairedCount": 10,
           "deviceCategories": {
             "ce": {
@@ -186,14 +186,26 @@ describe('DeviceUsageTotalService', function () {
       expect(dateRange.end).toEqual(yesterday());
     });
 
-    xit("return start and end date base on start of period", function () {
+    it("return start and end date for 4 weeks", function () {
       //TODO: Test with non-floating window
-      DeviceUsageTotalService.getDateRangeForLastNTimeUnits(4, "week");
+      var dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(4, "week");
+      var end = sundayInLastWeek();
+      var start = mondayNWeeksAgo(4);
+      expect(dateRange.start).toEqual(start);
+      expect(dateRange.end).toEqual(end);
     });
   });
 
   function yesterday() {
     return moment().subtract(1, "day").format("YYYY-MM-DD");
+  }
+
+  function sundayInLastWeek() {
+    return moment().isoWeekday(7).subtract(1, 'weeks').format("YYYY-MM-DD");
+  }
+
+  function mondayNWeeksAgo(weekCount) {
+    return moment().isoWeekday(1).subtract(weekCount, 'weeks').format("YYYY-MM-DD");
   }
 
   function sevenDaysAgo() {

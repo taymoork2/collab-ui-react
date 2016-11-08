@@ -170,6 +170,12 @@
       integration: 'https://ccaportalbts.webex.com/ccaportal/api/v2/',
       prod: 'https://ccaportal.webex.com/ccaportal/api/v2/'
     },
+    GssUrl: {
+      dev: 'https://statusbts.webex.com/status',
+      cfe: 'https://statusbts.webex.com/status',
+      integration: 'https://statusbts.webex.com/status',
+      prod: 'https://statusbts.webex.com/status'
+    },
 
     // urls same for all environments
 

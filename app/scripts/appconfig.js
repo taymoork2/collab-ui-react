@@ -627,25 +627,6 @@
             controllerAs: 'settingsCtrl',
             parent: 'main'
           })
-          .state('status', {
-            url: '/status',
-            templateUrl: 'modules/status/dashboard/dashboard.tpl.html',
-            controller: 'DashboardCtrl',
-            controllerAs: 'dashboardCtrl',
-            parent: 'main',
-            resolve: {
-              hasFeatureToggle: function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.globalStatus);
-              }
-            }
-          })
-          /*.state('status', {
-           url: '/status-conponents',
-           templateUrl: 'modules/status/components/components.tpl.html',
-           controller: 'ComponentsCtrl',
-           controllerAs: 'componentsCtrl',
-           parent: 'main'
-           })*/
           .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
             views: {
@@ -2998,7 +2979,10 @@
           })
           .state('care.Settings', {
             url: '/settings',
-            parent: 'care.Details'
+            parent: 'care.Details',
+            templateUrl: 'modules/sunlight/settings/careSettings.tpl.html',
+            controller: 'CareLocalSettingsCtrl',
+            controllerAs: 'localCareSettings'
           })
           .state('care.Features', {
             url: '/features',
@@ -3031,6 +3015,43 @@
               deleteFeatureName: null,
               deleteFeatureId: null,
               deleteFeatureType: null
+            }
+          })
+          .state('gss', {
+            url: '/gss',
+            templateUrl: 'modules/gss/gssIframe/gssIframe.tpl.html',
+            controller: 'GssIframeCtrl',
+            controllerAs: 'gssIframe',
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasGlobalServiceStatus);
+              }
+            }
+          })
+          .state('gss.dashboard', {
+            url: '/dashboard',
+            templateUrl: 'modules/gss/dashboard/dashboard.tpl.html',
+            controller: 'DashboardCtrl',
+            controllerAs: 'dashboardCtrl'
+          })
+          .state('gss.components', {
+            url: '/components',
+            templateUrl: 'modules/gss/components/components.tpl.html',
+            controller: 'ComponentsCtrl',
+            controllerAs: 'componentsCtrl'
+          })
+          .state('gss.components.deleteComponent', {
+            url: '/delete',
+            views: {
+              '@status': {
+                controller: 'DelComponentCtrl',
+                controllerAs: 'delComponentCtrl',
+                templateUrl: 'modules/gss/components/deleteComponent/deleteComponent.tpl.html'
+              }
+            },
+            params: {
+              component: null
             }
           });
       }

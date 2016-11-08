@@ -1,0 +1,19 @@
+<div class="status">
+  <cs-page-header id="statusPanel"
+                  title="{{::gssIframe.pageTitle}}"
+                  back="false"
+                  tabs="gssIframe.headerTabs">
+  </cs-page-header>
+
+  <div class="row">
+    <cs-select
+      ng-model="gssIframe.selected"
+      options="gssIframe.options"
+      placeholder="::'gss.servicesPlaceholder' | translate"
+      nested="false"
+      icon="icon-chevron-down">
+    </cs-select>
+  </div>
+
+  <div class="status-page-wraper" ui-view></div>
+</div>

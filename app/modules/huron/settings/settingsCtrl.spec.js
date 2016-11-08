@@ -5,9 +5,10 @@ describe('Controller: HuronSettingsCtrl', function () {
   var Authinfo, Notification;
   var ExternalNumberService, DialPlanService, PstnSetupService, ModalService;
   var HuronCustomer, ServiceSetup, CallerId, HuronConfig, InternationalDialing, VoicemailMessageAction;
-  var modalDefer, customer, timezones, timezone, voicemailCustomer, internalNumberRanges;
+  var modalDefer, customer, timezones, timezone, voicemailCustomer, internalNumberRanges, languages;
   var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction;
   var $rootScope, didVoicemailCustomer, FeatureToggleService;
+  var controller;
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
@@ -46,6 +47,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     cosRestrictions = getJSONFixture('huron/json/settings/cosRestrictions.json');
     customerCarriers = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
     messageAction = getJSONFixture('huron/json/settings/messageAction.json');
+    languages = getJSONFixture('huron/json/settings/languages.json');
 
     spyOn(HuronCustomer, 'get').and.returnValue($q.when(customer));
     spyOn(ServiceSetup, 'updateVoicemailTimezone').and.returnValue($q.when());
@@ -54,6 +56,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ServiceSetup, 'listInternalNumberRanges').and.returnValue($q.when(internalNumberRanges));
     spyOn(ServiceSetup, 'saveAutoAttendantSite').and.returnValue($q.when());
     spyOn(ServiceSetup, 'updateVoicemailPostalcode').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'getSiteLanguages').and.returnValue($q.when(languages));
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
     spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.when());
     spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.when({
@@ -104,7 +107,6 @@ describe('Controller: HuronSettingsCtrl', function () {
   }));
 
   describe('SettingsCtrlBasic', function () {
-    var controller;
     beforeEach(inject(function ($controller) {
       $scope = $rootScope;
 
@@ -462,6 +464,20 @@ describe('Controller: HuronSettingsCtrl', function () {
       $scope.$apply();
 
       expect($scope.to.options).toEqual(controller.timeZoneOptions);
+    });
+
+    it('should update the preferred language options when collection changes', function () {
+      $scope.to = {};
+
+      controller.preferredLanguageOptions = [{
+        label: "Test Language",
+        value: "test"
+      }];
+
+      controller._buildPreferredLanguageOptions($scope);
+      $scope.$apply();
+
+      expect($scope.to.options).toEqual(controller.preferredLanguageOptions);
     });
 
     it('outbound dial digit should not be equal to site steering digit', function () {
@@ -846,11 +862,49 @@ describe('Controller: HuronSettingsCtrl', function () {
         expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
         expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
       });
+
+      it('should update preferred language when preferred language selection changes', function () {
+        var newLanguage = {
+          label: 'French (Canadian)',
+          value: 'fr_CA'
+        };
+
+        controller.model.site.preferredLanguage = newLanguage;
+        controller.save();
+        $scope.$apply();
+
+        expect(ServiceSetup.updateSite).toHaveBeenCalledWith(jasmine.any(String), {
+          preferredLanguage: newLanguage.value
+        });
+        expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
+      });
+
+      it('should not update preferred language when preferred language selection did not change', function () {
+        var defaultLanguage = {
+          label: 'English (United States)',
+          value: 'en_US'
+        };
+
+        controller.model.site.preferredLanguage = defaultLanguage;
+        controller.save();
+        $scope.$apply();
+
+        expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
+        expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
+      });
+
     });
 
     describe('Voicemail prefix', function () {
       it('should change the extension length and change site code', function () {
         $scope.to = {};
+        controller._buildVoicemailPrefixOptions($scope);
+        controller.model.site.extensionLength = '5';
+        $scope.$apply();
+        expect(controller.model.site.siteCode).toEqual(10);
+      });
+
+      it('should handle $scope.to being undefined', function () {
         controller._buildVoicemailPrefixOptions($scope);
         controller.model.site.extensionLength = '5';
         $scope.$apply();

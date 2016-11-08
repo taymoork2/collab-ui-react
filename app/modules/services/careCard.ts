@@ -12,6 +12,11 @@ export class ServicesOverviewCareCard extends ServicesOverviewCard {
       routerState: 'care.Features',
       buttonClass: 'btn-link',
     },
+    {
+      name: 'servicesOverview.cards.care.buttons.settings',
+      routerState: 'care.Settings',
+      buttonClass: 'btn-link',
+    },
   ];
 
   public getButtons(): Array<ICardButton> {

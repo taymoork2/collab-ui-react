@@ -3,10 +3,13 @@
 /*eslint-disable */
 
 describe('Huron Auto Attendant', function () {
+  var remote = require('selenium-webdriver/remote');
 
   var initialIgnoreSync = true;
 
   beforeAll(function () {
+
+    browser.setFileDetector(new remote.FileDetector());
 
     initialIgnoreSync = browser.ignoreSynchronization;
 
@@ -108,22 +111,39 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisabled(autoattendant.saveButton);
     }, 60000);
 
-    it('should add Phone Menu Say to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    it('should change the Phone Menu Say to an upload file for the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
+      autoattendant.scrollIntoView(autoattendant.phonesayMessageLanguage);
+      //change say to upload file
+      utils.click(autoattendant.phoneMenuMessageOptions);
+      utils.click(autoattendant.phoneMenuPlayMessageOption);
+      utils.wait(autoattendant.phoneMenuMediaUploadInput, 6000);
+      $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
+      utils.wait(autoattendant.saveButton, 12000);
+      utils.expectIsEnabled(autoattendant.saveButton);
+      utils.click(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+    });
 
+    it('should add Phone Menu Say to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      autoattendant.scrollIntoView(autoattendant.phonesayMessageLanguage);
+      utils.click(autoattendant.phoneMenuMessageOptions);
+      utils.click(autoattendant.phoneMenuSayMessageOption);
       autoattendant.scrollIntoView(autoattendant.phoneMenuSay);
       //Add Phone Menu Say Message
       utils.click(autoattendant.phoneMenuSay);
       utils.click(autoattendant.phonesayMessageInput);
       utils.sendKeys(autoattendant.phonesayMessageInput, "Press a key at the menu");
       utils.expectIsEnabled(autoattendant.saveButton);
-
       // language and voice
-      autoattendant.scrollIntoView(autoattendant.phonelanguageDropDownOptions);
+      autoattendant.scrollIntoView(autoattendant.phonesayMessageLanguage);
       utils.click(autoattendant.phonesayMessageLanguage);
       utils.click(autoattendant.phonelanguageDropDownOptions);
       utils.click(autoattendant.phonesayMessageVoice);
       utils.click(autoattendant.phonesayMessageVoiceOptions);
-
+      utils.expectIsEnabled(autoattendant.saveButton);
+      utils.click(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
     });
 
     it('should add Phone Menu Repeat to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
@@ -152,14 +172,33 @@ describe('Huron Auto Attendant', function () {
 
     });
 
-    it('should add say message into submenu of the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    it('should add play message into submenu of the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      // 1st submenu play message
+      var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
+      var sub = element.all(by.css('aa-message-type[name="aa-msg-input-only"]')).get(0);
+      autoattendant.scrollIntoView(autoattendant.submenuSayMessageHeaderFirst);
+      utils.click(autoattendant.submenuMessageOptionsFirst);
+      utils.click(autoattendant.submenuMessageOptionSelect.first());
+      utils.wait(sub.element(by.name('mediaUploadInput')), 6000);
+      $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
+      utils.wait(autoattendant.saveButton, 12000);
+      utils.expectIsEnabled(autoattendant.saveButton);
+      utils.click(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+      utils.click(autoattendant.submenuMessageOptionsFirst);
+      utils.click(autoattendant.submenuMessageOptionSelect.last());
+    });
 
+    it('should add say message into submenu of the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       // 1st submenu say message
       autoattendant.scrollIntoView(autoattendant.submenuSayMessage.get(0));
-      var textBox = autoattendant.submenuSayMessage.get(0).element(by.name('sayMessageInput'));
+      var textBox = autoattendant.submenuSayMessage.get(0).element(by.name('messageInput'));
       utils.click(textBox);
       utils.sendKeys(textBox, "Welcome to first AA submenu");
-
+      utils.wait(autoattendant.saveButton, 12000);
+      utils.expectIsEnabled(autoattendant.saveButton);
+      utils.click(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
     });
 
     it('should set first button of submenu to repeat menu', function () {
@@ -205,8 +244,9 @@ describe('Huron Auto Attendant', function () {
     it('should add say message into the second submenu of the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       // 2nd submenu say message
+      utils.wait(autoattendant.submenuSayMessage, 12000);
       autoattendant.scrollIntoView(autoattendant.submenuSayMessage.get(1));
-      var textBox = autoattendant.submenuSayMessage.get(1).element(by.name('sayMessageInput'));
+      var textBox = autoattendant.submenuSayMessage.get(1).element(by.name('messageInput'));
       utils.click(textBox);
       utils.sendKeys(textBox, "Welcome to second AA submenu");
 
@@ -262,24 +302,24 @@ describe('Huron Auto Attendant', function () {
     it('should contain two submenus previously created in AA "' + deleteUtils.testAAName, function () {
       expect(autoattendant.phoneMenuAction.count()).toBe(3);
       expect(autoattendant.phoneMenuKeyOptions.count()).toBe(3);
-      expect(autoattendant.phoneMenuKeysContent.get(0).getAttribute('innerHTML')).toContain(autoattendant.key0);
-      expect(autoattendant.phoneMenuActionContent.get(0).getAttribute('innerHTML')).toContain(autoattendant.repeatMenu);
-      expect(autoattendant.phoneMenuKeysContent.get(1).getAttribute('innerHTML')).toContain(autoattendant.key1);
-      expect(autoattendant.phoneMenuActionContent.get(1).getAttribute('innerHTML')).toContain(autoattendant.playSubmenu);
-      expect(autoattendant.phoneMenuKeysContent.get(2).getAttribute('innerHTML')).toContain(autoattendant.key2);
-      expect(autoattendant.phoneMenuActionContent.get(2).getAttribute('innerHTML')).toContain(autoattendant.playSubmenu);
+      expect(autoattendant.phoneMenuKeysContent.get(0).getInnerHtml()).toContain(autoattendant.key0);
+      expect(autoattendant.phoneMenuActionContent.get(0).getInnerHtml()).toContain(autoattendant.repeatMenu);
+      expect(autoattendant.phoneMenuKeysContent.get(1).getInnerHtml()).toContain(autoattendant.key1);
+      expect(autoattendant.phoneMenuActionContent.get(1).getInnerHtml()).toContain(autoattendant.playSubmenu);
+      expect(autoattendant.phoneMenuKeysContent.get(2).getInnerHtml()).toContain(autoattendant.key2);
+      expect(autoattendant.phoneMenuActionContent.get(2).getInnerHtml()).toContain(autoattendant.playSubmenu);
 
       var submenuI = 0;
-      expect(autoattendant.submenuKeysContent(submenuI).get(0).getAttribute('innerHTML')).toContain(autoattendant.key0);
-      expect(autoattendant.submenuActionContent(submenuI).get(0).getAttribute('innerHTML')).toContain(autoattendant.repeatMenu);
-      expect(autoattendant.submenuKeysContent(submenuI).get(1).getAttribute('innerHTML')).toContain(autoattendant.key1);
-      expect(autoattendant.submenuActionContent(submenuI).get(1).getAttribute('innerHTML')).toContain(autoattendant.goBack);
+      expect(autoattendant.submenuKeysContent(submenuI).get(0).getInnerHtml()).toContain(autoattendant.key0);
+      expect(autoattendant.submenuActionContent(submenuI).get(0).getInnerHtml()).toContain(autoattendant.repeatMenu);
+      expect(autoattendant.submenuKeysContent(submenuI).get(1).getInnerHtml()).toContain(autoattendant.key1);
+      expect(autoattendant.submenuActionContent(submenuI).get(1).getInnerHtml()).toContain(autoattendant.goBack);
 
       submenuI = 1;
-      expect(autoattendant.submenuKeysContent(submenuI).get(0).getAttribute('innerHTML')).toContain(autoattendant.key0);
-      expect(autoattendant.submenuActionContent(submenuI).get(0).getAttribute('innerHTML')).toContain(autoattendant.repeatMenu);
-      expect(autoattendant.submenuKeysContent(submenuI).get(1).getAttribute('innerHTML')).toContain(autoattendant.key1);
-      expect(autoattendant.submenuActionContent(submenuI).get(1).getAttribute('innerHTML')).toContain(autoattendant.goBack);
+      expect(autoattendant.submenuKeysContent(submenuI).get(0).getInnerHtml()).toContain(autoattendant.key0);
+      expect(autoattendant.submenuActionContent(submenuI).get(0).getInnerHtml()).toContain(autoattendant.repeatMenu);
+      expect(autoattendant.submenuKeysContent(submenuI).get(1).getInnerHtml()).toContain(autoattendant.key1);
+      expect(autoattendant.submenuActionContent(submenuI).get(1).getInnerHtml()).toContain(autoattendant.goBack);
 
     });
 

@@ -12,7 +12,7 @@ import {
   ITimespan,
   ISecondaryReport,
 } from './partnerReportInterfaces';
-let Masonry = require('masonry-layout');
+import { CardUtils } from 'modules/core/cards';
 
 class PartnerReportCtrl {
   // tracking when initialization has completed
@@ -37,9 +37,9 @@ class PartnerReportCtrl {
   constructor(
     private $q: ng.IQService,
     private $rootScope: ng.IRootScopeService,
-    private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
+    private CardUtils: CardUtils,
     private ReportConstants,
     private DummyReportService,
     private GraphService,
@@ -73,7 +73,7 @@ class PartnerReportCtrl {
       } else {
         this.setAllNoData();
       }
-      this.resize(0);
+      this.CardUtils.resize(0);
       this.initialized = true;
     });
   }
@@ -235,7 +235,7 @@ class PartnerReportCtrl {
           }
         }
       }
-      this.resize(0);
+      this.CardUtils.resize(0);
       return;
     });
     promises.push(activePromise);
@@ -247,7 +247,7 @@ class PartnerReportCtrl {
         this.activeUserSecondaryReportOptions.state = this.ReportConstants.SET;
         this.$rootScope.$broadcast(this.activeUserSecondaryReportOptions.broadcast);
       }
-      this.resize(0);
+      this.CardUtils.resize(0);
       return;
     });
     promises.push(tablePromise);
@@ -259,7 +259,7 @@ class PartnerReportCtrl {
     let tempActiveUsersChart = this.GraphService.getActiveUsersGraph(data, this.activeUsersChart);
     if (tempActiveUsersChart) {
       this.activeUsersChart = tempActiveUsersChart;
-      this.resize(0);
+      this.CardUtils.resize(0);
     }
   }
 
@@ -267,7 +267,7 @@ class PartnerReportCtrl {
     let tempPopChart = this.GraphService.getActiveUserPopulationGraph(data, this.popChart);
     if (tempPopChart) {
       this.popChart = tempPopChart;
-      this.resize(0);
+      this.CardUtils.resize(0);
     }
   }
 
@@ -281,7 +281,7 @@ class PartnerReportCtrl {
           this.endpointReportOptions.table.dummy = false;
           this.endpointReportOptions.table.data = response;
           this.endpointReportOptions.state = this.ReportConstants.SET;
-          this.resize(0);
+          this.CardUtils.resize(0);
         }
       }
     });
@@ -305,7 +305,7 @@ class PartnerReportCtrl {
     let tempMediaChart = this.GraphService.getMediaQualityGraph(data, this.mediaQualityChart);
     if (tempMediaChart) {
       this.mediaQualityChart = tempMediaChart;
-      this.resize(0);
+      this.CardUtils.resize(0);
     }
   }
 
@@ -318,7 +318,7 @@ class PartnerReportCtrl {
           this.setCallMetricsGraph(response);
           this.callMetricsReportOptions.state = this.ReportConstants.SET;
         }
-        this.resize(0);
+        this.CardUtils.resize(0);
       }
     });
   }
@@ -327,7 +327,7 @@ class PartnerReportCtrl {
     let tempMetricsChart = this.GraphService.getCallMetricsDonutChart(data, this.callMetricsChart);
     if (tempMetricsChart) {
       this.callMetricsChart = tempMetricsChart;
-      this.resize(0);
+      this.CardUtils.resize(0);
     }
   }
 
@@ -388,21 +388,7 @@ class PartnerReportCtrl {
       }
     });
     this.customerOptions = customers;
-    this.resize(0);
-  }
-
-  // masonry resizing
-  private resize(delay: number): void {
-    // delayed resize necessary to fix any overlapping cards on smaller screens
-    this.$timeout((): void => {
-      const $cardlayout = new Masonry('.cs-card-layout', {
-        itemSelector: '.cs-card',
-        columnWidth: '.cs-card',
-        resize: true,
-        percentPosition: true,
-      });
-      $cardlayout.layout();
-    }, delay);
+    this.CardUtils.resize(0);
   }
 
   // toggle for the all/engagement/quality filter
@@ -416,7 +402,7 @@ class PartnerReportCtrl {
       if (filter === this.ALL || filter === this.QUALITY) {
         this.showQuality = true;
       }
-      this.resize(500);
+      this.CardUtils.resize(500);
       this.currentFilter = filter;
     }
   }
@@ -424,7 +410,7 @@ class PartnerReportCtrl {
   // public functions
   // resizing for Most Active Users Table
   public resizeMostActive() {
-    this.resize(0);
+    this.CardUtils.resize(0);
   }
 
   // reset for the reports after a global filter changes
@@ -451,7 +437,7 @@ class PartnerReportCtrl {
     } else {
       this.setAllNoData();
     }
-    this.resize(0);
+    this.CardUtils.resize(0);
   }
 }
 

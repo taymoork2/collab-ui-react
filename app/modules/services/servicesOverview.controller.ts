@@ -7,6 +7,7 @@ export class ServicesOverviewCtrl {
   /* @ngInject */
   constructor(
     private ServicesOverviewCardFactory,
+    private Auth,
     private Authinfo,
     private FusionClusterService,
     private FeatureToggleService,
@@ -38,6 +39,11 @@ export class ServicesOverviewCtrl {
       this.forwardEvent('hybridDataSecurityToggleEventHandler', supports);
     });
 
+    FeatureToggleService.atlasPMRonM2GetStatus().then(supports => {
+      if (supports) {
+        this.getPMRStatus();
+      }
+    });
   }
 
   get hybridCards() {
@@ -63,6 +69,11 @@ export class ServicesOverviewCtrl {
   private loadWebexSiteList() {
     let siteList = this.Authinfo.getConferenceServicesWithoutSiteUrl() || [];
     this.forwardEvent('updateWebexSiteList', siteList);
+  }
+
+  public getPMRStatus() {
+    let customerAccount = this.Auth.getCustomerAccount(this.Authinfo.getOrgId());
+    this.forwardEvent('updatePMRStatus', customerAccount);
   }
 }
 

@@ -436,7 +436,7 @@ $aa-builder-text-color: $gray-dark-1;
   .aa-lane {
     @extend .aa-flex-container;
 
-    min-width: vr-adjust(390);
+    min-width: vr-adjust(480);
 
     .aa-panel-lane {
       @extend .aa-panel;
