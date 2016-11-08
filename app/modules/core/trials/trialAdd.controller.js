@@ -472,7 +472,6 @@
 
     function init() {
       $q.all({
-        atlasWebexTrials: FeatureToggleService.atlasWebexTrialsGetStatus(),
         atlasCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         atlasContextServiceTrials: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
@@ -482,7 +481,7 @@
           vm.showRoomSystems = true;
           vm.roomSystemTrial.enabled = true;
           vm.sparkBoardTrial.enabled = results.atlasDarling;
-          vm.webexTrial.enabled = results.atlasWebexTrials;
+          vm.webexTrial.enabled = true; // TODO: we enable globally by defaulting to 'true' here, but will revisit and refactor codepaths in a subsequent PR
           vm.callTrial.enabled = vm.hasCallEntitlement;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;
           vm.messageTrial.enabled = true;
