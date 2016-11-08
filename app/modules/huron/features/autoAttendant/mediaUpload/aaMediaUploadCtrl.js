@@ -241,7 +241,7 @@
     }
 
     function gatherMediaSource() {
-      if ($scope.type && _.includes(mediaTypes, $scope.type)) { //case of route to queue types
+      if ($scope.type && _.includes(mediaTypes, $scope.type) && $scope.menuId) { //case of route to queue types
         //type will be used to differentiate between the different media uploads on the queue modal
         //get the entry mapped to a particular route to queue and
         //mapped to a particular queue setting

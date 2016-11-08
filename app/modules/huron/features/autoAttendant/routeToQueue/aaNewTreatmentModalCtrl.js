@@ -6,8 +6,22 @@
     .controller('AANewTreatmentModalCtrl', AANewTreatmentModalCtrl);
 
   /* @ngInject */
-  function AANewTreatmentModalCtrl($modalInstance, $translate, $scope, AACommonService, AutoAttendantCeMenuModelService, AAUiModelService, aa_schedule, aa_menu_id, aa_index, aa_key_index) {
+  function AANewTreatmentModalCtrl($modalInstance, $translate, $scope, AALanguageService, AACommonService, AutoAttendantCeMenuModelService, AAUiModelService, aa_schedule, aa_menu_id, aa_index, aa_key_index, aa_from_route_call) {
     var vm = this;
+
+    vm.actionEntry = {};
+
+    vm.showLanguageAndVoiceOptions = true;
+
+    var languageOption = {
+      label: '',
+      value: ''
+    };
+
+    var voiceOption = {
+      label: '',
+      value: ''
+    };
 
     vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
@@ -45,6 +59,12 @@
     vm.ok = ok;
     vm.isSaveEnabled = isSaveEnabled;
     vm.uploadMohTrigger = uploadMohTrigger;
+
+    vm.languageOption = languageOption;
+    vm.voiceOption = voiceOption;
+
+    vm.languageOptions = AALanguageService.getLanguageOptions();
+    vm.voiceOptions = AALanguageService.getVoiceOptions();
 
     var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
     var DEFAULT_MOH = 'musicOnHoldDefault';
@@ -95,6 +115,12 @@
     //populating fallback drop down in sorted order
     function populateDropDown() {
       vm.destinationOptions.sort(AACommonService.sortByProperty('label'));
+      vm.languageOptions.sort(AACommonService.sortByProperty('label'));
+      vm.voiceOptions.sort(AACommonService.sortByProperty('label'));
+
+      vm.languageOption = AALanguageService.getLanguageOption();
+      vm.voiceOption = AALanguageService.getVoiceOption();
+
     }
 
     function populateMohRadio() {
@@ -110,6 +136,7 @@
       if ($scope.keyIndex && $scope.menuId) { //came from a phone menu
         var phMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         vm.menuEntry = phMenu.entries[$scope.keyIndex];
+        vm.showLanguageAndVoiceOptions = false;
       } else { //came from a route call
         var ui = AAUiModelService.getUiModel();
         var rcMenu = ui[$scope.schedule];
@@ -124,6 +151,7 @@
       $scope.index = aa_index;
       $scope.menuId = aa_menu_id;
       $scope.keyIndex = aa_key_index;
+      $scope.fromRouteCall = aa_from_route_call;
     }
 
     function initializeView() {

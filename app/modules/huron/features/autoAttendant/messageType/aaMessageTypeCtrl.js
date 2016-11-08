@@ -146,7 +146,7 @@
       holdActionDesc = "";
       holdActionValue = "";
 
-      if ($scope.type) {
+      if ($scope.type && $scope.menuId) {
         var sourceMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         var sourceQueue = sourceMenu.entries[$scope.keyIndex];
         var queueAction = sourceQueue.actions[0];

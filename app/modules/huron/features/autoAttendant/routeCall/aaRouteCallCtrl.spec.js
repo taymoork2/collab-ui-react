@@ -2,11 +2,17 @@
 
 describe('Controller: AARouteCallMenuCtrl', function () {
   var controller;
-  var AAUiModelService, AutoAttendantCeMenuModelService;
-  var $rootScope, $scope;
+  var AAUiModelService, AutoAttendantCeMenuModelService, FeatureToggleService, QueueHelperService;
+  var $rootScope, $scope, $q;
   var aaUiModel = {
     openHours: {}
   };
+  var queueName = 'Sunlight Queue 1';
+  var queues = [{
+    queueName: queueName,
+    queueUrl: '/c16a6027-caef-4429-b3af-9d61ddc7964b'
+
+  }];
 
   var sortedOptions = [{
     "label": 'autoAttendant.phoneMenuRouteAA',
@@ -23,14 +29,20 @@ describe('Controller: AARouteCallMenuCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function ($controller, _$rootScope_, _$q_, _FeatureToggleService_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _QueueHelperService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
+    $q = _$q_;
 
+    FeatureToggleService = _FeatureToggleService_;
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    QueueHelperService = _QueueHelperService_;
 
+
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+    spyOn(QueueHelperService, 'listQueues').and.returnValue($q.when(queues));
 
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
     $scope.schedule = 'openHours';

@@ -2377,6 +2377,8 @@
       "ExternalPhone": "External Phone",
       "Disconnect": "Disconnect"
   },
+    "languageAndVoice" : "Language and Voice",
+    "langaugeAndVoiceHelp" : "Language and voice will apply to Say Messages and Fallback.",
     "initialAnnouncement" : "Initial Announcement",
     "initialHelpText" : "This message will play for the caller upon entry into the queue.",
     "fallbackLabel": "Fallback" ,

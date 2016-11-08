@@ -80,6 +80,9 @@
           aa_key_index: function () {
             return $scope.keyIndex;
           },
+          aa_from_route_call: function () {
+            return $scope.fromRouteCall;
+          }
         },
         modalClass: 'aa-queue-settings-modal'
       });
@@ -128,6 +131,26 @@
             vm.menuEntry.actions[0].setValue('');
           } // else let saved value be used
         }
+        if (angular.isUndefined(vm.menuEntry.actions[0].queueSettings)) {
+          vm.menuEntry.actions[0].queueSettings = {};
+        }
+        if (angular.isUndefined(vm.menuEntry.actions[0].queueSettings.musicOnHold)) {
+          vm.menuEntry.actions[0].queueSettings.musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var mohAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+          vm.menuEntry.actions[0].queueSettings.musicOnHold.addAction(mohAction);
+        }
+        if (angular.isUndefined(vm.menuEntry.actions[0].queueSettings.initialAnnouncement)) {
+          vm.menuEntry.actions[0].queueSettings.initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
+          vm.menuEntry.actions[0].queueSettings.initialAnnouncement.addAction(iaAction);
+        }
+        if (angular.isUndefined(vm.menuEntry.actions[0].queueSettings.fallBack)) {
+          vm.menuEntry.actions[0].queueSettings.fallBack = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var fbMaxTime = AutoAttendantCeMenuModelService.newCeActionEntry('time', '');
+          vm.menuEntry.actions[0].queueSettings.fallBack.addAction(fbMaxTime);
+          var fbAction = AutoAttendantCeMenuModelService.newCeActionEntry('option', '');
+          vm.menuEntry.actions[0].queueSettings.fallBack.addAction(fbAction);
+        }
       } else {
         vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         if ($scope.keyIndex < vm.menuEntry.entries.length) {
@@ -142,19 +165,19 @@
         }
         if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.musicOnHold)) {
           vm.menuKeyEntry.actions[0].queueSettings.musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var mohAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+          mohAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
           vm.menuKeyEntry.actions[0].queueSettings.musicOnHold.addAction(mohAction);
         }
         if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement)) {
           vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
+          iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
           vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.addAction(iaAction);
         }
         if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.fallBack)) {
           vm.menuKeyEntry.actions[0].queueSettings.fallBack = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var fbMaxTime = AutoAttendantCeMenuModelService.newCeActionEntry('time', '');
+          fbMaxTime = AutoAttendantCeMenuModelService.newCeActionEntry('time', '');
           vm.menuKeyEntry.actions[0].queueSettings.fallBack.addAction(fbMaxTime);
-          var fbAction = AutoAttendantCeMenuModelService.newCeActionEntry('option', '');
+          fbAction = AutoAttendantCeMenuModelService.newCeActionEntry('option', '');
           vm.menuKeyEntry.actions[0].queueSettings.fallBack.addAction(fbAction);
         }
       }

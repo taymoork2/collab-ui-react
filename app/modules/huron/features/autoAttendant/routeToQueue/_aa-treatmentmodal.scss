@@ -14,6 +14,24 @@
   .aa-selectmessage-modal {
     width: 150px;
   }
+  .aa-message-select-list {
+    @include vr-spacing(mb, 0.75);
+
+    .select-toggle {
+      width: 100%;
+
+      @include vr-spacing(pr, 1.75);
+    }
+
+    .select-toggle > i {
+      @include vr-spacing(mr, 0);
+      @include vr-spacing(ml, -0.5);
+    }
+
+    .dropdown-menu {
+      width: 100%;
+    }
+  }
 & .aa-destination-container {
      width: 100%;
      & .csSelect-container {
