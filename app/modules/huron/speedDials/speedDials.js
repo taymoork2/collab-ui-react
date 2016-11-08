@@ -5,7 +5,7 @@
     .module('Huron')
     .controller('SpeedDialsCtrl', SpeedDialsCtrl);
 
-  function SpeedDialsCtrl($translate, $stateParams, $scope, $modal, $timeout, dragularService, SpeedDialsService, Notification) {
+  function SpeedDialsCtrl($translate, $stateParams, $scope, $modal, $timeout, dragularService, SpeedDialsService, Notification, TelephoneNumberService, Authinfo, DialPlanService) {
     var speedDials = this;
     speedDials.currentUser = $stateParams.currentUser;
     if (_.has(speedDials, 'currentUser') && _.has(speedDials.currentUser, 'id')) {
@@ -26,6 +26,15 @@
       required: $translate.instant('common.invalidRequired'),
       pattern: $translate.instant('common.incorrectFormat')
     };
+
+    speedDials.callDestInputs = ['external', 'uri', 'custom'];
+
+    speedDials.getRegionCode = function () {
+      return DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
+        return response;
+      });
+    };
+
     speedDials.reachSpeedDialLimit = function () {
       if (_.has(speedDials.speedDialList, 'length')) {
         return speedDials.speedDialList.length >= 125;
@@ -50,7 +59,7 @@
         speedDials.editing = true;
         sd.edit = true;
         speedDials.newLabel = sd.label;
-        speedDials.newNumber = sd.number;
+        speedDials.callDest = TelephoneNumberService.getDestinationObject(sd.number);
       }
     };
 
@@ -106,6 +115,7 @@
         }
         speedDials.newLabel = '';
         speedDials.newNumber = '';
+        speedDials.callDest = undefined;
       } else if (speedDials.reordering) {
         speedDials.speedDialList.length = 0;
         Array.prototype.push.apply(speedDials.speedDialList, angular.copy(speedDials.copyList));
@@ -121,6 +131,13 @@
         });
         sd.edit = false;
         sd.label = speedDials.newLabel;
+
+        if (TelephoneNumberService.validateDID(speedDials.callDest.phoneNumber)) {
+          speedDials.newNumber = TelephoneNumberService.getDIDValue(speedDials.callDest.phoneNumber);
+        } else {
+          speedDials.newNumber = _.replace(speedDials.callDest.phoneNumber, /-/g, '');
+        }
+
         sd.number = _.replace(speedDials.newNumber, / /g, '');
         speedDials.newLabel = '';
         speedDials.newNumber = '';
