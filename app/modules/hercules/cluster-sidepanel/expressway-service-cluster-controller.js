@@ -45,9 +45,7 @@
       if (vm.cluster && _.size(vm.cluster.connectors) === 0) {
         FusionClusterService.getPreregisteredClusterAllowList()
           .then(function (allowList) {
-            vm.cluster.allowedRedirectTarget = _.find(allowList, function (entry) {
-              return entry.clusterId === vm.cluster.id;
-            });
+            vm.cluster.allowedRedirectTarget = _.find(allowList, { clusterId: vm.cluster.id });
           })
           .catch(function (error) {
             Notification.errorWithTrackingId(error, 'hercules.genericFailure');
@@ -219,9 +217,9 @@
         controller: 'ClusterDeregisterController',
         controllerAs: 'clusterDeregister',
         templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html',
-        type: 'small'
+        type: 'dialog'
       }).result.then(function () {
-        $state.go('cluster-list');
+        $state.go('calendar-service.list');
       });
     }
 

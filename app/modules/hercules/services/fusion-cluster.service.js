@@ -8,7 +8,7 @@
     .factory('FusionClusterService', FusionClusterService);
 
   /* @ngInject */
-  function FusionClusterService($http, $q, $translate, Authinfo, FusionClusterStatesService, FusionUtils, UrlConfig, USSService) {
+  function FusionClusterService($http, $q, $translate, Authinfo, FusionClusterStatesService, FusionUtils, UrlConfig, USSService, Notification) {
     var service = {
       preregisterCluster: preregisterCluster,
       addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList,
@@ -34,7 +34,8 @@
       getStatusForService: getStatusForService,
       getResourceGroups: getResourceGroups,
       getClustersForResourceGroup: getClustersForResourceGroup,
-      getUnassignedClusters: getUnassignedClusters
+      getUnassignedClusters: getUnassignedClusters,
+      setClusterAllowListInfoForExpressway: setClusterAllowListInfoForExpressway
     };
 
     return service;
@@ -416,6 +417,31 @@
             unassigned: response.unassigned,
             clusters: response.clusters
           };
+        });
+    }
+
+    function setClusterAllowListInfoForExpressway(clusters) {
+      var emptyExpresswayClusters = _.filter(clusters, function (cluster) {
+        return cluster.targetType === 'c_mgmt' && _.size(cluster.connectors) === 0;
+      });
+      if (_.size(emptyExpresswayClusters) === 0) {
+        return $q.resolve(clusters);
+      }
+      return getPreregisteredClusterAllowList()
+        .then(function (allowList) {
+          return _.map(clusters, function (cluster) {
+            if (_.some(emptyExpresswayClusters, { id: cluster.id})) {
+              cluster.isEmptyExpresswayCluster = true;
+              cluster.allowedRedirectTarget = _.find(allowList, {clusterId: cluster.id});
+              if (cluster.aggregates && !cluster.allowedRedirectTarget) {
+                cluster.aggregates.state = 'registrationTimeout';
+              }
+            }
+            return cluster;
+          });
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
         });
     }
   }

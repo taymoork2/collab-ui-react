@@ -50,14 +50,14 @@
     </div>
     <div class="row cluster-list-body" ng-if="$ctrl.cluster.isEmptyExpresswayCluster">
       <div ng-if="$ctrl.cluster.allowedRedirectTarget" class="columns medium-12">
-        <p translate="hercules.fusion.list.completeRegistration"></p>
+        <p translate="hercules.fusion.list.complete-registration"></p>
         <div class="center" style="padding-bottom: 1rem;">
           <button class="btn" ng-click="$ctrl.openDeleteConfirm($ctrl.cluster)" translate="common.remove"></button>
-          <button class="btn btn--primary" ng-click="$ctrl.goToExpressway($ctrl.cluster.allowedRedirectTarget.hostname)" translate="hercules.redirect-target-dialog.register-resource-button"></button>
+          <button class="btn btn--primary" ng-click="$ctrl.goToExpressway($ctrl.cluster.allowedRedirectTarget.hostname)" translate="hercules.fusion.list.go-to-expressway"></button>
         </div>
       </div>
       <div ng-if="!$ctrl.cluster.allowedRedirectTarget" class="columns medium-12">
-        <p translate="hercules.fusion.list.registrationTimeout"></p>
+        <p translate="hercules.fusion.list.registration-timeout"></p>
       </div>
     </div>
     <footer ng-if="!$ctrl.cluster.isEmptyExpresswayCluster">

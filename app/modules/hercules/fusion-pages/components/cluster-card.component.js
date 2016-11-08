@@ -92,7 +92,7 @@
         controller: 'ClusterDeregisterController',
         controllerAs: 'clusterDeregister',
         templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html',
-        type: 'small'
+        type: 'dialog'
       }).result.then(function () {
         $state.go('cluster-list');
       });

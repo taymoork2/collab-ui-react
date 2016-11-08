@@ -78,6 +78,7 @@
         case 'stopped':
         case 'not_operational':
         case 'unknown':
+        case 'registrationTimeout':
         default:
           label = 'error';
           value = 3;
@@ -200,7 +201,7 @@
           return cluster;
         })
         .filter(function (cluster) {
-          return _.find(cluster.provisioning, { connectorType: type });
+          return _.some(cluster.provisioning, { connectorType: type });
         })
         .value();
     }

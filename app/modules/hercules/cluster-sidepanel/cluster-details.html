@@ -158,22 +158,17 @@
 
   <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length === 0 && clusterDetailsCtrl.cluster.allowedRedirectTarget">
     <div class="section-title-row section-name" translate="hercules.registration.heading"></div>
-    <p translate="hercules.fusion.list.completeRegistration"></p>
-    <div class="center">
+    <p translate="hercules.fusion.list.complete-registration"></p>
+    <div>
       <button class="btn" ng-click="clusterDetailsCtrl.openDeleteConfirm($ctrl.cluster)" translate="common.remove"></button>
-      <button class="btn btn--primary" ng-click="clusterDetailsCtrl.goToExpresswayCluster($ctrl.cluster.allowedRedirectTarget.hostname)" translate="hercules.redirect-target-dialog.register-resource-button"></button>
+      <button class="btn btn--primary" ng-click="clusterDetailsCtrl.goToExpressway(clusterDetailsCtrl.cluster.allowedRedirectTarget.hostname)" translate="hercules.fusion.list.go-to-expressway"></button>
     </div>
   </cs-sp-section>
 
   <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length === 0 && !clusterDetailsCtrl.cluster.allowedRedirectTarget">
     <div class="section-title-row section-name" translate="hercules.registration.heading"></div>
-    <div ng-if="!$ctrl.cluster.allowedRedirectTarget" class="columns medium-12">
-      <div class="error-message">
-        <i class="icon icon-warning"></i>
-        <p class="message" translate="hercules.fusion.list.registrationTimeoutExtended"></p>
-      </div>
-    </div>
-    <div class="center">
+    <p translate="hercules.fusion.list.registration-timeout-extended"></p>
+    <div>
       <button class="btn" ng-click="clusterDetailsCtrl.openDeleteConfirm()" translate="common.remove"></button>
     </div>
   </cs-sp-section>

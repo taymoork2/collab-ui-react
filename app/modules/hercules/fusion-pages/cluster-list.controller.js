@@ -70,8 +70,8 @@
           }
           return clusters;
         })
+        .then(FusionClusterService.setClusterAllowListInfoForExpressway(clusters))
         .then(function (clusters) {
-          setClusterAllowListInfoForExpressway(clusters);
           clustersCache = clusters;
           updateFilters();
           vm.displayedClusters = clusters;
@@ -89,7 +89,14 @@
       FusionClusterService.getResourceGroups()
         .then(removeHybridMediaClustersIfNecessary)
         .then(function (groups) {
-          setClusterAllowListInfoForExpressway(groups.clusters);
+          return FusionClusterService.setClusterAllowListInfoForExpressway(groups.clusters)
+            .then(function (clusters) {
+              // we replace groups.clusters with the one modified by setClusterAllowListInfoForExpressway
+              groups.clusters = clusters;
+              return groups;
+            });
+        })
+        .then(function (groups) {
           groupsCache = groups;
           updateFilters();
           vm.displayedGroups = groups;
@@ -99,27 +106,6 @@
         })
         .finally(function () {
           vm.loading = false;
-        });
-    }
-
-    function setClusterAllowListInfoForExpressway(clusters) {
-      var emptyExpresswayClusters = _.filter(clusters, function (cluster) {
-        return cluster.targetType === 'c_mgmt' && _.size(cluster.connectors) === 0;
-      });
-      if (_.size(emptyExpresswayClusters) === 0) {
-        return;
-      }
-      FusionClusterService.getPreregisteredClusterAllowList()
-        .then(function (allowList) {
-          _.each(emptyExpresswayClusters, function (cluster) {
-            cluster.isEmptyExpresswayCluster = true;
-            cluster.allowedRedirectTarget = _.find(allowList, function (entry) {
-              return entry.clusterId === cluster.id;
-            });
-          });
-        })
-        .catch(function (error) {
-          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
         });
     }
 
