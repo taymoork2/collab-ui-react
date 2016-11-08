@@ -69,13 +69,13 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     return this._clusterSetupModeButtons;
   }
 
-  private enableButtons (buttons: Array<IHdsCardButton>) {
+  private enableButtons(buttons: Array<IHdsCardButton>) {
     for (let i = 0; i < buttons.length; i++) {
       if (i !== this._step) {
-         buttons[i].routerState = undefined;
+        buttons[i].routerState = undefined;
       }
       if (i < this._step) {
-         buttons[i].completed = true;
+        buttons[i].completed = true;
       }
     }
   }
