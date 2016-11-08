@@ -18,8 +18,6 @@
     //ok, we need a unique global self.
     //the above self is overloaded in places.
 
-    //var loc = _.replace($translate.use(), "_", "-");
-
     var common_reports_pageids = ["meetings_in_progess",
       "meeting_usage",
       "recording_usage",
@@ -282,7 +280,7 @@
       var training_center = new ReportsSection("training_center", siteUrl, ["/u/y/z", "www.yahoo.com"], "TC", "en");
       var remote_access = new ReportsSection("remote_access", siteUrl, ["/u/y/z", "www.yahoo.com"], "RA", "en");
 
-      if (angular.isDefined(mapJson)) {
+      if (!_.isUndefined(mapJson)) {
         //use the above 5 lists to gather all the UISrefs
         [
           [common_reports_pageids, common_reports],
@@ -413,7 +411,7 @@
 
                 logMsg = funcName + ": " + "ns1_siteAdminNavUrl=" + "\n" +
                   JSON.stringify(ns1_siteAdminNavUrl);
-                $log.log(logMsg);
+                Log.debug(logMsg);
 
                 var rpts = self.getReports(siteUrl, reportPagesInfoJson);
                 reportsObject["reports"] = rpts;

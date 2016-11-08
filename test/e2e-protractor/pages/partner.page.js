@@ -97,15 +97,16 @@ var PartnerHomePage = function () {
   this.launchCustomerPanelButton = element(by.id('launchCustomer'));
   this.exitPreviewButton = element(by.css('.panel-close'));
   this.partnerFilter = element(by.id('partnerFilter'));
-  this.trialFilter = element(by.cssContainingText('.filter', 'Trial'));
+  //this.trialFilter = element(by.cssContainingText('.filter', 'Trial'));
   this.searchFilter = element(by.id('searchFilter'));
-  this.allFilter = element(by.cssContainingText('.filter', 'All'));
+  //this.allFilter = element(by.cssContainingText('.filter', 'All'));
   this.partnerEmail = element.all(by.binding('userName'));
   this.messageTrialCheckbox = element(by.css('label[for="messageTrial"]'));
   this.roomSystemsCheckbox = element(by.css('label[for="trialRoomSystem"]'));
   this.roomSystemsCheckboxChecked = element(by.css('label[for="trialRoomSystemsChecked"]'));
   this.squaredUCTrialCheckbox = element(by.css('label[for="callTrial"]'));
   this.roomSystemsTrialCheckbox = element(by.css('label[for="roomSystemsTrial"]'));
+  this.sparkBoardTrialCheckbox = element(by.css('label[for="sparkBoardTrial"]'));
   this.careTrialCheckbox = element(by.css('label[for="careTrial"]'));
   this.webexTrialCheckbox = element(by.css('label[for="webexTrial"]'));
   this.careLicenseCountTextbox = element(by.css('input[name="input_trialCareLicenseCount"]'));
@@ -167,7 +168,7 @@ var PartnerHomePage = function () {
       partner.pendingCount++;
 
       browser.refresh();
-      utils.click(partner.trialFilter);
+      //utils.click(partner.trialFilter);
       utils.search(partner.newTrial.customerName, -1);
       utils.waitIsDisplayed(partner.newTrialRow);
 

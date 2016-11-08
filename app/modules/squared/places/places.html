@@ -2,7 +2,7 @@
   <cs-page-header title="{{::'tabs.placeTab' | translate}}"></cs-page-header>
   <cs-page-sub-header ng-show="sc.existsDevices()">
     <cs-page-sub-header-left>
-      <cs-searchfilter filters="sc.placeFilter.getFilters()" search-item-fn="sc.placeFilter.setCurrentSearch(searchStr)" set-filter-fn="sc.placeFilter.setCurrentFilter(filter.filterValue)">{}
+      <cs-searchfilter filters="sc.placeFilter.getFilters()" search-item-fn="sc.setCurrentSearch(searchStr)" set-filter-fn="sc.setCurrentFilter(filter.filterValue)">{}
       </cs-searchfilter>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
@@ -22,10 +22,10 @@
       </div>
     </div>
     <div ng-if="sc.shouldShowList()">
-      <div ng-if="sc.existsDevices() && sc.updateListAndFilter().length > 0" id="roomsListPanel" class="row">
+      <div ng-if="sc.existsDevices() && sc.placeList().length > 0" id="roomsListPanel" class="row">
         <div class="gridStyle" ui-grid="sc.gridOptions" ui-grid-selection></div>
       </div>
-      <div ng-if="sc.updateListAndFilter().length === 0 && sc.existsDevices()">
+      <div ng-if="sc.placeList().length === 0 && sc.existsDevices()">
         <div class="none_found">
           <i class="icon icon-circle-comp-negative" />
           <span class="h5" translate="spacesPage.tryAgain"></span>

@@ -3,7 +3,7 @@
 describe('Controller: ServiceSetup', function () {
   var $scope, $state, $previousState, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer, DialPlanService;
   var Authinfo, VoicemailMessageAction, Orgservice;
-  var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction;
+  var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction, FeatureToggleService;
   var $rootScope, PstnSetupService;
   var dialPlanDetailsNorthAmerica = [{
     countryCode: "+1",
@@ -17,7 +17,7 @@ describe('Controller: ServiceSetup', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$rootScope_, _$previousState_, _$q_, _ServiceSetup_, _Notification_, _HuronConfig_, _$httpBackend_,
-    _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _Authinfo_, _VoicemailMessageAction_,
+    _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _Authinfo_, _VoicemailMessageAction_, _FeatureToggleService_,
     _PstnSetupService_, _Orgservice_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
@@ -36,6 +36,7 @@ describe('Controller: ServiceSetup', function () {
     $previousState = _$previousState_;
     PstnSetupService = _PstnSetupService_;
     Orgservice = _Orgservice_;
+    FeatureToggleService = _FeatureToggleService_;
 
     customer = {
       "uuid": "84562afa-2f35-474f-ba0f-2def42864e12",
@@ -85,7 +86,7 @@ describe('Controller: ServiceSetup', function () {
     form = {
       '$invalid': false,
       'ftswLocalDialingRadio': {
-        $setValidity: function () {}
+        $setValidity: function () { }
       }
     };
 
@@ -136,6 +137,8 @@ describe('Controller: ServiceSetup', function () {
 
     spyOn(VoicemailMessageAction, 'get').and.returnValue($q.when(messageAction));
     spyOn(VoicemailMessageAction, 'update').and.returnValue($q.when());
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'getCustomerHuronToggle').and.returnValue($q.when(false));
 
     $httpBackend
       .expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + customer.uuid + '/directorynumbers')
@@ -893,6 +896,13 @@ describe('Controller: ServiceSetup', function () {
         expect(controller.model.site.siteCode).toEqual('10');
       });
 
+      it('should handle $scope.to being undefined', function () {
+        controller._buildVoicemailPrefixOptions($scope);
+        controller.model.site.extensionLength = '5';
+        $scope.$apply();
+        expect(controller.model.site.siteCode).toEqual('10');
+      });
+
       it('should set voicemail prefix to intersect with extension range and trigger warning', function () {
         controller.model.voicemailPrefix.label = '1100';
         controller.model.displayNumberRanges = [{
@@ -919,7 +929,7 @@ describe('Controller: ServiceSetup', function () {
         var localscope = {
           fields: [{
             formControl: {
-              $setValidity: function () {}
+              $setValidity: function () { }
             }
           }]
         };

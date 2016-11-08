@@ -12,6 +12,7 @@
         vm.placesLoaded = false;
         vm.placeFilter = PlaceFilter;
         vm.placeFilter.resetFilters();
+        var filteredPlaces;
         var placesList;
 
         function init() {
@@ -22,6 +23,7 @@
           CsdmDataModelService.getPlacesMap().then(function (list) {
             placesList = list;
             vm.placesLoaded = true;
+            vm.updateListAndFilter();
           });
         }
 
@@ -43,9 +45,26 @@
           return Authinfo.isSquaredUC();
         };
 
-        vm.updateListAndFilter = function () {
-          return PlaceFilter.getFilteredList(_.values(placesList));
+        vm.setCurrentSearch = function (searchStr) {
+          vm.placeFilter.setCurrentSearch(searchStr);
+          vm.updateListAndFilter();
         };
+
+        vm.setCurrentFilter = function (filterValue) {
+          vm.placeFilter.setCurrentFilter(filterValue);
+          vm.updateListAndFilter();
+        };
+
+        vm.placeList = function () {
+          return filteredPlaces;
+        };
+
+        vm.updateListAndFilter = function () {
+          filteredPlaces = PlaceFilter.getFilteredList(_.values(placesList));
+          return filteredPlaces;
+        };
+
+        CsdmDataModelService.subscribeToChanges($scope, vm.updateListAndFilter.bind(this));
 
         vm.numDevices = function (place) {
           return _.size(place.devices);
@@ -59,7 +78,7 @@
         };
 
         vm.gridOptions = {
-          data: 'sc.updateListAndFilter()',
+          data: 'sc.placeList()',
           rowHeight: 45,
           enableRowHeaderSelection: false,
           enableColumnMenus: false,

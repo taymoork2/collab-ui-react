@@ -7,7 +7,7 @@
       /* @ngInject */
       function ($scope, $state, $translate, $templateCache, DeviceFilter, CsdmUnusedAccountsService, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, CsdmPlaceService) {
         var vm = this;
-
+        var filteredDevices = [];
         AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
           vm.showLicenseWarning = !!_.find(data.accounts, {
             licenses: [{
@@ -23,11 +23,16 @@
 
         CsdmDataModelService.getDevicesMap().then(function (devicesMap) {
           vm.devicesMap = devicesMap;
+          vm.updateListAndFilter();
         });
 
-        CsdmDataModelService.devicePollerOn('data', angular.noop, {
-          scope: $scope
-        });
+        CsdmDataModelService.devicePollerOn('data',
+          function () {
+            vm.updateListAndFilter();
+          }, {
+            scope: $scope
+          }
+        );
 
         var csdmHuronOrgDeviceService = CsdmHuronOrgDeviceService.create(Authinfo.getOrgId());
 
@@ -35,6 +40,15 @@
         CsdmPlaceService.placesFeatureIsEnabled().then(function (result) {
           vm.showPlaces = result;
         });
+
+        vm.setCurrentSearch = function (searchStr) {
+          vm.deviceFilter.setCurrentSearch(searchStr);
+          vm.updateListAndFilter();
+        };
+        vm.setCurrentFilter = function (filterValue) {
+          vm.deviceFilter.setCurrentFilter(filterValue);
+          vm.updateListAndFilter();
+        };
 
         vm.existsDevices = function () {
           return (vm.shouldShowList() && CsdmDataModelService.hasDevices());
@@ -56,16 +70,20 @@
           return vm.isEntitledToRoomSystem() || vm.isEntitledToHuron();
         };
 
+        vm.deviceList = function () {
+          return filteredDevices;
+        };
         vm.updateListAndFilter = function () {
-
           var allDevices = _.chain({})
             .extend(vm.devicesMap)
             .extend(CsdmUnusedAccountsService.getAccountList())
             .values()
             .value();
-
-          return vm.deviceFilter.getFilteredList(allDevices);
+          filteredDevices = vm.deviceFilter.getFilteredList(allDevices);
+          return filteredDevices;
         };
+
+        CsdmDataModelService.subscribeToChanges($scope, vm.updateListAndFilter.bind(this));
 
         vm.showDeviceDetails = function (device) {
           vm.currentDevice = device; // fixme: modals depend on state set here
@@ -76,7 +94,7 @@
         };
 
         vm.gridOptions = {
-          data: 'sc.updateListAndFilter()',
+          data: 'sc.deviceList()',
           rowHeight: 45,
           enableRowHeaderSelection: false,
           enableColumnMenus: false,
@@ -178,12 +196,8 @@
               },
               'addDeviceFlow.choosePersonal': {
                 nextOptions: {
-                  create: 'addDeviceFlow.addServices',
                   existing: 'addDeviceFlow.showActivationCode'
                 }
-              },
-              'addDeviceFlow.addServices': {
-                next: "addDeviceFlow.addLines"
               },
               'addDeviceFlow.chooseSharedSpace': {
                 nextOptions: {

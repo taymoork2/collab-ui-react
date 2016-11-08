@@ -1,14 +1,21 @@
-// Used by the time Filter
-export interface ITimespan {
-  value: number;
+// base interfaces
+export interface IGraphBase {
+  date: string;
+  balloon: boolean;
+}
+
+export interface IDropdownBase {
+  value: number | string;
   label: string;
+}
+
+// Used by the time Filter
+export interface ITimespan extends IDropdownBase {
   description: string;
 }
 
 // Used by the Customer Filter
-export interface IReportsCustomer {
-  value: string;
-  label: string;
+export interface IReportsCustomer extends IDropdownBase {
   isAllowedToManage: boolean;
   isSelected: boolean;
 }
@@ -49,15 +56,10 @@ export interface ISecondaryReport {
 }
 
 export interface IReportDropdown {
-  array: Array<IDropdownOption>;
+  array: Array<IDropdownBase>;
   click: Function;
   disabled: boolean;
-  selected: IDropdownOption;
-}
-
-export interface IDropdownOption {
-  value: number;
-  label: string;
+  selected: IDropdownBase;
 }
 
 export interface IReportsTable {
@@ -101,21 +103,18 @@ export interface ICallMetricsLabels {
 }
 
 export interface ICallMetricsDataProvider {
+  value: number;
   label: string;
-  // value can be string or number
-  value: any;
   color: string;
 }
 
 // Media Quality Interface
-export interface IMediaQualityData {
-  date: string | void;
+export interface IMediaQualityData extends IGraphBase {
   totalDurationSum: number;
   partialSum: number;
   goodQualityDurationSum: number;
   fairQualityDurationSum: number;
   poorQualityDurationSum: number;
-  balloon: boolean;
 }
 
 // Active User interfaces
@@ -126,20 +125,21 @@ export interface IActiveUserCustomerData {
   totalRegistered: number;
 }
 
-export interface IActiveUserData {
-  date: string;
+export interface IActiveUserData extends IGraphBase {
   totalRegisteredUsers: number;
   activeUsers: number;
   percentage: number;
-  balloon: boolean;
 }
 
-export interface IActiveTableData {
-  orgName: string;
+export interface IActiveTableBase {
   numCalls: number;
   totalActivity: number;
   sparkMessages: number;
   userName: string;
+}
+
+export interface IActiveTableData extends IActiveTableBase {
+  orgName: string;
 }
 
 export interface IPopulationData {

@@ -1,11 +1,9 @@
 (function () {
   'use strict';
 
-  var Masonry = require('masonry-layout');
-
   angular.module('Mediafusion').controller('MediaServiceMetricsContoller', MediaServiceMetricsContoller);
   /* @ngInject */
-  function MediaServiceMetricsContoller($timeout, $translate, MediaClusterServiceV2, $q, MetricsReportService, XhrNotificationService, MetricsGraphService, DummyMetricsReportService, $interval, $scope) {
+  function MediaServiceMetricsContoller($translate, MediaClusterServiceV2, $q, MetricsReportService, Notification, MetricsGraphService, DummyMetricsReportService, $interval, $scope, CardUtils) {
     var vm = this;
     vm.ABORT = 'ABORT';
     vm.REFRESH = 'refresh';
@@ -114,8 +112,8 @@
           vm.clusterId = vm.clusterOptions[0];
           vm.clusterSelected = vm.clusterOptions[0];
 
-        }).catch(function () {
-          XhrNotificationService.notify(vm.errorData);
+        }).catch(function (err) {
+          Notification.errorWithTrackingId(err, vm.errorData);
         });
       return deferred.promise;
     }
@@ -126,7 +124,7 @@
         var clusterName = _.findKey(vm.Map, function (val) {
           return val === value.valueField;
         });
-        if (angular.isDefined(clusterName)) {
+        if (!_.isUndefined(clusterName)) {
           value.title = clusterName;
           if (vm.allClusters !== vm.clusterId && vm.clusterSelected !== value.title) {
             value.lineAlpha = 0.2;
@@ -203,28 +201,12 @@
     }
 
     function resizeCards() {
-      $timeout(function () {
-        var $cardlayout = new Masonry('.cs-card-layout', {
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          resize: true,
-          percentPosition: true,
-        });
-        $cardlayout.layout();
-      }, 0);
+      CardUtils.resize();
     }
 
     function delayedResize() {
       // delayed resize necessary to fix any overlapping cards on smaller screens
-      $timeout(function () {
-        var $cardlayout = new Masonry('.cs-card-layout', {
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          resize: true,
-          percentPosition: true,
-        });
-        $cardlayout.layout();
-      }, 500);
+      CardUtils.resize(500);
     }
 
     function setDummyData() {
@@ -236,7 +218,7 @@
 
     function setCallVolumeGraph(data) {
       var tempCallVolumeChart = MetricsGraphService.setCallVolumeGraph(data, vm.callVolumeChart, vm.clusterSelected, vm.timeSelected.label);
-      if (tempCallVolumeChart !== null && angular.isDefined(tempCallVolumeChart)) {
+      if (tempCallVolumeChart !== null && !_.isUndefined(tempCallVolumeChart)) {
         vm.callVolumeChart = tempCallVolumeChart;
       }
     }
@@ -257,14 +239,14 @@
 
     function setAvailabilityGraph(data) {
       var tempData = angular.copy(data);
-      if (!angular.isDefined(data.data[0].isDummy)) {
+      if (_.isUndefined(data.data[0].isDummy)) {
         var availabilityData = [];
         if (vm.clusterId === vm.allClusters) {
           _.forEach(data.data[0].clusterCategories, function (clusterCategory) {
             var clusterName = _.findKey(vm.Map, function (val) {
               return val === clusterCategory.category;
             });
-            if (angular.isDefined(clusterName)) {
+            if (!_.isUndefined(clusterName)) {
               clusterCategory.category = clusterName;
               availabilityData.push(clusterCategory);
             }
@@ -276,7 +258,7 @@
         }
       }
       var tempAvailabilityChart = MetricsGraphService.setAvailabilityGraph(tempData, vm.availabilityChart, vm.clusterId, vm.clusterSelected, vm.timeSelected.label);
-      if (tempAvailabilityChart !== null && angular.isDefined(tempAvailabilityChart)) {
+      if (tempAvailabilityChart !== null && !_.isUndefined(tempAvailabilityChart)) {
         vm.availabilityChart = tempAvailabilityChart;
       }
       return true;
@@ -286,7 +268,7 @@
       MetricsReportService.getAvailabilityData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (response === vm.ABORT) {
           return;
-        } else if (!angular.isDefined(response.data) || !angular.isArray(response.data) || response.data.length === 0 || !angular.isDefined(response.data[0].clusterCategories) || response.data[0].clusterCategories.length === 0) {
+        } else if (_.isUndefined(response.data) || !_.isArray(response.data) || response.data.length === 0 || _.isUndefined(response.data[0].clusterCategories) || response.data[0].clusterCategories.length === 0) {
           vm.availabilityStatus = vm.EMPTY;
         } else {
           deferred.promise.then(function () {
@@ -308,7 +290,7 @@
 
     function setUtilizationGraph(data, graphs) {
       var tempUtilizationChart = MetricsGraphService.setUtilizationGraph(data, graphs, vm.utilizationChart, vm.clusterSelected, vm.timeSelected);
-      if (tempUtilizationChart !== null && angular.isDefined(tempUtilizationChart)) {
+      if (tempUtilizationChart !== null && !_.isUndefined(tempUtilizationChart)) {
         vm.UtilizationChart = tempUtilizationChart;
       }
     }
@@ -318,7 +300,7 @@
         MetricsReportService.getUtilizationData(vm.timeSelected, vm.allClusters).then(function (response) {
           if (response === vm.ABORT) {
             return;
-          } else if (!angular.isDefined(response.graphData) || !angular.isDefined(response.graphs) || response.graphData.length === 0) {
+          } else if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0) {
             vm.utilizationStatus = vm.EMPTY;
           } else {
             deferred.promise.then(function () {
@@ -338,7 +320,7 @@
         MetricsReportService.getUtilizationData(vm.timeSelected, vm.allClusters).then(function (response) {
           if (response === vm.ABORT) {
             return;
-          } else if (!angular.isDefined(response.graphData) || !angular.isDefined(response.graphs) || response.graphData.length === 0) {
+          } else if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0) {
             vm.utilizationStatus = vm.EMPTY;
           } else {
             for (var i = 0; i <= response.graphs.length; i++) {
@@ -365,19 +347,19 @@
         if (vm.clusterId === vm.allClusters) {
           if (response === vm.ABORT) {
             return;
-          } else if (!angular.isDefined(response.data) || response.data.length === 0) {
+          } else if (_.isUndefined(response.data) || response.data.length === 0) {
             vm.onprem = vm.noData;
             vm.cloud = vm.noData;
             vm.total = vm.noData;
-          } else if (!angular.isDefined(response.data.callsOnPremise) && angular.isDefined(response.data.callsOverflow)) {
+          } else if (_.isUndefined(response.data.callsOnPremise) && !_.isUndefined(response.data.callsOverflow)) {
             vm.onprem = vm.noData;
             vm.cloud = response.data.callsOverflow;
             vm.total = vm.cloud;
-          } else if (angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsOverflow)) {
+          } else if (!_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.callsOverflow)) {
             vm.onprem = response.data.callsOnPremise;
             vm.cloud = vm.noData;
             vm.total = vm.onprem;
-          } else if (!angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsOverflow)) {
+          } else if (_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.callsOverflow)) {
             vm.onprem = vm.noData;
             vm.cloud = vm.noData;
             vm.total = vm.noData;
@@ -390,19 +372,19 @@
         } else {
           if (response === vm.ABORT) {
             return;
-          } else if (!angular.isDefined(response.data) || response.data.length === 0) {
+          } else if (_.isUndefined(response.data) || response.data.length === 0) {
             vm.onprem = vm.noData;
             vm.cloud = vm.noData;
             vm.total = vm.noData;
-          } else if (!angular.isDefined(response.data.callsOnPremise) && angular.isDefined(response.data.callsRedirect)) {
+          } else if (_.isUndefined(response.data.callsOnPremise) && !_.isUndefined(response.data.callsRedirect)) {
             vm.onprem = vm.noData;
             vm.cloud = response.data.callsRedirect;
             vm.total = vm.cloud;
-          } else if (angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsRedirect)) {
+          } else if (!_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.callsRedirect)) {
             vm.onprem = response.data.callsOnPremise;
             vm.cloud = vm.noData;
             vm.total = vm.onprem;
-          } else if (!angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsRedirect)) {
+          } else if (_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.callsRedirect)) {
             vm.onprem = vm.noData;
             vm.cloud = vm.noData;
             vm.total = vm.noData;
@@ -421,7 +403,7 @@
       MetricsReportService.getClusterAvailabilityData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (response === vm.ABORT) {
           return;
-        } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.availabilityPercent)) {
+        } else if (_.isUndefined(response.data) || response.data.length === 0 || _.isUndefined(response.data.availabilityPercent)) {
           vm.clusterAvailability = vm.EMPTY;
           vm.clusterAvailability = vm.noData;
         } else {

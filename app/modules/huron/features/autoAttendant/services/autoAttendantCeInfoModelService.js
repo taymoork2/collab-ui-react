@@ -137,7 +137,7 @@
 
     function getAllCeInfos(aaResourceRecords) {
       var ceInfos = [];
-      if (angular.isArray(aaResourceRecords)) {
+      if (_.isArray(aaResourceRecords)) {
         for (var i = 0; i < aaResourceRecords.length; i++) {
           ceInfos[i] = getCeInfo(aaResourceRecords[i]);
         }
@@ -151,7 +151,7 @@
       aaModel.ceInfos = [];
 
       return AutoAttendantCeService.listCes().then(function (aaRecords) {
-        if (angular.isArray(aaRecords)) {
+        if (_.isArray(aaRecords)) {
           aaModel.aaRecords = aaRecords;
 
           aaModel.ceInfos = getAllCeInfos(aaModel.aaRecords);
@@ -183,26 +183,26 @@
      */
     function getCeInfo(aaResourceRecord) {
       var ceInfo = new CeInfo();
-      if (angular.isDefined(aaResourceRecord.callExperienceName)) {
+      if (!_.isUndefined(aaResourceRecord.callExperienceName)) {
         ceInfo.setName(aaResourceRecord.callExperienceName);
       }
-      if (angular.isDefined(aaResourceRecord.callExperienceURL)) {
+      if (!_.isUndefined(aaResourceRecord.callExperienceURL)) {
         ceInfo.setCeUrl(aaResourceRecord.callExperienceURL);
       }
-      if (angular.isArray(aaResourceRecord.assignedResources)) {
+      if (_.isArray(aaResourceRecord.assignedResources)) {
         for (var j = 0; j < aaResourceRecord.assignedResources.length; j++) {
           var iResource = aaResourceRecord.assignedResources[j];
           var resource = new CeInfoResource();
           resource.setTrigger(iResource.trigger);
           resource.setId(iResource.id);
           resource.setType(iResource.type);
-          if (angular.isDefined(iResource.number)) {
+          if (!_.isUndefined(iResource.number)) {
             resource.setNumber(iResource.number);
           }
           ceInfo.addResource(resource);
         }
       }
-      if (angular.isDefined(aaResourceRecord.scheduleId)) {
+      if (!_.isUndefined(aaResourceRecord.scheduleId)) {
         ceInfo.setSchedule(aaResourceRecord.scheduleId);
       }
       return ceInfo;
@@ -226,7 +226,7 @@
 
     function deleteCeInfo(aaResourceRecords, ceInfo) {
       var i;
-      if (angular.isArray(aaResourceRecords)) {
+      if (_.isArray(aaResourceRecords)) {
         for (i = 0; i < aaResourceRecords.length; i++) {
           if (aaResourceRecords[i].callExperienceName === ceInfo.getName()) {
             aaResourceRecords.splice(i, 1);

@@ -6,7 +6,7 @@
     .controller('AABuilderActionsCtrl', AABuilderActionsCtrl);
 
   /* @ngInject */
-  function AABuilderActionsCtrl($scope, $translate, $controller, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService, AAScrollBar) {
+  function AABuilderActionsCtrl($scope, $translate, $controller, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService) {
 
     var vm = this;
     var appendSpecialCharHelp = "<br><br>" + $translate.instant('autoAttendant.sayMessageSpecialChar');
@@ -71,7 +71,6 @@
         uiMenu.entries[vm.index] = menu;
       }
       AACommonService.setActionStatus(true);
-      AAScrollBar.resizeBuilderScrollBar(AAScrollBar.delay.MEDIUM); // delay for transitions to finish
     }
 
     function getSelectHint() {
@@ -112,7 +111,6 @@
       uiMenu.deleteEntryAt(index);
 
       AACommonService.setActionStatus(true);
-      AAScrollBar.resizeBuilderScrollBar(AAScrollBar.delay.MEDIUM); // delay for transitions to finish
     }
 
     function setOption() {

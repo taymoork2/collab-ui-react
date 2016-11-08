@@ -16,7 +16,7 @@
   }
 
   /* @ngInject */
-  function AAPhoneMenuCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AAScrollBar, FeatureToggleService, QueueHelperService) {
+  function AAPhoneMenuCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, FeatureToggleService, QueueHelperService) {
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
@@ -50,7 +50,8 @@
     }, {
       label: $translate.instant('autoAttendant.actionSayMessage'),
       name: 'phoneMenuSayMessage',
-      action: 'say'
+      action: 'say',
+      playAction: 'play'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuDialExt'),
       name: 'phoneMenuDialExt',
@@ -109,7 +110,6 @@
       // remove key that is in use from creating the new key entry
       setAvailableKeys();
       setPhonemenuFormDirty();
-      AAScrollBar.resizeBuilderScrollBar();
     }
 
     // the user has pressed the trash can icon for a key/action pair
@@ -118,7 +118,6 @@
       vm.menuEntry.entries.splice(index, 1);
       setAvailableKeys();
       setPhonemenuFormDirty();
-      AAScrollBar.resizeBuilderScrollBar();
     }
 
     // the user has changed the key for an existing action
@@ -136,7 +135,7 @@
         AutoAttendantCeMenuModelService.deleteCeMenuMap(entryI.getId());
       }
       var _keyAction = findKeyAction(keyAction.name);
-      if (angular.isDefined(_keyAction)) {
+      if (!_.isUndefined(_keyAction)) {
         if (_keyAction.name === 'phoneMenuPlaySubmenu') {
           // 1) Change of main menu attempts should copied into its submenus.
           // See aaTimeoutInvalidCtrl.js.
@@ -157,7 +156,7 @@
           phoneMenuEntry.key = vm.menuEntry.entries[index].key;
           var action = phoneMenuEntry.actions[0];
           action.name = keyAction.action;
-          if (angular.isDefined(_keyAction.inputType)) {
+          if (!_.isUndefined(_keyAction.inputType)) {
             // some action names are overloaded and are distinguished
             // by inputType
             action.inputType = _keyAction.inputType;
@@ -167,7 +166,6 @@
           vm.menuEntry.entries[index] = phoneMenuEntry;
         }
         setPhonemenuFormDirty();
-        AAScrollBar.resizeBuilderScrollBar();
       }
     }
 
@@ -226,12 +224,17 @@
             keyAction.key = menuEntry.key;
             if (_.has(menuEntry, 'actions')) {
               if (menuEntry.actions.length > 0 && menuEntry.type == "MENU_OPTION") {
-                if (angular.isDefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
+                if (!_.isUndefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
                   keyAction.action = _.find(vm.keyActions, _.bind(function (keyAction) {
                     if (_.has(this, 'inputType')) {
                       return this.name === keyAction.action && this.inputType === keyAction.inputType;
                     } else if (!_.has(keyAction, 'inputType')) {
-                      return this.name === keyAction.action;
+                      if (this.name === keyAction.action) {
+                        return true;
+                      }
+                      if (_.has(keyAction, 'playAction')) {
+                        return this.name === keyAction.playAction;
+                      }
                     }
                     return false;
                   }, menuEntry.actions[0]));
@@ -264,8 +267,6 @@
 
       // remove key that is in use from creating the new key entry
       setAvailableKeys();
-
-      AAScrollBar.resizeBuilderScrollBar(AAScrollBar.delay.LONG); // delay resize for all transitions to finish (from action change)
     }
 
     function setPhonemenuFormDirty() {

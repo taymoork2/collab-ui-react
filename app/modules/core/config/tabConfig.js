@@ -14,11 +14,25 @@
     state: 'partneroverview',
     link: '/partner/overview'
   }, {
+    tab: 'gssTab',
+    icon: 'icon-bell',
+    title: 'tabs.gssTab',
+    desc: 'tabs.gssTabDesc',
+    feature: 'atlas-global-service-status',
+    state: 'gss',
+    link: '/gss'
+  }, {
     tab: 'customerTab',
     icon: 'icon-user',
     title: 'tabs.customerTab',
     state: 'partnercustomers',
     link: '/partner/customers'
+  }, {
+    tab: 'gemservicesTab',
+    icon: 'icon-cloud',
+    title: 'tabs.servicesTab',
+    state: 'gem-services',
+    link: '/partner/services/index'
   }, {
     tab: 'userTab',
     icon: 'icon-user',
@@ -63,18 +77,10 @@
     link: '/support/status',
     state: 'support.status'
   }, {
-    tab: 'accountTab',
-    icon: 'icon-sliders',
-    title: 'tabs.accountTab',
-    state: 'profile',
-    feature: '!atlas-settings-page',
-    link: '/profile'
-  }, {
     tab: 'settingsTab',
     icon: 'icon-sliders',
     title: 'tabs.settingsTab',
     state: 'settings',
-    feature: "atlas-settings-page",
     link: '/settings'
   }, {
     tab: 'organizationTab',
@@ -104,16 +110,7 @@
       state: 'media-service-v2',
       link: '#mediaserviceV2'
     }]
-  },
-    {
-      tab: 'statusTab',
-      icon: 'icon-bell',
-      title: 'tabs.statusTab',
-      desc: 'tabs.statusTabDesc',
-      feature: 'global-status',
-      state: 'status',
-      link: '/status'
-    }];
+  }];
 
   module.exports = angular
     .module('core.tabconfig', [])

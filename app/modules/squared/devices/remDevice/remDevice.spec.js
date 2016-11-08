@@ -30,8 +30,6 @@ describe('Controller: RemDeviceController', function () {
       var codes = getJSONFixture('squared/json/activationCodes.json');
       var accounts = getJSONFixture('squared/json/accounts.json');
       var initialHuronDevices = getJSONFixture('squared/json/huronDevices.json');
-      var initialHuronPlaces = getJSONFixture('squared/json/huronPlaces.json');
-      var huronPlacesUrl = 'https://cmi.huron-int.com/api/v2/customers/null/places/';
 
       $q = _$q_;
       $rootScope = _$rootScope_;
@@ -46,8 +44,7 @@ describe('Controller: RemDeviceController', function () {
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/devices').respond(initialDevices);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/nonExistingDevices').respond([]);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/codes').respond(codes);
-      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/places/').respond(accounts);
-      $httpBackend.whenGET(huronPlacesUrl).respond(initialHuronPlaces);
+      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/places/?shallow=true&type=all').respond(accounts);
 
       spyOn(CsdmCodeService, 'deleteItem').and.returnValue($q.when());
       spyOn(CsdmDeviceService, 'deleteItem').and.returnValue($q.when());

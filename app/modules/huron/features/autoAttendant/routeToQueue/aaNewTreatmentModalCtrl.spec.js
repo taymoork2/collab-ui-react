@@ -95,7 +95,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     $scope.index = index;
     $scope.menuId = menuId;
     $scope.keyIndex = keyIndex;
-
+    AutoAttendantCeMenuModelService.clearCeMenuMap();
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     uiMenu = AutoAttendantCeMenuModelService.newCeMenu();
     ui[schedule] = uiMenu;

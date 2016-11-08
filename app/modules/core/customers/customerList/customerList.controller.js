@@ -5,7 +5,7 @@
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Analytics, Authinfo, Config, customerListToggle, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, TrialService, CsdmPlaceService) {
+  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Analytics, Authinfo, Config, customerListToggle, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, TrialService) {
     $scope.isCustomerPartner = !!Authinfo.isCustomerPartner;
     $scope.isPartnerAdmin = Authinfo.isPartnerAdmin();
     $scope.activeBadge = false;
@@ -48,6 +48,7 @@
     $scope.exportType = $rootScope.typeOfExport.CUSTOMER;
     $scope.filterList = _.debounce(filterAction, $scope.timeoutVal);
 
+    // TODO:  atlasCustomerListUpdate toggle is globally set to true. Needs refactoring to remove unused code
     $scope.customerListToggle = customerListToggle;
 
     // expecting this guy to be unset on init, and set every time after
@@ -354,7 +355,7 @@
         });
       });
 
-      CsdmPlaceService.placesFeatureIsEnabled().then(function (result) {
+      FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (result) {
         $scope.placesEnabled = result;
       });
 
@@ -499,7 +500,7 @@
         textLicenseInfoNotAvailable
       ];
       textArray.sort();
-      angular.forEach(textArray, function (text, index) {
+      _.forEach(textArray, function (text, index) {
         if (text === textSuspended) {
           PartnerService.customerStatus.NOTE_CANCELED = index;
         } else if (text === textExpiringToday) {
@@ -528,7 +529,7 @@
     // No changes to the length of rows can be made here, only visibility
 
     function rowFilter(rows) {
-      if (!customerListToggle) {
+      if (!$scope.customerListToggle) {
         // never want to filter with old design
         return rows;
       }

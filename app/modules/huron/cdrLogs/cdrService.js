@@ -39,7 +39,7 @@
       var url = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?filter=username eq "' + name + '"';
 
       $http.get(url).success(function (data) {
-        if (angular.isArray(data.Resources) && (data.Resources.length > 0)) {
+        if (_.isArray(data.Resources) && (data.Resources.length > 0)) {
           defer.resolve(data.Resources[0].id);
         } else {
           Log.debug('User does not exist in this org.');
@@ -111,7 +111,7 @@
       var promises = [];
       var userUuidRetrieved = true;
 
-      if (angular.isDefined(model.callingUser) && (model.callingUser !== '')) {
+      if (!_.isUndefined(model.callingUser) && (model.callingUser !== '')) {
         var callingUserPromse = convertUuid(model.callingUser, $translate.instant('cdrLogs.callingParty')).then(function (callingUUID) {
           if (callingUUID !== null) {
             devicesQuery.push(deviceQuery(callingUser, callingUUID));
@@ -121,7 +121,7 @@
         });
         promises.push(callingUserPromse);
       }
-      if (angular.isDefined(model.calledUser) && (model.calledUser !== '')) {
+      if (!_.isUndefined(model.calledUser) && (model.calledUser !== '')) {
         var calledUserPromse = convertUuid(model.calledUser, $translate.instant('cdrLogs.calledParty')).then(function (calledUUID) {
           if (calledUUID !== null) {
             devicesQuery.push(deviceQuery(calledUser, calledUUID));
@@ -136,16 +136,16 @@
         var queryPromises = [];
 
         if (userUuidRetrieved) {
-          if (angular.isDefined(model.callingPartyDevice) && (model.callingPartyDevice !== '')) {
+          if (!_.isUndefined(model.callingPartyDevice) && (model.callingPartyDevice !== '')) {
             devicesQuery.push(deviceQuery(callingDevice, model.callingPartyDevice));
           }
-          if (angular.isDefined(model.calledPartyDevice) && (model.calledPartyDevice !== '')) {
+          if (!_.isUndefined(model.calledPartyDevice) && (model.calledPartyDevice !== '')) {
             devicesQuery.push(deviceQuery(calledDevice, model.calledPartyDevice));
           }
-          if (angular.isDefined(model.callingPartyNumber) && (model.callingPartyNumber !== '')) {
+          if (!_.isUndefined(model.callingPartyNumber) && (model.callingPartyNumber !== '')) {
             devicesQuery.push(deviceQuery(callingNumber, model.callingPartyNumber));
           }
-          if (angular.isDefined(model.calledPartyNumber) && (model.calledPartyNumber !== '')) {
+          if (!_.isUndefined(model.calledPartyNumber) && (model.calledPartyNumber !== '')) {
             devicesQuery.push(deviceQuery(calledNumber, model.calledPartyNumber));
           }
 
@@ -211,7 +211,7 @@
 
     function generateHosts() {
       var hostsJson = '{"query_string":{"query":"id:CDR.CDR"}},';
-      angular.forEach(serverHosts, function (host, index) {
+      _.forEach(serverHosts, function (host, index) {
         hostsJson += '{"query_string":{"query":"id:CDR.CDR AND eventSource.hostname:\\"' + host + '\\""}}';
         if (index + 1 < serverHosts.length) {
           hostsJson += ',';
@@ -276,7 +276,7 @@
 
         if (queryArray.length > 0) {
           return secondaryQuery(queryArray, thisJob).then(function (newCdrArray) {
-            if (angular.isDefined(newCdrArray)) {
+            if (!_.isUndefined(newCdrArray)) {
               cdrArray.concat(newCdrArray);
             }
             return cdrArray;
@@ -295,7 +295,7 @@
     }
 
     function extractUniqueIds(cdrArray) {
-      if (!angular.isDefined(cdrArray)) {
+      if (_.isUndefined(cdrArray)) {
         return [];
       }
       var uniqueIds = [];

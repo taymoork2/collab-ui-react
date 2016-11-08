@@ -85,7 +85,7 @@ describe('crUserCsvResults Component', function () {
     this.$scope.$digest();
     this.$timeout.flush();
     this.$ctrl = this.element.isolateScope().$ctrl;
-    this.$ctrl.onCancelImport = angular.noop;
+    this.$ctrl.onCancelImport = _.noop;
   }
 
   function initController() {

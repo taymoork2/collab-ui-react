@@ -1,0 +1,30 @@
+.gemServices {
+  .card-icon {
+    position: absolute;
+    display: block;
+    left: 0;
+    top: 0;
+    width: 3rem;
+    height: 3rem;
+    line-height: 3rem;
+    color: $color-white;
+    text-align: center;
+    background-color: $gray-light;
+    border-radius: 50%;
+  }
+
+  .header-with-left-icon {
+    position: relative;
+    height: 3rem;
+    padding-left: 3.5rem;
+    box-sizing: border-box;
+
+    .title {
+      line-height: 3rem;
+    }
+  }
+
+  .callback-groups {
+    padding-left: 3.5rem;
+  }
+}

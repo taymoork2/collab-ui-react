@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: EnterpriseSettingsCtrl', function () {
-  var $scope, Orgservice, $controller, Notification;
+  var $scope, $controller, $q, Orgservice, Notification, ServiceSetup;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var getOrgStatus = 200;
   var rootScope;
@@ -15,40 +15,55 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
   }));
 
   beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(installPromiseMatchers);
 
-  beforeEach(inject(function ($rootScope, _$controller_, _Notification_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _Notification_, _Orgservice_, _ServiceSetup_) {
     $scope = $rootScope.$new();
     rootScope = $rootScope;
     $controller = _$controller_;
+    $q = _$q_;
     Orgservice = _Orgservice_;
     Notification = _Notification_;
+    ServiceSetup = _ServiceSetup_;
 
     $scope.wizard = {
       nextTab: sinon.stub()
     };
+  }));
 
+  function initSpies() {
     spyOn($scope.wizard, 'nextTab');
 
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(orgServiceJSONFixture.getOrg, getOrgStatus);
     });
+    spyOn(Orgservice, 'validateSiteUrl').and.returnValue($q.when({ isValid: true }));
+
     spyOn(Notification, 'error');
-  }));
+
+    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'getTranslatedTimeZones').and.returnValue(['1', '2', '3']);
+  }
 
   function initController() {
-    $controller('EnterpriseSettingsCtrl', {
+    var ctrl = $controller('EnterpriseSettingsCtrl', {
       $scope: $scope,
       $rootScope: rootScope,
       Authinfo: authInfo
     });
 
     $scope.$apply();
+
+    return ctrl;
   }
 
   describe('test the ssoEnabled settings', function () {
-    beforeEach(initController);
+    beforeEach(function () {
+      initSpies();
+      initController();
+    });
 
     it('should set ssoEnabled field to true in the scope', function () {
       rootScope.ssoEnabled = true;
@@ -110,6 +125,56 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       var promise = $scope.initNext();
       $scope.$apply();
       expect(promise).toBeResolved();
+    });
+
+  });
+
+  describe('test Personal Meeting Room Setup', function () {
+
+    it('should handle valid org settings', function () {
+
+      spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
+        callback(orgServiceJSONFixture.getOrg, getOrgStatus);
+      });
+
+      spyOn(Orgservice, 'validateSiteUrl').and.callFake(function () {
+        return $q.when({
+          isValid: true,
+        });
+      });
+
+      var ctrl = initController();
+
+      expect(ctrl.pmrField.inputValue).toEqual('amtest2.ciscospark.com');
+
+    });
+
+    it('should handle org data not having a sipCloudDomain in orgSettings', function () {
+
+      spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
+        var org = _.cloneDeep(orgServiceJSONFixture.getOrg);
+        org.orgSettings.sipCloudDomain = undefined;
+        callback(org, getOrgStatus);
+      });
+
+      spyOn(Orgservice, 'validateSiteUrl').and.callFake(function () {
+        return $q.when({
+          isValid: true,
+        });
+      });
+
+      var ctrl = initController();
+
+      expect(ctrl.pmrField.inputValue).toEqual('');
+
+    });
+
+    it('should shallow validate the Sip Domain', function () {
+
+      initSpies();
+      initController();
+
+      expect(Orgservice.validateSiteUrl).toHaveBeenCalledWith('amtest2.ciscospark.com');
     });
 
   });

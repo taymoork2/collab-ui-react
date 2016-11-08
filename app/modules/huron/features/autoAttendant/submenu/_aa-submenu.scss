@@ -2,12 +2,6 @@
   @include vr-spacing(pr, 0.5);
   @include vr-spacing(mb, 0);
 
-  textarea {
-    @extend %aa-menu-textarea;
-
-    @include vr-spacing(mb, 0);
-  }
-
   .control-label {
     @extend %aa-menu-control-label;
   }
@@ -19,7 +13,7 @@
   width: 100%;
 
   .row:first-child {
-    @include vr-spacing(pt, 1);
+    @include vr-spacing(pt, 0.25);
   }
 
   .aa-sm-collapse-left {

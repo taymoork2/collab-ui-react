@@ -2,10 +2,9 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmDataModelService($q, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmHuronOrgDeviceService, CsdmHuronPlaceService, CsdmPoller, CsdmConverter, CsdmHubFactory, Authinfo) {
+  function CsdmDataModelService($q, $rootScope, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmHuronOrgDeviceService, CsdmHuronPlaceService, CsdmPoller, CsdmConverter, CsdmHubFactory, Authinfo) {
 
     var placesUrl = CsdmPlaceService.getPlacesUrl();
-    var huronPlacesUrl = CsdmHuronPlaceService.getPlacesUrl();
 
     var csdmHuronOrgDeviceService = CsdmHuronOrgDeviceService.create(Authinfo.getOrgId());
 
@@ -15,8 +14,7 @@
     var cloudBerryDevicesLoaded = false;
     var codesLoaded = false;
     var huronDevicesLoaded = false;
-    var cloudBerryPlacesLoaded = false;
-    var huronPlacesLoaded = false;
+    var placesLoaded = false;
 
     var devicesFetchedDeferred;
     var devicesFastFetchedDeferred;
@@ -88,6 +86,16 @@
       }
     }
 
+    function subscribeToChanges(scope, callback) {
+      var unRegister = $rootScope.$on('PLACES_OR_DEVICES_UPDATED', callback);
+      scope.$on('$destroy', unRegister);
+      return unRegister;
+    }
+
+    function notifyListeners() {
+      $rootScope.$emit('PLACES_OR_DEVICES_UPDATED');
+    }
+
     function setCloudBerryDevicesLoaded() {
       if (!cloudBerryDevicesLoaded) {
         cloudBerryDevicesLoaded = true;
@@ -108,20 +116,10 @@
       }
     }
 
-    function setCloudBerryPlacesLoaded() {
-      cloudBerryPlacesLoaded = true;
-      if (huronPlacesLoaded) {
-        accountsFetchedDeferred.resolve(placesDataModel);
-        updatePlacesCache();
-      }
-    }
-
-    function setHuronPlacesLoaded() {
-      huronPlacesLoaded = true;
-      if (cloudBerryPlacesLoaded) {
-        accountsFetchedDeferred.resolve(placesDataModel);
-        updatePlacesCache();
-      }
+    function setPlacesLoaded() {
+      placesLoaded = true;
+      accountsFetchedDeferred.resolve(placesDataModel);
+      updatePlacesCache();
     }
 
     function fetchCodes() {
@@ -151,19 +149,8 @@
           });
         })
         .finally(function () {
-          setCloudBerryPlacesLoaded();
+          setPlacesLoaded();
         });
-
-      CsdmHuronPlaceService.getPlacesList()
-        .then(function (huronPlaces) {
-          _.each(_.values(huronPlaces), function (a) {
-            addOrUpdatePlaceInDataModel(a);
-          });
-        })
-        .finally(function () {
-          setHuronPlacesLoaded();
-        });
-
       return accountsFetchedDeferred.promise;
     }
 
@@ -219,35 +206,29 @@
               }
             }
           }
+          notifyListeners();
         });
     }
 
     function getPlaceUrl(item) {
-      if (item.type == 'huron') {
-        return huronPlacesUrl + item.cisUuid;
-      } else {
-        return placesUrl + item.cisUuid;
-      }
+      return placesUrl + item.cisUuid;
+    }
+
+    function addPlaceToDataModel(place) {
+      placesDataModel[place.url] = place;
+      addOrUpdatePlaceInDataModel(place);
+      notifyListeners();
+      return place;
     }
 
     function createCsdmPlace(name, type) {
-
       return CsdmPlaceService.createCsdmPlace(name, type)
-        .then(function (place) {
-          placesDataModel[place.url] = place;
-          addOrUpdatePlaceInDataModel(place);
-          return place;
-        });
+        .then(addPlaceToDataModel);
     }
 
     function createCmiPlace(name, directoryNumber, externalNumber) {
-
       return CsdmHuronPlaceService.createCmiPlace(name, directoryNumber, externalNumber)
-        .then(function (place) {
-          placesDataModel[place.url] = place;
-          addOrUpdatePlaceInDataModel(place);
-          return place;
-        });
+        .then(addPlaceToDataModel);
     }
 
     function updateCloudberryPlace(objectToUpdate, entitlements, directoryNumber, externalNumber) {
@@ -280,10 +261,15 @@
       return service.updateItemName(objectToUpdate, newName)
         .then(function () {
           var placeUrl = getPlaceUrl(objectToUpdate);
-          placesDataModel[placeUrl].displayName = newName;
+          var place = placesDataModel[placeUrl];
+          if (place) {
+            place.displayName = newName;
+          }
           var device = theDeviceMap[objectToUpdate.url];
-          device.displayName = newName;
-          return device;
+          if (device) {
+            device.displayName = newName;
+          }
+          return objectToUpdate.isPlace ? place : device;
         });
     }
 
@@ -318,17 +304,43 @@
         });
     }
 
-    function reloadDevice(device) {
-      var service = getServiceForDevice(device);
+    function reloadItem(item) {
+      var service = getServiceForDevice(item);
       if (!service) {
         return $q.reject();
       }
 
-      return service.fetchDevice(device.url).then(function (reloadedDevice) {
+      if (item.isPlace) {
+        if (item.type === 'huron') {
+          return csdmHuronOrgDeviceService.getDevicesForPlace(item.cisUuid).then(function (devicesForPlace) {
 
-        CsdmCacheUpdater.updateOne(theDeviceMap, device.url, reloadedDevice);
-        return theDeviceMap[device.url];
-      });
+            var reloadedPlace = placesDataModel[item.url];
+            for (var devUrl in devicesForPlace) {
+              var device = devicesForPlace[devUrl];
+              if (device.displayName) {
+                item.displayName = device.displayName;
+                reloadedPlace.displayName = device.displayName;
+              }
+              CsdmCacheUpdater.updateOne(theDeviceMap, devUrl, device);
+            }
+
+            reloadedPlace.devices = devicesForPlace;
+            item.devices = devicesForPlace;
+
+            notifyListeners();
+            return reloadedPlace;
+          });
+        } else {
+          return $q.reject();
+        }
+      } else {
+        return service.fetchDevice(item.url).then(function (reloadedDevice) {
+
+          CsdmCacheUpdater.updateOne(theDeviceMap, item.url, reloadedDevice);
+          notifyListeners();
+          return reloadedDevice;
+        });
+      }
     }
 
     function hasDevices() {
@@ -351,7 +363,7 @@
     }
 
     function updatePlacesCache() {
-      if (huronDevicesLoaded && cloudBerryDevicesLoaded && cloudBerryPlacesLoaded && huronPlacesLoaded) {
+      if (huronDevicesLoaded && cloudBerryDevicesLoaded && placesLoaded) {
         _.mapValues(placesDataModel, function (p) {
           p.devices = _.pickBy(theDeviceMap, function (d) {
             return (!(d.isCode)) && d.cisUuid == p.cisUuid;
@@ -361,6 +373,7 @@
           });
           return p;
         });
+        notifyListeners();
       }
     }
 
@@ -402,13 +415,14 @@
       deleteItem: deleteItem,
       updateItemName: updateItemName,
       updateTags: updateTags,
-      reloadDevice: reloadDevice,
+      reloadItem: reloadItem,
       hasDevices: hasDevices,
       hasLoadedAllDeviceSources: hasLoadedAllDeviceSources,
       createCodeForExisting: createCodeForExisting,
       createCsdmPlace: createCsdmPlace,
       createCmiPlace: createCmiPlace,
-      updateCloudberryPlace: updateCloudberryPlace
+      updateCloudberryPlace: updateCloudberryPlace,
+      subscribeToChanges: subscribeToChanges
     };
   }
 

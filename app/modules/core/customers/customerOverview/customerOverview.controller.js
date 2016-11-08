@@ -36,7 +36,7 @@
     vm.isTest = false;
     vm.isDeleting = false;
     vm.isOrgSetup = false;
-    vm.isUpdateStatusEnabled = false;
+    vm.isUpdateStatusEnabled = true;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
@@ -46,6 +46,8 @@
     vm.freeOrPaidServices = [];
     vm.trialActions = [];
 
+
+    // TODO:  atlasCustomerListUpdate toggle is globally set to true. Needs refactoring to remove unused code
     vm.newCustomerViewToggle = newCustomerViewToggle;
 
     var QTY = _.toUpper($translate.instant('common.quantity'));
@@ -60,11 +62,6 @@
         setOffers(isCareEnabled);
       });
 
-
-    FeatureToggleService.atlasCustomerListUpdateGetStatus()
-      .then(function (result) {
-        vm.isUpdateStatusEnabled = result;
-      });
 
     function setOffers(isCareEnabled) {
       var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, { isCareEnabled: isCareEnabled,
@@ -260,7 +257,7 @@
     }
 
     function isSquaredUC() {
-      if (angular.isArray(identityCustomer.services)) {
+      if (_.isArray(identityCustomer.services)) {
         return _.includes(identityCustomer.services, Config.entitlements.huron);
       }
       return false;
@@ -291,7 +288,7 @@
       if (!newCustomerViewToggle) {
         return false;
       } else {
-        return hasWebexOrMultMeeting;
+        return hasWebexOrMultMeeting || service.isRoom;
       }
     }
 
@@ -300,6 +297,8 @@
         var isTrial = _.get(options, 'isTrial', false);
         var services = isTrial ? PartnerService.getTrialMeetingServices(vm.currentCustomer.licenseList) : service.sub;
         $state.go('customer-overview.meetingDetail', { meetingLicenses: services });
+      } else if (service.isRoom) {
+        $state.go('customer-overview.sharedDeviceDetail', { sharedDeviceLicenses: service.sub });
       }
     }
 

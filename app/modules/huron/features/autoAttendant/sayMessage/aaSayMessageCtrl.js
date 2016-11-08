@@ -73,12 +73,7 @@
     //not for phone menu, dial by ext, or submenu at this point
     //and is also feature toggled
     function isMediaUploadToggle() {
-      var mediaUploadOn = false;
-      if (vm.sayMessageType == sayMessageType.ACTION && (AACommonService.isMediaUploadToggle())) {
-        mediaUploadOn = true;
-      }
-
-      return mediaUploadOn;
+      return AACommonService.isMediaUploadToggle();
     }
 
     function setVoiceOptions() {
@@ -297,7 +292,7 @@
             if (!vm.actionEntry.getVoice()) {
               var sayHeader = getSayActionHeader(vm.menuEntry);
               var headerSayAction = getSayAction(sayHeader);
-              if (angular.isDefined(headerSayAction)) {
+              if (!_.isUndefined(headerSayAction)) {
                 vm.actionEntry.setVoice(headerSayAction.getVoice());
               }
             }

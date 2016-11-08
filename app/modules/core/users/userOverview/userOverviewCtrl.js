@@ -60,7 +60,7 @@
       icon: 'icon-circle-group',
       state: 'conferencing',
       detail: $translate.instant('onboardModal.mtgFree'),
-      actionAvailable: getDisplayableServices('CONFERENCING') || angular.isArray(vm.currentUser.trainSiteNames)
+      actionAvailable: getDisplayableServices('CONFERENCING') || _.isArray(vm.currentUser.trainSiteNames)
     };
     var contactCenterState = {
       name: $translate.instant('onboardModal.contactCenter'),
@@ -156,7 +156,7 @@
           return service.isConfigurable && service.licenseType === serviceName;
         });
       }
-      return angular.isArray(displayableServices) && (displayableServices.length > 0);
+      return _.isArray(displayableServices) && (displayableServices.length > 0);
     }
 
     function hasEntitlement(entitlement) {
@@ -261,7 +261,7 @@
       if (vm.currentUser.title) {
         vm.subTitleCard = vm.currentUser.title;
       }
-      if (angular.isArray(vm.currentUser.addresses) && vm.currentUser.addresses.length) {
+      if (_.isArray(vm.currentUser.addresses) && vm.currentUser.addresses.length) {
         vm.subTitleCard += ' ' + (vm.currentUser.addresses[0].locality || '');
       }
       if (!vm.subTitleCard && vm.titleCard != vm.currentUser.userName) {
@@ -282,22 +282,17 @@
     function getAccountStatus() {
       // user status
       var promises = {
-        isPendingToggled: FeatureToggleService.atlasUserPendingStatusGetStatus(),
         isOnlineOrg: Auth.isOnlineOrg()
       };
       $q.all(promises).then(function (result) {
-        if (result.isPendingToggled) {
-          vm.currentUser.pendingStatus = false;
-          var userHasSignedUp = _.some(vm.currentUser.userSettings, function (userSetting) {
-            return userSetting.indexOf('spark.signUpDate') > 0;
-          });
-          var isActiveUser = !_.isEmpty(vm.currentUser.entitlements) &&
-                            (userHasSignedUp || result.isOnlineOrg || hasEntitlement('ciscouc'));
-          vm.pendingStatus = !isActiveUser;
-          vm.currentUser.pendingStatus = vm.pendingStatus;
-        } else {
-          vm.pendingStatus = _.indexOf(vm.currentUser.accountStatus, 'pending') >= 0;
-        }
+        vm.currentUser.pendingStatus = false;
+        var userHasSignedUp = _.some(vm.currentUser.userSettings, function (userSetting) {
+          return userSetting.indexOf('spark.signUpDate') > 0;
+        });
+        var isActiveUser = !_.isEmpty(vm.currentUser.entitlements) &&
+          (userHasSignedUp || result.isOnlineOrg || hasEntitlement('ciscouc'));
+        vm.pendingStatus = !isActiveUser;
+        vm.currentUser.pendingStatus = vm.pendingStatus;
       });
 
       // if no licenses/services found from CI,

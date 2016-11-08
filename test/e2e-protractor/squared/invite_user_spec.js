@@ -103,6 +103,7 @@ describe('Squared Add User Flow', function () {
       utils.click(partner.squaredUCTrialCheckbox);
       utils.click(partner.careTrialCheckbox);
       utils.click(partner.roomSystemsTrialCheckbox);
+      utils.setCheckboxIfDisplayed(partner.sparkBoardTrialCheckbox, false, 100);
       utils.setCheckboxIfDisplayed(partner.webexTrialCheckbox, false, 100);
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
@@ -168,7 +169,7 @@ describe('Squared Add User Flow', function () {
       browser.switchTo().window(appWindow);
 
       // make sure we delete the partner org we created
-      utils.click(partner.trialFilter);
+      //utils.click(partner.trialFilter);
       utils.search(partner.newTrial.customerName, -1);
       utils.click(partner.newTrialRow);
       utils.expectIsDisplayed(partner.previewPanel);

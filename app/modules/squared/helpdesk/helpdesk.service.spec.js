@@ -4,9 +4,9 @@ describe('HelpdeskService', function () {
   beforeEach(angular.mock.module('Squared'));
 
   var $timeout, $httpBackend, Service, urlBase, ServiceDescriptor, $scope, $q, HelpdeskMockData,
-    CsdmConverter, HelpdeskHttpRequestCanceller, FeatureToggleService;
+    CsdmConverter, HelpdeskHttpRequestCanceller, FeatureToggleService, CacheFactory;
 
-  beforeEach(inject(function (_$timeout_, UrlConfig, _$rootScope_, _$httpBackend_, _HelpdeskService_, _ServiceDescriptor_, _$q_, _HelpdeskMockData_, _CsdmConverter_, _HelpdeskHttpRequestCanceller_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$timeout_, UrlConfig, _$rootScope_, _$httpBackend_, _HelpdeskService_, _ServiceDescriptor_, _$q_, _HelpdeskMockData_, _CsdmConverter_, _HelpdeskHttpRequestCanceller_, _FeatureToggleService_, _CacheFactory_) {
     Service = _HelpdeskService_;
     ServiceDescriptor = _ServiceDescriptor_;
     HelpdeskHttpRequestCanceller = _HelpdeskHttpRequestCanceller_;
@@ -17,6 +17,7 @@ describe('HelpdeskService', function () {
     HelpdeskMockData = _HelpdeskMockData_;
     CsdmConverter = _CsdmConverter_;
     FeatureToggleService = _FeatureToggleService_;
+    CacheFactory = _CacheFactory_;
 
     $httpBackend = _$httpBackend_;
   }));
@@ -123,7 +124,7 @@ describe('HelpdeskService', function () {
 
     var error;
 
-    Service.searchUsers("whatever", "1111", 30, null, null).then(function () {}).catch(function (err) {
+    Service.searchUsers("whatever", "1111", 30, null, null).then(function () { }).catch(function (err) {
       error = err;
     });
 
@@ -152,7 +153,7 @@ describe('HelpdeskService', function () {
 
     var error;
 
-    Service.searchUsers("whatever", "1111", 30, null, null).then(function () {}).catch(function (err) {
+    Service.searchUsers("whatever", "1111", 30, null, null).then(function () { }).catch(function (err) {
       error = err;
     });
 
@@ -214,6 +215,98 @@ describe('HelpdeskService', function () {
     expect(result[0].id).toEqual("squared-fusion-uc");
     expect(result[1].id).toEqual("squared-fusion-cal");
     expect(result[2].id).toEqual("squared-fusion-mgmt");
+  });
+
+  describe('getOrgDisplayName', function () {
+
+    beforeEach(function () {
+      CacheFactory.get('helpdeskOrgDisplayNameCache').removeAll();
+    });
+
+    it('should return displayName when valid result returned', function () {
+      $httpBackend
+        .expect('GET', urlBase + 'helpdesk/search/organizations?phrase=testOrgId&limit=1')
+        .respond(200, { items: [{ displayName: 'test', id: 'testOrgId' }] });
+
+      Service.getOrgDisplayName('testOrgId')
+        .then(function (displayName) {
+          expect(displayName).toEqual('test');
+        })
+        .catch(function () {
+          expect('rejected promise').toBeFalsy();
+        });
+      $httpBackend.flush();
+    });
+
+    it('should reject promise when response.items is not an array', function () {
+
+      $httpBackend
+        .expectGET(urlBase + 'helpdesk/search/organizations?phrase=testOrgId&limit=1')
+        .respond(200, { items: 'this is not an array' });
+
+      var caughtError = false;
+      Service.getOrgDisplayName('testOrgId')
+        .catch(function () {
+          caughtError = true;
+        })
+        .finally(function () {
+          expect(caughtError).toBeTruthy();
+        });
+      $httpBackend.flush();
+    });
+
+    it('should reject promise when response.items is an empty array', function () {
+
+      $httpBackend
+        .expectGET(urlBase + 'helpdesk/search/organizations?phrase=testOrgId&limit=1')
+        .respond(200, { items: [] });
+
+      var caughtError = false;
+      Service.getOrgDisplayName('testOrgId')
+        .catch(function () {
+          caughtError = true;
+        })
+        .finally(function () {
+          expect(caughtError).toBeTruthy();
+        });
+      $httpBackend.flush();
+    });
+
+    it('should reject promise when response.items does not contain displayName', function () {
+
+      $httpBackend
+        .expectGET(urlBase + 'helpdesk/search/organizations?phrase=testOrgId&limit=1')
+        .respond(200, { items: [{ noName: 'test', id: 'testOrgId' }] });
+
+      var caughtError = false;
+      Service.getOrgDisplayName('testOrgId')
+        .catch(function () {
+          caughtError = true;
+        })
+        .finally(function () {
+          expect(caughtError).toBeTruthy();
+        });
+      $httpBackend.flush();
+    });
+
+    it('should reject promise on HTTP error', function () {
+
+      $httpBackend
+        .expectGET(urlBase + 'helpdesk/search/organizations?phrase=testOrgId&limit=1')
+        .respond(503, 'ignoreme');
+
+      var caughtError = false;
+      Service.getOrgDisplayName('testOrgId')
+        .catch(function (result) {
+          expect(result.status).toEqual(503);
+          caughtError = true;
+        })
+        .finally(function () {
+          expect(caughtError).toBeTruthy();
+        });
+      $httpBackend.flush();
+    });
+
   });
 
   it('finds cloudberry devices by display name', function () {

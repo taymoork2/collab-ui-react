@@ -50,6 +50,12 @@
       name: 'adminRoles',
       id: 'partialAdmin'
     };
+    $scope.messages = {
+      displayName: {
+        notblank: $translate.instant('profilePage.displayNameEmptyError')
+      }
+    };
+    $scope.checkAdminDisplayName = checkAdminDisplayName;
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasReadOnlyAdmin).then(function () {
       $scope.enableReadonlyAdminOption = true;
@@ -153,7 +159,7 @@
     }
 
     function updateRoles() {
-      if ($scope.showComplianceRole && $scope.rolesObj.complianceValue != isEntitledToCompliance()) {
+      if ($scope.showComplianceRole && $scope.rolesObj.complianceValue !== isEntitledToCompliance()) {
         EdiscoveryService.setEntitledForCompliance(Authinfo.getOrgId(), $scope.currentUser.id, $scope.rolesObj.complianceValue).then(
           function () {
             patchUserRoles();
@@ -360,6 +366,7 @@
       $scope.rolesObj.supportAdminValue = false;
       $scope.rolesObj.salesAdminValue = false;
       $scope.isChecked = false;
+      checkAdminDisplayName();
     }
 
     function supportCheckboxes() {
@@ -369,6 +376,7 @@
       $scope.rolesObj.supportAdminValue = true;
       $scope.rolesObj.adminRadioValue = 2;
       $scope.rolesEdit.form.$dirty = true;
+      checkAdminDisplayName();
     }
 
     function partialCheckboxes() {
@@ -377,10 +385,25 @@
       }
       $scope.rolesObj.adminRadioValue = 2;
       $scope.rolesEdit.form.$dirty = true;
+      checkAdminDisplayName();
     }
 
     function isEntitledToCompliance() {
       return $scope.currentUser && _.includes($scope.currentUser.entitlements, 'compliance');
+    }
+
+    function checkAdminDisplayName() {
+      // If the user is an admin user,
+      // the first name, last name and display name cannot be all blank.
+      if ($scope.rolesObj.adminRadioValue !== 0) {
+        var firstName = _.get($scope.currentUser, 'name.givenName', null);
+        var lastName = _.get($scope.currentUser, 'name.familyName', null);
+        var displayName = _.get($scope.currentUser, 'displayName', null);
+        var notAllBlank = !_.isEmpty(firstName) || !_.isEmpty(lastName) || !_.isEmpty(displayName);
+        $scope.rolesEdit.form.displayName.$setValidity("notblank", notAllBlank);
+      } else {
+        $scope.rolesEdit.form.displayName.$setValidity("notblank", true);
+      }
     }
 
     function orderadminOnCheckedHandler() {

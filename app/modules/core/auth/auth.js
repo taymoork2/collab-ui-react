@@ -95,7 +95,7 @@
       if (service.verifyOauthState(params.state)) {
         return httpPOST(url, data, token)
           .then(updateOauthTokens)
-          .catch(handleError('Failed to obtain new oauth access_token.'));
+          .catch(logErrorAndReject('Failed to obtain new oauth access token.'));
       } else {
         TokenService.clearStorage();
         return $q.reject();
@@ -109,28 +109,20 @@
       var data = OAuthConfig.getOauthAccessCodeUrl(refreshToken);
       var token = OAuthConfig.getOAuthClientRegistrationCredentials();
 
-      if (refreshToken) {
-        return httpPOST(url, data, token)
+      var refreshPromise = refreshToken ? httpPOST(url, data, token) : $q.reject('refreshtoken not found');
+      return refreshPromise
         .then(updateOauthTokens)
-        .catch(function () {
-          handleError('Failed to refresh access token');
+        .catch(function (response) {
           TokenService.completeLogout(redirectUrl);
+          return logErrorAndReject('Failed to refresh access token')(response);
         });
-      } else {
-        return $q.reject('refreshtoken not found');
-      }
     }
 
     function refreshAccessTokenAndResendRequest(response) {
-      var redirectUrl = OAuthConfig.getLogoutUrl();
-
       return refreshAccessToken()
         .then(function () {
           var $http = $injector.get('$http');
           return $http(response.config);
-        })
-        .catch(function () {
-          TokenService.completeLogout(redirectUrl);
         });
     }
 
@@ -141,7 +133,7 @@
 
       return httpPOST(url, data, token)
         .then(updateOauthTokens)
-        .catch(handleError('Failed to obtain oauth access_token'));
+        .catch(logErrorAndReject('Failed to obtain oauth access token'));
     }
 
     function logout() {
@@ -165,23 +157,19 @@
             promises.push(revoke);
           });
 
-          $q.all(promises).catch(function () {
-            handleError('Failed to revoke the refresh tokens');
-          })
-          .finally(function () {
-            TokenService.completeLogout(redirectUrl);
-          });
+          return $q.all(promises)
+            .catch(logErrorAndReject('Failed to revoke refresh tokens'));
         })
-        .catch(function () {
-          handleError('Failed to retrieve token_id');
-          TokenService.completeLogout(redirectUrl);
+        .catch(logErrorAndReject('Failed to get and revoke refresh tokens'))
+        .finally(function () {
+          return TokenService.completeLogout(redirectUrl);
         });
     }
 
     function revokeAuthTokens(tokenId) {
       var revokeUrl = OAuthConfig.getOauthDeleteRefreshTokenUrl() + $sanitize(tokenId);
       return $http.delete(revokeUrl)
-        .catch(handleError('Failed to delete the oAuth token'));
+        .catch(logErrorAndReject('Failed to delete the oAuth token'));
     }
 
     function isLoggedIn() {
@@ -287,7 +275,7 @@
     }
 
     function replaceOrTweakServices(res) {
-      var authData = res.data;
+      var authData = _.get(res, 'data');
       var isAdmin = _.intersection(['Full_Admin', 'PARTNER_ADMIN', 'Readonly_Admin', 'PARTNER_READ_ONLY_ADMIN'], authData.roles).length;
       if (isAdmin) {
         return replaceServices(authData);
@@ -357,7 +345,7 @@
       return _.isEqual(testState, getOauthState());
     }
 
-    function handleError(message) {
+    function logErrorAndReject(message) {
       return function (res) {
         Log.error(message, res && (res.data || res.text));
         return $q.reject(res);

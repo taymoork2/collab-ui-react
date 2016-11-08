@@ -11,9 +11,10 @@ describe('Controller: HelpdeskOrderController', function () {
     XhrNotificationService = _XhrNotificationService_;
     $scope = _$rootScope_.$new();
 
-    spyOn(HelpdeskService, 'searchOrder').and.returnValue($.when(getJSONFixture('core/json/orders/order.json')));
+    spyOn(HelpdeskService, 'searchOrders').and.returnValue($.when(getJSONFixture('core/json/orders/order.json')));
     spyOn(HelpdeskService, 'getAccount').and.returnValue($.when(getJSONFixture('core/json/orders/accountResponse.json')));
-    spyOn(HelpdeskService, 'getEmailStatus').and.returnValue($.when('core/json/orders/emailStatus.json'));
+    spyOn(HelpdeskService, 'getEmailStatus').and.returnValue($.when(getJSONFixture('core/json/orders/emailStatus.json').items));
+    spyOn(HelpdeskService, 'getOrg').and.returnValue($.when(getJSONFixture('core/json/orders/orgResponse.json')));
   }));
 
   describe('Order Controller', function () {
@@ -30,9 +31,24 @@ describe('Controller: HelpdeskOrderController', function () {
       $scope.$apply();
       expect(orderController.orderId).toBe("67891234");
       expect(orderController.account).toBeDefined();
-      expect(orderController.partnerInfo).toBeDefined();
-      expect(orderController.account.accountActivate).toBe("No");
+      expect(orderController.orderUuid).toBe("3e54548d-12ff-43f4-9aff-10c2fcc64130");
+      expect(orderController.partnerAdminEmail).toBe("boulder.steamboat@gmail.com");
+      expect(orderController.accountName).toBe("All_Pizza_And_Ice_Cream_You_Can_Eatery");
+      expect(orderController.provisionTime).toBe(new Date("2016-09-27T22:56:30.051Z").toGMTString());
     });
 
+    it('verify account info is correct', function () {
+      $scope.$apply();
+      expect(orderController.accountName).toBe("All_Pizza_And_Ice_Cream_You_Can_Eatery");
+      expect(orderController.accountOrgId).toBe("bbbc797b-f8a4-424b-9e1d-927e222f532e");
+      expect(orderController.customerId).toBe("Atlas_Test_Order_Search_Admin");
+      expect(orderController.customerAdminEmail).toBe("snzhuoatlas+inttest_sn30@gmail.com");
+      expect(orderController.accountActivationInfo).toBe(new Date("2016-10-20T18:22:31.093Z").toGMTString());
+    });
+
+    it('verify email status', function () {
+      $scope.$apply();
+      expect(orderController.customerEmailSent).toBe(new Date(1476222518.335901 * 1000).toUTCString());
+    });
   });
 });

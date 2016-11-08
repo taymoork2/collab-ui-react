@@ -6,7 +6,7 @@
     .factory('ServiceSetup', ServiceSetup);
 
   /* @ngInject */
-  function ServiceSetup($q, $translate, $filter, Authinfo, SiteService, InternalNumberRangeService, TimeZoneService, ExternalNumberPoolService, VoicemailTimezoneService, VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2, CeSiteService) {
+  function ServiceSetup($q, $translate, $filter, Authinfo, SiteService, InternalNumberRangeService, TimeZoneService, SiteLanguageService, ExternalNumberPoolService, VoicemailTimezoneService, VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2, CeSiteService) {
 
     return {
       internalNumberRanges: [],
@@ -56,7 +56,7 @@
           order: 'pattern',
           pattern: patternQuery
         }, angular.bind(this, function (extPool) {
-          angular.forEach(extPool, function (extNum) {
+          _.forEach(extPool, function (extNum) {
             extNumPool.push({
               uuid: extNum.uuid,
               pattern: extNum.pattern
@@ -125,7 +125,7 @@
       },
 
       updateInternalNumberRange: function (internalNumberRange) {
-        if (angular.isDefined(internalNumberRange.uuid)) {
+        if (!_.isUndefined(internalNumberRange.uuid)) {
           internalNumberRange.name = internalNumberRange.description = internalNumberRange.beginNumber + ' - ' + internalNumberRange.endNumber;
           internalNumberRange.patternUsage = "Device";
           return InternalNumberRangeService.save({
@@ -165,6 +165,19 @@
           });
         });
         return localizedTimeZones;
+      },
+
+      getSiteLanguages: function () {
+        return SiteLanguageService.query().$promise;
+      },
+
+      getTranslatedSiteLanguages: function (languages) {
+        var localizedLanguages = _.map(languages, function (language) {
+          return _.assign(language, {
+            label: $translate.instant(language.label)
+          });
+        });
+        return localizedLanguages;
       },
 
       isOverlapping: function (x1, x2, y1, y2) {

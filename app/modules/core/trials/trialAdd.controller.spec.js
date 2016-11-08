@@ -27,11 +27,15 @@ describe('Controller: TrialAddCtrl', function () {
     addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.when());
 
     spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
-    spyOn(FeatureToggleService, 'supports').and.callFake(function (input) {
-      if (input === 'atlasTrialsShipDevices') {
-        return ($q.when(false));
-      } else {
-        return ($q.when(true));
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
+      if (param == 'csdm-places' || param == 'csdm-pstn') {
+        return $q.when(false);
+      } else if (param != 'csdm-pstn') {
+        fail('the following toggle wasn\'t expected ' + param);
       }
     });
 
@@ -71,6 +75,7 @@ describe('Controller: TrialAddCtrl', function () {
     expect(controller.meetingTrial.enabled).toBeTruthy();
     expect(controller.webexTrial.enabled).toBeTruthy();
     expect(controller.roomSystemTrial.enabled).toBeTruthy();
+    expect(controller.sparkBoardTrial.enabled).toBeTruthy();
     expect(controller.callTrial.enabled).toBeTruthy();
     expect(controller.pstnTrial.enabled).toBeTruthy();
     expect(controller.contextTrial.enabled).toBeFalsy();
@@ -280,6 +285,17 @@ describe('Controller: TrialAddCtrl', function () {
       });
 
       it('should return false when only roomSystemTrial is enabled', function () {
+        expect(controller.hasUserServices()).toBeFalsy();
+      });
+
+      it('should return false when only roomSystemTrial and sparkBoardTrial is enabled', function () {
+        controller.sparkBoardTrial.enabled = true;
+        expect(controller.hasUserServices()).toBeFalsy();
+      });
+
+      it('should return false when only sparkboardTrial is enabled', function () {
+        controller.sparkBoardTrial.enabled = true;
+        controller.roomSystemTrial.enabled = false;
         expect(controller.hasUserServices()).toBeFalsy();
       });
 

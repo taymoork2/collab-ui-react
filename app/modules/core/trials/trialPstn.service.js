@@ -62,9 +62,10 @@
       return _trialData;
     }
 
-    function createPstnEntity(customerOrgId) {
+    function createPstnEntity(customerOrgId, customerName) {
       if (_trialData.details.pstnProvider.apiImplementation === "SWIVEL") {
         _trialData.details.pstnNumberInfo.numbers = _trialData.details.swivelNumbers;
+        _trialData.details.pstnContractInfo.companyName = customerName;
       }
       return reserveNumbers()
         .then(_.partial(createPstnCustomer, customerOrgId))

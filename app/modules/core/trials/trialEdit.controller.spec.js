@@ -45,12 +45,15 @@ describe('Controller: TrialEditCtrl:', function () {
     addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.when());
     removeContextSpy = spyOn(TrialContextService, 'removeService').and.returnValue($q.when());
     spyOn(TrialContextService, 'trialHasService').and.returnValue(false);
-    spyOn(FeatureToggleService, 'supports').and.callFake(function (input) {
-      if (input === 'atlasTrialsShipDevices') {
-        return $q.when(false);
-      } else {
-        return $q.when(true);
+    spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
+      if (param != 'csdm-places') {
+        fail('the following toggle wasn\'t expected' + param); //taking control of which toggles this controller are using (explicit or implicit)
       }
+      return $q.when(false);
     });
     spyOn(Orgservice, 'getAdminOrgAsPromise').and.returnValue($q.when({
       data: {
@@ -293,6 +296,35 @@ describe('Controller: TrialEditCtrl:', function () {
       });
     });
 
+    describe('hasEnabledSparkBoardTrial', function () {
+      it('should expect an object with a boolean property named "enabled" as its first arg, and an object with a boolean property named "roomSystems" as its second arg', function () {
+        var hasEnabledSparkBoardTrial = helpers.hasEnabledSparkBoardTrial;
+        expect(hasEnabledSparkBoardTrial({
+          enabled: true
+        }, {
+          sparkBoard: false
+        })).toBe(true);
+
+        expect(hasEnabledSparkBoardTrial({
+          enabled: true
+        }, {
+          sparkBoard: true
+        })).toBe(false);
+
+        expect(hasEnabledSparkBoardTrial({
+          enabled: false
+        }, {
+          sparkBoard: false
+        })).toBe(false);
+
+        expect(hasEnabledSparkBoardTrial({
+          enabled: false
+        }, {
+          sparkBoard: true
+        })).toBe(false);
+      });
+    });
+
     describe('hasEnabledCareTrial', function () {
       it('should expect an object with a boolean property named "enabled" as its first arg,' +
         'and an object with a boolean property named "care" as its second arg',
@@ -345,6 +377,9 @@ describe('Controller: TrialEditCtrl:', function () {
               roomSystemTrial: {
                 enabled: false
               },
+              sparkBoardTrial: {
+                enabled: false
+              },
               careTrial: {
                 enabled: false
               }
@@ -391,6 +426,15 @@ describe('Controller: TrialEditCtrl:', function () {
               var hasEnabledAnyTrial = helpers.hasEnabledAnyTrial;
               _vm.roomSystemTrial.enabled = true;
               _preset.roomSystems = false;
+              expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
+            });
+
+          it('should return true if the "sparkBoardTrial.enabled" sub-property on the first arg is true, ' +
+            'and the "roomSystems" property on the second arg is false',
+            function () {
+              var hasEnabledAnyTrial = helpers.hasEnabledAnyTrial;
+              _vm.sparkBoardTrial.enabled = true;
+              _preset.sparkBoard = false;
               expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
             });
 
@@ -483,6 +527,29 @@ describe('Controller: TrialEditCtrl:', function () {
           controller.careTrial.details.quantity = 20;
           expect(helpers.careLicenseCountLessThanTotalCount()).toBeTruthy();
         });
+      });
+    });
+
+    describe('care checkbox disabled/enabled', function () {
+      it('should disable care checkbox in edit trial when care was already selected in start trial', function () {
+        controller.preset.care = true;
+        controller.messageTrial.enabled = true;
+        var isDisabled = controller.careFields[0].expressionProperties['templateOptions.disabled']();
+        expect(isDisabled).toBeTruthy();
+      });
+
+      it('should enable care checkbox in edit trial when care was not already selected in start trial', function () {
+        controller.preset.care = false;
+        controller.messageTrial.enabled = true;
+        var isDisabled = controller.careFields[0].expressionProperties['templateOptions.disabled']();
+        expect(isDisabled).toBeFalsy();
+      });
+
+      it('should disable care checkbox in edit trial when message was not selected in start trial', function () {
+        controller.preset.care = false;
+        controller.messageTrial.enabled = false;
+        var isDisabled = controller.careFields[0].expressionProperties['templateOptions.disabled']();
+        expect(isDisabled).toBeTruthy();
       });
     });
   });

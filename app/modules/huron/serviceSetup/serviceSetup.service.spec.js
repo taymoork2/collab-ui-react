@@ -263,15 +263,33 @@ describe('Service: ServiceSetup', function () {
 
   describe('getTimeZones', function () {
     beforeEach(function () {
-      $httpBackend.expectGET('/app/modules/huron/serviceSetup/jodaTimeZones.json').respond(getJSONFixture('huron/json/timeZones/timeZones.json'));
-
-      it('should get time zones', function () {
-        ServiceSetup.getTimeZones();
-
-        $httpBackend.flush();
-      });
+      $httpBackend.expectGET('modules/huron/serviceSetup/jodaTimeZones.json').respond(getJSONFixture('huron/json/timeZones/timeZones.json'));
     });
 
+    it('should get time zones', function () {
+      ServiceSetup.getTimeZones().then(function (response) {
+        expect(response).toBeDefined();
+        expect(response.length).toBe(472);
+      });
+      $httpBackend.flush();
+    });
+  });
+
+  describe('getSiteLanguages', function () {
+    beforeEach(function () {
+      $httpBackend.expectGET('modules/huron/serviceSetup/siteLanguages.json').respond(getJSONFixture('huron/json/settings/languages.json'));
+    });
+
+    it('should get site languages', function () {
+      ServiceSetup.getSiteLanguages().then(function (response) {
+        expect(response).toBeDefined();
+        expect(response.length).toBe(2);
+        var translatedLanguages = ServiceSetup.getTranslatedSiteLanguages(response);
+        expect(translatedLanguages).toBeDefined();
+        expect(translatedLanguages.length).toBe(2);
+      });
+      $httpBackend.flush();
+    });
   });
 
   describe('generateVoiceMailNumber', function () {

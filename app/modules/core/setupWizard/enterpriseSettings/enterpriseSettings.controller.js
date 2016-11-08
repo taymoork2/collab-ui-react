@@ -5,7 +5,7 @@
     .controller('EnterpriseSettingsCtrl', EnterpriseSettingsCtrl);
 
   /* @ngInject */
-  function EnterpriseSettingsCtrl($scope, $rootScope, $q, $timeout, SSOService, Authinfo, Log, Notification, $translate, $window, UrlConfig) {
+  function EnterpriseSettingsCtrl($q, $rootScope, $scope, $timeout, $translate, $window, Authinfo, Config, Log, Notification, ServiceSetup, PersonalMeetingRoomManagementService, SSOService, Orgservice, UrlConfig) {
     var strEntityDesc = '<EntityDescriptor ';
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
@@ -24,11 +24,153 @@
       deleteSSOBySwitchingRadio: false
     };
 
+    var DEFAULT_TZ = {
+      id: 'America/Los_Angeles',
+      label: $translate.instant('timeZones.America/Los_Angeles')
+    };
+    var vm = this;
+
+    vm.pmrField = {
+      inputValue: '',
+      isDisabled: false,
+      isAvailable: false,
+      isButtonDisabled: false,
+      isLoading: false,
+      isConfirmed: null,
+      availableUrlValue: '',
+      isRoomLicensed: false,
+      domainSuffix: UrlConfig.getSparkDomainCheckUrl(),
+      errorMsg: $translate.instant('firstTimeWizard.setPersonalMeetingRoomInputFieldErrorMessage')
+    };
+
+    var pmrField = vm.pmrField;
+    vm.timeZoneOptions = [];
+    vm._buildTimeZoneOptions = _buildTimeZoneOptions;
+    vm.loadTimeZoneOptions = loadTimeZoneOptions;
+    vm.model = {
+      site: {
+        timeZone: DEFAULT_TZ
+      }
+    };
+
+    vm.timeZoneSelection = [{
+      model: vm.model.site,
+      key: 'timeZone',
+      type: 'select',
+      templateOptions: {
+        inputClass: 'medium-5',
+        label: $translate.instant('serviceSetupModal.timeZone'),
+        options: [],
+        labelfield: 'label',
+        valuefield: 'id',
+        inputPlaceholder: $translate.instant('serviceSetupModal.searchTimeZone'),
+        filter: true
+      },
+      controller: /* @ngInject */ function ($scope) {
+        _buildTimeZoneOptions($scope);
+        loadTimeZoneOptions();
+      }
+    }];
+
     init();
 
     function init() {
+      setPMRSiteUrlFromSipDomain();
       updateSSO();
     }
+
+    // Personal Meeting Room Controller code
+
+    function setPMRSiteUrlFromSipDomain() {
+      var pmrSiteUrl = '';
+      Orgservice.getOrg(function (data, status) {
+        if (status === 200) {
+          var sparkDomainStr = UrlConfig.getSparkDomainCheckUrl();
+          var sipCloudDomain = _.get(data.orgSettings, 'sipCloudDomain');
+          pmrSiteUrl = sipCloudDomain ? data.orgSettings.sipCloudDomain.replace(sparkDomainStr, Config.siteDomainUrl.webexUrl) : '';
+          Orgservice.validateSiteUrl(pmrSiteUrl).then(function (response) {
+            if (response.isValid) {
+              pmrField.inputValue = pmrSiteUrl.replace(Config.siteDomainUrl.webexUrl, '');
+              pmrField.isAvailable = true;
+              pmrField.availableUrlValue = pmrField.inputValue;
+              pmrField.isError = false;
+            } else {
+              pmrField.inputValue = '';
+            }
+          });
+        }
+      });
+    }
+
+    vm.checkPMRSiteUrlAvailability = function () {
+      var pmrSiteUrl = pmrField.inputValue + Config.siteDomainUrl.webexUrl;
+      pmrField.isAvailable = false;
+      pmrField.isLoading = true;
+      pmrField.isButtonDisabled = true;
+      pmrField.errorMsg = $translate.instant('firstTimeWizard.setPersonalMeetingRoomInputFieldErrorMessage');
+      return Orgservice.validateSiteUrl(pmrSiteUrl)
+        .then(function (response) {
+          if (response.isValid) {
+            pmrField.isAvailable = true;
+            pmrField.availableUrlValue = pmrField.inputValue;
+            pmrField.isError = false;
+          } else {
+            pmrField.isError = true;
+            pmrField.isButtonDisabled = false;
+          }
+          pmrField.isLoading = false;
+        })
+        .catch(function (response) {
+          if (response.status === 400) {
+            pmrField.errorMsg = $translate.instant('firstTimeWizard.personalMeetingRoomServiceErrorMessage');
+            pmrField.isError = true;
+          } else {
+            Notification.error('firstTimeWizard.personalMeetingRoomServiceErrorMessage');
+          }
+          pmrField.isLoading = false;
+          pmrField.isButtonDisabled = false;
+        });
+    };
+
+    vm._savePersonalMeetingRoomSiteUrl = function () {
+      var url = pmrField.inputValue;
+      if (pmrField.isAvailable && pmrField.isConfirmed) {
+        PersonalMeetingRoomManagementService.addPmrSiteUrl(url)
+          .then(function () {
+            pmrField.isError = false;
+            pmrField.isDisabled = true;
+            pmrField.isButtonDisabled = true;
+            Notification.success('firstTimeWizard.setPersonalMeetingRoomSuccessMessage');
+            $rootScope.$broadcast('DISMISS_PMR_NOTIFICATION');
+          })
+          .catch(function () {
+            Notification.error('firstTimeWizard.personalMeetingRoomServiceErrorMessage');
+          });
+      }
+    };
+
+    $scope.$on('wizard-enterprise-pmr-event', $scope._savePersonalMeetingRoomSiteUrl);
+
+    vm.validatePmrSiteUrl = function () {
+      if (pmrField.inputValue.length > 40) {
+        pmrField.isError = true;
+      }
+
+      return pmrField.isError;
+    };
+
+    vm.onPmrInputChange = function (inputValue) {
+      if (inputValue !== pmrField.availableUrlValue && !pmrField.isDisabled) {
+        pmrField.isAvailable = false;
+        pmrField.isError = false;
+        pmrField.isButtonDisabled = false;
+        pmrField.isConfirmed = false;
+      } else if (inputValue === pmrField.availableUrlValue) {
+        pmrField.isAvailable = true;
+      }
+    };
+
+    // SSO controller code
 
     function updateSSO() {
       //ssoEnabled should be set already in the userCard.js
@@ -247,6 +389,21 @@
         }
         $scope.wizard.wizardNextLoad = false;
       });
+    }
+
+    function _buildTimeZoneOptions(localScope) {
+      localScope.$watchCollection(function () {
+        return vm.timeZoneOptions;
+      }, function (timeZones) {
+        localScope.to.options = timeZones;
+      });
+    }
+
+    function loadTimeZoneOptions() {
+      return ServiceSetup.getTimeZones()
+        .then(function (timeZones) {
+          vm.timeZoneOptions = ServiceSetup.getTranslatedTimeZones(timeZones);
+        });
     }
 
     function reEnableSSO() {

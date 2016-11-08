@@ -1,16 +1,13 @@
 (function () {
   'use strict';
 
-  var Masonry = require('masonry-layout');
-
   angular
     .module('Core')
     .controller('CustomerReportsCtrl', CustomerReportsCtrl);
 
   /* @ngInject */
-  function CustomerReportsCtrl($rootScope, $stateParams, $q, $timeout, $translate, Log, Authinfo, CustomerReportService, ReportConstants, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage, FeatureToggleService, MediaServiceActivationV2) {
+  function CustomerReportsCtrl($rootScope, $stateParams, $q, $timeout, $translate, Log, Authinfo, CustomerReportService, ReportConstants, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage, FeatureToggleService, MediaServiceActivationV2, CardUtils) {
     var vm = this;
-    var ABORT = 'ABORT';
 
     // Feature Toggles
     var reportsUpdateToggle = FeatureToggleService.atlasReportsUpdateGetStatus();
@@ -46,13 +43,7 @@
     vm.displayActiveLineGraph = false;
 
     // Active User Options
-    var activeArray = [{
-      value: 0,
-      label: $translate.instant('activeUsers.allUsers')
-    }, {
-      value: 1,
-      label: $translate.instant('activeUsers.activeUsers')
-    }];
+    var activeArray = _.cloneDeep(ReportConstants.activeFilter);
     vm.activeOptions = {
       animate: true,
       description: 'activeUsers.customerPortalDescription',
@@ -104,7 +95,7 @@
     };
 
     vm.resizeMostActive = function () {
-      resize(0);
+      CardUtils.resize(0);
     };
 
     var avgRoomsChart = null;
@@ -133,16 +124,7 @@
 
     var mediaChart = null;
     var mediaData = [];
-    var mediaArray = [{
-      value: 0,
-      label: $translate.instant('reportsPage.allCalls')
-    }, {
-      value: 1,
-      label: $translate.instant('reportsPage.audioCalls')
-    }, {
-      value: 2,
-      label: $translate.instant('reportsPage.videoCalls')
-    }];
+    var mediaArray = _.cloneDeep(ReportConstants.mediaFilter);
     vm.mediaOptions = {
       animate: true,
       description: 'mediaQuality.descriptionCustomer',
@@ -321,19 +303,6 @@
       setDeviceData();
     }
 
-    function resize(delay) {
-      $timeout(function () {
-        // $('.cs-card-layout').masonry('layout');
-        var $cardlayout = new Masonry('.cs-card-layout', {
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          resize: true,
-          percentPosition: true,
-        });
-        $cardlayout.layout();
-      }, delay);
-    }
-
     function resetCards(filter) {
       if (vm.currentFilter !== filter) {
         vm.displayEngagement = false;
@@ -344,7 +313,7 @@
         if (filter === vm.ALL || filter === vm.QUALITY) {
           vm.displayQuality = true;
         }
-        resize(500);
+        CardUtils.resize(500);
         vm.currentFilter = filter;
       }
     }
@@ -369,7 +338,7 @@
       setDeviceGraph(DummyCustomerReportService.dummyDeviceData(vm.timeSelected));
       setMediaGraph(DummyCustomerReportService.dummyMediaData(vm.timeSelected));
 
-      resize(0);
+      CardUtils.resize(0);
     }
 
     function setActiveGraph(data) {
@@ -397,9 +366,7 @@
       }
 
       CustomerReportService.getActiveUserData(vm.timeSelected, vm.displayActiveLineGraph).then(function (response) {
-        if (response === ABORT) {
-          return;
-        } else if (_.isArray(response.graphData) && response.graphData.length === 0) {
+        if (_.isArray(response.graphData) && response.graphData.length === 0) {
           vm.activeOptions.state = ReportConstants.EMPTY;
         } else {
           setActiveGraph(response.graphData);
@@ -409,7 +376,7 @@
             vm.activeDropdown.disabled = !response.isActiveUsers;
           }
         }
-        resize(0);
+        CardUtils.resize(0);
       });
 
       CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {
@@ -434,9 +401,7 @@
 
     function setAvgRoomData() {
       CustomerReportService.getAvgRoomData(vm.timeSelected).then(function (response) {
-        if (response === ABORT) {
-          return;
-        } else if (response.length === 0) {
+        if (response.length === 0) {
           vm.avgRoomOptions.state = ReportConstants.EMPTY;
         } else {
           setAverageGraph(response);
@@ -454,9 +419,7 @@
 
     function setFilesSharedData() {
       CustomerReportService.getFilesSharedData(vm.timeSelected).then(function (response) {
-        if (response === ABORT) {
-          return;
-        } else if (response.length === 0) {
+        if (response.length === 0) {
           vm.filesSharedOptions.state = ReportConstants.EMPTY;
         } else {
           setFilesGraph(response);
@@ -476,9 +439,7 @@
       vm.mediaDropdown.disabled = true;
       mediaData = [];
       CustomerReportService.getMediaQualityData(vm.timeSelected).then(function (response) {
-        if (response === ABORT) {
-          return;
-        } else if (response.length === 0) {
+        if (response.length === 0) {
           vm.mediaOptions.state = ReportConstants.EMPTY;
         } else {
           mediaData = response;
@@ -510,11 +471,8 @@
 
     function setCallMetricsData() {
       CustomerReportService.getCallMetricsData(vm.timeSelected).then(function (response) {
-        if (response === ABORT) {
-          return;
-        } else if (_.isArray(response.dataProvider) && response.dataProvider.length === 0) {
-          vm.metricsOptions.state = ReportConstants.EMPTY;
-        } else {
+        vm.metricsOptions.state = ReportConstants.EMPTY;
+        if (_.isArray(response.dataProvider) && response.displayData) {
           setMetricGraph(response);
           setMetrics(response.displayData);
           vm.metricsOptions.state = ReportConstants.SET;
@@ -536,30 +494,24 @@
       vm.deviceDropdown.disabled = true;
 
       CustomerReportService.getDeviceData(vm.timeSelected).then(function (response) {
-        if (response === ABORT) {
-          return;
-        } else if (response.emptyGraph) {
-          vm.deviceOptions.state = ReportConstants.EMPTY;
-        } else {
-          if (response.filterArray.length) {
-            vm.deviceDropdown.array = response.filterArray.sort(function (a, b) {
-              if (a.label) {
-                return a.label.localeCompare(b.label);
-              } else {
-                return a > b;
-              }
-            });
-          }
-          vm.deviceDropdown.selected = vm.deviceDropdown.array[0];
-          currentDeviceGraphs = response.graphData;
+        if (response.filterArray.length) {
+          vm.deviceDropdown.array = response.filterArray.sort(function (a, b) {
+            if (a.label) {
+              return a.label.localeCompare(b.label);
+            } else {
+              return a > b;
+            }
+          });
+        }
+        vm.deviceDropdown.selected = vm.deviceDropdown.array[0];
+        currentDeviceGraphs = response.graphData;
 
-          if (currentDeviceGraphs.length && !currentDeviceGraphs[vm.deviceDropdown.selected.value].emptyGraph) {
-            setDeviceGraph(currentDeviceGraphs, vm.deviceDropdown.selected);
-            vm.deviceOptions.state = ReportConstants.SET;
-            vm.deviceDropdown.disabled = false;
-          } else {
-            vm.deviceOptions.state = ReportConstants.EMPTY;
-          }
+        if (currentDeviceGraphs.length && !currentDeviceGraphs[vm.deviceDropdown.selected.value].emptyGraph) {
+          setDeviceGraph(currentDeviceGraphs, vm.deviceDropdown.selected);
+          vm.deviceOptions.state = ReportConstants.SET;
+          vm.deviceDropdown.disabled = false;
+        } else {
+          vm.deviceOptions.state = ReportConstants.EMPTY;
         }
       });
     }

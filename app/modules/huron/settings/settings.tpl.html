@@ -10,14 +10,41 @@
       <button class="btn btn--primary" cs-btn loading="settings.processing" ng-click="settings.openSaveModal()" ng-disabled="settings.form.$invalid"><span translate="common.save"></span></button>
     </div>
 
-    <!-- time zone selection -->
-    <div class="cs-form__section">
+    <!-- regional settings -->
+    <div class="cs-form__section" ng-if="settings.showRegionAndVoicemail">
       <div class="section__info">
-        <h4 class="section__title" translate="serviceSetupModal.timeZone"></h4>
-        <h6 class="section__description" translate="serviceSetupModal.tzDescription"></h6>
+        <h4 class="section__title" translate="serviceSetupModal.regionalSettings"></h4>
       </div>
       <div class="section__content">
-        <formly-form model="settings.model" fields="settings.timeZoneSelection" form="settings.form"></formly-form>
+        <div class="sub-section">
+          <label class="control-label" for="timeZoneSelect" translate="serviceSetupModal.timeZone"></label>
+          <p class="description-block" translate="serviceSetupModal.tzDescription"></p>
+          <div class="medium-5">
+            <cs-select
+              name="timeZoneSelect"
+              ng-model="settings.model.site.timeZone"
+              options="settings.timeZoneOptions"
+              labelfield="label"
+              valuefield="id"
+              input-placeholder="settings.timeZoneInputPlaceholder"
+              filter="true"
+            ></cs-select>
+          </div>
+        </div>
+        <div class="sub-section service-setup service-setup-regional-settings" cr-feature-toggle feature-show="huron-l10n-user-locale">
+          <label class="control-label" translate="serviceSetupModal.preferredLanguage"></label>
+          <p class="description-block" translate="serviceSetupModal.preferredLanguageDescription"></p>
+          <div class="medium-5">
+            <cs-select
+              name="languageSelect"
+              ng-model="settings.model.site.preferredLanguage"
+              options="settings.preferredLanguageOptions"
+              labelfield="label"
+              valuefield="value"
+              filter="false"
+            ></cs-select>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -52,10 +79,10 @@
           <label class="cs-input__label" for="areacode-input" translate="serviceSetupModal.localDialingNumberTitle"></label>
           <input
             warning
-            ng-model="settings.model.regionCode" 
-            id="areacode-input" 
-            class="medium-4 columns text-center" 
-            type="text" 
+            ng-model="settings.model.regionCode"
+            id="areacode-input"
+            class="medium-4 columns text-center"
+            type="text"
             ng-disabled="settings.model.dialingHabit === settings.NATIONAL">
         </div>
         <p class="row columns warning terminus-warning indent-area-code" ng-if="!settings.isTerminusCustomer"><i class="icon icon-warning"></i>{{::'serviceSetupModal.warning.localDialing' | translate}}</p>
@@ -128,7 +155,7 @@
     </div>
 
     <!-- company voicemail selection -->
-    <div class="cs-form__section">
+    <div class="cs-form__section" ng-if="settings.showRegionAndVoicemail">
       <div class="section__info">
         <h4 class="section__title" translate="serviceSetupModal.companyVoicemail"></h4>
       </div>

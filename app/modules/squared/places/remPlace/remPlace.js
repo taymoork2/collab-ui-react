@@ -6,19 +6,14 @@
     .controller('RemPlaceController',
 
       /* @ngInject */
-      function ($modalInstance, CsdmDataModelService, XhrNotificationService, place, $rootScope, $timeout) {
+      function ($modalInstance, CsdmDataModelService, XhrNotificationService, place) {
         var rdc = this;
         rdc.place = place;
-
-        rdc.refreshPlaceList = function () {
-          $rootScope.$broadcast('PLACE_LIST_UPDATED');
-        };
 
         rdc.deletePlace = function () {
           return CsdmDataModelService.deleteItem(rdc.place)
             .then(function () {
               $modalInstance.close();
-              $timeout(rdc.refreshPlaceList, 500);
             }, XhrNotificationService.notify);
         };
       }

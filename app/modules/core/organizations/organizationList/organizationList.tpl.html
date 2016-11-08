@@ -5,9 +5,6 @@
       <cs-searchfilter filters="filters" set-filter-fn="setFilter(filter.filterValue)" ng-model="placeholder.count" search-item-fn="searchFn(searchStr)" placeholder-text="{{placeholder.name}}">
       </cs-searchfilter>
     </cs-page-sub-header-left>
-    <cs-page-sub-header-right>
-        <button id="addOrganizations" class="btn btn--people add-button" ui-sref="organization-overview.add" translate="tabs.addOrganizationTab"></button>
-    </cs-page-sub-header-right>
   </cs-page-sub-header>
   <div id="orgListPanel" class="row grid">
     <div class="gridStyle" ui-grid="gridOptions" ui-grid-selection ui-grid-infinite-scroll></div>

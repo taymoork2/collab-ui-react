@@ -23,11 +23,11 @@ describe('Controller: AAPhoneMenuCtrl', function () {
 
   function raw2MenuEntry(raw) {
     var _menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-    angular.extend(_menuEntry, raw);
+    _.assign(_menuEntry, raw);
     _menuEntry.actions = [];
     for (var j = 0; j < raw.actions.length; j++) {
       var _action = AutoAttendantCeMenuModelService.newCeActionEntry();
-      angular.extend(_action, raw.actions[j]);
+      _.assign(_action, raw.actions[j]);
       _menuEntry.addAction(_action);
     }
     return _menuEntry;
@@ -35,7 +35,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
 
   function raw2Menu(raw) {
     var _menu = AutoAttendantCeMenuModelService.newCeMenu();
-    angular.extend(_menu, raw);
+    _.assign(_menu, raw);
     _menu.headers = [];
     _menu.entries = [];
     for (var i = 0; i < raw.headers.length; i++) {
@@ -226,12 +226,12 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       controller.keyActionChanged(0, data.selectedActionsPlaySubmenu[0].action);
       expect(angular.equals(expectEntry2, controller.menuEntry.entries[0])).toEqual(true);
       var newSubmenuId = controller.menuEntry.entries[0].id;
-      expect(angular.isDefined(AutoAttendantCeMenuModelService.getCeMenu(newSubmenuId))).toBe(true);
+      expect(!_.isUndefined(AutoAttendantCeMenuModelService.getCeMenu(newSubmenuId))).toBe(true);
 
       controller.keyChanged(0, '1');
       controller.keyActionChanged(0, data.selectedActionsRepeatMenu[0].action);
       expect(angular.equals(expectEntry, controller.menuEntry.entries[0])).toEqual(true);
-      expect(angular.isDefined(AutoAttendantCeMenuModelService.getCeMenu(newSubmenuId))).toBe(false);
+      expect(!_.isUndefined(AutoAttendantCeMenuModelService.getCeMenu(newSubmenuId))).toBe(false);
     });
 
     it('should change Repeat-Menu to Play Submenu action in the model and copy the attempts from main menu', function () {

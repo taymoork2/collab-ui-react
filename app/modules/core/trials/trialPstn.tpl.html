@@ -92,21 +92,19 @@
               </cs-select>
             </div>
             <div class="medium-3 columns">
-              <div ng-if="pstnTrial.showNXXSearch">
-                <p translate="pstnSetup.nxx"></p>
-                <cs-select
-                  ng-model="pstnTrial.trialData.details.pstnNumberInfo.nxx"
-                  is-disabled="!pstnTrial.pstn.nxxEnable"
-                  options="pstnTrial.pstn.nxxOptions"
-                  labelfield="code"
-                  valuefield="code"
-                  placeholder="::'common.optional' | translate"
-                  input-placeholder=""
-                  filter="true"
-                  refresh-data-fn="sel.getoptions(filter)"
-                  on-change-fn="pstnTrial.onNxxChange()">
-                </cs-select>
-              </div>
+              <p translate="pstnSetup.nxx"></p>
+              <cs-select
+                ng-model="pstnTrial.trialData.details.pstnNumberInfo.nxx"
+                is-disabled="!pstnTrial.pstn.nxxEnable"
+                options="pstnTrial.pstn.nxxOptions"
+                labelfield="code"
+                valuefield="code"
+                placeholder="::'common.optional' | translate"
+                input-placeholder=""
+                filter="true"
+                refresh-data-fn="sel.getoptions(filter)"
+                on-change-fn="pstnTrial.onNxxChange()">
+              </cs-select>
           </div>
           </div>
         </form>
