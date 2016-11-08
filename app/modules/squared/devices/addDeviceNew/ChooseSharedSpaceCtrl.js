@@ -9,7 +9,7 @@
     vm.wizardData = $stateParams.wizard.state().data;
 
     vm.onlyNew = function () {
-      return vm.wizardData.function == 'addPlace';
+      return vm.wizardData.function == 'addPlace' || (!vm.wizardData.showPlaces && vm.wizardData.deviceType == 'cloudberry');
     };
 
     vm.isNewCollapsed = !vm.onlyNew();
