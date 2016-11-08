@@ -530,6 +530,29 @@ describe('Controller: TrialEditCtrl:', function () {
         });
       });
     });
+
+    describe('care checkbox disabled/enabled', function () {
+      it('should disable care checkbox in edit trial when care was already selected in start trial', function () {
+        controller.preset.care = true;
+        controller.messageTrial.enabled = true;
+        var isDisabled = controller.careFields[0].expressionProperties['templateOptions.disabled']();
+        expect(isDisabled).toBeTruthy();
+      });
+
+      it('should enable care checkbox in edit trial when care was not already selected in start trial', function () {
+        controller.preset.care = false;
+        controller.messageTrial.enabled = true;
+        var isDisabled = controller.careFields[0].expressionProperties['templateOptions.disabled']();
+        expect(isDisabled).toBeFalsy();
+      });
+
+      it('should disable care checkbox in edit trial when message was not selected in start trial', function () {
+        controller.preset.care = false;
+        controller.messageTrial.enabled = false;
+        var isDisabled = controller.careFields[0].expressionProperties['templateOptions.disabled']();
+        expect(isDisabled).toBeTruthy();
+      });
+    });
   });
 
   describe('with context service', function () {
