@@ -6,7 +6,7 @@
     .factory('OverviewPMRNotification', OverviewPMRNotification);
 
   /* @ngInject */
-  function OverviewPMRNotification($state) {
+  function OverviewPMRNotification($modal) {
     return {
       createNotification: function createNotification() {
         var notification = {
@@ -15,7 +15,12 @@
           canDismiss: true,
           dismiss: function () {},
           link: function () {
-            $state.go('services-overview');
+            $modal.open({
+              templateUrl: 'modules/core/setupWizard/enterpriseSettings/enterprise.pmrSetupModal.tpl.html',
+              controller: 'EnterpriseSettingsCtrl',
+              controllerAs: 'entprCtrl',
+              type: 'small'
+            });
           },
           linkText: 'homePage.setUpPMRUrl',
           name: 'pmr',

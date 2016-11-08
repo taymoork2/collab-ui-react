@@ -5,7 +5,7 @@
     .controller('DevicesCtrl',
 
       /* @ngInject */
-      function ($scope, $rootScope, $state, $translate, $templateCache, DeviceFilter, CsdmUnusedAccountsService, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, CsdmPlaceService) {
+      function ($scope, $state, $translate, $templateCache, DeviceFilter, CsdmUnusedAccountsService, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, CsdmPlaceService) {
         var vm = this;
         var filteredDevices = [];
         AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
@@ -20,9 +20,6 @@
 
         vm.deviceFilter = DeviceFilter;
         vm.deviceFilter.resetFilters();
-        $rootScope.$on('updateDeviceList', function () {
-          vm.updateListAndFilter();
-        });
 
         CsdmDataModelService.getDevicesMap().then(function (devicesMap) {
           vm.devicesMap = devicesMap;
@@ -85,6 +82,8 @@
           filteredDevices = vm.deviceFilter.getFilteredList(allDevices);
           return filteredDevices;
         };
+
+        CsdmDataModelService.subscribeToChanges($scope, vm.updateListAndFilter.bind(this));
 
         vm.showDeviceDetails = function (device) {
           vm.currentDevice = device; // fixme: modals depend on state set here

@@ -11,12 +11,6 @@ export class CommonGraphService {
   public readonly START: string = 'start';
   public readonly TITLE: string = 'title';
 
-  // Balloon Object Types
-  public  readonly BRACKET_TYPE: string = 'bracket';
-  public readonly SPAN_TYPE: string = 'span';
-  public readonly TEXT_TYPE: string = 'text';
-  public readonly TRANSLATE_TYPE: string = 'translate';
-
   /* @ngInject */
   constructor(
     private chartColors,

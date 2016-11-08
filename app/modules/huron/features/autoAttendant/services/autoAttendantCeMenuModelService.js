@@ -347,7 +347,13 @@
     function parseSayObject(menuEntry, inObject) {
       var action;
       action = new Action('say', decodeUtf8(inObject.value));
-      if (!_.isUndefined(inObject.voice)) {
+
+      if (_.startsWith(action.value.toLowerCase(), 'http')) {
+        action.name = 'play';
+        action.description = menuEntry.description;
+      }
+
+      if (angular.isDefined(inObject.voice)) {
         action.setVoice(inObject.voice);
       }
       menuEntry.addAction(action);
@@ -359,10 +365,14 @@
       }
     }
 
-    function createSayList(actions) {
+    function createSayList(menuEntry) {
+      var actions = menuEntry.actions;
+
       var newActionArray = [];
       for (var i = 0; i < actions.length; i++) {
         newActionArray[i] = {};
+        menuEntry.description = actions[i].description;
+
         newActionArray[i].value = (actions[i].getValue() ? encodeUtf8(actions[i].getValue()) : '');
         if (!_.isUndefined(actions[i].voice) && actions[i].voice.length > 0) {
           newActionArray[i].voice = actions[i].voice;
@@ -1170,8 +1180,10 @@
       if (aaMenu.headers.length > 0) {
         menuEntry = aaMenu.headers[0];
         inputAction.prompts = {};
+        inputAction.prompts.sayList = createSayList(menuEntry);
+        // say list moves the description from the action to
+        // the menuEntry so it is saved here. DB complains otherwise
         inputAction.prompts.description = menuEntry.description;
-        inputAction.prompts.sayList = createSayList(menuEntry.actions);
         if (_.has(aaMenu, 'attempts')) {
           inputAction.attempts = aaMenu.attempts;
         }

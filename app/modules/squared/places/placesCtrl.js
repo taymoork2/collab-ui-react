@@ -5,7 +5,7 @@
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($rootScope, $scope, $state, $templateCache, $translate, CsdmDataModelService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
+      function ($scope, $state, $templateCache, $translate, CsdmDataModelService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
         var vm = this;
 
         vm.data = [];
@@ -28,10 +28,6 @@
         }
 
         init();
-
-        $rootScope.$on('PLACE_LIST_UPDATED', function () {
-          vm.updateListAndFilter();
-        });
 
         vm.existsDevices = function () {
           return (vm.shouldShowList() && (Object.keys(placesList).length > 0));
@@ -67,6 +63,8 @@
           filteredPlaces = PlaceFilter.getFilteredList(_.values(placesList));
           return filteredPlaces;
         };
+
+        CsdmDataModelService.subscribeToChanges($scope, vm.updateListAndFilter.bind(this));
 
         vm.numDevices = function (place) {
           return _.size(place.devices);

@@ -84,7 +84,9 @@ describe('Controller: Dummy Customer Reports', function () {
   });
 
   it('dummyMetricsData should return the expected responses', function () {
-    expect(this.DummyCustomerReportService.dummyMetricsData()).toEqual(_.cloneDeep(metrics.dummyData));
+    let dummyMetrics = _.cloneDeep(metrics.dummyData);
+    dummyMetrics.displayData = undefined;
+    expect(this.DummyCustomerReportService.dummyMetricsData()).toEqual(dummyMetrics);
   });
 
   it('dummyDeviceData should return the expected responses', function () {

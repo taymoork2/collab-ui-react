@@ -12,7 +12,8 @@
         schedule: '@aaSchedule',
         menuId: '@aaMenuId',
         index: '=aaIndex',
-        keyIndex: '@aaKeyIndex'
+        fromSubMenu: '@aaFromSubMenu',
+        menuKeyIndex: '@aaKeyIndex'
       },
       controller: 'AADialByExtCtrl',
       controllerAs: 'aaDialByExtCtrl',

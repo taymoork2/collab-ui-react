@@ -297,9 +297,14 @@
 
     function executeNextStep(subTabControllerAs) {
       new PromiseHook($scope, getStepName() + 'Next', getTab().controllerAs, subTabControllerAs).then(function () {
-        if (getTab().name === 'enterpriseSettings' && getStep().name === 'enterpriseSipUrl') {
-          $rootScope.$broadcast('wizard-enterprise-sip-url-event');
+        if (getTab().name === 'enterpriseSettings') {
+          if (getStep().name === 'enterpriseSipUrl') {
+            $rootScope.$broadcast('wizard-enterprise-sip-url-event');
+          } else if (getStep().name === 'enterprisePmrSetup') {
+            $rootScope.$broadcast('wizard-enterprise-pmr-event');
+          }
         }
+
         var steps = getSteps();
         if (_.isArray(steps)) {
           var index = steps.indexOf(getStep());

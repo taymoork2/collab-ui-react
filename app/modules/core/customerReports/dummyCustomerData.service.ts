@@ -22,6 +22,7 @@ class DummyCustomerReportService {
   constructor(
     private $translate: ng.translate.ITranslateService,
     private chartColors,
+    private CommonReportService,
     private ReportConstants,
   ) {}
 
@@ -60,10 +61,6 @@ class DummyCustomerReportService {
     }
 
     return dummyGraph;
-  }
-
-  private getPercentage(numberOne: number, numberTwo: number): number {
-    return Math.round((numberOne / numberTwo) * 100);
   }
 
   // should return one set of data for column version and one set for line graph version
@@ -119,7 +116,7 @@ class DummyCustomerReportService {
       date: date,
       totalRegisteredUsers: totalRegisteredUsers,
       activeUsers: activeUsers,
-      percentage: this.getPercentage(activeUsers, totalRegisteredUsers),
+      percentage: this.CommonReportService.getPercentage(activeUsers, totalRegisteredUsers),
       balloon: false,
     };
   }
@@ -200,10 +197,7 @@ class DummyCustomerReportService {
         percentage: 90,
         color: this.chartColors.dummyGray,
       }],
-      labelData: {
-        numTotalCalls: 0,
-        numTotalMinutes: 0,
-      },
+      displayData: undefined,
       dummy: true,
     };
   }
@@ -213,6 +207,7 @@ class DummyCustomerReportService {
       deviceType: this.$translate.instant('registeredEndpoints.allDevices'),
       graph: this.getDummyData(filter, this.getDeviceDataPoint),
       balloon: false,
+      emptyGraph: false,
     }];
   }
 

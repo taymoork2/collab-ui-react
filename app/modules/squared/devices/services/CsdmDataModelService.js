@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmDataModelService($q, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmHuronOrgDeviceService, CsdmHuronPlaceService, CsdmPoller, CsdmConverter, CsdmHubFactory, Authinfo) {
+  function CsdmDataModelService($q, $rootScope, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmHuronOrgDeviceService, CsdmHuronPlaceService, CsdmPoller, CsdmConverter, CsdmHubFactory, Authinfo) {
 
     var placesUrl = CsdmPlaceService.getPlacesUrl();
 
@@ -84,6 +84,16 @@
           }
         });
       }
+    }
+
+    function subscribeToChanges(scope, callback) {
+      var unRegister = $rootScope.$on('PLACES_OR_DEVICES_UPDATED', callback);
+      scope.$on('$destroy', unRegister);
+      return unRegister;
+    }
+
+    function notifyListeners() {
+      $rootScope.$emit('PLACES_OR_DEVICES_UPDATED');
     }
 
     function setCloudBerryDevicesLoaded() {
@@ -196,6 +206,7 @@
               }
             }
           }
+          notifyListeners();
         });
     }
 
@@ -203,24 +214,21 @@
       return placesUrl + item.cisUuid;
     }
 
-    function createCsdmPlace(name, type) {
+    function addPlaceToDataModel(place) {
+      placesDataModel[place.url] = place;
+      addOrUpdatePlaceInDataModel(place);
+      notifyListeners();
+      return place;
+    }
 
+    function createCsdmPlace(name, type) {
       return CsdmPlaceService.createCsdmPlace(name, type)
-        .then(function (place) {
-          placesDataModel[place.url] = place;
-          addOrUpdatePlaceInDataModel(place);
-          return place;
-        });
+        .then(addPlaceToDataModel);
     }
 
     function createCmiPlace(name, directoryNumber, externalNumber) {
-
       return CsdmHuronPlaceService.createCmiPlace(name, directoryNumber, externalNumber)
-        .then(function (place) {
-          placesDataModel[place.url] = place;
-          addOrUpdatePlaceInDataModel(place);
-          return place;
-        });
+        .then(addPlaceToDataModel);
     }
 
     function updateCloudberryPlace(objectToUpdate, entitlements, directoryNumber, externalNumber) {
@@ -319,6 +327,7 @@
             reloadedPlace.devices = devicesForPlace;
             item.devices = devicesForPlace;
 
+            notifyListeners();
             return reloadedPlace;
           });
         } else {
@@ -328,6 +337,7 @@
         return service.fetchDevice(item.url).then(function (reloadedDevice) {
 
           CsdmCacheUpdater.updateOne(theDeviceMap, item.url, reloadedDevice);
+          notifyListeners();
           return reloadedDevice;
         });
       }
@@ -363,6 +373,7 @@
           });
           return p;
         });
+        notifyListeners();
       }
     }
 
@@ -410,7 +421,8 @@
       createCodeForExisting: createCodeForExisting,
       createCsdmPlace: createCsdmPlace,
       createCmiPlace: createCmiPlace,
-      updateCloudberryPlace: updateCloudberryPlace
+      updateCloudberryPlace: updateCloudberryPlace,
+      subscribeToChanges: subscribeToChanges
     };
   }
 

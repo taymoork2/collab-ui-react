@@ -99,7 +99,6 @@
 
     ////////////////
     var eventListeners = [];
-    var isUserPendingStatusToggled;
     var isOnlineOrg;
 
     function onInit() {
@@ -107,7 +106,6 @@
       var promises = {
         csvEnhancement: FeatureToggleService.atlasCsvEnhancementGetStatus(),
         atlasEmailStatus: FeatureToggleService.atlasEmailStatusGetStatus(),
-        atlasUserPendingStatus: FeatureToggleService.atlasUserPendingStatusGetStatus(),
         configureGrid: vm.configureGrid(),
         isOnlineOrg: Auth.isOnlineOrg()
       };
@@ -115,7 +113,6 @@
       $q.all(promises).then(function (results) {
         $scope.isCsvEnhancementToggled = results.csvEnhancement;
         $scope.isEmailStatusToggled = results.atlasEmailStatus;
-        isUserPendingStatusToggled = results.atlasUserPendingStatus;
         isOnlineOrg = results.isOnlineOrg;
 
         checkOrg();
@@ -290,20 +287,16 @@
                 // todo - why are we looping through ALL users here, and not just the new ones?
                 _.forEach($scope.userList.allUsers, function (user) {
                   // user status
-                  if (isUserPendingStatusToggled) {
-                    var userHasSignedUp = _.some(user.userSettings, function (userSetting) {
-                      return userSetting.indexOf('spark.signUpDate') > 0;
-                    });
-                    var index = _.findIndex(user.entitlements, function (ent) {
-                      return ent === 'ciscouc';
-                    });
-                    var hasCiscoUC = index > -1;
-                    var isActiveUser = !_.isEmpty(user.entitlements) &&
-                      (userHasSignedUp || isOnlineOrg || hasCiscoUC);
-                    user.userStatus = isActiveUser ? 'active' : 'pending';
-                  } else {
-                    user.userStatus = (_.indexOf(user.accountStatus, 'pending') >= 0) ? 'pending' : 'active';
-                  }
+                  var userHasSignedUp = _.some(user.userSettings, function (userSetting) {
+                    return userSetting.indexOf('spark.signUpDate') > 0;
+                  });
+                  var index = _.findIndex(user.entitlements, function (ent) {
+                    return ent === 'ciscouc';
+                  });
+                  var hasCiscoUC = index > -1;
+                  var isActiveUser = !_.isEmpty(user.entitlements) &&
+                    (userHasSignedUp || isOnlineOrg || hasCiscoUC);
+                  user.userStatus = isActiveUser ? 'active' : 'pending';
 
                   // email status
                   if (!user.active && $scope.isEmailStatusToggled) {
