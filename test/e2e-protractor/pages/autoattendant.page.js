@@ -5,7 +5,6 @@ var AutoAttendantPage = function () {
   this.playSubmenu = 'Play Submenu';
   this.goBack = 'Go Back';
   this.routeToQueue = 'Queue Call';
-
   this.key0 = '0';
   this.key1 = '1';
   this.key2 = '2';
@@ -20,18 +19,6 @@ var AutoAttendantPage = function () {
   this.okQueueTreatment = element(by.id('okTreatmentBtn'));
   this.mohCustomUpload = element(by.id('uploadFileRadio1'));
   this.mohDefaultUpload = element(by.id('musicOnHoldRadio1'));
-
-  this.queueDestDisconnect = element(by.linkText('Disconnect'));
-  this.queueDest = element(by.id('destinationSelect'));
-  this.queueDestOption = element(by.id('destinationSelect')).all(by.tagName('li'));
-  this.queueDestAction = element(by.linkText('Search or Select'));
-  this.queueDestActionOption = element(by.css('div.dropdown-menu.visible')).all(by.tagName('li'));
-  this.queueDestRouteToPhoneNumber = element(by.name('phoneNumberInput'));
-
-  this.initialMessage = element(by.id('initialAnnouncement')).element(by.css('aa-message-type [name="messageInput"]'));
-  this.initialMessageOptions = element(by.id('initialAnnouncement')).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
-  this.initialPlayMessageOption = element(by.id('initialAnnouncement')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
-  this.initialMediaUploadInput = element(by.id('initialAnnouncement')).element(by.name('mediaUploadInput'));
 
   this.searchBox = element(by.id('searchFilter'));
   this.aaTitle = element(by.tagName('aa-builder-name-edit'));
@@ -87,14 +74,17 @@ var AutoAttendantPage = function () {
   this.sayMessageVoice = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="voiceSelect"] + div a.select-toggle'));
   this.sayMessageVoiceOptions = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
 
+  this.phoneMenuMessageOptions = element(by.css('div.aa-panel-body[name="Phone Menu"]')).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
+  this.phoneMenuPlayMessageOption = element(by.css('div.aa-panel-body[name="Phone Menu"]')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.phoneMenuSayMessageOption = element(by.css('div.aa-panel-body[name="Phone Menu"]')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
+  this.phoneMenuMediaUploadInput = element(by.css('div.aa-panel-body[name="Phone Menu"]')).element(by.name('mediaUploadInput'));
   this.phoneMenuAll = element.all(by.css('div.aa-panel-body[name="Phone Menu"]')).all(by.cssContainingText("h3", "Phone Menu"));
-  this.phoneMenuSay = element.all(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message')).first();
-  this.phonesayMessageInput = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message [name="sayMessageInput"]'));
+  this.phoneMenuSay = element.all(by.css('div.aa-panel-body[name="Phone Menu"] aa-message-type')).first();
+  this.phonesayMessageInput = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-message-type [name="messageInput"]'));
   this.phonesayMessageLanguage = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message select[name="languageSelect"] + div a.select-toggle'));
   this.phonelanguageDropDownOptions = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message select[name="languageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
-  this.phonelanguageDropDownOptions = element(by.css('div.aa-panel-body[name="Phone Menu"]')).element(by.css('select[name="languageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
-  this.phonesayMessageVoice = this.phoneMenuSay.element(by.css('select[name="voiceSelect"] + div a.select-toggle'));
-  this.phonesayMessageVoiceOptions = this.phoneMenuSay.element(by.css('select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.phonesayMessageVoice = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message select[name="voiceSelect"] + div a.select-toggle'));
+  this.phonesayMessageVoiceOptions = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
   this.addPlus = element(by.css('.aa-add-step-icon'));
   this.repeatPlus = element(by.name('aa-phone-menu-add-action'));
   this.phoneMenuKeys = element.all(by.css('div.aa-pm-key-select .icon-chevron-down'));
@@ -107,9 +97,11 @@ var AutoAttendantPage = function () {
 
   this.phoneMenuTimeout = element(by.css('div.aa-pm-timeout .icon-chevron-down'));
   this.phoneMenuTimeoutOptions = element(by.css('div.aa-pm-timeout div.dropdown-menu')).all(by.tagName('li')).first();
-
   this.submenuRepeatPlus = element.all(by.css('aa-submenu .icon-plus-circle'));
   this.submenuSayMessage = element.all(by.css('aa-say-message[name="aa-submenu-say-message"]'));
+  this.submenuSayMessageHeaderFirst = element.all(by.css('aa-message-type[name="aa-msg-input-only"]')).get(0);
+  this.submenuMessageOptionsFirst = element.all(by.css('aa-message-type[name="aa-msg-input-only"]')).get(0).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
+  this.submenuMessageOptionSelect = element.all(by.css('aa-message-type[name="aa-msg-input-only"]')).get(0).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li'));
   this.submenuKeys = function (submenuI) {
     return element.all(by.css('aa-submenu')).get(submenuI).all(by.css('div.aa-sm-key-select .icon-chevron-down'));
   }
@@ -199,8 +191,6 @@ var AutoAttendantPage = function () {
 
   // and select the first one (which we added via Add New Step) for further tests
   this.sayMessageInputFirst = this.sayMessageAll.first().element(by.name('sayMessageInput'));
-
-  this.phoneSayMessageLanguageFirst = this.phoneMenuSay.all(by.name('languageSelect')).first().element(by.css('a.select-toggle'));
 
   // let's select galician (10th selection starting from 0 == 9) for a change of pace
   this.phoneLanguageDropDownOptionsTenth = this.phoneMenuSay.all(by.name('languageSelect'))

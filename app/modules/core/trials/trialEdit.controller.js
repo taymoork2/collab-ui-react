@@ -184,7 +184,7 @@
           return vm.messageTrial.enabled; // Since, it depends on Message Offer
         },
         'templateOptions.disabled': function () {
-          return messageOfferDisabledExpression();
+          return messageOfferDisabledExpression() || vm.preset.care;
         }
       }
     }, {
@@ -426,7 +426,6 @@
       var overrideTestOrg = false;
       var getAdminOrgError = false;
       var promises = {
-        ftWebex: FeatureToggleService.atlasWebexTrialsGetStatus(),
         ftContextServ: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
         tcHasService: TrialContextService.trialHasService(vm.currentTrial.customerOrgId),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
@@ -445,7 +444,8 @@
           vm.sparkBoardTrial.enabled = vm.preset.sparkBoard;
           vm.webexTrial.enabled = results.ftWebex && vm.preset.webex;
           vm.meetingTrial.enabled = vm.preset.meeting;
-          vm.showWebex = results.ftWebex;
+          // TODO: we enable globally by defaulting to 'true' here, but will revisit and refactor codepaths in a subsequent PR
+          vm.showWebex = true;
           vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
           vm.messageTrial.enabled = vm.preset.message;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;
@@ -455,10 +455,7 @@
           vm.showCare = results.ftCareTrials;
           vm.careTrial.enabled = vm.preset.care;
           vm.sbTrial = results.sbTrial;
-
-          if (vm.showWebex) {
-            updateTrialService(_messageTemplateOptionId);
-          }
+          updateTrialService(_messageTemplateOptionId);
 
           // To determine whether to display the ship devices page
           overrideTestOrg = results.ftShipDevices;

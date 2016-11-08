@@ -1,14 +1,21 @@
 <div ng-if="aaDialByExtCtrl.isTextOnly" id="dialByTextOnly">
-  <label class= 'control-label' for="dialByMessageInput{{ schedule + index + keyIndex}}" translate="{{ :: aaDialByExtCtrl.getMessageLabel() }}"></label>
-  <textarea aa-key="$index" aa-keypress ng-change="aaDialByExtCtrl.saveUiModel()" ng-model="aaDialByExtCtrl.messageInput" type="text" id="dialByMessageInput{{ schedule + index + keyIndex}}" name="dialByMessageInput" placeholder="{{ :: aaDialByExtCtrl.messageInputPlaceholder }}" rows="4" maxlength="2000" ></textarea>
+  <div ng-if="!aaDialByExtCtrl.isMediaUploadToggle()" id="dialBySayTextOnly" class="aa-message-panel-input-only">
+    <label class= 'control-label' for="dialByMessageInput{{ schedule + index + keyIndex}}" translate="{{ :: aaDialByExtCtrl.getMessageLabel() }}"></label>
+    <textarea class="aa-message-textarea" aa-key="$index" aa-keypress ng-change="aaDialByExtCtrl.saveUiModel()" ng-model="aaDialByExtCtrl.messageInput" type="text" id="dialByMessageInput{{ schedule + index + keyIndex}}" name="dialByMessageInput" placeholder="{{ :: aaDialByExtCtrl.messageInputPlaceholder }}" rows="4" cols="31" maxlength="2000" ></textarea>
+  </div>
+  <div ng-if="aaDialByExtCtrl.isMediaUploadToggle()" id="dialByTextOnlyMedia" > 
+    <aa-message-type aa-from-sub-menu={{fromSubMenu}} aa-menu-id={{menuId}} aa-key-index={{menuKeyIndex}} aa-index="index" aa-schedule="{{schedule}}"></aa-message-type>
+  </div>
+  </div>
 </div>
+
 
 <div ng-if="!aaDialByExtCtrl.isTextOnly" id="dialBySay" class="aa-dial-by-message-panel">
   <div ng-if="!aaDialByExtCtrl.isMediaUploadToggle()">
     <div class="row">
       <div class="small-12 columns">
         <label for="dialByMessageInput{{ schedule + index }}" translate="{{ :: aaDialByExtCtrl.getMessageLabel() }}"></label>
-        <textarea class="aa-dial-by-message-textarea" aa-key="$index" aa-keypress ng-change="aaDialByExtCtrl.saveUiModel()" ng-model="aaDialByExtCtrl.messageInput" type="text" id="dialByMessageInput{{ schedule + index}}" name="dialByMessageInput" placeholder="{{ :: aaDialByExtCtrl.messageInputPlaceholder }}" cols="50" rows="5" maxlength="2000" ></textarea>
+        <textarea class="aa-dial-by-message-textarea" aa-key="$index" aa-keypress ng-change="aaDialByExtCtrl.saveUiModel()" ng-model="aaDialByExtCtrl.messageInput" type="text" id="dialByMessageInput{{ schedule + index}}" name="dialByMessageInput" placeholder="{{ :: aaDialByExtCtrl.messageInputPlaceholder }}" cols="31" rows="5" maxlength="2000" ></textarea>
       </div>
     </div>
     <div class="row">
@@ -26,12 +33,12 @@
   </div>
   <div ng-if="aaDialByExtCtrl.isMediaUploadToggle()" id="dialBySay" >
     <div class="row">
-      <div class="large-6 small-12 columns aa-dial-by-message-select-list">
+      <div class="large-6 small-12 columns aa-message-select-list">
         <label for="languageSelect{{ schedule + index}}" translate="common.language"></label>
         <cs-select id="languageSelect{{ schedule + index}}" name="languageSelect" ng-model="aaDialByExtCtrl.languageOption" options="aaDialByExtCtrl.languageOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" placeholder="aaDialByExtCtrl.languagePlaceholder" ng-change="aaDialByExtCtrl.setVoiceOptions(); aaDialByExtCtrl.saveUiModel()">
         </cs-select>
       </div>
-      <div class="large-6 small-12 columns aa-dial-by-message-select-list">
+      <div class="large-6 small-12 columns aa-message-select-list">
         <label for="voiceSelect{{ schedule + index}}" translate="autoAttendant.sayMessageVoice"></label>
         <cs-select id="voiceSelect{{ schedule + index}}" name="voiceSelect" options="aaDialByExtCtrl.voiceOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" ng-model="aaDialByExtCtrl.voiceOption" placeholder="aaDialByExtCtrl.voicePlaceholder" ng-change="aaDialByExtCtrl.saveUiModel()">
         </cs-select>
