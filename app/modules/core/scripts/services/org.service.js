@@ -352,6 +352,8 @@
         serviceUrl = serviceUrl.concat(Config.entitlements.fusion_ec);
       } else if (serviceName === 'squared-fusion-media') {
         serviceUrl = serviceUrl.concat(Config.entitlements.mediafusion);
+      } else if (serviceName === 'spark-hybrid-datasecurity') {
+        serviceUrl = serviceUrl.concat(Config.entitlements.hds);
       } else {
         return $q(function (resolve, reject) {
           reject('serviceName is invalid: ' + serviceName);

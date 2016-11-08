@@ -23,18 +23,21 @@ describe('ServiceOverviewCtrl', () => {
     spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.when(true));
   }));
 
-  function initController({ F288 = true, MEDIA = true }) {
+  function initController({ F288 = true, MEDIA = true, HDS = true }) {
     ctrl = $controller('ServicesOverviewCtrl', {
       FeatureToggleService: {
         features: {
           servicesOverview: 'F288',
           atlasMediaServiceOnboarding: 'MEDIA',
+          atlasHybridDataSecurity: 'HDS',
         },
         supports: function (feature) {
           if (feature === 'F288') {
             return $q.resolve(F288);
           } else if (feature === 'MEDIA') {
             return $q.resolve(MEDIA);
+          } else if (feature === 'HDS') {
+            return $q.resolve(HDS);
           }
         },
         atlasCareTrialsGetStatus: function () {

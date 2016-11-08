@@ -1113,7 +1113,8 @@
     "setupPMRsiteNameModalTitle": "Personal Meeting Room Setup",
     "setUpHybridMediaService": "Hybrid Media Service is available. Extend cloud media to use premises-based resources for calls and meetings.",
     "getStarted": "Get Started",
-    "urgentUpgrade": "An urgent upgrade is available for <a ui-sref='{{link}}'>{{connector}}</a> and it will upgrade during the next scheduled upgrade."
+    "urgentUpgrade": "An urgent upgrade is available for <a ui-sref='{{link}}'>{{connector}}</a> and it will upgrade during the next scheduled upgrade.",
+    "setUpHybridDataSecurity": "Use premises-based Data Security for encryption."
   },
   "inviteModal": {
     "title": "Service Entitlement",
@@ -5684,11 +5685,8 @@
         "title": "Hybrid Data Security",
         "description": "Storage Node Setup in Progress",
         "buttons": {
-          "installSoftware": "Install server software",
-          "createCluster": "Create cluster",
-          "registerNode": "Register node",
-          "configureNode": "Configure node",
-          "addUsers" : "Add users"
+          "resources": "Resources",
+          "settings": "Settings"
         }
       },
       "hybridContext": {
