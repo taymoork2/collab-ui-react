@@ -26,8 +26,8 @@ export class ServicesOverviewCareCard extends ServicesOverviewCard {
     return [];
   }
 
-  public careFeatureToggleEventHandler (hasFeature: boolean) {
-    this._display = hasFeature;
+  public careFeatureToggleEventHandler(hasFeature: boolean) {
+    this.display = hasFeature;
   }
 
   /* @ngInject */
@@ -40,6 +40,6 @@ export class ServicesOverviewCareCard extends ServicesOverviewCard {
       cardClass: 'care-bar',
       display: false,
     });
-    this._loading = false;
+    this.loading = false;
   }
 }

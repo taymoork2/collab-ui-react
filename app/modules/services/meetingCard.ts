@@ -40,7 +40,7 @@ export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
 
   public updateWebexSiteList(data: Array<{ license: { siteUrl: string } }>) {
     if (!data) {
-      this._loading = false;
+      this.loading = false;
       return;
     }
 
@@ -59,7 +59,7 @@ export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
           };
         })
         .value();
-    this._loading = false;
+    this.loading = false;
   }
 
   public updatePMRStatus(promise: any) {

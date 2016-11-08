@@ -27,13 +27,13 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
 
   public getButtons(): Array<ICardButton> {
     if (this.active) {
-      return _.take(this._buttons, 3);
+      return this._buttons;
     }
     return [this._setupButton];
   }
 
   /* @ngInject */
-  public constructor(FusionClusterStatesService) {
+  public constructor(Authinfo, FusionClusterStatesService) {
     super({
       name: 'servicesOverview.cards.calendar.title',
       description: 'servicesOverview.cards.calendar.description',
@@ -43,5 +43,6 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
       cardClass: 'calendar',
       cardType: CardType.hybrid,
     }, FusionClusterStatesService);
+    this.display = Authinfo.isFusionCal();
   }
 }

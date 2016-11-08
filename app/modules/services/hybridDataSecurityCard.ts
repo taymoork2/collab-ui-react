@@ -2,9 +2,9 @@ import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 import { ICardButton, CardType } from './ServicesOverviewCard';
 
 export interface IHdsCardButton {
-  name: String;
-  buttonClass?: String;
-  routerState?: String;
+  name: string;
+  buttonClass?: string;
+  routerState?: string;
   completed: boolean;
 }
 
@@ -39,11 +39,11 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
   }
 
   public hybridDataSecurityToggleEventHandler(hasFeature: boolean) {
-    this._display = hasFeature;
+    this.display = hasFeature;
   }
 
   /* @ngInject */
-  public constructor(FusionClusterStatesService) {
+  public constructor(Authinfo, FusionClusterStatesService) {
     super({
       template: 'modules/services/card.tpl.html',
       name: 'servicesOverview.cards.hybridDataSecurity.title',
@@ -56,5 +56,6 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       cardClass: 'media',
       cardType: CardType.hybrid,
     }, FusionClusterStatesService);
+    this.display = Authinfo.isFusionHDS();
   }
 }
