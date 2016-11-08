@@ -6,7 +6,7 @@
     .controller('AARouteCallMenuCtrl', AARouteCallMenuCtrl);
 
   /* @ngInject */
-  function AARouteCallMenuCtrl($scope, $translate, AAUiModelService, AACommonService, AAScrollBar, FeatureToggleService, QueueHelperService) {
+  function AARouteCallMenuCtrl($scope, $translate, AAUiModelService, AACommonService, FeatureToggleService, QueueHelperService) {
 
     var vm = this;
     vm.queues = [];
@@ -35,11 +35,6 @@
     };
 
     vm.setSelects = setSelects;
-    vm.selectChanged = selectChanged;
-
-    function selectChanged() {
-      AAScrollBar.resizeBuilderScrollBar();
-    }
 
     function setSelects() {
 

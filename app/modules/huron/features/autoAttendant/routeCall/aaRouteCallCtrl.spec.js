@@ -97,4 +97,16 @@ describe('Controller: AARouteCallMenuCtrl', function () {
     });
   });
 
+  describe('toggle', function () {
+    it('test toggle function', function () {
+      //expect(FeatureToggleService.supports(false)).toEqual(false);
+
+      FeatureToggleService.supports().then(function (result) {
+        expect(result).toBe(false);
+      });
+
+      //expect(FeatureToggleService.supports(true).and.toEqual();
+    });
+  });
+
 });
