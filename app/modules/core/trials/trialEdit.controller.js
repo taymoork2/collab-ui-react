@@ -184,7 +184,7 @@
           return vm.messageTrial.enabled; // Since, it depends on Message Offer
         },
         'templateOptions.disabled': function () {
-          return messageOfferDisabledExpression();
+          return messageOfferDisabledExpression() || vm.preset.care;
         }
       }
     }, {
