@@ -1713,15 +1713,11 @@
               filter: null
             },
             resolve: {
-              customerListToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.atlasCustomerListUpdateGetStatus()
-                  .then(function (result) {
-                    return result;
-                  })
-                  .catch(function () {
-                    return false;
-                  });
+              customerListToggle: /* @ngInject */ function () {
+                // TODO:  remove this once the controllers are refactored
+                return true;
               }
+
             }
           })
           .state('customer-overview', {
@@ -1746,11 +1742,9 @@
                   defer.resolve(data);
                 }
               },
-              newCustomerViewToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.atlasCustomerListUpdateGetStatus()
-                  .then(function (result) {
-                    return result;
-                  });
+              newCustomerViewToggle: /* @ngInject */ function () {
+                // TODO:  remove this once the controllers are refactored
+                return true;
               },
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview').data.displayName = $translate.instant('common.overview');

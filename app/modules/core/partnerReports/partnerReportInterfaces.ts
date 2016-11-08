@@ -1,9 +1,4 @@
 // base interfaces
-export interface ICallMetricsBase {
-  labelData: ICallMetricsLabels;
-  dummy: boolean;
-}
-
 export interface IGraphBase {
   date: string;
   balloon: boolean;
@@ -96,8 +91,10 @@ export interface IEndpointData {
 }
 
 // Call Metrics Interfaces
-export interface ICallMetricsData extends ICallMetricsBase {
+export interface ICallMetricsData {
   dataProvider: Array<ICallMetricsDataProvider>;
+  labelData: ICallMetricsLabels;
+  dummy: boolean;
 }
 
 export interface ICallMetricsLabels {
@@ -134,12 +131,15 @@ export interface IActiveUserData extends IGraphBase {
   percentage: number;
 }
 
-export interface IActiveTableData {
-  orgName: string;
+export interface IActiveTableBase {
   numCalls: number;
   totalActivity: number;
   sparkMessages: number;
   userName: string;
+}
+
+export interface IActiveTableData extends IActiveTableBase {
+  orgName: string;
 }
 
 export interface IPopulationData {

@@ -33,7 +33,7 @@ export class CommonReportService {
 
   private readonly usageOptions: Array<string> = ['weeklyUsage', 'monthlyUsage', 'threeMonthUsage'];
   private readonly altUsageOptions: Array<string> = ['dailyUsage', 'monthlyUsage', 'yearlyUsage'];
-  private readonly cacheValue: boolean = (parseInt(moment.utc().format('H'), this.ReportConstants.INTEGER_BASE) >= 8);
+  private readonly cacheValue: boolean = (this.getInt(moment.utc().format('H')) >= 8);
   private urlBase = this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/reports/';
 
   private getService(url: string, cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
@@ -114,7 +114,7 @@ export class CommonReportService {
       if (date === '') {
         date = moment().subtract(1, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
       }
-      let dayOffset: number = this.getOffset(parseInt(moment.tz(date, this.ReportConstants.TIMEZONE).format('e'), this.ReportConstants.INTEGER_BASE));
+      let dayOffset: number = this.getOffset(this.getInt(moment.tz(date, this.ReportConstants.TIMEZONE).format('e')));
       for (let x = 3; x >= 0; x--) {
         let temp: any = _.clone(graphItem);
         temp.date = moment().tz(this.ReportConstants.TIMEZONE)
@@ -316,6 +316,14 @@ export class CommonReportService {
 
   public getModifiedLineDate(date: string): string {
     return moment.tz(date, this.ReportConstants.TIMEZONE).format(this.ReportConstants.DAY_FORMAT);
+  }
+
+  public getPercentage(numberOne: number, numberTwo: number): number {
+    return Math.round((numberOne / numberTwo) * this.ReportConstants.PERCENTAGE_MULTIPLIER);
+  }
+
+  public getInt(num: string): number {
+    return parseInt(num, 10);
   }
 }
 

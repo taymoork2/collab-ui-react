@@ -1485,13 +1485,15 @@
             label: digit.concat(vm.model.site.siteCode)
           });
         });
-        $scope.to.description = $translate.instant('serviceSetupModal.voicemailPrefixDesc',
-          {
-            'number': vm.model.voicemailPrefix.value,
-            'extensionLength0': extensionLength0,
-            'extensionLength9': extensionLength9
-          });
-        $scope.to.options = values;
+        if ($scope.to) {
+          $scope.to.description = $translate.instant('serviceSetupModal.voicemailPrefixDesc',
+            {
+              'number': vm.model.voicemailPrefix.value,
+              'extensionLength0': extensionLength0,
+              'extensionLength9': extensionLength9
+            });
+          $scope.to.options = values;
+        }
       });
     }
 

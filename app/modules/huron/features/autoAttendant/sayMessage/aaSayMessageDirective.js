@@ -13,7 +13,8 @@
         menuId: '@aaMenuId',
         index: '=aaIndex',
         isMenuHeader: '=aaHeader',
-        menuKeyIndex: '@aaKeyIndex'
+        menuKeyIndex: '@aaKeyIndex',
+        fromSubMenu: '@aaFromSubMenu'
       },
       controller: 'AASayMessageCtrl',
       controllerAs: 'aaSay',

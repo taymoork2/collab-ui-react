@@ -1,7 +1,7 @@
 <div class="aa-media-upload">
   <div ng-switch="aaMediaUpload.state">
     <div ng-switch-when="WAIT" class="aa-box aa-drop-box large-12 small-12 columns" ngf-drop="aaMediaUpload.upload($file)" ngf-select="aaMediaUpload.upload($file)" ngf-drag-over-class="'dragover'" ng-multiple="false" name="mediaUploadSend">
-      <div class="row">
+      <div class="aa-flex-row-media-upload">
         <div class="small-12 columns">
           <div class="aa-center-small aa-progress">
             <span class="icon icon-upload-contain"></span>
@@ -47,7 +47,7 @@
       </div>
     </div>
     <!--end uploading state-->
-    <div ng-switch-when="UPLOADED" class="aa-box aa-drop-box large-12 small-12 columns" ngf-drop="aaMediaUpload.upload($file)" ngf-select="aaMediaUpload.upload($file)" ngf-drag-over-class="'dragover'" ng-multiple="false" name="mediaUploadSend">
+    <div ng-switch-when="UPLOADED" class="aa-box aa-drop-box large-12 small-12 columns" ng-class="{'aa-tall-box' : fromSubMenu}" ngf-drop="aaMediaUpload.upload($file)" ngf-select="aaMediaUpload.upload($file)" ngf-drag-over-class="'dragover'" ng-multiple="false" name="mediaUploadSend">
       <div class="row">
         <div class="small-11 columns">
           <div class="aa-progress">
@@ -57,7 +57,8 @@
       </div>
       <div class="row">
         <div class="small-11 columns">
-          <div class="aa-top-bottom-push">
+         <!-- if sub menu header say message (no menukey and not a menuheader then move margin up a little to fit (aa-upload-squish) -->
+          <div class="aa-top-bottom-push" ng-class="{'aa-upload-squish' : aaMediaUpload.isSquishable()}">
             <span>{{ aaMediaUpload.uploadFile | limitTo: aaMediaUpload.fileLengthLowerLimit }}{{ aaMediaUpload.uploadFile.length > aaMediaUpload.fileLengthUpperLimit ? '...' : '' }}</span>
             <span>{{ aaMediaUpload.uploadDuration }}</span>
             <span>{{ aaMediaUpload.uploadDate }}</span>

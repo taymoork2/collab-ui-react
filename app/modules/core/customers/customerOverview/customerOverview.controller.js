@@ -36,7 +36,7 @@
     vm.isTest = false;
     vm.isDeleting = false;
     vm.isOrgSetup = false;
-    vm.isUpdateStatusEnabled = false;
+    vm.isUpdateStatusEnabled = true;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
@@ -46,6 +46,8 @@
     vm.freeOrPaidServices = [];
     vm.trialActions = [];
 
+
+    // TODO:  atlasCustomerListUpdate toggle is globally set to true. Needs refactoring to remove unused code
     vm.newCustomerViewToggle = newCustomerViewToggle;
 
     var QTY = _.toUpper($translate.instant('common.quantity'));
@@ -60,11 +62,6 @@
         setOffers(isCareEnabled);
       });
 
-
-    FeatureToggleService.atlasCustomerListUpdateGetStatus()
-      .then(function (result) {
-        vm.isUpdateStatusEnabled = result;
-      });
 
     function setOffers(isCareEnabled) {
       var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, { isCareEnabled: isCareEnabled,
