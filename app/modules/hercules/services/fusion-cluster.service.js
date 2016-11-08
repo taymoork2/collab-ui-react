@@ -430,9 +430,9 @@
       return getPreregisteredClusterAllowList()
         .then(function (allowList) {
           return _.map(clusters, function (cluster) {
-            if (_.some(emptyExpresswayClusters, { id: cluster.id})) {
+            if (_.some(emptyExpresswayClusters, { id: cluster.id })) {
               cluster.isEmptyExpresswayCluster = true;
-              cluster.allowedRedirectTarget = _.find(allowList, {clusterId: cluster.id});
+              cluster.allowedRedirectTarget = _.find(allowList, { clusterId: cluster.id });
               if (cluster.aggregates && !cluster.allowedRedirectTarget) {
                 cluster.aggregates.state = 'registrationTimeout';
               }

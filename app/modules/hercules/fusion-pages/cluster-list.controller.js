@@ -70,7 +70,7 @@
           }
           return clusters;
         })
-        .then(FusionClusterService.setClusterAllowListInfoForExpressway(clusters))
+        .then(FusionClusterService.setClusterAllowListInfoForExpressway)
         .then(function (clusters) {
           clustersCache = clusters;
           updateFilters();

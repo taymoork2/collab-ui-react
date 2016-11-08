@@ -71,13 +71,13 @@
     function clustersUpdated() {
       ServiceStateChecker.checkState(vm.connectorType, vm.servicesId[0]);
       FusionClusterService.setClusterAllowListInfoForExpressway(ClusterService.getClustersByConnectorType(vm.connectorType))
-        .then(function(clusters) {
+        .then(function (clusters) {
           vm.clusters = clusters;
-      }).catch(function() {
-        vm.clusters = ClusterService.getClustersByConnectorType(vm.connectorType);
-      }).finally(function() {
-        vm.loadingClusters = false;
-      });
+        }).catch(function () {
+          vm.clusters = ClusterService.getClustersByConnectorType(vm.connectorType);
+        }).finally(function () {
+          vm.loadingClusters = false;
+        });
     }
 
     function extractSummaryForAService() {
