@@ -41,7 +41,7 @@
     position: relative;
     top: rem-calc(-15);
     width: rem-calc(200);
-    z-index: 1000;
+    z-index: 60;
     .select-options {
       @include vr-spacing(p, 0);
     }
