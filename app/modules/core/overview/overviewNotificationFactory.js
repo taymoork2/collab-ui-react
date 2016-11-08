@@ -6,7 +6,7 @@
     .factory('OverviewNotificationFactory', OverviewNotificationFactory);
 
   /* @ngInject */
-  function OverviewNotificationFactory(OverviewSetupNotification, OverviewUrgentUpgradeNotification, OverviewCalendarNotification, OverviewCallConnectNotification, OverviewCallAwareNotification, OverviewCloudSipUriNotification, OverviewDevicesNotification, OverviewHybridMediaNotification, OverviewPMRNotification) {
+  function OverviewNotificationFactory(OverviewSetupNotification, OverviewUrgentUpgradeNotification, OverviewCalendarNotification, OverviewCallConnectNotification, OverviewCallAwareNotification, OverviewCloudSipUriNotification, OverviewDevicesNotification, OverviewHybridMediaNotification, OverviewPMRNotification, OverviewDataSecurityNotification) {
     return {
       createSetupNotification: OverviewSetupNotification.createNotification,
       createUrgentUpgradeNotification: OverviewUrgentUpgradeNotification.createNotification,
@@ -16,7 +16,8 @@
       createCloudSipUriNotification: OverviewCloudSipUriNotification.createNotification,
       createDevicesNotification: OverviewDevicesNotification.createNotification,
       createHybridMediaNotification: OverviewHybridMediaNotification.createNotification,
-      createPMRNotification: OverviewPMRNotification.createNotification
+      createPMRNotification: OverviewPMRNotification.createNotification,
+      createHybridDataSecurityNotification: OverviewDataSecurityNotification.createNotification
     };
   }
 })();

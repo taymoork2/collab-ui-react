@@ -33,6 +33,11 @@ export class ServicesOverviewCtrl {
     FeatureToggleService.atlasCareTrialsGetStatus().then(supports => {
       this.forwardEvent('careFeatureToggleEventHandler', supports);
     });
+
+    FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridDataSecurity).then(supports => {
+      this.forwardEvent('hybridDataSecurityToggleEventHandler', supports);
+    });
+
   }
 
   get hybridCards() {

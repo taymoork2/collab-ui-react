@@ -1088,6 +1088,7 @@
     "convertText": "View and convert users currently using the free version",
     "lastUpdated": "Last sync",
     "notifications": "Notifications",
+    "getStarted": "Get Started",
     "todo": "To-do",
     "setUpYourTrial": "Set up Advanced Spark Call to start your trial.",
     "beginTrial": "Begin Trial",
@@ -1106,6 +1107,7 @@
     "setUpPMRDescription": "The Personal Meeting Rooms feature has been added to your subscription.",
     "setUpPMRUrl": "Set Up PMR Now",
     "setUpHybridMediaService": "Hybrid Media Service is available. Extend cloud media to use premises-based resources for calls and meetings.",
+    "setUpHybridDataSecurity": "Use premises-based Data Security for encryption.",
     "urgentUpgrade": "An urgent upgrade is available for {{connector}} and it will upgrade during the next scheduled upgrade.",
     "upgrade": "Upgrade now?"
   },
@@ -5644,11 +5646,8 @@
         "title": "Hybrid Data Security",
         "description": "Storage Node Setup in Progress",
         "buttons": {
-          "installSoftware": "Install server software",
-          "createCluster": "Create cluster",
-          "registerNode": "Register node",
-          "configureNode": "Configure node",
-          "addUsers" : "Add users"
+          "resources": "Resources",
+          "settings": "Settings"
         }
       },
       "hybridContext": {

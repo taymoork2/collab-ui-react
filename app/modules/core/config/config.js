@@ -61,7 +61,7 @@
         fusion_uc: 'squared-fusion-uc',
         fusion_cal: 'squared-fusion-cal',
         mediafusion: 'squared-fusion-media',
-        hds: 'hybrid-data-security',
+        hds: 'spark-hybrid-datasecurity',
         fusion_mgmt: 'squared-fusion-mgmt',
         room_system: 'spark-room-system',
         fusion_ec: 'squared-fusion-ec',
