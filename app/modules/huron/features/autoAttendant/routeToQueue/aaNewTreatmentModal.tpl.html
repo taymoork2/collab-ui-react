@@ -51,7 +51,7 @@
   <hr/>
   <div class="row">
     <div class="large-4 medium-12 small-12 columns">
-      <label class="h4" translate="autoAttendant.periodic"></label>
+      <label class="h4" translate="autoAttendant.periodicAnnouncement"></label>
     </div> 
     <div class="columns large-8 medium-8">
       <div class="row">
@@ -67,11 +67,11 @@
       </div>
       <div class="row">
         <div class="columns aa-selectmin-modal">
-          <cs-select ng-model="aaNewTreatmentModalCtrl.periodicMinute" id="periodicMinId" options="aaNewTreatmentModalCtrl.periodicMinutes" ng-change="aaNewTreatmentModalCtrl.changedPeriodicMinValue(aaNewTreatmentModalCtrl.periodicSecond, aaNewTreatmentModalCtrl.periodicMinute);" secondary-label="Minutes" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder" labelfield="label" valuefield="label" icon="icon-chevron-down" >
+          <cs-select ng-model="aaNewTreatmentModalCtrl.periodicMinute" id="periodicMinId" options="aaNewTreatmentModalCtrl.periodicMinutes" ng-change="aaNewTreatmentModalCtrl.changedPeriodicMinValue()" secondary-label="Minutes" labelfield="label" valuefield="label" icon="icon-chevron-down" >
           </cs-select> 
         </div>
         <div class="columns aa-selectsec-modal">
-          <cs-select ng-model="aaNewTreatmentModalCtrl.periodicSecond" id="periodicSecId" options="aaNewTreatmentModalCtrl.periodicSeconds" ng-change="aaNewTreatmentModalCtrl.changedPeriodicSecValue(aaNewTreatmentModalCtrl.periodicSecond, aaNewTreatmentModalCtrl.periodicMinute);" secondary-label="Seconds" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder" labelfield="label" valuefield="label" icon="icon-chevron-down" is-disabled="aaNewTreatmentModalCtrl.secondControl">
+          <cs-select ng-model="aaNewTreatmentModalCtrl.periodicSecond" id="periodicSecId" options="aaNewTreatmentModalCtrl.periodicSeconds" ng-change="aaNewTreatmentModalCtrl.changedPeriodicSecValue()" secondary-label="Seconds" labelfield="label" valuefield="label" icon="icon-chevron-down" is-disabled="!aaNewTreatmentModalCtrl.areSecondsDisabled">
           </cs-select>
         </div>
       </div>
@@ -103,7 +103,7 @@
       </div>
       <div class="row">
         <div class="columns large-8 medium-10 small-10">
-          <cs-select id="destinationSelect" ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions" labelfield="label" valuefield="label" icon="icon-chevron-down" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder">
+          <cs-select id="destinationSelect" ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions" labelfield="label" valuefield="label" icon="icon-chevron-down">
           </cs-select>
           <div ng-switch="aaNewTreatmentModalCtrl.destination.name" class="aa-destination-container">
             <aa-route-to-aa id="destinationMenuRouteAA" ng-switch-when="destinationMenuRouteAA" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}"></aa-route-to-aa>

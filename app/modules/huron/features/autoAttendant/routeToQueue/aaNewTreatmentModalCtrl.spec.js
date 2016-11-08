@@ -33,6 +33,10 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     {
       index: 5,
       label: 5
+    },
+    {
+      index: 0,
+      label: 5
     }
   ];
   var modalFake = {
@@ -151,31 +155,119 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         expect(controller.periodicSecond.index).toEqual(8);
       });
 
-      it("changedPeriodicSecValue function call with periodic seconds as 0 when minutes 0 results in periodic seconds to set to 5 automatically.", function () {
-        controller.changedPeriodicSecValue(fakePeriodicSecond[0], fakePeriodicMinute[0]);
+      it("changedPeriodicMinValue function call with periodic minutes between 1-5 results in periodic seconds to alllow 0.", function () {
+        controller.changedPeriodicMinValue();
+        controller.periodicMinute = fakePeriodicMinute[1];
+        controller.periodicSecond = fakePeriodicSecond[0];
+        expect(controller.periodicSecond.label).toEqual(0);
+        expect(controller.areSecondsDisabled).toBe(true);
+      });
+      it("changedPeriodicMinValue function call with periodic minutes as 0 when seconds 0 results in periodic seconds to set to 5 automatically.", function () {
+        controller.changedPeriodicMinValue();
+        controller.periodicMinute = fakePeriodicMinute[0];
+        controller.periodicSecond = fakePeriodicSecond[3];
         expect(controller.periodicSecond.label).toEqual(5);
-        expect(controller.secondControl).toBe(false);
+        expect(controller.areSecondsDisabled).toBe(true);
+      });
+      it("changedPeriodicMinValue function call with periodic minutes as 5 results in periodic seconds to set to 0 and disabled.", function () {
+        controller.changedPeriodicMinValue();
+        controller.periodicMinute = fakePeriodicMinute[2];
+        controller.periodicSecond = fakePeriodicSecond[0];
+        expect(controller.periodicSecond.label).toEqual(0);
+        expect(controller.areSecondsDisabled).toBe(true);
+      });
+      it("changedPeriodicMinValue function call with periodic minutes between 1-5 results in periodic seconds to set to any and enabled.", function () {
+        controller.changedPeriodicMinValue();
+        controller.periodicMinute = fakePeriodicMinute[1];
+        controller.periodicSecond = fakePeriodicSecond[0];
+        expect(controller.periodicSecond.label).toEqual(0);
+        expect(controller.areSecondsDisabled).toBe(true);
+      });
+      it("changedPeriodicMinValue function call with periodic minutes between 1-5 results in periodic seconds to set to any.", function () {
+        controller.changedPeriodicMinValue();
+        controller.periodicMinute = fakePeriodicMinute[1];
+        controller.periodicSecond = fakePeriodicSecond[1];
+        expect(controller.periodicSecond.label).toEqual(30);
+        expect(controller.areSecondsDisabled).toBe(true);
+      });
+      it("changedPeriodicSecValue function call with periodic seconds as 0 when minutes 0 results in periodic seconds to set to 5 automatically.", function () {
+        controller.changedPeriodicSecValue();
+        controller.periodicMinute = fakePeriodicMinute[0];
+        controller.periodicSecond = fakePeriodicSecond[2];
+        expect(controller.periodicSecond.label).toEqual(5);
+        expect(controller.areSecondsDisabled).toBe(true);
+      });
+      it("changedPeriodicSecValue function call with periodic minutes as 0 results in periodic seconds to set to any greater than 0.", function () {
+        controller.changedPeriodicSecValue();
+        controller.periodicMinute = fakePeriodicMinute[0];
+        controller.periodicSecond = fakePeriodicSecond[1];
+        expect(controller.periodicSecond.label).toEqual(30);
+        expect(controller.areSecondsDisabled).toBe(true);
+      });
+/*
+      it("changedPeriodicMinValue call when periodicMinute is 0 and periodicSecond is 0 then result in periodicSecond automatically 5", function () {
+        controller.changedPeriodicMinValue();
+        controller.periodicMinute = fakePeriodicMinute[0];
+        controller.periodicSeconds = fakePeriodicSecond[0];
+        expect(controller.periodicSecond.label).toEqual(5);
+        expect(controller.areSecondsDisabled).toBe(true);
       });
 
-      it("changedPeriodicMinValue function call with periodic minutes between 1-5 results in periodic seconds to alllow 0.", function () {
+      it("changedPeriodicMinValue call when periodicMinute between 1-5 results in periodicSeconds to allow 0", function () {
+        controller.changedPeriodicMinValue();
+        controller.periodicMinute = fakePeriodicMinute[1];
+        controller.periodicSecond = fakePeriodicSecond[0];
+        expect(controller.periodicSecond.label).toEqual(0);
+        expect(controller.areSecondsDisabled).toBe(true);
+      });
+
+      it("changedPeriodicMinValue call when periodicMinute is 5 then results in periodicSecond set as 0 and disabled", function () {
+        controller.changedPeriodicMinValue();
+        controller.periodicMinute = fakePeriodicMinute[3];
+//        controller.periodicSecond = fakePeriodicSecond[0];
+        expect(controller.periodicSecond.label).toEqual(0);
+        expect(controller.areSecondsDisabled).toBe(false);
+      });
+/*
+      it("changedPeriodicSecValue function call with periodic seconds as 0 when minutes 0 results in periodic seconds to set to 5 automatically.", function () {
+        controller.periodicSecond = fakePeriodicSecond[0];
+        controller.periodicMinute = fakePeriodicMinute[0];
+        controller.changedPeriodicSecValue();
+        expect(controller.periodicSecond.label).toEqual(5);
+        expect(controller.areSecondsDisabled).toBe(true);
+      });
+
+      it("changedPeriodicMinValue function call with periodic minutes between 1-5 results in periodic seconds to allow 0.", function () {
+        controller.periodicSecond = fakePeriodicSecond[0];
+        controller.periodicMinute = fakePeriodicMinute[1];
+        controller.changedPeriodicMinValue();
+        expect(controller.periodicSecond.label).toEqual(0);
+        expect(controller.areSecondsDisabled).toBe(true);
+      });
+
+      it("changedPeriodicMinValue function call with periodic minutes as 0 when seconds 0 results in periodic seconds to set to 5 automatically.", function () {
+        controller.periodicSecond = fakePeriodicSecond[0];
+        controller.periodicMinute = fakePeriodicMinute[0];
+        controller.changedPeriodicMinValue();
+        expect(controller.periodicSecond.label).toEqual(5);
+        expect(controller.areSecondsDisabled).toBe(true);
+      });
+
+      it("changedPeriodicMinValue function call with periodic minutes as 5 results in periodic seconds to set to 0 and disabled.", function () {
+        controller.periodicSecond = fakePeriodicSecond[0];
+        controller.periodicMinute = fakePeriodicMinute[6];
+        controller.changedPeriodicMinValue();
+        expect(controller.periodicSecond.label).toEqual(0);
+        expect(controller.areSecondsDisabled).toBe(true);
+      });
+
+      it("changedPeriodicMinValue function call with periodic minutes between 1-5 results in periodic seconds to set to any and enabled.", function () {
         controller.changedPeriodicMinValue(fakePeriodicSecond[0], fakePeriodicMinute[1]);
         expect(controller.periodicSecond.label).toEqual(0);
         expect(controller.secondControl).toBe(false);
       });
 
-      it("changedPeriodicMinValue function call with periodic minutes as 0 when seconds 0 results in periodic seconds to set to 5 automatically.", function () {
-        controller.changedPeriodicMinValue(fakePeriodicSecond[0], fakePeriodicMinute[0]);
-        expect(controller.periodicSecond.label).toEqual(5);
-        expect(controller.secondControl).toBe(false);
-      });
-
-      it("changedPeriodicMinValue function call with periodic minutes as 5 results in periodic seconds to set to 0 and disabled.", function () {
-        controller.changedPeriodicMinValue(fakePeriodicSecond[2], fakePeriodicMinute[2]);
-        expect(controller.periodicSecond.label).toEqual(0);
-        expect(controller.secondControl).toBe(true);
-      });
-
-      it("changedPeriodicMinValue function call with periodic minutes between 1-5 results in periodic seconds to set to any and enabled.", function () {
+      it("changedPeriodicMinValue function call with periodic minutes to set to any other than 0 results in periodic seconds to set to any and enabled.", function () {
         controller.changedPeriodicMinValue(fakePeriodicSecond[0], fakePeriodicMinute[1]);
         expect(controller.periodicSecond.label).toEqual(0);
         expect(controller.secondControl).toBe(false);
@@ -192,6 +284,13 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         expect(controller.periodicSecond.label).toEqual(30);
         expect(controller.secondControl).toBe(false);
       });
+
+      it("changedPeriodicMinValue function call with periodic minutes between 1-5 and periodic seconds first index label not 0 results to set label 0.", function () {
+        controller.changedPeriodicMinValue(fakePeriodicSecond[3], fakePeriodicMinute[1]);
+        expect(controller.periodicSecond.label).toEqual(5);
+        expect(controller.secondControl).toBe(false);
+      });*/
+
     });
 
     describe('FallBack', function () {

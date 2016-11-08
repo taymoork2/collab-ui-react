@@ -296,6 +296,8 @@
       clearCeMenuMap: clearCeMenuMap,
       deleteCeMenuMap: deleteCeMenuMap,
       isCeMenu: isCeMenu,
+      cesTempPa: cesTempPa,
+      constructCesTodoPa: constructCesTodoPa,
 
       newCeMenu: function () {
         return new CeMenu();

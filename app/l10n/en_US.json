@@ -2403,7 +2403,7 @@
     "initialHelpText" : "This message will play for the caller upon entry into the queue.",
      "periodicHelpText": "This message will play for the caller upon entry into the queue.",
     "fallbackLabel": "Fallback" ,
-    "periodic": "Periodic Announcements",
+    "periodicAnnouncement": "Periodic Announcements",
     "uploadedFile": "Upload File",
     "uploadFailed": "File upload failed, unable to connect. Please try again.",
     "dragAndDropWav": "Drag and Drop .wav file here or click to browse",

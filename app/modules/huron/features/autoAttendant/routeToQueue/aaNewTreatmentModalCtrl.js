@@ -9,9 +9,6 @@
   function AANewTreatmentModalCtrl($modalInstance, $translate, $scope, AACommonService, AutoAttendantCeMenuModelService, AAUiModelService, aa_schedule, aa_menu_id, aa_index, aa_key_index) {
     var vm = this;
 
-
-    vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
-
     vm.destinationOptions = [{
       label: $translate.instant('autoAttendant.destinations.Disconnect'),
       name: 'Disconnect',
@@ -48,18 +45,15 @@
     vm.isSaveEnabled = isSaveEnabled;
     vm.uploadMohTrigger = uploadMohTrigger;
 
-
-    var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
-    var DEFAULT_MOH = 'musicOnHoldDefault';
-    var CUSTOM_MOH = 'musicOnHoldUpload';
-
     vm.periodicMinutes = [];
     vm.periodicSeconds = [];
     vm.changedPeriodicMinValue = changedPeriodicMinValue;
     vm.changedPeriodicSecValue = changedPeriodicSecValue;
-    vm.secondControl = false;
-    vm.periodicMessageInput = '';
-    vm.message = true;
+    vm.areSecondsDisabled = isDisabled;
+
+    var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
+    var DEFAULT_MOH = 'musicOnHoldDefault';
+    var CUSTOM_MOH = 'musicOnHoldUpload';
 
     //////////////////////////////////
 
@@ -91,6 +85,27 @@
       vm.mohPlayAction.description = '';
     }
 
+    function isDisabled() {
+      return vm.periodicMinute.label == '5';
+    }
+
+    function populatePeriodicTime() {
+      _.times(6, function (i) {
+        vm.periodicMinutes.push({
+          index: i,
+          label: i
+        });
+      });
+      _.times(11, function (i) {
+        vm.periodicSeconds.push({
+          index: i,
+          label: (i + 1) * 5
+        });
+      });
+      vm.periodicMinute = vm.periodicMinutes[0];
+      vm.periodicSecond = vm.periodicSeconds[8];
+    }
+
     function populateMaxTime() {
       vm.minutes = [];
       _.times(60, function (i) {
@@ -116,62 +131,38 @@
       }
     }
 
-    function changedPeriodicMinValue(selectedPeriodicSecond, selectedPeriodicMinute) {
-      if (selectedPeriodicMinute.index == 5) {
-        if (vm.periodicSeconds[0].label != 0) {
-          vm.periodicSeconds.splice(vm.periodicSeconds, 0, { index: 0, label: 0 });
+    function changedPeriodicMinValue() {
+      if (vm.periodicMinute.index == '0') {
+        vm.periodicSeconds.splice(0, 1);
+        if (vm.periodicSecond.label == 0) {
+          vm.periodicSecond = vm.periodicSeconds[0];
         }
-        vm.periodicSecond = vm.periodicSeconds[0];
-        vm.secondControl = true;
-      } else if ((selectedPeriodicMinute.index == 0) && (selectedPeriodicSecond.index == 0)) {
-        if (vm.periodicSeconds[0].label == 0) {
-          vm.periodicSeconds.splice(vm.periodicSeconds[0], 1);
-        }
-        vm.periodicSecond = vm.periodicSeconds[0];
-        vm.secondControl = false;
+        vm.areSecondsDisabled = true;
       } else {
-        if ((vm.periodicSeconds[0].label != 0) && (selectedPeriodicMinute.index != 0)) {
-          vm.periodicSeconds.splice(vm.periodicSeconds, 0, { index: 0, label: 0 });
+        if (vm.periodicSeconds[0].label != '0') {
+          vm.periodicSeconds.splice(0, 0, { index: 0, label: 0 });
         }
-        if ((selectedPeriodicSecond.label != 0) && (selectedPeriodicMinute.index == 0)) {
-          vm.periodicSeconds.splice(vm.periodicSeconds[0], 1);
-        }
-        vm.periodicSecond = selectedPeriodicSecond;
-        vm.secondControl = false;
+        vm.areSecondsDisabled = true;
+      }
+      if (vm.periodicMinute.index == '5') {
+        vm.periodicSecond = vm.periodicSeconds[0];
+        vm.areSecondsDisabled = false;
       }
     }
 
-    function changedPeriodicSecValue(selectedPeriodicSecond, selectedPeriodicMinute) {
-      if ((selectedPeriodicSecond.index == 0) && (selectedPeriodicMinute.index == 0)) {
+    function changedPeriodicSecValue() {
+      if ((vm.periodicSecond.index == 0) && (vm.periodicMinute.index == 0)) {
         if (vm.periodicSeconds[0].label == 0) {
-          vm.periodicSeconds.splice(vm.periodicSeconds[0], 1);
+          vm.periodicSeconds.splice(0, 1);
         }
         vm.periodicSecond = vm.periodicSeconds[0];
-        vm.secondControl = false;
+        vm.areSecondsDisabled = true;
       } else {
-        if ((vm.periodicSeconds[0].label != 0) && (selectedPeriodicMinute.index != 0)) {
-          vm.periodicSeconds.splice(vm.periodicSeconds, 0, { index: 0, label: 0 });
+        if ((vm.periodicSeconds[0].label != 0) && (vm.periodicMinute.index != 0)) {
+          vm.periodicSeconds.splice(0, 0, { index: 0, label: 0 });
         }
-        vm.periodicSecond = selectedPeriodicSecond;
-        vm.secondControl = false;
+        vm.areSecondsDisabled = true;
       }
-    }
-
-    function populatePeriodicTime() {
-      _.times(6, function (i) {
-        vm.periodicMinutes.push({
-          index: i,
-          label: i
-        });
-      });
-      _.times(11, function (i) {
-        vm.periodicSeconds.push({
-          index: i,
-          label: (i + 1) * 5
-        });
-      });
-      vm.periodicMinute = vm.periodicMinutes[0];
-      vm.periodicSecond = vm.periodicSeconds[8];
     }
 
     //get queueSettings menuEntry -> inner menu entry type (moh, initial, periodic...)
@@ -198,6 +189,7 @@
 
     function initializeView() {
       populateMohRadio();
+      populatePeriodicTime();
       populateMaxTime();
       populateDropDown();
     }
@@ -206,8 +198,6 @@
       populateScope();
       setUpEntry();
       initializeView();
-      populateMaxTime();
-      populatePeriodicTime();
     }
 
     function activate() {
