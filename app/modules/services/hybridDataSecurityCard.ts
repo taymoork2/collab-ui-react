@@ -1,14 +1,9 @@
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 import { ICardButton, CardType } from './ServicesOverviewCard';
 
-export interface IHdsCardButton {
-  name: string;
-  buttonClass?: string;
-  routerState?: string;
-  completed: boolean;
-}
-
 export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybridCard {
+  private Authinfo;
+
   public getShowMoreButton(): ICardButton | undefined {
     return undefined;
   }
@@ -39,7 +34,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
   }
 
   public hybridDataSecurityToggleEventHandler(hasFeature: boolean) {
-    this.display = hasFeature;
+    this.display = this.Authinfo.isFusionHDS() && hasFeature;
   }
 
   /* @ngInject */
@@ -56,6 +51,6 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       cardClass: 'media',
       cardType: CardType.hybrid,
     }, FusionClusterStatesService);
-    this.display = Authinfo.isFusionHDS();
+    this.Authinfo = Authinfo;
   }
 }
