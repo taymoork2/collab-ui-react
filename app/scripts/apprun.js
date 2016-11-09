@@ -22,7 +22,6 @@
     var storedState = 'storedState';
     var storedParams = 'storedParams';
     var queryParams = 'queryParams';
-    var uuid = require('uuid');
 
     TokenService.init();
     TokenService.setAuthorizationHeader();
@@ -31,10 +30,6 @@
 
     if (Config.isE2E()) {
       $animate.enabled(false);
-    }
-
-    if (!TokenService.getClientSessionId()) {
-      generateClientSessionId();
     }
 
     $rootScope.$on('$stateChangeStart', function (e, to, toParams) {
@@ -149,10 +144,6 @@
         result[param.split('=')[0]] = param.split('=')[1];
       }
       return result;
-    }
-
-    function generateClientSessionId() {
-      TokenService.setClientSessionId(uuid.v4());
     }
 
   }

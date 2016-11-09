@@ -21,6 +21,7 @@
       getAccessToken: getAccessToken,
       getRefreshToken: getRefreshToken,
       getClientSessionId: getClientSessionId,
+      getOrGenerateClientSessionId: getOrGenerateClientSessionId,
       setAccessToken: setAccessToken,
       setRefreshToken: setRefreshToken,
       setClientSessionId: setClientSessionId,
@@ -64,8 +65,18 @@
       return Storage.put('clientSessionId', sessionId);
     }
 
-    function getClientSessionId(sessionId) {
-      return Storage.get('clientSessionId', sessionId);
+    function getClientSessionId() {
+      return Storage.get('clientSessionId');
+    }
+
+    function getOrGenerateClientSessionId() {
+      var clientSessionId = getClientSessionId();
+      if (!clientSessionId) {
+        var uuid = require('uuid');
+        clientSessionId = uuid.v4();
+        setClientSessionId(clientSessionId);
+      }
+      return clientSessionId;
     }
 
     function setAuthorizationHeader(token) {
