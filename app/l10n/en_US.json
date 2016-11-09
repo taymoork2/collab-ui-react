@@ -532,7 +532,8 @@
     "customers": "Customers",
     "customerSelect": "Select a customer",
     "usageReports": {
-      "usageReportTitle": "Room Device Usage Reports",
+      "usageReportTitle": "Reports",
+      "usageReportMenuTitle": "Room Device Usage Reports",
       "peakHour": "Peak Hour",
       "distribution": "Distribution",
       "timeline": "Timeline",
@@ -2636,7 +2637,7 @@
     "pagingGroupName": "Paging Group Name",
     "pagingGroupNumber": "Paging Group Number",
     "pagingGroupMembers": "Paging Group Members",
-    "memberEditHint": "Select the users or places that will be paged.  The devices need to be in the same multicast group for paging to work.",   
+    "memberEditHint": "Select the users or places that will be paged.  The devices need to be in the same multicast group for paging to work.",
     "saveLabel": "Do you want to save your changes?",
     "successUpdate": "'{{pagingGroupName}}' paging group has been updated successfully",
     "successSave": "'{{pagingGroupName}}' paging group has been created successfully",
