@@ -20,8 +20,10 @@
     var service = {
       getAccessToken: getAccessToken,
       getRefreshToken: getRefreshToken,
+      getClientSessionId: getClientSessionId,
       setAccessToken: setAccessToken,
       setRefreshToken: setRefreshToken,
+      setClientSessionId: setClientSessionId,
       setAuthorizationHeader: setAuthorizationHeader,
       completeLogout: completeLogout,
       clearStorage: clearStorage,
@@ -56,6 +58,14 @@
 
     function setRefreshToken(token) {
       return SessionStorage.put('refreshToken', token);
+    }
+
+    function setClientSessionId(sessionId) {
+      return Storage.put('clientSessionId', sessionId);
+    }
+
+    function getClientSessionId(sessionId) {
+      return Storage.get('clientSessionId', sessionId);
     }
 
     function setAuthorizationHeader(token) {

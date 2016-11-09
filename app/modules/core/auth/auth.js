@@ -87,8 +87,9 @@
     }
 
     function getNewAccessToken(params) {
+      var sessionId = TokenService.getClientSessionId();
       var url = OAuthConfig.getAccessTokenUrl();
-      var data = OAuthConfig.getNewAccessTokenPostData(params.code);
+      var data = OAuthConfig.getNewAccessTokenPostData(params.code, sessionId);
       var token = OAuthConfig.getOAuthClientRegistrationCredentials();
 
       // Security: verify authentication request came from our site
