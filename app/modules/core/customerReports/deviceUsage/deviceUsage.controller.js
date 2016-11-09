@@ -131,22 +131,18 @@
       switch (DeviceUsageCommonService.getTimeSelected()) {
         case 0:
           loadLastWeek();
-          //DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
           dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
           break;
         case 1:
           loadLastMonth();
-          //DeviceUsageTotalService.getDataForLastNTimeUnits(4, 'week', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
           dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(4, 'week');
           break;
         case 2:
-          //DeviceUsageTotalService.getDataForLastMonths(3, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
           loadLast3Months();
           dateRange = DeviceUsageTotalService.getDateRangeForPeriod(3, 'month');
           break;
         default:
           $log.warn("Unknown time period selected");
-          //DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
           loadLastWeek();
           dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
       }
