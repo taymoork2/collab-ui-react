@@ -152,6 +152,7 @@ exports.config = {
     var CareLandingPage = require('./test/e2e-protractor/pages/careLanding.page.js');
     var CareChatTemplateSetupPage = require('./test/e2e-protractor/pages/careChatTemplate.page.js');
     var ManageUsersPage = require('./test/e2e-protractor/pages/manageUsers.page.js');
+    var GSSDashboardPage = require('./test/e2e-protractor/pages/gssDashboard.page.js');
 
     global.notifications = new Notifications();
     global.navigation = new Navigation();
@@ -196,6 +197,7 @@ exports.config = {
     global.careLandingPage = new CareLandingPage();
     global.careChatTemplateSetupPage = new CareChatTemplateSetupPage();
     global.manageUsersPage = new ManageUsersPage();
+    global.gssDashboard = new GSSDashboardPage();
 
     function initReporters(config) {
       var testFile = _.chain(config)
