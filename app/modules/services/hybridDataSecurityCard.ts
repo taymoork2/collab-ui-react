@@ -2,8 +2,6 @@ import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 import { ICardButton, CardType } from './ServicesOverviewCard';
 
 export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybridCard {
-  private Authinfo;
-
   public getShowMoreButton(): ICardButton | undefined {
     return undefined;
   }
@@ -38,7 +36,10 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
   }
 
   /* @ngInject */
-  public constructor(Authinfo, FusionClusterStatesService) {
+  public constructor(
+    private Authinfo,
+    FusionClusterStatesService,
+  ) {
     super({
       template: 'modules/services/card.tpl.html',
       name: 'servicesOverview.cards.hybridDataSecurity.title',

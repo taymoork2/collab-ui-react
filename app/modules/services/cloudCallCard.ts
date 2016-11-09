@@ -1,8 +1,6 @@
 import { ServicesOverviewCard, ICardButton } from './ServicesOverviewCard';
 
 export class ServicesOverviewCallCard extends ServicesOverviewCard {
-  private Authinfo;
-
   public getShowMoreButton(): ICardButton | undefined {
     return undefined;
   }
@@ -39,7 +37,9 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
   }
 
   /* @ngInject */
-  public constructor(Authinfo) {
+  public constructor(
+    private Authinfo,
+  ) {
     super({
       name: 'servicesOverview.cards.call.title',
       description: 'servicesOverview.cards.call.description',

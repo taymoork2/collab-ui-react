@@ -2,9 +2,6 @@ import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 import { ICardButton, CardType } from './ServicesOverviewCard';
 
 export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard {
-  private Authinfo;
-  private Config;
-
   public getShowMoreButton(): ICardButton | undefined {
     return undefined;
   }
@@ -42,7 +39,11 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
   }
 
   /* @ngInject */
-  public constructor(Authinfo, Config, FusionClusterStatesService) {
+  public constructor(
+    private Authinfo,
+    private Config,
+    FusionClusterStatesService,
+  ) {
     super({
       name: 'servicesOverview.cards.hybridMedia.title',
       description: 'servicesOverview.cards.hybridMedia.description',
