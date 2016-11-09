@@ -2719,6 +2719,7 @@
     "forwardBusyNoAnswer": "Forward calls when line is busy or away",
     "internalAndExternal": "For internal and external calls",
     "internalOnly": "Only for internal calls",
+    "externalOnly": "Only for external calls",
     "forwardBusy": "When line is busy, send calls to:",
     "forwardNoAnswer": "When there is no answer, send calls to:",
     "forwardExternal": "Forward external calls differently",
