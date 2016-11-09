@@ -18,9 +18,7 @@
     vm.getRegionCode = getRegionCode;
 
     function getRegionCode() {
-      return DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
-        return response;
-      });
+      return DialPlanService.getCustomerVoice(Authinfo.getOrgId());
     }
 
     vm.snrWaitSecondsOptions = [{

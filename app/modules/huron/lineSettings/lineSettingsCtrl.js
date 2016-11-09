@@ -118,9 +118,7 @@
     ////////////
 
     function getRegionCode() {
-      return DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
-        return response;
-      });
+      return DialPlanService.getCustomerVoice(Authinfo.getOrgId());
     }
 
     vm.simultaneousCalls = [{
@@ -393,7 +391,7 @@
           vm.directoryNumber.companyNumber = companyNumberObj;
           if (vm.directoryNumber.externalCallerIdType == customCallerId_type) {
             vm.directoryNumber.customCallerIdName = vm.callerIdInfo.customName;
-            vm.directoryNumber.customCallerIdNumber = _.get(vm, 'callerIdInfo.customNumber.phoneNumber');
+            vm.directoryNumber.customCallerIdNumber = _.replace(_.get(vm, 'callerIdInfo.customNumber.phoneNumber'), /[\s-]/g, '');
           }
           promise = processSharedLineUsers().then(function () {
             return listSharedLineUsers(vm.directoryNumber.uuid);
@@ -708,7 +706,7 @@
           vm.directoryNumber.callForwardAll.destination = '';
         } else if (vm.allForward !== '' && _.has(vm, 'allForward.phoneNumber')) {
           vm.directoryNumber.callForwardAll.voicemailEnabled = false;
-          vm.directoryNumber.callForwardAll.destination = _.replace(_.get(vm, 'allForward.phoneNumber'), /[\s\-]/g, '');
+          vm.directoryNumber.callForwardAll.destination = _.replace(_.get(vm, 'allForward.phoneNumber'), /[\s-]/g, '');
         } else {
           return false;
         }
@@ -741,7 +739,7 @@
             vm.directoryNumber.callForwardNotRegistered.intVoiceMailEnabled = true;
             vm.directoryNumber.callForwardNotRegistered.intDestination = '';
           } else if (vm.internalForward !== '' && _.has(vm, 'internalForward.phoneNumber')) {
-            var formattedInternalNumber = _.replace(_.get(vm, 'internalForward.phoneNumber'), /[\s\-]/g, '');
+            var formattedInternalNumber = _.replace(_.get(vm, 'internalForward.phoneNumber'), /[\s-]/g, '');
 
             vm.directoryNumber.callForwardBusy.intVoiceMailEnabled = false;
             vm.directoryNumber.callForwardBusy.intDestination = formattedInternalNumber;
@@ -761,7 +759,7 @@
             vm.directoryNumber.callForwardNotRegistered.voicemailEnabled = true;
             vm.directoryNumber.callForwardNotRegistered.destination = '';
           } else if (vm.externalForward !== '' && _.has(vm, 'externalForward.phoneNumber')) {
-            var formattedExternalNumber = _.replace(_.get(vm, 'externalForward.phoneNumber'), /[\s\-]/g, '');
+            var formattedExternalNumber = _.replace(_.get(vm, 'externalForward.phoneNumber'), /[\s-]/g, '');
 
             vm.directoryNumber.callForwardBusy.voicemailEnabled = false;
             vm.directoryNumber.callForwardBusy.destination = formattedExternalNumber;
@@ -787,7 +785,7 @@
             vm.directoryNumber.callForwardNotRegistered.intVoiceMailEnabled = true;
             vm.directoryNumber.callForwardNotRegistered.intDestination = '';
           } else if (vm.internalForward !== '' && _.has(vm, 'internalForward.phoneNumber')) {
-            var formattedInternalOnlyNumber = _.replace(_.get(vm, 'internalForward.phoneNumber'), /[\s\-]/g, '');
+            var formattedInternalOnlyNumber = _.replace(_.get(vm, 'internalForward.phoneNumber'), /[\s-]/g, '');
 
             vm.directoryNumber.callForwardBusy.voicemailEnabled = false;
             vm.directoryNumber.callForwardBusy.destination = formattedInternalOnlyNumber;

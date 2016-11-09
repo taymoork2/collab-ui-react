@@ -173,16 +173,14 @@
      * PUT apis for the hunt group fallback destination object.
      */
     function getFallbackDestinationJSON() {
-      var data = {};
+      var data = {
+        fallbackDestination: {}
+      };
       if (isValidInternalNumber || isValidExternalNumber) {
         if (_.isObject(fallbackNumber) && _.has(fallbackNumber, 'phoneNumber')) {
-          data.fallbackDestination = {
-            number: TelephoneNumberService.getDIDValue(fallbackNumber.phoneNumber)
-          };
+          data.fallbackDestination.number = TelephoneNumberService.getDIDValue(fallbackNumber.phoneNumber);
         } else {
-          data.fallbackDestination = {
-            number: TelephoneNumberService.getDIDValue(fallbackNumber)
-          };
+          data.fallbackDestination.number = TelephoneNumberService.getDIDValue(fallbackNumber);
         }
       } else {
         data.fallbackDestination = {
@@ -199,7 +197,6 @@
       }
       if (TelephoneNumberService.validateDID(fallbackNumber)) {
         isValidExternalNumber = true;
-        fallbackNumber = TelephoneNumberService.getDIDLabel(fallbackNumber);
       } else if (TelephoneNumberService.validateDID(_.get(fallbackNumber, 'phoneNumber'))) {
         isValidExternalNumber = true;
       }

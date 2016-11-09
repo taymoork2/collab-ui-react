@@ -77,9 +77,6 @@
 
     vm.externalRegionCodeFn = getRegionCode;
     vm.callDestInputs = ['internal', 'external'];
-    vm.internalTranslations = {
-      placeholderText: 'e.g. John, Smith, jsmith@email'
-    };
 
     init();
 
@@ -89,9 +86,7 @@
     }
 
     function getRegionCode() {
-      return DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
-        return response;
-      });
+      return DialPlanService.getCustomerVoice(Authinfo.getOrgId());
     }
 
     function fetchNumbers(typedNumber) {

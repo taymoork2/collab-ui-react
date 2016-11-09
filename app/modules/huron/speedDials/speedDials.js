@@ -30,9 +30,7 @@
     speedDials.callDestInputs = ['external', 'uri', 'custom'];
 
     speedDials.getRegionCode = function () {
-      return DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
-        return response;
-      });
+      return DialPlanService.getCustomerVoice(Authinfo.getOrgId());
     };
 
     speedDials.reachSpeedDialLimit = function () {

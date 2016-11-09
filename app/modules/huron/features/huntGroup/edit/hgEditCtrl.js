@@ -51,10 +51,6 @@
 
     vm.externalRegionCodeFn = getRegionCode;
     vm.callDestInputs = ['internal', 'external'];
-    vm.internalTranslations = {
-      placeholderText: 'e.g. John, Smith, jsmith@email',
-      helpText: 'Name, User ID, or Email'
-    };
 
     vm.showDisableSave = showDisableSave;
 
@@ -95,9 +91,7 @@
     }
 
     function getRegionCode() {
-      return DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
-        return response;
-      });
+      return DialPlanService.getCustomerVoice(Authinfo.getOrgId());
     }
 
     function updateModal(pristineData, resetFromBackend) {
@@ -114,9 +108,7 @@
         vm.title = vm.model.name;
         updatePilotNumbers(pristineData);
         vm.selectedHuntMembers = HuntGroupMemberDataService.getHuntMembers();
-        vm.selectedFallbackNumber = {
-          phoneNumber: HuntGroupFallbackDataService.getFallbackNumber()
-        };
+        vm.selectedFallbackNumber = TelephoneNumberService.getDestinationObject(HuntGroupFallbackDataService.getFallbackNumber());
         vm.selectedFallbackMember = HuntGroupFallbackDataService.getFallbackMember();
         if (customerId && _.get(pristineData, 'fallbackDestination.numberUuid')) {
           HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get(pristineData, 'fallbackDestination.numberUuid')).then(function (isVoicemailDisabled) {
