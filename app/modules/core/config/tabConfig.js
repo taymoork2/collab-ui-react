@@ -31,7 +31,8 @@
     tab: 'gemservicesTab',
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
-    state: 'gem-services',
+    state: 'gem.services',
+    feature: 'gem-services-tab',
     link: '/partner/services/index'
   }, {
     tab: 'userTab',

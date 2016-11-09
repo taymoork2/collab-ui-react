@@ -41,9 +41,9 @@ export class PagingGroupService {
 
   public updatePagingGroup(pg: IPagingGroup) {
     return this.pgRes.update({
-        customerId: this.Authinfo.getOrgId(),
-        groupId: pg.groupId,
-      }, pg).$promise;
+      customerId: this.Authinfo.getOrgId(),
+      groupId: pg.groupId,
+    }, pg).$promise;
   }
 
   public deletePagingGroup(groupId: string) {
