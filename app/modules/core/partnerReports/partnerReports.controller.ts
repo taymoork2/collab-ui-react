@@ -14,15 +14,16 @@ import {
 } from './partnerReportInterfaces';
 import { CardUtils } from 'modules/core/cards';
 
+interface ICharts {
+  active: any | null;
+  metrics: any | null;
+  media: any | null;
+  population: any | null;
+}
+
 class PartnerReportCtrl {
   // tracking when initialization has completed
   private initialized: boolean = false;
-
-  // page charts
-  private activeUsersChart: any = null;
-  private callMetricsChart: any = null;
-  private mediaQualityChart: any = null;
-  private popChart: any = null;
 
   // reports filter
   public filterArray: Array<IFilterObject>;
@@ -40,10 +41,11 @@ class PartnerReportCtrl {
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private CardUtils: CardUtils,
+    private CommonReportService,
     private ReportConstants,
     private DummyReportService,
     private GraphService,
-    private ReportService
+    private ReportService,
   ) {
     this.ALL = this.ReportConstants.ALL;
     this.ENGAGEMENT = this.ReportConstants.ENGAGEMENT;
@@ -61,6 +63,20 @@ class PartnerReportCtrl {
       this.showHideCards(this.QUALITY);
     };
 
+    for (let key in this.charts) {
+      if (this.charts.hasOwnProperty(key) && this.exportArrays[key]) {
+        this.exportArrays[key][1].click = (): void => {
+          this.CommonReportService.exportJPG(this.charts[key]);
+        };
+        this.exportArrays[key][2].click = (): void => {
+          this.CommonReportService.exportPNG(this.charts[key]);
+        };
+        this.exportArrays[key][3].click = (): void => {
+          this.CommonReportService.exportPDF(this.charts[key]);
+        };
+      }
+    }
+
     this.ReportService.getOverallActiveUserData(this.timeSelected);
     this.ReportService.getCustomerList().then((response: Array<any>): void => {
       this.setAllDummyData();
@@ -77,6 +93,20 @@ class PartnerReportCtrl {
       this.initialized = true;
     });
   }
+
+  // charts and export tracking
+  public exportArrays: ICharts = {
+    active: _.cloneDeep(this.ReportConstants.exportMenu),
+    metrics: _.cloneDeep(this.ReportConstants.exportMenu),
+    media: _.cloneDeep(this.ReportConstants.exportMenu),
+    population: _.cloneDeep(this.ReportConstants.exportMenu),
+  };
+  private charts: ICharts = {
+    active: null,
+    metrics: null,
+    media: null,
+    population: null,
+  };
 
   // Active User Options
   public activeUserReportOptions: IReportCard = {
@@ -256,17 +286,17 @@ class PartnerReportCtrl {
   }
 
   private setActiveUserGraph(data: Array<IActiveUserData>): void {
-    let tempActiveUsersChart = this.GraphService.getActiveUsersGraph(data, this.activeUsersChart);
-    if (tempActiveUsersChart) {
-      this.activeUsersChart = tempActiveUsersChart;
+    let tempactive = this.GraphService.getActiveUsersGraph(data, this.charts.active);
+    if (tempactive) {
+      this.charts.active = tempactive;
       this.CardUtils.resize(0);
     }
   }
 
   private setActivePopulationGraph(data: Array<IPopulationData>): void {
-    let tempPopChart = this.GraphService.getActiveUserPopulationGraph(data, this.popChart);
-    if (tempPopChart) {
-      this.popChart = tempPopChart;
+    let temppopulation = this.GraphService.getActiveUserPopulationGraph(data, this.charts.population);
+    if (temppopulation) {
+      this.charts.population = temppopulation;
       this.CardUtils.resize(0);
     }
   }
@@ -302,9 +332,9 @@ class PartnerReportCtrl {
   }
 
   private setMediaQualityGraph(data: Array<IMediaQualityData>): void {
-    let tempMediaChart = this.GraphService.getMediaQualityGraph(data, this.mediaQualityChart);
+    let tempMediaChart = this.GraphService.getMediaQualityGraph(data, this.charts.media);
     if (tempMediaChart) {
-      this.mediaQualityChart = tempMediaChart;
+      this.charts.media = tempMediaChart;
       this.CardUtils.resize(0);
     }
   }
@@ -324,9 +354,9 @@ class PartnerReportCtrl {
   }
 
   private setCallMetricsGraph(data: ICallMetricsData): void {
-    let tempMetricsChart = this.GraphService.getCallMetricsDonutChart(data, this.callMetricsChart);
+    let tempMetricsChart = this.GraphService.getCallMetricsDonutChart(data, this.charts.metrics);
     if (tempMetricsChart) {
-      this.callMetricsChart = tempMetricsChart;
+      this.charts.metrics = tempMetricsChart;
       this.CardUtils.resize(0);
     }
   }
@@ -407,7 +437,6 @@ class PartnerReportCtrl {
     }
   }
 
-  // public functions
   // resizing for Most Active Users Table
   public resizeMostActive() {
     this.CardUtils.resize(0);

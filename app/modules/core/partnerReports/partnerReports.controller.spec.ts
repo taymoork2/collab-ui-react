@@ -1,4 +1,5 @@
 import {
+  IExportMenu,
   IFilterObject,
   IReportCard,
   ITimespan,
@@ -118,6 +119,14 @@ describe('Controller: Partner Reports', () => {
       expect(controller.ALL).toEqual(ctrlData.ALL);
       expect(controller.ENGAGEMENT).toEqual(ctrlData.ENGAGEMENT);
       expect(controller.QUALITY).toEqual(ctrlData.QUALITY);
+
+      _.forEach(controller.exportArrays, (array: Array<IExportMenu>): void => {
+        expect(array.length).toBe(4);
+        _.forEach(array, (item: IExportMenu, index: number): void => {
+          expect(item.id).toEqual(ctrlData.exportMenu[index].id);
+          expect(item.label).toEqual(ctrlData.exportMenu[index].label);
+        });
+      });
 
       expect(controller.customerPlaceholder).toEqual('reportsPage.customerSelect');
       expect(controller.customerSingular).toEqual('reportsPage.customer');

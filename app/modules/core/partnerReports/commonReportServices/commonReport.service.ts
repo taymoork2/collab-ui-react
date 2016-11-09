@@ -321,6 +321,44 @@ export class CommonReportService {
   public getPercentage(numberOne: number, numberTwo: number): number {
     return Math.round((numberOne / numberTwo) * this.ReportConstants.PERCENTAGE_MULTIPLIER);
   }
+
+  // export functions
+  public exportJPG(chart: any): void {
+    if (chart) {
+      chart.export.capture({}, function (): void {
+        this.toJPG({}, function (data: any): void {
+            this.download(data, 'application/jpg', 'amCharts.jpg');
+        });
+      });
+    }
+  }
+
+  public exportPNG(chart: any): void {
+    if (chart) {
+      chart.export.capture({}, function (): void {
+        this.toPNG({}, function (data: any): void {
+            this.download(data, 'application/png', 'amCharts.png');
+        });
+      });
+    }
+  }
+
+  public exportPDF(chart: any): void {
+    if (chart) {
+      chart.export.capture({}, function (): void {
+        this.toJPG({}, function (data: any): void {
+          chart.export.toPDF({
+            content: [{
+              image: data,
+              fit: [523, 300],
+            }],
+          }, function (downloadData: any): void {
+            this.download(downloadData, 'application/pdf', 'amCharts.pdf');
+          });
+        });
+      });
+    }
+  }
 }
 
 angular.module('Core')

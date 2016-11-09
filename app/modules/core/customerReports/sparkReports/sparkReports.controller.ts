@@ -22,12 +22,22 @@ import {
 } from './sparkReportInterfaces';
 let Masonry: any = require('masonry-layout');
 
+interface ICharts {
+  active: any | null;
+  rooms: any | null;
+  files: any | null;
+  media: any | null;
+  device: any | null;
+  metrics: any | null;
+}
+
 class SparkReportCtrl {
   /* @ngInject */
   constructor(
     private $rootScope: ng.IRootScopeService,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
+    private CommonReportService,
     private SparkGraphService,
     private SparkReportService,
     private DummySparkDataService,
@@ -44,6 +54,20 @@ class SparkReportCtrl {
       this.resetCards(this.QUALITY);
     };
 
+    for (let key in this.charts) {
+      if (this.charts.hasOwnProperty(key) && this.exportArrays[key]) {
+        this.exportArrays[key][1].click = (): void => {
+          this.CommonReportService.exportJPG(this.charts[key]);
+        };
+        this.exportArrays[key][2].click = (): void => {
+          this.CommonReportService.exportPNG(this.charts[key]);
+        };
+        this.exportArrays[key][3].click = (): void => {
+          this.CommonReportService.exportPDF(this.charts[key]);
+        };
+      }
+    }
+
     this.reportsUpdateToggle.then((response: boolean): void => {
       this.displayActiveLineGraph = response;
       if (this.displayActiveLineGraph) {
@@ -52,7 +76,7 @@ class SparkReportCtrl {
         this.activeDropdown = {
           array: this.activeArray,
           click: (): void => {
-            this.SparkGraphService.showHideActiveLineGraph(this.activeUsersChart, this.activeDropdown.selected);
+            this.SparkGraphService.showHideActiveLineGraph(this.charts.active, this.activeDropdown.selected);
           },
           disabled: true,
           selected: this.activeArray[0],
@@ -67,6 +91,24 @@ class SparkReportCtrl {
   }
 
   private reportsUpdateToggle = this.FeatureToggleService.atlasReportsUpdateGetStatus();
+
+  // charts and export controls
+  private charts: ICharts = {
+    active: null,
+    rooms: null,
+    files: null,
+    media: null,
+    device: null,
+    metrics: null,
+  };
+  public exportArrays: ICharts = {
+    active: _.cloneDeep(this.ReportConstants.exportMenu),
+    rooms: _.cloneDeep(this.ReportConstants.exportMenu),
+    files: _.cloneDeep(this.ReportConstants.exportMenu),
+    media: _.cloneDeep(this.ReportConstants.exportMenu),
+    device: _.cloneDeep(this.ReportConstants.exportMenu),
+    metrics: _.cloneDeep(this.ReportConstants.exportMenu),
+  };
 
   // report display filter controls
   public readonly ALL: string = this.ReportConstants.ALL;
@@ -103,7 +145,6 @@ class SparkReportCtrl {
   }
 
   // Active User Report Controls
-  private activeUsersChart: any;
   private displayActiveLineGraph: boolean = false;
   private activeArray: Array<IDropdownBase> = _.cloneDeep(this.ReportConstants.activeFilter);
   public activeDropdown: IReportDropdown;
@@ -165,15 +206,15 @@ class SparkReportCtrl {
   private setActiveGraph(data: Array<IActiveUserData>): void {
     let tempActiveUserChart: any;
     if (this.displayActiveLineGraph) {
-      tempActiveUserChart = this.SparkGraphService.setActiveLineGraph(data, this.activeUsersChart, this.timeSelected);
+      tempActiveUserChart = this.SparkGraphService.setActiveLineGraph(data, this.charts.active, this.timeSelected);
     } else {
-      tempActiveUserChart = this.SparkGraphService.setActiveUsersGraph(data, this.activeUsersChart);
+      tempActiveUserChart = this.SparkGraphService.setActiveUsersGraph(data, this.charts.active);
     }
 
     if (tempActiveUserChart) {
-      this.activeUsersChart = tempActiveUserChart;
+      this.charts.active = tempActiveUserChart;
       if (this.displayActiveLineGraph) {
-        this.SparkGraphService.showHideActiveLineGraph(this.activeUsersChart, this.activeDropdown.selected);
+        this.SparkGraphService.showHideActiveLineGraph(this.charts.active, this.activeDropdown.selected);
       }
     }
   }
@@ -214,7 +255,6 @@ class SparkReportCtrl {
   }
 
   // Average Rooms Report Controls
-  private avgRoomsChart: any;
   public avgRoomOptions: IReportCard = {
     animate: true,
     description: 'avgRooms.avgRoomsDescription',
@@ -227,9 +267,9 @@ class SparkReportCtrl {
   };
 
   private setAverageGraph(data: Array<IAvgRoomData>): void {
-    let tempAvgRoomsChart: any = this.SparkGraphService.setAvgRoomsGraph(data, this.avgRoomsChart);
-    if (tempAvgRoomsChart) {
-      this.avgRoomsChart = tempAvgRoomsChart;
+    let temprooms: any = this.SparkGraphService.setAvgRoomsGraph(data, this.charts.rooms);
+    if (temprooms) {
+      this.charts.rooms = temprooms;
     }
   }
 
@@ -245,7 +285,6 @@ class SparkReportCtrl {
   }
 
   // Files Shared Report Controls
-  private filesSharedChart: any;
   public filesSharedOptions: IReportCard = {
     animate: true,
     description: 'filesShared.filesSharedDescription',
@@ -258,9 +297,9 @@ class SparkReportCtrl {
   };
 
   private setFilesGraph(data: Array<IFilesShared>): void {
-    let tempFilesSharedChart: any = this.SparkGraphService.setFilesSharedGraph(data, this.filesSharedChart);
-    if (tempFilesSharedChart) {
-      this.filesSharedChart = tempFilesSharedChart;
+    let tempfiles: any = this.SparkGraphService.setFilesSharedGraph(data, this.charts.files);
+    if (tempfiles) {
+      this.charts.files = tempfiles;
     }
   }
 
@@ -276,7 +315,6 @@ class SparkReportCtrl {
   }
 
   // Media Quality Report Controls
-  private mediaChart: any;
   private mediaData: Array<IMediaData> = [];
   private mediaArray: Array<IDropdownBase> = _.cloneDeep(this.ReportConstants.mediaFilter);
 
@@ -300,9 +338,9 @@ class SparkReportCtrl {
   };
 
   private setMediaGraph(data: Array<IMediaData>): void {
-    let tempMediaChart: any = this.SparkGraphService.setMediaQualityGraph(data, this.mediaChart, this.mediaDropdown.selected);
-    if (tempMediaChart) {
-      this.mediaChart = tempMediaChart;
+    let tempmedia: any = this.SparkGraphService.setMediaQualityGraph(data, this.charts.media, this.mediaDropdown.selected);
+    if (tempmedia) {
+      this.charts.media = tempmedia;
     }
   }
 
@@ -322,7 +360,6 @@ class SparkReportCtrl {
   }
 
   // Registered Endpoints Report Controls
-  private deviceChart: any;
   private currentDeviceGraphs: Array<IEndpointWrapper> = [];
   private defaultDeviceFilter: IDropdownBase = {
     value: 0,
@@ -356,9 +393,9 @@ class SparkReportCtrl {
   };
 
     private setDeviceGraph(data: Array<IEndpointWrapper>, deviceFilter: IDropdownBase | undefined) {
-      let tempDevicesChart: any = this.SparkGraphService.setDeviceGraph(data, this.deviceChart, deviceFilter);
+      let tempDevicesChart: any = this.SparkGraphService.setDeviceGraph(data, this.charts.device, deviceFilter);
       if (tempDevicesChart) {
-        this.deviceChart = tempDevicesChart;
+        this.charts.device = tempDevicesChart;
       }
     }
 
@@ -394,7 +431,6 @@ class SparkReportCtrl {
     }
 
   // Call Metrics Report Controls
-  private metricsChart: any;
   public metricsOptions: IReportCard = {
     animate: false,
     description: 'callMetrics.customerDescription',
@@ -418,9 +454,9 @@ class SparkReportCtrl {
   }];
 
   private setMetricGraph(data: IMetricsData): void {
-    let tempMetricsChart: any = this.SparkGraphService.setMetricsGraph(data, this.metricsChart);
-    if (tempMetricsChart) {
-      this.metricsChart = tempMetricsChart;
+    let tempmetrics: any = this.SparkGraphService.setMetricsGraph(data, this.charts.metrics);
+    if (tempmetrics) {
+      this.charts.metrics = tempmetrics;
     }
   }
 

@@ -1,5 +1,6 @@
 import {
   IDropdownBase,
+  IExportMenu,
   IFilterObject,
   ITimespan,
 } from '../partnerReportInterfaces';
@@ -108,6 +109,25 @@ export class ReportConstants {
     label: this.$translate.instant('reportsPage.videoCalls'),
   };
   public mediaFilter: Array<IDropdownBase> = [this.MEDIA_FILTER_ONE, this.MEDIA_FILTER_TWO, this.MEDIA_FILTER_THREE];
+
+  // export menu
+  public exportMenu: Array<IExportMenu> = [{
+    id: 'saveAs',
+    label: this.$translate.instant('reportsPage.saveAs'),
+    click: undefined,
+  }, {
+    id: 'jpg',
+    label: this.$translate.instant('reportsPage.jpg'),
+    click: undefined,
+  }, {
+    id: 'png',
+    label: this.$translate.instant('reportsPage.png'),
+    click: undefined,
+  }, {
+    id: 'pdf',
+    label: this.$translate.instant('reportsPage.pdf'),
+    click: undefined,
+  }];
 }
 
 angular.module('Core')
