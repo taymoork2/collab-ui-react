@@ -3,7 +3,7 @@
 describe('Controller: ServiceSetup', function () {
   var $scope, $state, $previousState, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer, DialPlanService;
   var Authinfo, VoicemailMessageAction, Orgservice;
-  var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction, FeatureToggleService;
+  var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction, FeatureToggleService, languages;
   var $rootScope, PstnSetupService;
   var dialPlanDetailsNorthAmerica = [{
     countryCode: "+1",
@@ -91,6 +91,7 @@ describe('Controller: ServiceSetup', function () {
     };
 
     messageAction = getJSONFixture('huron/json/settings/messageAction.json');
+    languages = getJSONFixture('huron/json/settings/languages.json');
 
     spyOn($previousState, 'get').and.returnValue({
       state: {
@@ -122,6 +123,7 @@ describe('Controller: ServiceSetup', function () {
     });
 
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timeZone));
+    spyOn(ServiceSetup, 'getSiteLanguages').and.returnValue($q.when(languages));
     spyOn(Notification, 'notify');
     spyOn(Notification, 'errorResponse');
     spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.when({
@@ -166,6 +168,10 @@ describe('Controller: ServiceSetup', function () {
           timeZone: {
             id: 'America/Los_Angeles',
             label: 'America/Los_Angeles'
+          },
+          preferredLanguage: {
+            label: 'English (United States)',
+            value: 'en_US'
           },
           voicemailPilotNumberGenerated: false
         },
@@ -289,7 +295,9 @@ describe('Controller: ServiceSetup', function () {
         controller.model.site.timeZone = {
           id: 'bogus'
         };
-
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
         controller.initNext();
@@ -318,6 +326,10 @@ describe('Controller: ServiceSetup', function () {
           id: 'bogus'
         };
         controller.previousTimeZone = controller.model.site.timeZone;
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
+        controller.ftswPreferredLanguage = controller.model.site.preferredLanguage.value;
 
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -398,7 +410,10 @@ describe('Controller: ServiceSetup', function () {
           id: 'bogus'
         };
         controller.previousTimeZone = controller.model.site.timeZone;
-
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
+        controller.ftswPreferredLanguage = controller.model.site.preferredLanguage.value;
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
         ServiceSetup.createSite.and.returnValue($q.reject());
@@ -425,7 +440,9 @@ describe('Controller: ServiceSetup', function () {
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
         controller.hasVoicemailService = true;
-
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
         ServiceSetup.updateSite.and.returnValue($q.reject());
@@ -480,7 +497,9 @@ describe('Controller: ServiceSetup', function () {
         controller.model.site.timeZone = {
           id: 'bogus'
         };
-
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
         ServiceSetup.updateVoicemailTimezone.and.returnValue($q.reject());
@@ -508,6 +527,9 @@ describe('Controller: ServiceSetup', function () {
         controller.hasVoicemailService = true;
         controller.model.site.timeZone = {
           label: 'bogus'
+        };
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
         };
 
         //remove singlenumber range for it to pass
@@ -539,6 +561,9 @@ describe('Controller: ServiceSetup', function () {
         controller.model.site.timeZone = {
           id: 'bogus'
         };
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
 
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -565,6 +590,9 @@ describe('Controller: ServiceSetup', function () {
         controller.model.ftswCompanyVoicemail.ftswVoicemailToEmail = true;
         controller.model.ftswCompanyVoicemail.ftswExternalVoicemail = true;
 
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
         controller.hasVoicemailService = true;
         controller.voicemailMessageAction = {
           objectId: '1',
@@ -578,7 +606,7 @@ describe('Controller: ServiceSetup', function () {
         controller.initNext();
         $scope.$apply();
 
-        expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
+        expect(ServiceSetup.updateSite).toHaveBeenCalled();
         expect(ServiceSetup.updateCustomer).not.toHaveBeenCalled();
         expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
         expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
@@ -599,6 +627,9 @@ describe('Controller: ServiceSetup', function () {
         controller.hasVoicemailService = true;
         controller.model.site.timeZone = {
           id: 'bogus'
+        };
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
         };
 
         //remove singlenumber range for it to pass
@@ -627,6 +658,9 @@ describe('Controller: ServiceSetup', function () {
         controller.model.site.timeZone = {
           id: 'bogus'
         };
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
 
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -654,6 +688,9 @@ describe('Controller: ServiceSetup', function () {
         controller.model.site.timeZone = {
           id: 'bogus'
         };
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
 
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -677,6 +714,10 @@ describe('Controller: ServiceSetup', function () {
           id: 'bogus'
         };
         controller.previousTimeZone = controller.model.site.timeZone;
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
+        controller.ftswPreferredLanguage = controller.model.site.preferredLanguage.value;
 
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -698,7 +739,9 @@ describe('Controller: ServiceSetup', function () {
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = false;
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = undefined;
         controller.hasVoicemailService = false;
-
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
         controller.model.voicemailPrefix.value = '6';
 
         //remove singlenumber range for it to pass
@@ -706,7 +749,7 @@ describe('Controller: ServiceSetup', function () {
         controller.initNext();
         $scope.$apply();
 
-        expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
+        expect(ServiceSetup.updateSite).toHaveBeenCalled();
         expect(ServiceSetup.updateCustomer).not.toHaveBeenCalled();
         expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
         expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
@@ -724,6 +767,9 @@ describe('Controller: ServiceSetup', function () {
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
         controller.hasVoicemailService = false;
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
 
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -748,6 +794,9 @@ describe('Controller: ServiceSetup', function () {
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
         controller.hasVoicemailService = false;
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
 
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -775,6 +824,9 @@ describe('Controller: ServiceSetup', function () {
         controller.model.site.timeZone = {
           id: 'bogus'
         };
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
 
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -793,6 +845,9 @@ describe('Controller: ServiceSetup', function () {
         controller.hasSites = true;
         controller.model.ftswSteeringDigit = '5';
         controller.model.site.steeringDigit = '1';
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
         controller.initNext();
         $scope.$apply();
 
@@ -801,7 +856,9 @@ describe('Controller: ServiceSetup', function () {
 
       it('should notify error if createInternalNumberRange fails', function () {
         ServiceSetup.createInternalNumberRange.and.returnValue($q.reject());
-
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
         var promise = controller.initNext();
         $scope.$apply();
 
@@ -815,6 +872,9 @@ describe('Controller: ServiceSetup', function () {
 
       it('should call createInternalNumberRange() if hideFieldInternalNumberRange is false', function () {
         controller.hideFieldInternalNumberRange = false;
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
         controller.initNext();
         $scope.$apply();
         expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
@@ -822,6 +882,9 @@ describe('Controller: ServiceSetup', function () {
 
       it('should call not createInternalNumberRange() if hideFieldInternalNumberRange is true', function () {
         controller.hideFieldInternalNumberRange = true;
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
         controller.initNext();
         $scope.$apply();
         expect(ServiceSetup.createInternalNumberRange).not.toHaveBeenCalled();
@@ -850,6 +913,9 @@ describe('Controller: ServiceSetup', function () {
         controller.model.site.timeZone = {
           id: 3
         };
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
 
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -875,6 +941,9 @@ describe('Controller: ServiceSetup', function () {
         controller.model.site.timeZone = {
           id: 'America/Chicago'
         };
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
 
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -884,6 +953,36 @@ describe('Controller: ServiceSetup', function () {
         expect(ServiceSetup.updateSite).toHaveBeenCalled();
         expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
         expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalledWith(controller.model.site.timeZone.id, usertemplate[0].objectId);
+      });
+    });
+
+    describe('initnext.updatePreferredLanguage', function () {
+
+      it('should update preferred language when preferred language selection changes', function () {
+        var selectedPilotNumber = {
+          pattern: '+19728965000',
+          label: '(972) 896-5000'
+        };
+
+        controller.hasSites = true;
+        controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
+        controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
+        controller.hasVoicemailService = true;
+        controller.model.site.timeZone = {
+          id: 'bogus'
+        };
+        var newLanguage = {
+          label: 'French (Canadian)',
+          value: 'fr_CA'
+        };
+        controller.model.site.preferredLanguage = newLanguage;
+
+        //remove singlenumber range for it to pass
+        controller.deleteInternalNumberRange(model.numberRanges[2]);
+        controller.initNext();
+        $scope.$apply();
+
+        expect(ServiceSetup.updateSite).toHaveBeenCalled();
       });
     });
 
@@ -939,13 +1038,17 @@ describe('Controller: ServiceSetup', function () {
 
       it('should change the change site steering digit and send with the update site', function () {
         controller.model.voicemailPrefix.value = '1';
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
         controller.initNext();
         $scope.$apply();
         expect(ServiceSetup.updateSite).toHaveBeenCalledWith(model.site.uuid,
           {
             siteSteeringDigit: '1',
             voicemailPilotNumber: 'undefined8040506021015100215030504070415',
-            voicemailPilotNumberGenerated: 'true'
+            voicemailPilotNumberGenerated: 'true',
+            preferredLanguage: 'en_US'
           });
       });
     });
@@ -954,6 +1057,9 @@ describe('Controller: ServiceSetup', function () {
       it('should not call DialPlanService when dailing habit is not changed', function () {
         controller.model.regionCode = '';
         controller.model.initialRegionCode = '';
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
         controller.initNext();
         $scope.$apply();
         expect(DialPlanService.updateCustomerVoice).not.toHaveBeenCalled();
@@ -962,6 +1068,9 @@ describe('Controller: ServiceSetup', function () {
       it('should call DialPlanService when dailing habit is changed', function () {
         controller.model.regionCode = '214';
         controller.model.initialRegionCode = '';
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
         controller.initNext();
         $scope.$apply();
         expect(DialPlanService.updateCustomerVoice).toHaveBeenCalled();
