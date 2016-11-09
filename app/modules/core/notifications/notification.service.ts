@@ -1,5 +1,3 @@
-import { AlertService } from './alert.service';
-
 export class Notification {
   private static readonly SUCCESS = 'success';
   private static readonly WARNING = 'warning';
@@ -22,11 +20,9 @@ export class Notification {
   /* @ngInject */
   constructor(
     private $log: ng.ILogService,
-    private $q: ng.IQService,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private $window: ng.IWindowService,
-    private AlertService: AlertService,
     private Config,
     private toaster,
   ) {
@@ -95,34 +91,6 @@ export class Notification {
       timeout: type === Notification.SUCCESS ? this.successTimeout : this.failureTimeout,
       closeHtml: closeHtml,
     });
-  }
-
-  // TODO should this usage be replaced with a dialog modal?
-  public confirmation(message: string): ng.IPromise<any> {
-    let deferred = this.$q.defer();
-
-    this.AlertService.setDeferred(deferred);
-    this.AlertService.setMessage(message);
-    this.toaster.pop({
-      type: Notification.WARNING,
-      body: 'cr-confirmation',
-      bodyOutputType: 'directive',
-      showCloseButton: false,
-    });
-
-    this.$timeout(function () {
-      angular.element('.notification-yes').on('click', function () {
-        this.toaster.clear('*');
-        deferred.resolve();
-      });
-
-      angular.element('.notification-no').on('click', function () {
-        this.toaster.clear('*');
-        deferred.reject();
-      });
-    });
-
-    return deferred.promise;
   }
 
   public notifyReadOnly(): void {

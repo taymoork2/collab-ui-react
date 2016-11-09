@@ -13,7 +13,7 @@
     var ctrl = this;
     ctrl.goto = goto;
     function goto() {
-      $state.go('gem-spList');
+      $state.go('gem.servicesPartner');
     }
   }
 })();

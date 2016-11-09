@@ -442,7 +442,7 @@
           vm.showRoomSystems = true;
           vm.roomSystemTrial.enabled = vm.preset.roomSystems;
           vm.sparkBoardTrial.enabled = vm.preset.sparkBoard;
-          vm.webexTrial.enabled = results.ftWebex && vm.preset.webex;
+          vm.webexTrial.enabled = vm.preset.webex;
           vm.meetingTrial.enabled = vm.preset.meeting;
           // TODO: we enable globally by defaulting to 'true' here, but will revisit and refactor codepaths in a subsequent PR
           vm.showWebex = true;
