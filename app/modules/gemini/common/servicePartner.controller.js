@@ -3,10 +3,10 @@
 
   angular
     .module('Gemini')
-    .controller('GemspListCtrl', GemspListCtrl);
+    .controller('servicePartnerCtrl', servicePartnerCtrl);
 
   /* @ngInject */
-  function GemspListCtrl(gemService, Notification) {
+  function servicePartnerCtrl(gemService, Notification) {
 
     var vm = this;
     vm.loading = true;

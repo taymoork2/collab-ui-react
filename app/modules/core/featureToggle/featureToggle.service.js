@@ -159,7 +159,7 @@
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
       huronLocalDialing: 'huron-local-dialing',
       huronDeviceE911: 'huron-device-e911-address',
-      gemCCA: 'gem-cloud-connected-audio',
+      gemServicesTab: 'gem-services-tab',
       atlasHybridDataSecurity: 'atlas-data-security',
       atlasHerculesEmergencyUpgrade: 'atlas-hercules-emergency-upgrade',
       avrilVmEnable: 'avril-vm-enable',
