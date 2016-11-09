@@ -17,6 +17,7 @@ export class ServicesOverviewCtrl {
   constructor(
     private Auth,
     private Authinfo,
+    private Config,
     private FeatureToggleService,
     private FusionClusterService,
     private FusionClusterStatesService,
@@ -29,7 +30,7 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewHybridServicesCard(this.Authinfo),
       new ServicesOverviewHybridCalendarCard(this.Authinfo, this.FusionClusterStatesService),
       new ServicesOverviewHybridCallCard(this.Authinfo, this.FusionClusterStatesService),
-      new ServicesOverviewHybridMediaCard(this.Authinfo, this.FusionClusterStatesService),
+      new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
       new ServicesOverviewHybridDataSecurityCard(this.Authinfo, this.FusionClusterStatesService),
     ];
 

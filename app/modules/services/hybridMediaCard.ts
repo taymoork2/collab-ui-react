@@ -3,6 +3,7 @@ import { ICardButton, CardType } from './ServicesOverviewCard';
 
 export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard {
   private Authinfo;
+  private Config;
 
   public getShowMoreButton(): ICardButton | undefined {
     return undefined;
@@ -35,11 +36,13 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
   }
 
   public hybridMediaFeatureToggleEventHandler(hasFeature: boolean) {
-    this.display = this.Authinfo.isFusionMedia() && hasFeature;
+    const hasRequiredRoles = _.includes(this.Authinfo.getRoles(), this.Config.roles.full_admin) ||
+      _.includes(this.Authinfo.getRoles(), this.Config.roles.readonly_admin);
+    this.display = hasRequiredRoles && this.Authinfo.isFusionMedia() && hasFeature;
   }
 
   /* @ngInject */
-  public constructor(Authinfo, FusionClusterStatesService) {
+  public constructor(Authinfo, Config, FusionClusterStatesService) {
     super({
       name: 'servicesOverview.cards.hybridMedia.title',
       description: 'servicesOverview.cards.hybridMedia.description',
@@ -52,5 +55,6 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
       cardType: CardType.hybrid,
     }, FusionClusterStatesService);
     this.Authinfo = Authinfo;
+    this.Config = Config;
   }
 }
