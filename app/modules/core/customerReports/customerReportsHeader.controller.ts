@@ -59,7 +59,7 @@ class CustomerReportsHeaderCtrl {
             this.webex = true;
           }
         }
-      }, (): void => { /*no-op, but needed */ });
+      }).catch(_.noop);
     });
   }
 

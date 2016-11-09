@@ -339,7 +339,7 @@
         'users',
         'gss'
       ],
-      Support: ['gss', 'support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'reports.metrics'],
+      Support: ['gss', 'support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
       WX2_User: ['overview', 'support', 'activateProduct'],
       WX2_Support: ['gss', 'overview', 'reports', 'support'],
       WX2_SquaredInviter: [],

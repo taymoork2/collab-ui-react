@@ -1409,7 +1409,7 @@
               }
             }
           })
-          .state('webex-reports.webex-reports-iframe', {
+          .state('webex-reports-iframe', {
             templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
             controller: 'ReportsIframeCtrl',
             parent: 'main',

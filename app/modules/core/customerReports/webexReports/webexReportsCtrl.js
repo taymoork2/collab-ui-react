@@ -43,13 +43,7 @@
                 if (result.isAdminReportEnabled && result.isIframeSupported) {
                   vm.webexOptions.push(result.siteUrl);
                 }
-              },
-
-              function getSiteSupportsIframeError() {
-                //no-op, but needed
-              }
-            )
-          );
+              }).catch(_.noop));
         }
       );
 
