@@ -1,14 +1,13 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="$dismiss()">
   </button>
-  <h3 class="modal-title" translate="{{choosePersonal.wizardData.title}}"></h3>
+  <h3 class="modal-title" translate="{{choosePersonal.title}}"></h3>
 </div>
 <div class="modal-body device-wizard choose-personal">
   <div class="chooseExistingUser">
     <form class="chooseExistingUserForm" onsubmit="$('#next-button').click()">
       <h4 translate="addDeviceWizard.choosePersonal.whichUser"></h4>
       <p translate="addDeviceWizard.choosePersonal.existingUserInstructions"></p>
-      <div class="existingUserSpacing" ng-hide="choosePersonal.wizardData.allowUserCreation"></div>
       <div>
         <input type="text"
                class="existingUserInput"
@@ -44,7 +43,6 @@
   </button>
   <button
     cs-btn
-    loading="choosePersonal.isLoading"
     id="create-place-button"
     class="btn btn--primary"
     ng-click="choosePersonal.next()"
