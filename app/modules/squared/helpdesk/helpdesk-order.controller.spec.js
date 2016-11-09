@@ -3,18 +3,20 @@
 describe('Controller: HelpdeskOrderController', function () {
 
   beforeEach(angular.mock.module('Squared'));
-  var orderController, XhrNotificationService, $stateParams, HelpdeskService, $controller, $scope;
-  beforeEach(inject(function (_$rootScope_, _XhrNotificationService_, _$stateParams_, _HelpdeskService_, _$controller_) {
+  var $stateParams, $controller, $scope, HelpdeskService, Notification, orderController, q;
+  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$stateParams_, _HelpdeskService_, _Notification_) {
     HelpdeskService = _HelpdeskService_;
     $controller = _$controller_;
     $stateParams = _$stateParams_;
-    XhrNotificationService = _XhrNotificationService_;
     $scope = _$rootScope_.$new();
+    q = _$q_;
+    Notification = _Notification_;
 
     spyOn(HelpdeskService, 'searchOrders').and.returnValue($.when(getJSONFixture('core/json/orders/order.json')));
     spyOn(HelpdeskService, 'getAccount').and.returnValue($.when(getJSONFixture('core/json/orders/accountResponse.json')));
     spyOn(HelpdeskService, 'getEmailStatus').and.returnValue($.when(getJSONFixture('core/json/orders/emailStatus.json').items));
     spyOn(HelpdeskService, 'getOrg').and.returnValue($.when(getJSONFixture('core/json/orders/orgResponse.json')));
+    spyOn(Notification, 'errorWithTrackingId');
   }));
 
   describe('Order Controller', function () {
@@ -22,8 +24,7 @@ describe('Controller: HelpdeskOrderController', function () {
       $stateParams.id = "67891234";
       orderController = $controller('HelpdeskOrderController', {
         HelpdeskService: HelpdeskService,
-        $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService
+        $stateParams: $stateParams
       });
     });
 
@@ -49,6 +50,28 @@ describe('Controller: HelpdeskOrderController', function () {
     it('verify email status', function () {
       $scope.$apply();
       expect(orderController.customerEmailSent).toBe(new Date(1476222518.335901 * 1000).toUTCString());
+    });
+    it('call Notification.errorWithTrackingId and supply the response data when promise is rejected', function () {
+      $scope.$apply();
+      sinon.stub(HelpdeskService, 'getOrg');
+      var rejectData = {
+        data: {
+          errorCode: 420000
+        }
+      };
+      var promise = q.reject(rejectData);
+      HelpdeskService.getOrg.returns(promise);
+      $scope.$apply();
+
+      orderController = $controller('HelpdeskOrderController', {
+        HelpdeskService: HelpdeskService,
+        $stateParams: $stateParams,
+        Notification: Notification
+      });
+
+      $scope.$apply();
+      expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+      expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(rejectData, 'helpdesk.unexpectedError');
     });
   });
 });
