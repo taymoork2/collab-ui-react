@@ -363,12 +363,6 @@
 .choose-shared {
   display: flex;
 
-  .createNewPlace,
-  .chooseExistingPlace {
-    flex-grow: 1;
-    display: flex;
-  }
-
   .createNewPlaceForm,
   .chooseExistingPlaceForm {
     //flex-basis: 50%;
@@ -412,10 +406,6 @@
 
   .chooseExistingUserForm input {
     width: 250px;
-  }
-
-  .existingUserSpacing {
-    height: 24px;
   }
 }
 

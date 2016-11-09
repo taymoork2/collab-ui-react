@@ -2627,7 +2627,7 @@
     "pagingGroupName": "Paging Group Name",
     "pagingGroupNumber": "Paging Group Number",
     "pagingGroupMembers": "Paging Group Members",
-    "memberEditHint": "Select the users or places that will be paged.  The devices need to be in the same multicast group for paging to work.",   
+    "memberEditHint": "Select the users or places that will be paged.  The devices need to be in the same multicast group for paging to work.",
     "saveLabel": "Do you want to save your changes?",
     "successUpdate": "'{{pagingGroupName}}' paging group has been updated successfully",
     "successSave": "'{{pagingGroupName}}' paging group has been created successfully",
@@ -3468,7 +3468,9 @@
       "assignPhoneNumberInstructions": "Choose from the available phone numbers and extensions in the drop-down lists. These will become the primary line which you can use to reach this place.",
       "linesSaved": "Line configuration saved successfully",
       "placeError": "Add Place failed.",
-      "placeEditError": "Edit Place failed"
+      "placeEditError": "Edit Place failed",
+      "placeEditNoChanges": "No changes to save",
+      "placeNotFound": "Place not found, try finding it again in the list"
     },
     "editServices": {
       "whichServices": "Which service is needed in this place?",
