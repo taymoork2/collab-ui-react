@@ -20,7 +20,7 @@
         }
 
         function loadList() {
-          CsdmDataModelService.getPlacesMap().then(function (list) {
+          CsdmDataModelService.getPlacesMap(true).then(function (list) {
             placesList = list;
             vm.placesLoaded = true;
             vm.updateListAndFilter();
