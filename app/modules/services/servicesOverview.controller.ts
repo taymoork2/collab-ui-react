@@ -35,6 +35,10 @@ export class ServicesOverviewCtrl {
       this.forwardEvent('careFeatureToggleEventHandler', supports);
     });
 
+    FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridDataSecurity).then(supports => {
+      this.forwardEvent('hybridDataSecurityToggleEventHandler', supports);
+    });
+
     FeatureToggleService.atlasPMRonM2GetStatus().then(supports => {
       if (supports) {
         this.getPMRStatus();

@@ -1,5 +1,6 @@
-import { IPagingGroup } from 'modules/huron/features/pagingGroup/pagingGroup';
+import { IPagingGroup, IMemberData, IMemberWithPicture, PLACE, USER } from 'modules/huron/features/pagingGroup/pagingGroup';
 import { PagingGroupService } from 'modules/huron/features/pagingGroup/pagingGroup.service';
+import { USER_REAL_USER } from 'modules/huron/members';
 
 interface IToolkitModalSettings extends ng.ui.bootstrap.IModalSettings {
   type: string;
@@ -19,6 +20,9 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
   public number: string;
   private isNumberValid: boolean = false;
 
+  //Paging group members with picture
+  public selectedMembers: IMemberWithPicture[] = [];
+
   public animation: string = 'slide-left';
   private index: number = 0;
   private createLabel: string = '';
@@ -35,7 +39,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
   }
 
   public get lastIndex(): number {
-    return 1;
+    return 2;
   }
 
   public getPageIndex(): number {
@@ -54,9 +58,11 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
       case 0:
         return this.name !== '' && this.isNameValid;
       case 1:
-        let numberDefined: boolean = this.number !== '' && this.isNumberValid;
+        return !(this.number === undefined) && this.isNumberValid;
+      case 2:
+        let memberDefined: boolean = this.selectedMembers && this.selectedMembers.length !== 0;
         let helpText = this.$element.find('div.btn-helptext.helptext-btn--right');
-        if (numberDefined) {
+        if (memberDefined) {
           //Show helpText
           helpText.addClass('active');
           helpText.addClass('enabled');
@@ -65,7 +71,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
           helpText.removeClass('active');
           helpText.removeClass('enabled');
         }
-        return numberDefined;
+        return memberDefined;
       default:
         return true;
     }
@@ -95,8 +101,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
         //Change the blue arrow button to a green one
         let arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
         arrowButton.addClass('savePagingGroup');
-      }
-      if (this.index === this.lastIndex + 1) {
+      } else if (this.index === this.lastIndex + 1) {
         this.savePagingGroup();
         this.index--;
       }
@@ -108,7 +113,6 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
   }
 
   public evalKeyPress(keyCode: number): void {
-    const ENTER_KEY = 13;
     const ESCAPE_KEY = 27;
     const LEFT_ARROW = 37;
     const RIGHT_ARROW = 39;
@@ -117,11 +121,6 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
         this.cancelModal();
         break;
       case RIGHT_ARROW:
-        if (this.nextButton() === true) {
-          this.nextPage();
-        }
-        break;
-      case ENTER_KEY:
         if (this.nextButton() === true) {
           this.nextPage();
         }
@@ -136,6 +135,12 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
     }
   }
 
+  public enterNextPage(keyCode: number): void {
+    if (keyCode === 13 && this.nextButton() === true) {
+      this.nextPage();
+    }
+  }
+
   public onUpdateName(name: string, isValid: boolean): void {
     this.name = name;
     this.isNameValid = isValid;
@@ -146,14 +151,32 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
     this.isNumberValid = isValid;
   }
 
+  public onUpdateMember(members: IMemberWithPicture[]): void {
+    this.selectedMembers = members;
+  }
+
   public savePagingGroup(): void {
+    let members: IMemberData[] = [];
+    let emptyDeviceId: string[] = [];
+
+    _.forEach(this.selectedMembers, function (mem) {
+      let member: IMemberData = <IMemberData> {
+        memberId: mem.member.uuid,
+        deviceIds: emptyDeviceId,
+        type: (mem.member.type === USER_REAL_USER) ? USER : PLACE,
+      };
+      members.push(member);
+    });
+
     let pg: IPagingGroup = <IPagingGroup>{
       name: this.name,
       extension: this.number,
+      members: members,
     };
+
     this.PagingGroupService.savePagingGroup(pg).then(
       (data) => {
-        this.Notification.success('pagingGroup.successSave', { pagingGroupName: data.name });
+        this.compareMembers(pg, data);
         this.$state.go('huronfeatures');
       },
       (error) => {
@@ -168,6 +191,22 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
         }
         this.Notification.error('pagingGroup.errorSave', { message: message });
       });
+  }
+
+  public compareMembers(pg, data): void {
+    let result: Array<String> = [];
+    if (data.members !== undefined) {
+      if (data.members.length === pg.members.length) {
+        this.Notification.success('pagingGroup.successSave', { pagingGroupName: data.name });
+      } else {
+        for (let i = 0; i < pg.members.length; i++) {
+          if (_.find(data.members, { memberId: pg.members[i].memberId }) === undefined) {
+            result.push(pg.members[i].memberId);
+          }
+        }
+        this.Notification.error('pagingGroup.errorSavePartial', { pagingGroupName: data.name, message: result });
+      }
+    }
   }
 
   public cancelModal(): void {

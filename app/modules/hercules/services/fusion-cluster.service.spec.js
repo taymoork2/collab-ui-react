@@ -416,9 +416,11 @@ describe('Service: FusionClusterService', function () {
   describe('processClustersToAggregateStatusForService()', function () {
 
     var twoClusters;
+    var emptyClusters;
     beforeEach(function () {
       jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
       twoClusters = getJSONFixture('hercules/fusion-cluster-service-test-clusters.json');
+      emptyClusters = getJSONFixture('hercules/empty-clusters.json');
     });
 
     it('should return *operational* when all hosts are *running*', function () {
@@ -517,6 +519,11 @@ describe('Service: FusionClusterService', function () {
       twoClusters[1].servicesStatuses[2].serviceId = 'squared-fusion-media';
       twoClusters[1].servicesStatuses[2].state.name = 'upgrading';
       expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-media', twoClusters)).toBe('impaired');
+    });
+
+    it('should return *setupNotComplete* if no connectors in the cluster', function () {
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', emptyClusters)).toBe('setupNotComplete');
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-uc', emptyClusters)).toBe('setupNotComplete');
     });
   });
 

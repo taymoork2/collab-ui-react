@@ -1693,16 +1693,19 @@
             template: '<div ui-view></div>',
             absract: true
           })
-          .state('gem-services', {
+          .state('gem', {
             parent: 'partner',
+            controller: 'GemCtrl',
+            template: '<div ui-view></div>'
+          })
+          .state('gem.services', {
             url: '/services/index',
             template: '<cca-card></cca-card>'
           })
-          .state('gem-spList', {
-            parent: 'partner',
-            url: '/services/gemSPList',
-            templateUrl: "modules/gemini/common/gemspList.tpl.html",
-            controller: 'GemspListCtrl',
+          .state('gem.servicesPartner', {
+            url: '/services/spList',
+            templateUrl: "modules/gemini/common/servicePartner.tpl.html",
+            controller: 'servicePartnerCtrl',
             controllerAs: 'gsls'
           })
           .state('partnercustomers.list', {

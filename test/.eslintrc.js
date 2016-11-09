@@ -51,6 +51,7 @@ module.exports = {
     expect: true,
     exports: true,
     getJSONFixture: true,
+    gssDashboard: true,
     helper: true,
     huntGroup: true,
     huronFeatures: true,

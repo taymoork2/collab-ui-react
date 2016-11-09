@@ -513,7 +513,9 @@
 
           pstnModal.enabled = vm.pstnTrial.enabled;
           emergAddressModal.enabled = vm.pstnTrial.enabled;
-          meetingModal.enabled = results.atlasWebexTrials;
+          // TODO: we enable globally by defaulting to 'true' here, but will revisit and refactor codepaths in a subsequent PR
+
+          meetingModal.enabled = true;
 
           vm.placesEnabled = results.placesEnabled;
           setDeviceModal();

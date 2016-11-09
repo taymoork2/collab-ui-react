@@ -709,7 +709,7 @@
         .then(function (response) {
           $scope.trialsList = PartnerService.loadRetrievedDataToList(_.get(response, 'data.trials', []), true,
             $scope.isCareEnabled);
-          $scope.totalTrials = $scope.trialsList.length;
+          $scope.totalTrials = _.get($scope, 'trialsList', []).length;
         });
     }
 
@@ -738,8 +738,8 @@
         return $q.all([getTrialsList($scope.searchStr), getManagedOrgsList($scope.searchStr)]);
       } else {
         return getManagedOrgsList($scope.searchStr).then(function () {
-          $scope.gridData = $scope.managedOrgsList;
-          $scope.totalOrgs = $scope.managedOrgsList.length;
+          $scope.gridData = _.get($scope, 'managedOrgsList', []);
+          $scope.totalOrgs = _.get($scope, 'managedOrgsList', []).length;
         });
       }
     }
@@ -830,7 +830,7 @@
     }
 
     function getAccountStatus(rowData) {
-      if (rowData.daysLeft <= 0 || _.isUndefined(rowData.licenseList) || rowData.licenseList.length === 0) {
+      if (rowData.daysLeft <= 0 || _.get(rowData, 'licenseList', []).length === 0) {
         return 'expired';
       }
       var isTrial = _.some(Config.licenseObjectNames, function (type) {

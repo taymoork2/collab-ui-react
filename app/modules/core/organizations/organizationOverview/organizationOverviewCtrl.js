@@ -11,7 +11,7 @@
     $scope.setEftToggle = setEftToggle;
     $scope.eftToggleLoading = true;
     $scope.updateEftToggle = updateEftToggle;
-    $scope.currentOrganization.isEFT = false;
+    $scope.isEFT = false;
     $scope.currentEftSetting = false;
     $scope.toggleReleaseChannelAllowed = toggleReleaseChannelAllowed;
     $scope.showHybridServices = false;
@@ -60,7 +60,7 @@
     function updateEftToggle() {
       return Orgservice.getEftSetting(currentOrgId)
         .then(function (response) {
-          _.set($scope, 'currentOrganization.isEFT', response.data.eft);
+          _.set($scope, 'isEFT', response.data.eft);
           $scope.currentEftSetting = response.data.eft;
         })
         .catch(function () {
@@ -72,16 +72,15 @@
     }
 
     function setEftToggle(eft) {
-      if ($scope.currentEftSetting !== $scope.currentOrganization.isEFT) {
-        $scope.eftToggleLoading = true;
+      if (eft !== $scope.currentEftSetting) {
         Orgservice.setEftSetting(eft, currentOrgId)
-          .then(updateEftToggle)
-          .catch(function () {
-            _.set($scope, 'currentOrganization.isEFT', $scope.currentEftSetting);
-            Notification.error('organizationsPage.eftError');
+          .then(function () {
+            _.set($scope, 'isEFT', eft);
+            _.set($scope, 'currentEftSetting', eft);
           })
-          .finally(function () {
-            $scope.eftToggleLoading = false;
+          .catch(function () {
+            _.set($scope, 'isEFT', $scope.currentEftSetting);
+            Notification.error('organizationsPage.eftError');
           });
       }
     }

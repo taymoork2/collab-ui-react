@@ -431,9 +431,11 @@
       this.features = Config.getDefaultEntitlements();
     }
 
-    $scope.ConfirmAdditionalServiceSetup = function () {
-      var promise = Notification.confirmation($translate.instant('usersPage.addtionalServiceSetupConfirmation'));
-      promise.then(function () {
+    $scope.confirmAdditionalServiceSetup = function () {
+      $modal.open({
+        type: 'dialog',
+        templateUrl: 'modules/core/users/userAdd/confirmLeavingDialog.tpl.html',
+      }).result.then(function () {
         $state.go('firsttimewizard');
       });
     };

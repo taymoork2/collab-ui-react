@@ -41,6 +41,7 @@ export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
     impaired: 'servicesOverview.cardStatus.impaired',
     outage: 'servicesOverview.cardStatus.outage',
     unknown: 'servicesOverview.cardStatus.unknown',
+    setupNotComplete: 'servicesOverview.cardStatus.setupNotComplete',
   };
 
   protected filterAndGetCssStatus(services: Array<IServiceStatus>, serviceId: string): string | undefined {
