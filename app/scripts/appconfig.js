@@ -1407,6 +1407,9 @@
                 controller: 'WebexReportsCtrl',
                 templateUrl: 'modules/core/customerReports/webexReports/webexReports.tpl.html',
               }
+            },
+            params: {
+              siteUrl: null
             }
           })
           .state('webex-reports-iframe', {
