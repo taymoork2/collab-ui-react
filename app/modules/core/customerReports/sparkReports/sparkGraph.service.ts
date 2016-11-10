@@ -2,7 +2,7 @@ import {
   IActiveUserData,
   ITimespan,
   IDropdownBase,
-} from '../partnerReports/partnerReportInterfaces';
+} from '../../partnerReports/partnerReportInterfaces';
 
 import {
   IAvgRoomData,
@@ -10,9 +10,9 @@ import {
   IFilesShared,
   IMediaData,
   IMetricsData,
-} from './customerReportInterfaces';
+} from './sparkReportInterfaces';
 
-class CustomerGraphService {
+class SparkGraphService {
   // div variables
   private readonly activeUserDiv: string = 'activeUsersChart';
   private readonly avgRoomsdiv: string = 'avgRoomsChart';
@@ -159,9 +159,9 @@ class CustomerGraphService {
         let balloonText: string | undefined = undefined;
 
         if (title === users && data.date !== hiddenData) {
-          balloonText = CustomerGraphService.graphTextSpan + registeredUsers + CustomerGraphService.boldNumberSpan + ' ' + data.totalRegisteredUsers + '</span></span>';
+          balloonText = SparkGraphService.graphTextSpan + registeredUsers + SparkGraphService.boldNumberSpan + ' ' + data.totalRegisteredUsers + '</span></span>';
         } else if (data.date !== hiddenData) {
-          balloonText = CustomerGraphService.graphTextSpan + activeUsers + CustomerGraphService.boldNumberSpan + ' ' + data.activeUsers;
+          balloonText = SparkGraphService.graphTextSpan + activeUsers + SparkGraphService.boldNumberSpan + ' ' + data.activeUsers;
           if (this.activeUserFilter.value === this.ReportConstants.FILTER_ONE.value) {
             balloonText += ' (' + data.percentage + '%)';
           }
@@ -218,7 +218,7 @@ class CustomerGraphService {
   }
 
   private activeUserGraphs(data: Array<IActiveUserData>): Array<any> {
-    const balloonText: string = CustomerGraphService.graphTextSpan + this.$translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br>' + CustomerGraphService.graphTextSpan +  this.$translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
+    const balloonText: string = SparkGraphService.graphTextSpan + this.$translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br>' + SparkGraphService.graphTextSpan +  this.$translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
 
     let colors: Array<string> = [this.chartColors.brandSuccessLight, this.chartColors.brandSuccessDark];
     if (!data[0].balloon) {
@@ -286,7 +286,7 @@ class CustomerGraphService {
     let total: string = this.$translate.instant('avgRooms.avgTotal');
 
     // graph variables
-    const balloonText: string = CustomerGraphService.graphTextSpan + group + ' <span class="room-number">[[groupRooms]]</span><br>' + oneToOne + ' <span class="room-number">[[oneToOneRooms]]</span><br>' + total + ' <span class="room-number">[[avgRooms]]</span></span>';
+    const balloonText: string = SparkGraphService.graphTextSpan + group + ' <span class="room-number">[[groupRooms]]</span><br>' + oneToOne + ' <span class="room-number">[[oneToOneRooms]]</span><br>' + total + ' <span class="room-number">[[avgRooms]]</span></span>';
 
     let titles: Array<string> = [group, oneToOne];
     let values: Array<string> = ['totalRooms', 'oneToOneRooms'];
@@ -351,7 +351,7 @@ class CustomerGraphService {
     const fileSizes: string = this.$translate.instant('filesShared.fileSizes');
     const gb: string = this.$translate.instant('filesShared.gb');
 
-    const balloonText: string = CustomerGraphService.graphTextSpan + filesShared + ' <span class="graph-number">[[contentShared]]</span><br>' + fileSizes + ' <span class="graph-number">[[contentShareSizes]] ' + gb + '</span></span>';
+    const balloonText: string = SparkGraphService.graphTextSpan + filesShared + ' <span class="graph-number">[[contentShared]]</span><br>' + fileSizes + ' <span class="graph-number">[[contentShareSizes]] ' + gb + '</span></span>';
     let color: string = this.chartColors.brandSuccess;
 
     if (!data[0].balloon) {
@@ -491,7 +491,7 @@ class CustomerGraphService {
     graph.fillColors = color;
     graph.colorField = color;
     graph.valueField = 'totalRegisteredDevices';
-    graph.balloonText = CustomerGraphService.graphTextSpan + title + ' <span class="device-number">[[totalRegisteredDevices]]</span></span>';
+    graph.balloonText = SparkGraphService.graphTextSpan + title + ' <span class="device-number">[[totalRegisteredDevices]]</span></span>';
     graph.showBalloon = data[graphNumber].balloon;
 
     return [graph];
@@ -499,7 +499,7 @@ class CustomerGraphService {
 
   // Call Metrics Donut Chart
   public setMetricsGraph(data: IMetricsData, chart: any): any {
-    let balloonText = CustomerGraphService.graphTextSpan + '[[numCalls]] [[callCondition]] ([[percentage]]%)</span>';
+    let balloonText = SparkGraphService.graphTextSpan + '[[numCalls]] [[callCondition]] ([[percentage]]%)</span>';
 
     if (data && chart) {
       chart.balloonText = balloonText;
@@ -523,4 +523,4 @@ class CustomerGraphService {
 }
 
 angular.module('Core')
-  .service('CustomerGraphService', CustomerGraphService);
+  .service('SparkGraphService', SparkGraphService);

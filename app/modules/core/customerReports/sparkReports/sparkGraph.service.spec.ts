@@ -1,14 +1,14 @@
 import {
   IActiveUserData,
   IDropdownBase,
-} from '../partnerReports/partnerReportInterfaces';
+} from '../../partnerReports/partnerReportInterfaces';
 
 import {
   IAvgRoomData,
   IEndpointWrapper,
   IFilesShared,
   IMediaData,
-} from './customerReportInterfaces';
+} from './sparkReportInterfaces';
 
 describe('Service: Customer Graph Service', function () {
   let validateService: any;
@@ -21,7 +21,7 @@ describe('Service: Customer Graph Service', function () {
 
   beforeEach(function () {
     this.initModules('Core');
-    this.injectDependencies('CustomerGraphService');
+    this.injectDependencies('SparkGraphService');
 
     validateService = {
       addListener: jasmine.createSpy('addListener'),
@@ -51,7 +51,7 @@ describe('Service: Customer Graph Service', function () {
     });
 
     it('should have created a line graph when setActiveLineGraph is called the first time', function () {
-      this.CustomerGraphService.setActiveLineGraph(data, null, filter[0]);
+      this.SparkGraphService.setActiveLineGraph(data, null, filter[0]);
       expect(AmCharts.makeChart).toHaveBeenCalled();
       expect(validateService.validateData).not.toHaveBeenCalled();
       expect(validateService.validateNow).not.toHaveBeenCalled();
@@ -59,21 +59,21 @@ describe('Service: Customer Graph Service', function () {
     });
 
     it('should update graph when setActiveLineGraph is called a second time', function () {
-      let chart = this.CustomerGraphService.setActiveLineGraph(data, null, filter[0]);
-      this.CustomerGraphService.setActiveLineGraph(data, chart, filter[1]);
+      let chart = this.SparkGraphService.setActiveLineGraph(data, null, filter[0]);
+      this.SparkGraphService.setActiveLineGraph(data, chart, filter[1]);
       expect(validateService.validateData).toHaveBeenCalled();
       expect(validateService.validateNow).toHaveBeenCalled();
     });
 
     it('should have created a graph when setActiveUsersGraph is called the first time', function () {
-      this.CustomerGraphService.setActiveUsersGraph(data, null);
+      this.SparkGraphService.setActiveUsersGraph(data, null);
       expect(AmCharts.makeChart).toHaveBeenCalled();
       expect(validateService.validateData).not.toHaveBeenCalled();
     });
 
     it('should update graph when setActiveUsersGraph is called a second time', function () {
-      let chart = this.CustomerGraphService.setActiveUsersGraph(data, null);
-      this.CustomerGraphService.setActiveUsersGraph(data, chart);
+      let chart = this.SparkGraphService.setActiveUsersGraph(data, null);
+      this.SparkGraphService.setActiveUsersGraph(data, chart);
       expect(validateService.validateData).toHaveBeenCalled();
     });
   });
@@ -89,14 +89,14 @@ describe('Service: Customer Graph Service', function () {
     });
 
     it('should have created a graph when setAvgRoomsGraph is called the first time', function () {
-      this.CustomerGraphService.setAvgRoomsGraph(data, null);
+      this.SparkGraphService.setAvgRoomsGraph(data, null);
       expect(AmCharts.makeChart).toHaveBeenCalled();
       expect(validateService.validateData).not.toHaveBeenCalled();
     });
 
     it('should update graph when setAvgRoomsGraph is called a second time', function () {
-      let chart = this.CustomerGraphService.setAvgRoomsGraph(data, null);
-      this.CustomerGraphService.setAvgRoomsGraph(data, chart);
+      let chart = this.SparkGraphService.setAvgRoomsGraph(data, null);
+      this.SparkGraphService.setAvgRoomsGraph(data, chart);
       expect(validateService.validateData).toHaveBeenCalled();
     });
   });
@@ -112,14 +112,14 @@ describe('Service: Customer Graph Service', function () {
     });
 
     it('should have created a graph when setFilesSharedGraph is called the first time', function () {
-      this.CustomerGraphService.setFilesSharedGraph(data, null);
+      this.SparkGraphService.setFilesSharedGraph(data, null);
       expect(AmCharts.makeChart).toHaveBeenCalled();
       expect(validateService.validateData).not.toHaveBeenCalled();
     });
 
     it('should update graph when setFilesSharedGraph is called a second time', function () {
-      let chart = this.CustomerGraphService.setFilesSharedGraph(data, null);
-      this.CustomerGraphService.setFilesSharedGraph(data, chart);
+      let chart = this.SparkGraphService.setFilesSharedGraph(data, null);
+      this.SparkGraphService.setFilesSharedGraph(data, chart);
       expect(validateService.validateData).toHaveBeenCalled();
     });
   });
@@ -136,14 +136,14 @@ describe('Service: Customer Graph Service', function () {
     });
 
     it('should have created a graph when setMediaQualityGraph is called the first time', function () {
-      this.CustomerGraphService.setMediaQualityGraph(data, null, filter[0]);
+      this.SparkGraphService.setMediaQualityGraph(data, null, filter[0]);
       expect(AmCharts.makeChart).toHaveBeenCalled();
       expect(validateService.validateData).not.toHaveBeenCalled();
     });
 
     it('should update graph when setMediaQualityGraph is called a second time', function () {
-      let chart = this.CustomerGraphService.setMediaQualityGraph(data, null, filter[0]);
-      this.CustomerGraphService.setMediaQualityGraph(data, chart, filter[1]);
+      let chart = this.SparkGraphService.setMediaQualityGraph(data, null, filter[0]);
+      this.SparkGraphService.setMediaQualityGraph(data, chart, filter[1]);
       expect(validateService.validateData).toHaveBeenCalled();
     });
   });
@@ -157,14 +157,14 @@ describe('Service: Customer Graph Service', function () {
     });
 
     it('should have created a graph when setMetricsGraph is called the first time', function () {
-      this.CustomerGraphService.setMetricsGraph(metricsData.response, null);
+      this.SparkGraphService.setMetricsGraph(metricsData.response, null);
       expect(AmCharts.makeChart).toHaveBeenCalled();
       expect(validateService.validateData).not.toHaveBeenCalled();
     });
 
     it('should update graph when setMetricsGraph is called a second time', function () {
-      let chart = this.CustomerGraphService.setMetricsGraph(metricsData.response, null);
-      this.CustomerGraphService.setMetricsGraph(metricsData.response, chart);
+      let chart = this.SparkGraphService.setMetricsGraph(metricsData.response, null);
+      this.SparkGraphService.setMetricsGraph(metricsData.response, chart);
       expect(validateService.validateData).toHaveBeenCalled();
     });
   });
@@ -181,14 +181,14 @@ describe('Service: Customer Graph Service', function () {
     });
 
     it('should have created a graph when setDeviceGraph is called the first time', function () {
-      this.CustomerGraphService.setDeviceGraph(data, null, filter[0]);
+      this.SparkGraphService.setDeviceGraph(data, null, filter[0]);
       expect(AmCharts.makeChart).toHaveBeenCalled();
       expect(validateService.validateData).not.toHaveBeenCalled();
     });
 
     it('should update graph when setDeviceGraph is called a second time', function () {
-      let chart = this.CustomerGraphService.setDeviceGraph(data, null, filter[0]);
-      this.CustomerGraphService.setDeviceGraph(data, chart, filter[1]);
+      let chart = this.SparkGraphService.setDeviceGraph(data, null, filter[0]);
+      this.SparkGraphService.setDeviceGraph(data, chart, filter[1]);
       expect(validateService.validateData).toHaveBeenCalled();
     });
   });
