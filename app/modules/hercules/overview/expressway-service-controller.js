@@ -123,6 +123,9 @@
         controllerAs: 'vm',
         templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
         type: 'small'
+      })
+      .result.finally(function () {
+        $state.reload();
       });
     }
 
