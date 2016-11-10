@@ -20,7 +20,7 @@
       };
 
       LogMetricsService.logMetrics(
-        'deviceUsage',
+        'deviceUsageReports',
         eventType,
         LogMetricsService.eventAction.buttonClick,
         200,
