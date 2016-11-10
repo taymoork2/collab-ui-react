@@ -14,13 +14,13 @@
   </div>
 </section>
 <section ng-if="card.loading">
-  <i class='icon icon-spinner icon-2x'></i>
+  <i class="icon icon-spinner icon-2x"></i>
 </section>
-<footer ng-if="card.showStatus">
+<footer ng-if="card.showStatus()">
   <div>
     <a class="status" ui-sref="{{card.status.routerState}}">
       <i class="icon icon-circle status-indicator" ng-class="card.status.status"></i>
-      <span>{{::card.status.text| translate}}</span>
+      <span>{{::card.status.text | translate}}</span>
     </a>
   </div>
 </footer>

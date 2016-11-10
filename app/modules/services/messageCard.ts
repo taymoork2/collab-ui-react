@@ -27,6 +27,6 @@ export class ServicesOverviewMessageCard extends ServicesOverviewCard {
       }]
       : [];
 
-    this._loading = false;
+    this.loading = false;
   }
 }

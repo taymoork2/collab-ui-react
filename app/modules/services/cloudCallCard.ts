@@ -20,13 +20,34 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
 
   public getButtons(): Array<ICardButton> {
     if (this.active) {
-      return _.take(this._buttons, 3);
+      return this._buttons;
     }
     return [];
   }
 
+  private showFeatureTab(pstnEnabled: boolean) {
+    return this.Authinfo.getLicenses()
+      .filter((license) => {
+        return !pstnEnabled || (license.licenseType === this.Config.licenseTypes.COMMUNICATION);
+      }).length > 0;
+  }
+
+  public csdmPstnFeatureToggleEventHandler(pstnEnabled: boolean) {
+    if (this.showFeatureTab(pstnEnabled)) {
+      this._buttons.splice(1, 0, {
+        name: 'servicesOverview.cards.call.buttons.features',
+        routerState: 'huronfeatures',
+        buttonClass: 'btn-link',
+      });
+    }
+    this.loading = false;
+  }
+
   /* @ngInject */
-  public constructor(Authinfo, FeatureToggleService, Config) {
+  public constructor(
+    private Authinfo,
+    private Config,
+  ) {
     super({
       name: 'servicesOverview.cards.call.title',
       description: 'servicesOverview.cards.call.description',
@@ -34,18 +55,7 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
       active: Authinfo.isAllowedState('huronsettings'),
       cardClass: 'cta-bar',
     });
-    this._loading = false;
-    function showFeatureTab(pstnEnabled) {
-      return Authinfo.getLicenses().filter(function (license) {
-        return !pstnEnabled || (license.licenseType === Config.licenseTypes.COMMUNICATION);
-      }).length > 0;
-    }
-
-    FeatureToggleService.supports(FeatureToggleService.features.csdmPstn)
-      .then((pstnEnabled) => {
-        if (showFeatureTab(pstnEnabled)) {
-          this._buttons.splice(1, 0, { name: 'servicesOverview.cards.call.buttons.features', routerState: 'huronfeatures', buttonClass: 'btn-link' });
-        }
-      });
+    this.Authinfo = Authinfo;
+    this.Config = Config;
   }
 }
