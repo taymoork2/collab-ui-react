@@ -2666,9 +2666,14 @@
             url: '/services/calendar/settings',
             views: {
               fullPane: {
-                controllerAs: 'expresswayServiceSettings',
-                controller: 'ExpresswayServiceSettingsController',
+                controllerAs: 'calendarSettings',
+                controller: 'CalendarSettingsController',
                 templateUrl: 'modules/hercules/service-settings/calendar-service-settings.html'
+              }
+            },
+            resolve: {
+              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
               }
             }
           })

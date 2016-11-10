@@ -986,6 +986,8 @@
     "error": "Error",
     "finish": "Finish",
     "firstName": "First Name",
+    "general": "General",
+    "help": "Help",
     "id": "ID",
     "incorrectFormat": "Incorrect format",
     "invalidEmail": "This is not a valid Email Address.",
@@ -1038,10 +1040,12 @@
     "unassigned": "Unassigned",
     "unknown": "Unknown",
     "update": "Update",
+    "upload": "Upload",
     "user": "User",
     "users": "Users",
     "voice": "Voice",
     "warning": "Warning",
+    "help": "Help",
     "yes": "Yes"
   },
   "notifications": {
@@ -1691,7 +1695,7 @@
       "emailNotificationsWatermark": "Add email addresses",
       "emailAdministratorHeading": "Administrators",
       "emailAdministratorNotification": "Add email addresses to receive email notifications about service impacting alarms and software upgrades.",
-      "emailUserHeading": "Users",
+      "emailUserHeading": "Users email notifications",
       "emailUserNotification": "By default, users receive email notifications about new Calendar Service functionality, error messages, and service status. Toggle this setting off to stop sending these email notifications to users.",
       "emailNotificationsSaving": "Saving.",
       "emailNotificationsSavingSuccess": "The email subscriber list was successfully saved.",
@@ -1734,6 +1738,13 @@
         "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
         "sipDomainExample": "For example: sipmtls.example.com"
+      },
+      "googleCalendar": {
+        "title": "Google Calendar",
+        "privateKeyHeader": "Private Key",
+        "privateKeyText": "Upload a new private key.",
+        "deactivateHeader": "Deactivate Google Calendar",
+        "deactivateText": "Your users will no longer be able to use this service."
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
