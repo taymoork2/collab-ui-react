@@ -137,7 +137,10 @@
       }, timeoutInMillis);
 
       return $http.get(url, timeout).then(function (response) {
-        $log.info('#items', response.data.items.length);
+        //$log.info('#items', response.data.items.length);
+        if (!response.data.items) {
+          response.data.items = [];
+        }
         if (response.data.items.length > 0) {
           checkIfMissingDays(response.data.items, start, end, missingDaysDeferred);
         }
