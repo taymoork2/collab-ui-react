@@ -2,20 +2,11 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmHuronPlaceService($window, $http, Authinfo, CsdmConverter, FeatureToggleService, $q, HuronConfig, CsdmConfigService) {
+  function CsdmHuronPlaceService($http, Authinfo, CsdmConverter, HuronConfig, CsdmConfigService) {
 
     var cmiOtpUri = HuronConfig.getCmiUrl() + '/identity/machines/otp';
     var cmiPlacesUrl = HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/places/';
     var csdmPlaceUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/places/';
-
-
-    function placesFeatureIsEnabled() {
-      if ($window.location.search.indexOf("enablePlaces=true") > -1) {
-        return $q.when(true);
-      } else {
-        return FeatureToggleService.supports(FeatureToggleService.features.csdmPlaces);
-      }
-    }
 
     function createOtp(machineUuid) {
       return $http.post(cmiOtpUri, {
@@ -53,7 +44,6 @@
     }
 
     return {
-      placesFeatureIsEnabled: placesFeatureIsEnabled,
       createCmiPlace: createCmiPlace,
       createOtp: createOtp
     };

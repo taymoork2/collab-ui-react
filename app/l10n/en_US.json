@@ -3510,7 +3510,9 @@
       "assignPhoneNumberInstructions": "Choose from the available phone numbers and extensions in the drop-down lists. These will become the primary line which you can use to reach this place.",
       "linesSaved": "Line configuration saved successfully",
       "placeError": "Add Place failed.",
-      "placeEditError": "Edit Place failed"
+      "placeEditError": "Edit Place failed",
+      "placeEditNoChanges": "No changes to save",
+      "placeNotFound": "Place not found, try finding it again in the list"
     },
     "editServices": {
       "whichServices": "Which service is needed in this place?",

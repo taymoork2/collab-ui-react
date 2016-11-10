@@ -1,7 +1,7 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="$dismiss()">
   </button>
-  <h3 class="modal-title" translate="{{addLines.wizardData.title}}"></h3>
+  <h3 class="modal-title" translate="{{addLines.title}}"></h3>
 </div>
 <div class="modal-body device-wizard add-lines">
   <div>
@@ -36,21 +36,19 @@
   </button>
   <button
     cs-btn
-    loading="addLines.isLoading"
     id="create-place-button"
     class="btn btn--primary"
     ng-disabled="addLines.isDisabled"
-    ng-show="addLines.wizardData.deviceType === 'huron'"
+    ng-show="addLines.deviceType === 'huron'"
     ng-click="addLines.next()">
     <span translate="common.next"></span>
   </button>
   <button
     cs-btn
-    loading="addLines.isLoading"
     id="create-place-button"
     class="btn btn--primary"
     ng-disabled="addLines.isDisabled"
-    ng-show="addLines.wizardData.deviceType === 'cloudberry'"
+    ng-show="addLines.deviceType === 'cloudberry'"
     ng-click="addLines.save()">
     <span translate="common.save"></span>
   </button>
