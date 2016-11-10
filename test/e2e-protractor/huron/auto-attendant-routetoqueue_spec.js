@@ -105,7 +105,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.periodicMediaUploadSelectOption);
       utils.click(autoattendant.periodicMediaUploadInput);
       $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
-//      utils.scrollIntoView(autoattendant.repeatPlus);
+      utils.scrollIntoView(autoattendant.repeatPlus);
       utils.click(autoattendant.periodicMin);
       utils.click(autoattendant.periodicMinOption.get(1));
       utils.click(autoattendant.periodicSec);
