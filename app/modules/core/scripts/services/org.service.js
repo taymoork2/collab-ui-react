@@ -1,14 +1,21 @@
 (function () {
   'use strict';
 
+  var authModule = require('modules/core/auth/auth');
+  var configModule = require('modules/core/config/config');
+  var urlConfigModule = require('modules/core/config/urlConfig');
+  var authinfoModule = require('modules/core/scripts/services/authinfo');
+  var logModule = require('modules/core/scripts/services/log');
+  var utilsModule = require('modules/core/scripts/services/utils');
+
   module.exports = angular
     .module('core.org', [
-      require('modules/core/auth/auth'),
-      require('modules/core/config/config'),
-      require('modules/core/config/urlConfig'),
-      require('modules/core/scripts/services/authinfo'),
-      require('modules/core/scripts/services/log'),
-      require('modules/core/scripts/services/utils'),
+      authModule,
+      authinfoModule,
+      configModule,
+      logModule,
+      urlConfigModule,
+      utilsModule
     ])
     .factory('Orgservice', Orgservice)
     .name;

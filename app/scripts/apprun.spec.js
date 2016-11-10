@@ -2,11 +2,11 @@
   'use strict';
 
   describe('App Run', function () {
-    var $rootScope, $httpBackend, $q, $state, Authinfo, HealthService, TrackingId;
+    var $rootScope, $httpBackend, $q, $state, Authinfo, HealthService, TrackingId, TOSService;
 
     beforeEach(angular.mock.module('wx2AdminWebClientApp'));
 
-    beforeEach(inject(function (_$rootScope_, _$httpBackend_, _$q_, _$state_, _Authinfo_, _HealthService_, _TrackingId_) {
+    beforeEach(inject(function (_$rootScope_, _$httpBackend_, _$q_, _$state_, _Authinfo_, _HealthService_, _TrackingId_, _TOSService_) {
       $rootScope = _$rootScope_;
       $httpBackend = _$httpBackend_;
       $q = _$q_;
@@ -14,12 +14,20 @@
       Authinfo = _Authinfo_;
       HealthService = _HealthService_;
       TrackingId = _TrackingId_;
+      TOSService = _TOSService_;
 
       //hack the l10n json because entire module is loaded
       $httpBackend.whenGET('l10n/en_US.json').respond(200);
 
+      var meData = {
+      };
+      $httpBackend.whenGET(/.*\/Users\/me\b.*/).respond(200, meData);
+
       spyOn(Authinfo, 'isInitialized').and.returnValue(true);
-      spyOn(HealthService, 'getHealthStatus').and.returnValue($q.when('online'));
+      spyOn(HealthService, 'getHealthStatus').and.returnValue($q.resolve('online'));
+      spyOn(TOSService, 'fetchUser').and.returnValue($q.resolve());
+      spyOn(TOSService, 'hasAcceptedTOS').and.returnValue($q.resolve(true));
+      spyOn(TOSService, 'openTOSModal').and.returnValue();
       spyOn(TrackingId, 'clear').and.callThrough();
       spyOn($state, 'go').and.callThrough();
     }));
@@ -42,6 +50,27 @@
 
         expect(TrackingId.clear).toHaveBeenCalled();
         expect(TrackingId.get()).toBeUndefined();
+      });
+
+    });
+
+    describe('$stateChangeStart verify Terms Of Service acceptance', function () {
+      beforeEach(function () {
+        Authinfo.isInitialized.and.returnValue(true);
+        spyOn(Authinfo, 'isAllowedState').and.returnValue(true);
+      });
+
+      it('should proceed if ToS were previously accepted', function () {
+        goToState('firsttimewizard');
+        expect(TOSService.hasAcceptedTOS).toHaveBeenCalled();
+        expect(TOSService.openTOSModal).not.toHaveBeenCalled();
+      });
+
+      it('should display ToS dialog if ToS not previously accepted', function () {
+        TOSService.hasAcceptedTOS.and.returnValue($q.resolve(false));
+        goToState('firsttimewizard');
+        expect(TOSService.hasAcceptedTOS).toHaveBeenCalled();
+        expect(TOSService.openTOSModal).toHaveBeenCalled();
       });
 
     });
@@ -94,6 +123,7 @@
           expect($state.go).not.toHaveBeenCalledWith('server-maintenance');
         });
       });
+
     });
 
   });

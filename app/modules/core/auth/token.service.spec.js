@@ -1,7 +1,9 @@
 'use strict';
 
+var testModule = require('./token.service');
+
 describe('TokenService', function () {
-  beforeEach(angular.mock.module('core.token'));
+  beforeEach(angular.mock.module(testModule));
 
   var SessionStorage, TokenService, $window;
   var windowMock = {
