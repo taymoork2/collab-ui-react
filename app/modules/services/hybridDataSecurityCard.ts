@@ -26,20 +26,17 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
 
   public getButtons(): Array<ICardButton> {
     if (this.active) {
-      return _.take(this._buttons, 3);
+      return this._buttons;
     }
     return [this._setupButton];
   }
 
   public hybridDataSecurityToggleEventHandler(hasFeature: boolean) {
-    this.display = this.Authinfo.isFusionHDS() && hasFeature;
+    this.display = hasFeature;
   }
 
   /* @ngInject */
-  public constructor(
-    private Authinfo,
-    FusionClusterStatesService,
-  ) {
+  public constructor(FusionClusterStatesService) {
     super({
       template: 'modules/services/card.tpl.html',
       name: 'servicesOverview.cards.hybridDataSecurity.title',
@@ -52,6 +49,5 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       cardClass: 'media',
       cardType: CardType.hybrid,
     }, FusionClusterStatesService);
-    this.Authinfo = Authinfo;
   }
 }

@@ -20,7 +20,7 @@ export class ServicesOverviewCareCard extends ServicesOverviewCard {
 
   public getButtons(): Array<ICardButton> {
     if (this.active) {
-      return _.take(this._buttons, 3);
+      return this._buttons;
     }
     return [];
   }

@@ -31,7 +31,7 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewHybridCalendarCard(this.Authinfo, this.FusionClusterStatesService),
       new ServicesOverviewHybridCallCard(this.Authinfo, this.FusionClusterStatesService),
       new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
-      new ServicesOverviewHybridDataSecurityCard(this.Authinfo, this.FusionClusterStatesService),
+      new ServicesOverviewHybridDataSecurityCard(this.FusionClusterStatesService),
     ];
 
     this.loadWebexSiteList();
