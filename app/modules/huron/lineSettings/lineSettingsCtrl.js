@@ -113,7 +113,7 @@
     vm.callForwardInputs = ['external', 'uri', 'custom'];
     vm.callerIdInputs = ['external', 'custom'];
     vm.getRegionCode = getRegionCode;
-    vm.callerIdCustomTranslations = {
+    vm.customTranslations = {
       placeholderText: $translate.instant('callDestination.alternateCustomPlaceholder'),
       helpText: $translate.instant('callDestination.alternateCustomHelpText')
     };
