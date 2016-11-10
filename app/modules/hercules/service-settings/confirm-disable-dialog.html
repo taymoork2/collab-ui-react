@@ -10,15 +10,21 @@
 
   <p translate="hercules.settings.call.fromCiscoSpark"
       translate-values="{orgName: confirmDisableDialog.companyName}"></p>
-
-  <p>
+  <p ng-hide="confirmDisableDialog.serviceId === 'squared-fusion-gcal'">
     <span translate="hercules.settings.call.connectorsAndDataWillBeWiped"
      translate-values="{connectorName: confirmDisableDialog.connectorName}"></span>
     <span translate="hercules.settings.call.usersWillBeDisentitled"
        translate-values="{serviceName: confirmDisableDialog.serviceName}"></span>
   </p>
 
-  <p translate="hercules.settings.call.noClustersWillBeDeregistered"></p>
+  <p ng-show="confirmDisableDialog.serviceId === 'squared-fusion-gcal'">
+    <span translate="hercules.settings.googleCalendar.googleCalendarConfigWillBeWiped"></span>
+    <span translate="hercules.settings.call.usersWillBeDisentitled"
+          translate-values="{serviceName: confirmDisableDialog.serviceName}"></span>
+  </p>
+
+  <p ng-hide="confirmDisableDialog.serviceId === 'squared-fusion-gcal'"
+     translate="hercules.settings.call.noClustersWillBeDeregistered"></p>
 
 </div>
 <div class="modal-footer deregister-expressway-modal">
