@@ -1,4 +1,4 @@
-<div>
+<div class="call-feature-add">
   <cs-overlay-panel
     class="callpark overlay-panel typeahead-group"
     overlay-title="{{::'callPark.newCallPark' | translate}}"
@@ -13,7 +13,6 @@
       next-text="$ctrl.createHelpText()">
 
       <form novalidate name="$ctrl.form" role="form">
-        <h3 style="position: absolute; top: 0;"></h3>
         <uc-call-feature-name
           ng-if="$ctrl.pageIndex === 0"
           placeholder-key="callPark.namePlaceholder"

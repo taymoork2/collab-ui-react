@@ -1,31 +1,3 @@
-.typeahead-large .dropdown-menu,
-.typeahead .dropdown-menu {
-  @include vr-spacing(pb, 1);
-
-  li .call-park-member-name {
-    @include vr-spacing(ph, 2);
-    @include vr-spacing(pt, 0.5);
-    @include vr-spacing(pb, 0.25);
-    @include vr-spacing(mt, 0.5);
-
-    line-height: normal;
-  }
-
-  li .call-park-member-line {
-    @include vr-spacing(ph, 2);
-    @include vr-spacing(pv, 0.25);
-
-    background: $color-white;
-    cursor: default;
-
-    span {
-      font-size: $font-size-h4;
-      font-family: $brand-font-cisco-TT-Extra-Light;
-      color: $gray-dark-1;
-    }
-  }
-}
-
 .callpark.overlay-panel .cs-card-layout {
   @include vr-spacing(ml, 24, 0px, true);
   @include vr-spacing(pb, 1);

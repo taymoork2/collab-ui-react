@@ -11,7 +11,6 @@ export default angular
     'atlas.templates',
     'collab.ui',
     'pascalprecht.translate',
-    CallParkComponent,
     callFeatureName,
     callParkNumber,
     callParkMember,
