@@ -291,7 +291,7 @@
     function exportRawData() {
       vm.exporting = true;
       //$log.info("Exporting data for range", dateRange);
-      DeviceUsageTotalService.exportRawData(dateRange.start, dateRange.end).then(function () {
+      DeviceUsageTotalService.exportRawData(dateRange.start, dateRange.end, apiToUse).then(function () {
         //$log.info("export finished");
         DeviceUsageSplunkMetricsService.reportClick(DeviceUsageSplunkMetricsService.eventTypes.fullReportDownload, dateRange);
         vm.exporting = false;

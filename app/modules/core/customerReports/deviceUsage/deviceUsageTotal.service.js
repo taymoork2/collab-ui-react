@@ -406,11 +406,19 @@
       };
     }
 
-    function exportRawData(startDate, endDate) {
+    function exportRawData(startDate, endDate, api) {
       var granularity = "day";
       var deviceCategories = ['ce', 'sparkboard'];
-
-      var url = localUrlBase + '/' + Authinfo.getOrgId() + '/reports/device/call/export?';
+      var baseUrl = '';
+      if (api === 'mock') {
+        return;
+      }
+      if (api === 'local') {
+        baseUrl = localUrlBase;
+      } else {
+        baseUrl = urlBase;
+      }
+      var url = baseUrl + '/' + Authinfo.getOrgId() + '/reports/device/call/export?';
       url = url + 'intervalType=' + granularity;
       url = url + '&rangeStart=' + startDate + '&rangeEnd' + endDate;
       //url = url + '&rangeStart=' + dateRange.start + '&rangeEnd=' + dateRange.end;
