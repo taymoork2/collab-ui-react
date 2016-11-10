@@ -94,7 +94,7 @@
         templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html',
         type: 'dialog'
       }).result.then(function () {
-        $state.go('cluster-list');
+        $state.go('cluster-list', {}, { reload: true });
       });
     }
 
