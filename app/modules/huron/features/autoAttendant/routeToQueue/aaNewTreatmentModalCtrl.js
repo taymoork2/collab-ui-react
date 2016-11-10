@@ -157,11 +157,6 @@
         }
         vm.periodicSecond = vm.periodicSeconds[0];
         vm.areSecondsDisabled = true;
-      } else {
-        if ((vm.periodicSeconds[0].label != 0) && (vm.periodicMinute.index != 0)) {
-          vm.periodicSeconds.splice(0, 0, { index: 0, label: 0 });
-        }
-        vm.areSecondsDisabled = true;
       }
     }
 

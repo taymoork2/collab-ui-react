@@ -398,10 +398,12 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var _action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'routeToQueueId');
       _action.setDescription('routeToQueueDescription');
       AutoAttendantCeMenuModelService.cesTempPa(_action);
+      _action.queueSettings = {};
       expect(angular.isDefined(_action.description)).toBe(true);
       expect(angular.isDefined(_action.queueSettings)).toBe(true);
     });
   });
+
 
   describe('clearCeMenuMap', function () {
     it('should reset the CeMenu internal count to 0', function () {

@@ -19,9 +19,11 @@ var AutoAttendantPage = function () {
   this.okQueueTreatment = element(by.id('okTreatmentBtn'));
   this.mohCustomUpload = element(by.id('uploadFileRadio1'));
   this.mohDefaultUpload = element(by.id('musicOnHoldRadio1'));
-  this.periodicMessageTypeSelect = element(by.name('periodicMessageSelect'));
-  this.periodicMessageTypeSelectOption = element(by.name('periodicMessageSelect')).all(by.tagName('li'));
 
+  this.periodicMessageTypeSelect = element(by.id('periodicAnnouncement')).element(by.css('aa-message-type [name="messageInput"]'));
+  this.periodicSayMessageOption = element(by.id('periodicAnnouncement')).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
+  this.periodicMediaUploadSelectOption = element(by.id('periodicAnnouncement')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.periodicMediaUploadInput = element(by.id('periodicAnnouncement')).element(by.css('aa-message-type [name="mediaUploadSend"]'));
 
   this.periodicMin = element(by.linkText('0'));
   this.periodicMinOption = element(by.id('periodicMinId')).all(by.tagName('li'));

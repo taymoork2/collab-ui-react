@@ -36,7 +36,7 @@
   </div>
   <hr/>
   <div class="row">
-    <div class="large-4 medium-12 small-12 columns">
+    <div class="large-4 medium-4 small-12 columns">
       <label class="h4" translate="autoAttendant.initialAnnouncement"></label>
     </div>
     <div class="columns large-8 medium-8">
@@ -50,12 +50,12 @@
   </div>
   <hr/>
   <div class="row">
-    <div class="large-4 medium-12 small-12 columns">
+    <div class="large-4 medium-4 small-12 columns">
       <label class="h4" translate="autoAttendant.periodicAnnouncement"></label>
     </div> 
     <div class="columns large-8 medium-8">
       <div class="row">
-        <aa-message-type aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-media-type="periodicAnnouncement" id="periodicAnnouncement"></aa-message-type>
+        <aa-message-type aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-from-new-treatment="true" aa-index="index" aa-key-index="{{keyIndex}}" aa-media-type="periodicAnnouncement" id="periodicAnnouncement"></aa-message-type>
       </div>
       <div class="row">
         <p class="small-12 columns cs-input__help-text" translate = "autoAttendant.periodicHelpText"></p>
@@ -76,7 +76,7 @@
         </div>
       </div>
     </div>
-   </div>
+  </div>
   <hr/>
   <div class="row">
     <div class="columns large-4 medium-4">
@@ -90,7 +90,7 @@
       </div>
       <div class="row">
         <div class="columns aa-selectmin-modal">
-          <cs-select id="queueMin" ng-model="aaNewTreatmentModalCtrl.maxWaitTime" options="aaNewTreatmentModalCtrl.minutes"   placeholder="aaNewTreatmentModalCtrl.selectPlaceholder" secondary-label="Minutes" labelfield="label" valuefield="label" icon="icon-chevron-down" >
+          <cs-select id="queueMin" ng-model="aaNewTreatmentModalCtrl.maxWaitTime" options="aaNewTreatmentModalCtrl.minutes" " secondary-label="Minutes" labelfield="label" valuefield="label" icon="icon-chevron-down" >
           </cs-select>
         </div>
       </div>
@@ -103,7 +103,7 @@
       </div>
       <div class="row">
         <div class="columns large-8 medium-10 small-10">
-          <cs-select id="destinationSelect" ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions" labelfield="label" valuefield="label" icon="icon-chevron-down">
+          <cs-select id="destinationSelect" ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions" labelfield="label" valuefield="label" icon="icon-chevron-down" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder">
           </cs-select>
           <div ng-switch="aaNewTreatmentModalCtrl.destination.name" class="aa-destination-container">
             <aa-route-to-aa id="destinationMenuRouteAA" ng-switch-when="destinationMenuRouteAA" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}"></aa-route-to-aa>
