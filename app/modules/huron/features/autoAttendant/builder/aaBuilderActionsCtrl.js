@@ -12,6 +12,15 @@
     var appendSpecialCharHelp = "<br><br>" + $translate.instant('autoAttendant.sayMessageSpecialChar');
 
     vm.options = [{
+      title: $translate.instant('autoAttendant.actionCallerInput'),
+      controller: 'AACallerInputCtrl as aaCallerInput',
+      url: 'modules/huron/features/autoAttendant/callerInput/aaCallerInput.tpl.html',
+      hint: $translate.instant('autoAttendant.actionCallerInputHint'),
+      help: $translate.instant('autoAttendant.actionCallerInputHelp') + appendSpecialCharHelp,
+      metric: 'Caller-Input-Title',
+      showHelpLink: true,
+      actions: ['callerInput']
+    }, {
       title: $translate.instant('autoAttendant.actionSayMessage'),
       controller: 'AASayMessageCtrl as aaSay',
       url: 'modules/huron/features/autoAttendant/sayMessage/aaSayMessage.tpl.html',
@@ -47,7 +56,7 @@
       help: $translate.instant('autoAttendant.routeCallMenuHelp'),
       metric: 'Route-Call-Title',
       showHelpLink: false,
-      actions: ['route', 'goto', 'routeToUser', 'routeToVoiceMail', 'routeToHuntGroup']
+      actions: ['route', 'goto', 'routeToUser', 'routeToVoiceMail', 'routeToHuntGroup', 'callerInput']
     }];
 
     vm.actionPlaceholder = $translate.instant("autoAttendant.actionPlaceholder");
@@ -117,7 +126,7 @@
       if ($scope.index >= 0) {
         var menuEntry = vm.ui[vm.schedule].getEntryAt($scope.index);
         if (menuEntry.type == "MENU_OPTION") {
-          vm.option = vm.options[1];
+          vm.option = vm.options[2];
         } else if (menuEntry.actions.length > 0 && menuEntry.actions[0].getName()) {
           var matchType = function (action) {
             return menuEntry.actions[0].getName() === action &&

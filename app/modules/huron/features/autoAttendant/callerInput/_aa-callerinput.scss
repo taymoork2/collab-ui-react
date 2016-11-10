@@ -1,0 +1,156 @@
+.aa-call-input-message-panel {
+  @extend .aa-message-panel;
+
+  $aa-pm-action-max-width: vr-adjust(340);
+
+  width: 100%;
+
+  @include vr-spacing(mt, 1);
+  @include vr-spacing(mb, 1);
+
+  .aa-flex-row {
+    @extend .row;
+    @include vr-spacing(ml, 0);
+    @include vr-spacing(mb, 0);
+  }
+  .aa-pm-if-switch-true {
+    @include vr-spacing(mb, 1);
+  }
+  .aa-pm-if-switch-false {
+    @include vr-spacing(mb, 2);
+  }
+
+  .add-name-input-help-desc {
+    color: $gray-dark;
+    font-family: $brand-font-extra-light;
+    font-style: italic;
+    font-size: .75rem;
+    @include vr-spacing(mt, -1);
+    @include vr-spacing(ml, 0);
+    @include vr-spacing(mb, 1);
+    @include vr-spacing(pt, 0);
+  }
+
+
+  .aa-pm-add-text {
+    @extend %aa-menu-add-text;
+    @include vr-spacing(pb, 1);
+  }
+
+  .aa-pm-key-select,
+  .aa-pm-action-select {
+    @extend %aa-menu-select;
+  }
+
+  .aa-pm-action-select {
+    max-width: $aa-pm-action-max-width;
+  }
+
+  .aa-pm-action-input {
+   max-width: $aa-pm-action-max-width;
+   @include vr-spacing(pl, 1);
+   @include vr-spacing(ml, .5);
+   width: vr-adjust(240);
+  }
+
+  .aa-pm-key-select {
+    @include aa-menu-key-button($color-cta-base, 57);
+  }
+
+  .aa-pm-vertical-line {
+    @extend %aa-menu-vertical-line;
+  }
+
+  .aa-trash-icon {
+    @include vr-spacing(pl, 0);
+    @include vr-spacing(pt, 0);
+
+    top: 0.5rem;
+  }
+
+  .panel {
+    @include vr-spacing(m, 0);
+    @include vr-spacing(pt, 1);
+    @include vr-spacing(pl, 0.25);
+    @include vr-spacing(pr, 0.25);
+    @include vr-spacing(pb, 0);
+
+    background-color: $gray-light-3;
+
+    ~ .panel {
+      @include vr-spacing(mt, 0.5);
+    }
+
+    .control-label {
+      @include vr-spacing(pv, 0.25);
+    }
+
+    .aa-pm-timeout {
+      @include vr-spacing(pb, 1);
+    }
+  }
+
+  .aa-caller-input-message-select-list {
+    @include vr-spacing(mb, 0.75);
+    @include vr-spacing(pl, 0);
+
+    .select-toggle {
+      width: 100%;
+
+      @include vr-spacing(pr, 1.75);
+    }
+
+    .select-toggle > i {
+      @include vr-spacing(mr, 0);
+      @include vr-spacing(ml, -0.5);
+    }
+
+    .dropdown-menu {
+      width: 100%;
+    }
+  }
+
+  .aa-cnvt-digit {
+    @include vr-spacing(mb, .5);
+    @include vr-spacing(mt, 1);
+  }
+
+  .aa-max-length-str {
+    @include vr-spacing(mb, .1);
+    @include vr-spacing(pl, 0);
+  }
+
+  .aa-select-min {
+    @extend .aa-caller-input-message-select-list;
+    width : 6rem;
+    @include vr-spacing(mb, .3);
+  }
+
+  .aa-message-footer {
+    color: $gray-base;
+    white-space: nowrap;
+  }
+  .aa-call-input-subtext {
+    @extend .aa-message-subtext;
+    @include vr-spacing(pl, 0);
+  }
+  .aa-name-variable{
+    @include vr-spacing(pl, 0);
+    @include vr-spacing(mb, 0);
+  }
+
+  .aa-caller-input-msg-line {
+    @include vr-spacing(mb, 0.5);
+    @include vr-spacing(ml, 0);
+    border-bottom: 2px solid $gray-light-1;
+    width: 98%;
+  }
+  .aa-message-max-length-subtext {
+    @extend .aa-message-subtext;
+
+    @include vr-spacing(mb, 1);
+    @include vr-spacing(ml, 0);
+    @include vr-spacing(pl, 0);
+  }
+
+}

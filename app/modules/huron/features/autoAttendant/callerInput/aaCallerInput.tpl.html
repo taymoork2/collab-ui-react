@@ -1,0 +1,66 @@
+<div id ="callerInput" class="aa-call-input-message-panel">
+  <div class="aa-flex-row">
+    <div class="large-12 small-12 columns aa-name-variable">
+      <input cs-input type="text" id="callerInputName{{ schedule + index }}" placeholder="{{ :: 'autoAttendant.callerInputNamePlaceHolder' | translate }}" ng-model="aaCallerInput.nameInput" cs-input-group-size="medium-12" cs-input-label="{{ :: 'autoAttendant.callerInputLabel' | translate }}">
+    </div>
+  </div>
+  <label class="add-name-input-help-desc" translate="autoAttendant.callerNameInputHelpText"></label> 
+  <div class="row">
+    <div class="large-6 small-12 columns aa-caller-input-message-select-list">
+      <label for="languageSelect{{ schedule + index }}" translate="common.language"></label>
+      <cs-select id="languageSelect{{ schedule + index }}" name="languageSelect" ng-model="aaCallerInput.languageOption" options="aaCallerInput.languageOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" placeholder="aaCallerInput.languagePlaceholder" ng-change="aaCallerInput.setVoiceOptions(); aaCallerInput.saveUiModel()">
+      </cs-select>
+    </div>
+    <div class="large-6 small-12 columns aa-caller-input-message-select-list">
+      <label for="voiceSelect{{ schedule + index }}" translate="autoAttendant.sayMessageVoice"></label>
+      <cs-select id="voiceSelect{{ schedule + index }}" name="voiceSelect" options="aaCallerInput.voiceOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" ng-model="aaCallerInput.voiceOption" placeholder="aaCallerInput.voicePlaceholder" ng-change="aaCallerInput.saveUiModel()">
+      </cs-select>
+    </div>
+  </div>
+  <div class="row">
+    <span class="small-12 columns aa-call-input-subtext" translate="autoAttendant.sayAndError"></span>
+    <hr class="aa-caller-input-msg-line"></hr>
+  </div>
+  <div class="row" aa-message-type aa-index="index" aa-schedule="{{schedule}}"></div>
+  <div class="aa-cnvt-digit">
+    <cs-checkbox ckid="cnvt_chk_{{schedule + index}}" ng-model="aaCallerInput.convertDigitState" label="{{:: 'autoAttendant.callerInputCnvtDigit' | translate }}"></cs-checkbox>
+  </div>
+  <div ng-switch="aaCallerInput.convertDigitState">
+    <div ng-switch-when="true" class="aa-pm-if-switch-true">
+      <p class="body-small aa-message-footer" translate="autoAttendant.phoneMenuListening"></p>
+      <div class="panel">
+        <div ng-if="aaCallerInput.inputActions.length" class="row aa-pm-vertical-line" ng-repeat="keyAction in aaCallerInput.inputActions">
+          <div class="row">
+            <div class="small-2 columns">
+              <cs-select ng-model="keyAction.key" options="keyAction.keys" placeholder="aaCallerInput.selectPlaceholder" on-change-fn="aaCallerInput.keyChanged($index, keyAction.key)" class="aa-pm-key-select" icon="icon-chevron-down" ng-class="{'not-selected':!keyAction.key}">
+              </cs-select>
+            </div>
+            <div class="small-9 columns">
+              <input cs-input type="text" id="callerInput" placeholder="{{ :: 'autoAttendant.callerInputValue' | translate }}" ng-model="keyAction.value" class="aa-pm-action-input"> 
+              </input>
+            </div>
+            <div class="small-1 columns">
+              <i ng-if="aaCallerInput.inputActions.length > 1" class="aa-trash-icon" aria-label="common.delete" ng-click="aaCallerInput.deleteKeyAction($index); $event.stopPropagation();"></i>
+            </div>
+          </div>
+        </div>
+        <div class="row" ng-if="aaCallerInput.inputActions.length < 12">
+          <a class="aa-pm-add-text" ng-click="aaCallerInput.addKeyAction()">
+            <i name="aa-phone-menu-add-action" class="icon icon-plus-circle"></i>{{(aaPhoneMenu.inputActions.length === 0 ?  'autoAttendant.phoneMenuAddDigit' : 'autoAttendant.phoneMenuAnotherDigit') | translate }}</a>
+        </div>
+      </div>
+    </div>
+    <div ng-switch-when="false" class="aa-pm-if-switch-false">
+      <label class="small-6 large-6 columns aa-max-length-str" for="maxLength{{ schedule + index }}" translate="autoAttendant.callerInputMaxLenStr"></label>
+      <div class="aa-select-min">
+         <cs-select id="maxLength{{ schedule + index }}" ng-model="aaCallerInput.maxOptionLength" options="aaCallerInput.maxLengthOptions"></cs-select>
+      </div>
+       <div>
+          <span class="small-12 large-12 columns aa-message-max-length-subtext" translate="autoAttendant.callerInputMaxLength"></span>
+       </div>
+    </div>
+  </div>
+  <div class="panel">
+    <aa-timeout-invalid aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index"></aa-timeout-invalid>
+  </div>
+</div>
