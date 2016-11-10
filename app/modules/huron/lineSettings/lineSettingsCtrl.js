@@ -1121,7 +1121,7 @@
     }
 
     function saveDisabled() {
-      if (vm.internalNumberPool.length === 0 || vm.assignedInternalNumber.uuid === 'none') {
+      if (vm.internalNumberPool.length === 0 && vm.assignedInternalNumber.uuid === 'none') {
         return true;
       }
       return false;
