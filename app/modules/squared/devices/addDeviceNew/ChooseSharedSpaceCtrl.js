@@ -14,7 +14,7 @@
     var maxlength = 64;
 
     vm.onlyNew = function () {
-      return wizardData.function == 'addPlace' || (!wizardData.showPlaces && wizardData.deviceType == 'cloudberry');
+      return wizardData.function == 'addPlace' || (!wizardData.showPlaces && vm.deviceType == 'cloudberry');
     };
 
     vm.isNewCollapsed = !vm.onlyNew();
