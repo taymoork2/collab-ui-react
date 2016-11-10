@@ -54,7 +54,8 @@
         oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=%s&service=%s',
         oauth2ClientUrlPattern: 'grant_type=client_credentials&scope=',
         oauth2CodeUrlPattern: 'grant_type=authorization_code&code=%s&scope=',
-        oauth2AccessCodeUrlPattern: 'grant_type=refresh_token&refresh_token=%s&scope=%s'
+        oauth2AccessCodeUrlPattern: 'grant_type=refresh_token&refresh_token=%s&scope=%s',
+        userInfo: 'user_info=%s'
       },
       logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=',
     };
@@ -123,9 +124,9 @@
       return Utils.sprintf(config.oauthUrl.oauth2AccessCodeUrlPattern, params);
     }
 
-    function getNewAccessTokenPostData(code) {
+    function getNewAccessTokenPostData(code, sessionId) {
       var oauthCodeUrl = Utils.sprintf(config.oauthUrl.oauth2CodeUrlPattern, [code]);
-      return oauthCodeUrl + oauth2Scope + '&' + getRedirectUrl();
+      return oauthCodeUrl + oauth2Scope + '&' + getRedirectUrl() + '&' + buildUserInfo(sessionId);
     }
 
     function getAccessTokenPostData() {
@@ -148,6 +149,12 @@
       var acu = getAdminPortalUrl();
       var params = [encodeURIComponent(acu)];
       return Utils.sprintf(config.oauthUrl.ciRedirectUrl, params);
+    }
+
+    function buildUserInfo(sessionId) {
+      var clientInfo = { client_session_id: sessionId };
+      var params = [JSON.stringify(clientInfo)];
+      return Utils.sprintf(config.oauthUrl.userInfo, params);
     }
 
     function getAbsUrlForDev() {

@@ -6,7 +6,9 @@
     .factory('ServiceSetup', ServiceSetup);
 
   /* @ngInject */
-  function ServiceSetup($q, $translate, $filter, Authinfo, SiteService, InternalNumberRangeService, TimeZoneService, SiteLanguageService, ExternalNumberPoolService, VoicemailTimezoneService, VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2, CeSiteService) {
+  function ServiceSetup($q, $translate, $filter, Authinfo, SiteService, InternalNumberRangeService,
+      TimeZoneService, SiteLanguageService, ExternalNumberPool, VoicemailTimezoneService,
+      VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2, CeSiteService) {
 
     return {
       internalNumberRanges: [],
@@ -49,13 +51,12 @@
 
       loadExternalNumberPool: function (pattern) {
         var extNumPool = [];
-        var patternQuery = pattern ? '%' + pattern + '%' : undefined;
-        return ExternalNumberPoolService.query({
-          customerId: Authinfo.getOrgId(),
-          directorynumber: '',
-          order: 'pattern',
-          pattern: patternQuery
-        }, angular.bind(this, function (extPool) {
+        return ExternalNumberPool.getExternalNumbers(
+          Authinfo.getOrgId(),
+          pattern,
+          ExternalNumberPool.UNASSIGNED_NUMBERS,
+          ExternalNumberPool.FIXED_LINE_OR_MOBILE
+        ).then(angular.bind(this, function (extPool) {
           _.forEach(extPool, function (extNum) {
             extNumPool.push({
               uuid: extNum.uuid,
@@ -63,7 +64,7 @@
             });
           });
           this.externalNumberPool = extNumPool;
-        })).$promise;
+        }));
       },
 
       listVoicemailTimezone: function () {

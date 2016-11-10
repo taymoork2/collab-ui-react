@@ -269,9 +269,8 @@
           return response.createdBy === vm.currentAdminId;
         })
         .catch(function (error) {
-          Notification.error('customerPage.errGetTrial', {
-            customer: vm.customerName,
-            message: error.data.message
+          Notification.errorResponse(error, 'customerPage.errGetTrial', {
+            customer: vm.customerName
           });
           return false;
         });
@@ -314,9 +313,8 @@
           isPartnerCreator()
             .then(function (isPartnerCreator) {
               if (isPartnerCreator) {
-                Notification.error('customerPage.isSetupDoneError', {
-                  orgName: vm.customerName,
-                  message: error.data.message
+                Notification.errorResponse(error, 'customerPage.isSetupDoneError', {
+                  orgName: vm.customerName
                 });
               }
             });
@@ -357,14 +355,12 @@
             });
           }).catch(function (error) {
             vm.isDeleting = false;
-            Notification.error('customerPage.deleteOrgError', {
-              orgName: vm.customerName,
-              message: error.data.message
+            Notification.errorResponse(error, 'customerPage.deleteOrgError', {
+              orgName: vm.customerName
             });
           });
         });
       }
     }
-
   }
 })();

@@ -1,13 +1,6 @@
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 import { ICardButton, CardType } from './ServicesOverviewCard';
 
-export interface IHdsCardButton {
-  name: String;
-  buttonClass?: String;
-  routerState?: String;
-  completed: boolean;
-}
-
 export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybridCard {
   public getShowMoreButton(): ICardButton | undefined {
     return undefined;
@@ -33,13 +26,13 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
 
   public getButtons(): Array<ICardButton> {
     if (this.active) {
-      return _.take(this._buttons, 3);
+      return this._buttons;
     }
     return [this._setupButton];
   }
 
   public hybridDataSecurityToggleEventHandler(hasFeature: boolean) {
-    this._display = hasFeature;
+    this.display = hasFeature;
   }
 
   /* @ngInject */

@@ -43,8 +43,8 @@
                   <a class="icon icon-tables"></a>
                 </div>
               </div>
-              <div ng-if="sd.edit" class="sd-edit-wrapper row">
-                <div class="medium-6 sd-spacing-input">
+              <div ng-if="sd.edit" class="sd-edit-wrapper">
+                <div class="sd-spacing-input row">
                   <input
                     id="{{'sd-'+sd.index}}"
                     cs-input
@@ -58,17 +58,16 @@
                     cs-input-messages="speedDials.labelMessages"
                     pattern="^((?!<).)*$"/>
                 </div>
-                <div class="medium-6 sd-spacing-input">
-                  <input
-                    cs-input
-                    type="text"
+                <div class="sd-spacing-input row">
+                  <cs-call-destination
+                    model="speedDials.callDest"
+                    size="medium-12"
+                    inputs="speedDials.callDestInputs"
                     id="number{{$index}}"
                     name="number{{$index}}"
-                    ng-model="speedDials.newNumber"
-                    cs-input-label="{{:: 'speedDials.number' | translate}}"
-                    ng-required="true"
-                    cs-input-messages="speedDials.numberMessages"
-                    pattern="(^[A-z0-9._%+-]+@[A-z0-9.-]+\.[A-z]{2,}$)|(^\+?[0-9]+$)"/>
+                    select-type="select"
+                    external-number-region-code-fn="speedDials.getRegionCode()">
+                  </cs-call-destination>
                 </div>
               </div>
             </div>
