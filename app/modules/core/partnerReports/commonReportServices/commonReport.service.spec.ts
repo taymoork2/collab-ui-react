@@ -111,100 +111,28 @@ describe('Service: Common Report Service', () => {
   });
 
   describe('getReturnGraph responses:', function () {
-    let getOffset = (date: number): number => {
-      if (date >= 4) {
-        return 7 - date;
-      } else {
-        return -date;
-      }
-    };
-
-    let buildResponse = (responseType: any): Array<any> => {
-      let returnGraph: Array<any> = [];
-
-      if (responseType === 0) {
-        for (let i = 7; i > 0; i--) {
-          let tmpItem = _.cloneDeep(defaults.graphItem);
-          tmpItem.date = moment().tz(defaults.timezone)
-            .subtract(i, defaults.DAY)
-            .format(defaults.dayFormat);
-          returnGraph.push(tmpItem);
-        }
-      } else if (responseType === 1) {
-        let dayOffset = getOffset(parseInt(moment().format('e'), 10));
-        for (let x = 3; x >= 0; x--) {
-          let temp = _.cloneDeep(defaults.graphItem);
-          temp.date = moment().tz(defaults.timezone)
-            .startOf(defaults.WEEK)
-            .subtract(dayOffset + (x * 7), defaults.DAY)
-            .format(defaults.dayFormat);
-          returnGraph.push(temp);
-        }
-      } else {
-        for (let y = 2; y >= 0; y--) {
-          let item = _.cloneDeep(defaults.graphItem);
-          item.date = moment().tz(defaults.timezone)
-            .subtract(y, defaults.MONTH)
-            .startOf(defaults.MONTH)
-            .format(defaults.monthFormat);
-          returnGraph.push(item);
-        }
-      }
-
-      return returnGraph;
-    };
-
+    // verify the correct number of objects are returned in the array
     it('should get expected responses for getReturnGraph', function () {
       let graph = this.CommonReportService.getReturnGraph(filter[0], today, defaults.graphItem);
-      expect(graph).toEqual(buildResponse(0));
+      expect(graph.length).toBe(7);
 
       graph = this.CommonReportService.getReturnGraph(filter[1], today, defaults.graphItem);
-      expect(graph).toEqual(buildResponse(1));
+      expect(graph.length).toBe(4);
 
       graph = this.CommonReportService.getReturnGraph(filter[2], today, defaults.graphItem);
-      expect(graph).toEqual(buildResponse(2));
+      expect(graph.length).toBe(3);
     });
 
-    let buildAltResponse = (responseType: any): Array<any> => {
-      let returnGraph: Array<any> = [];
-
-      if (responseType === 0) {
-        for (let i = 8; i > 0; i--) {
-          let tmpItem = _.cloneDeep(defaults.graphItem);
-          tmpItem.date = moment().subtract(i, defaults.DAY)
-            .format(defaults.dayFormat);
-          returnGraph.push(tmpItem);
-        }
-      } else if (responseType === 1) {
-        for (let x = 4; x >= 0; x--) {
-          let temp = _.cloneDeep(defaults.graphItem);
-          temp.date = moment().day(-1)
-            .subtract(x, defaults.WEEK)
-            .format(defaults.dayFormat);
-          returnGraph.push(temp);
-        }
-      } else {
-        for (let y = 52; y >= 0; y--) {
-          let item = _.cloneDeep(defaults.graphItem);
-          item.date = moment().day(-1)
-            .subtract(y, defaults.WEEK)
-            .format(defaults.dayFormat);
-          returnGraph.push(item);
-        }
-      }
-
-      return returnGraph;
-    };
-
-    xit('should get expected responses for getReturnLineGraph', function () {
+    // verify the correct number of objects are returned in the array
+    it('should get expected responses for getReturnLineGraph', function () {
       let graph = this.CommonReportService.getReturnLineGraph(filter[0], defaults.graphItem);
-      expect(graph).toEqual(buildAltResponse(0));
+      expect(graph.length).toBe(8);
 
       graph = this.CommonReportService.getReturnLineGraph(filter[1], defaults.graphItem);
-      expect(graph).toEqual(buildAltResponse(1));
+      expect(graph.length).toBe(5);
 
       graph = this.CommonReportService.getReturnLineGraph(filter[2], defaults.graphItem);
-      expect(graph).toEqual(buildAltResponse(2));
+      expect(graph.length).toBe(53);
     });
   });
 
