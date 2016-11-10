@@ -1,0 +1,18 @@
+[
+    {
+        "uuid": "0001",
+        "type": "USER_REAL_USER",
+        "firstName": "Chuck",
+        "lastName": "Norris",
+        "userName": "chuck.norris@kickyourbutt.com",
+        "displayName": null
+    },
+    {
+        "uuid": "0002",
+        "type": "USER_PLACE",
+        "firstName": null,
+        "lastName": null,
+        "userName": null,
+        "displayName": "Koala Lounge"
+    }
+]

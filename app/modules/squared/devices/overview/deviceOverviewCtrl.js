@@ -6,10 +6,11 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService, FeatureToggleService) {
     var deviceOverview = this;
     deviceOverview.currentDevice = $stateParams.currentDevice;
     var huronDeviceService = $stateParams.huronDeviceService;
+    var showPlaces = false;
 
     deviceOverview.linesAreLoaded = false;
     deviceOverview.tzIsLoaded = false;
@@ -28,6 +29,10 @@
       });
       pollLines();
     }
+
+    FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
+      showPlaces = result;
+    });
 
     function loadDeviceTimeZone() {
       huronDeviceService.getTimezoneForDevice(deviceOverview.currentDevice).then(function (result) {
@@ -185,6 +190,12 @@
 
     deviceOverview.showRemoteSupportButton = function () {
       return deviceOverview.currentDevice && !!deviceOverview.currentDevice.hasRemoteSupport;
+    };
+
+    deviceOverview.getDeleteCodeText = function () {
+      return showPlaces
+        ? $translate.instant('placesPage.deletePlace')
+        : $translate.instant('deviceOverviewPage.deleteLocation');
     };
 
     deviceOverview.addTag = function () {

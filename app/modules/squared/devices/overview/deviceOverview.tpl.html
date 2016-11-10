@@ -16,7 +16,7 @@
         ng-click="deviceOverview.deleteDevice()"
         class="btn"
         ng-disabled="deviceOverview.resettingCode">
-        <span translate="deviceOverviewPage.deleteLocation"></span>
+        <span>{{ deviceOverview.getDeleteCodeText() }}</span>
       </button>
 
       <button

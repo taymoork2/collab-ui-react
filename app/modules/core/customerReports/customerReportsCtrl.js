@@ -242,7 +242,7 @@
       deviceUsageToggle.then(function (response) {
         if (response) {
           vm.headerTabs.push({
-            title: $translate.instant('reportsPage.usageReports.usageReportTitle'),
+            title: $translate.instant('reportsPage.usageReports.usageReportMenuTitle'),
             state: 'reports.device-usage.total'
           });
         }

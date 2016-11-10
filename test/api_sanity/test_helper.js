@@ -193,6 +193,11 @@ var auth = {
     user: 'dev-dmz-e2e@mailinator.com',
     pass: 'Cisco!23',
     org: '06db50d9-a129-4a1f-9ee9-bcff65246b15'
+  },
+  'gss-testAdmin': {
+    user: 'sjsite14-lhsieh@mailinator.com',
+    pass: 'Cisco!23',
+    org: '06db50d9-a129-4a1f-9ee9-bcff65246b15'
   }
 };
 
