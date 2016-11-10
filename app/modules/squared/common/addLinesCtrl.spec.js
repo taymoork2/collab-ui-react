@@ -273,7 +273,7 @@ describe('AddLinesCtrl: Ctrl', function () {
         spyOn(Notification, 'warning');
       });
 
-      it('passes on the selected numbers to CsdmDataModeService, adding ciscouc when missing', function () {
+      it('passes on the selected numbers to CsdmDataModelService', function () {
         spyOn(controller, 'getSelectedNumbers').and.returnValue({
           directoryNumber: directoryNumber,
           externalNumber: externalNumber
@@ -284,23 +284,7 @@ describe('AddLinesCtrl: Ctrl', function () {
         spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.when());
         controller.save();
         $scope.$apply();
-        expect(CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, ['ciscouc'], directoryNumber, externalNumber);
-        expect(Notification.success).toHaveBeenCalled();
-        expect($scope.$dismiss).toHaveBeenCalled();
-      });
-
-      it('passes on the selected numbers to CsdmDataModeService, leaving entitlements intact if ciscouc is already present', function () {
-        spyOn(controller, 'getSelectedNumbers').and.returnValue({
-          directoryNumber: directoryNumber,
-          externalNumber: externalNumber
-        });
-        var place = { cisUuid: deviceCisUuid };
-        entitlements = ['ciscouc'];
-        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.when({ 'http://placeurl': place }));
-        spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.when());
-        controller.save();
-        $scope.$apply();
-        expect(CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, ['ciscouc'], directoryNumber, externalNumber);
+        expect(CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, directoryNumber, externalNumber);
         expect(Notification.success).toHaveBeenCalled();
         expect($scope.$dismiss).toHaveBeenCalled();
       });

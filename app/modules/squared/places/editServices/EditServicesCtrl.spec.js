@@ -119,7 +119,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         expect($scope.$dismiss).toHaveBeenCalled();
       });
 
-      it('should remove the "ciscouc" entitlement and close the modal', function () {
+      it('should update the place and close the modal', function () {
         $stateParams.wizard = {
           state: function () {
             return {
@@ -141,7 +141,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         controller.service = 'sparkOnly';
         controller.save();
         $scope.$digest();
-        expect(CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, ['something']);
+        expect(CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, null, null);
         expect($scope.$dismiss).toHaveBeenCalled();
         expect(Notification.success).toHaveBeenCalled();
       });

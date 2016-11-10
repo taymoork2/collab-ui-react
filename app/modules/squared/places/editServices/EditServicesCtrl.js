@@ -12,7 +12,11 @@
     vm.service = initialService;
 
     vm.next = function () {
-      $stateParams.wizard.next({});
+      $stateParams.wizard.next({}, vm.service);
+    };
+
+    vm.hasNextStep = function () {
+      return wizardData.function !== 'editServices' || (vm.service === 'sparkCall' && vm.service !== initialService);
     };
 
     vm.hasNextStep = function () {
@@ -25,11 +29,10 @@
         var entitlements = (wizardData.account.entitlements || []);
         var sparkCallIndex = entitlements.indexOf('ciscouc');
         if (sparkCallIndex > -1) {
-          entitlements.splice(sparkCallIndex, 1);
           CsdmDataModelService.getPlacesMap().then(function (list) {
             var place = _.find(_.values(list), { 'cisUuid': wizardData.account.cisUuid });
             if (place) {
-              CsdmDataModelService.updateCloudberryPlace(place, entitlements)
+              CsdmDataModelService.updateCloudberryPlace(place, null, null)
                 .then(function () {
                   $scope.$dismiss();
                   Notification.success("addDeviceWizard.editServices.servicesSaved");

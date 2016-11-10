@@ -33,6 +33,10 @@
     $scope.syncGridDidDn = syncGridDidDn;
     $scope.checkDnOverlapsSteeringDigit = CommonLineService.checkDnOverlapsSteeringDigit;
 
+    vm.hasNextStep = function () {
+      return wizardData.function !== 'editServices';
+    };
+
     vm.next = function () {
       var numbers = vm.getSelectedNumbers();
       $stateParams.wizard.next({
@@ -64,12 +68,7 @@
         CsdmDataModelService.getPlacesMap().then(function (list) {
           var place = _.find(_.values(list), { 'cisUuid': wizardData.account.cisUuid });
           if (place) {
-            var entitlements = wizardData.account.entitlements || [];
-            var sparkCallIndex = entitlements.indexOf('ciscouc');
-            if (sparkCallIndex == -1) {
-              entitlements.push('ciscouc');
-            }
-            CsdmDataModelService.updateCloudberryPlace(place, entitlements, numbers.directoryNumber, numbers.externalNumber)
+            CsdmDataModelService.updateCloudberryPlace(place, numbers.directoryNumber, numbers.externalNumber)
               .then(function () {
                 $scope.$dismiss();
                 Notification.success("addDeviceWizard.assignPhoneNumber.linesSaved");

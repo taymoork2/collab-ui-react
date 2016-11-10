@@ -30,6 +30,9 @@
           FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
             vm.showDarling = result;
           });
+          FeatureToggleService.csdmPstnGetStatus().then(function (result) {
+            vm.showPstn = result && Authinfo.isSquaredUC();
+          });
         }
 
         function fetchDetailsForLoggedInUser() {
@@ -194,7 +197,9 @@
                 next: 'addDeviceFlow.showActivationCode'
               },
               'addDeviceFlow.chooseSharedSpace': {
-                next: 'addDeviceFlow.showActivationCode'
+                nextOptions: {
+                  cloudberry_existing: 'addDeviceFlow.showActivationCode'
+                }
               },
               'addDeviceFlow.showActivationCode': {}
             }
@@ -238,9 +243,16 @@
               },
               'addDeviceFlow.chooseSharedSpace': {
                 nextOptions: {
-                  cloudberry: 'addDeviceFlow.showActivationCode',
+                  cloudberry_existing: 'addDeviceFlow.showActivationCode',
+                  cloudberry_create: vm.showPstn && vm.showPlaces ? 'addDeviceFlow.editServices' : 'addDeviceFlow.showActivationCode',
                   huron_existing: 'addDeviceFlow.showActivationCode',
                   huron_create: 'addDeviceFlow.addLines'
+                }
+              },
+              'addDeviceFlow.editServices': {
+                nextOptions: {
+                  sparkCall: 'addDeviceFlow.addLines',
+                  sparkOnly: 'addDeviceFlow.showActivationCode'
                 }
               },
               'addDeviceFlow.addLines': {

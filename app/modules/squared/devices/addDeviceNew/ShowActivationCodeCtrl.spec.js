@@ -20,8 +20,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
     CsdmEmailService = _CsdmEmailService_;
     Notification = _Notification_;
     ActivationCodeEmailService = _ActivationCodeEmailService_;
-    // $httpBackend = _$httpBackend_;
-    // HuronConfig = _HuronConfig_;
   }));
 
   function initController() {
@@ -163,6 +161,8 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
                 deviceType: 'cloudberry',
                 type: 'shared',
                 name: deviceName,
+                directoryNumber: directoryNumber,
+                externalNumber: externalNumber
               },
               recipient: {
                 organizationId: userOrgId,
@@ -276,7 +276,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         });
 
         it('creates a new place and otp', function () {
-          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName);
+          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, directoryNumber, externalNumber);
           expect(CsdmDataModelService.createCodeForExisting).toHaveBeenCalledWith(cisUuid);
           expect(OtpService.getQrCodeUrl).toHaveBeenCalledWith(activationCode);
           expect(controller.activationCode).toBe(activationCode);

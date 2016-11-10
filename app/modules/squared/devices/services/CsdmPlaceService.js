@@ -42,16 +42,35 @@
       return $http.delete(place.url);
     }
 
-    function createCsdmPlace(name, deviceType) {
+    function createCsdmPlace(name, directoryNumber, externalNumber) {
+      var entitlements;
+      if (directoryNumber || externalNumber) {
+        entitlements = ['webex-squared', 'ciscouc'];
+      } else {
+        entitlements = ['webex-squared'];
+      }
       return $http.post(csdmPlacesUrl, {
         name: name,
-        placeType: deviceType
+        directoryNumber: directoryNumber,
+        externalNumber: externalNumber,
+        entitlements: entitlements,
+        machineType: 'lyra_space'
       }).then(function (res) {
-        return CsdmConverter.convertPlace(res.data);
+        var convertedPlace = CsdmConverter.convertPlace(res.data);
+        // TODO: Don't need to set these here when CSDM returns the lines on place creation
+        convertedPlace.directoryNumber = convertedPlace.directoryNumber || directoryNumber;
+        convertedPlace.externalNumber = convertedPlace.externalNumber || externalNumber;
+        return convertedPlace;
       });
     }
 
-    function updatePlace(placeUrl, entitlements, directoryNumber, externalNumber) {
+    function updatePlace(placeUrl, directoryNumber, externalNumber) {
+      var entitlements;
+      if (directoryNumber || externalNumber) {
+        entitlements = ['webex-squared', 'ciscouc'];
+      } else {
+        entitlements = ['webex-squared'];
+      }
       return $http.patch(placeUrl, {
         directoryNumber: directoryNumber,
         externalNumber: externalNumber,
