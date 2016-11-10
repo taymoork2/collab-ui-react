@@ -10,6 +10,7 @@ export class Notification {
   private static readonly HTTP_STATUS = {
     NOT_FOUND: 404,
     REJECTED: -1,
+    UNAUTHORIZED: 401,
     UNKNOWN: 0,
   };
   private failureTimeout: number;
@@ -109,6 +110,8 @@ export class Notification {
       errorMsg += ' ' + this.$translate.instant('errors.statusRejected');
     } else if (this.isNotFoundStatus(status)) {
       errorMsg += ' ' + this.$translate.instant('errors.status404');
+    } else if (this.isUnauthorizedStatus(status)) {
+      errorMsg += ' ' + this.$translate.instant('errors.statusUnauthorized');
     } else if (this.isUnknownStatus(status)) {
       errorMsg += ' ' + this.$translate.instant('errors.statusUnknown');
     } else if (useResponseData) {
@@ -137,14 +140,22 @@ export class Notification {
     return status === Notification.HTTP_STATUS.UNKNOWN;
   }
 
+  private isUnauthorizedStatus(status: number): boolean {
+    return status === Notification.HTTP_STATUS.UNAUTHORIZED;
+  }
+
   private addResponseMessage(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>): string {
-    if (_.get(response, 'data.errorMessage')) {
-      // TODO: rip out 'stringify()' usage once ATLAS-1338 is resolved
-      errorMsg += ' ' + this.stringify(response.data.errorMessage);
-    } else if (_.get(response, 'data.error')) {
-      // TODO: rip out 'stringify()' usage once ATLAS-1338 is resolved
-      errorMsg += ' ' + this.stringify(response.data.error);
-    } else if (_.isString(response)) {
+    let error: string;
+    let errors: Array<any> | string;
+    if ((errors = _.get(response, 'data.error.message', [])) && (_.isArray(errors) || _.isString(errors)) && errors.length) { // for CCATG API spec
+      errorMsg += ' ' + this.getMessageFromErrorDataStructure(errors);
+    } else if ((errors = _.get(response, 'data.errors', [])) && (_.isArray(errors) || _.isString(errors)) && errors.length) {  // fallback for Atlas responses
+      errorMsg += ' ' + this.getMessageFromErrorDataStructure(errors);
+    } else if ((error = _.get(response, 'data.errorMessage', '')) && _.isString(error) && error.length) {  // fallback for legacy/huron
+      errorMsg += ' ' + error;
+    } else if ((error = _.get(response, 'data.error', '')) && _.isString(error) && error.length) { // fallback for old data structure
+      errorMsg += ' ' + error;
+    } else if (_.isString(response)) {  // fallback for custom string rejections
       errorMsg += ' ' + response;
     } else {
       this.$log.warn('Unable to notify an error response', response);
@@ -152,11 +163,40 @@ export class Notification {
     return errorMsg;
   }
 
+  /**
+   * https://wiki.cisco.com/display/WX2RESTAPI/CCATG+RESTful+API+Design+Guidelines#CCATGRESTfulAPIDesignGuidelines-3.9StatusCodes
+   */
+  private getMessageFromErrorDataStructure(errors: Array<string|Object> | string): string {
+    if (_.isString(errors)) {
+      return errors;
+    }
+
+    return _.chain(errors)
+      .map((error) => {
+        let errorString;
+        if (_.isString(error)) {
+          errorString = error;
+        } else {
+          errorString = _.get(error, 'description', '');
+        }
+        if (errorString && !_.endsWith(errorString, '.')) {
+          errorString += '.';
+        }
+        return errorString;
+      })
+      .reject(_.isEmpty)
+      .join(' ')
+      .value();
+  }
+
   private addTrackingId(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>): string {
     let headers = _.get(response, 'headers');
-    let trackingId = _.isFunction(headers) && headers('TrackingID');
+    let trackingId = _.isFunction(headers) && headers('TrackingID');  // exposed via CORS headers
     if (!trackingId) {
-      trackingId = _.get(response, 'data.trackingId');
+      trackingId = _.get(response, 'data.trackingId'); // for CCATG API spec
+    }
+    if (!trackingId) {
+      trackingId = _.get(response, 'data.error.trackingId');  // falback to old data structure
     }
     if (_.isString(trackingId) && trackingId.length) {
       if (errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
@@ -173,11 +213,6 @@ export class Notification {
 
   private getTitle(titleKey?: string): string | undefined {
     return _.isString(titleKey) ? this.$translate.instant(titleKey) : undefined;
-  }
-
-  // TODO: rip this out once ATLAS-1338 is resolved
-  private stringify(jsonifiableVal) {
-    return (_.isObjectLike(jsonifiableVal)) ? JSON.stringify(jsonifiableVal) : jsonifiableVal;
   }
 
   private initTimeouts(): void {
