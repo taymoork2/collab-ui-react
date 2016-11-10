@@ -74,7 +74,7 @@
         }
         return result;
       }, {}).map(function (value, key) {
-        value.totalDuration = (value.totalDuration / 60).toFixed(2);
+        value.totalDuration = (value.totalDuration / 3600).toFixed(2);
         value.time = key;
         return value;
       }).value();
