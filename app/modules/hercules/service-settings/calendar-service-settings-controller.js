@@ -10,8 +10,8 @@
   function CalendarSettingsController($modal, $translate, $state, hasGoogleCalendarFeatureToggle, MailValidatorService, Notification, ServiceDescriptor) {
     var vm = this;
     vm.localizedAddEmailWatermark = $translate.instant('hercules.settings.emailNotificationsWatermark');
-    vm.localizedServiceName = $translate.instant('hercules.serviceNames.' + 'squared-fusion-cal');
-    vm.localizedConnectorName = $translate.instant('hercules.connectorNames.' + 'squared-fusion-cal');
+    vm.localizedServiceName = $translate.instant('hercules.serviceNames.squared-fusion-cal');
+    vm.localizedConnectorName = $translate.instant('hercules.connectorNames.squared-fusion-cal');
     vm.hasGoogleCalendarFeatureToggle = hasGoogleCalendarFeatureToggle;
 
     vm.general = {
