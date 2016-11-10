@@ -113,6 +113,10 @@
     vm.callForwardInputs = ['external', 'uri', 'custom'];
     vm.callerIdInputs = ['external', 'custom'];
     vm.getRegionCode = getRegionCode;
+    vm.callerIdCustomTranslations = {
+      placeholderText: $translate.instant('callDestination.alternateCustomPlaceholder'),
+      helpText: $translate.instant('callDestination.alternateCustomHelpText')
+    };
     vm.callerId = {};
 
     ////////////
@@ -1117,7 +1121,7 @@
     }
 
     function saveDisabled() {
-      if ((vm.internalNumberPool.length === 0 || vm.externalNumberPool.length === 0) && (vm.assignedInternalNumber.uuid === 'none' || vm.assignedExternalNumber.uuid === 'none')) {
+      if (vm.internalNumberPool.length === 0 && vm.assignedInternalNumber.uuid === 'none') {
         return true;
       }
       return false;

@@ -1072,7 +1072,9 @@
     "externalHelpText": "National or International Number",
     "uriPlaceholder": "example@site.domain.com",
     "customPlaceholder": "e.g. 81095555",
-    "customHelpText": "Site-to-Site to External Site"
+    "customHelpText": "Site-to-Site to External Site",
+    "alternateCustomPlaceholder": "e.g. 456, 4567, 45678",
+    "alternateCustomHelpText": "Internal extension or custom number"
   },
   "homePage": {
     "overview": "Last 4 weeks",
