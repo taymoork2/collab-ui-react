@@ -559,8 +559,8 @@
       "last3Months": "Monthly Last 3 Months",
       "deviceOptions": {
         "all": "All",
-        "roomSystems": "Room Systems",
-        "sparkBoard": "SparkBoard"
+        "roomSystems": "DX, MX, and SX Systems",
+        "sparkBoard": "Spark Board"
       }
     }
   },

@@ -8,7 +8,7 @@
   /* @ngInject */
   function DeviceUsageTotalService($translate, $document, $window, $log, $q, $timeout, $http, chartColors, DeviceUsageMockData, UrlConfig, Authinfo) {
     var localUrlBase = 'http://localhost:8080/atlas-server/admin/api/v1/organization';
-    var urlBase = UrlConfig.getAdminServiceUrl() + 'organizations';
+    var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
 
     var csdmUrlBase = UrlConfig.getCsdmServiceUrl() + '/organization';
     var csdmUrl = csdmUrlBase + '/' + Authinfo.getOrgId() + '/places/';
