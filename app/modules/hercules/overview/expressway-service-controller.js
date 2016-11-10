@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceController', ExpresswayServiceController);
 
   /* @ngInject */
-  function ExpresswayServiceController($state, $modal, $scope, $stateParams, $translate, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService, FusionUtils) {
+  function ExpresswayServiceController($state, $modal, $scope, $stateParams, $translate, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService, FusionUtils, FusionClusterService) {
     ClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
     });
@@ -70,8 +70,14 @@
 
     function clustersUpdated() {
       ServiceStateChecker.checkState(vm.connectorType, vm.servicesId[0]);
-      vm.clusters = ClusterService.getClustersByConnectorType(vm.connectorType);
-      vm.loadingClusters = false;
+      FusionClusterService.setClusterAllowListInfoForExpressway(ClusterService.getClustersByConnectorType(vm.connectorType))
+        .then(function (clusters) {
+          vm.clusters = clusters;
+        }).catch(function () {
+          vm.clusters = ClusterService.getClustersByConnectorType(vm.connectorType);
+        }).finally(function () {
+          vm.loadingClusters = false;
+        });
     }
 
     function extractSummaryForAService() {

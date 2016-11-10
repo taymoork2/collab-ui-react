@@ -12,12 +12,12 @@
       <a ui-sref="{{card.getShowMoreButton().routerState}}" ng-class="button.buttonClass" class="btn-link">{{::card.getShowMoreButton().name | translate}}</a>
     </div>
   </div>
-  <p ng-if="card.showText">{{card.text | translate}}</p>
+  <p ng-if="card.showText">{{::card.text | translate}}</p>
 </section>
 <section ng-if="card.loading">
   <i class='icon icon-spinner icon-2x'></i>
 </section>
-<footer ng-if="card.showStatus">
+<footer ng-if="card.showStatus()">
   <div>
     <a class="status" ui-sref="{{card.status.routerState}}">
       <i class="icon icon-circle status-indicator" ng-class="card.status.status"></i>

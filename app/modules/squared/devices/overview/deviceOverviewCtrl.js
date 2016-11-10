@@ -10,6 +10,7 @@
     var deviceOverview = this;
     deviceOverview.currentDevice = $stateParams.currentDevice;
     var huronDeviceService = $stateParams.huronDeviceService;
+    var showPlaces = false;
 
     deviceOverview.linesAreLoaded = false;
     deviceOverview.tzIsLoaded = false;
@@ -217,6 +218,12 @@
 
     deviceOverview.showRemoteSupportButton = function () {
       return deviceOverview.currentDevice && !!deviceOverview.currentDevice.hasRemoteSupport;
+    };
+
+    deviceOverview.getDeleteCodeText = function () {
+      return showPlaces
+        ? $translate.instant('placesPage.deletePlace')
+        : $translate.instant('deviceOverviewPage.deleteLocation');
     };
 
     deviceOverview.addTag = function () {

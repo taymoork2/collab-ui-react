@@ -26,21 +26,9 @@ export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
     return [];
   }
 
-  /* @ngInject */
-  public constructor(Authinfo) {
-    super({
-      template: 'modules/services/meetingCard.tpl.html',
-      name: 'servicesOverview.cards.meeting.title',
-      description: 'servicesOverview.cards.meeting.description',
-      icon: 'icon-circle-group',
-      active: Authinfo.isAllowedState('site-list'),
-      cardClass: 'meetings',
-    });
-  }
-
   public updateWebexSiteList(data: Array<{ license: { siteUrl: string } }>) {
     if (!data) {
-      this._loading = false;
+      this.loading = false;
       return;
     }
 
@@ -59,7 +47,7 @@ export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
           };
         })
         .value();
-    this._loading = false;
+    this.loading = false;
   }
 
   public updatePMRStatus(promise: any) {
@@ -75,6 +63,18 @@ export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
         }
       });
       return false;
+    });
+  }
+
+  /* @ngInject */
+  public constructor(Authinfo) {
+    super({
+      template: 'modules/services/meetingCard.tpl.html',
+      name: 'servicesOverview.cards.meeting.title',
+      description: 'servicesOverview.cards.meeting.description',
+      icon: 'icon-circle-group',
+      active: Authinfo.isAllowedState('site-list'),
+      cardClass: 'meetings',
     });
   }
 }

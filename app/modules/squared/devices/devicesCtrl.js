@@ -88,7 +88,9 @@
         };
 
         vm.isEntitledToHuron = function () {
-          return Authinfo.isSquaredUC();
+          return _.filter(Authinfo.getLicenses(), function (l) {
+            return l.licenseType === 'COMMUNICATION';
+          }).length > 0;
         };
 
         vm.isEntitled = function () {

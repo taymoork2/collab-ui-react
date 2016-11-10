@@ -8,10 +8,11 @@
     .factory('FusionClusterService', FusionClusterService);
 
   /* @ngInject */
-  function FusionClusterService($http, $q, $translate, Authinfo, FusionClusterStatesService, FusionUtils, UrlConfig, USSService) {
+  function FusionClusterService($http, $q, $translate, Authinfo, FusionClusterStatesService, FusionUtils, UrlConfig, USSService, Notification) {
     var service = {
       preregisterCluster: preregisterCluster,
       addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList,
+      getPreregisteredClusterAllowList: getPreregisteredClusterAllowList,
       provisionConnector: provisionConnector,
       deprovisionConnector: deprovisionConnector,
       getAll: getAll,
@@ -33,7 +34,8 @@
       getStatusForService: getStatusForService,
       getResourceGroups: getResourceGroups,
       getClustersForResourceGroup: getClustersForResourceGroup,
-      getUnassignedClusters: getUnassignedClusters
+      getUnassignedClusters: getUnassignedClusters,
+      setClusterAllowListInfoForExpressway: setClusterAllowListInfoForExpressway
     };
 
     return service;
@@ -44,6 +46,10 @@
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '?fields=@wide')
         .then(extractDataFromResponse);
+        /*.then(function(cluster) { // REMOVE ME, TESTING no connectors handling
+          cluster.connectors = [];
+          return cluster;
+        });*/
     }
 
     function getAll(orgId) {
@@ -73,8 +79,10 @@
                 clusters: sort(getClustersForResourceGroup(resourceGroup.id, org.clusters)),
               };
             }),
-            unassigned: sort(getUnassignedClusters(org.clusters))
+            unassigned: sort(getUnassignedClusters(org.clusters)),
+            clusters: org.clusters
           };
+
         })
         .then(addUserCount);
     }
@@ -123,6 +131,7 @@
     function addServicesStatuses(clusters) {
       return _.map(clusters, function (cluster) {
         if (cluster.targetType === 'c_mgmt') {
+          // cluster.connectors = []; // REMOVE ME, TESTING no connectors handling
           var mgmtConnectors = _.filter(cluster.connectors, { connectorType: 'c_mgmt' });
           var ucmcConnectors = _.filter(cluster.connectors, { connectorType: 'c_ucmc' });
           var calConnectors = _.filter(cluster.connectors, { connectorType: 'c_cal' });
@@ -173,6 +182,11 @@
         ttlInSeconds: ttlInSeconds,
         clusterId: clusterId
       });
+    }
+
+    function getPreregisteredClusterAllowList() {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/allowedRedirectTargets';
+      return $http.get(url).then(extractDataFromResponse);
     }
 
     function provisionConnector(clusterId, connectorType) {
@@ -255,24 +269,26 @@
     }
 
     function processClustersToAggregateStatusForService(serviceId, clusterList) {
-
       // get the aggregated statuses per cluster, and transform them into a flat array that
       // represents the state of each cluster for only that service, e.g. ['stopped', 'running']
-      var allServicesStatuses = _.map(clusterList, 'servicesStatuses');
-      var statuses = _.map(allServicesStatuses, function (services) {
-        var matchingService = _.find(services, function (service) {
-          return service.serviceId === serviceId;
-        });
-        if (matchingService && matchingService.state) {
-          return matchingService.state.name;
-        } else {
-          return 'unknown';
-        }
-      });
+      var statuses = _.chain(clusterList)
+        .map('servicesStatuses')
+        .flatten()
+        .filter({ serviceId: serviceId })
+        .map(function (service) {
+          return service.state ? service.state.name : 'unknown';
+        })
+        .value();
 
       // if no data or invalid data, assume that something is wrong
       if (statuses.length === 0) {
         return 'outage';
+      }
+
+      if (_.every(statuses, function (value) {
+        return value === 'not_installed';
+      })) {
+        return 'setupNotComplete';
       }
 
       // For Hybrid Media we have to handle upgrading scenario differently than expressway
@@ -322,14 +338,12 @@
     }
 
     function processClustersToSeeIfServiceIsSetup(serviceId, clusterList) {
-
       if (!Authinfo.isEntitled(serviceId)) {
         return false;
       }
 
-      var target_connector = FusionUtils.serviceId2ConnectorType(serviceId);
-
-      if (target_connector === '') {
+      var connectorType = FusionUtils.serviceId2ConnectorType(serviceId);
+      if (connectorType === '') {
         return false; // Cannot recognize service, default to *not* enabled
       }
 
@@ -337,9 +351,9 @@
         return _.some(clusterList, { targetType: 'mf_mgmt' });
       } else {
         return _.chain(clusterList)
-          .map('connectors')
+          .map('provisioning')
           .flatten()
-          .some({ connectorType: target_connector })
+          .some({ connectorType: connectorType })
           .value();
       }
     }
@@ -401,7 +415,33 @@
               return group;
             }),
             unassigned: response.unassigned,
+            clusters: response.clusters
           };
+        });
+    }
+
+    function setClusterAllowListInfoForExpressway(clusters) {
+      var emptyExpresswayClusters = _.filter(clusters, function (cluster) {
+        return cluster.targetType === 'c_mgmt' && _.size(cluster.connectors) === 0;
+      });
+      if (_.size(emptyExpresswayClusters) === 0) {
+        return $q.resolve(clusters);
+      }
+      return getPreregisteredClusterAllowList()
+        .then(function (allowList) {
+          return _.map(clusters, function (cluster) {
+            if (_.some(emptyExpresswayClusters, { id: cluster.id })) {
+              cluster.isEmptyExpresswayCluster = true;
+              cluster.allowedRedirectTarget = _.find(allowList, { clusterId: cluster.id });
+              if (cluster.aggregates && !cluster.allowedRedirectTarget) {
+                cluster.aggregates.state = 'registrationTimeout';
+              }
+            }
+            return cluster;
+          });
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
         });
     }
   }

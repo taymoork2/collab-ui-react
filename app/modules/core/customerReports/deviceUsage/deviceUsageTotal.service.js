@@ -8,16 +8,16 @@
   /* @ngInject */
   function DeviceUsageTotalService($translate, $document, $window, $log, $q, $timeout, $http, chartColors, DeviceUsageMockData, UrlConfig, Authinfo) {
     var localUrlBase = 'http://localhost:8080/atlas-server/admin/api/v1/organization';
-    var urlBase = UrlConfig.getAdminServiceUrl() + 'organizations';
+    var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
 
     var csdmUrlBase = UrlConfig.getCsdmServiceUrl() + '/organization';
     var csdmUrl = csdmUrlBase + '/' + Authinfo.getOrgId() + '/places/';
 
     var timeoutInMillis = 10000;
 
-    function getDataForLastWeek(deviceCategories, api) {
-      $log.info("dataForLastWeek", api);
-      return getDataForPeriod('week', 1, 'day', deviceCategories, api);
+    function getDataForLastWeek(deviceCategories, api, missingDaysDeferred) {
+      //$log.info("dataForLastWeek", api);
+      return getDataForPeriod('week', 1, 'day', deviceCategories, api, missingDaysDeferred);
     }
 
     function getDateRangeForLastNTimeUnits(count, granularity) {
@@ -33,38 +33,38 @@
       }
       return { start: start, end: end };
     }
-    function getDataForLastNTimeUnits(count, granularity, deviceCategories, api) {
+    function getDataForLastNTimeUnits(count, granularity, deviceCategories, api, missingDaysDeferred) {
       var dateRange = getDateRangeForLastNTimeUnits(count, granularity);
-      return getDataForRange(dateRange.start, dateRange.end, granularity, deviceCategories, api);
+      return getDataForRange(dateRange.start, dateRange.end, granularity, deviceCategories, api, missingDaysDeferred);
     }
 
-    function getDataForLastMonth(deviceCategories, api) {
-      return getDataForPeriod('month', 1, 'week', deviceCategories, api);
+    function getDataForLastMonth(deviceCategories, api, missingDaysDeferred) {
+      return getDataForPeriod('month', 1, 'week', deviceCategories, api, missingDaysDeferred);
     }
 
-    function getDataForLastMonths(count, granularity, deviceCategories, api) {
-      return getDataForPeriod('month', count, granularity, deviceCategories, api);
+    function getDataForLastMonths(count, granularity, deviceCategories, api, missingDaysDeferred) {
+      return getDataForPeriod('month', count, granularity, deviceCategories, api, missingDaysDeferred);
     }
 
-    function getDataForPeriod(period, count, granularity, deviceCategories, api) {
-      return loadPeriodCallData(period, count, granularity, deviceCategories, api);
+    function getDataForPeriod(period, count, granularity, deviceCategories, api, missingDaysDeferred) {
+      return loadPeriodCallData(period, count, granularity, deviceCategories, api, missingDaysDeferred);
     }
 
     function getDatesForLastWeek() {
       var start = moment().startOf('week').subtract(1, 'weeks').format('YYYY-MM-DD');
       var end = moment().startOf('week').subtract(1, 'days').format('YYYY-MM-DD');
-      $log.info("Returning dates for last week, dates:" + start + "," + end);
+      //$log.info("Returning dates for last week, dates:" + start + "," + end);
       return { start: start, end: end };
     }
 
     function getDatesForLastMonths(n) {
       var start = moment().startOf('month').subtract(n, 'months').format('YYYY-MM-DD');
       var end = moment().startOf('month').subtract(1, 'days').format('YYYY-MM-DD');
-      $log.info("Returning dates for " + n + " month(s), dates:" + start + "," + end);
+      //$log.info("Returning dates for " + n + " month(s), dates:" + start + "," + end);
       return { start: start, end: end };
     }
 
-    function getDataForRange(start, end, granularity, deviceCategories, api) {
+    function getDataForRange(start, end, granularity, deviceCategories, api, missingDaysDeferred) {
       var startDate = moment(start);
       var endDate = moment(end);
       var now = moment();
@@ -81,14 +81,14 @@
           url = url + '&deviceCategories=' + deviceCategories.join();
           url = url + '&accounts=__';
           url = url + '&sendMockData=false';
-          return doRequest(url, granularity);
+          return doRequest(url, granularity, start, end, missingDaysDeferred);
         } else {
           url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
           url = url + 'intervalType=' + granularity;
           url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
           url = url + '&deviceCategories=' + deviceCategories.join();
           url = url + '&accounts=__';
-          return doRequest(url, granularity);
+          return doRequest(url, granularity, start, end, missingDaysDeferred);
         }
       }
 
@@ -100,7 +100,7 @@
       return { start: start, end: end };
     }
 
-    function loadPeriodCallData(period, count, granularity, deviceCategories, api) {
+    function loadPeriodCallData(period, count, granularity, deviceCategories, api, missingDaysDeferred) {
       var dateRange = getDateRangeForPeriod(count, period);
       var start = dateRange.start;
       var end = dateRange.end;
@@ -116,18 +116,18 @@
         url = url + '&deviceCategories=' + deviceCategories.join();
         url = url + '&accounts=__';
         url = url + '&sendMockData=false';
-        return doRequest(url, granularity);
+        return doRequest(url, granularity, start, end, missingDaysDeferred);
       } else {
         url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
         url = url + 'intervalType=' + granularity;
         url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
         url = url + '&deviceCategories=' + deviceCategories.join();
         url = url + '&accounts=__';
-        return doRequest(url, granularity);
+        return doRequest(url, granularity, start, end, missingDaysDeferred);
       }
     }
 
-    function doRequest(url, granularity) {
+    function doRequest(url, granularity, start, end, missingDaysDeferred) {
       var deferred = $q.defer();
       var timeout = {
         timeout: deferred.promise
@@ -137,9 +137,45 @@
       }, timeoutInMillis);
 
       return $http.get(url, timeout).then(function (response) {
+        //$log.info('#items', response.data.items.length);
+        if (!response.data.items) {
+          response.data.items = [];
+        }
+        if (response.data.items.length > 0) {
+          checkIfMissingDays(response.data.items, start, end, missingDaysDeferred);
+        }
         return reduceAllData(response.data.items, granularity);
       }, function (reject) {
         return $q.reject(analyseReject(reject));
+      });
+    }
+
+    function checkIfMissingDays(items, start, end, missingDaysDeferred) {
+      var first = moment(start);
+      var last = moment(end);
+      $log.info('checkIfMissingDays', first.format('YYYYMMDD') + ' - ' + last.format('YYYYMMDD'));
+      var current = first;
+      var missingDays = _.chain(items).reduce(function (result, item) {
+        if (!result[item.date]) {
+          //$log.info('reduce_day', item.date);
+          result[item.date] = item.date;
+        }
+        return result;
+      }, {})
+      .filter(function (item, key) {
+        var tmpDate = key.toString();
+        var date = moment(tmpDate.substr(0, 4) + '-' + tmpDate.substr(4, 2) + '-' + tmpDate.substr(6, 2));
+        var available = current.isSame(date);
+        current.add(1, 'days');
+        return available;
+      }).value();
+      current.subtract(1, 'days');
+      var missingAtEnd = last.diff(current, 'days');
+      $log.info('missingDays', missingDays);
+      $log.info('reduced', missingDays.length);
+      $log.info('reduced', missingDays.length + missingAtEnd);
+      missingDaysDeferred.resolve({
+        nbrOfMissingDays: missingDays.length + missingAtEnd
       });
     }
 
@@ -203,7 +239,7 @@
     }
 
     function extractAndSortAccounts(reduced) {
-      $log.info("sequence before sorting", reduced);
+      //$log.info("sequence before sorting", reduced);
       var sequence = _.chain(reduced).map(function (value) {
         return value.accountIds;
       })
@@ -230,7 +266,7 @@
         .orderBy(['totalDuration'], ['desc'])
         .value();
 
-      $log.info('sequence after sorting', sequence);
+      //$log.info('sequence after sorting', sequence);
       return sequence;
     }
 
@@ -261,6 +297,7 @@
     function pickDateBucket(item, granularity) {
       var day = item.date.toString();
       var formattedDate = day.substr(0, 4) + '-' + day.substr(4, 2) + '-' + day.substr(6, 2);
+      //$log.info('pickDateBucket', formattedDate);
       var date = moment(formattedDate).startOf(granularity);
       switch (granularity) {
         case 'day':
@@ -369,11 +406,19 @@
       };
     }
 
-    function exportRawData(startDate, endDate) {
+    function exportRawData(startDate, endDate, api) {
       var granularity = "day";
       var deviceCategories = ['ce', 'sparkboard'];
-
-      var url = localUrlBase + '/' + Authinfo.getOrgId() + '/reports/device/call/export?';
+      var baseUrl = '';
+      if (api === 'mock') {
+        return;
+      }
+      if (api === 'local') {
+        baseUrl = localUrlBase;
+      } else {
+        baseUrl = urlBase;
+      }
+      var url = baseUrl + '/' + Authinfo.getOrgId() + '/reports/device/call/export?';
       url = url + 'intervalType=' + granularity;
       url = url + '&rangeStart=' + startDate + '&rangeEnd' + endDate;
       //url = url + '&rangeStart=' + dateRange.start + '&rangeEnd=' + dateRange.end;

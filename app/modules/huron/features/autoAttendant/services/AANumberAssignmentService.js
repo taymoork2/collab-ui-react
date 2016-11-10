@@ -9,7 +9,8 @@
 
   /* @ngInject */
 
-  function AANumberAssignmentService($q, AssignAutoAttendantService, TelephonyInfoService) {
+  function AANumberAssignmentService($q, AssignAutoAttendantService, TelephonyInfoService,
+    ExternalNumberPool) {
 
     var service = {
       setAANumberAssignment: setAANumberAssignment,
@@ -127,7 +128,10 @@
 
       var formattedResources = _.map(resources, function (res) {
 
-        return TelephonyInfoService.loadExternalNumberPool(res.number.replace(/\D/g, '')).then(function (extNums) {
+        return TelephonyInfoService.loadExternalNumberPool(
+          _.get(res, 'number', '').replace(/\D/g, ''),
+          ExternalNumberPool.ALL_EXTERNAL_NUMBER_TYPES
+        ).then(function (extNums) {
           return formatAAE164Resource(res, extNums);
         });
 
