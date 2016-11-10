@@ -96,14 +96,15 @@ describe('Service: ServiceSetup', function () {
       pattern: '+11234567890'
     }];
 
+      //$httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(extNumPool);
     beforeEach(function () {
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(extNumPool);
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&externalnumbertype=Fixed+Line+or+Mobile&order=pattern').respond(extNumPool);
     });
 
     it('should list external number pool', function () {
       ServiceSetup.loadExternalNumberPool();
       $httpBackend.flush();
-
+      expect(ServiceSetup.externalNumberPool).toEqual(extNumPool);
       expect(angular.equals(ServiceSetup.externalNumberPool, extNumPool)).toBe(true);
     });
   });

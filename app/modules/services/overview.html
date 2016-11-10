@@ -1,14 +1,14 @@
-<div class="servicesOverview">
+<div class="services-overview">
   <cs-page-header title="servicesOverview.title"></cs-page-header>
 
-  <div class="servicesBlock">
+  <div class="services-list">
     <h5><span translate="servicesOverview.cloudServices"></span></h5>
     <cs-card-layout>
       <cs-card class="large-3 medium-6 small-12 header-bar"
                ng-class="card.cardClass"
-               ng-repeat="card in servicesOverviewCtrl.cloudCards">
-        <article ng-include="card.template"
-                 ng-show="card.display"></article>
+               ng-repeat="card in servicesOverviewCtrl.getCloudCards()"
+               ng-if="card.display">
+        <article ng-include="card.template"></article>
       </cs-card>
     </cs-card-layout>
 
@@ -16,9 +16,9 @@
     <cs-card-layout>
       <cs-card class="large-3 medium-6 small-12 header-bar gray-light"
                ng-class="card.cardClass"
-               ng-repeat="card in servicesOverviewCtrl.hybridCards">
-        <article ng-include="card.template"
-                 ng-show="card.display"></article>
+               ng-repeat="card in servicesOverviewCtrl.getHybridCards()"
+               ng-if="card.display">
+        <article ng-include="card.template"></article>
       </cs-card>
     </cs-card-layout>
 

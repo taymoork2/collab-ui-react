@@ -532,7 +532,8 @@
     "customers": "Customers",
     "customerSelect": "Select a customer",
     "usageReports": {
-      "usageReportTitle": "Room Device Usage Reports",
+      "usageReportTitle": "Reports",
+      "usageReportMenuTitle": "Room Device Usage Reports",
       "peakHour": "Peak Hour",
       "distribution": "Distribution",
       "timeline": "Timeline",
@@ -558,8 +559,8 @@
       "last3Months": "Monthly Last 3 Months",
       "deviceOptions": {
         "all": "All",
-        "roomSystems": "Room Systems",
-        "sparkBoard": "SparkBoard"
+        "roomSystems": "DX, MX, and SX Systems",
+        "sparkBoard": "Spark Board"
       }
     }
   },
@@ -1056,6 +1057,19 @@
     "minutes": "{time, plural, one{# minute} other{# minutes}}",
     "hours": "{time, plural, one{# hour} other{# hours}}"
   },
+  "callDestination": {
+    "numberFormat": "Number Format",
+    "internal": "Internal",
+    "external": "External",
+    "uri": "URI Address",
+    "custom": "Custom",
+    "internalPlaceholder": "e.g. John, jsmith, jsmith@email.com",
+    "internalHelpText": "Name, User ID, or Email",
+    "externalHelpText": "National or International Number",
+    "uriPlaceholder": "example@site.domain.com",
+    "customPlaceholder": "e.g. 81095555",
+    "customHelpText": "Site-to-Site to External Site"
+  },
   "homePage": {
     "overview": "Last 4 weeks",
     "activeUsers": "Active Users",
@@ -1365,6 +1379,8 @@
     "reboot": "Reboot",
     "reportProblem": "Report Issue",
     "deleteDeviceConfText": "Are you sure you want to delete this device?",
+    "deleteLocationConfText": "Are you sure you want to delete this location?",
+    "deletePlaceConfText": "Are you sure you want to delete this place?",
     "rebootDeviceConfText": "Are you sure you want to reboot this device?",
     "ciscoSupport": "Cisco Support",
     "remoteAccessKey": "Remote Access Key",
@@ -2636,7 +2652,7 @@
     "pagingGroupName": "Paging Group Name",
     "pagingGroupNumber": "Paging Group Number",
     "pagingGroupMembers": "Paging Group Members",
-    "memberEditHint": "Select the users or places that will be paged.  The devices need to be in the same multicast group for paging to work.",   
+    "memberEditHint": "Select the users or places that will be paged.  The devices need to be in the same multicast group for paging to work.",
     "saveLabel": "Do you want to save your changes?",
     "successUpdate": "'{{pagingGroupName}}' paging group has been updated successfully",
     "successSave": "'{{pagingGroupName}}' paging group has been created successfully",
@@ -2705,11 +2721,13 @@
     "forwardBusyNoAnswer": "Forward calls when line is busy or away",
     "internalAndExternal": "For internal and external calls",
     "internalOnly": "Only for internal calls",
+    "externalOnly": "Only for external calls",
     "forwardBusy": "When line is busy, send calls to:",
     "forwardNoAnswer": "When there is no answer, send calls to:",
     "forwardExternal": "Forward external calls differently",
     "addNew": "Add New",
-    "forwardVoicemailDisabled": "Call Forwarding is set to Voicemail, which is currently disabled. Please update the Call Forwarding settings."
+    "forwardVoicemailDisabled": "Call Forwarding is set to Voicemail, which is currently disabled. Please update the Call Forwarding settings.",
+    "directVoicemail": "Forward directly to Voicemail"
   },
   "multipleCalls": {
     "title": "Simultaneous Calls",
@@ -3219,7 +3237,7 @@
     "setupButton": "Setup Customer",
     "myOrgButton": "View My Organization",
     "edit": "Edit Trial",
-    "errGetTrial": "Failed to retrieve trial {{user}}. Message: {{message}}",
+    "errGetTrial": "Failed to retrieve trial {{user}}.",
     "trialTerms": "Terms of Trial",
     "trialOverview": "Trial",
     "webexOverview": "WebEx",
@@ -3262,10 +3280,10 @@
     "deleteOrgConfirmMsg": "Are you sure you want to permanently delete customer '{{orgName}}'?",
     "deleteOrg": "Delete Customer",
     "deleteOrgSuccess": "{{orgName}} successfully deleted",
-    "deleteOrgError": "{{orgName}} was not deleted. Message: {{message}}",
+    "deleteOrgError": "{{orgName}} was not deleted.",
     "pstnOrders": "PSTN Orders",
     "addNumbers": "Add Numbers",
-    "isSetupDoneError": "Unable to determine if {{orgName}} is setup. Message: {{message}}",
+    "isSetupDoneError": "Unable to determine if {{orgName}} is setup.",
     "launchCustomerPortalError": "Unable to launch the customer portal.",
     "meetingLicenses": "Meeting Licenses",
     "sharedDeviceLicenses": "Room Device Licenses",
@@ -3391,7 +3409,7 @@
     "issues": "Issues",
     "lastSeen": "since:",
     "notYetActivated": "There is a device activation code which has not yet been used.",
-    "deleteLocation": "Delete Place",
+    "deleteLocation": "Delete Location",
     "deviceCodeExpires": "This activation code will expire {{inXDays}}.",
     "getNewCode": "Get a New Code",
     "channelUpdated": "Software Update Channel updated",

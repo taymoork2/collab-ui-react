@@ -84,4 +84,121 @@ describe('Service: ExternalNumberPool', function () {
     });
   });
 
+  describe('getExternalNumbers function', function () {
+    it('should exist', function () {
+      expect(ExternalNumberPool.getExternalNumbers).toBeDefined();
+    });
+    it('should query for all assigned, unassigned, and all types of numbers', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/customerId1/externalnumberpools?order=pattern').respond(200);
+      ExternalNumberPool.getExternalNumbers('customerId1');
+      $httpBackend.flush();
+    });
+    it('should query for all number types matching a pattern', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/customerId1/externalnumberpools?order=pattern&pattern=%25%2B15551234567%25').respond(200);
+      ExternalNumberPool.getExternalNumbers(
+        'customerId1',
+        '+15551234567');
+      $httpBackend.flush();
+    });
+    it('should query for all numbers when using the NO_PATTERN_MATCHING param', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/customerId1/externalnumberpools?order=pattern').respond(200);
+      ExternalNumberPool.getExternalNumbers(
+        'customerId1',
+        ExternalNumberPool.NO_PATTERN_MATCHING);
+      $httpBackend.flush();
+    });
+    it('should query for unassigned numbers of all types when using the NO_PATTERN_MATCHING and UNASSIGNED_NUMBERS params', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/customerId1/externalnumberpools?directorynumber=&order=pattern').respond(200);
+      ExternalNumberPool.getExternalNumbers(
+        'customerId1',
+        ExternalNumberPool.NO_PATTERN_MATCHING,
+        ExternalNumberPool.UNASSIGNED_NUMBERS);
+      $httpBackend.flush();
+    });
+    it('should query for all numbers of all types when using the NO_PATTERN_MATCHING and ASSIGNED_AND_UNASSIGNED_NUMBERS params', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/customerId1/externalnumberpools?order=pattern').respond(200);
+      ExternalNumberPool.getExternalNumbers(
+        'customerId1',
+        ExternalNumberPool.NO_PATTERN_MATCHING,
+        ExternalNumberPool.ASSIGNED_AND_UNASSIGNED_NUMBERS);
+      $httpBackend.flush();
+    });
+    it('should query for unassigned numbers of all types when using the NO_PATTERN_MATCHING and UNASSIGNED_NUMBERS params', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/customerId1/externalnumberpools?directorynumber=&order=pattern&pattern=%25%2B15551234567%25').respond(200);
+      ExternalNumberPool.getExternalNumbers(
+        'customerId1',
+        '+15551234567',
+        ExternalNumberPool.UNASSIGNED_NUMBERS);
+      $httpBackend.flush();
+    });
+    it('should query for all numbers of all types when using the NO_PATTERN_MATCHING and ASSIGNED_AND_UNASSIGNED_NUMBERS params', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/customerId1/externalnumberpools?order=pattern&pattern=%25%2B15551234567%25').respond(200);
+      ExternalNumberPool.getExternalNumbers(
+        'customerId1',
+        '+15551234567',
+        ExternalNumberPool.ASSIGNED_AND_UNASSIGNED_NUMBERS);
+      $httpBackend.flush();
+    });
+    it('should query for unassigned numbers of all types when using the NO_PATTERN_MATCHING, UNASSIGNED_NUMBERS, and ALL_EXTERNAL_NUMBER_TYPES params', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/customerId1/externalnumberpools?directorynumber=&order=pattern').respond(200);
+      ExternalNumberPool.getExternalNumbers(
+        'customerId1',
+        ExternalNumberPool.NO_PATTERN_MATCHING,
+        ExternalNumberPool.UNASSIGNED_NUMBERS,
+        ExternalNumberPool.ALL_EXTERNAL_NUMBER_TYPES);
+      $httpBackend.flush();
+    });
+    it('should query for assigned and unassigned numbers of all number types when using the NO_PATTERN_MATCHING, UNASSIGNED_NUMBERS, and ALL_EXTERNAL_NUMBER_TYPES params', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/customerId1/externalnumberpools?order=pattern').respond(200);
+      ExternalNumberPool.getExternalNumbers(
+        'customerId1',
+        ExternalNumberPool.NO_PATTERN_MATCHING,
+        ExternalNumberPool.ASSIGNED_AND_UNASSIGNED_NUMBERS,
+        ExternalNumberPool.ALL_EXTERNAL_NUMBER_TYPES);
+      $httpBackend.flush();
+    });
+    it('should query for assigned and unassigned PSTN numbers when using the NO_PATTERN_MATCHING, ASSIGNED_AND_UNASSIGNED_NUMBERS, and FIXED_LINE_OR_MOBILE params', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/customerId1/externalnumberpools?externalnumbertype=Fixed+Line+or+Mobile&order=pattern').respond(200);
+      ExternalNumberPool.getExternalNumbers(
+        'customerId1',
+        ExternalNumberPool.NO_PATTERN_MATCHING,
+        ExternalNumberPool.ASSIGNED_AND_UNASSIGNED_NUMBERS,
+        ExternalNumberPool.FIXED_LINE_OR_MOBILE);
+      $httpBackend.flush();
+    });
+    it('should query for assigned and unassigned Toll-Free numbers when using the NO_PATTERN_MATCHING, ASSIGNED_AND_UNASSIGNED_NUMBERS, and TOLL_FREE params', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/customerId1/externalnumberpools?externalnumbertype=Toll+Free&order=pattern').respond(200);
+      ExternalNumberPool.getExternalNumbers(
+        'customerId1',
+        ExternalNumberPool.NO_PATTERN_MATCHING,
+        ExternalNumberPool.ASSIGNED_AND_UNASSIGNED_NUMBERS,
+        ExternalNumberPool.TOLL_FREE);
+      $httpBackend.flush();
+    });
+    it('should query for assigned and unassigned PSTN numbers when using the NO_PATTERN_MATCHING, UNASSIGNED_NUMBERS, and FIXED_LINE_OR_MOBILE params', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/customerId1/externalnumberpools?directorynumber=&externalnumbertype=Fixed+Line+or+Mobile&order=pattern').respond(200);
+      ExternalNumberPool.getExternalNumbers(
+        'customerId1',
+        ExternalNumberPool.NO_PATTERN_MATCHING,
+        ExternalNumberPool.UNASSIGNED_NUMBERS,
+        ExternalNumberPool.FIXED_LINE_OR_MOBILE);
+      $httpBackend.flush();
+    });
+    it('should query for assigned and unassigned Toll-Free numbers when using the NO_PATTERN_MATCHING, UNASSIGNED_NUMBERS, and TOLL_FREE params', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/customerId1/externalnumberpools?directorynumber=&externalnumbertype=Toll+Free&order=pattern').respond(200);
+      ExternalNumberPool.getExternalNumbers(
+        'customerId1',
+        ExternalNumberPool.NO_PATTERN_MATCHING,
+        ExternalNumberPool.UNASSIGNED_NUMBERS,
+        ExternalNumberPool.TOLL_FREE);
+      $httpBackend.flush();
+    });
+  });
+
+  describe('queryExternalNumberPools function', function () {
+    it('should exist', function () {
+      expect(ExternalNumberPool.queryExternalNumberPools).toBeDefined();
+    });
+  });
+
 });

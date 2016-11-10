@@ -20,7 +20,7 @@
         }
 
         function loadList() {
-          CsdmDataModelService.getPlacesMap().then(function (list) {
+          CsdmDataModelService.getPlacesMap(true).then(function (list) {
             placesList = list;
             vm.placesLoaded = true;
             vm.updateListAndFilter();
@@ -42,7 +42,9 @@
         };
 
         vm.isEntitledToHuron = function () {
-          return Authinfo.isSquaredUC();
+          return _.filter(Authinfo.getLicenses(), function (l) {
+            return l.licenseType === 'COMMUNICATION';
+          }).length > 0;
         };
 
         vm.setCurrentSearch = function (searchStr) {

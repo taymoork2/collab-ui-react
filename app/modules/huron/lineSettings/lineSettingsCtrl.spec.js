@@ -293,7 +293,7 @@ describe('Controller: LineSettingsCtrl', function () {
       controller.init();
       $scope.$apply();
       expect(controller.cfModel.forward).toBe('busy');
-      expect(controller.cfModel.forwardNABCalls).toBe(getDirectoryNumberBusy.callForwardBusy.intDestination);
+      expect(controller.internalForward.phoneNumber).toBe(getDirectoryNumberBusy.callForwardBusy.intDestination);
       expect(controller.telephonyInfo.voicemail).toBe('On');
     });
   });
@@ -314,7 +314,7 @@ describe('Controller: LineSettingsCtrl', function () {
       controller.init();
       $scope.$apply();
       expect(controller.cfModel.forward).toBe('busy');
-      expect(controller.cfModel.forwardNABCalls).toBe(getDirectoryNumberBusy.callForwardBusy.intDestination);
+      expect(controller.internalForward.phoneNumber).toBe(getDirectoryNumberBusy.callForwardBusy.intDestination);
       expect(controller.telephonyInfo.voicemail).toBe('Off');
     });
   });

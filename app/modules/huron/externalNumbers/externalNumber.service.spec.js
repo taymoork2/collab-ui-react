@@ -82,7 +82,7 @@ describe('Service: ExternalNumberService', function () {
     spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.when());
     spyOn(PstnSetupService, 'deleteNumber');
     spyOn(ExternalNumberPool, 'deletePool');
-    spyOn(ExternalNumberPool, 'getAll').and.returnValue($q.when(externalNumbers));
+    spyOn(ExternalNumberPool, 'getExternalNumbers').and.returnValue($q.when(externalNumbers));
     spyOn($translate, 'instant');
   }));
 
@@ -136,7 +136,7 @@ describe('Service: ExternalNumberService', function () {
   it('should get unassigned numbers that aren\'t pending', function () {
     var unassignedAndPendingNumbers = unassignedNumbers.concat(pendingNumbers);
     var externalNumbers = unassignedAndPendingNumbers.concat(assignedNumbers);
-    ExternalNumberPool.getAll.and.returnValue($q.when(externalNumbers));
+    ExternalNumberPool.getExternalNumbers.and.returnValue($q.when(externalNumbers));
 
     ExternalNumberService.refreshNumbers();
 
@@ -170,7 +170,7 @@ describe('Service: ExternalNumberService', function () {
   });
 
   it('should clear numbers on external number error', function () {
-    ExternalNumberPool.getAll.and.returnValue($q.reject({}));
+    ExternalNumberPool.getExternalNumbers.and.returnValue($q.reject({}));
     ExternalNumberService.refreshNumbers();
 
     $rootScope.$apply();

@@ -22,21 +22,28 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
       name: 'servicesOverview.cards.hybridMedia.buttons.settings',
       routerState: 'media-service-v2.settings',
       buttonClass: 'btn-link',
-    }];
+    },
+  ];
 
   public getButtons(): Array<ICardButton> {
     if (this.active) {
-      return _.take(this._buttons, 3);
+      return this._buttons;
     }
     return [this._setupButton];
   }
 
   public hybridMediaFeatureToggleEventHandler(hasFeature: boolean) {
-    this._display = hasFeature;
+    const hasRequiredRoles = _.includes(this.Authinfo.getRoles(), this.Config.roles.full_admin) ||
+      _.includes(this.Authinfo.getRoles(), this.Config.roles.readonly_admin);
+    this.display = hasRequiredRoles && this.Authinfo.isFusionMedia() && hasFeature;
   }
 
   /* @ngInject */
-  public constructor(FusionClusterStatesService) {
+  public constructor(
+    private Authinfo,
+    private Config,
+    FusionClusterStatesService,
+  ) {
     super({
       name: 'servicesOverview.cards.hybridMedia.title',
       description: 'servicesOverview.cards.hybridMedia.description',
@@ -48,5 +55,7 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
       cardClass: 'media',
       cardType: CardType.hybrid,
     }, FusionClusterStatesService);
+    this.Authinfo = Authinfo;
+    this.Config = Config;
   }
 }

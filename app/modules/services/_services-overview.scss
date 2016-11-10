@@ -1,8 +1,4 @@
-.servicesOverview {
-  .hidden {
-    display: none;
-  }
-
+.services-overview {
   .gray-light header::after {
     border-top-color: $gray-light-1 !important;
   }
@@ -18,7 +14,7 @@
     margin-top: 2rem;
   }
 
-  .servicesBlock {
+  .services-list {
     padding: 1rem 1.5rem;
     margin-top: 1rem;
     display: block;
