@@ -33,7 +33,7 @@ describe('Service: Customer Reports Service', function () {
 
   beforeEach(function () {
     this.initModules('Core');
-    this.injectDependencies('$httpBackend', '$q', 'CommonReportService', 'CustomerReportService');
+    this.injectDependencies('$httpBackend', '$q', 'CommonReportService', 'SparkReportService');
 
     spyOn(this.CommonReportService, 'returnErrorCheck').and.callFake((error, message, response) => {
       expect(error).toEqual(rejectError);
@@ -53,7 +53,7 @@ describe('Service: Customer Reports Service', function () {
         data: updateDates(_.cloneDeep(activeData.activeDetailed), undefined, undefined),
       }])));
 
-      this.CustomerReportService.getActiveUserData(defaults.timeFilter[0], false).then(function (response) {
+      this.SparkReportService.getActiveUserData(defaults.timeFilter[0], false).then(function (response) {
         expect(response).toEqual({
           graphData: updateDates(_.cloneDeep(activeData.activeResponse), defaults.dayFormat, undefined),
           isActiveUsers: true,
@@ -64,7 +64,7 @@ describe('Service: Customer Reports Service', function () {
     it('should return line data getActiveUserData where lineGraph is true', function () {
       spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.when(dataResponse(updateDates(_.cloneDeep(activeData.activeLineData), undefined, undefined))));
 
-      this.CustomerReportService.getActiveUserData(defaults.timeFilter[0], true).then(function (response) {
+      this.SparkReportService.getActiveUserData(defaults.timeFilter[0], true).then(function (response) {
         expect(response).toEqual({
           graphData: updateDates(_.cloneDeep(activeData.activeLineResponse), defaults.dayFormat, undefined),
           isActiveUsers: true,
@@ -75,7 +75,7 @@ describe('Service: Customer Reports Service', function () {
     it('should notify an error for getActiveUserData where lineGraph is false', function () {
       spyOn(this.CommonReportService, 'getCustomerReport').and.returnValue(this.$q.reject(rejectError));
 
-      this.CustomerReportService.getActiveUserData(defaults.timeFilter[0], false).then(function (response) {
+      this.SparkReportService.getActiveUserData(defaults.timeFilter[0], false).then(function (response) {
         expect(response).toEqual({
           graphData: [],
           isActiveUsers: false,
@@ -86,7 +86,7 @@ describe('Service: Customer Reports Service', function () {
     it('should notify an error for getActiveUserData where lineGraph is true', function () {
       spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.reject(rejectError));
 
-      this.CustomerReportService.getActiveUserData(defaults.timeFilter[0], true).then(function (response) {
+      this.SparkReportService.getActiveUserData(defaults.timeFilter[0], true).then(function (response) {
         expect(response).toEqual({
           graphData: [],
           isActiveUsers: false,
@@ -99,7 +99,7 @@ describe('Service: Customer Reports Service', function () {
         data: _.cloneDeep(activeData.mostActive),
       }));
 
-      this.CustomerReportService.getMostActiveUserData(defaults.timeFilter[0]).then(function (response) {
+      this.SparkReportService.getMostActiveUserData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual({
           tableData: _.cloneDeep(activeData.mostActiveResponse),
           error: false,
@@ -110,7 +110,7 @@ describe('Service: Customer Reports Service', function () {
     it('should notify an error for getMostActiveUserData', function () {
       spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.reject(rejectError));
 
-      this.CustomerReportService.getMostActiveUserData(defaults.timeFilter[0]).then(function (response) {
+      this.SparkReportService.getMostActiveUserData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual({
           tableData: [],
           error: true,
@@ -132,7 +132,7 @@ describe('Service: Customer Reports Service', function () {
         return q.when(dataResponse(data));
       });
 
-      this.CustomerReportService.getAvgRoomData(defaults.timeFilter[0]).then(function (response) {
+      this.SparkReportService.getAvgRoomData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual(updateDates(_.cloneDeep(roomData.response), defaults.dayFormat, undefined));
       });
     });
@@ -140,7 +140,7 @@ describe('Service: Customer Reports Service', function () {
     it('should notify an error for getAvgRoomData', function () {
       spyOn(this.CommonReportService, 'getCustomerReport').and.returnValue(this.$q.reject(rejectError));
 
-      this.CustomerReportService.getAvgRoomData(defaults.timeFilter[0]).then(function (response) {
+      this.SparkReportService.getAvgRoomData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual([]);
       });
     });
@@ -157,7 +157,7 @@ describe('Service: Customer Reports Service', function () {
         return q.when(dataResponse(data));
       });
 
-      this.CustomerReportService.getFilesSharedData(defaults.timeFilter[0]).then(function (response) {
+      this.SparkReportService.getFilesSharedData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual(updateDates(_.cloneDeep(fileData.response), defaults.dayFormat, undefined));
       });
     });
@@ -165,7 +165,7 @@ describe('Service: Customer Reports Service', function () {
     it('should notify an error for getFilesSharedData', function () {
       spyOn(this.CommonReportService, 'getCustomerReport').and.returnValue(this.$q.reject(rejectError));
 
-      this.CustomerReportService.getFilesSharedData(defaults.timeFilter[0]).then(function (response) {
+      this.SparkReportService.getFilesSharedData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual([]);
       });
     });
@@ -177,7 +177,7 @@ describe('Service: Customer Reports Service', function () {
         data: updateDates(_.cloneDeep(mediaData.callQuality.data[0].data), undefined, undefined),
       }])));
 
-      this.CustomerReportService.getMediaQualityData(defaults.timeFilter[0]).then(function (response) {
+      this.SparkReportService.getMediaQualityData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual(updateDates(_.cloneDeep(mediaData.response), defaults.dayFormat, undefined));
       });
     });
@@ -185,7 +185,7 @@ describe('Service: Customer Reports Service', function () {
     it('should notify an error for getMediaQualityData', function () {
       spyOn(this.CommonReportService, 'getCustomerReport').and.returnValue(this.$q.reject(rejectError));
 
-      this.CustomerReportService.getMediaQualityData(defaults.timeFilter[0]).then(function (response) {
+      this.SparkReportService.getMediaQualityData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual([]);
       });
     });
@@ -195,7 +195,7 @@ describe('Service: Customer Reports Service', function () {
     it('should getCallMetricsData', function () {
       spyOn(this.CommonReportService, 'getCustomerReport').and.returnValue(this.$q.when(dataResponse(_.cloneDeep(metricsData.data))));
 
-      this.CustomerReportService.getCallMetricsData(defaults.timeFilter[0]).then(function (response) {
+      this.SparkReportService.getCallMetricsData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual(metricsData.response);
       });
     });
@@ -203,7 +203,7 @@ describe('Service: Customer Reports Service', function () {
     it('should notify an error for getCallMetricsData', function () {
       spyOn(this.CommonReportService, 'getCustomerReport').and.returnValue(this.$q.reject(rejectError));
 
-      this.CustomerReportService.getCallMetricsData(defaults.timeFilter[0]).then(function (response) {
+      this.SparkReportService.getCallMetricsData(defaults.timeFilter[0]).then(function (response) {
         expect(response.dataProvider).toEqual(metricsData.emptyData);
       });
     });
@@ -223,7 +223,7 @@ describe('Service: Customer Reports Service', function () {
     it('should getDeviceData', function () {
       spyOn(this.CommonReportService, 'getCustomerReportByType').and.returnValue(this.$q.when(dataResponse(devicesData)));
 
-      this.CustomerReportService.getDeviceData(defaults.timeFilter[0]).then(function (response) {
+      this.SparkReportService.getDeviceData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual(deviceResponse);
       });
     });
@@ -231,7 +231,7 @@ describe('Service: Customer Reports Service', function () {
     it('should notify an error for getDeviceData', function () {
       spyOn(this.CommonReportService, 'getCustomerReportByType').and.returnValue(this.$q.reject(rejectError));
 
-      this.CustomerReportService.getDeviceData(defaults.timeFilter[0]).then(function (response) {
+      this.SparkReportService.getDeviceData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual(devicesJson.emptyData);
       });
     });

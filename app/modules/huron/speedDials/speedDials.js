@@ -28,6 +28,10 @@
     };
 
     speedDials.callDestInputs = ['external', 'uri', 'custom'];
+    speedDials.customTranslations = {
+      placeholderText: $translate.instant('callDestination.alternateCustomPlaceholder'),
+      helpText: $translate.instant('callDestination.alternateCustomHelpText')
+    };
 
     speedDials.getRegionCode = function () {
       return DialPlanService.getCustomerVoice(Authinfo.getOrgId());

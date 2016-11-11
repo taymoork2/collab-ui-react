@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: DevicesCtrlHuron', function () {
-  var controller, $scope, $q, $stateParams, $state, CsdmHuronUserDeviceService, OtpService, poller;
+  var controller, $scope, $q, $stateParams, $state, CsdmHuronUserDeviceService, OtpService, poller, FeatureToggleService;
 
   beforeEach(angular.mock.module('Huron'));
 
@@ -15,7 +15,7 @@ describe('Controller: DevicesCtrlHuron', function () {
 
   var emptyArray = [];
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _OtpService_, _CsdmHuronUserDeviceService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _OtpService_, _CsdmHuronUserDeviceService_, _FeatureToggleService_) {
     $scope = _$rootScope_.$new();
     $scope.userOverview = userOverview;
     $stateParams = _$stateParams_;
@@ -23,6 +23,7 @@ describe('Controller: DevicesCtrlHuron', function () {
     CsdmHuronUserDeviceService = _CsdmHuronUserDeviceService_;
     OtpService = _OtpService_;
     $state = _$state_;
+    FeatureToggleService = _FeatureToggleService_;
 
     $stateParams.currentUser = {
       "userName": "pregoldtx1sl+2callwaiting1@gmail.com",
@@ -49,9 +50,11 @@ describe('Controller: DevicesCtrlHuron', function () {
     spyOn(CsdmHuronUserDeviceService, 'create').and.returnValue(poller);
     spyOn(poller, 'getDeviceList').and.returnValue($q.when(deviceList));
     spyOn(OtpService, 'loadOtps').and.returnValue($q.when(emptyArray));
+    spyOn(FeatureToggleService, 'csdmPlacesGetStatus').and.returnValue($q.when(false));
 
     controller = _$controller_('DevicesCtrlHuron', {
-      $scope: $scope
+      $scope: $scope,
+      FeatureToggleService: FeatureToggleService
     });
 
     $scope.$apply();
@@ -136,33 +139,56 @@ describe('Controller: DevicesCtrlHuron', function () {
   });
 
   describe('resetCode() method', function () {
+    var displayName;
+    var firstName;
+    var userCisUuid;
+    var email;
+    var orgId;
+    var showPlaces;
+    var userName;
     beforeEach(function () {
-      $stateParams.currentUser.meta = { organizationID: 'as,jdf' };
+      displayName = 'displayName';
+      firstName = 'firstName';
+      userCisUuid = 'userCisUuid';
+      email = 'email@address.com';
+      userName = 'usernameemailadresscom';
+      orgId = 'orgId';
+      showPlaces = true;
+      controller.currentUser = {
+        displayName: displayName,
+        id: userCisUuid,
+        userName: userName,
+        emails: [{
+          primary: true,
+          value: email
+        }],
+        name: {
+          givenName: firstName
+        },
+        meta: {
+          organizationID: orgId
+        }
+      };
+      controller.showPlaces = showPlaces;
+      spyOn($state, 'go');
+      controller.resetCode();
+      $scope.$apply();
     });
-
-    describe('and otp failure', function () {
-      beforeEach(function () {
-        spyOn(OtpService, 'generateOtp').and.returnValue($q.reject({ statusText: 'ijihu' }));
-        spyOn($state, 'go');
-        controller.resetCode();
-        $scope.$apply();
-      });
-      it('on failure should not the wizardState with activation code from OtpService ', function () {
-        expect($state.go.calls.count()).toEqual(0);
-      });
-    });
-
-    describe('otp succes', function () {
-      beforeEach(function () {
-        spyOn(OtpService, 'generateOtp').and.returnValue($q.when({ code: 'code1' }));
-        spyOn($state, 'go');
-        controller.resetCode();
-        $scope.$apply();
-      });
-      it('on success should set the wizardState with activation code from OtpService ', function () {
-        expect($state.go).toHaveBeenCalled();
-        expect($state.go.calls.mostRecent().args[1].wizard.state().data.code.code).toEqual('code1');
-      });
+    it('should set the wizardState with correct fields for show activation code modal', function () {
+      expect($state.go).toHaveBeenCalled();
+      var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
+      expect(wizardState.title).toBe('addDeviceWizard.newDevice');
+      expect(wizardState.showPlaces).toBe(showPlaces);
+      expect(wizardState.account.deviceType).toBe('huron');
+      expect(wizardState.account.type).toBe('personal');
+      expect(wizardState.account.name).toBe(displayName);
+      expect(wizardState.account.cisUuid).toBeUndefined();
+      expect(wizardState.account.username).toBe(userName);
+      expect(wizardState.recipient.displayName).toBe(displayName);
+      expect(wizardState.recipient.firstName).toBe(firstName);
+      expect(wizardState.recipient.cisUuid).toBe(userCisUuid);
+      expect(wizardState.recipient.email).toBe(email);
+      expect(wizardState.recipient.organizationId).toBe(orgId);
     });
   });
 });

@@ -986,6 +986,8 @@
     "error": "Error",
     "finish": "Finish",
     "firstName": "First Name",
+    "general": "General",
+    "help": "Help",
     "id": "ID",
     "incorrectFormat": "Incorrect format",
     "invalidEmail": "This is not a valid Email Address.",
@@ -1038,10 +1040,12 @@
     "unassigned": "Unassigned",
     "unknown": "Unknown",
     "update": "Update",
+    "upload": "Upload",
     "user": "User",
     "users": "Users",
     "voice": "Voice",
     "warning": "Warning",
+    "help": "Help",
     "yes": "Yes"
   },
   "notifications": {
@@ -1068,7 +1072,9 @@
     "externalHelpText": "National or International Number",
     "uriPlaceholder": "example@site.domain.com",
     "customPlaceholder": "e.g. 81095555",
-    "customHelpText": "Site-to-Site to External Site"
+    "customHelpText": "Site-to-Site to External Site",
+    "alternateCustomPlaceholder": "e.g. 456, 4567, 45678",
+    "alternateCustomHelpText": "Internal extension or custom number"
   },
   "homePage": {
     "overview": "Last 4 weeks",
@@ -1691,7 +1697,7 @@
       "emailNotificationsWatermark": "Add email addresses",
       "emailAdministratorHeading": "Administrators",
       "emailAdministratorNotification": "Add email addresses to receive email notifications about service impacting alarms and software upgrades.",
-      "emailUserHeading": "Users",
+      "emailUserHeading": "Users email notifications",
       "emailUserNotification": "By default, users receive email notifications about new Calendar Service functionality, error messages, and service status. Toggle this setting off to stop sending these email notifications to users.",
       "emailNotificationsSaving": "Saving.",
       "emailNotificationsSavingSuccess": "The email subscriber list was successfully saved.",
@@ -1734,6 +1740,13 @@
         "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
         "sipDomainExample": "For example: sipmtls.example.com"
+      },
+      "googleCalendar": {
+        "title": "Google Calendar",
+        "privateKeyHeader": "Private Key",
+        "privateKeyText": "Upload a new private key.",
+        "deactivateHeader": "Deactivate Google Calendar",
+        "deactivateText": "Your users will no longer be able to use this service."
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
@@ -3497,7 +3510,9 @@
       "assignPhoneNumberInstructions": "Choose from the available phone numbers and extensions in the drop-down lists. These will become the primary line which you can use to reach this place.",
       "linesSaved": "Line configuration saved successfully",
       "placeError": "Add Place failed.",
-      "placeEditError": "Edit Place failed"
+      "placeEditError": "Edit Place failed",
+      "placeEditNoChanges": "No changes to save",
+      "placeNotFound": "Place not found, try finding it again in the list"
     },
     "editServices": {
       "whichServices": "Which service is needed in this place?",
@@ -6214,6 +6229,7 @@
     "updateComponentTipsLink": "update a component's status.",
     "useDerivedStatus": "Use Derived Status",
     "overrideStatus": "Override this status",
+    "deleteComponent": "Delete {{componentName}}",
     "permanentlyDeleteComponent": "Permanently DELETE {{componentName}}",
     "newService": "New Service",
     "serviceName": "Service Name",
@@ -6231,7 +6247,7 @@
         "noComponentHeading": "No Component Added",
         "noComponentText": "Click the ADD botton to get started."
       },
-      "addComponentTitle": "ADD A COMPONENT",
+      "addComponentTitle": "Add A Component",
       "updateComponentTitle": "Update A Component",
       "componentName": "Component Name",
       "componentDesc": "Description (optional)",
@@ -6239,12 +6255,18 @@
       "componentGroup": "Component Group",
       "nameCannotBeBlank": "Name can't be blank",
       "createNewComponentGroup": "Create new component group",
-      "createComponent": "Create Component",
+      "addComponent": "Add Component",
       "updateComponent": "Update Component",
       "componentInfo": "Component Info",
       "selectPlaceholder": "Select or Create group",
       "groupName": "Group name",
-      "cancelCreateNewGroup": "Cancel new group creation"
+      "cancelCreateNewGroup": "Cancel new group creation",
+      "addComponentSucceed": "Component {{componentName}} under group {{componentGroupName}} add succeed.",
+      "addComponentFailed": "Component {{componentName}} add failed.",
+      "updateComponentSucceed": "Component {{componentName}} under group {{componentGroupName}} update succeed.",
+      "updateComponentFailed": "Component {{componentName}} update failed.",
+      "deleteComponentSucceed": "Component {{componentName}} delete succeed.",
+      "deleteComponentFailed":"Component {{componentName}} delete failed."
     },
     "createIncident": {
       "newIncident": "New Incident",
@@ -6256,7 +6278,7 @@
       "message": "Message",
       "messagePlaceholder": "Message",
       "viewIncident": "View Incident",
-      "newIncidentBtn": "+ NEW INCIDENT",
+      "newIncidentBtn": "New Incident",
       "noIncidentContent1": "Looks like you've got a clean record",
       "noIncidentContent2":"When you have downtime: ",
       "noIncidentContentLink": "Create your first incident",
