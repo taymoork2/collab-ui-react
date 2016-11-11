@@ -3521,8 +3521,8 @@
       "whichServices": "Which service is needed in this place?",
       "sparkOnly": "Spark only (default)",
       "sparkOnlyHelp": "Calling to/from this place will only work through Cisco Spark or using SIP addresses.",
-      "sparkCall": "Spark Call (phone numbers)",
-      "sparkCallHelp": "If you have set up your organization's PSTN provider, this place will be able to call to/from landlines and mobile phones.",
+      "sparkCall": "Spark + Spark Call (phone numbers)",
+      "sparkCallHelp": "In addition to calling with Spark and SIP addresses, if you have set up your organization’s PSTN provider this place will be able to call to/from landlines and mobile phones.",
       "servicesSaved": "Services updated successfully"
     },
     "showActivationCode": {
@@ -4790,7 +4790,7 @@
     "noneFound": "No Places Found",
     "actionHeader": "Actions",
     "servicesHeader": "Services",
-    "sparkCall": "Spark Call",
+    "sparkCall": "Spark + Spark Call",
     "sparkOnly": "Spark only",
     "placeAdd": "Add Place",
     "placesDefinition": "A place represents a physical location containing a device not owned by a specific user, such as a meeting room with a room device or a reception with shared phones.",
