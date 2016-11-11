@@ -5,6 +5,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   var $controller, controller;
   var AACommonService;
   var AutoAttendantCeMenuModelService;
+  var AAUiModelService;
 
   var modalFake = {
     close: jasmine.createSpy('modalInstance.close'),
@@ -30,6 +31,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   var index = '0';
   var menuId = 'menu0';
   var keyIndex = '0';
+  var fromRouteCall = true;
   var rtQ = 'routeToQueue';
   var play = 'play';
   var sortedOptions = [{
@@ -50,16 +52,18 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _AACommonService_, _AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _AACommonService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     AACommonService = _AACommonService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    AAUiModelService = _AAUiModelService_;
 
     $scope.schedule = schedule;
     $scope.index = index;
     $scope.menuId = menuId;
     $scope.keyIndex = keyIndex;
+    $scope.fromRouteCall = fromRouteCall;
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     uiMenu = AutoAttendantCeMenuModelService.newCeMenu();
     ui[schedule] = uiMenu;
@@ -85,6 +89,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
       aa_menu_id: menuId,
       aa_index: index,
       aa_key_index: keyIndex,
+      aa_from_route_call: fromRouteCall
     });
   }));
 
@@ -143,6 +148,28 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
       spyOn(AACommonService, 'isValid').and.returnValue(false);
       var save = controller.isSaveEnabled();
       expect(save).toEqual(false);
+    });
+  });
+
+  describe('languageAndVoiceOptions', function () {
+    it('when landed from Phone Menu, showLanguageAndVoiceOptions should be false', function () {
+      controller.setUpEntry();
+      expect(controller.showLanguageAndVoiceOptions).toBe(false);
+    });
+
+    it('when landed from New Step, showLanguageAndVoiceOptions should be true', function () {
+      $scope.keyIndex = null;
+      spyOn(AAUiModelService, 'getUiModel').and.returnValue(ui);
+      controller.setUpEntry();
+      expect(controller.showLanguageAndVoiceOptions).toBe(true);
+    });
+  });
+
+  describe('populateMoHRadioForCustomMoH', function () {
+    it('should set the musicOnHold to CustomMoH', function () {
+      controller.mohPlayAction.description = VALUE;
+      controller.populateMohRadio();
+      expect(controller.musicOnHold).toEqual(CUSTOM_MOH);
     });
   });
 

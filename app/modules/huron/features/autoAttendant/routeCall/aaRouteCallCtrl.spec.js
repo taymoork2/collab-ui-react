@@ -40,7 +40,7 @@ describe('Controller: AARouteCallMenuCtrl', function () {
     QueueHelperService = _QueueHelperService_;
 
 
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    //spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     spyOn(QueueHelperService, 'listQueues').and.returnValue($q.when(queues));
 
@@ -49,11 +49,11 @@ describe('Controller: AARouteCallMenuCtrl', function () {
     $scope.index = '0';
     aaUiModel['openHours'].addEntryAt($scope.index, AutoAttendantCeMenuModelService.newCeMenuEntry());
 
-    controller = $controller('AARouteCallMenuCtrl', {
-      $scope: $scope
-    });
-    $scope.$apply();
-
+//    controller = $controller('AARouteCallMenuCtrl', {
+//      $scope: $scope
+//    });
+//    $scope.$apply();
+    controller = $controller;
   }));
 
   afterEach(function () {
@@ -63,6 +63,13 @@ describe('Controller: AARouteCallMenuCtrl', function () {
   describe('setSelects', function () {
 
     it('should add a new keyAction object into selectedActions array', function () {
+
+      FeatureToggleService.supports = jasmine.createSpy().and.returnValue($q.when(true));
+      controller = controller('AARouteCallMenuCtrl', {
+        $scope: $scope
+      });
+      $scope.$apply();
+
       controller.menuEntry = AutoAttendantCeMenuModelService.newCeMenu();
       controller.menuEntry.actions = [];
 
@@ -90,6 +97,12 @@ describe('Controller: AARouteCallMenuCtrl', function () {
   describe('Activate ', function () {
     it('test for sorted options', function () {
 
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+      controller = controller('AARouteCallMenuCtrl', {
+        $scope: $scope
+      });
+      $scope.$apply();
+
       for (var i = 0; i < sortedOptions.length; i++) {
         expect(controller.options[i].label).toEqual(sortedOptions[i].label);
       }
@@ -101,8 +114,14 @@ describe('Controller: AARouteCallMenuCtrl', function () {
     it('test toggle function', function () {
       //expect(FeatureToggleService.supports(false)).toEqual(false);
 
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.reject(new Error('my Error')));
+      controller = controller('AARouteCallMenuCtrl', {
+        $scope: $scope
+      });
+      $scope.$apply();
+
       FeatureToggleService.supports().then(function (result) {
-        expect(result).toBe(false);
+        expect(result).toBe(true);
       });
 
       //expect(FeatureToggleService.supports(true).and.toEqual();

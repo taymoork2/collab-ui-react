@@ -64,7 +64,7 @@
      * This push the Route To Queue option in Route Call List and push get all the queues
     */
     function getQueues() {
-      if (AACommonService.isRouteQueueToggle) {
+      if (AACommonService.isRouteQueueToggle()) {
         return QueueHelperService.listQueues().then(function (aaQueueList) {
           if (aaQueueList.length > 0) {
             vm.options.push({
@@ -102,10 +102,10 @@
       var ui = AAUiModelService.getUiModel();
       vm.menuEntry = ui[$scope.schedule].entries[$scope.index];
       AACommonService.setRouteQueueToggle(false);
-      toggleRouteToQueueFeature().finally(getQueues());
-      vm.options.sort(AACommonService.sortByProperty('label'));
-      setSelects();
-
+      toggleRouteToQueueFeature().finally(getQueues).finally(function () {
+        vm.options.sort(AACommonService.sortByProperty('label'));
+        setSelects();
+      });
     }
 
     activate();

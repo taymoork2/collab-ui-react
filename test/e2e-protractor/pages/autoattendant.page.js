@@ -64,6 +64,7 @@ var AutoAttendantPage = function () {
 
   this.numberIconClose = element.all(by.css('.icon-close')).last();
   this.sayMessageBody = element(by.css('div.aa-panel-body[name="Say Message"]'));
+
   this.messageOptions = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
   this.playMessageOption = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
 
@@ -95,6 +96,7 @@ var AutoAttendantPage = function () {
   this.phonelanguageDropDownOptions = element(by.css('div.aa-panel-body[name="Phone Menu"]')).element(by.css('select[name="languageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
   this.phonesayMessageVoice = this.phoneMenuSay.element(by.css('select[name="voiceSelect"] + div a.select-toggle'));
   this.phonesayMessageVoiceOptions = this.phoneMenuSay.element(by.css('select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+
   this.addPlus = element(by.css('.aa-add-step-icon'));
   this.repeatPlus = element(by.name('aa-phone-menu-add-action'));
   this.phoneMenuKeys = element.all(by.css('div.aa-pm-key-select .icon-chevron-down'));
@@ -147,6 +149,13 @@ var AutoAttendantPage = function () {
   .first()
   .all(by.css("div.aa-flex-row"))
   .last();
+
+  this.newStepForm = element.all(by.css('div.aa-panel[name="newStepForm"]')).first();
+  this.newStepDropDownActionSelectopenHours0 = element(by.id('actionSelectopenHours0'));
+  this.queueSettingsModal = element(by.css('div.aa-queue-settings-modal'));
+  this.languageSelectopenHours0 = element(by.id('languageSelectopenHours0'));
+  this.voiceSelectopenHours0 = element(by.id('voiceSelectopenHours0'));
+  this.cancelTreatmentFeature = element(by.id('cancelTreatmentFeature'));
 
   // first item in newStep dropdown: Say Message
   this.newStepSelectSayMessage = element.all(by.css('div.aa-panel[name="newStepForm"]'))
@@ -212,6 +221,7 @@ var AutoAttendantPage = function () {
   this.routeCall = element(by.css('div.aa-panel-body[name="Route Call"]'));
   this.routeCallChoose = this.routeCall.element(by.css('div.dropdown'));
   this.routeExternal = this.routeCall.element(by.css('div.dropdown-menu')).all(by.tagName('li')).last();
+  this.routeQueueCall = this.routeCall.element(by.css('div.dropdown-menu')).all(by.tagName('li')).get(0);
   this.routeExternalNumber = this.routeCall.element(by.css('input.phone-number'));
 
   this.dialByExtension = element(by.css('div.aa-panel-body[name="Dial by Extension"]'));

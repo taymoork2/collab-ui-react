@@ -53,6 +53,44 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
+    it('should open New Step modal', function () {
+
+        utils.scrollIntoView(autoattendant.addStepFirst);
+        //Click on the + icon to open New Step
+        utils.click(autoattendant.addStepFirst);
+//        expect(autoattendant.newStep).toBe(true);
+        //utils.expectIsDisplayed(autoattendant.newStep);
+        utils.expectIsDisplayed(autoattendant.newStepForm);
+
+      });
+    it('should open Route Call menu from New step', function () {
+
+        //Select Route Call from New Step drop down menu
+    	utils.click(autoattendant.newStepDropDownActionSelectopenHours0);
+        utils.click(autoattendant.newStepSelectRouteCall);
+        utils.expectIsDisplayed(autoattendant.routeCall);
+
+      });
+    it('should display Queue Call Settings link in Route Call Menu upon choosing Queue Call', function () {
+
+        //Select Queue Call from Route Call drop down menu
+    	utils.click(autoattendant.routeCallChoose);
+        utils.click(autoattendant.routeQueueCall);
+        utils.expectIsDisplayed(autoattendant.queueSetting);
+
+      });
+    it('should open Queue Settings modal and contain language and voice options', function () {
+
+      //Click on Queue Settings link to open Queue Settings modal
+    utils.click(autoattendant.queueSetting);
+      utils.expectIsDisplayed(autoattendant.queueSettingsModal);
+      utils.expectIsDisplayed(autoattendant.languageSelectopenHours0);
+      utils.expectIsDisplayed(autoattendant.voiceSelectopenHours0);
+      utils.scrollIntoView(autoattendant.cancelTreatmentFeature);
+    //Click cancel to close Queue Settings modal and come back to main menu to continue further tests
+      utils.click(autoattendant.cancelTreatmentFeature);
+
+    });
 
     it('should add Phone Menu Say to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
