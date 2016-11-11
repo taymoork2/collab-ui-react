@@ -3054,8 +3054,9 @@
           })
           .state('gss.components.deleteComponent', {
             url: '/delete',
+            parent: 'gss.components',
             views: {
-              '@status': {
+              '@gss': {
                 controller: 'DelComponentCtrl',
                 controllerAs: 'delComponentCtrl',
                 templateUrl: 'modules/gss/components/deleteComponent/deleteComponent.tpl.html'
