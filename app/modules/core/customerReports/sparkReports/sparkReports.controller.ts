@@ -54,20 +54,6 @@ class SparkReportCtrl {
       this.resetCards(this.QUALITY);
     };
 
-    for (let key in this.charts) {
-      if (this.charts.hasOwnProperty(key) && this.exportArrays[key]) {
-        this.exportArrays[key][1].click = (): void => {
-          this.CommonReportService.exportJPG(this.charts[key]);
-        };
-        this.exportArrays[key][2].click = (): void => {
-          this.CommonReportService.exportPNG(this.charts[key]);
-        };
-        this.exportArrays[key][3].click = (): void => {
-          this.CommonReportService.exportPDF(this.charts[key]);
-        };
-      }
-    }
-
     this.reportsUpdateToggle.then((response: boolean): void => {
       this.displayActiveLineGraph = response;
       if (this.displayActiveLineGraph) {
@@ -102,12 +88,12 @@ class SparkReportCtrl {
     metrics: null,
   };
   public exportArrays: ICharts = {
-    active: _.cloneDeep(this.ReportConstants.exportMenu),
-    rooms: _.cloneDeep(this.ReportConstants.exportMenu),
-    files: _.cloneDeep(this.ReportConstants.exportMenu),
-    media: _.cloneDeep(this.ReportConstants.exportMenu),
-    device: _.cloneDeep(this.ReportConstants.exportMenu),
-    metrics: _.cloneDeep(this.ReportConstants.exportMenu),
+    active: null,
+    rooms: null,
+    files: null,
+    media: null,
+    device: null,
+    metrics: null,
   };
 
   // report display filter controls
@@ -204,6 +190,7 @@ class SparkReportCtrl {
   }
 
   private setActiveGraph(data: Array<IActiveUserData>): void {
+    this.exportArrays.active = null;
     let tempActiveUserChart: any;
     if (this.displayActiveLineGraph) {
       tempActiveUserChart = this.SparkGraphService.setActiveLineGraph(data, this.charts.active, this.timeSelected);
@@ -213,6 +200,7 @@ class SparkReportCtrl {
 
     if (tempActiveUserChart) {
       this.charts.active = tempActiveUserChart;
+      this.exportArrays.active = this.CommonReportService.createExportMenu(this.charts.active);
       if (this.displayActiveLineGraph) {
         this.SparkGraphService.showHideActiveLineGraph(this.charts.active, this.activeDropdown.selected);
       }
@@ -267,9 +255,11 @@ class SparkReportCtrl {
   };
 
   private setAverageGraph(data: Array<IAvgRoomData>): void {
+    this.exportArrays.rooms = null;
     let temprooms: any = this.SparkGraphService.setAvgRoomsGraph(data, this.charts.rooms);
     if (temprooms) {
       this.charts.rooms = temprooms;
+      this.exportArrays.rooms = this.CommonReportService.createExportMenu(this.charts.rooms);
     }
   }
 
@@ -297,9 +287,11 @@ class SparkReportCtrl {
   };
 
   private setFilesGraph(data: Array<IFilesShared>): void {
+    this.exportArrays.files = null;
     let tempfiles: any = this.SparkGraphService.setFilesSharedGraph(data, this.charts.files);
     if (tempfiles) {
       this.charts.files = tempfiles;
+      this.exportArrays.files = this.CommonReportService.createExportMenu(this.charts.files);
     }
   }
 
@@ -338,9 +330,11 @@ class SparkReportCtrl {
   };
 
   private setMediaGraph(data: Array<IMediaData>): void {
+    this.exportArrays.media = null;
     let tempmedia: any = this.SparkGraphService.setMediaQualityGraph(data, this.charts.media, this.mediaDropdown.selected);
     if (tempmedia) {
       this.charts.media = tempmedia;
+      this.exportArrays.media = this.CommonReportService.createExportMenu(this.charts.media);
     }
   }
 
@@ -393,9 +387,11 @@ class SparkReportCtrl {
   };
 
     private setDeviceGraph(data: Array<IEndpointWrapper>, deviceFilter: IDropdownBase | undefined) {
+      this.exportArrays.device = null;
       let tempDevicesChart: any = this.SparkGraphService.setDeviceGraph(data, this.charts.device, deviceFilter);
       if (tempDevicesChart) {
         this.charts.device = tempDevicesChart;
+        this.exportArrays.device = this.CommonReportService.createExportMenu(this.charts.device);
       }
     }
 
@@ -454,9 +450,11 @@ class SparkReportCtrl {
   }];
 
   private setMetricGraph(data: IMetricsData): void {
+    this.exportArrays.metrics = null;
     let tempmetrics: any = this.SparkGraphService.setMetricsGraph(data, this.charts.metrics);
     if (tempmetrics) {
       this.charts.metrics = tempmetrics;
+      this.exportArrays.metrics = this.CommonReportService.createExportMenu(this.charts.metrics);
     }
   }
 

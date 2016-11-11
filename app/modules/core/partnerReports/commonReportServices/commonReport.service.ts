@@ -1,4 +1,5 @@
 import {
+  IExportMenu,
   ITimespan,
   IIntervalQuery,
   ICustomerIntervalQuery,
@@ -25,6 +26,7 @@ export class CommonReportService {
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
+    private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private Notification: Notification,
     private ReportConstants,
@@ -323,8 +325,35 @@ export class CommonReportService {
   }
 
   // export functions
-  public exportJPG(chart: any): void {
+  public createExportMenu(chart: any): Array<IExportMenu> {
+    return [{
+      id: 'saveAs',
+      label: this.$translate.instant('reportsPage.saveAs'),
+      click: undefined,
+    }, {
+      id: 'jpg',
+      label: this.$translate.instant('reportsPage.jpg'),
+      click: (): void => {
+        this.exportJPG(chart);
+      },
+    }, {
+      id: 'png',
+      label: this.$translate.instant('reportsPage.png'),
+      click: (): void => {
+        this.exportPNG(chart);
+      },
+    }, {
+      id: 'pdf',
+      label: this.$translate.instant('reportsPage.pdf'),
+      click: (): void => {
+        this.exportPDF(chart);
+      },
+    }];
+  }
+
+  private exportJPG(chart: any): void {
     if (chart) {
+      // 'this' is the AmCharts export object
       chart.export.capture({}, function (): void {
         this.toJPG({}, function (data: any): void {
             this.download(data, 'application/jpg', 'amCharts.jpg');
@@ -333,8 +362,9 @@ export class CommonReportService {
     }
   }
 
-  public exportPNG(chart: any): void {
+  private exportPNG(chart: any): void {
     if (chart) {
+      // 'this' is the AmCharts export object
       chart.export.capture({}, function (): void {
         this.toPNG({}, function (data: any): void {
             this.download(data, 'application/png', 'amCharts.png');
@@ -343,8 +373,9 @@ export class CommonReportService {
     }
   }
 
-  public exportPDF(chart: any): void {
+  private exportPDF(chart: any): void {
     if (chart) {
+      // 'this' is the AmCharts export object
       chart.export.capture({}, function (): void {
         this.toJPG({}, function (data: any): void {
           chart.export.toPDF({

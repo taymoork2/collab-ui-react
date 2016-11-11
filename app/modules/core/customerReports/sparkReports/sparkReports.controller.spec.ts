@@ -170,10 +170,6 @@ describe('Controller: Customer Reports Ctrl', function () {
 
       _.forEach(controller.exportArrays, (array: Array<IExportMenu>): void => {
         expect(array.length).toBe(4);
-        _.forEach(array, (item: IExportMenu, index: number): void => {
-          expect(item.id).toEqual(ctrlData.exportMenu[index].id);
-          expect(item.label).toEqual(ctrlData.exportMenu[index].label);
-        });
       });
 
       expect(controller.activeOptions).toEqual(activeOptions);

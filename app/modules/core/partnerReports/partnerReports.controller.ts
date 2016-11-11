@@ -63,20 +63,6 @@ class PartnerReportCtrl {
       this.showHideCards(this.QUALITY);
     };
 
-    for (let key in this.charts) {
-      if (this.charts.hasOwnProperty(key) && this.exportArrays[key]) {
-        this.exportArrays[key][1].click = (): void => {
-          this.CommonReportService.exportJPG(this.charts[key]);
-        };
-        this.exportArrays[key][2].click = (): void => {
-          this.CommonReportService.exportPNG(this.charts[key]);
-        };
-        this.exportArrays[key][3].click = (): void => {
-          this.CommonReportService.exportPDF(this.charts[key]);
-        };
-      }
-    }
-
     this.ReportService.getOverallActiveUserData(this.timeSelected);
     this.ReportService.getCustomerList().then((response: Array<any>): void => {
       this.setAllDummyData();
@@ -95,13 +81,13 @@ class PartnerReportCtrl {
   }
 
   // charts and export tracking
-  public exportArrays: ICharts = {
-    active: _.cloneDeep(this.ReportConstants.exportMenu),
-    metrics: _.cloneDeep(this.ReportConstants.exportMenu),
-    media: _.cloneDeep(this.ReportConstants.exportMenu),
-    population: _.cloneDeep(this.ReportConstants.exportMenu),
-  };
   private charts: ICharts = {
+    active: null,
+    metrics: null,
+    media: null,
+    population: null,
+  };
+  public exportArrays: ICharts = {
     active: null,
     metrics: null,
     media: null,
@@ -286,17 +272,21 @@ class PartnerReportCtrl {
   }
 
   private setActiveUserGraph(data: Array<IActiveUserData>): void {
+    this.exportArrays.active = null;
     let tempactive = this.GraphService.getActiveUsersGraph(data, this.charts.active);
     if (tempactive) {
       this.charts.active = tempactive;
+      this.exportArrays.active = this.CommonReportService.createExportMenu(this.charts.active);
       this.CardUtils.resize(0);
     }
   }
 
   private setActivePopulationGraph(data: Array<IPopulationData>): void {
-    let temppopulation = this.GraphService.getActiveUserPopulationGraph(data, this.charts.population);
-    if (temppopulation) {
-      this.charts.population = temppopulation;
+    this.exportArrays.population = null;
+    let tempPopulation = this.GraphService.getActiveUserPopulationGraph(data, this.charts.population);
+    if (tempPopulation) {
+      this.charts.population = tempPopulation;
+      this.exportArrays.population = this.CommonReportService.createExportMenu(this.charts.population);
       this.CardUtils.resize(0);
     }
   }
@@ -332,9 +322,11 @@ class PartnerReportCtrl {
   }
 
   private setMediaQualityGraph(data: Array<IMediaQualityData>): void {
+    this.exportArrays.media = null;
     let tempMediaChart = this.GraphService.getMediaQualityGraph(data, this.charts.media);
     if (tempMediaChart) {
       this.charts.media = tempMediaChart;
+      this.exportArrays.media = this.CommonReportService.createExportMenu(this.charts.media);
       this.CardUtils.resize(0);
     }
   }
@@ -354,9 +346,11 @@ class PartnerReportCtrl {
   }
 
   private setCallMetricsGraph(data: ICallMetricsData): void {
+    this.exportArrays.metrics = null;
     let tempMetricsChart = this.GraphService.getCallMetricsDonutChart(data, this.charts.metrics);
     if (tempMetricsChart) {
       this.charts.metrics = tempMetricsChart;
+      this.exportArrays.metrics = this.CommonReportService.createExportMenu(this.charts.metrics);
       this.CardUtils.resize(0);
     }
   }
