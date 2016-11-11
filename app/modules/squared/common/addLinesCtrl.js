@@ -8,7 +8,6 @@
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
-    vm.deviceType = wizardData.account.deviceType;
 
     $scope.entitylist = [{
       name: wizardData.account.name
@@ -40,23 +39,9 @@
     vm.next = function () {
       var numbers = vm.getSelectedNumbers();
       $stateParams.wizard.next({
-        title: wizardData.title,
-        showPlaces: wizardData.showPlaces,
         account: {
-          deviceType: wizardData.account.deviceType,
-          type: wizardData.account.type,
-          name: wizardData.account.name,
-          cisUuid: wizardData.account.cisUuid,
-          username: wizardData.account.username,
           directoryNumber: numbers.directoryNumber,
           externalNumber: numbers.externalNumber
-        },
-        recipient: {
-          displayName: wizardData.recipient.displayName,
-          firstName: wizardData.recipient.firstName,
-          cisUuid: wizardData.recipient.cisUuid,
-          email: wizardData.recipient.email,
-          organizationId: wizardData.recipient.organizationId
         }
       });
     };
@@ -68,7 +53,7 @@
         CsdmDataModelService.getPlacesMap().then(function (list) {
           var place = _.find(_.values(list), { 'cisUuid': wizardData.account.cisUuid });
           if (place) {
-            CsdmDataModelService.updateCloudberryPlace(place, numbers.directoryNumber, numbers.externalNumber)
+            CsdmDataModelService.updateCloudberryPlace(place, wizardData.account.entitlements, numbers.directoryNumber, numbers.externalNumber)
               .then(function () {
                 $scope.$dismiss();
                 Notification.success("addDeviceWizard.assignPhoneNumber.linesSaved");

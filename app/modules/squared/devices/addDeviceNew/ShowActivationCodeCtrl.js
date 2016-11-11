@@ -75,7 +75,7 @@
       if (vm.account.cisUuid) { // Existing place
         createCodeForCloudberryPlace(vm.account.cisUuid).then(success, error);
       } else { // New place
-        createCloudberryPlace(vm.account.name, wizardData.account.directoryNumber, wizardData.account.externalNumber).then(function (place) {
+        createCloudberryPlace(vm.account.name, wizardData.account.entitlements, wizardData.account.directoryNumber, wizardData.account.externalNumber).then(function (place) {
           vm.account.cisUuid = place.cisUuid;
           createCodeForCloudberryPlace(vm.account.cisUuid).then(success, error);
         }, error);
@@ -99,8 +99,8 @@
       }, error);
     }
 
-    function createCloudberryPlace(name, directoryNumber, externalNumber) {
-      return CsdmDataModelService.createCsdmPlace(name, directoryNumber, externalNumber);
+    function createCloudberryPlace(name, entitlements, directoryNumber, externalNumber) {
+      return CsdmDataModelService.createCsdmPlace(name, entitlements, directoryNumber, externalNumber);
     }
 
     function createCodeForCloudberryPlace(cisUuid) {

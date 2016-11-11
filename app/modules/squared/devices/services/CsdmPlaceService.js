@@ -42,13 +42,7 @@
       return $http.delete(place.url);
     }
 
-    function createCsdmPlace(name, directoryNumber, externalNumber) {
-      var entitlements;
-      if (directoryNumber || externalNumber) {
-        entitlements = ['webex-squared', 'ciscouc'];
-      } else {
-        entitlements = ['webex-squared'];
-      }
+    function createCsdmPlace(name, entitlements, directoryNumber, externalNumber) {
       return $http.post(csdmPlacesUrl, {
         name: name,
         directoryNumber: directoryNumber,
@@ -64,13 +58,7 @@
       });
     }
 
-    function updatePlace(placeUrl, directoryNumber, externalNumber) {
-      var entitlements;
-      if (directoryNumber || externalNumber) {
-        entitlements = ['webex-squared', 'ciscouc'];
-      } else {
-        entitlements = ['webex-squared'];
-      }
+    function updatePlace(placeUrl, entitlements, directoryNumber, externalNumber) {
       return $http.patch(placeUrl, {
         directoryNumber: directoryNumber,
         externalNumber: externalNumber,

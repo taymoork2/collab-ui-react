@@ -90,8 +90,11 @@ describe('EditServicesCtrl: Ctrl', function () {
         };
         spyOn($stateParams.wizard, 'next');
         initController();
+        controller.service = 'sparkCall';
         controller.next();
         expect($stateParams.wizard.next).toHaveBeenCalled();
+        var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
+        expect(wizardState.account.entitlements).toEqual(['something', 'ciscouc']);
       });
     });
 
@@ -119,7 +122,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         expect($scope.$dismiss).toHaveBeenCalled();
       });
 
-      it('should update the place and close the modal', function () {
+      it('should remove the "ciscouc" entitlement and close the modal', function () {
         $stateParams.wizard = {
           state: function () {
             return {
@@ -141,7 +144,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         controller.service = 'sparkOnly';
         controller.save();
         $scope.$digest();
-        expect(CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, null, null);
+        expect(CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, ['something']);
         expect($scope.$dismiss).toHaveBeenCalled();
         expect(Notification.success).toHaveBeenCalled();
       });
