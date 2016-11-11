@@ -2647,7 +2647,13 @@
     "singleRange": "Single Park Number",
     "saveLabel": "Do you want to save your changes?",
     "memberFetchFailure": "Unable to get members.",
-    "membersTitle": "Members"
+    "membersTitle": "Members",
+    "reversionTitle": "Call Park Reversion",
+    "reversionRuleLabel": "Call Reversion Rule",
+    "reversionRuleDesc": "If the call is not answered, send it to this destination",
+    "reversionParkerLabel": "Person who parked the call",
+    "reversionOtherLabel": "Another destination",
+    "voicemailCheckLabel": "Send call directly to voicemail"
   },
   "callPickup": {
     "title": "Call Pickup",

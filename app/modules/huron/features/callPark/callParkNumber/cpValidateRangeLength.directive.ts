@@ -11,6 +11,10 @@ export class CallParkRangeLengthValidator implements ng.IDirective {
     ctrl: any,
   ) => {
     ctrl.$validators.rangeLength = (modelValue) => {
+      if (!ctrl.$dirty) {
+        return true;
+      }
+
       let rangeType: RangeType = _.get<RangeType>(scope, '$ctrl.rangeType');
       if (rangeType !== RangeType.RANGE) {
         return true;
@@ -24,7 +28,7 @@ export class CallParkRangeLengthValidator implements ng.IDirective {
 
   constructor() {}
 
-  /* ngInject */
+  /* @ngInject */
   public static factory() {
     return new CallParkRangeLengthValidator();
   }
