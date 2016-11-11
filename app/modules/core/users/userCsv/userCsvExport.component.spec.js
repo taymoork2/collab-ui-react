@@ -30,8 +30,7 @@ describe('crUserCsvExport Component', function () {
   }
 
   function initDependencySpies() {
-    spyOn(this.Notification, 'notify');
-    spyOn(this.Notification, 'error');
+    spyOn(this.Notification, 'success');
     spyOn(this.CsvDownloadService, 'getCsv').and.returnValue(this.$q.when(DATA_URL));
     spyOn(this.CsvDownloadService, 'cancelDownload');
     spyOn(this.$modal, 'open').and.returnValue(fakeModal);
@@ -118,7 +117,7 @@ describe('crUserCsvExport Component', function () {
       this.$timeout.flush();
       expect(this.vm.isDownloading).toBeFalsy();
       expect(this.$scope.onTestExportDownloadStatus).toHaveBeenCalledWith(false, DATA_URL);
-      expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+      expect(this.Notification.success).toHaveBeenCalled();
       expect(this.$rootScope.$emit).toHaveBeenCalledWith('csv-download-end');
     });
 
@@ -141,7 +140,7 @@ describe('crUserCsvExport Component', function () {
       this.$timeout.flush();
       expect(this.vm.isDownloading).toBeFalsy();
       expect(this.$scope.onTestExportDownloadStatus).toHaveBeenCalledWith(false, DATA_URL);
-      expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+      expect(this.Notification.success).toHaveBeenCalled();
       expect(this.$rootScope.$emit).toHaveBeenCalledWith('csv-download-end');
     });
 
@@ -186,7 +185,7 @@ describe('crUserCsvExport Component', function () {
       this.$timeout.flush();
       expect(this.vm.isDownloading).toBeFalsy();
       expect(this.$scope.onTestExportDownloadStatus).toHaveBeenCalledWith(false, DATA_URL);
-      expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+      expect(this.Notification.success).toHaveBeenCalled();
       expect(this.$rootScope.$emit).toHaveBeenCalledWith('csv-download-end');
     });
 

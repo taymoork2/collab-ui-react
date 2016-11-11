@@ -64,7 +64,7 @@
           Log.debug('Fetching Care setup status failed: ', result);
           if (vm.errorCount++ >= pollErrorCount) {
             vm.state = vm.UNKNOWN;
-            Notification.error($translate.instant('firstTimeWizard.careSettingsFetchFailed'));
+            Notification.error('firstTimeWizard.careSettingsFetchFailed');
             stopPolling();
           }
         }
@@ -74,7 +74,7 @@
     function processTimeout(pollerResult) {
       Log.debug('Poll timed out after ' + pollerResult + ' attempts.');
       vm.state = vm.NOT_ONBOARDED;
-      Notification.error($translate.instant('firstTimeWizard.careSettingsTimeout'));
+      Notification.error('firstTimeWizard.careSettingsTimeout');
       enableNext();
     }
 

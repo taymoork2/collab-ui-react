@@ -81,8 +81,8 @@
           'isValid': isValid && data.errorCode === '0',
           'errorCode': errorCodes[data.errorCode] || 'invalidSite'
         };
-      }).catch(function () {
-        Notification.error('trialModal.meeting.validationHttpError');
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'trialModal.meeting.validationHttpError');
       });
     }
 

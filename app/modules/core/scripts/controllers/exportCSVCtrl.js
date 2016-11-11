@@ -27,9 +27,8 @@
       }
 
       if (promise) {
-        promise.then(null, function (error) {
-          Log.debug(error);
-          Notification.error('errors.csvError');
+        promise.catch(function (response) {
+          Notification.errorResponse(response, 'errors.csvError');
         }).finally(function () {
           $rootScope.exporting = false;
           $rootScope.$broadcast('EXPORT_FINISHED');

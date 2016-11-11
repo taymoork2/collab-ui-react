@@ -6,7 +6,7 @@
     .service('Userservice', Userservice);
 
   /* @ngInject */
-  function Userservice($http, $q, $rootScope, $translate, Authinfo, Config, HuronUser, Log, NAME_DELIMITER, Notification, SunlightConfigService, TelephoneNumberService, UrlConfig) {
+  function Userservice($http, $q, $rootScope, Authinfo, Config, HuronUser, Log, NAME_DELIMITER, Notification, SunlightConfigService, TelephoneNumberService, UrlConfig) {
     var userUrl = UrlConfig.getAdminServiceUrl();
 
     var service = {
@@ -175,7 +175,7 @@
       return $http.get(scimUrl, _httpConfig);
     }
 
-    function updateUserProfile(userid, userData, callback) {
+    function updateUserProfile(userid, userData) {
       var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
 
       if (!userData) {
@@ -187,34 +187,21 @@
         url: scimUrl,
         data: userData
       })
-        .success(function (data, status) {
-          data = _.isObject(data) ? data : {};
+        .then(function (response) {
+          var entitlements = _.get(response, 'data.entitlements', []);
           // This code is being added temporarily to update users on Squared UC
           // Discussions are ongoing concerning how these common functions should be
           // integrated.
-          if (data.entitlements && data.entitlements.indexOf(Config.entitlements.huron) !== -1) {
-            HuronUser.update(data.id, data)
-              .then(function () {
-                data.success = true;
-                callback(data, status);
-              }).catch(function (response) {
-                // Notify Huron error
-                Notification.errorResponse(response);
-
-                // Callback update success
-                data.success = true;
-                callback(data, status);
+          if (_.includes(entitlements, Config.entitlements.huron)) {
+            var data = _.get(response, 'data', {});
+            return HuronUser.update(data.id, data)
+              .catch(function (huronResponse) {
+                // Notify Huron error huronResponse
+                Notification.errorResponse(huronResponse);
+                // return original successful response
+                return response;
               });
-          } else {
-            data.success = true;
-            callback(data, status);
           }
-        })
-        .error(function (data, status) {
-          data = _.isObject(data) ? data : {};
-          data.success = false;
-          data.status = status;
-          callback(data, status);
         });
     }
 
@@ -304,7 +291,8 @@
       return $http.get(emailUrl);
     }
 
-    function patchUserRoles(email, name, roles, callback) {
+    // TODO: mipark2 - remove this and update upstream code to use UserRoleService
+    function patchUserRoles(email, name, roles) {
       var patchUrl = userUrl + '/organization/' + Authinfo.getOrgId() + '/users/roles';
 
       var requestBody = {
@@ -315,22 +303,11 @@
         }]
       };
 
-      $http({
+      return $http({
         method: 'PATCH',
         url: patchUrl,
         data: requestBody
-      })
-        .success(function (data, status) {
-          data = _.isObject(data) ? data : {};
-          data.success = true;
-          callback(data, status);
-        })
-        .error(function (data, status) {
-          data = _.isObject(data) ? data : {};
-          data.success = false;
-          data.status = status;
-          callback(data, status);
-        });
+      });
     }
 
     function migrateUsers(users, callback) {
@@ -484,8 +461,9 @@
           SunlightConfigService.updateUserInfo(userData, userId)
             .then(function () {
               checkAndPatchSyncKmsRole(userId);
-            }, function () {
-              Notification.error($translate.instant('usersPage.careAddUserError'));
+            })
+            .catch(function (response) {
+              Notification.errorResponse(response, 'usersPage.careAddUserError');
             });
         }
       });
@@ -505,7 +483,7 @@
             };
             updateUserProfile(userId, userRoleData, function (data) {
               if (!data.success) {
-                Notification.error($translate.instant('usersPage.careAddUserRoleError'));
+                Notification.error('usersPage.careAddUserRoleError');
               }
             });
           }
