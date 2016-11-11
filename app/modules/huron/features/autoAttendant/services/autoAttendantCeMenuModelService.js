@@ -296,6 +296,8 @@
       clearCeMenuMap: clearCeMenuMap,
       deleteCeMenuMap: deleteCeMenuMap,
       isCeMenu: isCeMenu,
+      cesTempPa: cesTempPa,
+      constructCesTodoPa: constructCesTodoPa,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -494,6 +496,7 @@
         setDescription(action, inAction.routeToQueue);
         cesTempMoh(action);
         cesTempIa(action);
+        cesTempPa(action);
         cesTempfallBack(action);
         menuEntry.addAction(action);
       } else {
@@ -541,12 +544,29 @@
     }
 
     /*
+     * temporary solution to write to db until ces ready
+     */
+    function cesTempPa(action) {
+      if (angular.isDefined(action.description)) {
+        try {
+          if (angular.isUndefined(action.queueSettings)) {
+            action.description = JSON.parse(action.description);
+            action.queueSettings = {};
+          }
+          action.queueSettings.periodicAnnouncement = constructCesTodoPa(action.description);
+        } catch (exception) {
+          action.queueSettings = {};
+        }
+      }
+    }
+
+    /*
     * temporary solution to write to db until ces ready
     */
     function cesTempfallBack(action) {
       if (!_.isUndefined(action.description)) {
         try {
-          if (angular.isUnDefined(action.queueSettings)) {
+          if (angular.isUndefined(action.queueSettings)) {
             action.description = JSON.parse(action.description);
             action.queueSettings = {};
           }
@@ -593,6 +613,18 @@
       action = new Action(fallBackOption.name, fallBackTime.value);
       action.setDescrption(fallBackOption.description);
       fallBack.addAction(action);
+    }
+
+    /*
+    * temporary solution to write to db until ces ready
+    */
+    function constructCesTodoPa(parsedDescription) {
+      var periodicAnnouncement = parsedDescription.periodicAnnouncement.actions[0];
+      var action = new Action(periodicAnnouncement.name, periodicAnnouncement.value);
+      action.setDescription(periodicAnnouncement.description);
+      periodicAnnouncement = new CeMenuEntry();
+      periodicAnnouncement.addAction(action);
+      return periodicAnnouncement;
     }
 
     function parseActions(menuEntry, actions) {
