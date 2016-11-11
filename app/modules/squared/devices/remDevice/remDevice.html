@@ -5,19 +5,14 @@
     class="close"
     ng-click="$dismiss()">
   </button>
-  <h3
-    class="modal-title"
-    translate="spacesPage.deleteDevice">
-  </h3>
+  <h3 class="modal-title">{{ rdc.getDeleteText() }}</h3>
 </div>
 
 <!-- body -->
 <div
   class="modal-body">
   <p>
-    <span
-      translate="spacesPage.deleteDeviceConfText">
-    </span>
+    <span>{{ rdc.getDeleteConfText() }}</span>
   </p>
 </div>
 
@@ -34,8 +29,6 @@
   <button
     class="btn btn--negative"
     sq-click-promise="rdc.deleteDeviceOrCode(sc.currentDevice)" >
-    <span
-      translate="spacesPage.deleteDevice">
-    </span>
+    <span>{{ rdc.getDeleteText() }}</span>
   </button>
 </div>

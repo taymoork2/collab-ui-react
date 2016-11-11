@@ -145,5 +145,6 @@
       }
       return result;
     }
+
   }
 }());

@@ -1,7 +1,7 @@
 import {
   IActiveUserData,
   ITimespan,
-} from '../partnerReports/partnerReportInterfaces';
+} from '../../partnerReports/partnerReportInterfaces';
 
 import {
   IAvgRoomData,
@@ -10,14 +10,14 @@ import {
   IFilesShared,
   IMediaData,
   IMetricsData,
-} from './customerReportInterfaces';
+} from './sparkReportInterfaces';
 
 interface ICommonData {
   date: string;
   count: number;
 }
 
-class DummyCustomerReportService {
+class DummySparkDataService {
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
@@ -105,7 +105,7 @@ class DummyCustomerReportService {
       if (filter.value === 0) {
         index++;
       }
-      let commonData: ICommonData = DummyCustomerReportService.getCommonData(filter, index, this.ReportConstants);
+      let commonData: ICommonData = DummySparkDataService.getCommonData(filter, index, this.ReportConstants);
       date = commonData.date;
     }
 
@@ -126,7 +126,7 @@ class DummyCustomerReportService {
   }
 
   private getAvgRoomDataPoint(filter: ITimespan, index: number, constants: any): IAvgRoomData {
-    let commonData: ICommonData = DummyCustomerReportService.getCommonData(filter, index, constants);
+    let commonData: ICommonData = DummySparkDataService.getCommonData(filter, index, constants);
 
     return {
       date: commonData.date,
@@ -143,7 +143,7 @@ class DummyCustomerReportService {
   }
 
   private getFilesSharedDataPoint(filter: ITimespan, index: number, constants: any): IFilesShared {
-    let commonData: ICommonData = DummyCustomerReportService.getCommonData(filter, index, constants);
+    let commonData: ICommonData = DummySparkDataService.getCommonData(filter, index, constants);
 
     return {
       date: commonData.date,
@@ -158,7 +158,7 @@ class DummyCustomerReportService {
   }
 
   private getMediaDataPoint(filter: ITimespan, index: number, constants: any): IMediaData {
-    let commonData: ICommonData = DummyCustomerReportService.getCommonData(filter, index, constants);
+    let commonData: ICommonData = DummySparkDataService.getCommonData(filter, index, constants);
     let goodQualityDurationSum = 25 + (15 * commonData.count);
     let fairQualityDurationSum = 15 + (10 * commonData.count);
     let poorQualityDurationSum = 5 + (5 * commonData.count);
@@ -212,7 +212,7 @@ class DummyCustomerReportService {
   }
 
   private getDeviceDataPoint(filter: ITimespan, index: number, constants: any): IEndpointData {
-    let commonData: ICommonData = DummyCustomerReportService.getCommonData(filter, index, constants);
+    let commonData: ICommonData = DummySparkDataService.getCommonData(filter, index, constants);
 
     return {
       date: commonData.date,
@@ -222,4 +222,4 @@ class DummyCustomerReportService {
 }
 
 angular.module('Core')
-  .service('DummyCustomerReportService', DummyCustomerReportService);
+  .service('DummySparkDataService', DummySparkDataService);

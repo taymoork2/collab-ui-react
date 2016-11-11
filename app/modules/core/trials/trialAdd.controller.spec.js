@@ -39,7 +39,7 @@ describe('Controller: TrialAddCtrl', function () {
       }
     });
 
-    spyOn(Notification, 'notify');
+    spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
@@ -149,7 +149,7 @@ describe('Controller: TrialAddCtrl', function () {
       });
 
       it('should notify success', function () {
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+        expect(Notification.success).toHaveBeenCalledWith('trialModal.addSuccess', jasmine.any(Object));
       });
 
       it('should have a customer org id set', function () {
@@ -234,8 +234,8 @@ describe('Controller: TrialAddCtrl', function () {
         controller.startTrial();
         $scope.$apply();
         expect(HuronCustomer.create).toHaveBeenCalled();
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
-        expect(Notification.notify.calls.count()).toEqual(1);
+        expect(Notification.success).toHaveBeenCalledWith('trialModal.addSuccess', jasmine.any(Object));
+        expect(Notification.success.calls.count()).toEqual(1);
       });
 
       it('error should notify error', function () {
@@ -260,8 +260,8 @@ describe('Controller: TrialAddCtrl', function () {
         $scope.$apply();
         expect(HuronCustomer.create).toHaveBeenCalled();
         expect(TrialPstnService.createPstnEntity).toHaveBeenCalled();
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
-        expect(Notification.notify.calls.count()).toEqual(1);
+        expect(Notification.success).toHaveBeenCalledWith('trialModal.addSuccess', jasmine.any(Object));
+        expect(Notification.success.calls.count()).toEqual(1);
       });
 
       it('error should notify error', function () {
@@ -365,9 +365,8 @@ describe('Controller: TrialAddCtrl', function () {
   });
 
   describe('Start a new trial with error', function () {
-    var startTrialSpy;
     beforeEach(function () {
-      startTrialSpy = spyOn(TrialService, 'startTrial').and.returnValue($q.reject({
+      spyOn(TrialService, 'startTrial').and.returnValue($q.reject({
         data: {
           message: 'An error occurred'
         }
@@ -377,33 +376,11 @@ describe('Controller: TrialAddCtrl', function () {
     });
 
     it('should notify error', function () {
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      expect(Notification.errorResponse).toHaveBeenCalled();
     });
 
     it('should not have closed the modal', function () {
       expect($state.modal.close).not.toHaveBeenCalled();
-    });
-
-    it('should show a name error', function () {
-      startTrialSpy.and.returnValue($q.reject({
-        data: {
-          message: 'Org'
-        }
-      }));
-      controller.startTrial();
-      $scope.$apply();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
-    });
-
-    it('should show an email error', function () {
-      startTrialSpy.and.returnValue($q.reject({
-        data: {
-          message: 'Admin User'
-        }
-      }));
-      controller.startTrial();
-      $scope.$apply();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
   });
 

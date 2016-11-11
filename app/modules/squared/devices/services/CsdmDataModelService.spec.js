@@ -849,6 +849,62 @@ describe('Service: CsdmDataModelService', function () {
     });
   });
 
+  describe('re-fetch places', function () {
+    var scope;
+
+    beforeEach(function () {
+      scope = $rootScope.$new();
+
+      $rootScope.$apply();
+
+      CsdmDataModelService.getPlacesMap(true);
+
+      $rootScope.$digest();
+      $timeout.flush(1000);
+      $httpBackend.flush();
+      $rootScope.$apply();
+    });
+
+    afterEach(function () {
+
+      $httpBackend.verifyNoOutstandingRequest();
+      $httpBackend.verifyNoOutstandingExpectation();
+
+      scope.$destroy();
+    });
+
+    it('has done the initial poll', function () {
+      $httpBackend.verifyNoOutstandingRequest();
+      $httpBackend.verifyNoOutstandingExpectation();
+    });
+
+    it('asking before grace time should not trigger fetching', function () {
+
+      $timeout.flush(3000);
+
+      CsdmDataModelService.getPlacesMap(true);
+
+      $rootScope.$digest();
+
+      $httpBackend.verifyNoOutstandingRequest();
+      $httpBackend.verifyNoOutstandingExpectation();
+    });
+
+    it('asking after grace time should trigger fetching', function () {
+
+      $timeout.flush(300000);
+
+      CsdmDataModelService.getPlacesMap(true);
+
+      $rootScope.$digest();
+
+      $httpBackend.flush(3);//devices,codes,accounts.
+
+      $httpBackend.verifyNoOutstandingRequest();
+      $httpBackend.verifyNoOutstandingExpectation();
+    });
+  });
+
   describe('polling', function () {
     var scope;
 

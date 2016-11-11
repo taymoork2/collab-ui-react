@@ -111,8 +111,8 @@ class ReportService {
       let date: string = item.date;
       let details: any = item.details;
       if (details && date) {
-        let activeUsers = this.CommonReportService.getInt(details.activeUsers);
-        let totalRegisteredUsers = this.CommonReportService.getInt(details.totalRegisteredUsers);
+        let activeUsers = _.toInteger(details.activeUsers);
+        let totalRegisteredUsers = _.toInteger(details.totalRegisteredUsers);
 
         if (activeUsers > 0 || totalRegisteredUsers > 0) {
           graphData.push({
@@ -281,9 +281,9 @@ class ReportService {
           _.forEach(_.get(org, 'data'), (item) => {
             tableData.push({
               orgName: org.orgName,
-              numCalls: this.CommonReportService.getInt(item.details.sparkCalls) + this.CommonReportService.getInt(item.details.sparkUcCalls),
-              totalActivity: this.CommonReportService.getInt(item.details.totalActivity),
-              sparkMessages: this.CommonReportService.getInt(item.details.sparkMessages),
+              numCalls: _.toInteger(item.details.sparkCalls) + _.toInteger(item.details.sparkUcCalls),
+              totalActivity: _.toInteger(item.details.totalActivity),
+              sparkMessages: _.toInteger(item.details.sparkMessages),
               userName: item.details.userName,
             });
           });
@@ -352,10 +352,10 @@ class ReportService {
     _.forEach(orgData, (item) => {
       let details: any = _.get(item, 'details');
       if (details) {
-        let totalSum = this.CommonReportService.getInt(details.totalDurationSum);
-        let goodSum = this.CommonReportService.getInt(details.goodQualityDurationSum);
-        let fairSum = this.CommonReportService.getInt(details.fairQualityDurationSum);
-        let poorSum = this.CommonReportService.getInt(details.poorQualityDurationSum);
+        let totalSum = _.toInteger(details.totalDurationSum);
+        let goodSum = _.toInteger(details.goodQualityDurationSum);
+        let fairSum = _.toInteger(details.fairQualityDurationSum);
+        let poorSum = _.toInteger(details.poorQualityDurationSum);
         let partialSum = fairSum + poorSum;
         let date = _.get(item, 'date');
 
@@ -429,13 +429,13 @@ class ReportService {
         _.forEach(data, (item) => {
           let details: any = _.get(item, 'data[0].details');
           if (details) {
-            let totalCalls = this.CommonReportService.getInt(details.totalCalls);
+            let totalCalls = _.toInteger(details.totalCalls);
 
             if (totalCalls > 0) {
               transformData.labelData.numTotalCalls += totalCalls;
               transformData.labelData.numTotalMinutes += Math.round(parseFloat(details.totalAudioDuration));
-              transformData.dataProvider[0].value += this.CommonReportService.getInt(details.totalFailedCalls);
-              transformData.dataProvider[1].value += this.CommonReportService.getInt(details.totalSuccessfulCalls);
+              transformData.dataProvider[0].value += _.toInteger(details.totalFailedCalls);
+              transformData.dataProvider[1].value += _.toInteger(details.totalSuccessfulCalls);
               transformDataSet = true;
             }
           }

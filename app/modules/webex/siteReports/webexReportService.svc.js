@@ -150,7 +150,7 @@
       this.reportPageIframeUrl = theUrl;
       this.modifiedUrl = this.reportPageIframeUrl;
       this.toUIsrefString = function () {
-        return "webex-reports.webex-reports-iframe({" +
+        return "webex-reports-iframe({" +
           "  siteUrl:" + "'" + this.siteUrl + "'" + "," +
           "  reportPageId:" + "'" + this.reportPageId + "'" + "," +
           "  reportPageIframeUrl:" + "'" + this.reportPageIframeUrl + "'" +

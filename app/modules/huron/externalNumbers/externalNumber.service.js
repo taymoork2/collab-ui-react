@@ -66,13 +66,20 @@
           }
         })
         .then(function () {
-          return ExternalNumberPool.getAll(customerId)
-            .then(formatNumberLabels)
-            .then(function (numbers) {
-              unassignedNumbers = filterUnassigned(numbers);
-              assignedNumbers = filterAssigned(numbers);
-              allNumbers = pendingNumbers.concat(getNumbersWithoutPending(numbers));
-            });
+          // Specifying ASSIGNED_AND_UNASSIGNED_NUMBERS and FIXED_LINE_OR_MOBILE returns both
+          // assigned and unassigned standard PSTN numbers.
+          // Toll-Free numbers should not be returned.
+          return ExternalNumberPool.getExternalNumbers(
+            customerId,
+            ExternalNumberPool.NO_PATTERN_MATCHING,
+            ExternalNumberPool.ASSIGNED_AND_UNASSIGNED_NUMBERS,
+            ExternalNumberPool.FIXED_LINE_OR_MOBILE)
+          .then(formatNumberLabels)
+          .then(function (numbers) {
+            unassignedNumbers = filterUnassigned(numbers);
+            assignedNumbers = filterAssigned(numbers);
+            allNumbers = pendingNumbers.concat(getNumbersWithoutPending(numbers));
+          });
         })
         .catch(function (response) {
           clearNumbers();

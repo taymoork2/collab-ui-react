@@ -33,4 +33,21 @@ describe('TokenService', function () {
     TokenService.setRefreshToken('test');
     expect(SessionStorage.put).toHaveBeenCalledWith('refreshToken', 'test');
   });
+
+  describe('clientSessionId', function () {
+    beforeEach(function () {
+      $window.localStorage.setItem.and.callThrough();
+      $window.localStorage.removeItem.and.callThrough();
+    });
+
+    it('should get existing or generate a new id', function () {
+      expect(TokenService.getClientSessionId()).toBeFalsy();
+
+      var clientSessionId = TokenService.getOrGenerateClientSessionId();
+      expect(clientSessionId).toBeTruthy();
+
+      var clientSessionIdAgain = TokenService.getOrGenerateClientSessionId();
+      expect(clientSessionId).toEqual(clientSessionIdAgain);
+    });
+  });
 });

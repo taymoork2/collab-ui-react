@@ -27,13 +27,13 @@ export class ServicesOverviewHybridCallCard extends ServicesOverviewHybridCard {
 
   public getButtons(): Array<ICardButton> {
     if (this.active) {
-      return _.take(this._buttons, 3);
+      return this._buttons;
     }
     return [this._setupButton];
   }
 
   /* @ngInject */
-  public constructor(FusionClusterStatesService) {
+  public constructor(Authinfo, FusionClusterStatesService) {
     super({
       name: 'servicesOverview.cards.hybridCall.title',
       description: 'servicesOverview.cards.hybridCall.description',
@@ -43,5 +43,6 @@ export class ServicesOverviewHybridCallCard extends ServicesOverviewHybridCard {
       cardClass: 'call',
       cardType: CardType.hybrid,
     }, FusionClusterStatesService);
+    this.display = Authinfo.isFusionUC();
   }
 }
