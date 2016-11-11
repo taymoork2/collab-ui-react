@@ -60,8 +60,6 @@
     vm.isSaveEnabled = isSaveEnabled;
     vm.uploadMohTrigger = uploadMohTrigger;
     vm.setUpEntry = setUpEntry;
-//    vm.populateScope = populateScope;
-//    vm.populateUiModel = populateUiModel;
     vm.populateMohRadio = populateMohRadio;
 
     vm.languageOption = languageOption;

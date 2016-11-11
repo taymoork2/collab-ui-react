@@ -58,8 +58,6 @@ describe('Huron Auto Attendant', function () {
         utils.scrollIntoView(autoattendant.addStepFirst);
         //Click on the + icon to open New Step
         utils.click(autoattendant.addStepFirst);
-//        expect(autoattendant.newStep).toBe(true);
-        //utils.expectIsDisplayed(autoattendant.newStep);
         utils.expectIsDisplayed(autoattendant.newStepForm);
 
       });
@@ -74,7 +72,7 @@ describe('Huron Auto Attendant', function () {
     it('should display Queue Call Settings link in Route Call Menu upon choosing Queue Call', function () {
 
         //Select Queue Call from Route Call drop down menu
-    	utils.click(autoattendant.routeCallChoose);
+        utils.click(autoattendant.routeCallChoose);
         utils.click(autoattendant.routeQueueCall);
         utils.expectIsDisplayed(autoattendant.queueSetting);
 
@@ -82,7 +80,7 @@ describe('Huron Auto Attendant', function () {
     it('should open Queue Settings modal and contain language and voice options', function () {
 
       //Click on Queue Settings link to open Queue Settings modal
-    utils.click(autoattendant.queueSetting);
+      utils.click(autoattendant.queueSetting);
       utils.expectIsDisplayed(autoattendant.queueSettingsModal);
       utils.expectIsDisplayed(autoattendant.languageSelectopenHours0);
       utils.expectIsDisplayed(autoattendant.voiceSelectopenHours0);

@@ -39,8 +39,6 @@ describe('Controller: AARouteCallMenuCtrl', function () {
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     QueueHelperService = _QueueHelperService_;
 
-
-    //spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     spyOn(QueueHelperService, 'listQueues').and.returnValue($q.when(queues));
 
@@ -49,10 +47,6 @@ describe('Controller: AARouteCallMenuCtrl', function () {
     $scope.index = '0';
     aaUiModel['openHours'].addEntryAt($scope.index, AutoAttendantCeMenuModelService.newCeMenuEntry());
 
-//    controller = $controller('AARouteCallMenuCtrl', {
-//      $scope: $scope
-//    });
-//    $scope.$apply();
     controller = $controller;
   }));
 
