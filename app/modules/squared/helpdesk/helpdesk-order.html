@@ -97,8 +97,13 @@
         <div class="large-5 columns details-heading">
           <span>{{'helpdesk.emailSent' | translate}}</span>
         </div>
-        <div class="large-7 columns details-value">
+        <div class="large-7 columns details-value" ng-show="helpdeskOrderCtrl.showCustomerEmailSent">
           <span>{{helpdeskOrderCtrl.customerEmailSent}}</span>
+        </div>
+        <div class="helpdesk-order-email">
+          <span class="spinner-example--small" ng-show="!helpdeskOrderCtrl.showCustomerEmailSent">
+            <i class="icon icon-spinner"></i>
+          </span>
         </div>
       </div>
 
@@ -148,8 +153,13 @@
         <div class="large-5 columns details-heading">
           <span>{{'helpdesk.emailSent' | translate}}</span>
         </div>
-        <div class="large-7 columns details-value">
+        <div class="large-7 columns details-value" ng-show="helpdeskOrderCtrl.showPartnerEmailSent">
           <span>{{helpdeskOrderCtrl.partnerEmailSent}}</span>
+        </div>
+        <div class="helpdesk-order-email">
+          <span class="spinner-example--small" ng-show="!helpdeskOrderCtrl.showPartnerEmailSent">
+            <i class="icon icon-spinner"></i>
+          </span>
         </div>
       </div>
       <hr>

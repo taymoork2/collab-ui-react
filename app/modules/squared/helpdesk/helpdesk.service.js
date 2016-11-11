@@ -12,6 +12,7 @@
       searchOrgs: searchOrgs,
       searchOrders: searchOrders,
       resendAdminEmail: resendAdminEmail,
+      editAdminEmail: editAdminEmail,
       getUser: getUser,
       getOrg: getOrg,
       isEmailBlocked: isEmailBlocked,
@@ -207,6 +208,23 @@
         url = urlBase + "helpdesk/orders/" + orderUUID + "/actions/resendpartneradminemail/invoke";
       }
       return $http.post(url).then(extractData);
+    }
+
+    function editAdminEmail(orderUUID, adminEmail, toCustomer) {
+      var url;
+      var payload;
+      if (toCustomer === true) {
+        url = urlBase + "helpdesk/orders/" + orderUUID + "/customerAdminEmail";
+        payload = {
+          "emailId": adminEmail
+        };
+      } else {
+        url = urlBase + "helpdesk/orders/" + orderUUID + "/partnerAdminEmail";
+        payload = {
+          "emailId": adminEmail
+        };
+      }
+      return $http.post(url, payload).then(extractData);
     }
 
     function getUser(orgId, userId) {

@@ -5653,7 +5653,9 @@
     "editAdminEmail": "Edit",
     "resendTooltip": "Resends the welcome email.",
     "resendMailSuccess": "Welcome email was successfully sent.",
-    "resendMailFailure": "Failed to resend welcome email."
+    "resendMailFailure": "Failed to resend welcome email.",
+    "editAdminEmailSuccess": "Admin email was updated successfully.",
+    "editAdminEmailFailure": "Failed to update admin email."
   },
   "activation": {
     "verificationComplete": "Verification Complete",

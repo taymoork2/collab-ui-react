@@ -14,6 +14,8 @@
     } else {
       vm.orderId = $stateParams.id;
     }
+    vm.showCustomerEmailSent = true;
+    vm.showPartnerEmailSent = true;
     vm.customerAdminEmailEdit = vm.partnerAdminEmailEdit = false;
     vm.showCustomerAdminEmailEdit = showCustomerAdminEmailEdit;
     vm.updateCustomerAdminEmail = updateCustomerAdminEmail;
@@ -46,45 +48,45 @@
       // Getting the account details using the account Id from order.
       if (accountId) {
         HelpdeskService.getAccount(accountId)
-        .then(function (account) {
-          vm.account = account;
-          vm.accountName = account.accountName;
-          vm.customerId = account.customerId;
-          vm.accountOrgId = account.accountOrgId;
-          vm.customerAdminEmail = _.get(vm, 'account.customerAdminEmail');
-          // Getting partner Info only if Partner OrgId exists.
-          vm.partnerOrgId = account.partnerOrgId;
-          if (vm.partnerOrgId) {
-            var licenses = _.get(account, 'licenses');
-            var license = _.first(licenses);
-            vm.partnerAdminEmail = license.partnerEmail;
-            // Getting the display name of the partner cited in account.
-            HelpdeskService.getOrg(vm.partnerOrgId).then(function (org) {
-              vm.managedBy = _.get(org, 'displayName', '');
-            }, vm._helpers.notifyError);
-          }
-          vm.provisionTime = (new Date(orderObj.orderReceived)).toGMTString();
-          vm.accountActivated = false;
-          vm.accountActivationInfo = $translate.instant('common.no');
-          if (vm.accountOrgId) {
-            // Getting the activation time if the account has already been activated.
-            HelpdeskService.getOrg(vm.accountOrgId).then(function (org) {
-              var activationDate = _.get(org, 'meta.created');
-              if (activationDate) {
-                vm.accountActivated = true;
-                vm.accountActivationInfo = (new Date(activationDate)).toGMTString();
-              }
-            });
-          }
+          .then(function (account) {
+            vm.account = account;
+            vm.accountName = account.accountName;
+            vm.customerId = account.customerId;
+            vm.accountOrgId = account.accountOrgId;
+            vm.customerAdminEmail = _.get(vm, 'account.customerAdminEmail');
+            // Getting partner Info only if Partner OrgId exists.
+            vm.partnerOrgId = account.partnerOrgId;
+            if (vm.partnerOrgId) {
+              var licenses = _.get(account, 'licenses');
+              var license = _.first(licenses);
+              vm.partnerAdminEmail = license.partnerEmail;
+              // Getting the display name of the partner cited in account.
+              HelpdeskService.getOrg(vm.partnerOrgId).then(function (org) {
+                vm.managedBy = _.get(org, 'displayName', '');
+              }, XhrNotificationService.notify);
+            }
+            vm.provisionTime = (new Date(orderObj.orderReceived)).toGMTString();
+            vm.accountActivated = false;
+            vm.accountActivationInfo = $translate.instant('common.no');
+            if (vm.accountOrgId) {
+              // Getting the activation time if the account has already been activated.
+              HelpdeskService.getOrg(vm.accountOrgId).then(function (org) {
+                var activationDate = _.get(org, 'meta.created');
+                if (activationDate) {
+                  vm.accountActivated = true;
+                  vm.accountActivationInfo = (new Date(activationDate)).toGMTString();
+                }
+              });
+            }
 
-          // Get the most recent date that emails were sent to customer and partner
-          // First, get latest date the welcome email was sent to customer.
-          getEmailStatus(true);
-          // If Partner is available, get the latest date welcome mail was sent to partner.
-          if (vm.partnerOrgId) {
-            getEmailStatus(false);
-          }
-        });
+            // Get the most recent date that emails were sent to customer and partner
+            // First, get latest date the welcome email was sent to customer.
+            getEmailStatus(true);
+            // If Partner is available, get the latest date welcome mail was sent to partner.
+            if (vm.partnerOrgId) {
+              getEmailStatus(false);
+            }
+          });
       }
     }
 
@@ -92,22 +94,36 @@
     function getEmailStatus(isCustomer) {
       if (isCustomer) {
         HelpdeskService.getEmailStatus(vm.customerAdminEmail)
-        .then(function (response) {
-          // First element of response array is the latest.
-          var mailStat = _.first(response);
-          if (mailStat && mailStat.timestamp) {
-            vm.customerEmailSent = getUTCtime(mailStat.timestamp);
-          }
-        }, vm._helpers.notifyError);
+          .then(function (response) {
+            // First element of response array is the latest.
+            var mailStat = _.first(response);
+            for (var i = 0; i < response.length; i++) {
+              if (response[i].event == "delivered") {
+                mailStat = response[i];
+                break;
+              }
+            }
+            if (mailStat && mailStat.timestamp) {
+              vm.customerEmailSent = getUTCtime(mailStat.timestamp);
+            }
+            vm.showCustomerEmailSent = true;
+          }, XhrNotificationService.notify);
       } else {
         HelpdeskService.getEmailStatus(vm.partnerAdminEmail)
-        .then(function (response) {
-          // First element of response array is the latest.
-          var mailStat = _.first(response);
-          if (mailStat && mailStat.timestamp) {
-            vm.partnerEmailSent = getUTCtime(mailStat.timestamp);
-          }
-        }, vm._helpers.notifyError);
+          .then(function (response) {
+            // First element of response array is the latest.
+            var mailStat = _.first(response);
+            for (var i = 0; i < response.length; i++) {
+              if (response[i].event == "delivered") {
+                mailStat = response[i];
+                break;
+              }
+            }
+            if (mailStat && mailStat.timestamp) {
+              vm.partnerEmailSent = getUTCtime(mailStat.timestamp);
+            }
+            vm.showPartnerEmailSent = true;
+          }, XhrNotificationService.notify);
       }
     }
 
@@ -115,8 +131,7 @@
     function getUTCtime(timestamp) {
       var newDate = new Date();
       newDate.setTime(timestamp * 1000);
-      var emailSent = newDate.toUTCString();
-      return emailSent;
+      return newDate.toUTCString();
     }
 
     // Allow Customer Admin Email address to be editted
@@ -126,7 +141,24 @@
 
     // Update Customer Admin Email and send welcome email
     function updateCustomerAdminEmail() {
-      // TODO - Waiting for backend support
+      HelpdeskService.editAdminEmail(vm.orderUuid, vm.customerAdminEmail, true)
+        .then(function () {
+          var successMessage = [];
+          successMessage.push($translate.instant('helpdesk.editAdminEmailSuccess'));
+          Notification.notify(successMessage, 'success');
+          vm.customerAdminEmailEdit = false;
+          vm.showCustomerEmailSent = false;
+          _.delay(function () {
+            getEmailStatus(true);
+          }, 5000);
+        }, function (err) {
+          var message = _.get(err.data, "message");
+          var description = _.get(message[0], "description");
+          var errorMessage = [];
+          errorMessage.push($translate.instant('helpdesk.editAdminEmailFailure'));
+          errorMessage.push(description);
+          Notification.notify(errorMessage, 'error');
+        });
     }
 
     // Cancel (close) the Edit option
@@ -141,7 +173,23 @@
 
     // Update Partner Admin Email and send welcome email
     function updatePartnerAdminEmail() {
-      // TODO - Waiting for backend support
+      HelpdeskService.editAdminEmail(vm.orderUuid, vm.customerAdminEmail, false)
+        .then(function () {
+          var successMessage = [];
+          successMessage.push($translate.instant('helpdesk.editAdminEmailSuccess'));
+          Notification.notify(successMessage, 'success');
+          vm.partnerAdminEmailEdit = false;
+          _.delay(function () {
+            getEmailStatus(false);
+          }, 5000);
+        }, function (err) {
+          var message = _.get(err.data, "errors");
+          var description = _.get(message[0], "description");
+          var errorMessage = [];
+          errorMessage.push($translate.instant('helpdesk.editAdminEmailFailure'));
+          errorMessage.push(description);
+          Notification.notify(errorMessage, 'error');
+        });
     }
 
     // Cancel (close) the Edit option
@@ -153,7 +201,14 @@
     function resendAdminEmail(isCustomer) {
       HelpdeskService.resendAdminEmail(vm.orderUuid, isCustomer)
         .then(function () {
-          getEmailStatus(isCustomer);
+          if (isCustomer) {
+            vm.showCustomerEmailSent = false;
+          } else {
+            vm.showPartnerEmailSent = false;
+          }
+          _.delay(function () {
+            getEmailStatus(isCustomer);
+          }, 5000);
           var successMessage = [];
           successMessage.push($translate.instant('helpdesk.resendMailSuccess'));
           Notification.notify(successMessage, 'success');
@@ -163,7 +218,7 @@
           errorMessage.push($translate.instant('helpdesk.resendMailFailure'));
           errorMessage.push(message);
           Notification.notify(errorMessage, 'error');
-        });
+        }, XhrNotificationService.notify);
     }
 
     // Transition to the customer page if account has been activated.
