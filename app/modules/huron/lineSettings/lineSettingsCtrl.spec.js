@@ -293,7 +293,7 @@ describe('Controller: LineSettingsCtrl', function () {
       controller.init();
       $scope.$apply();
       expect(controller.cfModel.forward).toBe('busy');
-      expect(controller.cfModel.forwardNABCalls).toBe(getDirectoryNumberBusy.callForwardBusy.intDestination);
+      expect(controller.internalForward.phoneNumber).toBe(getDirectoryNumberBusy.callForwardBusy.intDestination);
       expect(controller.telephonyInfo.voicemail).toBe('On');
     });
   });
@@ -314,7 +314,7 @@ describe('Controller: LineSettingsCtrl', function () {
       controller.init();
       $scope.$apply();
       expect(controller.cfModel.forward).toBe('busy');
-      expect(controller.cfModel.forwardNABCalls).toBe(getDirectoryNumberBusy.callForwardBusy.intDestination);
+      expect(controller.internalForward.phoneNumber).toBe(getDirectoryNumberBusy.callForwardBusy.intDestination);
       expect(controller.telephonyInfo.voicemail).toBe('Off');
     });
   });
@@ -594,15 +594,6 @@ describe('Controller: LineSettingsCtrl', function () {
       controller.init();
       $scope.$apply();
       expect(controller.saveDisabled()).toBeFalsy();
-    });
-
-    it('should return true when loadExternalNumberPool fails and the line is new', function () {
-      TelephonyInfoService.getExternalNumberPool.and.returnValue([]);
-      DirectoryNumber.getDirectoryNumber.and.returnValue($q.when(getDirectoryNumberBusyNewLine));
-      TelephonyInfoService.loadExternalNumberPool.and.returnValue($q.reject(errorResponse));
-      controller.init();
-      $scope.$apply();
-      expect(controller.saveDisabled()).toBeTruthy();
     });
   });
 

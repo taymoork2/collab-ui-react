@@ -1,6 +1,6 @@
 import {
   ITimespan,
-} from '../partnerReports/partnerReportInterfaces';
+} from '../../partnerReports/partnerReportInterfaces';
 
 describe('Controller: Dummy Customer Reports', function () {
   const defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
@@ -47,46 +47,46 @@ describe('Controller: Dummy Customer Reports', function () {
 
   beforeEach(function () {
     this.initModules('Core');
-    this.injectDependencies('DummyCustomerReportService');
+    this.injectDependencies('DummySparkDataService');
   });
 
   it('dummyActiveUserData should return the expected responses', function () {
     let dummyActiveData = _.cloneDeep(dummyData.activeUser);
-    expect(this.DummyCustomerReportService.dummyActiveUserData(timeFilter[0], false)).toEqual(updateDates(dummyActiveData.one, timeFilter[0]));
-    expect(this.DummyCustomerReportService.dummyActiveUserData(timeFilter[1], false)).toEqual(updateDates(dummyActiveData.two, timeFilter[1]));
-    expect(this.DummyCustomerReportService.dummyActiveUserData(timeFilter[2], false)).toEqual(updateDates(dummyActiveData.three, timeFilter[2]));
+    expect(this.DummySparkDataService.dummyActiveUserData(timeFilter[0], false)).toEqual(updateDates(dummyActiveData.one, timeFilter[0]));
+    expect(this.DummySparkDataService.dummyActiveUserData(timeFilter[1], false)).toEqual(updateDates(dummyActiveData.two, timeFilter[1]));
+    expect(this.DummySparkDataService.dummyActiveUserData(timeFilter[2], false)).toEqual(updateDates(dummyActiveData.three, timeFilter[2]));
 
     let dummyLineData = _.cloneDeep(activeData.dummyData);
-    expect(this.DummyCustomerReportService.dummyActiveUserData(timeFilter[0], true)).toEqual(updateLineDates(dummyLineData.one, timeFilter[0]));
-    expect(this.DummyCustomerReportService.dummyActiveUserData(timeFilter[1], true)).toEqual(updateLineDates(dummyLineData.two, timeFilter[1]));
-    expect(this.DummyCustomerReportService.dummyActiveUserData(timeFilter[2], true)).toEqual(updateLineDates(dummyLineData.three, timeFilter[2]));
+    expect(this.DummySparkDataService.dummyActiveUserData(timeFilter[0], true)).toEqual(updateLineDates(dummyLineData.one, timeFilter[0]));
+    expect(this.DummySparkDataService.dummyActiveUserData(timeFilter[1], true)).toEqual(updateLineDates(dummyLineData.two, timeFilter[1]));
+    expect(this.DummySparkDataService.dummyActiveUserData(timeFilter[2], true)).toEqual(updateLineDates(dummyLineData.three, timeFilter[2]));
   });
 
   it('dummyAvgRoomData should return the expected responses', function () {
     let dummyAvg = _.cloneDeep(dummyData.avgRooms);
-    expect(this.DummyCustomerReportService.dummyAvgRoomData(timeFilter[0])).toEqual(updateDates(dummyAvg.one, timeFilter[0]));
-    expect(this.DummyCustomerReportService.dummyAvgRoomData(timeFilter[1])).toEqual(updateDates(dummyAvg.two, timeFilter[1]));
-    expect(this.DummyCustomerReportService.dummyAvgRoomData(timeFilter[2])).toEqual(updateDates(dummyAvg.three, timeFilter[2]));
+    expect(this.DummySparkDataService.dummyAvgRoomData(timeFilter[0])).toEqual(updateDates(dummyAvg.one, timeFilter[0]));
+    expect(this.DummySparkDataService.dummyAvgRoomData(timeFilter[1])).toEqual(updateDates(dummyAvg.two, timeFilter[1]));
+    expect(this.DummySparkDataService.dummyAvgRoomData(timeFilter[2])).toEqual(updateDates(dummyAvg.three, timeFilter[2]));
   });
 
   it('dummyFilesSharedData should return the expected responses', function () {
     let dummyFiles = _.cloneDeep(dummyData.filesShared);
-    expect(this.DummyCustomerReportService.dummyFilesSharedData(timeFilter[0])).toEqual(updateDates(dummyFiles.one, timeFilter[0]));
-    expect(this.DummyCustomerReportService.dummyFilesSharedData(timeFilter[1])).toEqual(updateDates(dummyFiles.two, timeFilter[1]));
-    expect(this.DummyCustomerReportService.dummyFilesSharedData(timeFilter[2])).toEqual(updateDates(dummyFiles.three, timeFilter[2]));
+    expect(this.DummySparkDataService.dummyFilesSharedData(timeFilter[0])).toEqual(updateDates(dummyFiles.one, timeFilter[0]));
+    expect(this.DummySparkDataService.dummyFilesSharedData(timeFilter[1])).toEqual(updateDates(dummyFiles.two, timeFilter[1]));
+    expect(this.DummySparkDataService.dummyFilesSharedData(timeFilter[2])).toEqual(updateDates(dummyFiles.three, timeFilter[2]));
   });
 
   it('dummyMediaData should return the expected responses', function () {
     let dummyMedia = _.cloneDeep(mediaData.dummyData);
-    expect(this.DummyCustomerReportService.dummyMediaData(timeFilter[0])).toEqual(updateDates(dummyMedia.one, timeFilter[0]));
-    expect(this.DummyCustomerReportService.dummyMediaData(timeFilter[1])).toEqual(updateDates(dummyMedia.two, timeFilter[1]));
-    expect(this.DummyCustomerReportService.dummyMediaData(timeFilter[2])).toEqual(updateDates(dummyMedia.three, timeFilter[2]));
+    expect(this.DummySparkDataService.dummyMediaData(timeFilter[0])).toEqual(updateDates(dummyMedia.one, timeFilter[0]));
+    expect(this.DummySparkDataService.dummyMediaData(timeFilter[1])).toEqual(updateDates(dummyMedia.two, timeFilter[1]));
+    expect(this.DummySparkDataService.dummyMediaData(timeFilter[2])).toEqual(updateDates(dummyMedia.three, timeFilter[2]));
   });
 
   it('dummyMetricsData should return the expected responses', function () {
     let dummyMetrics = _.cloneDeep(metrics.dummyData);
     dummyMetrics.displayData = undefined;
-    expect(this.DummyCustomerReportService.dummyMetricsData()).toEqual(dummyMetrics);
+    expect(this.DummySparkDataService.dummyMetricsData()).toEqual(dummyMetrics);
   });
 
   it('dummyDeviceData should return the expected responses', function () {
@@ -95,8 +95,8 @@ describe('Controller: Dummy Customer Reports', function () {
     devicesData.two[0].graph = updateDates(devicesData.two[0].graph, timeFilter[1]);
     devicesData.three[0].graph = updateDates(devicesData.three[0].graph, timeFilter[2]);
 
-    expect(this.DummyCustomerReportService.dummyDeviceData(timeFilter[0])).toEqual(devicesData.one);
-    expect(this.DummyCustomerReportService.dummyDeviceData(timeFilter[1])).toEqual(devicesData.two);
-    expect(this.DummyCustomerReportService.dummyDeviceData(timeFilter[2])).toEqual(devicesData.three);
+    expect(this.DummySparkDataService.dummyDeviceData(timeFilter[0])).toEqual(devicesData.one);
+    expect(this.DummySparkDataService.dummyDeviceData(timeFilter[1])).toEqual(devicesData.two);
+    expect(this.DummySparkDataService.dummyDeviceData(timeFilter[2])).toEqual(devicesData.three);
   });
 });

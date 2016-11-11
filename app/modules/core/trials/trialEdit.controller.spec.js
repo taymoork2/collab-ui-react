@@ -32,9 +32,7 @@ describe('Controller: TrialEditCtrl:', function () {
     FeatureToggleService = _FeatureToggleService_;
     Orgservice = _Orgservice_;
 
-    spyOn(Notification, 'notify');
     spyOn(Notification, 'success');
-    spyOn(Notification, 'error');
     spyOn(Notification, 'errorResponse');
     $state.modal = jasmine.createSpyObj('modal', ['close']);
     spyOn($state, 'go');
@@ -130,7 +128,7 @@ describe('Controller: TrialEditCtrl:', function () {
       });
 
       it('should notify error', function () {
-        expect(Notification.error).toHaveBeenCalled();
+        expect(Notification.errorResponse).toHaveBeenCalled();
       });
 
       it('should not close the modal', function () {

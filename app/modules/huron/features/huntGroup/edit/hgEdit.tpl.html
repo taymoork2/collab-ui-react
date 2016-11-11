@@ -29,12 +29,19 @@
         <label for="fallback-dest">{{:: 'huronHuntGroup.fallbackLabel' | translate}}</label>
         <p>{{:: 'huronHuntGroup.fallbackDesc' | translate}}</p>
 
-        <div ng-if="hge.shouldShowFallbackLookup()" class="form-input typeahead"
-             ng-class="{'warning-typeahead': hge.shouldShowFallbackWarning()}">
-          <input type="text" ng-model="hge.selectedFallbackNumber"
-                 typeahead="user for user in hge.fetchFallbackDestination($viewValue) | limitTo: 10"
-                 typeahead-template-url="userTemplate.html" typeahead-on-select="hge.selectFallback($item)"
-                 ng-keyup="hge.validateFallbackNumber()" placeholder="{{:: 'huronHuntGroup.numberLabel' | translate}}"/>
+        <div ng-if="hge.shouldShowFallbackLookup()" class="form-input typeahead">
+          <cs-call-destination
+            model="hge.selectedFallbackNumber"
+            size="medium-12"
+            inputs="hge.callDestInputs"
+            select-type="select"
+            external-number-region-code-fn="hge.externalRegionCodeFn()"
+            ng-keyup="hge.validateFallbackNumber()"
+            internal-number-data-fn="hge.fetchFallbackDestination(data)"
+            internal-number-on-select="hge.selectFallback(data)"
+            internal-number-template-url="userTemplate.html"
+            internal-number-translations="hge.internalTranslations">
+          </cs-call-destination>
         </div>
         <div class="ellipsis warning-typeahead" ng-if="hge.shouldShowFallbackWarning()">
             <span class="icon"></span> <span class="message">{{:: 'huronHuntGroup.invalidFallback' | translate}}</span>

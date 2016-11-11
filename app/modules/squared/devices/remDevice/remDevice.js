@@ -6,10 +6,35 @@
     .controller('RemDeviceController',
 
       /* @ngInject */
-      function ($modalInstance, CsdmDataModelService, CsdmUnusedAccountsService, deviceOrCode) {
+      function ($modalInstance, $translate, CsdmDataModelService, CsdmUnusedAccountsService, FeatureToggleService, deviceOrCode) {
         var rdc = this;
+        var showPlaces = false;
 
         rdc.deviceOrCode = deviceOrCode;
+
+        FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
+          showPlaces = result;
+        });
+
+        rdc.getDeleteText = function () {
+          if (deviceOrCode.needsActivation) {
+            if (showPlaces) {
+              return $translate.instant('placesPage.deletePlace');
+            }
+            return $translate.instant('deviceOverviewPage.deleteLocation');
+          }
+          return $translate.instant('spacesPage.deleteDevice');
+        };
+
+        rdc.getDeleteConfText = function () {
+          if (deviceOrCode.needsActivation) {
+            if (showPlaces) {
+              return $translate.instant('spacesPage.deletePlaceConfText');
+            }
+            return $translate.instant('spacesPage.deleteLocationConfText');
+          }
+          return $translate.instant('spacesPage.deleteDeviceConfText');
+        };
 
         rdc.deleteDeviceOrCode = function () {
           if (rdc.deviceOrCode.isUnused) {

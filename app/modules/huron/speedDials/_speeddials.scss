@@ -41,6 +41,8 @@
     flex-direction: row;
     padding-left: 2rem;
     padding-right: 2rem;
+    @include vr-spacing(pt, 1.5);
+    @include vr-spacing(pb, 1);
 
     input {
       width: 13rem;

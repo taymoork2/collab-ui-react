@@ -446,11 +446,17 @@
       isFusionCal: function () {
         return isEntitled(Config.entitlements.fusion_cal);
       },
-      isDeviceMgmt: function () {
-        return isEntitled(Config.entitlements.room_system);
-      },
       isFusionEC: function () {
         return isEntitled(Config.entitlements.fusion_ec);
+      },
+      isFusionMedia: function () {
+        return isEntitled(Config.entitlements.mediafusion);
+      },
+      isFusionHDS: function () {
+        return isEntitled(Config.entitlements.hds);
+      },
+      isDeviceMgmt: function () {
+        return isEntitled(Config.entitlements.room_system);
       },
       isWebexSquared: function () {
         return isEntitled(Config.entitlements.squared);

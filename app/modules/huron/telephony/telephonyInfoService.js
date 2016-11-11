@@ -7,7 +7,9 @@
 
   /* @ngInject */
 
-  function TelephonyInfoService($rootScope, $q, $translate, Authinfo, RemoteDestinationService, UserServiceCommon, UserDirectoryNumberService, InternalNumberPoolService, ExternalNumberPoolService, ServiceSetup, DirectoryNumberUserService, DirectoryNumber, HuronCustomer, InternationalDialing) {
+  function TelephonyInfoService($rootScope, $q, $translate, Authinfo, RemoteDestinationService,
+    UserServiceCommon, UserDirectoryNumberService, InternalNumberPoolService, ExternalNumberPool,
+    ServiceSetup, DirectoryNumberUserService, DirectoryNumber, HuronCustomer, InternationalDialing) {
 
     var broadcastEvent = "telephonyInfoUpdated";
 
@@ -340,27 +342,30 @@
       return angular.copy(externalNumberPool);
     }
 
-    function loadExternalNumberPool(pattern) {
-      var extNumPool = [{
+    function loadExternalNumberPool(pattern, numberType) {
+      // Adds a 'None' entry to the list of selectable external numbers
+      var externalNumberPool = [{
         uuid: 'none',
         pattern: $translate.instant('directoryNumberPanel.none')
       }];
-      var patternQuery = pattern ? '%' + pattern + '%' : undefined;
-      return ExternalNumberPoolService.query({
-        customerId: Authinfo.getOrgId(),
-        directorynumber: '',
-        order: 'pattern',
-        pattern: patternQuery
-      }).$promise
-        .then(function (extPool) {
-          for (var i = 0; i < extPool.length; i++) {
-            var dn = {
-              uuid: extPool[i].uuid,
-              pattern: extPool[i].pattern
-            };
-            extNumPool.push(dn);
-          }
-          externalNumberPool = extNumPool;
+
+      return ExternalNumberPool.getExternalNumbers(
+          Authinfo.getOrgId(),
+          pattern,
+          ExternalNumberPool.UNASSIGNED_NUMBERS,
+
+        // Defaults to loading regular DID numbers only, if numberType is not specified.
+        // Toll-Free numbers should only be available for Auto Attendant and Hunt Groups.
+          numberType || ExternalNumberPool.FIXED_LINE_OR_MOBILE
+        ).then(function (extPool) {
+          _.forEach(extPool, function (externalNumber) {
+            externalNumberPool.push({
+              uuid: externalNumber.uuid,
+              pattern: externalNumber.pattern
+            });
+          });
+
+          // Adds currently assigned number to the list of selectable external numbers
           if (telephonyInfo.alternateDirectoryNumber.uuid !== 'none') {
             externalNumberPool.push(telephonyInfo.alternateDirectoryNumber);
           }
@@ -371,29 +376,33 @@
         });
     }
 
-    function loadExtPoolWithMapping(count) {
-      return ExternalNumberPoolService.query({
-        customerId: Authinfo.getOrgId(),
-        directorynumber: '',
-        order: 'pattern',
+    function loadExtPoolWithMapping(count, numberType) {
+      var finalNumberType = numberType || ExternalNumberPool.FIXED_LINE_OR_MOBILE;
+      var extraQueries = {
         automaptodn: true,
         automaptodncount: count
-      }).$promise
-        .then(function (extPool) {
-          var extNumPool = extPool.map(function (extPoolValue) {
-            var dn = {
-              uuid: extPoolValue.uuid,
-              pattern: extPoolValue.pattern,
-              directoryNumber: extPoolValue.directoryNumber
-            };
-            return dn;
-          });
-          externalNumberPool = extNumPool;
-          return angular.copy(externalNumberPool);
-        }).catch(function (response) {
-          externalNumberPool = [];
-          return $q.reject(response);
+      };
+      return ExternalNumberPool.getExternalNumbers(
+        Authinfo.getOrgId(),
+        ExternalNumberPool.NO_PATTERN_MATCHING,
+        ExternalNumberPool.UNASSIGNED_NUMBERS,
+        finalNumberType,
+        extraQueries
+      ).then(function (extPool) {
+        var extNumPool = extPool.map(function (extPoolValue) {
+          var dn = {
+            uuid: extPoolValue.uuid,
+            pattern: extPoolValue.pattern,
+            directoryNumber: extPoolValue.directoryNumber
+          };
+          return dn;
         });
+        externalNumberPool = extNumPool;
+        return angular.copy(externalNumberPool);
+      }).catch(function (response) {
+        externalNumberPool = [];
+        return $q.reject(response);
+      });
     }
 
     function checkCustomerVoicemail() {

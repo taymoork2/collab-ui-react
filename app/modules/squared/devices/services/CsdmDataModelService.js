@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmDataModelService($q, $rootScope, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmHuronOrgDeviceService, CsdmHuronPlaceService, CsdmPoller, CsdmConverter, CsdmHubFactory, Authinfo) {
+  function CsdmDataModelService($q, $timeout, $rootScope, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmHuronOrgDeviceService, CsdmHuronPlaceService, CsdmPoller, CsdmConverter, CsdmHubFactory, Authinfo) {
 
     var placesUrl = CsdmPlaceService.getPlacesUrl();
 
@@ -15,6 +15,7 @@
     var codesLoaded = false;
     var huronDevicesLoaded = false;
     var placesLoaded = false;
+    var pollingGracePeriodActive = true;
 
     var devicesFetchedDeferred;
     var devicesFastFetchedDeferred;
@@ -31,7 +32,9 @@
       slowResolved = false;
       if (!devicesFastFetchedDeferred) {
 
-        //First time: kick off get huron devices:
+        //First time: kick off get huron devices: //If we disable device polling,
+        // we could move csdmHuronOrgDeviceService.fetch out of (!devicesFastFetchedDeferred)
+        // so it is refreshed on "single poll"
 
         csdmHuronOrgDeviceService.fetchDevices()
           .then(function (huronDeviceMap) {
@@ -374,27 +377,57 @@
       }
     }
 
-    function generatePlacesFromDevicesAndCodes() {
-      if (!placesMapReadyDeferred) {
-        placesMapReadyDeferred = $q.defer();
-      }
+    function startPollingGracePeriod() {
 
+      $timeout(function () {
+        pollingGracePeriodActive = false;
+      }, 30000);
+    }
+
+    function retrieveDevicesAndAccountsAndGeneratePlaceMap() {
+
+      var placesMapReadyPromise = $q.defer();
       var getDevicesPromise = getDevicesMap();
       var getCodePromise = getCodesMap();
 
       getAccountsMap().then(function () {
         getDevicesPromise.then(function () {
           getCodePromise.then(function () {
+            startPollingGracePeriod();
             updatePlacesCache();
-            placesMapReadyDeferred.resolve(placesDataModel);
+            placesMapReadyPromise.resolve(placesDataModel);
           });
         });
       });
+
+      return placesMapReadyPromise;
     }
 
-    function getPlacesMap() {
+    function reFetchDevicesAndAccountsAndGeneratePlaceMap() {
+
+      var placesMapReadyPromise = $q.defer();
+      var getDevicesPromise = fetchDevices();
+      var getCodePromise = fetchCodes();
+
+      fetchAccounts().then(function () {
+        getDevicesPromise.then(function () {
+          getCodePromise.then(function () {
+            startPollingGracePeriod();
+            updatePlacesCache();
+            placesMapReadyPromise.resolve(placesDataModel);
+          });
+        });
+      });
+
+      return placesMapReadyPromise;
+    }
+
+    function getPlacesMap(refreshIfOld) {
+
       if (!placesMapReadyDeferred) {
-        generatePlacesFromDevicesAndCodes();
+        placesMapReadyDeferred = retrieveDevicesAndAccountsAndGeneratePlaceMap();
+      } else if (refreshIfOld && !pollingGracePeriodActive) {
+        reFetchDevicesAndAccountsAndGeneratePlaceMap();
       }
       return placesMapReadyDeferred.promise;
     }

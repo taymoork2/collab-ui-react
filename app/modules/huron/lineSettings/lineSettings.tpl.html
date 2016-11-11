@@ -18,11 +18,130 @@
     </cs-sp-section>
     <cs-sp-section>
       <h4 class="top-padding-section-title" translate="callForwardPanel.title"></h4>
-      <formly-form model="lineSettings.cfModel" fields="lineSettings.callForwardingFields"></formly-form>
+      <div class="cs-radio-group">
+        <input
+          cs-input
+          type="radio"
+          ng-model="lineSettings.cfModel.forward"
+          id="noForward"
+          name="noForward"
+          value="none"
+          cs-input-label="{{::'callForwardPanel.forwardNoCalls' | translate}}">
+        <input
+          cs-input
+          type="radio"
+          ng-model="lineSettings.cfModel.forward"
+          id="allForward"
+          name="allForward"
+          value="all"
+          cs-input-label="{{::'callForwardPanel.forwardAllCalls' | translate}}">
+        <div ng-if="lineSettings.cfModel.forward === 'all'">
+          <cs-call-destination
+            ng-if="lineSettings.allDirectVoicemail === false"
+            class="row"
+            model="lineSettings.allForward"
+            size="medium-12"
+            inputs="lineSettings.callForwardInputs"
+            select-type="select"
+            custom-number-translations="lineSettings.customTranslations"
+            external-number-region-code-fn="lineSettings.getRegionCode()">
+          </cs-call-destination>
+          <input
+            cs-input
+            type="checkbox"
+            id="allDirectVoicemail"
+            name="allDirectVoicemail"
+            ng-model="lineSettings.allDirectVoicemail"
+            is-disabled="lineSettings.telephonyInfo.voicemail !== 'On'"
+            cs-input-label="{{::'callForwardPanel.directVoicemail' | translate}}">
+        </div>
+        <input
+          cs-input
+          type="radio"
+          ng-model="lineSettings.cfModel.forward"
+          id="busyForward"
+          name="busyForward"
+          value="busy"
+          cs-input-label="{{::'callForwardPanel.forwardBusyNoAnswer' | translate}}">
+        <div ng-if="lineSettings.cfModel.forward === 'busy'">
+          <h5 translate="{{lineSettings.cfModel.forwardExternalCalls ? 'callForwardPanel.internalOnly' : 'callForwardPanel.internalAndExternal'}}"></h5>
+          <cs-call-destination
+            ng-if="lineSettings.internalDirectVoicemail === false"
+            class="row"
+            model="lineSettings.internalForward"
+            size="medium-12"
+            inputs="lineSettings.callForwardInputs"
+            select-type="select"
+            custom-number-translations="lineSettings.customTranslations"
+            external-number-region-code-fn="lineSettings.getRegionCode()">
+          </cs-call-destination>
+          <div class="cs-checkbox-group">
+            <input
+              cs-input
+              type="checkbox"
+              id="internalDirectVoicemail"
+              name="internalDirectVoicemail"
+              ng-model="lineSettings.internalDirectVoicemail"
+              is-disabled="lineSettings.telephonyInfo.voicemail !== 'On'"
+              cs-input-label="{{::'callForwardPanel.directVoicemail' | translate}}">
+            <input
+              cs-input
+              type="checkbox"
+              ng-disabled="{{lineSettings.cfModel.forward === 'all'}}"
+              id="forwardExternalCalls"
+              name="forwardExternalCalls"
+              ng-model="lineSettings.cfModel.forwardExternalCalls"
+              cs-input-label="{{::'callForwardPanel.forwardExternal' | translate}}">
+          </div>
+          <div ng-if="lineSettings.cfModel.forwardExternalCalls">
+            <h5 translate="callForwardPanel.externalOnly"></h5>
+            <cs-call-destination
+              ng-if="lineSettings.externalDirectVoicemail === false"
+              class="row"
+              disabled="lineSettings.externalDirectVoicemail"
+              model="lineSettings.externalForward"
+              size="medium-12"
+              inputs="lineSettings.callForwardInputs"
+              select-type="select"
+              custom-number-translations="lineSettings.customTranslations"
+              external-number-region-code-fn="lineSettings.getRegionCode()">
+            </cs-call-destination>
+            <input
+              cs-input
+              type="checkbox"
+              id="externalDirectVoicemail"
+              name="externalDirectVoicemail"
+              ng-model="lineSettings.externalDirectVoicemail"
+              is-disabled="lineSettings.telephonyInfo.voicemail !== 'On'"
+              cs-input-label="{{::'callForwardPanel.directVoicemail' | translate}}">
+          </div>
+        </div>
+      </div>
     </cs-sp-section>
     <cs-sp-section>
       <h4 class="top-padding-section-title" translate="callerIdPanel.title"></h4>
-      <formly-form model="lineSettings.callerIdInfo" fields="lineSettings.callerIdFields"></formly-form>
+      <cs-select
+        ng-model="lineSettings.callerIdInfo.callerIdSelection"
+        options="lineSettings.callerId.options"
+        labelfield="label"
+        valuefield="value"></cs-select>
+      <div ng-if="lineSettings.callerIdInfo.callerIdSelection.label === 'Custom'">
+        <label class="cs-input__label" for="customName" translate="callerIdPanel.customName"></label>
+        <input
+          cs-input
+          id="customName"
+          type="text"
+          ng-model="lineSettings.callerIdInfo.customName">
+        <cs-call-destination
+          class="row"
+          model="lineSettings.callerIdInfo.customNumber"
+          size="medium-12"
+          inputs="lineSettings.callerIdInputs"
+          select-type="select"
+          custom-number-translations="lineSettings.customTranslations"
+          external-number-region-code-fn="lineSettings.getRegionCode()">
+        </cs-call-destination>
+      </div>
       <div class="caller-id-description">
         <p>{{lineSettings.callerIdInfo.callerIdSelection.value.name}}</p>
         <p>{{lineSettings.callerIdInfo.callerIdSelection.value.pattern}}</p>

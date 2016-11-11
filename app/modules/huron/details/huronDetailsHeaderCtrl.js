@@ -13,7 +13,7 @@
 
     function showFeatureTab(pstnEnabled) {
       return Authinfo.getLicenses().filter(function (license) {
-        return !pstnEnabled || (license.licenseType === Config.licenseTypes.COMMUNICATION || license.licenseType === Config.licenseTypes.SHARED_DEVICES);
+        return !pstnEnabled || (license.licenseType === Config.licenseTypes.COMMUNICATION);
       }).length > 0;
     }
 

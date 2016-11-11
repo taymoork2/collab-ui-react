@@ -2,6 +2,21 @@ export interface IDirectoryNumber {
   pattern: string;
 }
 
+export enum Availability {
+  ASSIGNED_AND_UNASSIGNED = <any>undefined,
+  UNASSIGNED = <any>'',
+}
+
+export enum ExternalNumberType {
+  ALL = <any>undefined,
+  DID = <any>'Fixed Line or Mobile',
+  TOLLFREE = <any>'Toll Free',
+}
+
+export enum Pattern {
+  SKIP_MATCHING = <any>undefined,
+}
+
 export class DirectoryNumberOptionsService {
   private internalNumbersOptions: ng.resource.IResourceClass<ng.resource.IResource<IDirectoryNumber>>;
   private externalNumbersOptions: ng.resource.IResourceClass<ng.resource.IResource<IDirectoryNumber>>;
@@ -27,12 +42,15 @@ export class DirectoryNumberOptionsService {
     });
   }
 
-  public getExternalNumberOptions(): ng.IPromise<string[]> {
-    return this.externalNumbersOptions.query({
+  public getExternalNumberOptions(pattern?: string | Pattern, assignment?: Availability, externalNumberType?: ExternalNumberType): ng.IPromise<string[]> {
+    let queries = {
       customerId: this.Authinfo.getOrgId(),
-      directorynumber: '',
+      directorynumber: assignment || Availability.UNASSIGNED,
+      externalnumbertype: externalNumberType || ExternalNumberType.DID,
       order: 'pattern',
-    }).$promise
+      pattern: pattern ? '%' + pattern + '%' : undefined,
+    };
+    return this.externalNumbersOptions.query(queries).$promise
     .then(options => {
       return _.map(options, 'pattern');
     });

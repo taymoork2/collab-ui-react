@@ -1,0 +1,24 @@
+<div class="delete-component-page"><!-- reuse delete IncidentPage style-->
+  <h1 translate="gss.deleteComponent" translate-values="{ componentName: delComponentCtrl.componentName }"></h1>
+
+  <p>
+    <em translate="common.warning"></em>
+    <strong translate="gss.deletingComponentCannotBeUndone"></strong>
+    <span translate="gss.deleteEnsureAction"></span>
+  </p>
+
+  <p translate="gss.deleteConfirmation"></p>
+
+  <input class="cs-input" ng-model="delComponentCtrl.delText" placeholder="" type="text"
+         ng-pattern="delComponentCtrl.delConfirmText">
+
+  <button cs-btn class="btn activate-button btn--negative" ng-disabled="!delComponentCtrl.isValid()"
+          loading="delComponentCtrl.isDeleting"
+          ng-click="delComponentCtrl.delComponent()">
+    <span translate="gss.permanentlyDeleteComponent" translate-values="{ componentName: delComponentCtrl.componentName }"></span>
+  </button>
+
+  <button cs-btn class="btn" ng-click="delComponentCtrl.goBack()">
+    <span translate="common.cancel"></span>
+  </button>
+</div>
