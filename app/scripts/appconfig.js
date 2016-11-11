@@ -1092,6 +1092,24 @@
               displayName: 'Device Configuration'
             }
           })
+          .state('user-overview.csdmDevice.emergencyServices', {
+            views: {
+              '': {
+                template: '<uc-emergency-services></uc-emergency-services>',
+              }
+            },
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.csdmDevice.emergencyServices').data.displayName = $translate.instant('spacesPage.emergencyTitle');
+              }
+            },
+            data: {},
+            params: {
+              currentAddress: {},
+              currentNumber: '',
+              status: ''
+            },
+          })
           .state('user-overview.communication.voicemail', {
             template: '<div uc-voicemail></div>',
             data: {
@@ -1473,6 +1491,24 @@
               displayName: 'Device Configuration'
             }
           })
+          .state('place-overview.csdmDevice.emergencyServices', {
+            views: {
+              '': {
+                template: '<uc-emergency-services></uc-emergency-services>',
+              }
+            },
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('place-overview.csdmDevice.emergencyServices').data.displayName = $translate.instant('spacesPage.emergencyTitle');
+              }
+            },
+            data: {},
+            params: {
+              currentAddress: {},
+              currentNumber: '',
+              status: '',
+            },
+          })
           .state('place-overview.communication', {
             template: '<place-call-overview></place-call-overview>',
             params: {
@@ -1603,6 +1639,28 @@
             data: {
               displayName: 'Overview'
             }
+          })
+          .state('device-overview.emergencyServices', {
+            parent: 'device-overview',
+            views: {
+              'sidepanel@': {
+                template: '<uc-emergency-services></uc-emergency-services>',
+              },
+              'header@device-overview.emergencyServices': {
+                templateUrl: 'modules/squared/devices/emergencyServices/emergencyServicesHeader.tpl.html'
+              }
+            },
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('device-overview.emergencyServices').data.displayName = $translate.instant('spacesPage.emergencyTitle');
+              }
+            },
+            data: {},
+            params: {
+              currentAddress: {},
+              currentNumber: '',
+              status: '',
+            },
           })
           .state('video', {
             parent: 'modal',
