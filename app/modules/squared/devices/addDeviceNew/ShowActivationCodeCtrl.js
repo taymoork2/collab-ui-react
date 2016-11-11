@@ -4,21 +4,30 @@
   angular.module('Core')
     .controller('ShowActivationCodeCtrl', ShowActivationCodeCtrl);
   /* @ngInject */
-  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmDataModelService, $stateParams, ActivationCodeEmailService, $translate, Notification, CsdmEmailService) {
+  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmDataModelService, CsdmHuronPlaceService, $stateParams, ActivationCodeEmailService, $translate, Notification, CsdmEmailService) {
     var vm = this;
-    vm.wizardData = $stateParams.wizard.state().data;
-    vm.hideBackButton = vm.wizardData.function == "showCode";
+    var wizardData = $stateParams.wizard.state().data;
+    vm.title = wizardData.title;
+    vm.showPlaces = wizardData.showPlaces;
+    vm.account = {
+      name: wizardData.account.name,
+      type: wizardData.account.type,
+      deviceType: wizardData.account.deviceType,
+      cisUuid: wizardData.account.cisUuid
+    };
+
+    vm.hideBackButton = wizardData.function === 'showCode';
     vm.showEmail = false;
-    vm.selectedUser = "" + vm.wizardData.displayName + " (" + vm.wizardData.email + ")";
-    vm.email = {
-      to: vm.wizardData.email,
-      id: vm.wizardData.cisUuid
+    vm.selectedUser = {
+      nameWithEmail: '' + wizardData.recipient.displayName + ' (' + wizardData.recipient.email + ')',
+      email: wizardData.recipient.email,
+      cisUuid: wizardData.recipient.cisUuid,
+      firstName: wizardData.recipient.firstName
     };
     vm.qrCode = undefined;
     vm.timeLeft = '';
     vm.isLoading = true;
-
-    vm.activationCode = vm.wizardData.activationCode || (vm.wizardData.code && vm.wizardData.code.activationCode) || '';
+    // vm.place = wizardData.place;
 
     vm.onCopySuccess = function () {
       Notification.success(
@@ -37,7 +46,7 @@
     };
 
     function generateQRCode() {
-      OtpService.getQrCodeUrl(vm.wizardData.activationCode || vm.wizardData.code.activationCode).then(function (qrcode) {
+      OtpService.getQrCodeUrl(vm.activationCode).then(function (qrcode) {
         var arrayData = '';
         for (var i in Object.keys(qrcode)) {
           if (qrcode.hasOwnProperty(i)) {
@@ -49,51 +58,82 @@
       });
     }
 
-    if (vm.wizardData.deviceType !== 'huron' && (!vm.wizardData.code || !vm.wizardData.code.activationCode)) {
-      var success = function success(code) {
-        if (code) {
-          vm.wizardData.code = code;
-          vm.activationCode = code.activationCode;
-          vm.friendlyActivationCode = formatActivationCode(code.activationCode);
+    if (vm.account.deviceType === 'huron') {
+      if (vm.account.type === 'shared') {
+        if (vm.account.cisUuid) { // Existing place
+          createCodeForHuronPlace(vm.account.cisUuid).then(success, error);
+        } else { // New place
+          createHuronPlace(vm.account.name, wizardData.account.directoryNumber, wizardData.account.externalNumber)
+            .then(function (place) {
+              vm.account.cisUuid = place.cisUuid;
+              createCodeForHuronPlace(vm.account.cisUuid).then(success, error);
+            });
+        }
+      } else { // Personal (never create new)
+        OtpService.generateOtp(wizardData.account.username).then(function (code) {
+          vm.activationCode = code.code;
+          vm.friendlyActivationCode = formatActivationCode(vm.activationCode);
+          vm.expiryTime = code.friendlyExpiresOn;
           generateQRCode();
-        }
-      };
-      var error =
-        function error(err) {
-          Notification.errorWithTrackingId(err);
-          vm.isLoading = false;
-        };
-      if (vm.place) {
-        CsdmDataModelService
-          .createCodeForExisting(vm.place.cisUuid)
-          .then(success, error);
-      } else {
-        if (vm.wizardData.deviceType === "cloudberry") {
-          CsdmDataModelService.createCsdmPlace(vm.wizardData.deviceName, vm.wizardData.deviceType).then(function (place) {
-            vm.place = place;
-            CsdmDataModelService
-              .createCodeForExisting(place.cisUuid)
-              .then(success, error);
-          }, error);
-        } else { //New Place
-          success();
-        }
+        }, error);
       }
-    } else {
-      generateQRCode();
+    } else { // Cloudberry
+      if (vm.account.cisUuid) { // Existing place
+        CsdmDataModelService
+          .createCodeForExisting(vm.account.cisUuid)
+          .then(success, error);
+      } else { // New place
+        createCloudberryPlace(vm.account.name).then(function (place) {
+          vm.account.cisUuid = place.cisUuid;
+          createCodeForCloudberryPlace(vm.account.cisUuid)
+            .then(success, error);
+        }, error);
+      }
+    }
+
+    function createHuronPlace(name, directoryNumber, externalNumber) {
+      return CsdmDataModelService.createCmiPlace(name, directoryNumber, externalNumber);
+    }
+
+    function createCodeForHuronPlace(cisUuid) {
+      return CsdmHuronPlaceService.createOtp(cisUuid);
+    }
+
+    function createCloudberryPlace(name) {
+      return CsdmDataModelService.createCsdmPlace(name);
+    }
+
+    function createCodeForCloudberryPlace(cisUuid) {
+      return CsdmDataModelService.createCodeForExisting(cisUuid);
+    }
+
+    function success(code) {
+      if (code) {
+        vm.activationCode = code.activationCode;
+        vm.friendlyActivationCode = formatActivationCode(code.activationCode);
+        vm.expiryTime = code.expiryTime;
+        vm.codeIsUsed = code.isUsed;
+        generateQRCode();
+      }
+    }
+
+
+    function error(err) {
+      Notification.errorWithTrackingId(err);
+      vm.isLoading = false;
     }
 
     vm.activationFlowType = function () {
-      if (vm.wizardData.deviceType === "cloudberry") {
-        if (vm.wizardData.showPlaces) {
-          return "places";
+      if (vm.account.deviceType === 'cloudberry') {
+        if (vm.showPlaces) {
+          return 'places';
         }
-        return "devices";
+        return 'devices';
       }
-      if (vm.wizardData.accountType === "shared") {
-        return "places";
+      if (vm.account.type === 'shared') {
+        return 'places';
       }
-      return "users";
+      return 'users';
     };
 
     function formatActivationCode(activationCode) {
@@ -111,7 +151,7 @@
       timezone = 'UTC';
     }
     vm.getExpiresOn = function () {
-      return moment(vm.wizardData.expiryTime || (vm.wizardData.code && vm.wizardData.code.expiresOn) || undefined).local().tz(timezone).format('LLL (z)');
+      return moment(vm.expiryTime || undefined).local().tz(timezone).format('LLL (z)');
     };
 
     vm.onTextClick = function ($event) {
@@ -124,8 +164,10 @@
         var callback = function (data) {
           var userList = data.Resources.map(function (r) {
             var name = null;
+            var firstName = null;
             if (r.name) {
               name = r.name.givenName;
+              firstName = name.givenName;
               if (r.name.familyName) {
                 name += ' ' + r.name.familyName;
               }
@@ -133,10 +175,17 @@
             if (_.isEmpty(name)) {
               name = r.displayName;
             }
+            if (_.isEmpty(firstName)) {
+              firstName = r.displayName;
+            }
             if (_.isEmpty(name)) {
               name = r.userName;
             }
+            if (_.isEmpty(firstName)) {
+              firstName = r.userName;
+            }
             r.extractedName = name;
+            r.firstName = firstName;
             return r;
           });
           deferred.resolve(userList);
@@ -149,75 +198,62 @@
     };
 
     vm.selectUser = function ($item) {
-      vm.selectedUser = "" + $item.extractedName + " (" + $item.userName + ")";
-      vm.email.to = $item.userName;
-      vm.email.id = $item.id;
+      vm.selectedUser = {
+        nameWithEmail: "" + $item.extractedName + " (" + $item.userName + ")",
+        email: $item.userName,
+        cisUuid: $item.id,
+        firstName: $item.firstName
+      };
       vm.foundUser = "";
     };
 
     vm.sendActivationCodeEmail = function sendActivationCodeEmail() {
-      if (vm.wizardData.deviceType === 'huron' && vm.wizardData.accountType === 'personal') {
+      var success = function () {
+        Notification.notify(
+          [$translate.instant('generateActivationCodeModal.emailSuccess', {
+            'address': vm.selectedUser.email
+          })],
+          'success',
+          $translate.instant('generateActivationCodeModal.emailSuccessTitle')
+        );
+      };
+      var error = function () {
+        Notification.notify(
+          [$translate.instant('generateActivationCodeModal.emailError', {
+            'address': vm.selectedUser.email
+          })],
+          'error',
+          $translate.instant('generateActivationCodeModal.emailErrorTitle')
+        );
+      };
+
+      if (vm.account.deviceType === 'huron' && vm.account.type === 'personal') {
         var emailInfo = {
-          email: vm.email.to,
-          firstName: vm.email.to,
+          email: vm.selectedUser.email,
+          firstName: vm.selectedUser.firstName,
           oneTimePassword: vm.activationCode,
           expiresOn: vm.getExpiresOn(),
-          userId: vm.wizardData.cisUuid,
-          customerId: vm.wizardData.organizationId
+          userId: vm.selectedUser.cisUuid,
+          customerId: wizardData.recipient.organizationId
         };
-
-        ActivationCodeEmailService.save({}, emailInfo, function () {
-          Notification.notify(
-            [$translate.instant('generateActivationCodeModal.emailSuccess', {
-              'address': vm.email.to
-            })],
-            'success',
-            $translate.instant('generateActivationCodeModal.emailSuccessTitle')
-          );
-
-        }, function () {
-          Notification.notify(
-            [$translate.instant('generateActivationCodeModal.emailError', {
-              'address': vm.email.to
-            })],
-            'error',
-            $translate.instant('generateActivationCodeModal.emailErrorTitle')
-          );
-        });
+        ActivationCodeEmailService.save({}, emailInfo, success, error);
       } else {
         var cbEmailInfo = {
-          toCustomerId: vm.wizardData.organizationId,
-          toUserId: vm.email.id,
-          machineAccountCustomerId: vm.wizardData.organizationId,
-          machineAccountId: vm.wizardData.code.cisUuid,
+          toCustomerId: wizardData.recipient.organizationId,
+          toUserId: vm.selectedUser.cisUuid,
+          machineAccountCustomerId: wizardData.recipient.organizationId,
+          machineAccountId: vm.account.cisUuid,
           activationCode: vm.activationCode,
           expiryTime: vm.getExpiresOn()
         };
         var mailFunction;
-        if (vm.wizardData.deviceType === 'cloudberry') {
+        if (vm.account.deviceType === 'cloudberry') {
           mailFunction = CsdmEmailService.sendCloudberryEmail;
         } else {
           mailFunction = CsdmEmailService.sendHuronEmail;
         }
 
-        mailFunction(cbEmailInfo)
-          .then(function () {
-            Notification.notify(
-              [$translate.instant('generateActivationCodeModal.emailSuccess', {
-                'address': vm.email.to
-              })],
-              'success',
-              $translate.instant('generateActivationCodeModal.emailSuccessTitle')
-            );
-          }, function () {
-            Notification.notify(
-              [$translate.instant('generateActivationCodeModal.emailError', {
-                'address': vm.email.to
-              })],
-              'error',
-              $translate.instant('generateActivationCodeModal.emailErrorTitle')
-            );
-          });
+        mailFunction(cbEmailInfo).then(success, error);
       }
     };
 

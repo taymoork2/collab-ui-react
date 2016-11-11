@@ -8,7 +8,7 @@
   /* @ngInject */
   function DeviceUsageTotalService($translate, $document, $window, $log, $q, $timeout, $http, chartColors, DeviceUsageMockData, UrlConfig, Authinfo) {
     var localUrlBase = 'http://localhost:8080/atlas-server/admin/api/v1/organization';
-    var urlBase = UrlConfig.getAdminServiceUrl() + 'organizations';
+    var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
 
     var csdmUrlBase = UrlConfig.getCsdmServiceUrl() + '/organization';
     var csdmUrl = csdmUrlBase + '/' + Authinfo.getOrgId() + '/places/';
@@ -137,7 +137,10 @@
       }, timeoutInMillis);
 
       return $http.get(url, timeout).then(function (response) {
-        $log.info('#items', response.data.items.length);
+        //$log.info('#items', response.data.items.length);
+        if (!response.data.items) {
+          response.data.items = [];
+        }
         if (response.data.items.length > 0) {
           checkIfMissingDays(response.data.items, start, end, missingDaysDeferred);
         }
@@ -403,11 +406,19 @@
       };
     }
 
-    function exportRawData(startDate, endDate) {
+    function exportRawData(startDate, endDate, api) {
       var granularity = "day";
       var deviceCategories = ['ce', 'sparkboard'];
-
-      var url = localUrlBase + '/' + Authinfo.getOrgId() + '/reports/device/call/export?';
+      var baseUrl = '';
+      if (api === 'mock') {
+        return;
+      }
+      if (api === 'local') {
+        baseUrl = localUrlBase;
+      } else {
+        baseUrl = urlBase;
+      }
+      var url = baseUrl + '/' + Authinfo.getOrgId() + '/reports/device/call/export?';
       url = url + 'intervalType=' + granularity;
       url = url + '&rangeStart=' + startDate + '&rangeEnd' + endDate;
       //url = url + '&rangeStart=' + dateRange.start + '&rangeEnd=' + dateRange.end;

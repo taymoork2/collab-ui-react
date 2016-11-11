@@ -595,15 +595,6 @@ describe('Controller: LineSettingsCtrl', function () {
       $scope.$apply();
       expect(controller.saveDisabled()).toBeFalsy();
     });
-
-    it('should return true when loadExternalNumberPool fails and the line is new', function () {
-      TelephonyInfoService.getExternalNumberPool.and.returnValue([]);
-      DirectoryNumber.getDirectoryNumber.and.returnValue($q.when(getDirectoryNumberBusyNewLine));
-      TelephonyInfoService.loadExternalNumberPool.and.returnValue($q.reject(errorResponse));
-      controller.init();
-      $scope.$apply();
-      expect(controller.saveDisabled()).toBeTruthy();
-    });
   });
 
   describe('checkDnOverlapsSteeringDigit', function () {

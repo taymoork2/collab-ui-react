@@ -6,7 +6,7 @@
     .controller('DeviceUsageHeaderCtrl', DeviceUsageHeaderCtrl);
 
   /* @ngInject */
-  function DeviceUsageHeaderCtrl($q, $scope, $log, $state, $translate, deviceUsageFeatureToggle, ReportConstants, DeviceUsageCommonService, FeatureToggleService, MediaServiceActivationV2, Authinfo) {
+  function DeviceUsageHeaderCtrl($q, $scope, $log, $state, $translate, deviceUsageFeatureToggle, ReportConstants, DeviceUsageCommonService, FeatureToggleService, MediaServiceActivationV2, Authinfo, DeviceUsageSplunkMetricsService) {
     var vm = this;
     if (!deviceUsageFeatureToggle) {
       // simulate a 404
@@ -72,6 +72,7 @@
     function timeUpdate() {
       $scope.$broadcast('time-range-changed', vm.timeSelected);
       DeviceUsageCommonService.setTimeSelected(vm.timeSelected.value);
+      DeviceUsageSplunkMetricsService.reportClick(DeviceUsageSplunkMetricsService.eventTypes.timeRangeSelected, vm.timeSelected);
     }
 
   }

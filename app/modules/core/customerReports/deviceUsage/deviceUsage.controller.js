@@ -6,10 +6,10 @@
     .controller('DeviceUsageCtrl', DeviceUsageCtrl);
 
   /* @ngInject */
-  function DeviceUsageCtrl($log, $q, $translate, $state, $scope, DeviceUsageTotalService, Notification, deviceUsageFeatureToggle, DeviceUsageCommonService) {
+  function DeviceUsageCtrl($log, $q, $translate, $state, $scope, DeviceUsageTotalService, Notification, deviceUsageFeatureToggle, DeviceUsageCommonService, DeviceUsageSplunkMetricsService) {
     var vm = this;
     var amChart;
-    var apiToUse = 'mock';
+    var apiToUse = 'backend';
 
     vm.leastUsedDevices = [];
     vm.mostUsedDevices = [];
@@ -74,7 +74,7 @@
         }
         return result;
       }, {}).map(function (value, key) {
-        value.totalDuration = (value.totalDuration / 60).toFixed(2);
+        value.totalDuration = (value.totalDuration / 3600).toFixed(2);
         value.time = key;
         return value;
       }).value();
@@ -291,8 +291,9 @@
     function exportRawData() {
       vm.exporting = true;
       //$log.info("Exporting data for range", dateRange);
-      DeviceUsageTotalService.exportRawData(dateRange.start, dateRange.end).then(function () {
+      DeviceUsageTotalService.exportRawData(dateRange.start, dateRange.end, apiToUse).then(function () {
         //$log.info("export finished");
+        DeviceUsageSplunkMetricsService.reportClick(DeviceUsageSplunkMetricsService.eventTypes.fullReportDownload, dateRange);
         vm.exporting = false;
       })
       .catch(function (err) {
