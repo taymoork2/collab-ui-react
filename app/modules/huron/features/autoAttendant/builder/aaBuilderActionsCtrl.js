@@ -12,15 +12,6 @@
     var appendSpecialCharHelp = "<br><br>" + $translate.instant('autoAttendant.sayMessageSpecialChar');
 
     vm.options = [{
-      title: $translate.instant('autoAttendant.actionCallerInput'),
-      controller: 'AACallerInputCtrl as aaCallerInput',
-      url: 'modules/huron/features/autoAttendant/callerInput/aaCallerInput.tpl.html',
-      hint: $translate.instant('autoAttendant.actionCallerInputHint'),
-      help: $translate.instant('autoAttendant.actionCallerInputHelp') + appendSpecialCharHelp,
-      metric: 'Caller-Input-Title',
-      showHelpLink: true,
-      actions: ['callerInput']
-    }, {
       title: $translate.instant('autoAttendant.actionSayMessage'),
       controller: 'AASayMessageCtrl as aaSay',
       url: 'modules/huron/features/autoAttendant/sayMessage/aaSayMessage.tpl.html',
@@ -56,7 +47,7 @@
       help: $translate.instant('autoAttendant.routeCallMenuHelp'),
       metric: 'Route-Call-Title',
       showHelpLink: false,
-      actions: ['route', 'goto', 'routeToUser', 'routeToVoiceMail', 'routeToHuntGroup', 'callerInput']
+      actions: ['route', 'goto', 'routeToUser', 'routeToVoiceMail', 'routeToHuntGroup']
     }];
 
     vm.actionPlaceholder = $translate.instant("autoAttendant.actionPlaceholder");
@@ -142,7 +133,23 @@
       }
     }
 
+    function setFeatureToggledActions() {
+      if (AACommonService.isCallerInputToggle()) {
+        vm.options.unshift({
+          title: $translate.instant('autoAttendant.actionCallerInput'),
+          controller: 'AACallerInputCtrl as aaCallerInput',
+          url: 'modules/huron/features/autoAttendant/callerInput/aaCallerInput.tpl.html',
+          hint: $translate.instant('autoAttendant.actionCallerInputHint'),
+          help: $translate.instant('autoAttendant.actionCallerInputHelp') + appendSpecialCharHelp,
+          metric: 'Caller-Input-Title',
+          showHelpLink: true,
+          actions: ['callerInput']
+        });
+      }
+    }
+
     function activate() {
+      setFeatureToggledActions();
       vm.index = $scope.index;
       vm.schedule = $scope.schedule;
       vm.ui = AAUiModelService.getUiModel();

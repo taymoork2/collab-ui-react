@@ -17,6 +17,7 @@
     var aaQueueSettingsStatus = false;
     var routeQueueToggle = false;
     var mediaUploadToggle = false;
+    var callerInputToggle = false;
     var uniqueId = 0;
 
     var invalidList = {};
@@ -31,8 +32,10 @@
       setMediaUploadStatus: setMediaUploadStatus,
       setQueueSettingsStatus: setQueueSettingsStatus,
       setMediaUploadToggle: setMediaUploadToggle,
+      setCallerInputToggle: setCallerInputToggle,
       setRouteQueueToggle: setRouteQueueToggle,
       isRouteQueueToggle: isRouteQueueToggle,
+      isCallerInputToggle: isCallerInputToggle,
       isMediaUploadToggle: isMediaUploadToggle,
       isValid: isValid,
       setIsValid: setIsValid,
@@ -130,6 +133,10 @@
       mediaUploadToggle = status;
     }
 
+    function setCallerInputToggle(status) {
+      callerInputToggle = status;
+    }
+
     /**
      * Will check the toggle status for Queue which is set while aaPhoneMenuCtrl
      */
@@ -137,11 +144,12 @@
       return routeQueueToggle;
     }
 
-    /**
-    * will check the toggle status for queue which is only allowed for say messages and not phone menu or submenu
-    */
     function isMediaUploadToggle() {
       return mediaUploadToggle;
+    }
+
+    function isCallerInputToggle() {
+      return callerInputToggle;
     }
 
     function saveUiModel(ui, aaRecord) {
