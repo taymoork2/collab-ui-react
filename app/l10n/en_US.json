@@ -972,6 +972,7 @@
     "close": "Close",
     "confirm": "Confirm",
     "continue": "Continue",
+    "dateRange": "Date Range",
     "deactivate": "Deactivate",
     "delete": "Delete",
     "description": "Description",
@@ -1036,6 +1037,7 @@
     "settings": "Settings",
     "status": "Status",
     "submit": "Submit",
+    "to": "to",
     "trackingId": "Tracking Id: {{trackingId}}.",
     "tryAgain": "Try Again",
     "turnOff": "Turn Off",
@@ -2087,6 +2089,19 @@
       "roomLookupError": "An unexpected error occurred when searching for the room",
       "generatedAt": "Generated Today at {{time}}",
       "expiryInfo": "Generated reports will expire after 10 days. Any reports older than 10 days will automatically be deleted by the system."
+    },
+    "searchParameters": {
+      "searchBy": "Search By",
+      "searchByPlaceholder": "Email Id",
+      "searchByEmailPlaceholder": "e.g. johnsmith@email.com, jansmith@email.com",
+      "roomName": "Where <b>Room Name</b> contains",
+      "roomNamePlaceholder": "e.g. sales AND meeting OR private",
+      "textMessage": "Where <b>Text Messages</b> contains",
+      "textMessagePlaceholder": "e.g. project AND manager OR admin NOT owner",
+      "fileName": "Where <b>File Name</b> contains",
+      "fileNamePlaceholder": "e.g. confidential OR restricted",
+      "activityType": "And <b>Activity Type</b> is",
+      "activityTypePlaceholder": "Meeting"
     },
     "reportsList": {
       "name": "Name",
