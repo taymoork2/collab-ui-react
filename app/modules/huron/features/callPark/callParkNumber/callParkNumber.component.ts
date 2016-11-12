@@ -106,6 +106,17 @@ class CallParkNumberCtrl implements ng.IComponentController {
     });
   }
 
+  public onChangeEndRange(): void {
+    let range: ICallParkRangeItem = {
+      startRange: this.startRange,
+      endRange: this.endRange,
+    };
+    this.range = range;
+    this.onChangeFn({
+      range: range,
+    });
+  }
+
   public onHandleKeyPress($keyCode): void {
     this.onKeyPressFn({
       keyCode: $keyCode,
