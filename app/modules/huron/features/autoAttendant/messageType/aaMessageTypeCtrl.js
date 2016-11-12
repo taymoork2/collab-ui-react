@@ -17,6 +17,13 @@
       HEADER_TYPE: "MENU_OPTION_ANNOUNCEMENT"
     };
 
+    var messageType = {
+      ACTION: 1,
+      MENUHEADER: 2,
+      MENUKEY: 3,
+      SUBMENU_HEADER: 4
+    };
+
     var actionType = {
       PLAY: 0,
       SAY: 1
@@ -46,7 +53,7 @@
       "action": "say"
     }];
 
-
+    vm.messageType = messageType.ACTION;
     vm.saveUiModel = saveUiModel;
     vm.setMessageOptions = setMessageOptions;
 
@@ -113,6 +120,15 @@
       }
     }
 
+    function getActionHeader(menuEntry) {
+      if (menuEntry && menuEntry.headers && menuEntry.headers.length > 0) {
+        var header = _.find(menuEntry.headers, function (header) {
+          return header.type === properties.HEADER_TYPE;
+        });
+        return header;
+      }
+    }
+
     function populateUiModel() {
       // default
       vm.messageOption = vm.messageOptions[actionType.SAY];
@@ -134,14 +150,12 @@
       }
     }
 
-    function createSayAction(which) {
-      return AutoAttendantCeMenuModelService.newCeActionEntry(properties.NAME[which], '');
-    }
-
     function setActionEntry() {
-      var sayAction;
       var ui;
       var uiMenu;
+      var sourceQueue;
+      var sourceMenu;
+      var queueAction;
 
       holdActionDesc = "";
       holdActionValue = "";
@@ -160,19 +174,66 @@
         vm.menuEntry = uiMenu.entries[$scope.index];
       }
 
-      sayAction = getAction(vm.menuEntry);
+      switch (vm.messageType) {
+        case messageType.MENUHEADER:
+        case messageType.SUBMENU_HEADER:
+          {
+            vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+            var actionHeader = getActionHeader(vm.menuEntry);
+            var action = getAction(actionHeader);
 
-      if (!sayAction) {
-        sayAction = createSayAction(actionType.SAY);
-        vm.menuEntry.addAction(sayAction);
+            if (action) {
+              vm.actionEntry = action;
+            }
+            break;
+          }
+        case messageType.MENUKEY:
+          {
+            vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+            if (vm.menuEntry.entries.length > $scope.menuKeyIndex && vm.menuEntry.entries[$scope.menuKeyIndex]) {
+              if ($scope.type) {
+                sourceQueue = vm.menuEntry.entries[$scope.menuKeyIndex];
+                queueAction = sourceQueue.actions[0];
+                sourceMenu = queueAction.queueSettings[$scope.type];
+                vm.actionEntry = getAction(sourceMenu);
+              } else {
+                var keyAction = getAction(vm.menuEntry.entries[$scope.menuKeyIndex]);
+                if (keyAction) {
+                  vm.actionEntry = keyAction;
+                }
+              }
+
+            }
+
+            break;
+
+          }
+        case messageType.ACTION:
+          {
+            ui = AAUiModelService.getUiModel();
+            uiMenu = ui[$scope.schedule];
+
+            vm.menuEntry = uiMenu.entries[$scope.index];
+            vm.actionEntry = getAction(vm.menuEntry);
+
+            break;
+          }
       }
 
-      vm.actionEntry = sayAction;
-
       return;
+
     }
 
     function activate() {
+      if ($scope.isMenuHeader) {
+        vm.messageType = messageType.MENUHEADER;
+      } else if ($scope.menuId && (!$scope.menuKeyIndex || $scope.menuKeyIndex <= -1)) {
+        vm.messageType = messageType.SUBMENU_HEADER;
+      } else if ($scope.menuKeyIndex && $scope.menuKeyIndex > -1) {
+        vm.messageType = messageType.MENUKEY;
+      } else {
+        vm.messageType = messageType.ACTION;
+      }
 
       setActionEntry();
 

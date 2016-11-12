@@ -1,4 +1,13 @@
 import { CardType, ServicesOverviewCard } from './ServicesOverviewCard';
+import { ServicesOverviewMessageCard } from './messageCard';
+import { ServicesOverviewMeetingCard } from './meetingCard';
+import { ServicesOverviewCallCard } from './cloudCallCard';
+import { ServicesOverviewCareCard } from './careCard';
+import { ServicesOverviewHybridServicesCard } from './hybridServicesCard';
+import { ServicesOverviewHybridCalendarCard } from './hybridCalendarCard';
+import { ServicesOverviewHybridCallCard } from './hybridCallCard';
+import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
+import { ServicesOverviewHybridDataSecurityCard } from './hybridDataSecurityCard';
 
 export class ServicesOverviewCtrl {
 
@@ -6,49 +15,64 @@ export class ServicesOverviewCtrl {
 
   /* @ngInject */
   constructor(
-    private ServicesOverviewCardFactory,
     private Auth,
     private Authinfo,
-    private FusionClusterService,
+    private Config,
     private FeatureToggleService,
+    private FusionClusterService,
+    private FusionClusterStatesService,
   ) {
-    this.cards = this.ServicesOverviewCardFactory.createCards();
+    this.cards = [
+      new ServicesOverviewMessageCard(this.Authinfo),
+      new ServicesOverviewMeetingCard(this.Authinfo),
+      new ServicesOverviewCallCard(this.Authinfo, this.Config),
+      new ServicesOverviewCareCard(this.Authinfo),
+      new ServicesOverviewHybridServicesCard(this.Authinfo),
+      new ServicesOverviewHybridCalendarCard(this.Authinfo, this.FusionClusterStatesService),
+      new ServicesOverviewHybridCallCard(this.Authinfo, this.FusionClusterStatesService),
+      new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
+      new ServicesOverviewHybridDataSecurityCard(this.FusionClusterStatesService),
+    ];
 
     this.loadWebexSiteList();
 
-    this.FusionClusterService.getAll()
-      .then((clusterList) => {
-        let services: any[] = [];
-        services.push(this.FusionClusterService.getStatusForService('squared-fusion-mgmt', clusterList));
-        services.push(this.FusionClusterService.getStatusForService('squared-fusion-cal', clusterList));
-        services.push(this.FusionClusterService.getStatusForService('squared-fusion-uc', clusterList));
-        services.push(this.FusionClusterService.getStatusForService('squared-fusion-media', clusterList));
-        this.forwardEvent('hybridStatusEventHandler', services);
-        this.forwardEvent('hybridClustersEventHandler', clusterList);
+    this.loadHybridServicesStatuses();
+
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServiceOnboarding)
+      .then(supports => {
+        this.forwardEvent('hybridMediaFeatureToggleEventHandler', supports);
       });
 
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServiceOnboarding).then(supports => {
-      this.forwardEvent('hybridMediaFeatureToggleEventHandler', supports);
-    });
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasCareTrials)
+      .then(supports => {
+        this.forwardEvent('careFeatureToggleEventHandler', supports);
+      });
 
-    FeatureToggleService.atlasCareTrialsGetStatus().then(supports => {
-      this.forwardEvent('careFeatureToggleEventHandler', supports);
-    });
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasPMRonM2)
+      .then(supports => {
+        if (supports) {
+          this.getPMRStatus();
+        }
+      });
 
-    FeatureToggleService.atlasPMRonM2GetStatus().then(supports => {
-      if (supports) {
-        this.getPMRStatus();
-      }
-    });
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridDataSecurity)
+      .then(supports => {
+        this.forwardEvent('hybridDataSecurityToggleEventHandler', supports);
+      });
+
+    this.FeatureToggleService.supports(FeatureToggleService.features.csdmPstn)
+      .then(supports => {
+        this.forwardEvent('csdmPstnFeatureToggleEventHandler', supports);
+      });
   }
 
-  get hybridCards() {
+  public getHybridCards() {
     return _.filter(this.cards, {
       cardType: CardType.hybrid,
     });
   }
 
-  get cloudCards() {
+  public getCloudCards() {
     return _.filter(this.cards, {
       cardType: CardType.cloud,
     });
@@ -56,10 +80,24 @@ export class ServicesOverviewCtrl {
 
   private forwardEvent(handlerName, ...eventArgs: Array<any>) {
     _.each(this.cards, function (card) {
-      if (typeof (card[handlerName]) === 'function') {
+      if (_.isFunction(card[handlerName])) {
         card[handlerName].apply(card, eventArgs);
       }
     });
+  }
+
+  private loadHybridServicesStatuses() {
+    this.FusionClusterService.getAll()
+      .then((clusterList) => {
+        let servicesStatuses: Array<any> = [
+          this.FusionClusterService.getStatusForService('squared-fusion-mgmt', clusterList),
+          this.FusionClusterService.getStatusForService('squared-fusion-cal', clusterList),
+          this.FusionClusterService.getStatusForService('squared-fusion-uc', clusterList),
+          this.FusionClusterService.getStatusForService('squared-fusion-media', clusterList),
+        ];
+        this.forwardEvent('hybridStatusEventHandler', servicesStatuses);
+        this.forwardEvent('hybridClustersEventHandler', clusterList);
+      });
   }
 
   private loadWebexSiteList() {
@@ -67,7 +105,7 @@ export class ServicesOverviewCtrl {
     this.forwardEvent('updateWebexSiteList', siteList);
   }
 
-  public getPMRStatus() {
+  private getPMRStatus() {
     let customerAccount = this.Auth.getCustomerAccount(this.Authinfo.getOrgId());
     this.forwardEvent('updatePMRStatus', customerAccount);
   }

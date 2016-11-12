@@ -296,6 +296,8 @@
       clearCeMenuMap: clearCeMenuMap,
       deleteCeMenuMap: deleteCeMenuMap,
       isCeMenu: isCeMenu,
+      cesTempPa: cesTempPa,
+      constructCesTodoPa: constructCesTodoPa,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -347,7 +349,13 @@
     function parseSayObject(menuEntry, inObject) {
       var action;
       action = new Action('say', decodeUtf8(inObject.value));
-      if (!_.isUndefined(inObject.voice)) {
+
+      if (_.startsWith(action.value.toLowerCase(), 'http')) {
+        action.name = 'play';
+        action.description = menuEntry.description;
+      }
+
+      if (angular.isDefined(inObject.voice)) {
         action.setVoice(inObject.voice);
       }
       menuEntry.addAction(action);
@@ -359,10 +367,14 @@
       }
     }
 
-    function createSayList(actions) {
+    function createSayList(menuEntry) {
+      var actions = menuEntry.actions;
+
       var newActionArray = [];
       for (var i = 0; i < actions.length; i++) {
         newActionArray[i] = {};
+        menuEntry.description = actions[i].description;
+
         newActionArray[i].value = (actions[i].getValue() ? encodeUtf8(actions[i].getValue()) : '');
         if (!_.isUndefined(actions[i].voice) && actions[i].voice.length > 0) {
           newActionArray[i].voice = actions[i].voice;
@@ -484,6 +496,7 @@
         setDescription(action, inAction.routeToQueue);
         cesTempMoh(action);
         cesTempIa(action);
+        cesTempPa(action);
         cesTempfallBack(action);
         menuEntry.addAction(action);
       } else {
@@ -531,12 +544,29 @@
     }
 
     /*
+     * temporary solution to write to db until ces ready
+     */
+    function cesTempPa(action) {
+      if (angular.isDefined(action.description)) {
+        try {
+          if (angular.isUndefined(action.queueSettings)) {
+            action.description = JSON.parse(action.description);
+            action.queueSettings = {};
+          }
+          action.queueSettings.periodicAnnouncement = constructCesTodoPa(action.description);
+        } catch (exception) {
+          action.queueSettings = {};
+        }
+      }
+    }
+
+    /*
     * temporary solution to write to db until ces ready
     */
     function cesTempfallBack(action) {
       if (!_.isUndefined(action.description)) {
         try {
-          if (angular.isUnDefined(action.queueSettings)) {
+          if (angular.isUndefined(action.queueSettings)) {
             action.description = JSON.parse(action.description);
             action.queueSettings = {};
           }
@@ -583,6 +613,18 @@
       action = new Action(fallBackOption.name, fallBackTime.value);
       action.setDescrption(fallBackOption.description);
       fallBack.addAction(action);
+    }
+
+    /*
+    * temporary solution to write to db until ces ready
+    */
+    function constructCesTodoPa(parsedDescription) {
+      var periodicAnnouncement = parsedDescription.periodicAnnouncement.actions[0];
+      var action = new Action(periodicAnnouncement.name, periodicAnnouncement.value);
+      action.setDescription(periodicAnnouncement.description);
+      periodicAnnouncement = new CeMenuEntry();
+      periodicAnnouncement.addAction(action);
+      return periodicAnnouncement;
     }
 
     function parseActions(menuEntry, actions) {
@@ -1170,8 +1212,10 @@
       if (aaMenu.headers.length > 0) {
         menuEntry = aaMenu.headers[0];
         inputAction.prompts = {};
+        inputAction.prompts.sayList = createSayList(menuEntry);
+        // say list moves the description from the action to
+        // the menuEntry so it is saved here. DB complains otherwise
         inputAction.prompts.description = menuEntry.description;
-        inputAction.prompts.sayList = createSayList(menuEntry.actions);
         if (_.has(aaMenu, 'attempts')) {
           inputAction.attempts = aaMenu.attempts;
         }

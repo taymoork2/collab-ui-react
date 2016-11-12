@@ -40,7 +40,6 @@
       atlasComplianceRole: 'atlas-compliance-role',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
-      atlasUserPendingStatus: 'atlas-user-pending-status',
       atlasTrialsShipDevices: 'atlasTrialsShipDevices',
       atlasWebexTrials: 'atlas-webex-trials',
       atlasDeviceUsageReport: 'atlas-device-usage-report',
@@ -160,9 +159,10 @@
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
       huronLocalDialing: 'huron-local-dialing',
       huronDeviceE911: 'huron-device-e911-address',
-      gemCCA: 'gem-cloud-connected-audio',
+      gemServicesTab: 'gem-services-tab',
       atlasHybridDataSecurity: 'atlas-data-security',
       atlasHerculesEmergencyUpgrade: 'atlas-hercules-emergency-upgrade',
+      atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',
       avrilVmEnable: 'avril-vm-enable',
     };
 

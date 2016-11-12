@@ -1,6 +1,6 @@
-.componentPage {
+.component-page {
+  background-color: $white;
   .centered-info-pane {
-    background-color: $brand-white;
     width: 500px;
     height: 300px;
     margin: 100px auto;
@@ -18,16 +18,6 @@
     }
   }
 
-  .gss-components {
-    background-color: $brand-white;
-  }
-  .gss-components-list{
-    margin: 0 auto;
-    padding: 2rem;
-    line-height: 3rem;
-    color: $gray-dark-4;
-
-  }
   .gss-components-list {
     margin: 0 auto;
     padding: 2rem;
@@ -50,20 +40,20 @@
       margin: auto 10px;
     }
   }
-  
-  .componentStatus-operational {
+
+  .component-status-operational {
     color: $color-cta-base;
   }
-  .componentStatus-degraded_performance {
+  .component-status-degraded_performance {
     color: $color-negative-base;
   }
-  .componentStatus-under_maintenance {
+  .component-status-under_maintenance {
     color: $color-primary-base;
   }
-  .componentStatus-partial_outage {
+  .component-status-partial_outage {
     color: $color-meetings-base;
   }
-  .componentStatus-major_outage {
+  .component-status-major_outage {
     color: $color-alerts-base;
   }
 
@@ -76,4 +66,18 @@
     font-size: 0.8rem;
     color: $color-primary-base;
   }
+}
+
+.delete-component-page {
+  @include vr_spacing(p, 3);
+
+  p, input {
+    font-size:16px;
+    @include vr_spacing(mb, 1.25);
+  }
+}
+
+.modal-content.small.add-component,
+.modal-content.small.update-component {
+  height: 320px;
 }

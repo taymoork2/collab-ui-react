@@ -12,8 +12,7 @@
 
   /* @ngInject */
 
-  function HuntGroupFallbackDataService(TelephoneNumberService, HuntGroupService, Notification, $q, DirectoryNumberService,
-    DialPlanService, Authinfo) {
+  function HuntGroupFallbackDataService(TelephoneNumberService, HuntGroupService, Notification, $q, DirectoryNumberService) {
 
     var isValidInternalNumber = false;
     var isValidExternalNumber = false;
@@ -35,8 +34,7 @@
       getFallbackMember: getFallbackMember,
       isFallbackDirty: isFallbackDirty,
       setAsPristine: setAsPristine,
-      isVoicemailDisabled: isVoicemailDisabled,
-      allowLocalValidation: allowLocalValidation
+      isVoicemailDisabled: isVoicemailDisabled
     };
 
     ////////////////
@@ -174,17 +172,16 @@
      * This is the JSON data that will be used in POST &
      * PUT apis for the hunt group fallback destination object.
      */
-    function getFallbackDestinationJSON(allowLocalValidation) {
-      var data = {};
+    function getFallbackDestinationJSON() {
+      var data = {
+        fallbackDestination: {}
+      };
       if (isValidInternalNumber || isValidExternalNumber) {
-        data.fallbackDestination = {
-          number: TelephoneNumberService.getDIDValue(fallbackNumber)
-        };
-      } else if ((!isValidInternalNumber || !isValidExternalNumber)
-        && allowLocalValidation && _.isUndefined(fallbackMember)) {
-        data.fallbackDestination = {
-          number: fallbackNumber
-        };
+        if (_.isObject(fallbackNumber) && _.has(fallbackNumber, 'phoneNumber')) {
+          data.fallbackDestination.number = TelephoneNumberService.getDIDValue(fallbackNumber.phoneNumber);
+        } else {
+          data.fallbackDestination.number = TelephoneNumberService.getDIDValue(fallbackNumber);
+        }
       } else {
         data.fallbackDestination = {
           numberUuid: fallbackMemberNumberUuid(),
@@ -195,9 +192,13 @@
     }
 
     function validateExternalNumber() {
+      if (_.isObject(fallbackNumber) && _.get(fallbackNumber, 'code')) {
+        TelephoneNumberService.setRegionCode(_.get(fallbackNumber, 'code'));
+      }
       if (TelephoneNumberService.validateDID(fallbackNumber)) {
         isValidExternalNumber = true;
-        fallbackNumber = TelephoneNumberService.getDIDLabel(fallbackNumber);
+      } else if (TelephoneNumberService.validateDID(_.get(fallbackNumber, 'phoneNumber'))) {
+        isValidExternalNumber = true;
       }
       return isValidExternalNumber;
     }
@@ -264,12 +265,6 @@
         directoryNumberId: fallbackUuid
       }).$promise.then(function (data) {
         return !data.voiceMailProfile;
-      });
-    }
-
-    function allowLocalValidation() {
-      return DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
-        return !!response.regionCode;
       });
     }
   }

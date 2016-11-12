@@ -5,7 +5,6 @@
 
   /* @ngInject */
   function WebExSiteSettingsFact(
-    $log,
     $q,
     $stateParams,
     $translate,
@@ -246,7 +245,7 @@
 
               logMsg = funcName + ": " + "ns1_siteAdminNavUrl=" + "\n" +
                 JSON.stringify(ns1_siteAdminNavUrl);
-              $log.log(logMsg);
+              Log.debug(logMsg);
 
               _this.processSettingPagesInfo(ns1_siteAdminNavUrl);
               _this.copyFromInfoCategoryToCommonCategory();

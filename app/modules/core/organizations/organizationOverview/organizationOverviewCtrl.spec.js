@@ -101,7 +101,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       var setting = true;
       $scope.setEftToggle(setting);
       $scope.$apply();
-      expect($scope.currentOrganization.isEFT).toEqual(setting);
+      expect($scope.isEFT).toEqual(setting);
     });
   });
 
@@ -124,7 +124,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       var setting = true;
       $scope.setEftToggle(setting);
       $scope.$apply();
-      expect($scope.currentOrganization.isEFT).toEqual($scope.currentEftSetting);
+      expect($scope.isEFT).toEqual($scope.currentEftSetting);
     });
   });
 

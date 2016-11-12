@@ -87,8 +87,9 @@
     }
 
     function getNewAccessToken(params) {
+      var clientSessionId = TokenService.getOrGenerateClientSessionId();
       var url = OAuthConfig.getAccessTokenUrl();
-      var data = OAuthConfig.getNewAccessTokenPostData(params.code);
+      var data = OAuthConfig.getNewAccessTokenPostData(params.code, clientSessionId);
       var token = OAuthConfig.getOAuthClientRegistrationCredentials();
 
       // Security: verify authentication request came from our site
@@ -138,8 +139,10 @@
 
     function logout() {
       var redirectUrl = OAuthConfig.getLogoutUrl();
-      TokenService.triggerGlobalLogout();
-      return service.logoutAndRedirectTo(redirectUrl);
+      return service.logoutAndRedirectTo(redirectUrl)
+        .finally(function () {
+          return TokenService.triggerGlobalLogout();
+        });
     }
 
     function logoutAndRedirectTo(redirectUrl) {
@@ -148,7 +151,10 @@
         .then(function (response) {
           var promises = [];
           var clientTokens = _.filter(response.data.data, {
-            client_id: OAuthConfig.getClientId()
+            client_id: OAuthConfig.getClientId(),
+            user_info: {
+              client_session_id: TokenService.getClientSessionId()
+            }
           });
 
           _.each(clientTokens, function (tokenData) {

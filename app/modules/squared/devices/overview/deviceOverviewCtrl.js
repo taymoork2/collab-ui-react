@@ -6,10 +6,11 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, Userservice, $stateParams, $translate, $timeout, Authinfo, FeatureToggleService, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService) {
     var deviceOverview = this;
     deviceOverview.currentDevice = $stateParams.currentDevice;
     var huronDeviceService = $stateParams.huronDeviceService;
+    var showPlaces = false;
 
     deviceOverview.linesAreLoaded = false;
     deviceOverview.tzIsLoaded = false;
@@ -17,6 +18,14 @@
     if (deviceOverview.isKEMAvailable) {
       deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.addOnModuleCount);
     }
+    deviceOverview.showPlaces = false;
+
+    function init() {
+      fetchDisplayNameForLoggedInUser();
+      fetchPlacesSupport();
+    }
+
+    init();
 
     if (deviceOverview.currentDevice.isHuronDevice) {
       initTimeZoneOptions().then(function () {
@@ -27,6 +36,20 @@
         $interval.cancel(huronPollInterval);
       });
       pollLines();
+    }
+
+    function fetchDisplayNameForLoggedInUser() {
+      Userservice.getUser('me', function (data) {
+        if (data.success) {
+          deviceOverview.adminDisplayName = data.displayName;
+        }
+      });
+    }
+
+    function fetchPlacesSupport() {
+      FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
+        deviceOverview.showPlaces = result;
+      });
     }
 
     function loadDeviceTimeZone() {
@@ -154,10 +177,20 @@
         .then(function () {
           var wizardState = {
             data: {
-              function: "showCode",
-              deviceType: "cloudberry",
-              deviceName: displayName,
-              title: "addDeviceWizard.newCode"
+              function: 'showCode',
+              showPlaces: deviceOverview.showPlaces,
+              account: {
+                type: 'shared',
+                name: displayName,
+                deviceType: 'cloudberry',
+              },
+              recipient: {
+                displayName: deviceOverview.adminDisplayName,
+                cisUuid: Authinfo.getUserId(),
+                email: Authinfo.getPrimaryEmail(),
+                organizationId: Authinfo.getOrgId(),
+              },
+              title: 'addDeviceWizard.newCode'
             },
             history: [],
             currentStateName: 'addDeviceFlow.showActivationCode',
@@ -166,7 +199,7 @@
             }
           };
           var wizard = WizardFactory.create(wizardState);
-          $state.go('addDeviceFlow.showActivationCode', {
+          $state.go(wizardState.currentStateName, {
             wizard: wizard
           });
         });
@@ -185,6 +218,12 @@
 
     deviceOverview.showRemoteSupportButton = function () {
       return deviceOverview.currentDevice && !!deviceOverview.currentDevice.hasRemoteSupport;
+    };
+
+    deviceOverview.getDeleteCodeText = function () {
+      return showPlaces
+        ? $translate.instant('placesPage.deletePlace')
+        : $translate.instant('deviceOverviewPage.deleteLocation');
     };
 
     deviceOverview.addTag = function () {

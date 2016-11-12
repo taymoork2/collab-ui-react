@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmDataModelService($q, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmHuronOrgDeviceService, CsdmHuronPlaceService, CsdmPoller, CsdmConverter, CsdmHubFactory, Authinfo) {
+  function CsdmDataModelService($q, $timeout, $rootScope, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmHuronOrgDeviceService, CsdmHuronPlaceService, CsdmPoller, CsdmConverter, CsdmHubFactory, Authinfo) {
 
     var placesUrl = CsdmPlaceService.getPlacesUrl();
 
@@ -15,6 +15,7 @@
     var codesLoaded = false;
     var huronDevicesLoaded = false;
     var placesLoaded = false;
+    var pollingGracePeriodActive = true;
 
     var devicesFetchedDeferred;
     var devicesFastFetchedDeferred;
@@ -31,7 +32,9 @@
       slowResolved = false;
       if (!devicesFastFetchedDeferred) {
 
-        //First time: kick off get huron devices:
+        //First time: kick off get huron devices: //If we disable device polling,
+        // we could move csdmHuronOrgDeviceService.fetch out of (!devicesFastFetchedDeferred)
+        // so it is refreshed on "single poll"
 
         csdmHuronOrgDeviceService.fetchDevices()
           .then(function (huronDeviceMap) {
@@ -84,6 +87,16 @@
           }
         });
       }
+    }
+
+    function subscribeToChanges(scope, callback) {
+      var unRegister = $rootScope.$on('PLACES_OR_DEVICES_UPDATED', callback);
+      scope.$on('$destroy', unRegister);
+      return unRegister;
+    }
+
+    function notifyListeners() {
+      $rootScope.$emit('PLACES_OR_DEVICES_UPDATED');
     }
 
     function setCloudBerryDevicesLoaded() {
@@ -196,6 +209,7 @@
               }
             }
           }
+          notifyListeners();
         });
     }
 
@@ -203,24 +217,21 @@
       return placesUrl + item.cisUuid;
     }
 
-    function createCsdmPlace(name, type) {
+    function addPlaceToDataModel(place) {
+      placesDataModel[place.url] = place;
+      addOrUpdatePlaceInDataModel(place);
+      notifyListeners();
+      return place;
+    }
 
+    function createCsdmPlace(name, type) {
       return CsdmPlaceService.createCsdmPlace(name, type)
-        .then(function (place) {
-          placesDataModel[place.url] = place;
-          addOrUpdatePlaceInDataModel(place);
-          return place;
-        });
+        .then(addPlaceToDataModel);
     }
 
     function createCmiPlace(name, directoryNumber, externalNumber) {
-
       return CsdmHuronPlaceService.createCmiPlace(name, directoryNumber, externalNumber)
-        .then(function (place) {
-          placesDataModel[place.url] = place;
-          addOrUpdatePlaceInDataModel(place);
-          return place;
-        });
+        .then(addPlaceToDataModel);
     }
 
     function updateCloudberryPlace(objectToUpdate, entitlements, directoryNumber, externalNumber) {
@@ -319,6 +330,7 @@
             reloadedPlace.devices = devicesForPlace;
             item.devices = devicesForPlace;
 
+            notifyListeners();
             return reloadedPlace;
           });
         } else {
@@ -328,6 +340,7 @@
         return service.fetchDevice(item.url).then(function (reloadedDevice) {
 
           CsdmCacheUpdater.updateOne(theDeviceMap, item.url, reloadedDevice);
+          notifyListeners();
           return reloadedDevice;
         });
       }
@@ -363,30 +376,61 @@
           });
           return p;
         });
+        notifyListeners();
       }
     }
 
-    function generatePlacesFromDevicesAndCodes() {
-      if (!placesMapReadyDeferred) {
-        placesMapReadyDeferred = $q.defer();
-      }
+    function startPollingGracePeriod() {
 
+      $timeout(function () {
+        pollingGracePeriodActive = false;
+      }, 30000);
+    }
+
+    function retrieveDevicesAndAccountsAndGeneratePlaceMap() {
+
+      var placesMapReadyPromise = $q.defer();
       var getDevicesPromise = getDevicesMap();
       var getCodePromise = getCodesMap();
 
       getAccountsMap().then(function () {
         getDevicesPromise.then(function () {
           getCodePromise.then(function () {
+            startPollingGracePeriod();
             updatePlacesCache();
-            placesMapReadyDeferred.resolve(placesDataModel);
+            placesMapReadyPromise.resolve(placesDataModel);
           });
         });
       });
+
+      return placesMapReadyPromise;
     }
 
-    function getPlacesMap() {
+    function reFetchDevicesAndAccountsAndGeneratePlaceMap() {
+
+      var placesMapReadyPromise = $q.defer();
+      var getDevicesPromise = fetchDevices();
+      var getCodePromise = fetchCodes();
+
+      fetchAccounts().then(function () {
+        getDevicesPromise.then(function () {
+          getCodePromise.then(function () {
+            startPollingGracePeriod();
+            updatePlacesCache();
+            placesMapReadyPromise.resolve(placesDataModel);
+          });
+        });
+      });
+
+      return placesMapReadyPromise;
+    }
+
+    function getPlacesMap(refreshIfOld) {
+
       if (!placesMapReadyDeferred) {
-        generatePlacesFromDevicesAndCodes();
+        placesMapReadyDeferred = retrieveDevicesAndAccountsAndGeneratePlaceMap();
+      } else if (refreshIfOld && !pollingGracePeriodActive) {
+        reFetchDevicesAndAccountsAndGeneratePlaceMap();
       }
       return placesMapReadyDeferred.promise;
     }
@@ -410,7 +454,8 @@
       createCodeForExisting: createCodeForExisting,
       createCsdmPlace: createCsdmPlace,
       createCmiPlace: createCmiPlace,
-      updateCloudberryPlace: updateCloudberryPlace
+      updateCloudberryPlace: updateCloudberryPlace,
+      subscribeToChanges: subscribeToChanges
     };
   }
 

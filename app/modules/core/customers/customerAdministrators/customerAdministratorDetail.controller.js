@@ -110,9 +110,9 @@
         var fullName = Userservice.getFullNameFromUser(user);
         var email = Userservice.getPrimaryEmailFromUser(user);
         var stringMatches = {
-          fullName: _.includes(fullName, lcaseStr),
-          displayName: _.includes(user.displayName, lcaseStr),
-          email: _.includes(email, lcaseStr)
+          fullName: fullName && _.includes(fullName.toLowerCase(), lcaseStr),
+          displayName: user.displayName && _.includes(user.displayName.toLowerCase(), lcaseStr),
+          email: email && _.includes(email.toLowerCase(), lcaseStr)
         };
         if (_.some(stringMatches)) {
           adminProfile = getAdminProfileFromUser(user);

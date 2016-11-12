@@ -19,29 +19,20 @@ describe('ServiceOverviewCtrl', () => {
   beforeEach(inject(($injector) => {
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.when('GET', /\/hercules\/api\/v2\/organizations/).respond({});
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.when(true));
   }));
 
-  function initController({ F288 = true, MEDIA = true }) {
+  function initController({ MEDIA = true }) {
     ctrl = $controller('ServicesOverviewCtrl', {
       FeatureToggleService: {
         features: {
-          servicesOverview: 'F288',
           atlasMediaServiceOnboarding: 'MEDIA',
         },
         supports: function (feature) {
-          if (feature === 'F288') {
-            return $q.resolve(F288);
-          } else if (feature === 'MEDIA') {
+          if (feature === 'MEDIA') {
             return $q.resolve(MEDIA);
+          } else {
+            return $q.resolve(true);
           }
-        },
-        atlasCareTrialsGetStatus: function () {
-          return $q.resolve(true);
-        },
-        atlasPMRonM2GetStatus: function () {
-          return $q.resolve(true);
         },
       },
     });
@@ -52,35 +43,34 @@ describe('ServiceOverviewCtrl', () => {
 
     it('should create the ctrl and add the cards', () => {
       initController({});
-      // $rootScope.$digest();
-      expect(ctrl.cloudCards).not.toBeNull();
+      expect(ctrl.getCloudCards()).not.toBeNull();
     });
 
     it('should create cloud cards', () => {
       initController({});
-      expect(_.filter(ctrl.cloudCards, { name: 'servicesOverview.cards.message.title' }).length).toBe(1);
-      expect(_.filter(ctrl.cloudCards, { name: 'servicesOverview.cards.meeting.title' }).length).toBe(1);
-      expect(_.filter(ctrl.cloudCards, { name: 'servicesOverview.cards.call.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.message.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.meeting.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.call.title' }).length).toBe(1);
     });
 
     it('should default filter to show all hybrid cards', () => {
       initController({});
-      expect(_.filter(ctrl.hybridCards, { name: 'servicesOverview.cards.clusterList.title' }).length).toBe(1);
-      expect(_.filter(ctrl.hybridCards, { name: 'servicesOverview.cards.calendar.title' }).length).toBe(1);
-      expect(_.filter(ctrl.hybridCards, { name: 'servicesOverview.cards.hybridCall.title' }).length).toBe(1);
-      expect(_.filter(ctrl.hybridCards, { name: 'servicesOverview.cards.hybridMedia.title' }).length).toBe(1);
-      expect(_.filter(ctrl.hybridCards, { name: 'servicesOverview.cards.hybridContext.title' }).length).toBe(0); //this card isn't present in factory now.
+      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.clusterList.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.calendar.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridCall.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridMedia.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridContext.title' }).length).toBe(0); //this card isn't present in factory now.
     });
   });
 
   it('should show the right cards when the hybrid media feature toggle is NOT active', () => {
     initController({ MEDIA: false });
-    const mediaCard = _.find(ctrl.hybridCards, { name: 'servicesOverview.cards.hybridMedia.title' });
+    const mediaCard = _.find(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridMedia.title' });
     expect(mediaCard.display).toBe(false);
   });
 
   it('should show the right cards when the hybrid media feature toggle is active', () => {
     initController({ MEDIA: true });
-    expect(_.find(ctrl.hybridCards, { name: 'servicesOverview.cards.hybridMedia.title' })).not.toBe(undefined);
+    expect(_.find(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridMedia.title' })).not.toBe(undefined);
   });
 });

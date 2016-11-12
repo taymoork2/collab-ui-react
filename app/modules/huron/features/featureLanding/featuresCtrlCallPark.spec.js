@@ -73,7 +73,7 @@ describe('Features Controller', function () {
 
     //Using a Jasmine Spy to return a promise when methods of the HuntGroupService are called
     spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.when([]));
-    spyOn(CallParkService, 'getListOfCallParks').and.returnValue(getDeferred.promise);
+    spyOn(CallParkService, 'getCallParkList').and.returnValue(getDeferred.promise);
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.when([]));
     spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue($q.when());
     spyOn(AAModelService, 'newAAModel').and.returnValue(getDeferred.promise);
@@ -99,19 +99,19 @@ describe('Features Controller', function () {
 
   //TODO: re-enable after feature toggles are removed
   it('should get list of callParks and then store the data in listOfFeatures', function () {
-    getDeferred.resolve(getCPListSuccessResp(listOfCPs));
+    getDeferred.resolve(getCPListSuccessResp(listOfCPs.callparks));
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.listOfFeatures).toEqual(callParks.callparks);
   });
   it('should get list of callParks and if there is any data, should change the pageState to showFeatures', function () {
-    getDeferred.resolve(getCPListSuccessResp(listOfCPs));
+    getDeferred.resolve(getCPListSuccessResp(listOfCPs.callparks));
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('showFeatures');
   });
   it('should get list of callParks and if data received is empty, should change the pageState to newFeature', function () {
-    getDeferred.resolve(getCPListSuccessResp(emptyListOfCPs));
+    getDeferred.resolve(getCPListSuccessResp(emptyListOfCPs.callparks));
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('NewFeature');
@@ -128,7 +128,7 @@ describe('Features Controller', function () {
   it('should set the pageState to Loading when controller is getting data from back-end', function () {
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('Loading');
-    getDeferred.resolve(getCPListSuccessResp(listOfCPs));
+    getDeferred.resolve(getCPListSuccessResp(listOfCPs.callparks));
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('showFeatures');
@@ -142,7 +142,7 @@ describe('Features Controller', function () {
     expect(featureCtrl.pageState).toEqual('Reload');
   });
   it('should be able call delete a callPark function and call the $state service', function () {
-    getDeferred.resolve(getCPListSuccessResp(emptyListOfCPs));
+    getDeferred.resolve(getCPListSuccessResp(emptyListOfCPs.callparks));
     $scope.$apply();
     $timeout.flush();
     featureCtrl.deleteHuronFeature(callParks.callparks[0]);
@@ -164,7 +164,7 @@ describe('Features Controller', function () {
     $timeout.flush();
     featureCtrl.listOfFeatures = [];
     expect(featureCtrl.pageState).toEqual('Loading');
-    getDeferred.resolve(getCPListSuccessResp(singlePark));
+    getDeferred.resolve(getCPListSuccessResp(singlePark.callparks));
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('showFeatures');
@@ -177,14 +177,14 @@ describe('Features Controller', function () {
     expect(featureCtrl.pageState).toEqual('NewFeature');
   });
   it('should set the view to callParks when CP filter is selected', function () {
-    getDeferred.resolve(getCPListSuccessResp(listOfCPs));
+    getDeferred.resolve(getCPListSuccessResp(listOfCPs.callparks));
     $scope.$apply();
     $timeout.flush();
     featureCtrl.setFilter('CP');
     expect(featureCtrl.listOfFeatures).toEqual(jasmine.arrayContaining(callParks.callparks));
   });
   it('should take search query and display the results according to search query', function () {
-    getDeferred.resolve(getCPListSuccessResp(listOfCPs));
+    getDeferred.resolve(getCPListSuccessResp(listOfCPs.callparks));
     $scope.$apply();
     $timeout.flush();
     featureCtrl.searchData(callParks.callparks[0].cardName);

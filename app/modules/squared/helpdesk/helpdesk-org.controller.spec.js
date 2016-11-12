@@ -67,7 +67,7 @@ describe('Controller: HelpdeskOrgController', function () {
   describe('read only access', function () {
     beforeEach(function () {
       sinon.stub(HelpdeskService, 'usersWithRole').returns(q.resolve({}));
-      sinon.stub(HelpdeskService, 'getServiceOrder').returns(q.resolve({}));
+      sinon.stub(HelpdeskService, 'getServiceOrders').returns(q.resolve([{}]));
       sinon.stub(LicenseService, 'getLicensesInOrg').returns(q.resolve({}));
       sinon.stub(HelpdeskHuronService, 'getOrgSiteInfo').returns(q.resolve([{}]));
       sinon.stub(HelpdeskHuronService, 'getTenantInfo').returns(q.resolve({}));
@@ -422,25 +422,35 @@ describe('Controller: HelpdeskOrgController', function () {
 
     });
 
-    it('shows name based on known orderingTool code', function () {
-      sinon.stub(HelpdeskService, 'getServiceOrder').returns(q.resolve({ "orderingTool": "APP_DIRECT" }));
+    it('shows name based on one known orderingTool code', function () {
+      sinon.stub(HelpdeskService, 'getServiceOrders').returns(q.resolve([{ "orderingTool": "APP_DIRECT" }]));
       $scope.$apply();
-      orgController.findServiceOrder("12345");
-      expect(orgController.orderSystem).toBe("Telstra AppDirect Marketplace(TAM)");
+      orgController.findServiceOrders("12345");
+      expect(orgController.orderSystems.length).toBe(1);
+      expect(orgController.orderSystems).toEqual(["Partner Marketplace"]);
     });
 
-    it('shows service order key directly if unknown orderingTool code', function () {
-      sinon.stub(HelpdeskService, 'getServiceOrder').returns(q.resolve({ "orderingTool": "ABCD" }));
+    it('shows names based on two known orderingTool codes', function () {
+      sinon.stub(HelpdeskService, 'getServiceOrders').returns(q.resolve([{ "orderingTool": "DIGITAL_RIVER" }, { "orderingTool": "CCW" }]));
       $scope.$apply();
-      orgController.findServiceOrder("12345");
-      expect(orgController.orderSystem).toBe("ABCD");
+      orgController.findServiceOrders("12345");
+      expect(orgController.orderSystems.length).toBe(2);
+      expect(orgController.orderSystems).toEqual(["Cisco Online Marketplace", "Cisco Commerce"]);
     });
 
-    it('shows empty if empty orderingTool code', function () {
-      sinon.stub(HelpdeskService, 'getServiceOrder').returns(q.resolve({ "orderingTool": "" }));
+    it('shows actual value from service order if unknown orderingTool code', function () {
+      sinon.stub(HelpdeskService, 'getServiceOrders').returns(q.resolve([{ "orderingTool": "ABCD" }]));
       $scope.$apply();
-      orgController.findServiceOrder("12345");
-      expect(orgController.orderSystem).toBe("");
+      orgController.findServiceOrders("12345");
+      expect(orgController.orderSystems.length).toBe(1);
+      expect(orgController.orderSystems).toEqual(["ABCD"]);
+    });
+
+    it('shows empty if empty orderingTool list', function () {
+      sinon.stub(HelpdeskService, 'getServiceOrders').returns(q.resolve([{}]));
+      $scope.$apply();
+      orgController.findServiceOrders("12345");
+      expect(orgController.orderSystems).toEqual([undefined]);
     });
   });
 });

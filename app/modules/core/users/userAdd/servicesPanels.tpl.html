@@ -59,6 +59,7 @@
                   cs-input
                   type="checkbox"
                   ng-model="radioStates.msgRadio"
+                  ng-disabled="disableCheckbox(msgFeature.licenses)"
                   ng-change="checkLicenseAvailability('MESSAGING', radioStates.msgRadio)"
                   id="paid-msg"
                   name="paid-msg"
@@ -86,6 +87,7 @@
                   cs-input
                   type="checkbox"
                   ng-model="lic.confModel"
+                  ng-disabled="disableCheckbox(lic)"
                   ng-change="checkLicenseAvailability('CONFERENCING', lic.confModel)"
                   id="paid-conf"
                   name="paid-conf"
@@ -114,7 +116,7 @@
                 <a target="_blank"
                    href= "{{lic.siteAdminUrl}}"
                    id="{{lic.siteUrl}}_siteAdminUrl">
-                  
+
                   {{::'siteList.siteAdminUrl' | translate}}
                 </a>
               </span>
@@ -149,7 +151,7 @@
                 <span class="service-label" translate="usersPage.addtionalServiceSetupText"></span>
               </div>
               <div>
-                <a href ng-click="ConfirmAdditionalServiceSetup()" translate="usersPage.setUpThisService"></a>
+                <a href ng-click="confirmAdditionalServiceSetup()" translate="usersPage.setUpThisService"></a>
               </div>
             </div>
           </div>

@@ -393,6 +393,18 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     });
   });
 
+  describe('should create temporary solution to write to db for Periodic announcement', function () {
+    it('cesTempPa', function () {
+      var _action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'routeToQueueId');
+      _action.setDescription('routeToQueueDescription');
+      AutoAttendantCeMenuModelService.cesTempPa(_action);
+      _action.queueSettings = {};
+      expect(angular.isDefined(_action.description)).toBe(true);
+      expect(angular.isDefined(_action.queueSettings)).toBe(true);
+    });
+  });
+
+
   describe('clearCeMenuMap', function () {
     it('should reset the CeMenu internal count to 0', function () {
       var _ceMenu = AutoAttendantCeMenuModelService.newCeMenu();

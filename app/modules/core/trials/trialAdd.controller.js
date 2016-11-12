@@ -20,8 +20,6 @@
 
     vm.trialData = TrialService.getData();
     $scope.trialData = vm.trialData;
-    vm.nameError = false;
-    vm.emailError = false;
     vm.uniqueName = false;
     vm.uniqueEmail = false;
     vm.customerOrgId = undefined;
@@ -472,7 +470,6 @@
 
     function init() {
       $q.all({
-        atlasWebexTrials: FeatureToggleService.atlasWebexTrialsGetStatus(),
         atlasCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         atlasContextServiceTrials: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
@@ -482,7 +479,7 @@
           vm.showRoomSystems = true;
           vm.roomSystemTrial.enabled = true;
           vm.sparkBoardTrial.enabled = results.atlasDarling;
-          vm.webexTrial.enabled = results.atlasWebexTrials;
+          vm.webexTrial.enabled = true; // TODO: we enable globally by defaulting to 'true' here, but will revisit and refactor codepaths in a subsequent PR
           vm.callTrial.enabled = vm.hasCallEntitlement;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;
           vm.messageTrial.enabled = true;
@@ -514,7 +511,9 @@
 
           pstnModal.enabled = vm.pstnTrial.enabled;
           emergAddressModal.enabled = vm.pstnTrial.enabled;
-          meetingModal.enabled = results.atlasWebexTrials;
+          // TODO: we enable globally by defaulting to 'true' here, but will revisit and refactor codepaths in a subsequent PR
+
+          meetingModal.enabled = true;
 
           vm.placesEnabled = results.placesEnabled;
           setDeviceModal();
@@ -693,20 +692,14 @@
     }
 
     function startTrial(addNumbersCallback) {
-      vm.nameError = false;
-      vm.emailError = false;
       vm.loading = true;
       sendToAnalytics(Analytics.sections.TRIAL.eventNames.START_TRIAL);
 
       return TrialService.startTrial()
         .catch(function (response) {
-          vm.loading = false;
-          Notification.notify([response.data.message], 'error');
-          if ((response.data.message).indexOf('Org') > -1) {
-            vm.nameError = true;
-          } else if ((response.data.message).indexOf('Admin User') > -1) {
-            vm.emailError = true;
-          }
+          Notification.errorResponse(response, 'trialModal.addError', {
+            customerName: vm.details.customerName
+          });
           return $q.reject(response);
         })
         .then(function (response) {
@@ -719,8 +712,8 @@
           if (!vm.webexTrial.enabled) {
             return EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
                 vm.details.licenseDuration, Authinfo.getOrgId())
-              .catch(function () {
-                Notification.error('didManageModal.emailFailText');
+              .catch(function (response) {
+                Notification.errorResponse(response, 'didManageModal.emailFailText');
               })
               .then(function () {
                 return response;
@@ -732,7 +725,6 @@
           if (vm.callTrial.enabled) {
             return HuronCustomer.create(vm.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
-                vm.loading = false;
                 Notification.errorResponse(response, 'trialModal.squareducError');
                 return $q.reject(response);
               }).then(function () {
@@ -746,20 +738,18 @@
           if (vm.contextTrial.enabled) {
             return TrialContextService.addService(vm.customerOrgId)
               .catch(function (response) {
-                vm.loading = false;
                 Notification.errorResponse(response, 'trialModal.startTrialContextServiceError');
                 return $q.reject(response);
               });
           }
         })
         .then(function () {
-          var successMessage = [$translate.instant('trialModal.addSuccess', {
-            customerName: vm.details.customerName
-          })];
           sendToAnalytics(Analytics.sections.TRIAL.eventNames.FINISH);
-          Notification.notify(successMessage, 'success');
+          Notification.success('trialModal.addSuccess', {
+            customerName: vm.details.customerName
+          });
 
-          if (addNumbersCallback) {
+          if (_.isFunction(addNumbersCallback)) {
             return addNumbersCallback(vm.customerOrgId)
               .catch(_.noop); //don't throw an error
           }

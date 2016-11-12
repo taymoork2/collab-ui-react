@@ -27,17 +27,37 @@
     vm.openModal = openModal;
     vm.progress = 0;
     vm.actionCopy = undefined;
+    vm.isSquishable = isSquishable;
 
-    var myActions = ["play", "runActionsOnInput"];
+    var maxLanes = 3;
+
     var mediaTypes = {
       musicOnHold: 'musicOnHold',
       initialAnnouncement: 'initialAnnouncement',
       periodicAnnouncement: 'periodicAnnouncement',
     };
+
+    var properties = {
+      NAME: ['play', 'say', 'runActionsOnInput'],
+      HEADER_TYPE: 'MENU_OPTION_ANNOUNCEMENT'
+    };
+
+    var messageType = {
+      ACTION: 1,
+      MENUHEADER: 2,
+      MENUKEY: 3,
+      SUBMENU_HEADER: 4,
+      ROUTE_TO_QUEUE: 5,
+    };
+
+    var sourceType = messageType.ACTION;
     var uniqueCtrlIdentifer = 'mediaUploadCtrl';
     var modalOpen = false;
     var modalCanceled = false;
     var uploadServProm = undefined;
+    var menuKeyIndex;
+    var isMenuHeader;
+    var numLanes;
 
     //////////////////////////////////////////////////////
 
@@ -87,13 +107,12 @@
     function uploadSuccess(result) {
       if (!modalCanceled) {
         vm.state = vm.UPLOADED;
-        var action = getPlayAction(vm.menuEntry);
         var fd = {};
         fd.uploadFile = vm.uploadFile;
         fd.uploadDate = vm.uploadDate;
         fd.uploadDuration = vm.uploadDuration;
-        action.setDescription(JSON.stringify(fd));
-        action.setValue('http://' + result.data.PlaybackUri);
+        vm.actionEntry.setDescription(JSON.stringify(fd));
+        vm.actionEntry.setValue('http://' + result.data.PlaybackUri);
         setActionCopy();
         $scope.change();
       }
@@ -172,11 +191,10 @@
         uploadServProm.abort();
         uploadServProm = undefined;
       }
-      var playAction = getPlayAction(vm.menuEntry);
-      if (!_.isUndefined(vm.actionCopy)) {
-        revert(playAction);
+      if (angular.isDefined(vm.actionCopy)) {
+        revert(vm.actionEntry);
       } else {
-        reset(playAction);
+        reset(vm.actionEntry);
       }
     }
 
@@ -213,31 +231,97 @@
     //if user cancels upload & previously uploaded media -> re-init/revert copy
     function setActionCopy() {
       if (!modalOpen) {
-        var playAction = getPlayAction(vm.menuEntry);
-        if (!_.isUndefined(playAction)) {
-          if (!_.isEmpty(playAction.getValue())) {
+        var action = vm.actionEntry;
+        if (angular.isDefined(action)) {
+          if (!_.isEmpty(action.getValue())) {
             vm.actionCopy = {};
-            vm.actionCopy.description = playAction.getDescription();
-            vm.actionCopy.value = playAction.getValue();
-            vm.actionCopy.voice = playAction.getVoice();
+            vm.actionCopy.description = action.getDescription();
+            vm.actionCopy.value = action.getValue();
+            vm.actionCopy.voice = action.getVoice();
           }
         }
       }
     }
 
-    function createPlayAction() {
-      return AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+    function getAction(menuEntry) {
+      var action;
+      if (menuEntry && menuEntry.actions && menuEntry.actions.length > 0) {
+        action = _.find(menuEntry.actions, function (action) {
+          return _.indexOf(properties.NAME, action.name) >= 0;
+        });
+        return action;
+      }
     }
 
-
-    function getPlayAction(menuEntry) {
-      var playAction;
-      if (menuEntry && menuEntry.actions && menuEntry.actions.length > 0) {
-        playAction = _.find(menuEntry.actions, function (action) {
-          return _.indexOf(myActions, action.getName()) >= 0;
+    function getActionHeader(menuEntry) {
+      if (menuEntry && menuEntry.headers && menuEntry.headers.length > 0) {
+        var header = _.find(menuEntry.headers, function (header) {
+          return header.type === properties.HEADER_TYPE;
         });
-        return playAction;
+        return header;
       }
+    }
+
+    function fromMenuHeader() {
+      vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+      var actionHeader = getActionHeader(vm.menuEntry);
+      var action = getAction(actionHeader);
+      if (action) {
+        // existing say action from the existing header
+        vm.actionEntry = action;
+      }
+    }
+
+    function fromMenuKey() {
+      vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+      if (vm.menuEntry.entries.length > $scope.menuKeyIndex && vm.menuEntry.entries[$scope.menuKeyIndex]) {
+        var keyAction = getAction(vm.menuEntry.entries[$scope.menuKeyIndex]);
+        if (keyAction) {
+          vm.actionEntry = keyAction;
+        }
+      }
+    }
+
+    function fromRouteToQueue() {
+      var sourceMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+      var sourceQueue = sourceMenu.entries[$scope.menuKeyIndex];
+      var queueAction = sourceQueue.actions[0];
+      vm.menuEntry = queueAction.queueSettings[$scope.type];
+      vm.actionEntry = getAction(vm.menuEntry);
+    }
+
+    function fromAction() {
+      var ui = AAUiModelService.getUiModel();
+      var uiMenu = ui[$scope.schedule];
+      vm.menuEntry = uiMenu.entries[$scope.index];
+      vm.actionEntry = getAction(vm.menuEntry);
+    }
+
+    function setActionEntry() {
+      switch (sourceType) {
+        case messageType.MENUHEADER:
+        case messageType.SUBMENU_HEADER:
+          {
+            fromMenuHeader();
+            break;
+          }
+        case messageType.MENUKEY:
+          {
+            fromMenuKey();
+            break;
+          }
+        case messageType.ROUTE_TO_QUEUE:
+          {
+            fromRouteToQueue();
+            break;
+          }
+        case messageType.ACTION:
+          {
+            fromAction();
+            break;
+          }
+      }
+      return;
     }
 
     function gatherMediaSource() {
@@ -245,16 +329,23 @@
         //type will be used to differentiate between the different media uploads on the queue modal
         //get the entry mapped to a particular route to queue and
         //mapped to a particular queue setting
-        var sourceMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-        var sourceQueue = sourceMenu.entries[$scope.keyIndex];
-        var queueAction = sourceQueue.actions[0];
-        vm.menuEntry = queueAction.queueSettings[$scope.type];
-      } else { //case of no key input message types
+        sourceType = messageType.ROUTE_TO_QUEUE;
+      } else if ($scope.isMenuHeader) { //case of coming from menu header
+        //get the menu entry mapped to the top level menu header
+        sourceType = messageType.MENUHEADER;
+      } else if ($scope.menuId && (!$scope.menuKeyIndex || $scope.menuKeyIndex <= -1)) {
+        //get the menu entry mapped to the submenu header location
+        sourceType = messageType.SUBMENU_HEADER;
+      } else if ($scope.menuKeyIndex && $scope.menuKeyIndex > -1) {
+        //case of coming from phone key set in a type of phone menu
+        //get the entry mapped to menu key type
+        sourceType = messageType.MENUKEY;
+      } else {
+        //case of no key input message types
         //get the entry mapped to a plain message type
-        var ui = AAUiModelService.getUiModel();
-        var uiMenu = ui[$scope.schedule];
-        vm.menuEntry = uiMenu.entries[$scope.index];
+        sourceType = messageType.ACTION;
       }
+      setActionEntry();
     }
 
     function setUpEntry(action) {
@@ -279,18 +370,8 @@
 
     function populateUiModel() {
       gatherMediaSource();
-      var action = getPlayAction(vm.menuEntry);
-      if (!_.isUndefined(action)) {
-        setUpEntry(action);
-      } else {
-        // should not happen, created earlier but ..
-        vm.menuEntry.addAction(createPlayAction());
-      }
-    }
-
-    function activate() {
-      populateUiModel();
-      setActionCopy();
+      //set up the view according to the play
+      setUpEntry(vm.actionEntry);
     }
 
     $scope.$on('$destroy', function () {
@@ -299,6 +380,43 @@
         uploadServProm.abort();
       }
     });
+
+    function isSquishable() {
+      // if it is submenu header in the phone menu slightly squish the html to fit when open/closed and holidays are exposed.
+
+      var toSquish = (numLanes == maxLanes) && ((menuKeyIndex !== '') || (_.isEmpty(menuKeyIndex) && (isMenuHeader === 'false')));
+      return toSquish;
+    }
+
+    function countLanes(ui) {
+      var n = 1; // always one lane, open hours
+
+      if (ui.isClosedHours) {
+        n++;
+      }
+      if (ui.isHolidays) {
+        if (ui.holidaysValue !== 'closedHours') {
+          n++;
+        }
+      }
+      return n;
+
+    }
+
+    function determineSquishability() {
+      var ui = AAUiModelService.getUiModel();
+
+      numLanes = countLanes(ui);
+
+      menuKeyIndex = $scope.menuKeyIndex;
+      isMenuHeader = $scope.isMenuHeader;
+    }
+
+    function activate() {
+      determineSquishability();
+      populateUiModel();
+      setActionCopy();
+    }
 
     activate();
 

@@ -48,6 +48,7 @@
     $scope.exportType = $rootScope.typeOfExport.CUSTOMER;
     $scope.filterList = _.debounce(filterAction, $scope.timeoutVal);
 
+    // TODO:  atlasCustomerListUpdate toggle is globally set to true. Needs refactoring to remove unused code
     $scope.customerListToggle = customerListToggle;
 
     // expecting this guy to be unset on init, and set every time after
@@ -528,7 +529,7 @@
     // No changes to the length of rows can be made here, only visibility
 
     function rowFilter(rows) {
-      if (!customerListToggle) {
+      if (!$scope.customerListToggle) {
         // never want to filter with old design
         return rows;
       }
@@ -708,7 +709,7 @@
         .then(function (response) {
           $scope.trialsList = PartnerService.loadRetrievedDataToList(_.get(response, 'data.trials', []), true,
             $scope.isCareEnabled);
-          $scope.totalTrials = $scope.trialsList.length;
+          $scope.totalTrials = _.get($scope, 'trialsList', []).length;
         });
     }
 
@@ -737,8 +738,8 @@
         return $q.all([getTrialsList($scope.searchStr), getManagedOrgsList($scope.searchStr)]);
       } else {
         return getManagedOrgsList($scope.searchStr).then(function () {
-          $scope.gridData = $scope.managedOrgsList;
-          $scope.totalOrgs = $scope.managedOrgsList.length;
+          $scope.gridData = _.get($scope, 'managedOrgsList', []);
+          $scope.totalOrgs = _.get($scope, 'managedOrgsList', []).length;
         });
       }
     }
@@ -829,7 +830,7 @@
     }
 
     function getAccountStatus(rowData) {
-      if (rowData.daysLeft <= 0 || _.isUndefined(rowData.licenseList) || rowData.licenseList.length === 0) {
+      if (rowData.daysLeft <= 0 || _.get(rowData, 'licenseList', []).length === 0) {
         return 'expired';
       }
       var isTrial = _.some(Config.licenseObjectNames, function (type) {

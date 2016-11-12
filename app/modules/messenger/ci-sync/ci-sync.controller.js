@@ -55,6 +55,7 @@
     vm.pwdSyncTooltip = $translate.instant(translatePrefix + 'pwdSyncTooltip');
     vm.sparkEntTooltip = $translate.instant(translatePrefix + 'sparkEntTooltip');
     vm.usrDisTooltip = $translate.instant(translatePrefix + 'usrDisTooltip');
+    vm.usrDelTooltip = $translate.instant(translatePrefix + 'usrDelTooltip');
 
     vm.syncInfo = {
       messengerOrgName: 'Unknown',
@@ -66,7 +67,8 @@
       isNewDataFormat: false,
       isPwdSync: true,
       isSparkEnt: true,
-      isUsrDis: true
+      isUsrDis: true,
+      isUsrDel: true
     };
 
     vm.fields = [{

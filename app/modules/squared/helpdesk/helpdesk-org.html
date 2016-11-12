@@ -107,10 +107,13 @@
 
       <div class="row">
         <div class="large-5 columns details-heading">
-          <span>{{'helpdesk.orderSystem' | translate}}:</span>
+          <span>{{'helpdesk.orderSystems' | translate}}:</span>
         </div>
         <div class="large-7 columns details-value">
-          <span>{{helpdeskOrgCtrl.orderSystem}}</span>
+          <span ng-repeat="orderSystem in helpdeskOrgCtrl.orderSystems">
+            {{orderSystem}}{{$last ? '' : ', '}}
+          </span>
+          <span ng-if="!helpdeskOrgCtrl.orderSystems" translate="helpdesk.none"></span>
         </div>
       </div>
 

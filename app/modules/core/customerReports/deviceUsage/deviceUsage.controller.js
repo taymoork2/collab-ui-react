@@ -6,10 +6,10 @@
     .controller('DeviceUsageCtrl', DeviceUsageCtrl);
 
   /* @ngInject */
-  function DeviceUsageCtrl($log, $state, $scope, DeviceUsageTotalService, Notification, deviceUsageFeatureToggle, DeviceUsageCommonService) {
+  function DeviceUsageCtrl($log, $q, $translate, $state, $scope, DeviceUsageTotalService, Notification, deviceUsageFeatureToggle, DeviceUsageCommonService, DeviceUsageSplunkMetricsService) {
     var vm = this;
     var amChart;
-    var apiToUse = 'mock';
+    var apiToUse = 'backend';
 
     vm.leastUsedDevices = [];
     vm.mostUsedDevices = [];
@@ -20,6 +20,7 @@
 
     vm.loading = true;
     vm.exporting = false;
+    vm.noDataForRange = false;
 
     var dateRange;
     vm.exportRawData = exportRawData;
@@ -27,18 +28,15 @@
     vm.deviceOptions = [
       {
         value: 0,
-        label: 'All',
-        description: 'All CE and SparkBoard devices'
+        label: $translate.instant('reportsPage.usageReports.deviceOptions.all')
       },
       {
         value: 1,
-        label: 'Room Systems',
-        description: 'All CE devices'
+        label: $translate.instant('reportsPage.usageReports.deviceOptions.roomSystems')
       },
       {
         value: 2,
-        label: 'SparkBoard',
-        description: 'All SparkBoard devices'
+        label: $translate.instant('reportsPage.usageReports.deviceOptions.sparkBoard')
       }
     ];
     vm.deviceFilter = vm.deviceOptions[0];
@@ -76,11 +74,11 @@
         }
         return result;
       }, {}).map(function (value, key) {
-        value.totalDuration = (value.totalDuration / 60).toFixed(2);
+        value.totalDuration = (value.totalDuration / 3600).toFixed(2);
         value.time = key;
         return value;
       }).value();
-      $log.info('extractDeviceType extract', extract);
+      //$log.info('extractDeviceType extract', extract);
       return extract;
     }
 
@@ -132,20 +130,20 @@
     function loadInitData() {
       switch (DeviceUsageCommonService.getTimeSelected()) {
         case 0:
-          DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          loadLastWeek();
           dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
           break;
         case 1:
-          DeviceUsageTotalService.getDataForLastNTimeUnits(4, 'week', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          loadLastMonth();
           dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(4, 'week');
           break;
         case 2:
-          DeviceUsageTotalService.getDataForLastMonths(3, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          loadLast3Months();
           dateRange = DeviceUsageTotalService.getDateRangeForPeriod(3, 'month');
           break;
         default:
           $log.warn("Unknown time period selected");
-          DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          loadLastWeek();
           dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
       }
 
@@ -170,6 +168,13 @@
     }
 
     function loadChartData(data, title) {
+      if (data.length === 0) {
+        vm.noDataForRange = true;
+        var warning = 'No report data available for : \n' + dateRange.start + ' to ' + dateRange.end;
+        Notification.notify([warning], 'warning');
+      } else {
+        vm.noDataForRange = false;
+      }
       vm.reportData = data;
       amChart.dataProvider = data;
       if (title) {
@@ -186,24 +191,36 @@
     }
 
     function loadLastWeek() {
+      var missingDaysDeferred = $q.defer();
+      missingDaysDeferred.promise.then(handleMissingDays);
       vm.loading = true;
-      DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(function (data) {
-        loadChartData(data, 'Last 7 Days');
+      DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse, missingDaysDeferred).then(function (data) {
+        loadChartData(data, $translate.instant('reportsPage.usageReports.last7Days'));
       }, handleReject);
     }
 
     function loadLastMonth() {
+      var missingDaysDeferred = $q.defer();
+      missingDaysDeferred.promise.then(handleMissingDays);
       vm.loading = true;
-      DeviceUsageTotalService.getDataForLastNTimeUnits(4, 'week', ['ce', 'sparkboard'], apiToUse).then(function (data) {
-        loadChartData(data, 'Weekly Last 4 Weeks');
+      DeviceUsageTotalService.getDataForLastNTimeUnits(4, 'week', ['ce', 'sparkboard'], apiToUse, missingDaysDeferred).then(function (data) {
+        loadChartData(data, $translate.instant('reportsPage.usageReports.last4Weeks'));
       }, handleReject);
     }
 
     function loadLast3Months() {
+      var missingDaysDeferred = $q.defer();
+      missingDaysDeferred.promise.then(handleMissingDays);
       vm.loading = true;
-      DeviceUsageTotalService.getDataForLastMonths(3, 'month', ['ce', 'sparkboard'], apiToUse).then(function (data) {
-        loadChartData(data, 'Monthly');
+      DeviceUsageTotalService.getDataForLastMonths(3, 'month', ['ce', 'sparkboard'], apiToUse, missingDaysDeferred).then(function (data) {
+        loadChartData(data, $translate.instant('reportsPage.usageReports.last3Months'));
       }, handleReject);
+    }
+
+    function handleMissingDays(info) {
+      //$log.info('missingDays', info);
+      var warning = 'Data missing for ' + info.nbrOfMissingDays + ' days';
+      Notification.notify([warning], 'warning');
     }
 
     function rollOverGraphItem(event) {
@@ -218,9 +235,9 @@
     }
 
     function renderBalloon(graphDataItem) {
-      var text = '<div><h5>Call Duration: ' + graphDataItem.dataContext.totalDuration + '</h5>';
-      text = text + 'Call Count:  ' + graphDataItem.dataContext.callCount + ' <br/> ';
-      text = text + 'Paired Count: ' + graphDataItem.dataContext.pairedCount + '<br/>';
+      var text = '<div><h5>' + $translate.instant('reportsPage.usageReports.callDuration') + ' : ' + graphDataItem.dataContext.totalDuration + '</h5>';
+      text = text + $translate.instant('reportsPage.usageReports.callCount') + ' : ' + graphDataItem.dataContext.callCount + ' <br/> ';
+      text = text + $translate.instant('reportsPage.usageReports.pairedCount') + ' : ' + graphDataItem.dataContext.pairedCount + '<br/>';
       return text;
     }
 
@@ -273,9 +290,10 @@
 
     function exportRawData() {
       vm.exporting = true;
-      $log.info("Exporting data for range", dateRange);
-      DeviceUsageTotalService.exportRawData(dateRange.start, dateRange.end).then(function () {
-        $log.info("export finished");
+      //$log.info("Exporting data for range", dateRange);
+      DeviceUsageTotalService.exportRawData(dateRange.start, dateRange.end, apiToUse).then(function () {
+        //$log.info("export finished");
+        DeviceUsageSplunkMetricsService.reportClick(DeviceUsageSplunkMetricsService.eventTypes.fullReportDownload, dateRange);
         vm.exporting = false;
       })
       .catch(function (err) {

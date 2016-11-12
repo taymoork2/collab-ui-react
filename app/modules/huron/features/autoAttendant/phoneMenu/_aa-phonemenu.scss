@@ -19,16 +19,6 @@
   }
 }
 
-%aa-menu-textarea {
-  line-height: 1.25rem;
-  width: 100%;
-
-  @include vr-spacing(pv, 0.5);
-  @include vr-spacing(ph, 0.75);
-
-  resize: none;
-}
-
 %aa-menu-control-label {
   @include vr-spacing(pl, 0.25);
   @include vr-spacing(mt, 0.25);
@@ -76,13 +66,8 @@
 
 %aa-menu-actions {
   width: 100%;
-
   .csSelect-container {
-    @include vr-spacing(pt, 1);
-  }
-
-  textarea {
-    @extend %aa-menu-textarea;
+    @include vr-spacing(pt, 0);
   }
 
   .control-label {

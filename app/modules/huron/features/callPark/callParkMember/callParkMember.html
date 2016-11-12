@@ -1,0 +1,68 @@
+<script type="text/ng-template" id="memberTemplate.html">
+  <a class="member__name">
+    <span ng-bind-html="match.label.firstName | typeaheadHighlight:query" ng-if="match.label.firstName"></span>
+    <span ng-bind-html="match.label.lastName | typeaheadHighlight:query" ng-if="match.label.lastName"></span>
+    <span ng-show="match.label.lastName">(<span ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>)</span>
+    <span ng-show="!match.label.lastName && !match.label.displayName" ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>
+    <span ng-show="!match.label.userName" ng-bind-html="match.label.displayName | typeaheadHighlight:query"></span>
+  </a>
+  <div class="member__line">
+    <span ng-bind-html="(match.label.numbers | callParkMemberTelephoneFilter) | typeaheadHighlight:query"></span>
+  </div>
+</script>
+<div class="call-park-member-lookup">
+  <div class="typeahead-large" ng-if="$ctrl.isNew">
+    <input
+      id="userInput"
+      ng-model="$ctrl.selectedMember"
+      ng-class="{'error': $ctrl.errorMemberInput}"
+      typeahead="member for member in $ctrl.getMemberList($viewValue) | limitTo:10"
+      typeahead-on-select="$ctrl.selectCallParkMember($item)"
+      typeahead-template-url="memberTemplate.html"
+      typeahead-min-length="3"
+      typeahead-wait-ms="200"
+      placeholder="{{:: 'callPark.memberPlaceholder' | translate}}"
+      ng-keypress="$ctrl.onHandleKeyPress($event.keyCode)"
+      autocomplete="off"
+      focus-on>
+    <p class="input-description" translate="callPark.memberHint"></p>
+  </div>
+  <div ng-if="!$ctrl.isNew" class="typeahead">
+    <input
+      cs-input
+      id="userInput"
+      ng-model="$ctrl.selectedMember"
+      typeahead="member for member in $ctrl.getMemberList($viewValue) | limitTo:10"
+      typeahead-on-select="$ctrl.selectCallParkMember($item)"
+      typeahead-template-url="memberTemplate.html"
+      typeahead-min-length="3"
+      typeahead-wait-ms="200"
+      placeholder="{{:: 'callPark.memberPlaceholder' | translate}}"
+      cs-input-size="small-12"
+      autocomplete="off">
+  </div>
+  <cs-card-layout>
+    <cs-card
+      class="small header-background primary call-park-member-card"
+      ng-repeat="member in $ctrl.members track by member.memberUuid">
+      <article>
+        <a href ng-click="$ctrl.toggleMemberPanel(member)">
+          <header ng-class="{'open-panel' : $ctrl.openMemberPanelUuid === member.memberUuid}">
+            <div class="header-with-right-icon">
+              <h5 class="ellipsis">{{member.memberName}}</h5>
+              <i class="icon icon-arrow-next icon-lg"></i>
+            </div>
+          </header>
+        </a>
+        <section ng-if="($ctrl.openMemberPanelUuid === member.memberUuid)">
+          <fieldset>
+            <p class="primary-number">{{member.numbers | callParkMemberTelephoneFilter}}</p>
+            <p>
+              <a href ng-click="$ctrl.unSelectCallParkMember(member)" translate="callPark.removeMem"></a>
+            </p>
+          </fieldset>
+        </section>
+      </article>
+    </cs-card>
+  </cs-card-layout>
+</div>

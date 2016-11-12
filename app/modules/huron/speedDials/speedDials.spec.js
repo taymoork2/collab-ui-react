@@ -73,7 +73,7 @@ describe('Controller: SpeedDialsCtrl', function () {
       expect(controller.editing).toBeTruthy();
       expect(sd.edit).toBeTruthy();
       expect(controller.newLabel).toEqual(sd.label);
-      expect(controller.newNumber).toEqual(sd.number);
+      expect(controller.callDest.phoneNumber).toEqual(sd.number);
     });
 
     it('should not set edit with no parameter', function () {
@@ -172,7 +172,7 @@ describe('Controller: SpeedDialsCtrl', function () {
       var length = controller.speedDialList.length;
       controller.add();
       controller.newLabel = 'Test';
-      controller.newNumber = '0000';
+      controller.callDest.phoneNumber = '0000';
       expect(controller.speedDialList.length).toEqual(length + 1);
       controller.save();
       expect(controller.speedDialList.length).toEqual(length + 1);
@@ -193,7 +193,7 @@ describe('Controller: SpeedDialsCtrl', function () {
       expect(controller.editing).toBeTruthy();
       expect(sd.edit).toBeTruthy();
       controller.newLabel = 'Test';
-      controller.newNumber = '0000';
+      controller.callDest.phoneNumber = '0000';
       controller.save();
       expect(sd.edit).toBeFalsy();
       expect(sd.label).toEqual('Test');

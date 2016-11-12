@@ -12,8 +12,11 @@
         schedule: '@aaSchedule',
         menuId: '@aaMenuId',
         index: '=aaIndex',
-        keyIndex: '@aaKeyIndex',
         type: '@aaMediaType',
+        isMenuHeader: '@aaMenuHeader',
+        fromSubMenu: '@aaFromSubMenu',
+        menuKeyIndex: '@aaKeyIndex',
+        fromNewTreatment: '@aaFromNewTreatment'
       },
       controller: 'AAMessageTypeCtrl',
       controllerAs: 'aaMessageType',
