@@ -699,11 +699,11 @@
       var limitsPromise = TrialDeviceService.getLimitsPromise();
       Analytics.trackTrialSteps(Analytics.eventNames.ENTER_SCREEN, vm.parentTrialData);
 
-      // TODO - remove feature toggle when MX300 are officially supported
+      // TODO - remove feature toggle code and checks. MX300 is now officially supported
       // Hides the MX300 under a feature toggle
       FeatureToggleService.supports(FeatureToggleService.features.atlasNewRoomSystems)
-        .then(function (results) {
-          vm.showNewRoomSystems = results;
+        .then(function () {
+          vm.showNewRoomSystems = true;
         });
 
       vm.canAddMoreDevices = vm.isEditing && vm.hasExistingDevices();
