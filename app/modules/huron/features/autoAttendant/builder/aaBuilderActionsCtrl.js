@@ -60,6 +60,8 @@
     vm.getSelectHint = getSelectHint;
     vm.removeAction = removeAction;
 
+    var featureToggleIndex = 1;
+
     /////////////////////
 
     function selectOption() {
@@ -117,7 +119,7 @@
       if ($scope.index >= 0) {
         var menuEntry = vm.ui[vm.schedule].getEntryAt($scope.index);
         if (menuEntry.type == "MENU_OPTION") {
-          vm.option = vm.options[2];
+          vm.option = vm.options[featureToggleIndex];
         } else if (menuEntry.actions.length > 0 && menuEntry.actions[0].getName()) {
           var matchType = function (action) {
             return menuEntry.actions[0].getName() === action &&
@@ -145,6 +147,7 @@
           showHelpLink: true,
           actions: ['callerInput']
         });
+        featureToggleIndex = 2;
       }
     }
 
