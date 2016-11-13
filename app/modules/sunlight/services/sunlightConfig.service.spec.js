@@ -8,7 +8,8 @@ describe(' sunlightConfigService', function () {
   var sunlightConfigService, $httpBackend, sunlightUserConfigUrl, $window,
     sunlightChatConfigUrl, sunlightChatTemplateUrl, chatConfig, userData, userId, orgId, csConnString, templateId;
   var spiedAuthinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org')
   };
   var errorData = {
     'errorType': 'Internal Server Error'
@@ -84,6 +85,25 @@ describe(' sunlightConfigService', function () {
     var userInfo = angular.copy(getJSONFixture('sunlight/json/sunlightTestUser.json'));
     $httpBackend.whenPUT(sunlightUserConfigUrl + '/' + userId).respond(500, errorData);
     sunlightConfigService.updateUserInfo(userInfo, userId).then(function () {}, function (response) {
+      expect(response.data).toEqual(errorData);
+      expect(response.status).toBe(500);
+    });
+    $httpBackend.flush();
+  });
+
+  it('should update chatConfig in sunlight config service', function () {
+    var chatConfig = angular.copy(getJSONFixture('sunlight/json/features/config/sunlightTestChatConfig.json'));
+    $httpBackend.whenPUT(sunlightChatConfigUrl).respond(200, {});
+    sunlightConfigService.updateChatConfig(chatConfig).then(function (response) {
+      expect(response.status).toBe(200);
+    });
+    $httpBackend.flush();
+  });
+
+  it('should fail to update chatConfig in sunlight config service when there is an http error', function () {
+    var chatConfig = angular.copy(getJSONFixture('sunlight/json/features/config/sunlightTestChatConfig.json'));
+    $httpBackend.whenPUT(sunlightChatConfigUrl).respond(500, errorData);
+    sunlightConfigService.updateChatConfig(chatConfig).then(function () {}, function (response) {
       expect(response.data).toEqual(errorData);
       expect(response.status).toBe(500);
     });
