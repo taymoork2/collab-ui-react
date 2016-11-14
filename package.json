@@ -24,7 +24,7 @@
     "ktest-all-watch": "./bin/ktest-all --no-parallel --no-single-run --auto-watch",
     "ktest-all": "./bin/ktest-all",
     "ktest-debug": "./bin/ktest --no-parallel --no-single-run --debug",
-    "ktest-watch": "./bin/ktest --no-parallel --no-single-run --auto-watch --nolint",
+    "ktest-watch": "./bin/ktest --no-parallel --no-single-run --auto-watch",
     "languages-verify": "node ./utils/languages-verify.js",
     "lint": "npm run eslint && npm run tslint",
     "postinstall": "npm run ts-spec-delete && npm run typings",
