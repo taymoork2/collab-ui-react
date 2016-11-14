@@ -29,6 +29,7 @@
       atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list',
       atlasMediaServiceMetrics: 'atlas-media-service-metrics',
       atlasMediaServiceOnboarding: 'atlas-media-service-onboarding',
+      atlasMediaServicePhaseTwo: 'atlas-media-service-phase-two',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
       atlasNewUserExport: 'atlas-new-user-export',
       atlasNurturingEmails: 'atlas-nurturing-emails',
