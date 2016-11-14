@@ -159,7 +159,6 @@
       csdmATA: 'csdm-ata',
       atlasGlobalServiceStatus: 'atlas-global-service-status',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
-      huronLocalDialing: 'huron-local-dialing',
       huronDeviceE911: 'huron-device-e911-address',
       gemServicesTab: 'gem-services-tab',
       atlasHybridDataSecurity: 'atlas-data-security',
