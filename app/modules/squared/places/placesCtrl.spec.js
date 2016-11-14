@@ -28,6 +28,7 @@ describe('Controller: PlacesCtrl', function () {
       return {};
     });
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when());
+    spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.when());
   }
 
   function initController() {

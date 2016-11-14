@@ -38,12 +38,14 @@ describe('Controller: DeviceOverviewCtrl', function () {
   function initSpies() {
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false').respond(200);
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/upgradeChannels').respond(200);
+    $httpBackend.whenGET('http://thedeviceurl').respond(200);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/sipendpoints/3/addonmodules').respond(200);
   }
 
   var $stateParams = {
     currentDevice: {
+      url: 'http://thedeviceurl',
       isHuronDevice: false,
       product: 'Cisco 8865',
       cisUuid: 2,
@@ -320,6 +322,7 @@ describe('Huron Device', function () {
     ServiceSetup = _ServiceSetup_;
     $stateParams = {
       currentDevice: {
+        url: 'http://thedeviceurl',
         isHuronDevice: true
       },
       huronDeviceService: CsdmHuronDeviceService($q)
@@ -356,6 +359,7 @@ describe('Huron Device', function () {
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false').respond(200);
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/upgradeChannels').respond(200);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
+    $httpBackend.whenGET('http://thedeviceurl').respond(200);
 
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timeZone));
     spyOn($stateParams.huronDeviceService, 'setTimezoneForDevice').and.returnValue($q.when(true));

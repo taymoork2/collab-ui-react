@@ -213,19 +213,12 @@
         });
     }
 
-    function getPlaceUrl(item) {
-      return placesUrl + item.cisUuid;
+    function getPlaceUrl(device) {
+      return placesUrl + device.cisUuid;
     }
 
-    function addPlaceToDataModel(place) {
-      placesDataModel[place.url] = place;
-      addOrUpdatePlaceInDataModel(place);
-      notifyListeners();
-      return place;
-    }
-
-    function createCsdmPlace(name, type) {
-      return CsdmPlaceService.createCsdmPlace(name, type)
+    function createCsdmPlace(name, entitlements, directoryNumber, externalNumber) {
+      return CsdmPlaceService.createCsdmPlace(name, entitlements, directoryNumber, externalNumber)
         .then(addPlaceToDataModel);
     }
 
@@ -238,9 +231,6 @@
       var placeUrl = getPlaceUrl(objectToUpdate);
       return CsdmPlaceService.updatePlace(placeUrl, entitlements, directoryNumber, externalNumber)
         .then(function (place) {
-          placesDataModel[place.url].entitlements = place.entitlements;
-          placesDataModel[place.url].directoryNumber = place.directoryNumber;
-          placesDataModel[place.url].externalNumber = place.externalNumber;
           addOrUpdatePlaceInDataModel(place);
           return place;
         });
@@ -336,9 +326,10 @@
         } else {
           return $q.reject();
         }
+      } else if (item.type === 'huron') {
+        return $q.reject();
       } else {
-        return service.fetchDevice(item.url).then(function (reloadedDevice) {
-
+        return service.fetchItem(item.url).then(function (reloadedDevice) {
           CsdmCacheUpdater.updateOne(theDeviceMap, item.url, reloadedDevice);
           notifyListeners();
           return reloadedDevice;
@@ -352,6 +343,13 @@
 
     function hasLoadedAllDeviceSources() {
       return cloudBerryDevicesLoaded && codesLoaded && huronDevicesLoaded;
+    }
+
+    function addPlaceToDataModel(place) {
+      placesDataModel[place.url] = place;
+      addOrUpdatePlaceInDataModel(place);
+      notifyListeners();
+      return place;
     }
 
     function addOrUpdatePlaceInDataModel(item) {

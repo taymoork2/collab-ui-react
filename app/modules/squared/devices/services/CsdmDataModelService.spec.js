@@ -178,7 +178,7 @@ describe('Service: CsdmDataModelService', function () {
 
       CsdmDataModelService.getDevicesMap().then(function (devicesMap) {
         CsdmDataModelService.getPlacesMap().then(function (places) {
-          CsdmDataModelService.createCsdmPlace("newPlace", "cloudberry").then(function (place) {
+          CsdmDataModelService.createCsdmPlace('newPlace').then(function (place) {
 
             CsdmDataModelService.subscribeToChanges(testScope, function () {
               changeNotification = "YES";

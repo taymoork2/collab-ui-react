@@ -25,6 +25,9 @@
           FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
             vm.showDarling = result;
           });
+          FeatureToggleService.csdmPstnGetStatus().then(function (result) {
+            vm.showPstn = result && Authinfo.isSquaredUC();
+          });
         }
 
         function loadList() {
@@ -168,8 +171,14 @@
               },
               'addDeviceFlow.chooseDeviceType': {
                 nextOptions: {
-                  cloudberry: 'addDeviceFlow.showActivationCode',
+                  cloudberry: vm.showPstn && vm.showPlaces ? 'addDeviceFlow.editServices' : 'addDeviceFlow.showActivationCode',
                   huron: 'addDeviceFlow.addLines'
+                }
+              },
+              'addDeviceFlow.editServices': {
+                nextOptions: {
+                  sparkCall: 'addDeviceFlow.addLines',
+                  sparkOnly: 'addDeviceFlow.showActivationCode'
                 }
               },
               'addDeviceFlow.addLines': {

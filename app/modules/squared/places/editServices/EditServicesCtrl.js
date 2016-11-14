@@ -12,24 +12,40 @@
     vm.service = initialService;
 
     vm.next = function () {
-      $stateParams.wizard.next({});
+      $stateParams.wizard.next({
+        account: {
+          entitlements: getUpdatedEntitlements()
+        }
+      }, vm.service);
     };
 
     vm.hasNextStep = function () {
-      return vm.service === 'sparkCall' && vm.service !== initialService;
+      return wizardData.function !== 'editServices' || (vm.service === 'sparkCall' && vm.service !== initialService);
     };
+
+    function getUpdatedEntitlements() {
+      var entitlements = (wizardData.account.entitlements || ['webex-squared']);
+      var sparkCallIndex = entitlements.indexOf('ciscouc');
+      if (vm.service === 'sparkOnly') {
+        if (sparkCallIndex > -1) {
+          entitlements.splice(sparkCallIndex, 1);
+        }
+      } else {
+        if (sparkCallIndex == -1) {
+          entitlements.push('ciscouc');
+        }
+      }
+      return entitlements;
+    }
 
     vm.save = function () {
       if (vm.service === 'sparkOnly') {
         vm.isLoading = true;
-        var entitlements = (wizardData.account.entitlements || []);
-        var sparkCallIndex = entitlements.indexOf('ciscouc');
-        if (sparkCallIndex > -1) {
-          entitlements.splice(sparkCallIndex, 1);
+        if (vm.service !== initialService) {
           CsdmDataModelService.getPlacesMap().then(function (list) {
             var place = _.find(_.values(list), { 'cisUuid': wizardData.account.cisUuid });
             if (place) {
-              CsdmDataModelService.updateCloudberryPlace(place, entitlements)
+              CsdmDataModelService.updateCloudberryPlace(place, getUpdatedEntitlements())
                 .then(function () {
                   $scope.$dismiss();
                   Notification.success("addDeviceWizard.editServices.servicesSaved");

@@ -108,7 +108,6 @@ class PlaceOverview implements ng.IComponentController {
   }
 
   public editCloudberryServices(): void {
-    //other TOdo to test
     let wizardState = {
       data: {
         function: 'editServices',
@@ -126,7 +125,9 @@ class PlaceOverview implements ng.IComponentController {
       currentStateName: 'addDeviceFlow.editServices',
       wizardState: {
         'addDeviceFlow.editServices': {
-          next: 'addDeviceFlow.addLines',
+          nextOptions: {
+            sparkCall: 'addDeviceFlow.addLines',
+          },
         },
         'addDeviceFlow.addLines': {},
       },
