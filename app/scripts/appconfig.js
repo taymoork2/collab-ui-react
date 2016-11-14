@@ -1717,6 +1717,51 @@
             controller: 'servicePartnerCtrl',
             controllerAs: 'gsls'
           })
+          .state('gem.cbgBase', {
+            abstract: true,
+            templateUrl: 'modules/gemini/callbackGroup/cbgBase.tpl.html',
+            controller: 'CbgHeaderCtrl',
+            controllerAs: 'header'
+          })
+          .state('gem.cbgBase.cbgs', {
+            controller: 'CbgsCtrl',
+            controllerAs: 'cbgsCtrl',
+            url: '/services/gemcbg/:companyName/:customerId',
+            templateUrl: 'modules/gemini/callbackGroup/cbgs.tpl.html'
+          })
+          .state('gem.modal', {
+            abstract: true,
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<div ui-view></div>'
+              }
+            }
+          })
+          .state('gem.modal.request', {
+            controller: 'CbgRequestCtrl',
+            controllerAs: 'cbgrCtrl',
+            params: {
+              customerId: null
+            },
+            templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html'
+          })
+          .state('gem.cbgDetails', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                controller: 'CbgDetailsCtrl',
+                controllerAs: 'detailsCtrl',
+                templateUrl: 'modules/gemini/callbackGroup/cbgDetails.tpl.html'
+              }
+            },
+            params: {
+              info: {}
+            },
+            data: {
+              displayName: 'Overview'
+            }
+          })
           .state('partnercustomers.list', {
             url: '/customers',
             templateUrl: 'modules/core/customers/customerList/customerList.tpl.html',

@@ -1,0 +1,105 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title" translate="gemini.cbgs.request.modalTitle"></h3>
+</div>
+
+<div class="modal-body gemini-request-callbackgroup">
+  <form name="cbgForm" novalidate>
+
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="gemini.cbgs.request.groupName"></h4>
+      </div>
+      <div class="section__content">
+        <div class="cs-input-group medium-12 columns">
+          <input
+            cs-input
+            required
+            type="text"
+            ng-maxlength="60"
+            cs-input-messages="forms.messages"
+            ng-model="cbgrCtrl.model.postData.customerName"
+            cs-input-label="{{'gemini.cbgs.request.labelCustomer' | translate}}"
+            placeholder="{{'gemini.cbgs.request.customerPlaceholder' | translate}}">
+        </div>
+        <div class="cs-input-group medium-12 columns">
+          <input
+            cs-input
+            type="text"
+            ng-maxlength="200"
+            ng-model="cbgrCtrl.model.postData.customerAttribute"
+            placeholder="{{'gemini.cbgs.request.customerAttrPlaceholder' | translate}}"
+            cs-input-label="{{'gemini.cbgs.request.labelCustomerAttr' | translate}}">
+        </div>
+      </div>
+    </div>
+
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="gemini.cbgs.request.groupCountries"></h4>
+      </div>
+
+      <div class="cs-input-group section__content columns">
+        <div class="cs-input-group ui-grid-header-viewport">
+          <label class="cs-input__label" for="html-input" translate="gemini.cbgs.request.labelCountries"></label>
+          <div class="left small-10 input-icon">
+            <span class="icon icon-search"></span>
+            <input id="html-input" class="cs-input" type="text" placeholder="{{'gemini.cbgs.request.countriesPlaceholder' | translate}}">
+            <input type="hidden" ng-model="cbgrCtrl.hideCountries" required="true">
+          </div>
+
+
+          <div class="small-2 right upload-file text-right">
+            <!-- upload start-->
+            <div class="user-csv-upload" ng-if="!cbgrCtrl.isCsvValid">
+              <div class="flex-center-container">
+                <div class="file-drop">
+                  <i class="icon icon-share-contain icon-2x upload-file-btn"></i>
+                  <input
+                    class="upload-file-input"
+                    id="upload"
+                    name="upload"
+                    type="file"
+                    cr-file-read
+                    file="cbgrCtrl.model.file"
+                    file-name="cbgrCtrl.model.fileName"
+                    file-max-size="10"
+                    file-max-size-error="cbgrCtrl.onFileSizeError()"
+                    file-type="text/csv, application/csv, application/vnd.ms-excel"
+                    file-suffix="csv"
+                    file-type-error="cbgrCtrl.onFileTypeError()"/>
+                </div>
+              </div>
+            </div>
+            <!-- upload end-->
+          </div>
+        </div>
+
+        <div ng-if="cbgrCtrl.isCsvValid" class="file-drop-inactive">
+          <div class="center-vert">
+            <span>{{cbgrCtrl.model.fileName}}</span>
+            <button type="button" ng-click="cbgrCtrl.resetFile()" class="btn--none">
+              <small class="icon icon-exit"></small>
+            </button>
+          </div>
+        </div>
+
+        <div class="tag-container">
+          <span class="tag tag-country" ng-repeat="val in cbgrCtrl.model.postData.countries">
+            <span>{{val.countryName}}</span>
+            <i class="icon icon-close" ng-click="cbgrCtrl.removeCountry(val.countryName)"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" ng-click="$dismiss()"><span translate="common.cancel"></span></button>
+  <button type="button" class="btn btn--primary" cs-btn loading="cbgrCtrl.loading" ng-click="cbgForm.$setPristine(true); cbgrCtrl.onSubmit()" ng-disabled="cbgForm.$invalid">
+    <span translate="common.submit"></span>
+  </button>
+</div>

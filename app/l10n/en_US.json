@@ -1561,6 +1561,7 @@
       "squared-fusion-uc": "Call Service",
       "squared-fusion-uc.full": "Call Service Aware",
       "squared-fusion-cal": "Calendar Service",
+      "squared-fusion-gcal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
       "squared-fusion-ec": "Call Service Connect",
@@ -1744,7 +1745,11 @@
         "privateKeyHeader": "Private Key",
         "privateKeyText": "Upload a new private key.",
         "deactivateHeader": "Deactivate Google Calendar",
-        "deactivateText": "Your users will no longer be able to use this service."
+        "deactivateText": "Your users will no longer be able to use this service.",
+        "googleCalendarConfigWillBeWiped": "This action will delete all Google Calendar settings from Cisco Collaboration Cloud.",
+        "uploadNewPrivateKey": "Upload New Private Key",
+        "successfullyUploadedKey": "Private key uploaded successfully.",
+        "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status."
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
@@ -5767,7 +5772,44 @@
     },
     "msg": {
       "splsResponseErr": "No partner organization found, please contact ccaportal@cisco.com for help."
-    }
+    },
+    "cbgTitle": "Callback Groups",
+    "cbgs": {
+      "title": "Callback Groups",
+      "csvFilename": "exported_callbackGroup.csv",
+      "field": {
+        "sites": "Site URL",
+        "status_": "Status",
+        "cbgName": "Callback Group Name",
+        "totalSites": "Sites Assigned",
+        "alias": "Partner CB Group Name",
+        "status": {
+          "E": "Edit",
+          "L": "Failed",
+          "S": "Submit",
+          "C": "Cancel",
+          "D": "Delete",
+          "A": "Approved",
+          "R": "Rejected",
+          "F": "Finish_edit",
+          "P": "Provisioned"
+        }
+      },
+      "request": {
+        "button": "Request",
+        "modalTitle": "Request Callback Group",
+        "groupName": "Naming",
+        "groupCountries": "Countries",
+        "labelCustomer": "Customer Name",
+        "customerPlaceholder": "Who is this callback group for?",
+        "labelCustomerAttr": "Partner CB Group Name",
+        "customerAttrPlaceholder": "Enter a shorter name for quick refernce",
+        "labelCountries": "Select Country/Regions",
+        "countriesPlaceholder": "Search to add country"
+      },
+      "placeholder-text": "All"
+    },
+    "tdTitle": "Telephony Domain"
   },
   "timeZones": {
     "Etc/GMT+12": "Etc/GMT+12",
