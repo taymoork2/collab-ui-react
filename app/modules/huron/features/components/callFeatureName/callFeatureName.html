@@ -1,10 +1,24 @@
-<div class="typeahead-large">
-  <input
-    class="form-control"
-    placeholder={{::$ctrl.placeholder}}
-    ng-model="$ctrl.name"
-    ng-change="$ctrl.onNameChange()"
-    ng-keypress="$ctrl.onHandleKeyPress($event.keyCode)"
-    focus-on>
-  <p class="input-hint">{{::$ctrl.nameHint}}</p>
+<div ng-form="featureNameForm">
+  <div class="typeahead-large" ng-if="$ctrl.isNew">
+    <input
+      class="form-control"
+      placeholder={{::$ctrl.placeholder}}
+      ng-model="$ctrl.name"
+      ng-change="$ctrl.onNameChange()"
+      ng-keypress="$ctrl.onHandleKeyPress($event.keyCode)"
+      ng-required="$ctrl.isRequired"
+      focus-on>
+    <p class="input-hint">{{::$ctrl.nameHint}}</p>
+  </div>
+
+  <div ng-if="!$ctrl.isNew">
+    <input
+      cs-input
+      type="text"
+      cs-input-size="small-12"
+      placeholder={{::$ctrl.placeholder}}
+      ng-model="$ctrl.name"
+      ng-change="$ctrl.onNameChange()"
+      ng-required="$ctrl.isRequired">
+  </div>
 </div>

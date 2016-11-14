@@ -1293,26 +1293,42 @@
               settingPageIframeUrl: null
             }
           })
+
           .state('reports', {
-            url: '/reports',
-            templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
-            controller: 'CustomerReportsCtrl',
-            controllerAs: 'nav',
+            templateUrl: 'modules/core/customerReports/customerReportsHeader.tpl.html',
+            controller: 'CustomerReportsHeaderCtrl',
+            controllerAs: 'header',
             parent: 'main',
-            params: {
-              tab: null,
-              siteUrl: null
+            abstract: true
+          })
+          .state('reports.spark', {
+            url: '/reports',
+            views: {
+              'tabContent': {
+                controllerAs: 'nav',
+                controller: 'SparkReportCtrl',
+                templateUrl: 'modules/core/customerReports/sparkReports/sparkReports.tpl.html',
+              }
             }
           })
-          .state('reports-metrics', {
+          .state('reports.metrics', {
             url: '/reports/metrics',
-            templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
-            controller: 'CustomerReportsCtrl',
-            controllerAs: 'nav',
-            parent: 'main',
-            params: {
-              tab: 'metrics',
-              siteUrl: null
+            views: {
+              'tabContent': {
+                controllerAs: 'nav',
+                controller: 'MediaServiceMetricsContoller',
+                templateUrl: 'modules/mediafusion/metrics-graph-report/mediaServiceMetricsReports.tpl.html'
+              }
+            }
+          })
+          .state('reports.care', {
+            url: '/reports/care',
+            views: {
+              'tabContent': {
+                controllerAs: 'nav',
+                controller: 'CareReportsController',
+                templateUrl: 'modules/sunlight/reports/careReports.tpl.html',
+              }
             }
           })
 
@@ -1382,28 +1398,21 @@
               },
             }
           })
-          .state('webex-reports', {
+
+          .state('reports.webex', {
             url: '/reports/webex',
-            templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
-            controller: 'CustomerReportsCtrl',
-            controllerAs: 'nav',
-            parent: 'main',
+            views: {
+              'tabContent': {
+                controllerAs: 'nav',
+                controller: 'WebexReportsCtrl',
+                templateUrl: 'modules/core/customerReports/webexReports/webexReports.tpl.html',
+              }
+            },
             params: {
-              tab: 'webex',
               siteUrl: null
             }
           })
-          .state('reports.care', {
-            templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
-            controller: 'CustomerReportsCtrl',
-            controllerAs: 'nav',
-            parent: 'main',
-            params: {
-              tab: 'care',
-              siteUrl: null
-            }
-          })
-          .state('webex-reports.webex-reports-iframe', {
+          .state('webex-reports-iframe', {
             templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
             controller: 'ReportsIframeCtrl',
             parent: 'main',
@@ -1707,6 +1716,51 @@
             templateUrl: "modules/gemini/common/servicePartner.tpl.html",
             controller: 'servicePartnerCtrl',
             controllerAs: 'gsls'
+          })
+          .state('gem.cbgBase', {
+            abstract: true,
+            templateUrl: 'modules/gemini/callbackGroup/cbgBase.tpl.html',
+            controller: 'CbgHeaderCtrl',
+            controllerAs: 'header'
+          })
+          .state('gem.cbgBase.cbgs', {
+            controller: 'CbgsCtrl',
+            controllerAs: 'cbgsCtrl',
+            url: '/services/gemcbg/:companyName/:customerId',
+            templateUrl: 'modules/gemini/callbackGroup/cbgs.tpl.html'
+          })
+          .state('gem.modal', {
+            abstract: true,
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<div ui-view></div>'
+              }
+            }
+          })
+          .state('gem.modal.request', {
+            controller: 'CbgRequestCtrl',
+            controllerAs: 'cbgrCtrl',
+            params: {
+              customerId: null
+            },
+            templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html'
+          })
+          .state('gem.cbgDetails', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                controller: 'CbgDetailsCtrl',
+                controllerAs: 'detailsCtrl',
+                templateUrl: 'modules/gemini/callbackGroup/cbgDetails.tpl.html'
+              }
+            },
+            params: {
+              info: {}
+            },
+            data: {
+              displayName: 'Overview'
+            }
           })
           .state('partnercustomers.list', {
             url: '/customers',
@@ -2031,55 +2085,6 @@
               logstashPath: ''
             }
           })
-          .state('callroutingBase', {
-            abstract: true,
-            parent: 'main',
-            templateUrl: 'modules/huron/callRouting/callRouting.tpl.html'
-          })
-          .state('callrouting', {
-            url: '/callrouting',
-            parent: 'callroutingBase',
-            views: {
-              'header': {
-                templateUrl: 'modules/huron/callRouting/callRoutingHeader.tpl.html'
-              },
-              'nav': {
-                templateUrl: 'modules/huron/callRouting/callRoutingNav.tpl.html',
-                controller: 'CallRoutingNavCtrl',
-                controllerAs: 'nav'
-              },
-              'main': {
-                template: '<div ui-view></div>'
-              }
-            }
-          })
-          .state('callpark', {
-            url: '/callpark',
-            parent: 'callrouting',
-            templateUrl: 'modules/huron/callRouting/callPark/callPark.tpl.html',
-            controller: 'CallParkCtrl',
-            controllerAs: 'cp'
-          })
-          .state('callpickup', {
-            url: '/callpickup',
-            parent: 'callrouting',
-            template: '<div></div>'
-          })
-          .state('intercomgroups', {
-            url: '/intercomgroups',
-            parent: 'callrouting',
-            template: '<div></div>'
-          })
-          .state('paginggroups', {
-            url: '/paginggroups',
-            parent: 'callrouting',
-            template: '<div></div>'
-          })
-          .state('huntgroups', {
-            url: '/huntgroups',
-            parent: 'callrouting',
-            template: '<div></div>'
-          })
           .state('trialAdd', {
             abstract: true,
             parent: 'modal',
@@ -2368,23 +2373,32 @@
                 });
               }
             }
-
           })
           .state('huronCallPark', {
             url: '/huronCallPark',
             parent: 'hurondetails',
-            templateUrl: 'modules/huron/features/callPark/cpSetupAssistant.tpl.html',
-            controller: 'CallParkSetupAssistantCtrl',
-            controllerAs: 'callParkSA'
+            template: '<uc-call-park></uc-call-park>',
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/callPark/callPark'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            }
           })
           .state('callparkedit', {
             url: '/features/cp/edit',
             parent: 'main',
-            templateUrl: 'modules/huron/features/callPark/edit/cpEdit.tpl.html',
-            controller: 'CallParkEditCtrl',
-            controllerAs: 'cpe',
+            template: '<uc-call-park></uc-call-park>',
             params: {
               feature: null
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/callPark/callPark'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
             }
           })
           .state('huronHuntGroup', {
@@ -2666,9 +2680,14 @@
             url: '/services/calendar/settings',
             views: {
               fullPane: {
-                controllerAs: 'expresswayServiceSettings',
-                controller: 'ExpresswayServiceSettingsController',
+                controllerAs: 'calendarSettings',
+                controller: 'CalendarSettingsController',
                 templateUrl: 'modules/hercules/service-settings/calendar-service-settings.html'
+              }
+            },
+            resolve: {
+              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
               }
             }
           })
@@ -3040,8 +3059,9 @@
           })
           .state('gss.components.deleteComponent', {
             url: '/delete',
+            parent: 'gss.components',
             views: {
-              '@status': {
+              '@gss': {
                 controller: 'DelComponentCtrl',
                 controllerAs: 'delComponentCtrl',
                 templateUrl: 'modules/gss/components/deleteComponent/deleteComponent.tpl.html'

@@ -103,29 +103,6 @@
       }
     };
 
-    function init() {
-      ServiceDescriptor.getDisableEmailSendingToUser()
-        .then(function (calSvcDisableEmailSendingToEndUser) {
-          vm.enableEmailSendingToUser = !calSvcDisableEmailSendingToEndUser;
-        });
-    }
-    init();
-
-    vm.writeEnableEmailSendingToUser = _.debounce(function (value) {
-      ServiceDescriptor.setDisableEmailSendingToUser(value)
-        .catch(function (error) {
-          vm.enableEmailSendingToUser = !vm.enableEmailSendingToUser;
-          return Notification.errorWithTrackingId(error, 'hercules.settings.emailUserNotificationsSavingError');
-        });
-    }, 2000, {
-      'leading': true,
-      'trailing': false
-    });
-
-    vm.setEnableEmailSendingToUser = function () {
-      vm.writeEnableEmailSendingToUser(vm.enableEmailSendingToUser);
-    };
-
     vm.confirmDisable = function (serviceId) {
       $modal.open({
         templateUrl: 'modules/hercules/service-settings/confirm-disable-dialog.html',

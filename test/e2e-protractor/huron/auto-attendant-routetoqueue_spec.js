@@ -88,6 +88,33 @@ describe('Huron Auto Attendant', function () {
       utils.scrollIntoView(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
 
     });
+    it('should click queue setting hyperlink and set and play periodic message and upload media to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      // it is for selecting the queue for route to queue option
+      utils.scrollIntoView(autoattendant.repeatPlus);
+      var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
+      utils.scrollIntoView(autoattendant.repeatPlus);
+      utils.click(autoattendant.queueSetting);
+      utils.scrollIntoView(autoattendant.repeatPlus);
+
+      // select say message
+      utils.click(autoattendant.periodicMessageTypeSelect);
+      utils.sendKeys(autoattendant.periodicMessageTypeSelect, "Welcome to Queue Settings Periodic Message");
+
+      //select media upload
+      utils.click(autoattendant.periodicSayMessageOption);
+      utils.click(autoattendant.periodicMediaUploadSelectOption);
+      utils.click(autoattendant.periodicMediaUploadInput);
+      $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
+      utils.scrollIntoView(autoattendant.repeatPlus);
+      utils.click(autoattendant.periodicMin);
+      utils.click(autoattendant.periodicMinOption.get(1));
+      utils.click(autoattendant.periodicSec);
+      utils.click(autoattendant.periodicSecOption.get(2));
+      utils.wait(autoattendant.okQueueTreatment, 12000);
+      utils.click(autoattendant.okQueueTreatment);
+      utils.click(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+    });
 
     it('should click queue setting hyperlink and set and play music on hold and upload media to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
@@ -134,8 +161,11 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.queueSetting);
       utils.click(autoattendant.queueMin);
       utils.click(autoattendant.queueMinOption.get(3));
-   // for now close the modal. when backend will come we will save the modal before closing.
-      utils.click(autoattendant.scheduleCloseButton);
+      utils.wait(autoattendant.okQueueTreatment, 12000);
+      utils.click(autoattendant.okQueueTreatment);
+      utils.click(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+
     });
 
     it('should save AA and return to landing page', function () {

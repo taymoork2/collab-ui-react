@@ -7,7 +7,8 @@
   function ChooseAccountTypeCtrl($stateParams) {
     var vm = this;
 
-    vm.wizardData = $stateParams.wizard.state().data;
+    var wizardData = $stateParams.wizard.state().data;
+    vm.title = wizardData.title;
     vm.radioSelect = null;
     vm.isLoading = false;
 
@@ -22,7 +23,9 @@
     vm.next = function () {
       vm.isLoading = true;
       $stateParams.wizard.next({
-        accountType: vm.radioSelect
+        account: {
+          type: vm.radioSelect
+        }
       }, vm.radioSelect);
 
     };

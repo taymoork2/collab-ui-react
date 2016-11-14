@@ -33,6 +33,7 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
   }
 
   public csdmPstnFeatureToggleEventHandler(pstnEnabled: boolean) {
+    this.active = pstnEnabled ? this.Authinfo.isAllowedState('huronsettings') : this.Authinfo.isSquaredUC() ;
     if (this.showFeatureTab(pstnEnabled)) {
       this._buttons.splice(1, 0, {
         name: 'servicesOverview.cards.call.buttons.features',

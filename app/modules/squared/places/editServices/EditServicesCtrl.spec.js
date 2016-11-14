@@ -30,13 +30,15 @@ describe('EditServicesCtrl: Ctrl', function () {
   });
   beforeEach(installPromiseMatchers);
 
-  describe('Initial selection', function () {
+  describe('initial selection', function () {
     it('sparkCall is selected if "ciscouc" is present', function () {
       $stateParams.wizard = {
         state: function () {
           return {
             data: {
-              entitlements: ['ciscouc']
+              account: {
+                entitlements: ['ciscouc']
+              }
             }
           };
         }
@@ -51,7 +53,9 @@ describe('EditServicesCtrl: Ctrl', function () {
         state: function () {
           return {
             data: {
-              entitlements: ['something']
+              account: {
+                entitlements: ['something']
+              }
             }
           };
         }
@@ -62,67 +66,152 @@ describe('EditServicesCtrl: Ctrl', function () {
     });
   });
 
-  describe('Next', function () {
-    it('should pass on the selected service', function () {
-      $stateParams.wizard = {
-        state: function () {
-          return {
-            data: {}
-          };
-        },
-        next: function () {}
-      };
-      spyOn($stateParams.wizard, 'next');
-      initController();
-      var service = "testService";
-      controller.service = service;
-
-      controller.next();
-      expect($stateParams.wizard.next).toHaveBeenCalledWith({ service: service });
-    });
-  });
-
-  describe('Save', function () {
-    it('should just close the modal if place does not have "ciscouc" entitlement', function () {
-      $stateParams.wizard = {
-        state: function () {
-          return {
-            data: {}
-          };
-        }
-      };
-      $scope.$dismiss = function () {};
-      spyOn($scope, '$dismiss');
-      initController();
-
-      controller.save();
-      expect($scope.$dismiss).toHaveBeenCalled();
+  describe('wizard functions', function () {
+    var deviceCisUuid;
+    beforeEach(function () {
+      deviceCisUuid = 'deviceId';
     });
 
-    it('should remove the "ciscouc" entitlement and close the modal', function () {
-      var selectedPlace = {};
-      $stateParams.wizard = {
-        state: function () {
+    describe('next', function () {
+      var state;
+      it('should pass on all fields required by the next step', function () {
+        state = function () {
           return {
             data: {
-              entitlements: ['ciscouc', 'something'],
-              selectedPlace: selectedPlace
+              account: {
+                entitlements: ['something']
+              }
             }
           };
-        }
-      };
-      CsdmDataModelService.updateCloudberryPlace = function () {};
-      spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.when());
-      $scope.$dismiss = function () {};
-      spyOn($scope, '$dismiss');
-      spyOn(Notification, 'success');
-      initController();
+        };
+        $stateParams.wizard = {
+          state: state,
+          next: function () {}
+        };
+        spyOn($stateParams.wizard, 'next');
+        initController();
+        controller.next();
+        expect($stateParams.wizard.next).toHaveBeenCalled();
+      });
+    });
 
-      controller.save();
-      $scope.$digest();
-      expect(CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(selectedPlace, ['something']);
-      expect($scope.$dismiss).toHaveBeenCalled();
-      expect(Notification.success).toHaveBeenCalled();
+    describe('Save', function () {
+      beforeEach(function () {
+        $scope.$dismiss = function () {};
+        spyOn($scope, '$dismiss');
+        spyOn(Notification, 'success');
+        spyOn(Notification, 'warning');
+        spyOn(Notification, 'errorResponse');
+      });
+
+      it('should just close the modal if place does not have "ciscouc" entitlement', function () {
+        $stateParams.wizard = {
+          state: function () {
+            return {
+              data: {
+                account: {}
+              }
+            };
+          }
+        };
+        initController();
+        controller.save();
+        expect($scope.$dismiss).toHaveBeenCalled();
+      });
+
+      it('should remove the "ciscouc" entitlement and close the modal', function () {
+        $stateParams.wizard = {
+          state: function () {
+            return {
+              data: {
+                account: {
+                  cisUuid: deviceCisUuid,
+                  entitlements: ['ciscouc', 'something']
+                }
+              }
+            };
+          }
+        };
+        var place = { cisUuid: deviceCisUuid };
+        CsdmDataModelService.getPlacesMap = function () {};
+        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.when({ 'http://placeurl': place }));
+        CsdmDataModelService.updateCloudberryPlace = function () {};
+        spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.when());
+        initController();
+        controller.service = 'sparkOnly';
+        controller.save();
+        $scope.$digest();
+        expect(CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, ['something']);
+        expect($scope.$dismiss).toHaveBeenCalled();
+        expect(Notification.success).toHaveBeenCalled();
+      });
+
+      it('display warning when place not found', function () {
+        $stateParams.wizard = {
+          state: function () {
+            return {
+              data: {
+                account: {
+                  cisUuid: deviceCisUuid,
+                  entitlements: ['ciscouc']
+                }
+              }
+            };
+          }
+        };
+        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.when({ 'http://placeurl': {} }));
+        initController();
+        controller.service = 'sparkOnly';
+        controller.save();
+        $scope.$digest();
+        expect(Notification.warning).toHaveBeenCalled();
+        expect($scope.$dismiss).toHaveBeenCalledTimes(0);
+      });
+
+      it('display error when fetching places fails', function () {
+        $stateParams.wizard = {
+          state: function () {
+            return {
+              data: {
+                account: {
+                  cisUuid: deviceCisUuid,
+                  entitlements: ['ciscouc']
+                }
+              }
+            };
+          }
+        };
+        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.reject());
+        initController();
+        controller.service = 'sparkOnly';
+        controller.save();
+        $scope.$digest();
+        expect(Notification.errorResponse).toHaveBeenCalled();
+        expect($scope.$dismiss).toHaveBeenCalledTimes(0);
+      });
+
+      it('display error when update fails', function () {
+        $stateParams.wizard = {
+          state: function () {
+            return {
+              data: {
+                account: {
+                  cisUuid: deviceCisUuid,
+                  entitlements: ['ciscouc']
+                }
+              }
+            };
+          }
+        };
+        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.when({ 'http://placeurl': { cisUuid: deviceCisUuid } }));
+        spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.reject());
+        initController();
+        controller.service = 'sparkOnly';
+        controller.save();
+        $scope.$digest();
+        expect(Notification.errorResponse).toHaveBeenCalled();
+        expect($scope.$dismiss).toHaveBeenCalledTimes(0);
+      });
     });
   });
 });

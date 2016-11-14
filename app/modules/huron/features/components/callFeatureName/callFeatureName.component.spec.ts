@@ -18,6 +18,7 @@ describe('Component: CallFeatureName', () => {
       placeholderKey: 'callPark.namePlaceholder',
       nameHintKey: 'callPark.nameHint',
       name: 'name',
+      isNew: 'true',
       onChangeFn: 'onChangeFn(value)',
       onKeyPressFn: 'onKeyPressFn(keyCode)',
     });
