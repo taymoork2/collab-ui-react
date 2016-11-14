@@ -19,9 +19,12 @@
     vm.timeOptions = _.cloneDeep(ReportConstants.timeFilter);
     vm.timeSelected = vm.timeOptions[0];
 
+    // TODO: Now that there is the customerReportsHeader, the Device Usage Page should utilize that so that
+    // all header tabs are accounted for, page conventions are maintained accross all reports pages more easily,
+    // and there won't be any unnecessary duplicate code
     vm.headerTabs = [{
       title: $translate.instant('reportsPage.sparkReports'),
-      state: 'reports'
+      state: 'reports.spark'
     }, {
       title: $translate.instant('reportsPage.usageReports.usageReportMenuTitle'),
       state: 'reports.device-usage'
@@ -37,7 +40,7 @@
       if (features.mf && features.isMfEnabled) {
         vm.headerTabs.unshift({
           title: $translate.instant('mediaFusion.page_title'),
-          state: 'reports-metrics'
+          state: 'reports.metrics'
         });
       }
       if (Authinfo.isCare() && features.care) {
