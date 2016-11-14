@@ -31,7 +31,12 @@
       <div class="sub-section">
         <h5 class="sub-section__label" translate="hercules.settings.googleCalendar.privateKeyHeader"></h5>
         <p class="sub-section__description" translate="hercules.settings.googleCalendar.privateKeyText"></p>
-        <button type="button" class="btn"
+        <button ng-if="!calendarSettings.googleServiceAccount"
+                disabled="disabled"
+                type="button" class="btn"
+                translate="common.upload"></button>
+        <button ng-if="calendarSettings.googleServiceAccount"
+                type="button" class="btn"
                 translate="common.upload"
                 ng-click="calendarSettings.uploadGooglePrivateKey()"></button>
       </div>

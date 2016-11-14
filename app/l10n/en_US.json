@@ -1732,7 +1732,8 @@
         "deactivateText": "Your users will no longer be able to use this service.",
         "googleCalendarConfigWillBeWiped": "This action will delete all Google Calendar settings from Cisco Collaboration Cloud.",
         "uploadNewPrivateKey": "Upload New Private Key",
-        "successfullyUploadedKey": "Private key uploaded successfully."
+        "successfullyUploadedKey": "Private key uploaded successfully.",
+        "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status."
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",

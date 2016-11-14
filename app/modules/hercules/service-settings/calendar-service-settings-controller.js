@@ -107,6 +107,9 @@
             CloudConnectorService.getServiceAccount('squared-fusion-gcal')
               .then(function (account) {
                 vm.googleServiceAccount = account;
+              })
+              .catch(function (error) {
+                Notification.errorWithTrackingId(error, 'hercules.settings.googleCalendar.couldNotReadGoogleCalendarStatus');
               });
           }
         });
