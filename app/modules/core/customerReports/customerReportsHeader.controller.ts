@@ -23,7 +23,7 @@ class CustomerReportsHeaderCtrl {
       }
       if (features.deviceUsage) {
         this.headerTabs.push({
-          title: $translate.instant('reportsPage.usageReports.usageReportMenuTitle'),
+          title: $translate.instant('reportsPage.usageReports.usageReportTitle'),
           state: 'reports.device-usage.total',
         });
       }
