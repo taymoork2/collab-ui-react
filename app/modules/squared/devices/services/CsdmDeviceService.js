@@ -27,7 +27,7 @@
     }
 
     function deleteItem(device) {
-      return $http.delete(device.url);
+      return $http.delete(device.url + '?keepPlace=true');
     }
 
     function updateItemName(device, newName) {

@@ -239,7 +239,7 @@ describe('Service: CsdmDataModelService', function () {
       executeGetCallsAndInitPromises();
       var deviceToDeleteUrl = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
 
-      $httpBackend.expectDELETE(deviceToDeleteUrl).respond(403);
+      $httpBackend.expectDELETE(deviceToDeleteUrl + '?keepPlace=true').respond(403);
 
       var promiseExecuted;
 
@@ -254,6 +254,7 @@ describe('Service: CsdmDataModelService', function () {
           CsdmDataModelService.deleteItem(deviceToDelete).catch(function () {
 
             expect(devices[deviceToDeleteUrl]).toBe(deviceToDelete);
+            expect(places[pWithDeviceUrl]).toBeDefined();
             expect(Object.keys(places[pWithDeviceUrl].devices).length).toBe(3);
             promiseExecuted = "YES";
           });
@@ -271,13 +272,17 @@ describe('Service: CsdmDataModelService', function () {
       executeGetCallsAndInitPromises();
 
       var promiseExecuted, changeNotification;
-      $httpBackend.expectDELETE(deviceUrlToDelete).respond(204);
 
       CsdmDataModelService.getDevicesMap().then(function (devices) {
 
         CsdmDataModelService.getPlacesMap().then(function (places) {
 
           var deviceToDelete = devices[deviceUrlToDelete];
+          if (deviceToDelete.isCloudberryDevice) {
+            $httpBackend.expectDELETE(deviceUrlToDelete + '?keepPlace=true').respond(204);
+          } else {
+            $httpBackend.expectDELETE(deviceUrlToDelete).respond(204);
+          }
 
           var place = places[placeUrl];
           var devicesInPlace;
@@ -299,8 +304,10 @@ describe('Service: CsdmDataModelService', function () {
           CsdmDataModelService.deleteItem(deviceToDelete).then(function () {
 
             expect(devices[deviceUrlToDelete]).toBeUndefined();
-            if (!deviceToDelete.isHuronDevice) {
+            if (!deviceToDelete.isHuronDevice && !deviceToDelete.isCloudberryDevice) {
               expect(places[placeUrl]).toBeUndefined();
+            } else {
+              expect(places[placeUrl]).toBeDefined();
             }
             if (deviceToDelete.isCode) {
               devicesInPlace = _.values(place.codes);
