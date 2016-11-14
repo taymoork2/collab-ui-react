@@ -213,15 +213,8 @@
         });
     }
 
-    function getPlaceUrl(item) {
-      return placesUrl + item.cisUuid;
-    }
-
-    function addPlaceToDataModel(place) {
-      placesDataModel[place.url] = place;
-      addOrUpdatePlaceInDataModel(place);
-      notifyListeners();
-      return place;
+    function getPlaceUrl(device) {
+      return placesUrl + device.cisUuid;
     }
 
     function createCsdmPlace(name, type) {
@@ -336,9 +329,10 @@
         } else {
           return $q.reject();
         }
+      } else if (item.type === 'huron') {
+        return $q.reject();
       } else {
-        return service.fetchDevice(item.url).then(function (reloadedDevice) {
-
+        return service.fetchItem(item.url).then(function (reloadedDevice) {
           CsdmCacheUpdater.updateOne(theDeviceMap, item.url, reloadedDevice);
           notifyListeners();
           return reloadedDevice;
@@ -352,6 +346,13 @@
 
     function hasLoadedAllDeviceSources() {
       return cloudBerryDevicesLoaded && codesLoaded && huronDevicesLoaded;
+    }
+
+    function addPlaceToDataModel(place) {
+      placesDataModel[place.url] = place;
+      addOrUpdatePlaceInDataModel(place);
+      notifyListeners();
+      return place;
     }
 
     function addOrUpdatePlaceInDataModel(item) {

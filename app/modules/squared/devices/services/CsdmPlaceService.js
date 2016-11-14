@@ -40,7 +40,7 @@
       });
     }
 
-    function fetchPlace(placeUrl) {
+    function fetchItem(placeUrl) {
       return $http.get(placeUrl).then(function (res) {
         return CsdmConverter.convertPlace(res.data);
       });
@@ -73,7 +73,7 @@
       placesFeatureIsEnabled: placesFeatureIsEnabled,
       deletePlace: deletePlace,
       deleteItem: deletePlace,
-      fetchItem: fetchPlace,
+      fetchItem: fetchItem,
       createCsdmPlace: createCsdmPlace,
       getPlacesList: getPlacesList,
       updateItemName: updateItemName,
