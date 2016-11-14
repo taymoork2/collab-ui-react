@@ -3,17 +3,12 @@
     @include vr-spacing(mt, 0.5);
   }
 
-  .aa-selectmin-modal {
+  .aa-select-modal {
     width: 9.4rem;
+    display: inline-block;
+    @include vr-spacing(mr, 0.5);
   }
 
-  .aa-selectsec-modal {
-    width: 9.84rem;
-  }
-
-  .aa-selectmessage-modal {
-    width: 150px;
-  }
 & .aa-destination-container {
      width: 100%;
      & .csSelect-container {
