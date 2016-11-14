@@ -365,8 +365,6 @@
     "developmentTab": "Development",
     "organizationTab": "Manage Organizations",
     "organizationTabDesc": "Manage Organization Details, View Assigned Services, And Access Tools.",
-    "callRoutingTab": "Call Routing",
-    "callRoutingTabDesc": "Manage Call Routing Features Such As Call Park",
     "mediaOnHoldTab": "Media On Hold",
     "mediaOnHoldTabDesc": "Media On Hold Development Example",
     "metricsDetailsTab": "Media Service V2 Page",
@@ -1563,6 +1561,7 @@
       "squared-fusion-uc": "Call Service",
       "squared-fusion-uc.full": "Call Service Aware",
       "squared-fusion-cal": "Calendar Service",
+      "squared-fusion-gcal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
       "squared-fusion-ec": "Call Service Connect",
@@ -1746,7 +1745,11 @@
         "privateKeyHeader": "Private Key",
         "privateKeyText": "Upload a new private key.",
         "deactivateHeader": "Deactivate Google Calendar",
-        "deactivateText": "Your users will no longer be able to use this service."
+        "deactivateText": "Your users will no longer be able to use this service.",
+        "googleCalendarConfigWillBeWiped": "This action will delete all Google Calendar settings from Cisco Collaboration Cloud.",
+        "uploadNewPrivateKey": "Upload New Private Key",
+        "successfullyUploadedKey": "Private key uploaded successfully.",
+        "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status."
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
@@ -2318,15 +2321,6 @@
     "weekOf": "Week Ending",
     "allCustomers": "All Customers"
   },
-  "callRouting": {
-    "title": "Call Routing",
-    "autoAttendantTitle": "Auto Attendant",
-    "callParkTitle": "Call Park",
-    "callPickUpTitle": "Call Pick Up",
-    "intercomGroupsTitle": "Intercom Groups",
-    "pagingGroupsTitle": "Paging Groups",
-    "huntGroupsTitle": "Hunt Groups"
-  },
   "autoAttendant": {
     "code": "AA",
     "title": "Auto Attendant",
@@ -2575,6 +2569,7 @@
   "callPark": {
     "code": "CP",
     "title": "Call Park",
+    "settingsTitle": "Call Park Settings",
     "modalDescription": "Call parks allow call recipients to place a call on hold so that it can be retrieved from another device.",
     "newCallPark": "Create Call Park",
     "callParkInformation": "Call Park information",
@@ -2599,8 +2594,7 @@
     "selectParkHint": "Number ranges are used for interdepartmental transfers while single park numbers are for individual use.",
     "namePlaceholder": "Name the Call Park",
     "numberPlaceholder": "Enter Number",
-    "memberPlaceholder": "Select Call Park Members",
-    "memberHint": "These users or or places' devices will be part of this call park.",
+    "memberHint": "These users or places' devices will be part of this call park.",
     "removeMem": "Remove Member",
     "nameHint": "The call park name appears on the call park members' devices.",
     "singleNumberPlaceholder": "Enter Single Number",
@@ -2632,7 +2626,8 @@
     "secondRange": "Ending #",
     "singleRange": "Single Park Number",
     "saveLabel": "Do you want to save your changes?",
-    "memberFetchFailure": "Unable to get members."
+    "memberFetchFailure": "Unable to get members.",
+    "membersTitle": "Members"
   },
   "callPickup": {
     "title": "Call Pickup",
@@ -3356,7 +3351,7 @@
   },
   "internationalDialing": {
     "internationalDialing": "International Dialing",
-    "internationalDialingDesc": "Users inherit this setting by default.  Exception can be made at the individual user's settings."
+    "internationalDialingDesc": "Users and Places with Spark Call inherit this setting by default. Exception can be made at the individual user's or place's settings."
   },
   "huronSettings": {
     "saveSuccess": "Settings successfully saved.",
@@ -5777,7 +5772,44 @@
     },
     "msg": {
       "splsResponseErr": "No partner organization found, please contact ccaportal@cisco.com for help."
-    }
+    },
+    "cbgTitle": "Callback Groups",
+    "cbgs": {
+      "title": "Callback Groups",
+      "csvFilename": "exported_callbackGroup.csv",
+      "field": {
+        "sites": "Site URL",
+        "status_": "Status",
+        "cbgName": "Callback Group Name",
+        "totalSites": "Sites Assigned",
+        "alias": "Partner CB Group Name",
+        "status": {
+          "E": "Edit",
+          "L": "Failed",
+          "S": "Submit",
+          "C": "Cancel",
+          "D": "Delete",
+          "A": "Approved",
+          "R": "Rejected",
+          "F": "Finish_edit",
+          "P": "Provisioned"
+        }
+      },
+      "request": {
+        "button": "Request",
+        "modalTitle": "Request Callback Group",
+        "groupName": "Naming",
+        "groupCountries": "Countries",
+        "labelCustomer": "Customer Name",
+        "customerPlaceholder": "Who is this callback group for?",
+        "labelCustomerAttr": "Partner CB Group Name",
+        "customerAttrPlaceholder": "Enter a shorter name for quick refernce",
+        "labelCountries": "Select Country/Regions",
+        "countriesPlaceholder": "Search to add country"
+      },
+      "placeholder-text": "All"
+    },
+    "tdTitle": "Telephony Domain"
   },
   "timeZones": {
     "Etc/GMT+12": "Etc/GMT+12",

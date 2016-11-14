@@ -7,7 +7,7 @@
 
 
   /* @ngInject */
-  function CalendarSettingsController($modal, $translate, $state, hasGoogleCalendarFeatureToggle, MailValidatorService, Notification, ServiceDescriptor) {
+  function CalendarSettingsController($modal, $translate, $state, hasGoogleCalendarFeatureToggle, CloudConnectorService, MailValidatorService, Notification, ServiceDescriptor) {
     var vm = this;
     vm.localizedAddEmailWatermark = $translate.instant('hercules.settings.emailNotificationsWatermark');
     vm.localizedServiceName = $translate.instant('hercules.serviceNames.squared-fusion-cal');
@@ -80,7 +80,7 @@
       vm.writeEnableEmailSendingToUser(vm.enableEmailSendingToUser);
     };
 
-    vm.confirmDisable = function () {
+    vm.confirmDisable = function (serviceId) {
       $modal.open({
         templateUrl: 'modules/hercules/service-settings/confirm-disable-dialog.html',
         type: 'small',
@@ -88,7 +88,7 @@
         controllerAs: 'confirmDisableDialog',
         resolve: {
           serviceId: function () {
-            return 'squared-fusion-cal';
+            return serviceId;
           }
         }
       }).result.then(function () {
@@ -101,6 +101,32 @@
       vm.googleCalendarSection = {
         title: 'hercules.settings.googleCalendar.title'
       };
+      CloudConnectorService.isServiceSetup('squared-fusion-gcal')
+        .then(function (isSetup) {
+          if (isSetup) {
+            CloudConnectorService.getServiceAccount('squared-fusion-gcal')
+              .then(function (account) {
+                vm.googleServiceAccount = account;
+              })
+              .catch(function (error) {
+                Notification.errorWithTrackingId(error, 'hercules.settings.googleCalendar.couldNotReadGoogleCalendarStatus');
+              });
+          }
+        });
+      vm.uploadGooglePrivateKey = function () {
+        $modal.open({
+          templateUrl: 'modules/hercules/service-settings/upload-google-calendar-key.html',
+          type: 'small',
+          controller: 'UploadGoogleCalendarKeyController',
+          controllerAs: 'uploadKey',
+          resolve: {
+            googleServiceAccount: function () {
+              return vm.googleServiceAccount;
+            }
+          }
+        });
+      };
+
     }
 
 

@@ -1717,6 +1717,51 @@
             controller: 'servicePartnerCtrl',
             controllerAs: 'gsls'
           })
+          .state('gem.cbgBase', {
+            abstract: true,
+            templateUrl: 'modules/gemini/callbackGroup/cbgBase.tpl.html',
+            controller: 'CbgHeaderCtrl',
+            controllerAs: 'header'
+          })
+          .state('gem.cbgBase.cbgs', {
+            controller: 'CbgsCtrl',
+            controllerAs: 'cbgsCtrl',
+            url: '/services/gemcbg/:companyName/:customerId',
+            templateUrl: 'modules/gemini/callbackGroup/cbgs.tpl.html'
+          })
+          .state('gem.modal', {
+            abstract: true,
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<div ui-view></div>'
+              }
+            }
+          })
+          .state('gem.modal.request', {
+            controller: 'CbgRequestCtrl',
+            controllerAs: 'cbgrCtrl',
+            params: {
+              customerId: null
+            },
+            templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html'
+          })
+          .state('gem.cbgDetails', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                controller: 'CbgDetailsCtrl',
+                controllerAs: 'detailsCtrl',
+                templateUrl: 'modules/gemini/callbackGroup/cbgDetails.tpl.html'
+              }
+            },
+            params: {
+              info: {}
+            },
+            data: {
+              displayName: 'Overview'
+            }
+          })
           .state('partnercustomers.list', {
             url: '/customers',
             templateUrl: 'modules/core/customers/customerList/customerList.tpl.html',
@@ -2040,55 +2085,6 @@
               logstashPath: ''
             }
           })
-          .state('callroutingBase', {
-            abstract: true,
-            parent: 'main',
-            templateUrl: 'modules/huron/callRouting/callRouting.tpl.html'
-          })
-          .state('callrouting', {
-            url: '/callrouting',
-            parent: 'callroutingBase',
-            views: {
-              'header': {
-                templateUrl: 'modules/huron/callRouting/callRoutingHeader.tpl.html'
-              },
-              'nav': {
-                templateUrl: 'modules/huron/callRouting/callRoutingNav.tpl.html',
-                controller: 'CallRoutingNavCtrl',
-                controllerAs: 'nav'
-              },
-              'main': {
-                template: '<div ui-view></div>'
-              }
-            }
-          })
-          .state('callpark', {
-            url: '/callpark',
-            parent: 'callrouting',
-            templateUrl: 'modules/huron/callRouting/callPark/callPark.tpl.html',
-            controller: 'CallParkCtrl',
-            controllerAs: 'cp'
-          })
-          .state('callpickup', {
-            url: '/callpickup',
-            parent: 'callrouting',
-            template: '<div></div>'
-          })
-          .state('intercomgroups', {
-            url: '/intercomgroups',
-            parent: 'callrouting',
-            template: '<div></div>'
-          })
-          .state('paginggroups', {
-            url: '/paginggroups',
-            parent: 'callrouting',
-            template: '<div></div>'
-          })
-          .state('huntgroups', {
-            url: '/huntgroups',
-            parent: 'callrouting',
-            template: '<div></div>'
-          })
           .state('trialAdd', {
             abstract: true,
             parent: 'modal',
@@ -2377,23 +2373,32 @@
                 });
               }
             }
-
           })
           .state('huronCallPark', {
             url: '/huronCallPark',
             parent: 'hurondetails',
-            templateUrl: 'modules/huron/features/callPark/cpSetupAssistant.tpl.html',
-            controller: 'CallParkSetupAssistantCtrl',
-            controllerAs: 'callParkSA'
+            template: '<uc-call-park></uc-call-park>',
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/callPark/callPark'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            }
           })
           .state('callparkedit', {
             url: '/features/cp/edit',
             parent: 'main',
-            templateUrl: 'modules/huron/features/callPark/edit/cpEdit.tpl.html',
-            controller: 'CallParkEditCtrl',
-            controllerAs: 'cpe',
+            template: '<uc-call-park></uc-call-park>',
             params: {
               feature: null
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/callPark/callPark'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
             }
           })
           .state('huronHuntGroup', {

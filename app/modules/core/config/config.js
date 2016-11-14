@@ -374,7 +374,6 @@
         'callpark',
         'callparkedit',
         'callpickup',
-        'callrouting',
         'device-overview',
         'devices',
         'didadd',

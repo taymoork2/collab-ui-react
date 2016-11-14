@@ -187,7 +187,10 @@
       });
     }
 
-    forwardEvent('licenseEventHandler', Authinfo.getLicenses());
+    FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
+      forwardEvent('licenseEventHandler', Authinfo.getLicenses(), pstnEnabled);
+    });
+
 
     vm.statusPageUrl = UrlConfig.getStatusPageUrl();
 

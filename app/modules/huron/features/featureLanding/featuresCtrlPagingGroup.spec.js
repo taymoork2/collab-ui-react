@@ -57,7 +57,7 @@ describe('Features Controller', function () {
 
     //Using a Jasmine Spy to return a promise when methods of the PagingGroupService are called
     spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.when([]));
-    spyOn(CallParkService, 'getListOfCallParks').and.returnValue($q.when([]));
+    spyOn(CallParkService, 'getCallParkList').and.returnValue($q.when([]));
     spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue(getDeferred.promise);
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.when([]));
     spyOn(AAModelService, 'newAAModel').and.returnValue(getDeferred.promise);

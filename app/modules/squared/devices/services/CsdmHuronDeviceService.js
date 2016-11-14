@@ -83,6 +83,12 @@
       });
     }
 
+    function fetchItem(url) {
+      return $http.get(url).then(function (res) {
+        return CsdmConverter.convertHuronDevice(res.data);
+      });
+    }
+
     function dataLoaded() {
       return !Authinfo.isSquaredUC() || loadedData;
     }
@@ -171,6 +177,7 @@
     return {
 
       fetchDevices: fetchDevices,
+      fetchItem: fetchItem,
       deleteItem: deleteItem,
       updateTags: updateTags,
       dataLoaded: dataLoaded,
