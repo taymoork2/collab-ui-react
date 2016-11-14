@@ -66,11 +66,11 @@ describe('Controller: TrialDeviceController', function () {
         expect(FeatureToggleService.supports).toHaveBeenCalled();
       });
 
-      it('should NOT show MX300 when feature toggle is false', function () {
+      it('should show MX300 when feature toggle is false', function () {
         spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
         initController();
 
-        expect(controller.showNewRoomSystems).toBe(false);
+        expect(controller.showNewRoomSystems).toBe(true);
         expect(FeatureToggleService.supports).toHaveBeenCalled();
       });
     });
