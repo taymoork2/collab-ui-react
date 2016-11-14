@@ -69,6 +69,7 @@
       }
       switch (serviceId) {
         case 'squared-fusion-cal':
+        case 'squared-fusion-gcal':
           return 'icon icon-circle-calendar';
         case 'squared-fusion-uc':
           return 'icon icon-circle-call';

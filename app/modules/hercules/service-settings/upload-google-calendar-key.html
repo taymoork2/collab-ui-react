@@ -1,0 +1,18 @@
+<div class="modal-header">
+  <div class="modal-title" translate="hercules.settings.googleCalendar.uploadNewPrivateKey"></div>
+</div>
+<div class="modal-body">
+  <p>… upload the key associated with the service account <em>{{uploadKey.googleServiceAccount}}</em> …</p>
+  <p>… awaiting design …</em></p>
+
+
+</div>
+<div class="modal-footer">
+  <button ng-click="$dismiss()" class="btn" translate="common.cancel"></button>
+  <button cs-btn
+          class="btn btn--primary"
+          loading="uploadKey.loading"
+          ng-click="uploadKey.uploadCertificate()">
+    <span translate="common.upload"></span>
+  </button>
+</div>

@@ -1561,6 +1561,7 @@
       "squared-fusion-uc": "Call Service",
       "squared-fusion-uc.full": "Call Service Aware",
       "squared-fusion-cal": "Calendar Service",
+      "squared-fusion-gcal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
       "squared-fusion-ec": "Call Service Connect",
@@ -1744,7 +1745,11 @@
         "privateKeyHeader": "Private Key",
         "privateKeyText": "Upload a new private key.",
         "deactivateHeader": "Deactivate Google Calendar",
-        "deactivateText": "Your users will no longer be able to use this service."
+        "deactivateText": "Your users will no longer be able to use this service.",
+        "googleCalendarConfigWillBeWiped": "This action will delete all Google Calendar settings from Cisco Collaboration Cloud.",
+        "uploadNewPrivateKey": "Upload New Private Key",
+        "successfullyUploadedKey": "Private key uploaded successfully.",
+        "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status."
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
