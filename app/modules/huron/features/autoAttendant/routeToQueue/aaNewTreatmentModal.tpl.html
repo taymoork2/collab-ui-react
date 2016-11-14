@@ -22,6 +22,7 @@
           cs-input
           type="radio"
           ng-model="aaNewTreatmentModalCtrl.musicOnHold"
+          ng-change = "aaNewTreatmentModalCtrl.saveMoh()"
           id="uploadFileRadio1"
           name="uploadFileRadio"
           value="musicOnHoldUpload"
@@ -90,7 +91,7 @@
       </div>
       <div class="row">
         <div class="columns aa-selectmin-modal">
-          <cs-select id="queueMin" ng-model="aaNewTreatmentModalCtrl.maxWaitTime" options="aaNewTreatmentModalCtrl.minutes" " secondary-label="Minutes" labelfield="label" valuefield="label" icon="icon-chevron-down" >
+          <cs-select id="queueMin" ng-model="aaNewTreatmentModalCtrl.maxWaitTime" options="aaNewTreatmentModalCtrl.minutes" ng-change ="aaNewTreatmentModalCtrl.saveFallback()" secondary-label="Minutes" labelfield="label" valuefield="label" icon="icon-chevron-down" >
           </cs-select>
         </div>
       </div>
@@ -103,7 +104,7 @@
       </div>
       <div class="row">
         <div class="columns large-8 medium-10 small-10">
-          <cs-select id="destinationSelect" ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions" labelfield="label" valuefield="label" icon="icon-chevron-down" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder">
+          <cs-select id="destinationSelect" ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions" ng-change ="aaNewTreatmentModalCtrl.saveFallback()" labelfield="label" valuefield="label" icon="icon-chevron-down" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder">
           </cs-select>
           <div ng-switch="aaNewTreatmentModalCtrl.destination.name" class="aa-destination-container">
             <aa-route-to-aa id="destinationMenuRouteAA" ng-switch-when="destinationMenuRouteAA" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}"></aa-route-to-aa>

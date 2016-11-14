@@ -13,27 +13,32 @@
       label: $translate.instant('autoAttendant.destinations.Disconnect'),
       name: 'Disconnect',
       action: 'disconnect',
-      level: 0
+      treatment: ''
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
       name: 'destinationMenuRouteHunt',
-      action: 'routeToHuntGroup'
+      action: 'routeToHuntGroup',
+      id: ''
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
       name: 'destinationMenuRouteAA',
-      action: 'goto'
+      action: 'goto',
+      id: ''
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
       name: 'destinationMenuRouteUser',
-      action: 'routeToUser'
+      action: 'routeToUser',
+      id: ''
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
       name: 'destinationMenuRouteMailbox',
-      action: 'routeToVoiceMail'
+      action: 'routeToVoiceMail',
+      id: ''
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
       name: 'destinationMenuRouteToExtNum',
-      action: 'route'
+      action: 'route',
+      id: ''
     }];
     vm.destination = vm.destinationOptions[0];
     vm.musicOnHold = '';
@@ -44,12 +49,17 @@
     vm.ok = ok;
     vm.isSaveEnabled = isSaveEnabled;
     vm.uploadMohTrigger = uploadMohTrigger;
+    vm.destination = '';
+    vm.fallbackAction = undefined;
+    vm.saveFallback = saveFallback;
+    vm.saveMoh = saveMoh;
 
     vm.periodicMinutes = [];
     vm.periodicSeconds = [];
     vm.changedPeriodicMinValue = changedPeriodicMinValue;
     vm.changedPeriodicSecValue = changedPeriodicSecValue;
     vm.areSecondsDisabled = isDisabled;
+    var periodicTime = '';
 
     var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
     var DEFAULT_MOH = 'musicOnHoldDefault';
@@ -68,6 +78,27 @@
       if (_.isEqual(vm.musicOnHold, DEFAULT_MOH)) {
         defaultMoh();
       }
+      if (_.isEqual(vm.fallbackAction.description, 'fallback')) {
+        vm.fallbackAction.name.id = vm.menuEntry.actions[0].getValue();
+        var obj = vm.fallbackAction.name;
+        vm.fallbackAction.action = {};
+        if (obj.action === 'disconnect') {
+          vm.fallbackAction.action[obj.action] = { treatment: 'none' };
+        } else {
+          vm.fallbackAction.action[obj.action] = { id: obj.id, description: obj.label };
+        }
+      }
+    }
+
+    function saveFallback() {
+      vm.fallbackAction.setName(vm.destination);
+      vm.fallbackAction.setValue(vm.maxWaitTime);
+      vm.fallbackAction.setDescription("fallback");
+    }
+
+    function saveMoh() {
+      vm.mohPlayAction.setValue('');
+      vm.mohPlayAction.setDescription(vm.musicOnHold);
     }
 
     //auto set the radio option
@@ -102,8 +133,18 @@
           label: (i + 1) * 5
         });
       });
-      vm.periodicMinute = vm.periodicMinutes[0];
-      vm.periodicSecond = vm.periodicSeconds[8];
+      if (!_.isEqual(vm.paAction.description, '')) { //no metadata set, so no file uploaded
+        var periodicMinute = parseInt(vm.paAction.description / 60, 10);
+        vm.periodicMinute = periodicMinute;
+        var periodicSecond = vm.paAction.description - (periodicMinute * 60);
+        vm.periodicSecond = periodicSecond;
+        if (vm.periodicMinute == '5') {
+          vm.areSecondsDisabled = false;
+        }
+      } else {
+        vm.periodicMinute = vm.periodicMinutes[0];
+        vm.periodicSecond = vm.periodicSeconds[8];
+      }
     }
 
     function populateMaxTime() {
@@ -115,12 +156,21 @@
         });
       });
       //setting maxWaitTime's default value
-      vm.maxWaitTime = vm.minutes[14];
+      if (_.isEqual(vm.fallbackAction.description, '')) { //no metadata set, so no file uploaded
+        vm.maxWaitTime = vm.minutes[14];
+      } else {
+        vm.maxWaitTime = vm.fallbackAction.getValue();
+      }
     }
 
     //populating fallback drop down in sorted order
     function populateDropDown() {
       vm.destinationOptions.sort(AACommonService.sortByProperty('label'));
+      if (_.isEqual(vm.fallbackAction.description, '')) { //no metadata set, so no file uploaded
+        vm.destination = vm.destinationOptions[0];
+      } else {
+        vm.destination = vm.fallbackAction.getName();
+      }
     }
 
     function populateMohRadio() {
@@ -148,6 +198,9 @@
         vm.periodicSecond = vm.periodicSeconds[0];
         vm.areSecondsDisabled = false;
       }
+      var periodicMinutes = (vm.periodicMinute.label * 60);
+      periodicTime = periodicMinutes + vm.periodicSecond.label;
+      vm.paAction.setDescription(periodicTime);
     }
 
     function changedPeriodicSecValue() {
@@ -158,6 +211,9 @@
         vm.periodicSecond = vm.periodicSeconds[0];
         vm.areSecondsDisabled = true;
       }
+      var periodicSeconds = (vm.periodicMinute.label * 60);
+      periodicTime = periodicSeconds + vm.periodicSecond.label;
+      vm.paAction.setDescription(periodicTime);
     }
 
     //get queueSettings menuEntry -> inner menu entry type (moh, initial, periodic...)
@@ -173,6 +229,7 @@
       vm.mohPlayAction = vm.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
       vm.iaAction = vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0];
       vm.paAction = vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0];
+      vm.fallbackAction = vm.menuEntry.actions[0].queueSettings.fallback.actions[0];
     }
 
     function populateScope() {

@@ -393,11 +393,11 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     });
   });
 
-  describe('should create temporary solution to write to db for Periodic announcement', function () {
-    it('cesTempPa', function () {
+  describe('should write to db for Periodic announcement', function () {
+    it('cesPa', function () {
       var _action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'routeToQueueId');
       _action.setDescription('routeToQueueDescription');
-      AutoAttendantCeMenuModelService.cesTempPa(_action);
+      AutoAttendantCeMenuModelService.cesPa(_action);
       _action.queueSettings = {};
       expect(angular.isDefined(_action.description)).toBe(true);
       expect(angular.isDefined(_action.queueSettings)).toBe(true);

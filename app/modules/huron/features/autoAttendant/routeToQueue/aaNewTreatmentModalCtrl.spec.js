@@ -58,15 +58,18 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   var musicOnHold = 'musicOnHold';
   var initialAnnouncement = 'initialAnnouncement';
   var periodicAnnouncement = 'periodicAnnouncement';
+  var fallback = 'fallback';
   var playAction = {};
   var iaAction = {};
   var paAction = {};
+  var fbAction = {};
   var schedule = 'openHours';
   var index = '0';
   var menuId = 'menu0';
   var keyIndex = '0';
   var rtQ = 'routeToQueue';
   var play = 'play';
+  var disconnect = 'disconnect';
   var sortedOptions = [{
     "label": 'autoAttendant.destinations.Disconnect',
   }, {
@@ -96,7 +99,6 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     $scope.menuId = menuId;
     $scope.keyIndex = keyIndex;
     AutoAttendantCeMenuModelService.clearCeMenuMap();
-    AutoAttendantCeMenuModelService.clearCeMenuMap();
     uiMenu = AutoAttendantCeMenuModelService.newCeMenu();
     ui[schedule] = uiMenu;
     menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
@@ -104,16 +106,20 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
     initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
     periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+    fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
     playAction = AutoAttendantCeMenuModelService.newCeActionEntry(play, '');
     iaAction = AutoAttendantCeMenuModelService.newCeActionEntry(play, '');
     paAction = AutoAttendantCeMenuModelService.newCeActionEntry(play, '');
+    fbAction = AutoAttendantCeMenuModelService.newCeActionEntry(disconnect, '');
     routeToQueue = AutoAttendantCeMenuModelService.newCeActionEntry(rtQ, '');
     musicOnHold.addAction(playAction);
     initialAnnouncement.addAction(iaAction);
     periodicAnnouncement.addAction(paAction);
+    fallback.addAction(fbAction);
     queueSettings.musicOnHold = musicOnHold;
     queueSettings.initialAnnouncement = initialAnnouncement;
     queueSettings.periodicAnnouncement = periodicAnnouncement;
+    queueSettings.fallback = fallback;
     routeToQueue.queueSettings = queueSettings;
     menuEntry.addAction(routeToQueue);
     uiMenu.addEntryAt(index, menuEntry);

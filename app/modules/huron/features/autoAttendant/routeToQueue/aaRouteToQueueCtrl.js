@@ -155,12 +155,10 @@
           var paAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
           vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.addAction(paAction);
         }
-        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.fallBack)) {
-          vm.menuKeyEntry.actions[0].queueSettings.fallBack = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var fbMaxTime = AutoAttendantCeMenuModelService.newCeActionEntry('time', '');
-          vm.menuKeyEntry.actions[0].queueSettings.fallBack.addAction(fbMaxTime);
-          var fbAction = AutoAttendantCeMenuModelService.newCeActionEntry('option', '');
-          vm.menuKeyEntry.actions[0].queueSettings.fallBack.addAction(fbAction);
+        if (angular.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.fallback)) {
+          vm.menuKeyEntry.actions[0].queueSettings.fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var fallbackAction = AutoAttendantCeMenuModelService.newCeActionEntry('Disconnect', '15');
+          vm.menuKeyEntry.actions[0].queueSettings.fallback.addAction(fallbackAction);
         }
       }
 

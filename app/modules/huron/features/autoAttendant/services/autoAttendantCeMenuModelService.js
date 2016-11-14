@@ -296,7 +296,7 @@
       clearCeMenuMap: clearCeMenuMap,
       deleteCeMenuMap: deleteCeMenuMap,
       isCeMenu: isCeMenu,
-      cesTempPa: cesTempPa,
+      cesPa: cesPa,
       constructCesTodoPa: constructCesTodoPa,
 
       newCeMenu: function () {
@@ -494,10 +494,10 @@
         //this occurs on the way in from the db
         action = new Action('routeToQueue', inAction.routeToQueue.id);
         setDescription(action, inAction.routeToQueue);
-        cesTempMoh(action);
-        cesTempIa(action);
-        cesTempPa(action);
-        cesTempfallBack(action);
+        cesMoh(action);
+        cesIa(action);
+        cesPa(action);
+        cesfallback(action);
         menuEntry.addAction(action);
       } else {
         // insert an empty action
@@ -510,9 +510,9 @@
     }
 
     /*
-    * temporary solution to write to db until ces ready
+    *write Moh  to db
     */
-    function cesTempMoh(action) {
+    function cesMoh(action) {
       if (!_.isUndefined(action.description)) {
         try {
           if (_.isUndefined(action.queueSettings)) {
@@ -527,9 +527,9 @@
     }
 
     /*
-    * temporary solution to write to db until ces ready
+    * function to write to db
     */
-    function cesTempIa(action) {
+    function cesIa(action) {
       if (!_.isUndefined(action.description)) {
         try {
           if (_.isUndefined(action.queueSettings)) {
@@ -544,9 +544,9 @@
     }
 
     /*
-     * temporary solution to write to db until ces ready
+     * write periodic announcement to db
      */
-    function cesTempPa(action) {
+    function cesPa(action) {
       if (angular.isDefined(action.description)) {
         try {
           if (angular.isUndefined(action.queueSettings)) {
@@ -561,16 +561,16 @@
     }
 
     /*
-    * temporary solution to write to db until ces ready
+    * write fallback to db
     */
-    function cesTempfallBack(action) {
+    function cesfallback(action) {
       if (!_.isUndefined(action.description)) {
         try {
           if (angular.isUndefined(action.queueSettings)) {
             action.description = JSON.parse(action.description);
             action.queueSettings = {};
           }
-          action.queueSettings.fallBack = constructCesTodofb(action.description);
+          action.queueSettings.fallback = constructCesTodoFallback(action.description);
         } catch (exception) {
           action.queueSettings = {};
         }
@@ -578,7 +578,7 @@
     }
 
     /*
-    * temporary solution to write to db until ces ready
+    * construct ces definition of Moh from db
     */
     function constructCesTodoMoh(parsedDescription) {
       var musicOnHold = parsedDescription.musicOnHold.actions[0];
@@ -590,7 +590,7 @@
     }
 
     /*
-    * temporary solution to write to db until ces ready
+    * construct ces definition of IA from db
     */
     function constructCesTodoIa(parsedDescription) {
       var initialAnnouncement = parsedDescription.initialAnnouncement.actions[0];
@@ -601,22 +601,19 @@
       return initialAnnouncement;
     }
     /*
-    * temporary solution to write to db until ces ready
+    * construct ces definition of Fallback from db
     */
-    function constructCesTodofb(parsedDescription) {
-      var fallBackTime = parsedDescription.fallBack.actions[0];
-      var fallBackOption = parsedDescription.fallBack.actions[1];
-      var action = new Action(fallBackTime.name, fallBackTime.value);
-      action.setDescription(fallBackTime.description);
-      var fallBack = new CeMenuEntry();
-      fallBack.addAction(action);
-      action = new Action(fallBackOption.name, fallBackTime.value);
-      action.setDescrption(fallBackOption.description);
-      fallBack.addAction(action);
+    function constructCesTodoFallback(parsedDescription) {
+      var fallback = parsedDescription.fallback.actions[0];
+      var action = new Action(fallback.name, fallback.value);
+      action.setDescription(fallback.description);
+      fallback = new CeMenuEntry();
+      fallback.addAction(action);
+      return fallback;
     }
 
     /*
-    * temporary solution to write to db until ces ready
+    * construct ces definition of PA from db
     */
     function constructCesTodoPa(parsedDescription) {
       var periodicAnnouncement = parsedDescription.periodicAnnouncement.actions[0];
@@ -1129,6 +1126,21 @@
       var newAction = {};
       if (!_.isUndefined(action.description)) {
         newAction.id = action.value;
+        newAction.queueMoH = action.queueSettings.musicOnHold.actions[0].getValue();
+        newAction.queueInitialAnnouncement = action.queueSettings.initialAnnouncement.actions[0].getValue();
+        var queuePeriodicAnnouncement = action.queueSettings.periodicAnnouncement.actions[0].getValue();
+        var queuePeriodicAnnouncementInterval = action.queueSettings.periodicAnnouncement.actions[0].getDescription();
+        var paAction = [];
+        var paActionArray = {
+          queuePeriodicAnnouncement: queuePeriodicAnnouncement,
+          queuePeriodicAnnouncementInterval: queuePeriodicAnnouncementInterval
+        };
+        paAction.push(paActionArray);
+        newAction.queuePeriodicAnnouncements = paAction;
+        var queueMaxTimeValue = action.queueSettings.fallback.actions[0].getValue();
+        newAction.queueMaxTime = queueMaxTimeValue.label;
+        var queueMaxDestination = action.queueSettings.fallback.actions[0].action;
+        newAction.queueFallback = queueMaxDestination;
         newAction.description = JSON.stringify(action.description);
       }
       return newAction;
