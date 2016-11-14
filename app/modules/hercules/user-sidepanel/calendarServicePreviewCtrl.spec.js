@@ -33,6 +33,7 @@ describe('Directive Controller: CalendarServicePreviewCtrl', function () {
     spyOn(Userservice, 'isInvitePending').and.returnValue(false);
     spyOn(Orgservice, 'getOrg').and.returnValue($q.when({}));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'calsvcShowPreferredSiteNameGetStatus').and.returnValue($q.when(true));
     spyOn(ResourceGroupService, 'getAllAsOptions').and.returnValue($q.when(resourceGroupsAsOptions));
     spyOn(USSService, 'getStatusesForUser').and.returnValue($q.when(userStatuses));
     spyOn(USSService, 'refreshEntitlementsForUser').and.returnValue($q.when({}));
