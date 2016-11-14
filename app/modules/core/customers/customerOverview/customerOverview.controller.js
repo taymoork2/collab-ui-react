@@ -48,6 +48,7 @@
 
     vm._helpers = {
       canUpdateLicensesForSelf: canUpdateLicensesForSelf,
+      openCustomerPortal: openCustomerPortal,
       updateUsers: updateUsers
     };
 
@@ -203,17 +204,17 @@
         // non-admin users (e.g. sales admins) should not try to update their own licenses, but
         // instead launch the portal immediately
         if (!vm._helpers.canUpdateLicensesForSelf()) {
-          return openCustomerPortal();
+          return vm._helpers.openCustomerPortal();
         }
 
         if (licIds.length > 0) {
-          return vm._helpers.updateUsers([emailObj], licIds).then(openCustomerPortal);
+          return vm._helpers.updateUsers([emailObj], licIds).then(vm._helpers.openCustomerPortal);
         }
 
         AccountOrgService.getAccount(vm.customerOrgId).then(function (response) {
           var accountsLength = _.get(response, 'data.accounts.length', 0);
           if (!accountsLength) {
-            return openCustomerPortal();
+            return vm._helpers.openCustomerPortal();
           }
 
           var updateUsersList = [];
@@ -224,7 +225,7 @@
             updateUsersList.push(vm._helpers.updateUsers([emailObj], licIds));
           }
 
-          return $q.all(updateUsersList).then(openCustomerPortal);
+          return $q.all(updateUsersList).then(vm._helpers.openCustomerPortal);
         });
       })
       .catch(function (response) {
