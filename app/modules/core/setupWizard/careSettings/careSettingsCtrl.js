@@ -8,7 +8,7 @@
     var vm = this;
     var callbackUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/csonboard?accessToken='
       + TokenService.getAccessToken() + '&orgName=' + Authinfo.getOrgName();
-    var ccfsUrl = UrlConfig.getCcfsUrl() + callbackUrl;
+    var ccfsUrl = UrlConfig.getCcfsUrl() + encodeURIComponent(callbackUrl);
 
     vm.UNKNOWN = 'unknown';
     vm.ONBOARDED = 'onboarded';
