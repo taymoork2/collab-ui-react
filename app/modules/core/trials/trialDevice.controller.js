@@ -55,7 +55,7 @@
     vm.areTemplateOptionsDisabled = _areTemplateOptionsDisabled;
     vm.getCountriesForSelectedDevices = getCountriesForSelectedDevices;
     // TODO - Remove vm.showNewRoomSystems when MX300 are officially supported
-    vm.showNewRoomSystems = false;
+    vm.showNewRoomSystems = true;
     vm.selectedCountryCode = null;
 
     if (_.has($stateParams, 'details.details.shippingInformation.country')) {
@@ -703,6 +703,8 @@
       // Hides the MX300 under a feature toggle
       FeatureToggleService.supports(FeatureToggleService.features.atlasNewRoomSystems)
         .then(function () {
+          vm.showNewRoomSystems = true;
+        }).catch(function () {
           vm.showNewRoomSystems = true;
         });
 
