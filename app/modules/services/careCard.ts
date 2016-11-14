@@ -1,7 +1,6 @@
 import { ServicesOverviewCard, ICardButton } from './ServicesOverviewCard';
 
 export class ServicesOverviewCareCard extends ServicesOverviewCard {
-
   public getShowMoreButton(): ICardButton | undefined {
     return undefined;
   }
@@ -21,13 +20,13 @@ export class ServicesOverviewCareCard extends ServicesOverviewCard {
 
   public getButtons(): Array<ICardButton> {
     if (this.active) {
-      return _.take(this._buttons, 3);
+      return this._buttons;
     }
     return [];
   }
 
-  public careFeatureToggleEventHandler (hasFeature: boolean) {
-    this._display = hasFeature;
+  public careFeatureToggleEventHandler(hasFeature: boolean) {
+    this.display = hasFeature;
   }
 
   /* @ngInject */
@@ -40,6 +39,6 @@ export class ServicesOverviewCareCard extends ServicesOverviewCard {
       cardClass: 'care-bar',
       display: false,
     });
-    this._loading = false;
+    this.loading = false;
   }
 }

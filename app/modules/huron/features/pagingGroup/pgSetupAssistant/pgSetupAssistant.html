@@ -1,7 +1,8 @@
 <div>
   <cs-overlay-panel class="paginggroup overlay-panel typeahead-group"
                     overlay-title="{{::'pagingGroup.createTitle' | translate}}" close="$ctrl.cancelModal()"
-                    ng-keyup="$ctrl.evalKeyPress($event.keyCode)">
+                    ng-keyup="$ctrl.evalKeyPress($event.keyCode)"
+                    ng-keypress="$ctrl.enterNextPage($event.keyCode)">
     <cs-setup-assistant previous="$ctrl.previousButton()"
                         next="$ctrl.nextButton()"
                         next-text="$ctrl.nextText()"
@@ -19,6 +20,13 @@
            on-update="$ctrl.onUpdateNumber(number, isValid)"
            paging-group-number="$ctrl.number"
            ng-class="$ctrl.animation"></pg-number>
+
+      <pg-member
+           ng-if="$ctrl.getPageIndex() === 2"
+           on-update="$ctrl.onUpdateMember(members)"
+           selected-members="$ctrl.selectedMembers"
+           card-threshold="6"
+           ng-class="$ctrl.animation"></pg-member>
 
     </cs-setup-assistant>
   </cs-overlay-panel>

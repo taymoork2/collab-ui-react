@@ -142,7 +142,93 @@ describe('Service: Notification', function () {
   });
 
   describe('errorResponse', function () {
-    it('should notify an error from response data errorMessage', function () {
+    it('should notify an error from response.data.error.message string', function () {
+      let response = createHttpResponseWith({
+        data: {
+          error: {
+            message: 'errorMessage details',
+          },
+        },
+      });
+      Notification.errorResponse(response, 'Something happened.');
+      let notifyMessage = 'Something happened. errorMessage details. TrackingID: Atlas_123';
+      expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'error', notifyMessage, 0));
+    });
+
+    it('should notify an error from response.data.error.message array of strings', function () {
+      let response = createHttpResponseWith({
+        data: {
+          error: {
+            message: [
+              'errorMessage details 1',
+              'errorMessage details 2',
+            ],
+          },
+        },
+      });
+      Notification.errorResponse(response, 'Something happened.');
+      let notifyMessage = 'Something happened. errorMessage details 1. errorMessage details 2. TrackingID: Atlas_123';
+      expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'error', notifyMessage, 0));
+    });
+
+    it('should notify an error from response.data.error.message array of objects', function () {
+      let response = createHttpResponseWith({
+        data: {
+          error: {
+            message: [{
+              description: 'errorMessage details 1',
+            }, {
+              description: 'errorMessage details 2',
+            }],
+          },
+        },
+      });
+      Notification.errorResponse(response, 'Something happened.');
+      let notifyMessage = 'Something happened. errorMessage details 1. errorMessage details 2. TrackingID: Atlas_123';
+      expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'error', notifyMessage, 0));
+    });
+
+    it('should notify an error from response.data.errors string', function () {
+      let response = createHttpResponseWith({
+        data: {
+          errors: 'errorMessage details',
+        },
+      });
+      Notification.errorResponse(response, 'Something happened.');
+      let notifyMessage = 'Something happened. errorMessage details. TrackingID: Atlas_123';
+      expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'error', notifyMessage, 0));
+    });
+
+    it('should notify an error from response.data.errors array of strings', function () {
+      let response = createHttpResponseWith({
+        data: {
+          errors: [
+            'errorMessage details 1',
+            'errorMessage details 2',
+          ],
+        },
+      });
+      Notification.errorResponse(response, 'Something happened.');
+      let notifyMessage = 'Something happened. errorMessage details 1. errorMessage details 2. TrackingID: Atlas_123';
+      expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'error', notifyMessage, 0));
+    });
+
+    it('should notify an error from response.data.errors array of objects', function () {
+      let response = createHttpResponseWith({
+        data: {
+          errors: [{
+            description: 'errorMessage details 1',
+          }, {
+            description: 'errorMessage details 2',
+          }],
+        },
+      });
+      Notification.errorResponse(response, 'Something happened.');
+      let notifyMessage = 'Something happened. errorMessage details 1. errorMessage details 2. TrackingID: Atlas_123';
+      expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'error', notifyMessage, 0));
+    });
+
+    it('should notify an error from response.data.errorMessage', function () {
       let response = createHttpResponseWith({
         data: {
           errorMessage: 'errorMessage details',
@@ -153,7 +239,7 @@ describe('Service: Notification', function () {
       expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'error', notifyMessage, 0));
     });
 
-    it('should notify an error from response data error', function () {
+    it('should notify an error from response.data.error', function () {
       let response = createHttpResponseWith({
         data: {
           error: 'error details',
@@ -208,6 +294,15 @@ describe('Service: Notification', function () {
       expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'error', notifyMessage, 0));
     });
 
+    it('should notify an error with an unauthorized error message', function () {
+      let response = createHttpResponseWith({
+        status: 401,
+      });
+      Notification.errorResponse(response, 'Something happened.');
+      let notifyMessage = 'Something happened. errors.statusUnauthorized. TrackingID: Atlas_123';
+      expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'error', notifyMessage, 0));
+    });
+
     it('should notify an error with an unknown error message', function () {
       let response = createHttpResponseWith({
         status: 0,
@@ -216,42 +311,31 @@ describe('Service: Notification', function () {
       let notifyMessage = 'Something happened. errors.statusUnknown. TrackingID: Atlas_123';
       expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'error', notifyMessage, 0));
     });
-  });
 
-  describe('Yes/No Confirmation Notifications', function () {
-
-    it('creates toaster with yes/no confirmation', function () {
-
-      let message = 'confirmation was successful';
-      Notification.confirmation(message);
-      expect(toaster.pop).toHaveBeenCalledWith({
-        type: 'warning',
-        body: 'cr-confirmation',
-        bodyOutputType: 'directive',
-        showCloseButton: false,
+    it('should notify an error with trackingId fallback in response.data', function () {
+      let response = createHttpResponseWith({
+        data: {
+          trackingId: 'Atlas_555',
+        },
+        headers: _.noop,
       });
-      expect(toaster.pop.calls.count()).toEqual(1);
+      Notification.errorResponse(response);
+      let notifyMessage = 'TrackingID: Atlas_555';
+      expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'error', notifyMessage, 0));
     });
-  });
 
-  // TODO: rip out 'stringify()' usage once ATLAS-1338 is resolved
-  describe('helper functions:', function () {
-    describe('stringify():', function () {
-      it('should JSON-stringify an object or array', function () {
-        expect(Notification.stringify({
-          a: 1,
-          b: null,
-          c: 'foo',
-        })).toBe('{"a":1,"b":null,"c":"foo"}');
-
-        expect(Notification.stringify([
-          1, 'a', null, undefined,
-        ])).toBe('[1,"a",null,null]');
+    it('should notify an error with trackingId fallback in response.data.error', function () {
+      let response = createHttpResponseWith({
+        data: {
+          error: {
+            trackingId: 'Atlas_777',
+          },
+        },
+        headers: _.noop,
       });
-
-      it('should return strings as-is', function () {
-        expect(Notification.stringify('foo')).toBe('foo');
-      });
+      Notification.errorResponse(response);
+      let notifyMessage = 'TrackingID: Atlas_777';
+      expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'error', notifyMessage, 0));
     });
   });
 });

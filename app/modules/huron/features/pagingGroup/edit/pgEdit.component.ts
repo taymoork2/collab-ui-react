@@ -1,4 +1,4 @@
-import { IPagingGroup } from 'modules/huron/features/pagingGroup/pagingGroup';
+import { IPagingGroup, IMemberData } from 'modules/huron/features/pagingGroup/pagingGroup';
 import { PagingNumberService } from 'modules/huron/features/pagingGroup/pgNumber.service';
 import { PagingGroupService } from 'modules/huron/features/pagingGroup/pagingGroup.service';
 
@@ -15,6 +15,9 @@ class PgEditComponentCtrl implements ng.IComponentController {
   //Paging group number
   public number: string;
   private availableNumbers: string[] = [];
+
+  //Paging group members
+  public members: Array<IMemberData>;
 
   public back: boolean = true;
   public huronFeaturesUrl: string = 'huronfeatures';
@@ -37,9 +40,21 @@ class PgEditComponentCtrl implements ng.IComponentController {
           this.pg = data;
           this.name = this.pg.name;
           this.number = this.pg.extension;
+          this.members = this.pg.members;
           this.loading = false;
+        },
+        (error) => {
+          let message = '';
+          if (error && _.has(error, 'data')
+            && _.has(error.data, 'error')
+            && _.has(error.data.error, 'message')
+            && _.has(error.data.error.message, 'length')
+            && error.data.error.message.length > 0
+            && _.has(error.data.error.message[0], 'description')) {
+            message = error.data.error.message[0].description;
           }
-      );
+          this.Notification.error('pagingGroup.errorUpdate', { message: message });
+        });
       this.fetchNumbers();
     } else {
       this.$state.go(this.huronFeaturesUrl);
@@ -79,6 +94,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
     pg.groupId = this.pg.groupId;
     pg.name = this.name;
     pg.extension = this.number;
+    pg.members = this.members;
     this.PagingGroupService.updatePagingGroup(pg).then(
       (data) => {
         this.Notification.success(this.$translate.instant('pagingGroup.successUpdate', {

@@ -15,26 +15,39 @@
       <div class="cs-radio-group">
         <ul>
           <li>
-            <input cs-input type="radio" ng-model="umoc.manageType" id="org-manual" ng-value="'manual'"
-                   cs-input-label="{{::'userManage.org.manualLabel'|translate}}"
-                  cs-input-help-text="{{::'userManage.org.manualDetails'|translate: {maxUsersInManual: umoc.maxUsersInManual} }}">
+            <input cs-input
+              type="radio"
+              ng-model="umoc.manageType"
+              id="org-manual"
+              ng-value="'manual'"
+              cs-input-label="{{::'userManage.org.manualLabel'|translate}}"
+              cs-input-help-text="{{::'userManage.org.manualDetails'|translate: {maxUsersInManual: umoc.maxUsersInManual} }}">
           </li>
           <li>
-            <input cs-input type="radio" ng-model="umoc.manageType" id="org-bulk" ng-value="'bulk'"
-                   cs-input-label="{{::'userManage.org.bulkLabel'|translate}}"
-                   cs-input-help-text="{{::'userManage.org.bulkDetails'|translate: {maxUsersInCSV: umoc.maxUsersInCSV} }}">
+            <input cs-input
+              type="radio"
+              ng-model="umoc.manageType"
+              id="org-bulk"
+              ng-value="'bulk'"
+              cs-input-label="{{::'userManage.org.bulkLabel'|translate}}"
+              cs-input-help-text="{{::'userManage.org.bulkDetails'|translate: {maxUsersInCSV: umoc.maxUsersInCSV} }}">
             <p class="csv-export-link">
-              <cr-user-csv-export is-over-export-threshold="csv.isOverExportThreshold"
-                                  as-link="{{::'userManage.bulk.exportUserList'|translate}}"
-                                  on-status-change="csv.onExportDownloadStatus(isExporting, dataUrl)"
-                                  use-csv-download-directive="true">
+              <cr-user-csv-export
+                is-over-export-threshold="csv.isOverExportThreshold"
+                as-link="{{::'userManage.bulk.exportUserList'|translate}}"
+                on-status-change="csv.onExportDownloadStatus(isExporting, dataUrl)"
+                use-csv-download-directive="true">
               </cr-user-csv-export>
             </p>
           </li>
           <li>
-            <input cs-input type="radio" ng-model="umoc.manageType" id="org-advanced" ng-value="'advanced'"
-                   cs-input-label="{{::'userManage.org.advancedLabel'|translate}}"
-                   cs-input-help-text="{{::'userManage.org.advancedDetails'|translate}}">
+            <input cs-input
+              type="radio"
+              ng-model="umoc.manageType"
+              id="org-advanced"
+              ng-value="'advanced'"
+              cs-input-label="{{::'userManage.org.advancedLabel'|translate}}"
+              cs-input-help-text="{{::'userManage.org.advancedDetails'|translate}}">
           </li>
         </ul>
       </div>
@@ -43,6 +56,6 @@
 </div>
 
 <div class="modal-footer">
-  <button type="button" id="btnClear" class="btn" ng-click="$dismiss()"><span translate="common.back"></span></button>
+  <button type="button" id="btnClear" class="btn" ng-click="$dismiss()"><span translate="common.cancel"></span></button>
   <button type="button" class="btn btn--primary" ng-click="umoc.onNext()"><span translate="common.next"></span></button>
 </div>

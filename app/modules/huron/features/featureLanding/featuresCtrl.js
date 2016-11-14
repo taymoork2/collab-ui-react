@@ -48,21 +48,27 @@
      * */
     vm.features = [{
       name: 'HG',
-      getFeature: HuntGroupService.getListOfHuntGroups,
+      getFeature: function () {
+        return HuntGroupService.getListOfHuntGroups();
+      },
       formatter: HuronFeaturesListService.huntGroups,
       isEmpty: false,
       i18n: 'huronFeatureDetails.hgName',
       color: 'alerts'
     }, {
       name: 'AA',
-      getFeature: AutoAttendantCeInfoModelService.getCeInfosList,
+      getFeature: function () {
+        return AutoAttendantCeInfoModelService.getCeInfosList();
+      },
       formatter: HuronFeaturesListService.autoAttendants,
       isEmpty: false,
       i18n: 'huronFeatureDetails.aaName',
       color: 'primary'
     }, {
       name: 'CP',
-      getFeature: CallParkService.getListOfCallParks,
+      getFeature: function () {
+        return CallParkService.getCallParkList();
+      },
       formatter: HuronFeaturesListService.callParks,
       isEmpty: false,
       i18n: 'huronFeatureDetails.cpName',

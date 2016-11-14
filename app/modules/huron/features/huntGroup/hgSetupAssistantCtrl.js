@@ -10,7 +10,7 @@
   /* @ngInject */
   function HuntGroupSetupAssistantCtrl($q, $state, $modal, $timeout,
     Authinfo, Notification, HuntGroupService,
-    HuntGroupFallbackDataService, HuntGroupMemberDataService) {
+    HuntGroupFallbackDataService, HuntGroupMemberDataService, DialPlanService) {
     var vm = this;
     var customerId = Authinfo.getOrgId();
 
@@ -74,14 +74,19 @@
     vm.populateHuntPilotNumbers = populateHuntPilotNumbers;
     vm.populateHuntMembers = populateHuntMembers;
     vm.populateFallbackDestination = populateFallbackDestination;
-    vm.allowLocalValidation = false;
+
+    vm.externalRegionCodeFn = getRegionCode;
+    vm.callDestInputs = ['internal', 'external'];
 
     init();
 
     function init() {
       HuntGroupFallbackDataService.reset();
       HuntGroupMemberDataService.reset();
-      allowLocalValidation();
+    }
+
+    function getRegionCode() {
+      return DialPlanService.getCustomerVoice(Authinfo.getOrgId());
     }
 
     function fetchNumbers(typedNumber) {
@@ -295,7 +300,7 @@
     }
 
     function populateFallbackDestination(data) {
-      data.fallbackDestination = HuntGroupFallbackDataService.getFallbackDestinationJSON(vm.allowLocalValidation);
+      data.fallbackDestination = HuntGroupFallbackDataService.getFallbackDestinationJSON();
     }
     /////////////////////////////////////////////////////////
 
@@ -336,12 +341,6 @@
           type: number.type,
           number: number.number
         });
-      });
-    }
-
-    function allowLocalValidation() {
-      HuntGroupFallbackDataService.allowLocalValidation().then(function (result) {
-        vm.allowLocalValidation = result;
       });
     }
   }

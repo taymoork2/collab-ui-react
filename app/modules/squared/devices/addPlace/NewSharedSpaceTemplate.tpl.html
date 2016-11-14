@@ -1,14 +1,14 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="$dismiss()">
   </button>
-  <h3 class="modal-title" translate="{{newPlace.wizardData.title}}"></h3>
+  <h3 class="modal-title" translate="{{newPlace.title}}"></h3>
 </div>
-<div class="modal-body device-wizard choose-shared">
-  <div class="createNewPlace" ng-hide="newPlace.isNewCollapsed">
+<div class="modal-body device-wizard">
+  <div>
+    <h4 translate="addDeviceWizard.newSharedSpace.newPlace"></h4>
+    <p translate="placesPage.placesDefinition"></p>
+    <div class="newPlaceSpacing" ></div>
     <form class="createNewPlaceForm" onsubmit="$('#next-button').click()">
-      <h4 translate="addDeviceWizard.newSharedSpace.newPlace"></h4>
-      <p translate="placesPage.placesDefinition"></p>
-      <div class="newPlaceSpacing" ></div>
       <div>
         <input
             required
@@ -36,7 +36,6 @@
   </button>
   <button
       cs-btn
-      loading="newPlace.isLoading"
       id="next-button"
       class="btn btn--primary"
       ng-click="newPlace.next()"

@@ -43,5 +43,14 @@
         "status": "OK"
       }
     }
+  },
+  "error2": {
+    "links": [],
+    "content": {
+      "data": {
+        "returnCode": 1,
+        "message": "Error request"
+      }
+    }
   }
 }

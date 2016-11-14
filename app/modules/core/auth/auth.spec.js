@@ -263,6 +263,7 @@ describe('Auth Service', function () {
       OAuthConfig.getOauthDeleteRefreshTokenUrl = sinon.stub().returns('refreshtoken=');
       OAuthConfig.getClientId = sinon.stub().returns('ewvmpibn34inbr433f23f4');
       spyOn(TokenService, 'completeLogout');
+      spyOn(TokenService, 'getClientSessionId').and.returnValue('testSessionId123');
     });
 
     it('should delete access tokens, logout, and redirect to a provided url', function () {
@@ -276,7 +277,10 @@ describe('Auth Service', function () {
             client_id: 'ewvmpibn34inbr433f23f4',
             last_used_time: '2016-07-28 21:39:06',
             token_id: 'OauthDeleteRefreshTokenUrl',
-            client_name: 'Admin Portal'
+            client_name: 'Admin Portal',
+            user_info: {
+              client_session_id: 'testSessionId123',
+            },
           }]
         });
 
@@ -302,7 +306,10 @@ describe('Auth Service', function () {
             client_id: 'ewvmpibn34inbr433f23f4',
             last_used_time: '2016-07-28 21:39:06',
             token_id: 'OauthDeleteRefreshTokenUrl',
-            client_name: 'Admin Portal'
+            client_name: 'Admin Portal',
+            user_info: {
+              client_session_id: 'testSessionId123',
+            },
           }]
         });
 
@@ -314,6 +321,31 @@ describe('Auth Service', function () {
 
       $httpBackend.flush();
       expect(promise).toBeRejectedWith(mockResponse(500));
+      expect(TokenService.completeLogout).toHaveBeenCalledWith('customLogoutUrl');
+    });
+
+    it('should logout and redirect to a provided url even if we didnt match any refresh tokens on client_session_id', function () {
+      $httpBackend
+        .expectGET('OauthListTokenUrl')
+        .respond(200, {
+          total: 1,
+          data: [{
+            device_type: null,
+            create_time: '2016-07-28 21:39:06',
+            client_id: 'ewvmpibn34inbr433f23f4',
+            last_used_time: '2016-07-28 21:39:06',
+            token_id: 'OauthDeleteRefreshTokenUrl',
+            client_name: 'Admin Portal',
+            user_info: {
+              client_session_id: 'testSessionId123-not-correct',
+            },
+          }]
+        });
+
+      var promise = Auth.logoutAndRedirectTo('customLogoutUrl');
+
+      $httpBackend.flush();
+      expect(promise).toBeResolved();
       expect(TokenService.completeLogout).toHaveBeenCalledWith('customLogoutUrl');
     });
 
@@ -331,20 +363,25 @@ describe('Auth Service', function () {
   });
 
   describe('logout()', function () {
+    beforeEach(function () {
+      spyOn(TokenService, 'triggerGlobalLogout');
+    });
+
     it('should logout and redirect to the default logout url', function () {
       var logoutDefer = $q.defer();
       OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
       Auth.logoutAndRedirectTo = sinon.stub().returns(logoutDefer.promise);
       var promise = Auth.logout();
 
+      expect(TokenService.triggerGlobalLogout).not.toHaveBeenCalled(); // should not be called before logout (token revocation) is complete
       logoutDefer.resolve();
       expect(promise).toBeResolved();  // seems unnecessary, but should be the same promise returned from logoutAndRedirectTo()
       expect(Auth.logoutAndRedirectTo.calledWith('logoutUrl')).toBe(true);
+      expect(TokenService.triggerGlobalLogout).toHaveBeenCalled(); // should only be called after logout (token revocation)
     });
   });
 
   describe('authorize()', function () {
-
     beforeEach(function () {
       SessionStorage.get = sinon.stub();
       UrlConfig.getAdminServiceUrl = sinon.stub().returns('path/');

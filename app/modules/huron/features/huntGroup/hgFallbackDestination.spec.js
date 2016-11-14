@@ -62,8 +62,6 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     $q = _$q_;
     HuntGroupFallbackDataService = _HuntGroupFallbackDataService_;
 
-    spyOn(HuntGroupFallbackDataService, 'allowLocalValidation').and.returnValue($q.when(false));
-
     controller = $controller('HuntGroupSetupAssistantCtrl', {
       $scope: $scope,
       $state: $state,
@@ -117,7 +115,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     $scope.$apply();
 
     expect(controller.isFallbackValid()).toBeTruthy();
-    expect(controller.selectedFallbackNumber).toEqual("(817) 932-5798");
+    expect(controller.selectedFallbackNumber).toEqual("8179325798");
   });
 
   it("should validate the external fallback number (with country code) correctly.", function () {
@@ -126,7 +124,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     $scope.$apply();
 
     expect(controller.isFallbackValid()).toBeTruthy();
-    expect(controller.selectedFallbackNumber).toEqual("(817) 932-5798");
+    expect(controller.selectedFallbackNumber).toEqual("+18179325798");
   });
 
   it("internal number absolute match works fine with 1 record backend response.", function () {

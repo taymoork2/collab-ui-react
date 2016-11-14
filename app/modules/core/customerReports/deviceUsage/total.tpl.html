@@ -4,17 +4,19 @@
   <cs-card class="full header-border">
 
     <article>
-      <header class="align-center">
-        <h4 translate="reportsPage.usageReports.deviceMetrics"></h4>
-        <div class="right" style="position:absolute; top:1rem; right:3rem">
-
-          <button class="btn btn-primary" ng-disabled="deviceUsage.exporting" ng-click="deviceUsage.exportRawData()" translate="reportsPage.usageReports.downloadFullReport">
-          </button>
-
-          <div cs-loader ng-show="deviceUsage.exporting" class="loader-example--small"></div>
-
+      <header>
+        <div class="row">
+          <div class="columns large-6 medium-6 medium-offset-3 small-12">
+            <h4 class="center" translate="reportsPage.usageReports.deviceMetrics"></h4>
+          </div>
+          <div class="columns large-3 medium-3 small-12">
+            <button ng-disabled="deviceUsage.noDataForRange" cs-btn class="btn btn-primary right" loading="deviceUsage.exporting" ng-click="deviceUsage.exportRawData()">
+              <span translate="reportsPage.usageReports.downloadFullReport"></span>
+            </button>
+          </div>
         </div>
       </header>
+
       <section>
         <div ng-include="'modules/core/customerReports/deviceUsage/keyholeview.tpl.html'" />
       </section>

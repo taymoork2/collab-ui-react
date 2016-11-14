@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Controller: DevicesCtrl', function () {
-  var $scope, $controller, controller, $httpBackend, $timeout;
-  var CsdmConfigService, AccountOrgService;
+  var $scope, $state, $controller, controller, $httpBackend, $timeout;
+  var CsdmConfigService, AccountOrgService, Authinfo;
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Huron'));
@@ -13,13 +13,15 @@ describe('Controller: DevicesCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies($rootScope, _$timeout_, _$controller_, _$httpBackend_, _CsdmConfigService_, _AccountOrgService_) {
+  function dependencies($rootScope, _$state_, _$timeout_, _$controller_, _$httpBackend_, _CsdmConfigService_, _AccountOrgService_, _Authinfo_) {
     $scope = $rootScope.$new();
+    $state = _$state_;
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $timeout = _$timeout_;
     CsdmConfigService = _CsdmConfigService_;
     AccountOrgService = _AccountOrgService_;
+    Authinfo = _Authinfo_;
   }
 
   function initSpies() {
@@ -40,7 +42,8 @@ describe('Controller: DevicesCtrl', function () {
 
   function initController() {
     controller = $controller('DevicesCtrl', {
-      $scope: $scope
+      $scope: $scope,
+      $state: $state
     });
     $scope.$apply();
   }
@@ -65,55 +68,73 @@ describe('Controller: DevicesCtrl', function () {
     $httpBackend.verifyNoOutstandingExpectation();
   });
 
-  //function visitState(currentStateName, allStates, visitedStates) {
-  //  if (visitedStates[currentStateName]) {
-  //    return;
-  //  }
-  //  visitedStates[currentStateName] = true;
-  //  var state = allStates[currentStateName];
-  //  expect(state).toBeTruthy(currentStateName);
-  //  if (state.nextOptions) {
-  //    _.each(state.nextOptions, function (next) {
-  //      visitState(next, allStates, visitedStates);
-  //    });
-  //  }
-  //  if (state.next) {
-  //    visitState(state.next, allStates, visitedStates);
-  //  }
-  //}
+  describe('startAddDeviceFlow function', function () {
+    var displayName;
+    var userCisUuid;
+    var firstName;
+    var email;
+    var orgId;
+    var isEntitledToHuron;
+    var isEntitledToRoomSystem;
+    var showDarling;
+    beforeEach(function () {
+      isEntitledToHuron = true;
+      isEntitledToRoomSystem = true;
+      showDarling = true;
+      displayName = 'displayName';
+      firstName = 'firstName';
+      userCisUuid = 'userCisUuid';
+      email = 'email@address.com';
+      orgId = 'orgId';
+      spyOn(controller, 'isEntitledToHuron').and.returnValue(isEntitledToHuron);
+      spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(isEntitledToRoomSystem);
+      spyOn(Authinfo, 'getUserId').and.returnValue(userCisUuid);
+      spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(email);
+      spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
+      spyOn($state, 'go');
+      controller.adminDisplayName = displayName;
+      controller.adminFirstName = firstName;
+      controller.showDarling = showDarling;
+    });
 
-  //describe("addDeviceFlow.chooseSharedSpace", function() {
-  //  var responsible = {
-  //    deviceType: undefined
-  //  };
-  //
-  //  function verifyResponsiblesAreSet() {
-  //    _.forEach(responsible, function(resp) {
-  //      expect(resp).toBe(true, resp);
-  //    });
-  //  }
-  //
-  //  it("clicking on desk phone", function() {
-  //    //call functions that click desk phone
-  //    verifyResponsiblesAreSet();
-  //  });
-  //
-  //  it("clicking on room system", function() {
-  //    //call functions that click room system
-  //    verifyResponsiblesAreSet();
-  //  });
-  //});
+    it('should set the wizardState with correct fields for the wizard if places toggle is on', function () {
+      controller.showPlaces = true;
+      controller.startAddDeviceFlow();
+      $scope.$apply();
+      expect($state.go).toHaveBeenCalled();
+      var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
+      expect(wizardState.title).toBe('addDeviceWizard.newDevice');
+      expect(wizardState.function).toBe('addDevice');
+      expect(wizardState.showPlaces).toBe(true);
+      expect(wizardState.showDarling).toBe(showDarling);
+      expect(wizardState.isEntitledToHuron).toBe(isEntitledToHuron);
+      expect(wizardState.isEntitledToRoomSystem).toBe(isEntitledToRoomSystem);
+      expect(wizardState.account).toBeUndefined();
+      expect(wizardState.recipient.displayName).toBe(displayName);
+      expect(wizardState.recipient.firstName).toBe(firstName);
+      expect(wizardState.recipient.cisUuid).toBe(userCisUuid);
+      expect(wizardState.recipient.email).toBe(email);
+      expect(wizardState.recipient.organizationId).toBe(orgId);
+    });
 
-  //it('wizards should visit each state', function () {
-  //  _.forEach([controller.wizardWithPlaces(), controller.wizardWithoutPlaces()], function (wizard) {
-  //    var visitedStates = {};
-  //    _.map(Object.keys(wizard.wizardState), function (s) {
-  //      visitedStates[s] = false;
-  //    });
-  //    visitState(wizard.currentStateName, wizard.wizardState, visitedStates);
-  //    _.forEach(visitedStates, function (visited, state) {
-  //      expect(visited).toBe(true, state);
-  //    });
-  //  });
-  //});
+    it('should set the wizardState with correct fields for the wizard if places toggle is off', function () {
+      controller.showPlaces = false;
+      controller.startAddDeviceFlow();
+      $scope.$apply();
+      expect($state.go).toHaveBeenCalled();
+      var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
+      expect(wizardState.title).toBe('addDeviceWizard.newDevice');
+      expect(wizardState.function).toBe('addDevice');
+      expect(wizardState.showPlaces).toBe(false);
+      expect(wizardState.showDarling).toBe(showDarling);
+      expect(wizardState.isEntitledToHuron).toBe(isEntitledToHuron);
+      expect(wizardState.isEntitledToRoomSystem).toBe(isEntitledToRoomSystem);
+      expect(wizardState.account).toBeUndefined();
+      expect(wizardState.recipient.displayName).toBe(displayName);
+      expect(wizardState.recipient.firstName).toBe(firstName);
+      expect(wizardState.recipient.cisUuid).toBe(userCisUuid);
+      expect(wizardState.recipient.email).toBe(email);
+      expect(wizardState.recipient.organizationId).toBe(orgId);
+    });
+  });
 });

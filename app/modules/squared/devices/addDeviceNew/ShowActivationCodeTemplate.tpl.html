@@ -1,26 +1,26 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="$dismiss()">
   </button>
-  <h3 class="modal-title" translate="{{showActivationCode.wizardData.title}}"></h3>
+  <h3 class="modal-title" translate="{{showActivationCode.title}}"></h3>
 </div>
 <div class="modal-body">
-  <span class="badge success" ng-show="showActivationCode.wizardData.code.isUsed" translate="addDeviceWizard.showActivationCode.codeIsUsed"></span>
+  <span class="badge success" ng-show="showActivationCode.codeIsUsed" translate="addDeviceWizard.showActivationCode.codeIsUsed"></span>
   <div>
     <div class="device-wizard view-activation-code" id="printActivationCode" print-element-margin="3rem 3rem">
       <h4 translate="addDeviceWizard.showActivationCode.activationCode"></h4>
       <p class="wizardDescription">
-        <span ng-if="showActivationCode.wizardData.deviceType==='huron'"
+        <span ng-if="showActivationCode.account.deviceType==='huron'"
             translate="addDeviceWizard.showActivationCode.plugInDeskPhone"
-            translate-values="{ belongsTo: showActivationCode.wizardData.deviceName }"></span>
-        <span ng-if="showActivationCode.wizardData.deviceType!=='huron'"
+            translate-values="{ belongsTo: showActivationCode.account.name }"></span>
+        <span ng-if="showActivationCode.account.deviceType!=='huron'"
               translate="addDeviceWizard.showActivationCode.plugInRoomSystem"
-              translate-values="{ belongsTo: showActivationCode.wizardData.deviceName }"></span>
+              translate-values="{ belongsTo: showActivationCode.account.name }"></span>
         <br>
-        <span ng-if="showActivationCode.wizardData.accountType === 'personal'"
+        <span ng-if="showActivationCode.account.type === 'personal'"
               translate="addDeviceWizard.showActivationCode.onceActivePersonalDevice"></span>
-        <span ng-if="showActivationCode.wizardData.accountType !== 'personal' && showActivationCode.wizardData.showPlaces"
+        <span ng-if="showActivationCode.account.type !== 'personal' && showActivationCode.showPlaces"
               translate="addDeviceWizard.showActivationCode.onceActiveSharedDevice"></span>
-        <span ng-if="showActivationCode.wizardData.accountType !== 'personal' && !showActivationCode.wizardData.showPlaces"
+        <span ng-if="showActivationCode.account.type !== 'personal' && !showActivationCode.showPlaces"
               translate="addDeviceWizard.showActivationCode.onceActiveSharedDeviceNoPlaces"></span>
       </p>
       <div class="qrCodeSection" ng-if="showActivationCode.isLoading">
@@ -64,7 +64,7 @@
           <div class="sendEmailForm">
             <div class="selectedAddress">
               <div class="spacingBeforeSearch"></div>
-              <label class="cs-input__label" for="userInput">{{showActivationCode.selectedUser}}</label>
+              <label class="cs-input__label" for="userInput">{{showActivationCode.selectedUser.nameWithEmail}}</label>
               <a class="sendMailArrow" ng-click="showActivationCode.sendActivationCodeEmail()"><i
                 class="icon icon-send-email"></i></a>
             </div>

@@ -36,6 +36,12 @@
         vm.hasMediaFeatureToggle = reply;
       });
 
+    vm.hasHDSFeatureToggle = false;
+    FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity)
+      .then(function (reply) {
+        vm.hasHDSFeatureToggle = reply;
+      });
+
     // for smaller screens where the notifications are on top, the layout needs to resize after the notifications are loaded
     function resizeNotifications() {
       CardUtils.resize(0, '.fourth.cs-card-layout');
@@ -48,8 +54,13 @@
         vm.notifications.push(OverviewNotificationFactory.createSetupNotification());
         resizeNotifications();
       }
+
       Orgservice.getHybridServiceAcknowledged().then(function (response) {
         if (response.status === 200) {
+           //TODO: Display HDS notification based on feagure toggle only for now
+          if (vm.hasHDSFeatureToggle) {
+            vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
+          }
           _.forEach(response.data.items, function (item) {
             if (!item.acknowledged) {
               if (item.id === Config.entitlements.fusion_cal) {
@@ -61,6 +72,10 @@
               } else if (item.id === Config.entitlements.mediafusion && vm.hasMediaFeatureToggle) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
               }
+              //TODO: Switch to using HDS entitlements when are ready in FMS
+              //} else if (item.id === Config.entitlements.hds && vm.hasHDSFeatureToggle) {
+              //  vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
+              //}
             }
           });
           resizeNotifications();
@@ -172,7 +187,10 @@
       });
     }
 
-    forwardEvent('licenseEventHandler', Authinfo.getLicenses());
+    FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
+      forwardEvent('licenseEventHandler', Authinfo.getLicenses(), pstnEnabled);
+    });
+
 
     vm.statusPageUrl = UrlConfig.getStatusPageUrl();
 

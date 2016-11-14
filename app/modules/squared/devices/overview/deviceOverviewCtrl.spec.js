@@ -1,8 +1,9 @@
 'use strict';
 
 describe('Controller: DeviceOverviewCtrl', function () {
-  var $scope, $controller, controller, $httpBackend;
-  var $q, CsdmConfigService, CsdmDeviceService, CsdmCodeService, Authinfo, Notification, RemoteSupportModal, HuronConfig;
+  var $scope, $controller, $state, controller, $httpBackend;
+  var $q, CsdmConfigService, CsdmDeviceService, CsdmCodeService, CsdmDataModelService, Authinfo, Notification;
+  var RemoteSupportModal, HuronConfig, WizardFactory, FeatureToggleService, Userservice;
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
@@ -12,19 +13,26 @@ describe('Controller: DeviceOverviewCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _CsdmDeviceService_, _CsdmCodeService_, _Authinfo_, _Notification_, _RemoteSupportModal_, _HuronConfig_) {
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _CsdmDeviceService_,
+                        _CsdmCodeService_, _CsdmDataModelService_, _Authinfo_, _Notification_, _RemoteSupportModal_,
+                        _HuronConfig_, _WizardFactory_, _FeatureToggleService_, _Userservice_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
+    $state = {};
+    FeatureToggleService = _FeatureToggleService_;
+    Userservice = _Userservice_;
 
     CsdmConfigService = _CsdmConfigService_;
     CsdmDeviceService = _CsdmDeviceService_;
     CsdmCodeService = _CsdmCodeService_;
+    CsdmDataModelService = _CsdmDataModelService_;
     Authinfo = _Authinfo_;
     Notification = _Notification_;
     RemoteSupportModal = _RemoteSupportModal_;
     HuronConfig = _HuronConfig_;
+    WizardFactory = _WizardFactory_;
   }
 
   function initSpies() {
@@ -50,7 +58,10 @@ describe('Controller: DeviceOverviewCtrl', function () {
     controller = $controller('DeviceOverviewCtrl', {
       $scope: $scope,
       channels: {},
-      $stateParams: $stateParams
+      $stateParams: $stateParams,
+      $state: $state,
+      Userservice: Userservice,
+      FeatureToggleService: FeatureToggleService
     });
     $scope.$apply();
   }
@@ -230,6 +241,62 @@ describe('Controller: DeviceOverviewCtrl', function () {
       expect(controller.addTag).toHaveBeenCalled();
     });
 
+  });
+
+  describe('resetCode', function () {
+    var showPlaces;
+    var currentDevice;
+    var deviceName;
+    var displayName;
+    var email;
+    var userCisUuid;
+    var orgId;
+    var wizard = {};
+
+    beforeEach(function () {
+      showPlaces = true;
+      deviceName = 'deviceName';
+      displayName = 'displayName';
+      email = 'email@address.com';
+      userCisUuid = 'userCisUuid';
+      orgId = 'orgId';
+      currentDevice = {
+        'displayName': deviceName
+      };
+      controller.currentDevice = currentDevice;
+      controller.showPlaces = showPlaces;
+      controller.adminDisplayName = displayName;
+      spyOn(Authinfo, 'getUserId').and.returnValue(userCisUuid);
+      spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(email);
+      spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
+      spyOn(CsdmDataModelService, 'deleteItem').and.returnValue($q.when());
+      spyOn(WizardFactory, 'create').and.returnValue(wizard);
+      $state.go = function () {};
+      spyOn($state, 'go');
+      $state.sidepanel = {};
+      $state.sidepanel.close = function () {};
+      spyOn($state.sidepanel, 'close');
+    });
+
+    it('should supply ShowActivationCodeCtrl with all the prerequisites', function () {
+      controller.resetCode();
+      $scope.$apply();
+      expect(CsdmDataModelService.deleteItem).toHaveBeenCalledWith(currentDevice);
+      expect(WizardFactory.create).toHaveBeenCalled();
+      var wizardState = WizardFactory.create.calls.mostRecent().args[0].data;
+      expect(wizardState.title).toBe('addDeviceWizard.newCode');
+      expect(wizardState.showPlaces).toBe(true);
+      expect(wizardState.account.deviceType).toBe('cloudberry');
+      expect(wizardState.account.type).toBe('shared');
+      expect(wizardState.account.name).toBe(deviceName);
+      expect(wizardState.recipient.displayName).toBe(displayName);
+      expect(wizardState.recipient.cisUuid).toBe(userCisUuid);
+      expect(wizardState.account.cisUuid).toBeUndefined();
+      expect(wizardState.recipient.email).toBe(email);
+      expect(wizardState.recipient.organizationId).toBe(orgId);
+      expect($state.go).toHaveBeenCalledWith('addDeviceFlow.showActivationCode', { wizard: wizard });
+      expect($state.sidepanel.close).toHaveBeenCalled();
+    });
   });
 });
 

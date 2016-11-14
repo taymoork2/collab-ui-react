@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmPlaceService($window, $http, Authinfo, CsdmConfigService, CsdmConverter, FeatureToggleService, $q) {
+  function CsdmPlaceService($http, Authinfo, CsdmConfigService, CsdmConverter, FeatureToggleService, $q) {
 
     var csdmPlacesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/places/';
 
@@ -11,7 +11,7 @@
     }
 
     function getPlacesList() {
-      return placesFeatureIsEnabled()
+      return FeatureToggleService.csdmPlacesGetStatus()
         .then(function (res) {
           if (res) {
             return $http.get(csdmPlacesUrl + "?shallow=true&type=all")
@@ -22,14 +22,6 @@
             return $q.reject('feature not enabled');
           }
         });
-    }
-
-    function placesFeatureIsEnabled() {
-      if ($window.location.search.indexOf("enablePlaces=true") > -1) {
-        return $q.when(true);
-      } else {
-        return FeatureToggleService.supports(FeatureToggleService.features.csdmPlaces);
-      }
     }
 
     function updateItemName(place, name) {
@@ -70,7 +62,6 @@
     }
 
     return {
-      placesFeatureIsEnabled: placesFeatureIsEnabled,
       deletePlace: deletePlace,
       deleteItem: deletePlace,
       fetchItem: fetchItem,

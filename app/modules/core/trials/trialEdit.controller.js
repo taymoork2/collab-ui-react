@@ -442,7 +442,7 @@
           vm.showRoomSystems = true;
           vm.roomSystemTrial.enabled = vm.preset.roomSystems;
           vm.sparkBoardTrial.enabled = vm.preset.sparkBoard;
-          vm.webexTrial.enabled = results.ftWebex && vm.preset.webex;
+          vm.webexTrial.enabled = vm.preset.webex;
           vm.meetingTrial.enabled = vm.preset.meeting;
           // TODO: we enable globally by defaulting to 'true' here, but will revisit and refactor codepaths in a subsequent PR
           vm.showWebex = true;
@@ -628,16 +628,16 @@
 
       return TrialService.editTrial(custId, trialId)
         .catch(function (response) {
-          vm.loading = false;
-          Notification.error(response.data.message);
-          return $q.reject();
+          Notification.errorResponse(response, 'trialModal.editError', {
+            customerName: vm.details.customerName
+          });
+          return $q.reject(response);
         })
         .then(function (response) {
           vm.customerOrgId = response.data.customerOrgId;
           if (vm.callTrial.enabled && !vm.preset.call) {
             return HuronCustomer.create(response.data.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
-                vm.loading = false;
                 Notification.errorResponse(response, 'trialModal.squareducError');
                 return $q.reject(response);
               }).then(function () {
@@ -651,13 +651,11 @@
           if (vm.preset.context !== vm.contextTrial.enabled) {
             if (vm.contextTrial.enabled) {
               return TrialContextService.addService(custId).catch(function (response) {
-                vm.loading = false;
                 Notification.errorResponse(response, 'trialModal.editTrialContextServiceEnableError');
                 return $q.reject(response);
               });
             } else {
               return TrialContextService.removeService(custId).catch(function (response) {
-                vm.loading = false;
                 Notification.errorResponse(response, 'trialModal.editTrialContextServiceDisableError');
                 return $q.reject(response);
               });
@@ -665,13 +663,12 @@
           }
         })
         .then(function () {
-          vm.loading = false;
           _.assign($stateParams.currentTrial, vm.currentTrial);
           Notification.success('trialModal.editSuccess', {
             customerName: vm.currentTrial.customerName
           });
 
-          if (callback) {
+          if (_.isFunction(callback)) {
             return callback(vm.customerOrgId)
               .catch(_.noop); //don't throw an error
           }
@@ -682,6 +679,9 @@
           } else {
             $state.modal.close();
           }
+        })
+        .finally(function () {
+          vm.loading = false;
         });
     }
 
