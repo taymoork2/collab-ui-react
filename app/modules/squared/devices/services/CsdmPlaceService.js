@@ -47,7 +47,7 @@
         name: name,
         directoryNumber: directoryNumber,
         externalNumber: externalNumber,
-        entitlements: entitlements,
+        entitlements: entitlements || ['webex-squared'],
         machineType: 'lyra_space'
       }).then(function (res) {
         var convertedPlace = CsdmConverter.convertPlace(res.data);
