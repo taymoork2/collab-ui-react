@@ -46,6 +46,10 @@
     vm.freeOrPaidServices = [];
     vm.trialActions = [];
 
+    vm._helpers = {
+      canUpdateLicensesForSelf: canUpdateLicensesForSelf,
+      updateUsers: updateUsers
+    };
 
     // TODO:  atlasCustomerListUpdate toggle is globally set to true. Needs refactoring to remove unused code
     vm.newCustomerViewToggle = newCustomerViewToggle;
@@ -195,27 +199,33 @@
       if (vm.isPartnerAdmin) {
         promise = PartnerService.modifyManagedOrgs(vm.customerOrgId);
       }
-      promise.then(function () {
-        if (licIds.length > 0) {
-          Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop);
-          openCustomerPortal();
-        } else {
-          AccountOrgService.getAccount(vm.customerOrgId).then(function (response) {
-            var accountsLength = _.get(response, 'data.accounts.length');
-            if (accountsLength) {
-              var updateUsersList = [];
-              for (var i = 0; i < accountsLength; i++) {
-                var account = response.data.accounts[i];
-                var lics = account.licenses;
-                var licIds = collectLicenseIdsForWebexSites(lics);
-                updateUsersList.push(Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop));
-              }
-              $q.all(updateUsersList).then(openCustomerPortal);
-            } else {
-              openCustomerPortal();
-            }
-          });
+      return promise.then(function () {
+        // non-admin users (e.g. sales admins) should not try to update their own licenses, but
+        // instead launch the portal immediately
+        if (!vm._helpers.canUpdateLicensesForSelf()) {
+          return openCustomerPortal();
         }
+
+        if (licIds.length > 0) {
+          return vm._helpers.updateUsers([emailObj], licIds).then(openCustomerPortal);
+        }
+
+        AccountOrgService.getAccount(vm.customerOrgId).then(function (response) {
+          var accountsLength = _.get(response, 'data.accounts.length', 0);
+          if (!accountsLength) {
+            return openCustomerPortal();
+          }
+
+          var updateUsersList = [];
+          for (var i = 0; i < accountsLength; i++) {
+            var account = response.data.accounts[i];
+            var lics = account.licenses;
+            var licIds = collectLicenseIdsForWebexSites(lics);
+            updateUsersList.push(vm._helpers.updateUsers([emailObj], licIds));
+          }
+
+          return $q.all(updateUsersList).then(openCustomerPortal);
+        });
       })
       .catch(function (response) {
         Notification.errorWithTrackingId(response, 'customerPage.launchCustomerPortalError');
@@ -223,8 +233,23 @@
       });
     }
 
+    function canUpdateLicensesForSelf() {
+      return Authinfo.isAdmin();
+    }
+
+    // TODO: 'Userservice.updateUsers' needs to be heavily re-worked, so we shim the logic we need
+    //   to reject as-needed here instead to expedite the fix for ATLAS-1465.
+    function updateUsers(userInfoList, licenses) {
+      if (!vm._helpers.canUpdateLicensesForSelf()) {
+        Notification.error('customerPage.updateLicensesAuthError');
+        return $q.reject();
+      }
+
+      return Userservice.updateUsers(userInfoList, licenses, null, 'updateUserLicense', _.noop);
+    }
+
     function openCustomerPortal() {
-      $window.open($state.href('login_swap', {
+      return $window.open($state.href('login_swap', {
         customerOrgId: vm.customerOrgId,
         customerOrgName: vm.customerName
       }));
