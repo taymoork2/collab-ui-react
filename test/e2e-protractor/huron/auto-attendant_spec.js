@@ -196,7 +196,7 @@ describe('Huron Auto Attendant', function () {
       autoattendant.scrollIntoView(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
       utils.click(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
       utils.click(autoattendant.phoneMenuAction.first());
-      autoattendant.scrollIntoView(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first());
+      autoattendant.scrollIntoView(autoattendant.phoneMenuActionOptions.all(by.linkText("Repeat this Menu")).first());
       utils.click(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first());
 
     });
@@ -345,6 +345,26 @@ describe('Huron Auto Attendant', function () {
 
     }, 120000);
 
+    it('should add Caller Input via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      autoattendant.scrollIntoView(autoattendant.addStepLast);
+      utils.click(autoattendant.addStepLast);
+      utils.expectIsDisplayed(autoattendant.newStep);
+      utils.click(autoattendant.newStepMenu);
+
+      // 4th/last menu option is Route Call
+      utils.click(autoattendant.newStepCallerInput);
+      utils.wait(autoattendant.callerInputFirst, 12000);
+      autoattendant.scrollIntoView(autoattendant.callerInputFirst);
+      utils.click(autoattendant.callerInputGetDigits);
+      autoattendant.scrollIntoView(autoattendant.callerInputFirst);
+      utils.click(autoattendant.callerInputAddAction);
+      autoattendant.scrollIntoView(autoattendant.callerInputFirst);
+      utils.sendKeys(autoattendant.callerInputTextFirst, "Auto Attendant");
+      utils.click(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+
+    });
+
     it('should add Route Call via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       // We are depending on menu order for this test, so if the Add New Step menu gets new steps or gets
@@ -473,8 +493,9 @@ describe('Huron Auto Attendant', function () {
       utils.wait(autoattendant.toggleHolidays, 12000);
       utils.click(autoattendant.toggleHolidays);
       utils.click(autoattendant.addholiday);
-      utils.sendKeys(autoattendant.recurAnnually, 'Recur Annually');
-      utils.sendKeys(autoattendant.exactDate, 'Exact Date');
+      utils.click(autoattendant.recurAnnually);
+      utils.click(autoattendant.exactDate);
+      //utils.sendKeys(autoattendant.exactDate, 'Exact Date');
       utils.sendKeys(autoattendant.holidayName2, 'Some Holiday');
       utils.expectIsDisabled(autoattendant.modalsave);
       utils.click(autoattendant.selectEvery);
@@ -558,7 +579,7 @@ describe('Huron Auto Attendant', function () {
       autoattendant.scrollIntoView(autoattendant.sayMessageAll.first());
 
       // Verify we have 3 Say Messages (2 sayMessage and PhoneMenu's) already:
-      utils.expectCount(autoattendant.sayMessageAll, 4);
+      utils.expectCount(autoattendant.sayMessageAll, 5);
 
       // Verify two phone messages
 

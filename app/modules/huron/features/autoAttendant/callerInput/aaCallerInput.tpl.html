@@ -1,10 +1,10 @@
-<div id ="callerInput" class="aa-call-input-message-panel">
+<div id="callerInput{{ schedule + index }}" class="aa-call-input-message-panel">
   <div class="aa-flex-row">
     <div class="large-12 small-12 columns aa-name-variable">
       <input cs-input type="text" id="callerInputName{{ schedule + index }}" placeholder="{{ :: 'autoAttendant.callerInputNamePlaceHolder' | translate }}" ng-model="aaCallerInput.nameInput" cs-input-group-size="medium-12" cs-input-label="{{ :: 'autoAttendant.callerInputLabel' | translate }}">
     </div>
   </div>
-  <label class="add-name-input-help-desc" translate="autoAttendant.callerNameInputHelpText"></label> 
+  <label class="add-name-input-help-desc" translate="autoAttendant.callerNameInputHelpText"></label>
   <div class="row">
     <div class="large-6 small-12 columns aa-caller-input-message-select-list">
       <label for="languageSelect{{ schedule + index }}" translate="common.language"></label>
@@ -36,7 +36,7 @@
               </cs-select>
             </div>
             <div class="small-9 columns">
-              <input cs-input type="text" id="callerInput" placeholder="{{ :: 'autoAttendant.callerInputValue' | translate }}" ng-model="keyAction.value" class="aa-pm-action-input"> 
+              <input cs-input type="text" name="callerInput" placeholder="{{ :: 'autoAttendant.callerInputValue' | translate }}" ng-model="keyAction.value" class="aa-pm-action-input">
               </input>
             </div>
             <div class="small-1 columns">
@@ -46,7 +46,7 @@
         </div>
         <div class="row" ng-if="aaCallerInput.inputActions.length < 12">
           <a class="aa-pm-add-text" ng-click="aaCallerInput.addKeyAction()">
-            <i name="aa-phone-menu-add-action" class="icon icon-plus-circle"></i>{{(aaPhoneMenu.inputActions.length === 0 ?  'autoAttendant.phoneMenuAddDigit' : 'autoAttendant.phoneMenuAnotherDigit') | translate }}</a>
+            <i name="aa-caller-input-add-action" class="icon icon-plus-circle"></i>{{(aaPhoneMenu.inputActions.length === 0 ?  'autoAttendant.phoneMenuAddDigit' : 'autoAttendant.phoneMenuAnotherDigit') | translate }}</a>
         </div>
       </div>
     </div>
