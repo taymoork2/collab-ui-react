@@ -21,7 +21,7 @@
 
     vm.headerTabs = [{
       title: $translate.instant('reportsPage.sparkReports'),
-      state: 'reports'
+      state: 'reports.spark'
     }, {
       title: $translate.instant('reportsPage.usageReports.usageReportMenuTitle'),
       state: 'reports.device-usage'
