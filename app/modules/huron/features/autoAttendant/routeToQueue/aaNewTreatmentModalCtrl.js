@@ -9,6 +9,10 @@
   function AANewTreatmentModalCtrl($modalInstance, $translate, $scope, AALanguageService, AACommonService, AutoAttendantCeMenuModelService, AAUiModelService, aa_schedule, aa_menu_id, aa_index, aa_key_index, aa_from_route_call) {
     var vm = this;
 
+    var properties = {
+      LABEL: "label"
+    };
+
     vm.actionEntry = {};
 
     vm.showLanguageAndVoiceOptions = false;
@@ -70,6 +74,8 @@
     vm.languageOptions = AALanguageService.getLanguageOptions();
     vm.voiceOptions = AALanguageService.getVoiceOptions();
 
+    vm.setVoiceOptions = setVoiceOptions;
+
     vm.periodicMinutes = [];
     vm.periodicSeconds = [];
     vm.changedPeriodicMinValue = changedPeriodicMinValue;
@@ -112,6 +118,23 @@
 
     function isDisabled() {
       return vm.periodicMinute.label == '5';
+    }
+
+    function setVoiceOptions() {
+      vm.voiceOptions = _.sortBy(AALanguageService.getVoiceOptions(vm.languageOption), properties.LABEL);
+      setVoiceOption();
+    }
+
+    function setVoiceOption() {
+      if (vm.voiceBackup && _.find(vm.voiceOptions, {
+        "value": vm.voiceBackup.value
+      })) {
+        vm.voiceOption = vm.voiceBackup;
+      } else if (_.find(vm.voiceOptions, AALanguageService.getVoiceOption())) {
+        vm.voiceOption = AALanguageService.getVoiceOption();
+      } else {
+        vm.voiceOption = vm.voiceOptions[0];
+      }
     }
 
     function populatePeriodicTime() {
@@ -226,6 +249,7 @@
       populateScope();
       setUpEntry();
       initializeView();
+      setVoiceOptions();
     }
 
     function activate() {
