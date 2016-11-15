@@ -21,10 +21,7 @@
   }
 
   .add-name-input-help-desc {
-    color: $gray-dark;
-    font-family: $brand-font-extra-light;
-    font-style: italic;
-    font-size: .75rem;
+    @extend .cs-input__help-text;
     @include vr-spacing(mt, -1);
     @include vr-spacing(ml, 0);
     @include vr-spacing(mb, 1);
