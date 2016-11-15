@@ -20,7 +20,8 @@ import {
   IMetricsData,
   IMetricsLabel,
 } from './sparkReportInterfaces';
-let Masonry: any = require('masonry-layout');
+
+import { CardUtils } from 'modules/core/cards';
 
 interface ICharts {
   active: any | null;
@@ -37,6 +38,7 @@ class SparkReportCtrl {
     private $rootScope: ng.IRootScopeService,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
+    private CardUtils: CardUtils,
     private CommonReportService,
     private SparkGraphService,
     private SparkReportService,
@@ -186,7 +188,7 @@ class SparkReportCtrl {
   };
 
   public resizeMostActive () {
-    this.resize(0);
+    this.CardUtils.resize(0);
   }
 
   private setActiveGraph(data: Array<IActiveUserData>): void {
@@ -226,7 +228,7 @@ class SparkReportCtrl {
           this.activeDropdown.disabled = !response.isActiveUsers;
         }
       }
-      this.resize(0);
+      this.CardUtils.resize(0);
     });
 
     this.SparkReportService.getMostActiveUserData(this.timeSelected).then((response: IActiveTableWrapper): void => {
@@ -492,21 +494,9 @@ class SparkReportCtrl {
       if (filter === this.ALL || filter === this.QUALITY) {
         this.displayQuality = true;
       }
-      this.resize(500);
+      this.CardUtils.resize(500);
       this.currentFilter = filter;
     }
-  }
-
-  private resize(delay: number): void {
-    this.$timeout((): void => {
-      const $cardlayout = new Masonry('.cs-card-layout', {
-        itemSelector: '.cs-card',
-        columnWidth: '.cs-card',
-        resize: true,
-        percentPosition: true,
-      });
-      $cardlayout.layout();
-    }, delay);
   }
 
   public setAllGraphs(): void {
@@ -527,7 +517,7 @@ class SparkReportCtrl {
     this.setDeviceGraph(this.DummySparkDataService.dummyDeviceData(this.timeSelected), undefined);
     this.setMediaGraph(this.DummySparkDataService.dummyMediaData(this.timeSelected));
 
-    this.resize(0);
+    this.CardUtils.resize(0);
   }
 }
 
