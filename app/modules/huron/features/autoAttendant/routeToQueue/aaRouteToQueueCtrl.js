@@ -134,17 +134,22 @@
         if (angular.isUndefined(vm.menuEntry.actions[0].queueSettings)) {
           vm.menuEntry.actions[0].queueSettings = {};
         }
-        if (angular.isUndefined(vm.menuEntry.actions[0].queueSettings.musicOnHold)) {
+        if (_.isUndefined(vm.menuEntry.actions[0].queueSettings.musicOnHold)) {
           vm.menuEntry.actions[0].queueSettings.musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
           var mohAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
           vm.menuEntry.actions[0].queueSettings.musicOnHold.addAction(mohAction);
         }
-        if (angular.isUndefined(vm.menuEntry.actions[0].queueSettings.initialAnnouncement)) {
+        if (_.isUndefined(vm.menuEntry.actions[0].queueSettings.initialAnnouncement)) {
           vm.menuEntry.actions[0].queueSettings.initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
           var iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
           vm.menuEntry.actions[0].queueSettings.initialAnnouncement.addAction(iaAction);
         }
-        if (angular.isUndefined(vm.menuEntry.actions[0].queueSettings.fallBack)) {
+        if (_.isUndefined(vm.menuEntry.actions[0].queueSettings.periodicAnnouncement)) {
+          vm.menuEntry.actions[0].queueSettings.periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var paAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
+          vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.addAction(paAction);
+        }
+        if (_.isUndefined(vm.menuEntry.actions[0].queueSettings.fallBack)) {
           vm.menuEntry.actions[0].queueSettings.fallBack = AutoAttendantCeMenuModelService.newCeMenuEntry();
           var fbMaxTime = AutoAttendantCeMenuModelService.newCeActionEntry('time', '');
           vm.menuEntry.actions[0].queueSettings.fallBack.addAction(fbMaxTime);
@@ -175,7 +180,7 @@
         }
         if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement)) {
           vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var paAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
+          paAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
           vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.addAction(paAction);
         }
         if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.fallBack)) {

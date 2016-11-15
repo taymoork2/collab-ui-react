@@ -204,7 +204,7 @@
       }
       vm.mohPlayAction = vm.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
       vm.iaAction = vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0];
-//      vm.paAction = vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0];
+      vm.paAction = vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0];
     }
 
     function populateScope() {
