@@ -532,8 +532,8 @@
     "customers": "Customers",
     "customerSelect": "Select a customer",
     "usageReports": {
-      "usageReportTitle": "Reports",
-      "usageReportMenuTitle": "Room Device Usage Reports",
+      "usageReportTitle": "Room Device Usage Reports",
+      "pageTitle": "Reports",
       "peakHour": "Peak Hour",
       "distribution": "Distribution",
       "timeline": "Timeline",
@@ -559,8 +559,8 @@
       "last3Months": "Monthly Last 3 Months",
       "deviceOptions": {
         "all": "All",
-        "roomSystems": "DX, MX, and SX Series",
-        "sparkBoard": "Spark Board Series"
+        "roomSystems": "DX, MX, and SX Devices",
+        "sparkBoard": "Spark Board"
       }
     }
   },
