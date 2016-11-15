@@ -12,6 +12,7 @@
     vm.localizedAddEmailWatermark = $translate.instant('hercules.settings.emailNotificationsWatermark');
     vm.localizedServiceName = $translate.instant('hercules.serviceNames.squared-fusion-cal');
     vm.localizedConnectorName = $translate.instant('hercules.connectorNames.squared-fusion-cal');
+    vm.localizedGoogleServiceAccountHelpText = $translate.instant('hercules.settings.googleCalendar.serviceAccountHelpText');
     vm.hasGoogleCalendarFeatureToggle = hasGoogleCalendarFeatureToggle;
 
     vm.general = {
@@ -116,7 +117,6 @@
       vm.uploadGooglePrivateKey = function () {
         $modal.open({
           templateUrl: 'modules/hercules/service-settings/upload-google-calendar-key.html',
-          type: 'small',
           controller: 'UploadGoogleCalendarKeyController',
           controllerAs: 'uploadKey',
           resolve: {
@@ -124,7 +124,10 @@
               return vm.googleServiceAccount;
             }
           }
-        });
+        })
+          .result.then(function (newServiceAccount) {
+            vm.googleServiceAccount = newServiceAccount;
+          });
       };
 
     }
