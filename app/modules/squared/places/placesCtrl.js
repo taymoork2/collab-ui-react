@@ -171,7 +171,7 @@
               },
               'addDeviceFlow.chooseDeviceType': {
                 nextOptions: {
-                  cloudberry: vm.showPstn && vm.showPlaces ? 'addDeviceFlow.editServices' : 'addDeviceFlow.showActivationCode',
+                  cloudberry: vm.showPstn ? 'addDeviceFlow.editServices' : 'addDeviceFlow.showActivationCode',
                   huron: 'addDeviceFlow.addLines'
                 }
               },
