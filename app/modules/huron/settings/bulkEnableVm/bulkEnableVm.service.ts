@@ -30,7 +30,7 @@ export class BulkEnableVmService {
     private UserListService,
     private UserServiceCommon,
     private UserServiceCommonV2,
-    private $q,
+    private $q: ng.IQService,
   ) {
   }
 
@@ -74,7 +74,7 @@ export class BulkEnableVmService {
     return this.$q.when()
       .then(() => { return this._getUserSitetoSiteNumber(_userId); })
       .catch(error => {
-        if (() => { return this._doRetry(_numTries, error); }) {
+        if (this._doRetry(_numTries, error)) {
           return this.getUserSitetoSiteNumberRetry(_userId, _numTries - 1);
         }
         return this.$q.reject(error);

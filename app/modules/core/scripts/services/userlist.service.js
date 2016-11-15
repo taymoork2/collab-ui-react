@@ -4,6 +4,7 @@
   /* global Uint8Array:false */
 
   module.exports = angular.module('core.userlist', [
+    require('angular-resource'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/scripts/services/log'),
     require('modules/core/scripts/services/utils'),
