@@ -548,7 +548,7 @@
   }
 
   function transformEnvelope(response) {
-    var responseObj = angular.fromJson(response);
+    var responseObj = JSON.parse(response);
     return _.get(responseObj, '[0]', responseObj);
   }
 

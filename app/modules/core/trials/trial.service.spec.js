@@ -110,7 +110,7 @@ describe('Service: Trial Service:', function () {
       it('should have offers list', function () {
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
           var offerList = ['MESSAGE', 'MEETING', 'WEBEX', 'ROOMSYSTEMS', 'CALL'];
-          var offers = angular.fromJson(data).offers;
+          var offers = JSON.parse(data).offers;
           return _.every(offerList, function (offer) {
             return _.some(offers, {
               id: offer
@@ -125,7 +125,7 @@ describe('Service: Trial Service:', function () {
 
       it('should have meeting settings', function () {
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-          var details = angular.fromJson(data).details;
+          var details = JSON.parse(data).details;
           return details.siteUrl === 'now.istomorrow.org' && details.timeZoneId === '4';
         }).respond(200);
 
@@ -143,7 +143,7 @@ describe('Service: Trial Service:', function () {
             model: 'CISCO_8865',
             quantity: 3
           }];
-          var dataJson = angular.fromJson(data);
+          var dataJson = JSON.parse(data);
           var devices = dataJson.details.devices;
           return _.some(devices, deviceList[0]) && _.some(devices, deviceList[1]) && (dataJson.details.shippingInfo.dealId == 'Enabled deal');
         }).respond(200);
@@ -173,7 +173,7 @@ describe('Service: Trial Service:', function () {
         });
         TrialService.getData();
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-          var state = angular.fromJson(data).details.shippingInfo.state;
+          var state = JSON.parse(data).details.shippingInfo.state;
           return state === 'TX';
         }).respond(200);
 
@@ -192,7 +192,7 @@ describe('Service: Trial Service:', function () {
         });
         TrialService.getData();
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-          return angular.fromJson(data).details.shippingInfo.state === 'IL';
+          return JSON.parse(data).details.shippingInfo.state === 'IL';
 
         }).respond(200);
 
@@ -209,7 +209,7 @@ describe('Service: Trial Service:', function () {
         TrialService.getData();
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
 
-          return angular.fromJson(data).details.shippingInfo.country === 'Canada';
+          return JSON.parse(data).details.shippingInfo.country === 'Canada';
         }).respond(200);
 
         TrialService.startTrial();
@@ -227,7 +227,7 @@ describe('Service: Trial Service:', function () {
         TrialService.getData();
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
 
-          return angular.fromJson(data).details.shippingInfo.country === 'Germany';
+          return JSON.parse(data).details.shippingInfo.country === 'Germany';
         }).respond(200);
 
         TrialService.startTrial();
@@ -240,7 +240,7 @@ describe('Service: Trial Service:', function () {
     describe('start trial with disabled trials', function () {
       it('should have blank offers list', function () {
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-          return angular.fromJson(data).offers.length === 0;
+          return JSON.parse(data).offers.length === 0;
         }).respond(200);
 
         TrialService.startTrial();
@@ -250,7 +250,7 @@ describe('Service: Trial Service:', function () {
 
       it('should have blank details', function () {
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-          var details = angular.fromJson(data).details;
+          var details = JSON.parse(data).details;
           return _.isEmpty(details.devices) && _.isEmpty(details.offers);
         }).respond(200);
 
@@ -270,7 +270,7 @@ describe('Service: Trial Service:', function () {
 
       it('should not have devices if call trial order page was skipped', function () {
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-          var devices = angular.fromJson(data).details.devices;
+          var devices = JSON.parse(data).details.devices;
           return _.isEmpty(devices);
         }).respond(200);
 
