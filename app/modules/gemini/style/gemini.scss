@@ -28,3 +28,50 @@
     padding-left: 3.5rem;
   }
 }
+
+.gemini-request-callbackgroup {
+  .input-icon {
+    position: relative;
+
+    .icon {
+      position: absolute;
+      top: $toast-padding;
+      left: $toast-padding;
+    }
+
+    input {
+      padding-left: $ui-padding--huge;
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
+
+  .upload-file {
+    position: relative;
+
+    .upload-file-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 2.25rem;
+      cursor: pointer;
+      opacity: 0;
+    }
+
+    .upload-file-btn {
+      color: $color-primary-base;
+    }
+  }
+
+  .tag-container {
+    .tag-country {
+      background-color: $color-primary-lighter;
+      color: $color-primary-base;
+
+      .tag-country:hover .icon {
+        color: $color-primary-darker;
+      }
+    }
+  }
+}
+

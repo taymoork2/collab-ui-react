@@ -20,6 +20,16 @@ var AutoAttendantPage = function () {
   this.mohCustomUpload = element(by.id('uploadFileRadio1'));
   this.mohDefaultUpload = element(by.id('musicOnHoldRadio1'));
 
+  this.periodicMessageTypeSelect = element(by.id('periodicAnnouncement')).element(by.css('aa-message-type [name="messageInput"]'));
+  this.periodicSayMessageOption = element(by.id('periodicAnnouncement')).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
+  this.periodicMediaUploadSelectOption = element(by.id('periodicAnnouncement')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.periodicMediaUploadInput = element(by.id('periodicAnnouncement')).element(by.css('aa-message-type [name="mediaUploadSend"]'));
+
+  this.periodicMin = element(by.linkText('0'));
+  this.periodicMinOption = element(by.id('periodicMinId')).all(by.tagName('li'));
+  this.periodicSec = element(by.linkText('45'));
+  this.periodicSecOption = element(by.id('periodicSecId')).all(by.tagName('li'));
+  
   this.searchBox = element(by.id('searchFilter'));
   this.aaTitle = element(by.tagName('aa-builder-name-edit'));
   this.autoAttendantDevLink = element(by.css('a[href*="#/hurondetails/features"]'));

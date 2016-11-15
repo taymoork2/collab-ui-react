@@ -65,7 +65,7 @@
     vm.removeFallbackDest = removeFallbackDest;
     vm.isErrorFallbackInput = isErrorFallbackInput;
     vm.fallbackSuggestionsAvailable = false;
-    vm.disableVoicemail = false;
+    vm.disableVoicemail = true;
 
     // ==================================================
     // The below methods have elevated access only to be
@@ -260,6 +260,9 @@
       vm.selectedFallbackMember = HuntGroupFallbackDataService.setFallbackMember($item);
       HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get($item, 'selectableNumber.uuid')).then(function (isVoicemailDisabled) {
         vm.disableVoicemail = isVoicemailDisabled;
+      })
+      .catch(function () {
+        vm.disableVoicemail = true;
       });
     }
 

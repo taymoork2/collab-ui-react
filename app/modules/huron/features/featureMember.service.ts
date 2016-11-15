@@ -12,10 +12,7 @@ export class FeatureMemberService {
   public getMemberPicture(memberId: string): ng.IPromise<string> {
     let scimUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + memberId;
     return this.$http.get(scimUrl, {}).then((response) => {
-      let user: any = _.get(response, 'data');
-      if (user !== undefined) {
-        return _.get(_.find(user.photos, { type: 'thumbnail' }), 'value', '');
-      }
+      return _.get(_.find(_.get(response, 'data.photos', []), { type: 'thumbnail' }), 'value', '');
     });
   }
 

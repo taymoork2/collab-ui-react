@@ -365,8 +365,6 @@
     "developmentTab": "Development",
     "organizationTab": "Manage Organizations",
     "organizationTabDesc": "Manage Organization Details, View Assigned Services, And Access Tools.",
-    "callRoutingTab": "Call Routing",
-    "callRoutingTabDesc": "Manage Call Routing Features Such As Call Park",
     "mediaOnHoldTab": "Media On Hold",
     "mediaOnHoldTabDesc": "Media On Hold Development Example",
     "metricsDetailsTab": "Media Service V2 Page",
@@ -522,7 +520,9 @@
     "careTab": "Care",
     "careTabDesc": "Cloud Contact Center",
     "saveAs": "Save As",
+    "jpg": "JPG",
     "pdf": "PDF",
+    "png": "PNG",
     "export": "Export",
     "print": "Print",
     "allCalls": "All Calls",
@@ -532,8 +532,8 @@
     "customers": "Customers",
     "customerSelect": "Select a customer",
     "usageReports": {
-      "usageReportTitle": "Reports",
-      "usageReportMenuTitle": "Room Device Usage Reports",
+      "usageReportTitle": "Room Device Usage Reports",
+      "pageTitle": "Reports",
       "peakHour": "Peak Hour",
       "distribution": "Distribution",
       "timeline": "Timeline",
@@ -559,7 +559,7 @@
       "last3Months": "Monthly Last 3 Months",
       "deviceOptions": {
         "all": "All",
-        "roomSystems": "DX, MX, and SX Systems",
+        "roomSystems": "DX, MX, and SX Devices",
         "sparkBoard": "Spark Board"
       }
     }
@@ -986,6 +986,8 @@
     "error": "Error",
     "finish": "Finish",
     "firstName": "First Name",
+    "general": "General",
+    "help": "Help",
     "id": "ID",
     "incorrectFormat": "Incorrect format",
     "invalidEmail": "This is not a valid Email Address.",
@@ -1006,6 +1008,7 @@
     "new": "New",
     "next": "Next",
     "no": "No",
+    "none": "None",
     "notAvailable": "N/A",
     "notSet": "Not set",
     "off": "Off",
@@ -1038,10 +1041,12 @@
     "unassigned": "Unassigned",
     "unknown": "Unknown",
     "update": "Update",
+    "upload": "Upload",
     "user": "User",
     "users": "Users",
     "voice": "Voice",
     "warning": "Warning",
+    "help": "Help",
     "yes": "Yes"
   },
   "notifications": {
@@ -1068,7 +1073,9 @@
     "externalHelpText": "National or International Number",
     "uriPlaceholder": "example@site.domain.com",
     "customPlaceholder": "e.g. 81095555",
-    "customHelpText": "Site-to-Site to External Site"
+    "customHelpText": "Site-to-Site to External Site",
+    "alternateCustomPlaceholder": "e.g. 456, 4567, 45678",
+    "alternateCustomHelpText": "Internal extension or custom number"
   },
   "homePage": {
     "overview": "Last 4 weeks",
@@ -1557,6 +1564,7 @@
       "squared-fusion-uc": "Call Service",
       "squared-fusion-uc.full": "Call Service Aware",
       "squared-fusion-cal": "Calendar Service",
+      "squared-fusion-gcal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
       "squared-fusion-ec": "Call Service Connect",
@@ -1691,7 +1699,7 @@
       "emailNotificationsWatermark": "Add email addresses",
       "emailAdministratorHeading": "Administrators",
       "emailAdministratorNotification": "Add email addresses to receive email notifications about service impacting alarms and software upgrades.",
-      "emailUserHeading": "Users",
+      "emailUserHeading": "Users email notifications",
       "emailUserNotification": "By default, users receive email notifications about new Calendar Service functionality, error messages, and service status. Toggle this setting off to stop sending these email notifications to users.",
       "emailNotificationsSaving": "Saving.",
       "emailNotificationsSavingSuccess": "The email subscriber list was successfully saved.",
@@ -1733,7 +1741,35 @@
         "sipDomainHeading": "SIP Destination",
         "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
-        "sipDomainExample": "For example: sipmtls.example.com"
+        "sipDomainExample": "For example: sipmtls.example.com",
+        "certificateDeleteTooltip": "Delete Certificate",
+        "noUploadedCertificate": "No certificates uploaded. Using the default trust list.",
+        "uploadedCertificates": "Uploaded Certificates:"
+      },
+      "googleCalendar": {
+        "title": "Google Calendar",
+        "serviceAccountHeader": "Service Account",
+        "serviceAccountText": "The service account used for connecting from Cisco Collaboration Cloud to your Google Calendar organization.",
+        "serviceAccountHelpText": "To change the service account, upload a new private key in the section below",
+        "privateKeyHeader": "Private Key",
+        "privateKeyText": "Upload a new private key.",
+        "deactivateHeader": "Deactivate Google Calendar",
+        "deactivateText": "Your users will no longer be able to use this service.",
+        "googleCalendarConfigWillBeWiped": "This action will delete all Google Calendar settings from Cisco Collaboration Cloud.",
+        "uploadNewPrivateKey": "Upload New Private Key",
+        "uploadNewPrivateKeyPlaceholder": "Enter service account name",
+        "serviceAccountName": "Service Account Name",
+        "uploadNewPrivateKeyExplanation": "Enter your service account name and upload the private key you downloaded from Google Developer Console.",
+        "dragAndDropKeyFileHere": "Drag and drop the file containing the private key here or",
+        "clickToBrowse": "click to browse",
+        "fileReadyForImport": "File ready for import",
+        "removeFile": "Remove file",
+        "successfullyUploadedKey": "Service account saved successfully, and private key file {{filename}} uploaded.",
+        "failedToUploadKey": "Changes not saved. The service account and/or private key file are not valid.",
+        "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status."
+      },
+      "hybridCalendarCommon": {
+        "hybridCalendarSetUp": "Hybrid Calendar setup"
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
@@ -2305,15 +2341,6 @@
     "weekOf": "Week Ending",
     "allCustomers": "All Customers"
   },
-  "callRouting": {
-    "title": "Call Routing",
-    "autoAttendantTitle": "Auto Attendant",
-    "callParkTitle": "Call Park",
-    "callPickUpTitle": "Call Pick Up",
-    "intercomGroupsTitle": "Intercom Groups",
-    "pagingGroupsTitle": "Paging Groups",
-    "huntGroupsTitle": "Hunt Groups"
-  },
   "autoAttendant": {
     "code": "AA",
     "title": "Auto Attendant",
@@ -2322,6 +2349,7 @@
     "repeatMenu": "Repeat",
     "queueSettings": "Queue Settings",
     "maxWaitTime": "Maximum Wait Time",
+    "periodicTime": "Frequency of Periodic Announcements",
     "errorReadCe": "Failed to read {{name}}: {{statusText}} ({{status}}).",
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",
@@ -2339,7 +2367,7 @@
     "builderAddNewStep": "Add New Step",
     "builderNewStep": "New Step",
     "builderNewStepHelp": "You can add as many steps to the call flow as you want.",
-    "builderNewStepInfo": "Add actions here for your Auto Attendant. Create as many as you want, and link them all together.",
+    "builderNewStepInfo": "Add actions to your Auto Attendant. Create as many as you want, link them together, and specify the sequence of actions.",
     "builderNumbers": "Numbers",
     "actionPlaceholder": "Choose Action...",
     "actionSayMessage": "Say Message",
@@ -2445,7 +2473,9 @@
   },
     "initialAnnouncement" : "Initial Announcement",
     "initialHelpText" : "This message will play for the caller upon entry into the queue.",
+     "periodicHelpText": "This message will play for the caller upon entry into the queue.",
     "fallbackLabel": "Fallback" ,
+    "periodicAnnouncement": "Periodic Announcements",
     "uploadedFile": "Upload File",
     "uploadFailed": "File upload failed, unable to connect. Please try again.",
     "dragAndDropWav": "Drag and Drop .wav file here or click to browse",
@@ -2569,6 +2599,7 @@
   "callPark": {
     "code": "CP",
     "title": "Call Park",
+    "settingsTitle": "Call Park Settings",
     "modalDescription": "Call parks allow call recipients to place a call on hold so that it can be retrieved from another device.",
     "newCallPark": "Create Call Park",
     "callParkInformation": "Call Park information",
@@ -2593,8 +2624,7 @@
     "selectParkHint": "Number ranges are used for interdepartmental transfers while single park numbers are for individual use.",
     "namePlaceholder": "Name the Call Park",
     "numberPlaceholder": "Enter Number",
-    "memberPlaceholder": "Select Call Park Members",
-    "memberHint": "These users or or places' devices will be part of this call park.",
+    "memberHint": "These users or places' devices will be part of this call park.",
     "removeMem": "Remove Member",
     "nameHint": "The call park name appears on the call park members' devices.",
     "singleNumberPlaceholder": "Enter Single Number",
@@ -2626,7 +2656,8 @@
     "secondRange": "Ending #",
     "singleRange": "Single Park Number",
     "saveLabel": "Do you want to save your changes?",
-    "memberFetchFailure": "Unable to get members."
+    "memberFetchFailure": "Unable to get members.",
+    "membersTitle": "Members"
   },
   "callPickup": {
     "title": "Call Pickup",
@@ -3068,13 +3099,14 @@
       "deskPhones": "Personal and Shared Desk Phones &nbsp;<span class='small-hint'>(Any mix up to {{max}} devices)</span>",
       "sx10": "SX10",
       "dx80": "DX80",
-      "mx300": "MX300",
+      "mx300": "MX300 (Limit {{max}})",
       "phone8865": "8865",
       "phone8845": "8845",
       "phone8841": "8841",
       "phone7841": "7841",
       "quantity": "Quantity",
       "invalidQuantity": "Quantity must be between 1 and {{max}}",
+      "invalidQuantityMx300": "Quantity must be {{qty}}",
       "invalidTotalQuantity": "Entire order must have between 1 and {{max}} devices",
       "invalidRoomSystemsQuantity": "Limited to 3 Spark Room Devices",
       "invalidPhonesQuantity": "Limited to {{max}} Personal & Shared Desk Phones",
@@ -3350,7 +3382,8 @@
   },
   "internationalDialing": {
     "internationalDialing": "International Dialing",
-    "internationalDialingDesc": "Users inherit this setting by default.  Exception can be made at the individual user's settings."
+    "internationalDialingDesc": "Users inherit this setting by default. Exception can be made at the individual user's settings.",
+    "internationalDialingPlacesDesc": "Users and Places with Spark Call inherit this setting by default. Exception can be made at the individual user's or place's settings."
   },
   "huronSettings": {
     "saveSuccess": "Settings successfully saved.",
@@ -3507,14 +3540,16 @@
       "assignPhoneNumberInstructions": "Choose from the available phone numbers and extensions in the drop-down lists. These will become the primary line which you can use to reach this place.",
       "linesSaved": "Line configuration saved successfully",
       "placeError": "Add Place failed.",
-      "placeEditError": "Edit Place failed"
+      "placeEditError": "Edit Place failed",
+      "placeEditNoChanges": "No changes to save",
+      "placeNotFound": "Place not found, try finding it again in the list"
     },
     "editServices": {
       "whichServices": "Which service is needed in this place?",
       "sparkOnly": "Spark only (default)",
       "sparkOnlyHelp": "Calling to/from this place will only work through Cisco Spark or using SIP addresses.",
-      "sparkCall": "Spark Call (phone numbers)",
-      "sparkCallHelp": "If you have set up your organization's PSTN provider, this place will be able to call to/from landlines and mobile phones.",
+      "sparkCall": "Spark + Spark Call (phone numbers)",
+      "sparkCallHelp": "In addition to calling with Spark and SIP addresses, if you have set up your organization’s PSTN provider this place will be able to call to/from landlines and mobile phones.",
       "servicesSaved": "Services updated successfully"
     },
     "showActivationCode": {
@@ -4782,7 +4817,7 @@
     "noneFound": "No Places Found",
     "actionHeader": "Actions",
     "servicesHeader": "Services",
-    "sparkCall": "Spark Call",
+    "sparkCall": "Spark + Spark Call",
     "sparkOnly": "Spark only",
     "placeAdd": "Add Place",
     "placesDefinition": "A place represents a physical location containing a device not owned by a specific user, such as a meeting room with a room device or a reception with shared phones.",
@@ -5769,7 +5804,44 @@
     },
     "msg": {
       "splsResponseErr": "No partner organization found, please contact ccaportal@cisco.com for help."
-    }
+    },
+    "cbgTitle": "Callback Groups",
+    "cbgs": {
+      "title": "Callback Groups",
+      "csvFilename": "exported_callbackGroup.csv",
+      "field": {
+        "sites": "Site URL",
+        "status_": "Status",
+        "cbgName": "Callback Group Name",
+        "totalSites": "Sites Assigned",
+        "alias": "Partner CB Group Name",
+        "status": {
+          "E": "Edit",
+          "L": "Failed",
+          "S": "Submit",
+          "C": "Cancel",
+          "D": "Delete",
+          "A": "Approved",
+          "R": "Rejected",
+          "F": "Finish_edit",
+          "P": "Provisioned"
+        }
+      },
+      "request": {
+        "button": "Request",
+        "modalTitle": "Request Callback Group",
+        "groupName": "Naming",
+        "groupCountries": "Countries",
+        "labelCustomer": "Customer Name",
+        "customerPlaceholder": "Who is this callback group for?",
+        "labelCustomerAttr": "Partner CB Group Name",
+        "customerAttrPlaceholder": "Enter a shorter name for quick refernce",
+        "labelCountries": "Select Country/Regions",
+        "countriesPlaceholder": "Search to add country"
+      },
+      "placeholder-text": "All"
+    },
+    "tdTitle": "Telephony Domain"
   },
   "timeZones": {
     "Etc/GMT+12": "Etc/GMT+12",
@@ -6224,6 +6296,7 @@
     "updateComponentTipsLink": "update a component's status.",
     "useDerivedStatus": "Use Derived Status",
     "overrideStatus": "Override this status",
+    "deleteComponent": "Delete {{componentName}}",
     "permanentlyDeleteComponent": "Permanently DELETE {{componentName}}",
     "newService": "New Service",
     "serviceName": "Service Name",
@@ -6241,7 +6314,7 @@
         "noComponentHeading": "No Component Added",
         "noComponentText": "Click the ADD botton to get started."
       },
-      "addComponentTitle": "ADD A COMPONENT",
+      "addComponentTitle": "Add A Component",
       "updateComponentTitle": "Update A Component",
       "componentName": "Component Name",
       "componentDesc": "Description (optional)",
@@ -6249,12 +6322,18 @@
       "componentGroup": "Component Group",
       "nameCannotBeBlank": "Name can't be blank",
       "createNewComponentGroup": "Create new component group",
-      "createComponent": "Create Component",
+      "addComponent": "Add Component",
       "updateComponent": "Update Component",
       "componentInfo": "Component Info",
       "selectPlaceholder": "Select or Create group",
       "groupName": "Group name",
-      "cancelCreateNewGroup": "Cancel new group creation"
+      "cancelCreateNewGroup": "Cancel new group creation",
+      "addComponentSucceed": "Component {{componentName}} under group {{componentGroupName}} add succeed.",
+      "addComponentFailed": "Component {{componentName}} add failed.",
+      "updateComponentSucceed": "Component {{componentName}} under group {{componentGroupName}} update succeed.",
+      "updateComponentFailed": "Component {{componentName}} update failed.",
+      "deleteComponentSucceed": "Component {{componentName}} delete succeed.",
+      "deleteComponentFailed":"Component {{componentName}} delete failed."
     },
     "createIncident": {
       "newIncident": "New Incident",
@@ -6266,7 +6345,7 @@
       "message": "Message",
       "messagePlaceholder": "Message",
       "viewIncident": "View Incident",
-      "newIncidentBtn": "+ NEW INCIDENT",
+      "newIncidentBtn": "New Incident",
       "noIncidentContent1": "Looks like you've got a clean record",
       "noIncidentContent2":"When you have downtime: ",
       "noIncidentContentLink": "Create your first incident",

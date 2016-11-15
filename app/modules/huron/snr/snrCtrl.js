@@ -11,7 +11,6 @@
     vm.saveSingleNumberReach = saveSingleNumberReach;
     vm.reset = reset;
     vm.snrInfo = angular.copy(TelephonyInfoService.getTelephonyInfo().snrInfo);
-    vm.customerLocalDialing = false;
     vm.regionCode = '';
 
     vm.callDestInputs = ['external', 'uri', 'custom'];

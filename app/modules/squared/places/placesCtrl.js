@@ -5,7 +5,7 @@
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($scope, $state, $templateCache, $translate, CsdmDataModelService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
+      function ($scope, $state, $templateCache, $translate, CsdmDataModelService, Userservice, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService) {
         var vm = this;
 
         vm.data = [];
@@ -16,7 +16,18 @@
         var placesList;
 
         function init() {
+          fetchFeatureToggles();
           loadList();
+          fetchDisplayNameForLoggedInUser();
+        }
+
+        function fetchFeatureToggles() {
+          FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
+            vm.showDarling = result;
+          });
+          FeatureToggleService.csdmPstnGetStatus().then(function (result) {
+            vm.showPstn = result && Authinfo.isSquaredUC();
+          });
         }
 
         function loadList() {
@@ -24,6 +35,14 @@
             placesList = list;
             vm.placesLoaded = true;
             vm.updateListAndFilter();
+          });
+        }
+
+        function fetchDisplayNameForLoggedInUser() {
+          Userservice.getUser('me', function (data) {
+            if (data.success) {
+              vm.adminDisplayName = data.displayName;
+            }
           });
         }
 
@@ -129,31 +148,42 @@
           var wizardState = {
             data: {
               function: "addPlace",
-              accountType: 'shared',
               showPlaces: true,
+              showDarling: vm.showDarling,
               title: 'addDeviceWizard.newSharedSpace.title',
               isEntitledToHuron: vm.isEntitledToHuron(),
               isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
-              allowUserCreation: false
+              account: {
+                type: 'shared'
+              },
+              recipient: {
+                cisUuid: Authinfo.getUserId(),
+                displayName: vm.adminDisplayName,
+                email: Authinfo.getPrimaryEmail(),
+                organizationId: Authinfo.getOrgId()
+              }
             },
             history: [],
             currentStateName: 'addDeviceFlow.newSharedSpace',
             wizardState: {
               'addDeviceFlow.newSharedSpace': {
-                next: 'addDeviceFlow.chooseDeviceType',
-                cloudberry: 'addDeviceFlow.showActivationCode',
-                huron_create: 'addDeviceFlow.addLines'
+                next: 'addDeviceFlow.chooseDeviceType'
               },
               'addDeviceFlow.chooseDeviceType': {
                 nextOptions: {
-                  cloudberry: 'addDeviceFlow.showActivationCode',
+                  cloudberry: vm.showPstn ? 'addDeviceFlow.editServices' : 'addDeviceFlow.showActivationCode',
                   huron: 'addDeviceFlow.addLines'
+                }
+              },
+              'addDeviceFlow.editServices': {
+                nextOptions: {
+                  sparkCall: 'addDeviceFlow.addLines',
+                  sparkOnly: 'addDeviceFlow.showActivationCode'
                 }
               },
               'addDeviceFlow.addLines': {
                 next: 'addDeviceFlow.showActivationCode'
-              },
-              'addDeviceFlow.generateAuthCode': {}
+              }
             }
           };
 

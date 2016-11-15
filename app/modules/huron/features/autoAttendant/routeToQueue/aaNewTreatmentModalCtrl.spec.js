@@ -6,6 +6,39 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   var AACommonService;
   var AutoAttendantCeMenuModelService;
 
+  var fakePeriodicMinute = [
+    {
+      index: 0,
+      label: 0
+    },
+    {
+      index: 3,
+      label: 3
+    },
+    {
+      index: 5,
+      label: 5
+    }
+  ];
+
+  var fakePeriodicSecond = [
+    {
+      index: 0,
+      label: 0
+    },
+    {
+      index: 6,
+      label: 30,
+    },
+    {
+      index: 5,
+      label: 5
+    },
+    {
+      index: 0,
+      label: 5
+    }
+  ];
   var modalFake = {
     close: jasmine.createSpy('modalInstance.close'),
     dismiss: jasmine.createSpy('modalInstance.dismiss')
@@ -24,8 +57,10 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   var queueSettings = {};
   var musicOnHold = 'musicOnHold';
   var initialAnnouncement = 'initialAnnouncement';
+  var periodicAnnouncement = 'periodicAnnouncement';
   var playAction = {};
   var iaAction = {};
+  var paAction = {};
   var schedule = 'openHours';
   var index = '0';
   var menuId = 'menu0';
@@ -61,19 +96,24 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     $scope.menuId = menuId;
     $scope.keyIndex = keyIndex;
     AutoAttendantCeMenuModelService.clearCeMenuMap();
+    AutoAttendantCeMenuModelService.clearCeMenuMap();
     uiMenu = AutoAttendantCeMenuModelService.newCeMenu();
     ui[schedule] = uiMenu;
     menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
     uiMenu.addEntryAt(index, menuEntry);
     musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
     initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+    periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
     playAction = AutoAttendantCeMenuModelService.newCeActionEntry(play, '');
     iaAction = AutoAttendantCeMenuModelService.newCeActionEntry(play, '');
+    paAction = AutoAttendantCeMenuModelService.newCeActionEntry(play, '');
     routeToQueue = AutoAttendantCeMenuModelService.newCeActionEntry(rtQ, '');
     musicOnHold.addAction(playAction);
     initialAnnouncement.addAction(iaAction);
+    periodicAnnouncement.addAction(paAction);
     queueSettings.musicOnHold = musicOnHold;
     queueSettings.initialAnnouncement = initialAnnouncement;
+    queueSettings.periodicAnnouncement = periodicAnnouncement;
     routeToQueue.queueSettings = queueSettings;
     menuEntry.addAction(routeToQueue);
     uiMenu.addEntryAt(index, menuEntry);
@@ -99,6 +139,46 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
 
     it("default value of minute should be 15.", function () {
       expect(controller.maxWaitTime.index).toEqual(14);
+    });
+
+    describe('Periodic Announcement', function () {
+      beforeEach(function () {
+      });
+      it("length of periodic minutes and seconds", function () {
+        expect(controller).toBeDefined();
+        expect(controller.periodicMinutes.length).toEqual(6);
+        expect(controller.periodicSeconds.length).toEqual(11);
+      });
+
+      it("default value of periodic minutes and seconds.", function () {
+        expect(controller.periodicMinute.index).toEqual(0);
+        expect(controller.periodicSecond.index).toEqual(8);
+      });
+      it("changedPeriodicMinValue funtion call with periodicMinute as 0", function () {
+        controller.periodicMinute = fakePeriodicMinute[0];
+        controller.changedPeriodicMinValue();
+        expect(controller.areSecondsDisabled).toBe(true);
+      });
+      it("changedPeriodicMinValue function call with periodicMinute and periodicSecond as 0", function () {
+        controller.periodicMinute = fakePeriodicMinute[0];
+        controller.periodicSecond = fakePeriodicSecond[0];
+        controller.changedPeriodicMinValue();
+        expect(controller.periodicSecond).toEqual(controller.periodicSeconds[0]);
+      });
+      it("changedPeriodicMinValue function call with periodicMinute as 5", function () {
+        controller.periodicMinute = fakePeriodicMinute[2];
+        controller.changedPeriodicMinValue();
+        expect(controller.periodicSecond).toEqual(controller.periodicSeconds[0]);
+        expect(controller.areSecondsDisabled).toBe(false);
+      });
+      it("changedPeriodicSecValue function call with periodicSecond and periodicMinute as 0", function () {
+        controller.periodicSecond = fakePeriodicSecond[0];
+        controller.periodicMinute = fakePeriodicMinute[0];
+        controller.periodicSeconds[0] = fakePeriodicSecond[0];
+        controller.changedPeriodicSecValue();
+        expect(controller.periodicSecond).toEqual(controller.periodicSeconds[0]);
+        expect(controller.areSecondsDisabled).toBe(true);
+      });
     });
 
     describe('FallBack', function () {

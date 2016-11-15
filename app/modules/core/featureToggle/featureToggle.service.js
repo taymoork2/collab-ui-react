@@ -29,6 +29,7 @@
       atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list',
       atlasMediaServiceMetrics: 'atlas-media-service-metrics',
       atlasMediaServiceOnboarding: 'atlas-media-service-onboarding',
+      atlasMediaServicePhaseTwo: 'atlas-media-service-phase-two',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
       atlasNewUserExport: 'atlas-new-user-export',
       atlasNurturingEmails: 'atlas-nurturing-emails',
@@ -40,6 +41,7 @@
       atlasComplianceRole: 'atlas-compliance-role',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
+      atlasSMP: 'atlas-smp',
       atlasTrialsShipDevices: 'atlasTrialsShipDevices',
       atlasWebexTrials: 'atlas-webex-trials',
       atlasDeviceUsageReport: 'atlas-device-usage-report',
@@ -158,11 +160,11 @@
       csdmATA: 'csdm-ata',
       atlasGlobalServiceStatus: 'atlas-global-service-status',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
-      huronLocalDialing: 'huron-local-dialing',
       huronDeviceE911: 'huron-device-e911-address',
       gemServicesTab: 'gem-services-tab',
       atlasHybridDataSecurity: 'atlas-data-security',
       atlasHerculesEmergencyUpgrade: 'atlas-hercules-emergency-upgrade',
+      atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',
       avrilVmEnable: 'avril-vm-enable',
     };
 

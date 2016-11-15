@@ -5,7 +5,7 @@
     .controller('DevicesCtrl',
 
       /* @ngInject */
-      function ($scope, $state, $translate, $templateCache, DeviceFilter, CsdmUnusedAccountsService, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, CsdmPlaceService) {
+      function ($scope, $state, $translate, $templateCache, Userservice, DeviceFilter, CsdmUnusedAccountsService, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, FeatureToggleService) {
         var vm = this;
         var filteredDevices = [];
         AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
@@ -17,6 +17,39 @@
           });
           vm.licenseError = vm.showLicenseWarning ? $translate.instant('spacesPage.licenseSuspendedWarning') : "";
         });
+
+        function init() {
+          fetchFeatureToggles();
+          fetchDetailsForLoggedInUser();
+        }
+
+        function fetchFeatureToggles() {
+          FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
+            vm.showPlaces = result;
+          });
+          FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
+            vm.showDarling = result;
+          });
+          FeatureToggleService.csdmPstnGetStatus().then(function (result) {
+            vm.showPstn = result && Authinfo.isSquaredUC();
+          });
+        }
+
+        function fetchDetailsForLoggedInUser() {
+          Userservice.getUser('me', function (data) {
+            if (data.success) {
+              vm.adminDisplayName = data.displayName;
+              if (data.name) {
+                vm.adminFirstName = data.name.givenName;
+              }
+              if (!vm.adminFirstName) {
+                vm.adminFirstName = data.displayName;
+              }
+            }
+          });
+        }
+
+        init();
 
         vm.deviceFilter = DeviceFilter;
         vm.deviceFilter.resetFilters();
@@ -35,11 +68,6 @@
         );
 
         var csdmHuronOrgDeviceService = CsdmHuronOrgDeviceService.create(Authinfo.getOrgId());
-
-        vm.showPlaces = false;
-        CsdmPlaceService.placesFeatureIsEnabled().then(function (result) {
-          vm.showPlaces = result;
-        });
 
         vm.setCurrentSearch = function (searchStr) {
           vm.deviceFilter.setCurrentSearch(searchStr);
@@ -146,10 +174,17 @@
             data: {
               function: "addDevice",
               showPlaces: false,
+              showDarling: vm.showDarling,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isEntitledToHuron(),
               isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
-              allowUserCreation: false
+              recipient: {
+                cisUuid: Authinfo.getUserId(),
+                displayName: vm.adminDisplayName,
+                email: Authinfo.getPrimaryEmail(),
+                organizationId: Authinfo.getOrgId(),
+                firstName: vm.adminFirstName
+              }
             },
             history: [],
             currentStateName: 'addDeviceFlow.chooseDeviceType',
@@ -164,7 +199,9 @@
                 next: 'addDeviceFlow.showActivationCode'
               },
               'addDeviceFlow.chooseSharedSpace': {
-                next: 'addDeviceFlow.showActivationCode'
+                nextOptions: {
+                  cloudberry_existing: 'addDeviceFlow.showActivationCode'
+                }
               },
               'addDeviceFlow.showActivationCode': {}
             }
@@ -176,10 +213,17 @@
             data: {
               function: "addDevice",
               showPlaces: true,
+              showDarling: vm.showDarling,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isEntitledToHuron(),
               isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
-              allowUserCreation: true
+              recipient: {
+                cisUuid: Authinfo.getUserId(),
+                displayName: vm.adminDisplayName,
+                email: Authinfo.getPrimaryEmail(),
+                organizationId: Authinfo.getOrgId(),
+                firstName: vm.adminFirstName
+              }
             },
             history: [],
             currentStateName: 'addDeviceFlow.chooseDeviceType',
@@ -197,15 +241,20 @@
                 }
               },
               'addDeviceFlow.choosePersonal': {
-                nextOptions: {
-                  existing: 'addDeviceFlow.showActivationCode'
-                }
+                next: 'addDeviceFlow.showActivationCode'
               },
               'addDeviceFlow.chooseSharedSpace': {
                 nextOptions: {
-                  cloudberry: 'addDeviceFlow.showActivationCode',
+                  cloudberry_existing: 'addDeviceFlow.showActivationCode',
+                  cloudberry_create: vm.showPstn && vm.showPlaces ? 'addDeviceFlow.editServices' : 'addDeviceFlow.showActivationCode',
                   huron_existing: 'addDeviceFlow.showActivationCode',
                   huron_create: 'addDeviceFlow.addLines'
+                }
+              },
+              'addDeviceFlow.editServices': {
+                nextOptions: {
+                  sparkCall: 'addDeviceFlow.addLines',
+                  sparkOnly: 'addDeviceFlow.showActivationCode'
                 }
               },
               'addDeviceFlow.addLines': {

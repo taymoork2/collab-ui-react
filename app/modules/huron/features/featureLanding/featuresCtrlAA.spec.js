@@ -63,7 +63,7 @@ describe('Features Controller', function () {
 
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue(getDeferred.promise);
     spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.when());
-    spyOn(CallParkService, 'getListOfCallParks').and.returnValue($q.when(emptyListOfCPs));
+    spyOn(CallParkService, 'getCallParkList').and.returnValue($q.when(emptyListOfCPs.callparks));
     spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue($q.when());
     spyOn(Notification, 'error');
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when());

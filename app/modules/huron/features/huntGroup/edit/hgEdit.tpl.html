@@ -6,7 +6,12 @@
     <span ng-bind-html="' (' + match.label.user.userName + ')' | typeaheadHighlight:query"></span>
   </div>
   <a class="hunt-member-line">
-    <span ng-bind-html="(match.label.selectableNumber | huntMemberTelephone) | typeaheadHighlight:query"></span>
+    <span
+      ng-if="match.label.selectableNumber" 
+      ng-bind-html="(match.label.selectableNumber | huntMemberTelephone) | typeaheadHighlight:query"></span>
+    <span
+      ng-if="match.label.searchNumber" 
+      ng-bind-html="(match.label.searchNumber) | typeaheadHighlight:query"></span>
   </a>
 </script>
 <div class="save-section hg-save" ng-if="hge.form.$dirty">
@@ -29,7 +34,7 @@
         <label for="fallback-dest">{{:: 'huronHuntGroup.fallbackLabel' | translate}}</label>
         <p>{{:: 'huronHuntGroup.fallbackDesc' | translate}}</p>
 
-        <div ng-if="hge.shouldShowFallbackLookup()" class="form-input typeahead">
+        <div ng-if="!hge.shouldShowFallbackPill()" class="form-input typeahead">
           <cs-call-destination
             model="hge.selectedFallbackNumber"
             size="medium-12"
@@ -49,7 +54,7 @@
         <div ng-if="hge.shouldShowFallbackPill()">
           <div class="clearfix">
             <div class="small header-background primary cs-card hunt-member-card">
-              <article>
+              <article  ng-if="hge.selectedFallbackMember.member.selectableNumber">
                 <a href ng-click="hge.toggleFallback()">
                   <header>
                     <div class="header-with-right-icon">
@@ -73,6 +78,14 @@
                     </p>
                   </fieldset>
                 </section>
+              </article>
+              <article ng-if="hge.selectedFallbackMember.member.searchNumber || hge.model.fallbackDestination.number">
+                <header>
+                  <div class="header-with-right-icon">
+                    <h5 class="ellipsis">{{hge.selectedFallbackMember.member.searchNumber || hge.model.fallbackDestination.number}}</h5>
+                    <i class="icon icon-close icon-lg" ng-click="hge.removeFallbackDest()"></i>
+                  </div>
+                </header>
               </article>
             </div>
           </div>

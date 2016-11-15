@@ -25,7 +25,7 @@ describe('Service: CsdmPlacesService', function () {
 
   describe('feature not enabled', function () {
     beforeEach(inject(function (FeatureToggleService, $q) {
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+      spyOn(FeatureToggleService, 'csdmPlacesGetStatus').and.returnValue($q.when(false));
     }));
 
     it('get device list should return empty ', function () {
@@ -44,7 +44,7 @@ describe('Service: CsdmPlacesService', function () {
 
   describe('feature enabled', function () {
     beforeEach(inject(function (FeatureToggleService, $q) {
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+      spyOn(FeatureToggleService, 'csdmPlacesGetStatus').and.returnValue($q.when(true));
     }));
 
     it('get device list should return a non empty list ', function () {

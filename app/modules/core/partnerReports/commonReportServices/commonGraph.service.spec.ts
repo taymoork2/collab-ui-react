@@ -11,13 +11,10 @@ describe('Service: Common Graph Service', () => {
   const PREFIXES = 'prefixesOfBigNumbers';
   const SCROLL = 'scroll';
   const dummyData = 'dummyData';
-  let exportResponse = responseData.baseVariables[EXPORT];
 
   beforeEach(function () {
     this.initModules('Core');
     this.injectDependencies('CommonGraphService');
-
-    exportResponse.menu[0].menu[1].click = Function;
   });
 
   it('getBaseVariable should return expected responses based on the key', function () {
@@ -33,8 +30,7 @@ describe('Service: Common Graph Service', () => {
     expect(this.CommonGraphService.getBaseVariable(SCROLL)).toEqual(responseData.baseVariables[SCROLL]);
 
     let exportVariable = this.CommonGraphService.getBaseVariable(EXPORT);
-    exportVariable.menu[0].menu[1].click = Function;
-    expect(exportVariable).toEqual(exportResponse);
+    expect(exportVariable).toEqual(responseData.baseVariables[EXPORT]);
 
     // incorrect key response
     expect(this.CommonGraphService.getBaseVariable('col')).toEqual(undefined);
@@ -42,11 +38,10 @@ describe('Service: Common Graph Service', () => {
 
   it('getBaseSerialGraph should return expected defaults for a column graph', function () {
     responseData.getBaseSerialGraph[BALLOON] = responseData.baseVariables[BALLOON];
-    responseData.getBaseSerialGraph[EXPORT] = exportResponse;
+    responseData.getBaseSerialGraph[EXPORT] = responseData.baseVariables[EXPORT];
     responseData.getBaseSerialGraph[PREFIXES] = responseData.baseVariables[PREFIXES];
 
     let baseSerialGraph = this.CommonGraphService.getBaseSerialGraph(dummyData, dummyData, dummyData, dummyData, dummyData, dummyData);
-    baseSerialGraph.export.menu[0].menu[1].click = Function;
     expect(baseSerialGraph).toEqual(responseData.getBaseSerialGraph);
   });
 
@@ -55,7 +50,6 @@ describe('Service: Common Graph Service', () => {
     responseData.getBasePieChart[EXPORT] = responseData.baseVariables[EXPORT];
 
     let basePiechart = this.CommonGraphService.getBasePieChart(dummyData, dummyData, dummyData, dummyData, dummyData, dummyData, dummyData, dummyData, dummyData, dummyData);
-    basePiechart.export.menu[0].menu[1].click = Function;
     expect(basePiechart).toEqual(responseData.getBasePieChart);
   });
 });

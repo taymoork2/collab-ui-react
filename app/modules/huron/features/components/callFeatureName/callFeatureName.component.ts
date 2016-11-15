@@ -4,6 +4,8 @@ class CallFeatureNameCtrl implements ng.IComponentController {
   public nameHint: string;
   public nameHintKey: string;
   public name: string;
+  public isRequired: boolean;
+  public isNew: boolean;
   public onChangeFn: Function;
   public onKeyPressFn: Function;
 
@@ -38,6 +40,8 @@ export class CallFeatureNameComponent implements ng.IComponentOptions {
     placeholderKey: '@',
     nameHintKey: '@',
     name: '<',
+    isRequired: '<',
+    isNew: '<',
     onChangeFn: '&',
     onKeyPressFn: '&',
   };

@@ -6,13 +6,25 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService, WizardFactory, Notification) {
+  function DevicesCtrlHuron($scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService, WizardFactory, FeatureToggleService) {
     var vm = this;
     vm.devices = {};
     vm.otps = [];
     vm.currentUser = $stateParams.currentUser;
     vm.csdmHuronUserDeviceService = null;
     vm.showGenerateOtpButton = false;
+
+    function init() {
+      fetchPlacesSupport();
+    }
+
+    init();
+
+    function fetchPlacesSupport() {
+      FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
+        vm.showPlaces = result;
+      });
+    }
 
     function addLinkOrButtonForActivationCode() {
       if (_.has(vm, 'csdmHuronUserDeviceService.dataLoaded')) {
@@ -43,35 +55,47 @@
 
     vm.resetCode = function () {
       vm.resettingCode = true;
-      OtpService.generateOtp(vm.currentUser.userName).then(function (code) {
-        var wizardState = {
-          data: {
-            function: 'showCode',
-            title: 'addDeviceWizard.newDevice',
-            accountType: 'personal',
+      var userFirstName;
+      if (vm.currentUser.name) {
+        userFirstName = vm.currentUser.name.givenName;
+      }
+      if (!userFirstName) {
+        userFirstName = vm.currentUser.displayName;
+      }
+      var email;
+      if (vm.currentUser.emails && vm.currentUser.emails.length > 0) {
+        email = vm.currentUser.emails[0].value;
+      } else {
+        email = vm.currentUser.userName;
+      }
+      var wizardState = {
+        data: {
+          function: 'showCode',
+          title: 'addDeviceWizard.newDevice',
+          showPlaces: vm.showPlaces,
+          account: {
+            name: vm.currentUser.displayName,
+            username: vm.currentUser.userName,
+            type: 'personal',
             deviceType: 'huron',
-            deviceName: vm.currentUser.displayName,
-            activationCode: code.code,
-            code: code,
-            expiryTime: code.friendlyExpiresOn,
-            cisUuid: vm.currentUser.id,
-            email: vm.currentUser.userName,
-            displayName: vm.currentUser.displayName,
-            organizationId: vm.currentUser.meta.organizationID
           },
-          history: [],
-          currentStateName: 'addDeviceFlow.showActivationCode',
-          wizardState: {
-            'addDeviceFlow.showActivationCode': {}
+          recipient: {
+            cisUuid: vm.currentUser.id,
+            email: email,
+            displayName: vm.currentUser.displayName,
+            firstName: userFirstName,
+            organizationId: vm.currentUser.meta.organizationID
           }
-        };
-        var wizard = WizardFactory.create(wizardState);
-        $state.go('addDeviceFlow.showActivationCode', {
-          wizard: wizard
-        });
-      }, function (err) {
-        vm.isLoading = false;
-        Notification.error(err.statusText);
+        },
+        history: [],
+        currentStateName: 'addDeviceFlow.showActivationCode',
+        wizardState: {
+          'addDeviceFlow.showActivationCode': {}
+        }
+      };
+      var wizard = WizardFactory.create(wizardState);
+      $state.go('addDeviceFlow.showActivationCode', {
+        wizard: wizard
       });
     };
 

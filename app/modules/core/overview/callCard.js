@@ -40,14 +40,14 @@
           });
         };
 
-        card.licenseEventHandler = function (licenses) {
+        card.licenseEventHandler = function (licenses, enabled) {
           card.allLicenses = licenses;
 
-          card.trial = _.some(filterLicenses(licenses), {
+          card.trial = _.some(filterLicenses(licenses, enabled), {
             'isTrial': true
           });
 
-          if (filterLicenses(licenses).length > 0) {
+          if (filterLicenses(licenses, enabled).length > 0) {
             card.enabled = true; //don't disable if no licenses in case test org..
           }
         };
@@ -58,10 +58,10 @@
           }
         };
 
-        function filterLicenses(licenses) {
+        function filterLicenses(licenses, enabled) {
           return _.filter(licenses, function (l) {
             //  return l.offerName === 'CO'
-            return (l.licenseType === 'COMMUNICATION' && card.helper.isntCancelledOrSuspended(l)) || (l.licenseType === 'SHARED_DEVICES' && card.helper.isntCancelledOrSuspended(l));
+            return (l.licenseType === 'COMMUNICATION' && card.helper.isntCancelledOrSuspended(l)) || (enabled && (l.licenseType === 'SHARED_DEVICES' && card.helper.isntCancelledOrSuspended(l)));
           });
         }
 

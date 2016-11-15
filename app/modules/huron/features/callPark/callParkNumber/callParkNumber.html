@@ -1,0 +1,100 @@
+<script type="text/ng-template" id="ranges.html">
+  <a>
+    <span ng-bind-html="match.label.startRange"></span>
+    <span>-</span>
+    <span ng-bind-html="match.label.endRange"></span>
+  </a>
+</script>
+<script type="text/ng-template" id="endRanges.html">
+  <a>
+    <span ng-bind-html="match.label"></span>
+  </a>
+</script>
+<div ng-form="cpNumberForm" class="cp-number-form" novalidate>
+  <div class="row form-group">
+    <div class="cs-input-group cs-input-radio'">
+      <input
+        type="radio"
+        class="cs-input"
+        id="radioTypeRange"
+        ng-value="'range'"
+        ng-model="$ctrl.rangeType"
+        ng-focus="$ctrl.focusInput($event)">
+      <label class="cs-radio" for="radioTypeRange">
+        <div class="cp-edit-range">
+          <div class="range-input">
+            <input
+              cs-input
+              type="text"
+              name="startRange"
+              ng-model="$ctrl.startRange"
+              ng-required="$ctrl.rangeType === 'range'"
+              typeahead="range for range in $ctrl.getRangeList()"
+              typeahead-on-select="$ctrl.onSelectNumberRange($item)"
+              typeahead-template-url="ranges.html"
+              typeahead-min-length="0"
+              placeholder="{{:: 'callPark.firstRange' | translate }}"
+              ng-click="$ctrl.onSelectStartEndRange()"
+              ng-keypress="$ctrl.onHandleKeyPress($event.keyCode); $ctrl.clearOtherInput($event)"
+              maxlength="{{$ctrl.extensionLength}}"
+              minlength="{{$ctrl.extensionLength}}"
+              autocomplete="off"
+              validate-range>
+          </div>
+          <div class="small-1 columns range-to">
+            <span translate="callPark.to"></span>
+          </div>
+          <div class="range-input">
+            <input
+              cs-input
+              type="text"
+              ng-model="$ctrl.endRange"
+              name="endRange"
+              ng-required="$ctrl.rangeType === 'range'"
+              ng-class="{'error': $ctrl.errorEndRangeInput}"
+              typeahead="endRange for endRange in $ctrl.getEndRangeList($ctrl.startRange)"
+              typeahead-template-url="endRanges.html"
+              typeahead-min-length="0"
+              placeholder="{{:: 'callPark.secondRange' | translate }}"
+              ng-keypress="$ctrl.onHandleKeyPress($event.keyCode); $ctrl.clearOtherInput($event)"
+              maxlength="{{$ctrl.extensionLength}}"
+              minlength="{{$ctrl.extensionLength}}"
+              ng-change="$ctrl.onChangeEndRange()"
+              autocomplete="off"
+              validate-range
+              validate-range-length>
+          </div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="cs-input-group cs-input-radio">
+      <input
+        type="radio"
+        class="cs-input"
+        id="radioTypeSingle"
+        ng-value="'single'"
+        ng-model="$ctrl.rangeType"
+        ng-focus="$ctrl.focusInput($event)">
+      <label class="cs-radio" for="radioTypeSingle">
+        <input
+          cs-input
+          name="singleNumber"
+          ng-class="{'error': $ctrl.errorSingleNumberInput}"
+          placeholder="{{:: 'callPark.singleRange' | translate }}"
+          ng-keypress="$ctrl.onHandleKeyPress($event.keyCode); $ctrl.clearOtherInput($event)"
+          type="text"
+          ng-model="$ctrl.singleNumber"
+          ng-change="$ctrl.onChangeSingleNumber()"
+          ng-click="$ctrl.onSelectSingleNumber()"
+          ng-required="$ctrl.rangeType === 'single'"
+          maxlength="{{$ctrl.extensionLength}}"
+          minlength="{{$ctrl.extensionLength}}"
+          autocomplete="off"
+          validate-range>
+      </label>
+    </div>
+  </div>
+</div>
