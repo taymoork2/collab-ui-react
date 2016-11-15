@@ -149,8 +149,10 @@
     }
 
     function resetForm() {
-      $scope.rolesEdit.form.$setPristine();
-      $scope.rolesEdit.form.$setUntouched();
+      if (_.has($scope, 'rolesEdit.form')) {
+        $scope.rolesEdit.form.$setPristine();
+        $scope.rolesEdit.form.$setUntouched();
+      }
     }
 
     function resetRoles() {
