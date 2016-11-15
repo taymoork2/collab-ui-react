@@ -1752,7 +1752,7 @@
         "googleCalendarConfigWillBeWiped": "This action will delete all Google Calendar settings from Cisco Collaboration Cloud.",
         "uploadNewPrivateKey": "Upload New Private Key",
         "uploadNewPrivateKeyPlaceholder": "Enter service account name",
-        "serviceAccountName": "Service Account name",
+        "serviceAccountName": "Service Account Name",
         "uploadNewPrivateKeyExplanation": "Enter your service account name and upload the private key you downloaded from Google Developer Console.",
         "dragAndDropKeyFileHere": "Drag and drop the file containing the private key here or",
         "clickToBrowse": "click to browse",
