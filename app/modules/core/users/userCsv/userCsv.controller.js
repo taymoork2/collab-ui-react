@@ -353,7 +353,7 @@
 
     function findHeaderIndex(name) {
       var index = _.findIndex(headers, function (h) {
-        return h.name == name;
+        return h.name === name;
       });
       if (index !== -1) {
         return headers[index].csvColIndex;
@@ -370,7 +370,7 @@
       } else {
         _.forEach(userHeaders, function (uHeader, k) {
           index = _.findIndex(serverHeaders, function (sHeader) {
-            return sHeader.name == uHeader;
+            return sHeader.name === uHeader;
           });
           if (index !== -1) {
             var h = serverHeaders[index];
@@ -389,8 +389,8 @@
       function successCallback(response, onboardedUsers) {
 
         function onboardedUserWithEmail(email) {
-          return _.find(onboardedUsers, {
-            'address': email
+          return _.find(onboardedUsers, function (user) {
+            return _.toLower(user.address) === _.toLower(email);
           });
         }
 

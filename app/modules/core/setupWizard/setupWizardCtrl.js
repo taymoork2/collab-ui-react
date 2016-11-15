@@ -92,9 +92,6 @@
           name: 'init',
           template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
         }, {
-          name: 'domainEntry',
-          template: 'modules/core/setupWizard/addUsers/addUsers.domainEntry.tpl.html'
-        }, {
           name: 'installConnector',
           template: 'modules/core/setupWizard/addUsers/addUsers.installConnector.tpl.html'
         }, {
@@ -259,7 +256,7 @@
       }
 
       var filteredTabs = _.filter(tabs, function (tab) {
-        return ($stateParams.currentTab == tab.name);
+        return ($stateParams.currentTab === tab.name);
       });
 
       if ($stateParams.currentStep && filteredTabs.length === 1 && filteredTabs[0].steps) {
