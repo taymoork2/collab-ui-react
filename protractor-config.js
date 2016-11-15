@@ -125,7 +125,6 @@ exports.config = {
     var DownloadPage = require('./test/e2e-protractor/pages/download.page.js');
     var ActivatePage = require('./test/e2e-protractor/pages/activate.page.js');
     var SpacesPage = require('./test/e2e-protractor/pages/spaces.page.js');
-    var CallRoutingPage = require('./test/e2e-protractor/pages/callrouting.page.js');
     var AutoAttendantPage = require('./test/e2e-protractor/pages/autoattendant.page.js');
     var PartnerHomePage = require('./test/e2e-protractor/pages/partner.page.js');
     var TelephonyPage = require('./test/e2e-protractor/pages/telephony.page.js');
@@ -153,6 +152,7 @@ exports.config = {
     var CareChatTemplateSetupPage = require('./test/e2e-protractor/pages/careChatTemplate.page.js');
     var ManageUsersPage = require('./test/e2e-protractor/pages/manageUsers.page.js');
     var GSSDashboardPage = require('./test/e2e-protractor/pages/gssDashboard.page.js');
+    var GSSComponentPage = require('./test/e2e-protractor/pages/gssComponent.page.js');
 
     global.notifications = new Notifications();
     global.navigation = new Navigation();
@@ -169,7 +169,6 @@ exports.config = {
     global.download = new DownloadPage();
     global.activate = new ActivatePage();
     global.spaces = new SpacesPage();
-    global.callrouting = new CallRoutingPage();
     global.autoattendant = new AutoAttendantPage();
     global.partner = new PartnerHomePage();
     global.telephony = new TelephonyPage();
@@ -198,6 +197,7 @@ exports.config = {
     global.careChatTemplateSetupPage = new CareChatTemplateSetupPage();
     global.manageUsersPage = new ManageUsersPage();
     global.gssDashboard = new GSSDashboardPage();
+    global.gssComponent = new GSSComponentPage();
 
     function initReporters(config) {
       var testFile = _.chain(config)

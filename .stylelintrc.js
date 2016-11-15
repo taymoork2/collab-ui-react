@@ -5,9 +5,11 @@ module.exports = {
     // Activate rules from the stylelint-scss plugin
     'scss/selector-no-redundant-nesting-selector': true,
     // Override stylelint-config-standard rules
-    'length-zero-no-unit': null,
+    //'at-rule-empty-line-before': 'never', TO BE CONFIGURED
     'color-hex-case': null,
     'color-hex-length': null,
+    // 'declaration-empty-line-before': 'never', TO BE CONFIGURED
+    'length-zero-no-unit': null,
     'selector-type-no-unknown': null, // because of Angular Components
     // Add other rules configuration
     'at-rule-no-vendor-prefix': true,

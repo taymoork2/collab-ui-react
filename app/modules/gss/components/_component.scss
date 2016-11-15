@@ -1,6 +1,7 @@
-.componentPage {
+.component-page {
+  background-color: $white;
+
   .centered-info-pane {
-    background-color: $brand-white;
     width: 500px;
     height: 300px;
     margin: 100px auto;
@@ -10,60 +11,60 @@
     h2 {
       color: black;
     }
+
     h3 {
       color: $gray-base;
     }
+
     p {
       margin-bottom: 1rem;
     }
   }
 
-  .gss-components {
-    background-color: $brand-white;
-  }
-  .gss-components-list{
-    margin: 0 auto;
-    padding: 2rem;
-    line-height: 3rem;
-    color: $gray-dark-4;
-
-  }
   .gss-components-list {
     margin: 0 auto;
     padding: 2rem;
     line-height: 3rem;
     color: $gray-dark-4;
+
     &:not(:last-child) {
       border-bottom: 1px solid $gray-base;
     }
+
     ul li {
       list-style-type: none;
       line-height: 2rem;
       color: $gray-base;
     }
+
     a {
       float: right;
       color: $color-primary-light;
       margin: auto 10px;
     }
+
     .icon {
       margin: auto 10px;
     }
   }
-  
-  .componentStatus-operational {
+
+  .component-status-operational {
     color: $color-cta-base;
   }
-  .componentStatus-degraded_performance {
+
+  .component-status-degraded_performance {
     color: $color-negative-base;
   }
-  .componentStatus-under_maintenance {
+
+  .component-status-under_maintenance {
     color: $color-primary-base;
   }
-  .componentStatus-partial_outage {
+
+  .component-status-partial_outage {
     color: $color-meetings-base;
   }
-  .componentStatus-major_outage {
+
+  .component-status-major_outage {
     color: $color-alerts-base;
   }
 
@@ -71,9 +72,25 @@
     margin-top: 8px;
     text-align: right;
   }
+
   .addComponentForm .cancelCreateNewGroup {
     background: none;
     font-size: 0.8rem;
     color: $color-primary-base;
   }
+}
+
+.delete-component-page {
+  @include vr_spacing(p, 3);
+
+  p,
+  input {
+    font-size: 16px;
+    @include vr_spacing(mb, 1.25);
+  }
+}
+
+.modal-content.small.add-component,
+.modal-content.small.update-component {
+  height: 320px;
 }

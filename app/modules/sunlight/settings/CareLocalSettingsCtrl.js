@@ -6,7 +6,7 @@
     .controller('CareLocalSettingsCtrl', CareLocalSettingsCtrl);
 
   /* @ngInject */
-  function CareLocalSettingsCtrl($interval, $scope, $translate, Log, $http, UrlConfig, Notification, SunlightConfigService) {
+  function CareLocalSettingsCtrl($interval, $scope, $translate, Log, $http, Authinfo, UrlConfig, Notification, SunlightConfigService) {
     var vm = this;
 
     vm.ONBOARDED = 'onboarded';
@@ -90,6 +90,12 @@
           SunlightConfigService.getChatConfig().then(function (result) {
             if (_.get(result, 'data.csConnString')) {
               vm.state = vm.ONBOARDED;
+            }
+            if (result.data.orgName == "" || !(_.get(result, 'data.orgName'))) {
+              result.data.orgName = Authinfo.getOrgName();
+              SunlightConfigService.updateChatConfig(result.data).then(function (result) {
+                Log.debug('Successfully updated org config with org name', result);
+              });
             }
           })
             .catch(function (result) {

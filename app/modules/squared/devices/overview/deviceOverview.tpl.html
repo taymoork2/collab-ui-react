@@ -131,16 +131,16 @@
       <div class="section-title-row">
         <span class="section-name" translate="spacesPage.informationHeader"></span>
       </div>
-      <div class="form-group" ng-show="deviceOverview.currentDevice.isHuronDevice">
+      <div class="form-group" ng-show="deviceOverview.shouldShowLines()">
         <label class="col-sm-4 control-label">Lines</label>
         <div class="col-sm-8" cs-loader ng-hide="deviceOverview.linesAreLoaded"></div>
-        <div class="col-sm-8" ng-show="deviceOverview.linesAreLoaded && deviceOverview.lines">
+        <div class="col-sm-8" ng-show="deviceOverview.linesAreLoaded">
           <p class="form-control-static line-row" ng-repeat="line in deviceOverview.lines | orderBy:'line.usage'">
             <span class="form-control-static line-row">{{line.directoryNumber}}&nbsp;</span>
             <span class="form-control-static line-row" ng-if="line.alternate"> {{ 'common.or' | translate }} {{line.alternate}}</span>
-            <span class="badge primary primaryLineBadge" ng-if="line.usage === 'Primary'">Primary</span>
+            <span class="badge primary primaryLineBadge" ng-if="deviceOverview.lines.length > 1 && line.usage === 'Primary'">Primary</span>
           </p>
-          <span ng-hide="deviceOverview.lines">-</span>
+          <p class="form-control-static" ng-hide="deviceOverview.lines && deviceOverview.lines.length > 0" translate="common.none"></p>
         </div>
       </div>
       <div class="form-group" ng-show="deviceOverview.currentDevice.ip">

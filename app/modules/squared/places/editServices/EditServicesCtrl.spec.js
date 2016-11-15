@@ -90,8 +90,11 @@ describe('EditServicesCtrl: Ctrl', function () {
         };
         spyOn($stateParams.wizard, 'next');
         initController();
+        controller.service = 'sparkCall';
         controller.next();
         expect($stateParams.wizard.next).toHaveBeenCalled();
+        var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
+        expect(wizardState.account.entitlements).toEqual(['something', 'ciscouc']);
       });
     });
 
@@ -138,6 +141,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         CsdmDataModelService.updateCloudberryPlace = function () {};
         spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.when());
         initController();
+        controller.service = 'sparkOnly';
         controller.save();
         $scope.$digest();
         expect(CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, ['something']);
@@ -160,6 +164,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         };
         spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.when({ 'http://placeurl': {} }));
         initController();
+        controller.service = 'sparkOnly';
         controller.save();
         $scope.$digest();
         expect(Notification.warning).toHaveBeenCalled();
@@ -181,6 +186,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         };
         spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.reject());
         initController();
+        controller.service = 'sparkOnly';
         controller.save();
         $scope.$digest();
         expect(Notification.errorResponse).toHaveBeenCalled();
@@ -203,6 +209,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.when({ 'http://placeurl': { cisUuid: deviceCisUuid } }));
         spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.reject());
         initController();
+        controller.service = 'sparkOnly';
         controller.save();
         $scope.$digest();
         expect(Notification.errorResponse).toHaveBeenCalled();

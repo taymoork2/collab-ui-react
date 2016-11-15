@@ -66,11 +66,11 @@ describe('Controller: TrialDeviceController', function () {
         expect(FeatureToggleService.supports).toHaveBeenCalled();
       });
 
-      it('should NOT show MX300 when feature toggle is false', function () {
+      it('should show MX300 when feature toggle is false', function () {
         spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
         initController();
 
-        expect(controller.showNewRoomSystems).toBe(false);
+        expect(controller.showNewRoomSystems).toBe(true);
         expect(FeatureToggleService.supports).toHaveBeenCalled();
       });
     });
@@ -341,6 +341,25 @@ describe('Controller: TrialDeviceController', function () {
       });
 
       expect(valid1).toBe(false);
+      expect(valid2).toBe(false);
+    });
+
+
+    it('should not validate quantity above 1 for mx300', function () {
+      var valid1 = controller.validateMx300InputQuantity(1, 1, {
+        model: {
+          enabled: true,
+          model: 'CISCO_MX300'
+        }
+      });
+      var valid2 = controller.validateMx300InputQuantity(2, 2, {
+        model: {
+          enabled: true,
+          model: 'CISCO_MX300'
+        }
+      });
+
+      expect(valid1).toBe(true);
       expect(valid2).toBe(false);
     });
   });

@@ -9,8 +9,6 @@
   function AANewTreatmentModalCtrl($modalInstance, $translate, $scope, AACommonService, AutoAttendantCeMenuModelService, AAUiModelService, aa_schedule, aa_menu_id, aa_index, aa_key_index) {
     var vm = this;
 
-    vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
-    vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
     vm.destinationOptions = [{
       label: $translate.instant('autoAttendant.destinations.Disconnect'),
       name: 'Disconnect',
@@ -42,9 +40,16 @@
     vm.menuEntry = undefined;
     vm.mohPlayAction = undefined;
     vm.iaAction = undefined;
+    vm.paAction = undefined;
     vm.ok = ok;
     vm.isSaveEnabled = isSaveEnabled;
     vm.uploadMohTrigger = uploadMohTrigger;
+
+    vm.periodicMinutes = [];
+    vm.periodicSeconds = [];
+    vm.changedPeriodicMinValue = changedPeriodicMinValue;
+    vm.changedPeriodicSecValue = changedPeriodicSecValue;
+    vm.areSecondsDisabled = isDisabled;
 
     var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
     var DEFAULT_MOH = 'musicOnHoldDefault';
@@ -80,6 +85,27 @@
       vm.mohPlayAction.description = '';
     }
 
+    function isDisabled() {
+      return vm.periodicMinute.label == '5';
+    }
+
+    function populatePeriodicTime() {
+      _.times(6, function (i) {
+        vm.periodicMinutes.push({
+          index: i,
+          label: i
+        });
+      });
+      _.times(11, function (i) {
+        vm.periodicSeconds.push({
+          index: i,
+          label: (i + 1) * 5
+        });
+      });
+      vm.periodicMinute = vm.periodicMinutes[0];
+      vm.periodicSecond = vm.periodicSeconds[8];
+    }
+
     function populateMaxTime() {
       vm.minutes = [];
       _.times(60, function (i) {
@@ -105,6 +131,35 @@
       }
     }
 
+    function changedPeriodicMinValue() {
+      if (vm.periodicMinute.index == '0') {
+        vm.periodicSeconds.splice(0, 1);
+        if (vm.periodicSecond.label == 0) {
+          vm.periodicSecond = vm.periodicSeconds[0];
+        }
+        vm.areSecondsDisabled = true;
+      } else {
+        if (vm.periodicSeconds[0].label != '0') {
+          vm.periodicSeconds.splice(0, 0, { index: 0, label: 0 });
+        }
+        vm.areSecondsDisabled = true;
+      }
+      if (vm.periodicMinute.index == '5') {
+        vm.periodicSecond = vm.periodicSeconds[0];
+        vm.areSecondsDisabled = false;
+      }
+    }
+
+    function changedPeriodicSecValue() {
+      if ((vm.periodicSecond.index == 0) && (vm.periodicMinute.index == 0)) {
+        if (vm.periodicSeconds[0].label == 0) {
+          vm.periodicSeconds.splice(0, 1);
+        }
+        vm.periodicSecond = vm.periodicSeconds[0];
+        vm.areSecondsDisabled = true;
+      }
+    }
+
     //get queueSettings menuEntry -> inner menu entry type (moh, initial, periodic...)
     function setUpEntry() {
       if ($scope.keyIndex && $scope.menuId) { //came from a phone menu
@@ -117,6 +172,7 @@
       }
       vm.mohPlayAction = vm.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
       vm.iaAction = vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0];
+      vm.paAction = vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0];
     }
 
     function populateScope() {
@@ -128,6 +184,7 @@
 
     function initializeView() {
       populateMohRadio();
+      populatePeriodicTime();
       populateMaxTime();
       populateDropDown();
     }

@@ -34,7 +34,8 @@
       getFallbackMember: getFallbackMember,
       isFallbackDirty: isFallbackDirty,
       setAsPristine: setAsPristine,
-      isVoicemailDisabled: isVoicemailDisabled
+      isVoicemailDisabled: isVoicemailDisabled,
+      isValidInternalOrgNumber: isValidInternalOrgNumber
     };
 
     ////////////////
@@ -125,6 +126,10 @@
       return (!isFallbackValidNumber() && !isFallbackValidMember());
     }
 
+    function isValidInternalOrgNumber() {
+      return isValidInternalNumber;
+    }
+
     /**
      * Reset the single data service to its origin state.
      */
@@ -179,9 +184,19 @@
       if (isValidInternalNumber || isValidExternalNumber) {
         if (_.isObject(fallbackNumber) && _.has(fallbackNumber, 'phoneNumber')) {
           data.fallbackDestination.number = TelephoneNumberService.getDIDValue(fallbackNumber.phoneNumber);
+        } else if (_.has(fallbackMember, 'member.searchNumber')) {
+          data.fallbackDestination = {
+            number: _.get(fallbackMember, 'member.searchNumber'),
+            sendToVoicemail: fallbackMember.sendToVoicemail
+          };
         } else {
           data.fallbackDestination.number = TelephoneNumberService.getDIDValue(fallbackNumber);
         }
+      } else if (_.has(fallbackMember, 'member.searchNumber')) {
+        data.fallbackDestination = {
+          number: _.get(fallbackMember, 'member.searchNumber'),
+          sendToVoicemail: fallbackMember.sendToVoicemail
+        };
       } else {
         data.fallbackDestination = {
           numberUuid: fallbackMemberNumberUuid(),
@@ -245,8 +260,10 @@
     }
 
     function fallbackMemberNumberUuid() {
-      if (fallbackMember) {
-        return fallbackMember.member.selectableNumber.uuid;
+      if (_.get(fallbackMember, 'member.selectableNumber')) {
+        return _.get(fallbackMember, 'member.selectableNumber.uuid');
+      } else if (_.get(fallbackMember, 'member.searchNumber')) {
+        return _.get(fallbackMember, 'member.uuid');
       }
     }
 
