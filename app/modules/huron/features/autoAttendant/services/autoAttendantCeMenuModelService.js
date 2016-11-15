@@ -297,7 +297,13 @@
       deleteCeMenuMap: deleteCeMenuMap,
       isCeMenu: isCeMenu,
       cesPa: cesPa,
+      cesMoh: cesMoh,
+      cesFallback: cesFallback,
+      cesIa: cesIa,
       constructCesTodoPa: constructCesTodoPa,
+      constructCesTodoIa: constructCesTodoIa,
+      constructCesTodoMoh: constructCesTodoMoh,
+      constructCesTodoFallback: constructCesTodoFallback,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -497,7 +503,7 @@
         cesMoh(action);
         cesIa(action);
         cesPa(action);
-        cesfallback(action);
+        cesFallback(action);
         menuEntry.addAction(action);
       } else {
         // insert an empty action
@@ -563,7 +569,7 @@
     /*
     * write fallback to db
     */
-    function cesfallback(action) {
+    function cesFallback(action) {
       if (!_.isUndefined(action.description)) {
         try {
           if (angular.isUndefined(action.queueSettings)) {
@@ -1138,7 +1144,14 @@
         paAction.push(paActionArray);
         newAction.queuePeriodicAnnouncements = paAction;
         var queueMaxTimeValue = action.queueSettings.fallback.actions[0].getValue();
+
         newAction.queueMaxTime = queueMaxTimeValue.label;
+        if (_.isUndefined(queueMaxTimeValue.label)) {
+          newAction.queueMaxTime = queueMaxTimeValue;
+        }
+        if (_.isUndefined(action.queueSettings.fallback.actions[0].action)) {
+          action.queueSettings.fallback.actions[0].action = { treatment: 'none' };
+        }
         var queueMaxDestination = action.queueSettings.fallback.actions[0].action;
         newAction.queueFallback = queueMaxDestination;
         newAction.description = JSON.stringify(action.description);

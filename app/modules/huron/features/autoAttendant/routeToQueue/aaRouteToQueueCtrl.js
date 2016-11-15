@@ -37,6 +37,8 @@
     var rtQueue = 'routeToQueue';
     var fromRouteCall = false;
 
+    var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
+
 
     /////////////////////
 
@@ -142,7 +144,7 @@
         }
         if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.musicOnHold)) {
           vm.menuKeyEntry.actions[0].queueSettings.musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var mohAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+          var mohAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', CISCO_STD_MOH_URL);
           vm.menuKeyEntry.actions[0].queueSettings.musicOnHold.addAction(mohAction);
         }
         if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement)) {
@@ -153,6 +155,7 @@
         if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement)) {
           vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
           var paAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
+          paAction.setDescription('45');
           vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.addAction(paAction);
         }
         if (angular.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.fallback)) {

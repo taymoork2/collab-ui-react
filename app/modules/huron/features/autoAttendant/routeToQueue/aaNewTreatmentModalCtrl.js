@@ -37,6 +37,7 @@
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
       name: 'destinationMenuRouteToExtNum',
+      number: '',
       action: 'route',
       id: ''
     }];
@@ -75,6 +76,10 @@
     }
 
     function autoValidate() {
+      if (_.isEqual(vm.mohPlayAction.value, '')) {
+        vm.mohPlayAction.setDescription('');
+        vm.musicOnHold = DEFAULT_MOH;
+      }
       if (_.isEqual(vm.musicOnHold, DEFAULT_MOH)) {
         defaultMoh();
       }
@@ -135,9 +140,15 @@
       });
       if (!_.isEqual(vm.paAction.description, '')) { //no metadata set, so no file uploaded
         var periodicMinute = parseInt(vm.paAction.description / 60, 10);
-        vm.periodicMinute = periodicMinute;
+        vm.periodicMinute = {
+          index: periodicMinute,
+          label: periodicMinute
+        };
         var periodicSecond = vm.paAction.description - (periodicMinute * 60);
-        vm.periodicSecond = periodicSecond;
+        vm.periodicSecond = {
+          index: periodicSecond,
+          label: (periodicSecond + 1) * 5,
+        };
         if (vm.periodicMinute == '5') {
           vm.areSecondsDisabled = false;
         }

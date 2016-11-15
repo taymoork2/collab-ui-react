@@ -196,6 +196,14 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
           expect(controller.destinationOptions[i].label).toEqual(sortedOptions[i].label);
         }
       });
+      it("default value of fallback Actions should be set", function () {
+        expect(controller.maxWaitTime.label).toEqual(15);
+        expect(controller.fallbackAction.description).toEqual('');
+      });
+      it(" value of maxTime shoulb be 15", function () {
+        controller.saveFallback();
+        expect(controller.fallbackAction.description).toEqual('fallback');
+      });
     });
 
     describe('view', function () {
@@ -213,6 +221,12 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
 
         it('should set up the radio options appropriately', function () {
           expect(controller.musicOnHold).toEqual(DEFAULT_MOH);
+        });
+
+        it('should set moh action', function () {
+          controller.musicOnHold = CUSTOM_MOH;
+          controller.saveMoh();
+          expect(controller.mohPlayAction.description).toEqual(CUSTOM_MOH);
         });
       });
     });
@@ -271,11 +285,11 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         expect(controller.mohPlayAction.value).toEqual(CISCO_STD_MOH_URL);
       });
 
-      it('ok function call doesnt result in resetting moh when moh is not set to default description', function () {
+      it('ok function call result in resetting moh when any upload is not set to default ', function () {
         controller.musicOnHold = CUSTOM_MOH;
         controller.mohPlayAction.description = VALUE;
         controller.ok();
-        expect(controller.mohPlayAction.description).toEqual(VALUE);
+        expect(controller.mohPlayAction.description).toEqual('');
       });
 
       it('ok function call doesnt result in resetting moh when moh is not set to default value', function () {

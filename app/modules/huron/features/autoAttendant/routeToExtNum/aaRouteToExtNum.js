@@ -47,7 +47,7 @@
       if (fromRouteCall) {
         vm.model.phoneNumberInput.phoneNumber = vm.menuEntry.actions[0].getValue();
       } else {
-        vm.model.phoneNumberInput.phoneNumber = vm.menuKeyEntry.actions[0].getValue();
+        vm.model.phoneNumberInput.phoneNumber = vm.menuKeyEntry.actions[0].name.number;
       }
     }
 
@@ -61,7 +61,7 @@
       if (fromRouteCall) {
         vm.menuEntry.actions[0].setValue(num);
       } else {
-        vm.menuKeyEntry.actions[0].setValue(num);
+        vm.menuKeyEntry.actions[0].name.number = num;
       }
 
       AACommonService.setPhoneMenuStatus(true);
@@ -124,7 +124,7 @@
           var entry = vm.menuEntry.entries[$scope.keyIndex];
           action = _.get(entry, 'actions[0]');
           if (action && _.get(action, 'name') === 'routeToQueue') {
-            vm.menuKeyEntry = action.queueSettings.fallBack;
+            vm.menuKeyEntry = action.queueSettings.fallback;
           } else {
             vm.menuKeyEntry = entry;
           }
