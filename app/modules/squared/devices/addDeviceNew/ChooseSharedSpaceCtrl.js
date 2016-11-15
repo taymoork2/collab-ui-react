@@ -4,12 +4,17 @@
   angular.module('Core')
     .controller('ChooseSharedSpaceCtrl', ChooseSharedSpaceCtrl);
   /* @ngInject */
-  function ChooseSharedSpaceCtrl(Userservice, CsdmDataModelService, CsdmHuronPlaceService, Notification, $stateParams, $translate, Authinfo) {
+  function ChooseSharedSpaceCtrl(CsdmDataModelService, $stateParams, $translate) {
     var vm = this;
-    vm.wizardData = $stateParams.wizard.state().data;
+    var wizardData = $stateParams.wizard.state().data;
+    vm.title = wizardData.title;
+    vm.deviceType = wizardData.account.deviceType;
+    vm.showPlaces = wizardData.showPlaces;
+    var minlength = 3;
+    var maxlength = 64;
 
     vm.onlyNew = function () {
-      return vm.wizardData.function == 'addPlace';
+      return wizardData.function == 'addPlace' || (!wizardData.showPlaces && vm.deviceType == 'cloudberry');
     };
 
     vm.isNewCollapsed = !vm.onlyNew();
@@ -17,38 +22,28 @@
     vm.selected = null;
     vm.radioSelect = null;
     vm.placesLoaded = false;
-    vm.isLoading = false;
     vm.rooms = undefined;
     vm.hasRooms = undefined;
 
     function init() {
       loadList();
-      fetchDisplayNameForLoggedInUser();
     }
 
     init();
 
     vm.localizedCreateInstructions = function () {
-      if (!vm.wizardData.showPlaces) {
+      if (!vm.showPlaces) {
         return $translate.instant('addDeviceWizard.chooseSharedSpace.deviceInstalledInstructions');
       }
-      if (vm.wizardData.deviceType === 'huron') {
+      if (vm.deviceType === 'huron') {
         return $translate.instant('placesPage.placesDefinition');
       }
       return $translate.instant('addDeviceWizard.chooseSharedSpace.newPlaceInstructions');
     };
 
-    function fetchDisplayNameForLoggedInUser() {
-      Userservice.getUser('me', function (data) {
-        if (data.success) {
-          vm.adminDisplayName = data.displayName;
-        }
-      });
-    }
-
     function loadList() {
-      if (vm.wizardData.showPlaces) {
-        if (vm.wizardData.deviceType == 'cloudberry') {
+      if (vm.showPlaces) {
+        if (vm.deviceType == 'cloudberry') {
           CsdmDataModelService.getPlacesMap().then(function (placesList) {
             vm.rooms = _(placesList).filter(function (place) {
               return _.isEmpty(place.devices) && place.type == 'cloudberry';
@@ -85,11 +80,10 @@
     };
 
     vm.toggle = function () {
-      vm.isNewCollapsed = vm.radioSelect == "existing";
-      vm.isExistingCollapsed = vm.radioSelect == "create";
+      vm.isNewCollapsed = vm.radioSelect == 'existing';
+      vm.isExistingCollapsed = vm.radioSelect == 'create';
     };
-    var minlength = 3;
-    var maxlength = 64;
+
     vm.message = {
       required: $translate.instant('common.invalidRequired'),
       min: $translate.instant('common.invalidMinLength', {
@@ -99,63 +93,33 @@
         'max': maxlength
       })
     };
+
     vm.isNameValid = function () {
       if (vm.place) {
         return true;
       } // hack;
       return vm.deviceName && vm.deviceName.length >= minlength && vm.deviceName.length < maxlength;
     };
+
     vm.next = function () {
-      vm.isLoading = true;
-      var nextOption = vm.wizardData.deviceType;
-      if (nextOption == 'huron') {
-        if (vm.wizardData.function == 'addPlace') {
-          nextOption += '_' + 'create';
-        } else {
-          nextOption += '_' + vm.radioSelect;
-        }
-      }
-
-      function success(code) {
-        vm.isLoading = false;
-        $stateParams.wizard.next({
-          deviceName: vm.deviceName,
-          code: code,
-          // expiryTime: code.expiryTime,
-          cisUuid: Authinfo.getUserId(),
-          email: Authinfo.getPrimaryEmail(),
-          displayName: vm.adminDisplayName,
-          organizationId: Authinfo.getOrgId()
-        }, nextOption);
-      }
-
-      function error(err) {
-        Notification.error(err);
-        vm.isLoading = false;
-      }
-
-      if (vm.place) {
-        if (vm.wizardData.deviceType === "cloudberry") {
-          CsdmDataModelService
-            .createCodeForExisting(vm.place.cisUuid)
-            .then(success, error);
-        } else {
-          CsdmHuronPlaceService
-            .createOtp(vm.place.cisUuid)
-            .then(success, error);
-        }
+      var nextOption = vm.deviceType;
+      if (wizardData.function == 'addPlace') {
+        nextOption += '_' + 'create';
       } else {
-        if (vm.wizardData.deviceType === "cloudberry") {
-          CsdmDataModelService.createCsdmPlace(vm.deviceName, vm.wizardData.deviceType).then(function (place) {
-            vm.place = place;
-            CsdmDataModelService
-              .createCodeForExisting(place.cisUuid)
-              .then(success, error);
-          }, error);
-        } else { //New Place
-          success();
-        }
+        nextOption += '_' + (vm.radioSelect || 'existing');
       }
+      var cisUuid;
+      if (vm.place) {
+        cisUuid = vm.place.cisUuid;
+      }
+
+      $stateParams.wizard.next({
+        account: {
+          name: vm.deviceName,
+          cisUuid: cisUuid,
+          type: 'shared'
+        }
+      }, nextOption);
     };
 
     vm.back = function () {

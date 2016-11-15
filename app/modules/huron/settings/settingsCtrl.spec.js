@@ -8,6 +8,7 @@ describe('Controller: HuronSettingsCtrl', function () {
   var modalDefer, customer, timezones, timezone, voicemailCustomer, internalNumberRanges, languages;
   var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction;
   var $rootScope, didVoicemailCustomer, FeatureToggleService;
+  var controller;
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
@@ -106,7 +107,6 @@ describe('Controller: HuronSettingsCtrl', function () {
   }));
 
   describe('SettingsCtrlBasic', function () {
-    var controller;
     beforeEach(inject(function ($controller) {
       $scope = $rootScope;
 
@@ -898,6 +898,13 @@ describe('Controller: HuronSettingsCtrl', function () {
     describe('Voicemail prefix', function () {
       it('should change the extension length and change site code', function () {
         $scope.to = {};
+        controller._buildVoicemailPrefixOptions($scope);
+        controller.model.site.extensionLength = '5';
+        $scope.$apply();
+        expect(controller.model.site.siteCode).toEqual(10);
+      });
+
+      it('should handle $scope.to being undefined', function () {
         controller._buildVoicemailPrefixOptions($scope);
         controller.model.site.extensionLength = '5';
         $scope.$apply();

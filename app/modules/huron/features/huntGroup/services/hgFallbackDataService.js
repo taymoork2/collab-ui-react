@@ -12,8 +12,7 @@
 
   /* @ngInject */
 
-  function HuntGroupFallbackDataService(TelephoneNumberService, HuntGroupService, Notification, $q, DirectoryNumberService,
-    DialPlanService, Authinfo) {
+  function HuntGroupFallbackDataService(TelephoneNumberService, HuntGroupService, Notification, $q, DirectoryNumberService) {
 
     var isValidInternalNumber = false;
     var isValidExternalNumber = false;
@@ -36,7 +35,7 @@
       isFallbackDirty: isFallbackDirty,
       setAsPristine: setAsPristine,
       isVoicemailDisabled: isVoicemailDisabled,
-      allowLocalValidation: allowLocalValidation
+      isValidInternalOrgNumber: isValidInternalOrgNumber
     };
 
     ////////////////
@@ -127,6 +126,10 @@
       return (!isFallbackValidNumber() && !isFallbackValidMember());
     }
 
+    function isValidInternalOrgNumber() {
+      return isValidInternalNumber;
+    }
+
     /**
      * Reset the single data service to its origin state.
      */
@@ -174,16 +177,25 @@
      * This is the JSON data that will be used in POST &
      * PUT apis for the hunt group fallback destination object.
      */
-    function getFallbackDestinationJSON(allowLocalValidation) {
-      var data = {};
+    function getFallbackDestinationJSON() {
+      var data = {
+        fallbackDestination: {}
+      };
       if (isValidInternalNumber || isValidExternalNumber) {
+        if (_.isObject(fallbackNumber) && _.has(fallbackNumber, 'phoneNumber')) {
+          data.fallbackDestination.number = TelephoneNumberService.getDIDValue(fallbackNumber.phoneNumber);
+        } else if (_.has(fallbackMember, 'member.searchNumber')) {
+          data.fallbackDestination = {
+            number: _.get(fallbackMember, 'member.searchNumber'),
+            sendToVoicemail: fallbackMember.sendToVoicemail
+          };
+        } else {
+          data.fallbackDestination.number = TelephoneNumberService.getDIDValue(fallbackNumber);
+        }
+      } else if (_.has(fallbackMember, 'member.searchNumber')) {
         data.fallbackDestination = {
-          number: TelephoneNumberService.getDIDValue(fallbackNumber)
-        };
-      } else if ((!isValidInternalNumber || !isValidExternalNumber)
-        && allowLocalValidation && _.isUndefined(fallbackMember)) {
-        data.fallbackDestination = {
-          number: fallbackNumber
+          number: _.get(fallbackMember, 'member.searchNumber'),
+          sendToVoicemail: fallbackMember.sendToVoicemail
         };
       } else {
         data.fallbackDestination = {
@@ -195,9 +207,13 @@
     }
 
     function validateExternalNumber() {
+      if (_.isObject(fallbackNumber) && _.get(fallbackNumber, 'code')) {
+        TelephoneNumberService.setRegionCode(_.get(fallbackNumber, 'code'));
+      }
       if (TelephoneNumberService.validateDID(fallbackNumber)) {
         isValidExternalNumber = true;
-        fallbackNumber = TelephoneNumberService.getDIDLabel(fallbackNumber);
+      } else if (TelephoneNumberService.validateDID(_.get(fallbackNumber, 'phoneNumber'))) {
+        isValidExternalNumber = true;
       }
       return isValidExternalNumber;
     }
@@ -244,8 +260,10 @@
     }
 
     function fallbackMemberNumberUuid() {
-      if (fallbackMember) {
-        return fallbackMember.member.selectableNumber.uuid;
+      if (_.get(fallbackMember, 'member.selectableNumber')) {
+        return _.get(fallbackMember, 'member.selectableNumber.uuid');
+      } else if (_.get(fallbackMember, 'member.searchNumber')) {
+        return _.get(fallbackMember, 'member.uuid');
       }
     }
 
@@ -264,12 +282,6 @@
         directoryNumberId: fallbackUuid
       }).$promise.then(function (data) {
         return !data.voiceMailProfile;
-      });
-    }
-
-    function allowLocalValidation() {
-      return DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
-        return !!response.regionCode;
       });
     }
   }

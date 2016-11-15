@@ -14,8 +14,50 @@ $overlay-panel-height: 93px;
   }
 }
 
+.paging-group-member-lookup .cs-card-layout {
+  @include vr-spacing(ml, 28.5, 0px, true);
+  @include vr-spacing(pb, 1);
+
+  position: fixed !important;
+  height: 16rem !important;
+  width: 58rem;
+  left: 50%;
+  margin-right: auto;
+  overflow: auto;
+  display: inline-flex;
+  flex-flow: row wrap;
+  flex: 1;
+  align-content: flex-start;
+  justify-content: center;
+}
+
+.pg-header {
+  margin: auto;
+  width: 54.5rem;
+
+  .member-count {
+    color: $gray-light;
+  }
+}
+
 .cs-setupassistant--content {
   height: calc(100vh - #{$top-bar-height + $overlay-panel-height});
+}
+
+.member-warning {
+  @include vr-spacing(pl, 0);
+  color: $gray-darkest;
+}
+
+.pg-cs-input__messages {
+  @extend .cs-input__messages;
+  display: block;
+  visibility: hidden;
+}
+
+.warning .pg-cs-input__messages {
+  margin-top: -1rem;
+  visibility: visible;
 }
 
 .pg-edit {

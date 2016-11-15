@@ -1,4 +1,9 @@
 .aa-media-upload {
+  .aa-flex-row-media-upload {
+    @extend .row;
+    @include vr-spacing(pt, 0.25);
+  }
+
   .aa-box {
     display: inline-block;
 
@@ -17,7 +22,11 @@
   .aa-tall-box {
     @extend .aa-box;
 
-    height: 9.25rem;
+    height: 9rem;
+    @include vr-spacing(pt, 0.85);
+    @include vr-spacing(pl, 0);
+    @include vr-spacing(pr, 0);
+    @include vr-spacing(pb, 1);
   }
 
   .aa-drop-box {
@@ -72,8 +81,13 @@
 
   .aa-top-bottom-push {
     @include vr-spacing(mv, 0.625);
-
     color: $gray-dark-4;
+    line-height: 1.25rem;
+  }
+
+  .aa-upload-squish {
+    @extend .aa-top-bottom-push;
+    @include vr-spacing(mb, 0.25);
   }
 
   .spread-light {

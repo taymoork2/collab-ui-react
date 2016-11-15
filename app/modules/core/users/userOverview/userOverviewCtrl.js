@@ -282,22 +282,17 @@
     function getAccountStatus() {
       // user status
       var promises = {
-        isPendingToggled: FeatureToggleService.atlasUserPendingStatusGetStatus(),
         isOnlineOrg: Auth.isOnlineOrg()
       };
       $q.all(promises).then(function (result) {
-        if (result.isPendingToggled) {
-          vm.currentUser.pendingStatus = false;
-          var userHasSignedUp = _.some(vm.currentUser.userSettings, function (userSetting) {
-            return userSetting.indexOf('spark.signUpDate') > 0;
-          });
-          var isActiveUser = !_.isEmpty(vm.currentUser.entitlements) &&
-                            (userHasSignedUp || result.isOnlineOrg || hasEntitlement('ciscouc'));
-          vm.pendingStatus = !isActiveUser;
-          vm.currentUser.pendingStatus = vm.pendingStatus;
-        } else {
-          vm.pendingStatus = _.indexOf(vm.currentUser.accountStatus, 'pending') >= 0;
-        }
+        vm.currentUser.pendingStatus = false;
+        var userHasSignedUp = _.some(vm.currentUser.userSettings, function (userSetting) {
+          return userSetting.indexOf('spark.signUpDate') > 0;
+        });
+        var isActiveUser = !_.isEmpty(vm.currentUser.entitlements) &&
+          (userHasSignedUp || result.isOnlineOrg || hasEntitlement('ciscouc'));
+        vm.pendingStatus = !isActiveUser;
+        vm.currentUser.pendingStatus = vm.pendingStatus;
       });
 
       // if no licenses/services found from CI,

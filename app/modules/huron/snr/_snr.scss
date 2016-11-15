@@ -39,20 +39,7 @@ $flagsImagePath: '../../images/' !default;
   }
 
   .snr-wait-seconds {
-    float: left;
-    font-size: rem-calc(14);
-    padding-top: 8px;
-    width: rem-calc(112px);
-
-    .select-toggle > i.icon {
-      right: 28px;
-      top: 3px;
-    }
-
-    .select-dropdown {
-      margin-top: -1px;
-      width: 100%;
-    }
+    display: inline-block;
   }
 
   .snr-wait-seconds-label {

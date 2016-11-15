@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function FusionClusterListController($filter, $modal, $state, $translate, Authinfo, Config, hasF237FeatureToggle, hasMediaFeatureToggle, FusionClusterService, Notification, WizardFactory) {
-
     var vm = this;
     if (hasF237FeatureToggle) {
       var groupsCache = {};
@@ -71,6 +70,7 @@
           }
           return clusters;
         })
+        .then(FusionClusterService.setClusterAllowListInfoForExpressway)
         .then(function (clusters) {
           clustersCache = clusters;
           updateFilters();
@@ -88,6 +88,14 @@
       vm.loading = true;
       FusionClusterService.getResourceGroups()
         .then(removeHybridMediaClustersIfNecessary)
+        .then(function (groups) {
+          return FusionClusterService.setClusterAllowListInfoForExpressway(groups.clusters)
+            .then(function (clusters) {
+              // we replace groups.clusters with the one modified by setClusterAllowListInfoForExpressway
+              groups.clusters = clusters;
+              return groups;
+            });
+        })
         .then(function (groups) {
           groupsCache = groups;
           updateFilters();
@@ -111,7 +119,8 @@
             response.clusters = filterHMClusters(response.clusters);
             return response;
           }),
-          unassigned: filterHMClusters(response.unassigned)
+          unassigned: filterHMClusters(response.unassigned),
+          clusters: filterHMClusters(response.clusters)
         };
       }
       return response;

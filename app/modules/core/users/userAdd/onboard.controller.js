@@ -7,9 +7,10 @@
 
   /*@ngInject*/
   function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate,
-                       addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService,
+                       addressparser, Analytics, Authinfo, chartColors, Config, DialPlanService, FeatureToggleService,
                        Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice,
-                       SunlightConfigService, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup) {
+                       SunlightConfigService, TelephonyInfoService, Userservice, Utils, UserCsvService,
+                       UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool) {
     var vm = this;
 
     $scope.hasAccount = Authinfo.hasAccount();
@@ -218,7 +219,9 @@
     }
 
     function loadExternalNumberPool(pattern) {
-      return TelephonyInfoService.loadExternalNumberPool(pattern).then(function (externalNumberPool) {
+      // Numbers loaded here should be limited to standard DID numbers. No Toll-Free numbers.
+      return TelephonyInfoService.loadExternalNumberPool(pattern, ExternalNumberPool.FIXED_LINE_OR_MOBILE)
+      .then(function (externalNumberPool) {
         $scope.externalNumberPool = externalNumberPool;
       }).catch(function (response) {
         $scope.externalNumberPool = [{
@@ -233,7 +236,10 @@
       $scope.isMapInProgress = true;
       $scope.isMapEnabled = false;
       var count = $scope.usrlist.length;
-      TelephonyInfoService.loadExtPoolWithMapping(count).then(function (externalNumberMapping) {
+
+      // Numbers loaded here should be limited to standard DID numbers. No Toll-Free numbers.
+      TelephonyInfoService.loadExtPoolWithMapping(count, ExternalNumberPool.FIXED_LINE_OR_MOBILE)
+      .then(function (externalNumberMapping) {
         $scope.externalNumberMapping = externalNumberMapping;
         assignMapUserList(count, externalNumberMapping);
         $scope.isMapped = true;
@@ -431,9 +437,11 @@
       this.features = Config.getDefaultEntitlements();
     }
 
-    $scope.ConfirmAdditionalServiceSetup = function () {
-      var promise = Notification.confirmation($translate.instant('usersPage.addtionalServiceSetupConfirmation'));
-      promise.then(function () {
+    $scope.confirmAdditionalServiceSetup = function () {
+      $modal.open({
+        type: 'dialog',
+        templateUrl: 'modules/core/users/userAdd/confirmLeavingDialog.tpl.html',
+      }).result.then(function () {
         $state.go('firsttimewizard');
       });
     };
@@ -458,7 +466,9 @@
     $scope.communicationFeatures = [];
     $scope.careFeatures = [];
     $scope.licenses = [];
+    $scope.licenseStatus = [];
     $scope.populateConf = populateConf;
+    $scope.disableCheckbox = disableCheckbox;
     $scope.populateConfInvitations = populateConfInvitations;
     $scope.getAccountLicenses = getAccountLicenses;
     $scope.checkMessageVisibility = checkMessageVisibility;
@@ -504,6 +514,14 @@
         return true;
       }
       return false;
+    }
+
+    function disableCheckbox(lic) {
+      if (_.isArray(lic)) {
+        return _.get(lic[0], 'status') === 'DISABLED';
+      } else {
+        return _.get(lic, 'status') === 'DISABLED';
+      }
     }
 
     function populateConf() {
@@ -610,6 +628,7 @@
         offerName: _.get(obj, 'license.offerName', ''),
         label: obj.label,
         isTrial: _.get(obj, 'license.isTrial', false),
+        status: _.get(obj, 'license.status', ''),
         confModel: false,
         cmrModel: false
       };

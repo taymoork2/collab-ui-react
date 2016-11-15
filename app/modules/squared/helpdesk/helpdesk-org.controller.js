@@ -41,18 +41,13 @@
     vm.supportsExtendedInformation = false;
     vm.cardsAvailable = false;
     vm.adminUsersAvailable = false;
-    vm.findServiceOrder = findServiceOrder;
-    vm.supportsLocalDialing = false;
+    vm.findServiceOrders = findServiceOrders;
     vm.openHybridServicesModal = openHybridServicesModal;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskExt).then(function (result) {
       vm.supportsExtendedInformation = result;
-    });
-
-    FeatureToggleService.getCustomerHuronToggle(vm.orgId, FeatureToggleService.features.huronLocalDialing).then(function (result) {
-      vm.supportsLocalDialing = result;
     });
 
     scrollToTop();
@@ -113,7 +108,7 @@
       }, XhrNotificationService.notify);
       findManagedByOrgs(org);
       findWebExSites(org);
-      findServiceOrder(vm.orgId);
+      findServiceOrders(vm.orgId);
       findAdminUsers(org);
       vm.supportedBy = isTrials(org.orgSettings) ? $translate.instant('helpdesk.trials') : $translate.instant('helpdesk.ts');
       angular.element(".helpdesk-details").focus();
@@ -153,17 +148,19 @@
       }
     }
 
-    function findServiceOrder(orgId) {
-      HelpdeskService.getServiceOrder(orgId).then(function (order) {
+    function findServiceOrders(orgId) {
+      HelpdeskService.getServiceOrders(orgId).then(function (orders) {
         var orderingSystemTypes = {
-          APP_DIRECT: 'Telstra AppDirect Marketplace(TAM)',
-          ATLAS_TRIALS: 'Spark Trial',
-          CCW: 'CCW',
-          CISCO_ONLINE_OPC: 'Spark Online Trial',
-          DIGITAL_RIVER: 'Digital River',
-          default: order.orderingTool
+          APP_DIRECT: 'Partner Marketplace',
+          ATLAS_TRIALS: 'Partner-Led Trial',
+          CCW: 'Cisco Commerce',
+          CISCO_ONLINE_OPC: 'Cisco Online Trial',
+          DIGITAL_RIVER: 'Cisco Online Marketplace'
         };
-        vm.orderSystem = orderingSystemTypes[order.orderingTool] || orderingSystemTypes['default'];
+        vm.orderSystems = [];
+        _.forEach(orders, function (order) {
+          vm.orderSystems.push(orderingSystemTypes[order.orderingTool] || order.orderingTool);
+        });
       }, XhrNotificationService.notify);
     }
 

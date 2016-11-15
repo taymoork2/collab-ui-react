@@ -47,7 +47,6 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(deferred.promise);
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(deferred2.promise);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'atlasUserPendingStatusGetStatus').and.returnValue($q.when(true));
     spyOn(Authinfo, 'isCSB').and.returnValue(false);
     spyOn(Auth, 'isOnlineOrg').and.returnValue($q.when(false));
     spyOn(Notification, 'success');

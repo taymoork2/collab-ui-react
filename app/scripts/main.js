@@ -62,11 +62,11 @@
   angular.module('Huron', [
     'Core',
     'uc.device',
-    'uc.callrouting',
     'uc.didadd',
     'uc.overview',
     'uc.hurondetails',
     'uc.cdrlogsupport',
+    'uc.autoattendant',
     'ngIcal',
     'huron.paging-group',
     'huron.telephoneNumber',

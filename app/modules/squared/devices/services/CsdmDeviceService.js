@@ -16,7 +16,7 @@
       });
     }
 
-    function fetchDevice(url) {
+    function fetchItem(url) {
       return $http.get(url).then(function (res) {
         return CsdmConverter.convertCloudberryDevice(res.data);
       });
@@ -70,7 +70,7 @@
       deleteItem: deleteItem,
       updateItemName: updateItemName,
       updateTags: updateTags,
-      fetchDevice: fetchDevice,
+      fetchItem: fetchItem,
 
 //Grey list:
       //on: deviceCache.on,

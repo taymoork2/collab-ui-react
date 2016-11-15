@@ -10,7 +10,7 @@
   /* @ngInject */
   function HuntGroupSetupAssistantCtrl($q, $state, $modal, $timeout,
     Authinfo, Notification, HuntGroupService,
-    HuntGroupFallbackDataService, HuntGroupMemberDataService) {
+    HuntGroupFallbackDataService, HuntGroupMemberDataService, DialPlanService) {
     var vm = this;
     var customerId = Authinfo.getOrgId();
 
@@ -65,7 +65,7 @@
     vm.removeFallbackDest = removeFallbackDest;
     vm.isErrorFallbackInput = isErrorFallbackInput;
     vm.fallbackSuggestionsAvailable = false;
-    vm.disableVoicemail = false;
+    vm.disableVoicemail = true;
 
     // ==================================================
     // The below methods have elevated access only to be
@@ -74,14 +74,19 @@
     vm.populateHuntPilotNumbers = populateHuntPilotNumbers;
     vm.populateHuntMembers = populateHuntMembers;
     vm.populateFallbackDestination = populateFallbackDestination;
-    vm.allowLocalValidation = false;
+
+    vm.externalRegionCodeFn = getRegionCode;
+    vm.callDestInputs = ['internal', 'external'];
 
     init();
 
     function init() {
       HuntGroupFallbackDataService.reset();
       HuntGroupMemberDataService.reset();
-      allowLocalValidation();
+    }
+
+    function getRegionCode() {
+      return DialPlanService.getCustomerVoice(Authinfo.getOrgId());
     }
 
     function fetchNumbers(typedNumber) {
@@ -255,6 +260,9 @@
       vm.selectedFallbackMember = HuntGroupFallbackDataService.setFallbackMember($item);
       HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get($item, 'selectableNumber.uuid')).then(function (isVoicemailDisabled) {
         vm.disableVoicemail = isVoicemailDisabled;
+      })
+      .catch(function () {
+        vm.disableVoicemail = true;
       });
     }
 
@@ -295,7 +303,7 @@
     }
 
     function populateFallbackDestination(data) {
-      data.fallbackDestination = HuntGroupFallbackDataService.getFallbackDestinationJSON(vm.allowLocalValidation);
+      data.fallbackDestination = HuntGroupFallbackDataService.getFallbackDestinationJSON();
     }
     /////////////////////////////////////////////////////////
 
@@ -336,12 +344,6 @@
           type: number.type,
           number: number.number
         });
-      });
-    }
-
-    function allowLocalValidation() {
-      HuntGroupFallbackDataService.allowLocalValidation().then(function (result) {
-        vm.allowLocalValidation = result;
       });
     }
   }

@@ -11,17 +11,9 @@ export class CommonGraphService {
   public readonly START: string = 'start';
   public readonly TITLE: string = 'title';
 
-  // Balloon Object Types
-  public  readonly BRACKET_TYPE: string = 'bracket';
-  public readonly SPAN_TYPE: string = 'span';
-  public readonly TEXT_TYPE: string = 'text';
-  public readonly TRANSLATE_TYPE: string = 'translate';
-
   /* @ngInject */
   constructor(
     private chartColors,
-    private $translate,
-    private $window
   ) {}
 
   private baseVariables = {
@@ -59,30 +51,10 @@ export class CommonGraphService {
     },
     export: {
       enabled: true,
-      position: 'bottom-right',
       libs: {
         autoLoad: false,
       },
-      menu: [{
-        class: 'export-main',
-        label: this.$translate.instant('reportsPage.downloadOptions'),
-        menu: [{
-          label: this.$translate.instant('reportsPage.saveAs'),
-          title: this.$translate.instant('reportsPage.saveAs'),
-          class: 'export-list',
-          menu: ['PNG', 'JPG'],
-        }, {
-          label: this.$translate.instant('reportsPage.pdf'),
-          title: this.$translate.instant('reportsPage.pdf'),
-          click: _.partial(function (commonGraphService: CommonGraphService) {
-            this.capture({}, function () {
-              this.toPDF({}, function (data) {
-                commonGraphService.$window.open(data, 'amCharts.pdf');
-              });
-            });
-          }, this),
-        }],
-      }],
+      menu: [],
     },
     legend: {
       color: this.chartColors.grayDarkest,

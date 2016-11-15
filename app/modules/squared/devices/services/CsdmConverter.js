@@ -220,6 +220,8 @@
         this.canDelete = true;
         this.accountType = obj.placeType || 'MACHINE';
         this.image = "images/devices-hi/unknown.png";
+        this.devices = {};
+        this.codes = {};
       }
 
       function decodeHuronTags(description) {

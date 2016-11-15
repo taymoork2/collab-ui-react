@@ -6,6 +6,7 @@ describe('Service: CsdmDataModelService', function () {
   var CsdmDataModelService;
   var $httpBackend;
   var $rootScope;
+  var testScope;
   var $timeout;
 
   var placesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/';
@@ -37,7 +38,7 @@ describe('Service: CsdmDataModelService', function () {
   var accounts = getJSONFixture('squared/json/accounts.json');
 
   beforeEach(inject(function (FeatureToggleService, $q, Authinfo) {
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'csdmPlacesGetStatus').and.returnValue($q.when(true));
     spyOn(Authinfo, 'getOrgId').and.returnValue('testOrg');
   }));
 
@@ -46,6 +47,7 @@ describe('Service: CsdmDataModelService', function () {
     $httpBackend = _$httpBackend_;
     $rootScope = _$rootScope_;
     $timeout = _$timeout_;
+    testScope = $rootScope.$new();
 
     $httpBackend.whenGET(devicesUrl + '?checkDisplayName=false&checkOnline=false').respond(initialHttpDevices);
     $httpBackend.whenGET(devicesUrl).respond(initialHttpDevices);
@@ -57,6 +59,7 @@ describe('Service: CsdmDataModelService', function () {
   }));
 
   afterEach(function () {
+    testScope.$destroy();
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
   });
@@ -171,11 +174,16 @@ describe('Service: CsdmDataModelService', function () {
         .respond({ cisUuid: placeUuid, url: placeToBeAddedUrl });
       $httpBackend.expectPOST("https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/codes")
         .respond({ url: codeToAddUrl, id: placeUuid }); //api uses id
-      var promiseExecuted;
+      var promiseExecuted, changeNotification;
 
       CsdmDataModelService.getDevicesMap().then(function (devicesMap) {
         CsdmDataModelService.getPlacesMap().then(function (places) {
-          CsdmDataModelService.createCsdmPlace("newPlace", "cloudberry").then(function (place) {
+          CsdmDataModelService.createCsdmPlace('newPlace').then(function (place) {
+
+            CsdmDataModelService.subscribeToChanges(testScope, function () {
+              changeNotification = "YES";
+            });
+
             CsdmDataModelService.createCodeForExisting(place.cisUuid).then(function (createdCode) {
               expect(devicesMap[codeToAddUrl]).toBe(createdCode);
               expect(Object.keys(places[place.url].codes).length).toBe(1);
@@ -187,6 +195,7 @@ describe('Service: CsdmDataModelService', function () {
 
       $httpBackend.flush();
       expect(promiseExecuted).toBeTruthy();
+      expect(changeNotification).toBeTruthy();
     });
 
     it('add code to an existing place is reflected in device list and place map with place containing new code', function () {
@@ -195,13 +204,17 @@ describe('Service: CsdmDataModelService', function () {
 
       $httpBackend.expectPOST("https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/codes")
         .respond({ url: codeToAddUrl, id: pWithoutDeviceUuid });  //api uses id
-      var promiseExecuted;
+      var promiseExecuted, changeNotification;
 
       CsdmDataModelService.getDevicesMap().then(function (deviceMap) {
         CsdmDataModelService.getPlacesMap().then(function (places) {
 
           expect(Object.keys(places[pWithoutDeviceUrl].devices).length).toBe(0);
           expect(Object.keys(places[pWithoutDeviceUrl].codes).length).toBe(0);
+
+          CsdmDataModelService.subscribeToChanges(testScope, function () {
+            changeNotification = "YES";
+          });
 
           CsdmDataModelService.createCodeForExisting(pWithoutDeviceUuid).then(function (createdCode) {
 
@@ -215,6 +228,7 @@ describe('Service: CsdmDataModelService', function () {
       });
       $httpBackend.flush();
       expect(promiseExecuted).toBeTruthy();
+      expect(changeNotification).toBeTruthy();
     });
 
     it('add code to non existing place is reflected in code list and place map', function () {
@@ -256,7 +270,7 @@ describe('Service: CsdmDataModelService', function () {
     function testDeleteDeviceIsReflectedInDevAndPlaceList(deviceUrlToDelete, placeUrl) {
       executeGetCallsAndInitPromises();
 
-      var promiseExecuted;
+      var promiseExecuted, changeNotification;
       $httpBackend.expectDELETE(deviceUrlToDelete).respond(204);
 
       CsdmDataModelService.getDevicesMap().then(function (devices) {
@@ -277,6 +291,10 @@ describe('Service: CsdmDataModelService', function () {
           var initalDeviceCountForPlace = devicesInPlace.length;
 
           expect(devicesInPlace).toContain(deviceToDelete);
+
+          CsdmDataModelService.subscribeToChanges(testScope, function () {
+            changeNotification = "YES";
+          });
 
           CsdmDataModelService.deleteItem(deviceToDelete).then(function () {
 
@@ -299,6 +317,7 @@ describe('Service: CsdmDataModelService', function () {
 
       $httpBackend.flush();
       expect(promiseExecuted).toBeTruthy();
+      expect(changeNotification).toBeTruthy();
     }
 
     it('delete cloudberry device is reflected in device list (all devices under same place) and place list', function () {
@@ -730,22 +749,29 @@ describe('Service: CsdmDataModelService', function () {
     });
 
     it('delete should remove place from place list', function () {
-
-      var expectCall;
       var placeToRemoveUrl = pWithoutDeviceUrl;
       $httpBackend.expectDELETE(placeToRemoveUrl).respond(200);
+      var promiseExecuted, changeNotification;
+
       CsdmDataModelService.getPlacesMap().then(function (places) {
         expect(Object.keys(places).length).toBe(initialPlaceCount);
         var placeToRemove = places[placeToRemoveUrl];
 
+        CsdmDataModelService.subscribeToChanges(testScope, function () {
+          changeNotification = "YES";
+        });
+
         CsdmDataModelService.deleteItem(placeToRemove).then(function () {
           expect(places[placeToRemove.url]).toBeUndefined();
           expect(Object.keys(places).length).toBe(initialPlaceCount - 1);
-          expectCall = true;
+          promiseExecuted = true;
         });
       });
+
+
       $httpBackend.flush();
-      expect(expectCall).toBe(true);
+      expect(promiseExecuted).toBeTruthy();
+      expect(changeNotification).toBeTruthy();
     });
 
     it('fail to delete should not remove place from place list', function () {
@@ -820,6 +846,62 @@ describe('Service: CsdmDataModelService', function () {
       });
       $httpBackend.flush();
       expect(expectCall).toBe(true);
+    });
+  });
+
+  describe('re-fetch places', function () {
+    var scope;
+
+    beforeEach(function () {
+      scope = $rootScope.$new();
+
+      $rootScope.$apply();
+
+      CsdmDataModelService.getPlacesMap(true);
+
+      $rootScope.$digest();
+      $timeout.flush(1000);
+      $httpBackend.flush();
+      $rootScope.$apply();
+    });
+
+    afterEach(function () {
+
+      $httpBackend.verifyNoOutstandingRequest();
+      $httpBackend.verifyNoOutstandingExpectation();
+
+      scope.$destroy();
+    });
+
+    it('has done the initial poll', function () {
+      $httpBackend.verifyNoOutstandingRequest();
+      $httpBackend.verifyNoOutstandingExpectation();
+    });
+
+    it('asking before grace time should not trigger fetching', function () {
+
+      $timeout.flush(3000);
+
+      CsdmDataModelService.getPlacesMap(true);
+
+      $rootScope.$digest();
+
+      $httpBackend.verifyNoOutstandingRequest();
+      $httpBackend.verifyNoOutstandingExpectation();
+    });
+
+    it('asking after grace time should trigger fetching', function () {
+
+      $timeout.flush(300000);
+
+      CsdmDataModelService.getPlacesMap(true);
+
+      $rootScope.$digest();
+
+      $httpBackend.flush(3);//devices,codes,accounts.
+
+      $httpBackend.verifyNoOutstandingRequest();
+      $httpBackend.verifyNoOutstandingExpectation();
     });
   });
 

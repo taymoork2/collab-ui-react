@@ -86,7 +86,7 @@ describe('Controller: ServiceSetup', function () {
     form = {
       '$invalid': false,
       'ftswLocalDialingRadio': {
-        $setValidity: function () {}
+        $setValidity: function () { }
       }
     };
 
@@ -896,6 +896,13 @@ describe('Controller: ServiceSetup', function () {
         expect(controller.model.site.siteCode).toEqual('10');
       });
 
+      it('should handle $scope.to being undefined', function () {
+        controller._buildVoicemailPrefixOptions($scope);
+        controller.model.site.extensionLength = '5';
+        $scope.$apply();
+        expect(controller.model.site.siteCode).toEqual('10');
+      });
+
       it('should set voicemail prefix to intersect with extension range and trigger warning', function () {
         controller.model.voicemailPrefix.label = '1100';
         controller.model.displayNumberRanges = [{
@@ -922,7 +929,7 @@ describe('Controller: ServiceSetup', function () {
         var localscope = {
           fields: [{
             formControl: {
-              $setValidity: function () {}
+              $setValidity: function () { }
             }
           }]
         };

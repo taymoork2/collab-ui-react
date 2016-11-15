@@ -21,6 +21,7 @@ class PlaceOverview implements ng.IComponentController {
 
   private currentPlace: IPlace = <IPlace>{ devices: [] };
   private csdmHuronUserDeviceService;
+  private adminDisplayName;
 
   /* @ngInject */
   constructor(private $q,
@@ -29,12 +30,11 @@ class PlaceOverview implements ng.IComponentController {
               private $translate: ng.translate.ITranslateService,
               private $window,
               private Authinfo,
-              private CsdmCodeService,
-              private CsdmHuronPlaceService,
               private CsdmHuronUserDeviceService,
               private CsdmDataModelService,
               private FeatureToggleService,
               private XhrNotificationService,
+              private Userservice,
               private WizardFactory) {
     this.currentPlace = this.$stateParams.currentPlace;
     this.csdmHuronUserDeviceService = this.CsdmHuronUserDeviceService.create(this.currentPlace.cisUuid);
@@ -48,6 +48,7 @@ class PlaceOverview implements ng.IComponentController {
   public $onInit(): void {
     this.loadServices();
     this.loadActions();
+    this.fetchDisplayNameForLoggedInUser();
   }
 
   private loadServices(): void {
@@ -71,6 +72,14 @@ class PlaceOverview implements ng.IComponentController {
     }
     this.services = [];
     this.services.push(service);
+  }
+
+  private fetchDisplayNameForLoggedInUser() {
+    this.Userservice.getUser('me', (data) => {
+      if (data.success) {
+        this.adminDisplayName = data.displayName;
+      }
+    });
   }
 
   private pstnFeatureIsEnabled(): Promise<boolean> {
@@ -102,19 +111,23 @@ class PlaceOverview implements ng.IComponentController {
     let wizardState = {
       data: {
         function: 'editServices',
-        accountType: 'shared',
-        showPlaces: true,
-        selectedPlace: this.currentPlace,
-        deviceName: this.currentPlace.displayName,
-        entitlements: this.currentPlace.entitlements,
-        deviceType: this.currentPlace.type,
         title: 'usersPreview.editServices',
+        showPlaces: true,
+        account: {
+          deviceType: this.currentPlace.type,
+          type: 'shared',
+          name: this.currentPlace.displayName,
+          cisUuid: this.currentPlace.cisUuid,
+          entitlements: this.currentPlace.entitlements,
+        },
       },
       history: [],
       currentStateName: 'addDeviceFlow.editServices',
       wizardState: {
         'addDeviceFlow.editServices': {
-          next: 'addDeviceFlow.addLines',
+          nextOptions: {
+            sparkCall: 'addDeviceFlow.addLines',
+          },
         },
         'addDeviceFlow.addLines': {},
       },
@@ -127,8 +140,8 @@ class PlaceOverview implements ng.IComponentController {
 
   public save(newName: string) {
     return this.CsdmDataModelService
-        .updateItemName(this.currentPlace, newName)
-        .catch(this.XhrNotificationService.notify);
+      .updateItemName(this.currentPlace, newName)
+      .catch(this.XhrNotificationService.notify);
   }
 
   public showDeviceDetails(device: IDevice): void {
@@ -154,19 +167,22 @@ class PlaceOverview implements ng.IComponentController {
     this.$state.go('place-overview.' + feature.state);
   }
 
-  private success(code): void {
+  public onGenerateOtpFn(): void {
     let wizardState = {
       data: {
         function: 'showCode',
-        accountType: 'shared',
         showPlaces: true,
-        code: code,
-        deviceType: this.currentPlace.type,
-        deviceName: this.currentPlace.displayName,
-        cisUuid: this.Authinfo.getUserId(),
-        email: this.Authinfo.getPrimaryEmail(),
-        displayName: this.Authinfo.displayName,
-        organizationId: this.Authinfo.getOrgId(),
+        account: {
+          type: 'shared',
+          deviceType: this.currentPlace.type,
+          name: this.currentPlace.displayName,
+        },
+        recipient: {
+          cisUuid: this.Authinfo.getUserId(),
+          email: this.Authinfo.getPrimaryEmail(),
+          displayName: this.adminDisplayName,
+          organizationId: this.Authinfo.getOrgId(),
+        },
         title: 'addDeviceWizard.newCode',
       },
       history: [],
@@ -179,28 +195,6 @@ class PlaceOverview implements ng.IComponentController {
     this.$state.go('addDeviceFlow.showActivationCode', {
       wizard: wizard,
     });
-  }
-
-  private error(err): void {
-    this.XhrNotificationService.notify(err);
-  }
-
-  public onGenerateOtpFn(): void {
-    if (this.currentPlace.type === 'cloudberry') {
-      this.CsdmCodeService.createCodeForExisting(this.currentPlace.cisUuid)
-        .then((code) => {
-          this.success(code);
-        }, (err) => {
-          this.error(err);
-        });
-    } else {
-      this.CsdmHuronPlaceService.createOtp(this.currentPlace.cisUuid)
-        .then((code) => {
-          this.success(code);
-        }, (err) => {
-          this.error(err);
-        });
-    }
   }
 }
 

@@ -11,7 +11,7 @@ describe('Spark Care Partner flow', function () {
     });
 
     it('should add a new care trial', function () {
-      utils.click(partner.trialFilter);
+      //utils.click(partner.trialFilter);
       utils.click(partner.addButton);
 
       utils.expectIsDisplayed(partner.addTrialForm);
@@ -92,7 +92,7 @@ describe('Spark Care Partner flow', function () {
 
     function clickTrialRowAndPreview() {
       navigation.clickCustomers();
-      utils.click(partner.trialFilter);
+      //utils.click(partner.trialFilter);
       utils.search(partner.newTrial.customerName, -1);
       utils.expectIsDisplayed(partner.newTrialRow);
       utils.click(partner.newTrialRow);

@@ -32,9 +32,7 @@ describe('Controller: TrialEditCtrl:', function () {
     FeatureToggleService = _FeatureToggleService_;
     Orgservice = _Orgservice_;
 
-    spyOn(Notification, 'notify');
     spyOn(Notification, 'success');
-    spyOn(Notification, 'error');
     spyOn(Notification, 'errorResponse');
     $state.modal = jasmine.createSpyObj('modal', ['close']);
     spyOn($state, 'go');
@@ -45,7 +43,6 @@ describe('Controller: TrialEditCtrl:', function () {
     addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.when());
     removeContextSpy = spyOn(TrialContextService, 'removeService').and.returnValue($q.when());
     spyOn(TrialContextService, 'trialHasService').and.returnValue(false);
-    spyOn(FeatureToggleService, 'atlasWebexTrialsGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.when(false));
@@ -131,7 +128,7 @@ describe('Controller: TrialEditCtrl:', function () {
       });
 
       it('should notify error', function () {
-        expect(Notification.error).toHaveBeenCalled();
+        expect(Notification.errorResponse).toHaveBeenCalled();
       });
 
       it('should not close the modal', function () {
@@ -528,6 +525,29 @@ describe('Controller: TrialEditCtrl:', function () {
           controller.careTrial.details.quantity = 20;
           expect(helpers.careLicenseCountLessThanTotalCount()).toBeTruthy();
         });
+      });
+    });
+
+    describe('care checkbox disabled/enabled', function () {
+      it('should disable care checkbox in edit trial when care was already selected in start trial', function () {
+        controller.preset.care = true;
+        controller.messageTrial.enabled = true;
+        var isDisabled = controller.careFields[0].expressionProperties['templateOptions.disabled']();
+        expect(isDisabled).toBeTruthy();
+      });
+
+      it('should enable care checkbox in edit trial when care was not already selected in start trial', function () {
+        controller.preset.care = false;
+        controller.messageTrial.enabled = true;
+        var isDisabled = controller.careFields[0].expressionProperties['templateOptions.disabled']();
+        expect(isDisabled).toBeFalsy();
+      });
+
+      it('should disable care checkbox in edit trial when message was not selected in start trial', function () {
+        controller.preset.care = false;
+        controller.messageTrial.enabled = false;
+        var isDisabled = controller.careFields[0].expressionProperties['templateOptions.disabled']();
+        expect(isDisabled).toBeTruthy();
       });
     });
   });

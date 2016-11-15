@@ -1,4 +1,5 @@
 import {
+  IExportMenu,
   ITimespan,
   IIntervalQuery,
   ICustomerIntervalQuery,
@@ -25,6 +26,7 @@ export class CommonReportService {
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
+    private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private Notification: Notification,
     private ReportConstants,
@@ -33,7 +35,7 @@ export class CommonReportService {
 
   private readonly usageOptions: Array<string> = ['weeklyUsage', 'monthlyUsage', 'threeMonthUsage'];
   private readonly altUsageOptions: Array<string> = ['dailyUsage', 'monthlyUsage', 'yearlyUsage'];
-  private readonly cacheValue: boolean = (parseInt(moment.utc().format('H'), this.ReportConstants.INTEGER_BASE) >= 8);
+  private readonly cacheValue: boolean = (_.toInteger(moment.utc().format('H')) >= 8);
   private urlBase = this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/reports/';
 
   private getService(url: string, cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
@@ -114,7 +116,7 @@ export class CommonReportService {
       if (date === '') {
         date = moment().subtract(1, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
       }
-      let dayOffset: number = this.getOffset(parseInt(moment.tz(date, this.ReportConstants.TIMEZONE).format('e'), this.ReportConstants.INTEGER_BASE));
+      let dayOffset: number = this.getOffset(_.toInteger(moment.tz(date, this.ReportConstants.TIMEZONE).format('e')));
       for (let x = 3; x >= 0; x--) {
         let temp: any = _.clone(graphItem);
         temp.date = moment().tz(this.ReportConstants.TIMEZONE)
@@ -316,6 +318,77 @@ export class CommonReportService {
 
   public getModifiedLineDate(date: string): string {
     return moment.tz(date, this.ReportConstants.TIMEZONE).format(this.ReportConstants.DAY_FORMAT);
+  }
+
+  public getPercentage(numberOne: number, numberTwo: number): number {
+    return Math.round((numberOne / numberTwo) * this.ReportConstants.PERCENTAGE_MULTIPLIER);
+  }
+
+  // export functions
+  public createExportMenu(chart: any): Array<IExportMenu> {
+    return [{
+      id: 'saveAs',
+      label: this.$translate.instant('reportsPage.saveAs'),
+      click: undefined,
+    }, {
+      id: 'jpg',
+      label: this.$translate.instant('reportsPage.jpg'),
+      click: (): void => {
+        this.exportJPG(chart);
+      },
+    }, {
+      id: 'png',
+      label: this.$translate.instant('reportsPage.png'),
+      click: (): void => {
+        this.exportPNG(chart);
+      },
+    }, {
+      id: 'pdf',
+      label: this.$translate.instant('reportsPage.pdf'),
+      click: (): void => {
+        this.exportPDF(chart);
+      },
+    }];
+  }
+
+  private exportJPG(chart: any): void {
+    if (chart) {
+      // 'this' is the AmCharts export object
+      chart.export.capture({}, function (): void {
+        this.toJPG({}, function (data: any): void {
+            this.download(data, 'application/jpg', 'amCharts.jpg');
+        });
+      });
+    }
+  }
+
+  private exportPNG(chart: any): void {
+    if (chart) {
+      // 'this' is the AmCharts export object
+      chart.export.capture({}, function (): void {
+        this.toPNG({}, function (data: any): void {
+            this.download(data, 'application/png', 'amCharts.png');
+        });
+      });
+    }
+  }
+
+  private exportPDF(chart: any): void {
+    if (chart) {
+      // 'this' is the AmCharts export object
+      chart.export.capture({}, function (): void {
+        this.toJPG({}, function (data: any): void {
+          chart.export.toPDF({
+            content: [{
+              image: data,
+              fit: [523, 300],
+            }],
+          }, function (downloadData: any): void {
+            this.download(downloadData, 'application/pdf', 'amCharts.pdf');
+          });
+        });
+      });
+    }
   }
 }
 

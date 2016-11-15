@@ -31,7 +31,8 @@
     tab: 'gemservicesTab',
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
-    state: 'gem-services',
+    state: 'gem.services',
+    feature: 'gem-services-tab',
     link: '/partner/services/index'
   }, {
     tab: 'userTab',
@@ -95,16 +96,6 @@
     title: 'tabs.developmentTab',
     hideProd: true,
     subPages: [{
-      title: 'tabs.callRoutingTab',
-      desc: 'tabs.callRoutingTabDesc',
-      state: 'callrouting',
-      link: '#callrouting'
-    }, {
-      title: 'tabs.mediaOnHoldTab',
-      desc: 'tabs.mediaOnHoldTabDesc',
-      state: 'mediaonhold',
-      link: '#mediaonhold'
-    }, {
       title: 'tabs.metricsDetailsTab',
       //desc: 'tabs.metricsDetailsTabDesc',
       state: 'media-service-v2',

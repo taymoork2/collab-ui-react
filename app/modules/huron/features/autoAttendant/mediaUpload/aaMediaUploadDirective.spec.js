@@ -9,10 +9,12 @@ describe('Directive: aaMediaUpload', function () {
   };
   var uiMenu = {};
   var menuEntry = {};
+  var playAction = {};
   var schedule = 'openHours';
   var index = '0';
   var elementHtml = "<aa-media-upload aa-schedule='openHours' aa-index='0' name='mediaUploadInput'></aa-media-upload>";
   var attributeHtml = "<div aa-media-upload aa-schedule='openHours' aa-index='0' name='mediaUploadInput'></div>";
+  var play = 'play';
 
   beforeEach(angular.mock.module('Huron'));
 
@@ -34,6 +36,8 @@ describe('Directive: aaMediaUpload', function () {
     ui[schedule] = uiMenu;
     menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
     uiMenu.addEntryAt(index, menuEntry);
+    playAction = AutoAttendantCeMenuModelService.newCeActionEntry(play, '');
+    menuEntry.addAction(playAction);
   }));
 
   describe('when the directive is an element', function () {

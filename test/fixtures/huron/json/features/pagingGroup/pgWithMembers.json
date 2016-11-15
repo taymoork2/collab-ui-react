@@ -1,0 +1,13 @@
+{
+  "groupId": "bbcd1234-abcd-abcd-abcddef123456",
+  "name": "Test1",
+  "extension": "5010",
+  "url": "",
+  "members": [
+    {
+      "deviceId": [],
+      "memberId": "38fcc914-5a18-442b-ae61-866df55d7ac9",
+      "type": "PLACE"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 import { CallForward } from '../../callForward';
 import { LineService, LineConsumerType, LINE_CHANGE, Line } from '../services';
 import { LineOverviewService, LineOverviewData } from './index';
-import { DirectoryNumberOptionsService } from '../../directoryNumber';
+import { DirectoryNumberOptionsService, Availability, ExternalNumberType, Pattern } from '../../directoryNumber';
 import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
 import { Member, MemberService } from '../../members';
 import { SharedLine, SharedLineService } from '../../sharedLine';
@@ -79,7 +79,11 @@ class LineOverview implements ng.IComponentController {
       });
 
     this.LineOverviewService.getEsnPrefix().then(esnPrefix => this.esnPrefix = esnPrefix);
-    this.DirectoryNumberOptionsService.getExternalNumberOptions().then(numbers => this.externalNumbers = numbers);
+    this.DirectoryNumberOptionsService.getExternalNumberOptions(
+      Pattern.SKIP_MATCHING,    // Don't search for a specific number
+      Availability.UNASSIGNED,  // Only get unassigned numbers
+      ExternalNumberType.DID,   // Only get standard PSTN numbers. No toll free.
+      ).then(numbers => this.externalNumbers = numbers);
   }
 
   public setDirectoryNumbers(internalNumber: string, externalNumber: string): void {

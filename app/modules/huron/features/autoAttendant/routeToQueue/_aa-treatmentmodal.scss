@@ -32,20 +32,21 @@
       width: 100%;
     }
   }
-& .aa-destination-container {
-     width: 100%;
-     & .csSelect-container {
-       @include vr-spacing(pt, 1);
-     }
+  .aa-destination-container {
+    width: 100%;
 
-     & form {
-       @include vr-spacing(mb, 0);
+    .csSelect-container {
+      @include vr-spacing(pt, 1);
+    }
 
-       & .form-group {
-         @include vr-spacing(mb, .25);
-       }
-     }
-}
+    form {
+      @include vr-spacing(mb, 0);
+
+      .form-group {
+        @include vr-spacing(mb, 0.25);
+      }
+    }
+  }
   .columns + .columns:last-child.aa-selectsec-modal {
     float: left;
   }

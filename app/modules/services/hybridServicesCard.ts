@@ -19,11 +19,11 @@ export class ServicesOverviewHybridServicesCard extends ServicesOverviewCard {
   ];
 
   public hybridClustersEventHandler(clusterList: Array<any>): void {
-    this._active = clusterList.length > 0;
+    this.active = clusterList.length > 0;
   }
 
   public getButtons(): Array<ICardButton> {
-    if (this._active) {
+    if (this.active) {
       return this._buttons;
     } else {
       return [this._disabledButton];
@@ -31,13 +31,14 @@ export class ServicesOverviewHybridServicesCard extends ServicesOverviewCard {
   }
 
   /* @ngInject */
-  public constructor() {
+  public constructor(Authinfo) {
     super({
       name: 'servicesOverview.cards.clusterList.title',
       description: 'servicesOverview.cards.clusterList.description',
       cardClass: 'cluster-list',
       cardType: CardType.hybrid,
     });
-    this._loading = false;
+    this.display = Authinfo.isFusion();
+    this.loading = false;
   }
 }

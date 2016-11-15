@@ -145,7 +145,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
       var ctrl = initController();
 
-      expect(ctrl.inputValue).toEqual('amtest2.ciscospark.com');
+      expect(ctrl.pmrField.inputValue).toEqual('amtest2.ciscospark.com');
 
     });
 
@@ -165,7 +165,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
       var ctrl = initController();
 
-      expect(ctrl.inputValue).toEqual('');
+      expect(ctrl.pmrField.inputValue).toEqual('');
 
     });
 

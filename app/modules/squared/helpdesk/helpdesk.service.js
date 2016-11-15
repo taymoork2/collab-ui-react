@@ -19,7 +19,7 @@
       getHybridServices: getHybridServices,
       resendInviteEmail: resendInviteEmail,
       getWebExSites: getWebExSites,
-      getServiceOrder: getServiceOrder,
+      getServiceOrders: getServiceOrders,
       getCloudberryDevice: getCloudberryDevice,
       getOrgDisplayName: getOrgDisplayName,
       findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults,
@@ -457,12 +457,12 @@
         .then(extractItems);
     }
 
-    function getServiceOrder(orgId) {
+    function getServiceOrders(orgId) {
       if (useMock()) {
-        return deferredResolve(HelpdeskMockData.serviceOrder);
+        return deferredResolve(HelpdeskMockData.serviceOrders);
       }
       return $http
-        .get(urlBase + 'helpdesk/serviceorder/' + encodeURIComponent(orgId))
+        .get(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/serviceorders')
         .then(extractData);
     }
 

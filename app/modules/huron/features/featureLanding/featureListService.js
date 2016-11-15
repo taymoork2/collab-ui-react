@@ -79,7 +79,7 @@
 
     function callParks(data) {
       var formattedList = [];
-      _.forEach(data.callparks, function (callPark) {
+      _.forEach(data, function (callPark) {
         formattedCard.cardName = callPark.name;
         formattedCard.id = callPark.uuid;
         formattedCard.startRange = callPark.startRange;

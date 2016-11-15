@@ -7,8 +7,8 @@
   function CareSettingsCtrl($interval, $scope, $translate, $window, Authinfo, Log, Notification, SunlightConfigService, TokenService, UrlConfig) {
     var vm = this;
     var callbackUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/csonboard?accessToken='
-      + TokenService.getAccessToken();
-    var ccfsUrl = UrlConfig.getCcfsUrl() + callbackUrl;
+      + TokenService.getAccessToken() + '&orgName=' + Authinfo.getOrgName();
+    var ccfsUrl = UrlConfig.getCcfsUrl() + encodeURIComponent(callbackUrl);
 
     vm.UNKNOWN = 'unknown';
     vm.ONBOARDED = 'onboarded';

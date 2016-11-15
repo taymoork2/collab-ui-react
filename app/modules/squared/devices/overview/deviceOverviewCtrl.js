@@ -6,27 +6,93 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, Userservice, $stateParams, $translate, $timeout, Authinfo, FeatureToggleService, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService) {
     var deviceOverview = this;
-    deviceOverview.currentDevice = $stateParams.currentDevice;
     var huronDeviceService = $stateParams.huronDeviceService;
-
+    deviceOverview.showPlaces = false;
     deviceOverview.linesAreLoaded = false;
     deviceOverview.tzIsLoaded = false;
-    deviceOverview.isKEMAvailable = KemService.isKEMAvailable(deviceOverview.currentDevice.product);
-    if (deviceOverview.isKEMAvailable) {
-      deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.addOnModuleCount);
+
+    function init() {
+      fetchDisplayNameForLoggedInUser();
+      fetchPlacesSupport();
+
+      displayDevice($stateParams.currentDevice);
+
+      CsdmDataModelService.reloadItem($stateParams.currentDevice).then(function (updatedDevice) {
+        displayDevice(updatedDevice);
+      });
     }
 
-    if (deviceOverview.currentDevice.isHuronDevice) {
-      initTimeZoneOptions().then(function () {
-        loadDeviceTimeZone();
+    init();
+
+    function displayDevice(device) {
+
+      var lastDevice = deviceOverview.currentDevice;
+      deviceOverview.currentDevice = device;
+
+      if (!lastDevice || lastDevice.product != deviceOverview.currentDevice.product) {
+        deviceOverview.isKEMAvailable = KemService.isKEMAvailable(deviceOverview.currentDevice.product);
+        deviceOverview.kemNumber = deviceOverview.isKEMAvailable ?
+          KemService.getKemOption(deviceOverview.currentDevice.addOnModuleCount) : '';
+      }
+
+      if (deviceOverview.currentDevice.isHuronDevice) {
+        if (!deviceOverview.tzIsLoaded) {
+          initTimeZoneOptions().then(function () {
+            loadDeviceTimeZone();
+          });
+        }
+        if (!deviceOverview.huronPollInterval) {
+          deviceOverview.huronPollInterval = $interval(pollLines, 30000);
+          $scope.$on("$destroy", function () {
+            $interval.cancel(deviceOverview.huronPollInterval);
+          });
+        }
+        pollLines();
+      }
+
+      deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport || deviceOverview.currentDevice.needsActivation;
+
+      deviceOverview.canChangeUpgradeChannel = channels.length > 1 && deviceOverview.currentDevice.isOnline;
+
+      deviceOverview.shouldShowUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isOnline;
+
+      deviceOverview.upgradeChannelOptions = _.map(channels, getUpgradeChannelObject);
+
+      resetSelectedChannel();
+    }
+
+    function fetchDisplayNameForLoggedInUser() {
+      Userservice.getUser('me', function (data) {
+        if (data.success) {
+          deviceOverview.adminDisplayName = data.displayName;
+        }
       });
-      var huronPollInterval = $interval(pollLines, 30000);
-      $scope.$on("$destroy", function () {
-        $interval.cancel(huronPollInterval);
+    }
+
+    function fetchPlacesSupport() {
+      FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
+        deviceOverview.showPlaces = result;
       });
-      pollLines();
+    }
+
+    function initTimeZoneOptions() {
+      deviceOverview.searchTimeZonePlaceholder = $translate.instant('serviceSetupModal.searchTimeZone');
+
+      if (!deviceOverview.timeZoneOptions) {
+        return ServiceSetup.getTimeZones().then(function (timezones) {
+          deviceOverview.timeZoneOptions = ServiceSetup.getTranslatedTimeZones(timezones);
+        });
+      } else {
+        return $q.resolve();
+      }
+    }
+
+    function getTimeZoneFromId(id) {
+      return _.find(deviceOverview.timeZoneOptions, function (o) {
+        return o.id == id;
+      });
     }
 
     function loadDeviceTimeZone() {
@@ -37,23 +103,16 @@
       });
     }
 
-    function getTimeZoneFromId(id) {
-      return _.find(deviceOverview.timeZoneOptions, function (o) {
-        return o.id == id;
-      });
-    }
-
-    function initTimeZoneOptions() {
-      deviceOverview.searchTimeZonePlaceholder = $translate.instant('serviceSetupModal.searchTimeZone');
-      return ServiceSetup.getTimeZones().then(function (timezones) {
-        deviceOverview.timeZoneOptions = ServiceSetup.getTranslatedTimeZones(timezones);
-      });
-    }
-
     function pollLines() {
       huronDeviceService.getLinesForDevice(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.lines = result;
         deviceOverview.linesAreLoaded = true;
+      });
+    }
+
+    function setTimeZone(timezone) {
+      return huronDeviceService.setTimezoneForDevice(deviceOverview.currentDevice, timezone).then(function () {
+        deviceOverview.timeZone = timezone;
       });
     }
 
@@ -64,12 +123,6 @@
           Notification.errorWithTrackingId(response);
         });
     };
-
-    function setTimeZone(timezone) {
-      return huronDeviceService.setTimezoneForDevice(deviceOverview.currentDevice, timezone).then(function () {
-        deviceOverview.timeZone = timezone;
-      });
-    }
 
     deviceOverview.saveTimeZoneAndWait = function () {
       var newValue = deviceOverview.selectedTimeZone.id;
@@ -154,10 +207,20 @@
         .then(function () {
           var wizardState = {
             data: {
-              function: "showCode",
-              deviceType: "cloudberry",
-              deviceName: displayName,
-              title: "addDeviceWizard.newCode"
+              function: 'showCode',
+              showPlaces: deviceOverview.showPlaces,
+              account: {
+                type: 'shared',
+                name: displayName,
+                deviceType: 'cloudberry',
+              },
+              recipient: {
+                displayName: deviceOverview.adminDisplayName,
+                cisUuid: Authinfo.getUserId(),
+                email: Authinfo.getPrimaryEmail(),
+                organizationId: Authinfo.getOrgId(),
+              },
+              title: 'addDeviceWizard.newCode'
             },
             history: [],
             currentStateName: 'addDeviceFlow.showActivationCode',
@@ -166,7 +229,7 @@
             }
           };
           var wizard = WizardFactory.create(wizardState);
-          $state.go('addDeviceFlow.showActivationCode', {
+          $state.go(wizardState.currentStateName, {
             wizard: wizard
           });
         });
@@ -185,6 +248,12 @@
 
     deviceOverview.showRemoteSupportButton = function () {
       return deviceOverview.currentDevice && !!deviceOverview.currentDevice.hasRemoteSupport;
+    };
+
+    deviceOverview.getDeleteCodeText = function () {
+      return deviceOverview.showPlaces
+        ? $translate.instant('placesPage.deletePlace')
+        : $translate.instant('deviceOverviewPage.deleteLocation');
     };
 
     deviceOverview.addTag = function () {
@@ -218,19 +287,9 @@
         });
     };
 
-    deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport || deviceOverview.currentDevice.needsActivation;
-
-    deviceOverview.canChangeUpgradeChannel = channels.length > 1 && deviceOverview.currentDevice.isOnline;
-
-    deviceOverview.shouldShowUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isOnline;
-
-    deviceOverview.upgradeChannelOptions = _.map(channels, getUpgradeChannelObject);
-
     function resetSelectedChannel() {
       deviceOverview.selectedUpgradeChannel = deviceOverview.currentDevice.upgradeChannel;
     }
-
-    resetSelectedChannel();
 
     function getUpgradeChannelObject(channel) {
       var labelKey = 'CsdmStatus.upgradeChannels.' + channel;

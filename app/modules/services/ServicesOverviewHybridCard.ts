@@ -5,6 +5,7 @@ export interface IHybridCardParams extends ICardParams {
   statusService: string;
   routerState: string;
 }
+
 export interface IServiceStatus {
   serviceId: string;
   status: string;
@@ -27,13 +28,13 @@ export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
   }
 
   public hybridStatusEventHandler(services: Array<IServiceStatus>): void {
-    this._status = {
+    this.status = {
       status: this.filterAndGetCssStatus(services, this.statusService),
       text: this.filterAndGetTxtStatus(services, this.statusService),
       routerState: this.routerState,
     };
-    this._active = this.filterAndGetEnabledService(services, this.activeServices);
-    this._loading = false;
+    this.active = this.filterAndGetEnabledService(services, this.activeServices);
+    this.loading = false;
   }
 
   public IserviceStatusToTxt = {
@@ -41,6 +42,7 @@ export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
     impaired: 'servicesOverview.cardStatus.impaired',
     outage: 'servicesOverview.cardStatus.outage',
     unknown: 'servicesOverview.cardStatus.unknown',
+    setupNotComplete: 'servicesOverview.cardStatus.setupNotComplete',
   };
 
   protected filterAndGetCssStatus(services: Array<IServiceStatus>, serviceId: string): string | undefined {

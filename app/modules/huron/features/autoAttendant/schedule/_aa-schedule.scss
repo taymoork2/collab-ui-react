@@ -61,6 +61,7 @@ $aa-schedule-text-color: $gray-light-1;
 
   .aa-help-icon {
     color: $color-primary-lighter;
+    position: absolute;
 
     &:hover {
       color: $white;
@@ -74,6 +75,12 @@ $aa-schedule-text-color: $gray-light-1;
   }
 
   .aa-help-wrapper {
+    .modal-title {
+      max-width: 900px;
+      margin: 0;
+      padding: 0 0rem 0 1rem;
+    }
+
     .popover {
       @include vr-spacing(mt, 0);
     }

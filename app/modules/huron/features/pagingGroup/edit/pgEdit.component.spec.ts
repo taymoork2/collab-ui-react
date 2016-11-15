@@ -23,7 +23,6 @@ describe('Component: pgEdit', () => {
     this.injectDependencies(
       '$q',
       '$scope',
-      '$timeout',
       '$state',
       'Notification',
       'Authinfo',
@@ -164,7 +163,7 @@ describe('Component: pgEdit', () => {
       this.controller.name = pgUpdated.name;
       this.controller.number = pgUpdated.extension;
       this.controller.saveForm();
-      this.$timeout.flush();
+      this.$scope.$apply();
       expect(this.PagingGroupService.updatePagingGroup).toHaveBeenCalledWith(pgUpdated);
       expect(this.Notification.success).toHaveBeenCalledWith('pagingGroup.successUpdate');
       expect(this.$state.go).toHaveBeenCalledWith('huronfeatures');
@@ -178,7 +177,7 @@ describe('Component: pgEdit', () => {
       this.controller.name = pgUpdated.name;
       this.controller.number = pgUpdated.extension;
       this.controller.saveForm();
-      this.$timeout.flush();
+      this.$scope.$apply();
       expect(this.PagingGroupService.updatePagingGroup).toHaveBeenCalledWith(pgUpdated);
       expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorUpdate', { message: 'A group with this name already exists.' });
       expect(this.$state.go).not.toHaveBeenCalledWith('huronfeatures');
@@ -192,7 +191,7 @@ describe('Component: pgEdit', () => {
       this.controller.name = pgUpdated.name;
       this.controller.number = pgUpdated.extension;
       this.controller.saveForm();
-      this.$timeout.flush();
+      this.$scope.$apply();
       expect(this.PagingGroupService.updatePagingGroup).toHaveBeenCalledWith(pgUpdated);
       expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorUpdate', { message: '' });
       expect(this.$state.go).not.toHaveBeenCalledWith('huronfeatures');

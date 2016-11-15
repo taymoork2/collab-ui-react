@@ -173,6 +173,11 @@
           iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
           vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.addAction(iaAction);
         }
+        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement)) {
+          vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var paAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
+          vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.addAction(paAction);
+        }
         if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.fallBack)) {
           vm.menuKeyEntry.actions[0].queueSettings.fallBack = AutoAttendantCeMenuModelService.newCeMenuEntry();
           fbMaxTime = AutoAttendantCeMenuModelService.newCeActionEntry('time', '');

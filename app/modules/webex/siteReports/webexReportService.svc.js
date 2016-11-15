@@ -18,8 +18,6 @@
     //ok, we need a unique global self.
     //the above self is overloaded in places.
 
-    //var loc = _.replace($translate.use(), "_", "-");
-
     var common_reports_pageids = ["meetings_in_progess",
       "meeting_usage",
       "recording_usage",
@@ -152,7 +150,7 @@
       this.reportPageIframeUrl = theUrl;
       this.modifiedUrl = this.reportPageIframeUrl;
       this.toUIsrefString = function () {
-        return "webex-reports.webex-reports-iframe({" +
+        return "webex-reports-iframe({" +
           "  siteUrl:" + "'" + this.siteUrl + "'" + "," +
           "  reportPageId:" + "'" + this.reportPageId + "'" + "," +
           "  reportPageIframeUrl:" + "'" + this.reportPageIframeUrl + "'" +
@@ -413,7 +411,7 @@
 
                 logMsg = funcName + ": " + "ns1_siteAdminNavUrl=" + "\n" +
                   JSON.stringify(ns1_siteAdminNavUrl);
-                $log.log(logMsg);
+                Log.debug(logMsg);
 
                 var rpts = self.getReports(siteUrl, reportPagesInfoJson);
                 reportsObject["reports"] = rpts;

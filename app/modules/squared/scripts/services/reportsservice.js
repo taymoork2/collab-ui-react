@@ -49,6 +49,8 @@
       getOverviewMetrics: getOverviewMetrics
     };
 
+    ///////////////////////
+
     function buildUrl(metricType, params) {
       var metricUrl = timeChartUrl;
 
@@ -177,10 +179,11 @@
         .success(function (data, status) {
           data = _.isObject(data) ? data : {};
           data.success = true;
-          Log.debug('Callback for healthMonitor');
           callback(data, status);
         })
         .error(function (data, status) {
+          data = _.isObject(data) ? data : {};
+          data.success = false;
           callback(data, status);
         });
     }

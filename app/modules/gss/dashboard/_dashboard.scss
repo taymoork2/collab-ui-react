@@ -1,0 +1,122 @@
+.status-dashboard {
+  .incident-section {
+    @include vr_spacing(mt, 1);
+    @include vr_spacing(p, 1);
+    background-color: $white;
+
+    .no-incident-notification {
+      border: 1px dashed $gray-base;
+      @include vr_spacing(p, 1.25);
+    }
+
+    .incidents-list {
+      @include vr_spacing(ml, 0);
+
+      > li {
+        @include vr_spacing(mt, 0.5);
+        list-style: none;
+
+        > div:first-child {
+          height: 40px;
+          background-color: #e67e22;
+
+          > span {
+            @include vr_spacing(mt, 0.75, 2px);
+            @include vr_spacing(ml, 0.5);
+            color: $white;
+            font-size: 1rem;
+          }
+
+          > a {
+            @include vr_spacing(mr, 0.75, 2px);
+            @include vr_spacing(mt, 0.5, 2px);
+
+            font-size: 15px;
+            border: 2px solid $white;
+            color: $white;
+          }
+        }
+
+        > div:last-child {
+          border: 1px solid #e67e22;
+          @include vr_spacing(p, 0.75, 2px);
+
+          > h6:first-child {
+            color: $gray-dark-4;
+          }
+        }
+      }
+    }
+  }
+
+  .component-section {
+    @include vr_spacing(mt, 1);
+    @include vr_spacing(mb, 1);
+    @include vr_spacing(p, 1);
+    background-color: $white;
+
+    .no-component-notification {
+      border: 1px dashed $gray-base;
+      @include vr_spacing(p, 1.25);
+    }
+
+    .components-list {
+      @include vr_spacing(ml, 0);
+
+      .component-name {
+        vertical-align: middle;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-weight: bolder;
+        color: $gray-dark-4;
+        cursor: pointer;
+      }
+
+      .sub-component-name {
+        @extend .component-name;
+
+        font-weight: 500;
+        color: $gray-dark-1;
+        cursor: default;
+      }
+
+      .component-status-selector {
+        width: 240px;
+      }
+
+      > li {
+        @include vr_spacing(mb, 1.25);
+
+        list-style: none;
+        border-top: 1px solid $gray-light-2;
+
+        &:first-child {
+          border-top: none !important;
+        }
+
+        > div {
+          @include vr_spacing(pt, 1, 1px);
+          @include vr_spacing(mt, 2.5);
+          @include vr_spacing(mb, 1.25);
+          height: 50px;
+
+          > a {
+            color: $gray-light-1;
+          }
+        }
+
+        > ul {
+          @include vr_spacing(ml, 0);
+          @include vr_spacing(mt, 0.75, 2px);
+
+          > li {
+            @include vr_spacing(pl, 0.5, 2px);
+            height: 50px;
+            list-style: none;
+          }
+        }
+      }
+    }
+  }
+}
