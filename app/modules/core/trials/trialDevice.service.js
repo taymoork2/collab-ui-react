@@ -124,6 +124,67 @@
         'Denmark', 'Finland', 'France', 'Germany', 'Ireland', 'Italy', 'Luxembourg', 'Netherlands', 'Norway', 'Poland',
         'Portugal', 'Slovakia', 'Spain', 'Sweden', 'Switzerland', 'United Kingdom']
     };
+    var _deviceLimit = {
+      roomSystems: {
+        min: 1,
+        max: 3,
+        type: 'ROOM_SYSTEMS',
+        errorMessage: 'trialModal.call.invalidRoomSystemsQuantity'
+      },
+      callDevices: {
+        min: 1,
+        max: 4,
+        type: 'CALL_DEVICES',
+        errorMessage: 'trialModal.call.invalidPhonesQuantity'
+      },
+      totalDevices: {
+        min: 1,
+        max: 5,
+        type: 'TOTAL'
+      },
+      CISCO_SX10: {
+        min: 1,
+        max: 3,
+        model: 'CISCO_SX10',
+        type: 'ROOM_SYSTEMS'
+      },
+      CISCO_DX80: {
+        min: 1,
+        max: 3,
+        model: 'CISCO_DX80',
+        type: 'ROOM_SYSTEMS'
+      },
+      CISCO_MX300: {
+        min: 1,
+        max: 1,
+        model: 'CISCO_MX300',
+        type: 'ROOM_SYSTEMS'
+      },
+      CISCO_8865: {
+        min: 1,
+        max: 4,
+        model: 'CISCO_8865',
+        type: 'CALL_DEVICES'
+      },
+      CISCO_8845: {
+        min: 1,
+        max: 4,
+        model: 'CISCO_8845',
+        type: 'CALL_DEVICES'
+      },
+      CISCO_8841: {
+        min: 1,
+        max: 4,
+        model: 'CISCO_8841',
+        type: 'CALL_DEVICES'
+      },
+      CISCO_7841: {
+        min: 1,
+        max: 4,
+        model: 'CISCO_7841',
+        type: 'CALL_DEVICES'
+      }
+    };
 
     var countryListTypes = {
       US_ONLY: 'US',
@@ -136,6 +197,7 @@
       CISCO_7841: 'US'
     };
 
+
     var service = {
       getData: getData,
       reset: reset,
@@ -143,12 +205,17 @@
       getStates: getStates,
       getCountries: getCountries,
       canAddDevice: canAddDevice,
-      getCountryCodeByName: getCountryCodeByName
+      getCountryCodeByName: getCountryCodeByName,
+      getDeviceLimit: getDeviceLimit
     };
 
     return service;
 
     ////////////////
+
+    function getDeviceLimit() {
+      return _deviceLimit;
+    }
 
     function getData() {
       return _trialData || _makeTrial();
