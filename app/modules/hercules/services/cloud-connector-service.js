@@ -7,6 +7,8 @@
 
   function CloudConnectorService($q, $timeout, Authinfo) {
 
+    var serviceAccountId = 'google@example.org'; // dummy value for now
+
     var service = {
       isServiceSetup: isServiceSetup,
       updateConfig: updateConfig,
@@ -32,19 +34,18 @@
     function getServiceAccount(serviceId) {
       return $q(function (resolve, reject) {
         if (serviceId === 'squared-fusion-gcal' && Authinfo.getOrgId() === 'fe5acf7a-6246-484f-8f43-3e8c910fc50d') {
-          resolve('serviceaccount@example.org');
+          resolve(serviceAccountId);
         } else {
           reject();
         }
       });
     }
 
-    function updateConfig(serviceAccountId, privateKey, serviceId) {
+    function updateConfig(newServiceAccountId, privateKey, serviceId) {
       return $q(function (resolve, reject) {
-        if (serviceAccountId === 'serviceaccount@example.org'
-           && privateKey === 'MIIEpQIBAAKCAQEA3Tz2mr7SZiAMfQyuvBjM9Oi..Z1BjP5CE/Wm/Rr500P'
-           && serviceId === 'squared-fusion-gcal') {
+        if (serviceId === 'squared-fusion-gcal' && Authinfo.getOrgId() === 'fe5acf7a-6246-484f-8f43-3e8c910fc50d') {
           $timeout(function () {
+            serviceAccountId = newServiceAccountId;
             resolve(extractDataFromResponse({
               data: {},
               status: 200

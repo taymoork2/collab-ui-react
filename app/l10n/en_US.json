@@ -532,8 +532,8 @@
     "customers": "Customers",
     "customerSelect": "Select a customer",
     "usageReports": {
-      "usageReportTitle": "Reports",
-      "usageReportMenuTitle": "Room Device Usage Reports",
+      "usageReportTitle": "Room Device Usage Reports",
+      "pageTitle": "Reports",
       "peakHour": "Peak Hour",
       "distribution": "Distribution",
       "timeline": "Timeline",
@@ -559,7 +559,7 @@
       "last3Months": "Monthly Last 3 Months",
       "deviceOptions": {
         "all": "All",
-        "roomSystems": "DX, MX, and SX Systems",
+        "roomSystems": "DX, MX, and SX Devices",
         "sparkBoard": "Spark Board"
       }
     }
@@ -1740,18 +1740,35 @@
         "sipDomainHeading": "SIP Destination",
         "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
-        "sipDomainExample": "For example: sipmtls.example.com"
+        "sipDomainExample": "For example: sipmtls.example.com",
+        "certificateDeleteTooltip": "Delete Certificate",
+        "noUploadedCertificate": "No certificates uploaded. Using the default trust list.",
+        "uploadedCertificates": "Uploaded Certificates:"
       },
       "googleCalendar": {
         "title": "Google Calendar",
+        "serviceAccountHeader": "Service Account",
+        "serviceAccountText": "The service account used for connecting from Cisco Collaboration Cloud to your Google Calendar organization.",
+        "serviceAccountHelpText": "To change the service account, upload a new private key in the section below",
         "privateKeyHeader": "Private Key",
         "privateKeyText": "Upload a new private key.",
         "deactivateHeader": "Deactivate Google Calendar",
         "deactivateText": "Your users will no longer be able to use this service.",
         "googleCalendarConfigWillBeWiped": "This action will delete all Google Calendar settings from Cisco Collaboration Cloud.",
         "uploadNewPrivateKey": "Upload New Private Key",
-        "successfullyUploadedKey": "Private key uploaded successfully.",
+        "uploadNewPrivateKeyPlaceholder": "Enter service account name",
+        "serviceAccountName": "Service Account Name",
+        "uploadNewPrivateKeyExplanation": "Enter your service account name and upload the private key you downloaded from Google Developer Console.",
+        "dragAndDropKeyFileHere": "Drag and drop the file containing the private key here or",
+        "clickToBrowse": "click to browse",
+        "fileReadyForImport": "File ready for import",
+        "removeFile": "Remove file",
+        "successfullyUploadedKey": "Service account saved successfully, and private key file {{filename}} uploaded.",
+        "failedToUploadKey": "Changes not saved. The service account and/or private key file are not valid.",
         "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status."
+      },
+      "hybridCalendarCommon": {
+        "hybridCalendarSetUp": "Hybrid Calendar setup"
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
@@ -3356,7 +3373,8 @@
   },
   "internationalDialing": {
     "internationalDialing": "International Dialing",
-    "internationalDialingDesc": "Users and Places with Spark Call inherit this setting by default. Exception can be made at the individual user's or place's settings."
+    "internationalDialingDesc": "Users inherit this setting by default. Exception can be made at the individual user's settings.",
+    "internationalDialingPlacesDesc": "Users and Places with Spark Call inherit this setting by default. Exception can be made at the individual user's or place's settings."
   },
   "huronSettings": {
     "saveSuccess": "Settings successfully saved.",
