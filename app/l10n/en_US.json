@@ -2367,7 +2367,7 @@
     "builderAddNewStep": "Add New Step",
     "builderNewStep": "New Step",
     "builderNewStepHelp": "You can add as many steps to the call flow as you want.",
-    "builderNewStepInfo": "Add actions here for your Auto Attendant. Create as many as you want, and link them all together.",
+    "builderNewStepInfo": "Add actions to your Auto Attendant. Create as many as you want, link them together, and specify the sequence of actions.",
     "builderNumbers": "Numbers",
     "actionPlaceholder": "Choose Action...",
     "actionSayMessage": "Say Message",
