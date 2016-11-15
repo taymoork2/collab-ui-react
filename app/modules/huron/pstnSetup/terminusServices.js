@@ -24,7 +24,8 @@
     .factory('TerminusCustomerCarrierTollFreeInventoryRelease', TerminusCustomerCarrierTollFreeInventoryRelease)
     .factory('TerminusCustomerCarrierTollFreeInventoryReserve', TerminusCustomerCarrierTollFreeInventoryReserve)
     .factory('TerminusStateService', TerminusStateService)
-    .factory('TerminusLookupE911Service', TerminusLookupE911Service);
+    .factory('TerminusLookupE911Service', TerminusLookupE911Service)
+    .factory('TerminusUserDeviceE911Service', TerminusUserDeviceE911Service);
 
   /* @ngInject */
   function TerminusCustomerService($resource, HuronConfig) {
@@ -177,5 +178,14 @@
   /* @ngInject */
   function TerminusLookupE911Service($resource, HuronConfig) {
     return $resource(HuronConfig.getTerminusUrl() + '/lookup/e911');
+  }
+
+  /* @ngInject */
+  function TerminusUserDeviceE911Service($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId/numbers/:number/e911', {}, {
+      update: {
+        method: 'PUT'
+      }
+    });
   }
 })();
