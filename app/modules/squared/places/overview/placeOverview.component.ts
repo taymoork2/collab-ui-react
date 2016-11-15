@@ -175,6 +175,7 @@ class PlaceOverview implements ng.IComponentController {
         account: {
           type: 'shared',
           deviceType: this.currentPlace.type,
+          cisUuid: this.currentPlace.cisUuid,
           name: this.currentPlace.displayName,
         },
         recipient: {
