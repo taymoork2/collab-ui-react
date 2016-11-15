@@ -33,10 +33,6 @@
       this.key = '';
       this.value = '';
       this.keys = [];
-      this.action = {
-        name: '',
-        label: ''
-      };
     }
 
     vm.maxLengthOptions = [];
@@ -60,11 +56,9 @@
     vm.addKeyAction = addKeyAction;
     vm.deleteKeyAction = deleteKeyAction;
     vm.keyChanged = keyChanged;
-
     vm.inputActions = [];
 
     /////////////////////
-
     //the media upload only is set for the say message action,
     //not for phone menu, dial by ext, or submenu at this point
     //and is also feature toggled
@@ -177,11 +171,14 @@
 
     function getPlayAction(menuEntry) {
       var action;
-      action = _.find(menuEntry.actions, function (action) {
-        return _.indexOf('play', action.name) >= 0;
-      });
+      action = _.get(menuEntry, 'actions[0]');
 
-      return action;
+      if (action && (action.name === 'play')) {
+        return action;
+      }
+
+      return undefined;
+
     }
     function setActionEntry() {
       var ui = AAUiModelService.getUiModel();
