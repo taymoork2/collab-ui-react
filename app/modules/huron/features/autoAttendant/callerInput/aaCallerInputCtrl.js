@@ -59,9 +59,8 @@
     vm.inputActions = [];
 
     /////////////////////
-    //the media upload only is set for the say message action,
-    //not for phone menu, dial by ext, or submenu at this point
-    //and is also feature toggled
+    //the media upload only is set for the say message action
+    // and is also feature toggled
     function isMediaUploadToggle() {
       return AACommonService.isMediaUploadToggle();
     }

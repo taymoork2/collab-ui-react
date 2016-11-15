@@ -46,7 +46,7 @@
         </div>
         <div class="row" ng-if="aaCallerInput.inputActions.length < 12">
           <a class="aa-pm-add-text" ng-click="aaCallerInput.addKeyAction()">
-            <i name="aa-caller-input-add-action" class="icon icon-plus-circle"></i>{{(aaPhoneMenu.inputActions.length === 0 ?  'autoAttendant.phoneMenuAddDigit' : 'autoAttendant.phoneMenuAnotherDigit') | translate }}</a>
+            <i name="aa-caller-input-add-action" class="icon icon-plus-circle"></i>{{(aaCallerInput.inputActions.length === 0 ?  'autoAttendant.phoneMenuAddDigit' : 'autoAttendant.phoneMenuAnotherDigit') | translate }}</a>
         </div>
       </div>
     </div>
@@ -55,9 +55,9 @@
       <div class="aa-select-min">
          <cs-select id="maxLength{{ schedule + index }}" ng-model="aaCallerInput.maxOptionLength" options="aaCallerInput.maxLengthOptions"></cs-select>
       </div>
-       <div>
-          <span class="small-12 large-12 columns aa-message-max-length-subtext" translate="autoAttendant.callerInputMaxLength"></span>
-       </div>
+      <div>
+        <span class="small-12 large-12 columns aa-message-max-length-subtext" translate="autoAttendant.callerInputMaxLength"></span>
+      </div>
     </div>
   </div>
   <div class="panel">
