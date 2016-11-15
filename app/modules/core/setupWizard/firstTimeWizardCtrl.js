@@ -64,16 +64,13 @@
       }
 
       var careAdmin = response.data;
-      var hasSyncKms = _.find(careAdmin.roles, function (r) {
-        return r === Config.backend_roles.spark_synckms;
-      });
 
       var hasCareEntitlements = _.filter(careAdmin.entitlements, function (e) {
         return (e === Config.entitlements.care ||
           e === Config.entitlements.context);
       }).length === 2;
 
-      return (!hasSyncKms || !hasCareEntitlements) ? $q.resolve(careAdmin) : $q.reject();
+      return (!hasCareEntitlements) ? $q.resolve(careAdmin) : $q.reject();
     }
 
     function patchAdmin(admin) {

@@ -11,11 +11,11 @@
   </cs-page-sub-header>
   <div class="content-container">
     <cs-card-layout>
-      <report-card options="nav.activeUserReportOptions" secondary-options="nav.activeUserSecondaryReportOptions" show="nav.showEngagement" time="nav.timeSelected" resize-page="nav.resizeMostActive()"></report-card>
+      <report-card options="nav.activeUserReportOptions" export-dropdown="nav.exportArrays.active" secondary-options="nav.activeUserSecondaryReportOptions" show="nav.showEngagement" time="nav.timeSelected" resize-page="nav.resizeMostActive()"></report-card>
       <report-card options="nav.endpointReportOptions" show="nav.showEngagement" time="nav.timeSelected"></report-card>
-      <report-card options="nav.populationReportOptions" show="nav.showEngagement"></report-card>
-      <report-card options="nav.callMetricsReportOptions" show="nav.showQuality" time="nav.timeSelected"></report-card>
-      <report-card options="nav.mediaReportOptions" show="nav.showQuality"></report-card>
+      <report-card options="nav.populationReportOptions" export-dropdown="nav.exportArrays.population" show="nav.showEngagement"></report-card>
+      <report-card options="nav.callMetricsReportOptions" export-dropdown="nav.exportArrays.metrics" show="nav.showQuality" time="nav.timeSelected"></report-card>
+      <report-card options="nav.mediaReportOptions" export-dropdown="nav.exportArrays.media" show="nav.showQuality"></report-card>
     </cs-card-layout>
     </div>
   </div>

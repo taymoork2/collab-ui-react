@@ -1,10 +1,20 @@
 'use strict';
 
 describe('Controller: Care Local Settings', function () {
-  var controller, sunlightChatConfigUrl, $httpBackend, Notification, $interval, $intervalSpy, $scope, $window, userInfoUrl;
+  var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy, $scope,
+    $window, userInfoUrl;
+  var spiedAuthinfo = {
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org')
+  };
   beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module(function ($provide) {
+    $provide.value("Authinfo", spiedAuthinfo);
+  }));
   beforeEach(
-    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _$interval_, _$window_, Authinfo, UrlConfig) {
+    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, _$window_,
+                     UrlConfig, $q) {
+      sunlightConfigService = _SunlightConfigService_;
       $httpBackend = _$httpBackend_;
       Notification = _Notification_;
       $scope = _$rootScope_.$new();
@@ -13,13 +23,19 @@ describe('Controller: Care Local Settings', function () {
       $intervalSpy = jasmine.createSpy('$interval', $interval).and.callThrough();
       $scope.wizard = {};
       $scope.wizard.isNextDisabled = false;
+      orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
       userInfoUrl = UrlConfig.getAdminServiceUrl() + 'userauthinfo';
-      sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/chat';
+      sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
       controller = $controller('CareLocalSettingsCtrl', {
         $scope: $scope,
         $interval: $intervalSpy,
         Notification: Notification,
         $window: $window
+      });
+      spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
+        var deferred = $q.defer();
+        deferred.resolve('fake update response');
+        return deferred.promise;
       });
     })
   );
@@ -42,6 +58,27 @@ describe('Controller: Care Local Settings', function () {
       expect(controller.state).toBe(controller.ONBOARDED);
       $httpBackend.flush();
       expect(controller.state).toBe(controller.ONBOARDED);
+    });
+
+    it('should call updateChatConfig, if already onboarded and orgName is not present', function () {
+      $httpBackend.expectGET(userInfoUrl).respond(200, { roles: 'Full_Admin' });
+      $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csConnString: 'testConnectionString' });
+      $httpBackend.flush();
+      expect(sunlightConfigService.updateChatConfig).toHaveBeenCalled();
+    });
+
+    it('should call updateChatConfig, if already onboarded and orgName is empty', function () {
+      $httpBackend.expectGET(userInfoUrl).respond(200, { roles: 'Full_Admin' });
+      $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csConnString: 'testConnectionString', orgName: "" });
+      $httpBackend.flush();
+      expect(sunlightConfigService.updateChatConfig).toHaveBeenCalled();
+    });
+
+    it('should not call updateChatConfig, if already onboarded and orgName is present', function () {
+      $httpBackend.expectGET(userInfoUrl).respond(200, { roles: 'Full_Admin' });
+      $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csConnString: 'testConnectionString', orgName: "fake org name" });
+      $httpBackend.flush();
+      expect(sunlightConfigService.updateChatConfig).not.toHaveBeenCalled();
     });
   });
 

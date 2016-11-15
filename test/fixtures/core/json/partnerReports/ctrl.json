@@ -161,5 +161,18 @@
   }, {
     "number": "0.35",
     "text": "callMetrics.failureRate"
+  }],
+  "exportMenu": [{
+    "id": "saveAs",
+    "label": "reportsPage.saveAs"
+  }, {
+    "id": "jpg",
+    "label": "reportsPage.jpg"
+  }, {
+    "id": "png",
+    "label": "reportsPage.png"
+  }, {
+    "id": "pdf",
+    "label": "reportsPage.pdf"
   }]
 }

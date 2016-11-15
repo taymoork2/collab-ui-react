@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmDataModelService($q, $timeout, $rootScope, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmHuronOrgDeviceService, CsdmHuronPlaceService, CsdmPoller, CsdmConverter, CsdmHubFactory, Authinfo) {
+  function CsdmDataModelService($q, $timeout, $rootScope, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmHuronOrgDeviceService, CsdmHuronPlaceService, CsdmPoller, CsdmConverter, CsdmHubFactory, Authinfo, FeatureToggleService) {
 
     var placesUrl = CsdmPlaceService.getPlacesUrl();
 
@@ -191,21 +191,33 @@
       return service.deleteItem(item)
         .then(function () {
           if (item.isPlace) {
-            delete placesDataModel[item.url];
+            _.unset(placesDataModel, [item.url]);
             _.each(item.devices, function (dev) {
-              delete theDeviceMap[dev.url];
+              _.unset(theDeviceMap, [dev.url]);
             });
             _.each(item.codes, function (code) {
-              delete theDeviceMap[code.url];
+              _.unset(theDeviceMap, [code.url]);
             });
           } else {
-            delete theDeviceMap[item.url];
+            _.unset(theDeviceMap, [item.url]);
             var placeUrl = getPlaceUrl(item);
             if (placesDataModel[placeUrl]) {
-              delete placesDataModel[placeUrl].devices[item.url]; //delete device or code from the place
-              delete placesDataModel[placeUrl].codes[item.url];
+              _.unset(placesDataModel, [placeUrl, 'devices', item.url]); // delete device or code from the place
+              _.unset(placesDataModel, [placeUrl, 'codes', item.url]);
               if (!item.isHuronDevice) {
-                delete placesDataModel[placeUrl]; //we currently delete the place when delete cloudberry device
+                if (item.isCloudberryDevice) {
+                  return FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
+                    if (!result) { // Places is disabled, delete the place
+                      return CsdmPlaceService.deleteItem(placesDataModel[placeUrl]).then(function () {
+                        _.unset(placesDataModel, [placeUrl]);
+                        notifyListeners();
+                      });
+                    }
+                    notifyListeners();
+                  });
+                } else { // Codes: Only possible to delete the whole place
+                  _.unset(placesDataModel, [placeUrl]); // we currently delete the place when delete cloudberry device
+                }
               }
             }
           }

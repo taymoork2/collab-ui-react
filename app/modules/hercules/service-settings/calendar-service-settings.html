@@ -29,6 +29,15 @@
 
     <setting-section setting="calendarSettings.googleCalendarSection" ng-show="calendarSettings.hasGoogleCalendarFeatureToggle">
       <div class="sub-section">
+        <h5 class="sub-section__label" translate="hercules.settings.googleCalendar.serviceAccountHeader"></h5>
+        <p class="sub-section__description" translate="hercules.settings.googleCalendar.serviceAccountText"></p>
+        <input cs-input
+               disabled
+               type="text"
+               ng-model="calendarSettings.googleServiceAccount"
+               cs-input-help-text="{{calendarSettings.localizedGoogleServiceAccountHelpText}}">
+      </div>
+      <div class="sub-section">
         <h5 class="sub-section__label" translate="hercules.settings.googleCalendar.privateKeyHeader"></h5>
         <p class="sub-section__description" translate="hercules.settings.googleCalendar.privateKeyText"></p>
         <button ng-if="!calendarSettings.googleServiceAccount"
@@ -40,7 +49,6 @@
                 translate="common.upload"
                 ng-click="calendarSettings.uploadGooglePrivateKey()"></button>
       </div>
-
       <div class="sub-section">
         <h5 class="sub-section__label" translate="hercules.settings.googleCalendar.deactivateHeader"></h5>
         <p class="sub-section__description" translate="hercules.settings.googleCalendar.deactivateText"></p>
