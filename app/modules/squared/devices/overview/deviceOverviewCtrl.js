@@ -12,10 +12,13 @@
     deviceOverview.showPlaces = false;
     deviceOverview.linesAreLoaded = false;
     deviceOverview.tzIsLoaded = false;
+    deviceOverview.shouldShowLines = function () {
+      return deviceOverview.currentDevice.isHuronDevice || (deviceOverview.showPstn && deviceOverview.showPlaces);
+    };
 
     function init() {
       fetchDisplayNameForLoggedInUser();
-      fetchPlacesSupport();
+      fetchFeatureToggles();
 
       displayDevice($stateParams.currentDevice);
 
@@ -37,12 +40,7 @@
           KemService.getKemOption(deviceOverview.currentDevice.addOnModuleCount) : '';
       }
 
-      if (deviceOverview.currentDevice.isHuronDevice) {
-        if (!deviceOverview.tzIsLoaded) {
-          initTimeZoneOptions().then(function () {
-            loadDeviceTimeZone();
-          });
-        }
+      if (deviceOverview.shouldShowLines()) {
         if (!deviceOverview.huronPollInterval) {
           deviceOverview.huronPollInterval = $interval(pollLines, 30000);
           $scope.$on("$destroy", function () {
@@ -50,6 +48,14 @@
           });
         }
         pollLines();
+      }
+
+      if (deviceOverview.currentDevice.isHuronDevice) {
+        if (!deviceOverview.tzIsLoaded) {
+          initTimeZoneOptions().then(function () {
+            loadDeviceTimeZone();
+          });
+        }
       }
 
       deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport || deviceOverview.currentDevice.needsActivation;
@@ -71,9 +77,12 @@
       });
     }
 
-    function fetchPlacesSupport() {
+    function fetchFeatureToggles() {
       FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
         deviceOverview.showPlaces = result;
+      });
+      FeatureToggleService.csdmPstnGetStatus().then(function (result) {
+        deviceOverview.showPstn = result && Authinfo.isSquaredUC();
       });
     }
 
