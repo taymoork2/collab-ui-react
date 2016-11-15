@@ -164,7 +164,11 @@
     }
 
     function shouldShowFallbackPill() {
-      return HuntGroupFallbackDataService.isFallbackValidMember();
+      return (vm.selectedFallbackNumber === '' &&
+      vm.selectedFallbackMember === undefined &&
+      vm.model.fallbackDestination.number &&
+      HuntGroupFallbackDataService.isValidInternalOrgNumber()) ||
+      HuntGroupFallbackDataService.isFallbackValidMember();
     }
 
     function shouldShowFallbackWarning() {
@@ -172,6 +176,7 @@
     }
 
     function removeFallbackDest() {
+      vm.selectedFallbackNumber = undefined;
       vm.selectedFallbackMember = HuntGroupFallbackDataService.removeFallbackMember();
       vm.form.$setDirty();
     }

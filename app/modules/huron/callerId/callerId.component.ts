@@ -175,7 +175,7 @@ class CallerId implements ng.IComponentController {
     }
   }
 
-  public selectType(type: any): IOption {
+  public selectType(type: string): IOption {
     let selected;
     switch (type) {
       case CallerId.COMPANY_NUMBER_TYPE.key:
@@ -191,16 +191,14 @@ class CallerId implements ng.IComponentController {
         selected = this.customOption;
         break;
       case CallerId.BLOCK_CALLERID_TYPE.key:
+      default:
         selected = this.blockOption;
         break;
     }
-    let _selected;
-    if (selected) {
-      _selected = {
-        value: selected.value.externalCallerIdType,
-        label: selected.label,
-      };
-    }
+    let _selected = {
+      value: selected.value.externalCallerIdType,
+      label: selected.label,
+    };
     return _selected;
   }
 }

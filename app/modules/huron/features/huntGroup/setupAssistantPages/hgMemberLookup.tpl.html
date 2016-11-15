@@ -6,7 +6,12 @@
     <span ng-if="match.label.user.firstName === null && match.label.user.lastName === null" ng-bind-html="match.label.user.userName | typeaheadHighlight:query"></span>
   </div>
   <a class="hunt-member-line">
-    <span ng-bind-html="(match.label.selectableNumber | huntMemberTelephone) | typeaheadHighlight:query"></span>
+    <span
+      ng-if="match.label.selectableNumber" 
+      ng-bind-html="(match.label.selectableNumber | huntMemberTelephone) | typeaheadHighlight:query"></span>
+    <span
+      ng-if="match.label.searchNumber" 
+      ng-bind-html="(match.label.searchNumber) | typeaheadHighlight:query"></span>
   </a>
 </script>
 <div class="hunt-member-lookup">

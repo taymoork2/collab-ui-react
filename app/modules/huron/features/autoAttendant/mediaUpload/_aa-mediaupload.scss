@@ -1,9 +1,9 @@
 .aa-media-upload {
-
   .aa-flex-row-media-upload {
     @extend .row;
     @include vr-spacing(pt, 0.25);
   }
+
   .aa-box {
     display: inline-block;
 
@@ -86,7 +86,7 @@
   }
 
   .aa-upload-squish {
-    @extends .aa-top-bottom-push;
+    @extend .aa-top-bottom-push;
     @include vr-spacing(mb, 0.25);
   }
 

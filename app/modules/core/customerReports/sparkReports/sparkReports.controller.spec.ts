@@ -1,4 +1,5 @@
 import {
+  IExportMenu,
   IFilterObject,
   IDropdownBase,
   IReportCard,
@@ -166,6 +167,10 @@ describe('Controller: Customer Reports Ctrl', function () {
       expect(controller.QUALITY).toEqual(ctrlData.QUALITY);
       expect(controller.displayEngagement).toBeTruthy();
       expect(controller.displayQuality).toBeTruthy();
+
+      _.forEach(controller.exportArrays, (array: Array<IExportMenu>): void => {
+        expect(array.length).toBe(4);
+      });
 
       expect(controller.activeOptions).toEqual(activeOptions);
       expect(controller.secondaryActiveOptions).toEqual(secondaryActiveOptions);

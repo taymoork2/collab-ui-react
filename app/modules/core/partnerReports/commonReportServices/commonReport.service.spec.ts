@@ -1,4 +1,5 @@
 import {
+  IExportMenu,
   ITimespan,
   IIntervalQuery,
   ICustomerIntervalQuery,
@@ -8,6 +9,7 @@ import {
 } from '../partnerReportInterfaces';
 
 describe('Service: Common Report Service', () => {
+  const ctrlData = getJSONFixture('core/json/partnerReports/ctrl.json');
   const customerData = getJSONFixture('core/json/partnerReports/customerResponse.json');
   const defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
   const cacheValue: boolean = (parseInt(moment.utc().format('H'), 10) >= 8);
@@ -285,5 +287,19 @@ describe('Service: Common Report Service', () => {
 
   it('getPercentage should return percentage of two numbers', function () {
     expect(this.CommonReportService.getPercentage(1, 2)).toEqual(50);
+  });
+
+  it('should return the export menu', function () {
+    let exportMenu: Array<IExportMenu> = this.CommonReportService.createExportMenu({});
+    expect(exportMenu.length).toBe(4);
+    _.forEach(exportMenu, (exportItem: IExportMenu, index: number): void => {
+      expect(exportItem.id).toEqual(ctrlData.exportMenu[index].id);
+      expect(exportItem.label).toEqual(ctrlData.exportMenu[index].label);
+      if (index > 0) {
+        expect(exportItem.click).toEqual(jasmine.any(Function));
+      } else {
+        expect(exportItem.click).toBeUndefined();
+      }
+    });
   });
 });

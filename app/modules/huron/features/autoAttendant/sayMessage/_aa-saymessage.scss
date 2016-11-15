@@ -20,6 +20,7 @@
     white-space: nowrap;
   }
 }
+
 .aa-message-panel-input-only {
   @extend .aa-message-panel;
   @include vr-spacing(mt, 0);
