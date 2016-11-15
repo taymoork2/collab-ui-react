@@ -3334,6 +3334,7 @@
     "orderRequest": "Order Request",
     "subscriptions": "Subscriptions",
     "viewSubscriptionInfo": "View Subscription Info",
+    "updateLicensesAuthError": "Current user is not authorized to update user license info.",
     "noAccountInfo": "No account information available for this organization. This is most likely due to accessing an Integration server based organization on a Production server.  Please verify that this organization exists on the server you are using."
   },
   "customerAdminPanel": {
