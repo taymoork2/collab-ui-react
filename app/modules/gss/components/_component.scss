@@ -1,5 +1,6 @@
 .component-page {
   background-color: $white;
+
   .centered-info-pane {
     width: 500px;
     height: 300px;
@@ -10,9 +11,11 @@
     h2 {
       color: black;
     }
+
     h3 {
       color: $gray-base;
     }
+
     p {
       margin-bottom: 1rem;
     }
@@ -23,19 +26,23 @@
     padding: 2rem;
     line-height: 3rem;
     color: $gray-dark-4;
+
     &:not(:last-child) {
       border-bottom: 1px solid $gray-base;
     }
+
     ul li {
       list-style-type: none;
       line-height: 2rem;
       color: $gray-base;
     }
+
     a {
       float: right;
       color: $color-primary-light;
       margin: auto 10px;
     }
+
     .icon {
       margin: auto 10px;
     }
@@ -44,15 +51,19 @@
   .component-status-operational {
     color: $color-cta-base;
   }
+
   .component-status-degraded_performance {
     color: $color-negative-base;
   }
+
   .component-status-under_maintenance {
     color: $color-primary-base;
   }
+
   .component-status-partial_outage {
     color: $color-meetings-base;
   }
+
   .component-status-major_outage {
     color: $color-alerts-base;
   }
@@ -61,6 +72,7 @@
     margin-top: 8px;
     text-align: right;
   }
+
   .addComponentForm .cancelCreateNewGroup {
     background: none;
     font-size: 0.8rem;
@@ -71,8 +83,9 @@
 .delete-component-page {
   @include vr_spacing(p, 3);
 
-  p, input {
-    font-size:16px;
+  p,
+  input {
+    font-size: 16px;
     @include vr_spacing(mb, 1.25);
   }
 }
