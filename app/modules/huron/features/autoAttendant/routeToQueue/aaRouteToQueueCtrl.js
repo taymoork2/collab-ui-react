@@ -37,7 +37,6 @@
     var rtQueue = 'routeToQueue';
     var fromRouteCall = false;
 
-
     /////////////////////
 
 
@@ -95,14 +94,18 @@
       } else {
         vm.queueSelected.id = vm.menuKeyEntry.actions[0].getValue();
       }
-      vm.queues = JSON.parse($scope.queues);
-      if (vm.queueSelected.id == '' && vm.hideQueues && vm.queues.length > 0) {
-        vm.queueSelected = vm.queues[0];
-        saveUiModel();
+      try {
+        vm.queues = JSON.parse($scope.queues);
+        if (vm.queueSelected.id == '' && vm.hideQueues && vm.queues.length > 0) {
+          vm.queueSelected = vm.queues[0];
+          saveUiModel();
+        }
+        vm.queueSelected.description = _.result(_.find(vm.queues, {
+          'id': vm.queueSelected.id
+        }), 'description', '');
+      } catch (e) {
+        return false;
       }
-      vm.queueSelected.description = _.result(_.find(vm.queues, {
-        'id': vm.queueSelected.id
-      }), 'description', '');
     }
 
     function saveUiModel() {
@@ -112,6 +115,41 @@
         vm.menuKeyEntry.actions[0].setValue(vm.queueSelected.id);
       }
       AACommonService.setPhoneMenuStatus(true);
+    }
+
+    function activateQueueSettings(menuEntryParam) {
+
+      var mohAction, iaAction, paAction, fbMaxTime, fbAction;
+
+      if (_.isUndefined(menuEntryParam.actions[0].queueSettings.musicOnHold)) {
+        menuEntryParam.actions[0].queueSettings.musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        mohAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+        menuEntryParam.actions[0].queueSettings.musicOnHold.addAction(mohAction);
+      }
+      if (_.isUndefined(menuEntryParam.actions[0].queueSettings.initialAnnouncement)) {
+        menuEntryParam.actions[0].queueSettings.initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
+        menuEntryParam.actions[0].queueSettings.initialAnnouncement.addAction(iaAction);
+      }
+      if (_.isUndefined(menuEntryParam.actions[0].queueSettings.periodicAnnouncement)) {
+        menuEntryParam.actions[0].queueSettings.periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        paAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
+        menuEntryParam.actions[0].queueSettings.periodicAnnouncement.addAction(paAction);
+      }
+      if (_.isUndefined(menuEntryParam.actions[0].queueSettings.fallBack)) {
+        menuEntryParam.actions[0].queueSettings.fallBack = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        fbMaxTime = AutoAttendantCeMenuModelService.newCeActionEntry('time', '');
+        menuEntryParam.actions[0].queueSettings.fallBack.addAction(fbMaxTime);
+        fbAction = AutoAttendantCeMenuModelService.newCeActionEntry('option', '');
+        menuEntryParam.actions[0].queueSettings.fallBack.addAction(fbAction);
+      }
+
+      if ($scope.fromRouteCall) {
+        vm.menuEntry = menuEntryParam;
+      } else {
+        vm.menuKeyEntry = menuEntryParam;
+      }
+
     }
 
     function activate() {
@@ -134,28 +172,8 @@
         if (angular.isUndefined(vm.menuEntry.actions[0].queueSettings)) {
           vm.menuEntry.actions[0].queueSettings = {};
         }
-        if (_.isUndefined(vm.menuEntry.actions[0].queueSettings.musicOnHold)) {
-          vm.menuEntry.actions[0].queueSettings.musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var mohAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
-          vm.menuEntry.actions[0].queueSettings.musicOnHold.addAction(mohAction);
-        }
-        if (_.isUndefined(vm.menuEntry.actions[0].queueSettings.initialAnnouncement)) {
-          vm.menuEntry.actions[0].queueSettings.initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
-          vm.menuEntry.actions[0].queueSettings.initialAnnouncement.addAction(iaAction);
-        }
-        if (_.isUndefined(vm.menuEntry.actions[0].queueSettings.periodicAnnouncement)) {
-          vm.menuEntry.actions[0].queueSettings.periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var paAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
-          vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.addAction(paAction);
-        }
-        if (_.isUndefined(vm.menuEntry.actions[0].queueSettings.fallBack)) {
-          vm.menuEntry.actions[0].queueSettings.fallBack = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var fbMaxTime = AutoAttendantCeMenuModelService.newCeActionEntry('time', '');
-          vm.menuEntry.actions[0].queueSettings.fallBack.addAction(fbMaxTime);
-          var fbAction = AutoAttendantCeMenuModelService.newCeActionEntry('option', '');
-          vm.menuEntry.actions[0].queueSettings.fallBack.addAction(fbAction);
-        }
+
+        activateQueueSettings(vm.menuEntry);
       } else {
         vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         if ($scope.keyIndex < vm.menuEntry.entries.length) {
@@ -168,28 +186,8 @@
         if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings)) {
           vm.menuKeyEntry.actions[0].queueSettings = {};
         }
-        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.musicOnHold)) {
-          vm.menuKeyEntry.actions[0].queueSettings.musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          mohAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
-          vm.menuKeyEntry.actions[0].queueSettings.musicOnHold.addAction(mohAction);
-        }
-        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement)) {
-          vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
-          vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.addAction(iaAction);
-        }
-        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement)) {
-          vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          paAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
-          vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.addAction(paAction);
-        }
-        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.fallBack)) {
-          vm.menuKeyEntry.actions[0].queueSettings.fallBack = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          fbMaxTime = AutoAttendantCeMenuModelService.newCeActionEntry('time', '');
-          vm.menuKeyEntry.actions[0].queueSettings.fallBack.addAction(fbMaxTime);
-          fbAction = AutoAttendantCeMenuModelService.newCeActionEntry('option', '');
-          vm.menuKeyEntry.actions[0].queueSettings.fallBack.addAction(fbAction);
-        }
+
+        activateQueueSettings(vm.menuKeyEntry);
       }
 
       populateUiModel();

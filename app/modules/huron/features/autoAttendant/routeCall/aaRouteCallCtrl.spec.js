@@ -106,7 +106,6 @@ describe('Controller: AARouteCallMenuCtrl', function () {
 
   describe('toggle', function () {
     it('test toggle function', function () {
-      //expect(FeatureToggleService.supports(false)).toEqual(false);
 
       spyOn(FeatureToggleService, 'supports').and.returnValue($q.reject(new Error('my Error')));
       controller = controller('AARouteCallMenuCtrl', {
@@ -117,8 +116,6 @@ describe('Controller: AARouteCallMenuCtrl', function () {
       FeatureToggleService.supports().then(function (result) {
         expect(result).toBe(true);
       });
-
-      //expect(FeatureToggleService.supports(true).and.toEqual();
     });
   });
 

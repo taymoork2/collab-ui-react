@@ -10,7 +10,7 @@
     var vm = this;
 
     var properties = {
-      NAME: ["play", "say", "runActionsOnInput", "routeToQueue"],
+      NAME: ["play", "say", "runActionsOnInput"],
       REPEAT_NAME: "repeatActionsOnInput",
       LABEL: "label",
       VALUE: "value",
@@ -199,7 +199,11 @@
             ui = AAUiModelService.getUiModel();
             uiMenu = ui[$scope.schedule];
             vm.menuEntry = uiMenu.entries[$scope.index];
-            if (!$scope.type) {
+            if ($scope.type) {
+              queueAction = vm.menuEntry.actions[0];
+              sourceMenu = queueAction.queueSettings[$scope.type];
+              vm.actionEntry = getAction(sourceMenu);
+            } else {
               vm.actionEntry = getAction(vm.menuEntry);
             }
             break;

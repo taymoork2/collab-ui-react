@@ -283,12 +283,36 @@
     }
 
     function fromRouteToQueue() {
-      var sourceMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-      var sourceQueue = sourceMenu.entries[$scope.menuKeyIndex];
-      var queueAction = sourceQueue.actions[0];
-      vm.menuEntry = queueAction.queueSettings[$scope.type];
-      vm.actionEntry = getAction(vm.menuEntry);
+      var sourceMenu, sourceQueue, queueAction;
+      if ($scope.menuId) {
+        sourceMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+        sourceQueue = sourceMenu.entries[$scope.menuKeyIndex];
+        queueAction = sourceQueue.actions[0];
+        vm.menuEntry = queueAction.queueSettings[$scope.type];
+        vm.actionEntry = getAction(vm.menuEntry);
+      } else {
+        var ui = AAUiModelService.getUiModel();
+        var uiMenu = ui[$scope.schedule];
+        vm.menuEntry = uiMenu.entries[$scope.index];
+        queueAction = vm.menuEntry.actions[0];
+        sourceMenu = queueAction.queueSettings[$scope.type];
+        vm.actionEntry = getAction(sourceMenu);
+      }
     }
+
+    /*
+            ui = AAUiModelService.getUiModel();
+            uiMenu = ui[$scope.schedule];
+            vm.menuEntry = uiMenu.entries[$scope.index];
+            if ($scope.type) {
+              queueAction = vm.menuEntry.actions[0];
+              sourceMenu = queueAction.queueSettings[$scope.type];
+              vm.actionEntry = getAction(sourceMenu);
+            } else {
+              vm.actionEntry = getAction(vm.menuEntry);
+            }
+            break;
+     */
 
     function fromAction() {
       var ui = AAUiModelService.getUiModel();
@@ -326,7 +350,7 @@
     }
 
     function gatherMediaSource() {
-      if ($scope.type && _.includes(mediaTypes, $scope.type) && $scope.menuId) { //case of route to queue types
+      if ($scope.type && _.includes(mediaTypes, $scope.type)) { //case of route to queue types
         //type will be used to differentiate between the different media uploads on the queue modal
         //get the entry mapped to a particular route to queue and
         //mapped to a particular queue setting
