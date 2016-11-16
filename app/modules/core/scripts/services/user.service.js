@@ -47,9 +47,8 @@
         users: []
       };
 
-      for (var i = 0; i < usersDataArray.length; i++) {
-        var userInfo = usersDataArray[i];
-        var userEmail = userInfo.address.trim();
+      _.forEach(usersDataArray, function (userInfo) {
+        var userEmail = _.trim(userInfo.address);
         if (userEmail.length > 0) {
           var user = {
             email: userEmail,
@@ -72,7 +71,7 @@
           }
           userData.users.push(user);
         }
-      }
+      });
 
       if (userData.users.length > 0) {
         return $http({
@@ -104,9 +103,9 @@
         'users': []
       };
 
-      for (var i = 0; i < usersDataArray.length; i++) {
-        var userEmail = usersDataArray[i].address.trim();
-        var userName = usersDataArray[i].name.trim();
+      _.forEach(usersDataArray, function (userInfo) {
+        var userEmail = _.trim(userInfo.address);
+        var userName = _.trim(userInfo.name);
         var user = {
           'email': null,
           'name': null,
@@ -119,7 +118,7 @@
           }
           userData.users.push(user);
         }
-      }
+      });
 
       if (userData.users.length > 0) {
 
@@ -220,12 +219,12 @@
         'inviteList': []
       };
 
-      for (var i = 0; i < usersDataArray.length; i++) {
-        var userEmail = usersDataArray[i].address.trim();
+      _.forEach(usersDataArray, function (userInfo) {
+        var userEmail = _.trim(userInfo.address);
 
         var userName = null;
-        if (usersDataArray[i].name) {
-          userName = usersDataArray[i].name.trim();
+        if (userInfo.name) {
+          userName = _.trim(userInfo.name);
         }
 
         var user = {
@@ -239,7 +238,7 @@
         if (userEmail.length > 0) {
           userData.inviteList.push(user);
         }
-      }
+      });
 
       if (userData.inviteList.length > 0) {
 
@@ -374,8 +373,8 @@
         'users': []
       };
 
-      _.forEach(users || [], function (userData) {
-        var userEmail = userData.address.trim();
+      _.forEach(users, function (userData) {
+        var userEmail = _.trim(userData.address);
         var userName = userData.name;
         var displayName = userData.displayName;
 
