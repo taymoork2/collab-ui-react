@@ -33,6 +33,8 @@
     function updateItemName(device, newName) {
       return $http.patch(device.url, {
         name: newName
+      }).then(function (res) {
+        return CsdmConverter.convertCloudberryDevice(res.data);
       });
     }
 
@@ -73,8 +75,6 @@
       fetchItem: fetchItem,
 
 //Grey list:
-      //on: deviceCache.on,
-      //getDevice: getDevice,
       uploadLogs: uploadLogs,
       deleteDevice: deleteDevice,
 
