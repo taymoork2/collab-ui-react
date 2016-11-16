@@ -115,31 +115,6 @@
       return extract;
     }
 
-    // if (!deviceUsageFeatureToggle) {
-    //   // simulate a 404
-    //   $state.go('login');
-    // }
-
-    $scope.$on('time-range-changed', function (event, timeSelected) {
-      vm.deviceFilter = vm.deviceOptions[0];
-      switch (timeSelected.value) {
-        case 0:
-          loadLastWeek();
-          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
-          break;
-        case 1:
-          loadLastMonth();
-          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(4, 'week');
-          break;
-        case 2:
-          loadLast3Months();
-          dateRange = DeviceUsageTotalService.getDateRangeForPeriod(3, 'month');
-          break;
-        default:
-          loadLastWeek();
-      }
-    });
-
     $scope.$watch(function () {
       return angular.element('#device-usage-total-chart').is(':visible');
     }, init);
@@ -252,7 +227,8 @@
 
     function handleMissingDays(info) {
       //$log.info('missingDays', info);
-      var warning = 'Data missing for ' + info.nbrOfMissingDays + ' days';
+      var missingDays = info.missingDays.length;
+      var warning = 'Data missing for ' + missingDays + ' days';
       Notification.notify([warning], 'warning');
     }
 
