@@ -65,9 +65,25 @@
         prod: 'https://minerva.huron-dev.com/api/v1'
       },
 
+      avrilUrl: {
+        dev: 'https://avrildirmgmt.appstaging.ciscoccservice.com/avrildirmgmt/api/v1',
+        integration: 'https://avrildirmgmt.appstaging.ciscoccservice.com/avrildirmgmt/api/v1',
+        prod: 'https://avrildirmgmt.produs1.ciscoccservice.com/avrildirmgmt/api/v1'
+      },
+
       // TODO: Remove this when CMIv2 URl is ready.
       getMockHgUrl: function () {
         return 'https://mock-hg.de-ams.thunderhead.io/api/v2';
+      },
+
+      getAvrilUrl: function () {
+        if (Config.isDev()) {
+          return this.avrilUrl.dev;
+        } else if (Config.isIntegration()) {
+          return this.avrilUrl.integration;
+        } else {
+          return this.avrilUrl.prod;
+        }
       },
 
       getCmiUrl: function () {

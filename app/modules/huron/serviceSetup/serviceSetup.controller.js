@@ -6,7 +6,7 @@
     .controller('ServiceSetupCtrl', ServiceSetupCtrl);
 
   /* @ngInject*/
-  function ServiceSetupCtrl($q, $state, $scope, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
+  function ServiceSetupCtrl($q, $state, $scope, $log, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
     ValidationService, DialPlanService, TelephoneNumberService, ExternalNumberService,
     CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction,
     PstnSetupService, Orgservice, FeatureToggleService, Config) {
@@ -36,6 +36,7 @@
 
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
+    var VOICE_VOICEMAIL_AVRIL = 'DEMO_STANDARD';
 
     vm.voicemailAvrilCustomer = false;
     vm.addInternalNumberRange = addInternalNumberRange;
@@ -44,7 +45,6 @@
     vm.initServiceSetup = initServiceSetup;
     vm.initNext = initNext;
     vm.checkIfTestOrg = checkIfTestOrg;
-
     vm.processing = true;
     vm.externalNumberPool = [];
     vm.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
@@ -115,7 +115,9 @@
     });
 
     FeatureToggleService.getCustomerHuronToggle(Authinfo.getOrgId(), FeatureToggleService.features.avrilVmEnable).then(function (result) {
+      $log.log('====> This customer is an Avril customer ' + result);
       vm.voicemailAvrilCustomer = result;
+      $log.log('====> This customer is an Avril customer, voicemailAvrilCustomer ' + vm.voicemailAvrilCustomer);
     });
 
     vm.validations = {
@@ -1073,6 +1075,7 @@
 
       var errors = [];
       var voicemailToggleEnabled = false;
+      var isAvrilVoiceEnabled = false;
       if (!_.get(vm, 'model.ftswCompanyVoicemail.ftswExternalVoicemail')) {
         if (_.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled')) {
           voicemailToggleEnabled = true;
@@ -1087,7 +1090,15 @@
         var customer = {};
         if (companyVoicemailNumber && _.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
           if (!vm.hasVoicemailService) {
-            customer.servicePackage = DEMO_STANDARD;
+            // customer.servicePackage = DEMO_STANDARD;
+            $log.log('====> This customer is an Avril customer, voicemailAvrilCustomer -out ' + vm.voicemailAvrilCustomer);
+            if (vm.voicemailAvrilCustomer) {
+              customer.servicePackage = VOICE_VOICEMAIL_AVRIL;
+              $log.log('====> customer.servicePackage ' + customer.servicePackage);
+              isAvrilVoiceEnabled = true;
+            } else {
+              customer.servicePackage = DEMO_STANDARD;
+            }
           }
 
           customer.voicemail = {
@@ -1164,6 +1175,17 @@
         if (!_.isEmpty(siteData)) {
           return ServiceSetup.updateSite(ServiceSetup.sites[0].uuid, siteData)
             .then(function () {
+              if (vm.voicemailAvrilCustomer && isAvrilVoiceEnabled) {
+                $log.log('====> ServiceSetup.sites[0].uuid: ' + ServiceSetup.sites[0].uuid +
+                       " ServiceSetup.sites[0].siteSteeringDigit: " + ServiceSetup.sites[0].siteSteeringDigit +
+                       " ServiceSetup.sites[0].siteCode: " + ServiceSetup.sites[0].siteCode +
+                       " ServiceSetup.sites[0].timeZone: " + ServiceSetup.sites[0].timeZone +
+                       " ServiceSetup.sites[0].extensionLength: " + ServiceSetup.sites[0].extensionLength +
+                      " ServiceSetup.sites[0].voicemailPilotNumber: " + ServiceSetup.sites[0].voicemailPilotNumber);
+                ServiceSetup.updateAvrilSite(ServiceSetup.sites[0].uuid, ServiceSetup.sites[0].siteSteeringDigit,
+                     ServiceSetup.sites[0].siteCode, ServiceSetup.sites[0].timeZone,
+                     ServiceSetup.sites[0].extensionLength, ServiceSetup.sites[0].voicemailPilotNumber, siteData);
+              }
               if (vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled && siteData && siteData.voicemailPilotNumber) {
                 return updateVoicemailSettings();
               }

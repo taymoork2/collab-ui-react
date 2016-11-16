@@ -85,7 +85,7 @@ describe('Service: ServiceSetup', function () {
     });
 
     it('should update site', function () {
-      ServiceSetup.updateSite(site.uuid, site);
+      expect(ServiceSetup.updateSite(site.uuid, site)).toHaveBeenCalled();
       $httpBackend.flush();
     });
   });

@@ -6,7 +6,7 @@
     .controller('HuronSettingsCtrl', HuronSettingsCtrl);
 
   /* @ngInject */
-  function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
+  function HuronSettingsCtrl($scope, Authinfo, $q, $translate, $log, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService,
     ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing, VoicemailMessageAction, FeatureToggleService, Config) {
     var vm = this;
@@ -39,6 +39,7 @@
     var DEFAULT_TO = '5999';
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
+    var VOICE_VOICEMAIL_AVRIL = 'DEMO_STANDARD';
     var INTERNATIONAL_DIALING = 'DIALINGCOSTAG_INTERNATIONAL';
     var COMPANY_CALLER_ID_TYPE = 'Company Caller ID';
     var COMPANY_NUMBER_TYPE = 'Company Number';
@@ -47,6 +48,8 @@
     var savedModel = null;
     var errors = [];
 
+    vm.voicemailAvrilCustomer = false;
+    vm.isAvrilVoiceEnabled = false;
     vm.init = init;
     vm.save = save;
     vm.resetSettings = resetSettings;
@@ -134,6 +137,12 @@
 
     PstnSetupService.getCustomer(Authinfo.getOrgId()).then(function () {
       vm.isTerminusCustomer = true;
+    });
+
+    FeatureToggleService.getCustomerHuronToggle(Authinfo.getOrgId(), FeatureToggleService.features.avrilVmEnable).then(function (result) {
+      $log.log('====> settingsCtrl, This customer is an Avril customer ' + result);
+      vm.voicemailAvrilCustomer = result;
+      $log.log('====> settingsCtrl, This customer is an Avril customer, voicemailAvrilCustomer ' + vm.voicemailAvrilCustomer);
     });
 
     vm.validations = {
@@ -905,6 +914,13 @@
             } else if (siteData.disableVoicemail) {
               vm.model.site.voicemailPilotNumber = undefined;
             }
+
+            if (vm.voicemailAvrilCustomer && vm.isAvrilVoiceEnabled) {
+              $log.log('====> updateSiteVoicemailNumber,vm.voicemailAvrilCustomer && vm.isAvrilVoiceEnabled');
+              ServiceSetup.updateAvrilSite(ServiceSetup.sites[0].uuid, ServiceSetup.sites[0].siteSteeringDigit,
+                     ServiceSetup.sites[0].siteCode, ServiceSetup.sites[0].timeZone,
+                     ServiceSetup.sites[0].extensionLength, ServiceSetup.sites[0].voicemailPilotNumber, siteData);
+            }
           })
           // in the case when voicemail is getting enabled, reload voicemail info such as (timezone and vm2email settings)
           // needs to be done in order, usertemplates > messageactions
@@ -1010,7 +1026,16 @@
     function updateCustomerServicePackage(companyVoicemailNumber) {
       var customer = {};
       if (companyVoicemailNumber && _.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
-        customer.servicePackage = DEMO_STANDARD;
+        //customer.servicePackage = DEMO_STANDARD;
+        $log.log('====> settingsCtrl, This customer is an Avril customer, voicemailAvrilCustomer -out ' + vm.voicemailAvrilCustomer);
+        if (vm.voicemailAvrilCustomer) {
+          customer.servicePackage = VOICE_VOICEMAIL_AVRIL;
+          $log.log('====> settingsCtrl, customer.servicePackage ' + customer.servicePackage);
+          vm.isAvrilVoiceEnabled = true;
+          $log.log('====> settingsCtrl-updateCustomerServicePackage, vm.isAvrilVoiceEnabled ' + vm.isAvrilVoiceEnabled);
+        } else {
+          customer.servicePackage = DEMO_STANDARD;
+        }
         customer.voicemail = {
           pilotNumber: companyVoicemailNumber
         };

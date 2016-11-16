@@ -140,6 +140,8 @@ describe('Controller: ServiceSetup', function () {
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'getCustomerHuronToggle').and.returnValue($q.when(false));
 
+    spyOn(FeatureToggleService, 'getCustomerHuronToggle').and.returnValue($q.when(false));
+
     $httpBackend
       .expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + customer.uuid + '/directorynumbers')
       .respond([]);
