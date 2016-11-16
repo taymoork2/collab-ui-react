@@ -143,8 +143,8 @@
             Notification.success('firstTimeWizard.setPersonalMeetingRoomSuccessMessage');
             $rootScope.$broadcast('DISMISS_PMR_NOTIFICATION');
           })
-          .catch(function () {
-            Notification.error('firstTimeWizard.personalMeetingRoomServiceErrorMessage');
+          .catch(function (response) {
+            Notification.errorResponse(response, 'firstTimeWizard.personalMeetingRoomServiceErrorMessage');
           });
       }
     };
@@ -483,31 +483,38 @@
     }
 
     function checkNewEntityId() {
-      var start = $scope.idpFile.file.indexOf(strEntityDesc);
-      start = $scope.idpFile.file.indexOf(strEntityId, start) + strEntityId.length;
-      var end = $scope.idpFile.file.indexOf(strEntityIdEnd, start);
-      var newEntityId = $scope.idpFile.file.substring(start, end);
-      return newEntityId;
+      var file = _.get($scope, 'idpFile.file');
+      if (_.isString(file)) {
+        var start = file.indexOf(strEntityDesc);
+        start = file.indexOf(strEntityId, start) + strEntityId.length;
+        var end = file.indexOf(strEntityIdEnd, start);
+        var newEntityId = file.substring(start, end);
+        return newEntityId;
+      }
     }
 
     function checkReqBinding() {
-      var start = $scope.idpFile.file.indexOf(strSignOn);
-      start = $scope.idpFile.file.indexOf(bindingStr, start);
-      var end = $scope.idpFile.file.indexOf(strLocation, start) - strBindingEnd.length;
-      var reqBinding = $scope.idpFile.file.substring(start + bindingStr.length, end);
-      return reqBinding;
+      var file = _.get($scope, 'idpFile.file');
+      if (_.isString(file)) {
+        var start = file.indexOf(strSignOn);
+        start = file.indexOf(bindingStr, start);
+        var end = file.indexOf(strLocation, start) - strBindingEnd.length;
+        var reqBinding = file.substring(start + bindingStr.length, end);
+        return reqBinding;
+      }
     }
 
     $scope.openTest = function () {
-      var entityId = null;
+      var entityId;
+      var reqBinding;
       $scope.testOpened = true;
       SSOService.getMetaInfo(function (data, status) {
         if (data.success) {
           if (data.data.length > 0) {
             entityId = data.data[0].entityId;
-            var reqBinding = checkReqBinding(data);
+            reqBinding = checkReqBinding(data);
           }
-          if (entityId !== null) {
+          if (entityId && reqBinding) {
             var testUrl = UrlConfig.getSSOTestUrl() + '?metaAlias=/' + Authinfo.getOrgId() + '/sp&idpEntityID=' + encodeURIComponent(entityId) + '&binding=' + _BINDINGS + 'HTTP-POST&reqBinding=' + _BINDINGS + reqBinding;
             $window.open(testUrl);
           } else {

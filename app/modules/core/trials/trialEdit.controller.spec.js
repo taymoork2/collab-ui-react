@@ -48,7 +48,9 @@ describe('Controller: TrialEditCtrl:', function () {
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
-      if (param != 'csdm-places') {
+      if (param === FeatureToggleService.features.huronSimplifiedTrialFlow) {
+        return $q.when(false);
+      } else if (param != 'csdm-places') {
         fail('the following toggle wasn\'t expected' + param); //taking control of which toggles this controller are using (explicit or implicit)
       }
       return $q.when(false);

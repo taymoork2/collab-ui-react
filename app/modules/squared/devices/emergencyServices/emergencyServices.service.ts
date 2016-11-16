@@ -25,13 +25,13 @@ export class EmergencyServicesService {
     let emergencyData = {
       emergencyNumber: this.$stateParams.currentNumber,
       emergencyAddress: this.$stateParams.currentAddress,
+      status: this.$stateParams.status,
     };
     this.emergencyDataCopy = this.cloneEmergencyData(emergencyData);
     return {
       emergency: emergencyData,
       currentDevice: this.currentDevice,
       stateOptions: this.stateOptions,
-      status: this.$stateParams.status,
     };
   }
 

@@ -34,7 +34,9 @@ describe('Controller: TrialAddCtrl', function () {
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
       if (param == 'csdm-places' || param == 'csdm-pstn') {
         return $q.when(false);
-      } else if (param != 'csdm-pstn') {
+      } else if (param === FeatureToggleService.features.huronSimplifiedTrialFlow) {
+        return $q.when(false);
+      } else {
         fail('the following toggle wasn\'t expected ' + param);
       }
     });

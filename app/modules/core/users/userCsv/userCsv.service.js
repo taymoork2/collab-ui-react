@@ -198,7 +198,8 @@
       return responseMessage;
     }
 
-    function addErrorWithTrackingID(errorMsg, response, headers) {
+    function addErrorWithTrackingID(_errorMsg, response, headers) {
+      var errorMsg = _errorMsg || '';
       var headersFunc = (response && response.headers) ? response.headers : headers;
       if (_.isFunction(headersFunc)) {
         if (errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {

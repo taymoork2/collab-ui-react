@@ -145,6 +145,7 @@
     deviceOverview.save = function (newName) {
       return CsdmDataModelService
         .updateItemName(deviceOverview.currentDevice, newName)
+        .then(displayDevice)
         .catch(function (response) {
           Notification.errorWithTrackingId(response, 'deviceOverviewPage.failedToSaveChanges');
         });
