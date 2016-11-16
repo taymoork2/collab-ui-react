@@ -6,10 +6,10 @@
         </header>
         <section>
             <div class="metrics-info"> 
-                <div class="no-data" ng-if="vm.obj.total === vm.obj.noData">{{vm.obj.total}}</div>
-                <div ng-if="vm.obj.total !== vm.obj.noData">
-                    <div class="call-counts">{{vm.obj.total}}</div>
-                       <div class="spinner-position" ng-if="!vm.obj.total && vm.obj.total !== 0">
+                <div class="no-data" ng-if="$ctrl.parentcntrl.total === $ctrl.parentcntrl.noData">{{$ctrl.parentcntrl.total}}</div>
+                <div ng-if="$ctrl.parentcntrl.total !== $ctrl.parentcntrl.noData">
+                    <div class="call-counts">{{$ctrl.parentcntrl.total}}</div>
+                       <div class="spinner-position" ng-if="!$ctrl.parentcntrl.total && $ctrl.parentcntrl.total !== 0">
                           <i class='icon icon-spinner icon-2x'></i>
                         </div>
             </div>
@@ -20,15 +20,15 @@
    <cs-card class="large-3 medium-6 small-12 menu-card header-bar orange overview-card">
     <article>
         <header>
-            <span class="metrics-header" translate ='mediaFusion.metrics.onpremcalls' ng-if="vm.obj.clusterSelected === 'All Clusters'"></span>
-                <span class="metrics-header" translate ='mediaFusion.metrics.hostedcalls' ng-if="vm.obj.clusterSelected !== 'All Clusters'"></span>
+            <span class="metrics-header" translate ='mediaFusion.metrics.onpremcalls' ng-if="$ctrl.parentcntrl.clusterSelected === 'All Clusters'"></span>
+                <span class="metrics-header" translate ='mediaFusion.metrics.hostedcalls' ng-if="$ctrl.parentcntrl.clusterSelected !== 'All Clusters'"></span>
         </header>
         <section>
             <div class="metrics-info">
-                <div class="no-data" ng-if="vm.obj.onprem === vm.obj.noData">{{vm.obj.onprem}}</div>
-                <div ng-if="vm.obj.onprem !== vm.obj.noData">
-                    <div class="call-counts">{{vm.obj.onprem}}</div>
-                       <div class="spinner-position" ng-if="!vm.obj.onprem && vm.obj.onprem !== 0">
+                <div class="no-data" ng-if="$ctrl.parentcntrl.onprem === $ctrl.parentcntrl.noData">{{$ctrl.parentcntrl.onprem}}</div>
+                <div ng-if="$ctrl.parentcntrl.onprem !== $ctrl.parentcntrl.noData">
+                    <div class="call-counts">{{$ctrl.parentcntrl.onprem}}</div>
+                       <div class="spinner-position" ng-if="!$ctrl.parentcntrl.onprem && $ctrl.parentcntrl.onprem !== 0">
                           <i class='icon icon-spinner icon-2x'></i>
                         </div>
                 </div>    
@@ -39,15 +39,15 @@
  <cs-card class="large-3 medium-6 small-12 menu-card header-bar green overview-card">
     <article>
         <header>
-            <span class="metrics-header" translate ='mediaFusion.metrics.cloudcalls' ng-if="vm.obj.clusterSelected === 'All Clusters'"></span>
-                <span class="metrics-header" translate ='mediaFusion.metrics.redirectedcalls' ng-if="vm.obj.clusterSelected !== 'All Clusters'"></span>
+            <span class="metrics-header" translate ='mediaFusion.metrics.cloudcalls' ng-if="$ctrl.parentcntrl.clusterSelected === 'All Clusters'"></span>
+                <span class="metrics-header" translate ='mediaFusion.metrics.redirectedcalls' ng-if="$ctrl.parentcntrl.clusterSelected !== 'All Clusters'"></span>
         </header>
         <section>
             <div class="metrics-info">
-                <div class="no-data" ng-if="vm.obj.cloud === vm.obj.noData">{{vm.obj.cloud}}</div>
-                <div ng-if="vm.obj.cloud !== vm.obj.noData">
-                    <div class="call-counts">{{vm.obj.cloud}}</div>
-                       <div class="spinner-position" ng-if="!vm.obj.cloud && vm.obj.cloud !== 0">
+                <div class="no-data" ng-if="$ctrl.parentcntrl.cloud === $ctrl.parentcntrl.noData">{{$ctrl.parentcntrl.cloud}}</div>
+                <div ng-if="$ctrl.parentcntrl.cloud !== $ctrl.parentcntrl.noData">
+                    <div class="call-counts">{{$ctrl.parentcntrl.cloud}}</div>
+                       <div class="spinner-position" ng-if="!$ctrl.parentcntrl.cloud && $ctrl.parentcntrl.cloud !== 0">
                           <i class='icon icon-spinner icon-2x'></i>
                         </div>
                 </div>    
@@ -62,10 +62,10 @@
         </header>
         <section>
             <div class="metrics-info">
-                <div class="no-data" ng-if="vm.obj.clusterAvailability === vm.obj.noData">{{vm.obj.clusterAvailability}}</div>
-                <div ng-if="vm.obj.clusterAvailability !== vm.obj.noData">
-                    <div class="availability-counts">{{vm.obj.clusterAvailability}}</div>
-                       <div class="spinner-position" ng-if="!vm.obj.clusterAvailability">
+                <div class="no-data" ng-if="$ctrl.parentcntrl.clusterAvailability === $ctrl.parentcntrl.noData">{{$ctrl.parentcntrl.clusterAvailability}}</div>
+                <div ng-if="$ctrl.parentcntrl.clusterAvailability !== $ctrl.parentcntrl.noData">
+                    <div class="availability-counts">{{$ctrl.parentcntrl.clusterAvailability}}</div>
+                       <div class="spinner-position" ng-if="!$ctrl.parentcntrl.clusterAvailability">
                           <i class='icon icon-spinner icon-2x'></i>
                         </div>
                 </div>    

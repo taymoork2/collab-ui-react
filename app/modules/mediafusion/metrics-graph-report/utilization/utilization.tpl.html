@@ -5,11 +5,11 @@
     </graphheader>
     <section>
       <div class="metrics-utilization">
-        <div id="utilizationdiv" class="barchart" ng-class="{'utilization-chart': !vm.obj.isEmpty(vm.obj.utilizationStatus) && !vm.obj.isRefresh(vm.obj.utilizationStatus)}"></div>
-        <div class="spinner-position" ng-if="vm.obj.isRefresh(vm.obj.utilizationStatus)">
+        <div id="utilizationdiv" class="barchart" ng-class="{'utilization-chart': !$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.utilizationStatus) && !$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.utilizationStatus)}"></div>
+        <div class="spinner-position" ng-if="$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.utilizationStatus)">
           <i class='icon icon-spinner icon-2x'></i>
         </div>
-        <div class="no-data-center" ng-if="vm.obj.isEmpty(vm.obj.utilizationStatus)">
+        <div class="no-data-center" ng-if="$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.utilizationStatus)">
           <p>
             <h3 class="no-data"> 
             <i class='icon icon-warning no-data-warning'></i>
