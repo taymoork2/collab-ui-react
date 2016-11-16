@@ -77,7 +77,6 @@
 
     function autoValidate() {
       if (_.isEqual(vm.mohPlayAction.value, '')) {
-        vm.mohPlayAction.setDescription('');
         vm.musicOnHold = DEFAULT_MOH;
       }
       if (_.isEqual(vm.musicOnHold, DEFAULT_MOH)) {
@@ -117,8 +116,8 @@
     }
 
     function defaultMoh() {
-      vm.mohPlayAction.value = CISCO_STD_MOH_URL;
-      vm.mohPlayAction.description = '';
+      vm.mohPlayAction.setValue(CISCO_STD_MOH_URL);
+      vm.mohPlayAction.setDescription('');
     }
 
     function isDisabled() {
@@ -146,10 +145,10 @@
         };
         var periodicSecond = vm.paAction.description - (periodicMinute * 60);
         vm.periodicSecond = {
-          index: periodicSecond,
-          label: (periodicSecond + 1) * 5,
+          index: parseInt(periodicSecond / 5, 10) - 1,
+          label: periodicSecond
         };
-        if (vm.periodicMinute == '5') {
+        if (periodicMinute == '5') {
           vm.areSecondsDisabled = false;
         }
       } else {
@@ -167,7 +166,7 @@
         });
       });
       //setting maxWaitTime's default value
-      if (_.isEqual(vm.fallbackAction.description, '')) { //no metadata set, so no file uploaded
+      if (_.isEqual(vm.fallbackAction.description, '')) {
         vm.maxWaitTime = vm.minutes[14];
       } else {
         vm.maxWaitTime = vm.fallbackAction.getValue();
@@ -175,9 +174,9 @@
     }
 
     //populating fallback drop down in sorted order
-    function populateDropDown() {
+    function populateFallbackDropDown() {
       vm.destinationOptions.sort(AACommonService.sortByProperty('label'));
-      if (_.isEqual(vm.fallbackAction.description, '')) { //no metadata set, so no file uploaded
+      if (_.isEqual(vm.fallbackAction.description, '')) {
         vm.destination = vm.destinationOptions[0];
       } else {
         vm.destination = vm.fallbackAction.getName();
@@ -254,7 +253,7 @@
       populateMohRadio();
       populatePeriodicTime();
       populateMaxTime();
-      populateDropDown();
+      populateFallbackDropDown();
     }
 
     function populateUiModel() {

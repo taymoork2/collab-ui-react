@@ -300,10 +300,10 @@
       cesMoh: cesMoh,
       cesFallback: cesFallback,
       cesIa: cesIa,
-      constructCesTodoPa: constructCesTodoPa,
-      constructCesTodoIa: constructCesTodoIa,
-      constructCesTodoMoh: constructCesTodoMoh,
-      constructCesTodoFallback: constructCesTodoFallback,
+      constructCesPa: constructCesPa,
+      constructCesIa: constructCesIa,
+      constructCesMoh: constructCesMoh,
+      constructCesFallback: constructCesFallback,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -525,7 +525,7 @@
             action.description = JSON.parse(action.description);
             action.queueSettings = {};
           }
-          action.queueSettings.musicOnHold = constructCesTodoMoh(action.description);
+          action.queueSettings.musicOnHold = constructCesMoh(action.description);
         } catch (exception) {
           action.queueSettings = {};
         }
@@ -542,7 +542,7 @@
             action.description = JSON.parse(action.description);
             action.queueSettings = {};
           }
-          action.queueSettings.initialAnnouncement = constructCesTodoIa(action.description);
+          action.queueSettings.initialAnnouncement = constructCesIa(action.description);
         } catch (exception) {
           action.queueSettings = {};
         }
@@ -559,7 +559,7 @@
             action.description = JSON.parse(action.description);
             action.queueSettings = {};
           }
-          action.queueSettings.periodicAnnouncement = constructCesTodoPa(action.description);
+          action.queueSettings.periodicAnnouncement = constructCesPa(action.description);
         } catch (exception) {
           action.queueSettings = {};
         }
@@ -576,7 +576,7 @@
             action.description = JSON.parse(action.description);
             action.queueSettings = {};
           }
-          action.queueSettings.fallback = constructCesTodoFallback(action.description);
+          action.queueSettings.fallback = constructCesFallback(action.description);
         } catch (exception) {
           action.queueSettings = {};
         }
@@ -586,7 +586,7 @@
     /*
     * construct ces definition of Moh from db
     */
-    function constructCesTodoMoh(parsedDescription) {
+    function constructCesMoh(parsedDescription) {
       var musicOnHold = parsedDescription.musicOnHold.actions[0];
       var playAction = new Action('play', musicOnHold.value);
       playAction.setDescription(musicOnHold.description);
@@ -598,7 +598,7 @@
     /*
     * construct ces definition of IA from db
     */
-    function constructCesTodoIa(parsedDescription) {
+    function constructCesIa(parsedDescription) {
       var initialAnnouncement = parsedDescription.initialAnnouncement.actions[0];
       var action = new Action(initialAnnouncement.name, initialAnnouncement.value);
       action.setDescription(initialAnnouncement.description);
@@ -609,7 +609,7 @@
     /*
     * construct ces definition of Fallback from db
     */
-    function constructCesTodoFallback(parsedDescription) {
+    function constructCesFallback(parsedDescription) {
       var fallback = parsedDescription.fallback.actions[0];
       var action = new Action(fallback.name, fallback.value);
       action.setDescription(fallback.description);
@@ -621,7 +621,7 @@
     /*
     * construct ces definition of PA from db
     */
-    function constructCesTodoPa(parsedDescription) {
+    function constructCesPa(parsedDescription) {
       var periodicAnnouncement = parsedDescription.periodicAnnouncement.actions[0];
       var action = new Action(periodicAnnouncement.name, periodicAnnouncement.value);
       action.setDescription(periodicAnnouncement.description);

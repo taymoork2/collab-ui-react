@@ -38,6 +38,10 @@
     var fromRouteCall = false;
 
     var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
+    var play = 'play';
+    var say = 'say';
+    var disconnect = 'disconnect';
+    var minutes = '15';
 
 
     /////////////////////
@@ -144,23 +148,23 @@
         }
         if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.musicOnHold)) {
           vm.menuKeyEntry.actions[0].queueSettings.musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var mohAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', CISCO_STD_MOH_URL);
+          var mohAction = AutoAttendantCeMenuModelService.newCeActionEntry(play, CISCO_STD_MOH_URL);
           vm.menuKeyEntry.actions[0].queueSettings.musicOnHold.addAction(mohAction);
         }
         if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement)) {
           vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
+          var iaAction = AutoAttendantCeMenuModelService.newCeActionEntry(say, '');
           vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.addAction(iaAction);
         }
         if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement)) {
           vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var paAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
+          var paAction = AutoAttendantCeMenuModelService.newCeActionEntry(say, '');
           paAction.setDescription('45');
           vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.addAction(paAction);
         }
         if (angular.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.fallback)) {
           vm.menuKeyEntry.actions[0].queueSettings.fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var fallbackAction = AutoAttendantCeMenuModelService.newCeActionEntry('Disconnect', '15');
+          var fallbackAction = AutoAttendantCeMenuModelService.newCeActionEntry(disconnect, minutes);
           vm.menuKeyEntry.actions[0].queueSettings.fallback.addAction(fallbackAction);
         }
       }
