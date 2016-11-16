@@ -431,7 +431,7 @@
       };
 
       return $http(config).then(function (response) {
-        var data = response.data.properties[0];
+        var data = _.get(response, 'data.properties[0]', {});
         var isValid = (data.isValid === 'true' && data.errorCode === '0');
         return {
           isValid: isValid
