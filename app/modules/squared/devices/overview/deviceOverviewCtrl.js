@@ -146,7 +146,7 @@
       return CsdmDataModelService
         .updateItemName(deviceOverview.currentDevice, newName)
         .catch(function (response) {
-          Notification.errorWithTrackingId(response);
+          Notification.errorWithTrackingId(response, 'deviceOverviewPage.failedToSaveChanges');
         });
     };
 
@@ -157,7 +157,7 @@
         setTimeZone(newValue)
           .then(_.partial(waitForDeviceToUpdateTimeZone, newValue))
           .catch(function (error) {
-            Notification.errorWithTrackingId(error);
+            Notification.errorWithTrackingId(error, 'deviceOverviewPage.failedToSaveChanges');
             loadDeviceInfo();
           })
           .finally(function () {
@@ -224,7 +224,7 @@
           $window.open(res.data.url, '_blank');
         })
         .catch(function (response) {
-          Notification.errorWithTrackingId(response);
+          Notification.errorWithTrackingId(response, 'deviceOverviewPage.failedToUploadLogs');
         });
     };
 
@@ -304,7 +304,7 @@
         return CsdmDataModelService
           .updateTags(deviceOverview.currentDevice, deviceOverview.currentDevice.tags.concat(tag))
           .catch(function (response) {
-            Notification.errorWithTrackingId(response);
+            Notification.errorWithTrackingId(response, 'deviceOverviewPage.failedToSaveChanges');
           });
 
       } else {
@@ -323,7 +323,7 @@
       var tags = _.without(deviceOverview.currentDevice.tags, tag);
       return CsdmDataModelService.updateTags(deviceOverview.currentDevice, tags)
         .catch(function (response) {
-          Notification.errorWithTrackingId(response);
+          Notification.errorWithTrackingId(response, 'deviceOverviewPage.failedToSaveChanges');
         });
     };
 
@@ -350,7 +350,7 @@
         saveUpgradeChannel(newValue)
           .then(_.partial(waitForDeviceToUpdateUpgradeChannel, newValue))
           .catch(function (error) {
-            Notification.errorWithTrackingId(error);
+            Notification.errorWithTrackingId(error, 'deviceOverviewPage.failedToSaveChanges');
             resetSelectedChannel();
           })
           .finally(function () {

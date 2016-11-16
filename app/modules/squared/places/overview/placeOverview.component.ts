@@ -33,7 +33,7 @@ class PlaceOverview implements ng.IComponentController {
               private CsdmHuronUserDeviceService,
               private CsdmDataModelService,
               private FeatureToggleService,
-              private XhrNotificationService,
+              private Notification,
               private Userservice,
               private WizardFactory) {
     this.currentPlace = this.$stateParams.currentPlace;
@@ -141,7 +141,10 @@ class PlaceOverview implements ng.IComponentController {
   public save(newName: string) {
     return this.CsdmDataModelService
       .updateItemName(this.currentPlace, newName)
-      .catch(this.XhrNotificationService.notify);
+      .catch((error) => {
+          this.Notification.errorWithTrackingId(error, 'placesPage.failedToSaveChanges');
+        }
+      );
   }
 
   public showDeviceDetails(device: IDevice): void {
