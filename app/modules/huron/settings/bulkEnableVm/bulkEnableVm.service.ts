@@ -38,8 +38,7 @@ export class BulkEnableVmService {
   private maxUserCount = 1000;
 
   public getSparkCallUserCountRetry(_numTries = this.maxRetry): ng.IPromise<number> {
-    return this.$q.when()
-      .then(() => { return this._getSparkCallUserCount(); })
+    return this._getSparkCallUserCount()
       .catch(error => {
         if (this._doRetry(_numTries, error)) {
           return this.getSparkCallUserCountRetry(_numTries - 1);
@@ -49,8 +48,7 @@ export class BulkEnableVmService {
   }
 
   public getUsersRetry(_offset: number, _limit: number, _numTries = this.maxRetry): ng.IPromise<any> {
-    return this.$q.when()
-      .then(() => { return this._getUsers(_offset, _limit); })
+    return this._getUsers(_offset, _limit)
       .catch(error => {
         if (this._doRetry(_numTries, error)) {
           return this.getUsersRetry(_offset, _limit, _numTries - 1);
@@ -60,8 +58,7 @@ export class BulkEnableVmService {
   }
 
   public getUserServicesRetry(_userId: string, _numTries = this.maxRetry): ng.IPromise<string[]> {
-    return this.$q.when()
-      .then(() => { return this._getUserServices(_userId); })
+    return this._getUserServices(_userId)
       .catch(error => {
         if (this._doRetry(_numTries, error)) {
           return this.getUserServicesRetry(_userId, _numTries - 1);
@@ -71,8 +68,7 @@ export class BulkEnableVmService {
   }
 
   public getUserSitetoSiteNumberRetry(_userId: string, _numTries = this.maxRetry): ng.IPromise<string> {
-    return this.$q.when()
-      .then(() => { return this._getUserSitetoSiteNumber(_userId); })
+    return this._getUserSitetoSiteNumber(_userId)
       .catch(error => {
         if (this._doRetry(_numTries, error)) {
           return this.getUserSitetoSiteNumberRetry(_userId, _numTries - 1);
@@ -82,8 +78,7 @@ export class BulkEnableVmService {
   }
 
   public enableUserVmRetry(_userId: string, _voicemailPayload: IVoiceMailPayload, _numTries = this.maxRetry) {
-    return this.$q.when()
-      .then(() => { return this._enableUserVm(_userId, _voicemailPayload); })
+    return this._enableUserVm(_userId, _voicemailPayload)
       .catch(error => {
         if (this._doRetry(_numTries, error)) {
           return this.enableUserVmRetry(_userId, _voicemailPayload, _numTries - 1);
