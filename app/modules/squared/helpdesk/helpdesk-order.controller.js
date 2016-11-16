@@ -26,7 +26,9 @@
     vm.resendAdminEmail = resendAdminEmail;
     vm.isEditAllowed = Authinfo.isOrderAdminUser();
     vm.goToCustomerPage = goToCustomerPage;
+    vm.goToPartnerPage = goToPartnerPage;
     vm.isAccountActivated = isAccountActivated;
+    vm.partnerOrgExists = partnerOrgExists;
 
     vm._helpers = {
       notifyError: notifyError
@@ -45,25 +47,49 @@
       vm.orderUuid = orderObj.orderUuid;
       var accountId = orderObj.accountId;
       vm.orderId = orderObj.externalOrderId;
+
+      //Getting the customer info from order payload or update clientContent
+      var emailUpdates = _.get(orderObj, 'clientContent.adminEmailUpdates');
+      var customerEmailUpdates = _.filter(emailUpdates, function (data) {
+        return data.orderEmailType === "CUSTOMER_ADMIN";
+      });
+      if (customerEmailUpdates.length > 0) {
+        customerEmailUpdates = _.last(customerEmailUpdates);
+        vm.customerAdminEmail = _.get(customerEmailUpdates, 'adminDetails.emailId');
+      } else {
+        vm.customerAdminEmail = _.get(orderObj, 'orderContent.common.customerInfo.endCustomerInfo.adminDetails.emailId');
+      }
+
+      //Getting the partner info from order payload or update clientContent
+      var partnerEmailUpdates = _.filter(emailUpdates, function (data) {
+        return data.orderEmailType === "PARTNER_ADMIN";
+      });
+      if (partnerEmailUpdates.length > 0) {
+        partnerEmailUpdates = _.last(partnerEmailUpdates);
+        vm.partnerAdminEmail = _.get(partnerEmailUpdates, 'adminDetails.emailId');
+      } else {
+        if (orderObj.orderContent.common.resellerInfo) {
+          vm.partnerAdminEmail = _.get(orderObj, 'orderContent.common.customerInfo.resellerInfo.adminDetails.emailId');
+        } else {
+          vm.partnerAdminEmail = _.get(orderObj, 'orderContent.common.customerInfo.partnerInfo.adminDetails.emailId');
+        }
+      }
+
+
       // Getting the account details using the account Id from order.
       if (accountId) {
         HelpdeskService.getAccount(accountId)
           .then(function (account) {
             vm.account = account;
             vm.accountName = account.accountName;
-            vm.customerId = account.customerId;
             vm.accountOrgId = account.accountOrgId;
-            vm.customerAdminEmail = _.get(vm, 'account.customerAdminEmail');
             // Getting partner Info only if Partner OrgId exists.
             vm.partnerOrgId = account.partnerOrgId;
             if (vm.partnerOrgId) {
-              var licenses = _.get(account, 'licenses');
-              var license = _.first(licenses);
-              vm.partnerAdminEmail = license.partnerEmail;
               // Getting the display name of the partner cited in account.
               HelpdeskService.getOrg(vm.partnerOrgId).then(function (org) {
                 vm.managedBy = _.get(org, 'displayName', '');
-              }, XhrNotificationService.notify);
+              }, vm._helpers.notifyError);
             }
             vm.provisionTime = (new Date(orderObj.orderReceived)).toGMTString();
             vm.accountActivated = false;
@@ -96,35 +122,35 @@
         HelpdeskService.getEmailStatus(vm.customerAdminEmail)
           .then(function (response) {
             // First element of response array is the latest.
-            var mailStat = _.first(response);
-            for (var i = 0; i < response.length; i++) {
-              if (response[i].event == "delivered") {
-                mailStat = response[i];
-                break;
-              }
-            }
-            if (mailStat && mailStat.timestamp) {
-              vm.customerEmailSent = getUTCtime(mailStat.timestamp);
+            vm.customerEmailSent = null;
+            var emailSent = getEmailSentTime(response);
+            if (emailSent && emailSent.timestamp) {
+              vm.customerEmailSent = getUTCtime(emailSent.timestamp);
             }
             vm.showCustomerEmailSent = true;
-          }, XhrNotificationService.notify);
+          }, vm._helpers.notifyError);
       } else {
         HelpdeskService.getEmailStatus(vm.partnerAdminEmail)
           .then(function (response) {
             // First element of response array is the latest.
-            var mailStat = _.first(response);
-            for (var i = 0; i < response.length; i++) {
-              if (response[i].event == "delivered") {
-                mailStat = response[i];
-                break;
-              }
-            }
-            if (mailStat && mailStat.timestamp) {
-              vm.partnerEmailSent = getUTCtime(mailStat.timestamp);
+            vm.partnerEmailSent = null;
+            var emailSent = getEmailSentTime(response);
+            if (emailSent && emailSent.timestamp) {
+              vm.partnerEmailSent = getUTCtime(emailSent.timestamp);
             }
             vm.showPartnerEmailSent = true;
-          }, XhrNotificationService.notify);
+          }, vm._helpers.notifyError);
       }
+    }
+
+    function getEmailSentTime(emails) {
+      var mailStat = _.filter(emails, function (data) {
+        return data.event === "delivered";
+      });
+      if (mailStat) {
+        mailStat = _.first(mailStat);
+      }
+      return mailStat;
     }
 
     // Convert Date from milliseconds to UTC format
@@ -141,23 +167,16 @@
 
     // Update Customer Admin Email and send welcome email
     function updateCustomerAdminEmail() {
-      HelpdeskService.editAdminEmail(vm.orderUuid, vm.customerAdminEmail, true)
+      HelpdeskService.editAdminEmail(vm.orderUuid, vm.customerAdminEmail, false)
         .then(function () {
-          var successMessage = [];
-          successMessage.push($translate.instant('helpdesk.editAdminEmailSuccess'));
-          Notification.notify(successMessage, 'success');
+          Notification.success('helpdesk.editAdminEmailSuccess');
           vm.customerAdminEmailEdit = false;
           vm.showCustomerEmailSent = false;
           _.delay(function () {
-            getEmailStatus(true);
+            getEmailStatus(false);
           }, 5000);
-        }, function (err) {
-          var message = _.get(err.data, "message");
-          var description = _.get(message[0], "description");
-          var errorMessage = [];
-          errorMessage.push($translate.instant('helpdesk.editAdminEmailFailure'));
-          errorMessage.push(description);
-          Notification.notify(errorMessage, 'error');
+        }, function (response) {
+          Notification.errorWithTrackingId(response, 'helpdesk.editAdminEmailFailure');
         });
     }
 
@@ -173,22 +192,16 @@
 
     // Update Partner Admin Email and send welcome email
     function updatePartnerAdminEmail() {
-      HelpdeskService.editAdminEmail(vm.orderUuid, vm.customerAdminEmail, false)
+      HelpdeskService.editAdminEmail(vm.orderUuid, vm.partnerAdminEmail, false)
         .then(function () {
-          var successMessage = [];
-          successMessage.push($translate.instant('helpdesk.editAdminEmailSuccess'));
-          Notification.notify(successMessage, 'success');
+          Notification.success('helpdesk.editAdminEmailSuccess');
           vm.partnerAdminEmailEdit = false;
+          vm.showPartnerEmailSent = false;
           _.delay(function () {
             getEmailStatus(false);
           }, 5000);
-        }, function (err) {
-          var message = _.get(err.data, "errors");
-          var description = _.get(message[0], "description");
-          var errorMessage = [];
-          errorMessage.push($translate.instant('helpdesk.editAdminEmailFailure'));
-          errorMessage.push(description);
-          Notification.notify(errorMessage, 'error');
+        }, function (response) {
+          Notification.errorWithTrackingId(response, 'helpdesk.editAdminEmailFailure');
         });
     }
 
@@ -209,16 +222,10 @@
           _.delay(function () {
             getEmailStatus(isCustomer);
           }, 5000);
-          var successMessage = [];
-          successMessage.push($translate.instant('helpdesk.resendMailSuccess'));
-          Notification.notify(successMessage, 'success');
-        }, function (err) {
-          var message = _.get(err.data, "message");
-          var errorMessage = [];
-          errorMessage.push($translate.instant('helpdesk.resendMailFailure'));
-          errorMessage.push(message);
-          Notification.notify(errorMessage, 'error');
-        }, XhrNotificationService.notify);
+          Notification.success('helpdesk.resendMailSuccess');
+        }, function (response) {
+          Notification.errorWithTrackingId(response, 'helpdesk.resendMailFailure');
+        });
     }
 
     // Transition to the customer page if account has been activated.
@@ -226,11 +233,18 @@
       $state.go('helpdesk.org', { id: vm.accountOrgId });
     }
 
+    function goToPartnerPage() {
+      $state.go('helpdesk.org', { id: vm.partnerOrgId });
+    }
+
     // Check if account has been activated.
     function isAccountActivated() {
       return (vm.accountActivated);
     }
 
+    function partnerOrgExists() {
+      return (vm.partnerOrgId);
+    }
     function notifyError(response) {
       Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
     }

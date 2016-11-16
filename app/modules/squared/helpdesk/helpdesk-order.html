@@ -60,27 +60,21 @@
 
       <div class="row">
         <div class="large-5 columns details-heading">
-          <span>{{'helpdesk.companyId' | translate}}</span>
-        </div>
-        <div class="large-7 columns details-value">
-          <span>{{helpdeskOrderCtrl.customerId}}</span>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="large-5 columns details-heading">
           <span>{{'helpdesk.adminEmail' | translate}}</span>
         </div>
         <div class="large-7 columns details-value" ng-show="!helpdeskOrderCtrl.customerAdminEmailEdit">
           <span class="custom-spacing">{{helpdeskOrderCtrl.customerAdminEmail}}</span>
-          <a ng-href class="custom-spacing ng-scope" ng-if="helpdeskOrderCtrl.isEditAllowed" ng-click="helpdeskOrderCtrl.showCustomerAdminEmailEdit()">
+          <a ng-href class="custom-spacing ng-scope"
+             ng-if="helpdeskOrderCtrl.isEditAllowed && !helpdeskOrderCtrl.isAccountActivated()"
+             ng-click="helpdeskOrderCtrl.showCustomerAdminEmailEdit()">
             {{'helpdesk.editAdminEmail' | translate}}
           </a>
           <a ng-href class="ng-scope" ng-click="helpdeskOrderCtrl.resendAdminEmail(true)">
             {{'helpdesk.resendAdminEmail' | translate}}
           </a>
-          <i tooltip-html-unsafe="{{'helpdesk.resendTooltip' | translate}}" tooltip-placement="right" tooltip-trigger="mouseenter"
-                 class="icon icon-information icon-lg blue-icon-info"></i>
+          <i tooltip-html-unsafe="{{'helpdesk.resendTooltip' | translate}}" tooltip-placement="right"
+             tooltip-trigger="mouseenter"
+             class="icon icon-information icon-lg blue-icon-info"></i>
         </div>
         <div class="large-7 columns details-value" ng-show="helpdeskOrderCtrl.customerAdminEmailEdit">
           <input ng-model="helpdeskOrderCtrl.customerAdminEmail" class="edit-box-style custom-spacing">
@@ -119,7 +113,8 @@
             <span>{{'helpdesk.managedBy' | translate}}</span>
           </div>
           <div class="large-7 columns details-value">
-            <span>{{helpdeskOrderCtrl.managedBy}}</span>
+            <span ng-if="!helpdeskOrderCtrl.partnerOrgExists()">{{helpdeskOrderCtrl.managedBy}}</span>
+            <a ng-href ng-click="helpdeskOrderCtrl.goToPartnerPage()" ng-if="helpdeskOrderCtrl.partnerOrgExists()">{{helpdeskOrderCtrl.managedBy}}</a>
           </div>
         </div>
 
@@ -129,40 +124,43 @@
           </div>
           <div class="large-7 columns details-value" ng-show="!helpdeskOrderCtrl.partnerAdminEmailEdit">
             <span class="custom-spacing">{{helpdeskOrderCtrl.partnerAdminEmail}}</span>
-            <a ng-href class="custom-spacing ng-scope" ng-if="helpdeskOrderCtrl.isEditAllowed" ng-click="helpdeskOrderCtrl.showPartnerAdminEmailEdit()">
+            <a ng-href class="custom-spacing ng-scope" ng-if="helpdeskOrderCtrl.isEditAllowed"
+               ng-click="helpdeskOrderCtrl.showPartnerAdminEmailEdit()">
               {{'helpdesk.editAdminEmail' | translate}}
             </a>
             <a ng-href class="ng-scope" ng-click="helpdeskOrderCtrl.resendAdminEmail(false)">
               {{'helpdesk.resendAdminEmail' | translate}}
             </a>
-            <i tooltip-html-unsafe="{{'helpdesk.resendTooltip' | translate}}" tooltip-placement="right" tooltip-trigger="mouseenter"
-                 class="icon icon-information icon-lg blue-icon-info"></i>
+            <i tooltip-html-unsafe="{{'helpdesk.resendTooltip' | translate}}" tooltip-placement="right"
+               tooltip-trigger="mouseenter"
+               class="icon icon-information icon-lg blue-icon-info"></i>
+          </div>
+          <div class="large-7 columns details-value" ng-show="helpdeskOrderCtrl.partnerAdminEmailEdit">
+            <input ng-model="helpdeskOrderCtrl.partnerAdminEmail" class="edit-box-style custom-spacing">
+            <a ng-href class="custom-spacing ng-scope" ng-click="helpdeskOrderCtrl.updatePartnerAdminEmail()">
+              {{'common.save' | translate}}
+            </a>
+            <a ng-href class="ng-scope" ng-click="helpdeskOrderCtrl.cancelPartnerAdminEmailEdit()">
+              {{'common.cancel' | translate}}
+            </a>
+          </div>
         </div>
-        <div class="large-7 columns details-value" ng-show="helpdeskOrderCtrl.partnerAdminEmailEdit">
-          <input ng-model="helpdeskOrderCtrl.partnerAdminEmail" class="edit-box-style custom-spacing">
-          <a ng-href class="custom-spacing ng-scope" ng-click="helpdeskOrderCtrl.updatePartnerAdminEmail()">
-            {{'common.save' | translate}}
-          </a>
-          <a ng-href class="ng-scope" ng-click="helpdeskOrderCtrl.cancelPartnerAdminEmailEdit()">
-            {{'common.cancel' | translate}}
-          </a>
-        </div>
-      </div>
 
-      <div class="row">
-        <div class="large-5 columns details-heading">
-          <span>{{'helpdesk.emailSent' | translate}}</span>
-        </div>
-        <div class="large-7 columns details-value" ng-show="helpdeskOrderCtrl.showPartnerEmailSent">
-          <span>{{helpdeskOrderCtrl.partnerEmailSent}}</span>
-        </div>
-        <div class="helpdesk-order-email">
+        <div class="row">
+          <div class="large-5 columns details-heading">
+            <span>{{'helpdesk.emailSent' | translate}}</span>
+          </div>
+          <div class="large-7 columns details-value" ng-show="helpdeskOrderCtrl.showPartnerEmailSent">
+            <span>{{helpdeskOrderCtrl.partnerEmailSent}}</span>
+          </div>
+          <div class="helpdesk-order-email">
           <span class="spinner-example--small" ng-show="!helpdeskOrderCtrl.showPartnerEmailSent">
             <i class="icon icon-spinner"></i>
           </span>
+          </div>
         </div>
+        <hr>
       </div>
-      <hr>
     </div>
   </div>
 </div>
