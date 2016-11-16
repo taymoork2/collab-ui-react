@@ -197,10 +197,13 @@
               .catch(function (huronResponse) {
                 // Notify Huron error huronResponse
                 Notification.errorResponse(huronResponse);
-                // return original successful response
+              })
+              .then(function () {
+                // always return original successful response
                 return response;
               });
           }
+          return response;
         });
     }
 
@@ -480,11 +483,10 @@
               schemas: Config.scimSchemas,
               roles: [Config.backend_roles.spark_synckms]
             };
-            updateUserProfile(userId, userRoleData, function (data) {
-              if (!data.success) {
-                Notification.error('usersPage.careAddUserRoleError');
-              }
-            });
+            updateUserProfile(userId, userRoleData)
+              .catch(function (response) {
+                Notification.errorResponse(response, 'usersPage.careAddUserRoleError');
+              });
           }
         }
       });
