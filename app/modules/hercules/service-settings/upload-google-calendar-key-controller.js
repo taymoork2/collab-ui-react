@@ -6,20 +6,29 @@
     .controller('UploadGoogleCalendarKeyController', UploadGoogleCalendarKeyController);
 
   /* @ngInject */
-  function UploadGoogleCalendarKeyController($modalInstance, CloudConnectorService, Notification, googleServiceAccount) {
+  function UploadGoogleCalendarKeyController($modalInstance, $translate, CloudConnectorService, Notification, googleServiceAccount) {
     var vm = this;
+    vm.enterServiceAccountPlaceholder = $translate.instant('hercules.settings.googleCalendar.uploadNewPrivateKeyPlaceholder');
+    vm.serviceAccountName = $translate.instant('hercules.settings.googleCalendar.serviceAccountName');
     vm.googleServiceAccount = googleServiceAccount;
-    var privateKey = 'MIIEpQIBAAKCAQEA3Tz2mr7SZiAMfQyuvBjM9Oi..Z1BjP5CE/Wm/Rr500P'; // obviously a dummy key
+
+
+    vm.clearFile = function () {
+      vm.file = undefined;
+      vm.fileName = undefined;
+    };
 
     vm.uploadCertificate = function () {
       vm.loading = true;
-      CloudConnectorService.updateConfig(googleServiceAccount, privateKey, 'squared-fusion-gcal')
+      CloudConnectorService.updateConfig(vm.googleServiceAccount, vm.file, 'squared-fusion-gcal')
         .then(function () {
-          Notification.success('hercules.settings.googleCalendar.successfullyUploadedKey');
-          $modalInstance.close();
+          Notification.success($translate.instant('hercules.settings.googleCalendar.successfullyUploadedKey', {
+            filename: vm.fileName
+          }));
+          $modalInstance.close(vm.googleServiceAccount);
         })
         .catch(function (error) {
-          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+          Notification.errorWithTrackingId(error, 'hercules.settings.googleCalendar.failedToUploadKey');
           vm.loading = false;
         });
     };

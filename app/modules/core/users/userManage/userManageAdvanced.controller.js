@@ -21,7 +21,7 @@
     vm.onInit();
 
     $scope.$on('modal.closing', function (ev) {
-      if ($scope.csv.model.isProcessing) {
+      if (isCsvProcessing()) {
         onCancelImport();
         ev.preventDefault();
       }
@@ -79,7 +79,7 @@
     };
 
     function onCancelImport() {
-      if ($scope.csv.model.isProcessing) {
+      if (isCsvProcessing()) {
         $modal.open({
           type: 'dialog',
           templateUrl: 'modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html'
@@ -88,9 +88,13 @@
           $scope.csv.isCancelledByUser = true;
           $scope.csv.model.cancelProcessCsv();
         });
-      } else {
+      } else if (_.isFunction($scope.$dismiss)) {
         $scope.$dismiss();
       }
+    }
+
+    function isCsvProcessing() {
+      return _.get($scope, 'csv.model.isProcessing', false);
     }
 
     function getCurrentState() {

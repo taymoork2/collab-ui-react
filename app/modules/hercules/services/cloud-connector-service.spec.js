@@ -48,7 +48,7 @@ describe('Service: CloudConnectorService', function () {
       var serviceId = 'squared-fusion-gcal';
       CloudConnectorService.getServiceAccount(serviceId)
         .then(function (serviceAccount) {
-          expect(serviceAccount).toBe('serviceaccount@example.org');
+          expect(serviceAccount).toBe('google@example.org');
         });
       $scope.$apply();
     });

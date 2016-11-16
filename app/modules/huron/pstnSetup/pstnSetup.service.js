@@ -6,7 +6,7 @@
 
   /* @ngInject */
   function PstnSetupService($q, $translate, Authinfo, Notification, PstnSetup, TerminusCarrierService,
-    TerminusCustomerService, TerminusCustomerCarrierService, TerminusOrderService,
+    TerminusCustomerService, TerminusCustomerV2Service, TerminusCustomerCarrierService, TerminusOrderService,
     TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch,
     TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease,
     TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease,
@@ -49,6 +49,7 @@
 
     var service = {
       createCustomer: createCustomer,
+      createCustomerV2: createCustomerV2,
       updateCustomerCarrier: updateCustomerCarrier,
       getCustomer: getCustomer,
       listDefaultCarriers: listDefaultCarriers,
@@ -108,6 +109,23 @@
         payload.resellerId = Authinfo.getOrgId();
       }
       return TerminusCustomerService.save({}, payload).$promise;
+    }
+
+    function createCustomerV2(uuid, name, firstName, lastName, email, pstnCarrierId, trial) {
+      var payload = {
+        uuid: uuid,
+        name: name,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        pstnCarrierId: pstnCarrierId,
+        trial: trial
+      };
+
+      if (PstnSetup.isResellerExists()) {
+        payload.resellerId = Authinfo.getOrgId();
+      }
+      return TerminusCustomerV2Service.save({}, payload).$promise;
     }
 
     function updateCustomerCarrier(customerId, pstnCarrierId) {

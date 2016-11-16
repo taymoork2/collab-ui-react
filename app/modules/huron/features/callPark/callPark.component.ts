@@ -1,4 +1,4 @@
-import { CallParkService, CallPark, ICallParkRangeItem, CallParkMember } from 'modules/huron/features/callPark/services';
+import { CallParkService, CallPark, ICallParkRangeItem, CallParkMember, FallbackDestination } from 'modules/huron/features/callPark/services';
 import { HuronSiteService } from 'modules/huron/sites';
 import { Notification } from 'modules/core/notifications';
 
@@ -80,7 +80,18 @@ class CallParkCtrl implements ng.IComponentController {
   public setCallParkMembers(members: Array<CallParkMember>): void {
     this.callPark.members = members;
     this.form.$setDirty();
+    this.callPark.members.length > 0 ? this.form.$invalid = false : this.form.$invalid = true;
     this.checkForChanges();
+  }
+
+  public setCallParkFallbackDestination(fbDestination: FallbackDestination) {
+    this.callPark.fallbackDestination = fbDestination;
+    this.form.$setDirty();
+    this.checkForChanges();
+  }
+
+  public onCallParkFallbackDestinationMemberRemoved() {
+    this.form.$setDirty();
   }
 
   public cancelModal(): void {

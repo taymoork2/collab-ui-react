@@ -153,6 +153,15 @@
       $scope.currentUserCount = 1;
       setLicenseAvailability();
       checkSite();
+      initResults();
+    }
+
+    function initResults() {
+      $scope.results = {
+        resultList: [],
+        errors: [],
+        warnings: []
+      };
     }
 
     $scope.isCsvEnhancement = false;
@@ -1442,14 +1451,12 @@
 
     $scope.clearPanel = function () {
       resetUsersfield();
-      $scope.results = null;
+      initResults();
     };
 
     function onboardUsers(optionalOnboard) {
       var deferred = $q.defer();
-      $scope.results = {
-        resultList: []
-      };
+      initResults();
       usersList = getUsersList();
       Log.debug('Entitlements: ', usersList);
 
@@ -1710,12 +1717,9 @@
     };
 
     function entitleUserCallback(data, status, method, headers) {
-      $scope.results = {
-        resultList: []
-      };
+      initResults();
       $scope.numAddedUsers = 0;
       $scope.numUpdatedUsers = 0;
-      $scope.results.errors = [];
       var isComplete = true;
 
       $rootScope.$broadcast('USER_LIST_UPDATED');

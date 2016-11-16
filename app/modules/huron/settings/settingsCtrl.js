@@ -1912,7 +1912,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (extensionList) {
-          if (angular.isArray(extensionList) && extensionList.length > -1) {
+          if (_.isArray(extensionList) && extensionList.length > 0) {
             vm.model.disableExtensions = true;
           }
         });

@@ -169,6 +169,30 @@ describe('OnboardCtrl: Ctrl', function () {
     };
   }
 
+  function bulkOnboardSuccessResponseUpperCaseEmail(uploadedData, defaultStatusCode) {
+    var response = {
+      data: {
+        userResponse: []
+      }
+    };
+
+    _.forEach(uploadedData, function (user) {
+      response.data.userResponse.push({
+        status: defaultStatusCode,
+        httpStatus: defaultStatusCode,
+        email: _.toUpper(user.address),
+        uuid: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c'
+      });
+    });
+    return $q.resolve(response);
+  }
+
+  function bulkOnboardUsersResponseUpperCaseEmailMock(statusCode) {
+    return function (uploadedData) {
+      return bulkOnboardSuccessResponseUpperCaseEmail(uploadedData, statusCode);
+    };
+  }
+
   function bulkOnboardUsersErrorResponseMock(statusCode, headers, successAfterTries, successCode) {
     var triesUntilSuccess = successAfterTries || Number.MAX_VALUE;
 
@@ -492,6 +516,26 @@ describe('OnboardCtrl: Ctrl', function () {
 
       it('should report new users', function () {
         Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(201));
+        controller.startUpload();
+        $scope.$apply();
+        $timeout.flush();
+        expect(controller.model.processProgress).toEqual(100);
+        expect(controller.model.numTotalUsers).toEqual(2);
+        expect(controller.model.numNewUsers).toEqual(2);
+        expect(controller.model.numExistingUsers).toEqual(0);
+        expect(controller.model.userErrorArray.length).toEqual(0);
+      });
+    });
+
+    describe('Process CSV with difference email cases and Save Users', function () {
+      beforeEach(function () {
+        controller.model.file = twoValidUsersWithSpaces;
+        $scope.$apply();
+        $timeout.flush();
+      });
+
+      it('should report new users', function () {
+        Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseUpperCaseEmailMock(201));
         controller.startUpload();
         $scope.$apply();
         $timeout.flush();
