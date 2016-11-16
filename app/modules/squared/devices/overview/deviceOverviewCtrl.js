@@ -145,6 +145,9 @@
     deviceOverview.save = function (newName) {
       return CsdmDataModelService
         .updateItemName(deviceOverview.currentDevice, newName)
+        .then(function (updatedItem) {
+          displayDevice(updatedItem);
+        })
         .catch(function (response) {
           Notification.errorWithTrackingId(response);
         });
