@@ -1566,7 +1566,13 @@
                   userResult.message = $translate.instant('usersPage.hybridServicesComboError');
                   break;
                 }
-                default: break;
+                default: {
+                  userResult.message = $translate.instant('usersPage.onboardError', {
+                    email: userResult.email,
+                    status: httpStatus
+                  });
+                  break;
+                }
               }
               break;
             }

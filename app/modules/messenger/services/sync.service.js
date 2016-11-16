@@ -317,7 +317,7 @@
       var syncMode = syncModes.messenger.off;
 
       // set to old data format by default, use new data format only when we detect it.
-      syncStringFromServer = syncString.trim();
+      syncStringFromServer = _.trim(syncString);
       syncStatus.isNewDataFormat = false;
       setSyncStatusNewDataDefaults();
 
@@ -341,11 +341,11 @@
           break;
         default:
           // new data format handled here -- "msgr_to_spark;pwd_sync=1:spark_ent=1:usr_dis=1:usr_del=1:usr_min=0"
-          var arraySyncString = syncString.trim().split(";");
+          var arraySyncString = _.trim(syncString).split(";");
           if (arraySyncString.length > 0) {
             // parse other data first before PK parse because of dependency
             if (arraySyncString.length > 1) {
-              var arrayOtherData = arraySyncString[1].trim().split(":");
+              var arrayOtherData = _.trim(arraySyncString[1]).split(":");
               _.forEach(arrayOtherData, function (data) {
                 // we only check non-default values
                 switch (data) {
