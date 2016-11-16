@@ -209,9 +209,16 @@
 
 
     function trackError(errorObj, cause) {
+      var message = _.get(errorObj, 'message');
+      var stack = _.get(errorObj, 'stack');
+      var error;
+      if (!message && !stack) {
+        error = _.isPlainObject(errorObj) ? JSON.stringify(errorObj) : String(errorObj);
+      }
       trackEvent(eventNames.RUNTIME_ERROR, {
-        message: _.get(errorObj, 'message'),
-        stack: _.get(errorObj, 'stack'),
+        message: message,
+        stack: stack,
+        error: error,
         cause: cause,
         userId: Authinfo.getUserId(),
         orgId: Authinfo.getOrgId(),

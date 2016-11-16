@@ -1,0 +1,183 @@
+import { FallbackDestination } from 'modules/huron/features/callPark/services/callPark';
+import { MemberService, Member } from 'modules/huron/members';
+import { Line } from 'modules/huron/lines/services/line';
+
+class CallParkReversionCtrl implements ng.IComponentController {
+  public fallbackDestination: FallbackDestination;
+  public onChangeFn: Function;
+  public onMemberRemovedFn: Function;
+
+  public callDestInputs: Array<string> = ['internal', 'external'];
+  public reversionType: string = 'parker';
+  public selectedReversionNumber: any;
+  public showReversionLookup: boolean;
+  public showMember: boolean;
+  public openPanel: boolean = false;
+  public cpReversionForm: ng.IFormController;
+
+  /* @ngInject */
+  constructor(
+    private MemberService: MemberService,
+    private CustomerVoiceCmiService,
+    private TelephoneNumberService,
+    private Authinfo,
+  ) {}
+
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+    let callParkChanges = changes['fallbackDestination'];
+    if (callParkChanges && callParkChanges.currentValue) {
+      if (this.cpReversionForm) {
+        this.cpReversionForm.$setValidity('', true, this.cpReversionForm);
+      }
+      this.processCallParkReversionChanges(callParkChanges);
+    }
+  }
+
+  private processCallParkReversionChanges(callParkChanges: ng.IChangesObject): void {
+    if (_.isNull(callParkChanges.currentValue.number) && _.isNull(callParkChanges.currentValue.numberUuid)) {
+      this.reversionType = 'parker';
+      this.showMember = false;
+      this.showReversionLookup = false;
+      this.selectedReversionNumber = undefined;
+    } else {
+      this.reversionType = 'destination';
+      if (!_.isNull(callParkChanges.currentValue.numberUuid)) {
+        this.showMember = true;
+        this.showReversionLookup = false;
+        // TODO (jlowery): go get number details
+      } else {
+        this.selectedReversionNumber = this.TelephoneNumberService.getDestinationObject(callParkChanges.currentValue.number);
+        this.showMember = false;
+        this.showReversionLookup = true;
+      }
+    }
+  }
+
+  public getMemberList(value: string): ng.IPromise<Array<Member>> {
+    return this.MemberService.getMemberList(value, true).then( members => {
+      return members;
+    });
+  }
+
+  public getExternalRegionCode(): ng.IPromise<any> {
+    return this.CustomerVoiceCmiService.get({
+      customerId: this.Authinfo.getOrgId(),
+    }).$promise;
+  }
+
+  public onSelectReversionMember(member: Member): void {
+    this.cpReversionForm.$setValidity('', true, this.cpReversionForm);
+    this.selectedReversionNumber = undefined;
+    this.showMember = true;
+    this.showReversionLookup = false;
+    let fallbackDestination = new FallbackDestination({
+      name: this.getDisplayName(member),
+      numberUuid: this.getPrimaryNumberUuid(member),
+      number: null,
+      memberUuid: member.uuid,
+      sendToVoicemail: false,
+    });
+    this.onChangeFn({
+      fallbackDestination: fallbackDestination,
+    });
+  }
+
+  public toggleMemberPanel(): void {
+    if (this.openPanel) {
+      this.openPanel = false;
+    } else {
+      this.openPanel = true;
+    }
+  }
+
+  public onSelectRevertToParker(): void {
+    this.cpReversionForm.$setValidity('', true, this.cpReversionForm);
+    this.onChangeFn({
+      fallbackDestination: new FallbackDestination(),
+    });
+  }
+
+  public onSelectAnotherDestination(): void {
+    this.cpReversionForm.$setValidity('', false, this.cpReversionForm);
+    this.showMember = false;
+    this.showReversionLookup = true;
+  }
+
+  public onChangeSendToVoicemail(): void {
+    let fallbackDestination = new FallbackDestination({
+      name: this.fallbackDestination.name,
+      numberUuid: this.fallbackDestination.numberUuid,
+      number: this.fallbackDestination.number,
+      memberUuid: this.fallbackDestination.memberUuid,
+      sendToVoicemail: this.fallbackDestination.sendToVoicemail,
+    });
+    this.onChangeFn({
+      fallbackDestination: fallbackDestination,
+    });
+  }
+
+  public removeMember(): void {
+    this.openPanel = false;
+    this.showMember = false;
+    this.showReversionLookup = true;
+    this.cpReversionForm.$setValidity('', false, this.cpReversionForm);
+    this.onMemberRemovedFn();
+  }
+
+  public validateReversionNumber(): void {
+    if (_.isObject(this.selectedReversionNumber)) {
+      this.TelephoneNumberService.setRegionCode(_.get(this.selectedReversionNumber, 'code'));
+      let isValid = this.TelephoneNumberService.validateDID(_.get(this.selectedReversionNumber, 'phoneNumber'));
+      if (isValid) {
+        this.cpReversionForm.$setValidity('', true, this.cpReversionForm);
+        let number = this.TelephoneNumberService.getDIDValue(_.get(this.selectedReversionNumber, 'phoneNumber'));
+        let fallbackDestination = new FallbackDestination({
+          name: null,
+          numberUuid: null,
+          number: number,
+          memberUuid: null,
+          sendToVoicemail: false,
+        });
+        this.onChangeFn({
+          fallbackDestination: fallbackDestination,
+        });
+      }
+    }
+  }
+
+  private getPrimaryNumberUuid(member: Member): string {
+    let number: Line = _.find<Line>(member.numbers, (item) => {
+      return item.primary === true;
+    });
+    return _.get(number, 'uuid', '');
+  }
+
+  public getDisplayName(member: Member): string | undefined {
+    if (!member) {
+      return;
+    }
+
+    if (!member.firstName && !member.lastName) {
+      return member.userName;
+    } else if (member.firstName && member.lastName) {
+      return member.firstName + ' ' + member.lastName;
+    } else if (member.firstName) {
+      return member.firstName;
+    } else if (member.lastName) {
+      return member.lastName;
+    } else {
+      return;
+    }
+  }
+
+}
+
+export class CallParkReversionComponent implements ng.IComponentOptions {
+  public controller = CallParkReversionCtrl;
+  public templateUrl = 'modules/huron/features/callPark/callParkReversion/callParkReversion.html';
+  public bindings = {
+    fallbackDestination: '<',
+    onMemberRemovedFn: '&',
+    onChangeFn: '&',
+  };
+}

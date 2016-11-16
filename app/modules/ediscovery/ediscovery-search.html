@@ -5,13 +5,75 @@
       <span translate="ediscovery.subheading"></span>
     </div>
 
-    <div class="typeahead-large">
+    <!-- Updated Search -->
+    <div ng-if="ediscoverySearchCtrl.ediscoveryToggle" class="searchByRoom">
+      <!-- Search By Row-->
+      <div class="row">
+        <div class="col-md-6 large-3 searchBox">
+          <span class="searchText" translate="ediscovery.searchParameters.searchBy"></span>    
+          <cs-select ng-model="ediscoverySearchCtrl.searchBySelected"
+            options="ediscoverySearchCtrl.searchByOptions"
+            placeholder="ediscoverySearchCtrl.searchByPlaceholder">
+          </cs-select>
+        </div>
+        <div class="col-md-6" id="midBreak">
+          <input class="cs-input" type="text"
+            ng-model="ediscoverySearchCtrl.searchByEmailModel"
+            placeholder="{{'ediscovery.searchParameters.searchByEmailPlaceholder' | translate}}">
+        </div> 
+      </div>
+      <!-- Date Range Row -->
+      <div class="row">
+        <div class="row">
+          <span class="searchText" id="smallBreak" translate="common.dateRange"></span>
+        </div>
+        <div class="col-md-5 searchBox">   
+          <cs-datepicker ng-model="ediscoverySearchCtrl.searchCriteria.startDate" view-format="YYYY-MM-DD"
+            placeholder="{{'ediscovery.search.startDatePlaceholder' | translate}}" required>
+          </cs-datepicker>
+        </div>
+        <span class="col-md-1" translate="common.to"></span>
+        <cs-datepicker class="col-md-6" ng-model="ediscoverySearchCtrl.searchCriteria.endDate" view-format="YYYY-MM-DD"
+          placeholder="{{'ediscovery.search.endDatePlaceholder' | translate}}" required>
+        </cs-datepicker>
+      </div>
+      <div class="row">
+        <!-- Room Name Row -->
+        <div class="row">
+          <span class="searchText" id="largeBreak" translate="ediscovery.searchParameters.roomName"></span>
+        </div>
+        <input class="cs-input" type="text" placeholder="{{'ediscovery.searchParameters.roomNamePlaceholder' | translate}}">
+        <!-- Text Message Row -->
+        <div class="row">
+          <span class="searchText" id="smallBreak" translate="ediscovery.searchParameters.textMessage"></span>
+        </div>
+        <input class="cs-input" type="text" placeholder="{{'ediscovery.searchParameters.textMessagePlaceholder' | translate}}">
+        <!-- File Name Row -->
+        <div class="row">
+          <span class="searchText" id="smallBreak" translate="ediscovery.searchParameters.fileName"></span>
+        </div>
+        <input class="cs-input" type="text" placeholder="{{'ediscovery.searchParameters.fileNamePlaceholder' | translate}}">
+        <!-- Activity Type Row -->
+        <div class="row">
+          <span class="searchText" id="smallBreak" translate="ediscovery.searchParameters.activityType"></span>
+        </div>
+        <cs-select ng-model="ediscoverySearchCtrl.activityTypeModel" class="selectList" 
+          placeholder="ediscoverySearchCtrl.activityTypePlaceholder">
+        </cs-select>
+      </div>
+      <div class="row" id="midBreak">
+        <button type="button" class="btn btn--primary searchButton" translate="{{'common.search' | translate}}"></button>
+      </div>
+    </div>
+
+    <!-- Original Search -->
+    <div ng-if="!ediscoverySearchCtrl.ediscoveryToggle" class="typeahead-large">
       <input maxlength="50" spellcheck="false" class="fit" id="searchInput" type="search" tabindex="1" autocomplete="off" ng-model="ediscoverySearchCtrl.searchCriteria.roomId" autofocus="true" ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)"/>
       <button type="submit" id="ediscoverySearchButton" class="btn btn--circle btn--primary icon icon-search" ng-click="ediscoverySearchCtrl.searchForRoom(ediscoverySearchCtrl.searchCriteria.roomId);" ng-disabled="ediscoverySearchCtrl.searchButtonDisabled()"></button>
       <div class="input-description"></div>
     </div>
 
-    <p class="search-tip" translate="ediscovery.searchTip"></p>
+    <p ng-if="!ediscoverySearchCtrl.ediscoveryToggle" class="search-tip" translate="ediscovery.searchTip"></p>
 
     <div class="search-error" ng-if="ediscoverySearchCtrl.error">
       <span>{{ediscoverySearchCtrl.error}}</span>

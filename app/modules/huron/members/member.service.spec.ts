@@ -20,6 +20,7 @@ describe('Service: MemberService', () => {
           lastName: 'Norris',
           userName: 'chuck.norris@kickyourbutt.com',
           displayName: undefined,
+          numbers: [],
         }),
         new Member({
           uuid: '0002',
@@ -28,6 +29,7 @@ describe('Service: MemberService', () => {
           lastName: undefined,
           userName: undefined,
           displayName: 'Koala Lounge',
+          numbers: [],
         }),
       ],
     };

@@ -30,7 +30,8 @@
       getUserPhoto: getUserPhoto,
       isValidThumbnail: isValidThumbnail,
       getFullNameFromUser: getFullNameFromUser,
-      getPrimaryEmailFromUser: getPrimaryEmailFromUser
+      getPrimaryEmailFromUser: getPrimaryEmailFromUser,
+      getUserLicence: getUserLicence
     };
 
     var _helpers = {
@@ -523,9 +524,14 @@
     }
 
     function getUserLicence(userEmail, users) {
-      return _.find(users, function (user) {
-        return userEmail === user.email;
-      }).licenses;
+      var aUser = _.find(users, function (user) {
+        return _.toLower(userEmail) === _.toLower(user.email);
+      });
+      if (!_.isNil(aUser)) {
+        return _.get(aUser, 'licenses', []);
+      } else {
+        return [];
+      }
     }
     /*
      * Modifies a license or entitlement array with properties specific for the user

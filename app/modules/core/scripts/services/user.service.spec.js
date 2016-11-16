@@ -98,6 +98,20 @@ describe('User Service', function () {
     $httpBackend.flush();
   });
 
+  it('getUserLicence() should pass if the email is in different case', function () {
+    var userEmail = 'Abc@Def.com';
+    var users = [{
+      email: 'abc@def.com',
+      licenses: [{
+        name: 'license1'
+      }, {
+        name: 'license2'
+      }]
+    }];
+    var licenses = Userservice.getUserLicence(userEmail, users);
+    expect(_.isEmpty(licenses)).toBeFalsy();
+  });
+
   describe('User Photo', function () {
 
     beforeEach(function () {

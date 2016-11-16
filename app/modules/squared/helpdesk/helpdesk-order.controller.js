@@ -6,7 +6,7 @@
     .controller('HelpdeskOrderController', HelpdeskOrderController);
 
   /* @ngInject */
-  function HelpdeskOrderController($stateParams, HelpdeskService, XhrNotificationService, Authinfo, Notification, $translate, $state) {
+  function HelpdeskOrderController($state, $stateParams, $translate, Authinfo, HelpdeskService, Notification) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.order) {
@@ -26,8 +26,12 @@
     vm.goToCustomerPage = goToCustomerPage;
     vm.isAccountActivated = isAccountActivated;
 
+    vm._helpers = {
+      notifyError: notifyError
+    };
+
     // Get Order details
-    HelpdeskService.searchOrders(vm.orderId).then(initOrderView, XhrNotificationService.notify);
+    HelpdeskService.searchOrders(vm.orderId).then(initOrderView, vm._helpers.notifyError);
 
     function initOrderView(order) {
       // Getting information from the order.
@@ -57,7 +61,7 @@
             // Getting the display name of the partner cited in account.
             HelpdeskService.getOrg(vm.partnerOrgId).then(function (org) {
               vm.managedBy = _.get(org, 'displayName', '');
-            }, XhrNotificationService.notify);
+            }, vm._helpers.notifyError);
           }
           vm.provisionTime = (new Date(orderObj.orderReceived)).toGMTString();
           vm.accountActivated = false;
@@ -94,7 +98,7 @@
           if (mailStat && mailStat.timestamp) {
             vm.customerEmailSent = getUTCtime(mailStat.timestamp);
           }
-        }, XhrNotificationService.notify);
+        }, vm._helpers.notifyError);
       } else {
         HelpdeskService.getEmailStatus(vm.partnerAdminEmail)
         .then(function (response) {
@@ -103,7 +107,7 @@
           if (mailStat && mailStat.timestamp) {
             vm.partnerEmailSent = getUTCtime(mailStat.timestamp);
           }
-        }, XhrNotificationService.notify);
+        }, vm._helpers.notifyError);
       }
     }
 
@@ -170,6 +174,10 @@
     // Check if account has been activated.
     function isAccountActivated() {
       return (vm.accountActivated);
+    }
+
+    function notifyError(response) {
+      Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
     }
   }
 }());
