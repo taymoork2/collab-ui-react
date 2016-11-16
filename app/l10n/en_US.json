@@ -3729,6 +3729,7 @@
   },
   "mediaFusion": {
     "page_title": "Hybrid Media Service",
+    "report_title": "Hybrid Media Service Report",
     "add-resource-button": "Add Resource",
     "genericError": "An unexpected error occurred. Please try again later.",
     "connectors": {
@@ -3788,6 +3789,7 @@
       "body2": "To make this node available again, you will need to reregister it."
     },
     "metrics": {
+      "title": "Metrics",
       "today": "Last 24 Hours",
       "today2": "Last 24 Hours",
       "yesterday": "Yesterday",
@@ -4050,7 +4052,7 @@
       "fqdn": "Fully Qualified Domain Name"
     },
     "meetings-report": {
-      "title": "Media Service Meetings Report",
+      "title": "Meetings",
       "adoption-tab": "Adoption",
       "quality-tab": "Quality",
       "health-tab": "Health",
