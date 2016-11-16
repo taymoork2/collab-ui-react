@@ -1,4 +1,4 @@
-import { CallPark } from './callPark';
+import { CallPark, FallbackDestination } from './callPark';
 
 export interface ICallParkListItem {
   uuid: string;
@@ -24,6 +24,7 @@ export class CallParkService {
   private callParkRangeResource: ICallParkRangeResource;
   private callParkDataCopy: CallPark;
   private callParkProperties: Array<string> = ['uuid', 'name', 'startRange', 'endRange', 'members'];
+  private fallbackDestProperties: Array<string> = ['memberUuid', 'name', 'number', 'numberUuid', 'sendToVoicemail'];
 
   /* @ngInject */
   constructor(
@@ -72,6 +73,7 @@ export class CallParkService {
       }).$promise
       .then( (callParkResource) => {
         let callPark = new CallPark(_.pick<CallPark, CallPark>(callParkResource, this.callParkProperties));
+        callPark.fallbackDestination = new FallbackDestination(_.pick<FallbackDestination, FallbackDestination>(callParkResource.fallbackDestination, this.fallbackDestProperties));
         this.callParkDataCopy = this.cloneCallParkData(callPark);
         return callPark;
       });
@@ -103,7 +105,7 @@ export class CallParkService {
     .then( () => location);
   }
 
-  public updateCallPark(callParkId: string | undefined, data: CallPark): ng.IPromise<void> {
+  public updateCallPark(callParkId: string | undefined, data: CallPark): ng.IPromise<CallPark> {
     return this.callParkResource.update({
       customerId: this.Authinfo.getOrgId(),
       callParkId: callParkId,
@@ -114,7 +116,15 @@ export class CallParkService {
       members: _.map(data.members, (member) => {
         return member.memberUuid;
       }),
-    }).$promise;
+      fallbackDestination: {
+        number: data.fallbackDestination.number,
+        numberUuid: data.fallbackDestination.numberUuid,
+        sendToVoicemail: data.fallbackDestination.sendToVoicemail,
+      },
+    }).$promise
+    .then( () => {
+      return this.getCallPark(callParkId);
+    });
   }
 
   public deleteCallPark(callParkId: string): ng.IPromise<any> {

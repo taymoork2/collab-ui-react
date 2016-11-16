@@ -555,6 +555,26 @@
       },
     }];
 
+    FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
+      vm.internationalDialingSelection = [{
+        type: 'switch',
+        key: 'internationalDialingEnabled',
+        className: 'international-dialing',
+        templateOptions: {
+          label: $translate.instant('internationalDialing.internationalDialing'),
+          description: $translate.instant(result
+            ? 'internationalDialing.internationalDialingPlacesDesc'
+            : 'internationalDialing.internationalDialingDesc')
+        },
+        expressionProperties: {
+          'templateOptions.isDisabled': function () {
+            // if the customer is in trial and doesn't have the feature toggle
+            // huronInternationalDialingTrialOverride then show toggle as disabled
+            return InternationalDialing.isDisableInternationalDialing();
+          }
+        }
+      }];
+    });
     vm.internationalDialingSelection = [{
       type: 'switch',
       key: 'internationalDialingEnabled',
@@ -1892,7 +1912,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (extensionList) {
-          if (angular.isArray(extensionList) && extensionList.length > -1) {
+          if (_.isArray(extensionList) && extensionList.length > 0) {
             vm.model.disableExtensions = true;
           }
         });

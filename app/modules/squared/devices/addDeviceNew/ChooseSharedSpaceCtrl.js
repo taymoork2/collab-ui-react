@@ -80,8 +80,8 @@
     };
 
     vm.toggle = function () {
-      vm.isNewCollapsed = vm.radioSelect == "existing";
-      vm.isExistingCollapsed = vm.radioSelect == "create";
+      vm.isNewCollapsed = vm.radioSelect == 'existing';
+      vm.isExistingCollapsed = vm.radioSelect == 'create';
     };
 
     vm.message = {
@@ -103,12 +103,10 @@
 
     vm.next = function () {
       var nextOption = vm.deviceType;
-      if (nextOption == 'huron') {
-        if (wizardData.function == 'addPlace') {
-          nextOption += '_' + 'create';
-        } else {
-          nextOption += '_' + vm.radioSelect;
-        }
+      if (wizardData.function == 'addPlace') {
+        nextOption += '_' + 'create';
+      } else {
+        nextOption += '_' + (vm.radioSelect || 'existing');
       }
       var cisUuid;
       if (vm.place) {

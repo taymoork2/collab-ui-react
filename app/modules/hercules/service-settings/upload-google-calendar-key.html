@@ -1,0 +1,62 @@
+<div class="modal-header">
+  <div class="modal-title" translate="hercules.settings.hybridCalendarCommon.hybridCalendarSetUp"></div>
+</div>
+<div class="modal-body hercules-upload-key-modal">
+
+  <div class="hercules-upload-key-section row">
+   <h3 translate="hercules.settings.googleCalendar.uploadNewPrivateKey"
+       class="hercules-upload-key-header"></h3>
+   <p translate="hercules.settings.googleCalendar.uploadNewPrivateKeyExplanation"
+      class="medium-8"></p>
+  </div>
+
+  <div class="row hercules-upload-key-section">
+    <input
+      cs-input
+      type="text"
+      placeholder="{{uploadKey.enterServiceAccountPlaceholder}}"
+      ng-model="uploadKey.googleServiceAccount"
+      cs-input-group-size="medium-4"
+      cs-input-label="{{uploadKey.serviceAccountName}}"
+    >
+  </div>
+
+
+  <div
+    ng-if="!uploadKey.file"
+    class="file-drop"
+    cr-file-drop
+    file="uploadKey.file"
+    file-name="uploadKey.fileName">
+    <div class="file-drop-content">
+      <div class="icon icon-upload-contain center"></div>
+      <input
+        cr-file-read
+        id="upload"
+        name="upload"
+        type="file"
+        file="uploadKey.file"
+        file-name="uploadKey.fileName" />
+      <span translate="hercules.settings.googleCalendar.dragAndDropKeyFileHere"></span>
+      <label for='upload' translate="hercules.settings.googleCalendar.clickToBrowse"></label>
+    </div>
+  </div>
+
+  <div class="file-drop-inactive" ng-if="uploadKey.file">
+    <div class="file-drop-content">
+        <p><span translate="hercules.settings.googleCalendar.fileReadyForImport"></span>: {{uploadKey.fileName}}</p>
+        <p><a ng-click="uploadKey.clearFile()" translate="hercules.settings.googleCalendar.removeFile"></a></p>
+    </div>
+  </div>
+
+</div>
+<div class="modal-footer">
+  <button ng-click="$dismiss()" class="btn" translate="common.cancel"></button>
+  <button cs-btn
+          class="btn btn--primary"
+          loading="uploadKey.loading"
+          ng-click="uploadKey.uploadCertificate()"
+          ng-disabled="!uploadKey.file || uploadKey.googleServiceAccount === ''">
+    <span translate="common.upload"></span>
+  </button>
+</div>

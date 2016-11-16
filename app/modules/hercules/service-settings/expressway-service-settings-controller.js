@@ -134,7 +134,7 @@
       $modal.open({
         templateUrl: 'modules/hercules/service-settings/confirm-certificate-delete.html',
         type: 'small',
-        controller: ConfirmCertificateDeleteController,
+        controller: 'ConfirmCertificateDeleteController',
         controllerAs: 'confirmCertificateDelete',
         resolve: {
           cert: function () {
@@ -154,20 +154,6 @@
           Notification.errorWithTrackingId(error, 'hercules.settings.call.certificatesCannotRead');
         });
     }
-
-  }
-
-  /* @ngInject */
-  function ConfirmCertificateDeleteController(CertService, $modalInstance, Notification, cert) {
-    var vm = this;
-    vm.cert = cert;
-    vm.remove = function () {
-      CertService.deleteCert(vm.cert.certId)
-        .then($modalInstance.close)
-        .catch(function (error) {
-          Notification.errorWithTrackingId(error, 'hercules.settings.call.certificatesCannotDelete');
-        });
-    };
   }
 
 }());

@@ -3,22 +3,26 @@
 describe('Controller: EdiscoverySearchController', function () {
   beforeEach(angular.mock.module('Ediscovery'));
 
-  var ediscoverySearchController, EdiscoveryService, EdiscoveryNotificationService, $q, $controller, $translate, $scope, Notification;
+  var ediscoverySearchController, EdiscoveryService, EdiscoveryNotificationService, FeatureToggleService, $q, $controller, $translate, $scope, Notification;
 
-  beforeEach(inject(function (_$translate_, _EdiscoveryService_, _EdiscoveryNotificationService_, _$q_, _$rootScope_, _$controller_, _Notification_) {
+  beforeEach(inject(function (_$translate_, _EdiscoveryService_, _EdiscoveryNotificationService_, _FeatureToggleService_, _$q_, _$rootScope_, _$controller_, _Notification_) {
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
     EdiscoveryService = _EdiscoveryService_;
     EdiscoveryNotificationService = _EdiscoveryNotificationService_;
+    FeatureToggleService = _FeatureToggleService_;
     $translate = _$translate_;
     $q = _$q_;
     Notification = _Notification_;
+
+    spyOn(FeatureToggleService, 'atlasEdiscoveryGetStatus').and.returnValue($q.when(false));
 
     ediscoverySearchController = $controller('EdiscoverySearchController', {
       $translate: $translate,
       $scope: $scope,
       EdiscoveryService: EdiscoveryService,
       EdiscoveryNotificationService: EdiscoveryNotificationService,
+      FeatureToggleService: FeatureToggleService,
       Notification: Notification
     });
 

@@ -16,7 +16,7 @@ $aa-schedule-text-color: $gray-light-1;
   @include vr-spacing(ph, 2);
 
   h3 {
-      display: inline-block;
+    display: inline-block;
   }
 
   &-timezone {
@@ -32,6 +32,7 @@ $aa-schedule-text-color: $gray-light-1;
   h3 {
     display: inline-block;
   }
+
   .modal-body &-subtitle {
     font-size: 1.25rem;
     line-height: 1;
@@ -52,6 +53,7 @@ $aa-schedule-text-color: $gray-light-1;
 
   .icon {
     color: $aa-builder-icon-color;
+
     &:hover {
       color: $aa-builder-icon-click-color;
     }
@@ -59,7 +61,8 @@ $aa-schedule-text-color: $gray-light-1;
 
   .aa-help-icon {
     color: $color-primary-lighter;
-    position:absolute;
+    position: absolute;
+
     &:hover {
       color: $white;
       cursor: pointer;
@@ -77,6 +80,7 @@ $aa-schedule-text-color: $gray-light-1;
       margin: 0;
       padding: 0 0rem 0 1rem;
     }
+
     .popover {
       @include vr-spacing(mt, 0);
     }

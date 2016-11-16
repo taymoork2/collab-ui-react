@@ -25,7 +25,7 @@
   <div class="fallback-container">
     <cs-card-layout block-view="true" ng-if="huntGroupSA.selectedFallbackMember">
       <cs-card class="small header-background primary hunt-member-card">
-        <article>
+        <article ng-if="huntGroupSA.selectedFallbackMember.member.user">
           <a href ng-click="huntGroupSA.toggleFallback()">
             <header ng-class="{'open-panel' : huntGroupSA.selectedFallbackMember.openPanel}">
               <div class="header-with-right-icon">
@@ -52,6 +52,14 @@
               </p>
             </fieldset>
           </section>
+        </article>
+        <article ng-if="huntGroupSA.selectedFallbackMember.member.searchNumber">
+          <header>
+            <div class="header-with-right-icon">
+              <h5 class="ellipsis">{{huntGroupSA.selectedFallbackMember.member.searchNumber}}</h5>
+              <i class="icon icon-close icon-lg" ng-click="huntGroupSA.removeFallbackDest()"></i>
+            </div>
+          </header>
         </article>
       </cs-card>
     </cs-card-layout>

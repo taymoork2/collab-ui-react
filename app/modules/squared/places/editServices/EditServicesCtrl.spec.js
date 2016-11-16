@@ -90,8 +90,11 @@ describe('EditServicesCtrl: Ctrl', function () {
         };
         spyOn($stateParams.wizard, 'next');
         initController();
+        controller.service = 'sparkCall';
         controller.next();
         expect($stateParams.wizard.next).toHaveBeenCalled();
+        var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
+        expect(wizardState.account.entitlements).toEqual(['something', 'ciscouc']);
       });
     });
 

@@ -9,6 +9,13 @@ export interface IDropdownBase {
   label: string;
 }
 
+// export menu
+export interface IExportMenu {
+  id: string;
+  label: string;
+  click: Function | undefined;
+}
+
 // Used by the time Filter
 export interface ITimespan extends IDropdownBase {
   description: string;

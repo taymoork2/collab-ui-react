@@ -131,16 +131,16 @@
       <div class="section-title-row">
         <span class="section-name" translate="spacesPage.informationHeader"></span>
       </div>
-      <div class="form-group" ng-show="deviceOverview.currentDevice.isHuronDevice">
+      <div class="form-group" ng-show="deviceOverview.shouldShowLines()">
         <label class="col-sm-4 control-label">Lines</label>
         <div class="col-sm-8" cs-loader ng-hide="deviceOverview.linesAreLoaded"></div>
-        <div class="col-sm-8" ng-show="deviceOverview.linesAreLoaded && deviceOverview.lines">
+        <div class="col-sm-8" ng-show="deviceOverview.linesAreLoaded">
           <p class="form-control-static line-row" ng-repeat="line in deviceOverview.lines | orderBy:'line.usage'">
             <span class="form-control-static line-row">{{line.directoryNumber}}&nbsp;</span>
             <span class="form-control-static line-row" ng-if="line.alternate"> {{ 'common.or' | translate }} {{line.alternate}}</span>
-            <span class="badge primary primaryLineBadge" ng-if="line.usage === 'Primary'">Primary</span>
+            <span class="badge primary primaryLineBadge" ng-if="deviceOverview.lines.length > 1 && line.usage === 'Primary'">Primary</span>
           </p>
-          <span ng-hide="deviceOverview.lines">-</span>
+          <p class="form-control-static" ng-hide="deviceOverview.lines && deviceOverview.lines.length > 0" translate="common.none"></p>
         </div>
       </div>
       <div class="form-group" ng-show="deviceOverview.currentDevice.ip">
@@ -158,7 +158,7 @@
       <div class="form-group" ng-show="deviceOverview.currentDevice.sipUrl">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.sipUrl"></label>
         <div class="col-sm-8">
-          <p class="form-control-static">{{deviceOverview.currentDevice.sipUrl}}</p>
+          <p class="form-control-static" title="{{deviceOverview.currentDevice.sipUrl}}">{{deviceOverview.currentDevice.sipUrl}}</p>
         </div>
       </div>
       <div class="form-group" ng-show="deviceOverview.currentDevice.serial">
@@ -216,6 +216,39 @@
         <label class="col-sm-4 control-label" translate="spacesPage.ciscoSupport"></label>
         <div class="col-sm-8">
           <a sq-click-promise="deviceOverview.showRemoteSupportDialog()" translate="spacesPage.remoteAccessKey"></a>
+        </div>
+      </div>
+    </cs-sp-section>
+    <cs-sp-section ng-show="deviceOverview.showE911">
+      <div ng-show="!deviceOverview.isE911Available">
+        <i class="icon icon-spinner"></i>
+      </div>
+      <div ng-show="deviceOverview.isE911Available">
+        <div class="section-title-row">
+          <span class="section-name" translate="spacesPage.emergencyTitle"></span>
+          <span cs-dropdown class="actions-menu dropdown pull-right">
+            <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
+              <i class="icon icon-three-dots"></i>
+            </button>
+            <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
+              <li><a href ng-click="deviceOverview.goToEmergencyServices()" translate="spacesPage.editEmergencyServices"></a></li>
+            </ul>
+          </span>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-4 control-label" translate="spacesPage.callbackNumber"></label>
+          <div class="col-sm-8">
+            <p class="form-control-static line-row">
+              <span class="form-control-static line-row">{{deviceOverview.emergencyCallbackNumber}}</span>
+            </p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-4 control-label" translate="spacesPage.serviceAddress"></label>
+          <div class="col-sm-8" >
+            <span class="form-control-static">{{deviceOverview.emergencyAddress.address1 | uppercase}}, {{deviceOverview.emergencyAddress.address2 | uppercase}}</span>
+            <span class="form-control-static">{{deviceOverview.emergencyAddress.city | uppercase}}, {{deviceOverview.emergencyAddress.state | uppercase}} {{deviceOverview.emergencyAddress.zip}}</span>
+          </div>
         </div>
       </div>
     </cs-sp-section>

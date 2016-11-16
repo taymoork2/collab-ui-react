@@ -83,6 +83,12 @@
       });
     }
 
+    function fetchItem(url) {
+      return $http.get(url).then(function (res) {
+        return CsdmConverter.convertHuronDevice(res.data);
+      });
+    }
+
     function dataLoaded() {
       return !Authinfo.isSquaredUC() || loadedData;
     }
@@ -126,20 +132,31 @@
         });
     }
 
-    function getTimezoneForDevice(huronDevice) {
+    function getDeviceInfo(huronDevice) {
       return $http.get(getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid))
         .then(function (res) {
-          var timeZone = null;
+          var response = {
+            timeZone: null
+          };
           if (res.data) {
-            timeZone = res.data.timeZone;
+            response.timeZone = res.data.timeZone;
+            response.emergencyCallbackNumber = res.data.emergencyCallbackNumber.number;
           }
-          return timeZone;
+          return response;
         });
     }
 
     function setTimezoneForDevice(huronDevice, timezone) {
       return $http.put(getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid), {
         timeZone: timezone
+      });
+    }
+
+    function setEmergencyCallback(huronDevice, emergencyCallbackNumber) {
+      return $http.put(getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid), {
+        emergencyCallbackNumber: {
+          number: emergencyCallbackNumber
+        }
       });
     }
 
@@ -171,6 +188,7 @@
     return {
 
       fetchDevices: fetchDevices,
+      fetchItem: fetchItem,
       deleteItem: deleteItem,
       updateTags: updateTags,
       dataLoaded: dataLoaded,
@@ -178,8 +196,9 @@
       getDevicesForPlace: getDevicesForPlace,
       deleteDevice: deleteDevice,
       getLinesForDevice: getLinesForDevice,
-      getTimezoneForDevice: getTimezoneForDevice,
+      getDeviceInfo: getDeviceInfo,
       setTimezoneForDevice: setTimezoneForDevice,
+      setEmergencyCallback: setEmergencyCallback,
       resetDevice: resetDevice,
       uploadLogs: uploadLogs,
       fetch: fetch

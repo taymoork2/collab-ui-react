@@ -3,7 +3,7 @@
 
   /* @ngInject */
   function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, EdiscoveryService, $window, EdiscoveryNotificationService,
-    Notification) {
+    FeatureToggleService, Notification) {
     $scope.$on('$viewContentLoaded', function () {
       angular.element('#searchInput').focus();
     });
@@ -21,16 +21,30 @@
     vm.downloadReport = downloadReport;
     vm.retrySearch = retrySearch;
     vm.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
+    vm.ediscoveryToggle = false;
     vm.createReportInProgress = false;
     vm.searchingForRoom = false;
     vm.searchInProgress = false;
     vm.currentReportId = null;
     vm.ongoingSearch = false;
 
+    vm.searchBySelected = '';
+    vm.searchByPlaceholder = $translate.instant("ediscovery.searchParameters.searchByPlaceholder");
+    vm.searchByOptions = ['Email Id', 'Room Participants'];
+
+    vm.searchByEmailModel = '';
+
+    vm.activityTypeModel = '';
+    vm.activityTypePlaceholder = $translate.instant("ediscovery.searchParameters.activityTypePlaceholder");
+
     init($stateParams.report, $stateParams.reRun);
 
     $scope.$on('$destroy', function () {
       disableAvalonPolling();
+    });
+
+    FeatureToggleService.atlasEdiscoveryGetStatus().then(function (result) {
+      vm.ediscoveryToggle = result;
     });
 
     function init(report, reRun) {
