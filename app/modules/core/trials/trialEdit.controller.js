@@ -430,6 +430,7 @@
         tcHasService: TrialContextService.trialHasService(vm.currentTrial.customerOrgId),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
+        ftSimplifiedTrialFlow: FeatureToggleService.supports(FeatureToggleService.features.huronSimplifiedTrialFlow),
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function (err) {
           getAdminOrgError = true;
           return err;
@@ -455,6 +456,7 @@
           vm.showCare = results.ftCareTrials;
           vm.careTrial.enabled = vm.preset.care;
           vm.sbTrial = results.sbTrial;
+          vm.simplifiedTrialFlow = results.ftSimplifiedTrialFlow;
           updateTrialService(_messageTemplateOptionId);
 
           // To determine whether to display the ship devices page

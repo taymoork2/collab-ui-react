@@ -1,0 +1,33 @@
+<cs-sp-header>
+
+  <div class="header-image">
+    <div class="device-img" ng-if="$ctrl.currentDevice.accountType === 'MACHINE'">
+      <img src="images/devices-hi/space_avatar.png" />
+    </div>
+    <div class="user-img" ng-if="$ctrl.currentDevice.accountType === 'PERSON'">
+      <span ng-if="!$ctrl.currentDevice.photos">
+        <i class="icon icon-user"></i>
+      </span>
+      <img ng-if="$ctrl.currentDevice.photos"
+           ng-src="{{$ctrl.currentDevice.photos[1].url}}" />
+    </div>
+  </div>
+
+  <div class="header-info">
+    <div class="header-info-wrap">
+      <sq-editable-input
+        ng-if="$ctrl.currentDevice.canEditDisplayName"
+        sq-save="$ctrl.save(newText)"
+        ng-model="$ctrl.currentDevice.displayName">
+      </sq-editable-input>
+      <div
+        id="header-title"
+        class="header-title"
+        title="{{$ctrl.currentDevice.displayName}}"
+        ng-if="!$ctrl.currentDevice.canEditDisplayName">
+        {{$ctrl.currentDevice.displayName}}
+      </div>
+    </div>
+  </div>
+
+</cs-sp-header>

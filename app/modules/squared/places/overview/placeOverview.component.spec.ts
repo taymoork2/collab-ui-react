@@ -42,7 +42,7 @@ describe('placeOverview component', () => {
   };
 
   describe('and invoke onGenerateOtpFn', () => {
-    let showPlaces, currentDevice, deviceName, displayName, email, userCisUuid, orgId;
+    let showPlaces, currentDevice, deviceName, displayName, email, userCisUuid, placeCisUuid, orgId;
     let goStateName, goStateData;
     beforeEach(() => {
 
@@ -51,9 +51,11 @@ describe('placeOverview component', () => {
       displayName = 'displayName';
       email = 'email@address.com';
       userCisUuid = 'userCisUuid';
+      placeCisUuid = 'placeCisUuid';
       orgId = 'orgId';
       currentDevice = {
         displayName: deviceName,
+        cisUuid: placeCisUuid,
       };
 
       spyOn(CsdmCodeService, 'createCodeForExisting').and.returnValue($q.when('0q9u09as09vu0a9sv'));
@@ -88,7 +90,7 @@ describe('placeOverview component', () => {
               data: {
                 function: 'showCode',
                 showPlaces: true,
-                account: { type: 'sharede', deviceType: 'cloudberry', name: deviceName },
+                account: { type: 'sharede', deviceType: 'cloudberry', cisUuid: placeCisUuid, name: deviceName },
                 recipient: { cisUuid: userCisUuid, organizationId: orgId, displayName: displayName, email: email },
                 title: 'addDeviceWizard.newCode',
               },
@@ -122,7 +124,7 @@ describe('placeOverview component', () => {
               data: {
                 function: 'showCode',
                 showPlaces: true,
-                account: { type: 'shared', deviceType: 'huron', name: deviceName },
+                account: { type: 'shared', deviceType: 'huron', cisUuid: placeCisUuid, name: deviceName },
                 recipient: { cisUuid: userCisUuid, organizationId: orgId, displayName: displayName, email: email },
                 title: 'addDeviceWizard.newCode',
               },

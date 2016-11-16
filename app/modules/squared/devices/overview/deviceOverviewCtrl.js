@@ -6,7 +6,7 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, Userservice, $stateParams, $translate, $timeout, Authinfo, FeatureToggleService, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, Userservice, $stateParams, $translate, $timeout, Authinfo, FeatureToggleService, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService, TerminusUserDeviceE911Service) {
     var deviceOverview = this;
     var huronDeviceService = $stateParams.huronDeviceService;
     deviceOverview.showPlaces = false;
@@ -53,7 +53,7 @@
       if (deviceOverview.currentDevice.isHuronDevice) {
         if (!deviceOverview.tzIsLoaded) {
           initTimeZoneOptions().then(function () {
-            loadDeviceTimeZone();
+            loadDeviceInfo();
           });
         }
       }
@@ -67,6 +67,22 @@
       deviceOverview.upgradeChannelOptions = _.map(channels, getUpgradeChannelObject);
 
       resetSelectedChannel();
+    }
+    function getEmergencyInformation() {
+      return FeatureToggleService.supports(FeatureToggleService.features.huronDeviceE911).then(function (result) {
+        deviceOverview.showE911 = result;
+        if (result) {
+          TerminusUserDeviceE911Service.get({
+            customerId: Authinfo.getOrgId(),
+            number: deviceOverview.emergencyCallbackNumber
+          }).$promise.then(function (info) {
+            deviceOverview.emergencyAddress = info.e911Address;
+            deviceOverview.emergencyAddressStatus = info.status;
+          }).finally(function () {
+            deviceOverview.isE911Available = true;
+          });
+        }
+      });
     }
 
     function fetchDisplayNameForLoggedInUser() {
@@ -98,17 +114,18 @@
       }
     }
 
+    function loadDeviceInfo() {
+      huronDeviceService.getDeviceInfo(deviceOverview.currentDevice).then(function (result) {
+        deviceOverview.timeZone = result.timeZone;
+        deviceOverview.emergencyCallbackNumber = result.emergencyCallbackNumber;
+        deviceOverview.selectedTimeZone = getTimeZoneFromId(result);
+        deviceOverview.tzIsLoaded = true;
+      }).then(getEmergencyInformation);
+    }
+
     function getTimeZoneFromId(id) {
       return _.find(deviceOverview.timeZoneOptions, function (o) {
         return o.id == id;
-      });
-    }
-
-    function loadDeviceTimeZone() {
-      huronDeviceService.getTimezoneForDevice(deviceOverview.currentDevice).then(function (result) {
-        deviceOverview.timeZone = result;
-        deviceOverview.selectedTimeZone = getTimeZoneFromId(result);
-        deviceOverview.tzIsLoaded = true;
       });
     }
 
@@ -141,11 +158,25 @@
           .then(_.partial(waitForDeviceToUpdateTimeZone, newValue))
           .catch(function (error) {
             Notification.errorWithTrackingId(error);
-            loadDeviceTimeZone();
+            loadDeviceInfo();
           })
           .finally(function () {
             deviceOverview.updatingTimeZone = false;
           });
+      }
+    };
+
+    deviceOverview.goToEmergencyServices = function () {
+      var data = {
+        currentAddress: deviceOverview.emergencyAddress,
+        currentNumber: deviceOverview.emergencyCallbackNumber,
+        status: deviceOverview.emergencyAddressStatus,
+      };
+
+      if ($state.current.name === 'user-overview.csdmDevice' || $state.current.name === 'place-overview.csdmDevice') {
+        $state.go($state.current.name + '.emergencyServices', data);
+      } else {
+        $state.go('device-overview.emergencyServices', data);
       }
     };
 
@@ -156,8 +187,8 @@
     }
 
     function pollDeviceForNewTimeZone(newValue, endTime, deferred) {
-      huronDeviceService.getTimezoneForDevice(deviceOverview.currentDevice).then(function (result) {
-        if (result == newValue) {
+      huronDeviceService.getDeviceInfo(deviceOverview.currentDevice).then(function (result) {
+        if (result.timeZone == newValue) {
           Notification.success('deviceOverviewPage.timeZoneUpdated');
           return deferred.resolve();
         }
