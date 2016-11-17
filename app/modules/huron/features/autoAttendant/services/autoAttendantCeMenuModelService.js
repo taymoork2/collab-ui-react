@@ -1145,9 +1145,9 @@
         newAction.queuePeriodicAnnouncements = paAction;
         var queueMaxTimeValue = action.queueSettings.fallback.actions[0].getValue();
 
-        newAction.queueMaxTime = (queueMaxTimeValue.label) * 60;
+        newAction.queueMaxTime = (queueMaxTimeValue.label);
         if (_.isUndefined(queueMaxTimeValue.label)) {
-          newAction.queueMaxTime = queueMaxTimeValue * 60;
+          newAction.queueMaxTime = queueMaxTimeValue;
         }
         if (_.isUndefined(action.queueSettings.fallback.actions[0].action)) {
           action.queueSettings.fallback.actions[0].action = { treatment: 'none' };
