@@ -1,0 +1,39 @@
+.hybrid-calendar-setup {
+
+  .serviceSelectContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    width: 90%;
+    height: 45vh;
+  }
+
+  .subServiceSelect {
+    margin: 10px;
+    width: 50%;
+    height: 400px;
+    line-height: 400px;
+
+    img {
+      padding-left: 15%;
+      padding-right: 15%;
+      vertical-align: middle;
+    }
+  }
+
+  .serviceNotSelected {
+    border-width: 1px;
+    border-style: solid;
+    border-color: $gray-light-3;
+  }
+
+  .serviceSelected {
+    border-width: 1px;
+    border-style: solid;
+    border-color: $color-primary-base;
+  }
+
+
+
+}

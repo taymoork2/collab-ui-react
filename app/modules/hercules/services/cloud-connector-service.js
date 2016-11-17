@@ -8,6 +8,7 @@
   function CloudConnectorService($q, $timeout, Authinfo) {
 
     var serviceAccountId = 'google@example.org'; // dummy value for now
+    var isGoogleCalendarSetup = false;
 
     var service = {
       isServiceSetup: isServiceSetup,
@@ -24,7 +25,7 @@
     function isServiceSetup(serviceId) {
       return $q(function (resolve) {
         $timeout(function () {
-          if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal()) {
+          if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal() && isGoogleCalendarSetup) {
             resolve(true);
           } else {
             resolve(false);
@@ -44,6 +45,7 @@
     }
 
     function updateConfig(newServiceAccountId, privateKey, serviceId) {
+      isGoogleCalendarSetup = true;
       return $q(function (resolve, reject) {
         if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal()) {
           $timeout(function () {
@@ -74,6 +76,7 @@
       return $q(function (resolve, reject) {
         if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal()) {
           $timeout(function () {
+            isGoogleCalendarSetup = false;
             resolve(extractDataFromResponse({
               data: {},
               status: 200

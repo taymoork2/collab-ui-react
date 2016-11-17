@@ -1,0 +1,40 @@
+<div class="modal-header">
+  <div class="modal-title" translate="hercules.settings.hybridCalendarCommon.hybridCalendarSetUp"></div>
+</div>
+
+<div class="modal-body add-resource hybrid-calendar-setup">
+
+  <h3 translate="hercules.settings.hybridCalendarCommon.selectCalendarType"></h3>
+  <p translate="hercules.settings.hybridCalendarCommon.serviceInto"></p>
+
+  <div class="serviceSelectContainer">
+    <div class="subServiceSelect" ng-click="vm.selected = 'exchange'">
+      <div ng-class="{serviceNotSelected: vm.selected !== 'exchange', serviceSelected: vm.selected === 'exchange'}">
+        <img src="/images/hybrid-services/Microsoft_Exchange_logo.png" />
+      </div>
+    </div>
+    <div class="subServiceSelect" ng-click="vm.selected = 'google'">
+      <div ng-class="{serviceNotSelected: vm.selected !== 'google', serviceSelected: vm.selected === 'google'}">
+        <img src="/images/hybrid-services/Google_Calendar_logo.png" />
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal-footer add-resource">
+
+  <button class="btn"
+          ng-click="vm.cancel();">
+    <span translate="common.cancel"></span>
+  </button>
+
+  <button class="btn btn--primary"
+          ng-click="vm.proceed()"
+          ng-disabled="vm.selected !== 'exchange' && vm.selected !== 'google'">
+
+    <span translate="common.next"></span>
+  </button>
+
+
+</div>

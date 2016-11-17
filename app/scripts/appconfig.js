@@ -2663,7 +2663,12 @@
               clusterId: null
             },
             parent: 'main',
-            abstract: true
+            abstract: true,
+            resolve: {
+              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
+              }
+            }
           })
           .state('calendar-service.list', {
             url: '/services/calendar',
@@ -2701,7 +2706,12 @@
             params: {
               clusterId: null
             },
-            parent: 'main'
+            parent: 'main',
+            resolve: {
+              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
+              }
+            }
           })
           .state('call-service.list', {
             url: '/services/call',
@@ -2732,7 +2742,12 @@
               connectorType: 'c_mgmt'
             },
             parent: 'main',
-            abstract: true
+            abstract: true,
+            resolve: {
+              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
+              }
+            }
           })
           .state('management-service.list', {
             url: '/services/expressway-management',

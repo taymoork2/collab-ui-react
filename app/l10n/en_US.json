@@ -1768,7 +1768,9 @@
         "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status."
       },
       "hybridCalendarCommon": {
-        "hybridCalendarSetUp": "Hybrid Calendar setup"
+        "hybridCalendarSetUp": "Hybrid Calendar setup",
+        "selectCalendarType": "Select Calendar type",
+        "serviceInto": "Hybrid Calendar Service supports Microsoft Exchange calendar via on-premises Expressway clusters, and Google Calendar."
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
