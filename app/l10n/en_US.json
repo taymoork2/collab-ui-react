@@ -2337,7 +2337,8 @@
     "invalidCallServiceResourceGroup": "Hybrid Call Service Resource Group \"{{group}}\" not found",
     "unableToUpdateResourceGroups": "Updating Hybrid Services Resource Groups failed",
     "ussUserPropsLoadFailed": "Unable to load the current user Hybrid Services Resource Group assignments. Resource group assignments in the CSV file will not be processed.",
-    "fmsResourceGroupsLoadFailed": "Unable to load the Hybrid Services Resource Groups. Resource group assignments in the CSV file will not be processed."
+    "fmsResourceGroupsLoadFailed": "Unable to load the Hybrid Services Resource Groups. Resource group assignments in the CSV file will not be processed.",
+    "mutuallyExclusiveCalendarEntitlements": "There are more than one Hybrid Calendar Service entitlement set. Please fix and try again."
   },
   "reports": {
     "title": "Reports",
