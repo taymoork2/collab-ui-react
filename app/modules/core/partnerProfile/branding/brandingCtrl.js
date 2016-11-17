@@ -138,8 +138,8 @@
         } else {
           Notification.success('partnerProfile.webexVersionUseLatestFalse');
         }
-      }).catch(function () {
-        Notification.error('partnerProfile.webexVersionUseLatestUpdateFailed');
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'partnerProfile.webexVersionUseLatestUpdateFailed');
       });
     }
 
@@ -160,8 +160,8 @@
 
       p.then(function () {
         Notification.success('partnerProfile.webexClientVersionUpdated');
-      }).catch(function () {
-        Notification.error('partnerProfile.webexClientVersionUpdatedFailed');
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'partnerProfile.webexClientVersionUpdatedFailed');
       });
     }
 
@@ -263,30 +263,22 @@
           brand.tempLogoUrl = logoUrl;
           brand.usePartnerLogo = false;
           brand.toggleLogo(false);
-        }).catch(function (result) {
-          uploadError(result);
-        });
-      }).catch(function (result) {
-        uploadError(result);
-      });
+        }).catch(uploadError);
+      }).catch(uploadError);
     }
 
-    function uploadError(result) {
-      var errorMsg;
+    function uploadError(response) {
+      var errorKey;
       brand.logoFile = null;
       if (brand.uploadModal) {
         brand.uploadModal.close();
       }
-      var resultData = result.data || result;
-      if (resultData.name === 'SecurityError') {
-        errorMsg = $translate.instant('partnerProfile.imageUploadFailedSecurity');
+      if (_.get(response, 'data.name') === 'SecurityError') {
+        errorKey = 'partnerProfile.imageUploadFailedSecurity';
       } else {
-        errorMsg = $translate.instant('partnerProfile.imageUploadFailed');
+        errorKey = 'partnerProfile.imageUploadFailed';
       }
-      if (resultData.trackingId) {
-        errorMsg += "  " + $translate.instant('common.trackingId', { trackingId: resultData.trackingId });
-      }
-      Notification.error(errorMsg);
+      Notification.errorResponse(response, errorKey);
     }
 
     function uploadProgress(evt) {

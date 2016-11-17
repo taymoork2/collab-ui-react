@@ -111,11 +111,11 @@
     vm.onExportDownloadStatus = onExportDownloadStatus;
 
     vm.onFileSizeError = function () {
-      $timeout(Notification.error('firstTimeWizard.csvMaxSizeError'));
+      Notification.error('firstTimeWizard.csvMaxSizeError');
     };
 
     vm.onFileTypeError = function () {
-      $timeout(Notification.error('firstTimeWizard.csvFileTypeError'));
+      Notification.error('firstTimeWizard.csvFileTypeError');
     };
 
     vm.resetFile = function () {
@@ -353,7 +353,7 @@
 
     function findHeaderIndex(name) {
       var index = _.findIndex(headers, function (h) {
-        return h.name == name;
+        return h.name === name;
       });
       if (index !== -1) {
         return headers[index].csvColIndex;
@@ -370,7 +370,7 @@
       } else {
         _.forEach(userHeaders, function (uHeader, k) {
           index = _.findIndex(serverHeaders, function (sHeader) {
-            return sHeader.name == uHeader;
+            return sHeader.name === uHeader;
           });
           if (index !== -1) {
             var h = serverHeaders[index];
@@ -389,8 +389,8 @@
       function successCallback(response, onboardedUsers) {
 
         function onboardedUserWithEmail(email) {
-          return _.find(onboardedUsers, {
-            'address': email
+          return _.find(onboardedUsers, function (user) {
+            return _.toLower(user.address) === _.toLower(email);
           });
         }
 
@@ -835,15 +835,15 @@
             vm.hybridServicesUserProps = userProps;
             ResourceGroupService.getAll().then(function (resourceGroups) {
               vm.resourceGroups = resourceGroups;
-            }).catch(function () {
+            }).catch(function (response) {
               vm.handleHybridServicesResourceGroups = false;
-              Notification.error('firstTimeWizard.fmsResourceGroupsLoadFailed');
+              Notification.errorResponse(response, 'firstTimeWizard.fmsResourceGroupsLoadFailed');
             }).finally(function () {
               processCsvRows();
             });
-          }).catch(function () {
+          }).catch(function (response) {
             vm.handleHybridServicesResourceGroups = false;
-            Notification.error('firstTimeWizard.ussUserPropsLoadFailed');
+            Notification.errorResponse(response, 'firstTimeWizard.ussUserPropsLoadFailed');
             processCsvRows();
           });
         } else {

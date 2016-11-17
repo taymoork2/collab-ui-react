@@ -153,6 +153,15 @@
       $scope.currentUserCount = 1;
       setLicenseAvailability();
       checkSite();
+      initResults();
+    }
+
+    function initResults() {
+      $scope.results = {
+        resultList: [],
+        errors: [],
+        warnings: []
+      };
     }
 
     $scope.isCsvEnhancement = false;
@@ -1442,14 +1451,12 @@
 
     $scope.clearPanel = function () {
       resetUsersfield();
-      $scope.results = null;
+      initResults();
     };
 
     function onboardUsers(optionalOnboard) {
       var deferred = $q.defer();
-      $scope.results = {
-        resultList: []
-      };
+      initResults();
       usersList = getUsersList();
       Log.debug('Entitlements: ', usersList);
 
@@ -1559,7 +1566,13 @@
                   userResult.message = $translate.instant('usersPage.hybridServicesComboError');
                   break;
                 }
-                default: break;
+                default: {
+                  userResult.message = $translate.instant('usersPage.onboardError', {
+                    email: userResult.email,
+                    status: httpStatus
+                  });
+                  break;
+                }
               }
               break;
             }
@@ -1631,27 +1644,7 @@
       };
 
       var errorCallback = function (response) {
-        Log.warn('Could not onboard the user', response.data);
-        var error = null;
-        if (response.status) {
-          error = $translate.instant('errors.statusError', {
-            status: response.status
-          });
-          if (response.data && _.isString(response.data.message)) {
-            error += ' ' + $translate.instant('usersPage.messageError', {
-              message: response.data.message
-            });
-          }
-          error = UserCsvService.addErrorWithTrackingID(error, response);
-        } else {
-          error = 'Request failed.';
-          if (_.isString(response.data)) {
-            error += ' ' + response.data;
-          }
-          error = UserCsvService.addErrorWithTrackingID(error, response);
-          Notification.notify(error, 'error');
-        }
-        Notification.notify([error], 'error');
+        Notification.errorResponse(response);
         $scope.btnOnboardLoading = false;
         deferred.reject();
       };
@@ -1690,9 +1683,7 @@
             .catch(errorCallback);
         }
       } else if (!optionalOnboard) {
-        Log.debug('No users entered.');
-        var error = [$translate.instant('usersPage.validEmailInput')];
-        Notification.notify(error, 'error');
+        Notification.error('usersPage.validEmailInput');
         deferred.reject();
       } else {
         deferred.resolve();
@@ -1710,12 +1701,9 @@
     };
 
     function entitleUserCallback(data, status, method, headers) {
-      $scope.results = {
-        resultList: []
-      };
+      initResults();
       $scope.numAddedUsers = 0;
       $scope.numUpdatedUsers = 0;
-      $scope.results.errors = [];
       var isComplete = true;
 
       $rootScope.$broadcast('USER_LIST_UPDATED');
@@ -1889,8 +1877,7 @@
         if ($scope.invalidcount === 0) {
           deferred.resolve();
         } else {
-          var error = [$translate.instant('usersPage.validEmailInput')];
-          Notification.notify(error, 'error');
+          Notification.error('usersPage.validEmailInput');
           deferred.reject();
         }
       }

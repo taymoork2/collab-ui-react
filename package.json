@@ -18,7 +18,7 @@
     "commit": "git-cz",
     "coverage-report": "node ./utils/coverage-report",
     "e2e": "npm run protractor -- --production-backend --suite jenkins",
-    "eslint": "eslint .",
+    "eslint": "eslint ./app ./config ./karma ./protractor ./test ./utils ./webpack",
     "json-verify": "node ./utils/json-verify.js",
     "ktest-all-no-parallel": "./bin/ktest-all --no-parallel",
     "ktest-all-watch": "./bin/ktest-all --no-parallel --no-single-run --auto-watch",

@@ -46,8 +46,8 @@
           vm.defaults = dbFeatures.concat(stdFeatures);
           vm.unalteredToggles = dbFeatures.concat(stdFeatures);
         })
-        .catch(function () {
-          Notification.error('organizationsPage.errorGettingToggles');
+        .catch(function (response) {
+          Notification.errorResponse(response, 'organizationsPage.errorGettingToggles');
         })
         .finally(resetForm);
     }

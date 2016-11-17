@@ -26,7 +26,7 @@
       title: $translate.instant('reportsPage.sparkReports'),
       state: 'reports.spark'
     }, {
-      title: $translate.instant('reportsPage.usageReports.usageReportMenuTitle'),
+      title: $translate.instant('reportsPage.usageReports.usageReportTitle'),
       state: 'reports.device-usage'
     }];
 
@@ -70,7 +70,7 @@
       // }
     ];
 
-    vm.pageTitle = $translate.instant('reportsPage.usageReports.usageReportTitle');
+    vm.pageTitle = $translate.instant('reportsPage.usageReports.pageTitle');
 
     function timeUpdate() {
       $scope.$broadcast('time-range-changed', vm.timeSelected);

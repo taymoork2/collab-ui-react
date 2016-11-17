@@ -147,25 +147,49 @@ describe('Controller: CustomerOverviewCtrl', function () {
   describe('launchCustomerPortal', function () {
     beforeEach(function () {
       Userservice.updateUsers.and.returnValue($q.when());
-      controller.launchCustomerPortal();
-      $scope.$apply();
     });
 
-    it('should call modifyManagedOrgs', function () {
-      expect(controller.customerOrgId).toBe(currentCustomer.customerOrgId);
-      expect(Authinfo.isPartnerAdmin()).toBe(true);
-      expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
-    });
+    describe('as a full-admin', function () {
+      beforeEach(function () {
+        spyOn(controller._helpers, 'canUpdateLicensesForSelf').and.returnValue(true);
+        controller.launchCustomerPortal();
+        $scope.$apply();
+      });
 
-    it('should create proper url', function () {
-      expect($state.href).toHaveBeenCalledWith('login_swap', {
-        customerOrgId: controller.currentCustomer.customerOrgId,
-        customerOrgName: controller.currentCustomer.customerName
+      it('should call modifyManagedOrgs', function () {
+        expect(controller.customerOrgId).toBe(currentCustomer.customerOrgId);
+        expect(Authinfo.isPartnerAdmin()).toBe(true);
+        expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
+      });
+
+      it('should create proper url', function () {
+        expect($state.href).toHaveBeenCalledWith('login_swap', {
+          customerOrgId: controller.currentCustomer.customerOrgId,
+          customerOrgName: controller.currentCustomer.customerName
+        });
+      });
+
+      it('should call $window.open', function () {
+        expect($window.open).toHaveBeenCalled();
       });
     });
 
-    it('should call $window.open', function () {
-      expect($window.open).toHaveBeenCalled();
+    describe('as a non-full-admin', function () {
+      beforeEach(function () {
+        controller.isPartnerAdmin = false;
+        spyOn(controller._helpers, 'canUpdateLicensesForSelf').and.returnValue(false);
+        spyOn(controller._helpers, 'openCustomerPortal');
+        controller.launchCustomerPortal();
+        $scope.$apply();
+      });
+
+      it('should not call "modifyManagedOrgs()"', function () {
+        expect(PartnerService.modifyManagedOrgs).not.toHaveBeenCalled();
+      });
+
+      it('should call "openCustomerPortal()"', function () {
+        expect(controller._helpers.openCustomerPortal).toHaveBeenCalled();
+      });
     });
   });
 

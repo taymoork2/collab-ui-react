@@ -7,6 +7,8 @@
 
   function CloudConnectorService($q, $timeout, Authinfo) {
 
+    var serviceAccountId = 'google@example.org'; // dummy value for now
+
     var service = {
       isServiceSetup: isServiceSetup,
       updateConfig: updateConfig,
@@ -21,30 +23,31 @@
 
     function isServiceSetup(serviceId) {
       return $q(function (resolve) {
-        if (serviceId === 'squared-fusion-gcal' && Authinfo.getOrgId() === 'fe5acf7a-6246-484f-8f43-3e8c910fc50d') {
-          resolve(true);
-        } else {
-          resolve(false);
-        }
+        $timeout(function () {
+          if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal()) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        }, 750);
       });
     }
 
     function getServiceAccount(serviceId) {
       return $q(function (resolve, reject) {
-        if (serviceId === 'squared-fusion-gcal' && Authinfo.getOrgId() === 'fe5acf7a-6246-484f-8f43-3e8c910fc50d') {
-          resolve('serviceaccount@example.org');
+        if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal()) {
+          resolve(serviceAccountId);
         } else {
           reject();
         }
       });
     }
 
-    function updateConfig(serviceAccountId, privateKey, serviceId) {
+    function updateConfig(newServiceAccountId, privateKey, serviceId) {
       return $q(function (resolve, reject) {
-        if (serviceAccountId === 'serviceaccount@example.org'
-           && privateKey === 'MIIEpQIBAAKCAQEA3Tz2mr7SZiAMfQyuvBjM9Oi..Z1BjP5CE/Wm/Rr500P'
-           && serviceId === 'squared-fusion-gcal') {
+        if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal()) {
           $timeout(function () {
+            serviceAccountId = newServiceAccountId;
             resolve(extractDataFromResponse({
               data: {},
               status: 200
@@ -69,7 +72,7 @@
 
     function deactivateService(serviceId) {
       return $q(function (resolve, reject) {
-        if (serviceId === 'squared-fusion-gcal' && Authinfo.getOrgId() === 'fe5acf7a-6246-484f-8f43-3e8c910fc50d') {
+        if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal()) {
           $timeout(function () {
             resolve(extractDataFromResponse({
               data: {},

@@ -1,69 +1,77 @@
-<cs-card-layout block-view="true">
+<div class="device-usage-report-pages">
+  <cs-page-sub-header>
+    <cs-page-sub-header-left tabs="deviceUsage.tabs">
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+      <cs-select id="timeFilter" name="timeFilter" class='customer-report-filter' ng-model="deviceUsage.timeSelected" options="deviceUsage.timeOptions" on-change-fn="deviceUsage.timeUpdate()"></cs-select>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+
+  <cs-card-layout block-view="true">
 
 
-  <cs-card class="full header-border">
+    <cs-card class="full header-border">
 
-    <article>
-      <header>
-        <div class="row">
-          <div class="columns large-6 medium-6 medium-offset-3 small-12">
-            <h4 class="center" translate="reportsPage.usageReports.deviceMetrics"></h4>
+      <article>
+        <header>
+          <div class="row">
+            <div class="columns large-6 medium-6 medium-offset-3 small-12">
+              <h4 class="center" translate="reportsPage.usageReports.deviceMetrics"></h4>
+            </div>
+            <div class="columns large-3 medium-3 small-12">
+              <button ng-disabled="deviceUsage.noDataForRange" cs-btn class="btn btn-primary right" loading="deviceUsage.exporting" ng-click="deviceUsage.exportRawData()">
+                <span translate="reportsPage.usageReports.downloadFullReport"></span>
+              </button>
+            </div>
           </div>
-          <div class="columns large-3 medium-3 small-12">
-            <button ng-disabled="deviceUsage.noDataForRange" cs-btn class="btn btn-primary right" loading="deviceUsage.exporting" ng-click="deviceUsage.exportRawData()">
-              <span translate="reportsPage.usageReports.downloadFullReport"></span>
-            </button>
-          </div>
-        </div>
-      </header>
+        </header>
 
-      <section>
-        <div ng-include="'modules/core/customerReports/deviceUsage/keyholeview.tpl.html'" />
-      </section>
-    </article>
-  </cs-card>
+        <section>
+          <div ng-include="'modules/core/customerReports/deviceUsage/keyholeview.tpl.html'" />
+        </section>
+      </article>
+    </cs-card>
 
+    <cs-card class="large header-border">
+      <article>
+        <header class="align-center">
+          <h4 translate="reportsPage.usageReports.mostUsed"></h4>
+        </header>
+        <section class="small-padding">
+          <div ng-include="'modules/core/customerReports/deviceUsage/mostUsedDevices.tpl.html'" />
 
-  <cs-card class="large header-border">
-    <article>
-      <header class="align-center">
-        <h4 translate="reportsPage.usageReports.leastUsed"></h4>
-      </header>
-      <section class="small-padding">
+        </section>
+      </article>
+    </cs-card>
 
-        <div ng-include="'modules/core/customerReports/deviceUsage/leastUsedDevices.tpl.html'" />
+    <cs-card class="large header-border">
+      <article>
+        <header class="align-center">
+          <h4 translate="reportsPage.usageReports.leastUsed"></h4>
+        </header>
+        <section class="small-padding">
 
-      </section>
-    </article>
-  </cs-card>
+          <div ng-include="'modules/core/customerReports/deviceUsage/leastUsedDevices.tpl.html'" />
 
+        </section>
+      </article>
+    </cs-card>
 
-  <cs-card class="large header-border">
-    <article>
-      <header class="align-center">
-        <h4 translate="reportsPage.usageReports.mostUsed"></h4>
-      </header>
-      <section class="small-padding">
-        <div ng-include="'modules/core/customerReports/deviceUsage/mostUsedDevices.tpl.html'" />
+  </cs-card-layout>
 
-      </section>
-    </article>
-  </cs-card>
-
-</cs-card-layout>
-
-<div class="card-look">
-  <div class="clearfix device-select right" ng-hide="deviceUsage.loading">
-    <cs-select ng-model="deviceUsage.deviceFilter" options="deviceUsage.deviceOptions" on-change-fn="deviceUsage.deviceUpdate()">
-    </cs-select>
+  <div class="card-look">
+    <div class="clearfix device-select right" ng-hide="deviceUsage.loading">
+      <cs-select ng-model="deviceUsage.deviceFilter" options="deviceUsage.deviceOptions" on-change-fn="deviceUsage.deviceUpdate()">
+      </cs-select>
+    </div>
+    <div id="device-usage-total-chart" class="device-usage-total-chart">
+    </div>
   </div>
-  <div id="device-usage-total-chart" class="device-usage-total-chart">
-  </div>
-</div>
 
-<div ng-show="deviceUsage.loading" class="loading-indicator">
-  <div class="loading-text">
-    <span translate="reportsPage.usageReports.collectingData"></span>
-    <div cs-loader class="loader-example--small"></div>
+  <div ng-show="deviceUsage.loading" class="loading-indicator">
+    <div class="loading-text">
+      <span translate="reportsPage.usageReports.collectingData"></span>
+      <div cs-loader class="loader-example--small"></div>
+    </div>
   </div>
 </div>

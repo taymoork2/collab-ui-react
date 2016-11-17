@@ -150,7 +150,9 @@
         // we only validate this if endNumber is valid or populated
         if (_.isUndefined(scope.model.endNumber) || scope.model.endNumber === "") {
           // trigger validation on endNumber field
-          scope.fields[2].formControl.$validate();
+          if (_.has(scope, 'fields[2].formControl')) {
+            scope.fields[2].formControl.$validate();
+          }
         }
         return true;
       },
@@ -163,9 +165,9 @@
             var beginNumber, endNumber;
             if (scope.index === 0) {
               beginNumber = value;
-              endNumber = scope.fields[2].formControl.$viewValue;
+              endNumber = _.get(scope, 'fields[2].formControl.$viewValue', '');
             } else {
-              beginNumber = scope.fields[0].formControl.$viewValue;
+              beginNumber = _.get(scope, 'fields[0].formControl.$viewValue', '');
               endNumber = value;
             }
             // Skip current range under validation if it's valid, otherwise we get into a validation loop
@@ -247,10 +249,14 @@
 
     vm.siteAndSteeringDigitErrorValidation = function (view, model, scope) {
       if (_.get(vm, 'model.site.siteSteeringDigit.siteDialDigit') === _.get(vm, 'model.site.steeringDigit')) {
-        scope.fields[0].formControl.$setValidity('', false);
+        if (_.has(scope, 'fields[0].formControl')) {
+          scope.fields[0].formControl.$setValidity('', false);
+        }
         return true;
       } else {
-        scope.fields[0].formControl.$setValidity('', true);
+        if (_.has(scope, 'fields[0].formControl')) {
+          scope.fields[0].formControl.$setValidity('', true);
+        }
         return false;
       }
     };
@@ -295,7 +301,9 @@
               vm.model.displayNumberRanges[i].endNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_endNumber_2'].$viewValue, '9');
             }
             scope.resetModel();
-            scope.formControl.$setDirty();
+            if (scope.formControl) {
+              scope.formControl.$setDirty();
+            }
           }
           vm.model.site.extensionLength = vm.model.previousLength;
           vm.extensionLengthChanged = true;
@@ -555,6 +563,26 @@
       },
     }];
 
+    FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
+      vm.internationalDialingSelection = [{
+        type: 'switch',
+        key: 'internationalDialingEnabled',
+        className: 'international-dialing',
+        templateOptions: {
+          label: $translate.instant('internationalDialing.internationalDialing'),
+          description: $translate.instant(result
+            ? 'internationalDialing.internationalDialingPlacesDesc'
+            : 'internationalDialing.internationalDialingDesc')
+        },
+        expressionProperties: {
+          'templateOptions.isDisabled': function () {
+            // if the customer is in trial and doesn't have the feature toggle
+            // huronInternationalDialingTrialOverride then show toggle as disabled
+            return InternationalDialing.isDisableInternationalDialing();
+          }
+        }
+      }];
+    });
     vm.internationalDialingSelection = [{
       type: 'switch',
       key: 'internationalDialingEnabled',
@@ -1892,7 +1920,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (extensionList) {
-          if (angular.isArray(extensionList) && extensionList.length > -1) {
+          if (_.isArray(extensionList) && extensionList.length > 0) {
             vm.model.disableExtensions = true;
           }
         });

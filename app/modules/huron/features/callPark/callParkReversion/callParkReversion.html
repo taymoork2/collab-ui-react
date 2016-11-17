@@ -1,0 +1,85 @@
+<script type="text/ng-template" id="memberTemplate.html">
+  <a class="member__name">
+    <span ng-bind-html="match.label.firstName | typeaheadHighlight:query" ng-if="match.label.firstName"></span>
+    <span ng-bind-html="match.label.lastName | typeaheadHighlight:query" ng-if="match.label.lastName"></span>
+    <span ng-show="match.label.lastName">(<span ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>)</span>
+    <span ng-show="!match.label.lastName && !match.label.displayName" ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>
+    <span ng-show="!match.label.userName" ng-bind-html="match.label.displayName | typeaheadHighlight:query"></span>
+  </a>
+  <div class="member__line">
+    <span ng-bind-html="(match.label.numbers | callParkMemberTelephoneFilter) | typeaheadHighlight:query"></span>
+  </div>
+</script>
+<div ng-form="$ctrl.cpReversionForm">
+  <div class="row form-group">
+    <input
+      cs-input
+      type="radio"
+      id="radioParker"
+      ng-value="'parker'"
+      ng-model="$ctrl.reversionType"
+      ng-click="$ctrl.onSelectRevertToParker()"
+      cs-input-label="{{:: 'callPark.reversionParkerLabel' | translate}}">
+  </div>
+  <div class="row form-group">
+    <input
+      cs-input
+      type="radio"
+      class="cs-input"
+      id="radioParkDestination"
+      ng-value="'destination'"
+      ng-model="$ctrl.reversionType"
+      ng-click="$ctrl.onSelectAnotherDestination()"
+      cs-input-label="{{:: 'callPark.reversionOtherLabel' | translate}}">
+  </div>
+  <div class="row form-group">
+    <div ng-if="$ctrl.showReversionLookup">
+      <cs-call-destination
+        ng-disabled="$ctrl.reversionType === 'parker'"
+        model="$ctrl.selectedReversionNumber"
+        inputs="$ctrl.callDestInputs"
+        select-type="select"
+        external-number-region-code-fn="$ctrl.getExternalRegionCode()"
+        ng-keyup="$ctrl.validateReversionNumber()"
+        internal-number-data-fn="$ctrl.getMemberList(data)"
+        internal-number-on-select="$ctrl.onSelectReversionMember(data)"
+        internal-number-template-url="memberTemplate.html">
+      </cs-call-destination>
+    </div>
+    <div ng-if="$ctrl.showMember">
+      <cs-card-layout>
+        <cs-card
+          class="small header-background primary call-park-member-card">
+          <article>
+            <a href ng-click="$ctrl.toggleMemberPanel()">
+              <header ng-class="{'open-panel' : $ctrl.openPanel}">
+                <div class="header-with-right-icon">
+                  <h5 class="ellipsis">{{$ctrl.fallbackDestination.name}}</h5>
+                  <i class="icon icon-arrow-next icon-lg"></i>
+                </div>
+              </header>
+            </a>
+            <section ng-if="($ctrl.openPanel)">
+              <fieldset>
+                <p class="primary-number">{{member.numbers | callParkMemberTelephoneFilter}}</p>
+                <p>
+                  <a href ng-click="$ctrl.removeMember()" translate="callPark.removeMem"></a>
+                </p>
+              </fieldset>
+            </section>
+          </article>
+        </cs-card>
+      </cs-card-layout>
+      <div class="ui-mt">
+        <input
+          cs-input
+          type="checkbox"
+          id="ckSendToVoicemail"
+          name="ckSendToVoicemail"
+          ng-model="$ctrl.fallbackDestination.sendToVoicemail"
+          cs-input-label="{{:: 'callPark.voicemailCheckLabel' | translate}}"
+          ng-click="$ctrl.onChangeSendToVoicemail()">
+      </div>
+    </div>
+  </div>
+</div>

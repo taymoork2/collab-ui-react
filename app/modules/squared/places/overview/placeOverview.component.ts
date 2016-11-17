@@ -5,12 +5,13 @@ interface IDevice {
 }
 
 interface IPlace {
-  devices: Array<IDevice>;
+  devices: {};
   cisUuid?: string;
   type?: string;
   url?: string;
   entitlements?: Array<any>;
   displayName?: string;
+  sipUrl?: string;
 }
 
 class PlaceOverview implements ng.IComponentController {
@@ -18,8 +19,9 @@ class PlaceOverview implements ng.IComponentController {
   public services: IFeature[] = [];
   public actionList: IActionItem[] = [];
   public showPstn: boolean = false;
+  public showATA: boolean = false;
 
-  private currentPlace: IPlace = <IPlace>{ devices: [] };
+  private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;
   private adminDisplayName;
 
@@ -33,22 +35,23 @@ class PlaceOverview implements ng.IComponentController {
               private CsdmHuronUserDeviceService,
               private CsdmDataModelService,
               private FeatureToggleService,
-              private XhrNotificationService,
+              private Notification,
               private Userservice,
               private WizardFactory) {
-    this.currentPlace = this.$stateParams.currentPlace;
     this.csdmHuronUserDeviceService = this.CsdmHuronUserDeviceService.create(this.currentPlace.cisUuid);
-    CsdmDataModelService.reloadItem(this.currentPlace).then((updatedPlace) => {
-      this.currentPlace = updatedPlace || this.currentPlace;
-      this.loadServices();
-      this.loadActions();
-    });
+    CsdmDataModelService.reloadItem(this.currentPlace).then((updatedPlace) => this.displayPlace(updatedPlace));
   }
 
   public $onInit(): void {
+    this.displayPlace(this.$stateParams.currentPlace);
+    this.fetchDisplayNameForLoggedInUser();
+    this.fetchFeatureToggles();
+  }
+
+  private displayPlace(newPlace) {
+    this.currentPlace = newPlace;
     this.loadServices();
     this.loadActions();
-    this.fetchDisplayNameForLoggedInUser();
   }
 
   private loadServices(): void {
@@ -88,6 +91,12 @@ class PlaceOverview implements ng.IComponentController {
     } else {
       return this.FeatureToggleService.supports(this.FeatureToggleService.features.csdmPstn);
     }
+  }
+
+  private fetchFeatureToggles() {
+    this.FeatureToggleService.csdmATAGetStatus().then((result) => {
+      this.showATA = result;
+    });
   }
 
   private loadActions(): void {
@@ -141,7 +150,11 @@ class PlaceOverview implements ng.IComponentController {
   public save(newName: string) {
     return this.CsdmDataModelService
       .updateItemName(this.currentPlace, newName)
-      .catch(this.XhrNotificationService.notify);
+      .then((updatedPlace) => this.displayPlace(updatedPlace))
+      .catch((error) => {
+          this.Notification.errorWithTrackingId(error, 'placesPage.failedToSaveChanges');
+        }
+      );
   }
 
   public showDeviceDetails(device: IDevice): void {
@@ -172,9 +185,11 @@ class PlaceOverview implements ng.IComponentController {
       data: {
         function: 'showCode',
         showPlaces: true,
+        showATA: this.showATA,
         account: {
           type: 'shared',
           deviceType: this.currentPlace.type,
+          cisUuid: this.currentPlace.cisUuid,
           name: this.currentPlace.displayName,
         },
         recipient: {
