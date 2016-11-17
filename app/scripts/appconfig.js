@@ -3043,7 +3043,7 @@
             url: '/gss',
             templateUrl: 'modules/gss/gssIframe/gssIframe.tpl.html',
             controller: 'GssIframeCtrl',
-            controllerAs: 'gssIframe',
+            controllerAs: 'gssIframeCtrl',
             parent: 'main',
             resolve: {
               hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
@@ -3076,6 +3076,12 @@
             params: {
               component: null
             }
+          })
+          .state('gss.services', {
+            url: '/services',
+            templateUrl: 'modules/gss/services/services.tpl.html',
+            controller: 'GSSServicesCtrl',
+            controllerAs: 'gssServicesCtrl'
           });
       }
     ]);
