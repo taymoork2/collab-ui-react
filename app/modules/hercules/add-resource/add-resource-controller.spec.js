@@ -234,12 +234,12 @@ describe('Controller: AddResourceController', function () {
       expect(controller.connectors.length).toBe(1);
     });
 
-    it('Create a warning if hostname is previously used', function () {
+    it('should create a warning if hostname is previously used', function () {
       controller.hostname = 'host1.example.org';
       expect(controller.warning()).toBe(true);
     });
 
-    it('Accept hostname if previously not used', function () {
+    it('should not create a warning if hostname is previously not used', function () {
       controller.hostname = 'neverUsedHostname.example.org';
       expect(controller.warning()).toBe(false);
     });

@@ -82,9 +82,11 @@
     };
 
     function warning() {
-      var connectorNameIndex = vm.connectors.lastIndexOf(vm.hostname);
-      if (connectorNameIndex !== -1) {
+      if (_.some(vm.connectors, function (connector) {
         vm.warningMessage = $translate.instant('hercules.addResourceDialog.hostnameRegistered');
+        return connector === vm.hostname;
+      })
+        ) {
         return true;
       }
       return false;
@@ -160,12 +162,12 @@
     }
 
     function getAllHostnames(allExpressways) {
-      allExpressways.forEach(function (cluster) {
-        cluster.connectorsHostname.forEach(function (connector) {
+      _.forEach(allExpressways, function (cluster) {
+        _.forEach(cluster.connectorsHostname, function (connector) {
           if (connector.connectorType === 'c_mgmt') {
             vm.connectors.push(
-              connector.hostname
-            );
+                    connector.hostname
+                  );
           }
         });
       });
