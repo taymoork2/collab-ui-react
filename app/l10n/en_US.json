@@ -3023,11 +3023,11 @@
     "feature4": "Taxes & Fees Included in Price"
   },
   "tataFeatures": {
-    "feature1": "1 DID or TFN per user",
-    "feature2": "Unlimited calling to U.S. 50 states + Canada",
-    "feature3": "Port/Carrier Transfer cancellation or expedite",
-    "feature4": "Caller ID name delivery and registration",
-    "feature5": "E911 Services and Toll Free vanity lookup"
+    "feature1": "1 DID per User",
+    "feature2": "Calling To/From U.S. 50 States",
+    "feature3": "No Fees for Number Porting/Transfer",
+    "feature4": "Caller ID Name Delivery and Registration",
+    "feature5": "E911"
   },
   "partnerHomePage": {
     "trialsHeading": "Trials",
