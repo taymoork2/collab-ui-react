@@ -300,20 +300,6 @@
       }
     }
 
-    /*
-            ui = AAUiModelService.getUiModel();
-            uiMenu = ui[$scope.schedule];
-            vm.menuEntry = uiMenu.entries[$scope.index];
-            if ($scope.type) {
-              queueAction = vm.menuEntry.actions[0];
-              sourceMenu = queueAction.queueSettings[$scope.type];
-              vm.actionEntry = getAction(sourceMenu);
-            } else {
-              vm.actionEntry = getAction(vm.menuEntry);
-            }
-            break;
-     */
-
     function fromAction() {
       var ui = AAUiModelService.getUiModel();
       var uiMenu = ui[$scope.schedule];
