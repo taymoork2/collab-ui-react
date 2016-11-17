@@ -111,11 +111,11 @@
     vm.onExportDownloadStatus = onExportDownloadStatus;
 
     vm.onFileSizeError = function () {
-      $timeout(Notification.error('firstTimeWizard.csvMaxSizeError'));
+      Notification.error('firstTimeWizard.csvMaxSizeError');
     };
 
     vm.onFileTypeError = function () {
-      $timeout(Notification.error('firstTimeWizard.csvFileTypeError'));
+      Notification.error('firstTimeWizard.csvFileTypeError');
     };
 
     vm.resetFile = function () {
@@ -835,15 +835,15 @@
             vm.hybridServicesUserProps = userProps;
             ResourceGroupService.getAll().then(function (resourceGroups) {
               vm.resourceGroups = resourceGroups;
-            }).catch(function () {
+            }).catch(function (response) {
               vm.handleHybridServicesResourceGroups = false;
-              Notification.error('firstTimeWizard.fmsResourceGroupsLoadFailed');
+              Notification.errorResponse(response, 'firstTimeWizard.fmsResourceGroupsLoadFailed');
             }).finally(function () {
               processCsvRows();
             });
-          }).catch(function () {
+          }).catch(function (response) {
             vm.handleHybridServicesResourceGroups = false;
-            Notification.error('firstTimeWizard.ussUserPropsLoadFailed');
+            Notification.errorResponse(response, 'firstTimeWizard.ussUserPropsLoadFailed');
             processCsvRows();
           });
         } else {

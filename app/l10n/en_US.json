@@ -457,7 +457,7 @@
     "numberOfLicenses": "Number of Licenses",
     "invalidOrganizationLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
     "isEFT": "isEFT Enabled",
-    "eftError": "Can not reach EFT Service",
+    "eftError": "Can not reach EFT Service.",
     "organizationInformation": "Organization Information",
     "createOrganization": "Create Organization",
     "cancel": "Cancel",
@@ -1105,7 +1105,6 @@
     "cancel": "Cancel",
     "emailAddress": "Email Address",
     "name": "Name",
-    "errGetTrialsQuery": "Failed to retrieve trials. Status: {{status}}",
     "quickLinksText": "Quick Links",
     "addUserText": "Add Users",
     "installDeviceText": "Install a Device for a User",
@@ -3040,7 +3039,7 @@
     "expiredToday": "Expires Today",
     "daysAgo": "{{days}} days ago",
     "expireToday": "Expiring Today",
-    "errGetTrialsQuery": "Failed to retrieve trials. Status: {{status}}",
+    "errGetTrialsQuery": "Failed to retrieve trials.",
     "errGetOrgs": "Failed to retrieve orgranizations.",
     "fifty": "50",
     "oneHundred": "100",
@@ -3497,7 +3496,9 @@
       "one": "One",
       "two": "Two",
       "three": "Three"
-    }
+    },
+    "failedToSaveChanges": "Failed to save changes to device. Reason:",
+    "failedToUploadLogs": "Failed to upload logs. Reason:"
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
@@ -3587,7 +3588,8 @@
       "onceActiveSharedDeviceNoPlaces": "Once the device has been successfully activated, you will be able to find and configure it in Devices.",
       "expires": "Expires {{expiryDate}}",
       "searchAnotherUser": "Or search for another user",
-      "codeIsUsed": "This code has now been used"
+      "codeIsUsed": "This code has now been used",
+      "failedToGenerateActivationCode": "Failed to generate activation code. Reason:"
     }
   },
   "generateActivationCodeModal": {
@@ -4849,7 +4851,9 @@
     "placesDefinition": "A place represents a physical location containing a device not owned by a specific user, such as a meeting room with a room device or a reception with shared phones.",
     "placesUses": "You'll be able to view your places here - and the devices and configurations that belong to them.",
     "deletePlace": "Delete Place",
-    "deletePlaceConfText": "Are you sure you want to delete {{ placeName }}?"
+    "deletePlaceConfText": "Are you sure you want to delete {{ placeName }}?",
+    "failedToSaveChanges": "Failed to save changes to place. Reason:",
+    "failedToDelete": "Failed to delete place. Reason:"
   },
   "linesPage": {
     "manageLines": "Numbers",
@@ -6328,6 +6332,12 @@
     "serviceDescription": "Service Description",
     "deleteService": "Delete {{serviceName}}",
     "editService": "Edit Service",
+    "addServiceSucceed": "Service {{serviceName}} add succeed.",
+    "addServiceFailed": "Service {{serviceName}} add failed.",
+    "editServiceSucceed": "Service {{serviceName}} edit succeed.",
+    "editServiceFailed": "Service {{serviceName}} edit failed.",
+    "deleteServiceSucceed": "Service {{serviceName}} delete succeed.",
+    "deleteServiceFailed":"Service {{serviceName}} delete failed.",
     "deletingComponentCannotBeUndone": "Deleting a component cannot be undone.",
     "deletingServiceCannotBeUndone": "Deleting a service cannot be undone.",
     "deletingIncidentCannotBeUndone": "Deleting an incident cannot be undone.",

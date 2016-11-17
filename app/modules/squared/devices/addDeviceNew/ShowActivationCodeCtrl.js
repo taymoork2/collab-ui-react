@@ -119,7 +119,7 @@
 
 
     function error(err) {
-      Notification.errorWithTrackingId(err);
+      Notification.errorWithTrackingId(err, 'addDeviceWizard.showActivationCode.failedToGenerateActivationCode');
       vm.isLoading = false;
     }
 

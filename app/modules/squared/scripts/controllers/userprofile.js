@@ -5,7 +5,7 @@
     .controller('UserProfileCtrl', UserProfileCtrl);
 
   /* @ngInject */
-  function UserProfileCtrl($scope, $location, $stateParams, Log, $filter, Userservice, Authinfo, Notification, Config) {
+  function UserProfileCtrl($scope, $location, $stateParams, Log, Userservice, Authinfo, Notification, Config) {
 
     var userid = $stateParams.uid;
     $scope.orgName = Authinfo.getOrgName();
@@ -68,19 +68,14 @@
       Log.debug('Updating user: ' + userid + ' with data: ');
       Log.debug(userData);
 
-      Userservice.updateUserProfile(userid, userData, function (data, status) {
-        if (data.success) {
-          var successMessage = [];
-          successMessage.push($filter('translate')('profilePage.success'));
-          Notification.notify(successMessage, 'success');
-          $scope.user = data;
-        } else {
-          Log.debug('Update existing user failed. Status: ' + status);
-          var errorMessage = [];
-          errorMessage.push($filter('translate')('profilePage.error'));
-          Notification.notify(errorMessage, 'error');
-        }
-      });
+      Userservice.updateUserProfile(userid, userData)
+        .then(function (response) {
+          Notification.success('profilePage.success');
+          $scope.user = response.data;
+        })
+        .catch(function (response) {
+          Notification.errorResponse(response, 'profilePage.error');
+        });
     };
 
   }

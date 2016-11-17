@@ -63,8 +63,8 @@
           _.set($scope, 'isEFT', response.data.eft);
           $scope.currentEftSetting = response.data.eft;
         })
-        .catch(function () {
-          Notification.error('organizationsPage.eftError');
+        .catch(function (response) {
+          Notification.errorResponse(response, 'organizationsPage.eftError');
         })
         .finally(function () {
           $scope.eftToggleLoading = false;
@@ -78,9 +78,9 @@
             _.set($scope, 'isEFT', eft);
             _.set($scope, 'currentEftSetting', eft);
           })
-          .catch(function () {
+          .catch(function (response) {
             _.set($scope, 'isEFT', $scope.currentEftSetting);
-            Notification.error('organizationsPage.eftError');
+            Notification.errorResponse(response, 'organizationsPage.eftError');
           });
       }
     }
@@ -92,8 +92,8 @@
       Orgservice.setHybridServiceReleaseChannelEntitlement(currentOrgId, channel.name, channel.newAllow).then(function () {
         Notification.success('organizationsPage.releaseChannelToggleSuccess');
         channel.updated();
-      }).catch(function () {
-        Notification.error('organizationsPage.releaseChannelToggleFailure');
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'organizationsPage.releaseChannelToggleFailure');
         channel.reset();
       });
     }

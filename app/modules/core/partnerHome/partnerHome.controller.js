@@ -67,11 +67,8 @@
     function getTrialsList() {
       $scope.showTrialsRefresh = true;
       TrialService.getTrialsList()
-        .catch(function (err) {
-          Log.debug('Failed to retrieve trial information. Status: ' + err.status);
-          Notification.error('partnerHomePage.errGetTrialsQuery', {
-            status: err.status
-          });
+        .catch(function (response) {
+          Notification.errorResponse(response, 'partnerHomePage.errGetTrialsQuery');
         })
         .then(function (response) {
           return PartnerService.loadRetrievedDataToList(_.get(response, 'data.trials', []), true);
