@@ -1,6 +1,6 @@
 <div ng-if="!$ctrl.callParkId">
   <ng-include src="'modules/huron/features/callPark/callParkAdd.html'"></ng-include>
 </div>
-<div ng-if="$ctrl.callParkId">
+<div class="call-park-edit" ng-if="$ctrl.callParkId">
   <ng-include src="'modules/huron/features/callPark/callParkEdit.html'"></ng-include>
 </div>

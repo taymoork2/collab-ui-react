@@ -15,7 +15,7 @@ describe('Controller: Customer Reports Ctrl', function () {
     state: 'reports.care',
   }, {
     title: 'reportsPage.usageReports.usageReportTitle',
-    state: 'reports.device-usage.total',
+    state: 'reports.device-usage',
   }];
 
   beforeEach(function () {

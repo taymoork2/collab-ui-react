@@ -34,14 +34,12 @@
       }).result.then(function () {
         dirSyncResource.patch({
           customerId: Authinfo.getOrgId()
-        }).$promise.then(
-          function () {
-            Notification.success('userManage.ad.dirSyncDisableSuccess');
-            $state.go('users.manage.org');
-          },
-          function (response) {
-            Notification.error(Notification.processErrorResponse(response, 'userManage.ad.dirSyncDisableFailure'));
-          });
+        }).$promise.then(function () {
+          Notification.success('userManage.ad.dirSyncDisableSuccess');
+          $state.go('users.manage.org');
+        }).catch(function (response) {
+          Notification.errorResponse(response, 'userManage.ad.dirSyncDisableFailure');
+        });
       });
     }
 

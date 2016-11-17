@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskHuronDeviceController($stateParams, HelpdeskHuronService, HelpdeskService, XhrNotificationService, $window) {
+  function HelpdeskHuronDeviceController($stateParams, $window, HelpdeskHuronService, HelpdeskService, Notification) {
     $('body').css('background', 'white');
     var vm = this;
     vm.deviceId = $stateParams.id;
@@ -17,12 +17,15 @@
         id: vm.orgId
       };
     }
+    vm._helpers = {
+      notifyError: notifyError
+    };
 
     HelpdeskHuronService.getDevice(vm.orgId, vm.deviceId).then(initDeviceView, function (err) {
       if (err.status === 404) {
         vm.notFound = true;
       } else {
-        XhrNotificationService.notify(err);
+        vm._helpers.notifyError(err);
       }
     });
 
@@ -32,17 +35,17 @@
         // Only if there is no displayName. If set, the org name has already been read (on the search page)
         HelpdeskService.getOrgDisplayName(vm.orgId).then(function (displayName) {
           vm.org.displayName = displayName;
-        }, XhrNotificationService.notify);
+        }, vm._helpers.notifyError);
       }
       if (!vm.ownerUser && vm.device.ownerUser && vm.device.ownerUser.uuid) {
         HelpdeskService.getUser(vm.orgId, vm.device.ownerUser.uuid).then(function (ownerUser) {
           vm.ownerUser = ownerUser;
-        }, XhrNotificationService.notify);
+        }, vm._helpers.notifyError);
       }
 
       HelpdeskHuronService.getDeviceNumbers(vm.deviceId, vm.orgId, vm.device.ownerUser ? vm.device.ownerUser.uuid : null).then(function (deviceNumbers) {
         vm.deviceNumbers = deviceNumbers;
-      }, XhrNotificationService.notify);
+      }, vm._helpers.notifyError);
 
       angular.element(".helpdesk-details").focus();
     }
@@ -51,6 +54,10 @@
       if (event.keyCode === 27) { // Esc
         $window.history.back();
       }
+    }
+
+    function notifyError(response) {
+      Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
     }
   }
 

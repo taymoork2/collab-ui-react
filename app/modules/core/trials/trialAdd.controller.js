@@ -473,7 +473,8 @@
         atlasCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         atlasContextServiceTrials: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
-        placesEnabled: FeatureToggleService.supports(FeatureToggleService.features.csdmPstn)
+        placesEnabled: FeatureToggleService.supports(FeatureToggleService.features.csdmPstn),
+        huronSimplifiedTrialFlow: FeatureToggleService.supports(FeatureToggleService.features.huronSimplifiedTrialFlow)
       })
         .then(function (results) {
           vm.showRoomSystems = true;
@@ -516,6 +517,7 @@
           meetingModal.enabled = true;
 
           vm.placesEnabled = results.placesEnabled;
+          vm.simplifiedTrialFlow = results.huronSimplifiedTrialFlow;
           setDeviceModal();
         })
         .finally(function () {
@@ -729,7 +731,11 @@
                 return $q.reject(response);
               }).then(function () {
                 if (vm.pstnTrial.enabled) {
-                  return TrialPstnService.createPstnEntity(vm.customerOrgId, response.data.customerName);
+                  if (vm.simplifiedTrialFlow) {
+                    return TrialPstnService.createPstnEntityV2(vm.customerOrgId, response.data.customerName);
+                  } else {
+                    return TrialPstnService.createPstnEntity(vm.customerOrgId, response.data.customerName);
+                  }
                 }
               });
           }

@@ -16,6 +16,7 @@
 
     var minRoomSystems = 1;
     var maxRoomSystems = 3;
+    var maxMx300 = 1;
     var minCallDevices = 1;
     var minTotalDevices = 1;
     vm.maxCallDevices = 4;
@@ -35,6 +36,7 @@
     vm.canAddCallDevice = TrialCallService.canAddCallDevice(_.get($stateParams, 'details.details'), _trialCallData.enabled);
     vm.canAddRoomSystemDevice = TrialRoomSystemService.canAddRoomSystemDevice(_.get($stateParams, 'details.details'), _trialRoomSystemData.enabled);
     vm.validateInputQuantity = validateInputQuantity;
+    vm.validateMx300InputQuantity = validateMx300InputQuantity;
     vm.validateRoomSystemsQuantity = validateRoomSystemsQuantity;
     vm.validatePhonesQuantity = validatePhonesQuantity;
     vm.validateTotalQuantity = validateTotalQuantity;
@@ -53,7 +55,7 @@
     vm.areTemplateOptionsDisabled = _areTemplateOptionsDisabled;
     vm.getCountriesForSelectedDevices = getCountriesForSelectedDevices;
     // TODO - Remove vm.showNewRoomSystems when MX300 are officially supported
-    vm.showNewRoomSystems = false;
+    vm.showNewRoomSystems = true;
     vm.selectedCountryCode = null;
 
     if (_.has($stateParams, 'details.details.shippingInformation.country')) {
@@ -213,7 +215,7 @@
       type: 'checkbox',
       className: 'pull-left medium-5 medium-offset-1',
       templateOptions: {
-        label: $translate.instant('trialModal.call.mx300'),
+        label: $translate.instant('trialModal.call.mx300', { max: maxMx300 }),
         id: 'cameraMX300',
         labelClass: 'medium-offset-1',
       },
@@ -510,7 +512,7 @@
           return field.model.country;
         },
         listener: function (field, newValue, oldValue) {
-          if (newValue !== oldValue) {
+          if (newValue !== oldValue && field.formControl) {
             field.formControl.$validate();
           }
         }
@@ -697,11 +699,13 @@
       var limitsPromise = TrialDeviceService.getLimitsPromise();
       Analytics.trackTrialSteps(Analytics.eventNames.ENTER_SCREEN, vm.parentTrialData);
 
-      // TODO - remove feature toggle when MX300 are officially supported
+      // TODO - remove feature toggle code and checks. MX300 is now officially supported
       // Hides the MX300 under a feature toggle
       FeatureToggleService.supports(FeatureToggleService.features.atlasNewRoomSystems)
-        .then(function (results) {
-          vm.showNewRoomSystems = results;
+        .then(function () {
+          vm.showNewRoomSystems = true;
+        }).catch(function () {
+          vm.showNewRoomSystems = true;
         });
 
       vm.canAddMoreDevices = vm.isEditing && vm.hasExistingDevices();
@@ -753,13 +757,26 @@
       return quantity;
     }
 
+    /*TODO: this is not a correct way to do it. Now that we have diff. max for diff. devices
+    we should store those in the object with the model and compare against that */
+
     function validateInputQuantity($viewValue, $modelValue, scope) {
       var quantity = $modelValue || $viewValue;
       var device = scope.model;
-      if (!device.enabled) {
+      if (!device.enabled || device.model === vm.mx300.model) {
         return true;
       } else {
         return (quantity >= minCallDevices && quantity <= vm.maxCallDevices);
+      }
+    }
+
+    function validateMx300InputQuantity($viewValue, $modelValue, scope) {
+      var quantity = $modelValue || $viewValue;
+      var device = scope.model;
+      if (!device.enabled || device.model !== vm.mx300.model) {
+        return true;
+      } else {
+        return (quantity === maxMx300);
       }
     }
 
@@ -870,6 +887,12 @@
           expression: vm.validateInputQuantity,
           message: function () {
             return $translate.instant('trialModal.call.invalidQuantity', { max: maxRoomSystems });
+          }
+        },
+        inputQuantityMx100: {
+          expression: vm.validateMx300InputQuantity,
+          message: function () {
+            return $translate.instant('trialModal.call.invalidQuantityMx300', { qty: maxMx300 });
           }
         },
         roomSystemsQuantity: {

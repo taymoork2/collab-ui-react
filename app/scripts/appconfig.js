@@ -1092,6 +1092,24 @@
               displayName: 'Device Configuration'
             }
           })
+          .state('user-overview.csdmDevice.emergencyServices', {
+            views: {
+              '': {
+                template: '<uc-emergency-services></uc-emergency-services>',
+              }
+            },
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.csdmDevice.emergencyServices').data.displayName = $translate.instant('spacesPage.emergencyTitle');
+              }
+            },
+            data: {},
+            params: {
+              currentAddress: {},
+              currentNumber: '',
+              status: ''
+            },
+          })
           .state('user-overview.communication.voicemail', {
             template: '<div uc-voicemail></div>',
             data: {
@@ -1331,71 +1349,19 @@
               }
             }
           })
-
           .state('reports.device-usage', {
             url: '/reports/device/usage',
-            templateUrl: 'modules/core/customerReports/deviceUsage/header.tpl.html',
-            controller: 'DeviceUsageHeaderCtrl',
-            controllerAs: 'deviceUsage',
-            parent: 'main',
-            params: {
-            },
-            resolve: {
-              deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
-              },
-            }
-          })
-          .state('reports.device-usage.overview', {
-            url: '/overview',
-            templateUrl: 'modules/core/customerReports/deviceUsage/overview.tpl.html',
-            controller: 'DeviceUsageOverviewCtrl',
-            controllerAs: 'deviceUsage',
-            params: {
-            },
-            resolve: {
-              deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
-              },
-            }
-          })
-          .state('reports.device-usage.distribution', {
-            url: '/distribution',
-            templateUrl: 'modules/core/customerReports/deviceUsage/distribution/distribution.tpl.html',
-            controller: 'DeviceUsageDistributionCtrl',
-            controllerAs: 'deviceUsage',
-            params: {
-            },
-            resolve: {
-              deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
-              },
-            }
-          })
-          .state('reports.device-usage.timeline', {
-            url: '/timeline',
-            templateUrl: 'modules/core/customerReports/deviceUsage/timeline/timeline.tpl.html',
-            controller: 'DeviceUsageTimelineCtrl',
-            controllerAs: 'deviceUsage',
-            params: {
-            },
-            resolve: {
-              deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
-              },
-            }
-          })
-          .state('reports.device-usage.total', {
-            url: '/total',
-            templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html',
-            controller: 'DeviceUsageCtrl',
-            controllerAs: 'deviceUsage',
-            params: {
-            },
-            resolve: {
-              deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
-              },
+            views: {
+              'tabContent': {
+                controllerAs: 'deviceUsage',
+                controller: 'DeviceUsageCtrl',
+                templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html',
+                resolve: {
+                  deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                    return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
+                  }
+                }
+              }
             }
           })
 
@@ -1524,6 +1490,24 @@
             data: {
               displayName: 'Device Configuration'
             }
+          })
+          .state('place-overview.csdmDevice.emergencyServices', {
+            views: {
+              '': {
+                template: '<uc-emergency-services></uc-emergency-services>',
+              }
+            },
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('place-overview.csdmDevice.emergencyServices').data.displayName = $translate.instant('spacesPage.emergencyTitle');
+              }
+            },
+            data: {},
+            params: {
+              currentAddress: {},
+              currentNumber: '',
+              status: '',
+            },
           })
           .state('place-overview.communication', {
             template: '<place-call-overview></place-call-overview>',
@@ -1655,6 +1639,28 @@
             data: {
               displayName: 'Overview'
             }
+          })
+          .state('device-overview.emergencyServices', {
+            parent: 'device-overview',
+            views: {
+              'sidepanel@': {
+                template: '<uc-emergency-services></uc-emergency-services>',
+              },
+              'header@device-overview.emergencyServices': {
+                templateUrl: 'modules/squared/devices/emergencyServices/emergencyServicesHeader.tpl.html'
+              }
+            },
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('device-overview.emergencyServices').data.displayName = $translate.instant('spacesPage.emergencyTitle');
+              }
+            },
+            data: {},
+            params: {
+              currentAddress: {},
+              currentNumber: '',
+              status: '',
+            },
           })
           .state('video', {
             parent: 'modal',
@@ -3037,7 +3043,7 @@
             url: '/gss',
             templateUrl: 'modules/gss/gssIframe/gssIframe.tpl.html',
             controller: 'GssIframeCtrl',
-            controllerAs: 'gssIframe',
+            controllerAs: 'gssIframeCtrl',
             parent: 'main',
             resolve: {
               hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
@@ -3070,6 +3076,12 @@
             params: {
               component: null
             }
+          })
+          .state('gss.services', {
+            url: '/services',
+            templateUrl: 'modules/gss/services/services.tpl.html',
+            controller: 'GSSServicesCtrl',
+            controllerAs: 'gssServicesCtrl'
           });
       }
     ]);

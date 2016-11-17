@@ -27,7 +27,6 @@
     vm.qrCode = undefined;
     vm.timeLeft = '';
     vm.isLoading = true;
-    // vm.place = wizardData.place;
 
     vm.onCopySuccess = function () {
       Notification.success(
@@ -70,23 +69,15 @@
             });
         }
       } else { // Personal (never create new)
-        OtpService.generateOtp(wizardData.account.username).then(function (code) {
-          vm.activationCode = code.code;
-          vm.friendlyActivationCode = formatActivationCode(vm.activationCode);
-          vm.expiryTime = code.friendlyExpiresOn;
-          generateQRCode();
-        }, error);
+        createCodeForHuronUser(wizardData.account.username);
       }
     } else { // Cloudberry
       if (vm.account.cisUuid) { // Existing place
-        CsdmDataModelService
-          .createCodeForExisting(vm.account.cisUuid)
-          .then(success, error);
+        createCodeForCloudberryPlace(vm.account.cisUuid).then(success, error);
       } else { // New place
-        createCloudberryPlace(vm.account.name).then(function (place) {
+        createCloudberryPlace(vm.account.name, wizardData.account.entitlements, wizardData.account.directoryNumber, wizardData.account.externalNumber).then(function (place) {
           vm.account.cisUuid = place.cisUuid;
-          createCodeForCloudberryPlace(vm.account.cisUuid)
-            .then(success, error);
+          createCodeForCloudberryPlace(vm.account.cisUuid).then(success, error);
         }, error);
       }
     }
@@ -99,8 +90,17 @@
       return CsdmHuronPlaceService.createOtp(cisUuid);
     }
 
-    function createCloudberryPlace(name) {
-      return CsdmDataModelService.createCsdmPlace(name);
+    function createCodeForHuronUser(username) {
+      OtpService.generateOtp(username).then(function (code) {
+        vm.activationCode = code.code;
+        vm.friendlyActivationCode = formatActivationCode(vm.activationCode);
+        vm.expiryTime = code.friendlyExpiresOn;
+        generateQRCode();
+      }, error);
+    }
+
+    function createCloudberryPlace(name, entitlements, directoryNumber, externalNumber) {
+      return CsdmDataModelService.createCsdmPlace(name, entitlements, directoryNumber, externalNumber);
     }
 
     function createCodeForCloudberryPlace(cisUuid) {
@@ -119,7 +119,7 @@
 
 
     function error(err) {
-      Notification.errorWithTrackingId(err);
+      Notification.errorWithTrackingId(err, 'addDeviceWizard.showActivationCode.failedToGenerateActivationCode');
       vm.isLoading = false;
     }
 

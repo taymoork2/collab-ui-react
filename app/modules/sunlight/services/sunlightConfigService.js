@@ -21,7 +21,8 @@
       createUserInfo: createUserInfo,
       getChatConfig: getChatConfig,
       deleteUser: deleteUser,
-      onBoardCare: onBoardCare
+      onBoardCare: onBoardCare,
+      updateChatConfig: updateChatConfig
     };
 
     return service;
@@ -55,10 +56,15 @@
       return $http.delete(sunlightUserConfigUrl + '/' + userId);
     }
 
+    function updateChatConfig(chatConfig) {
+      var sunlightChatConfigUrl = sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/chat';
+      return $http.put(sunlightChatConfigUrl, chatConfig);
+    }
+
     function onBoardCare() {
       var callbackUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/csonboard?accessToken='
-        + TokenService.getAccessToken();
-      var ccfsUrl = UrlConfig.getCcfsUrl() + callbackUrl;
+        + TokenService.getAccessToken() + '&orgName=' + Authinfo.getOrgName();
+      var ccfsUrl = UrlConfig.getCcfsUrl() + encodeURIComponent(callbackUrl);
       $window.open(ccfsUrl, '_blank');
     }
   }

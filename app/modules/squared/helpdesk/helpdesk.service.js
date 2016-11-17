@@ -156,8 +156,8 @@
       return $http
         .get(url, config)
         .catch(function (error) {
-          error.cancelled = error.config.timeout.cancelled;
-          error.timedout = error.config.timeout.timedout;
+          error.cancelled = _.get(error, 'config.timeout.cancelled', false);
+          error.timedout = _.get(error, 'config.timeout.timedout', false);
           return $q.reject(error);
         });
     }

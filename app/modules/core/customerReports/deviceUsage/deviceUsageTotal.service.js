@@ -138,11 +138,15 @@
 
       return $http.get(url, timeout).then(function (response) {
         //$log.info('#items', response.data.items.length);
+        var missingDays = false;
         if (!response.data.items) {
           response.data.items = [];
         }
         if (response.data.items.length > 0) {
-          checkIfMissingDays(response.data.items, start, end, missingDaysDeferred);
+          missingDays = checkIfMissingDays(response.data.items, start, end, missingDaysDeferred);
+        }
+        if (missingDays) {
+          fillEmptyDays(response.data.items, start, end);
         }
         return reduceAllData(response.data.items, granularity);
       }, function (reject) {
@@ -150,33 +154,71 @@
       });
     }
 
+    function fillEmptyDays(items, start, end) {
+      //$log.info('fillEmptyDays', start + ' - ' + end);
+      //$log.info('fillEmptyDays', items);
+      var daysNeeded = {};
+      var current = moment(start);
+      var final = moment(end);
+      while (current.isBefore(final)) {
+        daysNeeded[current.format('YYYYMMDD')] = true;
+        current.add(1, 'days');
+      }
+      daysNeeded[final.format('YYYYMMDD')] = true;
+      //$log.info('daysNeeded', daysNeeded);
+      _.each(items, function (day) {
+        if (daysNeeded[day.date.toString()]) {
+          daysNeeded[day.date.toString()] = false;
+        }
+      });
+      //$log.info('daysNeeded', daysNeeded);
+      _.each(daysNeeded, function (dn, day) {
+        if (dn) {
+          items.push({
+            date: day,
+            totalDuration: 0,
+            pairedCount: 0,
+            callCount: 0
+          });
+        }
+      });
+    }
+
     function checkIfMissingDays(items, start, end, missingDaysDeferred) {
-      var first = moment(start);
+      //var first = moment(start);
       var last = moment(end);
-      $log.info('checkIfMissingDays', first.format('YYYYMMDD') + ' - ' + last.format('YYYYMMDD'));
-      var current = first;
-      var missingDays = _.chain(items).reduce(function (result, item) {
+      var current = moment(start);
+
+      var correctDays = [];
+      while (current.isBefore(last)) {
+        correctDays.push(current.format('YYYYMMDD'));
+        current.add(1, 'days');
+      }
+      correctDays.push(last.format('YYYYMMDD'));
+      //$log.info('correctDays', correctDays);
+
+      //$log.info('checkIfMissingDays', first.format('YYYYMMDD') + ' - ' + last.format('YYYYMMDD'));
+      //current = first;
+      var reducedDays = _.chain(items).reduce(function (result, item) {
         if (!result[item.date]) {
           //$log.info('reduce_day', item.date);
           result[item.date] = item.date;
         }
         return result;
       }, {})
-      .filter(function (item, key) {
-        var tmpDate = key.toString();
-        var date = moment(tmpDate.substr(0, 4) + '-' + tmpDate.substr(4, 2) + '-' + tmpDate.substr(6, 2));
-        var available = current.isSame(date);
-        current.add(1, 'days');
-        return available;
+      .map(function (value) {
+        return value.toString();
       }).value();
-      current.subtract(1, 'days');
-      var missingAtEnd = last.diff(current, 'days');
-      $log.info('missingDays', missingDays);
-      $log.info('reduced', missingDays.length);
-      $log.info('reduced', missingDays.length + missingAtEnd);
-      missingDaysDeferred.resolve({
-        nbrOfMissingDays: missingDays.length + missingAtEnd
-      });
+      var diff = _.differenceWith(correctDays, reducedDays, _.isEqual);
+      //$log.info('diff', diff);
+      if (diff.length > 0) {
+        missingDaysDeferred.resolve({
+          missingDays: diff
+        });
+        return true;
+      } else {
+        return false;
+      }
     }
 
     function analyseReject(reject) {
@@ -216,14 +258,14 @@
           result[date].deviceCategories[item.deviceCategory].callCount += item.callCount;
           result[date].deviceCategories[item.deviceCategory].pairedCount += item.pairedCount;
         }
-        if (!result[date].accountIds[item.accountId]) {
+        if (item.accountId && !result[date].accountIds[item.accountId]) {
           result[date].accountIds[item.accountId] = {
             accountId: item.accountId,
             totalDuration: item.totalDuration,
             callCount: item.callCount,
             pairedCount: item.pairedCount
           };
-        } else {
+        } else if (item.accountId) {
           result[date].accountIds[item.accountId].totalDuration += item.totalDuration;
           result[date].accountIds[item.accountId].callCount += item.callCount;
           result[date].accountIds[item.accountId].pairedCount += item.pairedCount;

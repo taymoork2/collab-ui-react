@@ -144,7 +144,7 @@ class ReportService {
 
   public getActiveUserData(customers: Array<IReportsCustomer>, filter: ITimespan): ng.IHttpPromise<IActiveUserReturnData> {
     let overallStatus = true;
-    let promise;
+    let promise: ng.IPromise<any>;
 
     if (_.isUndefined(this.timeFilter) || filter.value !== this.timeFilter || _.isUndefined(this.activeUserDetailedPromise)) {
       promise = this.getOverallActiveUserData(filter).then((response) => {

@@ -83,8 +83,8 @@
           .then(function () {
             Notification.success('firstTimeWizard.messengerRetentionSuccess');
           })
-          .catch(function () {
-            Notification.error('firstTimeWizard.messengerRetentionError');
+          .catch(function (response) {
+            Notification.errorResponse(response, 'firstTimeWizard.messengerRetentionError');
           });
       }
 
@@ -93,8 +93,8 @@
           .then(function () {
             Notification.success('firstTimeWizard.messengerRetentionEditSuccess');
           })
-          .catch(function () {
-            Notification.error('firstTimeWizard.messengerRetentionEditError');
+          .catch(function (response) {
+            Notification.errorResponse(response, 'firstTimeWizard.messengerRetentionEditError');
           });
       }
 
@@ -103,8 +103,8 @@
           .then(function () {
             Notification.success('firstTimeWizard.messengerEnableWebexSuccess');
           })
-          .catch(function () {
-            Notification.error('firstTimeWizard.messengerEnableWebexError');
+          .catch(function (response) {
+            Notification.errorResponse(response, 'firstTimeWizard.messengerEnableWebexError');
           });
 
       } else if (!vm.msgIntegration && msgIntFlag) {
@@ -112,8 +112,8 @@
           .then(function () {
             Notification.success('firstTimeWizard.messengerDisableWebexError');
           })
-          .catch(function () {
-            Notification.error('firstTimeWizard.messengerDisableWebexError');
+          .catch(function (response) {
+            Notification.errorResponse(response, 'firstTimeWizard.messengerDisableWebexError');
           });
       }
     };

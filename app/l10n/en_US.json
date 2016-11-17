@@ -457,7 +457,7 @@
     "numberOfLicenses": "Number of Licenses",
     "invalidOrganizationLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
     "isEFT": "isEFT Enabled",
-    "eftError": "Can not reach EFT Service",
+    "eftError": "Can not reach EFT Service.",
     "organizationInformation": "Organization Information",
     "createOrganization": "Create Organization",
     "cancel": "Cancel",
@@ -520,7 +520,9 @@
     "careTab": "Care",
     "careTabDesc": "Cloud Contact Center",
     "saveAs": "Save As",
+    "jpg": "JPG",
     "pdf": "PDF",
+    "png": "PNG",
     "export": "Export",
     "print": "Print",
     "allCalls": "All Calls",
@@ -530,8 +532,8 @@
     "customers": "Customers",
     "customerSelect": "Select a customer",
     "usageReports": {
-      "usageReportTitle": "Reports",
-      "usageReportMenuTitle": "Room Device Usage Reports",
+      "usageReportTitle": "Room Devices",
+      "pageTitle": "Reports",
       "peakHour": "Peak Hour",
       "distribution": "Distribution",
       "timeline": "Timeline",
@@ -557,7 +559,7 @@
       "last3Months": "Monthly Last 3 Months",
       "deviceOptions": {
         "all": "All",
-        "roomSystems": "DX, MX, and SX Systems",
+        "roomSystems": "DX, MX, and SX Devices",
         "sparkBoard": "Spark Board"
       }
     }
@@ -970,6 +972,7 @@
     "close": "Close",
     "confirm": "Confirm",
     "continue": "Continue",
+    "dateRange": "Date Range",
     "deactivate": "Deactivate",
     "delete": "Delete",
     "description": "Description",
@@ -1003,9 +1006,11 @@
     "metrics": "Metrics",
     "modal": "Modal",
     "modify": "Modify",
+    "info": "Info",
     "new": "New",
     "next": "Next",
     "no": "No",
+    "none": "None",
     "notAvailable": "N/A",
     "notSet": "Not set",
     "off": "Off",
@@ -1026,12 +1031,14 @@
     "resources": "Resources",
     "retry": "Retry",
     "save": "Save",
+    "saveLabel": "Do you want to save your changes?",
     "search": "Search",
     "select": "Select",
     "selectLanguage": "Select a language",
     "settings": "Settings",
     "status": "Status",
     "submit": "Submit",
+    "to": "to",
     "trackingId": "Tracking Id: {{trackingId}}.",
     "tryAgain": "Try Again",
     "turnOff": "Turn Off",
@@ -1043,7 +1050,6 @@
     "users": "Users",
     "voice": "Voice",
     "warning": "Warning",
-    "help": "Help",
     "yes": "Yes"
   },
   "notifications": {
@@ -1089,6 +1095,7 @@
     "quickSetup": "Quick Setup",
     "quickProv": "Quickly provision  your users or groups",
     "advSetup": "Advanced Setup",
+    "viewOrEditSettings": "View or edit this setting",
     "advProv": "Provision users with a guided wizard to set up Directory Sync, Single Sign-on and customized reports",
     "launchBtn": "Launch",
     "convert": "Convert",
@@ -1100,7 +1107,6 @@
     "cancel": "Cancel",
     "emailAddress": "Email Address",
     "name": "Name",
-    "errGetTrialsQuery": "Failed to retrieve trials. Status: {{status}}",
     "quickLinksText": "Quick Links",
     "addUserText": "Add Users",
     "installDeviceText": "Install a Device for a User",
@@ -1401,7 +1407,20 @@
     "tryAgain": "Try another Search",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
-    "licenseSuspendedWarning": "Your room device licenses are suspended."
+    "licenseSuspendedWarning": "Your room device licenses are suspended.",
+    "retrieveDevicesFail": "Failed to load device information",
+    "retrieveKemFail": "Failed to retrieve key expansion module count.",
+    "emergencyTitle": "Emergency Services",
+    "editEmergencyServices": "Edit Emergency Services",
+    "callbackNumber": "Callback Number",
+    "serviceAddress": "Service Address",
+    "servicesDesc": "Emergency Services requires a street address where this device is located, and must be associated with a managed callback number that is used if an emergency call is disconnected.",
+    "ecn": "Emergency Callback Number",
+    "esa": "Emergency Service Address",
+    "companyDefaultAddress": "Use company default address",
+    "validatingAddr": "Validating Address...",
+    "saving": "Saving...",
+    "errorAddr": "The address you entered is invalid, please try again."
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -1561,6 +1580,7 @@
       "squared-fusion-uc": "Call Service",
       "squared-fusion-uc.full": "Call Service Aware",
       "squared-fusion-cal": "Calendar Service",
+      "squared-fusion-gcal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
       "squared-fusion-ec": "Call Service Connect",
@@ -1737,14 +1757,35 @@
         "sipDomainHeading": "SIP Destination",
         "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
-        "sipDomainExample": "For example: sipmtls.example.com"
+        "sipDomainExample": "For example: sipmtls.example.com",
+        "certificateDeleteTooltip": "Delete Certificate",
+        "noUploadedCertificate": "No certificates uploaded. Using the default trust list.",
+        "uploadedCertificates": "Uploaded Certificates:"
       },
       "googleCalendar": {
         "title": "Google Calendar",
+        "serviceAccountHeader": "Service Account",
+        "serviceAccountText": "The service account used for connecting from Cisco Collaboration Cloud to your Google Calendar organization.",
+        "serviceAccountHelpText": "To change the service account, upload a new private key in the section below",
         "privateKeyHeader": "Private Key",
         "privateKeyText": "Upload a new private key.",
         "deactivateHeader": "Deactivate Google Calendar",
-        "deactivateText": "Your users will no longer be able to use this service."
+        "deactivateText": "Your users will no longer be able to use this service.",
+        "googleCalendarConfigWillBeWiped": "This action will delete all Google Calendar settings from Cisco Collaboration Cloud.",
+        "uploadNewPrivateKey": "Upload New Private Key",
+        "uploadNewPrivateKeyPlaceholder": "Enter service account name",
+        "serviceAccountName": "Service Account Name",
+        "uploadNewPrivateKeyExplanation": "Enter your service account name and upload the private key you downloaded from Google Developer Console.",
+        "dragAndDropKeyFileHere": "Drag and drop the file containing the private key here or",
+        "clickToBrowse": "click to browse",
+        "fileReadyForImport": "File ready for import",
+        "removeFile": "Remove file",
+        "successfullyUploadedKey": "Service account saved successfully, and private key file {{filename}} uploaded.",
+        "failedToUploadKey": "Changes not saved. The service account and/or private key file are not valid.",
+        "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status."
+      },
+      "hybridCalendarCommon": {
+        "hybridCalendarSetUp": "Hybrid Calendar setup"
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
@@ -2050,6 +2091,19 @@
       "generatedAt": "Generated Today at {{time}}",
       "expiryInfo": "Generated reports will expire after 10 days. Any reports older than 10 days will automatically be deleted by the system."
     },
+    "searchParameters": {
+      "searchBy": "Search By",
+      "searchByPlaceholder": "Email Id",
+      "searchByEmailPlaceholder": "e.g. johnsmith@email.com, jansmith@email.com",
+      "roomName": "Where <b>Room Name</b> contains",
+      "roomNamePlaceholder": "e.g. sales AND meeting OR private",
+      "textMessage": "Where <b>Text Messages</b> contains",
+      "textMessagePlaceholder": "e.g. project AND manager OR admin NOT owner",
+      "fileName": "Where <b>File Name</b> contains",
+      "fileNamePlaceholder": "e.g. confidential OR restricted",
+      "activityType": "And <b>Activity Type</b> is",
+      "activityTypePlaceholder": "Meeting"
+    },
     "reportsList": {
       "name": "Name",
       "dateGenerated": "Date Generated",
@@ -2342,7 +2396,7 @@
     "builderAddNewStep": "Add New Step",
     "builderNewStep": "New Step",
     "builderNewStepHelp": "You can add as many steps to the call flow as you want.",
-    "builderNewStepInfo": "Add actions here for your Auto Attendant. Create as many as you want, and link them all together.",
+    "builderNewStepInfo": "Add actions to your Auto Attendant. Create as many as you want, link them together, and specify the sequence of actions.",
     "builderNumbers": "Numbers",
     "actionPlaceholder": "Choose Action...",
     "actionSayMessage": "Say Message",
@@ -2622,7 +2676,13 @@
     "singleRange": "Single Park Number",
     "saveLabel": "Do you want to save your changes?",
     "memberFetchFailure": "Unable to get members.",
-    "membersTitle": "Members"
+    "membersTitle": "Members",
+    "reversionTitle": "Call Park Reversion",
+    "reversionRuleLabel": "Call Reversion Rule",
+    "reversionRuleDesc": "If the call is not answered, send it to this destination",
+    "reversionParkerLabel": "Person who parked the call",
+    "reversionOtherLabel": "Another destination",
+    "voicemailCheckLabel": "Send call directly to voicemail"
   },
   "callPickup": {
     "title": "Call Pickup",
@@ -2850,7 +2910,8 @@
     "unit": "Unit",
     "city": "City",
     "state": "State",
-    "zipCode": "Zip Code"
+    "zipCode": "Zip Code",
+    "pending": "Emergency Service Address pending verification."
   },
   "pstnSetup": {
     "setupPstn": "Setup PSTN",
@@ -2980,7 +3041,7 @@
     "expiredToday": "Expires Today",
     "daysAgo": "{{days}} days ago",
     "expireToday": "Expiring Today",
-    "errGetTrialsQuery": "Failed to retrieve trials. Status: {{status}}",
+    "errGetTrialsQuery": "Failed to retrieve trials.",
     "errGetOrgs": "Failed to retrieve orgranizations.",
     "fifty": "50",
     "oneHundred": "100",
@@ -3064,13 +3125,14 @@
       "deskPhones": "Personal and Shared Desk Phones &nbsp;<span class='small-hint'>(Any mix up to {{max}} devices)</span>",
       "sx10": "SX10",
       "dx80": "DX80",
-      "mx300": "MX300",
+      "mx300": "MX300 (Limit {{max}})",
       "phone8865": "8865",
       "phone8845": "8845",
       "phone8841": "8841",
       "phone7841": "7841",
       "quantity": "Quantity",
       "invalidQuantity": "Quantity must be between 1 and {{max}}",
+      "invalidQuantityMx300": "Quantity must be {{qty}}",
       "invalidTotalQuantity": "Entire order must have between 1 and {{max}} devices",
       "invalidRoomSystemsQuantity": "Limited to 3 Spark Room Devices",
       "invalidPhonesQuantity": "Limited to {{max}} Personal & Shared Desk Phones",
@@ -3308,6 +3370,7 @@
     "orderRequest": "Order Request",
     "subscriptions": "Subscriptions",
     "viewSubscriptionInfo": "View Subscription Info",
+    "updateLicensesAuthError": "Current user is not authorized to update user license info.",
     "noAccountInfo": "No account information available for this organization. This is most likely due to accessing an Integration server based organization on a Production server.  Please verify that this organization exists on the server you are using."
   },
   "customerAdminPanel": {
@@ -3346,7 +3409,8 @@
   },
   "internationalDialing": {
     "internationalDialing": "International Dialing",
-    "internationalDialingDesc": "Users and Places with Spark Call inherit this setting by default. Exception can be made at the individual user's or place's settings."
+    "internationalDialingDesc": "Users inherit this setting by default. Exception can be made at the individual user's settings.",
+    "internationalDialingPlacesDesc": "Users and Places with Spark Call inherit this setting by default. Exception can be made at the individual user's or place's settings."
   },
   "huronSettings": {
     "saveSuccess": "Settings successfully saved.",
@@ -3434,7 +3498,9 @@
       "one": "One",
       "two": "Two",
       "three": "Three"
-    }
+    },
+    "failedToSaveChanges": "Failed to save changes to device. Reason:",
+    "failedToUploadLogs": "Failed to upload logs. Reason:"
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
@@ -3449,7 +3515,8 @@
       "deskPhoneLicenseWarning": "Your organization must purchase Cisco Spark Call licenses first. Contact your partner or Cisco Sales for more information.",
       "roomSystem": "Room Device",
       "newRoomSystem": "New room device",
-      "roomSystemExamples": "e.g. DX, MX and SX series",
+      "roomSystemExamples": "DX, MX and SX series",
+      "roomSystemExamplesExpanded": "Cisco Spark Board, DX, MX and SX series",
       "roomSystemLicenseWarning": "Your organization must purchase Cisco Spark Room Device licenses first. Contact your partner or Cisco Sales for more information."
     },
     "chooseAccountType": {
@@ -3524,7 +3591,8 @@
       "onceActiveSharedDeviceNoPlaces": "Once the device has been successfully activated, you will be able to find and configure it in Devices.",
       "expires": "Expires {{expiryDate}}",
       "searchAnotherUser": "Or search for another user",
-      "codeIsUsed": "This code has now been used"
+      "codeIsUsed": "This code has now been used",
+      "failedToGenerateActivationCode": "Failed to generate activation code. Reason:"
     }
   },
   "generateActivationCodeModal": {
@@ -4786,7 +4854,9 @@
     "placesDefinition": "A place represents a physical location containing a device not owned by a specific user, such as a meeting room with a room device or a reception with shared phones.",
     "placesUses": "You'll be able to view your places here - and the devices and configurations that belong to them.",
     "deletePlace": "Delete Place",
-    "deletePlaceConfText": "Are you sure you want to delete {{ placeName }}?"
+    "deletePlaceConfText": "Are you sure you want to delete {{ placeName }}?",
+    "failedToSaveChanges": "Failed to save changes to place. Reason:",
+    "failedToDelete": "Failed to delete place. Reason:"
   },
   "linesPage": {
     "manageLines": "Numbers",
@@ -4929,7 +4999,6 @@
     "type": "Type",
     "defaultRightCardText": "Select a field in the Preview to change its attributes",
     "profileSelector": "Profile",
-    "attributes": "Attributes",
     "org": "Organization",
     "agent": "Agent",
     "agentAlias": "Allow agent to use alias",
@@ -5265,7 +5334,8 @@
       "supportAccessDescription": "This setting gives Cisco Support read-only access to your organization. It does not allow changes to be made to your organization's details.",
       "allowReadOnlyOrgAccess": "Allow Cisco Support read-only access to your organization",
       "crashReportTitle": "Automatic Crash Reporting",
-      "crashReportText": "If an endpoint crashes, logs will be uploaded to Cisco to help improve the quality of the service.",
+      "crashReportNotificationText": "Automatic crash reporting enabled. If a room device crashes, logs will be uploaded to Cisco to help improve the quality of the service.",
+      "crashReportText": "If a room device crashes, logs will be uploaded to Cisco to help improve the quality of the service.",
       "crashReportCheckboxLabel": "Enable Automatic Crash reporting",
       "crashReportTooltipDescription": "What do these reports contain?",
       "crashReportTooltip": "Crash reports can include user and organisation identifiers, user agent strings, sanitized agent browser strings, client IP addresses and user’s device MAC address. All information will be treated confidentially and used solely for product quality enhancement."
@@ -6266,6 +6336,12 @@
     "serviceDescription": "Service Description",
     "deleteService": "Delete {{serviceName}}",
     "editService": "Edit Service",
+    "addServiceSucceed": "Service {{serviceName}} add succeed.",
+    "addServiceFailed": "Service {{serviceName}} add failed.",
+    "editServiceSucceed": "Service {{serviceName}} edit succeed.",
+    "editServiceFailed": "Service {{serviceName}} edit failed.",
+    "deleteServiceSucceed": "Service {{serviceName}} delete succeed.",
+    "deleteServiceFailed":"Service {{serviceName}} delete failed.",
     "deletingComponentCannotBeUndone": "Deleting a component cannot be undone.",
     "deletingServiceCannotBeUndone": "Deleting a service cannot be undone.",
     "deletingIncidentCannotBeUndone": "Deleting an incident cannot be undone.",

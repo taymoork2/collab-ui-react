@@ -25,9 +25,9 @@
           callback(data, status);
         })
         .error(function (data, status) {
-          //data = _.isObject(data) ? data : {};
-          // data.success = false;
-          // data.status = status;
+          data = _.isObject(data) ? data : {};
+          data.success = false;
+          data.status = status;
           callback(data, status);
         });
     }
@@ -43,6 +43,9 @@
           callback(data, status);
         })
         .error(function (data, status) {
+          data = _.isObject(data) ? data : {};
+          data.success = false;
+          data.status = status;
           callback(data, status);
         });
     }
@@ -61,6 +64,9 @@
           callback(data, status);
         })
         .error(function (data, status) {
+          data = _.isObject(data) ? data : {};
+          data.success = false;
+          data.status = status;
           callback(data, status);
         });
     }

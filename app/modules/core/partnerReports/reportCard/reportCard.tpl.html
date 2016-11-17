@@ -3,6 +3,18 @@
     <header>
       <span class='report-section-header' translate="{{::$ctrl.options.headerTitle}}"></span>
       <i ng-if="$ctrl.isPopover()" class='icon icon-information' tooltip="{{::$ctrl.getPopoverText()}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="true"></i>
+      <div ng-if="$ctrl.exportDropdown" class="grid-filter dropdown pull-right">
+        <a ng-click="$ctrl.toggleExportMenu()">
+          <i class='icon icon-three-dots export-dots'></i>
+        </a>
+        <ul class="dropdown-menu dropdown-primary" ng-class="{'export-visible': $ctrl.exportMenu}">
+          <li ng-repeat="object in $ctrl.exportDropdown" class="export-item">
+            <a id="{{object.id}}" ng-click="$ctrl.dropdownSelect(object)">
+              <span translate="{{object.label}}"></span>
+            </a>
+          </li>
+        </ul>
+      </div>
     </header>
     <section class="report-{{$ctrl.options.reportType}}">
       <p>{{$ctrl.getDescription($ctrl.options.description)}}</p>

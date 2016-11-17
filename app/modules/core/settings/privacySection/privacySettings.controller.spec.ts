@@ -82,12 +82,12 @@ namespace globalsettings {
         expect(controller.allowCrashLogUpload).toBeDefined();
       });
 
-      it('should query org service and keep allowCrashLogUpload false if not set in orgData', () => {
+      it('should query org service and keep allowCrashLogUpload true if not set in orgData', () => {
         initController({ success: true, orgSettings: {} });
 
         expect(Orgservice.getOrg).toHaveBeenCalledWith(jasmine.any(Function), orgId, jasmine.any(Boolean));
         expect(controller.allowCrashLogUpload).not.toBeUndefined();
-        expect(controller.allowCrashLogUpload).toBeFalsy();
+        expect(controller.allowCrashLogUpload).toBeTruthy();
       });
     });
 
