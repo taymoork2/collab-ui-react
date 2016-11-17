@@ -90,7 +90,7 @@
         ftswExternalVoicemail: false
       },
       ftswSteeringDigit: undefined,
-      ftswPreferredLanguage: undefined,
+      ftswPreferredLanguage: DEFAULT_LANG,
       ftswSiteSteeringDigit: {
         voicemailPrefixLabel: DEFAULT_SITE_SD.concat(DEFAULT_SITE_CODE),
         siteDialDigit: DEFAULT_SITE_SD
@@ -755,7 +755,7 @@
                 vm.model.site.preferredLanguage = _.find(vm.preferredLanguageOptions, function (language) {
                   return language.value === site.preferredLanguage;
                 });
-                vm.model.ftswPreferredLanguage = site.preferredLanguage;
+                vm.model.ftswPreferredLanguage = vm.model.site.preferredLanguage;
               }
 
               vm.previousTimeZone = vm.model.site.timeZone;
@@ -1248,7 +1248,7 @@
           if (_.get(vm, 'model.site.timeZone.id') !== _.get(vm, 'previousTimeZone.id')) {
             siteData.timeZone = vm.model.site.timeZone.id;
           }
-          if (vm.model.site.preferredLanguage.value !== vm.model.ftswPreferredLanguage) {
+          if (_.get(vm, 'model.site.preferredLanguage.value') !== _.get(vm, 'model.ftswPreferredLanguage.value')) {
             siteData.preferredLanguage = vm.model.site.preferredLanguage.value;
           }
           if (vm.model.site.siteSteeringDigit !== vm.model.voicemailPrefix.value) {

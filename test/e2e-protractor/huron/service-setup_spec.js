@@ -13,7 +13,6 @@ describe('First Time Wizard - CiscoUC Service Setup', function () {
     navigation.clickCommunicationWizard();
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Call Settings');
     utils.expectIsDisplayed(servicesetup.timeZone);
-    utils.expectIsDisplayed(servicesetup.preferredLanguage);
     utils.expectIsDisplayed(servicesetup.steeringDigit);
     utils.expectIsDisplayed(servicesetup.globalMOH);
     utils.expectIsDisplayed(servicesetup.companyVoicemail);

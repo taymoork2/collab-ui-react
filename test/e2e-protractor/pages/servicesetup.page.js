@@ -2,7 +2,6 @@
 
 var ServiceSetup = function () {
   this.timeZone = element(by.css('.select-list[name="timeZone"] a.select-toggle'));
-  this.preferredLanguage = element(by.css('.select-list[name="preferredLanguage"] a.select-toggle'));
   this.steeringDigit = element(by.css('.select-list[name="steeringDigit"] a.select-toggle'));
   this.siteSteeringDigit = element(by.css('.select-list[name="siteSteeringDigit"] a.select-toggle'));
   this.siteCode = element(by.id('siteCode'));
