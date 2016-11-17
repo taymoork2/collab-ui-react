@@ -62,6 +62,8 @@
       callParkService: 'call-park-service',
       huronCallPickup: 'huronCallPickup',
       calsvcDetectCmrLoc: 'calsvc_detect_cmr_loc',
+      calsvcWebexMeetingRegistries: 'calsvc_webex_meeting_registries',
+      calsvcShowPreferredSiteName: 'calsvc-show-preferred-sitename',
       clientRingbackV2: 'client-ringback-v2',
       console: 'console',
       deleteContent: 'delete-content',

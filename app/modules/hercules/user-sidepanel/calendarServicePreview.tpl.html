@@ -22,9 +22,9 @@
 
       </div>
 
-      <div class="cloud-extension-label" ng-show="extension.entitled && extension.id === 'squared-fusion-cal'">
-        <span class="cloud-extension-label" translate="hercules.cloudExtensions.defaultWebExSite"></span>
-        <span class="cloud-extension-label">{{extension.defaultWebExSiteName}}</span>
+      <div class="cloud-extension-label" ng-show="extension.entitled && extension.id === 'squared-fusion-cal' && extension.hasShowPreferredWebExSiteNameFeatureToggle">
+        <span class="cloud-extension-label" translate="hercules.cloudExtensions.preferredWebExSite"></span>
+        <span class="cloud-extension-label">{{extension.preferredWebExSiteName}}</span>
       </div>
 
       <div ng-if="extension.entitled && extension.homedConnector">

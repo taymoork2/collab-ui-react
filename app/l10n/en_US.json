@@ -1642,8 +1642,8 @@
         "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-ec": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too."
       },
-      "defaultWebExSite": "Default WebEx Site:",
-      "defaultWebExSiteNotSet": "Not set"
+      "preferredWebExSite": "Preferred WebEx Site:",
+      "preferredWebExSiteDefault": "Default"
     },
     "alarms": {
       "alarms": "Alarms",
