@@ -162,14 +162,12 @@
 
     function updateRoles() {
       if ($scope.showComplianceRole && $scope.rolesObj.complianceValue !== isEntitledToCompliance()) {
-        EdiscoveryService.setEntitledForCompliance(Authinfo.getOrgId(), $scope.currentUser.id, $scope.rolesObj.complianceValue).then(
-          function () {
+        EdiscoveryService.setEntitledForCompliance(Authinfo.getOrgId(), $scope.currentUser.id, $scope.rolesObj.complianceValue)
+          .then(function () {
             patchUserRoles();
-          },
-          function () {
-            var errorMessage = [];
-            errorMessage.push($translate.instant('profilePage.complianceError'));
-            Notification.notify(errorMessage, 'error');
+          })
+          .catch(function (response) {
+            Notification.errorResponse(response, 'profilePage.complianceError');
           });
       } else {
         patchUserRoles();
@@ -294,8 +292,8 @@
         'roleState': (hasRole(Config.backend_roles.spark_synckms) ? Config.roleState.active : Config.roleState.inactive)
       });
 
-      Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles, function (data, status) {
-        if (data.success) {
+      Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles)
+        .then(function (response) {
           var userData = {
             'schemas': Config.scimSchemas,
             'name': {},
@@ -328,37 +326,26 @@
           Log.debug('Updating user: ' + $scope.currentUser.id + ' with data: ');
 
           if (!$scope.dirsyncEnabled) {
-            Userservice.updateUserProfile($scope.currentUser.id, userData, function (data, status) {
-              if (data.success) {
-                var successMessage = [];
-                successMessage.push($translate.instant('profilePage.success'));
-                Notification.notify(successMessage, 'success');
-                $scope.user = data;
+            Userservice.updateUserProfile($scope.currentUser.id, userData)
+              .then(function (response) {
+                Notification.success('profilePage.success');
+                $scope.user = response.data;
                 $rootScope.$broadcast('USER_LIST_UPDATED');
                 resetForm();
-              } else {
-                Log.debug('Update existing user failed. Status: ' + status);
-                var errorMessage = [];
-                errorMessage.push($translate.instant('profilePage.error'));
-                Notification.notify(errorMessage, 'error');
-              }
-            });
+              })
+              .catch(function (response) {
+                Notification.errorResponse(response, 'profilePage.error');
+              });
           } else {
-            var successMessage = [];
-            successMessage.push($translate.instant('profilePage.success'));
-            Notification.notify(successMessage, 'success');
-            $scope.user = data;
+            Notification.success('profilePage.success');
+            $scope.user = response.data;
             $rootScope.$broadcast('USER_LIST_UPDATED');
             resetForm();
           }
-        } else {
-          Log.debug('Updating user\'s roles failed. Status: ' + status);
-          var errorMessage = [];
-          errorMessage.push($translate.instant('profilePage.rolesError'));
-          Notification.notify(errorMessage, 'error');
-        }
-
-      });
+        })
+        .catch(function (response) {
+          Notification.errorResponse(response, 'profilePage.rolesError');
+        });
       $scope.rolesObj.adminRadioValue = choice;
     }
 

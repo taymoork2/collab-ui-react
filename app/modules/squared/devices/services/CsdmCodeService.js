@@ -21,6 +21,8 @@
     function updateItemName(code, name) {
       return $http.patch(code.url, {
         name: name
+      }).then(function (res) {
+        return CsdmConverter.convertCode(res.data);
       });
     }
 

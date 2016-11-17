@@ -1,0 +1,33 @@
+<div class="delete-service-page">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()">
+      <span class="sr-only" translate="common.close"></span>
+    </button>
+
+    <h5 class="modal-title">
+      <span translate="gss.deleteService" translate-values="{ serviceName: deleteServiceCtrl.serviceName }"></span>
+    </h5>
+  </div>
+
+  <div class="modal-body">
+    <p>
+      <em translate="common.warning"></em>
+      <strong translate="gss.deletingServiceCannotBeUndone"></strong>
+      <span translate="gss.deleteEnsureAction"></span>
+    </p>
+
+    <p translate="gss.deleteConfirmation"></p>
+
+    <p>
+      <input class="cs-input delete-confirm" ng-model="deleteServiceCtrl.confirmText" type="text"
+             ng-pattern="deleteServiceCtrl.delConfirmText">
+    </p>
+  </div>
+
+  <div class="modal-footer">
+    <button cs-btn class="btn btn--negative" ng-disabled="!deleteServiceCtrl.isValid()"
+            loading="deleteServiceCtrl.isLoading" ng-click="deleteServiceCtrl.deleteService()">
+      <span translate="common.delete"></span>
+    </button>
+  </div>
+</div>

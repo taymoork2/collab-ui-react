@@ -4,13 +4,13 @@ import { EmergencyServicesService } from './emergencyServices.service';
 export interface IEmergency {
   emergencyAddress: IEmergencyAddress;
   emergencyNumber: string;
+  status: string;
 }
 
 export interface IEmergencyServicesData {
   emergency: IEmergency;
   currentDevice: IDevice;
   stateOptions: IState[];
-  status: string;
 }
 
 export interface IEmergencyServicesStateParams {

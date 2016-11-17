@@ -16,7 +16,6 @@ export class EmergencyServicesCtrl {
   public stateOptions: IState[];
   public errorMessage: string;
   public options: string[];
-  public status: string;
 
   /* @ngInject */
   constructor(
@@ -33,7 +32,6 @@ export class EmergencyServicesCtrl {
     this.emergency = data.emergency;
     this.currentDevice = data.currentDevice;
     this.stateOptions = data.stateOptions;
-    this.status = data.status;
     this.EmergencyServicesService.getOptions().then(options => {
       this.options = options;
     });
@@ -43,7 +41,7 @@ export class EmergencyServicesCtrl {
     this.loadingAddress = true;
     this.EmergencyServicesService.getAddressForNumber(this.emergency.emergencyNumber).then(info => {
       this.emergency.emergencyAddress = info.e911Address;
-      this.status = info.status;
+      this.emergency.status = info.status;
     }).finally(() => {
       this.loadingAddress = false;
       this.changes();
@@ -62,6 +60,11 @@ export class EmergencyServicesCtrl {
     this.form.$setUntouched();
     this.errorMessage = '';
     this.showAddressEntry = false;
+  }
+
+  public reset() {
+    this.resetSettings();
+    this.numberChange();
   }
 
   public modifyAddress(): void {
