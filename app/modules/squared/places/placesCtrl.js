@@ -25,6 +25,9 @@
           FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
             vm.showDarling = result;
           });
+          FeatureToggleService.csdmATAGetStatus().then(function (result) {
+            vm.showATA = result;
+          });
           FeatureToggleService.csdmPstnGetStatus().then(function (result) {
             vm.showPstn = result && Authinfo.isSquaredUC();
           });
@@ -150,6 +153,7 @@
               function: "addPlace",
               showPlaces: true,
               showDarling: vm.showDarling,
+              showATA: vm.showATA,
               title: 'addDeviceWizard.newSharedSpace.title',
               isEntitledToHuron: vm.isEntitledToHuron(),
               isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),

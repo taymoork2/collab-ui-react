@@ -51,6 +51,7 @@ describe('Controller: DevicesCtrlHuron', function () {
     spyOn(poller, 'getDeviceList').and.returnValue($q.when(deviceList));
     spyOn(OtpService, 'loadOtps').and.returnValue($q.when(emptyArray));
     spyOn(FeatureToggleService, 'csdmPlacesGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(false));
 
     controller = _$controller_('DevicesCtrlHuron', {
       $scope: $scope,
@@ -145,6 +146,7 @@ describe('Controller: DevicesCtrlHuron', function () {
     var email;
     var orgId;
     var showPlaces;
+    var showATA;
     var userName;
     beforeEach(function () {
       displayName = 'displayName';
@@ -154,6 +156,7 @@ describe('Controller: DevicesCtrlHuron', function () {
       userName = 'usernameemailadresscom';
       orgId = 'orgId';
       showPlaces = true;
+      showATA = true;
       controller.currentUser = {
         displayName: displayName,
         id: userCisUuid,
@@ -170,6 +173,7 @@ describe('Controller: DevicesCtrlHuron', function () {
         }
       };
       controller.showPlaces = showPlaces;
+      controller.showATA = showATA;
       spyOn($state, 'go');
       controller.resetCode();
       $scope.$apply();
@@ -179,6 +183,7 @@ describe('Controller: DevicesCtrlHuron', function () {
       var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
       expect(wizardState.title).toBe('addDeviceWizard.newDevice');
       expect(wizardState.showPlaces).toBe(showPlaces);
+      expect(wizardState.showATA).toBe(showATA);
       expect(wizardState.account.deviceType).toBe('huron');
       expect(wizardState.account.type).toBe('personal');
       expect(wizardState.account.name).toBe(displayName);

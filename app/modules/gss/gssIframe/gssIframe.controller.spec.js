@@ -1,66 +1,60 @@
 'use strict';
 
 describe('controller:GssIframeCtrl', function () {
-  var controller;
-  var $controller;
-  var $scope;
-  var GSSService;
-  var $httpBackend;
-  var UrlConfig;
-  var $state;
-  var $q;
-  beforeEach(angular.mock.module('GSS'));
-  beforeEach(angular.mock.module('ui.router'));
-  beforeEach(inject(dependencies));
-  function dependencies(_$rootScope_, _$controller_, _GSSService_, _$httpBackend_, _UrlConfig_, _$state_, _$q_) {
-    $scope = _$rootScope_.$new();
-    $controller = _$controller_;
-    GSSService = _GSSService_;
-    $httpBackend = _$httpBackend_;
-    UrlConfig = _UrlConfig_;
-    $state = _$state_;
-    $q = _$q_;
-    spyOn(GSSService, 'getServices').and.returnValue($q.when({
-      service0: [{
-        serviceId: 143,
-        serviceName: 'WebEx Meetings',
-        description: 'WebEx Meetings'
-      }],
-      service1: [{
-        serviceId: 181,
-        serviceName: 'WebEx Messenger',
-        description: 'WebEx Messenger'
-      }],
-      service2: [{
-        serviceId: 421,
-        serviceName: 'Cisco Spark',
-        description: 'dfsfdsfdsfd'
-      }],
-    }));
-    spyOn(GSSService, 'setServiceId').and.callThrough();
-    spyOn(GSSService, 'getServiceId').and.callThrough();
-    spyOn($state, 'go');
+  var $controller, $modal, $q, $scope, $state, controller, GSSService;
 
+  beforeEach(angular.mock.module('GSS'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(inject(dependencies));
+  beforeEach(initSpies);
+  beforeEach(initController);
+
+  function dependencies(_$controller_, _$modal_, _$q_, _$rootScope_, _$state_, _GSSService_) {
+    $controller = _$controller_;
+    $modal = _$modal_;
+    $q = _$q_;
+    $scope = _$rootScope_.$new();
+    $state = _$state_;
+    GSSService = _GSSService_;
   }
+
+  function initSpies() {
+    spyOn(GSSService, 'getServices').and.returnValue($q.when());
+    spyOn($modal, 'open').and.returnValue({
+      result: $q.when()
+    });
+    spyOn($scope, '$broadcast').and.callThrough();
+  }
+
   function initController() {
     controller = $controller('GssIframeCtrl', {
       $scope: $scope,
       GSSService: GSSService,
       $state: $state
     });
+
     $scope.$apply();
   }
-  beforeEach(function () {
-    $httpBackend.expectGET(UrlConfig.getGssUrl() + '/services').respond(200);
-  });
-  it('defined value should be valid', function () {
-    initController();
-    expect(controller.pageTitle).not.toBeEmpty();
-    expect(controller.headerTabs).not.toBeEmpty();
+
+  it('addService, should open edit modal, refresh services list and notify edited', function () {
+    controller.addService();
+
+    expect($modal.open).toHaveBeenCalled();
+    expect(GSSService.getServices).toHaveBeenCalled();
+
+    $scope.$digest();
+    expect($scope.$broadcast).toHaveBeenCalledWith('serviceAdded');
   });
 
-  it('getService should be success', function () {
-    initController();
-    expect(controller.serviceList.length).toBe(3);
+  it('event serviceEdited, should refresh options when got event serviceEdited', function () {
+    $scope.$new().$emit('serviceEdited');
+
+    expect(GSSService.getServices).toHaveBeenCalled();
+  });
+
+  it('event serviceDeleted, should refresh options when got event serviceDeleted', function () {
+    $scope.$new().$emit('serviceDeleted');
+
+    expect(GSSService.getServices).toHaveBeenCalled();
   });
 });
