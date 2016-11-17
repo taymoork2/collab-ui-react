@@ -140,8 +140,6 @@ describe('Controller: ServiceSetup', function () {
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'getCustomerHuronToggle').and.returnValue($q.when(false));
 
-    spyOn(FeatureToggleService, 'getCustomerHuronToggle').and.returnValue($q.when(false));
-
     $httpBackend
       .expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + customer.uuid + '/directorynumbers')
       .respond([]);
@@ -216,6 +214,7 @@ describe('Controller: ServiceSetup', function () {
         expect(index).toEqual(7);
       });
     });
+    
 
     describe('initController when is not first time setup', function () {
 

@@ -85,10 +85,31 @@ describe('Service: ServiceSetup', function () {
     });
 
     it('should update site', function () {
-      expect(ServiceSetup.updateSite(site.uuid, site)).toHaveBeenCalled();
+      ServiceSetup.updateSite(site.uuid, site);
       $httpBackend.flush();
     });
   });
+
+ describe('updateAvrilSite', function () {
+    var site = {
+      uuid: '1234567000',
+      steeringDigit: '5',
+      siteSteeringDigit: '6',
+      code: '8',
+      timeZone: 'MST',
+      extLength: '10',
+      voicemailPilotNumber: '1008'
+    };
+
+    beforeEach(function () {
+      $httpBackend.expectPOST(HuronConfig.getAvrilUrl() + '/customers/1/sites/').respond(200);
+    });
+
+    it('should update avril site', function () {
+      ServiceSetup.updateAvrilSite(site.uuid, siteSteeringDigit, code, timeZone, extLength, voicemailPilotNumber);
+      $httpBackend.flush();
+    });
+  }); 
 
   describe('loadExternalNumberPool', function () {
     var extNumPool = [{
@@ -98,7 +119,8 @@ describe('Service: ServiceSetup', function () {
 
       //$httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(extNumPool);
     beforeEach(function () {
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&externalnumbertype=Fixed+Line+or+Mobile&order=pattern').respond(extNumPool);
+      //$httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&externalnumbertype=Fixed+Line+or+Mobile&order=pattern').respond(extNumPool);
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(extNumPool);
     });
 
     it('should list external number pool', function () {
