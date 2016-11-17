@@ -1006,6 +1006,7 @@
     "metrics": "Metrics",
     "modal": "Modal",
     "modify": "Modify",
+    "info": "Info",
     "new": "New",
     "next": "Next",
     "no": "No",
@@ -1094,6 +1095,7 @@
     "quickSetup": "Quick Setup",
     "quickProv": "Quickly provision  your users or groups",
     "advSetup": "Advanced Setup",
+    "viewOrEditSettings": "View or edit this setting",
     "advProv": "Provision users with a guided wizard to set up Directory Sync, Single Sign-on and customized reports",
     "launchBtn": "Launch",
     "convert": "Convert",
@@ -3513,7 +3515,8 @@
       "deskPhoneLicenseWarning": "Your organization must purchase Cisco Spark Call licenses first. Contact your partner or Cisco Sales for more information.",
       "roomSystem": "Room Device",
       "newRoomSystem": "New room device",
-      "roomSystemExamples": "e.g. DX, MX and SX series",
+      "roomSystemExamples": "DX, MX and SX series",
+      "roomSystemExamplesExpanded": "Cisco Spark Board, DX, MX and SX series",
       "roomSystemLicenseWarning": "Your organization must purchase Cisco Spark Room Device licenses first. Contact your partner or Cisco Sales for more information."
     },
     "chooseAccountType": {
@@ -5331,7 +5334,8 @@
       "supportAccessDescription": "This setting gives Cisco Support read-only access to your organization. It does not allow changes to be made to your organization's details.",
       "allowReadOnlyOrgAccess": "Allow Cisco Support read-only access to your organization",
       "crashReportTitle": "Automatic Crash Reporting",
-      "crashReportText": "If an endpoint crashes, logs will be uploaded to Cisco to help improve the quality of the service.",
+      "crashReportNotificationText": "Automatic crash reporting enabled. If a room device crashes, logs will be uploaded to Cisco to help improve the quality of the service.",
+      "crashReportText": "If a room device crashes, logs will be uploaded to Cisco to help improve the quality of the service.",
       "crashReportCheckboxLabel": "Enable Automatic Crash reporting",
       "crashReportTooltipDescription": "What do these reports contain?",
       "crashReportTooltip": "Crash reports can include user and organisation identifiers, user agent strings, sanitized agent browser strings, client IP addresses and user’s device MAC address. All information will be treated confidentially and used solely for product quality enhancement."
