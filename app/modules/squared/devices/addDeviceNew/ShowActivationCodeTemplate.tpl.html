@@ -9,9 +9,12 @@
     <div class="device-wizard view-activation-code" id="printActivationCode" print-element-margin="3rem 3rem">
       <h4 translate="addDeviceWizard.showActivationCode.activationCode"></h4>
       <p class="wizardDescription">
-        <span ng-if="showActivationCode.account.deviceType==='huron'"
+        <span ng-if="showActivationCode.account.deviceType==='huron' && !showActivationCode.showATA"
             translate="addDeviceWizard.showActivationCode.plugInDeskPhone"
             translate-values="{ belongsTo: showActivationCode.account.name }"></span>
+        <span ng-if="showActivationCode.account.deviceType==='huron' && showActivationCode.showATA"
+              translate="addDeviceWizard.showActivationCode.plugInDeskPhoneExtra"
+              translate-values="{ belongsTo: showActivationCode.account.name }"></span>
         <span ng-if="showActivationCode.account.deviceType!=='huron'"
               translate="addDeviceWizard.showActivationCode.plugInRoomSystem"
               translate-values="{ belongsTo: showActivationCode.account.name }"></span>

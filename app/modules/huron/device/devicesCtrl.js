@@ -15,14 +15,17 @@
     vm.showGenerateOtpButton = false;
 
     function init() {
-      fetchPlacesSupport();
+      fetchFeatureToggles();
     }
 
     init();
 
-    function fetchPlacesSupport() {
+    function fetchFeatureToggles() {
       FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
         vm.showPlaces = result;
+      });
+      FeatureToggleService.csdmATAGetStatus().then(function (result) {
+        vm.showATA = result;
       });
     }
 
@@ -73,6 +76,7 @@
           function: 'showCode',
           title: 'addDeviceWizard.newDevice',
           showPlaces: vm.showPlaces,
+          showATA: vm.showATA,
           account: {
             name: vm.currentUser.displayName,
             username: vm.currentUser.userName,

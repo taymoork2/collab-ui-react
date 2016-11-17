@@ -3498,7 +3498,13 @@
       "three": "Three"
     },
     "failedToSaveChanges": "Failed to save changes to device. Reason:",
-    "failedToUploadLogs": "Failed to upload logs. Reason:"
+    "failedToUploadLogs": "Failed to upload logs. Reason:",
+    "deleteATAConfText": "Are you sure you want to delete Port 1?",
+    "deleteDeviceType": "Delete {{deviceType}}",
+    "analog": "Analog Telephone"
+  },
+  "ataSettings": {
+    "analog": "Analog Telephone"
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
@@ -3510,6 +3516,7 @@
       "deskPhone": "Desk Phone",
       "newDeskPhone": "New desk phone for existing user",
       "deskPhoneExamples": "e.g. 8845, 8865 or 8800",
+      "deskPhoneExamplesExtra": "e.g. 8845, 8865, 8800 or Analog Telephone Adapter port",
       "deskPhoneLicenseWarning": "Your organization must purchase Cisco Spark Call licenses first. Contact your partner or Cisco Sales for more information.",
       "roomSystem": "Room Device",
       "newRoomSystem": "New room device",
@@ -3582,6 +3589,7 @@
     "showActivationCode": {
       "activationCode": "Activation Code",
       "plugInDeskPhone": "Share this code with the person setting up the desk phone belonging to <b>{{belongsTo}}</b>, or enter or scan it yourself when prompted by the device.",
+      "plugInDeskPhoneExtra": "Share this code with the person setting up the desk phone (or analog telephone adapter port) belonging to <b>{{belongsTo}}</b>, or enter or scan it yourself when prompted by the device.",
       "plugInRoomSystem": "Share this code with the person setting up the room device belonging to <b>{{belongsTo}}</b>, or enter or scan it yourself when prompted by the device.",
       "onceActivePersonalDevice": "Once the device has been successfully activated, you will be able to find and configure it in Users or Devices.",
       "onceActiveSharedDevice": "Once the device has been successfully activated, you will be able to find and configure it in Places or Devices.",
@@ -3595,6 +3603,7 @@
   "generateActivationCodeModal": {
     "title": "Activation Code",
     "activateBody": "Plug in the desk phone belonging to <b>{{belongsTo}}</b> and enter the activation code when prompted or use the device camera to scan the QR code, if possible. A new activation code can be created from the Users page after this code expires.",
+    "activateBodyExtra": "Plug in the desk phone or analog telephone adapter belonging to <b>{{belongsTo}}</b> and enter the activation code when prompted or use the device camera to scan the QR code, if possible. A new activation code can be created from the Users page after this code expires.",
     "emailCode": "Email",
     "copyToClipboard": "Copy",
     "print": "Print",
