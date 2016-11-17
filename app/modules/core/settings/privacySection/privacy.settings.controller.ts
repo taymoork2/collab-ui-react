@@ -3,8 +3,8 @@ namespace globalsettings {
     private _allowReadOnlyAccess: boolean;
     public disableAllowReadOnlyAccessCheckbox: boolean = true;
     private orgId;
-    private _allowCrashLogUpload = false;
-    private _showCrashLogSetting = false;
+    private _allowCrashLogUpload: boolean;
+    private _showCrashLogSetting: boolean;
     /* @ngInject */
     constructor(private Orgservice, Authinfo, private Notification) {
       this.orgId = Authinfo.getOrgId();
