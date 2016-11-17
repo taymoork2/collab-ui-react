@@ -7,7 +7,7 @@
 
 
   /* @ngInject */
-  function AARouteToQueueCtrl($scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
+  function AARouteToQueueCtrl($scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AANotificationService) {
 
     var vm = this;
     vm.hideQueues = true;
@@ -104,7 +104,7 @@
           'id': vm.queueSelected.id
         }), 'description', '');
       } catch (e) {
-        return false;
+        AANotificationService.error('No valid queue configured to display Call Queue option.');
       }
     }
 
@@ -117,39 +117,36 @@
       AACommonService.setPhoneMenuStatus(true);
     }
 
+    // This function is called from activateQueueSettings.
+    // It adds the appropriate action (i.e. say or play) to the queueSettings.
+    function createAction(obj, type, sayOrPlay) {
+      var action;
+      obj[type] = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      action = AutoAttendantCeMenuModelService.newCeActionEntry(sayOrPlay, '');
+      obj[type].addAction(action);
+    }
+
+    // This function is called from activate.
+    // It is checking and creating queueSettings (i.e. MoH, IA, PA, FB).
     function activateQueueSettings(menuEntryParam) {
+      var queueSettings = _.get(menuEntryParam, 'actions[0].queueSettings');
 
-      var mohAction, iaAction, paAction, fbMaxTime, fbAction;
-
-      if (_.isUndefined(menuEntryParam.actions[0].queueSettings.musicOnHold)) {
-        menuEntryParam.actions[0].queueSettings.musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
-        mohAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
-        menuEntryParam.actions[0].queueSettings.musicOnHold.addAction(mohAction);
+      if (!_.has(queueSettings, 'musicOnHold')) {
+        createAction(queueSettings, 'musicOnHold', 'play');
       }
-      if (_.isUndefined(menuEntryParam.actions[0].queueSettings.initialAnnouncement)) {
-        menuEntryParam.actions[0].queueSettings.initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
-        iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
-        menuEntryParam.actions[0].queueSettings.initialAnnouncement.addAction(iaAction);
+      if (!_.has(queueSettings, 'initialAnnouncement')) {
+        createAction(queueSettings, 'initialAnnouncement', 'say');
       }
-      if (_.isUndefined(menuEntryParam.actions[0].queueSettings.periodicAnnouncement)) {
-        menuEntryParam.actions[0].queueSettings.periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
-        paAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
-        menuEntryParam.actions[0].queueSettings.periodicAnnouncement.addAction(paAction);
+      if (!_.has(queueSettings, 'periodicAnnouncement')) {
+        createAction(queueSettings, 'periodicAnnouncement', 'say');
       }
-      if (_.isUndefined(menuEntryParam.actions[0].queueSettings.fallBack)) {
-        menuEntryParam.actions[0].queueSettings.fallBack = AutoAttendantCeMenuModelService.newCeMenuEntry();
-        fbMaxTime = AutoAttendantCeMenuModelService.newCeActionEntry('time', '');
-        menuEntryParam.actions[0].queueSettings.fallBack.addAction(fbMaxTime);
-        fbAction = AutoAttendantCeMenuModelService.newCeActionEntry('option', '');
-        menuEntryParam.actions[0].queueSettings.fallBack.addAction(fbAction);
+      if (!_.has(queueSettings, 'fallBack')) {
+        queueSettings.fallback = {};
+        queueSettings.fallback.destination = "";
       }
-
-      if ($scope.fromRouteCall) {
-        vm.menuEntry = menuEntryParam;
-      } else {
-        vm.menuKeyEntry = menuEntryParam;
+      if (!_.has(queueSettings, 'maxTime')) {
+        queueSettings.maxTime = '900'; //default, 15 mins.
       }
-
     }
 
     function activate() {
@@ -169,7 +166,7 @@
             vm.menuEntry.actions[0].setValue('');
           } // else let saved value be used
         }
-        if (angular.isUndefined(vm.menuEntry.actions[0].queueSettings)) {
+        if (!_.has(_.get(vm.menuEntry, 'actions[0]'), 'queueSettings')) {
           vm.menuEntry.actions[0].queueSettings = {};
         }
 
@@ -183,7 +180,7 @@
           var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtQueue, '');
           vm.menuKeyEntry.addAction(action);
         }
-        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings)) {
+        if (!_.has(_.get(vm.menuKeyEntry, 'actions[0]'), 'queueSettings')) {
           vm.menuKeyEntry.actions[0].queueSettings = {};
         }
 
