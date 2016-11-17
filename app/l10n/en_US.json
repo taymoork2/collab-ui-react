@@ -3496,7 +3496,9 @@
       "one": "One",
       "two": "Two",
       "three": "Three"
-    }
+    },
+    "failedToSaveChanges": "Failed to save changes to device. Reason:",
+    "failedToUploadLogs": "Failed to upload logs. Reason:"
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
@@ -3586,7 +3588,8 @@
       "onceActiveSharedDeviceNoPlaces": "Once the device has been successfully activated, you will be able to find and configure it in Devices.",
       "expires": "Expires {{expiryDate}}",
       "searchAnotherUser": "Or search for another user",
-      "codeIsUsed": "This code has now been used"
+      "codeIsUsed": "This code has now been used",
+      "failedToGenerateActivationCode": "Failed to generate activation code. Reason:"
     }
   },
   "generateActivationCodeModal": {
@@ -4848,7 +4851,9 @@
     "placesDefinition": "A place represents a physical location containing a device not owned by a specific user, such as a meeting room with a room device or a reception with shared phones.",
     "placesUses": "You'll be able to view your places here - and the devices and configurations that belong to them.",
     "deletePlace": "Delete Place",
-    "deletePlaceConfText": "Are you sure you want to delete {{ placeName }}?"
+    "deletePlaceConfText": "Are you sure you want to delete {{ placeName }}?",
+    "failedToSaveChanges": "Failed to save changes to place. Reason:",
+    "failedToDelete": "Failed to delete place. Reason:"
   },
   "linesPage": {
     "manageLines": "Numbers",

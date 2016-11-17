@@ -50,14 +50,14 @@
                   $scope.$dismiss();
                   Notification.success("addDeviceWizard.editServices.servicesSaved");
                 }, function (error) {
-                  Notification.errorResponse(error, 'addDeviceWizard.assignPhoneNumber.placeEditError');
+                  Notification.errorWithTrackingId(error, 'addDeviceWizard.assignPhoneNumber.placeEditError');
                 });
             } else {
               vm.isLoading = false;
               Notification.warning('addDeviceWizard.assignPhoneNumber.placeNotFound');
             }
           }, function (error) {
-            Notification.errorResponse(error, 'addDeviceWizard.assignPhoneNumber.placeEditError');
+            Notification.errorWithTrackingId(error, 'addDeviceWizard.assignPhoneNumber.placeEditError');
           });
         } else {
           $scope.$dismiss();
