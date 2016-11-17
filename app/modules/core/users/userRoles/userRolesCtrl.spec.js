@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: UserRolesCtrl', function () {
-  var controller, $scope, $stateParams, Authinfo, Orgservice, $controller, Userservice, FeatureToggleService;
+  var controller, $q, $scope, $stateParams, Authinfo, Orgservice, $controller, Userservice, FeatureToggleService;
   var fakeUserJSONFixture = getJSONFixture('core/json/sipTestFakeUser.json');
   var careUserJSONFixture = getJSONFixture('core/json/users/careTestFakeUser.json');
   var currentUser = fakeUserJSONFixture.fakeUser1;
@@ -12,8 +12,9 @@ describe('Controller: UserRolesCtrl', function () {
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Ediscovery'));
 
-  beforeEach(inject(function ($rootScope, _$stateParams_, _$controller_, _Authinfo_, _Orgservice_, _Userservice_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, _$q_, _$stateParams_, _$controller_, _Authinfo_, _Orgservice_, _Userservice_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
+    $q = _$q_;
     Orgservice = _Orgservice_;
     Userservice = _Userservice_;
     $controller = _$controller_;
@@ -32,6 +33,7 @@ describe('Controller: UserRolesCtrl', function () {
         return true;
       }
     });
+    spyOn(Userservice, 'patchUserRoles').and.returnValue($q.resolve());
   }));
 
   function initController() {
@@ -159,9 +161,8 @@ describe('Controller: UserRolesCtrl', function () {
         })
       ];
 
-      var mockUser = spyOn(Userservice, 'patchUserRoles');
       $scope.updateRoles();
-      expect(mockUser.calls.argsFor(0)[2]).toEqual(roles);
+      expect(Userservice.patchUserRoles.calls.argsFor(0)[2]).toEqual(roles);
     });
   });
 
@@ -208,9 +209,8 @@ describe('Controller: UserRolesCtrl', function () {
         })
       ];
 
-      var mockUser = spyOn(Userservice, 'patchUserRoles');
       $scope.updateRoles();
-      expect(mockUser.calls.argsFor(0)[2]).toEqual(roles);
+      expect(Userservice.patchUserRoles.calls.argsFor(0)[2]).toEqual(roles);
     });
   });
 
@@ -270,9 +270,8 @@ describe('Controller: UserRolesCtrl', function () {
       ];
 
       $scope.showOrderAdminRole = true;
-      var mockUser = spyOn(Userservice, 'patchUserRoles');
       $scope.updateRoles();
-      expect(mockUser.calls.argsFor(0)[2]).toEqual(roles);
+      expect(Userservice.patchUserRoles.calls.argsFor(0)[2]).toEqual(roles);
     });
   });
 

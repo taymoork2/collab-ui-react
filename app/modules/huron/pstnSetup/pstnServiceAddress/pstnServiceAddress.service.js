@@ -82,9 +82,12 @@
       return mapKeys(address, addressMapping);
     }
 
-    function lookupAddress(address) {
+    function lookupAddress(address, noMap) {
       // format terminus payload and omit empty strings
-      var searchPayload = getTerminusAddress(_.omitBy(address, _.isEmpty));
+      var searchPayload = address;
+      if (!noMap) {
+        searchPayload = getTerminusAddress(_.omitBy(searchPayload, _.isEmpty));
+      }
       return TerminusLookupE911Service.save({}, searchPayload).$promise
         .then(function (response) {
           var address = _.get(response, 'addresses[0]');
@@ -94,7 +97,10 @@
               delete address.address2;
             }
             // format response back to huron model
-            return getHuronAddress(address);
+            if (!noMap) {
+              return getHuronAddress(address);
+            }
+            return address;
           }
         });
     }

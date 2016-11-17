@@ -1,6 +1,7 @@
 import { CallParkComponent } from './callPark.component';
 import callParkNumber from './callParkNumber';
 import callParkMember from './callParkMember';
+import callParkReversion from './callParkReversion';
 import callParkService from './services';
 import callFeatureName from 'modules/huron/features/components/callFeatureName';
 import huronSiteService from 'modules/huron/sites';
@@ -14,6 +15,7 @@ export default angular
     callFeatureName,
     callParkNumber,
     callParkMember,
+    callParkReversion,
     callParkService,
     huronSiteService,
     notifications,

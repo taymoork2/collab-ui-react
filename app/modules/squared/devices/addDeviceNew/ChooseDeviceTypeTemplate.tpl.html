@@ -22,7 +22,8 @@
               translate="addDeviceWizard.chooseDeviceType.newDeskPhone"></h4>
           <h4 ng-if="chooseDeviceType.showPlaces"
               translate="addDeviceWizard.chooseDeviceType.deskPhone"></h4>
-          <span translate="addDeviceWizard.chooseDeviceType.deskPhoneExamples"></span>
+          <span ng-if="!chooseDeviceType.showATA" translate="addDeviceWizard.chooseDeviceType.deskPhoneExamples"></span>
+          <span ng-if="chooseDeviceType.showATA" translate="addDeviceWizard.chooseDeviceType.deskPhoneExamplesExtra"></span>
         </div>
         <div class="errorBox" ng-if="chooseDeviceType.huronError">
           <i class="icon icon-warning"></i>
@@ -40,7 +41,8 @@
           <h4 ng-if="!chooseDeviceType.showPlaces"
               translate="addDeviceWizard.chooseDeviceType.newRoomSystem"></h4>
           <h4 ng-if="chooseDeviceType.showPlaces" translate="addDeviceWizard.chooseDeviceType.roomSystem"></h4>
-          <span translate="addDeviceWizard.chooseDeviceType.roomSystemExamples"></span>
+          <span translate="addDeviceWizard.chooseDeviceType.roomSystemExamples" ng-hide="chooseDeviceType.showDarling"></span>
+          <span translate="addDeviceWizard.chooseDeviceType.roomSystemExamplesExpanded" ng-show="chooseDeviceType.showDarling"></span>
         </div>
         <div class="errorBox" ng-if="chooseDeviceType.cloudberryError">
           <i class="icon icon-warning"></i>

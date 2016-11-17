@@ -1,23 +1,24 @@
 'use strict';
 
+// TODO: convert APIs sinon -> jasmine spy
 describe('Controller: HelpdeskOrgController', function () {
   beforeEach(angular.mock.module('Squared'));
 
-  var Authinfo, q, XhrNotificationService, $stateParams, HelpdeskService, LicenseService, $controller, $translate, $scope, orgController, Config, FeatureToggleService, HelpdeskHuronService;
+  var Authinfo, q, $stateParams, HelpdeskService, LicenseService, $controller, $translate, $scope, orgController, Config, FeatureToggleService, HelpdeskHuronService, Notification;
 
-  beforeEach(inject(function (_Authinfo_, _LicenseService_, _$q_, _XhrNotificationService_, _$stateParams_, _$translate_, _$rootScope_, _HelpdeskService_, _$controller_, _Config_, _FeatureToggleService_, _HelpdeskHuronService_) {
+  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$stateParams_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _HelpdeskHuronService_, _HelpdeskService_, _LicenseService_, _Notification_) {
     HelpdeskService = _HelpdeskService_;
     FeatureToggleService = _FeatureToggleService_;
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
     Config = _Config_;
     $stateParams = _$stateParams_;
-    XhrNotificationService = _XhrNotificationService_;
     q = _$q_;
     LicenseService = _LicenseService_;
     $translate = _$translate_;
     Authinfo = _Authinfo_;
     HelpdeskHuronService = _HelpdeskHuronService_;
+    Notification = _Notification_;
   }));
 
   describe('Org controller', function () {
@@ -36,8 +37,7 @@ describe('Controller: HelpdeskOrgController', function () {
         $scope: $scope,
         LicenseService: LicenseService,
         Config: Config,
-        $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService
+        $stateParams: $stateParams
       });
     });
 
@@ -60,6 +60,36 @@ describe('Controller: HelpdeskOrgController', function () {
     it('is not defined as trials if no org settings available', function () {
       var orgSettings = undefined;
       expect(orgController.isTrials(orgSettings)).toBeFalsy();
+    });
+
+  });
+
+  describe('Org controller error notification', function () {
+    beforeEach(function () {
+      sinon.stub(FeatureToggleService, 'supports').returns(q.resolve(false));
+      sinon.stub(FeatureToggleService, 'getCustomerHuronToggle').returns(q.resolve(false));
+    });
+
+    it('call errorWithTrackingId and supply the response data when promise is rejected', function () {
+      sinon.stub(Notification, 'errorWithTrackingId');
+      sinon.stub(HelpdeskService, 'getOrg');
+      var rejectData = {
+        data: {
+          errorCode: 420000
+        }
+      };
+      var promise = q.reject(rejectData);
+      HelpdeskService.getOrg.returns(promise);
+      $scope.$apply();
+
+      orgController = $controller('HelpdeskOrgController', {
+        HelpdeskService: HelpdeskService,
+        $scope: $scope,
+        Notification: Notification
+      });
+      $scope.$apply();
+      expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+      expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(rejectData, 'helpdesk.unexpectedError');
     });
 
   });
@@ -99,7 +129,6 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService,
         Authinfo: Authinfo
       });
       expect(orgController.cardsAvailable).toBeFalsy();
@@ -157,7 +186,6 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService,
         Authinfo: Authinfo
       });
       $scope.$apply();
@@ -211,7 +239,6 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService,
         Authinfo: Authinfo
       });
       $scope.$apply();
@@ -241,7 +268,6 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService,
         Authinfo: Authinfo
       });
       $scope.$apply();
@@ -273,7 +299,6 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService,
         Authinfo: Authinfo
       });
       $scope.$apply();
@@ -300,7 +325,6 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService,
         Authinfo: Authinfo
       });
       $scope.$apply();
@@ -327,7 +351,6 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService
       });
       $scope.$apply();
       expect(orgController.allowLaunchAtlas).toBeFalsy();
@@ -353,7 +376,6 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService,
         Authinfo: Authinfo
       });
       $scope.$apply();
@@ -379,8 +401,7 @@ describe('Controller: HelpdeskOrgController', function () {
         $scope: $scope,
         LicenseService: LicenseService,
         Config: Config,
-        $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService
+        $stateParams: $stateParams
       });
       $scope.$apply();
       expect(orgController.allowLaunchAtlas).toBeFalsy();
@@ -416,8 +437,7 @@ describe('Controller: HelpdeskOrgController', function () {
         $scope: $scope,
         LicenseService: LicenseService,
         Config: Config,
-        $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService
+        $stateParams: $stateParams
       });
 
     });

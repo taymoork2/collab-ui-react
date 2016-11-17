@@ -9,6 +9,7 @@
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
     vm.showPlaces = wizardData.showPlaces;
+    vm.showATA = wizardData.showATA;
     vm.account = {
       name: wizardData.account.name,
       type: wizardData.account.type,
@@ -119,7 +120,7 @@
 
 
     function error(err) {
-      Notification.errorWithTrackingId(err);
+      Notification.errorWithTrackingId(err, 'addDeviceWizard.showActivationCode.failedToGenerateActivationCode');
       vm.isLoading = false;
     }
 

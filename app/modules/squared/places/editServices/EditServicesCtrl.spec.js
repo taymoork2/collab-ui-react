@@ -104,7 +104,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         spyOn($scope, '$dismiss');
         spyOn(Notification, 'success');
         spyOn(Notification, 'warning');
-        spyOn(Notification, 'errorResponse');
+        spyOn(Notification, 'errorWithTrackingId');
       });
 
       it('should just close the modal if place does not have "ciscouc" entitlement', function () {
@@ -189,7 +189,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         controller.service = 'sparkOnly';
         controller.save();
         $scope.$digest();
-        expect(Notification.errorResponse).toHaveBeenCalled();
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
         expect($scope.$dismiss).toHaveBeenCalledTimes(0);
       });
 
@@ -212,7 +212,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         controller.service = 'sparkOnly';
         controller.save();
         $scope.$digest();
-        expect(Notification.errorResponse).toHaveBeenCalled();
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
         expect($scope.$dismiss).toHaveBeenCalledTimes(0);
       });
     });

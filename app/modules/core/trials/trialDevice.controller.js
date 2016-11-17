@@ -512,7 +512,7 @@
           return field.model.country;
         },
         listener: function (field, newValue, oldValue) {
-          if (newValue !== oldValue) {
+          if (newValue !== oldValue && field.formControl) {
             field.formControl.$validate();
           }
         }

@@ -471,9 +471,7 @@
           }
 
         } else {
-          Log.error('Could not process invitation.  Status: ' + status, data);
-          var error = [$translate.instant('usersPage.errInvite', data)];
-          Notification.notify(error, 'error');
+          Notification.error('usersPage.errInvite', data);
           isComplete = false;
           $scope.btnInviteLoad = false;
         }
@@ -500,9 +498,7 @@
         }
 
       } else {
-        Log.debug('No users entered.');
-        var error = [$filter('translate')('usersPage.validEmailInput')];
-        Notification.notify(error, 'error');
+        Notification.error('usersPage.validEmailInput');
       }
 
     };

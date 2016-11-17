@@ -28,6 +28,7 @@
       return $http.patch(place.url, {
         name: name
       }).then(function (res) {
+        res.data.type = place.type;
         return CsdmConverter.convertPlace(res.data);
       });
     }

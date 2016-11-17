@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskCardsOrgService(HelpdeskService, XhrNotificationService, Config, LicenseService, HelpdeskHuronService, $translate) {
+  function HelpdeskCardsOrgService($translate, Config, HelpdeskService, HelpdeskHuronService, LicenseService, Notification) {
 
     function getMessageCardForOrg(org, licenses) {
       var entitled = LicenseService.orgIsEntitledTo(org, 'webex-squared');
@@ -61,7 +61,9 @@
           hybridServicesCard.availableHybridServices = _.filter(services, {
             enabled: false
           });
-        }, XhrNotificationService.notify);
+        }).catch(function (response) {
+          Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
+        });
       }
       return hybridServicesCard;
     }

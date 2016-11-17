@@ -133,6 +133,7 @@ describe('Component: pgMember', () => {
         lastName: 'CRUISE',
         userName: undefined,
         displayName: undefined,
+        numbers: [],
       });
       expect(this.controller.getUserName(mem1)).toEqual('');
     });
@@ -168,6 +169,7 @@ describe('Component: pgMember', () => {
         lastName: 'CRUISE',
         userName: undefined,
         displayName: undefined,
+        numbers: [],
       });
       expect(this.controller.getDisplayNameOnCard(mem)).toEqual('');
     });
@@ -197,6 +199,7 @@ describe('Component: pgMember', () => {
         lastName: undefined,
         userName: 'peter@kickyourbutt.com',
         displayName: undefined,
+        numbers: [],
       });
       expect(this.controller.getMemberType(mem1)).toEqual('');
 
