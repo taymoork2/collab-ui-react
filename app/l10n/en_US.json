@@ -1451,7 +1451,7 @@
       "selectGroup": "Select…",
       "couldNotReadResourceGroups": "Could not read Resource Groups.",
       "CouldNotSaveResourceGroup": "Resource Group could not be saved. Continue with the registration process, and then try assigning a Resource Group again later.",
-      "hostnameRegistered": "This hostname belongs to an Expressway cluster that is already registered with Cisco Collaboration Cloud. It is not necessary to register it as a new resource if you want to add more services to it."
+      "hostnameRegistered": "This FQDN belongs to an Expressway cluster that is already registered with Cisco Collaboration Cloud. It is not necessary to register it as a new resource if you want to add more services to it."
     },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",

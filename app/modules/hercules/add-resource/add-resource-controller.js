@@ -11,6 +11,8 @@
     var vm = this;
     vm.connectors = [];
     vm.warning = warning;
+    // Bug in toolkit for cs-input warning
+    //https://wwwin-github.cisco.com/collab-ui/collab-library/issues/79
     vm.warningMessage = 'DummyMessage';
     vm.hostname = '';
     vm.releaseChannel = 'stable'; // clusters default to 'stable', must be changed via Resource Group
@@ -84,7 +86,7 @@
     function warning() {
       if (_.some(vm.connectors, function (connector) {
         vm.warningMessage = $translate.instant('hercules.addResourceDialog.hostnameRegistered');
-        return connector === vm.hostname;
+        return connector.toLowerCase() === vm.hostname.toLowerCase();
       })
         ) {
         return true;
@@ -137,7 +139,7 @@
     function findAndPopulateExistingExpressways(connectorType) {
       FusionClusterService.getAll()
         .then(getAllExpressways)
-        .then(getAllHostnames)
+        .then(updateConnectorNameList)
         .then(_.partial(removeAlreadyProvisionedExpressways, connectorType))
         .then(updateDropdownMenu)
         .catch(function (error) {
@@ -161,7 +163,7 @@
       return allExpressways;
     }
 
-    function getAllHostnames(allExpressways) {
+    function updateConnectorNameList(allExpressways) {
       _.forEach(allExpressways, function (cluster) {
         _.forEach(cluster.connectorsHostname, function (connector) {
           if (connector.connectorType === 'c_mgmt') {
