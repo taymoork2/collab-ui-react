@@ -4,6 +4,7 @@
   angular.module('Huron')
     .factory('TerminusCustomerService', TerminusCustomerService)
     .factory('TerminusCustomerV2Service', TerminusCustomerV2Service)
+    .factory('TerminusCustomerTrialV2Service', TerminusCustomerTrialV2Service)
     .factory('TerminusResellerCarrierService', TerminusResellerCarrierService)
     .factory('TerminusCustomerCarrierService', TerminusCustomerCarrierService)
     .factory('TerminusCustomerSiteService', TerminusCustomerSiteService)
@@ -40,6 +41,15 @@
   /* @ngInject */
   function TerminusCustomerV2Service($resource, HuronConfig) {
     return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId', {}, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+
+  /* @ngInject */
+  function TerminusCustomerTrialV2Service($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId/trial', {}, {
       update: {
         method: 'PUT'
       }

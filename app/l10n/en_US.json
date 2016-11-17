@@ -2907,7 +2907,8 @@
   "pstnOrderDetail": {
     "orderNumber": "Order #{{orderId}}",
     "pendingNumbers": "{count, plural, one{There is # number} other{There are # numbers}} pending for this order",
-    "searchPlaceholder": "Search Phone Numbers"
+    "searchPlaceholder": "Search Phone Numbers",
+    "waitOnTOSAcceptance": "Waiting on ToS acceptance from customer"
   },
   "serviceAddress": {
     "streetAddress": "Street Address",
