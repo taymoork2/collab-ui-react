@@ -362,7 +362,8 @@
           'autoGridCount': true,
           'title': 'Last 7 Days',
           'centerLabels': true,
-          'equalSpacing': true
+          'equalSpacing': true,
+          'addClassNames': true,
         },
         'listeners': [],
         'export': {
