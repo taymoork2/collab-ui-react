@@ -16,6 +16,7 @@ export class EmergencyServicesCtrl {
   public stateOptions: IState[];
   public errorMessage: string;
   public options: string[];
+  public companyEmergencyNumber: string;
 
   /* @ngInject */
   constructor(
@@ -32,9 +33,8 @@ export class EmergencyServicesCtrl {
     this.emergency = data.emergency;
     this.currentDevice = data.currentDevice;
     this.stateOptions = data.stateOptions;
-    this.EmergencyServicesService.getOptions().then(options => {
-      this.options = options;
-    });
+    this.EmergencyServicesService.getOptions().then(options => this.options = options);
+    this.EmergencyServicesService.getCompanyECN().then(result => this.companyEmergencyNumber = result);
   }
 
   public numberChange(): void {

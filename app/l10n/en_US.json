@@ -1420,7 +1420,8 @@
     "companyDefaultAddress": "Use company default address",
     "validatingAddr": "Validating Address...",
     "saving": "Saving...",
-    "errorAddr": "The address you entered is invalid, please try again."
+    "errorAddr": "The address you entered is invalid, please try again.",
+    "sameAsCompanyNum": "To edit your emergency service address, the emergency callback number for your device must be different from your company’s callback number."
   },
   "hercules": {
     "page_title": "Connector Management",
