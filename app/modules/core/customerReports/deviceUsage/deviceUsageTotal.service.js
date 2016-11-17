@@ -516,7 +516,7 @@
           .catch(function (err) {
             $log.info("Problems resolving device", err);
             return {
-              "displayName": "Unknown [" + device.accountId + "}"
+              "displayName": "Unknown [id:" + device.accountId + "]"
             };
           })
         );
