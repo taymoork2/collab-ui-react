@@ -14,6 +14,7 @@
     var csdmUrl = csdmUrlBase + '/' + Authinfo.getOrgId() + '/places/';
 
     var timeoutInMillis = 10000;
+    var intervalType = 'day'; // Used as long as week and month is not implemented
 
     function getDataForLastWeek(deviceCategories, api, missingDaysDeferred) {
       //$log.info("dataForLastWeek", api);
@@ -76,7 +77,7 @@
           });
         } else if (api === 'local') {
           var url = localUrlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
-          url = url + 'intervalType=' + granularity;
+          url = url + 'intervalType=' + intervalType; // As long week and month is not implemented
           url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
           url = url + '&deviceCategories=' + deviceCategories.join();
           url = url + '&accounts=__';
@@ -84,7 +85,7 @@
           return doRequest(url, granularity, start, end, missingDaysDeferred);
         } else {
           url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
-          url = url + 'intervalType=' + granularity;
+          url = url + 'intervalType=' + intervalType; // As long week and month is not implemented
           url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
           url = url + '&deviceCategories=' + deviceCategories.join();
           url = url + '&accounts=__';
@@ -111,7 +112,7 @@
         });
       } else if (api === 'local') {
         var url = localUrlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
-        url = url + 'intervalType=' + granularity;
+        url = url + 'intervalType=' + intervalType; // As long week and month is not implemented
         url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
         url = url + '&deviceCategories=' + deviceCategories.join();
         url = url + '&accounts=__';
@@ -119,7 +120,7 @@
         return doRequest(url, granularity, start, end, missingDaysDeferred);
       } else {
         url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
-        url = url + 'intervalType=' + granularity;
+        url = url + 'intervalType=' + intervalType; // As long week and month is not implemented
         url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
         url = url + '&deviceCategories=' + deviceCategories.join();
         url = url + '&accounts=__';
@@ -356,6 +357,7 @@
         'type': 'serial',
         'categoryField': 'time',
         'dataDateFormat': 'YYYY-MM-DD',
+        'addClassNames': true,
         'categoryAxis': {
           'minPeriod': 'DD',
           'parseDates': true,
@@ -516,7 +518,7 @@
           .catch(function (err) {
             $log.info("Problems resolving device", err);
             return {
-              "displayName": "Unknown [" + device.accountId + "}"
+              "displayName": "Unknown [id:" + device.accountId + "]"
             };
           })
         );
