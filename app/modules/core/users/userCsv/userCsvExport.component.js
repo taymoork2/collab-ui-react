@@ -17,7 +17,7 @@ require('./_user-csv.scss');
 
   /////////////////
   /* @ngInject */
-  function UserCsvExportController($scope, $rootScope, $modal, $translate, $timeout, $window, $element, CsvDownloadService, Notification) {
+  function UserCsvExportController($scope, $rootScope, $modal, $translate, $timeout, $window, $element, Analytics, CsvDownloadService, Notification) {
     var vm = this;
 
     vm.$onInit = onInit;
@@ -73,6 +73,7 @@ require('./_user-csv.scss');
     }
 
     function exportCsv() {
+      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.EXPORT_USER_LIST);
       $modal.open({
         type: 'dialog',
         templateUrl: 'modules/core/users/userCsv/userCsvExportConfirm.tpl.html'

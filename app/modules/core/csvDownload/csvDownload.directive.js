@@ -24,7 +24,8 @@ require('./_csv-download.scss');
         type: '@',
         filename: '@',
         statusMessage: '@',
-        downloadState: '@'
+        downloadState: '@',
+        analyticsEventname: '@'
       },
       link: link,
       controller: 'csvDownloadController',
@@ -51,7 +52,7 @@ require('./_csv-download.scss');
   }
 
   /* @ngInject */
-  function csvDownloadController($scope, $element, $rootScope, $window, $q, $translate, $timeout, $modal, $state, CsvDownloadService, Notification, FeatureToggleService) {
+  function csvDownloadController($scope, $element, $rootScope, $window, $q, $translate, $timeout, $modal, $state, Analytics, CsvDownloadService, Notification, FeatureToggleService) {
     var vm = this;
 
     $scope.downloading = false;
@@ -82,6 +83,9 @@ require('./_csv-download.scss');
 
     function downloadCsv(csvType, tooManyUsers) {
       csvType = csvType || $scope.type;
+      if ($scope.analyticsEventname) {
+        Analytics.trackCsv($scope.analyticsEventname);
+      }
 
       if (csvType === CsvDownloadService.typeTemplate || csvType === CsvDownloadService.typeUser || csvType === CsvDownloadService.typeError) {
         startDownload(csvType);

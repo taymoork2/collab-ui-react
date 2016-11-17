@@ -6,7 +6,7 @@
   module.exports = Analytics;
 
   /* @ngInject */
-  function Analytics($q, $state, Config, Orgservice, Authinfo) {
+  function Analytics($q, $state, Authinfo, Config, Orgservice, TrialService, UserListService) {
 
     var token = {
       PROD_KEY: 'a64cd4bbec043ed6bf9d5cd31e4b001c',
@@ -16,6 +16,7 @@
     var isTestOrgPromise = null;
     var hasInit = false;
     var throwError = false;
+
 
     var eventNames = {
       START: 'Start',
@@ -27,6 +28,8 @@
       FINISH: 'Finish',
       YES: 'Yes Selected',
       NO: 'No Selected',
+      DONE: 'Done',
+      SAVE: 'Save',
       ENTER_SCREEN: 'Entered Screen',
       VALIDATION_ERROR: 'Validation Error',
       RUNTIME_ERROR: 'Runtime Error'
@@ -36,9 +39,10 @@
       TRIAL: {
         name: 'Trial Flow',
         eventNames: {
-          START_SETUP: 'Start Trial Setup',
-          START_TRIAL: 'Start Trial'
-        }
+          START_SETUP: 'Trial flow: Start Trial Setup',
+          START_TRIAL: 'Trial flow: Start Trial'
+        },
+        prefixedEventNames: []
       },
       PARTNER: {
         name: 'Partner',
@@ -54,9 +58,38 @@
           CMR_CHECKBOX: 'CMR Checkbox Unselected',
           CONVERT_USER: 'Convert User Search'
         }
+      },
+      ADD_USERS: {
+        name: 'Add Users',
+        eventNames: {
+          FINISH: 'Add Users: Finish',
+          MANUAL_EMAIL: 'Add Users: Manual Email Entry',
+          CSV_UPLOAD: 'Add Users: CSV Upload',
+          CSV_ERROR_EXPORT: 'Add Users: CSV Error Export',
+          EXPORT_USER_LIST: 'Add Users: Export User List',
+          INSTALL_CONNECTOR: 'Add Users: Install Connector',
+          DIRECTORY_SYNC: 'Add Users: Directory Sync',
+          SYNC_REFRESH: 'Add Users: Sync Refresh',
+          SYNC_ERROR: 'Add Users: Sync Error',
+          GO_BACK_FIX: 'Add Users: Go Back Fix Errors'
+        },
+        persistentProperties: null,
+        uploadMethods: {
+          MANUAL: 'manual',
+          CSV: 'csv',
+          SYNC: 'sync'
+        },
+        manualMethods: {
+          '0': 'emailOnly',
+          '1': 'nameAndEmail'
+        },
+        saveResults: {
+          SUCCESS: 'success',
+          USER_ERROR: 'user_error',
+          APP_ERROR: 'app_exeption'
+        }
       }
     };
-
 
     var service = {
       _init: _init,
@@ -64,6 +97,8 @@
       _buildTrialServicesArray: _buildTrialServicesArray,
       _buildTrialDevicesArray: _buildTrialDevicesArray,
       _getSelectedTrialDevices: _getSelectedTrialDevices,
+      _getAddUserOrgData: _getAddUserOrgData,
+      _getOrgStatus: _getOrgStatus,
       checkIfTestOrg: checkIfTestOrg,
       eventNames: eventNames,
       sections: sections,
@@ -71,7 +106,9 @@
       trackEvent: trackEvent,
       trackPartnerActions: trackPartnerActions,
       trackTrialSteps: trackTrialSteps,
-      trackUserOnboarding: trackUserOnboarding
+      trackUserOnboarding: trackUserOnboarding,
+      trackAddUsers: trackAddUsers,
+      trackCsv: trackCsv
     };
 
     return service;
@@ -208,6 +245,42 @@
     }
 
 
+    /**
+    * Add User Events
+    */
+    function trackAddUsers(eventName, uploadMethod, additionalPayload) {
+      if (!eventName) {
+        return $q.reject('eventName not passed');
+      }
+      var properties = {
+        from: _.get($state, '$current.name'),
+
+      };
+      // populate static properties
+      _getAddUserOrgData(sections.ADD_USERS.name).then(function (data) {
+        _.extend(properties, data);
+        //if changing upload method -- set.
+        if (uploadMethod) {
+          properties.uploadMethod = uploadMethod;
+          sections.ADD_USERS.persistentProperties.uploadMethod = uploadMethod;
+        }
+        _.extend(properties, additionalPayload);
+        return trackEvent(eventName, properties);
+      });
+    }
+
+    function trackCsv(eventName) {
+      if (eventName === sections.ADD_USERS.eventNames.CSV_ERROR_EXPORT) {
+        return trackAddUsers(sections.ADD_USERS.eventNames.CSV_ERROR_EXPORT);
+      }
+    }
+
+
+    /**
+    * General Error Tracking
+    */
+
+
     function trackError(errorObj, cause) {
       var message = _.get(errorObj, 'message');
       var stack = _.get(errorObj, 'stack');
@@ -253,7 +326,44 @@
       }
     }
 
+    /* Add Users Helpers */
+    function _getAddUserOrgData(section) {
+      if (sections.ADD_USERS.persistentProperties && sections.ADD_USERS.persistentProperties.orgId === Authinfo.getOrgId()) {
+        return $q.resolve(sections.ADD_USERS.persistentProperties);
+      }
+      var licenses = Authinfo.getLicenses();
+      sections.ADD_USERS.persistentProperties = {
+        licenses: _.map(licenses, 'licenseType'),
+        orgId: Authinfo.getOrgId(),
+        uuid: Authinfo.getUserId(),
+        role: Authinfo.getRoles(),
+        section: section
+      };
+      var promises = {
+        listUsers: UserListService.listUsers(0, 1, null, null, _.noop),
+        getOrg: Orgservice.getAdminOrgAsPromise().catch(function (err) {
+          return err;
+        }),
+        trialDaysLeft: TrialService.getDaysLeftForCurrentUser()
+      };
+      return $q.all(promises).then(function (data) {
+        sections.ADD_USERS.persistentProperties.userCountPrior = _.get(data.listUsers, 'data.totalResults');
+        sections.ADD_USERS.persistentProperties.isPartner = _.get(data.getOrg, 'data.isPartner');
+        sections.ADD_USERS.persistentProperties.orgStatus = _getOrgStatus(data.trialDaysLeft, licenses);
+        return sections.ADD_USERS.persistentProperties;
+      });
+    }
 
+    function _getOrgStatus(daysLeft, licenseList) {
+      if (daysLeft <= 0 || _.get(licenseList, 'length', 0) === 0) {
+        return 'expired';
+      }
+      var isTrial = _.some(licenseList, function (license) {
+        return license && license.isTrial;
+
+      });
+      return isTrial ? 'trial' : 'active';
+    }
   }
 
 })();
