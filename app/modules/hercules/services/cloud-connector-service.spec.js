@@ -16,6 +16,7 @@ describe('Service: CloudConnectorService', function () {
   function mockDependencies($provide) {
     var Authinfo = {
       getOrgId: sinon.stub().returns('fe5acf7a-6246-484f-8f43-3e8c910fc50d'),
+      isFusionGoogleCal: sinon.stub().returns(true),
     };
     $provide.value('Authinfo', Authinfo);
   }

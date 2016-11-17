@@ -5,7 +5,7 @@
     .controller('OverviewReportsCtrl', OverviewReportsCtrl);
 
   /* @ngInject */
-  function OverviewReportsCtrl($scope, $translate, Authinfo, Notification, Log, PartnerService, ReportsService, chartColors, CommonGraphService) {
+  function OverviewReportsCtrl($scope, $translate, Authinfo, Notification, PartnerService, ReportsService, chartColors, CommonGraphService) {
     var LINE = 'line';
     var AXIS = 'axis';
     var NUMFORMAT = 'numFormat';
@@ -177,16 +177,10 @@
       return chart;
     }
 
-    function errorMessage(title, error) {
-      var errorMessage = $translate.instant('reports.error', {
+    function errorMessage(title, response) {
+      Notification.errorResponse(response, 'reports.error', {
         graph: title.toLowerCase()
       });
-      Log.debug(errorMessage + ' Status: ' + error.status);
-
-      if ((error.data !== null) && !_.isUndefined(error.data) && !_.isUndefined(error.data.trackingId) && (error.data.trackingId !== null)) {
-        errorMessage += '<br>' + $translate.instant('reportsPage.trackingId') + error.data.trackingId;
-      }
-      Notification.notify(errorMessage, error);
     }
 
     function sumMultipleOrgDataCount(timeChartResponse) {

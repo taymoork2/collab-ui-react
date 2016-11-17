@@ -40,7 +40,8 @@
           <h4 ng-if="!chooseDeviceType.showPlaces"
               translate="addDeviceWizard.chooseDeviceType.newRoomSystem"></h4>
           <h4 ng-if="chooseDeviceType.showPlaces" translate="addDeviceWizard.chooseDeviceType.roomSystem"></h4>
-          <span translate="addDeviceWizard.chooseDeviceType.roomSystemExamples"></span>
+          <span translate="addDeviceWizard.chooseDeviceType.roomSystemExamples" ng-hide="chooseDeviceType.showDarling"></span>
+          <span translate="addDeviceWizard.chooseDeviceType.roomSystemExamplesExpanded" ng-show="chooseDeviceType.showDarling"></span>
         </div>
         <div class="errorBox" ng-if="chooseDeviceType.cloudberryError">
           <i class="icon icon-warning"></i>

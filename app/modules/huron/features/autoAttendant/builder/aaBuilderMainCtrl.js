@@ -344,7 +344,7 @@
       var aaRecord = vm.aaModel.aaRecord;
 
       var aaRecordUUID = vm.aaModel.aaRecordUUID;
-      vm.ui.builder.ceInfo_name = vm.ui.builder.ceInfo_name.trim();
+      vm.ui.builder.ceInfo_name = _.trim(vm.ui.builder.ceInfo_name);
       if (!AAValidationService.isNameValidationSuccess(vm.ui.builder.ceInfo_name, aaRecordUUID)) {
         deferred.reject({
           statusText: '',

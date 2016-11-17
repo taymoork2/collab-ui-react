@@ -125,7 +125,7 @@
           if (dirSyncEnabled) {
             $state.go(nextState);
           } else {
-            Notification.notify([$translate.instant('userManage.advanced.noDirSync')], 'warning');
+            Notification.warning('userManage.advanced.noDirSync');
           }
         });
       } else {
