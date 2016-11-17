@@ -1,4 +1,5 @@
 import { CallPark, FallbackDestination } from './callPark';
+import { Member } from 'modules/huron/members/member';
 
 export interface ICallParkListItem {
   uuid: string;
@@ -19,9 +20,12 @@ interface ICallParkResource extends ng.resource.IResourceClass<ng.resource.IReso
 
 interface ICallParkRangeResource extends ng.resource.IResourceClass<ng.resource.IResource<ICallParkRangeItem>> {}
 
+interface IDirectoryNumberResource extends ng.resource.IResourceClass<ng.resource.IResource<string>> {}
+
 export class CallParkService {
   private callParkResource: ICallParkResource;
   private callParkRangeResource: ICallParkRangeResource;
+  private directoryNumberResource: IDirectoryNumberResource;
   private callParkDataCopy: CallPark;
   private callParkProperties: Array<string> = ['uuid', 'name', 'startRange', 'endRange', 'members'];
   private fallbackDestProperties: Array<string> = ['memberUuid', 'name', 'number', 'numberUuid', 'sendToVoicemail'];
@@ -52,6 +56,7 @@ export class CallParkService {
       });
 
     this.callParkRangeResource = <ICallParkRangeResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/features/callparks/ranges/:startRange');
+    this.directoryNumberResource = <IDirectoryNumberResource>this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId');
   }
 
   public getCallParkList(): ng.IPromise<Array<ICallParkListItem>> {
@@ -151,6 +156,29 @@ export class CallParkService {
     .then( endRanges => {
       return _.get<Array<string>>(endRanges, 'endRange', []);
     });
+  }
+
+  public getDirectoryNumber(numberUuid): ng.IPromise<any> {
+    return this.directoryNumberResource.get({
+      customerId: this.Authinfo.getOrgId(),
+      directoryNumberId: numberUuid,
+    }).$promise;
+  }
+
+  public getDisplayName(member: Member): string {
+    if (member.displayName) {
+      return member.displayName;
+    } else if (!member.firstName && !member.lastName && member.userName) {
+      return member.userName;
+    } else if (member.firstName && member.lastName) {
+      return member.firstName + ' ' + member.lastName;
+    } else if (member.firstName) {
+      return member.firstName;
+    } else if (member.lastName) {
+      return member.lastName;
+    } else {
+      return '';
+    }
   }
 
   private cloneCallParkData(callParkData: CallPark): CallPark {
