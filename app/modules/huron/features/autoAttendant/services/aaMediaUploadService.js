@@ -29,6 +29,7 @@
     var getBaseUrl = null;
     var clioEnabled = false;
     var CLIO_APP_TYPE = 'AutoAttendant';
+    var ENCRYPTION_POLICY = '{"encryptionPolicy":{"strategy":"SERVER"}}';
 
     return service;
 
@@ -75,7 +76,7 @@
         var variantKeys = _.keys(variants);
         if (variantKeys.length > 0) {
           if (_.has(variants, variantKeys[0] + '.variantUrl')) {
-            var variantUrl = variants[variantKeys[0]].variantUrl;
+            var variantUrl = variants[variantKeys[0]].variantUrl + '?orgId=' + Authinfo.getOrgId();
             if (_.isUndefined(variantUrl)) {
               return '';
             } else {
@@ -107,6 +108,7 @@
         fd.append('file', file);
         if (isClioEnabled()) {
           fd.append('appType', CLIO_APP_TYPE);
+          fd.append('policy', ENCRYPTION_POLICY);
         }
         return Upload.http({
           url: uploadUrl,
