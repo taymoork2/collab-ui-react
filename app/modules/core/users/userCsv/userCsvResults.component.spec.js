@@ -59,7 +59,7 @@ describe('crUserCsvResults Component', function () {
     spyOn(this.$modal, 'open').and.returnValue(fakeModal);
     spyOn(this.$translate, 'instant').and.returnValue(TRANSLATED_STRING);
     spyOn(this.$rootScope, '$emit');
-    spyOn(this.FeatureToggleService, 'atlasNewUserExportGetStatus').and.returnValue(this.$q.when(true));
+    spyOn(this.FeatureToggleService, 'atlasNewUserExportGetStatus').and.returnValue(this.$q.when(false));
   }
 
   function initUtils() {
