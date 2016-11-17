@@ -533,7 +533,7 @@
     }
 
     /*
-    * function to write to db
+    * write initial announcement to db
     */
     function cesIa(action) {
       if (!_.isUndefined(action.description)) {
@@ -1145,9 +1145,9 @@
         newAction.queuePeriodicAnnouncements = paAction;
         var queueMaxTimeValue = action.queueSettings.fallback.actions[0].getValue();
 
-        newAction.queueMaxTime = queueMaxTimeValue.label;
+        newAction.queueMaxTime = (queueMaxTimeValue.label) * 60;
         if (_.isUndefined(queueMaxTimeValue.label)) {
-          newAction.queueMaxTime = queueMaxTimeValue;
+          newAction.queueMaxTime = queueMaxTimeValue * 60;
         }
         if (_.isUndefined(action.queueSettings.fallback.actions[0].action)) {
           action.queueSettings.fallback.actions[0].action = { treatment: 'none' };

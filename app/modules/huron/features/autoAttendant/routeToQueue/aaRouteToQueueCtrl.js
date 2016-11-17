@@ -41,7 +41,7 @@
     var play = 'play';
     var say = 'say';
     var disconnect = 'disconnect';
-    var minutes = '15';
+    var maxWaitTime = '15';
 
 
     /////////////////////
@@ -164,7 +164,7 @@
         }
         if (angular.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.fallback)) {
           vm.menuKeyEntry.actions[0].queueSettings.fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var fallbackAction = AutoAttendantCeMenuModelService.newCeActionEntry(disconnect, minutes);
+          var fallbackAction = AutoAttendantCeMenuModelService.newCeActionEntry(disconnect, maxWaitTime);
           vm.menuKeyEntry.actions[0].queueSettings.fallback.addAction(fallbackAction);
         }
       }
