@@ -3513,7 +3513,8 @@
       "deskPhoneLicenseWarning": "Your organization must purchase Cisco Spark Call licenses first. Contact your partner or Cisco Sales for more information.",
       "roomSystem": "Room Device",
       "newRoomSystem": "New room device",
-      "roomSystemExamples": "e.g. DX, MX and SX series",
+      "roomSystemExamples": "DX, MX and SX series",
+      "roomSystemExamplesExpanded": "Cisco Spark Board, DX, MX and SX series",
       "roomSystemLicenseWarning": "Your organization must purchase Cisco Spark Room Device licenses first. Contact your partner or Cisco Sales for more information."
     },
     "chooseAccountType": {
