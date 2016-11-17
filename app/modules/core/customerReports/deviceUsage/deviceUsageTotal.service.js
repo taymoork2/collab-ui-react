@@ -211,11 +211,13 @@
       }).value();
       var diff = _.differenceWith(correctDays, reducedDays, _.isEqual);
       //$log.info('diff', diff);
-      missingDaysDeferred.resolve({
-        missingDays: diff
-      });
       if (diff.length > 0) {
+        missingDaysDeferred.resolve({
+          missingDays: diff
+        });
         return true;
+      } else {
+        return false;
       }
     }
 
