@@ -45,7 +45,7 @@
             internal-number-data-fn="hge.fetchFallbackDestination(data)"
             internal-number-on-select="hge.selectFallback(data)"
             internal-number-template-url="userTemplate.html"
-            internal-number-translations="hge.internalTranslations">
+            on-change-fn="hge.setFallbackNumber(model)">
           </cs-call-destination>
         </div>
         <div class="ellipsis warning-typeahead" ng-if="hge.shouldShowFallbackWarning()">

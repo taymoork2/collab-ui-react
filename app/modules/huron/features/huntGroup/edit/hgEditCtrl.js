@@ -46,6 +46,7 @@
     vm.validateFallbackNumber = validateFallbackNumber;
     vm.removeFallbackDest = removeFallbackDest;
     vm.checkFallbackDirtiness = checkFallbackDirtiness;
+    vm.setFallbackNumber = setFallbackNumber;
     vm.selectedFallbackMember = undefined;
     vm.disableVoicemail = false;
 
@@ -88,6 +89,10 @@
           });
           $state.go(vm.huronFeaturesUrl);
         });
+    }
+
+    function setFallbackNumber(model) {
+      _.set(vm, 'selectedFallbackNumber', model);
     }
 
     function getRegionCode() {
@@ -164,8 +169,7 @@
     }
 
     function shouldShowFallbackPill() {
-      return (vm.selectedFallbackNumber === '' &&
-      vm.selectedFallbackMember === undefined &&
+      return (vm.selectedFallbackMember === undefined &&
       vm.model.fallbackDestination.number &&
       HuntGroupFallbackDataService.isValidInternalOrgNumber()) ||
       HuntGroupFallbackDataService.isFallbackValidMember();

@@ -76,6 +76,7 @@
     vm.populateFallbackDestination = populateFallbackDestination;
 
     vm.externalRegionCodeFn = getRegionCode;
+    vm.setSelectedFallbackNumber = setSelectedFallbackNumber;
     vm.callDestInputs = ['internal', 'external'];
 
     init();
@@ -83,6 +84,10 @@
     function init() {
       HuntGroupFallbackDataService.reset();
       HuntGroupMemberDataService.reset();
+    }
+
+    function setSelectedFallbackNumber(model) {
+      _.set(vm, 'selectedFallbackNumber', model);
     }
 
     function getRegionCode() {

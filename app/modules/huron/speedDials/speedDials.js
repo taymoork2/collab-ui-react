@@ -33,6 +33,10 @@
       helpText: $translate.instant('callDestination.alternateCustomHelpText')
     };
 
+    speedDials.setSpeedDial = function (model) {
+      _.set(speedDials, 'callDest', model);
+    };
+
     speedDials.getRegionCode = function () {
       return DialPlanService.getCustomerVoice(Authinfo.getOrgId());
     };

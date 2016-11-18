@@ -6,7 +6,7 @@
     .controller('LineSettingsCtrl', LineSettingsCtrl);
 
   /* @ngInject */
-  function LineSettingsCtrl($scope, $state, $stateParams, $translate, $q, $modal, Notification,
+  function LineSettingsCtrl($scope, $state, $stateParams, $timeout, $translate, $q, $modal, Notification,
       DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser,
       UserListService, SharedLineInfoService, CallerId, DialPlanService,
       ExternalNumberPool, TelephoneNumberService, Authinfo) {
@@ -113,6 +113,10 @@
     vm.callForwardInputs = ['external', 'uri', 'custom'];
     vm.callerIdInputs = ['external', 'custom'];
     vm.getRegionCode = getRegionCode;
+    vm.setAllForward = setAllForward;
+    vm.setInternalForward = setInternalForward;
+    vm.setExternalForward = setExternalForward;
+    vm.setCallerIdNumber = setCallerIdNumber;
     vm.customTranslations = {
       placeholderText: $translate.instant('callDestination.alternateCustomPlaceholder'),
       helpText: $translate.instant('callDestination.alternateCustomHelpText')
@@ -120,6 +124,22 @@
     vm.callerId = {};
 
     ////////////
+
+    function setAllForward(model) {
+      _.set(vm, 'allForward', model);
+    }
+
+    function setInternalForward(model) {
+      _.set(vm, 'internalForward', model);
+    }
+
+    function setExternalForward(model) {
+      _.set(vm, 'externalForward', model);
+    }
+
+    function setCallerIdNumber(model) {
+      _.set(vm, 'callerIdInfo.customNumber', model);
+    }
 
     function getRegionCode() {
       return DialPlanService.getCustomerVoice(Authinfo.getOrgId());
@@ -157,8 +177,10 @@
       if ($stateParams.directoryNumber === 'new') {
         $state.go('user-overview.communication');
       } else if (vm.form) {
-        vm.form.$setPristine();
-        vm.form.$setUntouched();
+        $timeout(function () {
+          vm.form.$setPristine();
+          vm.form.$setUntouched();
+        });
       }
     }
 
@@ -180,8 +202,9 @@
     });
 
     function resetLineSettings() {
-      init();
-      resetForm();
+      $q.resolve(init()).then(function () {
+        resetForm();
+      });
     }
 
     function loadInternalNumberPool(pattern) {
@@ -222,6 +245,7 @@
     }
 
     function init() {
+      var defer = $q.defer();
       var directoryNumber = $stateParams.directoryNumber;
       initDirectoryNumber(directoryNumber);
 
@@ -268,7 +292,9 @@
           }
 
           initCallForward();
-          initCallerId();
+          initCallerId().then(function () {
+            defer.resolve();
+          });
         });
 
         if (typeof vm.telephonyInfo.alternateDirectoryNumber.uuid !== 'undefined' && vm.telephonyInfo.alternateDirectoryNumber.uuid !== '') {
@@ -299,7 +325,9 @@
           }
         });
         vm.cfModel.forward = 'none';
-        initCallerId();
+        initCallerId().then(function () {
+          defer.resolve();
+        });
       }
 
       if ((vm.telephonyInfo.currentDirectoryNumber.dnUsage !== 'Primary') && (vm.telephonyInfo.currentDirectoryNumber.uuid !== 'new')) {
@@ -311,6 +339,8 @@
           vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
         }
       }
+
+      return defer.promise;
     }
 
     function initDirectoryNumber(directoryNumber) {
@@ -557,6 +587,7 @@
     }
 
     function initCallerId() {
+      var defer = $q.defer();
       vm.callerIdOptions = [];
       var hasDirectLine = false;
       var hasCompanyCallerID = false;
@@ -567,7 +598,7 @@
         isNewLine = true;
       }
       // Construct callerIdOptions
-      return listSharedLineUsers(vm.telephonyInfo.currentDirectoryNumber.uuid).then(function () {
+      listSharedLineUsers(vm.telephonyInfo.currentDirectoryNumber.uuid).then(function () {
         CallerId.loadCompanyNumbers().then(function () {
             // load company numbers first
           vm.callerIdOptions = CallerId.getCompanyNumberList();
@@ -623,11 +654,14 @@
                 }
               });
             }
+            defer.resolve();
           })
           .catch(function (response) {
             Notification.errorResponse(response, 'callerIdPanel.companyNumberLoadError');
+            defer.reject();
           });
       });
+      return defer.promise;
     }
 
     // Call Forward Radio Button Model
