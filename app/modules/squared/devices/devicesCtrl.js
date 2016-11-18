@@ -82,7 +82,10 @@
         };
 
         vm.existsDevices = function () {
-          return (vm.shouldShowList() && CsdmDataModelService.hasDevices());
+          if (!vm._existsDevices) {
+            vm._existsDevices = (vm.shouldShowList() && CsdmDataModelService.hasDevices());
+          }
+          return vm._existsDevices;
         };
 
         vm.shouldShowList = function () {
