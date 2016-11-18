@@ -6328,7 +6328,7 @@
     "servicesPlaceholder": "Please choose a service",
     "componentStatuses": "Component Statuses",
     "updateIncident": "Update Incident",
-    "deleteIncident": "Delete Incident",
+    "deleteIncident": "Delete {{incidentName}}",
     "addStatusPage": "Add Another Service",
     "previousUpdated": "Previous Updates",
     "hideAffectedComponents": "Hide Affected Components",
@@ -6385,11 +6385,6 @@
       "deleteComponentSucceed": "Component {{componentName}} delete succeed.",
       "deleteComponentFailed":"Component {{componentName}} delete failed."
     },
-    "createIncident": {
-      "newIncident": "New Incident",
-      "incidentName": "Incident Name",
-      "createIncidentBtn": "Create Incident"
-    },
     "incidentsPage":{
       "incidentStatus": "Incident Status",
       "message": "Message",
@@ -6401,7 +6396,14 @@
       "noIncidentContentLink": "Create your first incident",
       "lastUpdatedOn": "Last updated on ",
       "resolvedOn": "Resolved on ",
-      "noAffectedComponent": "No components were affected by this update."
+      "noAffectedComponent": "No components were affected by this update.",
+      "newIncident": "New Incident",
+      "incidentName": "Incident Name",
+      "createIncidentBtn": "Create Incident",
+      "deleteIncidentSuccessfully": "Incident {{incidentName}} successfully deleted.",
+      "deleteIncidentFailed": "An error occurred deleting incident {{incidentName}}.",
+      "createIncidentSuccessfully": "Incident {{incidentName}} successfully created.",
+      "createIncidentFailed": "An error occurred creating incident {{incidentName}}."
     },
     "incidentStatus": {
       "investigating": "Investigating",
