@@ -181,6 +181,28 @@ describe('ClusterService', function () {
       $httpBackend.flush();
     });
 
+    it('should filter out clusters with targetType unknown', function () {
+      var clusterId = 'jalla';
+      var response = org([
+        {
+          id: clusterId,
+          targetType: 'unknown'
+        }
+      ]);
+      $httpBackend
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
+        .respond(response);
+
+      var callback = sinon.stub();
+      ClusterService.fetch().then(callback);
+      $httpBackend.flush();
+
+      var clusterCache = callback.getCall(0).args[0];
+      expect(clusterCache.c_mgmt[clusterId]).not.toBeDefined();
+      expect(clusterCache.c_ucmc[clusterId]).not.toBeDefined();
+      expect(clusterCache.c_cal[clusterId]).not.toBeDefined();
+    });
+
     it('should separate data based on connector types', function () {
       var response = org([
         cluster([

@@ -46,16 +46,13 @@
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '?fields=@wide')
         .then(extractDataFromResponse);
-        /*.then(function(cluster) { // REMOVE ME, TESTING no connectors handling
-          cluster.connectors = [];
-          return cluster;
-        });*/
     }
 
     function getAll(orgId) {
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '?fields=@wide')
         .then(extractClustersFromResponse)
+        .then(filterUnknownClusters)
         .then(addServicesStatuses)
         .then(sort);
     }
@@ -131,7 +128,6 @@
     function addServicesStatuses(clusters) {
       return _.map(clusters, function (cluster) {
         if (cluster.targetType === 'c_mgmt') {
-          // cluster.connectors = []; // REMOVE ME, TESTING no connectors handling
           var mgmtConnectors = _.filter(cluster.connectors, { connectorType: 'c_mgmt' });
           var ucmcConnectors = _.filter(cluster.connectors, { connectorType: 'c_ucmc' });
           var calConnectors = _.filter(cluster.connectors, { connectorType: 'c_cal' });
@@ -443,6 +439,12 @@
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'hercules.genericFailure');
         });
+    }
+
+    function filterUnknownClusters(clusters) {
+      return _.filter(clusters, function (cluster) {
+        return cluster.targetType !== 'unknown';
+      });
     }
   }
 })();

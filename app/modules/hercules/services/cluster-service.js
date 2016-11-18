@@ -211,10 +211,9 @@
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
         .then(extractDataFromResponse)
         .then(function (response) {
-          // only keep fused clusters
+          // only keep clusters that has a targetType (just to be on the safe side)
           return _.filter(response.clusters, function (cluster) {
-            // cluster.connectors = []; // REMOVE ME, TESTING no connectors behavior!!
-            return cluster.state ? cluster.state === 'fused' : true;
+            return cluster.targetType !== 'unknown';
           });
         })
         .then(function (clusters) {
