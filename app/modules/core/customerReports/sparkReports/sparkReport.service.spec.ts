@@ -33,7 +33,7 @@ describe('Service: Customer Reports Service', function () {
 
   beforeEach(function () {
     this.initModules('Core');
-    this.injectDependencies('$httpBackend', '$q', 'CommonReportService', 'SparkReportService');
+    this.injectDependencies('$scope', '$q', 'CommonReportService', 'SparkReportService');
 
     spyOn(this.CommonReportService, 'returnErrorCheck').and.callFake((error, message, response) => {
       expect(error).toEqual(rejectError);
@@ -42,56 +42,31 @@ describe('Service: Customer Reports Service', function () {
     });
   });
 
-  afterEach(function () {
-    this.$httpBackend.verifyNoOutstandingExpectation();
-    this.$httpBackend.verifyNoOutstandingRequest();
-  });
-
   describe('Active User Services', function () {
-    it('should return column data getActiveUserData where lineGraph is false', function () {
+    it('should return column data getActiveUserData', function () {
       spyOn(this.CommonReportService, 'getCustomerReport').and.returnValue(this.$q.when(dataResponse([{
         data: updateDates(_.cloneDeep(activeData.activeDetailed), undefined, undefined),
       }])));
 
-      this.SparkReportService.getActiveUserData(defaults.timeFilter[0], false).then(function (response) {
+      this.SparkReportService.getActiveUserData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual({
           graphData: updateDates(_.cloneDeep(activeData.activeResponse), defaults.dayFormat, undefined),
           isActiveUsers: true,
         });
       });
+      this.$scope.$apply();
     });
 
-    it('should return line data getActiveUserData where lineGraph is true', function () {
-      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.when(dataResponse(updateDates(_.cloneDeep(activeData.activeLineData), undefined, undefined))));
-
-      this.SparkReportService.getActiveUserData(defaults.timeFilter[0], true).then(function (response) {
-        expect(response).toEqual({
-          graphData: updateDates(_.cloneDeep(activeData.activeLineResponse), defaults.dayFormat, undefined),
-          isActiveUsers: true,
-        });
-      });
-    });
-
-    it('should notify an error for getActiveUserData where lineGraph is false', function () {
+    it('should notify an error for getActiveUserData', function () {
       spyOn(this.CommonReportService, 'getCustomerReport').and.returnValue(this.$q.reject(rejectError));
 
-      this.SparkReportService.getActiveUserData(defaults.timeFilter[0], false).then(function (response) {
+      this.SparkReportService.getActiveUserData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual({
           graphData: [],
           isActiveUsers: false,
         });
       });
-    });
-
-    it('should notify an error for getActiveUserData where lineGraph is true', function () {
-      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.reject(rejectError));
-
-      this.SparkReportService.getActiveUserData(defaults.timeFilter[0], true).then(function (response) {
-        expect(response).toEqual({
-          graphData: [],
-          isActiveUsers: false,
-        });
-      });
+      this.$scope.$apply();
     });
 
     it('should getMostActiveUserData', function () {
@@ -105,6 +80,7 @@ describe('Service: Customer Reports Service', function () {
           error: false,
         });
       });
+      this.$scope.$apply();
     });
 
     it('should notify an error for getMostActiveUserData', function () {
@@ -116,6 +92,7 @@ describe('Service: Customer Reports Service', function () {
           error: true,
         });
       });
+      this.$scope.$apply();
     });
   });
 
@@ -135,6 +112,7 @@ describe('Service: Customer Reports Service', function () {
       this.SparkReportService.getAvgRoomData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual(updateDates(_.cloneDeep(roomData.response), defaults.dayFormat, undefined));
       });
+      this.$scope.$apply();
     });
 
     it('should notify an error for getAvgRoomData', function () {
@@ -143,6 +121,7 @@ describe('Service: Customer Reports Service', function () {
       this.SparkReportService.getAvgRoomData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual([]);
       });
+      this.$scope.$apply();
     });
   });
 
@@ -160,6 +139,7 @@ describe('Service: Customer Reports Service', function () {
       this.SparkReportService.getFilesSharedData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual(updateDates(_.cloneDeep(fileData.response), defaults.dayFormat, undefined));
       });
+      this.$scope.$apply();
     });
 
     it('should notify an error for getFilesSharedData', function () {
@@ -168,6 +148,7 @@ describe('Service: Customer Reports Service', function () {
       this.SparkReportService.getFilesSharedData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual([]);
       });
+      this.$scope.$apply();
     });
   });
 
@@ -180,6 +161,7 @@ describe('Service: Customer Reports Service', function () {
       this.SparkReportService.getMediaQualityData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual(updateDates(_.cloneDeep(mediaData.response), defaults.dayFormat, undefined));
       });
+      this.$scope.$apply();
     });
 
     it('should notify an error for getMediaQualityData', function () {
@@ -188,6 +170,7 @@ describe('Service: Customer Reports Service', function () {
       this.SparkReportService.getMediaQualityData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual([]);
       });
+      this.$scope.$apply();
     });
   });
 
@@ -198,6 +181,7 @@ describe('Service: Customer Reports Service', function () {
       this.SparkReportService.getCallMetricsData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual(metricsData.response);
       });
+      this.$scope.$apply();
     });
 
     it('should notify an error for getCallMetricsData', function () {
@@ -206,6 +190,7 @@ describe('Service: Customer Reports Service', function () {
       this.SparkReportService.getCallMetricsData(defaults.timeFilter[0]).then(function (response) {
         expect(response.dataProvider).toEqual(metricsData.emptyData);
       });
+      this.$scope.$apply();
     });
   });
 
@@ -226,6 +211,7 @@ describe('Service: Customer Reports Service', function () {
       this.SparkReportService.getDeviceData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual(deviceResponse);
       });
+      this.$scope.$apply();
     });
 
     it('should notify an error for getDeviceData', function () {
@@ -234,6 +220,7 @@ describe('Service: Customer Reports Service', function () {
       this.SparkReportService.getDeviceData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual(devicesJson.emptyData);
       });
+      this.$scope.$apply();
     });
   });
 });

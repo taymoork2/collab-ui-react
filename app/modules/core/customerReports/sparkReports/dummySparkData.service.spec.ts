@@ -16,10 +16,6 @@ describe('Controller: Dummy Customer Reports', function () {
       for (let i = 7; i >= 0; i--) {
         data[i].date = moment().subtract(8 - i, defaults.DAY).format(defaults.dayFormat);
       }
-    } else if (filter.value === 1) {
-      for (let x = 0; x <= 4; x++) {
-        data[x].date = moment().day(-1).subtract(4 - x, defaults.WEEK).format(defaults.dayFormat);
-      }
     } else {
       for (let z = 0; z <= 52; z++) {
         data[z].date = moment().day(-1).subtract(52 - z, defaults.WEEK).format(defaults.dayFormat);
@@ -59,7 +55,6 @@ describe('Controller: Dummy Customer Reports', function () {
     let dummyLineData = _.cloneDeep(activeData.dummyData);
     expect(this.DummySparkDataService.dummyActiveUserData(timeFilter[0], true)).toEqual(updateLineDates(dummyLineData.one, timeFilter[0]));
     expect(this.DummySparkDataService.dummyActiveUserData(timeFilter[1], true)).toEqual(updateLineDates(dummyLineData.two, timeFilter[1]));
-    expect(this.DummySparkDataService.dummyActiveUserData(timeFilter[2], true)).toEqual(updateLineDates(dummyLineData.three, timeFilter[2]));
   });
 
   it('dummyAvgRoomData should return the expected responses', function () {

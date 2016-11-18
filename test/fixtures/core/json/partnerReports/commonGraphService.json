@@ -106,7 +106,8 @@
     "valueAxes": "dummyData",
     "graphs": "dummyData",
     "categoryField": "dummyData",
-    "categoryAxis": "dummyData"
+    "categoryAxis": "dummyData",
+    "zoomOutText": ""
   },
   "getBasePieChart": {
     "type": "pie",
