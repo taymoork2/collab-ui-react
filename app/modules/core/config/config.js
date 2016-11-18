@@ -67,7 +67,8 @@
         fusion_ec: 'squared-fusion-ec',
         messenger: 'webex-messenger',
         care: 'cloud-contact-center',
-        context: 'contact-center-context'
+        context: 'contact-center-context',
+        fusion_google_cal: 'squared-fusion-gcal'
       },
 
       offerTypes: {
