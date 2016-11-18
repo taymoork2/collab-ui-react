@@ -6,7 +6,7 @@
     .controller('HelpdeskOrderController', HelpdeskOrderController);
 
   /* @ngInject */
-  function HelpdeskOrderController($state, $stateParams, $translate, Authinfo, HelpdeskService, Notification) {
+  function HelpdeskOrderController($state, $stateParams, $translate, $timeout, Authinfo, HelpdeskService, Notification) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.order) {
@@ -19,6 +19,7 @@
     vm.customerAdminEmailEdit = vm.partnerAdminEmailEdit = false;
     vm.showCustomerAdminEmailEdit = showCustomerAdminEmailEdit;
     vm.updateCustomerAdminEmail = updateCustomerAdminEmail;
+    vm.getEmailStatus = getEmailStatus;
     vm.cancelCustomerAdminEmailEdit = cancelCustomerAdminEmailEdit;
     vm.showPartnerAdminEmailEdit = showPartnerAdminEmailEdit;
     vm.updatePartnerAdminEmail = updatePartnerAdminEmail;
@@ -172,7 +173,7 @@
           Notification.success('helpdesk.editAdminEmailSuccess');
           vm.customerAdminEmailEdit = false;
           vm.showCustomerEmailSent = false;
-          _.delay(function () {
+          $timeout(function () {
             getEmailStatus(false);
           }, 5000);
         }, function (response) {
@@ -197,7 +198,7 @@
           Notification.success('helpdesk.editAdminEmailSuccess');
           vm.partnerAdminEmailEdit = false;
           vm.showPartnerEmailSent = false;
-          _.delay(function () {
+          $timeout(function () {
             getEmailStatus(false);
           }, 5000);
         }, function (response) {
@@ -219,7 +220,8 @@
           } else {
             vm.showPartnerEmailSent = false;
           }
-          _.delay(function () {
+
+          $timeout(function () {
             getEmailStatus(isCustomer);
           }, 5000);
           Notification.success('helpdesk.resendMailSuccess');
