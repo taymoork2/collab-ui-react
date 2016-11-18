@@ -3603,7 +3603,9 @@
       "expires": "Expires {{expiryDate}}",
       "searchAnotherUser": "Or search for another user",
       "codeIsUsed": "This code has now been used",
-      "failedToGenerateActivationCode": "Failed to generate activation code. Reason:"
+      "failedToGenerateActivationCode": "Failed to generate activation code. Reason:",
+      "problemGeneratingCode": "There was a problem generating your activation code.",
+      "pressRetry": "Please press Retry to try again."
     }
   },
   "generateActivationCodeModal": {
