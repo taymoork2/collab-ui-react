@@ -45,9 +45,9 @@
     }
 
     function updateConfig(newServiceAccountId, privateKey, serviceId) {
-      isGoogleCalendarSetup = true;
       return $q(function (resolve, reject) {
         if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal()) {
+          isGoogleCalendarSetup = true;
           $timeout(function () {
             serviceAccountId = newServiceAccountId;
             resolve(extractDataFromResponse({

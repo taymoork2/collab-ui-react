@@ -195,9 +195,8 @@
         controllerAs: 'vm',
         templateUrl: 'modules/hercules/service-settings/calendar-service-setup/first-time-google-setup.html',
       })
-        .result.then(function () {
-          CloudConnectorService.updateConfig('google@example.org', 'placeholder_key', 'squared-fusion-gcal');
-          $state.go('calendar-service.settings');
+        .result.then(function (goToState) {
+          $state.go(goToState);
         })
         .catch(function () {
           $state.go('services-overview');

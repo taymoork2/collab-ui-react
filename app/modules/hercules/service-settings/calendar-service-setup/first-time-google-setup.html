@@ -4,22 +4,78 @@
 
 <div class="modal-body add-resource hybrid-calendar-setup">
 
- <h3>… First time Google Setup placeholder …</h3>
+  <div class="hercules-upload-key-section row"
+        ng-if="vm.inDocumentationStep">
+    <h3 translate="hercules.settings.googleCalendar.generateAPrivateKeyHeader"
+        class="hercules-upload-key-header"></h3>
+    <p translate="hercules.settings.googleCalendar.generateAPrivateKeyExplanation"
+       class="medium-10"></p>
+    <p translate="hercules.settings.googleCalendar.keyHasBeenGeneratedGoNext"
+       class="medium-10"></p>
+  </div>
+
+  <div ng-if="vm.inUploadPrivateKeyStep"
+       class="hercules-upload-key-modal">
+    <upload-private-key
+      data="vm.data"></upload-private-key>
+  </div>
+
+
+  <div class="hercules-upload-key-section row"
+       ng-if="vm.inFinalStep">
+
+    <h3 translate="hercules.settings.googleCalendar.googleCalendarSetupCompleted"></h3>
+    <p translate="hercules.settings.googleCalendar.great"
+       translate-values="{fileName: vm.data.fileName}"
+       class="medium-10"></p>
+    <p translate="hercules.settings.googleCalendar.toEnableUsers"></p>
+    <ul>
+      <li translate="hercules.settings.googleCalendar.enableIndividually"
+          translate-value-onclick="vm.navigateToUsers()"
+          translate-compile></li>
+      <li translate="hercules.settings.googleCalendar.enableInBulk"
+          translate-value-onclick="vm.navigateToCSV()"
+          translate-compile></li>
+    </ul>
+    <p translate="hercules.settings.googleCalendar.referToDocumentation"></p>
+  </div>
+
+
+
 
 </div>
 
 <div class="modal-footer add-resource">
 
   <button class="btn"
-          ng-click="vm.cancel();">
+          ng-click="vm.cancel()">
     <span translate="common.cancel"></span>
   </button>
 
   <button class="btn btn--primary"
-          ng-click="vm.proceed();">
+          ng-click="vm.haveReadDocumentation()"
+          ng-if="vm.inDocumentationStep">
 
     <span translate="common.next"></span>
   </button>
+
+  <button cs-btn
+          class="btn btn--primary"
+          ng-click="vm.uploadKey()"
+          ng-if="vm.inUploadPrivateKeyStep"
+          ng-disabled="vm.data.file === '' || vm.data.googleServiceAccount === ''"
+          loading="vm.loading">
+
+    <span translate="common.upload"></span>
+  </button>
+
+  <button class="btn btn--primary"
+          ng-click="vm.closeModal()"
+          ng-if="vm.inFinalStep">
+
+    <span translate="common.done"></span>
+  </button>
+
 
 
 </div>

@@ -1755,7 +1755,7 @@
         "deactivateHeader": "Deactivate Google Calendar",
         "deactivateText": "Your users will no longer be able to use this service.",
         "googleCalendarConfigWillBeWiped": "This action will delete all Google Calendar settings from Cisco Collaboration Cloud.",
-        "uploadNewPrivateKey": "Upload New Private Key",
+        "uploadNewPrivateKey": "Upload Private Key",
         "uploadNewPrivateKeyPlaceholder": "Enter service account name",
         "serviceAccountName": "Service Account Name",
         "uploadNewPrivateKeyExplanation": "Enter your service account name and upload the private key you downloaded from Google Developer Console.",
@@ -1765,7 +1765,16 @@
         "removeFile": "Remove file",
         "successfullyUploadedKey": "Service account saved successfully, and private key file {{filename}} uploaded.",
         "failedToUploadKey": "Changes not saved. The service account and/or private key file are not valid.",
-        "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status."
+        "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status.",
+        "generateAPrivateKeyHeader": "Generate a Private Key",
+        "generateAPrivateKeyExplanation": "To enable Hybrid Calendar for your users, you need to generate a private key for Google Calendar. You can generate the key with the <a href=\"https://console.developers.google.com/\" target=\"_blank\">Google Developer Console</a>. Follow <a href=\"https://example.org/\" target=\"_blank\">documentation</a> to learn how to generate a key.",
+        "keyHasBeenGeneratedGoNext": "When you have generated your key, click Next.",
+        "googleCalendarSetupCompleted": "Google Calendar setup completed",
+        "great": "Great! {{fileName}} was successfully uploaded to Cisco Collaboration Cloud. You can now enable Hybrid Calendar Service for your users.",
+        "toEnableUsers": "To enable users, you can:",
+        "enableIndividually": "Enable them individually from the <a ng-click=\"{{onclick}}\">users</a> page.",
+        "enableInBulk": "Enable them in bulk using the <a ng-click=\"{{onclick}}\">CSV template</a>.",
+        "referToDocumentation": "Refer to <a href=\"https://example.org/\" target=\"_blank\">documentation</a> if you need help enabling users."
       },
       "hybridCalendarCommon": {
         "hybridCalendarSetUp": "Hybrid Calendar setup",
