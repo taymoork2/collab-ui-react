@@ -6465,13 +6465,18 @@
       "lastUpdatedOn": "Last updated on ",
       "resolvedOn": "Resolved on ",
       "noAffectedComponent": "No components were affected by this update.",
+      "postAt": "Post At ",
       "newIncident": "New Incident",
       "incidentName": "Incident Name",
       "createIncidentBtn": "Create Incident",
-      "deleteIncidentSuccessfully": "Incident {{incidentName}} successfully deleted.",
-      "deleteIncidentFailed": "An error occurred deleting incident {{incidentName}}.",
-      "createIncidentSuccessfully": "Incident {{incidentName}} successfully created.",
-      "createIncidentFailed": "An error occurred creating incident {{incidentName}}."
+      "deleteIncidentSucceed": "Incident {{incidentName}} delete succeed.",
+      "deleteIncidentFailed": "Incident {{incidentName}} delete failed.",
+      "createIncidentSucceed": "Incident {{incidentName}} create succeed.",
+      "createIncidentFailed": "Incident {{incidentName}} create failed.",
+      "modifyMessageSucceed": "Message successfully modified.",
+      "modifyMessageFailed": "An error occurred modifying message.",
+      "updateIncidentSucceed": "Incident {{incidentName}} update succeed.",
+      "updateIncidentFailed": "Incident {{incidentName}} update failed."
     },
     "incidentStatus": {
       "investigating": "Investigating",
@@ -6481,7 +6486,7 @@
     },
     "impactStatus":{
       "none": "Override impact to None",
-      "Minor": "Override impact to Minor",
+      "minor": "Override impact to Minor",
       "major": "Override impact to Major",
       "critical": "Override impact to Critical",
       "maintenance": "Override impact to Maintenance"

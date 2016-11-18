@@ -52,7 +52,7 @@
       }).then(function () {
         goBack();
 
-        Notification.success('gss.incidentsPage.createIncidentSuccessfully', {
+        Notification.success('gss.incidentsPage.createIncidentSucceed', {
           incidentName: vm.incidentName
         });
       }).catch(function (error) {

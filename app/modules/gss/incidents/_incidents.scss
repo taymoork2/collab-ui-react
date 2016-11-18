@@ -1,5 +1,5 @@
 .gss-page-wrapper {
-  .conent-common-style {
+  .content-common-style {
     margin: 0 auto;
     padding: 2rem;
   }
@@ -21,7 +21,7 @@
         }
         .columns:last-child a {
           color: $color-primary-light;
-          margin: auto .625rem;
+          margin: auto 0.625rem;
         }
       }
     }
@@ -55,5 +55,109 @@
   p, input {
     font-size: 1rem;
     @include vr_spacing(mb, 1.25);
+  }
+}
+
+.update-incident-page {
+  background: $white;
+
+  .title-section {
+    .title {
+      h3 {
+        a {
+          font-size: 1rem;
+          padding-left: 1rem;
+        }
+      }
+
+      .none, .maintenance {
+        color: $gray-dark-3;
+      }
+      .minor {
+        color: $color-attention-base;
+      }
+      .major {
+        color: $color-meetings-base;
+      }
+      .critical {
+        color: $color-negative-dark;
+      }
+    }
+
+    .edit-title {
+      > .csSelect-container {
+        width: 30%;
+      }
+      > input, > .csSelect-container {
+        float: left;
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .update-incident-section {
+    border: 1px solid $gray-light-2;
+    padding: 2rem 2rem 0;
+
+    > .sub-section {
+      margin-bottom: 1.5rem;
+      & > :first-child {
+        margin-bottom: 0.5rem;
+      }
+
+      .cs-radio-group {
+        margin-bottom: 0;
+        .cs-input-group {
+          float: left;
+          margin-right: 1rem;
+        }
+      }
+    }
+    textarea {
+      width: 100%;
+    }
+
+    .component-list {
+      li ul {
+        margin-left: 0;
+      }
+    }
+  }
+
+  .messages-section {
+    padding: 2rem 0;
+    ul {
+      list-style: none;
+      margin-left: 0;
+    }
+    > ul > li {
+      padding: 1.5rem 0;
+      border-bottom: 1px solid $gray-light-2;
+      &:last-of-type {
+        border-bottom: none;
+      }
+
+      strong {
+        text-transform: capitalize;
+      }
+
+      button {
+        margin-top: 1rem;
+      }
+    }
+    .date-time-plugin {
+      margin-right: 0.5rem;
+    }
+    textarea {
+      clear: both;
+      width: 50%;
+    }
+    .affected-components {
+      li {
+        margin: 0.1rem;
+        padding: 0 1rem;
+        background: $gray-light-1;
+      }
+    }
   }
 }
