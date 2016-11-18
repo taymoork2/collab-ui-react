@@ -803,7 +803,7 @@
         ServiceSetup.deleteInternalNumberRange(internalNumberRange).then(function () {
           // delete the range from DB list
           var index = _.findIndex(vm.model.numberRanges, function (chr) {
-            return (chr.uuid == internalNumberRange.uuid);
+            return (chr.uuid === internalNumberRange.uuid);
           });
           if (index !== -1) {
             vm.model.numberRanges.splice(index, 1);
@@ -1212,7 +1212,7 @@
 
         // do not show singlenumber intenalranges
         vm.model.displayNumberRanges = vm.model.numberRanges.filter(function (obj) {
-          return obj.beginNumber != obj.endNumber;
+          return obj.beginNumber !== obj.endNumber;
         });
 
         // sort - order by beginNumber ascending
@@ -1462,7 +1462,7 @@
         .then(function () {
           if (vm.model.callerId.callerIdEnabled && (vm.model.callerId.callerIdName && vm.model.callerId.callerIdNumber)) {
             if (!(savedModel.callerId.callerIdEnabled) ||
-               (vm.model.callerId.uuid == "")) {
+               (vm.model.callerId.uuid === "")) {
               var data = {
                 name: vm.model.callerId.callerIdName,
                 externalCallerIdType: COMPANY_CALLER_ID_TYPE,

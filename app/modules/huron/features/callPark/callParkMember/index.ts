@@ -1,5 +1,5 @@
 import { CallParkMemberComponent } from './callParkMember.component';
-import { callParkMemberTelephoneFilter } from './callParkTelephone.filter';
+import { callParkMemberNumbersFilter } from './callParkMemberNumbers.filter';
 import memberService from 'modules/huron/members';
 
 export default angular
@@ -10,5 +10,5 @@ export default angular
     memberService,
   ])
   .component('ucCallParkMember', new CallParkMemberComponent())
-  .filter('callParkMemberTelephoneFilter', callParkMemberTelephoneFilter)
+  .filter('callParkMemberNumbersFilter', callParkMemberNumbersFilter)
   .name;

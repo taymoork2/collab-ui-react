@@ -1642,8 +1642,8 @@
         "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-ec": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too."
       },
-      "defaultWebExSite": "Default WebEx Site:",
-      "defaultWebExSiteNotSet": "Not set"
+      "preferredWebExSite": "Preferred WebEx Site:",
+      "preferredWebExSiteDefault": "Default"
     },
     "alarms": {
       "alarms": "Alarms",
@@ -2477,11 +2477,11 @@
     "inputPlaceHolder": "Start typing here",
     "sayMessage": "Message",
     "sayMessagePlaceholder": "Enter your message here.",
-    "sayMessageUninterrupt": "Message playback will be uninterruptable.",
+    "sayMessageUninterrupt": "The message playback cannot be interrupted.",
     "sayMessageVoice": "Voice",
     "sayMessageInvalidChar": "Invalid character. Character '{{char}}' is not allowed.",
     "messageType": "Message Type",
-    "destinationHelpMessage": "This is where the call is routed if not answered by the queue" ,
+    "destinationHelpMessage": "Choose where to route an unanswered call after a set period of waiting time.",
     "destinationLabel": "Destination" ,
     "destinations": {
      "AutoAttendant": "Auto Attendant",
@@ -2493,19 +2493,20 @@
       "Disconnect": "Disconnect"
   },
     "initialAnnouncement" : "Initial Announcement",
-    "initialHelpText" : "This message will play for the caller upon entry into the queue.",
-     "periodicHelpText": "This message will play for the caller upon entry into the queue.",
+    "initialHelpText" : "Specify a message to play when the caller enters the queue.",
+    "periodicHelpText": "Specify a message to play and how often to play it while the caller is waiting in the queue.",
     "fallbackLabel": "Fallback" ,
     "periodicAnnouncement": "Periodic Announcements",
     "uploadedFile": "Upload File",
     "uploadFailed": "File upload failed, unable to connect. Please try again.",
     "dragAndDropWav": "Drag and Drop .wav file here or click to browse",
     "import": "Import",
-    "sayAndError": "For Say Messages and Error Messages",
+    "sayAndError": "These selections apply to Say and Error Messages",
     "callAssociatedAAPreview": "Call number associated with this auto attendant to preview.",
     "holdMusic": "Hold Music",
-    "standardTransferMusic": "Cisco Standard Transfer Music",
-    "musicOnHoldHelp": "File will repeat while the caller is on hold.",
+    "standardTransferMusic": "Use Cisco Default",
+    "uploadYourOwn": "Upload Your Own File",
+    "musicOnHoldHelp": "Choose the audio that callers hear while on hold.",
     "cancelUpload": "Are you sure you want to cancel this upload?",
     "overwriteUpload": "Are you sure you want to overwrite the current file?",
     "overwrite": "Overwrite",
@@ -3023,11 +3024,11 @@
     "feature4": "Taxes & Fees Included in Price"
   },
   "tataFeatures": {
-    "feature1": "1 DID or TFN per user",
-    "feature2": "Unlimited calling to U.S. 50 states + Canada",
-    "feature3": "Port/Carrier Transfer cancellation or expedite",
-    "feature4": "Caller ID name delivery and registration",
-    "feature5": "E911 Services and Toll Free vanity lookup"
+    "feature1": "1 DID per User",
+    "feature2": "Calling To/From U.S. 50 States",
+    "feature3": "No Fees for Number Porting/Transfer",
+    "feature4": "Caller ID Name Delivery and Registration",
+    "feature5": "E911"
   },
   "partnerHomePage": {
     "trialsHeading": "Trials",
@@ -3123,7 +3124,7 @@
       "deviceTrialUnavailable": "The system is temporarily unable to add devices, please try later.",
       "selectDevicesHeader": "Select Devices",
       "deviceLimitDescription": "Choose up to {{max}} total devices",
-      "meetingRoomCamera": "Spark Room Device &nbsp;<span class='small-hint'>(Any mix up to 3 devices)</span>",
+      "meetingRoomCamera": "Spark Room Device &nbsp;<span class='small-hint'>(Any mix up to {{max}} devices)</span>",
       "deskPhones": "Personal and Shared Desk Phones &nbsp;<span class='small-hint'>(Any mix up to {{max}} devices)</span>",
       "sx10": "SX10",
       "dx80": "DX80",
@@ -3133,10 +3134,10 @@
       "phone8841": "8841",
       "phone7841": "7841",
       "quantity": "Quantity",
-      "invalidQuantity": "Quantity must be between 1 and {{max}}",
+      "invalidQuantity": "Quantity must be between {{min}} and {{max}}",
       "invalidQuantityMx300": "Quantity must be {{qty}}",
-      "invalidTotalQuantity": "Entire order must have between 1 and {{max}} devices",
-      "invalidRoomSystemsQuantity": "Limited to 3 Spark Room Devices",
+      "invalidTotalQuantity": "Entire order must have between {{min}} and {{max}} devices",
+      "invalidRoomSystemsQuantity": "Limited to {{max}} Spark Room Devices",
       "invalidPhonesQuantity": "Limited to {{max}} Personal & Shared Desk Phones",
       "shippingInfo": "Shipping Information",
       "address": "John Q. Partner\n555 Main St.\nSan Francisco, CA 43211",
@@ -6328,7 +6329,7 @@
     "servicesPlaceholder": "Please choose a service",
     "componentStatuses": "Component Statuses",
     "updateIncident": "Update Incident",
-    "deleteIncident": "Delete Incident",
+    "deleteIncident": "Delete {{incidentName}}",
     "addStatusPage": "Add Another Service",
     "previousUpdated": "Previous Updates",
     "hideAffectedComponents": "Hide Affected Components",
@@ -6385,11 +6386,6 @@
       "deleteComponentSucceed": "Component {{componentName}} delete succeed.",
       "deleteComponentFailed":"Component {{componentName}} delete failed."
     },
-    "createIncident": {
-      "newIncident": "New Incident",
-      "incidentName": "Incident Name",
-      "createIncidentBtn": "Create Incident"
-    },
     "incidentsPage":{
       "incidentStatus": "Incident Status",
       "message": "Message",
@@ -6401,7 +6397,14 @@
       "noIncidentContentLink": "Create your first incident",
       "lastUpdatedOn": "Last updated on ",
       "resolvedOn": "Resolved on ",
-      "noAffectedComponent": "No components were affected by this update."
+      "noAffectedComponent": "No components were affected by this update.",
+      "newIncident": "New Incident",
+      "incidentName": "Incident Name",
+      "createIncidentBtn": "Create Incident",
+      "deleteIncidentSuccessfully": "Incident {{incidentName}} successfully deleted.",
+      "deleteIncidentFailed": "An error occurred deleting incident {{incidentName}}.",
+      "createIncidentSuccessfully": "Incident {{incidentName}} successfully created.",
+      "createIncidentFailed": "An error occurred creating incident {{incidentName}}."
     },
     "incidentStatus": {
       "investigating": "Investigating",

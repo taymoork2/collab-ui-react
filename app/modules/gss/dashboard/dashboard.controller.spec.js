@@ -56,14 +56,14 @@ describe('controller: DashboardCtrl', function () {
     spyOn($state, 'go');
 
     controller.goToNewIncidentPage();
-    expect($state.go).toHaveBeenCalledWith('gss.under.construction');
+    expect($state.go).toHaveBeenCalledWith('gss.incidents.new');
   });
 
   it('call goToComponentsPage, should go to the components page', function () {
     spyOn($state, 'go');
 
     controller.goToComponentsPage();
-    expect($state.go).toHaveBeenCalledWith('gss.under.construction');
+    expect($state.go).toHaveBeenCalledWith('gss.components');
   });
 
   it('call modifyComponentStatus, DashboardService.modifyComponent should been called', function () {
