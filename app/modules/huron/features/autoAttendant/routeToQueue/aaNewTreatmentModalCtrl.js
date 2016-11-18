@@ -28,7 +28,6 @@
     };
 
     vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
-    vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
 
     vm.destinationOptions = [{
       label: $translate.instant('autoAttendant.destinations.Disconnect'),
@@ -65,7 +64,7 @@
     vm.ok = ok;
     vm.isSaveEnabled = isSaveEnabled;
     vm.uploadMohTrigger = uploadMohTrigger;
-    vm.setUpEntry = setUpEntry;
+    vm.activate = activate;
     vm.populateMohRadio = populateMohRadio;
 
     vm.languageOption = languageOption;
@@ -216,7 +215,7 @@
 
     //get queueSettings menuEntry -> inner menu entry type (moh, initial, periodic...)
     function setUpEntry() {
-      if ($scope.keyIndex && $scope.menuId) { //came from a phone menu
+      if ($scope.keyIndex && $scope.menuId && !$scope.fromRouteCall) { //came from a phone menu
         var phMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         vm.menuEntry = phMenu.entries[$scope.keyIndex];
       } else { //came from a route call

@@ -66,7 +66,6 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   var index = '0';
   var menuId = 'menu0';
   var keyIndex = '0';
-  var fromRouteCall = true;
   var rtQ = 'routeToQueue';
   var play = 'play';
   var sortedOptions = [{
@@ -98,7 +97,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     $scope.index = index;
     $scope.menuId = menuId;
     $scope.keyIndex = keyIndex;
-    $scope.fromRouteCall = fromRouteCall;
+    $scope.fromRouteCall = false;
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     uiMenu = AutoAttendantCeMenuModelService.newCeMenu();
@@ -129,7 +128,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
       aa_menu_id: menuId,
       aa_index: index,
       aa_key_index: keyIndex,
-      aa_from_route_call: fromRouteCall
+      aa_from_route_call: false
     });
   }));
 
@@ -233,14 +232,39 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
 
   describe('languageAndVoiceOptions', function () {
     it('when landed from Phone Menu, showLanguageAndVoiceOptions should be false', function () {
-      controller.setUpEntry();
+      var controller = $controller('AANewTreatmentModalCtrl', {
+        $scope: $scope,
+        $modalInstance: modalFake,
+        aa_schedule: schedule,
+        aa_menu_id: menuId,
+        aa_index: index,
+        aa_key_index: keyIndex,
+        aa_from_route_call: false
+      });
+
+      $scope.$apply();
+      controller.activate();
+
       expect(controller.showLanguageAndVoiceOptions).toBe(false);
     });
 
     it('when landed from New Step, showLanguageAndVoiceOptions should be true', function () {
       $scope.keyIndex = null;
       spyOn(AAUiModelService, 'getUiModel').and.returnValue(ui);
-      controller.setUpEntry();
+
+      var controller = $controller('AANewTreatmentModalCtrl', {
+        $scope: $scope,
+        $modalInstance: modalFake,
+        aa_schedule: schedule,
+        aa_menu_id: menuId,
+        aa_index: index,
+        aa_key_index: keyIndex,
+        aa_from_route_call: true
+      });
+
+      controller.activate();
+      $scope.$apply();
+
       expect(controller.showLanguageAndVoiceOptions).toBe(true);
     });
   });

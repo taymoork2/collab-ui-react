@@ -16,7 +16,7 @@
   }
 
   /* @ngInject */
-  function AAPhoneMenuCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, FeatureToggleService, QueueHelperService) {
+  function AAPhoneMenuCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, QueueHelperService) {
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
@@ -295,20 +295,6 @@
         });
       }
     }
-    /**
-     * This include the list of feature which are not production ready yet
-     */
-    function toggleRouteToQueueFeature() {
-      return FeatureToggleService.supports(FeatureToggleService.features.huronAACallQueue).then(function (result) {
-        if (result) {
-          AACommonService.setRouteQueueToggle(true);
-        } else {
-          AACommonService.setRouteQueueToggle(false);
-        }
-      }).catch(function () {
-        AACommonService.setRouteQueueToggle(false);
-      });
-    }
 
     /////////////////////
 
@@ -336,8 +322,7 @@
       vm.entries = vm.uiMenu.entries;
       vm.menuEntry = vm.entries[$scope.index];
       vm.menuId = vm.menuEntry.id;
-      AACommonService.setRouteQueueToggle(false);
-      toggleRouteToQueueFeature().finally(getQueues().finally(activate));
+      getQueues().finally(activate);
     }
 
     init();

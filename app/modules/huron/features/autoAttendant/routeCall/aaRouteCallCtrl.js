@@ -6,7 +6,7 @@
     .controller('AARouteCallMenuCtrl', AARouteCallMenuCtrl);
 
   /* @ngInject */
-  function AARouteCallMenuCtrl($scope, $translate, AAUiModelService, AACommonService, FeatureToggleService, QueueHelperService) {
+  function AARouteCallMenuCtrl($scope, $translate, AAUiModelService, AACommonService, QueueHelperService) {
 
     var vm = this;
     vm.queues = [];
@@ -64,48 +64,37 @@
      * This push the Route To Queue option in Route Call List and push get all the queues
     */
     function getQueues() {
-      if (AACommonService.isRouteQueueToggle()) {
-        return QueueHelperService.listQueues().then(function (aaQueueList) {
-          if (aaQueueList.length > 0) {
-            vm.options.push({
-              "label": $translate.instant('autoAttendant.phoneMenuRouteQueue'),
-              "value": 'routeToQueue'
+//      if (AACommonService.isRouteQueueToggle()) {
+      return QueueHelperService.listQueues().then(function (aaQueueList) {
+        if (aaQueueList.length > 0) {
+          vm.options.push({
+            "label": $translate.instant('autoAttendant.phoneMenuRouteQueue'),
+            "value": 'routeToQueue'
+          });
+          _.each(aaQueueList, function (aaQueue) {
+            var idPos = aaQueue.queueUrl.lastIndexOf("/");
+            vm.queues.push({
+              description: aaQueue.queueName,
+              id: aaQueue.queueUrl.substr(idPos + 1)
             });
-            _.each(aaQueueList, function (aaQueue) {
-              var idPos = aaQueue.queueUrl.lastIndexOf("/");
-              vm.queues.push({
-                description: aaQueue.queueName,
-                id: aaQueue.queueUrl.substr(idPos + 1)
-              });
-            });
-          }
-        });
-      }
+          });
+        }
+      });
     }
 
-    /**
-     * This include the list of feature which are not production ready yet
-     */
-    function toggleRouteToQueueFeature() {
-      return FeatureToggleService.supports(FeatureToggleService.features.huronAACallQueue).then(function (result) {
-        if (result) {
-          AACommonService.setRouteQueueToggle(true);
-        } else {
-          AACommonService.setRouteQueueToggle(false);
-        }
-      }).catch(function () {
-        AACommonService.setRouteQueueToggle(false);
-      });
+    function sortAndSetActionType() {
+      vm.options.sort(AACommonService.sortByProperty('label'));
+      setSelects();
     }
 
     function activate() {
       var ui = AAUiModelService.getUiModel();
       vm.menuEntry = ui[$scope.schedule].entries[$scope.index];
-      AACommonService.setRouteQueueToggle(false);
-      toggleRouteToQueueFeature().finally(getQueues).finally(function () {
-        vm.options.sort(AACommonService.sortByProperty('label'));
-        setSelects();
-      });
+      if (AACommonService.isRouteQueueToggle()) {
+        getQueues().finally(sortAndSetActionType);
+      } else {
+        sortAndSetActionType();
+      }
     }
 
     activate();
