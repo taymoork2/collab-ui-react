@@ -126,19 +126,19 @@
     ////////////
 
     function setAllForward(model) {
-      _.set(vm, 'allForward', model);
+      vm.allForward = model;
     }
 
     function setInternalForward(model) {
-      _.set(vm, 'internalForward', model);
+      vm.internalForward = model;
     }
 
     function setExternalForward(model) {
-      _.set(vm, 'externalForward', model);
+      vm.externalForward = model;
     }
 
     function setCallerIdNumber(model) {
-      _.set(vm, 'callerIdInfo.customNumber', model);
+      vm.callerIdInfo.customNumber = model;
     }
 
     function getRegionCode() {
@@ -202,9 +202,7 @@
     });
 
     function resetLineSettings() {
-      $q.resolve(init()).then(function () {
-        resetForm();
-      });
+      init().then(resetForm);
     }
 
     function loadInternalNumberPool(pattern) {

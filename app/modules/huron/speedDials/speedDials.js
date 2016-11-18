@@ -34,7 +34,7 @@
     };
 
     speedDials.setSpeedDial = function (model) {
-      _.set(speedDials, 'callDest', model);
+      speedDials.callDest = model;
     };
 
     speedDials.getRegionCode = function () {

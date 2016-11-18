@@ -108,7 +108,7 @@ class CallParkReversionCtrl implements ng.IComponentController {
   }
 
   public setSelectedReversionNumber(model) {
-    _.set(this, 'selectedReversionNumber', model);
+    this.selectedReversionNumber = model;
   }
 
   public toggleMemberPanel(): void {

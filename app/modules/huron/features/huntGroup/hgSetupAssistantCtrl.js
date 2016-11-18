@@ -87,7 +87,7 @@
     }
 
     function setSelectedFallbackNumber(model) {
-      _.set(vm, 'selectedFallbackNumber', model);
+      vm.selectedFallbackNumber = model;
     }
 
     function getRegionCode() {

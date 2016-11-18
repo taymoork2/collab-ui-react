@@ -22,7 +22,7 @@
     }
 
     function setSnr(info) {
-      _.set(vm, 'snrInfo.remoteDest', info);
+      vm.snrInfo.remoteDest = info;
     }
 
     vm.snrWaitSecondsOptions = [{
