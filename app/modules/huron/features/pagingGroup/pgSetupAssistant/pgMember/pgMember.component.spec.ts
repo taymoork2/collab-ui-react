@@ -3,12 +3,31 @@ import { Member } from 'modules/huron/members';
 describe('Component: pgMember', () => {
   const MEMBER_INPUT = 'input#memberInput';
   let membersList = getJSONFixture('huron/json/features/pagingGroup/membersList2.json');
-  let fake_picture_path = 'https://abcde/12345';
+  let fake_picture_path = 'https://09876/zyxwuv';
 
   let getMemberListFailureResp = {
     data: 'Internal Server Error',
     status: 500,
     statusText: 'Internal Server Error',
+  };
+
+  let userResponse = {
+    id: '0001',
+    name: {
+      givenName: 'rtp2',
+      familyName: 'rtp2lastname',
+    },
+    userName: 'porsche.rtp+phone2@gmail.com',
+    displayName: 'rtp2 displayName',
+    photos: [
+      {
+        type: 'photo',
+        value: 'https://12345/abcbe',
+      },
+      {
+        type: 'thumbnail',
+        value: 'https://09876/zyxwuv',
+      }],
   };
 
   beforeEach(function () {
@@ -29,6 +48,9 @@ describe('Component: pgMember', () => {
 
     this.getMemberPictureDefer = this.$q.defer();
     spyOn(this.FeatureMemberService, 'getMemberPicture').and.returnValue(this.getMemberPictureDefer.promise);
+
+    this.getUserDefer = this.$q.defer();
+    spyOn(this.FeatureMemberService, 'getUser').and.returnValue(this.getUserDefer.promise);
 
     spyOn(this.Notification, 'success');
     spyOn(this.Notification, 'errorResponse');
@@ -63,7 +85,8 @@ describe('Component: pgMember', () => {
     it('should be able to select and unselect a member', function () {
       this.controller.availableMembers = membersList;
       let mem1 = angular.copy(this.controller.availableMembers[0]);
-      this.getMemberPictureDefer.resolve(fake_picture_path);
+      //this.getMemberPictureDefer.resolve(fake_picture_path);
+      this.getUserDefer.resolve(userResponse);
       this.controller.selectMembers(mem1);
       this.$scope.$apply();
       expect(this.controller.selectedMembers.length).toEqual(1);
@@ -97,47 +120,6 @@ describe('Component: pgMember', () => {
   describe('member name display test', () => {
     beforeEach(initComponent);
 
-    it('Can get First and Last Name', function () {
-      let mem1 = angular.copy(membersList[0]);
-      expect(this.controller.getFirstLastName(mem1)).toEqual('Chuck Norris');
-    });
-
-    it('Can return empty string if no first and last name', function() {
-      let mem2 = angular.copy(membersList[1]);
-      expect(this.controller.getFirstLastName(mem2)).toEqual('');
-    });
-
-    it('Can return empty string for getFirstLastName if member is undefined', function() {
-      let mem = undefined;
-      expect(this.controller.getFirstLastName(mem)).toEqual('');
-    });
-
-    it('Can only get firstname if no last name', function() {
-      let mem3 = angular.copy(membersList[2]);
-      expect(this.controller.getFirstLastName(mem3)).toEqual('Tom');
-    });
-
-    it('Can only get lastname if no first name', function() {
-      let mem4 = angular.copy(membersList[3]);
-      expect(this.controller.getFirstLastName(mem4)).toEqual('Smith');
-    });
-
-    it('Can return empty string for getUserName if member is undefined', function() {
-      let mem = undefined;
-      expect(this.controller.getUserName(mem)).toEqual('');
-
-      let mem1 = new Member({
-        uuid: '0005',
-        type: 'USER_REAL_USER',
-        firstName: 'TOM',
-        lastName: 'CRUISE',
-        userName: undefined,
-        displayName: undefined,
-        numbers: [],
-      });
-      expect(this.controller.getUserName(mem1)).toEqual('');
-    });
-
     it('Can getDisplayNameInDropdown', function() {
       let mem5 = angular.copy(membersList[4]);
       expect(this.controller.getDisplayNameInDropdown(mem5)).toEqual('peter@kickyourbutt.com');
@@ -151,7 +133,7 @@ describe('Component: pgMember', () => {
 
     it('Can getDisplayNameOnCard', function() {
       let mem5 = angular.copy(membersList[4]);
-      expect(this.controller.getDisplayNameOnCard(mem5)).toEqual('peter@kickyourbutt.com');
+      expect(this.controller.getDisplayNameOnCard(mem5)).toEqual('');
 
       let mem1 = angular.copy(membersList[0]);
       expect(this.controller.getDisplayNameOnCard(mem1)).toEqual('Chuck Norris');
@@ -186,23 +168,6 @@ describe('Component: pgMember', () => {
     it('Can get USER_PLACE type', function() {
       let mem2 = angular.copy(membersList[1]);
       expect(this.controller.getMemberType(mem2)).toEqual('place');
-    });
-
-    it('Can get empty string for getMemberType if member is undefined', function() {
-      let mem = undefined;
-      expect(this.controller.getMemberType(mem)).toEqual('');
-
-      let mem1 = new Member({
-        uuid: '0005',
-        type: 'WRONG_TYPE',
-        firstName: undefined,
-        lastName: undefined,
-        userName: 'peter@kickyourbutt.com',
-        displayName: undefined,
-        numbers: [],
-      });
-      expect(this.controller.getMemberType(mem1)).toEqual('');
-
     });
   });
 
