@@ -6,7 +6,7 @@ describe('Component: pgEdit', () => {
   const SAVE_BUTTON = 'button.btn.btn--primary.ng-isolate-scope';
   const CANCEL_BUTTON = 'button.ng-binding';
   const MEMBER_INPUT = 'input#paging-group-member';
-  const SEARCH_INPUT = 'input#searchFilter';
+  const SEARCH_INPUT = 'input#search-member-box';
 
   let getNumberSuggestionsFailureResp = {
     data: 'Internal Server Error',
@@ -399,6 +399,39 @@ describe('Component: pgEdit', () => {
       spyOn(this.controller, 'getUserCount').and.returnValue(7);
       this.controller.numberOfCardsUsers = undefined;
       expect(this.controller.showLessButton('USER_REAL_USER')).toBeTruthy;
+    });
+
+    describe('Test getUserCount and getPlaceCount', () => {
+      beforeEach(initComponent);
+
+      it('incrementCount test', function () {
+        this.controller.userCount = 0;
+        this.controller.placeCount = 0;
+        let mem = angular.copy(membersList[0]);
+        this.controller.incrementCount(mem);
+        expect(this.controller.getUserCount()).toEqual(1);
+        expect(this.controller.getPlaceCount()).toEqual(0);
+
+        let mem1 = angular.copy(membersList[1]);
+        this.controller.incrementCount(mem1);
+        expect(this.controller.getUserCount()).toEqual(1);
+        expect(this.controller.getPlaceCount()).toEqual(1);
+      });
+
+      it('decreaseCount test', function () {
+        this.controller.userCount = 1;
+        this.controller.placeCount = 1;
+        let mem = angular.copy(membersList[0]);
+        this.controller.decreaseCount(mem);
+        expect(this.controller.getUserCount()).toEqual(0);
+        expect(this.controller.getPlaceCount()).toEqual(1);
+
+        let mem1 = angular.copy(membersList[1]);
+        this.controller.decreaseCount(mem1);
+        expect(this.controller.getUserCount()).toEqual(0);
+        expect(this.controller.getPlaceCount()).toEqual(0);
+      });
+
     });
   });
 });
