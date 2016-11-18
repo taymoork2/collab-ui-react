@@ -1,0 +1,59 @@
+.gss-page-wrapper {
+  .conent-common-style {
+    margin: 0 auto;
+    padding: 2rem;
+  }
+}
+
+.incident-list-page {
+  background: $white;
+
+  .incident-section {
+    ul {
+      li {
+        list-style-type: none;
+        margin-bottom: 1rem;
+      }
+
+      .row:last-child {
+        .columns:first-child span {
+          color: $gray-light-1;
+        }
+        .columns:last-child a {
+          color: $color-primary-light;
+          margin: auto .625rem;
+        }
+      }
+    }
+  }
+}
+
+.create-incident-page {
+  background: $white;
+
+  .cs-radio-group {
+    .cs-input-group {
+      float: left;
+      margin-right: 1rem;
+    }
+  }
+
+  .section__content {
+    .sub-section {
+      input, textarea {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.delete-incident-page {
+  background: $white;
+
+  @include vr_spacing(p, 3);
+
+  p, input {
+    font-size: 1rem;
+    @include vr_spacing(mb, 1.25);
+  }
+}

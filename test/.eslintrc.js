@@ -54,6 +54,7 @@ module.exports = {
     gssDashboard: true,
     gssComponent: true,
     gssService: true,
+    gssIncident: true,
     helper: true,
     huntGroup: true,
     huronFeatures: true,

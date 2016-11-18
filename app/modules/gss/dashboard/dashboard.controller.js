@@ -38,11 +38,11 @@
     vm.modifySubComponentStatus = modifySubComponentStatus;
 
     function goToNewIncidentPage() {
-      $state.go('gss.under.construction');
+      $state.go('gss.incidents.new');
     }
 
     function goToComponentsPage() {
-      $state.go('gss.under.construction');
+      $state.go('gss.components');
     }
 
     function modifyComponentStatus(component) {

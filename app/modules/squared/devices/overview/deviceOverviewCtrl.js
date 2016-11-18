@@ -50,7 +50,7 @@
         pollLines();
       }
 
-      if (deviceOverview.currentDevice.isHuronDevice) {
+      if (deviceOverview.currentDevice.isHuronDevice && !deviceOverview.currentDevice.isATA) {
         if (!deviceOverview.tzIsLoaded) {
           initTimeZoneOptions().then(function () {
             loadDeviceInfo();

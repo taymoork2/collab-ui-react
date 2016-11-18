@@ -1,0 +1,47 @@
+<div class="create-incident-page">
+  <div class="conent-common-style small-12 large-10 xlarge-8">
+    <form name="createIncidentForm" class="cs-form">
+      <div class="cs-form__section">
+        <div class="section__info">
+          <h4 class="section__title" translate="gss.incidentsPage.newIncident"></h4>
+        </div>
+
+        <div class="section__content">
+          <div class="sub-section">
+            <div class="cs-input-group">
+              <label class="cs-input__label" for="create-incident-name" translate="gss.incidentsPage.incidentName"></label>
+
+              <input id="create-incident-name" cs-input type="text" ng-minlength="3" ng-maxlength="64"
+                ng-model="createIncidentCtrl.incidentName">
+            </div>
+          </div>
+
+          <div class="sub-section">
+            <label class="cs-input__label" translate="gss.incidentsPage.incidentStatus"></label>
+            <div class="cs-radio-group clearfix">
+              <input class="pull-left" cs-input type="radio" id="{{ ::radio.id }}" value="{{ ::radio.value }}"
+                ng-model="createIncidentCtrl.status" cs-input-label="{{ ::radio.label }}"
+                ng-repeat="radio in createIncidentCtrl.radios">
+            </div>
+          </div>
+
+          <div class="sub-section">
+            <label class="cs-input__label" for="create-incident-message" translate="gss.incidentsPage.message"></label>
+            <textarea id="create-incident-message" ng-model="createIncidentCtrl.message"></textarea>
+          </div>
+
+          <div class="sub-section">
+            <button cs-btn id="createIncidentBtn" class="btn btn--primary" ng-disabled="!createIncidentCtrl.isValid()"
+                    loading="createIncidentCtrl.isLoading" ng-click="createIncidentCtrl.createIncident()">
+              <span translate="gss.incidentsPage.createIncidentBtn"></span>
+            </button>
+
+            <button cs-btn id="cancelBtn" class="btn" ng-click="createIncidentCtrl.goBack()">
+              <span translate="common.cancel"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

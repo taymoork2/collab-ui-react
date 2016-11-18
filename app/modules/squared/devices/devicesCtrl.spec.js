@@ -77,10 +77,12 @@ describe('Controller: DevicesCtrl', function () {
     var isEntitledToHuron;
     var isEntitledToRoomSystem;
     var showDarling;
+    var showATA;
     beforeEach(function () {
       isEntitledToHuron = true;
       isEntitledToRoomSystem = true;
       showDarling = true;
+      showATA = true;
       displayName = 'displayName';
       firstName = 'firstName';
       userCisUuid = 'userCisUuid';
@@ -99,6 +101,7 @@ describe('Controller: DevicesCtrl', function () {
 
     it('should set the wizardState with correct fields for the wizard if places toggle is on', function () {
       controller.showPlaces = true;
+      controller.showATA = showATA;
       controller.startAddDeviceFlow();
       $scope.$apply();
       expect($state.go).toHaveBeenCalled();
@@ -107,6 +110,7 @@ describe('Controller: DevicesCtrl', function () {
       expect(wizardState.function).toBe('addDevice');
       expect(wizardState.showPlaces).toBe(true);
       expect(wizardState.showDarling).toBe(showDarling);
+      expect(wizardState.showATA).toBe(showATA);
       expect(wizardState.isEntitledToHuron).toBe(isEntitledToHuron);
       expect(wizardState.isEntitledToRoomSystem).toBe(isEntitledToRoomSystem);
       expect(wizardState.account).toBeUndefined();
@@ -119,6 +123,7 @@ describe('Controller: DevicesCtrl', function () {
 
     it('should set the wizardState with correct fields for the wizard if places toggle is off', function () {
       controller.showPlaces = false;
+      controller.showATA = showATA;
       controller.startAddDeviceFlow();
       $scope.$apply();
       expect($state.go).toHaveBeenCalled();
@@ -127,6 +132,7 @@ describe('Controller: DevicesCtrl', function () {
       expect(wizardState.function).toBe('addDevice');
       expect(wizardState.showPlaces).toBe(false);
       expect(wizardState.showDarling).toBe(showDarling);
+      expect(wizardState.showATA).toBe(showATA);
       expect(wizardState.isEntitledToHuron).toBe(isEntitledToHuron);
       expect(wizardState.isEntitledToRoomSystem).toBe(isEntitledToRoomSystem);
       expect(wizardState.account).toBeUndefined();
