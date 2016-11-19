@@ -155,8 +155,8 @@
       }
     }
 
-    function fetchHuntMembers(nameHint) {
-      return HuntGroupMemberDataService.fetchHuntMembers(nameHint);
+    function fetchHuntMembers(nameHint, onlyMembers) {
+      return HuntGroupMemberDataService.fetchHuntMembers(nameHint, onlyMembers);
     }
 
     function showDisableSave() {
@@ -198,7 +198,7 @@
     }
 
     function fetchFallbackDestination(nameHint) {
-      return HuntGroupMemberDataService.fetchMembers(nameHint);
+      return HuntGroupMemberDataService.fetchMembers(nameHint, false);
     }
 
     function selectHuntGroupMember(member) {

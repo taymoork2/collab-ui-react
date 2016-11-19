@@ -233,7 +233,7 @@
     }
 
     function fetchHuntMembers(nameHint) {
-      return $q.when(HuntGroupMemberDataService.fetchHuntMembers(nameHint)).then(function (members) {
+      return $q.when(HuntGroupMemberDataService.fetchHuntMembers(nameHint, true)).then(function (members) {
         if (HuntGroupService.suggestionsNeeded(nameHint)) {
           vm.errorMemberInput = (members && members.length === 0);
         } else {
@@ -287,7 +287,7 @@
     }
 
     function fetchFallbackDestination(nameHint) {
-      return $q.when(HuntGroupMemberDataService.fetchMembers(nameHint)).then(function (mems) {
+      return $q.when(HuntGroupMemberDataService.fetchMembers(nameHint, false)).then(function (mems) {
         vm.fallbackSuggestionsAvailable = (mems && mems.length > 0);
         return mems;
       });
