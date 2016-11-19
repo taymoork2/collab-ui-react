@@ -5,9 +5,15 @@
     .module('Hercules')
     .controller('AddResourceController', AddResourceController);
 
+
   /* @ngInject */
   function AddResourceController($modalInstance, $window, $translate, connectorType, servicesId, firstTimeSetup, Notification, FusionClusterService, FusionUtils, $modal, $state, ResourceGroupService, FeatureToggleService) {
     var vm = this;
+    vm.connectors = [];
+    vm.warning = warning;
+    // Bug in toolkit for cs-input warning
+    //https://wwwin-github.cisco.com/collab-ui/collab-library/issues/79
+    vm.warningMessage = 'DummyMessage';
     vm.hostname = '';
     vm.releaseChannel = 'stable'; // clusters default to 'stable', must be changed via Resource Group
     vm.connectorType = connectorType;
@@ -19,7 +25,6 @@
     vm.closeSetupModal = closeSetupModal;
     vm.firstTimeSetup = firstTimeSetup;
     vm.welcomeScreenAccepted = !firstTimeSetup;
-
     vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
     vm.localizedServiceName = $translate.instant('hercules.serviceNames.' + vm.servicesId[0]);
     vm.localizedManagementConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
@@ -78,6 +83,17 @@
         });
     };
 
+    function warning() {
+      if (_.some(vm.connectors, function (connector) {
+        vm.warningMessage = $translate.instant('hercules.addResourceDialog.hostnameRegistered');
+        return connector.toLowerCase() === vm.hostname.toLowerCase();
+      })
+        ) {
+        return true;
+      }
+      return false;
+    }
+
     function displayResourceGroupsOrEndWizard() {
       if (vm.optionalSelectResourceGroupStep) {
         vm.gettingResourceGroupInput = true;
@@ -123,6 +139,7 @@
     function findAndPopulateExistingExpressways(connectorType) {
       FusionClusterService.getAll()
         .then(getAllExpressways)
+        .then(updateConnectorNameList)
         .then(_.partial(removeAlreadyProvisionedExpressways, connectorType))
         .then(updateDropdownMenu)
         .catch(function (error) {
@@ -137,9 +154,24 @@
           allExpressways.push({
             id: cluster.id,
             name: cluster.name,
-            provisionedConnectors: _.map(cluster.provisioning, 'connectorType')
+            provisionedConnectors: _.map(cluster.provisioning, 'connectorType'),
+            connectorsHostname: cluster.connectors
           });
+
         }
+      });
+      return allExpressways;
+    }
+
+    function updateConnectorNameList(allExpressways) {
+      _.forEach(allExpressways, function (cluster) {
+        _.forEach(cluster.connectorsHostname, function (connector) {
+          if (connector.connectorType === 'c_mgmt') {
+            vm.connectors.push(
+                    connector.hostname
+                  );
+          }
+        });
       });
       return allExpressways;
     }

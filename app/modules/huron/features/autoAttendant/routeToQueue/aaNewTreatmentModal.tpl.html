@@ -18,40 +18,40 @@
         <cs-select id="voiceSelect{{ schedule + index + menuKeyIndex }}" name="voiceSelect" options="aaNewTreatmentModalCtrl.voiceOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" ng-model="aaNewTreatmentModalCtrl.voiceOption" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder" ng-change="aaSay.saveUiModel()">
         </cs-select>
       </div>
-      <div class="large-12 columns">
+      <div class="large-12">
        <p class ="cs-input__help-text" translate="autoAttendant.langaugeAndVoiceHelp"></p>
       </div>
     </div>
   </div>
   <hr ng-if="aaNewTreatmentModalCtrl.showLanguageAndVoiceOptions"/>
   <div class="row">
-    <div class="large-4 medium-12 small-12 columns">
+    <div class="large-4 medium-4 small-12 columns">
       <label class="h4" translate="autoAttendant.holdMusic"></label>
     </div>
-    <div class="large-8 medium-offset-4 medium-8 small-12 columns">
-      <form name="musicOnHoldForm">
-        <div class="cs-radio-group">
-          <input
-          cs-input
-          type="radio"
-          ng-model="aaNewTreatmentModalCtrl.musicOnHold"
-          id="musicOnHoldRadio1"
-          name="musicOnHoldRadio"
-          value="musicOnHoldDefault"
-          cs-input-label="{{ :: 'autoAttendant.standardTransferMusic' | translate }}">
-          <input
-          cs-input
-          type="radio"
-          ng-model="aaNewTreatmentModalCtrl.musicOnHold"
-          id="uploadFileRadio1"
-          name="uploadFileRadio"
-          value="musicOnHoldUpload"
-          cs-input-label="{{ :: 'autoAttendant.uploadedFile' | translate }}">
-        </div>
-      </form>
+    <div class="large-8 medium-8 small-12 columns">
+      <div class="cs-radio-group">
+        <input
+        cs-input
+        type="radio"
+        ng-model="aaNewTreatmentModalCtrl.musicOnHold"
+        id="musicOnHoldRadio1"
+        name="musicOnHoldRadio"
+        value="musicOnHoldDefault"
+        cs-input-label="{{ :: 'autoAttendant.standardTransferMusic' | translate }}">
+        <input
+        cs-input
+        type="radio"
+        ng-model="aaNewTreatmentModalCtrl.musicOnHold"
+        id="uploadFileRadio1"
+        name="uploadFileRadio"
+        value="musicOnHoldUpload"
+        cs-input-label="{{ :: 'autoAttendant.uploadYourOwn' | translate }}">
+      </div>
+    </div>
+    <div class="large-8 medium-8 large-offset-4 medium-offset-4 small-12 columns">
+      <aa-media-upload id="mediaUploadInput{{ schedule + index + keyIndex }}" name="mediaUploadInput" aa-index="index" aa-schedule="{{ schedule }}" aa-menu-id="{{ menuId }}" aa-key-index="{{ keyIndex }}" aa-media-type="musicOnHold" aa-change="aaNewTreatmentModalCtrl.uploadMohTrigger();"></aa-media-upload>
     </div>
     <div class="large-8 medium-8 small-12 columns">
-      <aa-media-upload id="mediaUploadInput{{ schedule + index + keyIndex }}" name="mediaUploadInput" aa-index="index" aa-schedule="{{ schedule }}" aa-menu-id="{{ menuId }}" aa-key-index="{{ keyIndex }}" aa-media-type="musicOnHold" aa-change="aaNewTreatmentModalCtrl.uploadMohTrigger();"></aa-media-upload>
       <p class="cs-input__help-text" translate="autoAttendant.musicOnHoldHelp"></p>
     </div>
   </div>
@@ -60,91 +60,71 @@
     <div class="large-4 medium-4 small-12 columns">
       <label class="h4" translate="autoAttendant.initialAnnouncement"></label>
     </div>
-    <div class="columns large-8 medium-8">
-      <div class="row">
-        <aa-message-type aa-index="index" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-from-new-treatment="true" aa-key-index="{{keyIndex}}" aa-media-type="initialAnnouncement" id="initialAnnouncement"></aa-message-type>
-      </div>
-      <div class="row">
-        <span class="small-12 columns cs-input__help-text" translate="autoAttendant.initialHelpText"></span>
-      </div>
+    <div class="large-8 medium-8 small-12 columns">
+      <aa-message-type aa-index="index" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-from-new-treatment="true" aa-key-index="{{keyIndex}}" aa-media-type="initialAnnouncement" id="initialAnnouncement"></aa-message-type>
+    </div>
+    <div class="large-8 medium-8 small-12 large-offset-4 medium-offset-4 columns">
+      <p class="cs-input__help-text" translate="autoAttendant.initialHelpText"></p>
     </div>
   </div>
   <hr/>
   <div class="row">
     <div class="large-4 medium-4 small-12 columns">
       <label class="h4" translate="autoAttendant.periodicAnnouncement"></label>
-    </div> 
-    <div class="columns large-8 medium-8">
-      <div class="row">
-        <aa-message-type aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-from-new-treatment="true" aa-index="index" aa-key-index="{{keyIndex}}" aa-media-type="periodicAnnouncement" id="periodicAnnouncement"></aa-message-type>
-      </div>
-      <div class="row">
-        <p class="small-12 columns cs-input__help-text" translate = "autoAttendant.periodicHelpText"></p>
-      </div>
-      <div class="row">
-        <div class="columns">
-          <p class=" large-6" translate="autoAttendant.periodicTime"></p> 
-        </div>
-      </div>
-      <div class="row">
-        <div class="columns aa-selectmin-modal">
-          <cs-select ng-model="aaNewTreatmentModalCtrl.periodicMinute" id="periodicMinId" options="aaNewTreatmentModalCtrl.periodicMinutes" ng-change="aaNewTreatmentModalCtrl.changedPeriodicMinValue()" secondary-label="Minutes" labelfield="label" valuefield="label" icon="icon-chevron-down" >
-          </cs-select> 
-        </div>
-        <div class="columns aa-selectsec-modal">
-          <cs-select ng-model="aaNewTreatmentModalCtrl.periodicSecond" id="periodicSecId" options="aaNewTreatmentModalCtrl.periodicSeconds" ng-change="aaNewTreatmentModalCtrl.changedPeriodicSecValue()" secondary-label="Seconds" labelfield="label" valuefield="label" icon="icon-chevron-down" is-disabled="!aaNewTreatmentModalCtrl.areSecondsDisabled">
-          </cs-select>
-        </div>
-      </div>
+    </div>
+    <div class="large-8 medium-8 small-12 columns">
+      <aa-message-type aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-from-new-treatment="true" aa-index="index" aa-key-index="{{keyIndex}}" aa-media-type="periodicAnnouncement" id="periodicAnnouncement"></aa-message-type>
+    </div>
+    <div class="large-8 medium-8 small-12 large-offset-4 medium-offset-4 columns">
+      <p class="cs-input__help-text" translate="autoAttendant.periodicHelpText"></p>
+    </div>
+    <br/>
+    <div class="large-8 medium-8 small-12 large-offset-4 medium-offset-4 columns">
+      <p translate="autoAttendant.periodicTime"></p>
+    <div class="aa-select-modal">
+      <cs-select ng-model="aaNewTreatmentModalCtrl.periodicMinute" id="periodicMinId" options="aaNewTreatmentModalCtrl.periodicMinutes" ng-change="aaNewTreatmentModalCtrl.changedPeriodicMinValue()" secondary-label="Minutes" labelfield="label" valuefield="label" icon="icon-chevron-down" >
+      </cs-select>
+    </div>
+    <div class="aa-select-modal">
+      <cs-select ng-model="aaNewTreatmentModalCtrl.periodicSecond" id="periodicSecId" options="aaNewTreatmentModalCtrl.periodicSeconds" ng-change="aaNewTreatmentModalCtrl.changedPeriodicSecValue()" secondary-label="Seconds" labelfield="label" valuefield="label" icon="icon-chevron-down" is-disabled="!aaNewTreatmentModalCtrl.areSecondsDisabled">
+      </cs-select>
+    </div>
     </div>
   </div>
   <hr/>
   <div class="row">
-    <div class="columns large-4 medium-4">
+    <div class="large-4 medium-4 small-12 columns">
       <label class="h4 ng-scope" translate="autoAttendant.fallbackLabel"></label>
     </div>
-    <div class="columns large-8 medium-8">
-      <div class="row">
-        <div class="column">
-          <p translate="autoAttendant.maxWaitTime"></p>
-        </div>
+    <div class="large-8 medium-8 small-12 columns">
+      <p translate="autoAttendant.maxWaitTime"></p>
+    </div>
+    <div class="large-8 medium-8 small-12 large-offset-4 medium-offset-4 columns">
+      <div class="aa-select-modal">
+        <cs-select id="queueMin" ng-model="aaNewTreatmentModalCtrl.maxWaitTime" options="aaNewTreatmentModalCtrl.minutes" secondary-label="Minutes" labelfield="label" valuefield="label" icon="icon-chevron-down">
+        </cs-select>
       </div>
-      <div class="row">
-        <div class="columns aa-selectmin-modal">
-          <cs-select id="queueMin" ng-model="aaNewTreatmentModalCtrl.maxWaitTime" options="aaNewTreatmentModalCtrl.minutes" " secondary-label="Minutes" labelfield="label" valuefield="label" icon="icon-chevron-down" >
-          </cs-select>
-        </div>
+    </div>
+    <div class="large-8 medium-8 small-12 large-offset-4 medium-offset-4 columns aa-treatment-modal">
+      <p translate="autoAttendant.destinationLabel"></p>
+    </div>
+    <div class="large-6 medium-6 small-8 large-offset-4 medium-offset-4 columns">
+      <cs-select id="destinationSelect" ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions" labelfield="label" valuefield="label" icon="icon-chevron-down" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder">
+      </cs-select>
+      <div ng-switch="aaNewTreatmentModalCtrl.destination.name" class="aa-destination-container">
+        <aa-route-to-aa id="destinationMenuRouteAA" ng-switch-when="destinationMenuRouteAA" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}"></aa-route-to-aa>
+        <aa-route-to-hg id="destinationMenuRouteHunt" ng-switch-when="destinationMenuRouteHunt" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}"></aa-route-to-hg>
+        <aa-route-to-user id="destinationMenuRouteMailbox" ng-switch-when="destinationMenuRouteMailbox" aa-schedule="{{schedule}}" voicemail=true  aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}"></aa-route-to-user>
+        <aa-route-to-user id="destinationMenuRouteUser" ng-switch-when="destinationMenuRouteUser" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}"></aa-route-to-user>
+        <aa-route-to-ext-num id="destinationMenuRouteToExtNum" ng-switch-when="destinationMenuRouteToExtNum" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}"></aa-route-to-ext-num>
       </div>
-      <div class="row">
-        <div class="column">
-          <div class="aa-treatment-modal">
-            <p translate="autoAttendant.destinationLabel"></p>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="columns large-8 medium-10 small-10">
-          <cs-select id="destinationSelect" ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions" labelfield="label" valuefield="label" icon="icon-chevron-down" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder">
-          </cs-select>
-          <div ng-switch="aaNewTreatmentModalCtrl.destination.name" class="aa-destination-container">
-            <aa-route-to-aa id="destinationMenuRouteAA" ng-switch-when="destinationMenuRouteAA" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}"></aa-route-to-aa>
-            <aa-route-to-hg id="destinationMenuRouteHunt" ng-switch-when="destinationMenuRouteHunt" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}"></aa-route-to-hg>
-            <aa-route-to-user id="destinationMenuRouteMailbox" ng-switch-when="destinationMenuRouteMailbox" aa-schedule="{{schedule}}" voicemail=true  aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}"></aa-route-to-user>
-            <aa-route-to-user id="destinationMenuRouteUser" ng-switch-when="destinationMenuRouteUser" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}"></aa-route-to-user>
-            <aa-route-to-ext-num id="destinationMenuRouteToExtNum" ng-switch-when="destinationMenuRouteToExtNum" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}"></aa-route-to-ext-num>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="columns large-8 medium-8">
-          <p class="cs-input__help-text" translate="autoAttendant.destinationHelpMessage"></p> 
-        </div>
-      </div>
+    </div>
+    <div class="large-8 medium-8 small-12 large-offset-4 medium-offset-4 columns">
+      <p class="cs-input__help-text" translate="autoAttendant.destinationHelpMessage"></p>
     </div>
   </div>
 </div>
-
 <div class="modal-footer">
   <button id="cancelTreatmentFeature" class="btn" ng-click="$dismiss();" translate="common.cancel"></button>
-  <button id="okTreatmentBtn"  class="btn btn-primary" ng-click="aaNewTreatmentModalCtrl.ok();" ng-disabled="!aaNewTreatmentModalCtrl.isSaveEnabled();" translate="common.ok"></button>
+  <button id="okTreatmentBtn" class="btn btn-primary" ng-click="aaNewTreatmentModalCtrl.ok();" ng-disabled="!aaNewTreatmentModalCtrl.isSaveEnabled();" translate="common.ok"></button>
 </div>

@@ -1,4 +1,4 @@
-import { CallParkMember } from 'modules/huron/features/callPark/services';
+import { CallParkService, CallParkMember } from 'modules/huron/features/callPark/services';
 import { MemberService, Member } from 'modules/huron/members';
 
 class CallParkMemberCtrl implements ng.IComponentController {
@@ -13,6 +13,7 @@ class CallParkMemberCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private MemberService: MemberService,
+    private CallParkService: CallParkService,
   ) {}
 
   public getMemberList(value: string): ng.IPromise<Array<Member>> {
@@ -33,7 +34,7 @@ class CallParkMemberCtrl implements ng.IComponentController {
     this.selectedMember = undefined;
     this.members.push(new CallParkMember({
       memberUuid: member.uuid,
-      memberName: this.getDisplayName(member) || '',
+      memberName: this.CallParkService.getDisplayName(member) || '',
     }));
     this.onMembersChanged(this.members);
   }
@@ -72,24 +73,6 @@ class CallParkMemberCtrl implements ng.IComponentController {
     this.onKeyPressFn({
       keyCode: $keyCode,
     });
-  }
-
-  public getDisplayName(member: Member): string | undefined {
-    if (!member) {
-      return;
-    }
-
-    if (!member.firstName && !member.lastName) {
-      return member.userName;
-    } else if (member.firstName && member.lastName) {
-      return member.firstName + ' ' + member.lastName;
-    } else if (member.firstName) {
-      return member.firstName;
-    } else if (member.lastName) {
-      return member.lastName;
-    } else {
-      return;
-    }
   }
 
 }

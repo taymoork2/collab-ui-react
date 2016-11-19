@@ -30,6 +30,9 @@
           FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
             vm.showDarling = result;
           });
+          FeatureToggleService.csdmATAGetStatus().then(function (result) {
+            vm.showATA = result;
+          });
           FeatureToggleService.csdmPstnGetStatus().then(function (result) {
             vm.showPstn = result && Authinfo.isSquaredUC();
           });
@@ -79,7 +82,10 @@
         };
 
         vm.existsDevices = function () {
-          return (vm.shouldShowList() && CsdmDataModelService.hasDevices());
+          if (!vm._existsDevices) {
+            vm._existsDevices = (vm.shouldShowList() && CsdmDataModelService.hasDevices());
+          }
+          return vm._existsDevices;
         };
 
         vm.shouldShowList = function () {
@@ -175,6 +181,7 @@
               function: "addDevice",
               showPlaces: false,
               showDarling: vm.showDarling,
+              showATA: vm.showATA,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isEntitledToHuron(),
               isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
@@ -213,6 +220,7 @@
             data: {
               function: "addDevice",
               showPlaces: true,
+              showATA: vm.showATA,
               showDarling: vm.showDarling,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isEntitledToHuron(),

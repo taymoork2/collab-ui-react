@@ -64,7 +64,6 @@
      * This push the Route To Queue option in Route Call List and push get all the queues
     */
     function getQueues() {
-//      if (AACommonService.isRouteQueueToggle()) {
       return QueueHelperService.listQueues().then(function (aaQueueList) {
         if (aaQueueList.length > 0) {
           vm.options.push({

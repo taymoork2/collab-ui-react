@@ -80,7 +80,7 @@
         entitlements: [Config.entitlements.care, Config.entitlements.context]
       };
 
-      return Userservice.updateUserProfile(admin.id, userData, _.noop);
+      return Userservice.updateUserProfile(admin.id, userData);
     }
 
     function updateAccessToken(response) {

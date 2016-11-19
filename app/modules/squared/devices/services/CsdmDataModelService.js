@@ -264,17 +264,17 @@
       }
 
       return service.updateItemName(objectToUpdate, newName)
-        .then(function () {
-          var placeUrl = getPlaceUrl(objectToUpdate);
-          var place = placesDataModel[placeUrl];
-          if (place) {
-            place.displayName = newName;
+        .then(function (updatedObject) {
+
+          if (updatedObject.isPlace) {
+            var place = placesDataModel[updatedObject.url];
+            updatedObject.devices = place.devices;
+            updatedObject.codes = place.codes;
+            return CsdmCacheUpdater.updateOne(placesDataModel, updatedObject.url, updatedObject, null, true);
+          } else {
+            addOrUpdatePlaceInDataModel(updatedObject);
+            return CsdmCacheUpdater.updateOne(theDeviceMap, updatedObject.url, updatedObject, null, true);
           }
-          var device = theDeviceMap[objectToUpdate.url];
-          if (device) {
-            device.displayName = newName;
-          }
-          return objectToUpdate.isPlace ? place : device;
         });
     }
 
@@ -368,6 +368,7 @@
 
       var newPlaceUrl = getPlaceUrl(item);
       var existingPlace = placesDataModel[newPlaceUrl];
+
       if (!existingPlace) {
         existingPlace = CsdmConverter.convertPlace({ url: newPlaceUrl, isPlace: true, devices: {}, codes: {} });
         placesDataModel[newPlaceUrl] = existingPlace;

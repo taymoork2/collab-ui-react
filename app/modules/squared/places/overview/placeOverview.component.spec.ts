@@ -42,11 +42,12 @@ describe('placeOverview component', () => {
   };
 
   describe('and invoke onGenerateOtpFn', () => {
-    let showPlaces, currentDevice, deviceName, displayName, email, userCisUuid, placeCisUuid, orgId;
+    let showPlaces, showATA, currentDevice, deviceName, displayName, email, userCisUuid, placeCisUuid, orgId;
     let goStateName, goStateData;
     beforeEach(() => {
 
       showPlaces = true;
+      showATA = true;
       deviceName = 'deviceName';
       displayName = 'displayName';
       email = 'email@address.com';
@@ -60,6 +61,7 @@ describe('placeOverview component', () => {
 
       spyOn(CsdmCodeService, 'createCodeForExisting').and.returnValue($q.when('0q9u09as09vu0a9sv'));
       spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+      spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(showATA));
       spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
       Authinfo.displayName = displayName;
       spyOn(Authinfo, 'getUserId').and.returnValue(userCisUuid);
@@ -75,6 +77,7 @@ describe('placeOverview component', () => {
         beforeEach(() => {
           $stateParams = { currentPlace: { displayName: deviceName, type: 'cloudberry', cisUuid: 'sa0va9u02' } };
           controller = initController($stateParams, $scope, $state);
+          controller.showATA = showATA;
         });
 
         it('should supply ShowActivationCodeCtrl with all the prerequisites', () => {
@@ -90,6 +93,7 @@ describe('placeOverview component', () => {
               data: {
                 function: 'showCode',
                 showPlaces: true,
+                showATA: true,
                 account: { type: 'sharede', deviceType: 'cloudberry', cisUuid: placeCisUuid, name: deviceName },
                 recipient: { cisUuid: userCisUuid, organizationId: orgId, displayName: displayName, email: email },
                 title: 'addDeviceWizard.newCode',
@@ -109,6 +113,7 @@ describe('placeOverview component', () => {
           $stateParams = { currentPlace: { displayName: deviceName, type: 'huron', cisUuid: 'sa0va9u02' } };
           controller = initController($stateParams, $scope, $state);
           controller.adminDisplayName = displayName;
+          controller.showATA = showATA;
         });
 
         it('should supply ShowActivationCodeCtrl with all the prerequisites', () => {
@@ -124,6 +129,7 @@ describe('placeOverview component', () => {
               data: {
                 function: 'showCode',
                 showPlaces: true,
+                showATA: true,
                 account: { type: 'shared', deviceType: 'huron', cisUuid: placeCisUuid, name: deviceName },
                 recipient: { cisUuid: userCisUuid, organizationId: orgId, displayName: displayName, email: email },
                 title: 'addDeviceWizard.newCode',
@@ -141,9 +147,10 @@ describe('placeOverview component', () => {
 
   describe('invoke editCloudberryServices', () => {
     let goStateName, goStateData;
-    let showPlaces, currentDevice, deviceName, displayName, email, userCisUuid, orgId, entitlements, placeUuid;
+    let showPlaces, showATA, currentDevice, deviceName, displayName, email, userCisUuid, orgId, entitlements, placeUuid;
     beforeEach(() => {
       showPlaces = true;
+      showATA = true;
       deviceName = 'deviceName';
       displayName = 'displayName';
       email = 'email@address.com';
@@ -156,6 +163,7 @@ describe('placeOverview component', () => {
       placeUuid = '9avs8y9q2v9aw98';
 
       spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+      spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(showATA));
       spyOn(Userservice, 'getUser').and.returnValue($q.when({}));
       spyOn($state, 'go').and.callFake((stateName, stateData) => {
         goStateName = stateName;

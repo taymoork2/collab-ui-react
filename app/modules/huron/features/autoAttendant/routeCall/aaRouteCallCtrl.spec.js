@@ -2,7 +2,7 @@
 
 describe('Controller: AARouteCallMenuCtrl', function () {
   var controller;
-  var AAUiModelService, AutoAttendantCeMenuModelService, FeatureToggleService, QueueHelperService, AACommonService;
+  var AAUiModelService, AutoAttendantCeMenuModelService, QueueHelperService, AACommonService;
   var $rootScope, $scope, $q;
   var aaUiModel = {
     openHours: {}
@@ -19,6 +19,8 @@ describe('Controller: AARouteCallMenuCtrl', function () {
   }, {
     "label": 'autoAttendant.phoneMenuRouteHunt',
   }, {
+    "label": 'autoAttendant.phoneMenuRouteQueue',
+  }, {
     "label": 'autoAttendant.phoneMenuRouteToExtNum',
   }, {
     "label": 'autoAttendant.phoneMenuRouteUser',
@@ -29,12 +31,11 @@ describe('Controller: AARouteCallMenuCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, _$q_, _FeatureToggleService_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _QueueHelperService_, _AACommonService_) {
+  beforeEach(inject(function ($controller, _$rootScope_, _$q_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _QueueHelperService_, _AACommonService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $q = _$q_;
 
-    FeatureToggleService = _FeatureToggleService_;
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     QueueHelperService = _QueueHelperService_;
@@ -59,8 +60,8 @@ describe('Controller: AARouteCallMenuCtrl', function () {
 
     it('should add a new keyAction object into selectedActions array', function () {
 
-      FeatureToggleService.supports = jasmine.createSpy().and.returnValue($q.when(true));
-      AACommonService.isRouteQueueToggle = jasmine.createSpy().and.returnValue($q.when(true));
+      AACommonService.setRouteQueueToggle(false);
+
       controller = controller('AARouteCallMenuCtrl', {
         $scope: $scope
       });
@@ -74,16 +75,12 @@ describe('Controller: AARouteCallMenuCtrl', function () {
       for (i = 0; i < controller.options.length; i++) {
 
         action = AutoAttendantCeMenuModelService.newCeActionEntry(controller.options[i].value, '');
-
         controller.menuEntry.actions[0] = action;
-
         controller.setSelects();
         expect(controller.selected.label).toEqual(controller.options[i].label);
-
       }
 
     });
-
   });
 
   /**
@@ -93,11 +90,14 @@ describe('Controller: AARouteCallMenuCtrl', function () {
   describe('Activate ', function () {
     it('test for sorted options', function () {
 
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+      AACommonService.setRouteQueueToggle(true);
+
       controller = controller('AARouteCallMenuCtrl', {
         $scope: $scope
       });
       $scope.$apply();
+
+      expect(controller.options.length).toEqual(sortedOptions.length);
 
       for (var i = 0; i < sortedOptions.length; i++) {
         expect(controller.options[i].label).toEqual(sortedOptions[i].label);
@@ -105,5 +105,6 @@ describe('Controller: AARouteCallMenuCtrl', function () {
 
     });
   });
+
 
 });

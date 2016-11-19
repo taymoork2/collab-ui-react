@@ -45,6 +45,7 @@
       function HuronDevice(obj) {
         this.url = obj.url;
         this.type = 'huron';
+        this.isATA = (obj.product || '').indexOf('ATA') > 0;
         this.mac = obj.mac;
         this.ip = getIp(obj);
         this.cisUuid = obj.cisUuid;
@@ -110,7 +111,7 @@
           displayName: "Cisco 8865NR"
         },
         "MODEL_CISCO_ATA_190": {
-          displayName: "Cisco ATA 190"
+          displayName: "Cisco ATA 190-SC Port 1"
         }
       };
 
@@ -220,8 +221,8 @@
         this.canDelete = true;
         this.accountType = obj.placeType || 'MACHINE';
         this.image = "images/devices-hi/unknown.png";
-        this.devices = {};
-        this.codes = {};
+        this.devices = obj.devices || {};
+        this.codes = obj.codes || {};
       }
 
       function decodeHuronTags(description) {

@@ -199,6 +199,9 @@
         secondaryLabel: $translate.instant('trials.licenses'),
         type: 'number'
       },
+      modelOptions: {
+        allowInvalid: true
+      },
       expressionProperties: {
         'templateOptions.required': function () {
           return vm.careTrial.enabled;
@@ -216,6 +219,16 @@
             return $translate.instant('partnerHomePage.invalidTrialCareQuantity');
           }
         }
+      },
+      watcher: {
+        expression: function () {
+          return vm.details.licenseCount;
+        },
+        listener: function (field, newValue, oldValue) {
+          if (newValue !== oldValue) {
+            field.formControl.$validate();
+          }
+        }
       }
     }];
 
@@ -230,6 +243,9 @@
         type: 'number',
 
         secondaryLabel: $translate.instant('trials.users')
+      },
+      modelOptions: {
+        allowInvalid: true
       },
       expressionProperties: {
         'templateOptions.required': function () {
@@ -251,7 +267,7 @@
       validators: {
         count: {
           expression: function ($viewValue, $modelValue) {
-            return ValidationService.trialLicenseCount($viewValue, $modelValue);
+            return !hasUserServices() || ValidationService.trialLicenseCount($viewValue, $modelValue);
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
@@ -266,6 +282,17 @@
           }
         }
       },
+
+      watcher: {
+        expression: function () {
+          return vm.careTrial.details.quantity;
+        },
+        listener: function (field, newValue, oldValue) {
+          if (newValue !== oldValue) {
+            field.formControl.$validate();
+          }
+        }
+      }
     }];
 
     vm.trialTermsFields = [{
@@ -332,7 +359,7 @@
       validators: {
         quantity: {
           expression: function ($viewValue, $modelValue) {
-            return ValidationService.trialRoomSystemQuantity($viewValue, $modelValue);
+            return !vm.roomSystemTrial.enabled || ValidationService.trialRoomSystemQuantity($viewValue, $modelValue);
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialRoomSystemQuantity');

@@ -276,30 +276,28 @@
      * This push the Route To Queue option in Phone Menu List and push get all the queues
     */
     function getQueues() {
-      if (AACommonService.isRouteQueueToggle) {
-        return QueueHelperService.listQueues().then(function (aaQueueList) {
-          if (aaQueueList.length > 0) {
-            vm.keyActions.push({
-              label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
-              name: 'phoneMenuRouteQueue',
-              action: 'routeToQueue'
+      return QueueHelperService.listQueues().then(function (aaQueueList) {
+        if (aaQueueList.length > 0) {
+          vm.keyActions.push({
+            label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
+            name: 'phoneMenuRouteQueue',
+            action: 'routeToQueue'
+          });
+          _.each(aaQueueList, function (aaQueue) {
+            var idPos = aaQueue.queueUrl.lastIndexOf("/");
+            vm.queues.push({
+              description: aaQueue.queueName,
+              id: aaQueue.queueUrl.substr(idPos + 1)
             });
-            _.each(aaQueueList, function (aaQueue) {
-              var idPos = aaQueue.queueUrl.lastIndexOf("/");
-              vm.queues.push({
-                description: aaQueue.queueName,
-                id: aaQueue.queueUrl.substr(idPos + 1)
-              });
-            });
-          }
-        });
-      }
+          });
+        }
+      });
     }
 
     /////////////////////
 
     function activate() {
-      vm.keyActions.sort(AACommonService.sortByProperty('name'));
+      vm.keyActions.sort(AACommonService.sortByProperty('label'));
 
       if (vm.menuEntry.type === 'MENU_OPTION') {
         // If this is a new phone menu, add button zero
@@ -322,7 +320,11 @@
       vm.entries = vm.uiMenu.entries;
       vm.menuEntry = vm.entries[$scope.index];
       vm.menuId = vm.menuEntry.id;
-      getQueues().finally(activate);
+      if (AACommonService.isRouteQueueToggle) {
+        getQueues().finally(activate);
+      } else {
+        activate();
+      }
     }
 
     init();
