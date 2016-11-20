@@ -5,6 +5,7 @@ const dllDepsConfig = require('./dll-deps.config');
 const commonWebpack = require('./webpack.common');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const lsMostRecentFile = require('../utils/lsMostRecentFile');
+const processEnvUtil = require('../utils/processEnvUtil')();
 
 const hotMiddlewareScript = 'webpack-hot-middleware/client?timeout=30000';
 
@@ -28,7 +29,7 @@ const config = {
 // - for this codepath:
 //   - set env var in shell: `export WP__ENABLE_DLL=1`
 //   - build assets in shell: `mk-webpack-dlls.sh`
-if (hasEnabledDll()) {
+if (processEnvUtil.hasEnabledDll()) {
   const dllEntryNames = Object.keys(dllDepsConfig.entry);
   modifyConfigForWebpackDll(config, dllEntryNames);
 }
@@ -67,11 +68,6 @@ function mkHtmlFragForDllBundles(dllEntryNames) {
     return mkHtmlFrag(jsBaseName);
   });
   return result.join('');
-}
-
-function hasEnabledDll() {
-  const enableDll = _.get(process.env, 'WP__ENABLE_DLL');
-  return /(1|true)/i.test(enableDll);
 }
 
 function getManifest(dllEntryName) {
