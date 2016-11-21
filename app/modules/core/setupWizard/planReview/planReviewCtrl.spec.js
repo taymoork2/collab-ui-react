@@ -40,6 +40,7 @@ describe('Controller: PlanReviewCtrl', function () {
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasSMPGetStatus').and.returnValue($q.when(false));
     spyOn(WebExUtilsFact, "isCIEnabledSite").and.callFake(function (siteUrl) {
       if (siteUrl === "sjsite04.webex.com") {
         return true;

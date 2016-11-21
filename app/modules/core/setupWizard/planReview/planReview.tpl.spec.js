@@ -45,6 +45,7 @@ describe('Template: planReview', function () {
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasSMPGetStatus').and.returnValue($q.when(false));
     getUserMe = getJSONFixture('core/json/users/me.json');
 
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
