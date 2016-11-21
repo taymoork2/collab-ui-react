@@ -45,6 +45,7 @@ class LineOverview implements ng.IComponentController {
     private MemberService: MemberService,
     private Notification: Notification,
     private SharedLineService: SharedLineService,
+    private CsdmDataModelService,
   ) { }
 
   public $onInit(): void {
@@ -176,6 +177,12 @@ class LineOverview implements ng.IComponentController {
         this.lineOverviewData = lineOverviewData;
         this.newSharedLineMembers = [];
         this.showActions = this.setShowActionsFlag(lineOverviewData.line);
+        if (this.isCloudberryPlace()) {
+          this.CsdmDataModelService.notifyDevicesInPlace(this.ownerId, {
+            command: 'pstnChanged',
+            eventType: 'room.pstnChanged',
+          });
+        }
         this.Notification.success('directoryNumberPanel.success');
       })
       .finally( () => {
