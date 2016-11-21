@@ -216,4 +216,16 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
     $httpBackend.flush(); // Request made.
     expect(controller.errorMemberInput).toBeFalsy();
   });
+
+  it("does not search on the number api when looking for members", function () {
+    controller.selectHuntGroupMember(member1);
+    var noSuggestion = {
+      "users": []
+    };
+    $httpBackend.expectGET(MemberLookupUrl).respond(200, noSuggestion);
+    controller.fetchHuntMembers("123");
+    $scope.$apply();
+    $httpBackend.flush(); // Request made.
+    expect(controller.errorMemberInput).toBeTruthy();
+  });
 });
