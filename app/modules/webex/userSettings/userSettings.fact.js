@@ -546,8 +546,6 @@
             var funcName = "getOrgLicensesSuccess()";
             var logMsg = "";
 
-            _self.getUserSettingsFromWebEx();
-
             var orgLicenses = _.get(response, 'data.customers[0].licenses');
             var currSite = $stateParams.site;
             var userLicenses = $stateParams.currentUser.licenseID;
@@ -613,6 +611,8 @@
                 "currSite=" + currSite;
               $log.log(logMsg);
             }
+            
+            _self.getUserSettingsFromWebEx();
           }, // getOrgLicensesSuccess()
 
           function getOrgLicensesError(response) {
