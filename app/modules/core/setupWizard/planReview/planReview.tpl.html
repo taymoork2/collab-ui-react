@@ -77,7 +77,7 @@
            translate="firstTimeWizard.startYourTrial" translate-values="{days: planReview.trial.trialPeriod}">
         </div>
         <div ng-class="{'column-mtg' : !planReview.confServices.isNewTrial, 'column-trial' : planReview.confServices.isNewTrial}">
-          <div ng-if="planReview.confServices.services.length > 0 && !planReview.isSharedMultiPartyEnabled" class="item-mtg-license">
+          <div ng-if="planReview.confServices.services.length > 0 && !planReview.isSharedMultiPartyEnabled" class="item-license">
             <span translate="firstTimeWizard.meeting"></span>
           </div>
           <div ng-if="planReview.confServices.services.length > 0 && planReview.isSharedMultiPartyEnabled" class="item-mtg-license">
