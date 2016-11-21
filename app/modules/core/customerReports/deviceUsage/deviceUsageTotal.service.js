@@ -282,7 +282,7 @@
     }
 
     function extractAndSortAccounts(reduced) {
-      //$log.info("sequence before sorting", reduced);
+      $log.info("sequence before sorting", reduced);
       var sequence = _.chain(reduced).map(function (value) {
         return value.accountIds;
       })
@@ -309,7 +309,7 @@
         .orderBy(['totalDuration'], ['desc'])
         .value();
 
-      //$log.info('sequence after sorting', sequence);
+      $log.info('sequence after sorting', sequence);
       return sequence;
     }
 
