@@ -543,29 +543,17 @@
 
         Auth.getCustomerAccount(Authinfo.getOrgId()).then(
           function getValidLicensesSuccess(response) {
-            var orgLicenses = _.get(response, 'data.customers[0].licenses');
-            // var funcName = "getOrgLicensesSuccess()";
-            // var logMsg = "";
-
-            // logMsg = funcName + ": " + "\n" +
-            //   "orgLicenses=" + JSON.stringify(orgLicenses);
-            // $log.log(logMsg);
+            var funcName = "getOrgLicensesSuccess()";
+            var logMsg = "";
 
             _self.getUserSettingsFromWebEx();
 
+            var orgLicenses = _.get(response, 'data.customers[0].licenses');
             var currSite = $stateParams.site;
-            // var userName = $stateParams.currentUser.userName;
             var userLicenses = $stateParams.currentUser.licenseID;
 
-            // logMsg = funcName + "\n" +
-            //   "userLicenses=" + JSON.stringify(userLicenses);
-            // $log.log(logMsg);
-
             _.forEach(userLicenses,
-              function checkLicense(userLicense) {
-                // var funcName = "checkLicense()";
-                // var logMsg = "";
-
+              function (userLicense) {
                 var userLicenseItems = userLicense.split("_");
                 var userLicenseType = userLicenseItems[0];
 
@@ -575,31 +563,16 @@
                   ("MC" == userLicenseType) ||
                   ("EC" == userLicenseType) ||
                   ("SC" == userLicenseType) ||
-                  ("TC" == userLicenseType) ||
-                  ("CMR" == userLicenseType)
+                  ("TC" == userLicenseType)
                 ) {
 
                   var userLicenseSiteUrl = userLicenseItems[userLicenseItems.length - 1];
-
-                  // logMsg = funcName + "\n" +
-                  //   "currSite=" + currSite + "\n" +
-                  //   "userName=" + userName + "\n" +
-                  //   "userLicense=" + userLicense;
-                  // $log.log(logMsg);
 
                   // check that the license is for the current site
                   if (userLicenseSiteUrl == currSite) {
                     // verify that the user's webex center license is valid for the org
                     orgLicenses.forEach(
-                      function compareOrgLicense(orgLicense) {
-                        // var funcName = "";
-                        // var logMsg = "";
-
-                        // logMsg = funcName + "\n" +
-                        //   "orgLicense=" + JSON.stringify(orgLicense) + "\n" +
-                        //   "userLicense=" + JSON.stringify(userLicense);
-                        // $log.log(logMsg);
-
+                      function (orgLicense) {
                         if (userLicense == orgLicense.licenseId) {
                           if ("EE" == userLicenseType) {
                             WebexUserSettingsSvc.meetingCenter.isEntitledOnAtlas = true;
@@ -624,6 +597,22 @@
                 }
               } // checkLicense()
             ); // userLicenses.forEach(()
+
+            if (
+              !WebexUserSettingsSvc.meetingCenter.isEntitledOnAtlas &&
+              !WebexUserSettingsSvc.trainingCenter.isEntitledOnAtlas &&
+              !WebexUserSettingsSvc.eventCenter.isEntitledOnAtlas &&
+              !WebexUserSettingsSvc.supportCenter.isEntitledOnAtlas
+            ) {
+
+              logMsg = funcName + "\n" +
+                "ERROR - no WebEx center entitlement in Atlas" + "\n" +
+                "userName=" + $stateParams.currentUser.userName + "\n" +
+                "userLicenses=" + JSON.stringify(userLicenses) + "\n" +
+                "orgLicenses=" + JSON.stringify(orgLicenses) + "\n" +
+                "currSite=" + currSite;
+              $log.log(logMsg);
+            }
           }, // getOrgLicensesSuccess()
 
           function getOrgLicensesError(response) {
