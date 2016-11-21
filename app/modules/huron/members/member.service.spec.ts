@@ -53,7 +53,7 @@ describe('Service: MemberService', () => {
   it('should get the list of members with all params passed in', function () {
     this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/members?name=koala&wide=true&order=asc&limit=20&offset=200')
       .respond(200, this.membersList);
-    this.MemberService.getMemberList('koala', true, MemberOrder.ASCENDING, 20, 200).then(response => {
+    this.MemberService.getMemberList('koala', true, undefined, MemberOrder.ASCENDING, 20, 200).then(response => {
       expect(response).toEqual(jasmine.objectContaining(this.membersList.members));
     });
     this.$httpBackend.flush();

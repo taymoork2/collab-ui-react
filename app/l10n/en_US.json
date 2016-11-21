@@ -1422,7 +1422,8 @@
     "validatingAddr": "Validating Address...",
     "saving": "Saving...",
     "errorAddr": "The address you entered is invalid, please try again.",
-    "sameAsCompanyNum": "To edit your emergency service address, the emergency callback number for your device must be different from your company’s callback number."
+    "sameAsCompanyNum": "To edit your emergency service address, the emergency callback number for your device must be different from your company’s callback number.",
+    "impactedUserInfo": "Modifying the Emergency Service Address associated to the above selected Callback Number will impact the following users and/or places:"
   },
   "hercules": {
     "page_title": "Connector Management",
