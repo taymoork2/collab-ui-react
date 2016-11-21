@@ -13,7 +13,6 @@ describe('Controller: AAMediaUploadCtrl', function () {
   var AAMediaUploadService;
   var modal;
   var deferred;
-  var get;
 
   var ui = {
     openHours: {}
@@ -88,7 +87,6 @@ describe('Controller: AAMediaUploadCtrl', function () {
     AAMediaUploadService = _AAMediaUploadService_;
     modal = $q.defer();
     deferred = $q.defer();
-    get = $q.defer();
     $scope.change = function () {
       return true;
     };
@@ -316,12 +314,13 @@ describe('Controller: AAMediaUploadCtrl', function () {
   describe('upload', function () {
 
     it('should not allow an empty file to upload', function () {
+      spyOn(AAMediaUploadService, 'validateFile');
       controller.upload(undefined);
       $scope.$digest();
       expect(controller.uploadFile).toEqual('');
       controller.upload(null);
       $scope.$digest();
-      expect(controller.uploadFile).toEqual('');
+      expect(AAMediaUploadService.validateFile).not.toHaveBeenCalled();
     });
 
     describe('when bad response data is sent back', function () {
@@ -337,39 +336,31 @@ describe('Controller: AAMediaUploadCtrl', function () {
         deferred.resolve();
         $scope.$digest();
         $httpBackend.flush();
-        expect(AANotificationService.error).toHaveBeenCalled();
+        expect(AANotificationService.error).toHaveBeenCalledWith('autoAttendant.uploadFailed');
       });
 
       it('uploadSuccess rejected get promise', function () {
-        spyOn(AAMediaUploadService, 'retrieve').and.returnValue(get.promise);
-        get.reject();
-        $scope.$apply();
+        spyOn(AAMediaUploadService, 'retrieve').and.returnValue('');
         controller.upload(validFile);
         deferred.resolve();
         $scope.$digest();
         $httpBackend.flush();
-        expect(AANotificationService.error).toHaveBeenCalled();
+        expect(AANotificationService.error).toHaveBeenCalledWith('autoAttendant.uploadFailed');
       });
 
       it('uploadSuccess rejected get promise', function () {
-        spyOn(AAMediaUploadService, 'retrieve').and.returnValue(get.promise);
-        get.resolve();
-        $scope.$apply();
-        spyOn(AAMediaUploadService, 'getRecordingUrl').and.returnValue('');
+        spyOn(AAMediaUploadService, 'retrieve').and.returnValue('');
         controller.upload(validFile);
         deferred.resolve();
         $scope.$digest();
         $httpBackend.flush();
-        expect(AANotificationService.error).toHaveBeenCalled();
+        expect(AANotificationService.error).toHaveBeenCalledWith('autoAttendant.uploadFailed');
       });
     });
 
     describe('happy path', function () {
       beforeEach(function () {
-        spyOn(AAMediaUploadService, 'retrieve').and.returnValue(get.promise);
-        get.resolve();
-        $scope.$apply();
-        spyOn(AAMediaUploadService, 'getRecordingUrl').and.returnValue(variantUrlPlayback);
+        spyOn(AAMediaUploadService, 'retrieve').and.returnValue(variantUrlPlayback);
       });
 
       describe('when previous upload', function () {

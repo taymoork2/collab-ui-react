@@ -112,34 +112,14 @@
       if (!modalCanceled) {
         var get = AAMediaUploadService.retrieve(result);
         if (get) {
-          uploadResponse(get);
+          setUploadValues(get);
         } else {
           uploadError();
         }
       }
     }
 
-    function uploadResponse(get) {
-      if (_.isString(get)) {
-        uploadValues(get);
-      } else {
-        get.then(function (response) {
-          evaluatePlayback(AAMediaUploadService.getRecordingUrl(response));
-        }, function () {
-          uploadError();
-        });
-      }
-    }
-
-    function evaluatePlayback(recording) {
-      if (_.isEqual(recording, '')) {
-        uploadError();
-      } else {
-        uploadValues(recording);
-      }
-    }
-
-    function uploadValues(value) {
+    function setUploadValues(value) {
       vm.state = vm.UPLOADED;
       var fd = {};
       fd.uploadFile = vm.uploadFile;

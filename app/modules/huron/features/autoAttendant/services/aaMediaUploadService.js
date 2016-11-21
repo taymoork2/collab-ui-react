@@ -6,7 +6,7 @@
     .factory('AAMediaUploadService', AAMediaUploadService);
 
   /* @ngInject */
-  function AAMediaUploadService($window, $http, Authinfo, Upload, AACommonService, Config) {
+  function AAMediaUploadService($window, Authinfo, Upload, AACommonService, Config) {
     var service = {
       upload: upload,
       retrieve: retrieve,
@@ -29,7 +29,6 @@
     var getBaseUrl = null;
     var clioEnabled = false;
     var CLIO_APP_TYPE = 'AutoAttendant';
-    var ENCRYPTION_POLICY = '{"encryptionPolicy":{"strategy":"SERVER"}}';
 
     return service;
 
@@ -44,8 +43,8 @@
     //to call only during promise resolution from the retrieve get response
     function getRecordingUrl(response) {
       if (response) {
-        var variants = _.get(response, 'data.variants', undefined);
-        if (_.isUndefined(variants)) {
+        var variants = _.get(response, 'variants', undefined);
+        if (!variants) {
           return '';
         } else {
           return getRecordingByVariant(variants);
@@ -56,12 +55,12 @@
     }
 
     function retrieveByResult(successResult) {
-      if (_.isEmpty(successResult) || _.isUndefined(successResult)) {
+      if (!successResult) {
         return '';
       }
       if (isClioEnabled()) {
-        if (_.has(successResult, 'data.recordingId')) {
-          return $http.get(getBaseUrl + successResult.data.recordingId);
+        if (_.has(successResult, 'data.metadata')) {
+          return getRecordingUrl(successResult.data.metadata);
         }
       } else {
         if (_.has(successResult, 'data.PlaybackUri')) {
@@ -72,15 +71,15 @@
     }
 
     function getRecordingByVariant(variants) {
-      if (!_.isEmpty(variants)) {
+      if (variants) {
         var variantKeys = _.keys(variants);
         if (variantKeys.length > 0) {
           if (_.has(variants, variantKeys[0] + '.variantUrl')) {
-            var variantUrl = variants[variantKeys[0]].variantUrl + '?orgId=' + Authinfo.getOrgId();
+            var variantUrl = variants[variantKeys[0]].variantUrl;
             if (_.isUndefined(variantUrl)) {
               return '';
             } else {
-              return variantUrl;
+              return variantUrl + '?orgId=' + Authinfo.getOrgId();
             }
           } else {
             return '';
@@ -102,13 +101,12 @@
     }
 
     function uploadByUpload(file) {
-      if (!_.isEmpty(file) && validateFile(file.name)) {
+      if (file && validateFile(file.name)) {
         var uploadUrl = getUploadUrl();
         var fd = new $window.FormData();
         fd.append('file', file);
         if (isClioEnabled()) {
           fd.append('appType', CLIO_APP_TYPE);
-          fd.append('policy', ENCRYPTION_POLICY);
         }
         return Upload.http({
           url: uploadUrl,
@@ -137,7 +135,7 @@
     }
 
     function setURLFromClioFeatureToggle() {
-      if (_.isEmpty(uploadBaseUrl)) {
+      if (!uploadBaseUrl) {
         if (AACommonService.isClioToggle()) {
           if (Config.isProd()) {
             uploadBaseUrl = clioUploadBaseUrlProd;

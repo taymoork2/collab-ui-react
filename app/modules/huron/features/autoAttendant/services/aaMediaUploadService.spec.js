@@ -3,7 +3,6 @@
 describe('Service: AAMediaUploadService', function () {
   var Upload;
   var AAMediaUploadService;
-  var $http;
   var AACommonService;
   var Config;
 
@@ -13,83 +12,68 @@ describe('Service: AAMediaUploadService', function () {
     name: validFileByName,
     size: 1,
   };
-  var recordingId = 'recordingId';
-  var successResultLackingPath = {
-    malformed: {
-    }
-  };
-  var successResultRecordingId = {
-    data: {
-      recordingId: recordingId
-    }
-  };
   var variantUrlPlayback = 'recordingPlayBackUrl';
+  var orgId = '?orgId=null';
   var variantKeys = '12987-253235-235235-235235';
   var variantsMap = {};
   variantsMap[variantKeys] = {
     variantUrl: variantUrlPlayback
   };
   var clioValidRetrieve = {
-    data: {
-      variants: variantsMap,
-    },
+    variants: variantsMap,
   };
   var clioInvalidRetrieveEmptyVariants = {
-    data: {
-    },
   };
   var clioInvalidRetrieveUndefinedVariants = {
-    data: {
-      variants: undefined,
-    },
+    variants: undefined,
   };
   var clioInvalidRetrieveNoKeys = {
-    data: {
-      variants: {
-      }
+    variants: {
     }
   };
   var clioInvalidRetrieveNoVariantKeysMap = {
-    data: {
-      variants: {
-        noNestedFields: undefined
-      }
+    variants: {
+      noNestedFields: undefined
     }
   };
   var clioInvalidRetrieveNoVariantKeys = {
-    data: {
-      variants: {
-        noNestedFields: {
-        }
+    variants: {
+      noNestedFields: {
       }
     }
   };
   var clioInvalidRetrieveNoVariantUrl = {
-    data: {
-      variants: {
-        noNestedFields: {
-          notVariantUrlField: 'sampleValue'
-        }
+    variants: {
+      noNestedFields: {
+        notVariantUrlField: 'sampleValue'
       }
     }
   };
   var clioInvalidRetrieveEmptyVariantUrl = {
-    data: {
-      variants: {
-        noNestedFields: {
-          variantUrl: undefined
-        }
+    variants: {
+      noNestedFields: {
+        variantUrl: undefined
       }
+    }
+  };
+  var successResultLackingPath = {
+    malformed: {
+    }
+  };
+  var successResultRecording = {
+    data: {
+      metadata: {
+        variants: variantsMap
+      },
     }
   };
 
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_Upload_, _Config_, _AACommonService_, _AAMediaUploadService_, _$http_) {
+  beforeEach(inject(function (_Upload_, _Config_, _AACommonService_, _AAMediaUploadService_) {
     Upload = _Upload_;
     AAMediaUploadService = _AAMediaUploadService_;
-    $http = _$http_;
     AACommonService = _AACommonService_;
     Config = _Config_;
   }));
@@ -103,7 +87,7 @@ describe('Service: AAMediaUploadService', function () {
     });
 
     it('happy path', function () {
-      expect(AAMediaUploadService.getRecordingUrl(clioValidRetrieve)).toEqual(variantUrlPlayback);
+      expect(AAMediaUploadService.getRecordingUrl(clioValidRetrieve)).toEqual(variantUrlPlayback + orgId);
     });
 
     it('no keys sets', function () {
@@ -163,12 +147,8 @@ describe('Service: AAMediaUploadService', function () {
         expect(AAMediaUploadService.retrieve(successResultLackingPath)).toEqual('');
       });
 
-      it('should retrieve the recording id from a structure that has such in the success result', function () {
-        spyOn($http, 'get').and.callFake(function () {
-          return true;
-        });
-        AAMediaUploadService.retrieve(successResultRecordingId);
-        expect($http.get).toHaveBeenCalled();
+      it('should retrieve the recording url from a structure that has such in the success result', function () {
+        expect(AAMediaUploadService.retrieve(successResultRecording)).toEqual(variantUrlPlayback + orgId);
       });
     });
   });
