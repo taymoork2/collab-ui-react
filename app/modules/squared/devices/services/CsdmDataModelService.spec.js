@@ -856,6 +856,18 @@ describe('Service: CsdmDataModelService', function () {
       $httpBackend.flush();
       expect(expectCall).toBe(true);
     });
+
+    it('should notify all devices in a place when notifyDevicesInPlace', function () {
+      $httpBackend.expectPOST('https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f/notify').respond(201, '');
+      $httpBackend.expectPOST('https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f/notify').respond(201, '');
+      $httpBackend.expectPOST('https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/6ae09bec-c0f0-58af-b490-60ed6a695a89/notify').respond(201, '');
+
+      CsdmDataModelService.notifyDevicesInPlace('a19b308a-PlaceWithDevice-71898e423bec', { foo: 'bar' });
+
+      $httpBackend.flush();
+      $httpBackend.verifyNoOutstandingRequest();
+      $httpBackend.verifyNoOutstandingExpectation();
+    });
   });
 
   describe('re-fetch places', function () {
