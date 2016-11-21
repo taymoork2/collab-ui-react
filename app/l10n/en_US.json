@@ -1420,7 +1420,8 @@
     "companyDefaultAddress": "Use company default address",
     "validatingAddr": "Validating Address...",
     "saving": "Saving...",
-    "errorAddr": "The address you entered is invalid, please try again."
+    "errorAddr": "The address you entered is invalid, please try again.",
+    "sameAsCompanyNum": "To edit your emergency service address, the emergency callback number for your device must be different from your company’s callback number."
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -2723,6 +2724,10 @@
     "pagingGroupNumber": "Paging Group Number",
     "pagingGroupMembers": "Paging Group Members",
     "memberEditHint": "Select the users or places that will be paged.  The devices need to be in the same multicast group for paging to work.",
+    "editMemberPlaceholder": "Add Members",
+    "users": " Users",
+    "places": " Places",
+    "search": "Search",
     "saveLabel": "Do you want to save your changes?",
     "successUpdate": "'{{pagingGroupName}}' paging group has been updated successfully",
     "successSave": "'{{pagingGroupName}}' paging group has been created successfully",
@@ -2906,7 +2911,8 @@
   "pstnOrderDetail": {
     "orderNumber": "Order #{{orderId}}",
     "pendingNumbers": "{count, plural, one{There is # number} other{There are # numbers}} pending for this order",
-    "searchPlaceholder": "Search Phone Numbers"
+    "searchPlaceholder": "Search Phone Numbers",
+    "waitOnTOSAcceptance": "Waiting on ToS acceptance from customer"
   },
   "serviceAddress": {
     "streetAddress": "Street Address",
