@@ -15,6 +15,7 @@
       <aa-route-to-user ng-switch-when="routeToVoiceMail"  voicemail=true aa-schedule="{{schedule}}" aa-index="index" aa-from-route-call="true"></aa-route-to-user>
       <aa-route-to-user ng-switch-when="routeToUser"  aa-schedule="{{schedule}}" aa-index="index" aa-from-route-call="true"></aa-route-to-user>
       <aa-route-to-ext-num ng-switch-when="route" aa-schedule="{{schedule}}" aa-from-route-call="true" aa-index="index"></aa-route-to-ext-num>
+      <aa-route-to-queue ng-switch-when="routeToQueue" aa-schedule="{{schedule}}" aa-from-route-call="true" aa-index="index" aa-queues="{{aaRouteCallMenu.queues}}"></aa-route-to-queue>
     </div>
   </div>
 </div>
