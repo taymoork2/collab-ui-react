@@ -55,6 +55,23 @@
 
       <div class="cs-form__section">
         <div class="section__info">
+          <h4 class="section__title" translate="callPark.reversionTitle"></h4>
+        </div>
+        <div class="section__content">
+          <div class="sub-section">
+            <h5 class="sub-section__title" translate="callPark.reversionRuleLabel"></h5>
+            <p class="sub-section__description" translate="callPark.reversionRuleDesc"></p>
+            <uc-call-park-reversion
+              fallback-destination="$ctrl.callPark.fallbackDestination"
+              on-member-removed-fn="$ctrl.onCallParkFallbackDestinationMemberRemoved()"
+              on-change-fn="$ctrl.setCallParkFallbackDestination(fallbackDestination)">
+            </uc-call-park-reversion>
+          </div>
+        </div>
+      </div>
+
+      <div class="cs-form__section">
+        <div class="section__info">
           <h4 class="section__title" translate="callPark.membersTitle"></h4>
         </div>
         <div class="section__content">

@@ -6,7 +6,7 @@
     .controller('RemPlaceController',
 
       /* @ngInject */
-      function ($modalInstance, CsdmDataModelService, XhrNotificationService, place) {
+      function ($modalInstance, CsdmDataModelService, Notification, place) {
         var rdc = this;
         rdc.place = place;
 
@@ -14,7 +14,9 @@
           return CsdmDataModelService.deleteItem(rdc.place)
             .then(function () {
               $modalInstance.close();
-            }, XhrNotificationService.notify);
+            }, function (error) {
+              Notification.errorWithTrackingId(error, 'placesPage.failedToDelete');
+            });
         };
       }
     )

@@ -68,7 +68,7 @@
       };
 
       return $http(config).then(function (response) {
-        var data = response.data.properties[0];
+        var data = _.get(response, 'data.properties[0]', {});
         var errorCodes = {
           0: 'validSite',
           434057: 'domainInvalid',
@@ -81,8 +81,8 @@
           'isValid': isValid && data.errorCode === '0',
           'errorCode': errorCodes[data.errorCode] || 'invalidSite'
         };
-      }).catch(function () {
-        Notification.error('trialModal.meeting.validationHttpError');
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'trialModal.meeting.validationHttpError');
       });
     }
 

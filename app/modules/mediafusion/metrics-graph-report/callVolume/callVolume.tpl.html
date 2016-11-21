@@ -13,11 +13,11 @@
     </graphheader>
     <section>
       <div class="metrics-call-volume">
-        <div id="callVolumediv" class="barchart" ng-class="{'call-volume-chart': !nav.isEmpty(nav.callVolumeStatus) && !nav.isRefresh(nav.callVolumeStatus)}"></div>
-        <div class="spinner-position" ng-if="nav.isRefresh(nav.callVolumeStatus)">
+        <div id="callVolumediv" class="barchart" ng-class="{'call-volume-chart': !$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.callVolumeStatus) && !$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.callVolumeStatus)}"></div>
+        <div class="spinner-position" ng-if="$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.callVolumeStatus)">
           <i class='icon icon-spinner icon-2x'></i>
         </div>
-        <div class="no-data-center" ng-if="nav.isEmpty(nav.callVolumeStatus)">
+        <div class="no-data-center" ng-if="$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.callVolumeStatus)">
           <h3 class="no-data"> 
             <i class='icon icon-warning no-data-warning'></i>
             <span translate='mediaFusion.metrics.nodata'></span>

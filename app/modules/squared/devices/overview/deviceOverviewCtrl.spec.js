@@ -340,8 +340,8 @@ describe('Huron Device', function () {
       return q.resolve(true);
     }
 
-    function getTimezoneForDevice() {
-      return q.resolve('America/Los_Angeles');
+    function getDeviceInfo() {
+      return q.resolve({ timeZone: 'America/Los_Angeles' });
     }
 
     function getLinesForDevice() {
@@ -350,7 +350,7 @@ describe('Huron Device', function () {
 
     return {
       setTimezoneForDevice: setTimezoneForDevice,
-      getTimezoneForDevice: getTimezoneForDevice,
+      getDeviceInfo: getDeviceInfo,
       getLinesForDevice: getLinesForDevice
     };
   }

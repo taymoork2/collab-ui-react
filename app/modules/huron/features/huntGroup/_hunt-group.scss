@@ -46,7 +46,7 @@ $overlay-panel-height: 93px;
   }
 }
 
-[fallback-destination] {
+/*[fallback-destination] {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -69,7 +69,7 @@ $overlay-panel-height: 93px;
   .typeahead-large {
     margin-top: calc(51vh - #{$top-bar-height + $overlay-panel-height});
   }
-}
+}*/
 
 .cs-setupassistant {
   margin: 0 auto;

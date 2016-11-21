@@ -136,7 +136,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
   }
 
   public enterNextPage(keyCode: number): void {
-    if (keyCode === 13 && this.nextButton() === true) {
+    if ((keyCode === 13) && this.nextButton()) {
       this.nextPage();
     }
   }

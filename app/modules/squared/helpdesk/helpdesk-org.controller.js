@@ -6,7 +6,7 @@
     .controller('HelpdeskOrgController', HelpdeskOrgController);
 
   /* @ngInject */
-  function HelpdeskOrgController($location, $anchorScroll, $stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $modal, $state, Authinfo, $window, UrlConfig, FeatureToggleService, FusionClusterService, Notification) {
+  function HelpdeskOrgController($anchorScroll, $location, $modal, $scope, $state, $stateParams, $translate, $window, Authinfo, Config, HelpdeskService, HelpdeskCardsOrgService, FeatureToggleService, FusionClusterService, LicenseService, Notification, UrlConfig) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -43,8 +43,15 @@
     vm.adminUsersAvailable = false;
     vm.findServiceOrders = findServiceOrders;
     vm.openHybridServicesModal = openHybridServicesModal;
+    vm._helpers = {
+      notifyError: notifyError
+    };
 
-    HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
+    HelpdeskService.getOrg(vm.orgId).then(function (result) {
+      initOrgView(result);
+    }, function (result) {
+      vm._helpers.notifyError(result);
+    });
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskExt).then(function (result) {
       vm.supportsExtendedInformation = result;
@@ -105,7 +112,7 @@
       LicenseService.getLicensesInOrg(vm.orgId).then(function (licenses) {
         initCards(licenses);
         findLicenseUsage();
-      }, XhrNotificationService.notify);
+      }, vm._helpers.notifyError);
       findManagedByOrgs(org);
       findWebExSites(org);
       findServiceOrders(vm.orgId);
@@ -144,7 +151,7 @@
       if (LicenseService.orgIsEntitledTo(org, 'cloudMeetings')) {
         HelpdeskService.getWebExSites(vm.orgId).then(function (sites) {
           vm.org.webExSites = sites;
-        }, XhrNotificationService.notify);
+        }, vm._helpers.notifyError);
       }
     }
 
@@ -161,7 +168,7 @@
         _.forEach(orders, function (order) {
           vm.orderSystems.push(orderingSystemTypes[order.orderingTool] || order.orderingTool);
         });
-      }, XhrNotificationService.notify);
+      }, vm._helpers.notifyError);
     }
 
     function findAdminUsers(org) {
@@ -171,7 +178,7 @@
           numUsers: users.length
         });
         vm.adminUsersAvailable = true;
-      }, XhrNotificationService.notify);
+      }, vm._helpers.notifyError);
     }
 
     function findLicenseUsage() {
@@ -237,7 +244,7 @@
           customerOrgId: vm.orgId,
           customerOrgName: vm.org.displayName
         }));
-      }, XhrNotificationService.notify)
+      }, vm._helpers.notifyError)
         .finally(function () {
           vm.launchingAtlas = false;
         });
@@ -266,6 +273,10 @@
         .finally(function () {
           vm.loadingHSData = false;
         });
+    }
+
+    function notifyError(response) {
+      Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
     }
   }
 }());

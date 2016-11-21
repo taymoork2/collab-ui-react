@@ -31,6 +31,12 @@
       height: 400px;
       padding: 1rem;
       padding-top: 3rem;
+      .amcharts-title {
+        font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color: #4F5051;
+        font-weight: normal;
+        font-size: 1.25rem;
+      }
     }
 
     .device-select {

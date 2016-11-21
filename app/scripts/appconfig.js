@@ -1092,6 +1092,24 @@
               displayName: 'Device Configuration'
             }
           })
+          .state('user-overview.csdmDevice.emergencyServices', {
+            views: {
+              '': {
+                template: '<uc-emergency-services></uc-emergency-services>',
+              }
+            },
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.csdmDevice.emergencyServices').data.displayName = $translate.instant('spacesPage.emergencyTitle');
+              }
+            },
+            data: {},
+            params: {
+              currentAddress: {},
+              currentNumber: '',
+              status: ''
+            },
+          })
           .state('user-overview.communication.voicemail', {
             template: '<div uc-voicemail></div>',
             data: {
@@ -1473,6 +1491,24 @@
               displayName: 'Device Configuration'
             }
           })
+          .state('place-overview.csdmDevice.emergencyServices', {
+            views: {
+              '': {
+                template: '<uc-emergency-services></uc-emergency-services>',
+              }
+            },
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('place-overview.csdmDevice.emergencyServices').data.displayName = $translate.instant('spacesPage.emergencyTitle');
+              }
+            },
+            data: {},
+            params: {
+              currentAddress: {},
+              currentNumber: '',
+              status: '',
+            },
+          })
           .state('place-overview.communication', {
             template: '<place-call-overview></place-call-overview>',
             params: {
@@ -1603,6 +1639,28 @@
             data: {
               displayName: 'Overview'
             }
+          })
+          .state('device-overview.emergencyServices', {
+            parent: 'device-overview',
+            views: {
+              'sidepanel@': {
+                template: '<uc-emergency-services></uc-emergency-services>',
+              },
+              'header@device-overview.emergencyServices': {
+                templateUrl: 'modules/squared/devices/emergencyServices/emergencyServicesHeader.tpl.html'
+              }
+            },
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('device-overview.emergencyServices').data.displayName = $translate.instant('spacesPage.emergencyTitle');
+              }
+            },
+            data: {},
+            params: {
+              currentAddress: {},
+              currentNumber: '',
+              status: '',
+            },
           })
           .state('video', {
             parent: 'modal',
@@ -2985,7 +3043,7 @@
             url: '/gss',
             templateUrl: 'modules/gss/gssIframe/gssIframe.tpl.html',
             controller: 'GssIframeCtrl',
-            controllerAs: 'gssIframe',
+            controllerAs: 'gssIframeCtrl',
             parent: 'main',
             resolve: {
               hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
@@ -3017,6 +3075,41 @@
             },
             params: {
               component: null
+            }
+          })
+          .state('gss.services', {
+            url: '/services',
+            templateUrl: 'modules/gss/services/services.tpl.html',
+            controller: 'GSSServicesCtrl',
+            controllerAs: 'gssServicesCtrl'
+          })
+          .state('gss.incidents', {
+            url: '/incidents',
+            templateUrl: 'modules/gss/incidents/incidents.tpl.html',
+            controller: 'IncidentsCtrl',
+            controllerAs: 'incidentsCtrl'
+          })
+          .state('gss.incidents.new', {
+            url: '/new',
+            views: {
+              '@gss': {
+                templateUrl: 'modules/gss/incidents/createIncident/createIncident.tpl.html',
+                controller: 'CreateIncidentCtrl',
+                controllerAs: 'createIncidentCtrl'
+              }
+            }
+          })
+          .state('gss.incidents.delete', {
+            url: '/delete',
+            views: {
+              '@gss': {
+                templateUrl: 'modules/gss/incidents/deleteIncident/deleteIncident.tpl.html',
+                controller: 'DeleteIncidentCtrl',
+                controllerAs: 'deleteIncidentCtrl'
+              }
+            },
+            params: {
+              incident: null
             }
           });
       }

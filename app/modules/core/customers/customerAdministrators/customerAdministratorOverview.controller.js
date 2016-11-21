@@ -27,8 +27,8 @@
             vm.loading = false;
             _.set(vm, 'count', response.data.totalResults);
           })
-          .catch(function () {
-            Notification.error('customerAdminPanel.customerAdministratorServiceError');
+          .catch(function (response) {
+            Notification.errorResponse(response, 'customerAdminPanel.customerAdministratorServiceError');
           });
       }
     }

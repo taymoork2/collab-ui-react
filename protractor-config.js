@@ -153,6 +153,8 @@ exports.config = {
     var ManageUsersPage = require('./test/e2e-protractor/pages/manageUsers.page.js');
     var GSSDashboardPage = require('./test/e2e-protractor/pages/gssDashboard.page.js');
     var GSSComponentPage = require('./test/e2e-protractor/pages/gssComponent.page.js');
+    var GSSServicePage = require('./test/e2e-protractor/pages/gssService.page.js');
+    var GSSIncidentPage = require('./test/e2e-protractor/pages/gssIncident.page.js');
 
     global.notifications = new Notifications();
     global.navigation = new Navigation();
@@ -198,6 +200,8 @@ exports.config = {
     global.manageUsersPage = new ManageUsersPage();
     global.gssDashboard = new GSSDashboardPage();
     global.gssComponent = new GSSComponentPage();
+    global.gssService = new GSSServicePage();
+    global.gssIncident = new GSSIncidentPage();
 
     function initReporters(config) {
       var testFile = _.chain(config)

@@ -21,6 +21,7 @@ export class ServicesOverviewCtrl {
     private FeatureToggleService,
     private FusionClusterService,
     private FusionClusterStatesService,
+    private CloudConnectorService,
   ) {
     this.cards = [
       new ServicesOverviewMessageCard(this.Authinfo),
@@ -28,7 +29,7 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewCallCard(this.Authinfo, this.Config),
       new ServicesOverviewCareCard(this.Authinfo),
       new ServicesOverviewHybridServicesCard(this.Authinfo),
-      new ServicesOverviewHybridCalendarCard(this.Authinfo, this.FusionClusterStatesService),
+      new ServicesOverviewHybridCalendarCard(this.CloudConnectorService, this.Authinfo, this.FusionClusterStatesService),
       new ServicesOverviewHybridCallCard(this.Authinfo, this.FusionClusterStatesService),
       new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
       new ServicesOverviewHybridDataSecurityCard(this.FusionClusterStatesService),
@@ -63,6 +64,11 @@ export class ServicesOverviewCtrl {
     this.FeatureToggleService.supports(FeatureToggleService.features.csdmPstn)
       .then(supports => {
         this.forwardEvent('csdmPstnFeatureToggleEventHandler', supports);
+      });
+
+    this.FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
+      .then(supports => {
+        this.forwardEvent('googleCalendarFeatureToggleEventHandler', supports);
       });
   }
 
