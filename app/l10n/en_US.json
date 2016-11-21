@@ -2095,16 +2095,17 @@
     },
     "searchParameters": {
       "searchBy": "Search By",
-      "searchByPlaceholder": "Email Id",
+      "searchByPlaceholder": "Email ID",
       "searchByEmailPlaceholder": "e.g. johnsmith@email.com, jansmith@email.com",
-      "roomName": "Where <b>Room Name</b> contains",
-      "roomNamePlaceholder": "e.g. sales AND meeting OR private",
-      "textMessage": "Where <b>Text Messages</b> contains",
-      "textMessagePlaceholder": "e.g. project AND manager OR admin NOT owner",
-      "fileName": "Where <b>File Name</b> contains",
-      "fileNamePlaceholder": "e.g. confidential OR restricted",
-      "activityType": "And <b>Activity Type</b> is",
-      "activityTypePlaceholder": "Meeting"
+      "searchByRoomPlaceholder": "e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "textAndFileName": "Where <b>Text Messagegs</b> or <b>File Name</b> contains",
+      "textAndFileNamePlaceholder": "e.g. project AND manager",
+      "noMatchesFound": "No Matches Found"
+    },
+    "searchResults": {
+      "searchInfo": "Search Info",
+      "emailId": "Email Id",
+      "dateRange": "Date Range"
     },
     "reportsList": {
       "name": "Name",
