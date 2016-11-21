@@ -5,7 +5,7 @@
 <div class="modal-body add-resource hybrid-calendar-setup">
 
   <div class="hercules-upload-key-section row"
-        ng-if="vm.inDocumentationStep">
+        ng-if="vm.step === 'documentation'">
     <h3 translate="hercules.settings.googleCalendar.generateAPrivateKeyHeader"
         class="hercules-upload-key-header"></h3>
     <p translate="hercules.settings.googleCalendar.generateAPrivateKeyExplanation"
@@ -14,15 +14,15 @@
        class="medium-10"></p>
   </div>
 
-  <div ng-if="vm.inUploadPrivateKeyStep"
-       class="hercules-upload-key-modal">
+  <div class="hercules-upload-key-modal"
+       ng-if="vm.step === 'upload-private-key'">
     <upload-private-key
       data="vm.data"></upload-private-key>
   </div>
 
 
   <div class="hercules-upload-key-section row"
-       ng-if="vm.inFinalStep">
+       ng-if="vm.step === 'final'">
 
     <h3 translate="hercules.settings.googleCalendar.googleCalendarSetupCompleted"></h3>
     <p translate="hercules.settings.googleCalendar.great"
@@ -45,13 +45,13 @@
 <div class="modal-footer add-resource">
 
   <button class="btn"
-          ng-click="vm.cancel()">
+          ng-click="$dismiss()">
     <span translate="common.cancel"></span>
   </button>
 
   <button class="btn btn--primary"
           ng-click="vm.haveReadDocumentation()"
-          ng-if="vm.inDocumentationStep">
+          ng-if="vm.step === 'documentation'">
 
     <span translate="common.next"></span>
   </button>
@@ -59,7 +59,7 @@
   <button cs-btn
           class="btn btn--primary"
           ng-click="vm.uploadKey()"
-          ng-if="vm.inUploadPrivateKeyStep"
+          ng-if="vm.step === 'upload-private-key'"
           ng-disabled="vm.data.file === '' || vm.data.googleServiceAccount === ''"
           loading="vm.loading">
 
@@ -68,7 +68,7 @@
 
   <button class="btn btn--primary"
           ng-click="vm.closeModal()"
-          ng-if="vm.inFinalStep">
+          ng-if="vm.step === 'final'">
 
     <span translate="common.done"></span>
   </button>

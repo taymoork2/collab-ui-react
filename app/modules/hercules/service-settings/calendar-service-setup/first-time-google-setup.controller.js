@@ -9,9 +9,7 @@
   function FirstTimeGoogleSetupController($modalInstance, CloudConnectorService, Notification) {
     var vm = this;
 
-    vm.inDocumentationStep = true;
-    vm.inUploadPrivateKeyStep = false;
-    vm.inFinalStep = false;
+    vm.step = 'documentation'; // | 'upload-private-key' | 'final'
 
     vm.data = {
       googleServiceAccount: '',
@@ -19,21 +17,15 @@
       file: '',
     };
 
-    vm.cancel = function () {
-      $modalInstance.dismiss();
-    };
-
     vm.haveReadDocumentation = function () {
-      vm.inDocumentationStep = false;
-      vm.inUploadPrivateKeyStep = true;
+      vm.step = 'upload-private-key';
     };
 
     vm.uploadKey = function () {
       vm.loading = true;
       CloudConnectorService.updateConfig(vm.data.googleServiceAccount, vm.data.file, 'squared-fusion-gcal')
         .then(function () {
-          vm.inUploadPrivateKeyStep = false;
-          vm.inFinalStep = true;
+          vm.step = 'final';
         })
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'hercules.settings.googleCalendar.failedToUploadKey');

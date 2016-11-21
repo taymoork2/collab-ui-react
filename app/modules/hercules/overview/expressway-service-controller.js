@@ -129,7 +129,7 @@
       });
     }
 
-    function isServiceEnabled() {
+    function init() {
 
       if (vm.servicesId[0] === 'squared-fusion-cal' && hasGoogleCalendarFeatureToggle) {
 
@@ -166,7 +166,7 @@
         });
       }
     }
-    isServiceEnabled();
+    init();
 
     function firstTimeExchangeSetup() {
       $modal.open({
