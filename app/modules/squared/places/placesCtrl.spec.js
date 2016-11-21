@@ -29,6 +29,7 @@ describe('Controller: PlacesCtrl', function () {
     });
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.when());
+    spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when());
   }
 
   function initController() {
@@ -59,6 +60,7 @@ describe('Controller: PlacesCtrl', function () {
       email = 'email@address.com';
       orgId = 'orgId';
       controller.adminDisplayName = displayName;
+      controller.showATA = true;
       spyOn(controller, 'isEntitledToHuron').and.returnValue(isEntitledToHuron);
       spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(isEntitledToRoomSystem);
       spyOn(Authinfo, 'getUserId').and.returnValue(userCisUuid);
@@ -75,6 +77,7 @@ describe('Controller: PlacesCtrl', function () {
       expect(wizardState.title).toBe('addDeviceWizard.newSharedSpace.title');
       expect(wizardState.function).toBe('addPlace');
       expect(wizardState.showPlaces).toBe(true);
+      expect(wizardState.showATA).toBe(true);
       expect(wizardState.isEntitledToHuron).toBe(isEntitledToHuron);
       expect(wizardState.isEntitledToRoomSystem).toBe(isEntitledToRoomSystem);
       expect(wizardState.account.deviceType).toBeUndefined();

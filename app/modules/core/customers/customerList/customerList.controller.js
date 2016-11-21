@@ -666,12 +666,8 @@
           // (if you .finally(..), the next `then` doesnt get called)
           $scope.showManagedOrgsRefresh = false;
         })
-        .catch(function (err) {
-          Log.debug('Failed to retrieve managed orgs information. Status: ' + err.status);
-          Notification.error('partnerHomePage.errGetTrialsQuery', {
-            status: err.status
-          });
-
+        .catch(function (response) {
+          Notification.errorResponse(response, 'partnerHomePage.errGetTrialsQuery');
           $scope.showManagedOrgsRefresh = false;
         });
     }
@@ -700,11 +696,8 @@
     // AG : this will go away in refactor. We are getting rid of trials endpoint call
     function getTrialsList(searchText) {
       return TrialService.getTrialsList(searchText)
-        .catch(function (err) {
-          Log.debug('Failed to retrieve trial information. Status: ' + err.status);
-          Notification.error('partnerHomePage.errGetTrialsQuery', {
-            status: err.status
-          });
+        .catch(function (response) {
+          Notification.errorResponse(response, 'partnerHomePage.errGetTrialsQuery');
         })
         .then(function (response) {
           $scope.trialsList = PartnerService.loadRetrievedDataToList(_.get(response, 'data.trials', []), true,

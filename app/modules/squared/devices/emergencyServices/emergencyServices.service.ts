@@ -25,14 +25,23 @@ export class EmergencyServicesService {
     let emergencyData = {
       emergencyNumber: this.$stateParams.currentNumber,
       emergencyAddress: this.$stateParams.currentAddress,
+      status: this.$stateParams.status,
     };
     this.emergencyDataCopy = this.cloneEmergencyData(emergencyData);
     return {
       emergency: emergencyData,
       currentDevice: this.currentDevice,
       stateOptions: this.stateOptions,
-      status: this.$stateParams.status,
     };
+  }
+
+  public getCompanyECN() {
+    return this.ServiceSetup.listSites().then(() => {
+        if (this.ServiceSetup.sites.length !== 0) {
+          return this.ServiceSetup.getSite(this.ServiceSetup.sites[0].uuid)
+          .then(site => _.get(site, 'emergencyCallBackNumber.pattern'));
+        }
+    });
   }
 
   public getOptions(): ng.IPromise<string[]> {

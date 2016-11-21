@@ -143,8 +143,8 @@
             Notification.success('firstTimeWizard.setPersonalMeetingRoomSuccessMessage');
             $rootScope.$broadcast('DISMISS_PMR_NOTIFICATION');
           })
-          .catch(function () {
-            Notification.error('firstTimeWizard.personalMeetingRoomServiceErrorMessage');
+          .catch(function (response) {
+            Notification.errorResponse(response, 'firstTimeWizard.personalMeetingRoomServiceErrorMessage');
           });
       }
     };

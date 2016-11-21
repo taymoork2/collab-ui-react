@@ -1,13 +1,14 @@
-<script type="text/ng-template" id="memberTemplate.html">
+<script type="text/ng-template" id="callParkReversionTemplate.html">
   <a class="member__name">
     <span ng-bind-html="match.label.firstName | typeaheadHighlight:query" ng-if="match.label.firstName"></span>
     <span ng-bind-html="match.label.lastName | typeaheadHighlight:query" ng-if="match.label.lastName"></span>
+    <span ng-bind-html="match.label.number | typeaheadHighlight:query" ng-if="match.label.number"></span>
     <span ng-show="match.label.lastName">(<span ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>)</span>
-    <span ng-show="!match.label.lastName && !match.label.displayName" ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>
-    <span ng-show="!match.label.userName" ng-bind-html="match.label.displayName | typeaheadHighlight:query"></span>
+    <span ng-show="!match.label.lastName && !match.label.displayName && !match.label.number" ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>
+    <span ng-show="!match.label.userName && !match.label.number" ng-bind-html="match.label.displayName | typeaheadHighlight:query"></span>
   </a>
   <div class="member__line">
-    <span ng-bind-html="(match.label.numbers | callParkMemberTelephoneFilter) | typeaheadHighlight:query"></span>
+    <span ng-bind-html="(match.label.numbers | callParkMemberNumbersFilter : true) | typeaheadHighlight:query" ng-if="match.label.numbers"></span>
   </div>
 </script>
 <div ng-form="$ctrl.cpReversionForm">
@@ -43,7 +44,7 @@
         ng-keyup="$ctrl.validateReversionNumber()"
         internal-number-data-fn="$ctrl.getMemberList(data)"
         internal-number-on-select="$ctrl.onSelectReversionMember(data)"
-        internal-number-template-url="memberTemplate.html">
+        internal-number-template-url="callParkReversionTemplate.html">
       </cs-call-destination>
     </div>
     <div ng-if="$ctrl.showMember">
@@ -54,16 +55,17 @@
             <a href ng-click="$ctrl.toggleMemberPanel()">
               <header ng-class="{'open-panel' : $ctrl.openPanel}">
                 <div class="header-with-right-icon">
-                  <h5 class="ellipsis">{{$ctrl.fallbackDestination.name}}</h5>
+                  <h5 class="ellipsis" ng-if="$ctrl.fallbackDestination.name">{{$ctrl.fallbackDestination.name}}</h5>
+                  <h5 class="ellipsis" ng-if="!$ctrl.fallbackDestination.name && $ctrl.fallbackDestination.number">{{$ctrl.fallbackDestination.number}}</h5>
                   <i class="icon icon-arrow-next icon-lg"></i>
                 </div>
               </header>
             </a>
             <section ng-if="($ctrl.openPanel)">
               <fieldset>
-                <p class="primary-number">{{member.numbers | callParkMemberTelephoneFilter}}</p>
+                <p class="primary-number">{{$ctrl.directoryNumber | callParkReversionDirectoryNumberFilter}}</p>
                 <p>
-                  <a href ng-click="$ctrl.removeMember()" translate="callPark.removeMem"></a>
+                  <a href ng-click="$ctrl.removeMember()" translate="common.remove"></a>
                 </p>
               </fieldset>
             </section>

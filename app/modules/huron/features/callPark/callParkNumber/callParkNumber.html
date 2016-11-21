@@ -53,6 +53,7 @@
               ng-required="$ctrl.rangeType === 'range'"
               ng-class="{'error': $ctrl.errorEndRangeInput}"
               typeahead="endRange for endRange in $ctrl.getEndRangeList($ctrl.startRange)"
+              typeahead-on-select="$ctrl.onSelectEndRange()"
               typeahead-template-url="endRanges.html"
               typeahead-min-length="0"
               placeholder="{{:: 'callPark.secondRange' | translate }}"

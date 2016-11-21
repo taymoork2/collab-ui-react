@@ -347,11 +347,13 @@ describe('Service: CsdmDataModelService', function () {
       var newDeviceName = "This Is The New name !!";
       var promiseExecuted;
 
-      $httpBackend.expectPATCH(deviceUrlToUpdate).respond(204);
-
       CsdmDataModelService.getDevicesMap().then(function (devices) {
 
         CsdmDataModelService.getPlacesMap().then(function (places) {
+
+          var patchedDevice = JSON.parse(JSON.stringify(places[pWithDeviceUrl].devices[deviceUrlToUpdate]));
+          patchedDevice.displayName = newDeviceName;
+          $httpBackend.expectPATCH(deviceUrlToUpdate).respond(patchedDevice);
 
           expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].displayName).toBe(originalName);
 

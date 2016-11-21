@@ -6,6 +6,7 @@ describe('OnboardCtrl: Ctrl', function () {
   var fusionServices, headers;
   var customer;
   var resourceGroups;
+  var uploadedDataCapture;
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Hercules'));
@@ -161,15 +162,18 @@ describe('OnboardCtrl: Ctrl', function () {
     return $q.resolve(response);
   }
 
+
   function bulkOnboardUsersResponseMock(statusCode, additionalCodes) {
     var statusCodes = additionalCodes || [];
 
     return function (uploadedData) {
+      uploadedDataCapture = uploadedData;
       return bulkOnboardSuccessResponse(uploadedData, statusCode, statusCodes);
     };
   }
 
   function bulkOnboardSuccessResponseUpperCaseEmail(uploadedData, defaultStatusCode) {
+    uploadedDataCapture = uploadedData;
     var response = {
       data: {
         userResponse: []
@@ -189,6 +193,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
   function bulkOnboardUsersResponseUpperCaseEmailMock(statusCode) {
     return function (uploadedData) {
+      uploadedDataCapture = uploadedData;
       return bulkOnboardSuccessResponseUpperCaseEmail(uploadedData, statusCode);
     };
   }
@@ -197,6 +202,7 @@ describe('OnboardCtrl: Ctrl', function () {
     var triesUntilSuccess = successAfterTries || Number.MAX_VALUE;
 
     return function (uploadedData) {
+      uploadedDataCapture = uploadedData;
       if (triesUntilSuccess > 0) {
         // fail this request
         triesUntilSuccess--;
@@ -647,7 +653,7 @@ describe('OnboardCtrl: Ctrl', function () {
       FeatureToggleService.supports.and.returnValue($q.when(true));
       fusionServices = getJSONFixture('core/json/users/hybridServices.json');
       Orgservice.getHybridServiceAcknowledged.and.returnValue($q.when(fusionServices));
-      headers = getJSONFixture('core/json/users/headersForHybridServices.json');
+      headers = getJSONFixture('core/json/users/headersForHybridServicesOld.json');
       initController();
     });
 
@@ -813,6 +819,69 @@ describe('OnboardCtrl: Ctrl', function () {
       expect(updatedUserProps.length).toEqual(0);
       expect(USSService.updateBulkUserProps.calls.count()).toEqual(0);
       expect(controller.handleHybridServicesResourceGroups).toBeFalsy();
+    });
+  });
+
+  describe('Process CSV with new Hybrid Calendar Service entitlements', function () {
+
+    beforeEach(function () {
+      fusionServices = getJSONFixture('core/json/users/hybridServices.json');
+      Orgservice.getHybridServiceAcknowledged.and.returnValue($q.when(fusionServices));
+      headers = getJSONFixture('core/json/users/headersForHybridServicesNew.json');
+      initController();
+    });
+
+    function setCsv(users, header) {
+      var csv = [header || ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Hybrid Calendar Service (Exchange)', 'Hybrid Calendar Service (Google)']];
+      csv.push(users);
+      controller.model.file = $.csv.fromArrays(csv);
+      $scope.$apply();
+      $timeout.flush();
+    }
+
+    it('should add an error if both calendar entitlements (Exchange and Google) are set', function () {
+      setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'true', 'true']);
+      controller.startUpload();
+      $scope.$apply();
+      $timeout.flush();
+      expect(controller.model.numTotalUsers).toEqual(1);
+      expect(controller.model.userErrorArray.length).toEqual(1);
+      expect(controller.model.userErrorArray[0].email).toEqual('tvasset@cisco.com');
+      expect(controller.model.userErrorArray[0].error).toEqual('firstTimeWizard.mutuallyExclusiveCalendarEntitlements');
+      expect(Userservice.bulkOnboardUsers.calls.count()).toEqual(0);
+    });
+
+    it('should allow setting the google calendar entitlement (squaredFusionGCal)', function () {
+      setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'false', 'true']);
+      Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(201));
+      controller.startUpload();
+      $scope.$apply();
+      $timeout.flush();
+      expect(controller.model.numTotalUsers).toEqual(1);
+      expect(controller.model.userErrorArray.length).toEqual(0);
+      expect(Userservice.bulkOnboardUsers.calls.count()).toEqual(1);
+      expect(uploadedDataCapture.length).toEqual(1);
+      expect(uploadedDataCapture[0].entitlements.length).toEqual(1);
+      expect(_.some(uploadedDataCapture[0].entitlements, function (entitlement) {
+        return entitlement.entitlementName === 'squaredFusionGCal' && entitlement.entitlementState === 'ACTIVE';
+      })).toBeTruthy();
+    });
+
+    it('should accept the old Calendar Service header after the backend rename to Hybrid Calendar Service (Exchange) is completed', function () {
+      var oldHeaders = ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Calendar Service'];
+      setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'true'], oldHeaders);
+      Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(201));
+      controller.startUpload();
+      $scope.$apply();
+      $timeout.flush();
+      expect(controller.model.numTotalUsers).toEqual(1);
+      expect(controller.model.userErrorArray.length).toEqual(0);
+      expect(Userservice.bulkOnboardUsers.calls.count()).toEqual(1);
+      expect(uploadedDataCapture.length).toEqual(1);
+      expect(uploadedDataCapture[0].entitlements.length).toEqual(1);
+      expect(_.some(uploadedDataCapture[0].entitlements, function (entitlement) {
+        return entitlement.entitlementName === 'squaredFusionCal' && entitlement.entitlementState === 'ACTIVE';
+      })).toBeTruthy();
     });
   });
 });

@@ -14,6 +14,9 @@ describe('component: emergencyServices', () => {
     spyOn(this.EmergencyServicesService, 'getOptions').and
     .returnValue(this.$q.when(['1', '2']));
 
+    spyOn(this.EmergencyServicesService, 'getCompanyECN').and
+    .returnValue(this.$q.when('1'));
+
     spyOn(this.EmergencyServicesService, 'getInitialData').and
     .returnValue(this.$q.when({
       emergency: {

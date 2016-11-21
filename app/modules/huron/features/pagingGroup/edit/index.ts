@@ -1,6 +1,7 @@
 import { PgEditComponent } from './pgEdit.component';
 
 import pagingGroupService from 'modules/huron/features/pagingGroup';
+import featureMemberService from 'modules/huron/features';
 
 export default angular
   .module('huron.paging-group.edit', [
@@ -9,6 +10,7 @@ export default angular
     'pascalprecht.translate',
     require('modules/core/notifications').default,
     pagingGroupService,
+    featureMemberService,
   ])
   .component('pgEdit', new PgEditComponent())
   .name;

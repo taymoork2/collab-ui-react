@@ -53,7 +53,7 @@
     function isNameValidationSuccess(name, uuid) {
       var aaModel = AAModelService.getAAModel();
 
-      if (_.isUndefined(name) || name.trim().length === 0) {
+      if (_.trim(name).length === 0) {
         AANotificationService.error('autoAttendant.invalidBuilderNameMissing');
         return false;
       }
