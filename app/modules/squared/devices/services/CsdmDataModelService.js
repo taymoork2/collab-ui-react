@@ -97,9 +97,11 @@
 
     function notifyDevicesInPlace(cisUuid, event) {
       var place = placesDataModel[placesUrl + cisUuid];
-      _.each(place.devices, function (d) {
-        CsdmDeviceService.notifyDevice(d.url, event);
-      });
+      if (place) {
+        _.each(place.devices, function (d) {
+          CsdmDeviceService.notifyDevice(d.url, event);
+        });
+      }
     }
 
     function notifyListeners() {

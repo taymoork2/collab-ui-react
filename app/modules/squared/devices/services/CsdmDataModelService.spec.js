@@ -868,6 +868,12 @@ describe('Service: CsdmDataModelService', function () {
       $httpBackend.verifyNoOutstandingRequest();
       $httpBackend.verifyNoOutstandingExpectation();
     });
+
+    it('should not notify any devices in a place when place does not exist', function () {
+      CsdmDataModelService.notifyDevicesInPlace('a19b308a-PlaceDoesNotExist-71898e423bec', { foo: 'bar' });
+      $httpBackend.verifyNoOutstandingRequest();
+      $httpBackend.verifyNoOutstandingExpectation();
+    });
   });
 
   describe('re-fetch places', function () {
