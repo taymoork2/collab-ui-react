@@ -70,7 +70,7 @@ class PlaceOverview implements ng.IComponentController {
         icon: 'icon-circle-call',
         state: 'communication',
         detail: this.$translate.instant('placesPage.sparkOnly'),
-        actionAvailable: false,
+        actionAvailable: true,
       };
     }
     this.services = [];
