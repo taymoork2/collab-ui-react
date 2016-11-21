@@ -178,8 +178,12 @@
               'addDeviceFlow.editServices': {
                 nextOptions: {
                   sparkCall: 'addDeviceFlow.addLines',
+                  sparkCallConnect: 'addDeviceFlow.callConnectOptions',
                   sparkOnly: 'addDeviceFlow.showActivationCode'
                 }
+              },
+              'addDeviceFlow.callConnectOptions': {
+                next: 'addDeviceFlow.showActivationCode'
               },
               'addDeviceFlow.addLines': {
                 next: 'addDeviceFlow.showActivationCode'

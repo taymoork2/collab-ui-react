@@ -128,9 +128,11 @@ class PlaceOverview implements ng.IComponentController {
         'addDeviceFlow.editServices': {
           nextOptions: {
             sparkCall: 'addDeviceFlow.addLines',
+            sparkCallConnect: 'addDeviceFlow.callConnectOptions',
           },
         },
         'addDeviceFlow.addLines': {},
+        'addDeviceFlow.callConnectOptions': {},
       },
     };
     let wizard = this.WizardFactory.create(wizardState);

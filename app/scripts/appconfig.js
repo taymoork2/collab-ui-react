@@ -499,6 +499,19 @@
               }
             }
           })
+          .state('addDeviceFlow.callConnectOptions', {
+            parent: 'modal',
+            params: {
+              wizard: null
+            },
+            views: {
+              'modal@': {
+                templateUrl: 'modules/squared/places/callConnect/CallConnectOptions.tpl.html',
+                controller: 'CallConnectOptionsCtrl',
+                controllerAs: 'callConnectOptions'
+              }
+            }
+          })
           .state('activate', {
             url: '/activate',
             views: {
