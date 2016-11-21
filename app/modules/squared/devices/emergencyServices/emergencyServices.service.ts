@@ -35,6 +35,15 @@ export class EmergencyServicesService {
     };
   }
 
+  public getCompanyECN() {
+    return this.ServiceSetup.listSites().then(() => {
+        if (this.ServiceSetup.sites.length !== 0) {
+          return this.ServiceSetup.getSite(this.ServiceSetup.sites[0].uuid)
+          .then(site => _.get(site, 'emergencyCallBackNumber.pattern'));
+        }
+    });
+  }
+
   public getOptions(): ng.IPromise<string[]> {
     let voicemailPilotNumber;
     return this.ServiceSetup.getVoicemailPilotNumber().then(voicemail =>

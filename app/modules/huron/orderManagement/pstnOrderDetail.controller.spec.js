@@ -1,15 +1,23 @@
 'use strict';
 
 describe('Controller: PstnOrderDetailCtrl', function () {
-  var controller, $controller, $scope, $stateParams, $translate, fulfilledBlockOrder, pendingBlockOrder, fulfilledNumberOrder;
+  var controller, $q, $controller, $scope, $stateParams, $translate, fulfilledBlockOrder, pendingBlockOrder, fulfilledNumberOrder, FeatureToggleService;
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$translate_) {
+  beforeEach(inject(function (_$q_, $rootScope, _$controller_, _$stateParams_, _$translate_, _FeatureToggleService_) {
+    $q = _$q_;
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $stateParams = _$stateParams_;
     $translate = _$translate_;
+    FeatureToggleService = _FeatureToggleService_;
+
+    spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
+      if (param === FeatureToggleService.features.huronSimplifiedTrialFlow) {
+        return $q.when(false);
+      }
+    });
 
     fulfilledBlockOrder = {
       carrierOrderId: '631208',
