@@ -611,7 +611,7 @@
                 "currSite=" + currSite;
               $log.log(logMsg);
             }
-            
+
             _self.getUserSettingsFromWebEx();
           }, // getOrgLicensesSuccess()
 
