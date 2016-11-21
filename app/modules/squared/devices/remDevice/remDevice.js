@@ -23,6 +23,9 @@
             }
             return $translate.instant('deviceOverviewPage.deleteLocation');
           }
+          if (deviceOrCode.isATA) {
+            return $translate.instant('deviceOverviewPage.deleteDeviceType', { deviceType: deviceOrCode.product });
+          }
           return $translate.instant('spacesPage.deleteDevice');
         };
 
@@ -32,6 +35,9 @@
               return $translate.instant('spacesPage.deletePlaceConfText');
             }
             return $translate.instant('spacesPage.deleteLocationConfText');
+          }
+          if (deviceOrCode.isATA) {
+            return $translate.instant('deviceOverviewPage.deleteATAConfText');
           }
           return $translate.instant('spacesPage.deleteDeviceConfText');
         };

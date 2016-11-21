@@ -115,11 +115,14 @@
             <span class="row h5">{{$ctrl.emergency.emergencyAddress.address1 | uppercase}}, {{$ctrl.emergency.emergencyAddress.address2 | uppercase}}</span>
             <span class="row h5">{{$ctrl.emergency.emergencyAddress.city | uppercase}}, {{$ctrl.emergency.emergencyAddress.state | uppercase}} {{$ctrl.emergency.emergencyAddress.zip}}</span>
           </div>
-          <a href="" class="modify-button h6" ng-click="$ctrl.modifyAddress()" ng-if="$ctrl.emergency.status !== 'PENDING' && !$ctrl.showAddressEntry" translate="common.modify"></a>
+          <a href="" class="modify-button h6" ng-click="$ctrl.modifyAddress()" ng-if="$ctrl.emergency.status !== 'PENDING' && $ctrl.emergency.emergencyNumber !== $ctrl.companyEmergencyNumber && !$ctrl.showAddressEntry" translate="common.modify"></a>
           <div ng-class="{warning: $ctrl.emergency.status === 'PENDING'}">
             <div class="cs-input__messages">
               <div class="message">{{::'serviceAddress.pending' | translate}}</div>
             </div>
+          </div>
+          <div ng-if="$ctrl.emergency.emergencyNumber === $ctrl.companyEmergencyNumber">
+            <span translate="spacesPage.sameAsCompanyNum"></span>
           </div>
         </div>
       </form>

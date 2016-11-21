@@ -54,33 +54,35 @@
     $scope.extension = {
       id: $stateParams.extensionId,
       entitled: isEntitled(),
-      defaultWebExSiteName: $translate.instant('hercules.cloudExtensions.defaultWebExSiteNotSet')
+      hasShowPreferredWebExSiteNameFeatureToggle: false,
+      preferredWebExSiteName: $translate.instant('hercules.cloudExtensions.preferredWebExSiteDefault')
     };
 
-    function initDefaultWebExSiteName() {
-      var defaultWebExSiteName;
-      if (!_.isEmpty($scope.currentUser.userPreferences)) {
-        defaultWebExSiteName = _.find($scope.currentUser.userPreferences, function (userPreference) {
-          return userPreference.indexOf("calSvcPreferredWebexSite") > 0;
-        });
-        if (_.isString(defaultWebExSiteName)) {
-          defaultWebExSiteName = defaultWebExSiteName.substring(defaultWebExSiteName.indexOf(":") + 1).replace(/"/g, '');
-          $scope.extension.defaultWebExSiteName = defaultWebExSiteName;
-        }
-      }
+    FeatureToggleService.calsvcShowPreferredSiteNameGetStatus().then(function (toggle) {
+      $scope.extension.hasShowPreferredWebExSiteNameFeatureToggle = toggle;
 
-      if (defaultWebExSiteName === undefined) {
+      if (toggle) {
+        // If user preference...
+        if (!_.isEmpty($scope.currentUser.userPreferences)) {
+          var name = _.find($scope.currentUser.userPreferences, function (userPreference) {
+            return userPreference.indexOf("calSvcPreferredWebexSite") > 0;
+          });
+          if (_.isString(name)) {
+            name = name.substring(name.indexOf(":") + 1).replace(/"/g, '');
+            $scope.extension.preferredWebExSiteName = name;
+            return;
+          }
+        }
+
+        // If org settings preference...
         Orgservice.getOrg(_.noop, Authinfo.getOrgId(), true)
           .then(function (response) {
-            if (_.get(response, 'data.orgSettings.calSvcDefaultWebExSite')) {
-              defaultWebExSiteName = response.data.orgSettings.calSvcDefaultWebExSite;
-              $scope.extension.defaultWebExSiteName = defaultWebExSiteName;
+            if (_.get(response, 'data.orgSettings.calSvcpreferredWebExSite')) {
+              $scope.extension.preferredWebExSiteName = response.data.orgSettings.calSvcDefaultWebExSite;
             }
           });
       }
-    }
-
-    initDefaultWebExSiteName();
+    });
 
     $scope.$watch('extension.entitled', function (newVal, oldVal) {
       if (newVal !== oldVal) {

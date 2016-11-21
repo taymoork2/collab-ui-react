@@ -19,6 +19,7 @@ class PlaceOverview implements ng.IComponentController {
   public services: IFeature[] = [];
   public actionList: IActionItem[] = [];
   public showPstn: boolean = false;
+  public showATA: boolean = false;
 
   private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;
@@ -44,6 +45,7 @@ class PlaceOverview implements ng.IComponentController {
   public $onInit(): void {
     this.displayPlace(this.$stateParams.currentPlace);
     this.fetchDisplayNameForLoggedInUser();
+    this.fetchFeatureToggles();
   }
 
   private displayPlace(newPlace) {
@@ -89,6 +91,12 @@ class PlaceOverview implements ng.IComponentController {
     } else {
       return this.FeatureToggleService.supports(this.FeatureToggleService.features.csdmPstn);
     }
+  }
+
+  private fetchFeatureToggles() {
+    this.FeatureToggleService.csdmATAGetStatus().then((result) => {
+      this.showATA = result;
+    });
   }
 
   private loadActions(): void {
@@ -179,6 +187,7 @@ class PlaceOverview implements ng.IComponentController {
       data: {
         function: 'showCode',
         showPlaces: true,
+        showATA: this.showATA,
         account: {
           type: 'shared',
           deviceType: this.currentPlace.type,

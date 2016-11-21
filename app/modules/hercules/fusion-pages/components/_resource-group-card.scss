@@ -18,7 +18,7 @@ resource-group-card {
       align-items: stretch;
       border-bottom: 1px solid $gray-light-3;
 
-      > button > h4 {
+      > .resource-group-caret > h4 {
         @include text-overflow;
 
         display: inline;
@@ -41,6 +41,10 @@ resource-group-card {
       .fa {
         width: 1rem;
         margin-top: -2px;
+      }
+
+      &:hover {
+        cursor: pointer;
       }
 
       &:focus {

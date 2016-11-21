@@ -3,7 +3,7 @@
 describe('Controller: ServiceSetup', function () {
   var $scope, $state, $previousState, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer, DialPlanService;
   var Authinfo, VoicemailMessageAction, Orgservice;
-  var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction, FeatureToggleService;
+  var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction, FeatureToggleService, languages;
   var $rootScope, PstnSetupService;
   var dialPlanDetailsNorthAmerica = [{
     countryCode: "+1",
@@ -91,6 +91,7 @@ describe('Controller: ServiceSetup', function () {
     };
 
     messageAction = getJSONFixture('huron/json/settings/messageAction.json');
+    languages = getJSONFixture('huron/json/settings/languages.json');
 
     spyOn($previousState, 'get').and.returnValue({
       state: {
@@ -122,6 +123,7 @@ describe('Controller: ServiceSetup', function () {
     });
 
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timeZone));
+    spyOn(ServiceSetup, 'getSiteLanguages').and.returnValue($q.when(languages));
     spyOn(Notification, 'notify');
     spyOn(Notification, 'errorResponse');
     spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.when({
@@ -166,6 +168,10 @@ describe('Controller: ServiceSetup', function () {
           timeZone: {
             id: 'America/Los_Angeles',
             label: 'America/Los_Angeles'
+          },
+          preferredLanguage: {
+            label: 'English (United States)',
+            value: 'en_US'
           },
           voicemailPilotNumberGenerated: false
         },
@@ -289,7 +295,9 @@ describe('Controller: ServiceSetup', function () {
         controller.model.site.timeZone = {
           id: 'bogus'
         };
-
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
         controller.initNext();
@@ -317,8 +325,10 @@ describe('Controller: ServiceSetup', function () {
         controller.model.site.timeZone = {
           id: 'bogus'
         };
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
         controller.previousTimeZone = controller.model.site.timeZone;
-
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
         controller.initNext();
@@ -397,8 +407,10 @@ describe('Controller: ServiceSetup', function () {
         controller.model.site.timeZone = {
           id: 'bogus'
         };
+        controller.model.site.preferredLanguage = {
+          value: 'en_US'
+        };
         controller.previousTimeZone = controller.model.site.timeZone;
-
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
         ServiceSetup.createSite.and.returnValue($q.reject());
@@ -539,6 +551,9 @@ describe('Controller: ServiceSetup', function () {
         controller.model.site.timeZone = {
           id: 'bogus'
         };
+        controller.model.site.preferredLanguage = {
+          id: 'es_US'
+        };
 
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -676,6 +691,9 @@ describe('Controller: ServiceSetup', function () {
         controller.model.site.timeZone = {
           id: 'bogus'
         };
+        controller.model.site.preferredLanguage = {
+          id: 'es_US'
+        };
         controller.previousTimeZone = controller.model.site.timeZone;
 
         //remove singlenumber range for it to pass
@@ -698,7 +716,6 @@ describe('Controller: ServiceSetup', function () {
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = false;
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = undefined;
         controller.hasVoicemailService = false;
-
         controller.model.voicemailPrefix.value = '6';
 
         //remove singlenumber range for it to pass
@@ -887,6 +904,21 @@ describe('Controller: ServiceSetup', function () {
       });
     });
 
+    describe('initnext.updatePreferredLanguage', function () {
+      it('should update preferred language when preferred language selection changes', function () {
+        var newLanguage = {
+          label: 'French (Canadian)',
+          value: 'fr_CA'
+        };
+        controller.model.site.preferredLanguage = newLanguage;
+
+        controller.initNext();
+        $scope.$apply();
+
+        expect(ServiceSetup.updateSite).toHaveBeenCalled();
+      });
+    });
+
     describe('Voicemail Access Prefix', function () {
       it('should change the extension length and change site code', function () {
         $scope.to = {};
@@ -945,7 +977,7 @@ describe('Controller: ServiceSetup', function () {
           {
             siteSteeringDigit: '1',
             voicemailPilotNumber: 'undefined8040506021015100215030504070415',
-            voicemailPilotNumberGenerated: 'true'
+            voicemailPilotNumberGenerated: 'true',
           });
       });
     });

@@ -49,7 +49,7 @@
   }
 
   /* @ngInject */
-  function csvDownloadController($scope, $element, $rootScope, $window, $q, $translate, $timeout, $modal, $state, Authinfo, CsvDownloadService, Notification, FeatureToggleService) {
+  function csvDownloadController($scope, $element, $rootScope, $window, $q, $translate, $timeout, $modal, $state, CsvDownloadService, Notification, FeatureToggleService) {
     var vm = this;
 
     $scope.downloading = false;
@@ -62,14 +62,9 @@
     vm.$onInit = onInit;
     vm.$onDestroy = onDestroy;
 
-    // Allow Cisco org to download the new user report API
-    if (Authinfo.isCisco()) {
-      $scope.newUserExportToggle = true;
-    } else {
-      FeatureToggleService.atlasNewUserExportGetStatus().then(function (result) {
-        $scope.newUserExportToggle = result;
-      });
-    }
+    FeatureToggleService.atlasNewUserExportGetStatus().then(function (result) {
+      $scope.newUserExportToggle = result;
+    });
 
     ////////////////////
     var FILENAME = $scope.filename || 'exported_file.csv';

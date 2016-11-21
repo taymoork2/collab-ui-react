@@ -6,7 +6,7 @@
       <cs-select id="timeFilter" name="timeFilter" class='customer-report-filter' ng-model="deviceUsage.timeSelected" options="deviceUsage.timeOptions" on-change-fn="deviceUsage.timeUpdate()"></cs-select>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
-  
+
   <cs-card-layout block-view="true">
 
 
@@ -32,28 +32,26 @@
       </article>
     </cs-card>
 
+    <cs-card class="large header-border">
+      <article>
+        <header class="align-center">
+          <h4 translate="reportsPage.usageReports.mostUsed"></h4>
+        </header>
+        <section>
+          <div ng-include="'modules/core/customerReports/deviceUsage/mostUsedDevices.tpl.html'" />
+
+        </section>
+      </article>
+    </cs-card>
 
     <cs-card class="large header-border">
       <article>
         <header class="align-center">
           <h4 translate="reportsPage.usageReports.leastUsed"></h4>
         </header>
-        <section class="small-padding">
+        <section>
 
           <div ng-include="'modules/core/customerReports/deviceUsage/leastUsedDevices.tpl.html'" />
-
-        </section>
-      </article>
-    </cs-card>
-
-
-    <cs-card class="large header-border">
-      <article>
-        <header class="align-center">
-          <h4 translate="reportsPage.usageReports.mostUsed"></h4>
-        </header>
-        <section class="small-padding">
-          <div ng-include="'modules/core/customerReports/deviceUsage/mostUsedDevices.tpl.html'" />
 
         </section>
       </article>

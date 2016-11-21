@@ -6,7 +6,8 @@
 
   /* @ngInject */
   function PstnSetupService($q, $translate, Authinfo, Notification, PstnSetup, TerminusCarrierService,
-    TerminusCustomerService, TerminusCustomerV2Service, TerminusCustomerCarrierService, TerminusOrderService,
+    TerminusCustomerService, TerminusCustomerV2Service, TerminusCustomerTrialV2Service,
+    TerminusCustomerCarrierService, TerminusOrderService,
     TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch,
     TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease,
     TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease,
@@ -52,6 +53,8 @@
       createCustomerV2: createCustomerV2,
       updateCustomerCarrier: updateCustomerCarrier,
       getCustomer: getCustomer,
+      getCustomerV2: getCustomerV2,
+      getCustomerTrialV2: getCustomerTrialV2,
       listDefaultCarriers: listDefaultCarriers,
       getCarrierInventory: getCarrierInventory,
       getCarrierTollFreeInventory: getCarrierTollFreeInventory,
@@ -139,6 +142,18 @@
 
     function getCustomer(customerId) {
       return TerminusCustomerService.get({
+        customerId: customerId
+      }).$promise;
+    }
+
+    function getCustomerV2(customerId) {
+      return TerminusCustomerV2Service.get({
+        customerId: customerId
+      }).$promise;
+    }
+
+    function getCustomerTrialV2(customerId) {
+      return TerminusCustomerTrialV2Service.get({
         customerId: customerId
       }).$promise;
     }
