@@ -1765,21 +1765,25 @@
             },
             templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html'
           })
-          .state('gem.cbgDetails', {
+          .state('gemCbgDetails', {
             parent: 'sidepanel',
             views: {
-              'sidepanel@': {
-                controller: 'CbgDetailsCtrl',
-                controllerAs: 'detailsCtrl',
-                templateUrl: 'modules/gemini/callbackGroup/cbgDetails.tpl.html'
-              }
+              'sidepanel@': { template: '<cbg-details></cbg-details>' }
             },
-            params: {
-              info: {}
-            },
-            data: {
-              displayName: 'Overview'
-            }
+            params: { info: {} },
+            data: {}
+          })
+          .state('gemCbgDetails.sites', {
+            template: '<cbg-sites></cbg-sites>',
+            params: { obj: {} }
+          })
+          .state('gemCbgDetails.editCountry', {
+            template: '<cbg-edit-country></cbg-edit-country>',
+            params: { obj: {} }
+          })
+          .state('gemCbgDetails.notes', {
+            template: '<cbg-notes></cbg-notes>',
+            params: { obj: {} }
           })
           .state('partnercustomers.list', {
             url: '/customers',
