@@ -62,7 +62,7 @@
     //////////////////////////////////////////////////////
 
     function upload(file) {
-      if (!_.isUndefined(file) && file) {
+      if (file) {
         if (AAMediaUploadService.validateFile(file.name)) {
           if (isOverwrite()) {
             confirmOverwrite(file);
