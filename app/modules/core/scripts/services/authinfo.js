@@ -128,6 +128,7 @@
           var cmrLicenses = [];
           var careLicenses = [];
           var confLicensesWithoutSiteUrl = [];
+          var confLicensesLinkedSiteUrl = [];
           var customerAccounts = data.customers || [];
 
           if (customerAccounts.length > 0) {
@@ -174,6 +175,9 @@
                   if (license.siteUrl) {
                     confLicensesWithoutSiteUrl.push(service);
                   }
+                  if (license.linkedSiteUrl) {
+                    confLicensesLinkedSiteUrl.push(service);
+                  }
                   confLicenses.push(service);
                   break;
                 case Config.licenseTypes.MESSAGING:
@@ -211,6 +215,9 @@
           }
           if (confLicensesWithoutSiteUrl.length !== 0) {
             authData.conferenceServicesWithoutSiteUrl = confLicensesWithoutSiteUrl;
+          }
+          if (confLicensesLinkedSiteUrl.length !== 0) {
+            authData.conferenceServicesWithLinkedSiteUrl = confLicensesLinkedSiteUrl;
           }
           $rootScope.$broadcast('AccountinfoUpdated');
         } //end if
@@ -274,6 +281,9 @@
       },
       getConferenceServicesWithoutSiteUrl: function () {
         return authData.conferenceServicesWithoutSiteUrl;
+      },
+      getConferenceServicesWithLinkedSiteUrl: function () {
+        return authData.conferenceServicesWithLinkedSiteUrl;
       },
       getRoles: function () {
         return authData.roles;
