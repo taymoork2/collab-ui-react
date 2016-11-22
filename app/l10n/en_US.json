@@ -3516,7 +3516,7 @@
     "getNewCode": "Get a New Code",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time",
-    "logUploadWarning": "Selecting 'Report Issue' will send the device logs to Cisco.",
+    "logUploadWarning": "When you report an issue, device logs will be sent to Cisco.",
     "timeZone": "Timezone",
     "timeZoneUpdated": "Time Zone updated",
     "timeZoneUpdateFailed": "Device did not update its Time Zone in time",
@@ -3529,6 +3529,8 @@
       "two": "Two",
       "three": "Three"
     },
+    "deviceRebooting": "Device rebooting",
+    "deviceRebootingDetails": "The device is now rebooting and will be offline for a few moments.",
     "failedToSaveChanges": "Failed to save changes to device. Reason:",
     "failedToUploadLogs": "Failed to upload logs. Reason:",
     "deleteATAConfText": "Are you sure you want to delete Port 1?",
