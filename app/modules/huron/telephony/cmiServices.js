@@ -548,7 +548,7 @@
   }
 
   function transformEnvelope(response) {
-    var responseObj = JSON.parse(response);
+    var responseObj = _.isString(response) ? JSON.parse(response) : response;
     return _.get(responseObj, '[0]', responseObj);
   }
 
