@@ -1,9 +1,8 @@
 .ct-name {
-
   position: absolute;
   top: 50%;
-  text-align: center;
-  width: 100%;
+  left: 25%;
+  width: 50%;
 
     .ct-input-hint {
       @include vr-spacing(p, 1);
@@ -27,7 +26,7 @@
     }
 
     .ct-input-invalid-border {
-      border-top: solid 1px $color-negative-dark;
+      border-top: solid 1px $color-negative-dark !important;
     }
 
     .ct-input-error-wrapper {
@@ -43,7 +42,7 @@
     }
 
     // Input control.
-    input {
+    .ct-input {
       width: 100%;
       text-align: center;
       border-bottom: 0;
@@ -52,5 +51,4 @@
         border-top: solid rem(1px) $brand-primary;
       }
     }
-
 }
