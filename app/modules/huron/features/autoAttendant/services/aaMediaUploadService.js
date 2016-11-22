@@ -41,17 +41,14 @@
     }
 
     //to call only during promise resolution from the retrieve get response
-    function getRecordingUrl(response) {
-      if (response) {
-        var variants = _.get(response, 'variants', undefined);
-        if (!variants) {
-          return '';
-        } else {
+    function getRecordingUrl(metadata) {
+      if (metadata) {
+        var variants = _.get(metadata, 'variants', undefined);
+        if (variants) {
           return getRecordingByVariant(variants);
         }
-      } else {
-        return '';
       }
+      return '';
     }
 
     function retrieveByResult(successResult) {
@@ -71,25 +68,15 @@
     }
 
     function getRecordingByVariant(variants) {
-      if (variants) {
-        var variantKeys = _.keys(variants);
-        if (variantKeys.length > 0) {
-          if (_.has(variants, variantKeys[0] + '.variantUrl')) {
-            var variantUrl = variants[variantKeys[0]].variantUrl;
-            if (_.isUndefined(variantUrl)) {
-              return '';
-            } else {
-              return variantUrl + '?orgId=' + Authinfo.getOrgId();
-            }
-          } else {
-            return '';
-          }
-        } else {
-          return '';
-        }
-      } else {
+      var variantKeys = _.keys(variants);
+      if (!variantKeys || variantKeys.length === 0) {
         return '';
       }
+      var variantUrl = _.get(variants, variantKeys[0] + '.variantUrl', undefined);
+      if (_.isUndefined(variantUrl)) {
+        return '';
+      }
+      return variantUrl + '?orgId=' + Authinfo.getOrgId();
     }
 
     function getUploadUrl() {

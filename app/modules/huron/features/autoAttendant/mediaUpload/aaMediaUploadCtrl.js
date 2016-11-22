@@ -110,9 +110,9 @@
 
     function uploadSuccess(result) {
       if (!modalCanceled) {
-        var get = AAMediaUploadService.retrieve(result);
-        if (get) {
-          setUploadValues(get);
+        var playback = AAMediaUploadService.retrieve(result);
+        if (playback) {
+          setUploadValues(playback);
         } else {
           uploadError();
         }
