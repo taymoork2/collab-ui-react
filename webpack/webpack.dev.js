@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const dllDepsConfig = require('./dll-deps.config');
@@ -10,7 +11,7 @@ const processEnvUtil = require('../utils/processEnvUtil')();
 const hotMiddlewareScript = 'webpack-hot-middleware/client?timeout=30000';
 
 // base config
-const config = {
+const devWebpack = {
   entry: {
     styles: [hotMiddlewareScript],
   },
@@ -25,19 +26,30 @@ const config = {
   ],
 };
 
-// IMPORTANT:
-// - for this codepath:
-//   - set env var in shell: `export WP__ENABLE_DLL=1`
-//   - build assets in shell: `mk-webpack-dlls.sh`
-if (processEnvUtil.hasEnabledDll()) {
-  const dllEntryNames = Object.keys(dllDepsConfig.entry);
-  modifyConfigForWebpackDll(config, dllEntryNames);
+// ----------
+function mkHtmlFrag(jsBaseName) {
+  return (jsBaseName) ? `<script src="/js/${jsBaseName}"></script>` : '';
 }
 
-// ----------
-module.exports = merge.smart(commonWebpack, config);
+/* eslint-disable global-require, import/no-dynamic-require */
+function getManifest(dllEntryName) {
+  return require(path.resolve(__dirname, `../dist/js/dll-${dllEntryName}.manifest.json`));
+}
 
-// ----------
+function getLatestDllChunkFileBaseName(dllEntryName) {
+  const glob = path.resolve(__dirname, `../dist/js/dll-${dllEntryName}*.chunk.js`);
+  return lsMostRecentFile(glob);
+}
+
+function mkHtmlFragForDllBundles(dllEntryNames) {
+  const result = _.map(dllEntryNames, (dllEntryName) => {
+    const jsBaseName = getLatestDllChunkFileBaseName(dllEntryName);
+    return mkHtmlFrag(jsBaseName);
+  });
+  return result.join('');
+}
+
+/* eslint-disable no-param-reassign */
 function modifyConfigForWebpackDll(config, dllEntryNames) {
   // replace html plugin with one that includes the html fragment for the dll bundles
   const htmlFrag = mkHtmlFragForDllBundles(dllEntryNames);
@@ -49,7 +61,7 @@ function modifyConfigForWebpackDll(config, dllEntryNames) {
   });
 
   // add DllReferencePlugin(s) as-appropriate
-  _.forEach(dllEntryNames, function (dllEntryName) {
+  _.forEach(dllEntryNames, (dllEntryName) => {
     config.plugins.unshift(
       // notes:
       // - context: './app'
@@ -62,26 +74,15 @@ function modifyConfigForWebpackDll(config, dllEntryNames) {
   });
 }
 
-function mkHtmlFragForDllBundles(dllEntryNames) {
-  let result = _.map(dllEntryNames, function (dllEntryName) {
-    const jsBaseName = getLatestDllChunkFileBaseName(dllEntryName);
-    return mkHtmlFrag(jsBaseName);
-  });
-  return result.join('');
+// ----------
+// IMPORTANT:
+// - for this codepath:
+//   - set env var in shell: `export WP__ENABLE_DLL=1`
+//   - build assets in shell: `mk-webpack-dlls.sh`
+if (processEnvUtil.hasEnabledDll()) {
+  const dllEntryNames = Object.keys(dllDepsConfig.entry);
+  modifyConfigForWebpackDll(devWebpack, dllEntryNames);
 }
 
-function getManifest(dllEntryName) {
-  if (!dllEntryName) {
-    return;
-  }
-  return require(__dirname + `/../dist/js/dll-${dllEntryName}.manifest.json`);
-}
-
-function getLatestDllChunkFileBaseName(dllEntryName) {
-  const glob = __dirname + `/../dist/js/dll-${dllEntryName}*.chunk.js`;
-  return lsMostRecentFile(glob);
-}
-
-function mkHtmlFrag(jsBaseName) {
-  return (jsBaseName) && `<script src="/js/${jsBaseName}"></script>` || '';
-}
+// ----------
+module.exports = merge.smart(commonWebpack, devWebpack);

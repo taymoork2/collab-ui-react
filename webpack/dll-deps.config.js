@@ -1,8 +1,6 @@
-'use strict';
-
 const path = require('path');
 const webpack = require('webpack');
-const commonWebpack = require(__dirname + '/webpack.common.js');
+const commonWebpack = require('./webpack.common.js');
 
 // notes:
 // - appContextRootDir: './app'
@@ -20,10 +18,10 @@ module.exports = {
     // - as naming convention, start with the target file basename, then:
     //   - replace all '-' and '.' to '_'
     //   - e.g. 'foo-Bar.js' => 'foo_Bar_js'
-    bootstrap_deps_js: [path.resolve(appContextRootDir, 'bootstrap.deps.js')],
+    bootstrap_dependencies_js: [path.resolve(appContextRootDir, 'bootstrap.dependencies.js')],
   },
 
- output: {
+  output: {
     // notes:
     // - filename: basename of dll dependency bundle emitted
     // - path: location where bundles are written to
@@ -42,7 +40,7 @@ module.exports = {
     new webpack.DllPlugin({
       name: 'dll_[name]',
       path: path.resolve(targetJsDir, 'dll-[name].manifest.json'),
-    })
+    }),
   ],
 
   module: {

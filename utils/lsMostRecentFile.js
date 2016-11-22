@@ -1,5 +1,6 @@
 'use strict';
 
+/* eslint-env es6 */
 const execSync = require('child_process').execSync;
 
 function lsMostRecentFile(bashGlobPath) {

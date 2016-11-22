@@ -1,9 +1,9 @@
+'use strict';
+
 /**
  * Process environment helper functions
  */
-
-'use strict';
-
+/* eslint-env es6 */
 const _ = require('lodash');
 
 module.exports = function () {
