@@ -38,7 +38,7 @@ export class ServicesOverviewHybridCallCard extends ServicesOverviewHybridCard {
       name: 'servicesOverview.cards.hybridCall.title',
       description: 'servicesOverview.cards.hybridCall.description',
       activeServices: ['squared-fusion-uc'],
-      statusService: 'squared-fusion-uc',
+      statusServices: ['squared-fusion-uc'],
       routerState: 'call-service.list',
       cardClass: 'call',
       cardType: CardType.hybrid,

@@ -42,7 +42,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       name: 'servicesOverview.cards.hybridDataSecurity.title',
       description: 'servicesOverview.cards.hybridDataSecurity.description',
       activeServices: ['hybrid-data-security'],
-      statusService: 'hybrid-data-security',
+      statusServices: ['hybrid-data-security'],
       routerState: 'hds-settings',
       active: false,
       display : false,

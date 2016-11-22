@@ -20,12 +20,12 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
 
   private _buttons: Array<ICardButton> = [
     {
-      name: 'servicesOverview.cards.calendar.buttons.resources',
+      name: 'servicesOverview.cards.hybridCalendar.buttons.resources',
       routerState: 'calendar-service.list',
       buttonClass: 'btn-link',
     },
     {
-      name: 'servicesOverview.cards.calendar.buttons.settings',
+      name: 'servicesOverview.cards.hybridCalendar.buttons.settings',
       routerState: 'calendar-service.settings',
       buttonClass: 'btn-link',
     },
@@ -33,7 +33,7 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
 
   private _googleCalendarButtons: Array<ICardButton> = [
     {
-      name: 'servicesOverview.cards.calendar.buttons.settings',
+      name: 'servicesOverview.cards.hybridCalendar.buttons.settings',
       routerState: 'calendar-service.settings',
       buttonClass: 'btn-link',
     },
@@ -50,31 +50,30 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
   }
 
   public googleCalendarFeatureToggleEventHandler(hasFeature: boolean) {
-
     if (!hasFeature || !this.isGoogleCalendarEntitled) {
       return;
     }
+
     this.hasGoogleCalendarFeatureToggle = hasFeature;
     this.cloudConnectorService.isServiceSetup('squared-fusion-gcal')
       .then((isSetup) => {
         this.isGoogleCalendarSetup = isSetup;
       });
-
   }
 
   /* @ngInject */
-  public constructor(CloudConnectorService, Authinfo, FusionClusterStatesService) {
+  public constructor(Authinfo, CloudConnectorService, FusionClusterStatesService) {
     super({
-      name: 'servicesOverview.cards.calendar.title',
-      description: 'servicesOverview.cards.calendar.description',
-      activeServices: ['squared-fusion-cal'],
-      statusService: 'squared-fusion-cal',
+      name: 'servicesOverview.cards.hybridCalendar.title',
+      description: 'servicesOverview.cards.hybridCalendar.description',
+      activeServices: ['squared-fusion-cal', 'squared-fusion-gcal'],
+      statusServices: ['squared-fusion-cal', 'squared-fusion-gcal'],
       routerState: 'calendar-service.list',
       cardClass: 'calendar',
       cardType: CardType.hybrid,
     }, FusionClusterStatesService);
+    this.cloudConnectorService = CloudConnectorService;
     this.display = Authinfo.isFusionCal();
     this.isGoogleCalendarEntitled = Authinfo.isFusionGoogleCal();
-    this.cloudConnectorService = CloudConnectorService;
   }
 }

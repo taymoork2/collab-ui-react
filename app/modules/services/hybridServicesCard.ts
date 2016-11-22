@@ -38,7 +38,7 @@ export class ServicesOverviewHybridServicesCard extends ServicesOverviewCard {
       cardClass: 'cluster-list',
       cardType: CardType.hybrid,
     });
-    this.display = Authinfo.isFusion();
+    this.display = Authinfo.isFusion() || Authinfo.isFusionMedia() || Authinfo.isFusionHDS();
     this.loading = false;
   }
 }

@@ -48,7 +48,7 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
       name: 'servicesOverview.cards.hybridMedia.title',
       description: 'servicesOverview.cards.hybridMedia.description',
       activeServices: ['squared-fusion-media'],
-      statusService: 'squared-fusion-media',
+      statusServices: ['squared-fusion-media'],
       routerState: 'media-service-v2.list',
       active: false,
       display : false,

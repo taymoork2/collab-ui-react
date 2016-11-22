@@ -5832,7 +5832,7 @@
           "context": "Context"
         }
       },
-      "calendar": {
+      "hybridCalendar": {
         "title": "Hybrid Calendar",
         "description": "Inserts Join and Room details by adding @WebEx and/or @Spark to the Meeting Invite Location field.",
         "buttons": {

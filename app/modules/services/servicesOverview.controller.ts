@@ -29,7 +29,7 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewCallCard(this.Authinfo, this.Config),
       new ServicesOverviewCareCard(this.Authinfo),
       new ServicesOverviewHybridServicesCard(this.Authinfo),
-      new ServicesOverviewHybridCalendarCard(this.CloudConnectorService, this.Authinfo, this.FusionClusterStatesService),
+      new ServicesOverviewHybridCalendarCard(this.Authinfo, this.CloudConnectorService, this.FusionClusterStatesService),
       new ServicesOverviewHybridCallCard(this.Authinfo, this.FusionClusterStatesService),
       new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
       new ServicesOverviewHybridDataSecurityCard(this.FusionClusterStatesService),

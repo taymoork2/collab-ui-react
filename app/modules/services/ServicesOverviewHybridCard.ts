@@ -2,7 +2,7 @@ import { ICardParams, ServicesOverviewCard } from './ServicesOverviewCard';
 
 export interface IHybridCardParams extends ICardParams {
   activeServices: Array<string>;
-  statusService: string;
+  statusServices: Array<string>;
   routerState: string;
 }
 
@@ -14,7 +14,7 @@ export interface IServiceStatus {
 
 export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
   private activeServices: Array<string>;
-  private statusService: string;
+  private statusServices: Array<string>;
   private routerState: string;
 
   public constructor(
@@ -23,14 +23,14 @@ export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
   ) {
     super(params);
     this.activeServices = params.activeServices;
-    this.statusService = params.statusService;
+    this.statusServices = params.statusServices;
     this.routerState = params.routerState;
   }
 
   public hybridStatusEventHandler(services: Array<IServiceStatus>): void {
     this.status = {
-      status: this.filterAndGetCssStatus(services, this.statusService),
-      text: this.filterAndGetTxtStatus(services, this.statusService),
+      status: this.filterAndGetCssStatus(services, this.statusServices[0]),
+      text: this.filterAndGetTxtStatus(services, this.statusServices[0]),
       routerState: this.routerState,
     };
     this.active = this.filterAndGetEnabledService(services, this.activeServices);
