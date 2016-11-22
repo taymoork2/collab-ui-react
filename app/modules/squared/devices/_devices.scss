@@ -49,6 +49,12 @@
 }
 
 .sq-devices-page-overview, .sq-devices-emergency-services {
+  .dropdown-menu li {
+    min-width: 190px !important;
+    width: auto;
+    padding: 0.5em 1em;
+  }
+
   .activation-code-pane h3 {
     color: $color-people-light;
   }
@@ -616,5 +622,85 @@
 
   .kem-number {
     @include vr-spacing(pr, 2);
+  }
+}
+
+.ataDeviceModal {
+  button{
+    width: auto !important;
+  }
+  .rangeSliderWrap{
+    position: relative;
+    width: 100%;
+    max-width: 600px !important;
+
+    .selectedRange{
+      display: block;
+      height: 2px;
+      background-color: $brand-primary;
+      border-radius: 1px;
+      position: absolute;
+      top: 1em;
+      left: 0;
+      z-index: 1 !important;
+      opacity: 1;
+    }
+    .icon{
+      position: relative;
+      top: 0.35em;
+    }
+    .icon.icon-plus{
+      font-size: 1.75em;
+      margin-left: -0.25em;
+      margin-right: -0.25em;
+      top: 0.4em;
+    }
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 80%;
+      width: calc(100% - 45px);
+      background: transparent;
+      margin-bottom: 3em;
+      margin-top: 1em;
+      background: -webkit-linear-gradient(left, $brand-primary 0%, $brand-primary 10%, $gray-light-3 10%);
+      height: 2px;
+      border-radius: 1px;
+      border-color: $brand-primary;
+      color: $gray-light-3;
+      border-width: 0;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+    }
+
+    input[type=range]:focus {
+      outline: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      margin-top: -3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: white;
+      border: 1px solid $gray-light-2;
+    }
+    input[type=range]::-moz-range-thumb {
+      margin-top: -3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: white;
+      border: 1px solid $gray-light-2;
+    }
+    input[type=range]::-ms-thumb {
+      margin-top: -3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: white;
+      border: 1px solid $gray-light-2;
+    }
   }
 }

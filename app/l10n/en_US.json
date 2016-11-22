@@ -3505,7 +3505,13 @@
   },
   "ataSettings": {
     "analog": "Analog Telephone",
-    "manage": "Manage stuffs"
+    "manage": "Manage Device Settings",
+    "title": "Device Settings",
+    "description": "Updating settings will affect the entire analog telephone adapter. You may need to perform testing on the connected analog device after saving your settings.",
+    "impedance": "Impedance",
+    "impedanceDescr": "Adjust the frequency response level for sound quality.",
+    "input": "Input Audio Level",
+    "output": "Output Audio Level"
   },
   "addDeviceWizard": {
     "newDevice": "New Device",

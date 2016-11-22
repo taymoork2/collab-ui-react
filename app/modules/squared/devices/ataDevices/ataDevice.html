@@ -37,13 +37,6 @@
     <input type="range" min="{{ata.impedanceMin}}" max="{{ata.impedanceMax}}" step="1" ng-model="ata.impedanceModel" ng-change="ata.sliderUpdate('impedance')" style="background: -webkit-linear-gradient(left, {{ata.selectedColor}} 0%, {{ata.selectedColor}} {{ata.percImpedance}}%, {{ata.unselectedColor}} {{ata.percImpedance}}%)" />
     <i class="icon icon-indeterminate"></i>
   </div>
-
-  <button
-    class="btn"
-    ng-click="ata.resetValues()" >
-    <span translate="ataSettings.reset">
-    </span>
-  </button>
 </div>
 
 <!-- footer -->
@@ -59,8 +52,8 @@
   <button
     class="btn btn--primary"
     sq-click-promise="ata.saveSettings()" >
-    <span>
-      Save
+    <span
+      translate="common.save">
     </span>
   </button>
 </div>
