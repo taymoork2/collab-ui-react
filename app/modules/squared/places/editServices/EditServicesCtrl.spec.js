@@ -1,13 +1,13 @@
 'use strict';
 
 describe('EditServicesCtrl: Ctrl', function () {
-  var controller, $stateParams, $q, $state, $scope, CsdmDataModelService, Notification, FeatureToggleService;
+  var controller, $stateParams, $q, $state, $scope, CsdmDataModelService, Notification;
   var $controller;
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Squared'));
 
-  beforeEach(inject(function (_$controller_, _$q_, $rootScope, _$stateParams_, _$state_, _CsdmDataModelService_, _Notification_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$controller_, _$q_, $rootScope, _$stateParams_, _$state_, _CsdmDataModelService_, _Notification_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -15,7 +15,6 @@ describe('EditServicesCtrl: Ctrl', function () {
     $stateParams = _$stateParams_;
     CsdmDataModelService = _CsdmDataModelService_;
     Notification = _Notification_;
-    FeatureToggleService = _FeatureToggleService_;
   }));
 
   function initController() {
@@ -32,9 +31,6 @@ describe('EditServicesCtrl: Ctrl', function () {
   beforeEach(installPromiseMatchers);
 
   describe('initial selection', function () {
-    beforeEach(function () {
-      spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.when(false));
-    });
     it('sparkCall is selected if "ciscouc" is present', function () {
       $stateParams.wizard = {
         state: function () {
@@ -89,11 +85,11 @@ describe('EditServicesCtrl: Ctrl', function () {
 
   describe('init of ctrl', function () {
     it('should set sparkCallConnectEnabled to false if toggle is not present and entitlement is not set', function () {
-      spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.when(false));
       $stateParams.wizard = {
         state: function () {
           return {
             data: {
+              csdmHybridCall: false,
               account: {
                 entitlements: ['something']
               }
@@ -107,11 +103,11 @@ describe('EditServicesCtrl: Ctrl', function () {
     });
 
     it('should set sparkCallConnectEnabled to true if toggle is not present and entitlement is already set', function () {
-      spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.when(false));
       $stateParams.wizard = {
         state: function () {
           return {
             data: {
+              csdmHybridCall: false,
               account: {
                 entitlements: ['fusionec']
               }
@@ -125,11 +121,11 @@ describe('EditServicesCtrl: Ctrl', function () {
     });
 
     it('should set sparkCallConnectEnabled to true if toggle is present', function () {
-      spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.when(true));
       $stateParams.wizard = {
         state: function () {
           return {
             data: {
+              csdmHybridCall: true,
               account: {
                 entitlements: ['something']
               }
@@ -147,7 +143,6 @@ describe('EditServicesCtrl: Ctrl', function () {
     var deviceCisUuid;
     beforeEach(function () {
       deviceCisUuid = 'deviceId';
-      spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.when(true));
     });
 
     describe('hasNextStep', function () {
@@ -155,6 +150,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         var state = function () {
           return {
             data: {
+              csdmHybridCall: true,
               account: {
                 entitlements: ['something']
               },

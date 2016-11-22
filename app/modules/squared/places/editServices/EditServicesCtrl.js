@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('EditServicesCtrl', EditServicesCtrl);
   /* @ngInject */
-  function EditServicesCtrl($stateParams, $scope, Notification, CsdmDataModelService, FeatureToggleService) {
+  function EditServicesCtrl($stateParams, $scope, Notification, CsdmDataModelService) {
     var ciscouc = 'ciscouc';
     var fusionec = 'fusionec';
 
@@ -13,11 +13,7 @@
     vm.title = wizardData.title;
     var initialService = getService(wizardData.account.entitlements);
     vm.service = initialService;
-    vm.sparkCallConnectEnabled = false;
-
-    FeatureToggleService.csdmHybridCallGetStatus().then(function (toggle) {
-      vm.sparkCallConnectEnabled = !!toggle || vm.service === 'sparkCallConnect';
-    });
+    vm.sparkCallConnectEnabled = !!wizardData.csdmHybridCallFeature || vm.service === 'sparkCallConnect';
 
     vm.next = function () {
       $stateParams.wizard.next({

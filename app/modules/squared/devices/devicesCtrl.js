@@ -36,6 +36,9 @@
           FeatureToggleService.csdmPstnGetStatus().then(function (result) {
             vm.showPstn = result && Authinfo.isSquaredUC();
           });
+          FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
+            vm.csdmHybridCallFeature = feature;
+          });
         }
 
         function fetchDetailsForLoggedInUser() {
@@ -222,6 +225,7 @@
               showPlaces: true,
               showATA: vm.showATA,
               showDarling: vm.showDarling,
+              csdmHybridCallFeature: vm.csdmHybridCallFeature,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isEntitledToHuron(),
               isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
