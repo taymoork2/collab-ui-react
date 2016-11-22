@@ -23,6 +23,7 @@
     vm.noDataForRange = false;
 
     var dateRange;
+    var missingDays;
     vm.exportRawData = exportRawData;
 
     vm.tabs = [
@@ -186,6 +187,9 @@
       amChart.dataProvider = data;
       if (title) {
         amChart.categoryAxis.title = title;
+        if (missingDays) {
+          amChart.categoryAxis.title += missingDays;
+        }
       }
       amChart.validateData();
       vm.showDevices = false;
@@ -198,6 +202,7 @@
     }
 
     function loadLastWeek() {
+      missingDays = null;
       var missingDaysDeferred = $q.defer();
       missingDaysDeferred.promise.then(handleMissingDays);
       vm.loading = true;
@@ -207,6 +212,7 @@
     }
 
     function loadLastMonth() {
+      missingDays = null;
       var missingDaysDeferred = $q.defer();
       missingDaysDeferred.promise.then(handleMissingDays);
       vm.loading = true;
@@ -216,6 +222,7 @@
     }
 
     function loadLast3Months() {
+      missingDays = null;
       var missingDaysDeferred = $q.defer();
       missingDaysDeferred.promise.then(handleMissingDays);
       vm.loading = true;
@@ -226,9 +233,10 @@
 
     function handleMissingDays(info) {
       //$log.info('missingDays', info);
-      var missingDays = info.missingDays.length;
-      var warning = 'Data missing for ' + missingDays + ' days';
-      Notification.notify([warning], 'warning');
+      var nbrOfMissingDays = info.missingDays.length;
+      var warning = ' (Data missing for ' + nbrOfMissingDays + ' days)';
+      missingDays = warning;
+      //Notification.notify([warning], 'warning');
     }
 
     function rollOverGraphItem(event) {
