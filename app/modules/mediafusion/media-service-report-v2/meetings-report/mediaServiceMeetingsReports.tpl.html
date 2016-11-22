@@ -1,0 +1,20 @@
+<div class="metrics-reports">
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <cs-select id="clusterFilter" name="clusterFilter" class='metrics-report-filter' ng-model="nav.clusterSelected" options="nav.clusterOptions" on-change-fn="nav.clusterUpdate()"></cs-select>
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+      <cs-select id="timeFilter" name="timeFilter" class='metrics-report-filter' ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.timeUpdate()"></cs-select>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+  <div class="content-container">
+    <div class="row">
+      &nbsp;&nbsp;{{nav.label}} ({{nav.date}})
+      <cs-card-layout>
+        <uc-meetings-card></uc-meetings-card>
+        <uc-meeting-pie-chart parentcntrl="nav" options="nav.meetingLocationChartOptions" ></uc-meeting-pie-chart>
+        <uc-meeting-pie-chart parentcntrl="nav" options="nav.clientTypeChartOptions" ></uc-meeting-pie-chart>
+      </cs-card-layout>
+    </div>
+  </div>
+</div>

@@ -1,9 +1,9 @@
 (function () {
   'use strict';
 
-  angular.module('Mediafusion').service('CommonMetricsGraphService', CommonMetricsGraphService);
+  angular.module('Mediafusion').service('CommonMetricsGraphServiceV2', CommonMetricsGraphServiceV2);
   /* @ngInject */
-  function CommonMetricsGraphService($translate, chartColors) {
+  function CommonMetricsGraphServiceV2($translate, chartColors) {
     var amchartsImages = './amcharts/images/';
     // Base variables for building grids and charts
     var baseVariables = [];
@@ -12,7 +12,7 @@
       'fillAlphas': 1,
       'lineAlpha': 0,
       'balloonColor': chartColors.grayLight,
-      'columnWidth': 4
+      'columnWidth': 0.5
     };
     baseVariables['smoothedLine'] = {
       'type': 'smoothedLine',
@@ -108,12 +108,29 @@
       number: 1e+12,
       prefix: 'T'
     }];
+    baseVariables['chartScrollbar'] = {
+      'offset': 30,
+      'scrollbarHeight': 20,
+      'backgroundAlpha': 0,
+      'selectedBackgroundAlpha': 0.1,
+      'selectedBackgroundColor': '#888888',
+      'graphFillAlpha': 0,
+      'graphLineAlpha': 0.5,
+      'selectedGraphFillAlpha': 0,
+      'selectedGraphLineAlpha': 1,
+      'autoGridCount': true,
+      'color': '#AAAAAA'
+    };
+    baseVariables['valueScrollbar'] = {
+      'autoGridCount': true,
+      'color': '#AAAAAA',
+      'backgroundColor': '#ffffff',
+      'backgroundAlpha': 1
+    };
     return {
       getBaseVariable: getBaseVariable,
       getBaseStackSerialGraph: getBaseStackSerialGraph,
-      getGanttGraph: getGanttGraph,
-      getBasePieChart: getBasePieChart,
-      getDummyPieChart: getDummyPieChart
+      getGanttGraph: getGanttGraph
     };
 
     function getBaseVariable(key) {
@@ -124,7 +141,7 @@
       }
     }
 
-    function getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, categoryField, catAxis, exportData) {
+    function getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, categoryField, catAxis, exportData, chartScrollbar) {
       return angular.copy({
         'type': 'serial',
         'pathToImages': amchartsImages,
@@ -160,23 +177,11 @@
           "zoomable": true,
           "valueZoomable": false
         },
-        'chartScrollbar': {
-          'offset': 30,
-          'scrollbarHeight': 20,
-          'backgroundAlpha': 0,
-          'selectedBackgroundAlpha': 0.1,
-          'selectedBackgroundColor': '#888888',
-          'graphFillAlpha': 0,
-          'graphLineAlpha': 0.5,
-          'selectedGraphFillAlpha': 0,
-          'selectedGraphLineAlpha': 1,
-          'autoGridCount': true,
-          'color': '#AAAAAA'
-        }
+        'chartScrollbar': chartScrollbar
       });
     }
 
-    function getGanttGraph(data, valueAxis, exportData) {
+    function getGanttGraph(data, valueAxis, exportData, valueScrollbar) {
       return angular.copy({
         'type': 'gantt',
         'pathToImages': amchartsImages,
@@ -199,12 +204,7 @@
         'endField': 'end',
         'durationField': 'duration',
         'dataProvider': data,
-        'valueScrollbar': {
-          'autoGridCount': true,
-          'color': '#AAAAAA',
-          'backgroundColor': '#ffffff',
-          'backgroundAlpha': 1
-        },
+        'valueScrollbar': valueScrollbar,
         'chartCursor': {
           'cursorColor': '#55bb76',
           'valueBalloonsEnabled': false,
@@ -216,70 +216,6 @@
           'valueZoomable': true
         },
         'export': exportData
-      });
-    }
-
-    function getBasePieChart(data) {
-      return angular.copy({
-        'type': 'pie',
-        'balloonText': '[[title]]<br><span style="font-size:14px"><b>[[value]]</b> ([[percents]]%)</span>',
-        'hoverAlpha': 0.5,
-        'labelRadius': 1,
-        'pullOutRadius': '1%',
-        'titleField': 'name',
-        'valueField': 'value',
-        'theme': 'light',
-        'allLabels': [],
-        'balloon': {},
-        'legend': {
-          'enabled': true,
-          'align': 'center',
-          'forceWidth': true,
-          'switchable': false,
-          'valueText': ''
-        },
-        'titles': [],
-        'dataProvider': data.dataProvider
-      });
-    }
-
-    function getDummyPieChart() {
-      return angular.copy({
-        'type': 'pie',
-        'balloonText': '',
-        'labelText': '[[title]]',
-        'pullOutRadius': '1%',
-        'colorField': 'color',
-        'outlineColor': '#ECECEC',
-        'titleField': 'name',
-        'valueField': 'value',
-        'borderColor': '#A4ACAC',
-        'fontSize': 12,
-        'theme': 'light',
-        'balloon': {
-          'fontSize': 0
-        },
-        'legend': {
-          'enabled': true,
-          'align': 'center',
-          'labelWidth': 0,
-          'markerBorderThickness': 5,
-          'markerLabelGap': 6,
-          'markerSize': 5,
-          'valueAlign': 'left',
-          'valueText': '',
-          'switchable': false
-        },
-        'titles': [],
-        'dataProvider': [{
-          'name': 'No data',
-          'value': '60',
-          'color': '#ececec'
-        }, {
-          'name': 'No data',
-          'value': '40',
-          'color': '#d9d9d9'
-        }]
       });
     }
   }

@@ -3815,6 +3815,7 @@
       "title": "Metrics",
       "today": "Last 24 Hours",
       "today2": "Last 24 Hours",
+      "last4Hours": "Last 4 Hours",
       "yesterday": "Yesterday",
       "yesterday2": "Yesterday",
       "week": "Last Week",

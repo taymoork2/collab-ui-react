@@ -1,0 +1,33 @@
+(function () {
+  'use strict';
+
+  angular
+    .module('Mediafusion')
+    .service('MeetingsGraphService', MeetingsGraphService);
+
+  /* @ngInject */
+  function MeetingsGraphService(CommonMetricsGraphService) {
+    function getMeetingPieGraph(data, chart, id) {
+      if (_.isUndefined(chart)) {
+        var pieChart = CommonMetricsGraphService.getBasePieChart(data);
+        chart = AmCharts.makeChart(id, pieChart);
+      } else {
+        chart.dataProvider = data.dataProvider;
+      }
+      chart.validateData();
+      return chart;
+    }
+
+    function getMeetingDummyPieGraph(id) {
+      var pieChart = CommonMetricsGraphService.getDummyPieChart();
+      AmCharts.makeChart(id, pieChart);
+      return;
+    }
+
+    return {
+      getMeetingPieGraph: getMeetingPieGraph,
+      getMeetingDummyPieGraph: getMeetingDummyPieGraph
+    };
+  }
+
+})();

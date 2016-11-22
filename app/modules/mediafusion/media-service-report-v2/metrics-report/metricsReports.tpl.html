@@ -9,12 +9,12 @@
           <i class="icon icon-chevron-down"></i>
         </div>
         <ul ng-class="{'dropdown-menu dropdown-primary' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }" >
-          <li class="filter" ng-class="{'active' : nav.displayHistorical}" ng-click="nav.resetCards(nav.allReports);">
+          <li class="filter" ng-class="{'active' : nav.displayHistorical}" ng-click="nav.changeTabs(true, false);">
            <a id="allReports"  >
               <span class="name" translate="">Historical</span>
             </a>
           </li>
-          <li class="filter" ng-class="{'active' : nav.displayRealtime}" ng-click="nav.resetCards(nav.engagement);">
+          <li class="filter" ng-class="{'active' : nav.displayRealtime}" ng-click="nav.changeTabs(false, true);">
              <a id="engagementReports" >
               <span class="name" translate="">Real time</span>
             </a>
@@ -30,17 +30,25 @@
     <cs-page-sub-header-left>
       {{nav.label}} ({{nav.date}})
     </cs-page-sub-header-left>
-    <cs-page-sub-header-right>
+    <cs-page-sub-header-right ng-show="nav.displayHistorical">
       <cs-select id="timeFilter" name="timeFilter" class='metrics-report-filter' ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.timeUpdate()"></cs-select>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
   <div class="content-container">
     <div class="row" >
       <cs-card-layout>
-        <uc-metrics-info-card></uc-metrics-info-card>
-        <uc-utilization-metrics></uc-utilization-metrics>
-        <uc-call-volume-metrics></uc-call-volume-metrics>
-        <uc-availability-metrics></uc-availability-metrics>
+        <div ng-if="nav.displayHistorical">
+          <uc-metrics-historical-info-card></uc-metrics-historical-info-card>
+          <uc-utilization-historical-graph></uc-utilization-historical-graph>
+          <uc-call-volume-historical-graph></uc-call-volume-historical-graph>
+          <uc-availability-historical-graph></uc-availability-historical-graph>
+        </div>
+        <div ng-if="nav.displayRealtime">
+          <uc-new-metrics-info-card></uc-new-metrics-info-card>
+          <uc-utilization-real-graph></uc-utilization-real-graph>
+          <uc-call-volume-real-graph></uc-call-volume-real-graph>
+          <uc-availability-real-graph></uc-availability-real-graph>
+        </div>
       </cs-card-layout>
     </div>
   </div>

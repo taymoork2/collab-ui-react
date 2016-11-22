@@ -1,0 +1,76 @@
+<cs-card-layout>
+<cs-card class="large-3 medium-6 small-12 menu-card header-bar grey overview-card">
+    <article>
+        <header>
+            <div class="metrics-header" translate ='mediaFusion.metrics.total_calls'></div>
+        </header>
+        <section>
+            <div class="metrics-info"> 
+                <div class="no-data" ng-if="nav.total === nav.noData">{{nav.total}}</div>
+                <div ng-if="nav.total !== nav.noData">
+                    <div class="call-counts">{{nav.total}}</div>
+                       <!--div class="spinner-position" ng-if="!nav.total && nav.total !== 0">
+                          <i class='icon icon-spinner icon-2x'></i>
+                        </div-->
+            </div>
+            </div>
+        </section>
+    </article>
+  </cs-card>
+   <cs-card class="large-3 medium-6 small-12 menu-card header-bar orange overview-card">
+    <article>
+        <header>
+            <span class="metrics-header" translate ='mediaFusion.metrics.onpremcalls' ng-if="nav.clusterSelected === 'All Clusters'"></span>
+                <span class="metrics-header" translate ='mediaFusion.metrics.hostedcalls' ng-if="nav.clusterSelected !== 'All Clusters'"></span>
+        </header>
+        <section>
+            <div class="metrics-info">
+                <div class="no-data" ng-if="nav.onprem === nav.noData">{{nav.onprem}}</div>
+                <div ng-if="nav.onprem !== nav.noData">
+                    <div class="call-counts">{{nav.onprem}}</div>
+                       <!--div class="spinner-position" ng-if="!nav.onprem && nav.onprem !== 0">
+                          <i class='icon icon-spinner icon-2x'></i>
+                        </div-->
+                </div>    
+            </div>
+        </section>
+    </article>
+ </cs-card>
+ <cs-card class="large-3 medium-6 small-12 menu-card header-bar green overview-card">
+    <article>
+        <header>
+            <span class="metrics-header" translate ='mediaFusion.metrics.cloudcalls' ng-if="nav.clusterSelected === 'All Clusters'"></span>
+                <span class="metrics-header" translate ='mediaFusion.metrics.redirectedcalls' ng-if="nav.clusterSelected !== 'All Clusters'"></span>
+        </header>
+        <section>
+            <div class="metrics-info">
+                <div class="no-data" ng-if="nav.cloud === nav.noData">{{nav.cloud}}</div>
+                <div ng-if="nav.cloud !== nav.noData">
+                    <div class="call-counts">{{nav.cloud}}</div>
+                       <!--div class="spinner-position" ng-if="!nav.cloud && nav.cloud !== 0">
+                          <i class='icon icon-spinner icon-2x'></i>
+                        </div-->
+                </div>    
+            </div>
+        </section>
+    </article>
+ </cs-card>
+ <cs-card class="large-3 medium-6 small-12 menu-card header-bar blue overview-card">
+    <article>
+        <header>
+            <div class="metrics-header" translate ='mediaFusion.metrics.clusteravailability'></div>
+        </header>
+        <section>
+            <div class="metrics-info">
+                <div class="no-data" ng-if="nav.clusterAvailability === nav.noData">{{nav.clusterAvailability}}</div>
+                <div ng-if="nav.clusterAvailability !== nav.noData">
+                    <div class="availability-counts">{{nav.clusterAvailability}}</div>
+                       <!--div class="spinner-position" ng-if="!nav.clusterAvailability">
+                          <i class='icon icon-spinner icon-2x'></i>
+                        </div-->
+                </div>    
+            </div>
+        </section>
+    </article>
+  </cs-card>
+</cs-card-layout>

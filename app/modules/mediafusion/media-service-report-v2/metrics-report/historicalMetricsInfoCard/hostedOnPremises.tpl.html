@@ -1,0 +1,6 @@
+<div style="text-align: left">
+	<div ng-repeat="option in nav.hostedOnPremisesArray | limitTo:5">
+	<a ng-click="nav.clusterUpdateFromTooltip(option.clusterName)"
+	ng-class="{performingCluster: option.hostedOnPremises > 0}">
+	{{option.clusterName}}: {{option.hostedOnPremises}}</a></div>
+</div>
