@@ -1,0 +1,20 @@
+<div class="modal-header">
+  <h3 class="modal-title" translate="bulkEnableVm.enableCompanyVoicemail"></h3>
+</div>
+
+<div class="modal-body">
+  <div class="flex-item-no-resize">
+    <uc-bulk-enable-vm  scope="$ctrl.childScope" class="flex-container flex-item-resize"></uc-bulk-enable-vm>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button id="cancelButton" ng-hide="$ctrl.childScope.processProgress === 100" type="button" class="btn btn--default no-animate"
+    ng-click="$ctrl.childScope.onCancelProcess()" translate="common.cancel"></button>
+  <button id="doneButton" ng-show="$ctrl.childScope.processProgress === 100 && $ctrl.childScope.userErrorArray.length === 0" type="button"
+  class="btn btn--primary no-animate" ng-click="$dismiss()" translate="common.done"></button>
+  <button id="exitButton" ng-show="$ctrl.childScope.processProgress === 100 && $ctrl.childScope.userErrorArray.length > 0" type="button"
+    class="btn btn--default no-animate" ng-click="$dismiss()" translate="bulkEnableVm.exitWithoutResolving"></button>
+  <button id="retryButton" ng-show="$ctrl.childScope.processProgress === 100 && $ctrl.childScope.userErrorArray.length > 0" type="button" class="btn btn--primary no-animate"
+    ng-click="$ctrl.childScope.enableVoicemailForCustomer()" translate="bulkEnableVm.retryUsers"></button>
+</div>

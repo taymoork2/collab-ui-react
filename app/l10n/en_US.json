@@ -3448,7 +3448,23 @@
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
-    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
+    "errorGettingBulkVoicemailEnableToggle": "There was a problem getting the bulkVoicemailEnable toggle."
+  },
+  "bulkEnableVm": {
+    "enableCompanyVoicemail": "Turning On Company Voicemail",
+    "processing": "Updating individual users...",
+    "canceling": "Canceling...",
+    "enabledUsers": "Enabled Users",
+    "errorUsers": "Errors",
+    "errorResolveInstructions": "To resolve errors, update your user attributes CSV file and reimport.",
+    "errorResolveTooltip": "Export errors to CSV and download an updated user attributes CSV file. Edit the user attributes to address reported errors, then reimport.",
+    "headerRow": "Email",
+    "headerErrorMessage": "Error Message",
+    "retryUsers": "Retry",
+    "reportProblem": "Report problem",
+    "exitWithoutResolving": "Exit without resolving",
+    "allUsersEntitled": "All users entitled with voicemail."
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",

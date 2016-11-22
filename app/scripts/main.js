@@ -48,6 +48,7 @@
     require('modules/core/featureToggle/featureToggle.service'),
     require('modules/core/scripts/services/org.service'),
     require('modules/core/scripts/services/userlist.service'),
+    require('modules/core/users/userCsv/userCsv.service'),
     require('modules/core/cards').default,
     require('modules/online/digitalRiver').default // TODO make core.myCompany independent module
   ])
@@ -71,6 +72,7 @@
     'huron.paging-group',
     'huron.telephoneNumber',
     'huron.call-park',
+    'huron.bulk-enable-vm',
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
   ]);
