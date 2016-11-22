@@ -2710,7 +2710,11 @@
     "reversionRuleDesc": "If the call is not answered, send it to this destination",
     "reversionParkerLabel": "Person who parked the call",
     "reversionOtherLabel": "Another destination",
-    "voicemailCheckLabel": "Send call directly to voicemail"
+    "voicemailCheckLabel": "Send call directly to voicemail",
+    "reversionTimerLabel": "Call Reversion Timer",
+    "reversionTimerDesc": "If the call is not answered, send it to the reversion destination after the following wait time",
+    "reversionTimerSeconds": "Seconds",
+    "fallbackTimer.validation.error": "Must be a number between {{min}} and {{max}}"
   },
   "callPickup": {
     "title": "Call Pickup",

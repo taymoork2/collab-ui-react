@@ -1,11 +1,14 @@
 import { MemberType } from 'modules/huron/members';
 
+const FALLBACK_TIMER_DEFAULT: number = 120;
+
 export class CallPark {
   public uuid: string | undefined;
   public name: string | undefined;
   public startRange: string | undefined;
   public endRange: string | undefined;
   public fallbackDestination: FallbackDestination;
+  public fallbackTimer: number;
   public members: Array<CallParkMember>;
 
   constructor(obj: {
@@ -14,6 +17,7 @@ export class CallPark {
     startRange?: string,
     endRange?: string,
     fallbackDestination: FallbackDestination,
+    fallbackTimer: number,
     members: Array<CallParkMember>,
   } = {
     uuid: undefined,
@@ -21,6 +25,7 @@ export class CallPark {
     startRange: undefined,
     endRange: undefined,
     fallbackDestination: new FallbackDestination(),
+    fallbackTimer: FALLBACK_TIMER_DEFAULT,
     members: [],
   }) {
     this.uuid = obj.uuid;
@@ -28,6 +33,7 @@ export class CallPark {
     this.startRange = obj.startRange;
     this.endRange = obj.endRange;
     this.fallbackDestination = obj.fallbackDestination;
+    this.fallbackTimer = obj.fallbackTimer;
     this.members = obj.members;
   }
 }
