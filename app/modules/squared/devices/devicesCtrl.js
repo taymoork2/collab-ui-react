@@ -36,6 +36,9 @@
           FeatureToggleService.csdmPstnGetStatus().then(function (result) {
             vm.showPstn = result && Authinfo.isSquaredUC();
           });
+          FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
+            vm.csdmHybridCallFeature = feature;
+          });
         }
 
         function fetchDetailsForLoggedInUser() {
@@ -222,6 +225,7 @@
               showPlaces: true,
               showATA: vm.showATA,
               showDarling: vm.showDarling,
+              csdmHybridCallFeature: vm.csdmHybridCallFeature,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isEntitledToHuron(),
               isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
@@ -262,10 +266,14 @@
               'addDeviceFlow.editServices': {
                 nextOptions: {
                   sparkCall: 'addDeviceFlow.addLines',
+                  sparkCallConnect: 'addDeviceFlow.callConnectOptions',
                   sparkOnly: 'addDeviceFlow.showActivationCode'
                 }
               },
               'addDeviceFlow.addLines': {
+                next: 'addDeviceFlow.showActivationCode'
+              },
+              'addDeviceFlow.callConnectOptions': {
                 next: 'addDeviceFlow.showActivationCode'
               },
               'addDeviceFlow.showActivationCode': {}
