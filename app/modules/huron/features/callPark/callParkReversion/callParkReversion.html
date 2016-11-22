@@ -34,7 +34,7 @@
       cs-input-label="{{:: 'callPark.reversionOtherLabel' | translate}}">
   </div>
   <div class="row form-group">
-    <div ng-if="$ctrl.showReversionLookup">
+    <div ng-if="$ctrl.showReversionLookup" class="typeahead">
       <cs-call-destination
         ng-disabled="$ctrl.reversionType === 'parker'"
         model="$ctrl.selectedReversionNumber"

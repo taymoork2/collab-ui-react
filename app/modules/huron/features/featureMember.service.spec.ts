@@ -31,6 +31,11 @@ describe('Service: FeatureService', () => {
     numbers: [],
   };
 
+  let memberPictureResponse = {
+    memberUuid: 'fake-userid',
+    thumbnailSrc: 'https://09876/zyxwuv',
+  };
+
   beforeEach(function () {
     this.initModules('huron.feature-member-service');
     this.injectDependencies(
@@ -64,7 +69,7 @@ describe('Service: FeatureService', () => {
     let expectedUrl = 'https://identity.webex.com/identity/scim/12345/v1/Users/fake-userid';
     this.$httpBackend.whenGET(expectedUrl).respond(200, userResponse);
     this.FeatureMemberService.getMemberPicture(fakeUserId).then(function (response) {
-      expect(response).toEqual('https://09876/zyxwuv');
+      expect(response).toEqual(memberPictureResponse);
     });
     this.$httpBackend.flush();
   });

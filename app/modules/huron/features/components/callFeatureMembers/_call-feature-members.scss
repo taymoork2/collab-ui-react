@@ -23,3 +23,9 @@
     }
   }
 }
+
+.typeahead-large .dropdown-menu {
+  li .member__line {
+    @include vr-spacing(ph, 1);
+  }
+}
