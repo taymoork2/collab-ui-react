@@ -234,7 +234,7 @@
     function handleMissingDays(info) {
       //$log.info('missingDays', info);
       var nbrOfMissingDays = info.missingDays.length;
-      var warning = ' (Data missing for ' + nbrOfMissingDays + ' days)';
+      var warning = $translate.instant('reportsPage.usageReports.missingDays', { nbrOfMissingDays: nbrOfMissingDays }); //' (Data missing for ' + nbrOfMissingDays + ' days)';
       missingDays = warning;
       //Notification.notify([warning], 'warning');
     }
