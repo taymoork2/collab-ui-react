@@ -77,6 +77,7 @@
       geoHintEnabled: 'geo-hint-enabled',
       huronAACallQueue: 'huronAACallQueue',
       huronAAMediaUpload: 'huron-aa-mediaupload',
+      huronAAClioMedia: 'huron-aa-cliomedia',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       huronPagingGroup: 'huronPagingGroup',
