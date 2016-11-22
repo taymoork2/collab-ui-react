@@ -10,6 +10,7 @@
     var deviceOverview = this;
     var huronDeviceService = $stateParams.huronDeviceService;
     deviceOverview.showPlaces = false;
+    deviceOverview.resetCodeIsDisabled = true;
     deviceOverview.linesAreLoaded = false;
     deviceOverview.tzIsLoaded = false;
     deviceOverview.shouldShowLines = function () {
@@ -94,11 +95,14 @@
     }
 
     function fetchFeatureToggles() {
-      FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
+      var placesPromise = FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
         deviceOverview.showPlaces = result;
       });
-      FeatureToggleService.csdmPstnGetStatus().then(function (result) {
+      var pstnPromise = FeatureToggleService.csdmPstnGetStatus().then(function (result) {
         deviceOverview.showPstn = result && Authinfo.isSquaredUC();
+      });
+      $q.all([placesPromise, pstnPromise]).finally(function () {
+        deviceOverview.resetCodeIsDisabled = false;
       });
     }
 

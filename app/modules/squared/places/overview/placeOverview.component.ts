@@ -21,17 +21,18 @@ class PlaceOverview implements ng.IComponentController {
   public showPstn: boolean = false;
   public showATA: boolean = false;
   public csdmHybridCallFeature: boolean = false;
+  public generateCodeIsDisabled = true;
 
   private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;
   private adminDisplayName;
+  private pstnFeatureIsEnabledPromise: Promise<boolean> = this.FeatureToggleService.csdmPstnGetStatus();
 
   /* @ngInject */
   constructor(private $q,
               private $state: ng.ui.IStateService,
               private $stateParams,
               private $translate: ng.translate.ITranslateService,
-              private $window,
               private Authinfo,
               private CsdmHuronUserDeviceService,
               private CsdmDataModelService,
@@ -86,27 +87,22 @@ class PlaceOverview implements ng.IComponentController {
     });
   }
 
-  private pstnFeatureIsEnabled(): Promise<boolean> {
-    if (this.$window.location.search.indexOf('enablePstn=true') > -1) {
-      return this.$q.when(true);
-    } else {
-      return this.FeatureToggleService.supports(this.FeatureToggleService.features.csdmPstn);
-    }
-  }
-
   private fetchFeatureToggles() {
-    this.FeatureToggleService.csdmATAGetStatus().then((result) => {
+    let ataPromise = this.FeatureToggleService.csdmATAGetStatus().then((result) => {
       this.showATA = result;
     });
-    this.FeatureToggleService.csdmHybridCallGetStatus().then((feature) => {
+    let hybridPromise = this.FeatureToggleService.csdmHybridCallGetStatus().then((feature) => {
       this.csdmHybridCallFeature = feature;
+    });
+    this.$q.all([ataPromise, this.pstnFeatureIsEnabledPromise, hybridPromise]).finally(() => {
+      this.generateCodeIsDisabled = false;
     });
   }
 
   private loadActions(): void {
     this.actionList = [];
     if (this.currentPlace.type === 'cloudberry') {
-      this.pstnFeatureIsEnabled().then((result) => {
+      this.pstnFeatureIsEnabledPromise.then((result) => {
         this.showPstn = result && this.Authinfo.isSquaredUC();
         if (result) {
           this.actionList = [{
