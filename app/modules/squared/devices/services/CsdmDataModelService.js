@@ -253,6 +253,7 @@
       return CsdmPlaceService.updatePlace(placeUrl, entitlements, directoryNumber, externalNumber)
         .then(function (place) {
           addOrUpdatePlaceInDataModel(place);
+          notifyListeners();
           return place;
         });
     }
