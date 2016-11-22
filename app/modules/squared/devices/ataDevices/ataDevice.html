@@ -1,0 +1,66 @@
+<!-- header -->
+<div class="modal-header">
+  <button
+    type="button"
+    class="close"
+    ng-click="$dismiss()">
+  </button>
+  <h3 class="modal-title" translate="ataSettings.title">
+  </h3>
+</div>
+
+<!-- body -->
+<div
+  class="modal-body ataDeviceModal" ng-onload="{{ata.onLoad()}}">
+  <p translate="ataSettings.description">
+  </p>
+  <br>
+
+  <h5 translate="ataSettings.input"></h5>
+  <div class="rangeSliderWrap">
+    <i class="icon icon-audio-min"></i>
+    <input type="range" min="{{ata.inputMin}}" max="{{ata.inputMax}}" step="1" ng-model="ata.inputModel" ng-change="ata.sliderUpdate('input')" style="background: -webkit-linear-gradient(left, {{ata.selectedColor}} 0%, {{ata.selectedColor}} {{ata.percInput}}%, {{ata.unselectedColor}} {{ata.percInput}}%)" />
+    <i class="icon icon-audio-plus"></i>
+  </div>
+
+  <h5 translate="ataSettings.output"></h5>
+  <div class="rangeSliderWrap">
+    <i class="icon icon-audio-min"></i>
+    <input type="range" min="{{ata.outputMin}}" max="{{ata.outputMax}}" step="1" ng-model="ata.outputModel" ng-change="ata.sliderUpdate('output')" style="background: -webkit-linear-gradient(left, {{ata.selectedColor}} 0%, {{ata.selectedColor}} {{ata.percOutput}}%, {{ata.unselectedColor}} {{ata.percOutput}}%)" />
+    <i class="icon icon-audio-plus"></i>
+  </div>
+
+  <h5 translate="ataSettings.impedance"></h5>
+  <p translate="ataSettings.impedanceDescr"></p>
+  <div class="rangeSliderWrap">
+    <i class="icon icon-plus"></i>
+    <input type="range" min="{{ata.impedanceMin}}" max="{{ata.impedanceMax}}" step="1" ng-model="ata.impedanceModel" ng-change="ata.sliderUpdate('impedance')" style="background: -webkit-linear-gradient(left, {{ata.selectedColor}} 0%, {{ata.selectedColor}} {{ata.percImpedance}}%, {{ata.unselectedColor}} {{ata.percImpedance}}%)" />
+    <i class="icon icon-indeterminate"></i>
+  </div>
+
+  <button
+    class="btn"
+    ng-click="ata.resetValues()" >
+    <span translate="ataSettings.reset">
+    </span>
+  </button>
+</div>
+
+<!-- footer -->
+<div
+  class="modal-footer">
+  <button
+    class="btn"
+    ng-click="$dismiss()">
+    <span
+      translate="common.cancel">
+    </span>
+  </button>
+  <button
+    class="btn btn--primary"
+    sq-click-promise="ata.saveSettings()" >
+    <span>
+      Save
+    </span>
+  </button>
+</div>

@@ -130,6 +130,14 @@
     <cs-sp-section ng-show="deviceOverview.deviceHasInformation">
       <div class="section-title-row">
         <span class="section-name" translate="spacesPage.informationHeader"></span>
+        <span ng-if="deviceOverview.currentDevice.isATA" cs-dropdown class="actions-menu dropdown pull-right">
+          <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
+            <i class="icon icon-three-dots"></i>
+          </button>
+          <ul cs-dropdown-menu class="dropdown-menu dropdown-primary">
+            <li ng-click="deviceOverview.openAtaSettings()" translate="ataSettings.manage"></li>
+          </ul>
+        </span>
       </div>
       <div class="form-group" ng-show="deviceOverview.shouldShowLines()">
         <label class="col-sm-4 control-label">Lines</label>

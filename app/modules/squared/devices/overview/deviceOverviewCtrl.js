@@ -6,7 +6,7 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, Userservice, $stateParams, $translate, $timeout, Authinfo, FeatureToggleService, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService, TerminusUserDeviceE911Service) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, Userservice, $stateParams, $translate, $timeout, Authinfo, FeatureToggleService, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService, TerminusUserDeviceE911Service, AtaDeviceModal) {
     var deviceOverview = this;
     var huronDeviceService = $stateParams.huronDeviceService;
     deviceOverview.showPlaces = false;
@@ -231,6 +231,12 @@
 
     deviceOverview.deleteDevice = function () {
       RemDeviceModal
+        .open(deviceOverview.currentDevice)
+        .then($state.sidepanel.close);
+    };
+
+    deviceOverview.openAtaSettings = function () {
+      AtaDeviceModal
         .open(deviceOverview.currentDevice)
         .then($state.sidepanel.close);
     };

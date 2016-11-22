@@ -3504,7 +3504,8 @@
     "analog": "Analog Telephone"
   },
   "ataSettings": {
-    "analog": "Analog Telephone"
+    "analog": "Analog Telephone",
+    "manage": "Manage stuffs"
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
