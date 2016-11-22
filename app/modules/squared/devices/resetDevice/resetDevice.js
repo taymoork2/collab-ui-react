@@ -12,7 +12,10 @@
         rdc.resetDevice = function () {
           var CsdmHuronDeviceService = CsdmHuronOrgDeviceService.create();
           return CsdmHuronDeviceService.resetDevice(deviceOrCode.url)
-            .then($modalInstance.close)
+            .then(function () {
+              $modalInstance.close();
+              Notification.success("deviceOverviewPage.deviceRebootingDetails", null, "deviceOverviewPage.deviceRebooting");
+            })
             .catch(function (response) {
               Notification.errorResponse(response);
             });

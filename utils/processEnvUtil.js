@@ -1,19 +1,23 @@
+'use strict';
+
 /**
  * Process environment helper functions
  */
-
-'use strict';
+/* eslint-env es6 */
+const _ = require('lodash');
 
 module.exports = function () {
-  var E2E_RUN_COUNTER = 'E2E_RUN_COUNTER';
-  var E2E_RUN_COUNTER_MAX = 'E2E_RUN_COUNTER_MAX';
+  const E2E_RUN_COUNTER = 'E2E_RUN_COUNTER';
+  const E2E_RUN_COUNTER_MAX = 'E2E_RUN_COUNTER_MAX';
+  const WP__ENABLE_DLL = 'WP__ENABLE_DLL';
 
   return {
     isJenkins: isJenkins,
     setE2eRunCounter: setE2eRunCounter,
     getE2eRunCounter: getE2eRunCounter,
     getE2eRunCounterMax: getE2eRunCounterMax,
-    getEnvVarAsInt: getEnvVarAsInt
+    getEnvVarAsInt: getEnvVarAsInt,
+    hasEnabledDll: hasEnabledDll,
   };
 
   ////////////////
@@ -36,5 +40,10 @@ module.exports = function () {
 
   function getEnvVarAsInt(varName) {
     return (process.env[varName] && +process.env[varName]) || 0;
+  }
+
+  function hasEnabledDll() {
+    const enableDll = _.get(process.env, WP__ENABLE_DLL);
+    return /(1|true)/i.test(enableDll);
   }
 };

@@ -1,5 +1,7 @@
 import { CallParkService, CallParkMember } from 'modules/huron/features/callPark/services';
-import { MemberService, Member } from 'modules/huron/members';
+import { MemberService, Member, MemberType, USER_PLACE } from 'modules/huron/members';
+import { FeatureMemberService } from 'modules/huron/features';
+import { Line } from 'modules/huron/lines/services/line';
 
 class CallParkMemberCtrl implements ng.IComponentController {
   public members: Array<CallParkMember>;
@@ -7,13 +9,13 @@ class CallParkMemberCtrl implements ng.IComponentController {
   public onChangeFn: Function;
   public onKeyPressFn: Function;
   public selectedMember: Member | undefined;
-  public openMemberPanelUuid: string | undefined = undefined;
   public errorMemberInput: boolean = false;
 
   /* @ngInject */
   constructor(
     private MemberService: MemberService,
     private CallParkService: CallParkService,
+    private FeatureMemberService: FeatureMemberService,
   ) {}
 
   public getMemberList(value: string): ng.IPromise<Array<Member>> {
@@ -32,9 +34,22 @@ class CallParkMemberCtrl implements ng.IComponentController {
 
   public selectCallParkMember(member: Member): void {
     this.selectedMember = undefined;
-    this.members.push(new CallParkMember({
+    this.FeatureMemberService.getMemberPicture(member.uuid).then(featureMemberPicture => {
+      this.addCallParkMember(member, _.get(featureMemberPicture, 'thumbnailSrc', undefined));
+    }).catch( () => { // request for picture failed, but we don't care!
+      this.addCallParkMember(member, undefined);
+    });
+  }
+
+  private addCallParkMember(member: Member, thumbnailSrc: string | undefined): void {
+    let primaryNumber = this.getPrimaryNumber(member);
+    this.members.unshift(new CallParkMember({
       memberUuid: member.uuid,
       memberName: this.CallParkService.getDisplayName(member) || '',
+      memberType: member.type === USER_PLACE ? MemberType.USER_PLACE : MemberType.USER_REAL_USER,
+      number: primaryNumber.internal,
+      numberUuid: primaryNumber.uuid,
+      thumbnailSrc: thumbnailSrc,
     }));
     this.onMembersChanged(this.members);
   }
@@ -43,17 +58,7 @@ class CallParkMemberCtrl implements ng.IComponentController {
     _.remove<CallParkMember>(this.members, (callParkMember) => {
       return callParkMember.memberUuid === member.memberUuid;
     });
-    this.openMemberPanelUuid = undefined;
     this.onMembersChanged(this.members);
-  }
-
-  public toggleMemberPanel(member: CallParkMember): string | undefined {
-    if (this.openMemberPanelUuid === member.memberUuid) {
-      this.openMemberPanelUuid = undefined;
-    } else {
-      this.openMemberPanelUuid = member.memberUuid;
-    }
-    return this.openMemberPanelUuid;
   }
 
   private onMembersChanged(members: Array<CallParkMember>): void {
@@ -67,6 +72,12 @@ class CallParkMemberCtrl implements ng.IComponentController {
       return member.memberUuid === uuid;
     });
     return _.isUndefined(existingMembers);
+  }
+
+  private getPrimaryNumber(member: Member): Line {
+    return _.find<Line>(member.numbers, (item) => {
+      return item.primary === true;
+    });
   }
 
   public onHandleKeyPress($keyCode): void {

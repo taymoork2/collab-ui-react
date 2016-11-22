@@ -169,6 +169,7 @@
       atlasHerculesEmergencyUpgrade: 'atlas-hercules-emergency-upgrade',
       atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',
       avrilVmEnable: 'avril-vm-enable',
+      bulkVoicemailEnable: 'bulk-voicemail-enable'
     };
 
     var toggles = {};

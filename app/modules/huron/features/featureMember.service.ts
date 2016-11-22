@@ -1,19 +1,29 @@
 import { Member, MemberService, USER_REAL_USER, USER_PLACE } from 'modules/huron/members';
 
+export interface IFeatureMemberPicture {
+  memberUuid: string;
+  thumbnailSrc: string | undefined;
+}
+
 export class FeatureMemberService {
 
   /* @ngInject */
-  constructor(private UrlConfig,
-              private HuronConfig,
-              private Authinfo,
-              private $http: ng.IHttpService,
-              private MemberService: MemberService) {
-  }
+  constructor(
+    private UrlConfig,
+    private HuronConfig,
+    private Authinfo,
+    private $http: ng.IHttpService,
+    private MemberService: MemberService
+  ) {}
 
-  public getMemberPicture(memberId: string): ng.IPromise<string> {
+  public getMemberPicture(memberId: string): ng.IPromise<IFeatureMemberPicture> {
     let scimUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + memberId;
     return this.$http.get(scimUrl, {}).then((response) => {
-      return _.get(_.find(_.get(response, 'data.photos', []), { type: 'thumbnail' }), 'value', '');
+      let memberPicture = <IFeatureMemberPicture>{
+        memberUuid: memberId,
+        thumbnailSrc: _.get(_.find(_.get(response, 'data.photos', []), { type: 'thumbnail' }), 'value', ''),
+      };
+      return memberPicture;
     });
   }
 
@@ -80,8 +90,8 @@ export class FeatureMemberService {
     }
   }
 
-  //return will be 
-  // - "Firstname Lastname (userid@cisco.com)" 
+  //return will be
+  // - "Firstname Lastname (userid@cisco.com)"
   // - "userid@cisco.com" (if there is no firstName and lastNmae)
   public getFullNameFromMember(member: Member) {
     if (!member) {
@@ -102,7 +112,7 @@ export class FeatureMemberService {
     return name;
   }
 
-  //return will be 
+  //return will be
   // - "Firstname Lastname"
   // - "Display Name" (if no firstname and lastname )
   // - "Build 9 Lobby" (displayName if it is Place)

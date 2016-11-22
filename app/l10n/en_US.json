@@ -557,6 +557,7 @@
       "last7Days": "Last 7 Days",
       "last4Weeks": "Weekly Last 4 weeks ",
       "last3Months": "Monthly Last 3 Months",
+      "missingDays": " (data missing for {{nbrOfMissingDays}} days)",
       "deviceOptions": {
         "all": "All",
         "roomSystems": "DX, MX, and SX Devices",
@@ -1421,7 +1422,8 @@
     "validatingAddr": "Validating Address...",
     "saving": "Saving...",
     "errorAddr": "The address you entered is invalid, please try again.",
-    "sameAsCompanyNum": "To edit your emergency service address, the emergency callback number for your device must be different from your company’s callback number."
+    "sameAsCompanyNum": "To edit your emergency service address, the emergency callback number for your device must be different from your company’s callback number.",
+    "impactedUserInfo": "Modifying the Emergency Service Address associated to the above selected Callback Number will impact the following users and/or places:"
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -1774,7 +1776,7 @@
         "deactivateHeader": "Deactivate Google Calendar",
         "deactivateText": "Your users will no longer be able to use this service.",
         "googleCalendarConfigWillBeWiped": "This action will delete all Google Calendar settings from Cisco Collaboration Cloud.",
-        "uploadNewPrivateKey": "Upload New Private Key",
+        "uploadNewPrivateKey": "Upload Private Key",
         "uploadNewPrivateKeyPlaceholder": "Enter service account name",
         "serviceAccountName": "Service Account Name",
         "uploadNewPrivateKeyExplanation": "Enter your service account name and upload the private key you downloaded from Google Developer Console.",
@@ -1784,10 +1786,21 @@
         "removeFile": "Remove file",
         "successfullyUploadedKey": "Service account saved successfully, and private key file {{filename}} uploaded.",
         "failedToUploadKey": "Changes not saved. The service account and/or private key file are not valid.",
-        "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status."
+        "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status.",
+        "generateAPrivateKeyHeader": "Generate a Private Key",
+        "generateAPrivateKeyExplanation": "To enable Hybrid Calendar for your users, you need to generate a private key for Google Calendar. You can generate the key with the <a href=\"https://console.developers.google.com/\" target=\"_blank\">Google Developer Console</a>. Follow <a href=\"https://example.org/\" target=\"_blank\">documentation</a> to learn how to generate a key.",
+        "keyHasBeenGeneratedGoNext": "When you have generated your key, click Next.",
+        "googleCalendarSetupCompleted": "Google Calendar setup completed",
+        "great": "Great! {{fileName}} was successfully uploaded to Cisco Collaboration Cloud. You can now enable Hybrid Calendar Service for your users.",
+        "toEnableUsers": "To enable users, you can:",
+        "enableIndividually": "Enable them individually from the <a ng-click=\"{{onclick}}\">users</a> page.",
+        "enableInBulk": "Enable them in bulk using the <a ng-click=\"{{onclick}}\">CSV template</a>.",
+        "referToDocumentation": "Refer to <a href=\"https://example.org/\" target=\"_blank\">documentation</a> if you need help enabling users."
       },
       "hybridCalendarCommon": {
-        "hybridCalendarSetUp": "Hybrid Calendar setup"
+        "hybridCalendarSetUp": "Hybrid Calendar setup",
+        "selectCalendarType": "Select Calendar type",
+        "serviceInto": "Hybrid Calendar Service supports Microsoft Exchange calendar via on-premises Expressway clusters, and Google Calendar."
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
@@ -2095,16 +2108,17 @@
     },
     "searchParameters": {
       "searchBy": "Search By",
-      "searchByPlaceholder": "Email Id",
+      "searchByPlaceholder": "Email ID",
       "searchByEmailPlaceholder": "e.g. johnsmith@email.com, jansmith@email.com",
-      "roomName": "Where <b>Room Name</b> contains",
-      "roomNamePlaceholder": "e.g. sales AND meeting OR private",
-      "textMessage": "Where <b>Text Messages</b> contains",
-      "textMessagePlaceholder": "e.g. project AND manager OR admin NOT owner",
-      "fileName": "Where <b>File Name</b> contains",
-      "fileNamePlaceholder": "e.g. confidential OR restricted",
-      "activityType": "And <b>Activity Type</b> is",
-      "activityTypePlaceholder": "Meeting"
+      "searchByRoomPlaceholder": "e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "textAndFileName": "Where <b>Text Messagegs</b> or <b>File Name</b> contains",
+      "textAndFileNamePlaceholder": "e.g. project AND manager",
+      "noMatchesFound": "No Matches Found"
+    },
+    "searchResults": {
+      "searchInfo": "Search Info",
+      "emailId": "Email Id",
+      "dateRange": "Date Range"
     },
     "reportsList": {
       "name": "Name",
@@ -3435,7 +3449,23 @@
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
-    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
+    "errorGettingBulkVoicemailEnableToggle": "There was a problem getting the bulkVoicemailEnable toggle."
+  },
+  "bulkEnableVm": {
+    "enableCompanyVoicemail": "Turning On Company Voicemail",
+    "processing": "Updating individual users...",
+    "canceling": "Canceling...",
+    "enabledUsers": "Enabled Users",
+    "errorUsers": "Errors",
+    "errorResolveInstructions": "To resolve errors, update your user attributes CSV file and reimport.",
+    "errorResolveTooltip": "Export errors to CSV and download an updated user attributes CSV file. Edit the user attributes to address reported errors, then reimport.",
+    "headerRow": "Email",
+    "headerErrorMessage": "Error Message",
+    "retryUsers": "Retry",
+    "reportProblem": "Report problem",
+    "exitWithoutResolving": "Exit without resolving",
+    "allUsersEntitled": "All users entitled with voicemail."
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",
@@ -3504,7 +3534,7 @@
     "getNewCode": "Get a New Code",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time",
-    "logUploadWarning": "Selecting 'Report Issue' will send the device logs to Cisco.",
+    "logUploadWarning": "When you report an issue, device logs will be sent to Cisco.",
     "timeZone": "Timezone",
     "timeZoneUpdated": "Time Zone updated",
     "timeZoneUpdateFailed": "Device did not update its Time Zone in time",
@@ -3517,6 +3547,8 @@
       "two": "Two",
       "three": "Three"
     },
+    "deviceRebooting": "Device rebooting",
+    "deviceRebootingDetails": "The device is now rebooting and will be offline for a few moments.",
     "failedToSaveChanges": "Failed to save changes to device. Reason:",
     "failedToUploadLogs": "Failed to upload logs. Reason:",
     "deleteATAConfText": "Are you sure you want to delete Port 1?",
@@ -3618,7 +3650,9 @@
       "expires": "Expires {{expiryDate}}",
       "searchAnotherUser": "Or search for another user",
       "codeIsUsed": "This code has now been used",
-      "failedToGenerateActivationCode": "Failed to generate activation code. Reason:"
+      "failedToGenerateActivationCode": "Failed to generate activation code. Reason:",
+      "problemGeneratingCode": "There was a problem generating your activation code.",
+      "pressRetry": "Please press Retry to try again."
     }
   },
   "generateActivationCodeModal": {
@@ -5652,7 +5686,6 @@
     "orderProvision": "Order Provisioned",
     "accountActivate": "Account Activated",
     "companyName": "Company Name",
-    "companyId": "Company ID",
     "adminEmail": "Admin Email",
     "emailSent": "Last Email Sent",
     "partnerInfo": "Partner Information",
@@ -5660,9 +5693,11 @@
     "partnerEmail": "Partner Email",
     "resendAdminEmail": "Resend",
     "editAdminEmail": "Edit",
-    "resendTooltip": "Resends the welcome email.",
+    "resendTooltip": "Resend service provisioning email.",
     "resendMailSuccess": "Welcome email was successfully sent.",
-    "resendMailFailure": "Failed to resend welcome email."
+    "resendMailFailure": "Failed to resend welcome email.",
+    "editAdminEmailSuccess": "Admin email was updated successfully.",
+    "editAdminEmailFailure": "Failed to update admin email."
   },
   "activation": {
     "verificationComplete": "Verification Complete",
