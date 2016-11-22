@@ -298,6 +298,7 @@
       isCeMenu: isCeMenu,
       cesPa: cesPa,
       cesMoh: cesMoh,
+      cesMaxTime: cesMaxTime,
       cesFallback: cesFallback,
       cesIa: cesIa,
       constructCesPa: constructCesPa,
@@ -499,11 +500,11 @@
       } else if (!_.isUndefined(inAction.routeToQueue)) {
         //this occurs on the way in from the db
         action = new Action('routeToQueue', inAction.routeToQueue.id);
-        setDescription(action, inAction.routeToQueue);
-        cesMoh(action);
-        cesIa(action);
-        cesPa(action);
-        cesFallback(action);
+        cesMaxTime(action, inAction.routeToQueue);
+        cesMoh(action, inAction.routeToQueue);
+        cesIa(action, inAction.routeToQueue);
+        cesPa(action, inAction.routeToQueue);
+        cesFallback(action, inAction.routeToQueue);
         menuEntry.addAction(action);
       } else {
         // insert an empty action
@@ -515,17 +516,31 @@
       }
     }
 
+    function cesMaxTime(action, inAction) {
+      if (!_.isUndefined(action)) {
+        try {
+          if (_.isUndefined(action.queueSettings)) {
+            inAction.description = JSON.parse(inAction.description);
+            action.queueSettings = {};
+          }
+          action.queueSettings.maxWaitTime = inAction.queueMaxTime;
+        } catch (exception) {
+          action.queueSettings = {};
+        }
+      }
+    }
+
     /*
     *write Moh  to db
     */
-    function cesMoh(action) {
-      if (!_.isUndefined(action.description)) {
+    function cesMoh(action, inAction) {
+      if (!_.isUndefined(action)) {
         try {
           if (_.isUndefined(action.queueSettings)) {
-            action.description = JSON.parse(action.description);
+            inAction.description = JSON.parse(inAction.description);
             action.queueSettings = {};
           }
-          action.queueSettings.musicOnHold = constructCesMoh(action.description);
+          action.queueSettings.musicOnHold = constructCesMoh(inAction);
         } catch (exception) {
           action.queueSettings = {};
         }
@@ -535,14 +550,14 @@
     /*
     * write initial announcement to db
     */
-    function cesIa(action) {
-      if (!_.isUndefined(action.description)) {
+    function cesIa(action, inAction) {
+      if (!_.isUndefined(action)) {
         try {
           if (_.isUndefined(action.queueSettings)) {
-            action.description = JSON.parse(action.description);
+            inAction.description = JSON.parse(inAction.description);
             action.queueSettings = {};
           }
-          action.queueSettings.initialAnnouncement = constructCesIa(action.description);
+          action.queueSettings.initialAnnouncement = constructCesIa(inAction);
         } catch (exception) {
           action.queueSettings = {};
         }
@@ -552,14 +567,14 @@
     /*
      * write periodic announcement to db
      */
-    function cesPa(action) {
-      if (angular.isDefined(action.description)) {
+    function cesPa(action, inAction) {
+      if (!_.isUndefined(action)) {
         try {
           if (angular.isUndefined(action.queueSettings)) {
-            action.description = JSON.parse(action.description);
+            inAction.description = JSON.parse(inAction.description);
             action.queueSettings = {};
           }
-          action.queueSettings.periodicAnnouncement = constructCesPa(action.description);
+          action.queueSettings.periodicAnnouncement = constructCesPa(inAction);
         } catch (exception) {
           action.queueSettings = {};
         }
@@ -569,14 +584,14 @@
     /*
     * write fallback to db
     */
-    function cesFallback(action) {
-      if (!_.isUndefined(action.description)) {
+    function cesFallback(action, inAction) {
+      if (!_.isUndefined(action)) {
         try {
           if (angular.isUndefined(action.queueSettings)) {
-            action.description = JSON.parse(action.description);
+            inAction.description = JSON.parse(inAction.description);
             action.queueSettings = {};
           }
-          action.queueSettings.fallback = constructCesFallback(action.description);
+          action.queueSettings.fallback = constructCesFallback(inAction.description);
         } catch (exception) {
           action.queueSettings = {};
         }
@@ -587,9 +602,9 @@
     * construct ces definition of Moh from db
     */
     function constructCesMoh(parsedDescription) {
-      var musicOnHold = parsedDescription.musicOnHold.actions[0];
-      var playAction = new Action('play', musicOnHold.value);
-      playAction.setDescription(musicOnHold.description);
+      var musicOnHold = parsedDescription.queueMoH;
+      var playAction = new Action('play', musicOnHold);
+      playAction.setDescription("");
       musicOnHold = new CeMenuEntry();
       musicOnHold.addAction(playAction);
       return musicOnHold;
@@ -599,9 +614,10 @@
     * construct ces definition of IA from db
     */
     function constructCesIa(parsedDescription) {
-      var initialAnnouncement = parsedDescription.initialAnnouncement.actions[0];
-      var action = new Action(initialAnnouncement.name, initialAnnouncement.value);
-      action.setDescription(initialAnnouncement.description);
+      var iaType = parsedDescription.description.initialAnnouncementType;
+      var initialAnnouncement = parsedDescription.queueInitialAnnouncement;
+      var action = new Action(iaType, initialAnnouncement);
+      action.setDescription("");
       initialAnnouncement = new CeMenuEntry();
       initialAnnouncement.addAction(action);
       return initialAnnouncement;
@@ -610,9 +626,9 @@
     * construct ces definition of Fallback from db
     */
     function constructCesFallback(parsedDescription) {
-      var fallback = parsedDescription.fallback.actions[0];
-      var action = new Action(fallback.name, fallback.value);
-      action.setDescription(fallback.description);
+      var fallback = parsedDescription.fallback;
+      var action = new Action(fallback, fallback.id);
+      action.setDescription("fallback");
       fallback = new CeMenuEntry();
       fallback.addAction(action);
       return fallback;
@@ -622,9 +638,12 @@
     * construct ces definition of PA from db
     */
     function constructCesPa(parsedDescription) {
-      var periodicAnnouncement = parsedDescription.periodicAnnouncement.actions[0];
-      var action = new Action(periodicAnnouncement.name, periodicAnnouncement.value);
-      action.setDescription(periodicAnnouncement.description);
+      var paType = parsedDescription.description.periodicAnnouncementType;
+      var periodicAnnouncements = parsedDescription.queuePeriodicAnnouncements[0];
+      var periodicAnnouncement = periodicAnnouncements.queuePeriodicAnnouncement;
+      var paInterval = periodicAnnouncements.queuePeriodicAnnouncementInterval;
+      var action = new Action(paType, periodicAnnouncement);
+      action.setDescription(paInterval);
       periodicAnnouncement = new CeMenuEntry();
       periodicAnnouncement.addAction(action);
       return periodicAnnouncement;
@@ -1143,16 +1162,26 @@
         };
         paAction.push(paActionArray);
         newAction.queuePeriodicAnnouncements = paAction;
-        var queueMaxTimeValue = action.queueSettings.fallback.actions[0].getValue();
+        var queueMaxTimeValue = action.queueSettings.maxWaitTime;
 
         newAction.queueMaxTime = (queueMaxTimeValue.label);
         if (_.isUndefined(queueMaxTimeValue.label)) {
           newAction.queueMaxTime = queueMaxTimeValue;
         }
-        if (_.isUndefined(action.queueSettings.fallback.actions[0].action)) {
-          action.queueSettings.fallback.actions[0].action = { treatment: 'none' };
+        var destination = action.queueSettings.fallback.actions[0].name;
+        var fallbackAction = {};
+        if (_.isEqual(action.queueSettings.fallback.actions[0].description, 'fallback')) {
+          if (destination.action === 'disconnect') {
+            fallbackAction.action[destination.action] = { treatment: 'none' };
+          } else if (destination.action === 'goto') {
+            fallbackAction[destination.action] = { ceid: destination.id, description: destination.label };
+          } else {
+            fallbackAction[destination.action] = { id: destination.id, description: destination.label };
+          }
+        } else {
+          fallbackAction[destination] = { treatment: 'none' };
         }
-        var queueMaxDestination = action.queueSettings.fallback.actions[0].action;
+        var queueMaxDestination = fallbackAction;//action.queueSettings.fallback.actions[0].action;
         newAction.queueFallback = queueMaxDestination;
         newAction.description = JSON.stringify(action.description);
       }

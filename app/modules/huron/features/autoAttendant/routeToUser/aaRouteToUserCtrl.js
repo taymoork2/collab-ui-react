@@ -50,7 +50,11 @@
       if (fromRouteCall) {
         vm.userSelected.id = vm.menuEntry.actions[0].getValue();
       } else {
-        vm.userSelected.id = vm.menuKeyEntry.actions[0].getValue();
+        if (!_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings)) {
+          vm.userSelected.id = vm.menuKeyEntry.actions[0].queueSettings.fallback.actions[0].getValue();
+        } else {
+          vm.userSelected.id = vm.menuKeyEntry.actions[0].getValue();
+        }
       }
 
       if (vm.userSelected.id) {
@@ -65,7 +69,11 @@
       if (fromRouteCall) {
         vm.menuEntry.actions[0].setValue(vm.userSelected.id);
       } else {
-        vm.menuKeyEntry.actions[0].setValue(vm.userSelected.id);
+        if (!_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings)) {
+          vm.menuKeyEntry.actions[0].queueSettings.fallback.actions[0].setValue(vm.userSelected.id);
+        } else {
+          vm.menuKeyEntry.actions[0].setValue(vm.userSelected.id);
+        }
       }
     }
 

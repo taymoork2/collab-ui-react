@@ -52,7 +52,8 @@
     vm.uploadMohTrigger = uploadMohTrigger;
     vm.destination = '';
     vm.fallbackAction = undefined;
-    vm.saveFallback = saveFallback;
+    vm.updateFallback = updateFallback;
+    vm.updateMaxWaitTime = updateMaxWaitTime;
     vm.saveMoh = saveMoh;
 
     vm.periodicMinutes = [];
@@ -83,21 +84,20 @@
         defaultMoh();
       }
       if (_.isEqual(vm.fallbackAction.description, 'fallback')) {
-        vm.fallbackAction.name.id = vm.menuEntry.actions[0].getValue();
-        var obj = vm.fallbackAction.name;
-        vm.fallbackAction.action = {};
-        if (obj.action === 'disconnect') {
-          vm.fallbackAction.action[obj.action] = { treatment: 'none' };
-        } else {
-          vm.fallbackAction.action[obj.action] = { id: obj.id, description: obj.label };
-        }
+        vm.fallbackAction.name.id = vm.fallbackAction.getValue();
       }
     }
 
-    function saveFallback() {
+    function updateFallback() {
+      //clearing already stored values when new action is choosen from dropdown
+      vm.fallbackAction.setName('');
+      vm.fallbackAction.setValue('');
       vm.fallbackAction.setName(vm.destination);
-      vm.fallbackAction.setValue(vm.maxWaitTime);
       vm.fallbackAction.setDescription("fallback");
+    }
+
+    function updateMaxWaitTime() {
+      vm.menuEntry.actions[0].queueSettings.maxWaitTime = vm.maxWaitTime;
     }
 
     function saveMoh() {
@@ -169,7 +169,7 @@
       if (_.isEqual(vm.fallbackAction.description, '')) {
         vm.maxWaitTime = vm.minutes[14];
       } else {
-        vm.maxWaitTime = vm.fallbackAction.getValue();
+        vm.maxWaitTime = vm.maxWaitTime;
       }
     }
 
@@ -240,6 +240,7 @@
       vm.iaAction = vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0];
       vm.paAction = vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0];
       vm.fallbackAction = vm.menuEntry.actions[0].queueSettings.fallback.actions[0];
+      vm.maxWaitTime = vm.menuEntry.actions[0].queueSettings.maxWaitTime;
     }
 
     function populateScope() {

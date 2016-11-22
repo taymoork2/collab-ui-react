@@ -35,13 +35,15 @@
     /////////////////////
 
     function populateUiModel() {
-
       if (fromRouteCall) {
         vm.hgSelected.id = vm.menuEntry.actions[0].getValue();
       } else {
-        vm.hgSelected.id = vm.menuKeyEntry.actions[0].getValue();
+        if (vm.menuKeyEntry.actions[0].queueSettings) {
+          vm.hgSelected.id = vm.menuKeyEntry.actions[0].queueSettings.fallback.actions[0].getValue();
+        } else {
+          vm.hgSelected.id = vm.menuKeyEntry.actions[0].getValue();
+        }
       }
-
       vm.hgSelected.description = _.result(_.find(vm.huntGroups, {
         'id': vm.hgSelected.id
       }), 'description', '');
@@ -52,9 +54,12 @@
       if (fromRouteCall) {
         vm.menuEntry.actions[0].setValue(vm.hgSelected.id);
       } else {
-        vm.menuKeyEntry.actions[0].setValue(vm.hgSelected.id);
+        if (vm.menuKeyEntry.actions[0].queueSettings) {
+          vm.menuKeyEntry.actions[0].queueSettings.fallback.actions[0].setValue(vm.hgSelected.id);
+        } else {
+          vm.menuKeyEntry.actions[0].setValue(vm.hgSelected.id);
+        }
       }
-
       AACommonService.setPhoneMenuStatus(true);
     }
 

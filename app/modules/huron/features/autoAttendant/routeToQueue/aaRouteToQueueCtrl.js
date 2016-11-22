@@ -41,7 +41,10 @@
     var play = 'play';
     var say = 'say';
     var disconnect = 'disconnect';
-    var maxWaitTime = '15';
+    var maxWaitTime = {
+      index: '14',
+      label: '15'
+    };
 
 
     /////////////////////
@@ -55,7 +58,11 @@
         if (fromRouteCall) {
           vm.menuEntry.actions[0].description = vm.menuEntry.actions[0].queueSettings;
         } else {
-          vm.menuKeyEntry.actions[0].description = vm.menuKeyEntry.actions[0].queueSettings;
+          vm.menuKeyEntry.actions[0].description = {
+            periodicAnnouncementType: vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].name,
+            initialAnnouncementType: vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.actions[0].name,
+            fallback: vm.menuKeyEntry.actions[0].queueSettings.fallback.actions[0].name
+          };
         }
       }, function () {
         // discard changes as modal was dismissed
@@ -164,8 +171,11 @@
         }
         if (angular.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.fallback)) {
           vm.menuKeyEntry.actions[0].queueSettings.fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var fallbackAction = AutoAttendantCeMenuModelService.newCeActionEntry(disconnect, maxWaitTime);
+          var fallbackAction = AutoAttendantCeMenuModelService.newCeActionEntry(disconnect, '');
           vm.menuKeyEntry.actions[0].queueSettings.fallback.addAction(fallbackAction);
+        }
+        if (angular.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.maxWaitTime)) {
+          vm.menuKeyEntry.actions[0].queueSettings.maxWaitTime = maxWaitTime;
         }
       }
 

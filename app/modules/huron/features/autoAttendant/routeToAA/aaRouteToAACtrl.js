@@ -54,11 +54,19 @@
     }
 
     function populateUiModel() {
-      vm.aaName = ceId2aaName(vm.menuEntry.actions[0].value);
+      if (!_.isUndefined(vm.menuEntry.actions[0].queueSettings)) {
+        vm.aaName = ceId2aaName(vm.menuEntry.actions[0].queueSettings.fallback.actions[0].value);
+      } else {
+        vm.aaName = ceId2aaName(vm.menuEntry.actions[0].value);
+      }
     }
 
     function saveUiModel() {
-      vm.menuEntry.actions[0].setValue(aaName2CeId(vm.aaName));
+      if (!_.isUndefined(vm.menuEntry.actions[0].queueSettings)) {
+        vm.menuEntry.actions[0].queueSettings.fallback.actions[0].setValue(aaName2CeId(vm.aaName));
+      } else {
+        vm.menuEntry.actions[0].setValue(aaName2CeId(vm.aaName));
+      }
       AACommonService.setPhoneMenuStatus(true);
     }
 
