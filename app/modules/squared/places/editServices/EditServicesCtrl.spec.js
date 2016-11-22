@@ -89,7 +89,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         state: function () {
           return {
             data: {
-              csdmHybridCall: false,
+              csdmHybridCallFeature: false,
               account: {
                 entitlements: ['something']
               }
@@ -107,7 +107,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         state: function () {
           return {
             data: {
-              csdmHybridCall: false,
+              csdmHybridCallFeature: false,
               account: {
                 entitlements: ['fusionec']
               }
@@ -125,7 +125,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         state: function () {
           return {
             data: {
-              csdmHybridCall: true,
+              csdmHybridCallFeature: true,
               account: {
                 entitlements: ['something']
               }
@@ -150,7 +150,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         var state = function () {
           return {
             data: {
-              csdmHybridCall: true,
+              csdmHybridCallFeature: true,
               account: {
                 entitlements: ['something']
               },
