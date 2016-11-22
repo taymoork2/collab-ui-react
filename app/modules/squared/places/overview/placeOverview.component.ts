@@ -20,7 +20,7 @@ class PlaceOverview implements ng.IComponentController {
   public actionList: IActionItem[] = [];
   public showPstn: boolean = false;
   public showATA: boolean = false;
-  private csdmHybridCallFeature: boolean = false;
+  public csdmHybridCallFeature: boolean = false;
 
   private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;
@@ -98,7 +98,7 @@ class PlaceOverview implements ng.IComponentController {
     this.FeatureToggleService.csdmATAGetStatus().then((result) => {
       this.showATA = result;
     });
-    this.FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
+    this.FeatureToggleService.csdmHybridCallGetStatus().then((feature) => {
       this.csdmHybridCallFeature = feature;
     });
   }
