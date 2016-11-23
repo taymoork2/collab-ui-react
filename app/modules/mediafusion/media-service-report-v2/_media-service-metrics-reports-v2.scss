@@ -84,6 +84,9 @@
 
   .report-card {
     animation: scaleUpCard 0.5s linear;
+    .piechartWidth{
+      min-width: 38rem;
+    }
 
     article {
       min-height: vr-adjust(390);
