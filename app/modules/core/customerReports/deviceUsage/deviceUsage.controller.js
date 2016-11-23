@@ -25,6 +25,8 @@
     var dateRange;
     var missingDays;
     vm.exportRawData = exportRawData;
+    vm.init = init;
+    vm.timeUpdate = timeUpdate;
 
     vm.tabs = [
       {
@@ -33,13 +35,11 @@
       }
     ];
 
-    vm.timeUpdate = timeUpdate;
-
     vm.timeOptions = _.cloneDeep(ReportConstants.timeFilter);
     vm.timeSelected = vm.timeOptions[0];
 
     function timeUpdate() {
-      DeviceUsageSplunkMetricsService.reportClick(DeviceUsageSplunkMetricsService.eventTypes.timeRangeSelected, vm.timeSelected);
+      DeviceUsageSplunkMetricsService.reportOperation(DeviceUsageSplunkMetricsService.eventTypes.timeRangeSelected, vm.timeSelected);
       vm.deviceFilter = vm.deviceOptions[0];
       switch (vm.timeSelected.value) {
         case 0:
@@ -127,11 +127,7 @@
       { event: 'rollOutGraphItem', method: rollOutGraphItem },
       { event: 'dataUpdated', method: graphRendered }
       ];
-
-      amChart = AmCharts.makeChart('device-usage-total-chart', chart);
-      _.each(amChart.graphs, function (graph) {
-        graph.balloonFunction = renderBalloon;
-      });
+      amChart = DeviceUsageTotalService.makeChart('device-usage-total-chart', chart);
       loadInitData();
     }
 
@@ -250,13 +246,6 @@
       $scope.$apply();
     }
 
-    function renderBalloon(graphDataItem) {
-      var text = '<div><h5>' + $translate.instant('reportsPage.usageReports.callDuration') + ' : ' + graphDataItem.dataContext.totalDuration + '</h5>';
-      text = text + $translate.instant('reportsPage.usageReports.callCount') + ' : ' + graphDataItem.dataContext.callCount + ' <br/> ';
-      text = text + $translate.instant('reportsPage.usageReports.pairedCount') + ' : ' + graphDataItem.dataContext.pairedCount + '<br/>';
-      return text;
-    }
-
     function fillInStats(data) {
       var stats = DeviceUsageTotalService.extractStats(data);
       vm.totalDuration = formatSecondsToHrsMinSec(stats.totalDuration);
@@ -281,7 +270,7 @@
     }
 
     function reInstantiateMasonry() {
-      CardUtils.resize(0, 'cs-card-layout');
+      CardUtils.resize(0, 'score-card.cs-card-layout');
     }
 
     function pad(num, size) {
@@ -311,9 +300,15 @@
     function exportRawData() {
       vm.exporting = true;
       //$log.info("Exporting data for range", dateRange);
+      var exportStarted = moment();
       DeviceUsageTotalService.exportRawData(dateRange.start, dateRange.end, apiToUse).then(function () {
         //$log.info("export finished");
-        DeviceUsageSplunkMetricsService.reportClick(DeviceUsageSplunkMetricsService.eventTypes.fullReportDownload, dateRange);
+        var now = moment();
+        var data = {
+          timeSelected: vm.timeSelected,
+          duration: now.diff(exportStarted).valueOf()
+        };
+        DeviceUsageSplunkMetricsService.reportOperation(DeviceUsageSplunkMetricsService.eventTypes.fullReportDownload, data);
         vm.exporting = false;
       })
       .catch(function (err) {

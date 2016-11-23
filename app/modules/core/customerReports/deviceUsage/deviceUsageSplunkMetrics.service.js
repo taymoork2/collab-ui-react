@@ -13,15 +13,16 @@
       timeRangeSelected: 'TIMERANGESELECTED'
     };
 
-    function reportClick(eventType, operation) {
+    function reportOperation(operation, data) {
       $log.info('reportClick', operation);
       var json = {
-        operation: operation
+        operation: operation,
+        data: data
       };
 
       LogMetricsService.logMetrics(
         'deviceUsageReports',
-        eventType,
+        LogMetricsService.eventType.deviceUsageReportOperation,
         LogMetricsService.eventAction.buttonClick,
         200,
         moment(),
@@ -31,7 +32,7 @@
     }
 
     return {
-      reportClick: reportClick,
+      reportOperation: reportOperation,
       eventTypes: eventTypes
     };
   }

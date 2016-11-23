@@ -161,4 +161,10 @@
   .small-padding {
     padding: 1rem;
   }
+
+  .score-card {
+    .full.side-info-card.cs-card {
+      display: block;
+    }
+  }
 }
