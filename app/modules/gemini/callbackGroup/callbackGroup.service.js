@@ -7,20 +7,39 @@
 
   /* @ngInject */
   function cbgService($http, $translate, UrlConfig) {
+    var geminURL = UrlConfig.getGeminiUrl();
     var URL = {
-      coutries: UrlConfig.getGeminiUrl() + 'countries',
-      callbackGroup: UrlConfig.getGeminiUrl() + 'callbackgroup/customerId/'
+      coutries: geminURL + 'countries',
+      downloadCountryUrl: 'https://hfccap12.qa.webex.com/ccaportal/resources/excel/countries_regions_template.xls', // TODO the backend will provid another link
+      updateCallbackGroup: geminURL + 'callbackgroup/',
+      callbackGroup: geminURL + 'callbackgroup/customerId/',
+      activityLogs: geminURL + 'activityLogs'
     };
     var service = {
+      moveSite: moveSite,
       postRequest: postRequest,
       getCountries: getCountries,
       cbgsExportCSV: cbgsExportCSV,
-      getCallbackGroups: getCallbackGroups
+      getCallbackGroups: getCallbackGroups,
+      getOneCallbackGroup: getOneCallbackGroup,
+      updateCallbackGroup: updateCallbackGroup,
+      downloadCountryUrl: URL.downloadCountryUrl,
+      postNote: postNote,
+      listNotes: listNotes,
+      listActivityLog: listActivityLog
     };
     return service;
 
     function getCallbackGroups(customerId) {
       return $http.get(URL.callbackGroup + customerId).then(extractData);
+    }
+
+    function getOneCallbackGroup(customerId, groupId) {
+      return $http.get(URL.callbackGroup + customerId + '/groupId/' + groupId).then(extractData);
+    }
+
+    function updateCallbackGroup(data) {
+      return $http.put(URL.updateCallbackGroup, data).then(extractData);
     }
 
     function getCountries() {
@@ -29,6 +48,25 @@
 
     function postRequest(customerId, data) {
       return $http.post(URL.callbackGroup + customerId, data).then(extractData);
+    }
+
+    function moveSite(customerId, data) {
+      return $http.put(URL.callbackGroup + customerId + '/movesite', data).then(extractData);
+    }
+
+    function postNote(data) {
+      var url = URL.activityLogs;
+      return $http.post(url, data).then(extractData);
+    }
+
+    function listNotes(customerId, ccaGroupId) {
+      var url = URL.activityLogs + '/' + customerId + '/' + ccaGroupId + '/add_note';
+      return $http.get(url).then(extractData);
+    }
+
+    function listActivityLog(customerId) {
+      var url = URL.activityLogs + '/' + customerId + '/Callback%20Group';
+      return $http.get(url).then(extractData);
     }
 
     function extractData(response) {

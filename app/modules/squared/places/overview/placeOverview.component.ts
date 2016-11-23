@@ -20,6 +20,7 @@ class PlaceOverview implements ng.IComponentController {
   public actionList: IActionItem[] = [];
   public showPstn: boolean = false;
   public showATA: boolean = false;
+  public csdmHybridCallFeature: boolean = false;
 
   private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;
@@ -70,7 +71,7 @@ class PlaceOverview implements ng.IComponentController {
         icon: 'icon-circle-call',
         state: 'communication',
         detail: this.$translate.instant('placesPage.sparkOnly'),
-        actionAvailable: false,
+        actionAvailable: true,
       };
     }
     this.services = [];
@@ -96,6 +97,9 @@ class PlaceOverview implements ng.IComponentController {
   private fetchFeatureToggles() {
     this.FeatureToggleService.csdmATAGetStatus().then((result) => {
       this.showATA = result;
+    });
+    this.FeatureToggleService.csdmHybridCallGetStatus().then((feature) => {
+      this.csdmHybridCallFeature = feature;
     });
   }
 
@@ -136,9 +140,11 @@ class PlaceOverview implements ng.IComponentController {
         'addDeviceFlow.editServices': {
           nextOptions: {
             sparkCall: 'addDeviceFlow.addLines',
+            sparkCallConnect: 'addDeviceFlow.callConnectOptions',
           },
         },
         'addDeviceFlow.addLines': {},
+        'addDeviceFlow.callConnectOptions': {},
       },
     };
     let wizard = this.WizardFactory.create(wizardState);
@@ -186,6 +192,7 @@ class PlaceOverview implements ng.IComponentController {
         function: 'showCode',
         showPlaces: true,
         showATA: this.showATA,
+        csdmHybridCallFeature: this.csdmHybridCallFeature,
         account: {
           type: 'shared',
           deviceType: this.currentPlace.type,

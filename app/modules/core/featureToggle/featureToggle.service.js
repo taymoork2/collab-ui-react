@@ -77,6 +77,7 @@
       geoHintEnabled: 'geo-hint-enabled',
       huronAACallQueue: 'huronAACallQueue',
       huronAAMediaUpload: 'huron-aa-mediaupload',
+      huronAAClioMedia: 'huron-aa-cliomedia',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       huronPagingGroup: 'huronPagingGroup',
@@ -160,6 +161,7 @@
       csdmPlaces: 'csdm-places',
       csdmPstn: 'csdm-pstn',
       csdmATA: 'csdm-ata',
+      csdmHybridCall: 'csdm-hybrid-call',
       atlasGlobalServiceStatus: 'atlas-global-service-status',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
       huronDeviceE911: 'huron-device-e911-address',
@@ -168,6 +170,7 @@
       atlasHerculesEmergencyUpgrade: 'atlas-hercules-emergency-upgrade',
       atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',
       avrilVmEnable: 'avril-vm-enable',
+      bulkVoicemailEnable: 'bulk-voicemail-enable'
     };
 
     var toggles = {};

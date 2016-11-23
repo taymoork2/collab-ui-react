@@ -499,6 +499,19 @@
               }
             }
           })
+          .state('addDeviceFlow.callConnectOptions', {
+            parent: 'modal',
+            params: {
+              wizard: null
+            },
+            views: {
+              'modal@': {
+                templateUrl: 'modules/squared/places/callConnect/CallConnectOptions.tpl.html',
+                controller: 'CallConnectOptionsCtrl',
+                controllerAs: 'callConnectOptions'
+              }
+            }
+          })
           .state('activate', {
             url: '/activate',
             views: {
@@ -1752,21 +1765,25 @@
             },
             templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html'
           })
-          .state('gem.cbgDetails', {
+          .state('gemCbgDetails', {
             parent: 'sidepanel',
             views: {
-              'sidepanel@': {
-                controller: 'CbgDetailsCtrl',
-                controllerAs: 'detailsCtrl',
-                templateUrl: 'modules/gemini/callbackGroup/cbgDetails.tpl.html'
-              }
+              'sidepanel@': { template: '<cbg-details></cbg-details>' }
             },
-            params: {
-              info: {}
-            },
-            data: {
-              displayName: 'Overview'
-            }
+            params: { info: {} },
+            data: {}
+          })
+          .state('gemCbgDetails.sites', {
+            template: '<cbg-sites></cbg-sites>',
+            params: { obj: {} }
+          })
+          .state('gemCbgDetails.editCountry', {
+            template: '<cbg-edit-country></cbg-edit-country>',
+            params: { obj: {} }
+          })
+          .state('gemCbgDetails.notes', {
+            template: '<cbg-notes></cbg-notes>',
+            params: { obj: {} }
           })
           .state('partnercustomers.list', {
             url: '/customers',
@@ -2313,6 +2330,14 @@
             controller: 'HuronSettingsCtrl',
             controllerAs: 'settings'
           })
+          .state('users.enableVoicemail', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                templateUrl: 'modules/huron/settings/bulkEnableVmModal/bulkEnableVmModal.html'
+              }
+            }
+          })
           .state('huronfeatures', {
             url: '/features',
             parent: 'hurondetails',
@@ -2669,7 +2694,12 @@
               clusterId: null
             },
             parent: 'main',
-            abstract: true
+            abstract: true,
+            resolve: {
+              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
+              }
+            }
           })
           .state('calendar-service.list', {
             url: '/services/calendar',
@@ -2707,7 +2737,12 @@
             params: {
               clusterId: null
             },
-            parent: 'main'
+            parent: 'main',
+            resolve: {
+              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
+              }
+            }
           })
           .state('call-service.list', {
             url: '/services/call',
@@ -2738,7 +2773,12 @@
               connectorType: 'c_mgmt'
             },
             parent: 'main',
-            abstract: true
+            abstract: true,
+            resolve: {
+              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
+              }
+            }
           })
           .state('management-service.list', {
             url: '/services/expressway-management',

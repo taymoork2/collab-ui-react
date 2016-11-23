@@ -42,6 +42,12 @@ module.exports = (function makeWebpackConfig() {
       loaders.assets,
       loaders.dependencies,
     ]),
+    noParse: [
+      /messageformat\/messageformat\.js/,
+      /clipboard\/dist\/clipboard.js/,
+      /\/google-libphonenumber\/dist\/browser\/libphonenumber.js/,
+      /\/query-command-supported\/dist\/queryCommandSupported.js/,
+    ],
   };
 
   if (!args.nolint) {

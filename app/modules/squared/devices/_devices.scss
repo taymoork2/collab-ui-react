@@ -395,6 +395,23 @@
   }
 }
 
+.showActivationCode {
+  .activationCodeFailure {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    font-size: 7em;
+
+    i {
+      @include vr-spacing(mb, 1.5);
+      color: $gray-light-1;
+    }
+  }
+}
+
 .errorBox {
   display: flex;
   align-items: flex-start;

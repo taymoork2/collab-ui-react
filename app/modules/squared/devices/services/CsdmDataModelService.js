@@ -95,6 +95,15 @@
       return unRegister;
     }
 
+    function notifyDevicesInPlace(cisUuid, event) {
+      var place = placesDataModel[placesUrl + cisUuid];
+      if (place) {
+        _.each(place.devices, function (d) {
+          CsdmDeviceService.notifyDevice(d.url, event);
+        });
+      }
+    }
+
     function notifyListeners() {
       $rootScope.$emit('PLACES_OR_DEVICES_UPDATED');
     }
@@ -244,6 +253,7 @@
       return CsdmPlaceService.updatePlace(placeUrl, entitlements, directoryNumber, externalNumber)
         .then(function (place) {
           addOrUpdatePlaceInDataModel(place);
+          notifyListeners();
           return place;
         });
     }
@@ -466,7 +476,8 @@
       createCsdmPlace: createCsdmPlace,
       createCmiPlace: createCmiPlace,
       updateCloudberryPlace: updateCloudberryPlace,
-      subscribeToChanges: subscribeToChanges
+      subscribeToChanges: subscribeToChanges,
+      notifyDevicesInPlace: notifyDevicesInPlace
     };
   }
 

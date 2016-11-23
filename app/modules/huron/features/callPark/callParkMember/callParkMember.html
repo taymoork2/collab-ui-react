@@ -38,30 +38,18 @@
     typeahead-wait-ms="200"
     placeholder="{{:: 'callPark.memberPlaceholder' | translate}}"
     cs-input-size="small-12"
-    autocomplete="off">
+    autocomplete="off"
+    no-dirty>
 </div>
 <cs-card-layout>
-  <cs-card
-    class="small header-background primary call-park-member-card"
-    ng-repeat="member in $ctrl.members track by member.memberUuid">
-    <article>
-      <a href ng-click="$ctrl.toggleMemberPanel(member)">
-        <header ng-class="{'open-panel' : $ctrl.openMemberPanelUuid === member.memberUuid}">
-          <div class="header-with-right-icon">
-            <h5 class="ellipsis">{{member.memberName}}</h5>
-            <i class="icon icon-arrow-next icon-lg"></i>
-          </div>
-        </header>
-      </a>
-      <section ng-if="($ctrl.openMemberPanelUuid === member.memberUuid)">
-        <fieldset>
-          <p class="primary-number">{{member.number}}</p>
-          <p>
-            <a href ng-click="$ctrl.unSelectCallParkMember(member)" translate="callPark.removeMem"></a>
-          </p>
-        </fieldset>
-      </section>
-    </article>
-  </cs-card>
+  <cs-card-member
+    ng-repeat="member in $ctrl.members track by member.memberUuid"
+    type="simple"
+    member-type="{{member.memberType}}"
+    id="{{member.memberUuid}}"
+    title="{{member.memberName}}"
+    subtitle="{{member.number}}"
+    image="{{member.thumbnailSrc}}"
+    on-remove="$ctrl.unSelectCallParkMember(member)">
+  </cs-card-member>
 </cs-card-layout>
-

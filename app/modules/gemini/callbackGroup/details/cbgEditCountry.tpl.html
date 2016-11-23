@@ -1,0 +1,42 @@
+<cs-sp-container class="side-panel-country">
+  <cs-sp-section>
+    <div class="section-title-row">
+      <span class="section-name" translate="gemini.cbgs.editCountry"></span>
+    </div>
+    <div class="medium-6">
+      <cs-select
+        multi="true"
+        filter="true"
+        options="$ctrl.options"
+        ng-model="$ctrl.selected"
+        singular="Country/Region"
+        plural="Countries/Regions"
+        on-change-fn="$ctrl.onSelectChange()"
+        refresh-data-fn="$ctrl.getOptions()"
+        placeholder="$ctrl.selectPlaceholder"
+      ></cs-select>
+    </div>
+    <div class="ui-mt medium-12">
+      <!--<span class="btn" translate="gemini.cbgs.importCsv"></span> will be use in next sprint-->
+      <a class="btn btn--none" download="ccaportal_regions_template.xmls" ng-href="$ctrl.downloadCountryUrl"><small translate="gemini.cbgs.downloadCsv"></small></a>
+    </div>
+  </cs-sp-section>
+  <cs-sp-section>
+    <div class="section-title-row">
+      <span class="section-name" translate="gemini.cbgs.request.labelCountries"></span>
+      <!--<span class="pull-right"><a class="btn btn--none" translate="gemini.cbgs.exportToCsv"></a></span> will be use in next sprint-->
+    </div>
+    <div class="tag-container edit-country">
+      <span class="tag tag-country" ng-repeat="val in $ctrl.model.info.countries">
+        <span>{{val.countryName}}</span>
+        <i class="icon icon-close" ng-click="$ctrl.onRemoveCountry(val.countryName)"></i>
+      </span>
+    </div>
+  </cs-sp-section>
+  <cs-sp-buttons>
+    <button type="button" class="btn btn-default" ng-click="$ctrl.onCancel()"><span translate="common.cancel"></span></button>
+    <button type="button" class="btn btn--primary" loading="$ctrl.btnLoading" cs-btn ng-click="$ctrl.onSave()" ng-disabled="$ctrl.btnDisable">
+      <span translate="common.submit"></span>
+    </button>
+  </cs-sp-buttons>
+</cs-sp-container>
