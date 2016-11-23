@@ -6,10 +6,8 @@
     .controller('MediaSeriveMeetingsReportsCtrl', MediaSeriveMeetingsReportsCtrl);
 
   /* @ngInject */
-  function MediaSeriveMeetingsReportsCtrl($translate, $q, $scope, $interval, MediaClusterServiceV2, Notification, MeetingsReportService, MeetingsGraphService, $timeout) {
+  function MediaSeriveMeetingsReportsCtrl($translate, $scope, $interval, Notification, MeetingsReportService, MeetingsGraphService, $timeout) {
     var vm = this;
-    var deferred = $q.defer();
-    //var ABORT = 'ABORT';
 
     vm.pageTitle = $translate.instant('mediaFusion.meetings-report.title');
     vm.noData = $translate.instant('mediaFusion.metrics.nodata');
@@ -18,7 +16,6 @@
     vm.setTotalMeetingData = setTotalMeetingData;
     vm.setTotalMinutesData = setTotalMinutesData;
     vm.setTotalParticipantData = setTotalParticipantData;
-    vm.clusterUpdate = clusterUpdate;
     vm.timeUpdate = timeUpdate;
 
     vm.clusterOptions = [vm.allClusters];
@@ -105,37 +102,6 @@
       }
     }
 
-    function getCluster() {
-      MediaClusterServiceV2.getAll()
-        .then(function (clusters) {
-          vm.clusters = _.filter(clusters, { targetType: 'mf_mgmt' });
-          _.each(clusters, function (cluster) {
-            if (cluster.targetType === "mf_mgmt") {
-              vm.clusterOptions.push(cluster.name);
-              vm.Map[cluster.name] = cluster.id;
-            }
-          });
-          deferred.resolve(vm.Map);
-          vm.clusterId = vm.clusterOptions[0];
-          vm.clusterSelected = vm.clusterOptions[0];
-
-        }).catch(function (err) {
-          Notification.errorWithTrackingId(err, vm.errorData);
-        });
-      return deferred.promise;
-    }
-
-    function clusterUpdate() {
-      displayDate();
-      if (vm.clusterSelected !== vm.allClusters) {
-        vm.clusterId = vm.Map[vm.clusterSelected];
-      } else {
-        vm.clusterId = vm.allClusters;
-      }
-      // setDummyData();
-      setAllGraphs();
-    }
-
     function timeUpdate() {
       displayDate();
       // setDummyData();
@@ -143,13 +109,10 @@
     }
 
     function loadDatas() {
-      getCluster();
-      clusterUpdate();
+      timeUpdate();
     }
 
     function setAllGraphs() {
-      //      setTotalMeetingData();
-      //      setTotalMinutesData();
       setMeetingMetricsData();
       setTotalParticipantData();
       setMeetingPieData();
@@ -158,7 +121,7 @@
     loadDatas();
 
     // Code for auto reload the rest calls every 5 minutes
-    var interval = $interval(clusterUpdate, 300000);
+    var interval = $interval(timeUpdate, 300000);
     $scope.$on('$destroy', function () {
       $interval.cancel(interval);
     });
