@@ -34,6 +34,7 @@
         cs-input
         type="radio"
         ng-model="aaNewTreatmentModalCtrl.musicOnHold"
+        ng-change = "aaNewTreatmentModalCtrl.saveMoh()"
         id="musicOnHoldRadio1"
         name="musicOnHoldRadio"
         value="musicOnHoldDefault"
@@ -42,7 +43,6 @@
         cs-input
         type="radio"
         ng-model="aaNewTreatmentModalCtrl.musicOnHold"
-        ng-change = "aaNewTreatmentModalCtrl.saveMoh()"
         id="uploadFileRadio1"
         name="uploadFileRadio"
         value="musicOnHoldUpload"
@@ -97,7 +97,6 @@
     <div class="large-4 medium-4 small-12 columns">
       <label class="h4 ng-scope" translate="autoAttendant.fallbackLabel"></label>
     </div>
-
     <div class="large-8 medium-8 small-12 columns">
       <p translate="autoAttendant.maxWaitTime"></p>
     </div>
@@ -105,7 +104,6 @@
       <div class="aa-select-modal">
         <cs-select id="queueMin" ng-model="aaNewTreatmentModalCtrl.maxWaitTime" options="aaNewTreatmentModalCtrl.minutes" ng-change ="aaNewTreatmentModalCtrl.updateMaxWaitTime()" secondary-label="Minutes" labelfield="label" valuefield="label" icon="icon-chevron-down">
         </cs-select>
-
       </div>
     </div>
     <div class="large-8 medium-8 small-12 large-offset-4 medium-offset-4 columns aa-treatment-modal">

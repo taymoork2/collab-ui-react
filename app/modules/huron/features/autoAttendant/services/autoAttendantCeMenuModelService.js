@@ -298,7 +298,7 @@
       isCeMenu: isCeMenu,
       cesPa: cesPa,
       cesMoh: cesMoh,
-      cesMaxTime: cesMaxTime,
+      cesMaxWaitTime: cesMaxWaitTime,
       cesFallback: cesFallback,
       cesIa: cesIa,
       constructCesPa: constructCesPa,
@@ -500,7 +500,7 @@
       } else if (!_.isUndefined(inAction.routeToQueue)) {
         //this occurs on the way in from the db
         action = new Action('routeToQueue', inAction.routeToQueue.id);
-        cesMaxTime(action, inAction.routeToQueue);
+        cesMaxWaitTime(action, inAction.routeToQueue);
         cesMoh(action, inAction.routeToQueue);
         cesIa(action, inAction.routeToQueue);
         cesPa(action, inAction.routeToQueue);
@@ -516,7 +516,7 @@
       }
     }
 
-    function cesMaxTime(action, inAction) {
+    function cesMaxWaitTime(action, inAction) {
       if (!_.isUndefined(action)) {
         try {
           if (_.isUndefined(action.queueSettings)) {
@@ -1172,7 +1172,7 @@
         var fallbackAction = {};
         if (_.isEqual(action.queueSettings.fallback.actions[0].description, 'fallback')) {
           if (destination.action === 'disconnect') {
-            fallbackAction.action[destination.action] = { treatment: 'none' };
+            fallbackAction[destination.action] = { treatment: 'none' };
           } else if (destination.action === 'goto') {
             fallbackAction[destination.action] = { ceid: destination.id, description: destination.label };
           } else {

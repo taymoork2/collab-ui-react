@@ -37,14 +37,13 @@
     var rtQueue = 'routeToQueue';
     var fromRouteCall = false;
 
-/*    var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
-    var play = 'play';
-    var say = 'say';
-    var disconnect = 'disconnect';
+    var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
+    var periodicTime = '45';
+
     var maxWaitTime = {
       index: '14',
       label: '15'
-    };*/
+    };
 
     /////////////////////
 
@@ -132,10 +131,10 @@
 
     // This function is called from activateQueueSettings.
     // It adds the appropriate action (i.e. say or play) to the queueSettings.
-    function createAction(obj, type, sayOrPlay) {
+    function createAction(obj, type, sayOrPlayOrDisconnect) {
       var action;
       obj[type] = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      action = AutoAttendantCeMenuModelService.newCeActionEntry(sayOrPlay, '');
+      action = AutoAttendantCeMenuModelService.newCeActionEntry(sayOrPlayOrDisconnect, '');
       obj[type].addAction(action);
     }
 
@@ -146,19 +145,22 @@
 
       if (!_.has(queueSettings, 'musicOnHold')) {
         createAction(queueSettings, 'musicOnHold', 'play');
+        vm.menuKeyEntry.actions[0].queueSettings.musicOnHold.actions[0].setValue(CISCO_STD_MOH_URL);
       }
       if (!_.has(queueSettings, 'initialAnnouncement')) {
         createAction(queueSettings, 'initialAnnouncement', 'say');
       }
       if (!_.has(queueSettings, 'periodicAnnouncement')) {
         createAction(queueSettings, 'periodicAnnouncement', 'say');
+        vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].setDescription(periodicTime);
       }
-      if (!_.has(queueSettings, 'fallBack')) {
-        queueSettings.fallback = {};
-        queueSettings.fallback.destination = "";
+      if (!_.has(queueSettings, 'fallback')) {
+        createAction(queueSettings, 'fallback', 'Disconnect');
+/*        queueSettings.fallback = {};
+        queueSettings.fallback.destination = "";*/
       }
-      if (!_.has(queueSettings, 'maxTime')) {
-        queueSettings.maxTime = '900'; //default, 15 mins.
+      if (!_.has(queueSettings, 'maxWaitTime')) {
+        queueSettings.maxWaitTime = maxWaitTime; //default, 15 mins.
       }
     }
 
@@ -196,34 +198,7 @@
         if (!_.has(_.get(vm.menuKeyEntry, 'actions[0]'), 'queueSettings')) {
           vm.menuKeyEntry.actions[0].queueSettings = {};
         }
-
-        /*if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.musicOnHold)) {
-          vm.menuKeyEntry.actions[0].queueSettings.musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var mohAction = AutoAttendantCeMenuModelService.newCeActionEntry(play, CISCO_STD_MOH_URL);
-          vm.menuKeyEntry.actions[0].queueSettings.musicOnHold.addAction(mohAction);
-        }
-        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement)) {
-          vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var iaAction = AutoAttendantCeMenuModelService.newCeActionEntry(say, '');
-          vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.addAction(iaAction);
-        }
-        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement)) {
-          vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var paAction = AutoAttendantCeMenuModelService.newCeActionEntry(say, '');
-          paAction.setDescription('45');
-          vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.addAction(paAction);
-        }
-        if (angular.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.fallback)) {
-          vm.menuKeyEntry.actions[0].queueSettings.fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var fallbackAction = AutoAttendantCeMenuModelService.newCeActionEntry(disconnect, '');
-          vm.menuKeyEntry.actions[0].queueSettings.fallback.addAction(fallbackAction);
-        }
-        if (angular.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.maxWaitTime)) {
-          vm.menuKeyEntry.actions[0].queueSettings.maxWaitTime = maxWaitTime;
-        }*/
-
         activateQueueSettings(vm.menuKeyEntry);
-
       }
 
       populateUiModel();

@@ -116,7 +116,9 @@
         defaultMoh();
       }
       if (_.isEqual(vm.fallbackAction.description, 'fallback')) {
-        vm.fallbackAction.name.id = vm.fallbackAction.getValue();
+        if (!_.isEqual(vm.fallbackAction.name, 'Disconnect')) {
+          vm.fallbackAction.name.id = vm.fallbackAction.getValue();
+        }
       }
     }
 
@@ -206,7 +208,7 @@
       }
     }
 
-    function populateMaxTime() {
+    function populateMaxWaitTime() {
       vm.minutes = [];
       _.times(60, function (i) {
         vm.minutes.push({
@@ -309,7 +311,7 @@
     function initializeView() {
       populateMohRadio();
       populatePeriodicTime();
-      populateMaxTime();
+      populateMaxWaitTime();
       populateFallbackDropDown();
     }
 
