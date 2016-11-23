@@ -28,10 +28,10 @@
                 <div class="no-data" ng-if="nav.onprem === nav.noData">{{nav.onprem}}</div>
                 <div ng-if="nav.onprem !== nav.noData">
                     <div class="call-counts">{{nav.onprem}}
-                        <span ng-if="nav.onprem && nav.onprem !== 0 && nav.clusterId === nav.allClusters" ng-init="popoverOpened1=false" ng-mouseover="popoverOpened1=true" 
+                        <span ng-if="nav.onprem && nav.onprem !== 0 && nav.clusterId === nav.allClusters && nav.hostedOnPremisesArray.length > 0" ng-init="popoverOpened1=false" ng-mouseover="popoverOpened1=true" 
                         ng-mouseleave="popoverOpened1=false">
                             <a class="icon icon-info-outline media-tooltip" 
-                                tooltip-template="'modules/mediafusion/media-service-report-v2/historicalMetricsInfoCard/hostedOnPremises.tpl.html'"
+                                tooltip-template="'modules/mediafusion/media-service-report-v2/metrics-report/historicalMetricsInfoCard/hostedOnPremises.tpl.html'"
                                 tooltip-trigger="none" tooltip-placement="bottom-right" tooltip-is-open="popoverOpened1" >
                             </a>
                         </span>
@@ -81,10 +81,10 @@
                 <div class="no-data" ng-if="nav.clusterAvailability === nav.noData">{{nav.clusterAvailability}}</div>
                 <div ng-if="nav.clusterAvailability !== nav.noData">
                     <div class="availability-counts">{{nav.clusterAvailability}} 
-                        <span ng-if="nav.clusterAvailability && nav.clusterId === nav.allClusters" ng-init="popoverOpened1=false" ng-mouseover="popoverOpened1=true" 
+                        <span ng-if="nav.clusterAvailability && nav.clusterId === nav.allClusters && nav.clusterAvailabilityArray.length > 0" ng-init="popoverOpened1=false" ng-mouseover="popoverOpened1=true" 
                         ng-mouseleave="popoverOpened1=false">
                             <a class="icon icon-info-outline media-tooltip" 
-                                tooltip-template="'modules/mediafusion/media-service-report-v2/historicalMetricsInfoCard/clusterAvailabilityTooltip.tpl.html'"
+                                tooltip-template="'modules/mediafusion/media-service-report-v2/metrics-report/historicalMetricsInfoCard/clusterAvailabilityTooltip.tpl.html'"
                                 tooltip-trigger="none" tooltip-placement="bottom-right" tooltip-is-open="popoverOpened1" >
                             </a>
                         </span>

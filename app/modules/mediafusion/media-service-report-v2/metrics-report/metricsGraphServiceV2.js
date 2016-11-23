@@ -3,7 +3,7 @@
 
   angular.module('Mediafusion').service('MetricsGraphServiceV2', MetricsGraphServiceV2);
   /* @ngInject */
-  function MetricsGraphServiceV2($translate, CommonMetricsGraphServiceV2, chartColors, $window) {
+  function MetricsGraphServiceV2($translate, CommonMetricsGraphServiceV2, chartColors, $window, $rootScope) {
     // Keys for base variables in CommonMetricsGraphServiceV2
     var COLUMN = 'column';
     var AXIS = 'axis';
@@ -167,7 +167,7 @@
       chart.zoomToIndexes(chart.dataProvider.length - 40, chart.dataProvider.length - 1);
     }
 
-    function callVolumeGraphs(data, cluster) {
+    function callVolumeGraphs(data, cluster, displayHistorical) {
       var colors = ['colorOne', 'colorTwo'];
       var values = ['active_calls', 'call_reject'];
       var secondaryColors = [data[0].colorOne, data[0].colorTwo];
@@ -181,6 +181,11 @@
       var graphs = [];
       for (var i = 0; i < values.length; i++) {
         graphs.push(CommonMetricsGraphServiceV2.getBaseVariable(COLUMN));
+        if (displayHistorical) {
+          graphs[i].columnWidth = 4;
+        } else {
+          graphs[i].columnWidth = 0.5;
+        }
         graphs[i].title = titles[i];
         graphs[i].fillColors = colors[i];
         graphs[i].colorField = colors[i];
@@ -211,19 +216,27 @@
         return;
       } else if (callVolumeChart !== null && !_.isUndefined(callVolumeChart)) {
         var startDuration = 0;
-        if (!data[0].balloon) {
+        if (displayHistorical) {
+          startDuration = 1;
+          if (!data[0].balloon) {
+            startDuration = 0;
+          }
+        } else {
           startDuration = 0;
+          if (!data[0].balloon) {
+            startDuration = 0;
+          }
         }
         callVolumeChart = createCallVolumeGraph(data, cluster, daterange, displayHistorical);
         callVolumeChart.dataProvider = data;
-        callVolumeChart.graphs = callVolumeGraphs(data, cluster);
+        callVolumeChart.graphs = callVolumeGraphs(data, cluster, displayHistorical);
         callVolumeChart.startDuration = startDuration;
         callVolumeChart.validateData();
         return callVolumeChart;
       } else {
         callVolumeChart = createCallVolumeGraph(data, cluster, daterange, displayHistorical);
         callVolumeChart.dataProvider = data;
-        callVolumeChart.graphs = callVolumeGraphs(data, cluster);
+        callVolumeChart.graphs = callVolumeGraphs(data, cluster, displayHistorical);
         callVolumeChart.startDuration = startDuration;
         callVolumeChart.validateData();
         return callVolumeChart;
@@ -402,6 +415,15 @@
         });
       }
       var valueAxis = createValueAxis(data);
+      var catAxes = CommonMetricsGraphServiceV2.getBaseVariable(AXIS);
+      catAxes.listeners = [{
+        "event": "clickItem",
+        "method": function (event) {
+          $rootScope.$broadcast('clusterClickEvent', {
+            data: event.value
+          });
+        }
+      }];
       var exportFields = ['startTime', 'endTime', 'nodes', 'availability', 'category'];
       var columnNames = {};
       if (cluster === allClusters) {
@@ -428,17 +450,17 @@
         valueScrollbar = null;
       }
       var ExportFileName = 'MediaService_Availability_' + cluster + '_' + daterange + '_' + new Date();
-      var chartData = CommonMetricsGraphServiceV2.getGanttGraph(data.data[0].clusterCategories, valueAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames), valueScrollbar);
+      var chartData = CommonMetricsGraphServiceV2.getGanttGraph(data.data[0].clusterCategories, valueAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames), catAxes, valueScrollbar);
       chartData.legend = CommonMetricsGraphServiceV2.getBaseVariable(LEGEND);
       chartData.legend.labelText = '[[title]]';
       chartData.legend.data = legend;
-      chartData.graphs = [{
-        "showHandOnHover": true
-      }];
+      chartData.graph.showHandOnHover = true;
       chartData.listeners = [{
         "event": "clickGraphItem",
-        "method": function () {
-          $window.open("www.google.com/" + chartData.legend.labelText);
+        "method": function (event) {
+          $rootScope.$broadcast('clusterClickEvent', {
+            data: event.item.category
+          });
         }
       }];
       var chart = null;

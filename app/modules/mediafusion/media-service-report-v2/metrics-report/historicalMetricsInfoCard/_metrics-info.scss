@@ -82,6 +82,22 @@
   padding-top: 10px;
   color: #808080;
 }
+.tooltipDiv{
+  text-align: left;
+}
+.tooltipDiv > h1{
+  font-weight: bold;
+  font-size: .9rem;
+  text-align: left;
+  color: #026f97; 
+}
+.tooltipDiv > hr {
+  border: solid #0394c9;
+  border-width: 1px 0 0;
+  clear: both;
+  height: 0;
+  margin: .25rem 0 .1rem;
+}
 .media-tooltip{
   color: #E39A20;
   font-size: 1rem;
@@ -101,7 +117,7 @@
   border-color: transparent transparent #0393C9 transparent;
 }
 .lowPerformingCluster{
-  color: #D03D35; 
+  color: #a52d27; 
   font-weight: bold;
   font-size: .8rem;
 }
@@ -109,7 +125,7 @@
   color: #F98E89; 
 }
 .performingCluster{
-  color: #398F38; 
+  color: #255c24; 
   font-weight: bold;
   font-size: .8rem;
 }
