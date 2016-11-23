@@ -6,8 +6,28 @@
     .controller('AANewTreatmentModalCtrl', AANewTreatmentModalCtrl);
 
   /* @ngInject */
-  function AANewTreatmentModalCtrl($modalInstance, $translate, $scope, AACommonService, AutoAttendantCeMenuModelService, AAUiModelService, aa_schedule, aa_menu_id, aa_index, aa_key_index) {
+  function AANewTreatmentModalCtrl($modalInstance, $translate, $scope, AALanguageService, AACommonService, AutoAttendantCeMenuModelService, AAUiModelService, aa_schedule, aa_menu_id, aa_index, aa_key_index, aa_from_route_call) {
     var vm = this;
+
+    var properties = {
+      LABEL: "label"
+    };
+
+    vm.actionEntry = {};
+
+    vm.showLanguageAndVoiceOptions = false;
+
+    var languageOption = {
+      label: '',
+      value: ''
+    };
+
+    var voiceOption = {
+      label: '',
+      value: ''
+    };
+
+    vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
 
     vm.destinationOptions = [{
       label: $translate.instant('autoAttendant.destinations.Disconnect'),
@@ -50,11 +70,23 @@
     vm.ok = ok;
     vm.isSaveEnabled = isSaveEnabled;
     vm.uploadMohTrigger = uploadMohTrigger;
+
     vm.destination = '';
     vm.fallbackAction = undefined;
     vm.updateFallback = updateFallback;
     vm.updateMaxWaitTime = updateMaxWaitTime;
     vm.saveMoh = saveMoh;
+
+    vm.activate = activate;
+    vm.populateMohRadio = populateMohRadio;
+
+    vm.languageOption = languageOption;
+    vm.voiceOption = voiceOption;
+
+    vm.languageOptions = AALanguageService.getLanguageOptions();
+    vm.voiceOptions = AALanguageService.getVoiceOptions();
+
+    vm.setVoiceOptions = setVoiceOptions;
 
     vm.periodicMinutes = [];
     vm.periodicSeconds = [];
@@ -124,6 +156,23 @@
       return vm.periodicMinute.label == '5';
     }
 
+    function setVoiceOptions() {
+      vm.voiceOptions = _.sortBy(AALanguageService.getVoiceOptions(vm.languageOption), properties.LABEL);
+      setVoiceOption();
+    }
+
+    function setVoiceOption() {
+      if (vm.voiceBackup && _.find(vm.voiceOptions, {
+        "value": vm.voiceBackup.value
+      })) {
+        vm.voiceOption = vm.voiceBackup;
+      } else if (_.find(vm.voiceOptions, AALanguageService.getVoiceOption())) {
+        vm.voiceOption = AALanguageService.getVoiceOption();
+      } else {
+        vm.voiceOption = vm.voiceOptions[0];
+      }
+    }
+
     function populatePeriodicTime() {
       _.times(6, function (i) {
         vm.periodicMinutes.push({
@@ -181,6 +230,11 @@
       } else {
         vm.destination = vm.fallbackAction.getName();
       }
+      vm.languageOptions.sort(AACommonService.sortByProperty('label'));
+      vm.voiceOptions.sort(AACommonService.sortByProperty('label'));
+
+      vm.languageOption = AALanguageService.getLanguageOption();
+      vm.voiceOption = AALanguageService.getVoiceOption();
     }
 
     function populateMohRadio() {
@@ -228,13 +282,14 @@
 
     //get queueSettings menuEntry -> inner menu entry type (moh, initial, periodic...)
     function setUpEntry() {
-      if ($scope.keyIndex && $scope.menuId) { //came from a phone menu
+      if ($scope.keyIndex && $scope.menuId && !$scope.fromRouteCall) { //came from a phone menu
         var phMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         vm.menuEntry = phMenu.entries[$scope.keyIndex];
       } else { //came from a route call
         var ui = AAUiModelService.getUiModel();
         var rcMenu = ui[$scope.schedule];
         vm.menuEntry = rcMenu.entries[$scope.index];
+        vm.showLanguageAndVoiceOptions = true;
       }
       vm.mohPlayAction = vm.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
       vm.iaAction = vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0];
@@ -248,6 +303,7 @@
       $scope.index = aa_index;
       $scope.menuId = aa_menu_id;
       $scope.keyIndex = aa_key_index;
+      $scope.fromRouteCall = aa_from_route_call;
     }
 
     function initializeView() {
@@ -261,6 +317,7 @@
       populateScope();
       setUpEntry();
       initializeView();
+      setVoiceOptions();
     }
 
     function activate() {

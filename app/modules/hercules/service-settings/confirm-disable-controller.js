@@ -6,7 +6,7 @@
     .controller('ConfirmDisableController', DisableConfirmController);
 
   /* @ngInject */
-  function DisableConfirmController($modalInstance, $translate, Authinfo, FusionUtils, Notification, ServiceDescriptor, serviceId) {
+  function DisableConfirmController($modalInstance, $translate, Authinfo, CloudConnectorService, FusionUtils, Notification, ServiceDescriptor, serviceId) {
     var vm = this;
     vm.serviceId = serviceId;
     vm.serviceIconClass = FusionUtils.serviceId2Icon(serviceId);
@@ -17,7 +17,11 @@
 
     vm.confirmDeactivation = function () {
       vm.loading = true;
-      ServiceDescriptor.disableService(serviceId)
+      var disable = ServiceDescriptor.disableService;
+      if (serviceId === 'squared-fusion-gcal') {
+        disable = CloudConnectorService.deactivateService;
+      }
+      disable(serviceId)
         .then(function () {
           $modalInstance.close();
         })

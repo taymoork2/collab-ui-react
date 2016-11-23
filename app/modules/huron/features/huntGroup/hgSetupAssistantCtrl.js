@@ -65,7 +65,7 @@
     vm.removeFallbackDest = removeFallbackDest;
     vm.isErrorFallbackInput = isErrorFallbackInput;
     vm.fallbackSuggestionsAvailable = false;
-    vm.disableVoicemail = false;
+    vm.disableVoicemail = true;
 
     // ==================================================
     // The below methods have elevated access only to be
@@ -76,6 +76,7 @@
     vm.populateFallbackDestination = populateFallbackDestination;
 
     vm.externalRegionCodeFn = getRegionCode;
+    vm.setSelectedFallbackNumber = setSelectedFallbackNumber;
     vm.callDestInputs = ['internal', 'external'];
 
     init();
@@ -83,6 +84,10 @@
     function init() {
       HuntGroupFallbackDataService.reset();
       HuntGroupMemberDataService.reset();
+    }
+
+    function setSelectedFallbackNumber(model) {
+      vm.selectedFallbackNumber = model;
     }
 
     function getRegionCode() {
@@ -228,7 +233,7 @@
     }
 
     function fetchHuntMembers(nameHint) {
-      return $q.when(HuntGroupMemberDataService.fetchHuntMembers(nameHint)).then(function (members) {
+      return $q.when(HuntGroupMemberDataService.fetchHuntMembers(nameHint, true)).then(function (members) {
         if (HuntGroupService.suggestionsNeeded(nameHint)) {
           vm.errorMemberInput = (members && members.length === 0);
         } else {
@@ -260,6 +265,9 @@
       vm.selectedFallbackMember = HuntGroupFallbackDataService.setFallbackMember($item);
       HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get($item, 'selectableNumber.uuid')).then(function (isVoicemailDisabled) {
         vm.disableVoicemail = isVoicemailDisabled;
+      })
+      .catch(function () {
+        vm.disableVoicemail = true;
       });
     }
 
@@ -279,7 +287,7 @@
     }
 
     function fetchFallbackDestination(nameHint) {
-      return $q.when(HuntGroupMemberDataService.fetchMembers(nameHint)).then(function (mems) {
+      return $q.when(HuntGroupMemberDataService.fetchMembers(nameHint, false)).then(function (mems) {
         vm.fallbackSuggestionsAvailable = (mems && mems.length > 0);
         return mems;
       });

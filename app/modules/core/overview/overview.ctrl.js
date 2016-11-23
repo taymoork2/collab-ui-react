@@ -11,6 +11,7 @@
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
     vm.isCSB = Authinfo.isCSB();
+    vm.isDeviceManagement = Authinfo.isDeviceMgmt();
 
     vm.cards = [
       OverviewCardFactory.createMessageCard(),
@@ -87,6 +88,9 @@
         if (status === 200) {
           if (!data.orgSettings.sipCloudDomain) {
             vm.notifications.push(OverviewNotificationFactory.createCloudSipUriNotification());
+          }
+          if (vm.isDeviceManagement && _.isUndefined(data.orgSettings.allowCrashLogUpload)) {
+            vm.notifications.push(OverviewNotificationFactory.createCrashLogNotification());
           }
         } else {
           Log.debug('Get existing org failed. Status: ' + status);
@@ -187,7 +191,10 @@
       });
     }
 
-    forwardEvent('licenseEventHandler', Authinfo.getLicenses());
+    FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
+      forwardEvent('licenseEventHandler', Authinfo.getLicenses(), pstnEnabled);
+    });
+
 
     vm.statusPageUrl = UrlConfig.getStatusPageUrl();
 

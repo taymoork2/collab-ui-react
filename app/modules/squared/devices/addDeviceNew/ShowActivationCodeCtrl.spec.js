@@ -20,8 +20,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
     CsdmEmailService = _CsdmEmailService_;
     Notification = _Notification_;
     ActivationCodeEmailService = _ActivationCodeEmailService_;
-    // $httpBackend = _$httpBackend_;
-    // HuronConfig = _HuronConfig_;
   }));
 
   function initController() {
@@ -141,7 +139,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
     var huronExistingPlace;
     var huronExistingUser;
     var expectedEmailInfo;
-
+    var entitlements;
 
     beforeEach(function () {
       cisUuid = 'testId';
@@ -154,6 +152,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       externalNumber = '4321';
       userEmail = 'user@example.org';
       userFirstName = 'userFirstName';
+      entitlements = ['something', 'else'];
 
       cloudberryNewPlace = {
         state: function () {
@@ -163,6 +162,9 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
                 deviceType: 'cloudberry',
                 type: 'shared',
                 name: deviceName,
+                entitlements: entitlements,
+                directoryNumber: directoryNumber,
+                externalNumber: externalNumber
               },
               recipient: {
                 organizationId: userOrgId,
@@ -276,7 +278,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         });
 
         it('creates a new place and otp', function () {
-          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName);
+          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber);
           expect(CsdmDataModelService.createCodeForExisting).toHaveBeenCalledWith(cisUuid);
           expect(OtpService.getQrCodeUrl).toHaveBeenCalledWith(activationCode);
           expect(controller.activationCode).toBe(activationCode);

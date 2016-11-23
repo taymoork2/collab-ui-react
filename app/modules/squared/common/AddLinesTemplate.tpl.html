@@ -39,7 +39,7 @@
     id="create-place-button"
     class="btn btn--primary"
     ng-disabled="addLines.isDisabled"
-    ng-show="addLines.deviceType === 'huron'"
+    ng-show="addLines.hasNextStep()"
     ng-click="addLines.next()">
     <span translate="common.next"></span>
   </button>
@@ -48,7 +48,7 @@
     id="create-place-button"
     class="btn btn--primary"
     ng-disabled="addLines.isDisabled"
-    ng-show="addLines.deviceType === 'cloudberry'"
+    ng-hide="addLines.hasNextStep()"
     ng-click="addLines.save()">
     <span translate="common.save"></span>
   </button>

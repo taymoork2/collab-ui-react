@@ -7,7 +7,7 @@
 
 
   /* @ngInject */
-  function AARouteToQueueCtrl($scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
+  function AARouteToQueueCtrl($scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AANotificationService) {
 
     var vm = this;
     vm.hideQueues = true;
@@ -37,15 +37,14 @@
     var rtQueue = 'routeToQueue';
     var fromRouteCall = false;
 
-    var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
+/*    var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
     var play = 'play';
     var say = 'say';
     var disconnect = 'disconnect';
     var maxWaitTime = {
       index: '14',
       label: '15'
-    };
-
+    };*/
 
     /////////////////////
 
@@ -93,6 +92,9 @@
           aa_key_index: function () {
             return $scope.keyIndex;
           },
+          aa_from_route_call: function () {
+            return $scope.fromRouteCall;
+          }
         },
         modalClass: 'aa-queue-settings-modal'
       });
@@ -105,14 +107,18 @@
       } else {
         vm.queueSelected.id = vm.menuKeyEntry.actions[0].getValue();
       }
-      vm.queues = JSON.parse($scope.queues);
-      if (vm.queueSelected.id == '' && vm.hideQueues && vm.queues.length > 0) {
-        vm.queueSelected = vm.queues[0];
-        saveUiModel();
+      try {
+        vm.queues = JSON.parse($scope.queues);
+        if (vm.queueSelected.id == '' && vm.hideQueues && vm.queues.length > 0) {
+          vm.queueSelected = vm.queues[0];
+          saveUiModel();
+        }
+        vm.queueSelected.description = _.result(_.find(vm.queues, {
+          'id': vm.queueSelected.id
+        }), 'description', '');
+      } catch (e) {
+        AANotificationService.error('No valid queue configured to display Call Queue option.');
       }
-      vm.queueSelected.description = _.result(_.find(vm.queues, {
-        'id': vm.queueSelected.id
-      }), 'description', '');
     }
 
     function saveUiModel() {
@@ -122,6 +128,38 @@
         vm.menuKeyEntry.actions[0].setValue(vm.queueSelected.id);
       }
       AACommonService.setPhoneMenuStatus(true);
+    }
+
+    // This function is called from activateQueueSettings.
+    // It adds the appropriate action (i.e. say or play) to the queueSettings.
+    function createAction(obj, type, sayOrPlay) {
+      var action;
+      obj[type] = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      action = AutoAttendantCeMenuModelService.newCeActionEntry(sayOrPlay, '');
+      obj[type].addAction(action);
+    }
+
+    // This function is called from activate.
+    // It is checking and creating queueSettings (i.e. MoH, IA, PA, FB).
+    function activateQueueSettings(menuEntryParam) {
+      var queueSettings = _.get(menuEntryParam, 'actions[0].queueSettings');
+
+      if (!_.has(queueSettings, 'musicOnHold')) {
+        createAction(queueSettings, 'musicOnHold', 'play');
+      }
+      if (!_.has(queueSettings, 'initialAnnouncement')) {
+        createAction(queueSettings, 'initialAnnouncement', 'say');
+      }
+      if (!_.has(queueSettings, 'periodicAnnouncement')) {
+        createAction(queueSettings, 'periodicAnnouncement', 'say');
+      }
+      if (!_.has(queueSettings, 'fallBack')) {
+        queueSettings.fallback = {};
+        queueSettings.fallback.destination = "";
+      }
+      if (!_.has(queueSettings, 'maxTime')) {
+        queueSettings.maxTime = '900'; //default, 15 mins.
+      }
     }
 
     function activate() {
@@ -141,6 +179,11 @@
             vm.menuEntry.actions[0].setValue('');
           } // else let saved value be used
         }
+        if (!_.has(_.get(vm.menuEntry, 'actions[0]'), 'queueSettings')) {
+          vm.menuEntry.actions[0].queueSettings = {};
+        }
+
+        activateQueueSettings(vm.menuEntry);
       } else {
         vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         if ($scope.keyIndex < vm.menuEntry.entries.length) {
@@ -150,10 +193,11 @@
           var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtQueue, '');
           vm.menuKeyEntry.addAction(action);
         }
-        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings)) {
+        if (!_.has(_.get(vm.menuKeyEntry, 'actions[0]'), 'queueSettings')) {
           vm.menuKeyEntry.actions[0].queueSettings = {};
         }
-        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.musicOnHold)) {
+
+        /*if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.musicOnHold)) {
           vm.menuKeyEntry.actions[0].queueSettings.musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
           var mohAction = AutoAttendantCeMenuModelService.newCeActionEntry(play, CISCO_STD_MOH_URL);
           vm.menuKeyEntry.actions[0].queueSettings.musicOnHold.addAction(mohAction);
@@ -176,7 +220,10 @@
         }
         if (angular.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.maxWaitTime)) {
           vm.menuKeyEntry.actions[0].queueSettings.maxWaitTime = maxWaitTime;
-        }
+        }*/
+
+        activateQueueSettings(vm.menuKeyEntry);
+
       }
 
       populateUiModel();

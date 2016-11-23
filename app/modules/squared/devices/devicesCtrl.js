@@ -30,6 +30,12 @@
           FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
             vm.showDarling = result;
           });
+          FeatureToggleService.csdmATAGetStatus().then(function (result) {
+            vm.showATA = result;
+          });
+          FeatureToggleService.csdmPstnGetStatus().then(function (result) {
+            vm.showPstn = result && Authinfo.isSquaredUC();
+          });
         }
 
         function fetchDetailsForLoggedInUser() {
@@ -76,7 +82,10 @@
         };
 
         vm.existsDevices = function () {
-          return (vm.shouldShowList() && CsdmDataModelService.hasDevices());
+          if (!vm._existsDevices) {
+            vm._existsDevices = (vm.shouldShowList() && CsdmDataModelService.hasDevices());
+          }
+          return vm._existsDevices;
         };
 
         vm.shouldShowList = function () {
@@ -172,6 +181,7 @@
               function: "addDevice",
               showPlaces: false,
               showDarling: vm.showDarling,
+              showATA: vm.showATA,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isEntitledToHuron(),
               isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
@@ -196,7 +206,9 @@
                 next: 'addDeviceFlow.showActivationCode'
               },
               'addDeviceFlow.chooseSharedSpace': {
-                next: 'addDeviceFlow.showActivationCode'
+                nextOptions: {
+                  cloudberry_existing: 'addDeviceFlow.showActivationCode'
+                }
               },
               'addDeviceFlow.showActivationCode': {}
             }
@@ -208,6 +220,7 @@
             data: {
               function: "addDevice",
               showPlaces: true,
+              showATA: vm.showATA,
               showDarling: vm.showDarling,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isEntitledToHuron(),
@@ -240,9 +253,16 @@
               },
               'addDeviceFlow.chooseSharedSpace': {
                 nextOptions: {
-                  cloudberry: 'addDeviceFlow.showActivationCode',
+                  cloudberry_existing: 'addDeviceFlow.showActivationCode',
+                  cloudberry_create: vm.showPstn && vm.showPlaces ? 'addDeviceFlow.editServices' : 'addDeviceFlow.showActivationCode',
                   huron_existing: 'addDeviceFlow.showActivationCode',
                   huron_create: 'addDeviceFlow.addLines'
+                }
+              },
+              'addDeviceFlow.editServices': {
+                nextOptions: {
+                  sparkCall: 'addDeviceFlow.addLines',
+                  sparkOnly: 'addDeviceFlow.showActivationCode'
                 }
               },
               'addDeviceFlow.addLines': {

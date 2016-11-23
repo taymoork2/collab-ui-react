@@ -6,7 +6,8 @@
 
   /* @ngInject */
   function PstnSetupService($q, $translate, Authinfo, Notification, PstnSetup, TerminusCarrierService,
-    TerminusCustomerService, TerminusCustomerCarrierService, TerminusOrderService,
+    TerminusCustomerService, TerminusCustomerV2Service, TerminusCustomerTrialV2Service,
+    TerminusCustomerCarrierService, TerminusOrderService,
     TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch,
     TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease,
     TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease,
@@ -49,8 +50,11 @@
 
     var service = {
       createCustomer: createCustomer,
+      createCustomerV2: createCustomerV2,
       updateCustomerCarrier: updateCustomerCarrier,
       getCustomer: getCustomer,
+      getCustomerV2: getCustomerV2,
+      getCustomerTrialV2: getCustomerTrialV2,
       listDefaultCarriers: listDefaultCarriers,
       getCarrierInventory: getCarrierInventory,
       getCarrierTollFreeInventory: getCarrierTollFreeInventory,
@@ -110,6 +114,23 @@
       return TerminusCustomerService.save({}, payload).$promise;
     }
 
+    function createCustomerV2(uuid, name, firstName, lastName, email, pstnCarrierId, trial) {
+      var payload = {
+        uuid: uuid,
+        name: name,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        pstnCarrierId: pstnCarrierId,
+        trial: trial
+      };
+
+      if (PstnSetup.isResellerExists()) {
+        payload.resellerId = Authinfo.getOrgId();
+      }
+      return TerminusCustomerV2Service.save({}, payload).$promise;
+    }
+
     function updateCustomerCarrier(customerId, pstnCarrierId) {
       var payload = {
         pstnCarrierId: pstnCarrierId
@@ -121,6 +142,18 @@
 
     function getCustomer(customerId) {
       return TerminusCustomerService.get({
+        customerId: customerId
+      }).$promise;
+    }
+
+    function getCustomerV2(customerId) {
+      return TerminusCustomerV2Service.get({
+        customerId: customerId
+      }).$promise;
+    }
+
+    function getCustomerTrialV2(customerId) {
+      return TerminusCustomerTrialV2Service.get({
         customerId: customerId
       }).$promise;
     }

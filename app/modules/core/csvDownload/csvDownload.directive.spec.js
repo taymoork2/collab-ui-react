@@ -12,7 +12,7 @@ describe('Directive: csvDownload', function () {
     $q = _$q_;
     $window = _$window_;
     $scope = $rootScope.$new();
-    spyOn(FeatureToggleService, 'atlasNewUserExportGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasNewUserExportGetStatus').and.returnValue($q.when(false));
   }));
 
   describe("Controller", function () {

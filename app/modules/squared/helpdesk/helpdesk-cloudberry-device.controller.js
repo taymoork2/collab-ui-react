@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskCloudberryDeviceController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskLogService, Authinfo, $window, WindowLocation) {
+  function HelpdeskCloudberryDeviceController($stateParams, $window, Authinfo, HelpdeskLogService, HelpdeskService, Notification, WindowLocation) {
     $('body').css('background', 'white');
     var vm = this;
     vm.deviceId = $stateParams.id;
@@ -19,7 +19,11 @@
       };
     }
 
-    HelpdeskService.getCloudberryDevice(vm.orgId, vm.deviceId).then(initDeviceView, XhrNotificationService.notify);
+    vm._helpers = {
+      notifyError: notifyError
+    };
+
+    HelpdeskService.getCloudberryDevice(vm.orgId, vm.deviceId).then(initDeviceView, vm._helpers.notifyError);
 
     function initDeviceView(device) {
       vm.device = device;
@@ -27,7 +31,7 @@
         // Only if there is no displayName. If set, the org name has already been read (on the search page)
         HelpdeskService.getOrgDisplayName(vm.orgId).then(function (displayName) {
           vm.org.displayName = displayName;
-        }, XhrNotificationService.notify);
+        }, vm._helpers.notifyError);
       }
       if (isAuthorizedForLog()) {
         HelpdeskLogService.searchForLastPushedLog(vm.device.cisUuid).then(function (log) {
@@ -52,6 +56,10 @@
       if (event.keyCode === 27) { // Esc
         $window.history.back();
       }
+    }
+
+    function notifyError(response) {
+      Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
     }
   }
 

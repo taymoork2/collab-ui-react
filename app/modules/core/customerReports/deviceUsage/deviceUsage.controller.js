@@ -6,7 +6,7 @@
     .controller('DeviceUsageCtrl', DeviceUsageCtrl);
 
   /* @ngInject */
-  function DeviceUsageCtrl($log, $q, $translate, $state, $scope, DeviceUsageTotalService, Notification, deviceUsageFeatureToggle, DeviceUsageCommonService, DeviceUsageSplunkMetricsService) {
+  function DeviceUsageCtrl($log, $q, $translate, $scope, DeviceUsageTotalService, Notification, DeviceUsageSplunkMetricsService, ReportConstants, CardUtils) {
     var vm = this;
     var amChart;
     var apiToUse = 'backend';
@@ -23,7 +23,41 @@
     vm.noDataForRange = false;
 
     var dateRange;
+    var missingDays;
     vm.exportRawData = exportRawData;
+
+    vm.tabs = [
+      {
+        title: $translate.instant('reportsPage.usageReports.all'),
+        state: 'reports.device-usage'
+      }
+    ];
+
+    vm.timeUpdate = timeUpdate;
+
+    vm.timeOptions = _.cloneDeep(ReportConstants.timeFilter);
+    vm.timeSelected = vm.timeOptions[0];
+
+    function timeUpdate() {
+      DeviceUsageSplunkMetricsService.reportClick(DeviceUsageSplunkMetricsService.eventTypes.timeRangeSelected, vm.timeSelected);
+      vm.deviceFilter = vm.deviceOptions[0];
+      switch (vm.timeSelected.value) {
+        case 0:
+          loadLastWeek();
+          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
+          break;
+        case 1:
+          loadLastMonth();
+          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(4, 'week');
+          break;
+        case 2:
+          loadLast3Months();
+          dateRange = DeviceUsageTotalService.getDateRangeForPeriod(3, 'month');
+          break;
+        default:
+          loadLastWeek();
+      }
+    }
 
     vm.deviceOptions = [
       {
@@ -82,31 +116,6 @@
       return extract;
     }
 
-    if (!deviceUsageFeatureToggle) {
-      // simulate a 404
-      $state.go('login');
-    }
-
-    $scope.$on('time-range-changed', function (event, timeSelected) {
-      vm.deviceFilter = vm.deviceOptions[0];
-      switch (timeSelected.value) {
-        case 0:
-          loadLastWeek();
-          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
-          break;
-        case 1:
-          loadLastMonth();
-          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(4, 'week');
-          break;
-        case 2:
-          loadLast3Months();
-          dateRange = DeviceUsageTotalService.getDateRangeForPeriod(3, 'month');
-          break;
-        default:
-          loadLastWeek();
-      }
-    });
-
     $scope.$watch(function () {
       return angular.element('#device-usage-total-chart').is(':visible');
     }, init);
@@ -126,9 +135,8 @@
       loadInitData();
     }
 
-
     function loadInitData() {
-      switch (DeviceUsageCommonService.getTimeSelected()) {
+      switch (vm.timeSelected.value) {
         case 0:
           loadLastWeek();
           dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
@@ -179,6 +187,9 @@
       amChart.dataProvider = data;
       if (title) {
         amChart.categoryAxis.title = title;
+        if (missingDays) {
+          amChart.categoryAxis.title += missingDays;
+        }
       }
       amChart.validateData();
       vm.showDevices = false;
@@ -191,6 +202,7 @@
     }
 
     function loadLastWeek() {
+      missingDays = null;
       var missingDaysDeferred = $q.defer();
       missingDaysDeferred.promise.then(handleMissingDays);
       vm.loading = true;
@@ -200,6 +212,7 @@
     }
 
     function loadLastMonth() {
+      missingDays = null;
       var missingDaysDeferred = $q.defer();
       missingDaysDeferred.promise.then(handleMissingDays);
       vm.loading = true;
@@ -209,6 +222,7 @@
     }
 
     function loadLast3Months() {
+      missingDays = null;
       var missingDaysDeferred = $q.defer();
       missingDaysDeferred.promise.then(handleMissingDays);
       vm.loading = true;
@@ -219,8 +233,10 @@
 
     function handleMissingDays(info) {
       //$log.info('missingDays', info);
-      var warning = 'Data missing for ' + info.nbrOfMissingDays + ' days';
-      Notification.notify([warning], 'warning');
+      var nbrOfMissingDays = info.missingDays.length;
+      var warning = $translate.instant('reportsPage.usageReports.missingDays', { nbrOfMissingDays: nbrOfMissingDays }); //' (Data missing for ' + nbrOfMissingDays + ' days)';
+      missingDays = warning;
+      //Notification.notify([warning], 'warning');
     }
 
     function rollOverGraphItem(event) {
@@ -247,21 +263,25 @@
       vm.noOfCalls = stats.noOfCalls;
       vm.noOfDevices = stats.noOfDevices;
 
-      DeviceUsageTotalService.resolveDeviceData(stats.most)
-        .then(function (deviceInfo) {
-          vm.mostUsedDevices = [];
-          _.each(stats.most, function (topDevice, index) {
-            vm.mostUsedDevices.push({ "name": deviceInfo[index].displayName, "duration": formatSecondsToHrsMinSec(topDevice.totalDuration), "calls": topDevice.callCount });
-          });
-        });
+      vm.mostUsedDevices = [];
+      vm.leastUsedDevices = [];
 
-      DeviceUsageTotalService.resolveDeviceData(stats.least)
+      resolveDeviceData(stats.most, vm.mostUsedDevices)
+        .then(resolveDeviceData(stats.least, vm.leastUsedDevices))
+        .then(reInstantiateMasonry);
+    }
+
+    function resolveDeviceData(stats, target) {
+      return DeviceUsageTotalService.resolveDeviceData(stats)
         .then(function (deviceInfo) {
-          vm.leastUsedDevices = [];
-          _.each(stats.least, function (bottomDevice, index) {
-            vm.leastUsedDevices.push({ "name": deviceInfo[index].displayName, "duration": formatSecondsToHrsMinSec(bottomDevice.totalDuration), "calls": bottomDevice.callCount });
+          _.each(stats, function (device, index) {
+            target.push({ "name": deviceInfo[index].displayName, "duration": formatSecondsToHrsMinSec(device.totalDuration), "calls": device.callCount });
           });
         });
+    }
+
+    function reInstantiateMasonry() {
+      CardUtils.resize(0, 'cs-card-layout');
     }
 
     function pad(num, size) {

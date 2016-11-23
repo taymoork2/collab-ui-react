@@ -12,6 +12,7 @@
       getData: getData,
       reset: reset,
       createPstnEntity: createPstnEntity,
+      createPstnEntityV2: createPstnEntityV2,
       resetAddress: resetAddress,
     };
 
@@ -73,6 +74,17 @@
         .then(_.partial(createCustomerSite, customerOrgId));
     }
 
+    function createPstnEntityV2(customerOrgId, customerName) {
+      if (_trialData.details.pstnProvider.apiImplementation === "SWIVEL") {
+        _trialData.details.pstnNumberInfo.numbers = _trialData.details.swivelNumbers;
+        _trialData.details.pstnContractInfo.companyName = customerName;
+      }
+      return createPstnCustomerV2(customerOrgId)
+        .then(_.partial(reserveNumbersWithCustomer, customerOrgId))
+        .then(_.partial(orderNumbers, customerOrgId))
+        .then(_.partial(createCustomerSite, customerOrgId));
+    }
+
     function reserveNumbers() {
       if (_trialData.details.pstnProvider.apiImplementation !== "SWIVEL") {
         return PstnSetupService.reserveCarrierInventory(
@@ -80,6 +92,22 @@
           _trialData.details.pstnProvider.uuid,
           _trialData.details.pstnNumberInfo.numbers,
           false
+        ).catch(function (response) {
+          Notification.errorResponse(response, 'trialModal.pstn.error.reserveFail');
+          return $q.reject(response);
+        });
+      } else {
+        return $q.resolve();
+      }
+    }
+
+    function reserveNumbersWithCustomer(customerOrgId) {
+      if (_trialData.details.pstnProvider.apiImplementation !== "SWIVEL") {
+        return PstnSetupService.reserveCarrierInventory(
+          customerOrgId,
+          _trialData.details.pstnProvider.uuid,
+          _trialData.details.pstnNumberInfo.numbers,
+          true
         ).catch(function (response) {
           Notification.errorResponse(response, 'trialModal.pstn.error.reserveFail');
           return $q.reject(response);
@@ -98,6 +126,21 @@
         _trialData.details.pstnContractInfo.email,
         _trialData.details.pstnProvider.uuid,
         _trialData.details.pstnNumberInfo.numbers,
+        _trialData.details.isTrial
+      ).catch(function (response) {
+        Notification.errorResponse(response, 'trialModal.pstn.error.customerFail');
+        return $q.reject(response);
+      });
+    }
+
+    function createPstnCustomerV2(customerOrgId) {
+      return PstnSetupService.createCustomerV2(
+        customerOrgId,
+        _trialData.details.pstnContractInfo.companyName,
+        _trialData.details.pstnContractInfo.signeeFirstName,
+        _trialData.details.pstnContractInfo.signeeLastName,
+        _trialData.details.pstnContractInfo.email,
+        _trialData.details.pstnProvider.uuid,
         _trialData.details.isTrial
       ).catch(function (response) {
         Notification.errorResponse(response, 'trialModal.pstn.error.customerFail');

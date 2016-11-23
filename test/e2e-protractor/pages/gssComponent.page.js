@@ -1,13 +1,13 @@
 'use strict';
 
-var ComponentPage = function () {
+var GSSComponentPage = function () {
   this.newComponentName = 'e2e-gss-component';
   this.newGroupName = 'e2e-gss-group';
   this.updatedGroupName = 'e2e-gss-group-updated';
   this.componentMain = element(by.css('.component-page'));
   this.serviceSelector = element(by.css('#serviceSelector'));
   this.tabLink = element(by.css('a[href="#/gss/components"]'));
-  this.serviceSelectorFirstChild = element(by.css('.status .select-options li a'));
+  this.serviceSelectorFirstChild = element(by.css('.gss-iframe .select-options li a'));
   this.addComponentBtn = element(by.cssContainingText('button', 'Add A Component'));
   this.addComponent = element(by.css('.add-component'));
   this.addComponentGroupSelect = element(by.css('.add-component-page .dropdown a.select-toggle'));
@@ -30,4 +30,4 @@ var ComponentPage = function () {
     navigation.expectCurrentUrl('/gss/component');
   }
 };
-module.exports = ComponentPage;
+module.exports = GSSComponentPage;

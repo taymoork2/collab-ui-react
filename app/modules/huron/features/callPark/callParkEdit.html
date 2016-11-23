@@ -1,0 +1,90 @@
+<cs-page-header
+  title="{{$ctrl.title}}"
+  back="true"
+  back-url="$ctrl.huronFeaturesUrl">
+</cs-page-header>
+<div class="save-section cp-save" ng-if="$ctrl.form.$dirty">
+  <p translate="callPark.saveLabel"></p>
+  <button cs-btn ng-click="$ctrl.onCancel()">
+    <span translate="common.cancel"></span>
+  </button>
+  <button cs-btn
+    class="btn btn--primary"
+    loading="$ctrl.saveInProcess"
+    ng-click="$ctrl.save()"
+    ng-disabled="$ctrl.form.$invalid || $ctrl.saveInProcess">
+    <span translate="common.save"></span>
+  </button>
+</div>
+<div class="call-feature-edit">
+  <div ng-if="$ctrl.isLoading" class="load">
+    <i class='icon icon-spinner'></i>
+  </div>
+  <div ng-if="!$ctrl.isLoading">
+    <form novalidate class="cs-form" name="$ctrl.form" role="form">
+      <div class="cs-form__section">
+        <div class="section__info">
+          <h4 class="section__title" translate="callPark.settingsTitle"></h4>
+        </div>
+        <div class="section__content">
+          <div class="sub-section">
+            <h5 class="sub-section__title" translate="callPark.nameLabel"></h5>
+            <p class="sub-section__description" translate="callPark.nameDesc"></p>
+            <uc-call-feature-name
+              placeholder-key="callPark.namePlaceholder"
+              name-hint-key="callPark.nameHint"
+              name="$ctrl.callPark.name"
+              is-required="true"
+              is-new="false"
+              on-change-fn="$ctrl.setCallParkName(name)"
+              on-key-press-fn="$ctrl.enterNextPage(keyCode)"
+              ng-class="$ctrl.animation">
+            </uc-call-feature-name>
+          </div>
+          <div class="sub-section">
+            <h5 class="sub-section__title" translate="callPark.numberLabel"></h5>
+            <p class="sub-section__description" translate="callPark.numberDesc"></p>
+            <uc-call-park-number
+              range="$ctrl.range"
+              extension-length="$ctrl.extensionLength"
+              on-change-fn="$ctrl.setCallParkRange(range)">
+            </uc-call-park-number>
+          </div>
+        </div>
+      </div>
+
+      <div class="cs-form__section">
+        <div class="section__info">
+          <h4 class="section__title" translate="callPark.reversionTitle"></h4>
+        </div>
+        <div class="section__content">
+          <div class="sub-section">
+            <h5 class="sub-section__title" translate="callPark.reversionRuleLabel"></h5>
+            <p class="sub-section__description" translate="callPark.reversionRuleDesc"></p>
+            <uc-call-park-reversion
+              fallback-destination="$ctrl.callPark.fallbackDestination"
+              on-member-removed-fn="$ctrl.onCallParkFallbackDestinationMemberRemoved()"
+              on-change-fn="$ctrl.setCallParkFallbackDestination(fallbackDestination)">
+            </uc-call-park-reversion>
+          </div>
+        </div>
+      </div>
+
+      <div class="cs-form__section">
+        <div class="section__info">
+          <h4 class="section__title" translate="callPark.membersTitle"></h4>
+        </div>
+        <div class="section__content">
+          <div class="sub-section">
+            <h5 class="sub-section__title" translate="callPark.memberLabel"></h5>
+            <p class="sub-section__description" translate="callPark.memberDesc"></p>
+            <uc-call-park-member
+              members="$ctrl.callPark.members"
+              on-change-fn="$ctrl.setCallParkMembers(members)">
+            </uc-call-park-member>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

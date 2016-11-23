@@ -46,6 +46,7 @@
     vm.validateFallbackNumber = validateFallbackNumber;
     vm.removeFallbackDest = removeFallbackDest;
     vm.checkFallbackDirtiness = checkFallbackDirtiness;
+    vm.setFallbackNumber = setFallbackNumber;
     vm.selectedFallbackMember = undefined;
     vm.disableVoicemail = false;
 
@@ -88,6 +89,10 @@
           });
           $state.go(vm.huronFeaturesUrl);
         });
+    }
+
+    function setFallbackNumber(model) {
+      vm.selectedFallbackNumber = model;
     }
 
     function getRegionCode() {
@@ -150,8 +155,8 @@
       }
     }
 
-    function fetchHuntMembers(nameHint) {
-      return HuntGroupMemberDataService.fetchHuntMembers(nameHint);
+    function fetchHuntMembers(nameHint, onlyMembers) {
+      return HuntGroupMemberDataService.fetchHuntMembers(nameHint, onlyMembers);
     }
 
     function showDisableSave() {
@@ -164,7 +169,10 @@
     }
 
     function shouldShowFallbackPill() {
-      return HuntGroupFallbackDataService.isFallbackValidMember();
+      return (vm.selectedFallbackMember === undefined &&
+      vm.model.fallbackDestination.number &&
+      HuntGroupFallbackDataService.isValidInternalOrgNumber()) ||
+      HuntGroupFallbackDataService.isFallbackValidMember();
     }
 
     function shouldShowFallbackWarning() {
@@ -172,6 +180,7 @@
     }
 
     function removeFallbackDest() {
+      vm.selectedFallbackNumber = undefined;
       vm.selectedFallbackMember = HuntGroupFallbackDataService.removeFallbackMember();
       vm.form.$setDirty();
     }
@@ -189,7 +198,7 @@
     }
 
     function fetchFallbackDestination(nameHint) {
-      return HuntGroupMemberDataService.fetchMembers(nameHint);
+      return HuntGroupMemberDataService.fetchMembers(nameHint, false);
     }
 
     function selectHuntGroupMember(member) {

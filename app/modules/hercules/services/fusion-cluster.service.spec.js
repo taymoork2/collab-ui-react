@@ -79,12 +79,33 @@ describe('Service: FusionClusterService', function () {
       $httpBackend.flush();
     });
 
+    it('should filter out clusters with targetType unknown', function () {
+      $httpBackend
+        .expectGET('http://elg.no/organizations/0FF1C3?fields=@wide')
+        .respond({
+          clusters: [{
+            targetType: 'unknown',
+            connectors: []
+          }, {
+            targetType: 'c_mgmt',
+            connectors: []
+          }]
+        });
+      FusionClusterService.getAll()
+        .then(function (clusters) {
+          expect(clusters.length).toBe(1);
+        })
+        .catch(function () {
+          expect('reject called').toBeFalsy();
+        });
+      $httpBackend.flush();
+    });
+
     it('should add servicesStatuses property to each cluster', function () {
       $httpBackend
         .expectGET('http://elg.no/organizations/0FF1C3?fields=@wide')
         .respond({
           clusters: [{
-            state: 'fused',
             targetType: 'c_mgmt',
             connectors: [{
               alarms: [],
@@ -98,7 +119,6 @@ describe('Service: FusionClusterService', function () {
               hostname: 'b.elg.no'
             }]
           }, {
-            state: 'fused',
             targetType: 'mf_mgmt',
             connectors: [{
               alarms: [],

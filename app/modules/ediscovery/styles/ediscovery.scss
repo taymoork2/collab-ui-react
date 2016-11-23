@@ -148,6 +148,54 @@
         }
       }
 
+      .searchWarning {
+        color: $color-attention-base;
+      }
+
+      .searchByRoom {
+        margin-top: 48px;
+        display: inline-block;
+        width: 50%;
+
+        .cs-input {
+          width: 100%;
+        }
+
+        .cs-datapicker-normal {
+          max-width: 100%;
+        }
+
+        .searchText {
+          float: left;
+          padding-left: 0.5rem;
+        }
+
+        .searchBox {
+          padding-left: 0px;
+        }
+
+        .selectList {
+          width: 50%;
+        }
+
+        .searchButton {
+          float: left;
+          width: 100px;
+        }
+
+        #smallBreak {
+          margin-top: 16px;
+        }
+
+        #midBreak{
+          padding-top: 24px;
+        } 
+
+        #largeBreak {
+          margin-top: 36px;
+        }
+      }
+
       .typeahead-large .input-description::before {
         display: none;
       }

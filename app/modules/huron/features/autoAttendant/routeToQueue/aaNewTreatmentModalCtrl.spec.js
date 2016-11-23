@@ -5,6 +5,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   var $controller, controller;
   var AACommonService;
   var AutoAttendantCeMenuModelService;
+  var AAUiModelService;
 
   var fakePeriodicMinute = [
     {
@@ -88,16 +89,18 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _AACommonService_, _AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _AACommonService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     AACommonService = _AACommonService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    AAUiModelService = _AAUiModelService_;
 
     $scope.schedule = schedule;
     $scope.index = index;
     $scope.menuId = menuId;
     $scope.keyIndex = keyIndex;
+    $scope.fromRouteCall = false;
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     uiMenu = AutoAttendantCeMenuModelService.newCeMenu();
     ui[schedule] = uiMenu;
@@ -131,6 +134,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
       aa_menu_id: menuId,
       aa_index: index,
       aa_key_index: keyIndex,
+      aa_from_route_call: false
     });
   }));
 
@@ -243,6 +247,53 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
       spyOn(AACommonService, 'isValid').and.returnValue(false);
       var save = controller.isSaveEnabled();
       expect(save).toEqual(false);
+    });
+  });
+
+  describe('languageAndVoiceOptions', function () {
+    it('when landed from Phone Menu, showLanguageAndVoiceOptions should be false', function () {
+      var controller = $controller('AANewTreatmentModalCtrl', {
+        $scope: $scope,
+        $modalInstance: modalFake,
+        aa_schedule: schedule,
+        aa_menu_id: menuId,
+        aa_index: index,
+        aa_key_index: keyIndex,
+        aa_from_route_call: false
+      });
+
+      $scope.$apply();
+      controller.activate();
+
+      expect(controller.showLanguageAndVoiceOptions).toBe(false);
+    });
+
+    it('when landed from New Step, showLanguageAndVoiceOptions should be true', function () {
+      $scope.keyIndex = null;
+      spyOn(AAUiModelService, 'getUiModel').and.returnValue(ui);
+
+      var controller = $controller('AANewTreatmentModalCtrl', {
+        $scope: $scope,
+        $modalInstance: modalFake,
+        aa_schedule: schedule,
+        aa_menu_id: menuId,
+        aa_index: index,
+        aa_key_index: keyIndex,
+        aa_from_route_call: true
+      });
+
+      controller.activate();
+      $scope.$apply();
+
+      expect(controller.showLanguageAndVoiceOptions).toBe(true);
+    });
+  });
+
+  describe('populateMoHRadioForCustomMoH', function () {
+    it('should set the musicOnHold to CustomMoH', function () {
+      controller.mohPlayAction.description = VALUE;
+      controller.populateMohRadio();
+      expect(controller.musicOnHold).toEqual(CUSTOM_MOH);
     });
   });
 

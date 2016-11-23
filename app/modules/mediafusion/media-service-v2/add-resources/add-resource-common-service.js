@@ -48,12 +48,12 @@
       //Checking if the host is already present
       if (vm.onlineNodeList.indexOf(hostName) > -1) {
         Notification.error('mediaFusion.add-resource-dialog.serverOnline');
-        return;
+        return $q.reject();
       }
 
       if (vm.offlineNodeList.indexOf(hostName) > -1) {
         Notification.error('mediaFusion.add-resource-dialog.serverOffline');
-        return;
+        return $q.reject();
       }
 
       //Checking if value in selected cluster is in cluster list

@@ -3,12 +3,12 @@ namespace globalsettings {
     private _allowReadOnlyAccess: boolean;
     public disableAllowReadOnlyAccessCheckbox: boolean = true;
     private orgId;
-    private _allowCrashLogUpload = false;
-
+    private _allowCrashLogUpload: boolean;
+    private _showCrashLogSetting: boolean;
     /* @ngInject */
     constructor(private Orgservice, Authinfo, private Notification) {
       this.orgId = Authinfo.getOrgId();
-
+      this._showCrashLogSetting = Authinfo.isDeviceMgmt();
       Orgservice.getOrg((data) => {
         this.orgDataLoaded(data);
       }, this.orgId, false);
@@ -30,7 +30,7 @@ namespace globalsettings {
         if (!_.isUndefined(orgSettings.allowCrashLogUpload)) {
           this._allowCrashLogUpload = orgSettings.allowCrashLogUpload;
         } else {
-          this._allowCrashLogUpload = false;
+          this._allowCrashLogUpload = true;
         }
       }
     }
@@ -42,6 +42,10 @@ namespace globalsettings {
     set allowReadOnlyAccess(value: boolean) {
       this._allowReadOnlyAccess = value;
       this.updateAllowReadOnlyOrgAccess();
+    }
+
+    get showCrashLogSetting(): boolean {
+      return this._showCrashLogSetting;
     }
 
     get allowCrashLogUpload(): boolean {

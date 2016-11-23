@@ -1,0 +1,54 @@
+<div class="incident-list-page">
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <h2 translate="gss.incidents"></h2>
+    </cs-page-sub-header-left>
+
+    <cs-page-sub-header-right>
+      <button id="newIncidentBtn" class="btn btn--primary add-resource-button" type="submit" ui-sref=".new"
+              translate="gss.incidentsPage.newIncidentBtn"></button>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+
+  <div class="incident-section conent-common-style small-12 large-10 xlarge-8">
+    <div ng-if="!incidentsCtrl.hasIncident">
+      <h6 translate="gss.incidentsPage.noIncidentContent1"></h6>
+      <span translate="gss.incidentsPage.noIncidentContent2"></span>
+      <a id="createIncidentLink" ui-sref=".new" translate="gss.incidentsPage.noIncidentContentLink"></a>
+    </div>
+
+    <ul ng-if="incidentsCtrl.hasIncident">
+      <li ng-repeat="incident in incidentsCtrl.list | orderBy:'-incident.lastModifiedTime':true">
+        <div class="row">
+          <div class="columns">{{ ::incident.incidentName }}</div>
+        </div>
+
+        <div class="row">
+          <div class="columns medium-8">
+            <span ng-if="!(incidentsCtrl.isResolved(incident.status))"
+                  translate="gss.incidentsPage.lastUpdatedOn"></span>
+
+            <span ng-if="incidentsCtrl.isResolved(incident.status)" translate="gss.incidentsPage.resolvedOn"></span>
+
+            <span>{{ ::incident.lastModifiedTime | date: "MMM d, y HH:mm" : 'UTC' }} UTC</span>
+          </div>
+
+          <div class="columns medium-4">
+            <a class="pull-right"
+               ng-click="incidentsCtrl.deleteIncident(incident)"
+               translate="common.delete">
+            </a>
+
+            <a class="pull-right"
+               ng-if="!(incidentsCtrl.isResolved(incident.status))" translate="common.update">
+            </a>
+
+            <a class="pull-right"
+               ng-if="incidentsCtrl.isResolved(incident.status)" translate="gss.incidentsPage.viewIncident">
+            </a>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

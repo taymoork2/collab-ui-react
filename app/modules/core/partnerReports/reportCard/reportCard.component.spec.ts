@@ -1,4 +1,5 @@
 import {
+  IExportMenu,
   IReportCard,
   IReportDropdown,
   IReportLabel,
@@ -31,6 +32,7 @@ describe('Component: reportCard', () => {
   const graphLabels: string = 'div.row div.columns.medium-4.label-display';
   const numberLabels: string = graphLabels + ' p.label-number';
   const textLabels: string = graphLabels + ' span.label-text';
+  const exportMenu: string = '.grid-filter.dropdown.pull-right';
 
   beforeEach(function () {
     this.initModules('Core');
@@ -92,9 +94,10 @@ describe('Component: reportCard', () => {
       expect(this.view).toContainElement(chart.replace(id, options.id));
       expect(this.view).not.toContainElement(dropdown.replace(id, options.id));
 
-      // table for the first report section and labels should not be present
+      // table for the first report section, export menu, and labels should not be present
       expect(this.view).not.toContainElement(table);
       expect(this.view).not.toContainElement(graphLabels);
+      expect(this.view).not.toContainElement(exportMenu);
 
       // verify secondary report is not visible, but link to open it is present
       expect(this.view).not.toContainElement(reportTable);
@@ -171,9 +174,15 @@ describe('Component: reportCard', () => {
   });
 
   describe('donut chart, labels, and dropdown:', function () {
-    const dropdownClick = 'div.select-list div.dropdown a.select-toggle';
-    const hiddenSelect = 'select.hidden-select option';
-    const dropdownOptions = 'ul.select-options li a';
+    // html constants
+    const dropdownClick: string = 'div.select-list div.dropdown a.select-toggle';
+    const hiddenSelect: string = 'select.hidden-select option';
+    const dropdownOptions: string = 'ul.select-options li a';
+    const threeDots: string = '.icon.icon-three-dots.export-dots';
+    const clickDots: string = exportMenu + ' a';
+    const exportOptions: string = exportMenu + ' li.export-item';
+
+    // scope variables
     let options: IReportCard = _.cloneDeep(ctrlData.callOptions);
     let labels: Array<IReportLabel> = _.cloneDeep(ctrlData.metricsLabels);
     options.table = undefined;
@@ -193,14 +202,19 @@ describe('Component: reportCard', () => {
       },
     };
 
+    let exportArray: Array<IExportMenu> = _.cloneDeep(ctrlData.exportMenu);
+    exportArray[1].click = jasmine.createSpy('click');
+
     beforeEach(function () {
       this.$scope.timeFilter = timeFilter;
       this.$scope.options = options;
       this.$scope.show = true;
       this.$scope.dropdown = reportDropdown;
       this.$scope.labels = labels;
+      this.$scope.exportArray = exportArray;
       this.compileComponent('reportCard', {
         options: 'options',
+        exportDropdown: 'exportArray',
         dropdown: 'dropdown',
         show: 'show',
         time: 'timeFilter',
@@ -230,9 +244,22 @@ describe('Component: reportCard', () => {
       // table for the first report section should not be present
       expect(this.view).not.toContainElement(table);
 
+      // expect the export menu to be present and manipulatable
+      expect(this.view).toContainElement(exportMenu);
+      expect(this.view).toContainElement(threeDots);
+      expect(this.view).not.toContain(exportOptions);
+      this.view.find(clickDots)[0].click();
+      let view = this.view;
+      _.forEach(exportArray, function (exportItem: IExportMenu, index: number): void {
+        expect(view.find(exportOptions).length).toEqual(exportArray.length);
+        expect(view.find(exportOptions)[index].innerText.trim()).toEqual(exportItem.label);
+      });
+      this.view.find('#' + exportArray[1].id).click();
+      expect(this.view).not.toContain(exportOptions);
+      expect(exportArray[1].click).toHaveBeenCalledTimes(1);
+
       // verify the labels are present
       expect(this.view.find(graphLabels).length).toEqual(3);
-      let view = this.view;
       _.forEach(labels, function (label, index) {
         expect(view.find(numberLabels)[index].innerText).toEqual(label.number.toString());
         expect(view.find(textLabels)[index].innerText).toEqual(label.text);

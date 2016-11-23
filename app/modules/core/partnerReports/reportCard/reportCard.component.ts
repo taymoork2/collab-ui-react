@@ -1,4 +1,5 @@
 import {
+  IExportMenu,
   ITimespan,
   IReportCard,
   IReportDropdown,
@@ -14,6 +15,10 @@ class ReportCardCtrl {
   public labels: Array<IReportLabel>;
   public show: boolean = true;
   public time: ITimespan;
+
+  // export menu
+  public exportDropdown: Array<IExportMenu>;
+  public exportMenu: boolean = false;
 
   // Secondary Report Variables
   public secondaryOptions: ISecondaryReport;
@@ -109,6 +114,18 @@ class ReportCardCtrl {
 
   public isTable(): boolean {
     return this.options.reportType === this.ReportConstants.TABLE;
+  }
+
+  // export menu Controls
+  public dropdownSelect(menuItem: IExportMenu): void {
+    if (menuItem.click) {
+      this.toggleExportMenu();
+      menuItem.click();
+    }
+  }
+
+  public toggleExportMenu(): void {
+    this.exportMenu = !this.exportMenu;
   }
 
   // Secondary Report Controls
@@ -250,6 +267,7 @@ angular.module('Core')
     controller: ReportCardCtrl,
     bindings: {
       dropdown: '<',
+      exportDropdown: '<',
       options: '<',
       labels: '<',
       secondaryOptions: '<',

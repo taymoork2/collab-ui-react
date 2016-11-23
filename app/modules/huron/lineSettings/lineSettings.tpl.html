@@ -44,7 +44,8 @@
             inputs="lineSettings.callForwardInputs"
             select-type="select"
             custom-number-translations="lineSettings.customTranslations"
-            external-number-region-code-fn="lineSettings.getRegionCode()">
+            external-number-region-code-fn="lineSettings.getRegionCode()"
+            on-change-fn="lineSettings.setAllForward(model)">
           </cs-call-destination>
           <input
             cs-input
@@ -73,7 +74,8 @@
             inputs="lineSettings.callForwardInputs"
             select-type="select"
             custom-number-translations="lineSettings.customTranslations"
-            external-number-region-code-fn="lineSettings.getRegionCode()">
+            external-number-region-code-fn="lineSettings.getRegionCode()"
+            on-change-fn="lineSettings.setInternalForward(model)">
           </cs-call-destination>
           <div class="cs-checkbox-group">
             <input
@@ -104,7 +106,8 @@
               inputs="lineSettings.callForwardInputs"
               select-type="select"
               custom-number-translations="lineSettings.customTranslations"
-              external-number-region-code-fn="lineSettings.getRegionCode()">
+              external-number-region-code-fn="lineSettings.getRegionCode()"
+              on-change-fn="lineSettings.setExternalForward(model)">
             </cs-call-destination>
             <input
               cs-input
@@ -126,10 +129,12 @@
         labelfield="label"
         valuefield="value"></cs-select>
       <div ng-if="lineSettings.callerIdInfo.callerIdSelection.label === 'Custom'">
-        <label class="cs-input__label" for="customName" translate="callerIdPanel.customName"></label>
         <input
           cs-input
+          cs-input-label="{{::'callerIdPanel.customName' | translate}}"
+          cs-input-size="medium-12"
           id="customName"
+          name="customName"
           type="text"
           ng-model="lineSettings.callerIdInfo.customName">
         <cs-call-destination
@@ -139,7 +144,8 @@
           inputs="lineSettings.callerIdInputs"
           select-type="select"
           custom-number-translations="lineSettings.customTranslations"
-          external-number-region-code-fn="lineSettings.getRegionCode()">
+          external-number-region-code-fn="lineSettings.getRegionCode()"
+          on-change-fn="lineSettings.setCallerIdNumber(model)">
         </cs-call-destination>
       </div>
       <div class="caller-id-description">

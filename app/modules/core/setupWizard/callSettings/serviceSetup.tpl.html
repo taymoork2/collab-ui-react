@@ -7,7 +7,21 @@
     <div ng-if="squaredUcSetup.showTimezoneAndVoicemail">
       <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswTimeZoneSelection" form="squaredUcSetup.form"></formly-form>
     </div>
-    <div class="row bottom-margin" cr-feature-toggle feature-show="huron-local-dialing">
+    <div class="row service-setup service-setup-regional-settings bottom-margin" cr-feature-toggle feature-show="huron-l10n-user-locale">
+      <label class="control-label" translate="serviceSetupModal.preferredLanguage"></label>
+      <p class="description-block" translate="serviceSetupModal.preferredLanguageDescription"></p>
+      <div class="medium-4">
+        <cs-select
+          name="preferredLanguage"
+          ng-model="squaredUcSetup.model.site.preferredLanguage"
+          options="squaredUcSetup.preferredLanguageOptions"
+          labelfield="label"
+          valuefield="value"
+          filter="false"
+        ></cs-select>
+      </div>
+    </div>
+    <div class="row bottom-margin">
       <h5 class="title-margin-bottom" translate="serviceSetupModal.dialing"></h5>
       <div class="cs-radio-group columns medium-8">
         <input
@@ -50,4 +64,3 @@
     </div>
   </div>
 </form>
-

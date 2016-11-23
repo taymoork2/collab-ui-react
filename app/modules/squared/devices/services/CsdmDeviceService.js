@@ -16,7 +16,7 @@
       });
     }
 
-    function fetchDevice(url) {
+    function fetchItem(url) {
       return $http.get(url).then(function (res) {
         return CsdmConverter.convertCloudberryDevice(res.data);
       });
@@ -27,12 +27,14 @@
     }
 
     function deleteItem(device) {
-      return $http.delete(device.url);
+      return $http.delete(device.url + '?keepPlace=true');
     }
 
     function updateItemName(device, newName) {
       return $http.patch(device.url, {
         name: newName
+      }).then(function (res) {
+        return CsdmConverter.convertCloudberryDevice(res.data);
       });
     }
 
@@ -70,13 +72,12 @@
       deleteItem: deleteItem,
       updateItemName: updateItemName,
       updateTags: updateTags,
-      fetchDevice: fetchDevice,
+      fetchItem: fetchItem,
 
 //Grey list:
-      //on: deviceCache.on,
-      //getDevice: getDevice,
       uploadLogs: uploadLogs,
       deleteDevice: deleteDevice,
+      notifyDevice: notifyDevice,
 
       renewRsuKey: renewRsuKey
     };

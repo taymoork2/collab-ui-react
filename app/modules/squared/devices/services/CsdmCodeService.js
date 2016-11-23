@@ -12,9 +12,17 @@
       });
     }
 
+    function fetchItem(url) {
+      return $http.get(url).then(function (res) {
+        return CsdmConverter.convertCode(res.data);
+      });
+    }
+
     function updateItemName(code, name) {
       return $http.patch(code.url, {
         name: name
+      }).then(function (res) {
+        return CsdmConverter.convertCode(res.data);
       });
     }
 
@@ -46,6 +54,7 @@
 
     return {
       fetchCodes: fetchCodes,
+      fetchItem: fetchItem,
       deleteItem: deleteCode,
       updateTags: updateTags,
       createCode: createCode,

@@ -46,6 +46,12 @@
         prod: 'https://terminus.huron-dev.com/api/v1'
       },
 
+      terminusV2Url: {
+        dev: 'https://terminus.huron-int.com/api/v2',
+        integration: 'https://terminus.huron-int.com/api/v2',
+        prod: 'https://terminus.huron-dev.com/api/v2'
+      },
+
       // TODO: Point to Ocelot micro service when it's ready.
       ocelotUrl: {
         dev: 'https://hermes.huron-int.com/api/v1',
@@ -121,6 +127,16 @@
           return this.terminusUrl.integration;
         } else {
           return this.terminusUrl.prod;
+        }
+      },
+
+      getTerminusV2Url: function () {
+        if (Config.isDev()) {
+          return this.terminusV2Url.dev;
+        } else if (Config.isIntegration()) {
+          return this.terminusV2Url.integration;
+        } else {
+          return this.terminusV2Url.prod;
         }
       },
 

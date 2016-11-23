@@ -8,7 +8,7 @@
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService,
-    ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing, VoicemailMessageAction, FeatureToggleService, Config) {
+    ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing, VoicemailMessageAction, FeatureToggleService, Config, $state) {
     var vm = this;
     vm.loading = true;
 
@@ -19,6 +19,7 @@
         return enabled ? (license.licenseType !== Config.licenseTypes.SHARED_DEVICES || license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
       }).length > 0;
     };
+    vm.bulkVoicemailEnable = false;
     FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
       vm.showRegionAndVoicemail = vm.isRegionAndVoicemail(pstnEnabled);
     });
@@ -150,7 +151,9 @@
         // we only validate this if endNumber is valid or populated
         if (_.isUndefined(scope.model.endNumber) || scope.model.endNumber === "") {
           // trigger validation on endNumber field
-          scope.fields[2].formControl.$validate();
+          if (_.has(scope, 'fields[2].formControl')) {
+            scope.fields[2].formControl.$validate();
+          }
         }
         return true;
       },
@@ -163,9 +166,9 @@
             var beginNumber, endNumber;
             if (scope.index === 0) {
               beginNumber = value;
-              endNumber = scope.fields[2].formControl.$viewValue;
+              endNumber = _.get(scope, 'fields[2].formControl.$viewValue', '');
             } else {
-              beginNumber = scope.fields[0].formControl.$viewValue;
+              beginNumber = _.get(scope, 'fields[0].formControl.$viewValue', '');
               endNumber = value;
             }
             // Skip current range under validation if it's valid, otherwise we get into a validation loop
@@ -247,10 +250,14 @@
 
     vm.siteAndSteeringDigitErrorValidation = function (view, model, scope) {
       if (_.get(vm, 'model.site.siteSteeringDigit.siteDialDigit') === _.get(vm, 'model.site.steeringDigit')) {
-        scope.fields[0].formControl.$setValidity('', false);
+        if (_.has(scope, 'fields[0].formControl')) {
+          scope.fields[0].formControl.$setValidity('', false);
+        }
         return true;
       } else {
-        scope.fields[0].formControl.$setValidity('', true);
+        if (_.has(scope, 'fields[0].formControl')) {
+          scope.fields[0].formControl.$setValidity('', true);
+        }
         return false;
       }
     };
@@ -295,7 +302,9 @@
               vm.model.displayNumberRanges[i].endNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_endNumber_2'].$viewValue, '9');
             }
             scope.resetModel();
-            scope.formControl.$setDirty();
+            if (scope.formControl) {
+              scope.formControl.$setDirty();
+            }
           }
           vm.model.site.extensionLength = vm.model.previousLength;
           vm.extensionLengthChanged = true;
@@ -555,6 +564,26 @@
       },
     }];
 
+    FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
+      vm.internationalDialingSelection = [{
+        type: 'switch',
+        key: 'internationalDialingEnabled',
+        className: 'international-dialing',
+        templateOptions: {
+          label: $translate.instant('internationalDialing.internationalDialing'),
+          description: $translate.instant(result
+            ? 'internationalDialing.internationalDialingPlacesDesc'
+            : 'internationalDialing.internationalDialingDesc')
+        },
+        expressionProperties: {
+          'templateOptions.isDisabled': function () {
+            // if the customer is in trial and doesn't have the feature toggle
+            // huronInternationalDialingTrialOverride then show toggle as disabled
+            return InternationalDialing.isDisableInternationalDialing();
+          }
+        }
+      }];
+    });
     vm.internationalDialingSelection = [{
       type: 'switch',
       key: 'internationalDialingEnabled',
@@ -775,7 +804,7 @@
         ServiceSetup.deleteInternalNumberRange(internalNumberRange).then(function () {
           // delete the range from DB list
           var index = _.findIndex(vm.model.numberRanges, function (chr) {
-            return (chr.uuid == internalNumberRange.uuid);
+            return (chr.uuid === internalNumberRange.uuid);
           });
           if (index !== -1) {
             vm.model.numberRanges.splice(index, 1);
@@ -1184,7 +1213,7 @@
 
         // do not show singlenumber intenalranges
         vm.model.displayNumberRanges = vm.model.numberRanges.filter(function (obj) {
-          return obj.beginNumber != obj.endNumber;
+          return obj.beginNumber !== obj.endNumber;
         });
 
         // sort - order by beginNumber ascending
@@ -1434,7 +1463,7 @@
         .then(function () {
           if (vm.model.callerId.callerIdEnabled && (vm.model.callerId.callerIdName && vm.model.callerId.callerIdNumber)) {
             if (!(savedModel.callerId.callerIdEnabled) ||
-               (vm.model.callerId.uuid == "")) {
+               (vm.model.callerId.uuid === "")) {
               var data = {
                 name: vm.model.callerId.callerIdName,
                 externalCallerIdType: COMPANY_CALLER_ID_TYPE,
@@ -1553,7 +1582,7 @@
       errors = [];
 
       var promises = [];
-      promises.push(loadCompanyInfo());
+      promises.push(enableBulkVmEnableToggle().then(loadCompanyInfo));
       promises.push(loadServiceAddress());
       promises.push(loadExternalNumbers());
       promises.push(enableExtensionLengthModifiable());
@@ -1601,7 +1630,13 @@
         })
         .finally(function () {
           vm.processing = false;
+          var existingCompanyVoicemailEnabled = savedModel.companyVoicemail.companyVoicemailEnabled;
           savedModel = angular.copy(vm.model);
+          if (vm.bulkVoicemailEnable &&
+            !existingCompanyVoicemailEnabled &&
+            savedModel.companyVoicemail.companyVoicemailEnabled) {
+            $state.go('users.enableVoicemail');
+          }
         });
     }
 
@@ -1892,7 +1927,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (extensionList) {
-          if (angular.isArray(extensionList) && extensionList.length > -1) {
+          if (_.isArray(extensionList) && extensionList.length > 0) {
             vm.model.disableExtensions = true;
           }
         });
@@ -1942,6 +1977,16 @@
           vm.model.companyVoicemail.externalVoicemail = false;
         }
       }
+    }
+
+    function enableBulkVmEnableToggle() {
+      return FeatureToggleService.supports(FeatureToggleService.features.bulkVoicemailEnable).then(function (result) {
+        if (result) {
+          vm.bulkVoicemailEnable = result;
+        }
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'huronSettings.errorGettingBulkVoicemailEnableToggle');
+      });
     }
 
     $scope.$watchCollection(function () {

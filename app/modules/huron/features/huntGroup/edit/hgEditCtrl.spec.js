@@ -405,4 +405,13 @@ describe('Hunt Group EditCtrl Controller', function () {
       expect(
         HuntGroupMemberDataService.getHuntMembers()[1].uuid).toEqual(member2.uuid);
     });
+
+  it("does not search on the number api when looking for members", function () {
+    var noSuggestion = {
+      "users": []
+    };
+    $httpBackend.expectGET(GetMemberListUrl).respond(200, noSuggestion);
+    hgEditCtrl.fetchHuntMembers("123", true);
+    $scope.$apply();
+  });
 });

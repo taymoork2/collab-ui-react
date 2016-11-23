@@ -26,6 +26,10 @@
       id: 'America/Los_Angeles',
       label: $translate.instant('timeZones.America/Los_Angeles')
     };
+    var DEFAULT_LANG = {
+      label: $translate.instant('languages.englishAmerican'),
+      value: 'en_US'
+    };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
     var DEFAULT_EXT_LEN = '4';
@@ -66,7 +70,8 @@
         voicemailPilotNumber: undefined,
         vmCluster: undefined,
         emergencyCallBackNumber: undefined,
-        voicemailPilotNumberGenerated: 'false'
+        voicemailPilotNumberGenerated: 'false',
+        preferredLanguage: DEFAULT_LANG
       },
       voicemailPrefix: {
         label: DEFAULT_SITE_SD.concat(DEFAULT_SITE_CODE),
@@ -85,6 +90,7 @@
         ftswExternalVoicemail: false
       },
       ftswSteeringDigit: undefined,
+      ftswPreferredLanguage: DEFAULT_LANG,
       ftswSiteSteeringDigit: {
         voicemailPrefixLabel: DEFAULT_SITE_SD.concat(DEFAULT_SITE_CODE),
         siteDialDigit: DEFAULT_SITE_SD
@@ -132,7 +138,9 @@
         // we only validate this if endNumber is valid or populated
         if (_.isUndefined(scope.model.endNumber) || scope.model.endNumber === "") {
           // trigger validation on endNumber field
-          scope.fields[2].formControl.$validate();
+          if (_.has(scope, 'fields[2].formControl')) {
+            scope.fields[2].formControl.$validate();
+          }
         }
         return true;
       },
@@ -145,9 +153,9 @@
             var beginNumber, endNumber;
             if (scope.index === 0) {
               beginNumber = value;
-              endNumber = scope.fields[2].formControl.$viewValue;
+              endNumber = _.get(scope, 'fields[2].formControl.$viewValue', '');
             } else {
-              beginNumber = scope.fields[0].formControl.$viewValue;
+              beginNumber = _.get(scope, 'fields[0].formControl.$viewValue', '');
               endNumber = value;
             }
             // Skip current range under validation if it's valid, otherwise we get into a validation loop
@@ -236,10 +244,14 @@
 
     vm.siteAndSteeringDigitErrorValidation = function (view, model, scope) {
       if (_.get(vm, 'model.voicemailPrefix.value') === _.get(vm, 'model.site.steeringDigit')) {
-        scope.fields[0].formControl.$setValidity('', false);
+        if (_.has(scope, 'fields[0].formControl')) {
+          scope.fields[0].formControl.$setValidity('', false);
+        }
         return true;
       }
-      scope.fields[0].formControl.$setValidity('', true);
+      if (_.has(scope, 'fields[0].formControl')) {
+        scope.fields[0].formControl.$setValidity('', true);
+      }
       return false;
     };
 
@@ -298,7 +310,9 @@
               vm.model.displayNumberRanges[i].endNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_endNumber_2'].$viewValue, '9');
             }
             scope.resetModel();
-            scope.formControl.$setDirty();
+            if (scope.formControl) {
+              scope.formControl.$setDirty();
+            }
           }
           vm.model.site.extensionLength = vm.model.previousLength;
           vm.extensionLengthChanged = true;
@@ -715,6 +729,9 @@
         return initTimeZone();
       })
       .then(function () {
+        return initPreferredLanguages();
+      })
+      .then(function () {
         // TODO BLUE-1221 - make /customer requests synchronous until fixed
         return listInternalExtensionRanges();
       })
@@ -742,6 +759,13 @@
               vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
                 return timezone.id === site.timeZone;
               });
+              if (site.preferredLanguage) {
+                vm.model.site.preferredLanguage = _.find(vm.preferredLanguageOptions, function (language) {
+                  return language.value === site.preferredLanguage;
+                });
+                vm.model.ftswPreferredLanguage = vm.model.site.preferredLanguage;
+              }
+
               vm.previousTimeZone = vm.model.site.timeZone;
               vm.model.site.voicemailPilotNumberGenerated = (site.voicemailPilotNumberGenerated !== null) ? site.voicemailPilotNumberGenerated : 'false';
             });
@@ -826,6 +850,13 @@
           return loadVoicemailTimeZone().then(loadVoicemailToEmail);
         }
       });
+    }
+
+    function initPreferredLanguages() {
+      return ServiceSetup.getSiteLanguages()
+        .then(function (languages) {
+          vm.preferredLanguageOptions = _.sortBy(ServiceSetup.getTranslatedSiteLanguages(languages), 'label');
+        });
     }
 
     function testForExtensions() {
@@ -1146,6 +1177,7 @@
 
         var currentSite = angular.copy(site);
         currentSite.timeZone = currentSite.timeZone.id;
+        currentSite.preferredLanguage = currentSite.preferredLanguage.value;
 
         return ServiceSetup.createSite(currentSite)
           .then(function () {
@@ -1223,6 +1255,9 @@
           // so no need to check for timeZoneToggle here
           if (_.get(vm, 'model.site.timeZone.id') !== _.get(vm, 'previousTimeZone.id')) {
             siteData.timeZone = vm.model.site.timeZone.id;
+          }
+          if (_.get(vm, 'model.site.preferredLanguage.value') !== _.get(vm, 'model.ftswPreferredLanguage.value')) {
+            siteData.preferredLanguage = vm.model.site.preferredLanguage.value;
           }
           if (vm.model.site.siteSteeringDigit !== vm.model.voicemailPrefix.value) {
             siteData.siteSteeringDigit = vm.model.voicemailPrefix.value;

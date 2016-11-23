@@ -15,16 +15,14 @@
       <div class="form-group-wrapper" ng-if="snr.snrInfo.singleNumberReachEnabled">
         <div class="form-group">
           <label for="snrDestinationNumber" translate="singleNumberReachPanel.snrRemoteDestinationNumber"></label>
-          <div class="snr-remote-destination-number" ng-if="!snr.customerLocalDialing">
-            <formly-form model="snr.snrInfo" fields="snr.snrFormFields"></formly-form>
-          </div>
           <div class="snr-remote-destination-number">
             <cs-call-destination
               model="snr.snrInfo.remoteDest"
               size="medium-12"
               inputs="snr.callDestInputs"
               select-type="select"
-              external-number-region-code-fn="snr.getRegionCode()">
+              external-number-region-code-fn="snr.getRegionCode()"
+              on-change-fn="snr.setSnr(model)">
             </cs-call-destination>
           </div>
         </div>
