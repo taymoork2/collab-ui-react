@@ -248,7 +248,7 @@
 
     function fillInStats(data) {
       var stats = DeviceUsageTotalService.extractStats(data);
-      vm.totalDuration = formatSecondsToHrsMinSec(stats.totalDuration);
+      vm.totalDuration = secondsTohhmmss(stats.totalDuration);
       vm.noOfCalls = stats.noOfCalls;
       vm.noOfDevices = stats.noOfDevices;
 
@@ -264,7 +264,7 @@
       return DeviceUsageTotalService.resolveDeviceData(stats)
         .then(function (deviceInfo) {
           _.each(stats, function (device, index) {
-            target.push({ "name": deviceInfo[index].displayName, "duration": formatSecondsToHrsMinSec(device.totalDuration), "calls": device.callCount });
+            target.push({ "name": deviceInfo[index].displayName, "duration": secondsTohhmmss(device.totalDuration), "calls": device.callCount });
           });
         });
     }
@@ -273,28 +273,21 @@
       CardUtils.resize(0, 'score-card.cs-card-layout');
     }
 
-    function pad(num, size) {
-      var s = "00000000" + num;
-      return s.substr(s.length - size);
-    }
+    function secondsTohhmmss(totalSeconds) {
+      var hours = Math.floor(totalSeconds / 3600);
+      var minutes = Math.floor((totalSeconds - (hours * 3600)) / 60);
+      var seconds = totalSeconds - (hours * 3600) - (minutes * 60);
 
-    function formatSecondsToHrsMinSec(sec) {
-      var hours = parseInt(sec / 3600, 10);
-      var minutes = parseInt((sec - (hours * 3600)) / 60, 10);
-      var seconds = Math.floor((sec - ((hours * 3600) + (minutes * 60))));
+      // round seconds
+      seconds = Math.round(seconds * 100) / 100;
+
+      var result = hours > 0 ? hours + 'h ' : '';
       if (hours > 99) {
-        return hours + "h ";
-      } else if (hours > 9) {
-        return hours + "h " + pad(minutes, 2) + "m";
-      } else if (hours >= 1) {
-        return pad(hours, 2) + "h " + pad(minutes, 2) + "m";
-      } else if (minutes > 10) {
-        return pad(minutes, 2) + "m";
-      } else if (minutes > 1) {
-        return pad(minutes, 2) + "m " + pad(seconds, 2) + "s";
-      } else {
-        return "    " + pad(seconds, 2) + "s";
+        return result;
       }
+      result += minutes > 0 ? minutes + 'm ' : '';
+      result += hours < 10 ? seconds + 's' : '';
+      return result;
     }
 
     function exportRawData() {

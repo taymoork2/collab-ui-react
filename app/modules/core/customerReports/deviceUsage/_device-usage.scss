@@ -4,9 +4,13 @@
   }
 
   .extreme-table-entry {
-    font-size: 1rem;
+    //font-size: 1rem;
     padding-bottom: 0.3rem;
     padding-top: 0.3rem;
+  }
+
+  td.right-aligned, th.right-aligned {
+    text-align: right;
   }
 
   .total-usage-table {
