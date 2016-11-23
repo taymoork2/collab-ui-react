@@ -5,9 +5,10 @@
     .controller('DevicesCtrl',
 
       /* @ngInject */
-      function ($scope, $state, $translate, $templateCache, Userservice, DeviceFilter, CsdmUnusedAccountsService, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, FeatureToggleService) {
+      function ($q, $scope, $state, $translate, $templateCache, Userservice, DeviceFilter, CsdmUnusedAccountsService, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, FeatureToggleService) {
         var vm = this;
         var filteredDevices = [];
+        vm.addDeviceIsDisabled = true;
         AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
           vm.showLicenseWarning = !!_.find(data.accounts, {
             licenses: [{
@@ -24,20 +25,23 @@
         }
 
         function fetchFeatureToggles() {
-          FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
+          var placesPromise = FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
             vm.showPlaces = result;
           });
-          FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
+          var darlingPromise = FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
             vm.showDarling = result;
           });
-          FeatureToggleService.csdmATAGetStatus().then(function (result) {
+          var ataPromise = FeatureToggleService.csdmATAGetStatus().then(function (result) {
             vm.showATA = result;
           });
-          FeatureToggleService.csdmPstnGetStatus().then(function (result) {
+          var pstnPromise = FeatureToggleService.csdmPstnGetStatus().then(function (result) {
             vm.showPstn = result && Authinfo.isSquaredUC();
           });
-          FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
+          var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
             vm.csdmHybridCallFeature = feature;
+          });
+          $q.all([placesPromise, darlingPromise, ataPromise, pstnPromise, hybridPromise]).finally(function () {
+            vm.addDeviceIsDisabled = false;
           });
         }
 

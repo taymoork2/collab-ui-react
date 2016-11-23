@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Controller: DevicesCtrl', function () {
-  var $scope, $state, $controller, controller, $httpBackend, $timeout;
-  var CsdmConfigService, AccountOrgService, Authinfo;
+  var $scope, $state, $controller, controller, $httpBackend, $timeout, $q;
+  var CsdmConfigService, AccountOrgService, Authinfo, FeatureToggleService;
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Huron'));
@@ -13,15 +13,17 @@ describe('Controller: DevicesCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies($rootScope, _$state_, _$timeout_, _$controller_, _$httpBackend_, _CsdmConfigService_, _AccountOrgService_, _Authinfo_) {
+  function dependencies($rootScope, _$state_, _$timeout_, _$controller_, _$httpBackend_, _$q_, _CsdmConfigService_, _AccountOrgService_, _Authinfo_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $timeout = _$timeout_;
+    $q = _$q_;
     CsdmConfigService = _CsdmConfigService_;
     AccountOrgService = _AccountOrgService_;
     Authinfo = _Authinfo_;
+    FeatureToggleService = _FeatureToggleService_;
   }
 
   function initSpies() {
@@ -141,6 +143,40 @@ describe('Controller: DevicesCtrl', function () {
       expect(wizardState.recipient.cisUuid).toBe(userCisUuid);
       expect(wizardState.recipient.email).toBe(email);
       expect(wizardState.recipient.organizationId).toBe(orgId);
+    });
+  });
+
+  describe('Feature toggle loading', function () {
+    beforeEach(function () {
+      spyOn(FeatureToggleService, 'csdmPlacesGetStatus').and.returnValue($q.when(true));
+      spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
+      spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(true));
+      spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.when(true));
+    });
+
+    it('should resolve toggle loading', function () {
+      spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.when(true));
+      controller = $controller('DevicesCtrl', {
+        $scope: $scope,
+        $state: $state,
+        FeatureToggleService: FeatureToggleService
+      });
+      expect(controller.addDeviceIsDisabled).toBeTruthy();
+      $scope.$digest();
+      expect(controller.addDeviceIsDisabled).toBeFalsy();
+    });
+
+    it('should resolve toggle loading if a promise fails', function () {
+      var deferred = $q.defer();
+      spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue(deferred.promise);
+      controller = $controller('DevicesCtrl', {
+        $scope: $scope,
+        $state: $state
+      });
+      expect(controller.addDeviceIsDisabled).toBeTruthy();
+      deferred.reject();
+      $scope.$digest();
+      expect(controller.addDeviceIsDisabled).toBeFalsy();
     });
   });
 });
