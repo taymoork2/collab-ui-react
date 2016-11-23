@@ -82,7 +82,7 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
         this.processProgress = 100;
         return;
      }
-     let UsersArray = [];
+     let UsersArray: UsersInfo[] = [];
      for (let i = 0; i < Users.length; i++) {
        let voicemailEnabled = false;
        for (let linkIndex = 0; linkIndex < Users[i].links.length; linkIndex++) {
@@ -166,7 +166,7 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
         return this.$q.resolve();
     }
     let i: number;
-    let promises = [];
+    let promises: ng.IPromise<any>[] = [];
     for (i = 0; i < Users.length; i++) {
         promises.push(this.enableVoicemailForOneUser(Users[i].uuid, Users[i].userName, Users[i].voicemailEnabled));
         this.offset++;

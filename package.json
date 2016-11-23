@@ -172,7 +172,6 @@
     "remap-istanbul": "^0.6.4",
     "request": "^2.72.0",
     "require-dir": "^0.3.0",
-    "retire": "^1.1.5",
     "rimraf": "^2.5.2",
     "sass-loader": "^4.0.0",
     "script-loader": "^0.7.0",
