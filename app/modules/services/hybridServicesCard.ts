@@ -10,13 +10,11 @@ export class ServicesOverviewHybridServicesCard extends ServicesOverviewCard {
     buttonClass: 'btn-link',
   };
 
-  private _buttons: Array<ICardButton> = [
-    {
-      name: 'servicesOverview.cards.clusterList.buttons.all',
-      routerState: 'cluster-list',
-      buttonClass: 'btn-link',
-    },
-  ];
+  private _buttons: Array<ICardButton> = [{
+    name: 'servicesOverview.cards.clusterList.buttons.all',
+    routerState: 'cluster-list',
+    buttonClass: 'btn-link',
+  }];
 
   public hybridClustersEventHandler(clusterList: Array<any>): void {
     this.active = clusterList.length > 0;

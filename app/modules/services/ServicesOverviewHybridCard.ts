@@ -1,8 +1,7 @@
 import { ICardParams, ServicesOverviewCard } from './ServicesOverviewCard';
 
 export interface IHybridCardParams extends ICardParams {
-  activeServices: Array<string>;
-  statusServices: Array<string>;
+  service: string;
   routerState: string;
 }
 
@@ -12,9 +11,37 @@ export interface IServiceStatus {
   setup: boolean;
 }
 
+const IserviceStatusToTxt = {
+  operational: 'servicesOverview.cardStatus.operational',
+  impaired: 'servicesOverview.cardStatus.impaired',
+  outage: 'servicesOverview.cardStatus.outage',
+  unknown: 'servicesOverview.cardStatus.unknown',
+  setupNotComplete: 'servicesOverview.cardStatus.setupNotComplete',
+};
+
+export function filterAndGetCssStatus(FusionClusterStatesService, services: Array<IServiceStatus>, serviceId: string): string | undefined {
+  let service = _.find(services, (service) => service.serviceId === serviceId);
+  if (service) {
+    return FusionClusterStatesService.getStatusIndicatorCSSClass(service.status);
+  }
+  return undefined;
+}
+
+export function filterAndGetTxtStatus(services: Array<IServiceStatus>, serviceId: string): string | undefined {
+  let service = _.find(services, (service) => service.serviceId === serviceId);
+  if (service) {
+    return IserviceStatusToTxt[service.status] || IserviceStatusToTxt['unknown'];
+  }
+  return undefined;
+}
+
+export function filterAndGetEnabledService(statuses: Array<IServiceStatus>, serviceId: string): boolean {
+  let service = _.find(statuses, (service) => service.serviceId === serviceId);
+  return service && service.setup;
+}
+
 export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
-  private activeServices: Array<string>;
-  private statusServices: Array<string>;
+  private service: string;
   private routerState: string;
 
   public constructor(
@@ -22,49 +49,17 @@ export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
     private FusionClusterStatesService
   ) {
     super(params);
-    this.activeServices = params.activeServices;
-    this.statusServices = params.statusServices;
+    this.service = params.service;
     this.routerState = params.routerState;
   }
 
-  public hybridStatusEventHandler(services: Array<IServiceStatus>): void {
+  public hybridStatusEventHandler(servicesStatuses: Array<IServiceStatus>): void {
     this.status = {
-      status: this.filterAndGetCssStatus(services, this.statusServices[0]),
-      text: this.filterAndGetTxtStatus(services, this.statusServices[0]),
+      status: filterAndGetCssStatus(this.FusionClusterStatesService, servicesStatuses, this.service),
+      text: filterAndGetTxtStatus(servicesStatuses, this.service),
       routerState: this.routerState,
     };
-    this.active = this.filterAndGetEnabledService(services, this.activeServices);
+    this.active = filterAndGetEnabledService(servicesStatuses, this.service);
     this.loading = false;
-  }
-
-  public IserviceStatusToTxt = {
-    operational: 'servicesOverview.cardStatus.operational',
-    impaired: 'servicesOverview.cardStatus.impaired',
-    outage: 'servicesOverview.cardStatus.outage',
-    unknown: 'servicesOverview.cardStatus.unknown',
-    setupNotComplete: 'servicesOverview.cardStatus.setupNotComplete',
-  };
-
-  protected filterAndGetCssStatus(services: Array<IServiceStatus>, serviceId: string): string | undefined {
-    let service = _.find(services, (service) => service.serviceId === serviceId);
-    if (service) {
-      return this.FusionClusterStatesService.getStatusIndicatorCSSClass(service.status);
-    }
-    return undefined;
-  }
-
-  protected filterAndGetTxtStatus(services: Array<IServiceStatus>, serviceId: string): string | undefined {
-    let service = _.find(services, (service) => service.serviceId === serviceId);
-    if (service) {
-      return this.IserviceStatusToTxt[service.status] || this.IserviceStatusToTxt['unknown'];
-    }
-    return undefined;
-  }
-
-  protected filterAndGetEnabledService(services: Array<IServiceStatus>, serviceIds: Array<String>): boolean {
-    return _.some(serviceIds, (serviceId) => {
-      let service = _.find(services, (service) => service.serviceId === serviceId);
-      return service && service.setup;
-    });
   }
 }

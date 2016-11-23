@@ -5838,7 +5838,9 @@
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
-        }
+        },
+        "exchangeTitle": "Microsoft Exchange",
+        "googleTitle": "Google Calendar"
       },
       "hybridCall": {
         "title": "Hybrid Call",
