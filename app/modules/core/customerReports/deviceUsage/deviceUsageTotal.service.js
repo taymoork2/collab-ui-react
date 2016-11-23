@@ -322,7 +322,7 @@
         .orderBy(['totalDuration'], ['desc'])
         .value();
 
-      $log.info('sequence after sorting', sequence);
+      //$log.info('sequence after sorting', sequence);
       return sequence;
     }
 
