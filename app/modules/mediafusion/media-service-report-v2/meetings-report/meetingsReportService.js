@@ -59,8 +59,8 @@
     }
 
     return {
-      getMeetingTypeData: getMeetingTypeData,
       getMeetingMetrics: getMeetingMetrics,
+      getMeetingTypeData: getMeetingTypeData,
       getMeetingTypeDurationData: getMeetingTypeDurationData
     };
   }
