@@ -2376,7 +2376,7 @@
     "actionCallerInputHint": "Collect Caller Input",
     "actionCallerInputHelp": "Set up the AA for capturing caller input",
     "callerInputCnvtDigit" : "Convert digit input to text string value",
-    "callerInputMaxLenStr" : "Max Legnth of String",
+    "callerInputMaxLenStr" : "Max Length of String",
     "callerInputValue"     : "Input Value",
     "callerInputLabel"     : "Name",
     "callerInputNamePlaceHolder": "Name Variable",

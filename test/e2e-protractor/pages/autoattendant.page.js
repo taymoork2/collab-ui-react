@@ -156,7 +156,7 @@ var AutoAttendantPage = function () {
   .all(by.css("div.aa-flex-row"))
   .last();
 
-  // first item in newStep dropdown: Say Message
+  // last item in newStep dropdown: Say Message
   this.newStepSelectSayMessage = element.all(by.css('div.aa-panel[name="newStepForm"]'))
     .filter(function (el) {
       return el.isDisplayed();
@@ -167,7 +167,7 @@ var AutoAttendantPage = function () {
     .all(by.tagName('li'))
     .get(4);
 
-  // second item in newStep dropdown: Phone Menu
+  // third item in newStep dropdown: Phone Menu
   this.newStepSelectPhoneMenu = element.all(by.css('div.aa-panel[name="newStepForm"]'))
     .filter(function (el) {
       return el.isDisplayed();
@@ -178,7 +178,7 @@ var AutoAttendantPage = function () {
     .all(by.tagName('li'))
     .get(2);
 
-  // third item in newStep dropdown: Dial By Extension
+  // second item in newStep dropdown: Dial By Extension
   this.newStepSelectDialByExt = element.all(by.css('div.aa-panel[name="newStepForm"]'))
     .filter(function (el) {
       return el.isDisplayed();
@@ -189,7 +189,7 @@ var AutoAttendantPage = function () {
     .all(by.tagName('li'))
     .get(1);
 
-  // last/third item in newStep dropdown: Route Call
+  // fourth item in newStep dropdown: Route Call
   this.newStepSelectRouteCall = element.all(by.css('div.aa-panel[name="newStepForm"]'))
     .filter(function (el) {
       return el.isDisplayed();

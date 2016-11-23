@@ -49,22 +49,15 @@
     vm.voiceBackup = voiceOption;
     vm.voicePlaceholder = selectPlaceholder;
     vm.voiceOptions = [];
+    vm.inputActions = [];
     vm.convertDigitState = false;
     vm.setVoiceOptions = setVoiceOptions;
     vm.saveUiModel = saveUiModel;
-    vm.isMediaUploadToggle = isMediaUploadToggle;
     vm.addKeyAction = addKeyAction;
     vm.deleteKeyAction = deleteKeyAction;
     vm.keyChanged = keyChanged;
-    vm.inputActions = [];
 
     /////////////////////
-    //the media upload only is set for the say message action
-    // and is also feature toggled
-    function isMediaUploadToggle() {
-      return AACommonService.isMediaUploadToggle();
-    }
-
     // the user has pressed the trash can icon for a key/action pair
     function deleteKeyAction(index) {
       vm.inputActions.splice(index, 1);
@@ -91,6 +84,7 @@
 
       vm.inputActions.push(keyAction);
 
+      setAvailableKeys();
     }
 
     // determine which keys are still available.
@@ -99,31 +93,7 @@
     // current key as available even though the model thinks it's in use.
 
     function getAvailableKeys(selectedKey) {
-      var keys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '#', '*'];
-      var availableKeys = [];
-      // for each key determine if it's in use by looping over all actions.
-      for (var i = 0; i < keys.length; i++) {
-        var key = keys[i];
-        if (key === selectedKey) {
-          // force this key to be in the available list
-          availableKeys.push(key);
-          continue;
-        }
-        var keyInUse = false;
-        for (var j = 0; j < vm.inputActions.length; j++) {
-          var actionKey = vm.inputActions[j].key;
-          if (key === actionKey) {
-            keyInUse = true;
-            break;
-          }
-        }
-        if (!keyInUse) {
-          // key is not in use to add to the available list
-          availableKeys.push(key);
-        }
-      }
-
-      return availableKeys;
+      return AACommonService.keyActionAvailable(selectedKey, vm.inputActions);
     }
 
     function setVoiceOptions() {
@@ -164,16 +134,21 @@
 
     }
 
-    function createPlayAction() {
-      return AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+    function createAction(action) {
+      return AutoAttendantCeMenuModelService.newCeActionEntry(action, '');
     }
 
-    function getPlayAction(menuEntry) {
+    function getAction(menuEntry) {
       var action;
+      // at this point in the development (UI only) there are no actions
+      // this is a work in progress. Gets plumbed later
+
       action = _.get(menuEntry, 'actions[0]');
 
-      if (action && (action.name === 'play')) {
-        return action;
+      if (action) {
+        if (_.indexOf(properties.NAME, action.name) >= 0) {
+          return action;
+        }
       }
 
       return undefined;
@@ -183,13 +158,13 @@
       var ui = AAUiModelService.getUiModel();
       var uiMenu = ui[$scope.schedule];
       vm.menuEntry = uiMenu.entries[$scope.index];
-      var playAction = getPlayAction(vm.menuEntry);
-      if (!playAction) {
-        playAction = createPlayAction();
-        vm.menuEntry.addAction(playAction);
+      var action = getAction(vm.menuEntry);
+      if (!action) {
+        action = createAction('play'); //default is now play
+        vm.menuEntry.addAction(action);
       }
 
-      vm.actionEntry = playAction;
+      vm.actionEntry = action;
 
       return;
     }

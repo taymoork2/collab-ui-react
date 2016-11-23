@@ -44,7 +44,8 @@
       makeKey: makeKey,
       resetFormStatus: resetFormStatus,
       saveUiModel: saveUiModel,
-      sortByProperty: sortByProperty
+      sortByProperty: sortByProperty,
+      keyActionAvailable: keyActionAvailable
     };
 
     return service;
@@ -200,4 +201,21 @@
     };
   };
 
+  /*
+   * will cycle through key actions and extract already used keys.
+   * return: a set of available keys
+   */
+  function keyActionAvailable(selectedKey, inputActions) {
+    var keys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '#', '*'];
+
+    _.forEach(inputActions, function (inputAction) {
+      if (inputAction.key !== selectedKey) {
+        _.pull(keys, inputAction.key);
+      }
+
+    });
+
+    return keys;
+
+  }
 })();
