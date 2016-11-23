@@ -61,7 +61,7 @@ describe('placeOverview component', () => {
       };
 
       spyOn(CsdmCodeService, 'createCodeForExisting').and.returnValue($q.when('0q9u09as09vu0a9sv'));
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+      spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.when(false));
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(showATA));
       spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.when(showHybrid));
       spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
@@ -169,7 +169,7 @@ describe('placeOverview component', () => {
       entitlements = ['entitlement'];
       placeUuid = '9avs8y9q2v9aw98';
 
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+      spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.when(false));
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(showATA));
       spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.when(showHybrid));
       spyOn(Userservice, 'getUser').and.returnValue($q.when({}));
