@@ -1,4 +1,4 @@
-(function () {
+(function() {
   'use strict';
 
   angular
@@ -13,9 +13,6 @@
     vm.noData = $translate.instant('mediaFusion.metrics.nodata');
     vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
 
-    vm.setTotalMeetingData = setTotalMeetingData;
-    vm.setTotalMinutesData = setTotalMinutesData;
-    vm.setTotalParticipantData = setTotalParticipantData;
     vm.timeUpdate = timeUpdate;
 
     vm.clusterOptions = [vm.allClusters];
@@ -44,13 +41,6 @@
     vm.displayDate = displayDate;
     vm.Map = {};
 
-    vm.meetingLocationChartOptions = {
-      id: 'meetinglocation',
-      desc: 'Meeting Location',
-      noData: false,
-      loading: true
-    };
-
     vm.meetingTypeChartOptions = {
       id: 'meetingtype',
       desc: 'Meeting Type',
@@ -60,7 +50,7 @@
 
     vm.meetingTypeDurationChartOptions = {
       id: 'meetingtypeduration',
-      desc: 'Meeting Type Duration',
+      desc: 'Meeting Duration',
       noData: false,
       loading: true
     };
@@ -104,7 +94,6 @@
 
     function timeUpdate() {
       displayDate();
-      // setDummyData();
       setAllGraphs();
     }
 
@@ -114,7 +103,6 @@
 
     function setAllGraphs() {
       setMeetingMetricsData();
-      setTotalParticipantData();
       setMeetingPieData();
     }
 
@@ -122,69 +110,58 @@
 
     // Code for auto reload the rest calls every 5 minutes
     var interval = $interval(timeUpdate, 300000);
-    $scope.$on('$destroy', function () {
+    $scope.$on('$destroy', function() {
       $interval.cancel(interval);
     });
 
 
     function setMeetingPieData() {
-      $timeout(function () {
-        setMeetingLocationData();
+      $timeout(function() {
         setMeetingTypeData();
-        setMeetingTypeDuration();
+        setMeetingTypeDurationData();
       }, 1000);
     }
 
-    function setMeetingTypeDuration() {
+    function setMeetingTypeDurationData() {
       vm.meetingTypeDurationChartOptions.loading = true;
-      vm.meetingTypeDurationChartOptions.noData = false;
-      MeetingsReportService.getMeetingTypeDurationData(vm.timeSelected, vm.clusterSelected).then(function (data) {
+      MeetingsReportService.getMeetingTypeDurationData(vm.timeSelected, vm.clusterSelected).then(function(data) {
         if (_.isUndefined(data) || data.length === 0 || _.isUndefined(data.dataProvider) || data.dataProvider.length === 0) {
           setDummyPieChart(vm.meetingTypeDurationChartOptions);
         } else {
+          var dataProviderTemp = [];
+          _.forEach(data.dataProvider, function(value) {
+            value.value = Math.ceil(value.value / 60);
+            dataProviderTemp.push(value);
+          });
+          data.dataProvider = dataProviderTemp;
           setMeetingPieGraph(data, vm.meetingTypeDurationChartOptions);
           vm.meetingTypeDurationChartOptions.loading = false;
+          vm.meetingTypeDurationChartOptions.noData = false;
         }
-      }, function (error) {
+      }, function() {
         setDummyPieChart(vm.meetingTypeDurationChartOptions);
-        Notification.error(error);
+        Notification.error('mediaFusion.genericError');
       });
     }
 
     function setMeetingTypeData() {
       vm.meetingTypeChartOptions.loading = true;
-      vm.meetingTypeChartOptions.noData = false;
-      MeetingsReportService.getMeetingTypeData(vm.timeSelected, vm.clusterSelected).then(function (data) {
+      MeetingsReportService.getMeetingTypeData(vm.timeSelected, vm.clusterSelected).then(function(data) {
         if (_.isUndefined(data) || data.length === 0 || _.isUndefined(data.dataProvider) || data.dataProvider.length === 0) {
           setDummyPieChart(vm.meetingTypeChartOptions);
         } else {
           setMeetingPieGraph(data, vm.meetingTypeChartOptions);
           vm.meetingTypeChartOptions.loading = false;
+          vm.meetingTypeChartOptions.noData = false;
         }
-      }, function (error) {
+      }, function() {
         setDummyPieChart(vm.meetingTypeChartOptions);
-        Notification.error(error);
-      });
-    }
-
-    function setMeetingLocationData() {
-      vm.meetingLocationChartOptions.loading = true;
-      vm.meetingLocationChartOptions.noData = false;
-      MeetingsReportService.getMeetingLocationData(vm.timeSelected, vm.clusterSelected).then(function (data) {
-        if (_.isUndefined(data) || data.length === 0 || _.isUndefined(data.dataProvider) || data.dataProvider.length === 0) {
-          setDummyPieChart(vm.meetingLocationChartOptions);
-        } else {
-          setMeetingPieGraph(data, vm.meetingLocationChartOptions);
-          vm.meetingLocationChartOptions.loading = false;
-        }
-      }, function (error) {
-        setDummyPieChart(vm.meetingLocationChartOptions);
-        Notification.error(error);
+        Notification.error('mediaFusion.genericError');
       });
     }
 
     function setMeetingPieGraph(data, chartOptions) {
-      var pieChart = MeetingsGraphService.getMeetingPieGraph(data, chartOptions.chart, chartOptions.id);
+      var pieChart = MeetingsGraphService.getMeetingPieGraph(data, chartOptions.chart, chartOptions.id, chartOptions.noData);
       chartOptions.chart = pieChart;
       return;
     }
@@ -197,7 +174,7 @@
     }
 
     function setMeetingMetricsData() {
-      MeetingsReportService.getMeetingMetrics(vm.timeSelected, vm.clusterSelected).then(function (data) {
+      MeetingsReportService.getMeetingMetrics(vm.timeSelected, vm.clusterSelected).then(function(data) {
         if (_.isUndefined(data) || data.length === 0) {
           vm.totalMeeting = vm.noData;
           vm.totalMinutes = vm.noData;
@@ -207,57 +184,17 @@
           } else {
             vm.totalMeeting = data.totalMeetings;
           }
-          if (_.isUndefined(data.totalMeetingTime)) {
+          if (_.isUndefined(data.totalMeetingDuration)) {
             vm.totalMinutes = vm.noData;
           } else {
-            vm.totalMinutes = data.totalMeetingTime / 60;
+            vm.totalMinutes = Math.ceil(data.totalMeetingDuration / 60);
           }
         }
-      }, function (error) {
+      }, function() {
         vm.totalMeeting = vm.noData;
         vm.totalMinutes = vm.noData;
-        Notification.error(error);
+        Notification.error('mediaFusion.genericError');
       });
     }
-
-    function setTotalMeetingData() {
-      MeetingsReportService.getTotalMeetings(vm.timeSelected, vm.clusterSelected).then(function (data) {
-        if (_.isUndefined(data) || data.length === 0 || _.isUndefined(data.totalMeeting)) {
-          vm.totalMeeting = vm.noData;
-        } else {
-          vm.totalMeeting = data.totalMeeting;
-        }
-      }, function (error) {
-        vm.totalMeeting = vm.noData;
-        Notification.error(error);
-      });
-    }
-
-    function setTotalMinutesData() {
-      MeetingsReportService.getTotalMinutes(vm.timeSelected, vm.clusterSelected).then(function (data) {
-        if (_.isUndefined(data) || data.length === 0 || _.isUndefined(data.totalMinutes)) {
-          vm.totalMinutes = vm.noData;
-        } else {
-          vm.totalMinutes = data.totalMinutes;
-        }
-      }, function () {
-        vm.totalMinutes = vm.noData;
-        Notification.error("Something went wrong");
-      });
-    }
-
-    function setTotalParticipantData() {
-      MeetingsReportService.getTotalParticipant(vm.timeSelected, vm.clusterSelected).then(function (data) {
-        if (_.isUndefined(data) || data.length === 0 || _.isUndefined(data.totalParticipant)) {
-          vm.totalParticipant = vm.noData;
-        } else {
-          vm.totalParticipant = data.totalParticipant;
-        }
-      }, function () {
-        vm.totalParticipant = vm.noData;
-        Notification.error("Something went wrong");
-      });
-    }
-
   }
 })();

@@ -1,4 +1,4 @@
-(function () {
+(function() {
   'use strict';
 
   angular.module('Mediafusion').service('CommonMetricsGraphService', CommonMetricsGraphService);
@@ -134,7 +134,7 @@
         'backgroundColor': chartColors.brandWhite,
         'backgroundAlpha': 1,
         'balloon': baseVariables['balloon'],
-        "autoMarginOffset": 25,
+        'autoMarginOffset': 25,
         'marginLeft': 60,
         'marginTop': 60,
         'marginRight': 60,
@@ -149,16 +149,16 @@
         'categoryField': categoryField,
         'categoryAxis': catAxis,
         'mouseWheelZoomEnabled': false,
-        "chartCursor": {
-          "cursorColor": "#55bb76",
-          "categoryBalloonDateFormat": "JJ:NN, DD MMMM",
-          "valueBalloonsEnabled": false,
-          "cursorAlpha": 0,
-          "valueLineAlpha": 0.5,
-          "valueLineBalloonEnabled": true,
-          "valueLineEnabled": true,
-          "zoomable": true,
-          "valueZoomable": false
+        'chartCursor': {
+          'cursorColor': '#55bb76',
+          'categoryBalloonDateFormat': 'JJ:NN, DD MMMM',
+          'valueBalloonsEnabled': false,
+          'cursorAlpha': 0,
+          'valueLineAlpha': 0.5,
+          'valueLineBalloonEnabled': true,
+          'valueLineEnabled': true,
+          'zoomable': true,
+          'valueZoomable': false
         },
         'chartScrollbar': {
           'offset': 30,
@@ -226,18 +226,25 @@
         'balloonText': '[[title]]<br><span style="font-size:14px"><b>[[value]]</b> ([[percents]]%)</span>',
         'hoverAlpha': 0.5,
         'labelRadius': 1,
+        'marginBottom': 40,
+        'marginLeft': 40,
+        'marginRight': 40,
+        'marginTop': 40,
+        'autoMargins': false,
         'pullOutRadius': '1%',
         'titleField': 'name',
         'valueField': 'value',
         'theme': 'light',
         'allLabels': [],
         'balloon': {},
+        'fontSize': 10,
         'legend': {
           'enabled': true,
           'align': 'center',
           'forceWidth': true,
           'switchable': false,
-          'valueText': ''
+          'valueText': '',
+          'markerSize': 8
         },
         'titles': [],
         'dataProvider': data.dataProvider
@@ -248,6 +255,12 @@
       return angular.copy({
         'type': 'pie',
         'startDuration': 0,
+        'labelRadius': 1,
+        'marginBottom': 40,
+        'marginLeft': 40,
+        'marginRight': 40,
+        'marginTop': 40,
+        'autoMargins': false,
         'balloonText': '',
         'labelText': '[[title]]',
         'pullOutRadius': '1%',
@@ -256,7 +269,7 @@
         'titleField': 'name',
         'valueField': 'value',
         'borderColor': '#A4ACAC',
-        'fontSize': 12,
+        'fontSize': 10,
         'theme': 'light',
         'balloon': {
           'fontSize': 0

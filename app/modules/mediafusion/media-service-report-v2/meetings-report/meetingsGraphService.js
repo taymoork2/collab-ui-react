@@ -1,4 +1,4 @@
-(function () {
+(function() {
   'use strict';
 
   angular
@@ -7,8 +7,8 @@
 
   /* @ngInject */
   function MeetingsGraphService(CommonMetricsGraphService) {
-    function getMeetingPieGraph(data, chart, id) {
-      if (_.isUndefined(chart)) {
+    function getMeetingPieGraph(data, chart, id, noData) {
+      if (_.isUndefined(chart) || (noData === true)) {
         var pieChart = CommonMetricsGraphService.getBasePieChart(data);
         chart = AmCharts.makeChart(id, pieChart);
       } else {
