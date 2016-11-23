@@ -156,8 +156,6 @@
       }
       if (!_.has(queueSettings, 'fallback')) {
         createAction(queueSettings, 'fallback', 'Disconnect');
-/*        queueSettings.fallback = {};
-        queueSettings.fallback.destination = "";*/
       }
       if (!_.has(queueSettings, 'maxWaitTime')) {
         queueSettings.maxWaitTime = maxWaitTime; //default, 15 mins.

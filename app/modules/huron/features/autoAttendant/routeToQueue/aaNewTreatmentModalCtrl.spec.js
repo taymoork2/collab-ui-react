@@ -205,7 +205,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         expect(controller.fallbackAction.description).toEqual('');
       });
       it(" value of maxTime shoulb be 15", function () {
-        controller.saveFallback();
+        controller.updateFallback();
         expect(controller.fallbackAction.description).toEqual('fallback');
       });
     });

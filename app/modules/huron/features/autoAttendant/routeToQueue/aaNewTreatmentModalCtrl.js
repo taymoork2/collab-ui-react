@@ -115,10 +115,8 @@
       if (_.isEqual(vm.musicOnHold, DEFAULT_MOH)) {
         defaultMoh();
       }
-      if (_.isEqual(vm.fallbackAction.description, 'fallback')) {
-        if (!_.isEqual(vm.fallbackAction.name, 'Disconnect')) {
-          vm.fallbackAction.name.id = vm.fallbackAction.getValue();
-        }
+      if (!_.isEqual(vm.fallbackAction.name, 'Disconnect')) {
+        vm.fallbackAction.name.id = vm.fallbackAction.getValue();
       }
     }
 
@@ -188,7 +186,7 @@
           label: (i + 1) * 5
         });
       });
-      if (!_.isEqual(vm.paAction.description, '')) { //no metadata set, so no file uploaded
+      if (!_.isEqual(vm.paAction.description, '')) {
         var periodicMinute = parseInt(vm.paAction.description / 60, 10);
         vm.periodicMinute = {
           index: periodicMinute,

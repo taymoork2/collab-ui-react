@@ -1170,7 +1170,7 @@
         }
         var destination = action.queueSettings.fallback.actions[0].name;
         var fallbackAction = {};
-        if (_.isEqual(action.queueSettings.fallback.actions[0].description, 'fallback')) {
+        if (!_.isUndefined(destination.action)) {
           if (destination.action === 'disconnect') {
             fallbackAction[destination.action] = { treatment: 'none' };
           } else if (destination.action === 'goto') {
@@ -1179,9 +1179,10 @@
             fallbackAction[destination.action] = { id: destination.id, description: destination.label };
           }
         } else {
+          destination = 'disconnect';
           fallbackAction[destination] = { treatment: 'none' };
         }
-        var queueMaxDestination = fallbackAction;//action.queueSettings.fallback.actions[0].action;
+        var queueMaxDestination = fallbackAction;
         newAction.queueFallback = queueMaxDestination;
         newAction.description = JSON.stringify(action.description);
       }
