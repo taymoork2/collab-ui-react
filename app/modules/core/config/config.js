@@ -405,9 +405,7 @@
         'services-overview',
         'resource-group-settings',
         'cluster-list',
-        'hds.settings', //Temporrary entitlement until updated in org setting
-        'hds',
-        'hds.list',
+        'hds-settings', //Temporrary entitlement until updated in org setting
       ],
       'spark-room-system': [
         'addDeviceFlow',
