@@ -11,26 +11,26 @@
     var meetingMetricsLink = '/meeting_metrics';
     var meetingTypesLink = '/meeting_types_count';
     var meetingTypesDurationLink = '/meeting_types_duration';
-    var shriniURL = 'http://localhost:8080/cloud-apps-server-1.0-SNAPSHOT/athena/api/v1/organizations/27f564b5-37f4-4b2d-a896-622ebb973506';
+  //  var shriniURL = 'http://localhost:8080/cloud-apps-server-1.0-SNAPSHOT/athena/api/v1/organizations/27f564b5-37f4-4b2d-a896-622ebb973506';
 
     function extractDataFromResponse(res) {
       return _.get(res, 'data');
     }
 
     function getMeetingTypeDurationData(time, cluster) {
-      var url = shriniURL + getQuerys(meetingTypesDurationLink, cluster, time);
+      var url = urlBase + getQuerys(meetingTypesDurationLink, cluster, time);
 
       return $http.get(url).then(extractDataFromResponse);
     }
 
     function getMeetingMetrics(time, cluster) {
-      var url = shriniURL + getQuerys(meetingMetricsLink, cluster, time);
+      var url = urlBase + getQuerys(meetingMetricsLink, cluster, time);
 
       return $http.get(url).then(extractDataFromResponse);
     }
 
     function getMeetingTypeData(time, cluster) {
-      var url = shriniURL + getQuerys(meetingTypesLink, cluster, time);
+      var url = urlBase + getQuerys(meetingTypesLink, cluster, time);
       return $http.get(url).then(extractDataFromResponse);
     }
 

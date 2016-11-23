@@ -1,4 +1,4 @@
-(function() {
+(function () {
   'use strict';
 
   angular
@@ -110,13 +110,13 @@
 
     // Code for auto reload the rest calls every 5 minutes
     var interval = $interval(timeUpdate, 300000);
-    $scope.$on('$destroy', function() {
+    $scope.$on('$destroy', function () {
       $interval.cancel(interval);
     });
 
 
     function setMeetingPieData() {
-      $timeout(function() {
+      $timeout(function () {
         setMeetingTypeData();
         setMeetingTypeDurationData();
       }, 1000);
@@ -124,12 +124,12 @@
 
     function setMeetingTypeDurationData() {
       vm.meetingTypeDurationChartOptions.loading = true;
-      MeetingsReportService.getMeetingTypeDurationData(vm.timeSelected, vm.clusterSelected).then(function(data) {
+      MeetingsReportService.getMeetingTypeDurationData(vm.timeSelected, vm.clusterSelected).then(function (data) {
         if (_.isUndefined(data) || data.length === 0 || _.isUndefined(data.dataProvider) || data.dataProvider.length === 0) {
           setDummyPieChart(vm.meetingTypeDurationChartOptions);
         } else {
           var dataProviderTemp = [];
-          _.forEach(data.dataProvider, function(value) {
+          _.forEach(data.dataProvider, function (value) {
             value.value = Math.ceil(value.value / 60);
             dataProviderTemp.push(value);
           });
@@ -138,7 +138,7 @@
           vm.meetingTypeDurationChartOptions.loading = false;
           vm.meetingTypeDurationChartOptions.noData = false;
         }
-      }, function() {
+      }, function () {
         setDummyPieChart(vm.meetingTypeDurationChartOptions);
         Notification.error('mediaFusion.genericError');
       });
@@ -146,7 +146,7 @@
 
     function setMeetingTypeData() {
       vm.meetingTypeChartOptions.loading = true;
-      MeetingsReportService.getMeetingTypeData(vm.timeSelected, vm.clusterSelected).then(function(data) {
+      MeetingsReportService.getMeetingTypeData(vm.timeSelected, vm.clusterSelected).then(function (data) {
         if (_.isUndefined(data) || data.length === 0 || _.isUndefined(data.dataProvider) || data.dataProvider.length === 0) {
           setDummyPieChart(vm.meetingTypeChartOptions);
         } else {
@@ -154,7 +154,7 @@
           vm.meetingTypeChartOptions.loading = false;
           vm.meetingTypeChartOptions.noData = false;
         }
-      }, function() {
+      }, function () {
         setDummyPieChart(vm.meetingTypeChartOptions);
         Notification.error('mediaFusion.genericError');
       });
@@ -174,7 +174,7 @@
     }
 
     function setMeetingMetricsData() {
-      MeetingsReportService.getMeetingMetrics(vm.timeSelected, vm.clusterSelected).then(function(data) {
+      MeetingsReportService.getMeetingMetrics(vm.timeSelected, vm.clusterSelected).then(function (data) {
         if (_.isUndefined(data) || data.length === 0) {
           vm.totalMeeting = vm.noData;
           vm.totalMinutes = vm.noData;
@@ -190,7 +190,7 @@
             vm.totalMinutes = Math.ceil(data.totalMeetingDuration / 60);
           }
         }
-      }, function() {
+      }, function () {
         vm.totalMeeting = vm.noData;
         vm.totalMinutes = vm.noData;
         Notification.error('mediaFusion.genericError');
