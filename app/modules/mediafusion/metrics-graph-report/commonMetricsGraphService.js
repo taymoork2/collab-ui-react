@@ -222,6 +222,7 @@
     function getBasePieChart(data) {
       return angular.copy({
         'type': 'pie',
+        'startDuration': 0,
         'balloonText': '[[title]]<br><span style="font-size:14px"><b>[[value]]</b> ([[percents]]%)</span>',
         'hoverAlpha': 0.5,
         'labelRadius': 1,
@@ -246,6 +247,7 @@
     function getDummyPieChart() {
       return angular.copy({
         'type': 'pie',
+        'startDuration': 0,
         'balloonText': '',
         'labelText': '[[title]]',
         'pullOutRadius': '1%',

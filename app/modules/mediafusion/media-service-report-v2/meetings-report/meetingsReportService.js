@@ -11,13 +11,21 @@
     var meetingMetricsLink = '/meeting_metrics';
     var totalParticipantLink = '';
     var meetingLocationLink = '';
-    var clientTypeLink = '';
+    var meetingTypesLink = '/meeting_types_count';
+    var meetingTypesDurationLink = '/meeting_types_duration';
+    var shriniURL = 'http://10.196.5.245:8080/athena/api/v1/organizations/27f564b5-37f4-4b2d-a896-622ebb973506';
     function extractDataFromResponse(res) {
       return _.get(res, 'data');
     }
 
+    function getMeetingTypeDurationData(time, cluster) {
+      var url = shriniURL + getQuerys(meetingTypesDurationLink, cluster, time);
+
+      return $http.get(url).then(extractDataFromResponse);
+    }
+
     function getMeetingMetrics(time, cluster) {
-      var url = 'http://10.196.5.245:8080/athena/api/v1/organizations/27f564b5-37f4-4b2d-a896-622ebb973506' + getQuerys(meetingMetricsLink, cluster, time);
+      var url = shriniURL + getQuerys(meetingMetricsLink, cluster, time);
 
       return $http.get(url).then(extractDataFromResponse);
     }
@@ -80,8 +88,8 @@
       */
     }
 
-    function getClientTypeData(time, cluster) {
-      var url = urlBase + getQuerys(clientTypeLink, cluster, time);
+    function getMeetingTypeData(time, cluster) {
+      var url = shriniURL + getQuerys(meetingTypesLink, cluster, time);
       return $http.get(url).then(extractDataFromResponse);
       /*  var res = {
         'cluster': cluster,
@@ -137,8 +145,9 @@
       getTotalMinutes: getTotalMinutes,
       getTotalParticipant: getTotalParticipant,
       getMeetingLocationData: getMeetingLocationData,
-      getClientTypeData: getClientTypeData,
-      getMeetingMetrics: getMeetingMetrics
+      getMeetingTypeData: getMeetingTypeData,
+      getMeetingMetrics: getMeetingMetrics,
+      getMeetingTypeDurationData: getMeetingTypeDurationData
     };
   }
 })();

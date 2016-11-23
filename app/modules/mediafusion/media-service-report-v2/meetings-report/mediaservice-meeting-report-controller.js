@@ -6,7 +6,7 @@
     .controller('MediaSeriveMeetingsReportsCtrl', MediaSeriveMeetingsReportsCtrl);
 
   /* @ngInject */
-  function MediaSeriveMeetingsReportsCtrl($translate, $q, $scope, $interval, MediaClusterServiceV2, Notification, MeetingsReportService, MeetingsGraphService) {
+  function MediaSeriveMeetingsReportsCtrl($translate, $q, $scope, $interval, MediaClusterServiceV2, Notification, MeetingsReportService, MeetingsGraphService, $timeout) {
     var vm = this;
     var deferred = $q.defer();
     //var ABORT = 'ABORT';
@@ -54,9 +54,16 @@
       loading: true
     };
 
-    vm.clientTypeChartOptions = {
-      id: 'clienttype',
-      desc: 'Client Type',
+    vm.meetingTypeChartOptions = {
+      id: 'meetingtype',
+      desc: 'Meeting Type',
+      noData: false,
+      loading: true
+    };
+
+    vm.meetingTypeDurationChartOptions = {
+      id: 'meetingtypeduration',
+      desc: 'Meeting Type Duration',
       noData: false,
       loading: true
     };
@@ -158,22 +165,41 @@
 
 
     function setMeetingPieData() {
-      setMeetingLocationData();
-      setClientTypeData();
+      $timeout(function () {
+        setMeetingLocationData();
+        setMeetingTypeData();
+        setMeetingTypeDuration();
+      }, 1000);
     }
 
-    function setClientTypeData() {
-      vm.clientTypeChartOptions.loading = true;
-      vm.clientTypeChartOptions.noData = false;
-      MeetingsReportService.getClientTypeData(vm.timeSelected, vm.clusterSelected).then(function (data) {
-        if (_.isUndefined(data) || data.length === 0 || _.isUndefined(data.dataProvider)) {
-          setDummyPieChart(vm.clientTypeChartOptions);
+    function setMeetingTypeDuration() {
+      vm.meetingTypeDurationChartOptions.loading = true;
+      vm.meetingTypeDurationChartOptions.noData = false;
+      MeetingsReportService.getMeetingTypeDurationData(vm.timeSelected, vm.clusterSelected).then(function (data) {
+        if (_.isUndefined(data) || data.length === 0 || _.isUndefined(data.dataProvider) || data.dataProvider.length === 0) {
+          setDummyPieChart(vm.meetingTypeDurationChartOptions);
         } else {
-          setMeetingPieGraph(data, vm.clientTypeChartOptions);
-          vm.clientTypeChartOptions.loading = false;
+          setMeetingPieGraph(data, vm.meetingTypeDurationChartOptions);
+          vm.meetingTypeDurationChartOptions.loading = false;
         }
       }, function (error) {
-        setDummyPieChart(vm.clientTypeChartOptions);
+        setDummyPieChart(vm.meetingTypeDurationChartOptions);
+        Notification.error(error);
+      });
+    }
+
+    function setMeetingTypeData() {
+      vm.meetingTypeChartOptions.loading = true;
+      vm.meetingTypeChartOptions.noData = false;
+      MeetingsReportService.getMeetingTypeData(vm.timeSelected, vm.clusterSelected).then(function (data) {
+        if (_.isUndefined(data) || data.length === 0 || _.isUndefined(data.dataProvider) || data.dataProvider.length === 0) {
+          setDummyPieChart(vm.meetingTypeChartOptions);
+        } else {
+          setMeetingPieGraph(data, vm.meetingTypeChartOptions);
+          vm.meetingTypeChartOptions.loading = false;
+        }
+      }, function (error) {
+        setDummyPieChart(vm.meetingTypeChartOptions);
         Notification.error(error);
       });
     }
@@ -182,7 +208,7 @@
       vm.meetingLocationChartOptions.loading = true;
       vm.meetingLocationChartOptions.noData = false;
       MeetingsReportService.getMeetingLocationData(vm.timeSelected, vm.clusterSelected).then(function (data) {
-        if (_.isUndefined(data) || data.length === 0 || _.isUndefined(data.dataProvider)) {
+        if (_.isUndefined(data) || data.length === 0 || _.isUndefined(data.dataProvider) || data.dataProvider.length === 0) {
           setDummyPieChart(vm.meetingLocationChartOptions);
         } else {
           setMeetingPieGraph(data, vm.meetingLocationChartOptions);
