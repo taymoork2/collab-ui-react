@@ -1,0 +1,189 @@
+.hds {
+  background-color: $brand-white;
+
+  .tags {
+    border-radius: 3px;
+
+    .tag-item {
+      background: none;
+      background-color: $brand-primary-light;
+      color: $brand-white;
+
+      .remove-button {
+        color: $brand-white;
+      }
+    }
+
+    .input.invalid-tag {
+      color: $brand-danger;
+    }
+  }
+
+  .typography-airy {
+    h5 {
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+      margin-top: 0.5rem;
+    }
+
+    p::first-line {
+      margin-bottom: 1rem;
+    }
+
+    p:last-child {
+      margin-bottom: 1rem;
+    }
+
+    hr {
+      margin-top: 0.3rem;
+      margin-bottom: 0.3rem;
+    }
+  }
+
+  .large-margin {
+    padding: 1rem 2rem;
+  }
+
+  .small-margin {
+    padding: 0.5rem 1rem 0.3rem;
+  }
+
+  .page-header {
+    .title-heading {
+      margin-right: 1rem;
+    }
+
+    .menu {
+      position: absolute;
+      right: 0;
+      bottom: 24px;
+
+      a {
+        color: $brand-default;
+        font-size: 1.25rem;
+        padding-bottom: 24px;
+        margin-right: 1rem;
+      }
+
+      a:hover {
+        color: $brand-default;
+        border-bottom: 3px solid $brand-default;
+      }
+
+      a.active {
+        color: $brand-primary;
+        border-bottom: 3px solid $brand-primary;
+        padding-bottom: 23px;
+        margin-right: 1rem;
+        box-shadow: none;
+      }
+    }
+
+    .page-title {
+      position: relative;
+    }
+  }
+
+  .centered-info-pane {
+    background-color: $brand-white;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    padding: 20%;
+    color: $gray-base;
+
+    h2 {
+      color: black;
+    }
+
+    h3 {
+      color: $gray-base;
+    }
+
+    p {
+      margin-bottom: 1rem;
+    }
+  }
+
+  .full-height {
+    min-height: 100vh;
+    min-height: calc(100vh - 150px);
+  }
+
+  .btn--alert {
+    margin-left: 0;
+  }
+
+  .btn--primary,
+  .btn--alert {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
+/**
+  Toolkit fixes
+  */
+.hds.large-margin {
+  .large-4 {
+    margin-right: 2rem !important;
+  }
+}
+
+/**
+  Overwritten from Toolkit somehwere in Atlas -
+  Fix it before removing this code
+  */
+.hds.large-margin {
+  p {
+    margin-bottom: 1rem;
+  }
+}
+
+.hds {
+  .alert,
+  .button.alert,
+  button.alert {
+    margin-left: 0 !important;
+  }
+}
+
+/* Has to be fixed in TK before we can fix the code in Atlas */
+.black-header {
+  color: black !important;
+}
+
+/**
+ Work around the extra col-md-12 class in views/main.tpl.html
+ */
+.hds {
+  margin: {
+    right: -0.5rem;
+    left: -0.5rem;
+  }
+}
+
+
+.hds-service {
+  @extend %grid-subheader;
+  @extend %page-background-white;
+}
+
+.hds-fix-paragraphs {
+  p {
+    margin-bottom: 1rem;
+  }
+}
+
+.hds-cluster-settings {
+  .section-title-row {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .toggle-switch {
+      margin-bottom: 0;
+    }
+  }
+}

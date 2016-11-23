@@ -1,0 +1,27 @@
+<div ng-if="hdsServiceController.serviceEnabled === true || hdsServiceController.featureToggled">
+  <div class="hds-service hds hds-fix-paragraphs">
+    <cs-page-header title="{{hdsServiceController.pageTitle}}" tabs="hdsServiceController.tabs" back="true" back-url="hdsServiceController.backState"></cs-page-header>
+    <cs-page-sub-header>
+      <cs-page-sub-header-left>
+      </cs-page-sub-header-left>
+      <cs-page-sub-header-right>
+        <button class="btn btn--people add-resource-button" type="submit"
+                translate="hds.resources.add-resource-button"></button>
+      </cs-page-sub-header-right>
+    </cs-page-sub-header>
+
+    <div ui-view="fullPane" class="small-padding-top">
+    </div>
+  </div>
+</div>
+
+
+<div ng-if="hdsServiceController.serviceEnabled === null && !hdsServiceController.featureToggled">
+  <div class="hds">
+    <div class="centered-info-pane full-height">
+      <i class="icon icon-spinner icon-2x"></i>
+      <p>Loading, please wait...</p>
+    </div>
+  </div>
+</div>
+

@@ -8,19 +8,19 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
 
   private _setupButton: ICardButton = {
     name: 'servicesOverview.genericButtons.setup',
-    routerState: 'hds-settings',
+    routerState: 'hds.list',
     buttonClass: 'btn',
   };
 
   private _buttons: Array<ICardButton> = [
     {
       name: 'servicesOverview.cards.hybridDataSecurity.buttons.resources',
-      routerState: 'hds-settings',
+      routerState: 'hds.list',
       buttonClass: 'btn-link',
     },
     {
       name: 'servicesOverview.cards.hybridDataSecurity.buttons.settings',
-      routerState: 'hds-settings',
+      routerState: 'hds.settings',
       buttonClass: 'btn-link',
     }];
 
@@ -41,9 +41,9 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       template: 'modules/services/card.tpl.html',
       name: 'servicesOverview.cards.hybridDataSecurity.title',
       description: 'servicesOverview.cards.hybridDataSecurity.description',
-      activeServices: ['hybrid-data-security'],
-      statusService: 'hybrid-data-security',
-      routerState: 'hds-settings',
+      activeServices: ['spark-hybrid-datasecurity'],
+      statusService: 'spark-hybrid-datasecurity',
+      routerState: 'hds.list',
       active: false,
       display : false,
       cardClass: 'media',

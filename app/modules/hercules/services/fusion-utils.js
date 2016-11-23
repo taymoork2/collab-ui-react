@@ -42,6 +42,8 @@
           return ['squared-fusion-mgmt'];
         case 'mf_mgmt':
           return ['squared-fusion-media'];
+        case 'hds_appt':
+          return ['spark-hybrid-datasecurity'];
         default:
           return [];
       }
@@ -58,6 +60,8 @@
           return 'c_mgmt';
         case 'squared-fusion-media':
           return 'mf_mgmt';
+        case 'spark-hybrid-datasecurity':
+          return 'hds_app';
         default:
           return '';
       }
