@@ -15,12 +15,19 @@
   </div>
 </div>
 
+<div ng-if="hdsServiceController.serviceEnabled === false && !hdsServiceController.featureToggled">
+  <div class="hds">
+    <div class="centered-info-pane full-height">
+      <--! TODO: Add service activate page here -->
+    </div>
+  </div>
+</div>
 
 <div ng-if="hdsServiceController.serviceEnabled === null && !hdsServiceController.featureToggled">
   <div class="hds">
     <div class="centered-info-pane full-height">
       <i class="icon icon-spinner icon-2x"></i>
-      <p>Loading, please wait...</p>
+      <p translate="hercules.overview.loading"></p>
     </div>
   </div>
 </div>

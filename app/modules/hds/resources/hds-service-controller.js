@@ -1,15 +1,18 @@
 (function () {
   'use strict';
 
+  angular
+    .module('HDS')
+    .controller('HDSServiceController', HDSServiceController);
+
   /* @ngInject */
-  function HDSServiceController($log, $state, $scope, $translate, HDSClusterService, FusionClusterService, FeatureToggleService) {
+  function HDSServiceController($state, $scope, $translate, HDSClusterService, FusionClusterService, FeatureToggleService) {
 
 
     var vm = this;
     vm.state = $state;
     vm.serviceEnabled = null;
-    vm.currentServiceType = "hds_app";
-    vm.currentServiceId = "spark-hybrid-datasecurity";
+    vm.currentServiceType = 'hds_app';
     vm.featureToggled = false;
     vm.backState = 'services-overview';
     vm.pageTitle = 'hds.resources.page_title';
@@ -55,21 +58,19 @@
       }]
     };
 
-    if (vm.currentServiceId == "spark-hybrid-datasecurity") {
-      FusionClusterService.serviceIsSetUp(vm.currentServiceId).then(function (enabled) {
-        if (enabled) {
-          vm.serviceEnabled = enabled;
-        }
-      });
-    }
-    vm.featureToggled = false;
+
+    FusionClusterService.serviceIsSetUp('spark-hybrid-datasecurity').then(function (enabled) {
+      if (enabled) {
+        vm.serviceEnabled = enabled;
+      }
+    });
+
+
     FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity)
       .then(function (reply) {
         vm.featureToggled = reply;
       });
 
-    $log.info('vm.serviceEnabled', vm.serviceEnabled);
-    $log.info('vm.featureToggled', vm.featureToggled);
     function clusterLength() {
       return _.size(vm.clusters);
     }
@@ -84,8 +85,4 @@
     }
 
   }
-
-  angular
-    .module('HDS')
-    .controller('HDSServiceController', HDSServiceController);
 }());
