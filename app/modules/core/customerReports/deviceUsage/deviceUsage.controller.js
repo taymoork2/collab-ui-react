@@ -123,9 +123,10 @@
     function init() {
       var chart = DeviceUsageTotalService.getLineChart();
       chart.listeners = [
-      { event: 'rollOverGraphItem', method: rollOverGraphItem },
-      { event: 'rollOutGraphItem', method: rollOutGraphItem },
-      { event: 'dataUpdated', method: graphRendered }
+        { event: 'rollOverGraphItem', method: rollOverGraphItem },
+        { event: 'rollOutGraphItem', method: rollOutGraphItem },
+        { event: 'dataUpdated', method: graphRendered },
+        { event: 'clickGraphItem', method: graphClick }
       ];
       amChart = DeviceUsageTotalService.makeChart('device-usage-total-chart', chart);
       loadInitData();
@@ -155,6 +156,10 @@
 
     function graphRendered() {
       vm.loading = false;
+    }
+
+    function graphClick(data) {
+      DeviceUsageSplunkMetricsService.reportOperation(DeviceUsageSplunkMetricsService.eventTypes.graphClick);
     }
 
     function handleReject(reject) {
