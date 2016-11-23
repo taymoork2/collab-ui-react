@@ -6,10 +6,8 @@
     .controller('MediaSeriveMeetingsReportsCtrl', MediaSeriveMeetingsReportsCtrl);
 
   /* @ngInject */
-  function MediaSeriveMeetingsReportsCtrl($translate, $q, $scope, $interval, MediaClusterServiceV2, Notification, MeetingsReportService, MeetingsGraphService) {
+  function MediaSeriveMeetingsReportsCtrl($translate, $scope, $interval, Notification, MeetingsReportService, MeetingsGraphService, $timeout) {
     var vm = this;
-    var deferred = $q.defer();
-    //var ABORT = 'ABORT';
 
     vm.pageTitle = $translate.instant('mediaFusion.meetings-report.title');
     vm.noData = $translate.instant('mediaFusion.metrics.nodata');
@@ -18,7 +16,6 @@
     vm.setTotalMeetingData = setTotalMeetingData;
     vm.setTotalMinutesData = setTotalMinutesData;
     vm.setTotalParticipantData = setTotalParticipantData;
-    vm.clusterUpdate = clusterUpdate;
     vm.timeUpdate = timeUpdate;
 
     vm.clusterOptions = [vm.allClusters];
@@ -54,9 +51,16 @@
       loading: true
     };
 
-    vm.clientTypeChartOptions = {
-      id: 'clienttype',
-      desc: 'Client Type',
+    vm.meetingTypeChartOptions = {
+      id: 'meetingtype',
+      desc: 'Meeting Type',
+      noData: false,
+      loading: true
+    };
+
+    vm.meetingTypeDurationChartOptions = {
+      id: 'meetingtypeduration',
+      desc: 'Meeting Type Duration',
       noData: false,
       loading: true
     };
@@ -98,37 +102,6 @@
       }
     }
 
-    function getCluster() {
-      MediaClusterServiceV2.getAll()
-        .then(function (clusters) {
-          vm.clusters = _.filter(clusters, { targetType: 'mf_mgmt' });
-          _.each(clusters, function (cluster) {
-            if (cluster.targetType === "mf_mgmt") {
-              vm.clusterOptions.push(cluster.name);
-              vm.Map[cluster.name] = cluster.id;
-            }
-          });
-          deferred.resolve(vm.Map);
-          vm.clusterId = vm.clusterOptions[0];
-          vm.clusterSelected = vm.clusterOptions[0];
-
-        }).catch(function (err) {
-          Notification.errorWithTrackingId(err, vm.errorData);
-        });
-      return deferred.promise;
-    }
-
-    function clusterUpdate() {
-      displayDate();
-      if (vm.clusterSelected !== vm.allClusters) {
-        vm.clusterId = vm.Map[vm.clusterSelected];
-      } else {
-        vm.clusterId = vm.allClusters;
-      }
-      // setDummyData();
-      setAllGraphs();
-    }
-
     function timeUpdate() {
       displayDate();
       // setDummyData();
@@ -136,13 +109,10 @@
     }
 
     function loadDatas() {
-      getCluster();
-      clusterUpdate();
+      timeUpdate();
     }
 
     function setAllGraphs() {
-      //      setTotalMeetingData();
-      //      setTotalMinutesData();
       setMeetingMetricsData();
       setTotalParticipantData();
       setMeetingPieData();
@@ -151,29 +121,48 @@
     loadDatas();
 
     // Code for auto reload the rest calls every 5 minutes
-    var interval = $interval(clusterUpdate, 300000);
+    var interval = $interval(timeUpdate, 300000);
     $scope.$on('$destroy', function () {
       $interval.cancel(interval);
     });
 
 
     function setMeetingPieData() {
-      setMeetingLocationData();
-      setClientTypeData();
+      $timeout(function () {
+        setMeetingLocationData();
+        setMeetingTypeData();
+        setMeetingTypeDuration();
+      }, 1000);
     }
 
-    function setClientTypeData() {
-      vm.clientTypeChartOptions.loading = true;
-      vm.clientTypeChartOptions.noData = false;
-      MeetingsReportService.getClientTypeData(vm.timeSelected, vm.clusterSelected).then(function (data) {
-        if (_.isUndefined(data) || data.length === 0 || _.isUndefined(data.dataProvider)) {
-          setDummyPieChart(vm.clientTypeChartOptions);
+    function setMeetingTypeDuration() {
+      vm.meetingTypeDurationChartOptions.loading = true;
+      vm.meetingTypeDurationChartOptions.noData = false;
+      MeetingsReportService.getMeetingTypeDurationData(vm.timeSelected, vm.clusterSelected).then(function (data) {
+        if (_.isUndefined(data) || data.length === 0 || _.isUndefined(data.dataProvider) || data.dataProvider.length === 0) {
+          setDummyPieChart(vm.meetingTypeDurationChartOptions);
         } else {
-          setMeetingPieGraph(data, vm.clientTypeChartOptions);
-          vm.clientTypeChartOptions.loading = false;
+          setMeetingPieGraph(data, vm.meetingTypeDurationChartOptions);
+          vm.meetingTypeDurationChartOptions.loading = false;
         }
       }, function (error) {
-        setDummyPieChart(vm.clientTypeChartOptions);
+        setDummyPieChart(vm.meetingTypeDurationChartOptions);
+        Notification.error(error);
+      });
+    }
+
+    function setMeetingTypeData() {
+      vm.meetingTypeChartOptions.loading = true;
+      vm.meetingTypeChartOptions.noData = false;
+      MeetingsReportService.getMeetingTypeData(vm.timeSelected, vm.clusterSelected).then(function (data) {
+        if (_.isUndefined(data) || data.length === 0 || _.isUndefined(data.dataProvider) || data.dataProvider.length === 0) {
+          setDummyPieChart(vm.meetingTypeChartOptions);
+        } else {
+          setMeetingPieGraph(data, vm.meetingTypeChartOptions);
+          vm.meetingTypeChartOptions.loading = false;
+        }
+      }, function (error) {
+        setDummyPieChart(vm.meetingTypeChartOptions);
         Notification.error(error);
       });
     }
@@ -182,7 +171,7 @@
       vm.meetingLocationChartOptions.loading = true;
       vm.meetingLocationChartOptions.noData = false;
       MeetingsReportService.getMeetingLocationData(vm.timeSelected, vm.clusterSelected).then(function (data) {
-        if (_.isUndefined(data) || data.length === 0 || _.isUndefined(data.dataProvider)) {
+        if (_.isUndefined(data) || data.length === 0 || _.isUndefined(data.dataProvider) || data.dataProvider.length === 0) {
           setDummyPieChart(vm.meetingLocationChartOptions);
         } else {
           setMeetingPieGraph(data, vm.meetingLocationChartOptions);
