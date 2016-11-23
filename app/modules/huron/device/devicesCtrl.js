@@ -6,13 +6,14 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService, WizardFactory, FeatureToggleService) {
+  function DevicesCtrlHuron($q, $scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService, WizardFactory, FeatureToggleService) {
     var vm = this;
     vm.devices = {};
     vm.otps = [];
     vm.currentUser = $stateParams.currentUser;
     vm.csdmHuronUserDeviceService = null;
     vm.showGenerateOtpButton = false;
+    vm.generateCodeIsDisabled = true;
 
     function init() {
       fetchFeatureToggles();
@@ -21,11 +22,14 @@
     init();
 
     function fetchFeatureToggles() {
-      FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
+      var placesPromise = FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
         vm.showPlaces = result;
       });
-      FeatureToggleService.csdmATAGetStatus().then(function (result) {
+      var ataPromise = FeatureToggleService.csdmATAGetStatus().then(function (result) {
         vm.showATA = result;
+      });
+      $q.all([placesPromise, ataPromise]).finally(function () {
+        vm.generateCodeIsDisabled = false;
       });
     }
 
