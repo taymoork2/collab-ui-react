@@ -158,7 +158,7 @@
       vm.loading = false;
     }
 
-    function graphClick(data) {
+    function graphClick() {
       DeviceUsageSplunkMetricsService.reportOperation(DeviceUsageSplunkMetricsService.eventTypes.graphClick);
     }
 
