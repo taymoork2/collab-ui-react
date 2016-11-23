@@ -3,10 +3,10 @@
 
   angular
     .module('Hercules')
-    .controller('ExpresswayServiceSettingsController', ExpresswayServiceSettingsController);
+    .controller('CallServiceSettingsController', CallServiceSettingsController);
 
   /* @ngInject */
-  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService, MailValidatorService, CertService, Notification, FusionUtils, CertificateFormatterService, $translate) {
+  function CallServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService, MailValidatorService, CertService, Notification, FusionUtils, CertificateFormatterService, $translate) {
     var vm = this;
     vm.emailSubscribers = '';
     vm.connectorType = $state.current.data.connectorType;
@@ -27,6 +27,31 @@
         }
       });
     }
+
+
+    vm.general = {
+      title: 'common.general'
+    };
+    vm.help = {
+      title: 'common.help'
+    };
+
+    vm.callServiceAware = {
+      title: 'hercules.settings.call.callServiceAware'
+    };
+
+    vm.domainVerification = {
+      title: 'hercules.settings.call.domainVerification'
+    };
+
+    vm.callServiceConnect = {
+      title: 'hercules.settings.call.callServiceConnect'
+    };
+
+
+    vm.deactivate = {
+      title: 'common.deactivate'
+    };
 
     vm.storeEc = function (onlyDisable) {
       if ((onlyDisable && !vm.squaredFusionEc) || !onlyDisable) {
@@ -61,15 +86,15 @@
       vm.savingSip = true;
 
       USSService.updateOrg(vm.org)
-          .then(function () {
-            vm.storeEc(false);
-            vm.savingSip = false;
-            Notification.success('hercules.errors.sipDomainSaved');
-          })
-            .catch(function (error) {
-              vm.savingSip = false;
-              Notification.errorWithTrackingId(error, 'hercules.errors.sipDomainInvalid');
-            });
+        .then(function () {
+          vm.storeEc(false);
+          vm.savingSip = false;
+          Notification.success('hercules.errors.sipDomainSaved');
+        })
+        .catch(function (error) {
+          vm.savingSip = false;
+          Notification.errorWithTrackingId(error, 'hercules.errors.sipDomainInvalid');
+        });
     };
 
     ServiceDescriptor.getEmailSubscribers(vm.servicesId[0], function (error, emailSubscribers) {

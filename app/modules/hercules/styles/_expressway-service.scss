@@ -18,10 +18,15 @@ $user-statuses-bar-height: 7.25rem;
     }
   }
 
+
   .add-resource-button {
     margin-left: 1rem;
   }
 }
+
+
+
+
 
 .hercules.call-service {
   .call-aware,
@@ -35,6 +40,10 @@ $user-statuses-bar-height: 7.25rem;
 
   .feature-settings {
     padding-bottom: 1rem;
+  }
+
+  .sub-section + .sub-section {
+    margin-top: 24px;
   }
 }
 
