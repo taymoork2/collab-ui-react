@@ -5,6 +5,7 @@
   /* @ngInject */
   function MetricsContoller($translate, MediaClusterServiceV2, $q, MetricsReportServiceV2, Notification, MetricsGraphServiceV2, DummyMetricsReportServiceV2, $interval, $scope, CardUtils) {
     var vm = this;
+    var interval = null;
     vm.ABORT = 'ABORT';
     vm.REFRESH = 'refresh';
     vm.SET = 'set';
@@ -106,6 +107,8 @@
       vm.displayRealtime = isDisplayRealtime;
       changeInterval();
       clusterUpdate();
+      $interval.cancel(interval);
+      interval = $interval(clusterUpdate, vm.updateInterval);
     }
 
     function realtimedisplayDate() {
@@ -250,7 +253,7 @@
     });
 
     // Code for auto reload the rest calls every 5 minutes
-    var interval = $interval(clusterUpdate, vm.updateInterval);
+    interval = $interval(clusterUpdate, vm.updateInterval);
     $scope.$on('$destroy', function () {
       $interval.cancel(interval);
     });
