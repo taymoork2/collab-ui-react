@@ -11,8 +11,7 @@
       'type': 'column',
       'fillAlphas': 1,
       'lineAlpha': 0,
-      'balloonColor': chartColors.grayLight,
-      'columnWidth': 0.5
+      'balloonColor': chartColors.grayLight
     };
     baseVariables['smoothedLine'] = {
       'type': 'smoothedLine',
@@ -181,7 +180,7 @@
       });
     }
 
-    function getGanttGraph(data, valueAxis, exportData, valueScrollbar) {
+    function getGanttGraph(data, valueAxis, exportData, catAxis, valueScrollbar) {
       return angular.copy({
         'type': 'gantt',
         'pathToImages': amchartsImages,
@@ -198,6 +197,7 @@
         },
         'rotate': true,
         'categoryField': 'category',
+        'categoryAxis': catAxis,
         'segmentsField': 'segments',
         'colorField': 'color',
         'startField': 'start',

@@ -1,4 +1,6 @@
-<div style="text-align: left">
+<div class="tooltipDiv">
+<h1>Clusters taking more calls</h1>
+<hr>
 	<div ng-repeat="option in nav.hostedOnPremisesArray | limitTo:5">
 	<a ng-click="nav.clusterUpdateFromTooltip(option.clusterName)"
 	ng-class="{performingCluster: option.hostedOnPremises > 0}">

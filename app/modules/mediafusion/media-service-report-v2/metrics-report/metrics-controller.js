@@ -245,6 +245,10 @@
 
     loadDatas();
 
+    $scope.$on('clusterClickEvent', function (event, data) {
+      clusterUpdateFromTooltip(data.data);
+    });
+
     // Code for auto reload the rest calls every 5 minutes
     var interval = $interval(clusterUpdate, vm.updateInterval);
     $scope.$on('$destroy', function () {
@@ -689,10 +693,12 @@
           cluster_name = _.findKey(vm.Map, function (value) {
             return value === val.cluster;
           });
-          if (cluster_name !== "MFA") {
+          if (cluster_name == "" || cluster_name == null) {
             cluster_name = 'Bangalore-Site' + index + '_TEST';
           }
-          vm.clusterAvailabilityArray.push({ clusterName: cluster_name, clusterAvailability: val.value });
+          if (val.value !== 100) {
+            vm.clusterAvailabilityArray.push({ clusterName: cluster_name, clusterAvailability: val.value });
+          }
         });
         vm.clusterAvailabilityArray = _.orderBy(vm.clusterAvailabilityArray, ['clusterAvailability'], ['asc']);
       }, function () {
