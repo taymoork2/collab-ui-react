@@ -10,15 +10,16 @@
 
     var eventTypes = {
       fullReportDownload: 'FULLREPORTDOWNLOAD',
-      timeRangeSelected: 'TIMERANGESELECTED'
+      timeRangeSelected: 'TIMERANGESELECTED',
+      graphClick: 'GRAPHCLICK'
     };
 
     function reportOperation(operation, data) {
-      $log.info('reportClick', operation);
       var json = {
         operation: operation,
         data: data
       };
+      $log.info('reportOperation', json);
 
       LogMetricsService.logMetrics(
         'deviceUsageReports',
