@@ -1,25 +1,8 @@
 (function () {
   'use strict';
 
-  var modalShown = false;
-
   /* @ngInject */
-  function ReadOnlyModalController($modalInstance, Authinfo) {
-    var vm = this;
-
-    vm.orgName = Authinfo.getOrgName();
-
-    vm.ok = function () {
-      $modalInstance.close();
-    };
-
-    vm.learnMore = function () {
-      $modalInstance.close();
-    };
-  }
-
-  /* @ngInject */
-  function ShowReadOnly($modal, Authinfo, $translate, $window) {
+  function ShowReadOnly(Authinfo, $translate, $window) {
 
     function link(scope, element) {
       if (Authinfo.isReadOnlyAdmin()) {
@@ -39,25 +22,9 @@
       }
     }
 
-    function Ctrl() {
-      if (Authinfo.isReadOnlyAdmin()) {
-        var vm = this;
-        if (!modalShown) {
-          modalShown = true;
-          vm.modal = $modal.open({
-            type: 'small',
-            controller: ReadOnlyModalController,
-            controllerAs: 'readOnlyCtrl',
-            templateUrl: 'modules/core/scripts/directives/views/read-only-modal.html'
-          });
-        }
-      }
-    }
-
     return {
       restrict: 'A',
       link: link,
-      controller: Ctrl
     };
 
   }
