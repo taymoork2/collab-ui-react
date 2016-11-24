@@ -44,7 +44,6 @@
     tab: 'placeTab',
     icon: 'icon-location',
     title: 'tabs.placeTab',
-    feature: 'csdm-places',
     state: 'places',
     link: '/places'
   }, {

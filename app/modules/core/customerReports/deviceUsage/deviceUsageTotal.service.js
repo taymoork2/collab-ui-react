@@ -365,6 +365,21 @@
       }
     }
 
+    function makeChart(id, chart) {
+      var amChart = AmCharts.makeChart(id, chart);
+      _.each(amChart.graphs, function (graph) {
+        graph.balloonFunction = renderBalloon;
+      });
+      return amChart;
+    }
+
+    function renderBalloon(graphDataItem) {
+      var text = '<div><h5>' + $translate.instant('reportsPage.usageReports.callDuration') + ' : ' + graphDataItem.dataContext.totalDuration + '</h5>';
+      text = text + $translate.instant('reportsPage.usageReports.callCount') + ' : ' + graphDataItem.dataContext.callCount + ' <br/> ';
+      text = text + $translate.instant('reportsPage.usageReports.pairedCount') + ' : ' + graphDataItem.dataContext.pairedCount + '<br/>';
+      return text;
+    }
+
     function getLineChart() {
       return {
         'type': 'serial',
@@ -546,6 +561,7 @@
       getDataForLastMonths: getDataForLastMonths,
       getDataForRange: getDataForRange,
       getLineChart: getLineChart,
+      makeChart: makeChart,
       getDatesForLastWeek: getDatesForLastWeek,
       getDatesForLastMonths: getDatesForLastMonths,
       exportRawData: exportRawData,

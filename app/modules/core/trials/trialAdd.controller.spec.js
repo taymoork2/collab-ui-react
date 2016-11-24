@@ -548,7 +548,7 @@ describe('Controller: TrialAddCtrl', function () {
     }
 
     _.times(testCase.length, function (index) {
-      var testMsg = 'should confirm ' + angular.toJson(testCase[index].retVal) + ' validates as ' + testCase[index].targetVal;
+      var testMsg = 'should confirm ' + JSON.stringify(testCase[index].retVal) + ' validates as ' + testCase[index].targetVal;
       it(testMsg, function () {
         doTestCase(index);
       });
