@@ -15,7 +15,6 @@
   function FeatureToggleService($http, $q, $resource, $state, Authinfo, HuronCustomerFeatureToggleService, UrlConfig, Orgservice) {
     var features = {
       dirSync: 'atlas-dir-sync',
-      atlasBrandingWordingChange: 'atlas-branding-wording-change',
       atlasCareTrials: 'atlas-care-trials',
       atlasCareCallbackTrials: 'atlas-care-callback-trials',
       atlasContextServiceTrials: 'atlas-context-service-trials',
