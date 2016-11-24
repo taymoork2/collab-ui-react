@@ -5896,10 +5896,7 @@
     }
   },
   "readOnlyModal": {
-    "banner": "You are in read-only mode",
-    "title": "Read-only",
-    "okButton": "OK",
-    "text": "You are now viewing <b>{{orgName}}</b> portal as a read-only user. Your limited access allows viewing of the entire portal, but will not accept changes."
+    "banner": "You are in read-only mode"
   },
   "readOnlyMessages": {
     "notAllowed": "Not allowed in read-only mode. Operation not executed."
