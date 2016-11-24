@@ -4135,7 +4135,9 @@
       "meetings-card": "Total Meetings",
       "minutes-card": "Total Minutes",
       "participants-card": "Total Participants",
-      "adoption-card": "Cluster Adoption"
+      "adoption-card": "Cluster Adoption",
+      "meeting-type-title": "Meeting Type",
+      "meeting-duration-title": "Meeting Duration"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",

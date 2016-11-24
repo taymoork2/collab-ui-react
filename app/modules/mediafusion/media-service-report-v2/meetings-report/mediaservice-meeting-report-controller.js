@@ -43,14 +43,14 @@
 
     vm.meetingTypeChartOptions = {
       id: 'meetingtype',
-      desc: 'Meeting Type',
+      desc: $translate.instant('mediaFusion.meetings-report.meeting-type-title'),
       noData: false,
       loading: true
     };
 
     vm.meetingTypeDurationChartOptions = {
       id: 'meetingtypeduration',
-      desc: 'Meeting Duration',
+      desc: $translate.instant('mediaFusion.meetings-report.meeting-duration-title'),
       noData: false,
       loading: true
     };
