@@ -16,7 +16,7 @@
       title: $translate.instant('mediaFusion.page_title'),
       state: 'media-service-v2.reports-metrics'
     }];
-    vm.pageTitle = $translate.instant('reportsPage.pageTitle');
+    vm.pageTitle = $translate.instant('mediaFusion.metrics.titlev2');
 
     vm.tab = $stateParams.tab;
 

@@ -249,7 +249,9 @@
     loadDatas();
 
     $scope.$on('clusterClickEvent', function (event, data) {
-      clusterUpdateFromTooltip(data.data);
+      if (vm.clusterSelected === vm.allClusters) {
+        clusterUpdateFromTooltip(data.data);
+      }
     });
 
     // Code for auto reload the rest calls every 5 minutes

@@ -47,6 +47,14 @@
   }
 }
 
+body {
+  overflow-y: hidden !important;
+}
+
+.content-container {
+  padding-bottom: 80px !important;
+}
+
 .metrics-reports {
   @extend %content-subheader;
   @extend %page-content-padding;

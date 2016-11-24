@@ -3861,6 +3861,9 @@
     },
     "metrics": {
       "title": "Metrics",
+      "titlev2": "Reports Phase 2 POC",
+      "historical": "Historical",
+      "realTime": "Real time",
       "today": "Last 24 Hours",
       "today2": "Last 24 Hours",
       "last4Hours": "Last 4 Hours",

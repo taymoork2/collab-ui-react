@@ -4,19 +4,19 @@
     <cs-page-sub-header-left>
       <div class="grid-filter" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
         <div class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm'">
-          <span class="name" ng-class="{'active' : nav.displayHistorical}" translate="">Historical</span>
-          <span class="name" ng-class="{'active' : nav.displayRealtime}" translate="">Real time</span>
+          <span class="name" ng-class="{'active' : nav.displayHistorical}" translate="mediaFusion.metrics.historical"></span>
+          <span class="name" ng-class="{'active' : nav.displayRealtime}" translate="mediaFusion.metrics.realTime"></span>
           <i class="icon icon-chevron-down"></i>
         </div>
         <ul ng-class="{'dropdown-menu dropdown-primary' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }" >
           <li class="filter" ng-class="{'active' : nav.displayHistorical}" ng-click="nav.changeTabs(true, false);">
            <a id="allReports"  >
-              <span class="name" translate="">Historical</span>
+              <span class="name" translate="mediaFusion.metrics.historical"></span>
             </a>
           </li>
           <li class="filter" ng-class="{'active' : nav.displayRealtime}" ng-click="nav.changeTabs(false, true);">
              <a id="engagementReports" >
-              <span class="name" translate="">Real time</span>
+              <span class="name" translate="mediaFusion.metrics.realTime"></span>
             </a>
           </li>
         </ul>
