@@ -111,7 +111,7 @@
           displayName: "Cisco 8865NR"
         },
         "MODEL_CISCO_ATA_190": {
-          displayName: "Cisco ATA 190-SC Port 1"
+          displayName: "Cisco ATA190-SC Port 1"
         }
       };
 
