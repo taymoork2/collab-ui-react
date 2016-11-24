@@ -79,7 +79,7 @@
         return item.needsActivation && !item.isUsed;
       }
       function hasIssues(item) {
-        return item.hasIssues && item.isOnline && !item.isUnused;
+        return item.hasIssues && item.isOnline;
       }
 
       function isOnline(item) {
@@ -87,7 +87,7 @@
       }
 
       function isOffline(item) {
-        return !item.isOnline && !item.needsActivation && !item.isUnused;
+        return !item.isOnline && !item.needsActivation;
       }
 
       function setCurrentSearch(search) {

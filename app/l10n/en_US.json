@@ -1381,7 +1381,6 @@
     "nameHeader": "Belongs to",
     "statusHeader": "Status",
     "actionsHeader": "Actions",
-    "account": "Account",
     "unactivatedDevice": "Unactivated Device",
     "informationHeader": "Settings",
     "newCustomTagPlaceholder": "Enter tag...",
@@ -4761,7 +4760,6 @@
     "OnlineWithIssues": "Online, With Issues",
     "Offline": "Offline",
     "Unknown": "Unknown",
-    "Inactive": "Inactive Account",
     "RequiresActivation": "Requires Activation",
     "WithDevices": "With Devices",
     "upgradeChannels": {
@@ -4826,10 +4824,6 @@
       "NetworkQuality": {
         "type": "Packet Loss Detected",
         "message": "During the last call we detected a level of packet loss that may have impacted the call quality. Packet loss is typically caused by network congestion."
-      },
-      "inactive": {
-        "type": "Inactive Account",
-        "message": "An account exists for a device, but there's no corresponding device or activation code. You can delete this account."
       },
       "unknown": {
         "type": "Unknown Error Occurred",

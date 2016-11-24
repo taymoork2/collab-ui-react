@@ -6,7 +6,7 @@
     .controller('RemDeviceController',
 
       /* @ngInject */
-      function ($modalInstance, $translate, CsdmDataModelService, CsdmUnusedAccountsService, FeatureToggleService, deviceOrCode) {
+      function ($modalInstance, $translate, CsdmDataModelService, FeatureToggleService, deviceOrCode) {
         var rdc = this;
         var showPlaces = false;
 
@@ -43,13 +43,8 @@
         };
 
         rdc.deleteDeviceOrCode = function () {
-          if (rdc.deviceOrCode.isUnused) {
-            return CsdmUnusedAccountsService.deleteAccount(rdc.deviceOrCode)
-              .then($modalInstance.close);
-          } else {
-            return CsdmDataModelService.deleteItem(rdc.deviceOrCode)
-              .then($modalInstance.close);
-          }
+          return CsdmDataModelService.deleteItem(rdc.deviceOrCode)
+            .then($modalInstance.close);
         };
       }
     )

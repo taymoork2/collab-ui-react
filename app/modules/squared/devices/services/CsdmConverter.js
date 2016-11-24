@@ -115,29 +115,6 @@
         }
       };
 
-      function UnusedAccount(obj) {
-        this.url = obj.url;
-        this.type = 'cloudberry';
-        this.cisUuid = obj.id;
-        this.displayName = obj.displayName;
-        this.product = t('spacesPage.account');
-        this.cssColorClass = 'device-status-gray';
-        this.state = {
-          readableState: t('CsdmStatus.Inactive'),
-          priority: "4"
-        };
-        this.isOnline = false;
-        this.isUnused = true;
-        this.canDelete = true;
-        this.hasIssues = true;
-        this.accountType = obj.accountType || 'MACHINE';
-        this.image = "images/devices-hi/unknown.png";
-        this.diagnosticsEvents = [{
-          type: translateOrDefault('CsdmStatus.errorCodes.inactive.type', 'Account with no device'),
-          message: translateOrDefault("CsdmStatus.errorCodes.inactive.message", "An account exists for a device, but there's no corresponding device or activation code. You can delete this account.")
-        }];
-      }
-
       function Code(obj) {
         obj.state = obj.status;
         this.isCode = true;
@@ -246,10 +223,6 @@
         return _.mapValues(data, convertHuronDevice);
       }
 
-      function convertAccounts(data) {
-        return _.mapValues(data, convertAccount);
-      }
-
       function convertPlaces(data) {
         return _.mapValues(data, convertPlace);
       }
@@ -260,10 +233,6 @@
 
       function convertHuronDevice(data) {
         return new HuronDevice(data);
-      }
-
-      function convertAccount(data) {
-        return new UnusedAccount(data);
       }
 
       function convertPlace(data) {
@@ -486,9 +455,7 @@
         convertCloudberryDevice: convertCloudberryDevice,
         convertCloudberryDevices: convertCloudberryDevices,
         convertHuronDevice: convertHuronDevice,
-        convertHuronDevices: convertHuronDevices,
-        convertAccount: convertAccount,
-        convertAccounts: convertAccounts
+        convertHuronDevices: convertHuronDevices
       };
 
     }

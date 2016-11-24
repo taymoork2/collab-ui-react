@@ -27,14 +27,12 @@ describe('Service: DeviceFilter', function () {
     }, {
       isOnline: false,
       needsActivation: false
-    }, {
-      isUnused: true
     }]);
     var filters = DeviceFilter.getFilters();
 
     expect(_.find(filters, {
       filterValue: 'all'
-    }).count).toBe(5);
+    }).count).toBe(4);
     expect(_.find(filters, {
       filterValue: 'codes'
     }).count).toBe(1);
@@ -60,14 +58,12 @@ describe('Service: DeviceFilter', function () {
     }, {
       isOnline: false,
       needsActivation: false
-    }, {
-      isUnused: true
     }]);
     var filters = DeviceFilter.getFilters();
 
     expect(_.find(filters, {
       filterValue: 'all'
-    }).count).toBe(5);
+    }).count).toBe(4);
     expect(_.find(filters, {
       filterValue: 'codes'
     }).count).toBe(1);
@@ -94,8 +90,6 @@ describe('Service: DeviceFilter', function () {
     }, {
       isOnline: false,
       needsActivation: false
-    }, {
-      isUnused: true
     }]);
     var filters = DeviceFilter.getFilters();
 
@@ -128,8 +122,6 @@ describe('Service: DeviceFilter', function () {
     }, {
       isOnline: false,
       needsActivation: false
-    }, {
-      isUnused: true
     }];
 
     DeviceFilter.setCurrentSearch('yolo');
@@ -144,7 +136,7 @@ describe('Service: DeviceFilter', function () {
 
     expect(_.find(filters, {
       filterValue: 'all'
-    }).count).toBe(5);
+    }).count).toBe(4);
     expect(_.find(filters, {
       filterValue: 'codes'
     }).count).toBe(0);
@@ -388,21 +380,9 @@ describe('Service: DeviceFilter', function () {
       expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
     });
 
-    it('inactive accounts are not counted as devices with issues', function () {
-      var arr = [{
-        hasIssues: true,
-        isUnused: true
-      }, {}];
-
-      DeviceFilter.setCurrentFilter('issues');
-
-      expect(DeviceFilter.getFilteredList(arr).length).toBe(0);
-    });
-
     it('offline devices are not counted as devices with issues', function () {
       var arr = [{
-        hasIssues: true,
-        isUnused: true
+        hasIssues: true
       }, {}];
 
       DeviceFilter.setCurrentFilter('issues');

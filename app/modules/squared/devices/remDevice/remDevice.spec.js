@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: RemDeviceController', function () {
-  var controller, $q, $rootScope, $httpBackend, CsdmCodeService, CsdmDeviceService, CsdmHuronDeviceService, CsdmUnusedAccountsService, CsdmPlaceService, deviceOrCode;
+  var controller, $q, $rootScope, $httpBackend, CsdmCodeService, CsdmDeviceService, CsdmHuronDeviceService, CsdmPlaceService, deviceOrCode;
   var fakeModal = {
     close: sinon.stub()
   };
@@ -25,7 +25,7 @@ describe('Controller: RemDeviceController', function () {
   }));
 
   describe('Expected Responses', function () {
-    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$httpBackend_, _CsdmCodeService_, _CsdmDeviceService_, _CsdmUnusedAccountsService_, _CsdmPlaceService_, CsdmDataModelService) {
+    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$httpBackend_, _CsdmCodeService_, _CsdmDeviceService_, _CsdmPlaceService_, CsdmDataModelService) {
       var initialDevices = getJSONFixture('squared/json/devices.json');
       var codes = getJSONFixture('squared/json/activationCodes.json');
       var accounts = getJSONFixture('squared/json/accounts.json');
@@ -36,7 +36,6 @@ describe('Controller: RemDeviceController', function () {
       $httpBackend = _$httpBackend_;
       CsdmCodeService = _CsdmCodeService_;
       CsdmDeviceService = _CsdmDeviceService_;
-      CsdmUnusedAccountsService = _CsdmUnusedAccountsService_;
       CsdmPlaceService = _CsdmPlaceService_;
 
       $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond({});
@@ -49,7 +48,6 @@ describe('Controller: RemDeviceController', function () {
 
       spyOn(CsdmCodeService, 'deleteItem').and.returnValue($q.when());
       spyOn(CsdmDeviceService, 'deleteItem').and.returnValue($q.when());
-      spyOn(CsdmUnusedAccountsService, 'deleteAccount').and.returnValue($q.when());
       spyOn(CsdmPlaceService, 'deleteItem').and.returnValue($q.when());
       spyOn(fakeModal, 'close');
 
@@ -80,24 +78,9 @@ describe('Controller: RemDeviceController', function () {
       expect(CsdmCodeService.deleteItem).toHaveBeenCalledWith(controller.deviceOrCode);
     });
 
-    it('should call CsdmUnusedAccountsService to delete an unused account', function () {
-      controller.deviceOrCode = {
-        needsActivation: false,
-        isUnused: true,
-        isCloudberryDevice: true,
-        url: 'fake url unused'
-      };
-      controller.deleteDeviceOrCode();
-      $rootScope.$digest();
-
-      expect(fakeModal.close).toHaveBeenCalled();
-      expect(CsdmUnusedAccountsService.deleteAccount).toHaveBeenCalled();
-    });
-
     it('should call CsdmDeviceService to delete a Cloudberry device', function () {
       controller.deviceOrCode = {
         needsActivation: false,
-        isUnused: false,
         type: 'cloudberry',
         isCloudberryDevice: true,
         url: device1Url,
@@ -114,7 +97,6 @@ describe('Controller: RemDeviceController', function () {
     it('should call CsdmHuronDeviceService to delete a Huron device', function () {
       controller.deviceOrCode = {
         needsActivation: false,
-        isUnused: false,
         type: 'huron',
         isHuronDevice: true,
         url: huronDevice2Url,

@@ -90,7 +90,6 @@ describe('Controller: RemPlaceController', function () {
     it('should call CsdmDeviceService to delete a Huron place', function () {
       controller.place = {
         needsActivation: false,
-        isUnused: false,
         type: 'huron',
         isHuronDevice: true,
         url: 'fake url',
