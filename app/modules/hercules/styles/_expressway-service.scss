@@ -18,35 +18,15 @@ $user-statuses-bar-height: 7.25rem;
     }
   }
 
-
   .add-resource-button {
     margin-left: 1rem;
   }
-}
 
-
-
-
-
-.hercules.call-service {
-  .call-aware,
-  .call-connect {
-    padding-bottom: 2rem;
-  }
-
-  .call-connect {
-    padding-top: 2rem;
-  }
-
-  .feature-settings {
-    padding-bottom: 1rem;
-  }
-
-  .sub-section + .sub-section {
-    margin-top: 24px;
+  .trash-icon {
+    margin-left: 10px;
+    margin-top: 5px;
   }
 }
-
 
 /**
 Special stuff currently used for out own mail input field...
@@ -248,7 +228,7 @@ Special stuff currently used for out own mail input field...
   }
 
   .sip-domain-icon {
-    margin-left: 30px;
+    margin-left: 10px;
   }
 }
 

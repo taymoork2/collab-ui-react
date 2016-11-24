@@ -1,11 +1,9 @@
 <div class="fusion-cluster-settings">
-<setting-section setting="callServiceSettings.general">
-  <div class="sub-section">
-    <p class="sub-section__label" translate="hercules.settings.emailNotificationsHeading"></p>
-    <h6 class="email-subsection" translate="hercules.settings.emailAdministratorHeading"
-        ng-if="callServiceSettings.servicesId[0] === 'squared-fusion-cal'"></h6>
-    <p><span translate="hercules.settings.emailAdministratorNotification"></span><br></p>
-    <tags-input add-on-blur="true"
+  <setting-section setting="callServiceSettings.general">
+    <div class="sub-section">
+      <p class="sub-section__label" translate="hercules.settings.emailNotificationsHeading"></p>
+      <p><span translate="hercules.settings.emailAdministratorNotification"></span></p>
+      <tags-input add-on-blur="true"
                 on-tag-added="callServiceSettings.writeConfig()"
                 on-tag-removed="callServiceSettings.writeConfig()"
                 placeholder={{callServiceSettings.localizedAddEmailWatermark}}
@@ -13,31 +11,34 @@
                 ng-model="callServiceSettings.emailSubscribers"
                 type="email"
                 allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
-    <span class="right" ng-show="callServiceSettings.savingEmail"><span translate="hercules.settings.emailNotificationsSaving"></span> <i class="icon icon-spinner"/></span>
-  </div>
-</setting-section>
+      <span class="right" ng-show="callServiceSettings.savingEmail"><span translate="hercules.settings.emailNotificationsSaving"></span> <i class="icon icon-spinner"/></span>
+    </div>
+  </setting-section>
 
-<setting-section setting="callServiceSettings.callServiceAware">
-  <div class="sub-section">
-    <p class="sub-section__label" translate="hercules.serviceNames.squared-fusion-uc.full"></p>
-    <p><span translate="hercules.settings.call.aware"></span><br></p>
-    <p class="sub-section__label" translate="hercules.settings.call.domainVerification"></p>
-    <div class="hercules-connect-setting"
+  <setting-section setting="callServiceSettings.callServiceAware">
+    <div class="sub-section">
+      <p class="sub-section__label" translate="hercules.serviceNames.squared-fusion-uc.full"></p>
+      <p><span translate="hercules.settings.call.aware"></span><br></p>
+    </div>
+    <div class="sub-section>">
+      <p class="sub-section__label" translate="hercules.settings.call.domainVerification"></p>
+      <div class="hercules-connect-setting"
          ng-controller="DomainManagementCtrl as dv"
          ng-include="'modules/core/domainManagement/domainManagement.tpl.html'"></div>
-  </div>
-</setting-section>
+    </div>
+  </setting-section>
 
-<setting-section ng-if="callServiceSettings.squaredFusionEcEntitled" setting="callServiceSettings.callServiceConnect">
-  <div class="sub-section">
-    <p class="sub-section__label" translate="hercules.serviceNames.squared-fusion-ec"></p>
-    <p translate="hercules.settings.call.connect"></p>
+  <setting-section ng-if="callServiceSettings.squaredFusionEcEntitled" setting="callServiceSettings.callServiceConnect">
+    <div class="sub-section">
+      <p class="sub-section__label" translate="hercules.serviceNames.squared-fusion-ec"></p>
+      <p translate="hercules.settings.call.connect"></p>
             <cs-toggle-switch ng-click="callServiceSettings.storeEc(true)"
                               ng-model="callServiceSettings.squaredFusionEc"
                               toggle-id="squaredFusionEc-toggler" size="small">
             </cs-toggle-switch>
-  </div>
-  <div class="sub-section" ng-if="callServiceSettings.squaredFusionEc">
+    </div>
+    <div class="sub-section" ng-if="callServiceSettings.squaredFusionEc">
+      <div class="hercules-sip-settings">
       <p class="sub-section__description">
         <span class="sub-section__label" translate="hercules.settings.call.sipDomainHeading"></span>
         <i tooltip="{{'hercules.settings.call.sipDomainButtonTooltip' |
@@ -46,8 +47,11 @@
            tooltip-trigger="mouseenter"
            class="icon icon-information sip-domain-icon"></i>
       </p>
+        <div class="row">
+          <div class="columns medium-8">
       <form name="inputSipDestinationForm" ng-submit="callServiceSettings.updateSipDomain()"
             class="hercules-sip-destination-table">
+
         <input ng-disabled="callServiceSettings.savingSip"
                placeholder="{{'hercules.settings.call.sipDomainPlaceholder' | translate}} "
                class="form-control"
@@ -63,78 +67,80 @@
                 ng-disabled="inputSipDestinationForm.$invalid || callServiceSettings.savingSip">
           <span translate="common.save"></span>
         </button>
-
-      </form>
-      <p><em><span translate="hercules.settings.call.sipDomainExample"></span></em></p>
-              <span class=right ng-show="callServiceSettings.savingSip">
+        <span class=right ng-show="callServiceSettings.savingSip">
                 <i class="icon icon-spinner"/>
-            </span>
-  </div>
-  <div class="sub-section" ng-if="callServiceSettings.squaredFusionEc">
-    <p class="sub-section__label" translate="hercules.settings.call.certificatesHeading"></p>
-    <p translate="hercules.settings.call.certificates"></p>
-    <div ng-if="callServiceSettings.certificates.length == 0">
-      <p><em translate="hercules.settings.call.noUploadedCertificate"></em></p>
+        </span>
+      </form>
+
+      <p><em><span translate="hercules.settings.call.sipDomainExample"></span></em></p>
+        </div>
+        </div>
+      </div>
     </div>
-    <div ng-if="callServiceSettings.certificates.length > 0" class="hercules-certificates-table">
-      <p><em translate="hercules.settings.call.uploadedCertificates"></em></p>
-      <hr>
-      <table class="table table-striped">
-        <tbody>
-        <tr data-ng-repeat="cert in callServiceSettings.formattedCertificateList">
-          <td>
-            <em translate="hercules.settings.call.certificatesEmailAddress"></em>
-            <br>
-            <em translate="hercules.settings.call.certificatesCommonName"></em>
-            <br>
-            <em translate="hercules.settings.call.certificatesOrganizationalUnit"></em>
-            <br>
-            <em translate="hercules.settings.call.certificatesOrganization"></em>
-            <br>
-            <em translate="hercules.settings.call.certificatesLocality"></em>
-            <br>
-            <em translate="hercules.settings.call.certificatesStateOrProvince"></em>
-            <br>
-            <em translate="hercules.settings.call.certificatesCountry"></em>
-            <br>
-            <em translate="hercules.settings.call.certificatesCreated"></em>
-            <br>
-            <em translate="hercules.settings.call.certificatesExpires"></em>
-          </td>
-          <td>
-            <span>{{cert.emailAddress}}</span>
-            <br>
-            <span>{{cert.commonName}}</span>
-            <br>
-            <span>{{cert.organizationalUnit}}</span>
-            <br>
-            <span>{{cert.organization}}</span>
-            <br>
-            <span>{{cert.locality}}</span>
-            <br>
-            <span>{{cert.stateAndProvince}}</span>
-            <br>
-            <span>{{cert.country}}</span>
-            <br>
-            <span>{{cert.created | date:'fullDate'}}</span>
-            <br>
-            <span>{{cert.expires | date:'fullDate'}}</span>
-          </td>
-          <td>
-            <i class="icon icon-trash icon-lg trash-icon right"
-               style="margin-left: 10px; margin-top: 5px;"
+    <div class="sub-section" ng-if="callServiceSettings.squaredFusionEc">
+      <p class="sub-section__label" translate="hercules.settings.call.certificatesHeading"></p>
+      <p translate="hercules.settings.call.certificates"></p>
+      <div ng-if="callServiceSettings.certificates.length == 0">
+        <p><em translate="hercules.settings.call.noUploadedCertificate"></em></p>
+      </div>
+      <div ng-if="callServiceSettings.certificates.length > 0" class="hercules-certificates-table">
+        <p><em translate="hercules.settings.call.uploadedCertificates"></em></p>
+        <hr>
+        <table class="table table-striped">
+          <tbody>
+          <tr data-ng-repeat="cert in callServiceSettings.formattedCertificateList">
+            <td>
+              <em translate="hercules.settings.call.certificatesEmailAddress"></em>
+              <br>
+              <em translate="hercules.settings.call.certificatesCommonName"></em>
+              <br>
+              <em translate="hercules.settings.call.certificatesOrganizationalUnit"></em>
+              <br>
+              <em translate="hercules.settings.call.certificatesOrganization"></em>
+              <br>
+              <em translate="hercules.settings.call.certificatesLocality"></em>
+              <br>
+              <em translate="hercules.settings.call.certificatesStateOrProvince"></em>
+              <br>
+              <em translate="hercules.settings.call.certificatesCountry"></em>
+              <br>
+              <em translate="hercules.settings.call.certificatesCreated"></em>
+              <br>
+              <em translate="hercules.settings.call.certificatesExpires"></em>
+            </td>
+            <td>
+              <span>{{cert.emailAddress}}</span>
+              <br>
+              <span>{{cert.commonName}}</span>
+              <br>
+              <span>{{cert.organizationalUnit}}</span>
+              <br>
+              <span>{{cert.organization}}</span>
+              <br>
+              <span>{{cert.locality}}</span>
+              <br>
+              <span>{{cert.stateAndProvince}}</span>
+              <br>
+              <span>{{cert.country}}</span>
+              <br>
+              <span>{{cert.created | date:'fullDate'}}</span>
+              <br>
+              <span>{{cert.expires | date:'fullDate'}}</span>
+            </td>
+            <td>
+              <i class="icon icon-trash icon-lg trash-icon right"
                ng-click="callServiceSettings.confirmCertDelete(cert)"
                popover-trigger="mouseenter"
                popover-placement="left"
                popover="{{'hercules.settings.call.certificateDeleteTooltip' | translate}}">
-            </i>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-      <hr>
-    </div>
-    <button class="btn btn--primary"
+              </i>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <hr>
+      </div>
+      <button class="btn btn--primary"
             name="file"
             accept=".pem, .crt, .der"
             ngf-select="callServiceSettings.uploadCert($file, $event)"
@@ -142,31 +148,27 @@
             loading="callServiceSettings.uploadingCert"
             translate="{{'hercules.settings.call.certificatesUpload'}}">
     </button>
-  </div>
-</setting-section>
+    </div>
+  </setting-section>
 
-<setting-section setting="callServiceSettings.deactivate">
-  <div class="sub-section">
-    <h5 class="sub-section__label" translate="hercules.settings.deactivateServiceHeading"
-        translate-values="{ServiceName: callServiceSettings.localizedServiceName}"></h5>
-    <p translate="hercules.settings.deactivateService"
+  <setting-section setting="callServiceSettings.deactivate">
+    <div class="sub-section">
+      <p class="sub-section__label" translate="hercules.settings.deactivateServiceHeading"
+        translate-values="{ServiceName: callServiceSettings.localizedServiceName}"></p>
+      <p translate="hercules.settings.deactivateService"
        translate-values="{ServiceName: callServiceSettings.localizedServiceName, ConnectorName: callServiceSettings.localizedConnectorName}"></p>
-    <button class="btn" id="deactivateService"
-            ng-click="callServiceSettings.confirmDisable(callServiceSettings.servicesId[0])"
+      <button class="btn" id="deactivateService"
+            ng-click="callServiceSettings.confirmDisable('squared-fusion-uc')"
             translate="hercules.settings.deactivate">
     </button>
-  </div>
-</setting-section>
+    </div>
+  </setting-section>
 
-<setting-section setting="callServiceSettings.help">
-  <div class="sub-section">
+  <setting-section setting="callServiceSettings.help">
+    <div class="sub-section">
     <p class="sub-section__label" translate="hercules.settings.documentationHeading"></p>
     <p translate="hercules.settings.documentationHelpLink"></p>
     <p translate="hercules.settings.documentationDownloadLink"></p>
   </div>
-  <!--<div class="sub-section">-->
-    <!--<h5 translate="hercules.settings.call.featureHeading"></h5>-->
-    <!--<p translate="hercules.settings.call.feature"></p>-->
-  <!--</div>-->
-</setting-section>
+  </setting-section>
 </div>

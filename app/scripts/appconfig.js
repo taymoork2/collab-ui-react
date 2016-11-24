@@ -2730,16 +2730,6 @@
               }
             }
           })
-          .state('management-service', {
-            templateUrl: 'modules/hercules/overview/overview.html',
-            controller: 'ExpresswayServiceController',
-            controllerAs: 'exp',
-            data: {
-              connectorType: 'c_mgmt'
-            },
-            parent: 'main',
-            abstract: true
-          })
           .state('management-service.list', {
             url: '/services/expressway-management',
             views: {

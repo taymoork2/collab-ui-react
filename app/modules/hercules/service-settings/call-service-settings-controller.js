@@ -6,49 +6,41 @@
     .controller('CallServiceSettingsController', CallServiceSettingsController);
 
   /* @ngInject */
-  function CallServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService, MailValidatorService, CertService, Notification, FusionUtils, CertificateFormatterService, $translate) {
+  function CallServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService, MailValidatorService, CertService, Notification, CertificateFormatterService, $translate) {
     var vm = this;
     vm.emailSubscribers = '';
-    vm.connectorType = $state.current.data.connectorType;
-    vm.servicesId = FusionUtils.connectorType2ServicesId(vm.connectorType);
     vm.formattedCertificateList = [];
     vm.readCerts = readCerts;
     vm.localizedAddEmailWatermark = $translate.instant('hercules.settings.emailNotificationsWatermark');
     vm.enableEmailSendingToUser = false;
     vm.squaredFusionEc = false;
     vm.squaredFusionEcEntitled = Authinfo.isFusionEC();
-    vm.localizedServiceName = $translate.instant('hercules.serviceNames.' + vm.servicesId[0]);
-    vm.localizedConnectorName = $translate.instant('hercules.connectorNames.' + vm.servicesId[0]);
+    vm.localizedServiceName = $translate.instant('hercules.serviceNames.squared-fusion-uc');
+    vm.localizedConnectorName = $translate.instant('hercules.connectorNames.squared-fusion-uc');
     if (vm.squaredFusionEcEntitled) {
-      ServiceDescriptor.isServiceEnabled('squared-fusion-ec', function (a, b) {
+      ServiceDescriptor.isServiceEnabled('squared-fusion-uc', function (a, b) {
         vm.squaredFusionEc = b;
         if (vm.squaredFusionEc) {
           readCerts();
         }
       });
     }
-
-
     vm.general = {
       title: 'common.general'
     };
     vm.help = {
       title: 'common.help'
     };
-
     vm.callServiceAware = {
-      title: 'hercules.settings.call.callServiceAware'
+      title: 'hercules.serviceNames.squared-fusion-uc.full'
     };
 
     vm.domainVerification = {
       title: 'hercules.settings.call.domainVerification'
     };
-
     vm.callServiceConnect = {
-      title: 'hercules.settings.call.callServiceConnect'
+      title: 'hercules.serviceNames.squared-fusion-ec'
     };
-
-
     vm.deactivate = {
       title: 'common.deactivate'
     };
@@ -96,8 +88,7 @@
           Notification.errorWithTrackingId(error, 'hercules.errors.sipDomainInvalid');
         });
     };
-
-    ServiceDescriptor.getEmailSubscribers(vm.servicesId[0], function (error, emailSubscribers) {
+    ServiceDescriptor.getEmailSubscribers('squared-fusion-uc', function (error, emailSubscribers) {
       if (!error) {
         vm.emailSubscribers = _.map(_.without(emailSubscribers.split(','), ''), function (user) {
           return {
@@ -117,7 +108,8 @@
         Notification.error('hercules.errors.invalidEmail');
       } else {
         vm.savingEmail = true;
-        ServiceDescriptor.setEmailSubscribers(vm.servicesId[0], emailSubscribers, function (statusCode) {
+
+        ServiceDescriptor.setEmailSubscribers('squared-fusion-uc', emailSubscribers, function (statusCode) {
           if (statusCode === 204) {
             Notification.success('hercules.settings.emailNotificationsSavingSuccess');
           } else {
