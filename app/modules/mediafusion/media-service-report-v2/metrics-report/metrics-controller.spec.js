@@ -298,7 +298,7 @@ describe('Controller:MetricsContoller', function () {
       expect(controller.isEmpty('refresh')).toBeFalsy();
     });
   });
-  it('getClusterAvailabilityData should be called for setClusterAvailabilityHistorical', function () {
+  xit('getClusterAvailabilityData should be called for setClusterAvailabilityHistorical', function () {
     controller.timeSelected = timeOptions[2];
     controller.clusterId = allClusters;
     controller.setClusterAvailabilityHistorical();
