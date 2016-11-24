@@ -13,7 +13,6 @@ describe('CsdmConverterSpec', function () {
     var obj = {
       description: '["foo"]'
     };
-    expect(converter.convertCode(obj).tags[0]).toBe('foo');
     expect(converter.convertCloudberryDevice(obj).tags[0]).toBe('foo');
   });
 
@@ -23,13 +22,6 @@ describe('CsdmConverterSpec', function () {
     };
     expect(converter.convertHuronDevice(obj).tags[0]).toBe('foo');
     expect(converter.convertHuronDevice(obj).tags[1]).toBe('bar');
-  });
-
-  it('should add needsActivation flag', function () {
-    var arr = [{
-      state: 'UNCLAIMED'
-    }];
-    expect(converter.convertCloudberryDevices(arr)[0].needsActivation).toBeTruthy();
   });
 
   it('unknown product should be cleared', function () {

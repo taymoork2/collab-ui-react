@@ -13,29 +13,23 @@ describe('Service: DeviceFilter', function () {
   }));
 
   it('should return a list of filters', function () {
-    expect(DeviceFilter.getFilters().length).toBe(5);
+    expect(DeviceFilter.getFilters().length).toBe(4);
   });
 
   it('should filters and settings', function () {
     DeviceFilter.getFilteredList([{
       isOnline: true
     }, {
-      needsActivation: true
-    }, {
       isOnline: true,
       hasIssues: true
     }, {
-      isOnline: false,
-      needsActivation: false
+      isOnline: false
     }]);
     var filters = DeviceFilter.getFilters();
 
     expect(_.find(filters, {
       filterValue: 'all'
-    }).count).toBe(4);
-    expect(_.find(filters, {
-      filterValue: 'codes'
-    }).count).toBe(1);
+    }).count).toBe(3);
     expect(_.find(filters, {
       filterValue: 'issues'
     }).count).toBe(1);
@@ -51,22 +45,16 @@ describe('Service: DeviceFilter', function () {
     DeviceFilter.getFilteredList([{
       isOnline: true
     }, {
-      needsActivation: true
-    }, {
       isOnline: true,
       hasIssues: true
     }, {
-      isOnline: false,
-      needsActivation: false
+      isOnline: false
     }]);
     var filters = DeviceFilter.getFilters();
 
     expect(_.find(filters, {
       filterValue: 'all'
-    }).count).toBe(4);
-    expect(_.find(filters, {
-      filterValue: 'codes'
-    }).count).toBe(1);
+    }).count).toBe(3);
     expect(_.find(filters, {
       filterValue: 'issues'
     }).count).toBe(1);
@@ -83,21 +71,15 @@ describe('Service: DeviceFilter', function () {
     DeviceFilter.getFilteredList([{
       isOnline: true
     }, {
-      needsActivation: false
-    }, {
       hasIssues: true,
       isOnline: true
     }, {
-      isOnline: false,
-      needsActivation: false
+      isOnline: false
     }]);
     var filters = DeviceFilter.getFilters();
 
     expect(_.find(filters, {
       filterValue: 'all'
-    }).count).toBe(0);
-    expect(_.find(filters, {
-      filterValue: 'codes'
     }).count).toBe(0);
     expect(_.find(filters, {
       filterValue: 'issues'
@@ -114,14 +96,11 @@ describe('Service: DeviceFilter', function () {
     var arr = [{
       isOnline: true
     }, {
-      needsActivation: false
-    }, {
       displayName: 'yolo',
       hasIssues: true,
       isOnline: true
     }, {
-      isOnline: false,
-      needsActivation: false
+      isOnline: false
     }];
 
     DeviceFilter.setCurrentSearch('yolo');
@@ -129,17 +108,14 @@ describe('Service: DeviceFilter', function () {
     expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
 
     DeviceFilter.resetFilters();
-    expect(DeviceFilter.getFilters().length).toBe(5);
-    expect(translate.instant).toHaveBeenCalledTimes(5);
+    expect(DeviceFilter.getFilters().length).toBe(4);
+    expect(translate.instant).toHaveBeenCalledTimes(4);
     DeviceFilter.getFilteredList(arr);
     var filters = DeviceFilter.getFilters();
 
     expect(_.find(filters, {
       filterValue: 'all'
-    }).count).toBe(4);
-    expect(_.find(filters, {
-      filterValue: 'codes'
-    }).count).toBe(0);
+    }).count).toBe(3);
     expect(_.find(filters, {
       filterValue: 'issues'
     }).count).toBe(1);
@@ -148,7 +124,7 @@ describe('Service: DeviceFilter', function () {
     }).count).toBe(2);
     expect(_.find(filters, {
       filterValue: 'offline'
-    }).count).toBe(2);
+    }).count).toBe(1);
   });
 
   describe('get filtered list', function () {
@@ -325,16 +301,6 @@ describe('Service: DeviceFilter', function () {
       expect(DeviceFilter.getFilteredList(arr).length).toBe(2);
     });
 
-    it('should filter activation codes', function () {
-      var arr = [{
-        needsActivation: true
-      }, {}];
-
-      DeviceFilter.setCurrentFilter('codes');
-
-      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
-    });
-
     it('should filter online devices', function () {
       var arr = [{
         isOnline: true
@@ -347,8 +313,7 @@ describe('Service: DeviceFilter', function () {
 
     it('should filter offline devices', function () {
       var arr = [{
-        isOnline: false,
-        needsActivation: false
+        isOnline: false
       }, {
         isOnline: true
       }];
@@ -356,17 +321,6 @@ describe('Service: DeviceFilter', function () {
       DeviceFilter.setCurrentFilter('offline');
 
       expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
-    });
-
-    it('activation codes are not offline', function () {
-      var arr = [{
-        isOnline: false,
-        needsActivation: true
-      }];
-
-      DeviceFilter.setCurrentFilter('offline');
-
-      expect(DeviceFilter.getFilteredList(arr).length).toBe(0);
     });
 
     it('should filter devices in error', function () {

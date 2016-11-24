@@ -6,44 +6,27 @@
     .controller('RemDeviceController',
 
       /* @ngInject */
-      function ($modalInstance, $translate, CsdmDataModelService, FeatureToggleService, deviceOrCode) {
+      function ($modalInstance, $translate, CsdmDataModelService, device) {
         var rdc = this;
-        var showPlaces = false;
 
-        rdc.deviceOrCode = deviceOrCode;
-
-        FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
-          showPlaces = result;
-        });
+        rdc.device = device;
 
         rdc.getDeleteText = function () {
-          if (deviceOrCode.needsActivation) {
-            if (showPlaces) {
-              return $translate.instant('placesPage.deletePlace');
-            }
-            return $translate.instant('deviceOverviewPage.deleteLocation');
-          }
-          if (deviceOrCode.isATA) {
-            return $translate.instant('deviceOverviewPage.deleteDeviceType', { deviceType: deviceOrCode.product });
+          if (device.isATA) {
+            return $translate.instant('deviceOverviewPage.deleteDeviceType', { deviceType: device.product });
           }
           return $translate.instant('spacesPage.deleteDevice');
         };
 
         rdc.getDeleteConfText = function () {
-          if (deviceOrCode.needsActivation) {
-            if (showPlaces) {
-              return $translate.instant('spacesPage.deletePlaceConfText');
-            }
-            return $translate.instant('spacesPage.deleteLocationConfText');
-          }
-          if (deviceOrCode.isATA) {
+          if (device.isATA) {
             return $translate.instant('deviceOverviewPage.deleteATAConfText');
           }
           return $translate.instant('spacesPage.deleteDeviceConfText');
         };
 
-        rdc.deleteDeviceOrCode = function () {
-          return CsdmDataModelService.deleteItem(rdc.deviceOrCode)
+        rdc.deleteDevice = function () {
+          return CsdmDataModelService.deleteItem(rdc.device)
             .then($modalInstance.close);
         };
       }
@@ -51,10 +34,10 @@
     .service('RemDeviceModal',
       /* @ngInject */
       function ($modal) {
-        function open(deviceOrCode) {
+        function open(device) {
           return $modal.open({
             resolve: {
-              deviceOrCode: _.constant(deviceOrCode)
+              device: _.constant(device)
             },
             controllerAs: 'rdc',
             controller: 'RemDeviceController',

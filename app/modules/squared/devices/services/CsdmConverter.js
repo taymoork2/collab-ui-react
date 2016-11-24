@@ -28,7 +28,6 @@
         this.cssColorClass = getCssColorClass(obj);
         this.state = getState(obj);
         this.upgradeChannel = getUpgradeChannel(obj);
-        this.needsActivation = getNeedsActivation(obj);
         this.diagnosticsEvents = getDiagnosticsEvents(obj);
         this.rsuKey = obj.remoteSupportUser && obj.remoteSupportUser.token;
         this.canDelete = true;
@@ -116,40 +115,14 @@
       };
 
       function Code(obj) {
-        obj.state = obj.status;
-        this.isCode = true;
-
-        this.url = obj.url;
-        this.type = obj.type || 'cloudberry';
-        this.cisUuid = obj.id;
-        this.tags = getTags(obj.description);
         this.expiryTime = obj.expiryTime;
-        this.expiresOn = obj.expiryTime;
-        this.friendlyExpiryTime = convertExpiryTime(obj.expiryTime);
-        this.product = t('spacesPage.unactivatedDevice');
-        this.tags = getTags(obj.description);
-        this.displayName = obj.displayName;
         this.activationCode = obj.activationCode;
-        this.state = getState(obj);
-        this.cssColorClass = getCssColorClass(obj);
-        this.needsActivation = getNeedsActivation(obj);
-        this.readableActivationCode = getReadableActivationCode(obj);
-        this.canDelete = true;
-        this.canEditDisplayName = true;
-        this.image = "images/devices-hi/unknown.png";
-        this.accountType = obj.accountType || 'MACHINE';
-        this.supportsCustomTags = true;
-        this.updateName = function (newName) {
-          this.displayName = newName;
-        };
       }
 
       function updatePlaceFromItem(place, item) {
 
         if (item.isPlace) {
           updatePlaceFromPlace(place, item);
-        } else if (item.isCode) {
-          updatePlaceFromCode(place, item);
         } else {
           updatePlaceFromDevice(place, item);
         }
@@ -164,25 +137,13 @@
         Place.bind(updatedPlace)(updatedPlace);
       }
 
-      function updatePlaceFromCode(place, code) {
-        var updatedPlace = place;
-        updatedPlace.type = code.type || 'cloudberry';
-        updatedPlace.cisUuid = code.cisUuid || code.uuid;
-        updatedPlace.displayName = code.displayName;
-        Place.bind(updatedPlace)(updatedPlace);
-      }
-
       function updatePlaceFromPlace(place, placeToUpdateFrom) {
 
         if (_.isEmpty(placeToUpdateFrom.devices)) {
           placeToUpdateFrom = _.merge(placeToUpdateFrom, _.pick(place, ['devices']));
         }
-        if (_.isEmpty(placeToUpdateFrom.codes)) {
-          placeToUpdateFrom = _.merge(placeToUpdateFrom, _.pick(place, ['codes']));
-        }
         Place.bind(place)(placeToUpdateFrom);
         place.devices = placeToUpdateFrom.devices;
-        place.codes = placeToUpdateFrom.codes;
       }
 
       function Place(obj) {
@@ -205,14 +166,6 @@
       function decodeHuronTags(description) {
         var tagString = _.replace(description, /\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
         return tagString;
-      }
-
-      function convertExpiryTime(expiryTime) {
-        return moment().to(expiryTime);
-      }
-
-      function convertCodes(data) {
-        return _.mapValues(data, convertCode);
       }
 
       function convertCloudberryDevices(data) {
@@ -349,16 +302,6 @@
         return (obj.status && obj.status.events) || [];
       }
 
-      function getNeedsActivation(obj) {
-        return obj.state == 'UNCLAIMED';
-      }
-
-      function getReadableActivationCode(obj) {
-        if (obj.activationCode) {
-          return obj.activationCode.match(/.{4}/g).join(' ');
-        }
-      }
-
       function getIsOnline(obj) {
         return (obj.status || {}).connectionStatus == 'CONNECTED';
       }
@@ -451,7 +394,6 @@
         convertPlace: convertPlace,
         convertPlaces: convertPlaces,
         convertCode: convertCode,
-        convertCodes: convertCodes,
         convertCloudberryDevice: convertCloudberryDevice,
         convertCloudberryDevices: convertCloudberryDevices,
         convertHuronDevice: convertHuronDevice,
