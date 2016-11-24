@@ -3939,7 +3939,9 @@
       "nodes": "Node(s)",
       "node": "Node",
       "availabilityStatus": "Availability Status",
-      "clusterTitle": "Cluster"
+      "clusterTitle": "Cluster",
+      "lowAvailableClusters": "Low availability clusters",
+      "clusterTakingMoreCalls":"Clusters taking more calls"
     },
     "serviceStatus": {
       "unknown": "Status unknown",

@@ -5,7 +5,6 @@
   /* @ngInject */
   function MetricsReportServiceV2($http, $translate, $q, Authinfo, Notification, Log, chartColors, UrlConfig) {
     var urlBase = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId();
-    //var urlBase = 'http://localhost:8080/athena-server-1.0-SNAPSHOT/athena/api/v1' + '/organizations/' + Authinfo.getOrgId();
     var utilizationUrl = '/utilization';
     var callVolumeUrl = '/call_volume';
     var clusterAvailability = '/clusters_availability';

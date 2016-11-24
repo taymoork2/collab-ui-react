@@ -25,7 +25,7 @@
     vm.setRealTimeAvailabilityData = setRealTimeAvailabilityData;
     vm.setRealTimeUtilizationData = setRealTimeUtilizationData;
     vm.setRealTimeTotalCallsData = setRealTimeTotalCallsData;
-    vm.setRealtimeClusterAvailability = setRealtimeClusterAvailability;
+    vm.setRealTimeClusterAvailability = setRealTimeClusterAvailability;
     vm.setCallVolumeHistoricalData = setCallVolumeHistoricalData;
     vm.setAvailabilityHistoricalData = setAvailabilityHistoricalData;
     vm.setUtilizationHistoricalData = setUtilizationHistoricalData;
@@ -59,7 +59,7 @@
     vm.displayHistorical = true;
     vm.displayRealtime = false;
 
-    vm.realtimeOptions = [{
+    vm.realTimeOptions = [{
       value: 4,
       label: $translate.instant('mediaFusion.metrics.last4Hours'),
       description: $translate.instant('mediaFusion.metrics.last4Hours')
@@ -87,9 +87,9 @@
 
     displayDate();
 
-    vm.realtimeSelected = vm.realtimeOptions[0];
-    vm.realtimedisplayDate = realtimedisplayDate;
-    realtimedisplayDate();
+    vm.realTimeSelected = vm.realTimeOptions[0];
+    vm.realTimeDisplayDate = realTimeDisplayDate;
+    realTimeDisplayDate();
 
     function changeInterval() {
       if (vm.displayHistorical) {
@@ -111,13 +111,13 @@
       interval = $interval(clusterUpdate, vm.updateInterval);
     }
 
-    function realtimedisplayDate() {
+    function realTimeDisplayDate() {
       var date1 = new Date();
       var month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-      if (vm.realtimeSelected.value === 4) {
+      if (vm.realTimeSelected.value === 4) {
 
-        vm.label = vm.realtimeSelected.label;
+        vm.label = vm.realTimeSelected.label;
         vm.date = date1.getHours() + ':' + (date1.getMinutes() < 10 ? '0' : '') + date1.getMinutes() + ' ' + month[date1.getMonth()] + ' ' + date1.getDate() + ',' + date1.getFullYear();
         vm.date = $translate.instant('mediaFusion.metrics.lastRefresh') + ' ' + vm.date;
 
@@ -222,7 +222,7 @@
         setDummyData();
         setAllHistoricalGraphs();
       } else {
-        realtimedisplayDate();
+        realTimeDisplayDate();
         setAllRealTimeGraphs();
       }
     }
@@ -254,7 +254,7 @@
       }
     });
 
-    // Code for auto reload the rest calls every 5 minutes
+    // Code for auto reload the rest calls every 5 minutes For Historical & 1 minute For Real Time
     interval = $interval(clusterUpdate, vm.updateInterval);
     $scope.$on('$destroy', function () {
       $interval.cancel(interval);
@@ -274,7 +274,7 @@
       setRealTimeAvailabilityData();
       setRealTimeCallVolumeData();
       setRealTimeTotalCallsData();
-      setRealtimeClusterAvailability();
+      setRealTimeClusterAvailability();
     }
 
     function setAllHistoricalGraphs() {
@@ -303,19 +303,19 @@
     }
 
     function setRealTimeCallVolumeGraph(data) {
-      var tempCallVolumeChart = MetricsGraphServiceV2.setCallVolumeGraph(data, vm.callVolumeChart, vm.clusterSelected, vm.realtimeSelected.label, vm.displayHistorical);
+      var tempCallVolumeChart = MetricsGraphServiceV2.setCallVolumeGraph(data, vm.callVolumeChart, vm.clusterSelected, vm.realTimeSelected.label, vm.displayHistorical);
       if (tempCallVolumeChart !== null && !_.isUndefined(tempCallVolumeChart)) {
         vm.callVolumeChart = tempCallVolumeChart;
       }
     }
 
     function setRealTimeCallVolumeData() {
-      MetricsReportServiceV2.getCallVolumeData(vm.realtimeSelected, vm.clusterId).then(function (response) {
+      MetricsReportServiceV2.getCallVolumeData(vm.realTimeSelected, vm.clusterId).then(function (response) {
         if (response === vm.ABORT) {
           return;
         } else if (response.graphData.length === 0) {
           vm.callVolumeStatus = vm.EMPTY;
-          setRealTimeCallVolumeGraph(DummyMetricsReportServiceV2.dummyCallVolumeData(vm.realtimeSelected));
+          setRealTimeCallVolumeGraph(DummyMetricsReportServiceV2.dummyCallVolumeData(vm.realTimeSelected));
         } else {
           setRealTimeCallVolumeGraph(response.graphData);
           vm.callVolumeStatus = vm.SET;
@@ -344,7 +344,7 @@
           tempData.data[0].clusterCategories = availabilityData;
         }
       }
-      var tempAvailabilityChart = MetricsGraphServiceV2.setAvailabilityGraph(tempData, vm.availabilityChart, vm.clusterId, vm.clusterSelected, vm.realtimeSelected.label, vm.displayHistorical);
+      var tempAvailabilityChart = MetricsGraphServiceV2.setAvailabilityGraph(tempData, vm.availabilityChart, vm.clusterId, vm.clusterSelected, vm.realTimeSelected.label, vm.displayHistorical);
       if (tempAvailabilityChart !== null && !_.isUndefined(tempAvailabilityChart)) {
         vm.availabilityChart = tempAvailabilityChart;
       }
@@ -352,23 +352,23 @@
     }
 
     function setRealTimeAvailabilityData() {
-      MetricsReportServiceV2.getAvailabilityData(vm.realtimeSelected, vm.clusterId).then(function (response) {
+      MetricsReportServiceV2.getAvailabilityData(vm.realTimeSelected, vm.clusterId).then(function (response) {
         if (response === vm.ABORT) {
           return;
         } else if (_.isUndefined(response.data) || !_.isArray(response.data) || response.data.length === 0 || _.isUndefined(response.data[0].clusterCategories) || response.data[0].clusterCategories.length === 0) {
           vm.availabilityStatus = vm.EMPTY;
-          setRealTimeAvailabilityGraph(DummyMetricsReportServiceV2.dummyAvailabilityData(vm.realtimeSelected));
+          setRealTimeAvailabilityGraph(DummyMetricsReportServiceV2.dummyAvailabilityData(vm.realTimeSelected));
         } else {
           deferred.promise.then(function () {
             if (!setRealTimeAvailabilityGraph(response)) {
               vm.availabilityStatus = vm.EMPTY;
-              setRealTimeAvailabilityGraph(DummyMetricsReportServiceV2.dummyAvailabilityData(vm.realtimeSelected));
+              setRealTimeAvailabilityGraph(DummyMetricsReportServiceV2.dummyAvailabilityData(vm.realTimeSelected));
             } else {
               vm.availabilityStatus = vm.SET;
             }
           }, //when promise of clusterid to name is a reject this gets executed
             function () {
-              setRealTimeAvailabilityGraph(DummyMetricsReportServiceV2.dummyAvailabilityData(vm.realtimeSelected));
+              setRealTimeAvailabilityGraph(DummyMetricsReportServiceV2.dummyAvailabilityData(vm.realTimeSelected));
               vm.availabilityStatus = vm.EMPTY;
             });
         }
@@ -377,7 +377,7 @@
     }
 
     function setRealTimeUtilizationGraph(data, graphs) {
-      var tempUtilizationChart = MetricsGraphServiceV2.setUtilizationGraph(data, graphs, vm.utilizationChart, vm.clusterSelected, vm.realtimeSelected, vm.displayHistorical);
+      var tempUtilizationChart = MetricsGraphServiceV2.setUtilizationGraph(data, graphs, vm.utilizationChart, vm.clusterSelected, vm.realTimeSelected, vm.displayHistorical);
       if (tempUtilizationChart !== null && !_.isUndefined(tempUtilizationChart)) {
         vm.UtilizationChart = tempUtilizationChart;
       }
@@ -385,12 +385,12 @@
 
     function setRealTimeUtilizationData() {
       if (vm.clusterId === vm.allClusters) {
-        MetricsReportServiceV2.getUtilizationData(vm.realtimeSelected, vm.allClusters).then(function (response) {
+        MetricsReportServiceV2.getUtilizationData(vm.realTimeSelected, vm.allClusters).then(function (response) {
           if (response === vm.ABORT) {
             return;
           } else if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0) {
             vm.utilizationStatus = vm.EMPTY;
-            setRealTimeUtilizationGraph(DummyMetricsReportServiceV2.dummyUtilizationData(vm.realtimeSelected), DummyMetricsReportServiceV2.dummyUtilizationGraph());
+            setRealTimeUtilizationGraph(DummyMetricsReportServiceV2.dummyUtilizationData(vm.realTimeSelected), DummyMetricsReportServiceV2.dummyUtilizationGraph());
           } else {
             deferred.promise.then(function () {
               vm.utilizationClusterName = getClusterName(response.graphs);
@@ -399,14 +399,14 @@
               vm.utilizationStatus = vm.SET;
             },  //when promise of clusterid to name is a reject this gets executed
             function () {
-              setRealTimeUtilizationGraph(DummyMetricsReportServiceV2.dummyUtilizationData(vm.realtimeSelected), DummyMetricsReportServiceV2.dummyUtilizationGraph());
+              setRealTimeUtilizationGraph(DummyMetricsReportServiceV2.dummyUtilizationData(vm.realTimeSelected), DummyMetricsReportServiceV2.dummyUtilizationGraph());
               vm.utilizationStatus = vm.EMPTY;
             });
           }
           resizeCards();
         });
       } else {
-        MetricsReportServiceV2.getUtilizationData(vm.realtimeSelected, vm.allClusters).then(function (response) {
+        MetricsReportServiceV2.getUtilizationData(vm.realTimeSelected, vm.allClusters).then(function (response) {
           if (response === vm.ABORT) {
             return;
           } else if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0) {
@@ -415,7 +415,7 @@
             for (var i = 0; i < response.graphs.length; i++) {
               if (response.graphs[i].valueField !== vm.clusterId) {
                 vm.utilizationStatus = vm.EMPTY;
-                setRealTimeUtilizationGraph(DummyMetricsReportServiceV2.dummyUtilizationData(vm.realtimeSelected), DummyMetricsReportServiceV2.dummyUtilizationGraph());
+                setRealTimeUtilizationGraph(DummyMetricsReportServiceV2.dummyUtilizationData(vm.realTimeSelected), DummyMetricsReportServiceV2.dummyUtilizationGraph());
 
               } else {
                 vm.utilizationClusterName = getClusterName(response.graphs);
@@ -433,7 +433,7 @@
 
     function setRealTimeTotalCallsData() {
       //changing the cluster ID to clister name and this should be changed back to cluster ID in future
-      MetricsReportServiceV2.getTotalCallsData(vm.realtimeSelected, vm.clusterSelected).then(function (response) {
+      MetricsReportServiceV2.getTotalCallsData(vm.realTimeSelected, vm.clusterSelected).then(function (response) {
         if (vm.clusterId === vm.allClusters) {
           if (response === vm.ABORT) {
             return;
@@ -489,8 +489,8 @@
 
     }
 
-    function setRealtimeClusterAvailability() {
-      MetricsReportServiceV2.getClusterAvailabilityData(vm.realtimeSelected, vm.clusterId).then(function (response) {
+    function setRealTimeClusterAvailability() {
+      MetricsReportServiceV2.getClusterAvailabilityData(vm.realTimeSelected, vm.clusterId).then(function (response) {
         if (response === vm.ABORT) {
           return;
         } else if (_.isUndefined(response.data) || response.data.length === 0 || _.isUndefined(response.data.availabilityPercent)) {

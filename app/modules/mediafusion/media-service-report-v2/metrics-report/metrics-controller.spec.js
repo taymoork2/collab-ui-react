@@ -90,7 +90,6 @@ describe('Controller:MetricsContoller', function () {
       Log: Log,
       Config: Config
     });
-    //$scope.$apply();
   }));
   it('controller should be defined', function () {
     expect(controller).toBeDefined();
@@ -104,7 +103,6 @@ describe('Controller:MetricsContoller', function () {
         expect(MetricsReportServiceV2.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0]);
         expect(MetricsReportServiceV2.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0]);
         expect(MetricsReportServiceV2.getUtilizationData).toHaveBeenCalledWith(timeOptions[0]);
-        //expect(MetricsReportServiceV2.getTotalCallsData).toHaveBeenCalledWith(timeOptions[0]);
 
         expect(MetricsGraphServiceV2.setCallVolumeGraph).toHaveBeenCalled();
         expect(MetricsGraphServiceV2.setAvailabilityGraph).toHaveBeenCalled();
@@ -129,7 +127,6 @@ describe('Controller:MetricsContoller', function () {
       expect(MetricsReportServiceV2.getCallVolumeData).toHaveBeenCalledWith(timeOptions[3], allClusters);
       expect(MetricsReportServiceV2.getAvailabilityData).toHaveBeenCalledWith(timeOptions[3], allClusters);
       expect(MetricsReportServiceV2.getUtilizationData).toHaveBeenCalledWith(timeOptions[3], allClusters);
-      //expect(MetricsReportServiceV2.getTotalCallsData).toHaveBeenCalledWith(timeOptions[1], 'All');
 
     });
 
@@ -139,7 +136,6 @@ describe('Controller:MetricsContoller', function () {
       expect(MetricsReportServiceV2.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
       expect(MetricsReportServiceV2.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
       expect(MetricsReportServiceV2.getUtilizationData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
-      //expect(MetricsReportServiceV2.getUtilizationData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
 
     });
     it('should call getClusterAvailabilityData on time filter changes', function () {

@@ -95,7 +95,6 @@
     }
 
     function createCallVolumeGraph(data, cluster, daterange, displayHistorical) {
-      // if there are no active users for this user
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       }
@@ -393,7 +392,6 @@
     }
 
     function createAvailabilityGraph(data, selectedCluster, cluster, daterange, displayHistorical) {
-      // if there are no active users for this user
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       }
