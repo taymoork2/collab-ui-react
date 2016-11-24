@@ -47,11 +47,22 @@
     /////////////////////
 
     function populateUiModel() {
-      if (fromRouteCall) {
-        vm.userSelected.id = vm.menuEntry.actions[0].getValue();
-      } else {
-        if (!_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings)) {
-          vm.userSelected.id = vm.menuKeyEntry.actions[0].queueSettings.fallback.actions[0].getValue();
+      var queueSettings;
+      if (fromRouteCall) { //from Route Call
+        queueSettings = vm.menuEntry.actions[0].queueSettings;
+        if (queueSettings) {
+          if (_.has(queueSettings, 'fallback.actions[0]')) {
+            vm.userSelected.id = queueSettings.fallback.actions[0].getValue();
+          }
+        } else {
+          vm.userSelected.id = vm.menuEntry.actions[0].getValue();
+        }
+      } else { //from phone menu
+        queueSettings = vm.menuKeyEntry.actions[0].queueSettings;
+        if (queueSettings) { //from queueSettings modal
+          if (_.has(queueSettings, 'fallback.actions[0]')) {
+            vm.userSelected.id = queueSettings.fallback.actions[0].getValue();
+          }
         } else {
           vm.userSelected.id = vm.menuKeyEntry.actions[0].getValue();
         }
@@ -66,11 +77,18 @@
 
     function saveUiModel() {
       AACommonService.setPhoneMenuStatus(true);
-      if (fromRouteCall) {
-        vm.menuEntry.actions[0].setValue(vm.userSelected.id);
-      } else {
-        if (!_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings)) {
-          vm.menuKeyEntry.actions[0].queueSettings.fallback.actions[0].setValue(vm.userSelected.id);
+      var action;
+      if (fromRouteCall) { //from route call
+        action = _.get(vm.menuEntry.actions[0].queueSettings.fallback, 'actions[0]');
+        if (action) {
+          action.setValue(vm.userSelected.id);
+        } else {
+          vm.menuEntry.actions[0].setValue(vm.userSelected.id);
+        }
+      } else { //from phone menu
+        action = _.get(vm.menuKeyEntry.actions[0].queueSettings.fallback, 'actions[0]');
+        if (action) { //from queueSettings modal
+          action.setValue(vm.userSelected.id);
         } else {
           vm.menuKeyEntry.actions[0].setValue(vm.userSelected.id);
         }

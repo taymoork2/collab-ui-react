@@ -44,11 +44,22 @@
     /////////////////////
 
     function populateUiModel() {
-      if (fromRouteCall) {
-        vm.model.phoneNumberInput.phoneNumber = vm.menuEntry.actions[0].getValue();
-      } else {
-        if (!_.isUndefined(vm.menuKeyEntry.queueSettings)) {
-          vm.model.phoneNumberInput.phoneNumber = vm.menuKeyEntry.queueSettings.fallback.actions[0].getValue();
+      var queueSettings;
+      if (fromRouteCall) { //from route call
+        queueSettings = vm.menuEntry.actions[0].queueSettings;
+        if (queueSettings) {
+          if (_.has(queueSettings, 'fallback.actions[0]')) {
+            vm.model.phoneNumberInput.phoneNumber = queueSettings.fallback.actions[0].getValue();
+          } else {
+            vm.model.phoneNumberInput.phoneNumber = vm.menuEntry.actions[0].getValue();
+          }
+        }
+      } else { //from phone menu
+        queueSettings = vm.menuKeyEntry.actions[0].queueSettings;
+        if (queueSettings) { //from queueSettings modal
+          if (_.has(queueSettings, 'fallback.actions[0]')) {
+            vm.model.phoneNumberInput.phoneNumber = queueSettings.fallback.actions[0].getValue();
+          }
         } else {
           vm.model.phoneNumberInput.phoneNumber = vm.menuKeyEntry.actions[0].getValue();
         }
@@ -56,17 +67,24 @@
     }
 
     function saveUiModel() {
+      var action;
       var num = vm.model.phoneNumberInput.phoneNumber;
 
       if (num) {
         num = _.replace(num, /[-\s]*/g, '');
       }
 
-      if (fromRouteCall) {
-        vm.menuEntry.actions[0].setValue(num);
-      } else {
-        if (!_.isUndefined(vm.menuKeyEntry.queueSettings)) {
-          vm.menuKeyEntry.queueSettings.fallback.actions[0].setValue(num);
+      if (fromRouteCall) { //from route call
+        action = _.get(vm.menuEntry.actions[0].queueSettings.fallback, 'actions[0]');
+        if (action) {
+          action.setValue(num);
+        } else {
+          vm.menuEntry.actions[0].setValue(num);
+        }
+      } else { //from phone menu
+        action = _.get(vm.menuKeyEntry.actions[0].queueSettings.fallback, 'actions[0]');
+        if (action) { //from queueSettings modal
+          action.setValue(num);
         } else {
           vm.menuKeyEntry.actions[0].setValue(num);
         }

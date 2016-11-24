@@ -54,7 +54,11 @@
       openQueueSettings().result.then(function () {
         // keep changes as modal was resolved with close
         if (fromRouteCall) {
-          vm.menuEntry.actions[0].description = vm.menuEntry.actions[0].queueSettings;
+          vm.menuEntry.actions[0].description = {
+            periodicAnnouncementType: vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].name,
+            initialAnnouncementType: vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0].name,
+            fallback: vm.menuEntry.actions[0].queueSettings.fallback.actions[0].name
+          };
         } else {
           vm.menuKeyEntry.actions[0].description = {
             periodicAnnouncementType: vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].name,
@@ -145,14 +149,16 @@
 
       if (!_.has(queueSettings, 'musicOnHold')) {
         createAction(queueSettings, 'musicOnHold', 'play');
-        vm.menuKeyEntry.actions[0].queueSettings.musicOnHold.actions[0].setValue(CISCO_STD_MOH_URL);
+        var musicOnHold = _.get(queueSettings, 'musicOnHold.actions[0');
+        musicOnHold.setValue(CISCO_STD_MOH_URL);
       }
       if (!_.has(queueSettings, 'initialAnnouncement')) {
         createAction(queueSettings, 'initialAnnouncement', 'say');
       }
       if (!_.has(queueSettings, 'periodicAnnouncement')) {
         createAction(queueSettings, 'periodicAnnouncement', 'say');
-        vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].setDescription(periodicTime);
+        var periodicAnnouncement = _.get(queueSettings, 'periodicAnnouncement.actions[0');
+        periodicAnnouncement.setDescription(periodicTime);
       }
       if (!_.has(queueSettings, 'fallback')) {
         createAction(queueSettings, 'fallback', 'Disconnect');

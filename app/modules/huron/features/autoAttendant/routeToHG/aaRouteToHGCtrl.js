@@ -35,11 +35,22 @@
     /////////////////////
 
     function populateUiModel() {
-      if (fromRouteCall) {
-        vm.hgSelected.id = vm.menuEntry.actions[0].getValue();
-      } else {
-        if (vm.menuKeyEntry.actions[0].queueSettings) {
-          vm.hgSelected.id = vm.menuKeyEntry.actions[0].queueSettings.fallback.actions[0].getValue();
+      var queueSettings;
+      if (fromRouteCall) { //from Route Call
+        queueSettings = vm.menuEntry.actions[0].queueSettings;
+        if (queueSettings) {
+          if (_.has(queueSettings, 'fallback.actions[0]')) {
+            vm.hgSelected.id = queueSettings.fallback.actions[0].getValue();
+          }
+        } else {
+          vm.hgSelected.id = vm.menuEntry.actions[0].getValue();
+        }
+      } else { //from phone menu
+        queueSettings = vm.menuKeyEntry.actions[0].queueSettings;
+        if (queueSettings) { //from queueSettings modal
+          if (_.has(queueSettings, 'fallback.actions[0')) {
+            vm.hgSelected.id = queueSettings.fallback.actions[0].getValue();
+          }
         } else {
           vm.hgSelected.id = vm.menuKeyEntry.actions[0].getValue();
         }
@@ -47,15 +58,21 @@
       vm.hgSelected.description = _.result(_.find(vm.huntGroups, {
         'id': vm.hgSelected.id
       }), 'description', '');
-
     }
 
     function saveUiModel() {
-      if (fromRouteCall) {
-        vm.menuEntry.actions[0].setValue(vm.hgSelected.id);
-      } else {
-        if (vm.menuKeyEntry.actions[0].queueSettings) {
-          vm.menuKeyEntry.actions[0].queueSettings.fallback.actions[0].setValue(vm.hgSelected.id);
+      var action;
+      if (fromRouteCall) { //from route call
+        action = _.get(vm.menuEntry.actions[0].queueSettings.fallback, 'actions[0]');
+        if (action) {
+          action.setValue(vm.hgSelected.id);
+        } else {
+          vm.menuEntry.actions[0].setValue(vm.hgSelected.id);
+        }
+      } else { //from phone menu
+        action = _.get(vm.menuKeyEntry.actions[0].queueSettings.fallback, 'actions[0]');
+        if (action) { //from queueSettings modal
+          action.setValue(vm.hgSelected.id);
         } else {
           vm.menuKeyEntry.actions[0].setValue(vm.hgSelected.id);
         }

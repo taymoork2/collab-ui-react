@@ -54,16 +54,20 @@
     }
 
     function populateUiModel() {
-      if (!_.isUndefined(vm.menuEntry.actions[0].queueSettings)) {
-        vm.aaName = ceId2aaName(vm.menuEntry.actions[0].queueSettings.fallback.actions[0].value);
+      var queueSettings = vm.menuEntry.actions[0].queueSettings;
+      if (queueSettings) {
+        if (_.has(queueSettings, 'fallback.actions[0]')) {
+          vm.aaName = ceId2aaName(queueSettings.fallback.actions[0].value);
+        }
       } else {
         vm.aaName = ceId2aaName(vm.menuEntry.actions[0].value);
       }
     }
 
     function saveUiModel() {
-      if (!_.isUndefined(vm.menuEntry.actions[0].queueSettings)) {
-        vm.menuEntry.actions[0].queueSettings.fallback.actions[0].setValue(aaName2CeId(vm.aaName));
+      var action = _.get(vm.menuEntry.actions[0].queueSettings.fallback, 'actions[0]');
+      if (action) {
+        action.setValue(aaName2CeId(vm.aaName));
       } else {
         vm.menuEntry.actions[0].setValue(aaName2CeId(vm.aaName));
       }
