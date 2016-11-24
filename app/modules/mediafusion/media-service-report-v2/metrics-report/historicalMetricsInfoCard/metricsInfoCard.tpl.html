@@ -55,13 +55,6 @@
                 <div class="no-data" ng-if="nav.cloud === nav.noData">{{nav.cloud}}</div>
                 <div ng-if="nav.cloud !== nav.noData">
                     <div class="call-counts">{{nav.cloud}}
-                        <!-- <span ng-if="nav.cloud && nav.cloud !== 0 && nav.clusterId === nav.allClusters" ng-init="popoverOpened1=false" ng-mouseover="popoverOpened1=true" 
-                        ng-mouseleave="popoverOpened1=false">
-                            <a class="icon icon-info-outline media-tooltip" 
-                                tooltip-template="'modules/mediafusion/metrics-graph-report/metricsInfoCard/overflowedToCloudTooltip.tpl.html'"
-                                tooltip-trigger="none" tooltip-placement="bottom-right" tooltip-is-open="popoverOpened1" >
-                            </a>
-                        </span> -->
                     </div>
                     <div class="spinner-position" ng-if="!nav.cloud && nav.cloud !== 0">
                         <i class='icon icon-spinner icon-2x'></i>

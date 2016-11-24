@@ -9,9 +9,7 @@ describe('Service: Metrics Graph Service V2', function () {
   };
 
   var callVolumeData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeGraphData.json');
-  //var callVolumeData = angular.copy(callVolumeData.graphData);
   var clusteravailabilityData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityGraphData.json');
-  //var clusteravailabilityData = angular.copy(clusteravailabilityData.data);
 
   beforeEach(angular.mock.module('Mediafusion'));
 
@@ -187,7 +185,6 @@ describe('Service: Metrics Graph Service V2', function () {
     beforeEach(function () {
       spyOn(AmCharts, 'makeChart').and.returnValue({
         'dataProvider': clusteravailabilityData
-           //validateData: validateService.validate
       });
       availabilityChart = null;
       availabilityChart = MetricsGraphServiceV2.setAvailabilityGraph(clusteravailabilityData, availabilityChart, 'All');
@@ -196,12 +193,10 @@ describe('Service: Metrics Graph Service V2', function () {
     it('should have created a graph when setActiveUsersGraph is called the first time', function () {
       expect(AmCharts.makeChart).toHaveBeenCalled();
       expect(MetricsGraphServiceV2.createAvailabilityGraph).toHaveBeenCalled();
-       //expect(validateService.validate).not.toHaveBeenCalled();
     });
 
     it('should update graph when setActiveUsersGraph is called a second time', function () {
       MetricsGraphServiceV2.setCallVolumeGraph(clusteravailabilityData, availabilityChart);
-       //expect(validateService.validate).toHaveBeenCalled();
     });
   });
 

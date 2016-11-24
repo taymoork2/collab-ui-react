@@ -11,8 +11,6 @@ describe('Service: Meeting Reports Meeting Service', function () {
   var timeFilter = {
     value: 0
   };
-  var allClusters = 'mediaFusion.metrics.allclusters';
-
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value('Authinfo', Authinfo);
   }));
@@ -31,7 +29,7 @@ describe('Service: Meeting Reports Meeting Service', function () {
 
   it('should getMeetingMetrics data', function () {
     $httpBackend.whenGET(meetingMetricsLink).respond(meetingMetricsRes);
-    MeetingsReportService.getMeetingMetrics(timeFilter, allClusters).then(function (response) {
+    MeetingsReportService.getMeetingMetrics(timeFilter).then(function (response) {
       expect(response).toEqual(meetingMetricsRes);
     });
     $httpBackend.flush();

@@ -108,17 +108,14 @@
       valueAxes[0].stackType = 'regular';
       var catAxis = CommonMetricsGraphServiceV2.getBaseVariable(AXIS);
       catAxis.gridPosition = 'start';
-      //catAxis.dataDateFormat = 'YYYY-MM-DDTJJ:NN:SS.QQQZ';
       catAxis.parseDates = true;
       catAxis.startOnAxis = true;
-      //catAxis.equalSpacing = true;
       catAxis.axisAlpha = 0.5;
       catAxis.axisColor = '#1C1C1C';
       catAxis.gridAlpha = 0.3;
       catAxis.minorGridAlpha = 0.1;
       catAxis.minorGridEnabled = false;
       catAxis.minPeriod = 'mm';
-      //catAxis.twoLineMode = true;
       var startDuration = 1;
       if (!data[0].balloon) {
         startDuration = 0;
@@ -191,7 +188,6 @@
         graphs[i].colorField = colors[i];
         graphs[i].valueField = values[i];
         graphs[i].legendColor = secondaryColors[i];
-        //graphs[i].showBalloon = data[0].balloon;
         graphs[i].showBalloon = data[0].balloon;
         if (cluster === allClusters) {
           if (graphs[i].valueField === 'active_calls') {
@@ -257,7 +253,6 @@
       valueAxes[0].position = 'left';
       valueAxes[0].title = '%';
       valueAxes[0].titleRotation = 180;
-      //valueAxes[0].guides.label = 'Utilization High';
 
       var catAxis = CommonMetricsGraphServiceV2.getBaseVariable(AXIS);
       catAxis.gridPosition = 'start';
@@ -386,7 +381,6 @@
 
     function createValueAxis(data) {
       var endTime = data.data[0].endTime;
-      //var endTime = str.substring(0, 10);
       endTime = convertToLocalTime(endTime);
       var startTime = data.data[0].startTime;
       startTime = convertToLocalTime(startTime);
@@ -481,7 +475,6 @@
 
     function setAvailabilityGraph(data, availabilityChart, selectedCluster, cluster, daterange, displayHistorical) {
       var startDate = data.data[0].startTime;
-      //var startDate = str.substring(0, 10);
       startDate = convertToLocalTime(startDate);
       if (data === null || data === 'undefined' || data.length === 0) {
         return;

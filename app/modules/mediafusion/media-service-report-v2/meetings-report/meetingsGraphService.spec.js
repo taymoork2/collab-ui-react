@@ -20,8 +20,11 @@ describe('Service: Meeting Graph Service', function () {
     var id = 'meetingID';
     var noData = false;
     var chart;
+    var chartOption = {
+      'balloonText': '[[title]]<br><span style="font-size:14px"><b>[[value]] meetings</b> ([[percents]]%)</span>'
+    };
     spyOn(CommonMetricsGraphService, 'getBasePieChart').and.callThrough();
-    MeetingsGraphService.getMeetingPieGraph(data, chart, id, noData);
+    MeetingsGraphService.getMeetingPieGraph(data, chart, id, noData, chartOption);
     expect(CommonMetricsGraphService.getBasePieChart).toHaveBeenCalled();
   });
 });
