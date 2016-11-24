@@ -6,7 +6,10 @@
       </cs-searchfilter>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <button class="btn btn--people add-button" ng-click="sc.startAddPlaceFlow()">
+      <button
+        class="btn btn--people add-button"
+        ng-click="sc.startAddPlaceFlow()"
+        ng-disabled="sc.addPlaceIsDisabled">
         <span translate="placesPage.placeAdd"></span>
       </button>
     </cs-page-sub-header-right>

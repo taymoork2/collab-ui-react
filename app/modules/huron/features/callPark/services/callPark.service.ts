@@ -1,5 +1,6 @@
-import { CallPark, FallbackDestination } from './callPark';
-import { Member } from 'modules/huron/members/member';
+import { CallPark, CallParkMember, FallbackDestination } from './callPark';
+import { Member, MemberType, USER_PLACE } from 'modules/huron/members';
+import { FeatureMemberService, IFeatureMemberPicture } from 'modules/huron/features';
 
 export interface ICallParkListItem {
   uuid: string;
@@ -35,7 +36,8 @@ export class CallParkService {
     private $resource: ng.resource.IResourceService,
     private $q: ng.IQService,
     private Authinfo,
-    private HuronConfig
+    private HuronConfig,
+    private FeatureMemberService: FeatureMemberService,
   ) {
 
     let updateAction: ng.resource.IActionDescriptor = {
@@ -79,6 +81,35 @@ export class CallParkService {
       .then( (callParkResource) => {
         let callPark = new CallPark(_.pick<CallPark, CallPark>(callParkResource, this.callParkProperties));
         callPark.fallbackDestination = new FallbackDestination(_.pick<FallbackDestination, FallbackDestination>(callParkResource.fallbackDestination, this.fallbackDestProperties));
+
+        let callParkMembers: Array<CallParkMember> = [];
+        let promises: Array<ng.IPromise<IFeatureMemberPicture>> = [];
+        _.forEach<any>(callParkResource.members, member => {
+          callParkMembers.push(new CallParkMember({
+              memberUuid: member.memberUuid,
+              memberName: member.memberName,
+              memberType: member.memberType === USER_PLACE ? MemberType.USER_PLACE : MemberType.USER_REAL_USER,
+              number: member.number,
+              numberUuid: member.numberUuid,
+              thumbnailSrc: undefined,
+            }));
+          promises.push(this.FeatureMemberService.getMemberPicture(member.memberUuid).catch( () => {
+            return <IFeatureMemberPicture>{
+              memberUuid: member.memberUuid,
+              thumbnailSrc: undefined,
+            };
+          }));
+        });
+
+        return this.$q.all(promises).then(responses => {
+          _.forEach(callParkMembers, callParkMember => {
+            callParkMember.thumbnailSrc = _.get(_.find(responses, { memberUuid: callParkMember.memberUuid }), 'thumbnailSrc', undefined);
+          });
+          callPark.members = callParkMembers;
+          return callPark;
+        });
+
+      }).then(callPark => {
         this.callParkDataCopy = this.cloneCallParkData(callPark);
         return callPark;
       });

@@ -52,6 +52,8 @@ require('ical.js/build/ical.js');
 require('angular-ical/dist/js/angular-ical.js');
 require('oclazyload');
 
+require('expose?_!lodash'); // expose current lodash as a global since `pdfmake` is overwriting the previous global to custom 3.1.0
+
 function requireAll(requireContext) {
   return requireContext.keys().forEach(requireContext);
 }

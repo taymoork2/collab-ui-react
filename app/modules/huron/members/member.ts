@@ -1,5 +1,10 @@
 import { Line } from 'modules/huron/lines/services/line';
 
+export enum MemberType {
+  USER_REAL_USER = <any>'user',
+  USER_PLACE = <any>'place',
+}
+
 export class Member {
   public uuid: string;
   public type: string;

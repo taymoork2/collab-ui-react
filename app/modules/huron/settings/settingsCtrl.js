@@ -8,7 +8,7 @@
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService,
-    ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing, VoicemailMessageAction, FeatureToggleService, Config) {
+    ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing, VoicemailMessageAction, FeatureToggleService, Config, $state) {
     var vm = this;
     vm.loading = true;
 
@@ -19,6 +19,7 @@
         return enabled ? (license.licenseType !== Config.licenseTypes.SHARED_DEVICES || license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
       }).length > 0;
     };
+    vm.bulkVoicemailEnable = false;
     FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
       vm.showRegionAndVoicemail = vm.isRegionAndVoicemail(pstnEnabled);
     });
@@ -1581,7 +1582,7 @@
       errors = [];
 
       var promises = [];
-      promises.push(loadCompanyInfo());
+      promises.push(enableBulkVmEnableToggle().then(loadCompanyInfo));
       promises.push(loadServiceAddress());
       promises.push(loadExternalNumbers());
       promises.push(enableExtensionLengthModifiable());
@@ -1629,7 +1630,13 @@
         })
         .finally(function () {
           vm.processing = false;
+          var existingCompanyVoicemailEnabled = savedModel.companyVoicemail.companyVoicemailEnabled;
           savedModel = angular.copy(vm.model);
+          if (vm.bulkVoicemailEnable &&
+            !existingCompanyVoicemailEnabled &&
+            savedModel.companyVoicemail.companyVoicemailEnabled) {
+            $state.go('users.enableVoicemail');
+          }
         });
     }
 
@@ -1970,6 +1977,16 @@
           vm.model.companyVoicemail.externalVoicemail = false;
         }
       }
+    }
+
+    function enableBulkVmEnableToggle() {
+      return FeatureToggleService.supports(FeatureToggleService.features.bulkVoicemailEnable).then(function (result) {
+        if (result) {
+          vm.bulkVoicemailEnable = result;
+        }
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'huronSettings.errorGettingBulkVoicemailEnableToggle');
+      });
     }
 
     $scope.$watchCollection(function () {

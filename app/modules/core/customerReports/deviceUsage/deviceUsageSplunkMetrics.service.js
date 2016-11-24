@@ -10,18 +10,20 @@
 
     var eventTypes = {
       fullReportDownload: 'FULLREPORTDOWNLOAD',
-      timeRangeSelected: 'TIMERANGESELECTED'
+      timeRangeSelected: 'TIMERANGESELECTED',
+      graphClick: 'GRAPHCLICK'
     };
 
-    function reportClick(eventType, operation) {
-      $log.info('reportClick', operation);
+    function reportOperation(operation, data) {
       var json = {
-        operation: operation
+        operation: operation,
+        data: data
       };
+      $log.info('reportOperation', json);
 
       LogMetricsService.logMetrics(
         'deviceUsageReports',
-        eventType,
+        LogMetricsService.eventType.deviceUsageReportOperation,
         LogMetricsService.eventAction.buttonClick,
         200,
         moment(),
@@ -31,7 +33,7 @@
     }
 
     return {
-      reportClick: reportClick,
+      reportOperation: reportOperation,
       eventTypes: eventTypes
     };
   }

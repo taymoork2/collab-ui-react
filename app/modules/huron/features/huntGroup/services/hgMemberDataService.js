@@ -175,8 +175,8 @@
      * on the nameHint, but filter those selected on
      * UI already from showing.
      */
-    function fetchHuntMembers(nameHint) {
-      return fetchMembers(nameHint, {
+    function fetchHuntMembers(nameHint, onlyMembers) {
+      return fetchMembers(nameHint, onlyMembers, {
         sourceKey: 'uuid',
         responseKey: 'uuid',
         dataToStrip: selectedHuntMembers
@@ -187,8 +187,8 @@
      * Given a hint and a filter function, fetch the huron
      * users from the backend and apply the filtering logic.
      */
-    function fetchMembers(nameHint, filter) {
-      var GetHuntMembers = HuntGroupService.getHuntMembers(nameHint);
+    function fetchMembers(nameHint, onlyMembers, filter) {
+      var GetHuntMembers = HuntGroupService.getHuntMembers(nameHint, onlyMembers);
 
       if (GetHuntMembers) {
         GetHuntMembers.setOnFailure(memberFailureResponse());

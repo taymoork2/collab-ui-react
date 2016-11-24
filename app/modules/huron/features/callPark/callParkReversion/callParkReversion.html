@@ -34,7 +34,7 @@
       cs-input-label="{{:: 'callPark.reversionOtherLabel' | translate}}">
   </div>
   <div class="row form-group">
-    <div ng-if="$ctrl.showReversionLookup">
+    <div ng-if="$ctrl.showReversionLookup" class="typeahead">
       <cs-call-destination
         ng-disabled="$ctrl.reversionType === 'parker'"
         model="$ctrl.selectedReversionNumber"
@@ -44,7 +44,8 @@
         ng-keyup="$ctrl.validateReversionNumber()"
         internal-number-data-fn="$ctrl.getMemberList(data)"
         internal-number-on-select="$ctrl.onSelectReversionMember(data)"
-        internal-number-template-url="callParkReversionTemplate.html">
+        internal-number-template-url="callParkReversionTemplate.html"
+        on-change-fn="$ctrl.setSelectedReversionNumber(model)">
       </cs-call-destination>
     </div>
     <div ng-if="$ctrl.showMember">

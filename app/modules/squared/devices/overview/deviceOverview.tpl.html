@@ -21,6 +21,7 @@
 
       <button
         ng-click="deviceOverview.resetCode()"
+        ng-disabled="deviceOverview.resetCodeIsDisabled"
         class="btn">
         <span ng-hide="deviceOverview.resettingCode" translate="deviceOverviewPage.getNewCode"></span>
         <div ng-show="deviceOverview.resettingCode" cs-loader class="loader-example--small"></div>
