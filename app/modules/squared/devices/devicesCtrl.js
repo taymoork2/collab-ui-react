@@ -5,9 +5,10 @@
     .controller('DevicesCtrl',
 
       /* @ngInject */
-      function ($scope, $state, $translate, $templateCache, Userservice, DeviceFilter, CsdmUnusedAccountsService, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, FeatureToggleService) {
+      function ($q, $scope, $state, $translate, $templateCache, Userservice, DeviceFilter, CsdmUnusedAccountsService, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, FeatureToggleService) {
         var vm = this;
         var filteredDevices = [];
+        vm.addDeviceIsDisabled = true;
         AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
           vm.showLicenseWarning = !!_.find(data.accounts, {
             licenses: [{
@@ -24,14 +25,23 @@
         }
 
         function fetchFeatureToggles() {
-          FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
+          var placesPromise = FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
             vm.showPlaces = result;
           });
-          FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
+          var darlingPromise = FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
             vm.showDarling = result;
           });
-          FeatureToggleService.csdmPstnGetStatus().then(function (result) {
+          var ataPromise = FeatureToggleService.csdmATAGetStatus().then(function (result) {
+            vm.showATA = result;
+          });
+          var pstnPromise = FeatureToggleService.csdmPstnGetStatus().then(function (result) {
             vm.showPstn = result && Authinfo.isSquaredUC();
+          });
+          var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
+            vm.csdmHybridCallFeature = feature;
+          });
+          $q.all([placesPromise, darlingPromise, ataPromise, pstnPromise, hybridPromise]).finally(function () {
+            vm.addDeviceIsDisabled = false;
           });
         }
 
@@ -79,7 +89,10 @@
         };
 
         vm.existsDevices = function () {
-          return (vm.shouldShowList() && CsdmDataModelService.hasDevices());
+          if (!vm._existsDevices) {
+            vm._existsDevices = (vm.shouldShowList() && CsdmDataModelService.hasDevices());
+          }
+          return vm._existsDevices;
         };
 
         vm.shouldShowList = function () {
@@ -175,6 +188,7 @@
               function: "addDevice",
               showPlaces: false,
               showDarling: vm.showDarling,
+              showATA: vm.showATA,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isEntitledToHuron(),
               isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
@@ -213,7 +227,9 @@
             data: {
               function: "addDevice",
               showPlaces: true,
+              showATA: vm.showATA,
               showDarling: vm.showDarling,
+              csdmHybridCallFeature: vm.csdmHybridCallFeature,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isEntitledToHuron(),
               isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
@@ -254,10 +270,14 @@
               'addDeviceFlow.editServices': {
                 nextOptions: {
                   sparkCall: 'addDeviceFlow.addLines',
+                  sparkCallConnect: 'addDeviceFlow.callConnectOptions',
                   sparkOnly: 'addDeviceFlow.showActivationCode'
                 }
               },
               'addDeviceFlow.addLines': {
+                next: 'addDeviceFlow.showActivationCode'
+              },
+              'addDeviceFlow.callConnectOptions': {
                 next: 'addDeviceFlow.showActivationCode'
               },
               'addDeviceFlow.showActivationCode': {}

@@ -5,12 +5,13 @@ interface IDevice {
 }
 
 interface IPlace {
-  devices: Array<IDevice>;
+  devices: {};
   cisUuid?: string;
   type?: string;
   url?: string;
   entitlements?: Array<any>;
   displayName?: string;
+  sipUrl?: string;
 }
 
 class PlaceOverview implements ng.IComponentController {
@@ -18,37 +19,41 @@ class PlaceOverview implements ng.IComponentController {
   public services: IFeature[] = [];
   public actionList: IActionItem[] = [];
   public showPstn: boolean = false;
+  public showATA: boolean = false;
+  public csdmHybridCallFeature: boolean = false;
+  public generateCodeIsDisabled = true;
 
-  private currentPlace: IPlace = <IPlace>{ devices: [] };
+  private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;
   private adminDisplayName;
+  private pstnFeatureIsEnabledPromise: Promise<boolean> = this.FeatureToggleService.csdmPstnGetStatus();
 
   /* @ngInject */
   constructor(private $q,
               private $state: ng.ui.IStateService,
               private $stateParams,
               private $translate: ng.translate.ITranslateService,
-              private $window,
               private Authinfo,
               private CsdmHuronUserDeviceService,
               private CsdmDataModelService,
               private FeatureToggleService,
-              private XhrNotificationService,
+              private Notification,
               private Userservice,
               private WizardFactory) {
-    this.currentPlace = this.$stateParams.currentPlace;
     this.csdmHuronUserDeviceService = this.CsdmHuronUserDeviceService.create(this.currentPlace.cisUuid);
-    CsdmDataModelService.reloadItem(this.currentPlace).then((updatedPlace) => {
-      this.currentPlace = updatedPlace || this.currentPlace;
-      this.loadServices();
-      this.loadActions();
-    });
+    CsdmDataModelService.reloadItem(this.currentPlace).then((updatedPlace) => this.displayPlace(updatedPlace));
   }
 
   public $onInit(): void {
+    this.displayPlace(this.$stateParams.currentPlace);
+    this.fetchDisplayNameForLoggedInUser();
+    this.fetchFeatureToggles();
+  }
+
+  private displayPlace(newPlace) {
+    this.currentPlace = newPlace;
     this.loadServices();
     this.loadActions();
-    this.fetchDisplayNameForLoggedInUser();
   }
 
   private loadServices(): void {
@@ -67,7 +72,7 @@ class PlaceOverview implements ng.IComponentController {
         icon: 'icon-circle-call',
         state: 'communication',
         detail: this.$translate.instant('placesPage.sparkOnly'),
-        actionAvailable: false,
+        actionAvailable: true,
       };
     }
     this.services = [];
@@ -82,18 +87,22 @@ class PlaceOverview implements ng.IComponentController {
     });
   }
 
-  private pstnFeatureIsEnabled(): Promise<boolean> {
-    if (this.$window.location.search.indexOf('enablePstn=true') > -1) {
-      return this.$q.when(true);
-    } else {
-      return this.FeatureToggleService.supports(this.FeatureToggleService.features.csdmPstn);
-    }
+  private fetchFeatureToggles() {
+    let ataPromise = this.FeatureToggleService.csdmATAGetStatus().then((result) => {
+      this.showATA = result;
+    });
+    let hybridPromise = this.FeatureToggleService.csdmHybridCallGetStatus().then((feature) => {
+      this.csdmHybridCallFeature = feature;
+    });
+    this.$q.all([ataPromise, this.pstnFeatureIsEnabledPromise, hybridPromise]).finally(() => {
+      this.generateCodeIsDisabled = false;
+    });
   }
 
   private loadActions(): void {
     this.actionList = [];
     if (this.currentPlace.type === 'cloudberry') {
-      this.pstnFeatureIsEnabled().then((result) => {
+      this.pstnFeatureIsEnabledPromise.then((result) => {
         this.showPstn = result && this.Authinfo.isSquaredUC();
         if (result) {
           this.actionList = [{
@@ -127,9 +136,11 @@ class PlaceOverview implements ng.IComponentController {
         'addDeviceFlow.editServices': {
           nextOptions: {
             sparkCall: 'addDeviceFlow.addLines',
+            sparkCallConnect: 'addDeviceFlow.callConnectOptions',
           },
         },
         'addDeviceFlow.addLines': {},
+        'addDeviceFlow.callConnectOptions': {},
       },
     };
     let wizard = this.WizardFactory.create(wizardState);
@@ -141,7 +152,11 @@ class PlaceOverview implements ng.IComponentController {
   public save(newName: string) {
     return this.CsdmDataModelService
       .updateItemName(this.currentPlace, newName)
-      .catch(this.XhrNotificationService.notify);
+      .then((updatedPlace) => this.displayPlace(updatedPlace))
+      .catch((error) => {
+          this.Notification.errorWithTrackingId(error, 'placesPage.failedToSaveChanges');
+        }
+      );
   }
 
   public showDeviceDetails(device: IDevice): void {
@@ -172,9 +187,12 @@ class PlaceOverview implements ng.IComponentController {
       data: {
         function: 'showCode',
         showPlaces: true,
+        showATA: this.showATA,
+        csdmHybridCallFeature: this.csdmHybridCallFeature,
         account: {
           type: 'shared',
           deviceType: this.currentPlace.type,
+          cisUuid: this.currentPlace.cisUuid,
           name: this.currentPlace.displayName,
         },
         recipient: {

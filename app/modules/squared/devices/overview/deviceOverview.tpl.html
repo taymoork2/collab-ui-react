@@ -21,6 +21,7 @@
 
       <button
         ng-click="deviceOverview.resetCode()"
+        ng-disabled="deviceOverview.resetCodeIsDisabled"
         class="btn">
         <span ng-hide="deviceOverview.resettingCode" translate="deviceOverviewPage.getNewCode"></span>
         <div ng-show="deviceOverview.resettingCode" cs-loader class="loader-example--small"></div>
@@ -216,6 +217,39 @@
         <label class="col-sm-4 control-label" translate="spacesPage.ciscoSupport"></label>
         <div class="col-sm-8">
           <a sq-click-promise="deviceOverview.showRemoteSupportDialog()" translate="spacesPage.remoteAccessKey"></a>
+        </div>
+      </div>
+    </cs-sp-section>
+    <cs-sp-section ng-show="deviceOverview.showE911">
+      <div ng-show="!deviceOverview.isE911Available">
+        <i class="icon icon-spinner"></i>
+      </div>
+      <div ng-show="deviceOverview.isE911Available">
+        <div class="section-title-row">
+          <span class="section-name" translate="spacesPage.emergencyTitle"></span>
+          <span cs-dropdown class="actions-menu dropdown pull-right">
+            <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
+              <i class="icon icon-three-dots"></i>
+            </button>
+            <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
+              <li><a href ng-click="deviceOverview.goToEmergencyServices()" translate="spacesPage.editEmergencyServices"></a></li>
+            </ul>
+          </span>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-4 control-label" translate="spacesPage.callbackNumber"></label>
+          <div class="col-sm-8">
+            <p class="form-control-static line-row">
+              <span class="form-control-static line-row">{{deviceOverview.emergencyCallbackNumber}}</span>
+            </p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-4 control-label" translate="spacesPage.serviceAddress"></label>
+          <div class="col-sm-8" >
+            <span class="form-control-static">{{deviceOverview.emergencyAddress.address1 | uppercase}}, {{deviceOverview.emergencyAddress.address2 | uppercase}}</span>
+            <span class="form-control-static">{{deviceOverview.emergencyAddress.city | uppercase}}, {{deviceOverview.emergencyAddress.state | uppercase}} {{deviceOverview.emergencyAddress.zip}}</span>
+          </div>
         </div>
       </div>
     </cs-sp-section>

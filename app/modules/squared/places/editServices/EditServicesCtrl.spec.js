@@ -48,7 +48,7 @@ describe('EditServicesCtrl: Ctrl', function () {
       expect(controller.service).toBe('sparkCall');
     });
 
-    it('sparkOnly is selected if "ciscouc" is not present', function () {
+    it('sparkOnly is selected if "ciscouc" and "fusionec" is not present', function () {
       $stateParams.wizard = {
         state: function () {
           return {
@@ -64,6 +64,79 @@ describe('EditServicesCtrl: Ctrl', function () {
 
       expect(controller.service).toBe('sparkOnly');
     });
+
+    it('sparkCallConnect is selected if "fusionec" is present', function () {
+      $stateParams.wizard = {
+        state: function () {
+          return {
+            data: {
+              account: {
+                entitlements: ['fusionec']
+              }
+            }
+          };
+        }
+      };
+      initController();
+
+      expect(controller.service).toBe('sparkCallConnect');
+    });
+  });
+
+  describe('init of ctrl', function () {
+    it('should set sparkCallConnectEnabled to false if toggle is not present and entitlement is not set', function () {
+      $stateParams.wizard = {
+        state: function () {
+          return {
+            data: {
+              csdmHybridCallFeature: false,
+              account: {
+                entitlements: ['something']
+              }
+            }
+          };
+        }
+      };
+      initController();
+      $scope.$apply();
+      expect(controller.sparkCallConnectEnabled).toBe(false);
+    });
+
+    it('should set sparkCallConnectEnabled to true if toggle is not present and entitlement is already set', function () {
+      $stateParams.wizard = {
+        state: function () {
+          return {
+            data: {
+              csdmHybridCallFeature: false,
+              account: {
+                entitlements: ['fusionec']
+              }
+            }
+          };
+        }
+      };
+      initController();
+      $scope.$digest();
+      expect(controller.sparkCallConnectEnabled).toBe(true);
+    });
+
+    it('should set sparkCallConnectEnabled to true if toggle is present', function () {
+      $stateParams.wizard = {
+        state: function () {
+          return {
+            data: {
+              csdmHybridCallFeature: true,
+              account: {
+                entitlements: ['something']
+              }
+            }
+          };
+        }
+      };
+      initController();
+      $scope.$digest();
+      expect(controller.sparkCallConnectEnabled).toBe(true);
+    });
   });
 
   describe('wizard functions', function () {
@@ -72,9 +145,97 @@ describe('EditServicesCtrl: Ctrl', function () {
       deviceCisUuid = 'deviceId';
     });
 
+    describe('hasNextStep', function () {
+      it('should be true when editServiceIsn`t set', function () {
+        var state = function () {
+          return {
+            data: {
+              csdmHybridCallFeature: true,
+              account: {
+                entitlements: ['something']
+              },
+              function: 'anotherFunction'
+            }
+          };
+        };
+        $stateParams.wizard = {
+          state: state,
+          next: function () {
+          }
+        };
+        initController();
+
+        expect(controller.hasNextStep()).toBe(true);
+      });
+
+      it('should be true when service is sparkCall and it is not the previous service', function () {
+        var state = function () {
+          return {
+            data: {
+              account: {
+                entitlements: ['fusionec']
+              },
+              function: 'editServices'
+            }
+          };
+        };
+        $stateParams.wizard = {
+          state: state,
+          next: function () {
+          }
+        };
+        initController();
+        controller.service = 'sparkCall';
+
+        expect(controller.hasNextStep()).toBe(true);
+      });
+
+      it('should be true when service is sparkCallConnect and it is not the previouis service', function () {
+        var state = function () {
+          return {
+            data: {
+              account: {
+                entitlements: ['ciscouc']
+              },
+              function: 'editServices'
+            }
+          };
+        };
+        $stateParams.wizard = {
+          state: state,
+          next: function () {
+          }
+        };
+        initController();
+        controller.service = 'sparkCallConnect';
+
+        expect(controller.hasNextStep()).toBe(true);
+      });
+
+      it('should be false when editService is set and it is the previous service', function () {
+        var state = function () {
+          return {
+            data: {
+              account: {
+                entitlements: ['something']
+              },
+              function: 'editServices'
+            }
+          };
+        };
+        $stateParams.wizard = {
+          state: state,
+          next: function () {
+          }
+        };
+        initController();
+        expect(controller.hasNextStep()).toBe(false);
+      });
+    });
+
     describe('next', function () {
       var state;
-      it('should pass on all fields required by the next step', function () {
+      it('selecting sparkCall should pass on all fields required by the next step including cicouc entitlement', function () {
         state = function () {
           return {
             data: {
@@ -86,7 +247,8 @@ describe('EditServicesCtrl: Ctrl', function () {
         };
         $stateParams.wizard = {
           state: state,
-          next: function () {}
+          next: function () {
+          }
         };
         spyOn($stateParams.wizard, 'next');
         initController();
@@ -96,15 +258,40 @@ describe('EditServicesCtrl: Ctrl', function () {
         var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
         expect(wizardState.account.entitlements).toEqual(['something', 'ciscouc']);
       });
+
+      it('selecting sparkCallConnect should pass on all fields required by the next step including fusionec entitlement', function () {
+        state = function () {
+          return {
+            data: {
+              account: {
+                entitlements: ['something']
+              }
+            }
+          };
+        };
+        $stateParams.wizard = {
+          state: state,
+          next: function () {
+          }
+        };
+        spyOn($stateParams.wizard, 'next');
+        initController();
+        controller.service = 'sparkCallConnect';
+        controller.next();
+        expect($stateParams.wizard.next).toHaveBeenCalled();
+        var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
+        expect(wizardState.account.entitlements).toEqual(['something', 'fusionec']);
+      });
     });
 
     describe('Save', function () {
       beforeEach(function () {
-        $scope.$dismiss = function () {};
+        $scope.$dismiss = function () {
+        };
         spyOn($scope, '$dismiss');
         spyOn(Notification, 'success');
         spyOn(Notification, 'warning');
-        spyOn(Notification, 'errorResponse');
+        spyOn(Notification, 'errorWithTrackingId');
       });
 
       it('should just close the modal if place does not have "ciscouc" entitlement', function () {
@@ -136,9 +323,11 @@ describe('EditServicesCtrl: Ctrl', function () {
           }
         };
         var place = { cisUuid: deviceCisUuid };
-        CsdmDataModelService.getPlacesMap = function () {};
+        CsdmDataModelService.getPlacesMap = function () {
+        };
         spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.when({ 'http://placeurl': place }));
-        CsdmDataModelService.updateCloudberryPlace = function () {};
+        CsdmDataModelService.updateCloudberryPlace = function () {
+        };
         spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.when());
         initController();
         controller.service = 'sparkOnly';
@@ -189,7 +378,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         controller.service = 'sparkOnly';
         controller.save();
         $scope.$digest();
-        expect(Notification.errorResponse).toHaveBeenCalled();
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
         expect($scope.$dismiss).toHaveBeenCalledTimes(0);
       });
 
@@ -212,7 +401,7 @@ describe('EditServicesCtrl: Ctrl', function () {
         controller.service = 'sparkOnly';
         controller.save();
         $scope.$digest();
-        expect(Notification.errorResponse).toHaveBeenCalled();
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
         expect($scope.$dismiss).toHaveBeenCalledTimes(0);
       });
     });

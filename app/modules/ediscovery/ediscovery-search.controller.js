@@ -3,7 +3,7 @@
 
   /* @ngInject */
   function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, EdiscoveryService, $window, EdiscoveryNotificationService,
-    Notification) {
+    FeatureToggleService, Notification) {
     $scope.$on('$viewContentLoaded', function () {
       angular.element('#searchInput').focus();
     });
@@ -11,6 +11,7 @@
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
     var vm = this;
+    vm.searchByParameters = searchByParameters;
     vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;
     vm.runReport = runReport;
@@ -21,16 +22,26 @@
     vm.downloadReport = downloadReport;
     vm.retrySearch = retrySearch;
     vm.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
+    vm.ediscoveryToggle = false;
     vm.createReportInProgress = false;
     vm.searchingForRoom = false;
     vm.searchInProgress = false;
     vm.currentReportId = null;
     vm.ongoingSearch = false;
 
+    vm.searchBySelected = '';
+    vm.searchByPlaceholder = $translate.instant('ediscovery.searchParameters.searchByPlaceholder');
+    vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchByEmailPlaceholder');
+    vm.searchByOptions = ['Email ID', 'Room ID'];
+
     init($stateParams.report, $stateParams.reRun);
 
     $scope.$on('$destroy', function () {
       disableAvalonPolling();
+    });
+
+    FeatureToggleService.atlasEdiscoveryGetStatus().then(function (result) {
+      vm.ediscoveryToggle = result;
     });
 
     function init(report, reRun) {
@@ -42,10 +53,11 @@
           displayName: report.displayName
         };
         vm.searchCriteria = {
-          "roomId": report.roomQuery.roomId,
-          "startDate": report.roomQuery.startDate,
-          "endDate": report.roomQuery.endDate,
-          "displayName": report.displayName
+          emailId: report.roomQuery.participants,
+          roomId: report.roomQuery.roomId,
+          startDate: report.roomQuery.startDate,
+          endDate: report.roomQuery.endDate,
+          displayName: report.displayName
         };
         if (!reRun) {
           vm.report = report;
@@ -102,6 +114,14 @@
     $scope.$watch(getEndDate, function () {
       validateDate();
     });
+
+    function searchByParameters() {
+      if (_.eq(vm.searchByOptions[0], vm.searchBySelected)) {
+        vm.searchPlaceholder = $translate.instant("ediscovery.searchParameters.searchByEmailPlaceholder");
+      } else if (_.eq(vm.searchByOptions[1], vm.searchBySelected)) {
+        vm.searchPlaceholder = $translate.instant("ediscovery.searchParameters.searchByRoomPlaceholder");
+      }
+    }
 
     function searchForRoom(roomId) {
       vm.ongoingSearch = true;

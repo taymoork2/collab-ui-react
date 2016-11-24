@@ -1,0 +1,36 @@
+<div class="edit-service-page">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()">
+      <span class="sr-only" translate="common.close"></span>
+    </button>
+
+    <h5 class="modal-title" translate="gss.editService"></h5>
+  </div>
+
+  <div class="modal-body">
+    <div class="row">
+      <label class="cs-input__label medium-3 columns" for="edit-service-name" translate="gss.serviceName"></label>
+
+      <div class=" medium-9 columns">
+        <input id="edit-service-name" cs-input required type="text" minlength="3" ng-maxlength="64"
+               ng-model="editServiceCtrl.serviceName"
+               placeholder="{{ 'gss.serviceName' | translate }}">
+      </div>
+    </div>
+
+    <div class="row">
+      <label class="cs-input__label medium-3 columns" for="edit-service-desc" translate="gss.serviceDescription"></label>
+
+      <div class=" medium-9 columns">
+        <textarea id="edit-service-desc" ng-model="editServiceCtrl.serviceDesc"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button cs-btn class="btn btn--primary" ng-disabled="!editServiceCtrl.isValid()"
+            loading="editServiceCtrl.isLoading" ng-click="editServiceCtrl.editService()">
+      <span translate="common.edit"></span>
+    </button>
+  </div>
+</div>

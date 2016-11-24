@@ -31,19 +31,6 @@ class CallParkNumberCtrl implements ng.IComponentController {
     private CallParkService: CallParkService,
   ) {}
 
-  public $onInit() {
-    if (this.range) {
-      if (_.isEqual(this.range.startRange, this.range.endRange) && this.range.startRange !== '') {
-        this.rangeType = RangeType.SINGLE;
-        this.singleNumber = this.range.startRange;
-      } else {
-        this.rangeType = RangeType.RANGE;
-        this.startRange = this.range.startRange;
-        this.endRange = this.range.endRange;
-      }
-    }
-  }
-
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
     let callParkChanges = changes['range'];
     if (callParkChanges && callParkChanges.currentValue) {
@@ -107,14 +94,20 @@ class CallParkNumberCtrl implements ng.IComponentController {
   }
 
   public onChangeEndRange(): void {
-    let range: ICallParkRangeItem = {
-      startRange: this.startRange,
-      endRange: this.endRange,
-    };
-    this.range = range;
-    this.onChangeFn({
-      range: range,
-    });
+    if (!_.isUndefined(this.startRange) && !_.isUndefined(this.endRange)) {
+      let range: ICallParkRangeItem = {
+        startRange: this.startRange,
+        endRange: this.endRange,
+      };
+      this.range = range;
+      this.onChangeFn({
+        range: range,
+      });
+    }
+  }
+
+  public onSelectEndRange(): void {
+    this.onChangeEndRange();
   }
 
   public onHandleKeyPress($keyCode): void {

@@ -499,6 +499,19 @@
               }
             }
           })
+          .state('addDeviceFlow.callConnectOptions', {
+            parent: 'modal',
+            params: {
+              wizard: null
+            },
+            views: {
+              'modal@': {
+                templateUrl: 'modules/squared/places/callConnect/CallConnectOptions.tpl.html',
+                controller: 'CallConnectOptionsCtrl',
+                controllerAs: 'callConnectOptions'
+              }
+            }
+          })
           .state('activate', {
             url: '/activate',
             views: {
@@ -1092,6 +1105,24 @@
               displayName: 'Device Configuration'
             }
           })
+          .state('user-overview.csdmDevice.emergencyServices', {
+            views: {
+              '': {
+                template: '<uc-emergency-services></uc-emergency-services>',
+              }
+            },
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.csdmDevice.emergencyServices').data.displayName = $translate.instant('spacesPage.emergencyTitle');
+              }
+            },
+            data: {},
+            params: {
+              currentAddress: {},
+              currentNumber: '',
+              status: ''
+            },
+          })
           .state('user-overview.communication.voicemail', {
             template: '<div uc-voicemail></div>',
             data: {
@@ -1473,6 +1504,24 @@
               displayName: 'Device Configuration'
             }
           })
+          .state('place-overview.csdmDevice.emergencyServices', {
+            views: {
+              '': {
+                template: '<uc-emergency-services></uc-emergency-services>',
+              }
+            },
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('place-overview.csdmDevice.emergencyServices').data.displayName = $translate.instant('spacesPage.emergencyTitle');
+              }
+            },
+            data: {},
+            params: {
+              currentAddress: {},
+              currentNumber: '',
+              status: '',
+            },
+          })
           .state('place-overview.communication', {
             template: '<place-call-overview></place-call-overview>',
             params: {
@@ -1604,6 +1653,28 @@
               displayName: 'Overview'
             }
           })
+          .state('device-overview.emergencyServices', {
+            parent: 'device-overview',
+            views: {
+              'sidepanel@': {
+                template: '<uc-emergency-services></uc-emergency-services>',
+              },
+              'header@device-overview.emergencyServices': {
+                templateUrl: 'modules/squared/devices/emergencyServices/emergencyServicesHeader.tpl.html'
+              }
+            },
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('device-overview.emergencyServices').data.displayName = $translate.instant('spacesPage.emergencyTitle');
+              }
+            },
+            data: {},
+            params: {
+              currentAddress: {},
+              currentNumber: '',
+              status: '',
+            },
+          })
           .state('video', {
             parent: 'modal',
             views: {
@@ -1694,21 +1765,25 @@
             },
             templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html'
           })
-          .state('gem.cbgDetails', {
+          .state('gemCbgDetails', {
             parent: 'sidepanel',
             views: {
-              'sidepanel@': {
-                controller: 'CbgDetailsCtrl',
-                controllerAs: 'detailsCtrl',
-                templateUrl: 'modules/gemini/callbackGroup/cbgDetails.tpl.html'
-              }
+              'sidepanel@': { template: '<cbg-details></cbg-details>' }
             },
-            params: {
-              info: {}
-            },
-            data: {
-              displayName: 'Overview'
-            }
+            params: { info: {} },
+            data: {}
+          })
+          .state('gemCbgDetails.sites', {
+            template: '<cbg-sites></cbg-sites>',
+            params: { obj: {} }
+          })
+          .state('gemCbgDetails.editCountry', {
+            template: '<cbg-edit-country></cbg-edit-country>',
+            params: { obj: {} }
+          })
+          .state('gemCbgDetails.notes', {
+            template: '<cbg-notes></cbg-notes>',
+            params: { obj: {} }
           })
           .state('partnercustomers.list', {
             url: '/customers',
@@ -2255,6 +2330,14 @@
             controller: 'HuronSettingsCtrl',
             controllerAs: 'settings'
           })
+          .state('users.enableVoicemail', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                templateUrl: 'modules/huron/settings/bulkEnableVmModal/bulkEnableVmModal.html'
+              }
+            }
+          })
           .state('huronfeatures', {
             url: '/features',
             parent: 'hurondetails',
@@ -2611,7 +2694,12 @@
               clusterId: null
             },
             parent: 'main',
-            abstract: true
+            abstract: true,
+            resolve: {
+              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
+              }
+            }
           })
           .state('calendar-service.list', {
             url: '/services/calendar',
@@ -2649,7 +2737,12 @@
             params: {
               clusterId: null
             },
-            parent: 'main'
+            parent: 'main',
+            resolve: {
+              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
+              }
+            }
           })
           .state('call-service.list', {
             url: '/services/call',
@@ -2680,7 +2773,12 @@
               connectorType: 'c_mgmt'
             },
             parent: 'main',
-            abstract: true
+            abstract: true,
+            resolve: {
+              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
+              }
+            }
           })
           .state('management-service.list', {
             url: '/services/expressway-management',
@@ -2985,7 +3083,7 @@
             url: '/gss',
             templateUrl: 'modules/gss/gssIframe/gssIframe.tpl.html',
             controller: 'GssIframeCtrl',
-            controllerAs: 'gssIframe',
+            controllerAs: 'gssIframeCtrl',
             parent: 'main',
             resolve: {
               hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
@@ -3017,6 +3115,41 @@
             },
             params: {
               component: null
+            }
+          })
+          .state('gss.services', {
+            url: '/services',
+            templateUrl: 'modules/gss/services/services.tpl.html',
+            controller: 'GSSServicesCtrl',
+            controllerAs: 'gssServicesCtrl'
+          })
+          .state('gss.incidents', {
+            url: '/incidents',
+            templateUrl: 'modules/gss/incidents/incidents.tpl.html',
+            controller: 'IncidentsCtrl',
+            controllerAs: 'incidentsCtrl'
+          })
+          .state('gss.incidents.new', {
+            url: '/new',
+            views: {
+              '@gss': {
+                templateUrl: 'modules/gss/incidents/createIncident/createIncident.tpl.html',
+                controller: 'CreateIncidentCtrl',
+                controllerAs: 'createIncidentCtrl'
+              }
+            }
+          })
+          .state('gss.incidents.delete', {
+            url: '/delete',
+            views: {
+              '@gss': {
+                templateUrl: 'modules/gss/incidents/deleteIncident/deleteIncident.tpl.html',
+                controller: 'DeleteIncidentCtrl',
+                controllerAs: 'deleteIncidentCtrl'
+              }
+            },
+            params: {
+              incident: null
             }
           });
       }

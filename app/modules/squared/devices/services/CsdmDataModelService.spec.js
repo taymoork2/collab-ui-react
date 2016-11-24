@@ -347,11 +347,13 @@ describe('Service: CsdmDataModelService', function () {
       var newDeviceName = "This Is The New name !!";
       var promiseExecuted;
 
-      $httpBackend.expectPATCH(deviceUrlToUpdate).respond(204);
-
       CsdmDataModelService.getDevicesMap().then(function (devices) {
 
         CsdmDataModelService.getPlacesMap().then(function (places) {
+
+          var patchedDevice = JSON.parse(JSON.stringify(places[pWithDeviceUrl].devices[deviceUrlToUpdate]));
+          patchedDevice.displayName = newDeviceName;
+          $httpBackend.expectPATCH(deviceUrlToUpdate).respond(patchedDevice);
 
           expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].displayName).toBe(originalName);
 
@@ -853,6 +855,24 @@ describe('Service: CsdmDataModelService', function () {
       });
       $httpBackend.flush();
       expect(expectCall).toBe(true);
+    });
+
+    it('should notify all devices in a place when notifyDevicesInPlace', function () {
+      $httpBackend.expectPOST('https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f/notify').respond(201, '');
+      $httpBackend.expectPOST('https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f/notify').respond(201, '');
+      $httpBackend.expectPOST('https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/6ae09bec-c0f0-58af-b490-60ed6a695a89/notify').respond(201, '');
+
+      CsdmDataModelService.notifyDevicesInPlace('a19b308a-PlaceWithDevice-71898e423bec', { foo: 'bar' });
+
+      $httpBackend.flush();
+      $httpBackend.verifyNoOutstandingRequest();
+      $httpBackend.verifyNoOutstandingExpectation();
+    });
+
+    it('should not notify any devices in a place when place does not exist', function () {
+      CsdmDataModelService.notifyDevicesInPlace('a19b308a-PlaceDoesNotExist-71898e423bec', { foo: 'bar' });
+      $httpBackend.verifyNoOutstandingRequest();
+      $httpBackend.verifyNoOutstandingExpectation();
     });
   });
 

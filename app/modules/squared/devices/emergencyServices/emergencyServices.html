@@ -1,0 +1,138 @@
+<div class="sq-devices-emergency-services">
+  <div class="emergency-desc-container" ui-view="header"></div>
+  <cs-sp-container>
+    <div class="save-section" ng-class="{invisible: !$ctrl.form.$dirty}">
+          <p translate="common.saveLabel"></p>
+          <button ng-click="$ctrl.reset()" translate="common.cancel"></button>
+          <button class="btn btn--primary" cs-btn loading="$ctrl.processing" ng-click="$ctrl.save()" ng-disabled="$ctrl.form.$invalid"><span translate="common.save"></span></button>
+        </div>
+    <cs-sp-section>
+      <cs-overview-loader loading="$ctrl.loading" loading-text="$ctrl.loadingText"></cs-overview-loader>
+      <form novalidate name="$ctrl.form">
+        <span class="emergency-desc-container" translate="spacesPage.servicesDesc"></span>
+        <div>
+          <div class="section-title-row">
+            <span class="section-name" translate="spacesPage.ecn"></span>
+          </div>
+          <cs-select
+            form="$ctrl.form"
+            ng-model="$ctrl.emergency.emergencyNumber"
+            options="$ctrl.options"
+            labelfield="label"
+            valuefield="value"
+            name="emergencyCallbackNumber"
+            filter="true"
+            refresh-data-fn="$ctrl.getoptions(filter)"
+            is-disabled="$ctrl.showAddressEntry"
+            on-change-fn="$ctrl.numberChange()">
+          </cs-select>
+        </div>
+        <div>
+          <div class="section-title-row">
+            <span class="section-name" translate="spacesPage.esa"></span>
+          </div>
+          <div ng-class="{error: $ctrl.errorMessage}">
+            <div class="cs-input__messages">
+              <div class="message">{{$ctrl.errorMessage}}</div>
+            </div>
+          </div>
+          <div class="address-inputs" ng-if="$ctrl.showAddressEntry">
+             <div class="cs-checkbox-group">
+              <input
+                cs-input
+                form="$ctrl.form"
+                type="checkbox"
+                ng-model="$ctrl.useCompanyAddress"
+                id="useCompanyAddress"
+                name="useCompanyAddress"
+                cs-input-label="{{'spacesPage.companyDefaultAddress' | translate}}"
+                ng-click="$ctrl.companyAddressSelection()"
+                ng-disabled="$ctrl.companyAddressLoading">
+            </div>
+            <div class="row">
+              <input
+                cs-input
+                form="$ctrl.form"
+                name="address1Input"
+                type="text"
+                ng-model="$ctrl.emergency.emergencyAddress.address1"
+                cs-input-group-size="medium-8"
+                cs-input-label="{{::'serviceAddress.streetAddress' | translate}}"
+                ng-disabled="$ctrl.useCompanyAddress"
+                ng-required="!$ctrl.useCompanyAddress">
+              <input
+                cs-input
+                form="$ctrl.form"
+                name="address2Input"
+                type="text"
+                ng-model="$ctrl.emergency.emergencyAddress.address2"
+                cs-input-group-size="medium-3"
+                cs-input-label="{{::'serviceAddress.unit' | translate}}"
+                ng-disabled="$ctrl.useCompanyAddress">
+            </div>
+            <div class="row">
+              <input
+                cs-input
+                form="$ctrl.form"
+                type="text"
+                name="addressCityInput"
+                ng-model="$ctrl.emergency.emergencyAddress.city"
+                cs-input-group-size="medium-12"
+                cs-input-label="{{::'serviceAddress.city' | translate}}"
+                ng-disabled="$ctrl.useCompanyAddress"
+                ng-required="!$ctrl.useCompanyAddress">
+            </div>
+            <div class="row collapse-both">
+              <div class="columns medium-7">
+                <p class="label-margin" translate="serviceAddress.state"></p>
+                <cs-select
+                  form="$ctrl.form"
+                  name="stateInput"
+                  ng-model="$ctrl.emergency.emergencyAddress.state"
+                  options="$ctrl.stateOptions"
+                  labelfield="name"
+                  valuefield="abbreviation"
+                  filter="true"
+                  is-disabled="$ctrl.useCompanyAddress"
+                  ng-required="!$ctrl.useCompanyAddress">
+                </cs-select>
+              </div>
+              <input
+                cs-input
+                form="$ctrl.form"
+                name="addressZipcodeInput"
+                type="number"
+                ng-model="$ctrl.emergency.emergencyAddress.zip"
+                cs-input-group-size="medium-4"
+                cs-input-label="{{::'serviceAddress.zipCode' | translate}}"
+                ng-disabled="$ctrl.useCompanyAddress"
+                ng-required="!$ctrl.useCompanyAddress"
+                maxlength="5">
+            </div>
+          </div>
+          <div class="saved-address" ng-if="!$ctrl.showAddressEntry">
+            <cs-overview-loader loading="$ctrl.loadingAddress" size="sm"></cs-overview-loader>
+            <span class="row h5">{{$ctrl.emergency.emergencyAddress.address1 | uppercase}}, {{$ctrl.emergency.emergencyAddress.address2 | uppercase}}</span>
+            <span class="row h5">{{$ctrl.emergency.emergencyAddress.city | uppercase}}, {{$ctrl.emergency.emergencyAddress.state | uppercase}} {{$ctrl.emergency.emergencyAddress.zip}}</span>
+          </div>
+          <a href="" class="modify-button h6" ng-click="$ctrl.modifyAddress()" ng-if="$ctrl.emergency.status !== 'PENDING' && $ctrl.emergency.emergencyNumber !== $ctrl.companyEmergencyNumber && !$ctrl.showAddressEntry" translate="common.modify"></a>
+          <div ng-class="{warning: $ctrl.emergency.status === 'PENDING'}">
+            <div class="cs-input__messages">
+              <div class="message">{{::'serviceAddress.pending' | translate}}</div>
+            </div>
+          </div>
+          <div ng-if="$ctrl.emergency.emergencyNumber === $ctrl.companyEmergencyNumber">
+            <span translate="spacesPage.sameAsCompanyNum"></span>
+          </div>
+        </div>
+      </form>
+      <div ng-if="!$ctrl.showAddressEntry && $ctrl.impactedUsers.length > 0 && $ctrl.emergency.status !== 'PENDING' && $ctrl.emergency.emergencyNumber !== $ctrl.companyEmergencyNumber">
+        <strong>Warning </strong>
+        - <span translate="spacesPage.impactedUserInfo"></span>
+        <div>
+          <div ng-repeat="user in $ctrl.impactedUsers"><strong>{{user.name}}</strong></div>
+        </div>
+      </div>
+    </cs-sp-section>
+  </cs-sp-container>
+</div>

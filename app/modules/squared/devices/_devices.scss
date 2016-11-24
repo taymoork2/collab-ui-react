@@ -1,3 +1,5 @@
+@import 'emergencyServices/csOverviewLoader';
+
 .sq-devices-page {
   @extend %grid-subheader;
   @extend %page-background-white;
@@ -46,7 +48,7 @@
   }
 }
 
-.sq-devices-page-overview {
+.sq-devices-page-overview, .sq-devices-emergency-services {
   .activation-code-pane h3 {
     color: $color-people-light;
   }
@@ -136,6 +138,49 @@
 
   .timeZoneSelector {
     width: 280px;
+  }
+}
+
+.sq-devices-emergency-services {
+  .breadcrumbs {
+    @include vr-spacing(mb, 1);
+  }
+
+  hr-settings-service-address > div {
+    background-color: $gray-light-3;
+  }
+
+  .label-margin {
+    @include vr-spacing(mb, 0.5, 0px, false);
+  }
+
+  .save-section {
+    @include vr-spacing(mt, 3, -1px, true);
+    @include vr-spacing(pr, 1);
+    @include vr-spacing(pt, 0.5);
+    @include vr-spacing(pb, 0.5);
+    @include vr-spacing(pl, 1.5, 1px, false);
+    @include vr-spacing(ml, 1.5, -1px, true);
+
+    width: 100%;
+    background-color: $gray-light-4;
+    border-bottom: none;
+  }
+
+  .modify-button {
+    color: $color-primary-base;
+  }
+
+  .saved-address {
+    @include vr-spacing(p, 0.75);
+    @include vr-spacing(mb, 0.5);
+
+    position: relative;
+    background-color: $gray-light-3;
+  }
+
+  .cs-input__messages {
+    @include vr-spacing(pb, 1);
   }
 }
 
@@ -346,6 +391,23 @@
 
     .typeButtonWrapperLeft {
       margin-right: 16px;
+    }
+  }
+}
+
+.showActivationCode {
+  .activationCodeFailure {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    font-size: 7em;
+
+    i {
+      @include vr-spacing(mb, 1.5);
+      color: $gray-light-1;
     }
   }
 }

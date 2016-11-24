@@ -66,18 +66,17 @@ describe('Controller: Customer Reports Ctrl', function () {
                             '$httpBackend',
                             '$controller',
                             'Authinfo',
+                            'CardUtils',
                             'SparkGraphService',
                             'SparkReportService',
                             'DummySparkDataService',
                             'FeatureToggleService');
     $scope = this.$rootScope.$new();
-    /* global document */
-    let $document = angular.element(document);
-    $document.find('body').append('<div class="cs-card-layout"></div>');
 
     this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200, {});
     spyOn(this.$rootScope, '$broadcast').and.callThrough();
     spyOn(this.Authinfo, 'isCare').and.returnValue(true);
+    spyOn(this.CardUtils, 'resize');
 
     spyOn(this.SparkGraphService, 'setActiveUsersGraph').and.returnValue({
       dataProvider: _.cloneDeep(dummyData.activeUser.one),

@@ -6,7 +6,7 @@
     .controller('HelpdeskUserController', HelpdeskUserController);
 
   /* @ngInject */
-  function HelpdeskUserController($modal, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, XhrNotificationService) {
+  function HelpdeskUserController($modal, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.user) {
@@ -35,12 +35,15 @@
     vm.openExtendedInformation = openExtendedInformation;
     vm.supportsExtendedInformation = false;
     vm.cardsAvailable = false;
+    vm._helpers = {
+      notifyError: notifyError
+    };
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskExt).then(function (result) {
       vm.supportsExtendedInformation = result;
     });
 
-    HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
+    HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, vm._helpers.notifyError);
 
     function resendInviteEmail() {
       var trimmedUserData = {
@@ -61,14 +64,14 @@
             }
           }
         })
-        .catch(XhrNotificationService.notify);
+        .catch(vm._helpers.notifyError);
     }
 
     function sendCode() {
       HelpdeskService.sendVerificationCode(vm.user.displayName, vm.user.userName).then(function (code) {
         vm.verificationCode = code;
         vm.sendingVerificationCode = false;
-      }, XhrNotificationService.notify);
+      }, vm._helpers.notifyError);
     }
 
     function openExtendedInformation() {
@@ -140,14 +143,14 @@
                 break;
             }
           });
-        }, XhrNotificationService.notify);
+        }, vm._helpers.notifyError);
       }
 
       if (!vm.org.displayName && vm.org.id !== Config.consumerOrgId) {
         // Only if there is no displayName. If set, the org name has already been read (on the search page)
         HelpdeskService.getOrgDisplayName(vm.orgId).then(function (displayName) {
           vm.org.displayName = displayName;
-        }, XhrNotificationService.notify);
+        }, vm._helpers.notifyError);
       }
 
       if (LicenseService.userIsEntitledTo(user, Config.entitlements.huron)) {
@@ -188,7 +191,7 @@
 
     function handleHuronError(err) {
       if (err.status !== 404) {
-        XhrNotificationService.notify(err);
+        vm._helpers.notifyError(err);
       }
     }
 
@@ -202,6 +205,10 @@
           $window.history.back();
         }
       }
+    }
+
+    function notifyError(response) {
+      Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
     }
   }
 

@@ -3,8 +3,7 @@ describe('Component: pgSetupAssistant', () => {
   let saveFailureResp = getJSONFixture('huron/json/features/pagingGroup/errorResponse.json');
   let pg = getJSONFixture('huron/json/features/pagingGroup/pg.json');
   let pgWithMembers = getJSONFixture('huron/json/features/pagingGroup/pgWithMembers.json');
-  let member = getJSONFixture('huron/json/features/pagingGroup/member.json');
-  let members = [member];
+  let members = getJSONFixture('huron/json/features/pagingGroup/membersList2.json');
 
   beforeEach(function () {
     this.initModules('huron.paging-group.setup-assistant');
@@ -148,6 +147,13 @@ describe('Component: pgSetupAssistant', () => {
       this.controller.index = 3;
       expect(this.controller.nextButton()).toBeTruthy();
     });
+
+    it('Test enterNextPage', function () {
+      spyOn(this.controller, 'nextPage');
+      spyOn(this.controller, 'nextButton').and.returnValue(true);
+      this.controller.enterNextPage(13);
+      expect(this.controller.nextPage).toHaveBeenCalled();
+    });
   });
 
   describe('previousPage', () => {
@@ -278,20 +284,26 @@ describe('Component: pgSetupAssistant', () => {
       this.controller.selectedMembers.push(memWithPic);
       this.controller.savePagingGroup();
       this.$timeout.flush();
-      expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorSavePartial', { pagingGroupName: pg.name, message: [ '38fcc914-5a18-442b-ae61-866df55d7ac9' ] });
+      expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorSavePartial', { pagingGroupName: pg.name, message: [ '0001' ] });
       expect(this.$state.go).toHaveBeenCalledWith('huronfeatures');
     });
 
     it('should save with success', function () {
       let mem1 = angular.copy(members[0]);
-      let memWithPic = {
+      let memWithPic1 = {
         member: mem1,
+        picturePath: '',
+      };
+      let mem2 = angular.copy(members[1]);
+      let memWithPic2 = {
+        member: mem2,
         picturePath: '',
       };
       this.savePagingGroupDefer.resolve(pgWithMembers);
       this.controller.name = pgWithMembers.name;
       this.controller.number = pgWithMembers.extension;
-      this.controller.selectedMembers.push(memWithPic);
+      this.controller.selectedMembers.push(memWithPic1);
+      this.controller.selectedMembers.push(memWithPic2);
       this.controller.savePagingGroup();
       this.$timeout.flush();
       expect(this.Notification.success).toHaveBeenCalledWith('pagingGroup.successSave', { pagingGroupName: pgWithMembers.name });

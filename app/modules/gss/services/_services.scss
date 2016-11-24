@@ -1,0 +1,37 @@
+.services-page {
+  background-color: $white;
+
+  ul {
+    list-style: none;
+    @include vr_spacing(p, 1.25);
+
+    li {
+      @include vr_spacing(mt, .75, 2px);
+    }
+  }
+}
+
+.modal-content.small.status-add-service,
+.modal-content.small.status-edit-service {
+  height: 235px;
+
+  .modal-body {
+    label {
+      line-height: 36px;
+    }
+  }
+}
+
+.modal-content.small.status-delete-service {
+  height: 235px;
+
+  .modal-body {
+    p:first-child {
+      @include vr_spacing(pb, 1);
+    }
+
+    p:last-child {
+      @include vr_spacing(pt, 1);
+    }
+  }
+}

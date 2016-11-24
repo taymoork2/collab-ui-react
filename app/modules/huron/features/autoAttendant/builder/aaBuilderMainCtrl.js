@@ -344,7 +344,7 @@
       var aaRecord = vm.aaModel.aaRecord;
 
       var aaRecordUUID = vm.aaModel.aaRecordUUID;
-      vm.ui.builder.ceInfo_name = vm.ui.builder.ceInfo_name.trim();
+      vm.ui.builder.ceInfo_name = _.trim(vm.ui.builder.ceInfo_name);
       if (!AAValidationService.isNameValidationSuccess(vm.ui.builder.ceInfo_name, aaRecordUUID)) {
         deferred.reject({
           statusText: '',
@@ -620,12 +620,22 @@
       var featureToggleDefault = false;
       AACommonService.setMediaUploadToggle(featureToggleDefault);
       AACommonService.setCallerInputToggle(featureToggleDefault);
-      FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload).then(function (result) {
-        AACommonService.setMediaUploadToggle(result);
-      });
       FeatureToggleService.supports(FeatureToggleService.features.huronAACallerInput).then(function (result) {
         AACommonService.setCallerInputToggle(result);
       });
+      AACommonService.setClioToggle(featureToggleDefault);
+      AACommonService.setRouteQueueToggle(featureToggleDefault);
+      return function () {
+        FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload).then(function (result) {
+          AACommonService.setMediaUploadToggle(result);
+        });
+        FeatureToggleService.supports(FeatureToggleService.features.huronAACallQueue).then(function (result) {
+          AACommonService.setRouteQueueToggle(result);
+        });
+        FeatureToggleService.supports(FeatureToggleService.features.huronAAClioMedia).then(function (result) {
+          AACommonService.setClioToggle(result);
+        });
+      }();
     }
 
     function activate() {

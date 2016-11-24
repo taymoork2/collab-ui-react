@@ -16,6 +16,7 @@
     vm.title = wizardData.title;
     vm.showPlaces = wizardData.showPlaces;
     vm.showDarling = wizardData.showDarling;
+    vm.showATA = wizardData.showATA;
     vm.selectedDeviceType = null;
     vm.isLoading = false;
 

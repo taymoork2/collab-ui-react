@@ -14,6 +14,7 @@
     var csdmUrl = csdmUrlBase + '/' + Authinfo.getOrgId() + '/places/';
 
     var timeoutInMillis = 10000;
+    var intervalType = 'day'; // Used as long as week and month is not implemented
 
     function getDataForLastWeek(deviceCategories, api, missingDaysDeferred) {
       //$log.info("dataForLastWeek", api);
@@ -76,7 +77,7 @@
           });
         } else if (api === 'local') {
           var url = localUrlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
-          url = url + 'intervalType=' + granularity;
+          url = url + 'intervalType=' + intervalType; // As long week and month is not implemented
           url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
           url = url + '&deviceCategories=' + deviceCategories.join();
           url = url + '&accounts=__';
@@ -84,7 +85,7 @@
           return doRequest(url, granularity, start, end, missingDaysDeferred);
         } else {
           url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
-          url = url + 'intervalType=' + granularity;
+          url = url + 'intervalType=' + intervalType; // As long week and month is not implemented
           url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
           url = url + '&deviceCategories=' + deviceCategories.join();
           url = url + '&accounts=__';
@@ -111,7 +112,7 @@
         });
       } else if (api === 'local') {
         var url = localUrlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
-        url = url + 'intervalType=' + granularity;
+        url = url + 'intervalType=' + intervalType; // As long week and month is not implemented
         url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
         url = url + '&deviceCategories=' + deviceCategories.join();
         url = url + '&accounts=__';
@@ -119,7 +120,7 @@
         return doRequest(url, granularity, start, end, missingDaysDeferred);
       } else {
         url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
-        url = url + 'intervalType=' + granularity;
+        url = url + 'intervalType=' + intervalType; // As long week and month is not implemented
         url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
         url = url + '&deviceCategories=' + deviceCategories.join();
         url = url + '&accounts=__';
@@ -138,11 +139,15 @@
 
       return $http.get(url, timeout).then(function (response) {
         //$log.info('#items', response.data.items.length);
+        var missingDays = false;
         if (!response.data.items) {
           response.data.items = [];
         }
         if (response.data.items.length > 0) {
-          checkIfMissingDays(response.data.items, start, end, missingDaysDeferred);
+          missingDays = checkIfMissingDays(response.data.items, start, end, missingDaysDeferred);
+        }
+        if (missingDays) {
+          fillEmptyDays(response.data.items, start, end);
         }
         return reduceAllData(response.data.items, granularity);
       }, function (reject) {
@@ -150,33 +155,71 @@
       });
     }
 
+    function fillEmptyDays(items, start, end) {
+      //$log.info('fillEmptyDays', start + ' - ' + end);
+      //$log.info('fillEmptyDays', items);
+      var daysNeeded = {};
+      var current = moment(start);
+      var final = moment(end);
+      while (current.isBefore(final)) {
+        daysNeeded[current.format('YYYYMMDD')] = true;
+        current.add(1, 'days');
+      }
+      daysNeeded[final.format('YYYYMMDD')] = true;
+      //$log.info('daysNeeded', daysNeeded);
+      _.each(items, function (day) {
+        if (daysNeeded[day.date.toString()]) {
+          daysNeeded[day.date.toString()] = false;
+        }
+      });
+      //$log.info('daysNeeded', daysNeeded);
+      _.each(daysNeeded, function (dn, day) {
+        if (dn) {
+          items.push({
+            date: day,
+            totalDuration: 0,
+            pairedCount: 0,
+            callCount: 0
+          });
+        }
+      });
+    }
+
     function checkIfMissingDays(items, start, end, missingDaysDeferred) {
-      var first = moment(start);
+      //var first = moment(start);
       var last = moment(end);
-      $log.info('checkIfMissingDays', first.format('YYYYMMDD') + ' - ' + last.format('YYYYMMDD'));
-      var current = first;
-      var missingDays = _.chain(items).reduce(function (result, item) {
+      var current = moment(start);
+
+      var correctDays = [];
+      while (current.isBefore(last)) {
+        correctDays.push(current.format('YYYYMMDD'));
+        current.add(1, 'days');
+      }
+      correctDays.push(last.format('YYYYMMDD'));
+      //$log.info('correctDays', correctDays);
+
+      //$log.info('checkIfMissingDays', first.format('YYYYMMDD') + ' - ' + last.format('YYYYMMDD'));
+      //current = first;
+      var reducedDays = _.chain(items).reduce(function (result, item) {
         if (!result[item.date]) {
           //$log.info('reduce_day', item.date);
           result[item.date] = item.date;
         }
         return result;
       }, {})
-      .filter(function (item, key) {
-        var tmpDate = key.toString();
-        var date = moment(tmpDate.substr(0, 4) + '-' + tmpDate.substr(4, 2) + '-' + tmpDate.substr(6, 2));
-        var available = current.isSame(date);
-        current.add(1, 'days');
-        return available;
+      .map(function (value) {
+        return value.toString();
       }).value();
-      current.subtract(1, 'days');
-      var missingAtEnd = last.diff(current, 'days');
-      $log.info('missingDays', missingDays);
-      $log.info('reduced', missingDays.length);
-      $log.info('reduced', missingDays.length + missingAtEnd);
-      missingDaysDeferred.resolve({
-        nbrOfMissingDays: missingDays.length + missingAtEnd
-      });
+      var diff = _.differenceWith(correctDays, reducedDays, _.isEqual);
+      //$log.info('diff', diff);
+      if (diff.length > 0) {
+        missingDaysDeferred.resolve({
+          missingDays: diff
+        });
+        return true;
+      } else {
+        return false;
+      }
     }
 
     function analyseReject(reject) {
@@ -201,9 +244,21 @@
             accountIds: {}
           };
         }
+        if (_.isNil(item.callCount) || _.isNaN(item.callCount)) {
+          $log.warn('Missing call count for', item);
+          item.callCount = 0;
+        }
+        if (_.isNil(item.totalDuration) || _.isNaN(item.totalDuration)) {
+          $log.warn('Missing total duration for', item);
+          item.totalDuration = 0;
+        }
+        if (_.isNil(item.pairedCount) || _.isNaN(item.pairedCount)) {
+          item.pairedCount = 0;
+        }
         result[date].callCount += item.callCount;
         result[date].totalDuration += item.totalDuration;
         result[date].pairedCount += item.pairedCount;
+
         if (!result[date].deviceCategories[item.deviceCategory]) {
           result[date].deviceCategories[item.deviceCategory] = {
             deviceCategory: item.deviceCategory,
@@ -216,14 +271,14 @@
           result[date].deviceCategories[item.deviceCategory].callCount += item.callCount;
           result[date].deviceCategories[item.deviceCategory].pairedCount += item.pairedCount;
         }
-        if (!result[date].accountIds[item.accountId]) {
+        if (item.accountId && !result[date].accountIds[item.accountId]) {
           result[date].accountIds[item.accountId] = {
             accountId: item.accountId,
             totalDuration: item.totalDuration,
             callCount: item.callCount,
             pairedCount: item.pairedCount
           };
-        } else {
+        } else if (item.accountId) {
           result[date].accountIds[item.accountId].totalDuration += item.totalDuration;
           result[date].accountIds[item.accountId].callCount += item.callCount;
           result[date].accountIds[item.accountId].pairedCount += item.pairedCount;
@@ -235,6 +290,7 @@
         value.time = timeFormatted;
         return value;
       }).value();
+      //$log.info('reduceAll', reduced);
       return reduced;
     }
 
@@ -280,7 +336,7 @@
         noOfCalls: calculateTotal(accounts).noOfCalls,
         totalDuration: calculateTotal(accounts).totalDuration
       };
-      $log.info('Extracted stats:', stats);
+      //$log.info('Extracted stats:', stats);
       return stats;
     }
 
@@ -309,11 +365,27 @@
       }
     }
 
+    function makeChart(id, chart) {
+      var amChart = AmCharts.makeChart(id, chart);
+      _.each(amChart.graphs, function (graph) {
+        graph.balloonFunction = renderBalloon;
+      });
+      return amChart;
+    }
+
+    function renderBalloon(graphDataItem) {
+      var text = '<div><h5>' + $translate.instant('reportsPage.usageReports.callDuration') + ' : ' + graphDataItem.dataContext.totalDuration + '</h5>';
+      text = text + $translate.instant('reportsPage.usageReports.callCount') + ' : ' + graphDataItem.dataContext.callCount + ' <br/> ';
+      text = text + $translate.instant('reportsPage.usageReports.pairedCount') + ' : ' + graphDataItem.dataContext.pairedCount + '<br/>';
+      return text;
+    }
+
     function getLineChart() {
       return {
         'type': 'serial',
         'categoryField': 'time',
         'dataDateFormat': 'YYYY-MM-DD',
+        'addClassNames': true,
         'categoryAxis': {
           'minPeriod': 'DD',
           'parseDates': true,
@@ -468,13 +540,13 @@
       _.each(devices, function (device) {
         promises.push($http.get(csdmUrl + device.accountId)
           .then(function (res) {
-            $log.info("resolving", res);
+            //$log.info("resolving", res);
             return res.data;
           })
           .catch(function (err) {
             $log.info("Problems resolving device", err);
             return {
-              "displayName": "Unknown [" + device.accountId + "}"
+              "displayName": "Unknown [id:" + device.accountId + "]"
             };
           })
         );
@@ -489,6 +561,7 @@
       getDataForLastMonths: getDataForLastMonths,
       getDataForRange: getDataForRange,
       getLineChart: getLineChart,
+      makeChart: makeChart,
       getDatesForLastWeek: getDatesForLastWeek,
       getDatesForLastMonths: getDatesForLastMonths,
       exportRawData: exportRawData,

@@ -175,13 +175,10 @@
 
         setAnchorData('', '');
 
-        var title = '<span class="toast-title">' + $translate.instant('userManage.bulk.exportSuccessTitle') + '</span>';
-        var str = $translate.instant('userManage.bulk.exportSuccessBody', {
+        Notification.success('userManage.bulk.exportSuccessBody', {
           type: csvType,
           filename: filename
-        });
-
-        Notification.notify([title, str], 'success');
+        }, 'userManage.bulk.exportSuccessTitle');
         $rootScope.$emit('csv-download-end');
       });
     }

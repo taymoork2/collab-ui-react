@@ -65,6 +65,7 @@
         domainManageInstructions: 'DOMAININST',
         helpdeskSearch: 'HELPDESKSEARCH',
         helpdeskOperation: 'HELPDESKOPERATION',
+        deviceUsageReportOperation: 'DEVICEUSAGEREPORTOPERATION',
         careTemplateInit: 'CARETEMPLATEINIT',
         careTemplateFinish: 'CARETEMPLATEFINISH',
         careReports: 'CAREREPORTS',

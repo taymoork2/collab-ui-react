@@ -30,7 +30,7 @@ describe('Controller: organizationOverviewCtrl', function () {
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback) {
       callback(currentOrganization, 200);
     });
-    spyOn(Notification, 'error');
+    spyOn(Notification, 'errorResponse');
   }));
 
   function initController(services) {
@@ -66,12 +66,10 @@ describe('Controller: organizationOverviewCtrl', function () {
 
     it('should check if updateEftToggle in success state sets isEFT to true', function () {
       _.set($scope, 'currentOrganization.isEFT', false);
-      $scope.updateEftToggle().then(function () {
-        expect($scope.currentOrganization.isEFT).toEqual(true);
-      })
-        .finally(function () {
-          expect($scope.eftToggleLoading).toEqual(false);
-        });
+      $scope.updateEftToggle();
+      $scope.$apply();
+      expect($scope.isEFT).toEqual(true);
+      expect($scope.eftToggleLoading).toEqual(false);
     });
   });
 
@@ -82,12 +80,10 @@ describe('Controller: organizationOverviewCtrl', function () {
     });
 
     it('should gracefully error', function () {
-      $scope.updateEftToggle().then(function () {
-        expect(Notification.error).toHaveBeenCalled();
-      })
-        .finally(function () {
-          expect($scope.eftToggleLoading).toEqual(false);
-        });
+      $scope.updateEftToggle();
+      $scope.$apply();
+      expect(Notification.errorResponse).toHaveBeenCalled();
+      expect($scope.eftToggleLoading).toEqual(false);
     });
   });
 
@@ -116,7 +112,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       var setting = true;
       $scope.setEftToggle(setting);
       $scope.$apply();
-      expect(Notification.error).toHaveBeenCalled();
+      expect(Notification.errorResponse).toHaveBeenCalled();
     });
 
     it('should check if setEftToggle in error state reverts the isEFT toggle', function () {
@@ -242,7 +238,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       expect(Orgservice.setHybridServiceReleaseChannelEntitlement.calls.count()).toEqual(1);
       expect($scope.latestChannel.newAllow).toBeFalsy();
       expect($scope.latestChannel.oldAllow).toBeFalsy();
-      expect(Notification.error.calls.count()).toEqual(1);
+      expect(Notification.errorResponse).toHaveBeenCalled();
     });
   });
 });

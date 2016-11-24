@@ -1,4 +1,6 @@
-import { CallPark } from './callPark';
+import { CallPark, CallParkMember, FallbackDestination } from './callPark';
+import { Member, MemberType, USER_PLACE } from 'modules/huron/members';
+import { FeatureMemberService, IFeatureMemberPicture } from 'modules/huron/features';
 
 export interface ICallParkListItem {
   uuid: string;
@@ -19,18 +21,23 @@ interface ICallParkResource extends ng.resource.IResourceClass<ng.resource.IReso
 
 interface ICallParkRangeResource extends ng.resource.IResourceClass<ng.resource.IResource<ICallParkRangeItem>> {}
 
+interface IDirectoryNumberResource extends ng.resource.IResourceClass<ng.resource.IResource<string>> {}
+
 export class CallParkService {
   private callParkResource: ICallParkResource;
   private callParkRangeResource: ICallParkRangeResource;
+  private directoryNumberResource: IDirectoryNumberResource;
   private callParkDataCopy: CallPark;
   private callParkProperties: Array<string> = ['uuid', 'name', 'startRange', 'endRange', 'members'];
+  private fallbackDestProperties: Array<string> = ['memberUuid', 'name', 'number', 'numberUuid', 'sendToVoicemail'];
 
   /* @ngInject */
   constructor(
     private $resource: ng.resource.IResourceService,
     private $q: ng.IQService,
     private Authinfo,
-    private HuronConfig
+    private HuronConfig,
+    private FeatureMemberService: FeatureMemberService,
   ) {
 
     let updateAction: ng.resource.IActionDescriptor = {
@@ -51,6 +58,7 @@ export class CallParkService {
       });
 
     this.callParkRangeResource = <ICallParkRangeResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/features/callparks/ranges/:startRange');
+    this.directoryNumberResource = <IDirectoryNumberResource>this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId');
   }
 
   public getCallParkList(): ng.IPromise<Array<ICallParkListItem>> {
@@ -72,6 +80,36 @@ export class CallParkService {
       }).$promise
       .then( (callParkResource) => {
         let callPark = new CallPark(_.pick<CallPark, CallPark>(callParkResource, this.callParkProperties));
+        callPark.fallbackDestination = new FallbackDestination(_.pick<FallbackDestination, FallbackDestination>(callParkResource.fallbackDestination, this.fallbackDestProperties));
+
+        let callParkMembers: Array<CallParkMember> = [];
+        let promises: Array<ng.IPromise<IFeatureMemberPicture>> = [];
+        _.forEach<any>(callParkResource.members, member => {
+          callParkMembers.push(new CallParkMember({
+              memberUuid: member.memberUuid,
+              memberName: member.memberName,
+              memberType: member.memberType === USER_PLACE ? MemberType.USER_PLACE : MemberType.USER_REAL_USER,
+              number: member.number,
+              numberUuid: member.numberUuid,
+              thumbnailSrc: undefined,
+            }));
+          promises.push(this.FeatureMemberService.getMemberPicture(member.memberUuid).catch( () => {
+            return <IFeatureMemberPicture>{
+              memberUuid: member.memberUuid,
+              thumbnailSrc: undefined,
+            };
+          }));
+        });
+
+        return this.$q.all(promises).then(responses => {
+          _.forEach(callParkMembers, callParkMember => {
+            callParkMember.thumbnailSrc = _.get(_.find(responses, { memberUuid: callParkMember.memberUuid }), 'thumbnailSrc', undefined);
+          });
+          callPark.members = callParkMembers;
+          return callPark;
+        });
+
+      }).then(callPark => {
         this.callParkDataCopy = this.cloneCallParkData(callPark);
         return callPark;
       });
@@ -103,7 +141,7 @@ export class CallParkService {
     .then( () => location);
   }
 
-  public updateCallPark(callParkId: string | undefined, data: CallPark): ng.IPromise<void> {
+  public updateCallPark(callParkId: string | undefined, data: CallPark): ng.IPromise<CallPark> {
     return this.callParkResource.update({
       customerId: this.Authinfo.getOrgId(),
       callParkId: callParkId,
@@ -114,7 +152,15 @@ export class CallParkService {
       members: _.map(data.members, (member) => {
         return member.memberUuid;
       }),
-    }).$promise;
+      fallbackDestination: {
+        number: data.fallbackDestination.number,
+        numberUuid: data.fallbackDestination.numberUuid,
+        sendToVoicemail: data.fallbackDestination.sendToVoicemail,
+      },
+    }).$promise
+    .then( () => {
+      return this.getCallPark(callParkId);
+    });
   }
 
   public deleteCallPark(callParkId: string): ng.IPromise<any> {
@@ -141,6 +187,29 @@ export class CallParkService {
     .then( endRanges => {
       return _.get<Array<string>>(endRanges, 'endRange', []);
     });
+  }
+
+  public getDirectoryNumber(numberUuid): ng.IPromise<any> {
+    return this.directoryNumberResource.get({
+      customerId: this.Authinfo.getOrgId(),
+      directoryNumberId: numberUuid,
+    }).$promise;
+  }
+
+  public getDisplayName(member: Member): string {
+    if (member.displayName) {
+      return member.displayName;
+    } else if (!member.firstName && !member.lastName && member.userName) {
+      return member.userName;
+    } else if (member.firstName && member.lastName) {
+      return member.firstName + ' ' + member.lastName;
+    } else if (member.firstName) {
+      return member.firstName;
+    } else if (member.lastName) {
+      return member.lastName;
+    } else {
+      return '';
+    }
   }
 
   private cloneCallParkData(callParkData: CallPark): CallPark {

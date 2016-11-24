@@ -84,11 +84,19 @@ describe('Controller: OverviewCtrl', function () {
   });
 
   describe('Notifications', function () {
-    var TOTAL_NOTIFICATIONS = 7;
+    var TOTAL_NOTIFICATIONS = 8;
     beforeEach(inject(defaultWireUpFunc));
 
     it('should all be shown', function () {
       expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+    });
+
+    it('should dismiss the Crash Log notification', function () {
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+
+      var notification = OverviewNotificationFactory.createCrashLogNotification();
+      controller.dismissNotification(notification);
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
     });
 
     it('should dismiss the PMR notification', function () {
@@ -243,6 +251,7 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(Authinfo, 'getServices').and.returnValue(services);
     spyOn(Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
+    spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(true);
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.when(true));
     spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.when(1));

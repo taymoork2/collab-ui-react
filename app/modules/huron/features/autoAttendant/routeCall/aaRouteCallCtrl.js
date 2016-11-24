@@ -6,9 +6,10 @@
     .controller('AARouteCallMenuCtrl', AARouteCallMenuCtrl);
 
   /* @ngInject */
-  function AARouteCallMenuCtrl($scope, $translate, AAUiModelService, AACommonService) {
+  function AARouteCallMenuCtrl($scope, $translate, AAUiModelService, AACommonService, QueueHelperService) {
 
     var vm = this;
+    vm.queues = [];
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
 
     vm.options = [{
@@ -59,12 +60,40 @@
 
     }
 
+    /**
+     * This push the Route To Queue option in Route Call List and push get all the queues
+    */
+    function getQueues() {
+      return QueueHelperService.listQueues().then(function (aaQueueList) {
+        if (aaQueueList.length > 0) {
+          vm.options.push({
+            "label": $translate.instant('autoAttendant.phoneMenuRouteQueue'),
+            "value": 'routeToQueue'
+          });
+          _.each(aaQueueList, function (aaQueue) {
+            var idPos = aaQueue.queueUrl.lastIndexOf("/");
+            vm.queues.push({
+              description: aaQueue.queueName,
+              id: aaQueue.queueUrl.substr(idPos + 1)
+            });
+          });
+        }
+      });
+    }
+
+    function sortAndSetActionType() {
+      vm.options.sort(AACommonService.sortByProperty('label'));
+      setSelects();
+    }
+
     function activate() {
       var ui = AAUiModelService.getUiModel();
       vm.menuEntry = ui[$scope.schedule].entries[$scope.index];
-      vm.options.sort(AACommonService.sortByProperty('label'));
-      setSelects();
-
+      if (AACommonService.isRouteQueueToggle()) {
+        getQueues().finally(sortAndSetActionType);
+      } else {
+        sortAndSetActionType();
+      }
     }
 
     activate();

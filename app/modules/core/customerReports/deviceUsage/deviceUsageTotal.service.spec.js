@@ -177,6 +177,62 @@ describe('DeviceUsageTotalService', function () {
       expect(stats.noOfCalls).toEqual(2 * 7);
       expect(stats.noOfDevices).toEqual(7);
     });
+
+    it('replaces missing duration with 0', function () {
+      var rawData = [
+        {
+          "accountId": "1111",
+          "date": day1,
+          "totalDuration": 3600,
+          "callCount": 1,
+          "pairedCount": 1,
+          "deviceCategory": "ce"
+        }, {
+          "accountId": "2222",
+          "date": day1,
+          //"totalDuration": 3600,
+          "callCount": 1,
+          "pairedCount": 1,
+          "deviceCategory": "ce"
+        }
+      ];
+
+      var result = DeviceUsageTotalService.reduceAllData(rawData, 'day');
+
+      var expectedFullResult = [
+        {
+          "callCount": 2,
+          "totalDuration": "1.00", // hours
+          "pairedCount": 2,
+          "deviceCategories": {
+            "ce": {
+              "deviceCategory": "ce",
+              "totalDuration": 3600,
+              "callCount": 2,
+              "pairedCount": 2
+            }
+          },
+          "accountIds": {
+            "1111": {
+              "accountId": "1111",
+              "totalDuration": 3600,
+              "callCount": 1,
+              "pairedCount": 1
+            },
+            "2222": {
+              "accountId": "2222",
+              "totalDuration": 0,
+              "callCount": 1,
+              "pairedCount": 1
+            }
+          },
+          "time": "2016-10-01"
+        }
+      ];
+      //TODO: Will the sequence allways be the same, or could we potentiall
+      // have a random failure test ?
+      expect(result).toEqual(expectedFullResult);
+    });
   });
 
   describe("date ranges", function () {
@@ -195,6 +251,7 @@ describe('DeviceUsageTotalService', function () {
       expect(dateRange.end).toEqual(end);
     });
   });
+
 
   function yesterday() {
     return moment().subtract(1, "day").format("YYYY-MM-DD");

@@ -48,13 +48,19 @@
       >
 
       <input
+        cs-input
         type="text"
         ng-model="vm.hostname"
+        name="hostname"
+        id="hostNameWarning"
         placeholder="{{'hercules.addResourceDialog.enterHostnamePlaceholder' | translate}}"
         class="addResourceModalInput"
         ng-if="vm.selectedAction === 'new'"
         ng-keyup="$event.keyCode == 13 && vm.completeEnterHostnameScreen()"
+        cs-input-warning="vm.warning()"
+        cs-input-warning-message="{{vm.warningMessage}}"
       >
+
 
       <input
         cs-input
@@ -96,6 +102,8 @@
     <p translate="hercules.addResourceDialog.enterDisplayName"></p>
 
     <form name="chooseClusterName" novalidate>
+
+
         <input
           cs-input
           type="text"

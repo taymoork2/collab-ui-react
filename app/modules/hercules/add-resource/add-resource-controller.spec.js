@@ -48,11 +48,22 @@ describe('Controller: AddResourceController', function () {
           connectorType: 'c_cal',
           upgradeState: 'upgraded',
           state: 'offline',
-          hostname: 'doesnothavecalendar.example.org',
+          hostname: 'host1.example.org',
           hostSerial: '03C36F68',
           alarms: [],
           runningVersion: '8.7-1.0.2966',
           packageUrl: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal'
+        }, {
+          url: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/01deb566-2cac-11e6-847d-005056bf13dd/connectors/c_mgmt@03C36F68',
+          id: 'c_mgmt@03C36F68',
+          connectorType: 'c_mgmt',
+          upgradeState: 'upgraded',
+          state: 'offline',
+          hostname: 'host1.example.org',
+          hostSerial: '03C36F68',
+          alarms: [],
+          runningVersion: '8.7-1.0.2966',
+          packageUrl: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_mgmt'
         }],
         state: 'fused',
         releaseChannel: 'stable',
@@ -181,7 +192,7 @@ describe('Controller: AddResourceController', function () {
     it('should parse the hostname from the connector list of the cluster, and make it available to the view', function () {
       controller.provisionExpresswayWithNewConnector('fe5acf7a-6246-484f-8f43-3e8c910fc50d', newConnectorType);
       $scope.$apply();
-      expect(controller.hostname).toBe('doesnothavecalendar.example.org');
+      expect(controller.hostname).toBe('host1.example.org');
     });
 
     it('should not touch the hostname if it cannot find a better one when parsing the connector list', function () {
@@ -217,7 +228,21 @@ describe('Controller: AddResourceController', function () {
       $scope.$apply();
       expect(controller.optionalSelectResourceGroupStep).toBe(false);
     });
+  });
+  describe('check for existing hostnames', function () {
+    it('Verify connectors get populated', function () {
+      expect(controller.connectors.length).toBe(1);
+    });
 
+    it('should create a warning if hostname is previously used', function () {
+      controller.hostname = 'host1.example.org';
+      expect(controller.warning()).toBe(true);
+    });
+
+    it('should not create a warning if hostname is previously not used', function () {
+      controller.hostname = 'neverUsedHostname.example.org';
+      expect(controller.warning()).toBe(false);
+    });
   });
 
 });

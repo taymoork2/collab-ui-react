@@ -8,6 +8,7 @@ import { Notification } from 'modules/core/notifications';
 class PlaceCallOverview implements ng.IComponentController {
 
   public currentPlace;
+  public hasSparkCall: boolean;
   public actionList: IActionItem[];
   public features: IFeature[];
 
@@ -24,13 +25,14 @@ class PlaceCallOverview implements ng.IComponentController {
     private Notification: Notification,
   ) {
     this.currentPlace = this.$stateParams.currentPlace;
+    this.hasSparkCall = this.hasEntitlement('ciscouc');
     this.$scope.$on(DialingType.INTERNATIONAL, (_e, data) => {
       this.DialingService.setInternationalDialing(data, LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
         this.DialingService.initializeDialing(LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
           this.initFeatures();
         });
       }, (response) => {
-        this.Notification.errorResponse(response, 'internationalDialingPanel.error');
+        this.Notification.errorWithTrackingId(response, 'internationalDialingPanel.error');
       });
     });
     this.$scope.$on(DialingType.LOCAL, (_e, data) => {
@@ -39,7 +41,7 @@ class PlaceCallOverview implements ng.IComponentController {
           this.initFeatures();
         });
       }, (response) => {
-        this.Notification.errorResponse(response, 'internationalDialingPanel.error');
+        this.Notification.errorWithTrackingId(response, 'internationalDialingPanel.error');
       });
     });
     this.$scope.$on(LINE_CHANGE, () => {
@@ -48,11 +50,13 @@ class PlaceCallOverview implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    this.initActions();
-    this.DialingService.initializeDialing(LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
-      this.initFeatures();
-    });
-    this.initNumbers();
+    if (this.hasSparkCall) {
+      this.initActions();
+      this.DialingService.initializeDialing(LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
+        this.initFeatures();
+      });
+      this.initNumbers();
+    }
   }
 
   private initActions(): void {
@@ -99,6 +103,18 @@ class PlaceCallOverview implements ng.IComponentController {
   private initNumbers(): void {
     this.LineService.getLineList(LineConsumerType.PLACES, this.currentPlace.cisUuid)
       .then(lines => this.directoryNumbers = lines);
+  }
+
+  private hasEntitlement(entitlement: string): boolean {
+    let hasEntitlement = false;
+    if (this.currentPlace.entitlements) {
+      this.currentPlace.entitlements.forEach(element => {
+        if (element === entitlement) {
+          hasEntitlement = true;
+        }
+      });
+    }
+    return hasEntitlement;
   }
 
   public clickFeature(feature: IFeature) {
