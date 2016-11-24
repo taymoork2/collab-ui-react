@@ -65,6 +65,9 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
     this.usersVoicemailUpdatedCount = 0;
     this.userVoicemailSkippedCount = 0;
     this.isCancelledByUser = false;
+    this.UserCsvService.setCsvStat({userErrorArray: [],
+    }, true);
+
     /* get the total users for the customer */
     this.BulkEnableVmService.getSparkCallUserCountRetry().then(count => {
         this.totalUsersCount = count;
