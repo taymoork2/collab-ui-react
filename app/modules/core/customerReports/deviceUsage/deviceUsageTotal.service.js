@@ -374,10 +374,32 @@
     }
 
     function renderBalloon(graphDataItem) {
-      var text = '<div><h5>' + $translate.instant('reportsPage.usageReports.callDuration') + ' : ' + graphDataItem.dataContext.totalDuration + '</h5>';
+      var totalDuration = secondsTohhmmss(parseFloat(graphDataItem.dataContext.totalDuration) * 3600);
+      var text = '<div><h5>' + $translate.instant('reportsPage.usageReports.callDuration') + ' : ' + totalDuration + '</h5>';
       text = text + $translate.instant('reportsPage.usageReports.callCount') + ' : ' + graphDataItem.dataContext.callCount + ' <br/> ';
-      text = text + $translate.instant('reportsPage.usageReports.pairedCount') + ' : ' + graphDataItem.dataContext.pairedCount + '<br/>';
+      //text = text + $translate.instant('reportsPage.usageReports.pairedCount') + ' : ' + graphDataItem.dataContext.pairedCount + '<br/>';
       return text;
+    }
+
+    function secondsTohhmmss(totalSeconds) {
+      var hours = Math.floor(totalSeconds / 3600);
+      var minutes = Math.floor((totalSeconds - (hours * 3600)) / 60);
+      var seconds = totalSeconds - (hours * 3600) - (minutes * 60);
+
+      // round seconds
+      seconds = Math.round(seconds * 100) / 100;
+
+      var result = hours > 0 ? hours + 'h ' : '';
+      if (hours > 99) {
+        return result;
+      }
+      result += minutes > 0 ? minutes + 'm ' : '';
+      result += hours < 10 ? seconds + 's' : '';
+      return result;
+    }
+
+    function getLabel(item) {
+      return secondsTohhmmss(parseFloat(item.dataContext.totalDuration) * 3600);
     }
 
     function getLineChart() {
@@ -434,7 +456,8 @@
             'lineColor': chartColors.primaryColorDarker,
             'bulletColor': '#ffffff',
             'bulletBorderAlpha': 1,
-            'useLineColorForBulletBorder': true
+            'useLineColorForBulletBorder': true,
+            'labelFunction': getLabel,
           }
           /*
           {
