@@ -10,13 +10,8 @@
     var vm = this;
 
     vm.noData = $translate.instant('mediaFusion.metrics.nodata');
-    vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
 
     vm.timeUpdate = timeUpdate;
-
-    vm.clusterOptions = [vm.allClusters];
-    vm.clusterSelected = vm.clusterOptions[0];
-    vm.clusterId = vm.clusterOptions[0];
 
     vm.timeOptions = [{
       value: 0,
@@ -44,14 +39,16 @@
       id: 'meetingtype',
       desc: $translate.instant('mediaFusion.meetings-report.meeting-type-title'),
       noData: false,
-      loading: true
+      loading: true,
+      balloonText: '[[title]]<br><span style="font-size:14px"><b>[[value]] meetings</b> ([[percents]]%)</span>'
     };
 
     vm.meetingTypeDurationChartOptions = {
       id: 'meetingtypeduration',
       desc: $translate.instant('mediaFusion.meetings-report.meeting-duration-title'),
       noData: false,
-      loading: true
+      loading: true,
+      balloonText: '[[title]]<br><span style="font-size:14px"><b>[[value]] minutes</b> ([[percents]]%)</span>'
     };
 
     displayDate();
@@ -123,7 +120,7 @@
 
     function setMeetingTypeDurationData() {
       vm.meetingTypeDurationChartOptions.loading = true;
-      MeetingsReportService.getMeetingTypeDurationData(vm.timeSelected, vm.clusterSelected).then(function (data) {
+      MeetingsReportService.getMeetingTypeDurationData(vm.timeSelected).then(function (data) {
         if (_.isUndefined(data) || data.length === 0 || _.isUndefined(data.dataProvider) || data.dataProvider.length === 0) {
           setDummyPieChart(vm.meetingTypeDurationChartOptions);
         } else {
@@ -145,7 +142,7 @@
 
     function setMeetingTypeData() {
       vm.meetingTypeChartOptions.loading = true;
-      MeetingsReportService.getMeetingTypeData(vm.timeSelected, vm.clusterSelected).then(function (data) {
+      MeetingsReportService.getMeetingTypeData(vm.timeSelected).then(function (data) {
         if (_.isUndefined(data) || data.length === 0 || _.isUndefined(data.dataProvider) || data.dataProvider.length === 0) {
           setDummyPieChart(vm.meetingTypeChartOptions);
         } else {
@@ -160,7 +157,7 @@
     }
 
     function setMeetingPieGraph(data, chartOptions) {
-      var pieChart = MeetingsGraphService.getMeetingPieGraph(data, chartOptions.chart, chartOptions.id, chartOptions.noData);
+      var pieChart = MeetingsGraphService.getMeetingPieGraph(data, chartOptions.chart, chartOptions.id, chartOptions.noData, chartOptions);
       chartOptions.chart = pieChart;
       return;
     }
@@ -173,7 +170,7 @@
     }
 
     function setMeetingMetricsData() {
-      MeetingsReportService.getMeetingMetrics(vm.timeSelected, vm.clusterSelected).then(function (data) {
+      MeetingsReportService.getMeetingMetrics(vm.timeSelected).then(function (data) {
         if (_.isUndefined(data) || data.length === 0) {
           vm.totalMeeting = vm.noData;
           vm.totalMinutes = vm.noData;

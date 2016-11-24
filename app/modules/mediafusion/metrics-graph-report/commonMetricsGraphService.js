@@ -219,11 +219,12 @@
       });
     }
 
-    function getBasePieChart(data) {
+    function getBasePieChart(data, chartOptions) {
       return angular.copy({
         'type': 'pie',
         'startDuration': 0,
-        'balloonText': '[[title]]<br><span style="font-size:14px"><b>[[value]]</b> ([[percents]]%)</span>',
+        'balloonText': chartOptions.balloonText,
+        'outlineThickness': 0,
         'hoverAlpha': 0.5,
         'labelRadius': 1,
         'marginBottom': 40,

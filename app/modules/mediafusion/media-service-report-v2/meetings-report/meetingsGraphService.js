@@ -7,9 +7,9 @@
 
   /* @ngInject */
   function MeetingsGraphService(CommonMetricsGraphService) {
-    function getMeetingPieGraph(data, chart, id, noData) {
+    function getMeetingPieGraph(data, chart, id, noData, chartOptions) {
       if (_.isUndefined(chart) || (noData === true)) {
-        var pieChart = CommonMetricsGraphService.getBasePieChart(data);
+        var pieChart = CommonMetricsGraphService.getBasePieChart(data, chartOptions);
         chart = AmCharts.makeChart(id, pieChart);
       } else {
         chart.dataProvider = data.dataProvider;
