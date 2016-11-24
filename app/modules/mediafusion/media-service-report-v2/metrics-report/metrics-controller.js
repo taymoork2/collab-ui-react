@@ -243,7 +243,9 @@
 
     function loadDatas() {
       getCluster();
-      clusterUpdate();
+      deferred.promise.then(function () {
+        clusterUpdate();
+      });
     }
 
     loadDatas();
@@ -692,16 +694,12 @@
       vm.hostedOnPremisesArray = [];
       var cluster_name;
       var overflowedArray = [];
-
       MetricsReportServiceV2.getClusterAvailabilityTooltip(vm.timeSelected).then(function (response) {
-        _.forEach(response.data, function (val, index) {
+        _.forEach(response.data, function (val) {
           cluster_name = _.findKey(vm.Map, function (value) {
             return value === val.cluster;
           });
-          if (cluster_name == "" || cluster_name == null) {
-            cluster_name = 'Bangalore-Site' + index + '_TEST';
-          }
-          if (val.value !== 100) {
+          if (val.value !== 100 && cluster_name !== "" && cluster_name !== null && !_.isUndefined(cluster_name)) {
             vm.clusterAvailabilityArray.push({ clusterName: cluster_name, clusterAvailability: val.value });
           }
         });
@@ -709,7 +707,6 @@
       }, function () {
         Notification.error('mediaFusion.genericError');
       });
-
       MetricsReportServiceV2.getOverflowedToCloudTooltip(vm.timeSelected).then(function (response) {
         var aggregatedOverflowed = 0;
         _.forEach(response.data, function (val) {
@@ -723,16 +720,19 @@
       }, function () {
         Notification.error('mediaFusion.genericError');
       });
-
       MetricsReportServiceV2.getHostedOnPremisesTooltip(vm.timeSelected).then(function (response) {
         _.forEach(response.data, function (val) {
-          vm.hostedOnPremisesArray.push({ clusterName: val.cluster, hostedOnPremises: val.value });
+          _.forEach(vm.clusterOptions, function (option) {
+            var cName = option.replace(/\W/g, "").toLowerCase();
+            if (cName === val.cluster) {
+              vm.hostedOnPremisesArray.push({ clusterName: option, hostedOnPremises: val.value });
+            }
+          });
         });
         vm.hostedOnPremisesArray = _.orderBy(vm.hostedOnPremisesArray, ['hostedOnPremises'], ['desc']);
       }, function () {
         Notification.error('mediaFusion.genericError');
       });
-
     }
 
     function setClusterAvailabilityHistorical() {

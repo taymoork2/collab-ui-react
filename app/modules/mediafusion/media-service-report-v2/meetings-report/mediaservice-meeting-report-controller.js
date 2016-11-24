@@ -10,6 +10,7 @@
     var vm = this;
 
     vm.noData = $translate.instant('mediaFusion.metrics.nodata');
+    vm.pageTitle = $translate.instant('mediaFusion.meetings-report.title');
 
     vm.timeUpdate = timeUpdate;
 
