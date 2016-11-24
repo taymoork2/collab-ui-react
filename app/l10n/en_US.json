@@ -3941,7 +3941,7 @@
       "availabilityStatus": "Availability Status",
       "clusterTitle": "Cluster",
       "lowAvailableClusters": "Low availability clusters",
-      "clusterTakingMoreCalls":"Clusters taking more calls"
+      "clusterTakingMoreCalls":"Clusters hosting more no of calls"
     },
     "serviceStatus": {
       "unknown": "Status unknown",

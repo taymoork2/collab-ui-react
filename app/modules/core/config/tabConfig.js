@@ -97,8 +97,8 @@
     subPages: [{
       title: 'tabs.metricsDetailsTab',
       //desc: 'tabs.metricsDetailsTabDesc',
-      state: 'media-service-v2.reports-metrics',
-      link: '#/mediaservicereport/metrics'
+      state: 'media-service-v2',
+      link: '#mediaserviceV2'
     }]
   }];
 
