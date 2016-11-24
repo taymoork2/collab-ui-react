@@ -12,18 +12,15 @@ export class ServicesOverviewHybridCallCard extends ServicesOverviewHybridCard {
     buttonClass: 'btn',
   };
 
-  private _buttons: Array<ICardButton> = [
-    {
-      name: 'servicesOverview.cards.hybridCall.buttons.resources',
-      routerState: 'call-service.list',
-      buttonClass: 'btn-link',
-    },
-    {
-      name: 'servicesOverview.cards.hybridCall.buttons.settings',
-      routerState: 'call-service.settings',
-      buttonClass: 'btn-link',
-    },
-  ];
+  private _buttons: Array<ICardButton> = [{
+    name: 'servicesOverview.cards.hybridCall.buttons.resources',
+    routerState: 'call-service.list',
+    buttonClass: 'btn-link',
+  }, {
+    name: 'servicesOverview.cards.hybridCall.buttons.settings',
+    routerState: 'call-service.settings',
+    buttonClass: 'btn-link',
+  }];
 
   public getButtons(): Array<ICardButton> {
     if (this.active) {
@@ -35,12 +32,13 @@ export class ServicesOverviewHybridCallCard extends ServicesOverviewHybridCard {
   /* @ngInject */
   public constructor(Authinfo, FusionClusterStatesService) {
     super({
-      name: 'servicesOverview.cards.hybridCall.title',
-      description: 'servicesOverview.cards.hybridCall.description',
-      service: 'squared-fusion-uc',
-      routerState: 'call-service.list',
+      active: false,
       cardClass: 'call',
       cardType: CardType.hybrid,
+      description: 'servicesOverview.cards.hybridCall.description',
+      name: 'servicesOverview.cards.hybridCall.title',
+      routerState: 'call-service.list',
+      service: 'squared-fusion-uc',
     }, FusionClusterStatesService);
     this.display = Authinfo.isFusionUC();
   }

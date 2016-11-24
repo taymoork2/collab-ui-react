@@ -12,18 +12,15 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
     buttonClass: 'btn',
   };
 
-  private _buttons: Array<ICardButton> = [
-    {
-      name: 'servicesOverview.cards.hybridCalendar.buttons.resources',
-      routerState: 'calendar-service.list',
-      buttonClass: 'btn-link',
-    },
-    {
-      name: 'servicesOverview.cards.hybridCalendar.buttons.settings',
-      routerState: 'calendar-service.settings',
-      buttonClass: 'btn-link',
-    },
-  ];
+  private _buttons: Array<ICardButton> = [{
+    name: 'servicesOverview.cards.hybridCalendar.buttons.resources',
+    routerState: 'calendar-service.list',
+    buttonClass: 'btn-link',
+  }, {
+    name: 'servicesOverview.cards.hybridCalendar.buttons.settings',
+    routerState: 'calendar-service.settings',
+    buttonClass: 'btn-link',
+  }];
 
   public getButtons(): Array<ICardButton> {
     if (this.active) {
@@ -33,20 +30,21 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
   }
 
   public googleCalendarFeatureToggleEventHandler(hasFeature: boolean) {
-    this.display = this.Authinfo.isFusionCal() && (!this.Authinfo.isFusionGoogleCal() || !hasFeature);
+    this.display = this.Authinfo.isFusionCal() && !(this.Authinfo.isFusionGoogleCal() || hasFeature);
   }
 
   /* @ngInject */
   public constructor(private Authinfo, FusionClusterStatesService) {
     super({
-      name: 'servicesOverview.cards.hybridCalendar.title',
-      description: 'servicesOverview.cards.hybridCalendar.description',
-      service: 'squared-fusion-cal',
-      routerState: 'calendar-service.list',
+      active: false,
       cardClass: 'calendar',
       cardType: CardType.hybrid,
+      description: 'servicesOverview.cards.hybridCalendar.description',
+      name: 'servicesOverview.cards.hybridCalendar.title',
+      routerState: 'calendar-service.list',
+      service: 'squared-fusion-cal',
     }, FusionClusterStatesService);
-    // Optimisticly display it (will be hidden if the org has google calendar feature)
+    // Optimisticly display it (will be hidden if the org has google calendar feature toggle)
     this.display = Authinfo.isFusionCal() && !Authinfo.isFusionGoogleCal();
   }
 }

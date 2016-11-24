@@ -12,18 +12,15 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
     buttonClass: 'btn',
   };
 
-  private _buttons: Array<ICardButton> = [
-    {
-      name: 'servicesOverview.cards.hybridMedia.buttons.resources',
-      routerState: 'media-service-v2.list',
-      buttonClass: 'btn-link',
-    },
-    {
-      name: 'servicesOverview.cards.hybridMedia.buttons.settings',
-      routerState: 'media-service-v2.settings',
-      buttonClass: 'btn-link',
-    },
-  ];
+  private _buttons: Array<ICardButton> = [{
+    name: 'servicesOverview.cards.hybridMedia.buttons.resources',
+    routerState: 'media-service-v2.list',
+    buttonClass: 'btn-link',
+  }, {
+    name: 'servicesOverview.cards.hybridMedia.buttons.settings',
+    routerState: 'media-service-v2.settings',
+    buttonClass: 'btn-link',
+  }];
 
   public getButtons(): Array<ICardButton> {
     if (this.active) {
@@ -45,16 +42,14 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
     FusionClusterStatesService,
   ) {
     super({
-      name: 'servicesOverview.cards.hybridMedia.title',
-      description: 'servicesOverview.cards.hybridMedia.description',
-      service: 'squared-fusion-media',
-      routerState: 'media-service-v2.list',
       active: false,
-      display : false,
       cardClass: 'media',
       cardType: CardType.hybrid,
+      description: 'servicesOverview.cards.hybridMedia.description',
+      display : false,
+      name: 'servicesOverview.cards.hybridMedia.title',
+      routerState: 'media-service-v2.list',
+      service: 'squared-fusion-media',
     }, FusionClusterStatesService);
-    this.Authinfo = Authinfo;
-    this.Config = Config;
   }
 }

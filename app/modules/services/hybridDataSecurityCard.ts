@@ -12,17 +12,15 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     buttonClass: 'btn',
   };
 
-  private _buttons: Array<ICardButton> = [
-    {
-      name: 'servicesOverview.cards.hybridDataSecurity.buttons.resources',
-      routerState: 'hds-settings',
-      buttonClass: 'btn-link',
-    },
-    {
-      name: 'servicesOverview.cards.hybridDataSecurity.buttons.settings',
-      routerState: 'hds-settings',
-      buttonClass: 'btn-link',
-    }];
+  private _buttons: Array<ICardButton> = [{
+    name: 'servicesOverview.cards.hybridDataSecurity.buttons.resources',
+    routerState: 'hds-settings',
+    buttonClass: 'btn-link',
+  }, {
+    name: 'servicesOverview.cards.hybridDataSecurity.buttons.settings',
+    routerState: 'hds-settings',
+    buttonClass: 'btn-link',
+  }];
 
   public getButtons(): Array<ICardButton> {
     if (this.active) {
@@ -38,15 +36,15 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
   /* @ngInject */
   public constructor(FusionClusterStatesService) {
     super({
-      template: 'modules/services/card.tpl.html',
-      name: 'servicesOverview.cards.hybridDataSecurity.title',
-      description: 'servicesOverview.cards.hybridDataSecurity.description',
-      service: 'hybrid-data-security',
-      routerState: 'hds-settings',
       active: false,
-      display : false,
       cardClass: 'media',
       cardType: CardType.hybrid,
+      description: 'servicesOverview.cards.hybridDataSecurity.description',
+      display : false,
+      name: 'servicesOverview.cards.hybridDataSecurity.title',
+      routerState: 'hds-settings',
+      service: 'hybrid-data-security',
+      template: 'modules/services/card.tpl.html',
     }, FusionClusterStatesService);
   }
 }

@@ -4,7 +4,7 @@ import { ServicesOverviewCard } from './ServicesOverviewCard';
 
 export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOverviewCard {
   private canDisplay: ng.IDeferred<void> = this.$q.defer();
-  private googleActive: boolean = false;
+  public googleActive: boolean = false;
   private googleStatus: ICardStatus;
 
   // Don't care but because of ServicesOverviewCard we have to do something
@@ -104,11 +104,12 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
     private FusionClusterStatesService
   ) {
     super({
-      template: 'modules/services/hybridAndGoogleCalendarCard.tpl.html',
-      name: 'servicesOverview.cards.hybridCalendar.title',
-      description: 'servicesOverview.cards.hybridCalendar.description',
+      active: false,
       cardClass: 'calendar',
       cardType: CardType.hybrid,
+      description: 'servicesOverview.cards.hybridCalendar.description',
+      name: 'servicesOverview.cards.hybridCalendar.title',
+      template: 'modules/services/hybridAndGoogleCalendarCard.tpl.html',
     });
   }
 }
