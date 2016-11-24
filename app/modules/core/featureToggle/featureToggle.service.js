@@ -163,6 +163,7 @@
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
       huronDeviceE911: 'huron-device-e911-address',
       gemServicesTab: 'gem-services-tab',
+      gemCCA: 'gem-cloud-connected-audio',
       atlasHybridDataSecurity: 'atlas-data-security',
       atlasHerculesEmergencyUpgrade: 'atlas-hercules-emergency-upgrade',
       atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',
