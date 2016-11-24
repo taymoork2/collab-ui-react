@@ -47,12 +47,8 @@
   }
 }
 
-body {
-  overflow-y: hidden !important;
-}
-
 .scrollpadding {
-  padding-bottom: 6rem !important
+  height: calc(100vh - (50px + (1px * 2) + (5rem * 2) + 4.125rem)) !important;
 }
 
 .metrics-reports {
