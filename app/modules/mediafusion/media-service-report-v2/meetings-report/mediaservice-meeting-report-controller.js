@@ -9,7 +9,6 @@
   function MediaSeriveMeetingsReportsCtrl($translate, $scope, $interval, Notification, MeetingsReportService, MeetingsGraphService, $timeout) {
     var vm = this;
 
-    vm.pageTitle = $translate.instant('mediaFusion.meetings-report.title');
     vm.noData = $translate.instant('mediaFusion.metrics.nodata');
     vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
 

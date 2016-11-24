@@ -4,8 +4,7 @@
       "type": "column",
       "fillAlphas": 1,
       "lineAlpha": 0,
-      "balloonColor": "#ccc",
-      "columnWidth": 4
+      "balloonColor": "#ccc"
     },
     "smoothedLine": {
       "type": "smoothedLine",
@@ -107,6 +106,25 @@
     }, {
       "number": 1e+12,
       "prefix": "T"
+    }],
+    "chartScrollbar": [{
+      "offset": 30,
+      "scrollbarHeight": 20,
+      "backgroundAlpha": 0,
+      "selectedBackgroundAlpha": 0.1,
+      "selectedBackgroundColor": "#ccc",
+      "graphFillAlpha": 0,
+      "graphLineAlpha": 0.5,
+      "selectedGraphFillAlpha": 0,
+      "selectedGraphLineAlpha": 1,
+      "autoGridCount": true,
+      "color": "#ccc"
+    }],
+    "valueScrollbar": [{
+      "autoGridCount": true,
+      "color": "#ccc",
+      "backgroundColor": "#ccc",
+      "backgroundAlpha": 1
     }]
   },
   "getBaseStackSerialGraph": {
@@ -142,19 +160,7 @@
       "zoomable": true,
       "valueZoomable": false
     },
-    "chartScrollbar": {
-      "offset": 30,
-      "scrollbarHeight": 20,
-      "backgroundAlpha": 0,
-      "selectedBackgroundAlpha": 0.1,
-      "selectedBackgroundColor": "#888888",
-      "graphFillAlpha": 0,
-      "graphLineAlpha": 0.5,
-      "selectedGraphFillAlpha": 0,
-      "selectedGraphLineAlpha": 1,
-      "autoGridCount": true,
-      "color": "#AAAAAA"
-    }
+    "chartScrollbar": "dummyData"
   },
   "getGanttGraph": {
     "type": "gantt",
@@ -179,12 +185,7 @@
     "endField": "end",
     "durationField": "duration",
     "dataProvider": "dummyData",
-    "valueScrollbar": {
-      "autoGridCount": true,
-      "color": "#AAAAAA",
-      "backgroundColor": "#ffffff",
-      "backgroundAlpha": 1
-    },
+    "valueScrollbar": "dummyData",
     "chartCursor": {
       "cursorColor": "#55bb76",
       "valueBalloonsEnabled": false,

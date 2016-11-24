@@ -21,9 +21,6 @@
     <section>
       <div class="metrics-availability">
         <div id="realtimeavailabilitydiv" class="barchart" ng-class="{'availability-chart': !nav.isEmpty(nav.availabilityStatus) && !nav.isRefresh(nav.availabilityStatus)}"></div>
-        <!--div class="spinner-position" ng-if="nav.isRefresh(nav.availabilityStatus)">
-          <i class='icon icon-spinner icon-2x'></i>
-        </div-->
         <div class="no-data-center" ng-if="nav.isEmpty(nav.availabilityStatus)">
           <h3 class="no-data">
             <i class='icon icon-warning no-data-warning'></i>

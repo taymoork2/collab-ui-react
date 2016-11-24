@@ -11,8 +11,6 @@
     var meetingMetricsLink = '/meeting_metrics';
     var meetingTypesLink = '/meeting_types_count';
     var meetingTypesDurationLink = '/meeting_types_duration';
-  //  var shriniURL = 'http://localhost:8080/cloud-apps-server-1.0-SNAPSHOT/athena/api/v1/organizations/27f564b5-37f4-4b2d-a896-622ebb973506';
-
     function extractDataFromResponse(res) {
       return _.get(res, 'data');
     }
