@@ -2765,14 +2765,6 @@
               }
             }
           })
-          .state('management-service.list', {
-            url: '/services/expressway-management',
-            views: {
-              'fullPane': {
-                templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
-              }
-            }
-          })
           .state('cluster-details', {
             parent: 'sidepanel',
             views: {
