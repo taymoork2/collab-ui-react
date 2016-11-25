@@ -49,12 +49,20 @@
 
     function processOnboardStatus() {
       SunlightConfigService.getChatConfig().then(function (result) {
-        if (_.get(result, 'data.csConnString')) {
-          Notification.success($translate.instant('sunlightDetails.settings.setUpCareSuccess'));
-          vm.state = vm.ONBOARDED;
-          stopPolling();
-        } else {
-          Log.debug('Chat Config does not have CS connection string: ', result);
+        var onboardingStatus = _.get(result, 'data.csOnboardingStatus');
+        switch (onboardingStatus) {
+          case 'Success':
+            Notification.success($translate.instant('sunlightDetails.settings.setUpCareSuccess'));
+            vm.state = vm.ONBOARDED;
+            stopPolling();
+            break;
+          case 'Failure':
+            Notification.error($translate.instant('sunlightDetails.settings.setUpCareFailure'));
+            vm.state = vm.NOT_ONBOARDED;
+            stopPolling();
+            break;
+          default:
+            Log.debug('Care setup status is not Success: ', result);
         }
       })
         .catch(function (result) {
@@ -88,10 +96,19 @@
         if (!isPartner(authData.data)) {
           vm.isPartner = false;
           SunlightConfigService.getChatConfig().then(function (result) {
-            if (_.get(result, 'data.csConnString')) {
-              vm.state = vm.ONBOARDED;
+            var onboardingStatus = _.get(result, 'data.csOnboardingStatus');
+            switch (onboardingStatus) {
+              case 'Pending':
+                vm.state = vm.IN_PROGRESS;
+                startPolling();
+                break;
+              case 'Success':
+                vm.state = vm.ONBOARDED;
+                break;
+              default:
+                vm.state = vm.NOT_ONBOARDED;
             }
-            if (result.data.orgName == "" || !(_.get(result, 'data.orgName'))) {
+            if (result.data.orgName === "" || !(_.get(result, 'data.orgName'))) {
               result.data.orgName = Authinfo.getOrgName();
               SunlightConfigService.updateChatConfig(result.data).then(function (result) {
                 Log.debug('Successfully updated org config with org name', result);

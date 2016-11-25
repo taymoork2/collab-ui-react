@@ -4,11 +4,8 @@
   angular.module('Core')
     .controller('CareSettingsCtrl', CareSettingsCtrl);
 
-  function CareSettingsCtrl($interval, $scope, $translate, $window, Authinfo, Log, Notification, SunlightConfigService, TokenService, UrlConfig) {
+  function CareSettingsCtrl($interval, $scope, $translate, Log, Notification, SunlightConfigService) {
     var vm = this;
-    var callbackUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/csonboard?accessToken='
-      + TokenService.getAccessToken() + '&orgName=' + Authinfo.getOrgName();
-    var ccfsUrl = UrlConfig.getCcfsUrl() + encodeURIComponent(callbackUrl);
 
     vm.UNKNOWN = 'unknown';
     vm.ONBOARDED = 'onboarded';
@@ -19,7 +16,7 @@
     vm.errorCount = 0;
 
     vm.onboardToCs = function () {
-      $window.open(ccfsUrl, '_blank');
+      SunlightConfigService.onBoardCare();
       vm.state = vm.IN_PROGRESS;
       startPolling();
     };
@@ -51,12 +48,20 @@
 
     function processOnboardStatus() {
       SunlightConfigService.getChatConfig().then(function (result) {
-        if (_.get(result, 'data.csConnString')) {
-          Notification.success($translate.instant('firstTimeWizard.careSettingsComplete'));
-          vm.state = vm.ONBOARDED;
-          stopPolling();
-        } else {
-          Log.debug('Chat Config does not have CS connection string: ', result);
+        var onboardingStatus = _.get(result, 'data.csOnboardingStatus');
+        switch (onboardingStatus) {
+          case 'Success':
+            Notification.success($translate.instant('firstTimeWizard.careSettingsComplete'));
+            vm.state = vm.ONBOARDED;
+            stopPolling();
+            break;
+          case 'Failure':
+            Notification.error($translate.instant('sunlightDetails.settings.setUpCareFailure'));
+            vm.state = vm.NOT_ONBOARDED;
+            stopPolling();
+            break;
+          default:
+            Log.debug('Care setup status is not Success: ', result);
         }
       })
       .catch(function (result) {
@@ -90,9 +95,18 @@
       disableNext();
 
       SunlightConfigService.getChatConfig().then(function (result) {
-        if (_.get(result, 'data.csConnString')) {
-          vm.state = vm.ONBOARDED;
-          enableNext();
+        var onboardingStatus = _.get(result, 'data.csOnboardingStatus');
+        switch (onboardingStatus) {
+          case 'Pending':
+            vm.state = vm.IN_PROGRESS;
+            startPolling();
+            break;
+          case 'Success':
+            vm.state = vm.ONBOARDED;
+            enableNext();
+            break;
+          default:
+            vm.state = vm.NOT_ONBOARDED;
         }
       })
       .catch(function (result) {
