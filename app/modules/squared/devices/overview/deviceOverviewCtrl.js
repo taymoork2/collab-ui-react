@@ -6,7 +6,7 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, Userservice, $stateParams, $translate, $timeout, Authinfo, FeatureToggleService, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService, TerminusUserDeviceE911Service) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, Userservice, $stateParams, $translate, $timeout, Authinfo, FeatureToggleService, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal, ServiceSetup, KemService, TerminusUserDeviceE911Service) {
     var deviceOverview = this;
     var huronDeviceService = $stateParams.huronDeviceService;
     deviceOverview.showPlaces = false;
@@ -58,7 +58,7 @@
         }
       }
 
-      deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport || deviceOverview.currentDevice.needsActivation;
+      deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport;
 
       deviceOverview.canChangeUpgradeChannel = channels.length > 1 && deviceOverview.currentDevice.isOnline;
 
@@ -68,6 +68,7 @@
 
       resetSelectedChannel();
     }
+
     function getEmergencyInformation() {
       return FeatureToggleService.supports(FeatureToggleService.features.huronDeviceE911).then(function (result) {
         deviceOverview.showE911 = result;
@@ -241,42 +242,6 @@
         .then($state.sidepanel.close);
     };
 
-    deviceOverview.resetCode = function () {
-      deviceOverview.resettingCode = true;
-      var displayName = deviceOverview.currentDevice.displayName;
-      CsdmDataModelService.deleteItem(deviceOverview.currentDevice)
-        .then(function () {
-          var wizardState = {
-            data: {
-              function: 'showCode',
-              showPlaces: deviceOverview.showPlaces,
-              account: {
-                type: 'shared',
-                name: displayName,
-                deviceType: 'cloudberry',
-              },
-              recipient: {
-                displayName: deviceOverview.adminDisplayName,
-                cisUuid: Authinfo.getUserId(),
-                email: Authinfo.getPrimaryEmail(),
-                organizationId: Authinfo.getOrgId(),
-              },
-              title: 'addDeviceWizard.newCode'
-            },
-            history: [],
-            currentStateName: 'addDeviceFlow.showActivationCode',
-            wizardState: {
-              'addDeviceFlow.showActivationCode': {}
-            }
-          };
-          var wizard = WizardFactory.create(wizardState);
-          $state.go(wizardState.currentStateName, {
-            wizard: wizard
-          });
-        });
-      $state.sidepanel.close();
-    };
-
     deviceOverview.showRemoteSupportDialog = function () {
       if (_.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin()) {
         Notification.notifyReadOnly();
@@ -289,12 +254,6 @@
 
     deviceOverview.showRemoteSupportButton = function () {
       return deviceOverview.currentDevice && !!deviceOverview.currentDevice.hasRemoteSupport;
-    };
-
-    deviceOverview.getDeleteCodeText = function () {
-      return deviceOverview.showPlaces
-        ? $translate.instant('placesPage.deletePlace')
-        : $translate.instant('deviceOverviewPage.deleteLocation');
     };
 
     deviceOverview.addTag = function () {

@@ -25,7 +25,13 @@
     var saveDeferred;
     var csvHeaders = null;
     var orgHeaders;
-
+    var renamedHeaders = {
+      'Calendar Service': 'Hybrid Calendar Service (Exchange)'
+    };
+    var mutuallyExclusiveCalendarEntitlements = {
+      'squaredFusionCal': 'squaredFusionGCal',
+      'squaredFusionGCal': 'squaredFusionCal'
+    };
     var USER_ID_EMAIL_HEADER = 'User ID/Email (Required)';
 
     CsvDownloadService.getCsv('headers').then(function (csvData) {
@@ -370,7 +376,7 @@
       } else {
         _.forEach(userHeaders, function (uHeader, k) {
           index = _.findIndex(serverHeaders, function (sHeader) {
-            return sHeader.name === uHeader;
+            return sHeader.name === uHeader || sHeader.name === renamedHeaders[uHeader];
           });
           if (index !== -1) {
             var h = serverHeaders[index];
@@ -648,7 +654,12 @@
                   // if lincense is Calendar Service, only process if it is enabled
                   if (entitlement.toUpperCase().indexOf('SQUAREDFUSIONCAL') === -1 || isCalendarServiceEnabled) {
                     if (isTrue(input)) {
-                      entitleList.push(new Feature(entitlement, true));
+                      if (hasMutuallyExclusiveCalendarEntitlements(entitlement, entitleList)) {
+                        processingError = true;
+                        addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.mutuallyExclusiveCalendarEntitlements'));
+                      } else {
+                        entitleList.push(new Feature(entitlement, true));
+                      }
                     } else if (isFalse(input)) {
                       if (vm.model.enableRemove) {
                         entitleList.push(new Feature(entitlement, false));
@@ -703,7 +714,19 @@
             return null;
           }
         }
+      }
 
+      /**
+       * We only allow squared-fusion-cal OR squared-fusion-gcal entitlement to be set per user
+       */
+      function hasMutuallyExclusiveCalendarEntitlements(entitlement, currentFeatureList) {
+        var badEntitlement = mutuallyExclusiveCalendarEntitlements[entitlement];
+        if (!badEntitlement) {
+          return false;
+        }
+        return _.some(currentFeatureList, function (feature) {
+          return feature.entitlementName === badEntitlement && feature.entitlementState === 'ACTIVE';
+        });
       }
 
       /**

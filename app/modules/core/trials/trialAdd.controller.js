@@ -373,6 +373,9 @@
           return vm.careLicenseInputDisabledExpression();
         }
       },
+      modelOptions: {
+        allowInvalid: true
+      },
       validators: {
         quantity: {
           expression: function ($viewValue, $modelValue) {
@@ -380,6 +383,16 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialCareQuantity');
+          }
+        }
+      },
+      watcher: {
+        expression: function () {
+          return vm.details.licenseCount;
+        },
+        listener: function (field, newValue, oldValue) {
+          if (newValue !== oldValue) {
+            field.formControl.$validate();
           }
         }
       }
@@ -395,6 +408,9 @@
         inputClass: 'medium-5',
         type: 'number',
         secondaryLabel: $translate.instant('trials.users'),
+      },
+      modelOptions: {
+        allowInvalid: true
       },
       expressionProperties: {
         'templateOptions.required': function () {
@@ -415,7 +431,7 @@
       validators: {
         count: {
           expression: function ($viewValue, $modelValue) {
-            return !vm.licenseCountFields.enabled || ValidationService.trialLicenseCount($viewValue, $modelValue);
+            return !hasUserServices() || ValidationService.trialLicenseCount($viewValue, $modelValue);
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
@@ -427,6 +443,16 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.careLicenseCountExceedsTotalCount');
+          }
+        }
+      },
+      watcher: {
+        expression: function () {
+          return vm.careTrial.details.quantity;
+        },
+        listener: function (field, newValue, oldValue) {
+          if (newValue !== oldValue) {
+            field.formControl.$validate();
           }
         }
       }

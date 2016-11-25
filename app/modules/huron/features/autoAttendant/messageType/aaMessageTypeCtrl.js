@@ -198,16 +198,19 @@
           {
             ui = AAUiModelService.getUiModel();
             uiMenu = ui[$scope.schedule];
-
             vm.menuEntry = uiMenu.entries[$scope.index];
-            vm.actionEntry = getAction(vm.menuEntry);
-
+            if ($scope.type) {
+              queueAction = vm.menuEntry.actions[0];
+              sourceMenu = queueAction.queueSettings[$scope.type];
+              vm.actionEntry = getAction(sourceMenu);
+            } else {
+              vm.actionEntry = getAction(vm.menuEntry);
+            }
             break;
           }
       }
 
       return;
-
     }
 
     function activate() {

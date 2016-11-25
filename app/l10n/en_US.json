@@ -549,7 +549,7 @@
       "callDuration": "Call Duration",
       "numberOfCalls": "Number of Calls",
       "deviceName": "Device Name",
-      "hoursUsed": "Hours Used",
+      "hoursUsed": "Time Used",
       "callCount": "# Calls",
       "callHours": "Call Hours",
       "deviceUsage": "Room Device Usage",
@@ -557,6 +557,7 @@
       "last7Days": "Last 7 Days",
       "last4Weeks": "Weekly Last 4 weeks ",
       "last3Months": "Monthly Last 3 Months",
+      "missingDays": " (data missing for {{nbrOfMissingDays}} days)",
       "deviceOptions": {
         "all": "All",
         "roomSystems": "DX, MX, and SX Devices",
@@ -1071,8 +1072,8 @@
     "external": "External",
     "uri": "URI Address",
     "custom": "Custom",
-    "internalPlaceholder": "e.g. John, jsmith, jsmith@email.com",
-    "internalHelpText": "Name, User ID, or Email",
+    "internalPlaceholder": "e.g. 5555, jsmith, jsmith@email.com",
+    "internalHelpText": "Extension, User ID, or Email",
     "externalHelpText": "National or International Number",
     "uriPlaceholder": "example@site.domain.com",
     "customPlaceholder": "e.g. 81095555",
@@ -1380,8 +1381,6 @@
     "nameHeader": "Belongs to",
     "statusHeader": "Status",
     "actionsHeader": "Actions",
-    "account": "Account",
-    "unactivatedDevice": "Unactivated Device",
     "informationHeader": "Settings",
     "newCustomTagPlaceholder": "Enter tag...",
     "addPersonalDevice": "Trying to add a personal device?",
@@ -1390,7 +1389,6 @@
     "reboot": "Reboot",
     "reportProblem": "Report Issue",
     "deleteDeviceConfText": "Are you sure you want to delete this device?",
-    "deleteLocationConfText": "Are you sure you want to delete this location?",
     "deletePlaceConfText": "Are you sure you want to delete this place?",
     "rebootDeviceConfText": "Are you sure you want to reboot this device?",
     "ciscoSupport": "Cisco Support",
@@ -1420,7 +1418,9 @@
     "companyDefaultAddress": "Use company default address",
     "validatingAddr": "Validating Address...",
     "saving": "Saving...",
-    "errorAddr": "The address you entered is invalid, please try again."
+    "errorAddr": "The address you entered is invalid, please try again.",
+    "sameAsCompanyNum": "To edit your emergency service address, the emergency callback number for your device must be different from your company’s callback number.",
+    "impactedUserInfo": "Modifying the Emergency Service Address associated to the above selected Callback Number will impact the following users and/or places:"
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -1642,8 +1642,8 @@
         "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-ec": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too."
       },
-      "defaultWebExSite": "Default WebEx Site:",
-      "defaultWebExSiteNotSet": "Not set"
+      "preferredWebExSite": "Preferred WebEx Site:",
+      "preferredWebExSiteDefault": "Default"
     },
     "alarms": {
       "alarms": "Alarms",
@@ -1771,7 +1771,7 @@
         "deactivateHeader": "Deactivate Google Calendar",
         "deactivateText": "Your users will no longer be able to use this service.",
         "googleCalendarConfigWillBeWiped": "This action will delete all Google Calendar settings from Cisco Collaboration Cloud.",
-        "uploadNewPrivateKey": "Upload New Private Key",
+        "uploadNewPrivateKey": "Upload Private Key",
         "uploadNewPrivateKeyPlaceholder": "Enter service account name",
         "serviceAccountName": "Service Account Name",
         "uploadNewPrivateKeyExplanation": "Enter your service account name and upload the private key you downloaded from Google Developer Console.",
@@ -1781,10 +1781,21 @@
         "removeFile": "Remove file",
         "successfullyUploadedKey": "Service account saved successfully, and private key file {{filename}} uploaded.",
         "failedToUploadKey": "Changes not saved. The service account and/or private key file are not valid.",
-        "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status."
+        "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status.",
+        "generateAPrivateKeyHeader": "Generate a Private Key",
+        "generateAPrivateKeyExplanation": "To enable Hybrid Calendar for your users, you need to generate a private key for Google Calendar. You can generate the key with the <a href=\"https://console.developers.google.com/\" target=\"_blank\">Google Developer Console</a>. Follow <a href=\"https://example.org/\" target=\"_blank\">documentation</a> to learn how to generate a key.",
+        "keyHasBeenGeneratedGoNext": "When you have generated your key, click Next.",
+        "googleCalendarSetupCompleted": "Google Calendar setup completed",
+        "great": "Great! {{fileName}} was successfully uploaded to Cisco Collaboration Cloud. You can now enable Hybrid Calendar Service for your users.",
+        "toEnableUsers": "To enable users, you can:",
+        "enableIndividually": "Enable them individually from the <a ng-click=\"{{onclick}}\">users</a> page.",
+        "enableInBulk": "Enable them in bulk using the <a ng-click=\"{{onclick}}\">CSV template</a>.",
+        "referToDocumentation": "Refer to <a href=\"https://example.org/\" target=\"_blank\">documentation</a> if you need help enabling users."
       },
       "hybridCalendarCommon": {
-        "hybridCalendarSetUp": "Hybrid Calendar setup"
+        "hybridCalendarSetUp": "Hybrid Calendar setup",
+        "selectCalendarType": "Select Calendar type",
+        "serviceInto": "Hybrid Calendar Service supports Microsoft Exchange calendar via on-premises Expressway clusters, and Google Calendar."
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
@@ -2092,16 +2103,17 @@
     },
     "searchParameters": {
       "searchBy": "Search By",
-      "searchByPlaceholder": "Email Id",
+      "searchByPlaceholder": "Email ID",
       "searchByEmailPlaceholder": "e.g. johnsmith@email.com, jansmith@email.com",
-      "roomName": "Where <b>Room Name</b> contains",
-      "roomNamePlaceholder": "e.g. sales AND meeting OR private",
-      "textMessage": "Where <b>Text Messages</b> contains",
-      "textMessagePlaceholder": "e.g. project AND manager OR admin NOT owner",
-      "fileName": "Where <b>File Name</b> contains",
-      "fileNamePlaceholder": "e.g. confidential OR restricted",
-      "activityType": "And <b>Activity Type</b> is",
-      "activityTypePlaceholder": "Meeting"
+      "searchByRoomPlaceholder": "e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "textAndFileName": "Where <b>Text Messagegs</b> or <b>File Name</b> contains",
+      "textAndFileNamePlaceholder": "e.g. project AND manager",
+      "noMatchesFound": "No Matches Found"
+    },
+    "searchResults": {
+      "searchInfo": "Search Info",
+      "emailId": "Email Id",
+      "dateRange": "Date Range"
     },
     "reportsList": {
       "name": "Name",
@@ -2200,6 +2212,13 @@
     "callingMsg": "Cloud Calling",
     "message": "Message",
     "meeting": "Meeting",
+    "standardMeetings": "Standard Meetings",
+    "advancedMeetings": "Advanced Meetings",
+    "sharedLicenses": "Shared Licenses",
+    "assignedLicenses": "Assigned User Licenses",
+    "partnerProvidedAudio": "Partner-provided Audio",
+    "webexProvidedAudio": "WebEx-provided Audio",
+    "meetingsInSpark": "25-party Meetings in Spark",
     "call": "Call",
     "care": "Care",
     "roomSystems": "Room Devices",
@@ -2336,7 +2355,8 @@
     "invalidCallServiceResourceGroup": "Hybrid Call Service Resource Group \"{{group}}\" not found",
     "unableToUpdateResourceGroups": "Updating Hybrid Services Resource Groups failed",
     "ussUserPropsLoadFailed": "Unable to load the current user Hybrid Services Resource Group assignments. Resource group assignments in the CSV file will not be processed.",
-    "fmsResourceGroupsLoadFailed": "Unable to load the Hybrid Services Resource Groups. Resource group assignments in the CSV file will not be processed."
+    "fmsResourceGroupsLoadFailed": "Unable to load the Hybrid Services Resource Groups. Resource group assignments in the CSV file will not be processed.",
+    "mutuallyExclusiveCalendarEntitlements": "There are more than one Hybrid Calendar Service entitlement set. Please fix and try again."
   },
   "reports": {
     "title": "Reports",
@@ -2489,6 +2509,8 @@
       "ExternalPhone": "External Phone",
       "Disconnect": "Disconnect"
   },
+    "languageAndVoice" : "Language and Voice",
+    "langaugeAndVoiceHelp" : "Language and voice will apply to Say Messages and Fallback.",
     "initialAnnouncement" : "Initial Announcement",
     "initialHelpText" : "Specify a message to play when the caller enters the queue.",
     "periodicHelpText": "Specify a message to play and how often to play it while the caller is waiting in the queue.",
@@ -2720,6 +2742,10 @@
     "pagingGroupNumber": "Paging Group Number",
     "pagingGroupMembers": "Paging Group Members",
     "memberEditHint": "Select the users or places that will be paged.  The devices need to be in the same multicast group for paging to work.",
+    "editMemberPlaceholder": "Add Members",
+    "users": " Users",
+    "places": " Places",
+    "search": "Search",
     "saveLabel": "Do you want to save your changes?",
     "successUpdate": "'{{pagingGroupName}}' paging group has been updated successfully",
     "successSave": "'{{pagingGroupName}}' paging group has been created successfully",
@@ -2903,7 +2929,8 @@
   "pstnOrderDetail": {
     "orderNumber": "Order #{{orderId}}",
     "pendingNumbers": "{count, plural, one{There is # number} other{There are # numbers}} pending for this order",
-    "searchPlaceholder": "Search Phone Numbers"
+    "searchPlaceholder": "Search Phone Numbers",
+    "waitOnTOSAcceptance": "Waiting on ToS acceptance from customer"
   },
   "serviceAddress": {
     "streetAddress": "Street Address",
@@ -3417,7 +3444,23 @@
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
-    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
+    "errorGettingBulkVoicemailEnableToggle": "There was a problem getting the bulkVoicemailEnable toggle."
+  },
+  "bulkEnableVm": {
+    "enableCompanyVoicemail": "Turning On Company Voicemail",
+    "processing": "Updating individual users...",
+    "canceling": "Canceling...",
+    "enabledUsers": "Enabled Users",
+    "errorUsers": "Errors",
+    "errorResolveInstructions": "To resolve errors, update your user attributes CSV file and reimport.",
+    "errorResolveTooltip": "Export errors to CSV and download an updated user attributes CSV file. Edit the user attributes to address reported errors, then reimport.",
+    "headerRow": "Email",
+    "headerErrorMessage": "Error Message",
+    "retryUsers": "Retry",
+    "reportProblem": "Report problem",
+    "exitWithoutResolving": "Exit without resolving",
+    "allUsersEntitled": "All users entitled with voicemail."
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",
@@ -3480,13 +3523,9 @@
     "sipUrl": "SIP Address",
     "issues": "Issues",
     "lastSeen": "since:",
-    "notYetActivated": "There is a device activation code which has not yet been used.",
-    "deleteLocation": "Delete Location",
-    "deviceCodeExpires": "This activation code will expire {{inXDays}}.",
-    "getNewCode": "Get a New Code",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time",
-    "logUploadWarning": "Selecting 'Report Issue' will send the device logs to Cisco.",
+    "logUploadWarning": "When you report an issue, device logs will be sent to Cisco.",
     "timeZone": "Timezone",
     "timeZoneUpdated": "Time Zone updated",
     "timeZoneUpdateFailed": "Device did not update its Time Zone in time",
@@ -3499,6 +3538,8 @@
       "two": "Two",
       "three": "Three"
     },
+    "deviceRebooting": "Device rebooting",
+    "deviceRebootingDetails": "The device is now rebooting and will be offline for a few moments.",
     "failedToSaveChanges": "Failed to save changes to device. Reason:",
     "failedToUploadLogs": "Failed to upload logs. Reason:",
     "deleteATAConfText": "Are you sure you want to delete Port 1?",
@@ -3510,7 +3551,6 @@
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
-    "newCode": "New Code",
     "chooseDeviceType": {
       "deviceType": "What kind of device do you want to set up?",
       "deviceTypeInstructions": "A new device requires a unique activation code to be input during setup. What kind of device do you want to activate?",
@@ -3587,7 +3627,12 @@
       "sparkOnlyHelp": "Calling to/from this place will only work through Cisco Spark or using SIP addresses.",
       "sparkCall": "Spark + Spark Call (phone numbers)",
       "sparkCallHelp": "In addition to calling with Spark and SIP addresses, if you have set up your organization’s PSTN provider this place will be able to call to/from landlines and mobile phones.",
+      "sparkCallConnect": "Spark + Call Service Connect (Hybrid)",
+      "sparkCallConnectHelp": "This place will be connected to your existing on-premises phone infrastructure. Therefore, it can call on-premises devices directly and leverage any existing PSTN services, if they are available",
       "servicesSaved": "Services updated successfully"
+    },
+    "sparkCallConnect": {
+      "editSettingsTitle": "Edit the settings for Hybrid Call Service Connect"
     },
     "showActivationCode": {
       "activationCode": "Activation Code",
@@ -3599,8 +3644,9 @@
       "onceActiveSharedDeviceNoPlaces": "Once the device has been successfully activated, you will be able to find and configure it in Devices.",
       "expires": "Expires {{expiryDate}}",
       "searchAnotherUser": "Or search for another user",
-      "codeIsUsed": "This code has now been used",
-      "failedToGenerateActivationCode": "Failed to generate activation code. Reason:"
+      "failedToGenerateActivationCode": "Failed to generate activation code. Reason:",
+      "problemGeneratingCode": "There was a problem generating your activation code.",
+      "pressRetry": "Please press Retry to try again."
     }
   },
   "generateActivationCodeModal": {
@@ -3743,6 +3789,7 @@
   },
   "mediaFusion": {
     "page_title": "Hybrid Media Service",
+    "report_title": "Hybrid Media Service Report",
     "add-resource-button": "Add Resource",
     "genericError": "An unexpected error occurred. Please try again later.",
     "connectors": {
@@ -3802,8 +3849,13 @@
       "body2": "To make this node available again, you will need to reregister it."
     },
     "metrics": {
+      "title": "Metrics",
+      "titlev2": "Reports Phase 2 POC",
+      "historical": "Historical",
+      "realTime": "Real time",
       "today": "Last 24 Hours",
       "today2": "Last 24 Hours",
+      "last4Hours": "Last 4 Hours",
       "yesterday": "Yesterday",
       "yesterday2": "Yesterday",
       "week": "Last Week",
@@ -3876,7 +3928,9 @@
       "nodes": "Node(s)",
       "node": "Node",
       "availabilityStatus": "Availability Status",
-      "clusterTitle": "Cluster"
+      "clusterTitle": "Cluster",
+      "lowAvailableClusters": "Low availability clusters",
+      "clusterTakingMoreCalls":"Clusters hosting more no of calls"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -4064,7 +4118,7 @@
       "fqdn": "Fully Qualified Domain Name"
     },
     "meetings-report": {
-      "title": "Media Service Meetings Report",
+      "title": "Meetings",
       "adoption-tab": "Adoption",
       "quality-tab": "Quality",
       "health-tab": "Health",
@@ -4072,7 +4126,9 @@
       "meetings-card": "Total Meetings",
       "minutes-card": "Total Minutes",
       "participants-card": "Total Participants",
-      "adoption-card": "Cluster Adoption"
+      "adoption-card": "Cluster Adoption",
+      "meeting-type-title": "Meeting Type",
+      "meeting-duration-title": "Meeting Duration"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
@@ -4704,8 +4760,6 @@
     "OnlineWithIssues": "Online, With Issues",
     "Offline": "Offline",
     "Unknown": "Unknown",
-    "Inactive": "Inactive Account",
-    "RequiresActivation": "Requires Activation",
     "WithDevices": "With Devices",
     "upgradeChannels": {
       "Stable": "Stable",
@@ -4769,10 +4823,6 @@
       "NetworkQuality": {
         "type": "Packet Loss Detected",
         "message": "During the last call we detected a level of packet loss that may have impacted the call quality. Packet loss is typically caused by network congestion."
-      },
-      "inactive": {
-        "type": "Inactive Account",
-        "message": "An account exists for a device, but there's no corresponding device or activation code. You can delete this account."
       },
       "unknown": {
         "type": "Unknown Error Occurred",
@@ -5634,7 +5684,6 @@
     "orderProvision": "Order Provisioned",
     "accountActivate": "Account Activated",
     "companyName": "Company Name",
-    "companyId": "Company ID",
     "adminEmail": "Admin Email",
     "emailSent": "Last Email Sent",
     "partnerInfo": "Partner Information",
@@ -5642,9 +5691,11 @@
     "partnerEmail": "Partner Email",
     "resendAdminEmail": "Resend",
     "editAdminEmail": "Edit",
-    "resendTooltip": "Resends the welcome email.",
+    "resendTooltip": "Resend service provisioning email.",
     "resendMailSuccess": "Welcome email was successfully sent.",
-    "resendMailFailure": "Failed to resend welcome email."
+    "resendMailFailure": "Failed to resend welcome email.",
+    "editAdminEmailSuccess": "Admin email was updated successfully.",
+    "editAdminEmailFailure": "Failed to update admin email."
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -5828,10 +5879,7 @@
     }
   },
   "readOnlyModal": {
-    "banner": "You are in read-only mode",
-    "title": "Read-only",
-    "okButton": "OK",
-    "text": "You are now viewing <b>{{orgName}}</b> portal as a read-only user. Your limited access allows viewing of the entire portal, but will not accept changes."
+    "banner": "You are in read-only mode"
   },
   "readOnlyMessages": {
     "notAllowed": "Not allowed in read-only mode. Operation not executed."
@@ -5848,9 +5896,18 @@
       "splsResponseErr": "No partner organization found, please contact ccaportal@cisco.com for help."
     },
     "cbgTitle": "Callback Groups",
+    "tdTitle": "Telephony Domain",
     "cbgs": {
+      "overview": "Overview",
+      "moveSite": "Move Site",
+      "placeholder-text": "All",
+      "importCsv": "Import CSV",
       "title": "Callback Groups",
+      "exportToCsv": "Export to CSV",
+      "editCountry": "Edit Country/Regions",
+      "downloadCsv": "Download CSV Template",
       "csvFilename": "exported_callbackGroup.csv",
+      "moveSiteMsg": "Are you sure you want to move this site?",
       "field": {
         "sites": "Site URL",
         "status_": "Status",
@@ -5858,10 +5915,10 @@
         "totalSites": "Sites Assigned",
         "alias": "Partner CB Group Name",
         "status": {
-          "E": "Edit",
+          "E": "Edited",
           "L": "Failed",
-          "S": "Submit",
-          "C": "Cancel",
+          "S": "Submitted",
+          "C": "Canceled",
           "D": "Delete",
           "A": "Approved",
           "R": "Rejected",
@@ -5881,9 +5938,20 @@
         "labelCountries": "Select Country/Regions",
         "countriesPlaceholder": "Search to add country"
       },
-      "placeholder-text": "All"
-    },
-    "tdTitle": "Telephony Domain"
+      "notes": {
+        "notes": "Notes",
+        "noNotes": "No notes yet",
+        "noNoteMsg": "Add notes to leave others helpful information that may be useful.",
+        "enterNote": "Enter note",
+        "newNote": "New Note",
+        "addNote": "Add Note"
+      },
+      "logs": {
+        "history": "History"
+      },
+      "by": "by",
+      "showMore": "Show more"
+    }
   },
   "timeZones": {
     "Etc/GMT+12": "Etc/GMT+12",
@@ -6326,7 +6394,7 @@
     "servicesPlaceholder": "Please choose a service",
     "componentStatuses": "Component Statuses",
     "updateIncident": "Update Incident",
-    "deleteIncident": "Delete Incident",
+    "deleteIncident": "Delete {{incidentName}}",
     "addStatusPage": "Add Another Service",
     "previousUpdated": "Previous Updates",
     "hideAffectedComponents": "Hide Affected Components",
@@ -6383,11 +6451,6 @@
       "deleteComponentSucceed": "Component {{componentName}} delete succeed.",
       "deleteComponentFailed":"Component {{componentName}} delete failed."
     },
-    "createIncident": {
-      "newIncident": "New Incident",
-      "incidentName": "Incident Name",
-      "createIncidentBtn": "Create Incident"
-    },
     "incidentsPage":{
       "incidentStatus": "Incident Status",
       "message": "Message",
@@ -6399,7 +6462,14 @@
       "noIncidentContentLink": "Create your first incident",
       "lastUpdatedOn": "Last updated on ",
       "resolvedOn": "Resolved on ",
-      "noAffectedComponent": "No components were affected by this update."
+      "noAffectedComponent": "No components were affected by this update.",
+      "newIncident": "New Incident",
+      "incidentName": "Incident Name",
+      "createIncidentBtn": "Create Incident",
+      "deleteIncidentSuccessfully": "Incident {{incidentName}} successfully deleted.",
+      "deleteIncidentFailed": "An error occurred deleting incident {{incidentName}}.",
+      "createIncidentSuccessfully": "Incident {{incidentName}} successfully created.",
+      "createIncidentFailed": "An error occurred creating incident {{incidentName}}."
     },
     "incidentStatus": {
       "investigating": "Investigating",

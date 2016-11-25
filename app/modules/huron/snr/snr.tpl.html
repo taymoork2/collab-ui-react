@@ -21,7 +21,8 @@
               size="medium-12"
               inputs="snr.callDestInputs"
               select-type="select"
-              external-number-region-code-fn="snr.getRegionCode()">
+              external-number-region-code-fn="snr.getRegionCode()"
+              on-change-fn="snr.setSnr(model)">
             </cs-call-destination>
           </div>
         </div>

@@ -13,18 +13,9 @@
     vm.onRequest = onRequest;
     vm.exportLoading = false;
     vm.exportCSV = exportCSV;
-    vm.filterList = _.debounce(filterList, 350);
+    vm.filterList = filterList;
     vm.customerId = _.get($stateParams, 'customerId', '');
     vm.placeholder = $translate.instant('gemini.cbgs.placeholder-text');
-
-    $scope.gridData = [];
-    $scope.gridData_ = []; // for search
-    $scope.showCbgDetails = showCbgDetails;
-
-    $rootScope.$on('cbgsUpdate', function () {
-      getcbgs();
-    });
-    $scope.$emit('headerTitle', $stateParams.companyName);
 
     var columnDefs = [{
       width: '20%',
@@ -33,11 +24,10 @@
       displayName: $translate.instant('gemini.cbgs.field.cbgName'),
       cellTooltip: true,
     }, {
-      width: '14%',
+      width: '18%',
       sortable: true,
       field: 'totalSites',
       cellClass: 'text-right',
-      headerCellClass: 'align-center',
       sort: { direction: 'asc', priority: 0 },
       displayName: $translate.instant('gemini.cbgs.field.totalSites')
     }, {
@@ -66,35 +56,30 @@
       }
     };
 
-    function filterList(str) {
-      vm.searchStr = str;
+    $scope.gridData = [];
+    $scope.gridData_ = []; // for search
+    $scope.showCbgDetails = showCbgDetails;
+    init();
+    function init() {
+      $rootScope.$on('cbgsUpdate', function () {
+        getcbgs();
+      });
+      $scope.$emit('headerTitle', $stateParams.companyName);
       getcbgs();
     }
 
-    function getcbgs() {
+    function filterList(str) {
+      var timeout;
+      vm.searchStr = str;
       vm.gridRefresh = true;
-
-      if ($scope.gridData_.length && vm.searchStr) {
-        $scope.gridData = $filter('filter')($scope.gridData_, vm.searchStr);
+      $timeout.cancel(timeout); // _.debounce ,it's hard to do unit test, so i replace $timeout;
+      $timeout(function () {
         vm.gridRefresh = false;
+      }, 350);
+      if (!$scope.gridData_.length) {
         return;
       }
-
-      cbgService.getCallbackGroups(vm.customerId)
-        .then(function (res) {
-          var cbgs = res.content.data.body;
-          $scope.gridData = cbgs;
-          $scope.gridData_ = cbgs;
-          _.forEach($scope.gridData, function (row) {
-            row.status_ = (row.status ? $translate.instant('gemini.cbgs.field.status.' + row.status) : '');
-            row.groupName = (row.groupName ? row.groupName : row.customerName);
-          });
-          vm.gridRefresh = false;
-        })
-        .catch(function (err) {
-          Notification.errorResponse(err, 'errors.statusError', { status: err.status });
-          vm.gridRefresh = true;
-        });
+      $scope.gridData = $filter('filter')($scope.gridData_, vm.searchStr);
     }
 
     function onRequest() {
@@ -103,11 +88,11 @@
 
     function showCbgDetails(cbg) {
       var info = {
-        currCbg: cbg,
+        groupId: cbg.ccaGroupId,
         customerId: vm.customerId,
         cbgs: $scope.gridData_
       };
-      $state.go('gem.cbgDetails', { info: info });
+      $state.go('gemCbgDetails', { info: info });
     }
 
     function exportCSV() {
@@ -120,6 +105,27 @@
         }, 1500);
       });
     }
-    getcbgs();
+
+    function getcbgs() {
+      vm.gridRefresh = true;
+
+      cbgService.getCallbackGroups(vm.customerId)
+        .then(function (res) {
+          var cbgs = _.get(res, 'content.data.body');
+          $scope.gridData = cbgs;
+          $scope.gridData_ = cbgs;
+          _.forEach($scope.gridData, function (row) {
+            row.groupName_ = row.groupName; // true groupName
+            row.groupName = (row.groupName ? row.groupName : row.customerName);
+            row.status_ = (row.status ? $translate.instant('gemini.cbgs.field.status.' + row.status) : '');
+          });
+          vm.gridRefresh = false;
+        })
+        .catch(function (err) {
+          // TODO will defined the wording
+          Notification.errorResponse(err, 'errors.statusError', { status: err.status });
+          vm.gridRefresh = true;
+        });
+    }
   }
 })();

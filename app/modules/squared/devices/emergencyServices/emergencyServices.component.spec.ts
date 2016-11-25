@@ -14,8 +14,14 @@ describe('component: emergencyServices', () => {
     spyOn(this.EmergencyServicesService, 'getOptions').and
     .returnValue(this.$q.when(['1', '2']));
 
+    spyOn(this.EmergencyServicesService, 'getCompanyECN').and
+    .returnValue(this.$q.when('1'));
+
+    spyOn(this.EmergencyServicesService, 'getImpactedUsers').and
+    .returnValue(this.$q.when([]));
+
     spyOn(this.EmergencyServicesService, 'getInitialData').and
-    .returnValue(this.$q.when({
+    .returnValue({
       emergency: {
         emergencyNumber: '1',
         emergencyAddress: {
@@ -27,7 +33,7 @@ describe('component: emergencyServices', () => {
       },
       status: 'ACTIVE',
       stateOptions: [{ abbreviation: 'TX', name: 'Texas' }],
-    }));
+    });
 
     spyOn(this.EmergencyServicesService, 'getAddressForNumber').and
     .returnValue(this.$q.when({

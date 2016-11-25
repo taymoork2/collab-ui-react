@@ -49,10 +49,6 @@
 }
 
 .sq-devices-page-overview, .sq-devices-emergency-services {
-  .activation-code-pane h3 {
-    color: $color-people-light;
-  }
-
   .message-container {
     position: absolute;
     left: 0;
@@ -89,27 +85,6 @@
 
   .btn-action {
     width: 141px;
-  }
-
-  .activationOverview {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .activationImage {
-    margin: 15px 0 40px;
-    width: 116px;
-  }
-
-  .activationDescription {
-    text-align: center;
-  }
-
-  .activationButtons {
-    margin-top: 40px;
-    display: flex;
-    justify-content: center;
   }
 
   .overview {
@@ -391,6 +366,23 @@
 
     .typeButtonWrapperLeft {
       margin-right: 16px;
+    }
+  }
+}
+
+.showActivationCode {
+  .activationCodeFailure {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    font-size: 7em;
+
+    i {
+      @include vr-spacing(mb, 1.5);
+      color: $gray-light-1;
     }
   }
 }

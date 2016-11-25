@@ -30,6 +30,7 @@ describe('Controller: PlacesCtrl', function () {
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when());
+    spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.when());
   }
 
   function initController() {

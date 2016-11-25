@@ -22,7 +22,7 @@ describe('Controller: ResetDeviceController', function () {
 
       controller = $controller('ResetDeviceController', {
         $modalInstance: fakeModal,
-        deviceOrCode: {
+        device: {
           url: url
         }
       });

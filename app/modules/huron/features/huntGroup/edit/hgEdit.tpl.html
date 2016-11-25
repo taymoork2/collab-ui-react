@@ -45,7 +45,7 @@
             internal-number-data-fn="hge.fetchFallbackDestination(data)"
             internal-number-on-select="hge.selectFallback(data)"
             internal-number-template-url="userTemplate.html"
-            internal-number-translations="hge.internalTranslations">
+            on-change-fn="hge.setFallbackNumber(model)">
           </cs-call-destination>
         </div>
         <div class="ellipsis warning-typeahead" ng-if="hge.shouldShowFallbackWarning()">
@@ -141,7 +141,7 @@
         <div class="hgmembers">
           <div class="form-input typeahead select-member" ng-class="{'warning-typeahead': hge.isMembersInvalid()}">
             <input type="text" ng-model="hge.userSelected"
-                   typeahead="user for user in hge.fetchHuntMembers($viewValue) | limitTo: 10"
+                   typeahead="user for user in hge.fetchHuntMembers($viewValue, true) | limitTo: 10"
                    typeahead-template-url="userTemplate.html" typeahead-on-select="hge.selectHuntGroupMember($item)"
                    placeholder="{{:: 'huronHuntGroup.addMemberLabel' | translate}}">
 
