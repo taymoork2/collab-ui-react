@@ -124,7 +124,6 @@
         vm.activationCode = code.activationCode;
         vm.friendlyActivationCode = formatActivationCode(code.activationCode);
         vm.expiryTime = code.expiryTime;
-        vm.codeIsUsed = code.isUsed;
         generateQRCode();
       }
     }
