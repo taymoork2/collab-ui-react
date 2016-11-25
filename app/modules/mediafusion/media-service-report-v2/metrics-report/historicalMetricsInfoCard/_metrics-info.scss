@@ -22,13 +22,13 @@
 .media-tooltip:hover{
   color: #D08D1D;
 }
-.metrics-tooltip .c-nub{
+.tooltip[popup-class="metrics-tooltip"] .c-nub{
   opacity:0.6;
   background-color: #FFFFFF;
   border: 0.5px solid #0393C9;
   max-width: 350px;
 }
-.metrics-tooltip .nub {
+.tooltip[popup-class="metrics-tooltip"] .nub {
   opacity:0.6;
   border-color: transparent transparent #0393C9 transparent;
 }
