@@ -2759,42 +2759,9 @@
             url: '/services/call/settings',
             views: {
               fullPane: {
-                controllerAs: 'expresswayServiceSettings',
-                controller: 'ExpresswayServiceSettingsController',
+                controllerAs: 'callServiceSettings',
+                controller: 'CallServiceSettingsController',
                 templateUrl: 'modules/hercules/service-settings/call-service-settings.html'
-              }
-            }
-          })
-          .state('management-service', {
-            templateUrl: 'modules/hercules/overview/overview.html',
-            controller: 'ExpresswayServiceController',
-            controllerAs: 'exp',
-            data: {
-              connectorType: 'c_mgmt'
-            },
-            parent: 'main',
-            abstract: true,
-            resolve: {
-              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
-              }
-            }
-          })
-          .state('management-service.list', {
-            url: '/services/expressway-management',
-            views: {
-              'fullPane': {
-                templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
-              }
-            }
-          })
-          .state('management-service.settings', {
-            url: '/services/expressway-management/settings',
-            views: {
-              fullPane: {
-                controllerAs: 'expresswayServiceSettings',
-                controller: 'ExpresswayServiceSettingsController',
-                templateUrl: 'modules/hercules/service-settings/management-service-settings.html'
               }
             }
           })
