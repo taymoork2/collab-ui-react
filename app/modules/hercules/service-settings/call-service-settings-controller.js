@@ -18,7 +18,7 @@
     vm.localizedServiceName = $translate.instant('hercules.serviceNames.squared-fusion-uc');
     vm.localizedConnectorName = $translate.instant('hercules.connectorNames.squared-fusion-uc');
     if (vm.squaredFusionEcEntitled) {
-      ServiceDescriptor.isServiceEnabled('squared-fusion-uc', function (a, b) {
+      ServiceDescriptor.isServiceEnabled('squared-fusion-ec', function (a, b) {
         vm.squaredFusionEc = b;
         if (vm.squaredFusionEc) {
           readCerts();
