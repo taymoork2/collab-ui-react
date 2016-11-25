@@ -3185,6 +3185,20 @@
             params: {
               incident: null
             }
+          })
+          .state('gss.incidents.update', {
+            url: '/update',
+            views: {
+              '@gss': {
+                templateUrl: 'modules/gss/incidents/updateIncident/updateIncident.tpl.html',
+                controller: 'UpdateIncidentCtrl',
+                controllerAs: 'updateIncidentCtrl'
+              }
+            },
+            params: {
+              incident: null,
+              actionType: null
+            }
           });
       }
     ]);
