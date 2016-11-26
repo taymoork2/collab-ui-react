@@ -83,7 +83,6 @@
         entry = vm.menuKeyEntry;
         action = _.get(entry, 'queueSettings.fallback.actions[0]', entry.queueSettings);
       }
-//      var action = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]', entry.actions[0]);
       if (action) {
         action.setValue(num);
       } else {

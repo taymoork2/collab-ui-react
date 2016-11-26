@@ -20,8 +20,6 @@
     vm.aaName = '';
 
     vm.saveUiModel = saveUiModel;
-//    var fromRouteCall = false;
-    /////////////////////
 
     function aaName2CeId(aaName) {
       var ceInfos = vm.aaModel.ceInfos;
@@ -80,7 +78,6 @@
       if ($scope.fromRouteCall) {
         var uiCombinedMenu = uiModel[$scope.schedule];
         vm.menuEntry = uiCombinedMenu.entries[$scope.index];
-//        fromRouteCall = true;
 
         if (!$scope.fromFallback) {
           if (vm.menuEntry.actions.length === 0) {

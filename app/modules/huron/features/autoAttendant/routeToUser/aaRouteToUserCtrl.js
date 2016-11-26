@@ -88,21 +88,6 @@
       var action = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]', entry.actions[0]);
       action.setValue(vm.userSelected.id);
 
-//      if (fromRouteCall) { //from route call
-//        action = _.get(vm.menuEntry.actions[0], 'queueSettings.fallback', vm.menuEntry.actions[0]);
-//        if (action) {
-//          action.setValue(vm.userSelected.id);
-//        } else {
-//          vm.menuEntry.actions[0].setValue(vm.userSelected.id);
-//        }
-//      } else { //from phone menu
-//        action = _.get(vm.menuKeyEntry.actions[0].queueSettings.fallback, 'actions[0]');
-//        if (action) { //from queueSettings modal
-//          action.setValue(vm.userSelected.id);
-//        } else {
-//          vm.menuKeyEntry.actions[0].setValue(vm.userSelected.id);
-//        }
-//      }
     }
 
     // format name with extension
