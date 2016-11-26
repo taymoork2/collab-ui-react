@@ -158,7 +158,6 @@
       locationSharing: 'location-sharing',
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
-      csdmPlaces: 'csdm-places',
       csdmPstn: 'csdm-pstn',
       csdmATA: 'csdm-ata',
       csdmHybridCall: 'csdm-hybrid-call',

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmDataModelService($q, $timeout, $rootScope, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmHuronOrgDeviceService, CsdmHuronPlaceService, CsdmPoller, CsdmConverter, CsdmHubFactory, Authinfo, FeatureToggleService) {
+  function CsdmDataModelService($q, $timeout, $rootScope, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmHuronOrgDeviceService, CsdmHuronPlaceService, CsdmPoller, CsdmConverter, CsdmHubFactory, Authinfo) {
 
     var placesUrl = CsdmPlaceService.getPlacesUrl();
 
@@ -171,15 +171,7 @@
             if (placesDataModel[placeUrl]) {
               _.unset(placesDataModel, [placeUrl, 'devices', item.url]); // delete device from the place
               if (item.isCloudberryDevice) {
-                return FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
-                  if (!result) { // Places is disabled, delete the place
-                    return CsdmPlaceService.deleteItem(placesDataModel[placeUrl]).then(function () {
-                      _.unset(placesDataModel, [placeUrl]);
-                      notifyListeners();
-                    });
-                  }
-                  notifyListeners();
-                });
+                notifyListeners();
               }
             }
           }

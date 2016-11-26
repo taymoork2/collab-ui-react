@@ -23,30 +23,7 @@ describe('Service: CsdmPlacesService', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  describe('feature not enabled', function () {
-    beforeEach(inject(function (FeatureToggleService, $q) {
-      spyOn(FeatureToggleService, 'csdmPlacesGetStatus').and.returnValue($q.when(false));
-    }));
-
-    it('get device list should return empty ', function () {
-      $httpBackend.whenGET(placesUrl).respond({});
-      var promiseExecuted;
-      CsdmPlaceService.getPlacesList().then(function () {
-        fail();
-      }).catch(function () {
-        promiseExecuted = true;
-      });
-
-      $rootScope.$apply();
-      expect(promiseExecuted).toBe(true);
-    });
-  });
-
-  describe('feature enabled', function () {
-    beforeEach(inject(function (FeatureToggleService, $q) {
-      spyOn(FeatureToggleService, 'csdmPlacesGetStatus').and.returnValue($q.when(true));
-    }));
-
+  describe('getPlacesList()', function () {
     it('get device list should return a non empty list ', function () {
       $httpBackend.whenGET(placesUrl).respond(accounts);
 
