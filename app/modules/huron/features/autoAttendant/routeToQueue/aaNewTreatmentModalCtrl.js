@@ -64,18 +64,15 @@
     vm.destination = vm.destinationOptions[0];
     vm.musicOnHold = '';
     vm.menuEntry = undefined;
-    vm.mohPlayAction = undefined;
-    vm.iaAction = undefined;
-    vm.paAction = undefined;
+    var mohPlayAction = undefined;
+    var paAction = undefined;
     vm.ok = ok;
     vm.isSaveEnabled = isSaveEnabled;
     vm.uploadMohTrigger = uploadMohTrigger;
 
     vm.destination = '';
-    vm.fallbackAction = undefined;
-    vm.updateFallback = updateFallback;
-    vm.updateMaxWaitTime = updateMaxWaitTime;
-    vm.saveMoh = saveMoh;
+    var fallbackAction = undefined;
+    vm.resetFallback = resetFallback;
 
     vm.activate = activate;
     vm.populateMohRadio = populateMohRadio;
@@ -103,38 +100,38 @@
 
     //else the dismiss was called
     function ok() {
+      updateMaxWaitTime();
+      updateFallback();
       autoValidate();
       AACommonService.setQueueSettingsStatus(true);
       $modalInstance.close();
     }
 
     function autoValidate() {
-      if (_.isEqual(vm.mohPlayAction.value, '')) {
+      if (_.isEqual(mohPlayAction.value, '')) {
         vm.musicOnHold = DEFAULT_MOH;
       }
       if (_.isEqual(vm.musicOnHold, DEFAULT_MOH)) {
         defaultMoh();
       }
-      if (!_.isEqual(vm.fallbackAction.name, 'Disconnect')) {
-        vm.fallbackAction.name.id = vm.fallbackAction.getValue();
+      if (!_.isEqual(fallbackAction.name, 'Disconnect')) {
+        fallbackAction.name.id = fallbackAction.getValue();
       }
     }
 
-    function updateFallback() {
+    function resetFallback() {
       //clearing already stored values when new action is choosen from dropdown
-      vm.fallbackAction.setName('');
-      vm.fallbackAction.setValue('');
-      vm.fallbackAction.setName(vm.destination);
-      vm.fallbackAction.setDescription("fallback");
+      fallbackAction.setName('');
+      fallbackAction.setValue('');
+    }
+
+    function updateFallback() {
+      fallbackAction.setName(vm.destination);
+      fallbackAction.setDescription("fallback");
     }
 
     function updateMaxWaitTime() {
       vm.menuEntry.actions[0].queueSettings.maxWaitTime = vm.maxWaitTime;
-    }
-
-    function saveMoh() {
-      vm.mohPlayAction.setValue('');
-      vm.mohPlayAction.setDescription(vm.musicOnHold);
     }
 
     //auto set the radio option
@@ -148,8 +145,8 @@
     }
 
     function defaultMoh() {
-      vm.mohPlayAction.setValue(CISCO_STD_MOH_URL);
-      vm.mohPlayAction.setDescription('');
+      mohPlayAction.setValue(CISCO_STD_MOH_URL);
+      mohPlayAction.setDescription('');
     }
 
     function isDisabled() {
@@ -186,13 +183,13 @@
           label: (i + 1) * 5
         });
       });
-      if (!_.isEqual(vm.paAction.description, '')) {
-        var periodicMinute = parseInt(vm.paAction.description / 60, 10);
+      if (!_.isEqual(paAction.interval, '')) {
+        var periodicMinute = parseInt(paAction.interval / 60, 10);
         vm.periodicMinute = {
           index: periodicMinute,
           label: periodicMinute
         };
-        var periodicSecond = vm.paAction.description - (periodicMinute * 60);
+        var periodicSecond = paAction.interval - (periodicMinute * 60);
         vm.periodicSecond = {
           index: parseInt(periodicSecond / 5, 10) - 1,
           label: periodicSecond
@@ -215,20 +212,18 @@
         });
       });
       //setting maxWaitTime's default value
-      if (_.isEqual(vm.fallbackAction.description, '')) {
+      if (_.isEqual(fallbackAction.description, '')) {
         vm.maxWaitTime = vm.minutes[14];
-      } else {
-        vm.maxWaitTime = vm.maxWaitTime;
       }
     }
 
     //populating fallback drop down in sorted order
     function populateFallbackDropDown() {
       vm.destinationOptions.sort(AACommonService.sortByProperty('label'));
-      if (_.isEqual(vm.fallbackAction.description, '')) {
+      if (_.isEqual(fallbackAction.description, '')) {
         vm.destination = vm.destinationOptions[0];
       } else {
-        vm.destination = vm.fallbackAction.getName();
+        vm.destination = fallbackAction.getName();
       }
       vm.languageOptions.sort(AACommonService.sortByProperty('label'));
       vm.voiceOptions.sort(AACommonService.sortByProperty('label'));
@@ -238,7 +233,7 @@
     }
 
     function populateMohRadio() {
-      if (_.isEqual(vm.mohPlayAction.description, '')) { //no metadata set, so no file uploaded
+      if (_.isEqual(mohPlayAction.description, '')) { //no metadata set, so no file uploaded
         vm.musicOnHold = DEFAULT_MOH;
       } else {
         vm.musicOnHold = CUSTOM_MOH;
@@ -264,7 +259,7 @@
       }
       var periodicMinutes = (vm.periodicMinute.label * 60);
       periodicTime = periodicMinutes + vm.periodicSecond.label;
-      vm.paAction.setDescription(periodicTime);
+      paAction.setInterval(periodicTime);
     }
 
     function changedPeriodicSecValue() {
@@ -277,7 +272,7 @@
       }
       var periodicSeconds = (vm.periodicMinute.label * 60);
       periodicTime = periodicSeconds + vm.periodicSecond.label;
-      vm.paAction.setDescription(periodicTime);
+      paAction.setInterval(periodicTime);
     }
 
     //get queueSettings menuEntry -> inner menu entry type (moh, initial, periodic...)
@@ -291,10 +286,9 @@
         vm.menuEntry = rcMenu.entries[$scope.index];
         vm.showLanguageAndVoiceOptions = true;
       }
-      vm.mohPlayAction = vm.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
-      vm.iaAction = vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0];
-      vm.paAction = vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0];
-      vm.fallbackAction = vm.menuEntry.actions[0].queueSettings.fallback.actions[0];
+      mohPlayAction = vm.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
+      paAction = vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0];
+      fallbackAction = vm.menuEntry.actions[0].queueSettings.fallback.actions[0];
       vm.maxWaitTime = vm.menuEntry.actions[0].queueSettings.maxWaitTime;
     }
 

@@ -34,7 +34,6 @@
         cs-input
         type="radio"
         ng-model="aaNewTreatmentModalCtrl.musicOnHold"
-        ng-change = "aaNewTreatmentModalCtrl.saveMoh()"
         id="musicOnHoldRadio1"
         name="musicOnHoldRadio"
         value="musicOnHoldDefault"
@@ -102,7 +101,7 @@
     </div>
     <div class="large-8 medium-8 small-12 large-offset-4 medium-offset-4 columns">
       <div class="aa-select-modal">
-        <cs-select id="queueMin" ng-model="aaNewTreatmentModalCtrl.maxWaitTime" options="aaNewTreatmentModalCtrl.minutes" ng-change ="aaNewTreatmentModalCtrl.updateMaxWaitTime()" secondary-label="Minutes" labelfield="label" valuefield="label" icon="icon-chevron-down">
+        <cs-select id="queueMin" ng-model="aaNewTreatmentModalCtrl.maxWaitTime" options="aaNewTreatmentModalCtrl.minutes" secondary-label="Minutes" labelfield="label" valuefield="label" icon="icon-chevron-down">
         </cs-select>
       </div>
     </div>
@@ -110,14 +109,14 @@
       <p translate="autoAttendant.destinationLabel"></p>
     </div>
     <div class="large-6 medium-6 small-8 large-offset-4 medium-offset-4 columns">
-      <cs-select id="destinationSelect" ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions" ng-change ="aaNewTreatmentModalCtrl.updateFallback()" labelfield="label" valuefield="label" icon="icon-chevron-down" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder">
+      <cs-select id="destinationSelect" ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions" ng-change ="aaNewTreatmentModalCtrl.resetFallback()" labelfield="label" valuefield="label" icon="icon-chevron-down" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder">
       </cs-select>
       <div ng-switch="aaNewTreatmentModalCtrl.destination.name" class="aa-destination-container">
-        <aa-route-to-aa id="destinationMenuRouteAA" ng-switch-when="destinationMenuRouteAA" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}"></aa-route-to-aa>
-        <aa-route-to-hg id="destinationMenuRouteHunt" ng-switch-when="destinationMenuRouteHunt" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}"></aa-route-to-hg>
-        <aa-route-to-user id="destinationMenuRouteMailbox" ng-switch-when="destinationMenuRouteMailbox" aa-schedule="{{schedule}}" voicemail=true  aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}"></aa-route-to-user>
-        <aa-route-to-user id="destinationMenuRouteUser" ng-switch-when="destinationMenuRouteUser" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}"></aa-route-to-user>
-        <aa-route-to-ext-num id="destinationMenuRouteToExtNum" ng-switch-when="destinationMenuRouteToExtNum" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}"></aa-route-to-ext-num>
+        <aa-route-to-aa id="destinationMenuRouteAA" ng-switch-when="destinationMenuRouteAA" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}" aa-from-fallback="true"></aa-route-to-aa>
+        <aa-route-to-hg id="destinationMenuRouteHunt" ng-switch-when="destinationMenuRouteHunt" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}" aa-from-fallback="true"></aa-route-to-hg>
+        <aa-route-to-user id="destinationMenuRouteMailbox" ng-switch-when="destinationMenuRouteMailbox" aa-schedule="{{schedule}}" voicemail=true  aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}" aa-from-fallback="true"></aa-route-to-user>
+        <aa-route-to-user id="destinationMenuRouteUser" ng-switch-when="destinationMenuRouteUser" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}" aa-from-fallback="true"></aa-route-to-user>
+        <aa-route-to-ext-num id="destinationMenuRouteToExtNum" ng-switch-when="destinationMenuRouteToExtNum" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}" aa-from-fallback="true"></aa-route-to-ext-num>
       </div>
     </div>
     <div class="large-8 medium-8 small-12 large-offset-4 medium-offset-4 columns">

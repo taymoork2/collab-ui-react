@@ -77,22 +77,32 @@
 
     function saveUiModel() {
       AACommonService.setPhoneMenuStatus(true);
-      var action;
-      if (fromRouteCall) { //from route call
-        action = _.get(vm.menuEntry.actions[0].queueSettings.fallback, 'actions[0]');
-        if (action) {
-          action.setValue(vm.userSelected.id);
-        } else {
-          vm.menuEntry.actions[0].setValue(vm.userSelected.id);
-        }
-      } else { //from phone menu
-        action = _.get(vm.menuKeyEntry.actions[0].queueSettings.fallback, 'actions[0]');
-        if (action) { //from queueSettings modal
-          action.setValue(vm.userSelected.id);
-        } else {
-          vm.menuKeyEntry.actions[0].setValue(vm.userSelected.id);
-        }
+
+      var entry;
+
+      if (fromRouteCall) {
+        entry = vm.menuEntry;
+      } else {
+        entry = vm.menuKeyEntry;
       }
+      var action = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]', entry.actions[0]);
+      action.setValue(vm.userSelected.id);
+
+//      if (fromRouteCall) { //from route call
+//        action = _.get(vm.menuEntry.actions[0], 'queueSettings.fallback', vm.menuEntry.actions[0]);
+//        if (action) {
+//          action.setValue(vm.userSelected.id);
+//        } else {
+//          vm.menuEntry.actions[0].setValue(vm.userSelected.id);
+//        }
+//      } else { //from phone menu
+//        action = _.get(vm.menuKeyEntry.actions[0].queueSettings.fallback, 'actions[0]');
+//        if (action) { //from queueSettings modal
+//          action.setValue(vm.userSelected.id);
+//        } else {
+//          vm.menuKeyEntry.actions[0].setValue(vm.userSelected.id);
+//        }
+//      }
     }
 
     // format name with extension
@@ -283,14 +293,17 @@
         vm.menuEntry = vm.uiMenu.entries[$scope.index];
         fromRouteCall = true;
 
-        if (vm.menuEntry.actions.length === 0) {
-          action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
-          vm.menuEntry.addAction(action);
-        } else {
-          // make sure action is User||VoiceMail not AA, HG, extNum, etc
-          if (!(vm.menuEntry.actions[0].getName() === routeToUserOrVM)) {
-            vm.menuEntry.actions[0].setName(routeToUserOrVM);
-            vm.menuEntry.actions[0].setValue('');
+        if (!$scope.fromFallback) {
+          if (vm.menuEntry.actions.length === 0) {
+            action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
+            vm.menuEntry.addAction(action);
+          } else {
+            // make sure action is User||VoiceMail not AA, HG, extNum, etc
+            if (!(vm.menuEntry.actions[0].getName() === routeToUserOrVM)) {
+              vm.menuEntry.actions[0].setName(routeToUserOrVM);
+              vm.menuEntry.actions[0].setValue('');
+              delete vm.menuEntry.actions[0].queueSettings;
+            }
           }
         }
       } else {

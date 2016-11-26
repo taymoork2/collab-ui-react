@@ -50,12 +50,12 @@
         if (queueSettings) {
           if (_.has(queueSettings, 'fallback.actions[0]')) {
             vm.model.phoneNumberInput.phoneNumber = queueSettings.fallback.actions[0].getValue();
-          } else {
-            vm.model.phoneNumberInput.phoneNumber = vm.menuEntry.actions[0].getValue();
           }
+        } else {
+          vm.model.phoneNumberInput.phoneNumber = vm.menuEntry.actions[0].getValue();
         }
       } else { //from phone menu
-        queueSettings = vm.menuKeyEntry.actions[0].queueSettings;
+        queueSettings = vm.menuKeyEntry.queueSettings;
         if (queueSettings) { //from queueSettings modal
           if (_.has(queueSettings, 'fallback.actions[0]')) {
             vm.model.phoneNumberInput.phoneNumber = queueSettings.fallback.actions[0].getValue();
@@ -74,20 +74,20 @@
         num = _.replace(num, /[-\s]*/g, '');
       }
 
-      if (fromRouteCall) { //from route call
-        action = _.get(vm.menuEntry.actions[0].queueSettings.fallback, 'actions[0]');
-        if (action) {
-          action.setValue(num);
-        } else {
-          vm.menuEntry.actions[0].setValue(num);
-        }
-      } else { //from phone menu
-        action = _.get(vm.menuKeyEntry.actions[0].queueSettings.fallback, 'actions[0]');
-        if (action) { //from queueSettings modal
-          action.setValue(num);
-        } else {
-          vm.menuKeyEntry.actions[0].setValue(num);
-        }
+      var entry;
+
+      if (fromRouteCall) {
+        entry = vm.menuEntry;
+        action = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]', entry.actions[0]);
+      } else {
+        entry = vm.menuKeyEntry;
+        action = _.get(entry, 'queueSettings.fallback.actions[0]', entry.queueSettings);
+      }
+//      var action = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]', entry.actions[0]);
+      if (action) {
+        action.setValue(num);
+      } else {
+        entry.actions[0].setValue(num);
       }
 
       AACommonService.setPhoneMenuStatus(true);
@@ -124,24 +124,24 @@
         vm.uiMenu = ui[$scope.schedule];
         vm.menuEntry = vm.uiMenu.entries[$scope.index];
         fromRouteCall = true;
-        // if our route is not there, add if no actions, or initialize
-        if (vm.menuEntry.actions.length === 0) {
-          action = AutoAttendantCeMenuModelService.newCeActionEntry(rtExtNum, '');
-          vm.menuEntry.addAction(action);
-        } else {
 
-          if (!(vm.menuEntry.actions[0].getName() === rtExtNum)) {
-            // make sure action is External Number not AA, HG, User, etc
-            vm.menuEntry.actions[0].setName(rtExtNum);
-            vm.menuEntry.actions[0].setValue('');
+        if (!$scope.fromFallback) {
+          // if our route is not there, add if no actions, or initialize
+          if (vm.menuEntry.actions.length === 0) {
+            action = AutoAttendantCeMenuModelService.newCeActionEntry(rtExtNum, '');
+            vm.menuEntry.addAction(action);
+          } else {
+            if (!(vm.menuEntry.actions[0].getName() === rtExtNum)) {
+              // make sure action is External Number not AA, HG, User, etc
+              vm.menuEntry.actions[0].setName(rtExtNum);
+              vm.menuEntry.actions[0].setValue('');
+              delete vm.menuEntry.actions[0].queueSettings;
+            }
           }
-
+          vm.menuEntry.routeToId = $scope.$id;
+          // used by aaValidationService to identify this menu
+          vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, vm.menuEntry.routeToId);
         }
-        vm.menuEntry.routeToId = $scope.$id;
-
-        // used by aaValidationService to identify this menu
-
-        vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, vm.menuEntry.routeToId);
 
       } else {
         var action;

@@ -49,6 +49,7 @@
     this.name = name;
     this.value = value;
     this.description = '';
+    this.interval = '';
     this.voice = '';
   }
 
@@ -81,6 +82,14 @@
 
   Action.prototype.getDescription = function () {
     return this.description;
+  };
+
+  Action.prototype.setInterval = function (interval) {
+    this.interval = interval;
+  };
+
+  Action.prototype.getInterval = function () {
+    return this.interval;
   };
 
   Action.prototype.setVoice = function (voice) {
@@ -500,6 +509,12 @@
       } else if (!_.isUndefined(inAction.routeToQueue)) {
         //this occurs on the way in from the db
         action = new Action('routeToQueue', inAction.routeToQueue.id);
+        setDescription(action, inAction.routeToQueue);
+        try {
+          action.description = JSON.parse(action.description);
+        } catch (exception) {
+          return;
+        }
         cesMaxWaitTime(action, inAction.routeToQueue);
         cesMoh(action, inAction.routeToQueue);
         cesIa(action, inAction.routeToQueue);
@@ -602,9 +617,9 @@
     * construct ces definition of Moh from db
     */
     function constructCesMoh(parsedDescription) {
-      var musicOnHold = parsedDescription.queueMoH;
-      var playAction = new Action('play', musicOnHold);
-      playAction.setDescription("");
+      var musicOnHold = parsedDescription;
+      var playAction = new Action('play', musicOnHold.queueMoH);
+      playAction.setDescription(musicOnHold.description.uploadDescription);
       musicOnHold = new CeMenuEntry();
       musicOnHold.addAction(playAction);
       return musicOnHold;
@@ -615,10 +630,9 @@
     */
     function constructCesIa(parsedDescription) {
       var iaType = parsedDescription.description.initialAnnouncementType;
-      var initialAnnouncement = parsedDescription.queueInitialAnnouncement;
-      var action = new Action(iaType, initialAnnouncement);
-      action.setDescription("");
-      initialAnnouncement = new CeMenuEntry();
+      var action = new Action(iaType, parsedDescription.queueInitialAnnouncement);
+      action.setDescription(parsedDescription.description.initialAnnouncementDescription);
+      var initialAnnouncement = new CeMenuEntry();
       initialAnnouncement.addAction(action);
       return initialAnnouncement;
     }
@@ -643,7 +657,8 @@
       var periodicAnnouncement = periodicAnnouncements.queuePeriodicAnnouncement;
       var paInterval = periodicAnnouncements.queuePeriodicAnnouncementInterval;
       var action = new Action(paType, periodicAnnouncement);
-      action.setDescription(paInterval);
+      action.interval = paInterval;
+      action.setDescription(parsedDescription.description.periodicAnnouncementDescription);
       periodicAnnouncement = new CeMenuEntry();
       periodicAnnouncement.addAction(action);
       return periodicAnnouncement;
@@ -1154,7 +1169,7 @@
         newAction.queueMoH = action.queueSettings.musicOnHold.actions[0].getValue();
         newAction.queueInitialAnnouncement = action.queueSettings.initialAnnouncement.actions[0].getValue();
         var queuePeriodicAnnouncement = action.queueSettings.periodicAnnouncement.actions[0].getValue();
-        var queuePeriodicAnnouncementInterval = action.queueSettings.periodicAnnouncement.actions[0].getDescription();
+        var queuePeriodicAnnouncementInterval = action.queueSettings.periodicAnnouncement.actions[0].interval;
         var paAction = [];
         var paActionArray = {
           queuePeriodicAnnouncement: queuePeriodicAnnouncement,
@@ -1179,11 +1194,22 @@
             fallbackAction[destination.action] = { id: destination.id, description: destination.label };
           }
         } else {
-          destination = 'disconnect';
-          fallbackAction[destination] = { treatment: 'none' };
+          destination = 'Disconnect';
+          fallbackAction['disconnect'] = { treatment: 'none' };
         }
         var queueMaxDestination = fallbackAction;
         newAction.queueFallback = queueMaxDestination;
+        if (_.isEmpty(action.description)) {
+          //for default queue settings
+          action.description = {
+            uploadDescription: '',
+            periodicAnnouncementType: 'say',
+            periodicAnnouncementDescription: '',
+            initialAnnouncementType: 'say',
+            initialAnnouncementDescription: '',
+            fallback: destination
+          };
+        }
         newAction.description = JSON.stringify(action.description);
       }
       return newAction;

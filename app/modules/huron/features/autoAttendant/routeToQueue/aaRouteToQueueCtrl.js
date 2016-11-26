@@ -55,14 +55,20 @@
         // keep changes as modal was resolved with close
         if (fromRouteCall) {
           vm.menuEntry.actions[0].description = {
+            uploadDescription: vm.menuEntry.actions[0].queueSettings.musicOnHold.actions[0].description,
             periodicAnnouncementType: vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].name,
+            periodicAnnouncementDescription: vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].description,
             initialAnnouncementType: vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0].name,
+            initialAnnouncementDescription: vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0].description,
             fallback: vm.menuEntry.actions[0].queueSettings.fallback.actions[0].name
           };
         } else {
           vm.menuKeyEntry.actions[0].description = {
+            uploadDescription: vm.menuKeyEntry.actions[0].queueSettings.musicOnHold.actions[0].description,
             periodicAnnouncementType: vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].name,
+            periodicAnnouncementDescription: vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].description,
             initialAnnouncementType: vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.actions[0].name,
+            initialAnnouncementDescription: vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.actions[0].description,
             fallback: vm.menuKeyEntry.actions[0].queueSettings.fallback.actions[0].name
           };
         }
@@ -149,7 +155,7 @@
 
       if (!_.has(queueSettings, 'musicOnHold')) {
         createAction(queueSettings, 'musicOnHold', 'play');
-        var musicOnHold = _.get(queueSettings, 'musicOnHold.actions[0');
+        var musicOnHold = _.get(queueSettings, 'musicOnHold.actions[0]');
         musicOnHold.setValue(CISCO_STD_MOH_URL);
       }
       if (!_.has(queueSettings, 'initialAnnouncement')) {
@@ -157,8 +163,9 @@
       }
       if (!_.has(queueSettings, 'periodicAnnouncement')) {
         createAction(queueSettings, 'periodicAnnouncement', 'say');
-        var periodicAnnouncement = _.get(queueSettings, 'periodicAnnouncement.actions[0');
-        periodicAnnouncement.setDescription(periodicTime);
+        var periodicAnnouncement = _.get(queueSettings, 'periodicAnnouncement.actions[0]');
+        periodicAnnouncement.setDescription("");
+        periodicAnnouncement.setInterval(periodicTime);
       }
       if (!_.has(queueSettings, 'fallback')) {
         createAction(queueSettings, 'fallback', 'Disconnect');

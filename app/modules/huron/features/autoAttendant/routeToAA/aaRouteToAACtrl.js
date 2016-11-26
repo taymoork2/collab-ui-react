@@ -20,7 +20,7 @@
     vm.aaName = '';
 
     vm.saveUiModel = saveUiModel;
-
+//    var fromRouteCall = false;
     /////////////////////
 
     function aaName2CeId(aaName) {
@@ -65,13 +65,11 @@
     }
 
     function saveUiModel() {
-      var action = _.get(vm.menuEntry.actions[0].queueSettings.fallback, 'actions[0]');
-      if (action) {
-        action.setValue(aaName2CeId(vm.aaName));
-      } else {
-        vm.menuEntry.actions[0].setValue(aaName2CeId(vm.aaName));
-      }
       AACommonService.setPhoneMenuStatus(true);
+
+      var action = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback.actions[0]', vm.menuEntry.actions[0]);
+      action.setValue(aaName2CeId(vm.aaName));
+
     }
 
     function activate() {
@@ -82,14 +80,19 @@
       if ($scope.fromRouteCall) {
         var uiCombinedMenu = uiModel[$scope.schedule];
         vm.menuEntry = uiCombinedMenu.entries[$scope.index];
-        if (vm.menuEntry.actions.length === 0) {
-          action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
-          vm.menuEntry.addAction(action);
-        } else {
-          // make sure action is AA not External Number, HG, User, etc
-          if (!(vm.menuEntry.actions[0].getName() === 'goto')) {
-            vm.menuEntry.actions[0].setName('goto');
-            vm.menuEntry.actions[0].setValue('');
+//        fromRouteCall = true;
+
+        if (!$scope.fromFallback) {
+          if (vm.menuEntry.actions.length === 0) {
+            action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
+            vm.menuEntry.addAction(action);
+          } else {
+            // make sure action is AA not External Number, HG, User, etc
+            if (!(vm.menuEntry.actions[0].getName() === 'goto')) {
+              vm.menuEntry.actions[0].setName('goto');
+              vm.menuEntry.actions[0].setValue('');
+              delete vm.menuEntry.actions[0].queueSettings;
+            }
           }
         }
       } else {

@@ -202,11 +202,15 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
       });
       it("default value of fallback Actions should be set", function () {
         expect(controller.maxWaitTime.label).toEqual(15);
-        expect(controller.fallbackAction.description).toEqual('');
+        var fallbackAction = controller.menuEntry.actions[0].queueSettings.fallback.actions[0];
+        var fallbackActionDescription = fallbackAction.getDescription();
+        expect(fallbackActionDescription).toEqual('');
       });
       it(" value of maxTime shoulb be 15", function () {
-        controller.updateFallback();
-        expect(controller.fallbackAction.description).toEqual('fallback');
+        controller.ok();
+        var fallbackAction = controller.menuEntry.actions[0].queueSettings.fallback.actions[0];
+        var fallbackActionDescription = fallbackAction.getDescription();
+        expect(fallbackActionDescription).toEqual('fallback');
       });
     });
 
@@ -219,18 +223,13 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
 
       describe('musicOnHold', function () {
         it('should set up appropriately according to musicOnHold format', function () {
-          expect(controller.mohPlayAction.name).toEqual(play);
+          var mohPlayAction = controller.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
+          expect(mohPlayAction.name).toEqual(play);
           expect(controller.menuEntry.actions[0].name).toEqual(rtQ);
         });
 
         it('should set up the radio options appropriately', function () {
           expect(controller.musicOnHold).toEqual(DEFAULT_MOH);
-        });
-
-        it('should set moh action', function () {
-          controller.musicOnHold = CUSTOM_MOH;
-          controller.saveMoh();
-          expect(controller.mohPlayAction.description).toEqual(CUSTOM_MOH);
         });
       });
     });
@@ -289,9 +288,32 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     });
   });
 
+  describe('populatePeriodicTime', function () {
+    it('seconds should be disabled when periodicMinute is 5 mins', function () {
+      var controller = $controller('AANewTreatmentModalCtrl', {
+        $scope: $scope,
+        $modalInstance: modalFake,
+        aa_schedule: schedule,
+        aa_menu_id: menuId,
+        aa_index: index,
+        aa_key_index: keyIndex,
+        aa_from_route_call: false
+      });
+
+      $scope.$apply();
+
+      var paAction = controller.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0];
+      paAction.setInterval(300);
+      controller.activate();
+
+      expect(controller.areSecondsDisabled).toBe(false);
+    });
+  });
+
   describe('populateMoHRadioForCustomMoH', function () {
     it('should set the musicOnHold to CustomMoH', function () {
-      controller.mohPlayAction.description = VALUE;
+      var mohPlayAction = controller.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
+      mohPlayAction.setDescription(VALUE);
       controller.populateMohRadio();
       expect(controller.musicOnHold).toEqual(CUSTOM_MOH);
     });
@@ -324,30 +346,34 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
 
       it('ok function call results in resetting the moh when moh is set to the default description', function () {
         controller.musicOnHold = DEFAULT_MOH;
-        controller.mohPlayAction.description = VALUE;
+        var mohPlayAction = controller.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
+        mohPlayAction.setDescription(VALUE);
         controller.ok();
-        expect(controller.mohPlayAction.description).toEqual('');
+        expect(mohPlayAction.description).toEqual('');
       });
 
       it('ok function call results in resetting moh is set to default value', function () {
         controller.musicOnHold = DEFAULT_MOH;
-        controller.mohPlayAction.value = VALUE;
+        var mohPlayAction = controller.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
+        mohPlayAction.setDescription(VALUE);
         controller.ok();
-        expect(controller.mohPlayAction.value).toEqual(CISCO_STD_MOH_URL);
+        expect(mohPlayAction.value).toEqual(CISCO_STD_MOH_URL);
       });
 
       it('ok function call result in resetting moh when any upload is not set to default ', function () {
         controller.musicOnHold = CUSTOM_MOH;
-        controller.mohPlayAction.description = VALUE;
+        var mohPlayAction = controller.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
+        mohPlayAction.setDescription(VALUE);
         controller.ok();
-        expect(controller.mohPlayAction.description).toEqual('');
+        expect(mohPlayAction.description).toEqual('');
       });
 
       it('ok function call doesnt result in resetting moh when moh is not set to default value', function () {
         controller.musicOnHold = CUSTOM_MOH;
-        controller.mohPlayAction.value = VALUE;
+        var mohPlayAction = controller.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
+        mohPlayAction.setValue(VALUE);
         controller.ok();
-        expect(controller.mohPlayAction.value).toEqual(VALUE);
+        expect(mohPlayAction.value).toEqual(VALUE);
       });
     });
   });
