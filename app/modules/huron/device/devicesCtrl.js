@@ -6,7 +6,7 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($q, $scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService, WizardFactory, FeatureToggleService) {
+  function DevicesCtrlHuron($q, $scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService, WizardFactory, FeatureToggleService, Userservice) {
     var vm = this;
     vm.devices = {};
     vm.otps = [];
@@ -16,21 +16,32 @@
     vm.generateCodeIsDisabled = true;
 
     function init() {
-      fetchFeatureToggles();
+      fetchAsyncSettings();
     }
 
     init();
 
-    function fetchFeatureToggles() {
+    function fetchAsyncSettings() {
       var placesPromise = FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
         vm.showPlaces = result;
       });
       var ataPromise = FeatureToggleService.csdmATAGetStatus().then(function (result) {
         vm.showATA = result;
       });
-      $q.all([placesPromise, ataPromise]).finally(function () {
+      $q.all([placesPromise, ataPromise, fetchDetailsForLoggedInUser()]).finally(function () {
         vm.generateCodeIsDisabled = false;
       });
+    }
+
+    function fetchDetailsForLoggedInUser() {
+      var userDetailsDeferred = $q.defer();
+      Userservice.getUser('me', function (data) {
+        if (data.success) {
+          vm.adminOrgId = data.meta.organizationID;
+        }
+        userDetailsDeferred.resolve();
+      });
+      return userDetailsDeferred.promise;
     }
 
     function addLinkOrButtonForActivationCode() {
@@ -81,9 +92,11 @@
           title: 'addDeviceWizard.newDevice',
           showPlaces: vm.showPlaces,
           showATA: vm.showATA,
+          adminOrganizationId: vm.adminOrgId,
           account: {
             name: vm.currentUser.displayName,
             username: vm.currentUser.userName,
+            organizationId: vm.currentUser.meta.organizationID,
             type: 'personal',
             deviceType: 'huron',
           },

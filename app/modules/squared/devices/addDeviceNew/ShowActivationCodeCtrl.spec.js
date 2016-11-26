@@ -2,13 +2,13 @@
 
 describe('ShowActivationCodeCtrl: Ctrl', function () {
   var controller, stateParams, $q, state, $scope, CsdmDataModelService, CsdmHuronPlaceService;
-  var OtpService, CsdmEmailService, Notification, ActivationCodeEmailService;// $httpBackend, HuronConfig;
+  var OtpService, CsdmEmailService, Notification, ActivationCodeEmailService, UserListService;
   var $controller;
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Squared'));
 
-  beforeEach(inject(function (_$controller_, _$q_, $rootScope, _CsdmDataModelService_, _CsdmHuronPlaceService_, _OtpService_, _CsdmEmailService_, _ActivationCodeEmailService_, _Notification_) {
+  beforeEach(inject(function (_$controller_, _$q_, $rootScope, _CsdmDataModelService_, _CsdmHuronPlaceService_, _OtpService_, _CsdmEmailService_, _ActivationCodeEmailService_, _Notification_, _UserListService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -20,6 +20,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
     CsdmEmailService = _CsdmEmailService_;
     Notification = _Notification_;
     ActivationCodeEmailService = _ActivationCodeEmailService_;
+    UserListService = _UserListService_;
   }));
 
   function initController() {
@@ -122,11 +123,178 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
     });
   });
 
+  describe('Search User', function () {
+    var customerOrgId;
+    var adminOrgId;
+    var returnedDataCustomerOrg;
+    var returnedDataAdminOrg;
+    beforeEach(function () {
+      stateParams.wizard = {
+        state: function () {
+          return {
+            data: {
+              adminOrganizationId: adminOrgId,
+              account: {
+                organizationId: customerOrgId
+              },
+              recipient: {}
+            }
+          };
+        }
+      };
+      spyOn(UserListService, 'listUsers').and.callFake(function (startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins, entitlements, orgId) {
+        if (orgId === adminOrgId) {
+          callback(returnedDataAdminOrg);
+        } else {
+          callback(returnedDataCustomerOrg);
+        }
+        expect(searchStr).toBe('tes');
+      });
+      spyOn(CsdmDataModelService, 'createCsdmPlace').and.returnValue($q.when({}));
+      spyOn(CsdmDataModelService, 'createCodeForExisting').and.returnValue($q.when());
+    });
+
+    it('searches only in one org when admin is in his own org', function () {
+      customerOrgId = 'customerOrgId';
+      adminOrgId = 'customerOrgId';
+      returnedDataCustomerOrg = {
+        Resources: [
+          {
+            displayName: 'test'
+          }
+        ]
+      };
+      initController();
+      var resultPromise = controller.searchUser('tes');
+      var promiseExecuted = false;
+      expect(resultPromise.then).toBeDefined();
+      resultPromise.then(function (result) {
+        expect(result.length).toBe(1);
+        expect(result[0].displayName).toBe('test');
+        expect(UserListService.listUsers).toHaveBeenCalledTimes(1);
+        promiseExecuted = true;
+      }).catch(function () {
+        fail();
+      });
+      $scope.$digest();
+      expect(promiseExecuted).toBeTruthy();
+    });
+
+    it('searches in both customer and own org when admin is in an org he is partner for', function () {
+      customerOrgId = 'customerOrgId';
+      adminOrgId = 'adminOrgId';
+      returnedDataCustomerOrg = {
+        Resources: [
+          {
+            displayName: 'atest'
+          }
+        ]
+      };
+      returnedDataAdminOrg = {
+        Resources: [
+          {
+            displayName: 'btest'
+          }
+        ]
+      };
+      initController();
+      var resultPromise = controller.searchUser('tes');
+      var promiseExecuted = false;
+      expect(resultPromise.then).toBeDefined();
+      resultPromise.then(function (result) {
+        expect(result.length).toBe(2);
+        expect(result[0].displayName).toBe('atest');
+        expect(result[1].displayName).toBe('btest');
+        expect(UserListService.listUsers).toHaveBeenCalledTimes(2);
+        promiseExecuted = true;
+      }).catch(function () {
+        fail();
+      });
+      $scope.$digest();
+      expect(promiseExecuted).toBeTruthy();
+    });
+
+    it('no results in customer still shows results in own org', function () {
+      customerOrgId = 'customerOrgId';
+      adminOrgId = 'adminOrgId';
+      returnedDataCustomerOrg = {
+        Resources: []
+      };
+      returnedDataAdminOrg = {
+        Resources: [
+          {
+            displayName: 'test'
+          }
+        ]
+      };
+      initController();
+      var resultPromise = controller.searchUser('tes');
+      var promiseExecuted = false;
+      expect(resultPromise.then).toBeDefined();
+      resultPromise.then(function (result) {
+        expect(result.length).toBe(1);
+        expect(result[0].displayName).toBe('test');
+        expect(UserListService.listUsers).toHaveBeenCalledTimes(2);
+        promiseExecuted = true;
+      }).catch(function () {
+        fail();
+      });
+      $scope.$digest();
+      expect(promiseExecuted).toBeTruthy();
+    });
+
+    it('no results in own still shows results in customer org', function () {
+      customerOrgId = 'customerOrgId';
+      adminOrgId = 'adminOrgId';
+      returnedDataCustomerOrg = {
+        Resources: [
+          {
+            displayName: 'test'
+          }
+        ]
+      };
+      returnedDataAdminOrg = {
+        Resources: []
+      };
+      initController();
+      var resultPromise = controller.searchUser('tes');
+      var promiseExecuted = false;
+      expect(resultPromise.then).toBeDefined();
+      resultPromise.then(function (result) {
+        expect(result.length).toBe(1);
+        expect(result[0].displayName).toBe('test');
+        expect(UserListService.listUsers).toHaveBeenCalledTimes(2);
+        promiseExecuted = true;
+      }).catch(function () {
+        fail();
+      });
+      $scope.$digest();
+      expect(promiseExecuted).toBeTruthy();
+    });
+
+    it('search string shorter than 3 characters returns empty resultset', function () {
+      initController();
+      var resultPromise = controller.searchUser('te');
+      var promiseExecuted = false;
+      expect(resultPromise.then).toBeDefined();
+      resultPromise.then(function (result) {
+        expect(result.length).toBe(0);
+        expect(UserListService.listUsers).toHaveBeenCalledTimes(0);
+        promiseExecuted = true;
+      }).catch(function () {
+        fail();
+      });
+      $scope.$digest();
+      expect(promiseExecuted).toBeTruthy();
+    });
+  });
+
   describe('Add device', function () {
     var cisUuid;
     var userOrgId;
     var userCisUuid;
     var deviceName;
+    var deviceOrgId;
     var activationCode;
     var expiryTime;
     var directoryNumber;
@@ -146,6 +314,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       userCisUuid = '09u0testId';
       userOrgId = '01gyq8awg-orgId';
       deviceName = "name";
+      deviceOrgId = "05oaj2fdj-orgId";
       activationCode = '1234567887654321';
       expiryTime = '1337-01-01T13:37:00.000Z';
       directoryNumber = '1234';
@@ -162,6 +331,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
                 deviceType: 'cloudberry',
                 type: 'shared',
                 name: deviceName,
+                organizationId: deviceOrgId,
                 entitlements: entitlements,
                 directoryNumber: directoryNumber,
                 externalNumber: externalNumber
@@ -183,7 +353,8 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
               account: {
                 deviceType: 'cloudberry',
                 type: 'shared',
-                cisUuid: cisUuid
+                cisUuid: cisUuid,
+                organizationId: deviceOrgId
               },
               recipient: {
                 organizationId: userOrgId,
@@ -202,6 +373,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
                 deviceType: 'huron',
                 type: 'shared',
                 name: deviceName,
+                organizationId: deviceOrgId,
                 directoryNumber: directoryNumber,
                 externalNumber: externalNumber,
               },
@@ -221,7 +393,8 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
               account: {
                 deviceType: 'huron',
                 type: 'shared',
-                cisUuid: cisUuid
+                cisUuid: cisUuid,
+                organizationId: deviceOrgId
               },
               recipient: {
                 organizationId: userOrgId,
@@ -239,7 +412,8 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
               account: {
                 deviceType: 'huron',
                 type: 'personal',
-                username: userEmail
+                username: userEmail,
+                organizationId: deviceOrgId
               },
               recipient: {
                 email: userEmail,
@@ -255,7 +429,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       expectedEmailInfo = {
         toCustomerId: userOrgId,
         toUserId: userCisUuid,
-        machineAccountCustomerId: userOrgId,
+        machineAccountCustomerId: deviceOrgId,
         machineAccountId: cisUuid,
         activationCode: activationCode,
         expiryTime: localized(expiryTime)

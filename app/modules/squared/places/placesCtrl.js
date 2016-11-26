@@ -17,12 +17,11 @@
         var placesList;
 
         function init() {
-          fetchFeatureToggles();
+          fetchAsyncSettings();
           loadList();
-          fetchDisplayNameForLoggedInUser();
         }
 
-        function fetchFeatureToggles() {
+        function fetchAsyncSettings() {
           var darlingPromise = FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
             vm.showDarling = result;
           });
@@ -35,7 +34,7 @@
           var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
             vm.csdmHybridCallFeature = feature;
           });
-          $q.all([darlingPromise, ataPromise, pstnPromise, hybridPromise]).finally(function () {
+          $q.all([darlingPromise, ataPromise, pstnPromise, hybridPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
             vm.addPlaceIsDisabled = false;
           });
         }
@@ -49,11 +48,15 @@
         }
 
         function fetchDisplayNameForLoggedInUser() {
+          var userDetailsDeferred = $q.defer();
           Userservice.getUser('me', function (data) {
             if (data.success) {
               vm.adminDisplayName = data.displayName;
+              vm.adminOrgId = data.meta.organizationID;
             }
+            userDetailsDeferred.resolve();
           });
+          return userDetailsDeferred.promise;
         }
 
         init();
@@ -161,18 +164,20 @@
               showPlaces: true,
               showDarling: vm.showDarling,
               showATA: vm.showATA,
+              adminOrganizationId: vm.adminOrgId,
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
               title: 'addDeviceWizard.newSharedSpace.title',
               isEntitledToHuron: vm.isEntitledToHuron(),
               isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
               account: {
-                type: 'shared'
+                type: 'shared',
+                organizationId: Authinfo.getOrgId()
               },
               recipient: {
                 cisUuid: Authinfo.getUserId(),
                 displayName: vm.adminDisplayName,
                 email: Authinfo.getPrimaryEmail(),
-                organizationId: Authinfo.getOrgId()
+                organizationId: vm.adminOrgId
               }
             },
             history: [],

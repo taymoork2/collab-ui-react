@@ -20,11 +20,10 @@
         });
 
         function init() {
-          fetchFeatureToggles();
-          fetchDetailsForLoggedInUser();
+          fetchAsyncSettings();
         }
 
-        function fetchFeatureToggles() {
+        function fetchAsyncSettings() {
           var placesPromise = FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
             vm.showPlaces = result;
           });
@@ -40,12 +39,13 @@
           var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
             vm.csdmHybridCallFeature = feature;
           });
-          $q.all([placesPromise, darlingPromise, ataPromise, pstnPromise, hybridPromise]).finally(function () {
+          $q.all([placesPromise, darlingPromise, ataPromise, pstnPromise, hybridPromise, fetchDetailsForLoggedInUser()]).finally(function () {
             vm.addDeviceIsDisabled = false;
           });
         }
 
         function fetchDetailsForLoggedInUser() {
+          var userDetailsDeferred = $q.defer();
           Userservice.getUser('me', function (data) {
             if (data.success) {
               vm.adminDisplayName = data.displayName;
@@ -55,8 +55,11 @@
               if (!vm.adminFirstName) {
                 vm.adminFirstName = data.displayName;
               }
+              vm.adminOrgId = data.meta.organizationID;
             }
+            userDetailsDeferred.resolve();
           });
+          return userDetailsDeferred.promise;
         }
 
         init();
@@ -188,14 +191,18 @@
               showPlaces: false,
               showDarling: vm.showDarling,
               showATA: vm.showATA,
+              adminOrganizationId: vm.adminOrgId,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isEntitledToHuron(),
               isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
+              account: {
+                organizationId: Authinfo.getOrgId()
+              },
               recipient: {
                 cisUuid: Authinfo.getUserId(),
                 displayName: vm.adminDisplayName,
                 email: Authinfo.getPrimaryEmail(),
-                organizationId: Authinfo.getOrgId(),
+                organizationId: vm.adminOrgId,
                 firstName: vm.adminFirstName
               }
             },
@@ -228,15 +235,19 @@
               showPlaces: true,
               showATA: vm.showATA,
               showDarling: vm.showDarling,
+              adminOrganizationId: vm.adminOrgId,
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isEntitledToHuron(),
               isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
+              account: {
+                organizationId: Authinfo.getOrgId()
+              },
               recipient: {
                 cisUuid: Authinfo.getUserId(),
                 displayName: vm.adminDisplayName,
                 email: Authinfo.getPrimaryEmail(),
-                organizationId: Authinfo.getOrgId(),
+                organizationId: vm.adminOrgId,
                 firstName: vm.adminFirstName
               }
             },
