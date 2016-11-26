@@ -401,7 +401,6 @@
       'squared-fusion-mgmt': [
         'cluster-details',
         'management-connector-details',
-        'management-service',
         'services-overview',
         'resource-group-settings',
         'cluster-list',
@@ -474,7 +473,6 @@
         'fusion',
         'hurondetails',
         'huronsettings',
-        'management-service',
         'media-service',
         'media-service-v2',
         'mediafusion-settings',

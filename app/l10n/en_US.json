@@ -974,7 +974,6 @@
     "confirm": "Confirm",
     "continue": "Continue",
     "dateRange": "Date Range",
-    "deactivate": "Deactivate",
     "delete": "Delete",
     "description": "Description",
     "devices": "Devices",
@@ -991,6 +990,7 @@
     "general": "General",
     "help": "Help",
     "id": "ID",
+    "deactivate": "Deactivate",
     "incorrectFormat": "Incorrect format",
     "invalidEmail": "This is not a valid Email Address.",
     "invalidMax": "Maximum value is {{max}}.",
@@ -1381,8 +1381,6 @@
     "nameHeader": "Belongs to",
     "statusHeader": "Status",
     "actionsHeader": "Actions",
-    "account": "Account",
-    "unactivatedDevice": "Unactivated Device",
     "informationHeader": "Settings",
     "newCustomTagPlaceholder": "Enter tag...",
     "addPersonalDevice": "Trying to add a personal device?",
@@ -1391,7 +1389,6 @@
     "reboot": "Reboot",
     "reportProblem": "Report Issue",
     "deleteDeviceConfText": "Are you sure you want to delete this device?",
-    "deleteLocationConfText": "Are you sure you want to delete this location?",
     "deletePlaceConfText": "Are you sure you want to delete this place?",
     "rebootDeviceConfText": "Are you sure you want to reboot this device?",
     "ciscoSupport": "Cisco Support",
@@ -1474,9 +1471,9 @@
       "title": "{{ServiceName}} Setup",
       "alreadyBeenSetupTitle": "Add Expressway Cluster",
       "subtitle": "Deploy a new Expressway cluster, or select an existing one.",
-      "registerNewExpressway": "Enter the hostname of the master peer of the new Expressway cluster that you want to register.",
+      "registerNewExpressway": "Register a new Expressway with its Fully Qualified Domain Name (FQDN)",
+      "registerNewExpresswayHelp": "Must match the value on the Expressway DNS settings: [System host name].[Domain name]",
       "addToExistingExpressway": "Select an existing Expressway cluster to add resources to this service.",
-      "enterHostname": "Enter the hostname of the Expressway you want to register with Cisco Collaboration Cloud.",
       "enterHostnamePlaceholder": "Enter Expressway hostname",
       "willBeInstalled": "{{ConnectorName}} will be installed as soon as you finish registration, enabling the Expressway cluster for {{ServiceName}}.",
       "selectExisting": "Select an existing Expressway clusters",
@@ -1730,10 +1727,8 @@
       "documentationDownloadLink": "Download Cisco Expressway software from <a href=\"https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP\" target=\"_blank\">software.cisco.com</a>.",
       "documentationSaving": "Saving.",
       "call": {
-        "featureHeading": "Feature Settings",
-        "feature": "Enable or disable Call Service features.",
+        "domainVerification": "Domain Verification",
         "aware": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
-        "on": "On by default",
         "connectSettingsHeading": "Connect Settings",
         "connectSettings": "Required settings for the Connect feature.",
         "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
@@ -1761,7 +1756,7 @@
         "sipDomainHeading": "SIP Destination",
         "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
-        "sipDomainExample": "For example: sipmtls.example.com",
+        "sipDomainExample": "For example: sipmtls.example.org",
         "certificateDeleteTooltip": "Delete Certificate",
         "noUploadedCertificate": "No certificates uploaded. Using the default trust list.",
         "uploadedCertificates": "Uploaded Certificates:"
@@ -3528,10 +3523,6 @@
     "sipUrl": "SIP Address",
     "issues": "Issues",
     "lastSeen": "since:",
-    "notYetActivated": "There is a device activation code which has not yet been used.",
-    "deleteLocation": "Delete Location",
-    "deviceCodeExpires": "This activation code will expire {{inXDays}}.",
-    "getNewCode": "Get a New Code",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time",
     "logUploadWarning": "When you report an issue, device logs will be sent to Cisco.",
@@ -3560,7 +3551,6 @@
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
-    "newCode": "New Code",
     "chooseDeviceType": {
       "deviceType": "What kind of device do you want to set up?",
       "deviceTypeInstructions": "A new device requires a unique activation code to be input during setup. What kind of device do you want to activate?",
@@ -3654,7 +3644,6 @@
       "onceActiveSharedDeviceNoPlaces": "Once the device has been successfully activated, you will be able to find and configure it in Devices.",
       "expires": "Expires {{expiryDate}}",
       "searchAnotherUser": "Or search for another user",
-      "codeIsUsed": "This code has now been used",
       "failedToGenerateActivationCode": "Failed to generate activation code. Reason:",
       "problemGeneratingCode": "There was a problem generating your activation code.",
       "pressRetry": "Please press Retry to try again."
@@ -3800,6 +3789,7 @@
   },
   "mediaFusion": {
     "page_title": "Hybrid Media Service",
+    "report_title": "Hybrid Media Service Report",
     "add-resource-button": "Add Resource",
     "genericError": "An unexpected error occurred. Please try again later.",
     "connectors": {
@@ -3859,8 +3849,13 @@
       "body2": "To make this node available again, you will need to reregister it."
     },
     "metrics": {
+      "title": "Metrics",
+      "titlev2": "Reports Phase 2 POC",
+      "historical": "Historical",
+      "realTime": "Real time",
       "today": "Last 24 Hours",
       "today2": "Last 24 Hours",
+      "last4Hours": "Last 4 Hours",
       "yesterday": "Yesterday",
       "yesterday2": "Yesterday",
       "week": "Last Week",
@@ -3933,7 +3928,9 @@
       "nodes": "Node(s)",
       "node": "Node",
       "availabilityStatus": "Availability Status",
-      "clusterTitle": "Cluster"
+      "clusterTitle": "Cluster",
+      "lowAvailableClusters": "Low availability clusters",
+      "clusterTakingMoreCalls":"Clusters hosting more no of calls"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -4121,7 +4118,7 @@
       "fqdn": "Fully Qualified Domain Name"
     },
     "meetings-report": {
-      "title": "Media Service Meetings Report",
+      "title": "Meetings",
       "adoption-tab": "Adoption",
       "quality-tab": "Quality",
       "health-tab": "Health",
@@ -4129,7 +4126,9 @@
       "meetings-card": "Total Meetings",
       "minutes-card": "Total Minutes",
       "participants-card": "Total Participants",
-      "adoption-card": "Cluster Adoption"
+      "adoption-card": "Cluster Adoption",
+      "meeting-type-title": "Meeting Type",
+      "meeting-duration-title": "Meeting Duration"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
@@ -4761,8 +4760,6 @@
     "OnlineWithIssues": "Online, With Issues",
     "Offline": "Offline",
     "Unknown": "Unknown",
-    "Inactive": "Inactive Account",
-    "RequiresActivation": "Requires Activation",
     "WithDevices": "With Devices",
     "upgradeChannels": {
       "Stable": "Stable",
@@ -4826,10 +4823,6 @@
       "NetworkQuality": {
         "type": "Packet Loss Detected",
         "message": "During the last call we detected a level of packet loss that may have impacted the call quality. Packet loss is typically caused by network congestion."
-      },
-      "inactive": {
-        "type": "Inactive Account",
-        "message": "An account exists for a device, but there's no corresponding device or activation code. You can delete this account."
       },
       "unknown": {
         "type": "Unknown Error Occurred",
@@ -6470,13 +6463,18 @@
       "lastUpdatedOn": "Last updated on ",
       "resolvedOn": "Resolved on ",
       "noAffectedComponent": "No components were affected by this update.",
+      "postAt": "Post At ",
       "newIncident": "New Incident",
       "incidentName": "Incident Name",
       "createIncidentBtn": "Create Incident",
-      "deleteIncidentSuccessfully": "Incident {{incidentName}} successfully deleted.",
-      "deleteIncidentFailed": "An error occurred deleting incident {{incidentName}}.",
-      "createIncidentSuccessfully": "Incident {{incidentName}} successfully created.",
-      "createIncidentFailed": "An error occurred creating incident {{incidentName}}."
+      "deleteIncidentSucceed": "Incident {{incidentName}} delete succeed.",
+      "deleteIncidentFailed": "Incident {{incidentName}} delete failed.",
+      "createIncidentSucceed": "Incident {{incidentName}} create succeed.",
+      "createIncidentFailed": "Incident {{incidentName}} create failed.",
+      "modifyMessageSucceed": "Message successfully modified.",
+      "modifyMessageFailed": "An error occurred modifying message.",
+      "updateIncidentSucceed": "Incident {{incidentName}} update succeed.",
+      "updateIncidentFailed": "Incident {{incidentName}} update failed."
     },
     "incidentStatus": {
       "investigating": "Investigating",
@@ -6486,7 +6484,7 @@
     },
     "impactStatus":{
       "none": "Override impact to None",
-      "Minor": "Override impact to Minor",
+      "minor": "Override impact to Minor",
       "major": "Override impact to Major",
       "critical": "Override impact to Critical",
       "maintenance": "Override impact to Maintenance"

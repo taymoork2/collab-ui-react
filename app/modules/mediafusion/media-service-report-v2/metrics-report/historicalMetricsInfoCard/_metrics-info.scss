@@ -1,0 +1,50 @@
+.tooltipDiv{
+  text-align: left;
+}
+.tooltipDiv > h1{
+  font-weight: bold;
+  font-size: 16px;
+  text-align: left;
+  color: #026f97; 
+}
+.tooltipDiv > hr {
+  border: solid #0394c9;
+  border-width: 1px 0 0;
+  clear: both;
+  height: 0;
+  margin: .25rem 0 .1rem;
+}
+.media-tooltip{
+  color: #E39A20;
+  font-size: 1rem;
+  bottom: 0rem;
+}
+.media-tooltip:hover{
+  color: #D08D1D;
+}
+.tooltip[popup-class="metrics-tooltip"] .c-nub{
+  opacity:0.6;
+  background-color: #FFFFFF;
+  border: 0.5px solid #0393C9;
+  max-width: 350px;
+}
+.tooltip[popup-class="metrics-tooltip"] .nub {
+  opacity:0.6;
+  border-color: transparent transparent #0393C9 transparent;
+}
+.lowPerformingCluster{
+  color: #a52d27; 
+  font-weight: bold;
+  font-size: .8rem;
+}
+.lowPerformingCluster:hover{
+  color: #F98E89; 
+}
+.performingCluster{
+  color: #255c24; 
+  font-weight: bold;
+  font-size: .8rem;
+}
+.performingCluster:hover{
+  color: #8BCA8A;
+}

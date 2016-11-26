@@ -7,6 +7,10 @@ describe('controller: IncidentsCtrl', function () {
     nonResolved: 'non-resolved',
     incidentForDelete: {
       incidentId: 'testIncidentId'
+    },
+    actionType: 'update',
+    incidentForUpdate: {
+      incidentId: 'testIncidentId'
     }
   };
 
@@ -58,6 +62,15 @@ describe('controller: IncidentsCtrl', function () {
 
     expect($state.go).toHaveBeenCalledWith('gss.incidents.delete', {
       incident: testData.incidentForDelete
+    });
+  });
+
+  it('updateIncident, should go to update page', function () {
+    controller.updateIncident(testData.incidentForUpdate, testData.actionType);
+
+    expect($state.go).toHaveBeenCalledWith('gss.incidents.update', {
+      incident: testData.incidentForUpdate,
+      actionType: testData.actionType
     });
   });
 });

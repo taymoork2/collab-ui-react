@@ -2759,42 +2759,9 @@
             url: '/services/call/settings',
             views: {
               fullPane: {
-                controllerAs: 'expresswayServiceSettings',
-                controller: 'ExpresswayServiceSettingsController',
+                controllerAs: 'callServiceSettings',
+                controller: 'CallServiceSettingsController',
                 templateUrl: 'modules/hercules/service-settings/call-service-settings.html'
-              }
-            }
-          })
-          .state('management-service', {
-            templateUrl: 'modules/hercules/overview/overview.html',
-            controller: 'ExpresswayServiceController',
-            controllerAs: 'exp',
-            data: {
-              connectorType: 'c_mgmt'
-            },
-            parent: 'main',
-            abstract: true,
-            resolve: {
-              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
-              }
-            }
-          })
-          .state('management-service.list', {
-            url: '/services/expressway-management',
-            views: {
-              'fullPane': {
-                templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
-              }
-            }
-          })
-          .state('management-service.settings', {
-            url: '/services/expressway-management/settings',
-            views: {
-              fullPane: {
-                controllerAs: 'expresswayServiceSettings',
-                controller: 'ExpresswayServiceSettingsController',
-                templateUrl: 'modules/hercules/service-settings/management-service-settings.html'
               }
             }
           })
@@ -2886,6 +2853,40 @@
           });
 
         $stateProvider
+
+          .state('media-service-v2.reports', {
+            url: '/mediaservicereport',
+            templateUrl: 'modules/mediafusion/media-service-report-v2/media-service-reports.tpl.html',
+            controller: 'MediaServiceReportsController',
+            controllerAs: 'nav',
+            parent: 'main',
+            params: {
+              tab: null,
+              siteUrl: null
+            }
+          })
+          .state('media-service-v2.reports-metrics', {
+            url: '/mediaservicereport/metrics',
+            templateUrl: 'modules/mediafusion/media-service-report-v2/media-service-reports.tpl.html',
+            controller: 'MediaServiceReportsController',
+            controllerAs: 'nav',
+            parent: 'main',
+            params: {
+              tab: 'metrics',
+              siteUrl: null
+            }
+          })
+          .state('media-service-v2.reports-meetings', {
+            url: '/mediaservicereport/meetings',
+            templateUrl: 'modules/mediafusion/media-service-report-v2/media-service-reports.tpl.html',
+            controller: 'MediaServiceReportsController',
+            controllerAs: 'nav',
+            parent: 'main',
+            params: {
+              tab: 'meetings',
+              siteUrl: null
+            }
+          })
 
         //V2 API changes
           .state('media-service-v2', {
@@ -3150,6 +3151,20 @@
             },
             params: {
               incident: null
+            }
+          })
+          .state('gss.incidents.update', {
+            url: '/update',
+            views: {
+              '@gss': {
+                templateUrl: 'modules/gss/incidents/updateIncident/updateIncident.tpl.html',
+                controller: 'UpdateIncidentCtrl',
+                controllerAs: 'updateIncidentCtrl'
+              }
+            },
+            params: {
+              incident: null,
+              actionType: null
             }
           });
       }

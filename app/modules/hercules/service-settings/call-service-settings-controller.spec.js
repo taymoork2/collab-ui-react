@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: ExpresswayServiceSettingsController', function () {
+describe('Controller: CallServiceSettingsController', function () {
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
@@ -12,7 +12,7 @@ describe('Controller: ExpresswayServiceSettingsController', function () {
     $httpBackend.expectGET('https://hercules-integration.wbx2.com/v1/organizations/null/services').respond(500, []);
 
     $scope = $rootScope.$new();
-    controller = $controller('ExpresswayServiceSettingsController', {
+    controller = $controller('CallServiceSettingsController', {
       $scope: $scope,
       $state: {
         current: {

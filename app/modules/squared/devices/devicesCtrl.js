@@ -5,7 +5,7 @@
     .controller('DevicesCtrl',
 
       /* @ngInject */
-      function ($q, $scope, $state, $translate, $templateCache, Userservice, DeviceFilter, CsdmUnusedAccountsService, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, FeatureToggleService) {
+      function ($q, $scope, $state, $translate, $templateCache, Userservice, DeviceFilter, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, FeatureToggleService) {
         var vm = this;
         var filteredDevices = [];
         vm.addDeviceIsDisabled = true;
@@ -119,7 +119,6 @@
         vm.updateListAndFilter = function () {
           var allDevices = _.chain({})
             .extend(vm.devicesMap)
-            .extend(CsdmUnusedAccountsService.getAccountList())
             .values()
             .value();
           filteredDevices = vm.deviceFilter.getFilteredList(allDevices);

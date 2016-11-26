@@ -18,7 +18,19 @@
 
         > div:first-child {
           height: 40px;
-          background-color: #e67e22;
+
+          &.none, &.maintenance {
+            background-color: $gray-dark-3;
+          }
+          &.minor {
+            background-color: $color-attention-base;
+          }
+          &.major {
+            background-color: $color-meetings-base;
+          }
+          &.critical {
+            background-color: $color-negative-dark;
+          }
 
           > span {
             @include vr_spacing(mt, 0.75, 2px);
@@ -31,14 +43,27 @@
             @include vr_spacing(mr, 0.75, 2px);
             @include vr_spacing(mt, 0.5, 2px);
 
-            font-size: 15px;
+            font-size: 1rem;
             border: 2px solid $white;
             color: $white;
           }
         }
 
         > div:last-child {
-          border: 1px solid #e67e22;
+          border: 1px solid;
+          &.none, &.maintenance {
+            border-color: $gray-dark-3;
+          }
+          &.minor {
+            border-color: $color-attention-base;
+          }
+          &.major {
+            border-color: $color-meetings-base;
+          }
+          &.critical {
+            border-color: $color-negative-dark;
+          }
+
           @include vr_spacing(p, 0.75, 2px);
 
           > h6:first-child {
@@ -72,7 +97,6 @@
         color: $gray-dark-4;
         cursor: pointer;
       }
-
       .sub-component-name {
         @extend .component-name;
 
@@ -89,8 +113,8 @@
         @include vr_spacing(mb, 1.25);
 
         list-style: none;
-        border-top: 1px solid $gray-light-2;
 
+        border-top: 1px solid $gray-light-2;
         &:first-child {
           border-top: none !important;
         }
