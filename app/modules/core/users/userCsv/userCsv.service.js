@@ -1,9 +1,15 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .factory('UserCsvService', UserCsvService);
+  module.exports = angular.module('core.UserCsvService', [
+    require('modules/core/scripts/services/authinfo'),
+    require('modules/core/scripts/services/log'),
+    require('modules/core/scripts/services/utils'),
+    require('modules/core/config/urlConfig'),
+    require('modules/core/trackingId/trackingId.module'),
+  ])
+    .service('UserCsvService', UserCsvService)
+    .name;
 
   /* @ngInject */
   function UserCsvService($translate, Config, TrackingId) {

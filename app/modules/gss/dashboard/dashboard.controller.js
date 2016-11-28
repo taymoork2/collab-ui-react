@@ -32,17 +32,25 @@
       }
     ];
     vm.goToNewIncidentPage = goToNewIncidentPage;
+    vm.goToUpdateIncidentPage = goToUpdateIncidentPage;
     vm.goToComponentsPage = goToComponentsPage;
     vm.modifyComponentStatus = modifyComponentStatus;
     vm.modifyComponentStatusForOverridden = modifyComponentStatusForOverridden;
     vm.modifySubComponentStatus = modifySubComponentStatus;
 
     function goToNewIncidentPage() {
-      $state.go('gss.under.construction');
+      $state.go('gss.incidents.new');
+    }
+
+    function goToUpdateIncidentPage(incident) {
+      $state.go('gss.incidents.update', {
+        incident: incident,
+        actionType: 'update'
+      });
     }
 
     function goToComponentsPage() {
-      $state.go('gss.under.construction');
+      $state.go('gss.components');
     }
 
     function modifyComponentStatus(component) {
@@ -69,15 +77,15 @@
        operational < degraded_performance < partial_outage < major_outage < under_maintenance
        */
 
-      var lowest = vm.statuses.length;
+      var largest = 0;
       _.forEach(subComponents, function (subComponent) {
         var priority = getStatusPriority(subComponent.statusObj);
-        if (lowest > priority) {
-          lowest = priority;
+        if (largest < priority) {
+          largest = priority;
         }
       });
 
-      var targetStatusObj = vm.statuses[lowest];
+      var targetStatusObj = vm.statuses[largest];
       if (targetStatusObj.value !== component.statusObj.value) {
         component.statusObj = targetStatusObj;
         component.status = component.statusObj.value;
@@ -112,7 +120,6 @@
         .then(function (incidentList) {
           vm.showList = incidentList.length !== 0;
           vm.incidentList = incidentList;
-
         }).catch(function () {
           vm.showList = false;
           vm.incidentList = null;

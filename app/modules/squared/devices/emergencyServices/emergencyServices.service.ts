@@ -1,4 +1,5 @@
 import { IHuronService, IEmergencyAddress, IEmergency, IState, IEmergencyServicesData, IEmergencyServicesStateParams, IDevice } from './index';
+import { MemberService } from 'modules/huron/members';
 
 export class EmergencyServicesService {
   private emergencyDataCopy: IEmergency;
@@ -15,6 +16,7 @@ export class EmergencyServicesService {
     private PstnServiceAddressService,
     private TerminusStateService,
     private TerminusUserDeviceE911Service,
+    private MemberService: MemberService
   ) {
     this.stateOptions = this.TerminusStateService.query();
   }
@@ -33,6 +35,15 @@ export class EmergencyServicesService {
       currentDevice: this.currentDevice,
       stateOptions: this.stateOptions,
     };
+  }
+
+  public getCompanyECN() {
+    return this.ServiceSetup.listSites().then(() => {
+        if (this.ServiceSetup.sites.length !== 0) {
+          return this.ServiceSetup.getSite(this.ServiceSetup.sites[0].uuid)
+          .then(site => _.get(site, 'emergencyCallBackNumber.pattern'));
+        }
+    });
   }
 
   public getOptions(): ng.IPromise<string[]> {
@@ -112,5 +123,17 @@ export class EmergencyServicesService {
         customerId: this.Authinfo.getOrgId(),
         number: emergency.emergencyNumber,
       }, response).$promise;
+  }
+
+  public getImpactedUsers(callback) {
+    return this.MemberService.getMemberList(undefined, undefined, callback).then((response) => {
+      return response.map((member) => {
+        let mem = {};
+        member.firstName = member.firstName || '';
+        member.lastName = member.lastName || '';
+        mem['name'] = member.displayName ? member.displayName : `${member.firstName} ${member.lastName}`;
+        return mem;
+      });
+    });
   }
 }

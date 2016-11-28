@@ -12,7 +12,8 @@
     vm.canGoNext = canGoNext;
     vm.handleKeypress = handleKeypress;
     vm._translation = {
-      placeholder: $translate.instant('hercules.addResourceDialog.enterHostnamePlaceholder')
+      placeholder: $translate.instant('hercules.addResourceDialog.enterHostnamePlaceholder'),
+      help: $translate.instant('hercules.addResourceDialog.registerNewExpresswayHelp'),
     };
     vm.minlength = 3;
     vm.validationMessages = {

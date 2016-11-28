@@ -8,8 +8,8 @@
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
-    vm.showPlaces = wizardData.showPlaces;
     vm.showATA = wizardData.showATA;
+    vm.failure = false;
     vm.account = {
       name: wizardData.account.name,
       type: wizardData.account.type,
@@ -27,7 +27,42 @@
     };
     vm.qrCode = undefined;
     vm.timeLeft = '';
-    vm.isLoading = true;
+
+    vm.createActivationCode = function () {
+      vm.isLoading = true;
+      vm.failure = false;
+      if (vm.account.deviceType === 'huron') {
+        if (vm.account.type === 'shared') {
+          if (vm.account.cisUuid) { // Existing place
+            createCodeForHuronPlace(vm.account.cisUuid).then(success, error);
+          } else { // New place
+            createHuronPlace(vm.account.name, wizardData.account.directoryNumber, wizardData.account.externalNumber)
+              .then(function (place) {
+                vm.account.cisUuid = place.cisUuid;
+                createCodeForHuronPlace(vm.account.cisUuid).then(success, error);
+              }, error);
+          }
+        } else { // Personal (never create new)
+          createCodeForHuronUser(wizardData.account.username);
+        }
+      } else { // Cloudberry
+        if (vm.account.cisUuid) { // Existing place
+          createCodeForCloudberryPlace(vm.account.cisUuid).then(success, error);
+        } else { // New place
+          createCloudberryPlace(vm.account.name, wizardData.account.entitlements, wizardData.account.directoryNumber, wizardData.account.externalNumber)
+            .then(function (place) {
+              vm.account.cisUuid = place.cisUuid;
+              createCodeForCloudberryPlace(vm.account.cisUuid).then(success, error);
+            }, error);
+        }
+      }
+    };
+
+    function init() {
+      vm.createActivationCode();
+    }
+
+    init();
 
     vm.onCopySuccess = function () {
       Notification.success(
@@ -56,31 +91,6 @@
         vm.qrCode = arrayData;
         vm.isLoading = false;
       });
-    }
-
-    if (vm.account.deviceType === 'huron') {
-      if (vm.account.type === 'shared') {
-        if (vm.account.cisUuid) { // Existing place
-          createCodeForHuronPlace(vm.account.cisUuid).then(success, error);
-        } else { // New place
-          createHuronPlace(vm.account.name, wizardData.account.directoryNumber, wizardData.account.externalNumber)
-            .then(function (place) {
-              vm.account.cisUuid = place.cisUuid;
-              createCodeForHuronPlace(vm.account.cisUuid).then(success, error);
-            });
-        }
-      } else { // Personal (never create new)
-        createCodeForHuronUser(wizardData.account.username);
-      }
-    } else { // Cloudberry
-      if (vm.account.cisUuid) { // Existing place
-        createCodeForCloudberryPlace(vm.account.cisUuid).then(success, error);
-      } else { // New place
-        createCloudberryPlace(vm.account.name, wizardData.account.entitlements, wizardData.account.directoryNumber, wizardData.account.externalNumber).then(function (place) {
-          vm.account.cisUuid = place.cisUuid;
-          createCodeForCloudberryPlace(vm.account.cisUuid).then(success, error);
-        }, error);
-      }
     }
 
     function createHuronPlace(name, directoryNumber, externalNumber) {
@@ -113,7 +123,6 @@
         vm.activationCode = code.activationCode;
         vm.friendlyActivationCode = formatActivationCode(code.activationCode);
         vm.expiryTime = code.expiryTime;
-        vm.codeIsUsed = code.isUsed;
         generateQRCode();
       }
     }
@@ -122,20 +131,8 @@
     function error(err) {
       Notification.errorWithTrackingId(err, 'addDeviceWizard.showActivationCode.failedToGenerateActivationCode');
       vm.isLoading = false;
+      vm.failure = true;
     }
-
-    vm.activationFlowType = function () {
-      if (vm.account.deviceType === 'cloudberry') {
-        if (vm.showPlaces) {
-          return 'places';
-        }
-        return 'devices';
-      }
-      if (vm.account.type === 'shared') {
-        return 'places';
-      }
-      return 'users';
-    };
 
     function formatActivationCode(activationCode) {
       return activationCode ? activationCode.match(/.{4}/g).join('-') : '';

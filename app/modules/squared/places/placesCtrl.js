@@ -5,11 +5,12 @@
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($scope, $state, $templateCache, $translate, CsdmDataModelService, Userservice, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService) {
+      function ($q, $scope, $state, $templateCache, $translate, CsdmDataModelService, Userservice, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService) {
         var vm = this;
 
         vm.data = [];
         vm.placesLoaded = false;
+        vm.addPlaceIsDisabled = true;
         vm.placeFilter = PlaceFilter;
         vm.placeFilter.resetFilters();
         var filteredPlaces;
@@ -22,14 +23,20 @@
         }
 
         function fetchFeatureToggles() {
-          FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
+          var darlingPromise = FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
             vm.showDarling = result;
           });
-          FeatureToggleService.csdmATAGetStatus().then(function (result) {
+          var ataPromise = FeatureToggleService.csdmATAGetStatus().then(function (result) {
             vm.showATA = result;
           });
-          FeatureToggleService.csdmPstnGetStatus().then(function (result) {
+          var pstnPromise = FeatureToggleService.csdmPstnGetStatus().then(function (result) {
             vm.showPstn = result && Authinfo.isSquaredUC();
+          });
+          var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
+            vm.csdmHybridCallFeature = feature;
+          });
+          $q.all([darlingPromise, ataPromise, pstnPromise, hybridPromise]).finally(function () {
+            vm.addPlaceIsDisabled = false;
           });
         }
 
@@ -151,9 +158,9 @@
           var wizardState = {
             data: {
               function: "addPlace",
-              showPlaces: true,
               showDarling: vm.showDarling,
               showATA: vm.showATA,
+              csdmHybridCallFeature: vm.csdmHybridCallFeature,
               title: 'addDeviceWizard.newSharedSpace.title',
               isEntitledToHuron: vm.isEntitledToHuron(),
               isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
@@ -182,8 +189,12 @@
               'addDeviceFlow.editServices': {
                 nextOptions: {
                   sparkCall: 'addDeviceFlow.addLines',
+                  sparkCallConnect: 'addDeviceFlow.callConnectOptions',
                   sparkOnly: 'addDeviceFlow.showActivationCode'
                 }
+              },
+              'addDeviceFlow.callConnectOptions': {
+                next: 'addDeviceFlow.showActivationCode'
               },
               'addDeviceFlow.addLines': {
                 next: 'addDeviceFlow.showActivationCode'

@@ -52,7 +52,7 @@
 
         elem.on('dragstart', function (event) {
           event = event.originalEvent || event;
-          event.dataTransfer.setData('Text', angular.toJson(scope.draggable));
+          event.dataTransfer.setData('Text', JSON.stringify(scope.draggable));
           event.dataTransfer.effectAllowed = 'move';
           elem.addClass('dragging');
           $timeout(function () {

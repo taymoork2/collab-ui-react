@@ -34,10 +34,10 @@ describe('Care admin should be able to', function () {
   function createTemplateAndValidate() {
     utils.expectIsDisplayed(careLandingPage.creatCTButton);
     utils.click(careLandingPage.creatCTButton);
-    utils.expectIsDisplayed(careChatTemplateSetupPage.typeAheadInput);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.ctNameInput);
     utils.expectTextToBeSet(careChatTemplateSetupPage.nameHint, "Enter a name for you to identify this chat template");
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.setUpLeftBtn);
-    utils.sendKeys(careChatTemplateSetupPage.typeAheadInput, careChatTemplateSetupPage.randomChatTemplateName);
+    utils.sendKeys(careChatTemplateSetupPage.ctNameInput, careChatTemplateSetupPage.randomChatTemplateName);
     fillTemplateValues(true);
   }
 
@@ -47,10 +47,10 @@ describe('Care admin should be able to', function () {
     utils.sendKeys(utils.searchField, careChatTemplateSetupPage.randomChatTemplateName);
     utils.expectTextToBeSet(careChatTemplateSetupPage.chatTemplateName, careChatTemplateSetupPage.randomChatTemplateName);
     utils.click(careChatTemplateSetupPage.editChatTemplateBtnOnCard);
-    utils.expectIsDisplayed(careChatTemplateSetupPage.typeAheadInput);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.ctNameInput);
     utils.expectTextToBeSet(careChatTemplateSetupPage.nameHint, "Enter a name for you to identify this chat template");
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.setUpLeftBtn);
-    utils.sendKeys(careChatTemplateSetupPage.typeAheadInput, templateNameSuffix);
+    utils.sendKeys(careChatTemplateSetupPage.ctNameInput, templateNameSuffix);
     fillTemplateValues(false);
   }
 

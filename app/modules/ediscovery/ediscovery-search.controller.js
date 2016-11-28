@@ -11,6 +11,7 @@
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
     var vm = this;
+    vm.searchByParameters = searchByParameters;
     vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;
     vm.runReport = runReport;
@@ -29,13 +30,9 @@
     vm.ongoingSearch = false;
 
     vm.searchBySelected = '';
-    vm.searchByPlaceholder = $translate.instant("ediscovery.searchParameters.searchByPlaceholder");
-    vm.searchByOptions = ['Email Id', 'Room Participants'];
-
-    vm.searchByEmailModel = '';
-
-    vm.activityTypeModel = '';
-    vm.activityTypePlaceholder = $translate.instant("ediscovery.searchParameters.activityTypePlaceholder");
+    vm.searchByPlaceholder = $translate.instant('ediscovery.searchParameters.searchByPlaceholder');
+    vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchByEmailPlaceholder');
+    vm.searchByOptions = ['Email ID', 'Room ID'];
 
     init($stateParams.report, $stateParams.reRun);
 
@@ -56,10 +53,11 @@
           displayName: report.displayName
         };
         vm.searchCriteria = {
-          "roomId": report.roomQuery.roomId,
-          "startDate": report.roomQuery.startDate,
-          "endDate": report.roomQuery.endDate,
-          "displayName": report.displayName
+          emailId: report.roomQuery.participants,
+          roomId: report.roomQuery.roomId,
+          startDate: report.roomQuery.startDate,
+          endDate: report.roomQuery.endDate,
+          displayName: report.displayName
         };
         if (!reRun) {
           vm.report = report;
@@ -116,6 +114,14 @@
     $scope.$watch(getEndDate, function () {
       validateDate();
     });
+
+    function searchByParameters() {
+      if (_.eq(vm.searchByOptions[0], vm.searchBySelected)) {
+        vm.searchPlaceholder = $translate.instant("ediscovery.searchParameters.searchByEmailPlaceholder");
+      } else if (_.eq(vm.searchByOptions[1], vm.searchBySelected)) {
+        vm.searchPlaceholder = $translate.instant("ediscovery.searchParameters.searchByRoomPlaceholder");
+      }
+    }
 
     function searchForRoom(roomId) {
       vm.ongoingSearch = true;

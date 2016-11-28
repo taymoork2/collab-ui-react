@@ -52,25 +52,25 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   }
 
   var sortedOptions = [{
-    "name": 'phoneMenuDialExt',
+    "label": 'autoAttendant.actionSayMessage',
   }, {
-    "name": 'phoneMenuPlaySubmenu',
+    "label": 'autoAttendant.phoneMenuDialExt',
   }, {
-    "name": 'phoneMenuRepeatMenu',
+    "label": 'autoAttendant.phoneMenuPlaySubmenu',
   }, {
-    "name": 'phoneMenuRouteAA',
+    "label": 'autoAttendant.phoneMenuRepeatMenu',
   }, {
-    "name": 'phoneMenuRouteHunt',
+    "label": 'autoAttendant.phoneMenuRouteAA',
   }, {
-    "name": 'phoneMenuRouteMailbox',
+    "label": 'autoAttendant.phoneMenuRouteHunt',
   }, {
-    "name": 'phoneMenuRouteQueue',
+    "label": 'autoAttendant.phoneMenuRouteQueue',
   }, {
-    "name": 'phoneMenuRouteToExtNum',
+    "label": 'autoAttendant.phoneMenuRouteToExtNum',
   }, {
-    "name": 'phoneMenuRouteUser',
+    "label": 'autoAttendant.phoneMenuRouteUser',
   }, {
-    "name": 'phoneMenuSayMessage',
+    "label": 'autoAttendant.phoneMenuRouteVM',
   }];
 
   beforeEach(angular.mock.module('uc.autoattendant'));
@@ -331,8 +331,10 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     });
 
     it('test for sorted options', function () {
+      expect(controller.keyActions.length).toEqual(sortedOptions.length);
+
       for (var i = 0; i < sortedOptions.length; i++) {
-        expect(controller.keyActions[i].name).toEqual(sortedOptions[i].name);
+        expect(controller.keyActions[i].label).toEqual(sortedOptions[i].label);
       }
     });
   });

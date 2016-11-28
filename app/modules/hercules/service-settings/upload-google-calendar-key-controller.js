@@ -10,22 +10,29 @@
     var vm = this;
     vm.enterServiceAccountPlaceholder = $translate.instant('hercules.settings.googleCalendar.uploadNewPrivateKeyPlaceholder');
     vm.serviceAccountName = $translate.instant('hercules.settings.googleCalendar.serviceAccountName');
-    vm.googleServiceAccount = googleServiceAccount;
 
+    vm.data = {
+      googleServiceAccount: googleServiceAccount,
+      file: '',
+      fileName: '',
+    };
 
     vm.clearFile = function () {
-      vm.file = undefined;
-      vm.fileName = undefined;
+      vm.data = {
+        googleServiceAccount: this.data.googleServiceAccount,
+        file: '',
+        fileName: '',
+      };
     };
 
     vm.uploadCertificate = function () {
       vm.loading = true;
-      CloudConnectorService.updateConfig(vm.googleServiceAccount, vm.file, 'squared-fusion-gcal')
+      CloudConnectorService.updateConfig(vm.data.googleServiceAccount, vm.data.file, 'squared-fusion-gcal')
         .then(function () {
           Notification.success($translate.instant('hercules.settings.googleCalendar.successfullyUploadedKey', {
-            filename: vm.fileName
+            filename: vm.data.fileName
           }));
-          $modalInstance.close(vm.googleServiceAccount);
+          $modalInstance.close(vm.data.googleServiceAccount);
         })
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'hercules.settings.googleCalendar.failedToUploadKey');

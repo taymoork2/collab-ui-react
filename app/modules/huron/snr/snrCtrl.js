@@ -5,11 +5,12 @@
     .module('Huron')
     .controller('SingleNumberReachInfoCtrl', SingleNumberReachInfoCtrl);
 
-  function SingleNumberReachInfoCtrl($scope, $stateParams, RemoteDestinationService, TelephonyInfoService, TelephoneNumberService, Notification, $translate, DialPlanService, Authinfo) {
+  function SingleNumberReachInfoCtrl($scope, $stateParams, $timeout, RemoteDestinationService, TelephonyInfoService, TelephoneNumberService, Notification, $translate, DialPlanService, Authinfo) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.saveSingleNumberReach = saveSingleNumberReach;
     vm.reset = reset;
+    vm.setSnr = setSnr;
     vm.snrInfo = angular.copy(TelephonyInfoService.getTelephonyInfo().snrInfo);
     vm.regionCode = '';
 
@@ -18,6 +19,10 @@
 
     function getRegionCode() {
       return DialPlanService.getCustomerVoice(Authinfo.getOrgId());
+    }
+
+    function setSnr(info) {
+      vm.snrInfo.remoteDest = info;
     }
 
     vm.snrWaitSecondsOptions = [{
@@ -79,8 +84,10 @@
 
     function resetForm() {
       if (vm.form) {
-        vm.form.$setPristine();
-        vm.form.$setUntouched();
+        $timeout(function () {
+          vm.form.$setPristine();
+          vm.form.$setUntouched();
+        }, 100);
       }
     }
 

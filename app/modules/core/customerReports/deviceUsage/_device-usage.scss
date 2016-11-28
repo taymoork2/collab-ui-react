@@ -4,9 +4,13 @@
   }
 
   .extreme-table-entry {
-    font-size: 1rem;
+    //font-size: 1rem;
     padding-bottom: 0.3rem;
     padding-top: 0.3rem;
+  }
+
+  td.right-aligned, th.right-aligned {
+    text-align: right;
   }
 
   .total-usage-table {
@@ -31,11 +35,25 @@
       height: 400px;
       padding: 1rem;
       padding-top: 3rem;
-      .amcharts-title {
+
+      .amcharts-main-div {
         font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
         color: #4F5051;
         font-weight: normal;
+      }
+
+      .amcharts-title {
+        @extend .amcharts-main-div;
         font-size: 1.25rem;
+      }
+
+      .amcharts-axis-title {
+        @extend .amcharts-main-div;
+        font-size: 1rem;
+      }
+      .amcharts-axis-label {
+        @extend .amcharts-main-div;
+        font-size: 0.875rem;
       }
     }
 
@@ -146,5 +164,11 @@
 
   .small-padding {
     padding: 1rem;
+  }
+
+  .score-card {
+    .full.side-info-card.cs-card {
+      display: block;
+    }
   }
 }

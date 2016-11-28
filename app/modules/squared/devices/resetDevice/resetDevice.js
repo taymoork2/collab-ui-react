@@ -6,13 +6,16 @@
     .controller('ResetDeviceController',
 
       /* @ngInject */
-      function ($modalInstance, CsdmHuronOrgDeviceService, Notification, deviceOrCode) {
+      function ($modalInstance, CsdmHuronOrgDeviceService, Notification, device) {
         var rdc = this;
 
         rdc.resetDevice = function () {
           var CsdmHuronDeviceService = CsdmHuronOrgDeviceService.create();
-          return CsdmHuronDeviceService.resetDevice(deviceOrCode.url)
-            .then($modalInstance.close)
+          return CsdmHuronDeviceService.resetDevice(device.url)
+            .then(function () {
+              $modalInstance.close();
+              Notification.success("deviceOverviewPage.deviceRebootingDetails", null, "deviceOverviewPage.deviceRebooting");
+            })
             .catch(function (response) {
               Notification.errorResponse(response);
             });
@@ -23,11 +26,11 @@
     .service('ResetDeviceModal',
       /* @ngInject */
       function ($modal) {
-        function open(deviceOrCode) {
+        function open(device) {
           return $modal.open({
             type: 'dialog',
             resolve: {
-              deviceOrCode: _.constant(deviceOrCode)
+              device: _.constant(device)
             },
             controllerAs: 'rdc',
             controller: 'ResetDeviceController',

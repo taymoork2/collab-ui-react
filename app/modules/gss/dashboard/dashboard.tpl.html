@@ -11,7 +11,8 @@
         <h3 translate="gss.incidents"/>
       </cs-page-sub-header-left>
       <cs-page-sub-header-right>
-        <button class="btn btn-primary" ng-click="goToNewIncidentPage()" translate="gss.incidentsPage.newIncidentBtn">
+        <button class="btn btn-primary" ng-click="dashboardCtrl.goToNewIncidentPage()"
+                translate="gss.incidentsPage.newIncidentBtn">
         </button>
       </cs-page-sub-header-right>
     </cs-page-sub-header>
@@ -19,19 +20,20 @@
     <div ng-if="!dashboardCtrl.showList" class="no-incident-notification">
       <h6 translate="gss.incidentsPage.noIncidentContent1"></h6>
       <span translate="gss.incidentsPage.noIncidentContent2"></span>
-      <a translate="gss.incidentsPage.noIncidentContentLink" ng-click="goToNewIncidentPage()"></a>
+      <a translate="gss.incidentsPage.noIncidentContentLink" ng-click="dashboardCtrl.goToNewIncidentPage()"></a>
     </div>
 
     <ul ng-if="dashboardCtrl.showList" class="incidents-list">
       <li ng-repeat="incident in dashboardCtrl.incidentList | orderBy:'-incident.lastModifiedTime':true">
-        <div ng-if="incident.status!='resolved'">
+        <div ng-if="incident.status!='resolved'" ng-class="incident.impact">
           <span class="pull-left">{{ incident.incidentName }}</span>
 
-          <a class="pull-right" translate="gss.updateIncident"
-             ui-sref="gss.under.construction( { incidentName:incident.incidentName, incidentId:incident.incidentId } )"></a>
+          <a class="pull-right" ng-click="dashboardCtrl.goToUpdateIncidentPage(incident)"
+             translate="gss.updateIncident">
+          </a>
         </div>
 
-        <div ng-if="incident.status!='resolved'">
+        <div ng-if="incident.status!='resolved'" ng-class="incident.impact">
           <h6><strong>{{ incident.status }}</strong></h6>
           <h6>{{ incident.message }}</h6>
           <h6 class="body-small">{{ incident.lastModifiedTime | date: "medium" }}</h6>
@@ -84,7 +86,7 @@
 
     <div ng-if="!dashboardCtrl.components.length" class="no-component-notification">
       <h6 translate="gss.componentsPage.listing.noComponentHeading"></h6>
-      <a translate="gss.componentsPage.listing.noComponentText" ng-click="goToComponentsPage()"></a>
+      <a translate="gss.componentsPage.listing.noComponentText" ng-click="dashboardCtrl.goToComponentsPage()"></a>
     </div>
   </div>
 </div>
