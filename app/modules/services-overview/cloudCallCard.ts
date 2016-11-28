@@ -5,18 +5,15 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
     return undefined;
   }
 
-  private _buttons: Array<ICardButton> = [
-    {
-      name: 'servicesOverview.cards.call.buttons.numbers',
-      routerState: 'huronlines',
-      buttonClass: 'btn-link',
-    },
-    {
-      name: 'servicesOverview.cards.call.buttons.settings',
-      routerState: 'huronsettings',
-      buttonClass: 'btn-link',
-    },
-  ];
+  private _buttons: Array<ICardButton> = [{
+    name: 'servicesOverview.cards.call.buttons.numbers',
+    routerState: 'huronlines',
+    buttonClass: 'btn-link',
+  }, {
+    name: 'servicesOverview.cards.call.buttons.settings',
+    routerState: 'huronsettings',
+    buttonClass: 'btn-link',
+  }];
 
   public getButtons(): Array<ICardButton> {
     if (this.active) {
@@ -33,7 +30,7 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
   }
 
   public csdmPstnFeatureToggleEventHandler(pstnEnabled: boolean) {
-    this.active = pstnEnabled ? this.Authinfo.isAllowedState('huronsettings') : this.Authinfo.isSquaredUC() ;
+    this.active = pstnEnabled ? this.Authinfo.isAllowedState('huronsettings') : this.Authinfo.isSquaredUC();
     if (this.showFeatureTab(pstnEnabled)) {
       this._buttons.splice(1, 0, {
         name: 'servicesOverview.cards.call.buttons.features',
@@ -50,13 +47,11 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
     private Config,
   ) {
     super({
-      name: 'servicesOverview.cards.call.title',
-      description: 'servicesOverview.cards.call.description',
-      icon: 'icon-circle-call',
       active: Authinfo.isAllowedState('huronsettings'),
       cardClass: 'cta-bar',
+      description: 'servicesOverview.cards.call.description',
+      icon: 'icon-circle-call',
+      name: 'servicesOverview.cards.call.title',
     });
-    this.Authinfo = Authinfo;
-    this.Config = Config;
   }
 }
