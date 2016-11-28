@@ -6,7 +6,7 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, Userservice, $stateParams, $translate, $timeout, Authinfo, FeatureToggleService, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal, ServiceSetup, KemService, TerminusUserDeviceE911Service) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo, FeatureToggleService, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal, ServiceSetup, KemService, TerminusUserDeviceE911Service) {
     var deviceOverview = this;
     var huronDeviceService = $stateParams.huronDeviceService;
     deviceOverview.linesAreLoaded = false;
@@ -16,7 +16,6 @@
     };
 
     function init() {
-      fetchDisplayNameForLoggedInUser();
       fetchFeatureToggles();
 
       displayDevice($stateParams.currentDevice);
@@ -81,14 +80,6 @@
           }).finally(function () {
             deviceOverview.isE911Available = true;
           });
-        }
-      });
-    }
-
-    function fetchDisplayNameForLoggedInUser() {
-      Userservice.getUser('me', function (data) {
-        if (data.success) {
-          deviceOverview.adminDisplayName = data.displayName;
         }
       });
     }
