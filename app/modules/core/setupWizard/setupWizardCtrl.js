@@ -1,3 +1,5 @@
+require('./_setup-wizard.scss');
+
 (function () {
   'use strict';
 
