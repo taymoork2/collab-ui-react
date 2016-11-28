@@ -1166,7 +1166,7 @@
     */
     function populateRouteToQueue(action) {
       var newAction = {};
-      if (action.description) {
+      if (action) {
         newAction.id = action.value;
         newAction.queueMoH = action.queueSettings.musicOnHold.actions[0].getValue();
         newAction.queueInitialAnnouncement = action.queueSettings.initialAnnouncement.actions[0].getValue();
@@ -1204,8 +1204,7 @@
             periodicAnnouncementType: 'say',
             periodicAnnouncementDescription: '',
             initialAnnouncementType: 'say',
-            initialAnnouncementDescription: '',
-            fallback: destination
+            initialAnnouncementDescription: ''
           };
         }
         newAction.description = JSON.stringify(action.description);

@@ -35,26 +35,14 @@
     /////////////////////
 
     function populateUiModel() {
-      var queueSettings;
-      if (fromRouteCall) { //from Route Call
-        queueSettings = vm.menuEntry.actions[0].queueSettings;
-        if (queueSettings) {
-          if (_.has(queueSettings, 'fallback.actions[0]')) {
-            vm.hgSelected.id = queueSettings.fallback.actions[0].getValue();
-          }
-        } else {
-          vm.hgSelected.id = vm.menuEntry.actions[0].getValue();
-        }
-      } else { //from phone menu
-        queueSettings = vm.menuKeyEntry.actions[0].queueSettings;
-        if (queueSettings) { //from queueSettings modal
-          if (_.has(queueSettings, 'fallback.actions[0]')) {
-            vm.hgSelected.id = queueSettings.fallback.actions[0].getValue();
-          }
-        } else {
-          vm.hgSelected.id = vm.menuKeyEntry.actions[0].getValue();
-        }
+      var entry;
+      if (fromRouteCall) {
+        entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
+      } else {
+        entry = _.get(vm.menuKeyEntry, 'actions[0].queueSettings.fallback', vm.menuKeyEntry);
       }
+      vm.hgSelected.id = entry.actions[0].getValue();
+
       vm.hgSelected.description = _.result(_.find(vm.huntGroups, {
         'id': vm.hgSelected.id
       }), 'description', '');

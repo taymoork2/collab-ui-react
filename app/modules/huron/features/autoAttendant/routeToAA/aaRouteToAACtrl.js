@@ -21,7 +21,7 @@
 
     vm.saveUiModel = saveUiModel;
 
-    //////////////////////
+    /////////////////////
 
     function aaName2CeId(aaName) {
       var ceInfos = vm.aaModel.ceInfos;
@@ -54,14 +54,8 @@
     }
 
     function populateUiModel() {
-      var queueSettings = vm.menuEntry.actions[0].queueSettings;
-      if (queueSettings) {
-        if (_.has(queueSettings, 'fallback.actions[0]')) {
-          vm.aaName = ceId2aaName(queueSettings.fallback.actions[0].value);
-        }
-      } else {
-        vm.aaName = ceId2aaName(vm.menuEntry.actions[0].value);
-      }
+      var entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
+      vm.aaName = ceId2aaName(entry.actions[0].value);
     }
 
     function saveUiModel() {

@@ -47,26 +47,13 @@
     /////////////////////
 
     function populateUiModel() {
-      var queueSettings;
-      if (fromRouteCall) { //from Route Call
-        queueSettings = vm.menuEntry.actions[0].queueSettings;
-        if (queueSettings) {
-          if (_.has(queueSettings, 'fallback.actions[0]')) {
-            vm.userSelected.id = queueSettings.fallback.actions[0].getValue();
-          }
-        } else {
-          vm.userSelected.id = vm.menuEntry.actions[0].getValue();
-        }
-      } else { //from phone menu
-        queueSettings = vm.menuKeyEntry.actions[0].queueSettings;
-        if (queueSettings) { //from queueSettings modal
-          if (_.has(queueSettings, 'fallback.actions[0]')) {
-            vm.userSelected.id = queueSettings.fallback.actions[0].getValue();
-          }
-        } else {
-          vm.userSelected.id = vm.menuKeyEntry.actions[0].getValue();
-        }
+      var entry;
+      if (fromRouteCall) {
+        entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
+      } else {
+        entry = _.get(vm.menuKeyEntry, 'actions[0].queueSettings.fallback', vm.menuKeyEntry);
       }
+      vm.userSelected.id = entry.actions[0].getValue();
 
       if (vm.userSelected.id) {
         getFormattedUserAndExtension(vm.userSelected.id).then(function (userName) {

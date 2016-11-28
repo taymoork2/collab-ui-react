@@ -209,7 +209,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
 
     describe('FallBack', function () {
       it('test for default option as Disconnect', function () {
-        expect(controller.destinationOptions[0].name).toEqual('Disconnect');
+        expect(controller.destinationOptions[0].name).toEqual('disconnect');
       });
       it('test for sorted order options in dropdown', function () {
         for (var i = 1; i < sortedOptions.length; i++) {
@@ -224,9 +224,8 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
       });
       it(" value of maxTime shoulb be 15", function () {
         controller.ok();
-        var fallbackAction = controller.menuEntry.actions[0].queueSettings.fallback.actions[0];
-        var fallbackActionDescription = fallbackAction.getDescription();
-        expect(fallbackActionDescription).toEqual('fallback');
+        var maxWaitTime = controller.menuEntry.actions[0].queueSettings.maxWaitTime.label;
+        expect(maxWaitTime).toEqual(15);
       });
     });
 

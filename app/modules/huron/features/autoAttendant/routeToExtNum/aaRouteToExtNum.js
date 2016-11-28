@@ -44,30 +44,16 @@
     /////////////////////
 
     function populateUiModel() {
-      var queueSettings;
-      if (fromRouteCall) { //from route call
-        queueSettings = vm.menuEntry.actions[0].queueSettings;
-        if (queueSettings) {
-          if (_.has(queueSettings, 'fallback.actions[0]')) {
-            vm.model.phoneNumberInput.phoneNumber = queueSettings.fallback.actions[0].getValue();
-          }
-        } else {
-          vm.model.phoneNumberInput.phoneNumber = vm.menuEntry.actions[0].getValue();
-        }
-      } else { //from phone menu
-        queueSettings = vm.menuKeyEntry.queueSettings;
-        if (queueSettings) { //from queueSettings modal
-          if (_.has(queueSettings, 'fallback.actions[0]')) {
-            vm.model.phoneNumberInput.phoneNumber = queueSettings.fallback.actions[0].getValue();
-          }
-        } else {
-          vm.model.phoneNumberInput.phoneNumber = vm.menuKeyEntry.actions[0].getValue();
-        }
+      var entry;
+      if (fromRouteCall) {
+        entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
+      } else {
+        entry = _.get(vm.menuKeyEntry, 'queueSettings.fallback', vm.menuKeyEntry);
       }
+      vm.model.phoneNumberInput.phoneNumber = entry.actions[0].getValue();
     }
 
     function saveUiModel() {
-      var action;
       var entry;
       var num = vm.model.phoneNumberInput.phoneNumber;
 
@@ -77,16 +63,12 @@
 
       if (fromRouteCall) {
         entry = vm.menuEntry;
-        action = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]', entry.actions[0]);
+        entry = _.get(entry, 'actions[0].queueSettings.fallback', entry);
       } else {
         entry = vm.menuKeyEntry;
-        action = _.get(entry, 'queueSettings.fallback.actions[0]', entry.queueSettings);
+        entry = _.get(entry, 'queueSettings.fallback', entry);
       }
-      if (action) {
-        action.setValue(num);
-      } else {
-        entry.actions[0].setValue(num);
-      }
+      entry.actions[0].setValue(num);
 
       AACommonService.setPhoneMenuStatus(true);
 
