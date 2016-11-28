@@ -51,6 +51,7 @@
     $scope.dirSyncConnectorDownload = "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/DirectoryConnector.zip";
 
     var isFTW = false;
+    $scope.isSharedMultiPartyEnabled = false;
     $scope.isReset = false;
     $scope.showExtensions = true;
     $scope.isResetEnabled = false;
@@ -91,6 +92,10 @@
     $scope.isCareEnabled = false;
     FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
       $scope.isCareEnabled = careStatus && Authinfo.isCare();
+    });
+
+    FeatureToggleService.atlasSMPGetStatus().then(function (smpStatus) {
+      $scope.isSharedMultiPartyEnabled = smpStatus;
     });
 
     initController();
@@ -652,6 +657,8 @@
     var generateConfChk = function (confs, cmrs) {
       $scope.confChk = [];
       $scope.allLicenses = [];
+      $scope.standardLicenses = [];
+      $scope.advancedLicenses = [];
 
       var formatLicense = function (site) {
         var confMatches = _.filter(confFeatures, {
@@ -721,8 +728,31 @@
         $scope.confChk.push(temp);
       }
 
+      // Distinguish between standard license and advanced license types
+      _.forEach($scope.allLicenses, function (license) {
+        if (license.site) {
+          $scope.advancedLicenses.push(license);
+        } else {
+          $scope.standardLicenses.push(license);
+        }
+      });
+
+      $scope.hasStandardLicenses = !_.isEmpty($scope.standardLicenses);
+      $scope.hasAdvancedLicenses = !_.isEmpty($scope.advancedLicenses);
+
       populateConf();
       populateConfInvitations();
+    };
+
+    /* TODO For now we are using the site url to determine if the license is an SMP license. This logic will change;
+    we will be looking at licenseModel inside the licenses payload to determine if the license is SMP instead of the siteUrl. */
+    $scope.isSharedMultiPartyLicense = function (siteUrl) {
+      return _.first(siteUrl.split('.')) === 'smp';
+    };
+
+    // This logic will be changed to look for the 'licenseModel' key when the payload is ready from the backend
+    $scope.determineLicenseType = function (siteUrl) {
+      return $scope.isSharedMultiPartyLicense(siteUrl) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.assignedLicenses');
     };
 
     $scope.isSubscribeable = function (license) {
