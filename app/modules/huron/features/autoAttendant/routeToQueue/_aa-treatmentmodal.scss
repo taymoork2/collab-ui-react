@@ -9,6 +9,11 @@
     @include vr-spacing(mr, 0.5);
   }
 
+  .aa-display-radio {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
   & .aa-destination-container {
     width: 100%;
     & .csSelect-container {
