@@ -6,7 +6,7 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($q, $scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService, WizardFactory, FeatureToggleService) {
+  function DevicesCtrlHuron($scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService, WizardFactory, FeatureToggleService) {
     var vm = this;
     vm.devices = {};
     vm.otps = [];
@@ -16,19 +16,15 @@
     vm.generateCodeIsDisabled = true;
 
     function init() {
-      fetchFeatureToggles();
+      fetchATASupport();
     }
 
     init();
 
-    function fetchFeatureToggles() {
-      var placesPromise = FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
-        vm.showPlaces = result;
-      });
-      var ataPromise = FeatureToggleService.csdmATAGetStatus().then(function (result) {
+    function fetchATASupport() {
+      FeatureToggleService.csdmATAGetStatus().then(function (result) {
         vm.showATA = result;
-      });
-      $q.all([placesPromise, ataPromise]).finally(function () {
+      }).finally(function () {
         vm.generateCodeIsDisabled = false;
       });
     }
@@ -79,7 +75,6 @@
         data: {
           function: 'showCode',
           title: 'addDeviceWizard.newDevice',
-          showPlaces: vm.showPlaces,
           showATA: vm.showATA,
           account: {
             name: vm.currentUser.displayName,

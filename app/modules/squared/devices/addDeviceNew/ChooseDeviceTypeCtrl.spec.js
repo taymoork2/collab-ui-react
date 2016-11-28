@@ -30,14 +30,12 @@ describe('ChooseDeviceTypeCtrl: Ctrl', function () {
   describe('Initialization', function () {
     it('sets all the necessary fields', function () {
       var title = 'title';
-      var showPlaces = true;
       var showDarling = true;
       $stateParams.wizard = {
         state: function () {
           return {
             data: {
               title: title,
-              showPlaces: showPlaces,
               showDarling: showDarling
             }
           };
@@ -46,7 +44,6 @@ describe('ChooseDeviceTypeCtrl: Ctrl', function () {
       initController();
 
       expect(controller.title).toBe(title);
-      expect(controller.showPlaces).toBe(showPlaces);
       expect(controller.showDarling).toBe(showDarling);
     });
   });
