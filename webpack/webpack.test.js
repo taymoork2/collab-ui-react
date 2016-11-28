@@ -23,6 +23,4 @@ const testConfig = merge.smart(commonWebpack, {
   output: {},
 });
 
-console.log('testConfig', testConfig.module.loaders);
-
 module.exports = testConfig;

@@ -89,7 +89,6 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
       this.active = filterAndGetEnabledService(servicesStatuses, service);
       // We can stop loading now because we know we have the results for both services
       this.loading = false;
-      debugger;
     });
   }
 
