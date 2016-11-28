@@ -131,7 +131,9 @@
 
     function init() {
 
-      if (vm.servicesId[0] === 'squared-fusion-cal' && hasGoogleCalendarFeatureToggle) {
+      // Until a proper fix, never show the setup modal
+      // It should be trigerred from the card in services-overview instead
+      if (false && vm.servicesId[0] === 'squared-fusion-cal' && hasGoogleCalendarFeatureToggle) {
 
         CloudConnectorService.isServiceSetup('squared-fusion-gcal')
           .then(function (isSetup) {

@@ -137,4 +137,19 @@
       }
     }
   }
+
+  .h6 {
+    margin-bottom: 1rem;
+  }
+
+  .hybrid-google-calendar-footer {
+    padding: 0 !important;
+
+    .status {
+      display: block;
+      padding-top: 0.9rem;
+      padding-bottom: 1rem;
+      color: inherit;
+    }
+  }
 }
