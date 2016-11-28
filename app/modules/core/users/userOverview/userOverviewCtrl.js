@@ -1,3 +1,5 @@
+require('./_user-overview.scss');
+
 (function () {
   'use strict';
 
