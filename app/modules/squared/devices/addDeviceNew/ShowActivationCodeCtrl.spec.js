@@ -40,7 +40,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
   describe('Initialization', function () {
     it('sets all the necessary fields', function () {
       var title = 'title';
-      var showPlaces = true;
       var deviceType = 'testDevice';
       var accountType = 'testAccount';
       var deviceName = 'deviceName';
@@ -54,7 +53,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
           return {
             data: {
               title: title,
-              showPlaces: showPlaces,
               account: {
                 deviceType: deviceType,
                 type: accountType,
@@ -74,7 +72,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       initController();
 
       expect(controller.title).toBe(title);
-      expect(controller.showPlaces).toBe(showPlaces);
       expect(controller.account.deviceType).toBe(deviceType);
       expect(controller.account.type).toBe(accountType);
       expect(controller.account.name).toBe(deviceName);

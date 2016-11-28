@@ -4,6 +4,7 @@ import { ServicesOverviewMeetingCard } from './meetingCard';
 import { ServicesOverviewCallCard } from './cloudCallCard';
 import { ServicesOverviewCareCard } from './careCard';
 import { ServicesOverviewHybridServicesCard } from './hybridServicesCard';
+import { ServicesOverviewHybridAndGoogleCalendarCard } from './hybridAndGoogleCalendarCard';
 import { ServicesOverviewHybridCalendarCard } from './hybridCalendarCard';
 import { ServicesOverviewHybridCallCard } from './hybridCallCard';
 import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
@@ -15,6 +16,7 @@ export class ServicesOverviewCtrl {
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private Auth,
     private Authinfo,
     private Config,
@@ -29,7 +31,8 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewCallCard(this.Authinfo, this.Config),
       new ServicesOverviewCareCard(this.Authinfo),
       new ServicesOverviewHybridServicesCard(this.Authinfo),
-      new ServicesOverviewHybridCalendarCard(this.CloudConnectorService, this.Authinfo, this.FusionClusterStatesService),
+      new ServicesOverviewHybridAndGoogleCalendarCard(this.$q, this.Authinfo, this.CloudConnectorService, this.FusionClusterStatesService),
+      new ServicesOverviewHybridCalendarCard(this.Authinfo, this.FusionClusterStatesService),
       new ServicesOverviewHybridCallCard(this.Authinfo, this.FusionClusterStatesService),
       new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
       new ServicesOverviewHybridDataSecurityCard(this.FusionClusterStatesService),

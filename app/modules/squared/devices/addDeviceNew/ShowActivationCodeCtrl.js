@@ -8,7 +8,6 @@
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
-    vm.showPlaces = wizardData.showPlaces;
     vm.showATA = wizardData.showATA;
     vm.failure = false;
     vm.account = {
@@ -135,19 +134,6 @@
       vm.isLoading = false;
       vm.failure = true;
     }
-
-    vm.activationFlowType = function () {
-      if (vm.account.deviceType === 'cloudberry') {
-        if (vm.showPlaces) {
-          return 'places';
-        }
-        return 'devices';
-      }
-      if (vm.account.type === 'shared') {
-        return 'places';
-      }
-      return 'users';
-    };
 
     function formatActivationCode(activationCode) {
       return activationCode ? activationCode.match(/.{4}/g).join('-') : '';

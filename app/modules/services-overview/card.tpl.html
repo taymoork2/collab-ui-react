@@ -3,7 +3,7 @@
 </header>
 <section ng-if="!card.loading">
   <p>{{::card.description | translate}}</p>
-  <div class="card-button" ng-class="{alignedButtons: !card.loading && card.status}">
+  <div class="card-button">
     <div ng-repeat="button in card.getButtons()">
       <a ng-if="!button.routerState" class="disabled" ng-class="button.buttonClass">{{::button.name | translate}}</a>
       <a ng-if="button.routerState" ui-sref="{{button.routerState}}" ng-class="button.buttonClass">{{::button.name | translate}}</a>

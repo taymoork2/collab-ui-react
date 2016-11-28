@@ -42,11 +42,10 @@ describe('placeOverview component', () => {
   };
 
   describe('and invoke onGenerateOtpFn', () => {
-    let showPlaces, showATA, showHybrid, currentDevice, deviceName, displayName, email, userCisUuid, placeCisUuid;
+    let showATA, showHybrid, currentDevice, deviceName, displayName, email, userCisUuid, placeCisUuid;
     let orgId, adminOrgId, goStateName, goStateData;
     beforeEach(() => {
 
-      showPlaces = true;
       showATA = true;
       showHybrid = true;
       deviceName = 'deviceName';
@@ -96,7 +95,6 @@ describe('placeOverview component', () => {
             {
               data: {
                 function: 'showCode',
-                showPlaces: true,
                 showATA: true,
                 csdmHybridCallFeature: true,
                 adminOrganizationId: adminOrgId,
@@ -135,7 +133,6 @@ describe('placeOverview component', () => {
             {
               data: {
                 function: 'showCode',
-                showPlaces: true,
                 showATA: true,
                 csdmHybridCallFeature: true,
                 adminOrganizationId: adminOrgId,
@@ -156,9 +153,8 @@ describe('placeOverview component', () => {
 
   describe('invoke editCloudberryServices', () => {
     let goStateName, goStateData;
-    let showPlaces, showATA, showHybrid, currentDevice, deviceName, displayName, email, userCisUuid, orgId, entitlements, placeUuid;
+    let showATA, showHybrid, currentDevice, deviceName, displayName, email, userCisUuid, orgId, entitlements, placeUuid;
     beforeEach(() => {
-      showPlaces = true;
       showATA = true;
       showHybrid = true;
       deviceName = 'deviceName';
@@ -205,7 +201,6 @@ describe('placeOverview component', () => {
           data: {
             function: 'editServices',
             title: 'usersPreview.editServices',
-            showPlaces: true,
             account: {
               deviceType: 'cloudberry',
               type: 'shared',

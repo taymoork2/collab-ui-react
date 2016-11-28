@@ -161,7 +161,6 @@
           var wizardState = {
             data: {
               function: "addPlace",
-              showPlaces: true,
               showDarling: vm.showDarling,
               showATA: vm.showATA,
               adminOrganizationId: vm.adminOrgId,

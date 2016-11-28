@@ -126,7 +126,6 @@ class PlaceOverview implements ng.IComponentController {
       data: {
         function: 'editServices',
         title: 'usersPreview.editServices',
-        showPlaces: true,
         account: {
           deviceType: this.currentPlace.type,
           type: 'shared',
@@ -191,7 +190,6 @@ class PlaceOverview implements ng.IComponentController {
     let wizardState = {
       data: {
         function: 'showCode',
-        showPlaces: true,
         showATA: this.showATA,
         csdmHybridCallFeature: this.csdmHybridCallFeature,
         adminOrganizationId: this.adminOrgId,

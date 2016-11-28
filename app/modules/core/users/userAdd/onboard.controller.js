@@ -164,12 +164,6 @@
       };
     }
 
-    $scope.isCsvEnhancement = false;
-    FeatureToggleService.supports(FeatureToggleService.features.csvEnhancement)
-      .then(function (result) {
-        $scope.isCsvEnhancement = result;
-      });
-
     var rootState = $previousState.get().state.name;
     $scope.onBack = function () {
       $state.go(rootState);
@@ -1262,7 +1256,7 @@
 
     $scope.hasErrors = function () {
       var haserr = ($scope.invalidcount > 0);
-      if ($scope.isCsvEnhancement && $scope.getNumUsersInTokenField() >= vm.maxUsersInManual) {
+      if ($scope.getNumUsersInTokenField() >= vm.maxUsersInManual) {
         haserr = true;
       }
       return haserr;

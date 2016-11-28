@@ -2510,7 +2510,7 @@
       "Disconnect": "Disconnect"
   },
     "languageAndVoice" : "Language and Voice",
-    "langaugeAndVoiceHelp" : "Language and voice will apply to Say Messages and Fallback.",
+    "langaugeAndVoiceHelp" : "These selections apply to Say and Error Messages.",
     "initialAnnouncement" : "Initial Announcement",
     "initialHelpText" : "Specify a message to play when the caller enters the queue.",
     "periodicHelpText": "Specify a message to play and how often to play it while the caller is waiting in the queue.",
@@ -3436,7 +3436,6 @@
   },
   "internationalDialing": {
     "internationalDialing": "International Dialing",
-    "internationalDialingDesc": "Users inherit this setting by default. Exception can be made at the individual user's settings.",
     "internationalDialingPlacesDesc": "Users and Places with Spark Call inherit this setting by default. Exception can be made at the individual user's or place's settings."
   },
   "huronSettings": {
@@ -3557,12 +3556,10 @@
       "deviceTypeInstructions": "A new device requires a unique activation code to be input during setup. What kind of device do you want to activate?",
       "deviceTypeNewPlace": "What kind of device do you want to set up in this place?",
       "deskPhone": "Desk Phone",
-      "newDeskPhone": "New desk phone for existing user",
       "deskPhoneExamples": "e.g. 8845, 8865 or 8800",
       "deskPhoneExamplesExtra": "e.g. 8845, 8865, 8800 or Analog Telephone Adapter port",
       "deskPhoneLicenseWarning": "Your organization must purchase Cisco Spark Call licenses first. Contact your partner or Cisco Sales for more information.",
       "roomSystem": "Room Device",
-      "newRoomSystem": "New room device",
       "roomSystemExamples": "DX, MX and SX series",
       "roomSystemExamplesExpanded": "Cisco Spark Board, DX, MX and SX series",
       "roomSystemLicenseWarning": "Your organization must purchase Cisco Spark Room Device licenses first. Contact your partner or Cisco Sales for more information."
@@ -3603,8 +3600,6 @@
       "placeLocation": "Where will this device be located?",
       "newPlaceInstructions": "What would you like to call the place that this device will be assigned to?",
       "newPlaceOnlyInstructions": "What would you like to call the place that this room device will be assigned to? A place represents a physical location such as a meeting room, a lobby or a factory floor.",
-      "deviceInstalled": "Where will this device be installed?",
-      "deviceInstalledInstructions": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
       "insertRoomName": "Insert name of device location, e.g. 'Reception' or 'Boardroom'",
       "noExistingPlaces": "There is no Cisco Spark Call place in your organization. Create a new place instead."
     },
@@ -3642,7 +3637,6 @@
       "plugInRoomSystem": "Share this code with the person setting up the room device belonging to <b>{{belongsTo}}</b>, or enter or scan it yourself when prompted by the device.",
       "onceActivePersonalDevice": "Once the device has been successfully activated, you will be able to find and configure it in Users or Devices.",
       "onceActiveSharedDevice": "Once the device has been successfully activated, you will be able to find and configure it in Places or Devices.",
-      "onceActiveSharedDeviceNoPlaces": "Once the device has been successfully activated, you will be able to find and configure it in Devices.",
       "expires": "Expires {{expiryDate}}",
       "searchAnotherUser": "Or search for another user",
       "failedToGenerateActivationCode": "Failed to generate activation code. Reason:",
@@ -5826,13 +5820,15 @@
           "context": "Context"
         }
       },
-      "calendar": {
+      "hybridCalendar": {
         "title": "Hybrid Calendar",
         "description": "Inserts Join and Room details by adding @WebEx and/or @Spark to the Meeting Invite Location field.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
-        }
+        },
+        "exchangeTitle": "Microsoft Exchange",
+        "googleTitle": "Google Calendar"
       },
       "hybridCall": {
         "title": "Hybrid Call",

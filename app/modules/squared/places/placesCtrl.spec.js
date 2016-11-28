@@ -78,7 +78,6 @@ describe('Controller: PlacesCtrl', function () {
       var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
       expect(wizardState.title).toBe('addDeviceWizard.newSharedSpace.title');
       expect(wizardState.function).toBe('addPlace');
-      expect(wizardState.showPlaces).toBe(true);
       expect(wizardState.showATA).toBe(true);
       expect(wizardState.adminOrganizationId).toBe(adminOrgId);
       expect(wizardState.isEntitledToHuron).toBe(isEntitledToHuron);

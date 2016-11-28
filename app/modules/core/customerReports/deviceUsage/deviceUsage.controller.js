@@ -10,6 +10,8 @@
     var vm = this;
     var amChart;
     var apiToUse = 'backend';
+    var missingDays;
+    var dateRange;
 
     vm.leastUsedDevices = [];
     vm.mostUsedDevices = [];
@@ -22,8 +24,6 @@
     vm.exporting = false;
     vm.noDataForRange = false;
 
-    var dateRange;
-    var missingDays;
     vm.exportRawData = exportRawData;
     vm.init = init;
     vm.timeUpdate = timeUpdate;
@@ -52,7 +52,7 @@
           break;
         case 2:
           loadLast3Months();
-          dateRange = DeviceUsageTotalService.getDateRangeForPeriod(3, 'month');
+          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(3, 'month');
           break;
         default:
           loadLastWeek();
@@ -144,7 +144,7 @@
           break;
         case 2:
           loadLast3Months();
-          dateRange = DeviceUsageTotalService.getDateRangeForPeriod(3, 'month');
+          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(3, 'month');
           break;
         default:
           $log.warn("Unknown time period selected");
@@ -172,7 +172,7 @@
       }
       amChart.dataProvider = [];
       amChart.validateData();
-      vm.dateRange = '';
+      dateRange = '';
       Notification.notify(errors, 'error');
     }
 
@@ -227,7 +227,7 @@
       var missingDaysDeferred = $q.defer();
       missingDaysDeferred.promise.then(handleMissingDays);
       vm.loading = true;
-      DeviceUsageTotalService.getDataForLastMonths(3, 'month', ['ce', 'sparkboard'], apiToUse, missingDaysDeferred).then(function (data) {
+      DeviceUsageTotalService.getDataForLastNTimeUnits(3, 'month', ['ce', 'sparkboard'], apiToUse, missingDaysDeferred).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last3Months'));
       }, handleReject);
     }
@@ -297,7 +297,6 @@
 
     function exportRawData() {
       vm.exporting = true;
-      //$log.info("Exporting data for range", dateRange);
       var exportStarted = moment();
       DeviceUsageTotalService.exportRawData(dateRange.start, dateRange.end, apiToUse).then(function () {
         //$log.info("export finished");

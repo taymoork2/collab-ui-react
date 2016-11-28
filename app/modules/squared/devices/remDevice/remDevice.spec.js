@@ -72,7 +72,6 @@ describe('Controller: RemDeviceController', function () {
 
       expect(fakeModal.close).toHaveBeenCalled();
       expect(CsdmDeviceService.deleteItem).toHaveBeenCalledWith(controller.device);
-      expect(CsdmPlaceService.deleteItem).toHaveBeenCalled();
     });
 
     it('should call CsdmHuronDeviceService to delete a Huron device', function () {

@@ -4,7 +4,7 @@
 /* global LONG_TIMEOUT */
 
 // NOTE: Be sure to re-enable the afterAll at line 144 when re-enabling this test!
-xdescribe('Manage Users - Manual -', function () {
+describe('Manage Users - Manual -', function () {
   var token;
 
   var usersEmailOnly = _.times(2, function () {
@@ -141,7 +141,7 @@ xdescribe('Manage Users - Manual -', function () {
     });
 
     // delete all the users we created
-    xafterAll(function () {
+    afterAll(function () {
       _.each(allUsers, function (user) {
         deleteUtils.deleteUser(user.email, token);
       });
