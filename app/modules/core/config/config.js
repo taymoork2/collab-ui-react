@@ -143,7 +143,8 @@
         helpdesk: 'atlas-portal.partner.helpdesk',
         orderadmin: 'atlas-portal.partner.orderadmin',
         spark_synckms: 'spark.synckms',
-        readonly_admin: 'id_readonly_admin'
+        readonly_admin: 'id_readonly_admin',
+        tech_support: 'atlas-portal.cisco.techsupport'
       },
 
       roles: {
@@ -158,7 +159,8 @@
         orderadmin: 'Order_Admin',
         spark_synckms: 'Spark_SyncKms',
         readonly_admin: 'Readonly_Admin',
-        compliance_user: 'Compliance_User'
+        compliance_user: 'Compliance_User',
+        tech_support: 'Tech_Support'
       },
 
       roleState: {
@@ -337,12 +339,12 @@
         'user-overview',
         'userRedirect',
         'userprofile',
-        'users',
-        'gss'
+        'users'
       ],
-      Support: ['gss', 'support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
+      Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
+      Tech_Support: ['gss'],
       WX2_User: ['overview', 'support', 'activateProduct'],
-      WX2_Support: ['gss', 'overview', 'reports', 'support'],
+      WX2_Support: ['overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
       PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'gem', 'gemCbgDetails', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
       PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],

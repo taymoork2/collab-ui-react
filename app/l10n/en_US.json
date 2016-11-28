@@ -5501,7 +5501,8 @@
     "Site_Admin": "Site Admin",
     "Readonly_Admin": "Read-only Admin",
     "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin",
-    "Compliance_User": "Compliance Officer"
+    "Compliance_User": "Compliance Officer",
+    "Tech_Support": "Tech Support"
   },
   "helpdesk": {
     "browserTabHeaderTitle": "Help Desk Support",
