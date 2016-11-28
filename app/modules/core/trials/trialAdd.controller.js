@@ -735,15 +735,21 @@
           return response;
         })
         .then(function (response) {
-          // suppress email if 'atlas-webex-trial' feature-toggle is enabled (more appropriately
+          // suppress email if webex trial is enabled (more appropriately
           // handled by the backend process once provisioning is complete)
           if (!vm.webexTrial.enabled) {
-            return EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
-                vm.details.licenseDuration, Authinfo.getOrgId())
-              .catch(function (response) {
-                Notification.errorResponse(response, 'didManageModal.emailFailText');
-              })
-              .then(function () {
+            return FeatureToggleService.atlasCreateTrialBackendEmailGetStatus()
+              .then(function (isEnabled) {
+                if (!isEnabled) {
+                  return EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
+                    vm.details.licenseDuration, Authinfo.getOrgId())
+                    .catch(function (response) {
+                      Notification.errorResponse(response, 'didManageModal.emailFailText');
+                    })
+                    .then(function () {
+                      return response;
+                    });
+                }
                 return response;
               });
           }
