@@ -27,7 +27,7 @@
 <section ng-if="card.loading">
   <i class="icon icon-spinner icon-2x"></i>
 </section>
-<footer class="hybrid-google-calendar-footer row" ng-if="card.showStatus() && card.showGoogleStatus()">
+<footer class="hybrid-google-calendar-footer row" ng-if="card.showStatus() || card.showGoogleStatus()">
   <span class="columns medium-6" ng-if="card.showStatus()">
     <a class="status ellipsis" ui-sref="{{card.status.routerState}}">
       <i class="icon icon-circle status-indicator" ng-class="card.status.status"></i>

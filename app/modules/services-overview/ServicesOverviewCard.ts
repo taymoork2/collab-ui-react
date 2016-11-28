@@ -40,7 +40,7 @@ export abstract class ServicesOverviewCard {
   public status: ICardStatus;
 
   public showStatus() {
-    return !this.loading && this.active && (this.status && this.status.status);
+    return !this.loading && this.active && !!(this.status && this.status.status);
   }
 
   public abstract getButtons(): Array<ICardButton>;
