@@ -132,7 +132,8 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             data: {
               adminOrganizationId: adminOrgId,
               account: {
-                organizationId: customerOrgId
+                organizationId: customerOrgId,
+                type: 'shared'
               },
               recipient: {}
             }

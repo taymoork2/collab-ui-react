@@ -161,7 +161,7 @@
       if (searchString.length >= 3) {
         var deferredCustomerOrg = $q.defer();
         var deferredOwnOrg = $q.defer();
-        var callback = function (deferred) {
+        var transformResults = function (deferred) {
           return function (data) {
             var userList = data.Resources.map(function (r) {
               var name = null;
@@ -192,9 +192,9 @@
             deferred.resolve(userList);
           };
         };
-        UserListService.listUsers(0, 6, null, null, callback(deferredCustomerOrg), searchString, false);
+        UserListService.listUsers(0, 6, null, null, transformResults(deferredCustomerOrg), searchString, false);
         if (wizardData.adminOrganizationId !== wizardData.account.organizationId && vm.account.type === 'shared') { // Excluding personal since Hermes does not allow emailing to a partner at the moment.
-          UserListService.listUsers(0, 6, null, null, callback(deferredOwnOrg), searchString, false, null, wizardData.adminOrganizationId);
+          UserListService.listUsers(0, 6, null, null, transformResults(deferredOwnOrg), searchString, false, null, wizardData.adminOrganizationId);
         } else {
           deferredOwnOrg.resolve([]);
         }

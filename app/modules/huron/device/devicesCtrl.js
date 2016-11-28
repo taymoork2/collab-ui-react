@@ -6,7 +6,7 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService, WizardFactory, FeatureToggleService, Userservice) {
+  function DevicesCtrlHuron($q, $scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService, WizardFactory, FeatureToggleService, Userservice) {
     var vm = this;
     vm.devices = {};
     vm.otps = [];
@@ -22,9 +22,10 @@
     init();
 
     function fetchATASupport() {
-      FeatureToggleService.csdmATAGetStatus().then(function (result) {
+      var ataPromise = FeatureToggleService.csdmATAGetStatus().then(function (result) {
         vm.showATA = result;
-      }).finally(function () {
+      });
+      $q.all([ataPromise, fetchDetailsForLoggedInUser()]).finally(function () {
         vm.generateCodeIsDisabled = false;
       });
     }
