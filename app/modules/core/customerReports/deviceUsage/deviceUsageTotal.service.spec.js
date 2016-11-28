@@ -238,8 +238,13 @@ describe('DeviceUsageTotalService', function () {
   describe("date ranges", function () {
 
     beforeEach(function () {
+      jasmine.clock().install();
       var baseTime = moment('2016-10-26').toDate(); // Wed, Oct, 2016
       jasmine.clock().mockDate(baseTime);
+    });
+
+    afterEach(function () {
+      jasmine.clock().uninstall();
     });
 
     it("returns start and end date based floating last 7 days", function () {
