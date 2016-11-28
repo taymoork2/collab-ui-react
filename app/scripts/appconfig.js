@@ -1151,7 +1151,19 @@
               displayName: 'Calendar Service'
             },
             params: {
-              extensionId: {}
+              extensionId: {},
+              extensions: {}
+            }
+          })
+          .state('user-overview.hybrid-services-squared-fusion-gcal', {
+            templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+            controller: 'CalendarServicePreviewCtrl',
+            data: {
+              displayName: 'Calendar Service'
+            },
+            params: {
+              extensionId: {},
+              extensions: {}
             }
           })
           .state('user-overview.hybrid-services-squared-fusion-uc', {

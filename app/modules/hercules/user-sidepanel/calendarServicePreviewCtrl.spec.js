@@ -23,8 +23,10 @@ describe('Directive Controller: CalendarServicePreviewCtrl', function () {
 
     var resourceGroupsAsOptions = [];
     var userStatuses = [{ userId: '1234', state: 'notActivated', serviceId: 'squared-fusion-cal', entitled: true }];
+    var userProps = { resourceGroups: {} };
     $stateParams.extensionId = 'squared-fusion-cal';
     $stateParams.currentUser = { id: '1234', userName: 'tvasset@cisco.com', entitlements: ['squared-fusion-cal'] };
+    $stateParams.extensions = [{ id: 'squared-fusion-cal', enabled: true, isSetup: true }];
 
     spyOn(Notification, 'error');
     spyOn(Notification, 'errorWithTrackingId');
@@ -35,8 +37,10 @@ describe('Directive Controller: CalendarServicePreviewCtrl', function () {
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'calsvcShowPreferredSiteNameGetStatus').and.returnValue($q.when(true));
     spyOn(ResourceGroupService, 'getAllAsOptions').and.returnValue($q.when(resourceGroupsAsOptions));
+    spyOn(ResourceGroupService, 'resourceGroupHasEligibleCluster').and.returnValue($q.when(true));
     spyOn(USSService, 'getStatusesForUser').and.returnValue($q.when(userStatuses));
     spyOn(USSService, 'refreshEntitlementsForUser').and.returnValue($q.when({}));
+    spyOn(USSService, 'getUserProps').and.returnValue($q.when(userProps));
   }));
 
   function initController() {
@@ -80,7 +84,11 @@ describe('Directive Controller: CalendarServicePreviewCtrl', function () {
     $scope.reset();
     $scope.$apply();
     expect($scope.extension.entitled).toBeTruthy();
+    expect($scope.extension.id).toBe('squared-fusion-cal');
+    expect($scope.extension.isExchange()).toBeTruthy();
     expect($scope.showButtons).toBeFalsy();
+    expect($scope.calendarType.exchangeSetup).toBeTruthy();
+    expect($scope.calendarType.googleSetup).toBeFalsy();
   });
 
   it('should show the unknown state and an error toaster if the service is entitled and no status is found for the service after refresh in USS', function () {
@@ -89,5 +97,47 @@ describe('Directive Controller: CalendarServicePreviewCtrl', function () {
     expect($scope.extension.entitled).toBeTruthy();
     expect($scope.extension.status.state).toBe('unknown');
     expect(Notification.error.calls.count()).toBe(1);
+  });
+
+  it('should have the correct state when google calendar is enabled and exchange disabled', function () {
+    $stateParams.currentUser.entitlements = ['squared-fusion-gcal'];
+    $stateParams.extensionId = 'squared-fusion-gcal';
+    $stateParams.extensions = [{ id: 'squared-fusion-gcal', enabled: true, isSetup: true }, { id: 'squared-fusion-cal', enabled: false, isSetup: false }];
+    initController();
+
+    expect($scope.extension.entitled).toBeTruthy();
+    expect($scope.extension.id).toBe('squared-fusion-gcal');
+    expect($scope.extension.isExchange()).toBeFalsy();
+    expect($scope.calendarType.exchangeSetup).toBeFalsy();
+    expect($scope.calendarType.exchangeEnabled).toBeFalsy();
+    expect($scope.calendarType.googleSetup).toBeTruthy();
+    expect($scope.calendarType.googleEnabled).toBeFalsy();
+    expect($scope.resourceGroup.show).toBeFalsy();
+  });
+
+  it('should change the extensionId when toggling between calendar types', function () {
+    ResourceGroupService.getAllAsOptions.and.returnValue($q.when([{ label: 'Test Group', value: '1234' }]));
+    $stateParams.extensions = [{ id: 'squared-fusion-gcal', enabled: true, isSetup: true }, { id: 'squared-fusion-cal', enabled: true, isSetup: true }];
+    initController();
+
+    expect($scope.extension.entitled).toBeTruthy();
+    expect($scope.extension.isExchange()).toBeTruthy();
+    expect($scope.calendarType.exchangeSetup).toBeTruthy();
+    expect($scope.calendarType.googleSetup).toBeTruthy();
+    expect($scope.resourceGroup.show).toBeTruthy();
+
+    // Change from Exchange to Google
+    $scope.selectedCalendarTypeChanged('squared-fusion-gcal');
+    $scope.$apply();
+    expect($scope.extension.id).toBe('squared-fusion-gcal');
+    expect($scope.extension.isExchange()).toBeFalsy();
+    expect($scope.resourceGroup.show).toBeFalsy();
+
+    // Change back to Exchange
+    $scope.selectedCalendarTypeChanged('squared-fusion-cal');
+    $scope.$apply();
+    expect($scope.extension.id).toBe('squared-fusion-cal');
+    expect($scope.extension.isExchange()).toBeTruthy();
+    expect($scope.resourceGroup.show).toBeTruthy();
   });
 });

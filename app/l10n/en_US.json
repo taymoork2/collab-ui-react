@@ -1636,15 +1636,21 @@
       "serviceNames": {
         "squared-fusion-uc": "Aware",
         "squared-fusion-cal": "Calendar",
+        "squared-fusion-gcal": "Calendar",
         "squared-fusion-ec": "Connect"
       },
       "serviceDescriptions": {
         "squared-fusion-uc": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
         "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
+        "squared-fusion-gcal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-ec": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too."
       },
-      "preferredWebExSite": "Preferred WebEx Site:",
-      "preferredWebExSiteDefault": "Default"
+      "preferredWebExSite": "Preferred WebEx Site",
+      "preferredWebExSiteDefault": "Default",
+      "calendarType": "Calendar Type",
+      "exchange": "Microsoft Exchange",
+      "google": "Google Calendar",
+      "notSetup": "Not currently set up"
     },
     "alarms": {
       "alarms": "Alarms",
