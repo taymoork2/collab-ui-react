@@ -92,10 +92,6 @@
     padding: 20%;
     color: $gray-base;
 
-    h2 {
-      color: black;
-    }
-
     h3 {
       color: $gray-base;
     }
@@ -148,10 +144,6 @@
   }
 }
 
-/* Has to be fixed in TK before we can fix the code in Atlas */
-.black-header {
-  color: black !important;
-}
 
 /**
  Work around the extra col-md-12 class in views/main.tpl.html
@@ -173,5 +165,35 @@
   p {
     margin-bottom: 1rem;
   }
+}
+
+.hds-clusters-list {
+  .ngVerticalBar {
+    display: none;
+  }
+}
+
+.icon {
+  top: 8px;
+  padding-right: 10px;
+}
+
+.icon {
+  top: 8px;
+  padding-right: 10px;
+}
+
+.icon-2x {
+  top: 8px;
+  padding-right: 10px;
+}
+
+.icon-circle-data {
+  top: 8px;
+  padding-right: 10px;
+}
+
+.ui-grid-cell-contents {
+  padding-top: 1.5rem;
 }
 

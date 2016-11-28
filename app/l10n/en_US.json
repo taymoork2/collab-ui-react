@@ -2056,32 +2056,11 @@
       "not_operational": "Not Operational",
       "nonodes": "No Nodes Registered"
     },
-   "settings": {
-      "deactivateServiceHeading": "Deactivate Service",
-      "deactivateService": "Deactivating a service removes all service-related features for your users and requires a confirmation step",
-      "emailNotificationsHeading": "Email Notifications",
-      "emailNotifications": "Add email addresses to receive email notifications about Service impacting Alarms and Software Upgrades.",
-      "emailNotificationsV2": "Add email addresses to recieve notifications about service-impacting alarms and software upgrades.",
-      "emailExample": "For example: John Doe john.doe@example.com, Kate Williams kate.williams@example.com",
-      "documentationHeading": "Documentation and software",
-      "documentation_1": "Go to",
-      "documentation_2": "Help Central",
-      "documentation_3": "for prerequisites and help installing and using Hybrid Services.",
-      "documentation_3V2": "for prerequisities and help installing and using the Hybrid Data Security Service.",
-      "documentation_4": "Download Hybrid Data Security Service OVA from",
-      "documentation_4V2": "Download Hybrid Data Security Service software from",
-      "documentation_5": "here",
-      "deactivateBody_1": "You are about to remove the following Hybrid Data Security Service for your organization:",
-      "deactivateBody_2": "Deactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources.",
-      "removeCluster": "REMOVE CLUSTER",
-      "schedule": "Set a Schedule",
-      "softwareUpgrade": "Software Upgrades",
-      "scheduleText": "Choose a release channel you want this cluster to update with:"
-    },
     "resources" : {
       "page_title": "Hybrid Data Security Service",
       "add-resource-button": "Add Resource",
       "genericError": "An unexpected error occurred. Please try again later.",
+      "loading" : "Loading",
       "connectors": {
         "group_by": "Group services by:",
         "cluster_id": "Cluster",
