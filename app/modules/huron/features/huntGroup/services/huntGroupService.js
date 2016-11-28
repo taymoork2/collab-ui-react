@@ -56,10 +56,10 @@
       }
     }
 
-    function getHuntMembers(hint) {
+    function getHuntMembers(hint, onlyMembers) {
       if (suggestionsNeeded(hint)) {
         var helper = getServiceHelper();
-        if (isNaN(hint)) {
+        if (isNaN(hint) || onlyMembers) {
           helper.setService(UserSearchServiceV2);
           helper.setApiArgs({
             name: hint,

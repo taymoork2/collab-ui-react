@@ -344,7 +344,7 @@
       WX2_User: ['overview', 'support', 'activateProduct'],
       WX2_Support: ['gss', 'overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
-      PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'gem', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
+      PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'gem', 'gemCbgDetails', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
       PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
       CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
       //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
@@ -401,7 +401,6 @@
       'squared-fusion-mgmt': [
         'cluster-details',
         'management-connector-details',
-        'management-service',
         'services-overview',
         'resource-group-settings',
         'cluster-list',
@@ -474,7 +473,6 @@
         'fusion',
         'hurondetails',
         'huronsettings',
-        'management-service',
         'media-service',
         'media-service-v2',
         'mediafusion-settings',

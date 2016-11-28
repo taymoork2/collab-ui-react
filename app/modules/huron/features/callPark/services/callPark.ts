@@ -1,3 +1,5 @@
+import { MemberType } from 'modules/huron/members';
+
 export class CallPark {
   public uuid: string | undefined;
   public name: string | undefined;
@@ -61,12 +63,24 @@ export class FallbackDestination {
 export class CallParkMember {
   public memberUuid: string;
   public memberName: string;
+  public memberType: MemberType;
+  public number?: string;
+  public numberUuid?: string;
+  public thumbnailSrc?: string;
 
   constructor(obj: {
     memberUuid: string,
     memberName: string,
+    memberType: MemberType,
+    number: string | undefined,
+    numberUuid: string | undefined,
+    thumbnailSrc: string | undefined,
   }) {
     this.memberUuid = obj.memberUuid;
     this.memberName = obj.memberName;
+    this.memberType = obj.memberType;
+    this.number = obj.number;
+    this.numberUuid = obj.numberUuid;
+    this.thumbnailSrc = obj.thumbnailSrc;
   }
 }

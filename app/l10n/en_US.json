@@ -549,7 +549,7 @@
       "callDuration": "Call Duration",
       "numberOfCalls": "Number of Calls",
       "deviceName": "Device Name",
-      "hoursUsed": "Hours Used",
+      "hoursUsed": "Time Used",
       "callCount": "# Calls",
       "callHours": "Call Hours",
       "deviceUsage": "Room Device Usage",
@@ -557,6 +557,7 @@
       "last7Days": "Last 7 Days",
       "last4Weeks": "Weekly Last 4 weeks ",
       "last3Months": "Monthly Last 3 Months",
+      "missingDays": " (data missing for {{nbrOfMissingDays}} days)",
       "deviceOptions": {
         "all": "All",
         "roomSystems": "DX, MX, and SX Devices",
@@ -973,7 +974,6 @@
     "confirm": "Confirm",
     "continue": "Continue",
     "dateRange": "Date Range",
-    "deactivate": "Deactivate",
     "delete": "Delete",
     "description": "Description",
     "devices": "Devices",
@@ -990,6 +990,7 @@
     "general": "General",
     "help": "Help",
     "id": "ID",
+    "deactivate": "Deactivate",
     "incorrectFormat": "Incorrect format",
     "invalidEmail": "This is not a valid Email Address.",
     "invalidMax": "Maximum value is {{max}}.",
@@ -1071,8 +1072,8 @@
     "external": "External",
     "uri": "URI Address",
     "custom": "Custom",
-    "internalPlaceholder": "e.g. John, jsmith, jsmith@email.com",
-    "internalHelpText": "Name, User ID, or Email",
+    "internalPlaceholder": "e.g. 5555, jsmith, jsmith@email.com",
+    "internalHelpText": "Extension, User ID, or Email",
     "externalHelpText": "National or International Number",
     "uriPlaceholder": "example@site.domain.com",
     "customPlaceholder": "e.g. 81095555",
@@ -1380,8 +1381,6 @@
     "nameHeader": "Belongs to",
     "statusHeader": "Status",
     "actionsHeader": "Actions",
-    "account": "Account",
-    "unactivatedDevice": "Unactivated Device",
     "informationHeader": "Settings",
     "newCustomTagPlaceholder": "Enter tag...",
     "addPersonalDevice": "Trying to add a personal device?",
@@ -1390,7 +1389,6 @@
     "reboot": "Reboot",
     "reportProblem": "Report Issue",
     "deleteDeviceConfText": "Are you sure you want to delete this device?",
-    "deleteLocationConfText": "Are you sure you want to delete this location?",
     "deletePlaceConfText": "Are you sure you want to delete this place?",
     "rebootDeviceConfText": "Are you sure you want to reboot this device?",
     "ciscoSupport": "Cisco Support",
@@ -1421,7 +1419,8 @@
     "validatingAddr": "Validating Address...",
     "saving": "Saving...",
     "errorAddr": "The address you entered is invalid, please try again.",
-    "sameAsCompanyNum": "To edit your emergency service address, the emergency callback number for your device must be different from your company’s callback number."
+    "sameAsCompanyNum": "To edit your emergency service address, the emergency callback number for your device must be different from your company’s callback number.",
+    "impactedUserInfo": "Modifying the Emergency Service Address associated to the above selected Callback Number will impact the following users and/or places:"
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -1472,9 +1471,9 @@
       "title": "{{ServiceName}} Setup",
       "alreadyBeenSetupTitle": "Add Expressway Cluster",
       "subtitle": "Deploy a new Expressway cluster, or select an existing one.",
-      "registerNewExpressway": "Enter the hostname of the master peer of the new Expressway cluster that you want to register.",
+      "registerNewExpressway": "Register a new Expressway with its Fully Qualified Domain Name (FQDN)",
+      "registerNewExpresswayHelp": "Must match the value on the Expressway DNS settings: [System host name].[Domain name]",
       "addToExistingExpressway": "Select an existing Expressway cluster to add resources to this service.",
-      "enterHostname": "Enter the hostname of the Expressway you want to register with Cisco Collaboration Cloud.",
       "enterHostnamePlaceholder": "Enter Expressway hostname",
       "willBeInstalled": "{{ConnectorName}} will be installed as soon as you finish registration, enabling the Expressway cluster for {{ServiceName}}.",
       "selectExisting": "Select an existing Expressway clusters",
@@ -1734,10 +1733,8 @@
       "documentationDownloadLink": "Download Cisco Expressway software from <a href=\"https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP\" target=\"_blank\">software.cisco.com</a>.",
       "documentationSaving": "Saving.",
       "call": {
-        "featureHeading": "Feature Settings",
-        "feature": "Enable or disable Call Service features.",
+        "domainVerification": "Domain Verification",
         "aware": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
-        "on": "On by default",
         "connectSettingsHeading": "Connect Settings",
         "connectSettings": "Required settings for the Connect feature.",
         "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
@@ -1765,7 +1762,7 @@
         "sipDomainHeading": "SIP Destination",
         "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
-        "sipDomainExample": "For example: sipmtls.example.com",
+        "sipDomainExample": "For example: sipmtls.example.org",
         "certificateDeleteTooltip": "Delete Certificate",
         "noUploadedCertificate": "No certificates uploaded. Using the default trust list.",
         "uploadedCertificates": "Uploaded Certificates:"
@@ -1780,7 +1777,7 @@
         "deactivateHeader": "Deactivate Google Calendar",
         "deactivateText": "Your users will no longer be able to use this service.",
         "googleCalendarConfigWillBeWiped": "This action will delete all Google Calendar settings from Cisco Collaboration Cloud.",
-        "uploadNewPrivateKey": "Upload New Private Key",
+        "uploadNewPrivateKey": "Upload Private Key",
         "uploadNewPrivateKeyPlaceholder": "Enter service account name",
         "serviceAccountName": "Service Account Name",
         "uploadNewPrivateKeyExplanation": "Enter your service account name and upload the private key you downloaded from Google Developer Console.",
@@ -1790,10 +1787,21 @@
         "removeFile": "Remove file",
         "successfullyUploadedKey": "Service account saved successfully, and private key file {{filename}} uploaded.",
         "failedToUploadKey": "Changes not saved. The service account and/or private key file are not valid.",
-        "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status."
+        "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status.",
+        "generateAPrivateKeyHeader": "Generate a Private Key",
+        "generateAPrivateKeyExplanation": "To enable Hybrid Calendar for your users, you need to generate a private key for Google Calendar. You can generate the key with the <a href=\"https://console.developers.google.com/\" target=\"_blank\">Google Developer Console</a>. Follow <a href=\"https://example.org/\" target=\"_blank\">documentation</a> to learn how to generate a key.",
+        "keyHasBeenGeneratedGoNext": "When you have generated your key, click Next.",
+        "googleCalendarSetupCompleted": "Google Calendar setup completed",
+        "great": "Great! {{fileName}} was successfully uploaded to Cisco Collaboration Cloud. You can now enable Hybrid Calendar Service for your users.",
+        "toEnableUsers": "To enable users, you can:",
+        "enableIndividually": "Enable them individually from the <a ng-click=\"{{onclick}}\">users</a> page.",
+        "enableInBulk": "Enable them in bulk using the <a ng-click=\"{{onclick}}\">CSV template</a>.",
+        "referToDocumentation": "Refer to <a href=\"https://example.org/\" target=\"_blank\">documentation</a> if you need help enabling users."
       },
       "hybridCalendarCommon": {
-        "hybridCalendarSetUp": "Hybrid Calendar setup"
+        "hybridCalendarSetUp": "Hybrid Calendar setup",
+        "selectCalendarType": "Select Calendar type",
+        "serviceInto": "Hybrid Calendar Service supports Microsoft Exchange calendar via on-premises Expressway clusters, and Google Calendar."
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
@@ -2101,16 +2109,17 @@
     },
     "searchParameters": {
       "searchBy": "Search By",
-      "searchByPlaceholder": "Email Id",
+      "searchByPlaceholder": "Email ID",
       "searchByEmailPlaceholder": "e.g. johnsmith@email.com, jansmith@email.com",
-      "roomName": "Where <b>Room Name</b> contains",
-      "roomNamePlaceholder": "e.g. sales AND meeting OR private",
-      "textMessage": "Where <b>Text Messages</b> contains",
-      "textMessagePlaceholder": "e.g. project AND manager OR admin NOT owner",
-      "fileName": "Where <b>File Name</b> contains",
-      "fileNamePlaceholder": "e.g. confidential OR restricted",
-      "activityType": "And <b>Activity Type</b> is",
-      "activityTypePlaceholder": "Meeting"
+      "searchByRoomPlaceholder": "e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "textAndFileName": "Where <b>Text Messagegs</b> or <b>File Name</b> contains",
+      "textAndFileNamePlaceholder": "e.g. project AND manager",
+      "noMatchesFound": "No Matches Found"
+    },
+    "searchResults": {
+      "searchInfo": "Search Info",
+      "emailId": "Email Id",
+      "dateRange": "Date Range"
     },
     "reportsList": {
       "name": "Name",
@@ -2209,6 +2218,13 @@
     "callingMsg": "Cloud Calling",
     "message": "Message",
     "meeting": "Meeting",
+    "standardMeetings": "Standard Meetings",
+    "advancedMeetings": "Advanced Meetings",
+    "sharedLicenses": "Shared Licenses",
+    "assignedLicenses": "Assigned User Licenses",
+    "partnerProvidedAudio": "Partner-provided Audio",
+    "webexProvidedAudio": "WebEx-provided Audio",
+    "meetingsInSpark": "25-party Meetings in Spark",
     "call": "Call",
     "care": "Care",
     "roomSystems": "Room Devices",
@@ -2499,6 +2515,8 @@
       "ExternalPhone": "External Phone",
       "Disconnect": "Disconnect"
   },
+    "languageAndVoice" : "Language and Voice",
+    "langaugeAndVoiceHelp" : "These selections apply to Say and Error Messages.",
     "initialAnnouncement" : "Initial Announcement",
     "initialHelpText" : "Specify a message to play when the caller enters the queue.",
     "periodicHelpText": "Specify a message to play and how often to play it while the caller is waiting in the queue.",
@@ -3424,7 +3442,6 @@
   },
   "internationalDialing": {
     "internationalDialing": "International Dialing",
-    "internationalDialingDesc": "Users inherit this setting by default. Exception can be made at the individual user's settings.",
     "internationalDialingPlacesDesc": "Users and Places with Spark Call inherit this setting by default. Exception can be made at the individual user's or place's settings."
   },
   "huronSettings": {
@@ -3432,7 +3449,23 @@
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
-    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
+    "errorGettingBulkVoicemailEnableToggle": "There was a problem getting the bulkVoicemailEnable toggle."
+  },
+  "bulkEnableVm": {
+    "enableCompanyVoicemail": "Turning On Company Voicemail",
+    "processing": "Updating individual users...",
+    "canceling": "Canceling...",
+    "enabledUsers": "Enabled Users",
+    "errorUsers": "Errors",
+    "errorResolveInstructions": "To resolve errors, update your user attributes CSV file and reimport.",
+    "errorResolveTooltip": "Export errors to CSV and download an updated user attributes CSV file. Edit the user attributes to address reported errors, then reimport.",
+    "headerRow": "Email",
+    "headerErrorMessage": "Error Message",
+    "retryUsers": "Retry",
+    "reportProblem": "Report problem",
+    "exitWithoutResolving": "Exit without resolving",
+    "allUsersEntitled": "All users entitled with voicemail."
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",
@@ -3495,13 +3528,9 @@
     "sipUrl": "SIP Address",
     "issues": "Issues",
     "lastSeen": "since:",
-    "notYetActivated": "There is a device activation code which has not yet been used.",
-    "deleteLocation": "Delete Location",
-    "deviceCodeExpires": "This activation code will expire {{inXDays}}.",
-    "getNewCode": "Get a New Code",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time",
-    "logUploadWarning": "Selecting 'Report Issue' will send the device logs to Cisco.",
+    "logUploadWarning": "When you report an issue, device logs will be sent to Cisco.",
     "timeZone": "Timezone",
     "timeZoneUpdated": "Time Zone updated",
     "timeZoneUpdateFailed": "Device did not update its Time Zone in time",
@@ -3514,6 +3543,8 @@
       "two": "Two",
       "three": "Three"
     },
+    "deviceRebooting": "Device rebooting",
+    "deviceRebootingDetails": "The device is now rebooting and will be offline for a few moments.",
     "failedToSaveChanges": "Failed to save changes to device. Reason:",
     "failedToUploadLogs": "Failed to upload logs. Reason:",
     "deleteATAConfText": "Are you sure you want to delete Port 1?",
@@ -3525,18 +3556,15 @@
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
-    "newCode": "New Code",
     "chooseDeviceType": {
       "deviceType": "What kind of device do you want to set up?",
       "deviceTypeInstructions": "A new device requires a unique activation code to be input during setup. What kind of device do you want to activate?",
       "deviceTypeNewPlace": "What kind of device do you want to set up in this place?",
       "deskPhone": "Desk Phone",
-      "newDeskPhone": "New desk phone for existing user",
       "deskPhoneExamples": "e.g. 8845, 8865 or 8800",
       "deskPhoneExamplesExtra": "e.g. 8845, 8865, 8800 or Analog Telephone Adapter port",
       "deskPhoneLicenseWarning": "Your organization must purchase Cisco Spark Call licenses first. Contact your partner or Cisco Sales for more information.",
       "roomSystem": "Room Device",
-      "newRoomSystem": "New room device",
       "roomSystemExamples": "DX, MX and SX series",
       "roomSystemExamplesExpanded": "Cisco Spark Board, DX, MX and SX series",
       "roomSystemLicenseWarning": "Your organization must purchase Cisco Spark Room Device licenses first. Contact your partner or Cisco Sales for more information."
@@ -3577,8 +3605,6 @@
       "placeLocation": "Where will this device be located?",
       "newPlaceInstructions": "What would you like to call the place that this device will be assigned to?",
       "newPlaceOnlyInstructions": "What would you like to call the place that this room device will be assigned to? A place represents a physical location such as a meeting room, a lobby or a factory floor.",
-      "deviceInstalled": "Where will this device be installed?",
-      "deviceInstalledInstructions": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
       "insertRoomName": "Insert name of device location, e.g. 'Reception' or 'Boardroom'",
       "noExistingPlaces": "There is no Cisco Spark Call place in your organization. Create a new place instead."
     },
@@ -3602,7 +3628,12 @@
       "sparkOnlyHelp": "Calling to/from this place will only work through Cisco Spark or using SIP addresses.",
       "sparkCall": "Spark + Spark Call (phone numbers)",
       "sparkCallHelp": "In addition to calling with Spark and SIP addresses, if you have set up your organization’s PSTN provider this place will be able to call to/from landlines and mobile phones.",
+      "sparkCallConnect": "Spark + Call Service Connect (Hybrid)",
+      "sparkCallConnectHelp": "This place will be connected to your existing on-premises phone infrastructure. Therefore, it can call on-premises devices directly and leverage any existing PSTN services, if they are available",
       "servicesSaved": "Services updated successfully"
+    },
+    "sparkCallConnect": {
+      "editSettingsTitle": "Edit the settings for Hybrid Call Service Connect"
     },
     "showActivationCode": {
       "activationCode": "Activation Code",
@@ -3611,11 +3642,11 @@
       "plugInRoomSystem": "Share this code with the person setting up the room device belonging to <b>{{belongsTo}}</b>, or enter or scan it yourself when prompted by the device.",
       "onceActivePersonalDevice": "Once the device has been successfully activated, you will be able to find and configure it in Users or Devices.",
       "onceActiveSharedDevice": "Once the device has been successfully activated, you will be able to find and configure it in Places or Devices.",
-      "onceActiveSharedDeviceNoPlaces": "Once the device has been successfully activated, you will be able to find and configure it in Devices.",
       "expires": "Expires {{expiryDate}}",
       "searchAnotherUser": "Or search for another user",
-      "codeIsUsed": "This code has now been used",
-      "failedToGenerateActivationCode": "Failed to generate activation code. Reason:"
+      "failedToGenerateActivationCode": "Failed to generate activation code. Reason:",
+      "problemGeneratingCode": "There was a problem generating your activation code.",
+      "pressRetry": "Please press Retry to try again."
     }
   },
   "generateActivationCodeModal": {
@@ -3758,6 +3789,7 @@
   },
   "mediaFusion": {
     "page_title": "Hybrid Media Service",
+    "report_title": "Hybrid Media Service Report",
     "add-resource-button": "Add Resource",
     "genericError": "An unexpected error occurred. Please try again later.",
     "connectors": {
@@ -3817,8 +3849,13 @@
       "body2": "To make this node available again, you will need to reregister it."
     },
     "metrics": {
+      "title": "Metrics",
+      "titlev2": "Reports Phase 2 POC",
+      "historical": "Historical",
+      "realTime": "Real time",
       "today": "Last 24 Hours",
       "today2": "Last 24 Hours",
+      "last4Hours": "Last 4 Hours",
       "yesterday": "Yesterday",
       "yesterday2": "Yesterday",
       "week": "Last Week",
@@ -3891,7 +3928,9 @@
       "nodes": "Node(s)",
       "node": "Node",
       "availabilityStatus": "Availability Status",
-      "clusterTitle": "Cluster"
+      "clusterTitle": "Cluster",
+      "lowAvailableClusters": "Low availability clusters",
+      "clusterTakingMoreCalls":"Clusters hosting more no of calls"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -4079,7 +4118,7 @@
       "fqdn": "Fully Qualified Domain Name"
     },
     "meetings-report": {
-      "title": "Media Service Meetings Report",
+      "title": "Meetings",
       "adoption-tab": "Adoption",
       "quality-tab": "Quality",
       "health-tab": "Health",
@@ -4087,7 +4126,9 @@
       "meetings-card": "Total Meetings",
       "minutes-card": "Total Minutes",
       "participants-card": "Total Participants",
-      "adoption-card": "Cluster Adoption"
+      "adoption-card": "Cluster Adoption",
+      "meeting-type-title": "Meeting Type",
+      "meeting-duration-title": "Meeting Duration"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
@@ -4719,8 +4760,6 @@
     "OnlineWithIssues": "Online, With Issues",
     "Offline": "Offline",
     "Unknown": "Unknown",
-    "Inactive": "Inactive Account",
-    "RequiresActivation": "Requires Activation",
     "WithDevices": "With Devices",
     "upgradeChannels": {
       "Stable": "Stable",
@@ -4784,10 +4823,6 @@
       "NetworkQuality": {
         "type": "Packet Loss Detected",
         "message": "During the last call we detected a level of packet loss that may have impacted the call quality. Packet loss is typically caused by network congestion."
-      },
-      "inactive": {
-        "type": "Inactive Account",
-        "message": "An account exists for a device, but there's no corresponding device or activation code. You can delete this account."
       },
       "unknown": {
         "type": "Unknown Error Occurred",
@@ -5649,7 +5684,6 @@
     "orderProvision": "Order Provisioned",
     "accountActivate": "Account Activated",
     "companyName": "Company Name",
-    "companyId": "Company ID",
     "adminEmail": "Admin Email",
     "emailSent": "Last Email Sent",
     "partnerInfo": "Partner Information",
@@ -5657,9 +5691,11 @@
     "partnerEmail": "Partner Email",
     "resendAdminEmail": "Resend",
     "editAdminEmail": "Edit",
-    "resendTooltip": "Resends the welcome email.",
+    "resendTooltip": "Resend service provisioning email.",
     "resendMailSuccess": "Welcome email was successfully sent.",
-    "resendMailFailure": "Failed to resend welcome email."
+    "resendMailFailure": "Failed to resend welcome email.",
+    "editAdminEmailSuccess": "Admin email was updated successfully.",
+    "editAdminEmailFailure": "Failed to update admin email."
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -5789,13 +5825,15 @@
           "context": "Context"
         }
       },
-      "calendar": {
+      "hybridCalendar": {
         "title": "Hybrid Calendar",
         "description": "Inserts Join and Room details by adding @WebEx and/or @Spark to the Meeting Invite Location field.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
-        }
+        },
+        "exchangeTitle": "Microsoft Exchange",
+        "googleTitle": "Google Calendar"
       },
       "hybridCall": {
         "title": "Hybrid Call",
@@ -5843,10 +5881,7 @@
     }
   },
   "readOnlyModal": {
-    "banner": "You are in read-only mode",
-    "title": "Read-only",
-    "okButton": "OK",
-    "text": "You are now viewing <b>{{orgName}}</b> portal as a read-only user. Your limited access allows viewing of the entire portal, but will not accept changes."
+    "banner": "You are in read-only mode"
   },
   "readOnlyMessages": {
     "notAllowed": "Not allowed in read-only mode. Operation not executed."
@@ -5863,9 +5898,18 @@
       "splsResponseErr": "No partner organization found, please contact ccaportal@cisco.com for help."
     },
     "cbgTitle": "Callback Groups",
+    "tdTitle": "Telephony Domain",
     "cbgs": {
+      "overview": "Overview",
+      "moveSite": "Move Site",
+      "placeholder-text": "All",
+      "importCsv": "Import CSV",
       "title": "Callback Groups",
+      "exportToCsv": "Export to CSV",
+      "editCountry": "Edit Country/Regions",
+      "downloadCsv": "Download CSV Template",
       "csvFilename": "exported_callbackGroup.csv",
+      "moveSiteMsg": "Are you sure you want to move this site?",
       "field": {
         "sites": "Site URL",
         "status_": "Status",
@@ -5873,10 +5917,10 @@
         "totalSites": "Sites Assigned",
         "alias": "Partner CB Group Name",
         "status": {
-          "E": "Edit",
+          "E": "Edited",
           "L": "Failed",
-          "S": "Submit",
-          "C": "Cancel",
+          "S": "Submitted",
+          "C": "Canceled",
           "D": "Delete",
           "A": "Approved",
           "R": "Rejected",
@@ -5896,9 +5940,20 @@
         "labelCountries": "Select Country/Regions",
         "countriesPlaceholder": "Search to add country"
       },
-      "placeholder-text": "All"
-    },
-    "tdTitle": "Telephony Domain"
+      "notes": {
+        "notes": "Notes",
+        "noNotes": "No notes yet",
+        "noNoteMsg": "Add notes to leave others helpful information that may be useful.",
+        "enterNote": "Enter note",
+        "newNote": "New Note",
+        "addNote": "Add Note"
+      },
+      "logs": {
+        "history": "History"
+      },
+      "by": "by",
+      "showMore": "Show more"
+    }
   },
   "timeZones": {
     "Etc/GMT+12": "Etc/GMT+12",
@@ -6410,13 +6465,18 @@
       "lastUpdatedOn": "Last updated on ",
       "resolvedOn": "Resolved on ",
       "noAffectedComponent": "No components were affected by this update.",
+      "postAt": "Post At ",
       "newIncident": "New Incident",
       "incidentName": "Incident Name",
       "createIncidentBtn": "Create Incident",
-      "deleteIncidentSuccessfully": "Incident {{incidentName}} successfully deleted.",
-      "deleteIncidentFailed": "An error occurred deleting incident {{incidentName}}.",
-      "createIncidentSuccessfully": "Incident {{incidentName}} successfully created.",
-      "createIncidentFailed": "An error occurred creating incident {{incidentName}}."
+      "deleteIncidentSucceed": "Incident {{incidentName}} delete succeed.",
+      "deleteIncidentFailed": "Incident {{incidentName}} delete failed.",
+      "createIncidentSucceed": "Incident {{incidentName}} create succeed.",
+      "createIncidentFailed": "Incident {{incidentName}} create failed.",
+      "modifyMessageSucceed": "Message successfully modified.",
+      "modifyMessageFailed": "An error occurred modifying message.",
+      "updateIncidentSucceed": "Incident {{incidentName}} update succeed.",
+      "updateIncidentFailed": "Incident {{incidentName}} update failed."
     },
     "incidentStatus": {
       "investigating": "Investigating",
@@ -6426,7 +6486,7 @@
     },
     "impactStatus":{
       "none": "Override impact to None",
-      "Minor": "Override impact to Minor",
+      "minor": "Override impact to Minor",
       "major": "Override impact to Major",
       "critical": "Override impact to Critical",
       "maintenance": "Override impact to Maintenance"

@@ -12,6 +12,7 @@
       searchOrgs: searchOrgs,
       searchOrders: searchOrders,
       resendAdminEmail: resendAdminEmail,
+      editAdminEmail: editAdminEmail,
       getUser: getUser,
       getOrg: getOrg,
       isEmailBlocked: isEmailBlocked,
@@ -191,22 +192,41 @@
     }
 
     function searchOrders(searchString) {
-      // TODO - if (useMock()) {
-      //  return deferredResolve(HelpdeskMockData.orders);
-      //}
-
       return cancelableHttpGET(urlBase + 'commerce/orders/search?webOrderId=' + encodeURIComponent(searchString))
         .then(extractData);
     }
 
     function resendAdminEmail(orderUUID, toCustomer) {
       var url;
-      if (toCustomer === true) {
+      if (toCustomer) {
         url = urlBase + "helpdesk/orders/" + orderUUID + "/actions/resendcustomeradminemail/invoke";
       } else {
         url = urlBase + "helpdesk/orders/" + orderUUID + "/actions/resendpartneradminemail/invoke";
       }
       return $http.post(url).then(extractData);
+    }
+
+    function editAdminEmail(orderUUID, adminEmail, toCustomer) {
+      var url = '';
+      if (_.isUndefined(orderUUID) || !_.isString(orderUUID)) {
+        $q.reject('A proper order UUID must be passed');
+      }
+      if (_.isUndefined(adminEmail) || !_.isString(adminEmail)) {
+        $q.reject('A valid admin email must be passed');
+      }
+      if (_.isUndefined(toCustomer) || !_.isBoolean(toCustomer)) {
+        $q.reject('Need specify email recipient');
+      }
+      var payload = {
+        emailId: adminEmail
+      };
+
+      if (toCustomer) {
+        url = urlBase + "helpdesk/orders/" + orderUUID + "/customerAdminEmail";
+      } else {
+        url = urlBase + "helpdesk/orders/" + orderUUID + "/partnerAdminEmail";
+      }
+      return $http.post(url, payload).then(extractData);
     }
 
     function getUser(orgId, userId) {

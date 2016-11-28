@@ -244,9 +244,21 @@
             accountIds: {}
           };
         }
+        if (_.isNil(item.callCount) || _.isNaN(item.callCount)) {
+          $log.warn('Missing call count for', item);
+          item.callCount = 0;
+        }
+        if (_.isNil(item.totalDuration) || _.isNaN(item.totalDuration)) {
+          $log.warn('Missing total duration for', item);
+          item.totalDuration = 0;
+        }
+        if (_.isNil(item.pairedCount) || _.isNaN(item.pairedCount)) {
+          item.pairedCount = 0;
+        }
         result[date].callCount += item.callCount;
         result[date].totalDuration += item.totalDuration;
         result[date].pairedCount += item.pairedCount;
+
         if (!result[date].deviceCategories[item.deviceCategory]) {
           result[date].deviceCategories[item.deviceCategory] = {
             deviceCategory: item.deviceCategory,
@@ -278,6 +290,7 @@
         value.time = timeFormatted;
         return value;
       }).value();
+      //$log.info('reduceAll', reduced);
       return reduced;
     }
 
@@ -323,7 +336,7 @@
         noOfCalls: calculateTotal(accounts).noOfCalls,
         totalDuration: calculateTotal(accounts).totalDuration
       };
-      $log.info('Extracted stats:', stats);
+      //$log.info('Extracted stats:', stats);
       return stats;
     }
 
@@ -350,6 +363,43 @@
         case 'month':
           return date.format('YYYYMMDD');
       }
+    }
+
+    function makeChart(id, chart) {
+      var amChart = AmCharts.makeChart(id, chart);
+      _.each(amChart.graphs, function (graph) {
+        graph.balloonFunction = renderBalloon;
+      });
+      return amChart;
+    }
+
+    function renderBalloon(graphDataItem) {
+      var totalDuration = secondsTohhmmss(parseFloat(graphDataItem.dataContext.totalDuration) * 3600);
+      var text = '<div><h5>' + $translate.instant('reportsPage.usageReports.callDuration') + ' : ' + totalDuration + '</h5>';
+      text = text + $translate.instant('reportsPage.usageReports.callCount') + ' : ' + graphDataItem.dataContext.callCount + ' <br/> ';
+      //text = text + $translate.instant('reportsPage.usageReports.pairedCount') + ' : ' + graphDataItem.dataContext.pairedCount + '<br/>';
+      return text;
+    }
+
+    function secondsTohhmmss(totalSeconds) {
+      var hours = Math.floor(totalSeconds / 3600);
+      var minutes = Math.floor((totalSeconds - (hours * 3600)) / 60);
+      var seconds = totalSeconds - (hours * 3600) - (minutes * 60);
+
+      // round seconds
+      seconds = Math.round(seconds * 100) / 100;
+
+      var result = hours > 0 ? hours + 'h ' : '';
+      if (hours > 99) {
+        return result;
+      }
+      result += minutes > 0 ? minutes + 'm ' : '';
+      result += hours < 10 ? seconds + 's' : '';
+      return result;
+    }
+
+    function getLabel(item) {
+      return secondsTohhmmss(parseFloat(item.dataContext.totalDuration) * 3600);
     }
 
     function getLineChart() {
@@ -406,7 +456,8 @@
             'lineColor': chartColors.primaryColorDarker,
             'bulletColor': '#ffffff',
             'bulletBorderAlpha': 1,
-            'useLineColorForBulletBorder': true
+            'useLineColorForBulletBorder': true,
+            'labelFunction': getLabel,
           }
           /*
           {
@@ -512,7 +563,7 @@
       _.each(devices, function (device) {
         promises.push($http.get(csdmUrl + device.accountId)
           .then(function (res) {
-            $log.info("resolving", res);
+            //$log.info("resolving", res);
             return res.data;
           })
           .catch(function (err) {
@@ -533,6 +584,7 @@
       getDataForLastMonths: getDataForLastMonths,
       getDataForRange: getDataForRange,
       getLineChart: getLineChart,
+      makeChart: makeChart,
       getDatesForLastWeek: getDatesForLastWeek,
       getDatesForLastMonths: getDatesForLastMonths,
       exportRawData: exportRawData,

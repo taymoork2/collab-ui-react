@@ -17,6 +17,7 @@ export class EmergencyServicesCtrl {
   public errorMessage: string;
   public options: string[];
   public companyEmergencyNumber: string;
+  public impactedUsers: any[];
 
   /* @ngInject */
   constructor(
@@ -35,6 +36,7 @@ export class EmergencyServicesCtrl {
     this.stateOptions = data.stateOptions;
     this.EmergencyServicesService.getOptions().then(options => this.options = options);
     this.EmergencyServicesService.getCompanyECN().then(result => this.companyEmergencyNumber = result);
+    this.EmergencyServicesService.getImpactedUsers(this.emergency.emergencyNumber).then(users =>  this.impactedUsers = users);
   }
 
   public numberChange(): void {
@@ -46,6 +48,7 @@ export class EmergencyServicesCtrl {
       this.loadingAddress = false;
       this.changes();
     });
+    this.EmergencyServicesService.getImpactedUsers(this.emergency.emergencyNumber).then(users => this.impactedUsers = users);
   }
 
   public changes(): void {

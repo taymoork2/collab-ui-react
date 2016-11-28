@@ -1,33 +1,7 @@
 <div class="sq-devices-page-overview">
   <div ui-view="header"></div>
 
-  <cs-sp-container ng-if="deviceOverview.currentDevice.needsActivation">
-    <div class="activationOverview">
-      <img
-        class="activationImage"
-        src="images/devices-hi/activation_code.png"
-      />
-      <div class="activationDescription" translate="deviceOverviewPage.notYetActivated"></div>
-      <div class="activationDescription" translate="deviceOverviewPage.deviceCodeExpires"
-           translate-values="{inXDays: deviceOverview.currentDevice.friendlyExpiryTime}"></div>
-    </div>
-    <div class="activationButtons">
-      <button
-        ng-click="deviceOverview.deleteDevice()"
-        class="btn"
-        ng-disabled="deviceOverview.resettingCode">
-        <span>{{ deviceOverview.getDeleteCodeText() }}</span>
-      </button>
-
-      <button
-        ng-click="deviceOverview.resetCode()"
-        class="btn">
-        <span ng-hide="deviceOverview.resettingCode" translate="deviceOverviewPage.getNewCode"></span>
-        <div ng-show="deviceOverview.resettingCode" cs-loader class="loader-example--small"></div>
-      </button>
-    </div>
-  </cs-sp-container>
-  <cs-sp-container ng-if="!deviceOverview.currentDevice.needsActivation">
+  <cs-sp-container>
     <cs-sp-section>
       <div class="overview">
         <img

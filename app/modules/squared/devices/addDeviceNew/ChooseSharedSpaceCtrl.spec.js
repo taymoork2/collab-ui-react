@@ -33,13 +33,11 @@ describe('ChooseSharedSpaceCtrl: Ctrl', function () {
     it('sets all the necessary fields', function () {
       var title = 'title';
       var deviceType = 'deviceType';
-      var showPlaces = true;
       $stateParams.wizard = {
         state: function () {
           return {
             data: {
               title: title,
-              showPlaces: showPlaces,
               account: {
                 deviceType: deviceType
               }
@@ -51,7 +49,6 @@ describe('ChooseSharedSpaceCtrl: Ctrl', function () {
 
       expect(controller.title).toBe(title);
       expect(controller.deviceType).toBe(deviceType);
-      expect(controller.showPlaces).toBe(showPlaces);
     });
   });
 

@@ -30,6 +30,7 @@ describe('Controller: PlacesCtrl', function () {
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when());
+    spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.when());
   }
 
   function initController() {
@@ -76,7 +77,6 @@ describe('Controller: PlacesCtrl', function () {
       var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
       expect(wizardState.title).toBe('addDeviceWizard.newSharedSpace.title');
       expect(wizardState.function).toBe('addPlace');
-      expect(wizardState.showPlaces).toBe(true);
       expect(wizardState.showATA).toBe(true);
       expect(wizardState.isEntitledToHuron).toBe(isEntitledToHuron);
       expect(wizardState.isEntitledToRoomSystem).toBe(isEntitledToRoomSystem);

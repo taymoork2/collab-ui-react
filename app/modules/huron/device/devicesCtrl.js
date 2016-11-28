@@ -13,19 +13,19 @@
     vm.currentUser = $stateParams.currentUser;
     vm.csdmHuronUserDeviceService = null;
     vm.showGenerateOtpButton = false;
+    vm.generateCodeIsDisabled = true;
 
     function init() {
-      fetchFeatureToggles();
+      fetchATASupport();
     }
 
     init();
 
-    function fetchFeatureToggles() {
-      FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
-        vm.showPlaces = result;
-      });
+    function fetchATASupport() {
       FeatureToggleService.csdmATAGetStatus().then(function (result) {
         vm.showATA = result;
+      }).finally(function () {
+        vm.generateCodeIsDisabled = false;
       });
     }
 
@@ -75,7 +75,6 @@
         data: {
           function: 'showCode',
           title: 'addDeviceWizard.newDevice',
-          showPlaces: vm.showPlaces,
           showATA: vm.showATA,
           account: {
             name: vm.currentUser.displayName,

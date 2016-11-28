@@ -10,7 +10,7 @@
     </cs-page-sub-header-right>
   </cs-page-sub-header>
 
-  <div class="incident-section conent-common-style small-12 large-10 xlarge-8">
+  <div class="incident-section content-common-style small-12 large-10 xlarge-8">
     <div ng-if="!incidentsCtrl.hasIncident">
       <h6 translate="gss.incidentsPage.noIncidentContent1"></h6>
       <span translate="gss.incidentsPage.noIncidentContent2"></span>
@@ -40,10 +40,12 @@
             </a>
 
             <a class="pull-right"
+               ng-click="incidentsCtrl.updateIncident(incident, 'update')"
                ng-if="!(incidentsCtrl.isResolved(incident.status))" translate="common.update">
             </a>
 
             <a class="pull-right"
+               ng-click="incidentsCtrl.updateIncident(incident, 'view')"
                ng-if="incidentsCtrl.isResolved(incident.status)" translate="gss.incidentsPage.viewIncident">
             </a>
           </div>

@@ -25,10 +25,6 @@
           filterValue: 'offline'
         }, {
           count: 0,
-          name: $translate.instant('CsdmStatus.RequiresActivation'),
-          filterValue: 'codes'
-        }, {
-          count: 0,
           name: $translate.instant('CsdmStatus.Online'),
           filterValue: 'online'
         }];
@@ -42,13 +38,6 @@
       };
 
       var updateFilters = function (list) {
-        _.find(filters, {
-          filterValue: 'codes'
-        }).count = _.chain(list)
-          .filter(isActivationCode)
-          .filter(matchesSearch)
-          .value().length;
-
         _.find(filters, {
           filterValue: 'issues'
         }).count = _.chain(list)
@@ -75,11 +64,8 @@
         }).count = _.filter(list, matchesSearch).length;
       };
 
-      function isActivationCode(item) {
-        return item.needsActivation && !item.isUsed;
-      }
       function hasIssues(item) {
-        return item.hasIssues && item.isOnline && !item.isUnused;
+        return item.hasIssues && item.isOnline;
       }
 
       function isOnline(item) {
@@ -87,7 +73,7 @@
       }
 
       function isOffline(item) {
-        return !item.isOnline && !item.needsActivation && !item.isUnused;
+        return !item.isOnline;
       }
 
       function setCurrentSearch(search) {
@@ -151,14 +137,9 @@
       }
 
       function matchesFilter(item) {
-        if (item.isCode && item.isUsed) {
-          return false;
-        }
         switch (currentFilter) {
           case 'all':
             return true;
-          case 'codes':
-            return isActivationCode(item);
           case 'issues':
             return hasIssues(item);
           case 'online':
