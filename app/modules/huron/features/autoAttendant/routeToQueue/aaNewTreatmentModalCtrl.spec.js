@@ -161,6 +161,22 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
       });
 
       it("default value of periodic minutes and seconds.", function () {
+        var controller = $controller('AANewTreatmentModalCtrl', {
+          $scope: $scope,
+          $modalInstance: modalFake,
+          aa_schedule: schedule,
+          aa_menu_id: menuId,
+          aa_index: index,
+          aa_key_index: keyIndex,
+          aa_from_route_call: false
+        });
+
+        $scope.$apply();
+
+        var paAction = controller.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0];
+        paAction.interval = '45';
+        controller.activate();
+
         expect(controller.periodicMinute.index).toEqual(0);
         expect(controller.periodicSecond.index).toEqual(8);
       });
@@ -303,7 +319,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
       $scope.$apply();
 
       var paAction = controller.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0];
-      paAction.setInterval(300);
+      paAction.interval = '300';
       controller.activate();
 
       expect(controller.areSecondsDisabled).toBe(false);

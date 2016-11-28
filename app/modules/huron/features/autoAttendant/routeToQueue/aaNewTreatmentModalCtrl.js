@@ -31,35 +31,28 @@
 
     vm.destinationOptions = [{
       label: $translate.instant('autoAttendant.destinations.Disconnect'),
-      name: 'Disconnect',
-      action: 'disconnect',
-      treatment: ''
+      name: 'disconnect',
+      action: 'disconnect'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
       name: 'destinationMenuRouteHunt',
-      action: 'routeToHuntGroup',
-      id: ''
+      action: 'routeToHuntGroup'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
       name: 'destinationMenuRouteAA',
-      action: 'goto',
-      id: ''
+      action: 'goto'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
       name: 'destinationMenuRouteUser',
-      action: 'routeToUser',
-      id: ''
+      action: 'routeToUser'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
       name: 'destinationMenuRouteMailbox',
-      action: 'routeToVoiceMail',
-      id: ''
+      action: 'routeToVoiceMail'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
       name: 'destinationMenuRouteToExtNum',
-      number: '',
-      action: 'route',
-      id: ''
+      action: 'route'
     }];
     vm.destination = vm.destinationOptions[0];
     vm.musicOnHold = '';
@@ -114,9 +107,6 @@
       if (_.isEqual(vm.musicOnHold, DEFAULT_MOH)) {
         defaultMoh();
       }
-      if (!_.isEqual(fallbackAction.name, 'Disconnect')) {
-        fallbackAction.name.id = fallbackAction.getValue();
-      }
     }
 
     function resetFallback() {
@@ -126,8 +116,8 @@
     }
 
     function updateFallback() {
-      fallbackAction.setName(vm.destination);
-      fallbackAction.setDescription("fallback");
+      fallbackAction.setName(vm.destination.action);
+      fallbackAction.setDescription(vm.destination.label);
     }
 
     function updateMaxWaitTime() {
@@ -223,7 +213,11 @@
       if (_.isEqual(fallbackAction.description, '')) {
         vm.destination = vm.destinationOptions[0];
       } else {
-        vm.destination = fallbackAction.getName();
+        for (var i = 0; i < vm.destinationOptions.length; i++) {
+          if (vm.destinationOptions[i].action === fallbackAction.name) {
+            vm.destination = vm.destinationOptions[i];
+          }
+        }
       }
       vm.languageOptions.sort(AACommonService.sortByProperty('label'));
       vm.voiceOptions.sort(AACommonService.sortByProperty('label'));
@@ -259,7 +253,7 @@
       }
       var periodicMinutes = (vm.periodicMinute.label * 60);
       periodicTime = periodicMinutes + vm.periodicSecond.label;
-      paAction.setInterval(periodicTime);
+      paAction.interval = periodicTime;
     }
 
     function changedPeriodicSecValue() {
@@ -272,7 +266,7 @@
       }
       var periodicSeconds = (vm.periodicMinute.label * 60);
       periodicTime = periodicSeconds + vm.periodicSecond.label;
-      paAction.setInterval(periodicTime);
+      paAction.interval = periodicTime;
     }
 
     //get queueSettings menuEntry -> inner menu entry type (moh, initial, periodic...)

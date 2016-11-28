@@ -49,7 +49,6 @@
     this.name = name;
     this.value = value;
     this.description = '';
-    this.interval = '';
     this.voice = '';
   }
 
@@ -82,14 +81,6 @@
 
   Action.prototype.getDescription = function () {
     return this.description;
-  };
-
-  Action.prototype.setInterval = function (interval) {
-    this.interval = interval;
-  };
-
-  Action.prototype.getInterval = function () {
-    return this.interval;
   };
 
   Action.prototype.setVoice = function (voice) {
@@ -606,7 +597,7 @@
             inAction.description = JSON.parse(inAction.description);
             action.queueSettings = {};
           }
-          action.queueSettings.fallback = constructCesFallback(inAction.description);
+          action.queueSettings.fallback = constructCesFallback(inAction);
         } catch (exception) {
           action.queueSettings = {};
         }
@@ -640,9 +631,20 @@
     * construct ces definition of Fallback from db
     */
     function constructCesFallback(parsedDescription) {
-      var fallback = parsedDescription.fallback;
-      var action = new Action(fallback, fallback.id);
-      action.setDescription("fallback");
+      var fallback = parsedDescription.queueFallback;
+      var action;
+      var fallbackObject = Object.keys(fallback);
+      var fallbackName = fallbackObject[0];
+      if (_.isEqual(fallbackName, 'disconnect')) {
+        action = new Action(fallbackName, '');
+      } else {
+        if (_.isEqual(fallbackName, 'goto')) {
+          action = new Action(fallbackName, fallback[fallbackName].ceid);
+        } else {
+          action = new Action(fallbackName, fallback[fallbackName].id);
+        }
+        action.setDescription(fallback[fallbackName].description);
+      }
       fallback = new CeMenuEntry();
       fallback.addAction(action);
       return fallback;
@@ -1183,19 +1185,15 @@
         if (_.isUndefined(queueMaxTimeValue.label)) {
           newAction.queueMaxTime = queueMaxTimeValue;
         }
-        var destination = action.queueSettings.fallback.actions[0].name;
+        var destination = action.queueSettings.fallback.actions[0];
+        var destinationName = destination.name;
         var fallbackAction = {};
-        if (!_.isUndefined(destination.action)) {
-          if (destination.action === 'disconnect') {
-            fallbackAction[destination.action] = { treatment: 'none' };
-          } else if (destination.action === 'goto') {
-            fallbackAction[destination.action] = { ceid: destination.id, description: destination.label };
-          } else {
-            fallbackAction[destination.action] = { id: destination.id, description: destination.label };
-          }
+        if (destinationName === 'disconnect') {
+          fallbackAction[destinationName] = { treatment: 'none' };
+        } else if (destinationName === 'goto') {
+          fallbackAction[destinationName] = { ceid: destination.value, description: destination.description };
         } else {
-          destination = 'Disconnect';
-          fallbackAction['disconnect'] = { treatment: 'none' };
+          fallbackAction[destinationName] = { id: destination.value, description: destination.description };
         }
         var queueMaxDestination = fallbackAction;
         newAction.queueFallback = queueMaxDestination;

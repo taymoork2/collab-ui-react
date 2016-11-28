@@ -59,8 +59,7 @@
             periodicAnnouncementType: vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].name,
             periodicAnnouncementDescription: vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].description,
             initialAnnouncementType: vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0].name,
-            initialAnnouncementDescription: vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0].description,
-            fallback: vm.menuEntry.actions[0].queueSettings.fallback.actions[0].name
+            initialAnnouncementDescription: vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0].description
           };
         } else {
           vm.menuKeyEntry.actions[0].description = {
@@ -68,8 +67,7 @@
             periodicAnnouncementType: vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].name,
             periodicAnnouncementDescription: vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].description,
             initialAnnouncementType: vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.actions[0].name,
-            initialAnnouncementDescription: vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.actions[0].description,
-            fallback: vm.menuKeyEntry.actions[0].queueSettings.fallback.actions[0].name
+            initialAnnouncementDescription: vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.actions[0].description
           };
         }
       }, function () {
@@ -165,10 +163,10 @@
         createAction(queueSettings, 'periodicAnnouncement', 'say');
         var periodicAnnouncement = _.get(queueSettings, 'periodicAnnouncement.actions[0]');
         periodicAnnouncement.setDescription("");
-        periodicAnnouncement.setInterval(periodicTime);
+        periodicAnnouncement.interval = periodicTime;
       }
       if (!_.has(queueSettings, 'fallback')) {
-        createAction(queueSettings, 'fallback', 'Disconnect');
+        createAction(queueSettings, 'fallback', 'disconnect');
       }
       if (!_.has(queueSettings, 'maxWaitTime')) {
         queueSettings.maxWaitTime = maxWaitTime; //default, 15 mins.
