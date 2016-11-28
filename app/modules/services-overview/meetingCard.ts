@@ -74,7 +74,7 @@ export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
       description: 'servicesOverview.cards.meeting.description',
       icon: 'icon-circle-group',
       name: 'servicesOverview.cards.meeting.title',
-      template: 'modules/services/meetingCard.tpl.html',
+      template: 'modules/services-overview/meetingCard.tpl.html',
     });
   }
 }

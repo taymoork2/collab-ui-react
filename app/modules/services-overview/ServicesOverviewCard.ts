@@ -55,7 +55,7 @@ export abstract class ServicesOverviewCard {
     display = true,
     icon = '',
     name,
-    template = 'modules/services/card.tpl.html',
+    template = 'modules/services-overview/card.tpl.html',
   }: ICardParams) {
     this.active = active;
     this.cardClass = cardClass;

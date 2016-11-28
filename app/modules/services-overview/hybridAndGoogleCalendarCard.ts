@@ -89,6 +89,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
       this.active = filterAndGetEnabledService(servicesStatuses, service);
       // We can stop loading now because we know we have the results for both services
       this.loading = false;
+      debugger;
     });
   }
 
@@ -109,7 +110,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
       cardType: CardType.hybrid,
       description: 'servicesOverview.cards.hybridCalendar.description',
       name: 'servicesOverview.cards.hybridCalendar.title',
-      template: 'modules/services/hybridAndGoogleCalendarCard.tpl.html',
+      template: 'modules/services-overview/hybridAndGoogleCalendarCard.tpl.html',
     });
   }
 }
