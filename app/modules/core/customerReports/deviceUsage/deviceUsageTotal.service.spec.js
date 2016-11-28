@@ -236,37 +236,30 @@ describe('DeviceUsageTotalService', function () {
   });
 
   describe("date ranges", function () {
-    it("returns start and end date based floating days", function () {
-      var dateRange = DeviceUsageTotalService.getDateRangeForPeriod(7, "day");
-      expect(dateRange.start).toEqual(sevenDaysAgo());
-      expect(dateRange.end).toEqual(yesterday());
+
+    beforeEach(function () {
+      var baseTime = moment('2016-10-26').toDate(); // Wed, Oct, 2016
+      jasmine.clock().mockDate(baseTime);
     });
 
-    it("return start and end date for 4 weeks", function () {
-      //TODO: Test with non-floating window
+    it("returns start and end date based floating last 7 days", function () {
+      var dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, "day");
+      expect(dateRange.start).toEqual("2016-10-19");
+      expect(dateRange.end).toEqual("2016-10-25");
+    });
+
+    it("return start and end date for last 4 weeks", function () {
       var dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(4, "week");
-      var end = sundayInLastWeek();
-      var start = mondayNWeeksAgo(4);
-      expect(dateRange.start).toEqual(start);
-      expect(dateRange.end).toEqual(end);
+      expect(dateRange.start).toEqual("2016-09-26"); // First Monday 4 weeks ago
+      expect(dateRange.end).toEqual("2016-10-23"); // Sunday last week
     });
+
+    it("return start and end date for last 3 months", function () {
+      var dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(3, "month");
+      expect(dateRange.start).toEqual("2016-07-01"); // first day in July
+      expect(dateRange.end).toEqual("2016-09-30"); // last day in Sept
+    });
+
   });
-
-
-  function yesterday() {
-    return moment().subtract(1, "day").format("YYYY-MM-DD");
-  }
-
-  function sundayInLastWeek() {
-    return moment().isoWeekday(7).subtract(1, 'weeks').format("YYYY-MM-DD");
-  }
-
-  function mondayNWeeksAgo(weekCount) {
-    return moment().isoWeekday(1).subtract(weekCount, 'weeks').format("YYYY-MM-DD");
-  }
-
-  function sevenDaysAgo() {
-    return moment().subtract(7, "day").format("YYYY-MM-DD");
-  }
 
 });
