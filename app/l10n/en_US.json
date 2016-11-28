@@ -224,7 +224,7 @@
       "enableRemoveNote": "Note: User entitlements not included in the CSV file upload will not be removed.",
       "removeFile": "Remove File",
       "confirmCsvDownloadTitle": "Export User Attributes",
-      "confirmCsvDownloadMsg": "Gathering data for export may take awhile. During this time you cannot sign out, or refresh your browser or the export will be canceled.",
+      "confirmCsvDownloadMsg": "Gathering data for export may take a while. During this time you cannot sign out, or refresh your browser or the export will be canceled.",
       "confirmCsvDownloadMsg10K": "Because you have more than {{maxUsers}} users, the exported list will not show the entitlements that are assigned to your users.",
       "newUsers": "Added",
       "existingUsers": "Updated",
