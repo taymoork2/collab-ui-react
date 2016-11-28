@@ -36,14 +36,14 @@ describe('ServicesOverviewHybridMediaCard', () => {
     expect(card.display).toBe(false);
   });
 
-  it('should stay hidden if the user is missing one of the acceptable role', () => {
+  it('should stay hidden if the user is missing the entitlement', () => {
     Authinfo.isFusionMedia.and.returnValue(true);
     card = new ServicesOverviewHybridMediaCard(Authinfo, Config, FusionClusterStatesService);
     card.hybridMediaFeatureToggleEventHandler(true);
     expect(card.display).toBe(false);
   });
 
-  it('should stay hidden if the user is missing the entitlement', () => {
+  it('should stay hidden if the user is missing one of the acceptable role', () => {
     Authinfo.getRoles.and.returnValue([Config.roles.full_admin]);
     card = new ServicesOverviewHybridMediaCard(Authinfo, Config, FusionClusterStatesService);
     card.hybridMediaFeatureToggleEventHandler(true);

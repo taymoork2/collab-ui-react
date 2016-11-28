@@ -6,13 +6,13 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
     return undefined;
   }
 
-  private _setupButton: ICardButton = {
+  private setupButton: ICardButton = {
     name: 'servicesOverview.genericButtons.setup',
     routerState: 'media-service-v2.list',
-    buttonClass: 'btn',
+    buttonClass: 'btn btn--primary',
   };
 
-  private _buttons: Array<ICardButton> = [{
+  private buttons: Array<ICardButton> = [{
     name: 'servicesOverview.cards.hybridMedia.buttons.resources',
     routerState: 'media-service-v2.list',
     buttonClass: 'btn-link',
@@ -24,9 +24,9 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
 
   public getButtons(): Array<ICardButton> {
     if (this.active) {
-      return this._buttons;
+      return this.buttons;
     }
-    return [this._setupButton];
+    return [this.setupButton];
   }
 
   public hybridMediaFeatureToggleEventHandler(hasFeature: boolean) {

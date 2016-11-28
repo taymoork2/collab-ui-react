@@ -6,13 +6,13 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     return undefined;
   }
 
-  private _setupButton: ICardButton = {
+  private setupButton: ICardButton = {
     name: 'servicesOverview.genericButtons.setup',
     routerState: 'hds-settings',
-    buttonClass: 'btn',
+    buttonClass: 'btn btn--primary',
   };
 
-  private _buttons: Array<ICardButton> = [{
+  private buttons: Array<ICardButton> = [{
     name: 'servicesOverview.cards.hybridDataSecurity.buttons.resources',
     routerState: 'hds-settings',
     buttonClass: 'btn-link',
@@ -24,9 +24,9 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
 
   public getButtons(): Array<ICardButton> {
     if (this.active) {
-      return this._buttons;
+      return this.buttons;
     }
-    return [this._setupButton];
+    return [this.setupButton];
   }
 
   public hybridDataSecurityToggleEventHandler(hasFeature: boolean) {

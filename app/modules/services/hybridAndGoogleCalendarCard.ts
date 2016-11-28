@@ -13,13 +13,13 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
   }
 
   // Hybrid Calendar
-  private _setupButton: ICardButton = {
+  private setupHybridCalendarButton: ICardButton = {
     name: 'servicesOverview.genericButtons.setup',
     routerState: 'calendar-service.list',
-    buttonClass: 'btn',
+    buttonClass: 'btn btn--primary',
   };
 
-  private _buttons: Array<ICardButton> = [{
+  private hybridCalendarButtons: Array<ICardButton> = [{
     name: 'servicesOverview.cards.hybridCalendar.buttons.resources',
     routerState: 'calendar-service.list',
     buttonClass: 'btn-link',
@@ -32,19 +32,19 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
 
   public getButtons(): Array<ICardButton> {
     if (this.active) {
-      return this._buttons;
+      return this.hybridCalendarButtons;
     }
-    return [this._setupButton];
+    return [this.setupHybridCalendarButton];
   }
 
   // Google Calendar
-  private _setupGoogleButton: ICardButton = {
+  private setupGoogleCalendarButton: ICardButton = {
     name: 'servicesOverview.genericButtons.setup',
-    routerState: 'calendar-service.list', // will trigger the right modal
-    buttonClass: 'btn',
+    routerState: 'calendar-service.list',
+    buttonClass: 'btn btn--primary',
   };
 
-  private _googlebuttons: Array<ICardButton> = [{
+  private googleCalendarButtons: Array<ICardButton> = [{
     name: 'servicesOverview.cards.hybridCalendar.buttons.settings',
     routerState: 'calendar-service.settings',
     buttonClass: 'btn-link',
@@ -52,9 +52,9 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
 
   public getGoogleButtons(): Array<ICardButton> {
     if (this.googleActive) {
-      return this._googlebuttons;
+      return this.googleCalendarButtons;
     }
-    return [this._setupGoogleButton];
+    return [this.setupGoogleCalendarButton];
   }
 
   public googleCalendarFeatureToggleEventHandler(hasFeature: boolean) {

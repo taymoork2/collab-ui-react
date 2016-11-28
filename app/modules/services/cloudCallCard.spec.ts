@@ -27,7 +27,7 @@ describe('ServiceOverviewMeetingCard', () => {
     expect(card.loading).toBe(true);
   });
 
-  it('should be active if pstn is enabled and use can access huronsettings state', () => {
+  it('should be active if pstn is enabled and user can access huronsettings state', () => {
     Authinfo.isAllowedState.and.returnValue(true);
     card = new ServicesOverviewCallCard(Authinfo, Config);
     card.csdmPstnFeatureToggleEventHandler(true);

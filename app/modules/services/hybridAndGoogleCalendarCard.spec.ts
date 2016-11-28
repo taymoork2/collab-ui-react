@@ -41,7 +41,7 @@ describe('ServicesOverviewHybridCallCard', () => {
     expect(card.display).toBe(false);
   });
 
-  it('should be displayed if the user the hybrid cal entitlement, the hybrid google cal entitlement and the feature toggle', () => {
+  it('should be displayed if the user has the hybrid cal entitlement, the hybrid google cal entitlement and the feature toggle', () => {
     Authinfo.isFusionCal.and.returnValue(true);
     Authinfo.isFusionGoogleCal.and.returnValue(true);
     card = new ServicesOverviewHybridAndGoogleCalendarCard($q, Authinfo, CloudConnectorService, FusionClusterStatesService);
@@ -60,7 +60,6 @@ describe('ServicesOverviewHybridCallCard', () => {
     expect(card.display).toBe(false);
   });
 
-  // scenario that should never happen but could technically happen though
   it('should not be displayed if the user has the hybrid cal entitlement but not the hybrid google cal entitlement and not the feature toggle', () => {
     Authinfo.isFusionCal.and.returnValue(true);
     Authinfo.isFusionGoogleCal.and.returnValue(false);
