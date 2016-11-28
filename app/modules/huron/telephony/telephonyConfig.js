@@ -76,16 +76,6 @@
         return 'https://mock-hg.de-ams.thunderhead.io/api/v2';
       },
 
-      getAvrilUrl: function () {
-        if (Config.isDev()) {
-          return this.avrilUrl.dev;
-        } else if (Config.isIntegration()) {
-          return this.avrilUrl.integration;
-        } else {
-          return this.avrilUrl.prod;
-        }
-      },
-
       getCmiUrl: function () {
         if (Config.isDev()) {
           return this.cmiUrl.dev;
@@ -174,8 +164,17 @@
         } else {
           return this.minervaUrl.prod;
         }
-      }
+      },
 
+      getAvrilUrl: function () {
+        if (Config.isDev()) {
+          return this.avrilUrl.dev;
+        } else if (Config.isIntegration()) {
+          return this.avrilUrl.integration;
+        } else {
+          return this.avrilUrl.prod;
+        }
+      }
     };
     return config;
   }

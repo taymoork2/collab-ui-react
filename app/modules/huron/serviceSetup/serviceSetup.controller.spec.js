@@ -220,7 +220,6 @@ describe('Controller: ServiceSetup', function () {
         expect(index).toEqual(7);
       });
     });
-    
 
     describe('initController when is not first time setup', function () {
 

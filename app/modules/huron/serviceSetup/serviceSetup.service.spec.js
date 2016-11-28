@@ -4,7 +4,7 @@ describe('Service: ServiceSetup', function () {
   var ServiceSetup, $httpBackend, HuronConfig;
 
   var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };
 
   beforeEach(angular.mock.module('Huron'));
@@ -12,6 +12,7 @@ describe('Service: ServiceSetup', function () {
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
+
 
   beforeEach(inject(function (_ServiceSetup_, _$httpBackend_, _HuronConfig_) {
     ServiceSetup = _ServiceSetup_;
@@ -90,26 +91,30 @@ describe('Service: ServiceSetup', function () {
     });
   });
 
- describe('updateAvrilSite', function () {
+  describe('updateAvrilSite', function () {
     var site = {
-      uuid: '1234567000',
-      steeringDigit: '5',
+      guid: '1234567890',
+      siteCode: '8',
       siteSteeringDigit: '6',
-      code: '8',
-      timeZone: 'MST',
-      extLength: '10',
-      voicemailPilotNumber: '1008'
+      timezone: 'MST',
+      extensionLength: '10',
+      pilotNumber: '1008'
+    };
+
+    var HuronConfig = {
+      getAvrilUrl: jasmine.createSpy('getAvrilUrl').and.returnValue('https://avrildirmgmt.appstaging.ciscoccservice.com/avrildirmgmt/api/v1')
     };
 
     beforeEach(function () {
-      $httpBackend.expectPOST(HuronConfig.getAvrilUrl() + '/customers/1/sites/').respond(200);
+      //$httpBackend.whenPOST(HuronConfig.getAvrilUrl() + '/customers/1/sites/', { "guid": site.guid }).respond(site);
+      $httpBackend.whenPOST(HuronConfig.getAvrilUrl() + '/customers/1/sites').respond(201);
     });
 
     it('should update avril site', function () {
-      ServiceSetup.updateAvrilSite(site.uuid, siteSteeringDigit, code, timeZone, extLength, voicemailPilotNumber);
+      ServiceSetup.updateAvrilSite(site.guid, site.siteSteeringDigit, site.code, site.timezone, site.extensionLength, site.pilotNumber);
       $httpBackend.flush();
     });
-  }); 
+  });
 
   describe('loadExternalNumberPool', function () {
     var extNumPool = [{
@@ -117,10 +122,10 @@ describe('Service: ServiceSetup', function () {
       pattern: '+11234567890'
     }];
 
-      //$httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(extNumPool);
+    // old and new url is creating issues ......Jk
+    //$httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(extNumPool);
     beforeEach(function () {
-      //$httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&externalnumbertype=Fixed+Line+or+Mobile&order=pattern').respond(extNumPool);
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(extNumPool);
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&externalnumbertype=Fixed+Line+or+Mobile&order=pattern').respond(extNumPool);
     });
 
     it('should list external number pool', function () {

@@ -368,22 +368,8 @@
     });
   }
 
-
-  /* @ngInject
-  function AvrilSiteService($resource, HuronConfig) {
-    return $resource(HuronConfig.getAvrilUrl() + '/customers/:customerId/sites/:siteId', {
-      customerId: '@customerId',
-      siteId: '@siteId'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
-  } */
-
   /* @ngInject */
-  function AvrilSiteService($resource, $log, HuronConfig) {
-    $log.log('====> AvrilSiteService, cust: ' + '@customerId');
+  function AvrilSiteService($resource, HuronConfig) {
     return $resource(HuronConfig.getAvrilUrl() + '/customers/:customerId/sites/', {
       customerId: '@customerId'
     }, {
@@ -395,27 +381,6 @@
       }
     });
   }
-
-  /* @ngInject
-  function AvrilSiteService($resource, $log, HuronConfig) {
-    var data = {
-      guid:"761cf9e3-86ec-44b4-a4b0-e6c55b4f9956"
-    };
-    $log.log('====> AvrilSiteService, cust: ' + '@customerId');
-    return $resource(HuronConfig.getAvrilUrl() + '/customers/:customerId/sites/', {
-      customerId: '@customerId'
-    }, {
-      save: {
-        method: 'POST',
-        headers: {
-          'Access-Control-Expose-Headers': 'Location',
-          'Access-Control-Allow-Origin': true
-        }
-      },
-        data
-      });
-  }*/
-
 
   /* @ngInject */
   function InternalNumberRangeService($resource, HuronConfig) {

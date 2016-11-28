@@ -6,7 +6,7 @@
     .controller('HuronSettingsCtrl', HuronSettingsCtrl);
 
   /* @ngInject */
-  function HuronSettingsCtrl($scope, Authinfo, $q, $translate, $log, Notification, ServiceSetup, PstnSetupService,
+  function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService,
     ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing, VoicemailMessageAction, FeatureToggleService, Config, $state) {
     var vm = this;
@@ -141,9 +141,7 @@
     });
 
     FeatureToggleService.getCustomerHuronToggle(Authinfo.getOrgId(), FeatureToggleService.features.avrilVmEnable).then(function (result) {
-      $log.log('====> settingsCtrl, This customer is an Avril customer ' + result);
       vm.voicemailAvrilCustomer = result;
-      $log.log('====> settingsCtrl, This customer is an Avril customer, voicemailAvrilCustomer ' + vm.voicemailAvrilCustomer);
     });
 
     vm.validations = {
@@ -921,7 +919,6 @@
             }
 
             if (vm.voicemailAvrilCustomer && vm.isAvrilVoiceEnabled) {
-              $log.log('====> updateSiteVoicemailNumber,vm.voicemailAvrilCustomer && vm.isAvrilVoiceEnabled');
               ServiceSetup.updateAvrilSite(ServiceSetup.sites[0].uuid, ServiceSetup.sites[0].siteSteeringDigit,
                      ServiceSetup.sites[0].siteCode, ServiceSetup.sites[0].timeZone,
                      ServiceSetup.sites[0].extensionLength, ServiceSetup.sites[0].voicemailPilotNumber, siteData);
@@ -1032,12 +1029,9 @@
       var customer = {};
       if (companyVoicemailNumber && _.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
         //customer.servicePackage = DEMO_STANDARD;
-        $log.log('====> settingsCtrl, This customer is an Avril customer, voicemailAvrilCustomer -out ' + vm.voicemailAvrilCustomer);
         if (vm.voicemailAvrilCustomer) {
           customer.servicePackage = VOICE_VOICEMAIL_AVRIL;
-          $log.log('====> settingsCtrl, customer.servicePackage ' + customer.servicePackage);
           vm.isAvrilVoiceEnabled = true;
-          $log.log('====> settingsCtrl-updateCustomerServicePackage, vm.isAvrilVoiceEnabled ' + vm.isAvrilVoiceEnabled);
         } else {
           customer.servicePackage = DEMO_STANDARD;
         }

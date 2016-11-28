@@ -121,9 +121,8 @@
     });
 
     FeatureToggleService.getCustomerHuronToggle(Authinfo.getOrgId(), FeatureToggleService.features.avrilVmEnable).then(function (result) {
-      $log.log('====> This customer is an Avril customer ' + result);
+      //$log.log('====> This customer is an Avril customer ' + result);
       vm.voicemailAvrilCustomer = result;
-      $log.log('====> This customer is an Avril customer, voicemailAvrilCustomer ' + vm.voicemailAvrilCustomer);
     });
 
     vm.validations = {
@@ -1122,7 +1121,6 @@
         if (companyVoicemailNumber && _.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
           if (!vm.hasVoicemailService) {
             // customer.servicePackage = DEMO_STANDARD;
-            $log.log('====> This customer is an Avril customer, voicemailAvrilCustomer -out ' + vm.voicemailAvrilCustomer);
             if (vm.voicemailAvrilCustomer) {
               customer.servicePackage = VOICE_VOICEMAIL_AVRIL;
               $log.log('====> customer.servicePackage ' + customer.servicePackage);
@@ -1208,12 +1206,12 @@
           return ServiceSetup.updateSite(ServiceSetup.sites[0].uuid, siteData)
             .then(function () {
               if (vm.voicemailAvrilCustomer && isAvrilVoiceEnabled) {
-                $log.log('====> ServiceSetup.sites[0].uuid: ' + ServiceSetup.sites[0].uuid +
-                       " ServiceSetup.sites[0].siteSteeringDigit: " + ServiceSetup.sites[0].siteSteeringDigit +
-                       " ServiceSetup.sites[0].siteCode: " + ServiceSetup.sites[0].siteCode +
-                       " ServiceSetup.sites[0].timeZone: " + ServiceSetup.sites[0].timeZone +
-                       " ServiceSetup.sites[0].extensionLength: " + ServiceSetup.sites[0].extensionLength +
-                      " ServiceSetup.sites[0].voicemailPilotNumber: " + ServiceSetup.sites[0].voicemailPilotNumber);
+                // $log.log('====> ServiceSetup.sites[0].uuid: ' + ServiceSetup.sites[0].uuid +
+                //        " ServiceSetup.sites[0].siteSteeringDigit: " + ServiceSetup.sites[0].siteSteeringDigit +
+                //        " ServiceSetup.sites[0].siteCode: " + ServiceSetup.sites[0].siteCode +
+                //        " ServiceSetup.sites[0].timeZone: " + ServiceSetup.sites[0].timeZone +
+                //        " ServiceSetup.sites[0].extensionLength: " + ServiceSetup.sites[0].extensionLength +
+                //       " ServiceSetup.sites[0].voicemailPilotNumber: " + ServiceSetup.sites[0].voicemailPilotNumber);
                 ServiceSetup.updateAvrilSite(ServiceSetup.sites[0].uuid, ServiceSetup.sites[0].siteSteeringDigit,
                      ServiceSetup.sites[0].siteCode, ServiceSetup.sites[0].timeZone,
                      ServiceSetup.sites[0].extensionLength, ServiceSetup.sites[0].voicemailPilotNumber, siteData);

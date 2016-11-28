@@ -9,8 +9,6 @@
   function ServiceSetup($q, $translate, $filter, Authinfo, SiteService, InternalNumberRangeService,
 TimeZoneService, SiteLanguageService, ExternalNumberPool, VoicemailTimezoneService,
 VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2, CeSiteService, AvrilSiteService) {
-    //$q, $translate, $filter, Authinfo, SiteService, AvrilSiteService, InternalNumberRangeService, TimeZoneService, ExternalNumberPoolService, VoicemailTimezoneService, VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2, CeSiteService) {
-
     return {
       internalNumberRanges: [],
       sites: [],
