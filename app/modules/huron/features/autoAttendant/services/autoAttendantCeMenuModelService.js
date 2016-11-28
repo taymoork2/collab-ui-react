@@ -523,7 +523,7 @@
     }
 
     function cesMaxWaitTime(action, inAction) {
-      if (!_.isUndefined(action)) {
+      if (action) {
         try {
           if (_.isUndefined(action.queueSettings)) {
             inAction.description = JSON.parse(inAction.description);
@@ -540,7 +540,7 @@
     *write Moh  to db
     */
     function cesMoh(action, inAction) {
-      if (!_.isUndefined(action)) {
+      if (action) {
         try {
           if (_.isUndefined(action.queueSettings)) {
             inAction.description = JSON.parse(inAction.description);
@@ -557,7 +557,7 @@
     * write initial announcement to db
     */
     function cesIa(action, inAction) {
-      if (!_.isUndefined(action)) {
+      if (action) {
         try {
           if (_.isUndefined(action.queueSettings)) {
             inAction.description = JSON.parse(inAction.description);
@@ -574,7 +574,7 @@
      * write periodic announcement to db
      */
     function cesPa(action, inAction) {
-      if (!_.isUndefined(action)) {
+      if (action) {
         try {
           if (angular.isUndefined(action.queueSettings)) {
             inAction.description = JSON.parse(inAction.description);
@@ -591,7 +591,7 @@
     * write fallback to db
     */
     function cesFallback(action, inAction) {
-      if (!_.isUndefined(action)) {
+      if (action) {
         try {
           if (angular.isUndefined(action.queueSettings)) {
             inAction.description = JSON.parse(inAction.description);
@@ -1166,7 +1166,7 @@
     */
     function populateRouteToQueue(action) {
       var newAction = {};
-      if (!_.isUndefined(action.description)) {
+      if (action.description) {
         newAction.id = action.value;
         newAction.queueMoH = action.queueSettings.musicOnHold.actions[0].getValue();
         newAction.queueInitialAnnouncement = action.queueSettings.initialAnnouncement.actions[0].getValue();

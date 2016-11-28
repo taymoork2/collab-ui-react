@@ -68,13 +68,12 @@
 
     function saveUiModel() {
       var action;
+      var entry;
       var num = vm.model.phoneNumberInput.phoneNumber;
 
       if (num) {
         num = _.replace(num, /[-\s]*/g, '');
       }
-
-      var entry;
 
       if (fromRouteCall) {
         entry = vm.menuEntry;

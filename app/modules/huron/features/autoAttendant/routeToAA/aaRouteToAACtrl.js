@@ -21,6 +21,8 @@
 
     vm.saveUiModel = saveUiModel;
 
+    //////////////////////
+
     function aaName2CeId(aaName) {
       var ceInfos = vm.aaModel.ceInfos;
       var ceInfo = _.find(ceInfos, _.bind(function (ceInfo) {
