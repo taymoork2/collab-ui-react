@@ -20,10 +20,8 @@
         <br>
         <span ng-if="showActivationCode.account.type === 'personal'"
               translate="addDeviceWizard.showActivationCode.onceActivePersonalDevice"></span>
-        <span ng-if="showActivationCode.account.type !== 'personal' && showActivationCode.showPlaces"
+        <span ng-if="showActivationCode.account.type !== 'personal'"
               translate="addDeviceWizard.showActivationCode.onceActiveSharedDevice"></span>
-        <span ng-if="showActivationCode.account.type !== 'personal' && !showActivationCode.showPlaces"
-              translate="addDeviceWizard.showActivationCode.onceActiveSharedDeviceNoPlaces"></span>
       </p>
       <div class="qrCodeSection" ng-if="showActivationCode.isLoading">
         <i class="loading space icon icon-spinner"></i>

@@ -102,7 +102,6 @@ describe('Controller: DevicesCtrl', function () {
     });
 
     it('should set the wizardState with correct fields for the wizard if places toggle is on', function () {
-      controller.showPlaces = true;
       controller.showATA = showATA;
       controller.startAddDeviceFlow();
       $scope.$apply();
@@ -110,7 +109,6 @@ describe('Controller: DevicesCtrl', function () {
       var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
       expect(wizardState.title).toBe('addDeviceWizard.newDevice');
       expect(wizardState.function).toBe('addDevice');
-      expect(wizardState.showPlaces).toBe(true);
       expect(wizardState.showDarling).toBe(showDarling);
       expect(wizardState.showATA).toBe(showATA);
       expect(wizardState.isEntitledToHuron).toBe(isEntitledToHuron);
@@ -124,7 +122,6 @@ describe('Controller: DevicesCtrl', function () {
     });
 
     it('should set the wizardState with correct fields for the wizard if places toggle is off', function () {
-      controller.showPlaces = false;
       controller.showATA = showATA;
       controller.startAddDeviceFlow();
       $scope.$apply();
@@ -132,7 +129,6 @@ describe('Controller: DevicesCtrl', function () {
       var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
       expect(wizardState.title).toBe('addDeviceWizard.newDevice');
       expect(wizardState.function).toBe('addDevice');
-      expect(wizardState.showPlaces).toBe(false);
       expect(wizardState.showDarling).toBe(showDarling);
       expect(wizardState.showATA).toBe(showATA);
       expect(wizardState.isEntitledToHuron).toBe(isEntitledToHuron);
@@ -148,7 +144,6 @@ describe('Controller: DevicesCtrl', function () {
 
   describe('Feature toggle loading', function () {
     beforeEach(function () {
-      spyOn(FeatureToggleService, 'csdmPlacesGetStatus').and.returnValue($q.when(true));
       spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(true));
       spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.when(true));
