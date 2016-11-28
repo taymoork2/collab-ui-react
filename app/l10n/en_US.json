@@ -2510,7 +2510,7 @@
       "Disconnect": "Disconnect"
   },
     "languageAndVoice" : "Language and Voice",
-    "langaugeAndVoiceHelp" : "Language and voice will apply to Say Messages and Fallback.",
+    "langaugeAndVoiceHelp" : "These selections apply to Say and Error Messages.",
     "initialAnnouncement" : "Initial Announcement",
     "initialHelpText" : "Specify a message to play when the caller enters the queue.",
     "periodicHelpText": "Specify a message to play and how often to play it while the caller is waiting in the queue.",
