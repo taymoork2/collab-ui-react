@@ -55,7 +55,7 @@
         // keep changes as modal was resolved with close
         if (fromRouteCall) {
           vm.menuEntry.actions[0].description = {
-            uploadDescription: vm.menuEntry.actions[0].queueSettings.musicOnHold.actions[0].description,
+            musicOnHoldDescription: vm.menuEntry.actions[0].queueSettings.musicOnHold.actions[0].description,
             periodicAnnouncementType: vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].name,
             periodicAnnouncementDescription: vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].description,
             initialAnnouncementType: vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0].name,
@@ -63,7 +63,7 @@
           };
         } else {
           vm.menuKeyEntry.actions[0].description = {
-            uploadDescription: vm.menuKeyEntry.actions[0].queueSettings.musicOnHold.actions[0].description,
+            musicOnHoldDescription: vm.menuKeyEntry.actions[0].queueSettings.musicOnHold.actions[0].description,
             periodicAnnouncementType: vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].name,
             periodicAnnouncementDescription: vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].description,
             initialAnnouncementType: vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.actions[0].name,

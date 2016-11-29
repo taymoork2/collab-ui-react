@@ -288,6 +288,20 @@
           vm.menuKeyEntry.addAction(action);
         }
       }
+      if ($scope.fromFallback) {
+        var entry;
+        if (_.has(vm.menuKeyEntry, 'actions[0]')) {
+          entry = vm.menuKeyEntry;
+        } else {
+          entry = vm.menuEntry;
+        }
+
+        var fallbackAction = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]');
+        if (!(fallbackAction.getName() === routeToUserOrVM)) {
+          fallbackAction.setName(routeToUserOrVM);
+          fallbackAction.setValue('');
+        }
+      }
       populateUiModel();
 
     }

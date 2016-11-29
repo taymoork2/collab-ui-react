@@ -108,6 +108,21 @@
         }
       }
 
+      if ($scope.fromFallback) {
+        var entry;
+        if (_.has(vm.menuKeyEntry, 'actions[0]')) {
+          entry = vm.menuKeyEntry;
+        } else {
+          entry = vm.menuEntry;
+        }
+
+        var fallbackAction = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]');
+        if (!(fallbackAction.getName() === rtHG)) {
+          fallbackAction.setName(rtHG);
+          fallbackAction.setValue('');
+        }
+      }
+
       getHuntGroups().then(function () {
         vm.huntGroups.sort(AACommonService.sortByProperty('description'));
         populateUiModel();

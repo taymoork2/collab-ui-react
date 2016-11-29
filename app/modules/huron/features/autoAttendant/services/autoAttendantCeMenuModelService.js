@@ -610,7 +610,7 @@
     function constructCesMoh(parsedDescription) {
       var musicOnHold = parsedDescription;
       var playAction = new Action('play', musicOnHold.queueMoH);
-      playAction.setDescription(musicOnHold.description.uploadDescription);
+      playAction.setDescription(musicOnHold.description.musicOnHoldDescription);
       musicOnHold = new CeMenuEntry();
       musicOnHold.addAction(playAction);
       return musicOnHold;
@@ -640,10 +640,11 @@
       } else {
         if (_.isEqual(fallbackName, 'goto')) {
           action = new Action(fallbackName, fallback[fallbackName].ceid);
+        } else if (_.isEqual(fallbackName, 'route')) {
+          action = new Action(fallbackName, fallback[fallbackName].destination);
         } else {
           action = new Action(fallbackName, fallback[fallbackName].id);
         }
-        action.setDescription(fallback[fallbackName].description);
       }
       fallback = new CeMenuEntry();
       fallback.addAction(action);
@@ -1162,7 +1163,7 @@
       return newActionArray;
     }
     /*
-    * Temp method for route to queue prior to CES def
+    * Method for route to queue prior to CES def
     */
     function populateRouteToQueue(action) {
       var newAction = {};
@@ -1190,6 +1191,8 @@
         var fallbackAction = {};
         if (destinationName === 'disconnect') {
           fallbackAction[destinationName] = { treatment: 'none' };
+        } else if (destinationName === 'route') {
+          fallbackAction[destinationName] = { destination: destination.value, description: destination.description };
         } else if (destinationName === 'goto') {
           fallbackAction[destinationName] = { ceid: destination.value, description: destination.description };
         } else {
@@ -1200,7 +1203,7 @@
         if (_.isEmpty(action.description)) {
           //for default queue settings
           action.description = {
-            uploadDescription: '',
+            musicOnHoldDescription: '',
             periodicAnnouncementType: 'say',
             periodicAnnouncementDescription: '',
             initialAnnouncementType: 'say',

@@ -62,11 +62,9 @@
       }
 
       if (fromRouteCall) {
-        entry = vm.menuEntry;
-        entry = _.get(entry, 'actions[0].queueSettings.fallback', entry);
+        entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
       } else {
-        entry = vm.menuKeyEntry;
-        entry = _.get(entry, 'queueSettings.fallback', entry);
+        entry = _.get(vm.menuKeyEntry, 'queueSettings.fallback', vm.menuKeyEntry);
       }
       entry.actions[0].setValue(num);
 
@@ -147,6 +145,21 @@
         vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, vm.menuKeyEntry.routeToId);
 
       }
+
+      if ($scope.fromFallback) {
+        if (_.has(vm.menuKeyEntry, 'queueSettings')) {
+          entry = vm.menuKeyEntry;
+        } else {
+          entry = vm.menuEntry.actions[0];
+        }
+
+        var fallbackAction = _.get(entry, 'queueSettings.fallback.actions[0]');
+        if (!(fallbackAction.getName() === rtExtNum)) {
+          fallbackAction.setName(rtExtNum);
+          fallbackAction.setValue('');
+        }
+      }
+
       populateUiModel();
 
     }

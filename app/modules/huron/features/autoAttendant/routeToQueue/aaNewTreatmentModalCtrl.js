@@ -57,15 +57,11 @@
     vm.destination = vm.destinationOptions[0];
     vm.musicOnHold = '';
     vm.menuEntry = undefined;
-    var mohPlayAction = undefined;
-    var paAction = undefined;
     vm.ok = ok;
     vm.isSaveEnabled = isSaveEnabled;
     vm.uploadMohTrigger = uploadMohTrigger;
 
     vm.destination = '';
-    var fallbackAction = undefined;
-    vm.resetFallback = resetFallback;
 
     vm.activate = activate;
     vm.populateMohRadio = populateMohRadio;
@@ -83,6 +79,10 @@
     vm.changedPeriodicMinValue = changedPeriodicMinValue;
     vm.changedPeriodicSecValue = changedPeriodicSecValue;
     vm.areSecondsDisabled = isDisabled;
+
+    var mohPlayAction = undefined;
+    var fallbackAction = undefined;
+    var paAction = undefined;
     var periodicTime = '';
 
     var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
@@ -109,15 +109,8 @@
       }
     }
 
-    function resetFallback() {
-      //clearing already stored values when new action is choosen from dropdown
-      fallbackAction.setName('');
-      fallbackAction.setValue('');
-    }
-
     function updateFallback() {
       fallbackAction.setName(vm.destination.action);
-      fallbackAction.setDescription(vm.destination.label);
     }
 
     function updateMaxWaitTime() {
@@ -131,7 +124,7 @@
 
     //the queueSettings save gets linked to main save
     function isSaveEnabled() {
-      return AACommonService.isValid();
+      return (AACommonService.isValid() && isDestinationValid());
     }
 
     function defaultMoh() {
@@ -141,6 +134,15 @@
 
     function isDisabled() {
       return vm.periodicMinute.label == '5';
+    }
+
+    function isDestinationValid() {
+      var isValid = true;
+      if (!_.isEqual(vm.destination.action, 'disconnect') && _.isEmpty(fallbackAction.value)) {
+        isValid = false;
+      }
+
+      return isValid;
     }
 
     function setVoiceOptions() {
@@ -201,24 +203,16 @@
           label: i + 1
         });
       });
-      //setting maxWaitTime's default value
-      if (_.isEqual(fallbackAction.description, '')) {
-        vm.maxWaitTime = vm.minutes[14];
-      }
     }
 
     //populating fallback drop down in sorted order
     function populateFallbackDropDown() {
       vm.destinationOptions.sort(AACommonService.sortByProperty('label'));
-      if (_.isEqual(fallbackAction.description, '')) {
-        vm.destination = vm.destinationOptions[0];
-      } else {
-        for (var i = 0; i < vm.destinationOptions.length; i++) {
-          if (vm.destinationOptions[i].action === fallbackAction.name) {
-            vm.destination = vm.destinationOptions[i];
-          }
-        }
-      }
+
+      vm.destination = _.find(vm.destinationOptions, function (option) {
+        return (_.isEqual(option.action, fallbackAction.name));
+      });
+
       vm.languageOptions.sort(AACommonService.sortByProperty('label'));
       vm.voiceOptions.sort(AACommonService.sortByProperty('label'));
 

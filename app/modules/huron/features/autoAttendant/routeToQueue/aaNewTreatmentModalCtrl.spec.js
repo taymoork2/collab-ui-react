@@ -64,6 +64,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   var iaAction = {};
   var paAction = {};
   var fbAction = {};
+  var maxWaitTime = '';
   var schedule = 'openHours';
   var index = '0';
   var menuId = 'menu0';
@@ -123,6 +124,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     queueSettings.initialAnnouncement = initialAnnouncement;
     queueSettings.periodicAnnouncement = periodicAnnouncement;
     queueSettings.fallback = fallback;
+    queueSettings.maxWaitTime = maxWaitTime;
     routeToQueue.queueSettings = queueSettings;
     menuEntry.addAction(routeToQueue);
     uiMenu.addEntryAt(index, menuEntry);
@@ -148,7 +150,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     });
 
     it("default value of minute should be 15.", function () {
-      expect(controller.maxWaitTime.index).toEqual(14);
+      expect(controller.maxWaitTime).toEqual(15);
     });
 
     describe('Periodic Announcement', function () {
@@ -209,7 +211,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
 
     describe('FallBack', function () {
       it('test for default option as Disconnect', function () {
-        expect(controller.destinationOptions[0].name).toEqual('disconnect');
+        expect(controller.fbAction).toEqual('disconnect');
       });
       it('test for sorted order options in dropdown', function () {
         for (var i = 1; i < sortedOptions.length; i++) {
@@ -217,14 +219,14 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         }
       });
       it("default value of fallback Actions should be set", function () {
-        expect(controller.maxWaitTime.label).toEqual(15);
+        expect(controller.maxWaitTime).toEqual(15);
         var fallbackAction = controller.menuEntry.actions[0].queueSettings.fallback.actions[0];
         var fallbackActionDescription = fallbackAction.getDescription();
         expect(fallbackActionDescription).toEqual('');
       });
       it(" value of maxTime shoulb be 15", function () {
         controller.ok();
-        var maxWaitTime = controller.menuEntry.actions[0].queueSettings.maxWaitTime.label;
+        var maxWaitTime = controller.menuEntry.actions[0].queueSettings.maxWaitTime;
         expect(maxWaitTime).toEqual(15);
       });
     });
