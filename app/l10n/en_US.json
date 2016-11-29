@@ -963,6 +963,7 @@
     "and": "and",
     "apply": "Apply",
     "assign": "Assign",
+    "agree": "Agree",
     "back": "Back",
     "begin": "Begin",
     "cancel": "Cancel",
@@ -3176,6 +3177,20 @@
       "msaNotSigned": "Customer needs to sign PSTN Contract.",
       "pendingVendor": "Scheduled transfer date requested from previous carrier for number porting.",
       "rejected": "Order has been rejected. Contact Intelepeer."
+    },
+    "notification": {
+      "text": "Your PSTN services are not set up completely until you accept the Terms of Service.",
+      "textLink": "Accept Now"
+    },
+    "tos": {
+      "titleIntelepeer": "Intelepeer terms of service",
+      "copyright": "Copyright 2016 Cisco Systems.  All rights reserved.",
+      "info": "Cisco Spark is a collaboration application that provides messaging (IM), voice and video calling capabilities.",
+      "noticeTitle": "IMPORTANT NOTICES AND DISCLAIMERS",
+      "notice": "Please redirect to the following page and read the agreements from you carrier.  Your PSTN numbers will be released after you read and agree these agreements.",
+      "confirmHeading": "Confirm the legal contact who accept this terms.",
+      "agreeInstructions": "By clicking 'Agree' you have read and agree to comply with the terms and conditions.",
+      "viewTos": "View Terms of Service"
     }
   },
   "pstnContractInformation": {
