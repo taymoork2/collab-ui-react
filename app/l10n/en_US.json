@@ -2152,14 +2152,28 @@
       "searchByPlaceholder": "Email ID",
       "searchByEmailPlaceholder": "e.g. johnsmith@email.com, jansmith@email.com",
       "searchByRoomPlaceholder": "e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-      "textAndFileName": "Where <b>Text Messagegs</b> or <b>File Name</b> contains",
+      "textAndFileName": "Where <b>Text Messages</b> or <b>File Name</b> contains",
       "textAndFileNamePlaceholder": "e.g. project AND manager",
       "noMatchesFound": "No Matches Found"
     },
     "searchResults": {
+      "backToSearch": "Back to Search",
       "searchInfo": "Search Info",
       "emailId": "Email Id",
-      "dateRange": "Date Range"
+      "dateRange": "Date Range",
+      "textMessage": "Text Messages Contains",
+      "fileName": "File Name Contains",
+      "reportSummary": "Report Summary",
+      "rooms": "Rooms",
+      "messages": "Messages",
+      "files": "Files",
+      "estReport": "Est. Report Size",
+      "generateReport": "Generate Report",
+      "generateText": "Enter report information to generate a report. Generation time will depend on estimated report size.",
+      "description": "Description",
+      "exportFormat": "Export Format",
+      "totalResultSize": "Total Result Size",
+      "downloadContent": "Download content such as documents, images and media associated with this report."
     },
     "reportsList": {
       "name": "Name",
