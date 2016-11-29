@@ -6,11 +6,10 @@
     .controller('HDSServiceController', HDSServiceController);
 
   /* @ngInject */
-  function HDSServiceController($state, $scope, $translate, HDSClusterService, FusionClusterService, FeatureToggleService) {
+  function HDSServiceController($scope, $translate, ClusterService, FusionClusterService, FeatureToggleService) {
 
 
     var vm = this;
-    vm.state = $state;
     vm.serviceEnabled = null;
     vm.currentServiceType = 'hds_app';
     vm.featureToggled = false;
@@ -25,8 +24,8 @@
         state: 'hds.settings',
       }
     ];
-    vm.clusters = HDSClusterService.getClustersByConnectorType('hds_app');
-    vm.getSeverity = HDSClusterService.getRunningStateSeverity;
+    vm.clusters = ClusterService.getClustersByConnectorType('hds_app');
+    vm.getSeverity = ClusterService.getRunningStateSeverity;
     vm.clusterLength = clusterLength;
     vm.sortByProperty = sortByProperty;
     vm.clusterList = [];
