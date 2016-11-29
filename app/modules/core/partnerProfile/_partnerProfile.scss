@@ -1,3 +1,7 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/spacing';
+@import 'styles/toolkit/layout';
+
 .profile-state {
   @extend %page-background-white;
 }
