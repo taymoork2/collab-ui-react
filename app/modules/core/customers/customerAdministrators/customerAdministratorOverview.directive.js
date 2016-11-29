@@ -1,3 +1,5 @@
+require('./_customer-admin.scss');
+
 (function () {
   'use strict';
 
