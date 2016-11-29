@@ -1691,7 +1691,14 @@
             parent: 'modal',
             views: {
               'modal@': {
-                templateUrl: 'modules/core/video/videoModal.tpl.html'
+                template: '<cr-video-modal class="modal-content" dismiss="$dismiss()"></cr-video-modal>'
+              }
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveVideo(resolve) {
+                  require(['modules/core/video'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
               }
             }
           })
