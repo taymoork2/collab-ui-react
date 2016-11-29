@@ -63,7 +63,7 @@
 
     function onBoardCare() {
       var onboardPayload = { 'orgDisplayName': Authinfo.getOrgName(), 'csDiscoveryUrl': UrlConfig.getCSDiscoveryUrl() };
-      $http.put(sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/csonboard', onboardPayload);
+      return $http.put(sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/csonboard', onboardPayload);
     }
   }
 })();
