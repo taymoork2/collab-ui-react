@@ -162,14 +162,6 @@
         AACommonService.setRouteQueueToggle(true);
         expect(AACommonService.isRouteQueueToggle()).toBeTruthy();
       });
-      it('setQueueSettingsToggle should set to false', function () {
-        AACommonService.setQueueSettingsToggle(false);
-        expect(AACommonService.isQueueSettingsToggle()).toBeFalsy();
-      });
-      it('setQueueSettingsToggle should set to true', function () {
-        AACommonService.setQueueSettingsToggle(true);
-        expect(AACommonService.isQueueSettingsToggle()).toBeTruthy();
-      });
       it('setCallerInputToggle should set to false', function () {
         AACommonService.setCallerInputToggle(false);
         expect(AACommonService.isCallerInputToggle()).toBeFalsy();
