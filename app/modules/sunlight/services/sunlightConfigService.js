@@ -9,7 +9,7 @@
     .service('SunlightConfigService', sunlightConfigService);
 
   /* @ngInject */
-  function sunlightConfigService($http, UrlConfig, Authinfo, TokenService, $window) {
+  function sunlightConfigService($http, UrlConfig, Authinfo) {
     var sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/user';
     var sunlightChatTemplateUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/template';
     var sunlightChatConfigBase = UrlConfig.getSunlightConfigServiceUrl() + '/organization';
@@ -62,10 +62,8 @@
     }
 
     function onBoardCare() {
-      var callbackUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/csonboard?accessToken='
-        + TokenService.getAccessToken() + '&orgName=' + Authinfo.getOrgName();
-      var ccfsUrl = UrlConfig.getCcfsUrl() + encodeURIComponent(callbackUrl);
-      $window.open(ccfsUrl, '_blank');
+      var onboardPayload = { 'orgDisplayName': Authinfo.getOrgName(), 'csDiscoveryUrl': UrlConfig.getCSDiscoveryUrl() };
+      return $http.put(sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/csonboard', onboardPayload);
     }
   }
 })();
