@@ -224,7 +224,7 @@
       "enableRemoveNote": "Note: User entitlements not included in the CSV file upload will not be removed.",
       "removeFile": "Remove File",
       "confirmCsvDownloadTitle": "Export User Attributes",
-      "confirmCsvDownloadMsg": "Gathering data for export may take awhile. During this time you cannot sign out, or refresh your browser or the export will be canceled.",
+      "confirmCsvDownloadMsg": "Gathering data for export may take a while. During this time you cannot sign out, or refresh your browser or the export will be canceled.",
       "confirmCsvDownloadMsg10K": "Because you have more than {{maxUsers}} users, the exported list will not show the entitlements that are assigned to your users.",
       "newUsers": "Added",
       "existingUsers": "Updated",
@@ -550,7 +550,7 @@
       "numberOfCalls": "Number of Calls",
       "deviceName": "Device Name",
       "hoursUsed": "Time Used",
-      "callCount": "# Calls",
+      "callCount": "Calls",
       "callHours": "Call Hours",
       "deviceUsage": "Room Device Usage",
       "pairedCount": "# Paired",
@@ -3556,6 +3556,7 @@
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
+    "newCode": "New Code",
     "chooseDeviceType": {
       "deviceType": "What kind of device do you want to set up?",
       "deviceTypeInstructions": "A new device requires a unique activation code to be input during setup. What kind of device do you want to activate?",
@@ -4738,7 +4739,9 @@
     "authError": "You are not entitled to access this site.",
     "systemError": "Unable to connect to this site.",
     "multipleLicenses": "Multiple...",
-    "checkingServices": "Checking services..."
+    "checkingServices": "Checking services...",
+    "linkedSiteAdminTool": "Launch Site Admin Tool",
+    "LinkedSiteProgress": "Account linking progress"
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
@@ -5504,7 +5507,8 @@
     "Site_Admin": "Site Admin",
     "Readonly_Admin": "Read-only Admin",
     "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin",
-    "Compliance_User": "Compliance Officer"
+    "Compliance_User": "Compliance Officer",
+    "Tech_Support": "Tech Support"
   },
   "helpdesk": {
     "browserTabHeaderTitle": "Help Desk Support",
@@ -5605,7 +5609,8 @@
       "CO": "Advanced Spark Call",
       "CMR": "Collaboration Meeting Rooms",
       "SD": "Room Devices",
-      "ST": "Storage"
+      "ST": "Storage",
+      "linkedSite": "Legacy WebEx License"
     },
     "trial": "Trial",
     "adminUsers": "Administrators",
@@ -5906,7 +5911,7 @@
       "importCsv": "Import CSV",
       "title": "Callback Groups",
       "exportToCsv": "Export to CSV",
-      "editCountry": "Edit Country/Regions",
+      "editCountry": "Edit Countries/Regions",
       "downloadCsv": "Download CSV Template",
       "csvFilename": "exported_callbackGroup.csv",
       "moveSiteMsg": "Are you sure you want to move this site?",
@@ -5937,7 +5942,7 @@
         "customerPlaceholder": "Who is this callback group for?",
         "labelCustomerAttr": "Partner CB Group Name",
         "customerAttrPlaceholder": "Enter a shorter name for quick refernce",
-        "labelCountries": "Select Country/Regions",
+        "labelCountries": "Select Countries/Regions",
         "countriesPlaceholder": "Search to add country"
       },
       "notes": {

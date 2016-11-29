@@ -24,9 +24,7 @@ describe('Controller: PlacesCtrl', function () {
 
   function initSpies() {
     spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.when({}));
-    spyOn(Userservice, 'getUser').and.returnValue(function () {
-      return {};
-    });
+    spyOn(Userservice, 'getUser');
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when());
@@ -51,6 +49,7 @@ describe('Controller: PlacesCtrl', function () {
     var userCisUuid;
     var email;
     var orgId;
+    var adminOrgId;
     var isEntitledToHuron;
     var isEntitledToRoomSystem;
     beforeEach(function () {
@@ -60,8 +59,10 @@ describe('Controller: PlacesCtrl', function () {
       userCisUuid = 'userCisUuid';
       email = 'email@address.com';
       orgId = 'orgId';
+      adminOrgId = 'adminOrgId';
       controller.adminDisplayName = displayName;
       controller.showATA = true;
+      controller.adminOrgId = adminOrgId;
       spyOn(controller, 'isEntitledToHuron').and.returnValue(isEntitledToHuron);
       spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(isEntitledToRoomSystem);
       spyOn(Authinfo, 'getUserId').and.returnValue(userCisUuid);
@@ -78,17 +79,15 @@ describe('Controller: PlacesCtrl', function () {
       expect(wizardState.title).toBe('addDeviceWizard.newSharedSpace.title');
       expect(wizardState.function).toBe('addPlace');
       expect(wizardState.showATA).toBe(true);
+      expect(wizardState.adminOrganizationId).toBe(adminOrgId);
       expect(wizardState.isEntitledToHuron).toBe(isEntitledToHuron);
       expect(wizardState.isEntitledToRoomSystem).toBe(isEntitledToRoomSystem);
-      expect(wizardState.account.deviceType).toBeUndefined();
       expect(wizardState.account.type).toBe('shared');
-      expect(wizardState.account.name).toBeUndefined();
-      expect(wizardState.account.cisUuid).toBeUndefined();
-      expect(wizardState.account.username).toBeUndefined();
+      expect(wizardState.account.organizationId).toBe(orgId);
       expect(wizardState.recipient.displayName).toBe(displayName);
       expect(wizardState.recipient.cisUuid).toBe(userCisUuid);
       expect(wizardState.recipient.email).toBe(email);
-      expect(wizardState.recipient.organizationId).toBe(orgId);
+      expect(wizardState.recipient.organizationId).toBe(adminOrgId);
     });
   });
 });

@@ -1,20 +1,21 @@
 
-  <span id="{{row.entity.license.siteUrl}}_configIcon"
+  <span ng-if="!row.entity.isLinkedSite"
+        id="{{row.entity.license.siteUrl}}_configIcon"
         name="{{row.entity.license.siteUrl}}_configIcon">
-        
+
     <span>
       &nbsp;
     </span>
 
     <!-- display disabled config icon -->
-    <i ng-if="!row.entity.showSiteLinks || 
+    <i ng-if="!row.entity.showSiteLinks ||
               row.entity.isError"
        id="{{row.entity.license.siteUrl}}_configUnavailable"
        name="{{row.entity.license.siteUrl}}_configUnavailable"
        class="icon icon-settings iconDisabled grid-vcenter"
-       tooltip-append-to-body="true" 
+       tooltip-append-to-body="true"
        tooltip="{{::'siteList.siteSettings' | translate}}"></i>
-    
+
     <!-- display enabled config icon and tooltip -->
     <i ng-if="row.entity.showSiteLinks &&
               !row.entity.isError"
@@ -22,6 +23,6 @@
        name="{{row.entity.license.siteUrl}}_webex-site-settings"
        class="icon icon-settings iconEnabledWithHover grid-vcenter"
        ui-sref="site-list.site-settings({siteUrl:row.entity.license.siteUrl})"
-       tooltip-append-to-body="true" 
+       tooltip-append-to-body="true"
        tooltip="{{::'siteList.siteSettings' | translate}}"></i>
   </span>
