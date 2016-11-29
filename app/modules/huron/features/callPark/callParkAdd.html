@@ -1,6 +1,6 @@
 <div class="call-feature-add">
   <cs-overlay-panel
-    class="callpark overlay-panel typeahead-group"
+    class="callfeature overlay-panel typeahead-group"
     overlay-title="{{::'callPark.newCallPark' | translate}}"
     close="$ctrl.cancelModal()"
     ng-keyup="$ctrl.evalKeyPress($event.keyCode)">
@@ -40,14 +40,17 @@
           </div>
         </div>
 
-        <uc-call-park-member ng-if="$ctrl.pageIndex === 2"
+        <uc-call-feature-members ng-if="$ctrl.pageIndex === 2"
           members="$ctrl.callPark.members"
+          member-hint-key="callPark.memberHint"
+          member-item-type="member"
+          card-type="simple"
+          show-external-numbers="false"
           is-new="true"
           on-change-fn="$ctrl.setCallParkMembers(members)"
           on-key-press-fn="$ctrl.enterNextPage(keyCode)"
           ng-class="$ctrl.animation">
-        </uc-call-park-member>
-
+        </uc-call-feature-members>
       </form>
 
     </cs-setup-assistant>

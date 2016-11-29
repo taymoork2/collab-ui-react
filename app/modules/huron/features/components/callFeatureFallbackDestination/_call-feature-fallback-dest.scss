@@ -1,0 +1,17 @@
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+
+.cs-setupassistant--content {
+  .fallback-destination-large {
+    .typeahead-large {
+      margin-top: calc(32vh - 143px);
+
+      .feature-desc {
+        @include vr-spacing(pb, 0);
+      }
+    }
+
+    .country-list {
+      border: 0 none;
+    }
+  }
+}

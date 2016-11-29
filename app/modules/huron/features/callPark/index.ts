@@ -2,8 +2,8 @@ import './_call-park.scss';
 
 import { CallParkComponent } from './callPark.component';
 import callParkNumber from './callParkNumber';
-import callParkMember from './callParkMember';
-import callParkReversion from './callParkReversion';
+import callFeatureMember from 'modules/huron/features/components/callFeatureMembers';
+import callParkFallbackDestination from 'modules/huron/features/callPark/callParkFallbackDestination';
 import callParkReversionTimer from './callParkReversionTimer';
 import callParkService from './services';
 import callFeatureName from 'modules/huron/features/components/callFeatureName';
@@ -17,8 +17,8 @@ export default angular
     require('angular-translate'),
     callFeatureName,
     callParkNumber,
-    callParkMember,
-    callParkReversion,
+    callFeatureMember,
+    callParkFallbackDestination,
     callParkReversionTimer,
     callParkService,
     huronSiteService,

@@ -1,0 +1,14 @@
+<div ng-form="$ctrl.hgMaxWaitTimeForm" class="cs-input-group large-6">
+  <cs-select
+    name="maxWaitMins"
+    ng-model="$ctrl.maxWaitMins"
+    selected="$ctrl.maxWaitMins"
+    options="$ctrl.options"
+    combo="true"
+    required="true"
+    secondary-label="{{:: 'huronHuntGroup.waitTimeSecondaryLabel' | translate }}"
+    on-change-fn="$ctrl.onMaxWaitMinsChange(value)"
+    is-error="{{$ctrl.isError}}"
+    error-msg="{{$ctrl.errorMsg}}">
+  </cs-select>
+</div>

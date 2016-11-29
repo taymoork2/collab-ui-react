@@ -1,0 +1,21 @@
+.cs-setupassistant--content {
+  .typeahead-large {
+    &.with-feature-title {
+      margin-top: calc(45vh - 143px);
+    }
+
+    .feature-title {
+      @include vr-spacing(pt, 3);
+
+      font-family: $brand-font-thin;
+      font-size: $font-size-h1;
+    }
+
+    .feature-desc {
+      @include vr-spacing(pb, 2.75);
+
+      font-family: $brand-font-light;
+      font-size: $font-size-h4;
+    }
+  }
+}

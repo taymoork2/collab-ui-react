@@ -1,5 +1,5 @@
 import { CallParkService } from './callPark.service';
-import featureMemberService from 'modules/huron/features';
+import featureMemberService from 'modules/huron/features/services';
 
 export * from './callPark.service';
 export * from './callPark';

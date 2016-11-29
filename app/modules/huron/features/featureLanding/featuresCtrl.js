@@ -61,7 +61,7 @@ require('./_feature-landing.scss');
     vm.features = [{
       name: 'HG',
       getFeature: function () {
-        return HuntGroupService.getListOfHuntGroups();
+        return HuntGroupService.getHuntGroupList();
       },
       formatter: HuronFeaturesListService.huntGroups,
       isEmpty: false,

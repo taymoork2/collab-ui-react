@@ -9,7 +9,7 @@
   </div>
   <form novalidate class="cs-form" name="$ctrl.form" role="form" ng-if="!$ctrl.isLoading">
     <div class="save-section" ng-class="{invisible: !$ctrl.form.$dirty}">
-      <p translate="callPark.saveLabel"></p>
+      <p translate="common.saveLabel"></p>
       <button
         cs-btn
         ng-click="$ctrl.onCancel()">
@@ -63,11 +63,10 @@
         <div class="sub-section">
           <h5 class="sub-section__title" translate="callPark.reversionRuleLabel"></h5>
           <p class="sub-section__description" translate="callPark.reversionRuleDesc"></p>
-          <uc-call-park-reversion
+          <uc-call-park-fallback-desination
             fallback-destination="$ctrl.callPark.fallbackDestination"
-            on-member-removed-fn="$ctrl.onCallParkFallbackDestinationMemberRemoved()"
             on-change-fn="$ctrl.setCallParkFallbackDestination(fallbackDestination)">
-          </uc-call-park-reversion>
+          </uc-call-park-fallback-desination>
         </div>
         <div class="sub-section">
           <h5 class="sub-section__title" translate="callPark.reversionTimerLabel"></h5>
@@ -88,10 +87,15 @@
         <div class="sub-section">
           <h5 class="sub-section__title" translate="callPark.memberLabel"></h5>
           <p class="sub-section__description" translate="callPark.memberDesc"></p>
-          <uc-call-park-member
+          <uc-call-feature-members
             members="$ctrl.callPark.members"
+            member-item-type="member"
+            filter-by="$ctrl.memberProperties"
+            card-type="simple"
+            show-external-numbers="false"
+            drag-and-drop="false"
             on-change-fn="$ctrl.setCallParkMembers(members)">
-          </uc-call-park-member>
+          </uc-call-feature-members>
         </div>
       </div>
     </div>

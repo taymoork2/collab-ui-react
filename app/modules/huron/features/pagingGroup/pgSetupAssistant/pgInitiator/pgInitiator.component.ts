@@ -1,4 +1,4 @@
-import { FeatureMemberService } from 'modules/huron/features/featureMember.service';
+import { FeatureMemberService } from 'modules/huron/features/services';
 import { Member, USER_REAL_USER, USER_PLACE } from 'modules/huron/members';
 import { IMemberWithPicture, CUSTOM } from 'modules/huron/features/pagingGroup';
 

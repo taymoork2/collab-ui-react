@@ -1,4 +1,5 @@
-import { MemberType } from 'modules/huron/members';
+import { CallFeatureMember } from 'modules/huron/features/components/callFeatureMembers/callFeatureMember';
+import { FallbackDestination } from 'modules/huron/features/components/callFeatureFallbackDestination/services';
 
 const FALLBACK_TIMER_DEFAULT: number = 120;
 
@@ -9,7 +10,7 @@ export class CallPark {
   public endRange: string | undefined;
   public fallbackDestination: FallbackDestination;
   public fallbackTimer: number;
-  public members: Array<CallParkMember>;
+  public members: Array<CallFeatureMember>;
 
   constructor(obj: {
     uuid?: string,
@@ -18,7 +19,7 @@ export class CallPark {
     endRange?: string,
     fallbackDestination: FallbackDestination,
     fallbackTimer: number,
-    members: Array<CallParkMember>,
+    members: Array<CallFeatureMember>,
   } = {
     uuid: undefined,
     name: undefined,
@@ -35,58 +36,5 @@ export class CallPark {
     this.fallbackDestination = obj.fallbackDestination;
     this.fallbackTimer = obj.fallbackTimer;
     this.members = obj.members;
-  }
-}
-
-export class FallbackDestination {
-  public number?: string | null;
-  public numberUuid?: string | null;
-  public name?: string | null;
-  public memberUuid?: string | null;
-  public sendToVoicemail: boolean;
-
-  constructor(obj: {
-    number?: string | null,
-    numberUuid?: string | null,
-    name?: string | null,
-    memberUuid?: string | null,
-    sendToVoicemail: boolean,
-  } = {
-    number: null,
-    numberUuid: null,
-    name: null,
-    memberUuid: null,
-    sendToVoicemail: false,
-  }) {
-    this.number = obj.number;
-    this.numberUuid = obj.numberUuid;
-    this.name = obj.name;
-    this.memberUuid = obj.memberUuid;
-    this.sendToVoicemail = obj.sendToVoicemail;
-  }
-}
-
-export class CallParkMember {
-  public memberUuid: string;
-  public memberName: string;
-  public memberType: MemberType;
-  public number?: string;
-  public numberUuid?: string;
-  public thumbnailSrc?: string;
-
-  constructor(obj: {
-    memberUuid: string,
-    memberName: string,
-    memberType: MemberType,
-    number: string | undefined,
-    numberUuid: string | undefined,
-    thumbnailSrc: string | undefined,
-  }) {
-    this.memberUuid = obj.memberUuid;
-    this.memberName = obj.memberName;
-    this.memberType = obj.memberType;
-    this.number = obj.number;
-    this.numberUuid = obj.numberUuid;
-    this.thumbnailSrc = obj.thumbnailSrc;
   }
 }

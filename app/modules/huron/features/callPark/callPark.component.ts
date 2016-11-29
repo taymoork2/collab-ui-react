@@ -1,4 +1,6 @@
-import { CallParkService, CallPark, ICallParkRangeItem, CallParkMember, FallbackDestination } from 'modules/huron/features/callPark/services';
+import { CallParkService, CallPark, ICallParkRangeItem } from 'modules/huron/features/callPark/services';
+import { CallFeatureMember } from 'modules/huron/features/components/callFeatureMembers/callFeatureMember';
+import { FallbackDestination } from 'modules/huron/features/components/callFeatureFallbackDestination/services';
 import { HuronSiteService } from 'modules/huron/sites';
 import { Notification } from 'modules/core/notifications';
 
@@ -13,6 +15,7 @@ class CallParkCtrl implements ng.IComponentController {
   // edit mode specific data
   public title: string;
   public huronFeaturesUrl: string = 'huronfeatures';
+  public memberProperties: Array<string> = ['name', 'number'];
 
   // common data
   public form: ng.IFormController;
@@ -77,7 +80,7 @@ class CallParkCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public setCallParkMembers(members: Array<CallParkMember>): void {
+  public setCallParkMembers(members: Array<CallFeatureMember>): void {
     this.callPark.members = members;
     this.form.$setDirty();
     this.callPark.members.length > 0 ? this.form.$invalid = false : this.form.$invalid = true;
@@ -93,10 +96,6 @@ class CallParkCtrl implements ng.IComponentController {
   public setCallParkFallbackTimer(seconds: number) {
     this.callPark.fallbackTimer = seconds;
     this.checkForChanges();
-  }
-
-  public onCallParkFallbackDestinationMemberRemoved() {
-    this.form.$setDirty();
   }
 
   public cancelModal(): void {

@@ -34,4 +34,20 @@ export class MemberService {
     });
   }
 
+  public getDisplayName(member: Member): string {
+    if (member.displayName) {
+      return member.displayName;
+    } else if (!member.firstName && !member.lastName && member.userName) {
+      return member.userName;
+    } else if (member.firstName && member.lastName) {
+      return member.firstName + ' ' + member.lastName;
+    } else if (member.firstName) {
+      return member.firstName;
+    } else if (member.lastName) {
+      return member.lastName;
+    } else {
+      return '';
+    }
+  }
+
 }

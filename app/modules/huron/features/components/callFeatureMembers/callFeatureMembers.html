@@ -1,0 +1,113 @@
+<script type="text/ng-template" id="callFeatureMemberTemplate.html">
+  <a class="member__name">
+    <span ng-bind-html="match.label.firstName | typeaheadHighlight:query" ng-if="match.label.firstName"></span>
+    <span ng-bind-html="match.label.lastName | typeaheadHighlight:query" ng-if="match.label.lastName"></span>
+    <span ng-show="match.label.lastName">(<span ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>)</span>
+    <span ng-show="!match.label.lastName && !match.label.displayName" ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>
+    <span ng-show="!match.label.userName" ng-bind-html="match.label.displayName | typeaheadHighlight:query"></span>
+  </a>
+  <div class="member__line">
+    <span ng-bind-html="(match.label.numbers | callFeatureMemberNumbersFilter) | typeaheadHighlight:query"></span>
+  </div>
+</script>
+<script type="text/ng-template" id="callFeatureMemberLinesTemplate.html">
+  <div class="member__name">
+    <span ng-if="match.label.showName" ng-bind-html="match.label.name | typeaheadHighlight:query"></span>
+  </div>
+  <a class="member__line">
+    <span ng-bind-html="match.label.number | typeaheadHighlight:query"></span>
+  </a>
+</script>
+<div class="typeahead-large with-feature-title" ng-if="$ctrl.isNew">
+  <div class="feature-title" translate="common.selectMembers"></div>
+  <div class="feature-desc">{{::$ctrl.memberHint}}</div>
+  <input
+    ng-model="$ctrl.selectedMember"
+    ng-class="{'error': $ctrl.errorMemberInput}"
+    typeahead="member for member in $ctrl.getMemberList($viewValue) | limitTo:10"
+    typeahead-on-select="$ctrl.selectMember($item)"
+    typeahead-template-url="callFeatureMemberTemplate.html"
+    typeahead-min-length="3"
+    typeahead-wait-ms="200"
+    placeholder="{{:: 'common.selectMembers' | translate}}"
+    ng-keypress="$ctrl.onHandleKeyPress($event.keyCode)"
+    autocomplete="off"
+    focus-on>
+</div>
+<div ng-if="!$ctrl.isNew" class="typeahead call-feature-members">
+  <div class="search-add">
+    <input
+      cs-input
+      id="callfeaturememberadd"
+      ng-model="$ctrl.selectedMember"
+      typeahead="member for member in $ctrl.getMemberList($viewValue) | limitTo:10"
+      typeahead-on-select="$ctrl.selectMember($item)"
+      typeahead-template-url="callFeatureMemberLinesTemplate.html"
+      typeahead-min-length="3"
+      typeahead-wait-ms="200"
+      placeholder="{{::'common.selectMembers' | translate}}"
+      cs-input-size="small-12"
+      autocomplete="off"
+      ng-disabled="$ctrl.reordering"
+      no-dirty>
+    <div class="search-member">
+      <i class="icon icon-search"></i>
+        <input
+          cs-input
+          id="callfeaturemembersearch"
+          type="text"
+          placeholder="{{::'common.searchMembers' | translate}}"
+          ng-model="$ctrl.searchStr"
+          ng-change="$ctrl.filterDisplayedMembers()"
+          ng-disabled="$ctrl.reordering"
+          no-dirty>
+    </div>
+  </div>
+</div>
+<div ng-class="{'call-feature-members': !$ctrl.isNew}">
+  <div ng-if="!$ctrl.isNew">
+    <span translate="common.members"></span>
+    <div ng-if="$ctrl.dragAndDrop" class="members-header pull-right">
+      <span ng-if="!$ctrl.reordering"><a class ng-click="$ctrl.onReorderClicked()" translate="common.reorder"></a></span>
+      <span ng-if="$ctrl.reordering"><a class="cancel-reorder" ng-click="$ctrl.onCancelReorderClicked()" translate="common.cancel"></a></span>
+      <span ng-if="$ctrl.reordering" class="apply-reorder"><a ng-click="$ctrl.onApplyReorderClicked()" translate="common.apply"></a></span>
+    </div>
+  </div>
+  <cs-card-layout>
+    <div  id="membersContainer" ng-class="{'members-reorder': $ctrl.reordering}">
+      <cs-card-member
+        ng-repeat="member in $ctrl.displayedMembers track by member.uuid"
+        cs-type="{{::member.cardType}}"
+        cs-member-type="{{::member.type}}"
+        cs-complex-card-type="{{::member.complexCardType}}"
+        cs-id="member.uuid"
+        cs-title="member.name"
+        cs-subtitle="member.number"
+        cs-radios="member.memberItems"
+        cs-radio-value="member.memberItemId"
+        cs-checkboxes="member.memberItems"
+        cs-items="member.memberItems"
+        cs-image="member.thumbnailSrc"
+        cs-reordering="$ctrl.reordering"
+        on-update="$ctrl.onUpdateCardMember(id, data)"
+        cs-remove-label="$ctrl.removeStr"
+        on-remove="$ctrl.unSelectMember(member)">
+      </cs-card-member>
+    </div>
+  </cs-card-layout>
+  <div ng-if="!$ctrl.isNew" class="members-footer">
+    <span
+      class="member-count"
+      translate="common.memberCount"
+      translate-values="{count: $ctrl.getMemberCount()}">
+    </span>
+    <a ng-click="$ctrl.onShowMoreClicked()"
+      ng-show="$ctrl.showMoreButton() && !$ctrl.reordering">
+      <span translate="common.showMore"></span>
+    </a>
+    <a ng-click="$ctrl.onShowLessClicked()"
+      ng-show="$ctrl.showLessButton() && !$ctrl.reordering">
+      <span translate="common.showLess"></span>
+    </a>
+  </div>
+</div>

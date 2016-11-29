@@ -24,6 +24,7 @@
       .desc {
         @include vr-spacing(pt, 1);
         @include vr-spacing(pb, 2.5);
+
         color: $gray-dark-1;
         font-family: $brand-font-light;
         font-size: $h4-font-size;

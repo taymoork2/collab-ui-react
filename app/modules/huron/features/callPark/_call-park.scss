@@ -1,6 +1,8 @@
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
 @import '~collab-ui/scss/settings/core';
 
+$overlay-panel-height: 93px;
+
 .callpark {
   &.overlay-panel {
     cs-setup-assistant {
@@ -24,6 +26,10 @@
     display: block;
     margin-left: 2rem;
   }
+}
+
+.send-to-voicemail-chk {
+  margin-top: 5rem;
 }
 
 //TODO: remove after updating the Toolkit (pajeter)

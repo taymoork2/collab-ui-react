@@ -1,0 +1,28 @@
+<div class="row form-group">
+  <input
+    cs-input
+    type="radio"
+    id="radioParker"
+    ng-value="'parker'"
+    ng-model="$ctrl.reversionType"
+    ng-click="$ctrl.onSelectRevertToParker()"
+    cs-input-label="{{:: 'callPark.reversionParkerLabel' | translate}}">
+</div>
+<div class="row form-group">
+  <input
+    cs-input
+    type="radio"
+    class="cs-input"
+    id="radioParkDestination"
+    ng-value="'destination'"
+    ng-model="$ctrl.reversionType"
+    ng-click="$ctrl.onSelectAnotherDestination()"
+    cs-input-label="{{:: 'callPark.reversionOtherLabel' | translate}}">
+</div>
+<div class="row form-group">
+  <uc-fallback-destination
+    fallback-destination="$ctrl.fallbackDestination"
+    show-reversion-lookup="$ctrl.showReversionLookup"
+    on-change-fn="$ctrl.setCallParkFallbackDestination(fallbackDestination)">
+  </uc-fallback-destination>
+</div>

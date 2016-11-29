@@ -1,0 +1,39 @@
+<div class="hgmethods" ng-class="{'large': $ctrl.isNew}">
+  <div ng-if="$ctrl.isNew">
+    <div class="feature-title" translate="huronHuntGroup.methodTitle"></div>
+    <div class="feature-desc" translate="huronHuntGroup.methodHint"></div>
+  </div>
+  <div class="row method-container">
+    <ul class="select-method large-9 columns medium-centered large-block-grid-4 medium-block-grid-2">
+      <li class="hgmethod" ng-class="{current: $ctrl.huntMethod === 'DA_LONGEST_IDLE_TIME'}">
+        <a href ng-click="$ctrl.setHuntMethod('DA_LONGEST_IDLE_TIME')" ng-attr-focus-on="{{$ctrl.huntMethod === 'DA_LONGEST_IDLE_TIME'}}">
+          <i class="icon icon-circle-clock-hands"></i>
+          <div translate="huronHuntGroup.hgMethods.longestIdle.name" ></div>
+          <p ng-if="$ctrl.isNew" translate="huronHuntGroup.hgMethods.longestIdle.desc"></p>
+        </a>
+      </li>
+      <li class="hgmethod" ng-class="{current: $ctrl.huntMethod === 'DA_BROADCAST'}">
+        <a href ng-click="$ctrl.setHuntMethod('DA_BROADCAST')" ng-attr-focus-on="{{$ctrl.huntMethod === 'DA_BROADCAST'}}">
+          <i class="icon icon-circle-arrows-cross"></i>
+          <div translate="huronHuntGroup.hgMethods.broadcast.name"></div>
+          <p ng-if="$ctrl.isNew" translate="huronHuntGroup.hgMethods.broadcast.desc"></p>
+        </a>
+      </li>
+      <li class="hgmethod" ng-class="{current: $ctrl.huntMethod === 'DA_CIRCULAR'}">
+        <a href ng-click="$ctrl.setHuntMethod('DA_CIRCULAR')" ng-attr-focus-on="{{$ctrl.huntMethod === 'DA_CIRCULAR'}}">
+          <i class="icon icon-circle-arrows-circular"></i>
+          <div translate="huronHuntGroup.hgMethods.circular.name"></div>
+          <p ng-if="$ctrl.isNew" translate="huronHuntGroup.hgMethods.circular.desc"></p>
+        </a>
+      </li>
+      <li class="hgmethod" ng-class="{current: $ctrl.huntMethod === 'DA_TOP_DOWN'}">
+        <a href ng-click="$ctrl.setHuntMethod('DA_TOP_DOWN')" ng-attr-focus-on="{{$ctrl.huntMethod === 'DA_TOP_DOWN'}}">
+          <i class="icon icon-circle-arrow-down"></i>
+          <div translate="huronHuntGroup.hgMethods.topDown.name"></div>
+          <p ng-if="$ctrl.isNew" translate="huronHuntGroup.hgMethods.topDown.desc"></p>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</div>
