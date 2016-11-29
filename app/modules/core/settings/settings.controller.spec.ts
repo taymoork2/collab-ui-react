@@ -20,7 +20,6 @@ namespace globalsettings {
 
     function initSpies() {
       spyOn(Orgservice, 'getOrg');
-      spyOn(FeatureToggleService, 'atlasBrandingWordingChangeGetStatus');
       spyOn(FeatureToggleService, 'atlasDataRetentionSettingsGetStatus');
       spyOn(FeatureToggleService, 'atlasPinSettingsGetStatus');
       spyOn(Authinfo, 'isPartner');
@@ -40,7 +39,6 @@ namespace globalsettings {
     beforeEach(inject(dependencies));
     beforeEach(initSpies);
     beforeEach(setFeatureToggles);
-    beforeEach(setBranding);
 
     describe('for partner admin', () => {
 
@@ -143,10 +141,6 @@ namespace globalsettings {
     function setFeatureToggles() {
       togglePinSettings();
       toggleDataRetentionSettings();
-    }
-
-    function setBranding() {
-      FeatureToggleService.atlasBrandingWordingChangeGetStatus.and.returnValue($q.when(true));
     }
 
     function togglePinSettings() {

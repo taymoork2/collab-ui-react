@@ -1164,7 +1164,19 @@
               displayName: 'Calendar Service'
             },
             params: {
-              extensionId: {}
+              extensionId: {},
+              extensions: {}
+            }
+          })
+          .state('user-overview.hybrid-services-squared-fusion-gcal', {
+            templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+            controller: 'CalendarServicePreviewCtrl',
+            data: {
+              displayName: 'Calendar Service'
+            },
+            params: {
+              extensionId: {},
+              extensions: {}
             }
           })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
@@ -1726,8 +1738,9 @@
             controller: 'GemCtrl',
             template: '<div ui-view></div>'
           })
-          .state('gem.services', {
-            url: '/services/index',
+          .state('gemOverview', {
+            parent: 'partner',
+            url: '/services/overview',
             template: '<cca-card></cca-card>'
           })
           .state('gem.servicesPartner', {
@@ -3079,7 +3092,9 @@
               deleteFeatureId: null,
               deleteFeatureType: null
             }
-          })
+          });
+
+        $stateProvider
           .state('gss', {
             url: '/gss',
             templateUrl: 'modules/gss/gssIframe/gssIframe.tpl.html',

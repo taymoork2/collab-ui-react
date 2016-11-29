@@ -429,13 +429,13 @@
           'useGraphSettings': true,
           'valueWidth': 100
         },
-        'titles': [
-          {
-            'id': 'Title-1',
-            'size': 15,
-            'text': $translate.instant('reportsPage.usageReports.deviceUsage')
-          }
-        ]
+        // 'titles': [
+        //   {
+        //     'id': 'Title-1',
+        //     'size': 15,
+        //     'text': $translate.instant('reportsPage.usageReports.deviceUsage')
+        //   }
+        // ]
       };
     }
 

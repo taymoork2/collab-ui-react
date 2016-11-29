@@ -269,6 +269,28 @@ describe('Authinfo:', function () {
     });
   });
 
+  describe('customer with CONFERENCING and linkedSiteUrl', function () {
+    var accountData = {
+      "customers": [{
+        "customerId": "1",
+        "customerName": "Atlas_Test_2",
+        "licenses": [{
+          "licenseType": "CONFERENCING",
+          "linkedSiteUrl": "www.abc.com"
+        }]
+      }]
+    };
+
+    it('have linked site conference service', function () {
+      var Authinfo = setupUser({
+        roles: ['Full_Admin']
+      });
+      Authinfo.updateAccountInfo(accountData);
+      expect(Authinfo.getConferenceServicesWithLinkedSiteUrl()).toBeTruthy();
+      expect(Authinfo.getConferenceServicesWithLinkedSiteUrl().length).toBe(1);
+    });
+  });
+
   function setupConfig(override) {
     override = override || {};
     var Config = injector.get('Config');

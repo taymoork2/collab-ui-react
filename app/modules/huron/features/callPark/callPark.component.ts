@@ -90,6 +90,11 @@ class CallParkCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
+  public setCallParkFallbackTimer(seconds: number) {
+    this.callPark.fallbackTimer = seconds;
+    this.checkForChanges();
+  }
+
   public onCallParkFallbackDestinationMemberRemoved() {
     this.form.$setDirty();
   }

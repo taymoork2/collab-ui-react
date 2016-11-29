@@ -550,7 +550,7 @@
       "numberOfCalls": "Number of Calls",
       "deviceName": "Device Name",
       "hoursUsed": "Time Used",
-      "callCount": "# Calls",
+      "callCount": "Calls",
       "callHours": "Call Hours",
       "deviceUsage": "Room Device Usage",
       "pairedCount": "# Paired",
@@ -1635,15 +1635,21 @@
       "serviceNames": {
         "squared-fusion-uc": "Aware",
         "squared-fusion-cal": "Calendar",
+        "squared-fusion-gcal": "Calendar",
         "squared-fusion-ec": "Connect"
       },
       "serviceDescriptions": {
         "squared-fusion-uc": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
         "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
+        "squared-fusion-gcal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-ec": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too."
       },
-      "preferredWebExSite": "Preferred WebEx Site:",
-      "preferredWebExSiteDefault": "Default"
+      "preferredWebExSite": "Preferred WebEx Site",
+      "preferredWebExSiteDefault": "Default",
+      "calendarType": "Calendar Type",
+      "exchange": "Microsoft Exchange",
+      "google": "Google Calendar",
+      "notSetup": "Not currently set up"
     },
     "alarms": {
       "alarms": "Alarms",
@@ -2704,7 +2710,11 @@
     "reversionRuleDesc": "If the call is not answered, send it to this destination",
     "reversionParkerLabel": "Person who parked the call",
     "reversionOtherLabel": "Another destination",
-    "voicemailCheckLabel": "Send call directly to voicemail"
+    "voicemailCheckLabel": "Send call directly to voicemail",
+    "reversionTimerLabel": "Call Reversion Timer",
+    "reversionTimerDesc": "If the call is not answered, send it to the reversion destination after the following wait time",
+    "reversionTimerSeconds": "Seconds",
+    "fallbackTimer.validation.error": "Must be a number between {{min}} and {{max}}"
   },
   "callPickup": {
     "title": "Call Pickup",
@@ -4733,7 +4743,9 @@
     "authError": "You are not entitled to access this site.",
     "systemError": "Unable to connect to this site.",
     "multipleLicenses": "Multiple...",
-    "checkingServices": "Checking services..."
+    "checkingServices": "Checking services...",
+    "linkedSiteAdminTool": "Launch Site Admin Tool",
+    "LinkedSiteProgress": "Account linking progress"
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
@@ -5499,7 +5511,8 @@
     "Site_Admin": "Site Admin",
     "Readonly_Admin": "Read-only Admin",
     "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin",
-    "Compliance_User": "Compliance Officer"
+    "Compliance_User": "Compliance Officer",
+    "Tech_Support": "Tech Support"
   },
   "helpdesk": {
     "browserTabHeaderTitle": "Help Desk Support",
@@ -5600,7 +5613,8 @@
       "CO": "Advanced Spark Call",
       "CMR": "Collaboration Meeting Rooms",
       "SD": "Room Devices",
-      "ST": "Storage"
+      "ST": "Storage",
+      "linkedSite": "Legacy WebEx License"
     },
     "trial": "Trial",
     "adminUsers": "Administrators",
@@ -5901,7 +5915,7 @@
       "importCsv": "Import CSV",
       "title": "Callback Groups",
       "exportToCsv": "Export to CSV",
-      "editCountry": "Edit Country/Regions",
+      "editCountry": "Edit Countries/Regions",
       "downloadCsv": "Download CSV Template",
       "csvFilename": "exported_callbackGroup.csv",
       "moveSiteMsg": "Are you sure you want to move this site?",
@@ -5932,7 +5946,7 @@
         "customerPlaceholder": "Who is this callback group for?",
         "labelCustomerAttr": "Partner CB Group Name",
         "customerAttrPlaceholder": "Enter a shorter name for quick refernce",
-        "labelCountries": "Select Country/Regions",
+        "labelCountries": "Select Countries/Regions",
         "countriesPlaceholder": "Search to add country"
       },
       "notes": {

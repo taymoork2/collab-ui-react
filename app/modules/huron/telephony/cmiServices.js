@@ -14,7 +14,6 @@
     .factory('UserOTPService', UserOTPService)
     .factory('LineResource', LineService)
     .factory('RemoteDestinationService', RemoteDestinationService)
-    .factory('UnassignedDirectoryNumberService', UnassignedDirectoryNumberService)
     .factory('UserDirectoryNumberService', UserDirectoryNumberService)
     .factory('DirectoryNumberService', DirectoryNumberService)
     .factory('CustomerCommonService', CustomerCommonService)
@@ -23,15 +22,12 @@
     .factory('UserSearchServiceV2', UserSearchServiceV2)
     .factory('NumberSearchServiceV2', NumberSearchServiceV2)
     .factory('HuntGroupServiceV2', HuntGroupServiceV2)
-    .factory('CallParkServiceV2', CallParkServiceV2)
     .factory('AssignAutoAttendantService', AssignAutoAttendantService)
     .factory('UserServiceVoice', UserServiceVoice)
     .factory('VoicemailService', VoicemailService)
     .factory('VoicemailTimezoneService', VoicemailTimezoneService)
     .factory('VoicemailMessageActionService', VoicemailMessageActionService)
     .factory('CompanyNumberService', CompanyNumberService)
-    // Will remove this service later
-    .factory('CallRouterService', CallRouterService)
     .factory('SimultaneousCallsServiceV2', SimultaneousCallsServiceV2)
     .factory('InternalNumberPoolService', InternalNumberPoolService)
     .factory('ExternalNumberPoolService', ExternalNumberPoolService)
@@ -103,13 +99,6 @@
       update: {
         method: 'PUT'
       }
-    });
-  }
-
-  /* @ngInject */
-  function UnassignedDirectoryNumberService($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/unassigneddirectorynumbers', {
-      customerId: '@customerId'
     });
   }
 
@@ -198,22 +187,6 @@
   }
 
   /* @ngInject */
-  function CallParkServiceV2($resource, HuronConfig) {
-    var baseUrl = HuronConfig.getCmiV2Url();
-    return $resource(baseUrl + '/customers/:customerId/features/callparks/:callParkId', {
-      customerId: '@customerId',
-      callParkId: '@callParkId'
-    }, {
-      update: {
-        method: 'PUT'
-      },
-      delete: {
-        method: 'DELETE'
-      }
-    });
-  }
-
-  /* @ngInject */
   function AssignAutoAttendantService($resource, HuronConfig) {
     var baseUrl = HuronConfig.getCmiV2Url();
     return $resource(baseUrl + '/customers/:customerId/features/autoattendants/:cesId/numbers', {
@@ -280,18 +253,6 @@
 
   /* @ngInject */
   function CompanyNumberService($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/companynumbers/:companyNumberId', {
-      customerId: '@customerId',
-      companyNumberId: '@companyNumberId'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
-  }
-
-  /* @ngInject */
-  function CallRouterService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/companynumbers/:companyNumberId', {
       customerId: '@customerId',
       companyNumberId: '@companyNumberId'
