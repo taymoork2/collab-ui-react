@@ -136,7 +136,7 @@ describe('Controller: Care Local Settings', function () {
     });
 
     it('should show error toaster if backend API fails', function () {
-      spyOn(Notification, 'error').and.callFake(function () {
+      spyOn(Notification, 'errorWithTrackingId').and.callFake(function () {
         return true;
       });
       $httpBackend.expectGET(userInfoUrl).respond(200, { roles: 'Full_Admin' });
@@ -149,7 +149,7 @@ describe('Controller: Care Local Settings', function () {
       }
       $httpBackend.flush();
       expect(controller.state).toBe(controller.NOT_ONBOARDED);
-      expect(Notification.error).toHaveBeenCalled();
+      expect(Notification.errorWithTrackingId).toHaveBeenCalled();
     });
 
     it('should disable setup care button, if failed to get status on loading', function () {
@@ -159,5 +159,6 @@ describe('Controller: Care Local Settings', function () {
       $httpBackend.flush();
       expect(controller.state).toBe(controller.ONBOARDED);
     });
+
   });
 });

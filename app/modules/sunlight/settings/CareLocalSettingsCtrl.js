@@ -57,7 +57,7 @@
             stopPolling();
             break;
           case 'Failure':
-            Notification.error($translate.instant('sunlightDetails.settings.setUpCareFailure'));
+            Notification.errorWithTrackingId(result, $translate.instant('sunlightDetails.settings.setUpCareFailure'));
             vm.state = vm.NOT_ONBOARDED;
             stopPolling();
             break;
@@ -70,7 +70,7 @@
             Log.debug('Fetching Care setup status failed: ', result);
             if (vm.errorCount++ >= pollErrorCount) {
               vm.state = vm.NOT_ONBOARDED;
-              Notification.error($translate.instant('sunlightDetails.settings.setUpCareFailure'));
+              Notification.errorWithTrackingId(result, $translate.instant('sunlightDetails.settings.setUpCareFailure'));
               stopPolling();
             }
           }

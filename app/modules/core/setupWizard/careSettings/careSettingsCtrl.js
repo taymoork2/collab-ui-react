@@ -43,7 +43,6 @@
         $interval.cancel(poller);
         poller = undefined;
       }
-      enableNext();
     }
 
     function processOnboardStatus() {
@@ -54,9 +53,10 @@
             Notification.success($translate.instant('firstTimeWizard.careSettingsComplete'));
             vm.state = vm.ONBOARDED;
             stopPolling();
+            enableNext();
             break;
           case 'Failure':
-            Notification.error($translate.instant('sunlightDetails.settings.setUpCareFailure'));
+            Notification.errorWithTrackingId(result, $translate.instant('sunlightDetails.settings.setUpCareFailure'));
             vm.state = vm.NOT_ONBOARDED;
             stopPolling();
             break;
@@ -69,7 +69,7 @@
           Log.debug('Fetching Care setup status failed: ', result);
           if (vm.errorCount++ >= pollErrorCount) {
             vm.state = vm.UNKNOWN;
-            Notification.error('firstTimeWizard.careSettingsFetchFailed');
+            Notification.errorWithTrackingId(result, 'firstTimeWizard.careSettingsFetchFailed');
             stopPolling();
           }
         }
@@ -80,7 +80,6 @@
       Log.debug('Poll timed out after ' + pollerResult + ' attempts.');
       vm.state = vm.NOT_ONBOARDED;
       Notification.error('firstTimeWizard.careSettingsTimeout');
-      enableNext();
     }
 
     function enableNext() {
@@ -114,7 +113,6 @@
           vm.state = vm.NOT_ONBOARDED;
         } else {
           Log.debug('Fetching Care setup status, on load, failed: ', result);
-          enableNext();
         }
       });
     }

@@ -105,11 +105,11 @@ describe('Controller: Care Settings', function () {
       $httpBackend.flush();
       expect(controller.state).toBe(controller.NOT_ONBOARDED);
       expect(Notification.error).toHaveBeenCalled();
-      expect($scope.wizard.isNextDisabled).toBe(false);
+      expect($scope.wizard.isNextDisabled).toBe(true);
     });
 
     it('should show error toaster if backend API fails', function () {
-      spyOn(Notification, 'error').and.callFake(function () {
+      spyOn(Notification, 'errorWithTrackingId').and.callFake(function () {
         return true;
       });
       $httpBackend.whenGET(sunlightChatConfigUrl).respond(500, {});
@@ -121,8 +121,8 @@ describe('Controller: Care Settings', function () {
       }
       $httpBackend.flush();
       expect(controller.state).toBe(controller.UNKNOWN);
-      expect(Notification.error).toHaveBeenCalled();
-      expect($scope.wizard.isNextDisabled).toBe(false);
+      expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+      expect($scope.wizard.isNextDisabled).toBe(true);
     });
 
     it('should allow proceeding with next steps, if failed to get status on loading', function () {
@@ -130,11 +130,11 @@ describe('Controller: Care Settings', function () {
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(403, {});
       $httpBackend.flush();
       expect(controller.state).toBe(controller.UNKNOWN);
-      expect($scope.wizard.isNextDisabled).toBe(false);
+      expect($scope.wizard.isNextDisabled).toBe(true);
     });
 
     it('should show error toaster if onboardStatus is failure', function () {
-      spyOn(Notification, 'error').and.callFake(function () {
+      spyOn(Notification, 'errorWithTrackingId').and.callFake(function () {
         return true;
       });
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
@@ -146,8 +146,8 @@ describe('Controller: Care Settings', function () {
       $interval.flush(10001);
       $httpBackend.flush();
       expect(controller.state).toBe(controller.NOT_ONBOARDED);
-      expect(Notification.error).toHaveBeenCalled();
-      expect($scope.wizard.isNextDisabled).toBe(false);
+      expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+      expect($scope.wizard.isNextDisabled).toBe(true);
     });
   });
 });
