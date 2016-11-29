@@ -1,3 +1,5 @@
+require('./_user-manage.scss');
+
 (function () {
   'use strict';
 
