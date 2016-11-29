@@ -28,7 +28,7 @@ export class CallParkService {
   private callParkRangeResource: ICallParkRangeResource;
   private directoryNumberResource: IDirectoryNumberResource;
   private callParkDataCopy: CallPark;
-  private callParkProperties: Array<string> = ['uuid', 'name', 'startRange', 'endRange', 'members'];
+  private callParkProperties: Array<string> = ['uuid', 'name', 'startRange', 'endRange', 'members', 'fallbackTimer'];
   private fallbackDestProperties: Array<string> = ['memberUuid', 'name', 'number', 'numberUuid', 'sendToVoicemail'];
 
   /* @ngInject */
@@ -152,6 +152,7 @@ export class CallParkService {
       members: _.map(data.members, (member) => {
         return member.memberUuid;
       }),
+      fallbackTimer: data.fallbackTimer,
       fallbackDestination: {
         number: data.fallbackDestination.number,
         numberUuid: data.fallbackDestination.numberUuid,

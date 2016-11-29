@@ -73,7 +73,6 @@ describe('UserListCtrl: Ctrl', function () {
     spyOn(Auth, 'isOnlineOrg').and.returnValue($q.when(false));
 
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasCsvEnhancementGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue($q.when(false));
   }));
 
@@ -215,28 +214,6 @@ describe('UserListCtrl: Ctrl', function () {
     });
     it('should expect telstraUser to be true', function () {
       expect($scope.getUserLicenses(telstraUser)).toBe(true);
-    });
-  });
-
-  describe('startExportUserList', function () {
-    beforeEach(initController);
-
-    it('should emit csv-download-request', function () {
-      $scope.startExportUserList();
-      $scope.$apply();
-      expect($scope.$emit).toHaveBeenCalledWith("csv-download-request", {
-        csvType: "user",
-        tooManyUsers: false
-      });
-    });
-    it('should emit csv-download-request with tooManyUsers when there are too many users in the org', function () {
-      $scope.totalUsers = $scope.userExportThreshold + 1;
-      $scope.startExportUserList();
-      $scope.$apply();
-      expect($scope.$emit).toHaveBeenCalledWith("csv-download-request", {
-        csvType: "user",
-        tooManyUsers: true
-      });
     });
   });
 

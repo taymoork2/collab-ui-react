@@ -4,7 +4,6 @@
   <h3 class="modal-title" translate="{{showActivationCode.title}}"></h3>
 </div>
 <div class="modal-body showActivationCode">
-  <span class="badge success" ng-show="showActivationCode.codeIsUsed" translate="addDeviceWizard.showActivationCode.codeIsUsed"></span>
   <div ng-hide="showActivationCode.failure">
     <div class="device-wizard view-activation-code" id="printActivationCode" print-element-margin="3rem 3rem">
       <h4 translate="addDeviceWizard.showActivationCode.activationCode"></h4>
@@ -21,10 +20,8 @@
         <br>
         <span ng-if="showActivationCode.account.type === 'personal'"
               translate="addDeviceWizard.showActivationCode.onceActivePersonalDevice"></span>
-        <span ng-if="showActivationCode.account.type !== 'personal' && showActivationCode.showPlaces"
+        <span ng-if="showActivationCode.account.type !== 'personal'"
               translate="addDeviceWizard.showActivationCode.onceActiveSharedDevice"></span>
-        <span ng-if="showActivationCode.account.type !== 'personal' && !showActivationCode.showPlaces"
-              translate="addDeviceWizard.showActivationCode.onceActiveSharedDeviceNoPlaces"></span>
       </p>
       <div class="qrCodeSection" ng-if="showActivationCode.isLoading">
         <i class="loading space icon icon-spinner"></i>

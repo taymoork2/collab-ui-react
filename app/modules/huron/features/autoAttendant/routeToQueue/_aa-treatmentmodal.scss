@@ -2,11 +2,18 @@
   .aa-treatment-modal {
     @include vr-spacing(mt, 0.5);
   }
-
+  .aa-message-select-list {
+    margin-bottom: 0rem;
+  }
   .aa-select-modal {
     width: 9.4rem;
     display: inline-block;
     @include vr-spacing(mr, 0.5);
+  }
+
+  .aa-display-radio {
+    display: flex;
+    flex-wrap: wrap;
   }
 
   & .aa-destination-container {

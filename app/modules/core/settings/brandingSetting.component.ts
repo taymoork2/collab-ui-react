@@ -9,14 +9,7 @@ export class BrandingSetting extends SettingSection {
   }
 }
 
-angular.module('Core').component('brandingSettingOld', {
+angular.module('Core').component('brandingSetting', {
   controller: 'BrandingCtrl as bctrl',
   templateUrl: 'modules/core/partnerProfile/branding/branding.tpl.html',
-});
-angular.module('Core').component('brandingSettingNew', {
-  controller: 'BrandingCtrl as bctrl',
-  templateUrl: 'modules/core/partnerProfile/branding/brandingWordingChange.tpl.html',
-});
-angular.module('Core').component('brandingSetting', {
-  template: '<branding-setting-new cr-feature-toggle feature-show="atlas-branding-wording-change"></branding-setting-new><branding-setting-old cr-feature-toggle feature-hide="atlas-branding-wording-change"></branding-setting-old>',
 });

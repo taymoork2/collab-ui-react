@@ -9,12 +9,11 @@
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
     vm.deviceType = wizardData.account.deviceType;
-    vm.showPlaces = wizardData.showPlaces;
     var minlength = 3;
     var maxlength = 64;
 
     vm.onlyNew = function () {
-      return wizardData.function == 'addPlace' || (!wizardData.showPlaces && vm.deviceType == 'cloudberry');
+      return wizardData.function == 'addPlace';
     };
 
     vm.isNewCollapsed = !vm.onlyNew();
@@ -32,9 +31,6 @@
     init();
 
     vm.localizedCreateInstructions = function () {
-      if (!vm.showPlaces) {
-        return $translate.instant('addDeviceWizard.chooseSharedSpace.deviceInstalledInstructions');
-      }
       if (vm.deviceType === 'huron') {
         return $translate.instant('placesPage.placesDefinition');
       }
@@ -42,24 +38,22 @@
     };
 
     function loadList() {
-      if (vm.showPlaces) {
-        if (vm.deviceType == 'cloudberry') {
-          CsdmDataModelService.getPlacesMap().then(function (placesList) {
-            vm.rooms = _(placesList).filter(function (place) {
-              return _.isEmpty(place.devices) && place.type == 'cloudberry';
-            }).sortBy('displayName').value();
-            vm.hasRooms = vm.rooms.length > 0;
-            vm.placesLoaded = true;
-          });
-        } else {
-          CsdmDataModelService.getPlacesMap().then(function (placesList) {
-            vm.rooms = _(placesList).filter(function (place) {
-              return place.type == 'huron';
-            }).sortBy('displayName').value();
-            vm.hasRooms = vm.rooms.length > 0;
-            vm.placesLoaded = true;
-          });
-        }
+      if (vm.deviceType == 'cloudberry') {
+        CsdmDataModelService.getPlacesMap().then(function (placesList) {
+          vm.rooms = _(placesList).filter(function (place) {
+            return _.isEmpty(place.devices) && place.type == 'cloudberry';
+          }).sortBy('displayName').value();
+          vm.hasRooms = vm.rooms.length > 0;
+          vm.placesLoaded = true;
+        });
+      } else {
+        CsdmDataModelService.getPlacesMap().then(function (placesList) {
+          vm.rooms = _(placesList).filter(function (place) {
+            return place.type == 'huron';
+          }).sortBy('displayName').value();
+          vm.hasRooms = vm.rooms.length > 0;
+          vm.placesLoaded = true;
+        });
       }
     }
 

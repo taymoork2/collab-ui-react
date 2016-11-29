@@ -2,6 +2,7 @@ $overlay-panel-height: 93px;
 
 @import 'callParkNumber/cp-number-lookup';
 @import 'callParkMember/cp-member-lookup';
+@import 'callParkReversionTimer/cp-reversion-timer';
 
 .callpark {
   &.overlay-panel {

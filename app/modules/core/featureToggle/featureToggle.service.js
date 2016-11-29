@@ -15,11 +15,9 @@
   function FeatureToggleService($http, $q, $resource, $state, Authinfo, HuronCustomerFeatureToggleService, UrlConfig, Orgservice) {
     var features = {
       dirSync: 'atlas-dir-sync',
-      atlasBrandingWordingChange: 'atlas-branding-wording-change',
       atlasCareTrials: 'atlas-care-trials',
       atlasCareCallbackTrials: 'atlas-care-callback-trials',
       atlasContextServiceTrials: 'atlas-context-service-trials',
-      atlasCsvEnhancement: 'atlas-csv-enhancement',
       atlasCustomerListUpdate: 'atlas-customer-list-update',
       atlasDarling: 'atlas-darling',
       atlasDataRetentionSettings: 'atlas-data-retention-settings',
@@ -159,7 +157,6 @@
       locationSharing: 'location-sharing',
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
-      csdmPlaces: 'csdm-places',
       csdmPstn: 'csdm-pstn',
       csdmATA: 'csdm-ata',
       csdmHybridCall: 'csdm-hybrid-call',
@@ -167,6 +164,7 @@
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
       huronDeviceE911: 'huron-device-e911-address',
       gemServicesTab: 'gem-services-tab',
+      gemCCA: 'gem-cloud-connected-audio',
       atlasHybridDataSecurity: 'atlas-data-security',
       atlasHerculesEmergencyUpgrade: 'atlas-hercules-emergency-upgrade',
       atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',
