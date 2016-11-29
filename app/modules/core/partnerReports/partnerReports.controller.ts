@@ -1,3 +1,5 @@
+import './_partner-reports.scss';
+
 import {
   IActiveUserData,
   IActiveUserReturnData,
