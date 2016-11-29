@@ -16,6 +16,7 @@ describe('controller: UpdateIncidentCtrl', function () {
       impact: 'none',
       message: 'testMessage',
       status: 'investigating',
+      localizedStatus: 'gss.incidentStatus.investigating'
     },
     majorOutageStatus: {
       label: 'gss.componentStatus.majorOutage',
@@ -236,5 +237,10 @@ describe('controller: UpdateIncidentCtrl', function () {
   it('hideAffectedComponent, isShowAffectedComponents to be false', function () {
     controller.hideAffectedComponent(testData.message);
     expect(testData.message.isShowAffectedComponents).toBeFalsy();
+  });
+
+  it('getLocalizedIncidentStatus', function () {
+    expect(controller.getLocalizedIncidentStatus(testData.incidentForUpdate.status))
+      .toEqual(testData.incidentForUpdate.localizedStatus);
   });
 });

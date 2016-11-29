@@ -20,17 +20,22 @@
     <ul ng-if="incidentsCtrl.hasIncident">
       <li ng-repeat="incident in incidentsCtrl.list | orderBy:'-incident.lastModifiedTime':true">
         <div class="row">
-          <div class="columns">{{ ::incident.incidentName }}</div>
+          <div class="columns div-word-wrapper">{{ ::incident.incidentName }}</div>
         </div>
 
         <div class="row">
           <div class="columns medium-8">
-            <span ng-if="!(incidentsCtrl.isResolved(incident.status))"
-                  translate="gss.incidentsPage.lastUpdatedOn"></span>
+            <h6>
+              <span translate="gss.incidentsPage.createdAt"></span>
+              <span>{{ ::incident.createTime | date: "MMM d, y HH:mm" : "UTC" }} UTC</span>
+            </h6>
 
-            <span ng-if="incidentsCtrl.isResolved(incident.status)" translate="gss.incidentsPage.resolvedOn"></span>
-
-            <span>{{ ::incident.lastModifiedTime | date: "MMM d, y HH:mm" : 'UTC' }} UTC</span>
+            <h6>
+              <span ng-if="!(incidentsCtrl.isResolved(incident.status))"
+                    translate="gss.incidentsPage.lastUpdatedOn"></span>
+              <span ng-if="incidentsCtrl.isResolved(incident.status)" translate="gss.incidentsPage.resolvedOn"></span>
+              <span>{{ ::incident.lastModifiedTime | date: "MMM d, y HH:mm" : "UTC" }} UTC</span>
+            </h6>
           </div>
 
           <div class="columns medium-4">

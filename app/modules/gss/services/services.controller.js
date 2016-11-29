@@ -6,7 +6,7 @@
     .controller('GSSServicesCtrl', GSSServicesCtrl);
 
   /* @ngInject */
-  function GSSServicesCtrl($modal, $scope, GSSService) {
+  function GSSServicesCtrl($modal, $state, $scope, GSSService) {
     var vm = this;
 
     vm.editService = editService;
@@ -35,23 +35,9 @@
     }
 
     function deleteService(service) {
-      $modal.open({
-        type: 'small',
-        controller: 'DeleteServiceCtrl',
-        controllerAs: 'deleteServiceCtrl',
-        templateUrl: 'modules/gss/services/deleteService/deleteService.tpl.html',
-        modalClass: 'status-delete-service',
-        resolve: {
-          theService: getService(service)
-        }
-      }).result.then(function () {
-        refreshServices();
-        notifyServiceDeleted();
+      $state.go('gss.services.delete', {
+        service: service
       });
-    }
-
-    function notifyServiceDeleted() {
-      $scope.$emit('serviceDeleted');
     }
 
     function refreshServices() {

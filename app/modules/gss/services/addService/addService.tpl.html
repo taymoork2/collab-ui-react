@@ -12,7 +12,7 @@
       <label class="cs-input__label medium-3 columns" for="add-service-name" translate="gss.serviceName"></label>
 
       <div class=" medium-9 columns">
-        <input id="add-service-name" cs-input required type="text" minlength="3" ng-maxlength="64"
+        <input id="add-service-name" cs-input required type="text" maxlength="200"
                ng-model="addServiceCtrl.serviceName"
                placeholder="{{ ::'gss.serviceName' | translate }}">
       </div>

@@ -95,6 +95,6 @@ describe('controller: UpdateComponentCtrl', function () {
 
   it('addComponent isValid false, don\'t call modifyComponent service', function () {
     controller.updateComponent();
-    expect(ComponentsService.modifyComponent.calls.count()).toEqual(0);
+    expect(ComponentsService.modifyComponent).not.toHaveBeenCalled();
   });
 });

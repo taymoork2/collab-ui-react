@@ -1,7 +1,7 @@
 <div class="update-incident-page">
   <div class="content-common-style small-12 large-10 xlarge-8">
     <div class="title-section">
-      <div class="title" ng-show="!updateIncidentCtrl.isEditingTitle">
+      <div class="title div-word-wrapper" ng-show="!updateIncidentCtrl.isEditingTitle">
         <h3 ng-class="updateIncidentCtrl.incidentForUpdate.impact">
             {{ updateIncidentCtrl.incidentForUpdate.incidentName }}
           <a id="editTitle" ng-click="updateIncidentCtrl.showEditTitle()" translate="common.edit"></a>
@@ -10,7 +10,7 @@
 
       <div class="edit-title" ng-show="updateIncidentCtrl.isEditingTitle">
         <input id="editIncidentName" type="text" class="cs-input"
-               ng-model="updateIncidentCtrl.incidentNameForEdit"/>
+               ng-model="updateIncidentCtrl.incidentNameForEdit" maxlength="200"/>
 
         <cs-select
           id="editIncidentImpactStatus"
@@ -63,7 +63,7 @@
       </div>
 
       <div class="sub-section">
-        <label class="cs-input__label" translate="gss.componentStatuses"></label>
+        <label class="cs-input__label" translate="gss.componentStatuses" ng-if="updateIncidentCtrl.components.length"></label>
         <ul class="component-list icon-ul">
           <li ng-repeat="groupComponent in updateIncidentCtrl.components">
             <div class="row">
@@ -73,7 +73,7 @@
                    ng-class="{ 'icon-chevron-right': groupComponent.isCollapsed, 'icon-chevron-down': !groupComponent.isCollapsed }"
                    ng-click="groupComponent.isCollapsed = !groupComponent.isCollapsed">
                 </i>
-                {{ ::groupComponent.componentName }}
+                  {{ ::groupComponent.componentName }}
               </div>
 
               <div class="columns medium-2">
@@ -135,19 +135,16 @@
         <li ng-repeat="message in updateIncidentCtrl.incidentForUpdate.messages">
           <div ng-init="updateIncidentCtrl.initMessageData(message)">
             <div ng-show="!message.isEditingMessage">
-              <strong>{{ ::message.status }}</strong> - {{ message.message }}
-              <a class="edit-message-link" ng-click="updateIncidentCtrl.showEditMessage(message)"
-                 translate="common.edit">
-              </a>
+              <strong>{{ updateIncidentCtrl.getLocalizedIncidentStatus(message.status) }}</strong>
+              <div class="div-word-wrapper msg-inner-wrapper">{{ message.message }}</div>
+              <div>
+                <a class="edit-message-link" ng-click="updateIncidentCtrl.showEditMessage(message)"
+                   translate="common.edit">
+                </a>
+              </div>
             </div>
 
             <div ng-show="message.isEditingMessage">
-              <cs-datepicker class="date-time-plugin pull-left" ng-model="message.editDateValue" required>
-              </cs-datepicker>
-
-              <input type="text" cs-timepicker twentyfourhour="true" ng-model="message.editTimeValue"
-                     class="date-time-plugin timepicker-input pull-left">
-
               <textarea ng-model="message.editMessage"></textarea>
 
               <button cs-btn
@@ -166,16 +163,24 @@
           </div>
 
           <div ng-show="!message.isEditingMessage">
-            <span translate="gss.incidentsPage.postAt"></span>
-            <span>{{ message.postAt | date: "MM d, y HH:mm" : 'UTC' }} UTC</span>
 
-            <a ng-show="!message.isShowAffectedComponents"
-               ng-click="updateIncidentCtrl.showAffectedComponents(message)" translate="gss.showAffectedComponents">
-            </a>
+            <div>
+              <span translate="gss.incidentsPage.postedAt"></span>
+              <span>{{ message.postAt | date: "MMM d, y HH:mm" : "UTC" }} UTC</span>
+            </div>
+            <div>
+              <span translate="gss.incidentsPage.lastUpdatedOn"></span>
+              <span>{{ message.lastModifiedTime | date: "MMM d, y HH:mm" : "UTC" }} UTC</span>
+            </div>
+            <div>
+              <a ng-show="!message.isShowAffectedComponents"
+                 ng-click="updateIncidentCtrl.showAffectedComponents(message)" translate="gss.showAffectedComponents">
+              </a>
 
-            <a ng-show="message.isShowAffectedComponents"
-               ng-click="updateIncidentCtrl.hideAffectedComponent(message)" translate="gss.hideAffectedComponents">
-            </a>
+              <a ng-show="message.isShowAffectedComponents"
+                 ng-click="updateIncidentCtrl.hideAffectedComponent(message)" translate="gss.hideAffectedComponents">
+              </a>
+            </div>
 
             <div ng-show="message.isShowAffectedComponents">
               <h6 ng-if="!message.hasAffectedComponent" translate="gss.incidentsPage.noAffectedComponent"></h6>
