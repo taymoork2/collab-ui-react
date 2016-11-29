@@ -77,6 +77,7 @@
 //Grey list:
       uploadLogs: uploadLogs,
       deleteDevice: deleteDevice,
+      notifyDevice: notifyDevice,
 
       renewRsuKey: renewRsuKey
     };

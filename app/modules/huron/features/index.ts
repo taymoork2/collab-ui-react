@@ -10,6 +10,7 @@ export default angular
     require('angular-resource'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/config/urlConfig'),
+    require('modules/huron/telephony/telephonyConfig'),
     memberService,
   ])
   .service('FeatureMemberService', FeatureMemberService)

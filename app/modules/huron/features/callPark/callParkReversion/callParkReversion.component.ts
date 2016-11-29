@@ -1,5 +1,7 @@
 import { FallbackDestination } from 'modules/huron/features/callPark/services/callPark';
+import { CallParkService } from 'modules/huron/features/callPark/services';
 import { MemberService, Member } from 'modules/huron/members';
+import { NumberService } from 'modules/huron/numbers';
 import { Line } from 'modules/huron/lines/services/line';
 
 class CallParkReversionCtrl implements ng.IComponentController {
@@ -14,10 +16,13 @@ class CallParkReversionCtrl implements ng.IComponentController {
   public showMember: boolean;
   public openPanel: boolean = false;
   public cpReversionForm: ng.IFormController;
+  public directoryNumber: any;
 
   /* @ngInject */
   constructor(
     private MemberService: MemberService,
+    private NumberService: NumberService,
+    private CallParkService: CallParkService,
     private CustomerVoiceCmiService,
     private TelephoneNumberService,
     private Authinfo,
@@ -41,21 +46,41 @@ class CallParkReversionCtrl implements ng.IComponentController {
       this.selectedReversionNumber = undefined;
     } else {
       this.reversionType = 'destination';
+      this.directoryNumber = undefined;
       if (!_.isNull(callParkChanges.currentValue.numberUuid)) {
         this.showMember = true;
         this.showReversionLookup = false;
-        // TODO (jlowery): go get number details
+        this.CallParkService.getDirectoryNumber(callParkChanges.currentValue.numberUuid).then( (dn) => this.directoryNumber = dn);
       } else {
-        this.selectedReversionNumber = this.TelephoneNumberService.getDestinationObject(callParkChanges.currentValue.number);
-        this.showMember = false;
-        this.showReversionLookup = true;
+        this.isValidInternalNumber(callParkChanges.currentValue.number).then( isInternalNumber => {
+          if (isInternalNumber) {
+            this.showMember = true;
+            this.showReversionLookup = false;
+          } else {
+            this.selectedReversionNumber = this.TelephoneNumberService.getDestinationObject(callParkChanges.currentValue.number);
+            this.showMember = false;
+            this.showReversionLookup = true;
+          }
+        });
       }
     }
   }
 
-  public getMemberList(value: string): ng.IPromise<Array<Member>> {
-    return this.MemberService.getMemberList(value, true).then( members => {
-      return members;
+  public getMemberList(value: any): ng.IPromise<Array<any>> {
+    if (isNaN(value)) {
+      return this.MemberService.getMemberList(value, true).then( members => {
+        return members;
+      });
+    } else {
+      return this.NumberService.getNumberList(value, undefined, true).then(numbers => {
+        return numbers;
+      });
+    }
+  }
+
+  public isValidInternalNumber(number: string): ng.IPromise<boolean> {
+    return this.NumberService.getNumberList(number, undefined, true).then( numbers => {
+      return numbers.length > 0;
     });
   }
 
@@ -65,21 +90,25 @@ class CallParkReversionCtrl implements ng.IComponentController {
     }).$promise;
   }
 
-  public onSelectReversionMember(member: Member): void {
+  public onSelectReversionMember(data: any): void {
     this.cpReversionForm.$setValidity('', true, this.cpReversionForm);
     this.selectedReversionNumber = undefined;
     this.showMember = true;
     this.showReversionLookup = false;
     let fallbackDestination = new FallbackDestination({
-      name: this.getDisplayName(member),
-      numberUuid: this.getPrimaryNumberUuid(member),
-      number: null,
-      memberUuid: member.uuid,
+      name: this.CallParkService.getDisplayName(<Member>data) || data.number,
+      numberUuid: _.get<string | null>(this.getPrimaryNumber(<Member>data), 'uuid', null),
+      number: _.get<string | null>(data, 'number', null),
+      memberUuid: data.uuid,
       sendToVoicemail: false,
     });
     this.onChangeFn({
       fallbackDestination: fallbackDestination,
     });
+  }
+
+  public setSelectedReversionNumber(model) {
+    this.selectedReversionNumber = model;
   }
 
   public toggleMemberPanel(): void {
@@ -145,29 +174,10 @@ class CallParkReversionCtrl implements ng.IComponentController {
     }
   }
 
-  private getPrimaryNumberUuid(member: Member): string {
-    let number: Line = _.find<Line>(member.numbers, (item) => {
+  private getPrimaryNumber(member: Member): Line {
+    return _.find<Line>(member.numbers, (item) => {
       return item.primary === true;
     });
-    return _.get(number, 'uuid', '');
-  }
-
-  public getDisplayName(member: Member): string | undefined {
-    if (!member) {
-      return;
-    }
-
-    if (!member.firstName && !member.lastName) {
-      return member.userName;
-    } else if (member.firstName && member.lastName) {
-      return member.firstName + ' ' + member.lastName;
-    } else if (member.firstName) {
-      return member.firstName;
-    } else if (member.lastName) {
-      return member.lastName;
-    } else {
-      return;
-    }
   }
 
 }

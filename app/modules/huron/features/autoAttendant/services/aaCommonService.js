@@ -16,6 +16,7 @@
     var aaQueueSettingsStatus = false;
     var routeQueueToggle = false;
     var mediaUploadToggle = false;
+    var clioToggle = false;
     var uniqueId = 0;
 
     var invalidList = {};
@@ -30,8 +31,10 @@
       setQueueSettingsStatus: setQueueSettingsStatus,
       setMediaUploadToggle: setMediaUploadToggle,
       setRouteQueueToggle: setRouteQueueToggle,
+      setClioToggle: setClioToggle,
       isRouteQueueToggle: isRouteQueueToggle,
       isMediaUploadToggle: isMediaUploadToggle,
+      isClioToggle: isClioToggle,
       isValid: isValid,
       setIsValid: setIsValid,
       getInvalid: getInvalid,
@@ -120,8 +123,19 @@
       aaQueueSettingsStatus = status;
     }
 
+    function setClioToggle(status) {
+      clioToggle = status;
+    }
+
     function setMediaUploadToggle(status) {
       mediaUploadToggle = status;
+    }
+
+    /**
+     * Will check the toggle status for clio enabled upload
+     */
+    function isClioToggle() {
+      return clioToggle;
     }
 
     /**

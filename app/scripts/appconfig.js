@@ -499,6 +499,19 @@
               }
             }
           })
+          .state('addDeviceFlow.callConnectOptions', {
+            parent: 'modal',
+            params: {
+              wizard: null
+            },
+            views: {
+              'modal@': {
+                templateUrl: 'modules/squared/places/callConnect/CallConnectOptions.tpl.html',
+                controller: 'CallConnectOptionsCtrl',
+                controllerAs: 'callConnectOptions'
+              }
+            }
+          })
           .state('activate', {
             url: '/activate',
             views: {
@@ -1151,7 +1164,19 @@
               displayName: 'Calendar Service'
             },
             params: {
-              extensionId: {}
+              extensionId: {},
+              extensions: {}
+            }
+          })
+          .state('user-overview.hybrid-services-squared-fusion-gcal', {
+            templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+            controller: 'CalendarServicePreviewCtrl',
+            data: {
+              displayName: 'Calendar Service'
+            },
+            params: {
+              extensionId: {},
+              extensions: {}
             }
           })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
@@ -1713,8 +1738,9 @@
             controller: 'GemCtrl',
             template: '<div ui-view></div>'
           })
-          .state('gem.services', {
-            url: '/services/index',
+          .state('gemOverview', {
+            parent: 'partner',
+            url: '/services/overview',
             template: '<cca-card></cca-card>'
           })
           .state('gem.servicesPartner', {
@@ -1752,21 +1778,25 @@
             },
             templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html'
           })
-          .state('gem.cbgDetails', {
+          .state('gemCbgDetails', {
             parent: 'sidepanel',
             views: {
-              'sidepanel@': {
-                controller: 'CbgDetailsCtrl',
-                controllerAs: 'detailsCtrl',
-                templateUrl: 'modules/gemini/callbackGroup/cbgDetails.tpl.html'
-              }
+              'sidepanel@': { template: '<cbg-details></cbg-details>' }
             },
-            params: {
-              info: {}
-            },
-            data: {
-              displayName: 'Overview'
-            }
+            params: { info: {} },
+            data: {}
+          })
+          .state('gemCbgDetails.sites', {
+            template: '<cbg-sites></cbg-sites>',
+            params: { obj: {} }
+          })
+          .state('gemCbgDetails.editCountry', {
+            template: '<cbg-edit-country></cbg-edit-country>',
+            params: { obj: {} }
+          })
+          .state('gemCbgDetails.notes', {
+            template: '<cbg-notes></cbg-notes>',
+            params: { obj: {} }
           })
           .state('partnercustomers.list', {
             url: '/customers',
@@ -2313,6 +2343,14 @@
             controller: 'HuronSettingsCtrl',
             controllerAs: 'settings'
           })
+          .state('users.enableVoicemail', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                templateUrl: 'modules/huron/settings/bulkEnableVmModal/bulkEnableVmModal.html'
+              }
+            }
+          })
           .state('huronfeatures', {
             url: '/features',
             parent: 'hurondetails',
@@ -2459,7 +2497,7 @@
         $stateProvider
           .state('services-overview', {
             url: '/services',
-            templateUrl: 'modules/services/overview.html',
+            templateUrl: 'modules/services-overview/overview.html',
             controller: 'ServicesOverviewCtrl',
             controllerAs: 'servicesOverviewCtrl',
             parent: 'main'
@@ -2669,7 +2707,12 @@
               clusterId: null
             },
             parent: 'main',
-            abstract: true
+            abstract: true,
+            resolve: {
+              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
+              }
+            }
           })
           .state('calendar-service.list', {
             url: '/services/calendar',
@@ -2707,7 +2750,12 @@
             params: {
               clusterId: null
             },
-            parent: 'main'
+            parent: 'main',
+            resolve: {
+              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
+              }
+            }
           })
           .state('call-service.list', {
             url: '/services/call',
@@ -2724,37 +2772,9 @@
             url: '/services/call/settings',
             views: {
               fullPane: {
-                controllerAs: 'expresswayServiceSettings',
-                controller: 'ExpresswayServiceSettingsController',
+                controllerAs: 'callServiceSettings',
+                controller: 'CallServiceSettingsController',
                 templateUrl: 'modules/hercules/service-settings/call-service-settings.html'
-              }
-            }
-          })
-          .state('management-service', {
-            templateUrl: 'modules/hercules/overview/overview.html',
-            controller: 'ExpresswayServiceController',
-            controllerAs: 'exp',
-            data: {
-              connectorType: 'c_mgmt'
-            },
-            parent: 'main',
-            abstract: true
-          })
-          .state('management-service.list', {
-            url: '/services/expressway-management',
-            views: {
-              'fullPane': {
-                templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
-              }
-            }
-          })
-          .state('management-service.settings', {
-            url: '/services/expressway-management/settings',
-            views: {
-              fullPane: {
-                controllerAs: 'expresswayServiceSettings',
-                controller: 'ExpresswayServiceSettingsController',
-                templateUrl: 'modules/hercules/service-settings/management-service-settings.html'
               }
             }
           })
@@ -2846,6 +2866,40 @@
           });
 
         $stateProvider
+
+          .state('media-service-v2.reports', {
+            url: '/mediaservicereport',
+            templateUrl: 'modules/mediafusion/media-service-report-v2/media-service-reports.tpl.html',
+            controller: 'MediaServiceReportsController',
+            controllerAs: 'nav',
+            parent: 'main',
+            params: {
+              tab: null,
+              siteUrl: null
+            }
+          })
+          .state('media-service-v2.reports-metrics', {
+            url: '/mediaservicereport/metrics',
+            templateUrl: 'modules/mediafusion/media-service-report-v2/media-service-reports.tpl.html',
+            controller: 'MediaServiceReportsController',
+            controllerAs: 'nav',
+            parent: 'main',
+            params: {
+              tab: 'metrics',
+              siteUrl: null
+            }
+          })
+          .state('media-service-v2.reports-meetings', {
+            url: '/mediaservicereport/meetings',
+            templateUrl: 'modules/mediafusion/media-service-report-v2/media-service-reports.tpl.html',
+            controller: 'MediaServiceReportsController',
+            controllerAs: 'nav',
+            parent: 'main',
+            params: {
+              tab: 'meetings',
+              siteUrl: null
+            }
+          })
 
         //V2 API changes
           .state('media-service-v2', {
@@ -3038,7 +3092,9 @@
               deleteFeatureId: null,
               deleteFeatureType: null
             }
-          })
+          });
+
+        $stateProvider
           .state('gss', {
             url: '/gss',
             templateUrl: 'modules/gss/gssIframe/gssIframe.tpl.html',
@@ -3082,6 +3138,49 @@
             templateUrl: 'modules/gss/services/services.tpl.html',
             controller: 'GSSServicesCtrl',
             controllerAs: 'gssServicesCtrl'
+          })
+          .state('gss.incidents', {
+            url: '/incidents',
+            templateUrl: 'modules/gss/incidents/incidents.tpl.html',
+            controller: 'IncidentsCtrl',
+            controllerAs: 'incidentsCtrl'
+          })
+          .state('gss.incidents.new', {
+            url: '/new',
+            views: {
+              '@gss': {
+                templateUrl: 'modules/gss/incidents/createIncident/createIncident.tpl.html',
+                controller: 'CreateIncidentCtrl',
+                controllerAs: 'createIncidentCtrl'
+              }
+            }
+          })
+          .state('gss.incidents.delete', {
+            url: '/delete',
+            views: {
+              '@gss': {
+                templateUrl: 'modules/gss/incidents/deleteIncident/deleteIncident.tpl.html',
+                controller: 'DeleteIncidentCtrl',
+                controllerAs: 'deleteIncidentCtrl'
+              }
+            },
+            params: {
+              incident: null
+            }
+          })
+          .state('gss.incidents.update', {
+            url: '/update',
+            views: {
+              '@gss': {
+                templateUrl: 'modules/gss/incidents/updateIncident/updateIncident.tpl.html',
+                controller: 'UpdateIncidentCtrl',
+                controllerAs: 'updateIncidentCtrl'
+              }
+            },
+            params: {
+              incident: null,
+              actionType: null
+            }
           });
       }
     ]);

@@ -128,6 +128,7 @@
           var cmrLicenses = [];
           var careLicenses = [];
           var confLicensesWithoutSiteUrl = [];
+          var confLicensesLinkedSiteUrl = [];
           var customerAccounts = data.customers || [];
 
           if (customerAccounts.length > 0) {
@@ -174,6 +175,9 @@
                   if (license.siteUrl) {
                     confLicensesWithoutSiteUrl.push(service);
                   }
+                  if (license.linkedSiteUrl) {
+                    confLicensesLinkedSiteUrl.push(service);
+                  }
                   confLicenses.push(service);
                   break;
                 case Config.licenseTypes.MESSAGING:
@@ -211,6 +215,9 @@
           }
           if (confLicensesWithoutSiteUrl.length !== 0) {
             authData.conferenceServicesWithoutSiteUrl = confLicensesWithoutSiteUrl;
+          }
+          if (confLicensesLinkedSiteUrl.length !== 0) {
+            authData.conferenceServicesWithLinkedSiteUrl = confLicensesLinkedSiteUrl;
           }
           $rootScope.$broadcast('AccountinfoUpdated');
         } //end if
@@ -274,6 +281,9 @@
       },
       getConferenceServicesWithoutSiteUrl: function () {
         return authData.conferenceServicesWithoutSiteUrl;
+      },
+      getConferenceServicesWithLinkedSiteUrl: function () {
+        return authData.conferenceServicesWithLinkedSiteUrl;
       },
       getRoles: function () {
         return authData.roles;
@@ -398,6 +408,9 @@
       isSupportUser: function () {
         return this.hasRole('Support') && !this.isAdmin();
       },
+      isTechSupport: function () {
+        return this.hasRole('Tech_Support');
+      },
       isHelpDeskUser: function () {
         return this.hasRole(Config.roles.helpdesk);
       },
@@ -445,6 +458,10 @@
       },
       isFusionCal: function () {
         return isEntitled(Config.entitlements.fusion_cal);
+      },
+      isFusionGoogleCal: function () {
+        /* Hard-coded list of orgs until https://atlas-integration.wbx2.com/admin/api/v1/organizations/(orgId)/services returns the Google Calendar entitlement  */
+        return this.getOrgId() === 'fe5acf7a-6246-484f-8f43-3e8c910fc50d' || this.getOrgId() === '5a0b787d-5a24-4e22-ae88-2c3e3edf03eb';
       },
       isFusionEC: function () {
         return isEntitled(Config.entitlements.fusion_ec);

@@ -25,8 +25,15 @@
     var saveDeferred;
     var csvHeaders = null;
     var orgHeaders;
-
+    var renamedHeaders = {
+      'Calendar Service': 'Hybrid Calendar Service (Exchange)'
+    };
+    var mutuallyExclusiveCalendarEntitlements = {
+      'squaredFusionCal': 'squaredFusionGCal',
+      'squaredFusionGCal': 'squaredFusionCal'
+    };
     var USER_ID_EMAIL_HEADER = 'User ID/Email (Required)';
+    var NO_RESOURCE_GROUP = '**no resource group**';
 
     CsvDownloadService.getCsv('headers').then(function (csvData) {
       orgHeaders = angular.copy(csvData.columns || []);
@@ -370,7 +377,7 @@
       } else {
         _.forEach(userHeaders, function (uHeader, k) {
           index = _.findIndex(serverHeaders, function (sHeader) {
-            return sHeader.name === uHeader;
+            return sHeader.name === uHeader || sHeader.name === renamedHeaders[uHeader];
           });
           if (index !== -1) {
             var h = serverHeaders[index];
@@ -492,18 +499,8 @@
           var currentProps = _.find(vm.hybridServicesUserProps, function (prop) {
             return prop.userId === user.uuid;
           });
-          var oldCalProps = currentProps ? currentProps.resourceGroups['squared-fusion-cal'] : undefined;
-          var newCalProps = user.resourceGroups['squared-fusion-cal'];
-          var calResourceGroupChanged = oldCalProps !== newCalProps;
-          if (calResourceGroupChanged && !newCalProps) {
-            user.resourceGroups['squared-fusion-cal'] = ''; // Will clear the group in USS
-          }
-          var oldUCProps = currentProps ? currentProps.resourceGroups['squared-fusion-uc'] : undefined;
-          var newUCProps = user.resourceGroups['squared-fusion-uc'];
-          var ucResourceGroupChanged = oldUCProps !== newUCProps;
-          if (ucResourceGroupChanged && !newUCProps) {
-            user.resourceGroups['squared-fusion-uc'] = ''; // Will clear the group in USS
-          }
+          var calResourceGroupChanged = tweakResourceGroups(user, 'squared-fusion-cal', currentProps);
+          var ucResourceGroupChanged = tweakResourceGroups(user, 'squared-fusion-uc', currentProps);
           if (calResourceGroupChanged || ucResourceGroupChanged) {
             updatedUserProps.push({ userId: user.uuid, resourceGroups: user.resourceGroups });
           }
@@ -516,6 +513,23 @@
             });
           });
         }
+      }
+
+      function tweakResourceGroups(user, entitlement, currentProps) {
+        var resourceGroupChanged = false;
+        var newProps = user.resourceGroups[entitlement];
+        if (newProps) {
+          var oldProps = currentProps ? (currentProps.resourceGroups[entitlement] || NO_RESOURCE_GROUP) : NO_RESOURCE_GROUP;
+          resourceGroupChanged = oldProps !== newProps;
+          if (newProps === NO_RESOURCE_GROUP) {
+            if (resourceGroupChanged) {
+              user.resourceGroups[entitlement] = '';
+            } else {
+              delete user.resourceGroups[entitlement];
+            }
+          }
+        }
+        return resourceGroupChanged;
       }
 
       function getResourceGroup(name) {
@@ -590,6 +604,8 @@
               } else {
                 calendarServiceResourceGroup = resourceGroup.id;
               }
+            } else {
+              calendarServiceResourceGroup = NO_RESOURCE_GROUP;
             }
           }
           index = findHeaderIndex('Hybrid Call Service Resource Group');
@@ -605,6 +621,8 @@
               } else {
                 callServiceResourceGroup = resourceGroup.id;
               }
+            } else {
+              callServiceResourceGroup = NO_RESOURCE_GROUP;
             }
           }
         }
@@ -648,7 +666,12 @@
                   // if lincense is Calendar Service, only process if it is enabled
                   if (entitlement.toUpperCase().indexOf('SQUAREDFUSIONCAL') === -1 || isCalendarServiceEnabled) {
                     if (isTrue(input)) {
-                      entitleList.push(new Feature(entitlement, true));
+                      if (hasMutuallyExclusiveCalendarEntitlements(entitlement, entitleList)) {
+                        processingError = true;
+                        addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.mutuallyExclusiveCalendarEntitlements'));
+                      } else {
+                        entitleList.push(new Feature(entitlement, true));
+                      }
                     } else if (isFalse(input)) {
                       if (vm.model.enableRemove) {
                         entitleList.push(new Feature(entitlement, false));
@@ -703,7 +726,19 @@
             return null;
           }
         }
+      }
 
+      /**
+       * We only allow squared-fusion-cal OR squared-fusion-gcal entitlement to be set per user
+       */
+      function hasMutuallyExclusiveCalendarEntitlements(entitlement, currentFeatureList) {
+        var badEntitlement = mutuallyExclusiveCalendarEntitlements[entitlement];
+        if (!badEntitlement) {
+          return false;
+        }
+        return _.some(currentFeatureList, function (feature) {
+          return feature.entitlementName === badEntitlement && feature.entitlementState === 'ACTIVE';
+        });
       }
 
       /**

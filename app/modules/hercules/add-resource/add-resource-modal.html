@@ -39,22 +39,21 @@
       >
 
       <input
+        cs-input
         type="text"
         ng-model="vm.hostname"
         placeholder="{{'hercules.addResourceDialog.enterHostnamePlaceholder' | translate}}"
         class="addResourceModalInput"
-        disabled
-        ng-if="vm.selectedAction === 'existing'"
+        name="hostname"
+        id="hostNameWarning"
+        ng-if="vm.selectedAction === 'new'"
+        ng-disabled="vm.selectedAction === 'existing'"
+        ng-keyup="$event.keyCode == 13 && vm.completeEnterHostnameScreen()"
+        cs-input-warning="vm.warning()"
+        cs-input-warning-message="{{vm.warningMessage}}"
+        cs-input-help-text="{{vm.localizedAddNewExpresswayHelp}}"
       >
 
-      <input
-        type="text"
-        ng-model="vm.hostname"
-        placeholder="{{'hercules.addResourceDialog.enterHostnamePlaceholder' | translate}}"
-        class="addResourceModalInput"
-        ng-if="vm.selectedAction === 'new'"
-        ng-keyup="$event.keyCode == 13 && vm.completeEnterHostnameScreen()"
-      >
 
       <input
         cs-input
@@ -96,6 +95,8 @@
     <p translate="hercules.addResourceDialog.enterDisplayName"></p>
 
     <form name="chooseClusterName" novalidate>
+
+
         <input
           cs-input
           type="text"

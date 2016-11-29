@@ -619,9 +619,19 @@
     function setUpFeatureToggles() {
       var featureToggleDefault = false;
       AACommonService.setMediaUploadToggle(featureToggleDefault);
-      return FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload).then(function (result) {
-        AACommonService.setMediaUploadToggle(result);
-      });
+      AACommonService.setClioToggle(featureToggleDefault);
+      AACommonService.setRouteQueueToggle(featureToggleDefault);
+      return function () {
+        FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload).then(function (result) {
+          AACommonService.setMediaUploadToggle(result);
+        });
+        FeatureToggleService.supports(FeatureToggleService.features.huronAACallQueue).then(function (result) {
+          AACommonService.setRouteQueueToggle(result);
+        });
+        FeatureToggleService.supports(FeatureToggleService.features.huronAAClioMedia).then(function (result) {
+          AACommonService.setClioToggle(result);
+        });
+      }();
     }
 
     function activate() {

@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceController', ExpresswayServiceController);
 
   /* @ngInject */
-  function ExpresswayServiceController($state, $modal, $scope, $stateParams, $translate, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService, FusionUtils, FusionClusterService) {
+  function ExpresswayServiceController($state, $modal, $scope, $stateParams, $translate, CloudConnectorService, ClusterService, FusionClusterService, FusionUtils, Notification, ServiceDescriptor, ServiceStateChecker, USSService, hasGoogleCalendarFeatureToggle) {
     ClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
     });
@@ -129,13 +129,49 @@
       });
     }
 
-    ServiceDescriptor.isServiceEnabled(vm.servicesId[0], function (error, enabled) {
-      if (!enabled) {
-        firstTimeSetup();
-      }
-    });
+    function init() {
 
-    function firstTimeSetup() {
+      // Until a proper fix, never show the setup modal
+      // It should be trigerred from the card in services-overview instead
+      var hackishBoolean = false;
+      if (hackishBoolean && vm.servicesId[0] === 'squared-fusion-cal' && hasGoogleCalendarFeatureToggle) {
+
+        CloudConnectorService.isServiceSetup('squared-fusion-gcal')
+          .then(function (isSetup) {
+            if (!isSetup) {
+              $modal.open({
+                controller: 'SelectCalendarServiceController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/service-settings/calendar-service-setup/select-calendar-service-modal.html',
+              })
+                .result
+                .then(function (result) {
+                  if (result === 'exchange') {
+                    firstTimeExchangeSetup();
+                  }
+                  if (result === 'google') {
+                    firstTimeGoogleSetup();
+                  }
+                })
+                .catch(function () {
+                  $state.go('services-overview');
+                });
+            }
+          })
+          .catch(function (error) {
+            Notification.errorWithTrackingId(error, 'hercules.settings.googleCalendar.couldNotReadGoogleCalendarStatus');
+          });
+      } else {
+        ServiceDescriptor.isServiceEnabled(vm.servicesId[0], function (error, enabled) {
+          if (!enabled) {
+            firstTimeExchangeSetup();
+          }
+        });
+      }
+    }
+    init();
+
+    function firstTimeExchangeSetup() {
       $modal.open({
         resolve: {
           connectorType: function () {
@@ -154,6 +190,20 @@
       .result.catch(function () {
         $state.go('services-overview');
       });
+    }
+
+    function firstTimeGoogleSetup() {
+      $modal.open({
+        controller: 'FirstTimeGoogleSetupController',
+        controllerAs: 'vm',
+        templateUrl: 'modules/hercules/service-settings/calendar-service-setup/first-time-google-setup.html',
+      })
+        .result.then(function (goToState) {
+          $state.go(goToState);
+        })
+        .catch(function () {
+          $state.go('services-overview');
+        });
     }
   }
 }());

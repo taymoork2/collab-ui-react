@@ -24,7 +24,6 @@ describe('Controller: RemPlaceController', function () {
   describe('Expected Responses', function () {
     beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$httpBackend_, CsdmDataModelService, _CsdmPlaceService_) {
       var initialDevices = getJSONFixture('squared/json/devices.json');
-      var codes = getJSONFixture('squared/json/activationCodes.json');
       var accounts = getJSONFixture('squared/json/accounts.json');
 
       $q = _$q_;
@@ -37,7 +36,6 @@ describe('Controller: RemPlaceController', function () {
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices?checkDisplayName=false&checkOnline=false').respond(initialDevices);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices').respond(initialDevices);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/nonExistingDevices').respond([]);
-      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/codes').respond(codes);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/?shallow=true&type=all').respond(accounts);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices/?type=huron').respond([]);
 
@@ -89,8 +87,6 @@ describe('Controller: RemPlaceController', function () {
 
     it('should call CsdmDeviceService to delete a Huron place', function () {
       controller.place = {
-        needsActivation: false,
-        isUnused: false,
         type: 'huron',
         isHuronDevice: true,
         url: 'fake url',

@@ -42,29 +42,33 @@ describe('placeOverview component', () => {
   };
 
   describe('and invoke onGenerateOtpFn', () => {
-    let showPlaces, currentDevice, deviceName, displayName, email, userCisUuid, placeCisUuid, orgId;
-    let goStateName, goStateData;
+    let showATA, showHybrid, currentDevice, deviceName, displayName, email, userCisUuid, placeCisUuid;
+    let orgId, adminOrgId, goStateName, goStateData;
     beforeEach(() => {
 
-      showPlaces = true;
+      showATA = true;
+      showHybrid = true;
       deviceName = 'deviceName';
       displayName = 'displayName';
       email = 'email@address.com';
       userCisUuid = 'userCisUuid';
       placeCisUuid = 'placeCisUuid';
       orgId = 'orgId';
+      adminOrgId = 'adminOrgId';
       currentDevice = {
         displayName: deviceName,
         cisUuid: placeCisUuid,
       };
 
       spyOn(CsdmCodeService, 'createCodeForExisting').and.returnValue($q.when('0q9u09as09vu0a9sv'));
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+      spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.when(false));
+      spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(showATA));
+      spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.when(showHybrid));
       spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
       Authinfo.displayName = displayName;
       spyOn(Authinfo, 'getUserId').and.returnValue(userCisUuid);
       spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(email);
-      spyOn(Userservice, 'getUser').and.returnValue($q.when({}));
+      spyOn(Userservice, 'getUser');
       spyOn($state, 'go').and.callFake((stateName, stateData) => {
         goStateName = stateName;
         goStateData = stateData;
@@ -75,6 +79,8 @@ describe('placeOverview component', () => {
         beforeEach(() => {
           $stateParams = { currentPlace: { displayName: deviceName, type: 'cloudberry', cisUuid: 'sa0va9u02' } };
           controller = initController($stateParams, $scope, $state);
+          controller.showATA = showATA;
+          controller.csdmHybridCallFeature = showHybrid;
         });
 
         it('should supply ShowActivationCodeCtrl with all the prerequisites', () => {
@@ -89,8 +95,10 @@ describe('placeOverview component', () => {
             {
               data: {
                 function: 'showCode',
-                showPlaces: true,
-                account: { type: 'sharede', deviceType: 'cloudberry', cisUuid: placeCisUuid, name: deviceName },
+                showATA: true,
+                csdmHybridCallFeature: true,
+                adminOrganizationId: adminOrgId,
+                account: { type: 'sharede', deviceType: 'cloudberry', cisUuid: placeCisUuid, name: deviceName, organizationId: orgId },
                 recipient: { cisUuid: userCisUuid, organizationId: orgId, displayName: displayName, email: email },
                 title: 'addDeviceWizard.newCode',
               },
@@ -109,6 +117,8 @@ describe('placeOverview component', () => {
           $stateParams = { currentPlace: { displayName: deviceName, type: 'huron', cisUuid: 'sa0va9u02' } };
           controller = initController($stateParams, $scope, $state);
           controller.adminDisplayName = displayName;
+          controller.showATA = showATA;
+          controller.csdmHybridCallFeature = showHybrid;
         });
 
         it('should supply ShowActivationCodeCtrl with all the prerequisites', () => {
@@ -123,8 +133,10 @@ describe('placeOverview component', () => {
             {
               data: {
                 function: 'showCode',
-                showPlaces: true,
-                account: { type: 'shared', deviceType: 'huron', cisUuid: placeCisUuid, name: deviceName },
+                showATA: true,
+                csdmHybridCallFeature: true,
+                adminOrganizationId: adminOrgId,
+                account: { type: 'shared', deviceType: 'huron', cisUuid: placeCisUuid, organizationId: orgId, name: deviceName },
                 recipient: { cisUuid: userCisUuid, organizationId: orgId, displayName: displayName, email: email },
                 title: 'addDeviceWizard.newCode',
               },
@@ -141,9 +153,10 @@ describe('placeOverview component', () => {
 
   describe('invoke editCloudberryServices', () => {
     let goStateName, goStateData;
-    let showPlaces, currentDevice, deviceName, displayName, email, userCisUuid, orgId, entitlements, placeUuid;
+    let showATA, showHybrid, currentDevice, deviceName, displayName, email, userCisUuid, orgId, entitlements, placeUuid;
     beforeEach(() => {
-      showPlaces = true;
+      showATA = true;
+      showHybrid = true;
       deviceName = 'deviceName';
       displayName = 'displayName';
       email = 'email@address.com';
@@ -155,7 +168,9 @@ describe('placeOverview component', () => {
       entitlements = ['entitlement'];
       placeUuid = '9avs8y9q2v9aw98';
 
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+      spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.when(false));
+      spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(showATA));
+      spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.when(showHybrid));
       spyOn(Userservice, 'getUser').and.returnValue($q.when({}));
       spyOn($state, 'go').and.callFake((stateName, stateData) => {
         goStateName = stateName;
@@ -186,7 +201,6 @@ describe('placeOverview component', () => {
           data: {
             function: 'editServices',
             title: 'usersPreview.editServices',
-            showPlaces: true,
             account: {
               deviceType: 'cloudberry',
               type: 'shared',
@@ -194,12 +208,10 @@ describe('placeOverview component', () => {
               cisUuid: placeUuid,
               entitlements: jasmine.anything(),
             },
-            // recipient: { cisUuid: userCisUuid, organizationId: orgId, displayName: displayName, email: email },
           },
           history: jasmine.anything(),
           currentStateName: jasmine.anything(),
           wizardState: jasmine.anything(),
-          // "addDeviceFlow.addLines": jasmine.anything()
         }
       );
     });

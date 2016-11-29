@@ -23,9 +23,13 @@
 
   .addResourceModalInput {
     margin-left: 30px;
-    margin-bottom: 20px;
     width: 70%;
     transition: initial;
+
+    + .cs-input__help-text {
+      margin-left: 30px;
+      margin-top: 0;
+    }
   }
 
   .radioNoTranform {

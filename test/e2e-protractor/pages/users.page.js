@@ -1,3 +1,5 @@
+/* globals manageUsersPage */
+
 'use strict';
 
 // TODO - break up into UserList/UserAdd/UserPreview
@@ -234,8 +236,12 @@ var UsersPage = function () {
   };
 
   this.createUser = function (userName) {
-    utils.click(this.addUsers);
-    utils.expectIsDisplayed(this.manageDialog);
+    utils.click(navigation.usersTab);
+    utils.click(manageUsersPage.buttons.manageUsers);
+    utils.expectTextToBeSet(manageUsersPage.select.title, 'Add or Modify Users');
+    utils.click(manageUsersPage.select.radio.orgManual);
+    utils.click(manageUsersPage.buttons.next);
+
     utils.click(this.nameAndEmailRadio);
     utils.sendKeys(this.firstName, 'Test');
     utils.sendKeys(this.lastName, 'User');

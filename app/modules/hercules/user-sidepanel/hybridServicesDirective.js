@@ -7,12 +7,12 @@
     .controller('HybridServicesCtrl', HybridServicesCtrl);
 
   /* @ngInject */
-  function HybridServicesCtrl($scope, $rootScope, $timeout, Authinfo, USSService, FusionUtils, ServiceDescriptor, Orgservice, Notification, Userservice) {
+  function HybridServicesCtrl($scope, $rootScope, $timeout, Authinfo, USSService, FusionUtils, ServiceDescriptor, Orgservice, Notification, Userservice, CloudConnectorService, FeatureToggleService) {
     if (!Authinfo.isFusion()) {
       return;
     }
     var vm = this;
-    var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-ec'];
+    var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-gcal', 'squared-fusion-uc', 'squared-fusion-ec'];
     var extensionCallEntitlements = ['squared-fusion-uc', 'squared-fusion-ec'];
     var stopDelayedUpdates = false;
     var delayedUpdateTimer = null;
@@ -93,6 +93,11 @@
         Notification.errorWithTrackingId(error, 'hercules.genericFailure');
       });
 
+    FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
+      .then(function (supported) {
+        vm.atlasHerculesGoogleCalendarFeatureToggle = supported;
+      });
+
     function checkEntitlements(options) {
       if (options.enforceLicenseCheck && !hasCaaSLicense()) {
         return;
@@ -104,7 +109,9 @@
             extension.enabled = ServiceDescriptor.filterEnabledServices(services).some(function (service) {
               return extension.id === service.id;
             });
-            // can't have huron (ciscouc) and call service at the same time
+            extension.isSetup = extension.enabled;
+
+            // Can't have huron (ciscouc) and call service at the same time
             if (extension.id === 'squared-fusion-uc' && hasEntitlement('ciscouc')) {
               extension.enabled = false;
             }
@@ -112,6 +119,24 @@
               vm.isEnabled = true;
             }
           });
+          var calServiceExchange = getExtension('squared-fusion-cal') || {};
+          var calServiceGoogle = getExtension('squared-fusion-gcal');
+          if (calServiceGoogle && vm.atlasHerculesGoogleCalendarFeatureToggle) {
+            CloudConnectorService.isServiceSetup('squared-fusion-gcal')
+              .then(function (isSetup) {
+                calServiceGoogle.isSetup = isSetup;
+                var ignoreGoogle = calServiceExchange.enabled && !calServiceExchange.entitled && !calServiceGoogle.entitled;
+                if (isSetup && (!calServiceExchange.enabled || !calServiceExchange.entitled) && !ignoreGoogle) {
+                  calServiceGoogle.enabled = true;
+                  calServiceExchange.enabled = false;
+                  if (!delayedUpdateTimer) {
+                    updateStatusForUser();
+                  }
+                }
+              }).catch(function (error) {
+                Notification.errorWithTrackingId(error, 'hercules.settings.googleCalendar.couldNotReadGoogleCalendarStatus');
+              });
+          }
           if (vm.isEnabled) {
             // Only poll for statuses if there are enabled extensions
             updateStatusForUser();
@@ -164,6 +189,12 @@
           };
         }
       }));
+    }
+
+    function getExtension(id) {
+      return _.find(vm.extensions, function (extension) {
+        return extension.id === id;
+      });
     }
 
     function getCallExtensions() {

@@ -3,25 +3,25 @@
   </button>
   <h3 class="modal-title" translate="{{showActivationCode.title}}"></h3>
 </div>
-<div class="modal-body">
-  <span class="badge success" ng-show="showActivationCode.codeIsUsed" translate="addDeviceWizard.showActivationCode.codeIsUsed"></span>
-  <div>
+<div class="modal-body showActivationCode">
+  <div ng-hide="showActivationCode.failure">
     <div class="device-wizard view-activation-code" id="printActivationCode" print-element-margin="3rem 3rem">
       <h4 translate="addDeviceWizard.showActivationCode.activationCode"></h4>
       <p class="wizardDescription">
-        <span ng-if="showActivationCode.account.deviceType==='huron'"
+        <span ng-if="showActivationCode.account.deviceType==='huron' && !showActivationCode.showATA"
             translate="addDeviceWizard.showActivationCode.plugInDeskPhone"
             translate-values="{ belongsTo: showActivationCode.account.name }"></span>
+        <span ng-if="showActivationCode.account.deviceType==='huron' && showActivationCode.showATA"
+              translate="addDeviceWizard.showActivationCode.plugInDeskPhoneExtra"
+              translate-values="{ belongsTo: showActivationCode.account.name }"></span>
         <span ng-if="showActivationCode.account.deviceType!=='huron'"
               translate="addDeviceWizard.showActivationCode.plugInRoomSystem"
               translate-values="{ belongsTo: showActivationCode.account.name }"></span>
         <br>
         <span ng-if="showActivationCode.account.type === 'personal'"
               translate="addDeviceWizard.showActivationCode.onceActivePersonalDevice"></span>
-        <span ng-if="showActivationCode.account.type !== 'personal' && showActivationCode.showPlaces"
+        <span ng-if="showActivationCode.account.type !== 'personal'"
               translate="addDeviceWizard.showActivationCode.onceActiveSharedDevice"></span>
-        <span ng-if="showActivationCode.account.type !== 'personal' && !showActivationCode.showPlaces"
-              translate="addDeviceWizard.showActivationCode.onceActiveSharedDeviceNoPlaces"></span>
       </p>
       <div class="qrCodeSection" ng-if="showActivationCode.isLoading">
         <i class="loading space icon icon-spinner"></i>
@@ -90,5 +90,26 @@
       </div>
     </div>
   </div>
+
+  <div class="activationCodeFailure" ng-show="showActivationCode.failure">
+    <i class="icon icon-circle-comp-negative failureIcon"></i>
+    <p translate="addDeviceWizard.showActivationCode.problemGeneratingCode"></p>
+    <p translate="addDeviceWizard.showActivationCode.pressRetry"></p>
+  </div>
 </div>
-<div class="modal-footer"></div>
+<div class="modal-footer">
+  <button
+    id="retry-button"
+    class="btn"
+    ng-show="showActivationCode.failure"
+    sq-click-promise="showActivationCode.createActivationCode()"
+    translate="common.retry">
+  </button>
+  <button
+    id="ok-button"
+    class="btn btn--primary"
+    ng-show="showActivationCode.failure"
+    ng-click="$dismiss()"
+    translate="common.ok">
+  </button>
+</div>

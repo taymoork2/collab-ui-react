@@ -14,13 +14,13 @@
 
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
-    vm.showPlaces = wizardData.showPlaces;
     vm.showDarling = wizardData.showDarling;
+    vm.showATA = wizardData.showATA;
     vm.selectedDeviceType = null;
     vm.isLoading = false;
 
     vm.isNewPlaceFlow = function () {
-      return wizardData.showPlaces && wizardData.function !== 'addDevice';
+      return wizardData.function !== 'addDevice';
     };
 
     vm.hideCancelButton = vm.isNewPlaceFlow();
