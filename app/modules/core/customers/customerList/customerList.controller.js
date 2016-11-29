@@ -1,3 +1,5 @@
+require('./_customer-list.scss');
+
 (function () {
   'use strict';
 
