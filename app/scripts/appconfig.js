@@ -3079,7 +3079,9 @@
               deleteFeatureId: null,
               deleteFeatureType: null
             }
-          })
+          });
+
+        $stateProvider
           .state('gss', {
             url: '/gss',
             templateUrl: 'modules/gss/gssIframe/gssIframe.tpl.html',

@@ -408,6 +408,9 @@
       isSupportUser: function () {
         return this.hasRole('Support') && !this.isAdmin();
       },
+      isTechSupport: function () {
+        return this.hasRole('Tech_Support');
+      },
       isHelpDeskUser: function () {
         return this.hasRole(Config.roles.helpdesk);
       },
