@@ -50,7 +50,7 @@ describe('Controller: TrialEditCtrl:', function () {
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
       if (param === FeatureToggleService.features.huronSimplifiedTrialFlow) {
         return $q.when(false);
-      } else if (param != 'csdm-places') {
+      } else {
         fail('the following toggle wasn\'t expected' + param); //taking control of which toggles this controller are using (explicit or implicit)
       }
       return $q.when(false);

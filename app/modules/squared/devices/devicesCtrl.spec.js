@@ -2,7 +2,7 @@
 
 describe('Controller: DevicesCtrl', function () {
   var $scope, $state, $controller, controller, $httpBackend, $timeout, $q;
-  var CsdmConfigService, AccountOrgService, Authinfo, FeatureToggleService;
+  var CsdmConfigService, AccountOrgService, Authinfo, FeatureToggleService, Userservice;
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Huron'));
@@ -13,7 +13,7 @@ describe('Controller: DevicesCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies($rootScope, _$state_, _$timeout_, _$controller_, _$httpBackend_, _$q_, _CsdmConfigService_, _AccountOrgService_, _Authinfo_, _FeatureToggleService_) {
+  function dependencies($rootScope, _$state_, _$timeout_, _$controller_, _$httpBackend_, _$q_, _CsdmConfigService_, _AccountOrgService_, _Authinfo_, _FeatureToggleService_, _Userservice_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $controller = _$controller_;
@@ -24,6 +24,7 @@ describe('Controller: DevicesCtrl', function () {
     AccountOrgService = _AccountOrgService_;
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
+    Userservice = _Userservice_;
   }
 
   function initSpies() {
@@ -34,8 +35,15 @@ describe('Controller: DevicesCtrl', function () {
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices').respond(200);
     $httpBackend.expectGET(CsdmConfigService.getUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false');
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/codes').respond(200);
-    //$httpBackend.expectGET(CsdmConfigService.getUrl() + '/organization/null/devices').respond(200);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
+
+    spyOn(Userservice, 'getUser').and.callFake(function (userId, callback) {
+      callback({
+        data: {
+          meta: {}
+        }
+      });
+    });
 
     spyOn(AccountOrgService, 'getAccount').and.returnValue({
       success: _.noop
@@ -76,6 +84,7 @@ describe('Controller: DevicesCtrl', function () {
     var firstName;
     var email;
     var orgId;
+    var adminOrgId;
     var isEntitledToHuron;
     var isEntitledToRoomSystem;
     var showDarling;
@@ -90,6 +99,7 @@ describe('Controller: DevicesCtrl', function () {
       userCisUuid = 'userCisUuid';
       email = 'email@address.com';
       orgId = 'orgId';
+      adminOrgId = 'adminOrgId';
       spyOn(controller, 'isEntitledToHuron').and.returnValue(isEntitledToHuron);
       spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(isEntitledToRoomSystem);
       spyOn(Authinfo, 'getUserId').and.returnValue(userCisUuid);
@@ -99,10 +109,10 @@ describe('Controller: DevicesCtrl', function () {
       controller.adminDisplayName = displayName;
       controller.adminFirstName = firstName;
       controller.showDarling = showDarling;
+      controller.adminOrgId = adminOrgId;
     });
 
     it('should set the wizardState with correct fields for the wizard if places toggle is on', function () {
-      controller.showPlaces = true;
       controller.showATA = showATA;
       controller.startAddDeviceFlow();
       $scope.$apply();
@@ -110,21 +120,20 @@ describe('Controller: DevicesCtrl', function () {
       var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
       expect(wizardState.title).toBe('addDeviceWizard.newDevice');
       expect(wizardState.function).toBe('addDevice');
-      expect(wizardState.showPlaces).toBe(true);
       expect(wizardState.showDarling).toBe(showDarling);
       expect(wizardState.showATA).toBe(showATA);
+      expect(wizardState.adminOrganizationId).toBe(adminOrgId);
       expect(wizardState.isEntitledToHuron).toBe(isEntitledToHuron);
       expect(wizardState.isEntitledToRoomSystem).toBe(isEntitledToRoomSystem);
-      expect(wizardState.account).toBeUndefined();
+      expect(wizardState.account.organizationId).toBe(orgId);
       expect(wizardState.recipient.displayName).toBe(displayName);
       expect(wizardState.recipient.firstName).toBe(firstName);
       expect(wizardState.recipient.cisUuid).toBe(userCisUuid);
       expect(wizardState.recipient.email).toBe(email);
-      expect(wizardState.recipient.organizationId).toBe(orgId);
+      expect(wizardState.recipient.organizationId).toBe(adminOrgId);
     });
 
     it('should set the wizardState with correct fields for the wizard if places toggle is off', function () {
-      controller.showPlaces = false;
       controller.showATA = showATA;
       controller.startAddDeviceFlow();
       $scope.$apply();
@@ -132,23 +141,22 @@ describe('Controller: DevicesCtrl', function () {
       var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
       expect(wizardState.title).toBe('addDeviceWizard.newDevice');
       expect(wizardState.function).toBe('addDevice');
-      expect(wizardState.showPlaces).toBe(false);
       expect(wizardState.showDarling).toBe(showDarling);
       expect(wizardState.showATA).toBe(showATA);
+      expect(wizardState.adminOrganizationId).toBe(adminOrgId);
       expect(wizardState.isEntitledToHuron).toBe(isEntitledToHuron);
       expect(wizardState.isEntitledToRoomSystem).toBe(isEntitledToRoomSystem);
-      expect(wizardState.account).toBeUndefined();
+      expect(wizardState.account.organizationId).toBe(orgId);
       expect(wizardState.recipient.displayName).toBe(displayName);
       expect(wizardState.recipient.firstName).toBe(firstName);
       expect(wizardState.recipient.cisUuid).toBe(userCisUuid);
       expect(wizardState.recipient.email).toBe(email);
-      expect(wizardState.recipient.organizationId).toBe(orgId);
+      expect(wizardState.recipient.organizationId).toBe(adminOrgId);
     });
   });
 
   describe('Feature toggle loading', function () {
     beforeEach(function () {
-      spyOn(FeatureToggleService, 'csdmPlacesGetStatus').and.returnValue($q.when(true));
       spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(true));
       spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.when(true));

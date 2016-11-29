@@ -2,7 +2,9 @@
   .aa-treatment-modal {
     @include vr-spacing(mt, 0.5);
   }
-
+  .aa-message-select-list {
+    margin-bottom: 0rem;
+  }
   .aa-select-modal {
     width: 9.4rem;
     display: inline-block;

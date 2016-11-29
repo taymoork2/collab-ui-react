@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: DevicesCtrlHuron', function () {
-  var controller, $scope, $q, $stateParams, $state, CsdmHuronUserDeviceService, OtpService, poller, FeatureToggleService;
+  var controller, $scope, $q, $stateParams, $state, CsdmHuronUserDeviceService, OtpService, poller, FeatureToggleService, Userservice;
 
   beforeEach(angular.mock.module('Huron'));
 
@@ -15,7 +15,7 @@ describe('Controller: DevicesCtrlHuron', function () {
 
   var emptyArray = [];
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _OtpService_, _CsdmHuronUserDeviceService_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _OtpService_, _CsdmHuronUserDeviceService_, _FeatureToggleService_, _Userservice_) {
     $scope = _$rootScope_.$new();
     $scope.userOverview = userOverview;
     $stateParams = _$stateParams_;
@@ -24,6 +24,7 @@ describe('Controller: DevicesCtrlHuron', function () {
     OtpService = _OtpService_;
     $state = _$state_;
     FeatureToggleService = _FeatureToggleService_;
+    Userservice = _Userservice_;
 
     $stateParams.currentUser = {
       "userName": "pregoldtx1sl+2callwaiting1@gmail.com",
@@ -50,8 +51,8 @@ describe('Controller: DevicesCtrlHuron', function () {
     spyOn(CsdmHuronUserDeviceService, 'create').and.returnValue(poller);
     spyOn(poller, 'getDeviceList').and.returnValue($q.when(deviceList));
     spyOn(OtpService, 'loadOtps').and.returnValue($q.when(emptyArray));
-    spyOn(FeatureToggleService, 'csdmPlacesGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(false));
+    spyOn(Userservice, 'getUser');
 
     controller = _$controller_('DevicesCtrlHuron', {
       $scope: $scope,
@@ -145,7 +146,7 @@ describe('Controller: DevicesCtrlHuron', function () {
     var userCisUuid;
     var email;
     var orgId;
-    var showPlaces;
+    var adminOrgId;
     var showATA;
     var userName;
     beforeEach(function () {
@@ -155,7 +156,7 @@ describe('Controller: DevicesCtrlHuron', function () {
       email = 'email@address.com';
       userName = 'usernameemailadresscom';
       orgId = 'orgId';
-      showPlaces = true;
+      adminOrgId = 'adminOrgId';
       showATA = true;
       controller.currentUser = {
         displayName: displayName,
@@ -172,8 +173,8 @@ describe('Controller: DevicesCtrlHuron', function () {
           organizationID: orgId
         }
       };
-      controller.showPlaces = showPlaces;
       controller.showATA = showATA;
+      controller.adminOrgId = adminOrgId;
       spyOn($state, 'go');
       controller.resetCode();
       $scope.$apply();
@@ -182,12 +183,13 @@ describe('Controller: DevicesCtrlHuron', function () {
       expect($state.go).toHaveBeenCalled();
       var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
       expect(wizardState.title).toBe('addDeviceWizard.newDevice');
-      expect(wizardState.showPlaces).toBe(showPlaces);
       expect(wizardState.showATA).toBe(showATA);
+      expect(wizardState.adminOrganizationId).toBe(adminOrgId);
       expect(wizardState.account.deviceType).toBe('huron');
       expect(wizardState.account.type).toBe('personal');
       expect(wizardState.account.name).toBe(displayName);
       expect(wizardState.account.cisUuid).toBeUndefined();
+      expect(wizardState.account.organizationId).toBe(orgId);
       expect(wizardState.account.username).toBe(userName);
       expect(wizardState.recipient.displayName).toBe(displayName);
       expect(wizardState.recipient.firstName).toBe(firstName);

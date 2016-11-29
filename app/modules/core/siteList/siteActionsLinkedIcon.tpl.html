@@ -1,0 +1,15 @@
+<span ng-if="row.entity.isLinkedSite">
+  <!-- display enabled config icon and tooltip -->
+  <i ng-click="grid.appScope.siteList.linkToSiteAdminHomePage(row.entity.license.linkedSiteUrl)"
+     class="icon icon-webex iconEnabledWithHover grid-vcenter"
+     tooltip-append-to-body="true"
+     tooltip="{{::'siteList.linkedSiteAdminTool' | translate}}"></i>
+
+  <span>&nbsp;</span>
+  <!-- display enabled config icon and tooltip -->
+  <i ng-click="grid.appScope.siteList.linkToSiteAdminLinkedPage(row.entity.license.linkedSiteUrl)"
+     class="icon icon-document iconEnabledWithHover grid-vcenter"
+     tooltip-append-to-body="true"
+     tooltip="{{::'siteList.LinkedSiteProgress' | translate}}"></i>
+</span>
+

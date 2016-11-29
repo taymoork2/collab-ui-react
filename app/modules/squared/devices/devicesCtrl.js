@@ -20,14 +20,10 @@
         });
 
         function init() {
-          fetchFeatureToggles();
-          fetchDetailsForLoggedInUser();
+          fetchAsyncSettings();
         }
 
-        function fetchFeatureToggles() {
-          var placesPromise = FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
-            vm.showPlaces = result;
-          });
+        function fetchAsyncSettings() {
           var darlingPromise = FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
             vm.showDarling = result;
           });
@@ -40,12 +36,13 @@
           var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
             vm.csdmHybridCallFeature = feature;
           });
-          $q.all([placesPromise, darlingPromise, ataPromise, pstnPromise, hybridPromise]).finally(function () {
+          $q.all([darlingPromise, ataPromise, pstnPromise, hybridPromise, fetchDetailsForLoggedInUser()]).finally(function () {
             vm.addDeviceIsDisabled = false;
           });
         }
 
         function fetchDetailsForLoggedInUser() {
+          var userDetailsDeferred = $q.defer();
           Userservice.getUser('me', function (data) {
             if (data.success) {
               vm.adminDisplayName = data.displayName;
@@ -55,8 +52,11 @@
               if (!vm.adminFirstName) {
                 vm.adminFirstName = data.displayName;
               }
+              vm.adminOrgId = data.meta.organizationID;
             }
+            userDetailsDeferred.resolve();
           });
+          return userDetailsDeferred.promise;
         }
 
         init();
@@ -181,62 +181,25 @@
           }]
         };
 
-        vm.wizardWithoutPlaces = function () {
-          return {
-            data: {
-              function: "addDevice",
-              showPlaces: false,
-              showDarling: vm.showDarling,
-              showATA: vm.showATA,
-              title: "addDeviceWizard.newDevice",
-              isEntitledToHuron: vm.isEntitledToHuron(),
-              isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
-              recipient: {
-                cisUuid: Authinfo.getUserId(),
-                displayName: vm.adminDisplayName,
-                email: Authinfo.getPrimaryEmail(),
-                organizationId: Authinfo.getOrgId(),
-                firstName: vm.adminFirstName
-              }
-            },
-            history: [],
-            currentStateName: 'addDeviceFlow.chooseDeviceType',
-            wizardState: {
-              'addDeviceFlow.chooseDeviceType': {
-                nextOptions: {
-                  cloudberry: 'addDeviceFlow.chooseSharedSpace',
-                  huron: 'addDeviceFlow.choosePersonal'
-                }
-              },
-              'addDeviceFlow.choosePersonal': {
-                next: 'addDeviceFlow.showActivationCode'
-              },
-              'addDeviceFlow.chooseSharedSpace': {
-                nextOptions: {
-                  cloudberry_existing: 'addDeviceFlow.showActivationCode'
-                }
-              },
-              'addDeviceFlow.showActivationCode': {}
-            }
-          };
-        };
-
         vm.wizardWithPlaces = function () {
           return {
             data: {
               function: "addDevice",
-              showPlaces: true,
               showATA: vm.showATA,
               showDarling: vm.showDarling,
+              adminOrganizationId: vm.adminOrgId,
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isEntitledToHuron(),
               isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
+              account: {
+                organizationId: Authinfo.getOrgId()
+              },
               recipient: {
                 cisUuid: Authinfo.getUserId(),
                 displayName: vm.adminDisplayName,
                 email: Authinfo.getPrimaryEmail(),
-                organizationId: Authinfo.getOrgId(),
+                organizationId: vm.adminOrgId,
                 firstName: vm.adminFirstName
               }
             },
@@ -261,7 +224,7 @@
               'addDeviceFlow.chooseSharedSpace': {
                 nextOptions: {
                   cloudberry_existing: 'addDeviceFlow.showActivationCode',
-                  cloudberry_create: vm.showPstn && vm.showPlaces ? 'addDeviceFlow.editServices' : 'addDeviceFlow.showActivationCode',
+                  cloudberry_create: vm.showPstn ? 'addDeviceFlow.editServices' : 'addDeviceFlow.showActivationCode',
                   huron_existing: 'addDeviceFlow.showActivationCode',
                   huron_create: 'addDeviceFlow.addLines'
                 }
@@ -285,13 +248,7 @@
         };
 
         vm.startAddDeviceFlow = function () {
-          var wizardState = undefined;
-          if (vm.showPlaces) {
-            wizardState = vm.wizardWithPlaces();
-          } else {
-            wizardState = vm.wizardWithoutPlaces();
-          }
-          var wizard = WizardFactory.create(wizardState);
+          var wizard = WizardFactory.create(vm.wizardWithPlaces());
           $state.go(wizard.state().currentStateName, {
             wizard: wizard
           });

@@ -14,9 +14,9 @@ export class ServicesOverviewMessageCard extends ServicesOverviewCard {
   /* @ngInject */
   public constructor(Authinfo) {
     super({
-      name: 'servicesOverview.cards.message.title',
       description: 'servicesOverview.cards.message.description',
       icon: 'icon-circle-message',
+      name: 'servicesOverview.cards.message.title',
     });
 
     this._buttons = Authinfo.isAllowedState('messenger')

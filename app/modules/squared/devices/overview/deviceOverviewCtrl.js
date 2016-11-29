@@ -6,18 +6,16 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, Userservice, $stateParams, $translate, $timeout, Authinfo, FeatureToggleService, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal, ServiceSetup, KemService, TerminusUserDeviceE911Service) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo, FeatureToggleService, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal, ServiceSetup, KemService, TerminusUserDeviceE911Service) {
     var deviceOverview = this;
     var huronDeviceService = $stateParams.huronDeviceService;
-    deviceOverview.showPlaces = false;
     deviceOverview.linesAreLoaded = false;
     deviceOverview.tzIsLoaded = false;
     deviceOverview.shouldShowLines = function () {
-      return deviceOverview.currentDevice.isHuronDevice || (deviceOverview.showPstn && deviceOverview.showPlaces);
+      return deviceOverview.currentDevice.isHuronDevice || deviceOverview.showPstn;
     };
 
     function init() {
-      fetchDisplayNameForLoggedInUser();
       fetchFeatureToggles();
 
       displayDevice($stateParams.currentDevice);
@@ -86,18 +84,7 @@
       });
     }
 
-    function fetchDisplayNameForLoggedInUser() {
-      Userservice.getUser('me', function (data) {
-        if (data.success) {
-          deviceOverview.adminDisplayName = data.displayName;
-        }
-      });
-    }
-
     function fetchFeatureToggles() {
-      FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
-        deviceOverview.showPlaces = result;
-      });
       FeatureToggleService.csdmPstnGetStatus().then(function (result) {
         deviceOverview.showPstn = result && Authinfo.isSquaredUC();
       });
