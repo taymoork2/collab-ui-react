@@ -29,6 +29,7 @@ describe('Controller: TrialAddCtrl', function () {
     spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasCreateTrialBackendEmailGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
@@ -175,7 +176,7 @@ describe('Controller: TrialAddCtrl', function () {
 
     describe('with atlas-webex-trial disabled and backend email feature-toggle disabled', function () {
       beforeEach(function () {
-        spyOn(FeatureToggleService, 'atlasCreateTrialBackendEmailGetStatus').and.returnValue($q.when(false));
+        controller.atlasCreateTrialBackendEmailEnabled = false;
         controller.callTrial.enabled = false;
         controller.pstnTrial.enabled = false;
         controller.webexTrial.enabled = false;
@@ -190,7 +191,7 @@ describe('Controller: TrialAddCtrl', function () {
 
     describe('with atlas-webex-trial disabled and backend email feature-toggle enabled', function () {
       beforeEach(function () {
-        spyOn(FeatureToggleService, 'atlasCreateTrialBackendEmailGetStatus').and.returnValue($q.when(true));
+        controller.atlasCreateTrialBackendEmailEnabled = true;
         controller.callTrial.enabled = false;
         controller.pstnTrial.enabled = false;
         controller.webexTrial.enabled = false;
