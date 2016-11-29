@@ -1,3 +1,4 @@
+import './_spark-reports.scss';
 import { CommonReportService } from '../../partnerReports/commonReportServices/commonReport.service';
 import { ReportConstants } from '../../partnerReports/commonReportServices/reportConstants.service';
 import {
