@@ -5635,8 +5635,9 @@
       "EC": "Event Center {{capacity}}",
       "CO": "Advanced Spark Call",
       "CMR": "Collaboration Meeting Rooms",
-      "SD": "Room Devices",
       "ST": "Storage",
+      "SD": "DX, MX, or SX systems",
+      "SB": "Spark Board",
       "linkedSite": "Legacy WebEx License"
     },
     "trial": "Trial",
