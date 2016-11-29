@@ -550,7 +550,7 @@
       "numberOfCalls": "Number of Calls",
       "deviceName": "Device Name",
       "hoursUsed": "Time Used",
-      "callCount": "# Calls",
+      "callCount": "Calls",
       "callHours": "Call Hours",
       "deviceUsage": "Room Device Usage",
       "pairedCount": "# Paired",
