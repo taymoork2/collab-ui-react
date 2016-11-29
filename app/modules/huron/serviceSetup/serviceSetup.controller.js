@@ -6,7 +6,7 @@
     .controller('ServiceSetupCtrl', ServiceSetupCtrl);
 
   /* @ngInject*/
-  function ServiceSetupCtrl($q, $state, $scope, $log, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
+  function ServiceSetupCtrl($q, $state, $scope, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
     ValidationService, DialPlanService, TelephoneNumberService, ExternalNumberService,
     CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction,
     PstnSetupService, Orgservice, FeatureToggleService, Config) {
@@ -121,7 +121,6 @@
     });
 
     FeatureToggleService.getCustomerHuronToggle(Authinfo.getOrgId(), FeatureToggleService.features.avrilVmEnable).then(function (result) {
-      //$log.log('====> This customer is an Avril customer ' + result);
       vm.voicemailAvrilCustomer = result;
     });
 
@@ -1120,10 +1119,8 @@
         var customer = {};
         if (companyVoicemailNumber && _.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
           if (!vm.hasVoicemailService) {
-            // customer.servicePackage = DEMO_STANDARD;
             if (vm.voicemailAvrilCustomer) {
               customer.servicePackage = VOICE_VOICEMAIL_AVRIL;
-              $log.log('====> customer.servicePackage ' + customer.servicePackage);
               isAvrilVoiceEnabled = true;
             } else {
               customer.servicePackage = DEMO_STANDARD;
@@ -1206,12 +1203,6 @@
           return ServiceSetup.updateSite(ServiceSetup.sites[0].uuid, siteData)
             .then(function () {
               if (vm.voicemailAvrilCustomer && isAvrilVoiceEnabled) {
-                // $log.log('====> ServiceSetup.sites[0].uuid: ' + ServiceSetup.sites[0].uuid +
-                //        " ServiceSetup.sites[0].siteSteeringDigit: " + ServiceSetup.sites[0].siteSteeringDigit +
-                //        " ServiceSetup.sites[0].siteCode: " + ServiceSetup.sites[0].siteCode +
-                //        " ServiceSetup.sites[0].timeZone: " + ServiceSetup.sites[0].timeZone +
-                //        " ServiceSetup.sites[0].extensionLength: " + ServiceSetup.sites[0].extensionLength +
-                //       " ServiceSetup.sites[0].voicemailPilotNumber: " + ServiceSetup.sites[0].voicemailPilotNumber);
                 ServiceSetup.updateAvrilSite(ServiceSetup.sites[0].uuid, ServiceSetup.sites[0].siteSteeringDigit,
                      ServiceSetup.sites[0].siteCode, ServiceSetup.sites[0].timeZone,
                      ServiceSetup.sites[0].extensionLength, ServiceSetup.sites[0].voicemailPilotNumber, siteData);

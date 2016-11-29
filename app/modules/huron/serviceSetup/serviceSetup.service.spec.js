@@ -106,7 +106,6 @@ describe('Service: ServiceSetup', function () {
     };
 
     beforeEach(function () {
-      //$httpBackend.whenPOST(HuronConfig.getAvrilUrl() + '/customers/1/sites/', { "guid": site.guid }).respond(site);
       $httpBackend.whenPOST(HuronConfig.getAvrilUrl() + '/customers/1/sites').respond(201);
     });
 
@@ -122,7 +121,6 @@ describe('Service: ServiceSetup', function () {
       pattern: '+11234567890'
     }];
 
-    // old and new url is creating issues ......Jk
     //$httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(extNumPool);
     beforeEach(function () {
       $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&externalnumbertype=Fixed+Line+or+Mobile&order=pattern').respond(extNumPool);
