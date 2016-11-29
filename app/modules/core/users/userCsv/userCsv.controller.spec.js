@@ -657,8 +657,8 @@ describe('OnboardCtrl: Ctrl', function () {
       initController();
     });
 
-    function setCsv(users) {
-      var header = ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Hybrid Calendar Service Resource Group', 'Hybrid Call Service Resource Group', 'Calendar Service', 'Call Service Aware'];
+    function setCsv(users, csvHeader) {
+      var header = csvHeader || ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Hybrid Calendar Service Resource Group', 'Hybrid Call Service Resource Group', 'Calendar Service', 'Call Service Aware'];
       var csv = [header];
       csv.push(users);
       controller.model.file = $.csv.fromArrays(csv);
@@ -666,8 +666,8 @@ describe('OnboardCtrl: Ctrl', function () {
       $timeout.flush();
     }
 
-    function initAndCaptureUpdatedUserProps(users) {
-      setCsv(users);
+    function initAndCaptureUpdatedUserProps(users, header) {
+      setCsv(users, header);
       Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(201));
       var updatedUserProps = [];
       USSService.updateBulkUserProps.and.callFake(function (props) {
@@ -819,6 +819,19 @@ describe('OnboardCtrl: Ctrl', function () {
       expect(updatedUserProps.length).toEqual(0);
       expect(USSService.updateBulkUserProps.calls.count()).toEqual(0);
       expect(controller.handleHybridServicesResourceGroups).toBeFalsy();
+    });
+
+    it('should not update USS if the CSV does not contain resource groups', function () {
+      USSService.getAllUserProps.and.returnValue($q.when([
+        { userId: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
+          resourceGroups: {
+            'squared-fusion-cal': 'be46e71f-c8ea-470b-ba13-2342d310a202',
+            'squared-fusion-uc': '445a3f8e-06a3-476b-b6f1-215a7db09083'
+          }
+        }
+      ]));
+      var updatedUserProps = initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'true', 'true'], ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Calendar Service', 'Call Service Aware']);
+      expect(updatedUserProps.length).toEqual(0);
     });
   });
 
