@@ -196,7 +196,7 @@ describe('Huron Auto Attendant', function () {
       autoattendant.scrollIntoView(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
       utils.click(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
       utils.click(autoattendant.phoneMenuAction.first());
-      autoattendant.scrollIntoView(autoattendant.phoneMenuActionOptions.all(by.linkText("Repeat this Menu")).first());
+      autoattendant.scrollIntoView(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first());
       utils.click(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first());
 
     });
@@ -345,25 +345,6 @@ describe('Huron Auto Attendant', function () {
 
     }, 120000);
 
-    it('should add Caller Input via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-      autoattendant.scrollIntoView(autoattendant.addStepLast);
-      utils.click(autoattendant.addStepLast);
-      utils.expectIsDisplayed(autoattendant.newStep);
-      utils.click(autoattendant.newStepMenu);
-
-      // 4th/last menu option is Route Call
-      utils.click(autoattendant.newStepCallerInput);
-      utils.wait(autoattendant.callerInputFirst, 12000);
-      autoattendant.scrollIntoView(autoattendant.callerInputFirst);
-      utils.click(autoattendant.callerInputGetDigits);
-      autoattendant.scrollIntoView(autoattendant.callerInputFirst);
-      utils.click(autoattendant.callerInputAddAction);
-      autoattendant.scrollIntoView(autoattendant.callerInputFirst);
-      utils.sendKeys(autoattendant.callerInputTextFirst, "Auto Attendant");
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-
-    });
 
     it('should add Route Call via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
@@ -450,6 +431,25 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisabled(autoattendant.saveButton);
 
     }, 60000);
+
+    it('should add Caller Input via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      autoattendant.scrollIntoView(autoattendant.addStepLast);
+      utils.click(autoattendant.addStepLast);
+      utils.expectIsDisplayed(autoattendant.newStep);
+      utils.click(autoattendant.newStepMenu);
+
+      // 4th/last menu option is Route Call
+      utils.click(autoattendant.newStepCallerInput);
+      utils.wait(autoattendant.callerInputFirst, 12000);
+      autoattendant.scrollIntoView(autoattendant.callerInputFirst);
+      utils.click(autoattendant.callerInputGetDigits);
+      autoattendant.scrollIntoView(autoattendant.callerInputFirst);
+      utils.click(autoattendant.callerInputAddAction);
+      autoattendant.scrollIntoView(autoattendant.callerInputFirst);
+      utils.sendKeys(autoattendant.callerInputTextFirst, "Auto Attendant");
+      utils.click(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+    });
 
     it('should add a Schedule to AA', function () {
       autoattendant.scrollIntoView(autoattendant.schedule);
