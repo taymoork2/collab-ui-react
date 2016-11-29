@@ -1726,8 +1726,9 @@
             controller: 'GemCtrl',
             template: '<div ui-view></div>'
           })
-          .state('gem.services', {
-            url: '/services/index',
+          .state('gemOverview', {
+            parent: 'partner',
+            url: '/services/overview',
             template: '<cca-card></cca-card>'
           })
           .state('gem.servicesPartner', {

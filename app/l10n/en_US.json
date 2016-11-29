@@ -5905,7 +5905,7 @@
       "importCsv": "Import CSV",
       "title": "Callback Groups",
       "exportToCsv": "Export to CSV",
-      "editCountry": "Edit Country/Regions",
+      "editCountry": "Edit Countries/Regions",
       "downloadCsv": "Download CSV Template",
       "csvFilename": "exported_callbackGroup.csv",
       "moveSiteMsg": "Are you sure you want to move this site?",
@@ -5936,7 +5936,7 @@
         "customerPlaceholder": "Who is this callback group for?",
         "labelCustomerAttr": "Partner CB Group Name",
         "customerAttrPlaceholder": "Enter a shorter name for quick refernce",
-        "labelCountries": "Select Country/Regions",
+        "labelCountries": "Select Countries/Regions",
         "countriesPlaceholder": "Search to add country"
       },
       "notes": {
