@@ -1210,7 +1210,7 @@
             initialAnnouncementDescription: ''
           };
         }
-        newAction.description = JSON.stringify(action.description);
+        newAction.description = action.description;
       }
       return newAction;
     }
