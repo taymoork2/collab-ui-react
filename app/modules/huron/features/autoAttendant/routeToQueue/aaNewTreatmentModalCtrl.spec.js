@@ -64,7 +64,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   var iaAction = {};
   var paAction = {};
   var fbAction = {};
-  var maxWaitTime = '';
+  var maxWaitTime = 15;
   var schedule = 'openHours';
   var index = '0';
   var menuId = 'menu0';
@@ -210,8 +210,10 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     });
 
     describe('FallBack', function () {
+
       it('test for default option as Disconnect', function () {
-        expect(controller.fbAction).toEqual('disconnect');
+        var fallbackAction = controller.menuEntry.actions[0].queueSettings.fallback.actions[0];
+        expect(fallbackAction.name).toEqual('disconnect');
       });
       it('test for sorted order options in dropdown', function () {
         for (var i = 1; i < sortedOptions.length; i++) {
