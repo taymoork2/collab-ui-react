@@ -1,8 +1,5 @@
-.template-anchor {
-  @extend .left;
-
-  @include vr-spacing(ml, 2);
-}
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/spacing';
 
 .dialog-padding {
   @include vr-spacing(mh, 1.5);
@@ -64,8 +61,6 @@
   }
 
   .columns .box {
-    @extend .center;
-
     @include vr-spacing(m, 1);
 
     border: thin solid $gray-light-2;
@@ -267,10 +262,8 @@
         }
       }
 
-      .retry-label span {
-        @extend .progressbar-progress;
-
-        float: none;
+      .progressbar-label span {
+        font-size: inherit;
       }
     }
   }
