@@ -52,6 +52,7 @@
     vm.processing = true;
     vm.externalNumberPool = [];
     vm.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
+    vm.defaultCountryPlaceholder = $translate.instant('serviceSetupModal.defaultCountryPlaceholder');
     vm.steeringDigits = [
       '1', '2', '3', '4', '5', '6', '7', '8', '9'
     ];
@@ -71,7 +72,8 @@
         vmCluster: undefined,
         emergencyCallBackNumber: undefined,
         voicemailPilotNumberGenerated: 'false',
-        preferredLanguage: DEFAULT_LANG
+        preferredLanguage: DEFAULT_LANG,
+        country: undefined
       },
       voicemailPrefix: {
         label: DEFAULT_SITE_SD.concat(DEFAULT_SITE_CODE),
@@ -91,6 +93,7 @@
       },
       ftswSteeringDigit: undefined,
       ftswPreferredLanguage: DEFAULT_LANG,
+      ftswCountry: undefined,
       ftswSiteSteeringDigit: {
         voicemailPrefixLabel: DEFAULT_SITE_SD.concat(DEFAULT_SITE_CODE),
         siteDialDigit: DEFAULT_SITE_SD
@@ -732,6 +735,9 @@
         return initPreferredLanguages();
       })
       .then(function () {
+        return initDefaultCountry();
+      })
+      .then(function () {
         // TODO BLUE-1221 - make /customer requests synchronous until fixed
         return listInternalExtensionRanges();
       })
@@ -764,6 +770,12 @@
                   return language.value === site.preferredLanguage;
                 });
                 vm.model.ftswPreferredLanguage = vm.model.site.preferredLanguage;
+              }
+              if (site.country) {
+                vm.model.site.country = _.find(vm.defaultCountryOptions, function (country) {
+                  return country.value === site.country;
+                });
+                vm.model.ftswCountry = vm.model.site.country;
               }
 
               vm.previousTimeZone = vm.model.site.timeZone;
@@ -856,6 +868,13 @@
       return ServiceSetup.getSiteLanguages()
         .then(function (languages) {
           vm.preferredLanguageOptions = _.sortBy(ServiceSetup.getTranslatedSiteLanguages(languages), 'label');
+        });
+    }
+
+    function initDefaultCountry() {
+      return ServiceSetup.getSiteCountries()
+        .then(function (countries) {
+          vm.defaultCountryOptions = _.sortBy(ServiceSetup.getTranslatedSiteCountries(countries), 'label');
         });
     }
 
@@ -1178,6 +1197,7 @@
         var currentSite = angular.copy(site);
         currentSite.timeZone = currentSite.timeZone.id;
         currentSite.preferredLanguage = currentSite.preferredLanguage.value;
+        currentSite.country = currentSite.country.value;
 
         return ServiceSetup.createSite(currentSite)
           .then(function () {
@@ -1258,6 +1278,9 @@
           }
           if (_.get(vm, 'model.site.preferredLanguage.value') !== _.get(vm, 'model.ftswPreferredLanguage.value')) {
             siteData.preferredLanguage = vm.model.site.preferredLanguage.value;
+          }
+          if (_.get(vm, 'model.site.country.value') !== _.get(vm, 'model.ftswCountry.value')) {
+            siteData.country = vm.model.site.country.value;
           }
           if (vm.model.site.siteSteeringDigit !== vm.model.voicemailPrefix.value) {
             siteData.siteSteeringDigit = vm.model.voicemailPrefix.value;

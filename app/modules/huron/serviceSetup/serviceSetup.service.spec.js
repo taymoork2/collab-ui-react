@@ -293,6 +293,23 @@ describe('Service: ServiceSetup', function () {
     });
   });
 
+  describe('getSiteCountries', function () {
+    beforeEach(function () {
+      $httpBackend.expectGET('modules/huron/serviceSetup/siteCountries.json').respond(getJSONFixture('huron/json/settings/countries.json'));
+    });
+
+    it('should get site languages', function () {
+      ServiceSetup.getSiteCountries().then(function (response) {
+        expect(response).toBeDefined();
+        expect(response.length).toBe(2);
+        var translatedLanguages = ServiceSetup.getTranslatedSiteLanguages(response);
+        expect(translatedLanguages).toBeDefined();
+        expect(translatedLanguages.length).toBe(2);
+      });
+      $httpBackend.flush();
+    });
+  });
+
   describe('generateVoiceMailNumber', function () {
     var customerId = 'c127f0cb-8abf-4965-a013-ce41a0649b7e';
     var countrycode = '+91';

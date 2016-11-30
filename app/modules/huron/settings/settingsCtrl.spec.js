@@ -6,7 +6,7 @@ describe('Controller: HuronSettingsCtrl', function () {
   var ExternalNumberService, DialPlanService, PstnSetupService, ModalService;
   var HuronCustomer, ServiceSetup, CallerId, HuronConfig, InternationalDialing, VoicemailMessageAction;
   var modalDefer, customer, timezones, timezone, voicemailCustomer, internalNumberRanges, languages;
-  var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction;
+  var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction, countries;
   var $rootScope, didVoicemailCustomer, FeatureToggleService;
   var controller;
 
@@ -48,6 +48,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     customerCarriers = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
     messageAction = getJSONFixture('huron/json/settings/messageAction.json');
     languages = getJSONFixture('huron/json/settings/languages.json');
+    countries = getJSONFixture('huron/json/settings/countries.json');
 
     spyOn(HuronCustomer, 'get').and.returnValue($q.when(customer));
     spyOn(ServiceSetup, 'updateVoicemailTimezone').and.returnValue($q.when());
@@ -57,6 +58,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ServiceSetup, 'saveAutoAttendantSite').and.returnValue($q.when());
     spyOn(ServiceSetup, 'updateVoicemailPostalcode').and.returnValue($q.when());
     spyOn(ServiceSetup, 'getSiteLanguages').and.returnValue($q.when(languages));
+    spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.when(countries));
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
     spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.when());
     spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.when({
@@ -480,6 +482,20 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect($scope.to.options).toEqual(controller.preferredLanguageOptions);
     });
 
+    it('should update the default country options when collection changes', function () {
+      $scope.to = {};
+
+      controller.defaultCountryOptions = [{
+        label: "Test Country",
+        value: "TC"
+      }];
+
+      controller._buildDefaultCountryOptions($scope);
+      $scope.$apply();
+
+      expect($scope.to.options).toEqual(controller.defaultCountryOptions);
+    });
+
     it('outbound dial digit should not be equal to site steering digit', function () {
       expect(site.siteSteeringDigit).not.toEqual(controller.model.steeringDigit);
     });
@@ -886,6 +902,36 @@ describe('Controller: HuronSettingsCtrl', function () {
         };
 
         controller.model.site.preferredLanguage = defaultLanguage;
+        controller.save();
+        $scope.$apply();
+
+        expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
+        expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
+      });
+
+      it('should update default country when country selection changes', function () {
+        var newCountry = {
+          label: 'Canada',
+          value: 'CA'
+        };
+
+        controller.model.site.defaultCountry = newCountry;
+        controller.save();
+        $scope.$apply();
+
+        expect(ServiceSetup.updateSite).toHaveBeenCalledWith(jasmine.any(String), {
+          country: newCountry.value
+        });
+        expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
+      });
+
+      it('should not update default country when country selection did not change', function () {
+        var defaultCountry = {
+          label: 'United States',
+          value: 'US'
+        };
+
+        controller.model.site.defaultCountry = defaultCountry;
         controller.save();
         $scope.$apply();
 

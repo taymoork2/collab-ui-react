@@ -32,6 +32,10 @@
       label: $translate.instant('languages.englishAmerican'),
       value: 'en_US'
     };
+    /*var DEFAULT_COUNTRY = {
+      label: $translate.instant('countries.unitedStates'),
+      value: 'US'
+    };*/
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
     var DEFAULT_EXT_LEN = '4';
@@ -58,6 +62,7 @@
     vm._voicemailEnabledWatcher = _voicemailEnabledWatcher;
     vm._buildTimeZoneOptions = _buildTimeZoneOptions;
     vm._buildPreferredLanguageOptions = _buildPreferredLanguageOptions;
+    vm._buildDefaultCountryOptions = _buildDefaultCountryOptions;
     vm._buildServiceNumberOptions = _buildServiceNumberOptions;
     vm._buildVoicemailNumberOptions = _buildVoicemailNumberOptions;
     vm._buildCallerIdOptions = _buildCallerIdOptions;
@@ -73,7 +78,9 @@
     vm.assignedNumbers = [];
     vm.timeZoneOptions = [];
     vm.timeZoneInputPlaceholder = $translate.instant('serviceSetupModal.searchTimeZone');
+    vm.defaultCountryPlaceholder = $translate.instant('serviceSetupModal.defaultCountryPlaceholder');
     vm.preferredLanguageOptions = [];
+    vm.defaultCountryOptions = [];
     vm.unassignedExternalNumbers = [];
     vm.allExternalNumbers = [];
     vm.extensionLengthChanged = false;
@@ -102,7 +109,8 @@
         emergencyCallBackNumber: undefined,
         uuid: undefined,
         voicemailPilotNumberGenerated: 'false',
-        preferredLanguage: DEFAULT_LANG
+        preferredLanguage: DEFAULT_LANG,
+        defaultCountry: undefined
       },
       numberRanges: [],
       previousLength: DEFAULT_EXT_LEN,
@@ -955,6 +963,10 @@
         siteData.preferredLanguage = vm.model.site.preferredLanguage.value;
       }
 
+      if (vm.model.site.defaultCountry.value !== savedModel.site.defaultCountry.value) {
+        siteData.country = vm.model.site.defaultCountry.value;
+      }
+
       if (vm.model.site.extensionLength !== savedModel.site.extensionLength) {
         siteData.extensionLength = vm.model.site.extensionLength;
       }
@@ -1103,6 +1115,11 @@
                   return language.value === site.preferredLanguage;
                 });
               }
+              if (site.country) {
+                vm.model.site.defaultCountry = _.find(vm.defaultCountryOptions, function (country) {
+                  return country.value === site.country;
+                });
+              }
               vm.model.site.siteCode = site.siteCode;
               vm.model.site.vmCluster = site.vmCluster;
               vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
@@ -1155,6 +1172,13 @@
       return ServiceSetup.getSiteLanguages()
         .then(function (languages) {
           vm.preferredLanguageOptions = _.sortBy(ServiceSetup.getTranslatedSiteLanguages(languages), 'label');
+        });
+    }
+
+    function loadDefaultCountryOptions() {
+      return ServiceSetup.getSiteCountries()
+        .then(function (countries) {
+          vm.defaultCountryOptions = _.sortBy(ServiceSetup.getTranslatedSiteCountries(countries), 'label');
         });
     }
 
@@ -1348,6 +1372,7 @@
             promises.push(loadDialPlan());
             promises.push(loadCallerId());
             promises.push(loadPreferredLanguageOptions());
+            promises.push(loadDefaultCountryOptions());
           }
 
           if (vm.hasVoicemailService) {
@@ -1655,6 +1680,7 @@
       vm.model.site.siteCode = savedModel.site.siteCode;
       vm.model.site.timeZone = savedModel.site.timeZone;
       vm.model.site.preferredLanguage = savedModel.site.preferredLanguage;
+      vm.model.site.defaultCountry = savedModel.site.defaultCountry;
       vm.model.site.voicemailPilotNumber = savedModel.site.voicemailPilotNumber;
       vm.model.site.vmCluster = savedModel.site.vmCluster;
       vm.model.site.emergencyCallBackNumber = savedModel.site.emergencyCallBackNumber;
@@ -1803,6 +1829,14 @@
         return vm.preferredLanguageOptions;
       }, function (languages) {
         localScope.to.options = languages;
+      });
+    }
+
+    function _buildDefaultCountryOptions(localScope) {
+      localScope.$watchCollection(function () {
+        return vm.defaultCountryOptions;
+      }, function (countries) {
+        localScope.to.options = countries;
       });
     }
 
