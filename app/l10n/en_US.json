@@ -1750,9 +1750,6 @@
       "moveResourceGroupDialogParagraph": "{{ClusterName}} will be moved to \"{{NewResourceGroup}}\".",
       "moveResourceGroupDialogConnectorsList": "The following connectors will be upgraded in the next upgrade window: ",
       "moveResourceGroupSuccess": "{{ClusterName}} has been assigned to \"{{NewResourceGroup}}\".",
-      "releasechannelHeader": "Release Channel",
-      "releasechannelSubHeader": "Release Channel",
-      "releasechannelParagraph": "To change the release channel for this cluster, assign it to a resource group with the preferred release channel.",
       "deactivateServicesHeader": "Deactivate Services",
       "deactivateServicesParagraph": "Deactivate {{ServiceName}} to remove any service-related functionality from this cluster.",
       "deactivateServicesSubHeader": "Deactivate {{service}}",
@@ -2062,11 +2059,8 @@
       "groupNameSaved": "Rename successful",
       "duplicateName": "A resource group with that name already exists. Please choose another name.",
       "loadFailed": "Unable to load the resource group details. Please try again later.",
-      "groupReleaseChannelSaved": "Release channel saved successfully",
       "removeGroupReq": "To remove this resource group, all assigned clusters must be removed first",
       "deleteSuccess": "Resource group successfully removed",
-      "orgHasNoAccessToChannel": "The resource group is configured with the “{{currentReleaseChannel}}” release channel, which is no longer available to your organization. Set the release channel to “{{stableReleaseChannel}}” to restore service.",
-      "setToStable": "Set to {{stableReleaseChannel}}",
       "failedToRemoveUsersFromGroup": "Remove group failed, unable to clear the existing user assignments",
       "assignSuccess": "The selected clusters are being moved. The connectors will be upgraded in the next upgrade window."
     },
@@ -2079,9 +2073,19 @@
       "noServices": "No services",
       "errorLoading": "Could not load the list of clusters."
     },
-    "confirmChangeReleaseChannelModal": {
+    "releaseChannelSection": {
+      "releaseChannelHeader": "Release Channel",
+      "releaseChannelClusterDescription": "Select the release channel for all Hybrid Services running in this cluster.",
+      "releaseChannelResourceGroupDescription": "Select the release channel for all Hybrid Services running in this group.",
+      "releaseChannelTip": "To change the release channel for this cluster, assign it to a resource group with the preferred release channel.",
+      "groupReleaseChannelSaved": "Release channel saved successfully",
+      "orgHasNoAccessToChannel": "The resource group is configured with the “{{currentReleaseChannel}}” release channel, which is no longer available to your organization. Set the release channel to “{{stableReleaseChannel}}” to restore service.",
+      "setToStable": "Set to {{stableReleaseChannel}}"
+    },
+    "changeReleaseChannelDialog": {
       "title": "Change Release Channel",
-      "description": "Are you sure you want to change the release channel for \"{{groupName}}\" to {{channelName}}?",
+      "description": "Are you sure you want to change the release channel for \"{{name}}\" to {{channelName}}?",
+      "warning": "If other unassigned clusters do not have the same resource group, it may be a problem.",
       "change": "Change"
     },
     "confirmDeleteResourceGroupModal": {

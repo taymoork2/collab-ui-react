@@ -17,32 +17,22 @@
       </div>
     </setting-section>
 
-    <setting-section setting="clusterSettings.resourceGroup" ng-if="clusterSettings.showResourceGroups">
-      <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.resourceGroupsSubHeader" id="RG-section-test"></h5>
-      <p class="sub-section__description" translate="hercules.expresswayClusterSettings.resourcegroupsParagraph"></p>
-      <div class="medium-8">
-        <cs-select
-          ng-model="clusterSettings.selectedResourceGroup"
-          options="clusterSettings.resourceGroupOptions"
-          on-change-fn="clusterSettings.showResourceGroupModal()"
-        >
-        </cs-select>
-      </div>
-    </setting-section>
+    <div ng-if="clusterSettings.showResourceGroups">
+      <setting-section setting="clusterSettings.resourceGroup" class="resource-group-section">
+        <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.resourceGroupsSubHeader" id="RG-section-test"></h5>
+        <p class="sub-section__description" translate="hercules.expresswayClusterSettings.resourcegroupsParagraph"></p>
+        <div class="medium-8">
+          <cs-select
+            ng-model="clusterSettings.selectedResourceGroup"
+            options="clusterSettings.resourceGroupOptions"
+            on-change-fn="clusterSettings.showResourceGroupModal()"
+          >
+          </cs-select>
+        </div>
+      </setting-section>
 
-    <setting-section setting="clusterSettings.releasechannel" ng-if="clusterSettings.showResourceGroups && clusterSettings.allowedChannels.length > 1">
-      <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.releasechannelSubHeader" id="RC-section-test"></h5>
-      <p class="sub-section__description" translate="hercules.expresswayClusterSettings.releasechannelParagraph"></p>
-      <div class="medium-8">
-        <cs-select
-          ng-model="clusterSettings.releasechannelsSelected"
-          options="clusterSettings.releasechannelsOptions"
-          placeholder="clusterSettings.releasechannelsPlaceholder"
-          is-disabled="true"
-        >
-        </cs-select>
-      </div>
-    </setting-section>
+      <release-channel-section cluster="clusterSettings.cluster"></release-channel-section>
+    </div>
 
     <setting-section setting="clusterSettings.deactivateServices">
       <div ng-if="clusterSettings.enabledServices.length > 1">

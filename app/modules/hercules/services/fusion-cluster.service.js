@@ -22,6 +22,7 @@
       postponeUpgradeSchedule: postponeUpgradeSchedule,
       deleteMoratoria: deleteMoratoria,
       setClusterName: setClusterName,
+      setReleaseChannel: setReleaseChannel,
       deregisterCluster: deregisterCluster,
       getReleaseNotes: getReleaseNotes,
       getAggregatedStatusForService: getAggregatedStatusForService,
@@ -239,6 +240,14 @@
         name: newClusterName
       })
         .then(extractData);
+    }
+
+    function setReleaseChannel(clusterId, releaseChannel) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
+      return $http.patch(url, {
+        releaseChannel: releaseChannel
+      })
+        .then(extractDataFromResponse);
     }
 
     function deregisterCluster(clusterId) {
