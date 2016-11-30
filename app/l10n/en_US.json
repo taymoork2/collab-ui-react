@@ -4972,6 +4972,7 @@
     "aa": "AA",
     "cp": "CP",
     "pg": "PG",
+    "pi": "PI",
     "editAction": "Edit",
     "deleteAction": "Delete",
     "aaDependsTitle": "Auto Attendant Dependents",
@@ -4986,8 +4987,10 @@
     "aaName": "auto attendant",
     "hgName": "hunt group",
     "pgName": "paging group",
+    "piName": "pickup group",
     "sorryMessage": "Sorry, something went wrong ",
-    "reloadMessage": "Please try reloading the page"
+    "reloadMessage": "Please try reloading the page",
+    "feature": "Feature"
   },
   "placesPage": {
     "nameHeader": "Name",

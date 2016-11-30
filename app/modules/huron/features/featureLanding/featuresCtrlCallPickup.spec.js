@@ -3,31 +3,35 @@
 describe('Features Controller', function () {
 
   var featureCtrl, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, TelephoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService, PagingGroupService, CallPickupGroupService;
-  var listOfPGs = getJSONFixture('huron/json/features/pagingGroup/pgList.json');
-  var emptyListOfPGs = [];
-  var getPGListSuccessResp = function (data) {
+  var listOfPIs = getJSONFixture('huron/json/features/callPickup/pickupList.json');
+  var emptylistOfPIs = [];
+  var getPIListSuccessResp = function (data) {
     return data;
   };
-  var getPGListFailureResp = {
+  var getPIListFailureResp = {
     'data': 'Internal Server Error',
     'status': 500,
     'statusText': 'Internal Server Error'
   };
-  var pagingGroups = {
-    "paginggroups": [{
-      "id": "bbcd1234-abcd-abcd-abcddef123456",
-      "cardName": "Test1",
-      "pgNumber": "5010",
-      "memberCount": 2,
-      "featureName": "huronFeatureDetails.pg",
-      "filterValue": "PG"
+  var pickupGroups = {
+    "pickupGroups": [{
+      id: "6ebcf83f-6594-419d-85a0-4c98b5f97995",
+      cardName: "blue",
+      memberCount: 2,
+      filterValue: 'PI',
+      featureName: 'huronFeatureDetails.pi'
     }, {
-      "id": "abcd1234-abcd-abcd-abcddef123456",
-      "cardName": "Test2",
-      "pgNumber": "5011",
-      "memberCount": 3,
-      "featureName": "huronFeatureDetails.pg",
-      "filterValue": "PG"
+      id: "bce45ce1-743a-454b-b1bf-30ca838ee3e5",
+      cardName: "check",
+      memberCount: 3,
+      filterValue: 'PI',
+      featureName: 'huronFeatureDetails.pi'
+    }, {
+      id: "1e861505-c281-4086-98c5-2e46b4659065",
+      cardName: "demo_1",
+      memberCount: 2,
+      filterValue: 'PI',
+      featureName: 'huronFeatureDetails.pi'
     }]
   };
 
@@ -55,14 +59,13 @@ describe('Features Controller', function () {
 
     //create mock deferred object which will be used to return promises
     getDeferred = $q.defer();
-
     //Using a Jasmine Spy to return a promise when methods of the PagingGroupService are called
     spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.when([]));
     spyOn(CallParkService, 'getCallParkList').and.returnValue($q.when([]));
-    spyOn(CallPickupGroupService, 'getListOfPickupGroups').and.returnValue($q.when());
-    spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue(getDeferred.promise);
+    spyOn(CallPickupGroupService, 'getListOfPickupGroups').and.returnValue(getDeferred.promise);
+    spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue($q.when());
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.when([]));
-    spyOn(AAModelService, 'newAAModel').and.returnValue(getDeferred.promise);
+    spyOn(AAModelService, 'newAAModel').and.returnValue($q.when([]));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn($state, 'go');
     spyOn(Notification, 'success');
@@ -75,7 +78,7 @@ describe('Features Controller', function () {
       $filter: $filter,
       $timeout: $timeout,
       Authinfo: Authinfo,
-      PagingGroupService: PagingGroupService,
+      CallPickupGroupService: CallPickupGroupService,
       TelephoneNumberService: TelephoneNumberService,
       Log: Log,
       Notification: Notification
@@ -84,38 +87,38 @@ describe('Features Controller', function () {
   }));
 
   //TODO: re-enable after feature toggles are removed
-  it('should get list of pagingGroups and then store the data in listOfFeatures', function () {
-    getDeferred.resolve(getPGListSuccessResp(listOfPGs));
+  it('should get list of pickupGroups and then store the data in listOfFeatures', function () {
+    getDeferred.resolve(getPIListSuccessResp(listOfPIs));
     $scope.$apply();
     $timeout.flush();
-    expect(featureCtrl.listOfFeatures).toEqual(pagingGroups.paginggroups);
+    expect(featureCtrl.listOfFeatures).toEqual(pickupGroups.pickupGroups);
   });
 
-  it('should get list of pagingGroups and if there is any data, should change the pageState to showFeatures', function () {
-    getDeferred.resolve(getPGListSuccessResp(listOfPGs));
+  it('should get list of pickupGroups and if there is any data, should change the pageState to showFeatures', function () {
+    getDeferred.resolve(getPIListSuccessResp(listOfPIs));
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('showFeatures');
   });
-  it('should get list of pagingGroups and if data received is empty, should change the pageState to newFeature', function () {
-    getDeferred.resolve(getPGListSuccessResp(emptyListOfPGs));
+  it('should get list of pickupGroups and if data received is empty, should change the pageState to newFeature', function () {
+    getDeferred.resolve(getPIListSuccessResp(emptylistOfPIs));
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('NewFeature');
   });
-  it('should get list of pagingGroups and if back end call fails should show error notification', function () {
-    getDeferred.reject(getPGListFailureResp);
+  it('should get list of pickupGroups and if back end call fails should show error notification', function () {
+    getDeferred.reject(getPIListFailureResp);
     $scope.$apply();
     $timeout.flush();
-    expect(Notification.errorResponse).toHaveBeenCalledWith(getPGListFailureResp,
+    expect(Notification.errorResponse).toHaveBeenCalledWith(getPIListFailureResp,
       'huronFeatureDetails.failedToLoad', {
-        featureType: 'huronFeatureDetails.pgName'
+        featureType: 'huronFeatureDetails.piName'
       });
   });
   it('should set the pageState to Loading when controller is getting data from back-end', function () {
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('Loading');
-    getDeferred.resolve(getPGListSuccessResp(listOfPGs));
+    getDeferred.resolve(getPIListSuccessResp(listOfPIs));
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('showFeatures');
@@ -123,29 +126,23 @@ describe('Features Controller', function () {
   it('should set the pageState to Reload when controller fails to load the data for all features from back-end', function () {
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('Loading');
-    getDeferred.reject(getPGListFailureResp);
+    getDeferred.reject(getPIListFailureResp);
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('Reload');
   });
-  it('should set the view to pagingGroup when PG filter is selected', function () {
-    getDeferred.resolve(getPGListSuccessResp(listOfPGs));
+  it('should set the view to pickupGroup when PI filter is selected', function () {
+    getDeferred.resolve(getPIListSuccessResp(listOfPIs));
     $scope.$apply();
     $timeout.flush();
-    featureCtrl.setFilter('PG');
-    expect(featureCtrl.listOfFeatures).toEqual(jasmine.arrayContaining(pagingGroups.paginggroups));
+    featureCtrl.setFilter('PI');
+    expect(featureCtrl.listOfFeatures).toEqual(jasmine.arrayContaining(pickupGroups.pickupGroups));
   });
   it('should take search query and display the results according to search query', function () {
-    getDeferred.resolve(getPGListSuccessResp(listOfPGs));
+    getDeferred.resolve(getPIListSuccessResp(listOfPIs));
     $scope.$apply();
     $timeout.flush();
-    featureCtrl.searchData(pagingGroups.paginggroups[0].cardName);
-    expect(featureCtrl.listOfFeatures).toEqual([pagingGroups.paginggroups[0]]);
-  });
-  it('should be able to edit an PagingGroup ', function () {
-    featureCtrl.editHuronFeature(pagingGroups.paginggroups[0]);
-    expect($state.go).toHaveBeenCalledWith('huronPagingGroupEdit', {
-      feature: pagingGroups.paginggroups[0]
-    });
+    featureCtrl.searchData(pickupGroups.pickupGroups[0].cardName);
+    expect(featureCtrl.listOfFeatures).toEqual([pickupGroups.pickupGroups[0]]);
   });
 });

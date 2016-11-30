@@ -32,6 +32,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
   }
 
   public selectMember(member: Member): void {
+    let isValid = this.verifyLineSelected();
     this.memberName = '';
     if (this.selectedMembers.length < this.maxMembersAllowed) {
       let memberData: IMember = {
@@ -53,7 +54,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
       this.selectedMembers.push(memberData);
       this.onUpdate({
         member: this.selectedMembers,
-        isValidMember: true,
+        isValidMember: isValid,
       });
     } else {
       this.Notification.error('callPickup.memberLimitExceeded');
@@ -118,12 +119,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
   public verifyLineSelected(): boolean {
     let result = true;
     if (this.selectedMembers) {
-      _.some(this.selectedMembers, function(member) {
-        if (member.saveNumbers.length < 1) {
-          result = false;
-          return;
-        }
-      });
+      result = _.every(this.selectedMembers, member => member.saveNumbers.length > 0);
     }
     return result;
   }
@@ -146,7 +142,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
       this.selectedMembers = _.reject(this.selectedMembers, member);
       this.onUpdate({
         member: this.selectedMembers,
-        isValidMember: true,
+        isValidMember: this.verifyLineSelected(),
       });
     }
   }
