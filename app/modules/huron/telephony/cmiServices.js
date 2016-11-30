@@ -35,6 +35,7 @@
     .factory('AlternateNumberService', AlternateNumberService)
     .factory('DirectoryNumberCopyService', DirectoryNumberCopyService)
     .factory('SiteService', SiteService)
+    .factory('AvrilSiteService', AvrilSiteService)
     .factory('InternalNumberRangeService', InternalNumberRangeService)
     .factory('UserEndpointService', UserEndpointService)
     .factory('SipEndpointService', SipEndpointService)
@@ -330,6 +331,20 @@
     }, {
       update: {
         method: 'PUT'
+      }
+    });
+  }
+
+  /* @ngInject */
+  function AvrilSiteService($resource, HuronConfig) {
+    return $resource(HuronConfig.getAvrilUrl() + '/customers/:customerId/sites/', {
+      customerId: '@customerId'
+    }, {
+      save: {
+        method: 'POST',
+        headers: {
+          'Access-Control-Expose-Headers': 'Location'
+        }
       }
     });
   }
