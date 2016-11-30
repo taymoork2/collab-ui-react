@@ -84,4 +84,7 @@ describe('Service: TelephoneNumberService', function () {
     expect(TelephoneNumberService.isPossibleAreaCode('3')).toEqual(true);
   });
 
+  it('should not accept a toll free number', function () {
+    expect(TelephoneNumberService.validateDID(tollFreeNumber)).toEqual(true);
+  });
 });

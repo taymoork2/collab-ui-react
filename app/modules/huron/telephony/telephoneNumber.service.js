@@ -21,7 +21,8 @@
       getPhoneNumberType: getPhoneNumberType,
       isTollFreeNumber: isTollFreeNumber,
       isPossibleAreaCode: isPossibleAreaCode,
-      getDestinationObject: getDestinationObject
+      getDestinationObject: getDestinationObject,
+      checkPhoneNumberType: checkPhoneNumberType
     };
     var TOLL_FREE = 'TOLL_FREE';
     var PREMIUM_RATE = 'PREMIUM_RATE';
@@ -174,6 +175,18 @@
       } else {
         throw new Error('Code not found');
       }
+    }
+
+    function checkPhoneNumberType(number) {
+      var phoneNumberType;
+      try {
+        if (phoneUtils.isValidNumberForRegion(number, regionCode)) {
+          phoneNumberType = phoneUtils.getNumberType(number, regionCode);
+        }
+      } catch (e) {
+        phoneNumberType = undefined;
+      }
+      return phoneNumberType;
     }
   }
 })();

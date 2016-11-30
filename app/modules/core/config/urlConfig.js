@@ -197,7 +197,7 @@
     LogMetricsUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
     SSOTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
     SSOSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
-
+    CSDiscoveryUrl: 'https://discovery.produs1.ciscoccservice.com'
   };
 
   module.exports = angular

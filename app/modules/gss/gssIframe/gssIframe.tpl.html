@@ -10,6 +10,7 @@
     ng-model="gssIframeCtrl.selected"
     options="gssIframeCtrl.options"
     placeholder="::'gss.servicesPlaceholder' | translate"
+    on-change-fn="gssIframeCtrl.onServiceSelectionChanged()"
     nested="false"
     class="service-selector"
     icon="icon-chevron-down">

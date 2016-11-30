@@ -619,6 +619,10 @@
     function setUpFeatureToggles() {
       var featureToggleDefault = false;
       AACommonService.setMediaUploadToggle(featureToggleDefault);
+      AACommonService.setCallerInputToggle(featureToggleDefault);
+      FeatureToggleService.supports(FeatureToggleService.features.huronAACallerInput).then(function (result) {
+        AACommonService.setCallerInputToggle(result);
+      });
       AACommonService.setClioToggle(featureToggleDefault);
       AACommonService.setRouteQueueToggle(featureToggleDefault);
       return function () {
