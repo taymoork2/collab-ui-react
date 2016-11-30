@@ -4,7 +4,7 @@ describe('Service: ServiceSetup', function () {
   var ServiceSetup, $httpBackend, HuronConfig;
 
   var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
 
   beforeEach(angular.mock.module('Huron'));
@@ -121,7 +121,6 @@ describe('Service: ServiceSetup', function () {
       pattern: '+11234567890'
     }];
 
-    //$httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(extNumPool);
     beforeEach(function () {
       $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&externalnumbertype=Fixed+Line+or+Mobile&order=pattern').respond(extNumPool);
     });

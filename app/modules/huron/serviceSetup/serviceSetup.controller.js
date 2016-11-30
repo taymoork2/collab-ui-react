@@ -1203,9 +1203,10 @@
           return ServiceSetup.updateSite(ServiceSetup.sites[0].uuid, siteData)
             .then(function () {
               if (vm.voicemailAvrilCustomer && isAvrilVoiceEnabled) {
-                ServiceSetup.updateAvrilSite(ServiceSetup.sites[0].uuid, ServiceSetup.sites[0].siteSteeringDigit,
-                     ServiceSetup.sites[0].siteCode, ServiceSetup.sites[0].timeZone,
-                     ServiceSetup.sites[0].extensionLength, ServiceSetup.sites[0].voicemailPilotNumber, siteData);
+                var setupSites = ServiceSetup.sites[0];
+                ServiceSetup.updateAvrilSite(setupSites.uuid, setupSites.siteSteeringDigit,
+                     setupSites.siteCode, setupSites.timeZone,
+                     setupSites.extensionLength, setupSites.voicemailPilotNumber, siteData);
               }
               if (vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled && siteData && siteData.voicemailPilotNumber) {
                 return updateVoicemailSettings();

@@ -919,9 +919,10 @@
             }
 
             if (vm.voicemailAvrilCustomer && vm.isAvrilVoiceEnabled) {
-              ServiceSetup.updateAvrilSite(ServiceSetup.sites[0].uuid, ServiceSetup.sites[0].siteSteeringDigit,
-                     ServiceSetup.sites[0].siteCode, ServiceSetup.sites[0].timeZone,
-                     ServiceSetup.sites[0].extensionLength, ServiceSetup.sites[0].voicemailPilotNumber, siteData);
+              var setupSites = ServiceSetup.sites[0];
+              ServiceSetup.updateAvrilSite(setupSites.uuid, setupSites.siteSteeringDigit,
+                    setupSites.siteCode, setupSites.timeZone,
+                     setupSites.extensionLength, setupSites.voicemailPilotNumber, siteData);
             }
           })
           // in the case when voicemail is getting enabled, reload voicemail info such as (timezone and vm2email settings)
@@ -1028,7 +1029,6 @@
     function updateCustomerServicePackage(companyVoicemailNumber) {
       var customer = {};
       if (companyVoicemailNumber && _.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
-        //customer.servicePackage = DEMO_STANDARD;
         if (vm.voicemailAvrilCustomer) {
           customer.servicePackage = VOICE_VOICEMAIL_AVRIL;
           vm.isAvrilVoiceEnabled = true;
