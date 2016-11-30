@@ -1,23 +1,22 @@
 <cs-sp-container>
   <cs-sp-section>
-   <div class="section-title-row">
-      <div user-entitlements current-user="userOverview.currentUser" entitlements="userOverview.entitlements" queryuserslist="userOverview.queryuserslist" service="confPreview.service"></div>
+    <div class="section-title-row">
+      <div user-entitlements current-user="userOverview.currentUser" entitlements="userOverview.entitlements" queryuserslist="userOverview.queryuserslist"
+        service="confPreview.service"></div>
     </div>
-
     <div class="section-title-row" ng-if="userOverview.currentUser.trainSiteNames">
       <span class="section-name" translate="usersPreview.siteUris"></span>
     </div>
-
     <div class="feature-list">
       <ul>
         <li class="feature" ng-repeat="site in userOverview.currentUser.trainSiteNames">
           <a id="{{site}}" ui-sref="user-overview.conferencing.webex({site:site})" ng-if="isValidConferenceSerivce(site)">
             <span class="feature-name">{{site}}</span>
+            <span class="badge badge-reposition" ng-if="isSharedMultiPartyEnabled">{{determineLicenseType(site)}}</span>
             <i class="feature-arrow"></i>
           </a>
         </li>
       </ul>
     </div>
-
   </cs-sp-section>
 </cs-sp-container>

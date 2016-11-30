@@ -67,6 +67,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     spyOn(AutoAttendantCeMenuModelService, 'deleteCeMenuMap');
 
+
     $scope.schedule = 'openHours';
     controller = $controller('AABuilderActionsCtrl', {
       $scope: $scope
@@ -199,6 +200,22 @@ describe('Controller: AABuilderActionsCtrl', function () {
         expect(controller.options[i].title).toEqual(sortedOptions[i].title);
       }
     });
+  });
+
+  describe('test caller Input', function () {
+    it('should add the Caller Input label', function () {
+      spyOn(AACommonService, 'isCallerInputToggle').and.returnValue(true);
+      // setup the options menu
+      controller = $controller('AABuilderActionsCtrl', {
+        $scope: $scope
+      });
+
+      expect(controller.options.length).toEqual(5);
+      // note: only works until an action that starts with an A or a B happens
+      expect(controller.options[0].title).toEqual('autoAttendant.actionCallerInput');
+
+    });
+
   });
 
 });

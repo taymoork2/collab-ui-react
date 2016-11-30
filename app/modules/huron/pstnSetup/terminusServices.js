@@ -9,6 +9,7 @@
     .factory('TerminusCustomerCarrierService', TerminusCustomerCarrierService)
     .factory('TerminusCustomerSiteService', TerminusCustomerSiteService)
     .factory('TerminusCustomerCarrierDidService', TerminusCustomerCarrierDidService)
+    .factory('TerminusCustomerPortService', TerminusCustomerPortService)
     .factory('TerminusCustomerCarrierTollFreeService', TerminusCustomerCarrierTollFreeService)
     .factory('TerminusOrderService', TerminusOrderService)
     .factory('TerminusNumberService', TerminusNumberService)
@@ -90,6 +91,11 @@
   /* @ngInject */
   function TerminusCustomerCarrierDidService($resource, HuronConfig) {
     return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId/did/:type', {}, {});
+  }
+
+  /* @ngInject */
+  function TerminusCustomerPortService($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId/numbers/orders/ports', {}, {});
   }
 
   /* @ngInject */
