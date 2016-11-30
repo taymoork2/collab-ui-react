@@ -287,6 +287,7 @@
     "paidMsg": "Message",
     "paidConf": "Meeting 25 Party",
     "paidConfWebEx": "WebEx Meetings",
+    "paidAdvancedConferencing": "Advanced Meetings",
     "paidComm": "Call",
     "paidCare": "Care Digital Channel",
     "paidContactCenter": "Chat",
@@ -2429,6 +2430,16 @@
     "actionPlaceholder": "Choose Action...",
     "actionSayMessage": "Say Message",
     "actionSayMessageHint": "Play an uninterruptable message.",
+    "actionCallerInput": "Caller Input",
+    "actionCallerInputHint": "Collect Caller Input",
+    "actionCallerInputHelp": "Set up the AA for capturing caller input",
+    "callerInputCnvtDigit" : "Convert digit input to text string value",
+    "callerInputMaxLenStr" : "Max Length of String",
+    "callerInputValue"     : "Input Value",
+    "callerInputLabel"     : "Name",
+    "callerInputNamePlaceHolder": "Name Variable",
+    "callerNameInputHelpText": "Name of tag being passed",
+    "callerInputMaxLength" : "# used as terminator for strings less than max",
     "actionPhoneMenu": "Phone Menu",
     "actionPhoneMenuHint": "Play a message and take action based on the caller's input.",
     "actionRouteCall": "Route Call",
@@ -2730,7 +2741,20 @@
     "cancelDialog": "Are you sure you wish to cancel call pickup creation? This call pickup will not be saved.",
     "createHelpText": "Create",
     "nameHint": "This name is not visible to callers.",
-    "namePlaceholder": "Name the Call Pickup"
+    "namePlaceholder": "Name the Call Pickup",
+    "memberPlaceholder": "Select Members",
+    "pickupNameHint": "These users' or places' lines will be part of this call pickup. 2 members minimum",
+    "successSave": "'{{callPickupName}}' call pickup has been created successfully",
+    "errorSave": "Failed to create the Call Pickup: '{{message}}'",
+    "memberHint": "These users' or places' lines will be part of this call pickup",
+    "members": " Members",
+    "memberFetchFailure": "Unable to get members.",
+    "memberLimitExceeded": "Unable to add member. Call Pickup feature is limited to 30 members",
+    "maxMembersAllowed": "30",
+    "minMemberWarning": "You need to select at least one line for each member",
+    "memberWarning": "Member already added to another call pickup group. Do you wish to continue?",
+    "duplicateNameWarning": "A pickup group by same name already exists",
+    "removeMember": "Remove Member"
   },
   "pagingGroup": {
     "title": "Paging Group",
@@ -2758,7 +2782,7 @@
     "editMemberPlaceholder": "Add Members",
     "users": " Users",
     "places": " Places",
-    "search": "Search",
+    "search": "Search Members",
     "saveLabel": "Do you want to save your changes?",
     "successUpdate": "'{{pagingGroupName}}' paging group has been updated successfully",
     "successSave": "'{{pagingGroupName}}' paging group has been created successfully",
@@ -2964,7 +2988,6 @@
     "portNumbersTab": "Porting Numbers",
     "portNumbersPrompt": "Copy and paste customer's numbers that need to be ported.",
     "portNumbersLabel": "Porting Numbers",
-    "portNumbersNoTollFree": "Toll-Free number porting is not supported at this time.  Please contact your carrier for more information.",
     "manualAdd": "Manually Add New Numbers",
     "state": "State",
     "selectState": "Select state",
@@ -3487,7 +3510,7 @@
     "savePrompt": "Save this number?",
     "saveSuccess": "Emergency Service Number updated successfully.",
     "saveError": "Error occurred updating Emergency Service Number.",
-    "warning": "Please select a number assinged to a user or Spark Call feature"
+    "warning": "Please select a number assigned to a user or Spark Call feature"
   },
   "didManageModal": {
     "buttonText": "Add Numbers",
@@ -5499,7 +5522,9 @@
     "user": "User",
     "ciscouc.devops": "Spark Call Devops",
     "ciscouc.devsupport": "Spark Call Dev Support",
-    "compliance": "Compliance Officer"
+    "compliance": "Compliance Officer",
+    "ciscouc.devsupport.phonelogaccess": "Spark Call Phone Log Access",
+    "ciscouc.devsupport.phonesupport": "Spark Call Phone Support"
   },
   "atlasRoles": {
     "Full_Admin": "Full Admin",
@@ -5621,8 +5646,9 @@
       "EC": "Event Center {{capacity}}",
       "CO": "Advanced Spark Call",
       "CMR": "Collaboration Meeting Rooms",
-      "SD": "Room Devices",
       "ST": "Storage",
+      "SD": "DX, MX, or SX systems",
+      "SB": "Spark Board",
       "linkedSite": "Legacy WebEx License"
     },
     "trial": "Trial",
@@ -6427,7 +6453,6 @@
     "useDerivedStatus": "Use Derived Status",
     "overrideStatus": "Override this status",
     "deleteComponent": "Delete {{componentName}}",
-    "permanentlyDeleteComponent": "Permanently DELETE {{componentName}}",
     "newService": "New Service",
     "serviceName": "Service Name",
     "serviceDescription": "Service Description",
@@ -6448,7 +6473,7 @@
     "componentsPage": {
       "listing": {
         "noComponentHeading": "No Component Added",
-        "noComponentText": "Click the ADD botton to get started."
+        "noComponentText": "Click the ADD button to get started."
       },
       "addComponentTitle": "Add A Component",
       "updateComponentTitle": "Update A Component",
@@ -6480,10 +6505,11 @@
       "noIncidentContent1": "Looks like you've got a clean record",
       "noIncidentContent2":"When you have downtime: ",
       "noIncidentContentLink": "Create your first incident",
+      "createdAt": "Created at ",
       "lastUpdatedOn": "Last updated on ",
       "resolvedOn": "Resolved on ",
       "noAffectedComponent": "No components were affected by this update.",
-      "postAt": "Post At ",
+      "postedAt": "Posted At ",
       "newIncident": "New Incident",
       "incidentName": "Incident Name",
       "createIncidentBtn": "Create Incident",

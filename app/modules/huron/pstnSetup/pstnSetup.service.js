@@ -11,7 +11,7 @@
     TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch,
     TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease,
     TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease,
-    TerminusCustomerCarrierDidService, TerminusResellerCarrierService,
+    TerminusCustomerCarrierDidService, TerminusCustomerPortService, TerminusResellerCarrierService,
     TerminusCarrierTollFreeInventoryCount, TerminusCarrierTollFreeInventoryRelease,
     TerminusCarrierTollFreeInventoryReserve, TerminusCarrierTollFreeInventorySearch,
     TerminusCustomerCarrierTollFreeInventoryRelease, TerminusCustomerCarrierTollFreeInventoryReserve,
@@ -39,6 +39,7 @@
     var BLOCK = 'block';
     var ORDER = 'order';
     var PORT = 'port';
+    var TOLL_FREE_NUMBER_PORT = 'tollfree';
     var TOLLFREEBLOCK = 'tollfree_block_value_tbd';
     var TOLLFREEORDER = 'tollfree_order_value_tbd';
     //misc
@@ -390,15 +391,36 @@
     }
 
     function portNumbers(customerId, carrierId, numbers) {
+      var promises = [];
+      var tfnNumbers = [];
+
+      tfnNumbers = _.remove(numbers, function (number) {
+        return TelephoneNumberService.checkPhoneNumberType(number) === 'TOLL_FREE';
+      });
+
+      var tfnPayload = {
+        numbers: tfnNumbers,
+        numberType: TOLL_FREE_NUMBER_PORT
+      };
+
       var payload = {
         numbers: numbers
       };
 
-      return TerminusCustomerCarrierDidService.save({
-        customerId: customerId,
-        carrierId: carrierId,
-        type: PORT
-      }, payload).$promise;
+      if (numbers.length > 0) {
+        promises.push(TerminusCustomerCarrierDidService.save({
+          customerId: customerId,
+          carrierId: carrierId,
+          type: PORT
+        }, payload).$promise);
+      }
+      if (tfnNumbers.length > 0) {
+        promises.push(TerminusCustomerPortService.save({
+          customerId: customerId
+        }, tfnPayload).$promise);
+      }
+
+      return $q.all(promises);
     }
 
     function listPendingOrders(customerId) {

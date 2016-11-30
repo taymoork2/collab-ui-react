@@ -13,6 +13,7 @@ describe('Service: ServiceSetup', function () {
     $provide.value("Authinfo", Authinfo);
   }));
 
+
   beforeEach(inject(function (_ServiceSetup_, _$httpBackend_, _HuronConfig_) {
     ServiceSetup = _ServiceSetup_;
     $httpBackend = _$httpBackend_;
@@ -90,13 +91,36 @@ describe('Service: ServiceSetup', function () {
     });
   });
 
+  describe('updateAvrilSite', function () {
+    var site = {
+      guid: '1234567890',
+      siteCode: '8',
+      siteSteeringDigit: '6',
+      timezone: 'MST',
+      extensionLength: '10',
+      pilotNumber: '1008'
+    };
+
+    var HuronConfig = {
+      getAvrilUrl: jasmine.createSpy('getAvrilUrl').and.returnValue('https://avrildirmgmt.appstaging.ciscoccservice.com/avrildirmgmt/api/v1')
+    };
+
+    beforeEach(function () {
+      $httpBackend.whenPOST(HuronConfig.getAvrilUrl() + '/customers/1/sites').respond(201);
+    });
+
+    it('should update avril site', function () {
+      ServiceSetup.updateAvrilSite(site.guid, site.siteSteeringDigit, site.code, site.timezone, site.extensionLength, site.pilotNumber);
+      $httpBackend.flush();
+    });
+  });
+
   describe('loadExternalNumberPool', function () {
     var extNumPool = [{
       uuid: '777-888-666',
       pattern: '+11234567890'
     }];
 
-      //$httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(extNumPool);
     beforeEach(function () {
       $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&externalnumbertype=Fixed+Line+or+Mobile&order=pattern').respond(extNumPool);
     });

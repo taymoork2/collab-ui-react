@@ -20,6 +20,7 @@
     .factory('UserServiceCommon', UserServiceCommon)
     .factory('UserServiceCommonV2', UserServiceCommonV2)
     .factory('UserSearchServiceV2', UserSearchServiceV2)
+    .factory('UserNumberService', UserNumberService)
     .factory('NumberSearchServiceV2', NumberSearchServiceV2)
     .factory('HuntGroupServiceV2', HuntGroupServiceV2)
     .factory('AssignAutoAttendantService', AssignAutoAttendantService)
@@ -34,6 +35,7 @@
     .factory('AlternateNumberService', AlternateNumberService)
     .factory('DirectoryNumberCopyService', DirectoryNumberCopyService)
     .factory('SiteService', SiteService)
+    .factory('AvrilSiteService', AvrilSiteService)
     .factory('InternalNumberRangeService', InternalNumberRangeService)
     .factory('UserEndpointService', UserEndpointService)
     .factory('SipEndpointService', SipEndpointService)
@@ -150,6 +152,11 @@
         method: 'PUT'
       }
     });
+  }
+
+  /* @ngInject */
+  function UserNumberService($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/users/:userId/numbers');
   }
 
   /* @ngInject */
@@ -325,6 +332,20 @@
     }, {
       update: {
         method: 'PUT'
+      }
+    });
+  }
+
+  /* @ngInject */
+  function AvrilSiteService($resource, HuronConfig) {
+    return $resource(HuronConfig.getAvrilUrl() + '/customers/:customerId/sites/', {
+      customerId: '@customerId'
+    }, {
+      save: {
+        method: 'POST',
+        headers: {
+          'Access-Control-Expose-Headers': 'Location'
+        }
       }
     });
   }

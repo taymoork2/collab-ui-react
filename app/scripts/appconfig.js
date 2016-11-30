@@ -2413,7 +2413,7 @@
             resolve: {
               lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
                 return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/callPickup/callPickupSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
+                  require(['modules/huron/features/callPickup'], loadModuleAndResolve($ocLazyLoad, resolve));
                 });
               }
             }
@@ -3100,12 +3100,7 @@
             templateUrl: 'modules/gss/gssIframe/gssIframe.tpl.html',
             controller: 'GssIframeCtrl',
             controllerAs: 'gssIframeCtrl',
-            parent: 'main',
-            resolve: {
-              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasGlobalServiceStatus);
-              }
-            }
+            parent: 'main'
           })
           .state('gss.dashboard', {
             url: '/dashboard',
@@ -3138,6 +3133,19 @@
             templateUrl: 'modules/gss/services/services.tpl.html',
             controller: 'GSSServicesCtrl',
             controllerAs: 'gssServicesCtrl'
+          })
+          .state('gss.services.delete', {
+            url: '/delete',
+            views: {
+              '@gss': {
+                templateUrl: 'modules/gss/services/deleteService/deleteService.tpl.html',
+                controller: 'DeleteServiceCtrl',
+                controllerAs: 'deleteServiceCtrl'
+              }
+            },
+            params: {
+              service: null
+            }
           })
           .state('gss.incidents', {
             url: '/incidents',

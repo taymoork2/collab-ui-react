@@ -40,6 +40,7 @@
 
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
+    var VOICE_VOICEMAIL_AVRIL = 'DEMO_STANDARD';
 
     vm.voicemailAvrilCustomer = false;
     vm.addInternalNumberRange = addInternalNumberRange;
@@ -48,7 +49,6 @@
     vm.initServiceSetup = initServiceSetup;
     vm.initNext = initNext;
     vm.checkIfTestOrg = checkIfTestOrg;
-
     vm.processing = true;
     vm.externalNumberPool = [];
     vm.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
@@ -1123,6 +1123,7 @@
 
       var errors = [];
       var voicemailToggleEnabled = false;
+      var isAvrilVoiceEnabled = false;
       if (!_.get(vm, 'model.ftswCompanyVoicemail.ftswExternalVoicemail')) {
         if (_.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled')) {
           voicemailToggleEnabled = true;
@@ -1137,7 +1138,12 @@
         var customer = {};
         if (companyVoicemailNumber && _.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
           if (!vm.hasVoicemailService) {
-            customer.servicePackage = DEMO_STANDARD;
+            if (vm.voicemailAvrilCustomer) {
+              customer.servicePackage = VOICE_VOICEMAIL_AVRIL;
+              isAvrilVoiceEnabled = true;
+            } else {
+              customer.servicePackage = DEMO_STANDARD;
+            }
           }
 
           customer.voicemail = {
@@ -1216,6 +1222,12 @@
         if (!_.isEmpty(siteData)) {
           return ServiceSetup.updateSite(ServiceSetup.sites[0].uuid, siteData)
             .then(function () {
+              if (vm.voicemailAvrilCustomer && isAvrilVoiceEnabled) {
+                var setupSites = ServiceSetup.sites[0];
+                ServiceSetup.updateAvrilSite(setupSites.uuid, setupSites.siteSteeringDigit,
+                     setupSites.siteCode, setupSites.timeZone,
+                     setupSites.extensionLength, setupSites.voicemailPilotNumber, siteData);
+              }
               if (vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled && siteData && siteData.voicemailPilotNumber) {
                 return updateVoicemailSettings();
               }

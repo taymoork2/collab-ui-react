@@ -8,8 +8,7 @@
   /* @ngInject */
   function ServiceSetup($q, $translate, $filter, Authinfo, SiteService, InternalNumberRangeService,
       TimeZoneService, SiteLanguageService, ExternalNumberPool, VoicemailTimezoneService,
-      VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2, CeSiteService, SiteCountryService) {
-
+      VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2, CeSiteService, AvrilSiteService, SiteCountryService) {
     return {
       internalNumberRanges: [],
       sites: [],
@@ -41,6 +40,18 @@
           customerId: Authinfo.getOrgId(),
           siteId: siteUuid
         }, site).$promise;
+      },
+
+      updateAvrilSite: function (siteUuid, siteStrDigit, code, timeZone, extLength, voicemailPilotNumber) {
+        return AvrilSiteService.save({
+          customerId: Authinfo.getOrgId(),
+          guid: siteUuid,
+          siteCode: code,
+          siteSteeringDigit: siteStrDigit,
+          timezone: timeZone,
+          extensionLength: extLength,
+          pilotNumber: voicemailPilotNumber
+        }).$promise;
       },
 
       saveAutoAttendantSite: function (site) {
