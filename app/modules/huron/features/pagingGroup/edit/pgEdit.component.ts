@@ -23,11 +23,12 @@ class PgEditComponentCtrl implements ng.IComponentController {
   public members: IMemberWithPicture[] = [];
   private originalMembersList: IMemberWithPicture[] = [];
   private memberName: string;
+  private userCount: number;
+  private placeCount: number;
 
   //Search 
   private listOfDisplayMembers: IMemberWithPicture[] = [];
   private searchStr: string;
-  private clearSearch: boolean = false;
 
   public back: boolean = true;
   public huronFeaturesUrl: string = 'huronfeatures';
@@ -55,6 +56,8 @@ class PgEditComponentCtrl implements ng.IComponentController {
           this.pg = data;
           this.name = this.pg.name;
           this.number = this.pg.extension;
+          this.userCount = _.get(_.countBy(this.pg.members, 'type'), USER, 0);
+          this.placeCount = _.get(_.countBy(this.pg.members, 'type'), PLACE, 0);
           _.forEach(this.pg.members, (mem) => {
             let memberWithPic: IMemberWithPicture = {
               member: {
@@ -106,7 +109,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
     }
   }
 
-  public saveAndSortLists(memberWithPic: IMemberWithPicture, memberType: string) {
+  public saveAndSortLists(memberWithPic: IMemberWithPicture, memberType: string): void {
     this.members.push(memberWithPic);
     this.originalMembersList.push(memberWithPic);
     this.listOfDisplayMembers.push(memberWithPic);
@@ -182,6 +185,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
       }
 
       this.members.unshift(memberWithPicture);
+      this.incrementCount(member);
       if (this.isMeetSearch(memberWithPicture, this.searchStr)) {
         this.listOfDisplayMembers.unshift(memberWithPicture);
       }
@@ -191,6 +195,21 @@ class PgEditComponentCtrl implements ng.IComponentController {
     this.availableMembers = [];
   }
 
+  private incrementCount(member: Member): void {
+    if (member.type === USER_REAL_USER) {
+      this.userCount++;
+    } else if (member.type === USER_PLACE) {
+      this.placeCount++;
+    }
+  }
+
+  private decreaseCount(member: Member): void {
+    if (member.type === USER_REAL_USER) {
+      this.userCount--;
+    } else if (member.type === USER_PLACE) {
+      this.placeCount--;
+    }
+  }
   public removeMembers(member: IMemberWithPicture): void {
     if (member) {
       this.members = _.reject(this.members, member);
@@ -198,6 +217,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
         this.listOfDisplayMembers = _.reject(this.listOfDisplayMembers, member);
       }
     }
+    this.decreaseCount(member.member);
     this.memberName = '';
     this.formChanged = true;
   }
@@ -207,11 +227,11 @@ class PgEditComponentCtrl implements ng.IComponentController {
   }
 
   public getUserCount(): number {
-    return _.get(_.countBy(this.members, 'member.type'), USER_REAL_USER, 0);
+    return this.userCount;
   }
 
   public getPlaceCount(): number {
-    return _.get(_.countBy(this.members, 'member.type'), USER_PLACE, 0);
+    return this.placeCount;
   }
 
   public onCancel(): void {
@@ -224,6 +244,8 @@ class PgEditComponentCtrl implements ng.IComponentController {
       this.listOfDisplayMembers.push(mem);
     });
 
+    this.userCount = _.get(_.countBy(this.originalMembersList, 'member.type'), USER_REAL_USER, 0);
+    this.placeCount = _.get(_.countBy(this.originalMembersList, 'member.type'), USER_PLACE, 0);
     this.errorNameInput = false;
     this.formChanged = false;
     this.form.$setPristine();
@@ -320,22 +342,17 @@ class PgEditComponentCtrl implements ng.IComponentController {
     }
   }
 
-  public filterList(str) {
-    this.searchStr = str.toLowerCase();
+  public filterList() {
+    let str = this.searchStr.toLowerCase();
     let filteredList = _.filter(this.members, (mem) => {
-      return this.isMeetSearch(mem, this.searchStr);
+      return this.isMeetSearch(mem, str);
     });
     this.listOfDisplayMembers = _.sortBy(filteredList, str);
   }
 
-  public resetFilter() {
-    this.clearSearch = true;
+  public resetFilter(): void {
     this.searchStr = '';
-    this.filterList(this.searchStr);
-  }
-
-  public resetSearchClear() {
-    this.clearSearch = false;
+    this.filterList();
   }
 }
 

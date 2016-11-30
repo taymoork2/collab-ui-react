@@ -101,6 +101,23 @@ $overlay-panel-height: 93px;
           margin-left: 2px;
           margin-bottom: 1rem;
         }
+
+        .search-member {
+          width: 300px;
+          position: relative;
+          @include vr-spacing(ml, 2);
+
+          .icon-search {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+          }
+
+          input {
+            width: 100%;
+            text-indent: 20px;
+          }
+        }
       }
 
       .cs-card-layout {

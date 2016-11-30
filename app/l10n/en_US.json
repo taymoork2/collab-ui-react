@@ -2779,7 +2779,7 @@
     "editMemberPlaceholder": "Add Members",
     "users": " Users",
     "places": " Places",
-    "search": "Search",
+    "search": "Search Members",
     "saveLabel": "Do you want to save your changes?",
     "successUpdate": "'{{pagingGroupName}}' paging group has been updated successfully",
     "successSave": "'{{pagingGroupName}}' paging group has been created successfully",
