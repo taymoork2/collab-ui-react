@@ -3507,7 +3507,7 @@
     "savePrompt": "Save this number?",
     "saveSuccess": "Emergency Service Number updated successfully.",
     "saveError": "Error occurred updating Emergency Service Number.",
-    "warning": "Please select a number assinged to a user or Spark Call feature"
+    "warning": "Please select a number assigned to a user or Spark Call feature"
   },
   "didManageModal": {
     "buttonText": "Add Numbers",
