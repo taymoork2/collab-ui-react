@@ -26,7 +26,6 @@
     ];
     vm.clusters = ClusterService.getClustersByConnectorType('hds_app');
     vm.getSeverity = ClusterService.getRunningStateSeverity;
-    vm.clusterLength = clusterLength;
     vm.sortByProperty = sortByProperty;
     vm.clusterList = [];
 
@@ -69,10 +68,6 @@
       .then(function (reply) {
         vm.featureToggled = reply;
       });
-
-    function clusterLength() {
-      return _.size(vm.clusters);
-    }
 
     /**
      * This will sort the string array based on the property passed.
