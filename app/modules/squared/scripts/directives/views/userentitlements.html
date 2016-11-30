@@ -5,6 +5,6 @@
 		</div>
 	</div>
 	<div class="entitle-save-btn">
-		<button id="btn-save" class="btn btn--people btn-save" cs-btn loading="btn_saveLoad" ng-disabled="saveDisabled" ng-click="changeEntitlement(currentUser)"><span translate="common.save"></span></button>
+		<button id="btn-save" class="btn btn--people btn-save" cs-btn loading="btn_saveLoad" ng-show="hasUserEntitlements" ng-disabled="saveDisabled" ng-click="changeEntitlement(currentUser)"><span translate="common.save"></span></button>
 	</div>
 </div>

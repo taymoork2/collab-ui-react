@@ -33,8 +33,7 @@ describe('Service: CsdmDataModelService', function () {
   var initialHttpDevices = getJSONFixture('squared/json/devices.json');
   var accounts = getJSONFixture('squared/json/accounts.json');
 
-  beforeEach(inject(function (FeatureToggleService, $q, Authinfo) {
-    spyOn(FeatureToggleService, 'csdmPlacesGetStatus').and.returnValue($q.when(true));
+  beforeEach(inject(function (Authinfo) {
     spyOn(Authinfo, 'getOrgId').and.returnValue('testOrg');
   }));
 

@@ -9,6 +9,7 @@
 
     var aaSayMessageForm = false;
     var aaPhoneMenuOptions = false;
+    var aaCallerInputStatus = false;
     var aaActionStatus = false;
     var aaDialByExtensionStatus = false;
     var aaCENumberStatus = false;
@@ -16,6 +17,7 @@
     var aaQueueSettingsStatus = false;
     var routeQueueToggle = false;
     var mediaUploadToggle = false;
+    var callerInputToggle = false;
     var clioToggle = false;
     var uniqueId = 0;
 
@@ -24,15 +26,18 @@
       isFormDirty: isFormDirty,
       setSayMessageStatus: setSayMessageStatus,
       setPhoneMenuStatus: setPhoneMenuStatus,
+      setCallerInputStatus: setCallerInputStatus,
       setActionStatus: setActionStatus,
       setDialByExtensionStatus: setDialByExtensionStatus,
       setCENumberStatus: setCENumberStatus,
       setMediaUploadStatus: setMediaUploadStatus,
       setQueueSettingsStatus: setQueueSettingsStatus,
       setMediaUploadToggle: setMediaUploadToggle,
+      setCallerInputToggle: setCallerInputToggle,
       setRouteQueueToggle: setRouteQueueToggle,
       setClioToggle: setClioToggle,
       isRouteQueueToggle: isRouteQueueToggle,
+      isCallerInputToggle: isCallerInputToggle,
       isMediaUploadToggle: isMediaUploadToggle,
       isClioToggle: isClioToggle,
       isValid: isValid,
@@ -42,7 +47,8 @@
       makeKey: makeKey,
       resetFormStatus: resetFormStatus,
       saveUiModel: saveUiModel,
-      sortByProperty: sortByProperty
+      sortByProperty: sortByProperty,
+      keyActionAvailable: keyActionAvailable
     };
 
     return service;
@@ -50,7 +56,7 @@
     /////////////////////
 
     function isFormDirty() {
-      return aaQueueSettingsStatus || aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus;
+      return aaQueueSettingsStatus || aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaCallerInputStatus || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus;
     }
 
     function isValid() {
@@ -85,6 +91,7 @@
     function resetFormStatus() {
       aaSayMessageForm = false;
       aaPhoneMenuOptions = false;
+      aaCallerInputStatus = false;
       aaActionStatus = false;
       aaDialByExtensionStatus = false;
       aaMediaUploadStatus = false;
@@ -100,6 +107,9 @@
 
     function setPhoneMenuStatus(status) {
       aaPhoneMenuOptions = status;
+    }
+    function setCallerInputStatus(status) {
+      aaCallerInputStatus = status;
     }
 
     function setActionStatus(status) {
@@ -131,6 +141,10 @@
       mediaUploadToggle = status;
     }
 
+    function setCallerInputToggle(status) {
+      callerInputToggle = status;
+    }
+
     /**
      * Will check the toggle status for clio enabled upload
      */
@@ -145,11 +159,12 @@
       return routeQueueToggle;
     }
 
-    /**
-    * will check the toggle status for queue which is only allowed for say messages and not phone menu or submenu
-    */
     function isMediaUploadToggle() {
       return mediaUploadToggle;
+    }
+
+    function isCallerInputToggle() {
+      return callerInputToggle;
     }
 
     function saveUiModel(ui, aaRecord) {
@@ -200,4 +215,21 @@
     };
   };
 
+  /*
+   * will cycle through key actions and extract already used keys.
+   * return: a set of available keys
+   */
+  function keyActionAvailable(selectedKey, inputActions) {
+    var keys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '#', '*'];
+
+    _.forEach(inputActions, function (inputAction) {
+      if (inputAction.key !== selectedKey) {
+        _.pull(keys, inputAction.key);
+      }
+
+    });
+
+    return keys;
+
+  }
 })();

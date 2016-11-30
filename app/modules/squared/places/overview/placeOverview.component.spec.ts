@@ -42,11 +42,10 @@ describe('placeOverview component', () => {
   };
 
   describe('and invoke onGenerateOtpFn', () => {
-    let showPlaces, showATA, showHybrid, currentDevice, deviceName, displayName, email, userCisUuid, placeCisUuid, orgId;
-    let goStateName, goStateData;
+    let showATA, showHybrid, currentDevice, deviceName, displayName, email, userCisUuid, placeCisUuid;
+    let orgId, adminOrgId, goStateName, goStateData;
     beforeEach(() => {
 
-      showPlaces = true;
       showATA = true;
       showHybrid = true;
       deviceName = 'deviceName';
@@ -55,6 +54,7 @@ describe('placeOverview component', () => {
       userCisUuid = 'userCisUuid';
       placeCisUuid = 'placeCisUuid';
       orgId = 'orgId';
+      adminOrgId = 'adminOrgId';
       currentDevice = {
         displayName: deviceName,
         cisUuid: placeCisUuid,
@@ -68,7 +68,7 @@ describe('placeOverview component', () => {
       Authinfo.displayName = displayName;
       spyOn(Authinfo, 'getUserId').and.returnValue(userCisUuid);
       spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(email);
-      spyOn(Userservice, 'getUser').and.returnValue($q.when({}));
+      spyOn(Userservice, 'getUser');
       spyOn($state, 'go').and.callFake((stateName, stateData) => {
         goStateName = stateName;
         goStateData = stateData;
@@ -95,10 +95,10 @@ describe('placeOverview component', () => {
             {
               data: {
                 function: 'showCode',
-                showPlaces: true,
                 showATA: true,
                 csdmHybridCallFeature: true,
-                account: { type: 'sharede', deviceType: 'cloudberry', cisUuid: placeCisUuid, name: deviceName },
+                adminOrganizationId: adminOrgId,
+                account: { type: 'sharede', deviceType: 'cloudberry', cisUuid: placeCisUuid, name: deviceName, organizationId: orgId },
                 recipient: { cisUuid: userCisUuid, organizationId: orgId, displayName: displayName, email: email },
                 title: 'addDeviceWizard.newCode',
               },
@@ -133,10 +133,10 @@ describe('placeOverview component', () => {
             {
               data: {
                 function: 'showCode',
-                showPlaces: true,
                 showATA: true,
                 csdmHybridCallFeature: true,
-                account: { type: 'shared', deviceType: 'huron', cisUuid: placeCisUuid, name: deviceName },
+                adminOrganizationId: adminOrgId,
+                account: { type: 'shared', deviceType: 'huron', cisUuid: placeCisUuid, organizationId: orgId, name: deviceName },
                 recipient: { cisUuid: userCisUuid, organizationId: orgId, displayName: displayName, email: email },
                 title: 'addDeviceWizard.newCode',
               },
@@ -153,9 +153,8 @@ describe('placeOverview component', () => {
 
   describe('invoke editCloudberryServices', () => {
     let goStateName, goStateData;
-    let showPlaces, showATA, showHybrid, currentDevice, deviceName, displayName, email, userCisUuid, orgId, entitlements, placeUuid;
+    let showATA, showHybrid, currentDevice, deviceName, displayName, email, userCisUuid, orgId, entitlements, placeUuid;
     beforeEach(() => {
-      showPlaces = true;
       showATA = true;
       showHybrid = true;
       deviceName = 'deviceName';
@@ -202,7 +201,6 @@ describe('placeOverview component', () => {
           data: {
             function: 'editServices',
             title: 'usersPreview.editServices',
-            showPlaces: true,
             account: {
               deviceType: 'cloudberry',
               type: 'shared',
@@ -210,12 +208,10 @@ describe('placeOverview component', () => {
               cisUuid: placeUuid,
               entitlements: jasmine.anything(),
             },
-            // recipient: { cisUuid: userCisUuid, organizationId: orgId, displayName: displayName, email: email },
           },
           history: jasmine.anything(),
           currentStateName: jasmine.anything(),
           wizardState: jasmine.anything(),
-          // "addDeviceFlow.addLines": jasmine.anything()
         }
       );
     });

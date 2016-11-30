@@ -22,16 +22,14 @@
   }
 }
 
-.modal-content.small.status-delete-service {
-  height: 235px;
 
-  .modal-body {
-    p:first-child {
-      @include vr_spacing(pb, 1);
-    }
+.delete-service-page {
+  background: $white;
 
-    p:last-child {
-      @include vr_spacing(pt, 1);
-    }
+  @include vr_spacing(p, 3);
+
+  p, input {
+    font-size: 1rem;
+    @include vr_spacing(mb, 1.25);
   }
 }

@@ -1164,7 +1164,19 @@
               displayName: 'Calendar Service'
             },
             params: {
-              extensionId: {}
+              extensionId: {},
+              extensions: {}
+            }
+          })
+          .state('user-overview.hybrid-services-squared-fusion-gcal', {
+            templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+            controller: 'CalendarServicePreviewCtrl',
+            data: {
+              displayName: 'Calendar Service'
+            },
+            params: {
+              extensionId: {},
+              extensions: {}
             }
           })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
@@ -1726,8 +1738,9 @@
             controller: 'GemCtrl',
             template: '<div ui-view></div>'
           })
-          .state('gem.services', {
-            url: '/services/index',
+          .state('gemOverview', {
+            parent: 'partner',
+            url: '/services/overview',
             template: '<cca-card></cca-card>'
           })
           .state('gem.servicesPartner', {
@@ -2484,7 +2497,7 @@
         $stateProvider
           .state('services-overview', {
             url: '/services',
-            templateUrl: 'modules/services/overview.html',
+            templateUrl: 'modules/services-overview/overview.html',
             controller: 'ServicesOverviewCtrl',
             controllerAs: 'servicesOverviewCtrl',
             parent: 'main'
@@ -3079,18 +3092,15 @@
               deleteFeatureId: null,
               deleteFeatureType: null
             }
-          })
+          });
+
+        $stateProvider
           .state('gss', {
             url: '/gss',
             templateUrl: 'modules/gss/gssIframe/gssIframe.tpl.html',
             controller: 'GssIframeCtrl',
             controllerAs: 'gssIframeCtrl',
-            parent: 'main',
-            resolve: {
-              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasGlobalServiceStatus);
-              }
-            }
+            parent: 'main'
           })
           .state('gss.dashboard', {
             url: '/dashboard',
@@ -3123,6 +3133,19 @@
             templateUrl: 'modules/gss/services/services.tpl.html',
             controller: 'GSSServicesCtrl',
             controllerAs: 'gssServicesCtrl'
+          })
+          .state('gss.services.delete', {
+            url: '/delete',
+            views: {
+              '@gss': {
+                templateUrl: 'modules/gss/services/deleteService/deleteService.tpl.html',
+                controller: 'DeleteServiceCtrl',
+                controllerAs: 'deleteServiceCtrl'
+              }
+            },
+            params: {
+              service: null
+            }
           })
           .state('gss.incidents', {
             url: '/incidents',

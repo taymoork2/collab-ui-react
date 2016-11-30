@@ -224,7 +224,7 @@
       "enableRemoveNote": "Note: User entitlements not included in the CSV file upload will not be removed.",
       "removeFile": "Remove File",
       "confirmCsvDownloadTitle": "Export User Attributes",
-      "confirmCsvDownloadMsg": "Gathering data for export may take awhile. During this time you cannot sign out, or refresh your browser or the export will be canceled.",
+      "confirmCsvDownloadMsg": "Gathering data for export may take a while. During this time you cannot sign out, or refresh your browser or the export will be canceled.",
       "confirmCsvDownloadMsg10K": "Because you have more than {{maxUsers}} users, the exported list will not show the entitlements that are assigned to your users.",
       "newUsers": "Added",
       "existingUsers": "Updated",
@@ -287,6 +287,7 @@
     "paidMsg": "Message",
     "paidConf": "Meeting 25 Party",
     "paidConfWebEx": "WebEx Meetings",
+    "paidAdvancedConferencing": "Advanced Meetings",
     "paidComm": "Call",
     "paidCare": "Care Digital Channel",
     "paidContactCenter": "Chat",
@@ -550,7 +551,7 @@
       "numberOfCalls": "Number of Calls",
       "deviceName": "Device Name",
       "hoursUsed": "Time Used",
-      "callCount": "# Calls",
+      "callCount": "Calls",
       "callHours": "Call Hours",
       "deviceUsage": "Room Device Usage",
       "pairedCount": "# Paired",
@@ -1635,15 +1636,21 @@
       "serviceNames": {
         "squared-fusion-uc": "Aware",
         "squared-fusion-cal": "Calendar",
+        "squared-fusion-gcal": "Calendar",
         "squared-fusion-ec": "Connect"
       },
       "serviceDescriptions": {
         "squared-fusion-uc": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
         "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
+        "squared-fusion-gcal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-ec": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too."
       },
-      "preferredWebExSite": "Preferred WebEx Site:",
-      "preferredWebExSiteDefault": "Default"
+      "preferredWebExSite": "Preferred WebEx Site",
+      "preferredWebExSiteDefault": "Default",
+      "calendarType": "Calendar Type",
+      "exchange": "Microsoft Exchange",
+      "google": "Google Calendar",
+      "notSetup": "Not currently set up"
     },
     "alarms": {
       "alarms": "Alarms",
@@ -2420,6 +2427,16 @@
     "actionPlaceholder": "Choose Action...",
     "actionSayMessage": "Say Message",
     "actionSayMessageHint": "Play an uninterruptable message.",
+    "actionCallerInput": "Caller Input",
+    "actionCallerInputHint": "Collect Caller Input",
+    "actionCallerInputHelp": "Set up the AA for capturing caller input",
+    "callerInputCnvtDigit" : "Convert digit input to text string value",
+    "callerInputMaxLenStr" : "Max Length of String",
+    "callerInputValue"     : "Input Value",
+    "callerInputLabel"     : "Name",
+    "callerInputNamePlaceHolder": "Name Variable",
+    "callerNameInputHelpText": "Name of tag being passed",
+    "callerInputMaxLength" : "# used as terminator for strings less than max",
     "actionPhoneMenu": "Phone Menu",
     "actionPhoneMenuHint": "Play a message and take action based on the caller's input.",
     "actionRouteCall": "Route Call",
@@ -2510,7 +2527,7 @@
       "Disconnect": "Disconnect"
   },
     "languageAndVoice" : "Language and Voice",
-    "langaugeAndVoiceHelp" : "Language and voice will apply to Say Messages and Fallback.",
+    "langaugeAndVoiceHelp" : "These selections apply to Say and Error Messages.",
     "initialAnnouncement" : "Initial Announcement",
     "initialHelpText" : "Specify a message to play when the caller enters the queue.",
     "periodicHelpText": "Specify a message to play and how often to play it while the caller is waiting in the queue.",
@@ -2704,7 +2721,11 @@
     "reversionRuleDesc": "If the call is not answered, send it to this destination",
     "reversionParkerLabel": "Person who parked the call",
     "reversionOtherLabel": "Another destination",
-    "voicemailCheckLabel": "Send call directly to voicemail"
+    "voicemailCheckLabel": "Send call directly to voicemail",
+    "reversionTimerLabel": "Call Reversion Timer",
+    "reversionTimerDesc": "If the call is not answered, send it to the reversion destination after the following wait time",
+    "reversionTimerSeconds": "Seconds",
+    "fallbackTimer.validation.error": "Must be a number between {{min}} and {{max}}"
   },
   "callPickup": {
     "title": "Call Pickup",
@@ -2951,7 +2972,6 @@
     "portNumbersTab": "Porting Numbers",
     "portNumbersPrompt": "Copy and paste customer's numbers that need to be ported.",
     "portNumbersLabel": "Porting Numbers",
-    "portNumbersNoTollFree": "Toll-Free number porting is not supported at this time.  Please contact your carrier for more information.",
     "manualAdd": "Manually Add New Numbers",
     "state": "State",
     "selectState": "Select state",
@@ -3436,7 +3456,6 @@
   },
   "internationalDialing": {
     "internationalDialing": "International Dialing",
-    "internationalDialingDesc": "Users inherit this setting by default. Exception can be made at the individual user's settings.",
     "internationalDialingPlacesDesc": "Users and Places with Spark Call inherit this setting by default. Exception can be made at the individual user's or place's settings."
   },
   "huronSettings": {
@@ -3551,17 +3570,16 @@
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
+    "newCode": "New Code",
     "chooseDeviceType": {
       "deviceType": "What kind of device do you want to set up?",
       "deviceTypeInstructions": "A new device requires a unique activation code to be input during setup. What kind of device do you want to activate?",
       "deviceTypeNewPlace": "What kind of device do you want to set up in this place?",
       "deskPhone": "Desk Phone",
-      "newDeskPhone": "New desk phone for existing user",
       "deskPhoneExamples": "e.g. 8845, 8865 or 8800",
       "deskPhoneExamplesExtra": "e.g. 8845, 8865, 8800 or Analog Telephone Adapter port",
       "deskPhoneLicenseWarning": "Your organization must purchase Cisco Spark Call licenses first. Contact your partner or Cisco Sales for more information.",
       "roomSystem": "Room Device",
-      "newRoomSystem": "New room device",
       "roomSystemExamples": "DX, MX and SX series",
       "roomSystemExamplesExpanded": "Cisco Spark Board, DX, MX and SX series",
       "roomSystemLicenseWarning": "Your organization must purchase Cisco Spark Room Device licenses first. Contact your partner or Cisco Sales for more information."
@@ -3602,8 +3620,6 @@
       "placeLocation": "Where will this device be located?",
       "newPlaceInstructions": "What would you like to call the place that this device will be assigned to?",
       "newPlaceOnlyInstructions": "What would you like to call the place that this room device will be assigned to? A place represents a physical location such as a meeting room, a lobby or a factory floor.",
-      "deviceInstalled": "Where will this device be installed?",
-      "deviceInstalledInstructions": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
       "insertRoomName": "Insert name of device location, e.g. 'Reception' or 'Boardroom'",
       "noExistingPlaces": "There is no Cisco Spark Call place in your organization. Create a new place instead."
     },
@@ -3641,7 +3657,6 @@
       "plugInRoomSystem": "Share this code with the person setting up the room device belonging to <b>{{belongsTo}}</b>, or enter or scan it yourself when prompted by the device.",
       "onceActivePersonalDevice": "Once the device has been successfully activated, you will be able to find and configure it in Users or Devices.",
       "onceActiveSharedDevice": "Once the device has been successfully activated, you will be able to find and configure it in Places or Devices.",
-      "onceActiveSharedDeviceNoPlaces": "Once the device has been successfully activated, you will be able to find and configure it in Devices.",
       "expires": "Expires {{expiryDate}}",
       "searchAnotherUser": "Or search for another user",
       "failedToGenerateActivationCode": "Failed to generate activation code. Reason:",
@@ -4738,7 +4753,9 @@
     "authError": "You are not entitled to access this site.",
     "systemError": "Unable to connect to this site.",
     "multipleLicenses": "Multiple...",
-    "checkingServices": "Checking services..."
+    "checkingServices": "Checking services...",
+    "linkedSiteAdminTool": "Launch Site Admin Tool",
+    "LinkedSiteProgress": "Account linking progress"
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
@@ -5504,7 +5521,8 @@
     "Site_Admin": "Site Admin",
     "Readonly_Admin": "Read-only Admin",
     "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin",
-    "Compliance_User": "Compliance Officer"
+    "Compliance_User": "Compliance Officer",
+    "Tech_Support": "Tech Support"
   },
   "helpdesk": {
     "browserTabHeaderTitle": "Help Desk Support",
@@ -5605,7 +5623,8 @@
       "CO": "Advanced Spark Call",
       "CMR": "Collaboration Meeting Rooms",
       "SD": "Room Devices",
-      "ST": "Storage"
+      "ST": "Storage",
+      "linkedSite": "Legacy WebEx License"
     },
     "trial": "Trial",
     "adminUsers": "Administrators",
@@ -5825,13 +5844,15 @@
           "context": "Context"
         }
       },
-      "calendar": {
+      "hybridCalendar": {
         "title": "Hybrid Calendar",
         "description": "Inserts Join and Room details by adding @WebEx and/or @Spark to the Meeting Invite Location field.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
-        }
+        },
+        "exchangeTitle": "Microsoft Exchange",
+        "googleTitle": "Google Calendar"
       },
       "hybridCall": {
         "title": "Hybrid Call",
@@ -5904,7 +5925,7 @@
       "importCsv": "Import CSV",
       "title": "Callback Groups",
       "exportToCsv": "Export to CSV",
-      "editCountry": "Edit Country/Regions",
+      "editCountry": "Edit Countries/Regions",
       "downloadCsv": "Download CSV Template",
       "csvFilename": "exported_callbackGroup.csv",
       "moveSiteMsg": "Are you sure you want to move this site?",
@@ -5935,7 +5956,7 @@
         "customerPlaceholder": "Who is this callback group for?",
         "labelCustomerAttr": "Partner CB Group Name",
         "customerAttrPlaceholder": "Enter a shorter name for quick refernce",
-        "labelCountries": "Select Country/Regions",
+        "labelCountries": "Select Countries/Regions",
         "countriesPlaceholder": "Search to add country"
       },
       "notes": {
@@ -6407,7 +6428,6 @@
     "useDerivedStatus": "Use Derived Status",
     "overrideStatus": "Override this status",
     "deleteComponent": "Delete {{componentName}}",
-    "permanentlyDeleteComponent": "Permanently DELETE {{componentName}}",
     "newService": "New Service",
     "serviceName": "Service Name",
     "serviceDescription": "Service Description",
@@ -6428,7 +6448,7 @@
     "componentsPage": {
       "listing": {
         "noComponentHeading": "No Component Added",
-        "noComponentText": "Click the ADD botton to get started."
+        "noComponentText": "Click the ADD button to get started."
       },
       "addComponentTitle": "Add A Component",
       "updateComponentTitle": "Update A Component",
@@ -6460,10 +6480,11 @@
       "noIncidentContent1": "Looks like you've got a clean record",
       "noIncidentContent2":"When you have downtime: ",
       "noIncidentContentLink": "Create your first incident",
+      "createdAt": "Created at ",
       "lastUpdatedOn": "Last updated on ",
       "resolvedOn": "Resolved on ",
       "noAffectedComponent": "No components were affected by this update.",
-      "postAt": "Post At ",
+      "postedAt": "Posted At ",
       "newIncident": "New Incident",
       "incidentName": "Incident Name",
       "createIncidentBtn": "Create Incident",

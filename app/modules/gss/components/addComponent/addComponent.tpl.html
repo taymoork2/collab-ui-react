@@ -13,7 +13,7 @@
         <label class="cs-input__label medium-4 columns" for="add-component-name" translate="gss.componentsPage.componentName"></label>
 
         <div class=" medium-8 columns">
-          <input id="add-component-name" cs-input required type="text" minlength="3" ng-maxlength="64"
+          <input id="add-component-name" cs-input required type="text" maxlength="200"
             ng-model="addComponentCtrl.componentName"
             placeholder="{{ 'gss.componentsPage.componentName' | translate }}">
         </div>
@@ -41,7 +41,7 @@
           <div ng-show="addComponentCtrl.isCreatingGroup()">
             <input id="add-component-group" cs-input ng-model="addComponentCtrl.groupName"
                    placeholder="{{ 'gss.componentsPage.groupName' | translate }}" type="text"
-                   minlength="3" maxlength="64">
+                   maxlength="200">
 
             <button ng-click="addComponentCtrl.resetSelectedGroup()">
               <span translate="gss.componentsPage.cancelCreateNewGroup"></span>

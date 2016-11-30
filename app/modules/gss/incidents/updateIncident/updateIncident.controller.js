@@ -32,6 +32,7 @@
     vm.showAffectedComponents = showAffectedComponents;
     vm.hideAffectedComponent = hideAffectedComponent;
     vm.isValidForMessage = isValidForMessage;
+    vm.getLocalizedIncidentStatus = getLocalizedIncidentStatus;
 
     init();
 
@@ -222,9 +223,6 @@
 
       message.isShowAffectedComponents = false;
       message.hasAffectedComponent = false;
-
-      message.editDateValue = moment.utc(message.postAt).format('YYYY-MM-DD');
-      message.editTimeValue = moment.utc(message.postAt).format('HH:mm');
     }
 
     function showEditMessage(message) {
@@ -252,6 +250,12 @@
       return !_.isEmpty(message.editMessage);
     }
 
+    function getLocalizedIncidentStatus(status) {
+      return _.find(vm.radios, {
+        value: status
+      }).label;
+    }
+
     function saveMessage(message) {
       if (!vm.isValidForMessage(message)) {
         return;
@@ -259,16 +263,14 @@
 
       message.isSavingMessage = true;
 
-      var postAtTime = message.editDateValue + 'T' + message.editTimeValue + ':00Z';
       IncidentsService
         .updateIncidentMessage(message.messageId, {
-          postAt: postAtTime,
           email: Authinfo.getUserName(),
           message: message.editMessage
         })
-        .then(function () {
-          message.postAt = postAtTime;
-          message.message = message.editMessage;
+        .then(function (savedMessage) {
+          message.message = savedMessage.message;
+          message.lastModifiedTime = savedMessage.lastModifiedTime;
 
           Notification.success('gss.incidentsPage.modifyMessageSucceed');
         })

@@ -78,6 +78,7 @@ var AutoAttendantPage = function () {
 
   this.mediaFileToUpload = './../data/sample-media-upload.wav';
 
+
   this.sayMessage = element(by.css('div.aa-panel-body[name="Say Message"]'));
   this.sayMessageInput = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.name('messageInput'));
   this.sayMessageLanguage = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="languageSelect"] + div a.select-toggle'));
@@ -107,6 +108,11 @@ var AutoAttendantPage = function () {
   this.phoneMenuActionContent = element.all(by.css('div.aa-pm-action-select .select-toggle'));
   this.phoneMenuActionOptions = element.all(by.css('div.aa-pm-action-select div.dropdown-menu'));
   this.phoneMenuActionTargets = element.all(by.css('div.aa-pm-action'));
+
+  this.callerInputFirst = element.all(by.css('div.aa-panel-body[name="Caller Input"]')).all(by.cssContainingText("h3", "Caller Input")).first();
+  this.callerInputGetDigits = element(by.cssContainingText('cs-checkbox', 'Convert digit input to text string value'));
+  this.callerInputTextFirst = element.all(by.name('callerInput')).first();
+  this.callerInputAddAction = element(by.name('aa-caller-input-add-action'));
 
   this.phoneMenuTimeout = element(by.css('div.aa-pm-timeout .icon-chevron-down'));
   this.phoneMenuTimeoutOptions = element(by.css('div.aa-pm-timeout div.dropdown-menu')).all(by.tagName('li')).first();
@@ -160,7 +166,7 @@ var AutoAttendantPage = function () {
   this.voiceSelectopenHours0 = element(by.id('voiceSelectopenHours0'));
   this.cancelTreatmentFeature = element(by.id('cancelTreatmentFeature'));
 
-  // first item in newStep dropdown: Say Message
+  // last item in newStep dropdown: Say Message
   this.newStepSelectSayMessage = element.all(by.css('div.aa-panel[name="newStepForm"]'))
     .filter(function (el) {
       return el.isDisplayed();
@@ -169,10 +175,21 @@ var AutoAttendantPage = function () {
     .all(by.css("div.aa-flex-row"))
     .last()
     .all(by.tagName('li'))
-    .get(3);
+    .get(4);
 
-  // second item in newStep dropdown: Phone Menu
+  // third item in newStep dropdown: Phone Menu
   this.newStepSelectPhoneMenu = element.all(by.css('div.aa-panel[name="newStepForm"]'))
+    .filter(function (el) {
+      return el.isDisplayed();
+    })
+    .first()
+    .all(by.css("div.aa-flex-row"))
+    .last()
+    .all(by.tagName('li'))
+    .get(2);
+
+  // second item in newStep dropdown: Dial By Extension
+  this.newStepSelectDialByExt = element.all(by.css('div.aa-panel[name="newStepForm"]'))
     .filter(function (el) {
       return el.isDisplayed();
     })
@@ -182,18 +199,7 @@ var AutoAttendantPage = function () {
     .all(by.tagName('li'))
     .get(1);
 
-  // third item in newStep dropdown: Dial By Extension
-  this.newStepSelectDialByExt = element.all(by.css('div.aa-panel[name="newStepForm"]'))
-    .filter(function (el) {
-      return el.isDisplayed();
-    })
-    .first()
-    .all(by.css("div.aa-flex-row"))
-    .last()
-    .all(by.tagName('li'))
-    .get(0);
-
-  // last/third item in newStep dropdown: Route Call
+  // fourth item in newStep dropdown: Route Call
   this.newStepSelectRouteCall = element.all(by.css('div.aa-panel[name="newStepForm"]'))
     .filter(function (el) {
       return el.isDisplayed();
@@ -202,7 +208,18 @@ var AutoAttendantPage = function () {
     .all(by.css("div.aa-flex-row"))
     .last()
     .all(by.tagName('li'))
-    .get(2);
+    .get(3);
+
+  // first item is caller input
+  this.newStepCallerInput = element.all(by.css('div.aa-panel[name="newStepForm"]'))
+      .filter(function (el) {
+        return el.isDisplayed();
+      })
+      .first()
+      .all(by.css("div.aa-flex-row"))
+      .last()
+      .all(by.tagName('li'))
+      .get(0)
 
   // since we added a Say Message via Add New Step, there should be more than 1 from now on.
   // Get them all so we can check:
@@ -245,8 +262,8 @@ var AutoAttendantPage = function () {
   this.deleteHoliday = element(by.name('aaScheduleModalCtrl.holidaysForm')).all(by.css('i.icon-trash'));
   this.holidayName = element(by.css('#holidayName'));
   this.holidayName2 = element(by.css('div.content.active')).element(by.css('#holidayName'));
-  this.recurAnnually = element(by.name('recurAnnually1'));
-  this.exactDate = element(by.name('exactDate1'));
+  this.recurAnnually = element.all(by.cssContainingText('.cs-checkbox', 'Recur Annually')).last();
+  this.exactDate = element.all(by.cssContainingText('.cs-checkbox', 'Exact Date')).last();
   this.selectEvery = element(by.css('div.content.active')).element(by.css('select[name="month"] + div a.select-toggle'));
   this.selectEveryJanuary = element(by.css('div.content.active')).element(by.css('select[name="month"] + div div.dropdown-menu')).all(by.tagName('li')).first();
   this.selectRank = element(by.css('div.content.active')).element(by.css('select[name="rank"] + div a.select-toggle'));

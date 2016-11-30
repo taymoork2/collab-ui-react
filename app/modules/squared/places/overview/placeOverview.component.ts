@@ -26,6 +26,7 @@ class PlaceOverview implements ng.IComponentController {
   private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;
   private adminDisplayName;
+  private adminOrgId;
   private pstnFeatureIsEnabledPromise: Promise<boolean> = this.FeatureToggleService.csdmPstnGetStatus();
 
   /* @ngInject */
@@ -46,8 +47,7 @@ class PlaceOverview implements ng.IComponentController {
 
   public $onInit(): void {
     this.displayPlace(this.$stateParams.currentPlace);
-    this.fetchDisplayNameForLoggedInUser();
-    this.fetchFeatureToggles();
+    this.fetchAsyncSettings();
   }
 
   private displayPlace(newPlace) {
@@ -79,24 +79,29 @@ class PlaceOverview implements ng.IComponentController {
     this.services.push(service);
   }
 
-  private fetchDisplayNameForLoggedInUser() {
-    this.Userservice.getUser('me', (data) => {
-      if (data.success) {
-        this.adminDisplayName = data.displayName;
-      }
-    });
-  }
-
-  private fetchFeatureToggles() {
+  private fetchAsyncSettings() {
     let ataPromise = this.FeatureToggleService.csdmATAGetStatus().then((result) => {
       this.showATA = result;
     });
     let hybridPromise = this.FeatureToggleService.csdmHybridCallGetStatus().then((feature) => {
       this.csdmHybridCallFeature = feature;
     });
-    this.$q.all([ataPromise, this.pstnFeatureIsEnabledPromise, hybridPromise]).finally(() => {
+
+    this.$q.all([ataPromise, this.pstnFeatureIsEnabledPromise, hybridPromise, this.fetchDetailsForLoggedInUser()]).finally(() => {
       this.generateCodeIsDisabled = false;
     });
+  }
+
+  private fetchDetailsForLoggedInUser() {
+    let userDetailsDeferred = this.$q.defer();
+    this.Userservice.getUser('me', (data) => {
+      if (data.success) {
+        this.adminDisplayName = data.displayName;
+        this.adminOrgId = data.meta.organizationID;
+      }
+      userDetailsDeferred.resolve();
+    });
+    return userDetailsDeferred.promise;
   }
 
   private loadActions(): void {
@@ -121,7 +126,6 @@ class PlaceOverview implements ng.IComponentController {
       data: {
         function: 'editServices',
         title: 'usersPreview.editServices',
-        showPlaces: true,
         account: {
           deviceType: this.currentPlace.type,
           type: 'shared',
@@ -186,20 +190,21 @@ class PlaceOverview implements ng.IComponentController {
     let wizardState = {
       data: {
         function: 'showCode',
-        showPlaces: true,
         showATA: this.showATA,
         csdmHybridCallFeature: this.csdmHybridCallFeature,
+        adminOrganizationId: this.adminOrgId,
         account: {
           type: 'shared',
           deviceType: this.currentPlace.type,
           cisUuid: this.currentPlace.cisUuid,
           name: this.currentPlace.displayName,
+          organizationId: this.Authinfo.getOrgId(),
         },
         recipient: {
           cisUuid: this.Authinfo.getUserId(),
           email: this.Authinfo.getPrimaryEmail(),
           displayName: this.adminDisplayName,
-          organizationId: this.Authinfo.getOrgId(),
+          organizationId: this.adminOrgId,
         },
         title: 'addDeviceWizard.newCode',
       },

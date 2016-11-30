@@ -17,7 +17,6 @@
   function UserListService($http, $rootScope, $q, $timeout, Authinfo, Log, Utils, $resource, UrlConfig, $window) {
     var searchFilter = 'filter=active%20eq%20true%20and%20%s(userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22%20or%20displayName%20sw%20%22%s%22)';
     var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings';
-    var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?' + '&' + attributes;
     // Get last 7 day user counts
     var userCountResource = $resource(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day');
     var pako = require('pako');
@@ -46,8 +45,9 @@
         });
     }
 
-    function listUsers(startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins, entitlements) {
-      var listUrl = scimUrl;
+    function listUsers(startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins, entitlements, orgId) {
+      var searchOrgId = orgId || Authinfo.getOrgId();
+      var listUrl = UrlConfig.getScimUrl(searchOrgId) + '?' + '&' + attributes;
       var filter;
       var scimSearchUrl = null;
       var encodedSearchStr = '';
@@ -64,18 +64,18 @@
       if (!getAdmins) {
         if (typeof entitlements !== 'undefined' && entitlements !== null && searchStr !== '' && typeof (searchStr) !== 'undefined') {
           filter = searchFilter;
-          scimSearchUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
+          scimSearchUrl = UrlConfig.getScimUrl(searchOrgId) + '?' + filter + '&' + attributes;
           var encodedEntitlementsStr = 'entitlements%20eq%20%22' + $window.encodeURIComponent(entitlements) + '%22%20and%20';
           encodedSearchStr = $window.encodeURIComponent(searchStr);
           listUrl = Utils.sprintf(scimSearchUrl, [encodedEntitlementsStr, encodedSearchStr, encodedSearchStr, encodedSearchStr, encodedSearchStr]);
         } else if (searchStr !== '' && typeof (searchStr) !== 'undefined') {
           filter = searchFilter;
-          scimSearchUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
+          scimSearchUrl = UrlConfig.getScimUrl(searchOrgId) + '?' + filter + '&' + attributes;
           encodedSearchStr = $window.encodeURIComponent(searchStr);
           listUrl = Utils.sprintf(scimSearchUrl, ['', encodedSearchStr, encodedSearchStr, encodedSearchStr, encodedSearchStr]);
         } else if (typeof entitlements !== 'undefined' && entitlements !== null) {
           filter = 'filter=active%20eq%20true%20and%20entitlements%20eq%20%22' + $window.encodeURIComponent(entitlements) + '%22';
-          scimSearchUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
+          scimSearchUrl = UrlConfig.getScimUrl(searchOrgId) + '?' + filter + '&' + attributes;
           listUrl = scimSearchUrl;
         }
       }

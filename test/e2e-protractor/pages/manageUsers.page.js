@@ -67,7 +67,8 @@ var manageUsersPage = function () {
       downloadTemplateButton: element(by.css('.user-csv-export .download-template')),
       exportCsvButton: element(by.css('.user-csv-export .hotspot')),
       exportSpinner: element(by.css('.user-csv-export .icon-spinner')),
-      cancelExportButton: element(by.css('.user-csv-export .prompt .cancel-download'))
+      cancelExportButton: element(by.css('.user-csv-export .prompt .cancel-download')),
+      confirmExportCsvButton: element(by.buttonText('Export'))
     },
 
     import: {

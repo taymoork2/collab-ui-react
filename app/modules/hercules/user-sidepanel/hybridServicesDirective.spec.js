@@ -3,9 +3,9 @@
 describe('Directive Controller: HybridServicesCtrl', function () {
   beforeEach(angular.mock.module('Hercules'));
 
-  var vm, $rootScope, $controller, $timeout, $q, Authinfo, Config, USSService, ServiceDescriptor, Userservice;
+  var vm, $rootScope, $controller, $timeout, $q, Authinfo, Config, USSService, ServiceDescriptor, Userservice, CloudConnectorService, FeatureToggleService;
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$timeout_, _Config_, _USSService_, _ServiceDescriptor_, _$q_, _Userservice_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$timeout_, _Config_, _USSService_, _ServiceDescriptor_, _$q_, _Userservice_, _CloudConnectorService_, _FeatureToggleService_) {
     $rootScope = _$rootScope_;
     $controller = _$controller_;
     $timeout = _$timeout_;
@@ -14,6 +14,8 @@ describe('Directive Controller: HybridServicesCtrl', function () {
     ServiceDescriptor = _ServiceDescriptor_;
     $q = _$q_;
     Userservice = _Userservice_;
+    CloudConnectorService = _CloudConnectorService_;
+    FeatureToggleService = _FeatureToggleService_;
 
     Authinfo = {
       getOrgId: sinon.stub().returns('dead-beef-123'),
@@ -23,6 +25,9 @@ describe('Directive Controller: HybridServicesCtrl', function () {
 
     sinon.stub(ServiceDescriptor, 'services').returns({});
     sinon.stub(Userservice, 'isInvitePending').returns(false);
+    sinon.stub(CloudConnectorService, 'isServiceSetup').returns($q.when(false));
+    sinon.stub(FeatureToggleService, 'supports').returns($q.when(false));
+
   }));
 
   it('should start with isEnabled as false', function () {

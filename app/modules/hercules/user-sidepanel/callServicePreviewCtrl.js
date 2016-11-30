@@ -117,10 +117,16 @@
             $scope.callServiceAware.homedConnector = connector;
           });
         }
+        if ($scope.callServiceAware.status && $scope.callServiceAware.status.lastStateChange) {
+          $scope.callServiceAware.status.lastStateChangeText = moment($scope.callServiceAware.status.lastStateChange).fromNow(true);
+        }
         if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.connectorId) {
           ClusterService.getConnector($scope.callServiceConnect.status.connectorId).then(function (connector) {
             $scope.callServiceConnect.homedConnector = connector;
           });
+        }
+        if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.lastStateChange) {
+          $scope.callServiceConnect.status.lastStateChangeText = moment($scope.callServiceConnect.status.lastStateChange).fromNow(true);
         }
       }).catch(function (response) {
         Notification.errorWithTrackingId(response, 'hercules.userSidepanel.readUserStatusFailed');

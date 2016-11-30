@@ -18,9 +18,9 @@
     init();
 
     function isValid() {
-      return (!vm.updateGroup && hasComponentName())
+      return ((!vm.updateGroup && hasComponentName())
         || (isGroupSelected() && hasComponentName())
-        || (isCreatingGroup() && hasComponentName() && hasGroupName());
+        || (isCreatingGroup() && hasComponentName() && hasGroupName()));
     }
 
     function isCreatingGroup() {
