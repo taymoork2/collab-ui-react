@@ -76,6 +76,9 @@
     vm.toggle = function () {
       vm.isNewCollapsed = vm.radioSelect == 'existing';
       vm.isExistingCollapsed = vm.radioSelect == 'create';
+      vm.deviceName = undefined;
+      vm.selected = undefined;
+      vm.place = undefined;
     };
 
     vm.message = {
