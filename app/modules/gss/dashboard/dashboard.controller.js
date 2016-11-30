@@ -5,52 +5,95 @@
     .controller('DashboardCtrl', DashboardCtrl);
 
   /* @ngInject */
-  function DashboardCtrl($scope, $state, $translate, DashboardService, GSSService, Notification) {
+  function DashboardCtrl($modal, $scope, $state, $translate, DashboardService, GSSService, Notification) {
     var vm = this;
+    var incidentStatusResolved = 'resolved';
+    var incidentStatus = [{
+      localizedStatus: $translate.instant('gss.incidentStatus.investigating'),
+      status: 'investigating'
+    }, {
+      localizedStatus: $translate.instant('gss.incidentStatus.identified'),
+      status: 'identified'
+    }, {
+      localizedStatus: $translate.instant('gss.incidentStatus.monitoring'),
+      status: 'monitoring'
+    }, {
+      localizedStatus: $translate.instant('gss.incidentStatus.resolved'),
+      status: incidentStatusResolved
+    }];
 
-    vm.showList = false;
-    vm.statuses = [
-      {
-        label: $translate.instant('gss.componentStatus.operational'),
-        value: 'operational'
-      },
-      {
-        label: $translate.instant('gss.componentStatus.degradedPerformance'),
-        value: 'degraded_performance'
-      },
-      {
-        label: $translate.instant('gss.componentStatus.partialOutage'),
-        value: 'partial_outage'
-      },
-      {
-        label: $translate.instant('gss.componentStatus.majorOutage'),
-        value: 'major_outage'
-      },
-      {
-        label: $translate.instant('gss.componentStatus.underMaintenance'),
-        value: 'under_maintenance'
-      }
-    ];
     vm.goToNewIncidentPage = goToNewIncidentPage;
-    vm.goToComponentsPage = goToComponentsPage;
-    vm.modifyComponentStatus = modifyComponentStatus;
-    vm.modifyComponentStatusForOverridden = modifyComponentStatusForOverridden;
+    vm.goToUpdateIncidentPage = goToUpdateIncidentPage;
+    vm.addComponent = addComponent;
+    vm.toggleOverridden = toggleOverridden;
+    vm.modifyGroupComponentStatus = modifyGroupComponentStatus;
     vm.modifySubComponentStatus = modifySubComponentStatus;
+    vm.getLocalizedIncidentStatus = getLocalizedIncidentStatus;
+
+    init();
 
     function goToNewIncidentPage() {
       $state.go('gss.incidents.new');
     }
 
-    function goToComponentsPage() {
-      $state.go('gss.components');
+    function goToUpdateIncidentPage(incident) {
+      $state.go('gss.incidents.update', {
+        incident: incident,
+        actionType: 'update'
+      });
     }
 
-    function modifyComponentStatus(component) {
+    function addComponent() {
+      $modal.open({
+        type: 'small',
+        controller: 'AddComponentCtrl',
+        controllerAs: 'addComponentCtrl',
+        templateUrl: 'modules/gss/components/addComponent/addComponent.tpl.html',
+        modalClass: 'add-component'
+      }).result.then(function () {
+        loadComponents(GSSService.getServiceId());
+      });
+    }
+
+    function toggleOverridden(component) {
+      component.isOverridden = !component.isOverridden;
+
+      if (component.isOverridden) {
+        setGroupComponentStatusForOverridden(component);
+        modifyComponentOverridden(component, 'overridden');
+      } else {
+        modifyComponentOverridden(component, component.statusObj.value);
+      }
+    }
+
+    function modifyGroupComponentStatus(groupComponent) {
+      modifyComponentStatus(groupComponent, groupComponent.statusObj.value);
+    }
+
+    function modifySubComponentStatus(component, subComponent) {
+      modifyComponentStatus(subComponent, subComponent.statusObj.value);
+
+      if (component.isOverridden) {
+        setGroupComponentStatusForOverridden(component);
+      }
+    }
+
+    function getLocalizedIncidentStatus(status) {
+      return _.find(incidentStatus, {
+        status: status
+      }).localizedStatus;
+    }
+
+    function isIncidentResolved(incident) {
+      return incident.status === incidentStatusResolved;
+    }
+
+    function modifyComponentStatus(component, status) {
       DashboardService.modifyComponent({
         componentId: component.componentId,
-        status: component.statusObj.value
+        status: status
       }).then(function () {
-        component.status = component.statusObj.value;
+        component.status = status;
         Notification.success('gss.componentStatusChanged', {
           componentName: component.componentName,
           status: component.status
@@ -60,39 +103,74 @@
       });
     }
 
-    function modifyComponentStatusForOverridden(component) {
-      component.isOverridden = true;
-      var subComponents = component.components;
-
-      /*
-       component status relation:
-       operational < degraded_performance < partial_outage < major_outage < under_maintenance
-       */
-
-      var lowest = vm.statuses.length;
-      _.forEach(subComponents, function (subComponent) {
-        var priority = getStatusPriority(subComponent.statusObj);
-        if (lowest > priority) {
-          lowest = priority;
-        }
+    function modifyComponentOverridden(component, overridden) {
+      DashboardService.modifyComponent({
+        componentId: component.componentId,
+        status: overridden
       });
+    }
 
-      var targetStatusObj = vm.statuses[lowest];
-      if (targetStatusObj.value !== component.statusObj.value) {
-        component.statusObj = targetStatusObj;
-        component.status = component.statusObj.value;
-        vm.modifyComponentStatus(component);
+    function init() {
+      vm.showList = false;
+      vm.statuses = [
+        {
+          label: $translate.instant('gss.componentStatus.operational'),
+          value: 'operational'
+        },
+        {
+          label: $translate.instant('gss.componentStatus.degradedPerformance'),
+          value: 'degraded_performance'
+        },
+        {
+          label: $translate.instant('gss.componentStatus.partialOutage'),
+          value: 'partial_outage'
+        },
+        {
+          label: $translate.instant('gss.componentStatus.majorOutage'),
+          value: 'major_outage'
+        },
+        {
+          label: $translate.instant('gss.componentStatus.underMaintenance'),
+          value: 'under_maintenance'
+        }
+      ];
+
+      $scope.$watch(
+        function () {
+          return GSSService.getServiceId();
+        },
+        function (newServiceId) {
+          if (newServiceId !== undefined) {
+            loadIncidents(newServiceId);
+            loadComponents(newServiceId);
+          }
+        }
+      );
+    }
+
+    function setGroupComponentStatusForOverridden(component) {
+      var newStatus = getGroupComponentStatusForOverridden(component);
+
+      if (newStatus.value !== component.statusObj.value) {
+        component.statusObj = newStatus;
+
+        Notification.success('gss.componentStatusChanged', {
+          componentName: component.componentName,
+          status: component.statusObj.value
+        });
       }
     }
 
-    function modifySubComponentStatus(component, subComponent) {
-      vm.modifyComponentStatus(subComponent);
+    function getGroupComponentStatusForOverridden(groupComponent) {
+      var highestPriority = 0;
+      _.forEach(groupComponent.components, function (subComponent) {
+        var priority = getStatusPriority(subComponent.statusObj);
+        if (highestPriority < priority) {
+          highestPriority = priority;
+        }
+      });
 
-      if (!(component.isOverridden)) {
-        return;
-      }
-
-      vm.modifyComponentStatusForOverridden(component);
+      return vm.statuses[highestPriority];
     }
 
     function getStatusPriority(statusObj) {
@@ -101,18 +179,13 @@
       });
     }
 
-    function getStatusObj(status) {
-      return _.find(vm.statuses, {
-        value: status
-      });
-    }
-
     function loadIncidents(serviceId) {
       DashboardService.getIncidents(serviceId)
         .then(function (incidentList) {
-          vm.showList = incidentList.length !== 0;
-          vm.incidentList = incidentList;
-
+          vm.incidentList = _.filter(incidentList, function (incident) {
+            return !isIncidentResolved(incident);
+          });
+          vm.showList = !_.isEmpty(vm.incidentList);
         }).catch(function () {
           vm.showList = false;
           vm.incidentList = null;
@@ -137,16 +210,10 @@
         });
     }
 
-    $scope.$watch(
-      function () {
-        return GSSService.getServiceId();
-      },
-      function (newServiceId) {
-        if (newServiceId !== undefined) {
-          loadIncidents(newServiceId);
-          loadComponents(newServiceId);
-        }
-      }
-    );
+    function getStatusObj(status) {
+      return _.find(vm.statuses, {
+        value: status
+      });
+    }
   }
 })();

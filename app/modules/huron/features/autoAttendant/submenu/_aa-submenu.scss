@@ -51,7 +51,7 @@
   }
 
   .aa-sm-key-select {
-    @include aa-menu-key-button($color-primary-darker);
+    @include aa-menu-key-button($color-primary-darker, 56);
   }
 
   .aa-sm-action-select {

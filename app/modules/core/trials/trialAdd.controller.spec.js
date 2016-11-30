@@ -32,7 +32,7 @@ describe('Controller: TrialAddCtrl', function () {
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
-      if (param == 'csdm-places' || param == 'csdm-pstn') {
+      if (param == 'csdm-pstn') {
         return $q.when(false);
       } else if (param === FeatureToggleService.features.huronSimplifiedTrialFlow) {
         return $q.when(false);
@@ -548,7 +548,7 @@ describe('Controller: TrialAddCtrl', function () {
     }
 
     _.times(testCase.length, function (index) {
-      var testMsg = 'should confirm ' + angular.toJson(testCase[index].retVal) + ' validates as ' + testCase[index].targetVal;
+      var testMsg = 'should confirm ' + JSON.stringify(testCase[index].retVal) + ' validates as ' + testCase[index].targetVal;
       it(testMsg, function () {
         doTestCase(index);
       });

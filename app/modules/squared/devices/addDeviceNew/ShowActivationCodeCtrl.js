@@ -8,7 +8,6 @@
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
-    vm.showPlaces = wizardData.showPlaces;
     vm.showATA = wizardData.showATA;
     vm.failure = false;
     vm.account = {
@@ -24,7 +23,8 @@
       nameWithEmail: '' + wizardData.recipient.displayName + ' (' + wizardData.recipient.email + ')',
       email: wizardData.recipient.email,
       cisUuid: wizardData.recipient.cisUuid,
-      firstName: wizardData.recipient.firstName
+      firstName: wizardData.recipient.firstName,
+      orgId: wizardData.recipient.organizationId
     };
     vm.qrCode = undefined;
     vm.timeLeft = '';
@@ -124,7 +124,6 @@
         vm.activationCode = code.activationCode;
         vm.friendlyActivationCode = formatActivationCode(code.activationCode);
         vm.expiryTime = code.expiryTime;
-        vm.codeIsUsed = code.isUsed;
         generateQRCode();
       }
     }
@@ -135,19 +134,6 @@
       vm.isLoading = false;
       vm.failure = true;
     }
-
-    vm.activationFlowType = function () {
-      if (vm.account.deviceType === 'cloudberry') {
-        if (vm.showPlaces) {
-          return 'places';
-        }
-        return 'devices';
-      }
-      if (vm.account.type === 'shared') {
-        return 'places';
-      }
-      return 'users';
-    };
 
     function formatActivationCode(activationCode) {
       return activationCode ? activationCode.match(/.{4}/g).join('-') : '';
@@ -172,42 +158,54 @@
     };
 
     vm.searchUser = function (searchString) {
-      var deferred = $q.defer();
       if (searchString.length >= 3) {
-        var callback = function (data) {
-          var userList = data.Resources.map(function (r) {
-            var name = null;
-            var firstName = null;
-            if (r.name) {
-              name = r.name.givenName;
-              firstName = name.givenName;
-              if (r.name.familyName) {
-                name += ' ' + r.name.familyName;
+        var deferredCustomerOrg = $q.defer();
+        var deferredOwnOrg = $q.defer();
+        var transformResults = function (deferred) {
+          return function (data) {
+            var userList = data.Resources.map(function (r) {
+              var name = null;
+              var firstName = null;
+              if (r.name) {
+                name = r.name.givenName;
+                firstName = name.givenName;
+                if (r.name.familyName) {
+                  name += ' ' + r.name.familyName;
+                }
               }
-            }
-            if (_.isEmpty(name)) {
-              name = r.displayName;
-            }
-            if (_.isEmpty(firstName)) {
-              firstName = r.displayName;
-            }
-            if (_.isEmpty(name)) {
-              name = r.userName;
-            }
-            if (_.isEmpty(firstName)) {
-              firstName = r.userName;
-            }
-            r.extractedName = name;
-            r.firstName = firstName;
-            return r;
-          });
-          deferred.resolve(userList);
+              if (_.isEmpty(name)) {
+                name = r.displayName;
+              }
+              if (_.isEmpty(firstName)) {
+                firstName = r.displayName;
+              }
+              if (_.isEmpty(name)) {
+                name = r.userName;
+              }
+              if (_.isEmpty(firstName)) {
+                firstName = r.userName;
+              }
+              r.extractedName = name;
+              r.firstName = firstName;
+              return r;
+            });
+            deferred.resolve(userList);
+          };
         };
-        UserListService.listUsers(0, 10, null, null, callback, searchString, false);
+        UserListService.listUsers(0, 6, null, null, transformResults(deferredCustomerOrg), searchString, false);
+        if (wizardData.adminOrganizationId !== wizardData.account.organizationId && vm.account.type === 'shared') { // Excluding personal since Hermes does not allow emailing to a partner at the moment.
+          UserListService.listUsers(0, 6, null, null, transformResults(deferredOwnOrg), searchString, false, null, wizardData.adminOrganizationId);
+        } else {
+          deferredOwnOrg.resolve([]);
+        }
+        return deferredOwnOrg.promise.then(function (ownOrgResults) {
+          return deferredCustomerOrg.promise.then(function (customerOrgResults) {
+            return _.sortBy(ownOrgResults.concat(customerOrgResults), ['extractedName', 'userName']);
+          });
+        });
       } else {
-        deferred.resolve([]);
+        return $q.when([]);
       }
-      return deferred.promise;
     };
 
     vm.selectUser = function ($item) {
@@ -215,7 +213,8 @@
         nameWithEmail: "" + $item.extractedName + " (" + $item.userName + ")",
         email: $item.userName,
         cisUuid: $item.id,
-        firstName: $item.firstName
+        firstName: $item.firstName,
+        orgId: $item.meta.organizationID
       };
       vm.foundUser = "";
     };
@@ -247,14 +246,14 @@
           oneTimePassword: vm.activationCode,
           expiresOn: vm.getExpiresOn(),
           userId: vm.selectedUser.cisUuid,
-          customerId: wizardData.recipient.organizationId
+          customerId: vm.selectedUser.orgId
         };
         ActivationCodeEmailService.save({}, emailInfo, success, error);
       } else {
         var cbEmailInfo = {
-          toCustomerId: wizardData.recipient.organizationId,
+          toCustomerId: vm.selectedUser.orgId,
           toUserId: vm.selectedUser.cisUuid,
-          machineAccountCustomerId: wizardData.recipient.organizationId,
+          machineAccountCustomerId: wizardData.account.organizationId,
           machineAccountId: vm.account.cisUuid,
           activationCode: vm.activationCode,
           expiryTime: vm.getExpiresOn()

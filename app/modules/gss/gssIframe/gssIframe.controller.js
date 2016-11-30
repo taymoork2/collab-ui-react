@@ -11,6 +11,7 @@
     var addServiceOptionValue = 'addService';
 
     vm.addService = addService;
+    vm.onServiceSelectionChanged = onServiceSelectionChanged;
 
     init();
 
@@ -25,10 +26,14 @@
         GSSService.getServices()
           .then(function (services) {
             vm.options = buildServiceOptions(services);
-            vm.selected = _.nth(vm.options, -2); // the new added service at position -2
+            var newService = _.last(services);
+            vm.selected = findServiceOptionWithId(newService.serviceId);
 
+            onServiceSelectionChanged();
             notifyServiceAdded();
           });
+      }).catch(function () {
+        setServiceSelection();
       });
     }
 
@@ -56,6 +61,15 @@
       $scope.$broadcast('serviceAdded');
     }
 
+    function onServiceSelectionChanged() {
+      if (vm.selected.value === addServiceOptionValue) {
+        vm.addService();
+      } else {
+        vm.lastSelectd = vm.selected;
+        GSSService.setServiceId(vm.selected.value);
+      }
+    }
+
     function init() {
       vm.pageTitle = $translate.instant('gss.pageTitle');
 
@@ -63,63 +77,38 @@
         title: $translate.instant('gss.dashboard'),
         state: 'gss.dashboard'
       }, {
-        title: $translate.instant('gss.components'),
-        state: 'gss.components'
-      }, {
         title: $translate.instant('gss.services'),
         state: 'gss.services'
+      }, {
+        title: $translate.instant('gss.components'),
+        state: 'gss.components'
       }, {
         title: $translate.instant('gss.incidents'),
         state: 'gss.incidents'
       }];
 
-      vm.selected = null;
-      vm.lastSelected = null;
-      vm.selectPlaceholder = $translate.instant('gss.servicesPlaceholder');
+      vm.selected = '';
+      vm.lastSelectd = '';
 
       GSSService.getServices()
         .then(function (services) {
           vm.options = buildServiceOptions(services);
-
-          var serviceId = GSSService.getServiceId();
-          if (serviceId) {
-            vm.selected = findServiceOptionWithId(serviceId);
-          } else {
-            vm.selected = vm.options[0];
-          }
-
-          GSSService.setServiceId(vm.selected.value);
-
-          if ($state.current.name === 'gss') {
-            $state.go('gss.dashboard');
-          }
+          setServiceSelection();
         });
 
-      $scope.$watch(
-        function () {
-          return vm.selected;
-        },
-        function (selected) {
-          if (!_.isNil(selected)) {
-
-            if (selected.value === addServiceOptionValue) {
-              vm.addService();
-              vm.selected = vm.lastSelected;
-            } else {
-              vm.lastSelected = vm.selected;
-              GSSService.setServiceId(selected.value);
-            }
-          }
-        });
+      $scope.$watch(function () {
+        return $state.current.name;
+      }, function (newValue) {
+        if (newValue === 'gss') {
+          $state.go('gss.dashboard');
+        }
+      });
 
       $scope.$on('serviceEdited', function () {
         GSSService.getServices()
           .then(function (services) {
             vm.options = buildServiceOptions(services);
-
-            if (vm.selected) {
-              vm.selected = findServiceOptionWithId(vm.selected.value);
-            }
+            setServiceSelection();
           });
       });
 
@@ -127,16 +116,31 @@
         GSSService.getServices()
           .then(function (services) {
             vm.options = buildServiceOptions(services);
-
-            if (vm.selected) {
-              vm.selected = findServiceOptionWithId(vm.selected.value);
-
-              if (vm.selected === undefined) {
-                vm.selected = vm.options[0];
-              }
-            }
+            setServiceSelection();
           });
       });
+    }
+
+    function hasServices() {
+      return vm.options.length > 1;
+    }
+
+    function setServiceSelection() {
+      if (hasServices()) {
+        var lastSelection = findServiceOptionWithId(vm.lastSelectd.value);
+
+        if (!_.isNil(lastSelection)) {
+          vm.selected = lastSelection;
+        } else {
+          vm.selected = vm.options[0];
+        }
+
+        GSSService.setServiceId(vm.selected.value);
+      } else {
+        vm.selected = '';
+
+        GSSService.setServiceId(undefined);
+      }
     }
   }
 })();

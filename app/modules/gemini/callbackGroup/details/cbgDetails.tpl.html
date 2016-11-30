@@ -1,0 +1,93 @@
+<div class="customer-overview gemini-side-panel">
+
+  <div ng-if="$ctrl.loading" class="grid-refresh">
+    <i class="icon icon-spinner icon-3x"></i>
+  </div>
+
+  <div ng-if="!$ctrl.loading">
+  <cs-sp-header>
+    <div class="header-image ng-scope">
+      <div class="user-img">
+        <i class="icon icon-user ng-scope">A</i>
+      </div>
+    </div>
+    <div class="header-info" id="customer-info">
+      <div class="header-info-wrap">
+        <div class="header-title">
+          <span>{{$ctrl.model.groupName ? $ctrl.model.groupName : $ctrl.model.customerName}}</span>
+        </div>
+      </div>
+    </div>
+  </cs-sp-header>
+  <cs-sp-container class="gemini-side-panel">
+    <cs-sp-section>
+      <ul class="small-offset-0">
+          <span class="feature-name">{{'gemini.cbgs.field.alias' | translate}}: {{$ctrl.model.customerAttribute}}</span>
+          <span class="feature-status pull-right" ng-if="$ctrl.model.status">
+            <i class="icon icon-circle status-indicator" ng-class="{'success': $ctrl.model.status === 'A' || $ctrl.model.status === 'P', 'danger': $ctrl.model.status === 'R' || $ctrl.model.status === 'L', 'warning': $ctrl.model.status === 'S', 'disabled': $ctrl.model.status === 'C'}"></i>
+            {{$ctrl.model.status_}}
+          </span>
+        </li>
+        </i>
+      </ul>
+        <div class="feature-list">
+        <ul>
+          <li class="feature" ng-if="$ctrl.model.callbackGroupSites.length">
+            <a ui-sref="gemCbgDetails.sites({obj: {cbgs: $ctrl.cbgs, customerId: $ctrl.customerId, currCbg: $ctrl.model}})">
+              <span class="feature-name" translate="gemini.cbgs.field.totalSites"></span>
+              <span class="feature-status">{{$ctrl.model.callbackGroupSites.length}}</span>
+              <i class="feature-arrow"></i>
+            </a>
+          </li>
+          <li class="feature" ng-if="!$ctrl.model.callbackGroupSites.length">
+            <a href="javascript:void(0)">
+              <span class="feature-name" translate="gemini.cbgs.field.totalSites"></span>
+              <span class="feature-status">0</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </cs-sp-section>
+    <cs-sp-section class="side-panel-country">
+      <div class="section-title-row">
+        <span class="section-name" translate="gemini.cbgs.request.labelCountries"></span>
+        <span class="pull-right" ng-if="$ctrl.model.isEdit"><a ui-sref="gemCbgDetails.editCountry({obj: {info: $ctrl.model, customerId: $ctrl.customerId}})" translate="common.edit" class="color-primary-base"></a></span>
+        <!--<span class="pull-right" ng-if="$ctrl.model.isEdit"><a class="btn btn-none" ng-click="$ctrl.editCountryModal()" translate="common.edit" class="color-primary-base"></a></span>-->
+      </div>
+      <div class="tag-container auto-scrollbar">
+          <span class="tag tag-country" ng-repeat="val in $ctrl.model.countries">
+              <span>{{val.countryName}}</span>
+          </span>
+      </div>
+    </cs-sp-section>
+    <cs-sp-section class="side-panel-note">
+      <div class="feature-list note-title">
+        <ul>
+          <li class="feature">
+            <a ui-sref="gemCbgDetails.notes({obj: {info: $ctrl.model, customerId: $ctrl.customerId}})">
+              <span class="feature-name" translate="gemini.cbgs.notes.notes"></span>
+              <span ng-if="!$ctrl.notes.length" class="feature-status" translate="gemini.cbgs.notes.noNotes"></span>
+              <span ng-if="$ctrl.notes.length" class="feature-status">{{$ctrl.notes.length}}</span>
+              <i class="feature-arrow"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </cs-sp-section>
+    <cs-sp-section class="side-panel-history">
+      <div class="section-title-row">
+        <div class="feature-name" ng-if="!notesCtrl.loading" translate="gemini.cbgs.logs.history"></div>
+      </div>
+      <ul class="history-ul">
+        <li ng-repeat="log in $ctrl.activityLogs">
+          <h6>{{log.action}}</h6>
+          <small>{{log.createdDate}} {{log.actionTime}} {{log.objectName}} {{'gemini.cbgs.by' | translate}} {{log.userName}} {{!log.email ? '' : '(' + log.email + ')'}}</small>
+        </li>
+      </ul>
+      <p ng-if="$ctrl.needShowMore" class="show-more">
+        <a class="primary-color" href ng-click="$ctrl.onShowMoreLogs()" translate="gemini.cbgs.showMore"></a>
+      </p>
+    </cs-sp-section>
+  </cs-sp-container>
+  </div>
+</div>

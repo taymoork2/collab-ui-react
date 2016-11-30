@@ -23,6 +23,7 @@ describe('Service: PstnSetupService', function () {
   var onlyTollFreeNumbers = []; // Add valid toll-free numbers when tollfree APIs are available
   var invalidNumbers = ['123', '456'];
   var numbers = onlyPstnNumbers.concat(onlyTollFreeNumbers, invalidNumbers);
+  var portNumbers = ['+19726579867', '+18004321010'];
 
   var customerPayload = {
     uuid: customerId,
@@ -53,6 +54,19 @@ describe('Service: PstnSetupService', function () {
 
   var orderPayload = {
     numbers: numbers
+  };
+
+  var portOrderPayload = {
+    numbers: portNumbers
+  };
+
+  var portOrderPstnPayload = {
+    numbers: ['+19726579867'],
+  };
+
+  var portOrderTfnPayload = {
+    numbers: ['+18004321010'],
+    numberType: "tollfree"
   };
 
   var pstnOrderPayload = {
@@ -153,6 +167,17 @@ describe('Service: PstnSetupService', function () {
       expect(carrierList).toContain(jasmine.objectContaining({
         vendor: 'INTELEPEER'
       }));
+    });
+    $httpBackend.flush();
+  });
+
+  it('should make different types of port order', function () {
+    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/carriers/' + carrierId + '/did/port', portOrderPstnPayload).respond(201);
+    $httpBackend.expectPOST(HuronConfig.getTerminusV2Url() + '/customers/' + customerId + '/numbers/orders/ports', portOrderTfnPayload).respond(201);
+    var promise = PstnSetupService.portNumbers(customerId, carrierId, portOrderPayload.numbers);
+    //verify the logic to split the ports
+    promise.then(function () {
+      expect(portOrderPayload.numbers.length).toEqual(1);
     });
     $httpBackend.flush();
   });

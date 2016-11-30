@@ -10,12 +10,13 @@
     init();
 
     function init() {
-      FeatureToggleService.gemServicesTabGetStatus().then(function (feature) {
-        if (!feature) {
-          $state.go('404');
-          return;
-        }
-      });
+      FeatureToggleService.supports(FeatureToggleService.features.gemCCA)
+        .then(function (feature) {
+          if (!feature) {
+            $state.go('404');
+            return;
+          }
+        });
     }
   }
 })();

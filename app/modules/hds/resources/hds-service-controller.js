@@ -18,10 +18,10 @@
     vm.tabs = [
       {
         title: $translate.instant('common.resources'),
-        state: 'hds.list',
+        state: 'hds-list',
       }, {
         title: $translate.instant('common.settings'),
-        state: 'hds.settings',
+        state: 'hds-settings',
       }
     ];
     vm.clusters = ClusterService.getClustersByConnectorType('hds_app');

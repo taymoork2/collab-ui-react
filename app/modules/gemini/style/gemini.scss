@@ -62,14 +62,84 @@
       color: $color-primary-base;
     }
   }
+}
 
-  .tag-container {
-    .tag-country {
-      background-color: $color-primary-lighter;
+.gemini-side-panel {
+  .side-panel-sites {
+    .sites-ul {
+      .action-movesite .actions-button {
+        display: none;
+      }
+
+      li:hover {
+        background-color: rgba($gray-lightest, 0.75);
+
+        .action-movesite {
+          .actions-button {
+            padding: 0.625rem $ui-padding;
+            display: block;
+            color: $color-primary-base;
+          }
+        }
+      }
+
+      .actions-services {
+        li {
+          padding: 0.2rem $ui-padding;
+          color: $gray-dark-1;
+        }
+      }
+    }
+  }
+
+  .side-panel-country {
+    .auto-scrollbar {
+      max-height: $toast-width-sm;
+      overflow-y: auto;
+    }
+
+    .tag {
+      white-space: normal;
+    }
+
+    .edit-country {
+      padding-bottom: $ui-padding--huge;
+    }
+
+    .color-primary-base {
       color: $color-primary-base;
+    }
 
-      .tag-country:hover .icon {
-        color: $color-primary-darker;
+    .button-container {
+      top: auto;
+      bottom: 0;
+      left: 0;
+    }
+  }
+
+  .side-panel-note {
+    .note-title {
+      padding: $ui-padding--large 0 $toast-padding;
+    }
+  }
+
+  .side-panel-history {
+    .history-ul {
+      list-style-type: none;
+      margin: 0;
+
+      li {
+        margin-bottom: $toastPossitionBottom;
+
+        small {
+          color: $gray-light-1;
+        }
+      }
+    }
+
+    .show-more {
+      a {
+        color: $color-primary-base;
       }
     }
   }

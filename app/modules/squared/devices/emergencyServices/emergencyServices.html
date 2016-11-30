@@ -126,6 +126,13 @@
           </div>
         </div>
       </form>
+      <div ng-if="!$ctrl.showAddressEntry && $ctrl.impactedUsers.length > 0 && $ctrl.emergency.status !== 'PENDING' && $ctrl.emergency.emergencyNumber !== $ctrl.companyEmergencyNumber">
+        <strong>Warning </strong>
+        - <span translate="spacesPage.impactedUserInfo"></span>
+        <div>
+          <div ng-repeat="user in $ctrl.impactedUsers"><strong>{{user.name}}</strong></div>
+        </div>
+      </div>
     </cs-sp-section>
   </cs-sp-container>
 </div>

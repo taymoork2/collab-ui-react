@@ -60,8 +60,10 @@
     vm.getSelectHint = getSelectHint;
     vm.removeAction = removeAction;
 
-    /////////////////////
 
+    var PHONE_MENU_INDEX = 1;
+
+    /////////////////////
     function selectOption() {
       // if we are selecting a phone menu, re-initialize uiMenu.entries[vm.index] with a CeMenu.
       if (vm.option.actions[0] === 'runActionsOnInput' && !_.has(vm.option, 'type')) {
@@ -117,7 +119,7 @@
       if ($scope.index >= 0) {
         var menuEntry = vm.ui[vm.schedule].getEntryAt($scope.index);
         if (menuEntry.type == "MENU_OPTION") {
-          vm.option = vm.options[1];
+          vm.option = vm.options[PHONE_MENU_INDEX];
         } else if (menuEntry.actions.length > 0 && menuEntry.actions[0].getName()) {
           var matchType = function (action) {
             return menuEntry.actions[0].getName() === action &&
@@ -133,7 +135,23 @@
       }
     }
 
+    function setFeatureToggledActions() {
+      if (AACommonService.isCallerInputToggle()) {
+        vm.options.push({
+          title: $translate.instant('autoAttendant.actionCallerInput'),
+          controller: 'AACallerInputCtrl as aaCallerInput',
+          url: 'modules/huron/features/autoAttendant/callerInput/aaCallerInput.tpl.html',
+          hint: $translate.instant('autoAttendant.actionCallerInputHint'),
+          help: $translate.instant('autoAttendant.actionCallerInputHelp') + appendSpecialCharHelp,
+          metric: 'Caller-Input-Title',
+          showHelpLink: true,
+          actions: ['callerInput']
+        });
+      }
+    }
+
     function activate() {
+      setFeatureToggledActions();
       vm.index = $scope.index;
       vm.schedule = $scope.schedule;
       vm.ui = AAUiModelService.getUiModel();

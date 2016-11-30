@@ -25,8 +25,6 @@
           return 'calendar-service';
         case 'c_ucmc':
           return 'call-service';
-        case 'c_mgmt':
-          return 'management-service';
         default:
           return '';
       }

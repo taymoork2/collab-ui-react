@@ -1,0 +1,47 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+  </button>
+  <h3 class="modal-title" translate="{{callConnectOptions.title}}"></h3>
+</div>
+<div class="modal-body">
+  <div>
+    <form name="placesEditServices" class="chooseServiceForm" onsubmit="$('#next-button').click()">
+      <h4 translate="addDeviceWizard.sparkCallConnect.editSettingsTitle"></h4>
+      <div class="callServiceRow">
+        <div class="callServiceTitle">
+          <i class="icon icon-circle-call modal-icon-flex-row icon-lg"></i>
+          <h3 translate="onboardModal.call"></h3>
+        </div>
+        <div>
+          This is the options for the Call Service Connect
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="modal-footer">
+
+  <button
+    id="back-button"
+    class="btn"
+    sq-click-promise="callConnectOptions.back()"
+    translate="common.back">
+  </button>
+  <button
+    cs-btn
+    id="save-button"
+    loading="callConnectOptions.isLoading"
+    class="btn btn--primary"
+    ng-class="{'ng-hide':callConnectOptions.hasNextStep()}"
+    ng-click="callConnectOptions.save()">
+    <span translate="common.save"></span>
+  </button>
+  <button
+    cs-btn
+    id="next-button"
+    class="btn btn--primary"
+    ng-class="{'ng-hide':!callConnectOptions.hasNextStep()}"
+    ng-click="callConnectOptions.next()">
+    <span translate="common.next"></span>
+  </button>
+</div>

@@ -62,7 +62,7 @@
     //////////////////////////////////////////////////////
 
     function upload(file) {
-      if (!_.isUndefined(file)) {
+      if (file) {
         if (AAMediaUploadService.validateFile(file.name)) {
           if (isOverwrite()) {
             confirmOverwrite(file);
@@ -98,7 +98,11 @@
         vm.progress = 0;
         modalCanceled = false;
         uploadServProm = AAMediaUploadService.upload(file);
-        uploadServProm.then(uploadSuccess, uploadError, uploadProgress).finally(cleanUp);
+        if (!_.isUndefined(uploadServProm)) {
+          uploadServProm.then(uploadSuccess, uploadError, uploadProgress).finally(cleanUp);
+        } else {
+          uploadError();
+        }
       }, function () {
         uploadError();
       });
@@ -106,16 +110,25 @@
 
     function uploadSuccess(result) {
       if (!modalCanceled) {
-        vm.state = vm.UPLOADED;
-        var fd = {};
-        fd.uploadFile = vm.uploadFile;
-        fd.uploadDate = vm.uploadDate;
-        fd.uploadDuration = vm.uploadDuration;
-        vm.actionEntry.setDescription(JSON.stringify(fd));
-        vm.actionEntry.setValue('http://' + result.data.PlaybackUri);
-        setActionCopy();
-        $scope.change();
+        var playback = AAMediaUploadService.retrieve(result);
+        if (playback) {
+          setUploadValues(playback);
+        } else {
+          uploadError();
+        }
       }
+    }
+
+    function setUploadValues(value) {
+      vm.state = vm.UPLOADED;
+      var fd = {};
+      fd.uploadFile = vm.uploadFile;
+      fd.uploadDate = vm.uploadDate;
+      fd.uploadDuration = vm.uploadDuration;
+      vm.actionEntry.setValue(value);
+      vm.actionEntry.setDescription(JSON.stringify(fd));
+      setActionCopy();
+      $scope.change();
     }
 
     function uploadError() {

@@ -18,27 +18,58 @@
 
         > div:first-child {
           height: 40px;
-          background-color: #e67e22;
+
+          &.none, &.maintenance {
+            background-color: $gray-dark-3;
+          }
+          &.minor {
+            background-color: $color-attention-base;
+          }
+          &.major {
+            background-color: $color-meetings-base;
+          }
+          &.critical {
+            background-color: $color-negative-dark;
+          }
 
           > span {
             @include vr_spacing(mt, 0.75, 2px);
             @include vr_spacing(ml, 0.5);
             color: $white;
             font-size: 1rem;
+
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            height: inherit;
+            max-width: 70%;
           }
 
           > a {
             @include vr_spacing(mr, 0.75, 2px);
             @include vr_spacing(mt, 0.5, 2px);
 
-            font-size: 15px;
+            font-size: 1rem;
             border: 2px solid $white;
             color: $white;
           }
         }
 
         > div:last-child {
-          border: 1px solid #e67e22;
+          border: 1px solid;
+          &.none, &.maintenance {
+            border-color: $gray-dark-3;
+          }
+          &.minor {
+            border-color: $color-attention-base;
+          }
+          &.major {
+            border-color: $color-meetings-base;
+          }
+          &.critical {
+            border-color: $color-negative-dark;
+          }
+
           @include vr_spacing(p, 0.75, 2px);
 
           > h6:first-child {
@@ -61,61 +92,36 @@
     }
 
     .components-list {
-      @include vr_spacing(ml, 0);
-
-      .component-name {
-        vertical-align: middle;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        font-weight: bolder;
-        color: $gray-dark-4;
-        cursor: pointer;
-      }
-
-      .sub-component-name {
-        @extend .component-name;
-
-        font-weight: 500;
-        color: $gray-dark-1;
-        cursor: default;
-      }
-
-      .component-status-selector {
-        width: 240px;
-      }
-
       > li {
-        @include vr_spacing(mb, 1.25);
+        @include vr_spacing(pt, 1);
 
-        list-style: none;
-        border-top: 1px solid $gray-light-2;
-
-        &:first-child {
-          border-top: none !important;
-        }
-
-        > div {
-          @include vr_spacing(pt, 1, 1px);
-          @include vr_spacing(mt, 2.5);
-          @include vr_spacing(mb, 1.25);
-          height: 50px;
-
-          > a {
-            color: $gray-light-1;
-          }
-        }
-
-        > ul {
+        ul {
           @include vr_spacing(ml, 0);
-          @include vr_spacing(mt, 0.75, 2px);
 
-          > li {
-            @include vr_spacing(pl, 0.5, 2px);
-            height: 50px;
-            list-style: none;
+          .row .columns:first-of-type {
+            @include vr_spacing(pl, 2);
           }
         }
+      }
+
+      .component-status-operational {
+        color: $color-cta-base;
+      }
+
+      .component-status-degraded_performance {
+        color: $color-negative-base;
+      }
+
+      .component-status-under_maintenance {
+        color: $color-primary-base;
+      }
+
+      .component-status-partial_outage {
+        color: $color-meetings-base;
+      }
+
+      .component-status-major_outage {
+        color: $color-alerts-base;
       }
     }
   }

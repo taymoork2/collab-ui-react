@@ -70,7 +70,7 @@ export class FeatureMemberService {
     });
   }
 
-  public getFirstLastName(member: Member) {
+  public getFirstLastName(member: Member): string {
     if (member.firstName && member.lastName) {
       return member.firstName + ' ' + member.lastName;
     } else if (member.firstName) {
@@ -82,8 +82,8 @@ export class FeatureMemberService {
     }
   }
 
-  public getUserName(member: Member) {
-    if (member.userName) {
+  public getUserName(member: Member): string {
+    if (member && member.userName) {
       return member.userName;
     } else {
       return '';
@@ -93,7 +93,7 @@ export class FeatureMemberService {
   //return will be
   // - "Firstname Lastname (userid@cisco.com)"
   // - "userid@cisco.com" (if there is no firstName and lastNmae)
-  public getFullNameFromMember(member: Member) {
+  public getFullNameFromMember(member: Member): string {
     if (!member) {
       return '';
     }
@@ -116,7 +116,7 @@ export class FeatureMemberService {
   // - "Firstname Lastname"
   // - "Display Name" (if no firstname and lastname )
   // - "Build 9 Lobby" (displayName if it is Place)
-  public getDisplayNameFromMember(member: Member) {
+  public getDisplayNameFromMember(member: Member): string {
     if (!member) {
       return '';
     }
@@ -134,7 +134,7 @@ export class FeatureMemberService {
     return name;
   }
 
-  public getMemberType(member: Member) {
+  public getMemberType(member: Member): string {
     if (!member) {
       return '';
     }

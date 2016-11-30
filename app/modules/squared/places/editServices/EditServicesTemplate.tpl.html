@@ -31,6 +31,16 @@
             value="sparkCall"
             cs-input-label="{{'addDeviceWizard.editServices.sparkCall' | translate}}"
             cs-input-help-text="{{'addDeviceWizard.editServices.sparkCallHelp' | translate}}">
+          <input
+            cs-input
+            type="radio"
+            ng-model="editServices.service"
+            id="service3"
+            name="service"
+            value="sparkCallConnect"
+            ng-if="editServices.sparkCallConnectEnabled"
+            cs-input-label="{{'addDeviceWizard.editServices.sparkCallConnect' | translate}}"
+            cs-input-help-text="{{'addDeviceWizard.editServices.sparkCallConnectHelp' | translate}}">
         </div>
       </div>
     </form>
@@ -39,9 +49,17 @@
 <div class="modal-footer">
 
   <button
+    id="back-button"
+    class="btn"
+    sq-click-promise="editServices.back()"
+    ng-class="{'ng-hide':!editServices.hasBackStep()}"
+    translate="common.back">
+  </button>
+  <button
     type="button"
     class="btn"
     ng-click="$dismiss()"
+    ng-class="{'ng-hide':editServices.hasBackStep()}"
     translate="common.cancel">
   </button>
   <button

@@ -419,6 +419,26 @@
   }
 }
 
+.license-entity-type {
+  font-family: $gray-dark-1;
+  font-size: 14px;
+  color: $gray-base;
+  display: block;
+}
+
+.under-label-reposition {
+  margin-top: -12px;
+  margin-left: 32px;
+}
+
+.item-mtg-license {
+  color: $gray-dark-2;
+  font-family: $brand-font-light;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 24px;
+}
+
 .wizard-main {
   .title-separator-pipe {
     color: $gray-light;
