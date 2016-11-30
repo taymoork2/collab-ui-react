@@ -1,4 +1,7 @@
+import { CommonReportService } from '../../partnerReports/commonReportServices/commonReport.service';
+import { ReportConstants } from '../../partnerReports/commonReportServices/reportConstants.service';
 import {
+  IActiveTableBase,
   IActiveUserData,
   IFilterObject,
   IDropdownBase,
@@ -7,10 +10,14 @@ import {
   IReportLabel,
   ISecondaryReport,
   ITimespan,
+  ITimeSliderFunctions,
 } from '../../partnerReports/partnerReportInterfaces';
 
+import { SparkGraphService } from './sparkGraph.service';
+import { SparkReportService } from './sparkReport.service';
+import { SparkLineReportService } from './sparkLineReport.service';
+import { DummySparkDataService } from './dummySparkData.service';
 import {
-  IActiveTableWrapper,
   IActiveUserWrapper,
   IAvgRoomData,
   IEndpointContainer,
@@ -39,12 +46,13 @@ class SparkReportCtrl {
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private CardUtils: CardUtils,
-    private CommonReportService,
-    private SparkGraphService,
-    private SparkReportService,
-    private DummySparkDataService,
+    private CommonReportService: CommonReportService,
+    private SparkGraphService: SparkGraphService,
+    private SparkReportService: SparkReportService,
+    private SparkLineReportService: SparkLineReportService,
+    private DummySparkDataService: DummySparkDataService,
+    private ReportConstants: ReportConstants,
     private FeatureToggleService,
-    private ReportConstants,
   ) {
     this.filterArray[0].toggle = (): void => {
       this.resetCards(this.ALL);
@@ -57,9 +65,10 @@ class SparkReportCtrl {
     };
 
     this.reportsUpdateToggle.then((response: boolean): void => {
-      this.displayActiveLineGraph = response;
-      if (this.displayActiveLineGraph) {
-        this.timeOptions[2].label = $translate.instant('reportsPage.threePlusMonths');
+      this.displayNewReports = response;
+
+      if (this.displayNewReports) {
+        this.timeOptions = _.cloneDeep(this.ReportConstants.altTimeFilter);
         this.secondaryActiveOptions.alternateTranslations = true;
         this.activeDropdown = {
           array: this.activeArray,
@@ -72,12 +81,17 @@ class SparkReportCtrl {
       }
 
       this.$timeout((): void => {
-        this.setDummyData();
-        this.setAllGraphs();
+        if (this.displayNewReports) {
+          this.setActiveLineGraph(this.timeSelected.min, this.timeSelected.max);
+        } else {
+          this.setDummyData();
+          this.setAllGraphs();
+        }
       }, 30);
     });
   }
 
+  public displayNewReports: boolean = false;
   private reportsUpdateToggle = this.FeatureToggleService.atlasReportsUpdateGetStatus();
 
   // charts and export controls
@@ -109,9 +123,37 @@ class SparkReportCtrl {
 
   // Time Filter Controls
   public timeOptions: Array<ITimespan> = _.cloneDeep(this.ReportConstants.timeFilter);
-  public timeSelected: ITimespan = this.timeOptions[0];
+  public timeSelected: ITimespan = this.ReportConstants.WEEK_FILTER;
+  public timeUpdates: ITimeSliderFunctions = {
+    sliderUpdate: (min: number, max: number): void => {
+      this.$timeout((): void => {
+        if (this.displayNewReports) {
+          this.sliderUpdate(min, max);
+        }
+      });
+    },
+    update: (): void => {
+      this.$timeout((): void => {
+        if (this.displayNewReports) {
+          this.sliderUpdate(this.timeSelected.min, this.timeSelected.max);
+        } else {
+          this.timeUpdate();
+        }
+      });
+    },
+  };
 
-  public timeUpdate() {
+  private sliderUpdate(min: number, max: number): void {
+    this.activeDropdown.selected = this.activeDropdown.array[0];
+    this.activeOptions.titlePopover = this.ReportConstants.UNDEF;
+    if (this.timeSelected.value === this.ReportConstants.CUSTOM_FILTER.value) {
+      this.activeOptions.titlePopover = 'activeUsers.customMessage';
+    }
+
+    this.setActiveLineGraph(min, max);
+  }
+
+  private timeUpdate(): void {
     this.activeOptions.state = this.ReportConstants.REFRESH;
     this.secondaryActiveOptions.state = this.ReportConstants.REFRESH;
     this.avgRoomOptions.state = this.ReportConstants.REFRESH;
@@ -120,20 +162,12 @@ class SparkReportCtrl {
     this.deviceOptions.state = this.ReportConstants.REFRESH;
     this.metricsOptions.state = this.ReportConstants.REFRESH;
     this.mediaDropdown.selected = this.mediaArray[0];
-    if (this.displayActiveLineGraph) {
-      this.activeDropdown.selected = this.activeDropdown.array[0];
-      this.activeOptions.titlePopover = this.ReportConstants.UNDEF;
-      if (this.timeSelected.value === this.ReportConstants.FILTER_THREE.value) {
-        this.activeOptions.titlePopover = 'activeUsers.threeMonthsMessage';
-      }
-    }
 
     this.setDummyData();
     this.setAllGraphs();
   }
 
   // Active User Report Controls
-  private displayActiveLineGraph: boolean = false;
   private activeArray: Array<IDropdownBase> = _.cloneDeep(this.ReportConstants.activeFilter);
   public activeDropdown: IReportDropdown;
 
@@ -194,8 +228,8 @@ class SparkReportCtrl {
   private setActiveGraph(data: Array<IActiveUserData>): void {
     this.exportArrays.active = null;
     let tempActiveUserChart: any;
-    if (this.displayActiveLineGraph) {
-      tempActiveUserChart = this.SparkGraphService.setActiveLineGraph(data, this.charts.active, this.timeSelected);
+    if (this.displayNewReports) {
+      tempActiveUserChart = this.SparkGraphService.setActiveLineGraph(data, this.charts.active);
     } else {
       tempActiveUserChart = this.SparkGraphService.setActiveUsersGraph(data, this.charts.active);
     }
@@ -203,7 +237,7 @@ class SparkReportCtrl {
     if (tempActiveUserChart) {
       this.charts.active = tempActiveUserChart;
       this.exportArrays.active = this.CommonReportService.createExportMenu(this.charts.active);
-      if (this.displayActiveLineGraph) {
+      if (this.displayNewReports) {
         this.SparkGraphService.showHideActiveLineGraph(this.charts.active, this.activeDropdown.selected);
       }
     }
@@ -213,35 +247,93 @@ class SparkReportCtrl {
     // reset defaults
     this.secondaryActiveOptions.table.data = [];
     this.$rootScope.$broadcast(this.secondaryActiveOptions.broadcast);
-    if (this.displayActiveLineGraph) {
-      this.activeDropdown.disabled = true;
-    }
 
-    this.SparkReportService.getActiveUserData(this.timeSelected, this.displayActiveLineGraph).then((response: IActiveUserWrapper): void => {
+    this.SparkReportService.getActiveUserData(this.timeSelected).then((response: IActiveUserWrapper): void => {
       if (_.isArray(response.graphData) && response.graphData.length === 0) {
         this.activeOptions.state = this.ReportConstants.EMPTY;
       } else {
         this.setActiveGraph(response.graphData);
         this.activeOptions.state = this.ReportConstants.SET;
-
-        if (this.displayActiveLineGraph) {
-          this.activeDropdown.disabled = !response.isActiveUsers;
-        }
       }
       this.CardUtils.resize(0);
     });
 
-    this.SparkReportService.getMostActiveUserData(this.timeSelected).then((response: IActiveTableWrapper): void => {
-      if (response.error) {
-        this.secondaryActiveOptions.state = this.ReportConstants.ERROR;
-      } else if (response.tableData.length === 0) {
+    this.SparkReportService.getMostActiveUserData(this.timeSelected).then((response: Array<IActiveTableBase>): void => {
+      if (response.length === 0) {
         this.secondaryActiveOptions.state = this.ReportConstants.EMPTY;
       } else {
         this.secondaryActiveOptions.state = this.ReportConstants.SET;
       }
-      this.secondaryActiveOptions.table.data = response.tableData;
+      this.secondaryActiveOptions.table.data = response;
       this.$rootScope.$broadcast(this.secondaryActiveOptions.broadcast);
+    }, (): void => {
+      this.secondaryActiveOptions.state = this.ReportConstants.ERROR;
     });
+  }
+
+  // Active User Line Graph Controls
+  private activeUserSevenDayData: IActiveUserWrapper;
+  private activeUserYearData: IActiveUserWrapper;
+
+  private setActiveLineGraph(min: number, max: number): void {
+    // reset defaults
+    this.secondaryActiveOptions.table.data = [];
+    this.$rootScope.$broadcast(this.secondaryActiveOptions.broadcast);
+    this.activeDropdown.disabled = true;
+
+    if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
+      if (_.isUndefined(this.activeUserSevenDayData)) {
+        this.activeOptions.state = this.ReportConstants.REFRESH;
+        this.setActiveGraph(this.DummySparkDataService.dummyActiveUserData(this.timeSelected, this.displayNewReports));
+        this.SparkLineReportService.getActiveUserData(this.timeSelected).then((response: IActiveUserWrapper): void => {
+          this.activeUserSevenDayData = response;
+          this.updateActiveLineGraph(this.activeUserSevenDayData);
+        });
+      } else {
+        this.updateActiveLineGraph(this.activeUserSevenDayData);
+      }
+    } else if (_.isUndefined(this.activeUserYearData)) {
+      this.activeOptions.state = this.ReportConstants.REFRESH;
+      this.setActiveGraph(this.DummySparkDataService.dummyActiveUserData(this.timeSelected, this.displayNewReports));
+      this.zoomChart(this.charts.active, min, max);
+      this.SparkLineReportService.getActiveUserData(this.timeSelected).then((response: IActiveUserWrapper): void => {
+        this.activeUserYearData = response;
+        this.updateActiveLineGraph(this.activeUserYearData);
+        this.zoomChart(this.charts.active, min, max);
+      });
+    } else {
+      this.updateActiveLineGraph(this.activeUserYearData);
+      this.zoomChart(this.charts.active, min, max);
+    }
+
+    if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value || this.timeSelected.value === this.ReportConstants.MONTH_FILTER.value
+      || this.timeSelected.value === this.ReportConstants.THREE_MONTH_FILTER.value) {
+      this.secondaryActiveOptions.display = true;
+      this.SparkLineReportService.getMostActiveUserData(this.timeSelected).then((response: Array<IActiveTableBase>): void => {
+        if (response.length === 0) {
+          this.secondaryActiveOptions.state = this.ReportConstants.EMPTY;
+        } else {
+          this.secondaryActiveOptions.state = this.ReportConstants.SET;
+        }
+        this.secondaryActiveOptions.table.data = response;
+        this.$rootScope.$broadcast(this.secondaryActiveOptions.broadcast);
+      }, (): void => {
+        this.secondaryActiveOptions.state = this.ReportConstants.ERROR;
+      });
+    } else {
+      this.secondaryActiveOptions.display = false;
+    }
+  }
+
+  private updateActiveLineGraph(data: IActiveUserWrapper): void {
+    if (_.isArray(data.graphData) && data.graphData.length === 0) {
+      this.activeOptions.state = this.ReportConstants.EMPTY;
+    } else {
+      this.setActiveGraph(data.graphData);
+      this.activeOptions.state = this.ReportConstants.SET;
+      this.activeDropdown.disabled = !data.isActiveUsers;
+    }
+    this.CardUtils.resize(0);
   }
 
   // Average Rooms Report Controls
@@ -509,7 +601,7 @@ class SparkReportCtrl {
   }
 
   public setDummyData(): void {
-    this.setActiveGraph(this.DummySparkDataService.dummyActiveUserData(this.timeSelected, this.displayActiveLineGraph));
+    this.setActiveGraph(this.DummySparkDataService.dummyActiveUserData(this.timeSelected, this.displayNewReports));
     this.setAverageGraph(this.DummySparkDataService.dummyAvgRoomData(this.timeSelected));
     this.setFilesGraph(this.DummySparkDataService.dummyFilesSharedData(this.timeSelected));
     this.setMetrics(undefined);
@@ -518,6 +610,12 @@ class SparkReportCtrl {
     this.setMediaGraph(this.DummySparkDataService.dummyMediaData(this.timeSelected));
 
     this.CardUtils.resize(0);
+  }
+
+  private zoomChart(chart: any, min: number, max: number): void {
+    if (chart && chart.zoomToIndexes) {
+      chart.zoomToIndexes(min - 1, max);
+    }
   }
 }
 

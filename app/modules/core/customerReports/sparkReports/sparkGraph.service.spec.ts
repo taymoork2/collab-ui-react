@@ -24,7 +24,6 @@ describe('Service: Customer Graph Service', function () {
     this.injectDependencies('SparkGraphService');
 
     validateService = {
-      addListener: jasmine.createSpy('addListener'),
       validateData: jasmine.createSpy('validateData'),
       validateNow: jasmine.createSpy('validateNow'),
     };
@@ -46,7 +45,6 @@ describe('Service: Customer Graph Service', function () {
         dataProvider: data,
         validateData: validateService.validateData,
         validateNow: validateService.validateNow,
-        addListener: validateService.addListener,
       });
     });
 
@@ -55,7 +53,6 @@ describe('Service: Customer Graph Service', function () {
       expect(AmCharts.makeChart).toHaveBeenCalled();
       expect(validateService.validateData).not.toHaveBeenCalled();
       expect(validateService.validateNow).not.toHaveBeenCalled();
-      expect(validateService.addListener).toHaveBeenCalled();
     });
 
     it('should update graph when setActiveLineGraph is called a second time', function () {

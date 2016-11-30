@@ -1,6 +1,5 @@
 import {
   IActiveUserData,
-  ITimespan,
   IDropdownBase,
 } from '../../partnerReports/partnerReportInterfaces';
 
@@ -12,7 +11,7 @@ import {
   IMetricsData,
 } from './sparkReportInterfaces';
 
-class SparkGraphService {
+export class SparkGraphService {
   // div variables
   private readonly activeUserDiv: string = 'activeUsersChart';
   private readonly avgRoomsdiv: string = 'avgRoomsChart';
@@ -23,7 +22,6 @@ class SparkGraphService {
 
   // filter variables
   private activeUserFilter: IDropdownBase;
-  private timeFilter: ITimespan;
 
   // reusable html for creating AmBalloon text
   private static readonly graphTextSpan: string = '<span class="graph-text">';
@@ -48,8 +46,7 @@ class SparkGraphService {
     chart.validateNow();
   }
 
-  public setActiveLineGraph(data: Array<IActiveUserData>, chart: any, timeFilter: ITimespan): any {
-    this.timeFilter = timeFilter;
+  public setActiveLineGraph(data: Array<IActiveUserData>, chart: any): any {
     if (data.length > 0 && chart) {
       chart.chartCursor.valueLineEnabled = true;
       chart.categoryAxis.gridColor = this.chartColors.grayLightTwo;
@@ -58,29 +55,12 @@ class SparkGraphService {
         chart.categoryAxis.gridColor = this.chartColors.grayLightThree;
       }
 
-      chart.chartScrollbar = undefined;
-      chart.mouseWheelZoomEnabled = false;
-      if (timeFilter.value === this.ReportConstants.FILTER_THREE.value && data.length > this.ReportConstants.THIRTEEN_WEEKS) {
-        chart.chartScrollbar = this.CommonGraphService.getBaseVariable(this.CommonGraphService.SCROLL);
-        chart.mouseWheelZoomEnabled = true;
-        if (!data[0].balloon) {
-          chart.chartScrollbar.selectedBackgroundColor = this.chartColors.grayLightOne;
-        }
-      }
-
       chart.graphs = this.getActiveLineGraphs(data);
       chart.dataProvider = data;
       chart.validateData();
       chart.validateNow();
     } else if (data.length > 0) {
       chart = this.createActiveLineGraph(data);
-      chart.addListener('rendered', (event: any): void => {
-        let chart: any = _.get(event, 'chart', {});
-        let chartData: Array<any> = _.get(event, 'chart.dataProvider', []);
-        if (chart.zoomToIndexes && (chartData.length > this.ReportConstants.THIRTEEN_WEEKS) && this.timeFilter === this.ReportConstants.FILTER_THREE) {
-          chart.zoomToIndexes(chartData.length - this.ReportConstants.THIRTEEN_WEEKS, chartData.length - 1);
-        }
-      });
     }
     return chart;
   }
@@ -113,15 +93,6 @@ class SparkGraphService {
     chartData.chartCursor = chartCursor;
     chartData.legend.labelText = '[[' + this.CommonGraphService.TITLE + ']]';
     chartData.autoMargins = true;
-    chartData.mouseWheelZoomEnabled = false;
-
-    if (this.timeFilter === this.ReportConstants.FILTER_THREE && data.length > this.ReportConstants.THIRTEEN_WEEKS) {
-      chartData.mouseWheelZoomEnabled = true;
-      chartData.chartScrollbar = this.CommonGraphService.getBaseVariable(this.CommonGraphService.SCROLL);
-      if (!data[0].balloon) {
-        chartData.chartScrollbar.selectedBackgroundColor = this.chartColors.grayLightOne;
-      }
-    }
 
     return AmCharts.makeChart(this.activeUserDiv, chartData);
   }
@@ -162,7 +133,7 @@ class SparkGraphService {
           balloonText = SparkGraphService.graphTextSpan + registeredUsers + SparkGraphService.boldNumberSpan + ' ' + data.totalRegisteredUsers + '</span></span>';
         } else if (data.date !== hiddenData) {
           balloonText = SparkGraphService.graphTextSpan + activeUsers + SparkGraphService.boldNumberSpan + ' ' + data.activeUsers;
-          if (this.activeUserFilter.value === this.ReportConstants.FILTER_ONE.value) {
+          if (this.activeUserFilter.value === this.ReportConstants.WEEK_FILTER.value) {
             balloonText += ' (' + data.percentage + '%)';
           }
           balloonText += '</span></span>';
@@ -442,7 +413,7 @@ class SparkGraphService {
   }
 
   // Registered Endpoints Column Graph
-  public setDeviceGraph(data: Array<IEndpointWrapper>, chart: any, filter: IDropdownBase): any {
+  public setDeviceGraph(data: Array<IEndpointWrapper>, chart: any, filter: IDropdownBase | undefined): any {
     if (data.length > 0 && chart) {
       const graphNumber: number = _.get(filter, 'value', 0);
       chart.startDuration = 1;
@@ -459,7 +430,7 @@ class SparkGraphService {
     return chart;
   }
 
-  private createDeviceGraph(data: Array<IEndpointWrapper>, filter: IDropdownBase): any {
+  private createDeviceGraph(data: Array<IEndpointWrapper>, filter: IDropdownBase | undefined): any {
     const graphNumber: number = _.get(filter, 'value', 0);
     let catAxis: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS);
     catAxis.gridPosition = this.CommonGraphService.START;
@@ -478,7 +449,7 @@ class SparkGraphService {
     return AmCharts.makeChart(this.devicesDiv, chartData);
   }
 
-  private deviceGraphs(data: Array<IEndpointWrapper>, filter: IDropdownBase): Array<any> {
+  private deviceGraphs(data: Array<IEndpointWrapper>, filter: IDropdownBase | undefined): Array<any> {
     const graphNumber: number = _.get(filter, 'value', 0);
     const title: string = this.$translate.instant('registeredEndpoints.registeredEndpoints');
     let color: string = this.chartColors.colorPeopleBase;

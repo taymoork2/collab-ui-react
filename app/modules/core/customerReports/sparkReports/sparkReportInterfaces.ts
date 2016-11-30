@@ -1,6 +1,5 @@
 import {
   IActiveUserData,
-  IActiveTableBase,
   IDropdownBase,
   IGraphBase,
   IMediaQualityData,
@@ -9,11 +8,6 @@ import {
 export interface IActiveUserWrapper {
   graphData: Array<IActiveUserData>;
   isActiveUsers: boolean;
-}
-
-export interface IActiveTableWrapper {
-  tableData: Array<IActiveTableBase>;
-  error: boolean;
 }
 
 export interface IAvgRoomData extends IGraphBase {
