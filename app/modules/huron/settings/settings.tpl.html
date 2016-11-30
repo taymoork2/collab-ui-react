@@ -45,6 +45,21 @@
             ></cs-select>
           </div>
         </div>
+        <div class="sub-section service-setup service-setup-regional-settings" cr-feature-toggle feature-show="huron-l10n-user-locale">
+          <label class="control-label" translate="serviceSetupModal.defaultCountry"></label>
+          <p class="description-block" translate="serviceSetupModal.defaultCountryDescription"></p>
+          <div class="medium-5">
+            <cs-select
+              name="defaultCountry"
+              ng-model="settings.model.site.defaultCountry"
+              options="settings.defaultCountryOptions"
+              labelfield="label"
+              valuefield="value"
+              filter="false"
+              placeholder="settings.defaultCountryPlaceholder"
+            ></cs-select>
+          </div>
+        </div>
       </div>
     </div>
 
