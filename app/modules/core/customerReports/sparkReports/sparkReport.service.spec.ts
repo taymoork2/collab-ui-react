@@ -75,10 +75,7 @@ describe('Service: Customer Reports Service', function () {
       }));
 
       this.SparkReportService.getMostActiveUserData(defaults.timeFilter[0]).then(function (response) {
-        expect(response).toEqual({
-          tableData: _.cloneDeep(activeData.mostActiveResponse),
-          error: false,
-        });
+        expect(response).toEqual(_.cloneDeep(activeData.mostActiveResponse));
       });
       this.$scope.$apply();
     });
@@ -87,10 +84,7 @@ describe('Service: Customer Reports Service', function () {
       spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.reject(rejectError));
 
       this.SparkReportService.getMostActiveUserData(defaults.timeFilter[0]).then(function (response) {
-        expect(response).toEqual({
-          tableData: [],
-          error: true,
-        });
+        expect(response).toEqual([]);
       });
       this.$scope.$apply();
     });

@@ -102,10 +102,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       });
 
       spyOn(this.SparkReportService, 'getActiveUserData').and.returnValue(this.$q.when(_.cloneDeep(activeData.activeResponse)));
-      spyOn(this.SparkReportService, 'getMostActiveUserData').and.returnValue(this.$q.when({
-        tableData: _.cloneDeep(activeData.mostActiveResponse),
-        error: false,
-      }));
+      spyOn(this.SparkReportService, 'getMostActiveUserData').and.returnValue(this.$q.when(_.cloneDeep(activeData.mostActiveResponse)));
       spyOn(this.SparkReportService, 'getAvgRoomData').and.returnValue(this.$q.when(_.cloneDeep(roomData.response)));
       spyOn(this.SparkReportService, 'getFilesSharedData').and.returnValue(this.$q.when(_.cloneDeep(fileData.response)));
       spyOn(this.SparkReportService, 'getMediaQualityData').and.returnValue(this.$q.when(_.cloneDeep(mediaData.response)));
@@ -283,10 +280,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(this.SparkGraphService, 'showHideActiveLineGraph');
 
       spyOn(this.SparkLineReportService, 'getActiveUserData').and.returnValue(this.$q.when(_.cloneDeep(activeData.activeLineResponse)));
-      spyOn(this.SparkLineReportService, 'getMostActiveUserData').and.returnValue(this.$q.when({
-        tableData: _.cloneDeep(activeData.mostActiveResponse),
-        error: false,
-      }));
+      spyOn(this.SparkLineReportService, 'getMostActiveUserData').and.returnValue(this.$q.when(_.cloneDeep(activeData.mostActiveResponse)));
 
       spyOn(this.DummySparkDataService, 'dummyActiveUserData').and.returnValue(activeData.dummyData.two);
 
