@@ -32,10 +32,6 @@
       label: $translate.instant('languages.englishAmerican'),
       value: 'en_US'
     };
-    /*var DEFAULT_COUNTRY = {
-      label: $translate.instant('countries.unitedStates'),
-      value: 'US'
-    };*/
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
     var DEFAULT_EXT_LEN = '4';
