@@ -85,7 +85,7 @@
           loadChartDataForDeviceType(extractDeviceType('ce'));
           break;
         case 2:
-          loadChartDataForDeviceType(extractDeviceType('sparkboard'));
+          loadChartDataForDeviceType(extractDeviceType('SparkBoard'));
           break;
       }
     };
