@@ -154,7 +154,7 @@
         }
 
         var fallbackAction = _.get(entry, 'queueSettings.fallback.actions[0]');
-        if (!(fallbackAction.getName() === rtExtNum)) {
+        if (fallbackAction && (fallbackAction.getName() !== rtExtNum)) {
           fallbackAction.setName(rtExtNum);
           fallbackAction.setValue('');
         }

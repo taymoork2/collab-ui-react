@@ -62,6 +62,7 @@
     vm.uploadMohTrigger = uploadMohTrigger;
 
     vm.destination = '';
+    vm.maxWaitTime = '';
 
     vm.activate = activate;
     vm.populateMohRadio = populateMohRadio;
@@ -76,6 +77,8 @@
 
     vm.periodicMinutes = [];
     vm.periodicSeconds = [];
+    vm.periodicSecond = {};
+    vm.periodicMinute = {};
     vm.changedPeriodicMinValue = changedPeriodicMinValue;
     vm.changedPeriodicSecValue = changedPeriodicSecValue;
     vm.areSecondsDisabled = isDisabled;

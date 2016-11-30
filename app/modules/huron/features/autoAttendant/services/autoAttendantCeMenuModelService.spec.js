@@ -10,6 +10,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   var wmenu = getJSONFixture('huron/json/autoAttendant/welcomeMenu.json');
   var ceWelcome = wmenu.ceWelcome;
   var ceWelcomeNoDescription = wmenu.ceWelcomeNoDescription;
+  var ceWelcomeNoDescriptionTemp = wmenu.ceWelcomeNoDescriptionTemp;
   var welcomeMenu = wmenu.welcomeMenu;
   var ceWelcome2 = {
     "callExperienceName": "AA Welcome",
@@ -139,7 +140,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcomeNoDescription, 'openHours');
       var success = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'openHours', _welcomeMenu);
 
-      expect(angular.equals(_ceRecord, ceWelcomeNoDescription)).toBe(true);
+      expect(angular.equals(_ceRecord, ceWelcomeNoDescriptionTemp)).toBe(true);
 
       expect(success).toBe(true);
 

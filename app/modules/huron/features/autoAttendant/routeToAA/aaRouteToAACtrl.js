@@ -105,7 +105,7 @@
         var entry = vm.menuEntry;
 
         var fallbackAction = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]');
-        if (!(fallbackAction.getName() === 'goto')) {
+        if (fallbackAction && (fallbackAction.getName() !== 'goto')) {
           fallbackAction.setName('goto');
           fallbackAction.setValue('');
         }

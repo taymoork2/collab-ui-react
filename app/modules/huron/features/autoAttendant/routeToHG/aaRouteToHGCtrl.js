@@ -117,7 +117,7 @@
         }
 
         var fallbackAction = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]');
-        if (!(fallbackAction.getName() === rtHG)) {
+        if (fallbackAction && (fallbackAction.getName() !== rtHG)) {
           fallbackAction.setName(rtHG);
           fallbackAction.setValue('');
         }

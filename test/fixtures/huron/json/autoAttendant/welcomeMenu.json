@@ -245,6 +245,128 @@
     }]
   },
 
+  "ceWelcomeNoDescriptionTemp": {
+    "callExperienceName": "AA Welcome",
+    "assignedResources": [{
+      "trigger": "incomingCall",
+      "type": "directoryNumber",
+      "id": "e7d68d8c-9e92-4330-a881-5fc9ace1f7d3"
+    }],
+    "defaultActionSet": "openHours",
+    "scheduleEventTypeMap": {
+      "open": "openHours"
+    },
+    "actionSets": [{
+      "name": "openHours",
+      "actions": [{
+        "play": {
+          "description": "Welcome prompt",
+          "url": "file1.avi"
+        }
+      }, {
+        "route": {
+          "description": "Operator",
+          "destination": "1111"
+        }
+      }, {
+        "say": {
+          "value": "Welcome to the AA",
+          "voice": "Kate"
+        }
+      }, {
+        "routeToUser": {
+          "description": "user 1",
+          "id": "0000"
+        }
+      }, {
+        "routeToVoiceMail": {
+          "description": "voice 1",
+          "id": "1111"
+        }
+      }, {
+        "routeToHuntGroup": {
+          "description": "Hunt Group 1",
+          "id": "2222"
+        }
+      }, {
+        "goto": {
+          "ceid": "3333"
+        }
+      }, {
+        "routeToQueue": {
+          "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+          "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+          "queueInitialAnnouncement": "",
+          "queuePeriodicAnnouncements": [{
+            "queuePeriodicAnnouncement": "",
+            "queuePeriodicAnnouncementInterval": "45"
+          }],
+          "queueMaxTime": 15,
+          "queueFallback": {
+            "disconnect": {
+              "treatment": "none"
+            }
+          },
+          "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}"
+        }
+      }, {
+      "routeToQueue": {
+        "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+        "queueInitialAnnouncement": "",
+        "queuePeriodicAnnouncements": [{
+          "queuePeriodicAnnouncement": "",
+          "queuePeriodicAnnouncementInterval": "45"
+        }],
+        "queueMaxTime": 15,
+        "queueFallback": {
+          "goto": {
+            "ceid": "c5495dc2-2754-473d-9a45-f7c33d87b829",
+            "description": ""
+          }
+        },
+        "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}"
+      }
+    }, {
+      "routeToQueue": {
+        "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+        "queueInitialAnnouncement": "",
+        "queuePeriodicAnnouncements": [{
+          "queuePeriodicAnnouncement": "",
+          "queuePeriodicAnnouncementInterval": "45"
+        }],
+        "queueMaxTime": 15,
+        "queueFallback": {
+          "route": {
+            "destination": "+112345678900",
+            "description": ""
+          }
+        },
+        "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}"
+      }
+    }, {
+      "routeToQueue": {
+        "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+        "queueInitialAnnouncement": "",
+        "queuePeriodicAnnouncements": [{
+          "queuePeriodicAnnouncement": "",
+          "queuePeriodicAnnouncementInterval": "45"
+        }],
+        "queueMaxTime": 15,
+        "queueFallback": {
+          "routeToVoiceMail": {
+            "id": "5991528f-d5c9-461a-b95f-a1e533dea0fc",
+            "description": ""
+          }
+        },
+        "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}"
+      }
+    }]
+    }]
+  },
+
   "welcomeMenu": {
     "type": "MENU_WELCOME",
     "id": "menu0",

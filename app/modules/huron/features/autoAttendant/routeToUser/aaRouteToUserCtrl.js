@@ -297,7 +297,7 @@
         }
 
         var fallbackAction = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]');
-        if (!(fallbackAction.getName() === routeToUserOrVM)) {
+        if (fallbackAction && (fallbackAction.getName() !== routeToUserOrVM)) {
           fallbackAction.setName(routeToUserOrVM);
           fallbackAction.setValue('');
         }
