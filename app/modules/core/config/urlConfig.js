@@ -176,6 +176,12 @@
       integration: 'https://statusbts.webex.com/status',
       prod: 'https://statusbts.webex.com/status'
     },
+    UccUrl: {
+      dev: 'https://ucc-integration.wbx2.com/ucm-service/api/v1',
+      cfe: 'https://ucc-e.wbx2.com/ucm-service/api/v1',
+      integration: 'https://ucc-integration.wbx2.com/ucm-service/api/v1',
+      prod: 'https://ucc-a.wbx2.com/ucm-service/api/v1'
+    },
 
     // urls same for all environments
 

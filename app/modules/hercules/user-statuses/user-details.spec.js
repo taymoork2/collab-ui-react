@@ -16,10 +16,9 @@ describe('Service: UserDetails', function () {
       $httpBackend.verifyNoOutstandingRequest();
     });
 
-    it('when uss user entitled is true', function () {
-      var request = 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111"';
+    it('when uss user is entitled and activated', function () {
       $httpBackend
-        .when('GET', request)
+        .when('GET', 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111"')
         .respond({
           Resources: [{
             id: '111',
@@ -29,20 +28,21 @@ describe('Service: UserDetails', function () {
       var simulatedResponse = [{
         userId: '111',
         entitled: true,
-        state: 'whatever'
+        state: 'activated',
+        connector: { cluster_name: 'Tom is Awesome Cluster' }
       }];
       UserDetails.getUsers('5632-f806-org', simulatedResponse)
         .then(function (userDetails) {
           expect(userDetails[0][0]).toBe('sparkuser1@gmail.com');
-          expect(userDetails[0][2]).toBe('whatever');
+          expect(userDetails[0][1]).toBe('Tom is Awesome Cluster');
+          expect(userDetails[0][2]).toBe('hercules.activationStatus.activated');
         });
       $httpBackend.flush();
     });
 
     it('when uss reports error for a user', function () {
-      var request = 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111"';
       $httpBackend
-        .when('GET', request)
+        .when('GET', 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111"')
         .respond({
           Resources: [{
             id: '111',
@@ -61,36 +61,34 @@ describe('Service: UserDetails', function () {
       UserDetails.getUsers('5632-f806-org', simulatedResponse)
         .then(function (userDetails) {
           expect(userDetails[0][0]).toBe('sparkuser1@gmail.com');
-          expect(userDetails[0][2]).toBe('error');
+          expect(userDetails[0][2]).toBe('hercules.activationStatus.error');
           expect(userDetails[0][3]).toBe('The request failed. The SMTP address has no mailbox associated with it.');
         });
       $httpBackend.flush();
     });
 
     it('when ci user NOT found', function () {
-      var request = 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111"';
       $httpBackend
-        .when('GET', request)
+        .when('GET', 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111"')
         .respond({
           Resources: []
         });
       var simulatedResponse = [{
         userId: '111',
         entitled: true,
-        state: 'whatever'
+        state: 'notActivated'
       }];
       UserDetails.getUsers('5632-f806-org', simulatedResponse)
         .then(function (userDetails) {
-          expect(userDetails[0][0]).toBe('Not found');
-          expect(userDetails[0][2]).toBe('whatever');
+          expect(userDetails[0][0]).toBe('hercules.export.userNotFound');
+          expect(userDetails[0][2]).toBe('hercules.activationStatus.pending_activation');
         });
       $httpBackend.flush();
     });
 
     it('fetching multiple users from CI in one request', function () {
-      var request = 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111" or id eq "222"';
       $httpBackend
-        .when('GET', request)
+        .when('GET', 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111" or id eq "222"')
         .respond({
           Resources: [{
             id: '111',
@@ -107,14 +105,14 @@ describe('Service: UserDetails', function () {
       }, {
         userId: '222',
         entitled: true,
-        state: 'whenever'
+        state: 'activated'
       }];
       UserDetails.getUsers('5632-f806-org', simulatedResponse)
         .then(function (userDetails) {
           expect(userDetails[0][0]).toBe('sparkuser1@gmail.com');
-          expect(userDetails[0][2]).toBe('whatever');
+          expect(userDetails[0][2]).toBe('hercules.activationStatus.not_entitled');
           expect(userDetails[1][0]).toBe('sparkuser2@gmail.com');
-          expect(userDetails[1][2]).toBe('whenever');
+          expect(userDetails[1][2]).toBe('hercules.activationStatus.activated');
         });
       $httpBackend.flush();
     });

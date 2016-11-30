@@ -117,13 +117,12 @@
       return $q.all(promises)
         .then(function (connectors) {
           // convert response to a more usable data structure
-          var hostNames = _.chain(connectors)
+          var connectorsById = _.chain(connectors)
             .keyBy('id')
-            .mapValues('host_name')
             .value();
           // augment statuses with details about the connectors
           return _.map(statuses, function (status) {
-            status.connector = hostNames[status.connectorId];
+            status.connector = connectorsById[status.connectorId];
             return status;
           });
         });
@@ -132,14 +131,7 @@
     function getUserStatuses(service, type, offset, limit) {
       return USSService.getStatuses(service, type, offset, limit)
         .then(function (response) {
-          if (offset + limit < response.paging.count) {
-            return getUserStatuses(service, type, offset + limit, limit)
-              .then(function (statuses) {
-                return response.userStatuses.concat(statuses);
-              });
-          } else {
-            return response.userStatuses;
-          }
+          return response.userStatuses;
         });
     }
 
@@ -154,8 +146,7 @@
     }
 
     function getStatusTypes() {
-      var a = formatStatusTypes(userStatusSummary);
-      return a;
+      return formatStatusTypes(userStatusSummary);
     }
 
     function formatStatusTypes(summary) {

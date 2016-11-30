@@ -6,7 +6,7 @@
     .service('UserDetails', UserDetails);
 
   /* @ngInject  */
-  function UserDetails($http, $translate, UrlConfig) {
+  function UserDetails($http, $translate, UrlConfig, USSService) {
     var service = {
       getCSVColumnHeaders: getCSVColumnHeaders,
       getUsers: getUsers,
@@ -31,7 +31,7 @@
     }
 
     function getCSVColumnHeaders() {
-      return ['User', 'Host', 'State', 'Error Message', 'User ID', 'Service'];
+      return ['User', 'Cluster', 'State', 'Error Message', 'User ID', 'Service'];
     }
 
     function getUsers(orgId, statuses) {
@@ -45,10 +45,10 @@
             var serviceName = status.serviceId === 'squared-fusion-uc' ? $translate.instant('hercules.serviceNames.squared-fusion-uc.full') : $translate.instant('hercules.serviceNames.' + status.serviceId);
             // Same shape as getCSVColumnHeaders!
             return [
-              foundUser ? foundUser.userName : 'Not found',
-              status.connector || 'not found(id=' + status.connectorId + ')',
-              status.state === 'notActivated' ? 'Pending Activation' : status.state,
-              status.state === 'error' ? status.description.defaultMessage : '',
+              foundUser ? foundUser.userName : $translate.instant('hercules.export.userNotFound'),
+              status.connector ? status.connector.cluster_name : '',
+              $translate.instant('hercules.activationStatus.' + USSService.decorateWithStatus(status)),
+              status.state === 'error' && status.description ? status.description.defaultMessage : '',
               status.userId,
               serviceName
             ];

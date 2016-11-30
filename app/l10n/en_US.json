@@ -1452,7 +1452,8 @@
       "modalText2": "Select the type of information that you want included in the report:",
       "modalNote": "Note: The more users included, the longer the report takes to generate.",
       "modalCTA": "Export to CSV",
-      "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s"
+      "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s",
+      "userNotFound": "Not found"
     },
     "overview": {
       "activated": "Activated",
@@ -4747,7 +4748,7 @@
     "cloudExtensions": "Hybrid Services",
     "enableService": "Activate service for this user",
     "status": "Status",
-    "host": "Node",
+    "cluster": "Cluster",
     "sipUri": "Directory URI"
   },
   "validation": {
