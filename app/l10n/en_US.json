@@ -1202,7 +1202,7 @@
     "regionalSettings": "Regional Settings",
     "preferredLanguage": "Preferred Language",
     "preferredLanguageDescription": "Specify the language to use for Spark Call Services. Preferred language only applies to new users.",
-    "preferredLanguagePlaceholder": "Select your lanugage",
+    "preferredLanguagePlaceholder": "Select your language",
     "defaultCountry": "Default Country",
     "defaultCountryDescription": "Specify the country to set the correct dial tone on user devices.",
     "defaultCountryPlaceholder": "Select your country",
