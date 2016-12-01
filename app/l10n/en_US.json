@@ -5930,18 +5930,32 @@
     "msg": {
       "splsResponseErr": "No partner organization found, please contact ccaportal@cisco.com for help."
     },
+    "button": {
+      "decline": "Decline",
+      "approve": "Approve",
+      "submitRequest": "Submit Request",
+      "cancelSubmission": "Cancel Submission"
+    },
     "cbgTitle": "Callback Groups",
     "tdTitle": "Telephony Domain",
     "cbgs": {
       "overview": "Overview",
+      "openedOn": "Opened on",
       "moveSite": "Move Site",
       "placeholder-text": "All",
       "importCsv": "Import CSV",
       "title": "Callback Groups",
       "exportToCsv": "Export to CSV",
+      "remedyTicket": "Remedy Ticket",
+      "reqSubmission": "Request Submission",
+      "approveCbg": "Approve Callback Group",
       "editCountry": "Edit Countries/Regions",
       "downloadCsv": "Download CSV Template",
       "csvFilename": "exported_callbackGroup.csv",
+      "declineDialogTitle": "Decline Callback Group",
+      "declineReason": "Reason Callback Group is declined",
+      "declineDialogNote": "Note: Explaination will appear as a comment in the Callback Group history",
+      "approveMsg": "If you proceed, the system will auto-update the callback group with the selected countries",
       "moveSiteMsg": "Are you sure you want to move this site?",
       "field": {
         "sites": "Site URL",
