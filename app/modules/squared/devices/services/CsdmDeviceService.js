@@ -30,14 +30,6 @@
       return $http.delete(device.url + '?keepPlace=true');
     }
 
-    function updateItemName(device, newName) {
-      return $http.patch(device.url, {
-        name: newName
-      }).then(function (res) {
-        return CsdmConverter.convertCloudberryDevice(res.data);
-      });
-    }
-
     function updateTags(deviceUrl, tags) {
       return $http.patch(deviceUrl, {
         description: JSON.stringify(tags || [])
@@ -70,7 +62,6 @@
     return {
       fetchDevices: fetchDevices,
       deleteItem: deleteItem,
-      updateItemName: updateItemName,
       updateTags: updateTags,
       fetchItem: fetchItem,
 

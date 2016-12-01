@@ -16,53 +16,24 @@
     var timeoutInMillis = 10000;
     var intervalType = 'day'; // Used as long as week and month is not implemented
 
-    function getDataForLastWeek(deviceCategories, api, missingDaysDeferred) {
-      //$log.info("dataForLastWeek", api);
-      return getDataForPeriod('week', 1, 'day', deviceCategories, api, missingDaysDeferred);
-    }
-
     function getDateRangeForLastNTimeUnits(count, granularity) {
       var start, end;
       if (granularity === 'day') {
         start = moment().subtract(count, granularity + 's').format('YYYY-MM-DD');
         end = moment().subtract(1, granularity + 's').format('YYYY-MM-DD');
       } else if (granularity === 'week') {
-        //start = moment().startOf('isoWeek').subtract(count, granularity + 's').format('YYYY-MM-DD');
         start = moment().isoWeekday(1).subtract(count, granularity + 's').format("YYYY-MM-DD");
-        //end = moment().subtract(1, granularity + 's').format('YYYY-MM-DD');
         end = moment().isoWeekday(7).subtract(1, granularity + 's').format("YYYY-MM-DD");
+      } else if (granularity === 'month') {
+        start = moment().startOf('month').subtract(count, 'months').format('YYYY-MM-DD');
+        end = moment().startOf('month').subtract(1, 'days').format('YYYY-MM-DD');
       }
       return { start: start, end: end };
     }
+
     function getDataForLastNTimeUnits(count, granularity, deviceCategories, api, missingDaysDeferred) {
       var dateRange = getDateRangeForLastNTimeUnits(count, granularity);
       return getDataForRange(dateRange.start, dateRange.end, granularity, deviceCategories, api, missingDaysDeferred);
-    }
-
-    function getDataForLastMonth(deviceCategories, api, missingDaysDeferred) {
-      return getDataForPeriod('month', 1, 'week', deviceCategories, api, missingDaysDeferred);
-    }
-
-    function getDataForLastMonths(count, granularity, deviceCategories, api, missingDaysDeferred) {
-      return getDataForPeriod('month', count, granularity, deviceCategories, api, missingDaysDeferred);
-    }
-
-    function getDataForPeriod(period, count, granularity, deviceCategories, api, missingDaysDeferred) {
-      return loadPeriodCallData(period, count, granularity, deviceCategories, api, missingDaysDeferred);
-    }
-
-    function getDatesForLastWeek() {
-      var start = moment().startOf('week').subtract(1, 'weeks').format('YYYY-MM-DD');
-      var end = moment().startOf('week').subtract(1, 'days').format('YYYY-MM-DD');
-      //$log.info("Returning dates for last week, dates:" + start + "," + end);
-      return { start: start, end: end };
-    }
-
-    function getDatesForLastMonths(n) {
-      var start = moment().startOf('month').subtract(n, 'months').format('YYYY-MM-DD');
-      var end = moment().startOf('month').subtract(1, 'days').format('YYYY-MM-DD');
-      //$log.info("Returning dates for " + n + " month(s), dates:" + start + "," + end);
-      return { start: start, end: end };
     }
 
     function getDataForRange(start, end, granularity, deviceCategories, api, missingDaysDeferred) {
@@ -93,39 +64,6 @@
         }
       }
 
-    }
-
-    function getDateRangeForPeriod(count, period) {
-      var start = moment().startOf(period).subtract(count, period + 's').format('YYYY-MM-DD');
-      var end = moment().startOf(period).subtract(1, 'days').format('YYYY-MM-DD');
-      return { start: start, end: end };
-    }
-
-    function loadPeriodCallData(period, count, granularity, deviceCategories, api, missingDaysDeferred) {
-      var dateRange = getDateRangeForPeriod(count, period);
-      var start = dateRange.start;
-      var end = dateRange.end;
-
-      if (api === 'mock') {
-        return DeviceUsageMockData.getRawDataPromise(start, end).then(function (data) {
-          return reduceAllData(data, granularity);
-        });
-      } else if (api === 'local') {
-        var url = localUrlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
-        url = url + 'intervalType=' + intervalType; // As long week and month is not implemented
-        url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
-        url = url + '&deviceCategories=' + deviceCategories.join();
-        url = url + '&accounts=__';
-        url = url + '&sendMockData=false';
-        return doRequest(url, granularity, start, end, missingDaysDeferred);
-      } else {
-        url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
-        url = url + 'intervalType=' + intervalType; // As long week and month is not implemented
-        url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
-        url = url + '&deviceCategories=' + deviceCategories.join();
-        url = url + '&accounts=__';
-        return doRequest(url, granularity, start, end, missingDaysDeferred);
-      }
     }
 
     function doRequest(url, granularity, start, end, missingDaysDeferred) {
@@ -365,6 +303,43 @@
       }
     }
 
+    function makeChart(id, chart) {
+      var amChart = AmCharts.makeChart(id, chart);
+      _.each(amChart.graphs, function (graph) {
+        graph.balloonFunction = renderBalloon;
+      });
+      return amChart;
+    }
+
+    function renderBalloon(graphDataItem) {
+      var totalDuration = secondsTohhmmss(parseFloat(graphDataItem.dataContext.totalDuration) * 3600);
+      var text = '<div><h5>' + $translate.instant('reportsPage.usageReports.callDuration') + ' : ' + totalDuration + '</h5>';
+      text = text + $translate.instant('reportsPage.usageReports.callCount') + ' : ' + graphDataItem.dataContext.callCount + ' <br/> ';
+      //text = text + $translate.instant('reportsPage.usageReports.pairedCount') + ' : ' + graphDataItem.dataContext.pairedCount + '<br/>';
+      return text;
+    }
+
+    function secondsTohhmmss(totalSeconds) {
+      var hours = Math.floor(totalSeconds / 3600);
+      var minutes = Math.floor((totalSeconds - (hours * 3600)) / 60);
+      var seconds = totalSeconds - (hours * 3600) - (minutes * 60);
+
+      // round seconds
+      seconds = Math.round(seconds * 100) / 100;
+
+      var result = hours > 0 ? hours + 'h ' : '';
+      if (hours > 99) {
+        return result;
+      }
+      result += minutes > 0 ? minutes + 'm ' : '';
+      result += hours < 10 ? seconds + 's' : '';
+      return result;
+    }
+
+    function getLabel(item) {
+      return secondsTohhmmss(parseFloat(item.dataContext.totalDuration) * 3600);
+    }
+
     function getLineChart() {
       return {
         'type': 'serial',
@@ -419,7 +394,8 @@
             'lineColor': chartColors.primaryColorDarker,
             'bulletColor': '#ffffff',
             'bulletBorderAlpha': 1,
-            'useLineColorForBulletBorder': true
+            'useLineColorForBulletBorder': true,
+            'labelFunction': getLabel,
           }
           /*
           {
@@ -453,13 +429,13 @@
           'useGraphSettings': true,
           'valueWidth': 100
         },
-        'titles': [
-          {
-            'id': 'Title-1',
-            'size': 15,
-            'text': $translate.instant('reportsPage.usageReports.deviceUsage')
-          }
-        ]
+        // 'titles': [
+        //   {
+        //     'id': 'Title-1',
+        //     'size': 15,
+        //     'text': $translate.instant('reportsPage.usageReports.deviceUsage')
+        //   }
+        // ]
       };
     }
 
@@ -468,6 +444,7 @@
       var deviceCategories = ['ce', 'sparkboard'];
       var baseUrl = '';
       if (api === 'mock') {
+        $log.info("Not implemented export for mock data");
         return;
       }
       if (api === 'local') {
@@ -478,7 +455,6 @@
       var url = baseUrl + '/' + Authinfo.getOrgId() + '/reports/device/call/export?';
       url = url + 'intervalType=' + granularity;
       url = url + '&rangeStart=' + startDate + '&rangeEnd' + endDate;
-      //url = url + '&rangeStart=' + dateRange.start + '&rangeEnd=' + dateRange.end;
       url = url + '&deviceCategories=' + deviceCategories.join();
       url = url + '&accounts=__';
       url = url + '&sendMockData=false';
@@ -540,19 +516,13 @@
     }
 
     return {
-      getDataForPeriod: getDataForPeriod,
-      getDataForLastWeek: getDataForLastWeek,
-      getDataForLastMonth: getDataForLastMonth,
-      getDataForLastMonths: getDataForLastMonths,
       getDataForRange: getDataForRange,
       getLineChart: getLineChart,
-      getDatesForLastWeek: getDatesForLastWeek,
-      getDatesForLastMonths: getDatesForLastMonths,
+      makeChart: makeChart,
       exportRawData: exportRawData,
       extractStats: extractStats,
       resolveDeviceData: resolveDeviceData,
       getDataForLastNTimeUnits: getDataForLastNTimeUnits,
-      getDateRangeForPeriod: getDateRangeForPeriod,
       getDateRangeForLastNTimeUnits: getDateRangeForLastNTimeUnits,
       reduceAllData: reduceAllData
     };

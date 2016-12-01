@@ -30,6 +30,7 @@
 
     this.initSiteRows = function () {
       _this.getConferenceServices();
+      _this.getLinkedConferenceServices();
       _this.configureGrid();
     }; // initSiteRows()
 
@@ -100,7 +101,7 @@
       };
 
       _this.siteRows.gridOptions.columnDefs.push({
-        field: 'license.siteUrl',
+        field: 'siteUrl',
         displayName: $translate.instant('siteList.siteName'),
         sortable: false,
         width: '25%'
@@ -136,70 +137,113 @@
       // logMsg = funcName + "\n" +
       //   "conferenceServices=\n" + JSON.stringify(conferenceServices);
       // $log.log(logMsg);
+      if (conferenceServices) {
+        conferenceServices.forEach(function (conferenceService) {
 
-      conferenceServices.forEach(function (conferenceService) {
-        var newSiteUrl = conferenceService.license.siteUrl;
+          var newSiteUrl = conferenceService.license.siteUrl;
 
-        var findCriteria = {
-          siteUrl: newSiteUrl,
-        };
-
-        var siteRowExists = _.find(
-          _this.siteRows.gridData,
-          findCriteria
-        );
-        // var siteRowExists = false;
-
-        if (siteRowExists) {
-          logMsg = funcName + "\n" +
-            "WARNING - duplicate siteUrl found!" + "\n" +
-            "newSiteUrl=" + newSiteUrl;
-          $log.log(logMsg);
-        } else {
-          conferenceService.showCSVInfo = false;
-          conferenceService.csvStatusObj = null;
-          conferenceService.csvPollIntervalObj = null;
-
-          conferenceService.isIframeSupported = false;
-          conferenceService.isAdminReportEnabled = false;
-          conferenceService.showSiteLinks = false;
-          conferenceService.isError = false;
-          conferenceService.isWarn = false;
-          conferenceService.isCI = true;
-          conferenceService.isCSVSupported = false;
-          conferenceService.adminEmailParam = null;
-          conferenceService.userEmailParam = null;
-          conferenceService.advancedSettings = null;
-          conferenceService.webexAdvancedUrl = null;
-          conferenceService.siteUrl = newSiteUrl;
-          conferenceService.siteAdminUrl = null;
-
-          conferenceService.showLicenseTypes = false;
-          conferenceService.multipleWebexServicesLicensed = false;
-          conferenceService.licenseTypeContentDisplay = null;
-          conferenceService.licenseTypeId = newSiteUrl + "_";
-          conferenceService.licenseTooltipDisplay = null;
-          conferenceService.MCLicensed = false;
-          conferenceService.ECLicensed = false;
-          conferenceService.SCLicensed = false;
-          conferenceService.TCLicensed = false;
-          conferenceService.EELicensed = false;
-          conferenceService.CMRLicensed = false;
-
-          conferenceService.csvMock = {
-            mockStatus: false,
-            mockStatusStartIndex: 0,
-            mockStatusEndIndex: 0,
-            mockStatusCurrentIndex: null,
-            mockExport: false,
-            mockImport: false,
-            mockFileDownload: false
+          var findCriteria = {
+            siteUrl: newSiteUrl,
+            isLinkedSite: false
           };
 
-          _this.addSiteRow(conferenceService);
-        }
-      }); // conferenceServices.forEach()
+          var siteRowExists = _.find(
+            _this.siteRows.gridData,
+            findCriteria
+          );
+          // var siteRowExists = false;
+
+          if (siteRowExists) {
+            logMsg = funcName + "\n" +
+              "WARNING - duplicate siteUrl found!" + "\n" +
+              "newSiteUrl=" + newSiteUrl;
+            $log.log(logMsg);
+          } else {
+            conferenceService.showCSVInfo = false;
+            conferenceService.csvStatusObj = null;
+            conferenceService.csvPollIntervalObj = null;
+
+            conferenceService.isIframeSupported = false;
+            conferenceService.isAdminReportEnabled = false;
+            conferenceService.showSiteLinks = false;
+            conferenceService.isError = false;
+            conferenceService.isWarn = false;
+            conferenceService.isCI = true;
+            conferenceService.isLinkedSite = false;
+            conferenceService.isCSVSupported = false;
+            conferenceService.adminEmailParam = null;
+            conferenceService.userEmailParam = null;
+            conferenceService.advancedSettings = null;
+            conferenceService.webexAdvancedUrl = null;
+            conferenceService.siteUrl = newSiteUrl;
+            conferenceService.siteAdminUrl = null;
+
+            conferenceService.showLicenseTypes = false;
+            conferenceService.multipleWebexServicesLicensed = false;
+            conferenceService.licenseTypeContentDisplay = null;
+            conferenceService.licenseTypeId = newSiteUrl + "_";
+            conferenceService.licenseTooltipDisplay = null;
+            conferenceService.MCLicensed = false;
+            conferenceService.ECLicensed = false;
+            conferenceService.SCLicensed = false;
+            conferenceService.TCLicensed = false;
+            conferenceService.EELicensed = false;
+            conferenceService.CMRLicensed = false;
+
+            conferenceService.csvMock = {
+              mockStatus: false,
+              mockStatusStartIndex: 0,
+              mockStatusEndIndex: 0,
+              mockStatusCurrentIndex: null,
+              mockExport: false,
+              mockImport: false,
+              mockFileDownload: false
+            };
+
+            _this.addSiteRow(conferenceService);
+          }
+        }); // conferenceServices.forEach()
+      }
     }; // getConferenceServices()
+
+    this.getLinkedConferenceServices = function () {
+      var funcName = "getLinkedConferenceServices()";
+      var logMsg = "";
+
+      var linkedConferenceServices = Authinfo.getConferenceServicesWithLinkedSiteUrl();
+
+      if (linkedConferenceServices) {
+        linkedConferenceServices.forEach(function (conferenceService) {
+          var newSiteUrl = conferenceService.license.linkedSiteUrl;
+
+          var findCriteria = {
+            siteUrl: newSiteUrl,
+            isLinkedSite: true
+          };
+
+          var siteRowExists = _.find(
+            _this.siteRows.gridData,
+            findCriteria
+          );
+
+          if (siteRowExists) {
+            logMsg = funcName + "\n" +
+              "WARNING - duplicate linkedSiteUrl found!" + "\n" +
+              "newSiteUrl=" + newSiteUrl;
+            $log.log(logMsg);
+          } else {
+            conferenceService.isLinkedSite = true;
+            conferenceService.showLicenseTypes = false;
+            conferenceService.siteUrl = newSiteUrl;
+            conferenceService.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.linkedSite');
+            conferenceService.licenseTooltipDisplay = $translate.instant('helpdesk.licenseDisplayNames.linkedSite');
+
+            _this.addSiteRow(conferenceService);
+          }
+        });
+      }
+
+    }; // getLinkedConferenceServices()
 
     this.updateConferenceServices = function () {
       // var funcName = "updateConferenceServices()";
@@ -283,8 +327,14 @@
           //   "allSitesLicenseInfo=" + JSON.stringify(allSitesLicenseInfo);
           // $log.log(logMsg);
 
-          _this.siteRows.gridData.forEach(
+          _.filter(_this.siteRows.gridData, {
+            isLinkedSite: false
+          }).forEach(
             function processGridForLicense(siteRow) {
+              // linked site don't need to process license
+              if (siteRow.isLinkedSite) {
+                return false;
+              }
               // var funcName = "processGridForLicense()";
               // var logMsg = "";
               var siteUrl = siteRow.license.siteUrl;
@@ -537,7 +587,9 @@
       // var funcName = "updateActionsColumnForAllRows()";
       // var logMsg = "";
 
-      _this.siteRows.gridData.forEach(function (siteRow) {
+      _.filter(_this.siteRows.gridData, {
+        isLinkedSite: false
+      }).forEach(function (siteRow) {
         _this.updateActionsColumnForOneRow(siteRow);
       }); // gridData.forEach()
 
@@ -557,7 +609,6 @@
       var isCISite = WebExUtilsFact.isCIEnabledSite(siteUrl);
 
       siteRow.siteAdminUrl = WebExUtilsFact.getSiteAdminUrl(siteUrl);
-
       siteRow.isCI = isCISite;
 
       // logMsg = funcName + ": " + "\n" +
@@ -572,7 +623,6 @@
           // logMsg = funcName + ": " + "\n" +
           //   "result=" + JSON.stringify(result);
           // $log.log(logMsg);
-
           siteRow.isIframeSupported = result.isIframeSupported;
           siteRow.isAdminReportEnabled = result.isAdminReportEnabled;
           siteRow.isCSVSupported = result.isCSVSupported;
@@ -611,9 +661,9 @@
         }, // siteFunctionsSuccess()
 
         function siteFunctionsError(response) {
+
           var funcName = "updateActionsColumnForOneRow().siteFunctionsError()";
           var logMsg = "";
-
           siteRow.isIframeSupported = false;
           siteRow.isAdminReportEnabled = false;
           siteRow.showSiteLinks = true;

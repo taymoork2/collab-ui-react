@@ -1,4 +1,6 @@
 import { IHuronService, IEmergencyAddress, IEmergency, IState, IEmergencyServicesData, IEmergencyServicesStateParams, IDevice } from './index';
+import { MemberService } from 'modules/huron/members';
+import { FeatureMemberService } from 'modules/huron/features/featureMember.service';
 
 export class EmergencyServicesService {
   private emergencyDataCopy: IEmergency;
@@ -15,6 +17,8 @@ export class EmergencyServicesService {
     private PstnServiceAddressService,
     private TerminusStateService,
     private TerminusUserDeviceE911Service,
+    private MemberService: MemberService,
+    private FeatureMemberService: FeatureMemberService,
   ) {
     this.stateOptions = this.TerminusStateService.query();
   }
@@ -52,6 +56,11 @@ export class EmergencyServicesService {
               return _.chain(this.ExternalNumberService.getAssignedNumbers())
                 // remove the voicemail number if it exists
                 .reject(externalNumber => externalNumber.pattern === voicemailPilotNumber)
+                .map(externalNumber => externalNumber.pattern).value();
+            });
+      }).catch(() => {
+        return this.ExternalNumberService.refreshNumbers(this.Authinfo.getOrgId()).then(() => {
+              return _.chain(this.ExternalNumberService.getAssignedNumbers())
                 .map(externalNumber => externalNumber.pattern).value();
             });
       });
@@ -121,5 +130,13 @@ export class EmergencyServicesService {
         customerId: this.Authinfo.getOrgId(),
         number: emergency.emergencyNumber,
       }, response).$promise;
+  }
+
+  public getImpactedUsers(callback) {
+    return this.MemberService.getMemberList(undefined, undefined, callback).then((response) => {
+      return response.map((member) => {
+        return this.FeatureMemberService.getFullNameFromMember(member);
+      });
+    });
   }
 }

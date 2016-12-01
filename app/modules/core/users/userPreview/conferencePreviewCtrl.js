@@ -1,3 +1,5 @@
+require('./_user-preview.scss');
+
 (function () {
   'use strict';
 
@@ -6,18 +8,23 @@
     .controller('ConferencePreviewCtrl', ConferencePreviewCtrl);
 
   /* @ngInject */
-  function ConferencePreviewCtrl($scope, $state, $stateParams, Authinfo) {
+  function ConferencePreviewCtrl($scope, $state, $stateParams, $translate, Authinfo, FeatureToggleService) {
     var vm = this;
 
     vm.service = '';
     vm.sites = [];
     vm.siteUrls = [];
+    $scope.isSharedMultiPartyEnabled = false;
 
     init();
 
     ////////////////
 
     function init() {
+      FeatureToggleService.atlasSMPGetStatus().then(function (smpStatus) {
+        $scope.isSharedMultiPartyEnabled = smpStatus;
+      });
+
       if ($stateParams.service) {
         vm.service = $stateParams.service;
       }
@@ -40,6 +47,17 @@
 
       $scope.closePreview = function () {
         $state.go('users.list');
+      };
+
+      /* TODO For now we are using the site url to determine if the license is an SMP license. This logic will change;
+      we will be looking at licenseModel inside the licenses payload to determine if the license is SMP instead of the siteUrl. */
+      $scope.isSharedMultiPartyLicense = function (siteUrl) {
+        return _.first(siteUrl.split('.')) === 'smp';
+      };
+
+      // This logic will be changed to look for the 'licenseModel' key when the payload is ready from the backend
+      $scope.determineLicenseType = function (siteUrl) {
+        return $scope.isSharedMultiPartyLicense(siteUrl) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.assignedLicenses');
       };
     }
   }

@@ -29,10 +29,11 @@ describe('Controller: TrialAddCtrl', function () {
     spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasCreateTrialBackendEmailGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
-      if (param == 'csdm-places' || param == 'csdm-pstn') {
+      if (param == 'csdm-pstn') {
         return $q.when(false);
       } else if (param === FeatureToggleService.features.huronSimplifiedTrialFlow) {
         return $q.when(false);
@@ -159,7 +160,7 @@ describe('Controller: TrialAddCtrl', function () {
       });
     });
 
-    describe('with atlas-webex-trial feature-toggle enabled', function () {
+    describe('with atlas-webex-trial enabled', function () {
       beforeEach(function () {
         controller.callTrial.enabled = false;
         controller.pstnTrial.enabled = false;
@@ -173,8 +174,9 @@ describe('Controller: TrialAddCtrl', function () {
       });
     });
 
-    describe('with atlas-webex-trial feature-toggle disabled', function () {
+    describe('with atlas-webex-trial disabled and backend email feature-toggle disabled', function () {
       beforeEach(function () {
+        controller.atlasCreateTrialBackendEmailEnabled = false;
         controller.callTrial.enabled = false;
         controller.pstnTrial.enabled = false;
         controller.webexTrial.enabled = false;
@@ -184,6 +186,21 @@ describe('Controller: TrialAddCtrl', function () {
 
       it('should send an email', function () {
         expect(EmailService.emailNotifyTrialCustomer).toHaveBeenCalled();
+      });
+    });
+
+    describe('with atlas-webex-trial disabled and backend email feature-toggle enabled', function () {
+      beforeEach(function () {
+        controller.atlasCreateTrialBackendEmailEnabled = true;
+        controller.callTrial.enabled = false;
+        controller.pstnTrial.enabled = false;
+        controller.webexTrial.enabled = false;
+        controller.startTrial(callback);
+        $scope.$apply();
+      });
+
+      it('should not send an email', function () {
+        expect(EmailService.emailNotifyTrialCustomer).not.toHaveBeenCalled();
       });
     });
 
@@ -548,7 +565,7 @@ describe('Controller: TrialAddCtrl', function () {
     }
 
     _.times(testCase.length, function (index) {
-      var testMsg = 'should confirm ' + angular.toJson(testCase[index].retVal) + ' validates as ' + testCase[index].targetVal;
+      var testMsg = 'should confirm ' + JSON.stringify(testCase[index].retVal) + ' validates as ' + testCase[index].targetVal;
       it(testMsg, function () {
         doTestCase(index);
       });

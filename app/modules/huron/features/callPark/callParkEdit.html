@@ -67,6 +67,14 @@
               on-change-fn="$ctrl.setCallParkFallbackDestination(fallbackDestination)">
             </uc-call-park-reversion>
           </div>
+          <div class="sub-section">
+            <h5 class="sub-section__title" translate="callPark.reversionTimerLabel"></h5>
+            <p class="sub-section__description" translate="callPark.reversionTimerDesc"></p>
+            <uc-call-park-reversion-timer
+              fallback-timer="$ctrl.callPark.fallbackTimer"
+              on-change-fn="$ctrl.setCallParkFallbackTimer(seconds)">
+            </uc-call-park-reversion-timer>
+          </div>
         </div>
       </div>
 

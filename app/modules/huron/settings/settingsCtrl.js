@@ -8,7 +8,7 @@
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService,
-    ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing, VoicemailMessageAction, FeatureToggleService, Config) {
+    ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing, VoicemailMessageAction, FeatureToggleService, Config, $state) {
     var vm = this;
     vm.loading = true;
 
@@ -19,6 +19,7 @@
         return enabled ? (license.licenseType !== Config.licenseTypes.SHARED_DEVICES || license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
       }).length > 0;
     };
+    vm.bulkVoicemailEnable = false;
     FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
       vm.showRegionAndVoicemail = vm.isRegionAndVoicemail(pstnEnabled);
     });
@@ -39,6 +40,7 @@
     var DEFAULT_TO = '5999';
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
+    var VOICE_VOICEMAIL_AVRIL = 'DEMO_STANDARD';
     var INTERNATIONAL_DIALING = 'DIALINGCOSTAG_INTERNATIONAL';
     var COMPANY_CALLER_ID_TYPE = 'Company Caller ID';
     var COMPANY_NUMBER_TYPE = 'Company Number';
@@ -47,6 +49,8 @@
     var savedModel = null;
     var errors = [];
 
+    vm.voicemailAvrilCustomer = false;
+    vm.isAvrilVoiceEnabled = false;
     vm.init = init;
     vm.save = save;
     vm.resetSettings = resetSettings;
@@ -134,6 +138,10 @@
 
     PstnSetupService.getCustomer(Authinfo.getOrgId()).then(function () {
       vm.isTerminusCustomer = true;
+    });
+
+    FeatureToggleService.getCustomerHuronToggle(Authinfo.getOrgId(), FeatureToggleService.features.avrilVmEnable).then(function (result) {
+      vm.voicemailAvrilCustomer = result;
     });
 
     vm.validations = {
@@ -563,26 +571,22 @@
       },
     }];
 
-    FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
-      vm.internationalDialingSelection = [{
-        type: 'switch',
-        key: 'internationalDialingEnabled',
-        className: 'international-dialing',
-        templateOptions: {
-          label: $translate.instant('internationalDialing.internationalDialing'),
-          description: $translate.instant(result
-            ? 'internationalDialing.internationalDialingPlacesDesc'
-            : 'internationalDialing.internationalDialingDesc')
-        },
-        expressionProperties: {
-          'templateOptions.isDisabled': function () {
-            // if the customer is in trial and doesn't have the feature toggle
-            // huronInternationalDialingTrialOverride then show toggle as disabled
-            return InternationalDialing.isDisableInternationalDialing();
-          }
+    vm.internationalDialingSelection = [{
+      type: 'switch',
+      key: 'internationalDialingEnabled',
+      className: 'international-dialing',
+      templateOptions: {
+        label: $translate.instant('internationalDialing.internationalDialing'),
+        description: $translate.instant('internationalDialing.internationalDialingPlacesDesc')
+      },
+      expressionProperties: {
+        'templateOptions.isDisabled': function () {
+          // if the customer is in trial and doesn't have the feature toggle
+          // huronInternationalDialingTrialOverride then show toggle as disabled
+          return InternationalDialing.isDisableInternationalDialing();
         }
-      }];
-    });
+      }
+    }];
     vm.internationalDialingSelection = [{
       type: 'switch',
       key: 'internationalDialingEnabled',
@@ -913,6 +917,13 @@
             } else if (siteData.disableVoicemail) {
               vm.model.site.voicemailPilotNumber = undefined;
             }
+
+            if (vm.voicemailAvrilCustomer && vm.isAvrilVoiceEnabled) {
+              var setupSites = ServiceSetup.sites[0];
+              ServiceSetup.updateAvrilSite(setupSites.uuid, setupSites.siteSteeringDigit,
+                    setupSites.siteCode, setupSites.timeZone,
+                     setupSites.extensionLength, setupSites.voicemailPilotNumber, siteData);
+            }
           })
           // in the case when voicemail is getting enabled, reload voicemail info such as (timezone and vm2email settings)
           // needs to be done in order, usertemplates > messageactions
@@ -1018,7 +1029,12 @@
     function updateCustomerServicePackage(companyVoicemailNumber) {
       var customer = {};
       if (companyVoicemailNumber && _.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
-        customer.servicePackage = DEMO_STANDARD;
+        if (vm.voicemailAvrilCustomer) {
+          customer.servicePackage = VOICE_VOICEMAIL_AVRIL;
+          vm.isAvrilVoiceEnabled = true;
+        } else {
+          customer.servicePackage = DEMO_STANDARD;
+        }
         customer.voicemail = {
           pilotNumber: companyVoicemailNumber
         };
@@ -1581,7 +1597,7 @@
       errors = [];
 
       var promises = [];
-      promises.push(loadCompanyInfo());
+      promises.push(enableBulkVmEnableToggle().then(loadCompanyInfo));
       promises.push(loadServiceAddress());
       promises.push(loadExternalNumbers());
       promises.push(enableExtensionLengthModifiable());
@@ -1629,7 +1645,13 @@
         })
         .finally(function () {
           vm.processing = false;
+          var existingCompanyVoicemailEnabled = savedModel.companyVoicemail.companyVoicemailEnabled;
           savedModel = angular.copy(vm.model);
+          if (vm.bulkVoicemailEnable &&
+            !existingCompanyVoicemailEnabled &&
+            savedModel.companyVoicemail.companyVoicemailEnabled) {
+            $state.go('users.enableVoicemail');
+          }
         });
     }
 
@@ -1970,6 +1992,16 @@
           vm.model.companyVoicemail.externalVoicemail = false;
         }
       }
+    }
+
+    function enableBulkVmEnableToggle() {
+      return FeatureToggleService.supports(FeatureToggleService.features.bulkVoicemailEnable).then(function (result) {
+        if (result) {
+          vm.bulkVoicemailEnable = result;
+        }
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'huronSettings.errorGettingBulkVoicemailEnableToggle');
+      });
     }
 
     $scope.$watchCollection(function () {

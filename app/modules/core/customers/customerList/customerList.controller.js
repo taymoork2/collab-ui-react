@@ -1,3 +1,5 @@
+require('./_customer-list.scss');
+
 (function () {
   'use strict';
 
@@ -13,7 +15,6 @@
     $scope.searchStr = '';
     $scope.timeoutVal = 1000;
     $scope.isCareEnabled = false;
-    $scope.placesEnabled = false;
     $scope.isOrgSetup = isOrgSetup;
     $scope.isPartnerAdminWithCallOrRooms = isPartnerAdminWithCallOrRooms;
     $scope.isOwnOrg = isOwnOrg;
@@ -355,10 +356,6 @@
         });
       });
 
-      FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (result) {
-        $scope.placesEnabled = result;
-      });
-
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           $scope.isTestOrg = data.isTestOrg;
@@ -401,11 +398,11 @@
     }
 
     function isPartnerAdminWithCallOrRooms(customer) {
-      return (!_.isUndefined(customer.communications.licenseType) || (!_.isUndefined(customer.roomSystems.licenseType) && $scope.placesEnabled)) && $scope.isPartnerAdmin;
+      return (!_.isUndefined(customer.communications.licenseType) || !_.isUndefined(customer.roomSystems.licenseType)) && $scope.isPartnerAdmin;
     }
 
     function isPstnSetup(row) {
-      return (row.entity.isAllowedToManage && isOrgSetup(row.entity) && (row.entity.isSquaredUcOffer || (row.entity.isRoomSystems && $scope.placesEnabled))) || isPartnerAdminWithCallOrRooms(row.entity);
+      return (row.entity.isAllowedToManage && isOrgSetup(row.entity) && (row.entity.isSquaredUcOffer || row.entity.isRoomSystems)) || isPartnerAdminWithCallOrRooms(row.entity);
     }
 
     function isOwnOrg(customer) {

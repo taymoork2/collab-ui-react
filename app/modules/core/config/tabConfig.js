@@ -18,7 +18,6 @@
     icon: 'icon-bell',
     title: 'tabs.gssTab',
     desc: 'tabs.gssTabDesc',
-    feature: 'atlas-global-service-status',
     state: 'gss',
     link: '/gss'
   }, {
@@ -31,9 +30,9 @@
     tab: 'gemservicesTab',
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
-    state: 'gem.services',
+    state: 'gemOverview',
     feature: 'gem-services-tab',
-    link: '/partner/services/index'
+    link: '/partner/services/overview'
   }, {
     tab: 'userTab',
     icon: 'icon-user',
@@ -44,7 +43,6 @@
     tab: 'placeTab',
     icon: 'icon-location',
     title: 'tabs.placeTab',
-    feature: 'csdm-places',
     state: 'places',
     link: '/places'
   }, {

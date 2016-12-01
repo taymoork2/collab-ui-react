@@ -1,3 +1,4 @@
+import './_settings.scss';
 import { SettingSection } from './settingSection';
 import { AuthenticationSetting } from './authenticationSetting.component';
 import { BrandingSetting } from './brandingSetting.component';
@@ -41,13 +42,7 @@ export class SettingsCtrl {
   }
 
   private initBranding() {
-    if (this.Authinfo.isPartner()) {
-      this.FeatureToggleService.atlasBrandingWordingChangeGetStatus().then(() => {
-        // this is done to prevent flashing between the two branding templates,
-        // it will be revealed after toggle is resolved
-        this.branding = new BrandingSetting();
-      });
-    } else if (this.Authinfo.isDirectCustomer()) {
+    if (this.Authinfo.isPartner() || this.Authinfo.isDirectCustomer()) {
       this.branding = new BrandingSetting();
     } else if (this.Authinfo.isCustomerAdmin()) {
       this.Orgservice.getOrg(_.noop).then(response => {

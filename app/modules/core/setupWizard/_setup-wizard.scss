@@ -5,9 +5,12 @@
 @import 'enterpriseSettings/enterprise-settings';
 @import 'finish/finish';
 
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/spacing';
+
 .wizard-main-wrapper {
   .row {
-    @extend .full;
+    max-width: 100% !important;
   }
 }
 

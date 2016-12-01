@@ -1,3 +1,6 @@
+require('./_branding.scss');
+require('./_brandingUpload.scss');
+
 (function () {
   'use strict';
 

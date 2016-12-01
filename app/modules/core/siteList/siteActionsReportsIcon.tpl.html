@@ -1,6 +1,7 @@
 
-  <span id="{{row.entity.license.siteUrl}}_reportsIcon"
-        name="{{row.entity.license.siteUrl}}_reportsIcon">
+  <span ng-if="!row.entity.isLinkedSite"
+      id="{{row.entity.license.siteUrl}}_reportsIcon"
+      name="{{row.entity.license.siteUrl}}_reportsIcon">
 
     <!-- display disabled reports icon -->
     <i ng-if="!row.entity.showSiteLinks ||

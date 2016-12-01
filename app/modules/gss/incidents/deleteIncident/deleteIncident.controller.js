@@ -34,8 +34,8 @@
       IncidentsService
         .deleteIncident(vm.incident.incidentId)
         .then(function () {
-          Notification.success('gss.incidentsPage.deleteIncidentSuccessfully', {
-            incidentName: vm.incidentName
+          Notification.success('gss.incidentsPage.deleteIncidentSucceed', {
+            incidentName: vm.incident.incidentName
           });
 
           goBack();

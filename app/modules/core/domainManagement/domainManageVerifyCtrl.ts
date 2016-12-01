@@ -1,3 +1,5 @@
+require('./_domainManagement.scss');
+
 namespace domainManagement {
 
   class DomainManageVerifyCtrl {

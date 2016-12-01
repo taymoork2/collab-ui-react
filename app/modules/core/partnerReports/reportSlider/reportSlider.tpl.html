@@ -1,0 +1,4 @@
+<div class="report-slider">
+  <cs-slider ng-if="$ctrl.slider" class="slider" slider-floor="$ctrl.floor" slider-ceil="$ctrl.ceil" slider-model="$ctrl.min" slider-high="$ctrl.max" slider-translate="$ctrl.translateSlider"></cs-slider>
+  <cs-select class="pull-right report-filter" id="timeFilter" name="timeFilter" ng-model="$ctrl.selected" options="$ctrl.options" on-change-fn="$ctrl.update()"></cs-select>
+</div>

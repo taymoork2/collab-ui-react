@@ -1,3 +1,8 @@
+@import 'modules/core/setupWizard/planReview/plan-container';
+
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/fonts';
+
 .modal-useradd-dialog {
   width: 900px;
 }
@@ -240,9 +245,6 @@
 }
 
 .warning-icon {
-  @extend .icon;
-  @extend .icon-warning;
-
   margin-right: 12px;
   font-size: 15px;
   color: $brand-warning;
@@ -312,9 +314,6 @@
   }
 
   .plus-icon {
-    @extend .icon;
-    @extend .icon-plus;
-
     border-radius: 50%;
     font-size: 25px;
     margin-left: 10px;
@@ -417,6 +416,26 @@
     margin-left: -20px;
     margin-right: -20px;
   }
+}
+
+.license-entity-type {
+  font-family: $gray-dark-1;
+  font-size: 14px;
+  color: $gray-base;
+  display: block;
+}
+
+.under-label-reposition {
+  margin-top: -12px;
+  margin-left: 32px;
+}
+
+.item-mtg-license {
+  color: $gray-dark-2;
+  font-family: $brand-font-light;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 24px;
 }
 
 .wizard-main {
@@ -572,43 +591,11 @@
   .form-control[disabled].select-toggle {
     border: 1px solid $brand-danger;
     background-color: transparent;
-
-    .icon-arrow-down {
-      &::after {
-        // this is the X icon that appears when no DNs are available
-        @extend %icon-error;
-
-        top: 0;
-        left: -12px;
-        position: absolute;
-        font-size: 18px;
-        line-height: 35px;
-        height: 17px;
-        width: 17px;
-        color: $brand-danger;
-      }
-    }
   }
 
   .select-warning .select-toggle {
     border: 1px solid $brand-warning-dark;
     background-color: transparent;
-
-    .icon-arrow-down {
-      &::after {
-        // this is the X icon that appears when no DNs are available
-        @extend %icon-warning;
-
-        top: 0;
-        left: -12px;
-        position: absolute;
-        font-size: 18px;
-        line-height: 35px;
-        height: 17px;
-        width: 17px;
-        color: $brand-warning-dark;
-      }
-    }
   }
 
   .icon-arrow-down {

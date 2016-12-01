@@ -1,3 +1,5 @@
+require('./_user-overview.scss');
+
 (function () {
   'use strict';
 
@@ -30,6 +32,7 @@
     vm.isValidThumbnail = Userservice.isValidThumbnail;
     vm.clickService = clickService;
     vm.actionList = [];
+    vm.isSharedMultiPartyEnabled = false;
 
     if (vm.currentUser.trainSiteNames) {
       var ciTrainSiteNames = vm.currentUser.trainSiteNames.filter(
@@ -80,7 +83,18 @@
 
     function init() {
       vm.services = [];
+      FeatureToggleService.atlasSMPGetStatus().then(function (smpStatus) {
+        vm.isSharedMultiPartyEnabled = smpStatus;
+      })
+      .then(initServices)
+      .finally(function () {
+        initActionList();
+        getAccountStatus();
+        updateUserTitleCard();
+      });
+    }
 
+    function initServices() {
       if (hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
         if (getServiceDetails('MS')) {
           msgState.detail = $translate.instant('onboardModal.paidMsg');
@@ -89,7 +103,7 @@
       }
       if (hasEntitlement('cloudmeetings')) {
         if (vm.currentUser.trainSiteNames) {
-          confState.detail = $translate.instant('onboardModal.paidConfWebEx');
+          confState.detail = vm.isSharedMultiPartyEnabled ? $translate.instant('onboardModal.paidAdvancedConferencing') : $translate.instant('onboardModal.paidConfWebEx');
           vm.services.push(confState);
         }
       } else if (hasEntitlement('squared-syncup')) {
@@ -107,17 +121,13 @@
       if (hasEntitlement('cloud-contact-center')) {
         if (getServiceDetails('CD')) {
           SunlightConfigService.getUserInfo(vm.currentUser.id).then(
-              function () {
-                setCareCheck(false);
-              }
+            function () {
+              setCareCheck(false);
+            }
           );
         }
 
       }
-
-      initActionList();
-      getAccountStatus();
-      updateUserTitleCard();
     }
 
     function initActionList() {
@@ -321,9 +331,9 @@
             }
             if (getInvitationDetails(response.effectiveLicenses, 'CD')) {
               SunlightConfigService.getUserInfo(vm.currentUser.id).then(
-                  function () {
-                    setCareCheck(true);
-                  }
+                function () {
+                  setCareCheck(true);
+                }
               );
             }
           }

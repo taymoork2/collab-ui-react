@@ -35,7 +35,7 @@ describe('OnboardCtrl: Ctrl', function () {
     ResourceGroupService = _ResourceGroupService_;
     USSService = _USSService_;
 
-    spyOn($state, 'go').and.returnValue($q.when());
+    spyOn($state, 'go').and.returnValue($q.resolve());
     spyOn(Authinfo, 'isOnline').and.returnValue(true);
     modalDefer = $q.defer();
     spyOn($modal, 'open').and.returnValue({
@@ -50,30 +50,30 @@ describe('OnboardCtrl: Ctrl', function () {
     customer = getJSONFixture('huron/json/settings/customer.json');
     resourceGroups = getJSONFixture('core/json/users/resource_groups.json');
 
-    spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.when(fusionServices));
+    spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.resolve(fusionServices));
     spyOn(CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
-        return $q.when(headers);
+        return $q.resolve(headers);
       } else {
-        return $q.when({});
+        return $q.resolve({});
       }
     });
     spyOn(Notification, 'notify');
     spyOn(Notification, 'error');
     spyOn(Orgservice, 'getUnlicensedUsers');
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
-    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
     spyOn(Userservice, 'onboardUsers');
     spyOn(Userservice, 'bulkOnboardUsers');
     spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
     spyOn(Userservice, 'migrateUsers').and.returnValue(getMigrateUsers);
     spyOn(Userservice, 'updateUsers');
     spyOn($scope, '$broadcast').and.callThrough();
-    spyOn(HuronCustomer, 'get').and.returnValue($q.when(customer));
-    spyOn(ResourceGroupService, 'getAll').and.returnValue($q.when(resourceGroups.items));
-    spyOn(USSService, 'getAllUserProps').and.returnValue($q.when([]));
-    spyOn(USSService, 'updateBulkUserProps').and.returnValue($q.when());
+    spyOn(HuronCustomer, 'get').and.returnValue($q.resolve(customer));
+    spyOn(ResourceGroupService, 'getAll').and.returnValue($q.resolve(resourceGroups.items));
+    spyOn(USSService, 'getAllUserProps').and.returnValue($q.resolve([]));
+    spyOn(USSService, 'updateBulkUserProps').and.returnValue($q.resolve());
 
     spyOn($previousState, 'get').and.returnValue({
       state: {
@@ -650,15 +650,15 @@ describe('OnboardCtrl: Ctrl', function () {
   describe('Process CSV with Hybrid Service Resource Groups', function () {
 
     beforeEach(function () {
-      FeatureToggleService.supports.and.returnValue($q.when(true));
+      FeatureToggleService.supports.and.returnValue($q.resolve(true));
       fusionServices = getJSONFixture('core/json/users/hybridServices.json');
-      Orgservice.getHybridServiceAcknowledged.and.returnValue($q.when(fusionServices));
+      Orgservice.getHybridServiceAcknowledged.and.returnValue($q.resolve(fusionServices));
       headers = getJSONFixture('core/json/users/headersForHybridServicesOld.json');
       initController();
     });
 
-    function setCsv(users) {
-      var header = ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Hybrid Calendar Service Resource Group', 'Hybrid Call Service Resource Group', 'Calendar Service', 'Call Service Aware'];
+    function setCsv(users, csvHeader) {
+      var header = csvHeader || ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Hybrid Calendar Service Resource Group', 'Hybrid Call Service Resource Group', 'Calendar Service', 'Call Service Aware'];
       var csv = [header];
       csv.push(users);
       controller.model.file = $.csv.fromArrays(csv);
@@ -666,13 +666,13 @@ describe('OnboardCtrl: Ctrl', function () {
       $timeout.flush();
     }
 
-    function initAndCaptureUpdatedUserProps(users) {
-      setCsv(users);
+    function initAndCaptureUpdatedUserProps(users, header) {
+      setCsv(users, header);
       Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(201));
       var updatedUserProps = [];
       USSService.updateBulkUserProps.and.callFake(function (props) {
         updatedUserProps = props;
-        return $q.when({});
+        return $q.resolve({});
       });
       controller.startUpload();
       $scope.$apply();
@@ -744,7 +744,7 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
     it('should not update USS when the current resource groups are the same', function () {
-      USSService.getAllUserProps.and.returnValue($q.when([
+      USSService.getAllUserProps.and.returnValue($q.resolve([
         { userId: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
           resourceGroups: {
             'squared-fusion-cal': 'be46e71f-c8ea-470b-ba13-2342d310a202',
@@ -758,7 +758,7 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
     it('should update USS when the current resource groups are different', function () {
-      USSService.getAllUserProps.and.returnValue($q.when([
+      USSService.getAllUserProps.and.returnValue($q.resolve([
         { userId: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
           resourceGroups: {
             'squared-fusion-cal': 'be46e71f-c8ea-470b-ba13-2342d310a202',
@@ -775,7 +775,7 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
     it('should update USS with empty resource groups when no longer in the CSV', function () {
-      USSService.getAllUserProps.and.returnValue($q.when([
+      USSService.getAllUserProps.and.returnValue($q.resolve([
         { userId: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
           resourceGroups: {
             'squared-fusion-cal': 'be46e71f-c8ea-470b-ba13-2342d310a202',
@@ -820,13 +820,26 @@ describe('OnboardCtrl: Ctrl', function () {
       expect(USSService.updateBulkUserProps.calls.count()).toEqual(0);
       expect(controller.handleHybridServicesResourceGroups).toBeFalsy();
     });
+
+    it('should not update USS if the CSV does not contain resource groups', function () {
+      USSService.getAllUserProps.and.returnValue($q.resolve([
+        { userId: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
+          resourceGroups: {
+            'squared-fusion-cal': 'be46e71f-c8ea-470b-ba13-2342d310a202',
+            'squared-fusion-uc': '445a3f8e-06a3-476b-b6f1-215a7db09083'
+          }
+        }
+      ]));
+      var updatedUserProps = initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'true', 'true'], ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Calendar Service', 'Call Service Aware']);
+      expect(updatedUserProps.length).toEqual(0);
+    });
   });
 
   describe('Process CSV with new Hybrid Calendar Service entitlements', function () {
 
     beforeEach(function () {
       fusionServices = getJSONFixture('core/json/users/hybridServices.json');
-      Orgservice.getHybridServiceAcknowledged.and.returnValue($q.when(fusionServices));
+      Orgservice.getHybridServiceAcknowledged.and.returnValue($q.resolve(fusionServices));
       headers = getJSONFixture('core/json/users/headersForHybridServicesNew.json');
       initController();
     });

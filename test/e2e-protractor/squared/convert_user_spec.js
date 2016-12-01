@@ -1,13 +1,19 @@
 'use strict';
 
-describe('Convert Users', function () {
+// NOTE: This test does not work! no Convert option for this admin user!
+xdescribe('Convert Users', function () {
+  var token;
 
   describe('Display the overview page', function () {
     it('should login as pbr org admin', function () {
-      login.login('sqtest-admin');
+      login.login('sqtest-admin', '#/users')
+        .then(function (_token) {
+          token = _token;
+          expect(token).toBeTruthy();
+        });
     });
 
-    xit('click on convert button should pop up the convert user modal', function () {
+    it('click on convert button should pop up the convert user modal', function () {
       utils.waitUntilEnabled(landing.convertButton);
       utils.click(landing.convertButton);
       utils.expectIsDisplayed(landing.convertDialog);
@@ -16,7 +22,7 @@ describe('Convert Users', function () {
     });
   });
 
-  xdescribe('convert users', function () {
+  describe('convert users', function () {
     it('convert user operations', function () {
       utils.expectIsDisabled(landing.convertNextButton);
       utils.click(landing.unlicensedUserRow);

@@ -64,6 +64,8 @@
               state = 'support.status';
             } else if (Authinfo.isPartnerUser()) {
               state = 'partnercustomers.list';
+            } else if (Authinfo.isTechSupport()) {
+              state = 'gss';
             }
             $rootScope.services = Authinfo.getServices();
 

@@ -101,6 +101,24 @@ describe('Controller: AARouteToQueueCtrl', function () {
       controller.openQueueTreatmentModal();
       $scope.$apply();
       expect($modal.open).toHaveBeenCalled();
+      modal.resolve();
+      $scope.$apply();
+    });
+
+    it('should open the Modal on Validation success when from Route Call', function () {
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+      controller.menuEntry.actions = [];
+      controller.menuEntry.actions[0] = action;
+      $scope.fromRouteCall = true;
+      controller = $controller('AARouteToQueueCtrl', {
+        $scope: $scope
+      });
+      $scope.$apply();
+      controller.openQueueTreatmentModal();
+      $scope.$apply();
+      expect($modal.open).toHaveBeenCalled();
+      modal.resolve();
+      $scope.$apply();
     });
 
     describe('fromRouteCall', function () {

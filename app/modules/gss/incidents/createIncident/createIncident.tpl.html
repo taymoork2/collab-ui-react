@@ -1,5 +1,5 @@
 <div class="create-incident-page">
-  <div class="conent-common-style small-12 large-10 xlarge-8">
+  <div class="content-common-style small-12 large-10 xlarge-8">
     <form name="createIncidentForm" class="cs-form">
       <div class="cs-form__section">
         <div class="section__info">
@@ -11,7 +11,7 @@
             <div class="cs-input-group">
               <label class="cs-input__label" for="create-incident-name" translate="gss.incidentsPage.incidentName"></label>
 
-              <input id="create-incident-name" cs-input type="text" ng-minlength="3" ng-maxlength="64"
+              <input id="create-incident-name" cs-input type="text" maxlength="200"
                 ng-model="createIncidentCtrl.incidentName">
             </div>
           </div>

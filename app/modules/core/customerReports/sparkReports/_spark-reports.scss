@@ -1,4 +1,7 @@
-@import '../../../sunlight/reports/_care-task';
+@import 'modules/sunlight/reports/_care-task';
+
+@import 'styles/toolkit/spacing';
+@import 'styles/toolkit/layout';
 
 @keyframes graphAxisFade {
   0% { opacity: 0; }

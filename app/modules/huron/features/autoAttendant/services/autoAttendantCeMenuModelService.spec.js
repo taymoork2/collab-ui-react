@@ -10,6 +10,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   var wmenu = getJSONFixture('huron/json/autoAttendant/welcomeMenu.json');
   var ceWelcome = wmenu.ceWelcome;
   var ceWelcomeNoDescription = wmenu.ceWelcomeNoDescription;
+  var ceWelcomeNoDescriptionTemp = wmenu.ceWelcomeNoDescriptionTemp;
   var welcomeMenu = wmenu.welcomeMenu;
   var ceWelcome2 = {
     "callExperienceName": "AA Welcome",
@@ -139,7 +140,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcomeNoDescription, 'openHours');
       var success = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'openHours', _welcomeMenu);
 
-      expect(angular.equals(_ceRecord, ceWelcomeNoDescription)).toBe(true);
+      expect(angular.equals(_ceRecord, ceWelcomeNoDescriptionTemp)).toBe(true);
 
       expect(success).toBe(true);
 
@@ -393,17 +394,49 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     });
   });
 
-  describe('should create temporary solution to write to db for Periodic announcement', function () {
-    it('cesTempPa', function () {
+  describe('should write to db for Periodic announcement', function () {
+    it('cesPa', function () {
       var _action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'routeToQueueId');
       _action.setDescription('routeToQueueDescription');
-      AutoAttendantCeMenuModelService.cesTempPa(_action);
+      AutoAttendantCeMenuModelService.cesPa(_action);
       _action.queueSettings = {};
       expect(angular.isDefined(_action.description)).toBe(true);
       expect(angular.isDefined(_action.queueSettings)).toBe(true);
     });
   });
 
+  describe('should write to db for Initial announcement', function () {
+    it('cesIa', function () {
+      var _action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'routeToQueueId');
+      _action.setDescription('routeToQueueDescription');
+      AutoAttendantCeMenuModelService.cesIa(_action);
+      _action.queueSettings = {};
+      expect(angular.isDefined(_action.description)).toBe(true);
+      expect(angular.isDefined(_action.queueSettings)).toBe(true);
+    });
+  });
+
+  describe('should write to db for fallback', function () {
+    it('cesIa', function () {
+      var _action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'routeToQueueId');
+      _action.setDescription('routeToQueueDescription');
+      AutoAttendantCeMenuModelService.cesFallback(_action);
+      _action.queueSettings = {};
+      expect(angular.isDefined(_action.description)).toBe(true);
+      expect(angular.isDefined(_action.queueSettings)).toBe(true);
+    });
+  });
+
+  describe('should write to db for Moh', function () {
+    it('cesIa', function () {
+      var _action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'routeToQueueId');
+      _action.setDescription('routeToQueueDescription');
+      AutoAttendantCeMenuModelService.cesMoh(_action);
+      _action.queueSettings = {};
+      expect(angular.isDefined(_action.description)).toBe(true);
+      expect(angular.isDefined(_action.queueSettings)).toBe(true);
+    });
+  });
 
   describe('clearCeMenuMap', function () {
     it('should reset the CeMenu internal count to 0', function () {
