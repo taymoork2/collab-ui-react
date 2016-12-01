@@ -13,8 +13,6 @@
       LABEL: "label"
     };
 
-    vm.actionEntry = {};
-
     vm.showLanguageAndVoiceOptions = false;
 
     var languageOption = {
@@ -31,27 +29,21 @@
 
     vm.destinationOptions = [{
       label: $translate.instant('autoAttendant.destinations.Disconnect'),
-      name: 'disconnect',
       action: 'disconnect'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
-      name: 'destinationMenuRouteHunt',
       action: 'routeToHuntGroup'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
-      name: 'destinationMenuRouteAA',
       action: 'goto'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
-      name: 'destinationMenuRouteUser',
       action: 'routeToUser'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
-      name: 'destinationMenuRouteMailbox',
       action: 'routeToVoiceMail'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
-      name: 'destinationMenuRouteToExtNum',
       action: 'route'
     }];
     vm.destination = vm.destinationOptions[0];
@@ -63,9 +55,6 @@
 
     vm.destination = '';
     vm.maxWaitTime = '';
-
-    vm.activate = activate;
-    vm.populateMohRadio = populateMohRadio;
 
     vm.languageOption = languageOption;
     vm.voiceOption = voiceOption;
@@ -79,9 +68,11 @@
     vm.periodicSeconds = [];
     vm.periodicSecond = {};
     vm.periodicMinute = {};
+    vm.minutes = [];
+
     vm.changedPeriodicMinValue = changedPeriodicMinValue;
-    vm.changedPeriodicSecValue = changedPeriodicSecValue;
-    vm.areSecondsDisabled = isDisabled;
+
+    vm.isDisabled = isDisabled;
 
     var mohPlayAction = undefined;
     var fallbackAction = undefined;
@@ -100,7 +91,6 @@
       }
       updateMaxWaitTime();
       updatePeriodicTime();
-      updateFallback();
       autoValidate();
       AACommonService.setQueueSettingsStatus(true);
       $modalInstance.close();
@@ -120,13 +110,10 @@
       vm.menuEntry.actions[0].queueSettings.voice = vm.voiceOption.value;
     }
 
-    function updateFallback() {
-      fallbackAction.setName(vm.destination.action);
-    }
-
     function updatePeriodicTime() {
-      var periodicMinutes = (vm.periodicMinute.label * 60);
-      var periodicTime = periodicMinutes + vm.periodicSecond.label;
+      var periodicMinutes = (vm.periodicMinute * 60);
+      var periodicTime = periodicMinutes + vm.periodicSecond;
+
       paAction.interval = periodicTime;
     }
 
@@ -150,7 +137,30 @@
     }
 
     function isDisabled() {
-      return vm.periodicMinute.label == '5';
+      return _.isEqual(vm.periodicMinute, 5);
+    }
+
+    function changedPeriodicMinValue() {
+      if (_.isEqual(vm.periodicMinute, 0)) {
+        // remove 'zero' from selection
+        if (_.isEqual(vm.periodicSeconds[0], 0)) {
+          vm.periodicSeconds.splice(0, 1);
+        }
+
+        if (_.isEqual(vm.periodicSecond, 0)) {
+          vm.periodicSecond = vm.periodicSeconds[0];
+        }
+        return;
+      }
+
+      if (_.indexOf(vm.periodicSeconds, 0) === -1) {
+        vm.periodicSeconds.splice(0, 1, 0);
+      }
+
+      if (_.isEqual(vm.periodicMinute, 5)) {
+        vm.periodicSecond = vm.periodicSeconds[0];
+      }
+      return;
     }
 
     function isDestinationValid() {
@@ -180,8 +190,8 @@
     }
 
     function populateLanguageVoice() {
-      vm.languageOptions.sort(AACommonService.sortByProperty('label'));
-      vm.voiceOptions.sort(AACommonService.sortByProperty('label'));
+      vm.languageOptions.sort(AACommonService.sortByProperty(properties.LABEL));
+      vm.voiceOptions.sort(AACommonService.sortByProperty(properties.LABEL));
 
       var voice = vm.menuEntry.actions[0].queueSettings.voice;
 
@@ -192,32 +202,13 @@
     }
 
     function populatePeriodicTime() {
-      _.times(6, function (i) {
-        vm.periodicMinutes.push({
-          index: i,
-          label: i
-        });
-      });
-      _.times(11, function (i) {
-        vm.periodicSeconds.push({
-          index: i,
-          label: (i + 1) * 5
-        });
-      });
+      vm.periodicMinutes = _.range(6);
+
+      vm.periodicSeconds = _.range(0, 60, 5);
+
       if (!_.isEqual(paAction.interval, '')) {
-        var periodicMinute = parseInt(paAction.interval / 60, 10);
-        vm.periodicMinute = {
-          index: periodicMinute,
-          label: periodicMinute
-        };
-        var periodicSecond = paAction.interval - (periodicMinute * 60);
-        vm.periodicSecond = {
-          index: parseInt(periodicSecond / 5, 10) - 1,
-          label: periodicSecond
-        };
-        if (periodicMinute == '5') {
-          vm.areSecondsDisabled = false;
-        }
+        vm.periodicMinute = parseInt(paAction.interval / 60, 10);
+        vm.periodicSecond = paAction.interval - (vm.periodicMinute * 60);
       } else {
         vm.periodicMinute = vm.periodicMinutes[0];
         vm.periodicSecond = vm.periodicSeconds[8];
@@ -225,18 +216,12 @@
     }
 
     function populateMaxWaitTime() {
-      vm.minutes = [];
-      _.times(60, function (i) {
-        vm.minutes.push({
-          index: i,
-          label: i + 1
-        });
-      });
+      vm.minutes = _.range(1, 61);
     }
 
     //populating fallback drop down in sorted order
     function populateFallbackDropDown() {
-      vm.destinationOptions.sort(AACommonService.sortByProperty('label'));
+      vm.destinationOptions.sort(AACommonService.sortByProperty(properties.LABEL));
 
       vm.destination = _.find(vm.destinationOptions, function (option) {
         return (_.isEqual(option.action, fallbackAction.name));
@@ -248,35 +233,6 @@
         vm.musicOnHold = DEFAULT_MOH;
       } else {
         vm.musicOnHold = CUSTOM_MOH;
-      }
-    }
-
-    function changedPeriodicMinValue() {
-      if (vm.periodicMinute.index == '0') {
-        vm.periodicSeconds.splice(0, 1);
-        if (vm.periodicSecond.label == 0) {
-          vm.periodicSecond = vm.periodicSeconds[0];
-        }
-        vm.areSecondsDisabled = true;
-      } else {
-        if (vm.periodicSeconds[0].label != '0') {
-          vm.periodicSeconds.splice(0, 0, { index: 0, label: 0 });
-        }
-        vm.areSecondsDisabled = true;
-      }
-      if (vm.periodicMinute.index == '5') {
-        vm.periodicSecond = vm.periodicSeconds[0];
-        vm.areSecondsDisabled = false;
-      }
-    }
-
-    function changedPeriodicSecValue() {
-      if ((vm.periodicSecond.index == 0) && (vm.periodicMinute.index == 0)) {
-        if (vm.periodicSeconds[0].label == 0) {
-          vm.periodicSeconds.splice(0, 1);
-        }
-        vm.periodicSecond = vm.periodicSeconds[0];
-        vm.areSecondsDisabled = true;
       }
     }
 
