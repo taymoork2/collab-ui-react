@@ -247,7 +247,7 @@
       return $http.patch(url, {
         releaseChannel: releaseChannel
       })
-        .then(extractDataFromResponse);
+        .then(extractData);
     }
 
     function deregisterCluster(clusterId) {

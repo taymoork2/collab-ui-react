@@ -2078,7 +2078,7 @@
       "releaseChannelClusterDescription": "Select the release channel for all Hybrid Services running in this cluster.",
       "releaseChannelResourceGroupDescription": "Select the release channel for all Hybrid Services running in this group.",
       "releaseChannelTip": "To change the release channel for this cluster, assign it to a resource group with the preferred release channel.",
-      "groupReleaseChannelSaved": "Release channel saved successfully",
+      "releaseChannelSaved": "Release channel saved successfully",
       "orgHasNoAccessToChannel": "The resource group is configured with the “{{currentReleaseChannel}}” release channel, which is no longer available to your organization. Set the release channel to “{{stableReleaseChannel}}” to restore service.",
       "setToStable": "Set to {{stableReleaseChannel}}"
     },

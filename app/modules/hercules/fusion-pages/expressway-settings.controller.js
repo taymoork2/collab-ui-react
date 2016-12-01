@@ -13,7 +13,6 @@
     vm.enabledServices = [];
     vm.newClusterName = '';
     vm.showResourceGroups = hasF237FeatureToggle;
-    vm.allowedChannels = [];
     // Translations
     vm.upgradeSchedule = {
       title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader'

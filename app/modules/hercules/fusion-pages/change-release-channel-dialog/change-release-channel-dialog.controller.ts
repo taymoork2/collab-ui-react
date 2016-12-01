@@ -28,12 +28,10 @@ export class ChangeReleaseChannelDialogController {
         return this.$q.reject();
       })
       .then((data) => {
-        this.Notification.success('hercules.releaseChannelSection.groupReleaseChannelSaved');
+        this.Notification.success('hercules.releaseChannelSection.releaseChannelSaved');
         this.$modalInstance.close(data);
       })
-      .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-      });
+      .catch(error => this.Notification.errorWithTrackingId(error, 'hercules.genericFailure'));
   }
 }
 

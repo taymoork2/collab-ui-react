@@ -73,8 +73,8 @@ class ReleaseChannelSectionController implements ng.IComponentController {
     // The function below gets all allowed channels for the current org,
     // nothing specific to a resource group. Bad naming.
     return this.ResourceGroupService.getAllowedChannels()
-      .then((channels) => {
-        _.forEach(ReleaseChannelSectionController.restrictedChannels, (restrictedChannel) => {
+      .then(channels => {
+        _.forEach(ReleaseChannelSectionController.restrictedChannels, restrictedChannel => {
           if (_.includes(channels, restrictedChannel)) {
             this.releaseChannelOptions.push({
               label: this.$translate.instant(`hercules.fusion.add-resource-group.release-channel.${restrictedChannel}`),
@@ -83,9 +83,7 @@ class ReleaseChannelSectionController implements ng.IComponentController {
           }
         });
       })
-      .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-      });
+      .catch(error => this.Notification.errorWithTrackingId(error, 'hercules.genericFailure'));
   }
 
   public releaseChannelChanged(): void {
@@ -105,10 +103,7 @@ class ReleaseChannelSectionController implements ng.IComponentController {
     .then(() => {
       this.data.releaseChannel = this.releaseChannelSelected.value;
     })
-    .catch(() => {
-      // User cancelled, set it back
-      this.setSelectedReleaseChannelOption(oldReleaseChannel);
-    });
+    .catch(() => this.setSelectedReleaseChannelOption(oldReleaseChannel));
   }
 
   public resetReleaseChannel(): ng.IPromise<any> {
@@ -125,9 +120,7 @@ class ReleaseChannelSectionController implements ng.IComponentController {
         this.showResetSection = false;
         this.Notification.success('hercules.resourceGroupSettings.releaseChannelSection');
       })
-      .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-      });
+      .catch(error => this.Notification.errorWithTrackingId(error, 'hercules.genericFailure'));
   }
 
   public isDisabled(): boolean {
