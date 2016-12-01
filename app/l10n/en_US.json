@@ -5512,8 +5512,8 @@
     "ciscouc.devops": "Spark Call Devops",
     "ciscouc.devsupport": "Spark Call Dev Support",
     "compliance": "Compliance Officer",
-    "ciscouc.devsupport.phonelogaccess": "Spark Call Phone Log Access",
-    "ciscouc.devsupport.phonesupport": "Spark Call Phone Support"
+    "ciscouc.phonelogaccess": "Spark Call Phone Log Access",
+    "ciscouc.phonesupport": "Spark Call Phone Support"
   },
   "atlasRoles": {
     "Full_Admin": "Full Admin",
