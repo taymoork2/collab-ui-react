@@ -305,6 +305,24 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
 
       expect(controller.showLanguageAndVoiceOptions).toBe(true);
     });
+
+    it('when showLanguageAndVoiceOptions is true updateLanguageVoice should be called', function () {
+      $scope.keyIndex = null;
+      spyOn(AAUiModelService, 'getUiModel').and.returnValue(ui);
+
+      var controller = $controller('AANewTreatmentModalCtrl', {
+        $scope: $scope,
+        $modalInstance: modalFake,
+        aa_schedule: schedule,
+        aa_menu_id: menuId,
+        aa_index: index,
+        aa_key_index: keyIndex,
+        aa_from_route_call: true
+      });
+
+      controller.ok();
+      $scope.$apply();
+    });
   });
 
   describe('populatePeriodicTime', function () {

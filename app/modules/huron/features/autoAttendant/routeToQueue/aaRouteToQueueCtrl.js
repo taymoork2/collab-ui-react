@@ -7,7 +7,7 @@
 
 
   /* @ngInject */
-  function AARouteToQueueCtrl($scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AANotificationService) {
+  function AARouteToQueueCtrl($scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AANotificationService, AALanguageService) {
 
     var vm = this;
     vm.hideQueues = true;
@@ -133,6 +133,11 @@
         vm.menuEntry.actions[0].setValue(vm.queueSelected.id);
       } else {
         vm.menuKeyEntry.actions[0].setValue(vm.queueSelected.id);
+        if (!_.isEmpty(vm.menuEntry.headers[0].language)) {
+          var queueSettings = _.get(vm.menuKeyEntry, 'actions[0].queueSettings');
+          queueSettings.language = vm.menuEntry.headers[0].language;
+          queueSettings.voice = vm.menuEntry.headers[0].voice;
+        }
       }
       AACommonService.setPhoneMenuStatus(true);
     }
@@ -170,6 +175,14 @@
       }
       if (!_.has(queueSettings, 'maxWaitTime')) {
         queueSettings.maxWaitTime = maxWaitTime; //default, 15 mins.
+      }
+      if (!_.has(queueSettings, 'language')) {
+        var languageOption = AALanguageService.getLanguageOption();
+        queueSettings.language = languageOption.value;//default English(US).
+      }
+      if (!_.has(queueSettings, 'voice')) {
+        var voiceOption = AALanguageService.getVoiceOption();
+        queueSettings.voice = voiceOption.value; //default Vanessa.
       }
     }
 

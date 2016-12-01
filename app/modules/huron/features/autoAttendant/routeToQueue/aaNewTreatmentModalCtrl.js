@@ -86,7 +86,6 @@
     var mohPlayAction = undefined;
     var fallbackAction = undefined;
     var paAction = undefined;
-    var periodicTime = '';
 
     var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
     var DEFAULT_MOH = 'musicOnHoldDefault';
@@ -96,7 +95,11 @@
 
     //else the dismiss was called
     function ok() {
+      if (vm.showLanguageAndVoiceOptions) {
+        updateLanguageVoice();
+      }
       updateMaxWaitTime();
+      updatePeriodicTime();
       updateFallback();
       autoValidate();
       AACommonService.setQueueSettingsStatus(true);
@@ -112,8 +115,19 @@
       }
     }
 
+    function updateLanguageVoice() {
+      vm.menuEntry.actions[0].queueSettings.language = vm.languageOption.value;
+      vm.menuEntry.actions[0].queueSettings.voice = vm.voiceOption.value;
+    }
+
     function updateFallback() {
       fallbackAction.setName(vm.destination.action);
+    }
+
+    function updatePeriodicTime() {
+      var periodicMinutes = (vm.periodicMinute.label * 60);
+      var periodicTime = periodicMinutes + vm.periodicSecond.label;
+      paAction.interval = periodicTime;
     }
 
     function updateMaxWaitTime() {
@@ -163,6 +177,18 @@
       } else {
         vm.voiceOption = vm.voiceOptions[0];
       }
+    }
+
+    function populateLanguageVoice() {
+      vm.languageOptions.sort(AACommonService.sortByProperty('label'));
+      vm.voiceOptions.sort(AACommonService.sortByProperty('label'));
+
+      var voice = vm.menuEntry.actions[0].queueSettings.voice;
+
+      vm.voiceOption = AALanguageService.getVoiceOption(voice);
+      vm.languageOption = AALanguageService.getLanguageOption(voice);
+      vm.voiceBackup = vm.voiceOption;
+      setVoiceOptions();
     }
 
     function populatePeriodicTime() {
@@ -215,12 +241,6 @@
       vm.destination = _.find(vm.destinationOptions, function (option) {
         return (_.isEqual(option.action, fallbackAction.name));
       });
-
-      vm.languageOptions.sort(AACommonService.sortByProperty('label'));
-      vm.voiceOptions.sort(AACommonService.sortByProperty('label'));
-
-      vm.languageOption = AALanguageService.getLanguageOption();
-      vm.voiceOption = AALanguageService.getVoiceOption();
     }
 
     function populateMohRadio() {
@@ -248,9 +268,6 @@
         vm.periodicSecond = vm.periodicSeconds[0];
         vm.areSecondsDisabled = false;
       }
-      var periodicMinutes = (vm.periodicMinute.label * 60);
-      periodicTime = periodicMinutes + vm.periodicSecond.label;
-      paAction.interval = periodicTime;
     }
 
     function changedPeriodicSecValue() {
@@ -261,9 +278,6 @@
         vm.periodicSecond = vm.periodicSeconds[0];
         vm.areSecondsDisabled = true;
       }
-      var periodicSeconds = (vm.periodicMinute.label * 60);
-      periodicTime = periodicSeconds + vm.periodicSecond.label;
-      paAction.interval = periodicTime;
     }
 
     //get queueSettings menuEntry -> inner menu entry type (moh, initial, periodic...)
@@ -292,6 +306,9 @@
     }
 
     function initializeView() {
+      if (vm.showLanguageAndVoiceOptions) {
+        populateLanguageVoice();
+      }
       populateMohRadio();
       populatePeriodicTime();
       populateMaxWaitTime();

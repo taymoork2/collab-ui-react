@@ -132,6 +132,11 @@
 
       vm.voiceBackup = vm.voiceOption;
       setVoiceOptions();
+
+      var menu = vm.menuEntry;
+      if (menu.entries) {
+        updateQueueSettingsLanguageVoice(menu);
+      }
     }
 
     /*
@@ -140,6 +145,8 @@
     */
     function updateVoiceOption(menu) {
       if (menu.entries) {
+        updateQueueSettingsLanguageVoice(menu);
+
         _.each(menu.entries, function (entry) {
           if (AutoAttendantCeMenuModelService.isCeMenu(entry)) {
             var submenuHeader = getSayActionHeader(entry);
@@ -312,6 +319,16 @@
 
             return;
           }
+      }
+    }
+
+    function updateQueueSettingsLanguageVoice(menu) {
+      for (var i = 0; i < menu.entries.length; i++) {
+        if (_.get(menu.entries[i], 'actions[0].queueSettings')) {
+          var queueSettings = _.get(menu.entries[i], 'actions[0].queueSettings');
+          queueSettings.language = AALanguageService.getLanguageCode(vm.languageOption);
+          queueSettings.voice = vm.voiceOption.value;
+        }
       }
     }
 

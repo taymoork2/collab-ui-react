@@ -301,6 +301,7 @@
       cesMaxWaitTime: cesMaxWaitTime,
       cesFallback: cesFallback,
       cesIa: cesIa,
+      cesLanguageVoice: cesLanguageVoice,
       constructCesPa: constructCesPa,
       constructCesIa: constructCesIa,
       constructCesMoh: constructCesMoh,
@@ -506,6 +507,7 @@
         } catch (exception) {
           return;
         }
+        cesLanguageVoice(action, inAction.routeToQueue);
         cesMaxWaitTime(action, inAction.routeToQueue);
         cesMoh(action, inAction.routeToQueue);
         cesIa(action, inAction.routeToQueue);
@@ -522,17 +524,22 @@
       }
     }
 
-    function cesMaxWaitTime(action, inAction) {
+    function cesLanguageVoice(action, inAction) {
       if (action) {
-        try {
-          if (_.isUndefined(action.queueSettings)) {
-            inAction.description = JSON.parse(inAction.description);
-            action.queueSettings = {};
-          }
-          action.queueSettings.maxWaitTime = inAction.queueMaxTime;
-        } catch (exception) {
+        if (_.isUndefined(action.queueSettings)) {
           action.queueSettings = {};
         }
+        action.queueSettings.language = inAction.language;
+        action.queueSettings.voice = inAction.voice;
+      }
+    }
+
+    function cesMaxWaitTime(action, inAction) {
+      if (action) {
+        if (_.isUndefined(action.queueSettings)) {
+          action.queueSettings = {};
+        }
+        action.queueSettings.maxWaitTime = inAction.queueMaxTime;
       }
     }
 
@@ -542,8 +549,8 @@
     function cesMoh(action, inAction) {
       if (action) {
         try {
+          inAction.description = JSON.parse(inAction.description);
           if (_.isUndefined(action.queueSettings)) {
-            inAction.description = JSON.parse(inAction.description);
             action.queueSettings = {};
           }
           action.queueSettings.musicOnHold = constructCesMoh(inAction);
@@ -1169,6 +1176,8 @@
       var newAction = {};
       if (action) {
         newAction.id = action.value;
+        newAction.language = action.queueSettings.language;
+        newAction.voice = action.queueSettings.voice;
         newAction.queueMoH = action.queueSettings.musicOnHold.actions[0].getValue();
         newAction.queueInitialAnnouncement = action.queueSettings.initialAnnouncement.actions[0].getValue();
         var queuePeriodicAnnouncement = action.queueSettings.periodicAnnouncement.actions[0].getValue();
