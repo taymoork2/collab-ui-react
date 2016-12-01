@@ -2543,38 +2543,12 @@
               },
             }
           })
-          .state('hds', {
-            templateUrl: 'modules/hds/resources/overview.html',
-            controller: 'HDSServiceController',
-            controllerAs: 'hdsServiceController',
+          .state('hds-settings', {
+            templateUrl: 'modules/hds/settings/settings.html',
+            controller: 'HDSSettingsController',
+            controllerAs: 'hdsSettings',
+            url: '/services/hds/settings',
             parent: 'main',
-            resolve: {
-              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
-              }
-            }
-          })
-          .state('hds.list', {
-            url: '/hds/resources',
-            views: {
-              'fullPane': {
-                templateUrl: 'modules/hds/resources/cluster-list.html'
-              }
-            },
-            resolve: {
-              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
-              }
-            }
-          })
-          .state('hds.settings', {
-            url: '/hds/settings',
-            views: {
-              'fullPane': {
-                //TODO: change to hds-settings.html
-                templateUrl: 'modules/hds/resources/cluster-list.html'
-              }
-            },
             resolve: {
               hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
