@@ -64,9 +64,7 @@
     };
 
     var isSetup = function (id) {
-      var extension = _.find($stateParams.extensions, function (extension) {
-        return extension.id === id;
-      });
+      var extension = _.find($stateParams.extensions, { id: id });
       return extension ? extension.isSetup : false;
     };
 
