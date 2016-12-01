@@ -16,7 +16,7 @@
 
   <div class="row text-center">
     <div class="columns medium-6">
-      <div class="box">
+      <div class="box center">
         <div class="box-content" ng-class="{'disabled': csv.isCsvValid}">
           <cr-user-csv-export is-over-export-threshold="csv.isOverExportThreshold"
                               on-status-change="csv.onExportDownloadStatus(isExporting, dataUrl)"
@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="columns medium-6">
-      <div class="box file-content">
+      <div class="box center file-content">
         <div class="box-content" ng-class="{'disabled': csv.isExporting}">
           <cr-user-csv-file></cr-user-csv-file>
           <div class="disable-mask" ng-click="" ng-if="csv.isExporting"></div>

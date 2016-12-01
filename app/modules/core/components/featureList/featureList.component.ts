@@ -1,3 +1,5 @@
+import './featureList.scss';
+
 export interface IFeature {
   name: string;
   icon?: string;

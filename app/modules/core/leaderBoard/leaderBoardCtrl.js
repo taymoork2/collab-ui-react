@@ -1,3 +1,5 @@
+require('./_leaderBoard.scss');
+
 (function () {
   'use strict';
 

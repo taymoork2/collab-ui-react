@@ -500,7 +500,9 @@
         atlasContextServiceTrials: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         placesEnabled: FeatureToggleService.supports(FeatureToggleService.features.csdmPstn),
-        huronSimplifiedTrialFlow: FeatureToggleService.supports(FeatureToggleService.features.huronSimplifiedTrialFlow)
+        huronSimplifiedTrialFlow: FeatureToggleService.supports(FeatureToggleService.features.huronSimplifiedTrialFlow),
+        atlasCreateTrialBackendEmail: FeatureToggleService.atlasCreateTrialBackendEmailGetStatus(),
+        atlasTrialsShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus()
       })
         .then(function (results) {
           vm.showRoomSystems = true;
@@ -512,6 +514,8 @@
           vm.messageTrial.enabled = true;
           vm.meetingTrial.enabled = true;
           vm.showContextServiceTrial = true;
+          vm.atlasCreateTrialBackendEmailEnabled = results.atlasCreateTrialBackendEmail;
+          vm.atlasTrialsShipDevicesEnabled = results.atlasTrialsShipDevices;
 
           if (vm.webexTrial.enabled) {
             vm.showWebex = true;
@@ -735,11 +739,11 @@
           return response;
         })
         .then(function (response) {
-          // suppress email if 'atlas-webex-trial' feature-toggle is enabled (more appropriately
+          // suppress email if webex trial is enabled (more appropriately
           // handled by the backend process once provisioning is complete)
-          if (!vm.webexTrial.enabled) {
+          if (!vm.webexTrial.enabled && !vm.atlasCreateTrialBackendEmailEnabled) {
             return EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
-                vm.details.licenseDuration, Authinfo.getOrgId())
+              vm.details.licenseDuration, Authinfo.getOrgId())
               .catch(function (response) {
                 Notification.errorResponse(response, 'didManageModal.emailFailText');
               })
@@ -816,16 +820,12 @@
     }
 
     function setDeviceModal() {
-      var overrideTestOrg = false;
+      var overrideTestOrg = vm.atlasTrialsShipDevicesEnabled;
       var isTestOrg = false;
 
-      $q.all([
-        FeatureToggleService.atlasTrialsShipDevicesGetStatus(),
-        Orgservice.getAdminOrg(_.noop)
-      ]).then(function (results) {
-        overrideTestOrg = results[0];
-        if (results[1].data.success) {
-          isTestOrg = results[1].data.isTestOrg;
+      Orgservice.getAdminOrg(_.noop).then(function (results) {
+        if (results.data.success) {
+          isTestOrg = results.data.isTestOrg;
         }
       }).finally(function () {
         // Display devices modal if not a test org or if toggle is set

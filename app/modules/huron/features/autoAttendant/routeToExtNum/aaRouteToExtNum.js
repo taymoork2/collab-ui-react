@@ -44,14 +44,17 @@
     /////////////////////
 
     function populateUiModel() {
+      var entry;
       if (fromRouteCall) {
-        vm.model.phoneNumberInput.phoneNumber = vm.menuEntry.actions[0].getValue();
+        entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
       } else {
-        vm.model.phoneNumberInput.phoneNumber = vm.menuKeyEntry.actions[0].getValue();
+        entry = _.get(vm.menuKeyEntry, 'queueSettings.fallback', vm.menuKeyEntry);
       }
+      vm.model.phoneNumberInput.phoneNumber = entry.actions[0].getValue();
     }
 
     function saveUiModel() {
+      var entry;
       var num = vm.model.phoneNumberInput.phoneNumber;
 
       if (num) {
@@ -59,10 +62,11 @@
       }
 
       if (fromRouteCall) {
-        vm.menuEntry.actions[0].setValue(num);
+        entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
       } else {
-        vm.menuKeyEntry.actions[0].setValue(num);
+        entry = _.get(vm.menuKeyEntry, 'queueSettings.fallback', vm.menuKeyEntry);
       }
+      entry.actions[0].setValue(num);
 
       AACommonService.setPhoneMenuStatus(true);
 
@@ -98,24 +102,24 @@
         vm.uiMenu = ui[$scope.schedule];
         vm.menuEntry = vm.uiMenu.entries[$scope.index];
         fromRouteCall = true;
-        // if our route is not there, add if no actions, or initialize
-        if (vm.menuEntry.actions.length === 0) {
-          action = AutoAttendantCeMenuModelService.newCeActionEntry(rtExtNum, '');
-          vm.menuEntry.addAction(action);
-        } else {
 
-          if (!(vm.menuEntry.actions[0].getName() === rtExtNum)) {
-            // make sure action is External Number not AA, HG, User, etc
-            vm.menuEntry.actions[0].setName(rtExtNum);
-            vm.menuEntry.actions[0].setValue('');
+        if (!$scope.fromFallback) {
+          // if our route is not there, add if no actions, or initialize
+          if (vm.menuEntry.actions.length === 0) {
+            action = AutoAttendantCeMenuModelService.newCeActionEntry(rtExtNum, '');
+            vm.menuEntry.addAction(action);
+          } else {
+            if (!(vm.menuEntry.actions[0].getName() === rtExtNum)) {
+              // make sure action is External Number not AA, HG, User, etc
+              vm.menuEntry.actions[0].setName(rtExtNum);
+              vm.menuEntry.actions[0].setValue('');
+              delete vm.menuEntry.actions[0].queueSettings;
+            }
           }
-
+          vm.menuEntry.routeToId = $scope.$id;
+          // used by aaValidationService to identify this menu
+          vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, vm.menuEntry.routeToId);
         }
-        vm.menuEntry.routeToId = $scope.$id;
-
-        // used by aaValidationService to identify this menu
-
-        vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, vm.menuEntry.routeToId);
 
       } else {
         var action;
@@ -124,7 +128,7 @@
           var entry = vm.menuEntry.entries[$scope.keyIndex];
           action = _.get(entry, 'actions[0]');
           if (action && _.get(action, 'name') === 'routeToQueue') {
-            vm.menuKeyEntry = action.queueSettings.fallBack;
+            vm.menuKeyEntry = action;
           } else {
             vm.menuKeyEntry = entry;
           }
@@ -141,6 +145,21 @@
         vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, vm.menuKeyEntry.routeToId);
 
       }
+
+      if ($scope.fromFallback) {
+        if (_.has(vm.menuKeyEntry, 'queueSettings')) {
+          entry = vm.menuKeyEntry;
+        } else {
+          entry = vm.menuEntry.actions[0];
+        }
+
+        var fallbackAction = _.get(entry, 'queueSettings.fallback.actions[0]');
+        if (fallbackAction && (fallbackAction.getName() !== rtExtNum)) {
+          fallbackAction.setName(rtExtNum);
+          fallbackAction.setValue('');
+        }
+      }
+
       populateUiModel();
 
     }

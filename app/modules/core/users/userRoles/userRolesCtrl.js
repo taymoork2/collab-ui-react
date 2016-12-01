@@ -1,3 +1,5 @@
+require('./_user-roles.scss');
+
 (function () {
   'use strict';
 

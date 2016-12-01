@@ -1,3 +1,5 @@
+require('./_csv-download.scss');
+
 (function () {
   'use strict';
 

@@ -2,7 +2,7 @@
 
 describe('Controller: Care Local Settings', function () {
   var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy, $scope,
-    userInfoUrl, sunlightCSOnboardUrl;
+    sunlightCSOnboardUrl;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
     getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org')
@@ -23,7 +23,6 @@ describe('Controller: Care Local Settings', function () {
       $scope.wizard = {};
       $scope.wizard.isNextDisabled = false;
       orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
-      userInfoUrl = UrlConfig.getAdminServiceUrl() + 'userauthinfo';
       sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
       sunlightCSOnboardUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/csonboard';
       controller = $controller('CareLocalSettingsCtrl', {
@@ -41,7 +40,6 @@ describe('Controller: Care Local Settings', function () {
 
   describe('CareSettings - Init', function () {
     it('should show enabled setup care button , if Org is not onboarded already.', function () {
-      $httpBackend.expectGET(userInfoUrl).respond(200, { roles: 'Full_Admin' });
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
       expect(controller).toBeDefined();
       expect(controller.state).toBe(controller.ONBOARDED);
@@ -50,7 +48,6 @@ describe('Controller: Care Local Settings', function () {
     });
 
     it('should disable setup care, if already onboarded', function () {
-      $httpBackend.expectGET(userInfoUrl).respond(200, { roles: 'Full_Admin' });
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Success' });
       expect(controller.state).toBe(controller.ONBOARDED);
       $httpBackend.flush();
@@ -58,7 +55,6 @@ describe('Controller: Care Local Settings', function () {
     });
 
     it('should show loading animation on setup care button, if Org orboarding is in progress', function () {
-      $httpBackend.expectGET(userInfoUrl).respond(200, { roles: 'Full_Admin' });
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Pending' });
       expect(controller.state).toBe(controller.ONBOARDED);
       $httpBackend.flush();
@@ -66,21 +62,18 @@ describe('Controller: Care Local Settings', function () {
     });
 
     it('should call updateChatConfig, if already onboarded and orgName is not present', function () {
-      $httpBackend.expectGET(userInfoUrl).respond(200, { roles: 'Full_Admin' });
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Success' });
       $httpBackend.flush();
       expect(sunlightConfigService.updateChatConfig).toHaveBeenCalled();
     });
 
     it('should call updateChatConfig, if already onboarded and orgName is empty', function () {
-      $httpBackend.expectGET(userInfoUrl).respond(200, { roles: 'Full_Admin' });
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Success', orgName: "" });
       $httpBackend.flush();
       expect(sunlightConfigService.updateChatConfig).toHaveBeenCalled();
     });
 
     it('should not call updateChatConfig, if already onboarded and orgName is present', function () {
-      $httpBackend.expectGET(userInfoUrl).respond(200, { roles: 'Full_Admin' });
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Success', orgName: "fake org name" });
       $httpBackend.flush();
       expect(sunlightConfigService.updateChatConfig).not.toHaveBeenCalled();
@@ -89,7 +82,6 @@ describe('Controller: Care Local Settings', function () {
 
   describe('CareSettings - Setup Care - Success', function () {
     it('should call the onboard config api and flash setup care button', function () {
-      $httpBackend.expectGET(userInfoUrl).respond(200, { roles: 'Full_Admin' });
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
       $httpBackend.flush();
       expect(controller.state).toBe(controller.NOT_ONBOARDED);
@@ -103,7 +95,6 @@ describe('Controller: Care Local Settings', function () {
       spyOn(Notification, 'success').and.callFake(function () {
         return true;
       });
-      $httpBackend.expectGET(userInfoUrl).respond(200, { roles: 'Full_Admin' });
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
       $httpBackend.flush();
       expect(controller.state).toBe(controller.NOT_ONBOARDED);
@@ -122,7 +113,6 @@ describe('Controller: Care Local Settings', function () {
       spyOn(Notification, 'error').and.callFake(function () {
         return true;
       });
-      $httpBackend.expectGET(userInfoUrl).respond(200, { roles: 'Full_Admin' });
       $httpBackend.whenGET(sunlightChatConfigUrl).respond(404, {});
       $httpBackend.expectPUT(sunlightCSOnboardUrl).respond(200, {});
       controller.onboardToCs();
@@ -139,7 +129,6 @@ describe('Controller: Care Local Settings', function () {
       spyOn(Notification, 'errorWithTrackingId').and.callFake(function () {
         return true;
       });
-      $httpBackend.expectGET(userInfoUrl).respond(200, { roles: 'Full_Admin' });
       $httpBackend.whenGET(sunlightChatConfigUrl).respond(500, {});
       $httpBackend.expectPUT(sunlightCSOnboardUrl).respond(200, {});
       controller.onboardToCs();
@@ -154,7 +143,6 @@ describe('Controller: Care Local Settings', function () {
 
     it('should disable setup care button, if failed to get status on loading', function () {
       expect(controller.state).toBe(controller.ONBOARDED);
-      $httpBackend.expectGET(userInfoUrl).respond(200, { roles: 'Full_Admin' });
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(403, {});
       $httpBackend.flush();
       expect(controller.state).toBe(controller.ONBOARDED);

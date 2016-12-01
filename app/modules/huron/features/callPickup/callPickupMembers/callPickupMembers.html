@@ -1,0 +1,43 @@
+<script type="text/ng-template" id="userTemplate.html">
+  <a>
+    <span ng-bind-html="match.label | typeaheadHighlight:query"></span>
+  </a>
+</script>
+
+<div class="call-pickup-member-lookup">
+  <div class="typeahead-large">
+    <input id="memberInput" ng-model="$ctrl.memberName"
+           ng-class="{'error': $ctrl.errorMemberInput}"
+           ng-change="$ctrl.fetchMembers()"
+           typeahead="mem as $ctrl.getDisplayName(mem) for mem in $ctrl.memberList | filter:$viewValue | limitTo:3"
+           typeahead-on-select="$ctrl.selectMember($item, $event)"
+           typeahead-template-url="userTemplate.html"
+           placeholder="{{:: 'callPickup.memberPlaceholder' | translate}}"
+           typeahead-min-length="3" typeahead-wait-ms="200"
+           focus-on/>
+    <p class="input-description" translate="callPickup.memberHint"></p>
+    <div class="warning">
+	    <div class="pi-cs-input__messages">
+        <div class="message member-warning" translate="callPickup.memberWarning"></div>
+      </div>
+    </div>
+  </div>
+  <div id="cs-card-members">
+    <cs-card-layout>
+      <cs-card-member 
+                  ng-repeat="member in $ctrl.selectedMembers track by $index"
+                  type="complex"
+                  member-type="{{$ctrl.getMemberType(member.member)}}"
+                  title="{{$ctrl.getDisplayNameOnCard(member.member)}}"
+                  subtitle="({{$ctrl.getUserName(member.member)}})"
+                  image="{{$ctrl.getMembersPictures(member.member)}}"
+                  on-remove="$ctrl.removeMember(member)"
+                  remove-label="{{$ctrl.removeText}}"
+                  checkboxes="member.checkboxes"
+                  id="{{$index}}"
+                  on-update ="$ctrl.updateNumbers(member)"
+                  >
+      </cs-card-member>
+    </cs-card-layout>
+  </div>
+</div>

@@ -1,3 +1,5 @@
+require('./_trials.scss');
+
 (function () {
   'use strict';
 

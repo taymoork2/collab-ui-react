@@ -1,3 +1,9 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/layout';
+@import 'styles/toolkit/spacing';
+
+@import '~collab-ui/scss/foundation-trumps/labels';
+
 .customer-list {
   @extend %grid-subheader;
   @extend %page-background-white;

@@ -23,7 +23,7 @@ describe(' sunlightConfigService', function () {
   beforeEach(inject(function (_SunlightConfigService_, _$httpBackend_, UrlConfig) {
     sunlightConfigService = _SunlightConfigService_;
     $httpBackend = _$httpBackend_;
-    sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/user';
+    sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/user';
     userData = getJSONFixture('sunlight/json/sunlightTestUser.json');
     chatConfig = getJSONFixture('sunlight/json/features/config/sunlightTestChatConfig.json');
     csConnString = 'FakeConnectionString';

@@ -40,6 +40,7 @@
     var DEFAULT_TO = '5999';
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
+    var VOICE_VOICEMAIL_AVRIL = 'DEMO_STANDARD';
     var INTERNATIONAL_DIALING = 'DIALINGCOSTAG_INTERNATIONAL';
     var COMPANY_CALLER_ID_TYPE = 'Company Caller ID';
     var COMPANY_NUMBER_TYPE = 'Company Number';
@@ -48,6 +49,8 @@
     var savedModel = null;
     var errors = [];
 
+    vm.voicemailAvrilCustomer = false;
+    vm.isAvrilVoiceEnabled = false;
     vm.init = init;
     vm.save = save;
     vm.resetSettings = resetSettings;
@@ -135,6 +138,10 @@
 
     PstnSetupService.getCustomer(Authinfo.getOrgId()).then(function () {
       vm.isTerminusCustomer = true;
+    });
+
+    FeatureToggleService.getCustomerHuronToggle(Authinfo.getOrgId(), FeatureToggleService.features.avrilVmEnable).then(function (result) {
+      vm.voicemailAvrilCustomer = result;
     });
 
     vm.validations = {
@@ -910,6 +917,13 @@
             } else if (siteData.disableVoicemail) {
               vm.model.site.voicemailPilotNumber = undefined;
             }
+
+            if (vm.voicemailAvrilCustomer && vm.isAvrilVoiceEnabled) {
+              var setupSites = ServiceSetup.sites[0];
+              ServiceSetup.updateAvrilSite(setupSites.uuid, setupSites.siteSteeringDigit,
+                    setupSites.siteCode, setupSites.timeZone,
+                     setupSites.extensionLength, setupSites.voicemailPilotNumber, siteData);
+            }
           })
           // in the case when voicemail is getting enabled, reload voicemail info such as (timezone and vm2email settings)
           // needs to be done in order, usertemplates > messageactions
@@ -1015,7 +1029,12 @@
     function updateCustomerServicePackage(companyVoicemailNumber) {
       var customer = {};
       if (companyVoicemailNumber && _.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
-        customer.servicePackage = DEMO_STANDARD;
+        if (vm.voicemailAvrilCustomer) {
+          customer.servicePackage = VOICE_VOICEMAIL_AVRIL;
+          vm.isAvrilVoiceEnabled = true;
+        } else {
+          customer.servicePackage = DEMO_STANDARD;
+        }
         customer.voicemail = {
           pilotNumber: companyVoicemailNumber
         };

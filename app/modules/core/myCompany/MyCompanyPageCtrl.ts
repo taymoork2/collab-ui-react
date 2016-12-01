@@ -1,3 +1,5 @@
+require('./_myCompany.scss');
+
 namespace myCompanyPage {
   class MyCompanyPageCtrl {
 

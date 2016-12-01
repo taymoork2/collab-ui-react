@@ -1,3 +1,5 @@
+require('./_site-list.scss');
+
 (function () {
   'use strict';
 

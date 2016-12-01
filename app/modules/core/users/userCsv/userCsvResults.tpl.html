@@ -9,7 +9,7 @@
                 translate="firstTimeWizard.processing"></span>
           <span class="progressbar-label" ng-if="$ctrl.csvData.isCancelledByUser"
                 translate="firstTimeWizard.canceling"></span>
-          <span class="progressbar-label retry-label" ng-show="$ctrl.csvData.model.isRetrying">
+          <span class="progressbar-label" ng-show="$ctrl.csvData.model.isRetrying">
               <span translate="userManage.bulk.retryingUsers" translate-value-users="{{$ctrl.csvData.model.usersToRetry.length}}"
                     translate-interpolation="messageformat"></span>
               <span translate="userManage.bulk.retryingIn"></span>
