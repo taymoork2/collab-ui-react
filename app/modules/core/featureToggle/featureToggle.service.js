@@ -161,7 +161,6 @@
       csdmPstn: 'csdm-pstn',
       csdmATA: 'csdm-ata',
       csdmHybridCall: 'csdm-hybrid-call',
-      atlasGlobalServiceStatus: 'atlas-global-service-status',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
       huronDeviceE911: 'huron-device-e911-address',
       gemServicesTab: 'gem-services-tab',
