@@ -33,7 +33,6 @@
         this.canDelete = true;
         this.canReportProblem = true;
         this.hasRemoteSupport = true;
-        this.canEditDisplayName = this.accountType === 'MACHINE';
         this.supportsCustomTags = true;
         this.update = function (updated) {
           this.displayName = updated.displayName;
