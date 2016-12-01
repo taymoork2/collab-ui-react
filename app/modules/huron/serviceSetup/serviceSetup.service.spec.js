@@ -322,13 +322,13 @@ describe('Service: ServiceSetup', function () {
       $httpBackend.expectGET('modules/huron/serviceSetup/siteCountries.json').respond(getJSONFixture('huron/json/settings/countries.json'));
     });
 
-    it('should get site languages', function () {
+    it('should get site countries', function () {
       ServiceSetup.getSiteCountries().then(function (response) {
         expect(response).toBeDefined();
         expect(response.length).toBe(2);
-        var translatedLanguages = ServiceSetup.getTranslatedSiteLanguages(response);
-        expect(translatedLanguages).toBeDefined();
-        expect(translatedLanguages.length).toBe(2);
+        var translatedCountries = ServiceSetup.getTranslatedSiteCountries(response);
+        expect(translatedCountries).toBeDefined();
+        expect(translatedCountries.length).toBe(2);
       });
       $httpBackend.flush();
     });
