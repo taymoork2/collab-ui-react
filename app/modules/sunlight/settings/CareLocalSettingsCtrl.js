@@ -6,7 +6,7 @@
     .controller('CareLocalSettingsCtrl', CareLocalSettingsCtrl);
 
   /* @ngInject */
-  function CareLocalSettingsCtrl($interval, $scope, $translate, Log, $http, Authinfo, UrlConfig, Notification, SunlightConfigService) {
+  function CareLocalSettingsCtrl($interval, $scope, $translate, Log, Authinfo, Notification, SunlightConfigService) {
     var vm = this;
 
     vm.ONBOARDED = 'onboarded';
@@ -14,7 +14,6 @@
     vm.IN_PROGRESS = 'inProgress';
 
     vm.state = vm.ONBOARDED;
-    vm.isPartner = true;
     vm.errorCount = 0;
 
     vm.onboardToCs = function () {
@@ -83,49 +82,33 @@
       Notification.error($translate.instant('sunlightDetails.settings.setUpCareFailure'));
     }
 
-    function isPartner(authData) {
-      var roles = authData.roles;
-      if (_.indexOf(roles, 'PARTNER_USER') > -1 || _.indexOf(roles, 'PARTNER_ADMIN') > -1) {
-        return true;
-      }
-      return false;
-    }
-
     function init() {
-      $http.get(UrlConfig.getAdminServiceUrl() + 'userauthinfo').then(function (authData) {
-        if (!isPartner(authData.data)) {
-          vm.isPartner = false;
-          SunlightConfigService.getChatConfig().then(function (result) {
-            var onboardingStatus = _.get(result, 'data.csOnboardingStatus');
-            switch (onboardingStatus) {
-              case 'Pending':
-                vm.state = vm.IN_PROGRESS;
-                startPolling();
-                break;
-              case 'Success':
-                vm.state = vm.ONBOARDED;
-                break;
-              default:
-                vm.state = vm.NOT_ONBOARDED;
-            }
-            if (result.data.orgName === "" || !(_.get(result, 'data.orgName'))) {
-              result.data.orgName = Authinfo.getOrgName();
-              SunlightConfigService.updateChatConfig(result.data).then(function (result) {
-                Log.debug('Successfully updated org config with org name', result);
-              });
-            }
-          })
-            .catch(function (result) {
-              if (result.status === 404) {
-                vm.state = vm.NOT_ONBOARDED;
-              } else {
-                Log.debug('Fetching Care setup status, on load, failed: ', result);
-              }
-            });
+      SunlightConfigService.getChatConfig().then(function (result) {
+        var onboardingStatus = _.get(result, 'data.csOnboardingStatus');
+        switch (onboardingStatus) {
+          case 'Pending':
+            vm.state = vm.IN_PROGRESS;
+            startPolling();
+            break;
+          case 'Success':
+            vm.state = vm.ONBOARDED;
+            break;
+          default:
+            vm.state = vm.NOT_ONBOARDED;
+        }
+        if (result.data.orgName === "" || !(_.get(result, 'data.orgName'))) {
+          result.data.orgName = Authinfo.getOrgName();
+          SunlightConfigService.updateChatConfig(result.data).then(function (result) {
+            Log.debug('Successfully updated org config with org name', result);
+          });
         }
       })
         .catch(function (result) {
-          Log.debug('Fetching of user-info failed: ', result);
+          if (result.status === 404) {
+            vm.state = vm.NOT_ONBOARDED;
+          } else {
+            Log.debug('Fetching Care setup status, on load, failed: ', result);
+          }
         });
     }
     init();

@@ -810,7 +810,8 @@ describe('OnboardCtrl: Ctrl', function () {
         spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
         spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
         spyOn(this.LogMetricsService, 'logMetrics').and.callFake(function () {});
-        this.$httpBackend.expectGET(this.UrlConfig.getSunlightConfigServiceUrl() + '/user' + '/' + userId).respond(200);
+        this.$httpBackend.expectGET(this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/'
+          + this.Authinfo.getOrgId() + '/user' + '/' + userId).respond(200);
         this.$httpBackend.expectGET(this.UrlConfig.getScimUrl('null') + '/' + userId).respond(200, this.mock.getUserMe);
         this.$stateParams.currentUser = {
           licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
