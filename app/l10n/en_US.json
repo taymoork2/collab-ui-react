@@ -5537,6 +5537,8 @@
     "subscription": "Subscription ID: ",
     "numberedName": "Subscription {{number}}",
     "usage": "Usage: ",
+    "licenseUsageReport": "License Usage Report",
+    "smpLicenseReportPeriod": "Last 3 Months",
     "more": "More",
     "less": "Less",
     "quantity": "Qty: ",
