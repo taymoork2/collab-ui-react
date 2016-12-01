@@ -151,6 +151,13 @@
             state: FusionClusterStatesService.getMergedStateSeverity(mediaConnectors),
             total: mediaConnectors.length
           }];
+        } else if (cluster.targetType === 'hds_app') {
+          var hdsConnectors = _.filter(cluster.connectors, { connectorType: 'hds_app' });
+          cluster.servicesStatuses = [{
+            serviceId: 'spark-hybrid-datasecurity',
+            state: FusionClusterStatesService.getMergedStateSeverity(hdsConnectors),
+            total: hdsConnectors.length
+          }];
         }
         return cluster;
       });
@@ -345,6 +352,8 @@
 
       if (serviceId === 'squared-fusion-media') {
         return _.some(clusterList, { targetType: 'mf_mgmt' });
+      } else if (serviceId === 'spark-hybrid-datasecurity') {
+        return _.some(clusterList, { targetType: 'hds_app' });
       } else {
         return _.chain(clusterList)
           .map('provisioning')
