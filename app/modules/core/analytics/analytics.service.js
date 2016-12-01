@@ -17,7 +17,6 @@
     var hasInit = false;
     var throwError = false;
 
-
     var eventNames = {
       START: 'Start',
       NEXT: 'Next',
