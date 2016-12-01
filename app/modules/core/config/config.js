@@ -406,9 +406,9 @@
         'services-overview',
         'resource-group-settings',
         'cluster-list',
-        'hds-settings', //Temporary  entitlement until updated in org setting
+        'hds.settings', //Temporary  entitlement until updated in org setting
         'hds',
-        'hds-list',
+        'hds.list',
       ],
       'spark-room-system': [
         'addDeviceFlow',
@@ -436,8 +436,8 @@
       'squared-team-member': [
         'organization',
       ],
-      'hybrid-data-security': [
-        'hds-settings'
+      'spark-hybrid-datasecurity': [
+        'hds.settings'
       ],
       'squared-fusion-media': [
         'add-resource',

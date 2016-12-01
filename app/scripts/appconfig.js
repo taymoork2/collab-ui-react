@@ -2547,7 +2547,7 @@
               }
             }
           })
-          .state('hds-list', {
+          .state('hds.list', {
             url: '/hds/resources',
             views: {
               'fullPane': {
@@ -2560,7 +2560,7 @@
               }
             }
           })
-          .state('hds-settings', {
+          .state('hds.settings', {
             url: '/hds/settings',
             views: {
               'fullPane': {

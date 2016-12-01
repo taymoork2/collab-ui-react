@@ -1592,7 +1592,7 @@
       "squared-fusion-mgmt": "Hybrid Management Service",
       "squared-fusion-uc": "Hybrid Call Service",
       "squared-fusion-cal": "Hybrid Calendar Service",
-      "hybrid-data-security": "Hybrid Data Security"
+      "spark-hybrid-datasecurity": "Hybrid Data Security"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
@@ -5413,7 +5413,7 @@
           "squared-fusion-uc": "Call",
           "squared-fusion-mgmt": "Management",
           "squared-fusion-media": "Media",
-          "hybrid-data-security": "Data Security"
+          "spark-hybrid-datasecurity": "Data Security"
         }
       },
       "licenses": {
