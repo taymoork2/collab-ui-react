@@ -1052,7 +1052,9 @@
     "users": "Users",
     "voice": "Voice",
     "warning": "Warning",
-    "yes": "Yes"
+    "yes": "Yes",
+    "type": "Type",
+    "service": "Service"
   },
   "notifications": {
     "success": "Success notifications",
@@ -4763,7 +4765,8 @@
     "enableService": "Activate service for this user",
     "status": "Status",
     "cluster": "Cluster",
-    "sipUri": "Directory URI"
+    "sipUri": "Directory URI",
+    "errorMessage": "Error Message"
   },
   "validation": {
     "nonPrintable": "This entry contains nonprintable characters.",
@@ -6518,5 +6521,12 @@
       "majorOutage": "Major Outage",
       "underMaintenance": "Under Maintenance"
     }
+  },
+  "machineTypes":{
+    "bot": "Bot",
+    "lyra_space": "Room Device Place",
+    "robot": "Robot",
+    "spark_integration": "Spark Integration",
+    "room": "Desk Phone Place"
   }
 }

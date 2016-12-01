@@ -16,6 +16,16 @@ describe('Service: UserDetails', function () {
       $httpBackend.verifyNoOutstandingRequest();
     });
 
+    function expectUserRow(userRow, user, type, cluster, status, errorMessage, id, service) {
+      expect(userRow[0]).toBe(user);
+      expect(userRow[1]).toBe(type);
+      expect(userRow[2]).toBe(cluster);
+      expect(userRow[3]).toBe('hercules.activationStatus.' + status);
+      expect(userRow[4]).toBe(errorMessage);
+      expect(userRow[5]).toBe(id);
+      expect(userRow[6]).toBe('hercules.serviceNames.' + service);
+    }
+
     it('when uss user is entitled and activated', function () {
       $httpBackend
         .when('GET', 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111"')
@@ -29,13 +39,12 @@ describe('Service: UserDetails', function () {
         userId: '111',
         entitled: true,
         state: 'activated',
+        serviceId: 'squared-fusion-cal',
         connector: { cluster_name: 'Tom is Awesome Cluster' }
       }];
       UserDetails.getUsers('5632-f806-org', simulatedResponse)
-        .then(function (userDetails) {
-          expect(userDetails[0][0]).toBe('sparkuser1@gmail.com');
-          expect(userDetails[0][1]).toBe('Tom is Awesome Cluster');
-          expect(userDetails[0][2]).toBe('hercules.activationStatus.activated');
+        .then(function (userRows) {
+          expectUserRow(userRows[0], 'sparkuser1@gmail.com', 'common.user', 'Tom is Awesome Cluster', 'activated', '', '111', 'squared-fusion-cal');
         });
       $httpBackend.flush();
     });
@@ -53,35 +62,55 @@ describe('Service: UserDetails', function () {
         userId: '111',
         entitled: true,
         state: 'error',
+        serviceId: 'squared-fusion-cal',
         description: {
           key: '987',
           defaultMessage: 'The request failed. The SMTP address has no mailbox associated with it.'
         }
       }];
       UserDetails.getUsers('5632-f806-org', simulatedResponse)
-        .then(function (userDetails) {
-          expect(userDetails[0][0]).toBe('sparkuser1@gmail.com');
-          expect(userDetails[0][2]).toBe('hercules.activationStatus.error');
-          expect(userDetails[0][3]).toBe('The request failed. The SMTP address has no mailbox associated with it.');
+        .then(function (userRows) {
+          expectUserRow(userRows[0], 'sparkuser1@gmail.com', 'common.user', '', 'error',
+            'The request failed. The SMTP address has no mailbox associated with it.', '111', 'squared-fusion-cal');
         });
       $httpBackend.flush();
     });
 
-    it('when ci user NOT found', function () {
+    it('when a user is NOT found, check if it is a machine account', function () {
       $httpBackend
-        .when('GET', 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111"')
+        .when('GET', 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111" or id eq "222" or id eq "333"')
         .respond({
-          Resources: []
+          Resources: [{
+            id: '111',
+            userName: 'balleklorin@gmail.com'
+          }]
+        });
+      $httpBackend
+        .when('GET', 'https://identity.webex.com/organization/5632-f806-org/v1/Machines?filter=id eq "222" or id eq "333"')
+        .respond({
+          data: [{ id: '222', name: 'machine1', displayName: 'Cloudberry Device', machineType: 'lyra_space' }]
         });
       var simulatedResponse = [{
-        userId: '111',
+        userId: '111', // User
         entitled: true,
-        state: 'notActivated'
+        serviceId: 'squared-fusion-cal',
+        state: 'activated'
+      }, {
+        userId: '222', // Machine account
+        entitled: true,
+        serviceId: 'squared-fusion-cal',
+        state: 'error'
+      }, {
+        userId: '333', // Unknown (not found)
+        entitled: true,
+        serviceId: 'squared-fusion-cal',
+        state: 'error'
       }];
       UserDetails.getUsers('5632-f806-org', simulatedResponse)
-        .then(function (userDetails) {
-          expect(userDetails[0][0]).toBe('hercules.export.userNotFound');
-          expect(userDetails[0][2]).toBe('hercules.activationStatus.pending_activation');
+        .then(function (userRows) {
+          expectUserRow(userRows[0], 'balleklorin@gmail.com', 'common.user', '', 'activated', '', '111', 'squared-fusion-cal');
+          expectUserRow(userRows[1], 'Cloudberry Device', 'machineTypes.lyra_space', '', 'error', '', '222', 'squared-fusion-cal');
+          expectUserRow(userRows[2], 'hercules.export.userNotFound', '', '', 'error', '', '333', 'squared-fusion-cal');
         });
       $httpBackend.flush();
     });
@@ -101,18 +130,18 @@ describe('Service: UserDetails', function () {
       var simulatedResponse = [{
         userId: '111',
         entitled: false,
-        state: 'whatever'
+        state: 'pendingActivation',
+        serviceId: 'squared-fusion-cal',
       }, {
         userId: '222',
         entitled: true,
-        state: 'activated'
+        state: 'activated',
+        serviceId: 'squared-fusion-cal',
       }];
       UserDetails.getUsers('5632-f806-org', simulatedResponse)
-        .then(function (userDetails) {
-          expect(userDetails[0][0]).toBe('sparkuser1@gmail.com');
-          expect(userDetails[0][2]).toBe('hercules.activationStatus.not_entitled');
-          expect(userDetails[1][0]).toBe('sparkuser2@gmail.com');
-          expect(userDetails[1][2]).toBe('hercules.activationStatus.activated');
+        .then(function (userRows) {
+          expectUserRow(userRows[0], 'sparkuser1@gmail.com', 'common.user', '', 'not_entitled', '', '111', 'squared-fusion-cal');
+          expectUserRow(userRows[1], 'sparkuser2@gmail.com', 'common.user', '', 'activated', '', '222', 'squared-fusion-cal');
         });
       $httpBackend.flush();
     });
