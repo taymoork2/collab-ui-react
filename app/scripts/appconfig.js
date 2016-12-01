@@ -1186,7 +1186,8 @@
               displayName: 'Call Service'
             },
             params: {
-              extensionId: {}
+              extensionId: {},
+              extensions: {}
             }
           })
           .state('user-overview.conferencing', {
