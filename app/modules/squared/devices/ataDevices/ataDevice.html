@@ -19,23 +19,35 @@
   <h5 translate="ataSettings.input"></h5>
   <div class="rangeSliderWrap">
     <i class="icon icon-audio-min"></i>
-    <input type="range" min="{{ata.inputMin}}" max="{{ata.inputMax}}" step="1" ng-model="ata.inputModel" ng-change="ata.sliderUpdate('input')" style="background: -webkit-linear-gradient(left, {{ata.selectedColor}} 0%, {{ata.selectedColor}} {{ata.percInput}}%, {{ata.unselectedColor}} {{ata.percInput}}%)" />
+    <div class="fake-slider">
+      <div class="range-bar"></div>
+      <div class="range-progress" style="width:{{ata.percInput}}%;"></div>
+    </div>
+    <input type="range" min="{{ata.inputMin}}" max="{{ata.inputMax}}" step="1" ng-model="ata.inputModel" ng-change="ata.sliderUpdate('input')" />
     <i class="icon icon-audio-plus"></i>
   </div>
 
   <h5 translate="ataSettings.output"></h5>
   <div class="rangeSliderWrap">
     <i class="icon icon-audio-min"></i>
-    <input type="range" min="{{ata.outputMin}}" max="{{ata.outputMax}}" step="1" ng-model="ata.outputModel" ng-change="ata.sliderUpdate('output')" style="background: -webkit-linear-gradient(left, {{ata.selectedColor}} 0%, {{ata.selectedColor}} {{ata.percOutput}}%, {{ata.unselectedColor}} {{ata.percOutput}}%)" />
+    <div class="fake-slider">
+      <div class="range-bar"></div>
+      <div class="range-progress" style="width:{{ata.percOutput}}%;"></div>
+    </div>
+    <input type="range" min="{{ata.outputMin}}" max="{{ata.outputMax}}" step="1" ng-model="ata.outputModel" ng-change="ata.sliderUpdate('output')" />
     <i class="icon icon-audio-plus"></i>
   </div>
 
   <h5 translate="ataSettings.impedance"></h5>
   <p translate="ataSettings.impedanceDescr"></p>
   <div class="rangeSliderWrap">
-    <i class="icon icon-plus"></i>
-    <input type="range" min="{{ata.impedanceMin}}" max="{{ata.impedanceMax}}" step="1" ng-model="ata.impedanceModel" ng-change="ata.sliderUpdate('impedance')" style="background: -webkit-linear-gradient(left, {{ata.selectedColor}} 0%, {{ata.selectedColor}} {{ata.percImpedance}}%, {{ata.unselectedColor}} {{ata.percImpedance}}%)" />
     <i class="icon icon-indeterminate"></i>
+    <div class="fake-slider">
+      <div class="range-bar"></div>
+      <div class="range-progress" style="width:{{ata.percImpedance}}%;"></div>
+    </div>
+    <input type="range" min="{{ata.impedanceMin}}" max="{{ata.impedanceMax}}" step="1" ng-model="ata.impedanceModel" ng-change="ata.sliderUpdate('impedance')" />
+    <i class="icon icon-plus"></i>
   </div>
 </div>
 
