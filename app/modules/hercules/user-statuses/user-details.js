@@ -36,7 +36,7 @@
       return [$translate.instant('common.user'),
         $translate.instant('common.type'),
         $translate.instant('cloudExtensions.cluster'),
-        $translate.instant('cloudExtensions.status'), '' +
+        $translate.instant('cloudExtensions.status'),
         $translate.instant('cloudExtensions.errorMessage'),
         $translate.instant('common.id'),
         $translate.instant('common.service')];
@@ -50,7 +50,7 @@
       return $http.get(machineUrl(orgId, machineIds))
         .then(function (response) {
           var machineRows = [];
-          var data = response.data ? response.data.data : null;
+          var data = _.get(response, 'data.data');
           if (data) {
             machineRows = _.map(statuses, function (status) {
               var machine = _.find(data, { id: status.userId });

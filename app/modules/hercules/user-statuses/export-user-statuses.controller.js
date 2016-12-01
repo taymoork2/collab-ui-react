@@ -131,7 +131,14 @@
     function getUserStatuses(service, type, offset, limit) {
       return USSService.getStatuses(service, type, offset, limit)
         .then(function (response) {
-          return response.userStatuses;
+          if (offset + limit < response.paging.count) {
+            return getUserStatuses(service, type, offset + limit, limit)
+              .then(function (statuses) {
+                return response.userStatuses.concat(statuses);
+              });
+          } else {
+            return response.userStatuses;
+          }
         });
     }
 
