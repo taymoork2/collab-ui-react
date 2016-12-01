@@ -10,12 +10,16 @@ export class ReportConstants {
   // Numerical Constants
   public readonly DAYS: number = 7;
   public readonly FIXED: number = 2;
-  public readonly LINE_WEEKS: number = 4;
   public readonly MONTHS: number = 2;
   public readonly PERCENTAGE_MULTIPLIER: number = 100;
   public readonly THIRTEEN_WEEKS: number = 13;
   public readonly WEEKS: number = 3;
   public readonly YEAR: number = 52;
+
+  // weekly values are calculated as total weeks in year - weeks in time period
+  public readonly FOUR_WEEKS: number = 48;
+  public readonly TWELVE_WEEKS: number = 40;
+  public readonly TWENTY_FOUR_WEEKS: number = 28;
 
   // moment formatting helpers
   public readonly DAY_FORMAT: string = 'MMM DD';
@@ -65,23 +69,36 @@ export class ReportConstants {
     private $translate: ng.translate.ITranslateService
   ) {}
 
-  // Time Filter
-  public FILTER_ONE: ITimespan = {
+  public WEEK_FILTER: ITimespan = {
     value: 0,
     label: this.$translate.instant('reportsPage.week'),
     description: this.$translate.instant('reportsPage.week2'),
+    min: 1,
+    max: this.DAYS,
   };
-  public FILTER_TWO: ITimespan = {
+  public MONTH_FILTER: ITimespan = {
     value: 1,
     label: this.$translate.instant('reportsPage.month'),
     description: this.$translate.instant('reportsPage.month2'),
+    min: this.FOUR_WEEKS,
+    max: this.YEAR,
   };
-  public FILTER_THREE: ITimespan = {
+  public THREE_MONTH_FILTER: ITimespan = {
     value: 2,
     label: this.$translate.instant('reportsPage.threeMonths'),
     description: this.$translate.instant('reportsPage.threeMonths2'),
+    min: this.TWELVE_WEEKS,
+    max: this.YEAR,
   };
-  public timeFilter: Array<ITimespan> = [this.FILTER_ONE, this.FILTER_TWO, this.FILTER_THREE];
+  public CUSTOM_FILTER: ITimespan = {
+    value: 'custom',
+    label: this.$translate.instant('reportsPage.custom'),
+    description: this.$translate.instant('reportsPage.custom2'),
+    min: 1,
+    max: this.YEAR,
+  };
+  public timeFilter: Array<ITimespan> = [this.WEEK_FILTER, this.MONTH_FILTER, this.THREE_MONTH_FILTER];
+  public altTimeFilter: Array<ITimespan> = [this.WEEK_FILTER, this.MONTH_FILTER, this.THREE_MONTH_FILTER, this.CUSTOM_FILTER];
 
   // active user line graph filterArray
   public ACTIVE_FILTER_ONE: IDropdownBase = {

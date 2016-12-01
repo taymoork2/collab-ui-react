@@ -89,7 +89,7 @@ beforeEach(function () {
 
     this.injectDependencies('$templateCache');
     var templateString = this.$templateCache.get(template);
-    this.compileTemplate(templateString);
+    this.compileTemplate('<div>' + templateString + '</div>');
   };
 
   /**

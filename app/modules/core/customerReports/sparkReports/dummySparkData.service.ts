@@ -1,3 +1,5 @@
+import { CommonReportService } from '../../partnerReports/commonReportServices/commonReport.service';
+import { ReportConstants } from '../../partnerReports/commonReportServices/reportConstants.service';
 import {
   IActiveUserData,
   ITimespan,
@@ -17,13 +19,13 @@ interface ICommonData {
   count: number;
 }
 
-class DummySparkDataService {
+export class DummySparkDataService {
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private chartColors,
-    private CommonReportService,
-    private ReportConstants,
+    private CommonReportService: CommonReportService,
+    private ReportConstants: ReportConstants,
   ) {}
 
   private static getCommonData(filter: ITimespan, index: number, constants: any): ICommonData {
@@ -77,7 +79,7 @@ class DummySparkDataService {
     } else if (filter.value === 1) {
       timespan = this.ReportConstants.WEEKS;
       if (lineGraph) {
-        timespan = this.ReportConstants.LINE_WEEKS;
+        timespan = this.ReportConstants.YEAR;
       }
     } else {
       timespan = this.ReportConstants.MONTHS;

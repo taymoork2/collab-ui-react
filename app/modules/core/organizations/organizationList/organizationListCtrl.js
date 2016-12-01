@@ -1,3 +1,5 @@
+require('./_organization-list.scss');
+
 (function () {
   'use strict';
 

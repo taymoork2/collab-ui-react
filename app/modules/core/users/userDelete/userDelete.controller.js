@@ -1,3 +1,5 @@
+require('./_user-delete.scss');
+
 (function () {
   'use strict';
 

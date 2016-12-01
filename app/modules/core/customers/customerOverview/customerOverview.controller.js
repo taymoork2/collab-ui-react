@@ -1,3 +1,5 @@
+require('./_customer-overview.scss');
+
 (function () {
   'use strict';
 

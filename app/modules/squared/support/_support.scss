@@ -153,6 +153,11 @@
 
 .support-logs {
   background-color: $white;
+
+  .call-info-panel {
+    position: relative;
+    top: 21px;
+  }
 }
 
 .support-logs table {

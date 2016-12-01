@@ -296,8 +296,15 @@
       clearCeMenuMap: clearCeMenuMap,
       deleteCeMenuMap: deleteCeMenuMap,
       isCeMenu: isCeMenu,
-      cesTempPa: cesTempPa,
-      constructCesTodoPa: constructCesTodoPa,
+      cesPa: cesPa,
+      cesMoh: cesMoh,
+      cesMaxWaitTime: cesMaxWaitTime,
+      cesFallback: cesFallback,
+      cesIa: cesIa,
+      constructCesPa: constructCesPa,
+      constructCesIa: constructCesIa,
+      constructCesMoh: constructCesMoh,
+      constructCesFallback: constructCesFallback,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -494,10 +501,16 @@
         //this occurs on the way in from the db
         action = new Action('routeToQueue', inAction.routeToQueue.id);
         setDescription(action, inAction.routeToQueue);
-        cesTempMoh(action);
-        cesTempIa(action);
-        cesTempPa(action);
-        cesTempfallBack(action);
+        try {
+          action.description = JSON.parse(action.description);
+        } catch (exception) {
+          return;
+        }
+        cesMaxWaitTime(action, inAction.routeToQueue);
+        cesMoh(action, inAction.routeToQueue);
+        cesIa(action, inAction.routeToQueue);
+        cesPa(action, inAction.routeToQueue);
+        cesFallback(action, inAction.routeToQueue);
         menuEntry.addAction(action);
       } else {
         // insert an empty action
@@ -509,17 +522,14 @@
       }
     }
 
-    /*
-    * temporary solution to write to db until ces ready
-    */
-    function cesTempMoh(action) {
-      if (!_.isUndefined(action.description)) {
+    function cesMaxWaitTime(action, inAction) {
+      if (action) {
         try {
           if (_.isUndefined(action.queueSettings)) {
-            action.description = JSON.parse(action.description);
+            inAction.description = JSON.parse(inAction.description);
             action.queueSettings = {};
           }
-          action.queueSettings.musicOnHold = constructCesTodoMoh(action.description);
+          action.queueSettings.maxWaitTime = inAction.queueMaxTime;
         } catch (exception) {
           action.queueSettings = {};
         }
@@ -527,16 +537,16 @@
     }
 
     /*
-    * temporary solution to write to db until ces ready
+    *write Moh  to db
     */
-    function cesTempIa(action) {
-      if (!_.isUndefined(action.description)) {
+    function cesMoh(action, inAction) {
+      if (action) {
         try {
           if (_.isUndefined(action.queueSettings)) {
-            action.description = JSON.parse(action.description);
+            inAction.description = JSON.parse(inAction.description);
             action.queueSettings = {};
           }
-          action.queueSettings.initialAnnouncement = constructCesTodoIa(action.description);
+          action.queueSettings.musicOnHold = constructCesMoh(inAction);
         } catch (exception) {
           action.queueSettings = {};
         }
@@ -544,16 +554,33 @@
     }
 
     /*
-     * temporary solution to write to db until ces ready
+    * write initial announcement to db
+    */
+    function cesIa(action, inAction) {
+      if (action) {
+        try {
+          if (_.isUndefined(action.queueSettings)) {
+            inAction.description = JSON.parse(inAction.description);
+            action.queueSettings = {};
+          }
+          action.queueSettings.initialAnnouncement = constructCesIa(inAction);
+        } catch (exception) {
+          action.queueSettings = {};
+        }
+      }
+    }
+
+    /*
+     * write periodic announcement to db
      */
-    function cesTempPa(action) {
-      if (angular.isDefined(action.description)) {
+    function cesPa(action, inAction) {
+      if (action) {
         try {
           if (angular.isUndefined(action.queueSettings)) {
-            action.description = JSON.parse(action.description);
+            inAction.description = JSON.parse(inAction.description);
             action.queueSettings = {};
           }
-          action.queueSettings.periodicAnnouncement = constructCesTodoPa(action.description);
+          action.queueSettings.periodicAnnouncement = constructCesPa(inAction);
         } catch (exception) {
           action.queueSettings = {};
         }
@@ -561,16 +588,16 @@
     }
 
     /*
-    * temporary solution to write to db until ces ready
+    * write fallback to db
     */
-    function cesTempfallBack(action) {
-      if (!_.isUndefined(action.description)) {
+    function cesFallback(action, inAction) {
+      if (action) {
         try {
           if (angular.isUndefined(action.queueSettings)) {
-            action.description = JSON.parse(action.description);
+            inAction.description = JSON.parse(inAction.description);
             action.queueSettings = {};
           }
-          action.queueSettings.fallBack = constructCesTodofb(action.description);
+          action.queueSettings.fallback = constructCesFallback(inAction);
         } catch (exception) {
           action.queueSettings = {};
         }
@@ -578,50 +605,63 @@
     }
 
     /*
-    * temporary solution to write to db until ces ready
+    * construct ces definition of Moh from db
     */
-    function constructCesTodoMoh(parsedDescription) {
-      var musicOnHold = parsedDescription.musicOnHold.actions[0];
-      var playAction = new Action('play', musicOnHold.value);
-      playAction.setDescription(musicOnHold.description);
+    function constructCesMoh(parsedDescription) {
+      var musicOnHold = parsedDescription;
+      var playAction = new Action('play', musicOnHold.queueMoH);
+      playAction.setDescription(musicOnHold.description.musicOnHoldDescription);
       musicOnHold = new CeMenuEntry();
       musicOnHold.addAction(playAction);
       return musicOnHold;
     }
 
     /*
-    * temporary solution to write to db until ces ready
+    * construct ces definition of IA from db
     */
-    function constructCesTodoIa(parsedDescription) {
-      var initialAnnouncement = parsedDescription.initialAnnouncement.actions[0];
-      var action = new Action(initialAnnouncement.name, initialAnnouncement.value);
-      action.setDescription(initialAnnouncement.description);
-      initialAnnouncement = new CeMenuEntry();
+    function constructCesIa(parsedDescription) {
+      var iaType = parsedDescription.description.initialAnnouncementType;
+      var action = new Action(iaType, parsedDescription.queueInitialAnnouncement);
+      action.setDescription(parsedDescription.description.initialAnnouncementDescription);
+      var initialAnnouncement = new CeMenuEntry();
       initialAnnouncement.addAction(action);
       return initialAnnouncement;
     }
     /*
-    * temporary solution to write to db until ces ready
+    * construct ces definition of Fallback from db
     */
-    function constructCesTodofb(parsedDescription) {
-      var fallBackTime = parsedDescription.fallBack.actions[0];
-      var fallBackOption = parsedDescription.fallBack.actions[1];
-      var action = new Action(fallBackTime.name, fallBackTime.value);
-      action.setDescription(fallBackTime.description);
-      var fallBack = new CeMenuEntry();
-      fallBack.addAction(action);
-      action = new Action(fallBackOption.name, fallBackTime.value);
-      action.setDescrption(fallBackOption.description);
-      fallBack.addAction(action);
+    function constructCesFallback(parsedDescription) {
+      var fallback = parsedDescription.queueFallback;
+      var action;
+      var fallbackObject = Object.keys(fallback);
+      var fallbackName = fallbackObject[0];
+      if (_.isEqual(fallbackName, 'disconnect')) {
+        action = new Action(fallbackName, '');
+      } else {
+        if (_.isEqual(fallbackName, 'goto')) {
+          action = new Action(fallbackName, fallback[fallbackName].ceid);
+        } else if (_.isEqual(fallbackName, 'route')) {
+          action = new Action(fallbackName, fallback[fallbackName].destination);
+        } else {
+          action = new Action(fallbackName, fallback[fallbackName].id);
+        }
+      }
+      fallback = new CeMenuEntry();
+      fallback.addAction(action);
+      return fallback;
     }
 
     /*
-    * temporary solution to write to db until ces ready
+    * construct ces definition of PA from db
     */
-    function constructCesTodoPa(parsedDescription) {
-      var periodicAnnouncement = parsedDescription.periodicAnnouncement.actions[0];
-      var action = new Action(periodicAnnouncement.name, periodicAnnouncement.value);
-      action.setDescription(periodicAnnouncement.description);
+    function constructCesPa(parsedDescription) {
+      var paType = parsedDescription.description.periodicAnnouncementType;
+      var periodicAnnouncements = parsedDescription.queuePeriodicAnnouncements[0];
+      var periodicAnnouncement = periodicAnnouncements.queuePeriodicAnnouncement;
+      var paInterval = periodicAnnouncements.queuePeriodicAnnouncementInterval;
+      var action = new Action(paType, periodicAnnouncement);
+      action.interval = paInterval;
+      action.setDescription(parsedDescription.description.periodicAnnouncementDescription);
       periodicAnnouncement = new CeMenuEntry();
       periodicAnnouncement.addAction(action);
       return periodicAnnouncement;
@@ -1123,12 +1163,53 @@
       return newActionArray;
     }
     /*
-    * Temp method for route to queue prior to CES def
+    * Method for route to queue prior to CES def
     */
     function populateRouteToQueue(action) {
       var newAction = {};
-      if (!_.isUndefined(action.description)) {
+      if (action) {
         newAction.id = action.value;
+        newAction.queueMoH = action.queueSettings.musicOnHold.actions[0].getValue();
+        newAction.queueInitialAnnouncement = action.queueSettings.initialAnnouncement.actions[0].getValue();
+        var queuePeriodicAnnouncement = action.queueSettings.periodicAnnouncement.actions[0].getValue();
+        var queuePeriodicAnnouncementInterval = action.queueSettings.periodicAnnouncement.actions[0].interval;
+        var paAction = [];
+        var paActionArray = {
+          queuePeriodicAnnouncement: queuePeriodicAnnouncement,
+          queuePeriodicAnnouncementInterval: queuePeriodicAnnouncementInterval
+        };
+        paAction.push(paActionArray);
+        newAction.queuePeriodicAnnouncements = paAction;
+        var queueMaxTimeValue = action.queueSettings.maxWaitTime;
+
+        newAction.queueMaxTime = (queueMaxTimeValue.label);
+        if (_.isUndefined(queueMaxTimeValue.label)) {
+          newAction.queueMaxTime = queueMaxTimeValue;
+        }
+        var destination = action.queueSettings.fallback.actions[0];
+        var destinationName = destination.name;
+        var fallbackAction = {};
+        if (destinationName === 'disconnect') {
+          fallbackAction[destinationName] = { treatment: 'none' };
+        } else if (destinationName === 'route') {
+          fallbackAction[destinationName] = { destination: destination.value, description: destination.description };
+        } else if (destinationName === 'goto') {
+          fallbackAction[destinationName] = { ceid: destination.value, description: destination.description };
+        } else {
+          fallbackAction[destinationName] = { id: destination.value, description: destination.description };
+        }
+        var queueMaxDestination = fallbackAction;
+        newAction.queueFallback = queueMaxDestination;
+        if (_.isEmpty(action.description)) {
+          //for default queue settings
+          action.description = {
+            musicOnHoldDescription: '',
+            periodicAnnouncementType: 'say',
+            periodicAnnouncementDescription: '',
+            initialAnnouncementType: 'say',
+            initialAnnouncementDescription: ''
+          };
+        }
         newAction.description = JSON.stringify(action.description);
       }
       return newAction;

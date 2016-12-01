@@ -1,3 +1,7 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/fonts';
+@import 'styles/toolkit/spacing';
+
 %plan-container {
   display: flex;
   flex-direction: column;
@@ -28,9 +32,6 @@
   }
 
   .flex-row {
-    @extend .row;
-    @extend .full;
-
     display: flex;
 
     .columns {
@@ -71,8 +72,6 @@
     }
 
     .column-trial-header {
-      @extend .h5;
-
       padding: 1.5rem;
       background: $color-attention;
       color: $white;
@@ -133,9 +132,7 @@
     line-height: 24px;
   }
 
-  .badge-trial {
-    @extend .badge.badge-warning;
-
+  .badge-warning {
     display: inline-block;
   }
 

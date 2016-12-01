@@ -1,3 +1,4 @@
+import { ReportConstants } from './reportConstants.service';
 import {
   IExportMenu,
   ITimespan,
@@ -29,12 +30,12 @@ export class CommonReportService {
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private Notification: Notification,
-    private ReportConstants,
+    private ReportConstants: ReportConstants,
     private UrlConfig,
   ) {}
 
   private readonly usageOptions: Array<string> = ['weeklyUsage', 'monthlyUsage', 'threeMonthUsage'];
-  private readonly altUsageOptions: Array<string> = ['dailyUsage', 'monthlyUsage', 'yearlyUsage'];
+  private readonly altUsageOptions: Array<string> = ['dailyUsage', 'yearlyUsage'];
   private readonly cacheValue: boolean = (_.toInteger(moment.utc().format('H')) >= 8);
   private urlBase = this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/reports/';
 
@@ -142,21 +143,13 @@ export class CommonReportService {
   public getReturnLineGraph(filter: ITimespan, graphItem: any): Array<any> {
     let returnGraph: Array<any> = [];
 
-    if (filter.value === 0) {
+    if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
       for (let i = 8; i > 0; i--) {
         let tmpItem: any = _.clone(graphItem);
         tmpItem.date = moment().tz(this.ReportConstants.TIMEZONE)
           .subtract(i, this.ReportConstants.DAY)
           .format(this.ReportConstants.DAY_FORMAT);
         returnGraph.push(tmpItem);
-      }
-    } else if (filter.value === 1) {
-      for (let x = 4; x >= 0; x--) {
-        let temp: any = _.clone(graphItem);
-        temp.date = moment().day(-1)
-          .subtract(x, this.ReportConstants.WEEK)
-          .format(this.ReportConstants.DAY_FORMAT);
-        returnGraph.push(temp);
       }
     } else {
       for (let z = 52; z >= 0; z--) {
@@ -257,14 +250,22 @@ export class CommonReportService {
   }
 
   public getLineTypeOptions(filter: ITimespan, name: string): ITypeQuery {
-    return {
-      name: name,
-      type: this.altUsageOptions[filter.value],
-      cache: this.cacheValue,
-    };
+    if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
+      return {
+        name: name,
+        type: this.altUsageOptions[0],
+        cache: this.cacheValue,
+      };
+    } else {
+      return {
+        name: name,
+        type: this.altUsageOptions[1],
+        cache: this.cacheValue,
+      };
+    }
   }
 
-  public getCustomerOptions(filter: ITimespan, type: string, action: string, customerView: boolean): ICustomerIntervalQuery {
+  public getCustomerOptions(filter: ITimespan, type: string, action: string, customerView: boolean | undefined): ICustomerIntervalQuery {
     let reportOptions: ICustomerIntervalQuery = {
       action: action,
       type: type,
@@ -287,7 +288,7 @@ export class CommonReportService {
     return reportOptions;
   }
 
-  public getAltCustomerOptions(filter: ITimespan, type: string, action: string, customerView: boolean): ICustomerIntervalQuery {
+  public getAltCustomerOptions(filter: ITimespan, type: string, action: string, customerView: boolean | undefined): ICustomerIntervalQuery {
     let reportOptions: ICustomerIntervalQuery = {
       action: action,
       type: type,
@@ -310,7 +311,7 @@ export class CommonReportService {
 
   public getModifiedDate(date: string, filter: ITimespan): string {
     let modifiedDate: string = moment.tz(date, this.ReportConstants.TIMEZONE).format(this.ReportConstants.DAY_FORMAT);
-    if (filter.value > 1) {
+    if (filter.value === this.ReportConstants.THREE_MONTH_FILTER.value) {
       modifiedDate = moment.tz(date, this.ReportConstants.TIMEZONE).format(this.ReportConstants.MONTH_FORMAT);
     }
     return modifiedDate;

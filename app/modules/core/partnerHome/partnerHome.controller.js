@@ -1,3 +1,6 @@
+require('./_partner-home.scss');
+require('./_partner-landing-trials.scss');
+
 (function () {
   'use strict';
 

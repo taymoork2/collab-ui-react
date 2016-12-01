@@ -1,3 +1,5 @@
+require('./_setting-section.scss');
+
 (function () {
   angular.module('Core')
     .component('settingSection', {

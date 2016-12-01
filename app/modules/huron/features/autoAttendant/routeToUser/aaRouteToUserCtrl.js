@@ -47,11 +47,13 @@
     /////////////////////
 
     function populateUiModel() {
+      var entry;
       if (fromRouteCall) {
-        vm.userSelected.id = vm.menuEntry.actions[0].getValue();
+        entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
       } else {
-        vm.userSelected.id = vm.menuKeyEntry.actions[0].getValue();
+        entry = _.get(vm.menuKeyEntry, 'actions[0].queueSettings.fallback', vm.menuKeyEntry);
       }
+      vm.userSelected.id = entry.actions[0].getValue();
 
       if (vm.userSelected.id) {
         getFormattedUserAndExtension(vm.userSelected.id).then(function (userName) {
@@ -62,11 +64,17 @@
 
     function saveUiModel() {
       AACommonService.setPhoneMenuStatus(true);
+
+      var entry;
+
       if (fromRouteCall) {
-        vm.menuEntry.actions[0].setValue(vm.userSelected.id);
+        entry = vm.menuEntry;
       } else {
-        vm.menuKeyEntry.actions[0].setValue(vm.userSelected.id);
+        entry = vm.menuKeyEntry;
       }
+      var action = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]', entry.actions[0]);
+      action.setValue(vm.userSelected.id);
+
     }
 
     // format name with extension
@@ -257,14 +265,17 @@
         vm.menuEntry = vm.uiMenu.entries[$scope.index];
         fromRouteCall = true;
 
-        if (vm.menuEntry.actions.length === 0) {
-          action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
-          vm.menuEntry.addAction(action);
-        } else {
-          // make sure action is User||VoiceMail not AA, HG, extNum, etc
-          if (!(vm.menuEntry.actions[0].getName() === routeToUserOrVM)) {
-            vm.menuEntry.actions[0].setName(routeToUserOrVM);
-            vm.menuEntry.actions[0].setValue('');
+        if (!$scope.fromFallback) {
+          if (vm.menuEntry.actions.length === 0) {
+            action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
+            vm.menuEntry.addAction(action);
+          } else {
+            // make sure action is User||VoiceMail not AA, HG, extNum, etc
+            if (!(vm.menuEntry.actions[0].getName() === routeToUserOrVM)) {
+              vm.menuEntry.actions[0].setName(routeToUserOrVM);
+              vm.menuEntry.actions[0].setValue('');
+              delete vm.menuEntry.actions[0].queueSettings;
+            }
           }
         }
       } else {
@@ -275,6 +286,20 @@
           vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
           var action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
           vm.menuKeyEntry.addAction(action);
+        }
+      }
+      if ($scope.fromFallback) {
+        var entry;
+        if (_.has(vm.menuKeyEntry, 'actions[0]')) {
+          entry = vm.menuKeyEntry;
+        } else {
+          entry = vm.menuEntry;
+        }
+
+        var fallbackAction = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]');
+        if (fallbackAction && (fallbackAction.getName() !== routeToUserOrVM)) {
+          fallbackAction.setName(routeToUserOrVM);
+          fallbackAction.setValue('');
         }
       }
       populateUiModel();

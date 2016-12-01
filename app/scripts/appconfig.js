@@ -942,7 +942,7 @@
                 template: '<div ui-view="usersConvert"></div>'
               },
               'usersConvert@users.convert': {
-                templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html',
+                template: '<cr-convert-users-modal/>',
                 resolve: {
                   modalInfo: function ($state) {
                     $state.params.modalClass = 'convert-users';
@@ -1692,7 +1692,14 @@
             parent: 'modal',
             views: {
               'modal@': {
-                templateUrl: 'modules/core/video/videoModal.tpl.html'
+                template: '<cr-video-modal class="modal-content" dismiss="$dismiss()"></cr-video-modal>'
+              }
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveVideo(resolve) {
+                  require(['modules/core/video'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
               }
             }
           })
@@ -2414,7 +2421,7 @@
             resolve: {
               lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
                 return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/callPickup/callPickupSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
+                  require(['modules/huron/features/callPickup'], loadModuleAndResolve($ocLazyLoad, resolve));
                 });
               }
             }

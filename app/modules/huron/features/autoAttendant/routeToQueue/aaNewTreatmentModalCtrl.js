@@ -31,9 +31,8 @@
 
     vm.destinationOptions = [{
       label: $translate.instant('autoAttendant.destinations.Disconnect'),
-      name: 'Disconnect',
-      action: 'disconnect',
-      level: 0
+      name: 'disconnect',
+      action: 'disconnect'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
       name: 'destinationMenuRouteHunt',
@@ -58,12 +57,13 @@
     vm.destination = vm.destinationOptions[0];
     vm.musicOnHold = '';
     vm.menuEntry = undefined;
-    vm.mohPlayAction = undefined;
-    vm.iaAction = undefined;
-    vm.paAction = undefined;
     vm.ok = ok;
     vm.isSaveEnabled = isSaveEnabled;
     vm.uploadMohTrigger = uploadMohTrigger;
+
+    vm.destination = '';
+    vm.maxWaitTime = '';
+
     vm.activate = activate;
     vm.populateMohRadio = populateMohRadio;
 
@@ -77,9 +77,16 @@
 
     vm.periodicMinutes = [];
     vm.periodicSeconds = [];
+    vm.periodicSecond = {};
+    vm.periodicMinute = {};
     vm.changedPeriodicMinValue = changedPeriodicMinValue;
     vm.changedPeriodicSecValue = changedPeriodicSecValue;
     vm.areSecondsDisabled = isDisabled;
+
+    var mohPlayAction = undefined;
+    var fallbackAction = undefined;
+    var paAction = undefined;
+    var periodicTime = '';
 
     var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
     var DEFAULT_MOH = 'musicOnHoldDefault';
@@ -89,15 +96,28 @@
 
     //else the dismiss was called
     function ok() {
+      updateMaxWaitTime();
+      updateFallback();
       autoValidate();
       AACommonService.setQueueSettingsStatus(true);
       $modalInstance.close();
     }
 
     function autoValidate() {
+      if (_.isEqual(mohPlayAction.value, '')) {
+        vm.musicOnHold = DEFAULT_MOH;
+      }
       if (_.isEqual(vm.musicOnHold, DEFAULT_MOH)) {
         defaultMoh();
       }
+    }
+
+    function updateFallback() {
+      fallbackAction.setName(vm.destination.action);
+    }
+
+    function updateMaxWaitTime() {
+      vm.menuEntry.actions[0].queueSettings.maxWaitTime = vm.maxWaitTime;
     }
 
     //auto set the radio option
@@ -107,16 +127,25 @@
 
     //the queueSettings save gets linked to main save
     function isSaveEnabled() {
-      return AACommonService.isValid();
+      return (AACommonService.isValid() && isDestinationValid());
     }
 
     function defaultMoh() {
-      vm.mohPlayAction.value = CISCO_STD_MOH_URL;
-      vm.mohPlayAction.description = '';
+      mohPlayAction.setValue(CISCO_STD_MOH_URL);
+      mohPlayAction.setDescription('');
     }
 
     function isDisabled() {
       return vm.periodicMinute.label == '5';
+    }
+
+    function isDestinationValid() {
+      var isValid = true;
+      if (!_.isEqual(vm.destination.action, 'disconnect') && _.isEmpty(fallbackAction.value)) {
+        isValid = false;
+      }
+
+      return isValid;
     }
 
     function setVoiceOptions() {
@@ -149,11 +178,27 @@
           label: (i + 1) * 5
         });
       });
-      vm.periodicMinute = vm.periodicMinutes[0];
-      vm.periodicSecond = vm.periodicSeconds[8];
+      if (!_.isEqual(paAction.interval, '')) {
+        var periodicMinute = parseInt(paAction.interval / 60, 10);
+        vm.periodicMinute = {
+          index: periodicMinute,
+          label: periodicMinute
+        };
+        var periodicSecond = paAction.interval - (periodicMinute * 60);
+        vm.periodicSecond = {
+          index: parseInt(periodicSecond / 5, 10) - 1,
+          label: periodicSecond
+        };
+        if (periodicMinute == '5') {
+          vm.areSecondsDisabled = false;
+        }
+      } else {
+        vm.periodicMinute = vm.periodicMinutes[0];
+        vm.periodicSecond = vm.periodicSeconds[8];
+      }
     }
 
-    function populateMaxTime() {
+    function populateMaxWaitTime() {
       vm.minutes = [];
       _.times(60, function (i) {
         vm.minutes.push({
@@ -161,23 +206,25 @@
           label: i + 1
         });
       });
-      //setting maxWaitTime's default value
-      vm.maxWaitTime = vm.minutes[14];
     }
 
     //populating fallback drop down in sorted order
-    function populateDropDown() {
+    function populateFallbackDropDown() {
       vm.destinationOptions.sort(AACommonService.sortByProperty('label'));
+
+      vm.destination = _.find(vm.destinationOptions, function (option) {
+        return (_.isEqual(option.action, fallbackAction.name));
+      });
+
       vm.languageOptions.sort(AACommonService.sortByProperty('label'));
       vm.voiceOptions.sort(AACommonService.sortByProperty('label'));
 
       vm.languageOption = AALanguageService.getLanguageOption();
       vm.voiceOption = AALanguageService.getVoiceOption();
-
     }
 
     function populateMohRadio() {
-      if (_.isEqual(vm.mohPlayAction.description, '')) { //no metadata set, so no file uploaded
+      if (_.isEqual(mohPlayAction.description, '')) { //no metadata set, so no file uploaded
         vm.musicOnHold = DEFAULT_MOH;
       } else {
         vm.musicOnHold = CUSTOM_MOH;
@@ -201,6 +248,9 @@
         vm.periodicSecond = vm.periodicSeconds[0];
         vm.areSecondsDisabled = false;
       }
+      var periodicMinutes = (vm.periodicMinute.label * 60);
+      periodicTime = periodicMinutes + vm.periodicSecond.label;
+      paAction.interval = periodicTime;
     }
 
     function changedPeriodicSecValue() {
@@ -211,6 +261,9 @@
         vm.periodicSecond = vm.periodicSeconds[0];
         vm.areSecondsDisabled = true;
       }
+      var periodicSeconds = (vm.periodicMinute.label * 60);
+      periodicTime = periodicSeconds + vm.periodicSecond.label;
+      paAction.interval = periodicTime;
     }
 
     //get queueSettings menuEntry -> inner menu entry type (moh, initial, periodic...)
@@ -224,9 +277,10 @@
         vm.menuEntry = rcMenu.entries[$scope.index];
         vm.showLanguageAndVoiceOptions = true;
       }
-      vm.mohPlayAction = vm.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
-      vm.iaAction = vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0];
-      vm.paAction = vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0];
+      mohPlayAction = vm.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
+      paAction = vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0];
+      fallbackAction = vm.menuEntry.actions[0].queueSettings.fallback.actions[0];
+      vm.maxWaitTime = vm.menuEntry.actions[0].queueSettings.maxWaitTime;
     }
 
     function populateScope() {
@@ -240,8 +294,8 @@
     function initializeView() {
       populateMohRadio();
       populatePeriodicTime();
-      populateMaxTime();
-      populateDropDown();
+      populateMaxWaitTime();
+      populateFallbackDropDown();
     }
 
     function populateUiModel() {
