@@ -28,10 +28,6 @@
       id: 'America/Los_Angeles',
       label: $translate.instant('timeZones.America/Los_Angeles')
     };
-    var DEFAULT_LANG = {
-      label: $translate.instant('languages.englishAmerican'),
-      value: 'en_US'
-    };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
     var DEFAULT_EXT_LEN = '4';
@@ -78,6 +74,7 @@
     vm.timeZoneOptions = [];
     vm.timeZoneInputPlaceholder = $translate.instant('serviceSetupModal.searchTimeZone');
     vm.defaultCountryPlaceholder = $translate.instant('serviceSetupModal.defaultCountryPlaceholder');
+    vm.preferredLanguagePlaceholder = $translate.instant('serviceSetupModal.preferredLanguagePlaceholder');
     vm.preferredLanguageOptions = [];
     vm.defaultCountryOptions = [];
     vm.unassignedExternalNumbers = [];
@@ -108,8 +105,8 @@
         emergencyCallBackNumber: undefined,
         uuid: undefined,
         voicemailPilotNumberGenerated: 'false',
-        preferredLanguage: DEFAULT_LANG,
-        defaultCountry: undefined
+        preferredLanguage: '',
+        defaultCountry: ''
       },
       numberRanges: [],
       previousLength: DEFAULT_EXT_LEN,
@@ -969,11 +966,11 @@
         siteData.timeZone = vm.model.site.timeZone.id;
       }
 
-      if (vm.model.site.preferredLanguage.value !== savedModel.site.preferredLanguage.value) {
+      if (vm.model.site.preferredLanguage && vm.model.site.preferredLanguage.value !== savedModel.site.preferredLanguage.value) {
         siteData.preferredLanguage = vm.model.site.preferredLanguage.value;
       }
 
-      if (vm.model.site.defaultCountry.value !== savedModel.site.defaultCountry.value) {
+      if (vm.model.site.defaultCountry && vm.model.site.defaultCountry.value !== savedModel.site.defaultCountry.value) {
         siteData.country = vm.model.site.defaultCountry.value;
       }
 

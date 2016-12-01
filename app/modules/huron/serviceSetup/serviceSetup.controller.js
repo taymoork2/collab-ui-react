@@ -26,10 +26,6 @@
       id: 'America/Los_Angeles',
       label: $translate.instant('timeZones.America/Los_Angeles')
     };
-    var DEFAULT_LANG = {
-      label: $translate.instant('languages.englishAmerican'),
-      value: 'en_US'
-    };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
     var DEFAULT_EXT_LEN = '4';
@@ -53,6 +49,7 @@
     vm.externalNumberPool = [];
     vm.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
     vm.defaultCountryPlaceholder = $translate.instant('serviceSetupModal.defaultCountryPlaceholder');
+    vm.preferredLanguagePlaceholder = $translate.instant('serviceSetupModal.preferredLanguagePlaceholder');
     vm.steeringDigits = [
       '1', '2', '3', '4', '5', '6', '7', '8', '9'
     ];
@@ -72,8 +69,8 @@
         vmCluster: undefined,
         emergencyCallBackNumber: undefined,
         voicemailPilotNumberGenerated: 'false',
-        preferredLanguage: DEFAULT_LANG,
-        country: undefined
+        preferredLanguage: '',
+        country: ''
       },
       voicemailPrefix: {
         label: DEFAULT_SITE_SD.concat(DEFAULT_SITE_CODE),
@@ -92,8 +89,8 @@
         ftswExternalVoicemail: false
       },
       ftswSteeringDigit: undefined,
-      ftswPreferredLanguage: DEFAULT_LANG,
-      ftswCountry: undefined,
+      ftswPreferredLanguage: '',
+      ftswCountry: '',
       ftswSiteSteeringDigit: {
         voicemailPrefixLabel: DEFAULT_SITE_SD.concat(DEFAULT_SITE_CODE),
         siteDialDigit: DEFAULT_SITE_SD
