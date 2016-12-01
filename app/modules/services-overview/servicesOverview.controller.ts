@@ -103,7 +103,6 @@ export class ServicesOverviewCtrl {
           this.FusionClusterService.getStatusForService('squared-fusion-cal', clusterList),
           this.FusionClusterService.getStatusForService('squared-fusion-uc', clusterList),
           this.FusionClusterService.getStatusForService('squared-fusion-media', clusterList),
-          this.FusionClusterService.getStatusForService('spark-hybrid-datasecurity', clusterList),
         ];
         this.forwardEvent('hybridStatusEventHandler', servicesStatuses);
         this.forwardEvent('hybridClustersEventHandler', clusterList);
