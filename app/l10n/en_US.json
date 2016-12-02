@@ -1198,6 +1198,10 @@
     "regionalSettings": "Regional Settings",
     "preferredLanguage": "Preferred Language",
     "preferredLanguageDescription": "Specify the language to use for Spark Call Services. Preferred language only applies to new users.",
+    "preferredLanguagePlaceholder": "Select your language",
+    "defaultCountry": "Default Country",
+    "defaultCountryDescription": "Specify the country to set the correct dial tone on user devices.",
+    "defaultCountryPlaceholder": "Select your country",
     "timeZone": "Time Zone",
     "searchTimeZone": "Search for a time zone...",
     "tzDescription": "Specify the time zone to use for schedule-based call routing. For example, this time zone applies to calls routed based on business hours and holiday schedules.",
@@ -4719,6 +4723,12 @@
     "errOrgCreation": "Your order is being processed. Please check back after 24 hours.",
     "info": "Status",
     "wait": "Please wait while we redirect you"
+  },
+  "countries": {
+    "greatBritain": "United Kingdom",
+    "unitedStates": "United States",
+    "canada": "Canada",
+    "colombia": "Colombia"
   },
   "languages": {
     "danish": "Dansk",
