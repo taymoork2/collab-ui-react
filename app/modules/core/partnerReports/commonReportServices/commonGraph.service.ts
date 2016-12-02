@@ -138,6 +138,7 @@ export class CommonGraphService {
       graphs: graphs,
       categoryField: categoryField,
       categoryAxis: catAxis,
+      zoomOutText: '',
     });
   }
 

@@ -1,4 +1,7 @@
+import { CommonReportService } from '../../partnerReports/commonReportServices/commonReport.service';
+import { ReportConstants } from '../../partnerReports/commonReportServices/reportConstants.service';
 import {
+  IActiveTableBase,
   IActiveUserData,
   ICustomerIntervalQuery,
   ITimespan,
@@ -7,7 +10,6 @@ import {
 
 import {
   IActiveUserWrapper,
-  IActiveTableWrapper,
   IAvgRoomData,
   IEndpointContainer,
   IEndpointData,
@@ -17,70 +19,55 @@ import {
   IMetricsData,
 } from './sparkReportInterfaces';
 
-class SparkReportService {
+export class SparkReportService {
   // Promise Tracking
-  private activePromise: ng.IDeferred<any>;
-  private mostActivePromise: ng.IDeferred<any>;
-  private groupCancelPromise: ng.IDeferred<any>;
-  private oneToOneCancelPromise: ng.IDeferred<any>;
-  private avgCancelPromise: ng.IDeferred<any>;
-  private contentSharedCancelPromise: ng.IDeferred<any>;
-  private contentShareSizesCancelPromise: ng.IDeferred<any>;
-  private metricsCancelPromise: ng.IDeferred<any>;
-  private mediaCancelPromise: ng.IDeferred<any>;
-  private deviceCancelPromise: ng.IDeferred<any>;
+  private activeDeferred: ng.IDeferred<any>;
+  private mostActiveDeferred: ng.IDeferred<any>;
+  private groupDeferred: ng.IDeferred<any>;
+  private oneToOneDeferred: ng.IDeferred<any>;
+  private avgDeferred: ng.IDeferred<any>;
+  private contentSharedDeferred: ng.IDeferred<any>;
+  private contentShareSizesDeferred: ng.IDeferred<any>;
+  private metricsDeferred: ng.IDeferred<any>;
+  private mediaDeferred: ng.IDeferred<any>;
+  private deviceDeferred: ng.IDeferred<any>;
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private $q: ng.IQService,
     private chartColors,
-    private CommonReportService,
-    private ReportConstants,
+    private CommonReportService: CommonReportService,
+    private ReportConstants: ReportConstants,
   ) {}
 
   // Active User Data
-  public getActiveUserData(filter: ITimespan, linegraph: boolean): ng.IHttpPromise<IActiveUserWrapper> {
+  public getActiveUserData(filter: ITimespan): ng.IHttpPromise<IActiveUserWrapper> {
     // cancel any currently running jobs
-    if (this.activePromise) {
-      this.activePromise.resolve(this.ReportConstants.ABORT);
+    if (this.activeDeferred) {
+      this.activeDeferred.resolve(this.ReportConstants.ABORT);
     }
-    this.activePromise = this.$q.defer();
+    this.activeDeferred = this.$q.defer();
 
     let returnData: IActiveUserWrapper = {
       graphData: [],
       isActiveUsers: false,
     };
 
-    if (linegraph) {
-      let lineOptions: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter, 'activeUsers');
-      return this.CommonReportService.getCustomerAltReportByType(lineOptions, this.activePromise).then((response: any): IActiveUserWrapper => {
-        let data = _.get(response, 'data.data');
-        if (data) {
-          return this.adjustActiveData(data, filter, returnData, linegraph);
-        } else {
-          return returnData;
-        }
-      }).catch((error: any): IActiveUserWrapper => {
-        return this.CommonReportService.returnErrorCheck(error, 'activeUsers.overallActiveUserGraphError', returnData);
-      });
-
-    } else {
-      let options: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'activeUsers', this.CommonReportService.DETAILED, undefined);
-      return this.CommonReportService.getCustomerReport(options, this.activePromise).then((response: any): IActiveUserWrapper => {
-        let data = _.get(response, 'data.data[0].data');
-        if (data) {
-          return this.adjustActiveData(data, filter, returnData, linegraph);
-        } else {
-          return returnData;
-        }
-      }).catch((error: any): IActiveUserWrapper => {
-        return this.CommonReportService.returnErrorCheck(error, 'activeUsers.overallActiveUserGraphError', returnData);
-      });
-    }
+    let options: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'activeUsers', this.CommonReportService.DETAILED, undefined);
+    return this.CommonReportService.getCustomerReport(options, this.activeDeferred).then((response: any): IActiveUserWrapper => {
+      let data = _.get(response, 'data.data[0].data');
+      if (data) {
+        return this.adjustActiveData(data, filter, returnData);
+      } else {
+        return returnData;
+      }
+    }).catch((error: any): IActiveUserWrapper => {
+      return this.CommonReportService.returnErrorCheck(error, 'activeUsers.overallActiveUserGraphError', returnData);
+    });
   }
 
-  private adjustActiveData(activeData: any, filter: ITimespan, returnData: IActiveUserWrapper, linegraph: boolean): IActiveUserWrapper {
+  private adjustActiveData(activeData: any, filter: ITimespan, returnData: IActiveUserWrapper): IActiveUserWrapper {
     let emptyGraph: boolean = true;
     let graphItem: IActiveUserData = {
       date: '',
@@ -89,32 +76,15 @@ class SparkReportService {
       percentage: 0,
       balloon: true,
     };
-    let returnGraph: Array<IActiveUserData>;
-    if (linegraph) {
-      returnGraph = this.CommonReportService.getReturnLineGraph(filter, graphItem);
-    } else {
-      returnGraph = this.CommonReportService.getReturnGraph(filter, activeData[(activeData.length - 1)].date, graphItem);
-    }
+    let returnGraph: Array<IActiveUserData> = this.CommonReportService.getReturnGraph(filter, activeData[(activeData.length - 1)].date, graphItem);
 
     _.forEach(activeData, (item: any): void => {
-      let date: string = this.CommonReportService.getModifiedLineDate(item.date);
-      let details: any;
-      if (linegraph) {
-        details = _.get(item, 'details[0]');
-      } else {
-        details = _.get(item, 'details');
-      }
+      let date: string = this.CommonReportService.getModifiedDate(item.date, filter);
+      let details: any = _.get(item, 'details');
 
       if (details) {
-        let activeUsers: number;
-        let totalRegisteredUsers: number;
-        if (linegraph) {
-          activeUsers = _.toInteger(details.combinedActiveUsers);
-          totalRegisteredUsers = _.toInteger(details.totalSparkEntitled);
-        } else {
-          activeUsers = _.toInteger(details.activeUsers);
-          totalRegisteredUsers = _.toInteger(details.totalRegisteredUsers);
-        }
+        let activeUsers: number = _.toInteger(details.activeUsers);
+        let totalRegisteredUsers: number = _.toInteger(details.totalRegisteredUsers);
 
         if (activeUsers > 0 || totalRegisteredUsers > 0) {
           _.forEach(returnGraph, (graphPoint) => {
@@ -129,59 +99,31 @@ class SparkReportService {
       }
     });
 
-    if (!emptyGraph && linegraph) {
-      returnData.graphData = this.trimEmptyDataSets(returnGraph);
-      returnData.isActiveUsers = true;
-    } else if (!emptyGraph) {
+    if (!emptyGraph) {
       returnData.graphData = returnGraph;
       returnData.isActiveUsers = true;
     }
     return returnData;
   }
 
-  private trimEmptyDataSets(graph: Array<IActiveUserData>): Array<IActiveUserData> {
-    if (graph.length <= this.ReportConstants.THIRTEEN_WEEKS) {
-      return graph;
-    } else {
-      let returnGraph: Array<IActiveUserData> = [];
-      let emptyGraph: boolean = true;
-      _.forEach(graph, (item: any, index: number) => {
-        if (index !== 0 && emptyGraph) {
-          let totalUsers = _.get(item, 'totalRegisteredUsers');
-          let nextTotalUsers = _.get(graph[index + 1], 'totalRegisteredUsers');
-          if (totalUsers > 0 || nextTotalUsers > 0 || index >= (graph.length - this.ReportConstants.THIRTEEN_WEEKS)) {
-            emptyGraph = false;
-          }
-        }
-
-        if (!emptyGraph) {
-          returnGraph.push(item);
-        }
-      });
-      return returnGraph;
-    }
-  }
-
   // Most Active User Data
-  public getMostActiveUserData(filter: ITimespan): ng.IHttpPromise<IActiveTableWrapper> {
+  public getMostActiveUserData(filter: ITimespan): ng.IPromise<Array<IActiveTableBase>> {
     // cancel any currently running jobs
-    if (this.mostActivePromise) {
-      this.mostActivePromise.resolve(this.ReportConstants.ABORT);
+    if (this.mostActiveDeferred) {
+      this.mostActiveDeferred.resolve(this.ReportConstants.ABORT);
     }
-    this.mostActivePromise = this.$q.defer();
-    let returnObject: IActiveTableWrapper = {
-      tableData: [],
-      error: false,
-    };
+    this.mostActiveDeferred = this.$q.defer();
 
+    let deferred: ng.IDeferred<Array<IActiveTableBase>> = this.$q.defer();
+    let returnArray: Array<IActiveTableBase> = [];
     let options: ITypeQuery = this.CommonReportService.getTypeOptions(filter, 'mostActive');
-    return this.CommonReportService.getCustomerAltReportByType(options, this.mostActivePromise).then((response: any): IActiveTableWrapper => {
+    this.CommonReportService.getCustomerAltReportByType(options, this.mostActiveDeferred).then((response: any): void => {
       let responseData: any = _.get(response, 'data.data');
       if (responseData) {
         _.forEach(responseData, (item: any): void => {
-          let details: any = _.get(item, 'details');
+          let details: any = _.get(item, 'details', undefined);
           if (details) {
-            returnObject.tableData.push({
+            returnArray.push({
               numCalls: _.toInteger(details.sparkCalls) + _.toInteger(item.details.sparkUcCalls),
               totalActivity: _.toInteger(details.totalActivity),
               sparkMessages: _.toInteger(details.sparkMessages),
@@ -190,51 +132,52 @@ class SparkReportService {
           }
         });
       }
-      return returnObject;
-    }).catch((error: any): IActiveTableWrapper => {
-      returnObject.error = true;
-      return this.CommonReportService.returnErrorCheck(error, 'activeUsers.mostActiveError', returnObject);
+      deferred.resolve(returnArray);
+    }).catch((error: any): void => {
+      deferred.reject(this.CommonReportService.returnErrorCheck(error, 'activeUsers.mostActiveError', returnArray));
     });
+
+    return deferred.promise;
   }
 
   // Average Room Data
   public getAvgRoomData(filter: ITimespan): ng.IPromise<Array<IAvgRoomData>> {
     // cancel any currently running jobs
-    if (this.groupCancelPromise) {
-      this.groupCancelPromise.resolve(this.ReportConstants.ABORT);
+    if (this.groupDeferred) {
+      this.groupDeferred.resolve(this.ReportConstants.ABORT);
     }
-    if (this.oneToOneCancelPromise) {
-      this.oneToOneCancelPromise.resolve(this.ReportConstants.ABORT);
+    if (this.oneToOneDeferred) {
+      this.oneToOneDeferred.resolve(this.ReportConstants.ABORT);
     }
-    if (this.avgCancelPromise) {
-      this.avgCancelPromise.resolve(this.ReportConstants.ABORT);
+    if (this.avgDeferred) {
+      this.avgDeferred.resolve(this.ReportConstants.ABORT);
     }
-    this.groupCancelPromise = this.$q.defer();
-    this.oneToOneCancelPromise = this.$q.defer();
-    this.avgCancelPromise = this.$q.defer();
+    this.groupDeferred = this.$q.defer();
+    this.oneToOneDeferred = this.$q.defer();
+    this.avgDeferred = this.$q.defer();
 
     let groupOptions: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'conversations', this.CommonReportService.TIME_CHARTS, true);
     let oneToOneOptions: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'convOneOnOne', this.CommonReportService.TIME_CHARTS, true);
     let avgOptions: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'avgConversations', this.CommonReportService.TIME_CHARTS, true);
     let promises: Array<ng.IHttpPromise<any>> = [];
 
-    let groupPromise = this.CommonReportService.getCustomerReport(groupOptions, this.groupCancelPromise).then((response: any): Array<any> => {
+    let groupPromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(groupOptions, this.groupDeferred).then((response: any): Array<any> => {
       return _.get(response, 'data.data', []);
-    }).catch((error: any): void => {
+    }, (error: any): void => {
       return this.CommonReportService.returnErrorCheck(error, 'avgRooms.groupError', []);
     });
     promises.push(groupPromise);
 
-    let oneToOnePromise = this.CommonReportService.getCustomerReport(oneToOneOptions, this.oneToOneCancelPromise).then((response: any): Array<any> => {
+    let oneToOnePromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(oneToOneOptions, this.oneToOneDeferred).then((response: any): Array<any> => {
       return _.get(response, 'data.data', []);
-    }).catch((error: any): void => {
+    }, (error: any): void => {
       return this.CommonReportService.returnErrorCheck(error, 'avgRooms.oneToOneError', []);
     });
     promises.push(oneToOnePromise);
 
-    let avgPromise = this.CommonReportService.getCustomerReport(avgOptions, this.avgCancelPromise).then((response: any): Array<any> => {
+    let avgPromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(avgOptions, this.avgDeferred).then((response: any): Array<any> => {
       return _.get(response, 'data.data', []);
-    }).catch((error: any): Array<any> => {
+    }, (error: any): Array<any> => {
       return this.CommonReportService.returnErrorCheck(error, 'avgRooms.avgError', []);
     });
     promises.push(avgPromise);
@@ -327,29 +270,29 @@ class SparkReportService {
   // Files Shared Data
   public getFilesSharedData(filter: ITimespan): ng.IPromise<Array<IFilesShared>> {
     // cancel any currently running jobs
-    if (this.contentSharedCancelPromise) {
-      this.contentSharedCancelPromise.resolve(this.ReportConstants.ABORT);
+    if (this.contentSharedDeferred) {
+      this.contentSharedDeferred.resolve(this.ReportConstants.ABORT);
     }
-    if (this.contentShareSizesCancelPromise) {
-      this.contentShareSizesCancelPromise.resolve(this.ReportConstants.ABORT);
+    if (this.contentShareSizesDeferred) {
+      this.contentShareSizesDeferred.resolve(this.ReportConstants.ABORT);
     }
-    this.contentSharedCancelPromise = this.$q.defer();
-    this.contentShareSizesCancelPromise = this.$q.defer();
+    this.contentSharedDeferred = this.$q.defer();
+    this.contentShareSizesDeferred = this.$q.defer();
 
     let contentSharedOptions: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'contentShared', this.CommonReportService.TIME_CHARTS, true);
     let contentShareSizesOptions: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'contentShareSizes', this.CommonReportService.TIME_CHARTS, true);
     let promises: Array<ng.IHttpPromise<any>> = [];
 
-    let contentSharedPromise = this.CommonReportService.getCustomerReport(contentSharedOptions, this.contentSharedCancelPromise).then((response: any): Array<any> => {
+    let contentSharedPromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(contentSharedOptions, this.contentSharedDeferred).then((response: any): Array<any> => {
       return _.get(response, 'data.data', []);
-    }).catch((error: any): void => {
+    }, (error: any): void => {
       return this.CommonReportService.returnErrorCheck(error, 'filesShared.contentSharedError', []);
     });
     promises.push(contentSharedPromise);
 
-    let contentShareSizesPromise = this.CommonReportService.getCustomerReport(contentShareSizesOptions, this.contentShareSizesCancelPromise).then((response: any): Array<any> => {
+    let contentShareSizesPromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(contentShareSizesOptions, this.contentShareSizesDeferred).then((response: any): Array<any> => {
       return _.get(response, 'data.data', []);
-    }).catch((error: any): void => {
+    }, (error: any): void => {
       return this.CommonReportService.returnErrorCheck(error, 'filesShared.contentShareSizesDataError', []);
     });
     promises.push(contentShareSizesPromise);
@@ -418,10 +361,10 @@ class SparkReportService {
   // Call Metrics Dat
   public getCallMetricsData(filter: ITimespan): ng.IHttpPromise<IMetricsData> {
     // cancel any currently running jobs
-    if (this.metricsCancelPromise) {
-      this.metricsCancelPromise.resolve(this.ReportConstants.ABORT);
+    if (this.metricsDeferred) {
+      this.metricsDeferred.resolve(this.ReportConstants.ABORT);
     }
-    this.metricsCancelPromise = this.$q.defer();
+    this.metricsDeferred = this.$q.defer();
     let returnArray: IMetricsData = {
       dataProvider: [{
         callCondition: this.$translate.instant('callMetrics.audioCalls'),
@@ -439,7 +382,7 @@ class SparkReportService {
     };
     let options: ICustomerIntervalQuery = this.CommonReportService.getAltCustomerOptions(filter, 'callMetrics', this.CommonReportService.DETAILED, undefined);
 
-    return this.CommonReportService.getCustomerReport(options, this.metricsCancelPromise).then((response: any): IMetricsData => {
+    return this.CommonReportService.getCustomerReport(options, this.metricsDeferred).then((response: any): IMetricsData => {
       let details: any = _.get(response, 'data.data[0].data[0].details');
       if (details) {
         let totalCalls: number = _.toInteger(details.totalCalls);
@@ -471,13 +414,13 @@ class SparkReportService {
   // Media Quality Data
   public getMediaQualityData(filter: ITimespan): ng.IHttpPromise<Array<IMediaData>> {
     // cancel any currently running jobs
-    if (this.mediaCancelPromise) {
-      this.metricsCancelPromise.resolve(this.ReportConstants.ABORT);
+    if (this.mediaDeferred) {
+      this.metricsDeferred.resolve(this.ReportConstants.ABORT);
     }
-    this.mediaCancelPromise = this.$q.defer();
+    this.mediaDeferred = this.$q.defer();
 
     let options: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'callQuality', this.CommonReportService.DETAILED, undefined);
-    return this.CommonReportService.getCustomerReport(options, this.mediaCancelPromise).then((response: any): Array<IMediaData> => {
+    return this.CommonReportService.getCustomerReport(options, this.mediaDeferred).then((response: any): Array<IMediaData> => {
       let emptyGraph: boolean = true;
       let data: any = _.get(response, 'data.data[0].data');
       let graphItem: IMediaData = {
@@ -555,10 +498,10 @@ class SparkReportService {
   // Registered Endpoints Data
   public getDeviceData(filter: ITimespan): ng.IHttpPromise<IEndpointContainer> {
     // cancel any currently running jobs
-    if (this.deviceCancelPromise) {
-      this.deviceCancelPromise.resolve(this.ReportConstants.ABORT);
+    if (this.deviceDeferred) {
+      this.deviceDeferred.resolve(this.ReportConstants.ABORT);
     }
-    this.deviceCancelPromise = this.$q.defer();
+    this.deviceDeferred = this.$q.defer();
     let deviceArray: IEndpointContainer = {
       graphData: [{
         deviceType: this.$translate.instant('registeredEndpoints.allDevices'),
@@ -573,7 +516,7 @@ class SparkReportService {
     };
 
     let options: ITypeQuery = this.CommonReportService.getTypeOptions(filter, 'deviceType');
-    return this.CommonReportService.getCustomerReportByType(options, this.deviceCancelPromise).then((response: any): IEndpointContainer => {
+    return this.CommonReportService.getCustomerReportByType(options, this.deviceDeferred).then((response: any): IEndpointContainer => {
       return this.analyzeDeviceData(response, filter, deviceArray);
     }).catch((error: any): IEndpointContainer => {
       return this.CommonReportService.returnErrorCheck(error, 'registeredEndpoints.customerError', deviceArray);

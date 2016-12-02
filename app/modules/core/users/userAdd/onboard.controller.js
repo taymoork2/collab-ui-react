@@ -1,3 +1,5 @@
+require('./_user-add.scss');
+
 (function () {
   'use strict';
 
@@ -87,6 +89,7 @@
     OnboardService.huronCallEntitlement = false;
 
     $scope.shouldAddCallService = shouldAddCallService;
+    $scope.cancelModal = cancelModal;
     var currentUserHasCall = false;
 
     $scope.isCareEnabled = false;
@@ -170,8 +173,10 @@
     }
 
     var rootState = $previousState.get().state.name;
-    $scope.onBack = function () {
-      $state.go(rootState);
+    $scope.onBack = function (state) {
+      var goToState = state || rootState;
+      Analytics.trackAddUsers(Analytics.eventNames.BACK, Analytics.sections.ADD_USERS.uploadMethods.MANUAL, { emailEntryMethod: Analytics.sections.ADD_USERS.manualMethods[$scope.model.userInputOption.toString()] });
+      $state.go(goToState);
     };
 
     // initiate the bulkSave operation for ADSync
@@ -579,6 +584,26 @@
       careRadio: false,
       initialCareRadioState: false // For generating Metrics
     };
+
+    function getSelectedKeys(obj) {
+      var result = _.reduce(obj, function (result, v, k) {
+        if (v === true) {
+          result.push(k);
+        }
+        return result;
+      }, []);
+      return result;
+    }
+
+
+    function createPropertiesForAnalyltics() {
+      return {
+        numberOfErrors: $scope.results.errors.length,
+        usersAdded: $scope.numAddedUsers,
+        usersUpdated: $scope.numUpdatedUsers,
+        servicesSelected: getSelectedKeys()
+      };
+    }
 
     if (userEnts) {
       for (var x = 0; x < userEnts.length; x++) {
@@ -1418,12 +1443,29 @@
       $scope.validateTokens().then(function () {
         if ($scope.invalidcount === 0 && usersListLength > 0) {
           $scope.currentUserCount = usersListLength;
+          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.MANUAL_EMAIL,
+            Analytics.sections.ADD_USERS.uploadMethods.MANUAL, {
+              emailEntryMethod: Analytics.sections.ADD_USERS.manualMethods[$scope.model.userInputOption.toString()]
+            }
+          );
           $state.go('users.add.services');
         } else if (usersListLength === 0) {
           Log.debug('No users entered.');
           Notification.error('usersPage.noUsersInput');
+          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.MANUAL_EMAIL,
+            Analytics.sections.ADD_USERS.uploadMethods.MANUAL, {
+              emailEntryMethod: Analytics.sections.ADD_USERS.manualMethods[$scope.model.userInputOption.toString()],
+              error: 'no users'
+            }
+          );
         } else {
           Log.debug('Invalid users entered.');
+          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.MANUAL_EMAIL,
+            Analytics.sections.ADD_USERS.uploadMethods.MANUAL, {
+              emailEntryMethod: Analytics.sections.ADD_USERS.manualMethods[$scope.model.userInputOption.toString()],
+              error: 'invalid users'
+            }
+          );
           Notification.error('usersPage.validEmailInput');
         }
       });
@@ -1645,6 +1687,7 @@
 
         $scope.goToUsersPage = function () {
           $previousState.forget('modalMemo');
+          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.FINISH, null, createPropertiesForAnalyltics());
           $state.go('users.list');
         };
 
@@ -1652,6 +1695,7 @@
           if (isFTW) {
             $scope.wizard.goToStep('manualEntry');
           } else {
+            Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.GO_BACK_FIX, null, createPropertiesForAnalyltics());
             $state.go('users.add');
           }
         };
@@ -1662,9 +1706,12 @@
           if (isFTW) {
             deferred.resolve();
           } else {
+            Analytics.trackAddUsers(Analytics.eventNames.SAVE, null, createPropertiesForAnalyltics());
             $state.go('users.add.results');
           }
         }
+
+
       };
 
       var errorCallback = function (response) {
@@ -2478,6 +2525,11 @@
       calculateProcessProgress();
 
       return saveDeferred.promise;
+    }
+
+    function cancelModal() {
+      Analytics.trackAddUsers(Analytics.eventNames.CANCEL_MODAL);
+      $state.modal.dismiss();
     }
 
   }

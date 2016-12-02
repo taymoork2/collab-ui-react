@@ -106,17 +106,13 @@ describe('CsdmConverterSpec', function () {
         accountType: 'PERSON'
       }];
       expect(converter.convertCloudberryDevices(arr)[0].accountType).toBe('PERSON');
-      expect(converter.convertCloudberryDevices(arr)[0].canEditDisplayName).toBeFalsy();
       expect(converter.convertHuronDevices(arr)[0].accountType).toBe('PERSON');
-      expect(converter.convertHuronDevices(arr)[0].canEditDisplayName).toBeFalsy();
     });
 
     it('default accountType', function () {
       var arr = [{}];
       expect(converter.convertCloudberryDevices(arr)[0].accountType).toBe('MACHINE');
-      expect(converter.convertCloudberryDevices(arr)[0].canEditDisplayName).toBeTruthy();
       expect(converter.convertHuronDevices(arr)[0].accountType).toBe('PERSON');
-      expect(converter.convertHuronDevices(arr)[0].canEditDisplayName).toBeFalsy();
     });
 
     it('photos', function () {

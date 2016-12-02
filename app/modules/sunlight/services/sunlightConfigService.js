@@ -10,7 +10,7 @@
 
   /* @ngInject */
   function sunlightConfigService($http, UrlConfig, Authinfo) {
-    var sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/user';
+    var sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/user';
     var sunlightChatTemplateUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/template';
     var sunlightChatConfigBase = UrlConfig.getSunlightConfigServiceUrl() + '/organization';
     var service = {
@@ -62,7 +62,8 @@
     }
 
     function onBoardCare() {
-      var onboardPayload = { 'orgDisplayName': Authinfo.getOrgName(), 'csDiscoveryUrl': UrlConfig.getCSDiscoveryUrl() };
+      var onboardPayload = { 'orgDisplayName': Authinfo.getOrgName(),
+        'csDiscoveryUrl': 'discovery.produs1.ciscoccservice.com' };
       return $http.put(sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/csonboard', onboardPayload);
     }
   }

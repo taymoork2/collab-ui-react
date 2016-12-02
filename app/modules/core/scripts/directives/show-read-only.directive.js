@@ -1,3 +1,5 @@
+require('./_show-read-only.scss');
+
 (function () {
   'use strict';
 

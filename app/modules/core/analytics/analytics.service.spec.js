@@ -1,14 +1,28 @@
 'use strict';
 
 describe('Service: Analytics', function () {
-  var Config, Analytics, Authinfo, Orgservice, $q, $scope, $state;
+  var Config, Analytics, Authinfo, Orgservice, $q, $scope, $state, TrialService, UserListService;
   var trialData = getJSONFixture('core/json/trials/trialData.json');
+  var customerData = getJSONFixture('core/json/customers/customer.json');
+  var getOrgData = {
+    data: {
+      isPartner: 'true'
+    }
+  };
+  var listUsersData = {
+    data: {
+      totalResults: 5
+    }
+  };
 
-  beforeEach(angular.mock.module(require('./index')));
+
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies(_$q_, $rootScope, _$state_, _Config_, _Analytics_, _Authinfo_, _Orgservice_) {
+  function dependencies(_$q_, $rootScope, _$state_, _Config_, _Analytics_, _Authinfo_, _Orgservice_, _TrialService_, _UserListService_) {
     $scope = $rootScope.$new();
     $q = _$q_;
     $state = _$state_;
@@ -16,10 +30,14 @@ describe('Service: Analytics', function () {
     Analytics = _Analytics_;
     Authinfo = _Authinfo_;
     Orgservice = _Orgservice_;
+    TrialService = _TrialService_;
+    UserListService = _UserListService_;
   }
 
   function initSpies() {
     spyOn(Config, 'isProd');
+    spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue(5);
+    spyOn(UserListService, 'listUsers').and.returnValue($q.when(listUsersData));
     spyOn(Analytics, '_init').and.returnValue($q.when());
     spyOn(Analytics, '_track').and.callFake(_.noop);
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
@@ -28,6 +46,7 @@ describe('Service: Analytics', function () {
         isTestOrg: true
       }, 200);
     });
+    spyOn(Orgservice, 'getAdminOrgAsPromise').and.returnValue($q.when(getOrgData));
   }
 
   function setIsProd(isProd) {
@@ -100,6 +119,78 @@ describe('Service: Analytics', function () {
       expect(result.length).toBe(2);
       expect(result).toContain({ model: 'CISCO_8865', qty: 3 });
 
+    });
+  });
+
+
+  describe('when tracking Add Users steps', function () {
+
+    it('should call _track when trackAddUsers is called', function () {
+      Analytics.trackAddUsers(Analytics.eventNames.START, {});
+      $scope.$apply();
+      expect(Analytics._track).toHaveBeenCalled();
+    });
+
+    it('should send org data', function () {
+      Analytics.trackAddUsers(Analytics.eventNames.START);
+      $scope.$apply();
+      expect(Analytics._track).toHaveBeenCalled();
+      var props = Analytics._track.calls.mostRecent().args[1];
+      expect(props.cisco_isPartner).toEqual('true');
+
+    });
+    it('should add additional properties if passed in', function () {
+      Analytics.trackAddUsers(Analytics.eventNames.START, null, { someProp: 'test' });
+      $scope.$apply();
+      expect(Analytics._track).toHaveBeenCalled();
+      var props = Analytics._track.calls.mostRecent().args[1];
+      expect(props.cisco_someProp).toEqual('test');
+
+    });
+  });
+
+  describe(' _getOrgStatus', function () {
+    it('shoule return \'expired\' when there are no licenses', function () {
+      var result = Analytics._getOrgStatus(32, null);
+      expect(result).toBe('expired');
+    });
+
+    it('should return trial when there are any services in trial', function () {
+      var result = Analytics._getOrgStatus(32, customerData.licenseList);
+      expect(result).toBe('trial');
+    });
+    it('should return active when has licenses and no trial', function () {
+
+      var licenseList = _.map(customerData.licenseList,
+        function (license) {
+          license.isTrial = false;
+          return license;
+        });
+      var result = Analytics._getOrgStatus(32, licenseList);
+      expect(result).toBe('active');
+    });
+  });
+
+  describe('_getAddUserOrgData', function () {
+    it('should populate persistentProperties when they are empty', function () {
+      Analytics.sections.ADD_USERS.persistentProperties = null;
+      spyOn(Authinfo, 'getOrgId').and.returnValue('999');
+      Analytics._getAddUserOrgData('Add Users').then(function (result) {
+        expect(result.orgId).toBe('999');
+        expect(Analytics.sections.ADD_USERS.persistentProperties.userCountPrior).toEqual('5');
+        expect(Analytics.sections.ADD_USERS.persistentProperties.orgId).toBe('999');
+      });
+    });
+
+    it('should not modify persistentProperties if not empty and orgId same as Authinfo orgId ', function () {
+      Analytics.sections.ADD_USERS.persistentProperties = {
+        orgId: '999',
+        userCountPrior: '4'
+      };
+
+      Analytics._getAddUserOrgData('Add Users').then(function (result) {
+        expect(result.userCountPrior).toEqual('4');
+      });
     });
   });
 

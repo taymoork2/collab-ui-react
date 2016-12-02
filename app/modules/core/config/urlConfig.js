@@ -176,6 +176,12 @@
       integration: 'https://statusbts.webex.com/status',
       prod: 'https://statusbts.webex.com/status'
     },
+    UccUrl: {
+      dev: 'https://ucc-integration.wbx2.com/ucm-service/api/v1',
+      cfe: 'https://ucc-e.wbx2.com/ucm-service/api/v1',
+      integration: 'https://ucc-integration.wbx2.com/ucm-service/api/v1',
+      prod: 'https://ucc-a.wbx2.com/ucm-service/api/v1'
+    },
 
     // urls same for all environments
 
@@ -190,8 +196,7 @@
     CallflowServiceUrl: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
     LogMetricsUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
     SSOTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
-    SSOSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
-    CSDiscoveryUrl: 'https://discovery.produs1.ciscoccservice.com'
+    SSOSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/'
   };
 
   module.exports = angular

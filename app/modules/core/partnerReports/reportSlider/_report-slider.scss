@@ -1,0 +1,30 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/spacing';
+
+report-slider, .report-slider {
+  width: 100%;
+}
+.report-slider {
+  .report-filter {
+    width: vr-adjust(200);
+  }
+  .slider {
+    width: calc(100% - 280px);
+    @include vr-spacing(mr, 2);
+    position: relative;
+    top: vr-adjust(8);
+    .insidebar, .sliderPointer {
+      background-color: $color-primary-base;
+    }
+    .sliderLabel {
+      font-size: vr-adjust(16);
+      top: vr-adjust(-36);
+      color: $gray-base;
+    }
+    .hashLabel {
+      font-size: vr-adjust(10);
+      color: $gray-base;
+      left: vr-adjust(-16);
+    }
+  }
+}

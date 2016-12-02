@@ -489,10 +489,6 @@
     "all": "All",
     "engagement": "Engagement",
     "quality": "Quality",
-    "avgEntitlements": "Entitlements",
-    "avgCalls": "Average Calls",
-    "avgConversations": "Average Conversations",
-    "activeUsers": "Active Users",
     "noData": "No Data",
     "noCustomerData": "No Data Available",
     "today": "Today",
@@ -508,10 +504,8 @@
     "threePlusMonths": "Last 3+ Months",
     "lastTwelveWeeks": "Last 12 Weeks",
     "lastTwelveWeeks2": "last twelve weeks",
-    "mostEngaged": "5 Most Engaged",
-    "leastEngaged": "5 Least Engaged",
-    "highQuality": "5 Highest Quality",
-    "leastQuality": "5 Lowest Quality",
+    "custom": "Custom",
+    "custom2": "custom selection",
     "customerLoadError": "There was an error while loading the customer list.",
     "unauthorizedError": "User is not authorized to access the customer reports.",
     "webex": "WebEx Reports",
@@ -632,7 +626,7 @@
     "noActiveUsers": "During the last {{time}}, there have been no active users.  To see user status and resend invitations to those still pending, visit the ",
     "errorActiveUsers": "This data is temporarily unavailable.  Our servers are working to return it soon, please check back again shortly.",
     "usersTab": "users tab.",
-    "threeMonthsMessage": "Use the sliders to show up to the last twelve months of data.  The Most Active Users table only shows data for the last twelve weeks."
+    "customMessage": "The Most Active Users table is unavailable when the custom date selector is active."
   },
   "avgRooms": {
     "avgRooms": "Total Rooms",
@@ -1052,7 +1046,9 @@
     "users": "Users",
     "voice": "Voice",
     "warning": "Warning",
-    "yes": "Yes"
+    "yes": "Yes",
+    "type": "Type",
+    "service": "Service"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1193,10 +1189,10 @@
     "modifySSOLabel": "Modify",
     "ssoEnabledStatus": "Single sign-on is enabled",
     "ssoNotEnabledStatus": "Single sign-on is not enabled",
-    "ssoModifyWarning": "SSO is Enabled <br/> Changing settings could invalidate the connection.",
+    "ssoModifyWarning": "SSO is Enabled. Changing settings could invalidate the connection.",
     "idpOverwriteWarning": "Are you Sure? Single Sign-On is currently enabled. Importing a new metadata file will invalidate your existing configuration. If you proceed you cannot revert to your previous SSO configuration. Do you want to continue?",
     "disableSSOByRadioWarning": "Are you sure? Your existing SSO configuration will be disabled. All users will now begin using the built-in authentication in Spark and may need assistance establishing or resetting their passwords. You will not be able to undo this selection, but can re-enable SSO again from Enterprise Settings. Do you want to continue? ",
-    "ssoDisableSuccessNotification": "SSO is disabled <br/> User authentication configuration is now using simple built-in identity service."
+    "ssoDisableSuccessNotification": "SSO is Disabled. User authentication configuration is now using simple built-in identity service."
   },
   "serviceSetupModal": {
     "regionalSettings": "Regional Settings",
@@ -1457,7 +1453,8 @@
       "modalText2": "Select the type of information that you want included in the report:",
       "modalNote": "Note: The more users included, the longer the report takes to generate.",
       "modalCTA": "Export to CSV",
-      "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s"
+      "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s",
+      "userNotFound": "Not found"
     },
     "overview": {
       "activated": "Activated",
@@ -1596,7 +1593,7 @@
       "squared-fusion-mgmt": "Hybrid Management Service",
       "squared-fusion-uc": "Hybrid Call Service",
       "squared-fusion-cal": "Hybrid Calendar Service",
-      "hybrid-data-security": "Hybrid Data Security"
+      "spark-hybrid-datasecurity": "Hybrid Data Security"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
@@ -2028,26 +2025,64 @@
     "genericFailure": "An unexpected error occurred. Please try again later."
   },
   "hds" : {
-    "settings" : {
-      "deactivateService" : "Deactivate Service",
-      "deactivateServiceHeader" : "Deactivate Hybrid Data Security",
-      "deactivateServiceDesc" : "Deactivating Service...",
-      "deactivateServiceButton" : "Deactivate",
-      "deactivateServiceConfirmation" : "Confirm Deactivation",
-      "serviceStatus" : "Service Status",
-      "serviceStatusTrialMode" : "Trial Mode",
-      "serviceStatusProductionMode" : "Production Mode",
-      "serviceStatusTrial" : "Trial",
-      "serviceStatusProduction" : "Production",
-      "serviceStatusTrialStarted" : "Hybrid Data Security Trial Mode has started",
-      "serviceStatusProductionStarted" : "Hybrid Data Security Production Mode has started",
-      "serviceDocumentationSoftware" : "Documentation and Software",
-      "serviceHelp" : "Visit <a target='_blank' href='{{documentationUrl}}'>Help Central</a> whenever you need further information about Hybrid Services",
-      "serviceDownload" : "Download Cisco Expressway software from <a target='_blank' href='http://software.cisco.com'>software.cisco.com</a>",
-      "orgSettings" : "Organization",
-      "orgSettingsKmsServer" : "Server",
-      "orgSettingsKmsMachineAccount"  : "Machine Account",
-      "getOrgSettingsFailure" : "Failed to retrieve organization data."
+    "pageTitle": "Hybrid Data Security",
+    "genericError": "An unexpected error occurred. Please try again later.",
+    "serviceDescription": "Hybrid Data Security Service Description.",
+    "hdsServiceActivationFailure": "Problems enabling the service",
+    "clusters": {
+      "listing": {
+        "no_clusters_heading": "No Hybrid Data Service clusters registered",
+        "no_clusters_text": "See required actions above and documentation to get started."
+      }
+    },
+    "serviceStatus": {
+      "unknown": "Status unknown",
+      "not_configured": "Not configured",
+      "installing": "Installing",
+      "disabled": "Disabled",
+      "not_installed": "Not installed",
+      "stopped": "Stopped",
+      "offline": "Offline",
+      "registered": "Registered",
+      "downloading": "Downloading",
+      "uninstalling": "Uninstalling",
+      "running": "Running",
+      "needs_attention": "Needs attention",
+      "alarm": "Alarms",
+      "Unknown": "Registering",
+      "nohosts": "No Hosts Registered",
+      "no_hosts": "No Hosts Registered",
+      "has_alarms": "Alarms",
+      "upgrading": "Upgrading",
+      "upgraded": "Upgraded",
+      "pending": "Pending",
+      "initializing": "Initializing",
+      "not_operational": "Not Operational",
+      "nonodes": "No Nodes Registered"
+    },
+    "resources" : {
+      "page_title": "Hybrid Data Security Service",
+      "add-resource-button": "Add Resource",
+      "genericError": "An unexpected error occurred. Please try again later.",
+      "loading" : "Loading",
+      "connectors": {
+        "group_by": "Group services by:",
+        "cluster_id": "Cluster",
+        "host_name": "Host",
+        "display_name": "Service Name",
+        "connector_type": "Connector Type",
+        "serial": "Serial",
+        "version": "Version",
+        "status": "Status",
+        "alarms": "Alarms",
+        "reportAlarm": "reported alarm.",
+        "reportAlarms": "reported alarms.",
+        "software": "Software",
+        "deregister_host": "DEREGISTER HOST",
+        "goToHost": "Go to Host",
+        "hosts": "Hosts",
+        "nodes": "Nodes"
+     }
     }
   },
   "ediscovery": {
@@ -4111,7 +4146,7 @@
       "cancel": "Cancel",
       "cluster-placeholder": "Create or select cluster",
       "hostname-placeholder": "Enter FQDN or IP address",
-      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud.<br> Node IP Address/FQDN: {{hostname}}<br>Cluster: {{clustername}}",
+      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud. Node IP Address/FQDN: {{hostname}} Cluster: {{clustername}}",
       "grant-registration-success-header-new-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, assigned to the new cluster <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
       "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration.",
       "next": "Next",
@@ -4171,7 +4206,7 @@
     "actionsHeader": "Actions",
     "defuseConnector": "Deregister",
     "confirmDefuse": "Confirm Deregistration",
-    "defuseText": "Are you sure?<br> Clicking \"Yes\" will remove this device from Cisco Cloud Collaboration Management and stop the devices from accepting any new calls. (Preexisting calls will continue.)",
+    "defuseText": "Are you sure? Clicking \"Yes\" will remove this device from Cisco Cloud Collaboration Management and stop the devices from accepting any new calls. (Preexisting calls will continue.)",
     "yesDefuse": "Yes",
     "defuseSuccess": "Deregistration successfully",
     "deleteConnectorError": "Error deleting connector",
@@ -4784,8 +4819,9 @@
     "cloudExtensions": "Hybrid Services",
     "enableService": "Activate service for this user",
     "status": "Status",
-    "host": "Node",
-    "sipUri": "Directory URI"
+    "cluster": "Cluster",
+    "sipUri": "Directory URI",
+    "errorMessage": "Error Message"
   },
   "validation": {
     "nonPrintable": "This entry contains nonprintable characters.",
@@ -5385,7 +5421,7 @@
           "squared-fusion-uc": "Call",
           "squared-fusion-mgmt": "Management",
           "squared-fusion-media": "Media",
-          "hybrid-data-security": "Data Security"
+          "spark-hybrid-datasecurity": "Data Security"
         }
       },
       "licenses": {
@@ -5524,8 +5560,8 @@
     "ciscouc.devops": "Spark Call Devops",
     "ciscouc.devsupport": "Spark Call Dev Support",
     "compliance": "Compliance Officer",
-    "ciscouc.devsupport.phonelogaccess": "Spark Call Phone Log Access",
-    "ciscouc.devsupport.phonesupport": "Spark Call Phone Support"
+    "ciscouc.phonelogaccess": "Spark Call Phone Log Access",
+    "ciscouc.phonesupport": "Spark Call Phone Support"
   },
   "atlasRoles": {
     "Full_Admin": "Full Admin",
@@ -5942,18 +5978,32 @@
     "msg": {
       "splsResponseErr": "No partner organization found, please contact ccaportal@cisco.com for help."
     },
+    "button": {
+      "decline": "Decline",
+      "approve": "Approve",
+      "submitRequest": "Submit Request",
+      "cancelSubmission": "Cancel Submission"
+    },
     "cbgTitle": "Callback Groups",
     "tdTitle": "Telephony Domain",
     "cbgs": {
       "overview": "Overview",
+      "openedOn": "Opened on",
       "moveSite": "Move Site",
       "placeholder-text": "All",
       "importCsv": "Import CSV",
       "title": "Callback Groups",
       "exportToCsv": "Export to CSV",
+      "remedyTicket": "Remedy Ticket",
+      "reqSubmission": "Request Submission",
+      "approveCbg": "Approve Callback Group",
       "editCountry": "Edit Countries/Regions",
       "downloadCsv": "Download CSV Template",
       "csvFilename": "exported_callbackGroup.csv",
+      "declineDialogTitle": "Decline Callback Group",
+      "declineReason": "Reason Callback Group is declined",
+      "declineDialogNote": "Note: Explaination will appear as a comment in the Callback Group history",
+      "approveMsg": "If you proceed, the system will auto-update the callback group with the selected countries",
       "moveSiteMsg": "Are you sure you want to move this site?",
       "field": {
         "sites": "Site URL",
@@ -6543,5 +6593,12 @@
       "majorOutage": "Major Outage",
       "underMaintenance": "Under Maintenance"
     }
+  },
+  "machineTypes":{
+    "bot": "Bot",
+    "lyra_space": "Room Device Place",
+    "robot": "Robot",
+    "spark_integration": "Spark Integration",
+    "room": "Desk Phone Place"
   }
 }

@@ -54,9 +54,9 @@
       </div>
 
       <div ng-if="extension.entitled && extension.homedConnector">
-        <span class="cloud-extension-label">{{'cloudExtensions.host' | translate}}:</span>
+        <span class="cloud-extension-label">{{'cloudExtensions.cluster' | translate}}:</span>
         <span ng-if="extension.entitled && extension.homedConnector" class="cloud-extension-label">
-          <a href="https://{{extension.homedConnector.host_name}}" target="_blank" style="color: #3ca8e8">{{extension.homedConnector.host_name}}</a>
+          <a href="https://{{extension.homedConnector.host_name}}" target="_blank" style="color: #3ca8e8">{{extension.homedConnector.cluster_name}}</a>
         </span>
       </div>
 

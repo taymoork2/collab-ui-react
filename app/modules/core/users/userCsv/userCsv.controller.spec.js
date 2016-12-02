@@ -1,7 +1,7 @@
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $controller, $modal, $scope, $timeout, $q, $state, $previousState, modalDefer, $interval, Notification, Userservice, Orgservice, FeatureToggleService, Authinfo, CsvDownloadService, HuronCustomer, UserCsvService, ResourceGroupService, USSService;
+  var controller, $controller, $modal, $scope, $timeout, $q, $state, $previousState, modalDefer, $interval, Analytics, Notification, Userservice, Orgservice, FeatureToggleService, Authinfo, CsvDownloadService, HuronCustomer, UserCsvService, ResourceGroupService, USSService;
   var getUserMe, getMigrateUsers, getMyFeatureToggles;
   var fusionServices, headers;
   var customer;
@@ -14,7 +14,7 @@ describe('OnboardCtrl: Ctrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Messenger'));
 
-  beforeEach(inject(function (_$controller_, _$interval_, _$modal_, _$q_, $rootScope, _$state_, _$previousState_, _$timeout_, _Authinfo_, _CsvDownloadService_, _FeatureToggleService_, _HuronCustomer_, _Notification_, _Orgservice_, _UserCsvService_, _Userservice_, _ResourceGroupService_, _USSService_) {
+  beforeEach(inject(function (_$controller_, _$interval_, _$modal_, _$previousState_, _$q_, $rootScope, _$state_, _$timeout_, _Authinfo_, _Analytics_, _CsvDownloadService_, _FeatureToggleService_, _HuronCustomer_, _Notification_, _Orgservice_, _UserCsvService_, _Userservice_, _ResourceGroupService_, _USSService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $timeout = _$timeout_;
@@ -34,8 +34,10 @@ describe('OnboardCtrl: Ctrl', function () {
     UserCsvService = _UserCsvService_;
     ResourceGroupService = _ResourceGroupService_;
     USSService = _USSService_;
+    Analytics = _Analytics_;
 
     spyOn($state, 'go').and.returnValue($q.resolve());
+    spyOn(Analytics, 'trackAddUsers').and.returnValue($q.when());
     spyOn(Authinfo, 'isOnline').and.returnValue(true);
     modalDefer = $q.defer();
     spyOn($modal, 'open').and.returnValue({

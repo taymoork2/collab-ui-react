@@ -583,7 +583,7 @@
     }];
 
     vm.ftswCompanyVoicemailSelection = [{
-      className: 'row collapse-both',
+      className: 'row full collapse-both',
       fieldGroup: [{
         // Since it is possible to have both the FTSW and
         // huron settings page in the DOM at the same time the id

@@ -34,13 +34,13 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
 
   it('should stay not active if services statuses do not say it is setup', () => {
     card = new ServicesOverviewHybridDataSecurityCard(FusionClusterStatesService);
-    card.hybridStatusEventHandler([{ serviceId: 'hybrid-data-security', setup: false, status: 'yolo' }]);
+    card.hybridStatusEventHandler([{ serviceId: 'spark-hybrid-datasecurity', setup: false, status: 'yolo' }]);
     expect(card.active).toBe(false);
   });
 
   it('should be active if services statuses say it is setup', () => {
     card = new ServicesOverviewHybridDataSecurityCard(FusionClusterStatesService);
-    card.hybridStatusEventHandler([{ serviceId: 'hybrid-data-security', setup: true, status: 'yolo' }]);
+    card.hybridStatusEventHandler([{ serviceId: 'spark-hybrid-datasecurity', setup: true, status: 'yolo' }]);
     expect(card.active).toBe(true);
   });
 

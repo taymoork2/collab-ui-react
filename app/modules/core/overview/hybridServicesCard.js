@@ -37,7 +37,7 @@
                 card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-media', response.clusterList));
               }
               if (response.hasHDSFeatureToggle && Authinfo.isEntitled(Config.entitlements.hds)) {
-                card.serviceList.push(FusionClusterService.getStatusForService('hybrid-data-security', response.clusterList));
+                card.serviceList.push(FusionClusterService.getStatusForService('spark-hybrid-datasecurity', response.clusterList));
               }
               card.enabled = _.some(card.serviceList, function (service) {
                 return service.setup;

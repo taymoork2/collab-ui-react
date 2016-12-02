@@ -18,7 +18,6 @@
     icon: 'icon-bell',
     title: 'tabs.gssTab',
     desc: 'tabs.gssTabDesc',
-    feature: 'atlas-global-service-status',
     state: 'gss',
     link: '/gss'
   }, {

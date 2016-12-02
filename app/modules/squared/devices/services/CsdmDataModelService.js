@@ -208,6 +208,9 @@
     }
 
     function updateItemName(objectToUpdate, newName) {
+      if (!objectToUpdate.isPlace) {
+        return $q.reject();
+      }
       var service = getServiceForDevice(objectToUpdate);
       if (!service) {
         return $q.reject();
@@ -215,15 +218,9 @@
 
       return service.updateItemName(objectToUpdate, newName)
         .then(function (updatedObject) {
-
-          if (updatedObject.isPlace) {
-            var place = placesDataModel[updatedObject.url];
-            updatedObject.devices = place.devices;
-            return CsdmCacheUpdater.updateOne(placesDataModel, updatedObject.url, updatedObject, null, true);
-          } else {
-            addOrUpdatePlaceInDataModel(updatedObject);
-            return CsdmCacheUpdater.updateOne(theDeviceMap, updatedObject.url, updatedObject, null, true);
-          }
+          var place = placesDataModel[updatedObject.url];
+          updatedObject.devices = place.devices;
+          return CsdmCacheUpdater.updateOne(placesDataModel, updatedObject.url, updatedObject, null, true);
         });
     }
 

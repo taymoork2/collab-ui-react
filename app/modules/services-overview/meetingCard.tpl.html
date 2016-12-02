@@ -12,6 +12,9 @@
       <a ui-sref="{{card.getShowMoreButton().routerState}}" ng-class="button.buttonClass" class="btn-link">{{::card.getShowMoreButton().name | translate}}</a>
     </div>
   </div>
+  <div class="overview-info" cr-feature-toggle feature-show="gem-cloud-connected-audio">
+    <p class="text-center"><a ui-sref="gem.servicesPartner" translate="gemini.audiocca"></a></p>
+  </div>
   <p ng-if="card.showText">{{::card.text | translate}}</p>
 </section>
 <section ng-if="card.loading">

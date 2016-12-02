@@ -942,7 +942,7 @@
                 template: '<div ui-view="usersConvert"></div>'
               },
               'usersConvert@users.convert': {
-                templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html',
+                template: '<cr-convert-users-modal/>',
                 resolve: {
                   modalInfo: function ($state) {
                     $state.params.modalClass = 'convert-users';
@@ -1186,7 +1186,8 @@
               displayName: 'Call Service'
             },
             params: {
-              extensionId: {}
+              extensionId: {},
+              extensions: {}
             }
           })
           .state('user-overview.conferencing', {
@@ -1691,7 +1692,14 @@
             parent: 'modal',
             views: {
               'modal@': {
-                templateUrl: 'modules/core/video/videoModal.tpl.html'
+                template: '<cr-video-modal class="modal-content" dismiss="$dismiss()"></cr-video-modal>'
+              }
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveVideo(resolve) {
+                  require(['modules/core/video'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
               }
             }
           })
@@ -2536,12 +2544,38 @@
               },
             }
           })
-          .state('hds-settings', {
-            templateUrl: 'modules/hds/settings/settings.html',
-            controller: 'HDSSettingsController',
-            controllerAs: 'hdsSettings',
-            url: '/services/hds/settings',
+          .state('hds', {
+            templateUrl: 'modules/hds/resources/overview.html',
+            controller: 'HDSServiceController',
+            controllerAs: 'hdsServiceController',
             parent: 'main',
+            resolve: {
+              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
+              }
+            }
+          })
+          .state('hds.list', {
+            url: '/hds/resources',
+            views: {
+              'fullPane': {
+                templateUrl: 'modules/hds/resources/cluster-list.html'
+              }
+            },
+            resolve: {
+              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
+              }
+            }
+          })
+          .state('hds.settings', {
+            url: '/hds/settings',
+            views: {
+              'fullPane': {
+                //TODO: change to hds-settings.html
+                templateUrl: 'modules/hds/resources/cluster-list.html'
+              }
+            },
             resolve: {
               hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);

@@ -42,7 +42,7 @@ class PlaceOverview implements ng.IComponentController {
               private Userservice,
               private WizardFactory) {
     this.csdmHuronUserDeviceService = this.CsdmHuronUserDeviceService.create(this.currentPlace.cisUuid);
-    CsdmDataModelService.reloadItem(this.currentPlace).then((updatedPlace) => this.displayPlace(updatedPlace));
+    CsdmDataModelService.reloadItem(this.$stateParams.currentPlace).then((updatedPlace) => this.displayPlace(updatedPlace));
   }
 
   public $onInit(): void {
