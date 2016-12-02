@@ -9,10 +9,11 @@
     });
 
   /* @ngInject */
-  function cbgSitesCtrl($state, $modal, $rootScope, $stateParams, $translate, cbgService, Notification) {
+  function cbgSitesCtrl($state, $modal, $rootScope, $stateParams, $translate, cbgService, Notification, PreviousState) {
     var vm = this;
     vm.onClick = onClick;
     vm.$onInit = $onInit;
+    vm.onCancel = onCancel;
     var obj = _.get($stateParams, 'obj', {});
     vm.cbgs = _.get(obj, 'cbgs', []);
     vm.currCbg = _.get(obj, 'currCbg', {});
@@ -22,7 +23,8 @@
     function $onInit() {
       if (vm.cbgs.length) {
         _.remove(vm.cbgs, function (obj) {
-          return obj.ccaGroupId === vm.currCbg.ccaGroupId; // don't move to self
+          var isSelf = (obj.ccaGroupId === vm.currCbg.ccaGroupId); // don't move to self
+          return isSelf || !obj.groupId;
         });
       }
       $state.current.data.displayName = $translate.instant('gemini.cbgs.field.totalSites');
@@ -42,10 +44,11 @@
         siteId: site.siteId,
         siteUrl: site.siteUrl,
         targetGroupId: toGroupId,
+        spCustomerId: vm.customerId,
         groupName: vm.currCbg.groupName,
         sourceGroupId: vm.currCbg.ccaGroupId
       };
-      cbgService.moveSite(vm.customerId, data).then(function (res) {
+      cbgService.moveSite(data).then(function (res) {
         var resJson = _.get(res.content, 'data');
         if (resJson.returnCode) {
           Notification.error('Failed to Move Site!');
@@ -56,6 +59,10 @@
         });
         $rootScope.$emit('cbgsUpdate', true);
       });
+    }
+
+    function onCancel() {
+      PreviousState.go();
     }
   }
 })();

@@ -1,0 +1,21 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h4 class="modal-title" translate="gemini.cbgs.declineDialogTitle"></h4>
+</div>
+<div class="modal-body row">
+  <form name="decline" novalidate>
+    <div class="columns">
+      <label translate="gemini.cbgs.declineReason"></label>
+      <textarea rows="10" ng-model="ctrl.comments" ng-minlength="1" ng-maxlength="300" required></textarea>
+      <p><small translate="gemini.cbgs.declineDialogNote"></small></p>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" ng-click="$dismiss()" translate="common.cancel"></button>
+  <button type="button" class="btn btn--primary" cs-btn ng-click="ctrl.onSave()" ng-disabled="decline.$invalid">
+    <span translate="common.save"></span>
+  </button>
+</div>

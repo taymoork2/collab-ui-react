@@ -8,7 +8,7 @@
       controller: CbgNotesCtrl
     });
   /* @ngInject */
-  function CbgNotesCtrl($state, $stateParams, $translate, cbgService, Notification) {
+  function CbgNotesCtrl($state, $stateParams, $translate, cbgService, Notification, PreviousState) {
     var vm = this;
     var customerId = _.get($stateParams, 'obj.customerId', '');
     var ccaGroupId = _.get($stateParams, 'obj.info.ccaGroupId', '');
@@ -16,6 +16,7 @@
     var allNotes = [];
     vm.loading = true;
     vm.notes = [];
+    vm.onCancel = onCancel;
     vm.$onInit = $onInit;
     vm.needShowMore = false;
     vm.onNotePost = onNotePost;
@@ -73,6 +74,10 @@
 
     function setShowMoreLink() {
       vm.needShowMore = allNotes.length > MAXNUM;
+    }
+
+    function onCancel() {
+      PreviousState.go();
     }
   }
 })();
