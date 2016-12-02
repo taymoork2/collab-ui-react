@@ -9,8 +9,8 @@
   function ServiceStateChecker(NotificationService, ClusterService, USSService, ServiceDescriptor, Authinfo, FeatureToggleService, Orgservice, DomainManagementService) {
     var vm = this;
     vm.isSipUriAcknowledged = false;
-    vm.hasSipUriDomainConfigured = {};
-    vm.hasDomains = {};
+    vm.hasSipUriDomainConfigured = false;
+    vm.hasVerifiedDomains = false;
     var allExpresswayServices = ['squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-cal', 'squared-fusion-mgmt'];
 
     function checkState(connectorType, serviceId) {
@@ -30,7 +30,7 @@
       if (serviceId !== 'squared-fusion-uc' && serviceId !== 'squared-fusion-ec') {
         return;
       }
-      if (vm.hasDomains[Authinfo.getOrgId()]) {
+      if (vm.hasVerifiedDomains) {
         return;
       }
       DomainManagementService.getVerifiedDomains()
@@ -47,7 +47,7 @@
             );
           } else {
             NotificationService.removeNotification('noDomains');
-            vm.hasDomains[Authinfo.getOrgId()] = true;
+            vm.hasVerifiedDomains = true;
           }
         });
     }
@@ -191,14 +191,14 @@
         FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomainEnterprise)
           .then(function (support) {
             if (support) {
-              if (vm.hasSipUriDomainConfigured[Authinfo.getOrgId()]) {
+              if (vm.hasSipUriDomainConfigured) {
                 return;
               }
               Orgservice.getOrg(function (data, status) {
                 if (status === 200) {
                   if (data && data.orgSettings && data.orgSettings.sipCloudDomain) {
                     NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
-                    vm.hasSipUriDomainConfigured[Authinfo.getOrgId()] = true;
+                    vm.hasSipUriDomainConfigured = true;
                   } else {
                     addNotification('sipUriDomainEnterpriseNotConfigured', [serviceId], 'modules/hercules/notifications/sip_uri_domain_enterprise_not_set.html');
                   }
