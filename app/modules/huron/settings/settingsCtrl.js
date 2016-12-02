@@ -1113,7 +1113,7 @@
                 siteDialDigit: site.siteSteeringDigit,
                 voicemailPrefixLabel: site.siteSteeringDigit.concat(site.siteCode)
               };
-              vm.model.site.extensionLength = vm.model.previousLength = site.extensionLength;
+              vm.model.site.extensionLength = vm.model.previousLength = vm.previousModel.site.extensionLength = site.extensionLength;
               vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
                 return timezone.id === site.timeZone;
               });
@@ -1561,7 +1561,7 @@
       if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled
         && (vm.model.site.siteSteeringDigit.siteDialDigit !== vm.previousModel.site.siteSteeringDigit.siteDialDigit
         || vm.model.site.extensionLength !== vm.previousModel.site.extensionLength
-        || vm.model.site.siteCode !== vm.previousModel.site.siteCode)) {
+        || !_.eq(_.toSafeInteger(vm.model.site.siteCode), _.toSafeInteger(vm.previousModel.site.siteCode)))) {
         var postalCode = [vm.model.site.siteSteeringDigit.siteDialDigit, vm.model.site.siteCode, vm.model.site.extensionLength].join('-');
         return ServiceSetup.updateVoicemailPostalcode(postalCode, vm.voicemailUserTemplate.objectId)
           .catch(function (response) {
