@@ -17,7 +17,7 @@
             Orgservice.setHybridServiceAcknowledged('spark-hybrid-datasecurity');
           },
           link: function () {
-            $state.go('hds-settings');
+            $state.go('hds.settings');
           },
           linkText: 'homePage.getStarted',
           name: 'hds',
