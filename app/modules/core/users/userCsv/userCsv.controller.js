@@ -9,7 +9,7 @@ require('./_user-csv.scss');
 
   /* @ngInject */
   function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState, $stateParams,
-                       Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
+                       Analytics, Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
                        Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService) {
     // variables
     var vm = this;
@@ -153,10 +153,12 @@ require('./_user-csv.scss');
 
     var rootState = $previousState.get().state.name;
     vm.onBack = function () {
+      Analytics.trackAddUsers(Analytics.eventNames.BACK);
       $state.go(rootState);
     };
 
     vm.startUpload = function () {
+      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD);
       beforeSubmitCsv().then(function () {
         bulkSaveWithIndividualLicenses();
         $state.go('users.csv.results');
@@ -180,8 +182,19 @@ require('./_user-csv.scss');
           vm.cancelProcessCsv();
         });
       } else {
+        Analytics.trackAddUsers(Analytics.eventNames.CANCEL_MODAL);
         $scope.$dismiss();
       }
+    };
+
+    vm.onDoneImport = function () {
+      var analyticsData = {
+        numberOfErrors: vm.model.userErrorArray.length,
+        usersAdded: vm.model.numNewUsers,
+        usersUpdated: vm.model.numExistingUsers
+      };
+      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.FINISH, null, analyticsData);
+      $state.modal.dismiss();
     };
 
     vm.cancelProcessCsv = function () {
@@ -189,6 +202,11 @@ require('./_user-csv.scss');
       cancelDeferred.resolve();
       saveDeferred.resolve();
       $scope.$broadcast('timer-stop');
+    };
+
+    vm.onCancelModal = function () {
+      Analytics.trackAddUsers(Analytics.eventNames.CANCEL_MODAL);
+      $state.modal.dismiss();
     };
 
     vm.licenseBulkErrorModal = function () {

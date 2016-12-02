@@ -328,6 +328,8 @@
         'dr-login-forward',
         'editService',
         'firsttimewizard',
+        'gem',
+        'gemCbgDetails',
         'my-company',
         'overview',
         'profile',
@@ -339,7 +341,7 @@
         'user-overview',
         'userRedirect',
         'userprofile',
-        'users'
+        'users',
       ],
       Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
       Tech_Support: ['gss'],
