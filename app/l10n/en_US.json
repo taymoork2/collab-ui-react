@@ -1189,10 +1189,10 @@
     "modifySSOLabel": "Modify",
     "ssoEnabledStatus": "Single sign-on is enabled",
     "ssoNotEnabledStatus": "Single sign-on is not enabled",
-    "ssoModifyWarning": "SSO is Enabled <br/> Changing settings could invalidate the connection.",
+    "ssoModifyWarning": "SSO is Enabled. Changing settings could invalidate the connection.",
     "idpOverwriteWarning": "Are you Sure? Single Sign-On is currently enabled. Importing a new metadata file will invalidate your existing configuration. If you proceed you cannot revert to your previous SSO configuration. Do you want to continue?",
     "disableSSOByRadioWarning": "Are you sure? Your existing SSO configuration will be disabled. All users will now begin using the built-in authentication in Spark and may need assistance establishing or resetting their passwords. You will not be able to undo this selection, but can re-enable SSO again from Enterprise Settings. Do you want to continue? ",
-    "ssoDisableSuccessNotification": "SSO is disabled <br/> User authentication configuration is now using simple built-in identity service."
+    "ssoDisableSuccessNotification": "SSO is Disabled. User authentication configuration is now using simple built-in identity service."
   },
   "serviceSetupModal": {
     "regionalSettings": "Regional Settings",
@@ -4104,7 +4104,7 @@
       "cancel": "Cancel",
       "cluster-placeholder": "Create or select cluster",
       "hostname-placeholder": "Enter FQDN or IP address",
-      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud.<br> Node IP Address/FQDN: {{hostname}}<br>Cluster: {{clustername}}",
+      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud. Node IP Address/FQDN: {{hostname}} Cluster: {{clustername}}",
       "grant-registration-success-header-new-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, assigned to the new cluster <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
       "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration.",
       "next": "Next",
@@ -4164,7 +4164,7 @@
     "actionsHeader": "Actions",
     "defuseConnector": "Deregister",
     "confirmDefuse": "Confirm Deregistration",
-    "defuseText": "Are you sure?<br> Clicking \"Yes\" will remove this device from Cisco Cloud Collaboration Management and stop the devices from accepting any new calls. (Preexisting calls will continue.)",
+    "defuseText": "Are you sure? Clicking \"Yes\" will remove this device from Cisco Cloud Collaboration Management and stop the devices from accepting any new calls. (Preexisting calls will continue.)",
     "yesDefuse": "Yes",
     "defuseSuccess": "Deregistration successfully",
     "deleteConnectorError": "Error deleting connector",
