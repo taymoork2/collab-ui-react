@@ -22,6 +22,7 @@
       atlasCustomerListUpdate: 'atlas-customer-list-update',
       atlasDarling: 'atlas-darling',
       atlasDataRetentionSettings: 'atlas-data-retention-settings',
+      atlasDevicesAdvancedSettings: 'atlas-devices-advanced-settings',
       atlasEdiscovery: 'atlas-ediscovery',
       atlasEmailStatus: 'atlas-email-status',
       atlasHelpDeskExt: 'atlas-helpdesk-extended-information',

@@ -186,7 +186,7 @@
           <p class="form-control-static">{{deviceOverview.currentDevice.software}}</p>
         </div>
       </div>
-      <div class="form-group" ng-show="deviceOverview.currentDevice.hasAdvancedSettings">
+      <div class="form-group" ng-show="deviceOverview.currentDevice.hasAdvancedSettings" cr-feature-toggle feature-show="atlas-devices-advanced-settings">
         <label class="col-sm-4 control-label" translate="spacesPage.advancedSettings.advancedSettings"></label>
         <div class="col-sm-8">
           <a sq-click-promise="deviceOverview.showAdvancedSettingsDialog()" translate="spacesPage.advancedSettings.launchAdvancedSettings"></a>
