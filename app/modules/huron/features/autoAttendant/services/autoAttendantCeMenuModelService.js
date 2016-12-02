@@ -296,16 +296,6 @@
       clearCeMenuMap: clearCeMenuMap,
       deleteCeMenuMap: deleteCeMenuMap,
       isCeMenu: isCeMenu,
-      cesPa: cesPa,
-      cesMoh: cesMoh,
-      cesMaxWaitTime: cesMaxWaitTime,
-      cesFallback: cesFallback,
-      cesIa: cesIa,
-      cesLanguageVoice: cesLanguageVoice,
-      constructCesPa: constructCesPa,
-      constructCesIa: constructCesIa,
-      constructCesMoh: constructCesMoh,
-      constructCesFallback: constructCesFallback,
 
       newCeMenu: function () {
         return new CeMenu();

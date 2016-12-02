@@ -29,7 +29,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     },
     {
       index: 6,
-      label: 30,
+      label: 30
     },
     {
       index: 5,
@@ -159,53 +159,24 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
       it("length of periodic minutes and seconds", function () {
         expect(controller).toBeDefined();
         expect(controller.periodicMinutes.length).toEqual(6);
-        expect(controller.periodicSeconds.length).toEqual(11);
+        expect(controller.periodicSeconds.length).toEqual(12);
       });
 
-      it("default value of periodic minutes and seconds.", function () {
-        var controller = $controller('AANewTreatmentModalCtrl', {
-          $scope: $scope,
-          $modalInstance: modalFake,
-          aa_schedule: schedule,
-          aa_menu_id: menuId,
-          aa_index: index,
-          aa_key_index: keyIndex,
-          aa_from_route_call: false
-        });
-
-        $scope.$apply();
-
-        var paAction = controller.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0];
-        paAction.interval = '45';
-        controller.activate();
-
-        expect(controller.periodicMinute.index).toEqual(0);
-        expect(controller.periodicSecond.index).toEqual(8);
-      });
       it("changedPeriodicMinValue funtion call with periodicMinute as 0", function () {
         controller.periodicMinute = fakePeriodicMinute[0];
         controller.changedPeriodicMinValue();
-        expect(controller.areSecondsDisabled).toBe(true);
+        expect(controller.isDisabled()).toBe(false);
       });
       it("changedPeriodicMinValue function call with periodicMinute and periodicSecond as 0", function () {
         controller.periodicMinute = fakePeriodicMinute[0];
         controller.periodicSecond = fakePeriodicSecond[0];
         controller.changedPeriodicMinValue();
-        expect(controller.periodicSecond).toEqual(controller.periodicSeconds[0]);
+        expect(controller.periodicSecond.label).toEqual(controller.periodicSeconds[0]);
       });
       it("changedPeriodicMinValue function call with periodicMinute as 5", function () {
-        controller.periodicMinute = fakePeriodicMinute[2];
+        controller.periodicMinute = 5;
         controller.changedPeriodicMinValue();
-        expect(controller.periodicSecond).toEqual(controller.periodicSeconds[0]);
-        expect(controller.areSecondsDisabled).toBe(false);
-      });
-      it("changedPeriodicSecValue function call with periodicSecond and periodicMinute as 0", function () {
-        controller.periodicSecond = fakePeriodicSecond[0];
-        controller.periodicMinute = fakePeriodicMinute[0];
-        controller.periodicSeconds[0] = fakePeriodicSecond[0];
-        controller.changedPeriodicSecValue();
-        expect(controller.periodicSecond).toEqual(controller.periodicSeconds[0]);
-        expect(controller.areSecondsDisabled).toBe(true);
+        expect(controller.isDisabled()).toBe(true);
       });
     });
 
@@ -281,7 +252,6 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
       });
 
       $scope.$apply();
-      controller.activate();
 
       expect(controller.showLanguageAndVoiceOptions).toBe(false);
     });
@@ -300,7 +270,6 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         aa_from_route_call: true
       });
 
-      controller.activate();
       $scope.$apply();
 
       expect(controller.showLanguageAndVoiceOptions).toBe(true);
@@ -320,8 +289,15 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         aa_from_route_call: true
       });
 
+      controller.languageOption.value = "de_DE";
+      controller.voiceOption.value = "Anna";
+
       controller.ok();
       $scope.$apply();
+
+      var queueSettings = _.get(controller.menuEntry, 'actions[0].queueSettings');
+      expect(angular.equals(queueSettings.language, "de_DE")).toBe(true);
+      expect(angular.equals(queueSettings.voice, "Anna")).toBe(true);
     });
   });
 
@@ -337,22 +313,12 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         aa_from_route_call: false
       });
 
-      $scope.$apply();
 
       var paAction = controller.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0];
       paAction.interval = '300';
-      controller.activate();
+      $scope.$apply();
 
-      expect(controller.areSecondsDisabled).toBe(false);
-    });
-  });
-
-  describe('populateMoHRadioForCustomMoH', function () {
-    it('should set the musicOnHold to CustomMoH', function () {
-      var mohPlayAction = controller.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
-      mohPlayAction.setDescription(VALUE);
-      controller.populateMohRadio();
-      expect(controller.musicOnHold).toEqual(CUSTOM_MOH);
+      expect(controller.isDisabled()).toBe(false);
     });
   });
 

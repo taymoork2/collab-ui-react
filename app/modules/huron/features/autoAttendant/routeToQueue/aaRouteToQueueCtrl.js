@@ -133,7 +133,7 @@
         vm.menuEntry.actions[0].setValue(vm.queueSelected.id);
       } else {
         vm.menuKeyEntry.actions[0].setValue(vm.queueSelected.id);
-        if (!_.isEmpty(vm.menuEntry.headers[0].language)) {
+        if (!_.isEmpty(vm.menuEntry.headers[0].voice)) {
           var queueSettings = _.get(vm.menuKeyEntry, 'actions[0].queueSettings');
           queueSettings.language = vm.menuEntry.headers[0].language;
           queueSettings.voice = vm.menuEntry.headers[0].voice;

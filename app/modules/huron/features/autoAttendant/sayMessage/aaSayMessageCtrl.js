@@ -323,13 +323,13 @@
     }
 
     function updateQueueSettingsLanguageVoice(menu) {
-      for (var i = 0; i < menu.entries.length; i++) {
-        if (_.get(menu.entries[i], 'actions[0].queueSettings')) {
-          var queueSettings = _.get(menu.entries[i], 'actions[0].queueSettings');
+      _.each(menu.entries, function (entry) {
+        var queueSettings = _.get(entry, 'actions[0].queueSettings');
+        if (queueSettings) {
           queueSettings.language = AALanguageService.getLanguageCode(vm.languageOption);
           queueSettings.voice = vm.voiceOption.value;
         }
-      }
+      });
     }
 
     function activate() {
