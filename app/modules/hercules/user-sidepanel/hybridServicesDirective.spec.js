@@ -20,7 +20,8 @@ describe('Directive Controller: HybridServicesCtrl', function () {
     Authinfo = {
       getOrgId: sinon.stub().returns('dead-beef-123'),
       isEntitled: sinon.stub().returns(true),
-      isFusion: sinon.stub().returns(true)
+      isFusion: sinon.stub().returns(true),
+      getLicenses: sinon.stub().returns([])
     };
 
     sinon.stub(ServiceDescriptor, 'services').returns({});
@@ -44,25 +45,19 @@ describe('Directive Controller: HybridServicesCtrl', function () {
   it('should call ServiceDescriptor.services if the org has a license and the user too', function () {
     vm = createController({
       licenseID: ['MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_t30citest.webex.com']
-    }, $q.when([{
-      licenses: ['MC']
-    }]));
+    }, ['MC']);
     $rootScope.$digest();
     expect(ServiceDescriptor.services.called).toBe(true);
   });
 
   it('should NOT call ServiceDescriptor.services if the org has a license and but NOT the user', function () {
-    vm = createController({}, $q.when([{
-      licenses: ['MC']
-    }]));
+    vm = createController({}, ['MC']);
     $rootScope.$digest();
     expect(ServiceDescriptor.services.called).toBe(false);
   });
 
   it('should show aggregated status as error when Aware and Connects is entitled and Aware is activated but Connect is error', function () {
-    vm = createController({}, $q.when([{
-      licenses: ['MC']
-    }]));
+    vm = createController({}, ['MC']);
 
     var fusionUcNotActivated = {
       "serviceId": "squared-fusion-uc",
@@ -96,9 +91,7 @@ describe('Directive Controller: HybridServicesCtrl', function () {
   });
 
   it('should show aggregated status as not activated when Aware and Connects is entitled but both statuses are not activated', function () {
-    vm = createController({}, $q.when([{
-      licenses: ['MC']
-    }]));
+    vm = createController({}, ['MC']);
 
     var fusionUcNotActivated = {
       "serviceId": "squared-fusion-uc",
@@ -132,9 +125,7 @@ describe('Directive Controller: HybridServicesCtrl', function () {
   });
 
   it('should show aggregated status as unknown when both Aware and Connects not entitled for user', function () {
-    vm = createController({}, $q.when([{
-      licenses: ['MC']
-    }]));
+    vm = createController({}, ['MC']);
 
     vm.extensions = [{
       "id": "squared-fusion-cal",
@@ -155,24 +146,17 @@ describe('Directive Controller: HybridServicesCtrl', function () {
     expect(mostSignificantStatus).toBe('unknown');
   });
 
-  function createController(user, promise) {
-    if (!promise) {
-      promise = $q.reject();
+  function createController(user, orgLicenses) {
+    if (orgLicenses) {
+      Authinfo.getLicenses.returns(orgLicenses);
     }
-    var Orgservice = {
-      whatever: 123,
-      getLicensesUsage: function () {
-        return promise;
-      }
-    };
     return $controller('HybridServicesCtrl', {
       $scope: $rootScope.$new(),
       $timeout: $timeout,
       Authinfo: Authinfo,
       Config: Config,
       USSService: USSService,
-      ServiceDescriptor: ServiceDescriptor,
-      Orgservice: Orgservice
+      ServiceDescriptor: ServiceDescriptor
     }, {
       user: user
     });

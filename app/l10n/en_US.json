@@ -1046,7 +1046,9 @@
     "users": "Users",
     "voice": "Voice",
     "warning": "Warning",
-    "yes": "Yes"
+    "yes": "Yes",
+    "type": "Type",
+    "service": "Service"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1447,7 +1449,8 @@
       "modalText2": "Select the type of information that you want included in the report:",
       "modalNote": "Note: The more users included, the longer the report takes to generate.",
       "modalCTA": "Export to CSV",
-      "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s"
+      "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s",
+      "userNotFound": "Not found"
     },
     "overview": {
       "activated": "Activated",
@@ -4768,8 +4771,9 @@
     "cloudExtensions": "Hybrid Services",
     "enableService": "Activate service for this user",
     "status": "Status",
-    "host": "Node",
-    "sipUri": "Directory URI"
+    "cluster": "Cluster",
+    "sipUri": "Directory URI",
+    "errorMessage": "Error Message"
   },
   "validation": {
     "nonPrintable": "This entry contains nonprintable characters.",
@@ -5508,8 +5512,8 @@
     "ciscouc.devops": "Spark Call Devops",
     "ciscouc.devsupport": "Spark Call Dev Support",
     "compliance": "Compliance Officer",
-    "ciscouc.devsupport.phonelogaccess": "Spark Call Phone Log Access",
-    "ciscouc.devsupport.phonesupport": "Spark Call Phone Support"
+    "ciscouc.phonelogaccess": "Spark Call Phone Log Access",
+    "ciscouc.phonesupport": "Spark Call Phone Support"
   },
   "atlasRoles": {
     "Full_Admin": "Full Admin",
@@ -5926,18 +5930,32 @@
     "msg": {
       "splsResponseErr": "No partner organization found, please contact ccaportal@cisco.com for help."
     },
+    "button": {
+      "decline": "Decline",
+      "approve": "Approve",
+      "submitRequest": "Submit Request",
+      "cancelSubmission": "Cancel Submission"
+    },
     "cbgTitle": "Callback Groups",
     "tdTitle": "Telephony Domain",
     "cbgs": {
       "overview": "Overview",
+      "openedOn": "Opened on",
       "moveSite": "Move Site",
       "placeholder-text": "All",
       "importCsv": "Import CSV",
       "title": "Callback Groups",
       "exportToCsv": "Export to CSV",
+      "remedyTicket": "Remedy Ticket",
+      "reqSubmission": "Request Submission",
+      "approveCbg": "Approve Callback Group",
       "editCountry": "Edit Countries/Regions",
       "downloadCsv": "Download CSV Template",
       "csvFilename": "exported_callbackGroup.csv",
+      "declineDialogTitle": "Decline Callback Group",
+      "declineReason": "Reason Callback Group is declined",
+      "declineDialogNote": "Note: Explaination will appear as a comment in the Callback Group history",
+      "approveMsg": "If you proceed, the system will auto-update the callback group with the selected countries",
       "moveSiteMsg": "Are you sure you want to move this site?",
       "field": {
         "sites": "Site URL",
@@ -6527,5 +6545,12 @@
       "majorOutage": "Major Outage",
       "underMaintenance": "Under Maintenance"
     }
+  },
+  "machineTypes":{
+    "bot": "Bot",
+    "lyra_space": "Room Device Place",
+    "robot": "Robot",
+    "spark_integration": "Spark Integration",
+    "room": "Desk Phone Place"
   }
 }

@@ -260,17 +260,28 @@
       }
 
       if (item.isPlace) {
-        return service.fetchItem(item.url).then(function (reloadedPlace) {
-          _.each(_.difference(_.values(item.devices), _.values(reloadedPlace.devices)), function (deletedDevice) {
-            _.unset(theDeviceMap, [deletedDevice.url]);
+        if (item.type === 'huron') {
+          return csdmHuronOrgDeviceService.getDevicesForPlace(item.cisUuid).then(function (devicesForPlace) {
+
+            var reloadedPlace = placesDataModel[item.url];
+            for (var devUrl in devicesForPlace) {
+              var device = devicesForPlace[devUrl];
+              if (device.displayName) {
+                item.displayName = device.displayName;
+                reloadedPlace.displayName = device.displayName;
+              }
+              CsdmCacheUpdater.updateOne(theDeviceMap, devUrl, device);
+            }
+
+            reloadedPlace.devices = devicesForPlace;
+            item.devices = devicesForPlace;
+
+            notifyListeners();
+            return reloadedPlace;
           });
-          CsdmCacheUpdater.updateOne(placesDataModel, reloadedPlace.url, reloadedPlace, null, true);
-          _.each(reloadedPlace.devices, function (reloadedDevice) {
-            CsdmCacheUpdater.updateOne(theDeviceMap, reloadedDevice.url, reloadedDevice);
-          });
-          notifyListeners();
-          return reloadedPlace;
-        });
+        } else {
+          return $q.reject();
+        }
       } else if (item.type === 'huron') {
         return $q.reject();
       } else {

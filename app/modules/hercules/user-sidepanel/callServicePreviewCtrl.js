@@ -6,16 +6,17 @@
     .controller('CallServicePreviewCtrl', CallServicePreviewCtrl);
 
   /*@ngInject*/
-  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, ServiceDescriptor, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService) {
+  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService, UCCService) {
     $scope.saveLoading = false;
+    $scope.domainVerificationError = false;
     $scope.currentUser = $stateParams.currentUser;
     var isEntitled = function (ent) {
       return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf(ent) > -1;
     };
-
-    var sipUri = _.find($scope.currentUser.sipAddresses, {
-      type: "enterprise"
-    });
+    var isSetup = function (id) {
+      var extension = _.find($stateParams.extensions, { id: id });
+      return extension ? extension.isSetup : false;
+    };
 
     $scope.isInvitePending = Userservice.isInvitePending($scope.currentUser);
     $scope.localizedServiceName = $translate.instant('hercules.serviceNames.' + $stateParams.extensionId);
@@ -28,7 +29,7 @@
       id: 'squared-fusion-uc',
       name: 'squaredFusionUC',
       entitled: isEntitled('squared-fusion-uc'),
-      sipUri: sipUri ? sipUri.value : null
+      directoryUri: null
     };
     $scope.callServiceConnect = {
       id: 'squared-fusion-ec',
@@ -66,11 +67,7 @@
 
     // Only show callServiceConnect if it's enabled
     if ($scope.callServiceConnect.orgEntitled) {
-      ServiceDescriptor.isServiceEnabled($scope.callServiceConnect.id, function (error, enabled) {
-        if (!error) {
-          $scope.callServiceConnect.enabledInFMS = enabled;
-        }
-      });
+      $scope.callServiceConnect.enabledInFMS = isSetup($scope.callServiceConnect.id);
     }
 
     $scope.$watch('callServiceAware.entitled', function (newVal, oldVal) {
@@ -127,6 +124,20 @@
         }
         if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.lastStateChange) {
           $scope.callServiceConnect.status.lastStateChangeText = moment($scope.callServiceConnect.status.lastStateChange).fromNow(true);
+        }
+        if ($scope.callServiceAware.entitled && $scope.callServiceAware.status) {
+          UCCService.getUserDiscovery($scope.currentUser.id).then(function (userDiscovery) {
+            $scope.callServiceAware.directoryUri = userDiscovery.directoryURI;
+            if ($scope.callServiceAware.directoryUri) {
+              DomainManagementService.getVerifiedDomains().then(function (domainList) {
+                if (!UriVerificationService.isDomainVerified(domainList, $scope.callServiceAware.directoryUri)) {
+                  $scope.domainVerificationError = true;
+                }
+              });
+            } else {
+              $scope.domainVerificationError = false;
+            }
+          });
         }
       }).catch(function (response) {
         Notification.errorWithTrackingId(response, 'hercules.userSidepanel.readUserStatusFailed');
@@ -330,24 +341,6 @@
     $scope.getStatus = function (status) {
       return USSService.decorateWithStatus(status);
     };
-
-    $scope.domainVerificationError = false; // need to be to be backwards compatible.
-    $scope.checkIfDomainIsVerified = function (awareEntitled) {
-      if (awareEntitled) {
-        if (sipUri) {
-          DomainManagementService.getVerifiedDomains().then(function (domainList) {
-            if (!UriVerificationService.isDomainVerified(domainList, sipUri.value)) {
-              $scope.domainVerificationError = true;
-            }
-          });
-        }
-      } else {
-        $scope.domainVerificationError = false;
-      }
-    };
-
-    // Do this at construct time
-    $scope.checkIfDomainIsVerified($scope.callServiceAware.entitled);
 
     $scope.navigateToCallSettings = function () {
       $state.go('call-service.settings');
