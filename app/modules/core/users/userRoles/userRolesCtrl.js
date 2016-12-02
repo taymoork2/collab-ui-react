@@ -7,7 +7,7 @@ require('./_user-roles.scss');
     .controller('UserRolesCtrl', UserRolesCtrl);
 
   /* @ngInject */
-  function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userservice, Log, Authinfo, Config, $rootScope, Notification, Orgservice, FeatureToggleService, EdiscoveryService) {
+  function UserRolesCtrl($q, $scope, $translate, $stateParams, SessionStorage, Userservice, Log, Authinfo, Config, $rootScope, Notification, Orgservice, FeatureToggleService, EdiscoveryService) {
     $scope.currentUser = $stateParams.currentUser;
     $scope.sipAddr = '';
     $scope.dirsyncEnabled = false;
@@ -25,7 +25,7 @@ require('./_user-roles.scss');
     $scope.partialCheckboxes = partialCheckboxes;
     $scope.orderadminOnCheckedHandler = orderadminOnCheckedHandler;
     $scope.helpdeskOnCheckedHandler = helpdeskOnCheckedHandler;
-    $scope.resetRoles = resetRoles;
+    $scope.resetFormData = resetFormData;
     $scope.enableReadonlyAdminOption = false;
     $scope.rolesObj = {};
     $scope.noAdmin = {
@@ -59,6 +59,8 @@ require('./_user-roles.scss');
     };
     $scope.checkAdminDisplayName = checkAdminDisplayName;
 
+    $scope.updatingUser = false;
+
     FeatureToggleService.supports(FeatureToggleService.features.atlasReadOnlyAdmin).then(function () {
       $scope.enableReadonlyAdminOption = true;
     });
@@ -68,6 +70,8 @@ require('./_user-roles.scss');
     });
 
     initView();
+
+    ///////////////////////////
 
     function initView() {
       Orgservice.getOrgCacheOption(function (data, status) {
@@ -88,12 +92,19 @@ require('./_user-roles.scss');
       });
 
       if ($scope.currentUser) {
-        $scope.isEditingSelf = $scope.currentUser.id === Authinfo.getUserId();
-        $scope.roles = $scope.currentUser.roles;
+        $scope.isEditingSelf = ($scope.currentUser.id === Authinfo.getUserId());
       }
 
-      setUserSipAddress();
-      setFormValuesToMatchRoles();
+      // reset the form to match the currentUser
+      resetFormData();
+    }
+
+    function setFormUserData() {
+      // data used in the form for editing
+      $scope.formUserData = {
+        name: _.clone(_.get($scope, 'currentUser.name')),
+        displayName: _.clone(_.get($scope, 'currentUser.displayName'))
+      };
     }
 
     function setUserSipAddress() {
@@ -123,10 +134,12 @@ require('./_user-roles.scss');
       $scope.rolesObj.helpdeskValue = hasRole(Config.backend_roles.helpdesk);
       $scope.rolesObj.orderAdminValue = hasRole(Config.backend_roles.orderadmin);
       $scope.rolesObj.complianceValue = $scope.currentUser && _.includes($scope.currentUser.entitlements, 'compliance');
+
+      $scope.initialRoles = rolesFromScope();
     }
 
     function checkMainRoles() {
-      if ($scope.roles) {
+      if (_.get($scope, 'currentUser.roles')) {
         if (hasRole(Config.backend_roles.full_admin)) {
           return 1;
         } else if (hasRole(Config.backend_roles.readonly_admin)) {
@@ -139,7 +152,7 @@ require('./_user-roles.scss');
     }
 
     function hasRole(role) {
-      return $scope.roles && _.includes($scope.roles, role);
+      return _.get($scope, 'currentUser.roles') && _.includes(_.get($scope, 'currentUser.roles'), role);
     }
 
     function checkPartialRoles(roleEnabled) {
@@ -150,36 +163,32 @@ require('./_user-roles.scss');
       }
     }
 
-    function resetForm() {
-      if (_.has($scope, 'rolesEdit.form')) {
-        $scope.rolesEdit.form.$setPristine();
-        $scope.rolesEdit.form.$setUntouched();
-      }
-    }
-
-    function resetRoles() {
+    function resetFormData() {
+      setUserSipAddress();
       setFormValuesToMatchRoles();
-      resetForm();
+      setFormUserData();
+      if (_.has($scope, 'rolesEdit.form')) {
+        _.attempt($scope.rolesEdit.form.$setPristine);
+        _.attempt($scope.rolesEdit.form.$setUntouched);
+      }
     }
 
     function updateRoles() {
       if ($scope.showComplianceRole && $scope.rolesObj.complianceValue !== isEntitledToCompliance()) {
         EdiscoveryService.setEntitledForCompliance(Authinfo.getOrgId(), $scope.currentUser.id, $scope.rolesObj.complianceValue)
           .then(function () {
-            patchUserRoles();
+            saveForm();
           })
           .catch(function (response) {
             Notification.errorResponse(response, 'profilePage.complianceError');
           });
       } else {
-        patchUserRoles();
+        saveForm();
       }
     }
 
-    function patchUserRoles() {
-      var choice = $scope.rolesObj.adminRadioValue;
+    function rolesFromScope() {
       var roles = [];
-
       switch ($scope.rolesObj.adminRadioValue) {
         case 0: // No admin
           for (var roleName in Config.roles) {
@@ -192,7 +201,6 @@ require('./_user-roles.scss');
                 'roleState': Config.roleState.inactive
               });
             }
-
           }
           break;
         case 1: // Full admin
@@ -294,61 +302,82 @@ require('./_user-roles.scss');
         'roleState': (hasRole(Config.backend_roles.spark_synckms) ? Config.roleState.active : Config.roleState.inactive)
       });
 
-      Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles)
-        .then(function (response) {
-          var userData = {
-            'schemas': Config.scimSchemas,
-            'name': {},
-            'meta': {
-              'attributes': []
-            }
-          };
-          // Add or delete properties depending on whether or not their value is empty/blank.
-          // With property value set to "", the back-end will respond with a 400 error.
-          // Guidance from CI team is to not specify any property containing an empty string
-          // value. Instead, add the property to meta.attribute to have its value be deleted.
-          if ($scope.currentUser.name) {
-            if ($scope.currentUser.name.givenName) {
-              userData.name["givenName"] = $scope.currentUser.name.givenName;
-            } else {
-              userData.meta.attributes.push('name.givenName');
-            }
-            if ($scope.currentUser.name.familyName) {
-              userData.name["familyName"] = $scope.currentUser.name.familyName;
-            } else {
-              userData.meta.attributes.push('name.familyName');
-            }
-          }
-          if ($scope.currentUser.displayName) {
-            userData.displayName = $scope.currentUser.displayName;
-          } else {
-            userData.meta.attributes.push('displayName');
-          }
+      return roles;
+    }
 
-          Log.debug('Updating user: ' + $scope.currentUser.id + ' with data: ');
+    function saveForm() {
+      $scope.updatingUser = true;
 
-          if (!$scope.dirsyncEnabled) {
-            Userservice.updateUserProfile($scope.currentUser.id, userData)
-              .then(function (response) {
-                Notification.success('profilePage.success');
-                $scope.user = response.data;
-                $rootScope.$broadcast('USER_LIST_UPDATED');
-                resetForm();
-              })
-              .catch(function (response) {
-                Notification.errorResponse(response, 'profilePage.error');
-              });
-          } else {
-            Notification.success('profilePage.success');
-            $scope.user = response.data;
-            $rootScope.$broadcast('USER_LIST_UPDATED');
-            resetForm();
-          }
+      $q.resolve()
+        .then(patchUserRoles)
+        .then(patchUserData)
+        .then(function () {
+          Notification.success('profilePage.success');
+          $rootScope.$broadcast('USER_LIST_UPDATED');
+          resetFormData();
         })
-        .catch(function (response) {
+        .catch(function errorHandler(response) {
           Notification.errorResponse(response, 'profilePage.rolesError');
+        })
+        .finally(function () {
+          $scope.updatingUser = false;
         });
-      $scope.rolesObj.adminRadioValue = choice;
+    }
+
+    function patchUserRoles() {
+      var roles = rolesFromScope();
+      if (!_.isEqual(roles, $scope.initialRoles)) {
+        return Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles)
+          .then(function (response) {
+            $scope.currentUser.roles = response.data.userResponse[0].roles;
+          });
+      }
+    }
+
+    function patchUserData() {
+      // Add or delete properties depending on whether or not their value is empty/blank.
+      // With property value set to "", the back-end will respond with a 400 error.
+      // Guidance from CI team is to not specify any property containing an empty string
+      // value. Instead, add the property to meta.attribute to have its value be deleted.
+      var userData = {
+        'schemas': Config.scimSchemas,
+        'name': {},
+        'meta': {
+          'attributes': []
+        }
+      };
+
+      if ($scope.formUserData.name) {
+        if ($scope.formUserData.name.givenName) {
+          userData.name["givenName"] = $scope.formUserData.name.givenName;
+        } else {
+          userData.meta.attributes.push('name.givenName');
+        }
+        if ($scope.formUserData.name.familyName) {
+          userData.name["familyName"] = $scope.formUserData.name.familyName;
+        } else {
+          userData.meta.attributes.push('name.familyName');
+        }
+      }
+
+      if ($scope.formUserData.displayName) {
+        userData.displayName = $scope.formUserData.displayName;
+      } else {
+        userData.meta.attributes.push('displayName');
+      }
+
+      // check if user profile data changed.
+      var useDataChanged = (
+        !_.isEqual($scope.formUserData.name, $scope.currentUser.name) ||
+        !_.isEqual($scope.formUserData.displayName, $scope.currentUser.displayName)
+      );
+
+      if (!$scope.dirsyncEnabled && useDataChanged) {
+        return Userservice.updateUserProfile($scope.currentUser.id, userData)
+          .then(function (response) {
+            $scope.currentUser = response.data;
+          });
+      }
     }
 
     function clearCheckboxes() {
@@ -387,9 +416,9 @@ require('./_user-roles.scss');
       // If the user is an admin user,
       // the first name, last name and display name cannot be all blank.
       if ($scope.rolesObj.adminRadioValue !== 0) {
-        var firstName = _.get($scope.currentUser, 'name.givenName', null);
-        var lastName = _.get($scope.currentUser, 'name.familyName', null);
-        var displayName = _.get($scope.currentUser, 'displayName', null);
+        var firstName = _.get($scope.formUserData, 'name.givenName', null);
+        var lastName = _.get($scope.formUserData, 'name.familyName', null);
+        var displayName = _.get($scope.formUserData, 'displayName', null);
         var notAllBlank = !_.isEmpty(firstName) || !_.isEmpty(lastName) || !_.isEmpty(displayName);
         $scope.rolesEdit.form.displayName.$setValidity("notblank", notAllBlank);
       } else {
