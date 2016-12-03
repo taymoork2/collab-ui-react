@@ -85,12 +85,11 @@
         });
     };
 
-    var getDisableEmailSendingToUser = function () {
+    var getOrgSettings = function () {
       return Orgservice.getOrg(_.noop, Authinfo.getOrgId(), true)
         .then(function (response) {
-          var settings = response.data.orgSettings;
-          if (!_.isEmpty(settings)) {
-            return settings.calSvcDisableEmailSendingToEndUser;
+          if (!_.isEmpty(response.data.orgSettings)) {
+            return response.data.orgSettings;
           }
         });
     };
@@ -98,6 +97,14 @@
     var setDisableEmailSendingToUser = function (calSvcDisableEmailSendingToEndUser) {
       var settings = {
         calSvcDisableEmailSendingToEndUser: !!calSvcDisableEmailSendingToEndUser
+      };
+
+      return Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
+    };
+
+    var setOneButtonToPushIntervalMinutes = function (bgbIntervalMinutes) {
+      var settings = {
+        bgbIntervalMinutes: bgbIntervalMinutes
       };
 
       return Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
@@ -169,8 +176,9 @@
       servicesInOrg: servicesInOrg,
       getEmailSubscribers: getEmailSubscribers,
       setEmailSubscribers: setEmailSubscribers,
-      getDisableEmailSendingToUser: getDisableEmailSendingToUser,
+      getOrgSettings: getOrgSettings,
       setDisableEmailSendingToUser: setDisableEmailSendingToUser,
+      setOneButtonToPushIntervalMinutes: setOneButtonToPushIntervalMinutes,
       enableService: enableService,
       disableService: disableService,
     };

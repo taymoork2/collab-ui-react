@@ -7,13 +7,14 @@
 
 
   /* @ngInject */
-  function CalendarSettingsController($modal, $translate, $state, hasGoogleCalendarFeatureToggle, Authinfo, CloudConnectorService, MailValidatorService, Notification, ServiceDescriptor) {
+  function CalendarSettingsController($modal, $translate, $state, hasGoogleCalendarFeatureToggle, Authinfo, CloudConnectorService, MailValidatorService, Notification, ServiceDescriptor, FeatureToggleService) {
     var vm = this;
     vm.localizedAddEmailWatermark = $translate.instant('hercules.settings.emailNotificationsWatermark');
     vm.localizedServiceName = $translate.instant('hercules.serviceNames.squared-fusion-cal');
     vm.localizedConnectorName = $translate.instant('hercules.connectorNames.squared-fusion-cal');
     vm.localizedGoogleServiceAccountHelpText = $translate.instant('hercules.settings.googleCalendar.serviceAccountHelpText');
     vm.hasGoogleCalendarFeatureToggle = hasGoogleCalendarFeatureToggle;
+    vm.hasCalsvcOneButtonToPushIntervalFeatureToggle = false;
 
     vm.general = {
       title: 'common.general'
@@ -26,6 +27,15 @@
     vm.documentationSection = {
       title: 'common.help'
     };
+
+    vm.oneButtonToPushIntervalOptions = [
+      0,
+      5,
+      10,
+      15
+    ];
+
+    vm.oneButtonToPushIntervalMinutes = '';
 
     ServiceDescriptor.getEmailSubscribers('squared-fusion-cal', function (error, emailSubscribers) {
       if (!error) {
@@ -59,15 +69,29 @@
     };
 
     function init() {
-      ServiceDescriptor.getDisableEmailSendingToUser()
-        .then(function (calSvcDisableEmailSendingToEndUser) {
-          vm.enableEmailSendingToUser = !calSvcDisableEmailSendingToEndUser;
-        });
+      FeatureToggleService.calsvcOneButtonToPushIntervalGetStatus().then(function (toggle) {
+        vm.hasCalsvcOneButtonToPushIntervalFeatureToggle = toggle;
+        if (toggle) {
+          ServiceDescriptor.getOrgSettings().then(function (orgSettings) {
+            vm.enableEmailSendingToUser = !orgSettings.calSvcDisableEmailSendingToEndUser;
+            if (orgSettings.bgbIntervalMinutes === undefined) {
+              vm.oneButtonToPushIntervalMinutes = 5;
+              vm.setOneButtonToPushIntervalMinutes();
+            } else {
+              vm.oneButtonToPushIntervalMinutes = orgSettings.bgbIntervalMinutes;
+            }
+          });
+        }
+      });
     }
+
     init();
 
     vm.writeEnableEmailSendingToUser = _.debounce(function (value) {
       ServiceDescriptor.setDisableEmailSendingToUser(value)
+        .then(function () {
+          return Notification.success('hercules.settings.emailUserNotificationsSavingSuccess');
+        })
         .catch(function (error) {
           vm.enableEmailSendingToUser = !vm.enableEmailSendingToUser;
           return Notification.errorWithTrackingId(error, 'hercules.settings.emailUserNotificationsSavingError');
@@ -79,6 +103,16 @@
 
     vm.setEnableEmailSendingToUser = function () {
       vm.writeEnableEmailSendingToUser(vm.enableEmailSendingToUser);
+    };
+
+    vm.setOneButtonToPushIntervalMinutes = function () {
+      ServiceDescriptor.setOneButtonToPushIntervalMinutes(vm.oneButtonToPushIntervalMinutes)
+        .then(function () {
+          return Notification.success('hercules.settings.oneButtonToPushIntervalMinutesSavingSuccess');
+        })
+        .catch(function (error) {
+          return Notification.errorWithTrackingId(error, 'hercules.settings.oneButtonToPushIntervalMinutesSavingError');
+        });
     };
 
     vm.confirmDisable = function (serviceId) {
@@ -96,7 +130,6 @@
         $state.go('services-overview');
       });
     };
-
 
     if (hasGoogleCalendarFeatureToggle) {
       vm.isGoogleCalendarEntitled = Authinfo.isFusionGoogleCal();
@@ -130,10 +163,7 @@
             vm.googleServiceAccount = newServiceAccount;
           });
       };
-
     }
-
-
   }
 
 }());
