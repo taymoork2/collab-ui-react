@@ -3,7 +3,7 @@ import { IServiceStatus, filterAndGetCssStatus, filterAndGetTxtStatus, filterAnd
 import { ServicesOverviewCard } from './ServicesOverviewCard';
 
 export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOverviewCard {
-  private canDisplay: ng.IDeferred<void> = this.$q.defer();
+  private canDisplay: ng.IDeferred<boolean> = this.$q.defer();
   public googleActive: boolean = false;
   private googleStatus: ICardStatus;
 
@@ -40,19 +40,19 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
   // Google Calendar
   private setupGoogleCalendarButton: ICardButton = {
     name: 'servicesOverview.genericButtons.setup',
-    routerState: 'calendar-service.list',
+    routerState: '404',
     buttonClass: 'btn btn--primary',
   };
 
-  private googleCalendarButtons: Array<ICardButton> = [{
+  private googleCalendarButton: ICardButton = {
     name: 'servicesOverview.cards.hybridCalendar.buttons.settings',
-    routerState: 'calendar-service.settings',
+    routerState: 'google-calendar-service.settings',
     buttonClass: 'btn-link',
-  }];
+  };
 
   public getGoogleButtons(): Array<ICardButton> {
     if (this.googleActive) {
-      return this.googleCalendarButtons;
+      return [this.googleCalendarButton];
     }
     return [this.setupGoogleCalendarButton];
   }
@@ -65,7 +65,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
         .then((isSetup) => {
           // conveys the same as .active for Hybrid Calendar
           this.googleActive = isSetup;
-          this.canDisplay.resolve();
+          this.canDisplay.resolve(true);
           // Fake data for now
           this.googleStatus = {
             status: 'default',
@@ -98,10 +98,10 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
 
   /* @ngInject */
   public constructor(
-    private $q,
+    private $q: ng.IQService,
     private Authinfo,
     private CloudConnectorService,
-    private FusionClusterStatesService
+    private FusionClusterStatesService,
   ) {
     super({
       active: false,

@@ -7,13 +7,11 @@
 
 
   /* @ngInject */
-  function CalendarSettingsController($modal, $translate, $state, hasGoogleCalendarFeatureToggle, Authinfo, CloudConnectorService, MailValidatorService, Notification, ServiceDescriptor) {
+  function CalendarSettingsController($modal, $translate, $state, MailValidatorService, Notification, ServiceDescriptor) {
     var vm = this;
     vm.localizedAddEmailWatermark = $translate.instant('hercules.settings.emailNotificationsWatermark');
     vm.localizedServiceName = $translate.instant('hercules.serviceNames.squared-fusion-cal');
     vm.localizedConnectorName = $translate.instant('hercules.connectorNames.squared-fusion-cal');
-    vm.localizedGoogleServiceAccountHelpText = $translate.instant('hercules.settings.googleCalendar.serviceAccountHelpText');
-    vm.hasGoogleCalendarFeatureToggle = hasGoogleCalendarFeatureToggle;
 
     vm.general = {
       title: 'common.general'
@@ -96,44 +94,5 @@
         $state.go('services-overview');
       });
     };
-
-
-    if (hasGoogleCalendarFeatureToggle) {
-      vm.isGoogleCalendarEntitled = Authinfo.isFusionGoogleCal();
-      vm.googleCalendarSection = {
-        title: 'hercules.settings.googleCalendar.title'
-      };
-      CloudConnectorService.isServiceSetup('squared-fusion-gcal')
-        .then(function (isSetup) {
-          if (isSetup) {
-            CloudConnectorService.getServiceAccount('squared-fusion-gcal')
-              .then(function (account) {
-                vm.googleServiceAccount = account;
-              })
-              .catch(function (error) {
-                Notification.errorWithTrackingId(error, 'hercules.settings.googleCalendar.couldNotReadGoogleCalendarStatus');
-              });
-          }
-        });
-      vm.uploadGooglePrivateKey = function () {
-        $modal.open({
-          templateUrl: 'modules/hercules/service-settings/upload-google-calendar-key.html',
-          controller: 'UploadGoogleCalendarKeyController',
-          controllerAs: 'uploadKey',
-          resolve: {
-            googleServiceAccount: function () {
-              return vm.googleServiceAccount;
-            }
-          }
-        })
-          .result.then(function (newServiceAccount) {
-            vm.googleServiceAccount = newServiceAccount;
-          });
-      };
-
-    }
-
-
   }
-
 }());

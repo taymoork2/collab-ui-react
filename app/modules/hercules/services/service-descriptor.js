@@ -76,12 +76,15 @@
     };
 
     var setEmailSubscribers = function (serviceId, emailSubscribers, callback) {
-      $http
+      return $http
         .patch(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
           emailSubscribers: emailSubscribers
         })
         .then(function (res) {
-          callback(res.status);
+          if (callback) {
+            callback(res.status);
+          }
+          return res;
         });
     };
 
