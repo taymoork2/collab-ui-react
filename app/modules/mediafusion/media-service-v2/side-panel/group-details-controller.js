@@ -5,7 +5,7 @@
     .controller('GroupDetailsControllerV2',
 
       /* @ngInject */
-      function ($scope, MediaClusterServiceV2, $stateParams, $modal, $state, $timeout, FusionUtils) {
+      function ($scope, MediaClusterServiceV2, FusionClusterService, $stateParams, $modal, $state, $timeout, FusionUtils) {
 
         var vm = this;
         vm.displayName = null;
@@ -13,6 +13,7 @@
         vm.clusterDetail = null;
         vm.openSettings = openSettings;
         vm.fakeUpgrade = false;
+        vm.dateTime = null;
 
 
         if (!angular.equals($stateParams.clusterName, {})) {
@@ -25,6 +26,7 @@
 
         if (!angular.equals($stateParams.cluster, {})) {
           vm.clusterDetail = $stateParams.cluster;
+          vm.dateTime = FusionClusterService.formatTimeAndDate(vm.clusterDetail.upgradeSchedule);
           if ($stateParams.cluster) {
             vm.releaseChannel = FusionUtils.getLocalizedReleaseChannel(vm.clusterDetail.releaseChannel);
           }
