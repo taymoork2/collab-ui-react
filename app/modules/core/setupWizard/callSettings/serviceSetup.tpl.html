@@ -17,7 +17,25 @@
           options="squaredUcSetup.preferredLanguageOptions"
           labelfield="label"
           valuefield="value"
+          placeholder="squaredUcSetup.preferredLanguagePlaceholder"
           filter="false"
+          required="true"
+        ></cs-select>
+      </div>
+    </div>
+    <div class="row service-setup service-setup-regional-settings bottom-margin" cr-feature-toggle feature-show="huron-l10n-network-locale">
+      <label class="control-label" translate="serviceSetupModal.defaultCountry"></label>
+      <p class="description-block" translate="serviceSetupModal.defaultCountryDescription"></p>
+      <div class="medium-4">
+        <cs-select
+          name="country"
+          ng-model="squaredUcSetup.model.site.country"
+          options="squaredUcSetup.defaultCountryOptions"
+          labelfield="label"
+          valuefield="value"
+          filter="false"
+          placeholder="squaredUcSetup.defaultCountryPlaceholder"
+          required="true"
         ></cs-select>
       </div>
     </div>

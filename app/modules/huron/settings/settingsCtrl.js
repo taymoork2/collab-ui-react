@@ -32,6 +32,10 @@
       label: $translate.instant('languages.englishAmerican'),
       value: 'en_US'
     };
+    var DEFAULT_COUNTRY = {
+      label: $translate.instant('countries.unitedStates'),
+      value: 'US'
+    };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
     var DEFAULT_EXT_LEN = '4';
@@ -61,6 +65,7 @@
     vm._voicemailEnabledWatcher = _voicemailEnabledWatcher;
     vm._buildTimeZoneOptions = _buildTimeZoneOptions;
     vm._buildPreferredLanguageOptions = _buildPreferredLanguageOptions;
+    vm._buildDefaultCountryOptions = _buildDefaultCountryOptions;
     vm._buildServiceNumberOptions = _buildServiceNumberOptions;
     vm._buildVoicemailNumberOptions = _buildVoicemailNumberOptions;
     vm._buildCallerIdOptions = _buildCallerIdOptions;
@@ -77,6 +82,7 @@
     vm.timeZoneOptions = [];
     vm.timeZoneInputPlaceholder = $translate.instant('serviceSetupModal.searchTimeZone');
     vm.preferredLanguageOptions = [];
+    vm.defaultCountryOptions = [];
     vm.unassignedExternalNumbers = [];
     vm.allExternalNumbers = [];
     vm.extensionLengthChanged = false;
@@ -105,7 +111,8 @@
         emergencyCallBackNumber: undefined,
         uuid: undefined,
         voicemailPilotNumberGenerated: 'false',
-        preferredLanguage: DEFAULT_LANG
+        preferredLanguage: DEFAULT_LANG,
+        defaultCountry: DEFAULT_COUNTRY
       },
       numberRanges: [],
       previousLength: DEFAULT_EXT_LEN,
@@ -969,6 +976,10 @@
         siteData.preferredLanguage = vm.model.site.preferredLanguage.value;
       }
 
+      if (vm.model.site.defaultCountry.value !== savedModel.site.defaultCountry.value) {
+        siteData.country = vm.model.site.defaultCountry.value;
+      }
+
       if (vm.model.site.extensionLength !== savedModel.site.extensionLength) {
         siteData.extensionLength = vm.model.site.extensionLength;
       }
@@ -1113,13 +1124,18 @@
                 siteDialDigit: site.siteSteeringDigit,
                 voicemailPrefixLabel: site.siteSteeringDigit.concat(site.siteCode)
               };
-              vm.model.site.extensionLength = vm.model.previousLength = site.extensionLength;
+              vm.model.site.extensionLength = vm.model.previousLength = vm.previousModel.site.extensionLength = site.extensionLength;
               vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
                 return timezone.id === site.timeZone;
               });
               if (site.preferredLanguage) {
                 vm.model.site.preferredLanguage = _.find(vm.preferredLanguageOptions, function (language) {
                   return language.value === site.preferredLanguage;
+                });
+              }
+              if (site.country) {
+                vm.model.site.defaultCountry = _.find(vm.defaultCountryOptions, function (country) {
+                  return country.value === site.country;
                 });
               }
               vm.model.site.siteCode = site.siteCode;
@@ -1174,6 +1190,13 @@
       return ServiceSetup.getSiteLanguages()
         .then(function (languages) {
           vm.preferredLanguageOptions = _.sortBy(ServiceSetup.getTranslatedSiteLanguages(languages), 'label');
+        });
+    }
+
+    function loadDefaultCountryOptions() {
+      return ServiceSetup.getSiteCountries()
+        .then(function (countries) {
+          vm.defaultCountryOptions = _.sortBy(ServiceSetup.getTranslatedSiteCountries(countries), 'label');
         });
     }
 
@@ -1367,6 +1390,7 @@
             promises.push(loadDialPlan());
             promises.push(loadCallerId());
             promises.push(loadPreferredLanguageOptions());
+            promises.push(loadDefaultCountryOptions());
           }
 
           if (vm.hasVoicemailService) {
@@ -1561,7 +1585,7 @@
       if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled
         && (vm.model.site.siteSteeringDigit.siteDialDigit !== vm.previousModel.site.siteSteeringDigit.siteDialDigit
         || vm.model.site.extensionLength !== vm.previousModel.site.extensionLength
-        || vm.model.site.siteCode !== vm.previousModel.site.siteCode)) {
+        || !_.eq(_.toSafeInteger(vm.model.site.siteCode), _.toSafeInteger(vm.previousModel.site.siteCode)))) {
         var postalCode = [vm.model.site.siteSteeringDigit.siteDialDigit, vm.model.site.siteCode, vm.model.site.extensionLength].join('-');
         return ServiceSetup.updateVoicemailPostalcode(postalCode, vm.voicemailUserTemplate.objectId)
           .catch(function (response) {
@@ -1674,6 +1698,7 @@
       vm.model.site.siteCode = savedModel.site.siteCode;
       vm.model.site.timeZone = savedModel.site.timeZone;
       vm.model.site.preferredLanguage = savedModel.site.preferredLanguage;
+      vm.model.site.defaultCountry = savedModel.site.defaultCountry;
       vm.model.site.voicemailPilotNumber = savedModel.site.voicemailPilotNumber;
       vm.model.site.vmCluster = savedModel.site.vmCluster;
       vm.model.site.emergencyCallBackNumber = savedModel.site.emergencyCallBackNumber;
@@ -1822,6 +1847,14 @@
         return vm.preferredLanguageOptions;
       }, function (languages) {
         localScope.to.options = languages;
+      });
+    }
+
+    function _buildDefaultCountryOptions(localScope) {
+      localScope.$watchCollection(function () {
+        return vm.defaultCountryOptions;
+      }, function (countries) {
+        localScope.to.options = countries;
       });
     }
 

@@ -7,8 +7,8 @@ require('./_user-manage.scss');
     .controller('UserManageAdvancedController', UserManageAdvancedController);
 
   /* @ngInject */
-  function UserManageAdvancedController($state, $rootScope, $scope, $previousState, $translate, $modal, $timeout,
-    FeatureToggleService, Notification) {
+  function UserManageAdvancedController($modal, $previousState, $rootScope, $scope, $state, $timeout, $translate,
+    Analytics, FeatureToggleService, Notification) {
     var vm = this;
 
     vm.onInit = onInit;
@@ -27,6 +27,7 @@ require('./_user-manage.scss');
         onCancelImport();
         ev.preventDefault();
       }
+      Analytics.trackAddUsers(Analytics.eventNames.CANCEL_MODAL);
     });
 
     //////////////////
@@ -49,6 +50,7 @@ require('./_user-manage.scss');
       $rootScope.$on('add-user-dirsync-error', function () {
         vm.isNextDisabled = true;
         vm.dirSyncStatusMessage = $translate.instant('userManage.ad.dirSyncError');
+        Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_ERROR, null, { error: 'Directory Sync Error' });
       });
 
       // adapt so we an use the userCsvResults page since we want the DirSync results to look the same
@@ -106,6 +108,7 @@ require('./_user-manage.scss');
     function onBack() {
       var curState = getCurrentState();
       var nextState = transitions[curState].prev;
+      Analytics.trackAddUsers(Analytics.eventNames.BACK);
       if (curState === 'syncStatus') {
         $state.go('users.manage.activedir');
       } else {
@@ -125,13 +128,16 @@ require('./_user-manage.scss');
         FeatureToggleService.supportsDirSync().then(function (dirSyncEnabled) {
           vm.isBusy = false;
           if (dirSyncEnabled) {
+            Analytics.trackAddUsers(Analytics.eventNames.NEXT);
             $state.go(nextState);
           } else {
+            Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_ERROR, null, { error: 'Directory Connector not installed' });
             Notification.warning('userManage.advanced.noDirSync');
           }
         });
       } else {
         // move on
+        Analytics.trackAddUsers(Analytics.eventNames.NEXT);
         $state.go(nextState);
       }
     }
@@ -139,6 +145,7 @@ require('./_user-manage.scss');
     function onClose() {
       vm.isBusy = true;
       $timeout(function () {
+        Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.DONE);
         $scope.$dismiss();
       });
     }
