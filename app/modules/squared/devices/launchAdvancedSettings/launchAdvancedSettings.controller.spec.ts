@@ -2,9 +2,21 @@ namespace deviceAdvancedSettings {
 
   describe('LaunchAdvancedSettingsController', () => {
 
-    let controller, authInfo, $controller, $modalInstance, $scope, $timeout, CsdmDeviceService;
-    let rootScope;
-    let device: any = {};
+    let state: any = {
+      controller: <any>{},
+      authInfo: <any>{},
+      $controller: <any>{},
+      $modalInstance: <any>{},
+      $scope: <ng.IScope>{},
+      $timeout: <ng.ITimeoutService>{},
+      CsdmDeviceService: <any>{},
+      rootScope: <ng.IScope>{},
+      device: <any>{},
+    };
+
+    afterEach(() => {
+      state = {}; //clean up memory
+    });
 
     beforeEach(angular.mock.module('Core'));
     beforeEach(angular.mock.module('Squared'));
@@ -13,38 +25,38 @@ namespace deviceAdvancedSettings {
 
     beforeEach(inject(($rootScope, _$controller_, _$timeout_, $q, _Authinfo_, _CsdmDeviceService_) => {
 
-      $scope = $rootScope.$new();
-      $timeout = _$timeout_;
-      rootScope = $rootScope;
-      authInfo = _Authinfo_;
-      CsdmDeviceService = _CsdmDeviceService_;
-      $modalInstance = {
+      state.$scope = $rootScope.$new();
+      state.$timeout = _$timeout_;
+      state.rootScope = $rootScope;
+      state.authInfo = _Authinfo_;
+      state.CsdmDeviceService = _CsdmDeviceService_;
+      state.$modalInstance = {
         close: () => {
         },
       };
 
-      $controller = _$controller_;
+      state.$controller = _$controller_;
 
-      spyOn(CsdmDeviceService, 'sendAdvancedSettingsOtp').and.returnValue($q.when({ data: {} }));
+      spyOn(state.CsdmDeviceService, 'sendAdvancedSettingsOtp').and.returnValue($q.when({ data: {} }));
 
-      spyOn($modalInstance, 'close').and.stub();
+      spyOn(state.$modalInstance, 'close').and.stub();
 
-      spyOn(authInfo, 'getPrimaryEmail').and.returnValue('getPrimaryEmail@getPrimaryEmail');
-      spyOn(authInfo, 'getUserName').and.returnValue('getUserName');
+      spyOn(state.authInfo, 'getPrimaryEmail').and.returnValue('getPrimaryEmail@getPrimaryEmail');
+      spyOn(state.authInfo, 'getUserName').and.returnValue('getUserName');
     }));
 
     function initController(device) {
-      controller = $controller('LaunchAdvancedSettingsController', {
-        $scope: $scope,
-        $modalInstance: $modalInstance,
-        Authinfo: authInfo,
+      state.controller = state.$controller('LaunchAdvancedSettingsController', {
+        $scope: state.$scope,
+        $modalInstance: state.$modalInstance,
+        Authinfo: state.authInfo,
         currentDevice: device,
       });
-      $scope.$apply();
+      state.$scope.$apply();
     }
 
     beforeEach(() => {
-      device = {
+      state.device = {
         software: 'Spark Room OS 2016-11-30 a487137',
         isOnline: true,
         ip: '1.1.1.1',
@@ -58,32 +70,32 @@ namespace deviceAdvancedSettings {
       describe('with device online', () => {
 
         beforeEach(() => {
-          device.isOnline = true;
+          state.device.isOnline = true;
         });
 
         describe('+supported sw', () => {
 
           beforeEach(() => {
-            device.software = 'Spark Room OS 2016-11-30 a487137';
-            initController(device);
-            $timeout.flush();
+            state.device.software = 'Spark Room OS 2016-11-30 a487137';
+            initController(state.device);
+            state.$timeout.flush();
           });
 
           it('should start in the connect state.', () => {
-            expect(controller.state).toEqual(controller.states.connect);
+            expect(state.controller.state).toEqual(state.controller.states.connect);
           });
         });
 
         describe('+unsupported sw', () => {
 
           beforeEach(() => {
-            device.software = 'Spark Room OS 2012-11-30 a4d7137';
-            initController(device);
-            $timeout.flush();
+            state.device.software = 'Spark Room OS 2012-11-30 a4d7137';
+            initController(state.device);
+            state.$timeout.flush();
           });
 
           it('should be in the unsupportedSoftwareVersion state.', () => {
-            expect(controller.state).toEqual(controller.states.unsupportedSoftwareVersion);
+            expect(state.controller.state).toEqual(state.controller.states.unsupportedSoftwareVersion);
           });
         });
       });
@@ -91,31 +103,31 @@ namespace deviceAdvancedSettings {
       describe('with device offline', () => {
 
         beforeEach(() => {
-          device.isOnline = false;
+          state.device.isOnline = false;
         });
 
         describe('+supported sw', () => {
           beforeEach(() => {
-            device.software = 'Spark Room OS 2016-11-30 a487137';
-            initController(device);
-            $timeout.flush();
+            state.device.software = 'Spark Room OS 2016-11-30 a487137';
+            initController(state.device);
+            state.$timeout.flush();
           });
 
           it('should be in the offline state.', () => {
-            expect(controller.state).toEqual(controller.states.offline);
+            expect(state.controller.state).toEqual(state.controller.states.offline);
           });
         });
 
         describe('+unsupported sw', () => {
 
           beforeEach(() => {
-            device.software = 'Spark Room OS 2012-11-30 a4d7137';
-            initController(device);
-            $timeout.flush();
+            state.device.software = 'Spark Room OS 2012-11-30 a4d7137';
+            initController(state.device);
+            state.$timeout.flush();
           });
 
           it('should be in the unsupportedSoftwareVersion state.', () => {
-            expect(controller.state).toEqual(controller.states.unsupportedSoftwareVersion);
+            expect(state.controller.state).toEqual(state.controller.states.unsupportedSoftwareVersion);
           });
         });
       });
@@ -124,77 +136,77 @@ namespace deviceAdvancedSettings {
     describe('offline state', () => {
 
       beforeEach(() => {
-        device.isOnline = false;
-        initController(device);
-        $timeout.flush();
+        state.device.isOnline = false;
+        initController(state.device);
+        state.$timeout.flush();
       });
 
       it('should start in the offline state.', () => {
-        expect(controller.state).toEqual(controller.states.offline);
+        expect(state.controller.state).toEqual(state.controller.states.offline);
       });
 
       it('should not have button1', () => {
-        expect(controller.state.button1text).toBeFalsy();
+        expect(state.controller.state.button1text).toBeFalsy();
       });
 
       it('should have button2', () => {
-        expect(controller.state.button2text).toBeTruthy();
+        expect(state.controller.state.button2text).toBeTruthy();
       });
 
       it('should close the modal on button2', () => {
-        expect(controller.state.button2Click).toEqual($modalInstance.close);
+        expect(state.controller.state.button2Click).toEqual(state.$modalInstance.close);
       });
     });
 
     describe('unsupportedSoftwareVersion state', () => {
 
       beforeEach(() => {
-        device.software = 'Spark Room OS 2012-11-30 a4d7137';
-        initController(device);
-        $timeout.flush();
+        state.device.software = 'Spark Room OS 2012-11-30 a4d7137';
+        initController(state.device);
+        state.$timeout.flush();
       });
 
       it('should start in the unsupportedSoftwareVersion state.', () => {
-        expect(controller.state).toEqual(controller.states.unsupportedSoftwareVersion);
+        expect(state.controller.state).toEqual(state.controller.states.unsupportedSoftwareVersion);
       });
 
       it('should not have button1', () => {
-        expect(controller.state.button1text).toBeFalsy();
+        expect(state.controller.state.button1text).toBeFalsy();
       });
 
       it('should have button2', () => {
-        expect(controller.state.button2text).toBeTruthy();
+        expect(state.controller.state.button2text).toBeTruthy();
       });
 
       it('should close the modal on button2', () => {
-        expect(controller.state.button2Click).toEqual($modalInstance.close);
+        expect(state.controller.state.button2Click).toEqual(state.$modalInstance.close);
       });
     });
 
     describe('connect state', () => {
       beforeEach(() => {
-        initController(device);
-        $timeout.flush();
+        initController(state.device);
+        state.$timeout.flush();
       });
 
       it('should start in the connect state.', () => {
-        expect(controller.state).toEqual(controller.states.connect);
+        expect(state.controller.state).toEqual(state.controller.states.connect);
       });
 
       it('should have button1', () => {
-        expect(controller.state.button1text).toBeTruthy();
+        expect(state.controller.state.button1text).toBeTruthy();
       });
 
       it('should have button2', () => {
-        expect(controller.state.button2text).toBeTruthy();
+        expect(state.controller.state.button2text).toBeTruthy();
       });
 
       it('should not be in retry mode', () => {
-        expect(controller.state.isRetry).toBeFalsy();
+        expect(state.controller.state.isRetry).toBeFalsy();
       });
 
       it('should close the modal on button1', () => {
-        expect(controller.state.button1Click).toEqual($modalInstance.close);
+        expect(state.controller.state.button1Click).toEqual(state.$modalInstance.close);
       });
     });
   });

@@ -22,7 +22,7 @@ namespace deviceAdvancedSettings {
     /* @ngInject */
     constructor(private $modalInstance,
                 private $sanitize,
-                private $scope,
+                private $scope: ng.IScope,
                 private $timeout: ng.ITimeoutService,
                 private $translate: ng.translate.ITranslateService,
                 private $window: Window,

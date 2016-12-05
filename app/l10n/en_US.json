@@ -1420,14 +1420,14 @@
     "advancedSettings": {
       "advancedSettings": "Advanced Settings",
       "launchAdvancedSettings": "Launch Advanced Settings",
-      "connecting" : "Connecting to Advanced Settings on {name}'s {product}...",
-      "connectingTitle" : "{name}'s {product}",
+      "connecting": "Connecting to Advanced Settings on {name}'s {product}...",
+      "connectingTitle": "{name}'s {product}",
       "offlineHeader": "This room device is offline",
       "offlineMessage": "To access Advanced Settings, check that the room device is turned on and connected to the network, then try again.",
       "oldSoftwareMessage": "Advanced Settings are not currently available on the software version your room device is running.",
       "unavailableHeader": "Advanced Settings Unavailable",
       "unavailableMessage": "Connecting to the room device was unsuccessful.<br><br>Access to Advanced Settings requires that you are connected to the same network as the room device.",
-      "availableMessage":"This will open Advanced Settings in a new tab.<br><br>Access to Advanced Settings requires that you are on the same network as the room device."
+      "availableMessage": "This will open Advanced Settings in a new tab.<br><br>Access to Advanced Settings requires that you are on the same network as the room device."
     },
     "sameAsCompanyNum": "To edit your emergency service address, the emergency callback number for your device must be different from your company’s callback number.",
     "impactedUserInfo": "Modifying the Emergency Service Address associated to the above selected Callback Number will impact the following users and/or places:"
