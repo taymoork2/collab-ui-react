@@ -9,28 +9,53 @@ describe('Controller: DeviceUsageCtrl', function () {
   var splunkService;
   var $scope;
   var $q;
+  var $state;
 
-  beforeEach(inject(function (_$q_, _$rootScope_, _DeviceUsageTotalService_, _DeviceUsageSplunkMetricsService_, _$controller_) {
+  beforeEach(inject(function (_$q_, _$rootScope_, _DeviceUsageTotalService_, _DeviceUsageSplunkMetricsService_, _$controller_, _$state_) {
     DeviceUsageTotalService = _DeviceUsageTotalService_;
     DeviceUsageSplunkMetricsService = _DeviceUsageSplunkMetricsService_;
     $controller = _$controller_;
     $scope = _$rootScope_.$new();
     $q = _$q_;
+    $state = _$state_;
 
     sinon.stub(DeviceUsageTotalService, 'makeChart');
     DeviceUsageTotalService.makeChart.returns(amchartMock());
 
-    controller = $controller('DeviceUsageCtrl', {
-      DeviceUsageTotalService: DeviceUsageTotalService,
-      DeviceUsageSplunkMetricsService: DeviceUsageSplunkMetricsService,
-      $scope: $scope
-    });
-
-    splunkService = sinon.stub(DeviceUsageSplunkMetricsService, 'reportOperation');
 
   }));
 
+  describe('Missing feature toggle', function () {
+
+    it('goes to login state if feature toggle key is missing', function (done) {
+      sinon.stub($state, 'go');
+      controller = $controller('DeviceUsageCtrl', {
+        DeviceUsageTotalService: DeviceUsageTotalService,
+        DeviceUsageSplunkMetricsService: DeviceUsageSplunkMetricsService,
+        $scope: $scope,
+        deviceUsageFeatureToggle: false,
+        $state: $state
+      });
+      expect($state.go).toHaveBeenCalledWith('login');
+      done();
+
+    });
+  });
+
   describe('Normal initialization fetching device data', function () {
+
+    beforeEach(function () {
+      controller = $controller('DeviceUsageCtrl', {
+        DeviceUsageTotalService: DeviceUsageTotalService,
+        DeviceUsageSplunkMetricsService: DeviceUsageSplunkMetricsService,
+        $scope: $scope,
+        deviceUsageFeatureToggle: true,
+        $state: $state
+      });
+
+      splunkService = sinon.stub(DeviceUsageSplunkMetricsService, 'reportOperation');
+    });
+
 
     it('starts with fetching initial data based on default last 7 days range', function (done) {
       sinon.stub(DeviceUsageTotalService, 'getDataForLastNTimeUnits');
