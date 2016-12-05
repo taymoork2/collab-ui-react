@@ -4077,7 +4077,6 @@
       "movedTo": "{{nodeName}} moved to: {{clusterName}}",
       "upgradeSchedule": "Upgrade Schedule",
       "everyDay": "Every Day in",
-      "in": "in",
       "stable": "STABLE",
       "beta": "BETA",
       "latest": "LATEST",
