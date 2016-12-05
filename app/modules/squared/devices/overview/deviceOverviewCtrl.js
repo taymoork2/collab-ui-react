@@ -288,7 +288,11 @@
         saveUpgradeChannel(newValue)
           .then(_.partial(waitForDeviceToUpdateUpgradeChannel, newValue))
           .catch(function (error) {
-            Notification.errorWithTrackingId(error, 'deviceOverviewPage.failedToSaveChanges');
+            if (error.message) {
+              Notification.errorWithTrackingId(error, 'deviceOverviewPage.failedToSaveChanges');
+            } else {
+              Notification.error($translate.instant('deviceOverviewPage.failedToSaveChanges') + ' ' + error);
+            }
             resetSelectedChannel();
           })
           .finally(function () {
@@ -309,6 +313,7 @@
 
     function pollDeviceForNewChannel(newValue, endTime, deferred) {
       CsdmDataModelService.reloadItem(deviceOverview.currentDevice).then(function (device) {
+        deviceOverview.currentDevice = device;
         if (device.upgradeChannel.value == newValue) {
           Notification.success('deviceOverviewPage.channelUpdated');
           return deferred.resolve();
