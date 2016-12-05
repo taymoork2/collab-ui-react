@@ -14,7 +14,6 @@
 
     vm.customerOrgId = undefined;
     vm.licenseCountChanged = false;
-    vm.showWebex = false;
     vm.showRoomSystems = false;
     vm.showContextServiceTrial = false;
     vm.showCare = false;
@@ -134,9 +133,6 @@
         label: $translate.instant('trials.webex'),
         id: 'webexTrial',
         class: '',
-      },
-      'hideExpression': function () {
-        return !vm.showWebex;
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
@@ -472,8 +468,6 @@
           vm.sparkBoardTrial.enabled = vm.preset.sparkBoard;
           vm.webexTrial.enabled = vm.preset.webex;
           vm.meetingTrial.enabled = vm.preset.meeting;
-          // TODO: we enable globally by defaulting to 'true' here, but will revisit and refactor codepaths in a subsequent PR
-          vm.showWebex = true;
           vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
           vm.messageTrial.enabled = vm.preset.message;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;

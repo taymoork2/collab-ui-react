@@ -56,7 +56,6 @@
     // Navigate trial modal in this order
     vm.navOrder = ['trialAdd.info', 'trialAdd.webex', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call'];
     vm.navStates = ['trialAdd.info'];
-    vm.showWebex = false;
     vm.startTrial = startTrial;
     vm.setDeviceModal = setDeviceModal;
     vm.devicesModal = _.find(vm.trialStates, {
@@ -217,9 +216,6 @@
       templateOptions: {
         id: webexTemplateOptionId,
         label: $translate.instant('trials.webex')
-      },
-      hideExpression: function () {
-        return !vm.showWebex;
       },
     }];
 
@@ -516,11 +512,7 @@
           vm.showContextServiceTrial = true;
           vm.atlasCreateTrialBackendEmailEnabled = results.atlasCreateTrialBackendEmail;
           vm.atlasTrialsShipDevicesEnabled = results.atlasTrialsShipDevices;
-
-          if (vm.webexTrial.enabled) {
-            vm.showWebex = true;
-            updateTrialService(messageTemplateOptionId);
-          }
+          updateTrialService(messageTemplateOptionId);
 
           vm.showCare = results.atlasCareTrials;
           vm.careTrial.enabled = results.atlasCareTrials;
