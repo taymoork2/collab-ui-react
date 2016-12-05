@@ -93,23 +93,23 @@
   .timechartDiv {
     font-size: rem-calc(11);
     height: vr-adjust(380);
-    width: 100%;
+    width: 95%;
     position: relative;
     top: rem-calc(-50);
   }
 
   .barchart {
     font-size: rem-calc(11);
-    height: vr-adjust(375);
+    height: vr-adjust(368);
     width: 85%;
-    margin-left: auto;
+    margin-left: 5%;
     margin-right: auto;
     z-index: 50;
   }
 
   .barchart-shift {
     position: relative;
-    top: rem-calc(-64);
+    top: vr-adjust(12);
   }
 
   .report-table {
@@ -302,12 +302,23 @@
     animation: graphAxisFade 2s ease-in-out 1 forwards;
   }
 
-  #avgRoomsChart {
-    .room-number {
-      font-size: rem-calc(18);
-      color: $color-primary-base;
-      text-align: left;
+  // !important necessary to override AmCharts putting css directly on the divs
+  .amcharts-main-div, .amcharts-chart-div, .amcharts-balloon-div {
+    overflow: visible !important;
+  }
+  .amcharts-main-div {
+    .amcharts-chart-div svg {
+      left: 10px !important;
     }
+    .amcharts-chart-div .amcharts-balloon-div {
+      margin-left: 10px !important;
+    }
+  }
+
+  #avgRoomsChart .room-number {
+    font-size: rem-calc(18);
+    color: $color-primary-base;
+    text-align: left;
   }
 
   #mediaQualityChart {
