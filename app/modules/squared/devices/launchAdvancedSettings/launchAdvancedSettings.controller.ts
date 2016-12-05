@@ -2,13 +2,13 @@ namespace deviceAdvancedSettings {
 
   interface IDialogState {
     button1text?: string;
-    button1Click(): void;
+    button1Click?(): void;
     button2text: string;
-    button2Click(): void;
+    button2Click?(): void;
     isRetry?: boolean;
     title: string;
     message: string;
-    onEnter(): void;
+    onEnter?(): void;
   }
 
   class LaunchAdvancedSettingsController {
@@ -21,6 +21,7 @@ namespace deviceAdvancedSettings {
 
     /* @ngInject */
     constructor(private $modalInstance,
+                private $sanitize,
                 private $scope,
                 private $timeout: ng.ITimeoutService,
                 private $translate: ng.translate.ITranslateService,
@@ -64,8 +65,6 @@ namespace deviceAdvancedSettings {
           },
           button2text: 'common.ok',
           button2Click: this.$modalInstance.close,
-          onEnter: () => {
-          },
         },
         unsupportedSoftwareVersion: {
           title: 'spacesPage.advancedSettings.unavailableHeader',
@@ -74,8 +73,6 @@ namespace deviceAdvancedSettings {
           },
           button2text: 'common.ok',
           button2Click: this.$modalInstance.close,
-          onEnter: () => {
-          },
         },
         unavailable: {
           title: 'spacesPage.advancedSettings.unavailableHeader',
@@ -86,8 +83,6 @@ namespace deviceAdvancedSettings {
           button2Click: () => {
             this.states.connect.isRetry = true;
             this.changeState(this.states.connect);
-          },
-          onEnter: () => {
           },
         },
         connect: {
@@ -102,7 +97,9 @@ namespace deviceAdvancedSettings {
           },
           onEnter: () => {
             if (this.states.connect.isRetry) {
-              this.states.connect.button2Click();
+              if (this.states.connect.button2Click) {
+                this.states.connect.button2Click();
+              }
               this.states.connect.isRetry = false;
             }
           },
@@ -120,16 +117,8 @@ namespace deviceAdvancedSettings {
 
       let createEndpointWindow = (endpointOrigin, currentDevice): Window => {
 
-        function htmlEncode(text) {
-          return text.replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&apos;');
-        }
-
-        function createForwardingPageHtml(endpointOrigin, connectingText, title) {
-          return `<html><head><title>${htmlEncode(title)}</title></head><br><body><h4>${htmlEncode(connectingText)}</h4></body>
+        function createForwardingPageHtml($sanitize, endpointOrigin, connectingText, title) {
+          return `<html><head><title>${$sanitize(title)}</title></head><br><body><h4>${$sanitize(connectingText)}</h4></body>
                   <script>window.location.assign('${endpointOrigin}/cloud-login');</script></html>`;
         }
 
@@ -139,7 +128,7 @@ namespace deviceAdvancedSettings {
           return template.replace('{product}', (device.product || ''));
         };
 
-        let forwardingPageHtml = createForwardingPageHtml(
+        let forwardingPageHtml = createForwardingPageHtml(this.$sanitize,
           endpointOrigin,
           getText('connecting', currentDevice),
           getText('connectingTitle', currentDevice));
