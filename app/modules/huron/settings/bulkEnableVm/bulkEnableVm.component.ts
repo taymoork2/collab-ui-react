@@ -47,8 +47,8 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
         this.userErrorArray.push(error);
         this.UserCsvService.setCsvStat({userErrorArray: [{
                                     row: this.offset,
-                                    email: (userName == null ? '' : userName),
-                                    error: errorText + (trackingID == null ? '' : trackingID),
+                                    email: (userName === null ? '' : userName),
+                                    error: errorText + (trackingID === null ? '' : trackingID),
                                   }],
         });
         this.usersVoicemailFailedCount++;
