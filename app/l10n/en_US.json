@@ -6061,9 +6061,12 @@
         "labelCustomer": "Customer Name",
         "customerPlaceholder": "Who is this callback group for?",
         "labelCustomerAttr": "Partner CB Group Name",
-        "customerAttrPlaceholder": "Enter a shorter name for quick refernce",
-        "labelCountries": "Select Countries/Regions",
-        "countriesPlaceholder": "Search to add country"
+        "customerAttrPlaceholder": "Enter a shorter name for quick reference",
+        "labelCountries": "Select Country/Regions",
+        "countriesPlaceholder": "Search to add country",
+        "selectPlaceholder": "Select your country",
+        "syncPlaceholder": " Country/Regions Selected",
+        "countryDisplayNull": "No countries or regions yet"
       },
       "notes": {
         "notes": "Notes",

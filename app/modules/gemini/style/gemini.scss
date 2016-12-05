@@ -110,10 +110,18 @@
       color: $color-primary-base;
     }
 
-    .button-container {
-      top: auto;
-      bottom: 0;
-      left: 0;
+    .country-upload-file {
+      .upload-file-box {
+        position: relative;
+      }
+
+      .country-upload-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        opacity: 0;
+      }
     }
   }
 
@@ -142,6 +150,12 @@
         color: $color-primary-base;
       }
     }
+  }
+
+  .button-container {
+    top: auto;
+    bottom: 0;
+    left: 0;
   }
 }
 
