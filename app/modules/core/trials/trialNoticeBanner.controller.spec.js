@@ -46,6 +46,14 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
     'license': {}
   }];
 
+  afterEach(function () {
+    $scope = controller = $httpBackend = $q = Authinfo = deferred = EmailService = Notification = TrialService = UserListService = undefined;
+  });
+
+  afterAll(function () {
+    fakePartnerInfoData = fakeTrialPeriodData = fakeConferenceDataWithWebex = fakeConferenceDataWithoutWebex = undefined;
+  });
+
   beforeEach(angular.mock.module('core.trial'));
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));

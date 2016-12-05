@@ -15,16 +15,16 @@ import {
 describe('Controller: Customer Reports Ctrl', function () {
   let controller;
 
-  const dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
-  const activeData = getJSONFixture('core/json/customerReports/activeUser.json');
-  const ctrlData = getJSONFixture('core/json/partnerReports/ctrl.json');
-  const roomData = getJSONFixture('core/json/customerReports/roomData.json');
-  const fileData = getJSONFixture('core/json/customerReports/fileData.json');
-  const mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
-  const metricsData = getJSONFixture('core/json/customerReports/callMetrics.json');
-  const devicesJson = getJSONFixture('core/json/customerReports/devices.json');
-  const defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
-  const conversationData = getJSONFixture('core/json/customerReports/conversation.json');
+  let dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
+  let activeData = getJSONFixture('core/json/customerReports/activeUser.json');
+  let ctrlData = getJSONFixture('core/json/partnerReports/ctrl.json');
+  let roomData = getJSONFixture('core/json/customerReports/roomData.json');
+  let fileData = getJSONFixture('core/json/customerReports/fileData.json');
+  let mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
+  let metricsData = getJSONFixture('core/json/customerReports/callMetrics.json');
+  let devicesJson = getJSONFixture('core/json/customerReports/devices.json');
+  let defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
+  let conversationData = getJSONFixture('core/json/customerReports/conversation.json');
 
   let activeOptions: IReportCard = _.cloneDeep(ctrlData.activeUserOptions);
   let secondaryActiveOptions: ISecondaryReport = _.cloneDeep(ctrlData.activeUserSecondaryOptions);
@@ -58,6 +58,10 @@ describe('Controller: Customer Reports Ctrl', function () {
     selected: mediaArray[0],
     click: (): void => {},
   };
+
+  afterAll(function () {
+    dummyData = activeData = ctrlData = roomData = fileData = mediaData = metricsData = devicesJson = defaults = conversationData = undefined;
+  });
 
   beforeEach(function () {
     this.initModules('Core');

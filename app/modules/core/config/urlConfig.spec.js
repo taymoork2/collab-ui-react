@@ -1,15 +1,20 @@
 'use strict';
 
 describe('UrlConfigSpec', function () {
-
   beforeEach(angular.mock.module('core.urlconfig'));
 
   var UrlConfig, $location;
+
+  afterEach(function () {
+    UrlConfig = $location = undefined;
+  });
+
   beforeEach(inject(function (_$location_, _UrlConfig_) {
     UrlConfig = _UrlConfig_;
     $location = _$location_;
     spyOn($location, 'host');
   }));
+
 
   var devHost = 'localhost';
   var cfeHost = 'cfe-admin.ciscospark.com';
@@ -46,6 +51,10 @@ describe('UrlConfigSpec', function () {
       }
     };
   };
+
+  afterAll(function () {
+    devHost = cfeHost = intHost = prodHost = orgId = siteURL = whenCalling = undefined;
+  });
 
   it('should return correct identity user service url', function () {
     whenCalling('getScimUrl', orgId).expectUrlToBe({

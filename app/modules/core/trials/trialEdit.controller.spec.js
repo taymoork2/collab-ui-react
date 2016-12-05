@@ -3,10 +3,6 @@
 describe('Controller: TrialEditCtrl:', function () {
   var controller, helpers, $scope, $state, $q, $translate, $window, $httpBackend, Notification, TrialService, TrialContextService, HuronCustomer, FeatureToggleService, Orgservice;
 
-  beforeEach(angular.mock.module('core.trial'));
-  beforeEach(angular.mock.module('Core'));
-  beforeEach(angular.mock.module('Huron'));
-  beforeEach(angular.mock.module('Sunlight'));
   var stateParams = {
     currentTrial: {
       offers: [{
@@ -17,6 +13,19 @@ describe('Controller: TrialEditCtrl:', function () {
     }
   };
   var addContextSpy, removeContextSpy;
+
+  afterEach(function () {
+    controller = helpers = $scope = $state = $q = $translate = $window = $httpBackend = Notification = TrialService = TrialContextService = HuronCustomer = FeatureToggleService = Orgservice = undefined;
+  });
+
+  afterAll(function () {
+    addContextSpy = removeContextSpy = undefined;
+  });
+
+  beforeEach(angular.mock.module('core.trial'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _$window_, _$httpBackend_, _Notification_, _TrialService_, _TrialContextService_, _HuronCustomer_, _FeatureToggleService_, _Orgservice_) {
     $scope = $rootScope.$new();

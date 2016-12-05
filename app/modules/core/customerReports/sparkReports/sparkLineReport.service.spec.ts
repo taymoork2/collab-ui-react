@@ -1,12 +1,12 @@
 describe('Service: Customer Reports Service', function () {
-  const activeData = getJSONFixture('core/json/customerReports/activeUser.json');
-  const conversationData = getJSONFixture('core/json/customerReports/conversation.json');
-  const defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
-  const rejectError = {
+  let activeData = getJSONFixture('core/json/customerReports/activeUser.json');
+  let conversationData = getJSONFixture('core/json/customerReports/conversation.json');
+  let defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
+  let rejectError: any = {
     status: 500,
   };
 
-  let updateDates = (data: Array<any>, filter: string | undefined, altDate: string | undefined): Array<any> => {
+  let updateDates: any = (data: Array<any>, filter: string | undefined, altDate: string | undefined): Array<any> => {
     _.forEachRight(data, (item: any, index: number): void => {
       if (filter) {
         item.date = moment().tz(defaults.timezone).subtract(data.length - index, defaults.DAY).format(filter);
@@ -19,13 +19,17 @@ describe('Service: Customer Reports Service', function () {
     return data;
   };
 
-  let dataResponse = (data: any): any => {
+  let dataResponse: any = (data: any): any => {
     return {
       data: {
         data: data,
       },
     };
   };
+
+  afterAll(function () {
+    activeData = conversationData = defaults = rejectError = updateDates = dataResponse = undefined;
+  });
 
   beforeEach(function () {
     this.initModules('Core');

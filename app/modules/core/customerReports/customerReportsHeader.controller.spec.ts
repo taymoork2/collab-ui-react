@@ -1,7 +1,7 @@
 describe('Controller: Customer Reports Ctrl', function () {
   let WebexReportService: any;
 
-  let headerTabs: Array<any> = [{
+  let headerTabs: any = [{
     title: 'mediaFusion.page_title',
     state: 'reports.metrics',
   }, {
@@ -17,6 +17,14 @@ describe('Controller: Customer Reports Ctrl', function () {
     title: 'reportsPage.usageReports.usageReportTitle',
     state: 'reports.device-usage',
   }];
+
+  afterAll(function () {
+    headerTabs = undefined;
+  });
+
+  afterEach(function () {
+    WebexReportService = undefined;
+  });
 
   beforeEach(function () {
     this.initModules('Core', 'Huron', 'Sunlight', 'Mediafusion');

@@ -6,6 +6,14 @@ describe('Template: trialDevice.tpl.spec.js:', function () {
   var view;
   var skipBtn, backBtn;
 
+  afterEach(function () {
+    if (view) {
+      view.remove();
+    }
+    $compile = $controller = $httpBackend = $scope = $templateCache = Orgservice = undefined;
+    view = skipBtn = backBtn = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('core.trial'));
   // TODO - check for removal of Huron and Sunlight when MX300 are officially supported

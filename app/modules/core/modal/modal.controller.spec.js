@@ -9,6 +9,14 @@ describe('Controller: ModalCtrl', function () {
   var dismiss = 'myDismiss';
   var btnType = 'myBtnType';
 
+  afterEach(function () {
+    controller = $scope = undefined;
+  });
+
+  afterAll(function () {
+    title = message = close = dismiss = btnType = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
 
   beforeEach(angular.mock.module(function ($provide) {

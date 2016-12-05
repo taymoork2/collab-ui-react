@@ -16,6 +16,18 @@ describe('Template: partnerProfile', function () {
   var SAVE_BUTTON = '#orgProfileSaveBtn';
   var INVISIBLE = 'invisible';
 
+  afterEach(function () {
+    if (view) {
+      view.remove();
+    }
+    $scope = $controller = $q = $templateCache = $compile = view = undefined;
+    Notification = Orgservice = UserListService = BrandService = FeatureToggleService = WebexClientVersion = Authinfo = undefined;
+  });
+
+  afterAll(function () {
+    PROBLEM_SITE_RADIO_0 = PROBLEM_SITE_RADIO_1 = HELP_SITE_RADIO_0 = HELP_SITE_RADIO_1 = PARTNER_HELP_URL = BUTTON_CONTAINER = CANCEL_BUTTON = SAVE_BUTTON = INVISIBLE = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));

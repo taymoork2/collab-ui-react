@@ -5,6 +5,10 @@ describe('settingsMenuCtrl', function () {
 
   var controller, $translate;
 
+  afterEach(function () {
+    controller = $translate = undefined;
+  });
+
   describe('with real languages', function () {
     beforeEach(inject(function ($rootScope, $controller, _$translate_) {
       $translate = _$translate_;
