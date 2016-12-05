@@ -86,9 +86,7 @@
 
     //else the dismiss was called
     function ok() {
-      if (vm.showLanguageAndVoiceOptions) {
-        updateLanguageVoice();
-      }
+      updateLanguageVoice();
       updateMaxWaitTime();
       updatePeriodicTime();
       autoValidate();
@@ -106,8 +104,10 @@
     }
 
     function updateLanguageVoice() {
-      vm.menuEntry.actions[0].queueSettings.language = vm.languageOption.value;
-      vm.menuEntry.actions[0].queueSettings.voice = vm.voiceOption.value;
+      if (vm.showLanguageAndVoiceOptions) {
+        vm.menuEntry.actions[0].queueSettings.language = vm.languageOption.value;
+        vm.menuEntry.actions[0].queueSettings.voice = vm.voiceOption.value;
+      }
     }
 
     function updatePeriodicTime() {
@@ -190,15 +190,17 @@
     }
 
     function populateLanguageVoice() {
-      vm.languageOptions.sort(AACommonService.sortByProperty(properties.LABEL));
-      vm.voiceOptions.sort(AACommonService.sortByProperty(properties.LABEL));
+      if (vm.showLanguageAndVoiceOptions) {
+        vm.languageOptions.sort(AACommonService.sortByProperty(properties.LABEL));
+        vm.voiceOptions.sort(AACommonService.sortByProperty(properties.LABEL));
 
-      var voice = vm.menuEntry.actions[0].queueSettings.voice;
+        var voice = vm.menuEntry.actions[0].queueSettings.voice;
 
-      vm.voiceOption = AALanguageService.getVoiceOption(voice);
-      vm.languageOption = AALanguageService.getLanguageOption(voice);
-      vm.voiceBackup = vm.voiceOption;
-      setVoiceOptions();
+        vm.voiceOption = AALanguageService.getVoiceOption(voice);
+        vm.languageOption = AALanguageService.getLanguageOption(voice);
+        vm.voiceBackup = vm.voiceOption;
+        setVoiceOptions();
+      }
     }
 
     function populatePeriodicTime() {
@@ -262,9 +264,7 @@
     }
 
     function initializeView() {
-      if (vm.showLanguageAndVoiceOptions) {
-        populateLanguageVoice();
-      }
+      populateLanguageVoice();
       populateMohRadio();
       populatePeriodicTime();
       populateMaxWaitTime();
