@@ -20,7 +20,7 @@ namespace deviceAdvancedSettings {
       CsdmDeviceService = _CsdmDeviceService_;
       $modalInstance = {
         close: () => {
-        }
+        },
       };
 
       $controller = _$controller_;
@@ -38,7 +38,7 @@ namespace deviceAdvancedSettings {
         $scope: $scope,
         $modalInstance: $modalInstance,
         Authinfo: authInfo,
-        currentDevice: device
+        currentDevice: device,
       });
       $scope.$apply();
     }
@@ -50,7 +50,7 @@ namespace deviceAdvancedSettings {
         ip: '1.1.1.1',
         cisUuid: 'cisUuidcisUuidcisUuid',
         url: 'http://sdfdsfdsfsdfds',
-        displayName: 'displayName'
+        displayName: 'displayName',
       };
     });
 
