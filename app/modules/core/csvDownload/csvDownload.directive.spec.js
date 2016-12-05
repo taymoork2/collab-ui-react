@@ -1,18 +1,22 @@
 'use strict';
 
 describe('Directive: csvDownload', function () {
-  var $compile, $rootScope, $scope, $timeout, $httpBackend, CsvDownloadService, FeatureToggleService, $q, $window;
+  var $compile, $rootScope, $scope, $timeout, $httpBackend, Analytics, CsvDownloadService, FeatureToggleService, $q, $window;
 
   beforeEach(angular.mock.module('Core'));
-  beforeEach(inject(function (_FeatureToggleService_, _$q_, _$compile_, _$rootScope_, _$timeout_, _$window_) {
+  beforeEach(angular.mock.module('Huron'));
+
+  beforeEach(inject(function (_$compile_, _$q_, _$rootScope_, _$timeout_, _$window_, _Analytics_, _FeatureToggleService_) {
     FeatureToggleService = _FeatureToggleService_;
     $compile = _$compile_;
     $timeout = _$timeout_;
     $rootScope = _$rootScope_;
     $q = _$q_;
     $window = _$window_;
+    Analytics = _Analytics_;
     $scope = $rootScope.$new();
     spyOn(FeatureToggleService, 'atlasNewUserExportGetStatus').and.returnValue($q.when(false));
+    spyOn(Analytics, 'trackCsv').and.returnValue($q.when());
   }));
 
   describe("Controller", function () {

@@ -5,9 +5,10 @@
     .controller('AddUserCtrl', AddUserCtrl);
 
   /* @ngInject */
-  function AddUserCtrl($scope, $rootScope, $q, $location, addressparser, DirSyncService, Log, $translate, Notification,
-    UserListService, $filter, Userservice, LogMetricsService, Config, FeatureToggleService) {
+  function AddUserCtrl($filter, $location, $q, $rootScope, $scope, $translate, addressparser, Analytics, DirSyncService, Log, Notification,
+    UserListService, Userservice, LogMetricsService, Config, FeatureToggleService) {
     $scope.maxUsers = 1100;
+    var getStatusCount = 0;
     var invalidcount = 0;
     $scope.options = {
       addUsers: 0
@@ -63,6 +64,10 @@
         deferred.reject();
       }
       return deferred.promise;
+    };
+
+    $scope.trackInstall = function () {
+      Analytics.trackAddUser(Analytics.sections.ADD_USERS.eventNames.INSTALL_CONNECTOR);
     };
 
     var allSteps = ['chooseSync', 'domain', 'installCloud', 'syncStatus', 'manual'];
@@ -285,8 +290,8 @@
       $scope.userList = [];
       $scope.useNameList = [];
       $scope.dirsyncUserCountText = '';
-
       $rootScope.$emit('add-user-dirsync-started');
+      getStatusCount += 1;
 
       DirSyncService.getDirSyncStatus(function (data, status) {
         if (data.success) {
@@ -295,12 +300,14 @@
             $scope.dirsyncStatus = data.result;
             $scope.lastEndTime = data.lastEndTime;
           }
+          Analytics.trackAddUser(Analytics.sections.ADD_USERS.eventNames.SYNC_REFRESH, null, { result: 'success', clicks: getStatusCount });
         } else {
           Log.debug('Failed to retrieve directory sync status. Status: ' + status);
           $rootScope.$emit('add-user-dirsync-error');
           Notification.error('dirsyncModal.getStatusFailed', {
             status: status
           });
+          Analytics.trackAddUser(Analytics.sections.ADD_USERS.eventNames.SYNC_REFRESH, null, { result: 'error', clicks: getStatusCount });
         }
       });
 

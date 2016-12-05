@@ -7,10 +7,12 @@ require('./_user-manage.scss');
     .controller('UserManageModalController', UserManageModalController);
 
   /* @ngInject */
-  function UserManageModalController(FeatureToggleService, $state) {
+  function UserManageModalController($state, Analytics, FeatureToggleService) {
     var vm = this;
 
     vm.onInit = onInit;
+    vm.cancelModal = cancelModal;
+
 
     vm.onInit();
 
@@ -30,6 +32,11 @@ require('./_user-manage.scss');
         }
       });
 
+    }
+
+    function cancelModal() {
+      Analytics.trackAddUsers(Analytics.eventNames.CANCEL_MODAL);
+      $state.modal.dismiss();
     }
   }
 })();

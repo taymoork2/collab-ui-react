@@ -60,10 +60,6 @@ require('./_overview.scss');
 
       Orgservice.getHybridServiceAcknowledged().then(function (response) {
         if (response.status === 200) {
-           //TODO: Display HDS notification based on feagure toggle only for now
-          if (vm.hasHDSFeatureToggle) {
-            vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
-          }
           _.forEach(response.data.items, function (item) {
             if (!item.acknowledged) {
               if (item.id === Config.entitlements.fusion_cal) {
@@ -74,11 +70,9 @@ require('./_overview.scss');
                 vm.notifications.push(OverviewNotificationFactory.createCallConnectNotification());
               } else if (item.id === Config.entitlements.mediafusion && vm.hasMediaFeatureToggle) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
+              } else if (item.id === Config.entitlements.hds && vm.hasHDSFeatureToggle) {
+                vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
               }
-              //TODO: Switch to using HDS entitlements when are ready in FMS
-              //} else if (item.id === Config.entitlements.hds && vm.hasHDSFeatureToggle) {
-              //  vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
-              //}
             }
           });
           resizeNotifications();

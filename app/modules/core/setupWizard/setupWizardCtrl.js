@@ -6,7 +6,7 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($http, $scope, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, UrlConfig, Utils) {
+  function SetupWizardCtrl($scope, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, Utils) {
 
     FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
       $scope.pstnEnabled = pstnEnabled;
@@ -146,11 +146,7 @@ require('./_setup-wizard.scss');
       if (Authinfo.isCare()) {
         FeatureToggleService.atlasCareTrialsGetStatus().then(function (careToggle) {
           if (careToggle) {
-            $http.get(UrlConfig.getAdminServiceUrl() + 'userauthinfo').then(function (authData) {
-              if (!isPartner(authData.data)) {
-                addCareStep();
-              }
-            });
+            addCareStep();
           }
         });
       }
@@ -242,14 +238,6 @@ require('./_setup-wizard.scss');
       } else {
         $scope.tabs.splice(userOrFinishTabIndex, 0, careTab);
       }
-    }
-
-    function isPartner(authData) {
-      var roles = authData.roles;
-      if (_.indexOf(roles, 'PARTNER_USER') > -1 || _.indexOf(roles, 'PARTNER_ADMIN') > -1) {
-        return true;
-      }
-      return false;
     }
 
     function filterTabs(tabs) {

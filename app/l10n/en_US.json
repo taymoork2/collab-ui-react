@@ -1189,15 +1189,19 @@
     "modifySSOLabel": "Modify",
     "ssoEnabledStatus": "Single sign-on is enabled",
     "ssoNotEnabledStatus": "Single sign-on is not enabled",
-    "ssoModifyWarning": "SSO is Enabled <br/> Changing settings could invalidate the connection.",
+    "ssoModifyWarning": "SSO is Enabled. Changing settings could invalidate the connection.",
     "idpOverwriteWarning": "Are you Sure? Single Sign-On is currently enabled. Importing a new metadata file will invalidate your existing configuration. If you proceed you cannot revert to your previous SSO configuration. Do you want to continue?",
     "disableSSOByRadioWarning": "Are you sure? Your existing SSO configuration will be disabled. All users will now begin using the built-in authentication in Spark and may need assistance establishing or resetting their passwords. You will not be able to undo this selection, but can re-enable SSO again from Enterprise Settings. Do you want to continue? ",
-    "ssoDisableSuccessNotification": "SSO is disabled <br/> User authentication configuration is now using simple built-in identity service."
+    "ssoDisableSuccessNotification": "SSO is Disabled. User authentication configuration is now using simple built-in identity service."
   },
   "serviceSetupModal": {
     "regionalSettings": "Regional Settings",
     "preferredLanguage": "Preferred Language",
     "preferredLanguageDescription": "Specify the language to use for Spark Call Services. Preferred language only applies to new users.",
+    "preferredLanguagePlaceholder": "Select your language",
+    "defaultCountry": "Default Country",
+    "defaultCountryDescription": "Specify the country to set the correct dial tone on user devices.",
+    "defaultCountryPlaceholder": "Select your country",
     "timeZone": "Time Zone",
     "searchTimeZone": "Search for a time zone...",
     "tzDescription": "Specify the time zone to use for schedule-based call routing. For example, this time zone applies to calls routed based on business hours and holiday schedules.",
@@ -1589,7 +1593,7 @@
       "squared-fusion-mgmt": "Hybrid Management Service",
       "squared-fusion-uc": "Hybrid Call Service",
       "squared-fusion-cal": "Hybrid Calendar Service",
-      "hybrid-data-security": "Hybrid Data Security"
+      "spark-hybrid-datasecurity": "Hybrid Data Security"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
@@ -2021,26 +2025,64 @@
     "genericFailure": "An unexpected error occurred. Please try again later."
   },
   "hds" : {
-    "settings" : {
-      "deactivateService" : "Deactivate Service",
-      "deactivateServiceHeader" : "Deactivate Hybrid Data Security",
-      "deactivateServiceDesc" : "Deactivating Service...",
-      "deactivateServiceButton" : "Deactivate",
-      "deactivateServiceConfirmation" : "Confirm Deactivation",
-      "serviceStatus" : "Service Status",
-      "serviceStatusTrialMode" : "Trial Mode",
-      "serviceStatusProductionMode" : "Production Mode",
-      "serviceStatusTrial" : "Trial",
-      "serviceStatusProduction" : "Production",
-      "serviceStatusTrialStarted" : "Hybrid Data Security Trial Mode has started",
-      "serviceStatusProductionStarted" : "Hybrid Data Security Production Mode has started",
-      "serviceDocumentationSoftware" : "Documentation and Software",
-      "serviceHelp" : "Visit <a target='_blank' href='{{documentationUrl}}'>Help Central</a> whenever you need further information about Hybrid Services",
-      "serviceDownload" : "Download Cisco Expressway software from <a target='_blank' href='http://software.cisco.com'>software.cisco.com</a>",
-      "orgSettings" : "Organization",
-      "orgSettingsKmsServer" : "Server",
-      "orgSettingsKmsMachineAccount"  : "Machine Account",
-      "getOrgSettingsFailure" : "Failed to retrieve organization data."
+    "pageTitle": "Hybrid Data Security",
+    "genericError": "An unexpected error occurred. Please try again later.",
+    "serviceDescription": "Hybrid Data Security Service Description.",
+    "hdsServiceActivationFailure": "Problems enabling the service",
+    "clusters": {
+      "listing": {
+        "no_clusters_heading": "No Hybrid Data Service clusters registered",
+        "no_clusters_text": "See required actions above and documentation to get started."
+      }
+    },
+    "serviceStatus": {
+      "unknown": "Status unknown",
+      "not_configured": "Not configured",
+      "installing": "Installing",
+      "disabled": "Disabled",
+      "not_installed": "Not installed",
+      "stopped": "Stopped",
+      "offline": "Offline",
+      "registered": "Registered",
+      "downloading": "Downloading",
+      "uninstalling": "Uninstalling",
+      "running": "Running",
+      "needs_attention": "Needs attention",
+      "alarm": "Alarms",
+      "Unknown": "Registering",
+      "nohosts": "No Hosts Registered",
+      "no_hosts": "No Hosts Registered",
+      "has_alarms": "Alarms",
+      "upgrading": "Upgrading",
+      "upgraded": "Upgraded",
+      "pending": "Pending",
+      "initializing": "Initializing",
+      "not_operational": "Not Operational",
+      "nonodes": "No Nodes Registered"
+    },
+    "resources" : {
+      "page_title": "Hybrid Data Security Service",
+      "add-resource-button": "Add Resource",
+      "genericError": "An unexpected error occurred. Please try again later.",
+      "loading" : "Loading",
+      "connectors": {
+        "group_by": "Group services by:",
+        "cluster_id": "Cluster",
+        "host_name": "Host",
+        "display_name": "Service Name",
+        "connector_type": "Connector Type",
+        "serial": "Serial",
+        "version": "Version",
+        "status": "Status",
+        "alarms": "Alarms",
+        "reportAlarm": "reported alarm.",
+        "reportAlarms": "reported alarms.",
+        "software": "Software",
+        "deregister_host": "DEREGISTER HOST",
+        "goToHost": "Go to Host",
+        "hosts": "Hosts",
+        "nodes": "Nodes"
+     }
     }
   },
   "ediscovery": {
@@ -4104,7 +4146,7 @@
       "cancel": "Cancel",
       "cluster-placeholder": "Create or select cluster",
       "hostname-placeholder": "Enter FQDN or IP address",
-      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud.<br> Node IP Address/FQDN: {{hostname}}<br>Cluster: {{clustername}}",
+      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud. Node IP Address/FQDN: {{hostname}} Cluster: {{clustername}}",
       "grant-registration-success-header-new-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, assigned to the new cluster <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
       "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration.",
       "next": "Next",
@@ -4164,7 +4206,7 @@
     "actionsHeader": "Actions",
     "defuseConnector": "Deregister",
     "confirmDefuse": "Confirm Deregistration",
-    "defuseText": "Are you sure?<br> Clicking \"Yes\" will remove this device from Cisco Cloud Collaboration Management and stop the devices from accepting any new calls. (Preexisting calls will continue.)",
+    "defuseText": "Are you sure? Clicking \"Yes\" will remove this device from Cisco Cloud Collaboration Management and stop the devices from accepting any new calls. (Preexisting calls will continue.)",
     "yesDefuse": "Yes",
     "defuseSuccess": "Deregistration successfully",
     "deleteConnectorError": "Error deleting connector",
@@ -4681,6 +4723,12 @@
     "errOrgCreation": "Your order is being processed. Please check back after 24 hours.",
     "info": "Status",
     "wait": "Please wait while we redirect you"
+  },
+  "countries": {
+    "greatBritain": "United Kingdom",
+    "unitedStates": "United States",
+    "canada": "Canada",
+    "colombia": "Colombia"
   },
   "languages": {
     "danish": "Dansk",
@@ -5373,7 +5421,7 @@
           "squared-fusion-uc": "Call",
           "squared-fusion-mgmt": "Management",
           "squared-fusion-media": "Media",
-          "hybrid-data-security": "Data Security"
+          "spark-hybrid-datasecurity": "Data Security"
         }
       },
       "licenses": {
