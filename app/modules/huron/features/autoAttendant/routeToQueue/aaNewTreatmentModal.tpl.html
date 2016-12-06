@@ -15,7 +15,7 @@
       </div>
       <div class="large-6 medium-6 columns aa-message-select-list">
         <label for="voiceSelect{{ schedule + index + menuKeyIndex }}" translate="autoAttendant.sayMessageVoice"></label>
-        <cs-select id="voiceSelect{{ schedule + index + menuKeyIndex }}" name="voiceSelect" options="aaNewTreatmentModalCtrl.voiceOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" ng-model="aaNewTreatmentModalCtrl.voiceOption" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder" ng-change="aaSay.saveUiModel()">
+        <cs-select id="voiceSelect{{ schedule + index + menuKeyIndex }}" name="voiceSelect" options="aaNewTreatmentModalCtrl.voiceOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" ng-model="aaNewTreatmentModalCtrl.voiceOption" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder">
         </cs-select>
       </div>
       <div class="large-12">
@@ -82,11 +82,11 @@
     <div class="large-8 medium-8 small-12 large-offset-4 medium-offset-4 columns">
       <p translate="autoAttendant.periodicTime"></p>
     <div class="aa-select-modal">
-      <cs-select ng-model="aaNewTreatmentModalCtrl.periodicMinute" id="periodicMinId" options="aaNewTreatmentModalCtrl.periodicMinutes" ng-change="aaNewTreatmentModalCtrl.changedPeriodicMinValue()" secondary-label="Minutes" labelfield="label" valuefield="label" icon="icon-chevron-down" >
+      <cs-select ng-model="aaNewTreatmentModalCtrl.periodicMinute" id="periodicMinId" options="aaNewTreatmentModalCtrl.periodicMinutes"  ng-change="aaNewTreatmentModalCtrl.changedPeriodicMinValue()" secondary-label="Minutes" labelfield="label" valuefield="label" icon="icon-chevron-down" >
       </cs-select>
     </div>
     <div class="aa-select-modal">
-      <cs-select ng-model="aaNewTreatmentModalCtrl.periodicSecond" id="periodicSecId" options="aaNewTreatmentModalCtrl.periodicSeconds" ng-change="aaNewTreatmentModalCtrl.changedPeriodicSecValue()" secondary-label="Seconds" labelfield="label" valuefield="label" icon="icon-chevron-down" is-disabled="!aaNewTreatmentModalCtrl.areSecondsDisabled">
+      <cs-select ng-model="aaNewTreatmentModalCtrl.periodicSecond" id="periodicSecId" options="aaNewTreatmentModalCtrl.periodicSeconds" secondary-label="Seconds" labelfield="label" valuefield="label" icon="icon-chevron-down" is-disabled="aaNewTreatmentModalCtrl.isDisabled()">
       </cs-select>
     </div>
     </div>
@@ -111,12 +111,12 @@
     <div class="large-6 medium-6 small-8 large-offset-4 medium-offset-4 columns">
       <cs-select id="destinationSelect" ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions" labelfield="label" valuefield="label" icon="icon-chevron-down" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder">
       </cs-select>
-      <div ng-switch="aaNewTreatmentModalCtrl.destination.name" class="aa-destination-container">
-        <aa-route-to-aa id="destinationMenuRouteAA" ng-switch-when="destinationMenuRouteAA" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}" aa-from-fallback="true"></aa-route-to-aa>
-        <aa-route-to-hg id="destinationMenuRouteHunt" ng-switch-when="destinationMenuRouteHunt" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}" aa-from-fallback="true"></aa-route-to-hg>
-        <aa-route-to-user id="destinationMenuRouteMailbox" ng-switch-when="destinationMenuRouteMailbox" aa-schedule="{{schedule}}" voicemail=true  aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}" aa-from-fallback="true"></aa-route-to-user>
-        <aa-route-to-user id="destinationMenuRouteUser" ng-switch-when="destinationMenuRouteUser" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}" aa-from-fallback="true"></aa-route-to-user>
-        <aa-route-to-ext-num id="destinationMenuRouteToExtNum" ng-switch-when="destinationMenuRouteToExtNum" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}" aa-from-fallback="true"></aa-route-to-ext-num>
+      <div ng-switch="aaNewTreatmentModalCtrl.destination.action" class="aa-destination-container">
+        <aa-route-to-aa id="destinationMenuRouteAA" ng-switch-when="goto" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}" aa-from-fallback="true"></aa-route-to-aa>
+        <aa-route-to-hg id="destinationMenuRouteHunt" ng-switch-when="routeToHuntGroup" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}" aa-from-fallback="true"></aa-route-to-hg>
+        <aa-route-to-user id="destinationMenuRouteMailbox" ng-switch-when="routeToVoiceMail" aa-schedule="{{schedule}}" voicemail=true  aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}" aa-from-fallback="true"></aa-route-to-user>
+        <aa-route-to-user id="destinationMenuRouteUser" ng-switch-when="routeToUser" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}" aa-from-fallback="true"></aa-route-to-user>
+        <aa-route-to-ext-num id="destinationMenuRouteToExtNum" ng-switch-when="route" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}" aa-from-route-call="{{fromRouteCall}}" aa-from-fallback="true"></aa-route-to-ext-num>
       </div>
     </div>
     <div class="large-8 medium-8 small-12 large-offset-4 medium-offset-4 columns">
