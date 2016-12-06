@@ -61,6 +61,7 @@
     "angular-translate-loader-static-files": "^2.11.1",
     "angular-ui-grid": "~3.0.7",
     "angular-ui-router": "^0.3.1",
+    "angularjs-slider": "*",
     "angularjs-toaster": "~1.2.0",
     "api-check": "~7.5.0",
     "bmmp": "=0.0.1",

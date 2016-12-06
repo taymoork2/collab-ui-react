@@ -6,10 +6,12 @@
     .controller('AtaDeviceController',
 
       /* @ngInject */
-      function ($modalInstance, $log) {
+      function ($modalInstance, $log, $scope) {
         var ata = this;
 
-        ata.testData = "Test";
+        $scope.$$postDigest(function () {
+          $scope.$broadcast('rzSliderForceRender');
+        });
 
         /*
          * Default variables.
@@ -27,14 +29,38 @@
         ata.inputMin = 0;
         ata.inputMax = 20;
         ata.inputModel = ata.defaultInput;
+        ata.inputOptions = {
+          value: ata.inputModel,
+          options: {
+            showSelectionBar: true,
+            floor: ata.inputMin,
+            ceil: ata.inputMax
+          }
+        };
 
         ata.outputMin = 0;
         ata.outputMax = 20;
         ata.outputModel = ata.defaultOutput;
+        ata.outputOptions = {
+          value: ata.outputModel,
+          options: {
+            showSelectionBar: true,
+            floor: ata.outputMin,
+            ceil: ata.outputMax
+          }
+        };
 
         ata.impedanceMin = 0;
         ata.impedanceMax = 7;
         ata.impedanceModel = ata.defaultImpedance;
+        ata.impedanceOptions = {
+          value: ata.impedanceModel,
+          options: {
+            showSelectionBar: true,
+            floor: ata.impedanceMin,
+            ceil: ata.impedanceMax
+          }
+        };
 
         /*
          * Percentage values.
@@ -88,9 +114,9 @@
          * Save settings.
          */
         ata.saveSettings = function () {
-          var inputVal = ata.inputModel - 6;
-          var outputVal = ata.outputModel - 14;
-          var impedanceVal = ata.impedanceModel;
+          var inputVal = ata.inputOptions.value - 6;
+          var outputVal = ata.outputOptions.value - 14;
+          var impedanceVal = ata.impedanceOptions.value;
 
           $log.log("Values that should get saved: ", inputVal, outputVal, impedanceVal);
           $modalInstance.close();

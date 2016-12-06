@@ -19,22 +19,18 @@
   <h5 translate="ataSettings.input"></h5>
   <div class="rangeSliderWrap">
     <i class="icon icon-audio-min"></i>
-    <div class="fake-slider">
-      <div class="range-bar"></div>
-      <div class="range-progress" style="width:{{ata.percInput}}%;"></div>
-    </div>
-    <input type="range" min="{{ata.inputMin}}" max="{{ata.inputMax}}" step="1" ng-model="ata.inputModel" ng-change="ata.sliderUpdate('input')" />
+    <span class="rzSliderStyle">
+      <rzslider rz-slider-model="ata.inputOptions.value" rz-slider-options="ata.inputOptions.options"></rzslider>
+    </span>
     <i class="icon icon-audio-plus"></i>
   </div>
 
   <h5 translate="ataSettings.output"></h5>
   <div class="rangeSliderWrap">
     <i class="icon icon-audio-min"></i>
-    <div class="fake-slider">
-      <div class="range-bar"></div>
-      <div class="range-progress" style="width:{{ata.percOutput}}%;"></div>
-    </div>
-    <input type="range" min="{{ata.outputMin}}" max="{{ata.outputMax}}" step="1" ng-model="ata.outputModel" ng-change="ata.sliderUpdate('output')" />
+    <span class="rzSliderStyle">
+      <rzslider rz-slider-model="ata.outputOptions.value" rz-slider-options="ata.outputOptions.options"></rzslider>
+    </span>
     <i class="icon icon-audio-plus"></i>
   </div>
 
@@ -42,11 +38,9 @@
   <p translate="ataSettings.impedanceDescr"></p>
   <div class="rangeSliderWrap">
     <i class="icon icon-indeterminate"></i>
-    <div class="fake-slider">
-      <div class="range-bar"></div>
-      <div class="range-progress" style="width:{{ata.percImpedance}}%;"></div>
-    </div>
-    <input type="range" min="{{ata.impedanceMin}}" max="{{ata.impedanceMax}}" step="1" ng-model="ata.impedanceModel" ng-change="ata.sliderUpdate('impedance')" />
+    <span class="rzSliderStyle">
+      <rzslider rz-slider-model="ata.impedanceOptions.value" rz-slider-options="ata.impedanceOptions.options"></rzslider>
+    </span>
     <i class="icon icon-plus"></i>
   </div>
 </div>

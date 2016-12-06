@@ -629,50 +629,48 @@
   button{
     width: auto !important;
   }
+  .rzSliderStyle{
+    .rz-bubble{
+      display: none;
+    }
+    .rz-bar{
+      background-color: $gray-light-2;
+      height: 2px;
+    }
+    .rz-bar.rz-selection, .rz-selection{
+      background-color: $brand-primary;
+    }
+  }
   .rangeSliderWrap{
     position: relative;
     width: 100%;
     max-width: 600px !important;
+    margin-top: 0.75em;
+    margin-bottom: 1.5em;
 
-    .fake-slider{
+    .rzSliderStyle{
       display: block;
+      width: 80%;
       width: calc(100% - 60px);
       max-width: 600px !important;
       position: relative;
-
-      .range-bar{
-        display: block;
-        height: 2px;
-        width: 100%;
-        border-radius: 1px;
-        background-color: $gray-light-2;
-        position: absolute;
-        top: 1.05em;
-        left: 1.5em;
-        z-index: 0 !important;
-      }
-
-      .range-progress{
-        display: block;
-        height: 2px;
-        width: 100%;
-        border-radius: 1px;
-        background-color: $brand-primary;
-        position: absolute;
-        top: 1.05em;
-        left: 1.5em;
-        z-index: 0 !important;
+      margin-top: -2em;
+      margin-left: 0.5em;
+      margin-right: 0.7em;
+      .rz-pointer{
+        left: 389px;
+        top: -11px;
+        width: 22px;
+        height: 22px;
+        background-color: white;
+        border: 1px solid $gray-light-2;
+        &::after{
+          display: none;
+        }
       }
     }
-    .icon{
-      position: absolute;
-      top: 0.5em;
-    }
-    .icon.icon-plus{
-      font-size: 1.75em;
-      margin-left: -0.25em;
-      margin-right: -0.25em;
-      top: 0.1em;
+    .rzSliderStyle,.icon{
+      float: left;
     }
     input[type=range] {
       -webkit-appearance: none;
