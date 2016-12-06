@@ -1,3 +1,23 @@
+@import 'styles/toolkit/colors';
+
 calendar-email-notifications-section {
   display: block;
+
+  .tags {
+    border-radius: 3px;
+
+    .tag-item {
+      background: none;
+      background-color: $brand-primary-light;
+      color: $brand-white;
+
+      .remove-button {
+        color: $brand-white;
+      }
+    }
+
+    .input.invalid-tag {
+      color: $brand-danger;
+    }
+  }
 }
