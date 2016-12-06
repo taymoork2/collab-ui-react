@@ -28,13 +28,10 @@ class CalendarEmailNotificationsSectionCtrl implements ng.IComponentController {
 
   private init(serviceId) {
     this.serviceId = serviceId;
-    this.ServiceDescriptor.getEmailSubscribers(serviceId, (error, emailSubscribers: string = '') => {
-      if (!error) {
-        this.emailSubscribers = _.map(_.without(emailSubscribers.split(','), ''), user => ({ text: user }));
-      } else {
-        this.emailSubscribers = [];
-      }
-    });
+    this.ServiceDescriptor.getEmailSubscribers(serviceId)
+      .then((emailSubscribers: string[]) => {
+        this.emailSubscribers = _.map(emailSubscribers, user => ({ text: user }));
+      });
     this.ServiceDescriptor.getDisableEmailSendingToUser()
       .then(calSvcDisableEmailSendingToEndUser => {
         this.enableEmailSendingToUser = !calSvcDisableEmailSendingToEndUser;
@@ -47,14 +44,15 @@ class CalendarEmailNotificationsSectionCtrl implements ng.IComponentController {
       this.Notification.error('hercules.errors.invalidEmail');
     } else {
       this.savingEmail = true;
-      this.ServiceDescriptor.setEmailSubscribers(this.serviceId, emailSubscribers, statusCode => {
-        if (statusCode === 204) {
-          this.Notification.success('hercules.settings.emailNotificationsSavingSuccess');
-        } else {
-          this.Notification.error('hercules.settings.emailNotificationsSavingError');
-        }
-        this.savingEmail = false;
-      });
+      this.ServiceDescriptor.setEmailSubscribers(this.serviceId, emailSubscribers)
+        .then(response => {
+          if (response.status === 204) {
+            this.Notification.success('hercules.settings.emailNotificationsSavingSuccess');
+          } else {
+            this.Notification.error('hercules.settings.emailNotificationsSavingError');
+          }
+          this.savingEmail = false;
+        });
     }
   }
 

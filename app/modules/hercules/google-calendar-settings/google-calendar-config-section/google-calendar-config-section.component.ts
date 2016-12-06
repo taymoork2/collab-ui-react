@@ -4,7 +4,6 @@ class GoogleCalendarConfigSectionCtrl implements ng.IComponentController {
   public calendarSectionTexts = {
     title: 'hercules.settings.googleCalendar.title',
   };
-  public isGoogleCalendarEntitled = this.Authinfo.isFusionGoogleCal();
   public googleServiceAccount;
   public localizedGoogleServiceAccountHelpText = this.$translate.instant('hercules.settings.googleCalendar.serviceAccountHelpText');
 
@@ -15,7 +14,6 @@ class GoogleCalendarConfigSectionCtrl implements ng.IComponentController {
     private $modal,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
-    private Authinfo,
     private CloudConnectorService,
     private Notification: Notification,
   ) {}
