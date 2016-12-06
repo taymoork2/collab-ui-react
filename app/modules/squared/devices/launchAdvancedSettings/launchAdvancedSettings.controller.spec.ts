@@ -2,47 +2,48 @@ namespace deviceAdvancedSettings {
 
   describe('LaunchAdvancedSettingsController', () => {
 
-    let state: any = {
-      controller: <any>{},
-      authInfo: <any>{},
-      $controller: <any>{},
-      $modalInstance: <any>{},
-      $scope: <ng.IScope>{},
-      $timeout: <ng.ITimeoutService>{},
-      CsdmDeviceService: <any>{},
-      rootScope: <ng.IScope>{},
-      device: <any>{},
-    };
-
-    afterEach(() => {
-      state = {}; //clean up memory
-    });
-
     beforeEach(angular.mock.module('Core'));
     beforeEach(angular.mock.module('Squared'));
-
     beforeEach(installPromiseMatchers);
 
-    beforeEach(inject(($rootScope, _$controller_, _$timeout_, $q, _Authinfo_, _CsdmDeviceService_) => {
+    let state = defaultState();
 
-      state.$scope = $rootScope.$new();
-      state.$timeout = _$timeout_;
-      state.rootScope = $rootScope;
-      state.authInfo = _Authinfo_;
-      state.CsdmDeviceService = _CsdmDeviceService_;
-      state.$modalInstance = {
-        close: () => {
-        },
+    function defaultState() {
+      return {
+        controller: <any>{},
+        authInfo: <any>{},
+        $controller: <any>{},
+        $modalInstance: <any>{},
+        $scope: <any>{},
+        $timeout: <ng.ITimeoutService>{},
+        CsdmDeviceService: <any>{},
+        device: <any>{},
       };
+    }
 
+    afterEach(() => {
+      state = defaultState(); //clean up memory
+    });
+
+    beforeEach(inject((_$controller_, _$timeout_) => {
+
+      state.$timeout = _$timeout_;
       state.$controller = _$controller_;
 
-      spyOn(state.CsdmDeviceService, 'sendAdvancedSettingsOtp').and.returnValue($q.when({ data: {} }));
+      state.$scope = {
+        $apply: sinon.stub(),
+      };
 
-      spyOn(state.$modalInstance, 'close').and.stub();
-
-      spyOn(state.authInfo, 'getPrimaryEmail').and.returnValue('getPrimaryEmail@getPrimaryEmail');
-      spyOn(state.authInfo, 'getUserName').and.returnValue('getUserName');
+      state.authInfo = {
+        getPrimaryEmail: sinon.stub().returns('getPrimaryEmail@getPrimaryEmail'),
+        getUserName: sinon.stub().returns('getUserName'),
+      };
+      state.CsdmDeviceService = {
+        sendAdvancedSettingsOtp: sinon.stub(),
+      };
+      state.$modalInstance = {
+        close: sinon.stub(),
+      };
     }));
 
     function initController(device) {
@@ -52,7 +53,6 @@ namespace deviceAdvancedSettings {
         Authinfo: state.authInfo,
         currentDevice: device,
       });
-      state.$scope.$apply();
     }
 
     beforeEach(() => {
