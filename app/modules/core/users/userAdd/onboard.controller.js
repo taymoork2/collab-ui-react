@@ -772,7 +772,7 @@ require('./_user-add.scss');
     /* TODO For now we are using the site url to determine if the license is an SMP license. This logic will change;
     we will be looking at licenseModel inside the licenses payload to determine if the license is SMP instead of the siteUrl. */
     $scope.isSharedMultiPartyLicense = function (siteUrl) {
-      return _.first(siteUrl.split('.')) === 'smp';
+      return _.isString(siteUrl) && siteUrl.indexOf('.') > -1 ? _.first(siteUrl.split('.')) === 'smp' : false;
     };
 
     // This logic will be changed to look for the 'licenseModel' key when the payload is ready from the backend
