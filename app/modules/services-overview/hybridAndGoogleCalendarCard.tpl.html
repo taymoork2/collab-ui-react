@@ -3,7 +3,14 @@
 </header>
 <section ng-if="!card.loading">
   <p>{{::card.description | translate}}</p>
-  <div class="row">
+  <div class="row" ng-if="card.noneActive">
+    <div class="columns medium-12">
+      <div class="text-center">
+        <button ng-click="card.openChoiceModal()" class="btn btn--primary" translate="servicesOverview.genericButtons.setup"></button>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="!card.noneActive">
     <div class="columns medium-6">
       <div class="text-center">
         <div class="h6 ellipsis" translate="servicesOverview.cards.hybridCalendar.exchangeTitle"></div>

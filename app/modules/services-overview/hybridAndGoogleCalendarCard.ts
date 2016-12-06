@@ -4,12 +4,52 @@ import { ServicesOverviewCard } from './ServicesOverviewCard';
 
 export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOverviewCard {
   private canDisplay: ng.IDeferred<boolean> = this.$q.defer();
-  public googleActive: boolean = false;
   private googleStatus: ICardStatus;
 
+  public googleActive: boolean = false;
+  public noneActive = !this.active && !this.googleActive;
+
   // Don't care but because of ServicesOverviewCard we have to do something
-  public getShowMoreButton(): ICardButton | undefined {
+  public getShowMoreButton() {
     return undefined;
+  }
+
+  public openChoiceModal() {
+    this.$modal.open({
+      controller: 'SelectCalendarServiceController',
+      controllerAs: 'vm',
+      templateUrl: 'modules/hercules/service-settings/calendar-service-setup/select-calendar-service-modal.html',
+    })
+    .result
+    .then((result) => {
+      if (result === 'exchange') {
+        this.firstTimeExchangeSetup();
+      } else if (result === 'google') {
+        this.firstTimeGoogleSetup();
+      }
+    });
+  }
+
+  private firstTimeExchangeSetup() {
+    this.$modal.open({
+      resolve: {
+        connectorType: () => 'c_cal',
+        servicesId: () => ['squared-fusion-cal'],
+        firstTimeSetup: true,
+      },
+      controller: 'AddResourceController',
+      controllerAs: 'vm',
+      templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
+      type: 'small',
+    });
+  }
+
+  private firstTimeGoogleSetup() {
+    this.$modal.open({
+      controller: 'FirstTimeGoogleSetupController',
+      controllerAs: 'vm',
+      templateUrl: 'modules/hercules/service-settings/calendar-service-setup/first-time-google-setup.html',
+    });
   }
 
   // Hybrid Calendar
@@ -99,6 +139,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
   /* @ngInject */
   public constructor(
     private $q: ng.IQService,
+    private $modal,
     private Authinfo,
     private CloudConnectorService,
     private FusionClusterStatesService,
