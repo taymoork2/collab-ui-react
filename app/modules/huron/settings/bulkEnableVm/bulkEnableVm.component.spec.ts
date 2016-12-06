@@ -238,8 +238,8 @@ describe('Component: bulkEnableVm', () => {
         let errorRecords = this.view.find('div#errorList').find('.row');
         expect(errorRecords.length).toBe(2);
         _.forEach(errorRecords, (element, index: number) => {
-          expect(element.getElementsByClassName('columns small-2 center error-row')[0]).toHaveText('testUserId' + (index + 1));
-          expect(element.getElementsByClassName('columns small-10 error-desc')[0]).toHaveText('failed to fetch user' + ' ' + 'TrackingID' + (index + 1));
+          expect(element.getElementsByClassName('columns small-4 center error-row')[0]).toHaveText('testUserId' + (index + 1));
+          expect(element.getElementsByClassName('columns small-8 error-desc')[0]).toHaveText('failed to fetch user' + ' ' + 'TrackingID' + (index + 1));
         });
       });
 
