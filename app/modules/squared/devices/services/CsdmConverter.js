@@ -158,8 +158,18 @@
         this.canDelete = true;
         this.accountType = obj.placeType || 'MACHINE';
         this.image = "images/devices-hi/unknown.png";
-        this.devices = obj.devices || {};
+        this.devices = convertDevicesForPlace(obj.devices || {}, this.type, this.displayName);
         this.codes = obj.codes || {};
+      }
+
+      // Hack, these two fields should be set correctly in CSDM. Adding here until we can fix this.
+      function convertDevicesForPlace(devices, type, displayName) {
+        var converted = type === 'huron' ? convertHuronDevices(devices) : convertCloudberryDevices(devices);
+        return _.map(converted, function (device) {
+          device.accountType = 'MACHINE';
+          device.displayName = displayName;
+          return device;
+        });
       }
 
       function decodeHuronTags(description) {
