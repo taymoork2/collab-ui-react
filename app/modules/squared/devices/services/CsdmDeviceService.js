@@ -49,6 +49,16 @@
       });
     }
 
+    function sendAdvancedSettingsOtp(deviceUrl, token, email, displayName) {
+      return notifyDevice(deviceUrl, {
+        command: "localAccess",
+        eventType: "room.localAccess",
+        displayName: displayName,
+        email: email,
+        message: token
+      });
+    }
+
     function renewRsuKey(deviceUrl, feedbackId, email) {
       return notifyDevice(deviceUrl, {
         command: "renewRSU",
@@ -64,12 +74,12 @@
       deleteItem: deleteItem,
       updateTags: updateTags,
       fetchItem: fetchItem,
+      notifyDevice: notifyDevice,
+      sendAdvancedSettingsOtp: sendAdvancedSettingsOtp,
 
 //Grey list:
       uploadLogs: uploadLogs,
       deleteDevice: deleteDevice,
-      notifyDevice: notifyDevice,
-
       renewRsuKey: renewRsuKey
     };
   }
