@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: DidAddCtrl', function () {
-  var controller, $scope, $state, $httpBackend, $window, HuronConfig, Notification;
+  var $controller, $httpBackend, $rootScope, $scope, $state, $timeout, $window, controller, HuronConfig, Notification;
 
   var customerVoiceNorthAmerica = getJSONFixture('huron/json/dialPlans/customervoice-nanp.json');
 
@@ -36,13 +36,16 @@ describe('Controller: DidAddCtrl', function () {
     }
   };
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _HuronConfig_, _Notification_, $timeout, _$window_, _$state_) {
-    $scope = $rootScope.$new();
-    $scope.trial = trial;
-
+  beforeEach(inject(function (_$controller_, _$httpBackend_, _$rootScope_, _$state_, _$timeout_, _$window_, _HuronConfig_, _Notification_) {
+    $controller = _$controller_;
     $httpBackend = _$httpBackend_;
+    $rootScope = _$rootScope_;
+    $timeout = _$timeout_;
     $window = _$window_;
     $state = _$state_;
+
+    $scope = $rootScope.$new();
+    $scope.trial = trial;
     $state.modal = {
       close: sinon.stub(),
       result: {
