@@ -11,6 +11,7 @@ export class CommonGraphService {
   public readonly prefixes: string = 'prefixesOfBigNumbers';
   public readonly START: string = 'start';
   public readonly TITLE: string = 'title';
+  public readonly VERTICAL_SCROLL: string = 'verticalScroll';
 
   /* @ngInject */
   constructor(
@@ -60,7 +61,6 @@ export class CommonGraphService {
     legend: {
       color: this.chartColors.grayDarkest,
       align: 'center',
-      autoMargins: false,
       switchable: false,
       fontSize: 13,
       markerLabelGap: 10,
@@ -111,6 +111,12 @@ export class CommonGraphService {
       number: 1e+12,
       prefix: 'T',
     }],
+    verticalScroll: {
+      autoGridCount: true,
+      scrollbarHeight: 60,
+      selectedBackgroundColor: this.chartColors.grayLightTwo,
+      color: this.chartColors.grayDarkThree,
+    },
   };
 
   public getBaseVariable(key: string): any {

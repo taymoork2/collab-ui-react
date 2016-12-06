@@ -2,6 +2,7 @@ describe('Service: Customer Reports Service', function () {
   let activeData = getJSONFixture('core/json/customerReports/activeUser.json');
   let conversationData = getJSONFixture('core/json/customerReports/conversation.json');
   let defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
+  let mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
   let rejectError: any = {
     status: 500,
   };
@@ -28,7 +29,7 @@ describe('Service: Customer Reports Service', function () {
   };
 
   afterAll(function () {
-    activeData = conversationData = defaults = rejectError = updateDates = dataResponse = undefined;
+    mediaData = activeData = conversationData = defaults = rejectError = updateDates = dataResponse = undefined;
   });
 
   beforeEach(function () {
@@ -111,6 +112,26 @@ describe('Service: Customer Reports Service', function () {
           hasRooms: false,
           hasFiles: false,
         });
+      });
+      this.$scope.$apply();
+    });
+  });
+
+  describe('Media Service', function () {
+    it('should getMediaQualityData', function () {
+      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.when(dataResponse(updateDates(_.cloneDeep(mediaData.callQuality.data[0].data), undefined, undefined))));
+
+      this.SparkLineReportService.getMediaQualityData(defaults.timeFilter[0]).then(function (response) {
+        expect(response).toEqual(updateDates(_.cloneDeep(mediaData.lineResponse), defaults.dayFormat, undefined));
+      });
+      this.$scope.$apply();
+    });
+
+    it('should notify an error for getMediaQualityData', function () {
+      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.reject(rejectError));
+
+      this.SparkLineReportService.getMediaQualityData(defaults.timeFilter[0]).then(function (response) {
+        expect(response).toEqual([]);
       });
       this.$scope.$apply();
     });
