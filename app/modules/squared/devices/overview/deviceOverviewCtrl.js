@@ -48,7 +48,7 @@
         pollLines();
       }
 
-      if (deviceOverview.currentDevice.isHuronDevice && !deviceOverview.currentDevice.isATA) {
+      if (deviceOverview.currentDevice.isHuronDevice) {
         if (!deviceOverview.tzIsLoaded) {
           initTimeZoneOptions().then(function () {
             loadDeviceInfo();
@@ -111,10 +111,12 @@
       }).then(getEmergencyInformation);
     }
 
-    function getTimeZoneFromId(id) {
-      return _.find(deviceOverview.timeZoneOptions, function (o) {
-        return o.id == id;
-      });
+    function getTimeZoneFromId(timeZone) {
+      if (timeZone && timeZone.timeZone) {
+        return _.find(deviceOverview.timeZoneOptions, function (o) {
+          return o.id === timeZone.timeZone;
+        });
+      }
     }
 
     function pollLines() {
