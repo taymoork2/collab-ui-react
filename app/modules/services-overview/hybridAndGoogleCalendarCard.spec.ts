@@ -32,7 +32,8 @@ describe('ServicesOverviewHybridCallCard', () => {
     expect(card.loading).toBe(true);
   });
 
-  // Note: currently we have no cards if the user has only the google calendar entitlement
+  // no org should have the google calendar entitlement without having the microsoft exchange one
+  // we don't have a card for "just google calendar"
   it('should not be displayed if the user does not have the hybrid cal entitlement but has the hybrid google cal entitlement and the feature toggle', () => {
     Authinfo.isFusionCal.and.returnValue(false);
     Authinfo.isFusionGoogleCal.and.returnValue(true);
@@ -51,7 +52,6 @@ describe('ServicesOverviewHybridCallCard', () => {
     expect(card.display).toBe(true);
   });
 
-  // scenario that should never happen but could technically happen though
   it('should not be displayed if the user does not have the hybrid cal entitlement but has the hybrid google cal entitlement and not the feature toggle', () => {
     Authinfo.isFusionCal.and.returnValue(false);
     Authinfo.isFusionGoogleCal.and.returnValue(true);

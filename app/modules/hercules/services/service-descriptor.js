@@ -6,7 +6,7 @@
     .service('ServiceDescriptor', ServiceDescriptor);
 
   /* @ngInject */
-  function ServiceDescriptor($http, $q, UrlConfig, Authinfo, Orgservice) {
+  function ServiceDescriptor($http, UrlConfig, Authinfo, Orgservice) {
     var services = function (callback, includeStatus) {
       $http
         .get(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services' + (includeStatus ? '?fields=status' : ''))
