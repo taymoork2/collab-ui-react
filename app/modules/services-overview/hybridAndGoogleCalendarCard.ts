@@ -1,17 +1,24 @@
-import { ICardButton, ICardStatus, CardType } from './ServicesOverviewCard';
+import { ICardStatus, CardType } from './ServicesOverviewCard';
 import { IServiceStatus, filterAndGetCssStatus, filterAndGetTxtStatus, filterAndGetEnabledService } from './ServicesOverviewHybridCard';
-import { ServicesOverviewCard } from './ServicesOverviewCard';
+import { ICardButton, ServicesOverviewCard } from './ServicesOverviewCard';
 
 export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOverviewCard {
   private canDisplay: ng.IDeferred<boolean> = this.$q.defer();
   private googleStatus: ICardStatus;
 
   public googleActive: boolean = false;
-  public noneActive = !this.active && !this.googleActive;
 
-  // Don't care but because of ServicesOverviewCard we have to do something
+  // We don't care about these methods this card,
+  // but because of ServicesOverviewCard we need a minimal implementation
   public getShowMoreButton() {
     return undefined;
+  }
+  public getButtons() {
+    return [];
+  }
+
+  public areNoneActive() {
+    return !this.active && !this.googleActive;
   }
 
   public openChoiceModal() {
@@ -53,13 +60,15 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
   }
 
   // Hybrid Calendar
-  private setupHybridCalendarButton: ICardButton = {
+  public setupHybridCalendarButton = {
     name: 'servicesOverview.genericButtons.setup',
-    routerState: 'calendar-service.list',
+    onClick: () => {
+      this.firstTimeExchangeSetup();
+    },
     buttonClass: 'btn btn--primary',
   };
 
-  private hybridCalendarButtons: Array<ICardButton> = [{
+  public hybridCalendarButtons: Array<ICardButton> = [{
     name: 'servicesOverview.cards.hybridCalendar.buttons.resources',
     routerState: 'calendar-service.list',
     buttonClass: 'btn-link',
@@ -70,32 +79,20 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
     buttonClass: 'btn-link',
   }];
 
-  public getButtons(): Array<ICardButton> {
-    if (this.active) {
-      return this.hybridCalendarButtons;
-    }
-    return [this.setupHybridCalendarButton];
-  }
-
   // Google Calendar
-  private setupGoogleCalendarButton: ICardButton = {
+  public setupGoogleCalendarButton = {
     name: 'servicesOverview.genericButtons.setup',
-    routerState: '404',
+    onClick: () => {
+      this.firstTimeGoogleSetup();
+    },
     buttonClass: 'btn btn--primary',
   };
 
-  private googleCalendarButton: ICardButton = {
+  public googleCalendarButton: ICardButton = {
     name: 'servicesOverview.cards.hybridCalendar.buttons.settings',
     routerState: 'google-calendar-service.settings',
     buttonClass: 'btn-link',
   };
-
-  public getGoogleButtons(): Array<ICardButton> {
-    if (this.googleActive) {
-      return [this.googleCalendarButton];
-    }
-    return [this.setupGoogleCalendarButton];
-  }
 
   public googleCalendarFeatureToggleEventHandler(hasFeature: boolean) {
     this.display = this.Authinfo.isFusionCal() && this.Authinfo.isFusionGoogleCal() && hasFeature;
