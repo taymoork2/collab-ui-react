@@ -2731,7 +2731,7 @@
             }
           })
           .state('calendar-service', {
-            templateUrl: 'modules/hercules/overview/overview.html',
+            templateUrl: 'modules/hercules/service-specific-cluster-lists/service-specific-cluster-list-container.html',
             controller: 'ExpresswayServiceController',
             controllerAs: 'exp',
             data: {
@@ -2752,7 +2752,7 @@
             url: '/services/calendar',
             views: {
               fullPane: {
-                templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
+                templateUrl: 'modules/hercules/service-specific-cluster-lists/service-specific-cluster-list.html'
               }
             },
             params: {
@@ -2775,7 +2775,7 @@
             }
           })
           .state('call-service', {
-            templateUrl: 'modules/hercules/overview/overview.html',
+            templateUrl: 'modules/hercules/service-specific-cluster-lists/service-specific-cluster-list-container.html',
             controller: 'ExpresswayServiceController',
             controllerAs: 'exp',
             data: {
@@ -2795,7 +2795,7 @@
             url: '/services/call',
             views: {
               fullPane: {
-                templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
+                templateUrl: 'modules/hercules/service-specific-cluster-lists/service-specific-cluster-list.html'
               }
             },
             params: {
