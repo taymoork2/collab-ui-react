@@ -514,15 +514,15 @@ describe('Service: FusionClusterService', function () {
       expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('operational');
     });
 
-    it('should handle invalid service types by falling back to *outage*', function () {
-      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-invalid-service', twoClusters)).toBe('outage');
+    it('should handle invalid service types by falling back to *setupNotComplete*', function () {
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-invalid-service', twoClusters)).toBe('setupNotComplete');
     });
 
     it('should handle invalid cluster lists by falling back to *outage*', function () {
       var malformedClusterList = {
         clusters: 'not exactly a valid list of clusters'
       };
-      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-call', malformedClusterList)).toBe('outage');
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', malformedClusterList)).toBe('setupNotComplete');
     });
 
     it('should return *outage* when all hosts are *upgrading*', function () {

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskCardsOrgService($translate, Config, HelpdeskService, HelpdeskHuronService, LicenseService, Notification) {
+  function HelpdeskCardsOrgService($translate, Config, HelpdeskHuronService, LicenseService, Notification, FusionClusterService) {
 
     function getMessageCardForOrg(org, licenses) {
       var entitled = LicenseService.orgIsEntitledTo(org, 'webex-squared');
@@ -48,23 +48,17 @@
       var hybridServicesCard = {
         entitled: false
       };
-      if (LicenseService.orgIsEntitledTo(org, 'squared-fusion-mgmt') && (LicenseService.orgIsEntitledTo(org, 'squared-fusion-cal') || LicenseService.orgIsEntitledTo(org, 'squared-fusion-uc'))) {
-        hybridServicesCard.entitled = true;
-        HelpdeskService.getHybridServices(org.id).then(function (services) {
-          var enabledHybridServices = _.filter(services, {
-            enabled: true
-          });
-          if (enabledHybridServices.length === 1 && enabledHybridServices[0].id === "squared-fusion-mgmt") {
-            enabledHybridServices = []; // Don't show the management service if none of the others are enabled.
+      FusionClusterService.getAll(org.id).then(function (clusterList) {
+        hybridServicesCard.services = [];
+        _.forEach(['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-media', 'spark-hybrid-datasecurity'], function (serviceId) {
+          if (LicenseService.orgIsEntitledTo(org, serviceId)) {
+            hybridServicesCard.services.push(FusionClusterService.getStatusForService(serviceId, clusterList));
           }
-          hybridServicesCard.enabledHybridServices = enabledHybridServices;
-          hybridServicesCard.availableHybridServices = _.filter(services, {
-            enabled: false
-          });
-        }).catch(function (response) {
-          Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
         });
-      }
+        hybridServicesCard.entitled = _.size(hybridServicesCard.services) > 0;
+      }).catch(function (response) {
+        Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
+      });
       return hybridServicesCard;
     }
 
