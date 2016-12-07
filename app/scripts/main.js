@@ -23,8 +23,6 @@
     'core.utils',
     'core.windowlocation',
     'csDonut',
-    'ct.ui.router.extras.sticky',
-    'ct.ui.router.extras.future',
     'ct.ui.router.extras.previous',
     'cwill747.phonenumber',
     'ngAnimate',
