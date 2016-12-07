@@ -12,9 +12,9 @@
 <div class="content-container">
   <div class="row">
     <cs-card-layout>
-      <report-card ng-if="!nav.displayNewReports" options="nav.avgRoomOptions" export-dropdown="nav.exportArrays.rooms" show="nav.displayEngagement" time="nav.timeSelected"></report-card>
+      <report-card options="nav.avgRoomOptions" export-dropdown="nav.exportArrays.rooms" show="nav.displayEngagement" time="nav.timeSelected"></report-card>
       <report-card options="nav.activeOptions" export-dropdown="nav.exportArrays.active" secondary-options="nav.secondaryActiveOptions" dropdown="nav.activeDropdown" show="nav.displayEngagement" time="nav.timeSelected" resize-page="nav.resizeMostActive()"></report-card>
-      <report-card ng-if="!nav.displayNewReports" options="nav.filesSharedOptions" export-dropdown="nav.exportArrays.files" show="nav.displayEngagement" time="nav.timeSelected"></report-card>
+      <report-card options="nav.filesSharedOptions" export-dropdown="nav.exportArrays.files" show="nav.displayEngagement" time="nav.timeSelected"></report-card>
       <report-card ng-if="!nav.displayNewReports" options="nav.deviceOptions" export-dropdown="nav.exportArrays.device" dropdown="nav.deviceDropdown" show="nav.displayEngagement" time="nav.timeSelected"></report-card>
       <report-card ng-if="!nav.displayNewReports" options="nav.mediaOptions" export-dropdown="nav.exportArrays.media" dropdown="nav.mediaDropdown" show="nav.displayQuality" time="nav.timeSelected"></report-card>
       <report-card ng-if="!nav.displayNewReports" options="nav.metricsOptions" export-dropdown="nav.exportArrays.metrics" labels="nav.metricsLabels" show="nav.displayQuality" time="nav.timeSelected"></report-card>

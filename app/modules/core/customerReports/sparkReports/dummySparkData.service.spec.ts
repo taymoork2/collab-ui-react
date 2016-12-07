@@ -7,6 +7,7 @@ describe('Controller: Dummy Customer Reports', function () {
   const dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
   const devicesJson = getJSONFixture('core/json/customerReports/devices.json');
   const activeData = getJSONFixture('core/json/customerReports/activeUser.json');
+  const conversationData = getJSONFixture('core/json/customerReports/conversation.json');
   const mediaData: any = getJSONFixture('core/json/customerReports/mediaQuality.json');
   const metrics = getJSONFixture('core/json/customerReports/callMetrics.json');
   const timeFilter: Array<ITimespan> = _.cloneDeep(defaults.timeFilter);
@@ -55,6 +56,12 @@ describe('Controller: Dummy Customer Reports', function () {
     let dummyLineData = _.cloneDeep(activeData.dummyData);
     expect(this.DummySparkDataService.dummyActiveUserData(timeFilter[0], true)).toEqual(updateLineDates(dummyLineData.one, timeFilter[0]));
     expect(this.DummySparkDataService.dummyActiveUserData(timeFilter[1], true)).toEqual(updateLineDates(dummyLineData.two, timeFilter[1]));
+  });
+
+  it('dummyConversationData should return the expected responses', function () {
+    let dummyData = _.cloneDeep(conversationData.dummyData);
+    expect(this.DummySparkDataService.dummyConversationData(timeFilter[0])).toEqual(updateLineDates(dummyData.one, timeFilter[0]));
+    expect(this.DummySparkDataService.dummyConversationData(timeFilter[1])).toEqual(updateLineDates(dummyData.two, timeFilter[1]));
   });
 
   it('dummyAvgRoomData should return the expected responses', function () {
