@@ -1,3 +1,5 @@
+import { WindowService } from 'modules/core/window';
+
 export class Notification {
   private static readonly SUCCESS = 'success';
   private static readonly WARNING = 'warning';
@@ -21,10 +23,9 @@ export class Notification {
   /* @ngInject */
   constructor(
     private $log: ng.ILogService,
-    private $rootScope: ng.IRootScopeService,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
-    private $window: ng.IWindowService,
+    private WindowService: WindowService,
     private Config,
     private toaster,
   ) {
@@ -230,15 +231,7 @@ export class Notification {
   }
 
   private initOfflineListeners(): void {
-    let setNetworkOffline = this.setNetworkOffline.bind(this);
-    let setNetworkOnline = this.setNetworkOnline.bind(this);
-
-    this.$window.addEventListener('offline', setNetworkOffline);
-    this.$window.addEventListener('online', setNetworkOnline);
-
-    this.$rootScope.$on('$destroy', () => {
-      this.$window.removeEventListener('offline', setNetworkOffline);
-      this.$window.removeEventListener('online', setNetworkOnline);
-    });
+    this.WindowService.registerEventListener('offline', this.setNetworkOffline.bind(this));
+    this.WindowService.registerEventListener('online', this.setNetworkOnline.bind(this));
   }
 }

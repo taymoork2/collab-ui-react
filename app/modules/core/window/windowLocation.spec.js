@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Window Location', function () {
-  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module(require('./index').default));
 
   var WindowLocation, $window;
 

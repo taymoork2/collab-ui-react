@@ -7,13 +7,13 @@
       require('modules/core/scripts/services/storage'),
       require('modules/core/scripts/services/sessionstorage'),
       require('modules/core/config/oauthConfig'),
-      require('modules/core/windowLocation/windowLocation'),
+      require('modules/core/window').default,
     ])
     .service('TokenService', TokenService)
     .name;
 
   /* @ngInject */
-  function TokenService($injector, $rootScope, $window, OAuthConfig, Config, Storage, SessionStorage, WindowLocation) {
+  function TokenService($injector, $rootScope, $window, OAuthConfig, Config, Storage, SessionStorage, WindowLocation, WindowService) {
     var respondSessionStorageEvent = 'sessionStorage' + Config.getEnv();
     var requestSessionStorageEvent = 'getSessionStorage' + Config.getEnv();
     var logoutEvent = 'logout' + Config.getEnv();
@@ -36,10 +36,7 @@
 
     function init() {
       // listen for changes to localStorage
-      $window.addEventListener('storage', sessionTokenTransfer);
-      $rootScope.$on('$destroy', function () {
-        $window.removeEventListener('storage', sessionTokenTransfer);
-      });
+      WindowService.registerEventListener('storage', sessionTokenTransfer);
 
       // If no sessionStorage tokens and the tab was not logged out, ask other tabs for the sessionStorage
       if (!$window.sessionStorage.length && !$window.sessionStorage.getItem('logout')) {

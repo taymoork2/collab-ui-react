@@ -1,4 +1,4 @@
-namespace deviceAdvancedSettings {
+  import { WindowService } from 'modules/core/window';
 
   interface IDialogState {
     button1text?: string;
@@ -20,17 +20,19 @@ namespace deviceAdvancedSettings {
     private SHA512 = require('crypto-js/sha512');
 
     /* @ngInject */
-    constructor(private $modalInstance,
-                private $sanitize,
-                private $scope: ng.IScope,
-                private $timeout: ng.ITimeoutService,
-                private $translate: ng.translate.ITranslateService,
-                private $window: Window,
-                private Authinfo,
-                private CsdmDeviceService,
-                private currentDevice,
-                private Utils) {
-
+    constructor(
+      private $modalInstance,
+      private $sanitize,
+      private $scope: ng.IScope,
+      private $timeout: ng.ITimeoutService,
+      private $translate: ng.translate.ITranslateService,
+      private $window: Window,
+      private Authinfo,
+      private CsdmDeviceService,
+      private currentDevice,
+      private Utils,
+      private WindowService: WindowService,
+    ) {
       this.buildStates();
       this.changeState(this.getInitialState(this.currentDevice));
     }
@@ -140,11 +142,7 @@ namespace deviceAdvancedSettings {
 
       let endpointOrigin = 'http://' + this.currentDevice.ip;
 
-      let handleMessageEvent = this.handleMessageEvent.bind(this);
-      this.$window.addEventListener('message', handleMessageEvent);
-      this.$scope.$on('$destroy', () => {
-        this.$window.removeEventListener('message', handleMessageEvent);
-      });
+      this.WindowService.registerEventListener('message', this.handleMessageEvent.bind(this), this.$scope);
 
       this.endpointWindow = createEndpointWindow(endpointOrigin, this.currentDevice);
 
@@ -235,4 +233,3 @@ namespace deviceAdvancedSettings {
         };
       }
     );
-}
