@@ -14,7 +14,8 @@
       updateConfig: updateConfig,
       deactivateService: deactivateService,
       getServiceAccount: getServiceAccount,
-      getService: getService
+      getService: getService,
+      getStatusCss: getStatusCss
     };
 
     function extractDataFromResponse(res) {
