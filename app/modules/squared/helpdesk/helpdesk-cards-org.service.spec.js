@@ -197,7 +197,7 @@ describe('HelpdeskCardsService', function () {
       expect(card.entitled).toBeTruthy();
       expect(card.services.length).toEqual(1);
 
-      expect(card.services[0].serviceId).toEqual('squared-fusion-gcal')
+      expect(card.services[0].serviceId).toEqual('squared-fusion-gcal');
       expect(card.services[0].status).toEqual('OK');
       expect(card.services[0].setup).toBeTruthy();
       expect(card.services[0].statusCss).toEqual('success');

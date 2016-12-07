@@ -19,7 +19,7 @@ describe('OverviewHybridServicesCard', function () {
     spyOn(FusionClusterService, 'getAll');
     spyOn(Authinfo, 'isEntitled').and.returnValue(true);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
-    spyOn(CloudConnectorService, 'getService').and.returnValue($q.resolve({ serviceId: 'squared-fusion-gcal', setup: false, statusCss: 'default' }));;
+    spyOn(CloudConnectorService, 'getService').and.returnValue($q.resolve({ serviceId: 'squared-fusion-gcal', setup: false, statusCss: 'default' }));
   }
 
   beforeEach(inject(dependencies));
