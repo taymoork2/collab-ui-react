@@ -22,6 +22,7 @@
       atlasCustomerListUpdate: 'atlas-customer-list-update',
       atlasDarling: 'atlas-darling',
       atlasDataRetentionSettings: 'atlas-data-retention-settings',
+      atlasDevicesAdvancedSettings: 'atlas-devices-advanced-settings',
       atlasEdiscovery: 'atlas-ediscovery',
       atlasEmailStatus: 'atlas-email-status',
       atlasHelpDeskExt: 'atlas-helpdesk-extended-information',
@@ -168,8 +169,7 @@
       atlasHybridDataSecurity: 'atlas-data-security',
       atlasHerculesEmergencyUpgrade: 'atlas-hercules-emergency-upgrade',
       atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',
-      avrilVmEnable: 'avril-vm-enable',
-      bulkVoicemailEnable: 'bulk-voicemail-enable'
+      avrilVmEnable: 'avril-vm-enable'
     };
 
     var toggles = {};

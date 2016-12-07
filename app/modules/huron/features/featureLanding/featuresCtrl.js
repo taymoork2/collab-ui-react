@@ -6,7 +6,7 @@
     .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeInfoModelService, Notification, Log, FeatureToggleService, CardUtils) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeInfoModelService, Notification, Log, FeatureToggleService, CallPickupGroupService, CardUtils) {
 
     var vm = this;
     vm.searchData = searchData;
@@ -64,7 +64,9 @@
       isEmpty: false,
       i18n: 'huronFeatureDetails.aaName',
       color: 'primary'
-    }, {
+    }];
+
+    var cpFeature = {
       name: 'CP',
       getFeature: function () {
         return CallParkService.getCallParkList();
@@ -73,7 +75,18 @@
       isEmpty: false,
       i18n: 'huronFeatureDetails.cpName',
       color: 'cta'
-    }];
+    };
+
+    var piFeature = {
+      name: 'PI',
+      getFeature: function () {
+        return CallPickupGroupService.getListOfPickupGroups();
+      },
+      formatter: HuronFeaturesListService.pickupGroups,
+      isEmpty: false,
+      i18n: 'huronFeatureDetails.piName',
+      color: 'attention'
+    };
 
     var pgFeature = {
       name: 'PG',
@@ -92,7 +105,19 @@
           name: $translate.instant('callPark.title'),
           filterValue: 'CP'
         };
+        vm.features.push(cpFeature);
         vm.filters.push(cp);
+      }
+    });
+
+    FeatureToggleService.supports(FeatureToggleService.features.huronCallPickup).then(function (result) {
+      if (result) {
+        var pi = {
+          name: $translate.instant('callPickup.title'),
+          filterValue: 'PI'
+        };
+        vm.features.push(piFeature);
+        vm.filters.push(pi);
       }
     });
 
@@ -107,7 +132,6 @@
       }
       init();
     });
-
 
     function init() {
       vm.loading = false;
@@ -144,6 +168,19 @@
         reload: true
       });
     }
+    vm.featureFilter = function (feature) {
+      if (feature.filterValue !== 'CP' && feature.filterValue !== 'PG' && feature.filterValue !== 'PI') {
+        return true;
+      }
+      return false;
+    };
+
+    vm.filterForMemberCount = function (feature) {
+      if (feature.filterValue === 'HG' || feature.filterValue === 'CP' || feature.filterValue === 'PG' || feature.filterValue === 'PI') {
+        return true;
+      }
+      return false;
+    };
 
     function getListOfFeatures() {
       var promises = [];

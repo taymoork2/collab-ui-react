@@ -183,6 +183,10 @@
           width: 100px;
         }
 
+        #textInput {
+          margin-left: 0.5rem;
+        }
+
         #smallBreak {
           margin-top: 16px;
         }
@@ -334,8 +338,32 @@
           }
         }
 
+        .result-title {
+          font-size: 12px;
+          font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        .result-info {
+          font-size: 16px;
+          font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+          padding-top: 0px;
+          padding-bottom: 0px;
+        }
+
+        .report-header {
+          padding: 14px 18px;
+        }
+
+        .report-parameters {
+          padding: 12px 32px;
+        }
+
+        .summaryHeader {
+          padding-left: 30px;
+        }
+
         .input-section {
-          padding-bottom: 1rem;
+          padding-bottom: 1.5rem;
 
           .report-name {
             width: 100%;

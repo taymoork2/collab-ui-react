@@ -10,7 +10,8 @@ export class CallPickupGroupService {
  /* @ngInject */
   constructor(private $resource: ng.resource.IResourceService,
               private HuronConfig,
-              private Authinfo) {
+              private Authinfo,
+              ) {
     this.pickupGroupResource = <IPickupGroupResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/features/callpickups/:callPickupGroupId', {},
       {
         update: {
@@ -29,5 +30,12 @@ export class CallPickupGroupService {
     return this.pickupGroupResource.get({
       customerId: this.Authinfo.getOrgId(),
     }).$promise.then(response => _.get(response, 'callpickups'));
+  }
+
+  public deletePickupGroup(uuid: string) {
+    return this.pickupGroupResource.delete({
+      customerId: this.Authinfo.getOrgId(),
+      callPickupGroupId: uuid,
+    }).$promise;
   }
 }

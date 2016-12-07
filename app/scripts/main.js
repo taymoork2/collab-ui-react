@@ -70,6 +70,7 @@
     'uc.autoattendant',
     'ngIcal',
     'huron.paging-group',
+    'huron.call-pickup',
     'huron.telephoneNumber',
     'huron.call-park',
     'huron.bulk-enable-vm',

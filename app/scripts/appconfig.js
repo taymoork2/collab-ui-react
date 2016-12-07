@@ -2364,7 +2364,15 @@
             parent: 'hurondetails',
             templateUrl: 'modules/huron/features/featureLanding/features.tpl.html',
             controller: 'HuronFeaturesCtrl',
-            controllerAs: 'huronFeaturesCtrl'
+            controllerAs: 'huronFeaturesCtrl',
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/callPark'], loadModuleAndResolve($ocLazyLoad, resolve));
+                  require(['modules/huron/features/callPickup'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            }
           })
           .state('huronnewfeature', {
             url: '/newfeature',
@@ -2421,7 +2429,7 @@
             resolve: {
               lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
                 return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/callPickup'], loadModuleAndResolve($ocLazyLoad, resolve));
+                  require(['modules/huron/features/callPickup/callPickupSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
                 });
               }
             }
@@ -2430,13 +2438,6 @@
             url: '/huronCallPark',
             parent: 'hurondetails',
             template: '<uc-call-park></uc-call-park>',
-            resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/callPark/callPark'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
-            }
           })
           .state('callparkedit', {
             url: '/features/cp/edit',
