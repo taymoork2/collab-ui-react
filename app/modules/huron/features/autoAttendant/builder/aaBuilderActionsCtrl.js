@@ -144,8 +144,9 @@
           hint: $translate.instant('autoAttendant.actionCallerInputHint'),
           help: $translate.instant('autoAttendant.actionCallerInputHelp') + appendSpecialCharHelp,
           metric: 'Caller-Input-Title',
+          type: 3,
           showHelpLink: true,
-          actions: ['callerInput']
+          actions: ['runActionsOnInput']
         });
       }
     }

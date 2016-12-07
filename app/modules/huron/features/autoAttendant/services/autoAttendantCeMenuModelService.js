@@ -277,6 +277,13 @@
     this.url = '';
   }
 
+  function KeyAction() {
+    this.key = '';
+    this.value = '';
+    this.keys = [];
+  }
+
+
   /* @ngInject */
   function AutoAttendantCeMenuModelService() {
 
@@ -460,16 +467,16 @@
         action = new Action('routeToDialed', '');
         setDescription(action, inAction.routeToDialed);
         menuEntry.addAction(action);
-      } else if (!_.isUndefined(inAction.runActionsOnInput)) {
+      } else if (_.has(inAction.runActionsOnInput)) {
         action = new Action('runActionsOnInput', '');
-        if (!_.isUndefined(inAction.runActionsOnInput.inputType)) {
+        if (_.has(inAction.runActionsOnInput.inputType)) {
           action.inputType = inAction.runActionsOnInput.inputType;
           // check if this dial-by-extension
-          if (action.inputType === 2 &&
-            !_.isUndefined(inAction.runActionsOnInput.prompts.sayList)) {
+          if (_.includes([2, 3, 4], action.inputType) &&
+            _.has(inAction.runActionsOnInput.prompts.sayList)) {
             var sayList = inAction.runActionsOnInput.prompts.sayList;
-            if (sayList.length > 0 && !_.isUndefined(sayList[0].value)) {
-              action.value = decodeUtf8(inAction.runActionsOnInput.prompts.sayList[0].value);
+            if (sayList.length > 0 && _.has(sayList[0].value)) {
+              action.value = decodeUtf8(sayList[0].value);
               action.voice = inAction.runActionsOnInput.voice;
               action.description = inAction.runActionsOnInput.description;
 
@@ -478,6 +485,23 @@
               menuEntry.voice = inAction.runActionsOnInput.voice;
               menuEntry.language = inAction.runActionsOnInput.language;
               menuEntry.attempts = inAction.runActionsOnInput.attempts;
+              if (_.includes([3, 4], action.inputType)) {
+                action.variableName = inAction.runActionsOnInput.rawInputActions[0].assignVar.variableName;
+              }
+              if (inAction.inputs.length > 0) {
+                action.inputActions = [];
+                _.forEach(inAction.inputs, function (input) {
+                  var k = new KeyAction();
+                  k.key = input.key;
+
+                  if (_.has(input.assignVar)) {
+                    k.value = _.get(input.assignVar.value);
+                  }
+                  action.inputActions.push(k.value);
+                });
+
+              }
+
               menuEntry.addAction(action);
 
             }
@@ -665,9 +689,11 @@
             menu.addEntry(menuEntry);
           }
         } else {
-          // check for dial by extension - inputType is only 2 for now.
+          // check for dial by extension - inputType is only 2..3 for now.
+          // 1 for option menu dialbyextension
+
           if (_.has(ceActionArray[i], 'runActionsOnInput.inputType') &&
-            ceActionArray[i].runActionsOnInput.inputType === 2) {
+            ceActionArray[i].runActionsOnInput.inputType !== 1) {
             menuEntry = new CeMenuEntry();
             parseAction(menuEntry, ceActionArray[i]);
             if (menuEntry.actions.length > 0) {
@@ -1014,6 +1040,8 @@
         } else {
           if (!_.isUndefined(menuEntry.actions) && menuEntry.actions.length > 0) {
             var actionName = menuEntry.actions[0].getName();
+            actionName = 'runActionsOnInput';
+
             newActionArray[i][actionName] = {};
             if (!_.isUndefined(menuEntry.actions[0].description) && menuEntry.actions[0].description.length > 0) {
               newActionArray[i][actionName].description = menuEntry.actions[0].description;
@@ -1045,14 +1073,15 @@
               */
               //newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
             } else if (actionName === 'runActionsOnInput') {
-              if (menuEntry.actions[0].inputType === 2) {
+
+              if (_.includes([2, 3, 4], menuEntry.actions[0].inputType)) {
+                // dial by extension of caller input
                 newActionArray[i][actionName] = populateRunActionsOnInput(menuEntry.actions[0]);
                 newActionArray[i][actionName].attempts = menuEntry.attempts;
                 newActionArray[i][actionName].voice = menuEntry.actions[0].voice;
                 newActionArray[i][actionName].language = menuEntry.actions[0].language;
               }
             }
-
           }
         }
       }
@@ -1138,19 +1167,22 @@
      */
     function populateRunActionsOnInput(action) {
       var newAction = {};
+      var prompts = {};
+      var sayListArr = [];
+      var sayList = {};
+      var rawInputAction = {};
+      var routeToExtension = {};
+      var assignVar = {};
+
+
       if (!_.isUndefined(action.inputType)) {
         newAction.inputType = action.inputType;
         if (newAction.inputType == 2 && !_.isUndefined(action.value)) {
-          var prompts = {};
-          var sayListArr = [];
-          var sayList = {};
           newAction.description = action.description;
           sayList.value = encodeUtf8(action.value);
           sayListArr[0] = sayList;
           prompts.sayList = sayListArr;
           newAction.prompts = prompts;
-          var rawInputAction = {};
-          var routeToExtension = {};
           routeToExtension.destination = '$Input';
           routeToExtension.description = action.description;
           rawInputAction.routeToExtension = routeToExtension;
@@ -1160,6 +1192,41 @@
           newAction.maxNumberOfCharacters = action.maxNumberOfCharacters;
           newAction.attempts = 3;
           newAction.repeats = 2;
+        } else {
+          newAction.description = action.description;
+          sayList.value = encodeUtf8(action.value);
+          sayListArr[0] = sayList;
+          prompts.sayList = sayListArr;
+          newAction.prompts = prompts;
+          assignVar.value = '$Input';
+          assignVar.variableName = action.variableName;
+          rawInputAction.assignVar = assignVar;
+          newAction.rawInputActions = [];
+          newAction.rawInputActions[0] = rawInputAction;
+
+          if (newAction.inputType === 4) {
+            newAction.inputs = [];
+            _.forEach(action.inputActions, function (inputAction) {
+              var assignVar = {};
+              var assignVarItem = {};
+              var inputItem = {};
+              inputItem.actions = [];
+              inputItem.input = inputAction.key;
+              assignVarItem.variableName = action.variableName;
+              assignVarItem.value = inputAction.value;
+              assignVar.assignVar = assignVarItem;
+
+              inputItem.actions.push(assignVar);
+
+              newAction.inputs.push(inputItem);
+            });
+
+          }
+
+          newAction.minNumberOfCharacters = 1;
+          newAction.maxNumberOfCharacters = action.maxNumberOfCharacters;
+          newAction.language = action.language;
+          newAction.voice = action.voice;
         }
       }
       return newAction;

@@ -70,10 +70,10 @@ describe('Controller: AACallerInputCtrl', function () {
   afterEach(function () {
 
   });
-  describe('add play action', function () {
-    it('should add play action object menuEntry', function () {
+  describe('add runActionsOnInput action', function () {
+    it('should add runActionsOnInput action object menuEntry', function () {
       // appends a play action onto menuEntry
-      expect(controller.menuEntry.actions[1].name).toEqual('play');
+      expect(controller.menuEntry.actions[0].name).toEqual('runActionsOnInput');
     });
   });
 
