@@ -29,7 +29,7 @@ var AutoAttendantPage = function () {
   this.periodicMinOption = element(by.id('periodicMinId')).all(by.tagName('li'));
   this.periodicSec = element(by.linkText('45'));
   this.periodicSecOption = element(by.id('periodicSecId')).all(by.tagName('li'));
-  
+
   this.searchBox = element(by.id('searchFilter'));
   this.aaTitle = element(by.tagName('aa-builder-name-edit'));
   this.autoAttendantDevLink = element(by.css('a[href*="#/hurondetails/features"]'));
@@ -78,6 +78,8 @@ var AutoAttendantPage = function () {
 
   this.mediaFileToUpload = './../data/sample-media-upload.wav';
 
+  this.deleteMedia = element(by.css('.delete-media a'));
+  this.deleteConfirmationModalClose = element(by.css('.modal-footer')).element(by.cssContainingText('button', 'Delete'));
 
   this.sayMessage = element(by.css('div.aa-panel-body[name="Say Message"]'));
   this.sayMessageInput = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.name('messageInput'));
