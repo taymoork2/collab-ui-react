@@ -67,9 +67,10 @@
             return 'calendar-service.list';
           } else if (serviceId === 'squared-fusion-media') {
             return 'media-service-v2.list';
+          } else if (serviceId === 'squared-fusion-gcal') {
+            return 'google-calendar-service.settings';
           }
         }
-
         return card;
       }
     };
