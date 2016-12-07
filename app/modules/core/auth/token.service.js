@@ -37,6 +37,9 @@
     function init() {
       // listen for changes to localStorage
       $window.addEventListener('storage', sessionTokenTransfer);
+      $rootScope.$on('$destroy', function () {
+        $window.removeEventListener('storage', sessionTokenTransfer);
+      });
 
       // If no sessionStorage tokens and the tab was not logged out, ask other tabs for the sessionStorage
       if (!$window.sessionStorage.length && !$window.sessionStorage.getItem('logout')) {

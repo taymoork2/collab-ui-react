@@ -107,13 +107,13 @@ namespace deviceAdvancedSettings {
       };
     }
 
+    private generateHash(data: String): String {
+      return String(this.SHA512(data));
+    }
+
     private connectToEndpoint() {
 
       let endpointInitialContactTimeout = 10000;
-
-      let generateHash = (data: String): String => {
-        return String(this.SHA512(data));
-      };
 
       let createEndpointWindow = (endpointOrigin, currentDevice): Window => {
 
@@ -139,57 +139,11 @@ namespace deviceAdvancedSettings {
       };
 
       let endpointOrigin = 'http://' + this.currentDevice.ip;
-      this.$window.addEventListener('message', (event) => {
 
-        if (endpointOrigin === event.origin) {
-
-          let reportedId = String(_.get(event.data, 'id'));
-
-          if (reportedId && reportedId === generateHash(this.currentDevice.cisUuid)) {
-
-            let messageStatus = String(_.get(event.data, 'status'));
-
-            if (messageStatus === 'ready') {
-
-              //Stop the timer
-              this.$timeout.cancel(this.timeoutPromise);
-
-              //Generate token
-              let token = this.Utils.getUUID();
-
-              //Send token on Mercury:
-              if (token && token.length > 15) { //Minimum password length picked by fair vote. TTL is 30 sec on device.
-
-                this.CsdmDeviceService.sendAdvancedSettingsOtp(this.currentDevice.url,
-                  token,
-                  this.Authinfo.getPrimaryEmail(),
-                  this.Authinfo.getUserName());
-              }
-
-              //Post token to endpoint
-              if (this.endpointWindow) {
-                this.endpointWindow.postMessage({ token: token }, endpointOrigin);
-              }
-            } else if (messageStatus === 'login-success') {
-              //Stop the timer
-              this.$timeout.cancel(this.timeoutPromise);
-              this.$modalInstance.close();
-            } else if (messageStatus === 'login-failure') {
-              this.$timeout.cancel(this.timeoutPromise);
-              this.changeState(this.states.unavailable); //mercury problem?
-            }
-          } else {
-            //Right origin, but wrong endpoint => wrong network?
-            //Stop the timer
-            this.$timeout.cancel(this.timeoutPromise);
-            this.changeState(this.states.unavailable); // wrong network);
-
-            if (this.endpointWindow) {
-              this.endpointWindow.close();
-            }
-          }
-          this.$scope.$apply();
-        }
+      let handleMessageEvent = this.handleMessageEvent.bind(this);
+      this.$window.addEventListener('message', handleMessageEvent);
+      this.$scope.$on('$destroy', () => {
+        this.$window.removeEventListener('message', handleMessageEvent);
       });
 
       this.endpointWindow = createEndpointWindow(endpointOrigin, this.currentDevice);
@@ -200,6 +154,60 @@ namespace deviceAdvancedSettings {
         this.endpointWindow.close();
 
       }, endpointInitialContactTimeout);
+    }
+
+    private handleMessageEvent(event): void {
+      let endpointOrigin = 'http://' + this.currentDevice.ip;
+
+      if (endpointOrigin === event.origin) {
+
+        let reportedId = String(_.get(event.data, 'id'));
+
+        if (reportedId && reportedId === this.generateHash(this.currentDevice.cisUuid)) {
+
+          let messageStatus = String(_.get(event.data, 'status'));
+
+          if (messageStatus === 'ready') {
+
+            //Stop the timer
+            this.$timeout.cancel(this.timeoutPromise);
+
+            //Generate token
+            let token = this.Utils.getUUID();
+
+            //Send token on Mercury:
+            if (token && token.length > 15) { //Minimum password length picked by fair vote. TTL is 30 sec on device.
+
+              this.CsdmDeviceService.sendAdvancedSettingsOtp(this.currentDevice.url,
+                token,
+                this.Authinfo.getPrimaryEmail(),
+                this.Authinfo.getUserName());
+            }
+
+            //Post token to endpoint
+            if (this.endpointWindow) {
+              this.endpointWindow.postMessage({ token: token }, endpointOrigin);
+            }
+          } else if (messageStatus === 'login-success') {
+            //Stop the timer
+            this.$timeout.cancel(this.timeoutPromise);
+            this.$modalInstance.close();
+          } else if (messageStatus === 'login-failure') {
+            this.$timeout.cancel(this.timeoutPromise);
+            this.changeState(this.states.unavailable); //mercury problem?
+          }
+        } else {
+          //Right origin, but wrong endpoint => wrong network?
+          //Stop the timer
+          this.$timeout.cancel(this.timeoutPromise);
+          this.changeState(this.states.unavailable); // wrong network);
+
+          if (this.endpointWindow) {
+            this.endpointWindow.close();
+          }
+        }
+        this.$scope.$apply();
+      }
     }
   }
 

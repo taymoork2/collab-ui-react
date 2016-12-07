@@ -21,6 +21,7 @@ export class Notification {
   /* @ngInject */
   constructor(
     private $log: ng.ILogService,
+    private $rootScope: ng.IRootScopeService,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private $window: ng.IWindowService,
@@ -220,8 +221,24 @@ export class Notification {
     this.successTimeout = this.Config.isE2E() ? Notification.NO_TIMEOUT : Notification.DEFAULT_TIMEOUT;
   }
 
+  private setNetworkOffline(): void {
+    this.isNetworkOffline = true;
+  }
+
+  private setNetworkOnline(): void {
+    this.isNetworkOffline = false;
+  }
+
   private initOfflineListeners(): void {
-    this.$window.addEventListener('offline', () => this.isNetworkOffline = true);
-    this.$window.addEventListener('online', () => this.isNetworkOffline = false);
+    let setNetworkOffline = this.setNetworkOffline.bind(this);
+    let setNetworkOnline = this.setNetworkOnline.bind(this);
+
+    this.$window.addEventListener('offline', setNetworkOffline);
+    this.$window.addEventListener('online', setNetworkOnline);
+
+    this.$rootScope.$on('$destroy', () => {
+      this.$window.removeEventListener('offline', setNetworkOffline);
+      this.$window.removeEventListener('online', setNetworkOnline);
+    });
   }
 }
