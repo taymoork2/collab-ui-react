@@ -4,9 +4,9 @@
 describe('Controller: HelpdeskOrgController', function () {
   beforeEach(angular.mock.module('Squared'));
 
-  var Authinfo, q, $stateParams, HelpdeskService, LicenseService, $controller, $translate, $scope, orgController, Config, FeatureToggleService, HelpdeskHuronService, Notification;
+  var Authinfo, q, $stateParams, HelpdeskService, LicenseService, $controller, $translate, $scope, orgController, Config, FeatureToggleService, HelpdeskHuronService, Notification, FusionClusterService;
 
-  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$stateParams_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _HelpdeskHuronService_, _HelpdeskService_, _LicenseService_, _Notification_) {
+  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$stateParams_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _HelpdeskHuronService_, _HelpdeskService_, _LicenseService_, _Notification_, _FusionClusterService_) {
     HelpdeskService = _HelpdeskService_;
     FeatureToggleService = _FeatureToggleService_;
     $scope = _$rootScope_.$new();
@@ -19,6 +19,9 @@ describe('Controller: HelpdeskOrgController', function () {
     Authinfo = _Authinfo_;
     HelpdeskHuronService = _HelpdeskHuronService_;
     Notification = _Notification_;
+    FusionClusterService = _FusionClusterService_;
+    
+    sinon.stub(FusionClusterService, 'getAll').returns(q.resolve([]))
   }));
 
   describe('Org controller', function () {
@@ -37,7 +40,8 @@ describe('Controller: HelpdeskOrgController', function () {
         $scope: $scope,
         LicenseService: LicenseService,
         Config: Config,
-        $stateParams: $stateParams
+        $stateParams: $stateParams,
+        FusionClusterService: FusionClusterService
       });
     });
 
