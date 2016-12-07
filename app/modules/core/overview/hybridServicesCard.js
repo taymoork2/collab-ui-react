@@ -30,7 +30,7 @@
               clusterList: FusionClusterService.getAll(),
               gcalService: Authinfo.isEntitled(Config.entitlements.fusion_google_cal) && featureToggles.hasGoogleCalendarFeatureToggle ? CloudConnectorService.getService('squared-fusion-gcal') : $q.resolve({}),
               featureToggles: featureToggles,
-            })
+            });
           }).then(function (response) {
             if (response.featureToggles.hasGoogleCalendarFeatureToggle && Authinfo.isEntitled(Config.entitlements.fusion_google_cal)) {
               card.serviceList.push(response.gcalService);
