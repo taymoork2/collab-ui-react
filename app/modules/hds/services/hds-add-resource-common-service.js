@@ -72,7 +72,7 @@
         //TODO: fix for fusion cluster
         vm.fusionClusterService.preregisterCluster(enteredCluster, 'stable', 'hds_app')
         .then(function (resp) {
-          vm.selectedClusterId = resp.data.id;
+          vm.selectedClusterId = resp.id;
           deferred.resolve(whiteListHost(hostName, vm.selectedClusterId));
         })
         .catch(function (error) {

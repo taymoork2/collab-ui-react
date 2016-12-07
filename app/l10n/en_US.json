@@ -2052,10 +2052,10 @@
       "confirmationDialogBody": "Are you sure you want to cancel service setup?"
     },
     "clusters": {
+      "clusterCreationFailed": "Failed to create new cluster: {{enteredCluster}}",
       "listing": {
         "no_clusters_heading": "No Hybrid Data Service clusters registered",
-        "no_clusters_text": "See required actions above and documentation to get started.",
-        "clusterCreationFailed": "Failed to create new cluster: {{enteredCluster}}"
+        "no_clusters_text": "See required actions above and documentation to get started."
       }
     },
     "serviceStatus": {

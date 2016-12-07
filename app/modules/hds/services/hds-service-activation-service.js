@@ -11,7 +11,7 @@
     var baseHerculesUrl = UrlConfig.getHerculesUrl();
     var setServiceEnabled = function (serviceId, enabled) {
       return $http
-        .patch(baseHerculesUrl.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
+        .patch(baseHerculesUrl + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
           enabled: enabled
         });
 
