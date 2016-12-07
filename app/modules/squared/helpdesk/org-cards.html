@@ -213,7 +213,7 @@
         <div ng-repeat="hybridService in helpdeskOrgCtrl.hybridServicesCard.services">
           <span>
             <i class="icon icon-circle circle-status-icon"
-               ng-class="hybridService.statusCss"></i>
+               ng-class="'helpdesk-' + hybridService.statusCss"></i>
           </span>
           <span translate="{{'overview.cards.hybrid.services.' + hybridService.serviceId}}"></span>
         </div>

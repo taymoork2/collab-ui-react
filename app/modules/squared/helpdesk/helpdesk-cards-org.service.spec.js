@@ -8,14 +8,16 @@ describe('HelpdeskCardsService', function () {
   var HelpdeskHuronService;
   var FusionClusterService;
   var $scope, q;
+  var CloudConnectorService;
 
-  beforeEach(inject(function (_HelpdeskCardsOrgService_, _$q_, _LicenseService_, _$rootScope_, _HelpdeskHuronService_, _FusionClusterService_) {
+  beforeEach(inject(function (_HelpdeskCardsOrgService_, _$q_, _LicenseService_, _$rootScope_, _HelpdeskHuronService_, _FusionClusterService_, _CloudConnectorService_) {
     HelpdeskCardsOrgService = _HelpdeskCardsOrgService_;
     LicenseService = _LicenseService_;
     HelpdeskHuronService = _HelpdeskHuronService_;
     FusionClusterService = _FusionClusterService_;
     $scope = _$rootScope_.$new();
     q = _$q_;
+    CloudConnectorService = _CloudConnectorService_;
     spyOn(FusionClusterService, 'getAll').and.returnValue(q.resolve(getJSONFixture('hercules/fusion-cluster-service-test-clusters.json')));
   }));
 
@@ -181,6 +183,24 @@ describe('HelpdeskCardsService', function () {
       expect(card.services[2].status).toEqual('setupNotComplete');
       expect(card.services[2].setup).toBeFalsy();
       expect(card.services[2].statusCss).toEqual('default');
+
+    });
+
+    it('should return correct hybrid service card when google calendar is enabled', function () {
+      spyOn(CloudConnectorService, 'getService').and.returnValue(q.resolve({ serviceId: 'squared-fusion-gcal', setup: true, status: 'OK', statusCss: 'success' }));
+      var org = {
+        services: ['squared-fusion-mgmt', 'squared-fusion-gcal']
+      };
+      var card = HelpdeskCardsOrgService.getHybridServicesCardForOrg(org);
+      $scope.$apply();
+
+      expect(card.entitled).toBeTruthy();
+      expect(card.services.length).toEqual(1);
+
+      expect(card.services[0].serviceId).toEqual('squared-fusion-gcal')
+      expect(card.services[0].status).toEqual('OK');
+      expect(card.services[0].setup).toBeTruthy();
+      expect(card.services[0].statusCss).toEqual('success');
 
     });
 

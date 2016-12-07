@@ -20,8 +20,8 @@ describe('Controller: HelpdeskOrgController', function () {
     HelpdeskHuronService = _HelpdeskHuronService_;
     Notification = _Notification_;
     FusionClusterService = _FusionClusterService_;
-    
-    sinon.stub(FusionClusterService, 'getAll').returns(q.resolve([]))
+
+    sinon.stub(FusionClusterService, 'getAll').returns(q.resolve([]));
   }));
 
   describe('Org controller', function () {

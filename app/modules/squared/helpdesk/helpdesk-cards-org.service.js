@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskCardsOrgService($translate, Config, HelpdeskHuronService, LicenseService, Notification, FusionClusterService) {
+  function HelpdeskCardsOrgService($translate, Config, HelpdeskHuronService, LicenseService, Notification, FusionClusterService, CloudConnectorService) {
 
     function getMessageCardForOrg(org, licenses) {
       var entitled = LicenseService.orgIsEntitledTo(org, 'webex-squared');
@@ -45,20 +45,32 @@
     }
 
     function getHybridServicesCardForOrg(org) {
+      var hybridServiceIds = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-media', 'spark-hybrid-datasecurity'];
       var hybridServicesCard = {
-        entitled: false
+        entitled: _.some(hybridServiceIds, function (serviceId) {
+          return LicenseService.orgIsEntitledTo(org, serviceId);
+        }) || LicenseService.orgIsEntitledTo(org, 'squared-fusion-gcal'),
+        services: []
       };
+      if (!hybridServicesCard.entitled) {
+        return;
+      }
       FusionClusterService.getAll(org.id).then(function (clusterList) {
-        hybridServicesCard.services = [];
-        _.forEach(['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-media', 'spark-hybrid-datasecurity'], function (serviceId) {
+        _.forEach(hybridServiceIds, function (serviceId) {
           if (LicenseService.orgIsEntitledTo(org, serviceId)) {
             hybridServicesCard.services.push(FusionClusterService.getStatusForService(serviceId, clusterList));
           }
         });
-        hybridServicesCard.entitled = _.size(hybridServicesCard.services) > 0;
       }).catch(function (response) {
         Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
       });
+      if (LicenseService.orgIsEntitledTo(org, 'squared-fusion-gcal')) {
+        CloudConnectorService.getService('squared-fusion-gcal', org.id).then(function (service) {
+          hybridServicesCard.services.push(service);
+        }).catch(function (response) {
+          Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
+        });
+      }
       return hybridServicesCard;
     }
 

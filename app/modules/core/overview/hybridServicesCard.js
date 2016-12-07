@@ -6,7 +6,7 @@
     .factory('OverviewHybridServicesCard', OverviewHybridServicesCard);
 
   /* @ngInject */
-  function OverviewHybridServicesCard($q, Authinfo, Config, FeatureToggleService, FusionClusterService, FusionClusterStatesService) {
+  function OverviewHybridServicesCard($q, Authinfo, Config, FeatureToggleService, FusionClusterService, CloudConnectorService) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -22,21 +22,28 @@
 
         function init() {
           $q.all({
-            clusterList: FusionClusterService.getAll(),
             hasMediaFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding),
             hasHDSFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity),
-          })
-            .then(function (response) {
+            hasGoogleCalendarFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar),
+          }).then(function (featureToggles) {
+            $q.all({
+              clusterList: FusionClusterService.getAll(),
+              gcalService: Authinfo.isEntitled(Config.entitlements.fusion_google_cal) && featureToggles.hasGoogleCalendarFeatureToggle ? CloudConnectorService.getService('squared-fusion-gcal') : $q.resolve({}),
+              featureToggles: featureToggles,
+            }).then(function (response) {
+              if (response.featureToggles.hasGoogleCalendarFeatureToggle && Authinfo.isEntitled(Config.entitlements.fusion_google_cal)) {
+                card.serviceList.push(response.gcalService);
+              }
               if (Authinfo.isEntitled(Config.entitlements.fusion_cal)) {
                 card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-cal', response.clusterList));
               }
               if (Authinfo.isEntitled(Config.entitlements.fusion_uc)) {
                 card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-uc', response.clusterList));
               }
-              if (response.hasMediaFeatureToggle && Authinfo.isEntitled(Config.entitlements.mediafusion)) {
+              if (response.featureToggles.hasMediaFeatureToggle && Authinfo.isEntitled(Config.entitlements.mediafusion)) {
                 card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-media', response.clusterList));
               }
-              if (response.hasHDSFeatureToggle && Authinfo.isEntitled(Config.entitlements.hds)) {
+              if (response.featureToggles.hasHDSFeatureToggle && Authinfo.isEntitled(Config.entitlements.hds)) {
                 card.serviceList.push(FusionClusterService.getStatusForService('spark-hybrid-datasecurity', response.clusterList));
               }
               card.enabled = _.some(card.serviceList, function (service) {
@@ -45,10 +52,11 @@
               if (card.enabled) {
                 _.each(card.serviceList, function (service) {
                   service.UIstateLink = getUIStateLink(service.serviceId);
-                  service.healthStatus = FusionClusterStatesService.getStatusIndicatorCSSClass(service.status);
+                  service.healthStatus = service.statusCss;
                 });
               }
             });
+          });
         }
         init();
 
