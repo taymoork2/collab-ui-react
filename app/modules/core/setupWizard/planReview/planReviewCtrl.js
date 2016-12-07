@@ -64,7 +64,7 @@
     /* TODO For now we are using the site url to determine if the license is an SMP license. This logic will change;
     we will be looking at licenseModel inside the licenses payload to determine if the license is SMP instead of the siteUrl. */
     vm.isSharedMultiPartyLicense = function (siteUrl) {
-      return _.first(siteUrl.split('.')) === 'smp';
+      return _.first(_.split(siteUrl, '.')) === 'smp';
     };
 
     // This logic needs to be changed to look for the provided audio type from license usage call when payload is ready from the backend

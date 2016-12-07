@@ -2165,14 +2165,28 @@
       "searchByPlaceholder": "Email ID",
       "searchByEmailPlaceholder": "e.g. johnsmith@email.com, jansmith@email.com",
       "searchByRoomPlaceholder": "e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-      "textAndFileName": "Where <b>Text Messagegs</b> or <b>File Name</b> contains",
+      "textAndFileName": "Where <b>Text Messages</b> or <b>File Name</b> contains",
       "textAndFileNamePlaceholder": "e.g. project AND manager",
       "noMatchesFound": "No Matches Found"
     },
     "searchResults": {
+      "backToSearch": "Back to Search",
       "searchInfo": "Search Info",
       "emailId": "Email Id",
-      "dateRange": "Date Range"
+      "dateRange": "Date Range",
+      "textMessage": "Text Messages Contains",
+      "fileName": "File Name Contains",
+      "reportSummary": "Report Summary",
+      "rooms": "Rooms",
+      "messages": "Messages",
+      "files": "Files",
+      "estReport": "Est. Report Size",
+      "generateReport": "Generate Report",
+      "generateText": "Enter report information to generate a report. Generation time will depend on estimated report size.",
+      "description": "Description",
+      "exportFormat": "Export Format",
+      "totalResultSize": "Total Result Size",
+      "downloadContent": "Download content such as documents, images and media associated with this report."
     },
     "reportsList": {
       "name": "Name",
@@ -3528,8 +3542,7 @@
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
-    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
-    "errorGettingBulkVoicemailEnableToggle": "There was a problem getting the bulkVoicemailEnable toggle."
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
   },
   "bulkEnableVm": {
     "enableCompanyVoicemail": "Turning On Company Voicemail",
@@ -3537,8 +3550,7 @@
     "canceling": "Canceling...",
     "enabledUsers": "Enabled Users",
     "errorUsers": "Errors",
-    "errorResolveInstructions": "To resolve errors, update your user attributes CSV file and reimport.",
-    "errorResolveTooltip": "Export errors to CSV and download an updated user attributes CSV file. Edit the user attributes to address reported errors, then reimport.",
+    "errorResolveInstructions": "We could not turn on voicemail for the following users. You can retry them individually or in bulk, or download the CSV error file and send it to support.",
     "headerRow": "Email",
     "headerErrorMessage": "Error Message",
     "retryUsers": "Retry",
@@ -4972,6 +4984,7 @@
     "aa": "AA",
     "cp": "CP",
     "pg": "PG",
+    "pi": "PI",
     "editAction": "Edit",
     "deleteAction": "Delete",
     "aaDependsTitle": "Auto Attendant Dependents",
@@ -4986,8 +4999,10 @@
     "aaName": "auto attendant",
     "hgName": "hunt group",
     "pgName": "paging group",
+    "piName": "pickup group",
     "sorryMessage": "Sorry, something went wrong ",
-    "reloadMessage": "Please try reloading the page"
+    "reloadMessage": "Please try reloading the page",
+    "feature": "Feature"
   },
   "placesPage": {
     "nameHeader": "Name",
@@ -5520,6 +5535,8 @@
     "subscription": "Subscription ID: ",
     "numberedName": "Subscription {{number}}",
     "usage": "Usage: ",
+    "licenseUsageReport": "License Usage Report",
+    "smpLicenseReportPeriod": "Last 3 Months",
     "more": "More",
     "less": "Less",
     "quantity": "Qty: ",

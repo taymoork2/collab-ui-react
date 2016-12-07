@@ -15,18 +15,36 @@ export interface ICallParkRangeItem {
   endRange: string;
 }
 
+interface IUserCommon {
+  uuid: string;
+  firstName: string;
+  lastName: string;
+  userName: string;
+  services: Array<string>;
+}
+
+interface IDnUsers {
+  user: {
+    uuid: string;
+    userId: string;
+  };
+  dnUsage: string;
+}
+
 interface ICallParkResource extends ng.resource.IResourceClass<ng.resource.IResource<CallPark>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
-
 interface ICallParkRangeResource extends ng.resource.IResourceClass<ng.resource.IResource<ICallParkRangeItem>> {}
-
-interface IDirectoryNumberResource extends ng.resource.IResourceClass<ng.resource.IResource<string>> {}
+interface IDirectoryNumberResource extends ng.resource.IResourceClass<ng.resource.IResource<any>> {}
+interface IDirectoryNumberUsersResource extends ng.resource.IResourceClass<ng.resource.IResource<IDnUsers>> {}
+interface IUserCommonResource extends ng.resource.IResourceClass<ng.resource.IResource<IUserCommon>> {}
 
 export class CallParkService {
   private callParkResource: ICallParkResource;
   private callParkRangeResource: ICallParkRangeResource;
   private directoryNumberResource: IDirectoryNumberResource;
+  private userCommonResource: IUserCommonResource;
+  private directoryNumbersUsersResource: IDirectoryNumberUsersResource;
   private callParkDataCopy: CallPark;
   private callParkProperties: Array<string> = ['uuid', 'name', 'startRange', 'endRange', 'members', 'fallbackTimer'];
   private fallbackDestProperties: Array<string> = ['memberUuid', 'name', 'number', 'numberUuid', 'sendToVoicemail'];
@@ -59,6 +77,8 @@ export class CallParkService {
 
     this.callParkRangeResource = <ICallParkRangeResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/features/callparks/ranges/:startRange');
     this.directoryNumberResource = <IDirectoryNumberResource>this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId');
+    this.userCommonResource = <IUserCommonResource>this.$resource(this.HuronConfig.getCmiUrl() + '/common/customers/:customerId/users/:userId');
+    this.directoryNumbersUsersResource = <IDirectoryNumberUsersResource>this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId/users/:userId');
   }
 
   public getCallParkList(): ng.IPromise<Array<ICallParkListItem>> {
@@ -195,6 +215,24 @@ export class CallParkService {
       customerId: this.Authinfo.getOrgId(),
       directoryNumberId: numberUuid,
     }).$promise;
+  }
+
+  public isVoiceMailEnabled(numberUuid): ng.IPromise<boolean> {
+    return this.directoryNumbersUsersResource.query({
+      customerId: this.Authinfo.getOrgId(),
+      directoryNumberId: numberUuid,
+    }).$promise.then( users => {
+      let user = _.find(users, { dnUsage: 'Primary' });
+      return _.get(user, 'user.uuid', '');
+    }).then( uuid => {
+      return this.userCommonResource.get({
+        customerId: this.Authinfo.getOrgId(),
+        userId: uuid,
+      }).$promise.then( user => {
+        return _.indexOf(_.get(user, 'services', []), 'VOICEMAIL') !== -1;
+      });
+    });
+
   }
 
   public getDisplayName(member: Member): string {
