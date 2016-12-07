@@ -7,7 +7,7 @@ class GoogleCalendarSettingsCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $window,
+    private $modal,
     private $translate: ng.translate.ITranslateService,
     private USSService,
   ) {}
@@ -25,7 +25,16 @@ class GoogleCalendarSettingsCtrl implements ng.IComponentController {
   }
 
   public openUserStatusReportModal(): void {
-    return this.$window.alert('soon');
+    return this.$modal.open({
+      controller: 'ExportUserStatusesController',
+      controllerAs: 'exportUserStatusesCtrl',
+      templateUrl: 'modules/hercules/user-statuses/export-user-statuses.html',
+      type: 'small',
+      resolve: {
+        servicesId: () => [this.serviceId],
+        userStatusSummary: () => this.userStatusesSummary,
+      },
+    });
   }
 }
 
