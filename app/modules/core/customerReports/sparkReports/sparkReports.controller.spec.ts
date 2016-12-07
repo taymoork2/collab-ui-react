@@ -354,8 +354,6 @@ describe('Controller: Customer Reports Ctrl', function () {
 
     describe('filter changes', function () {
       it('All graphs should update on time filter changes', function () {
-        expect(this.DummySparkDataService.dummyActiveUserData).toHaveBeenCalledTimes(1);
-        expect(this.SparkLineReportService.getActiveUserData).toHaveBeenCalledTimes(1);
         controller.timeSelected = altTimeFilter[1];
         controller.timeUpdates.update();
         this.$timeout.flush();
@@ -372,9 +370,9 @@ describe('Controller: Customer Reports Ctrl', function () {
         this.$timeout.flush();
         expect(controller.timeSelected).toEqual(altTimeFilter[altTimeFilter.length - 1]);
 
-        expect(this.DummySparkDataService.dummyActiveUserData).toHaveBeenCalledTimes(2);
+        expect(this.DummySparkDataService.dummyActiveUserData).toHaveBeenCalledTimes(3);
         expect(this.SparkLineReportService.getActiveUserData).toHaveBeenCalledTimes(2);
-        expect(this.SparkGraphService.setActiveLineGraph).toHaveBeenCalledTimes(5);
+        expect(this.SparkGraphService.setActiveLineGraph).toHaveBeenCalledTimes(6);
         expect(zoomFunction).toHaveBeenCalledTimes(3);
         expect(this.CardUtils.resize).toHaveBeenCalledTimes(3);
       });
