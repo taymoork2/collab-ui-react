@@ -32,7 +32,7 @@ describe('First Time Wizard', function () {
       ssowizard.uploadMetaData();
     });
 
-    it('should test the SSO connection', function () {
+    xit('should test the SSO connection', function () {
       utils.click(wizard.nextBtn);
       utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Test SSO Setup');
       utils.click(ssowizard.testSsoConnectionBtn);

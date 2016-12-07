@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: MySubscriptionCtrl', function () {
-  let $httpBackend, rootScope, $scope, $controller, q, controller, Orgservice, ServiceDescriptor, Authinfo;
+  let $httpBackend, rootScope, $scope, $controller, $q, controller, Orgservice, ServiceDescriptor, Authinfo, FeatureToggleService;
   let data = getJSONFixture('core/json/myCompany/subscriptionData.json');
   let trialUrl = 'https://atlas-integration.wbx2.com/admin/api/v1/commerce/online/subID';
   let trialUrlResponse = 'trialUrlResponse';
@@ -24,7 +24,7 @@ describe('Controller: MySubscriptionCtrl', function () {
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, $q, _Orgservice_, _ServiceDescriptor_, _Authinfo_, _$httpBackend_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _Orgservice_, _ServiceDescriptor_, _Authinfo_, _FeatureToggleService_, _$httpBackend_) {
     $httpBackend = _$httpBackend_;
     rootScope = _$rootScope_;
     $scope = rootScope.$new();
@@ -32,9 +32,11 @@ describe('Controller: MySubscriptionCtrl', function () {
     Orgservice = _Orgservice_;
     ServiceDescriptor = _ServiceDescriptor_;
     Authinfo = _Authinfo_;
-    q = $q;
+    FeatureToggleService = _FeatureToggleService_;
+    $q = _$q_;
 
-    spyOn(ServiceDescriptor, 'servicesInOrg').and.returnValue(q.when(data.servicesResponse));
+    spyOn(ServiceDescriptor, 'servicesInOrg').and.returnValue($q.when(data.servicesResponse));
+    spyOn(FeatureToggleService, 'atlasSMPGetStatus').and.returnValue($q.when(false));
     spyOn(rootScope, '$broadcast').and.callThrough();
   }));
 
@@ -65,7 +67,7 @@ describe('Controller: MySubscriptionCtrl', function () {
       spyOn(this.Authinfo, 'isOnline').and.returnValue(true);
       spyOn(this.DigitalRiverService, 'getSubscriptionsUrl').and.returnValue(this.getDigitalRiverSubscriptionsUrlDefer.promise);
       spyOn(this.Notification, 'errorWithTrackingId');
-      spyOn(Orgservice, 'getLicensesUsage').and.returnValue(q.when(data.subscriptionsResponse));
+      spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(data.subscriptionsResponse));
     });
     it('should get digital river order history url to load iframe', function () {
       this.getDigitalRiverSubscriptionsUrlDefer.resolve('https://some.url.com');
@@ -91,7 +93,7 @@ describe('Controller: MySubscriptionCtrl', function () {
 
   it('should initialize with expected data for ccw orgs', function () {
     spyOn(Authinfo, 'isOnline').and.returnValue(false);
-    spyOn(Orgservice, 'getLicensesUsage').and.returnValue(q.when(data.subscriptionsResponse));
+    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(data.subscriptionsResponse));
     startController();
 
     expect(controller.visibleSubscriptions).toBeFalsy();
@@ -107,7 +109,7 @@ describe('Controller: MySubscriptionCtrl', function () {
 
   xit('should initialize with expected data for online orgs', function () {
     spyOn(Authinfo, 'isOnline').and.returnValue(true);
-    spyOn(Orgservice, 'getLicensesUsage').and.returnValue(q.when(data.subscriptionsResponse));
+    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(data.subscriptionsResponse));
     startController();
     $scope.$apply();
 
@@ -121,7 +123,7 @@ describe('Controller: MySubscriptionCtrl', function () {
 
   it('should initialize with expected data for ccw trial orgs', function () {
     spyOn(Authinfo, 'isOnline').and.returnValue(false);
-    spyOn(Orgservice, 'getLicensesUsage').and.returnValue(q.when(data.subscriptionsTrialResponse));
+    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(data.subscriptionsTrialResponse));
     startController();
     $scope.$apply();
 
@@ -134,9 +136,9 @@ describe('Controller: MySubscriptionCtrl', function () {
   });
 
   xit('should initialize with expected data for online trial orgs', function () {
-    $httpBackend.whenGET(trialUrl).respond(q.when(trialUrlResponse));
+    $httpBackend.whenGET(trialUrl).respond($q.when(trialUrlResponse));
     spyOn(Authinfo, 'isOnline').and.returnValue(true);
-    spyOn(Orgservice, 'getLicensesUsage').and.returnValue(q.when(data.subscriptionsTrialResponse));
+    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(data.subscriptionsTrialResponse));
     data.trialSubscriptionData[0].upgradeTrialUrl = trialUrlResponse;
 
     startController();

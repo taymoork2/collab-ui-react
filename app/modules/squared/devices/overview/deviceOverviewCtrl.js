@@ -6,7 +6,7 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo, FeatureToggleService, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal, ServiceSetup, KemService, TerminusUserDeviceE911Service) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo, FeatureToggleService, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal, LaunchAdvancedSettingsModal, ServiceSetup, KemService, TerminusUserDeviceE911Service) {
     var deviceOverview = this;
     var huronDeviceService = $stateParams.huronDeviceService;
     deviceOverview.linesAreLoaded = false;
@@ -48,7 +48,7 @@
         pollLines();
       }
 
-      if (deviceOverview.currentDevice.isHuronDevice && !deviceOverview.currentDevice.isATA) {
+      if (deviceOverview.currentDevice.isHuronDevice) {
         if (!deviceOverview.tzIsLoaded) {
           initTimeZoneOptions().then(function () {
             loadDeviceInfo();
@@ -111,10 +111,12 @@
       }).then(getEmergencyInformation);
     }
 
-    function getTimeZoneFromId(id) {
-      return _.find(deviceOverview.timeZoneOptions, function (o) {
-        return o.id == id;
-      });
+    function getTimeZoneFromId(timeZone) {
+      if (timeZone && timeZone.timeZone) {
+        return _.find(deviceOverview.timeZoneOptions, function (o) {
+          return o.id === timeZone.timeZone;
+        });
+      }
     }
 
     function pollLines() {
@@ -220,6 +222,10 @@
         .then($state.sidepanel.close);
     };
 
+    deviceOverview.showAdvancedSettingsDialog = function () {
+      LaunchAdvancedSettingsModal.open(deviceOverview.currentDevice);
+    };
+
     deviceOverview.showRemoteSupportDialog = function () {
       if (_.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin()) {
         Notification.notifyReadOnly();
@@ -288,7 +294,11 @@
         saveUpgradeChannel(newValue)
           .then(_.partial(waitForDeviceToUpdateUpgradeChannel, newValue))
           .catch(function (error) {
-            Notification.errorWithTrackingId(error, 'deviceOverviewPage.failedToSaveChanges');
+            if (error.message) {
+              Notification.errorWithTrackingId(error, 'deviceOverviewPage.failedToSaveChanges');
+            } else {
+              Notification.error($translate.instant('deviceOverviewPage.failedToSaveChanges') + ' ' + error);
+            }
             resetSelectedChannel();
           })
           .finally(function () {
@@ -309,6 +319,7 @@
 
     function pollDeviceForNewChannel(newValue, endTime, deferred) {
       CsdmDataModelService.reloadItem(deviceOverview.currentDevice).then(function (device) {
+        deviceOverview.currentDevice = device;
         if (device.upgradeChannel.value == newValue) {
           Notification.success('deviceOverviewPage.channelUpdated');
           return deferred.resolve();

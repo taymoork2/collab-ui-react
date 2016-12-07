@@ -89,7 +89,7 @@ export class BulkEnableVmService {
 
   private _doRetry(_retryCount: number, _error): boolean {
     if (_retryCount > 0) {
-      if (_error && _error.status && (_error.status === 503 || _error.status === 429)) {
+      if (_error && _error.status && (_error.status === 503 || _error.status === 429 || _error.status === 502 || _error.status === 504)) {
         return true;
       }
     }
