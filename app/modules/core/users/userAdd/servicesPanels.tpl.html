@@ -145,10 +145,10 @@
             </div>
           </div>
         </div>
-        <div class="item-mtg-license" ng-if="hasAdvancedLicenses">
-          <span translate="firstTimeWizard.advancedMeetings"></span>
-        </div>
         <div class="entitle-check-grp" ng-repeat="lic in advancedLicenses">
+          <div class="item-mtg-license" ng-if="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial) && advancedLicenses.indexOf(lic) === 0">
+            <span translate="firstTimeWizard.advancedMeetings"></span>
+          </div>
           <div class="item-mtg" ng-if="lic.site">
             <div ng-show="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial)">
               <span ng-if="lic.isCISite">{{lic.site}}</span>
