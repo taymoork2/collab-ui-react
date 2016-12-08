@@ -1,4 +1,9 @@
 describe('Component: sectionTitle', () => {
+  afterEach(function () {
+    if (this.view) {
+      this.view.remove();
+    }
+  });
   beforeEach(function () {
     this.initModules('Core');
     this.injectDependencies(

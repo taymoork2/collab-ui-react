@@ -8,11 +8,19 @@ describe('DeviceUsageTimelineService', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('123')
   };
 
+  afterAll(function () {
+    Authinfo = undefined;
+  });
+
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value('Authinfo', Authinfo);
   }));
 
   var DeviceUsageTimelineService, $httpBackend, urlBase, $timeout;
+
+  afterEach(function () {
+    DeviceUsageTimelineService = $httpBackend = urlBase = $timeout = undefined;
+  });
 
   function createDayMockData(startDate, dayCount) {
     var items = [];

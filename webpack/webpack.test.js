@@ -1,15 +1,13 @@
+const webpack = require('webpack');
 const merge = require('webpack-merge');
 const commonWebpack = require('./webpack.common');
 const loaders = require('./loaders');
-const _ = require('lodash');
 
 const testConfig = merge.smart(commonWebpack, {
-  devtool: 'inline-source-map',
+  // ideally faster build speed
+  devtool: 'cheap-inline-source-map',
   entry: {},
   module: {
-    loaders: [_.merge(loaders.scss, {
-      loader: 'null',
-    })],
     postLoaders: [
       loaders.instrument,
     ],
@@ -21,6 +19,10 @@ const testConfig = merge.smart(commonWebpack, {
     },
   },
   output: {},
+  plugins: [
+    // don't load unnecessary files
+    new webpack.NormalModuleReplacementPlugin(/\.(svg|png|jpg|jpeg|gif|ico|scss|css|woff|woff2|ttf|eot|pdf)$/, 'node-noop'),
+  ],
 });
 
 module.exports = testConfig;

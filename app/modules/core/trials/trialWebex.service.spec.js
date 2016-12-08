@@ -26,9 +26,6 @@ describe('Service: Webex Trial Service', function () {
         };
       }
     });
-    bard.mockService(Notification, {
-      error: $q.when([])
-    });
   });
 
   beforeEach(function () {

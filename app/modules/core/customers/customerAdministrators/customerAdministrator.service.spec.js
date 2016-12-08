@@ -6,6 +6,14 @@ describe('Service: CustomerAdministratorService', function () {
   var customerId;
   var getSalesAdminRegex = /.*%2212345-67890-12345%22\.*/;
 
+  afterAll(function () {
+    getSalesAdminRegex = undefined;
+  });
+
+  afterEach(function () {
+    $httpBackend = $rootScope = Config = Authinfo = CustomerAdministratorService = UserRoleService = customerId = undefined;
+  });
+
   beforeEach(inject(function (_$rootScope_, _$httpBackend_, _Config_, _Authinfo_, _CustomerAdministratorService_, _UserRoleService_) {
     $httpBackend = _$httpBackend_;
     $rootScope = _$rootScope_;

@@ -8,6 +8,14 @@ describe('LeaderBoard', function () {
   var $controller, $q, $scope, controller, Orgservice, TrialService, WebExUtilsFact;
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
 
+  afterEach(function () {
+    $controller = $q = $scope = controller = Orgservice = TrialService = WebExUtilsFact = undefined;
+  });
+
+  afterAll(function () {
+    usageOnlySharedDevicesFixture = undefined;
+  });
+
   beforeEach(inject(function (_$controller_, _$q_, $rootScope, _Orgservice_, _TrialService_, _WebExUtilsFact_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;

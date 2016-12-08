@@ -4,6 +4,10 @@ describe('Service: WebExSiteRowService', function () {
 
   var $rootScope, $q, WebExSiteRowService, Auth, Authinfo, FeatureToggleService, WebExUtilsFact, WebExApiGatewayService, WebExApiGatewayConstsService, deferred_licenseInfo, deferredIsSiteSupportsIframe, deferredCsvStatus;
 
+  afterEach(function () {
+    $rootScope = $q = WebExSiteRowService = Auth = Authinfo = FeatureToggleService = WebExUtilsFact = WebExApiGatewayService = WebExApiGatewayConstsService = deferred_licenseInfo = deferredIsSiteSupportsIframe = deferredCsvStatus = undefined;
+  });
+
   var fakeSiteRow1 = {
     "label": "Meeting Center 200",
     "value": 1,
@@ -189,6 +193,10 @@ describe('Service: WebExSiteRowService', function () {
     "offerCode": "CMR",
     "capacity": "100"
   }];
+
+  afterAll(function () {
+    fakeSiteRow1 = fakeSiteRow2 = fakeConferenceService2 = fakeConferenceServicesArray = fake_allSitesLicenseInfo = undefined;
+  });
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));

@@ -25,6 +25,26 @@
                           size="small">
         </cs-toggle-switch>
       </div>
+
+      <div class="sub-section" ng-show="calendarSettings.hasCalsvcOneButtonToPushIntervalFeatureToggle">
+        <h5 class="sub-section__label" translate="hercules.settings.oneButtonToPushIntervalHeading"></h5>
+        <p class="sub-section__description" translate="hercules.settings.oneButtonToPushInterval"></p>
+        <form id="oneButtonToPushIntervalForm">
+          <div class="row">
+            <div class="medium-2 columns">
+              <cs-select
+                ng-model="calendarSettings.oneButtonToPushIntervalMinutes"
+                options="calendarSettings.oneButtonToPushIntervalOptions"
+                on-change-fn="calendarSettings.setOneButtonToPushIntervalMinutes()"
+              >
+              </cs-select>
+            </div>
+            <div class="medium-10 columns custom-line-height" translate="hercules.settings.oneButtonToPushIntervalSecondaryLabel">
+            </div>
+          </div>
+        </form>
+      </div>
+
     </setting-section>
 
     <setting-section setting="calendarSettings.googleCalendarSection" ng-show="calendarSettings.hasGoogleCalendarFeatureToggle && calendarSettings.isGoogleCalendarEntitled">

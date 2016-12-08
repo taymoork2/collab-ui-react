@@ -16,6 +16,14 @@ describe('Service: CsvDownloadService', function () {
     $provide.value("Authinfo", Authinfo);
   }));
 
+  afterEach(function () {
+    CsvDownloadService = $httpBackend = UrlConfig = $window = UserCsvService = undefined;
+  });
+
+  afterAll(function () {
+    typeTemplate = typeUser = typeError = Authinfo = undefined;
+  });
+
   beforeEach(inject(function (_CsvDownloadService_, _$httpBackend_, _UrlConfig_, _$window_, _UserCsvService_) {
     CsvDownloadService = _CsvDownloadService_;
     $httpBackend = _$httpBackend_;

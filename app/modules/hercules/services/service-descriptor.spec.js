@@ -98,8 +98,8 @@ describe('ServiceDescriptor', function () {
     };
     $httpBackend.expectGET('https://identity.webex.com/organization/scim/v1/Orgs/' + authinfo.getOrgId() + '?disableCache=true')
       .respond(200, data);
-    Service.getDisableEmailSendingToUser().then(function (calSvcDisableEmailSendingToEndUser) {
-      expect(calSvcDisableEmailSendingToEndUser).toBe(true);
+    Service.getOrgSettings().then(function (orgSettings) {
+      expect(orgSettings.calSvcDisableEmailSendingToEndUser).toBe(true);
     });
     $httpBackend.flush();
   });

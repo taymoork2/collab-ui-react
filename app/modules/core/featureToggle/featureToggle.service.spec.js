@@ -11,6 +11,14 @@ describe('FeatureToggleService', function () {
   var identityMe = 'https://identity.webex.com/identity/scim/null/v1/Users/me';
   var dirSyncRegex = /.*\/organization\/.*\/dirsync\.*/;
 
+  afterEach(function () {
+    httpBackend = $state = Authinfo = FeatureToggleService = getUserMe = undefined;
+  });
+
+  afterAll(function () {
+    userId = getUserFeatureToggles = userRegex = identityMe = dirSyncRegex = undefined;
+  });
+
   beforeEach(inject(function (_$httpBackend_, _$state_, _Authinfo_, _FeatureToggleService_) {
     httpBackend = _$httpBackend_;
     $state = _$state_;
