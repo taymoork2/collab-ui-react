@@ -1,5 +1,32 @@
 <cs-sp-container class="side-panel-country">
   <cs-sp-section>
+    <div class="ui-mt">
+      <div class="form-group">
+        <label class="cs-input__label">{{::'gemini.cbgs.request.labelCustomer' | translate}}</label>
+        <input
+          class="form-control"
+          required
+          type="text"
+          ng-maxlength="60"
+          ng-model="$ctrl.model.info.groupName"
+          placeholder="{{::'gemini.cbgs.request.customerPlaceholder' | translate}}"
+          ng-change="$ctrl.onGroupNameChange()"
+          ng-readonly="$ctrl.isReadonly">
+      </div>
+      <div class="form-group">
+        <label class="cs-input__label">{{::'gemini.cbgs.request.labelCustomerAttr' | translate}}</label>
+        <input
+          class="form-control"
+          type="text"
+          type="text"
+          ng-maxlength="60"
+          ng-model="$ctrl.model.info.customerAttribute"
+          placeholder="{{::'gemini.cbgs.request.customerAttrPlaceholder' | translate}}"
+          ng-change="$ctrl.onCustomerNameChange()">
+      </div>
+    </div>
+  </cs-sp-section>
+  <cs-sp-section>
     <div class="section-title-row">
       <span class="section-name" translate="gemini.cbgs.editCountry"></span>
     </div>
@@ -17,8 +44,40 @@
       ></cs-select>
     </div>
     <div class="ui-mt medium-12">
-      <!--<span class="btn" translate="gemini.cbgs.importCsv"></span> will be use in next sprint-->
-      <a class="btn btn--none" download="ccaportal_regions_template.xmls" ng-href="$ctrl.downloadCountryUrl"><small translate="gemini.cbgs.downloadCsv"></small></a>
+      <!-- upload start-->
+      <div class="user-csv-upload">
+        <div class="flex-center-container">
+          <div class="country-upload-file">
+
+              <div class="pull-left upload-file-box" ng-if="!$ctrl.isCsvValid">
+                <span class="btn" translate="gemini.cbgs.importCsv"></span>
+                <input
+                  class="country-upload-input"
+                  id="upload"
+                  name="upload"
+                  type="file"
+                  cr-file-read
+                  file="$ctrl.model.file"
+                  file-name="$ctrl.model.fileName"
+                  file-max-size="10"
+                  file-max-size-error="$ctrl.onFileSizeError()"
+                  file-type="text/csv, application/csv, application/vnd.ms-excel"
+                  file-suffix="csv"
+                  file-type-error="$ctrl.onFileTypeError()"/>
+              </div>
+              <div ng-if="$ctrl.isCsvValid" class="pull-left">
+                <span title="{{$ctrl.model.fullFileName}}">{{$ctrl.model.fileName}}</span>
+                <button type="button" ng-click="$ctrl.onResetFile()" class="btn--none">
+                  <small class="icon icon-exit"></small>
+                </button>
+              </div>
+              <!-- upload end-->
+
+              <a class="btn btn--none" download="ccaportal_regions_template.xls" ng-href="$ctrl.downloadCountryUrl"><small translate="gemini.cbgs.downloadCsv" class="color-primary-base"></small></a>
+
+          </div>
+        </div>
+      </div>
     </div>
   </cs-sp-section>
   <cs-sp-section>
@@ -26,6 +85,9 @@
       <span class="section-name" translate="gemini.cbgs.request.labelCountries"></span>
       <!--<span class="pull-right"><a class="btn btn--none" translate="gemini.cbgs.exportToCsv"></a></span> will be use in next sprint-->
     </div>
+    <h3 ng-if="$ctrl.model.info.countries.length == 0" class="text-center">
+      <small>{{::'gemini.cbgs.request.countryDisplayNull' | translate}}</small>
+    </h3>
     <div class="tag-container edit-country">
       <span class="tag tag-country" ng-repeat="val in $ctrl.model.info.countries">
         <span>{{val.countryName}}</span>
