@@ -257,6 +257,6 @@ describe('Controller: DevicesCtrl', function () {
       expect(controller.exporting).toBeFalsy();
     });
 
-  })
+  });
 
 });

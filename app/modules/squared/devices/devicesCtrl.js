@@ -285,7 +285,7 @@
             });
             vm.exportProgressDialog.result.then(function () {
             }, function (err) {
-              $log.warn("Export stopped while in progress, reason:", err)
+              $log.warn("Export stopped while in progress, reason:", err);
               //Notification.notify('spacesPage.export.deviceExportCancelled', 'error');
               //vm.exporting = false;
             });
@@ -299,8 +299,8 @@
             Notification.notify(text, 'success', title);
           } else if (percent == -1) {
             vm.exporting = false;
-            var text = $translate.instant('spacesPage.export.deviceExportCancelled');
-            Notification.notify(text, 'warn');
+            var text2 = $translate.instant('spacesPage.export.deviceExportCancelled');
+            Notification.notify(text2, 'warn');
             vm.exportProgressDialog.close();
           } else {
             vm.exporting = false;
