@@ -30,7 +30,7 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
   }
 
   public googleCalendarFeatureToggleEventHandler(hasFeature: boolean) {
-    this.display = this.Authinfo.isFusionCal() && !(this.Authinfo.isFusionGoogleCal() || hasFeature);
+    this.display = this.Authinfo.isFusionCal() && !(this.Authinfo.isFusionGoogleCal() && hasFeature);
   }
 
   /* @ngInject */

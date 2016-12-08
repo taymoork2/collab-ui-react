@@ -60,6 +60,7 @@
         squared: 'webex-squared',
         fusion_uc: 'squared-fusion-uc',
         fusion_cal: 'squared-fusion-cal',
+        fusion_gcal: 'squared-fusion-gcal',
         mediafusion: 'squared-fusion-media',
         hds: 'spark-hybrid-datasecurity',
         fusion_mgmt: 'squared-fusion-mgmt',
@@ -434,6 +435,12 @@
         'calendar-service',
         'cluster-list',
         'expressway-settings',
+        'services-overview',
+      ],
+      'squared-fusion-gcal': [
+        'add-resource',
+        'google-calendar-service',
+        'cluster-list',
         'services-overview',
       ],
       'squared-team-member': [

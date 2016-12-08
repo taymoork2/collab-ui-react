@@ -58,12 +58,12 @@
       columnDefs: [{
         field: 'name',
         displayName: $translate.instant('hercules.overview.clusters-title'),
-        cellTemplate: 'modules/hercules/cluster-list/cluster-list-display-name.html',
+        cellTemplate: 'modules/hercules/service-specific-cluster-lists/cluster-list-display-name.html',
         width: '35%'
       }, {
         field: 'serviceStatus',
         displayName: $translate.instant('hercules.overview.status-title'),
-        cellTemplate: 'modules/hercules/cluster-list/cluster-list-status.html',
+        cellTemplate: 'modules/hercules/service-specific-cluster-lists/cluster-list-status.html',
         width: '65%'
       }]
     };
