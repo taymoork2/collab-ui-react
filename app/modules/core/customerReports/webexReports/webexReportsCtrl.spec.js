@@ -1,12 +1,15 @@
 describe('Controller: Customer Reports Ctrl', function () {
   var controller, WebexReportService, WebExApiGatewayService, Userservice;
 
+  afterEach(function () {
+    controller = WebexReportService = WebExApiGatewayService = Userservice = undefined;
+  });
+
   beforeEach(function () {
     this.initModules('Core');
     this.injectDependencies('$controller',
                             '$scope',
-                            '$q',
-                            'Authinfo');
+                            '$q');
     WebexReportService = {
       initReportsObject: function () {}
     };

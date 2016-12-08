@@ -2,7 +2,6 @@
 
 describe('controller: CbgRequestCtrl', function () {
   var $q, defer, $scope, $controller, $stateParams, controller, cbgService, Notification;
-  // var spData = getJSONFixture('gemini/custom.json');
   var cbgsData = getJSONFixture('gemini/callbackGroups.json');
 
   beforeEach(angular.mock.module('Core'));
@@ -45,7 +44,7 @@ describe('controller: CbgRequestCtrl', function () {
     controller.hideCountries = 'American';
     controller.resetFile();
     expect(controller.model.file).toBe(null);
-    expect(controller.model.postData.countries).toBe(null);
+    expect(controller.model.postData.countries.length).toBe(0);
     expect(controller.hideCountries).toBe(null);
   });
 

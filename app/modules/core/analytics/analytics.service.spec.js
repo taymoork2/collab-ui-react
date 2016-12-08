@@ -15,9 +15,16 @@ describe('Service: Analytics', function () {
     }
   };
 
-
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
+
+  afterEach(function () {
+    Config = Analytics = Authinfo = Orgservice = $q = $scope = $state = TrialService = UserListService = undefined;
+  });
+
+  afterAll(function () {
+    trialData = customerData = getOrgData = listUsersData = undefined;
+  });
 
   beforeEach(inject(dependencies));
   beforeEach(initSpies);

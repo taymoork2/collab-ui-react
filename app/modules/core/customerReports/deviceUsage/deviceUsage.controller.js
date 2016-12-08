@@ -318,6 +318,8 @@ require('./_device-usage.scss');
       })
       .catch(function (err) {
         $log.warn("Export failed", err);
+        vm.exporting = false;
+        Notification.notify("An error occured while exporting usage data", 'error');
       });
     }
 

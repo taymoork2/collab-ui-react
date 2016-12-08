@@ -13,6 +13,8 @@
     var vm = this;
     vm.searchByParameters = searchByParameters;
     vm.goToSearchPage = goToSearchPage;
+    vm.searchByService = searchByService;
+    vm.advancedSearch = advancedSearch;
     vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;
     vm.runReport = runReport;
@@ -34,10 +36,13 @@
     vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchByEmailPlaceholder');
     vm.searchByOptions = ['Email ID', 'Room ID'];
     vm.searchBySelected = '' || vm.searchByOptions[0];
-    vm.searchByRoom = false;
+    vm.searchModel = '';
 
     vm.searchResults = {
-      emailAddresses: []
+      emailAddresses: [],
+      numFiles: null,
+      numMessages: null,
+      totalSize: null
     };
 
     /* generate report status pages */
@@ -139,12 +144,32 @@
 
     function searchByParameters() {
       if (_.eq(vm.searchByOptions[0], vm.searchBySelected)) {
-        vm.searchByRoom = false;
         vm.searchPlaceholder = $translate.instant("ediscovery.searchParameters.searchByEmailPlaceholder");
       } else if (_.eq(vm.searchByOptions[1], vm.searchBySelected)) {
-        vm.searchByRoom = true;
         vm.searchPlaceholder = $translate.instant("ediscovery.searchParameters.searchByRoomPlaceholder");
       }
+    }
+
+    function searchByService() {
+      if (_.eq(vm.searchByOptions[0], vm.searchBySelected)) {
+        advancedSearch();
+      } else if (_.eq(vm.searchByOptions[1], vm.searchBySelected)) {
+        searchForRoom(vm.searchModel);
+      }
+    }
+
+    function advancedSearch() {
+      vm.searchingForRoom = true;
+      EdiscoveryService.getArgonautServiceUrl(vm.searchModel, 'kms://cisco.com/keys/7831cef0-f0ad-4327-a170-465c88dab9d1', vm.searchCriteria.startDate, vm.searchCriteria.endDate)
+        .then(function (result) {
+          vm.roomInfo = result;
+          vm.searchResults.numFiles = result.data.numFiles;
+          vm.searchResults.numMessages = result.data.numMessages;
+          vm.searchResults.totalSize = result.data.totalSizeInBytes;
+        })
+        .finally(function () {
+          vm.searchingForRoom = false;
+        });
     }
 
     function searchForRoom(roomId) {
@@ -230,7 +255,7 @@
 
     function searchButtonDisabled() {
       var disable = !vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true;
-      return vm.ediscoveryToggle ? (disable || !vm.searchByRoom) : disable;
+      return !vm.ediscoveryToggle ? (disable && vm.searchModel === '') : disable;
     }
 
     function pollAvalonReport() {

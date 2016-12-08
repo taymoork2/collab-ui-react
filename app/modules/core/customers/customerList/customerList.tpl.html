@@ -2,9 +2,9 @@
   <cs-page-header title="{{::'customerPage.title' | translate}}"></cs-page-header>
   <cs-page-sub-header>
     <cs-page-sub-header-left>
-      <cs-searchfilter filters="filters" search-item-fn="filterList(searchStr)">
+      <cs-searchfilter filters="filters" search-item-fn="customerList.filterList(searchStr)">
       </cs-searchfilter>
-      <div cs-dropdown class="table-filter" ng-if="!isCustomerPartner && !customerListToggle">
+      <div cs-dropdown class="table-filter" ng-if="!customerList.isCustomerPartner && !customerList.customerListToggle">
         <div cs-dropdown-toggle class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm' || breakpoint === 'screen-md'">
           <span class="name" ng-if="activeFilter === 'all'" translate="customerPage.all"></span>
           <span class="name" ng-if="activeFilter === 'trials'" translate="customerPage.trial"></span>
@@ -13,12 +13,12 @@
         <div ng-include="'modules/core/customers/customerList/customerFilters.tpl.html'" cs-dropdown-menu ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm' || breakpoint === 'screen-md'"></div>
         <div ng-include="'modules/core/customers/customerList/customerFilters.tpl.html'" ng-if="breakpoint === 'screen-lg'"></div>
       </div>
-      <div ng-if="customerListToggle">
-        <span translate="customerPage.allCustomers"/> <span class="count">{{totalOrgs}}</span>
+      <div ng-if="customerList.customerListToggle">
+        <span translate="customerPage.allCustomers"/> <span class="count">{{customerList.totalOrgs}}</span>
       </div>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <cs-select ng-if="customerListToggle" class="filter-dropdown" ng-model="filter.selected" options="filter.options" placeholder="filter.placeholder" multi="true" singular="filter" plural="filters"></cs-select>
+      <cs-select ng-if="customerList.customerListToggle" class="filter-dropdown" ng-model="customerList.filter.selected" options="customerList.filter.options" placeholder="customerList.filter.placeholder" multi="true" singular="filter" plural="filters"></cs-select>
       <div class="center" ng-controller="ExportCSVCtrl">
         <a id="export-btn" class="export-users" ng-if="!exporting" ng-csv="exportCSV()" filename="{{'customerPage.csvFilename' | translate}}">
           <span id="export-icon"><i class="icon icon-content-share icon-lg" tooltip-placement="top" tooltip="{{'customerPage.csvBtnTitle' | translate}}" tooltip-animation="false"  tooltip-append-to-body="true"></i></span>
@@ -26,12 +26,12 @@
         <a id="export-in-progress" class="export-users" ng-if="exporting">
           <span id="exporting-icon"><i class="icon icon-spinner icon-lg" tooltip-placement="top" tooltip="{{'customerPage.csvBtnExportingTitle' | translate}}" tooltip-animation="false"  tooltip-append-to-body="true"></i></span>
         </a>
-        <button id="addTrial" class="btn btn--people add-button" ng-if="!isCustomerPartner" ng-click="openAddTrialModal()" translate="customerPage.addTrial"></button>
+        <button id="addTrial" class="btn btn--people add-button" ng-if="!customerList.isCustomerPartner" ng-click="customerList.openAddTrialModal()" translate="customerPage.addTrial"></button>
       </div>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
-    <div id="customerListPanel" class="gridStyle" ui-grid="gridOptions" ui-grid-selection ui-grid-infinite-scroll ui-grid-resize-columns ui-grid-move-columns></div>
-    <div class="grid-refresh" ng-if="showManagedOrgsRefresh">
+    <div id="customerListPanel" class="gridStyle" ui-grid="customerList.gridOptions" ui-grid-selection ui-grid-infinite-scroll ui-grid-resize-columns ui-grid-move-columns></div>
+    <div class="grid-refresh" ng-if="customerList.showManagedOrgsRefresh">
       <i class='icon icon-spinner icon-2x'></i>
     </div>
 </div>

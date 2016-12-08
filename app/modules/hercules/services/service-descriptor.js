@@ -57,40 +57,33 @@
       });
     };
 
-    var getEmailSubscribers = function (serviceId, callback) {
-      $http
+    var getEmailSubscribers = function (serviceId) {
+      return $http
         .get(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
-        .success(function (data) {
+        .then(function (response) {
+          var data = response.data;
           var service = _.find(data.items, {
             id: serviceId
           });
-          if (service === undefined) {
-            callback(false);
-          } else {
-            callback(null, service.emailSubscribers);
+          if (service !== undefined) {
+            return _.without(service.emailSubscribers.split(','), '');
           }
-        })
-        .error(function () {
-          callback(arguments);
+          return [];
         });
     };
 
-    var setEmailSubscribers = function (serviceId, emailSubscribers, callback) {
-      $http
+    var setEmailSubscribers = function (serviceId, emailSubscribers) {
+      return $http
         .patch(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
           emailSubscribers: emailSubscribers
-        })
-        .then(function (res) {
-          callback(res.status);
         });
     };
 
-    var getDisableEmailSendingToUser = function () {
+    var getOrgSettings = function () {
       return Orgservice.getOrg(_.noop, Authinfo.getOrgId(), true)
         .then(function (response) {
-          var settings = response.data.orgSettings;
-          if (!_.isEmpty(settings)) {
-            return settings.calSvcDisableEmailSendingToEndUser;
+          if (!_.isEmpty(response.data.orgSettings)) {
+            return response.data.orgSettings;
           }
         });
     };
@@ -98,6 +91,14 @@
     var setDisableEmailSendingToUser = function (calSvcDisableEmailSendingToEndUser) {
       var settings = {
         calSvcDisableEmailSendingToEndUser: !!calSvcDisableEmailSendingToEndUser
+      };
+
+      return Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
+    };
+
+    var setOneButtonToPushIntervalMinutes = function (bgbIntervalMinutes) {
+      var settings = {
+        bgbIntervalMinutes: bgbIntervalMinutes
       };
 
       return Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
@@ -169,8 +170,9 @@
       servicesInOrg: servicesInOrg,
       getEmailSubscribers: getEmailSubscribers,
       setEmailSubscribers: setEmailSubscribers,
-      getDisableEmailSendingToUser: getDisableEmailSendingToUser,
+      getOrgSettings: getOrgSettings,
       setDisableEmailSendingToUser: setDisableEmailSendingToUser,
+      setOneButtonToPushIntervalMinutes: setOneButtonToPushIntervalMinutes,
       enableService: enableService,
       disableService: disableService,
     };

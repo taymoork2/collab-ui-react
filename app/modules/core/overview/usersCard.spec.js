@@ -12,6 +12,14 @@ describe('OverviewUsersCard', function () {
     totalResults: 0
   };
 
+  afterEach(function () {
+    $rootScope = OverviewUsersCard = card = undefined;
+  });
+
+  afterAll(function () {
+    convertUserData = userData = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
 
   function dependencies(_OverviewUsersCard_, _$rootScope_) {

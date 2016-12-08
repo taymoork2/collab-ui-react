@@ -14,7 +14,6 @@
 
     vm.customerOrgId = undefined;
     vm.licenseCountChanged = false;
-    vm.showWebex = false;
     vm.showRoomSystems = false;
     vm.showContextServiceTrial = false;
     vm.showCare = false;
@@ -135,9 +134,6 @@
         id: 'webexTrial',
         class: '',
       },
-      'hideExpression': function () {
-        return !vm.showWebex;
-      },
       expressionProperties: {
         'templateOptions.disabled': function () {
           return vm.preset.webex;
@@ -181,10 +177,10 @@
       },
       expressionProperties: {
         'templateOptions.required': function () {
-          return vm.messageTrial.enabled; // Since, it depends on Message Offer
+          return (vm.messageTrial.enabled && vm.callTrial.enabled); // Since, it depends on Message and Call Offer
         },
         'templateOptions.disabled': function () {
-          return messageOfferDisabledExpression() || vm.preset.care;
+          return messageOfferDisabledExpression() || callOfferDisabledExpression() || vm.preset.care;
         }
       }
     }, {
@@ -439,6 +435,7 @@
       hasEnabledAnyTrial: hasEnabledAnyTrial,
 
       messageOfferDisabledExpression: messageOfferDisabledExpression,
+      callOfferDisabledExpression: callOfferDisabledExpression,
       careLicenseInputDisabledExpression: careLicenseInputDisabledExpression,
       validateCareLicense: validateCareLicense,
       careLicenseCountLessThanTotalCount: careLicenseCountLessThanTotalCount
@@ -472,8 +469,6 @@
           vm.sparkBoardTrial.enabled = vm.preset.sparkBoard;
           vm.webexTrial.enabled = vm.preset.webex;
           vm.meetingTrial.enabled = vm.preset.meeting;
-          // TODO: we enable globally by defaulting to 'true' here, but will revisit and refactor codepaths in a subsequent PR
-          vm.showWebex = true;
           vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
           vm.messageTrial.enabled = vm.preset.message;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;
@@ -815,6 +810,13 @@
         vm.careTrial.enabled = false;
       }
       return !vm.messageTrial.enabled;
+    }
+
+    function callOfferDisabledExpression() {
+      if (!vm.callTrial.enabled) {
+        vm.careTrial.enabled = false;
+      }
+      return !vm.callTrial.enabled;
     }
 
     function careLicenseInputDisabledExpression() {

@@ -5,6 +5,10 @@ describe('Auth Service', function () {
 
   var Auth, Authinfo, $httpBackend, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig, WindowLocation, TokenService;
 
+  afterEach(function () {
+    Auth = Authinfo = $httpBackend = SessionStorage = $rootScope = $state = $q = OAuthConfig = UrlConfig = WindowLocation = TokenService = undefined;
+  });
+
   beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _SessionStorage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
     $q = _$q_;
     Auth = _Auth_;

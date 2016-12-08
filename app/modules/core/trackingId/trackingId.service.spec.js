@@ -7,6 +7,14 @@
     var SEPARATOR = "_";
     var TrackingId, $http;
 
+    afterEach(function () {
+      TrackingId = $http = undefined;
+    });
+
+    afterAll(function () {
+      SEPARATOR = undefined;
+    });
+
     beforeEach(inject(function (_TrackingId_, _$http_) {
       TrackingId = _TrackingId_;
       $http = _$http_;

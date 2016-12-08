@@ -56,7 +56,6 @@
     // Navigate trial modal in this order
     vm.navOrder = ['trialAdd.info', 'trialAdd.webex', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call'];
     vm.navStates = ['trialAdd.info'];
-    vm.showWebex = false;
     vm.startTrial = startTrial;
     vm.setDeviceModal = setDeviceModal;
     vm.devicesModal = _.find(vm.trialStates, {
@@ -218,9 +217,6 @@
         id: webexTemplateOptionId,
         label: $translate.instant('trials.webex')
       },
-      hideExpression: function () {
-        return !vm.showWebex;
-      },
     }];
 
     vm.callFields = [{
@@ -348,10 +344,11 @@
       },
       expressionProperties: {
         'templateOptions.required': function () {
-          return vm.messageTrial.enabled; // Since, it depends on Message Offer
+          return (vm.messageTrial.enabled && vm.callTrial.enabled); // Since, it depends on Message and Call Offer
         },
         'templateOptions.disabled': function () {
-          return vm.messageOfferDisabledExpression();
+          return vm.messageOfferDisabledExpression()
+            || vm.callOfferDisabledExpression();
         }
       }
     }, {
@@ -486,6 +483,7 @@
     vm.hasUserServices = hasUserServices;
 
     vm.messageOfferDisabledExpression = messageOfferDisabledExpression;
+    vm.callOfferDisabledExpression = callOfferDisabledExpression;
     vm.careLicenseInputDisabledExpression = careLicenseInputDisabledExpression;
     vm.validateCareLicense = validateCareLicense;
     vm.careLicenseCountLessThanTotalCount = careLicenseCountLessThanTotalCount;
@@ -516,11 +514,7 @@
           vm.showContextServiceTrial = true;
           vm.atlasCreateTrialBackendEmailEnabled = results.atlasCreateTrialBackendEmail;
           vm.atlasTrialsShipDevicesEnabled = results.atlasTrialsShipDevices;
-
-          if (vm.webexTrial.enabled) {
-            vm.showWebex = true;
-            updateTrialService(messageTemplateOptionId);
-          }
+          updateTrialService(messageTemplateOptionId);
 
           vm.showCare = results.atlasCareTrials;
           vm.careTrial.enabled = results.atlasCareTrials;
@@ -579,6 +573,13 @@
         vm.careTrial.enabled = false;
       }
       return !vm.messageTrial.enabled;
+    }
+
+    function callOfferDisabledExpression() {
+      if (!vm.callTrial.enabled) {
+        vm.careTrial.enabled = false;
+      }
+      return !vm.callTrial.enabled;
     }
 
     function careLicenseInputDisabledExpression() {
