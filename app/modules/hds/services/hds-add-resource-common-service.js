@@ -20,7 +20,6 @@
       vm.clusterList = [];
       vm.onlineNodeList = [];
       vm.offlineNodeList = [];
-      var deferred = $q.defer();
       FusionClusterService.getAll()
         .then(function (clusters) {
           vm.clusters = _.filter(clusters, { targetType: 'hds_app' });
@@ -37,10 +36,10 @@
             }
           });
           vm.clusterList.sort();
-          deferred.resolve(vm.clusterList);
+          $q.resolve(vm.clusterList);
         });
 
-      return deferred.promise;
+      return $q.resolve();
     }
 
     function addRedirectTargetClicked(hostName, enteredCluster) {
