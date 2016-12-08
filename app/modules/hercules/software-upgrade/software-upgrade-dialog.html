@@ -6,11 +6,16 @@
 </div>
 <div class="modal-body hercules-fix-paragraphs hercules-settings-table">
   <p>
-    <span translate="hercules.softwareUpgrade.explanation" translate-values="{connectorType: softwareUpgradeCtrl.connectorName, newVersion: softwareUpgradeCtrl.availableVersion}"></span>
+    <span translate="hercules.softwareUpgrade.explanation"
+          translate-values="{connectorType: softwareUpgradeCtrl.connectorName, newVersion: softwareUpgradeCtrl.availableVersion}"></span>
     <span><strong>{{softwareUpgradeCtrl.clusterName}}</strong>.</span>
   </p>
   <p>
-    <strong><span translate="hercules.softwareUpgrade.releaseNotes"></span></strong><span class="preserve-newlines">: {{softwareUpgradeCtrl.releaseNotes}}</span>
+    <strong><span translate="hercules.softwareUpgrade.releaseNotes"></span></strong><span
+    ng-show="softwareUpgradeCtrl.releaseNotesUrl === ''"
+    class="preserve-newlines">: {{softwareUpgradeCtrl.releaseNotes}}</span>
+    <span ng-show="softwareUpgradeCtrl.releaseNotesUrl !== ''">: <a href={{softwareUpgradeCtrl.releaseNotesUrl}}
+                                                                    target="_blank">{{softwareUpgradeCtrl.releaseNotesUrl}}</a></span>
   </p>
 </div>
 <div class="modal-footer">
