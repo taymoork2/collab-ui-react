@@ -476,6 +476,20 @@ describe('Controller: TrialEditCtrl:', function () {
         });
       });
 
+      describe('callOfferDisabledExpression:', function () {
+        it('should be disabled if call is disabled.', function () {
+          controller.careTrial.enabled = true;
+          controller.callTrial.enabled = false;
+          expect(helpers.callOfferDisabledExpression()).toBeTruthy();
+          expect(controller.careTrial.enabled).toBeFalsy();
+
+          controller.callTrial.enabled = true;
+          expect(helpers.callOfferDisabledExpression()).toBeFalsy();
+          //Care is a choice to enable/disable when Call is enabled.
+          expect(controller.careTrial.enabled).toBeFalsy();
+        });
+      });
+
       describe('careLicenseInputDisabledExpression:', function () {
         it('care license count disabled expression returns false in happy scenario.', function () {
           controller.careTrial.enabled = true;
@@ -550,6 +564,7 @@ describe('Controller: TrialEditCtrl:', function () {
       it('should enable care checkbox in edit trial when care was not already selected in start trial', function () {
         controller.preset.care = false;
         controller.messageTrial.enabled = true;
+        controller.callTrial.enabled = true;
         var isDisabled = controller.careFields[0].expressionProperties['templateOptions.disabled']();
         expect(isDisabled).toBeFalsy();
       });
@@ -557,6 +572,15 @@ describe('Controller: TrialEditCtrl:', function () {
       it('should disable care checkbox in edit trial when message was not selected in start trial', function () {
         controller.preset.care = false;
         controller.messageTrial.enabled = false;
+        controller.callTrial.enabled = true;
+        var isDisabled = controller.careFields[0].expressionProperties['templateOptions.disabled']();
+        expect(isDisabled).toBeTruthy();
+      });
+
+      it('should disable care checkbox in edit trial when call was not selected in start trial', function () {
+        controller.preset.care = false;
+        controller.messageTrial.enabled = true;
+        controller.callTrial.enabled = false;
         var isDisabled = controller.careFields[0].expressionProperties['templateOptions.disabled']();
         expect(isDisabled).toBeTruthy();
       });
