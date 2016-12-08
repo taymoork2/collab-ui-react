@@ -11,7 +11,7 @@
   <div ng-class="{invisible: !externalNumbers.filter}" class="filter-count" translate="externalNumberPanel.searchResults" translate-values="{count: filteredNumbers.length}" translate-interpolation="messageformat">
   </div>
   <ul class="list-group">
-    <li class="list-group-item list-token" ng-class="{'invalid-token': number.pattern === number.label}" ng-repeat="number in filteredNumbers = (numbers | externalNumberList: externalNumbers.filter) | orderBy:'pattern'">
+    <li class="list-group-item list-token" ng-repeat="number in filteredNumbers = (numbers | externalNumberList: externalNumbers.filter) | orderBy:'pattern'">
       <span ng-bind="::number.label"></span>
       <button ng-if="number.uuid && !number.directoryNumber" type="button" class="close" ng-click="externalNumbers.deleteNumber(number)">
         <span class="sr-only" translate="common.delete"></span>
