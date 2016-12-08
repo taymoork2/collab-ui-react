@@ -165,7 +165,6 @@
     }
 
     function notifyPartnerTrialExt() {
-      var data = _trialData;
       var notifyPartnerTrialExtUrl = UrlConfig.getAdminServiceUrl() + '/trials/notifypartnertrialextinterest';
 
       function logNotifyPartnerTrialExtMetric(data, status) {
