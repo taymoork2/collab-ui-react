@@ -32,7 +32,8 @@
       calcDaysUsed: calcDaysUsed,
       getExpirationPeriod: getExpirationPeriod,
       shallowValidation: shallowValidation,
-      getDaysLeftForCurrentUser: getDaysLeftForCurrentUser
+      getDaysLeftForCurrentUser: getDaysLeftForCurrentUser,
+      notifyPartnerTrialExt: notifyPartnerTrialExt
     };
 
     return service;
@@ -161,6 +162,19 @@
       return $http.post(trialsUrl, trialData)
         .success(logStartTrialMetric)
         .error(logStartTrialMetric);
+    }
+
+    function notifyPartnerTrialExt() {
+      var data = _trialData;
+      var notifyPartnerTrialExtUrl = UrlConfig.getAdminServiceUrl() + '/trials/notifypartnertrialextinterest';
+
+      function logNotifyPartnerTrialExtMetric(data, status) {
+        LogMetricsService.logMetrics('Notify partner to extend trial', LogMetricsService.getEventType('trialExtPartnerNotify'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, null);
+      }
+
+      return $http.post(notifyPartnerTrialExtUrl)
+        .success(logNotifyPartnerTrialExtMetric)
+        .error(logNotifyPartnerTrialExtMetric);
     }
 
     function getData() {
