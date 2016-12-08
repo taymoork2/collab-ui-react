@@ -44,12 +44,12 @@
 <cs-card-layout>
   <cs-card-member
     ng-repeat="member in $ctrl.members track by member.memberUuid"
-    type="simple"
-    member-type="{{member.memberType}}"
-    id="{{member.memberUuid}}"
-    title="{{member.memberName}}"
-    subtitle="{{member.number}}"
-    image="{{member.thumbnailSrc}}"
+    cs-type="simple"
+    cs-member-type="member.memberType"
+    cs-id="member.memberUuid"
+    cs-title="member.memberName"
+    cs-subtitle="member.number"
+    cs-image="member.thumbnailSrc"
     on-remove="$ctrl.unSelectCallParkMember(member)">
   </cs-card-member>
 </cs-card-layout>
