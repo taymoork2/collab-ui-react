@@ -5,10 +5,12 @@
     .controller('DevicesCtrl',
 
       /* @ngInject */
-      function ($q, $scope, $state, $translate, $templateCache, Userservice, DeviceFilter, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, FeatureToggleService) {
+      function ($log, $q, $scope, $state, $translate, $templateCache, Userservice, DeviceFilter, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, FeatureToggleService, $modal, Notification, DeviceExportService) {
         var vm = this;
         var filteredDevices = [];
         vm.addDeviceIsDisabled = true;
+        vm.exportProgressDialog = undefined;
+
         AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
           vm.showLicenseWarning = !!_.find(data.accounts, {
             licenses: [{
@@ -36,7 +38,10 @@
           var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
             vm.csdmHybridCallFeature = feature;
           });
-          $q.all([darlingPromise, ataPromise, pstnPromise, hybridPromise, fetchDetailsForLoggedInUser()]).finally(function () {
+          var deviceExportPromise = FeatureToggleService.atlasDeviceExportGetStatus().then(function (result) {
+            vm.deviceExportFeature = result;
+          });
+          $q.all([darlingPromise, ataPromise, pstnPromise, hybridPromise, deviceExportPromise, fetchDetailsForLoggedInUser()]).finally(function () {
             vm.addDeviceIsDisabled = false;
           });
         }
@@ -252,6 +257,55 @@
           $state.go(wizard.state().currentStateName, {
             wizard: wizard
           });
+        };
+
+        vm.startDeviceExport = function () {
+          $modal.open({
+            templateUrl: "modules/squared/devices/export/devices-export.html",
+            type: 'dialog'
+          }).result.then(function () {
+            DeviceExportService.exportDevices(vm.exportStatus);
+          }, function () {
+            $log.info("Export cancelled");
+          });
+        };
+
+        vm.exportStatus = function (percent) {
+          if (percent == 0) {
+            vm.exporting = true;
+            vm.exportProgressDialog = $modal.open({
+              templateUrl: "modules/squared/devices/export/devices-export-progress.html",
+              type: 'dialog',
+              controller: function () {
+                $scope.cancelExport = function () {
+                  DeviceExportService.cancelExport();
+                };
+              },
+              scope: $scope
+            });
+            vm.exportProgressDialog.result.then(function () {
+            }, function (err) {
+              $log.warn("Export stopped while in progress, reason:", err)
+              //Notification.notify('spacesPage.export.deviceExportCancelled', 'error');
+              //vm.exporting = false;
+            });
+          } else if (percent > 0 && percent < 100) {
+            // progress percentage not implemented
+          } else if (percent == 100) {
+            vm.exporting = false;
+            vm.exportProgressDialog.close("success");
+            var title = $translate.instant('spacesPage.export.exportCompleted');
+            var text = $translate.instant('spacesPage.export.deviceListReadyForDownload');
+            Notification.notify(text, 'success', title);
+          } else if (percent == -1) {
+            vm.exporting = false;
+            var text = $translate.instant('spacesPage.export.deviceExportCancelled');
+            Notification.notify(text, 'warn');
+            vm.exportProgressDialog.close();
+          } else {
+            vm.exporting = false;
+            $log.warn("Unexpected export state!");
+          }
         };
 
         function getTemplate(name) {

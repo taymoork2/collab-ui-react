@@ -160,6 +160,7 @@ describe('Controller: DevicesCtrl', function () {
       spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(true));
       spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.when(true));
+      spyOn(FeatureToggleService, 'atlasDeviceExportGetStatus').and.returnValue($q.when(true));
     });
 
     it('should resolve toggle loading', function () {
@@ -187,4 +188,75 @@ describe('Controller: DevicesCtrl', function () {
       expect(controller.addDeviceIsDisabled).toBeFalsy();
     });
   });
+
+  describe('export device data', function () {
+    var $modal, DeviceExportService, fakeModal, Notification;
+    beforeEach(inject(function (_$modal_, _DeviceExportService_, _Notification_) {
+      $modal = _$modal_;
+      DeviceExportService = _DeviceExportService_;
+      Notification = _Notification_;
+    }));
+
+    beforeEach(function () {
+
+      fakeModal = {
+        result: {
+          then: function (okCallback, cancelCallback) {
+            this.okCallback = okCallback;
+            this.cancelCallback = cancelCallback;
+          }
+        },
+        close: function (item) {
+          this.result.okCallback(item);
+        },
+        dismiss: function (type) {
+          this.result.cancelCallback(type);
+        }
+      };
+      spyOn($modal, 'open').and.returnValue(fakeModal);
+      spyOn(Notification, 'notify');
+
+    });
+
+    it('exports device data after acknowledged in modal', function () {
+      spyOn(DeviceExportService, 'exportDevices');
+      controller.startDeviceExport();
+      expect($modal.open).toHaveBeenCalled();
+      fakeModal.close();
+      expect(DeviceExportService.exportDevices).toHaveBeenCalled();
+    });
+
+    it('does not export device data after rejected in modal', function () {
+      spyOn(DeviceExportService, 'exportDevices');
+      controller.startDeviceExport();
+      expect($modal.open).toHaveBeenCalled();
+      fakeModal.dismiss();
+      expect(DeviceExportService.exportDevices).not.toHaveBeenCalled();
+    });
+
+    it('exports status 0 indicates that export has started and a cancel modal is shown', function () {
+      controller.exportStatus(0);
+      expect(controller.exporting).toBeTruthy();
+      expect($modal.open).toHaveBeenCalled();
+      expect(controller.exporting).toBeTruthy();
+    });
+
+    it('exports status 100 indicates export progress finished', function () {
+      controller.exportStatus(0);
+      expect(controller.exporting).toBeTruthy();
+      controller.exportStatus(100);
+      expect(Notification.notify).toHaveBeenCalledWith('spacesPage.export.deviceListReadyForDownload', 'success', 'spacesPage.export.exportCompleted');
+      expect(controller.exporting).toBeFalsy();
+    });
+
+    it('export cancelled mid-flight closes the dialog and shows a toaster', function () {
+      controller.exportStatus(0);
+      expect(controller.exporting).toBeTruthy();
+      controller.exportStatus(-1);
+      expect(Notification.notify).toHaveBeenCalledWith('spacesPage.export.deviceExportCancelled', 'warn');
+      expect(controller.exporting).toBeFalsy();
+    });
+
+  })
+
 });
