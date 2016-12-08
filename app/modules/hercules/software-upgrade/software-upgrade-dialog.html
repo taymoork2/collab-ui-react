@@ -11,11 +11,12 @@
     <span><strong>{{softwareUpgradeCtrl.clusterName}}</strong>.</span>
   </p>
   <p>
-    <strong><span translate="hercules.softwareUpgrade.releaseNotes"></span></strong><span
-    ng-show="softwareUpgradeCtrl.releaseNotesUrl === ''"
-    class="preserve-newlines">: {{softwareUpgradeCtrl.releaseNotes}}</span>
-    <span ng-show="softwareUpgradeCtrl.releaseNotesUrl !== ''">: <a href={{softwareUpgradeCtrl.releaseNotesUrl}}
-                                                                    target="_blank">{{softwareUpgradeCtrl.releaseNotesUrl}}</a></span>
+    <strong><span translate="hercules.softwareUpgrade.releaseNotes"></span></strong><br>
+    <span
+      ng-hide="softwareUpgradeCtrl.releaseNotesUrl"
+      class="preserve-newlines">{{softwareUpgradeCtrl.releaseNotes}}</span>
+    <span ng-show="softwareUpgradeCtrl.releaseNotesUrl"><a href={{softwareUpgradeCtrl.releaseNotesUrl}}
+                                                           target="_blank">{{softwareUpgradeCtrl.releaseNotesUrl}}</a></span>
   </p>
 </div>
 <div class="modal-footer">

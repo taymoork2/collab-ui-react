@@ -28,6 +28,10 @@ describe('Controller: SoftwareUpgradeController', function () {
     $scope.$apply();
   }));
 
+  afterEach(function () {
+    $scope.$destroy();
+  });
+
   function initController() {
     cluster = {
       "id": "a050fcc7-9ade-4790-a06d-cca596910421",
