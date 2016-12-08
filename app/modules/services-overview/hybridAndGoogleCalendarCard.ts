@@ -1,25 +1,74 @@
-import { ICardButton, ICardStatus, CardType } from './ServicesOverviewCard';
+import { ICardStatus, CardType } from './ServicesOverviewCard';
 import { IServiceStatus, filterAndGetCssStatus, filterAndGetTxtStatus, filterAndGetEnabledService } from './ServicesOverviewHybridCard';
-import { ServicesOverviewCard } from './ServicesOverviewCard';
+import { ICardButton, ServicesOverviewCard } from './ServicesOverviewCard';
 
 export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOverviewCard {
-  private canDisplay: ng.IDeferred<void> = this.$q.defer();
-  public googleActive: boolean = false;
+  private canDisplay: ng.IDeferred<boolean> = this.$q.defer();
   private googleStatus: ICardStatus;
 
-  // Don't care but because of ServicesOverviewCard we have to do something
-  public getShowMoreButton(): ICardButton | undefined {
+  public googleActive: boolean = false;
+
+  // We don't care about these methods this card,
+  // but because of ServicesOverviewCard we need a minimal implementation
+  public getShowMoreButton() {
     return undefined;
+  }
+  public getButtons() {
+    return [];
+  }
+
+  public areNoneActive() {
+    return !this.active && !this.googleActive;
+  }
+
+  public openChoiceModal() {
+    this.$modal.open({
+      controller: 'SelectCalendarServiceController',
+      controllerAs: 'vm',
+      templateUrl: 'modules/hercules/service-settings/calendar-service-setup/select-calendar-service-modal.html',
+    })
+    .result
+    .then((result) => {
+      if (result === 'exchange') {
+        this.firstTimeExchangeSetup();
+      } else if (result === 'google') {
+        this.firstTimeGoogleSetup();
+      }
+    });
+  }
+
+  private firstTimeExchangeSetup() {
+    this.$modal.open({
+      resolve: {
+        connectorType: () => 'c_cal',
+        servicesId: () => ['squared-fusion-cal'],
+        firstTimeSetup: true,
+      },
+      controller: 'AddResourceController',
+      controllerAs: 'vm',
+      templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
+      type: 'small',
+    });
+  }
+
+  private firstTimeGoogleSetup() {
+    this.$modal.open({
+      controller: 'FirstTimeGoogleSetupController',
+      controllerAs: 'vm',
+      templateUrl: 'modules/hercules/service-settings/calendar-service-setup/first-time-google-setup.html',
+    });
   }
 
   // Hybrid Calendar
-  private setupHybridCalendarButton: ICardButton = {
+  public setupHybridCalendarButton = {
     name: 'servicesOverview.genericButtons.setup',
-    routerState: 'calendar-service.list',
+    onClick: () => {
+      this.firstTimeExchangeSetup();
+    },
     buttonClass: 'btn btn--primary',
   };
 
-  private hybridCalendarButtons: Array<ICardButton> = [{
+  public hybridCalendarButtons: Array<ICardButton> = [{
     name: 'servicesOverview.cards.hybridCalendar.buttons.resources',
     routerState: 'calendar-service.list',
     buttonClass: 'btn-link',
@@ -30,32 +79,20 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
     buttonClass: 'btn-link',
   }];
 
-  public getButtons(): Array<ICardButton> {
-    if (this.active) {
-      return this.hybridCalendarButtons;
-    }
-    return [this.setupHybridCalendarButton];
-  }
-
   // Google Calendar
-  private setupGoogleCalendarButton: ICardButton = {
+  public setupGoogleCalendarButton = {
     name: 'servicesOverview.genericButtons.setup',
-    routerState: 'calendar-service.list',
+    onClick: () => {
+      this.firstTimeGoogleSetup();
+    },
     buttonClass: 'btn btn--primary',
   };
 
-  private googleCalendarButtons: Array<ICardButton> = [{
+  public googleCalendarButton: ICardButton = {
     name: 'servicesOverview.cards.hybridCalendar.buttons.settings',
-    routerState: 'calendar-service.settings',
+    routerState: 'google-calendar-service.settings',
     buttonClass: 'btn-link',
-  }];
-
-  public getGoogleButtons(): Array<ICardButton> {
-    if (this.googleActive) {
-      return this.googleCalendarButtons;
-    }
-    return [this.setupGoogleCalendarButton];
-  }
+  };
 
   public googleCalendarFeatureToggleEventHandler(hasFeature: boolean) {
     this.display = this.Authinfo.isFusionCal() && this.Authinfo.isFusionGoogleCal() && hasFeature;
@@ -65,7 +102,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
         .then((isSetup) => {
           // conveys the same as .active for Hybrid Calendar
           this.googleActive = isSetup;
-          this.canDisplay.resolve();
+          this.canDisplay.resolve(true);
           // Fake data for now
           this.googleStatus = {
             status: 'default',
@@ -98,10 +135,11 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
 
   /* @ngInject */
   public constructor(
-    private $q,
+    private $q: ng.IQService,
+    private $modal,
     private Authinfo,
     private CloudConnectorService,
-    private FusionClusterStatesService
+    private FusionClusterStatesService,
   ) {
     super({
       active: false,

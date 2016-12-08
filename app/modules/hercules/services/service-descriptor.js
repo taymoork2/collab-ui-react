@@ -57,31 +57,25 @@
       });
     };
 
-    var getEmailSubscribers = function (serviceId, callback) {
-      $http
+    var getEmailSubscribers = function (serviceId) {
+      return $http
         .get(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
-        .success(function (data) {
+        .then(function (response) {
+          var data = response.data;
           var service = _.find(data.items, {
             id: serviceId
           });
-          if (service === undefined) {
-            callback(false);
-          } else {
-            callback(null, service.emailSubscribers);
+          if (service !== undefined) {
+            return _.without(service.emailSubscribers.split(','), '');
           }
-        })
-        .error(function () {
-          callback(arguments);
+          return [];
         });
     };
 
-    var setEmailSubscribers = function (serviceId, emailSubscribers, callback) {
-      $http
+    var setEmailSubscribers = function (serviceId, emailSubscribers) {
+      return $http
         .patch(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
           emailSubscribers: emailSubscribers
-        })
-        .then(function (res) {
-          callback(res.status);
         });
     };
 
