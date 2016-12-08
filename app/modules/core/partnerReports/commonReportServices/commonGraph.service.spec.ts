@@ -9,7 +9,6 @@ describe('Service: Common Graph Service', () => {
   const BALLOON = 'balloon';
   const EXPORT = 'export';
   const PREFIXES = 'prefixesOfBigNumbers';
-  const SCROLL = 'scroll';
   const dummyData = 'dummyData';
 
   beforeEach(function () {
@@ -27,7 +26,6 @@ describe('Service: Common Graph Service', () => {
     expect(this.CommonGraphService.getBaseVariable(NUMFORMAT)).toEqual(responseData.baseVariables[NUMFORMAT]);
     expect(this.CommonGraphService.getBaseVariable(BALLOON)).toEqual(responseData.baseVariables[BALLOON]);
     expect(this.CommonGraphService.getBaseVariable(PREFIXES)).toEqual(responseData.baseVariables[PREFIXES]);
-    expect(this.CommonGraphService.getBaseVariable(SCROLL)).toEqual(responseData.baseVariables[SCROLL]);
 
     let exportVariable = this.CommonGraphService.getBaseVariable(EXPORT);
     expect(exportVariable).toEqual(responseData.baseVariables[EXPORT]);
@@ -39,7 +37,6 @@ describe('Service: Common Graph Service', () => {
   it('getBaseSerialGraph should return expected defaults for a column graph', function () {
     responseData.getBaseSerialGraph[BALLOON] = responseData.baseVariables[BALLOON];
     responseData.getBaseSerialGraph[EXPORT] = responseData.baseVariables[EXPORT];
-    responseData.getBaseSerialGraph[PREFIXES] = responseData.baseVariables[PREFIXES];
 
     let baseSerialGraph = this.CommonGraphService.getBaseSerialGraph(dummyData, dummyData, dummyData, dummyData, dummyData, dummyData);
     expect(baseSerialGraph).toEqual(responseData.getBaseSerialGraph);

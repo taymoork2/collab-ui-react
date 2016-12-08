@@ -15,7 +15,7 @@
       require('modules/core/scripts/services/sessionstorage'),
       require('modules/core/scripts/services/storage'),
       require('modules/core/scripts/services/utils'),
-      require('modules/core/windowLocation/windowLocation'),
+      require('modules/core/window').default,
     ])
     .factory('Auth', Auth)
     .name;

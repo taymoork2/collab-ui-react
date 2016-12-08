@@ -7,6 +7,14 @@ describe('Controller: TrialDeviceController', function () {
   var trialData = getJSONFixture('core/json/trials/trialData.json');
   var limitData = {};
 
+  afterEach(function () {
+    controller = scope = undefined;
+  });
+
+  afterAll(function () {
+    trialData = limitData = undefined;
+  });
+
   beforeEach(angular.mock.module('core.trial'));
   beforeEach(angular.mock.module('Core'));
   // TODO - check for removal of Huron and Sunlight when MX300 are officially supported

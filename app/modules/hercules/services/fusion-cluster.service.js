@@ -283,12 +283,7 @@
         })
         .value();
 
-      // if no data or invalid data, assume that something is wrong
-      if (statuses.length === 0) {
-        return 'outage';
-      }
-
-      if (_.every(statuses, function (value) {
+      if (statuses.length === 0 || _.every(statuses, function (value) {
         return value === 'not_installed';
       })) {
         return 'setupNotComplete';
@@ -341,10 +336,6 @@
     }
 
     function processClustersToSeeIfServiceIsSetup(serviceId, clusterList) {
-      if (!Authinfo.isEntitled(serviceId)) {
-        return false;
-      }
-
       var connectorType = FusionUtils.serviceId2ConnectorType(serviceId);
       if (connectorType === '') {
         return false; // Cannot recognize service, default to *not* enabled
@@ -392,11 +383,13 @@
     }
 
     function getStatusForService(serviceId, clusterList) {
-      return {
+      var serviceStatus = {
         serviceId: serviceId,
         setup: processClustersToSeeIfServiceIsSetup(serviceId, clusterList),
-        status: processClustersToAggregateStatusForService(serviceId, clusterList)
+        status: processClustersToAggregateStatusForService(serviceId, clusterList),
       };
+      serviceStatus.statusCss = FusionClusterStatesService.getStatusIndicatorCSSClass(serviceStatus.status);
+      return serviceStatus;
     }
 
     function addUserCount(response) {

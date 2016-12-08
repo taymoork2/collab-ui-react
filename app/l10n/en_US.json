@@ -508,6 +508,7 @@
     "custom2": "custom selection",
     "customerLoadError": "There was an error while loading the customer list.",
     "unauthorizedError": "User is not authorized to access the customer reports.",
+    "conversationError": "There was an error while loading room and file data.",
     "webex": "WebEx Reports",
     "devReports": "Development Customer Reports",
     "sparkReports": "Spark Reports",
@@ -5443,9 +5444,10 @@
         "title": "Hybrid Services",
         "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Collaboration Platform.",
         "notEnabledActionText": "Learn More",
-        "serviceHeader": "On-Premises Status",
+        "serviceHeader": "Status",
         "services": {
-          "squared-fusion-cal": "Calendar",
+          "squared-fusion-cal": "Calendar (Exchange)",
+          "squared-fusion-gcal": "Calendar (Google)",
           "squared-fusion-uc": "Call",
           "squared-fusion-mgmt": "Management",
           "squared-fusion-media": "Media",
@@ -5688,8 +5690,6 @@
       "rejected": "Onboard email error",
       "resent": "Invite Resent"
     },
-    "enabledServices": "Active",
-    "availableServices": "Available",
     "webexsites": "WebEx Sites",
     "phoneNumbers": "Phone Numbers",
     "software": "Software",
@@ -5806,7 +5806,8 @@
     "resendMailSuccess": "Welcome email was successfully sent.",
     "resendMailFailure": "Failed to resend welcome email.",
     "editAdminEmailSuccess": "Admin email was updated successfully.",
-    "editAdminEmailFailure": "Failed to update admin email."
+    "editAdminEmailFailure": "Failed to update admin email.",
+    "userStatusEventLog": "User Status Event Log"
   },
   "activation": {
     "verificationComplete": "Verification Complete",

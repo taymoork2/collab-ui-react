@@ -9,6 +9,14 @@ describe('DeviceUsageRawService', function () {
   var day1 = 20161001;
   var day2 = 20161002;
 
+  afterAll(function () {
+    day1 = day2 = undefined;
+  });
+
+  afterEach(function () {
+    $timeout = DeviceUsageRawService = DeviceUsageMockData = undefined;
+  });
+
   beforeEach(inject(function (_$timeout_, _DeviceUsageRawService_, _DeviceUsageMockData_) {
     DeviceUsageRawService = _DeviceUsageRawService_;
     DeviceUsageMockData = _DeviceUsageMockData_;

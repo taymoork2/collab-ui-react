@@ -33,6 +33,7 @@
     vm.downloadLog = downloadLog;
     vm.isAuthorizedForLog = isAuthorizedForLog;
     vm.openExtendedInformation = openExtendedInformation;
+    vm.openHybridServicesModal = openHybridServicesModal;
     vm.supportsExtendedInformation = false;
     vm.cardsAvailable = false;
     vm._helpers = {
@@ -135,12 +136,18 @@
               case 'squared-fusion-cal':
                 vm.hybridServicesCard.cal.status = status;
                 break;
+              case 'squared-fusion-gcal':
+                vm.hybridServicesCard.gcal.status = status;
+                break;
               case 'squared-fusion-uc':
                 vm.hybridServicesCard.uc.status = status;
                 break;
               case 'squared-fusion-ec':
                 vm.hybridServicesCard.ec.status = status;
                 break;
+            }
+            if (status.lastStateChange) {
+              status.lastStateChangeText = moment(status.lastStateChange).fromNow(true);
             }
           });
         }, vm._helpers.notifyError);
@@ -209,6 +216,31 @@
 
     function notifyError(response) {
       Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
+    }
+
+    function openHybridServicesModal() {
+      vm.loadingHSData = true;
+      USSService.getUserJournal(vm.userId, vm.orgId, 20)
+        .then(function (hsData) {
+          $modal.open({
+            templateUrl: 'modules/squared/helpdesk/helpdesk-extended-information.html',
+            controller: 'HelpdeskExtendedInfoDialogController as modal',
+            resolve: {
+              title: function () {
+                return 'helpdesk.userStatusEventLog';
+              },
+              data: function () {
+                return hsData;
+              }
+            }
+          });
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        })
+        .finally(function () {
+          vm.loadingHSData = false;
+        });
     }
   }
 

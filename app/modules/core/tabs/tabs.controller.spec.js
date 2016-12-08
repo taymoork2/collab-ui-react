@@ -34,6 +34,14 @@
 
     var states;
 
+    afterEach(function () {
+      tabsController = $q = $controller = $rootScope = injectedRootScope = $scope = $location = Authinfo = Auth = UrlConfig = $httpBackend = $provide = $injector = states = undefined;
+    });
+
+    afterAll(function () {
+      featureToggleService = defaultConfig = defaultUser = undefined;
+    });
+
     beforeEach(angular.mock.module('Core'));
     beforeEach(angular.mock.module(function (_$provide_) {
       $provide = _$provide_;

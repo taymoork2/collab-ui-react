@@ -3,6 +3,12 @@
 describe('Controller: TrialAddCtrl', function () {
   var controller, $httpBackend, $q, $scope, $state, $translate, EmailService, FeatureToggleService, HuronCustomer, Notification, Orgservice, TrialContextService, TrialPstnService, TrialService;
   var addContextSpy;
+
+  afterEach(function () {
+    controller = $httpBackend = $q = $scope = $state = $translate = EmailService = FeatureToggleService = HuronCustomer = Notification = Orgservice = TrialContextService = TrialPstnService = TrialService = undefined;
+    addContextSpy = undefined;
+  });
+
   beforeEach(angular.mock.module('core.trial'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
@@ -420,7 +426,8 @@ describe('Controller: TrialAddCtrl', function () {
   describe('Care offer trial', function () {
 
     describe('primary behaviors:', function () {
-      it('Message and Care are enabled by default', function () {
+      it('Message, Call and Care are enabled by default', function () {
+        expect(controller.callTrial.enabled).toBeTruthy();
         expect(controller.messageTrial.enabled).toBeTruthy();
         expect(controller.careTrial.enabled).toBeTruthy();
       });
@@ -439,6 +446,19 @@ describe('Controller: TrialAddCtrl', function () {
           controller.messageTrial.enabled = true;
           expect(controller.messageOfferDisabledExpression()).toBeFalsy();
           //Care is a choice to enable/disable when Message is enabled.
+          expect(controller.careTrial.enabled).toBeFalsy();
+        });
+      });
+
+      describe('callOfferDisabledExpression:', function () {
+        it('should be disabled if call is disabled.', function () {
+          controller.callTrial.enabled = false;
+          expect(controller.callOfferDisabledExpression()).toBeTruthy();
+          expect(controller.careTrial.enabled).toBeFalsy();
+
+          controller.callTrial.enabled = true;
+          expect(controller.callOfferDisabledExpression()).toBeFalsy();
+          //Care is a choice to enable/disable when Call is enabled.
           expect(controller.careTrial.enabled).toBeFalsy();
         });
       });

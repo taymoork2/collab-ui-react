@@ -12,6 +12,10 @@ describe('Controller: DeviceUsageCtrl', function () {
   var $state;
   var Notification;
 
+  afterEach(function () {
+    DeviceUsageTotalService = DeviceUsageSplunkMetricsService = $controller = controller = splunkService = $scope = $q = $state = undefined;
+  });
+
   beforeEach(inject(function (_$q_, _$rootScope_, _DeviceUsageTotalService_, _DeviceUsageSplunkMetricsService_, _$controller_, _$state_, _Notification_) {
     DeviceUsageTotalService = _DeviceUsageTotalService_;
     DeviceUsageSplunkMetricsService = _DeviceUsageSplunkMetricsService_;

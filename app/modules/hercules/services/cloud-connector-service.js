@@ -6,32 +6,38 @@
     .factory('CloudConnectorService', CloudConnectorService);
 
   function CloudConnectorService($q, $timeout, Authinfo) {
-
     var serviceAccountId = 'google@example.org'; // dummy value for now
     var isGoogleCalendarSetup = false;
 
-    var service = {
+    return {
       isServiceSetup: isServiceSetup,
       updateConfig: updateConfig,
       deactivateService: deactivateService,
       getServiceAccount: getServiceAccount,
+      getService: getService,
+      getStatusCss: getStatusCss
     };
-    return service;
 
     function extractDataFromResponse(res) {
       return res.data;
     }
 
-    function isServiceSetup(serviceId) {
-      return $q(function (resolve) {
-        $timeout(function () {
-          if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal() && isGoogleCalendarSetup) {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        }, 750);
+    function isServiceSetup(serviceId, orgId) {
+      return getService(serviceId, orgId).then(function (service) {
+        return service.provisioned;
       });
+    }
+
+    function getService(serviceId/*, orgId */) {
+      // Make sure you use the orgId (orgId || Authinfo.getOrgId) when the real API is called
+      return $q.resolve({ provisioned: isGoogleCalendarSetup, status: 'OK', serviceAccountId: serviceAccountId })
+        .then(function (service) {
+          // Align this with the FusionClusterService.getServiceStatus() to make the UI handling simpler
+          service.statusCss = getStatusCss(service);
+          service.serviceId = serviceId;
+          service.setup = service.provisioned;
+          return service;
+        });
     }
 
     function getServiceAccount(serviceId) {
@@ -100,7 +106,21 @@
       });
     }
 
-
+    function getStatusCss(service) {
+      if (!service || !service.provisioned || !service.status) {
+        return 'default';
+      }
+      switch (service.status.toLowerCase()) {
+        case 'ok':
+          return 'success';
+        case 'error':
+          return 'danger';
+        case 'warn':
+          return 'warning';
+        default:
+          return 'default';
+      }
+    }
   }
 
 })();

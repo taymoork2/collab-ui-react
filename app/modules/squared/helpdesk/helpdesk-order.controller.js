@@ -60,6 +60,7 @@
       } else {
         vm.customerAdminEmail = _.get(orderObj, 'orderContent.common.customerInfo.endCustomerInfo.adminDetails.emailId');
       }
+      vm.oldcustomerAdminEmail = vm.customerAdminEmail;
 
       //Getting the partner info from order payload or update clientContent
       var partnerEmailUpdates = _.filter(emailUpdates, function (data) {
@@ -75,6 +76,7 @@
           vm.partnerAdminEmail = _.get(orderObj, 'orderContent.common.customerInfo.partnerInfo.adminDetails.emailId');
         }
       }
+      vm.oldpartnerAdminEmail = vm.partnerAdminEmail;
 
 
       // Getting the account details using the account Id from order.
@@ -171,6 +173,7 @@
       HelpdeskService.editAdminEmail(vm.orderUuid, vm.customerAdminEmail, false)
         .then(function () {
           Notification.success('helpdesk.editAdminEmailSuccess');
+          vm.oldcustomerAdminEmail = vm.customerAdminEmail;
           vm.customerAdminEmailEdit = false;
           vm.showCustomerEmailSent = false;
           $timeout(function () {
@@ -184,6 +187,7 @@
     // Cancel (close) the Edit option
     function cancelCustomerAdminEmailEdit() {
       vm.customerAdminEmailEdit = false;
+      vm.customerAdminEmail = vm.oldcustomerAdminEmail;
     }
 
     // Allow Partner Admin Email address to be editted
@@ -196,6 +200,7 @@
       HelpdeskService.editAdminEmail(vm.orderUuid, vm.partnerAdminEmail, false)
         .then(function () {
           Notification.success('helpdesk.editAdminEmailSuccess');
+          vm.oldpartnerAdminEmail = vm.partnerAdminEmail;
           vm.partnerAdminEmailEdit = false;
           vm.showPartnerEmailSent = false;
           $timeout(function () {
@@ -209,6 +214,7 @@
     // Cancel (close) the Edit option
     function cancelPartnerAdminEmailEdit() {
       vm.partnerAdminEmailEdit = false;
+      vm.partnerAdminEmail = vm.oldpartnerAdminEmail;
     }
 
     // Resend the welcome email to specified party.  Attempt to last send date.
