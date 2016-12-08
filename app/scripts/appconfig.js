@@ -2767,12 +2767,21 @@
                 controller: 'CalendarSettingsController',
                 templateUrl: 'modules/hercules/service-settings/calendar-service-settings.html'
               }
-            },
+            }
+          })
+          .state('google-calendar-service', {
+            abstract: true,
+            parent: 'main',
+            template: '<div ui-view></div>',
             resolve: {
               hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
               }
             }
+          })
+          .state('google-calendar-service.settings', {
+            url: '/services/google-calendar/settings',
+            template: '<google-calendar-settings-page ng-if="$resolve.hasGoogleCalendarFeatureToggle"></google-calendar-settings-page>',
           })
           .state('call-service', {
             templateUrl: 'modules/hercules/overview/overview.html',

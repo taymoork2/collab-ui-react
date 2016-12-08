@@ -7,7 +7,7 @@
 
   function CloudConnectorService($q, $timeout, Authinfo) {
     var serviceAccountId = 'google@example.org'; // dummy value for now
-    var isGoogleCalendarSetup = false;
+    var isGoogleCalendarSetup = true;
 
     return {
       isServiceSetup: isServiceSetup,
