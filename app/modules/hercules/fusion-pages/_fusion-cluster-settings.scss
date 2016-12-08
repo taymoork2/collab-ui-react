@@ -1,3 +1,5 @@
+@import 'styles/toolkit/colors';
+
 .fusion-cluster-settings {
   background-color: #fff;
 
@@ -27,8 +29,8 @@
     margin-top: 2.375rem;
   }
 
-  .custom-line-height {
-    line-height: 2;
+  .needs-border-top {
+    border-top: 1px solid $gray-light-2;
   }
 }
 
