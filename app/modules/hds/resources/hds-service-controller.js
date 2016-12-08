@@ -75,7 +75,7 @@
         modalClass: 'redirect-add-resource',
         resolve: {
           firstTimeSetup: true,
-          yesProceed: false
+          proceedSetup: false
         },
       });
     }

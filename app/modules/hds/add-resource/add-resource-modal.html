@@ -8,7 +8,7 @@
   </h5>
 </div>
 <div class="modal-body">
-  <div ng-show="hdsRedirectAddResourceController.yesProceed && !hdsRedirectAddResourceController.enableRedirectToTarget">
+  <div ng-show="hdsRedirectAddResourceController.proceedSetup && !hdsRedirectAddResourceController.enableRedirectToTarget">
     <div>
       <h4 class="addResourceInlineBlock" translate="hds.add-resource-dialog.yesInfo1"></h4>
       <h4 class="addResourceFQDN" tooltip="{{'hds.add-resource-dialog.fqdn' | translate}}" translate="hds.add-resource-dialog.yesInfo2"></h4>
@@ -35,24 +35,27 @@
             <p class="addResourceInlineBlock" translate="hds.add-resource-dialog.text3part2"/>
           </div>
           <div class="columns medium-6 inputHostNameForm">
-            <input class="cs-input" ng-model="hdsRedirectAddResourceController.hostName" placeholder="{{'hds.add-resource-dialog.hostname-placeholder' | translate}} " type="text">
+            <input class="cs-input" ng-model="hdsRedirectAddResourceController.hostName" placeholder="{{'hds.add-resource-dialog.hostname' | translate}} " type="text">
           </div>
         </div>
       </div>
     </form>
   </div>
   <div ng-show="hdsRedirectAddResourceController.enableRedirectToTarget">
-    <h3>
-      <span translate="hds.add-resource-dialog.grant-registration-success-header-old-cluster" translate-values="{hostname: hdsRedirectAddResourceController.hostName || '', clustername: hdsRedirectAddResourceController.selectedCluster || ''}">
-      </span>
-    </h3>
+    <p>
+      <span translate="hds.add-resource-dialog.grant-registration-success-part-1"/>
+      <br>
+      <span translate="hds.add-resource-dialog.grant-registration-success-part-2" translate-values="{hostname: hdsRedirectAddResourceController.hostName || ''}"/>
+      <br>
+      <span translate="hds.add-resource-dialog.grant-registration-success-part-3" translate-values="{clustername: hdsRedirectAddResourceController.selectedCluster || ''}"/>
+    </p>
     <br>
     <p>
       <span translate="hds.add-resource-dialog.grant-success-information">
       </span>
     </p>
   </div>
-  <div ng-hide="hdsRedirectAddResourceController.noProceed || hdsRedirectAddResourceController.yesProceed || hdsRedirectAddResourceController.enableRedirectToTarget">
+  <div ng-hide="hdsRedirectAddResourceController.noProceed || hdsRedirectAddResourceController.proceedSetup || hdsRedirectAddResourceController.enableRedirectToTarget">
     <div>
       <h4 translate="hds.add-resource-dialog.firstStep"></h4>
     </div>
@@ -100,7 +103,7 @@
       <span translate="common.back"></span>
     </button>
     <button class="btn activate-button btn--primary" ng-click="hdsRedirectAddResourceController.next()"  ng-disabled="!hdsRedirectAddResourceController.canGoNext()">
-      <span translate="hds.add-resource-dialog.next"></span>
+      <span translate="common.next"></span>
     </button>
   </div>
   <div ng-show="hdsRedirectAddResourceController.noProceed">
@@ -109,10 +112,7 @@
     </button>
   </div>
   <div ng-show="hdsRedirectAddResourceController.enableRedirectToTarget">
-    <button class="btn" ng-click="hdsRedirectAddResourceController.back()">
-      <span translate="hds.add-resource-dialog.back"></span>
-    </button>
-    <button class="btn register-button btn--primary" ng-click="hdsRedirectAddResourceController.redirectToTargetAndCloseWindowClicked(hdsRedirectAddResourceController.hostName, hdsRedirectAddResourceController.selectedCluster)">
+    <button class="btn btn--primary" ng-click="hdsRedirectAddResourceController.redirectToTargetAndCloseWindowClicked(hdsRedirectAddResourceController.hostName, hdsRedirectAddResourceController.selectedCluster)">
       <span translate="hercules.connectors.goToHost"></span>
     </button>
   </div>

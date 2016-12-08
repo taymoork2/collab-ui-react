@@ -6,7 +6,7 @@
     .service('HDSAddResourceCommonService', HDSAddResourceCommonService);
 
   /* @ngInject */
-  function HDSAddResourceCommonService(Notification, $translate, $q, FusionClusterService, $window, HDSServiceActivation, Authinfo) {
+  function HDSAddResourceCommonService($q, $translate, $window, FusionClusterService, Notification, ServiceDescriptor) {
     var vm = this;
     vm.clusters = null;
     vm.onlineNodeList = [];
@@ -14,8 +14,6 @@
     vm.clusterList = [];
     vm.selectedClusterId = '';
     vm.currentServiceId = 'spark-hybrid-datasecurity';
-    vm.fusionClusterService = FusionClusterService;
-    vm.orgId = Authinfo.getOrgId();
 
     function updateClusterLists() {
       vm.clusters = null;
@@ -23,14 +21,14 @@
       vm.onlineNodeList = [];
       vm.offlineNodeList = [];
       var deferred = $q.defer();
-      vm.fusionClusterService.getAll(vm.orgId)
+      FusionClusterService.getAll()
         .then(function (clusters) {
           vm.clusters = _.filter(clusters, { targetType: 'hds_app' });
           _.each(clusters, function (cluster) {
             if (cluster.targetType === 'hds_app') {
               vm.clusterList.push(cluster.name);
               _.each(cluster.connectors, function (connector) {
-                if ('running' == connector.state) {
+                if ('running' === connector.state) {
                   vm.onlineNodeList.push(connector.hostname);
                 } else {
                   vm.offlineNodeList.push(connector.hostname);
@@ -40,11 +38,8 @@
           });
           vm.clusterList.sort();
           deferred.resolve(vm.clusterList);
-
-        })
-        .catch(function (error) {
-          Notification.errorWithTrackingId(error, 'hds.genericError');
         });
+
       return deferred.promise;
     }
 
@@ -63,17 +58,17 @@
 
       //Checking if value in selected cluster is in cluster list
       _.each(vm.clusters, function (cluster) {
-        if (cluster.name == enteredCluster) {
+        if (cluster.name === enteredCluster) {
           vm.clusterDetail = cluster;
         }
       });
       if (vm.clusterDetail == null) {
         var deferred = $q.defer();
         //TODO: fix for fusion cluster
-        vm.fusionClusterService.preregisterCluster(enteredCluster, 'stable', 'hds_app')
+        FusionClusterService.preregisterCluster(enteredCluster, 'stable', 'hds_app')
         .then(function (resp) {
           vm.selectedClusterId = resp.id;
-          deferred.resolve(whiteListHost(hostName, vm.selectedClusterId));
+          deferred.resolve(allowListHost(hostName, vm.selectedClusterId));
         })
         .catch(function (error) {
           var errorMessage = $translate.instant('hds.clusters.clusterCreationFailed', {
@@ -84,17 +79,17 @@
         return deferred.promise;
       } else {
         vm.selectedClusterId = vm.clusterDetail.id;
-        return whiteListHost(hostName, vm.selectedClusterId);
+        return allowListHost(hostName, vm.selectedClusterId);
       }
     }
 
-    function whiteListHost(hostName, clusterId) {
-      return vm.fusionClusterService.addPreregisteredClusterToAllowList(hostName, 3600, clusterId);
+    function allowListHost(hostName, clusterId) {
+      return FusionClusterService.addPreregisteredClusterToAllowList(hostName, 3600, clusterId);
     }
 
     function redirectPopUpAndClose(hostName, enteredCluster, clusterId, firstTimeSetup) {
       if (firstTimeSetup) {
-        HDSServiceActivation.enableHdsService('spark-hybrid-datasecurity');
+        ServiceDescriptor.enableService('spark-hybrid-datasecurity');
       }
       vm.popup = $window.open('https://' + encodeURIComponent(hostName) + '/?clusterName=' + encodeURIComponent(enteredCluster) + '&clusterId=' + encodeURIComponent(vm.selectedClusterId));
     }
