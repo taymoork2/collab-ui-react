@@ -2857,6 +2857,7 @@
             },
             params: {
               host: null,
+              hostSerial: null,
               clusterId: null,
               connectorType: 'c_mgmt'
             }
@@ -2882,6 +2883,7 @@
             },
             params: {
               host: null,
+              hostSerial: null,
               clusterId: null,
               connectorType: null
             }

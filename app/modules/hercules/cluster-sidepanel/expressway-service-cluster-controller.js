@@ -203,7 +203,7 @@
       if (connector.connectorType === 'c_mgmt') {
         return -1;
       } else {
-        return connector.connectorType;
+        return connector.connectorType + connector.hostSerial;
       }
     };
 
