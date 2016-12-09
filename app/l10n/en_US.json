@@ -1607,7 +1607,8 @@
       "squared-fusion-mgmt": "Hybrid Management Service",
       "squared-fusion-uc": "Hybrid Call Service",
       "squared-fusion-cal": "Hybrid Calendar Service",
-      "spark-hybrid-datasecurity": "Hybrid Data Security"
+      "spark-hybrid-datasecurity": "Hybrid Data Security",
+      "squared-fusion-media": "Hybrid Media Service"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
@@ -1750,10 +1751,12 @@
       "oneButtonToPushIntervalSecondaryLabel": "minutes before the meeting",
       "oneButtonToPushIntervalMinutesSavingSuccess": "Early join time was successfully saved.",
       "oneButtonToPushIntervalMinutesSavingError": "Could not save the change to early join time. Try again later.",
-      "documentationHeading": "Documentation and Software",
-      "documentationHelpLink": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> for further information about Hybrid Services.",
-      "documentationDownloadLink": "Download Cisco Expressway software from <a href=\"https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP\" target=\"_blank\">software.cisco.com</a>.",
-      "documentationSaving": "Saving.",
+      "documentation": {
+        "heading": "Documentation and Software",
+        "help": "Visit <a href=\"{{helpLink}}\" target=\"_blank\">Help Central</a> for further information about {{localizedServiceName}}.",
+        "downloadExpressway": "Download Cisco Expressway software from <a href=\"{{downloadLink}}\" target=\"_blank\">software.cisco.com</a>.",
+        "downloadECP": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download {{serviceName}} software</a>."
+      },
       "call": {
         "domainVerification": "Domain Verification",
         "aware": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
@@ -3915,25 +3918,7 @@
       "label": "ACTIVATE AND BEGIN SETUP"
     },
     "settings": {
-      "deactivateServiceHeading": "Deactivate Service",
-      "deactivateService": "Deactivating a service removes all service-related features for your users and requires a confirmation step",
-      "deactivateServiceV2": "Deactivating a service removes all service-related features for your users and requires a confirmation step.",
-      "deactivate": "Deactivate",
-      "emailNotificationsHeading": "Email Notifications",
-      "emailNotifications": "Add email addresses to receive email notifications about Service impacting Alarms and Software Upgrades.",
-      "emailNotificationsV2": "Add email addresses to recieve notifications about service-impacting alarms and software upgrades.",
-      "emailExample": "For example: John Doe john.doe@email.com, Kate Williams kate.williams@email.com",
-      "documentationHeading": "Documentation and software",
-      "documentationHeadingV2": "Documentation and Software",
-      "documentation_1": "Go to",
-      "documentation_2": "Help Central",
-      "documentation_3": "for prerequisites and help installing and using Hybrid Services.",
-      "documentation_3V2": "for prerequisities and help installing and using the Hybrid Media Service.",
-      "documentation_4": "Download Media Service OVA from",
-      "documentation_4V2": "Download Hybrid Media Service software from",
-      "documentation_5": "here",
-      "cancelCaps": "CANCEL",
-      "cancel": "Cancel",
+      "deactivateServiceV2": "Deactivating Hybrid Media Service removes all service-related features for users.",
       "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
       "deactivateBody_2": "Deactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources.",
       "removeCluster": "REMOVE CLUSTER",
