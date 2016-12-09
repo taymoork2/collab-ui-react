@@ -101,7 +101,8 @@
     "query-command-supported": "~1.0.0",
     "typeahead.js": "~0.10.2",
     "ui-router-extras": "^0.1.2",
-    "x2js": "git+https://github.com/abdmob/x2js.git#v1.2.0"
+    "x2js": "git+https://github.com/abdmob/x2js.git#v1.2.0",
+    "stickyfill": "git://github.com/collab-ui/stickyfill.git"
   },
   "devDependencies": {
     "angular-mocks": "~1.5.7",
