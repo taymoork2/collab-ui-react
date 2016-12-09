@@ -15,8 +15,10 @@
     <span
       ng-hide="softwareUpgradeCtrl.releaseNotesUrl"
       class="preserve-newlines">{{softwareUpgradeCtrl.releaseNotes}}</span>
-    <span ng-show="softwareUpgradeCtrl.releaseNotesUrl"><a href={{softwareUpgradeCtrl.releaseNotesUrl}}
-                                                           target="_blank">{{softwareUpgradeCtrl.releaseNotesUrl}}</a></span>
+    <span ng-show="softwareUpgradeCtrl.releaseNotesUrl"><a href="{{softwareUpgradeCtrl.releaseNotesUrl}}"
+                                                           target="_blank"><span
+      translate="hercules.softwareUpgrade.releaseNotesLinkText"
+      translate-values="{connectorType: softwareUpgradeCtrl.connectorName, newVersion: softwareUpgradeCtrl.availableVersion}"></span></a></span>
   </p>
 </div>
 <div class="modal-footer">

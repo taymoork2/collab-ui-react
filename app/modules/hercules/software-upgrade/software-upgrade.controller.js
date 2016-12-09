@@ -21,13 +21,9 @@
     FusionClusterService.getReleaseNotes(cluster.releaseChannel, connectorType)
       .then(function (res) {
         vm.releaseNotes = res;
-        try {
-          var urlParts = URL.parse(res);
-          if (urlParts.hostname != undefined && urlParts.hostname != null) {
-            vm.releaseNotesUrl = urlParts.href;
-          }
-        } catch (e) {
-          // If not URL, fallback to showing the text (backwards compatible)
+        var urlParts = URL.parse(res);
+        if (urlParts.hostname !== null) {
+          vm.releaseNotesUrl = urlParts.href;
         }
       }, function () {
         vm.releaseNotes = 'Not Found';
