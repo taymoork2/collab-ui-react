@@ -202,7 +202,7 @@ describe(' sunlightReportService', function () {
 
     sunlightReportService.getReportingData('org_snapshot_stats', 0, 'chat').then(function (response) {
       var startTimeStamp = moment().startOf('day');
-      var endTimeStamp = moment();
+      var endTimeStamp = moment().add(1, 'hours').startOf('hour');
       var duration = moment.duration(endTimeStamp.diff(startTimeStamp));
       var hours = Math.floor(duration.asHours());
       expect(response.length).toBe(hours);
