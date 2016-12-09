@@ -95,20 +95,21 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
   };
 
   public googleCalendarFeatureToggleEventHandler(hasFeature: boolean) {
+    const serviceId = 'squared-fusion-gcal';
     this.display = this.Authinfo.isFusionCal() && this.Authinfo.isFusionGoogleCal() && hasFeature;
     if (this.display) {
       // We only get the status for Hybrid Calendar that way
-      this.CloudConnectorService.isServiceSetup('squared-fusion-gcal')
-        .then((isSetup) => {
-          // conveys the same as .active for Hybrid Calendar
-          this.googleActive = isSetup;
-          this.canDisplay.resolve(true);
-          // Fake data for now
+      this.CloudConnectorService.getService(serviceId)
+        .then(servicesStatus => {
+          const servicesStatuses = [servicesStatus];
+          // .googleActive conveys the same meaning as .active for Hybrid Calendar
+          this.googleActive = servicesStatus.setup;
           this.googleStatus = {
-            status: 'default',
-            text: 'servicesOverview.cardStatus.setupNotComplete',
-            routerState: 'calendar-service.list', // will trigger the right modal
+            status: filterAndGetCssStatus(this.FusionClusterStatesService, servicesStatuses, serviceId),
+            text: filterAndGetTxtStatus(servicesStatuses, serviceId),
+            routerState: 'google-calendar-service.settings',
           };
+          this.canDisplay.resolve(true);
         });
     }
   }
