@@ -3097,6 +3097,11 @@
     "fallbackTimer.validation.error": "Must be a number between {{min}} and {{max}}"
   },
   "callPickup": {
+    "nameLabel": "Call Pickup Name",
+    "memberLabel": "Call Pickup Members",
+    "successUpdate": "'{{callPickupName}}' Call pickup has been updated successfully",
+    "errorUpdate": "Failed to update the '{{callPickupName}}' Call Pickup",
+    "saveLabel": "Do you want to save your changes?",
     "title": "Call Pickup",
     "code": "PI",
     "modalDescription": "Call Pickup feature allows users to pick up incoming calls within a group of users.",
@@ -3120,7 +3125,19 @@
     "minMemberWarning": "You need to select at least one line for each member",
     "memberWarning": "Member already added to another call pickup group. Do you wish to continue?",
     "duplicateNameWarning": "A pickup group by same name already exists",
-    "removeMember": "Remove Member"
+    "removeMember": "Remove Member",
+    "memberTitle": "Members",
+    "nameTitle": "Call Pickup Settings",
+    "notificationTitle": "Notifications",
+    "notificationTimer": "Notification Timer",
+    "timerHint": "Set the duration of time the call rings before notifying pickup group.",
+    "pickupHint": "Pickup Notifications",
+    "pickupNotification": "Call pickup notification behavior and pickup experience on members' device.",
+    "notificationTimer.validation.error": "Must be a number between 1 and 120",
+    "notificationTimerSeconds": "Seconds",
+    "calledParty": "Display called party's information",
+    "callingParty": "Display calling party's information",
+    "playSound": "Play Sound"
   },
   "pagingGroup": {
     "title": "Paging Group",

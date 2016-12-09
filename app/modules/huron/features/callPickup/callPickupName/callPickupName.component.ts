@@ -6,6 +6,7 @@ class CallPickupNameCtrl implements ng.IComponentController {
   public errorNameInput: boolean = false;
   private onUpdate: Function;
   private listOfCallPickups: ng.IPromise<IPickupGroup[]> ;
+  public isNew: boolean;
 
   /* @ngInject */
   constructor(private CallPickupGroupService: CallPickupGroupService,
@@ -41,5 +42,6 @@ export class CallPickupNameComponent implements ng.IComponentOptions {
   public bindings = {
     onUpdate: '&',
     callPickupName: '<',
+    isNew: '<',
   };
 }

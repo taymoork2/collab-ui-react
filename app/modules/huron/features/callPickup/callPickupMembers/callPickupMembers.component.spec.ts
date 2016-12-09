@@ -5,7 +5,8 @@ describe('Component: callPickupMembers', () => {
   let membersList = getJSONFixture('huron/json/features/callPickup/membersList.json');
   let fake_picture_path = 'https://abcde/12345';
   let checkboxesList = getJSONFixture('huron/json/features/callPickup/checkboxesList.json');
-  let numbersArray = getJSONFixture('huron/json/features/callPickup/numbersList.json');
+  let numbersObject = getJSONFixture('huron/json/features/callPickup/numbersList.json');
+  let numbersArray = _.result(numbersObject, 'numbers');
 
   beforeEach(function () {
     this.initModules('huron.call-pickup.members');
@@ -17,19 +18,26 @@ describe('Component: callPickupMembers', () => {
       '$httpBackend',
       'Authinfo',
       'HuronConfig',
-      'UserNumberService'
+      'UserNumberService',
+      'CallPickupGroupService',
     );
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
     this.$scope.onUpdate = jasmine.createSpy('onUpdate');
-    this.$scope.selectedMembers = [];
-    this.$scope.$apply();
+    this.$scope.onEditUpdate = jasmine.createSpy('onEditUpdate');
 
+    this.$scope.selectedMembers = [];
+    this.$scope.savedCallpickup = {};
+    this.$scope.$apply();
+    this.$scope.isNew = true;
     this.getMemberListDefer = this.$q.defer();
     spyOn(this.FeatureMemberService, 'getMemberSuggestions').and.returnValue(this.getMemberListDefer.promise);
 
     this.getMemberPictureDefer = this.$q.defer();
     spyOn(this.FeatureMemberService, 'getMemberPicture').and.returnValue(this.getMemberPictureDefer.promise);
+
+    this.getNumbersDefer = this.$q.defer();
+    spyOn(this.CallPickupGroupService, 'getMemberNumbers').and.returnValue(this.getNumbersDefer.promise);
 
     spyOn(this.Notification, 'success');
     spyOn(this.Notification, 'error');
@@ -44,6 +52,9 @@ describe('Component: callPickupMembers', () => {
     this.compileComponent('callPickupMembers', {
       onUpdate: 'onUpdate(member, isValidMember)',
       selectedMembers: 'selectedMembers',
+      isNew: 'isNew',
+      onEditUpdate: 'onEditUpdate(savedCallpickup)',
+      savedCallpickup: 'savedCallpickup',
     });
     this.$scope.$apply();
   }
@@ -86,8 +97,9 @@ describe('Component: callPickupMembers', () => {
       };
       member2 = angular.copy(this.controller.memberList[1]);
       allNumbers = getJSONFixture('huron/json/features/callPickup/numbersList.json');
-      spyOn(this.controller, 'getPrimaryNumber').and.callThrough();
-      spyOn(this.controller, 'createCheckBoxes').and.callThrough();
+      spyOn(this.CallPickupGroupService, 'createCheckBoxes').and.callThrough();
+      this.getNumbersDefer.resolve(numbersArray);
+      this.getMemberPictureDefer.resolve(fake_picture_path);
       this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/users/0001/numbers').respond(200, allNumbers);
       this.$scope.$digest();
     });
@@ -96,10 +108,9 @@ describe('Component: callPickupMembers', () => {
       this.controller.selectedMembers = [];
       this.controller.maxMembersAllowed = 1;
       this.controller.selectMember(member1);
-      this.getMemberPictureDefer.resolve(fake_picture_path);
+      expect(this.CallPickupGroupService.getMemberNumbers).toHaveBeenCalled();
+      this.$scope.$digest();
       expect(this.controller.selectedMembers.length).toEqual(1);
-      expect(this.$scope.onUpdate).toHaveBeenCalledWith(this.controller.selectedMembers, true);
-      this.$httpBackend.flush();
       this.controller.selectMember(member2);
       expect(this.Notification.error).toHaveBeenCalledWith('callPickup.memberLimitExceeded');
     });
@@ -108,17 +119,16 @@ describe('Component: callPickupMembers', () => {
       this.controller.selectedMembers.push(memberData);
       this.controller.removeMember(memberData);
       expect(this.controller.selectedMembers.length).toEqual(0);
-    });
+  });
 
     it('member name input box should be empty when calling select member', function() {
       this.controller.memberList = membersList;
       this.controller.selectMember(member1);
-      this.$httpBackend.flush();
       expect(this.controller.memberName).toBe('');
     });
 
     it('should create checkboxes for all numbers', function(){
-      this.controller.createCheckBoxes(memberData, allNumbers['numbers']);
+      this.CallPickupGroupService.createCheckBoxes(memberData, allNumbers['numbers']);
       expect(memberData.checkboxes[0].label).toEqual('2361');
       expect(memberData.checkboxes[0].value).toEqual(true);
       expect(memberData.checkboxes[0].sublabel).toEqual('');
@@ -190,7 +200,7 @@ describe('Component: callPickupMembers', () => {
 
     it('should give error if any member has no checkbox selected', function() {
       this.controller.selectedMembers = member2;
-      spyOn(this.controller, 'verifyLineSelected').and.callFake(function() {
+      spyOn(this.CallPickupGroupService, 'verifyLineSelected').and.callFake(function() {
         return false;
       });
       this.controller.updateNumbers(member2);
@@ -204,39 +214,6 @@ describe('Component: callPickupMembers', () => {
       };
       this.controller.updateNumbers(member3);
       expect(member3.saveNumbers).toContain(saveNumber);
-    });
-  });
-
-  describe('verify line selected', () => {
-    let member1, memberData, checkboxesList, allNumbers;
-    beforeEach(initComponent);
-    beforeEach(function() {
-      this.controller.memberList = membersList;
-      member1 = angular.copy(this.controller.memberList[0]);
-      memberData = {
-        member: member1,
-        picturePath: fake_picture_path,
-        checkboxes: checkboxesList,
-        saveNumbers: [],
-      };
-      allNumbers = getJSONFixture('huron/json/features/callPickup/numbersList.json');
-    });
-
-    it('should return false if a member doesn\'t have a single line selected ', function() {
-      this.controller.selectedMembers.push(memberData);
-      expect(this.controller.verifyLineSelected()).toEqual(false);
-    });
-  });
-
-  describe('get member numbers', () => {
-    beforeEach(initComponent);
-
-    it('Should return all the numbers for a member', function() {
-      this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/users/0001/numbers').respond(200, numbersArray);
-      this.controller.getMemberNumbers('0001').then(function (response) {
-        expect(response.length).toEqual(9);
-      });
-      this.$httpBackend.flush();
     });
   });
 

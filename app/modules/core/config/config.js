@@ -408,7 +408,7 @@
         'huntgroups',
         'huronCallPark',
         'huronCallPickup',
-        'huronPickupGroupEdit',
+        'callpickupedit',
         'hurondetails',
         'huronfeatures',
         'huronHuntGroup',
