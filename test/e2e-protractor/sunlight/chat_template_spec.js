@@ -274,25 +274,29 @@ describe('Care admin should be able to', function () {
   }
 
   function validateChatStatusMessagesDefaultPage() {
-    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(0), "Waiting for an Agent to join...");
-    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(1), "Agent has entered the chat room");
-    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(2), "Agent has left the chat room");
-    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(3), "You are chatting with our Agent");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(0), "Click here to chat with Customer Care");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(1), "Waiting for an Agent to join...");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(2), "Agent has entered the chat room");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(3), "Agent has left the chat room");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(4), "You are chatting with our Agent");
   }
 
   function validateChatStatusMessagesChange() {
-    utils.sendKeys(careChatTemplateSetupPage.chatStatusMessages.get(0), " His name is Joy");
+    utils.sendKeys(careChatTemplateSetupPage.chatStatusMessages.get(0), " Joy");
     utils.sendKeys(careChatTemplateSetupPage.chatStatusMessages.get(1), " His name is Joy");
-    utils.sendKeys(careChatTemplateSetupPage.chatStatusMessages.get(2), " Good Bye");
-    utils.sendKeys(careChatTemplateSetupPage.chatStatusMessages.get(3), " Cody Banks");
+    utils.sendKeys(careChatTemplateSetupPage.chatStatusMessages.get(2), " His name is Joy");
+    utils.sendKeys(careChatTemplateSetupPage.chatStatusMessages.get(3), " Good Bye");
+    utils.sendKeys(careChatTemplateSetupPage.chatStatusMessages.get(4), " Cody Banks");
 
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(0),
-      "Waiting for an Agent to join... His name is Joy");
+      "Click here to chat with Customer Care Joy");
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(1),
-      "Agent has entered the chat room His name is Joy");
+      "Waiting for an Agent to join... His name is Joy");
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(2),
-      "Agent has left the chat room Good Bye");
+      "Agent has entered the chat room His name is Joy");
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(3),
+      "Agent has left the chat room Good Bye");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(4),
       "You are chatting with our Agent Cody Banks");
   }
 
