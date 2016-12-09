@@ -5,6 +5,7 @@
         <i class="feature-icon" ng-class="feature.icon"></i>
         <span class="feature-name">{{feature.name}}</span>
         <span
+          class="feature-label"
           ng-class="{'feature-arrow-match': $ctrl.hasActionAvailable && !feature.actionAvailable, 'feature-status': $ctrl.hasActionAvailable, 'feature-details': !$ctrl.hasActionAvailable}">
           {{feature.detail}}
         </span>
@@ -16,7 +17,7 @@
     <li class="feature" ng-repeat="feature in $ctrl.features track by $index">
       <i class="feature-icon" ng-class="feature.icon"></i>
       <span class="feature-name">{{feature.name}}</span>
-      <span class="feature-details">{{feature.detail}}</span>
+      <span class="feature-details feature-label">{{feature.detail}}</span>
     </li>
   </ul>
 </div>

@@ -304,6 +304,9 @@
         },
         chatStatusMessages: {
           messages: {
+            bubbleTitleMessage: {
+              displayText: $translate.instant('careChatTpl.bubbleTitleMessage')
+            },
             connectingMessage: {
               displayText: $translate.instant('careChatTpl.connectingMessage')
             },
@@ -430,6 +433,7 @@
     function isStatusMessagesPageValid() {
       var chatStatusMessagesObj = vm.template.configuration.chatStatusMessages.messages;
       return isValidSinglelineField(chatStatusMessagesObj.connectingMessage.displayText)
+      && isValidSinglelineField(chatStatusMessagesObj.bubbleTitleMessage.displayText)
       && isValidSinglelineField(chatStatusMessagesObj.waitingMessage.displayText)
       && isValidSinglelineField(chatStatusMessagesObj.enterRoomMessage.displayText)
       && isValidSinglelineField(chatStatusMessagesObj.leaveRoomMessage.displayText)
