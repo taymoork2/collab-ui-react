@@ -27,6 +27,13 @@ describe('assignServices', function () {
     }).entitlementState === 'ACTIVE').toBe(state);
   };
 
+  afterEach(function () {
+    if (view) {
+      view.remove();
+    }
+    view = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Huron'));

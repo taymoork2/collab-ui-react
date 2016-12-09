@@ -98,6 +98,15 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   var startTimeOptions = businessHours.startTimeOptions;
   var defaultTimings = businessHours.defaultTimings;
 
+  afterEach(function () {
+    controller = $scope = $modal = $q = CTService = getLogoDeferred = getLogoUrlDeferred = SunlightConfigService = $state = $stateParams = LogMetricsService = undefined;
+    Notification = $translate = undefined;
+  });
+
+  afterAll(function () {
+    selectedDaysByDefault = defaultTimeZone = defaultDayPreview = startTimeOptions = defaultTimings = businessHours = failedData = deSelectAllDays = duplicateFieldTypeData = customerInfoWithLongAttributeValue = undefined;
+  });
+
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module(function ($provide) {

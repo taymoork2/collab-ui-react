@@ -2,6 +2,7 @@
 
 describe('Controller: PstnNumbersCtrl', function () {
   var controller, $compile, $scope, $state, $q, $translate, PstnSetupService, PstnSetup, Notification, TerminusStateService, FeatureToggleService;
+  var element;
 
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
   var customerCarrierList = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
@@ -89,6 +90,13 @@ describe('Controller: PstnNumbersCtrl', function () {
     zip: '77777'
   };
 
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
+
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight')); // Remove this when FeatureToggleService is removed.
 
@@ -125,10 +133,10 @@ describe('Controller: PstnNumbersCtrl', function () {
 
   function compileTemplate() {
     var template = '<div><div ng-controller="PstnNumbersCtrl as pstnNumbers" ng-include="\'modules/huron/pstnSetup/pstnNumbers/pstnNumbers.tpl.html\'"></div></div>';
-    var el = $compile(template)($scope);
+    element = $compile(template)($scope);
     $scope.$apply();
     $translate.instant.calls.reset();
-    return _.get(el.scope(), '$$childTail.pstnNumbers');
+    return _.get(element.scope(), '$$childTail.pstnNumbers');
   }
 
   describe('initial/default data', function () {
