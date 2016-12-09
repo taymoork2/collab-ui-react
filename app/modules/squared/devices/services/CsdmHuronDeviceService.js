@@ -140,6 +140,7 @@
           };
           if (res.data) {
             response.timeZone = res.data.timeZone;
+            response.country = res.data.country;
             response.emergencyCallbackNumber = res.data.emergencyCallbackNumber.number;
           }
           return response;
@@ -149,6 +150,12 @@
     function setTimezoneForDevice(huronDevice, timezone) {
       return $http.put(getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid), {
         timeZone: timezone
+      });
+    }
+
+    function setCountryForDevice(huronDevice, country) {
+      return $http.put(getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid), {
+        country: country
       });
     }
 
@@ -198,6 +205,7 @@
       getLinesForDevice: getLinesForDevice,
       getDeviceInfo: getDeviceInfo,
       setTimezoneForDevice: setTimezoneForDevice,
+      setCountryForDevice: setCountryForDevice,
       setEmergencyCallback: setEmergencyCallback,
       resetDevice: resetDevice,
       uploadLogs: uploadLogs,
