@@ -58,7 +58,6 @@
       bridgeMaxConvParticipants: 'bridge-max-conv-participants',
       callMultiDevice: 'call-multi-device',
       calliopeDiscovery: 'calliope-discovery',
-      callParkService: 'call-park-service',
       huronCallPickup: 'huronCallPickup',
       calsvcDetectCmrLoc: 'calsvc_detect_cmr_loc',
       calsvcWebexMeetingRegistries: 'calsvc_webex_meeting_registries',
