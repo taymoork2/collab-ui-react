@@ -467,15 +467,15 @@
         action = new Action('routeToDialed', '');
         setDescription(action, inAction.routeToDialed);
         menuEntry.addAction(action);
-      } else if (_.has(inAction.runActionsOnInput)) {
+      } else if (_.has(inAction, 'runActionsOnInput')) {
         action = new Action('runActionsOnInput', '');
-        if (_.has(inAction.runActionsOnInput.inputType)) {
+        if (_.has(inAction.runActionsOnInput, 'inputType')) {
           action.inputType = inAction.runActionsOnInput.inputType;
           // check if this dial-by-extension
           if (_.includes([2, 3, 4], action.inputType) &&
-            _.has(inAction.runActionsOnInput.prompts.sayList)) {
+            _.has(inAction, 'runActionsOnInput.prompts.sayList')) {
             var sayList = inAction.runActionsOnInput.prompts.sayList;
-            if (sayList.length > 0 && _.has(sayList[0].value)) {
+            if (sayList.length > 0 && _.has(sayList[0], 'value')) {
               action.value = decodeUtf8(sayList[0].value);
               action.voice = inAction.runActionsOnInput.voice;
               action.description = inAction.runActionsOnInput.description;
@@ -488,16 +488,16 @@
               if (_.includes([3, 4], action.inputType)) {
                 action.variableName = inAction.runActionsOnInput.rawInputActions[0].assignVar.variableName;
               }
-              if (inAction.inputs.length > 0) {
+              if (inAction.runActionsOnInput.inputs.length > 0) {
                 action.inputActions = [];
-                _.forEach(inAction.inputs, function (input) {
+                _.forEach(inAction.runActionsOnInput.inputs, function (inputItem) {
                   var k = new KeyAction();
-                  k.key = input.key;
+                  k.key = inputItem.input;
 
-                  if (_.has(input.assignVar)) {
-                    k.value = _.get(input.assignVar.value);
+                  if (_.has(inputItem, 'actions[0].assignVar')) {
+                    k.value = _.get(inputItem.actions[0].assignVar, 'value');
                   }
-                  action.inputActions.push(k.value);
+                  action.inputActions.push(k);
                 });
 
               }
@@ -1211,14 +1211,17 @@
               var assignVarItem = {};
               var inputItem = {};
               inputItem.actions = [];
-              inputItem.input = inputAction.key;
-              assignVarItem.variableName = action.variableName;
-              assignVarItem.value = inputAction.value;
-              assignVar.assignVar = assignVarItem;
+              // remove input fields with blank values
+              if (!_.isEmpty(inputAction.value)) {
+                inputItem.input = inputAction.key;
+                assignVarItem.variableName = action.variableName;
+                assignVarItem.value = inputAction.value;
+                assignVar.assignVar = assignVarItem;
 
-              inputItem.actions.push(assignVar);
+                inputItem.actions.push(assignVar);
 
-              newAction.inputs.push(inputItem);
+                newAction.inputs.push(inputItem);
+              }
             });
 
           }

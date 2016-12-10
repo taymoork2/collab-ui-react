@@ -73,21 +73,23 @@
       vm.inputActions.splice(index, 1);
 
       setAvailableKeys();
-      setCallerInputFormDirty();
+
+      AACommonService.setCallerInputStatus(true);
+
     }
     // the user has changed the key for an existing action
     function keyChanged(index, whichKey) {
       vm.inputActions[index].key = whichKey;
       setAvailableKeys();
-      setCallerInputFormDirty();
+      AACommonService.setCallerInputStatus(true);
+
     }
     //the user enteres a char into the key input area
     function keyInputChanged(keyIndex, whichKey) {
       vm.inputActions[keyIndex].value = whichKey.value;
-    }
 
-    function setCallerInputFormDirty() {
       AACommonService.setCallerInputStatus(true);
+
     }
 
     function addKeyAction() {
@@ -100,6 +102,8 @@
       vm.inputActions.push(keyAction);
 
       setAvailableKeys();
+      AACommonService.setCallerInputStatus(true);
+
     }
 
     // determine which keys are still available.
@@ -112,9 +116,11 @@
     }
     function setType() {
       vm.actionEntry.inputType = vm.convertDigitState ? DIGITS_CHOICE : DIGITS_RAW;
+      AACommonService.setCallerInputStatus(true);
     }
     function setMaxStringLength() {
       vm.actionEntry.maxNumberOfCharacters = vm.maxStringLength;
+      AACommonService.setCallerInputStatus(true);
     }
 
     function setVoiceOptions() {
@@ -188,6 +194,8 @@
         action.inputType = vm.convertDigitState ? DIGITS_CHOICE : DIGITS_RAW;
         action.inputActions = [];
 
+        action.maxNumberOfCharacters = INPUT_DIGIT_MAX_DEFAULT;
+
         vm.menuEntry.addAction(action);
       }
 
@@ -224,6 +232,8 @@
 
       // remove keys that are in use from the selection widget
       setAvailableKeys();
+
+      AACommonService.setCallerInputStatus(false);
 
     }
     // update the list of available keys for each action
