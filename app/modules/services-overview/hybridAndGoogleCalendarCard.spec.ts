@@ -22,7 +22,7 @@ describe('ServicesOverviewHybridCallCard', () => {
   function initSpies() {
     spyOn(Authinfo, 'isFusionCal');
     spyOn(Authinfo, 'isFusionGoogleCal');
-    spyOn(CloudConnectorService, 'isServiceSetup').and.returnValue($q.resolve(true));
+    spyOn(CloudConnectorService, 'getService').and.returnValue($q.resolve({ setup: true }));
   }
 
   it('should have sane defaults', () => {
