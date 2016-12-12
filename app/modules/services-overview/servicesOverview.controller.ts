@@ -113,6 +113,7 @@ export class ServicesOverviewCtrl {
 
   private loadWebexSiteList() {
     let siteList = this.Authinfo.getConferenceServicesWithoutSiteUrl() || [];
+    siteList = siteList.concat(this.Authinfo.getConferenceServicesWithLinkedSiteUrl() || []);
     this.forwardEvent('updateWebexSiteList', siteList);
   }
 
