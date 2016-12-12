@@ -6,7 +6,7 @@
   module.exports = Analytics;
 
   /* @ngInject */
-  function Analytics($q, $state, Authinfo, Config, Orgservice, TrialService, UserListService) {
+  function Analytics($q, $state, Authinfo, Config, CryptoJS, Orgservice, TrialService, UserListService) {
 
     var token = {
       PROD_KEY: 'a64cd4bbec043ed6bf9d5cd31e4b001c',
@@ -98,6 +98,7 @@
       _getSelectedTrialDevices: _getSelectedTrialDevices,
       _getAddUserOrgData: _getAddUserOrgData,
       _getOrgStatus: _getOrgStatus,
+      _getDomainFromEmail: _getDomainFromEmail,
       checkIfTestOrg: checkIfTestOrg,
       eventNames: eventNames,
       sections: sections,
@@ -186,7 +187,7 @@
 
       var properties = {
         from: _.get($state, '$current.name'),
-        orgId: Authinfo.getOrgId(),
+        orgId: _hashSha256(Authinfo.getOrgId()),
         section: sections.TRIAL.name,
       };
       if (trialData) {
@@ -211,8 +212,8 @@
         return $q.reject('eventName, uuid or orgId not passed');
       }
       var properties = {
-        uuid: UUID,
-        orgId: orgId,
+        uuid: _hashSha256(UUID),
+        orgId: _hashSha256(orgId),
         section: sections.PARTNER.name
       };
       return trackEvent(eventName, properties);
@@ -229,7 +230,7 @@
 
       var properties = {
         from: name,
-        orgId: orgId,
+        orgId: _hashSha256(orgId),
         section: sections.USER_ONBOARDING.name,
       };
 
@@ -258,6 +259,7 @@
       // populate static properties
       _getAddUserOrgData(sections.ADD_USERS.name).then(function (data) {
         _.extend(properties, data);
+        delete properties.realOrgId;
         //if changing upload method -- set.
         if (uploadMethod) {
           properties.uploadMethod = uploadMethod;
@@ -292,8 +294,9 @@
         stack: stack,
         error: error,
         cause: cause,
-        userId: Authinfo.getUserId(),
-        orgId: Authinfo.getOrgId(),
+        userId: _hashSha256(Authinfo.getUserId()),
+        orgId: _hashSha256(Authinfo.getOrgId()),
+        domain: _getDomainFromEmail(Authinfo.getPrimaryEmail()),
         state: _.get($state, '$current.name')
       });
     }
@@ -327,14 +330,16 @@
 
     /* Add Users Helpers */
     function _getAddUserOrgData(section) {
-      if (sections.ADD_USERS.persistentProperties && sections.ADD_USERS.persistentProperties.orgId === Authinfo.getOrgId()) {
+      if (sections.ADD_USERS.persistentProperties && sections.ADD_USERS.persistentProperties.realOrgId === Authinfo.getOrgId()) {
         return $q.resolve(sections.ADD_USERS.persistentProperties);
       }
       var licenses = Authinfo.getLicenses();
       sections.ADD_USERS.persistentProperties = {
         licenses: _.map(licenses, 'licenseType'),
-        orgId: Authinfo.getOrgId(),
-        uuid: Authinfo.getUserId(),
+        realOrgId: Authinfo.getOrgId(),
+        orgId: _hashSha256(Authinfo.getOrgId()),
+        domain: _getDomainFromEmail(Authinfo.getPrimaryEmail()),
+        uuid: _hashSha256(Authinfo.getUserId()),
         role: Authinfo.getRoles(),
         section: section
       };
@@ -362,6 +367,17 @@
 
       });
       return isTrial ? 'trial' : 'active';
+    }
+
+    function _hashSha256(id) {
+      if (!id) {
+        return null;
+      }
+      return CryptoJS.SHA256(id).toString(CryptoJS.enc.Base64);
+    }
+
+    function _getDomainFromEmail(email) {
+      return email ? email.split('@')[1] || '' : '';
     }
   }
 

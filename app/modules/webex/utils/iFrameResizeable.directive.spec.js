@@ -5,8 +5,15 @@
 'use strict';
 
 xdescribe('iFrameResizable directive', function () {
-  var elm;
+  var element;
   var window;
+
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
 
   beforeEach(angular.mock.module('WebExApp'));
 
@@ -15,14 +22,13 @@ xdescribe('iFrameResizable directive', function () {
 
     var html = '<div><iframe i-frame-resizable></iframe></div>';
     var template = angular.element(html);
-    var linkFn = $compile(template);
-    elm = linkFn($rootScope);
+    element = $compile(template)($rootScope);
 
     $rootScope.$digest();
   }));
 
   it('should contain iFrameresizeable', function () {
-    expect(elm.html()).toContain("i-frame-resizable");
+    expect(element.html()).toContain("i-frame-resizable");
   });
 
   it('should define the initializeWindowSize function', inject(function ($rootScope) {

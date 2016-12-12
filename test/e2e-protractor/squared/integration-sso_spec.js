@@ -5,7 +5,7 @@
 describe('First Time Wizard', function () {
 
   it('should login as an admin user into the SSO test-org', function () {
-    login.loginThroughGui(helper.auth['sso-e2e-test-org'].user, helper.auth['sso-e2e-test-org'].pass, '#/overview');
+    login.loginThroughGui(helper.auth['sso-e2e-test-org-mailsac'].user, helper.auth['sso-e2e-test-org-mailsac'].pass, '#/overview');
   });
 
   describe('should complete custom sso provider flow', function () {
@@ -32,7 +32,7 @@ describe('First Time Wizard', function () {
       ssowizard.uploadMetaData();
     });
 
-    xit('should test the SSO connection', function () {
+    it('should test the SSO connection', function () {
       utils.click(wizard.nextBtn);
       utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Test SSO Setup');
       utils.click(ssowizard.testSsoConnectionBtn);

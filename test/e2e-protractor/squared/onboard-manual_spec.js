@@ -49,7 +49,7 @@ describe('Onboard users through Manual Invite', function () {
       utils.expectIsDisplayed(users.servicesPanel);
 
       utils.expectIsDisplayed(users.messageService);
-      utils.expectIsNotDisplayed(users.meetingService);
+      utils.expectIsDisplayed(users.meetingService);
       utils.click(users.closeSidePanel);
     });
   });

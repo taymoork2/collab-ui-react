@@ -3,16 +3,16 @@ import {
 } from '../../partnerReports/partnerReportInterfaces';
 
 describe('Controller: Dummy Customer Reports', function () {
-  const defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
-  const dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
-  const devicesJson = getJSONFixture('core/json/customerReports/devices.json');
-  const activeData = getJSONFixture('core/json/customerReports/activeUser.json');
-  const conversationData = getJSONFixture('core/json/customerReports/conversation.json');
-  const mediaData: any = getJSONFixture('core/json/customerReports/mediaQuality.json');
-  const metrics = getJSONFixture('core/json/customerReports/callMetrics.json');
-  const timeFilter: Array<ITimespan> = _.cloneDeep(defaults.timeFilter);
+  let defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
+  let dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
+  let devicesJson = getJSONFixture('core/json/customerReports/devices.json');
+  let activeData = getJSONFixture('core/json/customerReports/activeUser.json');
+  let conversationData = getJSONFixture('core/json/customerReports/conversation.json');
+  let mediaData: any = getJSONFixture('core/json/customerReports/mediaQuality.json');
+  let metrics = getJSONFixture('core/json/customerReports/callMetrics.json');
+  let timeFilter = _.cloneDeep(defaults.timeFilter);
 
-  let updateLineDates = function (data: any, filter: ITimespan): any {
+  let updateLineDates: any = function (data: any, filter: ITimespan): any {
     if (filter.value === 0) {
       for (let i = 7; i >= 0; i--) {
         data[i].date = moment().subtract(8 - i, defaults.DAY).format(defaults.dayFormat);
@@ -25,7 +25,7 @@ describe('Controller: Dummy Customer Reports', function () {
     return data;
   };
 
-  let updateDates = function (data: any, filter: ITimespan): any {
+  let updateDates: any = function (data: any, filter: ITimespan): any {
     if (filter.value === 0) {
       for (let i = 6; i >= 0; i--) {
         data[i].date = moment().subtract(7 - i, defaults.DAY).format(defaults.dayFormat);
@@ -41,6 +41,10 @@ describe('Controller: Dummy Customer Reports', function () {
     }
     return data;
   };
+
+  afterAll(function () {
+    defaults = dummyData = devicesJson = activeData = conversationData = mediaData = metrics = timeFilter = updateLineDates = updateDates = undefined;
+  });
 
   beforeEach(function () {
     this.initModules('Core');

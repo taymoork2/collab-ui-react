@@ -1,3 +1,5 @@
+import { WindowService } from 'modules/core/window';
+
 export class Notification {
   private static readonly SUCCESS = 'success';
   private static readonly WARNING = 'warning';
@@ -23,7 +25,7 @@ export class Notification {
     private $log: ng.ILogService,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
-    private $window: ng.IWindowService,
+    private WindowService: WindowService,
     private Config,
     private toaster,
   ) {
@@ -220,8 +222,16 @@ export class Notification {
     this.successTimeout = this.Config.isE2E() ? Notification.NO_TIMEOUT : Notification.DEFAULT_TIMEOUT;
   }
 
+  private setNetworkOffline(): void {
+    this.isNetworkOffline = true;
+  }
+
+  private setNetworkOnline(): void {
+    this.isNetworkOffline = false;
+  }
+
   private initOfflineListeners(): void {
-    this.$window.addEventListener('offline', () => this.isNetworkOffline = true);
-    this.$window.addEventListener('online', () => this.isNetworkOffline = false);
+    this.WindowService.registerEventListener('offline', this.setNetworkOffline.bind(this));
+    this.WindowService.registerEventListener('online', this.setNetworkOnline.bind(this));
   }
 }

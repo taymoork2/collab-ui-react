@@ -1,23 +1,19 @@
-import {
-  IActiveUserData,
-  IDropdownBase,
-} from '../../partnerReports/partnerReportInterfaces';
-
-import {
-  IAvgRoomData,
-  IEndpointWrapper,
-  IFilesShared,
-  IMediaData,
-} from './sparkReportInterfaces';
-
 describe('Service: Customer Graph Service', function () {
   let validateService: any;
-  const activeUsers: any = getJSONFixture('core/json/customerReports/activeUser.json');
-  const avgRooms: any = getJSONFixture('core/json/customerReports/roomData.json');
-  const devicesJson: any = getJSONFixture('core/json/customerReports/devices.json');
-  const fileData: any = getJSONFixture('core/json/customerReports/fileData.json');
-  const mediaData: any = getJSONFixture('core/json/customerReports/mediaQuality.json');
-  const metricsData: any = getJSONFixture('core/json/customerReports/callMetrics.json');
+  let activeUsers: any = getJSONFixture('core/json/customerReports/activeUser.json');
+  let avgRooms: any = getJSONFixture('core/json/customerReports/roomData.json');
+  let devicesJson: any = getJSONFixture('core/json/customerReports/devices.json');
+  let fileData: any = getJSONFixture('core/json/customerReports/fileData.json');
+  let mediaData: any = getJSONFixture('core/json/customerReports/mediaQuality.json');
+  let metricsData: any = getJSONFixture('core/json/customerReports/callMetrics.json');
+
+  afterAll(function () {
+    activeUsers = avgRooms = devicesJson = fileData = mediaData = metricsData = undefined;
+  });
+
+  afterEach(function () {
+    validateService = undefined;
+  });
 
   const chart: any = {
     categoryAxis: {
@@ -41,8 +37,12 @@ describe('Service: Customer Graph Service', function () {
   });
 
   describe('Active Users graph services', function () {
-    const data: Array<IActiveUserData> = _.cloneDeep(activeUsers.dummyData.one);
-    const filter: Array<IDropdownBase> = _.cloneDeep(activeUsers.dropdownOptions);
+    let data = _.cloneDeep(activeUsers.dummyData.one);
+    let filter = _.cloneDeep(activeUsers.dropdownOptions);
+
+    afterAll(function () {
+      data = filter = undefined;
+    });
 
     beforeEach(function () {
       let chartResponse: any = _.cloneDeep(chart);
@@ -77,7 +77,11 @@ describe('Service: Customer Graph Service', function () {
   });
 
   describe('Total Rooms graph services', function () {
-    const data: Array<IAvgRoomData> = _.cloneDeep(avgRooms.response);
+    let data = _.cloneDeep(avgRooms.response);
+
+    afterAll(function () {
+      data = undefined;
+    });
 
     beforeEach(function () {
       let chartResponse: any = _.cloneDeep(chart);
@@ -112,7 +116,11 @@ describe('Service: Customer Graph Service', function () {
   });
 
   describe('Files Shared graph services', function () {
-    const data: Array<IFilesShared> = _.cloneDeep(fileData.response);
+    let data = _.cloneDeep(fileData.response);
+
+    afterAll(function () {
+      data = undefined;
+    });
 
     beforeEach(function () {
       let chartResponse: any = _.cloneDeep(chart);
@@ -147,8 +155,12 @@ describe('Service: Customer Graph Service', function () {
   });
 
   describe('Media Quality graph services', function () {
-    const data: Array<IMediaData> = _.cloneDeep(mediaData.response);
-    const filter: Array<IDropdownBase> = _.cloneDeep(mediaData.dropdownFilter);
+    let data = _.cloneDeep(mediaData.response);
+    let filter = _.cloneDeep(mediaData.dropdownFilter);
+
+    afterAll(function () {
+      data = filter = undefined;
+    });
 
     beforeEach(function () {
       spyOn(AmCharts, 'makeChart').and.returnValue({
@@ -192,8 +204,12 @@ describe('Service: Customer Graph Service', function () {
   });
 
   describe('Registered Devices graph services', function () {
-    const data: Array<IEndpointWrapper> = _.cloneDeep(devicesJson.response.graphData);
-    const filter: Array<IDropdownBase> = _.cloneDeep(devicesJson.response.filterArray);
+    let data = _.cloneDeep(devicesJson.response.graphData);
+    let filter = _.cloneDeep(devicesJson.response.filterArray);
+
+    afterAll(function () {
+      data = filter = undefined;
+    });
 
     beforeEach(function () {
       spyOn(AmCharts, 'makeChart').and.returnValue({

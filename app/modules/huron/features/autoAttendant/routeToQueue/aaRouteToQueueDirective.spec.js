@@ -3,6 +3,7 @@
 describe('Directive: aaRouteToQueue', function () {
   var $compile, $rootScope, $scope;
   var AAUiModelService, AutoAttendantCeMenuModelService;
+  var element;
 
   var aaUiModel = {
     openHours: {},
@@ -19,6 +20,13 @@ describe('Directive: aaRouteToQueue', function () {
   var index = '0';
   var keyIndex = '0';
   var menuId = 'menu1';
+
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
 
   beforeEach(angular.mock.module('Huron'));
 
@@ -45,7 +53,7 @@ describe('Directive: aaRouteToQueue', function () {
   }));
 
   it('replaces the element with the appropriate content', function () {
-    var element = $compile("<aa-route-to-queue aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0' aa-queues='" + $scope.queues + "'></aa-route-to-queue>")($rootScope);
+    element = $compile("<aa-route-to-queue aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0' aa-queues='" + $scope.queues + "'></aa-route-to-queue>")($rootScope);
     $rootScope.$digest();
     expect(element.html()).toContain("aaRouteToQueue");
   });

@@ -91,8 +91,8 @@
                 value: restrictedChannel
               });
             }
-            setSelectedReleaseChannelOption();
           });
+          setSelectedReleaseChannelOption();
         })
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'hercules.genericFailure');
@@ -165,6 +165,7 @@
         vm.localizedStableChannelName = $translate.instant('hercules.fusion.add-resource-group.release-channel.stable');
       }
     }
+
 
     vm.resetReleaseChannel = function () {
       ResourceGroupService.setReleaseChannel(vm.group.id, 'stable')

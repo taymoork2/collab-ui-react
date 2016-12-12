@@ -344,10 +344,11 @@
       },
       expressionProperties: {
         'templateOptions.required': function () {
-          return vm.messageTrial.enabled; // Since, it depends on Message Offer
+          return (vm.messageTrial.enabled && vm.callTrial.enabled); // Since, it depends on Message and Call Offer
         },
         'templateOptions.disabled': function () {
-          return vm.messageOfferDisabledExpression();
+          return vm.messageOfferDisabledExpression()
+            || vm.callOfferDisabledExpression();
         }
       }
     }, {
@@ -482,6 +483,7 @@
     vm.hasUserServices = hasUserServices;
 
     vm.messageOfferDisabledExpression = messageOfferDisabledExpression;
+    vm.callOfferDisabledExpression = callOfferDisabledExpression;
     vm.careLicenseInputDisabledExpression = careLicenseInputDisabledExpression;
     vm.validateCareLicense = validateCareLicense;
     vm.careLicenseCountLessThanTotalCount = careLicenseCountLessThanTotalCount;
@@ -571,6 +573,13 @@
         vm.careTrial.enabled = false;
       }
       return !vm.messageTrial.enabled;
+    }
+
+    function callOfferDisabledExpression() {
+      if (!vm.callTrial.enabled) {
+        vm.careTrial.enabled = false;
+      }
+      return !vm.callTrial.enabled;
     }
 
     function careLicenseInputDisabledExpression() {

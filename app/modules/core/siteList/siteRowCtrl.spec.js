@@ -13,6 +13,14 @@ describe('Controller: WebExSiteRowCtrl', function () {
 
   var accessToken = "Token ABCDERFGHIJK";
 
+  afterEach(function () {
+    controller = $scope = $q = FeatureToggleService = WebExSiteRowService = TokenService = undefined;
+  });
+
+  afterAll(function () {
+    fakeShowGridData = fakeGridData = fakeGridOptions = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));

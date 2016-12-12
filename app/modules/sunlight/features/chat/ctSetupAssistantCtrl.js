@@ -304,6 +304,9 @@
         },
         chatStatusMessages: {
           messages: {
+            bubbleTitleMessage: {
+              displayText: $translate.instant('careChatTpl.bubbleTitleMessage')
+            },
             connectingMessage: {
               displayText: $translate.instant('careChatTpl.connectingMessage')
             },
@@ -427,9 +430,17 @@
       && isValidSinglelineField(vm.template.configuration.pages.feedback.fields.comment.displayText));
     }
 
+    function isBubbleTitleValid(chatStatusMessagesObj) {
+      if (chatStatusMessagesObj.bubbleTitleMessage) {
+        return isValidSinglelineField(chatStatusMessagesObj.bubbleTitleMessage.displayText);
+      }
+      return true;
+    }
+
     function isStatusMessagesPageValid() {
       var chatStatusMessagesObj = vm.template.configuration.chatStatusMessages.messages;
       return isValidSinglelineField(chatStatusMessagesObj.connectingMessage.displayText)
+      && isBubbleTitleValid(chatStatusMessagesObj)
       && isValidSinglelineField(chatStatusMessagesObj.waitingMessage.displayText)
       && isValidSinglelineField(chatStatusMessagesObj.enterRoomMessage.displayText)
       && isValidSinglelineField(chatStatusMessagesObj.leaveRoomMessage.displayText)

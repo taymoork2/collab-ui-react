@@ -15,6 +15,7 @@
       <div class="header-info-wrap">
         <div class="header-title">
           <span>{{$ctrl.model.groupName ? $ctrl.model.groupName : $ctrl.model.customerName}}</span>
+          <a ng-if="$ctrl.model.isEdit" ui-sref="gemCbgDetails.editCountry({obj: {info: $ctrl.model, customerId: $ctrl.customerId}})"><i class="edit-button icon icon-edit"></i></a>
         </div>
       </div>
     </div>

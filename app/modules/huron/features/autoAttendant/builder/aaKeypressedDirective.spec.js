@@ -5,6 +5,13 @@ describe('Directive: aaKeypress', function () {
   var element;
   var Notification;
 
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
+
   beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_, _Notification_) {

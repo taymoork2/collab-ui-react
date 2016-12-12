@@ -1,9 +1,114 @@
 describe('Component: sectionTitle', () => {
+  afterEach(function () {
+    if (this.view) {
+      this.view.remove();
+    }
+  });
   beforeEach(function () {
     this.initModules('Core');
     this.injectDependencies(
       '$scope'
     );
+  });
+
+  describe('asButton attribute', () => {
+
+    beforeEach(function () {
+      this.actionSpy = jasmine.createSpy('actionFunction');
+      this.actionSpy2 = jasmine.createSpy('actionFunction');
+
+      this.$scope.actionList = [{
+        actionKey: 'action.key',
+        actionFunction: this.actionSpy,
+      },
+        {
+          actionKey: 'action.key.2',
+          actionFunction: this.actionSpy2,
+        }];
+    });
+
+    it('should default to dropdown menu when not defined', function () {
+      this.compileComponent('sectionTitle', {
+        titleKey: 'custom.key',
+        actionList: 'actionList',
+      });
+
+      expect(this.controller.asButton).toBeFalsy();
+      expect(this.view).toContainElement('.section-title-row button.actions-button');
+      expect(this.view).not.toContainElement('.section-title-row a.as-button');
+    });
+
+    it('should display dropdown menu if asButton evaluates to false', function () {
+      this.compileComponent('sectionTitle', {
+        titleKey: 'custom.key',
+        actionList: 'actionList',
+        asButton: 'false',
+      });
+      expect(this.controller.asButton).toBeFalsy();
+      expect(this.view).toContainElement('.section-title-row button.actions-button');
+      expect(this.view).not.toContainElement('.section-title-row a.as-button');
+
+      // make sure clicking things works as expcected
+      this.view.find('.section-title-row button.actions-button').click();
+      this.view.find('.section-title-row a.as-button').click();
+      expect(this.actionSpy).not.toHaveBeenCalled();
+      expect(this.actionSpy2).not.toHaveBeenCalled();
+    });
+
+    it('should display button with first action if asButton evaluates to true', function () {
+      this.compileComponent('sectionTitle', {
+        titleKey: 'custom.key',
+        actionList: 'actionList',
+        asButton: 'true',
+      });
+
+      expect(this.controller.asButton).toBeTruthy();
+      expect(this.view).not.toContainElement('.section-title-row button.actions-button');
+      expect(this.view).toContainElement('.section-title-row a.as-button');
+      expect(this.view.find('.section-title-row a.as-button')).toHaveText('action.key');
+
+      // make sure the action is called when the button is clicked
+      this.view.find('.section-title-row a.as-button').click();
+      expect(this.actionSpy).toHaveBeenCalled();
+      expect(this.actionSpy2).not.toHaveBeenCalled();
+    });
+
+    it('should support different ways of setting asButton', function () {
+      this.compileComponent('sectionTitle', {
+        titleKey: 'custom.key',
+        actionList: 'actionList',
+        asButton: 'true',
+      });
+      expect(this.controller.asButton).toBeTruthy();
+
+      this.compileComponent('sectionTitle', {
+        titleKey: 'custom.key',
+        actionList: 'actionList',
+        asButton: '2',
+      });
+      expect(this.controller.asButton).toBeTruthy();
+
+      this.compileComponent('sectionTitle', {
+        titleKey: 'custom.key',
+        actionList: 'actionList',
+        asButton: '0',
+      });
+      expect(this.controller.asButton).toBeFalsy();
+
+      this.compileComponent('sectionTitle', {
+        titleKey: 'custom.key',
+        actionList: 'actionList',
+        asButton: 'FALSE',
+      });
+      expect(this.controller.asButton).toBeFalsy();
+
+      this.compileComponent('sectionTitle', {
+        titleKey: 'custom.key',
+        actionList: 'actionList',
+        asButton: '',
+      });
+      expect(this.controller.asButton).toBeFalsy();
+    });
   });
 
   describe('without an actionList', () => {

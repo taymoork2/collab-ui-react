@@ -1,6 +1,10 @@
 describe('OverviewHybridServicesCard', function () {
   var OverviewHybridServicesCard, $rootScope, Authinfo, FeatureToggleService, FusionClusterService, $q, CloudConnectorService;
 
+  afterEach(function () {
+    OverviewHybridServicesCard = $rootScope = Authinfo = FeatureToggleService = FusionClusterService = $q = undefined;
+  });
+
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Core'));

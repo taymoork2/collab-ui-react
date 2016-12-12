@@ -6,6 +6,10 @@ describe('DeviceUsageDistributiongraphService', function () {
 
   var DeviceUsageDistributionGraphService;
 
+  afterEach(function () {
+    DeviceUsageDistributionGraphService = undefined;
+  });
+
   beforeEach(inject(function (_DeviceUsageDistributionGraphService_) {
     DeviceUsageDistributionGraphService = _DeviceUsageDistributionGraphService_;
   }));

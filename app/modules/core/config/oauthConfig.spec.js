@@ -5,6 +5,10 @@ describe('OAuthConfig', function () {
 
   var OAuthConfig, $location;
 
+  afterEach(function () {
+    OAuthConfig = $location = undefined;
+  });
+
   beforeEach(inject(function (_$location_, _OAuthConfig_) {
     OAuthConfig = _OAuthConfig_;
     $location = _$location_;
@@ -44,6 +48,10 @@ describe('OAuthConfig', function () {
       }
     };
   };
+
+  afterAll(function () {
+    devHost = prodHost = cfeHost = intHost = scope = whenCalling = undefined;
+  });
 
   it('should return correct access code url', function () {
     whenCalling('getOauthAccessCodeUrl', 'foo').expectUrlToBe({
