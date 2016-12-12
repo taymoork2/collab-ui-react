@@ -1,0 +1,27 @@
+<setting-section setting="$ctrl.calendarSectionTexts">
+  <div class="sub-section">
+    <h5 class="sub-section__label" translate="hercules.settings.googleCalendar.serviceAccountHeader"></h5>
+    <p class="sub-section__description" translate="hercules.settings.googleCalendar.serviceAccountText"></p>
+    <input cs-input
+            disabled
+            type="text"
+            ng-model="$ctrl.googleServiceAccount"
+            cs-input-help-text="{{$ctrl.localizedGoogleServiceAccountHelpText}}">
+  </div>
+  <div class="sub-section">
+    <h5 class="sub-section__label" translate="hercules.settings.googleCalendar.privateKeyHeader"></h5>
+    <p class="sub-section__description" translate="hercules.settings.googleCalendar.privateKeyText"></p>
+            <button
+            ng-disabled="!$ctrl.googleServiceAccount"
+            type="button" class="btn"
+            translate="common.upload"
+            ng-click="$ctrl.uploadGooglePrivateKey()"></button>
+  </div>
+  <div class="sub-section">
+    <h5 class="sub-section__label" translate="hercules.settings.googleCalendar.deactivateHeader"></h5>
+    <p class="sub-section__description" translate="hercules.settings.googleCalendar.deactivateText"></p>
+    <button type="button" class="btn"
+            translate="common.deactivate"
+            ng-click="$ctrl.confirmDisable($ctrl.serviceId)"></button>
+  </div>
+</setting-section>

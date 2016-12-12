@@ -684,6 +684,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     });
     it("should have previous and next button enabled", function () {
       controller.template.configuration.chatStatusMessages.messages.connectingMessage.displayText = "Connecting Message";
+      controller.template.configuration.chatStatusMessages.messages.bubbleTitleMessage.displayText = "Click here to chat with Customer Care";
       controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = "Waiting Message";
       controller.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText = "Enter Room Message";
       controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = "Left Room Message";
@@ -692,6 +693,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     });
     it("should have next button disabled if all the status messages are more than 50 characters", function () {
       controller.template.configuration.chatStatusMessages.messages.connectingMessage.displayText = Array(60).join("n");
+      controller.template.configuration.chatStatusMessages.messages.bubbleTitleMessage.displayText = Array(51).join("n");
       controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = Array(60).join("n");
       controller.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText = Array(60).join("n");
       controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = Array(60).join("n");
@@ -700,6 +702,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     });
     it("should have next button disabled if any of the status messages are more than 50 characters", function () {
       controller.template.configuration.chatStatusMessages.messages.connectingMessage.displayText = "Connecting Message";
+      controller.template.configuration.chatStatusMessages.messages.bubbleTitleMessage.displayText = "Click here to chat with Customer Care";
       controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = "Waiting Message";
       controller.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText = "Enter Room Message";
       controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = "Left Room Message";

@@ -24,6 +24,15 @@ describe('Auth Service', function () {
 
     spyOn(WindowLocation, 'set');
     spyOn($state, 'go').and.returnValue($q.when());
+
+    this.orgInfo = {
+      orgSettingsWithDomain: {
+        orgSettings: [
+          '{"sparkCallBaseDomain":"sparkc-eu.com"}',
+        ],
+      }
+    };
+
   }));
 
   afterEach(function () {
@@ -439,13 +448,17 @@ describe('Auth Service', function () {
             orgId: 1337,
             roles: ['Full_Admin']
           });
+
+        $httpBackend
+          .expectGET('path/organizations/1337?disableCache=true')
+          .respond(200, this.orgInfo.orgSettingsWithDomain);
+
       });
 
       it('services should be fetched', function () {
         $httpBackend
           .expectGET('path/organizations/1337/services')
           .respond(500, {});
-
         Auth.authorize();
 
         $httpBackend.flush();
@@ -489,9 +502,15 @@ describe('Auth Service', function () {
               sqService: 'bar'
             }]
           });
+
+        $httpBackend
+          .expectGET('path/organizations/1337?disableCache=true')
+          .respond(200, this.orgInfo.orgSettingsWithDomain);
+
         $httpBackend
           .expectGET('msn/orgs/1337/cisync/')
           .respond(200, {});
+
         Authinfo.initialize = sinon.stub();
       });
 
@@ -543,6 +562,11 @@ describe('Auth Service', function () {
               sqService: 'bar'
             }]
           });
+
+        $httpBackend
+          .expectGET('path/organizations/1337?disableCache=true')
+          .respond(200, this.orgInfo.orgSettingsWithDomain);
+
         $httpBackend
           .expectGET('msn/orgs/1337/cisync/')
           .respond(200, {});
@@ -580,6 +604,10 @@ describe('Auth Service', function () {
         });
 
       $httpBackend
+        .expectGET('path/organizations/1337?disableCache=true')
+        .respond(200, this.orgInfo.orgSettingsWithDomain);
+
+      $httpBackend
         .expectGET('msn/orgs/1337/cisync/')
         .respond(200, {
           orgID: 'foo',
@@ -609,6 +637,10 @@ describe('Auth Service', function () {
           roles: ['Full_Admin'],
           services: []
         });
+
+      $httpBackend
+        .expectGET('path/organizations/1337?disableCache=true')
+        .respond(200, this.orgInfo.orgSettingsWithDomain);
 
       $httpBackend
         .expectGET('path/organizations/1337/services')
@@ -648,11 +680,14 @@ describe('Auth Service', function () {
         });
 
       $httpBackend
+        .expectGET('path/organizations/1337?disableCache=true')
+        .respond(200, this.orgInfo.orgSettingsWithDomain);
+
+      $httpBackend
         .expectGET('path/organizations/1337/services')
         .respond(200, {
           entitlements: ['foo']
         });
-
       $httpBackend
         .expectGET('msn/orgs/1337/cisync/')
         .respond(200, {
@@ -683,6 +718,10 @@ describe('Auth Service', function () {
           roles: ['PARTNER_ADMIN'],
           services: []
         });
+
+      $httpBackend
+        .expectGET('path/organizations/1337?disableCache=true')
+        .respond(200, this.orgInfo.orgSettingsWithDomain);
 
       $httpBackend
         .expectGET('path/organizations/1337/services')

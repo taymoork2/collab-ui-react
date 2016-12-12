@@ -8,18 +8,19 @@ describe('Controller: HuronSettingsCtrl', function () {
   var modalDefer, customer, timezones, timezone, voicemailCustomer, internalNumberRanges, languages;
   var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction, countries;
   var $rootScope, didVoicemailCustomer, FeatureToggleService;
-  var controller;
+  var controller, compile, styleSheet, element, window;
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$rootScope_, _$q_, _$httpBackend_, _ExternalNumberService_, _DialPlanService_,
     _PstnSetupService_, _ModalService_, _Notification_, _HuronCustomer_, _ServiceSetup_, _InternationalDialing_, _Authinfo_, _HuronConfig_,
-    _CallerId_, _VoicemailMessageAction_, _FeatureToggleService_) {
+    _CallerId_, _VoicemailMessageAction_, $compile, _FeatureToggleService_) {
 
     $q = _$q_;
     $rootScope = _$rootScope_;
     $scope = $rootScope;
+    compile = $compile;
     $httpBackend = _$httpBackend_;
     Authinfo = _Authinfo_;
     Notification = _Notification_;
@@ -34,6 +35,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     CallerId = _CallerId_;
     VoicemailMessageAction = _VoicemailMessageAction_;
     FeatureToggleService = _FeatureToggleService_;
+    window = window || {};
 
     modalDefer = $q.defer();
 
@@ -1162,6 +1164,37 @@ describe('Controller: HuronSettingsCtrl', function () {
           pattern: controller.model.serviceNumber.pattern
         }
       });
+    });
+  });
+
+  describe('Sticky Directive', function () {
+    beforeEach(function () {
+      styleSheet = angular.element([
+        '<style name="sticky" type="text/css">',
+        '.sticky {position:sticky;-webkit-position:sticky}',
+        '</style>'].join(''));
+      element = angular.element('<div cs-sticky>Sticky</div>');
+      if (!angular.element('style[name=sticky]').length) {
+        angular.element('head').append(styleSheet);
+      }
+      angular.element('body').append(element);
+      $scope.$digest();
+    });
+
+    it('should not have polyfill globally available', inject(function () {
+      compile(element)($scope);
+      $scope.$apply();
+      expect(window.Stickyfill).not.toBeDefined();
+    }));
+    it('should have polyfill factory available', inject(function (Sticky) {
+      compile(element)($scope);
+      $scope.$apply();
+      expect(Sticky).toBeDefined();
+    }));
+    it('should initialize', function () {
+      compile(element)($scope);
+      $scope.$apply();
+      expect(angular.element(element).hasClass('sticky')).toBe(true);
     });
   });
 });

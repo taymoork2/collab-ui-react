@@ -379,6 +379,11 @@
             field.model.details.quantity = newValue ? 5 : 0;
           }
         }
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.preset.sparkBoard;
+        },
       }
     }, {
       model: vm.sparkBoardTrial.details,

@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var URL = require('url');
+
   angular
     .module('Hercules')
     .controller('SoftwareUpgradeController', SoftwareUpgradeController);
@@ -14,10 +16,15 @@
     vm.clusterName = cluster.name;
     vm.connectorName = $translate.instant('hercules.connectorNames.' + servicesId[0]);
     vm.releaseNotes = '';
+    vm.releaseNotesUrl = '';
 
     FusionClusterService.getReleaseNotes(cluster.releaseChannel, connectorType)
       .then(function (res) {
         vm.releaseNotes = res;
+        var urlParts = URL.parse(res);
+        if (urlParts.hostname !== null) {
+          vm.releaseNotesUrl = urlParts.href;
+        }
       }, function () {
         vm.releaseNotes = 'Not Found';
       });

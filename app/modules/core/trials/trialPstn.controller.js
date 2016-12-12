@@ -44,11 +44,10 @@
       createTokensOnBlur: true,
       limit: 100,
       tokens: [],
-      minLength: 9,
       beautify: false
     };
     vm.manualTokenMethods = {
-      createtoken: createToken,
+      createtoken: manualCreateToken,
       createdtoken: manualCreatedToken,
       editedtoken: manualEditToken,
       removedtoken: manualRemovedToken,
@@ -289,8 +288,19 @@
       }
     }
 
+    function manualCreateToken(e) {
+      if (e.attrs.value.charAt(0) !== '+') {
+        e.attrs.value = '+'.concat(e.attrs.value);
+      }
+      try {
+        e.attrs.value = e.attrs.label = phoneUtils.formatE164(e.attrs.value);
+      } catch (e) {
+        //noop
+      }
+    }
+
     function manualCreatedToken(e) {
-      if (!validateDID(e.attrs.value) || isDidAlreadyPresent(e.attrs.value)) {
+      if (!TelephoneNumberService.internationalNumberValidator(e.attrs.value) || isDidAlreadyPresent(e.attrs.value)) {
         angular.element(e.relatedTarget).addClass('invalid');
         vm.invalidCount++;
       }
@@ -330,10 +340,6 @@
       if (index > -1) {
         vm.trialData.details.swivelNumbers.splice(index, 1);
       }
-    }
-
-    function validateDID(input) {
-      return TelephoneNumberService.validateDID(input);
     }
 
     function isDidAlreadyPresent(input) {

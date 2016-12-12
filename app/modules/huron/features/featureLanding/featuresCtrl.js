@@ -96,7 +96,7 @@
       formatter: HuronFeaturesListService.pagingGroups,
       isEmpty: false,
       i18n: 'huronFeatureDetails.pgName',
-      color: 'gray'
+      color: 'people'
     };
 
     FeatureToggleService.supports(FeatureToggleService.features.callParkService).then(function (result) {
