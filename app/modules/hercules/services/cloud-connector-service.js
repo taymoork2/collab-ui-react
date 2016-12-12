@@ -5,7 +5,7 @@
     .module('Hercules')
     .factory('CloudConnectorService', CloudConnectorService);
 
-  function CloudConnectorService($q, $timeout, Authinfo) {
+  function CloudConnectorService($q, $timeout, Authinfo, ServiceDescriptor) {
     var serviceAccountId = 'google@example.org'; // dummy value for now
     var isGoogleCalendarSetup = false;
 
@@ -47,14 +47,18 @@
     function updateConfig(newServiceAccountId, privateKey, serviceId) {
       return $q(function (resolve, reject) {
         if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal()) {
-          isGoogleCalendarSetup = true;
-          $timeout(function () {
-            serviceAccountId = newServiceAccountId;
-            resolve(extractDataFromResponse({
-              data: {},
-              status: 200
-            }));
-          }, 1000);
+          ServiceDescriptor.enableService(serviceId)
+              .then(function () {
+                isGoogleCalendarSetup = true;
+                serviceAccountId = newServiceAccountId;
+                resolve(extractDataFromResponse({
+                  data: {},
+                  status: 200
+                }));
+              })
+              .catch(function (error) {
+                reject(error);
+              });
         } else {
           $timeout(function () {
             reject({
@@ -75,13 +79,17 @@
     function deactivateService(serviceId) {
       return $q(function (resolve, reject) {
         if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal()) {
-          $timeout(function () {
-            isGoogleCalendarSetup = false;
-            resolve(extractDataFromResponse({
-              data: {},
-              status: 200
-            }));
-          }, 300);
+          ServiceDescriptor.disableService(serviceId)
+            .then(function () {
+              isGoogleCalendarSetup = false;
+              resolve(extractDataFromResponse({
+                data: {},
+                status: 200
+              }));
+            })
+            .catch(function (error) {
+              reject(error);
+            });
         } else {
           $timeout(function () {
             reject({
