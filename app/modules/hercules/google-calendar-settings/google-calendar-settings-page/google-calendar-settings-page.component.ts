@@ -2,6 +2,7 @@ class GoogleCalendarSettingsCtrl implements ng.IComponentController {
   public pageTitle = this.$translate.instant('Hybrid Calendar (Google)');
   public backState = 'services-overview';
   public userStatusesSummary = [];
+  private subscribeStatusesSummary: any;
 
   private serviceId = 'squared-fusion-gcal';
 
@@ -13,15 +14,15 @@ class GoogleCalendarSettingsCtrl implements ng.IComponentController {
   ) {}
 
   public $onInit() {
-    const dataFromService = this.USSService.extractSummaryForAService(this.serviceId);
-    // Add random data while the backend is not ready
-    this.userStatusesSummary = dataFromService.length > 0 ? dataFromService : [{
-      serviceId: this.serviceId,
-      activated: _.random(0, 100),
-      notActivated: _.random(0, 100),
-      error: _.random(0, 100),
-      total: _.random(0, 100),
-    }];
+    this.subscribeStatusesSummary = this.USSService.subscribeStatusesSummary('data', this.extractSummary.bind(this));
+  }
+
+  public $onDestroy() {
+    this.subscribeStatusesSummary.cancel();
+  }
+
+  public extractSummary() {
+    this.userStatusesSummary = this.USSService.extractSummaryForAService([this.serviceId]);
   }
 
   public openUserStatusReportModal(): void {

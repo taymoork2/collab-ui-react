@@ -93,7 +93,7 @@ describe('ServicesOverviewHybridCallCard', () => {
   it('should stay not googleActive if CloudConnectorService says service not setup', () => {
     Authinfo.isFusionCal.and.returnValue(true);
     Authinfo.isFusionGoogleCal.and.returnValue(true);
-    CloudConnectorService.isServiceSetup.and.returnValue($q.resolve(false));
+    CloudConnectorService.getService.and.returnValue($q.resolve({ setup: false }));
     card = new ServicesOverviewHybridAndGoogleCalendarCard($q, $modal, Authinfo, CloudConnectorService, FusionClusterStatesService);
     card.hybridStatusEventHandler([]);
     card.googleCalendarFeatureToggleEventHandler(true);
@@ -104,7 +104,7 @@ describe('ServicesOverviewHybridCallCard', () => {
   it('should be googleActive if CloudConnectorService says service setup', () => {
     Authinfo.isFusionCal.and.returnValue(true);
     Authinfo.isFusionGoogleCal.and.returnValue(true);
-    CloudConnectorService.isServiceSetup.and.returnValue($q.resolve(true));
+    CloudConnectorService.getService.and.returnValue($q.resolve({ setup: true }));
     card = new ServicesOverviewHybridAndGoogleCalendarCard($q, $modal, Authinfo, CloudConnectorService, FusionClusterStatesService);
     card.hybridStatusEventHandler([]);
     card.googleCalendarFeatureToggleEventHandler(true);
