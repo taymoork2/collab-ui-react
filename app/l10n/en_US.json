@@ -4933,7 +4933,17 @@
     "featuresTitle": "Features",
     "sorryMessage": "Sorry, something went wrong ",
     "reloadMessage": "Please try reloading the page",
-    "newFeatureButtonText": "New",
+    "chatTemplateCode": "Ch",
+    "callbackTemplateCode": "Ca",
+    "newFeatures": {
+      "newFeatureButtonText": "New",
+      "newCareTemplateModalTitle": "Create New Care Template",
+      "noCareFeatures": "Care Features are not available for the current login",
+      "selectCHDesc": "Configure this template to customize the experience for your customers when they contact your agents via chat.",
+      "selectCADesc": "Configure this template to customize the experience for your customers when they request a callback from your agents.",
+      "chatType": "Chat",
+      "callbackType": "Callback"
+    },
     "settings": {
       "setUpCare": "Care",
       "setUpDescription": "Setup Care to add this license for your users so that your organization can take advantage of Care service.",
@@ -4941,8 +4951,8 @@
       "setUpCareFailure": "Failed to setup Care service. Please try again. Users cannot have Care license till this setup is complete."
     },
     "featuresNotYetConfiguredPage": {
-      "createCT": "Create a Chat Template",
-      "createCTDesc": "A chat template is what your customer sees when chatting with an agent.",
+      "createCareTemplate": "Create a Care Template",
+      "createCareTemplateDesc": "A Care template is what your customer uses to contact customer care.",
       "new": "New"
     }
   },
