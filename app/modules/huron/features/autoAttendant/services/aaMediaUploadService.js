@@ -52,6 +52,7 @@
         }
       }
     */
+    //the resources are mapped from a common controller resource service
     var resources = AACtrlResourcesService.getCtrlToResourceMap();
 
     $rootScope.$on('CE Closed', closeResources);
@@ -67,6 +68,8 @@
       return retrieveByResult(result);
     }
 
+    //when the aa builder has been closed, clean up all resources from
+    //saved until the end
     function closeResources() {
       _.each(AACtrlResourcesService.getCtrlKeys(), function (key) {
         cleanResourceFieldIndex('saved', 0, key);
@@ -74,12 +77,17 @@
       });
     }
 
+    //when the aa save is complete, we want to keep the main active
+    //media, so delete backwards
     function saveResources() {
       _.each(AACtrlResourcesService.getCtrlKeys(), function (key) {
         cleanResourceFieldIndex('active', getResources(key).length - 1, key);
       });
     }
 
+    //helper function to clean based on active, or saved fields
+    //for the specific controller being referred to
+    //closed focuses on the last saved and save focuses on the active
     function cleanResourceFieldIndex(field, index, key) {
       if (key && field) {
         if (getResources(key)[field]) {
@@ -105,10 +113,10 @@
       }
     }
 
+    //get the resources associated with a media controller
+    //if that controller doesn't have an entry
+    //create as default, then return the media controller values
     function getResources(unqCtrlId) {
-      //get the resources associated with a media controller
-      //if that controller doesn't have an entry
-      //create as default, then return the media controller values
       if (unqCtrlId) {
         resources[unqCtrlId] = _.get(resources, unqCtrlId, { uploads: [], active: true, saved: false });
         return resources[unqCtrlId];
@@ -116,6 +124,7 @@
       return undefined;
     }
 
+    //clean all resources except for a specific index from the resource array
     function clearResourcesExcept(unqCtrlId, index) {
       if (index >= 0) {
         var ctrlResources = getResources(unqCtrlId);
@@ -130,6 +139,8 @@
     function deleteResources(ctrl) {
       var target = _.get(ctrl, 'uploads', []);
       _.each(target, function (value) {
+        //every media upload controller stores the url
+        //in the value field for tropo
         if (_.has(value, 'value')) {
           try {
             var desc = JSON.parse(target.description);
@@ -148,7 +159,7 @@
     //if it fails after that, it's orphaned in clio
     function httpDeleteRetry(internalValue, counter) {
       var deleter = deleteRecording(internalValue);
-      if (!_.isUndefined(deleter)) {
+      if (deleter) {
         deleter.then(function () {
         }, function () {
           if (counter < 3) {
@@ -158,6 +169,7 @@
       }
     }
 
+    //asynchronous delete on the resource, assumes url is valid
     function deleteRecording(deleteUrl) {
       if (deleteUrl) {
         return $http.delete(deleteUrl);
@@ -166,6 +178,9 @@
       }
     }
 
+    //from the very specific metadata returned by clio
+    //under the http result promise .data.metadata will be a field
+    //called variants which inside will store the recording url
     function getRecordingUrl(metadata) {
       if (metadata) {
         var variants = _.get(metadata, 'variants', undefined);
@@ -176,6 +191,9 @@
       return '';
     }
 
+    //from the very specific metadata returned by clio
+    //under the http result promise .data.metadata will be a field called
+    //recordingId which is the UUID for the resource stored in cliomanager
     function getDeleteUrl(metadata) {
       var recordingId = _.get(metadata, 'recordingId', '');
       if (recordingId) {
@@ -184,6 +202,7 @@
       return recordingId;
     }
 
+    //get the playback and delete url, store in obj
     function retrieveByResult(successResult) {
       if (!successResult) {
         return '';
@@ -203,13 +222,14 @@
       return urls;
     }
 
+    //once at the variants level, clio stores the recording url under variants[0].variantUrl
     function getRecordingByVariant(variants) {
       var variantKeys = _.keys(variants);
       if (!variantKeys || variantKeys.length === 0) {
         return '';
       }
       var variantUrl = _.get(variants, variantKeys[0] + '.variantUrl', undefined);
-      if (_.isUndefined(variantUrl)) {
+      if (!variantUrl) {
         return '';
       }
       return variantUrl + '?orgId=' + Authinfo.getOrgId();

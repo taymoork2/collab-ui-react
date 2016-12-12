@@ -101,7 +101,7 @@
         vm.progress = 0;
         modalCanceled = false;
         uploadServProm = AAMediaUploadService.upload(file);
-        if (!_.isUndefined(uploadServProm)) {
+        if (uploadServProm) {
           uploadServProm.then(uploadSuccess, uploadError, uploadProgress).finally(cleanUp);
         } else {
           uploadError();
@@ -129,9 +129,7 @@
       fd.uploadFile = vm.uploadFile;
       fd.uploadDate = vm.uploadDate;
       fd.uploadDuration = vm.uploadDuration;
-      if (vm.clioDelete) {
-        fd.deleteUrl = deleteUrl;
-      }
+      fd.deleteUrl = deleteUrl;
       vm.actionEntry.value = value;
       vm.actionEntry.description = JSON.stringify(fd);
     }
@@ -151,7 +149,7 @@
 
     function uploadProgress(evt) {
       //dont divide by zero for progress calculation
-      if (!_.isUndefined(evt) && !_.isEqual(evt.total, 0)) {
+      if (evt && !_.isEqual(evt.total, 0)) {
         vm.progress = parseInt((100.0 * ((evt.loaded - 1) / evt.total)), 10);
       } else {
         vm.progress = 0;
@@ -242,7 +240,7 @@
 
     //roll back, revert if history exists, else hard reset
     function rollBack() {
-      if (!_.isUndefined(uploadServProm)) {
+      if (uploadServProm) {
         uploadServProm.abort();
         uploadServProm = undefined;
       }
@@ -259,7 +257,7 @@
         vm.uploadFile = desc.uploadFile;
         vm.uploadDate = desc.uploadDate;
         vm.uploadDuration = desc.uploadDuration;
-        if (!_.isUndefined(playAction)) {
+        if (playAction) {
           playAction.description = vm.actionCopy.description;
           playAction.value = vm.actionCopy.value;
         }
@@ -274,7 +272,7 @@
       vm.uploadFile = '';
       vm.uploadDate = '';
       vm.uploadDuration = '';
-      if (!_.isUndefined(playAction)) {
+      if (playAction) {
         playAction.description = '';
         playAction.value = '';
       }
@@ -289,7 +287,7 @@
     });
 
     $scope.$on('$destroy', function () {
-      if (!_.isUndefined(uploadServProm)) {
+      if (uploadServProm) {
         modalCanceled = true;
         uploadServProm.abort();
       }
