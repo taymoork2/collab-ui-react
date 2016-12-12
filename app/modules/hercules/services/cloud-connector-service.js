@@ -7,7 +7,7 @@
 
   function CloudConnectorService($q, $timeout, Authinfo) {
     var serviceAccountId = 'google@example.org'; // dummy value for now
-    var isGoogleCalendarSetup = true;
+    var isGoogleCalendarSetup = false;
 
     return {
       updateConfig: updateConfig,
@@ -26,10 +26,10 @@
       return $q.resolve({ provisioned: isGoogleCalendarSetup, status: 'OK', serviceAccountId: serviceAccountId })
         .then(function (service) {
           // Align this with the FusionClusterService.getServiceStatus() to make the UI handling simpler
-          service.status = translateStatus(service);
-          service.statusCss = getStatusCss(service);
           service.serviceId = serviceId;
           service.setup = service.provisioned;
+          service.statusCss = getStatusCss(service);
+          service.status = translateStatus(service);
           return service;
         });
     }
