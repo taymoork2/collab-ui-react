@@ -649,17 +649,11 @@ require('./_user-add.scss');
       }
     }
 
-    function getServiceDetails(license) {
-      var userLicenses = $scope.currentUser.licenseID;
-      if (userLicenses) {
-        for (var l = userLicenses.length - 1; l >= 0; l--) {
-          var licensePrefix = userLicenses[l].substring(0, 2);
-          if (licensePrefix === license) {
-            return true;
-          }
-        }
-      }
-      return false;
+    function getServiceDetails(licensePrefix) {
+      var hasLicense = _.find($scope.currentUser.licenseID, function (userLicense) {
+        return (userLicense.substring(0, 2) === licensePrefix);
+      });
+      return hasLicense;
     }
 
 
