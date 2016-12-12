@@ -669,6 +669,9 @@
           LogMetricsService.logMetrics('Created template for Care', LogMetricsService.getEventType('careTemplateFinish'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
         }, function () {
           handleChatTemplateError();
+        })
+        .catch(function (response) {
+          Notification.errorWithTrackingId(response, 'careChatTpl.createChatTemplateFailureText');
         });
     }
 
@@ -679,6 +682,9 @@
           LogMetricsService.logMetrics('Edited template for Care', LogMetricsService.getEventType('careTemplateFinish'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
         }, function () {
           handleChatTemplateError();
+        })
+        .catch(function (response) {
+          Notification.errorWithTrackingId(response, 'careChatTpl.editChatTemplateFailureText');
         });
     }
 

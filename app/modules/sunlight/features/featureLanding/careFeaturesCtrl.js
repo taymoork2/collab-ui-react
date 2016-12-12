@@ -99,7 +99,7 @@
     function handleFailures(response, feature) {
       vm.pageState = pageStates.error;
       Log.warn('Could not fetch features for customer with Id:', Authinfo.getOrgId());
-      Notification.errorResponse(response, 'careChatTpl.failedToLoad', {
+      Notification.errorWithTrackingId(response, 'careChatTpl.failedToLoad', {
         featureText: $filter('translate')(feature.i18n)
       });
     }

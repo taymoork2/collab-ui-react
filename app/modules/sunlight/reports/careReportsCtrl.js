@@ -81,6 +81,9 @@
 
     function showReportsWithRealData() {
       var isToday = (vm.timeSelected.value === 0);
+      if (isToday) {
+        showSnapshotReportWithRealData();
+      }
       var categoryAxisTitle = vm.timeSelected.categoryAxisTitle;
       SunlightReportService.getReportingData('org_stats', vm.timeSelected.value, 'chat')
         .then(function (data) {
@@ -93,13 +96,14 @@
             CareReportsService.showAverageCsatGraph('averageCsatDiv', data, categoryAxisTitle, isToday);
             resizeCards();
           }
-        }, function () {
+        }, function (data) {
           vm.dataStatus = EMPTY;
-          Notification.error($translate.instant('careReportsPage.taskDataGetError', { dataType: 'Tasks' }));
+          Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Customer Satisfaction' }));
+          if (!isToday) {
+            Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Contact Time Measure' }));
+          }
+          Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Total Completed Contacts' }));
         });
-      if (isToday) {
-        showSnapshotReportWithRealData();
-      }
     }
 
     function showSnapshotReportWithRealData() {
@@ -113,9 +117,9 @@
             CareReportsService.showTaskAggregateGraph('taskAggregateDiv', data, vm.timeSelected.categoryAxisTitle);
             resizeCards();
           }
-        }, function () {
+        }, function (data) {
           vm.snapshotDataStatus = EMPTY;
-          Notification.error($translate.instant('careReportsPage.taskDataGetError', { dataType: 'Task Aggregation' }));
+          Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Aggregated Contacts' }));
         });
     }
 
