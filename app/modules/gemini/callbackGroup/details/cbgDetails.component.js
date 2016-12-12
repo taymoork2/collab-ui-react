@@ -5,11 +5,11 @@
     .module('Gemini')
     .component('cbgDetails', {
       templateUrl: 'modules/gemini/callbackGroup/details/cbgDetails.tpl.html',
-      controller: cbgDetailsCtrl
+      controller: CbgDetailsCtrl
     });
 
   /* @ngInject */
-  function cbgDetailsCtrl($state, $modal, $rootScope, $stateParams, $translate, $window, Notification, PreviousState, cbgService, gemService) {
+  function CbgDetailsCtrl($state, $modal, $rootScope, $stateParams, $translate, $window, Notification, PreviousState, cbgService, gemService) {
     var vm = this;
     var showHistoriesNum = 5;
     var groupId = _.get($stateParams, 'info.groupId', '');
@@ -20,6 +20,7 @@
     vm.$onInit = $onInit;
     vm.onApprove = onApprove;
     vm.onDecline = onDecline;
+    vm.onComplete = onComplete;
     vm.remedyTicketLoading = true;
     vm.onShowAllHistories = onShowAllHistories;
     vm.onOpenRemedyTicket = onOpenRemedyTicket;
@@ -31,15 +32,20 @@
     function $onInit() {
       $state.current.data.displayName = $translate.instant('gemini.cbgs.overview');
 
-      getCurrentCallbackGroup(groupId);
       getNotes();
       getHistories();
       getRemedyTicket();
+      getCurrentCallbackGroup();
     }
 
     function onCancelSubmission() {
-      setButtonStatus('CancelSubmission');
-      updateCallbackGroupStatus('cancel');
+      $modal.open({
+        type: 'dialog',
+        templateUrl: 'modules/gemini/callbackGroup/details/cancelSubmissionConfirm.tpl.html'
+      }).result.then(function () {
+        setButtonStatus('CancelSubmission');
+        updateCallbackGroupStatus('cancel');
+      });
     }
 
     function onApprove() {
@@ -47,8 +53,21 @@
         type: 'dialog',
         templateUrl: 'modules/gemini/callbackGroup/details/approveConfirm.tpl.html'
       }).result.then(function () {
+        vm.isNotReload = false;
         updateCallbackGroupStatus('approve');
+        $modal.open({
+          type: 'dialog',
+          templateUrl: 'modules/gemini/callbackGroup/details/provisionConfirm.tpl.html'
+        }).result.then(function () {
+          vm.isNotReload = false;
+          updateCallbackGroupStatus('provision');
+        });
       });
+    }
+
+    function onComplete() {
+      setButtonStatus('Complete');
+      updateCallbackGroupStatus('provision');
     }
 
     function onDecline() {
@@ -65,7 +84,6 @@
         },
         templateUrl: 'modules/gemini/callbackGroup/details/declineSmallDialog.tpl.html'
       }).result.then(function () {
-        vm.loading = true;
         updateCallbackGroupStatus('decline', { comments: vm.comments });
       });
     }
@@ -79,7 +97,7 @@
       vm.isShowAllHistories = false;
     }
 
-    function getCurrentCallbackGroup(groupId) {
+    function getCurrentCallbackGroup() {
       cbgService.getOneCallbackGroup(vm.customerId, groupId)
         .then(function (res) {
           var resJson = _.get(res.content, 'data');
@@ -89,6 +107,7 @@
           }
           vm.model = resJson.body;
           var status = vm.model.status;
+          vm.isShowCommplet = (status === 'A');
           vm.model.isEdit = !(status === 'S' || status === 'A');
           vm.isShowDeclineApprove = (gemService.isAvops() && status === 'S');
           vm.isShowCancelSubmission = (gemService.isServicePartner() && (status === 'S'));
@@ -103,12 +122,12 @@
     function getNotes() {
       cbgService.getNotes(vm.customerId, groupId)
         .then(function (res) {
-          var resJson = _.get(res.content, 'data');
-          if (resJson.returnCode) {
+          var returnCode = _.get(res.content, 'data.returnCode');
+          if (returnCode) {
             Notification.error('Fail to get notes');//TODO wording
             return;
           }
-          vm.notes = resJson.body;
+          vm.notes = _.get(res.content, 'data.body');
         });
     }
 
@@ -119,10 +138,11 @@
           vm.remedyTicket = _.first(resArr);
           vm.remedyTicketLoading = false;
         });
+
     }
 
     function getHistories() {
-      cbgService.getHistories(vm.customerId)
+      cbgService.getHistories(vm.customerId, groupId)
         .then(function (res) {
           var resJson = _.get(res.content, 'data');
           if (resJson.returnCode) {
@@ -131,19 +151,22 @@
           }
           vm.allHistories = resJson.body;
           vm.histories = (_.size(vm.allHistories) <= showHistoriesNum ? vm.allHistories : _.slice(vm.allHistories, 0, showHistoriesNum));
-          vm.isShowAllHistories = true;
+          vm.isShowAllHistories = (_.size(vm.allHistories) > showHistoriesNum);
         });
     }
 
     function updateCallbackGroupStatus(operation, data) {
       cbgService.updateCallbackGroupStatus(vm.customerId, vm.model.ccaGroupId, operation, data)
         .then(function (res) {
-          if (_.get(res.content, 'data.returnCode')) {
-            Notification.error('Failed to update callback Group status');
+          var resJson = _.get(res.content, 'data');
+          if (resJson.returnCode) {
+            Notification.notify(gemService.showError(resJson.returnCode));
             return;
           }
           $rootScope.$emit('cbgsUpdate', true);
-          $state.reload();
+          if (!vm.isNotReload) {
+            $state.reload();
+          }
         })
         .catch(function (err) {
           Notification.errorResponse(err, 'errors.statusError', { status: err.status }); // TODO will defined the wording
