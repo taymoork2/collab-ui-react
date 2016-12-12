@@ -1685,6 +1685,7 @@
       "currentVersion": "Current Version",
       "newVersion": "New Version",
       "explanation": "You are about to upgrade {{connectorType}} to version {{newVersion}} on all nodes in your Expressway cluster",
+      "releaseNotesLinkText": "See release notes for {{connectorType}} {{newVersion}}",
       "releaseNotes": "Release Notes",
       "pending": "Pending",
       "upgrade": "Upgrade",
@@ -1997,9 +1998,9 @@
       "pageTitle": "{{groupName}} Settings",
       "releaseChannelHeader": "Release Channel",
       "releaseChannelDescription": "Select the release channel for all Hybrid Services running in this group.",
-      "clustersHeader" : "Clusters",
-      "clustersAssign" : "Assign Clusters",
-      "clustersDescription" : "Add one or more existing Expressway clusters to this group.",
+      "clustersHeader": "Clusters",
+      "clustersAssign": "Assign Clusters",
+      "clustersDescription": "Add one or more existing Expressway clusters to this group.",
       "usersHeader": "Users",
       "usersAssign": "Assign Users",
       "usersDescription1": "Choose users who you want to gain access to configuration in the resource group (for example, beta testers). You can:",
@@ -2044,7 +2045,7 @@
     },
     "genericFailure": "An unexpected error occurred. Please try again later."
   },
-  "hds" : {
+  "hds": {
     "pageTitle": "Hybrid Data Security",
     "genericError": "An unexpected error occurred. Please try again later.",
     "serviceDescription": "Hybrid Data Security Service Description.",
@@ -2080,11 +2081,11 @@
       "not_operational": "Not Operational",
       "nonodes": "No Nodes Registered"
     },
-    "resources" : {
+    "resources": {
       "page_title": "Hybrid Data Security Service",
       "add-resource-button": "Add Resource",
       "genericError": "An unexpected error occurred. Please try again later.",
-      "loading" : "Loading",
+      "loading": "Loading",
       "connectors": {
         "group_by": "Group services by:",
         "cluster_id": "Cluster",
@@ -2102,7 +2103,7 @@
         "goToHost": "Go to Host",
         "hosts": "Hosts",
         "nodes": "Nodes"
-     }
+      }
     }
   },
   "ediscovery": {
@@ -2503,13 +2504,13 @@
     "actionCallerInput": "Caller Input",
     "actionCallerInputHint": "Collect Caller Input",
     "actionCallerInputHelp": "Set up the AA for capturing caller input",
-    "callerInputCnvtDigit" : "Convert digit input to text string value",
-    "callerInputMaxLenStr" : "Max Length of String",
-    "callerInputValue"     : "Input Value",
-    "callerInputLabel"     : "Name",
+    "callerInputCnvtDigit": "Convert digit input to text string value",
+    "callerInputMaxLenStr": "Max Length of String",
+    "callerInputValue": "Input Value",
+    "callerInputLabel": "Name",
     "callerInputNamePlaceHolder": "Name Variable",
     "callerNameInputHelpText": "Name of tag being passed",
-    "callerInputMaxLength" : "# used as terminator for strings less than max",
+    "callerInputMaxLength": "# used as terminator for strings less than max",
     "actionPhoneMenu": "Phone Menu",
     "actionPhoneMenuHint": "Play a message and take action based on the caller's input.",
     "actionRouteCall": "Route Call",
@@ -2589,22 +2590,22 @@
     "sayMessageInvalidChar": "Invalid character. Character '{{char}}' is not allowed.",
     "messageType": "Message Type",
     "destinationHelpMessage": "Choose where to route an unanswered call after a set period of waiting time.",
-    "destinationLabel": "Destination" ,
+    "destinationLabel": "Destination",
     "destinations": {
-     "AutoAttendant": "Auto Attendant",
-      "HuntGroup":  "Hunt Group" ,
+      "AutoAttendant": "Auto Attendant",
+      "HuntGroup": "Hunt Group",
       "Queue": "Queue",
       "User": "User",
       "Voicemail": "Voicemail",
       "ExternalPhone": "External Phone",
       "Disconnect": "Disconnect"
-  },
-    "languageAndVoice" : "Language and Voice",
-    "langaugeAndVoiceHelp" : "These selections apply to Say and Error Messages.",
-    "initialAnnouncement" : "Initial Announcement",
-    "initialHelpText" : "Specify a message to play when the caller enters the queue.",
+    },
+    "languageAndVoice": "Language and Voice",
+    "langaugeAndVoiceHelp": "These selections apply to Say and Error Messages.",
+    "initialAnnouncement": "Initial Announcement",
+    "initialHelpText": "Specify a message to play when the caller enters the queue.",
     "periodicHelpText": "Specify a message to play and how often to play it while the caller is waiting in the queue.",
-    "fallbackLabel": "Fallback" ,
+    "fallbackLabel": "Fallback",
     "periodicAnnouncement": "Periodic Announcements",
     "uploadedFile": "Upload File",
     "uploadFailed": "File upload failed, unable to connect. Please try again.",
@@ -2860,7 +2861,7 @@
     "errorSave": "Failed to create the paging group: '{{message}}'",
     "errorSavePartial": "'{{pagingGroupName}}' paging group has been created successfully but following member ids did not get added: '{{message}}'"
   },
-"telephonyPreview": {
+  "telephonyPreview": {
     "lines": "Lines",
     "features": "Features",
     "voicemail": "Voicemail",
@@ -3065,7 +3066,7 @@
     "areaCode": "Area Code",
     "selectAreaCode": "Select area code",
     "nxx": "NXX",
-    "SelectNxx" : "Select Nxx",
+    "SelectNxx": "Select Nxx",
     "searchAreaCodes": "Search area codes",
     "quantity": "Quantity",
     "quantityRange": "Valid Range is 2 - 100",
@@ -3632,6 +3633,10 @@
     "timeZone": "Timezone",
     "timeZoneUpdated": "Time Zone updated",
     "timeZoneUpdateFailed": "Device did not update its Time Zone in time",
+    "country": "Country",
+    "countryPlaceholder": "Select your country",
+    "countryUpdated": "Country updated",
+    "countryUpdateFailed": "Device did not update its Country in time",
     "kem": "Key Expansion Module(s)",
     "kemAbbreviation": "KEM",
     "kemDescription": "Increases single-button access to more contacts and features.",
@@ -3774,9 +3779,9 @@
     "generateErrorNotFound": "Please unlicense and relicense this Spark Call user. Contact support if the problem persists.",
     "generateError": "Unable to generate activation code. Please try again."
   },
-  "devicesClipboard":{
-    "successTitle":"Copied to clipboard",
-    "success":"The code has been copied to the clipboard.",
+  "devicesClipboard": {
+    "successTitle": "Copied to clipboard",
+    "success": "The code has been copied to the clipboard.",
     "errorTitle": "Not copied to clipboard",
     "error": "Failed to copy the code to the clipboard."
   },
@@ -4029,7 +4034,7 @@
       "availabilityStatus": "Availability Status",
       "clusterTitle": "Cluster",
       "lowAvailableClusters": "Low availability clusters",
-      "clusterTakingMoreCalls":"Clusters hosting more no of calls"
+      "clusterTakingMoreCalls": "Clusters hosting more no of calls"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -5225,6 +5230,8 @@
     "errorCreateChatTemplate": "Error generating embed code, please try again.",
     "agentUnavailableMessage": "Sorry, we are unavailable at the moment. Please try again later.",
     "message": "Message",
+    "bubbleTitle":"Get Started",
+    "bubbleTitleMessage":"Click here to chat with Customer Care",
     "connecting": "Connecting",
     "connectingMessage": "Connecting you to an Agent",
     "waiting": "Waiting",
@@ -6554,7 +6561,7 @@
     "editServiceSucceed": "Service {{serviceName}} edit succeed.",
     "editServiceFailed": "Service {{serviceName}} edit failed.",
     "deleteServiceSucceed": "Service {{serviceName}} delete succeed.",
-    "deleteServiceFailed":"Service {{serviceName}} delete failed.",
+    "deleteServiceFailed": "Service {{serviceName}} delete failed.",
     "deletingComponentCannotBeUndone": "Deleting a component cannot be undone.",
     "deletingServiceCannotBeUndone": "Deleting a service cannot be undone.",
     "deletingIncidentCannotBeUndone": "Deleting an incident cannot be undone.",
@@ -6585,16 +6592,16 @@
       "updateComponentSucceed": "Component {{componentName}} under group {{componentGroupName}} update succeed.",
       "updateComponentFailed": "Component {{componentName}} update failed.",
       "deleteComponentSucceed": "Component {{componentName}} delete succeed.",
-      "deleteComponentFailed":"Component {{componentName}} delete failed."
+      "deleteComponentFailed": "Component {{componentName}} delete failed."
     },
-    "incidentsPage":{
+    "incidentsPage": {
       "incidentStatus": "Incident Status",
       "message": "Message",
       "messagePlaceholder": "Message",
       "viewIncident": "View Incident",
       "newIncidentBtn": "New Incident",
       "noIncidentContent1": "Looks like you've got a clean record",
-      "noIncidentContent2":"When you have downtime: ",
+      "noIncidentContent2": "When you have downtime: ",
       "noIncidentContentLink": "Create your first incident",
       "createdAt": "Created at ",
       "lastUpdatedOn": "Last updated on ",
@@ -6619,14 +6626,14 @@
       "monitoring": "Monitoring",
       "resolved": "Resolved"
     },
-    "impactStatus":{
+    "impactStatus": {
       "none": "Override impact to None",
       "minor": "Override impact to Minor",
       "major": "Override impact to Major",
       "critical": "Override impact to Critical",
       "maintenance": "Override impact to Maintenance"
     },
-    "componentStatus":{
+    "componentStatus": {
       "operational": "Operational",
       "degradedPerformance": "Degraded Performance",
       "partialOutage": "Partial Outage",
@@ -6634,7 +6641,7 @@
       "underMaintenance": "Under Maintenance"
     }
   },
-  "machineTypes":{
+  "machineTypes": {
     "bot": "Bot",
     "lyra_space": "Room Device Place",
     "robot": "Robot",

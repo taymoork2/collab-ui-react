@@ -117,6 +117,13 @@
       min-width: vr-adjust(600px);
     }
   }
+  
+  .cs-form__section {
+    & > .section__info .sticky {
+      top: vr-adjust(60px);
+      bottom: vr-adjust(48px);
+    }
+  }
 
   .alert {
     margin-right: 0;

@@ -360,7 +360,7 @@
       };
       _.forEach(numbers, function (number) {
         var phoneNumberType = TelephoneNumberService.getPhoneNumberType(number);
-        if (phoneNumberType === 'FIXED_LINE_OR_MOBILE') {
+        if (phoneNumberType === 'FIXED_LINE_OR_MOBILE' || phoneNumberType === 'FIXED_LINE') {
           payload.pstn.numbers.push(number);
         } else if (phoneNumberType === 'TOLL_FREE') {
           payload.tollFree.numbers.push(number);

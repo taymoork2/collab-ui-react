@@ -139,17 +139,41 @@
 }
 
 .feature-icon-color-PG {
-  color: $gray-base;
+  color: $color-people;
 }
 
 .feature-icon-color-PI {
   color: $color-attention-base;
 }
 
-.feature-label-container {
+.feature-label-container-AA {
   @include vr-spacing(pt, 2);
 
-  color: $color-people-light;
+  color: $color-primary;
+}
+
+.feature-label-container-HG {
+  @include vr-spacing(pt, 2);
+
+  color: $color-alerts;
+}
+
+.feature-label-container-CP {
+  @include vr-spacing(pt, 2);
+
+  color: $color-cta;
+}
+
+.feature-label-container-PG {
+  @include vr-spacing(pt, 2);
+
+  color: $color-people;
+}
+
+.feature-label-container-PI {
+  @include vr-spacing(pt, 2);
+
+  color: $color-attention-base;
 }
 
 .feature-description-container {

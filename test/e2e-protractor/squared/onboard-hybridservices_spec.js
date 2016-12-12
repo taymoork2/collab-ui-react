@@ -46,8 +46,8 @@ describe('Onboard users with Hybrid Services', function () {
       utils.searchAndClick(testUser);
       utils.expectIsDisplayed(users.servicesPanel);
 
-      utils.expectIsNotDisplayed(users.messageService);
-      utils.expectIsNotDisplayed(users.meetingService);
+      utils.expectIsDisplayed(users.messageServiceFree);
+      utils.expectIsDisplayed(users.meetingServiceFree);
       utils.expectIsNotDisplayed(users.hybridServices_sidePanel_Calendar);
       utils.expectIsNotDisplayed(users.hybridServices_sidePanel_UC);
 
