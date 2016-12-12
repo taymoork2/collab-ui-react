@@ -31,6 +31,7 @@
       atlasMediaServiceMetrics: 'atlas-media-service-metrics',
       atlasMediaServiceOnboarding: 'atlas-media-service-onboarding',
       atlasMediaServicePhaseTwo: 'atlas-media-service-phase-two',
+      atlasNewCiDataModel: 'atlas-new-ci-data-model',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
       atlasNewUserExport: 'atlas-new-user-export',
       atlasNurturingEmails: 'atlas-nurturing-emails',
