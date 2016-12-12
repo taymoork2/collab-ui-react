@@ -59,7 +59,7 @@
     var menuKeyIndex;
     var isMenuHeader;
     var numLanes;
-    var actionSaved = undefined;
+    var savedActionEntry = undefined;
     var uniqueCtrlIdentifier = 'mediaUploadCtrl' + AACommonService.getUniqueId();
     var mediaResources = AAMediaUploadService.getResources(uniqueCtrlIdentifier);
 
@@ -218,7 +218,7 @@
 
     function modalDelete() {
       if (mediaResources.uploads.length > 1) {
-        vm.actionEntry = _.cloneDeep(actionSaved);
+        vm.actionEntry = _.cloneDeep(savedActionEntry);
         //ok to delete at this point all the unsaved uploads
         AAMediaUploadService.clearResourcesExcept(uniqueCtrlIdentifier, 0);
         setUpEntry(vm.actionEntry);
@@ -283,7 +283,7 @@
 
     $scope.$on('CE Saved', function () {
       AAMediaUploadService.notifyAsSaved(uniqueCtrlIdentifier, true);
-      actionSaved = _.cloneDeep(vm.actionEntry);
+      savedActionEntry = _.cloneDeep(vm.actionEntry);
     });
 
     $scope.$on('$destroy', function () {
@@ -451,11 +451,11 @@
       //set up the view according to the play
       setUpEntry(vm.actionEntry);
       //set up the last saved according to the play
-      actionSaved = _.cloneDeep(vm.actionEntry);
+      savedActionEntry = _.cloneDeep(vm.actionEntry);
       //set up the initial mediaUploads
-      mediaResources.uploads[0] = _.cloneDeep(actionSaved);
+      mediaResources.uploads[0] = _.cloneDeep(savedActionEntry);
       //if previously saved a real value, want to esure not deleted
-      if (actionSaved.description.length > 0) {
+      if (savedActionEntry.description.length > 0) {
         AAMediaUploadService.notifyAsSaved(uniqueCtrlIdentifier, true);
       }
     }

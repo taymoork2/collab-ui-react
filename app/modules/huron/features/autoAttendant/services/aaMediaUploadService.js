@@ -81,7 +81,7 @@
     //media, so delete backwards
     function saveResources() {
       _.each(AACtrlResourcesService.getCtrlKeys(), function (key) {
-        cleanResourceFieldIndex('active', getResources(key).length - 1, key);
+        cleanResourceFieldIndex('active', getResources(key).uploads.length - 1, key);
       });
     }
 
@@ -143,7 +143,8 @@
         //in the value field for tropo
         if (_.has(value, 'value')) {
           try {
-            var desc = JSON.parse(target.description);
+            //initiate the deletion on the retrieved delete url
+            var desc = JSON.parse(value.description);
             httpDeleteRetry(desc.deleteUrl, 0);
           } catch (exception) {
             //do nothing
@@ -161,9 +162,11 @@
       var deleter = deleteRecording(internalValue);
       if (deleter) {
         deleter.then(function () {
-        }, function () {
-          if (counter < 3) {
-            httpDeleteRetry(internalValue, ++counter);
+        }, function (response) {
+          if (response.status > 0 && !_.inRange(response.status, 403, 405)) {
+            if (counter < 3) {
+              httpDeleteRetry(internalValue, ++counter);
+            }
           }
         });
       }

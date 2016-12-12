@@ -23,7 +23,7 @@
     }
 
     function getCtrlKeys() {
-      return _.keys(getCtrlToResourceMap);
+      return _.keys(getCtrlToResourceMap());
     }
   }
 
