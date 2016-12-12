@@ -336,12 +336,6 @@
     }
 
     function processClustersToSeeIfServiceIsSetup(serviceId, clusterList) {
-      if (serviceId !== 'spark-hybrid-datasecurity') {
-        if (!Authinfo.isEntitled(serviceId)) {
-          return false;
-        }
-      }
-
       var connectorType = FusionUtils.serviceId2ConnectorType(serviceId);
       if (connectorType === '') {
         return false; // Cannot recognize service, default to *not* enabled
