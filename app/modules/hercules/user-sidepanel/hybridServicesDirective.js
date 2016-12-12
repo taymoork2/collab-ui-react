@@ -102,8 +102,9 @@
           var calServiceExchange = getExtension('squared-fusion-cal') || {};
           var calServiceGoogle = getExtension('squared-fusion-gcal');
           if (calServiceGoogle && vm.atlasHerculesGoogleCalendarFeatureToggle) {
-            CloudConnectorService.isServiceSetup('squared-fusion-gcal')
-              .then(function (isSetup) {
+            CloudConnectorService.getService('squared-fusion-gcal')
+              .then(function (service) {
+                var isSetup = service.setup;
                 calServiceGoogle.isSetup = isSetup;
                 var ignoreGoogle = calServiceExchange.enabled && !calServiceExchange.entitled && !calServiceGoogle.entitled;
                 if (isSetup && (!calServiceExchange.enabled || !calServiceExchange.entitled) && !ignoreGoogle) {

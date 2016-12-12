@@ -576,7 +576,6 @@
 
   h5 {
     margin-top: 0.5rem;
-    color: black;
   }
 
   .badge {
@@ -616,12 +615,24 @@
   color: $gray-base;
 }
 
+.helpdesk-default {
+  color: $gray-base;
+}
+
 .helpdesk-yellow {
   color: $color-attention-base;
 }
 
 .helpdesk-error {
   color: $color-negative-base;
+}
+
+.helpdesk-danger {
+  color: $color-negative-base;
+}
+
+.helpdesk-success {
+  color: $color-cta-base;
 }
 
 .helpdesk-ok {

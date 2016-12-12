@@ -2,6 +2,7 @@
 
 describe('Directive: aaMessageType', function () {
   var $compile, $rootScope;
+  var element;
 
   var AAUiModelService, AutoAttendantCeMenuModelService;
 
@@ -11,6 +12,13 @@ describe('Directive: aaMessageType', function () {
       name: 'aa'
     }
   };
+
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
 
   beforeEach(angular.mock.module('Huron'));
 
@@ -33,7 +41,7 @@ describe('Directive: aaMessageType', function () {
   }));
 
   it('creates the appropriate content as element', function () {
-    var element = $compile("<aa-message-type aa-schedule='openHours' aa-index='0' name='messageType'></aa-message-type>")($rootScope);
+    element = $compile("<aa-message-type aa-schedule='openHours' aa-index='0' name='messageType'></aa-message-type>")($rootScope);
     $rootScope.$digest();
     expect(element.html()).toContain("messageType");
   });

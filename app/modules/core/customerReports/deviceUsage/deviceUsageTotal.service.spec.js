@@ -8,6 +8,14 @@ describe('DeviceUsageTotalService', function () {
 
   var day1 = 20161001;
 
+  afterAll(function () {
+    day1 = undefined;
+  });
+
+  afterEach(function () {
+    DeviceUsageTotalService = undefined;
+  });
+
   beforeEach(inject(function (_DeviceUsageTotalService_) {
     DeviceUsageTotalService = _DeviceUsageTotalService_;
   }));

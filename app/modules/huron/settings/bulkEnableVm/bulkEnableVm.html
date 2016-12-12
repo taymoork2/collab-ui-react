@@ -51,8 +51,6 @@
         <h5 translate="bulkEnableVm.errorUsers"></h5>
         <p>
           <span translate="bulkEnableVm.errorResolveInstructions"></span>
-          <span class="icon icon-info" tooltip="{{::'bulkEnableVm.errorResolveTooltip' | translate}}"
-                tooltip-placement="top"></span>
         </p>
          <!-- Need to check what is isprocessing -->
         <div class="error-download" ng-disabled="$ctrl.processProgress < 100">
@@ -63,16 +61,16 @@
 
       <div class="flex-item-no-resize table-header">
         <div class="row">
-          <span id="headerRow" class="columns small-2 center error-row" translate="bulkEnableVm.headerRow"></span>
-          <span id="headerErrorMessage" class="columns small-10 error-desc" translate="bulkEnableVm.headerErrorMessage"></span>
+          <span id="headerRow" class="columns small-4 center error-row" translate="bulkEnableVm.headerRow"></span>
+          <span id="headerErrorMessage" class="columns small-8 error-desc" translate="bulkEnableVm.headerErrorMessage"></span>
         </div>
       </div>
 
       <div id="errorList" class="flex-item-resize table-body">
         <div class="scroller">
           <div ng-repeat="data in $ctrl.userErrorArray" class="row">
-            <span class="columns small-2 center error-row">{{::data.userId}}</span>
-            <span class="columns small-10 error-desc">{{::data.statusText}} {{::data.trackingID}}</span>
+            <span class="columns small-4 center error-row">{{::data.userId}}</span>
+            <span class="columns small-8 error-desc">{{::data.statusText}} {{::data.trackingID}}</span>
           </div>
         </div>
       </div>

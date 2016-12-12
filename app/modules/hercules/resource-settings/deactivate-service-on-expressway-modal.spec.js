@@ -6,6 +6,13 @@ describe('DeactivateServiceModalView', function () {
   var view;
   var html;
 
+  afterEach(function () {
+    if (view) {
+      view.remove();
+    }
+    view = undefined;
+  });
+
   beforeEach(inject(function ($rootScope, $templateCache, $compile) {
     $scope = $rootScope.$new();
     html = $templateCache.get("modules/hercules/resource-settings/deactivate-service-on-expressway-modal.html");

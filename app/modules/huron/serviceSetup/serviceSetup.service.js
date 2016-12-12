@@ -7,8 +7,8 @@
 
   /* @ngInject */
   function ServiceSetup($q, $translate, $filter, Authinfo, SiteService, InternalNumberRangeService,
-TimeZoneService, SiteLanguageService, ExternalNumberPool, VoicemailTimezoneService,
-VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2, CeSiteService, AvrilSiteService) {
+      TimeZoneService, SiteLanguageService, ExternalNumberPool, VoicemailTimezoneService,
+      VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2, CeSiteService, AvrilSiteService, SiteCountryService) {
     return {
       internalNumberRanges: [],
       sites: [],
@@ -190,6 +190,19 @@ VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2, CeSite
           });
         });
         return localizedLanguages;
+      },
+
+      getSiteCountries: function () {
+        return SiteCountryService.query().$promise;
+      },
+
+      getTranslatedSiteCountries: function (countries) {
+        var localizedCountries = _.map(countries, function (country) {
+          return _.assign(country, {
+            label: $translate.instant(country.label)
+          });
+        });
+        return localizedCountries;
       },
 
       isOverlapping: function (x1, x2, y1, y2) {

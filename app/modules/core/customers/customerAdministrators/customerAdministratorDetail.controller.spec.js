@@ -9,6 +9,14 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
   var controller, $controller, $scope, $q, $stateParams, Analytics, CustomerAdministratorService, ModalService, Notification, Orgservice, Userservice;
   var modalDefer, testUsers = [];
 
+  afterAll(function () {
+    modalDefer = testUsers = undefined;
+  });
+
+  afterEach(function () {
+    controller = $controller = $scope = $q = $stateParams = Analytics = CustomerAdministratorService = ModalService = Notification = Orgservice = Userservice = undefined;
+  });
+
   beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$stateParams_, _Analytics_, _Notification_, _CustomerAdministratorService_, _ModalService_, _Orgservice_, _Userservice_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
@@ -256,6 +264,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
   });
 
   describe('helper functions:', function () {
+    beforeEach(initController);
     describe('getFoundUsers():', function () {
       // TODO: revisit and add unit-tests after fixing karma + webpack performance problems
     });

@@ -394,50 +394,6 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     });
   });
 
-  describe('should write to db for Periodic announcement', function () {
-    it('cesPa', function () {
-      var _action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'routeToQueueId');
-      _action.setDescription('routeToQueueDescription');
-      AutoAttendantCeMenuModelService.cesPa(_action);
-      _action.queueSettings = {};
-      expect(angular.isDefined(_action.description)).toBe(true);
-      expect(angular.isDefined(_action.queueSettings)).toBe(true);
-    });
-  });
-
-  describe('should write to db for Initial announcement', function () {
-    it('cesIa', function () {
-      var _action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'routeToQueueId');
-      _action.setDescription('routeToQueueDescription');
-      AutoAttendantCeMenuModelService.cesIa(_action);
-      _action.queueSettings = {};
-      expect(angular.isDefined(_action.description)).toBe(true);
-      expect(angular.isDefined(_action.queueSettings)).toBe(true);
-    });
-  });
-
-  describe('should write to db for fallback', function () {
-    it('cesIa', function () {
-      var _action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'routeToQueueId');
-      _action.setDescription('routeToQueueDescription');
-      AutoAttendantCeMenuModelService.cesFallback(_action);
-      _action.queueSettings = {};
-      expect(angular.isDefined(_action.description)).toBe(true);
-      expect(angular.isDefined(_action.queueSettings)).toBe(true);
-    });
-  });
-
-  describe('should write to db for Moh', function () {
-    it('cesIa', function () {
-      var _action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'routeToQueueId');
-      _action.setDescription('routeToQueueDescription');
-      AutoAttendantCeMenuModelService.cesMoh(_action);
-      _action.queueSettings = {};
-      expect(angular.isDefined(_action.description)).toBe(true);
-      expect(angular.isDefined(_action.queueSettings)).toBe(true);
-    });
-  });
-
   describe('clearCeMenuMap', function () {
     it('should reset the CeMenu internal count to 0', function () {
       var _ceMenu = AutoAttendantCeMenuModelService.newCeMenu();

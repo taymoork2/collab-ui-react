@@ -3,7 +3,7 @@
 describe('Controller: ServiceSetup', function () {
   var $scope, $state, $previousState, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer, DialPlanService;
   var Authinfo, VoicemailMessageAction, Orgservice;
-  var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction, FeatureToggleService, languages;
+  var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction, FeatureToggleService, languages, countries;
   var $rootScope, PstnSetupService;
   var dialPlanDetailsNorthAmerica = [{
     countryCode: "+1",
@@ -92,6 +92,7 @@ describe('Controller: ServiceSetup', function () {
 
     messageAction = getJSONFixture('huron/json/settings/messageAction.json');
     languages = getJSONFixture('huron/json/settings/languages.json');
+    countries = getJSONFixture('huron/json/settings/countries.json');
 
     spyOn($previousState, 'get').and.returnValue({
       state: {
@@ -124,6 +125,7 @@ describe('Controller: ServiceSetup', function () {
 
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timeZone));
     spyOn(ServiceSetup, 'getSiteLanguages').and.returnValue($q.when(languages));
+    spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.when(countries));
     spyOn(Notification, 'notify');
     spyOn(Notification, 'errorResponse');
     spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.when({
@@ -172,6 +174,10 @@ describe('Controller: ServiceSetup', function () {
           preferredLanguage: {
             label: 'English (United States)',
             value: 'en_US'
+          },
+          country: {
+            label: 'United States',
+            value: 'US'
           },
           voicemailPilotNumberGenerated: false
         },
@@ -298,6 +304,9 @@ describe('Controller: ServiceSetup', function () {
         controller.model.site.preferredLanguage = {
           value: 'en_US'
         };
+        controller.model.site.country = {
+          value: 'US'
+        };
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
         controller.initNext();
@@ -327,6 +336,9 @@ describe('Controller: ServiceSetup', function () {
         };
         controller.model.site.preferredLanguage = {
           value: 'en_US'
+        };
+        controller.model.site.country = {
+          value: 'US'
         };
         controller.previousTimeZone = controller.model.site.timeZone;
         //remove singlenumber range for it to pass
@@ -409,6 +421,9 @@ describe('Controller: ServiceSetup', function () {
         };
         controller.model.site.preferredLanguage = {
           value: 'en_US'
+        };
+        controller.model.site.country = {
+          value: 'US'
         };
         controller.previousTimeZone = controller.model.site.timeZone;
         //remove singlenumber range for it to pass
@@ -554,6 +569,9 @@ describe('Controller: ServiceSetup', function () {
         controller.model.site.preferredLanguage = {
           id: 'es_US'
         };
+        controller.model.site.country = {
+          value: 'US'
+        };
 
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -693,6 +711,9 @@ describe('Controller: ServiceSetup', function () {
         };
         controller.model.site.preferredLanguage = {
           id: 'es_US'
+        };
+        controller.model.site.country = {
+          value: 'US'
         };
         controller.previousTimeZone = controller.model.site.timeZone;
 
@@ -919,6 +940,21 @@ describe('Controller: ServiceSetup', function () {
       });
     });
 
+    describe('initnext.updateDefaultCountry', function () {
+      it('should update default country when country selection changes', function () {
+        var newCountry = {
+          label: 'Canada',
+          value: 'CA'
+        };
+        controller.model.site.country = newCountry;
+
+        controller.initNext();
+        $scope.$apply();
+
+        expect(ServiceSetup.updateSite).toHaveBeenCalled();
+      });
+    });
+
     describe('Voicemail Access Prefix', function () {
       it('should change the extension length and change site code', function () {
         $scope.to = {};
@@ -1091,6 +1127,9 @@ describe('Controller: ServiceSetup', function () {
       it('site and voicemail is created with a voice pilot set to generated value', function () {
         controller.model.site.timeZone = {
           id: 'bogus'
+        };
+        controller.model.site.country = {
+          value: 'US'
         };
         controller.hasSites = false;
         controller.model.site.voicemailPilotNumber = undefined;

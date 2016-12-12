@@ -17,7 +17,7 @@ describe('Manage Users - CSV File -', function () {
     utils.searchAndClick(email);
     utils.expectIsDisplayed(users.servicesPanel);
 
-    utils.expectIsNotDisplayed(users.messageService);
+    utils.expectIsDisplayed(users.messageServiceFree);
     utils.expectIsDisplayed(users.meetingService);
     // utils.expectIsDisplayed(users.hybridServices_sidePanel_Calendar);
     // utils.expectIsDisplayed(users.hybridServices_sidePanel_UC);

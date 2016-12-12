@@ -36,6 +36,17 @@
       return res.data;
     }
 
+    function getArgonautServiceUrl(emailAddress, encryptionKeyUrl, startDate, endDate) {
+      var url = 'https://argonaut-a.wbx2.com/argonaut/api/v1/compliance/report/size';
+      return $http
+        .post(url, {
+          emailAddress: emailAddress,
+          encryptionKeyUrl: encryptionKeyUrl,
+          startDate: startDate,
+          endDate: endDate
+        });
+    }
+
     function getAvalonServiceUrl() {
       var orgId = Authinfo.getOrgId();
       var cachedAvalonRoomsUrl = avalonRoomsUrlCache.get(orgId);
@@ -157,6 +168,7 @@
     }
 
     return {
+      getArgonautServiceUrl: getArgonautServiceUrl,
       getAvalonServiceUrl: getAvalonServiceUrl,
       getAvalonRoomInfo: getAvalonRoomInfo,
       getReport: getReport,

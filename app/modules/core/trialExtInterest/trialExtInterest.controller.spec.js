@@ -4,6 +4,14 @@ describe('Controller: TrialExtInterestCtrl', function () {
   var $rootScope, $location, Log, TrialExtInterestService, $controller, controller, $q;
   var eqpParam = 'hi';
 
+  afterEach(function () {
+    $rootScope = $location = Log = TrialExtInterestService = $controller = controller = $q = undefined;
+  });
+
+  afterAll(function () {
+    eqpParam = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
 
   beforeEach(inject(function (_$rootScope_, _$location_, _Log_, _TrialExtInterestService_, _$controller_, _$q_) {

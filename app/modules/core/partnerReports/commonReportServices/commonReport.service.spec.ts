@@ -207,6 +207,7 @@ describe('Service: Common Report Service', () => {
       let options: ITypeQuery = this.CommonReportService.getTypeOptions(filter[0], 'name');
       let updatedQuery = _.cloneDeep(queryFour);
       updatedQuery.type = defaults.usageOptions[0];
+      updatedQuery.extension = undefined;
       expect(options).toEqual(updatedQuery);
 
       options = this.CommonReportService.getTypeOptions(filter[1], 'name');
@@ -222,6 +223,7 @@ describe('Service: Common Report Service', () => {
       let options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter[0], 'name');
       let updatedQuery = _.cloneDeep(queryFour);
       updatedQuery.type = defaults.altUsageOptions[0];
+      updatedQuery.extension = undefined;
       expect(options).toEqual(updatedQuery);
 
       options = this.CommonReportService.getLineTypeOptions(filter[1], 'name');

@@ -69,6 +69,12 @@ describe('crUserCsvExport Component', function () {
     this.vm.$onInit();
   }
 
+  afterEach(function () {
+    if (this.element) {
+      this.element.remove();
+    }
+  });
+
   beforeEach(init);
 
   /////////////

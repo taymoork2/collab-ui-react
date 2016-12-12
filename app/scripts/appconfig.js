@@ -1810,6 +1810,7 @@
             url: '/customers',
             templateUrl: 'modules/core/customers/customerList/customerList.tpl.html',
             controller: 'CustomerListCtrl',
+            controllerAs: 'customerList',
             params: {
               filter: null
             },
@@ -2364,7 +2365,7 @@
             parent: 'hurondetails',
             templateUrl: 'modules/huron/features/featureLanding/features.tpl.html',
             controller: 'HuronFeaturesCtrl',
-            controllerAs: 'huronFeaturesCtrl'
+            controllerAs: 'huronFeaturesCtrl',
           })
           .state('huronnewfeature', {
             url: '/newfeature',
@@ -2731,7 +2732,7 @@
             }
           })
           .state('calendar-service', {
-            templateUrl: 'modules/hercules/overview/overview.html',
+            templateUrl: 'modules/hercules/service-specific-cluster-lists/service-specific-cluster-list-container.html',
             controller: 'ExpresswayServiceController',
             controllerAs: 'exp',
             data: {
@@ -2752,7 +2753,7 @@
             url: '/services/calendar',
             views: {
               fullPane: {
-                templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
+                templateUrl: 'modules/hercules/service-specific-cluster-lists/service-specific-cluster-list.html'
               }
             },
             params: {
@@ -2767,15 +2768,24 @@
                 controller: 'CalendarSettingsController',
                 templateUrl: 'modules/hercules/service-settings/calendar-service-settings.html'
               }
-            },
+            }
+          })
+          .state('google-calendar-service', {
+            abstract: true,
+            parent: 'main',
+            template: '<div ui-view></div>',
             resolve: {
               hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
               }
             }
           })
+          .state('google-calendar-service.settings', {
+            url: '/services/google-calendar/settings',
+            template: '<google-calendar-settings-page ng-if="$resolve.hasGoogleCalendarFeatureToggle"></google-calendar-settings-page>',
+          })
           .state('call-service', {
-            templateUrl: 'modules/hercules/overview/overview.html',
+            templateUrl: 'modules/hercules/service-specific-cluster-lists/service-specific-cluster-list-container.html',
             controller: 'ExpresswayServiceController',
             controllerAs: 'exp',
             data: {
@@ -2795,7 +2805,7 @@
             url: '/services/call',
             views: {
               fullPane: {
-                templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
+                templateUrl: 'modules/hercules/service-specific-cluster-lists/service-specific-cluster-list.html'
               }
             },
             params: {
@@ -2857,6 +2867,7 @@
             },
             params: {
               host: null,
+              hostSerial: null,
               clusterId: null,
               connectorType: 'c_mgmt'
             }
@@ -2882,6 +2893,7 @@
             },
             params: {
               host: null,
+              hostSerial: null,
               clusterId: null,
               connectorType: null
             }

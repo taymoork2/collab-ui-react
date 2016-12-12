@@ -24,11 +24,12 @@ describe('Service: Report Service', () => {
       expect(message).not.toBe(undefined);
       return response;
     });
-
+    jasmine.clock().install();
     jasmine.clock().mockDate(new Date(2016, 10, 2));
   });
 
   afterEach(function () {
+    jasmine.clock().uninstall();
     this.$httpBackend.verifyNoOutstandingExpectation();
     this.$httpBackend.verifyNoOutstandingRequest();
   });

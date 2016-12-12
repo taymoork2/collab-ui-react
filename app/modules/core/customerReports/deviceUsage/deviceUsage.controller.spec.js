@@ -9,28 +9,59 @@ describe('Controller: DeviceUsageCtrl', function () {
   var splunkService;
   var $scope;
   var $q;
+  var $state;
+  var Notification;
 
-  beforeEach(inject(function (_$q_, _$rootScope_, _DeviceUsageTotalService_, _DeviceUsageSplunkMetricsService_, _$controller_) {
+  afterEach(function () {
+    DeviceUsageTotalService = DeviceUsageSplunkMetricsService = $controller = controller = splunkService = $scope = $q = $state = undefined;
+  });
+
+  beforeEach(inject(function (_$q_, _$rootScope_, _DeviceUsageTotalService_, _DeviceUsageSplunkMetricsService_, _$controller_, _$state_, _Notification_) {
     DeviceUsageTotalService = _DeviceUsageTotalService_;
     DeviceUsageSplunkMetricsService = _DeviceUsageSplunkMetricsService_;
     $controller = _$controller_;
     $scope = _$rootScope_.$new();
     $q = _$q_;
+    $state = _$state_;
+    Notification = _Notification_;
 
     sinon.stub(DeviceUsageTotalService, 'makeChart');
     DeviceUsageTotalService.makeChart.returns(amchartMock());
 
-    controller = $controller('DeviceUsageCtrl', {
-      DeviceUsageTotalService: DeviceUsageTotalService,
-      DeviceUsageSplunkMetricsService: DeviceUsageSplunkMetricsService,
-      $scope: $scope
-    });
-
-    splunkService = sinon.stub(DeviceUsageSplunkMetricsService, 'reportOperation');
 
   }));
 
+  describe('Missing feature toggle', function () {
+
+    it('goes to login state if feature toggle key is missing', function (done) {
+      sinon.stub($state, 'go');
+      controller = $controller('DeviceUsageCtrl', {
+        DeviceUsageTotalService: DeviceUsageTotalService,
+        DeviceUsageSplunkMetricsService: DeviceUsageSplunkMetricsService,
+        $scope: $scope,
+        deviceUsageFeatureToggle: false,
+        $state: $state
+      });
+      expect($state.go).toHaveBeenCalledWith('login');
+      done();
+
+    });
+  });
+
   describe('Normal initialization fetching device data', function () {
+
+    beforeEach(function () {
+      controller = $controller('DeviceUsageCtrl', {
+        DeviceUsageTotalService: DeviceUsageTotalService,
+        DeviceUsageSplunkMetricsService: DeviceUsageSplunkMetricsService,
+        $scope: $scope,
+        deviceUsageFeatureToggle: true,
+        $state: $state
+      });
+
+      splunkService = sinon.stub(DeviceUsageSplunkMetricsService, 'reportOperation');
+    });
+
 
     it('starts with fetching initial data based on default last 7 days range', function (done) {
       sinon.stub(DeviceUsageTotalService, 'getDataForLastNTimeUnits');
@@ -47,29 +78,45 @@ describe('Controller: DeviceUsageCtrl', function () {
       done();
     });
 
-    it('exporting raw data', function (done) {
-      sinon.stub(DeviceUsageTotalService, 'exportRawData');
-      DeviceUsageTotalService.exportRawData.returns($q.when());
+    describe('export', function () {
 
-      sinon.stub(DeviceUsageTotalService, 'getDataForLastNTimeUnits');
-      DeviceUsageTotalService.getDataForLastNTimeUnits.returns($q.when([]));
+      beforeEach(function () {
+        sinon.stub(DeviceUsageTotalService, 'getDataForLastNTimeUnits');
+        DeviceUsageTotalService.getDataForLastNTimeUnits.returns($q.when([]));
+        sinon.stub(DeviceUsageTotalService, 'exportRawData');
+        sinon.stub(Notification, 'notify');
+      });
 
-      controller.init();
-      expect(controller.exporting).toBeFalsy();
-      expect(controller.timeSelected.value).toBe(0);
-      controller.exportRawData();
-      expect(controller.exporting).toBeTruthy();
-      $scope.$apply();
+      it('exporting raw data successful', function (done) {
+        DeviceUsageTotalService.exportRawData.returns($q.when());
+        controller.init();
+        expect(controller.exporting).toBeFalsy();
+        expect(controller.timeSelected.value).toBe(0);
+        controller.exportRawData();
+        expect(controller.exporting).toBeTruthy();
+        $scope.$apply();
 
-      // Initally, last 7 days are selected
-      var expectStartDate = moment().subtract(7, 'days').format("YYYY-MM-DD");
-      var expectEndDate = moment().subtract(1, 'days').format("YYYY-MM-DD");
+        // Initally, last 7 days are selected
+        var expectStartDate = moment().subtract(7, 'days').format("YYYY-MM-DD");
+        var expectEndDate = moment().subtract(1, 'days').format("YYYY-MM-DD");
 
-      expect(DeviceUsageTotalService.exportRawData).toHaveBeenCalledWith(expectStartDate, expectEndDate, sinon.match.any);
-      expect(controller.exporting).toBeFalsy();
-      done();
+        expect(DeviceUsageTotalService.exportRawData).toHaveBeenCalledWith(expectStartDate, expectEndDate, sinon.match.any);
+        expect(controller.exporting).toBeFalsy();
+        done();
+      });
+
+      it('exporting raw data fails', function (done) {
+        DeviceUsageTotalService.exportRawData.returns($q.reject());
+        controller.init();
+        controller.exportRawData();
+        expect(controller.exporting).toBeTruthy();
+        $scope.$apply();
+        expect(Notification.notify).toHaveBeenCalledWith(sinon.match.any, 'error');
+        expect(controller.exporting).toBeFalsy();
+        done();
+      });
+
     });
-
 
     describe('splunk reporting', function () {
       it('when date range is selected', function () {

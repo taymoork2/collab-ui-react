@@ -310,6 +310,7 @@
 
       var valueAxes = [CareReportsGraphService.getBaseVariable('axis')];
       valueAxes[0].title = $translate.instant('careReportsPage.csatRating');
+      valueAxes[0].maximum = 5;
 
       var csatGraph = {
         title: $translate.instant('careReportsPage.averageCsat'),

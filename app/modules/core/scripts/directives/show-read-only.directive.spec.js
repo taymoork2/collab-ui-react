@@ -4,6 +4,13 @@ describe('Directive: ShowReadOnly', function () {
 
   var compile, scope, directiveElem, Authinfo, translate;
 
+  afterEach(function () {
+    if (directiveElem) {
+      directiveElem.remove();
+    }
+    directiveElem = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
 
   beforeEach(inject(function (_$rootScope_, _$compile_, _$translate_, _Authinfo_) {

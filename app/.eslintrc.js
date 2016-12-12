@@ -44,10 +44,12 @@ module.exports = {
   globals: {
     _: true,
     $: true,
+    afterAll: true,
     afterEach: true,
     AmCharts: true,
     angular: true,
     bard: true,
+    beforeAll: true,
     beforeEach: true,
     describe: true,
     expect: true,

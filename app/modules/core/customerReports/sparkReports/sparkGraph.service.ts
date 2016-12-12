@@ -5,6 +5,7 @@ import {
 
 import {
   IAvgRoomData,
+  IConversation,
   IEndpointWrapper,
   IFilesShared,
   IMediaData,
@@ -48,17 +49,14 @@ export class SparkGraphService {
 
   public setActiveLineGraph(data: Array<IActiveUserData>, chart: any): any {
     if (data.length > 0 && chart) {
-      chart.chartCursor.valueLineEnabled = true;
       chart.categoryAxis.gridColor = this.chartColors.grayLightTwo;
       if (!data[0].balloon) {
-        chart.chartCursor.valueLineEnabled = false;
         chart.categoryAxis.gridColor = this.chartColors.grayLightThree;
       }
 
       chart.graphs = this.getActiveLineGraphs(data);
       chart.dataProvider = data;
       chart.validateData();
-      chart.validateNow();
     } else if (data.length > 0) {
       chart = this.createActiveLineGraph(data);
     }
@@ -66,24 +64,17 @@ export class SparkGraphService {
   }
 
   private createActiveLineGraph(data: Array<IActiveUserData>): any {
+    let catAxis: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LINE_AXIS);
     let valueAxes: any = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
     valueAxes[0].integersOnly = true;
-
-    let catAxis: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS);
-    catAxis.startOnAxis = true;
-    catAxis.gridAlpha = 1;
-    catAxis.gridColor = this.chartColors.grayLightTwo;
-    catAxis.tickLength = 5;
-    catAxis.showFirstLabel = false;
 
     let chartCursor: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.CURSOR);
     chartCursor.valueLineAlpha = 1;
     chartCursor.valueLineEnabled = true;
     chartCursor.valueLineBalloonEnabled = true;
-    chartCursor.cursorColor = this.chartColors.grayLightOne;
+    chartCursor.cursorColor = this.chartColors.grayLightTwo;
 
     if (!data[0].balloon) {
-      chartCursor.valueLineEnabled = false;
       catAxis.gridColor = this.chartColors.grayLightThree;
     }
 
@@ -105,7 +96,6 @@ export class SparkGraphService {
 
     let colors: Array<string> = [this.chartColors.colorPeopleLighter, this.chartColors.colorPeopleLight];
     let balloons: Array<boolean> = [true, true];
-    let fillAlphas: Array<number> = [0.5, 0.5];
     let values: Array<string> = ['totalRegisteredUsers', 'activeUsers'];
     let titles: Array<string> = [users, activeUsers];
     let graphs: Array<any> = [];
@@ -118,11 +108,11 @@ export class SparkGraphService {
     let colorsTwo: Array<string> = _.clone(colors);
     _.forEach(values, (value: string, index: number): void => {
       graphs.push(this.CommonGraphService.getBaseVariable(this.CommonGraphService.LINE));
-      graphs[index].bullet = 'none';
       graphs[index].title = titles[index];
       graphs[index].lineColor = colorsTwo[index];
       graphs[index].legendColor = colors[index];
       graphs[index].valueField = value;
+      graphs[index].clustered = false;
       graphs[index].balloonFunction = (graphDataItem: any, graph: any): string | undefined => {
         let data: any = _.get(graphDataItem, 'dataContext', {});
         let hiddenData: string = _.get(graph, 'data[0].category', '');
@@ -142,9 +132,6 @@ export class SparkGraphService {
         return balloonText;
       };
       graphs[index].showBalloon = balloons[index];
-      graphs[index].clustered = false;
-      graphs[index].fillAlphas = fillAlphas[index];
-      graphs[index].lineThickness = 1;
     });
 
     return graphs;
@@ -280,6 +267,79 @@ export class SparkGraphService {
     return graphs;
   }
 
+  // Average Rooms Line Graph
+  public setRoomGraph(data: Array<IConversation> | Array<IAvgRoomData>, chart: any): any {
+    if (data.length > 0 && chart) {
+      chart.categoryAxis.gridColor = this.chartColors.grayLightTwo;
+      if (!data[0].balloon) {
+        chart.categoryAxis.gridColor = this.chartColors.grayLightThree;
+      }
+
+      chart.dataProvider = data;
+      chart.graphs = this.roomGraphs(data);
+      chart.validateData();
+    } else if (data.length > 0) {
+      chart = this.createRoomGraph(data);
+    }
+    return chart;
+  }
+
+  private createRoomGraph(data: Array<IConversation> | Array<IAvgRoomData>): any {
+    let catAxis: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LINE_AXIS);
+    let valueAxes: any = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
+    valueAxes[0].integersOnly = true;
+    valueAxes[0].stackType = 'regular';
+
+    let chartCursor: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.CURSOR);
+    chartCursor.valueLineAlpha = 1;
+    chartCursor.valueLineEnabled = true;
+    chartCursor.valueLineBalloonEnabled = true;
+    chartCursor.cursorColor = this.chartColors.grayLightTwo;
+
+    if (!data[0].balloon) {
+      catAxis.gridColor = this.chartColors.grayLightThree;
+    }
+
+    let chartData: any = this.CommonGraphService.getBaseSerialGraph(data, 0, valueAxes, this.roomGraphs(data), this.CommonGraphService.DATE, catAxis);
+    chartData.numberFormatter = this.CommonGraphService.getBaseVariable(this.CommonGraphService.NUMFORMAT);
+    chartData.legend = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LEGEND);
+    chartData.chartCursor = chartCursor;
+    chartData.legend.labelText = '[[' + this.CommonGraphService.TITLE + ']]';
+    chartData.autoMargins = true;
+
+    return AmCharts.makeChart(this.avgRoomsdiv, chartData);
+  }
+
+  private roomGraphs(data: Array<IConversation> | Array<IAvgRoomData>): Array<any> {
+    // translations
+    let oneToOne: string = this.$translate.instant('avgRooms.oneToOne');
+    let group: string = this.$translate.instant('avgRooms.group');
+    let total: string = this.$translate.instant('avgRooms.avgTotal');
+
+    // graph variables
+    const balloonText: string = SparkGraphService.graphTextSpan + group + ' <span class="room-number">[[groupRooms]]</span><br>' + oneToOne + ' <span class="room-number">[[oneToOneRooms]]</span><br>' + total + ' <span class="room-number">[[avgRooms]]</span></span>';
+
+    let titles: Array<string> = [group, oneToOne];
+    let values: Array<string> = ['groupRooms', 'oneToOneRooms'];
+    let colors: Array<string> = [this.chartColors.primaryColorLight, this.chartColors.primaryColorDarker];
+    if (!data[0].balloon) {
+      colors = [this.chartColors.dummyGrayLight, this.chartColors.dummyGray];
+    }
+
+    let graphs: Array<any> = [];
+    _.forEach(values, (value: string, index: number): void => {
+      graphs.push(this.CommonGraphService.getBaseVariable(this.CommonGraphService.LINE));
+      graphs[index].title = titles[index];
+      graphs[index].fillColors = colors[index];
+      graphs[index].valueField = value;
+      graphs[index].lineColor = colors[index];
+      graphs[index].legendColor = colors[index];
+      graphs[index].showBalloon = data[0].balloon;
+      graphs[index].balloonText = balloonText;
+    });
+    return graphs;
+  }
+
   // Files Shared Column Graph
   public setFilesSharedGraph(data: Array<IFilesShared>, chart: any): any {
     if (data.length > 0 && chart) {
@@ -297,7 +357,7 @@ export class SparkGraphService {
     return chart;
   }
 
-  private createFilesSharedGraph(data) {
+  private createFilesSharedGraph(data: Array<IFilesShared>): any {
     let catAxis: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS);
     catAxis.gridPosition = this.CommonGraphService.START;
 
@@ -336,6 +396,70 @@ export class SparkGraphService {
     graph.valueField = 'contentShared';
     graph.showBalloon = data[0].balloon;
     graph.balloonText = balloonText;
+
+    return [graph];
+  }
+
+  // Files Shared Line Graph
+  public setFilesGraph(data: Array<IFilesShared>, chart: any): any {
+    if (data.length > 0 && chart) {
+      chart.categoryAxis.gridColor = this.chartColors.grayLightTwo;
+      if (!data[0].balloon) {
+        chart.categoryAxis.gridColor = this.chartColors.grayLightThree;
+      }
+
+      chart.dataProvider = data;
+      chart.graphs = this.filesGraphs(data);
+      chart.validateData();
+    } else if (data.length > 0) {
+      chart = this.createsFileGraph(data);
+    }
+    return chart;
+  }
+
+  private createsFileGraph(data: Array<IFilesShared>): any {
+    let catAxis: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LINE_AXIS);
+    let valueAxes: any = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
+    valueAxes[0].integersOnly = true;
+
+    let chartCursor: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.CURSOR);
+    chartCursor.valueLineAlpha = 1;
+    chartCursor.valueLineEnabled = true;
+    chartCursor.valueLineBalloonEnabled = true;
+    chartCursor.cursorColor = this.chartColors.grayLightTwo;
+
+    if (!data[0].balloon) {
+      catAxis.gridColor = this.chartColors.grayLightThree;
+    }
+
+    let chartData: any = this.CommonGraphService.getBaseSerialGraph(data, 0, valueAxes, this.filesGraphs(data), this.CommonGraphService.DATE, catAxis);
+    chartData.numberFormatter = this.CommonGraphService.getBaseVariable(this.CommonGraphService.NUMFORMAT);
+    chartData.legend = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LEGEND);
+    chartData.chartCursor = chartCursor;
+    chartData.legend.labelText = '[[' + this.CommonGraphService.TITLE + ']]';
+    chartData.autoMargins = true;
+
+    return AmCharts.makeChart(this.filesSharedDiv, chartData);
+  }
+
+  private filesGraphs(data: Array<IFilesShared>): Array<any> {
+    const filesShared: string = this.$translate.instant('filesShared.filesShared');
+    const fileSizes: string = this.$translate.instant('filesShared.fileSizes');
+    const gb: string = this.$translate.instant('filesShared.gb');
+
+    let color: string = this.chartColors.brandSuccess;
+    if (!data[0].balloon) {
+      color = this.chartColors.dummyGray;
+    }
+
+    let graph: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LINE);
+    graph.title = filesShared;
+    graph.fillColors = color;
+    graph.colorField = color;
+    graph.lineColor = color;
+    graph.valueField = 'contentShared';
+    graph.showBalloon = data[0].balloon;
+    graph.balloonText = SparkGraphService.graphTextSpan + filesShared + ' <span class="graph-number">[[contentShared]]</span><br>' + fileSizes + ' <span class="graph-number">[[contentShareSizes]] ' + gb + '</span></span>';
 
     return [graph];
   }

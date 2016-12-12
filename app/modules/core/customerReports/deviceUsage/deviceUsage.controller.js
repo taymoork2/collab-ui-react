@@ -8,12 +8,18 @@ require('./_device-usage.scss');
     .controller('DeviceUsageCtrl', DeviceUsageCtrl);
 
   /* @ngInject */
-  function DeviceUsageCtrl($log, $q, $translate, $scope, DeviceUsageTotalService, Notification, DeviceUsageSplunkMetricsService, ReportConstants, CardUtils) {
+  function DeviceUsageCtrl($log, $q, $translate, $scope, DeviceUsageTotalService, Notification, DeviceUsageSplunkMetricsService, ReportConstants, CardUtils, deviceUsageFeatureToggle, $state) {
     var vm = this;
     var amChart;
     var apiToUse = 'backend';
     var missingDays;
     var dateRange;
+
+    if (!deviceUsageFeatureToggle) {
+      // simulate a 404
+      $log.warn("State not allowed.");
+      $state.go('login');
+    }
 
     vm.leastUsedDevices = [];
     vm.mostUsedDevices = [];
@@ -312,6 +318,8 @@ require('./_device-usage.scss');
       })
       .catch(function (err) {
         $log.warn("Export failed", err);
+        vm.exporting = false;
+        Notification.notify("An error occured while exporting usage data", 'error');
       });
     }
 

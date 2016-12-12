@@ -22,7 +22,8 @@
       isTollFreeNumber: isTollFreeNumber,
       isPossibleAreaCode: isPossibleAreaCode,
       getDestinationObject: getDestinationObject,
-      checkPhoneNumberType: checkPhoneNumberType
+      checkPhoneNumberType: checkPhoneNumberType,
+      internationalNumberValidator: internationalNumberValidator
     };
     var TOLL_FREE = 'TOLL_FREE';
     var PREMIUM_RATE = 'PREMIUM_RATE';
@@ -187,6 +188,20 @@
         phoneNumberType = undefined;
       }
       return phoneNumberType;
+    }
+
+    function internationalNumberValidator(number) {
+      try {
+        var phoneNumber = phoneUtils.formatE164(number);
+        var regionCode = phoneUtils.getRegionCodeForNumber(phoneNumber).toLowerCase();
+        if (phoneUtils.isValidNumberForRegion(phoneNumber, regionCode)) {
+          return true;
+        } else {
+          return false;
+        }
+      } catch (e) {
+        return false;
+      }
     }
   }
 })();

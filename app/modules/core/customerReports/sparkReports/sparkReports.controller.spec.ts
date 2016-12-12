@@ -9,22 +9,22 @@ import {
 } from '../../partnerReports/partnerReportInterfaces';
 
 import {
-  IMetricsData,
   IMetricsLabel,
 } from './sparkReportInterfaces';
 
 describe('Controller: Customer Reports Ctrl', function () {
   let controller;
 
-  const dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
-  const activeData = getJSONFixture('core/json/customerReports/activeUser.json');
-  const ctrlData = getJSONFixture('core/json/partnerReports/ctrl.json');
-  const roomData = getJSONFixture('core/json/customerReports/roomData.json');
-  const fileData = getJSONFixture('core/json/customerReports/fileData.json');
-  const mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
-  const metricsData = getJSONFixture('core/json/customerReports/callMetrics.json');
-  const devicesJson = getJSONFixture('core/json/customerReports/devices.json');
-  const defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
+  let dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
+  let activeData = getJSONFixture('core/json/customerReports/activeUser.json');
+  let ctrlData = getJSONFixture('core/json/partnerReports/ctrl.json');
+  let roomData = getJSONFixture('core/json/customerReports/roomData.json');
+  let fileData = getJSONFixture('core/json/customerReports/fileData.json');
+  let mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
+  let metricsData = getJSONFixture('core/json/customerReports/callMetrics.json');
+  let devicesJson = getJSONFixture('core/json/customerReports/devices.json');
+  let defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
+  let conversationData = getJSONFixture('core/json/customerReports/conversation.json');
 
   let activeOptions: IReportCard = _.cloneDeep(ctrlData.activeUserOptions);
   let secondaryActiveOptions: ISecondaryReport = _.cloneDeep(ctrlData.activeUserSecondaryOptions);
@@ -58,6 +58,10 @@ describe('Controller: Customer Reports Ctrl', function () {
     selected: mediaArray[0],
     click: (): void => {},
   };
+
+  afterAll(function () {
+    dummyData = activeData = ctrlData = roomData = fileData = mediaData = metricsData = devicesJson = defaults = conversationData = undefined;
+  });
 
   beforeEach(function () {
     this.initModules('Core');
@@ -109,15 +113,12 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(this.SparkReportService, 'getCallMetricsData').and.returnValue(this.$q.when(_.cloneDeep(metricsData.response)));
       spyOn(this.SparkReportService, 'getDeviceData').and.returnValue(this.$q.when(_.cloneDeep(devicesJson.response)));
 
-      let dummyMetrics: IMetricsData = _.cloneDeep(metricsData.response);
-      dummyMetrics.dummy = true;
-
-      spyOn(this.DummySparkDataService, 'dummyActiveUserData').and.returnValue(dummyData.activeUser.one);
-      spyOn(this.DummySparkDataService, 'dummyAvgRoomData').and.returnValue(dummyData.avgRooms.one);
-      spyOn(this.DummySparkDataService, 'dummyFilesSharedData').and.returnValue(dummyData.filesShared.one);
-      spyOn(this.DummySparkDataService, 'dummyMediaData').and.returnValue(dummyData.mediaQuality.one);
-      spyOn(this.DummySparkDataService, 'dummyMetricsData').and.returnValue(dummyMetrics);
-      spyOn(this.DummySparkDataService, 'dummyDeviceData').and.returnValue(_.cloneDeep(devicesJson.dummyData));
+      spyOn(this.DummySparkDataService, 'dummyActiveUserData').and.callThrough();
+      spyOn(this.DummySparkDataService, 'dummyAvgRoomData').and.callThrough();
+      spyOn(this.DummySparkDataService, 'dummyFilesSharedData').and.callThrough();
+      spyOn(this.DummySparkDataService, 'dummyMediaData').and.callThrough();
+      spyOn(this.DummySparkDataService, 'dummyMetricsData').and.callThrough();
+      spyOn(this.DummySparkDataService, 'dummyDeviceData').and.callThrough();
 
       controller = this.$controller('SparkReportCtrl', {
         $q: this.$q,
@@ -281,8 +282,14 @@ describe('Controller: Customer Reports Ctrl', function () {
 
       spyOn(this.SparkLineReportService, 'getActiveUserData').and.returnValue(this.$q.when(_.cloneDeep(activeData.activeLineResponse)));
       spyOn(this.SparkLineReportService, 'getMostActiveUserData').and.returnValue(this.$q.when(_.cloneDeep(activeData.mostActiveResponse)));
+      spyOn(this.SparkLineReportService, 'getConversationData').and.returnValue(this.$q.when({
+        array: _.cloneDeep(conversationData.response),
+        hasRooms: true,
+        hasFiles: true,
+      }));
 
-      spyOn(this.DummySparkDataService, 'dummyActiveUserData').and.returnValue(activeData.dummyData.two);
+      spyOn(this.DummySparkDataService, 'dummyActiveUserData').and.callThrough();
+      spyOn(this.DummySparkDataService, 'dummyConversationData').and.callThrough();
 
       controller = this.$controller('SparkReportCtrl', {
         $q: this.$q,
@@ -299,11 +306,13 @@ describe('Controller: Customer Reports Ctrl', function () {
     describe('Initializing Controller', function () {
       it('should be created successfully and all expected calls completed', function () {
         expect(this.DummySparkDataService.dummyActiveUserData).toHaveBeenCalledTimes(1);
+        expect(this.DummySparkDataService.dummyConversationData).toHaveBeenCalledTimes(1);
+
         expect(this.SparkLineReportService.getActiveUserData).toHaveBeenCalledTimes(1);
         expect(this.SparkGraphService.setActiveLineGraph).toHaveBeenCalled();
         expect(zoomFunction).not.toHaveBeenCalled();
 
-        expect(this.CommonReportService.createExportMenu).toHaveBeenCalledTimes(2);
+        expect(this.CommonReportService.createExportMenu).toHaveBeenCalledTimes(6);
         expect(this.SparkGraphService.showHideActiveLineGraph).toHaveBeenCalledTimes(2);
         expect(this.CardUtils.resize).toHaveBeenCalledTimes(1);
       });
@@ -330,6 +339,9 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(controller.activeDropdown.selected).toEqual(activeDropdownArray[0]);
         expect(controller.activeDropdown.click).toEqual(jasmine.any(Function));
 
+        expect(controller.avgRoomOptions).toEqual(avgRoomsCard);
+        expect(controller.filesSharedOptions).toEqual(filesSharedCard);
+
         let reportFilter: Array<IFilterObject> = _.cloneDeep(ctrlData.reportFilter);
         _.forEach(controller.filterArray, function (filter, index: number) {
           expect(filter.label).toEqual(reportFilter[index].label);
@@ -346,8 +358,6 @@ describe('Controller: Customer Reports Ctrl', function () {
 
     describe('filter changes', function () {
       it('All graphs should update on time filter changes', function () {
-        expect(this.DummySparkDataService.dummyActiveUserData).toHaveBeenCalledTimes(1);
-        expect(this.SparkLineReportService.getActiveUserData).toHaveBeenCalledTimes(1);
         controller.timeSelected = altTimeFilter[1];
         controller.timeUpdates.update();
         this.$timeout.flush();
@@ -364,9 +374,9 @@ describe('Controller: Customer Reports Ctrl', function () {
         this.$timeout.flush();
         expect(controller.timeSelected).toEqual(altTimeFilter[altTimeFilter.length - 1]);
 
-        expect(this.DummySparkDataService.dummyActiveUserData).toHaveBeenCalledTimes(2);
+        expect(this.DummySparkDataService.dummyActiveUserData).toHaveBeenCalledTimes(3);
         expect(this.SparkLineReportService.getActiveUserData).toHaveBeenCalledTimes(2);
-        expect(this.SparkGraphService.setActiveLineGraph).toHaveBeenCalledTimes(5);
+        expect(this.SparkGraphService.setActiveLineGraph).toHaveBeenCalledTimes(6);
         expect(zoomFunction).toHaveBeenCalledTimes(3);
         expect(this.CardUtils.resize).toHaveBeenCalledTimes(3);
       });

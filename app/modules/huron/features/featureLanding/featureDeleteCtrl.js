@@ -9,7 +9,7 @@
     .controller('HuronFeatureDeleteCtrl', HuronFeatureDeleteCtrl);
 
   /* @ngInject */
-  function HuronFeatureDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, AAModelService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeService, AutoAttendantCeInfoModelService, Notification, Log, AACalendarService, CardUtils) {
+  function HuronFeatureDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, AAModelService, CallPickupGroupService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeService, AutoAttendantCeInfoModelService, Notification, Log, AACalendarService, CardUtils) {
     var vm = this;
     vm.deleteBtnDisabled = false;
     vm.deleteFeature = deleteFeature;
@@ -24,8 +24,10 @@
       vm.featureType = $translate.instant('callPark.title');
     } else if (vm.featureFilter === 'PG') {
       vm.featureType = $translate.instant('pagingGroup.title');
+    } else if (vm.featureFilter === 'PI') {
+      vm.featureType = $translate.instant('callPickup.title');
     } else {
-      vm.featureType = 'Feature';
+      vm.featureType = $translate.instant('huronFeatureDetails.feature');
     }
     vm.deleteBtnDisabled = false;
 
@@ -97,6 +99,15 @@
         );
       } else if (vm.featureFilter === 'PG') {
         PagingGroupService.deletePagingGroup(vm.featureId).then(
+          function () {
+            deleteSuccess();
+          },
+          function (response) {
+            deleteError(response);
+          }
+        );
+      } else if (vm.featureFilter === 'PI') {
+        CallPickupGroupService.deletePickupGroup(vm.featureId).then(
           function () {
             deleteSuccess();
           },

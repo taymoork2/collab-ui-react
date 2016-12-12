@@ -17,6 +17,7 @@ export class CommonReportService {
 
   // private API helpers
   private readonly CACHE: string = '&cache=';
+  private readonly TYPE: string = '?type=';
   private readonly ICOUNT: string = '&intervalCount=';
   private readonly ITYPE: string = '&intervalType=';
   private readonly SCOUNT: string = '&spanCount=';
@@ -71,7 +72,7 @@ export class CommonReportService {
 
   // TODO: remove unnecessary IIntervalQuery options once API stops requiring them
   public getPartnerReportByReportType(options: IReportTypeQuery, extraOptions: IIntervalQuery, customers: Array<IReportsCustomer>, cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
-    let url = this.urlBase + options.action + '/managedOrgs/' + options.type + '?type=' + options.reportType + this.getQuery(extraOptions) + this.getCustomerQuery(customers);
+    let url = this.urlBase + options.action + '/managedOrgs/' + options.type + this.TYPE + options.reportType + this.getQuery(extraOptions) + this.getCustomerQuery(customers);
     return this.getService(url, cancelPromise);
   }
 
@@ -84,12 +85,17 @@ export class CommonReportService {
   }
 
   public getCustomerReportByType(options: ITypeQuery, cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
-    let url = this.urlBase + options.name + '?type=' + options.type + this.CACHE + options.cache;
+    let url = this.urlBase + options.name + this.TYPE + options.type + this.CACHE + options.cache;
     return this.getService(url, cancelPromise);
   }
 
   public getCustomerAltReportByType(options: ITypeQuery, cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
-    let url = this.urlBase + options.name + '/' + options.type + '?' + this.CACHE + options.cache;
+    let url = this.urlBase;
+    if (options.extension) {
+      url += options.extension + '/' + options.name + '/' + this.TYPE + options.type + this.CACHE + options.cache;
+    } else {
+      url += options.name + '/' + options.type + '?' + this.CACHE + options.cache;
+    }
     return this.getService(url, cancelPromise);
   }
 
@@ -244,21 +250,24 @@ export class CommonReportService {
   public getTypeOptions(filter: ITimespan, name: string): ITypeQuery {
     return {
       name: name,
+      extension: undefined,
       type: this.usageOptions[filter.value],
       cache: this.cacheValue,
     };
   }
 
-  public getLineTypeOptions(filter: ITimespan, name: string): ITypeQuery {
+  public getLineTypeOptions(filter: ITimespan, name: string, extension: string | undefined): ITypeQuery {
     if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
       return {
         name: name,
+        extension: extension,
         type: this.altUsageOptions[0],
         cache: this.cacheValue,
       };
     } else {
       return {
         name: name,
+        extension: extension,
         type: this.altUsageOptions[1],
         cache: this.cacheValue,
       };
