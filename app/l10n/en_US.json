@@ -5805,6 +5805,7 @@
     "areaCode": "Area Code",
     "customerInfo": "Customer Information",
     "webOrderId": "Web Order Number",
+    "subscriptionId": "Subscription ID",
     "orderProvision": "Order Provisioned",
     "accountActivate": "Account Activated",
     "companyName": "Company Name",
