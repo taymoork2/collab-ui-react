@@ -2049,7 +2049,6 @@
       "yesInfo1": "Assign your Hybrid Data Security Node to a cluster and enter the ",
       "yesInfo2": "FQDN ",
       "yesInfo3": "or IP address.",
-      "fqdn": "Fully Qualified Domain Name",
       "confirmationDialogHeader": "Cancel Setup",
       "confirmationDialogBody": "Are you sure you want to cancel service setup?"
     },

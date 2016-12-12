@@ -6,40 +6,44 @@
     .service('HDSAddResourceCommonService', HDSAddResourceCommonService);
 
   /* @ngInject */
-  function HDSAddResourceCommonService($q, $translate, $window, FusionClusterService, Notification, ServiceDescriptor) {
+  function HDSAddResourceCommonService($log, $window, FusionClusterService, Notification, ServiceDescriptor) {
     var vm = this;
     vm.clusters = null;
     vm.onlineNodeList = [];
     vm.offlineNodeList = [];
-    vm.clusterList = [];
     vm.selectedClusterId = '';
     vm.currentServiceId = 'spark-hybrid-datasecurity';
 
     function updateClusterLists() {
       vm.clusters = null;
-      vm.clusterList = [];
       vm.onlineNodeList = [];
       vm.offlineNodeList = [];
-      FusionClusterService.getAll()
+      // returns a promise directly
+      return FusionClusterService.getAll()
         .then(function (clusters) {
+          $log.info('updateClusterLists clusters', clusters);
           vm.clusters = _.filter(clusters, { targetType: 'hds_app' });
-          _.each(clusters, function (cluster) {
-            if (cluster.targetType === 'hds_app') {
-              vm.clusterList.push(cluster.name);
-              _.each(cluster.connectors, function (connector) {
-                if ('running' === connector.state) {
-                  vm.onlineNodeList.push(connector.hostname);
-                } else {
-                  vm.offlineNodeList.push(connector.hostname);
-                }
-              });
+          // vm.clusters already had only hds clusters, let's use the shorthand version
+          // if _.map() to extract the name of each cluster
+          var clusterList = _.map(vm.clusters, function (cluster) {
+            return cluster.name;
+          });
+          clusterList.sort();
+
+          var connectors = _.flatten(_.map(vm.clusters, function (cluster) {
+            return cluster.connectors;
+          }));
+          _.each(connectors, function (connector) {
+            if ('running' === connector.state) {
+              vm.onlineNodeList.push(connector.hostname);
+            } else {
+              vm.offlineNodeList.push(connector.hostname);
             }
           });
-          vm.clusterList.sort();
-          $q.resolve(vm.clusterList);
+          // inside a promise, we can just return a value
+          $log.info('updateClusterLists clusterList', clusterList);
+          return clusterList;
         });
-
-      return $q.resolve();
     }
 
     function addRedirectTargetClicked(hostName, enteredCluster) {
@@ -62,20 +66,15 @@
         }
       });
       if (vm.clusterDetail == null) {
-        var deferred = $q.defer();
-        //TODO: fix for fusion cluster
-        FusionClusterService.preregisterCluster(enteredCluster, 'stable', 'hds_app')
-        .then(function (resp) {
-          vm.selectedClusterId = resp.id;
-          deferred.resolve(allowListHost(hostName, vm.selectedClusterId));
-        })
+      //TODO: fix for fusion cluster
+        return FusionClusterService.preregisterCluster(enteredCluster, 'stable', 'hds_app')
+          .then(function (resp) {
+            vm.selectedClusterId = resp.id;
+            return allowListHost(hostName, vm.selectedClusterId);
+          })
         .catch(function (error) {
-          var errorMessage = $translate.instant('hds.clusters.clusterCreationFailed', {
-            enteredCluster: enteredCluster
-          });
-          Notification.errorWithTrackingId(error, errorMessage);
+          Notification.errorWithTrackingId(error, 'hds.clusters.clusterCreationFailed', { enteredCluster: enteredCluster });
         });
-        return deferred.promise;
       } else {
         vm.selectedClusterId = vm.clusterDetail.id;
         return allowListHost(hostName, vm.selectedClusterId);

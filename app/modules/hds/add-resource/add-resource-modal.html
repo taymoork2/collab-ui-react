@@ -10,31 +10,31 @@
 <div class="modal-body">
   <div ng-show="hdsRedirectAddResourceController.proceedSetup && !hdsRedirectAddResourceController.enableRedirectToTarget">
     <div>
-      <h4 class="addResourceInlineBlock" translate="hds.add-resource-dialog.yesInfo1"></h4>
-      <h4 class="addResourceFQDN" tooltip="{{'hds.add-resource-dialog.fqdn' | translate}}" translate="hds.add-resource-dialog.yesInfo2"></h4>
-      <h4 class="addResourceInlineBlock" translate="hds.add-resource-dialog.yesInfo3"></h4>
+      <h4 class="hdsAddResourceInlineBlock" translate="hds.add-resource-dialog.yesInfo1"></h4>
+      <h4 class="hdsAddResourceFQDN" translate="hds.add-resource-dialog.yesInfo2"></h4>
+      <h4 class="hdsAddResourceInlineBlock" translate="hds.add-resource-dialog.yesInfo3"></h4>
     </div>
-    <form name="inputHostNameForm" class="inputHostNameForm">
+    <form name="hdsInputHostNameForm" class="hdsInputHostNameForm">
       <div>
         <br>
-        <div class="row showgrid">
+        <div class="row">
           <div class="columns medium-5">
             <p translate="hds.add-resource-dialog.text1">
             </p>
           </div>
-          <div class="columns medium-6 inputHostNameForm">
+          <div class="columns medium-6 hdsInputHostNameForm">
             <cs-select combo="true" ng-model="hdsRedirectAddResourceController.selectedCluster" options="hdsRedirectAddResourceController.clusterList" placeholder="hdsRedirectAddResourceController.selectPlaceholder">
             </cs-select>
           </div>
         </div>
         <br>
-        <div class="row showgrid">
+        <div class="row">
           <div class="columns medium-5">
-            <p class="addResourceInlineBlock" translate="hds.add-resource-dialog.text3"/>
-            <p class="addResourceFQDN" tooltip="{{'hds.add-resource-dialog.fqdn' | translate}}" translate="hds.add-resource-dialog.yesInfo2"/>
-            <p class="addResourceInlineBlock" translate="hds.add-resource-dialog.text3part2"/>
+            <p class="hdsAddResourceInlineBlock" translate="hds.add-resource-dialog.text3"/>
+            <p class="hdsAddResourceFQDN" translate="hds.add-resource-dialog.yesInfo2"/>
+            <p class="hdsAddResourceInlineBlock" translate="hds.add-resource-dialog.text3part2"/>
           </div>
-          <div class="columns medium-6 inputHostNameForm">
+          <div class="columns medium-6 hdsInputHostNameForm">
             <input class="cs-input" ng-model="hdsRedirectAddResourceController.hostName" placeholder="{{'hds.add-resource-dialog.hostname' | translate}} " type="text">
           </div>
         </div>
@@ -59,8 +59,8 @@
     <div>
       <h4 translate="hds.add-resource-dialog.firstStep"></h4>
     </div>
-    <div class="myAddResourceForm">
-      <form name="myAddResourceForm">
+    <div class="hdsAddResourceForm">
+      <form name="hdsAddResourceForm">
         <div class="cs-radio-group">
           <div class="radioDisplay">
             <input cs-input type="radio" ng-model="hdsRedirectAddResourceController.radio" id="yes" name="hdsRedirectAddResourceController" value="1" cs-input-label="{{'hds.add-resource-dialog.yesProceed' | translate}}" class="radioNoTranform">
@@ -82,7 +82,7 @@
     <div>
       <h4 translate="hds.add-resource-dialog.noRetryInfo"></h4>
     </div>
-    <div class="addResourceBodyInfo">
+    <div class="hdsAddResourceBodyInfo">
       <p>
         {{'hds.add-resource-dialog.noDesc1' | translate}} <a href="https://www.cisco.com/go/hybrid-services-media"  target='_blank'>{{'hds.add-resource-dialog.noDesc2' | translate}}</a>
       </p>

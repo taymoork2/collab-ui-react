@@ -50,22 +50,20 @@
         templateUrl: 'modules/hds/add-resource/confirm-setup-cancel-dialog.html',
         type: 'dialog'
       })
-        .result.then(function (isAborting) {
-          if (isAborting) {
-            $modalInstance.close();
-            $state.go('services-overview');
-          }
+        .result.then(function () {
+          $modalInstance.close();
+          $state.go('services-overview');
         });
     }
 
 
     function next() {
-      if (vm.radio == 0) {
+      if (vm.radio === 0) {
         vm.noProceed = true;
         //TODO: Switch to HDS link when available
         $window.open('https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova');
       } else if (vm.proceedSetup) {
-        if (!_.isUndefined(vm.selectedCluster) && vm.selectedCluster != '' && !_.isUndefined(vm.hostName)) {
+        if (!_.isUndefined(vm.selectedCluster) && vm.selectedCluster !== '' && !_.isUndefined(vm.hostName)) {
           vm.enableRedirectToTarget = true;
         }
       } else {
