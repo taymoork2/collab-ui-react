@@ -38,6 +38,10 @@ describe('Controller: DeviceOverviewCtrl', function () {
     $httpBackend.whenGET('http://thedeviceurl').respond(200);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/sipendpoints/3/addonmodules').respond(200);
+    $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond([{
+      name: "Texas",
+      abbreviation: "TX"
+    }]);
   }
 
   var $stateParams = {
@@ -296,7 +300,10 @@ describe('Huron Device', function () {
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/upgradeChannels').respond(200);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
     $httpBackend.whenGET('http://thedeviceurl').respond(200);
-
+    $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond([{
+      name: "Texas",
+      abbreviation: "TX"
+    }]);
     countries = getJSONFixture('huron/json/settings/countries.json');
 
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timeZone));
