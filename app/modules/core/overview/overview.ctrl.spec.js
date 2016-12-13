@@ -280,7 +280,8 @@ describe('Controller: OverviewCtrl', function () {
       TrialService: TrialService,
       OverviewNotificationFactory: OverviewNotificationFactory,
       SunlightReportService: SunlightReportService,
-      hasCareFeatureToggle: true
+      hasCareFeatureToggle: true,
+      hasGoogleCalendarFeatureToggle: false,
     });
 
     // TODO Need to be removed once Care is graduated on atlas.
@@ -298,7 +299,8 @@ describe('Controller: OverviewCtrl', function () {
       Config: Config,
       TrialService: TrialService,
       OverviewNotificationFactory: OverviewNotificationFactory,
-      hasCareFeatureToggle: false
+      hasCareFeatureToggle: false,
+      hasGoogleCalendarFeatureToggle: false,
     });
 
     $scope.$apply();
