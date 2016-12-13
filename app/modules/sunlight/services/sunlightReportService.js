@@ -92,7 +92,7 @@
         // today
         case 0:
           startTimeStamp = moment().startOf('day');
-          endTimeStamp = moment();
+          endTimeStamp = moment().add(1, 'hours').startOf('hour');
           config = getQueryConfig('fifteen_minutes', mediaType, startTimeStamp, endTimeStamp);
           dataPromise = getStats(reportName, config)
           .then(function (response) {

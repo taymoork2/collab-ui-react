@@ -134,7 +134,7 @@
     "unknownCreateUserError": "An unknown error has occurred and user creation could not be completed.",
     "insufficientEntitlementsError": "{{email}} cannot be added.  There are insufficient licenses to create this user.",
     "telstraAppRedirect": "Connecting to Telstra Apps Marketplace",
-    "careAddUserError": "Error adding user to Care.",
+    "careAddUserError": "Failed to add user to Care.",
     "careAddUserRoleError": "Error adding roles to user."
   },
   "userManage": {
@@ -600,7 +600,7 @@
     "threeMonths2": "for the last three months",
     "threeMonthsTaskStatus": "handled and abandoned",
     "threeMonthsInterval": "given month",
-    "taskDataGetError": "There was an error while loading the data for {{dataType}}."
+    "taskDataGetError": "There was an error while loading the {{dataType}} data."
   },
   "activeUsers": {
     "active": "Active",
@@ -1608,7 +1608,8 @@
       "squared-fusion-mgmt": "Hybrid Management Service",
       "squared-fusion-uc": "Hybrid Call Service",
       "squared-fusion-cal": "Hybrid Calendar Service",
-      "spark-hybrid-datasecurity": "Hybrid Data Security"
+      "spark-hybrid-datasecurity": "Hybrid Data Security",
+      "squared-fusion-media": "Hybrid Media Service"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
@@ -1752,10 +1753,12 @@
       "oneButtonToPushIntervalSecondaryLabel": "minutes before the meeting",
       "oneButtonToPushIntervalMinutesSavingSuccess": "Early join time was successfully saved.",
       "oneButtonToPushIntervalMinutesSavingError": "Could not save the change to early join time. Try again later.",
-      "documentationHeading": "Documentation and Software",
-      "documentationHelpLink": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> for further information about Hybrid Services.",
-      "documentationDownloadLink": "Download Cisco Expressway software from <a href=\"https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP\" target=\"_blank\">software.cisco.com</a>.",
-      "documentationSaving": "Saving.",
+      "documentation": {
+        "heading": "Documentation and Software",
+        "help": "Visit <a href=\"{{helpLink}}\" target=\"_blank\">Help Central</a> for further information about {{localizedServiceName}}.",
+        "downloadExpressway": "Download Cisco Expressway software from <a href=\"{{downloadLink}}\" target=\"_blank\">software.cisco.com</a>.",
+        "downloadECP": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download {{serviceName}} software</a>."
+      },
       "call": {
         "domainVerification": "Domain Verification",
         "aware": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
@@ -2377,6 +2380,7 @@
     "careSettingsFetchFailed": "Error retrieving onboarding status.",
     "careSettingsTimeout": "Request timed out while checking Care setup status.",
     "careSettingsChecking": "Checking Care setup status.",
+    "setUpCareFailure": "Failed to setup Care. Please try again or skip this step for now and set it up from the Settings page in Care. Users cannot have Care license until this setup is complete.",
     "addUsers": "Add Users",
     "addUsersSubDescription": "Invite users and assign services",
     "addUsersDescription": "Select a method to upload your users.",
@@ -3949,25 +3953,7 @@
       "label": "ACTIVATE AND BEGIN SETUP"
     },
     "settings": {
-      "deactivateServiceHeading": "Deactivate Service",
-      "deactivateService": "Deactivating a service removes all service-related features for your users and requires a confirmation step",
-      "deactivateServiceV2": "Deactivating a service removes all service-related features for your users and requires a confirmation step.",
-      "deactivate": "Deactivate",
-      "emailNotificationsHeading": "Email Notifications",
-      "emailNotifications": "Add email addresses to receive email notifications about Service impacting Alarms and Software Upgrades.",
-      "emailNotificationsV2": "Add email addresses to recieve notifications about service-impacting alarms and software upgrades.",
-      "emailExample": "For example: John Doe john.doe@email.com, Kate Williams kate.williams@email.com",
-      "documentationHeading": "Documentation and software",
-      "documentationHeadingV2": "Documentation and Software",
-      "documentation_1": "Go to",
-      "documentation_2": "Help Central",
-      "documentation_3": "for prerequisites and help installing and using Hybrid Services.",
-      "documentation_3V2": "for prerequisities and help installing and using the Hybrid Media Service.",
-      "documentation_4": "Download Media Service OVA from",
-      "documentation_4V2": "Download Hybrid Media Service software from",
-      "documentation_5": "here",
-      "cancelCaps": "CANCEL",
-      "cancel": "Cancel",
+      "deactivateServiceV2": "Deactivating Hybrid Media Service removes all service-related features for users.",
       "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
       "deactivateBody_2": "Deactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources.",
       "removeCluster": "REMOVE CLUSTER",
@@ -4988,7 +4974,7 @@
       "userUpdateSuccessMessage": "Information has been updated successfully for user {{userId}}. "
     },
     "failureMessages": {
-      "userUpdateFailureMessage": "Information cannot be updated currently for user {{userId}}.",
+      "userUpdateFailureMessage": "Failed to update information for user {{userId}}.",
       "userloadFailureMessage": "Information is currently not available for user {{userId}}.",
       "emptyAliasErrorMessage": "User alias cannot be empty."
     }
@@ -5014,7 +5000,7 @@
       "setUpCare": "Care",
       "setUpDescription": "Setup Care to add this license for your users so that your organization can take advantage of Care service.",
       "setUpCareSuccess": "Care service has been setup successfully.",
-      "setUpCareFailure": "Failed to setup Care service. Please try again. Users cannot have Care license till this setup is complete."
+      "setUpCareFailure": "Failed to setup Care. Please try again. Users cannot have Care license until this setup is complete."
     },
     "featuresNotYetConfiguredPage": {
       "createCareTemplate": "Create a Care Template",
@@ -5141,11 +5127,13 @@
     "deleteAction": "Delete",
     "deleteFeatureTextConfirmation": "Are you sure you want to delete the {{ featureName }} {{featureText}}?",
     "createSuccessText": "{{ featureName }} chat template has been created successfully",
+    "createChatTemplateFailureText": "Failed to create chat template.",
     "editSuccessText": "{{ featureName }} chat template has been updated successfully",
+    "editChatTemplateFailureText": "Failed to edit {{ featureName }} chat template.",
     "deleteSuccessText": "{{ featureName }} {{ featureText }} has been deleted successfully",
     "deleteFailedText": "Failed to delete {{ featureName }} {{ featureText }}.",
     "messageError": "Message {{ message }}",
-    "failedToLoad": "Unable to load {{ featureText }}(s) information",
+    "failedToLoad": "Failed to load {{ featureText }}(s).",
     "chatTemplate": "chat template",
     "namePlaceholder": "Name the Chat Template",
     "nameHint": "Enter a name for you to identify this chat template",
