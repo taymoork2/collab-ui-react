@@ -539,11 +539,11 @@ class SparkReportCtrl {
         this.updateQualityGraph(this.qualitySevenDayData);
       }
     } else if (_.isUndefined(this.qualityYearData)) {
-      this.zoomChart(this.charts.active, min, max);
+      this.zoomChart(this.charts.media, min, max);
       this.SparkLineReportService.getMediaQualityData(this.timeSelected).then((response: Array<IMediaData>): void => {
         this.qualityYearData = response;
         this.updateQualityGraph(this.qualityYearData);
-        this.zoomChart(this.charts.active, min, max);
+        this.zoomChart(this.charts.media, min, max);
       });
     } else {
       this.updateQualityGraph(this.qualityYearData);
@@ -728,7 +728,7 @@ class SparkReportCtrl {
 
   private zoomChart(chart: any, min: number, max: number): void {
     if (chart && chart.zoomToIndexes) {
-      chart.zoomToIndexes(min - 1, max);
+      chart.zoomToIndexes(min, max);
     }
   }
 }

@@ -31,7 +31,7 @@ export class DummySparkDataService {
 
   private static getCommonData(filter: ITimespan, index: number, constants: any): ICommonData {
     let count = constants.DAYS - index;
-    let date = moment().subtract(index, constants.DAY).format(constants.DAY_FORMAT);
+    let date = moment().subtract(index + 1, constants.DAY).format(constants.DAY_FORMAT);
     if (filter.value === 1) {
       count = constants.WEEKS - index;
       date = moment().startOf(constants.WEEK).subtract(1 + (index * 7), constants.DAY).format(constants.DAY_FORMAT);
@@ -50,7 +50,7 @@ export class DummySparkDataService {
     let dummyGraph: Array<any> = [];
 
     if (filter.value === 0) {
-      for (let i = this.ReportConstants.DAYS; i >= 1; i--) {
+      for (let i = this.ReportConstants.DAYS; i >= 0; i--) {
         dummyGraph.push(callFunction(filter, i, this.ReportConstants));
       }
     } else if (filter.value === 1) {
@@ -73,10 +73,7 @@ export class DummySparkDataService {
     let timespan: number;
 
     if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
-      timespan = this.ReportConstants.DAYS - 1;
-      if (lineGraph) {
-        timespan = this.ReportConstants.DAYS;
-      }
+      timespan = this.ReportConstants.DAYS;
     } else if (filter.value === this.ReportConstants.MONTH_FILTER.value) {
       timespan = this.ReportConstants.WEEKS;
       if (lineGraph) {
@@ -102,12 +99,9 @@ export class DummySparkDataService {
       if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
         date = moment().subtract(index + 1, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
       } else {
-        date = moment().day(-1).subtract(index, this.ReportConstants.WEEK).format(this.ReportConstants.DAY_FORMAT);
+        date = moment().day(-1).subtract(index + 1, this.ReportConstants.WEEK).format(this.ReportConstants.DAY_FORMAT);
       }
     } else {
-      if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
-        index++;
-      }
       let commonData: ICommonData = DummySparkDataService.getCommonData(filter, index, this.ReportConstants);
       date = commonData.date;
     }
@@ -170,7 +164,7 @@ export class DummySparkDataService {
     }
 
     for (let i = timespan; i >= 0; i--) {
-      dummyGraph.push(this.getConversationDataPoint(filter, i, timespan - i));
+      dummyGraph.push(this.getConversationDataPoint(filter, i + 1, timespan - i));
     }
 
     return dummyGraph;
@@ -179,7 +173,7 @@ export class DummySparkDataService {
   private getConversationDataPoint(filter: ITimespan, index: number, count: number): IConversation {
     let date: string;
     if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
-      date = moment().subtract(index + 1, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
+      date = moment().subtract(index, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
     } else {
       date = moment().day(-1).subtract(index, this.ReportConstants.WEEK).format(this.ReportConstants.DAY_FORMAT);
     }
@@ -210,7 +204,7 @@ export class DummySparkDataService {
       }
 
       for (let i = timespan; i >= 0; i--) {
-        dummyGraph.push(this.getQualityDataPoint(filter, i, timespan - i));
+        dummyGraph.push(this.getQualityDataPoint(filter, i + 1, timespan - i));
       }
 
       return dummyGraph;
@@ -222,7 +216,7 @@ export class DummySparkDataService {
   private getQualityDataPoint(filter: ITimespan, index: number, count: number): IMediaData {
     let date: string;
     if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
-      date = moment().subtract(index + 1, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
+      date = moment().subtract(index, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
     } else {
       date = moment().day(-1).subtract(index, this.ReportConstants.WEEK).format(this.ReportConstants.DAY_FORMAT);
     }

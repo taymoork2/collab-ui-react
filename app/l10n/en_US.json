@@ -507,6 +507,8 @@
     "lastTwelveWeeks2": "last twelve weeks",
     "custom": "Custom",
     "custom2": "custom selection",
+    "fromDate": "From ",
+    "toDate": "To ",
     "customerLoadError": "There was an error while loading the customer list.",
     "unauthorizedError": "User is not authorized to access the customer reports.",
     "conversationError": "There was an error while loading room and file data.",

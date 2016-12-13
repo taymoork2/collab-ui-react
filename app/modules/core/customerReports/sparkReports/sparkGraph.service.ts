@@ -116,13 +116,12 @@ export class SparkGraphService {
       graphs[index].clustered = false;
       graphs[index].balloonFunction = (graphDataItem: any, graph: any): string | undefined => {
         let data: any = _.get(graphDataItem, 'dataContext', {});
-        let hiddenData: string = _.get(graph, 'data[0].category', '');
         let title: string = _.get(graph, 'title', '');
         let balloonText: string | undefined = undefined;
 
-        if (title === users && data.date !== hiddenData) {
+        if (title === users) {
           balloonText = SparkGraphService.graphTextSpan + registeredUsers + SparkGraphService.boldNumberSpan + ' ' + data.totalRegisteredUsers + '</span></span>';
-        } else if (data.date !== hiddenData) {
+        } else {
           balloonText = SparkGraphService.graphTextSpan + activeUsers + SparkGraphService.boldNumberSpan + ' ' + data.activeUsers;
           if (this.activeUserFilter.value === this.ReportConstants.WEEK_FILTER.value) {
             balloonText += ' (' + data.percentage + '%)';
@@ -536,10 +535,10 @@ export class SparkGraphService {
   public setQualityGraph(data: Array<IMediaData>, chart: any, filter: IDropdownBase): any {
     if (data.length > 0 && chart) {
       chart.categoryAxis.gridColor = this.chartColors.grayLightTwo;
-      chart.valueScrollbar = this.CommonGraphService.getBaseVariable(this.CommonGraphService.VERTICAL_SCROLL);
+      chart.legend.valueText = '[[title]] [[value]]';
       if (!data[0].balloon) {
         chart.categoryAxis.gridColor = this.chartColors.grayLightThree;
-        chart.valueScrollbar = undefined;
+        chart.legend.valueText = '[[title]] -';
       }
 
       chart.dataProvider = data;
@@ -564,24 +563,22 @@ export class SparkGraphService {
     chartCursor.valueLineBalloonEnabled = true;
     chartCursor.cursorColor = this.chartColors.grayLightTwo;
 
-    if (!data[0].balloon) {
-      catAxis.gridColor = this.chartColors.grayLightThree;
-    }
-
     let chartData: any = this.CommonGraphService.getBaseSerialGraph(data, 0, valueAxes, this.qualityGraphs(data, filter), this.CommonGraphService.DATE, catAxis);
     chartData.numberFormatter = this.CommonGraphService.getBaseVariable(this.CommonGraphService.NUMFORMAT);
     chartData.legend = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LEGEND);
     chartData.legend.valueAlign = 'left';
     chartData.legend.reversedOrder = true;
     chartData.legend.valueText = '[[title]] [[value]]';
-    chartData.legend.periodValueText = '[[title]]';
+    chartData.legend.periodValueText = '[[title]] -';
     chartData.legend.labelText = '';
     chartData.legend.valueWidth = 100;
     chartData.legend.verticalGap = 0;
     chartData.legend.markerLabelGap = 0;
     chartData.chartCursor = chartCursor;
-    if (data[0].balloon) {
-      chartData.valueScrollbar = this.CommonGraphService.getBaseVariable(this.CommonGraphService.VERTICAL_SCROLL);
+
+    if (!data[0].balloon) {
+      chartData.legend.valueText = '[[title]] -';
+      chartData.categoryAxis.gridColor = this.chartColors.grayLightThree;
     }
 
     return AmCharts.makeChart(this.mediaQualityDiv, chartData);
@@ -601,7 +598,7 @@ export class SparkGraphService {
     let titles: Array<string> = [this.$translate.instant('mediaQuality.poor'), this.$translate.instant('mediaQuality.fair'), this.$translate.instant('mediaQuality.good')];
     let colors: Array<string> = [this.chartColors.brandDanger, this.chartColors.brandWarning, this.chartColors.blue];
     if (!data[0].balloon) {
-      colors = [this.chartColors.dummyGray, this.chartColors.dummyGrayLight, this.chartColors.dummyGrayLighter];
+      colors = [this.chartColors.grayLightOne, this.chartColors.grayLightTwo, this.chartColors.grayLightThree];
     }
 
     let graphs: Array<any> = [];
