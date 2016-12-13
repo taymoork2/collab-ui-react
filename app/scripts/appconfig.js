@@ -2282,6 +2282,58 @@
             controller: 'TrialEmergAddressCtrl',
             controllerAs: 'eAddressTrial'
           })
+          .state('trial', {
+            abstract: true,
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<div ui-view></div>',
+                controller: 'TrialCtrl',
+                controllerAs: 'trial'
+              }
+            },
+            params: {
+              isEditing: false,
+              currentTrial: {},
+              details: {},
+              mode: {}
+            }
+          })
+          .state('trial.info', {
+            templateUrl: 'modules/core/trials/trial.tpl.html'
+          })
+          .state('trial.finishSetup', {
+            templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
+          })
+          .state('trial.webex', {
+            templateUrl: 'modules/core/trials/trialWebex.tpl.html',
+            controller: 'TrialWebexCtrl',
+            controllerAs: 'webexTrial'
+          })
+          .state('trial.call', {
+            templateUrl: 'modules/core/trials/trialDevice.tpl.html',
+            controller: 'TrialDeviceController',
+            controllerAs: 'callTrial'
+          })
+          .state('trial.pstn', {
+            templateUrl: 'modules/core/trials/trialPstn.tpl.html',
+            controller: 'TrialPstnCtrl',
+            controllerAs: 'pstnTrial'
+          })
+          .state('trial.emergAddress', {
+            templateUrl: 'modules/core/trials/trialEmergAddress.tpl.html',
+            controller: 'TrialEmergAddressCtrl',
+            controllerAs: 'eAddressTrial'
+          })
+          .state('trial.addNumbers', {
+            templateUrl: 'modules/core/trials/addNumbers.tpl.html',
+            controller: 'DidAddCtrl',
+            controllerAs: 'didAdd',
+            params: {
+              currentTrial: {},
+              currentOrg: {},
+            }
+          })
           .state('generateauthcode', {
             parent: 'modal',
             params: {

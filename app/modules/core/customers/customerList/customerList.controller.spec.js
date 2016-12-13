@@ -450,4 +450,17 @@ describe('Controller: CustomerListCtrl', function () {
       expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
     });
   });
+
+  describe('getTrialRoute', function () {
+    it('should return a path to old \'trial\' with FT set to true', function () {
+      var result = controller._helpers.getTrialRoute(false, {});
+      expect(result.path).toEqual('trial.info');
+    });
+    it('should return a path to \'trialAdd\' when FT set to false', function () {
+      FeatureToggleService.supports.and.returnValue($q.when(false));
+      initController();
+      var result = controller._helpers.getTrialRoute(false, {});
+      expect(result.path).toEqual('trialAdd.info');
+    });
+  })
 });

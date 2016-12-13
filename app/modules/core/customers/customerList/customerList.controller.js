@@ -52,6 +52,7 @@ require('./_customer-list.scss');
 
     // TODO:  atlasCustomerListUpdate toggle is globally set to true. Needs refactoring to remove unused code
     vm.customerListToggle = customerListToggle;
+    vm.isTrialMerge = false;
 
     // expecting this guy to be unset on init, and set every time after
     // check resetLists fn to see how its being used
@@ -137,7 +138,8 @@ require('./_customer-list.scss');
       launchCustomerPortal: launchCustomerPortal,
       getLicenseObj: getLicenseObj,
       updateResultCount: updateResultCount,
-      updateServiceForOrg: updateServiceForOrg
+      updateServiceForOrg: updateServiceForOrg,
+      getTrialRoute: getTrialRoute
     };
 
     // common between new + old
@@ -365,6 +367,10 @@ require('./_customer-list.scss');
         } else {
           Log.error('Query org info failed. Status: ' + status);
         }
+      });
+      FeatureToggleService.supports(FeatureToggleService.features.atlasTrialMerge)
+      .then(function (result) {
+        vm.isTrialMerge = result;
       });
     }
 
@@ -708,20 +714,41 @@ require('./_customer-list.scss');
 
     function openAddTrialModal() {
       Analytics.trackTrialSteps(Analytics.sections.TRIAL.eventNames.START_SETUP, $state.current.name, Authinfo.getOrgId());
-      $state.go('trialAdd.info').then(function () {
+
+      var route = getTrialRoute(false, {});
+      $state.go(route.path, route.params).then(function () {
         $state.modal.result.finally(resetLists);
       });
     }
 
     function openEditTrialModal() {
       TrialService.getTrial(vm.currentTrial.trialId).then(function (response) {
-        $state.go('trialEdit.info', {
+        var route = getTrialRoute(true, {
           currentTrial: vm.currentTrial,
           details: response
-        }).then(function () {
+        });
+        $state.go(route.path, route.params).then(function () {
           $state.modal.result.finally(resetLists);
         });
       });
+    }
+
+    function getTrialRoute(isEdit, params) {
+      var result = {
+        params: params
+      };
+      if (vm.isEdit) {
+        result.path = (vm.isTrialMerge) ? 'trial.info' : 'trialEdit.info';
+        if (vm.isTrialMerge) {
+          result.params.mode = 'edit';
+        }
+      } else {
+        result.path = (vm.isTrialMerge) ? 'trial.info' : 'trialAdd.info';
+        if (vm.isTrialMerge) {
+          result.params.mode = 'add';
+        }
+      }
+      return result;
     }
 
     function resetLists() {

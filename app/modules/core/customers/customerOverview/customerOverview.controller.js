@@ -51,9 +51,11 @@ require('./_customer-overview.scss');
     vm._helpers = {
       canUpdateLicensesForSelf: canUpdateLicensesForSelf,
       openCustomerPortal: openCustomerPortal,
-      updateUsers: updateUsers
+      updateUsers: updateUsers,
+      getEditTrialRoute: getEditTrialRoute
     };
 
+    vm.isTrialMerge = false;
     // TODO:  atlasCustomerListUpdate toggle is globally set to true. Needs refactoring to remove unused code
     vm.newCustomerViewToggle = newCustomerViewToggle;
     vm.featureTrialForPaid = trialForPaid;
@@ -70,6 +72,10 @@ require('./_customer-overview.scss');
         setOffers(isCareEnabled);
       });
 
+    FeatureToggleService.supports(FeatureToggleService.features.atlasTrialMerge)
+    .then(function (result) {
+      vm.isTrialMerge = result;
+    });
 
     function setOffers(isCareEnabled) {
       var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, { isCareEnabled: isCareEnabled,
@@ -269,12 +275,13 @@ require('./_customer-overview.scss');
     }
 
     function openEditTrialModal(/*isPaid*/) {
-      //isPaid flag will be used later once the paid trial implementation is in place
-      return TrialService.getTrial(vm.currentCustomer.trialId).then(function (response) {
-        $state.go('trialEdit.info', {
+      TrialService.getTrial(vm.currentCustomer.trialId).then(function (response) {
+        var params = {
           currentTrial: vm.currentCustomer,
           details: response
-        }).then(function () {
+        };
+        var route = getEditTrialRoute(params);
+        $state.go(route.path, route.params).then(function () {
           $state.modal.result.then(function () {
             $state.go('partnercustomers.list', {}, {
               reload: true
@@ -403,6 +410,17 @@ require('./_customer-overview.scss');
           });
         });
       }
+    }
+
+    function getEditTrialRoute(params) {
+      var result = {
+        path: (vm.isTrialMerge) ? 'trial.info' : 'trialEdit.info',
+        params: params
+      };
+      if (vm.isTrialMerge) {
+        result.params.mode = 'edit';
+      }
+      return result;
     }
   }
 })();
