@@ -43,7 +43,7 @@ describe('Care Feature Delete Ctrl', function () {
     $stateParams = {
       deleteFeatureId: 123,
       deleteFeatureName: 'Sunlight Dev Template',
-      deleteFeatureType: 'CT'
+      deleteFeatureType: 'Ch'
     };
 
     controller = $controller('CareFeaturesDeleteCtrl', {

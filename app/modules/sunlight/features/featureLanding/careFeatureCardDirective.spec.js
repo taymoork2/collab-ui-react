@@ -1,21 +1,13 @@
 'use strict';
 
 describe('Directive: car featureCards', function () {
-  var $compile, $rootScope;
-
-  beforeEach(angular.mock.module('Sunlight'));
-
-  beforeEach(inject(function (_$compile_, _$rootScope_) {
-    $compile = _$compile_;
-    $rootScope = _$rootScope_;
-  }));
+  beforeEach(function () {
+    this.initModules('Sunlight');
+    this.compileComponent('careFeatureCard');
+  });
 
   it('replaces the element with the appropriate content', function () {
-    var element = $compile("<care-feature-card></care-feature-card>")($rootScope);
-
-    $rootScope.$digest();
-
-    expect(element.html()).toContain('cs-card-block');
+    expect(this.view.html()).toContain('cs-card-block');
   });
 
 });

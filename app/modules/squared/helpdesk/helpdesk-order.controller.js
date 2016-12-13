@@ -46,6 +46,7 @@
         return;
       }
       vm.orderUuid = orderObj.orderUuid;
+      vm.subscriptionId = orderObj.serviceId;
       var accountId = orderObj.accountId;
       vm.orderId = orderObj.externalOrderId;
 

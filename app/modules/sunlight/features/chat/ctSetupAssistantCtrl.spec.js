@@ -98,6 +98,15 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   var startTimeOptions = businessHours.startTimeOptions;
   var defaultTimings = businessHours.defaultTimings;
 
+  afterEach(function () {
+    controller = $scope = $modal = $q = CTService = getLogoDeferred = getLogoUrlDeferred = SunlightConfigService = $state = $stateParams = LogMetricsService = undefined;
+    Notification = $translate = undefined;
+  });
+
+  afterAll(function () {
+    selectedDaysByDefault = defaultTimeZone = defaultDayPreview = startTimeOptions = defaultTimings = businessHours = failedData = deSelectAllDays = duplicateFieldTypeData = customerInfoWithLongAttributeValue = undefined;
+  });
+
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module(function ($provide) {
@@ -261,12 +270,17 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       checkStateOfNavigationButtons(PROFILE_PAGE_INDEX, true, false);
     });
 
+    it('should set default agent preview name to the agent display name option', function () {
+      resolveLogoPromise();
+      expect(controller.selectedAgentProfile).toEqual(controller.agentNames.displayName);
+    });
+
     it('should set agent preview names based on selected agent profile', function () {
       resolveLogoPromise();
       controller.selectedAgentProfile = controller.agentNames.alias;
       controller.setAgentProfile();
       expect(controller.agentNamePreview).toEqual('careChatTpl.agentAliasPreview');
-      controller.selectedAgentProfile = controller.agentNames.realName;
+      controller.selectedAgentProfile = controller.agentNames.displayName;
       controller.setAgentProfile();
       expect(controller.agentNamePreview).toEqual('careChatTpl.agentNamePreview');
     });
@@ -278,7 +292,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       controller.nextButton();
       expect(controller.template.configuration.mediaSpecificConfiguration).toEqual({
         useOrgProfile: true,
-        useAgentRealName: false,
+        useAgentRealName: true,
         displayText: OrgName,
         orgLogoUrl: dummyLogoUrl
       });

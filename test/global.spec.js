@@ -7,6 +7,28 @@ beforeEach(angular.mock.module('oc.lazyLoad', function ($provide) {
   $provide.value('$ocLazyLoad', ocLazyLoadMock);
 }));
 
+var testDurations;
+var beforeAllMock = jasmine.Suite.prototype.beforeAll
+jasmine.Suite.prototype.beforeAll = function () {
+  self.lastSuite = this.result
+  beforeAllMock.apply(this, arguments)
+}
+var executeMock = jasmine.Spec.prototype.execute
+jasmine.Spec.prototype.execute = function () {
+  self.lastTest = this.result
+  executeMock.apply(this, arguments)
+}
+
+logLongDurationTests();
+
+// Cleanup Detached DOM and DocumentFragments
+afterEach(function () {
+  if (this.view) {
+    this.view.remove();
+    this.view = undefined;
+  }
+});
+
 beforeEach(function () {
   /**
    * Initialize each argument as a module
@@ -125,3 +147,40 @@ describe('Global Unit Test Config', function () {
   //   //console.log('jasmine-version:' + jasmine.getEnv().versionString());
   // }
 });
+
+function logLongDurationTests() {
+  beforeAll(function () {
+    testDurations = [];
+  })
+
+  beforeEach(function () {
+    this.startTime = new Date();
+  });
+
+  afterEach(function () {
+    this.endTime = new Date();
+    testDurations.push({
+      name: self.lastTest.fullName,
+      duration: this.endTime - this.startTime,
+    });
+  })
+
+  afterAll(function () {
+    var longTests = _.chain(testDurations)
+      .filter(function (test) {
+        return test.duration > 300;
+      })
+      .sortBy('duration')
+      .reverse()
+      .take(10)
+      .map(function (test) {
+        return '\n' + test.name + '. Duration: ' + test.duration;
+      })
+      .join('')
+      .value();
+
+    if (longTests.length) {
+      self.console.log('Longest Duration Tests (> 300ms):', longTests);
+    }
+  });
+}

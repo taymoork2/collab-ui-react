@@ -34,11 +34,18 @@ describe('Care admin should be able to', function () {
   function createTemplateAndValidate() {
     utils.expectIsDisplayed(careLandingPage.creatCTButton);
     utils.click(careLandingPage.creatCTButton);
+    validateDisplayNewFeatureModal();
+    utils.click(careChatTemplateSetupPage.createChatTemplateButton);
     utils.expectIsDisplayed(careChatTemplateSetupPage.ctNameInput);
     utils.expectTextToBeSet(careChatTemplateSetupPage.nameHint, "Enter a name for you to identify this chat template");
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.setUpLeftBtn);
     utils.sendKeys(careChatTemplateSetupPage.ctNameInput, careChatTemplateSetupPage.randomChatTemplateName);
     fillTemplateValues(true);
+  }
+
+  function validateDisplayNewFeatureModal() {
+    utils.expectIsDisplayed(careChatTemplateSetupPage.careNewFeatureModal);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.createChatTemplateButton);
   }
 
   function editTemplateAndValidate(templateNameSuffix) {

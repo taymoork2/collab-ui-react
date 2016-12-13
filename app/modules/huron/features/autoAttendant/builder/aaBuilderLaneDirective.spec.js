@@ -4,8 +4,16 @@ describe('Directive: aaBuilderLane', function () {
   var $compile, $rootScope, $q;
   var AAUiModelService, AutoAttendantCeMenuModelService;
   var FeatureToggleService;
+  var element;
 
   var aaUiModel = {};
+
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
 
   beforeEach(angular.mock.module('Huron'));
 
@@ -27,7 +35,7 @@ describe('Directive: aaBuilderLane', function () {
     aaUiModel['openHours'] = AutoAttendantCeMenuModelService.newCeMenu();
     $rootScope.schedule = 'openHours';
     $rootScope.index = 0;
-    var element = $compile("<aa-builder-lane aa-schedule='openHours'></aa-builder-lane>")($rootScope);
+    element = $compile("<aa-builder-lane aa-schedule='openHours'></aa-builder-lane>")($rootScope);
     $rootScope.$digest();
 
     expect(element.html()).toContain("aa-add-step-icon");
@@ -43,7 +51,7 @@ describe('Directive: aaBuilderLane', function () {
 
     $rootScope.schedule = 'openHours';
     $rootScope.index = 0;
-    var element = $compile("<aa-builder-lane aa-schedule='openHours'></aa-builder-lane>")($rootScope);
+    element = $compile("<aa-builder-lane aa-schedule='openHours'></aa-builder-lane>")($rootScope);
 
     $rootScope.$digest();
 
