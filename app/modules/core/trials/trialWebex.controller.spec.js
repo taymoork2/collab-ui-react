@@ -6,6 +6,14 @@ describe('Controller: Trial Webex', function () {
   var controller, scope;
   var trialData = getJSONFixture('core/json/trials/trialData.json');
 
+  afterEach(function () {
+    controller = scope = undefined;
+  });
+
+  afterAll(function () {
+    trialData = undefined;
+  });
+
   beforeEach(angular.mock.module('core.trial'));
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));

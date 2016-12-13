@@ -58,12 +58,12 @@
       columnDefs: [{
         field: 'name',
         displayName: $translate.instant('hercules.overview.clusters-title'),
-        cellTemplate: 'modules/hercules/cluster-list/cluster-list-display-name.html',
+        cellTemplate: 'modules/hercules/service-specific-cluster-lists/cluster-list-display-name.html',
         width: '35%'
       }, {
         field: 'serviceStatus',
         displayName: $translate.instant('hercules.overview.status-title'),
-        cellTemplate: 'modules/hercules/cluster-list/cluster-list-status.html',
+        cellTemplate: 'modules/hercules/service-specific-cluster-lists/cluster-list-status.html',
         width: '65%'
       }]
     };
@@ -136,9 +136,9 @@
       var hackishBoolean = false;
       if (hackishBoolean && vm.servicesId[0] === 'squared-fusion-cal' && hasGoogleCalendarFeatureToggle) {
 
-        CloudConnectorService.isServiceSetup('squared-fusion-gcal')
-          .then(function (isSetup) {
-            if (!isSetup) {
+        CloudConnectorService.getService('squared-fusion-gcal')
+          .then(function (service) {
+            if (!service.setup) {
               $modal.open({
                 controller: 'SelectCalendarServiceController',
                 controllerAs: 'vm',

@@ -67,7 +67,7 @@
     };
 
     $scope.trackInstall = function () {
-      Analytics.trackAddUser(Analytics.sections.ADD_USERS.eventNames.INSTALL_CONNECTOR);
+      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.INSTALL_CONNECTOR);
     };
 
     var allSteps = ['chooseSync', 'domain', 'installCloud', 'syncStatus', 'manual'];
@@ -208,6 +208,7 @@
         }
         $('#chooseSyncTab').addClass('ng-show');
         $('#chooseSyncTab').removeClass('ng-hide');
+        Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.INSTALL_CONNECTOR);
       } else {
         $('#chooseSyncTab').removeClass('ng-show');
         $('#chooseSyncTab').addClass('ng-hide');
@@ -300,14 +301,14 @@
             $scope.dirsyncStatus = data.result;
             $scope.lastEndTime = data.lastEndTime;
           }
-          Analytics.trackAddUser(Analytics.sections.ADD_USERS.eventNames.SYNC_REFRESH, null, { result: 'success', clicks: getStatusCount });
+          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_REFRESH, null, { result: 'success', clicks: getStatusCount });
         } else {
           Log.debug('Failed to retrieve directory sync status. Status: ' + status);
           $rootScope.$emit('add-user-dirsync-error');
           Notification.error('dirsyncModal.getStatusFailed', {
             status: status
           });
-          Analytics.trackAddUser(Analytics.sections.ADD_USERS.eventNames.SYNC_REFRESH, null, { result: 'error', clicks: getStatusCount });
+          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_REFRESH, null, { result: 'error', clicks: getStatusCount });
         }
       });
 

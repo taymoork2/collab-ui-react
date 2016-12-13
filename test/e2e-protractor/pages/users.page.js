@@ -27,7 +27,7 @@ var UsersPage = function () {
 
   this.servicesPanel = element.all(by.cssContainingText('.section-title-row', 'Services')).first();
   this.servicesActionButton = this.servicesPanel.element(by.css('button.actions-button'));
-  this.editServicesButton = element(by.cssContainingText('a', 'Edit services'));
+  this.editServicesButton = element(by.css('.section-title-row a.as-button[translate="common.edit"]'));
   this.editServicesModal = element(by.css('.edit-services'));
 
   this.servicesPanelCommunicationsCheckbox = element(by.css('.indentedCheckbox'));
@@ -172,8 +172,15 @@ var UsersPage = function () {
   this.callServiceConnectStatus = element(by.id('callServiceConnectStatus'));
 
   this.msgRadio = element(by.repeater('license in msgFeature.licenses'));
-  this.messageService = element(by.cssContainingText('.feature', 'Message'))
-  this.meetingService = element(by.cssContainingText('.feature', 'Meeting'))
+
+  this.messageService = element(by.cssContainingText('.feature-name', 'Message'));
+  this.meetingService = element(by.cssContainingText('.feature-name', 'Meeting'));
+
+  this.messageServiceFree = element(by.cssContainingText('.feature-label', 'Message Free'));
+  this.meetingServiceFree = element(by.cssContainingText('.feature-label', 'Meeting Free 3 Party'));
+
+  this.messageServicePaid = element(by.cssContainingText('.feature-label', 'Message'));
+  this.meetingServicePaid = element(by.cssContainingText('.feature-label', 'Meeting 25 Party'));
 
   this.assertSorting = function (nameToSort) {
     this.queryResults.getAttribute('value').then(function (value) {
@@ -263,20 +270,26 @@ var UsersPage = function () {
   };
 
   this.clickServiceCheckbox = function (alias, expectedMsgState, expectedMtgState, clickService) {
-    function expectDisplayed(elem, state) {
-      if (state) {
-        utils.expectIsDisplayed(elem);
-      } else {
-        utils.expectIsNotDisplayed(elem);
-      }
-    }
 
     utils.clickUser(alias);
-    expectDisplayed(users.servicesPanel, true);
-    expectDisplayed(users.messageService, expectedMsgState);
-    expectDisplayed(users.meetingService, expectedMtgState);
+    utils.expectIsDisplayed(users.servicesPanel);
 
-    utils.click(users.servicesActionButton);
+    utils.expectIsDisplayed(users.messageService);
+    utils.expectIsDisplayed(users.meetingService);
+
+    if (expectedMsgState) {
+      utils.expectIsDisplayed(users.messageServicePaid);
+    } else {
+      utils.expectIsDisplayed(users.messageServiceFree);
+    }
+
+    if (expectedMtgState) {
+      utils.expectIsDisplayed(users.meetingServicePaid);
+    } else {
+      utils.expectIsDisplayed(users.meetingServiceFree);
+    }
+
+    utils.expectIsDisplayed(users.editServicesButton);
     utils.click(users.editServicesButton);
 
     utils.waitForModal().then(function () {

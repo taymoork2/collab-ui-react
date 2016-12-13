@@ -3,22 +3,33 @@
 </header>
 <section ng-if="!card.loading">
   <p>{{::card.description | translate}}</p>
-  <div class="row">
+  <div class="row" ng-if="card.areNoneActive()">
+    <div class="columns medium-12">
+      <div class="text-center">
+        <button ng-click="card.openChoiceModal()" class="btn btn--primary" translate="servicesOverview.genericButtons.setup"></button>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="!card.areNoneActive()">
     <div class="columns medium-6">
       <div class="text-center">
         <div class="h6 ellipsis" translate="servicesOverview.cards.hybridCalendar.exchangeTitle"></div>
-        <div ng-repeat="button in card.getButtons()">
-          <a ng-if="!button.routerState" class="disabled" ng-class="button.buttonClass">{{::button.name | translate}}</a>
+        <div ng-if="card.active" ng-repeat="button in card.hybridCalendarButtons">
           <a ng-if="button.routerState" ui-sref="{{button.routerState}}" ng-class="button.buttonClass">{{::button.name | translate}}</a>
+        </div>
+        <div ng-if="!card.active">
+          <button ng-click="card.setupHybridCalendarButton.onClick()" ng-class="card.setupHybridCalendarButton.buttonClass">{{::card.setupHybridCalendarButton.name | translate}}</button>
         </div>
       </div>
     </div>
     <div class="columns medium-6">
       <div class="text-center">
         <div class="h6 ellipsis" translate="servicesOverview.cards.hybridCalendar.googleTitle"></div>
-        <div ng-repeat="button in card.getGoogleButtons()">
-          <a ng-if="!button.routerState" class="disabled" ng-class="button.buttonClass">{{::button.name | translate}}</a>
-          <a ng-if="button.routerState" ui-sref="{{button.routerState}}" ng-class="button.buttonClass">{{::button.name | translate}}</a>
+        <div ng-if="card.googleActive">
+          <a ng-if="card.googleCalendarButton.routerState" ui-sref="{{card.googleCalendarButton.routerState}}" ng-class="card.googleCalendarButton.buttonClass">{{::card.googleCalendarButton.name | translate}}</a>
+        </div>
+        <div ng-if="!card.googleActive">
+          <button ng-click="card.setupGoogleCalendarButton.onClick()" ng-class="card.setupGoogleCalendarButton.buttonClass">{{::card.setupGoogleCalendarButton.name | translate}}</button>
         </div>
       </div>
     </div>
@@ -34,7 +45,7 @@
       <span>{{::card.status.text | translate}}</span>
     </a>
   </span>
-  <span class="columns medium-6" ng-if="card.showGoogleStatus()">
+  <span class="columns medium-6 medium-offset-6" ng-if="card.showGoogleStatus()">
     <a class="status ellipsis" ui-sref="{{card.googleStatus.routerState}}">
       <i class="icon icon-circle status-indicator" ng-class="card.googleStatus.status"></i>
       <span>{{::card.googleStatus.text | translate}}</span>

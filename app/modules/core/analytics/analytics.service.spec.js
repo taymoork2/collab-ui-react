@@ -15,9 +15,16 @@ describe('Service: Analytics', function () {
     }
   };
 
-
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
+
+  afterEach(function () {
+    Config = Analytics = Authinfo = Orgservice = $q = $scope = $state = TrialService = UserListService = undefined;
+  });
+
+  afterAll(function () {
+    trialData = customerData = getOrgData = listUsersData = undefined;
+  });
 
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
@@ -150,7 +157,7 @@ describe('Service: Analytics', function () {
   });
 
   describe(' _getOrgStatus', function () {
-    it('shoule return \'expired\' when there are no licenses', function () {
+    it('should return \'expired\' when there are no licenses', function () {
       var result = Analytics._getOrgStatus(32, null);
       expect(result).toBe('expired');
     });
@@ -168,6 +175,17 @@ describe('Service: Analytics', function () {
         });
       var result = Analytics._getOrgStatus(32, licenseList);
       expect(result).toBe('active');
+    });
+  });
+  describe(' _getDomainFromEmail', function () {
+    it('should return an empty string when domain undefined', function () {
+      var result = Analytics._getDomainFromEmail();
+      expect(result).toBe('');
+    });
+
+    it('should return domain from email', function () {
+      var result = Analytics._getDomainFromEmail('someone@cisco.com');
+      expect(result).toBe('cisco.com');
     });
   });
 
@@ -226,6 +244,7 @@ describe('Service: Analytics', function () {
     beforeEach(function () {
       spyOn(Authinfo, 'getUserId').and.returnValue('111');
       spyOn(Authinfo, 'getOrgId').and.returnValue('999');
+      spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('someone@someplace.edu');
       _.set($state, '$current.name', 'my-state');
     });
     it('should send necessary properties in event', function () {
@@ -235,8 +254,7 @@ describe('Service: Analytics', function () {
       expect(Analytics._track).toHaveBeenCalledWith('Runtime Error', jasmine.objectContaining({
         cisco_message: 'Something went wrong',
         cisco_cause: 'some cause',
-        cisco_userId: '111',
-        cisco_orgId: '999',
+        cisco_domain: 'someplace.edu',
         cisco_state: 'my-state'
       }));
     });

@@ -31,6 +31,7 @@
       atlasMediaServiceMetrics: 'atlas-media-service-metrics',
       atlasMediaServiceOnboarding: 'atlas-media-service-onboarding',
       atlasMediaServicePhaseTwo: 'atlas-media-service-phase-two',
+      atlasNewCiDataModel: 'atlas-new-ci-data-model',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
       atlasNewUserExport: 'atlas-new-user-export',
       atlasNurturingEmails: 'atlas-nurturing-emails',
@@ -44,7 +45,6 @@
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasSMP: 'atlas-smp',
       atlasTrialsShipDevices: 'atlasTrialsShipDevices',
-      atlasWebexTrials: 'atlas-webex-trials',
       atlasDeviceUsageReport: 'atlas-device-usage-report',
       androidAddGuestRelease: 'android-add-guest-release',
       androidDirectUpload: 'android-direct-upload',
@@ -59,11 +59,11 @@
       bridgeMaxConvParticipants: 'bridge-max-conv-participants',
       callMultiDevice: 'call-multi-device',
       calliopeDiscovery: 'calliope-discovery',
-      callParkService: 'call-park-service',
       huronCallPickup: 'huronCallPickup',
       calsvcDetectCmrLoc: 'calsvc_detect_cmr_loc',
       calsvcWebexMeetingRegistries: 'calsvc_webex_meeting_registries',
       calsvcShowPreferredSiteName: 'calsvc-show-preferred-sitename',
+      calsvcOneButtonToPushInterval: 'calsvc-OneButtonToPush-interval',
       clientRingbackV2: 'client-ringback-v2',
       console: 'console',
       deleteContent: 'delete-content',
@@ -169,7 +169,8 @@
       atlasHybridDataSecurity: 'atlas-data-security',
       atlasHerculesEmergencyUpgrade: 'atlas-hercules-emergency-upgrade',
       atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',
-      avrilVmEnable: 'avril-vm-enable'
+      avrilVmEnable: 'avril-vm-enable',
+      avrilVoicemaill1249: 'avril-voicemail-l1249'
     };
 
     var toggles = {};

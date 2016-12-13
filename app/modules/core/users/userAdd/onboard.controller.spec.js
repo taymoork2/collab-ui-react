@@ -53,6 +53,7 @@ describe('OnboardCtrl: Ctrl', function () {
     this.mock.unlicensedUsers = getJSONFixture('core/json/organizations/unlicensedUsers.json');
     this.mock.allLicensesData = getJSONFixture('core/json/organizations/allLicenses.json');
     this.mock.getCareServices = getJSONFixture('core/json/authInfo/careServices.json');
+    this.mock.getCareServicesWithoutCareLicense = getJSONFixture('core/json/authInfo/careServicesWithoutCareLicense.json');
     this.mock.getLicensesUsage = getJSONFixture('core/json/organizations/usage.json');
 
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
@@ -800,6 +801,32 @@ describe('OnboardCtrl: Ctrl', function () {
       it('should have care license', function () {
         expect(this.$scope.careFeatures[1].license.licenseType).toEqual('CARE');
         expect(this.$scope.radioStates.careRadio).toEqual(false);
+      });
+    });
+
+    describe('Check that careRadio remains false when user does not have the care License', function () {
+      var userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
+
+      beforeEach(function () {
+        spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+        spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServicesWithoutCareLicense.careLicense);
+        spyOn(this.LogMetricsService, 'logMetrics').and.callFake(function () {});
+        this.$stateParams.currentUser = {
+          licenseID: ['MS_cd66217d-a419-4cfb-92b4-a196b7fe3c74'],
+          entitlements: ['cloud-contact-center'],
+          id: userId
+        };
+      });
+      beforeEach(initController);
+
+
+      it('should call getAccountLicenses correctly', function () {
+        this.$httpBackend.flush();
+        this.$scope.radioStates.initialCareRadioState = false;
+        this.$scope.getAccountLicenses();
+        expect(this.$scope.radioStates.careRadio).toEqual(false);
+        this.$httpBackend.verifyNoOutstandingRequest();
       });
     });
 

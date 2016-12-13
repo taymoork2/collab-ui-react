@@ -2,6 +2,7 @@
 
 describe('Directive: ct-customer Customer Information Page', function () {
   var $compile, $rootScope;
+  var element;
   var mockActiveItem = {
     attributes: [{
       name: 'required',
@@ -29,6 +30,13 @@ describe('Directive: ct-customer Customer Information Page', function () {
     }]
   };
 
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
+
   beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_) {
@@ -39,7 +47,7 @@ describe('Directive: ct-customer Customer Information Page', function () {
   }));
 
   function renderCtCustomerDirective() {
-    var element = $compile("<ct-customer/>")($rootScope);
+    element = $compile("<ct-customer/>")($rootScope);
     $rootScope.$digest();
     return element;
   }

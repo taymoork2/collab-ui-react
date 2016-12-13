@@ -9,6 +9,14 @@
     var TRACKING_ID = 'TrackingID';
     var SEPARATOR = '_';
 
+    afterEach(function () {
+      TrackingIdInterceptor = undefined;
+    });
+
+    afterAll(function () {
+      EXPOSE_HEADERS = TRACKING_ID = SEPARATOR = undefined;
+    });
+
     function buildRequest(url) {
       return {
         url: url,

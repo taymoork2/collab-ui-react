@@ -88,17 +88,14 @@
           Notification.errorWithTrackingId(error, 'hercules.errors.sipDomainInvalid');
         });
     };
-    ServiceDescriptor.getEmailSubscribers('squared-fusion-uc', function (error, emailSubscribers) {
-      if (!error) {
-        vm.emailSubscribers = _.map(_.without(emailSubscribers.split(','), ''), function (user) {
+    ServiceDescriptor.getEmailSubscribers('squared-fusion-uc')
+      .then(function (emailSubscribers) {
+        vm.emailSubscribers = _.map(emailSubscribers, function (user) {
           return {
             text: user
           };
         });
-      } else {
-        vm.emailSubscribers = [];
-      }
-    });
+      });
 
     vm.writeConfig = function () {
       var emailSubscribers = _.map(vm.emailSubscribers, function (data) {
@@ -109,14 +106,15 @@
       } else {
         vm.savingEmail = true;
 
-        ServiceDescriptor.setEmailSubscribers('squared-fusion-uc', emailSubscribers, function (statusCode) {
-          if (statusCode === 204) {
-            Notification.success('hercules.settings.emailNotificationsSavingSuccess');
-          } else {
-            Notification.error('hercules.settings.emailNotificationsSavingError');
-          }
-          vm.savingEmail = false;
-        });
+        ServiceDescriptor.setEmailSubscribers('squared-fusion-uc', emailSubscribers)
+          .then(function (response) {
+            if (response.status === 204) {
+              Notification.success('hercules.settings.emailNotificationsSavingSuccess');
+            } else {
+              Notification.error('hercules.settings.emailNotificationsSavingError');
+            }
+            vm.savingEmail = false;
+          });
       }
     };
 

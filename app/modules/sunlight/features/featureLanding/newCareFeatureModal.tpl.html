@@ -1,0 +1,30 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()">
+    <span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title" translate="sunlightDetails.newFeatures.newCareTemplateModalTitle"></h3>
+</div>
+<div class="modal-body">
+  <div class="care-new-feature-modal" ng-if="!loading">
+    <button ng-repeat="feature in features" ng-click="ok((feature.id))" ng-if="features.length !== 0">
+      <div class="feature-icon-container">
+          <label class="feature-icon-circle feature-icon-color-care">
+              <i class="icon {{feature.icon}}"></i>
+          </label>
+      </div>
+      <h4 class="feature-label-container">
+        <strong>{{feature.label | translate}}</strong>
+      </h4>
+
+      <p class="feature-description-container text-left">
+        {{feature.description | translate}}
+      </p>
+    </button>
+    <div ng-if="features.length === 0">
+      <h4 translate="sunlightDetails.newFeatures.noCareFeatures"></h4>
+    </div>
+  </div>
+</div>
+<div class="feature-modal-loading" ng-if="loading">
+  <i class="icon icon-spinner"></i>
+</div>

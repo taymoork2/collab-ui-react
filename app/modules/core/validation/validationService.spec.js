@@ -3,6 +3,10 @@
 describe('Service: ValidationService', function () {
   var ValidationService;
 
+  afterEach(function () {
+    ValidationService = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
 
   beforeEach(inject(function (_ValidationService_) {

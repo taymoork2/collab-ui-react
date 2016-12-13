@@ -628,7 +628,8 @@ require('./_user-add.scss');
     }
 
     function setCareSevice() {
-      SunlightConfigService.getUserInfo($scope.currentUser.id)
+      if (getServiceDetails('CD')) {
+        SunlightConfigService.getUserInfo($scope.currentUser.id)
           .then(function () {
             Userservice.getUser($scope.currentUser.id, true, function (data) {
               if (data.success) {
@@ -645,6 +646,14 @@ require('./_user-add.scss');
         function () {
           $scope.radioStates.careRadio = false;
         });
+      }
+    }
+
+    function getServiceDetails(licensePrefix) {
+      var hasLicense = _.find($scope.currentUser.licenseID, function (userLicense) {
+        return (userLicense.substring(0, 2) === licensePrefix);
+      });
+      return hasLicense;
     }
 
 

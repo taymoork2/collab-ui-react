@@ -5,33 +5,33 @@
     .module('Hercules')
     .factory('CloudConnectorService', CloudConnectorService);
 
-  function CloudConnectorService($q, $timeout, Authinfo) {
-
+  function CloudConnectorService($q, $timeout, Authinfo, ServiceDescriptor) {
     var serviceAccountId = 'google@example.org'; // dummy value for now
     var isGoogleCalendarSetup = false;
 
-    var service = {
-      isServiceSetup: isServiceSetup,
+    return {
       updateConfig: updateConfig,
       deactivateService: deactivateService,
       getServiceAccount: getServiceAccount,
+      getService: getService,
+      getStatusCss: getStatusCss
     };
-    return service;
 
     function extractDataFromResponse(res) {
       return res.data;
     }
 
-    function isServiceSetup(serviceId) {
-      return $q(function (resolve) {
-        $timeout(function () {
-          if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal() && isGoogleCalendarSetup) {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        }, 750);
-      });
+    function getService(serviceId/*, orgId */) {
+      // Make sure you use the orgId (orgId || Authinfo.getOrgId) when the real API is called
+      return $q.resolve({ provisioned: isGoogleCalendarSetup, status: 'OK', serviceAccountId: serviceAccountId })
+        .then(function (service) {
+          // Align this with the FusionClusterService.getServiceStatus() to make the UI handling simpler
+          service.serviceId = serviceId;
+          service.setup = service.provisioned;
+          service.statusCss = getStatusCss(service);
+          service.status = translateStatus(service);
+          return service;
+        });
     }
 
     function getServiceAccount(serviceId) {
@@ -47,14 +47,18 @@
     function updateConfig(newServiceAccountId, privateKey, serviceId) {
       return $q(function (resolve, reject) {
         if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal()) {
-          isGoogleCalendarSetup = true;
-          $timeout(function () {
-            serviceAccountId = newServiceAccountId;
-            resolve(extractDataFromResponse({
-              data: {},
-              status: 200
-            }));
-          }, 1000);
+          ServiceDescriptor.enableService(serviceId)
+              .then(function () {
+                isGoogleCalendarSetup = true;
+                serviceAccountId = newServiceAccountId;
+                resolve(extractDataFromResponse({
+                  data: {},
+                  status: 200
+                }));
+              })
+              .catch(function (error) {
+                reject(error);
+              });
         } else {
           $timeout(function () {
             reject({
@@ -75,13 +79,17 @@
     function deactivateService(serviceId) {
       return $q(function (resolve, reject) {
         if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal()) {
-          $timeout(function () {
-            isGoogleCalendarSetup = false;
-            resolve(extractDataFromResponse({
-              data: {},
-              status: 200
-            }));
-          }, 300);
+          ServiceDescriptor.disableService(serviceId)
+            .then(function () {
+              isGoogleCalendarSetup = false;
+              resolve(extractDataFromResponse({
+                data: {},
+                status: 200
+              }));
+            })
+            .catch(function (error) {
+              reject(error);
+            });
         } else {
           $timeout(function () {
             reject({
@@ -100,7 +108,37 @@
       });
     }
 
+    function getStatusCss(service) {
+      if (!service || !service.provisioned || !service.status) {
+        return 'default';
+      }
+      switch (service.status.toLowerCase()) {
+        case 'ok':
+          return 'success';
+        case 'error':
+          return 'danger';
+        case 'warn':
+          return 'warning';
+        default:
+          return 'default';
+      }
+    }
 
+    function translateStatus(service) {
+      if (!service || !service.provisioned || !service.status) {
+        return 'setupNotComplete';
+      }
+      switch (service.status.toLowerCase()) {
+        case 'ok':
+          return 'operational';
+        case 'error':
+          return 'outage';
+        case 'warn':
+          return 'impaired';
+        default:
+          return 'unknown';
+      }
+    }
   }
 
 })();
