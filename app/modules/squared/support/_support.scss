@@ -1,3 +1,7 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/fonts';
+@import 'styles/toolkit/layout';
+
 .support {
   @extend %content-header;
   @extend %page-content-padding;

@@ -1,3 +1,5 @@
+require('./helpdesk.scss');
+
 (function () {
   'use strict';
 
