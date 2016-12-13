@@ -13,14 +13,17 @@ describe('Controller: AACallerInputCtrl', function () {
   };
   var inputActions = [{
     "key": "1",
+    "value": "",
     "keys": [
       "0", "1", "4", "5", "6", "7", "8", "9", "#", "*"
     ] }, {
       "key": "2",
+      "value": "",
       "keys": [
         "0", "2", "4", "5", "6", "7", "8", "9", "#", "*"
       ] }, {
         "key": "3",
+        "value": "",
         "keys": [
           "0", "3", "4", "5", "6", "7", "8", "9", "#", "*"
         ] }];
@@ -53,9 +56,9 @@ describe('Controller: AACallerInputCtrl', function () {
     $scope.menuId = menuId;
 
     var menu = AutoAttendantCeMenuModelService.newCeMenuEntry();
-    var action = AutoAttendantCeMenuModelService.newCeActionEntry("", "");
+    // var action = AutoAttendantCeMenuModelService.newCeActionEntry("", "");
 
-    menu.addAction(action);
+    // menu.addAction(action);
 
     aaUiModel['openHours'].addEntryAt(index, menu);
 
@@ -127,6 +130,42 @@ describe('Controller: AACallerInputCtrl', function () {
       expect(controller.inputActions[0].key).toEqual(newKey);
     });
   });
+
+  describe('keyInputChanged', function () {
+    it('should change the input value for an existing action', function () {
+      var whichKey = {};
+      whichKey.value = 'X';
+
+      controller.inputActions = angular.copy(inputActions);
+      controller.keyInputChanged(0, whichKey);
+      expect(controller.inputActions[0].value).toEqual('X');
+    });
+  });
+  describe('setType', function () {
+    it('should change the inputType to DIGITS_CHOICE', function () {
+
+      controller.convertDigitState = true;
+      controller.setType();
+      expect(controller.actionEntry.inputType).toEqual(4);
+    });
+    it('should change the inputType to DIGITS_RAW', function () {
+
+      controller.convertDigitState = false;
+      controller.setType();
+      expect(controller.actionEntry.inputType).toEqual(3);
+    });
+
+  });
+
+  describe('set Name Variable', function () {
+    it('should change the Name Variable', function () {
+
+      controller.nameInput = "Hello World";
+      controller.saveNameInput();
+      expect(controller.actionEntry.variableName).toEqual("Hello World");
+    });
+  });
+
   describe('voiceOption', function () {
     it('should find the voice option', function () {
       var voiceOptions = [{

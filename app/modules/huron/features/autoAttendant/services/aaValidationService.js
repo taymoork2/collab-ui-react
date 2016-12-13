@@ -209,7 +209,7 @@
         }
 
         if (action.inputType === 4) {
-          if (action.inputActions.length === 0) {
+          if (!action.inputActions || action.inputActions.length === 0) {
             validAction = false;
             AANotificationService.error(errNoInputValuesEnteredMsg, {
               schedule: translatedLabel,
