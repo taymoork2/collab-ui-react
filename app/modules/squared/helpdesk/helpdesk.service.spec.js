@@ -6,6 +6,11 @@ describe('HelpdeskService', function () {
   var $timeout, $httpBackend, Service, urlBase, ServiceDescriptor, $scope, $q, HelpdeskMockData,
     CsdmConverter, HelpdeskHttpRequestCanceller, FeatureToggleService, CacheFactory;
 
+  afterEach(function () {
+    $timeout = $httpBackend = Service = urlBase = ServiceDescriptor = $scope = $q = HelpdeskMockData =
+      CsdmConverter = HelpdeskHttpRequestCanceller = FeatureToggleService = CacheFactory = undefined;
+  });
+
   beforeEach(inject(function (_$timeout_, UrlConfig, _$rootScope_, _$httpBackend_, _HelpdeskService_, _ServiceDescriptor_, _$q_, _HelpdeskMockData_, _CsdmConverter_, _HelpdeskHttpRequestCanceller_, _FeatureToggleService_, _CacheFactory_) {
     Service = _HelpdeskService_;
     ServiceDescriptor = _ServiceDescriptor_;
@@ -440,14 +445,47 @@ describe('HelpdeskService', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
+  describe('getLatestEmailEvent:', function () {
+    it('calls through to getEmailStatus()', function () {
+      spyOn(Service, 'getEmailStatus').and.returnValue($q.when());
+      Service.getLatestEmailEvent('fake-email@example.com');
+      expect(Service.getEmailStatus.calls.count()).toBe(1);
+      expect(Service.getEmailStatus).toHaveBeenCalledWith('fake-email@example.com');
+    });
+
+    it('should return the first item of the resolved promise\'s list', function () {
+      spyOn(Service, 'getEmailStatus').and.returnValue($q.when([{ fake: 'data' }]));
+      Service.getLatestEmailEvent('fake-email@example.com').then(function (latestEvent) {
+        expect(latestEvent).toEqual({ fake: 'data' });
+      });
+      $scope.$apply();
+    });
+  });
+
+  describe('unixTimestampToUTC:', function () {
+    it('should print UTC formatted date time given a Unix timestamp in seconds', function () {
+      var timestampInSec = 1482652800;
+      expect(Service.unixTimestampToUTC(timestampInSec)).toBe('Sun, 25 Dec 2016 08:00:00 GMT');
+
+      timestampInSec = 1480966041.160986;
+      expect(Service.unixTimestampToUTC(timestampInSec)).toBe('Mon, 05 Dec 2016 19:27:21 GMT');
+    });
+  });
+
   describe('resendInviteEmail:', function () {
-    var fakeUserData = {
-      displayName: 'fake-displayName',
-      email: 'fake-email',
-      onlineOrderIds: ['fake-onlineOrderId-0']
-    };
+    var fakeUserData;
+
+    afterEach(function () {
+      fakeUserData = undefined;
+    });
 
     beforeEach(function () {
+      fakeUserData = {
+        displayName: 'fake-displayName',
+        email: 'fake-email',
+        onlineOrderIds: ['fake-onlineOrderId-0']
+      };
+
       spyOn(Service, 'invokeInviteEmail');
     });
 
