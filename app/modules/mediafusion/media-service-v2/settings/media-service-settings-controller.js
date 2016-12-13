@@ -10,6 +10,13 @@
     vm.serviceId = "squared-fusion-media";
     vm.cluster = $stateParams.cluster;
 
+    vm.emailSection = {
+      title: 'common.general'
+    };
+    vm.deactivateSection = {
+      title: 'common.deactivate'
+    };
+
     vm.confirmDisable = function () {
       $modal.open({
         templateUrl: "modules/mediafusion/media-service-v2/settings/confirm-disable-dialog.html",
