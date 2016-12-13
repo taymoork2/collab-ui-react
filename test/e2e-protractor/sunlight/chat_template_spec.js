@@ -46,7 +46,7 @@ describe('Care admin should be able to', function () {
   function validateDisplayNewFeatureModal() {
     utils.expectIsDisplayed(careChatTemplateSetupPage.careNewFeatureModal);
     utils.expectIsDisplayed(careChatTemplateSetupPage.createChatTemplateButton);
-   }
+  }
 
   function editTemplateAndValidate(templateNameSuffix) {
     utils.click(utils.searchbox);
