@@ -5,9 +5,9 @@
     .module('Hercules')
     .factory('CloudConnectorService', CloudConnectorService);
 
-  function CloudConnectorService($q, $timeout, Authinfo, ServiceDescriptor) {
-    var serviceAccountId = 'google@example.org'; // dummy value for now
-    var isGoogleCalendarSetup = false;
+  function CloudConnectorService($http, $q, $timeout, Authinfo, ServiceDescriptor, UrlConfig) {
+    var serviceAccountId = ''; // must store in memory for demo purposes until the server actually starts persisting it
+    var isGoogleCalendarSetup = false; // must store in memory for demo purposes until the server actually starts persisting it
 
     return {
       updateConfig: updateConfig,
@@ -45,35 +45,22 @@
     }
 
     function updateConfig(newServiceAccountId, privateKey, serviceId) {
-      return $q(function (resolve, reject) {
-        if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal()) {
-          ServiceDescriptor.enableService(serviceId)
-              .then(function () {
-                isGoogleCalendarSetup = true;
-                serviceAccountId = newServiceAccountId;
-                resolve(extractDataFromResponse({
-                  data: {},
-                  status: 200
-                }));
-              })
-              .catch(function (error) {
-                reject(error);
-              });
-        } else {
-          $timeout(function () {
-            reject({
-              data: {
-                message: 'Not implemented yet!',
-                errors: {
-                  description: 'API not found!'
-                },
-                trackingId: 'ATLAS_08193b4d-3061-0cd4-3f2c-96117f019146_15'
-              },
-              status: 501
+      return $http
+        .post(UrlConfig.getCccUrl() + '/orgs/' + Authinfo.getOrgId() + '/services/' + serviceId, {
+          serviceAccountId: newServiceAccountId,
+          privateKeyData: privateKey.split(',')[1]
+        })
+        .then(function () {
+          return ServiceDescriptor.enableService(serviceId)
+            .then(function () {
+              /* Remove this .then() once the CCC is persisting data */
+              isGoogleCalendarSetup = true;
+              serviceAccountId = newServiceAccountId;
+            })
+            .catch(function (error) {
+              throw error;
             });
-          }, 2000);
-        }
-      });
+        });
     }
 
     function deactivateService(serviceId) {

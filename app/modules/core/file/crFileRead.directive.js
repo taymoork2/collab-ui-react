@@ -12,7 +12,8 @@
         file: '=',
         fileName: '=',
         fileMaxSizeError: '&',
-        fileTypeError: '&'
+        fileTypeError: '&',
+        readingStrategy: '@',
       },
       link: link
     };
@@ -69,7 +70,11 @@
         var type = file.type;
         var size = file.size;
         reader.onload = onLoad;
-        reader.readAsText(file);
+        if (scope.readingStrategy === 'binary') {
+          reader.readAsDataURL(file);
+        } else {
+          reader.readAsText(file);
+        }
 
         function onLoad(loadEvent) {
           if (checkSize(size) && isTypeValid(type, name)) {
