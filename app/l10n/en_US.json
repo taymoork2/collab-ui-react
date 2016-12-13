@@ -5849,7 +5849,20 @@
     "resendMailFailure": "Failed to resend welcome email.",
     "editAdminEmailSuccess": "Admin email was updated successfully.",
     "editAdminEmailFailure": "Failed to update admin email.",
-    "userStatusEventLog": "User Status Event Log"
+    "userStatusEventLog": "User Status Event Log",
+    "emailStatus": "Email Status",
+    "emailStatuses": {
+      "accepted": "Pending Delivery",
+      "delivered": "Delivered",
+      "failed": "Failed",
+      "rejected": "Rejected",
+      "unsubscribed": "Unsubscribed",
+      "tooltips": {
+        "accepted": "Email is waiting in queue.",
+        "delivered": "Email was delivered.",
+        "unsubscribed": "Email can not be delivered because the user unsubscribed."
+      }
+    }
   },
   "activation": {
     "verificationComplete": "Verification Complete",
