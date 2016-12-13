@@ -74,7 +74,7 @@ describe('LaunchAdvancedSettingsController', () => {
       describe('+supported sw', () => {
 
         beforeEach(() => {
-          state.device.software = 'Spark Room OS 2016-11-30 a487137';
+          state.device.software = 'Spark Room OS 2017-11-30 a487137';
           initController(state.device);
           state.$timeout.flush();
         });
@@ -87,7 +87,7 @@ describe('LaunchAdvancedSettingsController', () => {
       describe('+unsupported sw', () => {
 
         beforeEach(() => {
-          state.device.software = 'Spark Room OS 2012-11-30 a4d7137';
+          state.device.software = 'Spark Unsupported OS 2016-11-30 a4d7137';
           initController(state.device);
           state.$timeout.flush();
         });
@@ -119,7 +119,7 @@ describe('LaunchAdvancedSettingsController', () => {
       describe('+unsupported sw', () => {
 
         beforeEach(() => {
-          state.device.software = 'Spark Room OS 2012-11-30 a4d7137';
+          state.device.software = 'Spark Unsupported Room OS 2012-11-30 a4d7137';
           initController(state.device);
           state.$timeout.flush();
         });
@@ -159,7 +159,7 @@ describe('LaunchAdvancedSettingsController', () => {
   describe('unsupportedSoftwareVersion state', () => {
 
     beforeEach(() => {
-      state.device.software = 'Spark Room OS 2012-11-30 a4d7137';
+      state.device.software = 'Unsupported Spark Room OS 2012-11-30 a4d7137';
       initController(state.device);
       state.$timeout.flush();
     });
