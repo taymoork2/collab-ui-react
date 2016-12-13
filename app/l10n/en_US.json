@@ -134,7 +134,7 @@
     "unknownCreateUserError": "An unknown error has occurred and user creation could not be completed.",
     "insufficientEntitlementsError": "{{email}} cannot be added.  There are insufficient licenses to create this user.",
     "telstraAppRedirect": "Connecting to Telstra Apps Marketplace",
-    "careAddUserError": "Error adding user to Care.",
+    "careAddUserError": "Failed to add user to Care.",
     "careAddUserRoleError": "Error adding roles to user."
   },
   "userManage": {
@@ -600,7 +600,7 @@
     "threeMonths2": "for the last three months",
     "threeMonthsTaskStatus": "handled and abandoned",
     "threeMonthsInterval": "given month",
-    "taskDataGetError": "There was an error while loading the data for {{dataType}}."
+    "taskDataGetError": "There was an error while loading the {{dataType}} data."
   },
   "activeUsers": {
     "active": "Active",
@@ -2380,6 +2380,7 @@
     "careSettingsFetchFailed": "Error retrieving onboarding status.",
     "careSettingsTimeout": "Request timed out while checking Care setup status.",
     "careSettingsChecking": "Checking Care setup status.",
+    "setUpCareFailure": "Failed to setup Care. Please try again or skip this step for now and set it up from the Settings page in Care. Users cannot have Care license until this setup is complete.",
     "addUsers": "Add Users",
     "addUsersSubDescription": "Invite users and assign services",
     "addUsersDescription": "Select a method to upload your users.",
@@ -4973,7 +4974,7 @@
       "userUpdateSuccessMessage": "Information has been updated successfully for user {{userId}}. "
     },
     "failureMessages": {
-      "userUpdateFailureMessage": "Information cannot be updated currently for user {{userId}}.",
+      "userUpdateFailureMessage": "Failed to update information for user {{userId}}.",
       "userloadFailureMessage": "Information is currently not available for user {{userId}}.",
       "emptyAliasErrorMessage": "User alias cannot be empty."
     }
@@ -4999,7 +5000,7 @@
       "setUpCare": "Care",
       "setUpDescription": "Setup Care to add this license for your users so that your organization can take advantage of Care service.",
       "setUpCareSuccess": "Care service has been setup successfully.",
-      "setUpCareFailure": "Failed to setup Care service. Please try again. Users cannot have Care license till this setup is complete."
+      "setUpCareFailure": "Failed to setup Care. Please try again. Users cannot have Care license until this setup is complete."
     },
     "featuresNotYetConfiguredPage": {
       "createCareTemplate": "Create a Care Template",
@@ -5126,11 +5127,13 @@
     "deleteAction": "Delete",
     "deleteFeatureTextConfirmation": "Are you sure you want to delete the {{ featureName }} {{featureText}}?",
     "createSuccessText": "{{ featureName }} chat template has been created successfully",
+    "createChatTemplateFailureText": "Failed to create chat template.",
     "editSuccessText": "{{ featureName }} chat template has been updated successfully",
+    "editChatTemplateFailureText": "Failed to edit {{ featureName }} chat template.",
     "deleteSuccessText": "{{ featureName }} {{ featureText }} has been deleted successfully",
     "deleteFailedText": "Failed to delete {{ featureName }} {{ featureText }}.",
     "messageError": "Message {{ message }}",
-    "failedToLoad": "Unable to load {{ featureText }}(s) information",
+    "failedToLoad": "Failed to load {{ featureText }}(s).",
     "chatTemplate": "chat template",
     "namePlaceholder": "Name the Chat Template",
     "nameHint": "Enter a name for you to identify this chat template",

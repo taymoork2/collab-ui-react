@@ -59,24 +59,7 @@
         featureName: vm.featureName,
         featureText: vm.featureText
       });
-      if (response) {
-        if (response.status) {
-          error += ' ' + $translate.instant('errors.statusError', {
-            status: response.status
-          });
-          if (response.data && _.isString(response.data)) {
-            error += ' ' + $translate.instant('careChatTpl.messageError', {
-              message: response.data
-            });
-          }
-        } else {
-          error += ' Request failed.';
-          if (_.isString(response.data)) {
-            error += ' ' + response.data;
-          }
-        }
-      }
-      Notification.error(error);
+      Notification.errorWithTrackingId(response, error);
     }
 
   }
