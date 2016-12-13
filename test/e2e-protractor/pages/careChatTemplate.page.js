@@ -67,6 +67,8 @@ var ChatTemplateCreation = function () {
   this.timezoneInput = element(by.css('.timezone-picker input'));
   this.selectATimezone = element(by.css('.timezone-picker [name="businessHours-timezonePicker"] .dropdown-menu li'));
   this.templatePreviewTextField = element(by.css('.ct-left-cs-input'));
+  this.careNewFeatureModal = element(by.css('.care-new-feature-modal'));
+  this.createChatTemplateButton = element.all(by.css('.care-new-feature-modal .feature-icon-container')).first();
 };
 
 module.exports = ChatTemplateCreation;
