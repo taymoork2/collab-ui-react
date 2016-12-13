@@ -6,7 +6,7 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo, FeatureToggleService, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal, LaunchAdvancedSettingsModal, ServiceSetup, KemService, TerminusUserDeviceE911Service) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo, FeatureToggleService, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal, LaunchAdvancedSettingsModal, ServiceSetup, KemService, TerminusUserDeviceE911Service, EmergencyServicesService) {
     var deviceOverview = this;
     var huronDeviceService = $stateParams.huronDeviceService;
     deviceOverview.linesAreLoaded = false;
@@ -14,6 +14,7 @@
     deviceOverview.countryIsLoaded = false;
     deviceOverview.country = "";
     deviceOverview.selectedCountry = "";
+    deviceOverview.hideE911Edit = true;
     deviceOverview.shouldShowLines = function () {
       return deviceOverview.currentDevice.isHuronDevice || deviceOverview.showPstn;
     };
@@ -77,18 +78,37 @@
 
     function getEmergencyInformation() {
       return FeatureToggleService.supports(FeatureToggleService.features.huronDeviceE911).then(function (result) {
-        deviceOverview.showE911 = result;
-        if (result) {
-          TerminusUserDeviceE911Service.get({
-            customerId: Authinfo.getOrgId(),
-            number: deviceOverview.emergencyCallbackNumber
-          }).$promise.then(function (info) {
-            deviceOverview.emergencyAddress = info.e911Address;
-            deviceOverview.emergencyAddressStatus = info.status;
-          }).finally(function () {
-            deviceOverview.isE911Available = true;
-          });
+        if (!deviceOverview.currentDevice.isHuronDevice) {
+          deviceOverview.emergencyCallbackNumber = _.get(deviceOverview, 'lines[0].alternate');
+          deviceOverview.showE911 = deviceOverview.emergencyCallbackNumber;
+          if (!deviceOverview.showE911) {
+            deviceOverview.hideE911Edit = false;
+            EmergencyServicesService.getCompanyECN().then(function (result) {
+              deviceOverview.showE911 = true;
+              deviceOverview.emergencyCallbackNumber = result;
+              getEmergencyAddress();
+            });
+          } else {
+            getEmergencyAddress();
+          }
+        } else {
+          deviceOverview.showE911 = true;
+          if (result) {
+            getEmergencyAddress();
+          }
         }
+      });
+    }
+
+    function getEmergencyAddress() {
+      TerminusUserDeviceE911Service.get({
+        customerId: Authinfo.getOrgId(),
+        number: deviceOverview.emergencyCallbackNumber
+      }).$promise.then(function (info) {
+        deviceOverview.emergencyAddress = info.e911Address;
+        deviceOverview.emergencyAddressStatus = info.status;
+      }).finally(function () {
+        deviceOverview.isE911Available = true;
       });
     }
 
@@ -155,6 +175,14 @@
       huronDeviceService.getLinesForDevice(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.lines = result;
         deviceOverview.linesAreLoaded = true;
+      }).then(function () {
+        if (!deviceOverview.currentDevice.isHuronDevice) {
+          FeatureToggleService.supports(FeatureToggleService.features.cloudberryE911).then(function (result) {
+            if (result) {
+              getEmergencyInformation();
+            }
+          });
+        }
       });
     }
 
@@ -208,6 +236,7 @@
         currentAddress: deviceOverview.emergencyAddress,
         currentNumber: deviceOverview.emergencyCallbackNumber,
         status: deviceOverview.emergencyAddressStatus,
+        staticNumber: !deviceOverview.currentDevice.isHuronDevice
       };
 
       if ($state.current.name === 'user-overview.csdmDevice' || $state.current.name === 'place-overview.csdmDevice') {
