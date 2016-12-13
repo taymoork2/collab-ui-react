@@ -7,10 +7,9 @@
 
   function CloudConnectorService($q, $timeout, Authinfo) {
     var serviceAccountId = 'google@example.org'; // dummy value for now
-    var isGoogleCalendarSetup = true;
+    var isGoogleCalendarSetup = false;
 
     return {
-      isServiceSetup: isServiceSetup,
       updateConfig: updateConfig,
       deactivateService: deactivateService,
       getServiceAccount: getServiceAccount,
@@ -22,20 +21,15 @@
       return res.data;
     }
 
-    function isServiceSetup(serviceId, orgId) {
-      return getService(serviceId, orgId).then(function (service) {
-        return service.provisioned;
-      });
-    }
-
     function getService(serviceId/*, orgId */) {
       // Make sure you use the orgId (orgId || Authinfo.getOrgId) when the real API is called
       return $q.resolve({ provisioned: isGoogleCalendarSetup, status: 'OK', serviceAccountId: serviceAccountId })
         .then(function (service) {
           // Align this with the FusionClusterService.getServiceStatus() to make the UI handling simpler
-          service.statusCss = getStatusCss(service);
           service.serviceId = serviceId;
           service.setup = service.provisioned;
+          service.statusCss = getStatusCss(service);
+          service.status = translateStatus(service);
           return service;
         });
     }
@@ -119,6 +113,22 @@
           return 'warning';
         default:
           return 'default';
+      }
+    }
+
+    function translateStatus(service) {
+      if (!service || !service.provisioned || !service.status) {
+        return 'setupNotComplete';
+      }
+      switch (service.status.toLowerCase()) {
+        case 'ok':
+          return 'operational';
+        case 'error':
+          return 'outage';
+        case 'warn':
+          return 'impaired';
+        default:
+          return 'unknown';
       }
     }
   }

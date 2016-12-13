@@ -7,6 +7,14 @@ describe('components:showComponents', function () {
   var noData = 'centered-info-pane';
   var ADD_BUTTON = '.add-component-button';
   var $q;
+
+  afterEach(function () {
+    if (view) {
+      view.remove();
+    }
+    view = undefined;
+  });
+
   beforeEach(angular.mock.module('GSS'));
   beforeEach(inject(dependencies));
   beforeEach(compileView);

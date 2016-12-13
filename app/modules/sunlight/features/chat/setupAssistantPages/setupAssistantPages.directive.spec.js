@@ -2,6 +2,7 @@
 
 describe('Directive: setupAssistantPages', function () {
   var $compile, $rootScope;
+  var element;
 
   // ct-name and ct-summary are not being tested as they dont have any titles
   var pageDirectives = [
@@ -14,6 +15,13 @@ describe('Directive: setupAssistantPages', function () {
     'ct-chat-status-messages'
   ];
 
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
+
   beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_) {
@@ -22,7 +30,7 @@ describe('Directive: setupAssistantPages', function () {
   }));
 
   function validateAppropriateContent(directiveName, expectedContent) {
-    var element = $compile("<" + directiveName + "/>")($rootScope);
+    element = $compile("<" + directiveName + "/>")($rootScope);
     $rootScope.$digest();
 
     expect(element.html()).toContain(expectedContent);

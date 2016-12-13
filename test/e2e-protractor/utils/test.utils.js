@@ -41,11 +41,11 @@ exports.resolvePath = function (filePath) {
 };
 
 exports.writeFile = function (file, text) {
-  return fs.writeFile(file, text);
+  return fs.writeFileSync(file, text);
 };
 
 exports.deleteFile = function (file) {
-  return fs.unlink(file);
+  return fs.unlinkSync(file);
 };
 
 exports.searchField = element(by.id('searchFilter'));

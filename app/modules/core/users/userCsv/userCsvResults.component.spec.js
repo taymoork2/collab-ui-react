@@ -98,6 +98,12 @@ describe('crUserCsvResults Component', function () {
     this.$ctrl.$onInit();
   }
 
+  afterEach(function () {
+    if (this.element) {
+      this.element.remove();
+    }
+  });
+
   beforeEach(init);
 
   /////////////

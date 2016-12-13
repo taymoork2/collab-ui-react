@@ -136,9 +136,9 @@
       var hackishBoolean = false;
       if (hackishBoolean && vm.servicesId[0] === 'squared-fusion-cal' && hasGoogleCalendarFeatureToggle) {
 
-        CloudConnectorService.isServiceSetup('squared-fusion-gcal')
-          .then(function (isSetup) {
-            if (!isSetup) {
+        CloudConnectorService.getService('squared-fusion-gcal')
+          .then(function (service) {
+            if (!service.setup) {
               $modal.open({
                 controller: 'SelectCalendarServiceController',
                 controllerAs: 'vm',

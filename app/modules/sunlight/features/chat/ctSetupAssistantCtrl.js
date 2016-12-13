@@ -51,10 +51,10 @@
     };
     vm.selectedTemplateProfile = vm.profiles.org;
     vm.agentNames = {
-      alias: $translate.instant('careChatTpl.agentAlias'),
-      realName: $translate.instant('careChatTpl.agentRealName')
+      displayName: $translate.instant('careChatTpl.agentDisplayName'),
+      alias: $translate.instant('careChatTpl.agentAlias')
     };
-    vm.selectedAgentProfile = vm.agentNames.alias;
+    vm.selectedAgentProfile = vm.agentNames.displayName;
     vm.agentNamePreview = $translate.instant('careChatTpl.agentAliasPreview');
     vm.logoFile = '';
     vm.logoUploaded = false;
@@ -163,8 +163,10 @@
     //Template related constants  variables used after editing template
     if ($stateParams.isEditFeature) {
       var config = $stateParams.template.configuration;
-      vm.selectedTemplateProfile = config.mediaSpecificConfiguration.useOrgProfile ? vm.profiles.org : vm.profiles.agent;
-      vm.selectedAgentProfile = config.mediaSpecificConfiguration.useAgentRealName ? vm.agentNames.realName : vm.agentNames.alias;
+      vm.selectedTemplateProfile = config.mediaSpecificConfiguration.useOrgProfile ?
+        vm.profiles.org : vm.profiles.agent;
+      vm.selectedAgentProfile = config.mediaSpecificConfiguration.useAgentRealName ?
+        vm.agentNames.displayName : vm.agentNames.alias;
       vm.orgName = config.mediaSpecificConfiguration.displayText;
       vm.logoUrl = config.mediaSpecificConfiguration.orgLogoUrl;
       vm.timings.startTime.label = config.pages.offHours.schedule.timings.startTime;
@@ -304,6 +306,9 @@
         },
         chatStatusMessages: {
           messages: {
+            bubbleTitleMessage: {
+              displayText: $translate.instant('careChatTpl.bubbleTitleMessage')
+            },
             connectingMessage: {
               displayText: $translate.instant('careChatTpl.connectingMessage')
             },
@@ -427,9 +432,17 @@
       && isValidSinglelineField(vm.template.configuration.pages.feedback.fields.comment.displayText));
     }
 
+    function isBubbleTitleValid(chatStatusMessagesObj) {
+      if (chatStatusMessagesObj.bubbleTitleMessage) {
+        return isValidSinglelineField(chatStatusMessagesObj.bubbleTitleMessage.displayText);
+      }
+      return true;
+    }
+
     function isStatusMessagesPageValid() {
       var chatStatusMessagesObj = vm.template.configuration.chatStatusMessages.messages;
       return isValidSinglelineField(chatStatusMessagesObj.connectingMessage.displayText)
+      && isBubbleTitleValid(chatStatusMessagesObj)
       && isValidSinglelineField(chatStatusMessagesObj.waitingMessage.displayText)
       && isValidSinglelineField(chatStatusMessagesObj.enterRoomMessage.displayText)
       && isValidSinglelineField(chatStatusMessagesObj.leaveRoomMessage.displayText)
@@ -634,7 +647,7 @@
     function setTemplateProfile() {
       vm.template.configuration.mediaSpecificConfiguration = {
         useOrgProfile: vm.selectedTemplateProfile === vm.profiles.org,
-        useAgentRealName: vm.selectedAgentProfile === vm.agentNames.realName,
+        useAgentRealName: vm.selectedAgentProfile === vm.agentNames.displayName,
         orgLogoUrl: vm.logoUrl,
         displayText: vm.getAttributeParam('value', 'organization', 'welcomeHeader')
       };
@@ -651,7 +664,7 @@
     function setAgentProfile() {
       if (vm.selectedAgentProfile === vm.agentNames.alias) {
         vm.agentNamePreview = $translate.instant('careChatTpl.agentAliasPreview');
-      } else if (vm.selectedAgentProfile === vm.agentNames.realName) {
+      } else if (vm.selectedAgentProfile === vm.agentNames.displayName) {
         vm.agentNamePreview = $translate.instant('careChatTpl.agentNamePreview');
       }
     }

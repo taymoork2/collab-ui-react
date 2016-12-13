@@ -96,13 +96,13 @@
             CareReportsService.showAverageCsatGraph('averageCsatDiv', data, categoryAxisTitle, isToday);
             resizeCards();
           }
-        }, function (data) {
+        }, function () {
           vm.dataStatus = EMPTY;
-          Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Customer Satisfaction' }));
+          Notification.error($translate.instant('careReportsPage.taskDataGetError', { dataType: 'Customer Satisfaction' }));
           if (!isToday) {
-            Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Contact Time Measure' }));
+            Notification.error($translate.instant('careReportsPage.taskDataGetError', { dataType: 'Contact Time Measure' }));
           }
-          Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Total Completed Contacts' }));
+          Notification.error($translate.instant('careReportsPage.taskDataGetError', { dataType: 'Total Completed Contacts' }));
         });
     }
 
@@ -117,9 +117,9 @@
             CareReportsService.showTaskAggregateGraph('taskAggregateDiv', data, vm.timeSelected.categoryAxisTitle);
             resizeCards();
           }
-        }, function (data) {
+        }, function () {
           vm.snapshotDataStatus = EMPTY;
-          Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Aggregated Contacts' }));
+          Notification.error($translate.instant('careReportsPage.taskDataGetError', { dataType: 'Aggregated Contacts' }));
         });
     }
 

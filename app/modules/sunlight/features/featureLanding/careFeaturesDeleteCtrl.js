@@ -13,11 +13,11 @@
     vm.featureId = $stateParams.deleteFeatureId;
     vm.featureName = $stateParams.deleteFeatureName;
     vm.featureType = $stateParams.deleteFeatureType;
-    vm.featureText = vm.featureType == 'CT' ? $translate.instant('careChatTpl.chatTemplate') : '';
+    vm.featureText = vm.featureType === 'Ch' ? $translate.instant('careChatTpl.chatTemplate') : '';
 
     function deleteFeature() {
       vm.deleteBtnDisabled = true;
-      if (vm.featureType == 'CT') {
+      if (vm.featureType === 'Ch') {
         CareFeatureList.deleteChatTemplate(vm.featureId).then(function () {
           deleteSuccess();
         }, function (response) {
