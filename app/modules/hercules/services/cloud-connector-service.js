@@ -38,10 +38,7 @@
           privateKeyData: privateKey.split(',')[1]
         })
         .then(function () {
-          return ServiceDescriptor.enableService(serviceId)
-            .catch(function (error) {
-              throw error;
-            });
+          return ServiceDescriptor.enableService(serviceId);
         });
     }
 
@@ -49,10 +46,7 @@
       return $http
         .delete(UrlConfig.getCccUrl() + '/orgs/' + Authinfo.getOrgId() + '/services/' + serviceId)
         .then(function () {
-          ServiceDescriptor.disableService(serviceId)
-            .catch(function (error) {
-              throw error;
-            });
+          ServiceDescriptor.disableService(serviceId);
         });
     }
 

@@ -70,7 +70,7 @@
         var type = file.type;
         var size = file.size;
         reader.onload = onLoad;
-        if (scope.readingStrategy === 'binary') {
+        if (scope.readingStrategy === 'dataURL') {
           reader.readAsDataURL(file);
         } else {
           reader.readAsText(file);

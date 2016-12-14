@@ -21,7 +21,7 @@
   ng-if="!uploadKey.data.file"
   class="file-drop"
   cr-file-drop
-  reading-strategy="binary"
+  reading-strategy="dataURL"
   file="uploadKey.data.file"
   file-name="uploadKey.data.fileName">
   <div class="file-drop-content">
@@ -33,7 +33,7 @@
       type="file"
       file="uploadKey.data.file"
       file-name="uploadKey.data.fileName"
-      reading-strategy="binary"
+      reading-strategy="dataURL"
     />
     <span translate="hercules.settings.googleCalendar.dragAndDropKeyFileHere"></span>
     <label for='upload' translate="hercules.settings.googleCalendar.clickToBrowse"></label>
