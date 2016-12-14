@@ -91,6 +91,42 @@ describe('Service: ServiceSetup', function () {
     });
   });
 
+  describe('getAvrilSite', function () {
+    var site = {
+      guid: '1234567890'
+    };
+
+    beforeEach(function () {
+      $httpBackend.whenGET(HuronConfig.getAvrilUrl() + '/customers/1/sites/' + site.guid).respond(201);
+    });
+
+    it('should get the avril voicemail site', function () {
+      ServiceSetup.getAvrilSite(site.guid);
+      $httpBackend.flush();
+    });
+  });
+
+  describe('updateAvrilVoicemail', function () {
+    var site = {
+      guid: '1234567890'
+    };
+    var voicemailFeatures = {
+      VM2E: false,
+      VM2T: true,
+      VM2S: true
+    };
+
+    beforeEach(function () {
+      $httpBackend.expectPUT(HuronConfig.getAvrilUrl() + '/customers/1/sites/' + site.guid).respond(204);
+    });
+
+    it('should update avril voicemail', function () {
+      ServiceSetup.updateAvrilVoicemail(site.guid, voicemailFeatures);
+      $httpBackend.flush();
+    });
+  });
+
+
   describe('updateAvrilSite', function () {
     var site = {
       guid: '1234567890',

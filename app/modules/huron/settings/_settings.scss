@@ -68,7 +68,29 @@
 
     .voicemail-spacing {
       @include vr-spacing(pl, 2);
-      @include vr-spacing(mb, 2);
+      @include vr-spacing(mb, 2.75);
+    }
+
+    .voicemail-spacing-helptext {
+      @include vr-spacing(pl, 2);
+      @include vr-spacing(mb, 1.5);
+    }
+
+    .warning-message {
+      padding-top: 24px;
+      padding-left: 8px;
+    }
+    
+    .no-padding {
+      padding: 0;
+    }
+
+    .no-border {
+      border: 0;
+    }
+
+    .no-margin {
+      margin: 0;
     }
 
     button.btn-link {
@@ -112,9 +134,10 @@
     .inner-section-margin {
       @include vr-spacing(mt, 2.25);
     }
-
+    
     .msg-container {
       min-width: vr-adjust(600px);
+      padding-top: vr-adjust(12px);
     }
   }
   
@@ -142,8 +165,12 @@
     margin-bottom: 1rem;
   }
 
+  .warning-color {
+    color: $brand-warning
+  }
+
   .terminus-warning {
-    font-size: 0.75rem;
+    font-size: 0.78rem;
 
     .icon-warning {
       margin-right: 0.25rem;

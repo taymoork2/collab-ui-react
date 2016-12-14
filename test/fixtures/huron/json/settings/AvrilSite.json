@@ -1,0 +1,16 @@
+{
+  "guid": "3cd0a76f-5889-49a2-b7df-1e31e5230bd8",
+  "language": "en-US",
+  "timeZone": "America/Los_Angeles",
+  "pilotNumber": "+19987865437",
+  "siteDescription": "Denver Location",
+  "siteCode": "100",
+  "siteSteeringDigit": "8",
+  "extensionLength": "4",
+  "cpeCloudPilotNumber": "+0019987865437",
+  "features": {
+    "VM2E": false,
+    "VM2T": true,
+    "VM2S": true
+  }
+}
