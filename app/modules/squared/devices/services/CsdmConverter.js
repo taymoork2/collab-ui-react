@@ -150,7 +150,7 @@
         this.url = obj.url;
         this.isPlace = true;
         this.type = obj.type || (obj.machineType == 'lyra_space' ? 'cloudberry' : 'huron');
-        this.readableType = getLocalizedType(obj.type);
+        this.readableType = getLocalizedType(this.type);
         this.entitlements = obj.entitlements;
         this.cisUuid = obj.cisUuid || obj.uuid;
         this.displayName = obj.displayName;
