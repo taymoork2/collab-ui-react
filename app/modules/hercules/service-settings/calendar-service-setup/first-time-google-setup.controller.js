@@ -28,7 +28,7 @@
           vm.step = 'final';
         })
         .catch(function (error) {
-          Notification.errorWithTrackingId(error, 'hercules.settings.googleCalendar.failedToUploadKey');
+          Notification.errorWithTrackingId(error, 'hercules.settings.googleCalendar.failedToActivateService');
           vm.loading = false;
         });
     };
