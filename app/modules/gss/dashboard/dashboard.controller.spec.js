@@ -14,7 +14,7 @@ describe('controller: DashboardCtrl', function () {
 
 
   beforeEach(angular.mock.module('GSS'));
-  beforeEach(angular.mock.module('Core'));
+  afterEach(destructDI);
   beforeEach(inject(dependencies));
   beforeEach(initController);
   beforeEach(initSpies);
@@ -28,6 +28,10 @@ describe('controller: DashboardCtrl', function () {
     $state = _$state_;
     DashboardService = _DashboardService_;
     GSSService = _GSSService_;
+  }
+
+  function destructDI() {
+    $controller = $modal = $q = $scope = $state = controller = DashboardService = GSSService = undefined;
   }
 
   function initController() {
