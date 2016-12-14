@@ -15,11 +15,8 @@ export class ReportConstants {
   public readonly THIRTEEN_WEEKS: number = 13;
   public readonly WEEKS: number = 3;
   public readonly YEAR: number = 52;
-
-  // weekly values are calculated as total weeks in year - weeks in time period
-  public readonly FOUR_WEEKS: number = 48;
-  public readonly TWELVE_WEEKS: number = 40;
-  public readonly TWENTY_FOUR_WEEKS: number = 28;
+  public readonly FOUR_WEEKS: number = 49;
+  public readonly TWELVE_WEEKS: number = 41;
 
   // moment formatting helpers
   public readonly DAY_FORMAT: string = 'MMM DD';

@@ -129,7 +129,7 @@
             vm.customerEmailSent = null;
             var emailSent = getEmailSentTime(response);
             if (emailSent && emailSent.timestamp) {
-              vm.customerEmailSent = getUTCtime(emailSent.timestamp);
+              vm.customerEmailSent = HelpdeskService.unixTimestampToUTC(emailSent.timestamp);
             }
             vm.showCustomerEmailSent = true;
           }, vm._helpers.notifyError);
@@ -140,7 +140,7 @@
             vm.partnerEmailSent = null;
             var emailSent = getEmailSentTime(response);
             if (emailSent && emailSent.timestamp) {
-              vm.partnerEmailSent = getUTCtime(emailSent.timestamp);
+              vm.partnerEmailSent = HelpdeskService.unixTimestampToUTC(emailSent.timestamp);
             }
             vm.showPartnerEmailSent = true;
           }, vm._helpers.notifyError);
@@ -155,13 +155,6 @@
         mailStat = _.first(mailStat);
       }
       return mailStat;
-    }
-
-    // Convert Date from milliseconds to UTC format
-    function getUTCtime(timestamp) {
-      var newDate = new Date();
-      newDate.setTime(timestamp * 1000);
-      return newDate.toUTCString();
     }
 
     // Allow Customer Admin Email address to be editted

@@ -67,6 +67,22 @@
 
       <div class="row">
         <div class="medium-5 columns details-heading">
+          <span>{{'helpdesk.emailStatus' | translate}}:</span>
+        </div>
+        <div class="medium-7 columns details-value">
+          <span>{{helpdeskUserCtrl.user.lastEmailStatus.displayStatus}}</span>
+          <a ng-if="helpdeskUserCtrl.hasEmailStatus()">
+            <i
+              class="icon icon-info"
+              tooltip-html="helpdeskUserCtrl.user.lastEmailStatus.toolTipHtml"
+              tooltip-placement="right"
+              tooltip-class="email-status"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="medium-5 columns details-heading">
           <span>{{'helpdesk.roles' | translate}}:</span>
         </div>
         <div class="medium-7 columns details-value">

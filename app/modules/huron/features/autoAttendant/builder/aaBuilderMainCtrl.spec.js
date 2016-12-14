@@ -124,6 +124,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       return $q.when();
     });
     spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(sysModel.site));
+    spyOn($rootScope, '$broadcast').and.callThrough();
 
     controller = $controller('AABuilderMainCtrl as vm', {
       $scope: $scope,
@@ -212,6 +213,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.$apply();
       expect($state.go).toHaveBeenCalled();
       expect(AutoAttendantCeMenuModelService.clearCeMenuMap).toHaveBeenCalled();
+      expect($rootScope.$broadcast).toHaveBeenCalledWith('CE Closed');
     });
 
     it('should warn on CMI assignment failure on close', function () {

@@ -1123,7 +1123,8 @@
             params: {
               currentAddress: {},
               currentNumber: '',
-              status: ''
+              status: '',
+              staticNumber: '',
             },
           })
           .state('user-overview.communication.voicemail', {
@@ -1536,6 +1537,7 @@
               currentAddress: {},
               currentNumber: '',
               status: '',
+              staticNumber: '',
             },
           })
           .state('place-overview.communication', {
@@ -1689,6 +1691,7 @@
               currentAddress: {},
               currentNumber: '',
               status: '',
+              staticNumber: '',
             },
           })
           .state('video', {

@@ -18,6 +18,7 @@ export class EmergencyServicesCtrl {
   public options: string[];
   public companyEmergencyNumber: string;
   public impactedUsers: any[];
+  public staticNumber: boolean;
 
   /* @ngInject */
   constructor(
@@ -34,6 +35,7 @@ export class EmergencyServicesCtrl {
     this.emergency = data.emergency;
     this.currentDevice = data.currentDevice;
     this.stateOptions = data.stateOptions;
+    this.staticNumber = data.staticNumber;
     this.EmergencyServicesService.getOptions().then(options => this.options = options);
     this.EmergencyServicesService.getCompanyECN().then(result => this.companyEmergencyNumber = result);
     this.EmergencyServicesService.getImpactedUsers(this.emergency.emergencyNumber).then(users =>  this.impactedUsers = users);

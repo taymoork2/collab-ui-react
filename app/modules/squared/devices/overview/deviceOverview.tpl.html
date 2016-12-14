@@ -227,7 +227,7 @@
       <div ng-show="deviceOverview.isE911Available">
         <div class="section-title-row">
           <span class="section-name" translate="spacesPage.emergencyTitle"></span>
-          <span cs-dropdown class="actions-menu dropdown pull-right">
+          <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="deviceOverview.hideE911Edit">
             <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
               <i class="icon icon-three-dots"></i>
             </button>

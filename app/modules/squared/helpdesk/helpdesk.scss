@@ -187,6 +187,19 @@
       text-align: center;
     }
   }
+
+  .icon-info {
+    font-size: $paragraph-font-size;
+    margin-left: 0.3rem;
+    position: relative;
+    bottom: -1px;
+  }
+
+  .tooltip[popup-class="email-status"] .c-nub {
+    font-size: 0.75rem;
+    max-width: 250px;
+    width: 250px;
+  }
 }
 
 .helpdesk-orderDetail {
