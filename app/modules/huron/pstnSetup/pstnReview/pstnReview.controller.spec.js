@@ -30,6 +30,8 @@ describe('Controller: PstnReviewCtrl', function () {
     spyOn(PstnSetupService, 'createCustomer').and.returnValue($q.when());
     spyOn(PstnSetupService, 'updateCustomerCarrier').and.returnValue($q.when());
     spyOn(PstnSetupService, 'orderNumbers').and.returnValue($q.when());
+    spyOn(PstnSetupService, 'orderNumbersV2').and.returnValue($q.when());
+    spyOn(PstnSetupService, 'orderTollFreeBlock').and.returnValue($q.when());
     spyOn(PstnSetupService, 'portNumbers').and.returnValue($q.when());
     spyOn(PstnSetupService, 'orderBlock').and.returnValue($q.when());
     spyOn(PstnServiceAddressService, 'createCustomerSite').and.returnValue($q.when());
@@ -42,6 +44,25 @@ describe('Controller: PstnReviewCtrl', function () {
 
     $scope.$apply();
   }));
+
+  afterEach(function () {
+    controller = undefined;
+    $controller = undefined;
+    $scope = undefined;
+    $q = undefined;
+    $state = undefined;
+    PstnSetup = undefined;
+    PstnSetupService = undefined;
+    PstnServiceAddressService = undefined;
+    ExternalNumberPool = undefined;
+  });
+
+  afterAll(function () {
+    carrierList = undefined;
+    customer = undefined;
+    orderCart = undefined;
+  });
+
 
   describe('placeOrder', function () {
     describe('when customer exists', function () {
@@ -59,14 +80,15 @@ describe('Controller: PstnReviewCtrl', function () {
         });
       });
 
-      it('should contain one of each order', function () {
+      it('should contain at least one of each order type', function () {
         expect(controller.portOrders.length).toEqual(1);
-        expect(controller.advancedOrders.length).toEqual(2);
+        expect(controller.advancedOrders.length).toEqual(3);
         expect(controller.newOrders.length).toEqual(1);
+        expect(controller.newTollFreeOrders.length).toEqual(1);
       });
 
       it('should show the correct number of new and port numbers', function () {
-        expect(controller.totalNewAdvancedOrder).toEqual(16);
+        expect(controller.totalNewAdvancedOrder).toEqual(19);
         expect(controller.totalPortNumbers).toEqual(2);
       });
     });

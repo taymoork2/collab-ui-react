@@ -3169,6 +3169,9 @@
     "errors": {
       "states": "Failed to retrieve states",
       "inventory": "Failed to get PSTN inventory",
+      "orders": {
+        "missingNumber": "Number Missing in Order {{orderNumber}}"
+      },
       "tollfree": {
         "areacodes": "Failed to retrieve toll-free area codes.",
         "inventory": "Failed to retrieve toll-free number inventory."
