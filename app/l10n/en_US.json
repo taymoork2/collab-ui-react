@@ -315,7 +315,8 @@
       "400094": "already has Call Service under Hybrid Services enabled; having both Call Service and Spark Call enabled for a user is unsupported. To enable Spark Call, disable Call Service for this user and try again.",
       "deleteUserDnFallbackError": "entitlement update failed. The user's directory number is used as the fallback destination for Hunt Group(s).",
       "other": "not entitled, status: {{status}}"
-    }
+    },
+    "enableCareInformationText": "Select Message and Call to enable Care."
   },
   "usersPreview": {
     "groupPreview": "Group:",

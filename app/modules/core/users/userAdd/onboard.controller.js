@@ -101,6 +101,8 @@ require('./_user-add.scss');
       $scope.isSharedMultiPartyEnabled = smpStatus;
     });
 
+    $scope.controlCare = controlCare;
+
     initController();
 
     /****************************** License Enforcement START *******************************/
@@ -610,8 +612,10 @@ require('./_user-add.scss');
         if (userEnts[x] === 'ciscouc') {
           $scope.radioStates.commRadio = true;
           currentUserHasCall = true;
+          $scope.controlCare();
         } else if (userEnts[x] === 'squared-room-moderation') {
           $scope.radioStates.msgRadio = true;
+          $scope.controlCare();
         } else if (userEnts[x] === 'cloud-contact-center') {
           setCareSevice();
         }
@@ -621,6 +625,7 @@ require('./_user-add.scss');
     if (userInvites) {
       if (userInvites.ms) {
         $scope.radioStates.msgRadio = true;
+        $scope.controlCare();
       }
       if (userInvites.cc) {
         setCareSevice();
@@ -639,6 +644,7 @@ require('./_user-add.scss');
                 if (hasSyncKms) {
                   $scope.radioStates.careRadio = true;
                   $scope.radioStates.initialCareRadioState = true;
+                  $scope.enableCareService = true;
                 }
               }
             });
@@ -846,6 +852,7 @@ require('./_user-add.scss');
 
         if ($scope.messageFeatures[1].licenses.length > 1) {
           $scope.radioStates.msgRadio = true;
+          $scope.controlCare();
         }
       }
       if (services.conference) {
@@ -2539,6 +2546,15 @@ require('./_user-add.scss');
     function cancelModal() {
       Analytics.trackAddUsers(Analytics.eventNames.CANCEL_MODAL);
       $state.modal.dismiss();
+    }
+
+    function controlCare() {
+      if ($scope.radioStates.msgRadio && $scope.radioStates.commRadio) {
+        $scope.enableCareService = true;
+      } else {
+        $scope.enableCareService = false;
+        $scope.radioStates.careRadio = false;
+      }
     }
 
   }
