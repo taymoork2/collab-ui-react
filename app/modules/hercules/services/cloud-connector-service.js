@@ -6,13 +6,10 @@
     .factory('CloudConnectorService', CloudConnectorService);
 
   function CloudConnectorService($http, $q, $timeout, Authinfo, ServiceDescriptor, UrlConfig) {
-    var serviceAccountId = ''; // must store in memory for demo purposes until the server actually starts persisting it
-    var isGoogleCalendarSetup = false; // must store in memory for demo purposes until the server actually starts persisting it
 
     return {
       updateConfig: updateConfig,
       deactivateService: deactivateService,
-      getServiceAccount: getServiceAccount,
       getService: getService,
       getStatusCss: getStatusCss
     };
@@ -21,27 +18,17 @@
       return res.data;
     }
 
-    function getService(serviceId/*, orgId */) {
-      // Make sure you use the orgId (orgId || Authinfo.getOrgId) when the real API is called
-      return $q.resolve({ provisioned: isGoogleCalendarSetup, status: 'OK', serviceAccountId: serviceAccountId })
+    function getService(serviceId, orgId) {
+      return $http.get(UrlConfig.getCccUrl() + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/services/' + serviceId)
+        .then(extractDataFromResponse)
         .then(function (service) {
-          // Align this with the FusionClusterService.getServiceStatus() to make the UI handling simpler
+            // Align this with the FusionClusterService.getServiceStatus() to make the UI handling simpler
           service.serviceId = serviceId;
           service.setup = service.provisioned;
           service.statusCss = getStatusCss(service);
           service.status = translateStatus(service);
           return service;
         });
-    }
-
-    function getServiceAccount(serviceId) {
-      return $q(function (resolve, reject) {
-        if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal()) {
-          resolve(serviceAccountId);
-        } else {
-          reject();
-        }
-      });
     }
 
     function updateConfig(newServiceAccountId, privateKey, serviceId) {
@@ -52,23 +39,18 @@
         })
         .then(function () {
           return ServiceDescriptor.enableService(serviceId)
-            .then(function () {
-              /* Remove this .then() once the CCC is persisting data */
-              isGoogleCalendarSetup = true;
-              serviceAccountId = newServiceAccountId;
-            })
             .catch(function (error) {
               throw error;
             });
         });
     }
 
+    /* Still not sure how to disable the service, keeping dummy implementation for now.  */
     function deactivateService(serviceId) {
       return $q(function (resolve, reject) {
         if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal()) {
           ServiceDescriptor.disableService(serviceId)
             .then(function () {
-              isGoogleCalendarSetup = false;
               resolve(extractDataFromResponse({
                 data: {},
                 status: 200
