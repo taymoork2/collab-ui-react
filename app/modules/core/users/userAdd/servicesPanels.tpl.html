@@ -60,7 +60,7 @@
                   type="checkbox"
                   ng-model="radioStates.msgRadio"
                   ng-disabled="disableCheckbox(msgFeature.licenses)"
-                  ng-change="checkLicenseAvailability('MESSAGING', radioStates.msgRadio); controlCare();"
+                  ng-change="checkLicenseAvailability('MESSAGING', radioStates.msgRadio)"
                   id="paid-msg"
                   name="paid-msg"
                   cs-input-label="{{::msgFeature.label | translate}}">
@@ -193,7 +193,7 @@
                 cs-input
                 type="checkbox"
                 id="{{commFeature.license.licenseId}}"
-                ng-change="checkLicenseAvailability('COMMUNICATION', radioStates.commRadio); controlCare();"
+                ng-change="checkLicenseAvailability('COMMUNICATION', radioStates.commRadio)"
                 ng-model="radioStates.commRadio"
                 ng-disabled="hybridCallServiceAware"
                 cs-input-label="{{::commFeature.label | translate}}">

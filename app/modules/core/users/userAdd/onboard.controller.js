@@ -612,10 +612,8 @@ require('./_user-add.scss');
         if (userEnts[x] === 'ciscouc') {
           $scope.radioStates.commRadio = true;
           currentUserHasCall = true;
-          $scope.controlCare();
         } else if (userEnts[x] === 'squared-room-moderation') {
           $scope.radioStates.msgRadio = true;
-          $scope.controlCare();
         } else if (userEnts[x] === 'cloud-contact-center') {
           setCareSevice();
         }
@@ -625,7 +623,6 @@ require('./_user-add.scss');
     if (userInvites) {
       if (userInvites.ms) {
         $scope.radioStates.msgRadio = true;
-        $scope.controlCare();
       }
       if (userInvites.cc) {
         setCareSevice();
@@ -852,7 +849,6 @@ require('./_user-add.scss');
 
         if ($scope.messageFeatures[1].licenses.length > 1) {
           $scope.radioStates.msgRadio = true;
-          $scope.controlCare();
         }
       }
       if (services.conference) {
@@ -968,6 +964,8 @@ require('./_user-add.scss');
           }
         }
       }
+      // Control Care behavior
+      $scope.controlCare();
     });
 
     $scope.$watch('wizard.current.step', function () {
@@ -986,6 +984,11 @@ require('./_user-add.scss');
           $scope.validateDnForUser();
         }
       }
+    });
+
+    $scope.$watch('radioStates.msgRadio', function () {
+      // Control Care behavior
+      $scope.controlCare();
     });
 
     $scope.validateDnForUser = function () {
