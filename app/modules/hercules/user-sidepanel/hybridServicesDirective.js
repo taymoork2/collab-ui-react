@@ -87,7 +87,7 @@
         if (services) {
           _.forEach(vm.extensions, function (extension) {
             extension.enabled = ServiceDescriptor.filterEnabledServices(services).some(function (service) {
-              return extension.id === service.id;
+              return extension.id === service.id && extension.id !== "squared-fusion-gcal";
             });
             extension.isSetup = extension.enabled;
 
