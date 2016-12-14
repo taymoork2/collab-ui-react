@@ -135,6 +135,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     spyOn(CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
     spyOn(CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
     spyOn(Notification, 'success');
+    spyOn(Notification, 'errorWithTrackingId');
     spyOn(LogMetricsService, 'logMetrics').and.callFake(function () {});
     $stateParams = {
       template: undefined,
@@ -614,6 +615,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
 
       expect(controller.saveCTErrorOccurred).toBeTruthy();
       expect(LogMetricsService.logMetrics).not.toHaveBeenCalled();
+      expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String));
     });
 
     it("should submit chat template successfully", function () {
