@@ -164,7 +164,7 @@
 
     // Update Customer Admin Email and send welcome email
     function updateCustomerAdminEmail() {
-      HelpdeskService.editAdminEmail(vm.orderUuid, vm.customerAdminEmail, false)
+      HelpdeskService.editAdminEmail(vm.orderUuid, vm.customerAdminEmail, true)
         .then(function () {
           Notification.success('helpdesk.editAdminEmailSuccess');
           vm.oldcustomerAdminEmail = vm.customerAdminEmail;
