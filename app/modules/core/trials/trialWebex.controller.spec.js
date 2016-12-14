@@ -1,4 +1,4 @@
-/* globals $controller, $q, $rootScope, Orgservice, TrialWebexCtrl, TrialWebexService, TrialTimeZoneService, TrialService */
+/* globals $controller, $q, $rootScope, Analytics, Orgservice, TrialWebexCtrl, TrialWebexService, TrialTimeZoneService, TrialService */
 
 'use strict';
 
@@ -20,7 +20,7 @@ describe('Controller: Trial Webex', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(function () {
-    bard.inject(this, '$controller', '$q', '$rootScope', 'Orgservice', 'TrialWebexService', 'TrialTimeZoneService', 'TrialService');
+    bard.inject(this, '$controller', '$q', '$rootScope', 'Analytics', 'Orgservice', 'TrialWebexService', 'TrialTimeZoneService', 'TrialService');
   });
 
   beforeEach(function () {
@@ -46,6 +46,7 @@ describe('Controller: Trial Webex', function () {
     });
 
     spyOn(Orgservice, 'getOrg');
+    spyOn(Analytics, 'trackTrialSteps');
 
     initController();
   });

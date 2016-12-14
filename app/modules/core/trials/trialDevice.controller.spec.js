@@ -1,4 +1,4 @@
-/* globals $controller, $httpBackend, $q, $rootScope, FeatureToggleService, Notification, Orgservice, TrialDeviceController, TrialCallService, TrialDeviceService, TrialRoomSystemService*/
+/* globals $controller, $httpBackend, $q, $rootScope, Analytics, FeatureToggleService, Notification, Orgservice, TrialDeviceController, TrialCallService, TrialDeviceService, TrialRoomSystemService*/
 
 'use strict';
 
@@ -33,7 +33,7 @@ describe('Controller: TrialDeviceController', function () {
       .respond({});
     spyOn(Orgservice, 'getOrg');
     limitData = TrialDeviceService.getDeviceLimit();
-
+    spyOn(Analytics, 'trackTrialSteps');
     initController();
   });
 
