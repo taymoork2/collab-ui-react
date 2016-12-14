@@ -910,6 +910,13 @@ describe('Controller: HuronSettingsCtrl', function () {
         expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
       });
 
+      it('test loadPreferredLanguageOptions should load default & additional languages', function () {
+        controller.loadPreferredLanguageOptions();
+        $scope.$apply();
+        var filteredLanguage = _.find(controller.preferredLanguageOptions, { 'value': 'es_ES' });
+        expect(filteredLanguage).toBeDefined();
+      });
+
       it('should not update preferred language when preferred language selection did not change', function () {
         var defaultLanguage = {
           label: 'English (United States)',
