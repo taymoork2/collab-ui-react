@@ -784,7 +784,7 @@
 
     FeatureToggleService.supports(FeatureToggleService.features.avrilVoicemaill1249)
     .then(function (response) {
-      if (response) {
+      if (response && vm.voicemailAvrilCustomer) {
         vm.companyVoicemailSelection = [{
           className: 'row collapse-both voicemail-switch-width',
           fieldGroup: [{
