@@ -39,6 +39,8 @@
       getAccount: getAccount,
       getOrder: getOrder,
       getEmailStatus: getEmailStatus,
+      hasBounceDetails: hasBounceDetails,
+      clearBounceDetails: clearBounceDetails,
       getLatestEmailEvent: getLatestEmailEvent,
       unixTimestampToUTC: unixTimestampToUTC,
     };
@@ -137,7 +139,7 @@
 
     function getCorrectedDisplayName(user) {
       var displayName = '';
-      if (user.name != null) {
+      if (user.name !== null) {
         displayName = user.name.givenName ? user.name.givenName : '';
         displayName += user.name.familyName ? ' ' + user.name.familyName : '';
       }
@@ -535,6 +537,16 @@
       return $http
         .get(urlBase + "email?email=" + encodeURIComponent(email))
         .then(extractItems);
+    }
+
+    function hasBounceDetails(email) {
+      return $http
+        .get(urlBase + "email/bounces?email=" + encodeURIComponent(email));
+    }
+
+    function clearBounceDetails(email) {
+      return $http
+        .delete(urlBase + "email/bounces?email=" + encodeURIComponent(email));
     }
 
     // Convert Date from seconds to UTC format

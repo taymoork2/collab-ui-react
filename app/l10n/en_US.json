@@ -5905,10 +5905,13 @@
     "editAdminEmailFailure": "Failed to update admin email.",
     "userStatusEventLog": "User Status Event Log",
     "emailStatus": "Email Status",
+    "clearBounce": "Clear Bounce",
+    "clearBounceSuccess": "Bounce cleared successfully. Try resending invite.",
     "emailStatuses": {
       "accepted": "Pending Delivery",
       "delivered": "Delivered",
       "failed": "Failed",
+      "bounced": "Bounced",
       "rejected": "Rejected",
       "unsubscribed": "Unsubscribed",
       "tooltips": {

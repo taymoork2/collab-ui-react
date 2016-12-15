@@ -8,6 +8,10 @@
   /* @ngInject */
   function HelpdeskUserController($modal, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, FusionUtils) {
     var vm = this;
+    var PROBLEM_STATE = {
+      LOADING: 'loading',
+      BOUNCED: 'bounced',
+    };
     if ($stateParams.user) {
       vm.userId = $stateParams.user.id;
       vm.orgId = $stateParams.user.organization.id;
@@ -36,6 +40,8 @@
     vm.supportsExtendedInformation = false;
     vm.cardsAvailable = false;
     vm.hasEmailStatus = hasEmailStatus;
+    vm.hasEmailProblem = hasEmailProblem;
+    vm.clear = clear;
     vm._helpers = {
       notifyError: notifyError
     };
@@ -171,8 +177,77 @@
       return (body ? header + '<br />' + body : header);
     }
 
+    function clear(email, origProblemState) {
+      // default to 'bounced' for now (since we don't support 'unsubscribed' or 'complained' yet)
+      origProblemState = origProblemState || PROBLEM_STATE.BOUNCED;
+
+      // determine which delete function to use
+      // - currently as of 2016-12-15, we only support clearing 'bounced' state
+      var clearFn;
+      switch (origProblemState) {
+        case PROBLEM_STATE.BOUNCED:
+          clearFn = HelpdeskService.clearBounceDetails;
+          break;
+        default:
+          break;
+      }
+
+      // set to loading state
+      vm.user.lastEmailStatus.problemState = PROBLEM_STATE.LOADING;
+
+      // attempt delete, update the state, and notify
+      return clearFn(email)
+        .then(function () {
+          vm.user.lastEmailStatus.problemState = null;
+          Notification.success('helpdesk.clearBounceSuccess');
+        })
+        .catch(function (response) {
+          vm.user.lastEmailStatus.problemState = origProblemState;
+          vm._helpers.notifyError(response);
+        });
+    }
+
     function hasEmailStatus() {
-      return !!_.get(vm, 'user.lastEmailStatus.displayStatus');
+      return !!_.get(vm, 'user.lastEmailStatus');
+    }
+
+    function hasEmailProblem() {
+      return !!_.get(vm, 'user.lastEmailStatus.problemState');
+    }
+
+    function refreshEmailStatus(email) {
+      var lastEmailStatus = {};
+
+      // notes:
+      // - even though we retrieve user details from 'getUser()', we fetch a user's email
+      //   status separately (it's also managed by a separate end-point anyways)
+      return HelpdeskService.getLatestEmailEvent(email)
+        .then(function (emailEvent) {
+          var eventType = _.get(emailEvent, 'event');
+          if (eventType === 'failed') {
+            // fetch from bounces endpoint and update state
+            // - always pass original email event payload down the chain regardless
+            return HelpdeskService.hasBounceDetails(email)
+              .then(function () {
+                lastEmailStatus.problemState = PROBLEM_STATE.BOUNCED;
+                return emailEvent;
+              })
+              .catch(function () {
+                return emailEvent;
+              });
+          }
+          return emailEvent;
+        })
+        .then(function (emailEvent) {
+          var displayStatus = getDisplayStatus(emailEvent);
+          var toolTipHtml = mkTooltipHtml(emailEvent);
+          lastEmailStatus.displayStatus = displayStatus;
+          lastEmailStatus.toolTipHtml = toolTipHtml;
+        })
+        .catch(vm._helpers.notifyError)
+        .finally(function () {
+          vm.user.lastEmailStatus = lastEmailStatus;
+        });
     }
 
     function initUserView(user) {
@@ -180,20 +255,6 @@
       vm.resendInviteEnabled = _.some(user.statuses, function (_status) {
         return /helpdesk.userStatuses..*-pending$/.test(_status);
       });
-
-      // notes:
-      // - even though we retrieve user details from 'getUser()', we fetch a user's email
-      //   status separately (it's also managed by a separate end-point anyways)
-      HelpdeskService.getLatestEmailEvent(user.userName)
-        .then(function (emailEvent) {
-          var displayStatus = getDisplayStatus(emailEvent);
-          var toolTipHtml = mkTooltipHtml(emailEvent);
-          vm.user.lastEmailStatus = {
-            displayStatus: displayStatus,
-            toolTipHtml: toolTipHtml,
-          };
-        })
-        .catch(vm._helpers.notifyError);
 
       FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)
         .then(function (isSupported) {
@@ -218,6 +279,8 @@
         });
 
       vm.userStatusesAsString = getUserStatusesAsString(vm);
+
+      refreshEmailStatus(user.userName);
 
       vm.messageCard = HelpdeskCardsUserService.getMessageCardForUser(user);
       vm.meetingCard = HelpdeskCardsUserService.getMeetingCardForUser(user);
