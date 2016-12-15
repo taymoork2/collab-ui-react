@@ -1,32 +1,47 @@
 'use strict';
 
 describe('controller: DeleteServiceCtrl', function () {
-  var $controller, $q, $scope, controller, GSSService;
+  var $controller, $q, $scope, $state, $stateParams, controller, GSSService;
+  var testData = {
+    deleteCommand: 'DELETE',
+    serviceForDelete: {
+      serviceId: 'testServiceId'
+    }
+  };
 
   beforeEach(angular.mock.module('GSS'));
-  beforeEach(angular.mock.module('Core'));
+  afterEach(destructDI);
+  afterAll(function () {
+    testData = undefined;
+  });
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies(_$controller_, _$q_, _$rootScope_, _GSSService_) {
+  function dependencies(_$controller_, _$q_, _$rootScope_, _$state_, _$stateParams_, _GSSService_) {
     $controller = _$controller_;
     $q = _$q_;
     $scope = _$rootScope_.$new();
+    $state = _$state_;
+    $stateParams = _$stateParams_;
     GSSService = _GSSService_;
+  }
+
+  function destructDI() {
+    $controller = $q = $scope = $state = $stateParams = controller = GSSService = undefined;
   }
 
   function initSpies() {
     spyOn(GSSService, 'deleteService').and.returnValue($q.when());
+    spyOn($state, 'go');
+    spyOn($scope, '$emit').and.callThrough();
   }
 
   function initController() {
     controller = $controller('DeleteServiceCtrl', {
-      $modalInstance: {
-        close: sinon.stub()
-      },
-      theService: {},
       $scope: $scope,
+      $state: $state,
+      $stateParams: $stateParams,
       GSSService: GSSService
     });
 
@@ -34,7 +49,7 @@ describe('controller: DeleteServiceCtrl', function () {
   }
 
   it('isValid true, with right confirm text', function () {
-    controller.confirmText = 'DELETE';
+    controller.confirmText = testData.deleteCommand;
 
     expect(controller.isValid()).toBe(true);
   });
@@ -44,10 +59,16 @@ describe('controller: DeleteServiceCtrl', function () {
   });
 
   it('deleteService isValid true, call GSSService.deleteService', function () {
-    controller.confirmText = 'DELETE';
+    controller.confirmText = testData.deleteCommand;
+    controller.service = testData.serviceForDelete;
 
     controller.deleteService();
     expect(GSSService.deleteService).toHaveBeenCalled();
+
+    $scope.$digest();
+    expect($scope.$emit).toHaveBeenCalledWith('serviceDeleted');
+
+    expect($state.go).toHaveBeenCalledWith('^');
   });
 
   it('deleteService isValid false, don\'t call GSSService.deleteService', function () {

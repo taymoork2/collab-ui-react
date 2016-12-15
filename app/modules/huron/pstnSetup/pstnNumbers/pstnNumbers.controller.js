@@ -547,7 +547,6 @@
     vm.unsavedTokens = [];
     vm.validCount = 0;
     vm.invalidCount = 0;
-    vm.tollFreeNumberCount = 0;
     vm.tokenfieldId = 'pstn-port-numbers';
 
     vm.tokenoptions = {
@@ -575,9 +574,6 @@
       if (isTokenInvalid(e.attrs.value)) {
         angular.element(e.relatedTarget).addClass('invalid');
         e.attrs.invalid = true;
-        if (TelephoneNumberService.isTollFreeNumber(e.attrs.value)) {
-          vm.tollFreeNumberCount++;
-        }
       } else {
         vm.validCount++;
       }
@@ -589,7 +585,6 @@
 
     function isTokenInvalid(value) {
       return !TelephoneNumberService.validateDID(value) ||
-        TelephoneNumberService.isTollFreeNumber(value) ||
         _.includes(DidService.getDidList(), value);
     }
 
@@ -610,7 +605,6 @@
       // reset valid and list before setTokens
       vm.validCount = 0;
       vm.invalidCount = 0;
-      vm.tollFreeNumberCount = 0;
       DidService.clearDidList();
       angular.element('#' + vm.tokenfieldId).tokenfield('setTokens', tmpDids);
     }

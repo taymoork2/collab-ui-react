@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$dismiss()" id="closeManageUsers">
+  <button type="button" class="close" ng-click="umoc.cancelModal()" id="closeManageUsers">
     <span class="sr-only" translate="common.close"></span>
   </button>
   <h3 class="modal-title" translate="usersPage.manageUsers"></h3>
@@ -56,6 +56,6 @@
 </div>
 
 <div class="modal-footer">
-  <button type="button" id="btnClear" class="btn" ng-click="$dismiss()"><span translate="common.cancel"></span></button>
+  <button type="button" id="btnClear" class="btn" ng-click="umoc.cancelModal()"><span translate="common.cancel"></span></button>
   <button type="button" class="btn btn--primary" ng-click="umoc.onNext()"><span translate="common.next"></span></button>
 </div>

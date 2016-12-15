@@ -73,6 +73,7 @@ module.exports = (function makeWebpackConfig() {
   config.sassLoader = {
     sourceComments: true,
     includePaths: [
+      path.resolve('./app'),
       path.resolve('node_modules/bootstrap-sass/assets/stylesheets'),
       path.resolve('node_modules/foundation-sites/scss'),
     ],

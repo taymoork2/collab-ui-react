@@ -16,6 +16,7 @@ describe('controller: UpdateIncidentCtrl', function () {
       impact: 'none',
       message: 'testMessage',
       status: 'investigating',
+      localizedStatus: 'gss.incidentStatus.investigating'
     },
     majorOutageStatus: {
       label: 'gss.componentStatus.majorOutage',
@@ -51,7 +52,10 @@ describe('controller: UpdateIncidentCtrl', function () {
   };
 
   beforeEach(angular.mock.module('GSS'));
-  beforeEach(angular.mock.module('Core'));
+  afterEach(destructDI);
+  afterAll(function () {
+    testData = undefined;
+  });
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(initController);
@@ -68,6 +72,10 @@ describe('controller: UpdateIncidentCtrl', function () {
 
     GSSService = _GSSService_;
     IncidentsService = _IncidentsService_;
+  }
+
+  function destructDI() {
+    $controller = $q = $scope = $state = $stateParams = controller = GSSService = IncidentsService = undefined;
   }
 
   function initSpies() {
@@ -236,5 +244,10 @@ describe('controller: UpdateIncidentCtrl', function () {
   it('hideAffectedComponent, isShowAffectedComponents to be false', function () {
     controller.hideAffectedComponent(testData.message);
     expect(testData.message.isShowAffectedComponents).toBeFalsy();
+  });
+
+  it('getLocalizedIncidentStatus', function () {
+    expect(controller.getLocalizedIncidentStatus(testData.incidentForUpdate.status))
+      .toEqual(testData.incidentForUpdate.localizedStatus);
   });
 });

@@ -10,23 +10,24 @@
     var geminURL = UrlConfig.getGeminiUrl();
     var URL = {
       coutries: geminURL + 'countries',
-      downloadCountryUrl: 'https://hfccap12.qa.webex.com/ccaportal/resources/excel/countries_regions_template.xls', // TODO the backend will provid another link
       updateCallbackGroup: geminURL + 'callbackgroup/',
+      downloadCountryUrl: geminURL + 'callbackgroup/countryTemplate',
       callbackGroup: geminURL + 'callbackgroup/customerId/',
       activityLogs: geminURL + 'activityLogs'
     };
     var service = {
+      getNotes: getNotes,
       moveSite: moveSite,
       postRequest: postRequest,
       getCountries: getCountries,
+      getHistories: getHistories,
       cbgsExportCSV: cbgsExportCSV,
       getCallbackGroups: getCallbackGroups,
       getOneCallbackGroup: getOneCallbackGroup,
       updateCallbackGroup: updateCallbackGroup,
       downloadCountryUrl: URL.downloadCountryUrl,
+      updateCallbackGroupStatus: updateCallbackGroupStatus,
       postNote: postNote,
-      listNotes: listNotes,
-      listActivityLog: listActivityLog
     };
     return service;
 
@@ -42,6 +43,17 @@
       return $http.put(URL.updateCallbackGroup, data).then(extractData);
     }
 
+    function updateCallbackGroupStatus(customerId, ccaGroupId, operation, data) {
+      if (!data) {
+        data = {};
+      }
+      var url = URL.callbackGroup + customerId + '/groupId/' + ccaGroupId + '/status/' + operation;
+      if (operation === 'cancel' || operation === 'decline') {
+        url = URL.callbackGroup + customerId + '/groupId/' + ccaGroupId + '/' + operation;
+      }
+      return $http.put(url, data).then(extractData);
+    }
+
     function getCountries() {
       return $http.get(URL.coutries).then(extractData);
     }
@@ -50,8 +62,8 @@
       return $http.post(URL.callbackGroup + customerId, data).then(extractData);
     }
 
-    function moveSite(customerId, data) {
-      return $http.put(URL.callbackGroup + customerId + '/movesite', data).then(extractData);
+    function moveSite(data) {
+      return $http.put(URL.updateCallbackGroup + 'movesite', data).then(extractData);
     }
 
     function postNote(data) {
@@ -59,13 +71,13 @@
       return $http.post(url, data).then(extractData);
     }
 
-    function listNotes(customerId, ccaGroupId) {
+    function getNotes(customerId, ccaGroupId) {
       var url = URL.activityLogs + '/' + customerId + '/' + ccaGroupId + '/add_note';
       return $http.get(url).then(extractData);
     }
 
-    function listActivityLog(customerId) {
-      var url = URL.activityLogs + '/' + customerId + '/Callback%20Group';
+    function getHistories(customerId, ccaGroupId) {
+      var url = URL.activityLogs + '/' + customerId + '/' + ccaGroupId + '/Callback%20Group';
       return $http.get(url).then(extractData);
     }
 
@@ -110,12 +122,13 @@
       _.forEach(data.callbackGroupSites, function (row, key) {
         oneLine = {};
         if (!key) {
+          var cabte = data.customerAttribute;
           var groupName = data.groupName ? data.groupName : data.customerName;
           groupName = (_.isNumber(groupName) ? '="' + groupName + '"' : groupName);
           oneLine.groupName = groupName;
           oneLine.totalSites = data.totalSites;
           oneLine.status = (data.status ? $translate.instant('gemini.cbgs.field.status.' + data.status) : '');
-          oneLine.customerAttribute = data.customerAttribute;
+          oneLine.customerAttribute = (_.isNumber(cabte) ? '="' + cabte + '"' : cabte);
         } else {
           oneLine.groupName = '';
           oneLine.totalSites = '';

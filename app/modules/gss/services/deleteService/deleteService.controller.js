@@ -6,12 +6,13 @@
     .controller('DeleteServiceCtrl', DeleteServiceCtrl);
 
   /* @ngInject */
-  function DeleteServiceCtrl($modalInstance, theService, GSSService, Notification) {
+  function DeleteServiceCtrl($scope, $state, $stateParams, GSSService, Notification) {
     var vm = this;
     var delConfirmText = 'DELETE';
 
     vm.isValid = isValid;
     vm.deleteService = deleteService;
+    vm.goBack = goBack;
 
     init();
 
@@ -30,23 +31,35 @@
           Notification.success('gss.deleteServiceSucceed', {
             serviceName: vm.serviceName
           });
+
+          notifyServiceDeleted();
+          goBack();
         })
         .catch(function (error) {
-          Notification.errorWithTrackingId(error, 'gss.addServiceFailed', {
+          Notification.errorWithTrackingId(error, 'gss.deleteServiceFailed', {
             serviceName: vm.serviceName
           });
         })
         .finally(function () {
           vm.isLoading = false;
-          $modalInstance.close();
         });
     }
 
     function init() {
       vm.confirmText = '';
-      vm.serviceId = theService.serviceId;
-      vm.serviceName = theService.serviceName;
+      if ($stateParams && $stateParams.service) {
+        vm.serviceId = $stateParams.service.serviceId;
+        vm.serviceName = $stateParams.service.serviceName;
+      }
       vm.isLoading = false;
+    }
+
+    function goBack() {
+      $state.go('^');
+    }
+
+    function notifyServiceDeleted() {
+      $scope.$emit('serviceDeleted');
     }
   }
 })();

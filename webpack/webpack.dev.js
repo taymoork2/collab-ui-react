@@ -13,6 +13,7 @@ const hotMiddlewareScript = 'webpack-hot-middleware/client?timeout=30000';
 // base config
 const devWebpack = {
   entry: {
+    app: [hotMiddlewareScript],
     styles: [hotMiddlewareScript],
   },
   plugins: [

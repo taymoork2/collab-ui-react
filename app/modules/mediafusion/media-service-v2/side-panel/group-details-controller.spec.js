@@ -35,7 +35,26 @@ describe('Controller: GroupDetailsControllerV2', function () {
     };
     $stateParams = {
       cluster: {
-        releaseChannel: "mockedChannel"
+        releaseChannel: "mockedChannel",
+        upgradeSchedule: {
+          scheduleDays: [
+            "sunday",
+            "saturday",
+            "tuesday",
+            "friday",
+            "thursday",
+            "wednesday",
+            "monday"
+          ],
+          scheduleTime: "22:00",
+          scheduleTimeZone: "America/Los_Angeles",
+          moratoria: [],
+          nextUpgradeWindow: {
+            "startTime": "2016-12-06T06:00:50.325Z",
+            "endTime": "2016-12-06T07:00:50.325Z"
+          },
+          url: "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9e-73d9-4460-a668-047162ff1bac/clusters/fa8ea85d-6f7a-43ea-833d-297f62dc3e84/upgradeSchedule"
+        }
       }
     };
     MediaClusterServiceV2 = {
@@ -156,15 +175,24 @@ describe('Controller: GroupDetailsControllerV2', function () {
         targetType: "mf_mgmt",
         upgradeScheduleUrl: "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9…047162ff1bac/clusters/8909455b-3018-44c6-adfd-2840978bb5c1/upgradeSchedule",
         upgradeSchedule: {
-          scheduleDays: ["sunday", "saturday", "tuesday", "wednesday", "thursday", "friday", "monday"],
-          scheduleTime: "03:00",
+          scheduleDays: [
+            "sunday",
+            "saturday",
+            "tuesday",
+            "friday",
+            "thursday",
+            "wednesday",
+            "monday"
+          ],
+          scheduleTime: "22:00",
           scheduleTimeZone: "America/Los_Angeles",
           moratoria: [],
           nextUpgradeWindow: {
-            startTime: "2016-09-20T10:00:53.789Z",
-            endTime: "2016-09-20T11:00:53.789Z"
+            "startTime": "2016-12-06T06:00:50.325Z",
+            "endTime": "2016-12-06T07:00:50.325Z"
           },
-          url: "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9…047162ff1bac/clusters/8909455b-3018-44c6-adfd-2840978bb5c1/upgradeSchedule" },
+          url: "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9e-73d9-4460-a668-047162ff1bac/clusters/fa8ea85d-6f7a-43ea-833d-297f62dc3e84/upgradeSchedule"
+        },
         aggregates: {
           alarms: [],
           state: "running",

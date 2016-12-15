@@ -1,3 +1,5 @@
+require('./_overview.scss');
+
 (function () {
   'use strict';
 
@@ -6,12 +8,15 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasCareFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, SunlightReportService, TrialService, UrlConfig) {
+  function OverviewCtrl($rootScope, $modal, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasCareFeatureToggle, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, SunlightReportService, TrialService, UrlConfig, PstnSetupService) {
     var vm = this;
+
+    var PSTN_TOS_ACCEPT = 'pstn-tos-accept-event';
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
     vm.isCSB = Authinfo.isCSB();
     vm.isDeviceManagement = Authinfo.isDeviceMgmt();
+    vm.orgData = null;
 
     vm.cards = [
       OverviewCardFactory.createMessageCard(),
@@ -28,6 +33,7 @@
     }
 
     vm.notifications = [];
+    vm.pstnToSNotification = null;
     vm.trialDaysLeft = undefined;
     vm.dismissNotification = dismissNotification;
 
@@ -58,25 +64,21 @@
 
       Orgservice.getHybridServiceAcknowledged().then(function (response) {
         if (response.status === 200) {
-           //TODO: Display HDS notification based on feagure toggle only for now
-          if (vm.hasHDSFeatureToggle) {
-            vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
-          }
           _.forEach(response.data.items, function (item) {
             if (!item.acknowledged) {
               if (item.id === Config.entitlements.fusion_cal) {
                 vm.notifications.push(OverviewNotificationFactory.createCalendarNotification());
+              } else if (item.id === Config.entitlements.fusion_gcal && hasGoogleCalendarFeatureToggle) {
+                vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($modal, $state, Orgservice));
               } else if (item.id === Config.entitlements.fusion_uc) {
                 vm.notifications.push(OverviewNotificationFactory.createCallAwareNotification());
               } else if (item.id === Config.entitlements.fusion_ec) {
                 vm.notifications.push(OverviewNotificationFactory.createCallConnectNotification());
               } else if (item.id === Config.entitlements.mediafusion && vm.hasMediaFeatureToggle) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
+              } else if (item.id === Config.entitlements.hds && vm.hasHDSFeatureToggle) {
+                vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
               }
-              //TODO: Switch to using HDS entitlements when are ready in FMS
-              //} else if (item.id === Config.entitlements.hds && vm.hasHDSFeatureToggle) {
-              //  vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
-              //}
             }
           });
           resizeNotifications();
@@ -86,6 +88,13 @@
       });
       Orgservice.getOrg(function (data, status) {
         if (status === 200) {
+          vm.orgData = data;
+          FeatureToggleService.supports(FeatureToggleService.features.huronSimplifiedTrialFlow).then(function (supported) {
+            if (supported) {
+              getTOSStatus();
+            }
+          });
+
           if (!data.orgSettings.sipCloudDomain) {
             vm.notifications.push(OverviewNotificationFactory.createCloudSipUriNotification());
           }
@@ -141,6 +150,28 @@
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.trialDaysLeft = daysLeft;
       });
+    }
+
+    function getTOSStatus() {
+      if (vm.orgData !== null) {
+        PstnSetupService.getCustomerV2(vm.orgData.id).then(function (customer) {
+          if (customer.trial) {
+            PstnSetupService.getCustomerTrialV2(vm.orgData.id).then(function (trial) {
+              if (!_.has(trial, 'acceptedDate')) {
+                vm.pstnToSNotification = OverviewNotificationFactory.createPSTNToSNotification();
+                vm.notifications.push(vm.pstnToSNotification);
+                $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
+              }
+            });
+          }
+        });
+      }
+    }
+
+    function onPstnToSAccept() {
+      if (vm.pstnToSNotification !== null) {
+        dismissNotification(vm.pstnToSNotification);
+      }
     }
 
     function findAnyUrgentUpgradeInHybridServices() {

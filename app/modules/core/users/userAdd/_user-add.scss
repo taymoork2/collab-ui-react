@@ -1,3 +1,8 @@
+@import 'modules/core/setupWizard/planReview/plan-container';
+
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/fonts';
+
 .modal-useradd-dialog {
   width: 900px;
 }
@@ -240,9 +245,6 @@
 }
 
 .warning-icon {
-  @extend .icon;
-  @extend .icon-warning;
-
   margin-right: 12px;
   font-size: 15px;
   color: $brand-warning;
@@ -312,9 +314,6 @@
   }
 
   .plus-icon {
-    @extend .icon;
-    @extend .icon-plus;
-
     border-radius: 50%;
     font-size: 25px;
     margin-left: 10px;
@@ -592,43 +591,11 @@
   .form-control[disabled].select-toggle {
     border: 1px solid $brand-danger;
     background-color: transparent;
-
-    .icon-arrow-down {
-      &::after {
-        // this is the X icon that appears when no DNs are available
-        @extend %icon-error;
-
-        top: 0;
-        left: -12px;
-        position: absolute;
-        font-size: 18px;
-        line-height: 35px;
-        height: 17px;
-        width: 17px;
-        color: $brand-danger;
-      }
-    }
   }
 
   .select-warning .select-toggle {
     border: 1px solid $brand-warning-dark;
     background-color: transparent;
-
-    .icon-arrow-down {
-      &::after {
-        // this is the X icon that appears when no DNs are available
-        @extend %icon-warning;
-
-        top: 0;
-        left: -12px;
-        position: absolute;
-        font-size: 18px;
-        line-height: 35px;
-        height: 17px;
-        width: 17px;
-        color: $brand-warning-dark;
-      }
-    }
   }
 
   .icon-arrow-down {
@@ -662,4 +629,10 @@
 
 .users-upload-results {
   min-height: 0px;
+}
+
+.care-information-text {
+  cursor: default;
+  font-size: 12px;
+  width: auto;
 }

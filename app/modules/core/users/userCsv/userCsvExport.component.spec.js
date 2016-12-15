@@ -24,7 +24,7 @@ describe('crUserCsvExport Component', function () {
 
   function init() {
     this.initModules('Core', 'Huron', 'Sunlight');
-    this.injectDependencies('$componentController', '$scope', '$rootScope', '$timeout', '$q', '$compile', '$modal', '$translate', 'Notification', 'CsvDownloadService');
+    this.injectDependencies('$compile', '$componentController', '$modal', '$q', '$scope', '$rootScope', '$timeout', '$translate', 'Analytics', 'CsvDownloadService', 'Notification');
     initDependencySpies.apply(this);
     initUtils.apply(this);
   }
@@ -36,6 +36,8 @@ describe('crUserCsvExport Component', function () {
     spyOn(this.$modal, 'open').and.returnValue(fakeModal);
     spyOn(this.$translate, 'instant').and.returnValue(TRANSLATED_STRING);
     spyOn(this.$rootScope, '$emit');
+    spyOn(this.Analytics, 'trackAddUsers').and.returnValue(this.$q.when({}));
+
   }
 
   function initUtils() {
@@ -66,6 +68,12 @@ describe('crUserCsvExport Component', function () {
     this.$scope.$apply();
     this.vm.$onInit();
   }
+
+  afterEach(function () {
+    if (this.element) {
+      this.element.remove();
+    }
+  });
 
   beforeEach(init);
 

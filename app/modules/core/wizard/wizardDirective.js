@@ -1,3 +1,5 @@
+require('./_wizard.scss');
+
 (function () {
   'use strict';
 
@@ -391,7 +393,8 @@
       }
 
       // enable/disable skip tab button
-      vm.showSkipTabBtn = (vm.isFirstTime() && vm.current.tab.name === 'addUsers' && vm.isFirstStep());
+      vm.showSkipTabBtn = (vm.isFirstTime() && (vm.current.tab.name === 'addUsers' || vm.current.tab.name === 'careSettings')
+        && vm.isFirstStep());
     }
 
     $scope.$on('wizardNextButtonDisable', function (event, status) {

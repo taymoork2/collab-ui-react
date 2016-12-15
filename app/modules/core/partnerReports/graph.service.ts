@@ -1,3 +1,4 @@
+import { CommonGraphService } from './commonReportServices/commonGraph.service';
 import {
   IActiveUserData,
   ICallMetricsData,
@@ -22,8 +23,8 @@ export class GraphService {
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
+    private CommonGraphService: CommonGraphService,
     private chartColors,
-    private CommonGraphService
   ) {}
 
   // Active User Graph functions

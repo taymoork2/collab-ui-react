@@ -5,7 +5,7 @@
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
       <button class="btn btn--primary add-component-button" type="submit"
-              translate="gss.componentsPage.addComponentTitle"
+              translate="gss.componentsPage.addComponent"
               ng-click="componentsCtrl.addComponent()"></button>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
@@ -17,7 +17,7 @@
       {{component.componentName}}
       <a translate="common.delete" ng-click="componentsCtrl.delComponent(component)"></a>
       <a translate="common.edit" ng-click="componentsCtrl.updateComponent(component)"></a>
-      <ul ng-hide="hide">
+      <ul collapse="hide">
         <li ng-repeat="subComponent in component.components">
           <span class="icon icon-circle component-status-{{subComponent.status}}"></span>
           {{subComponent.componentName}}

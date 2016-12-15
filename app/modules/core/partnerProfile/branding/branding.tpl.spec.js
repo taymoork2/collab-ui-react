@@ -11,6 +11,13 @@ describe('Template: branding', function () {
   var ALLOW_LOGO_CHECKBOX = '#allowCustomerLogo';
   var USE_LATEST_WEBEX_CHECKBOX = '#useLatestWbxVersion';
 
+  afterEach(function () {
+    if (view) {
+      view.remove();
+    }
+    view = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));

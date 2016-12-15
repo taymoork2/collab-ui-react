@@ -1,3 +1,4 @@
+import './_settings.scss';
 import { SettingSection } from './settingSection';
 import { AuthenticationSetting } from './authenticationSetting.component';
 import { BrandingSetting } from './brandingSetting.component';

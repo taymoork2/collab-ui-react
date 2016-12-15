@@ -280,48 +280,12 @@ describe('Service: CsdmDataModelService', function () {
       testDeleteDeviceIsReflectedInDevAndPlaceList(huronDevice2Url, pWithHuronDevice2Url);
     });
 
-    it('change device name is reflected in device list and place list', function () {
+    it('change device name is not possible', function () {
       executeGetCallsAndInitPromises();
       var deviceUrlToUpdate = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
       var originalName = "test device 2";
       var newDeviceName = "This Is The New name !!";
-      var promiseExecuted;
-
-      CsdmDataModelService.getDevicesMap().then(function (devices) {
-
-        CsdmDataModelService.getPlacesMap().then(function (places) {
-
-          var patchedDevice = JSON.parse(JSON.stringify(places[pWithDeviceUrl].devices[deviceUrlToUpdate]));
-          patchedDevice.displayName = newDeviceName;
-          $httpBackend.expectPATCH(deviceUrlToUpdate).respond(patchedDevice);
-
-          expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].displayName).toBe(originalName);
-
-          CsdmDataModelService.updateItemName(devices[deviceUrlToUpdate], newDeviceName).then(function (updatedDevice) {
-
-            expect(updatedDevice.displayName).toEqual(newDeviceName);
-            expect(devices[deviceUrlToUpdate].displayName).toEqual(newDeviceName);
-            expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].displayName).toEqual(newDeviceName);
-            expect(places[pWithDeviceUrl].displayName).toEqual(newDeviceName);
-
-            promiseExecuted = "YES";
-          });
-        });
-      });
-
-      $httpBackend.flush();
-      expect(promiseExecuted).toBeTruthy();
-    });
-
-    it('failing to change device name is not reflected in device list and place list', function () {
-      executeGetCallsAndInitPromises();
-      var deviceUrlToUpdate = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f';
-
-      var originalName = "test device 2";
-      var newDeviceName = "This Could have been The New name !!";
-      var promiseExecuted;
-
-      $httpBackend.expectPATCH(deviceUrlToUpdate).respond(403);
+      var promiseRejected;
 
       CsdmDataModelService.getDevicesMap().then(function (devices) {
 
@@ -329,17 +293,16 @@ describe('Service: CsdmDataModelService', function () {
 
           expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].displayName).toBe(originalName);
 
-          CsdmDataModelService.updateItemName(devices[deviceUrlToUpdate], newDeviceName).catch(function () {
-
-            expect(devices[deviceUrlToUpdate].displayName).toEqual(originalName);
-            expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].displayName).toEqual(originalName);
-            promiseExecuted = "YES";
+          CsdmDataModelService.updateItemName(devices[deviceUrlToUpdate], newDeviceName).then(function () {
+            fail('Should be rejected');
+          }).catch(function () {
+            promiseRejected = "YES";
           });
         });
       });
 
-      $httpBackend.flush();
-      expect(promiseExecuted).toBeTruthy();
+      $rootScope.$digest();
+      expect(promiseRejected).toBeTruthy();
     });
 
     function testAddTagIsReflectedInDevAndPlaceList(deviceUrlToUpdate, placeUrl) {
@@ -628,15 +591,16 @@ describe('Service: CsdmDataModelService', function () {
       expect(expectCall).toBe(true);
     });
 
-    it('get should return an updated huron item and update the model when a device was activated', function () {
+    it('get should return an updated item and update the model when a device was activated', function () {
 
-      var expectCall;
+      var expectCall, changeNotification;
       var placeToUpdateUrl = huronPlaceWithoutDeviceUrl;
-      var placeToUpdateId = huronPlaceWithoutDeviceUrl.split('/').slice(-1)[0];
-      var placeToFindDevicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices/?cisUuid=' + placeToUpdateId + '&type=huron';
 
-      var phonesForPlace = { 'http://new/device': { 'url': 'http://new/device' } };
-      $httpBackend.expectGET(placeToFindDevicesUrl).respond(phonesForPlace);
+      var updatedPlace = {
+        'url': huronPlaceWithoutDeviceUrl,
+        'devices': { 'http://new/device': { 'url': 'http://new/device' } }
+      };
+      $httpBackend.expectGET(placeToUpdateUrl).respond(updatedPlace);
 
       CsdmDataModelService.getPlacesMap().then(function (places) {
         expect(Object.keys(places).length).toBe(initialPlaceCount);
@@ -645,9 +609,12 @@ describe('Service: CsdmDataModelService', function () {
         expect(Object.keys(placeToUpdate.devices)).toHaveLength(0);
         expect(initialDeviceMap['http://new/device']).toBeUndefined();
         expect(Object.keys(initialDeviceMap)).not.toContain('http://new/device');
+        CsdmDataModelService.subscribeToChanges(testScope, function () {
+          changeNotification = "YES";
+        });
 
-        CsdmDataModelService.reloadItem(placeToUpdate).then(function () {
-
+        CsdmDataModelService.reloadItem(placeToUpdate).then(function (returnedPlace) {
+          expect(Object.keys(returnedPlace.devices)).toHaveLength(1);
           expect(Object.keys(placeToUpdate.devices)).toHaveLength(1);
 
           expect(Object.keys(initialDeviceMap)).toContain('http://new/device');
@@ -657,6 +624,75 @@ describe('Service: CsdmDataModelService', function () {
       });
       $httpBackend.flush();
       expect(expectCall).toBe(true);
+      expect(changeNotification).toBeTruthy();
+    });
+
+    it('get should return an updated item and update the model when place was renamed', function () {
+
+      var expectCall, changeNotification;
+      var placeToUpdateUrl = huronPlaceWithoutDeviceUrl;
+
+      var newDisplayName = 'New display name! Wow!';
+      var updatedPlace = {
+        'displayName': newDisplayName,
+        'url': huronPlaceWithoutDeviceUrl
+      };
+      $httpBackend.expectGET(placeToUpdateUrl).respond(updatedPlace);
+
+      CsdmDataModelService.getPlacesMap().then(function (places) {
+        expect(Object.keys(places).length).toBe(initialPlaceCount);
+        var placeToUpdate = places[placeToUpdateUrl];
+
+        CsdmDataModelService.subscribeToChanges(testScope, function () {
+          changeNotification = "YES";
+        });
+
+        CsdmDataModelService.reloadItem(placeToUpdate).then(function (returnedPlace) {
+          expect(returnedPlace.displayName).toBe(newDisplayName);
+          expect(placeToUpdate.displayName).toBe(newDisplayName);
+
+          expectCall = true;
+        });
+      });
+      $httpBackend.flush();
+      expect(expectCall).toBe(true);
+      expect(changeNotification).toBeTruthy();
+    });
+
+    it('get should return an updated item and update the model when a device was deleted', function () {
+
+      var expectCall, changeNotification;
+      var placeToUpdateUrl = pWithDeviceUrl;
+
+      var updatedPlace = {
+        'url': pWithDeviceUrl,
+        'devices': {}
+      };
+      $httpBackend.expectGET(placeToUpdateUrl).respond(updatedPlace);
+
+      CsdmDataModelService.getPlacesMap().then(function (places) {
+        expect(Object.keys(places).length).toBe(initialPlaceCount);
+        var placeToUpdate = places[placeToUpdateUrl];
+
+        expect(Object.keys(placeToUpdate.devices).length).toBeGreaterThan(0);
+        expect(initialDeviceMap[device1Url]).toBeDefined();
+        expect(Object.keys(initialDeviceMap)).toContain(device1Url);
+        CsdmDataModelService.subscribeToChanges(testScope, function () {
+          changeNotification = "YES";
+        });
+
+        CsdmDataModelService.reloadItem(placeToUpdate).then(function (returnedPlace) {
+          expect(Object.keys(returnedPlace.devices)).toHaveLength(0);
+          expect(Object.keys(placeToUpdate.devices)).toHaveLength(0);
+
+          expect(Object.keys(initialDeviceMap)).not.toContain(device1Url);
+
+          expectCall = true;
+        });
+      });
+      $httpBackend.flush();
+      expect(expectCall).toBe(true);
+      expect(changeNotification).toBeTruthy();
     });
 
     it('delete should remove place from place list', function () {

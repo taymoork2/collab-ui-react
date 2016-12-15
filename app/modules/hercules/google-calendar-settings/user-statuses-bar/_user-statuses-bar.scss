@@ -1,0 +1,10 @@
+@import 'styles/toolkit/colors';
+
+$user-statuses-bar-height: 7.25rem;
+
+user-statuses-bar {
+  display: flex;
+  padding: 2rem;
+  border-bottom: 1px solid $gray-light-3;
+  height: $user-statuses-bar-height;
+}

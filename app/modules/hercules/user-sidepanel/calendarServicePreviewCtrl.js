@@ -14,7 +14,7 @@
 
     $scope.currentUser = $stateParams.currentUser;
     $scope.isInvitePending = Userservice.isInvitePending($scope.currentUser);
-    $scope.localizedServiceName = $translate.instant('hercules.serviceNames..squared-fusion-cal');
+    $scope.localizedServiceName = $translate.instant('hercules.serviceNames.squared-fusion-cal');
     $scope.localizedConnectorName = $translate.instant('hercules.connectorNames.squared-fusion-cal');
     $scope.localizedOnboardingWarning = $translate.instant('hercules.userSidepanel.warningInvitePending', {
       ServiceName: $scope.localizedServiceName
@@ -64,9 +64,7 @@
     };
 
     var isSetup = function (id) {
-      var extension = _.find($stateParams.extensions, function (extension) {
-        return extension.id === id;
-      });
+      var extension = _.find($stateParams.extensions, { id: id });
       return extension ? extension.isSetup : false;
     };
 

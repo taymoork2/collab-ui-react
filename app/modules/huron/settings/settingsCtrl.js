@@ -19,7 +19,6 @@
         return enabled ? (license.licenseType !== Config.licenseTypes.SHARED_DEVICES || license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
       }).length > 0;
     };
-    vm.bulkVoicemailEnable = false;
     FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
       vm.showRegionAndVoicemail = vm.isRegionAndVoicemail(pstnEnabled);
     });
@@ -32,6 +31,10 @@
       label: $translate.instant('languages.englishAmerican'),
       value: 'en_US'
     };
+    var DEFAULT_COUNTRY = {
+      label: $translate.instant('countries.unitedStates'),
+      value: 'US'
+    };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
     var DEFAULT_EXT_LEN = '4';
@@ -40,6 +43,7 @@
     var DEFAULT_TO = '5999';
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
+    var VOICE_VOICEMAIL_AVRIL = 'DEMO_STANDARD';
     var INTERNATIONAL_DIALING = 'DIALINGCOSTAG_INTERNATIONAL';
     var COMPANY_CALLER_ID_TYPE = 'Company Caller ID';
     var COMPANY_NUMBER_TYPE = 'Company Number';
@@ -48,6 +52,8 @@
     var savedModel = null;
     var errors = [];
 
+    vm.voicemailAvrilCustomer = false;
+    vm.isAvrilVoiceEnabled = false;
     vm.init = init;
     vm.save = save;
     vm.resetSettings = resetSettings;
@@ -58,6 +64,7 @@
     vm._voicemailEnabledWatcher = _voicemailEnabledWatcher;
     vm._buildTimeZoneOptions = _buildTimeZoneOptions;
     vm._buildPreferredLanguageOptions = _buildPreferredLanguageOptions;
+    vm._buildDefaultCountryOptions = _buildDefaultCountryOptions;
     vm._buildServiceNumberOptions = _buildServiceNumberOptions;
     vm._buildVoicemailNumberOptions = _buildVoicemailNumberOptions;
     vm._buildCallerIdOptions = _buildCallerIdOptions;
@@ -74,6 +81,7 @@
     vm.timeZoneOptions = [];
     vm.timeZoneInputPlaceholder = $translate.instant('serviceSetupModal.searchTimeZone');
     vm.preferredLanguageOptions = [];
+    vm.defaultCountryOptions = [];
     vm.unassignedExternalNumbers = [];
     vm.allExternalNumbers = [];
     vm.extensionLengthChanged = false;
@@ -102,7 +110,8 @@
         emergencyCallBackNumber: undefined,
         uuid: undefined,
         voicemailPilotNumberGenerated: 'false',
-        preferredLanguage: DEFAULT_LANG
+        preferredLanguage: DEFAULT_LANG,
+        defaultCountry: DEFAULT_COUNTRY
       },
       numberRanges: [],
       previousLength: DEFAULT_EXT_LEN,
@@ -135,6 +144,10 @@
 
     PstnSetupService.getCustomer(Authinfo.getOrgId()).then(function () {
       vm.isTerminusCustomer = true;
+    });
+
+    FeatureToggleService.getCustomerHuronToggle(Authinfo.getOrgId(), FeatureToggleService.features.avrilVmEnable).then(function (result) {
+      vm.voicemailAvrilCustomer = result;
     });
 
     vm.validations = {
@@ -580,22 +593,6 @@
         }
       }
     }];
-    vm.internationalDialingSelection = [{
-      type: 'switch',
-      key: 'internationalDialingEnabled',
-      className: 'international-dialing',
-      templateOptions: {
-        label: $translate.instant('internationalDialing.internationalDialing'),
-        description: $translate.instant('internationalDialing.internationalDialingDesc')
-      },
-      expressionProperties: {
-        'templateOptions.isDisabled': function () {
-          // if the customer is in trial and doesn't have the feature toggle
-          // huronInternationalDialingTrialOverride then show toggle as disabled
-          return InternationalDialing.isDisableInternationalDialing();
-        }
-      }
-    }];
 
     vm.emergencyServiceAddressSelection = [{
       key: 'showServiceAddress',
@@ -910,6 +907,13 @@
             } else if (siteData.disableVoicemail) {
               vm.model.site.voicemailPilotNumber = undefined;
             }
+
+            if (vm.voicemailAvrilCustomer && vm.isAvrilVoiceEnabled) {
+              var setupSites = ServiceSetup.sites[0];
+              ServiceSetup.updateAvrilSite(setupSites.uuid, setupSites.siteSteeringDigit,
+                    setupSites.siteCode, setupSites.timeZone,
+                     setupSites.extensionLength, setupSites.voicemailPilotNumber, siteData);
+            }
           })
           // in the case when voicemail is getting enabled, reload voicemail info such as (timezone and vm2email settings)
           // needs to be done in order, usertemplates > messageactions
@@ -953,6 +957,10 @@
 
       if (vm.model.site.preferredLanguage.value !== savedModel.site.preferredLanguage.value) {
         siteData.preferredLanguage = vm.model.site.preferredLanguage.value;
+      }
+
+      if (vm.model.site.defaultCountry.value !== savedModel.site.defaultCountry.value) {
+        siteData.country = vm.model.site.defaultCountry.value;
       }
 
       if (vm.model.site.extensionLength !== savedModel.site.extensionLength) {
@@ -1015,7 +1023,12 @@
     function updateCustomerServicePackage(companyVoicemailNumber) {
       var customer = {};
       if (companyVoicemailNumber && _.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
-        customer.servicePackage = DEMO_STANDARD;
+        if (vm.voicemailAvrilCustomer) {
+          customer.servicePackage = VOICE_VOICEMAIL_AVRIL;
+          vm.isAvrilVoiceEnabled = true;
+        } else {
+          customer.servicePackage = DEMO_STANDARD;
+        }
         customer.voicemail = {
           pilotNumber: companyVoicemailNumber
         };
@@ -1094,13 +1107,18 @@
                 siteDialDigit: site.siteSteeringDigit,
                 voicemailPrefixLabel: site.siteSteeringDigit.concat(site.siteCode)
               };
-              vm.model.site.extensionLength = vm.model.previousLength = site.extensionLength;
+              vm.model.site.extensionLength = vm.model.previousLength = vm.previousModel.site.extensionLength = site.extensionLength;
               vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
                 return timezone.id === site.timeZone;
               });
               if (site.preferredLanguage) {
                 vm.model.site.preferredLanguage = _.find(vm.preferredLanguageOptions, function (language) {
                   return language.value === site.preferredLanguage;
+                });
+              }
+              if (site.country) {
+                vm.model.site.defaultCountry = _.find(vm.defaultCountryOptions, function (country) {
+                  return country.value === site.country;
                 });
               }
               vm.model.site.siteCode = site.siteCode;
@@ -1155,6 +1173,13 @@
       return ServiceSetup.getSiteLanguages()
         .then(function (languages) {
           vm.preferredLanguageOptions = _.sortBy(ServiceSetup.getTranslatedSiteLanguages(languages), 'label');
+        });
+    }
+
+    function loadDefaultCountryOptions() {
+      return ServiceSetup.getSiteCountries()
+        .then(function (countries) {
+          vm.defaultCountryOptions = _.sortBy(ServiceSetup.getTranslatedSiteCountries(countries), 'label');
         });
     }
 
@@ -1348,6 +1373,7 @@
             promises.push(loadDialPlan());
             promises.push(loadCallerId());
             promises.push(loadPreferredLanguageOptions());
+            promises.push(loadDefaultCountryOptions());
           }
 
           if (vm.hasVoicemailService) {
@@ -1542,7 +1568,7 @@
       if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled
         && (vm.model.site.siteSteeringDigit.siteDialDigit !== vm.previousModel.site.siteSteeringDigit.siteDialDigit
         || vm.model.site.extensionLength !== vm.previousModel.site.extensionLength
-        || vm.model.site.siteCode !== vm.previousModel.site.siteCode)) {
+        || !_.eq(_.toSafeInteger(vm.model.site.siteCode), _.toSafeInteger(vm.previousModel.site.siteCode)))) {
         var postalCode = [vm.model.site.siteSteeringDigit.siteDialDigit, vm.model.site.siteCode, vm.model.site.extensionLength].join('-');
         return ServiceSetup.updateVoicemailPostalcode(postalCode, vm.voicemailUserTemplate.objectId)
           .catch(function (response) {
@@ -1578,7 +1604,7 @@
       errors = [];
 
       var promises = [];
-      promises.push(enableBulkVmEnableToggle().then(loadCompanyInfo));
+      promises.push(loadCompanyInfo());
       promises.push(loadServiceAddress());
       promises.push(loadExternalNumbers());
       promises.push(enableExtensionLengthModifiable());
@@ -1628,8 +1654,7 @@
           vm.processing = false;
           var existingCompanyVoicemailEnabled = savedModel.companyVoicemail.companyVoicemailEnabled;
           savedModel = angular.copy(vm.model);
-          if (vm.bulkVoicemailEnable &&
-            !existingCompanyVoicemailEnabled &&
+          if (!existingCompanyVoicemailEnabled &&
             savedModel.companyVoicemail.companyVoicemailEnabled) {
             $state.go('users.enableVoicemail');
           }
@@ -1655,6 +1680,7 @@
       vm.model.site.siteCode = savedModel.site.siteCode;
       vm.model.site.timeZone = savedModel.site.timeZone;
       vm.model.site.preferredLanguage = savedModel.site.preferredLanguage;
+      vm.model.site.defaultCountry = savedModel.site.defaultCountry;
       vm.model.site.voicemailPilotNumber = savedModel.site.voicemailPilotNumber;
       vm.model.site.vmCluster = savedModel.site.vmCluster;
       vm.model.site.emergencyCallBackNumber = savedModel.site.emergencyCallBackNumber;
@@ -1803,6 +1829,14 @@
         return vm.preferredLanguageOptions;
       }, function (languages) {
         localScope.to.options = languages;
+      });
+    }
+
+    function _buildDefaultCountryOptions(localScope) {
+      localScope.$watchCollection(function () {
+        return vm.defaultCountryOptions;
+      }, function (countries) {
+        localScope.to.options = countries;
       });
     }
 
@@ -1973,16 +2007,6 @@
           vm.model.companyVoicemail.externalVoicemail = false;
         }
       }
-    }
-
-    function enableBulkVmEnableToggle() {
-      return FeatureToggleService.supports(FeatureToggleService.features.bulkVoicemailEnable).then(function (result) {
-        if (result) {
-          vm.bulkVoicemailEnable = result;
-        }
-      }).catch(function (response) {
-        Notification.errorResponse(response, 'huronSettings.errorGettingBulkVoicemailEnableToggle');
-      });
     }
 
     $scope.$watchCollection(function () {

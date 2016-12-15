@@ -11,7 +11,7 @@
     TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch,
     TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease,
     TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease,
-    TerminusCustomerCarrierDidService, TerminusResellerCarrierService,
+    TerminusCustomerCarrierDidService, TerminusCustomerPortService, TerminusResellerCarrierService,
     TerminusCarrierTollFreeInventoryCount, TerminusCarrierTollFreeInventoryRelease,
     TerminusCarrierTollFreeInventoryReserve, TerminusCarrierTollFreeInventorySearch,
     TerminusCustomerCarrierTollFreeInventoryRelease, TerminusCustomerCarrierTollFreeInventoryReserve,
@@ -39,6 +39,7 @@
     var BLOCK = 'block';
     var ORDER = 'order';
     var PORT = 'port';
+    var TOLL_FREE_NUMBER_PORT = 'tollfree';
     var TOLLFREEBLOCK = 'tollfree_block_value_tbd';
     var TOLLFREEORDER = 'tollfree_order_value_tbd';
     //misc
@@ -55,6 +56,7 @@
       getCustomer: getCustomer,
       getCustomerV2: getCustomerV2,
       getCustomerTrialV2: getCustomerTrialV2,
+      setCustomerTrialV2: setCustomerTrialV2,
       listDefaultCarriers: listDefaultCarriers,
       getCarrierInventory: getCarrierInventory,
       getCarrierTollFreeInventory: getCarrierTollFreeInventory,
@@ -155,6 +157,16 @@
     function getCustomerTrialV2(customerId) {
       return TerminusCustomerTrialV2Service.get({
         customerId: customerId
+      }).$promise;
+    }
+
+    function setCustomerTrialV2(customerId, fname, lname, email) {
+      return TerminusCustomerTrialV2Service.save({
+        customerId: customerId
+      }, {
+        "acceptedFirstName": fname,
+        "acceptedLastName": lname,
+        "acceptedEmail": email
       }).$promise;
     }
 
@@ -359,7 +371,7 @@
       };
       _.forEach(numbers, function (number) {
         var phoneNumberType = TelephoneNumberService.getPhoneNumberType(number);
-        if (phoneNumberType === 'FIXED_LINE_OR_MOBILE') {
+        if (phoneNumberType === 'FIXED_LINE_OR_MOBILE' || phoneNumberType === 'FIXED_LINE') {
           payload.pstn.numbers.push(number);
         } else if (phoneNumberType === 'TOLL_FREE') {
           payload.tollFree.numbers.push(number);
@@ -390,15 +402,36 @@
     }
 
     function portNumbers(customerId, carrierId, numbers) {
+      var promises = [];
+      var tfnNumbers = [];
+
+      tfnNumbers = _.remove(numbers, function (number) {
+        return TelephoneNumberService.checkPhoneNumberType(number) === 'TOLL_FREE';
+      });
+
+      var tfnPayload = {
+        numbers: tfnNumbers,
+        numberType: TOLL_FREE_NUMBER_PORT
+      };
+
       var payload = {
         numbers: numbers
       };
 
-      return TerminusCustomerCarrierDidService.save({
-        customerId: customerId,
-        carrierId: carrierId,
-        type: PORT
-      }, payload).$promise;
+      if (numbers.length > 0) {
+        promises.push(TerminusCustomerCarrierDidService.save({
+          customerId: customerId,
+          carrierId: carrierId,
+          type: PORT
+        }, payload).$promise);
+      }
+      if (tfnNumbers.length > 0) {
+        promises.push(TerminusCustomerPortService.save({
+          customerId: customerId
+        }, tfnPayload).$promise);
+      }
+
+      return $q.all(promises);
     }
 
     function listPendingOrders(customerId) {

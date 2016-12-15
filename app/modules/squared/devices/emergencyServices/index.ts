@@ -11,6 +11,7 @@ export interface IEmergencyServicesData {
   emergency: IEmergency;
   currentDevice: IDevice;
   stateOptions: IState[];
+  staticNumber: boolean;
 }
 
 export interface IEmergencyServicesStateParams {
@@ -19,6 +20,7 @@ export interface IEmergencyServicesStateParams {
   currentNumber: string;
   status: string;
   huronDeviceService: IHuronService;
+  staticNumber: boolean;
 }
 
 export interface IDevice {

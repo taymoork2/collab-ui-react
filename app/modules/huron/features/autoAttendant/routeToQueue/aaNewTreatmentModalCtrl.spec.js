@@ -29,7 +29,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     },
     {
       index: 6,
-      label: 30,
+      label: 30
     },
     {
       index: 5,
@@ -59,15 +59,19 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   var musicOnHold = 'musicOnHold';
   var initialAnnouncement = 'initialAnnouncement';
   var periodicAnnouncement = 'periodicAnnouncement';
+  var fallback = 'fallback';
   var playAction = {};
   var iaAction = {};
   var paAction = {};
+  var fbAction = {};
+  var maxWaitTime = 15;
   var schedule = 'openHours';
   var index = '0';
   var menuId = 'menu0';
   var keyIndex = '0';
   var rtQ = 'routeToQueue';
   var play = 'play';
+  var disconnect = 'disconnect';
   var sortedOptions = [{
     "label": 'autoAttendant.destinations.Disconnect',
   }, {
@@ -99,7 +103,6 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     $scope.keyIndex = keyIndex;
     $scope.fromRouteCall = false;
     AutoAttendantCeMenuModelService.clearCeMenuMap();
-    AutoAttendantCeMenuModelService.clearCeMenuMap();
     uiMenu = AutoAttendantCeMenuModelService.newCeMenu();
     ui[schedule] = uiMenu;
     menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
@@ -107,16 +110,21 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
     initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
     periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+    fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
     playAction = AutoAttendantCeMenuModelService.newCeActionEntry(play, '');
     iaAction = AutoAttendantCeMenuModelService.newCeActionEntry(play, '');
     paAction = AutoAttendantCeMenuModelService.newCeActionEntry(play, '');
+    fbAction = AutoAttendantCeMenuModelService.newCeActionEntry(disconnect, '');
     routeToQueue = AutoAttendantCeMenuModelService.newCeActionEntry(rtQ, '');
     musicOnHold.addAction(playAction);
     initialAnnouncement.addAction(iaAction);
     periodicAnnouncement.addAction(paAction);
+    fallback.addAction(fbAction);
     queueSettings.musicOnHold = musicOnHold;
     queueSettings.initialAnnouncement = initialAnnouncement;
     queueSettings.periodicAnnouncement = periodicAnnouncement;
+    queueSettings.fallback = fallback;
+    queueSettings.maxWaitTime = maxWaitTime;
     routeToQueue.queueSettings = queueSettings;
     menuEntry.addAction(routeToQueue);
     uiMenu.addEntryAt(index, menuEntry);
@@ -142,7 +150,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     });
 
     it("default value of minute should be 15.", function () {
-      expect(controller.maxWaitTime.index).toEqual(14);
+      expect(controller.maxWaitTime).toEqual(15);
     });
 
     describe('Periodic Announcement', function () {
@@ -151,48 +159,48 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
       it("length of periodic minutes and seconds", function () {
         expect(controller).toBeDefined();
         expect(controller.periodicMinutes.length).toEqual(6);
-        expect(controller.periodicSeconds.length).toEqual(11);
+        expect(controller.periodicSeconds.length).toEqual(12);
       });
 
-      it("default value of periodic minutes and seconds.", function () {
-        expect(controller.periodicMinute.index).toEqual(0);
-        expect(controller.periodicSecond.index).toEqual(8);
-      });
       it("changedPeriodicMinValue funtion call with periodicMinute as 0", function () {
         controller.periodicMinute = fakePeriodicMinute[0];
         controller.changedPeriodicMinValue();
-        expect(controller.areSecondsDisabled).toBe(true);
+        expect(controller.isDisabled()).toBe(false);
       });
       it("changedPeriodicMinValue function call with periodicMinute and periodicSecond as 0", function () {
         controller.periodicMinute = fakePeriodicMinute[0];
         controller.periodicSecond = fakePeriodicSecond[0];
         controller.changedPeriodicMinValue();
-        expect(controller.periodicSecond).toEqual(controller.periodicSeconds[0]);
+        expect(controller.periodicSecond.label).toEqual(controller.periodicSeconds[0]);
       });
       it("changedPeriodicMinValue function call with periodicMinute as 5", function () {
-        controller.periodicMinute = fakePeriodicMinute[2];
+        controller.periodicMinute = 5;
         controller.changedPeriodicMinValue();
-        expect(controller.periodicSecond).toEqual(controller.periodicSeconds[0]);
-        expect(controller.areSecondsDisabled).toBe(false);
-      });
-      it("changedPeriodicSecValue function call with periodicSecond and periodicMinute as 0", function () {
-        controller.periodicSecond = fakePeriodicSecond[0];
-        controller.periodicMinute = fakePeriodicMinute[0];
-        controller.periodicSeconds[0] = fakePeriodicSecond[0];
-        controller.changedPeriodicSecValue();
-        expect(controller.periodicSecond).toEqual(controller.periodicSeconds[0]);
-        expect(controller.areSecondsDisabled).toBe(true);
+        expect(controller.isDisabled()).toBe(true);
       });
     });
 
     describe('FallBack', function () {
+
       it('test for default option as Disconnect', function () {
-        expect(controller.destinationOptions[0].name).toEqual('Disconnect');
+        var fallbackAction = controller.menuEntry.actions[0].queueSettings.fallback.actions[0];
+        expect(fallbackAction.name).toEqual('disconnect');
       });
       it('test for sorted order options in dropdown', function () {
         for (var i = 1; i < sortedOptions.length; i++) {
           expect(controller.destinationOptions[i].label).toEqual(sortedOptions[i].label);
         }
+      });
+      it("default value of fallback Actions should be set", function () {
+        expect(controller.maxWaitTime).toEqual(15);
+        var fallbackAction = controller.menuEntry.actions[0].queueSettings.fallback.actions[0];
+        var fallbackActionDescription = fallbackAction.getDescription();
+        expect(fallbackActionDescription).toEqual('');
+      });
+      it(" value of maxTime shoulb be 15", function () {
+        controller.ok();
+        var maxWaitTime = controller.menuEntry.actions[0].queueSettings.maxWaitTime;
+        expect(maxWaitTime).toEqual(15);
       });
     });
 
@@ -205,7 +213,8 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
 
       describe('musicOnHold', function () {
         it('should set up appropriately according to musicOnHold format', function () {
-          expect(controller.mohPlayAction.name).toEqual(play);
+          var mohPlayAction = controller.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
+          expect(mohPlayAction.name).toEqual(play);
           expect(controller.menuEntry.actions[0].name).toEqual(rtQ);
         });
 
@@ -243,7 +252,6 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
       });
 
       $scope.$apply();
-      controller.activate();
 
       expect(controller.showLanguageAndVoiceOptions).toBe(false);
     });
@@ -262,18 +270,55 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         aa_from_route_call: true
       });
 
-      controller.activate();
       $scope.$apply();
 
       expect(controller.showLanguageAndVoiceOptions).toBe(true);
     });
+
+    it('when showLanguageAndVoiceOptions is true updateLanguageVoice should be called', function () {
+      $scope.keyIndex = null;
+      spyOn(AAUiModelService, 'getUiModel').and.returnValue(ui);
+
+      var controller = $controller('AANewTreatmentModalCtrl', {
+        $scope: $scope,
+        $modalInstance: modalFake,
+        aa_schedule: schedule,
+        aa_menu_id: menuId,
+        aa_index: index,
+        aa_key_index: keyIndex,
+        aa_from_route_call: true
+      });
+
+      controller.languageOption.value = "de_DE";
+      controller.voiceOption.value = "Anna";
+
+      controller.ok();
+      $scope.$apply();
+
+      var queueSettings = _.get(controller.menuEntry, 'actions[0].queueSettings');
+      expect(angular.equals(queueSettings.language, "de_DE")).toBe(true);
+      expect(angular.equals(queueSettings.voice, "Anna")).toBe(true);
+    });
   });
 
-  describe('populateMoHRadioForCustomMoH', function () {
-    it('should set the musicOnHold to CustomMoH', function () {
-      controller.mohPlayAction.description = VALUE;
-      controller.populateMohRadio();
-      expect(controller.musicOnHold).toEqual(CUSTOM_MOH);
+  describe('populatePeriodicTime', function () {
+    it('seconds should be disabled when periodicMinute is 5 mins', function () {
+      var controller = $controller('AANewTreatmentModalCtrl', {
+        $scope: $scope,
+        $modalInstance: modalFake,
+        aa_schedule: schedule,
+        aa_menu_id: menuId,
+        aa_index: index,
+        aa_key_index: keyIndex,
+        aa_from_route_call: false
+      });
+
+
+      var paAction = controller.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0];
+      paAction.interval = '300';
+      $scope.$apply();
+
+      expect(controller.isDisabled()).toBe(false);
     });
   });
 
@@ -304,30 +349,34 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
 
       it('ok function call results in resetting the moh when moh is set to the default description', function () {
         controller.musicOnHold = DEFAULT_MOH;
-        controller.mohPlayAction.description = VALUE;
+        var mohPlayAction = controller.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
+        mohPlayAction.setDescription(VALUE);
         controller.ok();
-        expect(controller.mohPlayAction.description).toEqual('');
+        expect(mohPlayAction.description).toEqual('');
       });
 
       it('ok function call results in resetting moh is set to default value', function () {
         controller.musicOnHold = DEFAULT_MOH;
-        controller.mohPlayAction.value = VALUE;
+        var mohPlayAction = controller.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
+        mohPlayAction.setDescription(VALUE);
         controller.ok();
-        expect(controller.mohPlayAction.value).toEqual(CISCO_STD_MOH_URL);
+        expect(mohPlayAction.value).toEqual(CISCO_STD_MOH_URL);
       });
 
-      it('ok function call doesnt result in resetting moh when moh is not set to default description', function () {
+      it('ok function call result in resetting moh when any upload is not set to default ', function () {
         controller.musicOnHold = CUSTOM_MOH;
-        controller.mohPlayAction.description = VALUE;
+        var mohPlayAction = controller.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
+        mohPlayAction.setDescription(VALUE);
         controller.ok();
-        expect(controller.mohPlayAction.description).toEqual(VALUE);
+        expect(mohPlayAction.description).toEqual('');
       });
 
       it('ok function call doesnt result in resetting moh when moh is not set to default value', function () {
         controller.musicOnHold = CUSTOM_MOH;
-        controller.mohPlayAction.value = VALUE;
+        var mohPlayAction = controller.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
+        mohPlayAction.setValue(VALUE);
         controller.ok();
-        expect(controller.mohPlayAction.value).toEqual(VALUE);
+        expect(mohPlayAction.value).toEqual(VALUE);
       });
     });
   });

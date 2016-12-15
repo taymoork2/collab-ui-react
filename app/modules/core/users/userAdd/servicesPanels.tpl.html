@@ -1,7 +1,7 @@
 <div>
   <div class="license-wrapper">
     <multiple-subscriptions></multiple-subscriptions>
-    <div class="flex-row">
+    <div class="row full flex-row">
       <div class="small-4 columns column-title">
         <div class="column-header">
           <i class="icon icon-circle-message modal-icon-flex-row"></i>
@@ -30,7 +30,7 @@
     <div class="row">
       <div class="column-subsription-header free" translate="onboardModal.freeCollab"></div>
     </div>
-    <div class="flex-row">
+    <div class="row full flex-row">
       <div class="small-4 columns column-free">
         <div translate="onboardModal.msgFree"></div>
       </div>
@@ -47,7 +47,7 @@
     <div class="row">
       <div class="column-subsription-header paid" translate="firstTimeWizard.paidColumnHeader"></div>
     </div>
-    <div class="flex-row row-licenses">
+    <div class="row full flex-row row-licenses">
       <!-- MESSAGE SERVICES PANEL -->
       <div id="messaging" class="small-4 columns column-paid">
         <div class="entitle-check-grp" ng-repeat="msgFeature in messageFeatures">
@@ -145,10 +145,10 @@
             </div>
           </div>
         </div>
-        <div class="item-mtg-license" ng-if="hasAdvancedLicenses">
-          <span translate="firstTimeWizard.advancedMeetings"></span>
-        </div>
         <div class="entitle-check-grp" ng-repeat="lic in advancedLicenses">
+          <div class="item-mtg-license" ng-if="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial) && advancedLicenses.indexOf(lic) === 0">
+            <span translate="firstTimeWizard.advancedMeetings"></span>
+          </div>
           <div class="item-mtg" ng-if="lic.site">
             <div ng-show="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial)">
               <span ng-if="lic.isCISite">{{lic.site}}</span>
@@ -193,7 +193,6 @@
                 cs-input
                 type="checkbox"
                 id="{{commFeature.license.licenseId}}"
-                ng-if="!disableCommFeatureAssignment() && hasSite"
                 ng-change="checkLicenseAvailability('COMMUNICATION', radioStates.commRadio)"
                 ng-model="radioStates.commRadio"
                 ng-disabled="hybridCallServiceAware"
@@ -201,7 +200,7 @@
             </div>
             <div ng-if="disableCommFeatureAssignment()">
               <div>
-                <span class="warning-icon"></span>
+                <span class="icon icon-warning warning-icon"></span>
                 <span class="service-label" translate="usersPage.addtionalServiceSetupText"></span>
               </div>
               <div>
@@ -224,10 +223,12 @@
                 type="checkbox"
                 id="{{care.license.licenseId}}"
                 ng-model="radioStates.careRadio"
-                cs-input-label="{{::care.label | translate}}">
+                cs-input-label="{{::care.label | translate}}"
+                ng-disabled="!enableCareService">
             </div>
           </div>
         </div>
+        <label class="care-information-text" translate="onboardModal.enableCareInformationText"></label>
       </div>
     </div>
 </div>

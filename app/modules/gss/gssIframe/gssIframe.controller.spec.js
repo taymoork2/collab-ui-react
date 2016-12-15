@@ -2,9 +2,25 @@
 
 describe('controller:GssIframeCtrl', function () {
   var $controller, $modal, $q, $scope, $state, controller, GSSService;
+  var testData = {
+    selectedServiceOption: {
+      label: 'testServiceOption',
+      value: 'testServiceId'
+    },
+    addServiceOption: {
+      label: 'addServiceOption',
+      value: 'addService'
+    },
+    services: [{
+      serviceId: 'testServiceId'
+    }]
+  };
 
   beforeEach(angular.mock.module('GSS'));
-  beforeEach(angular.mock.module('Core'));
+  afterEach(destructDI);
+  afterAll(function () {
+    testData = undefined;
+  });
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(initController);
@@ -18,12 +34,18 @@ describe('controller:GssIframeCtrl', function () {
     GSSService = _GSSService_;
   }
 
+  function destructDI() {
+    $controller = $modal = $q = $scope = $state = controller = GSSService = undefined;
+  }
+
   function initSpies() {
-    spyOn(GSSService, 'getServices').and.returnValue($q.when());
+    spyOn(GSSService, 'getServices').and.returnValue($q.when(testData.services));
+    spyOn(GSSService, 'getServiceId').and.callThrough();
     spyOn($modal, 'open').and.returnValue({
       result: $q.when()
     });
     spyOn($scope, '$broadcast').and.callThrough();
+    spyOn($state, 'go');
   }
 
   function initController() {
@@ -44,6 +66,27 @@ describe('controller:GssIframeCtrl', function () {
 
     $scope.$digest();
     expect($scope.$broadcast).toHaveBeenCalledWith('serviceAdded');
+  });
+
+  it('onServiceChanged select add service, should open add service modal dialog', function () {
+    controller.selected = testData.addServiceOption;
+
+    controller.onServiceSelectionChanged();
+    expect($modal.open).toHaveBeenCalled();
+  });
+
+  it('onServiceChanged select an exist service, should set the new service', function () {
+    controller.selected = testData.selectedServiceOption;
+
+    controller.onServiceSelectionChanged();
+    expect(GSSService.getServiceId()).toEqual(testData.selectedServiceOption.value);
+  });
+
+  it('$watch $state.current.name, should go to dashboard when current name is gss', function () {
+    $state.current.name = 'gss';
+    $scope.$digest();
+
+    expect($state.go).toHaveBeenCalledWith('gss.dashboard');
   });
 
   it('event serviceEdited, should refresh options when got event serviceEdited', function () {

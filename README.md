@@ -51,7 +51,6 @@ lean to help this process flow quicker.
 1. Setup your repository
   * `git clone git@sqbu-github.cisco.com:WebExSquared/wx2-admin-web-client.git`
   * `origin` should be the above WebExSquared repo (`git remote -v` to see remote details)
-  * See [Git Workflows](docs/git-workflows.md) for alternative detail on how to manage your git repository.
 2. Run the application
   * `npm install` to install project dependencies
   * `npm start` to run the development server

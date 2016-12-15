@@ -1,10 +1,10 @@
 <!-- Sub Header -->
 <cs-page-sub-header>
-  <cs-page-sub-header-left>
+  <cs-page-sub-header-left class="medium-2">
     <report-filter filter-array="nav.filterArray"></report-filter>
   </cs-page-sub-header-left>
-  <cs-page-sub-header-right>
-    <cs-select id="timeFilter" name="timeFilter" class='customer-report-filter' ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.timeUpdate()"></cs-select>
+  <cs-page-sub-header-right class="medium-10">
+    <report-slider selected="nav.timeSelected" options="nav.timeOptions" update-functions="nav.timeUpdates"></report-slider>
   </cs-page-sub-header-right>
 </cs-page-sub-header>
 
@@ -15,9 +15,9 @@
       <report-card options="nav.avgRoomOptions" export-dropdown="nav.exportArrays.rooms" show="nav.displayEngagement" time="nav.timeSelected"></report-card>
       <report-card options="nav.activeOptions" export-dropdown="nav.exportArrays.active" secondary-options="nav.secondaryActiveOptions" dropdown="nav.activeDropdown" show="nav.displayEngagement" time="nav.timeSelected" resize-page="nav.resizeMostActive()"></report-card>
       <report-card options="nav.filesSharedOptions" export-dropdown="nav.exportArrays.files" show="nav.displayEngagement" time="nav.timeSelected"></report-card>
-      <report-card options="nav.deviceOptions" export-dropdown="nav.exportArrays.device" dropdown="nav.deviceDropdown" show="nav.displayEngagement" time="nav.timeSelected"></report-card>
+      <report-card ng-if="!nav.displayNewReports" options="nav.deviceOptions" export-dropdown="nav.exportArrays.device" dropdown="nav.deviceDropdown" show="nav.displayEngagement" time="nav.timeSelected"></report-card>
       <report-card options="nav.mediaOptions" export-dropdown="nav.exportArrays.media" dropdown="nav.mediaDropdown" show="nav.displayQuality" time="nav.timeSelected"></report-card>
-      <report-card options="nav.metricsOptions" export-dropdown="nav.exportArrays.metrics" labels="nav.metricsLabels" show="nav.displayQuality" time="nav.timeSelected"></report-card>
+      <report-card ng-if="!nav.displayNewReports" options="nav.metricsOptions" export-dropdown="nav.exportArrays.metrics" labels="nav.metricsLabels" show="nav.displayQuality" time="nav.timeSelected"></report-card>
     </cs-card-layout>
   </div>
 </div>

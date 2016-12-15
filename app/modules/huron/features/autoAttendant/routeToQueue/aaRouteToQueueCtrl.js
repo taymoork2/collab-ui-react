@@ -7,7 +7,7 @@
 
 
   /* @ngInject */
-  function AARouteToQueueCtrl($scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AANotificationService) {
+  function AARouteToQueueCtrl($scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AANotificationService, AALanguageService) {
 
     var vm = this;
     vm.hideQueues = true;
@@ -37,6 +37,14 @@
     var rtQueue = 'routeToQueue';
     var fromRouteCall = false;
 
+    var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
+    var periodicTime = '45';
+
+    var maxWaitTime = {
+      index: '14',
+      label: '15'
+    };
+
     /////////////////////
 
 
@@ -46,9 +54,21 @@
       openQueueSettings().result.then(function () {
         // keep changes as modal was resolved with close
         if (fromRouteCall) {
-          vm.menuEntry.actions[0].description = vm.menuEntry.actions[0].queueSettings;
+          vm.menuEntry.actions[0].description = {
+            musicOnHoldDescription: vm.menuEntry.actions[0].queueSettings.musicOnHold.actions[0].description,
+            periodicAnnouncementType: vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].name,
+            periodicAnnouncementDescription: vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].description,
+            initialAnnouncementType: vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0].name,
+            initialAnnouncementDescription: vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0].description
+          };
         } else {
-          vm.menuKeyEntry.actions[0].description = vm.menuKeyEntry.actions[0].queueSettings;
+          vm.menuKeyEntry.actions[0].description = {
+            musicOnHoldDescription: vm.menuKeyEntry.actions[0].queueSettings.musicOnHold.actions[0].description,
+            periodicAnnouncementType: vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].name,
+            periodicAnnouncementDescription: vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].description,
+            initialAnnouncementType: vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.actions[0].name,
+            initialAnnouncementDescription: vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.actions[0].description
+          };
         }
       }, function () {
         // discard changes as modal was dismissed
@@ -113,16 +133,21 @@
         vm.menuEntry.actions[0].setValue(vm.queueSelected.id);
       } else {
         vm.menuKeyEntry.actions[0].setValue(vm.queueSelected.id);
+        if (!_.isEmpty(vm.menuEntry.headers[0].voice)) {
+          var queueSettings = _.get(vm.menuKeyEntry, 'actions[0].queueSettings');
+          queueSettings.language = vm.menuEntry.headers[0].language;
+          queueSettings.voice = vm.menuEntry.headers[0].voice;
+        }
       }
       AACommonService.setPhoneMenuStatus(true);
     }
 
     // This function is called from activateQueueSettings.
     // It adds the appropriate action (i.e. say or play) to the queueSettings.
-    function createAction(obj, type, sayOrPlay) {
+    function createAction(obj, type, sayOrPlayOrDisconnect) {
       var action;
       obj[type] = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      action = AutoAttendantCeMenuModelService.newCeActionEntry(sayOrPlay, '');
+      action = AutoAttendantCeMenuModelService.newCeActionEntry(sayOrPlayOrDisconnect, '');
       obj[type].addAction(action);
     }
 
@@ -133,19 +158,31 @@
 
       if (!_.has(queueSettings, 'musicOnHold')) {
         createAction(queueSettings, 'musicOnHold', 'play');
+        var musicOnHold = _.get(queueSettings, 'musicOnHold.actions[0]');
+        musicOnHold.setValue(CISCO_STD_MOH_URL);
       }
       if (!_.has(queueSettings, 'initialAnnouncement')) {
         createAction(queueSettings, 'initialAnnouncement', 'say');
       }
       if (!_.has(queueSettings, 'periodicAnnouncement')) {
         createAction(queueSettings, 'periodicAnnouncement', 'say');
+        var periodicAnnouncement = _.get(queueSettings, 'periodicAnnouncement.actions[0]');
+        periodicAnnouncement.setDescription("");
+        periodicAnnouncement.interval = periodicTime;
       }
-      if (!_.has(queueSettings, 'fallBack')) {
-        queueSettings.fallback = {};
-        queueSettings.fallback.destination = "";
+      if (!_.has(queueSettings, 'fallback')) {
+        createAction(queueSettings, 'fallback', 'disconnect');
       }
-      if (!_.has(queueSettings, 'maxTime')) {
-        queueSettings.maxTime = '900'; //default, 15 mins.
+      if (!_.has(queueSettings, 'maxWaitTime')) {
+        queueSettings.maxWaitTime = maxWaitTime; //default, 15 mins.
+      }
+      if (!_.has(queueSettings, 'language')) {
+        var languageOption = AALanguageService.getLanguageOption();
+        queueSettings.language = languageOption.value;//default English(US).
+      }
+      if (!_.has(queueSettings, 'voice')) {
+        var voiceOption = AALanguageService.getVoiceOption();
+        queueSettings.voice = voiceOption.value; //default Vanessa.
       }
     }
 
@@ -183,7 +220,6 @@
         if (!_.has(_.get(vm.menuKeyEntry, 'actions[0]'), 'queueSettings')) {
           vm.menuKeyEntry.actions[0].queueSettings = {};
         }
-
         activateQueueSettings(vm.menuKeyEntry);
       }
 

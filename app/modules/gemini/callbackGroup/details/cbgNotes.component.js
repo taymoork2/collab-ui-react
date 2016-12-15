@@ -8,25 +8,25 @@
       controller: CbgNotesCtrl
     });
   /* @ngInject */
-  function CbgNotesCtrl($state, $stateParams, $translate, cbgService, Notification) {
+  function CbgNotesCtrl($state, $stateParams, $translate, cbgService, Notification, PreviousState) {
     var vm = this;
+    var showNotesNum = 5;
     var customerId = _.get($stateParams, 'obj.customerId', '');
     var ccaGroupId = _.get($stateParams, 'obj.info.ccaGroupId', '');
-    var MAXNUM = 5;
-    var allNotes = [];
+
+    vm.allNotes = [];
     vm.loading = true;
-    vm.notes = [];
+    vm.onSave = onSave;
     vm.$onInit = $onInit;
-    vm.needShowMore = false;
-    vm.onNotePost = onNotePost;
-    vm.onShowMoreNotes = onShowMoreNotes;
+    vm.onCancel = onCancel;
+    vm.onShowAll = onShowAll;
 
     function $onInit() {
-      loadNotes();
+      getNotes();
       $state.current.data.displayName = $translate.instant('gemini.cbgs.notes.notes');
     }
 
-    function onNotePost() {
+    function onSave() {
       var postData = {
         customerID: customerId,
         siteID: ccaGroupId,
@@ -48,31 +48,28 @@
       });
     }
 
-    function getFirstFewNotes() {
-      vm.notes = _.size(allNotes) <= MAXNUM ? allNotes : allNotes.slice(0, MAXNUM);
+    function onShowAll() {
+      vm.notes = vm.allNotes;
+      vm.isShowAll = false;
     }
 
-    function loadNotes() {
-      cbgService.listNotes(customerId, ccaGroupId).then(function (res) {
-        var resJson = _.get(res.content, 'data');
-        if (resJson.returnCode) {
-          Notification.error('Fail to get notes');//TODO wording
-          return;
-        }
-        allNotes = resJson.body;
-        getFirstFewNotes();
-        setShowMoreLink();
-        vm.loading = false;
-      });
+    function onCancel() {
+      PreviousState.go();
     }
 
-    function onShowMoreNotes() {
-      vm.notes = allNotes;
-      vm.needShowMore = false;
-    }
-
-    function setShowMoreLink() {
-      vm.needShowMore = allNotes.length > MAXNUM;
+    function getNotes() {
+      cbgService.getNotes(customerId, ccaGroupId)
+        .then(function (res) {
+          var resJson = _.get(res.content, 'data');
+          if (resJson.returnCode) {
+            Notification.error('Fail to get notes');//TODO wording
+            return;
+          }
+          vm.allNotes = resJson.body;
+          vm.isShowAll = (_.size(vm.allNotes) > showNotesNum);
+          vm.notes = (_.size(vm.allNotes) <= showNotesNum ? vm.allNotes : vm.allNotes.slice(0, showNotesNum));
+          vm.loading = false;
+        });
     }
   }
 })();

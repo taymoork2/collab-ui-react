@@ -8,6 +8,14 @@ describe('HealthService', function () {
 
   var regex = /.*\/ping\.*/;
 
+  afterEach(function () {
+    $httpBackend = HealthService = undefined;
+  });
+
+  afterAll(function () {
+    regex = undefined;
+  });
+
   beforeEach(inject(function (_$httpBackend_, _HealthService_) {
     $httpBackend = _$httpBackend_;
     HealthService = _HealthService_;

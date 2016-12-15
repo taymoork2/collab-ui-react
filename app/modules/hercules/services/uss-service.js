@@ -10,6 +10,7 @@
     var cachedUserStatusSummary = [];
 
     var USSUrl = UrlConfig.getUssUrl() + 'uss/api/v1';
+    var USSv2Url = UrlConfig.getUssUrl() + 'uss/api/v2';
 
     var hub = CsdmHubFactory.create();
 
@@ -30,6 +31,7 @@
       removeAllUsersFromResourceGroup: removeAllUsersFromResourceGroup,
       refreshEntitlementsForUser: refreshEntitlementsForUser,
       getUserCountFromResourceGroup: getUserCountFromResourceGroup,
+      getUserJournal: getUserJournal,
     };
 
     CsdmPoller.create(fetchStatusesSummary, hub);
@@ -179,6 +181,12 @@
     function getUserCountFromResourceGroup(resourceGroupId, orgId) {
       return $http
         .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userProps/count?containingResourceGroupId=' + resourceGroupId)
+        .then(extractData);
+    }
+
+    function getUserJournal(userId, orgId, limit) {
+      return $http
+        .get(USSv2Url + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userJournal/' + userId + (limit ? '?limit=' + limit : ''))
         .then(extractData);
     }
   }

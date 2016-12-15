@@ -13,6 +13,7 @@ describe('Service: ServiceSetup', function () {
     $provide.value("Authinfo", Authinfo);
   }));
 
+
   beforeEach(inject(function (_ServiceSetup_, _$httpBackend_, _HuronConfig_) {
     ServiceSetup = _ServiceSetup_;
     $httpBackend = _$httpBackend_;
@@ -90,13 +91,36 @@ describe('Service: ServiceSetup', function () {
     });
   });
 
+  describe('updateAvrilSite', function () {
+    var site = {
+      guid: '1234567890',
+      siteCode: '8',
+      siteSteeringDigit: '6',
+      timezone: 'MST',
+      extensionLength: '10',
+      pilotNumber: '1008'
+    };
+
+    var HuronConfig = {
+      getAvrilUrl: jasmine.createSpy('getAvrilUrl').and.returnValue('https://avrildirmgmt.appstaging.ciscoccservice.com/avrildirmgmt/api/v1')
+    };
+
+    beforeEach(function () {
+      $httpBackend.whenPOST(HuronConfig.getAvrilUrl() + '/customers/1/sites').respond(201);
+    });
+
+    it('should update avril site', function () {
+      ServiceSetup.updateAvrilSite(site.guid, site.siteSteeringDigit, site.code, site.timezone, site.extensionLength, site.pilotNumber);
+      $httpBackend.flush();
+    });
+  });
+
   describe('loadExternalNumberPool', function () {
     var extNumPool = [{
       uuid: '777-888-666',
       pattern: '+11234567890'
     }];
 
-      //$httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(extNumPool);
     beforeEach(function () {
       $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&externalnumbertype=Fixed+Line+or+Mobile&order=pattern').respond(extNumPool);
     });
@@ -288,6 +312,23 @@ describe('Service: ServiceSetup', function () {
         var translatedLanguages = ServiceSetup.getTranslatedSiteLanguages(response);
         expect(translatedLanguages).toBeDefined();
         expect(translatedLanguages.length).toBe(2);
+      });
+      $httpBackend.flush();
+    });
+  });
+
+  describe('getSiteCountries', function () {
+    beforeEach(function () {
+      $httpBackend.expectGET('modules/huron/serviceSetup/siteCountries.json').respond(getJSONFixture('huron/json/settings/countries.json'));
+    });
+
+    it('should get site countries', function () {
+      ServiceSetup.getSiteCountries().then(function (response) {
+        expect(response).toBeDefined();
+        expect(response.length).toBe(2);
+        var translatedCountries = ServiceSetup.getTranslatedSiteCountries(response);
+        expect(translatedCountries).toBeDefined();
+        expect(translatedCountries.length).toBe(2);
       });
       $httpBackend.flush();
     });

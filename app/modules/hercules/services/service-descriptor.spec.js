@@ -59,7 +59,7 @@ describe('ServiceDescriptor', function () {
     $httpBackend.flush();
   });
 
-  it("should read out the email subscribers for a given service using a GET request", function (done) {
+  it("should read out the email subscribers for a given service using a GET request", function () {
     $httpBackend
       .expectGET('https://hercules-integration.wbx2.com/v1/organizations/12345/services')
       .respond({
@@ -70,24 +70,21 @@ describe('ServiceDescriptor', function () {
           emailSubscribers: "aalto@example.org",
         }]
       });
-    Service.getEmailSubscribers("squared-fusion-cal", function (err, emailSubscribers) {
-      expect(err).toBeFalsy();
-      expect(emailSubscribers).toEqual("aalto@example.org");
-      done();
+    Service.getEmailSubscribers("squared-fusion-cal").then(function (emailSubscribers) {
+      expect(emailSubscribers).toEqual(["aalto@example.org"]);
     });
     $httpBackend.flush();
   });
 
-  it("should set the email subscribers for a given service using a PATCH request", function (done) {
+  it("should set the email subscribers for a given service using a PATCH request", function () {
     $httpBackend
       .expectPATCH(
         'https://hercules-integration.wbx2.com/v1/organizations/12345/services/squared-fusion-mgmt', {
           emailSubscribers: "alvar@example.org"
         })
       .respond(204, '');
-    Service.setEmailSubscribers("squared-fusion-mgmt", "alvar@example.org", function (statusCode) {
-      expect(statusCode).toBe(204);
-      done();
+    Service.setEmailSubscribers("squared-fusion-mgmt", "alvar@example.org").then(function (response) {
+      expect(response.status).toBe(204);
     });
     $httpBackend.flush();
   });
@@ -98,8 +95,8 @@ describe('ServiceDescriptor', function () {
     };
     $httpBackend.expectGET('https://identity.webex.com/organization/scim/v1/Orgs/' + authinfo.getOrgId() + '?disableCache=true')
       .respond(200, data);
-    Service.getDisableEmailSendingToUser().then(function (calSvcDisableEmailSendingToEndUser) {
-      expect(calSvcDisableEmailSendingToEndUser).toBe(true);
+    Service.getOrgSettings().then(function (orgSettings) {
+      expect(orgSettings.calSvcDisableEmailSendingToEndUser).toBe(true);
     });
     $httpBackend.flush();
   });

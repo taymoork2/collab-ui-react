@@ -208,6 +208,9 @@
     }
 
     function updateItemName(objectToUpdate, newName) {
+      if (!objectToUpdate.isPlace) {
+        return $q.reject();
+      }
       var service = getServiceForDevice(objectToUpdate);
       if (!service) {
         return $q.reject();
@@ -215,15 +218,9 @@
 
       return service.updateItemName(objectToUpdate, newName)
         .then(function (updatedObject) {
-
-          if (updatedObject.isPlace) {
-            var place = placesDataModel[updatedObject.url];
-            updatedObject.devices = place.devices;
-            return CsdmCacheUpdater.updateOne(placesDataModel, updatedObject.url, updatedObject, null, true);
-          } else {
-            addOrUpdatePlaceInDataModel(updatedObject);
-            return CsdmCacheUpdater.updateOne(theDeviceMap, updatedObject.url, updatedObject, null, true);
-          }
+          var place = placesDataModel[updatedObject.url];
+          updatedObject.devices = place.devices;
+          return CsdmCacheUpdater.updateOne(placesDataModel, updatedObject.url, updatedObject, null, true);
         });
     }
 
@@ -263,28 +260,17 @@
       }
 
       if (item.isPlace) {
-        if (item.type === 'huron') {
-          return csdmHuronOrgDeviceService.getDevicesForPlace(item.cisUuid).then(function (devicesForPlace) {
-
-            var reloadedPlace = placesDataModel[item.url];
-            for (var devUrl in devicesForPlace) {
-              var device = devicesForPlace[devUrl];
-              if (device.displayName) {
-                item.displayName = device.displayName;
-                reloadedPlace.displayName = device.displayName;
-              }
-              CsdmCacheUpdater.updateOne(theDeviceMap, devUrl, device);
-            }
-
-            reloadedPlace.devices = devicesForPlace;
-            item.devices = devicesForPlace;
-
-            notifyListeners();
-            return reloadedPlace;
+        return service.fetchItem(item.url).then(function (reloadedPlace) {
+          _.each(_.difference(_.values(item.devices), _.values(reloadedPlace.devices)), function (deletedDevice) {
+            _.unset(theDeviceMap, [deletedDevice.url]);
           });
-        } else {
-          return $q.reject();
-        }
+          CsdmCacheUpdater.updateOne(placesDataModel, reloadedPlace.url, reloadedPlace, null, true);
+          _.each(reloadedPlace.devices, function (reloadedDevice) {
+            CsdmCacheUpdater.updateOne(theDeviceMap, reloadedDevice.url, reloadedDevice);
+          });
+          notifyListeners();
+          return reloadedPlace;
+        });
       } else if (item.type === 'huron') {
         return $q.reject();
       } else {

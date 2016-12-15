@@ -5,13 +5,20 @@ describe('SetupWizardCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var $controller, $httpBackend, $scope, $q, Authinfo, FeatureToggleService, Orgservice;
+  var $controller, $scope, $q, Authinfo, FeatureToggleService, Orgservice;
 
   var usageFixture = getJSONFixture('core/json/organizations/usage.json');
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
 
-  beforeEach(inject(function ($rootScope, _$httpBackend_, _$controller_, _$q_, _Authinfo_, _FeatureToggleService_, _Orgservice_) {
-    $httpBackend = _$httpBackend_;
+  afterEach(function () {
+    $controller = $scope = $q = Authinfo = FeatureToggleService = Orgservice = undefined;
+  });
+
+  afterAll(function () {
+    usageFixture = usageOnlySharedDevicesFixture = undefined;
+  });
+
+  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _Authinfo_, _FeatureToggleService_, _Orgservice_) {
     $scope = $rootScope.$new();
     $q = _$q_;
     $controller = _$controller_;
@@ -188,9 +195,7 @@ describe('SetupWizardCtrl', function () {
       Authinfo.isCare.and.returnValue(true);
       Authinfo.isCSB.and.returnValue(false);
       FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
-      $httpBackend.expectGET(/.*atlas.*\/userauthinfo/g).respond(200, { roles: ['User', 'Full_Admin'] });
       initController();
-      $httpBackend.flush();
     });
 
     it('the wizard should have the 6 steps', function () {
@@ -206,9 +211,7 @@ describe('SetupWizardCtrl', function () {
     beforeEach(function () {
       Authinfo.isCare.and.returnValue(true);
       FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
-      $httpBackend.expectGET(/.*atlas.*\/userauthinfo/g).respond(200, { roles: ['User', 'Full_Admin'] });
       initController();
-      $httpBackend.flush();
     });
 
     it('the wizard should have the 5 steps', function () {
@@ -221,26 +224,11 @@ describe('SetupWizardCtrl', function () {
       Authinfo.isCare.and.returnValue(true);
       FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
       Authinfo.isSetupDone.and.returnValue(true);
-      $httpBackend.expectGET(/.*atlas.*\/userauthinfo/g).respond(200, { roles: ['User', 'Full_Admin'] });
       initController();
-      $httpBackend.flush();
     });
 
     it('the wizard should have the 4 steps', function () {
       expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
-    });
-  });
-
-  describe('Partner should not see Care', function () {
-    beforeEach(function () {
-      $httpBackend.expectGET(/.*atlas.*\/userauthinfo/g).respond(200, { roles: ['PARTNER_USER', 'PARTNER_ADMIN'] });
-      Authinfo.isCare.and.returnValue(true);
-      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
-      initController();
-    });
-
-    it('the wizard should have the 4 steps without care', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
   });
 
@@ -287,9 +275,7 @@ describe('SetupWizardCtrl', function () {
       FeatureToggleService.supportsDirSync.and.returnValue($q.when(true));
       FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
 
-      $httpBackend.expectGET(/.*atlas.*\/userauthinfo/g).respond(200, { roles: ['User', 'Full_Admin'] });
       initController();
-      $httpBackend.flush();
     });
 
     it('the wizard should have a lot of settings', function () {

@@ -21,7 +21,9 @@
       getPhoneNumberType: getPhoneNumberType,
       isTollFreeNumber: isTollFreeNumber,
       isPossibleAreaCode: isPossibleAreaCode,
-      getDestinationObject: getDestinationObject
+      getDestinationObject: getDestinationObject,
+      checkPhoneNumberType: checkPhoneNumberType,
+      internationalNumberValidator: internationalNumberValidator
     };
     var TOLL_FREE = 'TOLL_FREE';
     var PREMIUM_RATE = 'PREMIUM_RATE';
@@ -173,6 +175,32 @@
         }
       } else {
         throw new Error('Code not found');
+      }
+    }
+
+    function checkPhoneNumberType(number) {
+      var phoneNumberType;
+      try {
+        if (phoneUtils.isValidNumberForRegion(number, regionCode)) {
+          phoneNumberType = phoneUtils.getNumberType(number, regionCode);
+        }
+      } catch (e) {
+        phoneNumberType = undefined;
+      }
+      return phoneNumberType;
+    }
+
+    function internationalNumberValidator(number) {
+      try {
+        var phoneNumber = phoneUtils.formatE164(number);
+        var regionCode = phoneUtils.getRegionCodeForNumber(phoneNumber).toLowerCase();
+        if (phoneUtils.isValidNumberForRegion(phoneNumber, regionCode)) {
+          return true;
+        } else {
+          return false;
+        }
+      } catch (e) {
+        return false;
       }
     }
   }

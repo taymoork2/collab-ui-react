@@ -113,8 +113,40 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
-    it('should add SayMessage Message, select Language and Voice to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    it('should add Play Message, select Language and Voice to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
 
+      autoattendant.scrollIntoView(autoattendant.sayMessage);
+
+      // media upload
+
+      utils.click(autoattendant.messageOptions);
+      utils.click(autoattendant.playMessageOption);
+      utils.wait(autoattendant.sayMediaUploadInput, 12000);
+
+      $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
+
+      // and save
+      utils.wait(autoattendant.saveButton, 12000);
+
+      utils.expectIsEnabled(autoattendant.saveButton);
+      utils.click(autoattendant.saveButton);
+
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+
+      // and delete
+      utils.click(autoattendant.deleteMedia);
+      utils.click(autoattendant.deleteConfirmationModalClose);
+
+      // and save
+      utils.expectIsEnabled(autoattendant.saveButton);
+      utils.click(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+    }, 60000);
+
+    it('should add SayMessage Message, select Language and Voice to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      utils.click(autoattendant.messageOptions);
+      utils.click(autoattendant.sayMessageOption);
       autoattendant.scrollIntoView(autoattendant.sayMessage);
 
       // say message
@@ -136,35 +168,6 @@ describe('Huron Auto Attendant', function () {
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
       utils.expectIsDisabled(autoattendant.saveButton);
-    }, 60000);
-
-    it('should add Play Message, select Language and Voice to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-      var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
-
-      autoattendant.scrollIntoView(autoattendant.sayMessage);
-
-      // media upload
-
-      utils.click(autoattendant.messageOptions);
-
-      utils.click(autoattendant.playMessageOption);
-      utils.wait(autoattendant.sayMediaUploadInput, 12000);
-
-      $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
-
-      // and save
-      utils.wait(autoattendant.saveButton, 12000);
-
-      utils.expectIsEnabled(autoattendant.saveButton);
-      utils.click(autoattendant.saveButton);
-
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-
-      // don't leave the play mode on the screen, effects later tests
-      utils.click(autoattendant.messageOptions);
-
-      utils.click(autoattendant.sayMessageOption);
-
     }, 60000);
 
     it('should add Phone Menu Say to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {

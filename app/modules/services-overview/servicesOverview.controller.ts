@@ -16,7 +16,9 @@ export class ServicesOverviewCtrl {
 
   /* @ngInject */
   constructor(
+    private $state: ng.IQService,
     private $q: ng.IQService,
+    private $modal: ng.IQService,
     private Auth,
     private Authinfo,
     private Config,
@@ -31,7 +33,7 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewCallCard(this.Authinfo, this.Config),
       new ServicesOverviewCareCard(this.Authinfo),
       new ServicesOverviewHybridServicesCard(this.Authinfo),
-      new ServicesOverviewHybridAndGoogleCalendarCard(this.$q, this.Authinfo, this.CloudConnectorService, this.FusionClusterStatesService),
+      new ServicesOverviewHybridAndGoogleCalendarCard(this.$state, this.$q, this.$modal, this.Authinfo, this.CloudConnectorService, this.FusionClusterStatesService),
       new ServicesOverviewHybridCalendarCard(this.Authinfo, this.FusionClusterStatesService),
       new ServicesOverviewHybridCallCard(this.Authinfo, this.FusionClusterStatesService),
       new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
@@ -103,6 +105,7 @@ export class ServicesOverviewCtrl {
           this.FusionClusterService.getStatusForService('squared-fusion-cal', clusterList),
           this.FusionClusterService.getStatusForService('squared-fusion-uc', clusterList),
           this.FusionClusterService.getStatusForService('squared-fusion-media', clusterList),
+          this.FusionClusterService.getStatusForService('spark-hybrid-datasecurity', clusterList),
         ];
         this.forwardEvent('hybridStatusEventHandler', servicesStatuses);
         this.forwardEvent('hybridClustersEventHandler', clusterList);
@@ -111,6 +114,7 @@ export class ServicesOverviewCtrl {
 
   private loadWebexSiteList() {
     let siteList = this.Authinfo.getConferenceServicesWithoutSiteUrl() || [];
+    siteList = siteList.concat(this.Authinfo.getConferenceServicesWithLinkedSiteUrl() || []);
     this.forwardEvent('updateWebexSiteList', siteList);
   }
 

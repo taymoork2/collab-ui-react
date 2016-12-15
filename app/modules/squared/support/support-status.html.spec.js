@@ -28,6 +28,12 @@ describe('Controller: SupportCtrl', function () {
 
   describe('Tools card view', function () {
     var view;
+    afterEach(function () {
+      if (view) {
+        view.remove();
+      }
+      view = undefined;
+    });
     beforeEach(inject(function (_$templateCache_) {
       var html = _$templateCache_.get("modules/squared/support/support-status.html");
       view = $compile(angular.element(html))($scope);

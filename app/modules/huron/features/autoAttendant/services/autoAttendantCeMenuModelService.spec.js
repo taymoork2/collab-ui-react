@@ -10,6 +10,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   var wmenu = getJSONFixture('huron/json/autoAttendant/welcomeMenu.json');
   var ceWelcome = wmenu.ceWelcome;
   var ceWelcomeNoDescription = wmenu.ceWelcomeNoDescription;
+  var ceWelcomeNoDescriptionTemp = wmenu.ceWelcomeNoDescriptionTemp;
   var welcomeMenu = wmenu.welcomeMenu;
   var ceMenuFull = wmenu.ceMenuFull;
 
@@ -140,7 +141,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcomeNoDescription, 'openHours');
       var success = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'openHours', _welcomeMenu);
 
-      expect(angular.equals(_ceRecord, ceWelcomeNoDescription)).toBe(true);
+      expect(angular.equals(_ceRecord, ceWelcomeNoDescriptionTemp)).toBe(true);
 
       expect(success).toBe(true);
 
@@ -413,18 +414,6 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       expect(_ceMenu.id).toBe('menu2');
     });
   });
-
-  describe('should create temporary solution to write to db for Periodic announcement', function () {
-    it('cesTempPa', function () {
-      var _action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'routeToQueueId');
-      _action.setDescription('routeToQueueDescription');
-      AutoAttendantCeMenuModelService.cesTempPa(_action);
-      _action.queueSettings = {};
-      expect(angular.isDefined(_action.description)).toBe(true);
-      expect(angular.isDefined(_action.queueSettings)).toBe(true);
-    });
-  });
-
 
   describe('clearCeMenuMap', function () {
     it('should reset the CeMenu internal count to 0', function () {

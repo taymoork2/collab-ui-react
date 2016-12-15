@@ -699,6 +699,9 @@
               // TODO Need to be removed once Care is graduated on atlas.
               hasCareFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials);
+              },
+              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
               }
             }
           })
@@ -942,7 +945,7 @@
                 template: '<div ui-view="usersConvert"></div>'
               },
               'usersConvert@users.convert': {
-                templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html',
+                template: '<cr-convert-users-modal/>',
                 resolve: {
                   modalInfo: function ($state) {
                     $state.params.modalClass = 'convert-users';
@@ -1120,7 +1123,8 @@
             params: {
               currentAddress: {},
               currentNumber: '',
-              status: ''
+              status: '',
+              staticNumber: '',
             },
           })
           .state('user-overview.communication.voicemail', {
@@ -1186,7 +1190,8 @@
               displayName: 'Call Service'
             },
             params: {
-              extensionId: {}
+              extensionId: {},
+              extensions: {}
             }
           })
           .state('user-overview.conferencing', {
@@ -1532,6 +1537,7 @@
               currentAddress: {},
               currentNumber: '',
               status: '',
+              staticNumber: '',
             },
           })
           .state('place-overview.communication', {
@@ -1685,13 +1691,21 @@
               currentAddress: {},
               currentNumber: '',
               status: '',
+              staticNumber: '',
             },
           })
           .state('video', {
             parent: 'modal',
             views: {
               'modal@': {
-                templateUrl: 'modules/core/video/videoModal.tpl.html'
+                template: '<cr-video-modal class="modal-content" dismiss="$dismiss()"></cr-video-modal>'
+              }
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveVideo(resolve) {
+                  require(['modules/core/video'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
               }
             }
           })
@@ -1802,6 +1816,7 @@
             url: '/customers',
             templateUrl: 'modules/core/customers/customerList/customerList.tpl.html',
             controller: 'CustomerListCtrl',
+            controllerAs: 'customerList',
             params: {
               filter: null
             },
@@ -1838,6 +1853,9 @@
               newCustomerViewToggle: /* @ngInject */ function () {
                 // TODO:  remove this once the controllers are refactored
                 return true;
+              },
+              trialForPaid: function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
               },
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview').data.displayName = $translate.instant('common.overview');
@@ -2356,7 +2374,7 @@
             parent: 'hurondetails',
             templateUrl: 'modules/huron/features/featureLanding/features.tpl.html',
             controller: 'HuronFeaturesCtrl',
-            controllerAs: 'huronFeaturesCtrl'
+            controllerAs: 'huronFeaturesCtrl',
           })
           .state('huronnewfeature', {
             url: '/newfeature',
@@ -2413,7 +2431,7 @@
             resolve: {
               lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
                 return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/callPickup/callPickupSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
+                  require(['modules/huron/features/callPickup'], loadModuleAndResolve($ocLazyLoad, resolve));
                 });
               }
             }
@@ -2536,12 +2554,38 @@
               },
             }
           })
-          .state('hds-settings', {
-            templateUrl: 'modules/hds/settings/settings.html',
-            controller: 'HDSSettingsController',
-            controllerAs: 'hdsSettings',
-            url: '/services/hds/settings',
+          .state('hds', {
+            templateUrl: 'modules/hds/resources/overview.html',
+            controller: 'HDSServiceController',
+            controllerAs: 'hdsServiceController',
             parent: 'main',
+            resolve: {
+              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
+              }
+            }
+          })
+          .state('hds.list', {
+            url: '/hds/resources',
+            views: {
+              'fullPane': {
+                templateUrl: 'modules/hds/resources/cluster-list.html'
+              }
+            },
+            resolve: {
+              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
+              }
+            }
+          })
+          .state('hds.settings', {
+            url: '/hds/settings',
+            views: {
+              'fullPane': {
+                //TODO: change to hds-settings.html
+                templateUrl: 'modules/hds/resources/cluster-list.html'
+              }
+            },
             resolve: {
               hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
@@ -2697,7 +2741,7 @@
             }
           })
           .state('calendar-service', {
-            templateUrl: 'modules/hercules/overview/overview.html',
+            templateUrl: 'modules/hercules/service-specific-cluster-lists/service-specific-cluster-list-container.html',
             controller: 'ExpresswayServiceController',
             controllerAs: 'exp',
             data: {
@@ -2718,7 +2762,7 @@
             url: '/services/calendar',
             views: {
               fullPane: {
-                templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
+                templateUrl: 'modules/hercules/service-specific-cluster-lists/service-specific-cluster-list.html'
               }
             },
             params: {
@@ -2733,15 +2777,24 @@
                 controller: 'CalendarSettingsController',
                 templateUrl: 'modules/hercules/service-settings/calendar-service-settings.html'
               }
-            },
+            }
+          })
+          .state('google-calendar-service', {
+            abstract: true,
+            parent: 'main',
+            template: '<div ui-view></div>',
             resolve: {
               hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
               }
             }
           })
+          .state('google-calendar-service.settings', {
+            url: '/services/google-calendar/settings',
+            template: '<google-calendar-settings-page ng-if="$resolve.hasGoogleCalendarFeatureToggle"></google-calendar-settings-page>',
+          })
           .state('call-service', {
-            templateUrl: 'modules/hercules/overview/overview.html',
+            templateUrl: 'modules/hercules/service-specific-cluster-lists/service-specific-cluster-list-container.html',
             controller: 'ExpresswayServiceController',
             controllerAs: 'exp',
             data: {
@@ -2761,7 +2814,7 @@
             url: '/services/call',
             views: {
               fullPane: {
-                templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
+                templateUrl: 'modules/hercules/service-specific-cluster-lists/service-specific-cluster-list.html'
               }
             },
             params: {
@@ -2823,6 +2876,7 @@
             },
             params: {
               host: null,
+              hostSerial: null,
               clusterId: null,
               connectorType: 'c_mgmt'
             }
@@ -2848,6 +2902,7 @@
             },
             params: {
               host: null,
+              hostSerial: null,
               clusterId: null,
               connectorType: null
             }
@@ -3100,12 +3155,7 @@
             templateUrl: 'modules/gss/gssIframe/gssIframe.tpl.html',
             controller: 'GssIframeCtrl',
             controllerAs: 'gssIframeCtrl',
-            parent: 'main',
-            resolve: {
-              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasGlobalServiceStatus);
-              }
-            }
+            parent: 'main'
           })
           .state('gss.dashboard', {
             url: '/dashboard',
@@ -3138,6 +3188,19 @@
             templateUrl: 'modules/gss/services/services.tpl.html',
             controller: 'GSSServicesCtrl',
             controllerAs: 'gssServicesCtrl'
+          })
+          .state('gss.services.delete', {
+            url: '/delete',
+            views: {
+              '@gss': {
+                templateUrl: 'modules/gss/services/deleteService/deleteService.tpl.html',
+                controller: 'DeleteServiceCtrl',
+                controllerAs: 'deleteServiceCtrl'
+              }
+            },
+            params: {
+              service: null
+            }
           })
           .state('gss.incidents', {
             url: '/incidents',

@@ -38,7 +38,9 @@
       invokeInviteEmail: invokeInviteEmail,
       getAccount: getAccount,
       getOrder: getOrder,
-      getEmailStatus: getEmailStatus
+      getEmailStatus: getEmailStatus,
+      getLatestEmailEvent: getLatestEmailEvent,
+      unixTimestampToUTC: unixTimestampToUTC,
     };
 
     if (!orgCache) {
@@ -523,10 +525,27 @@
         .then(extractData);
     }
 
+    function getLatestEmailEvent(email) {
+      return service.getEmailStatus(email).then(function (emailEvents) {
+        return _.first(emailEvents);
+      });
+    }
+
     function getEmailStatus(email) {
       return $http
         .get(urlBase + "email?email=" + encodeURIComponent(email))
         .then(extractItems);
+    }
+
+    // Convert Date from seconds to UTC format
+    function unixTimestampToUTC(timestamp) {
+      if (!timestamp) {
+        return;
+      }
+      // convert seconds to ms
+      var newDate = new Date();
+      newDate.setTime(timestamp * 1000);
+      return newDate.toUTCString();
     }
 
     return service;

@@ -1,30 +1,37 @@
 'use strict';
 
 describe('controller: DashboardCtrl', function () {
-  var $controller, $q, $scope, $state, controller, DashboardService, GSSService;
+  var $controller, $modal, $q, $scope, $state, controller, DashboardService, GSSService;
   var component;
   var testData = {
     testIncident: {
-      incidentId: 'testIncidentId'
+      incidentId: 'testIncidentId',
+      status: 'resolved',
+      localizedStatus: 'gss.incidentStatus.resolved'
     },
     actionType: 'update'
   };
 
 
   beforeEach(angular.mock.module('GSS'));
-  beforeEach(angular.mock.module('Core'));
+  afterEach(destructDI);
   beforeEach(inject(dependencies));
   beforeEach(initController);
   beforeEach(initSpies);
   beforeEach(loadTestData);
 
-  function dependencies(_$controller_, _$q_, _$rootScope_, _$state_, _DashboardService_, _GSSService_) {
+  function dependencies(_$controller_, _$modal_, _$q_, _$rootScope_, _$state_, _DashboardService_, _GSSService_) {
     $controller = _$controller_;
+    $modal = _$modal_;
     $q = _$q_;
     $scope = _$rootScope_.$new();
     $state = _$state_;
     DashboardService = _DashboardService_;
     GSSService = _GSSService_;
+  }
+
+  function destructDI() {
+    $controller = $modal = $q = $scope = $state = controller = DashboardService = GSSService = undefined;
   }
 
   function initController() {
@@ -41,6 +48,9 @@ describe('controller: DashboardCtrl', function () {
   function initSpies() {
     spyOn($state, 'go');
     spyOn(DashboardService, 'modifyComponent').and.returnValue($q.when());
+    spyOn($modal, 'open').and.returnValue({
+      result: $q.resolve()
+    });
   }
 
   function loadTestData() {
@@ -78,25 +88,28 @@ describe('controller: DashboardCtrl', function () {
     });
   });
 
-  it('call goToComponentsPage, should go to the components page', function () {
-    controller.goToComponentsPage();
-    expect($state.go).toHaveBeenCalledWith('gss.components');
+  it('addComponent should call $modal', function () {
+    controller.addComponent();
+    expect($modal.open).toHaveBeenCalled();
   });
 
-  it('call modifyComponentStatus, DashboardService.modifyComponent should been called', function () {
-    controller.modifyComponentStatus(component);
+  it('toggleOverridden, ', function () {
+    controller.toggleOverridden(component);
+    expect(component.isOverridden).toBeTruthy();
     expect(DashboardService.modifyComponent).toHaveBeenCalled();
   });
 
-  it('call modifySubComponentStatus overridden(false), should not touch parent component status', function () {
-    controller.modifySubComponentStatus(component, component.components[0]);
-    expect(DashboardService.modifyComponent.calls.count()).toEqual(1);
+  it('call modifyGroupComponentStatus, DashboardService.modifyComponent should been called', function () {
+    controller.modifyGroupComponentStatus(component);
+    expect(DashboardService.modifyComponent).toHaveBeenCalled();
   });
 
-  it('call modifySubComponentStatus overridden(true), parent component with lower priority, should not touch parent component status', function () {
-    component.isOverridden = true;
-
+  it('call modifySubComponentStatus, DashboardService.modifyComponent should been called', function () {
     controller.modifySubComponentStatus(component, component.components[0]);
-    expect(DashboardService.modifyComponent.calls.count()).toEqual(1);
+    expect(DashboardService.modifyComponent).toHaveBeenCalled();
+  });
+
+  it('getLocalizedIncidentStatus', function () {
+    expect(controller.getLocalizedIncidentStatus(testData.testIncident.status)).toEqual(testData.testIncident.localizedStatus);
   });
 });

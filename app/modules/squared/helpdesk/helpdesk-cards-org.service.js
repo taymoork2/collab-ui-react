@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskCardsOrgService($translate, Config, HelpdeskService, HelpdeskHuronService, LicenseService, Notification) {
+  function HelpdeskCardsOrgService($translate, Config, HelpdeskHuronService, LicenseService, Notification, FusionClusterService, CloudConnectorService) {
 
     function getMessageCardForOrg(org, licenses) {
       var entitled = LicenseService.orgIsEntitledTo(org, 'webex-squared');
@@ -45,22 +45,28 @@
     }
 
     function getHybridServicesCardForOrg(org) {
+      var hybridServiceIds = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-media', 'spark-hybrid-datasecurity'];
       var hybridServicesCard = {
-        entitled: false
+        entitled: _.some(hybridServiceIds, function (serviceId) {
+          return LicenseService.orgIsEntitledTo(org, serviceId);
+        }) || LicenseService.orgIsEntitledTo(org, 'squared-fusion-gcal'),
+        services: []
       };
-      if (LicenseService.orgIsEntitledTo(org, 'squared-fusion-mgmt') && (LicenseService.orgIsEntitledTo(org, 'squared-fusion-cal') || LicenseService.orgIsEntitledTo(org, 'squared-fusion-uc'))) {
-        hybridServicesCard.entitled = true;
-        HelpdeskService.getHybridServices(org.id).then(function (services) {
-          var enabledHybridServices = _.filter(services, {
-            enabled: true
-          });
-          if (enabledHybridServices.length === 1 && enabledHybridServices[0].id === "squared-fusion-mgmt") {
-            enabledHybridServices = []; // Don't show the management service if none of the others are enabled.
+      if (!hybridServicesCard.entitled) {
+        return;
+      }
+      FusionClusterService.getAll(org.id).then(function (clusterList) {
+        _.forEach(hybridServiceIds, function (serviceId) {
+          if (LicenseService.orgIsEntitledTo(org, serviceId)) {
+            hybridServicesCard.services.push(FusionClusterService.getStatusForService(serviceId, clusterList));
           }
-          hybridServicesCard.enabledHybridServices = enabledHybridServices;
-          hybridServicesCard.availableHybridServices = _.filter(services, {
-            enabled: false
-          });
+        });
+      }).catch(function (response) {
+        Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
+      });
+      if (LicenseService.orgIsEntitledTo(org, 'squared-fusion-gcal')) {
+        CloudConnectorService.getService('squared-fusion-gcal', org.id).then(function (service) {
+          hybridServicesCard.services.push(service);
         }).catch(function (response) {
           Notification.errorWithTrackingId(response, 'helpdesk.unexpectedError');
         });

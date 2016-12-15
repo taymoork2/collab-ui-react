@@ -10,6 +10,18 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
     abbreviation: 'TX'
   }];
 
+  afterEach(function () {
+    if (view) {
+      view.remove();
+    }
+    $q = $compile = $controller = $scope = $templateCache = Orgservice = TerminusStateService = FeatureToggleService = undefined;
+    view = skipBtn = backBtn = undefined;
+  });
+
+  afterAll(function () {
+    states = undefined;
+  });
+
   beforeEach(angular.mock.module('Huron'));
   beforeEach(inject(dependencies));
   beforeEach(compileView);

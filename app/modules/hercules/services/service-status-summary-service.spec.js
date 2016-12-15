@@ -244,9 +244,6 @@ describe('ServiceStatusSummaryService', function () {
 
     var clusters = [cluster1, cluster2];
 
-    //console.info(JSON.stringify(clusters, null, '  '));
-    //console.info(JSON.stringify(expected, null, '  '));
-
     expect(expected).toEqual(clusters);
   });
 

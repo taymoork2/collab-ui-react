@@ -1,7 +1,14 @@
 'use strict';
 
 describe('Component: upgradeScheduleConfiguration', function () {
-  var $scope, $q, $compile, $rootScope, FusionClusterService;
+  var $scope, $q, $compile, $rootScope, FusionClusterService, view;
+
+  afterEach(function () {
+    if (view) {
+      view.remove();
+    }
+    view = undefined;
+  });
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module(mockDirectives));
@@ -132,8 +139,8 @@ describe('Component: upgradeScheduleConfiguration', function () {
 
   function compileComponent($scope) {
     var template = '<upgrade-schedule-configuration cluster-id="clusterId"></upgrade-schedule-configuration>';
-    var element = $compile(angular.element(template))($scope);
+    view = $compile(angular.element(template))($scope);
     $scope.$apply();
-    return element;
+    return view;
   }
 });

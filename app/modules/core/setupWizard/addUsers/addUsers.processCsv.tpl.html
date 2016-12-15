@@ -5,7 +5,7 @@
     <div class="progressbar">
       <div class="progressbar-info">
         <span class="progressbar-label" ng-show="!csv.model.isRetrying && csv.model.processProgress < 100" translate="firstTimeWizard.processing"></span>
-        <span class="progressbar-label retry-label" ng-show="csv.model.isRetrying">
+        <span class="progressbar-label" ng-show="csv.model.isRetrying">
           <span translate="csvUpload.retryingUsers" translate-value-users="{{csv.model.usersToRetry.length}}" translate-interpolation="messageformat"></span>
           <span translate="csvUpload.retryingIn"></span>
           <span ng-show="csv.model.retryTimerParts.hours > 0" translate="time.hours" translate-value-time="{{csv.model.retryTimerParts.hours}}" translate-interpolation="messageformat"></span>

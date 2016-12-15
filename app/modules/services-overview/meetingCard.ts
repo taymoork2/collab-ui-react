@@ -26,16 +26,19 @@ export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
     return [];
   }
 
-  public updateWebexSiteList(data: Array<{ license: { siteUrl: string } }>) {
+  public updateWebexSiteList(data: Array<{ license: { siteUrl?: string,
+    linkedSiteUrl?: string } }>) {
     if (!data) {
       this.loading = false;
       return;
     }
 
+    // list both webex and linked webex sites
     this._buttons =
       _.chain(data)
         .map(serviceFeature => {
-          return _.get(serviceFeature, 'license.siteUrl', '');
+          return _.get(serviceFeature, 'license.siteUrl',
+            _.get(serviceFeature, 'license.linkedSiteUrl', ''));
         })
         .compact()
         .uniq()
