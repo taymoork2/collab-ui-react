@@ -432,6 +432,7 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
+
     it('should add Caller Input via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       autoattendant.scrollIntoView(autoattendant.addStepLast);
       utils.click(autoattendant.addStepLast);
@@ -579,8 +580,8 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.addAANumbers);
       autoattendant.scrollIntoView(autoattendant.sayMessageAll.first());
 
-      // Verify we have 3 Say Messages (2 sayMessage and PhoneMenu's) already:
-      utils.expectCount(autoattendant.sayMessageAll, 5);
+      // Verify we have 4 Say Messages (2 sayMessage and PhoneMenu's) already:
+      utils.expectCount(autoattendant.sayMessageAll, 4);
 
       // Verify two phone messages
 
