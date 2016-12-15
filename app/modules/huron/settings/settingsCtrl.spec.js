@@ -63,7 +63,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ServiceSetup, 'getSiteLanguages').and.returnValue($q.when(languages));
     spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.when(countries));
     spyOn(ServiceSetup, 'getAvrilSite').and.returnValue($q.when(avrilSites));
-    spyOn(ServiceSetup, 'updateAvrilVoicemail').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'updateAvrilSiteVoicemail').and.returnValue($q.when());
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
     spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.when());
     spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.when({

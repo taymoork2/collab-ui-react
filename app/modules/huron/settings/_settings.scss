@@ -134,13 +134,13 @@
     .inner-section-margin {
       @include vr-spacing(mt, 2.25);
     }
-    
+
     .msg-container {
       min-width: vr-adjust(600px);
       padding-top: vr-adjust(12px);
     }
   }
-  
+
   .cs-form__section {
     & > .section__info .sticky {
       top: vr-adjust(60px);
@@ -170,7 +170,7 @@
   }
 
   .terminus-warning {
-    font-size: 0.78rem;
+    font-size: 0.75rem;
 
     .icon-warning {
       margin-right: 0.25rem;

@@ -97,7 +97,7 @@ describe('Service: ServiceSetup', function () {
     };
 
     beforeEach(function () {
-      $httpBackend.whenGET(HuronConfig.getAvrilUrl() + '/customers/1/sites/' + site.guid).respond(201);
+      $httpBackend.expectGET(HuronConfig.getAvrilUrl() + '/customers/1/sites/' + site.guid).respond(201);
     });
 
     it('should get the avril voicemail site', function () {
@@ -106,7 +106,7 @@ describe('Service: ServiceSetup', function () {
     });
   });
 
-  describe('updateAvrilVoicemail', function () {
+  describe('updateAvrilSiteVoicemail', function () {
     var site = {
       guid: '1234567890'
     };
@@ -121,7 +121,7 @@ describe('Service: ServiceSetup', function () {
     });
 
     it('should update avril voicemail', function () {
-      ServiceSetup.updateAvrilVoicemail(site.guid, voicemailFeatures);
+      ServiceSetup.updateAvrilSiteVoicemail(site.guid, voicemailFeatures);
       $httpBackend.flush();
     });
   });

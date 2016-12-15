@@ -49,7 +49,7 @@
         }).$promise;
       },
 
-      updateAvrilVoicemail: function (siteUuid, features) {
+      updateAvrilSiteVoicemail: function (siteUuid, features) {
         return AvrilSiteUpdateService.update({
           customerId: Authinfo.getOrgId(),
           siteId: siteUuid

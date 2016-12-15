@@ -7,9 +7,9 @@
 
   /* @ngInject */
   function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CeService, CallerId, Config,
-    DirectoryNumberService, DialPlanService, ExternalNumberService, FeatureToggleService, HuronCustomer,
-    HuntGroupServiceV2, InternationalDialing, ModalService, Notification, PstnSetupService,
-    ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction) {
+      DirectoryNumberService, DialPlanService, ExternalNumberService, FeatureToggleService, HuronCustomer,
+      HuntGroupServiceV2, InternationalDialing, ModalService, Notification, PstnSetupService,
+      ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction) {
     var vm = this;
     vm.loading = true;
 
@@ -49,6 +49,9 @@
     var INTERNATIONAL_DIALING = 'DIALINGCOSTAG_INTERNATIONAL';
     var COMPANY_CALLER_ID_TYPE = 'Company Caller ID';
     var COMPANY_NUMBER_TYPE = 'Company Number';
+    var VM_SPARKPHONE = 'SparkPhoneVM';
+    var VM_PHONE = 'PhoneVM';
+    var VM_SPARK = 'SparkVM';
     var DEFAULT_DIAL_HABIT = vm.NATIONAL;
 
     var savedModel = null;
@@ -75,7 +78,7 @@
     vm._callerIdNumberWatcher = _callerIdNumberWatcher;
     vm._buildVoicemailPrefixOptions = _buildVoicemailPrefixOptions;
     vm.loadVoicemailNumber = loadVoicemailNumber;
-    vm.loadAvrilVoicemailOptions = AvrilVoicemailOptions;
+    vm.loadAvrilVoicemailOptions = loadAvrilVoicemailOptions;
     vm.loadSite = loadSite;
 
     vm.processing = false;
@@ -130,7 +133,7 @@
         companyVoicemailEnabled: false,
         companyVoicemailNumber: NO_VOICEMAIL_NUMBER,
         voicemailToEmail: false,
-        voicemailOptions: 'SparkVM',
+        voicemailOptions: VM_SPARK,
         externalVoicemail: false
       },
       internationalDialingEnabled: false,
@@ -784,7 +787,7 @@
 
     FeatureToggleService.supports(FeatureToggleService.features.avrilVoicemaill1249)
     .then(function (response) {
-      if (response && vm.voicemailAvrilCustomer) {
+      if (response) {
         vm.companyVoicemailSelection = [{
           className: 'row collapse-both voicemail-switch-width',
           fieldGroup: [{
@@ -805,7 +808,7 @@
           templateOptions: {
             model: 'voicemailOptions',
             label: $translate.instant('serviceSetupModal.voicemailToSparkLabel'),
-            value: 'SparkVM'
+            value: VM_SPARK
           },
           hideExpression: function () {
             return !vm.model.companyVoicemail.companyVoicemailEnabled;
@@ -816,7 +819,7 @@
           templateOptions: {
             model: 'voicemailOptions',
             label: $translate.instant('serviceSetupModal.voicemailToPhoneLabel'),
-            value: 'PhoneVM'
+            value: VM_PHONE
           },
           hideExpression: function () {
             return !vm.model.companyVoicemail.companyVoicemailEnabled;
@@ -836,7 +839,7 @@
             isWarn: false
           },
           hideExpression: function () {
-            return !(vm.model.companyVoicemail.voicemailOptions === 'PhoneVM' && vm.model.companyVoicemail.companyVoicemailEnabled);
+            return !(vm.model.companyVoicemail.voicemailOptions === VM_PHONE && vm.model.companyVoicemail.companyVoicemailEnabled);
           },
           expressionProperties: {
             'templateOptions.required': function () {
@@ -860,7 +863,7 @@
           templateOptions: {
             model: 'voicemailOptions',
             label: $translate.instant('serviceSetupModal.voicemailToSparkAndPhoneLabel'),
-            value: 'SparkPhoneVM'
+            value: VM_SPARKPHONE
           },
           hideExpression: function () {
             return !vm.model.companyVoicemail.companyVoicemailEnabled;
@@ -880,7 +883,7 @@
             isWarn: false
           },
           hideExpression: function () {
-            return !(vm.model.companyVoicemail.voicemailOptions === 'SparkPhoneVM' && vm.model.companyVoicemail.companyVoicemailEnabled);
+            return !(vm.model.companyVoicemail.voicemailOptions === VM_SPARKPHONE && vm.model.companyVoicemail.companyVoicemailEnabled);
           },
           expressionProperties: {
             'templateOptions.required': function () {
@@ -903,7 +906,7 @@
           template: '<table class="no-margin"><tr class="no-border"><td class="no-padding"><i class="icon icon-warning warning-color"></i></td><td class="warning-message"><span class="warning-color terminus-warning">' + $translate.instant('serviceSetupModal.messageWaitingIndicatorText') + '</span></td></tr><table>',
           className: 'medium-10 left',
           hideExpression: function () {
-            return !(vm.model.companyVoicemail.voicemailOptions === 'SparkPhoneVM' && vm.model.companyVoicemail.companyVoicemailEnabled);
+            return !(vm.model.companyVoicemail.voicemailOptions === VM_SPARKPHONE && vm.model.companyVoicemail.companyVoicemailEnabled);
           }
         }, {
           model: vm.model.companyVoicemail,
@@ -1283,21 +1286,23 @@
       });
     }
 
-    function AvrilVoicemailOptions() {
-      var guid = ServiceSetup.sites[0].uuid;
-      return ServiceSetup.getAvrilSite(guid)
-        .then(function (response) {
-          setVoicemailOptions(response.features);
-        });
+    function loadAvrilVoicemailOptions() {
+      var guid = _.get(ServiceSetup, 'sites[0].uuid', null);
+      if (guid !== null) {
+        return ServiceSetup.getAvrilSite(guid)
+          .then(function (response) {
+            setVoicemailOptions(response.features);
+          });
+      }
     }
 
     function setVoicemailOptions(features) {
       if (features.VM2S && features.VM2T) {
-        vm.model.companyVoicemail.voicemailOptions = 'SparkPhoneVM';
+        vm.model.companyVoicemail.voicemailOptions = VM_SPARKPHONE;
       } else if (features.VM2S) {
-        vm.model.companyVoicemail.voicemailOptions = 'SparkVM';
+        vm.model.companyVoicemail.voicemailOptions = VM_SPARK;
       } else if (features.VM2T) {
-        vm.model.companyVoicemail.voicemailOptions = 'PhoneVM';
+        vm.model.companyVoicemail.voicemailOptions = VM_PHONE;
       }
     }
 
@@ -1528,7 +1533,7 @@
               .then(loadSite)
               .then(loadVoicemailTimeZone)
               .then(loadVoicemailToEmail)
-              .then(AvrilVoicemailOptions)
+              .then(loadAvrilVoicemailOptions)
             );
 
             promises.push(loadInternalNumbers());
@@ -1739,17 +1744,17 @@
 
       if (vm.model.companyVoicemail.companyVoicemailEnabled) {
         switch (vm.model.companyVoicemail.voicemailOptions) {
-          case 'SparkVM' : {
+          case VM_SPARK : {
             featureOptions.features.VM2S = true;
             featureOptions.features.VM2T = false;
             break;
           }
-          case 'PhoneVM' : {
+          case VM_PHONE : {
             featureOptions.features.VM2S = false;
             featureOptions.features.VM2T = true;
             break;
           }
-          case 'SparkPhoneVM' : {
+          case VM_SPARKPHONE : {
             featureOptions.features.VM2S = true;
             featureOptions.features.VM2T = true;
             break;
@@ -1760,7 +1765,7 @@
         featureOptions.features.VM2T = false;
         featureOptions.features.VM2E = false;
       }
-      return ServiceSetup.updateAvrilVoicemail(ServiceSetup.sites[0].uuid, featureOptions);
+      return ServiceSetup.updateAvrilSiteVoicemail(ServiceSetup.sites[0].uuid, featureOptions);
     }
 
     function updateVoicemailPostalCode() {
