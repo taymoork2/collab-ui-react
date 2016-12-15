@@ -1,0 +1,47 @@
+<setting-section setting="$ctrl.clusterSection" class="needs-border-top">
+
+  <!--Alle data: {{$ctrl}}-->
+
+  <div class="sub-section">
+    <h5 class="sub-section__label" translate="common.rename"></h5>
+    <p class="sub-section__description"
+       translate="hercules.renameAndDeregisterComponent.renameClusterParagraph"
+       translate-values="{clusterType: $ctrl.clusterType}"></p>
+
+    <div class="row">
+      <input
+        cs-input
+        type="text"
+        placeholder={{$ctrl.localizedClusterNameWatermark}}
+        ng-model="$ctrl.clusterName"
+        ng-keypress="$event.which === 13 && $ctrl.saveClusterName()"
+        cs-input-group-size="medium-8"
+        cs-input-help-text="{{'hercules.renameAndDeregisterComponent.renameClusterDescription' | translate}}" >
+      <button
+        cs-btn
+        class="btn btn--primary btn-save-new-name"
+        ng-click="$ctrl.saveClusterName()"
+        loading="$ctrl.savingNameState">
+        <span translate="common.save"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="sub-section">
+    <h5 class="sub-section__label cap-long-names" translate="common.remove"></h5>
+    <p ng-if="!$ctrl.blockDeregistration()"
+       class="sub-section__description"
+       translate="hercules.renameAndDeregisterComponent.deregisterClusterExplanation"
+       translate-values="{clusterType: $ctrl.clusterType}"></p>
+    <p ng-if="$ctrl.blockDeregistration()"
+       class="sub-section__description"
+       translate="hercules.renameAndDeregisterComponent.deregisterClusterExplanationBlocked"></p>
+
+      <button type="button"
+              class="btn"
+              ng-click="$ctrl.deregisterCluster()"
+              translate="common.remove"
+              ng-disabled="$ctrl.blockDeregistration()"></button>
+  </div>
+
+</setting-section>

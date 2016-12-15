@@ -65,40 +65,11 @@
       </div>
     </setting-section>
 
-    <setting-section setting="clusterSettings.renameClusterSection">
-      <div class="sub-section">
-        <h5 class="sub-section__label" translate="common.rename"></h5>
-        <p class="sub-section__description" translate="hercules.expresswayClusterSettings.renameClusterParagraph"></p>
-
-        <div class="row">
-          <input
-            cs-input
-            type="text"
-            placeholder={{clusterSettings.localizedClusterNameWatermark}}
-            ng-model="clusterSettings.newClusterName"
-            cs-input-group-size="medium-8"
-            cs-input-help-text="{{'hercules.expresswayClusterSettings.renameClusterDescription' | translate}}"
-          >
-          <button
-            type="button"
-            class="btn btn--primary btn-save-new-name"
-            ng-click="clusterSettings.setClusterName(clusterSettings.newClusterName)"
-            translate="common.save"
-          ></button>
-        </div>
-      </div>
-      <div class="sub-section">
-        <h5 class="sub-section__label cap-long-names" translate="common.remove"></h5>
-        <p class="sub-section__description" translate="hercules.expresswayClusterSettings.deregisterClusterExplanation"></p>
-        <div ng-if="clusterSettings.enabledServices.length > 1">
-          <button type="button" class="btn" disabled="disabled" translate="common.remove"></button>
-          <p class="cap-long-names remove-warning" translate="hercules.expresswayClusterSettings.deregisterClusterParagraph" translate-values="{ ClusterName: clusterSettings.cluster.name}"></p>
-        </div>
-        <div ng-if="clusterSettings.enabledServices.length < 2">
-          <button type="button" class="btn" ng-click="clusterSettings.deregisterCluster(clusterSettings.cluster)" translate="common.remove"></button>
-        </div>
-      </div>
-    </setting-section>
+    <rename-and-deregister-cluster-section
+      service-id="'squared-fusion-cal'"
+      cluster="clusterSettings.cluster"
+      on-update="clusterSettings.nameUpdated()">
+    </rename-and-deregister-cluster-section>
 
   </div>
 </div>

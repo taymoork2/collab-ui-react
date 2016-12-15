@@ -968,6 +968,7 @@
     "begin": "Begin",
     "cancel": "Cancel",
     "ciscoCollaborationCloud": "Cisco Collaboration Cloud",
+    "cluster": "Cluster",
     "close": "Close",
     "confirm": "Confirm",
     "continue": "Continue",
@@ -1547,10 +1548,7 @@
       "listing": {
         "no_clusters_heading": "No Cisco Expressway clusters registered",
         "no_clusters_text": "See required actions above and documentation to get started."
-      },
-      "deregisterConfirmRemoval": "Confirm Removal",
-      "deregisterOpening": "You are about to deregister the Expressway cluster",
-      "willNoLongerBeUsed": "The Expressway cluster will no longer be used for Hybrid Services. All cluster peers will automatically be deregistered."
+      }
     },
     "status": {
       "unknown": "Status unknown",
@@ -1632,6 +1630,13 @@
       "c_cal": "Calendar Service",
       "c_ucmc": "Call Service",
       "c_mgmt": "Management Service"
+    },
+    "clusterTypeFromServiceId": {
+      "squared-fusion-mgmt": "Expressway",
+      "squared-fusion-cal": "Expressway",
+      "squared-fusion-uc": "Expressway",
+      "squared-fusion-media": "Hybrid Media",
+      "spark-hybrid-datasecurity": "Hybrid Data Security"
     },
     "serviceDescriptions": {
       "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets your users answer calls to their work phones and to place calls to other work phones, on their Cisco Spark client.",
@@ -1725,16 +1730,22 @@
       "deactivateServicesHeader": "Deactivate Services",
       "deactivateServicesParagraph": "Deactivate {{ServiceName}} to remove any service-related functionality from this cluster.",
       "deactivateServicesSubHeader": "Deactivate {{service}}",
-      "noHybridServicesProvisioned": "No Hybrid Services are enabled on this Expressway. To enable a Hybrid Service, go to the relevant service page.",
-      "deregisterClusterParagraph": "There are still services active on “{{ClusterName}}”.",
-      "deregisterClusterExplanation": "Remove this cluster from Cisco Collaboration Cloud. All services must be deactivated on a cluster before it can be removed.",
-      "clusterMainSectionHeader": "Cluster",
-      "renameClusterParagraph": "Rename the Expressway cluster.",
-      "renameClusterDescription": "The cluster name is only used for display purposes. Changing it will not update the name on the Expressway itself.",
-      "clusterNameCannotByEmpty": "Cluster name cannot be empty.",
-      "clusterNameSaved": "Cluster name saved successfully",
+      "noHybridServicesProvisioned": "No Hybrid Services are enabled on this Expressway. To enable a Hybrid Service, go to the relevant service page."
+    },
+    "renameAndDeregisterComponent": {
+      "clusterNameWatermark": "Enter cluster name…",
+      "renameClusterParagraph": "Rename the {{clusterType}} cluster.",
+      "clusterNameSaved": "Cluster name saved successfully.",
       "clusterNameCannotBeSaved": "Cluster name could not be saved. Try again later.",
-      "clusterNameWatermark": "Enter cluster name…"
+      "clusterNameCannotByEmpty": "Cluster name cannot be empty.",
+      "renameClusterDescription": "The cluster name is used for display purposes in Cloud Collaboration Managment and in email notifications.",
+      "deregisterClusterExplanation": "Remove this {{clusterType}} cluster from Cisco Collaboration Cloud.",
+      "deregisterClusterExplanationBlocked": "It is not possible to deregister an Expressway until all its services have been deactivated.",
+      "allServicesMustBeDeactivatedOnExpressway": "All services must be deactivated on an Expressway cluster before it can be removed.",
+      "couldNotDeregisterCluster": "Could not deregister cluster.",
+      "deregisterConfirmRemoval": "Confirm Removal",
+      "deregisterConfirmationText": "You are about to deregister the cluster <strong>{{clusterName}}</strong> from Cisco Collaboration Cloud.",
+      "deregisterConfirmPopup": "{{clusterName}} was removed successfully from Cisco Collaboration Cloud."
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate {{ServiceName}}",
@@ -1785,9 +1796,6 @@
         "certificatesModalHeading": "Remove Certificate",
         "certificatesModalText": "Are you sure you want to remove the following certificate?",
         "deactivateServiceOpening": "You are about to deactivate the following Hybrid Service:",
-        "fromCiscoSpark": "from your Cisco Spark organization {{orgName}}.",
-        "usersWillBeDisentitled": "{{serviceName}} will be disabled for all of your users.",
-        "connectorsAndDataWillBeWiped": "This action will remove {{connectorName}} from all of your Expressway clusters and delete all connectors' local settings.",
         "noClustersWillBeDeregistered": "No Expressway clusters will be deregistered from Cisco Collaboration Cloud, and they can still be used for hosting Hybrid Services.",
         "sipDomainHeading": "SIP Destination",
         "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
@@ -4132,7 +4140,6 @@
       "releaseChannelDesc": "Select a release channel for this cluster.",
       "deletecluster": "Delete Cluster",
       "deleteclusterHeadding": "Delete Hybrid Media Cluster",
-      "deleteclusterDesc": "Click the Delete Cluster button to launch the Delete Cluster workflow.",
       "deleteClusterBodyDesc": "Before you can delete this cluster you must either move all nodes to another cluster or deregister all the nodes. What would you like to do?",
       "makeASelection": "Make a selection:",
       "moveallnodes": "Move All Nodes",

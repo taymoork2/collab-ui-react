@@ -216,7 +216,7 @@
         },
         controller: 'ClusterDeregisterController',
         controllerAs: 'clusterDeregister',
-        templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html',
+        templateUrl: 'modules/hercules/fusion-pages/components/rename-and-deregister-cluster-section/deregister-dialog.html',
         type: 'dialog'
       }).result.then(function () {
         $state.go('calendar-service.list');
