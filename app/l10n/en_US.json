@@ -1667,7 +1667,8 @@
       "calendarType": "Calendar Type",
       "exchange": "Microsoft Exchange",
       "google": "Google Calendar",
-      "notSetup": "Not currently set up"
+      "notSetup": "Not currently set up",
+      "sinceTime": "since {{timestamp}}"
     },
     "alarms": {
       "alarms": "Alarms",
@@ -4874,7 +4875,7 @@
     "status": "Status",
     "cluster": "Cluster",
     "sipUri": "Directory URI",
-    "errorMessage": "Error Message"
+    "details": "Details"
   },
   "validation": {
     "nonPrintable": "This entry contains nonprintable characters.",

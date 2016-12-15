@@ -16,12 +16,12 @@ describe('Service: UserDetails', function () {
       $httpBackend.verifyNoOutstandingRequest();
     });
 
-    function expectUserRow(userRow, user, type, cluster, status, errorMessage, id, service) {
+    function expectUserRow(userRow, user, type, cluster, status, details, id, service) {
       expect(userRow[0]).toBe(user);
       expect(userRow[1]).toBe(type);
       expect(userRow[2]).toBe(cluster);
       expect(userRow[3]).toBe('hercules.activationStatus.' + status);
-      expect(userRow[4]).toBe(errorMessage);
+      expect(userRow[4]).toBe(details);
       expect(userRow[5]).toBe(id);
       expect(userRow[6]).toBe('hercules.serviceNames.' + service);
     }
@@ -40,11 +40,37 @@ describe('Service: UserDetails', function () {
         entitled: true,
         state: 'activated',
         serviceId: 'squared-fusion-cal',
-        connector: { cluster_name: 'Tom is Awesome Cluster' }
+        connector: { cluster_name: 'Tom is Awesome Cluster' },
       }];
       UserDetails.getUsers('5632-f806-org', simulatedResponse)
         .then(function (userRows) {
           expectUserRow(userRows[0], 'sparkuser1@gmail.com', 'common.user', 'Tom is Awesome Cluster', 'activated', '', '111', 'squared-fusion-cal');
+        });
+      $httpBackend.flush();
+    });
+
+    it('also shows the status description in the Activated state', function () {
+      $httpBackend
+        .when('GET', 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111"')
+        .respond({
+          Resources: [{
+            id: '111',
+            userName: 'sparkuser1@gmail.com'
+          }]
+        });
+      var simulatedResponse = [{
+        userId: '111',
+        entitled: true,
+        state: 'activated',
+        serviceId: 'squared-fusion-cal',
+        connector: { cluster_name: 'Tom is Awesome Cluster' },
+        description: {
+          defaultMessage: 'WebEx is not configured'
+        }
+      }];
+      UserDetails.getUsers('5632-f806-org', simulatedResponse)
+        .then(function (userRows) {
+          expectUserRow(userRows[0], 'sparkuser1@gmail.com', 'common.user', 'Tom is Awesome Cluster', 'activated', 'WebEx is not configured', '111', 'squared-fusion-cal');
         });
       $httpBackend.flush();
     });

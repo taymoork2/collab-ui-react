@@ -6,7 +6,7 @@
     .controller('CallServicePreviewCtrl', CallServicePreviewCtrl);
 
   /*@ngInject*/
-  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService, UCCService) {
+  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService, UCCService, FusionUtils) {
     $scope.saveLoading = false;
     $scope.domainVerificationError = false;
     $scope.currentUser = $stateParams.currentUser;
@@ -115,15 +115,16 @@
           });
         }
         if ($scope.callServiceAware.status && $scope.callServiceAware.status.lastStateChange) {
-          $scope.callServiceAware.status.lastStateChangeText = moment($scope.callServiceAware.status.lastStateChange).fromNow(true);
+          $scope.callServiceAware.status.lastStateChangeText = FusionUtils.getTimeSinceText($scope.callServiceAware.status.lastStateChange);
         }
+
         if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.connectorId) {
           ClusterService.getConnector($scope.callServiceConnect.status.connectorId).then(function (connector) {
             $scope.callServiceConnect.homedConnector = connector;
           });
         }
         if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.lastStateChange) {
-          $scope.callServiceConnect.status.lastStateChangeText = moment($scope.callServiceConnect.status.lastStateChange).fromNow(true);
+          $scope.callServiceConnect.status.lastStateChangeText = FusionUtils.getTimeSinceText($scope.callServiceConnect.status.lastStateChange);
         }
         if ($scope.callServiceAware.entitled && $scope.callServiceAware.status) {
           UCCService.getUserDiscovery($scope.currentUser.id).then(function (userDiscovery) {

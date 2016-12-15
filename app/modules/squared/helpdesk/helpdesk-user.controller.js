@@ -6,7 +6,7 @@
     .controller('HelpdeskUserController', HelpdeskUserController);
 
   /* @ngInject */
-  function HelpdeskUserController($modal, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation) {
+  function HelpdeskUserController($modal, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, FusionUtils) {
     var vm = this;
     if ($stateParams.user) {
       vm.userId = $stateParams.user.id;
@@ -232,7 +232,7 @@
                 break;
             }
             if (status.lastStateChange) {
-              status.lastStateChangeText = moment(status.lastStateChange).fromNow(true);
+              status.lastStateChangeText = FusionUtils.getTimeSinceText(status.lastStateChange);
             }
           });
         }, vm._helpers.notifyError);
