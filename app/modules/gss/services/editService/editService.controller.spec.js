@@ -4,7 +4,7 @@ describe('controller: EditServiceCtrl', function () {
   var $controller, $q, $scope, controller, GSSService;
 
   beforeEach(angular.mock.module('GSS'));
-  beforeEach(angular.mock.module('Core'));
+  afterEach(destructDI);
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(initController);
@@ -14,6 +14,10 @@ describe('controller: EditServiceCtrl', function () {
     $q = _$q_;
     $scope = _$rootScope_.$new();
     GSSService = _GSSService_;
+  }
+
+  function destructDI() {
+    $controller = $q = $scope = controller = GSSService = undefined;
   }
 
   function initSpies() {

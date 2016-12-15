@@ -5282,6 +5282,9 @@
     },
     "summary": "Summary",
     "summaryDesc": "You have configured the chat template. Click Finish to save the configuration and generate embed code so you can start using this chat template on your organization website.",
+    "editSummaryDesc": "You have edited the chat template. Click Finish to save the configuration so you can start using the new version of this chat template on your organization website.",
+    "editCodeWarnMsg2Line1": "It can take up to 15 minutes for the chat template changes to be reflected.",
+    "editCodeWarnMsg2Line2":"Open the chat template in a new browser tab after this time to view the changes.",
     "copyEmbedCode": "Copy Embed Code",
     "errorCreateChatTemplate": "Error generating embed code, please try again.",
     "agentUnavailableMessage": "Sorry, we are unavailable at the moment. Please try again later.",
@@ -6092,14 +6095,27 @@
     "msg": {
       "splsResponseErr": "No partner organization found, please contact ccaportal@cisco.com for help."
     },
+    "cbgTitle": "Callback Groups",
+    "tdTitle": "Telephony Domain",
     "button": {
       "decline": "Decline",
       "approve": "Approve",
+      "complete": "Complete",
       "submitRequest": "Submit Request",
       "cancelSubmission": "Cancel Submission"
     },
-    "cbgTitle": "Callback Groups",
-    "tdTitle": "Telephony Domain",
+    "errorCode": {
+      "3001": "Failed to create callback group",
+      "3002": "Failed to update callback group",
+      "3003": "Failed to get callback group",
+      "3004": "Failed to get callback group workflow status",
+      "3005": "Failed to sync callback group",
+      "3006": "Failed to move sites between callback groups",
+      "3007": "Failed to list callback groups",
+      "3008": "Failed to check callback group name",
+      "3009": "The callback group name is duplicated",
+      "genericError": "An unexpected error occurred. Please try again later."
+    },
     "cbgs": {
       "overview": "Overview",
       "openedOn": "Opened on",
@@ -6116,9 +6132,13 @@
       "csvFilename": "exported_callbackGroup.csv",
       "declineDialogTitle": "Decline Callback Group",
       "declineReason": "Reason Callback Group is declined",
+      "provisionCbg": "Callback Group successfully updated",
+      "moveSiteMsg": "Are you sure you want to move this site?",
+      "provisionMsg": "Do you want to complete this request and notify customer?",
+      "cancelSubmissionTitle": "Are you sure you want to cancel the submission?",
+      "cancelSubmissionMsg": "The associated remedy ticket will be deleted from the system.",
       "declineDialogNote": "Note: Explaination will appear as a comment in the Callback Group history",
       "approveMsg": "If you proceed, the system will auto-update the callback group with the selected countries",
-      "moveSiteMsg": "Are you sure you want to move this site?",
       "field": {
         "sites": "Site URL",
         "status_": "Status",

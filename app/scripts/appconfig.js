@@ -1854,6 +1854,9 @@
                 // TODO:  remove this once the controllers are refactored
                 return true;
               },
+              trialForPaid: function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
+              },
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview').data.displayName = $translate.instant('common.overview');
               }

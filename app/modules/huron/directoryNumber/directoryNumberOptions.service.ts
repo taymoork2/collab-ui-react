@@ -31,11 +31,12 @@ export class DirectoryNumberOptionsService {
     this.externalNumbersOptions = this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/externalnumberpools/:externalNumberId');
   }
 
-  public getInternalNumberOptions(): ng.IPromise<string[]> {
+  public getInternalNumberOptions(pattern?: string | Pattern, assignment?: Availability): ng.IPromise<string[]> {
     return this.internalNumbersOptions.query({
       customerId: this.Authinfo.getOrgId(),
-      directorynumber: '',
+      directorynumber: assignment || Availability.UNASSIGNED,
       order: 'pattern',
+      pattern: pattern ? '%' + pattern + '%' : undefined,
     }).$promise
     .then(options => {
       return _.map(options, 'pattern');

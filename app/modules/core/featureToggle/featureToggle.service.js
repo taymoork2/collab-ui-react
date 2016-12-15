@@ -46,6 +46,7 @@
       atlasSMP: 'atlas-smp',
       atlasTrialsShipDevices: 'atlasTrialsShipDevices',
       atlasDeviceUsageReport: 'atlas-device-usage-report',
+      atlasStartTrialForPaid: 'atlas-start-trial-for-paid',
       androidAddGuestRelease: 'android-add-guest-release',
       androidDirectUpload: 'android-direct-upload',
       androidImportantFilter: 'android-important-filter',

@@ -1,7 +1,9 @@
+@import '~collab-amcharts/amcharts/plugins/export/export';
 @import 'callVolume/_call-volume';
 @import 'availability/_availability';
 @import 'utilization/_utilization';
 @import 'metricsInfoCard/_metrics-info';
+@import '_media-metrics-report-card';
 
 @keyframes graphAxisFade {
   0% {
@@ -45,6 +47,52 @@
   }
 }
 
+.amcharts-export-menu .export-main > a,
+.amcharts-export-menu .export-delayed-capturing > a {
+  background-size: 1.25rem;
+  border: none;
+  box-shadow: none;
+  background-image: url('data:image/svg+xml;charset=utf-8;base64,PHN2ZyBoZWlnaHQ9IjEwMDAiIHdpZHRoPSIxMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xNjYuNyA1MDBjMCA0Ni0zNy4zIDgzLjMtODMuNCA4My4zUzAgNTQ2IDAgNTAwczM3LjMtODMuMyA4My4zLTgzLjMgODMuNCAzNy4zIDgzLjQgODMuM3ptNDE2LjYgMGMwIDQ2LTM3LjMgODMuMy04My4zIDgzLjNTNDE2LjcgNTQ2IDQxNi43IDUwMHMzNy4zLTgzLjMgODMuMy04My4zIDgzLjMgMzcuMyA4My4zIDgzLjN6bTQxNi43IDBjMCA0Ni0zNy4zIDgzLjMtODMuMyA4My4zUzgzMy4zIDU0NiA4MzMuMyA1MDBzMzcuMy04My4zIDgzLjQtODMuM1MxMDAwIDQ1NCAxMDAwIDUwMHoiLz48L3N2Zz4=');
+}
+
+.amcharts-export-menu .export-main:hover > a {
+  background-image: url('data:image/svg+xml;charset=utf-8;base64,PHN2ZyBoZWlnaHQ9IjEwMDAiIHdpZHRoPSIxMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xNjYuNyA1MDBjMCA0Ni0zNy4zIDgzLjMtODMuNCA4My4zUzAgNTQ2IDAgNTAwczM3LjMtODMuMyA4My4zLTgzLjMgODMuNCAzNy4zIDgzLjQgODMuM3ptNDE2LjYgMGMwIDQ2LTM3LjMgODMuMy04My4zIDgzLjNTNDE2LjcgNTQ2IDQxNi43IDUwMHMzNy4zLTgzLjMgODMuMy04My4zIDgzLjMgMzcuMyA4My4zIDgzLjN6bTQxNi43IDBjMCA0Ni0zNy4zIDgzLjMtODMuMyA4My4zUzgzMy4zIDU0NiA4MzMuMyA1MDBzMzcuMy04My4zIDgzLjQtODMuM1MxMDAwIDQ1NCAxMDAwIDUwMHoiIGZpbGw9IiMwMzg3QjgiIGZpbGwtb3BhY2l0eT0iMSIgLz48L3N2Zz4=');
+  box-shadow: none;
+  border: none;
+}
+
+.amcharts-export-menu li:hover > a {
+  background-color: #ebebec;
+  color: #4f5051;
+}
+
+.amcharts-export-menu > ul > li:hover > a {
+  background-color: transparent;
+}
+
+.amcharts-export-menu > ul ul {
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.18);
+  border-radius: 2px;
+}
+
+.amcharts-export-menu .export-main > a {
+  margin: 0;
+
+  @include vr-spacing(p, 1);
+}
+
+.amcharts-export-menu-top-right > ul > li > ul::after,
+.amcharts-export-menu-top-right > ul > li > ul > li:first-child > a::after {
+  display: none;
+  border: none;
+}
+
+.amcharts-export-menu li > a {
+  border: none;
+
+  @include vr-spacing(pv, 0.25);
+}
+
 .metrics-reports {
   @extend %content-subheader;
   @extend %page-content-padding;
@@ -80,7 +128,7 @@
     }
   }
 
-  .report-card {
+  .media-metrics-report-card {
     animation: scaleUpCard 0.5s linear;
 
     article {

@@ -55,7 +55,7 @@
         eventType: "room.localAccess",
         displayName: displayName,
         email: email,
-        message: token
+        token: token
       });
     }
 
