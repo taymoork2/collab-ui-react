@@ -4,11 +4,10 @@ describe('controller: AddComponentCtrl', function () {
   var $controller, $q, $scope, controller, ComponentsService, GSSService;
 
   beforeEach(angular.mock.module('GSS'));
-  beforeEach(angular.mock.module('Core'));
+  afterEach(destructDI);
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(initController);
-
 
   function dependencies(_$controller_, _$q_, _$rootScope_, _ComponentsService_, _GSSService_) {
     $controller = _$controller_;
@@ -16,6 +15,10 @@ describe('controller: AddComponentCtrl', function () {
     $scope = _$rootScope_.$new();
     ComponentsService = _ComponentsService_;
     GSSService = _GSSService_;
+  }
+
+  function destructDI() {
+    $controller = $q = $scope = controller = ComponentsService = GSSService = undefined;
   }
 
   function initSpies() {

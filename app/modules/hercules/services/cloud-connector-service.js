@@ -5,14 +5,11 @@
     .module('Hercules')
     .factory('CloudConnectorService', CloudConnectorService);
 
-  function CloudConnectorService($q, $timeout, Authinfo, ServiceDescriptor) {
-    var serviceAccountId = 'google@example.org'; // dummy value for now
-    var isGoogleCalendarSetup = false;
+  function CloudConnectorService($http, Authinfo, ServiceDescriptor, UrlConfig) {
 
     return {
       updateConfig: updateConfig,
       deactivateService: deactivateService,
-      getServiceAccount: getServiceAccount,
       getService: getService,
       getStatusCss: getStatusCss
     };
@@ -21,9 +18,9 @@
       return res.data;
     }
 
-    function getService(serviceId/*, orgId */) {
-      // Make sure you use the orgId (orgId || Authinfo.getOrgId) when the real API is called
-      return $q.resolve({ provisioned: isGoogleCalendarSetup, status: 'OK', serviceAccountId: serviceAccountId })
+    function getService(serviceId, orgId) {
+      return $http.get(UrlConfig.getCccUrl() + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/services/' + serviceId)
+        .then(extractDataFromResponse)
         .then(function (service) {
           // Align this with the FusionClusterService.getServiceStatus() to make the UI handling simpler
           service.serviceId = serviceId;
@@ -34,78 +31,23 @@
         });
     }
 
-    function getServiceAccount(serviceId) {
-      return $q(function (resolve, reject) {
-        if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal()) {
-          resolve(serviceAccountId);
-        } else {
-          reject();
-        }
-      });
-    }
-
     function updateConfig(newServiceAccountId, privateKey, serviceId) {
-      return $q(function (resolve, reject) {
-        if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal()) {
-          ServiceDescriptor.enableService(serviceId)
-              .then(function () {
-                isGoogleCalendarSetup = true;
-                serviceAccountId = newServiceAccountId;
-                resolve(extractDataFromResponse({
-                  data: {},
-                  status: 200
-                }));
-              })
-              .catch(function (error) {
-                reject(error);
-              });
-        } else {
-          $timeout(function () {
-            reject({
-              data: {
-                message: 'Not implemented yet!',
-                errors: {
-                  description: 'API not found!'
-                },
-                trackingId: 'ATLAS_08193b4d-3061-0cd4-3f2c-96117f019146_15'
-              },
-              status: 501
-            });
-          }, 2000);
-        }
-      });
+      return $http
+        .post(UrlConfig.getCccUrl() + '/orgs/' + Authinfo.getOrgId() + '/services/' + serviceId, {
+          serviceAccountId: newServiceAccountId,
+          privateKeyData: privateKey.split(',')[1]
+        })
+        .then(function () {
+          return ServiceDescriptor.enableService(serviceId);
+        });
     }
 
     function deactivateService(serviceId) {
-      return $q(function (resolve, reject) {
-        if (serviceId === 'squared-fusion-gcal' && Authinfo.isFusionGoogleCal()) {
-          ServiceDescriptor.disableService(serviceId)
-            .then(function () {
-              isGoogleCalendarSetup = false;
-              resolve(extractDataFromResponse({
-                data: {},
-                status: 200
-              }));
-            })
-            .catch(function (error) {
-              reject(error);
-            });
-        } else {
-          $timeout(function () {
-            reject({
-              data: {
-                message: 'Not implemented yet!',
-                errors: {
-                  description: 'API not found!'
-                },
-                trackingId: 'ATLAS_08193b4d-3061-0cd4-3f2c-96117f019146_15'
-              },
-              status: 501
-            });
-          }, 1000);
-
-        }
-      });
+      return $http
+        .delete(UrlConfig.getCccUrl() + '/orgs/' + Authinfo.getOrgId() + '/services/' + serviceId)
+        .then(function () {
+          ServiceDescriptor.disableService(serviceId);
+        });
     }
 
     function getStatusCss(service) {

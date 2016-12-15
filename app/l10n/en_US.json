@@ -315,7 +315,8 @@
       "400094": "already has Call Service under Hybrid Services enabled; having both Call Service and Spark Call enabled for a user is unsupported. To enable Spark Call, disable Call Service for this user and try again.",
       "deleteUserDnFallbackError": "entitlement update failed. The user's directory number is used as the fallback destination for Hunt Group(s).",
       "other": "not entitled, status: {{status}}"
-    }
+    },
+    "enableCareInformationText": "Select Message and Call to enable Care."
   },
   "usersPreview": {
     "groupPreview": "Group:",
@@ -962,6 +963,7 @@
     "and": "and",
     "apply": "Apply",
     "assign": "Assign",
+    "agree": "Agree",
     "back": "Back",
     "begin": "Begin",
     "cancel": "Cancel",
@@ -1608,6 +1610,7 @@
       "squared-fusion-mgmt": "Hybrid Management Service",
       "squared-fusion-uc": "Hybrid Call Service",
       "squared-fusion-cal": "Hybrid Calendar Service",
+      "squared-fusion-gcal": "Hybrid Calendar (Google)",
       "spark-hybrid-datasecurity": "Hybrid Data Security",
       "squared-fusion-media": "Hybrid Media Service"
     },
@@ -1813,8 +1816,10 @@
         "clickToBrowse": "click to browse",
         "fileReadyForImport": "File ready for import",
         "removeFile": "Remove file",
+        "certificateWarning": "Warning: {{fileName}} does not appear to be a valid PKCS-12 file.",
         "successfullyUploadedKey": "Service account saved successfully, and private key file {{filename}} uploaded.",
-        "failedToUploadKey": "Could not enable Hybrid Calendar Service for Google Calendar.",
+        "failedToUploadKey": "Could not save service account name and/or certificate file.",
+        "failedToActivateService": "Could not enable Hybrid Calendar.",
         "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status.",
         "generateAPrivateKeyHeader": "Generate a Private Key",
         "generateAPrivateKeyExplanation": "To enable Hybrid Calendar for your users, you need to generate a private key for Google Calendar. You can generate the key with the <a href=\"https://console.developers.google.com/\" target=\"_blank\">Google Developer Console</a>. Follow <a href=\"https://example.org/\" target=\"_blank\">documentation</a> to learn how to generate a key.",
@@ -3173,6 +3178,20 @@
       "msaNotSigned": "Customer needs to sign PSTN Contract.",
       "pendingVendor": "Scheduled transfer date requested from previous carrier for number porting.",
       "rejected": "Order has been rejected. Contact Intelepeer."
+    },
+    "notification": {
+      "text": "Your PSTN services are not set up completely until you accept the Terms of Service.",
+      "textLink": "Accept Now"
+    },
+    "tos": {
+      "titleIntelepeer": "Intelepeer terms of service",
+      "copyright": "Copyright 2016 Cisco Systems.  All rights reserved.",
+      "info": "Cisco Spark is a collaboration application that provides messaging (IM), voice and video calling capabilities.",
+      "noticeTitle": "IMPORTANT NOTICES AND DISCLAIMERS",
+      "notice": "Please redirect to the following page and read the agreements from you carrier.  Your PSTN numbers will be released after you read and agree these agreements.",
+      "confirmHeading": "Confirm the legal contact who accept this terms.",
+      "agreeInstructions": "By clicking 'Agree' you have read and agree to comply with the terms and conditions.",
+      "viewTos": "View Terms of Service"
     }
   },
   "pstnContractInformation": {
@@ -5255,6 +5274,9 @@
     },
     "summary": "Summary",
     "summaryDesc": "You have configured the chat template. Click Finish to save the configuration and generate embed code so you can start using this chat template on your organization website.",
+    "editSummaryDesc": "You have edited the chat template. Click Finish to save the configuration so you can start using the new version of this chat template on your organization website.",
+    "editCodeWarnMsg2Line1": "It can take up to 15 minutes for the chat template changes to be reflected.",
+    "editCodeWarnMsg2Line2":"Open the chat template in a new browser tab after this time to view the changes.",
     "copyEmbedCode": "Copy Embed Code",
     "errorCreateChatTemplate": "Error generating embed code, please try again.",
     "agentUnavailableMessage": "Sorry, we are unavailable at the moment. Please try again later.",
@@ -6065,14 +6087,27 @@
     "msg": {
       "splsResponseErr": "No partner organization found, please contact ccaportal@cisco.com for help."
     },
+    "cbgTitle": "Callback Groups",
+    "tdTitle": "Telephony Domain",
     "button": {
       "decline": "Decline",
       "approve": "Approve",
+      "complete": "Complete",
       "submitRequest": "Submit Request",
       "cancelSubmission": "Cancel Submission"
     },
-    "cbgTitle": "Callback Groups",
-    "tdTitle": "Telephony Domain",
+    "errorCode": {
+      "3001": "Failed to create callback group",
+      "3002": "Failed to update callback group",
+      "3003": "Failed to get callback group",
+      "3004": "Failed to get callback group workflow status",
+      "3005": "Failed to sync callback group",
+      "3006": "Failed to move sites between callback groups",
+      "3007": "Failed to list callback groups",
+      "3008": "Failed to check callback group name",
+      "3009": "The callback group name is duplicated",
+      "genericError": "An unexpected error occurred. Please try again later."
+    },
     "cbgs": {
       "overview": "Overview",
       "openedOn": "Opened on",
@@ -6089,9 +6124,13 @@
       "csvFilename": "exported_callbackGroup.csv",
       "declineDialogTitle": "Decline Callback Group",
       "declineReason": "Reason Callback Group is declined",
+      "provisionCbg": "Callback Group successfully updated",
+      "moveSiteMsg": "Are you sure you want to move this site?",
+      "provisionMsg": "Do you want to complete this request and notify customer?",
+      "cancelSubmissionTitle": "Are you sure you want to cancel the submission?",
+      "cancelSubmissionMsg": "The associated remedy ticket will be deleted from the system.",
       "declineDialogNote": "Note: Explaination will appear as a comment in the Callback Group history",
       "approveMsg": "If you proceed, the system will auto-update the callback group with the selected countries",
-      "moveSiteMsg": "Are you sure you want to move this site?",
       "field": {
         "sites": "Site URL",
         "status_": "Status",

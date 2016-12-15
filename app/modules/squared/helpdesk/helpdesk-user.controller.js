@@ -103,29 +103,42 @@
       return 'helpdesk.emailStatuses.' + eventType;
     }
 
-    function getDisplayStatus(eventType) {
+    function getDeliveryText(emailEvent) {
+      // sadly, the descriptive text might come from one of two properties that we know of so far:
+      // - 'delivery-status.message'
+      // - 'delivery-status.description'
+      var deliveryMsg = _.get(emailEvent, 'delivery-status.message');
+      var deliveryDescr = _.get(emailEvent, 'delivery-status.description');
+
+      // return the non-falsey property value, but prefer the 'message' property if both are truthy
+      // - note: this may change in the future
+      return deliveryMsg || deliveryDescr;
+    }
+
+    function getDisplayStatus(emailEvent) {
+      var eventType = _.get(emailEvent, 'event');
       var l10nKey = mailgunEventTypeToL10nKey(eventType);
       return $translate.instant(l10nKey);
     }
 
-    function mkDeliveryStatusMsgHtml(deliveryCode, deliveryMsg) {
-      var msg = deliveryMsg;
-      msg = msg.split('\n');
+    function mkDeliveryText(deliveryCode, deliveryText) {
+      var result = deliveryText;
+      result = result.split('\n');
 
       // delivery message may be multi-line, as a compromise on requirements, we settle for
       //   taking just the first line to display
-      msg = _.first(msg);
+      result = _.first(result);
 
       // delivery code is always provided explicitly, but what if delivery code is also contained as
       //   part of the message text? we remove it, if present
-      msg = _.replace(msg, deliveryCode, '');
+      result = _.replace(result, deliveryCode, '');
 
       // because we end up using the delivery code explicitly as a prefix in the final value anyways
-      msg = deliveryCode + ': ' + msg;
-      return msg;
+      result = deliveryCode + ': ' + result;
+      return result;
     }
 
-    function mkTooltipBodyHtml(eventType, deliveryCode, deliveryMsg) {
+    function mkTooltipBodyHtml(eventType, deliveryCode, deliveryText) {
       // notes:
       // - currently, we predefine tooltip messages for certain Mailgun API statuses
       var eventTypeWithPredefinedMsg = ['accepted', 'delivered', 'unsubscribed'];
@@ -133,20 +146,26 @@
       if (_.includes(eventTypeWithPredefinedMsg, eventType)) {
         return $translate.instant('helpdesk.emailStatuses.tooltips.' + eventType);
       }
+
       // - for others where we know delivery 'code' and 'message' properties contain something
       //   meaningful, we use those values instead
       if (_.includes(eventTypeToUseDeliveryProps, eventType)) {
-        return mkDeliveryStatusMsgHtml(deliveryCode, deliveryMsg);
+        return mkDeliveryText(deliveryCode, deliveryText);
       }
     }
 
-    function mkTooltipHtml(timestamp, eventType, deliveryCode, deliveryMsg) {
+    function mkTooltipHtml(emailEvent) {
+      var timestamp = _.get(emailEvent, 'timestamp');
+      var eventType = _.get(emailEvent, 'event');
       if (!timestamp || !eventType) {
         return $translate.instant('common.notAvailable');
       }
+
+      var deliveryCode = _.get(emailEvent, 'delivery-status.code');
+      var deliveryText = getDeliveryText(emailEvent);
       var header, body;
       header = '<b>' + HelpdeskService.unixTimestampToUTC(timestamp) + '</b>';
-      body = mkTooltipBodyHtml(eventType, deliveryCode, deliveryMsg);
+      body = mkTooltipBodyHtml(eventType, deliveryCode, deliveryText);
 
       // if event type is one that is currently not handled yet, only return the timestamp
       return (body ? header + '<br />' + body : header);
@@ -167,19 +186,11 @@
       //   status separately (it's also managed by a separate end-point anyways)
       HelpdeskService.getLatestEmailEvent(user.userName)
         .then(function (emailEvent) {
-          var eventType = _.get(emailEvent, 'event');
-          var timestamp = _.get(emailEvent, 'timestamp');
-          var deliveryCode = _.get(emailEvent, 'delivery-status.code');
-          var deliveryMsg = _.get(emailEvent, 'delivery-status.message');
-          var displayStatus = getDisplayStatus(eventType);
-          var toolTipHtml = mkTooltipHtml(timestamp, eventType, deliveryCode, deliveryMsg);
+          var displayStatus = getDisplayStatus(emailEvent);
+          var toolTipHtml = mkTooltipHtml(emailEvent);
           vm.user.lastEmailStatus = {
-            eventType: eventType,
-            timestamp: timestamp,
-            deliveryCode: deliveryCode,
-            deliveryMsg: deliveryMsg,
-            toolTipHtml: toolTipHtml,
             displayStatus: displayStatus,
+            toolTipHtml: toolTipHtml,
           };
         })
         .catch(vm._helpers.notifyError);

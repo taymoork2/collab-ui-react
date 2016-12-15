@@ -3,13 +3,17 @@
 describe('Service: DashboardService', function () {
   var $httpBackend, DashboardService;
 
-  beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('GSS'));
+  afterEach(destructDI);
   beforeEach(inject(dependencies));
 
   function dependencies(_$httpBackend_, _DashboardService_) {
     $httpBackend = _$httpBackend_;
     DashboardService = _DashboardService_;
+  }
+
+  function destructDI() {
+    $httpBackend = DashboardService = undefined;
   }
 
   it('getComponents should response with data', function () {

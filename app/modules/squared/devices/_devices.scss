@@ -1,4 +1,6 @@
-@import 'emergencyServices/csOverviewLoader';
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/spacing';
+@import 'styles/toolkit/layout';
 
 .sq-devices-page {
   @extend %grid-subheader;
@@ -329,7 +331,8 @@
       margin-bottom: 16px;
 
       .typeButton {
-        @extend .ui-grid-disable-selection;
+        user-select: none;
+        cursor: default;
 
         display: flex;
         flex-direction: column;
