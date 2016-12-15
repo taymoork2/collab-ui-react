@@ -1231,6 +1231,8 @@
     "extensionError": "Extension not valid: ",
     "companyVoicemail": "Voicemail",
     "vmAccessNumber": "Voicemail Access Number",
+    "vmAccessModes": "Access Modes",
+    "vmAccessModesHelpText": "Customize the voicemail delivery options for your organization. Aside from phone delivery, you can let users retrieve voicemails attachments in Cisco Spark, email or both. Downloaded voicemail attachments are not secure.",
     "companyVoicemailDescription": "Select a phone number to reserve for dialing voicemail from outside the company.",
     "to": "to",
     "addMoreExtensionRanges": "Add more extension ranges",
@@ -1246,6 +1248,7 @@
     "voicemailGetError": "Failed to get company voicemail number.",
     "voicemailUpdateError": "Failed to update company voicemail number.",
     "voicemailNoExternalNumbersError": "You must have unassigned direct lines to turn on voicemail. Please contact your partner or administrator.",
+    "voicemailNoDirectNumbersError": "You must have unassigned direct lines to turn on external voicemail access.",
     "timezoneUpdateError": "Failed to update company timezone.",
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
@@ -1259,12 +1262,18 @@
     "singleNumberRangeError": "Extension Ranges cannot begin and end with the same number.",
     "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines.",
     "voicemailToEmailLabel": "Voicemail to Email",
+    "voicemailToPhoneLabel": "Voicemail to Phone",
+    "phoneVoicemailAddedCostText": "Using this number incurs a usage cost.",
+    "voicemailToSparkLabel": "Voicemail to Spark",
+    "voicemailToSparkAndPhoneLabel": "Voicemail to Spark and Phone",
+    "messageWaitingIndicatorText": "The Message Waiting Indicator (MWI) continues to blink until users access their voicemails from their phones.",
     "voicemailToEmailHelpText": "Warning: Voicemail attachments sent via email are not secure.",
+    "voicemailNumberCostHelpText" : "Using this number incurs a usage cost",
     "voicemailToEmailGetError": "Failed to get voicemail to email settings.",
     "voicemailToEmailUpdateError": "Failed to update voicemail to email settings.",
     "voicemailTimeZoneGetError": "Failed to get voicemail time zone.",
     "externalVoicemailAccessLabel": "External Voicemail Access",
-    "voicemailPilotHelpText": "Usage of this E164 number incurs usage cost.",
+    "voicemailPilotHelpText": "Usage of this E164 number incurs a usage cost.",
     "errorGettingOptionaVmDidToggle": "There was a problem getting the optionalVmDid toggle.",
     "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network.",
     "voicemailPrefixTitle": "Voicemail ID Prefix",
@@ -1290,7 +1299,7 @@
     "saveModal": {
       "title": "Dial Plan Settings",
       "message1": "Are you sure you want to change your dial plan settings?",
-      "message2": "Changing dial plan settings during business hours can take a few minutes to propagate through the system and prevent users from placing calls during that time."
+      "message2": "This change can take a few minutes to apply to the system and prevent users from placing calls at that time."
     }
   },
   "dirsyncModal": {
