@@ -290,7 +290,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
 
     describe('sendNotifyPartnerRequest():', function () {
       it('should set requestResult to TOTAL_FAILURE when the request to notify partners fails', function () {
-        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.reject("error"));
+        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.reject('error'));
 
         controller._helpers.sendNotifyPartnerRequest().then(function () {
           expect(Notification.errorResponse).toHaveBeenCalled();
@@ -302,8 +302,8 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
 
       it('should set requestResult to TOTAL_FAILURE when the request to notify partners has no notifications', function () {
         var fakePartnerNotifyResponse = {
-          'data': {
-            'notifyPartnerEmailStatusList': []
+          data: {
+            notifyPartnerEmailStatusList: []
           }
         };
         spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.when(fakePartnerNotifyResponse));
@@ -318,13 +318,13 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
 
       it('should set requestResult to TOTAL_FAILURE when the request to notify partners has all failed notifications', function () {
         var fakePartnerNotifyResponse = {
-          'data': {
-            'notifyPartnerEmailStatusList': [{
-              "adminEmail": "fakeuserunodostres+admin1@gmail.com",
-              "status": 400
+          data: {
+            notifyPartnerEmailStatusList: [{
+              adminEmail: 'fakeuserunodostres+admin1@gmail.com',
+              status: 400
             }, {
-              "adminEmail": "fakeuserunodostres+admin2@gmail.com",
-              "status": 400
+              adminEmail: 'fakeuserunodostres+admin2@gmail.com',
+              status: 400
             }]
           }
         };
@@ -340,13 +340,13 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
 
       it('should set requestResult to PARTIAL_FAILURE when the request to notify partners has some failed notifications', function () {
         var fakePartnerNotifyResponse = {
-          'data': {
-            'notifyPartnerEmailStatusList': [{
-              "adminEmail": "fakeuserunodostres+admin1@gmail.com",
-              "status": 200
+          data: {
+            notifyPartnerEmailStatusList: [{
+              adminEmail: 'fakeuserunodostres+admin1@gmail.com',
+              status: 200
             }, {
-              "adminEmail": "fakeuserunodostres+admin2@gmail.com",
-              "status": 400
+              adminEmail: 'fakeuserunodostres+admin2@gmail.com',
+              status: 400
             }]
           }
         };
@@ -362,13 +362,13 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
 
       it('should set requestResult to SUCCESS when the request to notify partners has all successful notifications', function () {
         var fakePartnerNotifyResponse = {
-          'data': {
-            'notifyPartnerEmailStatusList': [{
-              "adminEmail": "fakeuserunodostres+admin1@gmail.com",
-              "status": 200
+          data: {
+            notifyPartnerEmailStatusList: [{
+              adminEmail: 'fakeuserunodostres+admin1@gmail.com',
+              status: 200
             }, {
-              "adminEmail": "fakeuserunodostres+admin2@gmail.com",
-              "status": 200
+              adminEmail: 'fakeuserunodostres+admin2@gmail.com',
+              status: 200
             }]
           }
         };

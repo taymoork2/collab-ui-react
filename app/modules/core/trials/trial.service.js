@@ -172,8 +172,14 @@
       }
 
       return $http.post(notifyPartnerTrialExtUrl)
-        .success(logNotifyPartnerTrialExtMetric)
-        .error(logNotifyPartnerTrialExtMetric);
+        .then(function (response) {
+          logNotifyPartnerTrialExtMetric(response.data, response.status);
+          return response;
+        })
+        .catch(function (response) {
+          logNotifyPartnerTrialExtMetric(response.data, response.status);
+          return response;
+        });
     }
 
     function getData() {

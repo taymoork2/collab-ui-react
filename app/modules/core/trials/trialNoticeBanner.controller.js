@@ -72,10 +72,10 @@
             status: 200
           });
 
-          if (emailSuccess.length == 0) {
+          if (emailSuccess.length === 0) {
             Notification.error('trials.requestConfirmTotalFailNotifyMsg');
             vm.requestResult = vm.requestResultEnum.TOTAL_FAILURE;
-          } else if (emailSuccess.length == results.data.notifyPartnerEmailStatusList.length) {
+          } else if (emailSuccess.length === results.data.notifyPartnerEmailStatusList.length) {
             Notification.success('trials.requestConfirmNotifyMsg');
             vm.requestResult = vm.requestResultEnum.SUCCESS;
           } else {

@@ -44,7 +44,7 @@
         trialDidEntered: 'TRIALDIDENTERED',
         trialStarted: 'TRIALSTARTED',
         trialEdited: 'TRIALEDITED',
-        trialExtPartnerNotify: "TRIALEXTPARTNERNOTIFY",
+        trialExtPartnerNotify: 'TRIALEXTPARTNERNOTIFY',
         organizationPage: 'ORGANIZATIONPAGE',
         organizationCreated: 'ORGANIZATIONCREATED',
         customerLogin: 'CUSTOMERLOGIN',
