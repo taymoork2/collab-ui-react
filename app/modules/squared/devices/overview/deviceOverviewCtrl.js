@@ -6,18 +6,20 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, Userservice, $stateParams, $translate, $timeout, Authinfo, FeatureToggleService, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService, TerminusUserDeviceE911Service, AtaDeviceModal) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo, FeatureToggleService, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal, LaunchAdvancedSettingsModal, ServiceSetup, KemService, TerminusUserDeviceE911Service, EmergencyServicesService, AtaDeviceModal) {
     var deviceOverview = this;
     var huronDeviceService = $stateParams.huronDeviceService;
-    deviceOverview.showPlaces = false;
     deviceOverview.linesAreLoaded = false;
     deviceOverview.tzIsLoaded = false;
+    deviceOverview.countryIsLoaded = false;
+    deviceOverview.country = "";
+    deviceOverview.selectedCountry = "";
+    deviceOverview.hideE911Edit = true;
     deviceOverview.shouldShowLines = function () {
-      return deviceOverview.currentDevice.isHuronDevice || (deviceOverview.showPstn && deviceOverview.showPlaces);
+      return deviceOverview.currentDevice.isHuronDevice || deviceOverview.showPstn;
     };
 
     function init() {
-      fetchDisplayNameForLoggedInUser();
       fetchFeatureToggles();
 
       displayDevice($stateParams.currentDevice);
@@ -50,15 +52,20 @@
         pollLines();
       }
 
-      if (deviceOverview.currentDevice.isHuronDevice && !deviceOverview.currentDevice.isATA) {
+      if (deviceOverview.currentDevice.isHuronDevice) {
         if (!deviceOverview.tzIsLoaded) {
           initTimeZoneOptions().then(function () {
             loadDeviceInfo();
           });
         }
+        if (!deviceOverview.countryIsLoaded) {
+          initCountryOptions().then(function () {
+            loadDeviceInfo();
+          });
+        }
       }
 
-      deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport || deviceOverview.currentDevice.needsActivation;
+      deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport;
 
       deviceOverview.canChangeUpgradeChannel = channels.length > 1 && deviceOverview.currentDevice.isOnline;
 
@@ -68,35 +75,44 @@
 
       resetSelectedChannel();
     }
+
     function getEmergencyInformation() {
       return FeatureToggleService.supports(FeatureToggleService.features.huronDeviceE911).then(function (result) {
-        deviceOverview.showE911 = result;
-        if (result) {
-          TerminusUserDeviceE911Service.get({
-            customerId: Authinfo.getOrgId(),
-            number: deviceOverview.emergencyCallbackNumber
-          }).$promise.then(function (info) {
-            deviceOverview.emergencyAddress = info.e911Address;
-            deviceOverview.emergencyAddressStatus = info.status;
-          }).finally(function () {
-            deviceOverview.isE911Available = true;
-          });
+        if (!deviceOverview.currentDevice.isHuronDevice) {
+          deviceOverview.emergencyCallbackNumber = _.get(deviceOverview, 'lines[0].alternate');
+          deviceOverview.showE911 = deviceOverview.emergencyCallbackNumber;
+          if (!deviceOverview.showE911) {
+            deviceOverview.hideE911Edit = false;
+            EmergencyServicesService.getCompanyECN().then(function (result) {
+              deviceOverview.showE911 = true;
+              deviceOverview.emergencyCallbackNumber = result;
+              getEmergencyAddress();
+            });
+          } else {
+            getEmergencyAddress();
+          }
+        } else {
+          deviceOverview.showE911 = true;
+          if (result) {
+            getEmergencyAddress();
+          }
         }
       });
     }
 
-    function fetchDisplayNameForLoggedInUser() {
-      Userservice.getUser('me', function (data) {
-        if (data.success) {
-          deviceOverview.adminDisplayName = data.displayName;
-        }
+    function getEmergencyAddress() {
+      TerminusUserDeviceE911Service.get({
+        customerId: Authinfo.getOrgId(),
+        number: deviceOverview.emergencyCallbackNumber
+      }).$promise.then(function (info) {
+        deviceOverview.emergencyAddress = info.e911Address;
+        deviceOverview.emergencyAddressStatus = info.status;
+      }).finally(function () {
+        deviceOverview.isE911Available = true;
       });
     }
 
     function fetchFeatureToggles() {
-      FeatureToggleService.csdmPlacesGetStatus().then(function (result) {
-        deviceOverview.showPlaces = result;
-      });
       FeatureToggleService.csdmPstnGetStatus().then(function (result) {
         deviceOverview.showPstn = result && Authinfo.isSquaredUC();
       });
@@ -114,18 +130,44 @@
       }
     }
 
+    function initCountryOptions() {
+      deviceOverview.countryPlaceholder = $translate.instant('deviceOverviewPage.countryPlaceholder');
+
+      if (!deviceOverview.countryOptions) {
+        return ServiceSetup.getSiteCountries()
+          .then(function (countries) {
+            deviceOverview.countryOptions = _.sortBy(ServiceSetup.getTranslatedSiteCountries(countries), 'label');
+          });
+      } else {
+        return $q.resolve();
+      }
+    }
+
     function loadDeviceInfo() {
       huronDeviceService.getDeviceInfo(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.timeZone = result.timeZone;
         deviceOverview.emergencyCallbackNumber = result.emergencyCallbackNumber;
         deviceOverview.selectedTimeZone = getTimeZoneFromId(result);
         deviceOverview.tzIsLoaded = true;
+        if (result.country) {
+          deviceOverview.country = result.country;
+          deviceOverview.selectedCountry = getCountryFromId(result.country);
+        }
+        deviceOverview.countryIsLoaded = true;
       }).then(getEmergencyInformation);
     }
 
-    function getTimeZoneFromId(id) {
-      return _.find(deviceOverview.timeZoneOptions, function (o) {
-        return o.id == id;
+    function getTimeZoneFromId(timeZone) {
+      if (timeZone && timeZone.timeZone) {
+        return _.find(deviceOverview.timeZoneOptions, function (o) {
+          return o.id === timeZone.timeZone;
+        });
+      }
+    }
+
+    function getCountryFromId(country) {
+      return _.find(deviceOverview.countryOptions, function (o) {
+        return o.value === country;
       });
     }
 
@@ -133,6 +175,14 @@
       huronDeviceService.getLinesForDevice(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.lines = result;
         deviceOverview.linesAreLoaded = true;
+      }).then(function () {
+        if (!deviceOverview.currentDevice.isHuronDevice) {
+          FeatureToggleService.supports(FeatureToggleService.features.cloudberryE911).then(function (result) {
+            if (result) {
+              getEmergencyInformation();
+            }
+          });
+        }
       });
     }
 
@@ -142,14 +192,11 @@
       });
     }
 
-    deviceOverview.save = function (newName) {
-      return CsdmDataModelService
-        .updateItemName(deviceOverview.currentDevice, newName)
-        .then(displayDevice)
-        .catch(function (response) {
-          Notification.errorWithTrackingId(response, 'deviceOverviewPage.failedToSaveChanges');
-        });
-    };
+    function setCountry(country) {
+      return huronDeviceService.setCountryForDevice(deviceOverview.currentDevice, country).then(function () {
+        deviceOverview.country = country;
+      });
+    }
 
     deviceOverview.saveTimeZoneAndWait = function () {
       var newValue = deviceOverview.selectedTimeZone.id;
@@ -167,11 +214,29 @@
       }
     };
 
+    deviceOverview.saveCountryAndWait = function () {
+      var newValue = deviceOverview.selectedCountry.value;
+      if (newValue !== deviceOverview.country) {
+        deviceOverview.updatingCountry = true;
+        setCountry(newValue)
+          .then(_.partial(waitForDeviceToUpdateCountry, newValue))
+          .catch(function (error) {
+            Notification.errorWithTrackingId(error, 'deviceOverviewPage.failedToSaveChanges');
+            loadDeviceInfo();
+          })
+          .finally(function () {
+            deviceOverview.updatingCountry = false;
+            deviceOverview.selectedCountry = getCountryFromId(newValue);
+          });
+      }
+    };
+
     deviceOverview.goToEmergencyServices = function () {
       var data = {
         currentAddress: deviceOverview.emergencyAddress,
         currentNumber: deviceOverview.emergencyCallbackNumber,
         status: deviceOverview.emergencyAddressStatus,
+        staticNumber: !deviceOverview.currentDevice.isHuronDevice
       };
 
       if ($state.current.name === 'user-overview.csdmDevice' || $state.current.name === 'place-overview.csdmDevice') {
@@ -184,6 +249,12 @@
     function waitForDeviceToUpdateTimeZone(newValue) {
       var deferred = $q.defer();
       pollDeviceForNewTimeZone(newValue, new Date().getTime() + 5000, deferred);
+      return deferred.promise;
+    }
+
+    function waitForDeviceToUpdateCountry(newValue) {
+      var deferred = $q.defer();
+      pollDeviceForNewCountry(newValue, new Date().getTime() + 5000, deferred);
       return deferred.promise;
     }
 
@@ -202,6 +273,20 @@
       });
     }
 
+    function pollDeviceForNewCountry(newValue, endTime, deferred) {
+      huronDeviceService.getDeviceInfo(deviceOverview.currentDevice).then(function (result) {
+        if (result.country === newValue) {
+          Notification.success('deviceOverviewPage.countryUpdated');
+          return deferred.resolve();
+        }
+        if (new Date().getTime() > endTime) {
+          return deferred.reject($translate.instant('deviceOverviewPage.countryUpdateFailed'));
+        }
+        $timeout(function () {
+          pollDeviceForNewCountry(newValue, endTime, deferred);
+        }, 1000);
+      });
+    }
     deviceOverview.reportProblem = function () {
       var uploadLogsPromise;
       var feedbackId;
@@ -247,40 +332,8 @@
         .then($state.sidepanel.close);
     };
 
-    deviceOverview.resetCode = function () {
-      deviceOverview.resettingCode = true;
-      var displayName = deviceOverview.currentDevice.displayName;
-      CsdmDataModelService.deleteItem(deviceOverview.currentDevice)
-        .then(function () {
-          var wizardState = {
-            data: {
-              function: 'showCode',
-              showPlaces: deviceOverview.showPlaces,
-              account: {
-                type: 'shared',
-                name: displayName,
-                deviceType: 'cloudberry',
-              },
-              recipient: {
-                displayName: deviceOverview.adminDisplayName,
-                cisUuid: Authinfo.getUserId(),
-                email: Authinfo.getPrimaryEmail(),
-                organizationId: Authinfo.getOrgId(),
-              },
-              title: 'addDeviceWizard.newCode'
-            },
-            history: [],
-            currentStateName: 'addDeviceFlow.showActivationCode',
-            wizardState: {
-              'addDeviceFlow.showActivationCode': {}
-            }
-          };
-          var wizard = WizardFactory.create(wizardState);
-          $state.go(wizardState.currentStateName, {
-            wizard: wizard
-          });
-        });
-      $state.sidepanel.close();
+    deviceOverview.showAdvancedSettingsDialog = function () {
+      LaunchAdvancedSettingsModal.open(deviceOverview.currentDevice);
     };
 
     deviceOverview.showRemoteSupportDialog = function () {
@@ -295,12 +348,6 @@
 
     deviceOverview.showRemoteSupportButton = function () {
       return deviceOverview.currentDevice && !!deviceOverview.currentDevice.hasRemoteSupport;
-    };
-
-    deviceOverview.getDeleteCodeText = function () {
-      return deviceOverview.showPlaces
-        ? $translate.instant('placesPage.deletePlace')
-        : $translate.instant('deviceOverviewPage.deleteLocation');
     };
 
     deviceOverview.addTag = function () {
@@ -357,7 +404,11 @@
         saveUpgradeChannel(newValue)
           .then(_.partial(waitForDeviceToUpdateUpgradeChannel, newValue))
           .catch(function (error) {
-            Notification.errorWithTrackingId(error, 'deviceOverviewPage.failedToSaveChanges');
+            if (error.message) {
+              Notification.errorWithTrackingId(error, 'deviceOverviewPage.failedToSaveChanges');
+            } else {
+              Notification.error($translate.instant('deviceOverviewPage.failedToSaveChanges') + ' ' + error);
+            }
             resetSelectedChannel();
           })
           .finally(function () {
@@ -378,6 +429,7 @@
 
     function pollDeviceForNewChannel(newValue, endTime, deferred) {
       CsdmDataModelService.reloadItem(deviceOverview.currentDevice).then(function (device) {
+        deviceOverview.currentDevice = device;
         if (device.upgradeChannel.value == newValue) {
           Notification.success('deviceOverviewPage.channelUpdated');
           return deferred.resolve();

@@ -6,8 +6,11 @@
     .controller('AtaDeviceController',
 
       /* @ngInject */
-      function ($modalInstance, $log, $scope, Notification) {
+      function ($modalInstance, $log, $scope, Notification, $stateParams, device) {
         var ata = this;
+        var huronDeviceService = $stateParams.huronDeviceService;
+
+        ata.device = device;
 
         $scope.$$postDigest(function () {
           $scope.$broadcast('rzSliderForceRender');
@@ -26,11 +29,10 @@
          * - at some point we need to get this from the API
          * - the API isn't ready yet right now
          */
-        ata.inputMin = 0;
-        ata.inputMax = 20;
-        ata.inputModel = ata.defaultInput;
+        ata.inputMin = -6;
+        ata.inputMax = 14;
         ata.inputOptions = {
-          value: ata.inputModel,
+          value: ata.defaultInput,
           options: {
             showSelectionBar: true,
             floor: ata.inputMin,
@@ -38,11 +40,10 @@
           }
         };
 
-        ata.outputMin = 0;
-        ata.outputMax = 20;
-        ata.outputModel = ata.defaultOutput;
+        ata.outputMin = -14;
+        ata.outputMax = 6;
         ata.outputOptions = {
-          value: ata.outputModel,
+          value: ata.defaultOutput,
           options: {
             showSelectionBar: true,
             floor: ata.outputMin,
@@ -52,9 +53,8 @@
 
         ata.impedanceMin = 0;
         ata.impedanceMax = 7;
-        ata.impedanceModel = ata.defaultImpedance;
         ata.impedanceOptions = {
-          value: ata.impedanceModel,
+          value: ata.defaultImpedance,
           options: {
             showSelectionBar: true,
             floor: ata.impedanceMin,
@@ -62,12 +62,11 @@
           }
         };
 
-        /*
-         * Percentage values.
-         */
-        ata.percInput = ata.inputModel * 5;
-        ata.percOutput = ata.outputModel * 5;
-        ata.percImpedance = 100 * (ata.impedanceModel / 7);
+        huronDeviceService.getAtaInfo(ata.device).then(function (result) {
+          ata.impedanceOptions.value = result.impedance || ata.defaultImpedance;
+          ata.inputOptions.value = result.inputAudioLevel || ata.defaultInput;
+          ata.outputOptions.value = result.outputAudioLevel || ata.defaultOutput;
+        });
 
         /*
          * Color from the gradient.
@@ -84,53 +83,43 @@
         };
 
         /*
-         * Update values.
-         */
-        ata.sliderUpdate = function (type) {
-          $log.log(type);
-          if (type == 'output') {
-            ata.percOutput = ata.outputModel * 5;
-          } else if (type == 'input') {
-            ata.percInput = ata.inputModel * 5;
-          } else if (type == 'impedance') {
-            ata.percImpedance = 100 * (ata.impedanceModel / 7);
-          }
-        };
-
-        /*
          * Reset values.
          */
         ata.resetValues = function () {
           ata.impedanceModel = ata.defaultImpedance;
           ata.inputModel = ata.defaultInput;
           ata.outputModel = ata.defaultOutput;
-
-          ata.percInput = ata.inputModel * 5;
-          ata.percOutput = ata.outputModel * 5;
-          ata.percImpedance = 100 * (ata.impedanceModel / 7);
         };
 
         /*
          * Save settings.
          */
         ata.saveSettings = function () {
-          var inputVal = ata.inputOptions.value - 6;
-          var outputVal = ata.outputOptions.value - 14;
-          var impedanceVal = ata.impedanceOptions.value;
+          $log.log("Values that should get saved: ", ata.inputOptions.value, ata.outputOptions.value, ata.impedanceOptions.value);
+          //$modalInstance.close();
+          //Notification.success('ataSettings.saved');
+          var settings = {
+            inputAudioLevel: ata.inputOptions.value,
+            outputAudioLevel: ata.outputOptions.value,
+            impedance: ata.impedanceOptions.value
+          };
 
-          $log.log("Values that should get saved: ", inputVal, outputVal, impedanceVal);
-          $modalInstance.close();
-          Notification.success('ataSettings.saved');
+          huronDeviceService.setSettingsForAta(ata.device, settings).then(function () {
+            $log.log('saved');
+            $modalInstance.close();
+            Notification.success('ataSettings.saved');
+          });
+
         };
       }
     )
     .service('AtaDeviceModal',
       /* @ngInject */
       function ($modal) {
-        function open(deviceOrCode) {
+        function open(device) {
           return $modal.open({
             resolve: {
-              deviceOrCode: _.constant(deviceOrCode)
+              device: _.constant(device)
             },
             controllerAs: 'ata',
             controller: 'AtaDeviceController',
