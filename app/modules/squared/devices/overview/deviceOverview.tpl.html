@@ -1,33 +1,7 @@
 <div class="sq-devices-page-overview">
   <div ui-view="header"></div>
 
-  <cs-sp-container ng-if="deviceOverview.currentDevice.needsActivation">
-    <div class="activationOverview">
-      <img
-        class="activationImage"
-        src="images/devices-hi/activation_code.png"
-      />
-      <div class="activationDescription" translate="deviceOverviewPage.notYetActivated"></div>
-      <div class="activationDescription" translate="deviceOverviewPage.deviceCodeExpires"
-           translate-values="{inXDays: deviceOverview.currentDevice.friendlyExpiryTime}"></div>
-    </div>
-    <div class="activationButtons">
-      <button
-        ng-click="deviceOverview.deleteDevice()"
-        class="btn"
-        ng-disabled="deviceOverview.resettingCode">
-        <span>{{ deviceOverview.getDeleteCodeText() }}</span>
-      </button>
-
-      <button
-        ng-click="deviceOverview.resetCode()"
-        class="btn">
-        <span ng-hide="deviceOverview.resettingCode" translate="deviceOverviewPage.getNewCode"></span>
-        <div ng-show="deviceOverview.resettingCode" cs-loader class="loader-example--small"></div>
-      </button>
-    </div>
-  </cs-sp-container>
-  <cs-sp-container ng-if="!deviceOverview.currentDevice.needsActivation">
+  <cs-sp-container>
     <cs-sp-section>
       <div class="overview">
         <img
@@ -197,6 +171,27 @@
           <div cs-loader class="loader-example--small"></div>
         </div>
       </div>
+      <div class="form-group" cr-feature-toggle feature-show="huron-l10n-network-locale">
+        <label class="col-sm-4 control-label" translate="deviceOverviewPage.country"></label>
+        <div class="col-sm-8" cs-loader ng-hide="deviceOverview.countryIsLoaded"></div>
+        <div class="col-sm-3" ng-show="deviceOverview.countryIsLoaded">
+          <cs-select
+            name="selectedCountry"
+            class="countrySelector"
+            ng-model="deviceOverview.selectedCountry"
+            options="deviceOverview.countryOptions"
+            is-disabled="deviceOverview.updatingCountry"
+            labelfield="label"
+            valuefield="value"
+            filter="false"
+            on-change-fn="deviceOverview.saveCountryAndWait()"
+            placeholder="deviceOverview.countryPlaceholder"
+          ></cs-select>
+        </div>
+        <div class="col-sm-4" ng-show="deviceOverview.updatingCountry">
+          <div cs-loader class="loader-example--small"></div>
+        </div>
+      </div>
 
       <div class="form-group" ng-show="deviceOverview.currentDevice.software">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.software"></label>
@@ -221,6 +216,12 @@
           <p class="form-control-static">{{deviceOverview.currentDevice.software}}</p>
         </div>
       </div>
+      <div class="form-group" ng-show="deviceOverview.currentDevice.hasAdvancedSettings" cr-feature-toggle feature-show="atlas-devices-advanced-settings">
+        <label class="col-sm-4 control-label" translate="spacesPage.advancedSettings.advancedSettings"></label>
+        <div class="col-sm-8">
+          <a sq-click-promise="deviceOverview.showAdvancedSettingsDialog()" translate="spacesPage.advancedSettings.launchAdvancedSettings"></a>
+        </div>
+      </div>
       <div class="form-group" ng-show="deviceOverview.currentDevice.hasRemoteSupport">
         <label class="col-sm-4 control-label" translate="spacesPage.ciscoSupport"></label>
         <div class="col-sm-8">
@@ -235,7 +236,7 @@
       <div ng-show="deviceOverview.isE911Available">
         <div class="section-title-row">
           <span class="section-name" translate="spacesPage.emergencyTitle"></span>
-          <span cs-dropdown class="actions-menu dropdown pull-right">
+          <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="deviceOverview.hideE911Edit">
             <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
               <i class="icon icon-three-dots"></i>
             </button>

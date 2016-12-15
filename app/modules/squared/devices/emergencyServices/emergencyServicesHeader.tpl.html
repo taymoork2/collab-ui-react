@@ -15,16 +15,10 @@
 
   <div class="header-info">
     <div class="header-info-wrap">
-      <sq-editable-input
-        ng-if="$ctrl.currentDevice.canEditDisplayName"
-        sq-save="$ctrl.save(newText)"
-        ng-model="$ctrl.currentDevice.displayName">
-      </sq-editable-input>
       <div
         id="header-title"
         class="header-title"
-        title="{{$ctrl.currentDevice.displayName}}"
-        ng-if="!$ctrl.currentDevice.canEditDisplayName">
+        title="{{$ctrl.currentDevice.displayName}}">
         {{$ctrl.currentDevice.displayName}}
       </div>
     </div>

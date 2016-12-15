@@ -61,6 +61,22 @@
       return vm.isCareEnabled ? 'small-3' : 'small-4';
     };
 
+    /* TODO For now we are using the site url to determine if the license is an SMP license. This logic will change;
+    we will be looking at licenseModel inside the licenses payload to determine if the license is SMP instead of the siteUrl. */
+    vm.isSharedMultiPartyLicense = function (siteUrl) {
+      return _.first(_.split(siteUrl, '.')) === 'smp';
+    };
+
+    // This logic needs to be changed to look for the provided audio type from license usage call when payload is ready from the backend
+    vm.determineLicenseAudio = function (siteUrl) {
+      return vm.isSharedMultiPartyLicense(siteUrl) ? $translate.instant('firstTimeWizard.partnerProvidedAudio') : $translate.instant('firstTimeWizard.webexProvidedAudio');
+    };
+
+    // This logic will be changed to look for the 'licenseModel' key when the payload is ready from the backend
+    vm.determineLicenseType = function (siteUrl) {
+      return vm.isSharedMultiPartyLicense(siteUrl) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.assignedLicenses');
+    };
+
     init();
 
     function getUserServiceRowClass(hasRoomSystem) {
@@ -81,6 +97,9 @@
         vm.isCareEnabled = careStatus && Authinfo.isCare();
       });
 
+      FeatureToggleService.atlasSMPGetStatus().then(function (smpStatus) {
+        vm.isSharedMultiPartyEnabled = smpStatus;
+      });
 
       vm.messagingServices.services = Authinfo.getMessageServices() || [];
       _.forEach(vm.messagingServices.services, function (service) {
@@ -183,6 +202,7 @@
           }
         }
       });
+
       if (Object.prototype.toString.call(vm.cmrServices.services) == '[object Array]') {
         _.forEach(vm.cmrServices.services, function (service) {
           if (service.license) {

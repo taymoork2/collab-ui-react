@@ -42,6 +42,12 @@ module.exports = (function makeWebpackConfig() {
       loaders.assets,
       loaders.dependencies,
     ]),
+    noParse: [
+      /messageformat\/messageformat\.js/,
+      /clipboard\/dist\/clipboard.js/,
+      /\/google-libphonenumber\/dist\/browser\/libphonenumber.js/,
+      /\/query-command-supported\/dist\/queryCommandSupported.js/,
+    ],
   };
 
   if (!args.nolint) {
@@ -67,6 +73,7 @@ module.exports = (function makeWebpackConfig() {
   config.sassLoader = {
     sourceComments: true,
     includePaths: [
+      path.resolve('./app'),
       path.resolve('node_modules/bootstrap-sass/assets/stylesheets'),
       path.resolve('node_modules/foundation-sites/scss'),
     ],

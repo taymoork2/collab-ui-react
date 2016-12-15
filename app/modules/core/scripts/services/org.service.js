@@ -346,6 +346,8 @@
       var serviceUrl = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/';
       if (serviceName === 'calendar-service') {
         serviceUrl = serviceUrl.concat(Config.entitlements.fusion_cal);
+      } else if (serviceName === 'google-calendar-service') {
+        serviceUrl = serviceUrl.concat(Config.entitlements.fusion_gcal);
       } else if (serviceName === 'call-aware-service') {
         serviceUrl = serviceUrl.concat(Config.entitlements.fusion_uc);
       } else if (serviceName === 'call-connect-service') {

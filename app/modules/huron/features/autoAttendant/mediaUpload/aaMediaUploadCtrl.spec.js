@@ -9,6 +9,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
   var ModalService;
   var AANotificationService;
   var AAUiModelService;
+  var AACommonService;
   var AutoAttendantCeMenuModelService;
   var AAMediaUploadService;
   var modal;
@@ -50,6 +51,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
     name: fileNameInvalid,
     size: fileSize
   };
+  var variantUrlPlayback = 'recordingPlayBackUrl';
   var uploadUrl = 'http://54.183.25.170:8001/api/notify/upload' + '?customerId=' + null;
   var voice = "Vanessa";
   var fileDuration = '(00:39)';
@@ -72,7 +74,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$httpBackend_, _$q_, _Upload_, _ModalService_, _AANotificationService_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _AAMediaUploadService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$httpBackend_, _$q_, _Upload_, _ModalService_, _AANotificationService_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _AAMediaUploadService_, _AACommonService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $controller = _$controller_;
@@ -84,6 +86,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     AAUiModelService = _AAUiModelService_;
     AAMediaUploadService = _AAMediaUploadService_;
+    AACommonService = _AACommonService_;
     modal = $q.defer();
     deferred = $q.defer();
     $scope.change = function () {
@@ -249,6 +252,18 @@ describe('Controller: AAMediaUploadCtrl', function () {
         expect(controller.uploadDuration).toEqual(fileDuration);
         expect(controller.state).toEqual(controller.UPLOADED);
       });
+
+      describe('on CE Saved', function () {
+        beforeEach(function () {
+          spyOn(AAMediaUploadService, 'notifyAsSaved');
+          $rootScope.$broadcast('CE Saved');
+          $rootScope.$apply();
+        });
+
+        it('should call notifyAsSaved on ce saved broadcast', function () {
+          expect(AAMediaUploadService.notifyAsSaved).toHaveBeenCalled();
+        });
+      });
     });
   });
 
@@ -312,188 +327,293 @@ describe('Controller: AAMediaUploadCtrl', function () {
 
   describe('upload', function () {
 
-    describe('when previous upload', function () {
+    it('should not allow an empty file to upload', function () {
+      spyOn(AAMediaUploadService, 'validateFile');
+      controller.upload(undefined);
+      $scope.$digest();
+      expect(controller.uploadFile).toEqual('');
+      controller.upload(null);
+      $scope.$digest();
+      expect(AAMediaUploadService.validateFile).not.toHaveBeenCalled();
+    });
+
+    describe('when bad response data is sent back', function () {
       beforeEach(function () {
         spyOn(AAMediaUploadService, 'upload').and.callThrough();
-        playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
-        playAction.setValue(uploadUrl);
-        playAction.setDescription(JSON.stringify(fileDescription));
-        menuEntry.actions[0] = playAction;
         $httpBackend.whenPOST(uploadUrl).respond(200, true);
+        spyOn(AANotificationService, 'error');
+      });
+
+      it('uploadSuccess empty return', function () {
+        spyOn(AAMediaUploadService, 'retrieve').and.returnValue('');
         controller.upload(validFile);
         deferred.resolve();
         $scope.$digest();
         $httpBackend.flush();
+        expect(AANotificationService.error).toHaveBeenCalledWith('autoAttendant.uploadFailed');
       });
 
-      describe('with overwrite', function () {
-        it('should confirm an overwrite and change the file', function () {
-          $httpBackend.whenPOST(uploadUrl).respond(200, true);
-          expect(controller.uploadFile).toEqual(validFile.name);
-          expect(controller.uploadDate).toMatch("[0-1][0-9][/][0-3][0-9][/][2][0][1-4][0-9]");
-          controller.upload(validFile2);
-          deferred.resolve();
-          $scope.$digest();
-          modal.resolve();
-          $scope.$apply();
-          expect(controller.uploadFile).toEqual(validFile2.name);
-          expect(controller.uploadDate).toMatch("[0-1][0-9][/][0-3][0-9][/][2][0][1-4][0-9]");
-        });
+      it('uploadSuccess rejected get promise', function () {
+        spyOn(AAMediaUploadService, 'retrieve').and.returnValue('');
+        controller.upload(validFile);
+        deferred.resolve();
+        $scope.$digest();
+        $httpBackend.flush();
+        expect(AANotificationService.error).toHaveBeenCalledWith('autoAttendant.uploadFailed');
+      });
 
-        it('should open and dismiss an overwrite modal and not change the file', function () {
-          controller.upload(validFile);
-          $scope.$apply();
-          expect(ModalService.open).toHaveBeenCalled();
-          modal.reject();
-          $scope.$apply();
-          expect(AAMediaUploadService.upload.calls.count()).toEqual(1);
-        });
-
-        it('should open and close an overwrite modal', function () {
-          controller.upload(validFile);
-          $scope.$apply();
-          expect(ModalService.open).toHaveBeenCalled();
-          modal.resolve();
-          $scope.$apply();
-        });
+      it('uploadSuccess rejected get promise', function () {
+        spyOn(AAMediaUploadService, 'retrieve').and.returnValue('');
+        controller.upload(validFile);
+        deferred.resolve();
+        $scope.$digest();
+        $httpBackend.flush();
+        expect(AANotificationService.error).toHaveBeenCalledWith('autoAttendant.uploadFailed');
       });
     });
 
-    describe('when no previous upload', function () {
+    describe('happy path', function () {
       beforeEach(function () {
-        spyOn(AAMediaUploadService, 'upload').and.callThrough();
-        playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
-        menuEntry.actions[0] = playAction;
-        $httpBackend.whenPOST(uploadUrl).respond(200, true);
+        spyOn(AAMediaUploadService, 'retrieve').and.returnValue(variantUrlPlayback);
       });
 
-      describe('with overwrite', function () {
-        it('should not open an overwrite modal', function () {
-          controller.upload(validFile);
-          deferred.resolve();
-          $scope.$digest();
-          $httpBackend.flush();
-          $scope.$apply();
-          expect(ModalService.open).not.toHaveBeenCalled();
-        });
-      });
-
-      describe('with cancel', function () {
+      describe('when previous upload', function () {
         beforeEach(function () {
+          spyOn(AAMediaUploadService, 'upload').and.callThrough();
+          playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
           playAction.setValue(uploadUrl);
           playAction.setDescription(JSON.stringify(fileDescription));
-          controller.openModal(controller.dialogModalTypes.cancel);
-        });
-
-        it('should continue uploading when cancel gets dismissed', function () {
+          menuEntry.actions[0] = playAction;
+          $httpBackend.whenPOST(uploadUrl).respond(200, true);
           controller.upload(validFile);
           deferred.resolve();
           $scope.$digest();
           $httpBackend.flush();
-          $scope.$apply();
-          modal.reject();
-          $scope.$apply();
+        });
+
+        describe('with delete', function () {
+          beforeEach(function () {
+            spyOn(AACommonService, 'getUniqueId').and.returnValue(1);
+            spyOn(AACommonService, 'setIsValid').and.callThrough();
+            spyOn(AACommonService, 'setMediaUploadStatus').and.callThrough();
+            spyOn(AAMediaUploadService, 'getResources').and.callThrough();
+            spyOn(AAMediaUploadService, 'clearResourcesExcept').and.callThrough();
+          });
+
+          it('when upload length is greater than 1, should rollBack on delete', function () {
+            controller.upload(validFile2);
+            modal.resolve();
+            $scope.$apply();
+            deferred.resolve();
+            $scope.$digest();
+            $httpBackend.flush();
+            $scope.$apply();
+            controller.openModal('delete');
+            $scope.$apply();
+            modal.resolve();
+            $scope.$apply();
+            expect(AACommonService.setMediaUploadStatus).toHaveBeenCalledWith(true);
+            expect(AACommonService.setIsValid).toHaveBeenCalledWith('mediaUploadCtrl' + AACommonService.getUniqueId(), true);
+            expect(AAMediaUploadService.clearResourcesExcept).toHaveBeenCalled();
+          });
+
+          it('when delete is cancelled no action should be made', function () {
+            controller.openModal('delete');
+            modal.reject();
+            $scope.$apply();
+            expect(AACommonService.setIsValid).not.toHaveBeenCalled();
+            expect(AACommonService.setMediaUploadStatus).not.toHaveBeenCalled();
+            expect(AAMediaUploadService.clearResourcesExcept).not.toHaveBeenCalled();
+          });
+        });
+
+        describe('with overwrite', function () {
+          it('should confirm an overwrite and change the file', function () {
+            $httpBackend.whenPOST(uploadUrl).respond(200, true);
+            expect(controller.uploadFile).toEqual(validFile.name);
+            expect(controller.uploadDate).toMatch("[0-1][0-9][/][0-3][0-9][/][2][0][1-4][0-9]");
+            controller.upload(validFile2);
+            deferred.resolve();
+            $scope.$digest();
+            modal.resolve();
+            $scope.$apply();
+            expect(controller.uploadFile).toEqual(validFile2.name);
+            expect(controller.uploadDate).toMatch("[0-1][0-9][/][0-3][0-9][/][2][0][1-4][0-9]");
+          });
+
+          it('should open and dismiss an overwrite modal and not change the file', function () {
+            controller.upload(validFile);
+            $scope.$apply();
+            expect(ModalService.open).toHaveBeenCalled();
+            modal.reject();
+            $scope.$apply();
+            expect(AAMediaUploadService.upload.calls.count()).toEqual(1);
+          });
+
+          it('should open and close an overwrite modal', function () {
+            controller.upload(validFile);
+            $scope.$apply();
+            expect(ModalService.open).toHaveBeenCalled();
+            modal.resolve();
+            $scope.$apply();
+          });
+        });
+      });
+
+      describe('when no previous upload', function () {
+        beforeEach(function () {
+          spyOn(AAMediaUploadService, 'upload').and.callThrough();
+          playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+          menuEntry.actions[0] = playAction;
+          $httpBackend.whenPOST(uploadUrl).respond(200, true);
+        });
+
+        describe('with delete', function () {
+          beforeEach(function () {
+            spyOn(AACommonService, 'getUniqueId').and.returnValue(1);
+            spyOn(AACommonService, 'setIsValid').and.callThrough();
+            spyOn(AACommonService, 'setMediaUploadStatus').and.callThrough();
+            spyOn(AAMediaUploadService, 'clearResourcesExcept').and.callThrough();
+          });
+
+          it('when upload length is less than 1', function () {
+            controller.openModal('delete');
+            modal.resolve();
+            $scope.$apply();
+            expect(AACommonService.setMediaUploadStatus).toHaveBeenCalledWith(true);
+            expect(AACommonService.setIsValid).toHaveBeenCalledWith('mediaUploadCtrl' + AACommonService.getUniqueId(), true);
+            expect(AAMediaUploadService.clearResourcesExcept).not.toHaveBeenCalled();
+          });
+        });
+
+        describe('with overwrite', function () {
+          it('should not open an overwrite modal', function () {
+            controller.upload(validFile);
+            deferred.resolve();
+            $scope.$digest();
+            $httpBackend.flush();
+            $scope.$apply();
+            expect(ModalService.open).not.toHaveBeenCalled();
+          });
+        });
+
+        describe('with cancel', function () {
+          beforeEach(function () {
+            playAction.setValue(uploadUrl);
+            playAction.setDescription(JSON.stringify(fileDescription));
+            controller.openModal(controller.dialogModalTypes.cancel);
+          });
+
+          it('should continue uploading when cancel gets dismissed', function () {
+            controller.upload(validFile);
+            deferred.resolve();
+            $scope.$digest();
+            $httpBackend.flush();
+            $scope.$apply();
+            modal.reject();
+            $scope.$apply();
+            expect(controller.uploadFile).toEqual(validFile.name);
+            expect(controller.uploadDate).toMatch("[0-1][0-9][/][0-3][0-9][/][2][0][1-4][0-9]");
+            expect(controller.state).toEqual(controller.UPLOADED);
+          });
+
+          it('should rollBack changes when cancel gets closed', function () {
+            controller.upload(validFile);
+            deferred.resolve();
+            $scope.$digest();
+            $httpBackend.flush();
+            $scope.$apply();
+            modal.resolve();
+            $scope.$apply();
+            expect(controller.uploadFile).toBeFalsy();
+            expect(controller.uploadDuration).toBeFalsy();
+            expect(controller.uploadDate).toBeFalsy();
+            expect(controller.state).toEqual(controller.WAIT);
+          });
+        });
+      });
+
+      describe('calls', function () {
+        beforeEach(function () {
+          spyOn(AAMediaUploadService, 'upload').and.callThrough();
+          spyOn(AANotificationService, 'error');
+        });
+
+        it('should receive an error from media duration and not upload', function () {
+          playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+          menuEntry.actions[0] = playAction;
+          $httpBackend.whenPOST(uploadUrl).respond(200, true);
+          controller.upload(validFile);
+          deferred.reject();
+          $scope.$digest();
+          expect(AAMediaUploadService.upload).not.toHaveBeenCalled();
+          expect(AANotificationService.error).toHaveBeenCalledWith('autoAttendant.uploadFailed');
+          expect(controller.state).toEqual(controller.WAIT);
+        });
+
+        it('should upload and set variables given a valid file name on upload call', function () {
+          playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+          menuEntry.actions[0] = playAction;
+          $httpBackend.whenPOST(uploadUrl).respond(200, true);
+          controller.upload(validFile);
+          deferred.resolve();
+          $scope.$digest();
+          $httpBackend.flush();
           expect(controller.uploadFile).toEqual(validFile.name);
           expect(controller.uploadDate).toMatch("[0-1][0-9][/][0-3][0-9][/][2][0][1-4][0-9]");
           expect(controller.state).toEqual(controller.UPLOADED);
         });
 
-        it('should rollBack changes when cancel gets closed', function () {
+        it('should not upload given an invalid file name on upload call and print an error message', function () {
+          controller.upload(invalidFileByName);
+          deferred.resolve();
+          $scope.$digest();
+          expect(AAMediaUploadService.upload).not.toHaveBeenCalled();
+          expect(AANotificationService.error).toHaveBeenCalledWith('fileUpload.errorFileType');
+        });
+
+        it('should not upload given an invalid file name on upload call and not set variables', function () {
+          controller.upload(invalidFileByName);
+          expect(AAMediaUploadService.upload).not.toHaveBeenCalled();
+          expect(controller.state).toEqual(controller.WAIT);
+        });
+
+        it('should upload and set variables given a valid file', function () {
+          playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+          menuEntry.actions[0] = playAction;
+          $httpBackend.whenPOST(uploadUrl).respond(200, true);
           controller.upload(validFile);
           deferred.resolve();
           $scope.$digest();
+          expect(AAMediaUploadService.upload).toHaveBeenCalled();
           $httpBackend.flush();
-          $scope.$apply();
-          modal.resolve();
-          $scope.$apply();
+          expect(controller.uploadFile).toEqual(validFile.name);
+          expect(controller.uploadDate).toMatch("[0-1][0-9][/][0-3][0-9][/][2][0][1-4][0-9]");
+          expect(controller.state).toEqual(controller.UPLOADED);
+        });
+
+        it('should print an error with a bad server response and a valid file', function () {
+          $httpBackend.whenPOST(uploadUrl).respond(500, false);
+          controller.upload(validFile);
+          deferred.resolve();
+          $scope.$digest();
+          expect(AAMediaUploadService.upload).toHaveBeenCalled();
+          $httpBackend.flush();
+          expect(AANotificationService.error).toHaveBeenCalledWith('autoAttendant.uploadFailed');
+        });
+
+        it('should not set upload file variables with a bad server response and a valid file', function () {
+          $httpBackend.whenPOST(uploadUrl).respond(500, false);
+          controller.upload(validFile);
+          deferred.resolve();
+          $scope.$digest();
+          expect(AAMediaUploadService.upload).toHaveBeenCalled();
+          $httpBackend.flush();
           expect(controller.uploadFile).toBeFalsy();
-          expect(controller.uploadDuration).toBeFalsy();
           expect(controller.uploadDate).toBeFalsy();
+          expect(controller.uploadDuration).toBeFalsy();
           expect(controller.state).toEqual(controller.WAIT);
         });
-      });
-    });
-
-    describe('calls', function () {
-      beforeEach(function () {
-        spyOn(AAMediaUploadService, 'upload').and.callThrough();
-        spyOn(AANotificationService, 'error');
-      });
-
-      it('should receive an error from media duration and not upload', function () {
-        playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
-        menuEntry.actions[0] = playAction;
-        $httpBackend.whenPOST(uploadUrl).respond(200, true);
-        controller.upload(validFile);
-        deferred.reject();
-        $scope.$digest();
-        expect(AAMediaUploadService.upload).not.toHaveBeenCalled();
-        expect(AANotificationService.error).toHaveBeenCalledWith('autoAttendant.uploadFailed');
-        expect(controller.state).toEqual(controller.WAIT);
-      });
-
-      it('should upload and set variables given a valid file name on upload call', function () {
-        playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
-        menuEntry.actions[0] = playAction;
-        $httpBackend.whenPOST(uploadUrl).respond(200, true);
-        controller.upload(validFile);
-        deferred.resolve();
-        $scope.$digest();
-        $httpBackend.flush();
-        expect(controller.uploadFile).toEqual(validFile.name);
-        expect(controller.uploadDate).toMatch("[0-1][0-9][/][0-3][0-9][/][2][0][1-4][0-9]");
-        expect(controller.state).toEqual(controller.UPLOADED);
-      });
-
-      it('should not upload given an invalid file name on upload call and print an error message', function () {
-        controller.upload(invalidFileByName);
-        deferred.resolve();
-        $scope.$digest();
-        expect(AAMediaUploadService.upload).not.toHaveBeenCalled();
-        expect(AANotificationService.error).toHaveBeenCalledWith('fileUpload.errorFileType');
-      });
-
-      it('should not upload given an invalid file name on upload call and not set variables', function () {
-        controller.upload(invalidFileByName);
-        expect(AAMediaUploadService.upload).not.toHaveBeenCalled();
-        expect(controller.state).toEqual(controller.WAIT);
-      });
-
-      it('should upload and set variables given a valid file', function () {
-        playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
-        menuEntry.actions[0] = playAction;
-        $httpBackend.whenPOST(uploadUrl).respond(200, true);
-        controller.upload(validFile);
-        deferred.resolve();
-        $scope.$digest();
-        expect(AAMediaUploadService.upload).toHaveBeenCalled();
-        $httpBackend.flush();
-        expect(controller.uploadFile).toEqual(validFile.name);
-        expect(controller.uploadDate).toMatch("[0-1][0-9][/][0-3][0-9][/][2][0][1-4][0-9]");
-        expect(controller.state).toEqual(controller.UPLOADED);
-      });
-
-      it('should print an error with a bad server response and a valid file', function () {
-        $httpBackend.whenPOST(uploadUrl).respond(500, false);
-        controller.upload(validFile);
-        deferred.resolve();
-        $scope.$digest();
-        expect(AAMediaUploadService.upload).toHaveBeenCalled();
-        $httpBackend.flush();
-        expect(AANotificationService.error).toHaveBeenCalledWith('autoAttendant.uploadFailed');
-      });
-
-      it('should not set upload file variables with a bad server response and a valid file', function () {
-        $httpBackend.whenPOST(uploadUrl).respond(500, false);
-        controller.upload(validFile);
-        deferred.resolve();
-        $scope.$digest();
-        expect(AAMediaUploadService.upload).toHaveBeenCalled();
-        $httpBackend.flush();
-        expect(controller.uploadFile).toBeFalsy();
-        expect(controller.uploadDate).toBeFalsy();
-        expect(controller.uploadDuration).toBeFalsy();
-        expect(controller.state).toEqual(controller.WAIT);
       });
     });
   });
@@ -606,5 +726,4 @@ describe('Controller: AAMediaUploadCtrl', function () {
 
     });
   });
-
 });

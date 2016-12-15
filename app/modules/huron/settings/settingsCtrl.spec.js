@@ -6,20 +6,21 @@ describe('Controller: HuronSettingsCtrl', function () {
   var ExternalNumberService, DialPlanService, PstnSetupService, ModalService;
   var HuronCustomer, ServiceSetup, CallerId, HuronConfig, InternationalDialing, VoicemailMessageAction;
   var modalDefer, customer, timezones, timezone, voicemailCustomer, internalNumberRanges, languages;
-  var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction;
+  var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction, countries;
   var $rootScope, didVoicemailCustomer, FeatureToggleService;
-  var controller;
+  var controller, compile, styleSheet, element, window;
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$rootScope_, _$q_, _$httpBackend_, _ExternalNumberService_, _DialPlanService_,
     _PstnSetupService_, _ModalService_, _Notification_, _HuronCustomer_, _ServiceSetup_, _InternationalDialing_, _Authinfo_, _HuronConfig_,
-    _CallerId_, _VoicemailMessageAction_, _FeatureToggleService_) {
+    _CallerId_, _VoicemailMessageAction_, $compile, _FeatureToggleService_) {
 
     $q = _$q_;
     $rootScope = _$rootScope_;
     $scope = $rootScope;
+    compile = $compile;
     $httpBackend = _$httpBackend_;
     Authinfo = _Authinfo_;
     Notification = _Notification_;
@@ -34,6 +35,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     CallerId = _CallerId_;
     VoicemailMessageAction = _VoicemailMessageAction_;
     FeatureToggleService = _FeatureToggleService_;
+    window = window || {};
 
     modalDefer = $q.defer();
 
@@ -48,6 +50,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     customerCarriers = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
     messageAction = getJSONFixture('huron/json/settings/messageAction.json');
     languages = getJSONFixture('huron/json/settings/languages.json');
+    countries = getJSONFixture('huron/json/settings/countries.json');
 
     spyOn(HuronCustomer, 'get').and.returnValue($q.when(customer));
     spyOn(ServiceSetup, 'updateVoicemailTimezone').and.returnValue($q.when());
@@ -57,6 +60,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ServiceSetup, 'saveAutoAttendantSite').and.returnValue($q.when());
     spyOn(ServiceSetup, 'updateVoicemailPostalcode').and.returnValue($q.when());
     spyOn(ServiceSetup, 'getSiteLanguages').and.returnValue($q.when(languages));
+    spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.when(countries));
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
     spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.when());
     spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.when({
@@ -92,7 +96,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(VoicemailMessageAction, 'get').and.returnValue($q.when(messageAction));
     spyOn(VoicemailMessageAction, 'update').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'csdmPlacesGetStatus').and.returnValue(($q.when(false)));
+    spyOn(FeatureToggleService, 'getCustomerHuronToggle').and.returnValue($q.when(false));
 
     $httpBackend
       .expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + customer.uuid + '/directorynumbers')
@@ -479,6 +483,20 @@ describe('Controller: HuronSettingsCtrl', function () {
       $scope.$apply();
 
       expect($scope.to.options).toEqual(controller.preferredLanguageOptions);
+    });
+
+    it('should update the default country options when collection changes', function () {
+      $scope.to = {};
+
+      controller.defaultCountryOptions = [{
+        label: "Test Country",
+        value: "TC"
+      }];
+
+      controller._buildDefaultCountryOptions($scope);
+      $scope.$apply();
+
+      expect($scope.to.options).toEqual(controller.defaultCountryOptions);
     });
 
     it('outbound dial digit should not be equal to site steering digit', function () {
@@ -894,6 +912,36 @@ describe('Controller: HuronSettingsCtrl', function () {
         expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
       });
 
+      it('should update default country when country selection changes', function () {
+        var newCountry = {
+          label: 'Canada',
+          value: 'CA'
+        };
+
+        controller.model.site.defaultCountry = newCountry;
+        controller.save();
+        $scope.$apply();
+
+        expect(ServiceSetup.updateSite).toHaveBeenCalledWith(jasmine.any(String), {
+          country: newCountry.value
+        });
+        expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
+      });
+
+      it('should not update default country when country selection did not change', function () {
+        var defaultCountry = {
+          label: 'United States',
+          value: 'US'
+        };
+
+        controller.model.site.defaultCountry = defaultCountry;
+        controller.save();
+        $scope.$apply();
+
+        expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
+        expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
+      });
+
     });
 
     describe('Voicemail prefix', function () {
@@ -1116,6 +1164,37 @@ describe('Controller: HuronSettingsCtrl', function () {
           pattern: controller.model.serviceNumber.pattern
         }
       });
+    });
+  });
+
+  describe('Sticky Directive', function () {
+    beforeEach(function () {
+      styleSheet = angular.element([
+        '<style name="sticky" type="text/css">',
+        '.sticky {position:sticky;-webkit-position:sticky}',
+        '</style>'].join(''));
+      element = angular.element('<div cs-sticky>Sticky</div>');
+      if (!angular.element('style[name=sticky]').length) {
+        angular.element('head').append(styleSheet);
+      }
+      angular.element('body').append(element);
+      $scope.$digest();
+    });
+
+    it('should not have polyfill globally available', inject(function () {
+      compile(element)($scope);
+      $scope.$apply();
+      expect(window.Stickyfill).not.toBeDefined();
+    }));
+    it('should have polyfill factory available', inject(function (Sticky) {
+      compile(element)($scope);
+      $scope.$apply();
+      expect(Sticky).toBeDefined();
+    }));
+    it('should initialize', function () {
+      compile(element)($scope);
+      $scope.$apply();
+      expect(angular.element(element).hasClass('sticky')).toBe(true);
     });
   });
 });

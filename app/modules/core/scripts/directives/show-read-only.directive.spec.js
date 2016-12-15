@@ -4,6 +4,13 @@ describe('Directive: ShowReadOnly', function () {
 
   var compile, scope, directiveElem, Authinfo, translate;
 
+  afterEach(function () {
+    if (directiveElem) {
+      directiveElem.remove();
+    }
+    directiveElem = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
 
   beforeEach(inject(function (_$rootScope_, _$compile_, _$translate_, _Authinfo_) {
@@ -12,9 +19,7 @@ describe('Directive: ShowReadOnly', function () {
     Authinfo = _Authinfo_;
     translate = _$translate_;
     sinon.stub(Authinfo, 'isReadOnlyAdmin');
-    sinon.stub(Authinfo, 'getOrgName');
     Authinfo.isReadOnlyAdmin.returns(true);
-    Authinfo.getOrgName.returns('Big Company');
     directiveElem = getCompiledElement();
   }));
 
@@ -26,7 +31,7 @@ describe('Directive: ShowReadOnly', function () {
   }
 
   it('should be wrapped in div element', function () {
-    expect(Authinfo.isReadOnlyAdmin.callCount).toBe(2);
+    expect(Authinfo.isReadOnlyAdmin.callCount).toBe(1);
     var divElement = directiveElem.find('div');
     expect(divElement).toBeDefined();
     expect(divElement.text()).toEqual(translate.instant('readOnlyModal.banner'));

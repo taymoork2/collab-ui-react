@@ -1,3 +1,6 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/spacing';
+
 .branding {
   .radio-input-spacing {
     align-items: flex-start;
@@ -18,7 +21,7 @@
     max-height: 100%;
   }
 
-  .drop-box {
+  .drop-box.form-section {
     display: inline-block;
     width: 100%;
 
@@ -50,7 +53,7 @@
     margin-left: 2rem;
   }
 
-  .drop-box {
+  .drop-box.form-section {
     width: 413px;
     height: 95px;
   }

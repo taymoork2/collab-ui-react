@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: DidAddCtrl', function () {
-  var controller, $q, $scope, $state, $httpBackend, $window, HuronConfig, Notification, EmailService;
+  var $controller, $httpBackend, $rootScope, $scope, $state, $timeout, $window, controller, HuronConfig, Notification;
 
   var customerVoiceNorthAmerica = getJSONFixture('huron/json/dialPlans/customervoice-nanp.json');
 
@@ -36,14 +36,16 @@ describe('Controller: DidAddCtrl', function () {
     }
   };
 
-  beforeEach(inject(function (_$q_, $rootScope, $controller, _$httpBackend_, _HuronConfig_, _Notification_, _EmailService_, $timeout, _$window_, _$state_) {
-    $q = _$q_;
-    $scope = $rootScope.$new();
-    $scope.trial = trial;
-
+  beforeEach(inject(function (_$controller_, _$httpBackend_, _$rootScope_, _$state_, _$timeout_, _$window_, _HuronConfig_, _Notification_) {
+    $controller = _$controller_;
     $httpBackend = _$httpBackend_;
+    $rootScope = _$rootScope_;
+    $timeout = _$timeout_;
     $window = _$window_;
     $state = _$state_;
+
+    $scope = $rootScope.$new();
+    $scope.trial = trial;
     $state.modal = {
       close: sinon.stub(),
       result: {
@@ -52,7 +54,6 @@ describe('Controller: DidAddCtrl', function () {
     };
     HuronConfig = _HuronConfig_;
     Notification = _Notification_;
-    EmailService = _EmailService_;
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?order=pattern').respond(200, [{
       'pattern': '+12145559991',
       'uuid': '12145559991-id'
@@ -78,7 +79,6 @@ describe('Controller: DidAddCtrl', function () {
     $rootScope.$apply();
     $timeout.flush();
 
-    spyOn(EmailService, 'emailNotifyTrialCustomer');
     spyOn(Notification, "success");
     spyOn(Notification, "error");
     spyOn($window, 'open');
@@ -256,58 +256,6 @@ describe('Controller: DidAddCtrl', function () {
           controller.sendEmail();
           $httpBackend.flush();
           expect(Notification.error.calls.count()).toEqual(1);
-        });
-      });
-
-      describe('emailNotifyTrialCustomer function with undefined trial', function () {
-        beforeEach(function () {
-          $scope.trial = undefined;
-        });
-
-        it('should exist', function () {
-          expect(controller.emailNotifyTrialCustomer).toBeDefined();
-        });
-
-        it('should not exist', function () {
-          expect($scope.trial).not.toBeDefined();
-        });
-
-        it('should report error notification when email cannot be sent', function () {
-          controller.emailNotifyTrialCustomer();
-          expect(Notification.error).toHaveBeenCalledWith('didManageModal.emailFailText');
-        });
-      });
-
-      describe('emailNotifyTrialCustomer success function', function () {
-        beforeEach(function () {
-          EmailService.emailNotifyTrialCustomer.and.returnValue($q.when());
-        });
-
-        it('should exist', function () {
-          expect(controller.emailNotifyTrialCustomer).toBeDefined();
-        });
-
-        it('should send email and report success notification', function () {
-
-          controller.emailNotifyTrialCustomer();
-          $scope.$apply();
-          expect(Notification.success).toHaveBeenCalledWith('didManageModal.emailSuccessText');
-        });
-      });
-
-      describe('emailNotifyTrialCustomer failure function', function () {
-        beforeEach(function () {
-          EmailService.emailNotifyTrialCustomer.and.returnValue($q.reject());
-        });
-
-        it('should exist', function () {
-          expect(controller.emailNotifyTrialCustomer).toBeDefined();
-        });
-
-        it('should report error notification when email cannot be sent', function () {
-          controller.emailNotifyTrialCustomer();
-          $scope.$apply();
-          expect(Notification.error).toHaveBeenCalledWith('didManageModal.emailFailText');
         });
       });
 

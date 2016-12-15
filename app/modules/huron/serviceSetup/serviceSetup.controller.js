@@ -36,6 +36,7 @@
 
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
+    var VOICE_VOICEMAIL_AVRIL = 'DEMO_STANDARD';
 
     vm.voicemailAvrilCustomer = false;
     vm.addInternalNumberRange = addInternalNumberRange;
@@ -44,10 +45,11 @@
     vm.initServiceSetup = initServiceSetup;
     vm.initNext = initNext;
     vm.checkIfTestOrg = checkIfTestOrg;
-
     vm.processing = true;
     vm.externalNumberPool = [];
     vm.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
+    vm.defaultCountryPlaceholder = $translate.instant('serviceSetupModal.defaultCountryPlaceholder');
+    vm.preferredLanguagePlaceholder = $translate.instant('serviceSetupModal.preferredLanguagePlaceholder');
     vm.steeringDigits = [
       '1', '2', '3', '4', '5', '6', '7', '8', '9'
     ];
@@ -66,7 +68,9 @@
         voicemailPilotNumber: undefined,
         vmCluster: undefined,
         emergencyCallBackNumber: undefined,
-        voicemailPilotNumberGenerated: 'false'
+        voicemailPilotNumberGenerated: 'false',
+        preferredLanguage: '',
+        country: ''
       },
       voicemailPrefix: {
         label: DEFAULT_SITE_SD.concat(DEFAULT_SITE_CODE),
@@ -85,6 +89,8 @@
         ftswExternalVoicemail: false
       },
       ftswSteeringDigit: undefined,
+      ftswPreferredLanguage: '',
+      ftswCountry: '',
       ftswSiteSteeringDigit: {
         voicemailPrefixLabel: DEFAULT_SITE_SD.concat(DEFAULT_SITE_CODE),
         siteDialDigit: DEFAULT_SITE_SD
@@ -577,7 +583,7 @@
     }];
 
     vm.ftswCompanyVoicemailSelection = [{
-      className: 'row collapse-both',
+      className: 'row full collapse-both',
       fieldGroup: [{
         // Since it is possible to have both the FTSW and
         // huron settings page in the DOM at the same time the id
@@ -723,6 +729,12 @@
         return initTimeZone();
       })
       .then(function () {
+        return initPreferredLanguages();
+      })
+      .then(function () {
+        return initDefaultCountry();
+      })
+      .then(function () {
         // TODO BLUE-1221 - make /customer requests synchronous until fixed
         return listInternalExtensionRanges();
       })
@@ -750,6 +762,19 @@
               vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
                 return timezone.id === site.timeZone;
               });
+              if (site.preferredLanguage) {
+                vm.model.site.preferredLanguage = _.find(vm.preferredLanguageOptions, function (language) {
+                  return language.value === site.preferredLanguage;
+                });
+                vm.model.ftswPreferredLanguage = vm.model.site.preferredLanguage;
+              }
+              if (site.country) {
+                vm.model.site.country = _.find(vm.defaultCountryOptions, function (country) {
+                  return country.value === site.country;
+                });
+                vm.model.ftswCountry = vm.model.site.country;
+              }
+
               vm.previousTimeZone = vm.model.site.timeZone;
               vm.model.site.voicemailPilotNumberGenerated = (site.voicemailPilotNumberGenerated !== null) ? site.voicemailPilotNumberGenerated : 'false';
             });
@@ -834,6 +859,20 @@
           return loadVoicemailTimeZone().then(loadVoicemailToEmail);
         }
       });
+    }
+
+    function initPreferredLanguages() {
+      return ServiceSetup.getSiteLanguages()
+        .then(function (languages) {
+          vm.preferredLanguageOptions = _.sortBy(ServiceSetup.getTranslatedSiteLanguages(languages), 'label');
+        });
+    }
+
+    function initDefaultCountry() {
+      return ServiceSetup.getSiteCountries()
+        .then(function (countries) {
+          vm.defaultCountryOptions = _.sortBy(ServiceSetup.getTranslatedSiteCountries(countries), 'label');
+        });
     }
 
     function testForExtensions() {
@@ -1081,6 +1120,7 @@
 
       var errors = [];
       var voicemailToggleEnabled = false;
+      var isAvrilVoiceEnabled = false;
       if (!_.get(vm, 'model.ftswCompanyVoicemail.ftswExternalVoicemail')) {
         if (_.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled')) {
           voicemailToggleEnabled = true;
@@ -1095,7 +1135,12 @@
         var customer = {};
         if (companyVoicemailNumber && _.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
           if (!vm.hasVoicemailService) {
-            customer.servicePackage = DEMO_STANDARD;
+            if (vm.voicemailAvrilCustomer) {
+              customer.servicePackage = VOICE_VOICEMAIL_AVRIL;
+              isAvrilVoiceEnabled = true;
+            } else {
+              customer.servicePackage = DEMO_STANDARD;
+            }
           }
 
           customer.voicemail = {
@@ -1154,6 +1199,8 @@
 
         var currentSite = angular.copy(site);
         currentSite.timeZone = currentSite.timeZone.id;
+        currentSite.preferredLanguage = currentSite.preferredLanguage.value;
+        currentSite.country = currentSite.country.value;
 
         return ServiceSetup.createSite(currentSite)
           .then(function () {
@@ -1172,6 +1219,12 @@
         if (!_.isEmpty(siteData)) {
           return ServiceSetup.updateSite(ServiceSetup.sites[0].uuid, siteData)
             .then(function () {
+              if (vm.voicemailAvrilCustomer && isAvrilVoiceEnabled) {
+                var setupSites = ServiceSetup.sites[0];
+                ServiceSetup.updateAvrilSite(setupSites.uuid, setupSites.siteSteeringDigit,
+                     setupSites.siteCode, setupSites.timeZone,
+                     setupSites.extensionLength, setupSites.voicemailPilotNumber, siteData);
+              }
               if (vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled && siteData && siteData.voicemailPilotNumber) {
                 return updateVoicemailSettings();
               }
@@ -1231,6 +1284,12 @@
           // so no need to check for timeZoneToggle here
           if (_.get(vm, 'model.site.timeZone.id') !== _.get(vm, 'previousTimeZone.id')) {
             siteData.timeZone = vm.model.site.timeZone.id;
+          }
+          if (_.get(vm, 'model.site.preferredLanguage.value') !== _.get(vm, 'model.ftswPreferredLanguage.value')) {
+            siteData.preferredLanguage = vm.model.site.preferredLanguage.value;
+          }
+          if (_.get(vm, 'model.site.country.value') !== _.get(vm, 'model.ftswCountry.value')) {
+            siteData.country = vm.model.site.country.value;
           }
           if (vm.model.site.siteSteeringDigit !== vm.model.voicemailPrefix.value) {
             siteData.siteSteeringDigit = vm.model.voicemailPrefix.value;

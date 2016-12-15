@@ -1,3 +1,5 @@
+@import 'styles/toolkit/fonts';
+
 .customer-admin-overview {
   .icon-spinner {
     vertical-align: middle;
@@ -12,26 +14,6 @@
   .align-search-inputs {
     display: flex;
     align-items: center;
-  }
-
-  .plus-icon {
-    @extend .icon;
-    @extend .icon-plus;
-
-    border-radius: 50%;
-    font-size: 25px;
-    margin-left: 10px;
-  }
-
-  .plus-icon-inactive {
-    color: $gray-lighter;
-    background-color: $gray-lightest;
-  }
-
-  .plus-icon-active {
-    cursor: pointer;
-    color: $brand-white;
-    background-color: $brand-info;
   }
 
   .search {

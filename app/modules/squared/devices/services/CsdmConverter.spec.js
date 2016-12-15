@@ -13,7 +13,6 @@ describe('CsdmConverterSpec', function () {
     var obj = {
       description: '["foo"]'
     };
-    expect(converter.convertCode(obj).tags[0]).toBe('foo');
     expect(converter.convertCloudberryDevice(obj).tags[0]).toBe('foo');
   });
 
@@ -23,13 +22,6 @@ describe('CsdmConverterSpec', function () {
     };
     expect(converter.convertHuronDevice(obj).tags[0]).toBe('foo');
     expect(converter.convertHuronDevice(obj).tags[1]).toBe('bar');
-  });
-
-  it('should add needsActivation flag', function () {
-    var arr = [{
-      state: 'UNCLAIMED'
-    }];
-    expect(converter.convertCloudberryDevices(arr)[0].needsActivation).toBeTruthy();
   });
 
   it('unknown product should be cleared', function () {
@@ -114,17 +106,13 @@ describe('CsdmConverterSpec', function () {
         accountType: 'PERSON'
       }];
       expect(converter.convertCloudberryDevices(arr)[0].accountType).toBe('PERSON');
-      expect(converter.convertCloudberryDevices(arr)[0].canEditDisplayName).toBeFalsy();
       expect(converter.convertHuronDevices(arr)[0].accountType).toBe('PERSON');
-      expect(converter.convertHuronDevices(arr)[0].canEditDisplayName).toBeFalsy();
     });
 
     it('default accountType', function () {
       var arr = [{}];
       expect(converter.convertCloudberryDevices(arr)[0].accountType).toBe('MACHINE');
-      expect(converter.convertCloudberryDevices(arr)[0].canEditDisplayName).toBeTruthy();
       expect(converter.convertHuronDevices(arr)[0].accountType).toBe('PERSON');
-      expect(converter.convertHuronDevices(arr)[0].canEditDisplayName).toBeFalsy();
     });
 
     it('photos', function () {
@@ -421,65 +409,5 @@ describe('CsdmConverterSpec', function () {
     it('no remoteSupportUser means no rsuKey, no nullReferences', function () {
       expect(converter.convertCloudberryDevices([{}]).rsuKey).toBeFalsy();
     });
-  });
-
-  describe("Non-existing devices", function () {
-    it('should have a url', function () {
-      var arr = [{
-        url: "foo"
-      }];
-      expect(converter.convertAccounts(arr)[0].url).toBe('foo');
-    });
-
-    it('should have a cisUuid', function () {
-      var arr = [{
-        id: "foo"
-      }];
-      expect(converter.convertAccounts(arr)[0].cisUuid).toBe('foo');
-    });
-
-    it('should have a displayName', function () {
-      var arr = [{
-        displayName: "foo"
-      }];
-      expect(converter.convertAccounts(arr)[0].displayName).toBe('foo');
-    });
-
-    it('should have a isUnused', function () {
-      var arr = [{
-        url: "foo"
-      }];
-      expect(converter.convertAccounts(arr)[0].isUnused).toBeTruthy();
-    });
-
-    it('should have a canDelete', function () {
-      var arr = [{
-        url: "foo"
-      }];
-      expect(converter.convertAccounts(arr)[0].canDelete).toBeTruthy();
-    });
-
-    it('should set Product to Account', function () {
-      var arr = [{
-        url: "foo"
-      }];
-      expect(converter.convertAccounts(arr)[0].product).toBe('spacesPage.account');
-    });
-
-    it('should set state to Non existent', function () {
-      var arr = [{
-        url: "foo"
-      }];
-      expect(converter.convertAccounts(arr)[0].state.priority).toBe("4");
-      expect(converter.convertAccounts(arr)[0].state.readableState).toBe('CsdmStatus.Inactive');
-    });
-
-    it('should have issues', function () {
-      var arr = [{
-        url: "foo"
-      }];
-      expect(converter.convertAccounts(arr)[0].hasIssues).toBeTruthy();
-    });
-
   });
 });

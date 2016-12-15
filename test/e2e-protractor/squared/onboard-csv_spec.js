@@ -1,12 +1,18 @@
 'use strict';
 
-/* global inviteusers */
+/* global inviteusers xdescribe xafterAll manageUsersPage*/
 /* global LONG_TIMEOUT */
 
+// NOTE: This test is superceeded by manageusers-csv_spec.js
+
 xdescribe('Onboard Users using CSV File', function () {
-  var token;
+
   var CSV_FILE_PATH = utils.resolvePath('./../data/DELETE_DO_NOT_CHECKIN_onboard_csv_test_file.csv');
-  var userList = users.createCsvAndReturnUsers(CSV_FILE_PATH);
+  var token;
+
+  beforeAll(function () {
+    this.userList = users.createCsvAndReturnUsers(CSV_FILE_PATH);
+  });
 
   // Given an email alias, activate the user and confirm entitlements set
   function confirmUserOnboarded(email) {
@@ -32,9 +38,12 @@ xdescribe('Onboard Users using CSV File', function () {
   });
 
   it('should open add users tab', function () {
-    utils.click(landing.serviceSetup); //TODO this is invalid, since the wizard will only be shown when !isSetupDone
-    utils.click(navigation.addUsers);
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
+    utils.click(navigation.usersTab);
+    utils.click(manageUsersPage.buttons.manageUsers);
+    utils.expectTextToBeSet(manageUsersPage.select.title, 'Add or Modify Users');
+    utils.click(manageUsersPage.select.radio.orgBulk);
+    utils.click(manageUsersPage.buttons.next);
+    utils.expectTextToBeSet(manageUsersPage.select.title, 'Bulk Add or Modify Users');
     utils.click(inviteusers.bulkUpload);
     utils.click(inviteusers.nextButton);
   });
@@ -61,26 +70,27 @@ xdescribe('Onboard Users using CSV File', function () {
   }, LONG_TIMEOUT);
 
   it('should confirm first user onboarded', function () {
-    confirmUserOnboarded(userList[0]);
+    confirmUserOnboarded(this.userList[0]);
   });
 
   it('should confirm middle user onboarded', function () {
-    confirmUserOnboarded(userList[(userList.length > 2) ? Math.round(userList.length / 2) : 1]);
+    confirmUserOnboarded(this.userList[(this.userList.length > 2) ? Math.round(this.userList.length / 2) : 1]);
   });
 
   it('should confirm last user onboarded', function () {
-    confirmUserOnboarded(userList[userList.length - 1]);
+    confirmUserOnboarded(this.userList[this.userList.length - 1]);
   });
 
   afterAll(function () {
     utils.deleteFile(CSV_FILE_PATH);
-  //   _.each(userList, function (user, ind) {
-  //     deleteUtils.deleteUser(user, token).then(function () {
-  //       console.log('Deleting user #' + ind + ' (' + user + ')');
-  //       if (ind == (userList.length - 1)) {
-  //         console.log('All users deleted.');
-  //       }
-  //     });
-  //   });
+
+    //   _.each(userList, function (user, ind) {
+    //     deleteUtils.deleteUser(user, token).then(function () {
+    //       console.log('Deleting user #' + ind + ' (' + user + ')');
+    //       if (ind == (userList.length - 1)) {
+    //         console.log('All users deleted.');
+    //       }
+    //     });
+    //   });
   }, 60000 * 4);
 });

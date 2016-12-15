@@ -9,9 +9,21 @@
     });
 
   /* @ngInject */
-  function CcaCardCtrl($state) {
-    var ctrl = this;
-    ctrl.goto = goto;
+  function CcaCardCtrl(FeatureToggleService, $state) {
+    var vm = this;
+    vm.goto = goto;
+    vm.$onInit = $onInit;
+
+    function $onInit() {
+      FeatureToggleService.supports(FeatureToggleService.features.gemServicesTab)
+        .then(function (feature) {
+          if (!feature) {
+            $state.go('404');
+            return;
+          }
+        });
+    }
+
     function goto() {
       $state.go('gem.servicesPartner');
     }

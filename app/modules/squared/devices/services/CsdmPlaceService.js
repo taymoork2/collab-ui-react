@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmPlaceService($http, Authinfo, CsdmConfigService, CsdmConverter, FeatureToggleService, $q) {
+  function CsdmPlaceService($http, Authinfo, CsdmConfigService, CsdmConverter) {
 
     var csdmPlacesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/places/';
 
@@ -11,16 +11,9 @@
     }
 
     function getPlacesList() {
-      return FeatureToggleService.csdmPlacesGetStatus()
+      return $http.get(csdmPlacesUrl + "?shallow=true&type=all")
         .then(function (res) {
-          if (res) {
-            return $http.get(csdmPlacesUrl + "?shallow=true&type=all")
-              .then(function (res) {
-                return CsdmConverter.convertPlaces(res.data);
-              });
-          } else {
-            return $q.reject('feature not enabled');
-          }
+          return CsdmConverter.convertPlaces(res.data);
         });
     }
 

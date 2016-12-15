@@ -29,6 +29,8 @@ describe('Component: lineOverview', () => {
   let internalNumbers: Array<string> = ['1234', '5678'];
   let externalNumbers: Array<string> = ['+5555551212', '+5555551313'];
 
+  beforeEach(angular.mock.module('Squared'));
+
   beforeEach(function () {
     this.initModules('huron.line-overview');
     this.injectDependencies(

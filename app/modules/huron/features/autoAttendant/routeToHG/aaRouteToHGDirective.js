@@ -13,7 +13,8 @@
         menuId: '@aaMenuId',
         index: '=aaIndex',
         keyIndex: '@aaKeyIndex',
-        fromRouteCall: '@aaFromRouteCall'
+        fromRouteCall: '@aaFromRouteCall',
+        fromFallback: '@aaFromFallback'
       },
       controller: 'AARouteToHGCtrl',
       controllerAs: 'aaRouteToHG',

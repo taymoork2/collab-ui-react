@@ -1,13 +1,21 @@
 'use strict';
 
 describe('components:showComponents', function () {
-  var $compile, $scope, $controller, controller, ComponentsService, GSSService, $templateCache;
+  var $compile, $controller, $q, $scope, controller, ComponentsService, GSSService, $templateCache;
   var view;
   var hasData = 'gss-components-list';
   var noData = 'centered-info-pane';
   var ADD_BUTTON = '.add-component-button';
-  var $q;
+
+  afterEach(function () {
+    if (view) {
+      view.remove();
+    }
+    view = hasData = noData = ADD_BUTTON = undefined;
+  });
+
   beforeEach(angular.mock.module('GSS'));
+  afterEach(destructDI);
   beforeEach(inject(dependencies));
   beforeEach(compileView);
   function dependencies(_$rootScope_, _$controller_, _$compile_, _ComponentsService_, _GSSService_, _$templateCache_, _$q_) {
@@ -18,6 +26,10 @@ describe('components:showComponents', function () {
     GSSService = _GSSService_;
     $templateCache = _$templateCache_;
     $q = _$q_;
+  }
+
+  function destructDI() {
+    $compile = $controller = $q = $scope = $templateCache = controller = ComponentsService = GSSService = undefined;
   }
 
   function compileView() {

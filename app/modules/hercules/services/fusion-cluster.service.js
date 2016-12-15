@@ -46,16 +46,13 @@
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '?fields=@wide')
         .then(extractDataFromResponse);
-        /*.then(function(cluster) { // REMOVE ME, TESTING no connectors handling
-          cluster.connectors = [];
-          return cluster;
-        });*/
     }
 
     function getAll(orgId) {
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '?fields=@wide')
         .then(extractClustersFromResponse)
+        .then(filterUnknownClusters)
         .then(addServicesStatuses)
         .then(sort);
     }
@@ -131,7 +128,6 @@
     function addServicesStatuses(clusters) {
       return _.map(clusters, function (cluster) {
         if (cluster.targetType === 'c_mgmt') {
-          // cluster.connectors = []; // REMOVE ME, TESTING no connectors handling
           var mgmtConnectors = _.filter(cluster.connectors, { connectorType: 'c_mgmt' });
           var ucmcConnectors = _.filter(cluster.connectors, { connectorType: 'c_ucmc' });
           var calConnectors = _.filter(cluster.connectors, { connectorType: 'c_cal' });
@@ -154,6 +150,13 @@
             serviceId: 'squared-fusion-media',
             state: FusionClusterStatesService.getMergedStateSeverity(mediaConnectors),
             total: mediaConnectors.length
+          }];
+        } else if (cluster.targetType === 'hds_app') {
+          var hdsConnectors = _.filter(cluster.connectors, { connectorType: 'hds_app' });
+          cluster.servicesStatuses = [{
+            serviceId: 'spark-hybrid-datasecurity',
+            state: FusionClusterStatesService.getMergedStateSeverity(hdsConnectors),
+            total: hdsConnectors.length
           }];
         }
         return cluster;
@@ -280,12 +283,7 @@
         })
         .value();
 
-      // if no data or invalid data, assume that something is wrong
-      if (statuses.length === 0) {
-        return 'outage';
-      }
-
-      if (_.every(statuses, function (value) {
+      if (statuses.length === 0 || _.every(statuses, function (value) {
         return value === 'not_installed';
       })) {
         return 'setupNotComplete';
@@ -338,10 +336,6 @@
     }
 
     function processClustersToSeeIfServiceIsSetup(serviceId, clusterList) {
-      if (!Authinfo.isEntitled(serviceId)) {
-        return false;
-      }
-
       var connectorType = FusionUtils.serviceId2ConnectorType(serviceId);
       if (connectorType === '') {
         return false; // Cannot recognize service, default to *not* enabled
@@ -349,6 +343,8 @@
 
       if (serviceId === 'squared-fusion-media') {
         return _.some(clusterList, { targetType: 'mf_mgmt' });
+      } else if (serviceId === 'spark-hybrid-datasecurity') {
+        return _.some(clusterList, { targetType: 'hds_app' });
       } else {
         return _.chain(clusterList)
           .map('provisioning')
@@ -387,11 +383,13 @@
     }
 
     function getStatusForService(serviceId, clusterList) {
-      return {
+      var serviceStatus = {
         serviceId: serviceId,
         setup: processClustersToSeeIfServiceIsSetup(serviceId, clusterList),
-        status: processClustersToAggregateStatusForService(serviceId, clusterList)
+        status: processClustersToAggregateStatusForService(serviceId, clusterList),
       };
+      serviceStatus.statusCss = FusionClusterStatesService.getStatusIndicatorCSSClass(serviceStatus.status);
+      return serviceStatus;
     }
 
     function addUserCount(response) {
@@ -443,6 +441,12 @@
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'hercules.genericFailure');
         });
+    }
+
+    function filterUnknownClusters(clusters) {
+      return _.filter(clusters, function (cluster) {
+        return cluster.targetType !== 'unknown';
+      });
     }
   }
 })();

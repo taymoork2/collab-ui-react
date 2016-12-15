@@ -1,0 +1,23 @@
+<div class="user-statuses-bar">
+  <div class="user-statuses-card" ng-repeat="summary in exp.userStatusSummary | orderBy: 'serviceId' : true ">
+    <div class="user-statuses-title"><span translate="{{'hercules.cloudExtensions.serviceNames.'+summary.serviceId}}"></span>&nbsp;–&nbsp;<span translate="hercules.overview.status"></span></div>
+    <ul class="user-statuses-content">
+      <li><span translate="hercules.overview.activated"></span>: {{summary.activated}}</li>
+      <li><span translate="hercules.overview.pending"></span>: {{summary.notActivated}}</li>
+      <li><span translate="hercules.overview.error"></span>: <span ng-class="{'red': summary.error > 0}">{{summary.error}}</span></li>
+    </ul>
+  </div>
+</div>
+<div class="hercules-clusters-list">
+  <div ng-show="exp.loadingClusters" class="clusters-list-loading">
+    <i class="icon icon-spinner icon-2x"></i>
+    <p translate="hercules.overview.loading"></p>
+  </div>
+  <div ng-if="!exp.loadingClusters && exp.clusters.length !== 0" class="gridStyle" ui-grid="exp.clusterListGridOptions" ui-grid-selection></div>
+  <div ng-if="!exp.loadingClusters && exp.clusters.length === 0">
+    <div class="centered-info-pane">
+      <h3 translate="{{'hercules.clusters.listing.no_clusters_heading'}}"></h3>
+      <p translate="{{'hercules.clusters.listing.no_clusters_text'}}"></p>
+    </div>
+  </div>
+</div>

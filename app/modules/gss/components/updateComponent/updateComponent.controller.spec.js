@@ -4,11 +4,10 @@ describe('controller: UpdateComponentCtrl', function () {
   var $controller, $q, $scope, controller, ComponentsService, GSSService;
 
   beforeEach(angular.mock.module('GSS'));
-  beforeEach(angular.mock.module('Core'));
+  afterEach(destructDI);
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(initController);
-
 
   function dependencies(_$controller_, _$q_, _$rootScope_, _ComponentsService_, _GSSService_) {
     $controller = _$controller_;
@@ -16,6 +15,10 @@ describe('controller: UpdateComponentCtrl', function () {
     $scope = _$rootScope_.$new();
     ComponentsService = _ComponentsService_;
     GSSService = _GSSService_;
+  }
+
+  function destructDI() {
+    $controller = $q = $scope = controller = ComponentsService = GSSService = undefined;
   }
 
   function initSpies() {
@@ -95,6 +98,6 @@ describe('controller: UpdateComponentCtrl', function () {
 
   it('addComponent isValid false, don\'t call modifyComponent service', function () {
     controller.updateComponent();
-    expect(ComponentsService.modifyComponent.calls.count()).toEqual(0);
+    expect(ComponentsService.modifyComponent).not.toHaveBeenCalled();
   });
 });

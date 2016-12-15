@@ -6,7 +6,12 @@
   "members": [
     {
       "deviceId": [],
-      "memberId": "38fcc914-5a18-442b-ae61-866df55d7ac9",
+      "memberId": "0001",
+      "type": "USER"
+    },
+    {
+      "deviceId": [],
+      "memberId": "0002",
       "type": "PLACE"
     }
   ]

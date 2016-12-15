@@ -1,0 +1,198 @@
+<div class="update-incident-page">
+  <div class="content-common-style small-12 large-10 xlarge-8">
+    <div class="title-section">
+      <div class="title div-word-wrapper" ng-show="!updateIncidentCtrl.isEditingTitle">
+        <h3 ng-class="updateIncidentCtrl.incidentForUpdate.impact">
+            {{ updateIncidentCtrl.incidentForUpdate.incidentName }}
+          <a id="editTitle" ng-click="updateIncidentCtrl.showEditTitle()" translate="common.edit"></a>
+        </h3>
+      </div>
+
+      <div class="edit-title" ng-show="updateIncidentCtrl.isEditingTitle">
+        <input id="editIncidentName" type="text" class="cs-input"
+               ng-model="updateIncidentCtrl.incidentNameForEdit" maxlength="200"/>
+
+        <cs-select
+          id="editIncidentImpactStatus"
+          ng-model="updateIncidentCtrl.impactStatusForEdit"
+          options="updateIncidentCtrl.impactStatuses">
+        </cs-select>
+
+        <button cs-btn
+                id="saveModifyIncidentBtn"
+                class="btn btn--primary"
+                ng-disabled="!updateIncidentCtrl.isValidForTitle()"
+                loading="updateIncidentCtrl.isSavingTitle"
+                ng-click="updateIncidentCtrl.saveTitle()">
+          <span translate="common.save"></span>
+        </button>
+
+        <button cs-btn id="cancelEditTitleBtn" class="btn" ng-click="updateIncidentCtrl.cancelEditTitle()">
+          <span translate="common.cancel"></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="update-incident-section" ng-if="updateIncidentCtrl.isUpdateMode">
+      <div class="sub-section">
+        <label class="cs-input__label" translate="gss.incidentsPage.incidentStatus"></label>
+        <div class="cs-radio-group clearfix">
+          <input
+            cs-input
+            type="radio"
+            id="{{ ::radio.id }}"
+            value="{{ ::radio.value }}"
+            ng-model="updateIncidentCtrl.incidentForUpdate.status"
+            cs-input-label="{{ ::radio.label }}"
+            ng-repeat="radio in updateIncidentCtrl.radios"/>
+        </div>
+
+        <div ng-show="updateIncidentCtrl.isIncidentStatusResolved()">
+          <h6 ng-if="!updateIncidentCtrl.isShowSetComponentTips">
+            <span translate="gss.setComponentTips"></span>
+            <a ng-click="updateIncidentCtrl.setOperationalForComponents()" translate="gss.setComponentTipsLink"></a>
+          </h6>
+
+          <h6 ng-if="updateIncidentCtrl.isShowSetComponentTips" translate="gss.setComponentText"></h6>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <label class="cs-input__label" for="updateIncidentMessage" translate="gss.incidentsPage.message"></label>
+        <textarea id="updateIncidentMessage" ng-model="updateIncidentCtrl.incidentForUpdate.message"></textarea>
+      </div>
+
+      <div class="sub-section">
+        <label class="cs-input__label" translate="gss.componentStatuses" ng-if="updateIncidentCtrl.components.length"></label>
+        <ul class="component-list icon-ul">
+          <li ng-repeat="groupComponent in updateIncidentCtrl.components">
+            <div class="row">
+              <div class="columns medium-4">
+                <i class="icon icon-li"
+                   ng-init="groupComponent.isCollapsed = true"
+                   ng-class="{ 'icon-chevron-right': groupComponent.isCollapsed, 'icon-chevron-down': !groupComponent.isCollapsed }"
+                   ng-click="groupComponent.isCollapsed = !groupComponent.isCollapsed">
+                </i>
+                  {{ ::groupComponent.componentName }}
+              </div>
+
+              <div class="columns medium-2">
+                <a ng-show="!groupComponent.isOverridden" ng-click="updateIncidentCtrl.toggleOverridden(groupComponent)"
+                   translate="gss.overrideStatus">
+                </a>
+
+                <a ng-show="groupComponent.isOverridden" ng-click="updateIncidentCtrl.toggleOverridden(groupComponent)"
+                   translate="gss.useDerivedStatus">
+                </a>
+              </div>
+
+              <div class="columns medium-6">
+                <cs-select
+                  ng-class="groupComponent.statusObj.value"
+                  ng-model="groupComponent.statusObj"
+                  is-disabled="groupComponent.isOverridden"
+                  options="updateIncidentCtrl.componentStatuses">
+                </cs-select>
+              </div>
+            </div>
+
+            <ul class="icon-ul" collapse="groupComponent.isCollapsed">
+              <li ng-repeat="childComponent in groupComponent.components">
+                <div class="row">
+                  <div class="columns medium-6">{{ ::childComponent.componentName }}</div>
+
+                  <div class="columns medium-6">
+                    <cs-select
+                      ng-class="childComponent.statusObj.value"
+                      ng-model="childComponent.statusObj"
+                      options="updateIncidentCtrl.componentStatuses"
+                      on-change-fn="updateIncidentCtrl.overrideGroupComponent(groupComponent)">
+                    </cs-select>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <button cs-btn
+                id="updateIncidentBtn"
+                class="btn btn--primary"
+                ng-disabled="!updateIncidentCtrl.isValidForIncident()"
+                loading="updateIncidentCtrl.isUpdatingIncident"
+                ng-click="updateIncidentCtrl.updateIncident()">
+          <span translate="gss.updateIncident"></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="messages-section">
+      <h3 translate="gss.previousUpdated"></h3>
+
+      <ul>
+        <li ng-repeat="message in updateIncidentCtrl.incidentForUpdate.messages">
+          <div ng-init="updateIncidentCtrl.initMessageData(message)">
+            <div ng-show="!message.isEditingMessage">
+              <strong>{{ updateIncidentCtrl.getLocalizedIncidentStatus(message.status) }}</strong>
+              <div class="div-word-wrapper msg-inner-wrapper">{{ message.message }}</div>
+              <div>
+                <a class="edit-message-link" ng-click="updateIncidentCtrl.showEditMessage(message)"
+                   translate="common.edit">
+                </a>
+              </div>
+            </div>
+
+            <div ng-show="message.isEditingMessage">
+              <textarea ng-model="message.editMessage"></textarea>
+
+              <button cs-btn
+                      class="btn btn--primary saveModifyMessageBtn"
+                      ng-disabled="!updateIncidentCtrl.isValidForMessage(message)"
+                      loading="message.isSavingMessage"
+                      ng-click="updateIncidentCtrl.saveMessage(message)">
+                <span translate="common.save"></span>
+              </button>
+
+              <button cs-btn id="cancelEditMessageBtn" class="btn"
+                      ng-click="updateIncidentCtrl.initMessageData(message)">
+                <span translate="common.cancel"></span>
+              </button>
+            </div>
+          </div>
+
+          <div ng-show="!message.isEditingMessage">
+
+            <div>
+              <span translate="gss.incidentsPage.postedAt"></span>
+              <span>{{ message.postAt | date: "MMM d, y HH:mm" : "UTC" }} UTC</span>
+            </div>
+            <div>
+              <span translate="gss.incidentsPage.lastUpdatedOn"></span>
+              <span>{{ message.lastModifiedTime | date: "MMM d, y HH:mm" : "UTC" }} UTC</span>
+            </div>
+            <div>
+              <a ng-show="!message.isShowAffectedComponents"
+                 ng-click="updateIncidentCtrl.showAffectedComponents(message)" translate="gss.showAffectedComponents">
+              </a>
+
+              <a ng-show="message.isShowAffectedComponents"
+                 ng-click="updateIncidentCtrl.hideAffectedComponent(message)" translate="gss.hideAffectedComponents">
+              </a>
+            </div>
+
+            <div ng-show="message.isShowAffectedComponents">
+              <h6 ng-if="!message.hasAffectedComponent" translate="gss.incidentsPage.noAffectedComponent"></h6>
+
+              <ul ng-if="message.hasAffectedComponent" class="affected-components clearfix">
+                <li class="pull-left" ng-repeat="component in message.affectedComponents">
+                    {{ ::component.componentName }}</li>
+              </ul>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

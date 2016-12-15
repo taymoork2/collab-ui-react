@@ -1,6 +1,6 @@
 'use strict';
 
-/* global LONG_TIMEOUT */
+/* global LONG_TIMEOUT manageUsersPage */
 
 describe('Onboard users with Message Service', function () {
   var token;
@@ -34,11 +34,15 @@ describe('Onboard users with Message Service', function () {
   });
 
   describe('Test manage dialog functionality', function () {
-    it('click on add button should pop up the adduser modal and display only invite button', function () {
-      navigation.clickUsers();
-      utils.click(users.addUsers);
-      utils.expectIsDisplayed(users.manageDialog);
+    it('should select manually add/modify users', function () {
+      utils.click(navigation.usersTab);
+      utils.click(manageUsersPage.buttons.manageUsers);
+      utils.expectTextToBeSet(manageUsersPage.select.title, 'Add or Modify Users');
+      utils.click(manageUsersPage.select.radio.orgManual);
+      utils.click(manageUsersPage.buttons.next);
+      utils.expectTextToBeSet(manageUsersPage.select.title, 'Manually Add or Modify Users');
     });
+
 
     it('should clear user input field and error message', function () {
       utils.sendKeys(users.addUsersField, 'abcdefg' + protractor.Key.ENTER);
@@ -66,15 +70,15 @@ describe('Onboard users with Message Service', function () {
       utils.click(users.closeSidePanel);
     });
 
-    xit('should check (Message On) then uncheck', function () {
+    it('should check (Message On) then uncheck', function () {
       users.clickServiceCheckbox(testUser, true, false, LICENSE);
     });
 
-    xit('should check (Message Off) then check', function () {
+    it('should check (Message Off) then check', function () {
       users.clickServiceCheckbox(testUser, false, false, LICENSE);
     });
 
-    xit('should check (Message On)', function () {
+    it('should check (Message On)', function () {
       users.clickServiceCheckbox(testUser, true, false, LICENSE);
     });
   });

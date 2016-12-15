@@ -10,16 +10,16 @@ var ChatTemplateCreation = function () {
   this.summaryDesc = element(by.css('.ct-summary .description'));
   this.setUpLeftBtn = element(by.css('.btn--primary.btn--left'));
   this.setUpRightBtn = element(by.css('.btn--primary.btn--right'));
-  this.typeAheadInput = element(by.css('.typeahead-large .ct-input'));
-  this.nameHint = element(by.css('.typeahead-large .ct-input-hint'));
+  this.ctNameInput = element(by.css('.ct-name .ct-input'));
+  this.nameHint = element(by.css('.ct-name .ct-input-hint'));
   this.profileTitle = element(by.css('.ct-title.h2'));
   this.profileTitleDesc = element(by.css('.ct-title-desc.h4'));
   this.agentProfile = element.all(by.css('.cs-input-group.cs-input-radio span')).last();
   this.orgNamePreview = element(by.css('.profile-name'));
   this.agentNamePreview = element.all(by.css('.profile-name div')).first();
   this.OrgName = element(by.css('.cs-input-group.cs-input-text input'));
-  this.agentAliasRadio = element.all(by.css('.agent-name-options cs-radio')).first();
-  this.agentNameRadio = element.all(by.css('.agent-name-options cs-radio')).last();
+  this.agentNameRadio = element.all(by.css('.agent-name-options cs-radio')).first();
+  this.agentAliasRadio = element.all(by.css('.agent-name-options cs-radio')).last();
   this.agentPreviewIcon = element(by.css('.img  .icon-user-chat'));
   this.previewMinimizeIcon = element(by.css('.actions .icon-minus'));
   this.previewCloseIcon = element(by.css('.actions .icon-close'));
@@ -67,6 +67,8 @@ var ChatTemplateCreation = function () {
   this.timezoneInput = element(by.css('.timezone-picker input'));
   this.selectATimezone = element(by.css('.timezone-picker [name="businessHours-timezonePicker"] .dropdown-menu li'));
   this.templatePreviewTextField = element(by.css('.ct-left-cs-input'));
+  this.careNewFeatureModal = element(by.css('.care-new-feature-modal'));
+  this.createChatTemplateButton = element.all(by.css('.care-new-feature-modal .feature-icon-container')).first();
 };
 
 module.exports = ChatTemplateCreation;

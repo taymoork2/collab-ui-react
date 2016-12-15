@@ -89,7 +89,7 @@ export class BulkEnableVmService {
 
   private _doRetry(_retryCount: number, _error): boolean {
     if (_retryCount > 0) {
-      if (_error && _error.status && (_error.status === 503 || _error.status === 429)) {
+      if (_error && _error.status && (_error.status === 503 || _error.status === 429 || _error.status === 502 || _error.status === 504)) {
         return true;
       }
     }
@@ -130,10 +130,12 @@ export class BulkEnableVmService {
       userId: _userId,
     }).$promise
       .then(commonV2User => {
-        if (typeof commonV2User === 'undefined') {
+        if (_.isUndefined(commonV2User) || _.isUndefined(commonV2User.numbers) ||
+            !(commonV2User.numbers instanceof Array) || commonV2User.numbers.length === 0 ||
+          _.isUndefined(commonV2User.numbers[0].siteToSite)) {
           return null;
         }
-        return commonV2User.numbers ? commonV2User.numbers[0].siteToSite : null;
+        return commonV2User.numbers[0].siteToSite;
       });
   }
 

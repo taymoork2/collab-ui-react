@@ -21,6 +21,7 @@
     vm.dialogModalTypes = {
       cancel: 'cancel',
       overwrite: 'overwrite',
+      delete: 'delete',
     };
 
     vm.upload = upload;
@@ -28,6 +29,7 @@
     vm.progress = 0;
     vm.actionCopy = undefined;
     vm.isSquishable = isSquishable;
+    vm.clioDelete = AAMediaUploadService.isClioEnabled();
 
     var maxLanes = 3;
 
@@ -38,7 +40,7 @@
     };
 
     var properties = {
-      NAME: ['play', 'say', 'runActionsOnInput'],
+      NAME: ['play', 'say', 'runActionsOnInput', 'routeToQueue'],
       HEADER_TYPE: 'MENU_OPTION_ANNOUNCEMENT'
     };
 
@@ -51,18 +53,20 @@
     };
 
     var sourceType = messageType.ACTION;
-    var uniqueCtrlIdentifer = 'mediaUploadCtrl';
     var modalOpen = false;
     var modalCanceled = false;
     var uploadServProm = undefined;
     var menuKeyIndex;
     var isMenuHeader;
     var numLanes;
+    var savedActionEntry = undefined;
+    var uniqueCtrlIdentifier = 'mediaUploadCtrl' + AACommonService.getUniqueId();
+    var mediaResources = AAMediaUploadService.getResources(uniqueCtrlIdentifier);
 
     //////////////////////////////////////////////////////
 
     function upload(file) {
-      if (!_.isUndefined(file)) {
+      if (file) {
         if (AAMediaUploadService.validateFile(file.name)) {
           if (isOverwrite()) {
             confirmOverwrite(file);
@@ -89,8 +93,7 @@
     //upload set up ui model and state info
     function continueUpload(file) {
       Upload.mediaDuration(file).then(function (durationInSeconds) {
-        uniqueCtrlIdentifer += AACommonService.getUniqueId();
-        AACommonService.setIsValid(uniqueCtrlIdentifer, false);
+        AACommonService.setIsValid(uniqueCtrlIdentifier, false);
         vm.uploadFile = file.name;
         vm.uploadDate = moment().format("MM/DD/YYYY");
         vm.uploadDuration = '(' + moment.utc(durationInSeconds * 1000).format('mm:ss') + ')';
@@ -98,7 +101,11 @@
         vm.progress = 0;
         modalCanceled = false;
         uploadServProm = AAMediaUploadService.upload(file);
-        uploadServProm.then(uploadSuccess, uploadError, uploadProgress).finally(cleanUp);
+        if (uploadServProm) {
+          uploadServProm.then(uploadSuccess, uploadError, uploadProgress).finally(cleanUp);
+        } else {
+          uploadError();
+        }
       }, function () {
         uploadError();
       });
@@ -106,16 +113,31 @@
 
     function uploadSuccess(result) {
       if (!modalCanceled) {
-        vm.state = vm.UPLOADED;
-        var fd = {};
-        fd.uploadFile = vm.uploadFile;
-        fd.uploadDate = vm.uploadDate;
-        fd.uploadDuration = vm.uploadDuration;
-        vm.actionEntry.setDescription(JSON.stringify(fd));
-        vm.actionEntry.setValue('http://' + result.data.PlaybackUri);
-        setActionCopy();
-        $scope.change();
+        var retrieve = AAMediaUploadService.retrieve(result);
+        if (retrieve) {
+          setUploadValues(retrieve.playback, retrieve.deleteUrl);
+          uploadComplete();
+        } else {
+          uploadError();
+        }
       }
+    }
+
+    function setUploadValues(value, deleteUrl) {
+      vm.state = vm.UPLOADED;
+      var fd = {};
+      fd.uploadFile = vm.uploadFile;
+      fd.uploadDate = vm.uploadDate;
+      fd.uploadDuration = vm.uploadDuration;
+      fd.deleteUrl = deleteUrl;
+      vm.actionEntry.value = value;
+      vm.actionEntry.description = JSON.stringify(fd);
+    }
+
+    function uploadComplete() {
+      setActionCopy();
+      $scope.change();
+      mediaResources.uploads.push(_.cloneDeep(vm.actionEntry));
     }
 
     function uploadError() {
@@ -127,7 +149,7 @@
 
     function uploadProgress(evt) {
       //dont divide by zero for progress calculation
-      if (!_.isUndefined(evt) && !_.isEqual(evt.total, 0)) {
+      if (evt && !_.isEqual(evt.total, 0)) {
         vm.progress = parseInt((100.0 * ((evt.loaded - 1) / evt.total)), 10);
       } else {
         vm.progress = 0;
@@ -137,14 +159,18 @@
     //global media upload for save
     function cleanUp() {
       uploadServProm = undefined;
-      AACommonService.setIsValid(uniqueCtrlIdentifer, true);
+      AACommonService.setIsValid(uniqueCtrlIdentifier, true);
       AACommonService.setMediaUploadStatus(true);
     }
 
     function openModal(uploadModal) {
       var modalInstance = dialogModal(uploadModal, vm.dialogModalTypes);
       modalInstance.result.then(function () {
-        modalAction();
+        if (_.isEqual(uploadModal, vm.dialogModalTypes.delete)) {
+          modalDelete();
+        } else {
+          modalAction();
+        }
       }).finally(modalClosed);
     }
 
@@ -157,6 +183,15 @@
             message: $translate.instant('autoAttendant.cancelUpload'),
             close: $translate.instant('common.cancel'),
             dismiss: $translate.instant('common.no'),
+            type: 'negative'
+          });
+          break;
+        case types.delete:
+          modalInstance = ModalService.open({
+            title: $translate.instant('common.delete'),
+            message: $translate.instant('autoAttendant.deleteUpload'),
+            close: $translate.instant('common.delete'),
+            dismiss: $translate.instant('common.cancel'),
             type: 'negative'
           });
           break;
@@ -181,13 +216,31 @@
       modalCanceled = true;
     }
 
+    function modalDelete() {
+      if (mediaResources.uploads.length > 1) {
+        vm.actionEntry = _.cloneDeep(savedActionEntry);
+        //ok to delete at this point all the unsaved uploads
+        AAMediaUploadService.clearResourcesExcept(uniqueCtrlIdentifier, 0);
+        setUpEntry(vm.actionEntry);
+      } else {
+        //this case only occurs with a single saved action
+        //in the queue for deletion, so we can't delete it until save occurs
+        //we need to clean up the view, but hold the action until the save/close occurs
+        //can't actually call the delete
+        reset(vm.actionEntry);
+        mediaResources.uploads.push(_.cloneDeep(vm.actionEntry));
+      }
+      AACommonService.setIsValid(uniqueCtrlIdentifier, true);
+      AACommonService.setMediaUploadStatus(true);
+    }
+
     function modalClosed() {
       modalOpen = false;
     }
 
     //roll back, revert if history exists, else hard reset
     function rollBack() {
-      if (!_.isUndefined(uploadServProm)) {
+      if (uploadServProm) {
         uploadServProm.abort();
         uploadServProm = undefined;
       }
@@ -204,9 +257,9 @@
         vm.uploadFile = desc.uploadFile;
         vm.uploadDate = desc.uploadDate;
         vm.uploadDuration = desc.uploadDuration;
-        if (!_.isUndefined(playAction)) {
-          playAction.setDescription(vm.actionCopy.description);
-          playAction.setValue(vm.actionCopy.value);
+        if (playAction) {
+          playAction.description = vm.actionCopy.description;
+          playAction.value = vm.actionCopy.value;
         }
         vm.state = vm.UPLOADED;
         vm.progress = 0;
@@ -219,14 +272,27 @@
       vm.uploadFile = '';
       vm.uploadDate = '';
       vm.uploadDuration = '';
-      if (!_.isUndefined(playAction)) {
-        playAction.setDescription('');
-        playAction.setValue('');
+      if (playAction) {
+        playAction.description = '';
+        playAction.value = '';
       }
       vm.state = vm.WAIT;
       vm.progress = 0;
       vm.actionCopy = undefined;
     }
+
+    $scope.$on('CE Saved', function () {
+      AAMediaUploadService.notifyAsSaved(uniqueCtrlIdentifier, true);
+      savedActionEntry = _.cloneDeep(vm.actionEntry);
+    });
+
+    $scope.$on('$destroy', function () {
+      if (uploadServProm) {
+        modalCanceled = true;
+        uploadServProm.abort();
+      }
+      AAMediaUploadService.notifyAsActive(uniqueCtrlIdentifier, false);
+    });
 
     //if user cancels upload & previously uploaded media -> re-init/revert copy
     function setActionCopy() {
@@ -283,11 +349,21 @@
     }
 
     function fromRouteToQueue() {
-      var sourceMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-      var sourceQueue = sourceMenu.entries[$scope.menuKeyIndex];
-      var queueAction = sourceQueue.actions[0];
-      vm.menuEntry = queueAction.queueSettings[$scope.type];
-      vm.actionEntry = getAction(vm.menuEntry);
+      var sourceMenu, sourceQueue, queueAction;
+      if ($scope.menuId) {
+        sourceMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+        sourceQueue = sourceMenu.entries[$scope.menuKeyIndex];
+        queueAction = sourceQueue.actions[0];
+        vm.menuEntry = queueAction.queueSettings[$scope.type];
+        vm.actionEntry = getAction(vm.menuEntry);
+      } else {
+        var ui = AAUiModelService.getUiModel();
+        var uiMenu = ui[$scope.schedule];
+        vm.menuEntry = uiMenu.entries[$scope.index];
+        queueAction = vm.menuEntry.actions[0];
+        sourceMenu = queueAction.queueSettings[$scope.type];
+        vm.actionEntry = getAction(sourceMenu);
+      }
     }
 
     function fromAction() {
@@ -349,7 +425,7 @@
     }
 
     function setUpEntry(action) {
-      if (_.startsWith(action.getValue().toLowerCase(), 'http')) {
+      if (_.startsWith(action.value.toLowerCase(), 'http')) {
         try {
           // description holds the file name plus the date plus the duration
           //dont set up the vm until the desc is parsed properly
@@ -362,9 +438,11 @@
         } catch (exception) {
           //if somehow a bad format came through
           //catch and keep disallowed
-          action.setValue('');
-          action.setDescription('');
+          action.value = '';
+          action.description = '';
         }
+      } else {
+        reset(action);
       }
     }
 
@@ -372,14 +450,15 @@
       gatherMediaSource();
       //set up the view according to the play
       setUpEntry(vm.actionEntry);
-    }
-
-    $scope.$on('$destroy', function () {
-      if (!_.isUndefined(uploadServProm)) {
-        modalCanceled = true;
-        uploadServProm.abort();
+      //set up the last saved according to the play
+      savedActionEntry = _.cloneDeep(vm.actionEntry);
+      //set up the initial mediaUploads
+      mediaResources.uploads[0] = _.cloneDeep(savedActionEntry);
+      //if previously saved a real value, want to esure not deleted
+      if (savedActionEntry.description.length > 0) {
+        AAMediaUploadService.notifyAsSaved(uniqueCtrlIdentifier, true);
       }
-    });
+    }
 
     function isSquishable() {
       // if it is submenu header in the phone menu slightly squish the html to fit when open/closed and holidays are exposed.

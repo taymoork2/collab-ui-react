@@ -3,10 +3,6 @@
 describe('Controller: TrialEditCtrl:', function () {
   var controller, helpers, $scope, $state, $q, $translate, $window, $httpBackend, Notification, TrialService, TrialContextService, HuronCustomer, FeatureToggleService, Orgservice;
 
-  beforeEach(angular.mock.module('core.trial'));
-  beforeEach(angular.mock.module('Core'));
-  beforeEach(angular.mock.module('Huron'));
-  beforeEach(angular.mock.module('Sunlight'));
   var stateParams = {
     currentTrial: {
       offers: [{
@@ -17,6 +13,19 @@ describe('Controller: TrialEditCtrl:', function () {
     }
   };
   var addContextSpy, removeContextSpy;
+
+  afterEach(function () {
+    controller = helpers = $scope = $state = $q = $translate = $window = $httpBackend = Notification = TrialService = TrialContextService = HuronCustomer = FeatureToggleService = Orgservice = undefined;
+  });
+
+  afterAll(function () {
+    addContextSpy = removeContextSpy = undefined;
+  });
+
+  beforeEach(angular.mock.module('core.trial'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _$window_, _$httpBackend_, _Notification_, _TrialService_, _TrialContextService_, _HuronCustomer_, _FeatureToggleService_, _Orgservice_) {
     $scope = $rootScope.$new();
@@ -50,7 +59,7 @@ describe('Controller: TrialEditCtrl:', function () {
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
       if (param === FeatureToggleService.features.huronSimplifiedTrialFlow) {
         return $q.when(false);
-      } else if (param != 'csdm-places') {
+      } else {
         fail('the following toggle wasn\'t expected' + param); //taking control of which toggles this controller are using (explicit or implicit)
       }
       return $q.when(false);
@@ -467,6 +476,20 @@ describe('Controller: TrialEditCtrl:', function () {
         });
       });
 
+      describe('callOfferDisabledExpression:', function () {
+        it('should be disabled if call is disabled.', function () {
+          controller.careTrial.enabled = true;
+          controller.callTrial.enabled = false;
+          expect(helpers.callOfferDisabledExpression()).toBeTruthy();
+          expect(controller.careTrial.enabled).toBeFalsy();
+
+          controller.callTrial.enabled = true;
+          expect(helpers.callOfferDisabledExpression()).toBeFalsy();
+          //Care is a choice to enable/disable when Call is enabled.
+          expect(controller.careTrial.enabled).toBeFalsy();
+        });
+      });
+
       describe('careLicenseInputDisabledExpression:', function () {
         it('care license count disabled expression returns false in happy scenario.', function () {
           controller.careTrial.enabled = true;
@@ -541,6 +564,7 @@ describe('Controller: TrialEditCtrl:', function () {
       it('should enable care checkbox in edit trial when care was not already selected in start trial', function () {
         controller.preset.care = false;
         controller.messageTrial.enabled = true;
+        controller.callTrial.enabled = true;
         var isDisabled = controller.careFields[0].expressionProperties['templateOptions.disabled']();
         expect(isDisabled).toBeFalsy();
       });
@@ -548,6 +572,15 @@ describe('Controller: TrialEditCtrl:', function () {
       it('should disable care checkbox in edit trial when message was not selected in start trial', function () {
         controller.preset.care = false;
         controller.messageTrial.enabled = false;
+        controller.callTrial.enabled = true;
+        var isDisabled = controller.careFields[0].expressionProperties['templateOptions.disabled']();
+        expect(isDisabled).toBeTruthy();
+      });
+
+      it('should disable care checkbox in edit trial when call was not selected in start trial', function () {
+        controller.preset.care = false;
+        controller.messageTrial.enabled = true;
+        controller.callTrial.enabled = false;
         var isDisabled = controller.careFields[0].expressionProperties['templateOptions.disabled']();
         expect(isDisabled).toBeTruthy();
       });

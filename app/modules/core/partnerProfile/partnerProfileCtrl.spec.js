@@ -4,6 +4,11 @@ describe('Controller: PartnerProfileCtrl', function () {
   var $scope, $controller, $q;
   var Notification, Orgservice, UserListService, FeatureToggleService;
 
+  afterEach(function () {
+    $scope = $controller = $q = undefined;
+    Notification = Orgservice = UserListService = FeatureToggleService = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));

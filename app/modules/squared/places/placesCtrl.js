@@ -1,3 +1,5 @@
+require('./_places.scss');
+
 (function () {
   'use strict';
 
@@ -5,31 +7,37 @@
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($scope, $state, $templateCache, $translate, CsdmDataModelService, Userservice, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService) {
+      function ($q, $scope, $state, $templateCache, $translate, CsdmDataModelService, Userservice, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService) {
         var vm = this;
 
         vm.data = [];
         vm.placesLoaded = false;
+        vm.addPlaceIsDisabled = true;
         vm.placeFilter = PlaceFilter;
         vm.placeFilter.resetFilters();
         var filteredPlaces;
         var placesList;
 
         function init() {
-          fetchFeatureToggles();
+          fetchAsyncSettings();
           loadList();
-          fetchDisplayNameForLoggedInUser();
         }
 
-        function fetchFeatureToggles() {
-          FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
+        function fetchAsyncSettings() {
+          var darlingPromise = FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
             vm.showDarling = result;
           });
-          FeatureToggleService.csdmATAGetStatus().then(function (result) {
+          var ataPromise = FeatureToggleService.csdmATAGetStatus().then(function (result) {
             vm.showATA = result;
           });
-          FeatureToggleService.csdmPstnGetStatus().then(function (result) {
+          var pstnPromise = FeatureToggleService.csdmPstnGetStatus().then(function (result) {
             vm.showPstn = result && Authinfo.isSquaredUC();
+          });
+          var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
+            vm.csdmHybridCallFeature = feature;
+          });
+          $q.all([darlingPromise, ataPromise, pstnPromise, hybridPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
+            vm.addPlaceIsDisabled = false;
           });
         }
 
@@ -42,11 +50,15 @@
         }
 
         function fetchDisplayNameForLoggedInUser() {
+          var userDetailsDeferred = $q.defer();
           Userservice.getUser('me', function (data) {
             if (data.success) {
               vm.adminDisplayName = data.displayName;
+              vm.adminOrgId = data.meta.organizationID;
             }
+            userDetailsDeferred.resolve();
           });
+          return userDetailsDeferred.promise;
         }
 
         init();
@@ -151,20 +163,22 @@
           var wizardState = {
             data: {
               function: "addPlace",
-              showPlaces: true,
               showDarling: vm.showDarling,
               showATA: vm.showATA,
+              adminOrganizationId: vm.adminOrgId,
+              csdmHybridCallFeature: vm.csdmHybridCallFeature,
               title: 'addDeviceWizard.newSharedSpace.title',
               isEntitledToHuron: vm.isEntitledToHuron(),
               isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
               account: {
-                type: 'shared'
+                type: 'shared',
+                organizationId: Authinfo.getOrgId()
               },
               recipient: {
                 cisUuid: Authinfo.getUserId(),
                 displayName: vm.adminDisplayName,
                 email: Authinfo.getPrimaryEmail(),
-                organizationId: Authinfo.getOrgId()
+                organizationId: vm.adminOrgId
               }
             },
             history: [],
@@ -182,8 +196,12 @@
               'addDeviceFlow.editServices': {
                 nextOptions: {
                   sparkCall: 'addDeviceFlow.addLines',
+                  sparkCallConnect: 'addDeviceFlow.callConnectOptions',
                   sparkOnly: 'addDeviceFlow.showActivationCode'
                 }
+              },
+              'addDeviceFlow.callConnectOptions': {
+                next: 'addDeviceFlow.showActivationCode'
               },
               'addDeviceFlow.addLines': {
                 next: 'addDeviceFlow.showActivationCode'

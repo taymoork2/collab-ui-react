@@ -5,7 +5,7 @@
     .controller('GroupDetailsControllerV2',
 
       /* @ngInject */
-      function ($scope, MediaClusterServiceV2, $stateParams, $modal, $state, $timeout, FusionUtils) {
+      function ($scope, $translate, MediaClusterServiceV2, $stateParams, $modal, $state, $timeout, FusionUtils) {
 
         var vm = this;
         vm.displayName = null;
@@ -13,6 +13,7 @@
         vm.clusterDetail = null;
         vm.openSettings = openSettings;
         vm.fakeUpgrade = false;
+        vm.dateTime = null;
 
 
         if (!angular.equals($stateParams.clusterName, {})) {
@@ -25,8 +26,18 @@
 
         if (!angular.equals($stateParams.cluster, {})) {
           vm.clusterDetail = $stateParams.cluster;
+          vm.dateTime = textForTime(vm.clusterDetail.upgradeSchedule.scheduleTime);
           if ($stateParams.cluster) {
             vm.releaseChannel = FusionUtils.getLocalizedReleaseChannel(vm.clusterDetail.releaseChannel);
+          }
+        }
+
+        function textForTime(time) {
+          var currentLanguage = $translate.use();
+          if (currentLanguage === 'en_US') {
+            return moment(time, 'HH:mm').format('hh:mm A');
+          } else {
+            return time;
           }
         }
 

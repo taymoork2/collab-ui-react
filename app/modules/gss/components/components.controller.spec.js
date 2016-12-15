@@ -1,11 +1,13 @@
 'use strict';
 
 describe('controller:ComponentsCtrl', function () {
-  var $scope, $controller, $modal, $state, $q, controller, ComponentsService, GSSService;
+  var $controller, $modal, $q, $scope, $state, controller, ComponentsService, GSSService;
   var component = {};
   beforeEach(angular.mock.module('GSS'));
+  afterEach(destructDI);
   beforeEach(inject(dependencies));
   beforeEach(initController);
+
   function dependencies(_$rootScope_, _$controller_, _$modal_, _$q_, _$state_, _ComponentsService_, _GSSService_) {
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
@@ -16,6 +18,11 @@ describe('controller:ComponentsCtrl', function () {
     GSSService = _GSSService_;
     ComponentsService = _ComponentsService_;
   }
+
+  function destructDI() {
+    $controller = $modal = $q = $scope = $state = controller = ComponentsService = GSSService = undefined;
+  }
+
   function initController() {
     controller = $controller('ComponentsCtrl', {
       $scope: $scope,

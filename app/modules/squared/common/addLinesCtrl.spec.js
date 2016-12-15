@@ -134,8 +134,6 @@ describe('AddLinesCtrl: Ctrl', function () {
 
     it('mapDidToDn', function () {
       initController();
-      $scope.internalNumberPool = internalNumbers;
-      $scope.externalNumberPool = externalNumberPool;
       $scope.showExtensions = false;
       controller.mapDidToDn();
       $scope.$apply();

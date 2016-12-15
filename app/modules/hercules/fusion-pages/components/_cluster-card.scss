@@ -145,6 +145,19 @@ cluster-card {
     .no-connectors {
       opacity: 0.6;
     }
+
+    .empty-cluster-body {
+      min-height: 13.75rem;
+    }
+
+    .button-row {
+      padding-left: 1rem;
+      padding-right: 1rem;
+      padding-bottom: 1rem;
+      .btn {
+        margin-top: 0.5rem;
+      }
+    }
   }
 }
 

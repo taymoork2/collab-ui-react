@@ -24,18 +24,20 @@
               ng-class="callServiceAware.entitled && callServiceAware.status ? 'status-' + callServiceAware.status.state : 'disabled'"
               id="callServiceAwareStatus"
               translate="hercules.activationStatus.{{getStatus(callServiceAware.status)}}"></span>
+        <span class="cloud-extension-label disabled" ng-if="callServiceAware.entitled && callServiceAware.status && callServiceAware.status.lastStateChangeText">
+          ({{callServiceAware.status.lastStateChangeText}})</span>
         <span class="cloud-extension-label status-off" ng-if="!callServiceAware.entitled" translate="common.off"></span>
         <span cs-loader ng-if="!callServiceAware.status && callServiceAware.entitled"></span>
       </div>
       <div ng-if="callServiceAware.entitled && callServiceAware.homedConnector">
-        <span class="cloud-extension-label">{{'cloudExtensions.host' | translate}}:</span>
+        <span class="cloud-extension-label">{{'cloudExtensions.cluster' | translate}}:</span>
         <span class="cloud-extension-label" ng-if="callServiceAware.entitled && callServiceAware.homedConnector">
-          <a href="https://{{callServiceAware.homedConnector.host_name}}" target="_blank" style="color: #3ca8e8">{{callServiceAware.homedConnector.host_name}}</a>
+          <a href="https://{{callServiceAware.homedConnector.host_name}}" target="_blank" style="color: #3ca8e8">{{callServiceAware.homedConnector.cluster_name}}</a>
         </span>
       </div>
-      <div ng-if="callServiceAware.sipUri && callServiceAware.entitled">
+      <div ng-if="callServiceAware.entitled && (callServiceAware.directoryUri || callServiceAware.status.state !== 'notActivated')">
         <span class="cloud-extension-label">{{'cloudExtensions.sipUri' | translate}}:</span>
-        <span class="cloud-extension-label status-notActivated">{{callServiceAware.sipUri}}</span>
+        <span class="cloud-extension-label status-notActivated">{{callServiceAware.directoryUri}}</span>
       </div>
         <div ng-if="domainVerificationError" class="error-message">
           <i class="icon icon-error"></i>
@@ -94,6 +96,8 @@
             ng-class="callServiceConnect.entitled && callServiceConnect.status ? 'status-' + callServiceConnect.status.state : 'disabled'"
             id="callServiceConnectStatus"
             translate="hercules.activationStatus.{{getStatus(callServiceConnect.status)}}"></span>
+      <span class="cloud-extension-label disabled" ng-if="callServiceConnect.entitled && callServiceConnect.status && callServiceConnect.status.lastStateChangeText">
+          ({{callServiceConnect.status.lastStateChangeText}})</span>
       <span class="cloud-extension-label status-off" ng-if="!callServiceConnect.entitled" translate="common.off"></span>
       <span cs-loader ng-if="!callServiceConnect.status && callServiceConnect.entitled"></span>
     </div>

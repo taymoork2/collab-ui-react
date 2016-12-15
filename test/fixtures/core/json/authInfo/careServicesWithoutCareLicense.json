@@ -1,0 +1,20 @@
+{
+  "careLicense": [{
+    "isCustomerPartner": false,
+    "label": "Care Digital Channel",
+    "license": {
+      "features": [
+        "webex-squared",
+        "squared-call-initiation",
+        "cloud-contact-center"
+      ],
+      "isTrial": true,
+      "trialId": "33e66606-b1b8-4794-a7c5-5bfc5046380f",
+      "licenseId": "MS_cd66217d-a419-4cfb-92b4-a196b7fe3c74",
+      "licenseType": "CARE",
+      "offerName": "CDC",
+      "status": "ACTIVE",
+      "volume": 30
+    }
+  }]
+}

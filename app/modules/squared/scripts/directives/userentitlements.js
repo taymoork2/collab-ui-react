@@ -59,6 +59,8 @@
         .value();
     };
 
+    $scope.hasUserEntitlements = !!$scope.entitlementsKeys.length;
+
     var watchCheckboxes = function () {
       $timeout(function () {});
       var flag = false;

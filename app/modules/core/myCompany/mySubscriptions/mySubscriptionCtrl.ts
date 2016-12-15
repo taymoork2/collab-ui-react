@@ -1,3 +1,4 @@
+import './_mySubscription.scss';
 import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { Notification } from 'modules/core/notifications';
 
@@ -34,6 +35,7 @@ class MySubscriptionCtrl {
   public trialUrlFailed = false;
   public loading = false;
   public digitalRiverSubscriptionsUrl: string;
+  public isSharedMultiPartyEnabled: boolean;
 
   /* @ngInject */
   constructor(
@@ -41,6 +43,7 @@ class MySubscriptionCtrl {
     private $rootScope: ng.IRootScopeService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
+    private FeatureToggleService,
     private DigitalRiverService: DigitalRiverService,
     private Notification: Notification,
     private Orgservice,
@@ -72,6 +75,29 @@ class MySubscriptionCtrl {
       this.hybridServicesRetrieval();
     }
     this.subscriptionRetrieval();
+    this.initFeatures();
+  }
+
+  /* TODO For now we are using the site url to determine if the license is an SMP license. This logic will change;
+  we will be looking at licenseModel inside the licenses payload to determine if the license is SMP instead of the siteUrl. */
+  public isSharedMultiPartyLicense(siteUrl) {
+    return _.isString(siteUrl) && siteUrl.indexOf('.') > -1 ? _.first(siteUrl.split('.')) === 'smp' : false;
+  }
+
+  // This logic needs to be changed to look for the provided audio type from license usage call when payload is ready from the backend
+  public determineLicenseAudio(siteUrl) {
+    return this.isSharedMultiPartyLicense(siteUrl) ? this.$translate.instant('firstTimeWizard.partnerProvidedAudio') : this.$translate.instant('firstTimeWizard.webexProvidedAudio');
+  }
+
+  // This logic will be changed to look for the 'licenseModel' key when the payload is ready from the backend
+  public determineLicenseType(siteUrl) {
+    return this.isSharedMultiPartyLicense(siteUrl) ? this.$translate.instant('firstTimeWizard.sharedLicenses') : this.$translate.instant('firstTimeWizard.assignedLicenses');
+  }
+
+  private initFeatures() {
+    this.FeatureToggleService.atlasSMPGetStatus().then((smpStatus) => {
+        this.isSharedMultiPartyEnabled = smpStatus;
+    });
   }
 
   private initIframe(): void {

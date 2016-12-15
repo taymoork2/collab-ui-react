@@ -1,0 +1,80 @@
+<div class="flex-container">
+  <!-- progress bar -->
+  <div id="uploadProgressComponent" class="flex-item-no-resize enable-progress" ng-show="$ctrl.processProgress < 100">
+    <div class="csv-process-content">
+      <div class="progressbar">
+        <div class="progressbar-info">
+          <span id="progressLabel" class="progressbar-label"
+                ng-if="$ctrl.processProgress < 100 && !$ctrl.isCancelledByUser"
+                translate="bulkEnableVm.processing"></span>
+          <span id="cancelLabel" class="progressbar-label" ng-if="$ctrl.isCancelledByUser"
+                translate="bulkEnableVm.canceling"></span>
+           <span id="progress" class="progressbar-progress">{{$ctrl.processProgress}}%</span>
+        </div>
+        <progressbar animate="false" class="progress-striped active" value="$ctrl.processProgress"
+                     type="primary"></progressbar>
+      </div>
+      <!-- Need to check what is isprocessing -->
+      <div id="cancelProgress" ng-if="$ctrl.processProgress < 100" class="close-button">
+        <a class="icon icon-close" ng-click="$ctrl.onCancelProcess()">
+          <span class="sr-only" translate="common.close"></span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+ <!-- success status -->
+  <div id="success" class="flex-item-no-resize" ng-show="$ctrl.processProgress == 100 && $ctrl.userErrorArray.length == 0">
+    <div class="success-page">
+      <i class="icon icon-circle-check-mark-success icon-5x success-icon"></i>
+      <p translate="bulkEnableVm.allUsersEntitled"></p>
+    </div>
+  </div>
+
+  <!-- display the results stats -->
+  <div id="resultStats" class="flex-item-no-resize enable-stats" ng-show="$ctrl.processProgress < 100 || $ctrl.userErrorArray.length !== 0">
+    <div id="updatedUsersStats" class="stat updated-users" ng-class="{disabled: $ctrl.usersVoicemailUpdatedCount === 0}">
+      <div class="total">{{$ctrl.usersVoicemailUpdatedCount}}</div>
+      <h4 class="total-title" translate="bulkEnableVm.enabledUsers"></h4>
+    </div>
+    <div id="errorUsersStats" class="stat error-users" ng-class="{disabled: $ctrl.userErrorArray.length === 0}">
+      <div class="total">{{$ctrl.userErrorArray.length}}</div>
+      <h4 class="total-title" translate="bulkEnableVm.errorUsers"></h4>
+    </div>
+  </div>
+
+  <!-- display the error details -->
+  <div class="flex-item-resize">
+    <div id="errorListContainer" class="flex-container enabled-errors" ng-if="$ctrl.userErrorArray.length > 0">
+
+      <div class="flex-item-no-resize">
+        <h5 translate="bulkEnableVm.errorUsers"></h5>
+        <p>
+          <span translate="bulkEnableVm.errorResolveInstructions"></span>
+        </p>
+         <!-- Need to check what is isprocessing -->
+        <div class="error-download" ng-disabled="$ctrl.processProgress < 100">
+          <csv-download type="error" filename="errors.csv" no-icon
+                        anchor-text="{{::'userManage.bulk.import.exportErrors'|translate}}"></csv-download>
+        </div>
+      </div>
+
+      <div class="flex-item-no-resize table-header">
+        <div class="row">
+          <span id="headerRow" class="columns small-4 center error-row" translate="bulkEnableVm.headerRow"></span>
+          <span id="headerErrorMessage" class="columns small-8 error-desc" translate="bulkEnableVm.headerErrorMessage"></span>
+        </div>
+      </div>
+
+      <div id="errorList" class="flex-item-resize table-body">
+        <div class="scroller">
+          <div ng-repeat="data in $ctrl.userErrorArray" class="row">
+            <span class="columns small-4 center error-row">{{::data.userId}}</span>
+            <span class="columns small-8 error-desc">{{::data.statusText}} {{::data.trackingID}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

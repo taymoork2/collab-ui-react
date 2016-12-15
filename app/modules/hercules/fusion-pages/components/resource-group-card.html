@@ -1,7 +1,7 @@
 <cs-card class="full header-bar cta">
   <article>
     <header>
-      <button class="resource-group-caret" ng-click="$ctrl.toggleDetails()">
+      <div class="resource-group-caret" ng-click="$ctrl.toggleDetails()">
         <i class="icon icon-arrow-down" ng-class="{'icon-arrow-down-rotated': !$ctrl.showDetails}"></i>
         <i class="icon icon-circle status-indicator" ng-class="$ctrl.getStatusCssClass()"></i>
         <h4>{{::$ctrl.group.name}}</h4>
@@ -11,7 +11,7 @@
           <span ng-if="$ctrl.hasZeroClusters() && $ctrl.hasUsers()" class="icon icon-warning danger"></span>
           <span translate="hercules.fusion.list.users"></span>:&nbsp;{{::$ctrl.group.numberOfUsers}}
         </div>
-      </button>
+      </div>
       <a ui-sref="resource-group-settings({id: $ctrl.group.id})" class="resource-group-settings-link"><i class="icon icon-settings"></i></a>
     </header>
     <section ng-show="$ctrl.showDetails">

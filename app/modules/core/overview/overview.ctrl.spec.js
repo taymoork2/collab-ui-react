@@ -12,6 +12,14 @@ describe('Controller: OverviewCtrl', function () {
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
 
+  afterEach(function () {
+    controller = controllerCareFeatureDisabled = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = OverviewNotificationFactory = ReportsService = ServiceDescriptor = ServiceStatusDecriptor = TrialService = FusionClusterService = SunlightReportService = undefined;
+  });
+
+  afterAll(function () {
+    orgServiceJSONFixture = usageOnlySharedDevicesFixture = services = undefined;
+  });
+
   describe('Wire up', function () {
     beforeEach(inject(defaultWireUpFunc));
 
@@ -55,8 +63,8 @@ describe('Controller: OverviewCtrl', function () {
 
   describe('Enable Devices', function () {
     beforeEach(function () {
-      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.when(usageOnlySharedDevicesFixture));
       inject(defaultWireUpFunc);
+      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.when(usageOnlySharedDevicesFixture));
     });
 
     it('should call do something', function () {
@@ -84,11 +92,19 @@ describe('Controller: OverviewCtrl', function () {
   });
 
   describe('Notifications', function () {
-    var TOTAL_NOTIFICATIONS = 7;
+    var TOTAL_NOTIFICATIONS = 8;
     beforeEach(inject(defaultWireUpFunc));
 
     it('should all be shown', function () {
       expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+    });
+
+    it('should dismiss the Crash Log notification', function () {
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+
+      var notification = OverviewNotificationFactory.createCrashLogNotification();
+      controller.dismissNotification(notification);
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
     });
 
     it('should dismiss the PMR notification', function () {
@@ -243,6 +259,7 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(Authinfo, 'getServices').and.returnValue(services);
     spyOn(Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
+    spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(true);
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.when(true));
     spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.when(1));
@@ -263,7 +280,8 @@ describe('Controller: OverviewCtrl', function () {
       TrialService: TrialService,
       OverviewNotificationFactory: OverviewNotificationFactory,
       SunlightReportService: SunlightReportService,
-      hasCareFeatureToggle: true
+      hasCareFeatureToggle: true,
+      hasGoogleCalendarFeatureToggle: false,
     });
 
     // TODO Need to be removed once Care is graduated on atlas.
@@ -281,7 +299,8 @@ describe('Controller: OverviewCtrl', function () {
       Config: Config,
       TrialService: TrialService,
       OverviewNotificationFactory: OverviewNotificationFactory,
-      hasCareFeatureToggle: false
+      hasCareFeatureToggle: false,
+      hasGoogleCalendarFeatureToggle: false,
     });
 
     $scope.$apply();

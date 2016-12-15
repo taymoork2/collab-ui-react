@@ -7,6 +7,10 @@ describe('Controller: LaunchSiteCtrl', function () {
 
   var scope;
 
+  afterEach(function () {
+    scope = undefined;
+  });
+
   // Initialize the controller and mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();

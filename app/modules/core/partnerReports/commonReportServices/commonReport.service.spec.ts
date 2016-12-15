@@ -131,7 +131,7 @@ describe('Service: Common Report Service', () => {
       expect(graph.length).toBe(8);
 
       graph = this.CommonReportService.getReturnLineGraph(filter[1], defaults.graphItem);
-      expect(graph.length).toBe(5);
+      expect(graph.length).toBe(53);
 
       graph = this.CommonReportService.getReturnLineGraph(filter[2], defaults.graphItem);
       expect(graph.length).toBe(53);
@@ -207,6 +207,7 @@ describe('Service: Common Report Service', () => {
       let options: ITypeQuery = this.CommonReportService.getTypeOptions(filter[0], 'name');
       let updatedQuery = _.cloneDeep(queryFour);
       updatedQuery.type = defaults.usageOptions[0];
+      updatedQuery.extension = undefined;
       expect(options).toEqual(updatedQuery);
 
       options = this.CommonReportService.getTypeOptions(filter[1], 'name');
@@ -222,6 +223,7 @@ describe('Service: Common Report Service', () => {
       let options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter[0], 'name');
       let updatedQuery = _.cloneDeep(queryFour);
       updatedQuery.type = defaults.altUsageOptions[0];
+      updatedQuery.extension = undefined;
       expect(options).toEqual(updatedQuery);
 
       options = this.CommonReportService.getLineTypeOptions(filter[1], 'name');
@@ -229,7 +231,7 @@ describe('Service: Common Report Service', () => {
       expect(options).toEqual(updatedQuery);
 
       options = this.CommonReportService.getLineTypeOptions(filter[2], 'name');
-      updatedQuery.type = defaults.altUsageOptions[2];
+      updatedQuery.type = defaults.altUsageOptions[1];
       expect(options).toEqual(updatedQuery);
     });
 

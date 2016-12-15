@@ -1,7 +1,14 @@
 import { IFeature } from './featureList.component';
 
 describe('Component: featureList', () => {
-  let features: IFeature[];
+  let features: IFeature[] | undefined;
+
+  afterEach(function () {
+    features = undefined;
+    if (this.view) {
+      this.view.remove();
+    }
+  });
 
   beforeEach(function() {
     features = [

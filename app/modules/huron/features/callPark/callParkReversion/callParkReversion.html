@@ -1,13 +1,14 @@
-<script type="text/ng-template" id="memberTemplate.html">
+<script type="text/ng-template" id="callParkReversionTemplate.html">
   <a class="member__name">
     <span ng-bind-html="match.label.firstName | typeaheadHighlight:query" ng-if="match.label.firstName"></span>
     <span ng-bind-html="match.label.lastName | typeaheadHighlight:query" ng-if="match.label.lastName"></span>
+    <span ng-bind-html="match.label.number | typeaheadHighlight:query" ng-if="match.label.number"></span>
     <span ng-show="match.label.lastName">(<span ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>)</span>
-    <span ng-show="!match.label.lastName && !match.label.displayName" ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>
-    <span ng-show="!match.label.userName" ng-bind-html="match.label.displayName | typeaheadHighlight:query"></span>
+    <span ng-show="!match.label.lastName && !match.label.displayName && !match.label.number" ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>
+    <span ng-show="!match.label.userName && !match.label.number" ng-bind-html="match.label.displayName | typeaheadHighlight:query"></span>
   </a>
   <div class="member__line">
-    <span ng-bind-html="(match.label.numbers | callParkMemberTelephoneFilter) | typeaheadHighlight:query"></span>
+    <span ng-bind-html="(match.label.numbers | callParkMemberNumbersFilter : true) | typeaheadHighlight:query" ng-if="match.label.numbers"></span>
   </div>
 </script>
 <div ng-form="$ctrl.cpReversionForm">
@@ -33,7 +34,7 @@
       cs-input-label="{{:: 'callPark.reversionOtherLabel' | translate}}">
   </div>
   <div class="row form-group">
-    <div ng-if="$ctrl.showReversionLookup">
+    <div ng-if="$ctrl.showReversionLookup" class="typeahead">
       <cs-call-destination
         ng-disabled="$ctrl.reversionType === 'parker'"
         model="$ctrl.selectedReversionNumber"
@@ -43,36 +44,31 @@
         ng-keyup="$ctrl.validateReversionNumber()"
         internal-number-data-fn="$ctrl.getMemberList(data)"
         internal-number-on-select="$ctrl.onSelectReversionMember(data)"
-        internal-number-template-url="memberTemplate.html">
+        internal-number-template-url="callParkReversionTemplate.html"
+        on-change-fn="$ctrl.setSelectedReversionNumber(model)">
       </cs-call-destination>
     </div>
     <div ng-if="$ctrl.showMember">
       <cs-card-layout>
-        <cs-card
-          class="small header-background primary call-park-member-card">
-          <article>
-            <a href ng-click="$ctrl.toggleMemberPanel()">
-              <header ng-class="{'open-panel' : $ctrl.openPanel}">
-                <div class="header-with-right-icon">
-                  <h5 class="ellipsis">{{$ctrl.fallbackDestination.name}}</h5>
-                  <i class="icon icon-arrow-next icon-lg"></i>
-                </div>
-              </header>
-            </a>
-            <section ng-if="($ctrl.openPanel)">
-              <fieldset>
-                <p class="primary-number">{{member.numbers | callParkMemberTelephoneFilter}}</p>
-                <p>
-                  <a href ng-click="$ctrl.removeMember()" translate="callPark.removeMem"></a>
-                </p>
-              </fieldset>
-            </section>
-          </article>
-        </cs-card>
+        <cs-card-member ng-if="$ctrl.fallbackDestination.memberUuid"
+          cs-type="simple"
+          cs-member-type="user"
+          cs-id="$ctrl.fallbackDestination.memberUuid"
+          cs-title="$ctrl.fallbackDestination.name"
+          cs-subtitle="$ctrl.directoryNumber | callParkReversionDirectoryNumberFilter"
+          cs-image="$ctrl.thumbnailSrc"
+          on-remove="$ctrl.removeMember()">
+        </cs-card-member>
+        <cs-card-number ng-if="!$ctrl.fallbackDestination.memberUuid"
+          cs-id="$ctrl.fallbackDestination.numberUuid"
+          cs-title="$ctrl.fallbackDestination.number"
+          on-remove-fn="$ctrl.removeMember()">
+        </cs-card-number>
       </cs-card-layout>
-      <div class="ui-mt">
+      <div class="send-to-voicemail-chk">
         <input
           cs-input
+          ng-disabled="!$ctrl.hasVoicemail"
           type="checkbox"
           id="ckSendToVoicemail"
           name="ckSendToVoicemail"

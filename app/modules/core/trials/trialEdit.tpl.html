@@ -93,8 +93,8 @@
           </div> -->
             </div>
             <div class="days-left">
-              <span ng-class="{'trial-danger-text': trial.currentTrial.daysLeft <= 5}">{{trial.getDaysLeft(trial.currentTrial.daysLeft)}}</span>
-              <span translate="partnerHomePage.trialsEndDate"></span>
+              <span class="small" ng-class="{'trial-danger-text': trial.currentTrial.daysLeft <= 5}">{{trial.getDaysLeft(trial.currentTrial.daysLeft)}}</span>
+              <span class="small" translate="partnerHomePage.trialsEndDate"></span>
             </div>
           </div>
         </div>
@@ -117,7 +117,7 @@
     <span translate="partnerHomePage.cancel"></span>
   </button>
   <button id="saveUpdateButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
-    ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trial.isProceedDisabled()">
+    ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trial.isProceedDisabled() || trialForm.$invalid">
       <span ng-if="!trial.hasNextStep()" translate="common.save"></span>
       <span ng-if="trial.hasNextStep()" translate="common.next"></span>
   </button>

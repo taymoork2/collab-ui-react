@@ -21,7 +21,9 @@
       getPhoneNumberType: getPhoneNumberType,
       isTollFreeNumber: isTollFreeNumber,
       isPossibleAreaCode: isPossibleAreaCode,
-      getDestinationObject: getDestinationObject
+      getDestinationObject: getDestinationObject,
+      checkPhoneNumberType: checkPhoneNumberType,
+      internationalNumberValidator: internationalNumberValidator
     };
     var TOLL_FREE = 'TOLL_FREE';
     var PREMIUM_RATE = 'PREMIUM_RATE';
@@ -61,7 +63,11 @@
     }
 
     function getPhoneNumberType(number) {
-      return phoneUtils.getNumberType(number, regionCode);
+      try {
+        return phoneUtils.getNumberType(number, regionCode);
+      } catch (e) {
+        return '';
+      }
     }
 
     function getRegionCode() {
@@ -129,12 +135,16 @@
 
     function isPossibleAreaCode(areaCode) {
       //TODO: needs to be looked at again when service in other countries is available
-      if (regionCode === 'us') {
-        return phoneUtils.isPossibleNumber(areaCode + '0000000', regionCode);
-      } else if (regionCode === 'au') {
-        return phoneUtils.isValidNumber(areaCode + '00000000', regionCode);
-      } else {
-        return true;
+      try {
+        if (regionCode === 'us') {
+          return phoneUtils.isPossibleNumber(areaCode + '0000000', regionCode);
+        } else if (regionCode === 'au') {
+          return phoneUtils.isValidNumber(areaCode + '00000000', regionCode);
+        } else {
+          return true;
+        }
+      } catch (e) {
+        return false;
       }
     }
 
@@ -165,6 +175,32 @@
         }
       } else {
         throw new Error('Code not found');
+      }
+    }
+
+    function checkPhoneNumberType(number) {
+      var phoneNumberType;
+      try {
+        if (phoneUtils.isValidNumberForRegion(number, regionCode)) {
+          phoneNumberType = phoneUtils.getNumberType(number, regionCode);
+        }
+      } catch (e) {
+        phoneNumberType = undefined;
+      }
+      return phoneNumberType;
+    }
+
+    function internationalNumberValidator(number) {
+      try {
+        var phoneNumber = phoneUtils.formatE164(number);
+        var regionCode = phoneUtils.getRegionCodeForNumber(phoneNumber).toLowerCase();
+        if (phoneUtils.isValidNumberForRegion(phoneNumber, regionCode)) {
+          return true;
+        } else {
+          return false;
+        }
+      } catch (e) {
+        return false;
       }
     }
   }

@@ -12,8 +12,8 @@ class ReportFilterCtrl {
     private $rootScope
   ) {}
 
-  public getBreakpoint(): string {
-    return this.$rootScope.breakpoint;
+  public getBreakpoint(): boolean {
+    return this.$rootScope.breakpoint === 'screen-xs' || this.$rootScope.breakpoint === 'screen-sm' || this.$rootScope.breakpoint === 'screen-md';
   }
 
   public toggleOpen(): void {

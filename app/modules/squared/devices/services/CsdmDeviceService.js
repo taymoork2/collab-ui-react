@@ -30,14 +30,6 @@
       return $http.delete(device.url + '?keepPlace=true');
     }
 
-    function updateItemName(device, newName) {
-      return $http.patch(device.url, {
-        name: newName
-      }).then(function (res) {
-        return CsdmConverter.convertCloudberryDevice(res.data);
-      });
-    }
-
     function updateTags(deviceUrl, tags) {
       return $http.patch(deviceUrl, {
         description: JSON.stringify(tags || [])
@@ -57,6 +49,16 @@
       });
     }
 
+    function sendAdvancedSettingsOtp(deviceUrl, token, email, displayName) {
+      return notifyDevice(deviceUrl, {
+        command: "localAccess",
+        eventType: "room.localAccess",
+        displayName: displayName,
+        email: email,
+        message: token
+      });
+    }
+
     function renewRsuKey(deviceUrl, feedbackId, email) {
       return notifyDevice(deviceUrl, {
         command: "renewRSU",
@@ -70,14 +72,14 @@
     return {
       fetchDevices: fetchDevices,
       deleteItem: deleteItem,
-      updateItemName: updateItemName,
       updateTags: updateTags,
       fetchItem: fetchItem,
+      notifyDevice: notifyDevice,
+      sendAdvancedSettingsOtp: sendAdvancedSettingsOtp,
 
 //Grey list:
       uploadLogs: uploadLogs,
       deleteDevice: deleteDevice,
-
       renewRsuKey: renewRsuKey
     };
   }

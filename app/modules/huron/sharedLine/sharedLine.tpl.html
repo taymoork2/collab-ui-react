@@ -1,15 +1,15 @@
 <script type="text/ng-template" id="customTemplate.html">
   <a>
-      <span bind-html-unsafe="match.label.name.givenName | typeaheadHighlight:query" ng-if="match.label.name.givenName"></span>
-      <span bind-html-unsafe="match.label.name.familyName | typeaheadHighlight:query" ng-if="match.label.name.familyName"></span>
-      <span ng-show="match.label.name.familyName">(<span bind-html-unsafe="match.label.userName | typeaheadHighlight:query"></span>)</span>
-      <span ng-show="!match.label.name.familyName" bind-html-unsafe="match.label.userName | typeaheadHighlight:query"></span>
+      <span ng-bind-html="match.label.name.givenName | typeaheadHighlight:query" ng-if="match.label.name.givenName"></span>
+      <span ng-bind-html="match.label.name.familyName | typeaheadHighlight:query" ng-if="match.label.name.familyName"></span>
+      <span ng-show="match.label.name.familyName">(<span ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>)</span>
+      <span ng-show="!match.label.name.familyName" ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>
   </a>
 </script>
 <div class="shared-line">
   <h4 class="shared-line-title" translate="sharedLinePanel.title"></h4>
   <p><small translate="sharedLinePanel.description"></small></p>
-  <div class="form-group typeahead-form-group">
+  <form class="form-group typeahead-form-group" autocomplete="off">
     <div class="typeahead-dropdown">
       <input id="userInput" type="text" ng-model="lineSettings.selected" class="form-control"
         typeahead="user for user in lineSettings.getUserList($viewValue) | limitTo:10"
@@ -24,12 +24,12 @@
           <cs-accordion-heading ng-if="user.name">{{user.name}}<span class="pull-right caret"></span></cs-accordion-heading>
           <cs-accordion-heading ng-if="!user.name">{{user.userName}}<span class="pull-right caret"></span> </cs-accordion-heading>
           <ul class="list-group">
-            <li class="list-group-item" ng-if="user.name">{{user.userName}}</span></li>
+            <li class="list-group-item" ng-if="user.name"><span>{{user.userName}}</span></li>
             <cs-checkbox ng-if="device.userUuid == user.uuid"  ng-repeat="device in lineSettings.sharedLineEndpoints" class="list-group-item" ckid="{{$index}}-{{device.model}}-{{user.userName}}" ng-model="device.isSharedLine" label="{{device.model}}" isdisabled="lineSettings.isSingleDevice(lineSettings.sharedLineEndpoints, user.uuid)"></cs-checkbox>
             <a class="list-group-item list-item-anchor"  ng-if="user.dnUsage != 'Primary'" id="removeMemberLink" href="" translate="sharedLinePanel.remove" ng-click="lineSettings.disassociateSharedLineUser(user, false)"/>
           </ul>
         </cs-accordion-group>
       </cs-accordion>
     </div>
-  </div>
+  </form>
 </div>

@@ -13,6 +13,14 @@ describe('TokenService', function () {
     }
   };
 
+  afterEach(function () {
+    SessionStorage = TokenService = $window = undefined;
+  });
+
+  afterAll(function () {
+    windowMock = undefined;
+  });
+
   beforeEach(inject(function (_SessionStorage_, _TokenService_) {
     SessionStorage = _SessionStorage_;
     TokenService = _TokenService_;

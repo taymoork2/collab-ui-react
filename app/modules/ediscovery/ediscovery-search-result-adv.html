@@ -1,0 +1,57 @@
+<div class="row search-result" ng-if="ediscoverySearchCtrl.roomInfo">
+	<div class="create-form">
+		<cs-card class="medium">
+			<article>
+				<div>
+		      <a ui-sref="ediscovery.search">
+		        <i class="icon icon-back icon-lg"></i>
+		        <span translate="ediscovery.searchResults.backToSearch"></span>
+		      </a>
+		    </div>
+				<header><h4 class="result-info" translate="ediscovery.searchResults.searchInfo"></h4></header>
+				<section>		
+					<p class="result-title" translate="ediscovery.searchResults.emailId"></p>
+					<div ng-repeat="emailAddress in ediscoverySearchCtrl.searchResults.emailAddresses">
+						<p class="result-info">{{emailAddress}}</p>
+					</div>
+					<p class="result-title" translate="ediscovery.searchResults.dateRange"></p>
+					<p class="result-info">{{ediscoverySearchCtrl.searchCriteria.startDate}} - {{ediscoverySearchCtrl.searchCriteria.endDate}}</p>
+					<p class="result-title" translate="ediscovery.searchResults.textMessage"></p>
+					<p class="result-title" translate="ediscovery.searchResults.fileName"></p>
+				</section>
+			</article>
+		</cs-card>
+		<cs-card class="large">
+			<article>
+				<header class="summaryHeader"><h4 translate="ediscovery.searchResults.reportSummary"></h4></header>
+				<section class="row">
+					<div class="col-md-2">
+						<p translate="ediscovery.searchResults.rooms"></p>
+					</div>
+					<div class="col-md-2">
+						<p translate="ediscovery.searchResults.messages"></p>
+						<p>{{ediscoverySearchCtrl.searchResults.numMessages}}</p>
+					</div>
+					<div class="col-md-2">
+						<p translate="ediscovery.searchResults.files"></p>
+						<p>{{ediscoverySearchCtrl.searchResults.numFiles}}</p>
+					</div>
+					<div class="col-md-6">
+						<p translate="ediscovery.searchResults.estReport"></p>
+						<p>{{ediscoverySearchCtrl.searchResults.totalSize}}</p>
+					</div>
+				</section>
+			</article>
+		</cs-card>
+		<cs-card class="large">
+			<article>
+				<section>
+					<!-- Generate Report Section -->
+		      <search-results-report ng-if="ediscoverySearchCtrl.isReport"></search-results-report>
+		      <search-results-generate ng-if="ediscoverySearchCtrl.isReportGenerating"></search-results-generate>
+		      <search-results-complete ng-if="ediscoverySearchCtrl.isReportComplete"></search-results-complete>
+				</section>
+			</article>
+		</cs-card>
+	</div>
+</div>

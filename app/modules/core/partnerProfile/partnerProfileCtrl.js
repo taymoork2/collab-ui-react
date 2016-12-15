@@ -1,3 +1,5 @@
+require('./_partnerProfile.scss');
+
 (function () {
   'use strict';
 

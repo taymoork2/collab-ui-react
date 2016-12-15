@@ -16,9 +16,16 @@ export interface IExportMenu {
   click: Function | undefined;
 }
 
-// Used by the time Filter
+// time slider
+export interface ITimeSliderFunctions {
+  sliderUpdate: Function | undefined;
+  update: Function;
+}
+
 export interface ITimespan extends IDropdownBase {
   description: string;
+  min: number;
+  max: number;
 }
 
 // Used by the Customer Filter
@@ -177,6 +184,7 @@ export interface IIntervalQuery {
 
 export interface ITypeQuery {
   name: string;
+  extension: string | undefined;
   type: string;
   cache: boolean;
 }
@@ -196,5 +204,5 @@ export interface ICustomerIntervalQuery {
   spanCount: number;
   spanType: string;
   cache: boolean;
-  customerView: boolean;
+  customerView: boolean | undefined;
 }

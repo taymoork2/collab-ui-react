@@ -1,3 +1,7 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/fonts';
+@import 'styles/toolkit/spacing';
+
 %plan-container {
   display: flex;
   flex-direction: column;
@@ -28,9 +32,6 @@
   }
 
   .flex-row {
-    @extend .row;
-    @extend .full;
-
     display: flex;
 
     .columns {
@@ -71,8 +72,6 @@
     }
 
     .column-trial-header {
-      @extend .h5;
-
       padding: 1.5rem;
       background: $color-attention;
       color: $white;
@@ -133,9 +132,7 @@
     line-height: 24px;
   }
 
-  .badge-trial {
-    @extend .badge.badge-warning;
-
+  .badge-warning {
     display: inline-block;
   }
 
@@ -222,6 +219,14 @@
     line-height: 24px;
   }
 
+  .item-mtg-license {
+    color: $gray-dark-2;
+    font-family: $brand-font-light;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 24px;
+  }
+
   .item-mtg {
     color: $color-primary-base;
     font-family: $brand-font-light;
@@ -245,7 +250,7 @@
       font-family: $brand-font-light;
       font-size: 14px;
       color: $gray-base;
-      display: inline-block;
+      display: block;
 
       .badge {
         padding: 3px 9px;
@@ -254,6 +259,13 @@
       .badge.badge-warning {
         background: $brand-warning-dark;
       }
+    }
+
+    .quantity-mtg-details {
+      font-family: $brand-font-light;
+      font-size: 12px;
+      color: $gray-base;
+      display: block;
     }
   }
 

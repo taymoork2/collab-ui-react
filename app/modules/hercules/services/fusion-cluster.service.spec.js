@@ -79,12 +79,33 @@ describe('Service: FusionClusterService', function () {
       $httpBackend.flush();
     });
 
+    it('should filter out clusters with targetType unknown', function () {
+      $httpBackend
+        .expectGET('http://elg.no/organizations/0FF1C3?fields=@wide')
+        .respond({
+          clusters: [{
+            targetType: 'unknown',
+            connectors: []
+          }, {
+            targetType: 'c_mgmt',
+            connectors: []
+          }]
+        });
+      FusionClusterService.getAll()
+        .then(function (clusters) {
+          expect(clusters.length).toBe(1);
+        })
+        .catch(function () {
+          expect('reject called').toBeFalsy();
+        });
+      $httpBackend.flush();
+    });
+
     it('should add servicesStatuses property to each cluster', function () {
       $httpBackend
         .expectGET('http://elg.no/organizations/0FF1C3?fields=@wide')
         .respond({
           clusters: [{
-            state: 'fused',
             targetType: 'c_mgmt',
             connectors: [{
               alarms: [],
@@ -98,7 +119,6 @@ describe('Service: FusionClusterService', function () {
               hostname: 'b.elg.no'
             }]
           }, {
-            state: 'fused',
             targetType: 'mf_mgmt',
             connectors: [{
               alarms: [],
@@ -494,15 +514,15 @@ describe('Service: FusionClusterService', function () {
       expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('operational');
     });
 
-    it('should handle invalid service types by falling back to *outage*', function () {
-      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-invalid-service', twoClusters)).toBe('outage');
+    it('should handle invalid service types by falling back to *setupNotComplete*', function () {
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-invalid-service', twoClusters)).toBe('setupNotComplete');
     });
 
     it('should handle invalid cluster lists by falling back to *outage*', function () {
       var malformedClusterList = {
         clusters: 'not exactly a valid list of clusters'
       };
-      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-call', malformedClusterList)).toBe('outage');
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', malformedClusterList)).toBe('setupNotComplete');
     });
 
     it('should return *outage* when all hosts are *upgrading*', function () {

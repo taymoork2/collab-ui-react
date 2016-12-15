@@ -5,7 +5,7 @@
   <div class="wizard-plan-review" ng-if="planReview.isInitialized"
      ng-class="planReview.getUserServiceRowClass(multipleSubscriptions.roomSystemsExist)">
     <multiple-subscriptions></multiple-subscriptions>
-    <div class="flex-row">
+    <div class="row full flex-row">
       <div ng-class="planReview.getGridColumnClassName()" class="columns column-title">
         <div class="column-header">
           <i class="icon icon-circle-message"></i>
@@ -31,10 +31,10 @@
         </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row full">
       <div class="column-subsription-header free" translate="firstTimeWizard.freeColumnHeader"></div>
     </div>
-    <div class="flex-row">
+    <div class="row full flex-row">
       <div ng-class="planReview.getGridColumnClassName()" class="columns column-free">
         <div class="item-free" translate="firstTimeWizard.freeMsg"></div>
       </div>
@@ -48,12 +48,12 @@
         <div class="item-free" translate="firstTimeWizard.freeCare"></div>
       </div>
     </div>
-    <div class="row">
+    <div class="row full">
       <div class="column-subsription-header paid" translate="firstTimeWizard.paidColumnHeader"></div>
     </div>
-    <div class="flex-row row-licenses">
+    <div class="row full flex-row row-licenses">
       <div ng-class="planReview.getGridColumnClassName()" class="columns">
-        <div ng-if="planReview.messagingServices.isNewTrial" class="column-trial-header"
+        <div ng-if="planReview.messagingServices.isNewTrial" class="h5 column-trial-header"
            translate="firstTimeWizard.startYourTrial"
            translate-values="{days: planReview.trial.trialPeriod}"></div>
         <div ng-class="{'column-paid' : !planReview.messagingServices.isNewTrial, 'column-trial' : planReview.messagingServices.isNewTrial}">
@@ -64,7 +64,7 @@
              ng-show="multipleSubscriptions.showLicenses(service.license.billingServiceId, service.license.isTrial)"
              ng-repeat="service in planReview.messagingServices.services">
             <div ng-if="service.license.isTrial || planReview.messagingServices.isNewTrial"
-               class="badge badge-trial" translate="firstTimeWizard.trial"></div>
+               class="badge badge-warning" translate="firstTimeWizard.trial"></div>
             <div class="quantity">
               <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
               <span>{{service.license.volume}}</span>
@@ -73,27 +73,63 @@
         </div>
       </div>
       <div ng-class="planReview.getGridColumnClassName()" class="columns">
-        <div ng-if="planReview.confServices.isNewTrial" class="column-trial-header"
+        <div ng-if="planReview.confServices.isNewTrial" class="h5 column-trial-header"
            translate="firstTimeWizard.startYourTrial" translate-values="{days: planReview.trial.trialPeriod}">
         </div>
         <div ng-class="{'column-mtg' : !planReview.confServices.isNewTrial, 'column-trial' : planReview.confServices.isNewTrial}">
-          <div ng-if="planReview.confServices.services.length > 0" class="item-license">
+          <div ng-if="planReview.confServices.services.length > 0 && !planReview.isSharedMultiPartyEnabled" class="item-license">
             <span translate="firstTimeWizard.meeting"></span>
           </div>
-          <div ng-repeat="service in planReview.confServices.services"
-             ng-hide="service.license.offerName !== 'CF'">
-            <div class="item-paid"
-               ng-show="multipleSubscriptions.showLicenses(service.license.billingServiceId, service.license.isTrial)">
-              <div ng-if="service.license.isTrial || planReview.confServices.isNewTrial"
-                 class="badge badge-trial" translate="firstTimeWizard.trial"></div>
+          <div ng-if="planReview.confServices.services.length > 0 && planReview.isSharedMultiPartyEnabled" class="item-mtg-license">
+            <span translate="firstTimeWizard.standardMeetings"></span>
+          </div>
+          <div ng-repeat="service in planReview.confServices.services" ng-hide="service.license.offerName !== 'CF'">
+            <!-- show license details for standard 25-party meetings-->
+            <div class="item-paid" ng-show="multipleSubscriptions.showLicenses(service.license.billingServiceId, service.license.isTrial)">
+              <div ng-if="service.license.isTrial || planReview.confServices.isNewTrial" class="badge badge-warning" translate="firstTimeWizard.trial"></div>
+              <div class="item-mtg" ng-if="planReview.isSharedMultiPartyEnabled" translate="firstTimeWizard.meetingsInSpark"></div>
               <div class="quantity">
                 <span translate="firstTimeWizard.quantity"></span>
                 <span>{{service.license.volume}}</span>
               </div>
             </div>
           </div>
+          <!-- START Darling: Shared Mult-Party Licenses functionality -->
+          <div class="item-mtg-license" 
+            ng-if="planReview.confServices.services.length > 0 && 
+            planReview.isSharedMultiPartyEnabled && 
+            multipleSubscriptions.showLicenses(planReview.confServices.services[0].license.billingServiceId, planReview.confServices.services[0].license.isTrial)">
+            <span translate="firstTimeWizard.advancedMeetings"></span>
+          </div>
           <div class="item-mtg"
-             ng-show="multipleSubscriptions.showLicenses(services[0].license.billingServiceId, services[0].license.isTrial)"
+             ng-show="multipleSubscriptions.showLicenses(services[0].license.billingServiceId, services[0].license.isTrial) && planReview.isSharedMultiPartyEnabled"
+             ng-repeat="(siteUrl,services) in planReview.sites">
+            {{siteUrl}}
+            <div class="sub-item" ng-repeat="service in services">
+              <div class="item-webex">
+                {{'firstTimeWizard.webex' | translate}} {{service.label}}
+              </div>
+              <div ng-if="service.license.isTrial || planReview.confServices.isNewTrial"
+                 class="badge badge-warning" translate="firstTimeWizard.trial"></div>
+              <div class="quantity-mtg-details" ng-if="planReview.isSharedMultiPartyEnabled">
+                <span>{{planReview.determineLicenseAudio(siteUrl)}}</span>
+              </div>
+              <div class="quantity-mtg-details">
+                <span>{{service.license.volume}}</span>
+                <span>{{planReview.determineLicenseType(siteUrl)}}</span>
+              </div>
+              <div ng-if="service.license.isCI === false">
+                <a target="_blank"
+                   href= "{{service.license.siteAdminUrl}}"
+                   id="{{service.license.siteUrl}}_siteAdminUrl">
+                  {{::'onboardModal.siteAdminUrl' | translate}}
+                </a>
+              </div>
+            </div>
+          </div>
+          <!-- END Darling: Shared Mult-Party Licenses functionality -->
+          <div class="item-mtg"
+             ng-show="multipleSubscriptions.showLicenses(services[0].license.billingServiceId, services[0].license.isTrial) && !planReview.isSharedMultiPartyEnabled"
              ng-repeat="(siteUrl,services) in planReview.sites">
             <div class="sub-line"></div>
             {{siteUrl}}
@@ -102,16 +138,16 @@
                 {{'firstTimeWizard.webex' | translate}} {{service.label}}
               </div>
               <div ng-if="service.license.isTrial || planReview.confServices.isNewTrial"
-                 class="badge badge-trial" translate="firstTimeWizard.trial"></div>
+                 class="badge badge-warning" translate="firstTimeWizard.trial"></div>
               <div class="quantity-mtg">
-                <span translate="firstTimeWizard.quantity"></span>
                 <span>{{service.license.volume}}</span>
+                <span translate="firstTimeWizard.quantity"></span>
               </div>
               <div ng-if="service.license.isCI === false">
                 <a target="_blank"
                    href= "{{service.license.siteAdminUrl}}"
                    id="{{service.license.siteUrl}}_siteAdminUrl">
-                
+
                   {{::'onboardModal.siteAdminUrl' | translate}}
                 </a>
               </div>
@@ -120,7 +156,7 @@
         </div>
       </div>
       <div ng-class="planReview.getGridColumnClassName()" class="columns">
-        <div ng-if="planReview.commServices.isNewTrial" class="column-trial-header"
+        <div ng-if="planReview.commServices.isNewTrial" class="h5 column-trial-header"
            translate="firstTimeWizard.startYourTrial"
            translate-values="{days: planReview.trial.trialPeriod}"></div>
         <div ng-class="{'column-paid' : !planReview.commServices.isNewTrial, 'column-trial' : planReview.commServices.isNewTrial}">
@@ -131,7 +167,7 @@
              ng-show="multipleSubscriptions.showLicenses(service.license.billingServiceId, service.license.isTrial)"
              ng-repeat="service in planReview.commServices.services">
             <div ng-if="service.license.isTrial || planReview.commServices.isNewTrial"
-               class="badge badge-trial" translate="firstTimeWizard.trial"></div>
+               class="badge badge-warning" translate="firstTimeWizard.trial"></div>
             <div class="quantity">
               <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
               <span>{{service.license.volume}}</span>
@@ -140,7 +176,7 @@
         </div>
       </div>
       <div ng-if="planReview.isCareEnabled" id="paidCare" class="small-3 columns">
-        <div ng-if="planReview.careServices.isNewTrial" id="careStartTrial" class="column-trial-header"
+        <div ng-if="planReview.careServices.isNewTrial" id="careStartTrial" class="h5 column-trial-header"
            translate="firstTimeWizard.startYourTrial"
            translate-values="{days: planReview.trial.trialPeriod}"></div>
         <div ng-class="{'column-paid' : !planReview.careServices.isNewTrial, 'column-trial' : planReview.careServices.isNewTrial}">
@@ -150,7 +186,7 @@
           <div ng-repeat="service in planReview.careServices.services" class="item-paid"
              ng-show="multipleSubscriptions.showLicenses(service.license.billingServiceId, service.license.isTrial)">
             <div ng-if="service.license.isTrial || planReview.careServices.isNewTrial"
-               class="badge badge-trial" translate="firstTimeWizard.trial"></div>
+               class="badge badge-warning" translate="firstTimeWizard.trial"></div>
             <div class="quantity">
               <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
               <span>{{service.license.volume}}</span>
@@ -160,7 +196,7 @@
       </div>
     </div>
     <div ng-hide="!multipleSubscriptions.roomSystemsExist">
-      <div class="row row-room"
+      <div class="row full row-room"
          ng-class="{'column-paid' : !planReview.roomServices.isNewTrial, 'column-trial' : planReview.roomServices.isNewTrial}">
         <div class="column-header column-room small-6 columns">
           <i class="icon icon-circle-telepresence"></i>
@@ -171,7 +207,7 @@
           <div ng-repeat="service in planReview.roomServices.services"
              ng-hide="service.licenseType !== 'SHARED_DEVICES'">
             <div ng-show="multipleSubscriptions.showLicenses(service.billingServiceId, service.isTrial)">
-              <div ng-if="service.isTrial || planReview.roomServices.isNewTrial" class="badge badge-trial"
+              <div ng-if="service.isTrial || planReview.roomServices.isNewTrial" class="badge badge-warning"
                  translate="firstTimeWizard.trial"></div>
             </div>
           </div>
@@ -184,7 +220,7 @@
     </div>
     <div ng-show="'Trial' === multipleSubscriptions.selectedSubscription">
       <div ng-if="planReview.trialExists && !planReview.processing" class="wizard-trial-progress container-fluid">
-        <div class="row collapse">
+        <div class="row full collapse">
           <div class="small-12 columns">
             <progressbar class="progress" value="planReview.trialUsedPercentage"
                    type="warning"></progressbar>

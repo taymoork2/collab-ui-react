@@ -3,6 +3,7 @@
 var webpackConfig;
 switch (process.env.npm_lifecycle_event) {
   case 'build':
+  case 'stats':
     webpackConfig = require('./webpack/webpack.prod');
     break;
   case 'test':

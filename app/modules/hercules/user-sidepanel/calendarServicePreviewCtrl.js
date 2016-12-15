@@ -9,16 +9,25 @@
   function CalendarServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, ClusterService, $translate, ResourceGroupService, FeatureToggleService) {
     $scope.entitlementNames = {
       'squared-fusion-cal': 'squaredFusionCal',
-      'squared-fusion-uc': 'squaredFusionUC'
+      'squared-fusion-gcal': 'squaredFusionGCal'
     };
 
     $scope.currentUser = $stateParams.currentUser;
     $scope.isInvitePending = Userservice.isInvitePending($scope.currentUser);
-    $scope.localizedServiceName = $translate.instant('hercules.serviceNames.' + $stateParams.extensionId);
-    $scope.localizedConnectorName = $translate.instant('hercules.connectorNames.' + $stateParams.extensionId);
+    $scope.localizedServiceName = $translate.instant('hercules.serviceNames.squared-fusion-cal');
+    $scope.localizedConnectorName = $translate.instant('hercules.connectorNames.squared-fusion-cal');
     $scope.localizedOnboardingWarning = $translate.instant('hercules.userSidepanel.warningInvitePending', {
       ServiceName: $scope.localizedServiceName
     });
+    $scope.extension = {
+      id: $stateParams.extensionId,
+      entitled: $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf($stateParams.extensionId) > -1,
+      hasShowPreferredWebExSiteNameFeatureToggle: false,
+      preferredWebExSiteName: $translate.instant('hercules.cloudExtensions.preferredWebExSiteDefault'),
+      isExchange: function () {
+        return this.id === 'squared-fusion-cal';
+      }
+    };
     $scope.resourceGroup = {
       show: false,
       saving: false,
@@ -43,44 +52,65 @@
               $scope.resourceGroup.shouldWarn = !hasEligibleCluster;
             });
         }
+      },
+      updateShow: function () {
+        this.show = $scope.extension.isExchange() && _.size(this.options) > 1;
       }
     };
     $scope.resourceGroup.init();
 
     var isEntitled = function () {
-      return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf($stateParams.extensionId) > -1;
+      return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf($scope.extension.id) > -1;
     };
 
-    $scope.extension = {
-      id: $stateParams.extensionId,
-      entitled: isEntitled(),
-      defaultWebExSiteName: $translate.instant('hercules.cloudExtensions.defaultWebExSiteNotSet')
+    var isSetup = function (id) {
+      var extension = _.find($stateParams.extensions, { id: id });
+      return extension ? extension.isSetup : false;
     };
 
-    function initDefaultWebExSiteName() {
-      var defaultWebExSiteName;
-      if (!_.isEmpty($scope.currentUser.userPreferences)) {
-        defaultWebExSiteName = _.find($scope.currentUser.userPreferences, function (userPreference) {
-          return userPreference.indexOf("calSvcPreferredWebexSite") > 0;
-        });
-        if (_.isString(defaultWebExSiteName)) {
-          defaultWebExSiteName = defaultWebExSiteName.substring(defaultWebExSiteName.indexOf(":") + 1).replace(/"/g, '');
-          $scope.extension.defaultWebExSiteName = defaultWebExSiteName;
-        }
+    $scope.calendarType = {
+      exchangeName: $translate.instant('hercules.cloudExtensions.exchange'),
+      exchangeSetup: isSetup('squared-fusion-cal'),
+      googleName: $translate.instant('hercules.cloudExtensions.google'),
+      googleSetup: isSetup('squared-fusion-gcal'),
+      notSetupText: $translate.instant('hercules.cloudExtensions.notSetup'),
+      init: function () {
+        this.selected = $scope.extension.id;
+        this.exchangeEnabled = this.exchangeSetup && !isEntitled();
+        this.googleEnabled = this.googleSetup && !isEntitled();
       }
+    };
+    $scope.calendarType.init();
 
-      if (defaultWebExSiteName === undefined) {
+    FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
+      .then(function (supported) {
+        $scope.atlasHerculesGoogleCalendarFeatureToggle = supported;
+      });
+
+    FeatureToggleService.calsvcShowPreferredSiteNameGetStatus().then(function (toggle) {
+      $scope.extension.hasShowPreferredWebExSiteNameFeatureToggle = toggle;
+      if (toggle) {
+        // If user preference...
+        if (!_.isEmpty($scope.currentUser.userPreferences)) {
+          var name = _.find($scope.currentUser.userPreferences, function (userPreference) {
+            return userPreference.indexOf("calSvcPreferredWebexSite") > 0;
+          });
+          if (_.isString(name)) {
+            name = name.substring(name.indexOf(":") + 1).replace(/"/g, '');
+            $scope.extension.preferredWebExSiteName = name;
+            return;
+          }
+        }
+
+        // If org settings preference...
         Orgservice.getOrg(_.noop, Authinfo.getOrgId(), true)
           .then(function (response) {
-            if (_.get(response, 'data.orgSettings.calSvcDefaultWebExSite')) {
-              defaultWebExSiteName = response.data.orgSettings.calSvcDefaultWebExSite;
-              $scope.extension.defaultWebExSiteName = defaultWebExSiteName;
+            if (_.get(response, 'data.orgSettings.calSvcpreferredWebExSite')) {
+              $scope.extension.preferredWebExSiteName = response.data.orgSettings.calSvcDefaultWebExSite;
             }
           });
       }
-    }
-
-    initDefaultWebExSiteName();
+    });
 
     $scope.$watch('extension.entitled', function (newVal, oldVal) {
       if (newVal !== oldVal) {
@@ -105,6 +135,10 @@
             $scope.extension.homedConnector = connector;
           });
         }
+        if ($scope.extension.status && $scope.extension.status.lastStateChange) {
+          $scope.extension.status.lastStateChangeText = moment($scope.extension.status.lastStateChange).fromNow(true);
+        }
+
         // If we find no status in USS and the service is entitled, we try to refresh the user in USS and reload the statuses
         // This can happen if USS has not been notified by CI in a reasonable time after entitled
         if (!$scope.extension.status && isEntitled()) {
@@ -143,6 +177,7 @@
     var readResourceGroups = function () {
       FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
         .then(function (supported) {
+          $scope.atlasF237ResourceGroupsFeatureToggle = supported;
           if (supported) {
             ResourceGroupService.getAllAsOptions().then(function (options) {
               if (options.length > 0) {
@@ -158,7 +193,7 @@
                     }
                   });
                 }
-                $scope.resourceGroup.show = true;
+                $scope.resourceGroup.updateShow();
               }
             });
           }
@@ -171,7 +206,7 @@
         'address': $scope.currentUser.userName
       }];
       var entitlement = [{
-        entitlementName: $scope.entitlementNames[$stateParams.extensionId],
+        entitlementName: $scope.entitlementNames[$scope.extension.id],
         entitlementState: entitled === true ? 'ACTIVE' : 'INACTIVE'
       }];
 
@@ -191,12 +226,13 @@
               $stateParams.currentUser.entitlements = [];
             }
             if (entitled) {
-              $stateParams.currentUser.entitlements.push($stateParams.extensionId);
+              $stateParams.currentUser.entitlements.push($scope.extension.id);
             } else {
               _.remove($stateParams.currentUser.entitlements, function (entitlement) {
-                return entitlement === $stateParams.extensionId;
+                return entitlement === $scope.extension.id;
               });
             }
+            $scope.calendarType.init();
             $scope.setShouldShowButtons();
             refreshUserInUss();
           } else if (userStatus === 404) {
@@ -263,7 +299,7 @@
     };
 
     $scope.reset = function () {
-      $scope.extension.entitled = $scope.currentUser.entitlements.indexOf($stateParams.extensionId) > -1;
+      $scope.extension.entitled = $scope.currentUser.entitlements.indexOf($scope.extension.id) > -1;
       $scope.resourceGroup.reset();
       $scope.showButtons = false;
     };
@@ -289,6 +325,14 @@
         }
       }
       $scope.showButtons = entitlementHasChanged();
+    };
+
+    $scope.selectedCalendarTypeChanged = function (type) {
+      $scope.extension.id = type;
+      if ($scope.atlasF237ResourceGroupsFeatureToggle) {
+        $scope.resourceGroup.updateShow();
+      }
+      $scope.calendarType.init();
     };
   }
 }());

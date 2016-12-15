@@ -7,7 +7,7 @@
 
 
   /* @ngInject */
-  function AARouteToQueueCtrl($scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
+  function AARouteToQueueCtrl($scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AANotificationService, AALanguageService) {
 
     var vm = this;
     vm.hideQueues = true;
@@ -37,6 +37,13 @@
     var rtQueue = 'routeToQueue';
     var fromRouteCall = false;
 
+    var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
+    var periodicTime = '45';
+
+    var maxWaitTime = {
+      index: '14',
+      label: '15'
+    };
 
     /////////////////////
 
@@ -47,9 +54,21 @@
       openQueueSettings().result.then(function () {
         // keep changes as modal was resolved with close
         if (fromRouteCall) {
-          vm.menuEntry.actions[0].description = vm.menuEntry.actions[0].queueSettings;
+          vm.menuEntry.actions[0].description = {
+            musicOnHoldDescription: vm.menuEntry.actions[0].queueSettings.musicOnHold.actions[0].description,
+            periodicAnnouncementType: vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].name,
+            periodicAnnouncementDescription: vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].description,
+            initialAnnouncementType: vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0].name,
+            initialAnnouncementDescription: vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0].description
+          };
         } else {
-          vm.menuKeyEntry.actions[0].description = vm.menuKeyEntry.actions[0].queueSettings;
+          vm.menuKeyEntry.actions[0].description = {
+            musicOnHoldDescription: vm.menuKeyEntry.actions[0].queueSettings.musicOnHold.actions[0].description,
+            periodicAnnouncementType: vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].name,
+            periodicAnnouncementDescription: vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].description,
+            initialAnnouncementType: vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.actions[0].name,
+            initialAnnouncementDescription: vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.actions[0].description
+          };
         }
       }, function () {
         // discard changes as modal was dismissed
@@ -80,6 +99,9 @@
           aa_key_index: function () {
             return $scope.keyIndex;
           },
+          aa_from_route_call: function () {
+            return $scope.fromRouteCall;
+          }
         },
         modalClass: 'aa-queue-settings-modal'
       });
@@ -92,14 +114,18 @@
       } else {
         vm.queueSelected.id = vm.menuKeyEntry.actions[0].getValue();
       }
-      vm.queues = JSON.parse($scope.queues);
-      if (vm.queueSelected.id == '' && vm.hideQueues && vm.queues.length > 0) {
-        vm.queueSelected = vm.queues[0];
-        saveUiModel();
+      try {
+        vm.queues = JSON.parse($scope.queues);
+        if (vm.queueSelected.id == '' && vm.hideQueues && vm.queues.length > 0) {
+          vm.queueSelected = vm.queues[0];
+          saveUiModel();
+        }
+        vm.queueSelected.description = _.result(_.find(vm.queues, {
+          'id': vm.queueSelected.id
+        }), 'description', '');
+      } catch (e) {
+        AANotificationService.error('No valid queue configured to display Call Queue option.');
       }
-      vm.queueSelected.description = _.result(_.find(vm.queues, {
-        'id': vm.queueSelected.id
-      }), 'description', '');
     }
 
     function saveUiModel() {
@@ -107,8 +133,57 @@
         vm.menuEntry.actions[0].setValue(vm.queueSelected.id);
       } else {
         vm.menuKeyEntry.actions[0].setValue(vm.queueSelected.id);
+        if (!_.isEmpty(vm.menuEntry.headers[0].voice)) {
+          var queueSettings = _.get(vm.menuKeyEntry, 'actions[0].queueSettings');
+          queueSettings.language = vm.menuEntry.headers[0].language;
+          queueSettings.voice = vm.menuEntry.headers[0].voice;
+        }
       }
       AACommonService.setPhoneMenuStatus(true);
+    }
+
+    // This function is called from activateQueueSettings.
+    // It adds the appropriate action (i.e. say or play) to the queueSettings.
+    function createAction(obj, type, sayOrPlayOrDisconnect) {
+      var action;
+      obj[type] = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      action = AutoAttendantCeMenuModelService.newCeActionEntry(sayOrPlayOrDisconnect, '');
+      obj[type].addAction(action);
+    }
+
+    // This function is called from activate.
+    // It is checking and creating queueSettings (i.e. MoH, IA, PA, FB).
+    function activateQueueSettings(menuEntryParam) {
+      var queueSettings = _.get(menuEntryParam, 'actions[0].queueSettings');
+
+      if (!_.has(queueSettings, 'musicOnHold')) {
+        createAction(queueSettings, 'musicOnHold', 'play');
+        var musicOnHold = _.get(queueSettings, 'musicOnHold.actions[0]');
+        musicOnHold.setValue(CISCO_STD_MOH_URL);
+      }
+      if (!_.has(queueSettings, 'initialAnnouncement')) {
+        createAction(queueSettings, 'initialAnnouncement', 'say');
+      }
+      if (!_.has(queueSettings, 'periodicAnnouncement')) {
+        createAction(queueSettings, 'periodicAnnouncement', 'say');
+        var periodicAnnouncement = _.get(queueSettings, 'periodicAnnouncement.actions[0]');
+        periodicAnnouncement.setDescription("");
+        periodicAnnouncement.interval = periodicTime;
+      }
+      if (!_.has(queueSettings, 'fallback')) {
+        createAction(queueSettings, 'fallback', 'disconnect');
+      }
+      if (!_.has(queueSettings, 'maxWaitTime')) {
+        queueSettings.maxWaitTime = maxWaitTime; //default, 15 mins.
+      }
+      if (!_.has(queueSettings, 'language')) {
+        var languageOption = AALanguageService.getLanguageOption();
+        queueSettings.language = languageOption.value;//default English(US).
+      }
+      if (!_.has(queueSettings, 'voice')) {
+        var voiceOption = AALanguageService.getVoiceOption();
+        queueSettings.voice = voiceOption.value; //default Vanessa.
+      }
     }
 
     function activate() {
@@ -128,6 +203,11 @@
             vm.menuEntry.actions[0].setValue('');
           } // else let saved value be used
         }
+        if (!_.has(_.get(vm.menuEntry, 'actions[0]'), 'queueSettings')) {
+          vm.menuEntry.actions[0].queueSettings = {};
+        }
+
+        activateQueueSettings(vm.menuEntry);
       } else {
         vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         if ($scope.keyIndex < vm.menuEntry.entries.length) {
@@ -137,31 +217,10 @@
           var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtQueue, '');
           vm.menuKeyEntry.addAction(action);
         }
-        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings)) {
+        if (!_.has(_.get(vm.menuKeyEntry, 'actions[0]'), 'queueSettings')) {
           vm.menuKeyEntry.actions[0].queueSettings = {};
         }
-        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.musicOnHold)) {
-          vm.menuKeyEntry.actions[0].queueSettings.musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var mohAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
-          vm.menuKeyEntry.actions[0].queueSettings.musicOnHold.addAction(mohAction);
-        }
-        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement)) {
-          vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
-          vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.addAction(iaAction);
-        }
-        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement)) {
-          vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var paAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
-          vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.addAction(paAction);
-        }
-        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.fallBack)) {
-          vm.menuKeyEntry.actions[0].queueSettings.fallBack = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var fbMaxTime = AutoAttendantCeMenuModelService.newCeActionEntry('time', '');
-          vm.menuKeyEntry.actions[0].queueSettings.fallBack.addAction(fbMaxTime);
-          var fbAction = AutoAttendantCeMenuModelService.newCeActionEntry('option', '');
-          vm.menuKeyEntry.actions[0].queueSettings.fallBack.addAction(fbAction);
-        }
+        activateQueueSettings(vm.menuKeyEntry);
       }
 
       populateUiModel();

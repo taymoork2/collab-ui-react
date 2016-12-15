@@ -4,11 +4,8 @@
   angular.module('Core')
     .controller('CareSettingsCtrl', CareSettingsCtrl);
 
-  function CareSettingsCtrl($interval, $scope, $translate, $window, Authinfo, Log, Notification, SunlightConfigService, TokenService, UrlConfig) {
+  function CareSettingsCtrl($interval, $scope, $translate, Log, Notification, SunlightConfigService) {
     var vm = this;
-    var callbackUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/csonboard?accessToken='
-      + TokenService.getAccessToken() + '&orgName=' + Authinfo.getOrgName();
-    var ccfsUrl = UrlConfig.getCcfsUrl() + encodeURIComponent(callbackUrl);
 
     vm.UNKNOWN = 'unknown';
     vm.ONBOARDED = 'onboarded';
@@ -19,7 +16,7 @@
     vm.errorCount = 0;
 
     vm.onboardToCs = function () {
-      $window.open(ccfsUrl, '_blank');
+      SunlightConfigService.onBoardCare();
       vm.state = vm.IN_PROGRESS;
       startPolling();
     };
@@ -46,17 +43,25 @@
         $interval.cancel(poller);
         poller = undefined;
       }
-      enableNext();
     }
 
     function processOnboardStatus() {
       SunlightConfigService.getChatConfig().then(function (result) {
-        if (_.get(result, 'data.csConnString')) {
-          Notification.success($translate.instant('firstTimeWizard.careSettingsComplete'));
-          vm.state = vm.ONBOARDED;
-          stopPolling();
-        } else {
-          Log.debug('Chat Config does not have CS connection string: ', result);
+        var onboardingStatus = _.get(result, 'data.csOnboardingStatus');
+        switch (onboardingStatus) {
+          case 'Success':
+            Notification.success($translate.instant('firstTimeWizard.careSettingsComplete'));
+            vm.state = vm.ONBOARDED;
+            stopPolling();
+            enableNext();
+            break;
+          case 'Failure':
+            Notification.errorWithTrackingId(result, $translate.instant('firstTimeWizard.setUpCareFailure'));
+            vm.state = vm.NOT_ONBOARDED;
+            stopPolling();
+            break;
+          default:
+            Log.debug('Care setup status is not Success: ', result);
         }
       })
       .catch(function (result) {
@@ -64,7 +69,7 @@
           Log.debug('Fetching Care setup status failed: ', result);
           if (vm.errorCount++ >= pollErrorCount) {
             vm.state = vm.UNKNOWN;
-            Notification.error('firstTimeWizard.careSettingsFetchFailed');
+            Notification.errorWithTrackingId(result, 'firstTimeWizard.careSettingsFetchFailed');
             stopPolling();
           }
         }
@@ -75,7 +80,6 @@
       Log.debug('Poll timed out after ' + pollerResult + ' attempts.');
       vm.state = vm.NOT_ONBOARDED;
       Notification.error('firstTimeWizard.careSettingsTimeout');
-      enableNext();
     }
 
     function enableNext() {
@@ -90,9 +94,18 @@
       disableNext();
 
       SunlightConfigService.getChatConfig().then(function (result) {
-        if (_.get(result, 'data.csConnString')) {
-          vm.state = vm.ONBOARDED;
-          enableNext();
+        var onboardingStatus = _.get(result, 'data.csOnboardingStatus');
+        switch (onboardingStatus) {
+          case 'Pending':
+            vm.state = vm.IN_PROGRESS;
+            startPolling();
+            break;
+          case 'Success':
+            vm.state = vm.ONBOARDED;
+            enableNext();
+            break;
+          default:
+            vm.state = vm.NOT_ONBOARDED;
         }
       })
       .catch(function (result) {
@@ -100,7 +113,6 @@
           vm.state = vm.NOT_ONBOARDED;
         } else {
           Log.debug('Fetching Care setup status, on load, failed: ', result);
-          enableNext();
         }
       });
     }

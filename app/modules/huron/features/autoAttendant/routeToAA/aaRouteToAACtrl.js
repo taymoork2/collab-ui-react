@@ -54,12 +54,16 @@
     }
 
     function populateUiModel() {
-      vm.aaName = ceId2aaName(vm.menuEntry.actions[0].value);
+      var entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
+      vm.aaName = ceId2aaName(entry.actions[0].value);
     }
 
     function saveUiModel() {
-      vm.menuEntry.actions[0].setValue(aaName2CeId(vm.aaName));
       AACommonService.setPhoneMenuStatus(true);
+
+      var action = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback.actions[0]', vm.menuEntry.actions[0]);
+      action.setValue(aaName2CeId(vm.aaName));
+
     }
 
     function activate() {
@@ -70,14 +74,18 @@
       if ($scope.fromRouteCall) {
         var uiCombinedMenu = uiModel[$scope.schedule];
         vm.menuEntry = uiCombinedMenu.entries[$scope.index];
-        if (vm.menuEntry.actions.length === 0) {
-          action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
-          vm.menuEntry.addAction(action);
-        } else {
-          // make sure action is AA not External Number, HG, User, etc
-          if (!(vm.menuEntry.actions[0].getName() === 'goto')) {
-            vm.menuEntry.actions[0].setName('goto');
-            vm.menuEntry.actions[0].setValue('');
+
+        if (!$scope.fromFallback) {
+          if (vm.menuEntry.actions.length === 0) {
+            action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
+            vm.menuEntry.addAction(action);
+          } else {
+            // make sure action is AA not External Number, HG, User, etc
+            if (!(vm.menuEntry.actions[0].getName() === 'goto')) {
+              vm.menuEntry.actions[0].setName('goto');
+              vm.menuEntry.actions[0].setValue('');
+              delete vm.menuEntry.actions[0].queueSettings;
+            }
           }
         }
       } else {
@@ -91,6 +99,16 @@
           vm.menuEntry.addAction(action);
         }
 
+      }
+
+      if ($scope.fromFallback) {
+        var entry = vm.menuEntry;
+
+        var fallbackAction = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]');
+        if (fallbackAction && (fallbackAction.getName() !== 'goto')) {
+          fallbackAction.setName('goto');
+          fallbackAction.setValue('');
+        }
       }
 
       // Deduce list of Auto Attendants

@@ -318,3 +318,89 @@ describe('Huron Feature DeleteCtrl for PagingGroup', function () {
   });
 
 });
+
+describe('Huron Feature DeleteCtrl for PickupGroup', function () {
+
+  var featureDeleteCtrl, rootScope, $scope, $stateParams, $q, $timeout, $translate, pickupGroupService, Notification, Log, featureDelDeferred;
+  var spiedAuthinfo = {
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+  };
+  var successResponse = {
+    'status': 200,
+    'statusText': 'OK'
+  };
+  var failureResponse = {
+    'data': 'Internal Server Error',
+    'status': 500,
+    'statusText': 'Internal Server Error'
+  };
+
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module(function ($provide) {
+    $provide.value("Authinfo", spiedAuthinfo);
+  }));
+
+  beforeEach(inject(function (_$rootScope_, $controller, _$timeout_, _$translate_, _$q_, Authinfo, _CallPickupGroupService_, _Notification_, _Log_) {
+    rootScope = _$rootScope_;
+    $scope = rootScope.$new();
+    $q = _$q_;
+    $translate = _$translate_;
+    $timeout = _$timeout_;
+    pickupGroupService = _CallPickupGroupService_;
+    Notification = _Notification_;
+    Log = _Log_;
+
+    featureDelDeferred = $q.defer();
+    spyOn(pickupGroupService, 'deletePickupGroup').and.returnValue(featureDelDeferred.promise);
+    spyOn(Notification, 'success');
+    spyOn(Notification, 'error');
+    spyOn(rootScope, '$broadcast').and.callThrough();
+
+    $stateParams = {
+      deleteFeatureId: 'aaaa',
+      deleteFeatureName: 'aaaa',
+      deleteFeatureType: 'PI'
+    };
+
+    featureDeleteCtrl = $controller('HuronFeatureDeleteCtrl', {
+      $rootScope: rootScope,
+      $scope: $scope,
+      $stateParams: $stateParams,
+      $timeout: $timeout,
+      $translate: $translate,
+      Authinfo: Authinfo,
+      CallPickupGroupService: pickupGroupService,
+      Log: Log,
+      Notification: Notification
+    });
+
+  }));
+
+  it('should broadcast HURON_FEATURE_DELETED event when pickup group is deleted successfully', function () {
+    featureDeleteCtrl.deleteFeature();
+    featureDelDeferred.resolve(successResponse);
+    $scope.$apply();
+    $timeout.flush();
+    expect(rootScope.$broadcast).toHaveBeenCalledWith('HURON_FEATURE_DELETED');
+  });
+
+  it('should give a successful notification when pickup group is deleted successfully', function () {
+    featureDeleteCtrl.deleteFeature();
+    featureDelDeferred.resolve(successResponse);
+    $scope.$apply();
+    $timeout.flush();
+    expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
+      featureName: $stateParams.deleteFeatureName,
+      featureType: jasmine.any(String)
+    });
+  });
+
+  it('should give the an error notification when pickup group deletion fails', function () {
+    featureDeleteCtrl.deleteFeature();
+    featureDelDeferred.reject(failureResponse);
+    $scope.$apply();
+    $timeout.flush();
+    expect(Notification.error).toHaveBeenCalledWith(jasmine.any(String));
+  });
+
+});
