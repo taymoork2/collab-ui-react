@@ -4,6 +4,13 @@ describe('Customer Screen Directive', function () {
   var $compile, $scope;
   var view;
 
+  afterEach(function () {
+    if (view) {
+      view.remove();
+    }
+    view = undefined;
+  });
+
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(inject(dependencies));
   beforeEach(injectScope);

@@ -45,6 +45,7 @@
 <div class="modal-footer add-resource">
 
   <button class="btn"
+          ng-if="vm.step !== 'final'"
           ng-click="$dismiss()">
     <span translate="common.cancel"></span>
   </button>

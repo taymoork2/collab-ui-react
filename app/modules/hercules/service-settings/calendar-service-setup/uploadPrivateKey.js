@@ -8,7 +8,7 @@
       controller: uploadPrivateKeyController,
       controllerAs: 'uploadKey',
       bindings: {
-        data: '<',
+        data: '=',
       }
     });
 
@@ -25,6 +25,11 @@
         fileName: '',
       };
     };
+
+    vm.warnInvalidCertificate = function () {
+      return !_.startsWith(vm.data.file, 'data:application/x-pkcs12;base64');
+    };
+
   }
 
 }());

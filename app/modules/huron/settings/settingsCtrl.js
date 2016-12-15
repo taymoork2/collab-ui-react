@@ -593,22 +593,6 @@
         }
       }
     }];
-    vm.internationalDialingSelection = [{
-      type: 'switch',
-      key: 'internationalDialingEnabled',
-      className: 'international-dialing',
-      templateOptions: {
-        label: $translate.instant('internationalDialing.internationalDialing'),
-        description: $translate.instant('internationalDialing.internationalDialingDesc')
-      },
-      expressionProperties: {
-        'templateOptions.isDisabled': function () {
-          // if the customer is in trial and doesn't have the feature toggle
-          // huronInternationalDialingTrialOverride then show toggle as disabled
-          return InternationalDialing.isDisableInternationalDialing();
-        }
-      }
-    }];
 
     vm.emergencyServiceAddressSelection = [{
       key: 'showServiceAddress',

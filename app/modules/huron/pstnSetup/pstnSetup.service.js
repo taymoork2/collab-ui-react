@@ -56,6 +56,7 @@
       getCustomer: getCustomer,
       getCustomerV2: getCustomerV2,
       getCustomerTrialV2: getCustomerTrialV2,
+      setCustomerTrialV2: setCustomerTrialV2,
       listDefaultCarriers: listDefaultCarriers,
       getCarrierInventory: getCarrierInventory,
       getCarrierTollFreeInventory: getCarrierTollFreeInventory,
@@ -156,6 +157,16 @@
     function getCustomerTrialV2(customerId) {
       return TerminusCustomerTrialV2Service.get({
         customerId: customerId
+      }).$promise;
+    }
+
+    function setCustomerTrialV2(customerId, fname, lname, email) {
+      return TerminusCustomerTrialV2Service.save({
+        customerId: customerId
+      }, {
+        "acceptedFirstName": fname,
+        "acceptedLastName": lname,
+        "acceptedEmail": email
       }).$promise;
     }
 

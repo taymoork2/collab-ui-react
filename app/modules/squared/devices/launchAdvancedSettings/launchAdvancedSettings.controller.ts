@@ -39,7 +39,7 @@ class LaunchAdvancedSettingsController {
 
   private getInitialState(device) {
 
-    if (device.software !== 'Spark Room OS 2016-11-30 a487137') {
+    if (!_.startsWith(device.software, 'Spark Room OS')) {
       return this.states.unsupportedSoftwareVersion;
     }
 

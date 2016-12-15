@@ -48,7 +48,11 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
       controllerAs: 'vm',
       templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
       type: 'small',
-    });
+    })
+      .result
+      .then(() => {
+        this.$state.go('calendar-service.list');
+      });
   }
 
   private firstTimeGoogleSetup() {
@@ -56,7 +60,11 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
       controller: 'FirstTimeGoogleSetupController',
       controllerAs: 'vm',
       templateUrl: 'modules/hercules/service-settings/calendar-service-setup/first-time-google-setup.html',
-    });
+    })
+      .result
+      .then(() => {
+        this.$state.go('google-calendar-service.settings');
+      });
   }
 
   // Hybrid Calendar
@@ -95,20 +103,21 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
   };
 
   public googleCalendarFeatureToggleEventHandler(hasFeature: boolean) {
+    const serviceId = 'squared-fusion-gcal';
     this.display = this.Authinfo.isFusionCal() && this.Authinfo.isFusionGoogleCal() && hasFeature;
     if (this.display) {
       // We only get the status for Hybrid Calendar that way
-      this.CloudConnectorService.isServiceSetup('squared-fusion-gcal')
-        .then((isSetup) => {
-          // conveys the same as .active for Hybrid Calendar
-          this.googleActive = isSetup;
-          this.canDisplay.resolve(true);
-          // Fake data for now
+      this.CloudConnectorService.getService(serviceId)
+        .then(servicesStatus => {
+          const servicesStatuses = [servicesStatus];
+          // .googleActive conveys the same meaning as .active for Hybrid Calendar
+          this.googleActive = servicesStatus.setup;
           this.googleStatus = {
-            status: 'default',
-            text: 'servicesOverview.cardStatus.setupNotComplete',
-            routerState: 'calendar-service.list', // will trigger the right modal
+            status: filterAndGetCssStatus(this.FusionClusterStatesService, servicesStatuses, serviceId),
+            text: filterAndGetTxtStatus(servicesStatuses, serviceId),
+            routerState: 'google-calendar-service.settings',
           };
+          this.canDisplay.resolve(true);
         });
     }
   }
@@ -135,6 +144,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
 
   /* @ngInject */
   public constructor(
+    private $state,
     private $q: ng.IQService,
     private $modal,
     private Authinfo,

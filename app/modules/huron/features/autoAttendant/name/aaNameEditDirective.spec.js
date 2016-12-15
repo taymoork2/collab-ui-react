@@ -2,6 +2,15 @@
 
 describe('Directive: aaBuilderLane', function () {
   var $compile, $rootScope, scope;
+  var element;
+
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
+
   beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_) {
@@ -13,7 +22,7 @@ describe('Directive: aaBuilderLane', function () {
   it('should set element focus if aa-name-focus is "true"', function () {
     scope.name = 'AA Test';
     scope.aaNameFocus = 'false';
-    var element = $compile("<aa-builder-name-edit aa-max-length='64' aa-name-focus='aaNameFocus' ng-model='name'></aa-name-focus>")(scope);
+    element = $compile("<aa-builder-name-edit aa-max-length='64' aa-name-focus='aaNameFocus' ng-model='name'></aa-name-focus>")(scope);
     spyOn(element[0], 'focus');
     scope.$digest();
 
@@ -33,7 +42,7 @@ describe('Directive: aaBuilderLane', function () {
 
     scope.name = 'AA Test';
     scope.aaNameFocus = 'true';
-    var element = $compile("<aa-builder-name-edit aa-max-length='64' aa-name-focus='aaNameFocus' ng-model='name'></aa-name-focus>")(scope);
+    element = $compile("<aa-builder-name-edit aa-max-length='64' aa-name-focus='aaNameFocus' ng-model='name'></aa-name-focus>")(scope);
     spyOn(event, 'preventDefault');
     scope.$digest();
 
@@ -51,7 +60,7 @@ describe('Directive: aaBuilderLane', function () {
 
     scope.name = '';
     scope.aaNameFocus = 'true';
-    var element = $compile("<aa-builder-name-edit aa-max-length='2' aa-name-focus='aaNameFocus' ng-model='name'></aa-name-focus>")(scope);
+    element = $compile("<aa-builder-name-edit aa-max-length='2' aa-name-focus='aaNameFocus' ng-model='name'></aa-name-focus>")(scope);
     spyOn(event, 'preventDefault');
     scope.$digest();
 
@@ -79,7 +88,7 @@ describe('Directive: aaBuilderLane', function () {
 
     scope.name = 'AA';
     scope.aaNameFocus = 'true';
-    var element = $compile("<aa-builder-name-edit aa-max-length='2' aa-name-focus='aaNameFocus' ng-model='name'></aa-name-focus>")(scope);
+    element = $compile("<aa-builder-name-edit aa-max-length='2' aa-name-focus='aaNameFocus' ng-model='name'></aa-name-focus>")(scope);
     spyOn(event, 'preventDefault');
     scope.$digest();
 
@@ -117,7 +126,7 @@ describe('Directive: aaBuilderLane', function () {
 
     scope.name = '';
     scope.aaNameFocus = 'true';
-    var element = $compile("<aa-builder-name-edit aa-max-length='64' aa-name-focus='aaNameFocus' ng-model='name'></aa-name-focus>")(scope);
+    element = $compile("<aa-builder-name-edit aa-max-length='64' aa-name-focus='aaNameFocus' ng-model='name'></aa-name-focus>")(scope);
     scope.$digest();
 
     element.text('A');
@@ -134,7 +143,7 @@ describe('Directive: aaBuilderLane', function () {
 
     scope.name = '';
     scope.aaNameFocus = 'true';
-    var element = $compile("<aa-builder-name-edit aa-max-length='64' aa-name-focus='aaNameFocus' ng-model='name'></aa-name-focus>")(scope);
+    element = $compile("<aa-builder-name-edit aa-max-length='64' aa-name-focus='aaNameFocus' ng-model='name'></aa-name-focus>")(scope);
     scope.$digest();
 
     element.text('A');

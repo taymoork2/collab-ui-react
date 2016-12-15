@@ -4,6 +4,13 @@ describe('cell-template-action', function () {
   beforeEach(angular.mock.module('Ediscovery'));
   var $templateCache, $scope, $compile, view, html;
 
+  afterEach(function () {
+    if (view) {
+      view.remove();
+    }
+    view = undefined;
+  });
+
   beforeEach(inject(function (_$templateCache_, _$rootScope_, _$compile_) {
     $templateCache = _$templateCache_;
     $scope = _$rootScope_.$new();

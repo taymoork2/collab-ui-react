@@ -19,17 +19,14 @@ class GoogleCalendarConfigSectionCtrl implements ng.IComponentController {
   ) {}
 
   public $onInit() {
-    this.CloudConnectorService.isServiceSetup(this.serviceId)
-      .then(isSetup => {
-        if (isSetup) {
-          this.CloudConnectorService.getServiceAccount(this.serviceId)
-            .then(account => {
-              this.googleServiceAccount = account;
-            })
-            .catch(error => {
-              this.Notification.errorWithTrackingId(error, 'hercules.settings.googleCalendar.couldNotReadGoogleCalendarStatus');
-            });
+    this.CloudConnectorService.getService(this.serviceId)
+      .then(service => {
+        if (service.setup) {
+          this.googleServiceAccount = service.serviceAccountId;
         }
+      })
+      .catch(error => {
+        this.Notification.errorWithTrackingId(error, 'hercules.settings.googleCalendar.couldNotReadGoogleCalendarStatus');
       });
   }
 

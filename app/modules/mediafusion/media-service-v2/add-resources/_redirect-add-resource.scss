@@ -16,7 +16,7 @@
     font-size: 0.75rem;
   }
 
-  .addResourceBodyInfo {
+  .hdsAddResourceBodyInfo {
     padding-top: 1rem;
   }
 }
@@ -25,21 +25,21 @@
   padding-top: 1rem;
 }
 
-.inputHostNameForm {
+.hdsInputHostNameForm {
   padding-top: 1rem;
 }
 
-.inputHostNameForm .dropdown-menu {
+.hdsInputHostNameForm .dropdown-menu {
   top: 101%;
   bottom: auto;
   height: 11rem;
 }
 
-.addResourceInlineBlock {
+.hdsAddResourceInlineBlock {
   display: initial;
 }
 
-.addResourceFQDN {
+.hdsAddResourceFQDN {
   display: initial;
   color: #0387b8;
 }

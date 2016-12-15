@@ -3,21 +3,22 @@
 describe('Service: ComponentsService', function () {
   var $httpBackend, ComponentsService;
   var mockData = {
-    components: [{
-      'componentId': 341,
-      'serviceId': 143,
-      'componentName': 'WebEx Meetings',
-      'status': 'operational',
-      'description': '',
-      'position': 1,
-      'subComponent': {
-        'componentId': 353,
+    components: [
+      {
+        'componentId': 341,
         'serviceId': 143,
-        'componentName': 'Schedule meetings',
-        'status': 'degraded_performance',
-        'description': ''
-      }
-    },
+        'componentName': 'WebEx Meetings',
+        'status': 'operational',
+        'description': '',
+        'position': 1,
+        'subComponent': {
+          'componentId': 353,
+          'serviceId': 143,
+          'componentName': 'Schedule meetings',
+          'status': 'degraded_performance',
+          'description': ''
+        }
+      },
       {
         'componentId': 981,
         'serviceId': 145,
@@ -25,7 +26,8 @@ describe('Service: ComponentsService', function () {
         'status': 'under_maintenance',
         'description': '',
         'position': 2
-      }],
+      }
+    ],
     newComponent: {
       "componentId": 355,
       "serviceId": 143,
@@ -35,13 +37,20 @@ describe('Service: ComponentsService', function () {
     }
   };
 
-  beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('GSS'));
+  afterEach(destructDI);
   beforeEach(inject(dependencies));
+  afterAll(function () {
+    mockData = undefined;
+  });
 
   function dependencies(_$httpBackend_, _ComponentsService_) {
     $httpBackend = _$httpBackend_;
     ComponentsService = _ComponentsService_;
+  }
+
+  function destructDI() {
+    $httpBackend = ComponentsService = undefined;
   }
 
   it('getComponents should response with data', function () {

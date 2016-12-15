@@ -8,7 +8,7 @@
   <cs-sp-header>
     <div class="header-image ng-scope">
       <div class="user-img">
-        <i class="icon icon-user ng-scope">A</i>
+        <i class="icon icon-user ng-scope"></i>
       </div>
     </div>
     <div class="header-info" id="customer-info">
@@ -105,10 +105,12 @@
     </cs-sp-section>
 
     <cs-sp-buttons>
+      <button type="button" class="btn btn--primary" cs-btn loading="$ctrl.btnCompleteLoading" ng-click="$ctrl.onComplete()" ng-if="$ctrl.isShowCommplet" ng-disabled="$ctrl.btnCompleteDisable">
+        <span translate="gemini.button.complete"></span>
+      </button>
       <button type="button" class="btn btn--primary" cs-btn loading="$ctrl.btnCancelSubmissionLoading" ng-click="$ctrl.onCancelSubmission()" ng-if="$ctrl.isShowCancelSubmission" ng-disabled="$ctrl.btnCancelSubmissionDisable">
         <span translate="gemini.button.cancelSubmission"></span>
       </button>
-
       <button type="button" class="btn btn--primary" ng-click="$ctrl.onApprove()" ng-if="$ctrl.isShowDeclineApprove">
         <span translate="gemini.button.approve"></span>
       </button>

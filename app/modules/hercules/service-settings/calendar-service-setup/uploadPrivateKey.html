@@ -21,6 +21,7 @@
   ng-if="!uploadKey.data.file"
   class="file-drop"
   cr-file-drop
+  reading-strategy="dataURL"
   file="uploadKey.data.file"
   file-name="uploadKey.data.fileName">
   <div class="file-drop-content">
@@ -31,7 +32,9 @@
       name="upload"
       type="file"
       file="uploadKey.data.file"
-      file-name="uploadKey.data.fileName" />
+      file-name="uploadKey.data.fileName"
+      reading-strategy="dataURL"
+    />
     <span translate="hercules.settings.googleCalendar.dragAndDropKeyFileHere"></span>
     <label for='upload' translate="hercules.settings.googleCalendar.clickToBrowse"></label>
   </div>
@@ -40,6 +43,11 @@
 <div class="file-drop-inactive" ng-if="uploadKey.data.file">
   <div class="file-drop-content">
     <p><span translate="hercules.settings.googleCalendar.fileReadyForImport"></span>: {{uploadKey.data.fileName}}</p>
+    <p ng-if="uploadKey.warnInvalidCertificate()">
+      <span class="hercules-update-warning-text"
+            translate="hercules.settings.googleCalendar.certificateWarning"
+            translate-values="{fileName: uploadKey.data.fileName}"></span>
+      </p>
     <p><a ng-click="uploadKey.clearFile()" translate="hercules.settings.googleCalendar.removeFile"></a></p>
   </div>
 </div>

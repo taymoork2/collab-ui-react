@@ -12,8 +12,6 @@
     $scope.entitylist = [{
       name: wizardData.account.name
     }];
-    $scope.internalNumberPool = [];
-    $scope.externalNumberPool = [];
     $scope.telephonyInfo = {};
     vm.isMapped = false;
     vm.isMapInProgress = false;
@@ -29,6 +27,8 @@
 
     $scope.returnInternalNumberlist = CommonLineService.returnInternalNumberList;
     $scope.returnExternalNumberList = CommonLineService.returnExternalNumberList;
+    $scope.getInternalNumberPool = CommonLineService.getInternalNumberPool;
+    $scope.getExternalNumberPool = CommonLineService.getExternalNumberPool;
     $scope.syncGridDidDn = syncGridDidDn;
     $scope.checkDnOverlapsSteeringDigit = CommonLineService.checkDnOverlapsSteeringDigit;
 
@@ -98,18 +98,9 @@
     function activateDID() {
       $q.all([CommonLineService.loadInternalNumberPool(), CommonLineService.loadExternalNumberPool(), CommonLineService.loadPrimarySiteInfo(), toggleShowExtensions()])
         .finally(function () {
-          $scope.internalNumberPool = CommonLineService.getInternalNumberPool();
-          $scope.externalNumberPool = CommonLineService.getExternalNumberPool();
-          $scope.externalNumber = $scope.externalNumberPool[0];
+          $scope.externalNumber = _.head(CommonLineService.getExternalNumberPool());
           $scope.telephonyInfo = CommonLineService.getTelephonyInfo();
-          /*if ($scope.internalNumberPool.length === 0 || $scope.externalNumberPool.length === 0) {
-            vm.isDisabled = true;
-          } else {
-            vm.isDisabled = false;
-          }*/
-
-          vm.isDisabled = !!($scope.internalNumberPool.length === 0 || $scope.externalNumberPool.length === 0);
-
+          vm.isDisabled = !!(CommonLineService.getInternalNumberPool().length === 0 || CommonLineService.getExternalNumberPool().length === 0);
 
           if (vm.showExtensions === true) {
             CommonLineService.assignDNForUserList($scope.entitylist);
@@ -186,7 +177,7 @@
         var dnLength = rowEntity.assignedDn.pattern.length;
         // if the internalNumber was changed, find a matching DID and set the externalNumber to match
         if (modifiedFieldName === "internalNumber") {
-          var matchingDid = _.find($scope.externalNumberPool, function (extNum) {
+          var matchingDid = _.find(CommonLineService.getExternalNumberPool(), function (extNum) {
             return extNum.pattern.substr(-dnLength) === rowEntity.assignedDn.pattern;
           });
           if (matchingDid) {
@@ -195,7 +186,7 @@
         }
         // if the externalNumber was changed, find a matching DN and set the internalNumber to match
         if (modifiedFieldName === "externalNumber") {
-          var matchingDn = _.find($scope.internalNumberPool, {
+          var matchingDn = _.find(CommonLineService.getInternalNumberPool(), {
             pattern: rowEntity.externalNumber.pattern.substr(-dnLength)
           });
           if (matchingDn) {
@@ -210,7 +201,7 @@
 
     var internalExtensionTemplate = '<div ng-show="row.entity.assignedDn !== undefined"> ' +
       '<cs-select name="internalNumber" ' +
-      'ng-model="row.entity.assignedDn" options="grid.appScope.internalNumberPool" ' +
+      'ng-model="row.entity.assignedDn" options="grid.appScope.getInternalNumberPool()" ' +
       'refresh-data-fn="grid.appScope.returnInternalNumberlist(filter)" wait-time="0" ' +
       'placeholder="placeholder" input-placeholder="inputPlaceholder" ' +
       'on-change-fn="grid.appScope.syncGridDidDn(row.entity, \'internalNumber\')"' +
@@ -225,14 +216,14 @@
 
     var externalExtensionTemplate = '<div ng-show="row.entity.didDnMapMsg === undefined"> ' +
       '<cs-select name="externalNumber" ' +
-      'ng-model="row.entity.externalNumber" options="grid.appScope.externalNumberPool" ' +
+      'ng-model="row.entity.externalNumber" options="grid.appScope.getExternalNumberPool()" ' +
       'refresh-data-fn="grid.appScope.returnExternalNumberList(filter)" wait-time="0" ' +
       'placeholder= "placeholder" input-placeholder="inputPlaceholder" ' +
       'on-change-fn="grid.appScope.syncGridDidDn(row.entity, \'externalNumber\')"' +
       'labelfield="pattern" valuefield="uuid" required="true" filter="true"> </cs-select></div> ' +
       '<div ng-show="row.entity.didDnMapMsg !== undefined"> ' +
       '<cs-select name="noExternalNumber" ' +
-      'ng-model="row.entity.externalNumber" options="grid.appScope.externalNumberPool" class="select-warning"' +
+      'ng-model="row.entity.externalNumber" options="grid.appScope.getExternalNumberPool()" class="select-warning"' +
       'labelfield="pattern" valuefield="uuid" required="true" filter="true"> </cs-select>' +
       '<span class="warning did-map-error">{{row.entity.didDnMapMsg | translate }}</span> </div> ';
 
