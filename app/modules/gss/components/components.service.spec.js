@@ -18,14 +18,14 @@ describe('Service: ComponentsService', function () {
         'description': ''
       }
     },
-      {
-        'componentId': 981,
-        'serviceId': 145,
-        'componentName': 'ComponentGroup test',
-        'status': 'under_maintenance',
-        'description': '',
-        'position': 2
-      }],
+    {
+      'componentId': 981,
+      'serviceId': 145,
+      'componentName': 'ComponentGroup test',
+      'status': 'under_maintenance',
+      'description': '',
+      'position': 2
+    }],
     newComponent: {
       "componentId": 355,
       "serviceId": 143,
