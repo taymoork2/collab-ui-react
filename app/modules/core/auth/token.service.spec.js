@@ -44,8 +44,7 @@ describe('TokenService', function () {
 
   describe('clientSessionId', function () {
     beforeEach(function () {
-      $window.localStorage.setItem.and.callThrough();
-      $window.localStorage.removeItem.and.callThrough();
+      TokenService.setClientSessionId();
     });
 
     it('should get existing or generate a new id', function () {
