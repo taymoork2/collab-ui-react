@@ -16,7 +16,8 @@
 
     <setting-section setting="clusterSettings.releaseChannel">
       <div class="sub-section">
-        <p translate="mediaFusion.clusters.releaseChannel"></p>
+      <h5 class="sub-section__label" translate="mediaFusion.clusters.releaseChannel"></h5>
+      <p class="sub-section__description" translate="mediaFusion.clusters.releaseChannelDesc"></p>
         <div class="row">
           <div class="large-3">
             <cs-select ng-model="clusterSettings.selected" options="clusterSettings.releaseChannelOptions" placeholder="clusterSettings.selectPlaceholder" on-change-fn="clusterSettings.changeReleaseChannel()">

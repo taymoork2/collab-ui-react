@@ -15,7 +15,6 @@
     };
     vm.releaseChannel = {
       title: 'mediaFusion.clusters.releaseChannel',
-      description: 'mediaFusion.clusters.releaseChannelDesc'
     };
 
     vm.releaseChannelOptions = [{
