@@ -166,8 +166,6 @@
       csdmATA: 'csdm-ata',
       csdmHybridCall: 'csdm-hybrid-call',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
-      huronDeviceE911: 'huron-device-e911-address',
-      cloudberryE911: 'cloudberry-e911-address',
       gemServicesTab: 'gem-services-tab',
       gemCCA: 'gem-cloud-connected-audio',
       atlasHybridDataSecurity: 'atlas-data-security',
