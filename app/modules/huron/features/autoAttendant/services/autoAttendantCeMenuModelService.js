@@ -487,19 +487,18 @@
               menuEntry.attempts = inAction.runActionsOnInput.attempts;
               if (_.includes([3, 4], action.inputType)) {
                 action.variableName = inAction.runActionsOnInput.rawInputActions[0].assignVar.variableName;
-              }
-              if (inAction.runActionsOnInput.inputs.length > 0) {
-                action.inputActions = [];
-                _.forEach(inAction.runActionsOnInput.inputs, function (inputItem) {
-                  var k = new KeyAction();
-                  k.key = inputItem.input;
+                if (inAction.runActionsOnInput.inputs.length > 0) {
+                  action.inputActions = [];
+                  _.forEach(inAction.runActionsOnInput.inputs, function (inputItem) {
+                    var k = new KeyAction();
+                    k.key = inputItem.input;
 
-                  if (_.has(inputItem, 'actions[0].assignVar')) {
-                    k.value = _.get(inputItem.actions[0].assignVar, 'value');
-                  }
-                  action.inputActions.push(k);
-                });
-
+                    if (_.has(inputItem, 'actions[0].assignVar')) {
+                      k.value = _.get(inputItem.actions[0].assignVar, 'value');
+                    }
+                    action.inputActions.push(k);
+                  });
+                }
               }
 
               menuEntry.addAction(action);
@@ -1040,8 +1039,6 @@
         } else {
           if (!_.isUndefined(menuEntry.actions) && menuEntry.actions.length > 0) {
             var actionName = menuEntry.actions[0].getName();
-            actionName = 'runActionsOnInput';
-
             newActionArray[i][actionName] = {};
             if (!_.isUndefined(menuEntry.actions[0].description) && menuEntry.actions[0].description.length > 0) {
               newActionArray[i][actionName].description = menuEntry.actions[0].description;

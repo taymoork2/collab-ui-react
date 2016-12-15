@@ -118,6 +118,7 @@
       vm.actionEntry.inputType = vm.convertDigitState ? DIGITS_CHOICE : DIGITS_RAW;
       AACommonService.setCallerInputStatus(true);
     }
+
     function setMaxStringLength() {
       vm.actionEntry.maxNumberOfCharacters = vm.maxStringLength;
       AACommonService.setCallerInputStatus(true);

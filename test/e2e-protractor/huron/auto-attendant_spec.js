@@ -442,6 +442,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.newStepCallerInput);
       utils.wait(autoattendant.callerInputFirst, 12000);
       autoattendant.scrollIntoView(autoattendant.callerInputFirst);
+      utils.sendKeys(autoattendant.callerInputNameVariable, "named Variable");
       utils.click(autoattendant.callerInputGetDigits);
       autoattendant.scrollIntoView(autoattendant.callerInputFirst);
       utils.click(autoattendant.callerInputAddAction);
