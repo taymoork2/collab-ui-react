@@ -62,7 +62,7 @@
 
   /* @ngInject */
   function TerminusCustomerTrialV2Service($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId/trial', {}, {
+    return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId/trials', {}, {
       update: {
         method: 'PUT'
       }

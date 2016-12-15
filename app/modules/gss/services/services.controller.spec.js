@@ -10,7 +10,10 @@ describe('controller: GSSServicesCtrl', function () {
   };
 
   beforeEach(angular.mock.module('GSS'));
-  beforeEach(angular.mock.module('Core'));
+  afterEach(destructDI);
+  afterAll(function () {
+    testData = undefined;
+  });
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(initController);
@@ -23,6 +26,10 @@ describe('controller: GSSServicesCtrl', function () {
     $scope = _$rootScope_.$new();
     $state = _$state_;
     GSSService = _GSSService_;
+  }
+
+  function destructDI() {
+    $controller = $modal = $q = $rootScope = $scope = $state = controller = GSSService = undefined;
   }
 
   function initSpies() {

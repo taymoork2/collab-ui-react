@@ -11,12 +11,16 @@ import {
   IActiveUserWrapper,
   IConversation,
   IConversationWrapper,
+  IMediaData,
 } from './sparkReportInterfaces';
 
 export class SparkLineReportService {
+  private readonly SIMPLE_COUNT: string = 'simplecounts';
+
   // Promise Tracking
   private activeDeferred: ng.IDeferred<any>;
   private conversationsDeferred: ng.IDeferred<any>;
+  private mediaDeferred: ng.IDeferred<any>;
   private mostActiveDeferred: ng.IDeferred<any>;
 
   /* @ngInject */
@@ -154,7 +158,7 @@ export class SparkLineReportService {
       hasRooms: false,
     };
 
-    let options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter, 'conversations', 'simplecounts');
+    let options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter, 'conversations', this.SIMPLE_COUNT);
     options.cache = false;
     return this.CommonReportService.getCustomerAltReportByType(options, this.activeDeferred).then((response: any): IConversationWrapper => {
       let data: Array<any> = _.get(response, 'data.data', []);
@@ -190,6 +194,89 @@ export class SparkLineReportService {
       return returnItem;
     }).catch((error: any): IConversationWrapper => {
       return this.CommonReportService.returnErrorCheck(error, 'reportsPage.conversationError', returnItem);
+    });
+  }
+
+  // Media Quality Data
+  public getMediaQualityData(filter: ITimespan): ng.IHttpPromise<Array<IMediaData>> {
+    // cancel any currently running jobs
+    if (this.mediaDeferred) {
+      this.mediaDeferred.resolve(this.ReportConstants.ABORT);
+    }
+    this.mediaDeferred = this.$q.defer();
+
+    let options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter, 'callQuality', this.SIMPLE_COUNT);
+    options.cache = false;
+    return this.CommonReportService.getCustomerAltReportByType(options, this.mediaDeferred).then((response: any): Array<IMediaData> => {
+      let data: any = _.get(response, 'data.data', []);
+      let emptyGraph: boolean = true;
+      let graphItem: IMediaData = {
+        date: '',
+        totalDurationSum: 0,
+        goodQualityDurationSum: 0,
+        fairQualityDurationSum: 0,
+        poorQualityDurationSum: 0,
+        partialSum: 0,
+        totalAudioDurationSum: 0,
+        goodAudioQualityDurationSum: 0,
+        fairAudioQualityDurationSum: 0,
+        poorAudioQualityDurationSum: 0,
+        partialAudioSum: 0,
+        totalVideoDurationSum: 0,
+        goodVideoQualityDurationSum: 0,
+        fairVideoQualityDurationSum: 0,
+        poorVideoQualityDurationSum: 0,
+        partialVideoSum: 0,
+        balloon: true,
+      };
+      let graph: Array<IMediaData> = this.CommonReportService.getReturnLineGraph(filter, graphItem);
+
+      _.forEach(data, (item: any): void => {
+        const details: any = _.get(item, 'details');
+        if (details) {
+          const modifiedDate: string = this.CommonReportService.getModifiedDate(item.date, filter);
+          const goodSum: number = _.toInteger(details.goodQualityDurationSum);
+          const fairSum: number = _.toInteger(details.fairQualityDurationSum);
+          const poorSum: number = _.toInteger(details.poorQualityDurationSum);
+          if (goodSum > 0 || fairSum > 0 || poorSum > 0) {
+            const goodVideoQualityDurationSum: number = _.toInteger(details.sparkGoodVideoDurationSum) + _.toInteger(details.sparkUcGoodVideoDurationSum);
+            const fairVideoQualityDurationSum: number = _.toInteger(details.sparkFairVideoDurationSum) + _.toInteger(details.sparkUcFairVideoDurationSum);
+            const poorVideoQualityDurationSum: number = _.toInteger(details.sparkPoorVideoDurationSum) + _.toInteger(details.sparkUcPoorVideoDurationSum);
+
+            const goodAudioQualityDurationSum: number = goodSum - goodVideoQualityDurationSum;
+            const fairAudioQualityDurationSum: number = fairSum - fairVideoQualityDurationSum;
+            const poorAudioQualityDurationSum: number = poorSum - poorVideoQualityDurationSum;
+
+            _.forEach(graph, (graphPoint): void => {
+              if (graphPoint.date === modifiedDate) {
+                graphPoint.totalDurationSum = goodSum + fairSum + poorSum;
+                graphPoint.goodQualityDurationSum = goodSum;
+                graphPoint.fairQualityDurationSum = fairSum;
+                graphPoint.poorQualityDurationSum = poorSum;
+
+                graphPoint.totalAudioDurationSum = goodAudioQualityDurationSum + fairAudioQualityDurationSum + poorAudioQualityDurationSum;
+                graphPoint.goodAudioQualityDurationSum = goodAudioQualityDurationSum;
+                graphPoint.fairAudioQualityDurationSum = fairAudioQualityDurationSum;
+                graphPoint.poorAudioQualityDurationSum = poorAudioQualityDurationSum;
+
+                graphPoint.totalVideoDurationSum = goodVideoQualityDurationSum + fairVideoQualityDurationSum + poorVideoQualityDurationSum;
+                graphPoint.goodVideoQualityDurationSum = goodVideoQualityDurationSum;
+                graphPoint.fairVideoQualityDurationSum = fairVideoQualityDurationSum;
+                graphPoint.poorVideoQualityDurationSum = poorVideoQualityDurationSum;
+
+                emptyGraph = false;
+              }
+            });
+          }
+        }
+      });
+      if (emptyGraph) {
+        return [];
+      } else {
+        return graph;
+      }
+    }, (error): Array<IMediaData> => {
+      return this.CommonReportService.returnErrorCheck(error, 'mediaQuality.customerError', []);
     });
   }
 }

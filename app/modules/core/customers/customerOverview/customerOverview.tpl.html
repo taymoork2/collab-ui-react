@@ -28,6 +28,12 @@
         </button>
       </a>
     </cs-sp-section>
+    <cs-sp-section ng-if="!customerOverview.currentCustomer.trialId && customerOverview.featureTrialForPaid">
+      <section-title
+        title-key="customerPage.trial"
+        action-list="customerOverview.trialActions">
+      </section-title>
+    </cs-sp-section>
     <cs-sp-section ng-if="customerOverview.currentCustomer.trialId">
       <section-title
         title-key="customerPage.trial"

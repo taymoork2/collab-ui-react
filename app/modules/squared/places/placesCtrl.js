@@ -1,3 +1,5 @@
+require('./_places.scss');
+
 (function () {
   'use strict';
 

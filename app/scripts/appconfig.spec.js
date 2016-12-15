@@ -2,6 +2,14 @@
 
 describe('App Config', function () {
   var $scope, $compile, $httpBackend;
+  var element;
+
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
 
   beforeEach(angular.mock.module('wx2AdminWebClientApp'));
   beforeEach(angular.mock.module('Main'));
@@ -19,7 +27,7 @@ describe('App Config', function () {
     function getCompiledLink(url) {
       $scope.myUrl = url;
       var template = angular.element('<a ng-href="{{myUrl}}"></a>');
-      var element = $compile(template)($scope);
+      element = $compile(template)($scope);
       $scope.$apply();
       return element[0].href;
     }

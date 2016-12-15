@@ -1,26 +1,16 @@
 'use strict';
 
 describe('Directive: aaBuilderAutofocus', function () {
-  var $compile, $rootScope;
-  var $timeout, element;
-
-  beforeEach(angular.mock.module('Huron'));
-
-  beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
-    $compile = _$compile_;
-    $rootScope = _$rootScope_;
-    $timeout = _$timeout_;
-    element = $compile("<input type='text' aa-builder-focus>")($rootScope);
-    $rootScope.$digest();
-  }));
+  beforeEach(function () {
+    this.initModules('Huron');
+    this.injectDependencies('$timeout');
+    this.compileTemplate('<input type="text" aa-builder-autofocus>');
+  });
 
   it('should focus on the name entry', function () {
+    spyOn(this.view[0], 'focus');
+    this.$timeout.flush();
 
-    element = $compile("<input type='text' aa-builder-autofocus>")($rootScope);
-    spyOn(element[0], 'focus');
-    $timeout.flush();
-
-    expect(element[0].focus).toHaveBeenCalled();
-
+    expect(this.view[0].focus).toHaveBeenCalled();
   });
 });

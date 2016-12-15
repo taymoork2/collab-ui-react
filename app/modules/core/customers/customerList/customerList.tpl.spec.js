@@ -7,6 +7,13 @@
     var ADD_BUTTON = '#addTrial';
     var SEARCH_FILTER = '#searchFilter';
 
+    afterEach(function () {
+      if (view) {
+        view.remove();
+      }
+      view = undefined;
+    });
+
     beforeEach(angular.mock.module('Core'));
     beforeEach(angular.mock.module('Huron'));
     beforeEach(angular.mock.module('Sunlight'));

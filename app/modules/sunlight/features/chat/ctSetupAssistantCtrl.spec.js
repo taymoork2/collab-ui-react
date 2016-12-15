@@ -98,6 +98,15 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   var startTimeOptions = businessHours.startTimeOptions;
   var defaultTimings = businessHours.defaultTimings;
 
+  afterEach(function () {
+    controller = $scope = $modal = $q = CTService = getLogoDeferred = getLogoUrlDeferred = SunlightConfigService = $state = $stateParams = LogMetricsService = undefined;
+    Notification = $translate = undefined;
+  });
+
+  afterAll(function () {
+    selectedDaysByDefault = defaultTimeZone = defaultDayPreview = startTimeOptions = defaultTimings = businessHours = failedData = deSelectAllDays = duplicateFieldTypeData = customerInfoWithLongAttributeValue = undefined;
+  });
+
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module(function ($provide) {
@@ -261,12 +270,17 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       checkStateOfNavigationButtons(PROFILE_PAGE_INDEX, true, false);
     });
 
+    it('should set default agent preview name to the agent display name option', function () {
+      resolveLogoPromise();
+      expect(controller.selectedAgentProfile).toEqual(controller.agentNames.displayName);
+    });
+
     it('should set agent preview names based on selected agent profile', function () {
       resolveLogoPromise();
       controller.selectedAgentProfile = controller.agentNames.alias;
       controller.setAgentProfile();
       expect(controller.agentNamePreview).toEqual('careChatTpl.agentAliasPreview');
-      controller.selectedAgentProfile = controller.agentNames.realName;
+      controller.selectedAgentProfile = controller.agentNames.displayName;
       controller.setAgentProfile();
       expect(controller.agentNamePreview).toEqual('careChatTpl.agentNamePreview');
     });
@@ -278,7 +292,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       controller.nextButton();
       expect(controller.template.configuration.mediaSpecificConfiguration).toEqual({
         useOrgProfile: true,
-        useAgentRealName: false,
+        useAgentRealName: true,
         displayText: OrgName,
         orgLogoUrl: dummyLogoUrl
       });
@@ -681,6 +695,15 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     });
     beforeEach(function () {
       controller.currentState = controller.states[CHAT_STATUS_MESSAGES_PAGE_INDEX];
+    });
+    it("if bubble title field is missing it should continue", function () {
+      controller.template.configuration.chatStatusMessages.messages.connectingMessage.displayText = "Connecting Message";
+      controller.template.configuration.chatStatusMessages.messages.bubbleTitleMessage = undefined;
+      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = "Waiting Message";
+      controller.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText = "Enter Room Message";
+      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = "Left Room Message";
+      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = "Chatting Message";
+      checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, true);
     });
     it("should have previous and next button enabled", function () {
       controller.template.configuration.chatStatusMessages.messages.connectingMessage.displayText = "Connecting Message";

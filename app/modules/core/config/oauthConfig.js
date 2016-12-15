@@ -54,7 +54,7 @@
         oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=%s&cisService=%s',
         oauth2ClientUrlPattern: 'grant_type=client_credentials&scope=',
         oauth2CodeUrlPattern: 'grant_type=authorization_code&code=%s&scope=',
-        oauth2AccessCodeUrlPattern: 'grant_type=refresh_token&refresh_token=%s&scope=%s',
+        oauth2AccessCodeUrlPattern: 'grant_type=refresh_token&refresh_token=%s',
         userInfo: 'user_info=%s'
       },
       logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&cisService=spark&goto=',
@@ -118,8 +118,7 @@
 
     function getOauthAccessCodeUrl(refresh_token) {
       var params = [
-        refresh_token,
-        oauth2Scope
+        refresh_token
       ];
       return Utils.sprintf(config.oauthUrl.oauth2AccessCodeUrlPattern, params);
     }

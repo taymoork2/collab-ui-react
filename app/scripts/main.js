@@ -50,6 +50,7 @@
     require('modules/core/window').default,
     require('modules/online/digitalRiver').default // TODO make core.myCompany independent module
   ])
+    .constant('CryptoJS', require('crypto-js'))
     .constant('phone', require('google-libphonenumber'))
     .constant('addressparser', require('emailjs-addressparser'));
 

@@ -7,86 +7,131 @@
     .controller('hybridServicesPanelCtrl', hybridServicesPanelCtrl);
 
   /* @ngInject */
-  function hybridServicesPanelCtrl(HybridService, OnboardService) {
+  function hybridServicesPanelCtrl(OnboardService, ServiceDescriptor, CloudConnectorService, Authinfo, $q, FeatureToggleService, $translate) {
     var vm = this;
-
     vm.isEnabled = false;
-    vm.extensions = [];
     vm.entitlements = [];
-    vm.setEntitlements = setEntitlements;
-    vm.shouldAddIndent = shouldAddIndent;
-    vm.huronCallEntitlement = function (ext) {
-      return ((ext !== 'squared-fusion-cal') && OnboardService.huronCallEntitlement);
+    vm.hasGoogleCalendarFeature = false;
+    vm.services = {
+      calendarEntitled: false,
+      selectedCalendarType: null,
+      calendarExchange: null,
+      calendarGoogle: null,
+      callServiceAware: null,
+      callServiceConnect: null,
+      notSetupText: $translate.instant('hercules.cloudExtensions.notSetup'),
+      hasCalendarService: function () {
+        return this.calendarExchange !== null || this.calendarGoogle !== null;
+      },
+      hasCallService: function () {
+        return this.callServiceAware !== null;
+      },
+      setSelectedCalendarEntitlement: function () {
+        if (this.calendarEntitled) {
+          var selectedCalendarService;
+          var previousCalendarService;
+          if (!this.selectedCalendarType) {
+            // Set one of them entitled (preferring Exchange over Google) if none selected yet
+            selectedCalendarService = this.calendarExchange || this.calendarGoogle;
+            this.selectedCalendarType = selectedCalendarService.id;
+          } else {
+            if (this.selectedCalendarType === 'squared-fusion-cal') {
+              selectedCalendarService = this.calendarExchange;
+              previousCalendarService = this.calendarGoogle;
+            } else {
+              selectedCalendarService = this.calendarGoogle;
+              previousCalendarService = this.calendarExchange;
+            }
+          }
+          selectedCalendarService.entitled = true;
+          if (previousCalendarService) {
+            previousCalendarService.entitled = false;
+          }
+        }
+      }
     };
+    vm.setEntitlements = setEntitlements;
+    vm.hasHuronCallEntitlement = hasHuronCallEntitlement;
 
-    function shouldAddIndent(key, reference) {
-      return key === reference;
+    if (Authinfo.isEntitled('squared-fusion-gcal')) {
+      FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
+        .then(function (hasGoogleCalendarFeatureToggle) {
+          vm.hasGoogleCalendarFeature = hasGoogleCalendarFeatureToggle;
+          init();
+        });
+    } else {
+      init();
     }
-
-    init();
 
     ////////////////
 
     function init() {
-      HybridService.getEntitledExtensions()
-        .then(function (extensions) {
-          vm.isEnabled = _.some(extensions, {
-            'enabled': true
-          });
-          vm.extensions = extensions || [];
-          // Sort items so they show in proper order (UC first, Calendar Last, everything else in the middle)
-          vm.extensions.sort(function (a, b) {
-            if (a.id === 'squared-fusion-uc') return -1;
-            if (a.id === 'squared-fusion-cal') return 1;
-            if (a.id === 'squared-fusion-ec' && b.id == 'squared-fusion-cal') return -1;
-            return 0;
-          });
-        });
+      $q.all({
+        servicesFromFms: ServiceDescriptor.getServices(),
+        gcalService: vm.hasGoogleCalendarFeature ? CloudConnectorService.getService('squared-fusion-gcal') : $q.resolve({})
+      }).then(function (response) {
+        vm.services.calendarExchange = getServiceIfEnabled(response.servicesFromFms, 'squared-fusion-cal');
+        vm.services.callServiceAware = getServiceIfEnabled(response.servicesFromFms, 'squared-fusion-uc');
+        vm.services.callServiceConnect = getServiceIfEnabled(response.servicesFromFms, 'squared-fusion-ec');
+        vm.services.calendarGoogle = (response.gcalService && response.gcalService.setup) ? response.gcalService : null;
+        vm.isEnabled = vm.services.hasCalendarService() || vm.services.hasCallService();
+      });
     }
 
-    function setCheckbox(entitlement, val) {
-      var state = (val) ? 'ACTIVE' : 'INACTIVE';
-      for (var i = 0; i < vm.extensions.length; i++) {
-        if (vm.extensions[i].id === entitlement) {
-          if (vm.extensions[i].entitlementState !== state) {
-            vm.extensions[i].entitlementState = state;
-          }
-          break;
+    function setEntitlements() {
+      // US8209 says to only add entitlements, not remove them. Allowing INACTIVE would remove entitlement when users are patched.
+      vm.entitlements = [];
+      if (vm.services.calendarEntitled) {
+        vm.services.setSelectedCalendarEntitlement();
+        if (vm.services.calendarExchange && vm.services.calendarExchange.entitled) {
+          vm.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionCal' });
+        } else if (vm.services.calendarGoogle && vm.services.calendarGoogle.entitled) {
+          vm.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionGCal' });
+        }
+      } else {
+        vm.services.selectedCalendarType = null;
+      }
+      if (!hasHuronCallEntitlement() && vm.services.callServiceAware && vm.services.callServiceAware.entitled) {
+        vm.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionUC' });
+        if (vm.services.callServiceConnect && vm.services.callServiceConnect.entitled) {
+          vm.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionEC' });
+        }
+      } else {
+        if (vm.services.callServiceAware) {
+          vm.services.callServiceAware.entitled = false;
+        }
+        if (vm.services.callServiceConnect) {
+          vm.services.callServiceConnect.entitled = false;
         }
       }
-    }
-
-    function setEntitlements(ext) {
-      // If EC requires UC be checked as well
-      if (ext.id === 'squared-fusion-ec') {
-        setCheckbox('squared-fusion-uc', true);
-      } else if ((ext.id === 'squared-fusion-uc') && (ext.entitlementState === 'INACTIVE')) {
-        setCheckbox('squared-fusion-ec', false);
-      }
-
-      // US8209 says to only add entitlements, not remove them.
-      // Allowing INACTIVE would remove entitlement when users are patched.
-      vm.entitlements = _(vm.extensions)
-        .map(function (extension) {
-          return _.pick(extension, ['entitlementState', 'entitlementName']);
-        })
-        .filter({
-          entitlementState: 'ACTIVE'
-        })
-        .value();
-
-      // Check before calling.
       if (!_.isUndefined(vm.updateEntitlements)) {
         vm.updateEntitlements({
           'entitlements': vm.entitlements
         });
       }
     }
+
+    function getServiceIfEnabled(services, id) {
+      var service = _.find(services, {
+        'id': id,
+        'enabled': true
+      });
+      if (service) {
+        service.entitled = false;
+        return service;
+      } else {
+        return null;
+      }
+    }
+
+    function hasHuronCallEntitlement() {
+      return OnboardService.huronCallEntitlement;
+    }
   }
 
   /* @ngInject */
   function hybridServicesPanel() {
-    var directive = {
+    return {
       restrict: 'E',
       scope: {
         'updateEntitlements': '&bindEntitlements'
@@ -96,7 +141,5 @@
       controller: 'hybridServicesPanelCtrl',
       templateUrl: 'modules/hercules/user-sidepanel/hybridServicesPanel.tpl.html'
     };
-
-    return directive;
   }
 })();

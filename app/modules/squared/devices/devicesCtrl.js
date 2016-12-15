@@ -1,3 +1,5 @@
+require('./_devices.scss');
+
 (function () {
   'use strict';
 

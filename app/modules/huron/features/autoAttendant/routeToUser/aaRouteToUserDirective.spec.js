@@ -3,6 +3,7 @@
 describe('Directive: aaRouteToUser', function () {
   var $compile, $rootScope, $scope, $q;
   var AAUiModelService, AutoAttendantCeMenuModelService, UserListService;
+  var element;
 
   var aaUiModel = {
     openHours: {},
@@ -54,6 +55,13 @@ describe('Directive: aaRouteToUser', function () {
   var keyIndex = '0';
   var menuId = 'menu1';
 
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
+
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
@@ -83,7 +91,7 @@ describe('Directive: aaRouteToUser', function () {
   }));
 
   it('replaces the element with the appropriate content', function () {
-    var element = $compile("<aa-route-to-user aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0'></aa-route-to-user>")($rootScope);
+    element = $compile("<aa-route-to-user aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0'></aa-route-to-user>")($rootScope);
     $rootScope.$digest();
 
     expect(element.html()).toContain("aaRouteUser");
