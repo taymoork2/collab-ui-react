@@ -12,6 +12,7 @@
     .factory('TerminusCustomerPortService', TerminusCustomerPortService)
     .factory('TerminusCustomerCarrierTollFreeService', TerminusCustomerCarrierTollFreeService)
     .factory('TerminusOrderService', TerminusOrderService)
+    .factory('TerminusOrderV2Service', TerminusOrderV2Service)
     .factory('TerminusNumberService', TerminusNumberService)
     .factory('TerminusCarrierService', TerminusCarrierService)
     .factory('TerminusCarrierInventoryCount', TerminusCarrierInventoryCount)
@@ -32,7 +33,6 @@
     .factory('TerminusV2CarrierNumberService', TerminusV2CarrierNumberService)
     .factory('TerminusV2CarrierNumberCountService', TerminusV2CarrierNumberCountService)
     .factory('TerminusV2CustomerService', TerminusV2CustomerService)
-    .factory('TerminusV2CustomerNumberOrderService', TerminusV2CustomerNumberOrderService)
     .factory('TerminusV2CustomerNumberOrderBlockService', TerminusV2CustomerNumberOrderBlockService)
     .factory('TerminusV2CustomerNumberOrderPortService', TerminusV2CustomerNumberOrderPortService)
     .factory('TerminusV2CustomerNumberReservationService', TerminusV2CustomerNumberReservationService)
@@ -111,6 +111,22 @@
   /* @ngInject */
   function TerminusOrderService($resource, HuronConfig) {
     return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/orders/:orderId', {}, {});
+  }
+
+  /* @ngInject */
+  function TerminusOrderV2Service($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId/numbers/orders/:orderId', {}, {
+      query: {
+        method: 'GET',
+        isArray: false,
+        cache: false
+      },
+      get: {
+        method: 'GET',
+        isArray: true,
+        cache: false
+      }
+    });
   }
 
   /* @ngInject */
@@ -241,11 +257,6 @@
   /* @ngInject */
   function TerminusV2CustomerService($resource, HuronConfig) {
     return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId');
-  }
-
-  /* @ngInject */
-  function TerminusV2CustomerNumberOrderService($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId/numbers/orders/:orderId');
   }
 
   /* @ngInject */

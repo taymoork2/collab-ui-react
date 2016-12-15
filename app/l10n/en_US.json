@@ -3079,7 +3079,8 @@
     "advanceOrder": "Advance Numbers",
     "newNumberOrder": "New Numbers",
     "portNumberOrder": "Porting Numbers",
-    "tollFreeNumberOrder": "Toll-Free Numbers",
+    "tollFreeNumberOrder": "New Toll-Free Numbers",
+    "tollFreeNumberAdvanceOrder": "Toll-Free Advance Numbers",
     "searchPlaceholder": "Search Orders"
   },
   "pstnOrderDetail": {

@@ -2,7 +2,7 @@
   <div class="total-count">
     <span translate="{{::countTranslateKey}}" translate-values="{count: quantity}" translate-interpolation="messageformat"></span>
     <i class="icon icon-refresh" ng-click="externalNumbers.listPhoneNumbers()" ng-if="!externalNumbers.refresh"></i><i class="icon icon-spinner" ng-if="externalNumbers.refresh"></i>
-    <i class="icon" ng-class="::tooltipClass" ng-if="::tooltipText" cs-tooltip="{{::tooltipText}}"></i>
+    <i class="icon" ng-class="::tooltipClass" ng-if="::tooltipText" tooltip="{{::tooltipText}}"></i>
   </div>
   <div class="filter">
     <input type="text" class="form-control" ng-model="externalNumbers.filter" ng-model-options="{ debounce: 250 }">

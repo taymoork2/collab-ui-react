@@ -12,10 +12,13 @@ describe('Service: PstnSetupService', function () {
   var customerCarrierList = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
   var customerOrderList = getJSONFixture('huron/json/pstnSetup/customerOrderList.json');
   var customerOrder = getJSONFixture('huron/json/pstnSetup/customerOrder.json');
+  var customerBlockOrder = getJSONFixture('huron/json/pstnSetup/customerBlockOrder.json');
   var carrierIntelepeer = getJSONFixture('huron/json/pstnSetup/carrierIntelepeer.json');
   var resellerCarrierList = getJSONFixture('huron/json/pstnSetup/resellerCarrierList.json');
 
   var orders = getJSONFixture('huron/json/orderManagement/orderManagement.json');
+  var pstnNumberOrder = getJSONFixture('huron/json/orderManagement/pstnNumberOrder.json');
+  var pstnBlockOrder = getJSONFixture('huron/json/orderManagement/pstnBlockOrder.json');
   var acceptedOrder = getJSONFixture('huron/json/orderManagement/acceptedOrders.json');
   var pendingOrder = _.cloneDeep(getJSONFixture('huron/json/lines/pendingNumbers.json'));
 
@@ -201,8 +204,8 @@ describe('Service: PstnSetupService', function () {
   });
 
   it('should list pending orders', function () {
-    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders?status=PENDING&type=PSTN').respond(customerOrderList);
-    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders?status=PENDING&type=PORT').respond([]);
+    $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + customerId + '/numbers/orders?status=PENDING&type=PSTN').respond(customerOrderList);
+    $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + customerId + '/numbers/orders?status=PENDING&type=PORT').respond([]);
     var promise = PstnSetupService.listPendingOrders(customerId);
     promise.then(function (orderList) {
       expect(angular.equals(orderList, customerOrderList)).toEqual(true);
@@ -211,7 +214,7 @@ describe('Service: PstnSetupService', function () {
   });
 
   it('should get a single order', function () {
-    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders/' + orderId).respond(customerOrder);
+    $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + customerId + '/numbers/orders/' + orderId).respond(customerOrder);
     var promise = PstnSetupService.getOrder(customerId, orderId);
     promise.then(function (order) {
       expect(angular.equals(order, customerOrder)).toEqual(true);
@@ -220,10 +223,11 @@ describe('Service: PstnSetupService', function () {
   });
 
   it('should list pending numbers', function () {
-    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders?status=PENDING&type=PSTN').respond(customerOrderList);
-    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders?status=PENDING&type=PORT').respond([]);
-    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders/' + orderId).respond(customerOrder);
-    var promise = PstnSetupService.listPendingNumbers(customerId, 'INTELEPEER');
+    $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + customerId + '/numbers/orders?status=PENDING&type=PSTN').respond(customerOrderList);
+    $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + customerId + '/numbers/orders?status=PENDING&type=PORT').respond([]);
+    $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + customerId + '/numbers/orders/' + '29c63c1f-83b0-42b9-98ee-85624e4c7408').respond(customerOrder);
+    $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + customerId + '/numbers/orders/' + '29c63c1f-83b0-42b9-98ee-85624e4c7409').respond(customerBlockOrder);
+    var promise = PstnSetupService.listPendingNumbers(customerId);
     promise.then(function (numbers) {
       expect(numbers).toContain(jasmine.objectContaining({
         pattern: '5125934450'
@@ -232,15 +236,14 @@ describe('Service: PstnSetupService', function () {
         pattern: '(123) XXX-XXXX',
         quantity: 1
       }));
-      expect(numbers).toContain(jasmine.objectContaining({
-        orderNumber: 654987
-      }));
     });
     $httpBackend.flush();
   });
 
   it('should get orders and filter to formatted number orders', function () {
-    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders').respond(orders);
+    $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + customerId + '/numbers/orders').respond(orders);
+    $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + customerId + '/numbers/orders/' + 'f950f0d4-bde8-4b0d-8762-d306655f24ed').respond(pstnNumberOrder);
+    $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + customerId + '/numbers/orders/' + '8b443bec-c535-4c2d-bebb-6293122d825a').respond(pstnBlockOrder);
     var promise = PstnSetupService.getFormattedNumberOrders(customerId);
     promise.then(function (numbers) {
       expect(numbers).toContain(jasmine.objectContaining(acceptedOrder[0]));
@@ -262,7 +265,7 @@ describe('Service: PstnSetupService', function () {
   });
 
   it('should not get translated order status message since status is None', function () {
-    var translated = PstnSetupService.translateStatusMessage(orders[0]);
+    var translated = PstnSetupService.translateStatusMessage(orders[3]);
     expect(translated).toEqual(undefined);
   });
 });
