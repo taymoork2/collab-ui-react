@@ -1,7 +1,8 @@
 'use strict';
 
 describe('Care admin should be able to', function () {
-
+  var createSummaryMessage = 'You have configured the chat template. Click Finish to save the configuration and generate embed code so you can start using this chat template on your organization website.';
+  var editSummaryMessage = 'You have edited the chat template. Click Finish to save the configuration so you can start using the new version of this chat template on your organization website.';
   beforeAll(function () {
     login.login('contactcenter-admin', '#/services');
   });
@@ -17,13 +18,13 @@ describe('Care admin should be able to', function () {
 
   it('create a chat template, assert chat template is listed, edit chat template and delete a chat template', function () {
     createTemplateAndValidate();
-    validateContentsOfSummaryPage(careChatTemplateSetupPage.randomChatTemplateName + ' chat template has been created successfully');
+    validateContentsOfSummaryPage(careChatTemplateSetupPage.randomChatTemplateName + ' chat template has been created successfully', createSummaryMessage);
     validateDismissOfCTSetupWizard();
     validateDisplayEmbedCodeModal();
     validateDismissOfEmbedCodeModal();
     validateFeaturesPage("");
     editTemplateAndValidate("edit");
-    validateContentsOfSummaryPage(careChatTemplateSetupPage.randomChatTemplateName + 'edit chat template has been updated successfully');
+    validateContentsOfSummaryPage(careChatTemplateSetupPage.randomChatTemplateName + 'edit chat template has been updated successfully', editSummaryMessage);
     validateDismissOfCTSetupWizard();
     validateDisplayEmbedCodeModal();
     validateDismissOfEmbedCodeModal();
@@ -250,8 +251,8 @@ describe('Care admin should be able to', function () {
 
   }
 
-  function validateContentsOfSummaryPage(successMessage) {
-    utils.expectTextToBeSet(careChatTemplateSetupPage.summaryDesc, 'You have configured the chat template. Click Finish to save the configuration and generate embed code so you can start using this chat template on your organization website.');
+  function validateContentsOfSummaryPage(successMessage, expectedMessage) {
+    utils.expectTextToBeSet(careChatTemplateSetupPage.summaryDesc, expectedMessage);
     utils.click(careChatTemplateSetupPage.chatSetupFinishBtn);
     notifications.assertSuccess(successMessage);
   }
