@@ -6,7 +6,7 @@
     .controller('AtaDeviceController',
 
       /* @ngInject */
-      function ($modalInstance, $log, $scope) {
+      function ($modalInstance, $log, $scope, Notification) {
         var ata = this;
 
         $scope.$$postDigest(function () {
@@ -120,6 +120,7 @@
 
           $log.log("Values that should get saved: ", inputVal, outputVal, impedanceVal);
           $modalInstance.close();
+          Notification.success('ataSettings.saved');
         };
       }
     )
