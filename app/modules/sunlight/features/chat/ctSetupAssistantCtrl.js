@@ -27,6 +27,7 @@
     vm.setEndTimeOptions = setEndTimeOptions;
     vm.animation = 'slide-left';
     vm.submitChatTemplate = submitChatTemplate;
+    vm.isEditFeature = $stateParams.isEditFeature;
 
     // Setup Assistant pages with index
     vm.states = ['name',
