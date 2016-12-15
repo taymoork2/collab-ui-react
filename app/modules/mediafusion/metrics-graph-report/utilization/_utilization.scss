@@ -71,7 +71,7 @@
   }
 }
 
-.metrics-reports .report-card .legendDiv .dottedlineCpu {
+.metrics-reports .media-metrics-report-card .legendDiv .dottedlineCpu {
   border: 0 none;
   border-top: 4.5px dashed;
   display: inline-block;
@@ -80,7 +80,7 @@
   color: #7baf5d;
 }
 
-.metrics-reports .report-card .legendDiv .lineCpu {
+.metrics-reports .media-metrics-report-card .legendDiv .lineCpu {
   border: 0 none;
   border-top: 4.5px solid;
   display: inline-block;
@@ -90,7 +90,7 @@
   color: #417505;
 }
 
-.metrics-reports .report-card .legendDiv p {
+.metrics-reports .media-metrics-report-card .legendDiv p {
   display: inline-block;
   padding: 0;
 }
@@ -99,7 +99,7 @@
   display: inline-block;
 }
 
-.metrics-reports .report-card .legendDiv .headerTable {
+.metrics-reports .media-metrics-report-card .legendDiv .headerTable {
   table-layout: fixed;
   margin-bottom: 0rem;
   border-collapse: inherit;
@@ -112,30 +112,30 @@
   }
 }
 
-.metrics-reports .report-card .legendDiv .legends {
+.metrics-reports .media-metrics-report-card .legendDiv .legends {
   display: inline-block;
   float: right;
 }
 
-.metrics-reports .report-card .legendDiv .legends .callLocal {
+.metrics-reports .media-metrics-report-card .legendDiv .legends .callLocal {
   color: #049fd9;
 }
 
-.metrics-reports .report-card .legendDiv .legends .callReject {
+.metrics-reports .media-metrics-report-card .legendDiv .legends .callReject {
   color: #f5a623;
   padding-left: 3rem;
 }
 
-.metrics-reports .report-card .legendDiv .legends .hostAvailableStyle {
+.metrics-reports .media-metrics-report-card .legendDiv .legends .hostAvailableStyle {
   color: #417505;
 }
 
-.metrics-reports .report-card .legendDiv .legends .hostUnavailableStyle {
+.metrics-reports .media-metrics-report-card .legendDiv .legends .hostUnavailableStyle {
   color: #d03d35;
   padding-left: 3rem;
 }
 
-.metrics-reports .report-card .legendDiv .legends .clusterPartialStyle {
+.metrics-reports .media-metrics-report-card .legendDiv .legends .clusterPartialStyle {
   color: #f5a623;
   padding-left: 3rem;
 }
