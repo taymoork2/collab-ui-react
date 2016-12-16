@@ -6,32 +6,26 @@
     .service('DeviceExportService', DeviceExportService);
 
   /* @ngInject */
-  function DeviceExportService($q, $document, $window, $log, $timeout, $http, Authinfo) {
+  function DeviceExportService($q, $document, $window, $log, $timeout, $http, Authinfo, UrlConfig) {
 
     function exportDevices(statusCallback) {
-      var deviceCategories = ['ce', 'sparkboard'];
-      var localUrlBase = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
-      var url = localUrlBase + '/' + Authinfo.getOrgId() + '/reports/device/call/export?';
-      url = url + 'intervalType=day';
-      url = url + '&rangeStart=' + '2016-08-01' + '&rangeEnd' + '2016-11-20';
-      url = url + '&deviceCategories=' + deviceCategories.join();
-      url = url + '&accounts=__';
-      url = url + '&sendMockData=false';
-      $log.warn("Trying to export data using url:", url);
+      var urlBase = UrlConfig.getCsdmServiceUrl();
+      var url = urlBase + '/organization/' + Authinfo.getOrgId() + '/devices?checkOnline=false&checkDisplayName=false';
       return exportData(url, statusCallback);
     }
 
-    // Mainly copied from Ediscovery's downloadReport
-    // TODO: Find another way ?
+    // Based on Ediscovery's downloadReport
     var exportCanceler;
     function exportData(url, statusCallback) {
       exportCanceler = $q.defer();
-      $log.warn("downloadReport", url);
-      statusCallback(0);
       return $http.get(url, {
         responseType: 'arraybuffer',
+        headers: {
+          'Accept': 'text/csv'
+        },
         timeout: exportCanceler.promise
-      }).success(function (data) {
+      }).then(function (response) {
+        var data = response.data;
         var fileName = 'devices.csv';
         var file = new $window.Blob([data], {
           type: 'application/json'
@@ -57,8 +51,8 @@
           }, 100);
         }
         statusCallback(100);
-      }).error(function (reason) {
-        $log.warn("Device export was not successful, reason:", reason);
+      }).catch(function (error){
+        $log.warn("Device export was not successful, reason:", error);
         statusCallback(-1);
       });
     }

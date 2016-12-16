@@ -206,6 +206,11 @@ describe('Controller: DevicesCtrl', function () {
             this.cancelCallback = cancelCallback;
           }
         },
+        opened: {
+          then: function (okCallback) {
+            okCallback();
+          }
+        },
         close: function (item) {
           this.result.okCallback(item);
         },
@@ -214,46 +219,46 @@ describe('Controller: DevicesCtrl', function () {
         }
       };
       spyOn($modal, 'open').and.returnValue(fakeModal);
-      spyOn(Notification, 'notify');
+      spyOn(Notification, 'success');
+      spyOn(Notification, 'warning');
+      spyOn(DeviceExportService, 'exportDevices');
 
     });
 
-    it('exports device data after acknowledged in modal', function () {
-      spyOn(DeviceExportService, 'exportDevices');
+    it('starts export and shows progress dialog after acknowledged in initial dialog', function () {
       controller.startDeviceExport();
-      expect($modal.open).toHaveBeenCalled();
-      fakeModal.close();
+      expect($modal.open).toHaveBeenCalled();  // initial dialog
+      fakeModal.close(); // user acks the export
+      expect($modal.open).toHaveBeenCalled(); // progress dialog
       expect(DeviceExportService.exportDevices).toHaveBeenCalled();
+      expect(controller.exporting).toBeTruthy();
     });
 
-    it('does not export device data after rejected in modal', function () {
-      spyOn(DeviceExportService, 'exportDevices');
+    it('does not export device data after cancelled in initial dialog', function () {
       controller.startDeviceExport();
       expect($modal.open).toHaveBeenCalled();
-      fakeModal.dismiss();
+      fakeModal.dismiss(); // used cancels the export
       expect(DeviceExportService.exportDevices).not.toHaveBeenCalled();
-    });
-
-    it('exports status 0 indicates that export has started and a cancel modal is shown', function () {
-      controller.exportStatus(0);
-      expect(controller.exporting).toBeTruthy();
-      expect($modal.open).toHaveBeenCalled();
-      expect(controller.exporting).toBeTruthy();
-    });
-
-    it('exports status 100 indicates export progress finished', function () {
-      controller.exportStatus(0);
-      expect(controller.exporting).toBeTruthy();
-      controller.exportStatus(100);
-      expect(Notification.notify).toHaveBeenCalledWith('spacesPage.export.deviceListReadyForDownload', 'success', 'spacesPage.export.exportCompleted');
       expect(controller.exporting).toBeFalsy();
     });
 
-    it('export cancelled mid-flight closes the dialog and shows a toaster', function () {
-      controller.exportStatus(0);
+    it('exports status 100 indicates export progress finished', function () {
+      controller.startDeviceExport();
+      fakeModal.close();
       expect(controller.exporting).toBeTruthy();
+
+      controller.exportStatus(100);
+      expect(Notification.success).toHaveBeenCalledWith('spacesPage.export.deviceListReadyForDownload', 'spacesPage.export.exportCompleted');
+      expect(controller.exporting).toBeFalsy();
+    });
+
+    it('export cancelled (for some reason) mid-flight closes the dialog and shows a toaster', function () {
+      controller.startDeviceExport();
+      fakeModal.close();
+      expect(controller.exporting).toBeTruthy();
+
       controller.exportStatus(-1);
-      expect(Notification.notify).toHaveBeenCalledWith('spacesPage.export.deviceExportCancelled', 'warn');
+      expect(Notification.warning).toHaveBeenCalledWith('spacesPage.export.deviceExportFailedOrCancelled');
       expect(controller.exporting).toBeFalsy();
     });
 

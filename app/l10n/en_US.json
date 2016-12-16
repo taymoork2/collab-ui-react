@@ -1455,7 +1455,7 @@
       "deviceExportInProgress": "Exporting Device Attributes to CSV",
       "exportCompleted": "Export completed",
       "deviceListReadyForDownload": "Your device list has been compiled and is ready to download.",
-      "deviceExportCancelled": "Device Export was cancelled."
+      "deviceExportFailedOrCancelled": "Device Export failed or was cancelled."
     }
   },
   "hercules": {
