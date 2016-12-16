@@ -7,37 +7,86 @@ interface IAlarms {
 class GoogleCalendarNotificationsDropdownCtrl implements ng.IComponentController {
   private serviceId = 'squared-fusion-gcal';
 
-  public showDropdown = false;
+  public open = false;
   public alarms: IAlarms[] = [];
 
   /* @ngInject */
   constructor(
+    private $element: ng.IRootElementService,
+    private $scope: ng.IScope,
+    private $window: ng.IWindowService,
     private FusionClusterService,
   ) {}
 
   public $onInit() {
+    this.handleClick = this.handleClick.bind(this);
     this.FusionClusterService.getAlarms(this.serviceId)
-      .then(data => {
+      .then((data: { items: IAlarms[] }) => {
         this.alarms = data.items;
       });
   }
 
-  public toggleDropdown() {
-    if (!this.showDropdown && this.alarms.length === 0) {
-      return;
-    }
-    this.showDropdown = !this.showDropdown;
+  public $onDestroy() {
+    this.$window.removeEventListener('click', this.handleClick);
   }
 
-  public removeAlarm(alarm) {
+  public showDropdown() {
+    this.$window.addEventListener('click', this.handleClick);
+    this.open = true;
+  }
+
+  public hideDropdown() {
+    this.open = false;
+    this.$window.removeEventListener('click', this.handleClick);
+  }
+
+  public toggleDropdown(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.alarms.length === 0) {
+      return;
+    }
+    this.open = !this.open;
+    if (this.open) {
+      this.showDropdown();
+    } else {
+      this.hideDropdown();
+    }
+  }
+
+  public handleClick(event) {
+    event.stopPropagation();
+    if (this.open && this.isTargetOutsideComponent(event.target)) {
+      this.hideDropdown();
+      this.$scope.$apply();
+    }
+  }
+
+  private isTargetOutsideComponent(target) {
+    let element = angular.element(target);
+    let inside;
+    while (element[0] !== undefined) {
+      inside = element[0] === this.$element[0];
+      if (inside) {
+        return false;
+      }
+      element = element.parent();
+    }
+    return true;
+  }
+
+  public removeAlarm(event, alarm) {
+    event.stopPropagation();
     this.alarms = _.without(this.alarms, alarm);
+    if (this.alarms.length === 0 ) {
+      this.hideDropdown();
+    }
   }
 
   public getNumberCSSClass() {
-    const allAreWarnings = _.every(this.alarms, { severity: 'warning' });
     if (this.alarms.length === 0) {
       return '';
-    } else if (allAreWarnings) {
+    } else if (_.every(this.alarms, { severity: 'warning' })) {
       return 'warning';
     } else {
       return 'alert';
@@ -50,10 +99,6 @@ class GoogleCalendarNotificationsDropdownCtrl implements ng.IComponentController
     } else {
       return 'alert';
     }
-  }
-
-  public shouldDisplayDropdown() {
-    return this.showDropdown && this.alarms.length > 0;
   }
 }
 

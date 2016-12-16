@@ -1,10 +1,11 @@
-<div class="notification-button" ng-click="$ctrl.toggleDropdown()" ng-class="{active: $ctrl.shouldDisplayDropdown(), clickable: $ctrl.alarms.length > 0}">
+<div class="notification-button" ng-click="$ctrl.toggleDropdown($event)" ng-class="{active: $ctrl.open, clickable: $ctrl.alarms.length > 0}">
   <div class="notification-number" ng-class="$ctrl.getNumberCSSClass()">{{$ctrl.alarms.length}}</div>
   <div class="notification-label" translate="hercules.notificationDropdown.label"></div>
+  <code> {{$ctrl.open}}</code>
 </div>
-<ul class="notification-dropdown" ng-if="$ctrl.shouldDisplayDropdown()">
+<ul class="notification-dropdown" ng-if="$ctrl.open">
   <li class="notification-entry" ng-repeat="alarm in $ctrl.alarms">
-    <div class="notification-entry-close" ng-click="$ctrl.removeAlarm(alarm)"><i class="icon icon-close"></i></div>
+    <div class="notification-entry-close" ng-click="$ctrl.removeAlarm($event, alarm)"><i class="icon icon-close"></i></div>
     <div class="notification-entry-severity">
       <span class="badge" ng-class="$ctrl.getBadgeCSSClass(alarm.severity)">{{::alarm.severity}}</span>
     </div>
