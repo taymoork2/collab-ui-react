@@ -1447,7 +1447,16 @@
       "availableMessage": "This will open Advanced Settings in a new tab.<br><br>Access to Advanced Settings requires that you are on the same network as the room device."
     },
     "sameAsCompanyNum": "To edit your emergency service address, the emergency callback number for your device must be different from your company’s callback number.",
-    "impactedUserInfo": "Modifying the Emergency Service Address associated to the above selected Callback Number will impact the following users and/or places:"
+    "impactedUserInfo": "Modifying the Emergency Service Address associated to the above selected Callback Number will impact the following users and/or places:",
+    "export": {
+      "deviceExportTitle": "Export Device Attributes to CSV",
+      "deviceExportDescription": "Gathering data for export may take a while. During this time you cannon sign out or refresh your browser, or the export will be cancelled.",
+      "export": "Export",
+      "deviceExportInProgress": "Exporting Device Attributes to CSV",
+      "exportCompleted": "Export completed",
+      "deviceListReadyForDownload": "Your device list has been compiled and is ready to download.",
+      "deviceExportFailedOrCancelled": "Device Export failed or was cancelled."
+    }
   },
   "hercules": {
     "page_title": "Connector Management",
