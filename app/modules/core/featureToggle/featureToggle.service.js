@@ -87,6 +87,7 @@
       huronPagingGroup: 'huronPagingGroup',
       huronNetworkLocale: 'huron-l10n-network-locale',
       huronUserLocale: 'huron-l10n-user-locale',
+      huronUserLocale2: 'huron-l10n-user-locale-2',
       iosActionBar: 'ios-action-bar',
       iosAecType: 'ios-aec-type',
       iosCameraview: 'ios-cameraview',
