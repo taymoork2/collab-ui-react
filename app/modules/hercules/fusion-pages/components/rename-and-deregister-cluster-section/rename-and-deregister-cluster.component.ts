@@ -17,6 +17,7 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
     type: 'dialog',
   };
 
+  public showRenameSection: boolean;
   public clusterName: string;
   public clusterType: string;
   public savingNameState: boolean = false;
@@ -99,6 +100,7 @@ export class RenameAndDeregisterClusterSectionComponent implements ng.IComponent
   public bindings = {
     serviceId: '<',
     cluster: '<',
+    showRenameSection: '<',
     deregisterModalOptions: '<',
     onNameUpdate: '&',
   };
