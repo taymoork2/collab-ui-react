@@ -81,7 +81,7 @@
               clusterName: cluster.name
             });
           }
-          if (cluster.connectors && cluster.connectors.length === 0) {
+          if (cluster && cluster.connectors && cluster.connectors.length === 0) {
             /* We have cluster data, but there are no nodes. Let's use the default deregistration dialog.  */
             vm.deregisterModalOptions = undefined;
           }
