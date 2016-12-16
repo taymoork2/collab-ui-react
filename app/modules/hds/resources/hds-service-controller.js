@@ -8,6 +8,9 @@
   /* @ngInject */
   function HDSServiceController($scope, $modal, $translate, ClusterService, FusionClusterService, FeatureToggleService) {
 
+    ClusterService.subscribe('data', clustersUpdated, {
+      scope: $scope
+    });
 
     var vm = this;
     vm.serviceEnabled = null;
@@ -64,6 +67,10 @@
       }
     });
 
+    function clustersUpdated() {
+      vm.clusters = ClusterService.getClustersByConnectorType('hds_app');
+      vm.clusters.sort(sortByProperty('name'));
+    }
 
     function firstTimeSetup() {
       vm.serviceEnabled = true;
