@@ -85,8 +85,6 @@
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       huronPagingGroup: 'huronPagingGroup',
-      huronNxxSearch: 'huron-nxx-search',
-      huronSimplifiedTrialFlow: 'huron-simplified-trial-flow',
       huronNetworkLocale: 'huron-l10n-network-locale',
       huronUserLocale: 'huron-l10n-user-locale',
       iosActionBar: 'ios-action-bar',

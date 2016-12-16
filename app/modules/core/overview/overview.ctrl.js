@@ -89,12 +89,8 @@ require('./_overview.scss');
       Orgservice.getOrg(function (data, status) {
         if (status === 200) {
           vm.orgData = data;
-          FeatureToggleService.supports(FeatureToggleService.features.huronSimplifiedTrialFlow).then(function (supported) {
-            if (supported) {
-              getTOSStatus();
-            }
-          });
 
+          getTOSStatus();
           if (!data.orgSettings.sipCloudDomain) {
             vm.notifications.push(OverviewNotificationFactory.createCloudSipUriNotification());
           }

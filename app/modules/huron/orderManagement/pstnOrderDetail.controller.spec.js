@@ -1,23 +1,20 @@
 'use strict';
 
 describe('Controller: PstnOrderDetailCtrl', function () {
-  var controller, $q, $controller, $scope, $stateParams, $translate, fulfilledBlockOrder, pendingBlockOrder, fulfilledNumberOrder, FeatureToggleService;
+  var $q, controller, $controller, $scope, $stateParams, $translate, fulfilledBlockOrder, pendingBlockOrder, fulfilledNumberOrder, PstnSetupService;
+
+  afterEach(function () {
+    $q = controller = $controller = $scope = $stateParams = $translate = fulfilledBlockOrder = pendingBlockOrder = fulfilledNumberOrder = PstnSetupService = undefined;
+  });
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_$q_, $rootScope, _$controller_, _$stateParams_, _$translate_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$q_, $rootScope, _$controller_, _$stateParams_, _$translate_) {
     $q = _$q_;
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $stateParams = _$stateParams_;
     $translate = _$translate_;
-    FeatureToggleService = _FeatureToggleService_;
-
-    spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
-      if (param === FeatureToggleService.features.huronSimplifiedTrialFlow) {
-        return $q.when(false);
-      }
-    });
 
     fulfilledBlockOrder = {
       carrierOrderId: '631208',
@@ -51,6 +48,19 @@ describe('Controller: PstnOrderDetailCtrl', function () {
       tooltip: 'Completed Successfully'
     };
 
+    PstnSetupService = {
+      getCustomerV2: function () {
+        return $q.when({
+          trial: true
+        });
+      },
+      getCustomerTrialV2: function () {
+        return $q.when({
+          acceptedDate: "today"
+        });
+      }
+    };
+
     spyOn($translate, 'instant');
 
     $scope.$apply();
@@ -58,10 +68,14 @@ describe('Controller: PstnOrderDetailCtrl', function () {
 
   function initController(order) {
     $stateParams.currentOrder = order;
+    $stateParams.currentCustomer = {
+      customerOrgId: "1111OrgId"
+    };
     controller = $controller('PstnOrderDetailCtrl', {
       $scope: $scope,
       $stateParams: $stateParams,
-      $translate: $translate
+      $translate: $translate,
+      PstnSetupService: PstnSetupService
     });
     $scope.$apply();
   }
