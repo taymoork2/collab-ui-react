@@ -11,6 +11,7 @@
     var baseHerculesUrlV2 = UrlConfig.getHerculesUrlV2();
     var baseUssUrl = UrlConfig.getUssUrl();
     var baseCalliopeUrl = UrlConfig.getCalliopeUrl();
+    var baseAthenaServiceUrl = UrlConfig.getAthenaServiceUrl();
 
     var getUrl = function () {
       return baseHerculesUrl;
@@ -24,12 +25,16 @@
     var getCalliopeUrl = function () {
       return baseCalliopeUrl;
     };
+    var getAthenaServiceUrl = function () {
+      return baseAthenaServiceUrl;
+    };
 
     return {
       getUrl: getUrl,
       getV2Url: getV2Url,
       getUSSUrl: getUSSUrl,
-      getCalliopeUrl: getCalliopeUrl
+      getCalliopeUrl: getCalliopeUrl,
+      getAthenaServiceUrl: getAthenaServiceUrl
     };
   }
 })();

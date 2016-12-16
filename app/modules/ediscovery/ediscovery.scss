@@ -1,3 +1,5 @@
+@import 'styles/toolkit/colors';
+
 .ediscovery-app-container {
   background-color: $brand-white;
   overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
@@ -193,7 +195,7 @@
 
         #midBreak{
           padding-top: 24px;
-        } 
+        }
 
         #largeBreak {
           margin-top: 36px;

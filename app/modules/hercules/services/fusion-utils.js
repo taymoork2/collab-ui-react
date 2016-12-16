@@ -7,15 +7,14 @@
 
   /*@ngInject*/
   function FusionUtils($translate) {
-    var service = {
+    return {
       connectorType2RouteName: connectorType2RouteName,
       connectorType2ServicesId: connectorType2ServicesId,
       serviceId2ConnectorType: serviceId2ConnectorType,
       serviceId2Icon: serviceId2Icon,
       getLocalizedReleaseChannel: getLocalizedReleaseChannel,
+      getTimeSinceText: getTimeSinceText
     };
-
-    return service;
 
     //////////
 
@@ -88,5 +87,17 @@
       return $translate.instant('hercules.fusion.add-resource-group.release-channel.' + channel);
     }
 
+    function getTimeSinceText(timestamp) {
+      var timestampText = moment(timestamp).calendar(null, {
+        sameElse: 'LL' // e.g. December 15, 2016
+      });
+      if (timestampText.startsWith('Last') || timestampText.startsWith('Today') || timestampText.startsWith('Tomorrow') || timestampText.startsWith('Yesterday')) {
+        // Lowercase the first letter for some well known English terms (it just looked bad with these uppercase). Other languages are left alone.
+        timestampText = timestampText[0].toLowerCase() + timestampText.slice(1);
+      }
+      return $translate.instant('hercules.cloudExtensions.sinceTime', {
+        timestamp: timestampText
+      });
+    }
   }
 }());

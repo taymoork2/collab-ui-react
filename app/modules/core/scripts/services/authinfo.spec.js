@@ -289,6 +289,22 @@ describe('Authinfo:', function () {
       expect(Authinfo.getConferenceServicesWithLinkedSiteUrl()).toBeTruthy();
       expect(Authinfo.getConferenceServicesWithLinkedSiteUrl().length).toBe(1);
     });
+
+    it('is patched with Site_Admin role if customer has full admin role.', function () {
+      var Authinfo = setupUser({
+        roles: ['Full_Admin']
+      });
+      Authinfo.updateAccountInfo(accountData);
+      expect(Authinfo.getRoles()).toEqual(["Full_Admin", "Site_Admin"]);
+    });
+
+    it('is patched with Site_Admin role if customer has read only admin role.', function () {
+      var Authinfo = setupUser({
+        roles: ['Readonly_Admin']
+      });
+      Authinfo.updateAccountInfo(accountData);
+      expect(Authinfo.getRoles()).toEqual(["Readonly_Admin", "Site_Admin"]);
+    });
   });
 
   function setupConfig(override) {

@@ -89,14 +89,18 @@
       vm.orders = PstnSetup.getOrders();
 
       vm.portOrders = _.remove(vm.orders, function (order) {
-        return _.get(order, 'type') === PstnSetupService.PORT_ORDER;
+        return _.get(order, 'orderType') === PstnSetupService.PORT_ORDER;
+      });
+
+      vm.newTollFreeOrders = _.remove(vm.orders, function (order) {
+        return _.get(order, 'orderType') === PstnSetupService.NUMBER_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_TOLLFREE;
       });
 
       var pstnAdvancedOrders = _.remove(vm.orders, function (order) {
-        return _.get(order, 'type') === PstnSetupService.BLOCK_ORDER;
+        return _.get(order, 'orderType') === PstnSetupService.BLOCK_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_DID;
       });
       var tollFreeAdvancedOrders = _.remove(vm.orders, function (order) {
-        return _.get(order, 'type') === PstnSetupService.TOLLFREE_BLOCK_ORDER;
+        return _.get(order, 'orderType') === PstnSetupService.BLOCK_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_TOLLFREE;
       });
       vm.advancedOrders = [].concat(pstnAdvancedOrders, tollFreeAdvancedOrders);
 
@@ -137,17 +141,23 @@
         promises.push(promise);
       }
 
+      if (vm.newTollFreeOrders.length > 0) {
+        promise = PstnSetupService.orderNumbersV2(PstnSetup.getCustomerId(), vm.newTollFreeOrders)
+          .catch(pushErrorArray);
+        promises.push(promise);
+      }
+
       if (vm.portOrders.length > 0) {
         promise = PstnSetupService.portNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), _.get(vm, 'portOrders[0].data.numbers'))
           .catch(pushErrorArray);
         promises.push(promise);
       }
       _.forEach(vm.advancedOrders, function (order) {
-        if (_.get(order, 'type') === PstnSetupService.BLOCK_ORDER) {
+        if (_.get(order, 'orderType') === PstnSetupService.BLOCK_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_DID) {
           promise = PstnSetupService.orderBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length, order.data.consecutive, order.data.nxx)
             .catch(pushErrorArray);
-        } else if (_.get(order, 'type') === PstnSetupService.TOLLFREE_BLOCK_ORDER) {
-          promise = PstnSetupService.orderTollFreeBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length, order.data.consecutive)
+        } else if (_.get(order, 'orderType') === PstnSetupService.BLOCK_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_TOLLFREE) {
+          promise = PstnSetupService.orderTollFreeBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length)
             .catch(pushErrorArray);
         }
         promises.push(promise);
