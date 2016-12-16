@@ -1,11 +1,21 @@
+import { Notification } from 'modules/core/notifications';
+
 class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
 
   private clusterId: string;
-
   private serviceId: string;
   private cluster: any;
-  private deregisterModalData: any;
-  private onUpdate;
+  private onNameUpdate;
+  private deregisterModalOptions: any;
+  private defaultDeregisterModalOptions: any = {
+    resolve: {
+      cluster: () => this.cluster,
+    },
+    controller: 'ClusterDeregisterController',
+    controllerAs: 'clusterDeregister',
+    templateUrl: 'modules/hercules/fusion-pages/components/rename-and-deregister-cluster-section/deregister-dialog.html',
+    type: 'dialog',
+  };
 
   public clusterName: string;
   public clusterType: string;
@@ -13,46 +23,36 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
   public clusterSection = {
     title: 'common.cluster',
   };
-  public localizedClusterNameWatermark: string;
+  public localizedClusterNameWatermark: string = this.$translate.instant('hercules.renameAndDeregisterComponent.clusterNameWatermark');
 
   /* @ngInject */
   constructor(
     private $modal,
     private $translate: ng.translate.ITranslateService,
     private $state: ng.ui.IStateService,
-    private Notification,
+    private Notification: Notification,
     private FusionClusterService,
   ) { }
 
   public $onInit() {
-    this.localizedClusterNameWatermark = this.$translate.instant('hercules.renameAndDeregisterComponent.clusterNameWatermark');
-    this.clusterType = this.$translate.instant('hercules.clusterTypeFromServiceId.' + this.serviceId);
+    this.clusterType = this.$translate.instant(`hercules.clusterTypeFromServiceId.${this.serviceId}`);
   }
 
-  public $onChanges() {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
 
-    /*  It might take a while before the parent has the cluster data,
-        so this part must be here, and not in $onInit() */
-    if (this.cluster) {
+    const { cluster, deregisterModalOptions } = changes;
+
+    if (cluster && cluster.currentValue) {
+      this.cluster = cluster.currentValue;
       this.clusterName = this.cluster.name;
       this.clusterId = this.cluster.id;
-
-      /* No deregisterModalData provided means that we fall back to the default one  */
-      if (this.deregisterModalData === undefined) {
-        this.deregisterModalData = {
-          resolve: {
-            cluster: () => {
-              return this.cluster;
-            },
-          },
-          controller: 'ClusterDeregisterController',
-          controllerAs: 'clusterDeregister',
-          templateUrl: 'modules/hercules/fusion-pages/components/rename-and-deregister-cluster-section/deregister-dialog.html',
-          type: 'dialog',
-        };
-      }
     }
 
+    if (deregisterModalOptions && deregisterModalOptions.currentValue) {
+      this.deregisterModalOptions = deregisterModalOptions.currentValue;
+    } else if (deregisterModalOptions) {
+      this.deregisterModalOptions = this.defaultDeregisterModalOptions;
+    }
   }
 
   public saveClusterName(): void {
@@ -63,20 +63,20 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
 
     this.savingNameState = true;
     this.FusionClusterService.setClusterName(this.clusterId, this.clusterName)
-      .then(() => {
+      .then((result) => {
         this.Notification.success('hercules.renameAndDeregisterComponent.clusterNameSaved');
+        this.onNameUpdate(result);
       })
       .catch((error) => {
         this.Notification.errorWithTrackingId(error, 'hercules.renameAndDeregisterComponent.clusterNameCannotBeSaved');
       })
       .finally(() => {
         this.savingNameState = false;
-        this.onUpdate();
       });
   }
 
   public deregisterCluster(): void {
-    this.$modal.open(this.deregisterModalData)
+    this.$modal.open(this.deregisterModalOptions)
       .result
       .then(() => {
         this.$state.go('cluster-list');
@@ -99,7 +99,7 @@ export class RenameAndDeregisterClusterSectionComponent implements ng.IComponent
   public bindings = {
     serviceId: '<',
     cluster: '<',
-    deregisterModalData: '<',
-    onUpdate: '&',
+    deregisterModalOptions: '<',
+    onNameUpdate: '&',
   };
 }

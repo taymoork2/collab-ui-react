@@ -22,7 +22,7 @@
       value: 'stable'
     }];
 
-    vm.deregisterModalData = {
+    vm.deregisterModalOptions = {
       resolve: {
         cluster: function () {
           return vm.cluster;
@@ -83,7 +83,7 @@
           }
           if (cluster.connectors && cluster.connectors.length === 0) {
             /* We have cluster data, but there are no nodes. Let's use the default deregistration dialog.  */
-            vm.deregisterModalData = undefined;
+            vm.deregisterModalOptions = undefined;
           }
         })
         .catch(function (error) {
