@@ -51,7 +51,7 @@
           }, 100);
         }
         statusCallback(100);
-      }).catch(function (error){
+      }).catch(function (error) {
         $log.warn("Device export was not successful, reason:", error);
         statusCallback(-1);
       });
