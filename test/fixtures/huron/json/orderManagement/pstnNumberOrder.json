@@ -1,0 +1,14 @@
+{
+  "uuid": "f950f0d4-bde8-4b0d-8762-d306655f24ed",
+  "type": "PSTN",
+  "status": "PROVISIONED",
+  "statusMessage": "PROVISIONED",
+  "carrier": "INTELEPEER",
+  "operation": "NUMBER_ORDER",
+  "carrierOrderId": "612808",
+  "carrierBatchId": "34567",
+  "numbers": [{"number":"6198818097","network":"PROVISIONED"}, {"number":"6198818098","network":"PROVISIONED"}],
+  "attributes": {},
+  "created": "Tue Feb 23 12:05:52 UTC 2016",
+  "url": "https://terminus.huron-int.com/api/v1/customers/b0bd81ca-5b24-4867-a012-5caa364e28f1/orders/f950f0d4-bde8-4b0d-8762-d306655f24ed"
+}

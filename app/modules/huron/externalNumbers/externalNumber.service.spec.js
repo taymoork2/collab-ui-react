@@ -86,6 +86,52 @@ describe('Service: ExternalNumberService', function () {
     spyOn($translate, 'instant');
   }));
 
+  describe('refreshNumbers', function () {
+    it('should query for did (fixed line) numbers only by default', function () {
+      ExternalNumberService.refreshNumbers(customerId);
+      $rootScope.$apply();
+
+      expect(ExternalNumberPool.getExternalNumbers).toHaveBeenCalledWith(
+        customerId,
+        ExternalNumberPool.NO_PATTERN_MATCHING,
+        ExternalNumberPool.ASSIGNED_AND_UNASSIGNED_NUMBERS,
+        ExternalNumberPool.FIXED_LINE_OR_MOBILE);
+    });
+
+    it('should query for did numbers only when FIXED_LINE_OR_MOBILE is used', function () {
+      ExternalNumberService.refreshNumbers(customerId, ExternalNumberPool.FIXED_LINE_OR_MOBILE);
+      $rootScope.$apply();
+
+      expect(ExternalNumberPool.getExternalNumbers).toHaveBeenCalledWith(
+        customerId,
+        ExternalNumberPool.NO_PATTERN_MATCHING,
+        ExternalNumberPool.ASSIGNED_AND_UNASSIGNED_NUMBERS,
+        ExternalNumberPool.FIXED_LINE_OR_MOBILE);
+    });
+
+    it('should query for all number types when ALL_EXTERNAL_NUMBER_TYPES is used', function () {
+      ExternalNumberService.refreshNumbers(customerId, ExternalNumberPool.ALL_EXTERNAL_NUMBER_TYPES);
+      $rootScope.$apply();
+
+      expect(ExternalNumberPool.getExternalNumbers).toHaveBeenCalledWith(
+        customerId,
+        ExternalNumberPool.NO_PATTERN_MATCHING,
+        ExternalNumberPool.ASSIGNED_AND_UNASSIGNED_NUMBERS,
+        ExternalNumberPool.ALL_EXTERNAL_NUMBER_TYPES);
+    });
+
+    it('should query for toll free numbers when TOLL_FREE is used', function () {
+      ExternalNumberService.refreshNumbers(customerId, ExternalNumberPool.TOLL_FREE);
+      $rootScope.$apply();
+
+      expect(ExternalNumberPool.getExternalNumbers).toHaveBeenCalledWith(
+        customerId,
+        ExternalNumberPool.NO_PATTERN_MATCHING,
+        ExternalNumberPool.ASSIGNED_AND_UNASSIGNED_NUMBERS,
+        ExternalNumberPool.TOLL_FREE);
+    });
+  });
+
   it('should only retrieve external numbers if not a terminus customer', function () {
     $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customerId + '/numbers?type=external').respond(numberResponse);
     PstnSetupService.getCustomer.and.returnValue($q.reject());

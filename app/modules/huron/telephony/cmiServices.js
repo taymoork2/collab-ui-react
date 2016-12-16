@@ -36,6 +36,7 @@
     .factory('DirectoryNumberCopyService', DirectoryNumberCopyService)
     .factory('SiteService', SiteService)
     .factory('AvrilSiteService', AvrilSiteService)
+    .factory('AvrilSiteUpdateService', AvrilSiteUpdateService)
     .factory('InternalNumberRangeService', InternalNumberRangeService)
     .factory('UserEndpointService', UserEndpointService)
     .factory('SipEndpointService', SipEndpointService)
@@ -346,6 +347,21 @@
         headers: {
           'Access-Control-Expose-Headers': 'Location'
         }
+      }
+    });
+  }
+
+  /* @ngInject */
+  function AvrilSiteUpdateService($resource, HuronConfig) {
+    return $resource(HuronConfig.getAvrilUrl() + '/customers/:customerId/sites/:siteId', {
+      customerId: '@customerId',
+      siteId: '@siteId'
+    }, {
+      update: {
+        method: 'PUT'
+      },
+      get: {
+        method: 'GET'
       }
     });
   }

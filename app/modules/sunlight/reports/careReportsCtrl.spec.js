@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: Care Reports Controller', function () {
-  var controller, $translate, $timeout, SunlightReportService, DummyCareReportService, CareReportsService, deferred;
+  var controller, $scope, $translate, $timeout, CareReportsService, DummyCareReportService, Notification, SunlightReportService, deferred;
   var timeOptions = [{
     value: 0,
     label: 'careReportsPage.today',
@@ -35,20 +35,31 @@ describe('Controller: Care Reports Controller', function () {
   }];
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module(function ($provide) {
+    $provide.value("Authinfo", spiedAuthinfo);
+  }));
+  var spiedAuthinfo = {
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org')
+  };
   beforeEach(
-    inject(function ($controller, _$q_, _$translate_, _$timeout_, _SunlightReportService_,
-                     _DummyCareReportService_, _CareReportsService_) {
+    inject(function ($controller, _$q_, _$translate_, _$timeout_, $rootScope, _CareReportsService_,
+      _DummyCareReportService_, _Notification_, _SunlightReportService_) {
+      $scope = $rootScope.$new();
       $translate = _$translate_;
       $timeout = _$timeout_;
       SunlightReportService = _SunlightReportService_;
+      Notification = _Notification_;
       DummyCareReportService = _DummyCareReportService_;
       CareReportsService = _CareReportsService_;
       deferred = _$q_.defer();
       spyOn(SunlightReportService, 'getReportingData').and.returnValue(deferred.promise);
       spyOn(DummyCareReportService, 'dummyOrgStatsData');
+      spyOn(Notification, 'errorResponse');
       controller = $controller('CareReportsController', {
         $translate: $translate,
         SunlightReportService: SunlightReportService,
+        Notification: Notification,
         DummyCareReportService: DummyCareReportService,
         CareReportsService: CareReportsService
       });
@@ -124,5 +135,36 @@ describe('Controller: Care Reports Controller', function () {
       expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_stats', 4, 'chat']);
       expect(SunlightReportService.getReportingData.calls.argsFor(1)).not.toEqual(['org_snapshot_stats', 1, 'chat']);
     });
+  });
+
+  describe('CareReportsController - Time Update', function () {
+
+    var failureResponse = {
+      'status': 500,
+      'statusText': 'Intenal Server Error'
+    };
+
+    it('should notify with error toaster on failure for yesterday', function (done) {
+      deferred.reject();
+      $scope.$apply();
+      controller.timeSelected = timeOptions[0];
+      controller.timeUpdate().catch(function () {
+        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Customer Satisfaction' });
+        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Contact Time Measure' });
+        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Total Completed Contacts' });
+      }).finally(done());
+    });
+
+    it('should notify with error toaster on failure for today', function (done) {
+      deferred.reject();
+      $scope.$apply();
+      controller.timeSelected = timeOptions[0];
+      controller.timeUpdate().catch(function () {
+        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Customer Satisfaction' });
+        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Aggregated Contacts' });
+        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Total Completed Contacts' });
+      }).finally(done());
+    });
+
   });
 });
