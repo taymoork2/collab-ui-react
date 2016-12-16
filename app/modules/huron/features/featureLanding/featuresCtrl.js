@@ -36,6 +36,9 @@
     }, {
       name: $translate.instant('huronHuntGroup.modalTitle'),
       filterValue: 'HG'
+    }, {
+      name: $translate.instant('callPark.title'),
+      filterValue: 'CP'
     }];
 
     /* LIST OF FEATURES

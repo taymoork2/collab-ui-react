@@ -41,6 +41,16 @@
       isOnlineOrg: isOnlineOrg
     };
 
+    var REFRESH_ACCESS_TOKEN_DEBOUNCE_MS = 1000;
+    var debouncedRefreshAccessToken = _.debounce(
+      refreshAccessToken,
+      REFRESH_ACCESS_TOKEN_DEBOUNCE_MS,
+      {
+        leading: true,
+        trailing: false
+      }
+    );
+
     return service;
 
     var deferredAll;
@@ -134,9 +144,11 @@
     }
 
     function refreshAccessTokenAndResendRequest(response) {
-      return refreshAccessToken()
+      return debouncedRefreshAccessToken()
         .then(function () {
           var $http = $injector.get('$http');
+          // replace the retried request with the new Authorization header
+          _.set(response, 'config.headers.Authorization', _.get($http, 'defaults.headers.common.Authorization'));
           return $http(response.config);
         });
     }

@@ -8,8 +8,6 @@
     </div>
     <div>
       <span class="feature-name">{{pstnOrderDetail.currentOrder.status}}
-        <span ng-if="pstnOrderDetail.currentOrder.statusMessage"> - {{pstnOrderDetail.currentOrder.statusMessage}}</span>
-        <i ng-if="pstnOrderDetail.currentOrder.tooltip" class="icon icon-info info-tooltip" tooltip-placement="right" tooltip="{{pstnOrderDetail.currentOrder.tooltip}}" tooltip-animation="false"  tooltip-append-to-body="true"></i>
       </span>
     </div>
     <div>
@@ -21,7 +19,9 @@
     </div>
     <ul class="detail-group">
       <li class="detail-group-item" ng-repeat="info in filteredOrderDetails = (pstnOrderDetail.info | filter:orderDetails.filter)">
-        <span class="text-center">{{info.label}}</span>
+        <span class="feature-name">{{info.label}}</span>
+        <span class="feature-status">{{info.status}}</span>
+        <span ng-if="info.tooltip" class="icon icon-info info-tooltip" tooltip="{{info.tooltip}}" tooltip-placement="top"></span>
       </li>
     </ul>
   </cs-sp-section>

@@ -5,11 +5,15 @@ describe('ResponseInterceptor', function () {
 
   var Interceptor, Auth;
 
+  afterEach(function () {
+    Interceptor = Auth = undefined;
+  });
+
   beforeEach(function () {
     angular.mock.module(function ($provide) {
       Auth = {
-        logout: sinon.stub(),
-        refreshAccessTokenAndResendRequest: sinon.stub()
+        logout: jasmine.createSpy('logout'),
+        refreshAccessTokenAndResendRequest: jasmine.createSpy('refreshAccessTokenAndResendRequest')
       };
       $provide.value('Auth', Auth);
     });
@@ -20,29 +24,27 @@ describe('ResponseInterceptor', function () {
   }));
 
   it('should refresh token for 200001 errors', function () {
-    Interceptor.responseError({
+    var response = {
       status: 401,
       data: {
         Errors: [{
           errorCode: '200001'
         }]
       }
-    });
-
-    expect(Auth.refreshAccessTokenAndResendRequest.calledOnce).toBe(true);
+    };
+    testRefreshAccessTokenAndResendRequestForResponse(response);
   });
 
   it('should refresh token for HTTP auth errors', function () {
-    Interceptor.responseError({
+    var response = {
       status: 401,
       data: 'This request requires HTTP authentication.'
-    });
-
-    expect(Auth.refreshAccessTokenAndResendRequest.calledOnce).toBe(true);
+    };
+    testRefreshAccessTokenAndResendRequestForResponse(response);
   });
 
   it('should refresh token for hercules 400 auth error responses', function () {
-    Interceptor.responseError({
+    var response = {
       status: 400,
       data: {
         error: {
@@ -51,9 +53,8 @@ describe('ResponseInterceptor', function () {
           }]
         }
       }
-    });
-
-    expect(Auth.refreshAccessTokenAndResendRequest.calledOnce).toBe(true);
+    };
+    testRefreshAccessTokenAndResendRequestForResponse(response);
   });
 
   it('should logout when token has expired', function () {
@@ -64,7 +65,16 @@ describe('ResponseInterceptor', function () {
       }
     });
 
-    expect(Auth.logout.calledOnce).toBe(true);
+    expect(Auth.logout).toHaveBeenCalledTimes(1);
   });
+
+  function testRefreshAccessTokenAndResendRequestForResponse(response) {
+    Interceptor.responseError(response);
+    expect(Auth.refreshAccessTokenAndResendRequest).toHaveBeenCalledTimes(1);
+
+    // Assume same request is retried - it should not invoke the refresh/resend again
+    Interceptor.responseError(response);
+    expect(Auth.refreshAccessTokenAndResendRequest).toHaveBeenCalledTimes(1);
+  }
 
 });
