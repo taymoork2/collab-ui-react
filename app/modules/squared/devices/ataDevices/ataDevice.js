@@ -6,11 +6,12 @@
     .controller('AtaDeviceController',
 
       /* @ngInject */
-      function ($modalInstance, $log, $scope, Notification, $stateParams, device) {
+      function ($modalInstance, $scope, Notification, $stateParams, device) {
         var ata = this;
         var huronDeviceService = $stateParams.huronDeviceService;
 
         ata.device = device;
+        ata.isLoading = false;
 
         $scope.$$postDigest(function () {
           $scope.$broadcast('rzSliderForceRender');
@@ -19,15 +20,15 @@
         /*
          * Default variables.
          * - this is what the sliders will jump to when clicking "reset to default"
+         * - coming from the wiki page: https://wiki.cisco.com/display/IPCBU/F6584
          */
         ata.defaultInput = 3;
         ata.defaultOutput = 11;
         ata.defaultImpedance = 0;
 
         /*
-         * Fake variables
-         * - at some point we need to get this from the API
-         * - the API isn't ready yet right now
+         * Settings, minimum, maximum and value.
+         * - coming from the wiki page: https://wiki.cisco.com/display/IPCBU/F6584
          */
         ata.inputMin = -6;
         ata.inputMax = 14;
@@ -75,14 +76,6 @@
         ata.unselectedColor = "#EBEBEC";
 
         /*
-         * Little hack to get the variable of the gradient colors from SCSS.
-         */
-        ata.onLoad = function () {
-          ata.selectedColor = $('input[type=range]').css('border-color') || ata.selectedColor;
-          ata.unselectedColor = $('input[type=range]').css('color') || ata.unselectedColor;
-        };
-
-        /*
          * Reset values.
          */
         ata.resetValues = function () {
@@ -95,9 +88,7 @@
          * Save settings.
          */
         ata.saveSettings = function () {
-          $log.log("Values that should get saved: ", ata.inputOptions.value, ata.outputOptions.value, ata.impedanceOptions.value);
-          //$modalInstance.close();
-          //Notification.success('ataSettings.saved');
+          ata.isLoading = true;
           var settings = {
             inputAudioLevel: ata.inputOptions.value,
             outputAudioLevel: ata.outputOptions.value,
@@ -105,7 +96,7 @@
           };
 
           huronDeviceService.setSettingsForAta(ata.device, settings).then(function () {
-            $log.log('saved');
+            ata.isLoading = false;
             $modalInstance.close();
             Notification.success('ataSettings.saved');
           });

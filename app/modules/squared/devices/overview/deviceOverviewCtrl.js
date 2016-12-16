@@ -322,8 +322,7 @@
 
     deviceOverview.openAtaSettings = function () {
       AtaDeviceModal
-        .open(deviceOverview.currentDevice)
-        .then($state.sidepanel.close);
+        .open(deviceOverview.currentDevice);
     };
 
     deviceOverview.resetDevice = function () {
