@@ -1928,6 +1928,9 @@
     "registration": {
       "heading": "Registration"
     },
+    "notificationDropdown": {
+      "label": "Service notifications"
+    },
     "fusion": {
       "types": {
         "expressway": "Expressway",
