@@ -56,9 +56,10 @@
       setFilterBasedTextForCare();
 
       showReportsWithDummyData();
-      showReportsWithRealData();
+      var promise = showReportsWithRealData();
       resizeCards();
       delayedResize();
+      return promise;
     }
 
     function setFilterBasedTextForCare() {
@@ -85,7 +86,7 @@
         showSnapshotReportWithRealData();
       }
       var categoryAxisTitle = vm.timeSelected.categoryAxisTitle;
-      SunlightReportService.getReportingData('org_stats', vm.timeSelected.value, 'chat')
+      return SunlightReportService.getReportingData('org_stats', vm.timeSelected.value, 'chat')
         .then(function (data) {
           if (data.length === 0) {
             vm.dataStatus = EMPTY;
@@ -96,13 +97,13 @@
             CareReportsService.showAverageCsatGraph('averageCsatDiv', data, categoryAxisTitle, isToday);
             resizeCards();
           }
-        }, function () {
+        }, function (data) {
           vm.dataStatus = EMPTY;
-          Notification.error($translate.instant('careReportsPage.taskDataGetError', { dataType: 'Customer Satisfaction' }));
+          Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Customer Satisfaction' }));
           if (!isToday) {
-            Notification.error($translate.instant('careReportsPage.taskDataGetError', { dataType: 'Contact Time Measure' }));
+            Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Contact Time Measure' }));
           }
-          Notification.error($translate.instant('careReportsPage.taskDataGetError', { dataType: 'Total Completed Contacts' }));
+          Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Total Completed Contacts' }));
         });
     }
 
@@ -117,9 +118,9 @@
             CareReportsService.showTaskAggregateGraph('taskAggregateDiv', data, vm.timeSelected.categoryAxisTitle);
             resizeCards();
           }
-        }, function () {
+        }, function (data) {
           vm.snapshotDataStatus = EMPTY;
-          Notification.error($translate.instant('careReportsPage.taskDataGetError', { dataType: 'Aggregated Contacts' }));
+          Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Aggregated Contacts' }));
         });
     }
 
