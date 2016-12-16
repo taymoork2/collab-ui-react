@@ -1,13 +1,15 @@
 'use strict';
 
 describe('Controller: ExternalNumberDetailCtrl', function () {
-  var controller, $controller, $interval, $intervalSpy, $q, $scope, $state, $stateParams, ModalService, ExternalNumberService, DialPlanService, Notification;
+  var controller, $controller, $interval, $intervalSpy, $q, $scope, $state, $stateParams,
+    ModalService, ExternalNumberService, DialPlanService, Notification, ExternalNumberPool;
 
   var externalNumbers, modalDefer;
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$interval_, _$stateParams_, _$q_, _$state_, _ModalService_, _ExternalNumberService_, _DialPlanService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$interval_, _$stateParams_, _$q_, _$state_,
+      _ModalService_, _ExternalNumberService_, _DialPlanService_, _Notification_, _ExternalNumberPool_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $state = _$state_;
@@ -16,6 +18,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     ExternalNumberService = _ExternalNumberService_;
     DialPlanService = _DialPlanService_;
     Notification = _Notification_;
+    ExternalNumberPool = _ExternalNumberPool_;
     $q = _$q_;
     $interval = _$interval_;
 
@@ -54,8 +57,37 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     $scope.$apply();
   }));
 
+  afterEach(function () {
+    controller = undefined;
+    $controller = undefined;
+    $interval = undefined;
+    $intervalSpy = undefined;
+    $q = undefined;
+    $scope = undefined;
+    $state = undefined;
+    $stateParams = undefined;
+    ModalService = undefined;
+    ExternalNumberService = undefined;
+    DialPlanService = undefined;
+    Notification = undefined;
+    ExternalNumberPool = undefined;
+    externalNumbers = undefined;
+    modalDefer = undefined;
+  });
+
   it('should load all the phone numbers', function () {
     expect(controller.allNumbers).toEqual(externalNumbers);
+  });
+
+  describe('listPhoneNumbers', function () {
+    it('should query for all number types', function () {
+      controller.listPhoneNumbers();
+      $scope.$apply();
+
+      expect(ExternalNumberService.refreshNumbers).toHaveBeenCalledWith(
+        $stateParams.currentCustomer.customerOrgId,
+        ExternalNumberPool.ALL_EXTERNAL_NUMBER_TYPES);
+    });
   });
 
   it('should refresh list of phone numbers', function () {

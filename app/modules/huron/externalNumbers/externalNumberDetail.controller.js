@@ -5,7 +5,9 @@
     .controller('ExternalNumberDetailCtrl', ExternalNumberDetail);
 
   /* @ngInject */
-  function ExternalNumberDetail($interval, $scope, $stateParams, $translate, DialPlanService, ExternalNumberService, ModalService, Notification, TelephoneNumberService) {
+  function ExternalNumberDetail($interval, $scope, $stateParams, $translate, DialPlanService,
+      ExternalNumberService, ExternalNumberPool, ModalService, Notification,
+      TelephoneNumberService) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
 
@@ -45,7 +47,7 @@
     function listPhoneNumbers() {
       if (vm.currentCustomer && vm.currentCustomer.customerOrgId) {
         vm.refresh = true;
-        return ExternalNumberService.refreshNumbers(vm.currentCustomer.customerOrgId)
+        return ExternalNumberService.refreshNumbers(vm.currentCustomer.customerOrgId, ExternalNumberPool.ALL_EXTERNAL_NUMBER_TYPES)
           .catch(function (response) {
             Notification.errorResponse(response, 'externalNumberPanel.listError');
           })

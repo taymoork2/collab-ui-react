@@ -1,19 +1,22 @@
 'use strict';
 
 describe('Controller: ExternalNumberOverviewCtrl', function () {
-  var controller, $controller, $scope, $state, $stateParams, $q, ExternalNumberService, Notification;
+  var controller, $controller, $scope, $state, $stateParams, $q, ExternalNumberService, Notification,
+    ExternalNumberPool;
 
   var externalNumbers;
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _$stateParams_, _$q_, _ExternalNumberService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _$stateParams_, _$q_,
+      _ExternalNumberService_, _Notification_, _ExternalNumberPool_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $state = _$state_;
     $stateParams = _$stateParams_;
     ExternalNumberService = _ExternalNumberService_;
     Notification = _Notification_;
+    ExternalNumberPool = _ExternalNumberPool_;
     $q = _$q_;
 
     $stateParams.currentCustomer = {
@@ -39,6 +42,19 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
 
     $scope.$apply();
   }));
+
+  afterEach(function () {
+    controller = undefined;
+    $controller = undefined;
+    $scope = undefined;
+    $state = undefined;
+    $stateParams = undefined;
+    $q = undefined;
+    ExternalNumberService = undefined;
+    Notification = undefined;
+    ExternalNumberPool = undefined;
+    externalNumbers = undefined;
+  });
 
   it('should get the number of phone numbers', function () {
     expect(controller.allNumbersCount).toEqual(2);
@@ -147,4 +163,16 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
     });
   });
 
+  describe('updatePhoneNumberCount', function () {
+    it('should query for all number types', function () {
+      controller.currentCustomer = {
+        customerOrgId: '1234-5678'
+      };
+      $scope.$apply();
+
+      expect(ExternalNumberService.refreshNumbers).toHaveBeenCalledWith(
+        $stateParams.currentCustomer.customerOrgId,
+        ExternalNumberPool.ALL_EXTERNAL_NUMBER_TYPES);
+    });
+  });
 });

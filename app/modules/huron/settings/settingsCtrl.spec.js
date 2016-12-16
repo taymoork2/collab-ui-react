@@ -5,7 +5,7 @@ describe('Controller: HuronSettingsCtrl', function () {
   var Authinfo, Notification;
   var ExternalNumberService, DialPlanService, PstnSetupService, ModalService;
   var HuronCustomer, ServiceSetup, CallerId, HuronConfig, InternationalDialing, VoicemailMessageAction;
-  var modalDefer, customer, timezones, timezone, voicemailCustomer, internalNumberRanges, languages;
+  var modalDefer, customer, timezones, timezone, voicemailCustomer, internalNumberRanges, languages, avrilSites;
   var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction, countries;
   var $rootScope, didVoicemailCustomer, FeatureToggleService;
   var controller, compile, styleSheet, element, window;
@@ -44,6 +44,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     timezone = getJSONFixture('huron/json/settings/timezone.json');
     internalNumberRanges = getJSONFixture('huron/json/settings/internalNumberRanges.json');
     sites = getJSONFixture('huron/json/settings/sites.json');
+    avrilSites = getJSONFixture('huron/json/settings/AvrilSite.json');
     companyNumbers = getJSONFixture('huron/json/settings/companyNumbers.json');
     voicemailCustomer = getJSONFixture('huron/json/settings/voicemailCustomer.json');
     cosRestrictions = getJSONFixture('huron/json/settings/cosRestrictions.json');
@@ -61,6 +62,8 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ServiceSetup, 'updateVoicemailPostalcode').and.returnValue($q.when());
     spyOn(ServiceSetup, 'getSiteLanguages').and.returnValue($q.when(languages));
     spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.when(countries));
+    spyOn(ServiceSetup, 'getAvrilSite').and.returnValue($q.when(avrilSites));
+    spyOn(ServiceSetup, 'updateAvrilSiteVoicemail').and.returnValue($q.when());
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
     spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.when());
     spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.when({
@@ -437,6 +440,15 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
       expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
+    });
+
+    it('should load Avril Voicemail response and Set Voicemail Options', function () {
+      controller.model.companyVoicemail.companyVoicemailEnabled = true;
+      controller.save();
+      $scope.$apply();
+
+      expect(ServiceSetup.getAvrilSite).toHaveBeenCalled();
+      expect(controller.model.companyVoicemail.voicemailOptions).toEqual('SparkPhoneVM');
     });
 
     it('should update site if there is a new outbound steering digit', function () {
