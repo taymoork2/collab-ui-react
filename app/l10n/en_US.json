@@ -1740,6 +1740,7 @@
       "clusterNameCannotByEmpty": "Cluster name cannot be empty.",
       "renameClusterDescription": "The cluster name is used for display purposes in Cloud Collaboration Managment and in email notifications.",
       "deregisterClusterExplanation": "Remove this {{clusterType}} cluster from Cisco Collaboration Cloud.",
+      "deregisterClusterExplanation": "Click the \"Remove\" button to launch the Remove Cluster workflow.",
       "deregisterClusterExplanationBlocked": "It is not possible to deregister an Expressway until all its services have been deactivated.",
       "allServicesMustBeDeactivatedOnExpressway": "All services must be deactivated on an Expressway cluster before it can be removed.",
       "couldNotDeregisterCluster": "Could not deregister cluster.",

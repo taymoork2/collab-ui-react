@@ -1,7 +1,5 @@
 <setting-section setting="$ctrl.clusterSection" class="needs-border-top">
 
-  <!--Alle data: {{$ctrl}}-->
-
   <div class="sub-section" ng-if="$ctrl.showRenameSection">
     <h5 class="sub-section__label" translate="common.rename"></h5>
     <p class="sub-section__description"
@@ -29,13 +27,17 @@
 
   <div class="sub-section">
     <h5 class="sub-section__label cap-long-names" translate="common.remove"></h5>
-    <p ng-if="!$ctrl.blockDeregistration()"
+    <p ng-if="!$ctrl.blockDeregistration() && $ctrl.serviceId !== 'squared-fusion-media'"
        class="sub-section__description"
        translate="hercules.renameAndDeregisterComponent.deregisterClusterExplanation"
        translate-values="{clusterType: $ctrl.clusterType}"></p>
-    <p ng-if="$ctrl.blockDeregistration()"
+    <p ng-if="$ctrl.blockDeregistration()  && $ctrl.serviceId !== 'squared-fusion-media'"
        class="sub-section__description"
        translate="hercules.renameAndDeregisterComponent.deregisterClusterExplanationBlocked"></p>
+    <p ng-if="$ctrl.serviceId === 'squared-fusion-media'"
+       class="sub-section__description"
+       translate="hercules.renameAndDeregisterComponent.deregisterClusterExplanation"></p>
+
 
       <button type="button"
               class="btn"

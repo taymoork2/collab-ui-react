@@ -3,7 +3,6 @@ import { Notification } from 'modules/core/notifications';
 class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
 
   private clusterId: string;
-  private serviceId: string;
   private cluster: any;
   private onNameUpdate;
   private deregisterModalOptions: any;
@@ -17,6 +16,7 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
     type: 'dialog',
   };
 
+  public serviceId: string;
   public showRenameSection: boolean;
   public clusterName: string;
   public clusterType: string;
