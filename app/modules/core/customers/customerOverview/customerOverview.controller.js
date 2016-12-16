@@ -51,14 +51,13 @@ require('./_customer-overview.scss');
     vm._helpers = {
       canUpdateLicensesForSelf: canUpdateLicensesForSelf,
       openCustomerPortal: openCustomerPortal,
-      updateUsers: updateUsers,
-      getEditTrialRoute: getEditTrialRoute
+      updateUsers: updateUsers
     };
 
-    vm.isTrialMerge = false;
     // TODO:  atlasCustomerListUpdate toggle is globally set to true. Needs refactoring to remove unused code
     vm.newCustomerViewToggle = newCustomerViewToggle;
     vm.featureTrialForPaid = trialForPaid;
+    //vm.featureTrialForPaid = true;
 
     var QTY = _.toUpper($translate.instant('common.quantity'));
     var FREE = _.toUpper($translate.instant('customerPage.free'));
@@ -72,10 +71,6 @@ require('./_customer-overview.scss');
         setOffers(isCareEnabled);
       });
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasTrialMerge)
-    .then(function (result) {
-      vm.isTrialMerge = result;
-    });
 
     function setOffers(isCareEnabled) {
       var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, { isCareEnabled: isCareEnabled,
@@ -274,13 +269,10 @@ require('./_customer-overview.scss');
       }));
     }
 
-    function openEditTrialModal(/*isPaid*/) {
+    function openEditTrialModal() {
+      //var isAddTrial = options.isAddTrial;
       TrialService.getTrial(vm.currentCustomer.trialId).then(function (response) {
-        var params = {
-          currentTrial: vm.currentCustomer,
-          details: response
-        };
-        var route = getEditTrialRoute(params);
+        var route = TrialService.getEditTrialRoute(vm.featureTrialForPaid, vm.currentCustomer, response);
         $state.go(route.path, route.params).then(function () {
           $state.modal.result.then(function () {
             $state.go('partnercustomers.list', {}, {
@@ -292,7 +284,14 @@ require('./_customer-overview.scss');
     }
 
     function openAddTrialModal() {
-      openEditTrialModal(true);
+      var route = TrialService.getAddTrialRoute(vm.featureTrialForPaid, vm.currentCustomer);
+      $state.go(route.path, route.params).then(function () {
+        $state.modal.result.then(function () {
+          $state.go('partnercustomers.list', {}, {
+            reload: true
+          });
+        });
+      });
     }
 
     function getDaysLeft(daysLeft) {
@@ -412,15 +411,6 @@ require('./_customer-overview.scss');
       }
     }
 
-    function getEditTrialRoute(params) {
-      var result = {
-        path: (vm.isTrialMerge) ? 'trial.info' : 'trialEdit.info',
-        params: params
-      };
-      if (vm.isTrialMerge) {
-        result.params.mode = 'edit';
-      }
-      return result;
-    }
+
   }
 })();

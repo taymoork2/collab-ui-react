@@ -1,23 +1,16 @@
 'use strict';
 
-describe('Controller: TrialEditCtrl:', function () {
-  var controller, helpers, $scope, $state, $q, $translate, $window, $httpBackend, Notification, TrialService, TrialContextService, TrialPstnService, HuronCustomer, EmailService, FeatureToggleService, Orgservice;
+describe('Controller: TrialCtrl:', function () {
+  var controller, helpers, $controller, $scope, $state, $q, $translate, $window, $httpBackend, Analytics, Notification, TrialService, TrialContextService, TrialPstnService, HuronCustomer, EmailService, FeatureToggleService, Orgservice;
 
-  var stateParams = {
-    currentTrial: {
-      offers: [{
-        id: 'COLLAB'
-      }, {
-        id: 'SQUAREDUC'
-      }]
-    },
-    isEditing: true
-  };
-  var addContextSpy, removeContextSpy;
+  var stateParams = {};
+  var addContextSpy, removeContextSpy, addWatchSpy;
+  var trialEditResponse = getJSONFixture('core/json/trials/trialEditResponse.json');
+  var purchasedCustomerData = getJSONFixture('core/json/customers/customerWithLicensesNoTrial.json');
 
 
   afterEach(function () {
-    controller = helpers = $scope = $state = $q = $translate = $window = $httpBackend = Notification = TrialService = TrialContextService = HuronCustomer = FeatureToggleService = Orgservice = undefined;
+    controller = helpers = $controller = $scope = $state = $q = $translate = $window = $httpBackend = Analytics = Notification = TrialService = TrialContextService = HuronCustomer = FeatureToggleService = Orgservice = undefined;
   });
 
   afterAll(function () {
@@ -30,13 +23,15 @@ describe('Controller: TrialEditCtrl:', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _$window_, _$httpBackend_, _EmailService_, _Notification_, _TrialService_, _TrialContextService_, _TrialPstnService_, _HuronCustomer_, _FeatureToggleService_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _$q_, _$translate_, _$window_, _$httpBackend_, _Analytics_, _EmailService_, _Notification_, _TrialService_, _TrialContextService_, _TrialPstnService_, _HuronCustomer_, _FeatureToggleService_, _Orgservice_) {
     $scope = $rootScope.$new();
+    $controller = _$controller_;
     $state = _$state_;
     $q = _$q_;
     $translate = _$translate_;
     $window = _$window_;
     $httpBackend = _$httpBackend_;
+    Analytics = _Analytics_;
     Notification = _Notification_;
     TrialService = _TrialService_;
     TrialContextService = _TrialContextService_;
@@ -53,8 +48,9 @@ describe('Controller: TrialEditCtrl:', function () {
     spyOn($state, 'go');
     spyOn($state, 'href');
     spyOn($window, 'open');
-    spyOn($scope, '$watch');
+    addWatchSpy = spyOn($scope, '$watch');
     spyOn(TrialService, 'getDeviceTrialsLimit');
+    spyOn(Analytics, 'trackTrialSteps');
     addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.when());
     removeContextSpy = spyOn(TrialContextService, 'removeService').and.returnValue($q.when());
     spyOn(TrialContextService, 'trialHasService').and.returnValue(false);
@@ -65,9 +61,7 @@ describe('Controller: TrialEditCtrl:', function () {
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
-      if (param === FeatureToggleService.features.huronSimplifiedTrialFlow) {
-        return $q.when(false);
-      } else if (param == 'csdm-pstn') {
+      if (param == 'csdm-pstn') {
         return $q.when(false);
       } else {
         fail('the following toggle wasn\'t expected' + param); //taking control of which toggles this controller are using (explicit or implicit)
@@ -90,8 +84,11 @@ describe('Controller: TrialEditCtrl:', function () {
       .respond({});
 
     spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
+  }));
 
-    controller = $controller('TrialEditCtrl', {
+  function initController(params) {
+    stateParams = params;
+    controller = $controller('TrialCtrl', {
       $scope: $scope,
       $translate: $translate,
       $stateParams: stateParams,
@@ -105,8 +102,27 @@ describe('Controller: TrialEditCtrl:', function () {
     });
     helpers = controller._helpers;
     $scope.$apply();
-  }));
+  }
+
   describe('edit trial mode:', function () {
+    beforeEach(function () {
+      var stateParams = {
+        currentTrial: {
+          offers: [{
+            id: 'COLLAB'
+          }, {
+            id: 'SQUAREDUC'
+          }],
+          customerOrgId: '1234',
+        },
+        isEditing: true,
+        mode: 'edit',
+
+        details: {}
+      };
+      initController(stateParams);
+    });
+
     describe('primary behaviors:', function () {
       describe('getDaysLeft', function () {
         it('should return expired', function () {
@@ -130,7 +146,8 @@ describe('Controller: TrialEditCtrl:', function () {
 
       describe('Interacting with TrialService.editTrial', function () {
         beforeEach(function () {
-          spyOn(TrialService, 'editTrial').and.returnValue($q.when(getJSONFixture('core/json/trials/trialEditResponse.json')));
+          trialEditResponse.data.customerOrgId = '12345';
+          spyOn(TrialService, 'editTrial').and.returnValue($q.when(trialEditResponse));
           controller.editTrial();
           $scope.$apply();
         });
@@ -606,7 +623,8 @@ describe('Controller: TrialEditCtrl:', function () {
 
     describe('with context service', function () {
       beforeEach(function () {
-        spyOn(TrialService, 'editTrial').and.returnValue($q.when(getJSONFixture('core/json/trials/trialEditResponse.json')));
+        trialEditResponse.data.customerOrgId = '12345';
+        spyOn(TrialService, 'editTrial').and.returnValue($q.when(trialEditResponse));
       });
 
       describe('enabled', function () {
@@ -668,42 +686,15 @@ describe('Controller: TrialEditCtrl:', function () {
 
   });
   describe('start trial mode:', function () {
-    beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _$window_, _$httpBackend_, _EmailService_, _Notification_, _TrialService_, _TrialContextService_, _HuronCustomer_, _FeatureToggleService_, _Orgservice_) {
-      $scope = $rootScope.$new();
-      $state = _$state_;
-      $q = _$q_;
-      $translate = _$translate_;
-      $window = _$window_;
-      $httpBackend = _$httpBackend_;
-      Notification = _Notification_;
-      TrialService = _TrialService_;
-      TrialContextService = _TrialContextService_;
-      HuronCustomer = _HuronCustomer_;
-      FeatureToggleService = _FeatureToggleService_;
-      Orgservice = _Orgservice_;
-      EmailService = _EmailService_;
-
-      stateParams = {
-        isEditing: false
+    beforeEach(function () {
+      var stateParams = {
+        currentTrial: {},
+        details: {},
+        mode: 'add',
       };
-
-      controller = $controller('TrialEditCtrl', {
-        $scope: $scope,
-        $translate: $translate,
-        $stateParams: stateParams,
-        $state: $state,
-        EmailService: EmailService,
-        TrialService: TrialService,
-        TrialContextService: TrialContextService,
-        Orgservice: Orgservice,
-        Notification: Notification,
-        HuronCustomer: HuronCustomer,
-        FeatureToggleService: FeatureToggleService,
-      });
-      helpers = controller._helpers;
-      $scope.$apply();
-    }));
-
+      addWatchSpy.and.callThrough();
+      initController(stateParams);
+    });
 
     it('should be created successfully', function () {
       expect(controller).toBeDefined();
@@ -720,18 +711,18 @@ describe('Controller: TrialEditCtrl:', function () {
       expect(controller.contextTrial.enabled).toBeFalsy();
     });
 
-    it('should start in trialAdd.info state', function () {
-      expect(controller.navStates).toEqual(['trialAdd.info']);
+    it('should start in trial.info state', function () {
+      expect(controller.navStates).toEqual(['trial.info']);
     });
 
     it('should have correct navigation state order', function () {
-      expect(controller.navOrder).toEqual(['trialAdd.info', 'trialAdd.webex', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call']);
+      expect(controller.navOrder).toEqual(['trial.info', 'trial.webex', 'trial.pstn', 'trial.emergAddress', 'trial.call']);
     });
 
     it('should transition state', function () {
       expect(controller.hasNextStep()).toBeTruthy();
       controller.nextStep();
-      expect($state.go).toHaveBeenCalledWith('trialAdd.info');
+      expect($state.go).toHaveBeenCalledWith('trial.info');
     });
 
     it('should close the modal', function () {
@@ -751,6 +742,7 @@ describe('Controller: TrialEditCtrl:', function () {
       controller.callTrial.enabled = false;
       controller.roomSystemTrial.enabled = false;
       $scope.$apply();
+      $scope.$digest();
       expect(controller.pstnTrial.enabled).toBeFalsy();
     });
 
@@ -839,7 +831,7 @@ describe('Controller: TrialEditCtrl:', function () {
         });
 
         it('should go to finish page', function () {
-          expect($state.go).toHaveBeenCalledWith('trialAdd.finishSetup');
+          expect($state.go).toHaveBeenCalledWith('trial.finishSetup');
         });
       });
 
@@ -856,7 +848,7 @@ describe('Controller: TrialEditCtrl:', function () {
         });
 
         it('should go to finish page', function () {
-          expect($state.go).toHaveBeenCalledWith('trialAdd.finishSetup');
+          expect($state.go).toHaveBeenCalledWith('trial.finishSetup');
         });
       });
 
@@ -1195,4 +1187,364 @@ describe('Controller: TrialEditCtrl:', function () {
 
   });
 
+  describe('start trial existing org mode:', function () {
+    beforeEach(function () {
+      var stateParams = {
+        currentTrial: purchasedCustomerData,
+        details: {},
+        mode: 'add',
+      };
+      addWatchSpy.and.callThrough();
+      initController(stateParams);
+    });
+
+    it('should be created successfully', function () {
+      expect(controller).toBeDefined();
+    });
+
+    it('should have purchased offer enabled', function () {
+      expect(controller.messageTrial.enabled).toBeFalsy();
+      expect(controller.meetingTrial.enabled).toBeFalsy();
+      expect(controller.webexTrial.enabled).toBeFalsy();
+      expect(controller.roomSystemTrial.enabled).toBeTruthy();
+      expect(controller.sparkBoardTrial.enabled).toBeFalsy();
+      expect(controller.callTrial.enabled).toBeFalsy();
+      expect(controller.contextTrial.enabled).toBeFalsy();
+    });
+
+    it('should start in trial.info state', function () {
+      expect(controller.navStates).toEqual(['trial.info']);
+    });
+
+    it('should have correct navigation state order', function () {
+      expect(controller.navOrder).toEqual(['trial.info', 'trial.webex', 'trial.pstn', 'trial.emergAddress', 'trial.call']);
+    });
+
+    it('should transition state', function () {
+      expect(controller.hasNextStep()).toBeTruthy();
+      controller.nextStep();
+      expect($state.go).toHaveBeenCalledWith('trial.info');
+    });
+
+    it('should close the modal', function () {
+      controller.closeDialogBox();
+      expect($state.modal.close).toHaveBeenCalled();
+    });
+
+    it('should test that if the current and next state are removed, then it can still find the next value', function () {
+      controller.navOrder = [1, 2, 3, 4, 5, 6];
+      controller.navStates = [1, 4];
+      $state.current.name = 2;
+      expect(controller.getNextState()).toEqual(4);
+    });
+
+    it('should set call trial to false and disable pstn trial', function () {
+      controller.pstnTrial.enabled = true;
+      controller.callTrial.enabled = false;
+      controller.roomSystemTrial.enabled = false;
+      $scope.$apply();
+      $scope.$digest();
+      expect(controller.pstnTrial.enabled).toBeFalsy();
+    });
+
+    it('should have call trial and not skip pstn after watch', function () {
+      controller.hasCallEntitlement = true;
+      controller.pstnTrial.enabled = false;
+      controller.callTrial.enabled = true;
+      controller.pstnTrial.skipped = false;
+      $scope.$apply();
+      expect(controller.pstnTrial.enabled).toBeTruthy();
+    });
+
+    it('should have call trial and skip pstn after watch', function () {
+      controller.hasCallEntitlement = true;
+      controller.pstnTrial.enabled = false;
+      controller.callTrial.enabled = true;
+      controller.pstnTrial.skipped = true;
+      $scope.$apply();
+      expect(controller.pstnTrial.enabled).toBeFalsy();
+    });
+
+    describe('Start a new trial', function () {
+      var callback;
+      beforeEach(function () {
+        callback = jasmine.createSpy('addNumbersCallback').and.returnValue($q.when());
+        spyOn(TrialService, 'startTrial').and.returnValue($q.when(getJSONFixture('core/json/trials/trialAddResponse.json')));
+      });
+
+
+      describe('basic behavior', function () {
+        beforeEach(function () {
+          controller.callTrial.enabled = false;
+          controller.pstnTrial.enabled = false;
+          controller.startTrial();
+          $scope.$apply();
+        });
+
+        it('should notify success', function () {
+          expect(Notification.success).toHaveBeenCalledWith('trialModal.addSuccess', jasmine.any(Object));
+        });
+
+        it('should have a customer org id set', function () {
+          expect(controller.customerOrgId).toBeDefined();
+        });
+      });
+
+      describe('with atlas-webex-trial enabled', function () {
+        beforeEach(function () {
+          controller.callTrial.enabled = false;
+          controller.pstnTrial.enabled = false;
+          controller.webexTrial.enabled = true;
+          controller.startTrial(callback);
+          $scope.$apply();
+        });
+
+        it('should not send an email', function () {
+          expect(EmailService.emailNotifyTrialCustomer).not.toHaveBeenCalled();
+        });
+      });
+
+      describe('with atlas-webex-trial disabled and backend email feature-toggle enabled', function () {
+        beforeEach(function () {
+          controller.atlasCreateTrialBackendEmailEnabled = true;
+          controller.callTrial.enabled = false;
+          controller.pstnTrial.enabled = false;
+          controller.webexTrial.enabled = false;
+          controller.startTrial(callback);
+          $scope.$apply();
+        });
+
+        it('should not send an email', function () {
+          expect(EmailService.emailNotifyTrialCustomer).not.toHaveBeenCalled();
+        });
+      });
+
+      describe('with addNumbers callback', function () {
+        beforeEach(function () {
+          controller.callTrial.enabled = false;
+          controller.pstnTrial.enabled = false;
+          controller.startTrial(callback);
+          $scope.$apply();
+        });
+
+        it('should call with customerOrgId', function () {
+          expect(callback).toHaveBeenCalledWith('123');
+        });
+
+        it('should go to finish page', function () {
+          expect($state.go).toHaveBeenCalledWith('trial.finishSetup');
+        });
+      });
+
+      describe('without addNumbers callback', function () {
+        beforeEach(function () {
+          controller.callTrial.enabled = false;
+          controller.pstnTrial.enabled = false;
+          controller.startTrial();
+          $scope.$apply();
+        });
+
+        it('should not call callback', function () {
+          expect(callback).not.toHaveBeenCalled();
+        });
+
+        it('should go to finish page', function () {
+          expect($state.go).toHaveBeenCalledWith('trial.finishSetup');
+        });
+      });
+
+      describe('With Squared UC', function () {
+        beforeEach(function () {
+          controller.pstnTrial.enabled = false;
+          controller.callTrial.enabled = true;
+        });
+
+        it('should notify success', function () {
+          spyOn(HuronCustomer, 'create').and.returnValue($q.when());
+          controller.startTrial();
+          $scope.$apply();
+          expect(HuronCustomer.create).toHaveBeenCalled();
+          expect(Notification.success).toHaveBeenCalledWith('trialModal.addSuccess', jasmine.any(Object));
+          expect(Notification.success.calls.count()).toEqual(1);
+        });
+
+        it('error should notify error', function () {
+          spyOn(HuronCustomer, 'create').and.returnValue($q.reject());
+          controller.startTrial();
+          $scope.$apply();
+          expect(Notification.errorResponse).toHaveBeenCalled();
+          expect(Notification.errorResponse.calls.count()).toEqual(1);
+        });
+      });
+
+      describe('With Squared UC and PSTN', function () {
+        beforeEach(function () {
+          controller.pstnTrial.enabled = true;
+          controller.callTrial.enabled = true;
+        });
+
+        it('should have Squared UC offer', function () {
+          expect(controller.callTrial.enabled).toBeTruthy();
+          expect(controller.pstnTrial.enabled).toBeTruthy();
+        });
+
+        it('should notify success', function () {
+          spyOn(HuronCustomer, 'create').and.returnValue($q.when());
+          spyOn(TrialPstnService, 'createPstnEntity').and.returnValue($q.when());
+          controller.startTrial();
+          $scope.$apply();
+          expect(HuronCustomer.create).toHaveBeenCalled();
+          expect(TrialPstnService.createPstnEntity).toHaveBeenCalled();
+          expect(Notification.success).toHaveBeenCalledWith('trialModal.addSuccess', jasmine.any(Object));
+          expect(Notification.success.calls.count()).toEqual(1);
+        });
+
+        it('error should notify error', function () {
+          spyOn(HuronCustomer, 'create').and.returnValue($q.reject());
+          controller.startTrial();
+          $scope.$apply();
+          expect(Notification.errorResponse).toHaveBeenCalled();
+          expect(Notification.errorResponse.calls.count()).toEqual(1);
+        });
+      });
+
+      describe('hasUserServices() ', function () {
+        beforeEach(function () {
+          controller.callTrial.enabled = false;
+          controller.meetingTrial.enabled = false;
+          controller.webexTrial.enabled = false;
+          controller.messageTrial.enabled = false;
+          controller.messageTrial.enabled = false;
+          controller.roomSystemTrial.enabled = true;
+          $scope.$apply();
+        });
+
+        it('should return false when only roomSystemTrial is enabled', function () {
+          expect(controller.hasUserServices()).toBeFalsy();
+        });
+
+        it('should return false when only roomSystemTrial and sparkBoardTrial is enabled', function () {
+          controller.sparkBoardTrial.enabled = true;
+          expect(controller.hasUserServices()).toBeFalsy();
+        });
+
+        it('should return false when only sparkboardTrial is enabled', function () {
+          controller.sparkBoardTrial.enabled = true;
+          controller.roomSystemTrial.enabled = false;
+          expect(controller.hasUserServices()).toBeFalsy();
+        });
+
+        it('should return false when no services are enabled', function () {
+          controller.roomSystemTrial.enabled = false;
+          $scope.$apply();
+          expect(controller.hasUserServices()).toBeFalsy();
+        });
+
+        it('should return true when any user service is enabled', function () {
+          controller.messageTrial.enabled = true;
+          $scope.$apply();
+          expect(controller.hasUserServices()).toBeTruthy();
+        });
+      });
+
+      describe('with context service checked', function () {
+
+        it('should enable context service', function () {
+          controller.contextTrial.enabled = true;
+          controller.callTrial.enabled = false;
+          controller.startTrial();
+          $scope.$apply();
+          expect(TrialContextService.addService).toHaveBeenCalled();
+          expect(Notification.errorResponse).not.toHaveBeenCalled();
+        });
+
+        it('should display error notification if call to enable context service fails', function () {
+          addContextSpy.and.returnValue($q.reject('rejected'));
+          controller.contextTrial.enabled = true;
+          controller.callTrial.enabled = false;
+          controller.startTrial();
+          $scope.$apply();
+          expect(TrialContextService.addService).toHaveBeenCalled();
+          expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.startTrialContextServiceError');
+        });
+
+        it('should not be able to proceed if no other trial services are checked', function () {
+          // uncheck all services except for Context Service
+          Object.keys(controller.trialData.trials).forEach(function (service) {
+            controller.trialData.trials[service].enabled = service === 'contextTrial';
+          });
+          expect(controller.hasTrial()).toBeFalsy();
+        });
+      });
+
+      describe('without context service checked', function () {
+        beforeEach(function () {
+          controller.contextTrial.enabled = false;
+          controller.callTrial.enabled = false;
+          controller.startTrial();
+          $scope.$apply();
+        });
+
+        it('should not enable context service', function () {
+          expect(TrialContextService.addService).not.toHaveBeenCalled();
+        });
+
+        it('should be able to proceed with trial services enabled', function () {
+          // uncheck Context Service and all other services except for Message
+          Object.keys(controller.trialData.trials).forEach(function (service) {
+            controller.trialData.trials[service].enabled = service === 'messageTrial';
+          });
+          expect(controller.hasTrial()).toBeTruthy();
+        });
+      });
+    });
+
+    describe('Start a new trial with error', function () {
+      beforeEach(function () {
+        spyOn(TrialService, 'startTrial').and.returnValue($q.reject({
+          data: {
+            message: 'An error occurred'
+          }
+        }));
+        controller.startTrial();
+        $scope.$apply();
+      });
+
+      it('should notify error', function () {
+        expect(Notification.errorResponse).toHaveBeenCalled();
+      });
+
+      it('should not have closed the modal', function () {
+        expect($state.modal.close).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('Set ship devices modal display with Orgservice call', function () {
+      it('should disable ship devices modal for test org', function () {
+        spyOn(Orgservice, 'getAdminOrg').and.returnValue($q.when({
+          data: {
+            success: true,
+            isTestOrg: true
+          }
+        }));
+        $scope.$apply();
+        expect(controller.devicesModal.enabled).toBeFalsy();
+      });
+    });
+
+    describe('New tests for add purchased', function () {
+      it('TODO: should find purchased services corectly', function () {
+        expect(true).toBeTruthy();
+      });
+      it('TODO: should merge trial presets with purchase services', function () {
+        expect(true).toBeTruthy();
+      });
+      it('TODO: should disable purhcased services before saving trial', function () {
+        expect(true).toBeTruthy();
+      });
+      it('TODO: should populate and and email fields', function () {
+        expect(true).toBeTruthy();
+      });
+    });
+  });
 });

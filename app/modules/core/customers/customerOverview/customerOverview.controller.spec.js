@@ -117,12 +117,12 @@ describe('Controller: CustomerOverviewCtrl', function () {
     $scope.$apply();
   }
 
-    afterEach(function () {
-      $controller = $scope = $stateParams = $state = $window = $q = modal = Authinfo = BrandService = controller = currentCustomer = FeatureToggleService = identityCustomer =  newCustomerViewToggle =  Orgservice
-       =  PartnerService = TrialService = Userservice = Notification = undefined;
-    });
+  afterEach(function () {
+    $controller = $scope = $stateParams = $state = $window = $q = modal = Authinfo = BrandService = controller = currentCustomer = FeatureToggleService = identityCustomer = newCustomerViewToggle = Orgservice
+    = PartnerService = TrialService = Userservice = Notification = undefined;
+  });
 
-    xit('should transition to trialEdit.info state', function () {
+  xit('should transition to trialEdit.info state', function () {
     controller.openEditTrialModal();
     expect($state.go).toHaveBeenCalled();
     expect($state.go.calls.mostRecent().args[0]).toEqual('trialEdit.info');
@@ -145,17 +145,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
       expect(controller.trialActions.length).toBe(1);
       expect(controller.trialActions[0].actionKey).toBe('customerPage.addTrial');
     });
-   });
-  it ('should open newly created trial modal for edit trial with FT being true', function () {
-    var result = controller._helpers.getEditTrialRoute({});
-    expect(result.path).toEqual('trial.info')
   });
-
-   it ('should open old edit trial with FT being false', function () {
-    FeatureToggleService.supports.and.returnValue($q.when(false));
-    initController();
-    var result = controller._helpers.getEditTrialRoute({});
-    expect(result.path).toEqual('trialEdit.info')
 
   it('should display correct customer portal launch button via var isOrgSetup', function () {
     // isOrgSetup is false from spyOn in beforeEach

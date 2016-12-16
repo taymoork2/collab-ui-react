@@ -1860,8 +1860,10 @@
               customerListToggle: /* @ngInject */ function () {
                 // TODO:  remove this once the controllers are refactored
                 return true;
+              },
+              trialForPaid: function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
               }
-
             }
           })
           .state('customer-overview', {
