@@ -38,6 +38,10 @@ describe('Controller: DeviceOverviewCtrl', function () {
     $httpBackend.whenGET('http://thedeviceurl').respond(200);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/sipendpoints/3/addonmodules').respond(200);
+    $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond([{
+      name: "Texas",
+      abbreviation: "TX"
+    }]);
   }
 
   var $stateParams = {
@@ -229,7 +233,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
 describe('Huron Device', function () {
   var $scope, $controller, controller, $httpBackend;
   var $q, CsdmConfigService;
-  var $stateParams, ServiceSetup, timeZone, newTimeZone, countries, newCountry;
+  var $stateParams, ServiceSetup, timeZone, newTimeZone, countries, newCountry, HuronConfig;
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
@@ -239,13 +243,14 @@ describe('Huron Device', function () {
   beforeEach(initSpies);
 
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _ServiceSetup_) {
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _ServiceSetup_, _HuronConfig_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     CsdmConfigService = _CsdmConfigService_;
     ServiceSetup = _ServiceSetup_;
+    HuronConfig = _HuronConfig_;
     $stateParams = {
       currentDevice: {
         url: 'http://thedeviceurl',
@@ -296,7 +301,11 @@ describe('Huron Device', function () {
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/upgradeChannels').respond(200);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
     $httpBackend.whenGET('http://thedeviceurl').respond(200);
-
+    $httpBackend.whenGET(HuronConfig.getTerminusV2Url() + '/customers/numbers/e911').respond(200);
+    $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond([{
+      name: "Texas",
+      abbreviation: "TX"
+    }]);
     countries = getJSONFixture('huron/json/settings/countries.json');
 
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timeZone));

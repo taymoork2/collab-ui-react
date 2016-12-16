@@ -1,3 +1,5 @@
+import './_csOverviewLoader.scss';
+
 class CSOverviewLoader implements ng.IComponentController {
   public size: string;
   constructor() {

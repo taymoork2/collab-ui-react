@@ -71,7 +71,7 @@
         partnerEmailUpdates = _.last(partnerEmailUpdates);
         vm.partnerAdminEmail = _.get(partnerEmailUpdates, 'adminDetails.emailId');
       } else {
-        if (orderObj.orderContent.common.resellerInfo) {
+        if (orderObj.orderContent.common.customerInfo.resellerInfo) {
           vm.partnerAdminEmail = _.get(orderObj, 'orderContent.common.customerInfo.resellerInfo.adminDetails.emailId');
         } else {
           vm.partnerAdminEmail = _.get(orderObj, 'orderContent.common.customerInfo.partnerInfo.adminDetails.emailId');
@@ -129,7 +129,7 @@
             vm.customerEmailSent = null;
             var emailSent = getEmailSentTime(response);
             if (emailSent && emailSent.timestamp) {
-              vm.customerEmailSent = getUTCtime(emailSent.timestamp);
+              vm.customerEmailSent = HelpdeskService.unixTimestampToUTC(emailSent.timestamp);
             }
             vm.showCustomerEmailSent = true;
           }, vm._helpers.notifyError);
@@ -140,7 +140,7 @@
             vm.partnerEmailSent = null;
             var emailSent = getEmailSentTime(response);
             if (emailSent && emailSent.timestamp) {
-              vm.partnerEmailSent = getUTCtime(emailSent.timestamp);
+              vm.partnerEmailSent = HelpdeskService.unixTimestampToUTC(emailSent.timestamp);
             }
             vm.showPartnerEmailSent = true;
           }, vm._helpers.notifyError);
@@ -157,13 +157,6 @@
       return mailStat;
     }
 
-    // Convert Date from milliseconds to UTC format
-    function getUTCtime(timestamp) {
-      var newDate = new Date();
-      newDate.setTime(timestamp * 1000);
-      return newDate.toUTCString();
-    }
-
     // Allow Customer Admin Email address to be editted
     function showCustomerAdminEmailEdit() {
       vm.customerAdminEmailEdit = true;
@@ -171,7 +164,7 @@
 
     // Update Customer Admin Email and send welcome email
     function updateCustomerAdminEmail() {
-      HelpdeskService.editAdminEmail(vm.orderUuid, vm.customerAdminEmail, false)
+      HelpdeskService.editAdminEmail(vm.orderUuid, vm.customerAdminEmail, true)
         .then(function () {
           Notification.success('helpdesk.editAdminEmailSuccess');
           vm.oldcustomerAdminEmail = vm.customerAdminEmail;

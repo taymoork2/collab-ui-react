@@ -101,6 +101,8 @@ require('./_user-add.scss');
       $scope.isSharedMultiPartyEnabled = smpStatus;
     });
 
+    $scope.controlCare = controlCare;
+
     initController();
 
     /****************************** License Enforcement START *******************************/
@@ -639,6 +641,7 @@ require('./_user-add.scss');
                 if (hasSyncKms) {
                   $scope.radioStates.careRadio = true;
                   $scope.radioStates.initialCareRadioState = true;
+                  $scope.enableCareService = true;
                 }
               }
             });
@@ -961,6 +964,8 @@ require('./_user-add.scss');
           }
         }
       }
+      // Control Care behavior
+      $scope.controlCare();
     });
 
     $scope.$watch('wizard.current.step', function () {
@@ -979,6 +984,11 @@ require('./_user-add.scss');
           $scope.validateDnForUser();
         }
       }
+    });
+
+    $scope.$watch('radioStates.msgRadio', function () {
+      // Control Care behavior
+      $scope.controlCare();
     });
 
     $scope.validateDnForUser = function () {
@@ -2539,6 +2549,15 @@ require('./_user-add.scss');
     function cancelModal() {
       Analytics.trackAddUsers(Analytics.eventNames.CANCEL_MODAL);
       $state.modal.dismiss();
+    }
+
+    function controlCare() {
+      if ($scope.radioStates.msgRadio && $scope.radioStates.commRadio) {
+        $scope.enableCareService = true;
+      } else {
+        $scope.enableCareService = false;
+        $scope.radioStates.careRadio = false;
+      }
     }
 
   }

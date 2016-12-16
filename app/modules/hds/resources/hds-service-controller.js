@@ -6,8 +6,11 @@
     .controller('HDSServiceController', HDSServiceController);
 
   /* @ngInject */
-  function HDSServiceController($scope, $translate, ClusterService, FusionClusterService, FeatureToggleService) {
+  function HDSServiceController($scope, $modal, $translate, ClusterService, FusionClusterService, FeatureToggleService) {
 
+    ClusterService.subscribe('data', clustersUpdated, {
+      scope: $scope
+    });
 
     var vm = this;
     vm.serviceEnabled = null;
@@ -56,12 +59,33 @@
       }]
     };
 
-
     FusionClusterService.serviceIsSetUp('spark-hybrid-datasecurity').then(function (enabled) {
       if (enabled) {
         vm.serviceEnabled = enabled;
+      } else {
+        firstTimeSetup();
       }
     });
+
+    function clustersUpdated() {
+      vm.clusters = ClusterService.getClustersByConnectorType('hds_app');
+      vm.clusters.sort(sortByProperty('name'));
+    }
+
+    function firstTimeSetup() {
+      vm.serviceEnabled = true;
+      $modal.open({
+        type: 'small',
+        controller: 'HDSRedirectAddResourceController',
+        controllerAs: 'hdsRedirectAddResourceController',
+        templateUrl: 'modules/hds/add-resource/add-resource-modal.html',
+        modalClass: 'redirect-add-resource',
+        resolve: {
+          firstTimeSetup: true,
+          proceedSetup: false
+        },
+      });
+    }
 
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity)

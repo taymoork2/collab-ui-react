@@ -1,3 +1,5 @@
+require('./_devices.scss');
+
 (function () {
   'use strict';
 
@@ -5,10 +7,12 @@
     .controller('DevicesCtrl',
 
       /* @ngInject */
-      function ($q, $scope, $state, $translate, $templateCache, Userservice, DeviceFilter, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, FeatureToggleService) {
+      function ($q, $scope, $state, $translate, $templateCache, Userservice, DeviceFilter, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, FeatureToggleService, $modal, Notification, DeviceExportService) {
         var vm = this;
         var filteredDevices = [];
+        var exportProgressDialog = undefined;
         vm.addDeviceIsDisabled = true;
+
         AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
           vm.showLicenseWarning = !!_.find(data.accounts, {
             licenses: [{
@@ -38,6 +42,10 @@
           });
           $q.all([darlingPromise, ataPromise, pstnPromise, hybridPromise, fetchDetailsForLoggedInUser()]).finally(function () {
             vm.addDeviceIsDisabled = false;
+          });
+
+          FeatureToggleService.atlasDeviceExportGetStatus().then(function (result) {
+            vm.deviceExportFeature = result;
           });
         }
 
@@ -252,6 +260,50 @@
           $state.go(wizard.state().currentStateName, {
             wizard: wizard
           });
+        };
+
+        vm.startDeviceExport = function () {
+          $modal.open({
+            templateUrl: "modules/squared/devices/export/devices-export.html",
+            type: 'dialog'
+          }).result.then(function () {
+            vm.openExportProgressTracker();
+          }, function () {
+            vm.exporting = false;
+          });
+        };
+
+        vm.openExportProgressTracker = function () {
+          exportProgressDialog = $modal.open({
+            templateUrl: 'modules/squared/devices/export/devices-export-progress.html',
+            type: 'dialog',
+            controller: function () {
+              var vm = this;
+              vm.cancelExport = function () {
+                DeviceExportService.cancelExport();
+              };
+            },
+            controllerAs: 'vm',
+          });
+          exportProgressDialog.opened.then(function () {
+            vm.exporting = true;
+            DeviceExportService.exportDevices(vm.exportStatus);
+          });
+        };
+
+        vm.exportStatus = function (percent) {
+          if (percent === 100) {
+            exportProgressDialog.close();
+            vm.exporting = false;
+            var title = $translate.instant('spacesPage.export.exportCompleted');
+            var text = $translate.instant('spacesPage.export.deviceListReadyForDownload');
+            Notification.success(text, title);
+          } else if (percent === -1) {
+            exportProgressDialog.close();
+            vm.exporting = false;
+            var warn = $translate.instant('spacesPage.export.deviceExportFailedOrCancelled');
+            Notification.warning(warn);
+          }
         };
 
         function getTemplate(name) {

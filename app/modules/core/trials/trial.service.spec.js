@@ -43,6 +43,7 @@ describe('Service: Trial Service:', function () {
     var trialData = getJSONFixture('core/json/trials/trialData.json');
     var trialAddResponse = getJSONFixture('core/json/trials/trialAddResponse.json');
     var trialEditResponse = getJSONFixture('core/json/trials/trialEditResponse.json');
+    var notifyPartnerResponse = getJSONFixture('core/json/trials/notifyPartnerResponse.json');
 
     beforeEach(function () {
       TrialService.getData();
@@ -73,6 +74,15 @@ describe('Service: Trial Service:', function () {
       $httpBackend.whenPATCH(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials/' + trialId).respond(trialEditResponse);
       TrialService.editTrial(customerOrgId, trialId).then(function (response) {
         expect(response.data).toEqual(trialEditResponse);
+        expect(LogMetricsService.logMetrics).toHaveBeenCalled();
+      });
+      $httpBackend.flush();
+    });
+
+    it('should send a partner notification', function () {
+      $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/trials/notifypartnertrialextinterest').respond(notifyPartnerResponse);
+      TrialService.notifyPartnerTrialExt().then(function (response) {
+        expect(response.data).toEqual(notifyPartnerResponse);
         expect(LogMetricsService.logMetrics).toHaveBeenCalled();
       });
       $httpBackend.flush();

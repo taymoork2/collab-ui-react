@@ -163,10 +163,10 @@ describe('Service: Customer Graph Service', function () {
     });
 
     beforeEach(function () {
-      spyOn(AmCharts, 'makeChart').and.returnValue({
-        dataProvider: data,
-        validateData: validateService.validateData,
-      });
+      let chartResponse: any = _.cloneDeep(chart);
+      chartResponse.dataProvider = data;
+      chartResponse.validateData = validateService.validateData;
+      spyOn(AmCharts, 'makeChart').and.returnValue(chartResponse);
     });
 
     it('should have created a graph when setMediaQualityGraph is called the first time', function () {
@@ -178,6 +178,18 @@ describe('Service: Customer Graph Service', function () {
     it('should update graph when setMediaQualityGraph is called a second time', function () {
       let chart = this.SparkGraphService.setMediaQualityGraph(data, null, filter[0]);
       this.SparkGraphService.setMediaQualityGraph(data, chart, filter[1]);
+      expect(validateService.validateData).toHaveBeenCalled();
+    });
+
+    it('should have created a graph when setQualityGraph is called the first time', function () {
+      this.SparkGraphService.setQualityGraph(data, null, filter[0]);
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+      expect(validateService.validateData).not.toHaveBeenCalled();
+    });
+
+    it('should update graph when setQualityGraph is called a second time', function () {
+      let chart = this.SparkGraphService.setQualityGraph(data, null, filter[0]);
+      this.SparkGraphService.setQualityGraph(data, chart, filter[1]);
       expect(validateService.validateData).toHaveBeenCalled();
     });
   });

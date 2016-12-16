@@ -182,6 +182,12 @@
       integration: 'https://ucc-integration.wbx2.com/ucm-service/api/v1',
       prod: 'https://ucc-a.wbx2.com/ucm-service/api/v1'
     },
+    CccUrl: {
+      dev: 'https://calendar-cloud-connector-integration.wbx2.com/api/v1',
+      cfe: 'https://calendar-cloud-connector-integration.wbx2.com/api/v1',
+      integration: 'https://calendar-cloud-connector-integration.wbx2.com/api/v1',
+      prod: 'https://calendar-cloud-connector-integration.wbx2.com/api/v1' // Update once cloud calendar goes to prod
+    },
 
     // urls same for all environments
 

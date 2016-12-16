@@ -43,7 +43,7 @@
         <span class="cloud-extension-label" ng-if="extension.entitled && extension.status"
               ng-class="extension.entitled && extension.status ? 'status-' + extension.status.state : 'disabled'"
               translate="hercules.activationStatus.{{getStatus(extension.status)}}"></span>
-        <span class="cloud-extension-label disabled" ng-if="extension.entitled && extension.status && extension.status.lastStateChangeText">({{extension.status.lastStateChangeText}})</span>
+        <span class="cloud-extension-label disabled" ng-if="extension.entitled && extension.status && extension.status.lastStateChangeText">{{extension.status.lastStateChangeText}}</span>
         <span class="cloud-extension-label status-off" ng-if="!extension.entitled" translate="common.off"></span>
         <span cs-loader ng-if="!extension.status && extension.entitled"></span>
       </div>
@@ -66,6 +66,14 @@
          <p class="message">
           {{extension.status.description.defaultMessage}}
          </p>
+      </div>
+
+      <div ng-if="extension.entitled && extension.status && extension.status.state !== 'error' && extension.status.description"
+           class="info-message">
+        <i class="icon icon-info"></i>
+        <p class="message">
+          {{extension.status.description.defaultMessage}}
+        </p>
       </div>
 
       <div

@@ -17,14 +17,6 @@
       fileName: '',
     };
 
-    vm.clearFile = function () {
-      vm.data = {
-        googleServiceAccount: this.data.googleServiceAccount,
-        file: '',
-        fileName: '',
-      };
-    };
-
     vm.uploadCertificate = function () {
       vm.loading = true;
       CloudConnectorService.updateConfig(vm.data.googleServiceAccount, vm.data.file, 'squared-fusion-gcal')

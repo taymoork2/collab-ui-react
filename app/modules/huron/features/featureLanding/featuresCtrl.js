@@ -36,6 +36,9 @@
     }, {
       name: $translate.instant('huronHuntGroup.modalTitle'),
       filterValue: 'HG'
+    }, {
+      name: $translate.instant('callPark.title'),
+      filterValue: 'CP'
     }];
 
     /* LIST OF FEATURES
@@ -64,9 +67,7 @@
       isEmpty: false,
       i18n: 'huronFeatureDetails.aaName',
       color: 'primary'
-    }];
-
-    var cpFeature = {
+    }, {
       name: 'CP',
       getFeature: function () {
         return CallParkService.getCallParkList();
@@ -75,7 +76,7 @@
       isEmpty: false,
       i18n: 'huronFeatureDetails.cpName',
       color: 'cta'
-    };
+    }];
 
     var piFeature = {
       name: 'PI',
@@ -98,17 +99,6 @@
       i18n: 'huronFeatureDetails.pgName',
       color: 'people'
     };
-
-    FeatureToggleService.supports(FeatureToggleService.features.callParkService).then(function (result) {
-      if (result) {
-        var cp = {
-          name: $translate.instant('callPark.title'),
-          filterValue: 'CP'
-        };
-        vm.features.push(cpFeature);
-        vm.filters.push(cp);
-      }
-    });
 
     FeatureToggleService.supports(FeatureToggleService.features.huronCallPickup).then(function (result) {
       if (result) {

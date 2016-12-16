@@ -1,5 +1,5 @@
 class GoogleCalendarSettingsCtrl implements ng.IComponentController {
-  public pageTitle = this.$translate.instant('Hybrid Calendar (Google)');
+  public pageTitle = this.$translate.instant('hercules.hybridServiceNames.squared-fusion-gcal');
   public backState = 'services-overview';
   public userStatusesSummary = [];
   private subscribeStatusesSummary: any;

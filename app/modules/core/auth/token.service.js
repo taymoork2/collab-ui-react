@@ -3,6 +3,7 @@
 
   module.exports = angular
     .module('core.token', [
+      require('angular-cookies'),
       require('modules/core/config/config'),
       require('modules/core/scripts/services/storage'),
       require('modules/core/scripts/services/sessionstorage'),
@@ -13,7 +14,7 @@
     .name;
 
   /* @ngInject */
-  function TokenService($injector, $rootScope, $window, OAuthConfig, Config, Storage, SessionStorage, WindowLocation, WindowService) {
+  function TokenService($cookies, $injector, $rootScope, $window, OAuthConfig, Config, Storage, SessionStorage, WindowLocation, WindowService) {
     var respondSessionStorageEvent = 'sessionStorage' + Config.getEnv();
     var requestSessionStorageEvent = 'getSessionStorage' + Config.getEnv();
     var logoutEvent = 'logout' + Config.getEnv();
@@ -32,6 +33,14 @@
       init: init
     };
 
+    var ACCESS_TOKEN = 'accessToken';
+    var REFRESH_TOKEN = 'refreshToken';
+    var LOGOUT = 'logout';
+    var FOOBAR = 'foobar';
+    var CLIENT_SESSION_ID = 'clientSessionId';
+    var CLIENT_SESSION_COOKIE_DURATION = 3;
+    var MONTHS = 'months';
+
     return service;
 
     function init() {
@@ -39,34 +48,36 @@
       WindowService.registerEventListener('storage', sessionTokenTransfer);
 
       // If no sessionStorage tokens and the tab was not logged out, ask other tabs for the sessionStorage
-      if (!$window.sessionStorage.length && !$window.sessionStorage.getItem('logout')) {
-        $window.localStorage.setItem(requestSessionStorageEvent, 'foobar');
-        $window.localStorage.removeItem(requestSessionStorageEvent, 'foobar');
+      if (!$window.sessionStorage.length && !$window.sessionStorage.getItem(LOGOUT)) {
+        $window.localStorage.setItem(requestSessionStorageEvent, FOOBAR);
+        $window.localStorage.removeItem(requestSessionStorageEvent, FOOBAR);
       }
     }
 
     function getAccessToken() {
-      return SessionStorage.get('accessToken');
+      return SessionStorage.get(ACCESS_TOKEN);
     }
 
     function getRefreshToken() {
-      return SessionStorage.get('refreshToken');
+      return SessionStorage.get(REFRESH_TOKEN);
     }
 
     function setAccessToken(token) {
-      return SessionStorage.put('accessToken', token);
+      return SessionStorage.put(ACCESS_TOKEN, token);
     }
 
     function setRefreshToken(token) {
-      return SessionStorage.put('refreshToken', token);
+      return SessionStorage.put(REFRESH_TOKEN, token);
     }
 
     function setClientSessionId(sessionId) {
-      return Storage.put('clientSessionId', sessionId);
+      $cookies.put(CLIENT_SESSION_ID, sessionId, {
+        expires: moment().add(CLIENT_SESSION_COOKIE_DURATION, MONTHS).toDate()
+      });
     }
 
     function getClientSessionId() {
-      return Storage.get('clientSessionId');
+      return $cookies.get(CLIENT_SESSION_ID);
     }
 
     function getOrGenerateClientSessionId() {
@@ -74,8 +85,9 @@
       if (!clientSessionId) {
         var uuid = require('uuid');
         clientSessionId = uuid.v4();
-        setClientSessionId(clientSessionId);
       }
+      // set or renew the 3 month cookie - refresh token is only valid for 2 months
+      setClientSessionId(clientSessionId);
       return clientSessionId;
     }
 
@@ -87,13 +99,13 @@
       clearStorage();
       // We store a key value in sessionStorage to
       // prevent a login when multiple tabs are open
-      SessionStorage.put('logout', 'logout');
+      SessionStorage.put(LOGOUT, LOGOUT);
       WindowLocation.set(redirectUrl);
     }
 
     function triggerGlobalLogout() {
-      $window.localStorage.setItem(logoutEvent, 'logout');
-      $window.localStorage.removeItem(logoutEvent, 'logout');
+      $window.localStorage.setItem(logoutEvent, LOGOUT);
+      $window.localStorage.removeItem(logoutEvent, LOGOUT);
     }
 
     function clearStorage() {

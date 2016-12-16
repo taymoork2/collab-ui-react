@@ -1,15 +1,16 @@
 describe('Service: Common Graph Service', () => {
   let responseData = getJSONFixture('core/json/partnerReports/commonGraphService.json');
-  const CURSOR = 'cursor';
-  const COLUMN = 'column';
-  const LINE = 'line';
-  const AXIS = 'axis';
-  const LEGEND = 'legend';
-  const NUMFORMAT = 'numFormat';
-  const BALLOON = 'balloon';
-  const EXPORT = 'export';
-  const PREFIXES = 'prefixesOfBigNumbers';
-  const dummyData = 'dummyData';
+  const CURSOR: string = 'cursor';
+  const COLUMN: string = 'column';
+  const LINE: string = 'line';
+  const AXIS: string = 'axis';
+  const LEGEND: string = 'legend';
+  const NUMFORMAT: string = 'numFormat';
+  const BALLOON: string = 'balloon';
+  const EXPORT: string = 'export';
+  const PREFIXES: string = 'prefixesOfBigNumbers';
+  const VERTICAL_SCROLL: string = 'verticalScroll';
+  const dummyData: string = 'dummyData';
 
   beforeEach(function () {
     this.initModules('Core');
@@ -26,6 +27,7 @@ describe('Service: Common Graph Service', () => {
     expect(this.CommonGraphService.getBaseVariable(NUMFORMAT)).toEqual(responseData.baseVariables[NUMFORMAT]);
     expect(this.CommonGraphService.getBaseVariable(BALLOON)).toEqual(responseData.baseVariables[BALLOON]);
     expect(this.CommonGraphService.getBaseVariable(PREFIXES)).toEqual(responseData.baseVariables[PREFIXES]);
+    expect(this.CommonGraphService.getBaseVariable(VERTICAL_SCROLL)).toEqual(responseData.baseVariables[VERTICAL_SCROLL]);
 
     let exportVariable = this.CommonGraphService.getBaseVariable(EXPORT);
     expect(exportVariable).toEqual(responseData.baseVariables[EXPORT]);

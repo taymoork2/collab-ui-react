@@ -415,7 +415,7 @@ export class SparkReportService {
   public getMediaQualityData(filter: ITimespan): ng.IHttpPromise<Array<IMediaData>> {
     // cancel any currently running jobs
     if (this.mediaDeferred) {
-      this.metricsDeferred.resolve(this.ReportConstants.ABORT);
+      this.mediaDeferred.resolve(this.ReportConstants.ABORT);
     }
     this.mediaDeferred = this.$q.defer();
 

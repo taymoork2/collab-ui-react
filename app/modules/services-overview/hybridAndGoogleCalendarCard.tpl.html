@@ -45,7 +45,7 @@
       <span>{{::card.status.text | translate}}</span>
     </a>
   </span>
-  <span class="columns medium-6" ng-if="card.showGoogleStatus()">
+  <span class="columns medium-6" ng-class="{'medium-offset-6': !card.showStatus()}" ng-if="card.showGoogleStatus()"> 
     <a class="status ellipsis" ui-sref="{{card.googleStatus.routerState}}">
       <i class="icon icon-circle status-indicator" ng-class="card.googleStatus.status"></i>
       <span>{{::card.googleStatus.text | translate}}</span>

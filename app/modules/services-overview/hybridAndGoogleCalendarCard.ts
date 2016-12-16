@@ -48,7 +48,11 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
       controllerAs: 'vm',
       templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
       type: 'small',
-    });
+    })
+      .result
+      .then(() => {
+        this.$state.go('calendar-service.list');
+      });
   }
 
   private firstTimeGoogleSetup() {
@@ -56,7 +60,11 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
       controller: 'FirstTimeGoogleSetupController',
       controllerAs: 'vm',
       templateUrl: 'modules/hercules/service-settings/calendar-service-setup/first-time-google-setup.html',
-    });
+    })
+      .result
+      .then(() => {
+        this.$state.go('google-calendar-service.settings');
+      });
   }
 
   // Hybrid Calendar
@@ -136,6 +144,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
 
   /* @ngInject */
   public constructor(
+    private $state,
     private $q: ng.IQService,
     private $modal,
     private Authinfo,

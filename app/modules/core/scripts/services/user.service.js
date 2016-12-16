@@ -465,7 +465,7 @@
               checkAndPatchSyncKmsRole(userId);
             })
             .catch(function (response) {
-              Notification.errorResponse(response, 'usersPage.careAddUserError');
+              Notification.errorWithTrackingId(response, 'usersPage.careAddUserError');
             });
         }
       });
@@ -485,7 +485,7 @@
             };
             updateUserProfile(userId, userRoleData)
               .catch(function (response) {
-                Notification.errorResponse(response, 'usersPage.careAddUserRoleError');
+                Notification.errorWithTrackingId(response, 'usersPage.careAddUserRoleError');
               });
           }
         }

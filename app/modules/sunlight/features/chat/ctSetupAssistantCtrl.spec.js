@@ -135,6 +135,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     spyOn(CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
     spyOn(CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
     spyOn(Notification, 'success');
+    spyOn(Notification, 'errorWithTrackingId');
     spyOn(LogMetricsService, 'logMetrics').and.callFake(function () {});
     $stateParams = {
       template: undefined,
@@ -270,12 +271,17 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       checkStateOfNavigationButtons(PROFILE_PAGE_INDEX, true, false);
     });
 
+    it('should set default agent preview name to the agent display name option', function () {
+      resolveLogoPromise();
+      expect(controller.selectedAgentProfile).toEqual(controller.agentNames.displayName);
+    });
+
     it('should set agent preview names based on selected agent profile', function () {
       resolveLogoPromise();
       controller.selectedAgentProfile = controller.agentNames.alias;
       controller.setAgentProfile();
       expect(controller.agentNamePreview).toEqual('careChatTpl.agentAliasPreview');
-      controller.selectedAgentProfile = controller.agentNames.realName;
+      controller.selectedAgentProfile = controller.agentNames.displayName;
       controller.setAgentProfile();
       expect(controller.agentNamePreview).toEqual('careChatTpl.agentNamePreview');
     });
@@ -287,7 +293,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       controller.nextButton();
       expect(controller.template.configuration.mediaSpecificConfiguration).toEqual({
         useOrgProfile: true,
-        useAgentRealName: false,
+        useAgentRealName: true,
         displayText: OrgName,
         orgLogoUrl: dummyLogoUrl
       });
@@ -609,6 +615,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
 
       expect(controller.saveCTErrorOccurred).toBeTruthy();
       expect(LogMetricsService.logMetrics).not.toHaveBeenCalled();
+      expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String));
     });
 
     it("should submit chat template successfully", function () {
