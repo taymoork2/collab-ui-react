@@ -30,7 +30,6 @@
       atlasHelpDeskOrderSearch: 'atlas-helpdesk-order-search',
       atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list',
       atlasMediaServiceMetrics: 'atlas-media-service-metrics',
-      atlasMediaServiceOnboarding: 'atlas-media-service-onboarding',
       atlasMediaServicePhaseTwo: 'atlas-media-service-phase-two',
       atlasNewCiDataModel: 'atlas-new-ci-data-model',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
@@ -168,7 +167,6 @@
       gemServicesTab: 'gem-services-tab',
       gemCCA: 'gem-cloud-connected-audio',
       atlasHybridDataSecurity: 'atlas-data-security',
-      atlasHerculesEmergencyUpgrade: 'atlas-hercules-emergency-upgrade',
       atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',
       avrilVmEnable: 'avril-vm-enable',
       avrilVoicemaill1249: 'avril-voicemail-l1249'
