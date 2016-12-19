@@ -18,7 +18,7 @@ describe('Controller: Dummy Customer Reports', function () {
       }
     } else {
       for (let z = 0; z <= 51; z++) {
-        data[z].date = moment().day(-1).subtract(52 - z, defaults.WEEK).format(defaults.dayFormat);
+        data[z].date = moment().day(-1).subtract(51 - z, defaults.WEEK).format(defaults.dayFormat);
       }
     }
     return data;

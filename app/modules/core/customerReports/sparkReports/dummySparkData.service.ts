@@ -99,7 +99,7 @@ export class DummySparkDataService {
       if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
         date = moment().subtract(index + 1, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
       } else {
-        date = moment().day(-1).subtract(index + 1, this.ReportConstants.WEEK).format(this.ReportConstants.DAY_FORMAT);
+        date = moment().day(-1).subtract(index, this.ReportConstants.WEEK).format(this.ReportConstants.DAY_FORMAT);
       }
     } else {
       let commonData: ICommonData = DummySparkDataService.getCommonData(filter, index, this.ReportConstants);
@@ -164,7 +164,7 @@ export class DummySparkDataService {
     }
 
     for (let i = timespan; i >= 0; i--) {
-      dummyGraph.push(this.getConversationDataPoint(filter, i + 1, timespan - i));
+      dummyGraph.push(this.getConversationDataPoint(filter, i, timespan - i));
     }
 
     return dummyGraph;
@@ -173,7 +173,7 @@ export class DummySparkDataService {
   private getConversationDataPoint(filter: ITimespan, index: number, count: number): IConversation {
     let date: string;
     if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
-      date = moment().subtract(index, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
+      date = moment().subtract(index + 1, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
     } else {
       date = moment().day(-1).subtract(index, this.ReportConstants.WEEK).format(this.ReportConstants.DAY_FORMAT);
     }
@@ -204,7 +204,7 @@ export class DummySparkDataService {
       }
 
       for (let i = timespan; i >= 0; i--) {
-        dummyGraph.push(this.getQualityDataPoint(filter, i + 1, timespan - i));
+        dummyGraph.push(this.getQualityDataPoint(filter, i, timespan - i));
       }
 
       return dummyGraph;
@@ -216,7 +216,7 @@ export class DummySparkDataService {
   private getQualityDataPoint(filter: ITimespan, index: number, count: number): IMediaData {
     let date: string;
     if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
-      date = moment().subtract(index, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
+      date = moment().subtract(index + 1, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
     } else {
       date = moment().day(-1).subtract(index, this.ReportConstants.WEEK).format(this.ReportConstants.DAY_FORMAT);
     }

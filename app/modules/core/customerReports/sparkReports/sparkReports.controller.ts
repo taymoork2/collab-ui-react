@@ -42,6 +42,11 @@ interface ICharts {
   metrics: any | null;
 }
 
+interface IConversationPopulated {
+  files: boolean;
+  rooms: boolean;
+}
+
 class SparkReportCtrl {
   /* @ngInject */
   constructor(
@@ -88,6 +93,7 @@ class SparkReportCtrl {
           this.setActiveLineGraph(this.timeSelected.min, this.timeSelected.max);
           this.setConversationGraphs(this.timeSelected.min, this.timeSelected.max);
           this.setCallQualityGraph(this.timeSelected.min, this.timeSelected.max);
+          this.setCallMetricsGraph(this.timeSelected.min, this.timeSelected.max);
         } else {
           this.setDummyData();
           this.setAllGraphs();
@@ -158,6 +164,7 @@ class SparkReportCtrl {
     this.setActiveLineGraph(min, max);
     this.setConversationGraphs(min, max);
     this.setCallQualityGraph(min, max);
+    this.setCallMetricsGraph(min, max);
   }
 
   private timeUpdate(): void {
@@ -256,7 +263,8 @@ class SparkReportCtrl {
     this.$rootScope.$broadcast(this.secondaryActiveOptions.broadcast);
 
     this.SparkReportService.getActiveUserData(this.timeSelected).then((response: IActiveUserWrapper): void => {
-      this.updateActiveLineGraph(response);
+      let graphData: Array<any> = _.get(response, 'graphData', []);
+      this.updateActiveLineGraph(response, graphData.length > 0);
     });
 
     this.SparkReportService.getMostActiveUserData(this.timeSelected).then((response: Array<IActiveTableBase>): void => {
@@ -288,20 +296,22 @@ class SparkReportCtrl {
       if (_.isUndefined(this.activeUserSevenDayData)) {
         this.SparkLineReportService.getActiveUserData(this.timeSelected).then((response: IActiveUserWrapper): void => {
           this.activeUserSevenDayData = response;
-          this.updateActiveLineGraph(this.activeUserSevenDayData);
+          let graphData = _.get(response, 'graphData', []);
+          this.updateActiveLineGraph(this.activeUserSevenDayData, graphData.length > 0);
         });
       } else {
-        this.updateActiveLineGraph(this.activeUserSevenDayData);
+        let graphData = _.get(this.activeUserSevenDayData, 'graphData', []);
+        this.updateActiveLineGraph(this.activeUserSevenDayData, graphData.length > 0);
       }
     } else if (_.isUndefined(this.activeUserYearData)) {
       this.zoomChart(this.charts.active, min, max);
       this.SparkLineReportService.getActiveUserData(this.timeSelected).then((response: IActiveUserWrapper): void => {
         this.activeUserYearData = response;
-        this.updateActiveLineGraph(this.activeUserYearData);
+        this.updateActiveLineGraph(this.activeUserYearData, this.activePopulated(this.activeUserYearData.graphData, min, max));
         this.zoomChart(this.charts.active, min, max);
       });
     } else {
-      this.updateActiveLineGraph(this.activeUserYearData);
+      this.updateActiveLineGraph(this.activeUserYearData, this.activePopulated(this.activeUserYearData.graphData, min, max));
       this.zoomChart(this.charts.active, min, max);
     }
 
@@ -324,10 +334,9 @@ class SparkReportCtrl {
     }
   }
 
-  private updateActiveLineGraph(data: IActiveUserWrapper): void {
-    if (_.isArray(data.graphData) && data.graphData.length === 0) {
-      this.activeOptions.state = this.ReportConstants.EMPTY;
-    } else {
+  private updateActiveLineGraph(data: IActiveUserWrapper, populated: boolean): void {
+    this.activeOptions.state = this.ReportConstants.EMPTY;
+    if (populated) {
       this.setActiveGraph(data.graphData);
       this.activeOptions.state = this.ReportConstants.SET;
       if (this.displayNewReports) {
@@ -335,6 +344,19 @@ class SparkReportCtrl {
       }
     }
     this.CardUtils.resize(0);
+  }
+
+  private activePopulated(data: Array<IActiveUserData>, min: number, max: number): boolean {
+    let length: number = data.length;
+    if ((length > 0) && (length > min) && (length > max)) {
+      for (let i = min; i <= max; i++) {
+        let datapoint: IActiveUserData = _.cloneDeep(data[i]);
+        if (datapoint.totalRegisteredUsers > 0) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   // Average Rooms Report Controls
@@ -390,41 +412,70 @@ class SparkReportCtrl {
       if (_.isUndefined(this.sevenDayConversations)) {
         this.SparkLineReportService.getConversationData(this.timeSelected).then((response: IConversationWrapper): void => {
           this.sevenDayConversations = response;
-          this.updateConversationGraphs(this.sevenDayConversations);
+          this.updateConversationGraphs(this.sevenDayConversations, {
+            files: this.sevenDayConversations.array.length > 0 && this.sevenDayConversations.hasFiles,
+            rooms: this.sevenDayConversations.array.length > 0 && this.sevenDayConversations.hasRooms,
+          });
         });
       } else {
-        this.updateConversationGraphs(this.sevenDayConversations);
+        this.updateConversationGraphs(this.sevenDayConversations, {
+          files: this.sevenDayConversations.array.length > 0 && this.sevenDayConversations.hasFiles,
+          rooms: this.sevenDayConversations.array.length > 0 && this.sevenDayConversations.hasRooms,
+        });
       }
     } else if (_.isUndefined(this.activeUserYearData)) {
       this.zoomChart(this.charts.rooms, min, max);
       this.zoomChart(this.charts.files, min, max);
       this.SparkLineReportService.getConversationData(this.timeSelected).then((response: IConversationWrapper): void => {
         this.yearlyConversations = response;
-        this.updateConversationGraphs(this.yearlyConversations);
+        this.updateConversationGraphs(this.yearlyConversations, this.conversationPopulated(this.yearlyConversations, min, max));
         this.zoomChart(this.charts.rooms, min, max);
         this.zoomChart(this.charts.files, min, max);
       });
     } else {
-      this.updateConversationGraphs(this.yearlyConversations);
+      this.updateConversationGraphs(this.yearlyConversations, this.conversationPopulated(this.yearlyConversations, min, max));
       this.zoomChart(this.charts.rooms, min, max);
       this.zoomChart(this.charts.files, min, max);
     }
   }
 
-  private updateConversationGraphs(data: IConversationWrapper): void {
-    if (data.array.length > 0 && data.hasRooms) {
+  private updateConversationGraphs(data: IConversationWrapper, population: IConversationPopulated): void {
+    if (population.rooms) {
       this.setAverageGraph(data.array);
       this.avgRoomOptions.state = this.ReportConstants.SET;
     } else {
       this.avgRoomOptions.state = this.ReportConstants.EMPTY;
     }
 
-    if (data.array.length > 0 && data.hasFiles) {
+    if (population.files) {
       this.setFilesGraph(data.array);
       this.filesSharedOptions.state = this.ReportConstants.SET;
     } else {
       this.filesSharedOptions.state = this.ReportConstants.EMPTY;
     }
+  }
+
+  private conversationPopulated(data: IConversationWrapper, min: number, max: number): IConversationPopulated {
+    let populated = {
+      files: false,
+      rooms: false,
+    };
+
+    let dataArray = _.get(data, 'array', []);
+    let length: number = dataArray.length;
+    if ((length > 0) && (length > min) && (length > max) && (data.hasRooms || data.hasFiles)) {
+      for (let i = min; i <= max; i++) {
+        let datapoint: IConversation = _.cloneDeep(dataArray[i]);
+        if (datapoint.totalRooms > 0) {
+          populated.rooms = true;
+        }
+        if (datapoint.contentShared > 0) {
+          populated.files = true;
+        }
+      }
+    }
+
+    return populated;
   }
 
   // Files Shared Report Controls
@@ -484,9 +535,9 @@ class SparkReportCtrl {
     click: (): void => {
       if (this.displayNewReports) {
         if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
-          this.updateQualityGraph(this.qualitySevenDayData);
+          this.updateQualityGraph(this.qualitySevenDayData, this.qualitySevenDayData && this.qualitySevenDayData.length > 0);
         } else {
-          this.updateQualityGraph(this.qualityYearData);
+          this.updateQualityGraph(this.qualityYearData, this.qualityYearVisible);
         }
       } else {
         this.setMediaGraph(this.mediaData);
@@ -516,13 +567,14 @@ class SparkReportCtrl {
     this.mediaData = [];
     this.SparkReportService.getMediaQualityData(this.timeSelected).then((response: Array<IMediaData>): void => {
       this.mediaData = response;
-      this.updateQualityGraph(response);
+      this.updateQualityGraph(response, response.length > 0);
     });
   }
 
   // Call Quality Line Graph Controls
   private qualitySevenDayData: Array<IMediaData>;
   private qualityYearData: Array<IMediaData>;
+  private qualityYearVisible: boolean;
 
   private setCallQualityGraph(min: number, max: number): void {
     this.mediaDropdown.disabled = true;
@@ -533,32 +585,47 @@ class SparkReportCtrl {
       if (_.isUndefined(this.qualitySevenDayData)) {
         this.SparkLineReportService.getMediaQualityData(this.timeSelected).then((response: Array<IMediaData>): void => {
           this.qualitySevenDayData = response;
-          this.updateQualityGraph(this.qualitySevenDayData);
+          this.updateQualityGraph(this.qualitySevenDayData, this.qualitySevenDayData.length > 0);
         });
       } else {
-        this.updateQualityGraph(this.qualitySevenDayData);
+        this.updateQualityGraph(this.qualitySevenDayData, this.qualitySevenDayData.length > 0);
       }
     } else if (_.isUndefined(this.qualityYearData)) {
       this.zoomChart(this.charts.media, min, max);
       this.SparkLineReportService.getMediaQualityData(this.timeSelected).then((response: Array<IMediaData>): void => {
         this.qualityYearData = response;
-        this.updateQualityGraph(this.qualityYearData);
+        this.qualityYearVisible = this.qualityPopulated(this.qualityYearData, min, max);
+        this.updateQualityGraph(this.qualityYearData, this.qualityYearVisible);
         this.zoomChart(this.charts.media, min, max);
       });
     } else {
-      this.updateQualityGraph(this.qualityYearData);
+      this.qualityYearVisible = this.qualityPopulated(this.qualityYearData, min, max);
+      this.updateQualityGraph(this.qualityYearData, this.qualityYearVisible);
       this.zoomChart(this.charts.media, min, max);
     }
   }
 
-  private updateQualityGraph(data: Array<IMediaData>): void {
-    if (data.length === 0) {
-      this.mediaOptions.state = this.ReportConstants.EMPTY;
-    } else {
+  private updateQualityGraph(data: Array<IMediaData>, populated: boolean): void {
+    if (populated) {
       this.setMediaGraph(data);
       this.mediaOptions.state = this.ReportConstants.SET;
       this.mediaDropdown.disabled = false;
+    } else {
+      this.mediaOptions.state = this.ReportConstants.EMPTY;
     }
+  }
+
+  private qualityPopulated(data: Array<IMediaData>, min: number, max: number): boolean {
+    let length: number = data.length;
+    if ((length > 0) && (length > min) && (length > max)) {
+      for (let i = min; i <= max; i++) {
+        let datapoint: IMediaData = _.cloneDeep(data[i]);
+        if (datapoint.totalDurationSum > 0) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   // Registered Endpoints Report Controls
@@ -594,45 +661,45 @@ class SparkReportCtrl {
     selected: this.defaultDeviceFilter,
   };
 
-    private setDeviceGraph(data: Array<IEndpointWrapper>, deviceFilter: IDropdownBase | undefined) {
-      this.exportArrays.device = null;
-      let tempDevicesChart: any = this.SparkGraphService.setDeviceGraph(data, this.charts.device, deviceFilter);
-      if (tempDevicesChart) {
-        this.charts.device = tempDevicesChart;
-        this.exportArrays.device = this.CommonReportService.createExportMenu(this.charts.device);
+  private setDeviceGraph(data: Array<IEndpointWrapper>, deviceFilter: IDropdownBase | undefined) {
+    this.exportArrays.device = null;
+    let tempDevicesChart: any = this.SparkGraphService.setDeviceGraph(data, this.charts.device, deviceFilter);
+    if (tempDevicesChart) {
+      this.charts.device = tempDevicesChart;
+      this.exportArrays.device = this.CommonReportService.createExportMenu(this.charts.device);
+    }
+  }
+
+  private setDeviceData() {
+    this.deviceDropdown.array = [this.defaultDeviceFilter];
+    this.deviceDropdown.selected = this.deviceDropdown.array[0];
+    this.currentDeviceGraphs = [];
+    this.deviceDropdown.disabled = true;
+
+    this.SparkReportService.getDeviceData(this.timeSelected).then((response: IEndpointContainer): void => {
+      if (response.filterArray.length) {
+        this.deviceDropdown.array = response.filterArray.sort((a: IDropdownBase, b: IDropdownBase): number => {
+          if (a.label) {
+            return a.label.localeCompare(b.label);
+          } else if (a > b) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
       }
-    }
-
-    private setDeviceData() {
-      this.deviceDropdown.array = [this.defaultDeviceFilter];
       this.deviceDropdown.selected = this.deviceDropdown.array[0];
-      this.currentDeviceGraphs = [];
-      this.deviceDropdown.disabled = true;
+      this.currentDeviceGraphs = response.graphData;
 
-      this.SparkReportService.getDeviceData(this.timeSelected).then((response: IEndpointContainer): void => {
-        if (response.filterArray.length) {
-          this.deviceDropdown.array = response.filterArray.sort((a: IDropdownBase, b: IDropdownBase): number => {
-            if (a.label) {
-              return a.label.localeCompare(b.label);
-            } else if (a > b) {
-              return 1;
-            } else {
-              return 0;
-            }
-          });
-        }
-        this.deviceDropdown.selected = this.deviceDropdown.array[0];
-        this.currentDeviceGraphs = response.graphData;
-
-        if (this.currentDeviceGraphs.length && !this.currentDeviceGraphs[this.deviceDropdown.selected.value].emptyGraph) {
-          this.setDeviceGraph(this.currentDeviceGraphs, this.deviceDropdown.selected);
-          this.deviceOptions.state = this.ReportConstants.SET;
-          this.deviceDropdown.disabled = false;
-        } else {
-          this.deviceOptions.state = this.ReportConstants.EMPTY;
-        }
-      });
-    }
+      if (this.currentDeviceGraphs.length && !this.currentDeviceGraphs[this.deviceDropdown.selected.value].emptyGraph) {
+        this.setDeviceGraph(this.currentDeviceGraphs, this.deviceDropdown.selected);
+        this.deviceOptions.state = this.ReportConstants.SET;
+        this.deviceDropdown.disabled = false;
+      } else {
+        this.deviceOptions.state = this.ReportConstants.EMPTY;
+      }
+    });
+  }
 
   // Call Metrics Report Controls
   public metricsOptions: IReportCard = {
@@ -663,6 +730,7 @@ class SparkReportCtrl {
     if (tempmetrics) {
       this.charts.metrics = tempmetrics;
       this.exportArrays.metrics = this.CommonReportService.createExportMenu(this.charts.metrics);
+      this.metricsOptions.state = this.ReportConstants.SET;
     }
   }
 
@@ -679,14 +747,76 @@ class SparkReportCtrl {
   }
 
   private setCallMetricsData(): void {
+    this.metricsOptions.state = this.ReportConstants.REFRESH;
     this.SparkReportService.getCallMetricsData(this.timeSelected).then((response: IMetricsData): void => {
-      this.metricsOptions.state = this.ReportConstants.EMPTY;
       if (_.isArray(response.dataProvider) && response.displayData) {
         this.setMetricGraph(response);
         this.setMetrics(response.displayData);
-        this.metricsOptions.state = this.ReportConstants.SET;
+      } else {
+        this.metricsOptions.state = this.ReportConstants.EMPTY;
       }
     });
+  }
+
+  // new metrics controller
+  private sevenDayMetrics: Array<IMetricsData>;
+  private yearlyMetrics: Array<IMetricsData>;
+
+  private setCallMetricsGraph(min: number, max: number): void {
+    this.metricsOptions.state = this.ReportConstants.REFRESH;
+    this.setMetrics(undefined);
+    this.setMetricGraph(this.DummySparkDataService.dummyMetricsData());
+
+    if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
+      if (_.isUndefined(this.sevenDayMetrics)) {
+        this.SparkLineReportService.getMetricsData(this.timeSelected).then((response: Array<IMetricsData>): void => {
+          this.sevenDayMetrics = response;
+          this.setMetricsData(this.sevenDayMetrics, 1, 7);
+        });
+      } else {
+        this.setMetricsData(this.sevenDayMetrics, 1, 7);
+      }
+    } else if (_.isUndefined(this.yearlyMetrics)) {
+      this.SparkLineReportService.getMetricsData(this.timeSelected).then((response: Array<IMetricsData>): void => {
+        this.yearlyMetrics = response;
+        this.setMetricsData(this.yearlyMetrics, min + 1, max + 1);
+      });
+    } else {
+      this.setMetricsData(this.yearlyMetrics, min + 1, max + 1);
+    }
+  }
+
+  private setMetricsData(data: Array<IMetricsData>, min: number, max: number): void {
+    let combinedData: IMetricsData = _.cloneDeep(data[min]);
+    for (let i = min + 1; i <= max; i++) {
+      if (combinedData && combinedData.displayData && data[i] && data[i].displayData) {
+        let display: IMetricsLabel = _.get(data[i], 'display', {
+          totalCalls: 0,
+          totalAudioDuration: 0,
+          totalFailedCalls: 0,
+        });
+
+        combinedData.dataProvider[0].numCalls += data[i].dataProvider[0].numCalls;
+        combinedData.dataProvider[0].percentage = (combinedData.dataProvider[0].percentage + data[i].dataProvider[0].percentage) / 2;
+
+        combinedData.dataProvider[1].numCalls += data[i].dataProvider[1].numCalls;
+        combinedData.dataProvider[1].percentage = (combinedData.dataProvider[1].percentage + data[i].dataProvider[1].percentage) / 2;
+
+        combinedData.displayData.totalCalls += display.totalCalls;
+        combinedData.displayData.totalAudioDuration += display.totalAudioDuration;
+        combinedData.displayData.totalFailedCalls = _.toInteger(combinedData.displayData.totalFailedCalls) + _.toInteger(display.totalFailedCalls);
+      } else if (data[i] && data[i].displayData) {
+        combinedData = _.cloneDeep(data[i]);
+      }
+    }
+
+    this.metricsOptions.state = this.ReportConstants.EMPTY;
+    if (combinedData && combinedData.displayData) {
+      let average = (_.toInteger(combinedData.displayData.totalFailedCalls) / combinedData.displayData.totalCalls) * this.ReportConstants.PERCENTAGE_MULTIPLIER;
+      combinedData.displayData.totalFailedCalls = average.toFixed(this.ReportConstants.FIXED);
+      this.setMetricGraph(combinedData);
+      this.setMetrics(combinedData.displayData);
+    }
   }
 
   // Helper Functions
