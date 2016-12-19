@@ -35,7 +35,8 @@
       getResourceGroups: getResourceGroups,
       getClustersForResourceGroup: getClustersForResourceGroup,
       getUnassignedClusters: getUnassignedClusters,
-      setClusterAllowListInfoForExpressway: setClusterAllowListInfoForExpressway
+      setClusterAllowListInfoForExpressway: setClusterAllowListInfoForExpressway,
+      getAlarms: getAlarms,
     };
 
     return service;
@@ -45,7 +46,7 @@
     function get(clusterId) {
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '?fields=@wide')
-        .then(extractDataFromResponse);
+        .then(extractData);
     }
 
     function getAll(orgId) {
@@ -121,10 +122,6 @@
       return _.get(extractData(response), 'clusters', []);
     }
 
-    function extractDataFromResponse(res) {
-      return res.data;
-    }
-
     function addServicesStatuses(clusters) {
       return _.map(clusters, function (cluster) {
         if (cluster.targetType === 'c_mgmt') {
@@ -175,7 +172,7 @@
         releaseChannel: releaseChannel,
         targetType: managementConnectorType
       })
-        .then(extractDataFromResponse);
+        .then(extractData);
     }
 
     function addPreregisteredClusterToAllowList(hostname, ttlInSeconds, clusterId) {
@@ -189,21 +186,21 @@
 
     function getPreregisteredClusterAllowList() {
       var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/allowedRedirectTargets';
-      return $http.get(url).then(extractDataFromResponse);
+      return $http.get(url).then(extractData);
     }
 
     function provisionConnector(clusterId, connectorType) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId +
         '/provisioning/actions/add/invoke?connectorType=' + connectorType;
       return $http.post(url)
-        .then(extractDataFromResponse);
+        .then(extractData);
     }
 
     function deprovisionConnector(clusterId, connectorType) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId +
         '/provisioning/actions/remove/invoke?connectorType=' + connectorType;
       return $http.post(url)
-        .then(extractDataFromResponse);
+        .then(extractData);
     }
 
     function buildSidepanelConnectorList(cluster, connectorTypeToKeep) {
@@ -241,19 +238,19 @@
       return $http.patch(url, {
         name: newClusterName
       })
-        .then(extractDataFromResponse);
+        .then(extractData);
     }
 
     function deregisterCluster(clusterId) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/deregisterCluster/invoke?clusterId=' + clusterId;
       return $http.post(url)
-        .then(extractDataFromResponse);
+        .then(extractData);
     }
 
     function getReleaseNotes(releaseChannel, connectorType) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/channels/' + releaseChannel + '/packages/' + connectorType + '?fields=@wide';
       return $http.get(url)
-        .then(extractDataFromResponse)
+        .then(extractData)
         .then(function (data) {
           return _.get(data, 'releaseNotes', '');
         });
@@ -447,6 +444,11 @@
       return _.filter(clusters, function (cluster) {
         return cluster.targetType !== 'unknown';
       });
+    }
+
+    function getAlarms(serviceId, orgId) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/alarms?serviceId=' + serviceId + '&sourceType=cloud';
+      return $http.get(url).then(extractData);
     }
   }
 })();

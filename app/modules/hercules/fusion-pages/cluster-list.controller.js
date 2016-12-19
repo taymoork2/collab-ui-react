@@ -6,7 +6,7 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $modal, $state, $translate, Authinfo, Config, hasF237FeatureToggle, hasMediaFeatureToggle, FusionClusterService, Notification, WizardFactory) {
+  function FusionClusterListController($filter, $modal, $state, $translate, Authinfo, Config, hasF237FeatureToggle, FusionClusterService, Notification, WizardFactory) {
     var vm = this;
     if (hasF237FeatureToggle) {
       var groupsCache = {};
@@ -37,7 +37,7 @@
         count: 0
       });
     }
-    if (hasMediaFeatureToggle && Authinfo.isEntitled(Config.entitlements.mediafusion)) {
+    if (Authinfo.isEntitled(Config.entitlements.mediafusion)) {
       vm.filters.push({
         name: $translate.instant('hercules.fusion.list.mediafusion'),
         filterValue: 'mf_mgmt',
@@ -64,12 +64,6 @@
     function loadClusters() {
       vm.loading = true;
       FusionClusterService.getAll()
-        .then(function (clusters) {
-          if (!hasMediaFeatureToggle) {
-            return filterHMClusters(clusters);
-          }
-          return clusters;
-        })
         .then(FusionClusterService.setClusterAllowListInfoForExpressway)
         .then(function (clusters) {
           clustersCache = clusters;
@@ -87,7 +81,6 @@
     function loadResourceGroups() {
       vm.loading = true;
       FusionClusterService.getResourceGroups()
-        .then(removeHybridMediaClustersIfNecessary)
         .then(function (groups) {
           return FusionClusterService.setClusterAllowListInfoForExpressway(groups.clusters)
             .then(function (clusters) {
@@ -107,29 +100,6 @@
         .finally(function () {
           vm.loading = false;
         });
-    }
-
-    function removeHybridMediaClustersIfNecessary(response) {
-      if (!hasMediaFeatureToggle) {
-        return {
-          // Hybrid Media should never be part of any resource group as of now
-          // but we never know so filter anyway…
-          groups: _.map(response.groups, function (group) {
-            var response = _.cloneDeep(group);
-            response.clusters = filterHMClusters(response.clusters);
-            return response;
-          }),
-          unassigned: filterHMClusters(response.unassigned),
-          clusters: filterHMClusters(response.clusters)
-        };
-      }
-      return response;
-    }
-
-    function filterHMClusters(clusters) {
-      return _.filter(clusters, function (cluster) {
-        return cluster.targetType !== 'mf_mgmt';
-      });
     }
 
     function updateFilters() {

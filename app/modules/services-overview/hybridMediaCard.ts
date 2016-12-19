@@ -29,10 +29,10 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
     return [this.setupButton];
   }
 
-  public hybridMediaFeatureToggleEventHandler(hasFeature: boolean) {
+  private hybridMediaRoleCheckEventHandler() {
     const hasRequiredRoles = _.includes(this.Authinfo.getRoles(), this.Config.roles.full_admin) ||
       _.includes(this.Authinfo.getRoles(), this.Config.roles.readonly_admin);
-    this.display = hasRequiredRoles && this.Authinfo.isFusionMedia() && hasFeature;
+    this.display = hasRequiredRoles && this.Authinfo.isFusionMedia();
   }
 
   /* @ngInject */
@@ -51,5 +51,6 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
       routerState: 'media-service-v2.list',
       service: 'squared-fusion-media',
     }, FusionClusterStatesService);
+    this.hybridMediaRoleCheckEventHandler();
   }
 }

@@ -22,7 +22,6 @@
 
         function init() {
           $q.all({
-            hasMediaFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding),
             hasHDSFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity),
             hasGoogleCalendarFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar),
           }).then(function (featureToggles) {
@@ -41,7 +40,7 @@
             if (Authinfo.isEntitled(Config.entitlements.fusion_uc)) {
               card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-uc', response.clusterList));
             }
-            if (response.featureToggles.hasMediaFeatureToggle && Authinfo.isEntitled(Config.entitlements.mediafusion)) {
+            if (Authinfo.isEntitled(Config.entitlements.mediafusion)) {
               card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-media', response.clusterList));
             }
             if (response.featureToggles.hasHDSFeatureToggle && Authinfo.isEntitled(Config.entitlements.hds)) {

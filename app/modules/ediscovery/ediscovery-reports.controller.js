@@ -1,3 +1,5 @@
+require('./ediscovery.scss');
+
 (function () {
   'use strict';
 

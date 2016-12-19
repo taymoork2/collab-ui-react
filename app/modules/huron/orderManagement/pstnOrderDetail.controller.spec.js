@@ -1,49 +1,64 @@
 'use strict';
 
 describe('Controller: PstnOrderDetailCtrl', function () {
-  var controller, $q, $controller, $scope, $stateParams, $translate, fulfilledBlockOrder, pendingBlockOrder, fulfilledNumberOrder, FeatureToggleService;
+  var $q, controller, $controller, $scope, $stateParams, $translate, fulfilledBlockOrder, pendingBlockOrder, fulfilledNumberOrder, PstnSetupService;
+
+  afterEach(function () {
+    $q = controller = $controller = $scope = $stateParams = $translate = fulfilledBlockOrder = pendingBlockOrder = fulfilledNumberOrder = PstnSetupService = undefined;
+  });
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_$q_, $rootScope, _$controller_, _$stateParams_, _$translate_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$q_, $rootScope, _$controller_, _$stateParams_, _$translate_) {
     $q = _$q_;
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $stateParams = _$stateParams_;
     $translate = _$translate_;
-    FeatureToggleService = _FeatureToggleService_;
-
-    spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
-      if (param === FeatureToggleService.features.huronSimplifiedTrialFlow) {
-        return $q.when(false);
-      }
-    });
 
     fulfilledBlockOrder = {
       carrierOrderId: '631208',
       created: '3/13/2016',
       operation: 'BLOCK_ORDER',
-      response: '{"631208":[{"countryCode":"1","e164":"+14697862340","number":"4697862340","tempCountryCode":null,"tempE164":null,"tempNumber":null,"network":"PROVISIONED","e911":null,"e911Address":null,"batchID":629790,"orderID":631208},{"countryCode":"1","e164":"+14697862371","number":"4697862371","tempCountryCode":null,"tempE164":null,"tempNumber":null,"network":"PROVISIONED","e911":null,"e911Address":null,"batchID":629790,"orderID":631208}]}',
+      numbers: [{ number: '+14697862340', network: 'PROVISIONED', status: 'Successful', tooltip: 'Completed Successfully' }, { number: '+14697862371', network: 'PROVISIONED', status: 'Successful', tooltip: 'Completed Successfully' }],
       status: 'Successful',
-      type: 'Advance Numbers'
+      type: 'Advance Numbers',
+      tooltip: 'Completed Successfully'
     };
 
     pendingBlockOrder = {
       carrierOrderId: '631209',
       created: '3/13/2016',
       operation: 'BLOCK_ORDER',
-      response: '{"631209":[{"countryCode":"1","e164":null,"number":null,"tempCountryCode":null,"tempE164":null,"tempNumber":null,"network":"PENDING","e911":null,"e911Address":null,"batchID":629790,"orderID":631209},{"countryCode":"1","e164":null,"number":null,"tempCountryCode":null,"tempE164":null,"tempNumber":null,"network":"PENDING","e911":null,"e911Address":null,"batchID":629790,"orderID":631209}]}',
-      status: 'Successful',
-      type: 'Advance Numbers'
+      numbers: [{ network: 'PENDING', status: 'In Progress', tooltip: 'Still Pending Queue' }, { network: 'PENDING', status: 'In Progress', tooltip: 'Still Pending Queue' }],
+      areaCode: '469',
+      quantity: '2',
+      status: 'In Progress',
+      type: 'Advance Numbers',
+      tooltip: 'Still Pending Queue'
     };
 
     fulfilledNumberOrder = {
       carrierOrderId: '631210',
       created: '3/13/2016',
       operation: 'NUMBER_ORDER',
-      response: '{"631210":[{"countryCode":"1","e164":"+14697862340","number":"4697862340","tempCountryCode":null,"tempE164":null,"tempNumber":null,"network":"PROVISIONED","e911":null,"e911Address":null,"batchID":629790,"orderID":631208},{"countryCode":"1","e164":"+14697862371","number":"4697862371","tempCountryCode":null,"tempE164":null,"tempNumber":null,"network":"PROVISIONED","e911":null,"e911Address":null,"batchID":629790,"orderID":631208}]}',
+      numbers: [{ number: '+14697862340', network: 'PROVISIONED', status: 'Successful', tooltip: 'Completed Successfully' }, { number: '+14697862371', network: 'PROVISIONED', status: 'Successful', tooltip: 'Completed Successfully' }],
       status: 'Successful',
-      type: 'New Numbers'
+      type: 'New Numbers',
+      tooltip: 'Completed Successfully'
+    };
+
+    PstnSetupService = {
+      getCustomerV2: function () {
+        return $q.when({
+          trial: true
+        });
+      },
+      getCustomerTrialV2: function () {
+        return $q.when({
+          acceptedDate: "today"
+        });
+      }
     };
 
     spyOn($translate, 'instant');
@@ -53,10 +68,14 @@ describe('Controller: PstnOrderDetailCtrl', function () {
 
   function initController(order) {
     $stateParams.currentOrder = order;
+    $stateParams.currentCustomer = {
+      customerOrgId: "1111OrgId"
+    };
     controller = $controller('PstnOrderDetailCtrl', {
       $scope: $scope,
       $stateParams: $stateParams,
-      $translate: $translate
+      $translate: $translate,
+      PstnSetupService: PstnSetupService
     });
     $scope.$apply();
   }
@@ -70,18 +89,24 @@ describe('Controller: PstnOrderDetailCtrl', function () {
     initController(fulfilledBlockOrder);
     expect(controller.info).toContain({
       number: '+14697862340',
-      label: '(469) 786-2340'
+      label: '(469) 786-2340',
+      status: 'Successful',
+      tooltip: 'Completed Successfully'
     }, {
       number: '+14697862371',
-      label: '(469) 786-2371'
+      label: '(469) 786-2371',
+      status: 'Successful',
+      tooltip: 'Completed Successfully'
     });
   });
 
   it('reset controller with pending order and process', function () {
-    $translate.instant.and.returnValue('There are 2 numbers pending for this order');
+    $translate.instant.and.returnValue('Quantity');
     initController(pendingBlockOrder);
     expect(controller.info).toContain({
-      label: 'There are 2 numbers pending for this order'
+      label: '(469) XXX-XXXX Quantity: 2',
+      status: 'In Progress',
+      tooltip: 'Still Pending Queue'
     });
   });
 
@@ -89,10 +114,14 @@ describe('Controller: PstnOrderDetailCtrl', function () {
     initController(fulfilledNumberOrder);
     expect(controller.info).toContain({
       number: '+14697862340',
-      label: '(469) 786-2340'
+      label: '(469) 786-2340',
+      status: 'Successful',
+      tooltip: 'Completed Successfully'
     }, {
       number: '+14697862371',
-      label: '(469) 786-2371'
+      label: '(469) 786-2371',
+      status: 'Successful',
+      tooltip: 'Completed Successfully'
     });
   });
 });

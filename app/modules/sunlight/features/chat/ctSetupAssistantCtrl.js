@@ -27,6 +27,7 @@
     vm.setEndTimeOptions = setEndTimeOptions;
     vm.animation = 'slide-left';
     vm.submitChatTemplate = submitChatTemplate;
+    vm.isEditFeature = $stateParams.isEditFeature;
 
     // Setup Assistant pages with index
     vm.states = ['name',
@@ -680,10 +681,9 @@
         .then(function (response) {
           handleChatTemplateCreation(response);
           LogMetricsService.logMetrics('Created template for Care', LogMetricsService.getEventType('careTemplateFinish'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-        }, function () {
-          handleChatTemplateError();
         })
         .catch(function (response) {
+          handleChatTemplateError();
           Notification.errorWithTrackingId(response, 'careChatTpl.createChatTemplateFailureText');
         });
     }
@@ -693,10 +693,9 @@
         .then(function (response) {
           handleChatTemplateEdit(response, vm.template.templateId);
           LogMetricsService.logMetrics('Edited template for Care', LogMetricsService.getEventType('careTemplateFinish'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-        }, function () {
-          handleChatTemplateError();
         })
         .catch(function (response) {
+          handleChatTemplateError();
           Notification.errorWithTrackingId(response, 'careChatTpl.editChatTemplateFailureText');
         });
     }

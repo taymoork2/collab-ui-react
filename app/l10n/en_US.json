@@ -1232,6 +1232,8 @@
     "extensionError": "Extension not valid: ",
     "companyVoicemail": "Voicemail",
     "vmAccessNumber": "Voicemail Access Number",
+    "vmAccessModes": "Access Modes",
+    "vmAccessModesHelpText": "Customize the voicemail delivery options for your organization. Aside from phone delivery, you can let users retrieve voicemails attachments in Cisco Spark, email or both. Downloaded voicemail attachments are not secure.",
     "companyVoicemailDescription": "Select a phone number to reserve for dialing voicemail from outside the company.",
     "to": "to",
     "addMoreExtensionRanges": "Add more extension ranges",
@@ -1247,6 +1249,7 @@
     "voicemailGetError": "Failed to get company voicemail number.",
     "voicemailUpdateError": "Failed to update company voicemail number.",
     "voicemailNoExternalNumbersError": "You must have unassigned direct lines to turn on voicemail. Please contact your partner or administrator.",
+    "voicemailNoDirectNumbersError": "You must have unassigned direct lines to turn on external voicemail access.",
     "timezoneUpdateError": "Failed to update company timezone.",
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
@@ -1260,12 +1263,18 @@
     "singleNumberRangeError": "Extension Ranges cannot begin and end with the same number.",
     "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines.",
     "voicemailToEmailLabel": "Voicemail to Email",
+    "voicemailToPhoneLabel": "Voicemail to Phone",
+    "phoneVoicemailAddedCostText": "Using this number incurs a usage cost.",
+    "voicemailToSparkLabel": "Voicemail to Spark",
+    "voicemailToSparkAndPhoneLabel": "Voicemail to Spark and Phone",
+    "messageWaitingIndicatorText": "The Message Waiting Indicator (MWI) continues to blink until users access their voicemails from their phones.",
     "voicemailToEmailHelpText": "Warning: Voicemail attachments sent via email are not secure.",
+    "voicemailNumberCostHelpText" : "Using this number incurs a usage cost",
     "voicemailToEmailGetError": "Failed to get voicemail to email settings.",
     "voicemailToEmailUpdateError": "Failed to update voicemail to email settings.",
     "voicemailTimeZoneGetError": "Failed to get voicemail time zone.",
     "externalVoicemailAccessLabel": "External Voicemail Access",
-    "voicemailPilotHelpText": "Usage of this E164 number incurs usage cost.",
+    "voicemailPilotHelpText": "Usage of this E164 number incurs a usage cost.",
     "errorGettingOptionaVmDidToggle": "There was a problem getting the optionalVmDid toggle.",
     "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network.",
     "voicemailPrefixTitle": "Voicemail ID Prefix",
@@ -1291,7 +1300,7 @@
     "saveModal": {
       "title": "Dial Plan Settings",
       "message1": "Are you sure you want to change your dial plan settings?",
-      "message2": "Changing dial plan settings during business hours can take a few minutes to propagate through the system and prevent users from placing calls during that time."
+      "message2": "This change can take a few minutes to apply to the system and prevent users from placing calls at that time."
     }
   },
   "dirsyncModal": {
@@ -1439,7 +1448,16 @@
       "availableMessage": "This will open Advanced Settings in a new tab.<br><br>Access to Advanced Settings requires that you are on the same network as the room device."
     },
     "sameAsCompanyNum": "To edit your emergency service address, the emergency callback number for your device must be different from your company’s callback number.",
-    "impactedUserInfo": "Modifying the Emergency Service Address associated to the above selected Callback Number will impact the following users and/or places:"
+    "impactedUserInfo": "Modifying the Emergency Service Address associated to the above selected Callback Number will impact the following users and/or places:",
+    "export": {
+      "deviceExportTitle": "Export Device Attributes to CSV",
+      "deviceExportDescription": "Gathering data for export may take a while. During this time you cannon sign out or refresh your browser, or the export will be cancelled.",
+      "export": "Export",
+      "deviceExportInProgress": "Exporting Device Attributes to CSV",
+      "exportCompleted": "Export completed",
+      "deviceListReadyForDownload": "Your device list has been compiled and is ready to download.",
+      "deviceExportFailedOrCancelled": "Device Export failed or was cancelled."
+    }
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -1675,7 +1693,8 @@
       "calendarType": "Calendar Type",
       "exchange": "Microsoft Exchange",
       "google": "Google Calendar",
-      "notSetup": "Not currently set up"
+      "notSetup": "Not currently set up",
+      "sinceTime": "since {{timestamp}}"
     },
     "alarms": {
       "alarms": "Alarms",
@@ -1917,6 +1936,9 @@
     },
     "registration": {
       "heading": "Registration"
+    },
+    "notificationDropdown": {
+      "label": "Service notifications"
     },
     "fusion": {
       "types": {
@@ -3079,7 +3101,8 @@
     "advanceOrder": "Advance Numbers",
     "newNumberOrder": "New Numbers",
     "portNumberOrder": "Porting Numbers",
-    "tollFreeNumberOrder": "Toll-Free Numbers",
+    "tollFreeNumberOrder": "New Toll-Free Numbers",
+    "tollFreeNumberAdvanceOrder": "Toll-Free Advance Numbers",
     "searchPlaceholder": "Search Orders"
   },
   "pstnOrderDetail": {
@@ -3168,6 +3191,9 @@
     "errors": {
       "states": "Failed to retrieve states",
       "inventory": "Failed to get PSTN inventory",
+      "orders": {
+        "missingNumber": "Number Missing in Order {{orderNumber}}"
+      },
       "tollfree": {
         "areacodes": "Failed to retrieve toll-free area codes.",
         "inventory": "Failed to retrieve toll-free number inventory."
@@ -3717,7 +3743,15 @@
     "analog": "Analog Telephone"
   },
   "ataSettings": {
-    "analog": "Analog Telephone"
+    "analog": "Analog Telephone",
+    "manage": "Manage Device Settings",
+    "title": "Device Settings",
+    "description": "Updating settings will affect the entire analog telephone adapter. You may need to perform testing on the connected analog device after saving your settings.",
+    "impedance": "Impedance",
+    "impedanceDescr": "Adjust the frequency response level for sound quality.",
+    "input": "Input Audio Level",
+    "output": "Output Audio Level",
+    "saved": "The settings are saved. You will have to reboot the device for the changes to take effect"
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
@@ -4901,7 +4935,7 @@
     "status": "Status",
     "cluster": "Cluster",
     "sipUri": "Directory URI",
-    "errorMessage": "Error Message"
+    "details": "Details"
   },
   "validation": {
     "nonPrintable": "This entry contains nonprintable characters.",
@@ -5281,6 +5315,9 @@
     },
     "summary": "Summary",
     "summaryDesc": "You have configured the chat template. Click Finish to save the configuration and generate embed code so you can start using this chat template on your organization website.",
+    "editSummaryDesc": "You have edited the chat template. Click Finish to save the configuration so you can start using the new version of this chat template on your organization website.",
+    "editCodeWarnMsg2Line1": "It can take up to 15 minutes for the chat template changes to be reflected.",
+    "editCodeWarnMsg2Line2":"Open the chat template in a new browser tab after this time to view the changes.",
     "copyEmbedCode": "Copy Embed Code",
     "errorCreateChatTemplate": "Error generating embed code, please try again.",
     "agentUnavailableMessage": "Sorry, we are unavailable at the moment. Please try again later.",
@@ -6091,14 +6128,27 @@
     "msg": {
       "splsResponseErr": "No partner organization found, please contact ccaportal@cisco.com for help."
     },
+    "cbgTitle": "Callback Groups",
+    "tdTitle": "Telephony Domain",
     "button": {
       "decline": "Decline",
       "approve": "Approve",
+      "complete": "Complete",
       "submitRequest": "Submit Request",
       "cancelSubmission": "Cancel Submission"
     },
-    "cbgTitle": "Callback Groups",
-    "tdTitle": "Telephony Domain",
+    "errorCode": {
+      "3001": "Failed to create callback group",
+      "3002": "Failed to update callback group",
+      "3003": "Failed to get callback group",
+      "3004": "Failed to get callback group workflow status",
+      "3005": "Failed to sync callback group",
+      "3006": "Failed to move sites between callback groups",
+      "3007": "Failed to list callback groups",
+      "3008": "Failed to check callback group name",
+      "3009": "The callback group name is duplicated",
+      "genericError": "An unexpected error occurred. Please try again later."
+    },
     "cbgs": {
       "overview": "Overview",
       "openedOn": "Opened on",
@@ -6115,9 +6165,13 @@
       "csvFilename": "exported_callbackGroup.csv",
       "declineDialogTitle": "Decline Callback Group",
       "declineReason": "Reason Callback Group is declined",
+      "provisionCbg": "Callback Group successfully updated",
+      "moveSiteMsg": "Are you sure you want to move this site?",
+      "provisionMsg": "Do you want to complete this request and notify customer?",
+      "cancelSubmissionTitle": "Are you sure you want to cancel the submission?",
+      "cancelSubmissionMsg": "The associated remedy ticket will be deleted from the system.",
       "declineDialogNote": "Note: Explaination will appear as a comment in the Callback Group history",
       "approveMsg": "If you proceed, the system will auto-update the callback group with the selected countries",
-      "moveSiteMsg": "Are you sure you want to move this site?",
       "field": {
         "sites": "Site URL",
         "status_": "Status",

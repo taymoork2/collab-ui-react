@@ -6,9 +6,9 @@
     .factory('ServiceSetup', ServiceSetup);
 
   /* @ngInject */
-  function ServiceSetup($q, $translate, $filter, Authinfo, SiteService, InternalNumberRangeService,
-      TimeZoneService, SiteLanguageService, ExternalNumberPool, VoicemailTimezoneService,
-      VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2, CeSiteService, AvrilSiteService, SiteCountryService) {
+  function ServiceSetup($filter, $q, $translate, Authinfo, AvrilSiteService, AvrilSiteUpdateService, CeSiteService,
+  CustomerCommonService, CustomerCosRestrictionServiceV2, ExternalNumberPool, FeatureToggleService, InternalNumberRangeService, SiteCountryService,
+  SiteLanguageService, SiteService, TimeZoneService, VoicemailService, VoicemailTimezoneService) {
     return {
       internalNumberRanges: [],
       sites: [],
@@ -40,6 +40,20 @@
           customerId: Authinfo.getOrgId(),
           siteId: siteUuid
         }, site).$promise;
+      },
+
+      getAvrilSite: function (siteUuid) {
+        return AvrilSiteUpdateService.get({
+          customerId: Authinfo.getOrgId(),
+          siteId: siteUuid
+        }).$promise;
+      },
+
+      updateAvrilSiteVoicemail: function (siteUuid, features) {
+        return AvrilSiteUpdateService.update({
+          customerId: Authinfo.getOrgId(),
+          siteId: siteUuid
+        }, features).$promise;
       },
 
       updateAvrilSite: function (siteUuid, siteStrDigit, code, timeZone, extLength, voicemailPilotNumber) {
@@ -180,7 +194,20 @@
       },
 
       getSiteLanguages: function () {
-        return SiteLanguageService.query().$promise;
+        return SiteLanguageService.query().$promise.then(function (languages) {
+          return FeatureToggleService.supports(
+              FeatureToggleService.features.huronUserLocale2
+            ).then(function (isHuronUserLocale2Enabled) {
+              if (!isHuronUserLocale2Enabled) {
+                languages = _.filter(languages, function (tLanguage) {
+                  return (!tLanguage.featureToggle || tLanguage.featureToggle !== FeatureToggleService.features.huronUserLocale2);
+                });
+              }
+              return languages;
+            }).catch(function () {
+              return languages;
+            });
+        });
       },
 
       getTranslatedSiteLanguages: function (languages) {

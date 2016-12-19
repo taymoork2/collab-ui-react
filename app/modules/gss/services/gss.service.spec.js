@@ -20,13 +20,20 @@ describe('Service: GSSService', function () {
     }
   };
 
-  beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('GSS'));
+  afterEach(destructDI);
+  afterAll(function () {
+    testData = undefined;
+  });
   beforeEach(inject(dependencies));
 
   function dependencies(_$httpBackend_, _GSSService_) {
     $httpBackend = _$httpBackend_;
     GSSService = _GSSService_;
+  }
+
+  function destructDI() {
+    $httpBackend = GSSService = undefined;
   }
 
   it('getServices should response with data', function () {

@@ -23,11 +23,9 @@ describe('Controller: TypeSelectorController', function () {
     Authinfo.isEntitled.and.returnValue(true);
   }));
 
-  function initController(options) {
-    var feature = _.get(options, 'hasMediaFeatureToggle', true);
+  function initController() {
     return $controller('TypeSelectorController', {
       $stateParams: $stateParams,
-      hasMediaFeatureToggle: feature,
     });
   }
 
@@ -50,11 +48,6 @@ describe('Controller: TypeSelectorController', function () {
       expect(controller.isEntitledTo.mediafusion).toBe(false);
     });
 
-    it('should initialize isEntitledTo.mediafusion to false if no media feature toggle', function () {
-      // fake the entitlement to true, and observe that the feature toggle is more important
-      var controller = initController({ hasMediaFeatureToggle: false });
-      expect(controller.isEntitledTo.mediafusion).toBe(false);
-    });
   });
 
   describe('canGoNext()', function () {

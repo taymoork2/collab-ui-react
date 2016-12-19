@@ -71,7 +71,7 @@
         partnerEmailUpdates = _.last(partnerEmailUpdates);
         vm.partnerAdminEmail = _.get(partnerEmailUpdates, 'adminDetails.emailId');
       } else {
-        if (orderObj.orderContent.common.resellerInfo) {
+        if (orderObj.orderContent.common.customerInfo.resellerInfo) {
           vm.partnerAdminEmail = _.get(orderObj, 'orderContent.common.customerInfo.resellerInfo.adminDetails.emailId');
         } else {
           vm.partnerAdminEmail = _.get(orderObj, 'orderContent.common.customerInfo.partnerInfo.adminDetails.emailId');

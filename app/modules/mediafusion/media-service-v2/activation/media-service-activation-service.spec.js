@@ -225,4 +225,11 @@ describe('MediaServiceActivationV2', function () {
     $httpBackend.flush();
     expect(Notification.error).toHaveBeenCalled();
   });
+  it('deactivateHybridMedia should be called successfully', function () {
+    $httpBackend.when('DELETE', /^\w+.*/).respond({
+      statusCode: 204
+    });
+    Service.deactivateHybridMedia();
+    expect($httpBackend.flush).not.toThrow();
+  });
 });

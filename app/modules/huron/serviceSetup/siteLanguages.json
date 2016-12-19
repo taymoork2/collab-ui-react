@@ -10,4 +10,36 @@
 }, {
   "label": "languages.englishBritish",
   "value": "en_GB"
+}, {
+  "label": "languages.german",
+  "value": "de_DE",
+  "featureToggle": "huron-l10n-user-locale-2"
+}, {
+  "label": "languages.dutch",
+  "value": "nl_NL",
+  "featureToggle": "huron-l10n-user-locale-2"
+}, {
+  "label": "languages.french",
+  "value": "fr_FR",
+  "featureToggle": "huron-l10n-user-locale-2"
+}, {
+  "label": "languages.italian",
+  "value": "it_IT",
+  "featureToggle": "huron-l10n-user-locale-2"
+}, {
+  "label": "languages.portugueseBrazillian",
+  "value": "pt_BR",
+  "featureToggle": "huron-l10n-user-locale-2"
+}, {
+  "label": "languages.portuguese",
+  "value": "pt_PT",
+  "featureToggle": "huron-l10n-user-locale-2"
+}, {
+  "label": "languages.spanishSpain",
+  "value": "es_ES",
+  "featureToggle": "huron-l10n-user-locale-2"
+}, {
+  "label": "languages.swedish",
+  "value": "sv_SE",
+  "featureToggle": "huron-l10n-user-locale-2"
 }]
