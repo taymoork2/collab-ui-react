@@ -9,7 +9,6 @@ describe('Service: Common Graph Service', () => {
   const BALLOON: string = 'balloon';
   const EXPORT: string = 'export';
   const PREFIXES: string = 'prefixesOfBigNumbers';
-  const VERTICAL_SCROLL: string = 'verticalScroll';
   const dummyData: string = 'dummyData';
 
   beforeEach(function () {
@@ -27,7 +26,6 @@ describe('Service: Common Graph Service', () => {
     expect(this.CommonGraphService.getBaseVariable(NUMFORMAT)).toEqual(responseData.baseVariables[NUMFORMAT]);
     expect(this.CommonGraphService.getBaseVariable(BALLOON)).toEqual(responseData.baseVariables[BALLOON]);
     expect(this.CommonGraphService.getBaseVariable(PREFIXES)).toEqual(responseData.baseVariables[PREFIXES]);
-    expect(this.CommonGraphService.getBaseVariable(VERTICAL_SCROLL)).toEqual(responseData.baseVariables[VERTICAL_SCROLL]);
 
     let exportVariable = this.CommonGraphService.getBaseVariable(EXPORT);
     expect(exportVariable).toEqual(responseData.baseVariables[EXPORT]);

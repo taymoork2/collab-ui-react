@@ -8,15 +8,15 @@ export class ReportConstants {
   public readonly ABORT: string = 'ABORT';
 
   // Numerical Constants
-  public readonly DAYS: number = 7;
+  public readonly DAYS: number = 6;
   public readonly FIXED: number = 2;
   public readonly MONTHS: number = 2;
   public readonly PERCENTAGE_MULTIPLIER: number = 100;
   public readonly THIRTEEN_WEEKS: number = 13;
   public readonly WEEKS: number = 3;
-  public readonly YEAR: number = 52;
-  public readonly FOUR_WEEKS: number = 49;
-  public readonly TWELVE_WEEKS: number = 41;
+  public readonly YEAR: number = 51;
+  public readonly FOUR_WEEKS: number = 48;
+  public readonly TWELVE_WEEKS: number = 40;
 
   // moment formatting helpers
   public readonly DAY_FORMAT: string = 'MMM DD';
@@ -91,7 +91,7 @@ export class ReportConstants {
     value: 'custom',
     label: this.$translate.instant('reportsPage.custom'),
     description: this.$translate.instant('reportsPage.custom2'),
-    min: 1,
+    min: 0,
     max: this.YEAR,
   };
   public timeFilter: Array<ITimespan> = [this.WEEK_FILTER, this.MONTH_FILTER, this.THREE_MONTH_FILTER];
