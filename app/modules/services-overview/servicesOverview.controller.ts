@@ -104,7 +104,6 @@ export class ServicesOverviewCtrl {
         ];
         this.forwardEvent('hybridStatusEventHandler', servicesStatuses);
         this.forwardEvent('hybridClustersEventHandler', clusterList);
-        this.forwardEvent('hybridMediaRoleCheckEventHandler');
       });
   }
 
