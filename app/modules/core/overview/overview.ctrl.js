@@ -37,12 +37,6 @@ require('./_overview.scss');
     vm.trialDaysLeft = undefined;
     vm.dismissNotification = dismissNotification;
 
-    vm.hasMediaFeatureToggle = false;
-    FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding)
-      .then(function (reply) {
-        vm.hasMediaFeatureToggle = reply;
-      });
-
     vm.hasHDSFeatureToggle = false;
     FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity)
       .then(function (reply) {
@@ -74,7 +68,7 @@ require('./_overview.scss');
                 vm.notifications.push(OverviewNotificationFactory.createCallAwareNotification());
               } else if (item.id === Config.entitlements.fusion_ec) {
                 vm.notifications.push(OverviewNotificationFactory.createCallConnectNotification());
-              } else if (item.id === Config.entitlements.mediafusion && vm.hasMediaFeatureToggle) {
+              } else if (item.id === Config.entitlements.mediafusion) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
               } else if (item.id === Config.entitlements.hds && vm.hasHDSFeatureToggle) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());

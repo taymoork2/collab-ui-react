@@ -44,11 +44,6 @@ export class ServicesOverviewCtrl {
 
     this.loadHybridServicesStatuses();
 
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServiceOnboarding)
-      .then(supports => {
-        this.forwardEvent('hybridMediaFeatureToggleEventHandler', supports);
-      });
-
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasCareTrials)
       .then(supports => {
         this.forwardEvent('careFeatureToggleEventHandler', supports);
@@ -109,6 +104,7 @@ export class ServicesOverviewCtrl {
         ];
         this.forwardEvent('hybridStatusEventHandler', servicesStatuses);
         this.forwardEvent('hybridClustersEventHandler', clusterList);
+        this.forwardEvent('hybridMediaRoleCheckEventHandler');
       });
   }
 

@@ -35,7 +35,7 @@
     </p>
   </cs-sp-section>
 
-  <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0 && clusterDetailsCtrl.schedule && clusterDetailsCtrl.hasEmergencyUpgradeFeatureToggle">
+  <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0 && clusterDetailsCtrl.schedule">
     <div class="section-title-row section-name" translate="hercules.fusion.urgentUpgrade.title"></div>
     <p>
       <span>{{clusterDetailsCtrl.schedule.urgentScheduleTime}}, </span>

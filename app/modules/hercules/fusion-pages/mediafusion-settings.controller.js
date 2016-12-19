@@ -6,10 +6,9 @@
     .controller('MediafusionClusterSettingsController', MediafusionClusterSettingsController);
 
   /* @ngInject */
-  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, MediaClusterServiceV2, $modal, FusionUtils, Notification, ResourceGroupService, hasEmergencyUpgradeFeatureToggle) {
+  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, MediaClusterServiceV2, $modal, FusionUtils, Notification, ResourceGroupService) {
     var vm = this;
     vm.backUrl = 'cluster-list';
-    vm.showEmergencyUpgrade = hasEmergencyUpgradeFeatureToggle;
     vm.upgradeSchedule = {
       title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader'
     };
