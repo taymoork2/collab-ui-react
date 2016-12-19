@@ -2025,12 +2025,83 @@
     "genericError": "An unexpected error occurred. Please try again later.",
     "serviceDescription": "Hybrid Data Security Service Description.",
     "hdsServiceActivationFailure": "Problems enabling the service",
+    "alarms": {
+      "alarms": "Alarms",
+      "critical": "Critical",
+      "error": "Error",
+      "warning": "Warning",
+      "alert": "Alert",
+      "severity": "Severity",
+      "firstReported": "First Reported",
+      "lastReported": "Last Reported",
+      "description": "Description",
+      "noAlarms": "No alarms reported",
+      "action": "Action"
+    },
     "clusters": {
       "listing": {
         "no_clusters_heading": "No Hybrid Data Service clusters registered",
         "no_clusters_text": "See required actions above and documentation to get started."
       }
     },
+    "clusterSettings": {
+      "pageTitle": "{{clusterName}} settings",
+      "upgradeScheduleHeader": "Upgrade",
+      "upgradeScheduleSubHeader": "Upgrade Schedule",
+      "allConnectorsWillBeUpgraded": "All connectors will be upgraded in the next scheduled upgrade.",
+      "moveResourceGroupDialogHeader": "Assign Resource Group",
+      "moveResourceGroupDialogParagraph": "{{ClusterName}} will be moved to \"{{NewResourceGroup}}\".",
+      "moveResourceGroupDialogConnectorsList": "The following connectors will be upgraded in the next upgrade window: ",
+      "moveResourceGroupSuccess": "{{ClusterName}} has been assigned to \"{{NewResourceGroup}}\".",
+      "releasechannelHeader": "Release Channel",
+      "releasechannelSubHeader": "Release Channel",
+      "releasechannelParagraph": "To change the release channel for this cluster, assign it to a resource group with the preferred release channel.",
+      "deactivateServicesHeader": "Deactivate Services",
+      "deactivateServicesParagraph": "Deactivate {{ServiceName}} to remove any service-related functionality from this cluster.",
+      "deactivateServicesSubHeader": "Deactivate {{service}}",
+      "noHybridServicesProvisioned": "No Hybrid Services are enabled on this Expressway. To enable a Hybrid Service, go to the relevant service page.",
+      "deregisterClusterParagraph": "There are still services active on “{{ClusterName}}”.",
+      "deregisterClusterExplanation": "Remove this cluster from Cisco Collaboration Cloud. All services must be deactivated on a cluster before it can be removed.",
+      "clusterMainSectionHeader": "Cluster",
+      "renameClusterParagraph": "Rename the Expressway cluster.",
+      "renameClusterDescription": "The cluster name is only used for display purposes. Changing it will not update the name on the Expressway itself.",
+      "clusterNameCannotByEmpty": "Cluster name cannot be empty.",
+      "clusterNameSaved": "Cluster name saved successfully",
+      "clusterNameCannotBeSaved": "Cluster name could not be saved. Try again later.",
+      "clusterNameWatermark": "Enter cluster name…",
+      "urgentUpgrade": {
+        "title": "Urgent Upgrade Schedule"
+      },
+      "connectorName": "Hybrid Data Security Node",
+      "connectorNameFromConnectorType": {
+        "hds_app": "Management Connector"
+      },
+      "registration": {
+        "heading": "Registration"
+      },
+      "list": {
+        "title": "Clusters",
+        "empty": "No clusters found.",
+        "upgrade-schedule": "Upgrade Schedule",
+        "clusters": "Clusters",
+        "users": "Users",
+        "release-channel": "Release Channel",
+        "nodes": "{count, plural, one{# Node} other{# Nodes}}",
+        "settings": "Settings",
+        "all": "All",
+        "add-resource": "Add Resource",
+        "no-services": "No services",
+        "missing-clusters": "<a ng-click=\"{{onclick}}\">Assign clusters</a> and users to complete this group",
+        "missing-users": "<a ng-click=\"{{onclick}}\">Assign users</a> to complete this group",
+        "users-in-limbo": "Either <a ng-click=\"{{onclick}}\">remove</a> this group to reset user assignments or <a ng-click=\"{{onclick}}\">assign clusters</a> to restore services.",
+        "complete-registration": "Go to your Hybrid Data Security admin to complete the registration.",
+        "registration-timeout": "The registration timed out. Please remove this cluster and register the Hybrid Data Security node again.",
+        "registration-timeout-extended": "The registration timed out. Please remove this cluster and register the Hybrid Data Security node again in the Add Resource dialog.",
+        "go-to-hds": "Go to Hybrid Data Security admin"
+
+      }
+    },
+    "serviceName" : "Hybrid Data Security",
     "serviceStatus": {
       "unknown": "Status unknown",
       "not_configured": "Not configured",

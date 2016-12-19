@@ -6,7 +6,7 @@
     .controller('HDSServiceController', HDSServiceController);
 
   /* @ngInject */
-  function HDSServiceController($scope, $translate, ClusterService, FusionClusterService, FeatureToggleService) {
+  function HDSServiceController($scope, $state, $stateParams, $translate, ClusterService, FusionClusterService, FeatureToggleService) {
 
 
     var vm = this;
@@ -28,6 +28,7 @@
     vm.getSeverity = ClusterService.getRunningStateSeverity;
     vm.sortByProperty = sortByProperty;
     vm.clusterList = [];
+    vm.showClusterSidepanel = showClusterSidepanel;
 
     vm.clusterListGridOptions = {
       data: 'hdsServiceController.clusters',
@@ -40,8 +41,11 @@
       onRegisterApi: function (gridApi) {
         $scope.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-          vm.showClusterDetails(row.entity);
+          $scope.exp.showClusterSidepanel(row.entity);
         });
+        if (!_.isUndefined($stateParams.clusterId) && $stateParams.clusterId !== null) {
+          showClusterSidepanel(ClusterService.getCluster('hds_app', $stateParams.clusterId));
+        }
       },
       columnDefs: [{
         field: 'groupName',
@@ -56,6 +60,12 @@
       }]
     };
 
+    function showClusterSidepanel(cluster) {
+      $state.go('hds-cluster-details', {
+        clusterId: cluster.id,
+        connectorType: vm.connectorType
+      });
+    }
 
     FusionClusterService.serviceIsSetUp('spark-hybrid-datasecurity').then(function (enabled) {
       if (enabled) {

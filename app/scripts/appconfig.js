@@ -2582,6 +2582,31 @@
               }
             }
           })
+          .state('hds-cluster-details', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                controllerAs: 'hdsClusterController',
+                controller: 'HDSClusterController',
+                templateUrl: 'modules/hds/cluster-sidepanel/cluster-details.html'
+              },
+              'header@hds-cluster-details': {
+                templateUrl: 'modules/hds/cluster-sidepanel/cluster-header.html'
+              }
+            },
+            data: {
+              displayName: 'Overview'
+            },
+            params: {
+              clusterId: null,
+              connectorType: null
+            },
+            resolve: {
+              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
+              },
+            }
+          })
           .state('mediafusion-settings', {
             url: '/services/cluster/mediafusion/:id/settings',
             templateUrl: 'modules/hercules/fusion-pages/mediafusion-settings.html',
