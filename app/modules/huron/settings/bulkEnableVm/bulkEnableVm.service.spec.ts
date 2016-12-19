@@ -102,6 +102,32 @@ describe('Service: BulkEnableVmService', () => {
 
   });
 
+  it('getUserServices should retry 3 times by default when 502 response is received', function() {
+    this.$httpBackend.whenGET(this.HuronConfig.getCmiUrl() + '/common/customers/' + this.Authinfo.getOrgId() + '/users/12345')
+    .respond(502);
+
+    spyOn(this.BulkEnableVmService, 'getUserServicesRetry').and.callThrough();
+    this.BulkEnableVmService.getUserServicesRetry('12345').catch(function (error) {
+          expect(error.status).toBe(502);
+        });
+    this.$httpBackend.flush();
+    expect(this.BulkEnableVmService.getUserServicesRetry).toHaveBeenCalledTimes(4);
+
+  });
+
+  it('getUserServices should retry 3 times by default when 504 response is received', function() {
+    this.$httpBackend.whenGET(this.HuronConfig.getCmiUrl() + '/common/customers/' + this.Authinfo.getOrgId() + '/users/12345')
+    .respond(504);
+
+    spyOn(this.BulkEnableVmService, 'getUserServicesRetry').and.callThrough();
+    this.BulkEnableVmService.getUserServicesRetry('12345').catch(function (error) {
+          expect(error.status).toBe(504);
+        });
+    this.$httpBackend.flush();
+    expect(this.BulkEnableVmService.getUserServicesRetry).toHaveBeenCalledTimes(4);
+
+  });
+
   it('getUserSitetoSiteNumberRetry should retry specified number of times when 429 response is received', function() {
     this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/users/12345').respond(429);
     spyOn(this.BulkEnableVmService, 'getUserSitetoSiteNumberRetry').and.callThrough();

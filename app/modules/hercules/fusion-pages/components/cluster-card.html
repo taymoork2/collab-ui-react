@@ -29,7 +29,11 @@
           </div>
           <div class="connection-status-services">
             <div class="connection-status-service" ng-repeat="service in $ctrl.cluster.servicesStatuses | filter: {serviceId: '!squared-fusion-mgmt'}" ng-if="service.total > 0">
-              <a ng-click="$ctrl.openService(service.serviceId, $ctrl.cluster.id)"><i class="icon icon-circle status-indicator" ng-class="service.state.cssClass"></i> <span>{{::'overview.cards.hybrid.services.' + service.serviceId | translate}}</span></a>
+              <a ng-click="$ctrl.openService(service.serviceId, $ctrl.cluster.id)">
+                <i class="icon icon-circle status-indicator" ng-class="service.state.cssClass"></i>
+                <span ng-if="service.serviceId !== 'squared-fusion-cal'">{{::'overview.cards.hybrid.services.' + service.serviceId | translate}}</span>
+                <span ng-if="service.serviceId === 'squared-fusion-cal'" translate="hercules.cloudExtensions.serviceNames.squared-fusion-cal"></span>
+              </a>
             </div>
           </div>
         </div>

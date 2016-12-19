@@ -10,6 +10,14 @@ describe('SetupWizardCtrl', function () {
   var usageFixture = getJSONFixture('core/json/organizations/usage.json');
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
 
+  afterEach(function () {
+    $controller = $scope = $q = Authinfo = FeatureToggleService = Orgservice = undefined;
+  });
+
+  afterAll(function () {
+    usageFixture = usageOnlySharedDevicesFixture = undefined;
+  });
+
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _Authinfo_, _FeatureToggleService_, _Orgservice_) {
     $scope = $rootScope.$new();
     $q = _$q_;

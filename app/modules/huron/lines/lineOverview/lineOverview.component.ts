@@ -93,6 +93,16 @@ class LineOverview implements ng.IComponentController {
     this.checkForChanges();
   }
 
+  public refreshInternalNumbers(filter: string): void {
+    this.DirectoryNumberOptionsService.getInternalNumberOptions(filter)
+      .then(numbers => this.internalNumbers = numbers);
+  }
+
+  public refreshExternalNumbers(filter: string): void {
+    this.DirectoryNumberOptionsService.getExternalNumberOptions(filter)
+      .then(numbers => this.externalNumbers = numbers);
+  }
+
   public setCallForward(callForward: CallForward): void {
     this.lineOverviewData.callForward = callForward;
     this.checkForChanges();

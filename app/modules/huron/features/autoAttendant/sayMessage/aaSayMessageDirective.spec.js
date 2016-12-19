@@ -3,6 +3,7 @@
 describe('Directive: aaSayMessage', function () {
   var $compile, $rootScope, $scope, $q;
   var AAUiModelService, AutoAttendantCeMenuModelService;
+  var element;
 
   var aaUiModel = {
     openHours: {}
@@ -10,6 +11,13 @@ describe('Directive: aaSayMessage', function () {
   var schedule = 'openHours';
   var index = '0';
   var FeatureToggleService;
+
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
 
   beforeEach(angular.mock.module('Huron'));
 
@@ -34,7 +42,7 @@ describe('Directive: aaSayMessage', function () {
   }));
 
   it('replaces the element with the appropriate content', function () {
-    var element = $compile("<aa-say-message aa-schedule='openHours' aa-index='0'></aa-say-message>")($rootScope);
+    element = $compile("<aa-say-message aa-schedule='openHours' aa-index='0'></aa-say-message>")($rootScope);
     $rootScope.$digest();
 
     expect(element.html()).toContain("aa-message-textarea");

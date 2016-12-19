@@ -8,7 +8,7 @@ require('./_customer-overview.scss');
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, newCustomerViewToggle, Notification, Orgservice, PartnerService, TrialService, Userservice) {
+  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, newCustomerViewToggle, Notification, Orgservice, PartnerService, trialForPaid, TrialService, Userservice) {
     var vm = this;
 
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -56,6 +56,7 @@ require('./_customer-overview.scss');
 
     // TODO:  atlasCustomerListUpdate toggle is globally set to true. Needs refactoring to remove unused code
     vm.newCustomerViewToggle = newCustomerViewToggle;
+    vm.featureTrialForPaid = trialForPaid;
 
     var QTY = _.toUpper($translate.instant('common.quantity'));
     var FREE = _.toUpper($translate.instant('customerPage.free'));
@@ -116,10 +117,19 @@ require('./_customer-overview.scss');
     }
 
     function initTrialActions() {
-      vm.trialActions.push({
-        actionKey: 'customerPage.edit',
-        actionFunction: openEditTrialModal
-      });
+      if (vm.currentCustomer.trialId) {
+        vm.trialActions.push({
+          actionKey: 'customerPage.edit',
+          actionFunction: openEditTrialModal
+        });
+      } else {
+        if (vm.featureTrialForPaid) {
+          vm.trialActions.push({
+            actionKey: 'customerPage.addTrial',
+            actionFunction: openAddTrialModal
+          });
+        }
+      }
     }
 
     function resetForm() {
@@ -258,20 +268,24 @@ require('./_customer-overview.scss');
       }));
     }
 
-    function openEditTrialModal() {
-      TrialService.getTrial(vm.currentCustomer.trialId).then(function (response) {
+    function openEditTrialModal(/*isPaid*/) {
+      //isPaid flag will be used later once the paid trial implementation is in place
+      return TrialService.getTrial(vm.currentCustomer.trialId).then(function (response) {
         $state.go('trialEdit.info', {
           currentTrial: vm.currentCustomer,
           details: response
-        })
-          .then(function () {
-            $state.modal.result.then(function () {
-              $state.go('partnercustomers.list', {}, {
-                reload: true
-              });
+        }).then(function () {
+          $state.modal.result.then(function () {
+            $state.go('partnercustomers.list', {}, {
+              reload: true
             });
           });
+        });
       });
+    }
+
+    function openAddTrialModal() {
+      openEditTrialModal(true);
     }
 
     function getDaysLeft(daysLeft) {

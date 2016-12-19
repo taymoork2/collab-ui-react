@@ -6,7 +6,7 @@
     .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeInfoModelService, Notification, Log, FeatureToggleService, CardUtils) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeInfoModelService, Notification, Log, FeatureToggleService, CallPickupGroupService, CardUtils) {
 
     var vm = this;
     vm.searchData = searchData;
@@ -36,6 +36,9 @@
     }, {
       name: $translate.instant('huronHuntGroup.modalTitle'),
       filterValue: 'HG'
+    }, {
+      name: $translate.instant('callPark.title'),
+      filterValue: 'CP'
     }];
 
     /* LIST OF FEATURES
@@ -75,6 +78,17 @@
       color: 'cta'
     }];
 
+    var piFeature = {
+      name: 'PI',
+      getFeature: function () {
+        return CallPickupGroupService.getListOfPickupGroups();
+      },
+      formatter: HuronFeaturesListService.pickupGroups,
+      isEmpty: false,
+      i18n: 'huronFeatureDetails.piName',
+      color: 'attention'
+    };
+
     var pgFeature = {
       name: 'PG',
       getFeature: function () {
@@ -83,16 +97,17 @@
       formatter: HuronFeaturesListService.pagingGroups,
       isEmpty: false,
       i18n: 'huronFeatureDetails.pgName',
-      color: 'gray'
+      color: 'people'
     };
 
-    FeatureToggleService.supports(FeatureToggleService.features.callParkService).then(function (result) {
+    FeatureToggleService.supports(FeatureToggleService.features.huronCallPickup).then(function (result) {
       if (result) {
-        var cp = {
-          name: $translate.instant('callPark.title'),
-          filterValue: 'CP'
+        var pi = {
+          name: $translate.instant('callPickup.title'),
+          filterValue: 'PI'
         };
-        vm.filters.push(cp);
+        vm.features.push(piFeature);
+        vm.filters.push(pi);
       }
     });
 
@@ -107,7 +122,6 @@
       }
       init();
     });
-
 
     function init() {
       vm.loading = false;
@@ -144,6 +158,19 @@
         reload: true
       });
     }
+    vm.featureFilter = function (feature) {
+      if (feature.filterValue !== 'CP' && feature.filterValue !== 'PG' && feature.filterValue !== 'PI') {
+        return true;
+      }
+      return false;
+    };
+
+    vm.filterForMemberCount = function (feature) {
+      if (feature.filterValue === 'HG' || feature.filterValue === 'CP' || feature.filterValue === 'PG' || feature.filterValue === 'PI') {
+        return true;
+      }
+      return false;
+    };
 
     function getListOfFeatures() {
       var promises = [];

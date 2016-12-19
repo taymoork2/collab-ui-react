@@ -6,7 +6,7 @@
     .controller('DidAddCtrl', DidAddCtrl);
 
   /* @ngInject */
-  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, ExternalNumberPool, EmailService, DidAddEmailService, Notification, Authinfo, $timeout, LogMetricsService, DidService, TelephoneNumberService, DialPlanService, PstnSetupService) {
+  function DidAddCtrl($q, $rootScope, $state, $stateParams, $timeout, $translate, Authinfo, DialPlanService, DidAddEmailService, DidService, ExternalNumberPool, LogMetricsService, Notification, PstnSetupService, TelephoneNumberService) {
     var vm = this;
     var firstValidDid = false;
     var editMode = !!$stateParams.editMode;
@@ -53,7 +53,6 @@
     vm.backtoStartTrial = backtoStartTrial;
     vm.backtoEditTrial = backtoEditTrial;
     vm.currentOrg = $stateParams.currentOrg;
-    vm.emailNotifyTrialCustomer = emailNotifyTrialCustomer;
 
     activate();
     initSubmitButtonStatus();
@@ -298,26 +297,6 @@
         Notification.error('didManageModal.emailFailText');
       });
       $state.modal.close();
-    }
-
-    function emailNotifyTrialCustomer() {
-      if (!_.isUndefined($scope.trial)) {
-        EmailService.emailNotifyTrialCustomer(
-            $scope.trial.model.customerEmail,
-            $scope.trial.model.licenseDuration,
-            $scope.trial.model.customerOrgId)
-          .then(function () {
-            Notification.success('didManageModal.emailSuccessText');
-          })
-          .catch(function () {
-            Notification.error('didManageModal.emailFailText');
-          })
-          .finally(function () {
-            angular.element('#trialNotifyCustomer').prop('disabled', true);
-          });
-      } else {
-        Notification.error('didManageModal.emailFailText');
-      }
     }
 
     // We want to capture the modal close event and clear didList from service.

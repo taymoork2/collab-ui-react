@@ -43,6 +43,20 @@
       font-size: 2.5rem;
       color: $color-primary-base;
     }
+
+    .delete-media {
+      .trash-media-icon {
+        @extend .icon;
+        @extend .icon-trash;
+        color: $gray-light-2;
+        font-size: 1rem;
+
+        &:hover {
+          cursor: pointer;
+          color: $aa-builder-icon-click-color;
+        }
+      }
+    }
   }
 
   .aa-dl-box {

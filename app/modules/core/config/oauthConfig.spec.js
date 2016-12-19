@@ -5,6 +5,10 @@ describe('OAuthConfig', function () {
 
   var OAuthConfig, $location;
 
+  afterEach(function () {
+    OAuthConfig = $location = undefined;
+  });
+
   beforeEach(inject(function (_$location_, _OAuthConfig_) {
     OAuthConfig = _OAuthConfig_;
     $location = _$location_;
@@ -37,7 +41,7 @@ describe('OAuthConfig', function () {
           $location.host.and.returnValue(host);
           var actual = OAuthConfig[fn](arg1, arg2);
 
-          if (expected != actual) {
+          if (expected !== actual) {
             throw new Error("Expected " + fn + " in " + env + " to be '" + expected + "' but it was '" + actual + "'");
           }
         });
@@ -45,12 +49,16 @@ describe('OAuthConfig', function () {
     };
   };
 
+  afterAll(function () {
+    devHost = prodHost = cfeHost = intHost = scope = whenCalling = undefined;
+  });
+
   it('should return correct access code url', function () {
     whenCalling('getOauthAccessCodeUrl', 'foo').expectUrlToBe({
-      dev: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope,
-      cfe: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope,
-      integration: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope,
-      prod: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope
+      dev: 'grant_type=refresh_token&refresh_token=foo',
+      cfe: 'grant_type=refresh_token&refresh_token=foo',
+      integration: 'grant_type=refresh_token&refresh_token=foo',
+      prod: 'grant_type=refresh_token&refresh_token=foo'
     });
   });
 

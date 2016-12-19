@@ -7,6 +7,13 @@ describe('Controller: ExpresswayClusterSettingsController', function () {
   var html;
   var $compile;
 
+  afterEach(function () {
+    if (view) {
+      view.remove();
+    }
+    view = undefined;
+  });
+
   beforeEach(inject(function ($rootScope, $templateCache, _$compile_) {
     $scope = $rootScope.$new();
     $compile = _$compile_;

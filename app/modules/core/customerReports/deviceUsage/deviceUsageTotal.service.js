@@ -396,6 +396,7 @@
             'bulletBorderAlpha': 1,
             'useLineColorForBulletBorder': true,
             'labelFunction': getLabel,
+            'labelOffset': -2
           }
           /*
           {

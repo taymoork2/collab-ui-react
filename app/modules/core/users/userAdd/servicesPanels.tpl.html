@@ -145,10 +145,10 @@
             </div>
           </div>
         </div>
-        <div class="item-mtg-license" ng-if="hasAdvancedLicenses">
-          <span translate="firstTimeWizard.advancedMeetings"></span>
-        </div>
         <div class="entitle-check-grp" ng-repeat="lic in advancedLicenses">
+          <div class="item-mtg-license" ng-if="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial) && advancedLicenses.indexOf(lic) === 0">
+            <span translate="firstTimeWizard.advancedMeetings"></span>
+          </div>
           <div class="item-mtg" ng-if="lic.site">
             <div ng-show="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial)">
               <span ng-if="lic.isCISite">{{lic.site}}</span>
@@ -193,7 +193,6 @@
                 cs-input
                 type="checkbox"
                 id="{{commFeature.license.licenseId}}"
-                ng-if="!disableCommFeatureAssignment() && hasSite"
                 ng-change="checkLicenseAvailability('COMMUNICATION', radioStates.commRadio)"
                 ng-model="radioStates.commRadio"
                 ng-disabled="hybridCallServiceAware"
@@ -224,10 +223,12 @@
                 type="checkbox"
                 id="{{care.license.licenseId}}"
                 ng-model="radioStates.careRadio"
-                cs-input-label="{{::care.label | translate}}">
+                cs-input-label="{{::care.label | translate}}"
+                ng-disabled="!enableCareService">
             </div>
           </div>
         </div>
+        <label class="care-information-text" translate="onboardModal.enableCareInformationText"></label>
       </div>
     </div>
 </div>

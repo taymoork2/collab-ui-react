@@ -13,8 +13,6 @@
       LABEL: "label"
     };
 
-    vm.actionEntry = {};
-
     vm.showLanguageAndVoiceOptions = false;
 
     var languageOption = {
@@ -31,27 +29,21 @@
 
     vm.destinationOptions = [{
       label: $translate.instant('autoAttendant.destinations.Disconnect'),
-      name: 'disconnect',
       action: 'disconnect'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
-      name: 'destinationMenuRouteHunt',
       action: 'routeToHuntGroup'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
-      name: 'destinationMenuRouteAA',
       action: 'goto'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
-      name: 'destinationMenuRouteUser',
       action: 'routeToUser'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
-      name: 'destinationMenuRouteMailbox',
       action: 'routeToVoiceMail'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
-      name: 'destinationMenuRouteToExtNum',
       action: 'route'
     }];
     vm.destination = vm.destinationOptions[0];
@@ -63,9 +55,6 @@
 
     vm.destination = '';
     vm.maxWaitTime = '';
-
-    vm.activate = activate;
-    vm.populateMohRadio = populateMohRadio;
 
     vm.languageOption = languageOption;
     vm.voiceOption = voiceOption;
@@ -79,14 +68,15 @@
     vm.periodicSeconds = [];
     vm.periodicSecond = {};
     vm.periodicMinute = {};
+    vm.minutes = [];
+
     vm.changedPeriodicMinValue = changedPeriodicMinValue;
-    vm.changedPeriodicSecValue = changedPeriodicSecValue;
-    vm.areSecondsDisabled = isDisabled;
+
+    vm.isDisabled = isDisabled;
 
     var mohPlayAction = undefined;
     var fallbackAction = undefined;
     var paAction = undefined;
-    var periodicTime = '';
 
     var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
     var DEFAULT_MOH = 'musicOnHoldDefault';
@@ -96,8 +86,9 @@
 
     //else the dismiss was called
     function ok() {
+      updateLanguageVoice();
       updateMaxWaitTime();
-      updateFallback();
+      updatePeriodicTime();
       autoValidate();
       AACommonService.setQueueSettingsStatus(true);
       $modalInstance.close();
@@ -112,8 +103,18 @@
       }
     }
 
-    function updateFallback() {
-      fallbackAction.setName(vm.destination.action);
+    function updateLanguageVoice() {
+      if (vm.showLanguageAndVoiceOptions) {
+        vm.menuEntry.actions[0].queueSettings.language = vm.languageOption.value;
+        vm.menuEntry.actions[0].queueSettings.voice = vm.voiceOption.value;
+      }
+    }
+
+    function updatePeriodicTime() {
+      var periodicMinutes = (vm.periodicMinute * 60);
+      var periodicTime = periodicMinutes + vm.periodicSecond;
+
+      paAction.interval = periodicTime;
     }
 
     function updateMaxWaitTime() {
@@ -136,7 +137,30 @@
     }
 
     function isDisabled() {
-      return vm.periodicMinute.label == '5';
+      return _.isEqual(vm.periodicMinute, 5);
+    }
+
+    function changedPeriodicMinValue() {
+      if (_.isEqual(vm.periodicMinute, 0)) {
+        // remove 'zero' from selection
+        if (_.isEqual(vm.periodicSeconds[0], 0)) {
+          vm.periodicSeconds.splice(0, 1);
+        }
+
+        if (_.isEqual(vm.periodicSecond, 0)) {
+          vm.periodicSecond = vm.periodicSeconds[0];
+        }
+        return;
+      }
+
+      if (_.indexOf(vm.periodicSeconds, 0) === -1) {
+        vm.periodicSeconds.splice(0, 1, 0);
+      }
+
+      if (_.isEqual(vm.periodicMinute, 5)) {
+        vm.periodicSecond = vm.periodicSeconds[0];
+      }
+      return;
     }
 
     function isDestinationValid() {
@@ -165,33 +189,28 @@
       }
     }
 
+    function populateLanguageVoice() {
+      if (vm.showLanguageAndVoiceOptions) {
+        vm.languageOptions.sort(AACommonService.sortByProperty(properties.LABEL));
+        vm.voiceOptions.sort(AACommonService.sortByProperty(properties.LABEL));
+
+        var voice = vm.menuEntry.actions[0].queueSettings.voice;
+
+        vm.voiceOption = AALanguageService.getVoiceOption(voice);
+        vm.languageOption = AALanguageService.getLanguageOption(voice);
+        vm.voiceBackup = vm.voiceOption;
+        setVoiceOptions();
+      }
+    }
+
     function populatePeriodicTime() {
-      _.times(6, function (i) {
-        vm.periodicMinutes.push({
-          index: i,
-          label: i
-        });
-      });
-      _.times(11, function (i) {
-        vm.periodicSeconds.push({
-          index: i,
-          label: (i + 1) * 5
-        });
-      });
+      vm.periodicMinutes = _.range(6);
+
+      vm.periodicSeconds = _.range(0, 60, 5);
+
       if (!_.isEqual(paAction.interval, '')) {
-        var periodicMinute = parseInt(paAction.interval / 60, 10);
-        vm.periodicMinute = {
-          index: periodicMinute,
-          label: periodicMinute
-        };
-        var periodicSecond = paAction.interval - (periodicMinute * 60);
-        vm.periodicSecond = {
-          index: parseInt(periodicSecond / 5, 10) - 1,
-          label: periodicSecond
-        };
-        if (periodicMinute == '5') {
-          vm.areSecondsDisabled = false;
-        }
+        vm.periodicMinute = parseInt(paAction.interval / 60, 10);
+        vm.periodicSecond = paAction.interval - (vm.periodicMinute * 60);
       } else {
         vm.periodicMinute = vm.periodicMinutes[0];
         vm.periodicSecond = vm.periodicSeconds[8];
@@ -199,28 +218,16 @@
     }
 
     function populateMaxWaitTime() {
-      vm.minutes = [];
-      _.times(60, function (i) {
-        vm.minutes.push({
-          index: i,
-          label: i + 1
-        });
-      });
+      vm.minutes = _.range(1, 61);
     }
 
     //populating fallback drop down in sorted order
     function populateFallbackDropDown() {
-      vm.destinationOptions.sort(AACommonService.sortByProperty('label'));
+      vm.destinationOptions.sort(AACommonService.sortByProperty(properties.LABEL));
 
       vm.destination = _.find(vm.destinationOptions, function (option) {
         return (_.isEqual(option.action, fallbackAction.name));
       });
-
-      vm.languageOptions.sort(AACommonService.sortByProperty('label'));
-      vm.voiceOptions.sort(AACommonService.sortByProperty('label'));
-
-      vm.languageOption = AALanguageService.getLanguageOption();
-      vm.voiceOption = AALanguageService.getVoiceOption();
     }
 
     function populateMohRadio() {
@@ -229,41 +236,6 @@
       } else {
         vm.musicOnHold = CUSTOM_MOH;
       }
-    }
-
-    function changedPeriodicMinValue() {
-      if (vm.periodicMinute.index == '0') {
-        vm.periodicSeconds.splice(0, 1);
-        if (vm.periodicSecond.label == 0) {
-          vm.periodicSecond = vm.periodicSeconds[0];
-        }
-        vm.areSecondsDisabled = true;
-      } else {
-        if (vm.periodicSeconds[0].label != '0') {
-          vm.periodicSeconds.splice(0, 0, { index: 0, label: 0 });
-        }
-        vm.areSecondsDisabled = true;
-      }
-      if (vm.periodicMinute.index == '5') {
-        vm.periodicSecond = vm.periodicSeconds[0];
-        vm.areSecondsDisabled = false;
-      }
-      var periodicMinutes = (vm.periodicMinute.label * 60);
-      periodicTime = periodicMinutes + vm.periodicSecond.label;
-      paAction.interval = periodicTime;
-    }
-
-    function changedPeriodicSecValue() {
-      if ((vm.periodicSecond.index == 0) && (vm.periodicMinute.index == 0)) {
-        if (vm.periodicSeconds[0].label == 0) {
-          vm.periodicSeconds.splice(0, 1);
-        }
-        vm.periodicSecond = vm.periodicSeconds[0];
-        vm.areSecondsDisabled = true;
-      }
-      var periodicSeconds = (vm.periodicMinute.label * 60);
-      periodicTime = periodicSeconds + vm.periodicSecond.label;
-      paAction.interval = periodicTime;
     }
 
     //get queueSettings menuEntry -> inner menu entry type (moh, initial, periodic...)
@@ -292,6 +264,7 @@
     }
 
     function initializeView() {
+      populateLanguageVoice();
       populateMohRadio();
       populatePeriodicTime();
       populateMaxWaitTime();

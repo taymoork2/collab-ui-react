@@ -1,0 +1,120 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="hdsRedirectAddResourceController.closeSetupModal()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h5 class="modal-title">
+    <span translate="hds.add-resource-dialog.title">
+    </span>
+  </h5>
+</div>
+<div class="modal-body">
+  <div ng-show="hdsRedirectAddResourceController.proceedSetup && !hdsRedirectAddResourceController.enableRedirectToTarget">
+    <div>
+      <h4 class="hdsAddResourceInlineBlock" translate="hds.add-resource-dialog.yesInfo1"></h4>
+      <h4 class="hdsAddResourceFQDN" translate="hds.add-resource-dialog.yesInfo2"></h4>
+      <h4 class="hdsAddResourceInlineBlock" translate="hds.add-resource-dialog.yesInfo3"></h4>
+    </div>
+    <form name="hdsInputHostNameForm" class="hdsInputHostNameForm">
+      <div>
+        <br>
+        <div class="row">
+          <div class="columns medium-5">
+            <p translate="hds.add-resource-dialog.text1">
+            </p>
+          </div>
+          <div class="columns medium-6 hdsInputHostNameForm">
+            <cs-select combo="true" ng-model="hdsRedirectAddResourceController.selectedCluster" options="hdsRedirectAddResourceController.clusterList" placeholder="hdsRedirectAddResourceController.selectPlaceholder">
+            </cs-select>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="columns medium-5">
+            <p class="hdsAddResourceInlineBlock" translate="hds.add-resource-dialog.text3"/>
+            <p class="hdsAddResourceFQDN" translate="hds.add-resource-dialog.yesInfo2"/>
+            <p class="hdsAddResourceInlineBlock" translate="hds.add-resource-dialog.text3part2"/>
+          </div>
+          <div class="columns medium-6 hdsInputHostNameForm">
+            <input class="cs-input" ng-model="hdsRedirectAddResourceController.hostName" placeholder="{{'hds.add-resource-dialog.hostname' | translate}} " type="text">
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div ng-show="hdsRedirectAddResourceController.enableRedirectToTarget">
+    <p>
+      <span translate="hds.add-resource-dialog.grant-registration-success-part-1"/>
+      <br>
+      <span translate="hds.add-resource-dialog.grant-registration-success-part-2" translate-values="{hostname: hdsRedirectAddResourceController.hostName || ''}"/>
+      <br>
+      <span translate="hds.add-resource-dialog.grant-registration-success-part-3" translate-values="{clustername: hdsRedirectAddResourceController.selectedCluster || ''}"/>
+    </p>
+    <br>
+    <p>
+      <span translate="hds.add-resource-dialog.grant-success-information">
+      </span>
+    </p>
+  </div>
+  <div ng-hide="hdsRedirectAddResourceController.noProceed || hdsRedirectAddResourceController.proceedSetup || hdsRedirectAddResourceController.enableRedirectToTarget">
+    <div>
+      <h4 translate="hds.add-resource-dialog.firstStep"></h4>
+    </div>
+    <div class="hdsAddResourceForm">
+      <form name="hdsAddResourceForm">
+        <div class="cs-radio-group">
+          <div class="radioDisplay">
+            <input cs-input type="radio" ng-model="hdsRedirectAddResourceController.radio" id="yes" name="hdsRedirectAddResourceController" value="1" cs-input-label="{{'hds.add-resource-dialog.yesProceed' | translate}}" class="radioNoTranform">
+          </div>
+          <div class="radioDisplay">
+            <input cs-input type="radio" ng-model="hdsRedirectAddResourceController.radio" id="no" name="hdsRedirectAddResourceController" value="0" cs-input-label="{{'hds.add-resource-dialog.noProceed' | translate}}" cs-input-help-text="{{'hds.add-resource-dialog.noProceed-helptext' | translate}}" class="radioNoTranform">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div ng-show="hdsRedirectAddResourceController.noProceed">
+    <a target="_self" href="https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova" download="mfusion.ova"/>
+    <div>
+      <h4 translate="hds.add-resource-dialog.noInfo"></h4>
+    </div>
+    <br>
+    <br>
+    <div>
+      <h4 translate="hds.add-resource-dialog.noRetryInfo"></h4>
+    </div>
+    <div class="hdsAddResourceBodyInfo">
+      <p>
+        {{'hds.add-resource-dialog.noDesc1' | translate}} <a href="https://www.cisco.com/go/hybrid-services-media"  target='_blank'>{{'hds.add-resource-dialog.noDesc2' | translate}}</a>
+      </p>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <div ng-hide="hdsRedirectAddResourceController.noProceed || hdsRedirectAddResourceController.enableRedirectToTarget || hdsRedirectAddResourceController.fromClusters">
+    <button class="btn" ng-click="hdsRedirectAddResourceController.closeSetupModal()">
+      <span translate="common.cancel"></span>
+    </button>
+    <button class="btn activate-button btn--primary" ng-click="hdsRedirectAddResourceController.next()" ng-disabled="!hdsRedirectAddResourceController.canGoNext()">
+      <span translate="common.next"></span>
+    </button>
+  </div>
+  <div ng-hide="hdsRedirectAddResourceController.noProceed || hdsRedirectAddResourceController.enableRedirectToTarget || !hdsRedirectAddResourceController.fromClusters">
+    <button class="btn" ng-click="hdsRedirectAddResourceController.back()">
+      <span translate="common.back"></span>
+    </button>
+    <button class="btn activate-button btn--primary" ng-click="hdsRedirectAddResourceController.next()"  ng-disabled="!hdsRedirectAddResourceController.canGoNext()">
+      <span translate="common.next"></span>
+    </button>
+  </div>
+  <div ng-show="hdsRedirectAddResourceController.noProceed">
+    <button class="btn activate-button btn--primary" ng-click="hdsRedirectAddResourceController.closeSetupModal(true)">
+      <span translate="common.ok"></span>
+    </button>
+  </div>
+  <div ng-show="hdsRedirectAddResourceController.enableRedirectToTarget">
+    <button class="btn btn--primary" ng-click="hdsRedirectAddResourceController.redirectToTargetAndCloseWindowClicked(hdsRedirectAddResourceController.hostName, hdsRedirectAddResourceController.selectedCluster)">
+      <span translate="hercules.connectors.goToHost"></span>
+    </button>
+  </div>
+</div>
+

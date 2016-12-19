@@ -5,12 +5,20 @@ describe('Controller: PartnerHomeCtrl', function () {
 
   var trialsListFixture = getJSONFixture('core/json/partner/trialsResponse.json');
 
-  beforeEach(angular.mock.module('Core'));
-  beforeEach(angular.mock.module('Huron'));
-
   var authInfo = {
     isCustomerPartner: true
   };
+
+  afterEach(function () {
+    $scope = $q = PartnerService = undefined;
+  });
+
+  afterAll(function () {
+    trialsListFixture = authInfo = undefined;
+  });
+
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);

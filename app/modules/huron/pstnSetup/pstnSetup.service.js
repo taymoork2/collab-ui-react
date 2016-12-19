@@ -7,15 +7,15 @@
   /* @ngInject */
   function PstnSetupService($q, $translate, Authinfo, Notification, PstnSetup, TerminusCarrierService,
     TerminusCustomerService, TerminusCustomerV2Service, TerminusCustomerTrialV2Service,
-    TerminusCustomerCarrierService, TerminusOrderService,
+    TerminusCustomerCarrierService, TerminusOrderV2Service,
     TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch,
     TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease,
     TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease,
     TerminusCustomerCarrierDidService, TerminusCustomerPortService, TerminusResellerCarrierService,
-    TerminusCarrierTollFreeInventoryCount, TerminusCarrierTollFreeInventoryRelease,
-    TerminusCarrierTollFreeInventoryReserve, TerminusCarrierTollFreeInventorySearch,
-    TerminusCustomerCarrierTollFreeInventoryRelease, TerminusCustomerCarrierTollFreeInventoryReserve,
-    TerminusCustomerCarrierTollFreeService, TelephoneNumberService) {
+    TerminusV2CarrierNumberCountService, TerminusV2CarrierNumberService,
+    TerminusV2ResellerNumberReservationService, TerminusV2ResellerCarrierNumberReservationService,
+    TerminusV2CustomerNumberReservationService,
+    TerminusV2CustomerNumberOrderBlockService, TelephoneNumberService) {
     //Providers
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
@@ -33,15 +33,12 @@
     var NUMBER_ORDER = 'NUMBER_ORDER';
     var PORT_ORDER = 'PORT_ORDER';
     var BLOCK_ORDER = 'BLOCK_ORDER';
-    var TOLLFREE_BLOCK_ORDER = 'TOLLFREE_BLOCK_ORDER';
-    var TOLLFREE_ORDER = 'TOLLFREE_ORDER';
     //$resource constants
     var BLOCK = 'block';
     var ORDER = 'order';
     var PORT = 'port';
-    var TOLL_FREE_NUMBER_PORT = 'tollfree';
-    var TOLLFREEBLOCK = 'tollfree_block_value_tbd';
-    var TOLLFREEORDER = 'tollfree_order_value_tbd';
+    var NUMTYPE_DID = 'did';
+    var NUMTYPE_TOLLFREE = 'tollfree';
     //misc
     var PSTN = "PSTN";
     var TYPE_PORT = "PORT";
@@ -56,6 +53,7 @@
       getCustomer: getCustomer,
       getCustomerV2: getCustomerV2,
       getCustomerTrialV2: getCustomerTrialV2,
+      setCustomerTrialV2: setCustomerTrialV2,
       listDefaultCarriers: listDefaultCarriers,
       getCarrierInventory: getCarrierInventory,
       getCarrierTollFreeInventory: getCarrierTollFreeInventory,
@@ -69,7 +67,9 @@
       listCustomerCarriers: listCustomerCarriers,
       listResellerCarriers: listResellerCarriers,
       orderBlock: orderBlock,
+      orderTollFreeBlock: orderTollFreeBlock,
       orderNumbers: orderNumbers,
+      orderNumbersV2: orderNumbersV2,
       portNumbers: portNumbers,
       listPendingOrders: listPendingOrders,
       getOrder: getOrder,
@@ -86,13 +86,11 @@
       QUEUED: QUEUED,
       BLOCK: BLOCK,
       ORDER: ORDER,
-      TOLLFREEBLOCK: TOLLFREEBLOCK,
-      TOLLFREEORDER: TOLLFREEORDER,
       PORT_ORDER: PORT_ORDER,
       BLOCK_ORDER: BLOCK_ORDER,
       NUMBER_ORDER: NUMBER_ORDER,
-      TOLLFREE_BLOCK_ORDER: TOLLFREE_BLOCK_ORDER,
-      TOLLFREE_ORDER: TOLLFREE_ORDER
+      NUMTYPE_DID: NUMTYPE_DID,
+      NUMTYPE_TOLLFREE: NUMTYPE_TOLLFREE
     };
 
     return service;
@@ -159,6 +157,16 @@
       }).$promise;
     }
 
+    function setCustomerTrialV2(customerId, fname, lname, email) {
+      return TerminusCustomerTrialV2Service.save({
+        customerId: customerId
+      }, {
+        "acceptedFirstName": fname,
+        "acceptedLastName": lname,
+        "acceptedEmail": email
+      }).$promise;
+    }
+
     function listDefaultCarriers() {
       return TerminusCarrierService.query({
         service: PSTN,
@@ -204,8 +212,9 @@
     }
 
     function getCarrierTollFreeInventory(carrierId) {
-      return TerminusCarrierTollFreeInventoryCount.get({
-        carrierId: carrierId
+      return TerminusV2CarrierNumberCountService.get({
+        carrierId: carrierId,
+        numberType: NUMTYPE_TOLLFREE
       }).$promise;
     }
 
@@ -214,16 +223,17 @@
       paramObj.carrierId = carrierId;
       return TerminusCarrierInventorySearch.get(paramObj).$promise
         .then(function (response) {
-          return response.numbers || [];
+          return _.get(response, 'numbers', []);
         });
     }
 
     function searchCarrierTollFreeInventory(carrierId, params) {
       var paramObj = params || {};
       paramObj.carrierId = carrierId;
-      return TerminusCarrierTollFreeInventorySearch.get(paramObj).$promise
+      paramObj.numberType = NUMTYPE_TOLLFREE;
+      return TerminusV2CarrierNumberService.get(paramObj).$promise
         .then(function (response) {
-          return response.numbers || [];
+          return _.get(response, 'numbers', []);
         });
     }
 
@@ -272,22 +282,23 @@
       }
     }
 
-    function releaseCarrierTollFreeInventory(customerId, carrierId, numbers, isCustomerExists) {
+    function releaseCarrierTollFreeInventory(customerId, carrierId, numbers, reservationId, isCustomerExists) {
       if (!_.isArray(numbers)) {
         numbers = [numbers];
       }
       if (isCustomerExists) {
         // If a customer exists, release with the customer
-        return TerminusCustomerCarrierTollFreeInventoryRelease.save({
+        return TerminusV2CustomerNumberReservationService.delete({
           customerId: customerId,
-          carrierId: carrierId
+          reservationId: reservationId
         }, {
           numbers: numbers
         }).$promise;
       } else {
         // Otherwise release with carrier
-        return TerminusCarrierTollFreeInventoryRelease.save({
-          carrierId: carrierId
+        return TerminusV2ResellerNumberReservationService.delete({
+          resellerId: Authinfo.getOrgId(),
+          reservationId: reservationId
         }, {
           numbers: numbers
         }).$promise;
@@ -301,18 +312,26 @@
 
       if (isCustomerExists) {
         // If a customer exists, reserve with the customer
-        return TerminusCustomerCarrierTollFreeInventoryReserve.save({
-          customerId: customerId,
-          carrierId: carrierId
+        return TerminusV2CustomerNumberReservationService.save({
+          customerId: customerId
         }, {
+          numberType: NUMTYPE_TOLLFREE,
           numbers: numbers
+        }, function (data, headers) {
+          data.uuid = headers('location').split("/").pop();
+          return data;
         }).$promise;
       } else {
         // Otherwise reserve with carrier
-        return TerminusCarrierTollFreeInventoryReserve.save({
+        return TerminusV2ResellerCarrierNumberReservationService.save({
+          resellerId: Authinfo.getOrgId(),
           carrierId: carrierId
         }, {
+          numberType: NUMTYPE_TOLLFREE,
           numbers: numbers
+        }, function (data, headers) {
+          data.uuid = headers('location').split("/").pop();
+          return data;
         }).$promise;
       }
     }
@@ -348,6 +367,17 @@
       }, payload).$promise;
     }
 
+    function orderTollFreeBlock(customerId, carrierId, npa, quantity) {
+      var payload = {
+        npa: npa,
+        quantity: quantity,
+        numberType: NUMTYPE_TOLLFREE
+      };
+      return TerminusV2CustomerNumberOrderBlockService.save({
+        customerId: customerId
+      }, payload).$promise;
+    }
+
     function orderNumbers(customerId, carrierId, numbers) {
       var promises = [];
       var payload = {
@@ -355,12 +385,13 @@
           numbers: []
         },
         tollFree: {
+          numberType: NUMTYPE_TOLLFREE,
           numbers: []
         }
       };
       _.forEach(numbers, function (number) {
         var phoneNumberType = TelephoneNumberService.getPhoneNumberType(number);
-        if (phoneNumberType === 'FIXED_LINE_OR_MOBILE') {
+        if (phoneNumberType === 'FIXED_LINE_OR_MOBILE' || phoneNumberType === 'FIXED_LINE') {
           payload.pstn.numbers.push(number);
         } else if (phoneNumberType === 'TOLL_FREE') {
           payload.tollFree.numbers.push(number);
@@ -379,14 +410,32 @@
         }, payload.pstn).$promise;
         promises.push(pstnPromise);
       }
-      if (payload.tollFree.numbers.length > 0) {
-        var tollFreePromise = TerminusCustomerCarrierTollFreeService.save({
-          customerId: customerId,
-          carrierId: carrierId,
-          type: ORDER
-        }, payload.tollFree).$promise;
-        promises.push(tollFreePromise);
-      }
+      return $q.all(promises);
+    }
+
+    function orderNumbersV2(customerId, newNumberOrders) {
+      var promises = [];
+      _.forEach(newNumberOrders, function (order) {
+        if (order.numberType === NUMTYPE_DID) {
+          var didOrderPromise = TerminusOrderV2Service.save({
+            customerId: customerId
+          }, {
+            reservationIds: [_.get(order, 'reservationId', '')],
+            numberType: order.numberType
+          }).$promise;
+          promises.push(didOrderPromise);
+        } else if (order.numberType === NUMTYPE_TOLLFREE) {
+          var tollFreeOrderPromise = TerminusOrderV2Service.save({
+            customerId: customerId
+          }, {
+            reservationIds: [_.get(order, 'reservationId', '')],
+            numberType: order.numberType
+          }).$promise;
+          promises.push(tollFreeOrderPromise);
+        } else {
+          Notification.error('pstnSetup.errors.unsupportedOrderType', order.numberType);
+        }
+      });
       return $q.all(promises);
     }
 
@@ -400,7 +449,7 @@
 
       var tfnPayload = {
         numbers: tfnNumbers,
-        numberType: TOLL_FREE_NUMBER_PORT
+        numberType: NUMTYPE_TOLLFREE
       };
 
       var payload = {
@@ -426,14 +475,14 @@
     function listPendingOrders(customerId) {
       var pendingOrders = [];
       pendingOrders.push(
-        TerminusOrderService.query({
+        TerminusOrderV2Service.get({
           customerId: customerId,
           type: PSTN,
           status: PENDING
         }).$promise
       );
       pendingOrders.push(
-        TerminusOrderService.query({
+        TerminusOrderV2Service.get({
           customerId: customerId,
           type: TYPE_PORT,
           status: PENDING
@@ -444,47 +493,90 @@
     }
 
     function getOrder(customerId, orderId) {
-      return TerminusOrderService.query({
+      return TerminusOrderV2Service.query({
         customerId: customerId,
         orderId: orderId
       }).$promise;
     }
 
     function getFormattedNumberOrders(customerId) {
-      return TerminusOrderService.query({
+      return TerminusOrderV2Service.get({
         customerId: customerId
-      }).$promise.then(function (response) {
+      }).$promise.then(function (orders) {
+        var promises = [];
+        // Lookup each order and add the numbers to original response
+        _.forEach(orders, function (order) {
+          if (order.operation != UPDATE && order.operation != DELETE && order.operation != ADD) {
+            var promise = getOrder(customerId, order.uuid).then(function (orderResponse) {
+              order.numbers = orderResponse.numbers;
+              if (!_.isUndefined(orderResponse.attributes.npa)) {
+                order.attributes = orderResponse.attributes;
+              }
+              return order;
+            });
+            promises.push(promise);
+          }
+        });
+        return $q.all(promises);
+      })
+      .then(function (response) {
         return _.chain(response)
           .map(function (order) {
             if (order.operation != UPDATE && order.operation != DELETE && order.operation != ADD) {
               var newOrder = {
                 carrierOrderId: _.get(order, 'carrierOrderId'),
-                response: _.get(order, 'response'),
+                //not all orders have batches
+                carrierBatchId: _.get(order, 'carrierBatchId', null),
                 operation: _.get(order, 'operation'),
                 statusMessage: _.get(order, 'statusMessage') === 'None' ? null : _.get(order, 'statusMessage'),
-                tooltip: translateStatusMessage(order)
+                tooltip: translateStatusMessage(order),
+                uuid: _.get(order, 'uuid'),
+                numbers: _.get(order, 'numbers')
               };
+
               //translate order status
               if (order.status === PROVISIONED) {
                 newOrder.status = $translate.instant('pstnOrderOverview.successful');
               } else if (order.status === PENDING) {
                 newOrder.status = $translate.instant('pstnOrderOverview.inProgress');
+              } else if (order.status === QUEUED) {
+                newOrder.status = $translate.instant('pstnOrderOverview.inProgress');
               }
+
               //translate order type
-              if (order.operation === BLOCK_ORDER) {
+              if (order.operation === BLOCK_ORDER && _.get(order, 'numberType', NUMTYPE_DID) === NUMTYPE_DID) {
                 newOrder.type = $translate.instant('pstnOrderOverview.advanceOrder');
-              } else if (order.operation === NUMBER_ORDER) {
+              } else if (order.operation === NUMBER_ORDER && _.get(order, 'numberType', NUMTYPE_DID) === NUMTYPE_DID) {
                 newOrder.type = $translate.instant('pstnOrderOverview.newNumberOrder');
-              } else if (order.operation === TOLLFREE_ORDER) {
-                newOrder.type = $translate.instant('pstnOrderOverview.tollFreeNumberOrder');
+              } else if (order.operation === BLOCK_ORDER && _.get(order, 'numberType') === NUMTYPE_TOLLFREE) {
+                newOrder.type = $translate.instant('pstnOrderOverview.advanceOrder');
+              } else if (order.operation === NUMBER_ORDER && _.get(order, 'numberType') === NUMTYPE_TOLLFREE) {
+                newOrder.type = $translate.instant('pstnOrderOverview.newNumberOrder');
               } else if (order.operation === PORT_ORDER) {
                 newOrder.type = $translate.instant('pstnOrderOverview.portNumberOrder');
+              } else if (order.operation == BLOCK_ORDER && order.numberType == NUMTYPE_TOLLFREE) {
+                newOrder.type = $translate.instant('pstnOrderOverview.tollFreeNumberAdvanceOrder');
               }
+
+              if (order.operation === BLOCK_ORDER) {
+                if (!_.isUndefined(order.attributes)) {
+                  newOrder.areaCode = order.attributes.npa;
+                  newOrder.quantity = order.attributes.quantity;
+                } else {
+                  newOrder.areaCode = getAreaCode(order);
+                  newOrder.quantity = order.numbers.length;
+                }
+              }
+
               //create sort date and translate creation date
               var orderDate = new Date(order.created);
               newOrder.sortDate = orderDate.getTime();
               newOrder.created = (orderDate.getMonth() + 1) + '/' + orderDate.getDate() + '/' + orderDate.getFullYear();
-
+              //update order status and tooltip at number level since we combine same order with different batches
+              _.forEach(newOrder.numbers, function (number) {
+                number.status = newOrder.status;
+                number.tooltip = newOrder.tooltip;
+              });
               return newOrder;
             }
             return undefined;
@@ -524,27 +616,29 @@
         var promises = [];
         _.forEach(orders, function (carrierOrder) {
           if (_.get(carrierOrder, 'operation') === BLOCK_ORDER) {
-            var areaCode = getAreaCode(carrierOrder);
-            try {
-              var json = JSON.parse(carrierOrder.response);
-            } catch (error) {
-              //if parsing fails, give order number to reference possible malformed order
+            var promise = getOrder(customerId, carrierOrder.uuid).then(function (response) {
+              if (!_.isUndefined(response.attributes.npa)) {
+                var areaCode = response.attributes.npa;
+                var orderQuantity = _.parseInt(response.attributes.quantity);
+              } else {
+                areaCode = getAreaCode(response);
+                orderQuantity = response.numbers.length;
+              }
               pendingNumbers.push({
-                orderNumber: carrierOrder.carrierOrderId
+                pattern: '(' + areaCode + ') XXX-XXXX',
+                quantity: orderQuantity
               });
-              return;
-            }
-            var orderQuantity = json[carrierOrder.carrierOrderId].length;
-            pendingNumbers.push({
-              pattern: '(' + areaCode + ') XXX-XXXX',
-              quantity: orderQuantity
             });
+            promises.push(promise);
           } else {
-            var promise = getOrder(customerId, carrierOrder.uuid).then(function (orderNumbers) {
+            promise = getOrder(customerId, carrierOrder.uuid).then(function (response) {
+              var orderNumbers = response.numbers;
               _.forEach(orderNumbers, function (orderNumber) {
                 if (orderNumber && orderNumber.number && (orderNumber.network === PENDING || orderNumber.network === QUEUED)) {
                   pendingNumbers.push({
-                    pattern: orderNumber.number
+                    pattern: _.get(orderNumber, 'number', $translate.instant('pstnSetup.errors.orders.missingNumber', {
+                      orderNumber: _.get(response, 'carrierOrderId')
+                    }))
                   });
                 }
               });

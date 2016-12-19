@@ -1,0 +1,67 @@
+<!-- header -->
+<div class="modal-header">
+  <button
+    type="button"
+    class="close"
+    ng-click="$dismiss()">
+  </button>
+  <h3 class="modal-title" translate="ataSettings.title">
+  </h3>
+</div>
+
+<!-- body -->
+<div
+  class="modal-body ataDeviceModal">
+  <p translate="ataSettings.description">
+  </p>
+  <br>
+
+  <h5 translate="ataSettings.input"></h5>
+  <div class="rangeSliderWrap">
+    <i class="icon icon-audio-min"></i>
+    <span class="rzSliderStyle">
+      <rzslider rz-slider-model="ata.inputOptions.value" rz-slider-options="ata.inputOptions.options"></rzslider>
+    </span>
+    <i class="icon icon-audio-plus"></i>
+  </div>
+
+  <h5 translate="ataSettings.output"></h5>
+  <div class="rangeSliderWrap">
+    <i class="icon icon-audio-min"></i>
+    <span class="rzSliderStyle">
+      <rzslider rz-slider-model="ata.outputOptions.value" rz-slider-options="ata.outputOptions.options"></rzslider>
+    </span>
+    <i class="icon icon-audio-plus"></i>
+  </div>
+
+  <h5 translate="ataSettings.impedance"></h5>
+  <p translate="ataSettings.impedanceDescr"></p>
+  <div class="rangeSliderWrap">
+    <i class="icon icon-indeterminate"></i>
+    <span class="rzSliderStyle">
+      <rzslider rz-slider-model="ata.impedanceOptions.value" rz-slider-options="ata.impedanceOptions.options"></rzslider>
+    </span>
+    <i class="icon icon-plus"></i>
+  </div>
+</div>
+
+<!-- footer -->
+<div
+  class="modal-footer">
+  <button
+    class="btn"
+    ng-click="$dismiss()">
+    <span
+      translate="common.cancel">
+    </span>
+  </button>
+  <button
+      cs-btn
+      loading="ata.isLoading"
+      class="btn btn--primary"
+      sq-click-promise="ata.saveSettings()">
+      <span
+        translate="common.save">
+      </span>
+  </button>
+</div>

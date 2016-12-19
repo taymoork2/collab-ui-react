@@ -1,3 +1,5 @@
+require('./_support.scss');
+
 (function () {
   'use strict';
 

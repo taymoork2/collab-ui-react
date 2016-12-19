@@ -184,6 +184,7 @@ export interface IIntervalQuery {
 
 export interface ITypeQuery {
   name: string;
+  extension: string | undefined;
   type: string;
   cache: boolean;
 }

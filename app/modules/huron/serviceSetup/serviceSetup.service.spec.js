@@ -91,6 +91,42 @@ describe('Service: ServiceSetup', function () {
     });
   });
 
+  describe('getAvrilSite', function () {
+    var site = {
+      guid: '1234567890'
+    };
+
+    beforeEach(function () {
+      $httpBackend.expectGET(HuronConfig.getAvrilUrl() + '/customers/1/sites/' + site.guid).respond(201);
+    });
+
+    it('should get the avril voicemail site', function () {
+      ServiceSetup.getAvrilSite(site.guid);
+      $httpBackend.flush();
+    });
+  });
+
+  describe('updateAvrilSiteVoicemail', function () {
+    var site = {
+      guid: '1234567890'
+    };
+    var voicemailFeatures = {
+      VM2E: false,
+      VM2T: true,
+      VM2S: true
+    };
+
+    beforeEach(function () {
+      $httpBackend.expectPUT(HuronConfig.getAvrilUrl() + '/customers/1/sites/' + site.guid).respond(204);
+    });
+
+    it('should update avril voicemail', function () {
+      ServiceSetup.updateAvrilSiteVoicemail(site.guid, voicemailFeatures);
+      $httpBackend.flush();
+    });
+  });
+
+
   describe('updateAvrilSite', function () {
     var site = {
       guid: '1234567890',
@@ -312,6 +348,23 @@ describe('Service: ServiceSetup', function () {
         var translatedLanguages = ServiceSetup.getTranslatedSiteLanguages(response);
         expect(translatedLanguages).toBeDefined();
         expect(translatedLanguages.length).toBe(2);
+      });
+      $httpBackend.flush();
+    });
+  });
+
+  describe('getSiteCountries', function () {
+    beforeEach(function () {
+      $httpBackend.expectGET('modules/huron/serviceSetup/siteCountries.json').respond(getJSONFixture('huron/json/settings/countries.json'));
+    });
+
+    it('should get site countries', function () {
+      ServiceSetup.getSiteCountries().then(function (response) {
+        expect(response).toBeDefined();
+        expect(response.length).toBe(2);
+        var translatedCountries = ServiceSetup.getTranslatedSiteCountries(response);
+        expect(translatedCountries).toBeDefined();
+        expect(translatedCountries.length).toBe(2);
       });
       $httpBackend.flush();
     });

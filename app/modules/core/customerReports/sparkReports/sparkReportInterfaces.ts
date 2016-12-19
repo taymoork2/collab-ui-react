@@ -10,6 +10,7 @@ export interface IActiveUserWrapper {
   isActiveUsers: boolean;
 }
 
+// TODO: remove IAvgRoomData when the switch from column graphs to line graphs is finalized
 export interface IAvgRoomData extends IGraphBase {
   totalRooms: number;
   oneToOneRooms: number;
@@ -34,9 +35,25 @@ export interface IEndpointContainer {
   filterArray: Array<IDropdownBase>;
 }
 
+// TODO: remove IFilesShared when the switch from column graphs to line graphs is finalized
 export interface IFilesShared extends IGraphBase {
   contentShared: number;
   contentShareSizes: number | string;
+}
+
+export interface IConversation extends IGraphBase {
+  avgRooms: number | string;
+  contentShared: number;
+  contentShareSizes: number | string;
+  totalRooms: number;
+  oneToOneRooms: number;
+  groupRooms: number;
+}
+
+export interface IConversationWrapper {
+  array: Array<IConversation>;
+  hasRooms: boolean;
+  hasFiles: boolean;
 }
 
 export interface IMetricsData {

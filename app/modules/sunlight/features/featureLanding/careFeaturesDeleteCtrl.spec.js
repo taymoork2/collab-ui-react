@@ -38,12 +38,13 @@ describe('Care Feature Delete Ctrl', function () {
     spyOn(CareFeatureList, 'deleteChatTemplate').and.returnValue(deferred.promise);
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
+    spyOn(Notification, 'errorWithTrackingId');
     spyOn($rootScope, '$broadcast').and.callThrough();
 
     $stateParams = {
       deleteFeatureId: 123,
       deleteFeatureName: 'Sunlight Dev Template',
-      deleteFeatureType: 'CT'
+      deleteFeatureType: 'Ch'
     };
 
     controller = $controller('CareFeaturesDeleteCtrl', {
@@ -85,7 +86,7 @@ describe('Care Feature Delete Ctrl', function () {
     deferred.reject(failureResponse);
     $scope.$apply();
     $timeout.flush();
-    expect(Notification.error).toHaveBeenCalledWith(jasmine.any(String));
+    expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failureResponse, jasmine.any(String));
   });
 
 });

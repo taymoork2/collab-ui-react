@@ -47,8 +47,8 @@
 
       tokenTimers: {
         timeoutTimer: 3000000, // 50 mins
-        refreshTimer: 39600000, // 11 hours
-        refreshDelay: 900000 // 15 mins
+        refreshTimer: 6600000, // 1 hour 50 mins (Access token expires in 120 mins)
+        refreshDelay: 540000 // 9 mins
       },
 
       siteDomainUrl: {
@@ -60,6 +60,7 @@
         squared: 'webex-squared',
         fusion_uc: 'squared-fusion-uc',
         fusion_cal: 'squared-fusion-cal',
+        fusion_gcal: 'squared-fusion-gcal',
         mediafusion: 'squared-fusion-media',
         hds: 'spark-hybrid-datasecurity',
         fusion_mgmt: 'squared-fusion-mgmt',
@@ -378,7 +379,7 @@
         'autoattendant',
         'callpark',
         'callparkedit',
-        'callpickup',
+        'callpickups',
         'device-overview',
         'devices',
         'didadd',
@@ -386,6 +387,7 @@
         'huntgroups',
         'huronCallPark',
         'huronCallPickup',
+        'huronPickupGroupEdit',
         'hurondetails',
         'huronfeatures',
         'huronHuntGroup',
@@ -433,6 +435,12 @@
         'calendar-service',
         'cluster-list',
         'expressway-settings',
+        'services-overview',
+      ],
+      'squared-fusion-gcal': [
+        'add-resource',
+        'google-calendar-service',
+        'cluster-list',
         'services-overview',
       ],
       'squared-team-member': [

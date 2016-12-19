@@ -33,8 +33,8 @@ describe('Component: uploadPrivateKey', function () {
     var bindings = {
       data: {
         googleServiceAccount: '',
-        file: '-----BEGIN RSA PRIVATE KEY-----  BLAH BLAH BLAH -----END RSA PRIVATE KEY-----',
-        fileName: 'very_secret_private_key.txt',
+        file: 'data:application/x-pkcs12;base64,LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktL…',
+        fileName: 'certificate_file.p12',
       }
     };
     var ctrl = $componentController('uploadPrivateKey', null, bindings);
@@ -42,6 +42,20 @@ describe('Component: uploadPrivateKey', function () {
     ctrl.clearFile();
     expect(ctrl.data.file).toBe('');
     expect(ctrl.data.fileName).toBe('');
+  });
+
+  it(' .warnInvalidCertificate() should show a warning when file type is incorrect', function () {
+
+    var bindings = {
+      data: {
+        googleServiceAccount: '',
+        file: 'data:image/jpeg;base64,/9j/4QEaRXhpZgAASUkqAAgAAAAIABIBAwA…',
+        fileName: 'not_a_certificate_file.jpg',
+      }
+    };
+    var ctrl = $componentController('uploadPrivateKey', null, bindings);
+
+    expect(ctrl.warnInvalidCertificate()).toBe(true);
   });
 
 

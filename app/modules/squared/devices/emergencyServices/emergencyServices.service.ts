@@ -36,6 +36,7 @@ export class EmergencyServicesService {
       emergency: emergencyData,
       currentDevice: this.currentDevice,
       stateOptions: this.stateOptions,
+      staticNumber: this.$stateParams.staticNumber,
     };
   }
 

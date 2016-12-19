@@ -104,6 +104,15 @@
     <cs-sp-section ng-show="deviceOverview.deviceHasInformation">
       <div class="section-title-row">
         <span class="section-name" translate="spacesPage.informationHeader"></span>
+        <!-- <span ng-if="deviceOverview.currentDevice.isATA" cs-dropdown class="actions-menu dropdown pull-right"> -->
+        <span cs-dropdown class="actions-menu dropdown pull-right">
+          <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
+            <i class="icon icon-three-dots"></i>
+          </button>
+          <ul cs-dropdown-menu class="dropdown-menu dropdown-primary">
+            <li ng-click="deviceOverview.openAtaSettings()" translate="ataSettings.manage"></li>
+          </ul>
+        </span>
       </div>
       <div class="form-group" ng-show="deviceOverview.shouldShowLines()">
         <label class="col-sm-4 control-label">Lines</label>
@@ -162,6 +171,27 @@
           <div cs-loader class="loader-example--small"></div>
         </div>
       </div>
+      <div class="form-group" cr-feature-toggle feature-show="huron-l10n-network-locale">
+        <label class="col-sm-4 control-label" translate="deviceOverviewPage.country"></label>
+        <div class="col-sm-8" cs-loader ng-hide="deviceOverview.countryIsLoaded"></div>
+        <div class="col-sm-3" ng-show="deviceOverview.countryIsLoaded">
+          <cs-select
+            name="selectedCountry"
+            class="countrySelector"
+            ng-model="deviceOverview.selectedCountry"
+            options="deviceOverview.countryOptions"
+            is-disabled="deviceOverview.updatingCountry"
+            labelfield="label"
+            valuefield="value"
+            filter="false"
+            on-change-fn="deviceOverview.saveCountryAndWait()"
+            placeholder="deviceOverview.countryPlaceholder"
+          ></cs-select>
+        </div>
+        <div class="col-sm-4" ng-show="deviceOverview.updatingCountry">
+          <div cs-loader class="loader-example--small"></div>
+        </div>
+      </div>
 
       <div class="form-group" ng-show="deviceOverview.currentDevice.software">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.software"></label>
@@ -186,6 +216,12 @@
           <p class="form-control-static">{{deviceOverview.currentDevice.software}}</p>
         </div>
       </div>
+      <div class="form-group" ng-show="deviceOverview.currentDevice.hasAdvancedSettings" cr-feature-toggle feature-show="atlas-devices-advanced-settings">
+        <label class="col-sm-4 control-label" translate="spacesPage.advancedSettings.advancedSettings"></label>
+        <div class="col-sm-8">
+          <a sq-click-promise="deviceOverview.showAdvancedSettingsDialog()" translate="spacesPage.advancedSettings.launchAdvancedSettings"></a>
+        </div>
+      </div>
       <div class="form-group" ng-show="deviceOverview.currentDevice.hasRemoteSupport">
         <label class="col-sm-4 control-label" translate="spacesPage.ciscoSupport"></label>
         <div class="col-sm-8">
@@ -200,7 +236,7 @@
       <div ng-show="deviceOverview.isE911Available">
         <div class="section-title-row">
           <span class="section-name" translate="spacesPage.emergencyTitle"></span>
-          <span cs-dropdown class="actions-menu dropdown pull-right">
+          <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="deviceOverview.hideE911Edit">
             <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
               <i class="icon icon-three-dots"></i>
             </button>

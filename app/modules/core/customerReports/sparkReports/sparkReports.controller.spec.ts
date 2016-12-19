@@ -5,26 +5,25 @@ import {
   IReportCard,
   IReportDropdown,
   ISecondaryReport,
-  ITimespan,
 } from '../../partnerReports/partnerReportInterfaces';
 
 import {
-  IMetricsData,
   IMetricsLabel,
 } from './sparkReportInterfaces';
 
 describe('Controller: Customer Reports Ctrl', function () {
-  let controller;
+  let controller: any;
 
-  const dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
-  const activeData = getJSONFixture('core/json/customerReports/activeUser.json');
-  const ctrlData = getJSONFixture('core/json/partnerReports/ctrl.json');
-  const roomData = getJSONFixture('core/json/customerReports/roomData.json');
-  const fileData = getJSONFixture('core/json/customerReports/fileData.json');
-  const mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
-  const metricsData = getJSONFixture('core/json/customerReports/callMetrics.json');
-  const devicesJson = getJSONFixture('core/json/customerReports/devices.json');
-  const defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
+  let dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
+  let activeData = getJSONFixture('core/json/customerReports/activeUser.json');
+  let ctrlData = getJSONFixture('core/json/partnerReports/ctrl.json');
+  let roomData = getJSONFixture('core/json/customerReports/roomData.json');
+  let fileData = getJSONFixture('core/json/customerReports/fileData.json');
+  let mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
+  let metricsData = getJSONFixture('core/json/customerReports/callMetrics.json');
+  let devicesJson = getJSONFixture('core/json/customerReports/devices.json');
+  let defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
+  let conversationData = getJSONFixture('core/json/customerReports/conversation.json');
 
   let activeOptions: IReportCard = _.cloneDeep(ctrlData.activeUserOptions);
   let secondaryActiveOptions: ISecondaryReport = _.cloneDeep(ctrlData.activeUserSecondaryOptions);
@@ -49,8 +48,6 @@ describe('Controller: Customer Reports Ctrl', function () {
   metricsOptions.description = 'callMetrics.customerDescription';
   metricsOptions.table = undefined;
 
-  let timeOptions: Array<ITimespan> = _.cloneDeep(defaults.timeFilter);
-  let altTimeFilter: Array<ITimespan> = _.cloneDeep(defaults.altTimeFilter);
   let mediaArray: Array<IDropdownBase> = _.cloneDeep(mediaData.dropdownFilter);
   let mediaDropdown: IReportDropdown = {
     array: mediaArray,
@@ -58,6 +55,10 @@ describe('Controller: Customer Reports Ctrl', function () {
     selected: mediaArray[0],
     click: (): void => {},
   };
+
+  afterAll(function () {
+    dummyData = activeData = ctrlData = roomData = fileData = mediaData = metricsData = devicesJson = defaults = conversationData = undefined;
+  });
 
   beforeEach(function () {
     this.initModules('Core');
@@ -109,15 +110,12 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(this.SparkReportService, 'getCallMetricsData').and.returnValue(this.$q.when(_.cloneDeep(metricsData.response)));
       spyOn(this.SparkReportService, 'getDeviceData').and.returnValue(this.$q.when(_.cloneDeep(devicesJson.response)));
 
-      let dummyMetrics: IMetricsData = _.cloneDeep(metricsData.response);
-      dummyMetrics.dummy = true;
-
-      spyOn(this.DummySparkDataService, 'dummyActiveUserData').and.returnValue(dummyData.activeUser.one);
-      spyOn(this.DummySparkDataService, 'dummyAvgRoomData').and.returnValue(dummyData.avgRooms.one);
-      spyOn(this.DummySparkDataService, 'dummyFilesSharedData').and.returnValue(dummyData.filesShared.one);
-      spyOn(this.DummySparkDataService, 'dummyMediaData').and.returnValue(dummyData.mediaQuality.one);
-      spyOn(this.DummySparkDataService, 'dummyMetricsData').and.returnValue(dummyMetrics);
-      spyOn(this.DummySparkDataService, 'dummyDeviceData').and.returnValue(_.cloneDeep(devicesJson.dummyData));
+      spyOn(this.DummySparkDataService, 'dummyActiveUserData').and.callThrough();
+      spyOn(this.DummySparkDataService, 'dummyAvgRoomData').and.callThrough();
+      spyOn(this.DummySparkDataService, 'dummyFilesSharedData').and.callThrough();
+      spyOn(this.DummySparkDataService, 'dummyMediaData').and.callThrough();
+      spyOn(this.DummySparkDataService, 'dummyMetricsData').and.callThrough();
+      spyOn(this.DummySparkDataService, 'dummyDeviceData').and.callThrough();
 
       controller = this.$controller('SparkReportCtrl', {
         $q: this.$q,
@@ -133,20 +131,20 @@ describe('Controller: Customer Reports Ctrl', function () {
 
     describe('Initializing Controller', function () {
       it('should be created successfully and all expected calls completed', function () {
-        expect(this.DummySparkDataService.dummyActiveUserData).toHaveBeenCalledWith(timeOptions[0], false);
-        expect(this.DummySparkDataService.dummyAvgRoomData).toHaveBeenCalledWith(timeOptions[0]);
-        expect(this.DummySparkDataService.dummyFilesSharedData).toHaveBeenCalledWith(timeOptions[0]);
-        expect(this.DummySparkDataService.dummyMediaData).toHaveBeenCalledWith(timeOptions[0]);
+        expect(this.DummySparkDataService.dummyActiveUserData).toHaveBeenCalledWith(defaults.timeFilter[0], false);
+        expect(this.DummySparkDataService.dummyAvgRoomData).toHaveBeenCalledWith(defaults.timeFilter[0]);
+        expect(this.DummySparkDataService.dummyFilesSharedData).toHaveBeenCalledWith(defaults.timeFilter[0]);
+        expect(this.DummySparkDataService.dummyMediaData).toHaveBeenCalledWith(defaults.timeFilter[0], false);
         expect(this.DummySparkDataService.dummyMetricsData).toHaveBeenCalled();
-        expect(this.DummySparkDataService.dummyDeviceData).toHaveBeenCalledWith(timeOptions[0]);
+        expect(this.DummySparkDataService.dummyDeviceData).toHaveBeenCalledWith(defaults.timeFilter[0]);
 
-        expect(this.SparkReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[0]);
-        expect(this.SparkReportService.getMostActiveUserData).toHaveBeenCalledWith(timeOptions[0]);
-        expect(this.SparkReportService.getAvgRoomData).toHaveBeenCalledWith(timeOptions[0]);
-        expect(this.SparkReportService.getFilesSharedData).toHaveBeenCalledWith(timeOptions[0]);
-        expect(this.SparkReportService.getMediaQualityData).toHaveBeenCalledWith(timeOptions[0]);
-        expect(this.SparkReportService.getCallMetricsData).toHaveBeenCalledWith(timeOptions[0]);
-        expect(this.SparkReportService.getDeviceData).toHaveBeenCalledWith(timeOptions[0]);
+        expect(this.SparkReportService.getActiveUserData).toHaveBeenCalledWith(defaults.timeFilter[0]);
+        expect(this.SparkReportService.getMostActiveUserData).toHaveBeenCalledWith(defaults.timeFilter[0]);
+        expect(this.SparkReportService.getAvgRoomData).toHaveBeenCalledWith(defaults.timeFilter[0]);
+        expect(this.SparkReportService.getFilesSharedData).toHaveBeenCalledWith(defaults.timeFilter[0]);
+        expect(this.SparkReportService.getMediaQualityData).toHaveBeenCalledWith(defaults.timeFilter[0]);
+        expect(this.SparkReportService.getCallMetricsData).toHaveBeenCalledWith(defaults.timeFilter[0]);
+        expect(this.SparkReportService.getDeviceData).toHaveBeenCalledWith(defaults.timeFilter[0]);
 
         expect(this.SparkGraphService.setActiveUsersGraph).toHaveBeenCalled();
         expect(this.SparkGraphService.setAvgRoomsGraph).toHaveBeenCalled();
@@ -198,8 +196,8 @@ describe('Controller: Customer Reports Ctrl', function () {
           expect(filter.selected).toEqual(reportFilter[index].selected);
         });
 
-        expect(controller.timeOptions).toEqual(timeOptions);
-        expect(controller.timeSelected).toEqual(timeOptions[0]);
+        expect(controller.timeOptions).toEqual(defaults.timeFilter);
+        expect(controller.timeSelected).toEqual(defaults.timeFilter[0]);
         expect(controller.timeUpdates.sliderUpdate).toEqual(jasmine.any(Function));
         expect(controller.timeUpdates.update).toEqual(jasmine.any(Function));
       });
@@ -207,24 +205,24 @@ describe('Controller: Customer Reports Ctrl', function () {
 
     describe('filter changes', function () {
       it('All graphs should update on time filter changes', function () {
-        controller.timeSelected = timeOptions[1];
+        controller.timeSelected = defaults.timeFilter[1];
         controller.timeUpdates.update();
         this.$timeout.flush();
-        expect(controller.timeSelected).toEqual(timeOptions[1]);
+        expect(controller.timeSelected).toEqual(defaults.timeFilter[1]);
 
-        expect(this.DummySparkDataService.dummyActiveUserData).toHaveBeenCalledWith(timeOptions[1], false);
-        expect(this.DummySparkDataService.dummyAvgRoomData).toHaveBeenCalledWith(timeOptions[1]);
-        expect(this.DummySparkDataService.dummyFilesSharedData).toHaveBeenCalledWith(timeOptions[1]);
-        expect(this.DummySparkDataService.dummyMediaData).toHaveBeenCalledWith(timeOptions[1]);
+        expect(this.DummySparkDataService.dummyActiveUserData).toHaveBeenCalledWith(defaults.timeFilter[1], false);
+        expect(this.DummySparkDataService.dummyAvgRoomData).toHaveBeenCalledWith(defaults.timeFilter[1]);
+        expect(this.DummySparkDataService.dummyFilesSharedData).toHaveBeenCalledWith(defaults.timeFilter[1]);
+        expect(this.DummySparkDataService.dummyMediaData).toHaveBeenCalledWith(defaults.timeFilter[1], false);
         expect(this.DummySparkDataService.dummyMetricsData).toHaveBeenCalled();
-        expect(this.DummySparkDataService.dummyDeviceData).toHaveBeenCalledWith(timeOptions[1]);
+        expect(this.DummySparkDataService.dummyDeviceData).toHaveBeenCalledWith(defaults.timeFilter[1]);
 
-        expect(this.SparkReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[1]);
-        expect(this.SparkReportService.getAvgRoomData).toHaveBeenCalledWith(timeOptions[1]);
-        expect(this.SparkReportService.getFilesSharedData).toHaveBeenCalledWith(timeOptions[1]);
-        expect(this.SparkReportService.getMediaQualityData).toHaveBeenCalledWith(timeOptions[1]);
-        expect(this.SparkReportService.getCallMetricsData).toHaveBeenCalledWith(timeOptions[1]);
-        expect(this.SparkReportService.getDeviceData).toHaveBeenCalledWith(timeOptions[1]);
+        expect(this.SparkReportService.getActiveUserData).toHaveBeenCalledWith(defaults.timeFilter[1]);
+        expect(this.SparkReportService.getAvgRoomData).toHaveBeenCalledWith(defaults.timeFilter[1]);
+        expect(this.SparkReportService.getFilesSharedData).toHaveBeenCalledWith(defaults.timeFilter[1]);
+        expect(this.SparkReportService.getMediaQualityData).toHaveBeenCalledWith(defaults.timeFilter[1]);
+        expect(this.SparkReportService.getCallMetricsData).toHaveBeenCalledWith(defaults.timeFilter[1]);
+        expect(this.SparkReportService.getDeviceData).toHaveBeenCalledWith(defaults.timeFilter[1]);
 
         expect(this.SparkGraphService.setActiveUsersGraph).toHaveBeenCalled();
         expect(this.SparkGraphService.setAvgRoomsGraph).toHaveBeenCalled();
@@ -234,17 +232,17 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(this.SparkGraphService.setDeviceGraph).toHaveBeenCalled();
       });
 
-      it('should update the media graph on mediaUpdate', function () {
-        controller.timeSelected = timeOptions[2];
-        expect(this.SparkGraphService.setMediaQualityGraph).toHaveBeenCalledTimes(2);
-        controller.mediaDropdown.click();
-        expect(this.SparkGraphService.setMediaQualityGraph).toHaveBeenCalledTimes(3);
-      });
-
       it('should update the registered device graph on deviceUpdated', function () {
         expect(this.SparkGraphService.setDeviceGraph).toHaveBeenCalledTimes(2);
         controller.deviceDropdown.click();
         expect(this.SparkGraphService.setDeviceGraph).toHaveBeenCalledTimes(3);
+      });
+
+      it('should update the media graph on mediaUpdate', function () {
+        controller.mediaArray = mediaArray[1];
+        expect(this.SparkGraphService.setMediaQualityGraph).toHaveBeenCalledTimes(2);
+        controller.mediaDropdown.click();
+        expect(this.SparkGraphService.setMediaQualityGraph).toHaveBeenCalledTimes(3);
       });
     });
 
@@ -277,12 +275,32 @@ describe('Controller: Customer Reports Ctrl', function () {
         dataProvider: _.cloneDeep(activeData.activeLineResponse),
         zoomToIndexes: zoomFunction,
       });
+      spyOn(this.SparkGraphService, 'setRoomGraph').and.returnValue({
+        dataProvider: _.cloneDeep(conversationData.response),
+        zoomToIndexes: zoomFunction,
+      });
+      spyOn(this.SparkGraphService, 'setFilesGraph').and.returnValue({
+        dataProvider: _.cloneDeep(conversationData.response),
+        zoomToIndexes: zoomFunction,
+      });
+      spyOn(this.SparkGraphService, 'setQualityGraph').and.returnValue({
+        dataProvider: _.cloneDeep(mediaData.response),
+        zoomToIndexes: zoomFunction,
+      });
       spyOn(this.SparkGraphService, 'showHideActiveLineGraph');
 
       spyOn(this.SparkLineReportService, 'getActiveUserData').and.returnValue(this.$q.when(_.cloneDeep(activeData.activeLineResponse)));
+      spyOn(this.SparkLineReportService, 'getMediaQualityData').and.returnValue(this.$q.when(_.cloneDeep(mediaData.response)));
       spyOn(this.SparkLineReportService, 'getMostActiveUserData').and.returnValue(this.$q.when(_.cloneDeep(activeData.mostActiveResponse)));
+      spyOn(this.SparkLineReportService, 'getConversationData').and.returnValue(this.$q.when({
+        array: _.cloneDeep(conversationData.response),
+        hasRooms: true,
+        hasFiles: true,
+      }));
 
-      spyOn(this.DummySparkDataService, 'dummyActiveUserData').and.returnValue(activeData.dummyData.two);
+      spyOn(this.DummySparkDataService, 'dummyActiveUserData').and.callThrough();
+      spyOn(this.DummySparkDataService, 'dummyConversationData').and.callThrough();
+      spyOn(this.DummySparkDataService, 'dummyMediaData').and.callThrough();
 
       controller = this.$controller('SparkReportCtrl', {
         $q: this.$q,
@@ -297,13 +315,29 @@ describe('Controller: Customer Reports Ctrl', function () {
     });
 
     describe('Initializing Controller', function () {
+      let secondaryOptions: ISecondaryReport = _.cloneDeep(secondaryActiveOptions);
+      secondaryOptions.alternateTranslations = true;
+
       it('should be created successfully and all expected calls completed', function () {
         expect(this.DummySparkDataService.dummyActiveUserData).toHaveBeenCalledTimes(1);
+        expect(this.DummySparkDataService.dummyConversationData).toHaveBeenCalledTimes(1);
+        expect(this.DummySparkDataService.dummyMediaData).toHaveBeenCalledTimes(1);
+
         expect(this.SparkLineReportService.getActiveUserData).toHaveBeenCalledTimes(1);
-        expect(this.SparkGraphService.setActiveLineGraph).toHaveBeenCalled();
+        expect(this.SparkGraphService.setActiveLineGraph).toHaveBeenCalledTimes(2);
+        expect(this.$rootScope.$broadcast).toHaveBeenCalledWith(secondaryOptions.broadcast);
+        expect(this.$rootScope.$broadcast).toHaveBeenCalledTimes(4);
+
+        expect(this.SparkLineReportService.getConversationData).toHaveBeenCalledTimes(1);
+        expect(this.SparkGraphService.setRoomGraph).toHaveBeenCalledTimes(2);
+        expect(this.SparkGraphService.setFilesGraph).toHaveBeenCalledTimes(2);
+
+        expect(this.SparkLineReportService.getMediaQualityData).toHaveBeenCalledTimes(1);
+        expect(this.SparkGraphService.setQualityGraph).toHaveBeenCalledTimes(2);
+
         expect(zoomFunction).not.toHaveBeenCalled();
 
-        expect(this.CommonReportService.createExportMenu).toHaveBeenCalledTimes(2);
+        expect(this.CommonReportService.createExportMenu).toHaveBeenCalledTimes(8);
         expect(this.SparkGraphService.showHideActiveLineGraph).toHaveBeenCalledTimes(2);
         expect(this.CardUtils.resize).toHaveBeenCalledTimes(1);
       });
@@ -322,13 +356,19 @@ describe('Controller: Customer Reports Ctrl', function () {
         });
 
         expect(controller.activeOptions).toEqual(activeOptions);
-        let options = _.cloneDeep(secondaryActiveOptions);
-        options.alternateTranslations = true;
-        expect(controller.secondaryActiveOptions).toEqual(options);
+        expect(controller.secondaryActiveOptions).toEqual(secondaryOptions);
         expect(controller.activeDropdown.array).toEqual(activeDropdownArray);
         expect(controller.activeDropdown.disabled).toBeTruthy();
         expect(controller.activeDropdown.selected).toEqual(activeDropdownArray[0]);
         expect(controller.activeDropdown.click).toEqual(jasmine.any(Function));
+
+        expect(controller.avgRoomOptions).toEqual(avgRoomsCard);
+        expect(controller.filesSharedOptions).toEqual(filesSharedCard);
+
+        expect(controller.mediaOptions).toEqual(mediaOptions);
+        expect(controller.mediaDropdown.array).toEqual(mediaDropdown.array);
+        expect(controller.mediaDropdown.disabled).toEqual(mediaDropdown.disabled);
+        expect(controller.mediaDropdown.selected).toEqual(mediaDropdown.selected);
 
         let reportFilter: Array<IFilterObject> = _.cloneDeep(ctrlData.reportFilter);
         _.forEach(controller.filterArray, function (filter, index: number) {
@@ -337,8 +377,8 @@ describe('Controller: Customer Reports Ctrl', function () {
           expect(filter.selected).toEqual(reportFilter[index].selected);
         });
 
-        expect(controller.timeOptions).toEqual(altTimeFilter);
-        expect(controller.timeSelected).toEqual(altTimeFilter[0]);
+        expect(controller.timeOptions).toEqual(defaults.altTimeFilter);
+        expect(controller.timeSelected).toEqual(defaults.altTimeFilter[0]);
         expect(controller.timeUpdates.sliderUpdate).toEqual(jasmine.any(Function));
         expect(controller.timeUpdates.update).toEqual(jasmine.any(Function));
       });
@@ -346,28 +386,44 @@ describe('Controller: Customer Reports Ctrl', function () {
 
     describe('filter changes', function () {
       it('All graphs should update on time filter changes', function () {
-        expect(this.DummySparkDataService.dummyActiveUserData).toHaveBeenCalledTimes(1);
-        expect(this.SparkLineReportService.getActiveUserData).toHaveBeenCalledTimes(1);
-        controller.timeSelected = altTimeFilter[1];
+        controller.timeSelected = defaults.altTimeFilter[1];
         controller.timeUpdates.update();
         this.$timeout.flush();
-        expect(controller.timeSelected).toEqual(altTimeFilter[1]);
+        expect(controller.timeSelected).toEqual(defaults.altTimeFilter[1]);
 
         expect(this.DummySparkDataService.dummyActiveUserData).toHaveBeenCalledTimes(2);
         expect(this.SparkLineReportService.getActiveUserData).toHaveBeenCalledTimes(2);
         expect(this.SparkGraphService.setActiveLineGraph).toHaveBeenCalledTimes(4);
-        expect(zoomFunction).toHaveBeenCalledTimes(2);
+        expect(this.$rootScope.$broadcast).toHaveBeenCalledTimes(6);
+
+        expect(this.SparkLineReportService.getConversationData).toHaveBeenCalledTimes(2);
+        expect(this.SparkGraphService.setRoomGraph).toHaveBeenCalledTimes(4);
+        expect(this.SparkGraphService.setFilesGraph).toHaveBeenCalledTimes(4);
+
+        expect(this.SparkLineReportService.getMediaQualityData).toHaveBeenCalledTimes(2);
+        expect(this.SparkGraphService.setQualityGraph).toHaveBeenCalledTimes(4);
+
+        expect(zoomFunction).toHaveBeenCalledTimes(8);
         expect(this.CardUtils.resize).toHaveBeenCalledTimes(2);
 
-        controller.timeSelected = altTimeFilter[altTimeFilter.length - 1];
+        controller.timeSelected = defaults.altTimeFilter[defaults.altTimeFilter.length - 1];
         controller.timeUpdates.sliderUpdate(5, 15);
         this.$timeout.flush();
-        expect(controller.timeSelected).toEqual(altTimeFilter[altTimeFilter.length - 1]);
+        expect(controller.timeSelected).toEqual(defaults.altTimeFilter[defaults.altTimeFilter.length - 1]);
 
-        expect(this.DummySparkDataService.dummyActiveUserData).toHaveBeenCalledTimes(2);
+        expect(this.DummySparkDataService.dummyActiveUserData).toHaveBeenCalledTimes(3);
         expect(this.SparkLineReportService.getActiveUserData).toHaveBeenCalledTimes(2);
-        expect(this.SparkGraphService.setActiveLineGraph).toHaveBeenCalledTimes(5);
-        expect(zoomFunction).toHaveBeenCalledTimes(3);
+        expect(this.SparkGraphService.setActiveLineGraph).toHaveBeenCalledTimes(6);
+        expect(this.$rootScope.$broadcast).toHaveBeenCalledTimes(7);
+
+        expect(this.SparkLineReportService.getConversationData).toHaveBeenCalledTimes(2);
+        expect(this.SparkGraphService.setRoomGraph).toHaveBeenCalledTimes(6);
+        expect(this.SparkGraphService.setFilesGraph).toHaveBeenCalledTimes(6);
+
+        expect(this.SparkLineReportService.getMediaQualityData).toHaveBeenCalledTimes(2);
+        expect(this.SparkGraphService.setQualityGraph).toHaveBeenCalledTimes(6);
+
+        expect(zoomFunction).toHaveBeenCalledTimes(12);
         expect(this.CardUtils.resize).toHaveBeenCalledTimes(3);
       });
 
@@ -375,6 +431,13 @@ describe('Controller: Customer Reports Ctrl', function () {
         controller.activeDropdown.selected = activeDropdownArray[1];
         controller.activeDropdown.click();
         expect(this.SparkGraphService.showHideActiveLineGraph).toHaveBeenCalledTimes(3);
+      });
+
+      it('should update the media graph on mediaUpdate', function () {
+        controller.mediaArray = mediaArray[1];
+        expect(this.SparkGraphService.setQualityGraph).toHaveBeenCalledTimes(2);
+        controller.mediaDropdown.click();
+        expect(this.SparkGraphService.setQualityGraph).toHaveBeenCalledTimes(3);
       });
     });
   });

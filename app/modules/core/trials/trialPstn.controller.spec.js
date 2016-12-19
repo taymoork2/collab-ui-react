@@ -78,6 +78,14 @@ describe('Controller: TrialPstnCtrl', function () {
     email: 'sample@snapple.com'
   };
 
+  afterEach(function () {
+    controller = trials = $httpBackend = $scope = $q = HuronConfig = Orgservice = TrialPstnService = TrialService = PstnSetupService = TerminusStateService = FeatureToggleService = undefined;
+  });
+
+  afterAll(function () {
+    customerName = customerEmail = carrier = states = numberInfo = carrierId = stateSearch = areaCodeResponse = newAreaCodes = exchangesResponse = numbersResponse = contractInfo = undefined;
+  });
+
   beforeEach(angular.mock.module('core.trial'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Core'));

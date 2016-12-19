@@ -10,23 +10,29 @@
 
   /* @ngInject */
   function ResponseInterceptor($q, $injector, Log) {
+    var HAS_RETRIED = 'config.hasRetried';
 
     return {
       responseError: function (response) {
+
+        if (hasAlreadyRetried(response)) {
+          return $q.reject(response);
+        }
+
+        var Auth = $injector.get('Auth');
         // injected manually to get around circular dependency problem with $translateProvider
         // http://stackoverflow.com/questions/20647483/angularjs-injecting-service-into-a-http-interceptor-circular-dependency/21632161
-        var Auth = $injector.get('Auth');
         if (is20001Error(response)) {
           Log.warn('Refresh access token due to 20001 response.', response);
-          return Auth.refreshAccessTokenAndResendRequest(response);
+          return refreshTokenAndRetry(response, Auth);
         }
         if (isHttpAuthError(response)) {
           Log.warn('Refresh access token due to HTTP authentication error.', response);
-          return Auth.refreshAccessTokenAndResendRequest(response);
+          return refreshTokenAndRetry(response, Auth);
         }
         if (isCIInvalidAccessTokenError(response)) {
           Log.warn('Refresh access token due to invalid CI error.', response);
-          return Auth.refreshAccessTokenAndResendRequest(response);
+          return refreshTokenAndRetry(response, Auth);
         }
 
         if (refreshTokenHasExpired(response)) {
@@ -42,6 +48,15 @@
         return $q.reject(response);
       }
     };
+
+    function refreshTokenAndRetry(response, Auth) {
+      _.set(response, HAS_RETRIED, true);
+      return Auth.refreshAccessTokenAndResendRequest(response);
+    }
+
+    function hasAlreadyRetried(response) {
+      return _.get(response, HAS_RETRIED, false);
+    }
 
     function is20001Error(response) {
       return response.status == 401 && responseContains(response, '200001');

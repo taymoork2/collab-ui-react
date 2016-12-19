@@ -1,19 +1,12 @@
 'use strict';
 
 describe('Directive: ucSharedlineOld', function () {
-  var $compile, $rootScope;
-
-  beforeEach(angular.mock.module('Huron'));
-
-  beforeEach(inject(function (_$compile_, _$rootScope_) {
-    $compile = _$compile_;
-    $rootScope = _$rootScope_;
-  }));
+  beforeEach(function () {
+    this.initModules('Huron');
+    this.compileComponent('ucSharedLineOld');
+  });
 
   it('replaces the element with the appropriate content', function () {
-    var element = $compile("<uc-shared-line-old/>")($rootScope);
-    $rootScope.$digest();
-
-    expect(element.html()).toContain("form-group");
+    expect(this.view.html()).toContain("form-group");
   });
 });

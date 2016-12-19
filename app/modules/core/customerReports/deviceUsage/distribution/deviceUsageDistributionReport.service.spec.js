@@ -6,6 +6,10 @@ describe('DeviceUsageDistributionReportService', function () {
 
   var $timeout, DeviceUsageRawService, DeviceUsageDistributionReportService, $q;
 
+  afterEach(function () {
+    $timeout = DeviceUsageRawService = DeviceUsageDistributionReportService = $q = undefined;
+  });
+
   beforeEach(inject(function (_$timeout_, _$q_, _DeviceUsageRawService_, _DeviceUsageDistributionReportService_) {
     DeviceUsageRawService = _DeviceUsageRawService_;
     DeviceUsageDistributionReportService = _DeviceUsageDistributionReportService_;

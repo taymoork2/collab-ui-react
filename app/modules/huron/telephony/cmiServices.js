@@ -36,6 +36,7 @@
     .factory('DirectoryNumberCopyService', DirectoryNumberCopyService)
     .factory('SiteService', SiteService)
     .factory('AvrilSiteService', AvrilSiteService)
+    .factory('AvrilSiteUpdateService', AvrilSiteUpdateService)
     .factory('InternalNumberRangeService', InternalNumberRangeService)
     .factory('UserEndpointService', UserEndpointService)
     .factory('SipEndpointService', SipEndpointService)
@@ -44,6 +45,7 @@
     .factory('SipEndpointDirectoryNumberService', SipEndpointDirectoryNumberService)
     .factory('TimeZoneService', TimeZoneService)
     .factory('SiteLanguageService', SiteLanguageService)
+    .factory('SiteCountryService', SiteCountryService)
     .factory('HermesQRCodeService', HermesQRCodeService)
     .factory('DeviceLogApiService', DeviceLogApiService)
     .factory('UserLineAssociationService', UserLineAssociationService)
@@ -350,6 +352,21 @@
   }
 
   /* @ngInject */
+  function AvrilSiteUpdateService($resource, HuronConfig) {
+    return $resource(HuronConfig.getAvrilUrl() + '/customers/:customerId/sites/:siteId', {
+      customerId: '@customerId',
+      siteId: '@siteId'
+    }, {
+      update: {
+        method: 'PUT'
+      },
+      get: {
+        method: 'GET'
+      }
+    });
+  }
+
+  /* @ngInject */
   function InternalNumberRangeService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberranges/:internalNumberRangeId', {
       customerId: '@customerId',
@@ -425,6 +442,11 @@
   /* @ngInject */
   function SiteLanguageService($resource) {
     return $resource('modules/huron/serviceSetup/siteLanguages.json', {}, {});
+  }
+
+  /* @ngInject */
+  function SiteCountryService($resource) {
+    return $resource('modules/huron/serviceSetup/siteCountries.json', {}, {});
   }
 
   /* @ngInject */

@@ -15,7 +15,10 @@ describe('controller: IncidentsCtrl', function () {
   };
 
   beforeEach(angular.mock.module('GSS'));
-  beforeEach(angular.mock.module('Core'));
+  afterEach(destructDI);
+  afterAll(function () {
+    testData = undefined;
+  });
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(initController);
@@ -27,6 +30,10 @@ describe('controller: IncidentsCtrl', function () {
     $state = _$state_;
     GSSService = _GSSService_;
     IncidentsService = _IncidentsService_;
+  }
+
+  function destructDI() {
+    $controller = $q = $scope = $state = controller = GSSService = IncidentsService = undefined;
   }
 
   function initSpies() {

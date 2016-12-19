@@ -6,6 +6,11 @@ describe('Controller: WizardCtrl', function () {
 
   var getUserMe, getMyFeatureToggles;
 
+  afterEach(function () {
+    controller = $scope = $state = $q = $translate = tabs = Userservice = FeatureToggleService = ServiceSetup = rootScope = undefined;
+    getUserMe = getMyFeatureToggles = undefined;
+  });
+
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Core'));

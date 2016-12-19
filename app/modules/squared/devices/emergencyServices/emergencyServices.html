@@ -14,7 +14,9 @@
           <div class="section-title-row">
             <span class="section-name" translate="spacesPage.ecn"></span>
           </div>
+          <div ng-if="$ctrl.staticNumber">{{$ctrl.emergency.emergencyNumber}}</div>
           <cs-select
+            ng-if="!$ctrl.staticNumber"
             form="$ctrl.form"
             ng-model="$ctrl.emergency.emergencyNumber"
             options="$ctrl.options"

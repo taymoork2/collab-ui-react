@@ -8,6 +8,7 @@
   /* @ngInject */
   function CbgRequestCtrl($state, $timeout, $scope, $rootScope, $stateParams, cbgService, Notification) {
     var vm = this;
+    vm.allCountries = [];
     vm.isCsvValid = false;
     vm.onSubmit = onSubmit;
     vm.resetFile = resetFile;
@@ -23,6 +24,7 @@
       isProcessing: false,
     };
     vm.model.postData = {};
+    vm.model.postData.countries = [];
 
     $scope.$watchCollection(function () {
       return vm.model.file;
@@ -40,8 +42,12 @@
         csvArray = $.csv.toArrays(vm.model.file);
         if (_.isArray(csvArray) && csvArray.length > 1 && _.isArray(csvArray[0])) {
           csvHeaders = csvArray.shift(); // First line is not empty -- need internationalization
-          if (csvArray.length > 247) return;
-          if (csvHeaders.length !== 1) return;
+          if (csvArray.length > 247) {
+            return;
+          }
+          if (csvHeaders.length !== 1) {
+            return;
+          }
           vm.isCsvValid = true;
           formateCountries(csvArray);
         }
@@ -67,15 +73,32 @@
     function onSubmit() {
       vm.loading = true;
       var customerId = _.get($stateParams, 'customerId', '');
-      if (!customerId) return;
-      cbgService.postRequest(customerId, vm.model.postData).then(function (res) {
-        var resJson = _.get(res.content, 'data');
-        if (resJson.returnCode) {
-          Notification.error(resJson.message);
-          return;
-        }
-        $rootScope.$emit('cbgsUpdate', true);
-        $state.modal.close();
+      if (!customerId) {
+        return;
+      }
+      cbgService.getCountries().then(function (res) {
+        var countries = [];
+        var arr = _.get(res.content, 'data');
+        _.forEach(arr, function (country) {
+          vm.allCountries[country.countryName] = country;
+        });
+        _.forEach(vm.model.postData.countries, function (country) {
+          var selectedCountry = vm.allCountries[country.countryName.trim()];
+          if (selectedCountry) {
+            countries.push({ countryId: selectedCountry.countryId, countryName: selectedCountry.countryName });
+          }
+        });
+        vm.model.postData.countries = countries;
+      }).then(function () {
+        cbgService.postRequest(customerId, vm.model.postData).then(function (res) {
+          var resJson = _.get(res.content, 'data');
+          if (resJson.returnCode) {
+            Notification.error(resJson.message);//TODO when wording confirmed
+            return;
+          }
+          $rootScope.$emit('cbgsUpdate', true);
+          $state.modal.close();
+        });
       });
     }
 
@@ -90,7 +113,7 @@
 
     function resetFile() {
       vm.model.file = null;
-      vm.model.postData.countries = null;
+      vm.model.postData.countries = [];
       vm.hideCountries = null;
     }
 

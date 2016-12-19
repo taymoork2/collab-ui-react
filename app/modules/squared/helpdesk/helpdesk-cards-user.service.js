@@ -73,6 +73,9 @@
         cal: {
           entitled: false
         },
+        gcal: {
+          entitled: false
+        },
         uc: {
           entitled: false
         },
@@ -84,10 +87,13 @@
         hybridServicesCard.entitled = true;
         hybridServicesCard.cal.entitled = true;
       }
+      if (LicenseService.userIsEntitledTo(user, 'squared-fusion-gcal')) {
+        hybridServicesCard.entitled = true;
+        hybridServicesCard.gcal.entitled = true;
+      }
       if (LicenseService.userIsEntitledTo(user, 'squared-fusion-uc')) {
         hybridServicesCard.entitled = true;
         hybridServicesCard.uc.entitled = true;
-
         hybridServicesCard.ec.entitled = LicenseService.userIsEntitledTo(user, 'squared-fusion-ec');
       }
       return hybridServicesCard;

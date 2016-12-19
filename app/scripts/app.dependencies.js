@@ -15,5 +15,6 @@ require('ui-router-extras/release/modular/ct-ui-router-extras.future.js');
 require('ui-router-extras/release/modular/ct-ui-router-extras.previous.js');
 require('collab-ui-ng/dist/collab-ui-ng');
 require('angularjs-toaster/toaster.js');
+require('angularjs-slider/dist/rzslider.min.js');
 require('oclazyload');
 require('dragular/dist/dragular.js');

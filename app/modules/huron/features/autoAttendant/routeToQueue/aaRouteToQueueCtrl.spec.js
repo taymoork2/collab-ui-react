@@ -396,6 +396,36 @@ describe('Controller: AARouteToQueueCtrl', function () {
         expect(controller.menuEntry.actions[0].name).toEqual('routeToQueue');
         expect(controller.menuEntry.actions[0].value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
       });
+
+      it('should be able to update queue settings voice via saveUIModel', function () {
+        var controller = $controller('AARouteToQueueCtrl', {
+          $scope: $scope
+        });
+        controller.queueSelected = {
+          name: "Test Queue",
+          id: "c16a6027-caef-4429-b3af-9d61ddc7964b"
+        };
+
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+        action.queueSettings = {
+          voice: ''
+        };
+        controller.menuKeyEntry.actions = [];
+        controller.menuKeyEntry.actions[0] = action;
+
+        var headerEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        controller.menuEntry.headers = [];
+        headerEntry.setVoice("Anna");
+        controller.menuEntry.headers.push(headerEntry);
+
+        controller.saveUiModel();
+        $scope.$apply();
+
+        expect(controller.menuKeyEntry.actions[0].value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
+
+        var queueSettings = _.get(controller.menuKeyEntry, 'actions[0].queueSettings');
+        expect(queueSettings.voice).toEqual("Anna");
+      });
     });
 
   });

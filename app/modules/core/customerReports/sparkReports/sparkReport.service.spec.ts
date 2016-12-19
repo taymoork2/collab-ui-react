@@ -1,16 +1,16 @@
 describe('Service: Customer Reports Service', function () {
-  const activeData = getJSONFixture('core/json/customerReports/activeUser.json');
-  const defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
-  const devicesJson = getJSONFixture('core/json/customerReports/devices.json');
-  const fileData = getJSONFixture('core/json/customerReports/fileData.json');
-  const mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
-  const metricsData = getJSONFixture('core/json/customerReports/callMetrics.json');
-  const roomData = getJSONFixture('core/json/customerReports/roomData.json');
-  const rejectError = {
+  let activeData = getJSONFixture('core/json/customerReports/activeUser.json');
+  let defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
+  let devicesJson = getJSONFixture('core/json/customerReports/devices.json');
+  let fileData = getJSONFixture('core/json/customerReports/fileData.json');
+  let mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
+  let metricsData = getJSONFixture('core/json/customerReports/callMetrics.json');
+  let roomData = getJSONFixture('core/json/customerReports/roomData.json');
+  let rejectError: any = {
     status: 500,
   };
 
-  let updateDates = (data: Array<any>, filter: string | undefined, altDate: string | undefined): Array<any> => {
+  let updateDates: any = (data: Array<any>, filter: string | undefined, altDate: string | undefined): Array<any> => {
     _.forEachRight(data, (item: any, index: number): void => {
       if (filter) {
         item.date = moment().tz(defaults.timezone).subtract(data.length - index, defaults.DAY).format(filter);
@@ -23,13 +23,17 @@ describe('Service: Customer Reports Service', function () {
     return data;
   };
 
-  let dataResponse = (data: any): any => {
+  let dataResponse: any = (data: any): any => {
     return {
       data: {
         data: data,
       },
     };
   };
+
+  afterAll(function () {
+    activeData = defaults = devicesJson = fileData = mediaData = metricsData = roomData = rejectError = updateDates = dataResponse = undefined;
+  });
 
   beforeEach(function () {
     this.initModules('Core');

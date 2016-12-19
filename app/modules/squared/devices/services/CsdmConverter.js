@@ -33,6 +33,7 @@
         this.canDelete = true;
         this.canReportProblem = true;
         this.hasRemoteSupport = true;
+        this.hasAdvancedSettings = true;
         this.supportsCustomTags = true;
         this.update = function (updated) {
           this.displayName = updated.displayName;
@@ -149,7 +150,7 @@
         this.url = obj.url;
         this.isPlace = true;
         this.type = obj.type || (obj.machineType == 'lyra_space' ? 'cloudberry' : 'huron');
-        this.readableType = getLocalizedType(obj.type);
+        this.readableType = getLocalizedType(this.type);
         this.entitlements = obj.entitlements;
         this.cisUuid = obj.cisUuid || obj.uuid;
         this.displayName = obj.displayName;
@@ -158,8 +159,18 @@
         this.canDelete = true;
         this.accountType = obj.placeType || 'MACHINE';
         this.image = "images/devices-hi/unknown.png";
-        this.devices = obj.devices || {};
+        this.devices = convertDevicesForPlace(obj.devices || {}, this.type, this.displayName);
         this.codes = obj.codes || {};
+      }
+
+      // Hack, these two fields should be set correctly in CSDM. Adding here until we can fix this.
+      function convertDevicesForPlace(devices, type, displayName) {
+        var converted = type === 'huron' ? convertHuronDevices(devices) : convertCloudberryDevices(devices);
+        return _.map(converted, function (device) {
+          device.accountType = 'MACHINE';
+          device.displayName = displayName;
+          return device;
+        });
       }
 
       function decodeHuronTags(description) {

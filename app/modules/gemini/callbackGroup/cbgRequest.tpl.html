@@ -21,8 +21,8 @@
             ng-maxlength="60"
             cs-input-messages="forms.messages"
             ng-model="cbgrCtrl.model.postData.customerName"
-            cs-input-label="{{'gemini.cbgs.request.labelCustomer' | translate}}"
-            placeholder="{{'gemini.cbgs.request.customerPlaceholder' | translate}}">
+            cs-input-label="{{::'gemini.cbgs.request.labelCustomer' | translate}}"
+            placeholder="{{::'gemini.cbgs.request.customerPlaceholder' | translate}}">
         </div>
         <div class="cs-input-group medium-12 columns">
           <input
@@ -30,8 +30,8 @@
             type="text"
             ng-maxlength="200"
             ng-model="cbgrCtrl.model.postData.customerAttribute"
-            placeholder="{{'gemini.cbgs.request.customerAttrPlaceholder' | translate}}"
-            cs-input-label="{{'gemini.cbgs.request.labelCustomerAttr' | translate}}">
+            placeholder="{{::'gemini.cbgs.request.customerAttrPlaceholder' | translate}}"
+            cs-input-label="{{::'gemini.cbgs.request.labelCustomerAttr' | translate}}">
         </div>
       </div>
     </div>
@@ -46,7 +46,7 @@
           <label class="cs-input__label" for="html-input" translate="gemini.cbgs.request.labelCountries"></label>
           <div class="left small-10 input-icon">
             <span class="icon icon-search"></span>
-            <input id="html-input" class="cs-input" type="text" placeholder="{{'gemini.cbgs.request.countriesPlaceholder' | translate}}">
+            <input id="html-input" class="cs-input" type="text" placeholder="{{::'gemini.cbgs.request.countriesPlaceholder' | translate}}">
             <input type="hidden" ng-model="cbgrCtrl.hideCountries" required="true">
           </div>
 
@@ -85,7 +85,9 @@
             </button>
           </div>
         </div>
-
+        <h3 ng-if="cbgrCtrl.model.postData.countries.length == 0" class="text-center">
+          <small>{{::'gemini.cbgs.request.countryDisplayNull' | translate}}</small>
+        </h3>
         <div class="tag-container">
           <span class="tag tag-country" ng-repeat="val in cbgrCtrl.model.postData.countries">
             <span>{{val.countryName}}</span>

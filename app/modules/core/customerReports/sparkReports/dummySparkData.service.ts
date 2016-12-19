@@ -7,6 +7,7 @@ import {
 
 import {
   IAvgRoomData,
+  IConversation,
   IEndpointData,
   IEndpointWrapper,
   IFilesShared,
@@ -71,12 +72,12 @@ export class DummySparkDataService {
     let dummyGraph: Array<IActiveUserData> = [];
     let timespan: number;
 
-    if (filter.value === 0) {
+    if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
       timespan = this.ReportConstants.DAYS - 1;
       if (lineGraph) {
         timespan = this.ReportConstants.DAYS;
       }
-    } else if (filter.value === 1) {
+    } else if (filter.value === this.ReportConstants.MONTH_FILTER.value) {
       timespan = this.ReportConstants.WEEKS;
       if (lineGraph) {
         timespan = this.ReportConstants.YEAR;
@@ -98,13 +99,13 @@ export class DummySparkDataService {
     let date;
 
     if (lineGraph) {
-      if (filter.value === 0) {
+      if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
         date = moment().subtract(index + 1, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
       } else {
         date = moment().day(-1).subtract(index, this.ReportConstants.WEEK).format(this.ReportConstants.DAY_FORMAT);
       }
     } else {
-      if (filter.value === 0) {
+      if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
         index++;
       }
       let commonData: ICommonData = DummySparkDataService.getCommonData(filter, index, this.ReportConstants);
@@ -123,6 +124,7 @@ export class DummySparkDataService {
     };
   }
 
+  // TODO: remove dummyAvgRoom functions after final switch to new reports
   public dummyAvgRoomData(filter: ITimespan): Array<IAvgRoomData> {
     return this.getDummyData(filter, this.getAvgRoomDataPoint);
   }
@@ -140,6 +142,7 @@ export class DummySparkDataService {
     };
   }
 
+  // TODO: remove dummyFilesShared functions after final switch to new reports
   public dummyFilesSharedData(filter: ITimespan): Array<IFilesShared> {
     return this.getDummyData(filter, this.getFilesSharedDataPoint);
   }
@@ -155,10 +158,101 @@ export class DummySparkDataService {
     };
   }
 
-  public dummyMediaData(filter: ITimespan): Array<IMediaData> {
-    return this.getDummyData(filter, this.getMediaDataPoint);
+  // dummy conversation data
+  public dummyConversationData(filter: ITimespan): Array<IConversation> {
+    let dummyGraph: Array<IConversation> = [];
+    let timespan: number;
+
+    if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
+      timespan = this.ReportConstants.DAYS;
+    } else {
+      timespan = this.ReportConstants.YEAR;
+    }
+
+    for (let i = timespan; i >= 0; i--) {
+      dummyGraph.push(this.getConversationDataPoint(filter, i, timespan - i));
+    }
+
+    return dummyGraph;
   }
 
+  private getConversationDataPoint(filter: ITimespan, index: number, count: number): IConversation {
+    let date: string;
+    if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
+      date = moment().subtract(index + 1, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
+    } else {
+      date = moment().day(-1).subtract(index, this.ReportConstants.WEEK).format(this.ReportConstants.DAY_FORMAT);
+    }
+
+    let newCount: number = 25 * count;
+    return {
+      date: date,
+      balloon: false,
+      avgRooms: 0,
+      contentShared: newCount,
+      contentShareSizes: 0,
+      groupRooms: newCount,
+      oneToOneRooms: 25 + newCount,
+      totalRooms: 25 + (newCount * 2),
+    };
+  }
+
+  // media data
+  public dummyMediaData(filter: ITimespan, linegraph: boolean): Array<IMediaData> {
+    if (linegraph) {
+      let dummyGraph: Array<IMediaData> = [];
+      let timespan: number;
+
+      if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
+        timespan = this.ReportConstants.DAYS;
+      } else {
+        timespan = this.ReportConstants.YEAR;
+      }
+
+      for (let i = timespan; i >= 0; i--) {
+        dummyGraph.push(this.getQualityDataPoint(filter, i, timespan - i));
+      }
+
+      return dummyGraph;
+    } else {
+      return this.getDummyData(filter, this.getMediaDataPoint);
+    }
+  }
+
+  private getQualityDataPoint(filter: ITimespan, index: number, count: number): IMediaData {
+    let date: string;
+    if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
+      date = moment().subtract(index + 1, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
+    } else {
+      date = moment().day(-1).subtract(index, this.ReportConstants.WEEK).format(this.ReportConstants.DAY_FORMAT);
+    }
+
+    let goodQualityDurationSum = 25 + (15 * count);
+    let fairQualityDurationSum = 15 + (10 * count);
+    let poorQualityDurationSum = 5 + (5 * count);
+
+    return {
+      date: date,
+      totalDurationSum: goodQualityDurationSum + fairQualityDurationSum + poorQualityDurationSum,
+      partialSum: fairQualityDurationSum + poorQualityDurationSum,
+      goodQualityDurationSum: goodQualityDurationSum,
+      fairQualityDurationSum: fairQualityDurationSum,
+      poorQualityDurationSum: poorQualityDurationSum,
+      totalAudioDurationSum: 0,
+      goodAudioQualityDurationSum: 0,
+      fairAudioQualityDurationSum: 0,
+      poorAudioQualityDurationSum: 0,
+      partialAudioSum: 0,
+      totalVideoDurationSum: 0,
+      goodVideoQualityDurationSum: 0,
+      fairVideoQualityDurationSum: 0,
+      poorVideoQualityDurationSum: 0,
+      partialVideoSum: 0,
+      balloon: false,
+    };
+  }
+
+  // TODO: Delete when the feature toggle is removed
   private getMediaDataPoint(filter: ITimespan, index: number, constants: any): IMediaData {
     let commonData: ICommonData = DummySparkDataService.getCommonData(filter, index, constants);
     let goodQualityDurationSum = 25 + (15 * commonData.count);

@@ -21,6 +21,8 @@ import { DummySparkDataService } from './dummySparkData.service';
 import {
   IActiveUserWrapper,
   IAvgRoomData,
+  IConversation,
+  IConversationWrapper,
   IEndpointContainer,
   IEndpointWrapper,
   IFilesShared,
@@ -84,6 +86,8 @@ class SparkReportCtrl {
       this.$timeout((): void => {
         if (this.displayNewReports) {
           this.setActiveLineGraph(this.timeSelected.min, this.timeSelected.max);
+          this.setConversationGraphs(this.timeSelected.min, this.timeSelected.max);
+          this.setCallQualityGraph(this.timeSelected.min, this.timeSelected.max);
         } else {
           this.setDummyData();
           this.setAllGraphs();
@@ -152,6 +156,8 @@ class SparkReportCtrl {
     }
 
     this.setActiveLineGraph(min, max);
+    this.setConversationGraphs(min, max);
+    this.setCallQualityGraph(min, max);
   }
 
   private timeUpdate(): void {
@@ -250,13 +256,7 @@ class SparkReportCtrl {
     this.$rootScope.$broadcast(this.secondaryActiveOptions.broadcast);
 
     this.SparkReportService.getActiveUserData(this.timeSelected).then((response: IActiveUserWrapper): void => {
-      if (_.isArray(response.graphData) && response.graphData.length === 0) {
-        this.activeOptions.state = this.ReportConstants.EMPTY;
-      } else {
-        this.setActiveGraph(response.graphData);
-        this.activeOptions.state = this.ReportConstants.SET;
-      }
-      this.CardUtils.resize(0);
+      this.updateActiveLineGraph(response);
     });
 
     this.SparkReportService.getMostActiveUserData(this.timeSelected).then((response: Array<IActiveTableBase>): void => {
@@ -281,11 +281,11 @@ class SparkReportCtrl {
     this.secondaryActiveOptions.table.data = [];
     this.$rootScope.$broadcast(this.secondaryActiveOptions.broadcast);
     this.activeDropdown.disabled = true;
+    this.activeOptions.state = this.ReportConstants.REFRESH;
+    this.setActiveGraph(this.DummySparkDataService.dummyActiveUserData(this.timeSelected, this.displayNewReports));
 
     if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
       if (_.isUndefined(this.activeUserSevenDayData)) {
-        this.activeOptions.state = this.ReportConstants.REFRESH;
-        this.setActiveGraph(this.DummySparkDataService.dummyActiveUserData(this.timeSelected, this.displayNewReports));
         this.SparkLineReportService.getActiveUserData(this.timeSelected).then((response: IActiveUserWrapper): void => {
           this.activeUserSevenDayData = response;
           this.updateActiveLineGraph(this.activeUserSevenDayData);
@@ -294,8 +294,6 @@ class SparkReportCtrl {
         this.updateActiveLineGraph(this.activeUserSevenDayData);
       }
     } else if (_.isUndefined(this.activeUserYearData)) {
-      this.activeOptions.state = this.ReportConstants.REFRESH;
-      this.setActiveGraph(this.DummySparkDataService.dummyActiveUserData(this.timeSelected, this.displayNewReports));
       this.zoomChart(this.charts.active, min, max);
       this.SparkLineReportService.getActiveUserData(this.timeSelected).then((response: IActiveUserWrapper): void => {
         this.activeUserYearData = response;
@@ -332,7 +330,9 @@ class SparkReportCtrl {
     } else {
       this.setActiveGraph(data.graphData);
       this.activeOptions.state = this.ReportConstants.SET;
-      this.activeDropdown.disabled = !data.isActiveUsers;
+      if (this.displayNewReports) {
+        this.activeDropdown.disabled = !data.isActiveUsers;
+      }
     }
     this.CardUtils.resize(0);
   }
@@ -349,9 +349,15 @@ class SparkReportCtrl {
     titlePopover: this.ReportConstants.UNDEF,
   };
 
-  private setAverageGraph(data: Array<IAvgRoomData>): void {
+  private setAverageGraph(data: Array<IAvgRoomData> | Array<IConversation>): void {
     this.exportArrays.rooms = null;
-    let temprooms: any = this.SparkGraphService.setAvgRoomsGraph(data, this.charts.rooms);
+    let temprooms: any;
+    if (this.displayNewReports) {
+      temprooms = this.SparkGraphService.setRoomGraph(data, this.charts.rooms);
+    } else {
+      temprooms = this.SparkGraphService.setAvgRoomsGraph(data, this.charts.rooms);
+    }
+
     if (temprooms) {
       this.charts.rooms = temprooms;
       this.exportArrays.rooms = this.CommonReportService.createExportMenu(this.charts.rooms);
@@ -369,6 +375,58 @@ class SparkReportCtrl {
     });
   }
 
+  // Conversation Graphs
+  private sevenDayConversations: IConversationWrapper;
+  private yearlyConversations: IConversationWrapper;
+
+  private setConversationGraphs(min: number, max: number): void {
+    this.filesSharedOptions.state = this.ReportConstants.REFRESH;
+    this.avgRoomOptions.state = this.ReportConstants.REFRESH;
+    let dummyData = this.DummySparkDataService.dummyConversationData(this.timeSelected);
+    this.setAverageGraph(dummyData);
+    this.setFilesGraph(dummyData);
+
+    if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
+      if (_.isUndefined(this.sevenDayConversations)) {
+        this.SparkLineReportService.getConversationData(this.timeSelected).then((response: IConversationWrapper): void => {
+          this.sevenDayConversations = response;
+          this.updateConversationGraphs(this.sevenDayConversations);
+        });
+      } else {
+        this.updateConversationGraphs(this.sevenDayConversations);
+      }
+    } else if (_.isUndefined(this.activeUserYearData)) {
+      this.zoomChart(this.charts.rooms, min, max);
+      this.zoomChart(this.charts.files, min, max);
+      this.SparkLineReportService.getConversationData(this.timeSelected).then((response: IConversationWrapper): void => {
+        this.yearlyConversations = response;
+        this.updateConversationGraphs(this.yearlyConversations);
+        this.zoomChart(this.charts.rooms, min, max);
+        this.zoomChart(this.charts.files, min, max);
+      });
+    } else {
+      this.updateConversationGraphs(this.yearlyConversations);
+      this.zoomChart(this.charts.rooms, min, max);
+      this.zoomChart(this.charts.files, min, max);
+    }
+  }
+
+  private updateConversationGraphs(data: IConversationWrapper): void {
+    if (data.array.length > 0 && data.hasRooms) {
+      this.setAverageGraph(data.array);
+      this.avgRoomOptions.state = this.ReportConstants.SET;
+    } else {
+      this.avgRoomOptions.state = this.ReportConstants.EMPTY;
+    }
+
+    if (data.array.length > 0 && data.hasFiles) {
+      this.setFilesGraph(data.array);
+      this.filesSharedOptions.state = this.ReportConstants.SET;
+    } else {
+      this.filesSharedOptions.state = this.ReportConstants.EMPTY;
+    }
+  }
+
   // Files Shared Report Controls
   public filesSharedOptions: IReportCard = {
     animate: true,
@@ -381,9 +439,15 @@ class SparkReportCtrl {
     titlePopover: this.ReportConstants.UNDEF,
   };
 
-  private setFilesGraph(data: Array<IFilesShared>): void {
+  private setFilesGraph(data: Array<IFilesShared> | Array<IConversation>): void {
     this.exportArrays.files = null;
-    let tempfiles: any = this.SparkGraphService.setFilesSharedGraph(data, this.charts.files);
+    let tempfiles: any;
+    if (this.displayNewReports) {
+      tempfiles = this.SparkGraphService.setFilesGraph(data, this.charts.files);
+    } else {
+      tempfiles = this.SparkGraphService.setFilesSharedGraph(data, this.charts.files);
+    }
+
     if (tempfiles) {
       this.charts.files = tempfiles;
       this.exportArrays.files = this.CommonReportService.createExportMenu(this.charts.files);
@@ -418,7 +482,15 @@ class SparkReportCtrl {
   public mediaDropdown: IReportDropdown = {
     array: this.mediaArray,
     click: (): void => {
-      this.setMediaGraph(this.mediaData);
+      if (this.displayNewReports) {
+        if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
+          this.updateQualityGraph(this.qualitySevenDayData);
+        } else {
+          this.updateQualityGraph(this.qualityYearData);
+        }
+      } else {
+        this.setMediaGraph(this.mediaData);
+      }
     },
     disabled: true,
     selected: this.mediaArray[0],
@@ -426,7 +498,13 @@ class SparkReportCtrl {
 
   private setMediaGraph(data: Array<IMediaData>): void {
     this.exportArrays.media = null;
-    let tempmedia: any = this.SparkGraphService.setMediaQualityGraph(data, this.charts.media, this.mediaDropdown.selected);
+    let tempmedia: any;
+    if (this.displayNewReports) {
+      tempmedia = this.SparkGraphService.setQualityGraph(data, this.charts.media, this.mediaDropdown.selected);
+    } else {
+      tempmedia = this.SparkGraphService.setMediaQualityGraph(data, this.charts.media, this.mediaDropdown.selected);
+    }
+
     if (tempmedia) {
       this.charts.media = tempmedia;
       this.exportArrays.media = this.CommonReportService.createExportMenu(this.charts.media);
@@ -437,15 +515,50 @@ class SparkReportCtrl {
     this.mediaDropdown.disabled = true;
     this.mediaData = [];
     this.SparkReportService.getMediaQualityData(this.timeSelected).then((response: Array<IMediaData>): void => {
-      if (response.length === 0) {
-        this.mediaOptions.state = this.ReportConstants.EMPTY;
-      } else {
-        this.mediaData = response;
-        this.setMediaGraph(this.mediaData);
-        this.mediaOptions.state = this.ReportConstants.SET;
-        this.mediaDropdown.disabled = false;
-      }
+      this.mediaData = response;
+      this.updateQualityGraph(response);
     });
+  }
+
+  // Call Quality Line Graph Controls
+  private qualitySevenDayData: Array<IMediaData>;
+  private qualityYearData: Array<IMediaData>;
+
+  private setCallQualityGraph(min: number, max: number): void {
+    this.mediaDropdown.disabled = true;
+    this.mediaOptions.state = this.ReportConstants.REFRESH;
+    this.setMediaGraph(this.DummySparkDataService.dummyMediaData(this.timeSelected, this.displayNewReports));
+
+    if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
+      if (_.isUndefined(this.qualitySevenDayData)) {
+        this.SparkLineReportService.getMediaQualityData(this.timeSelected).then((response: Array<IMediaData>): void => {
+          this.qualitySevenDayData = response;
+          this.updateQualityGraph(this.qualitySevenDayData);
+        });
+      } else {
+        this.updateQualityGraph(this.qualitySevenDayData);
+      }
+    } else if (_.isUndefined(this.qualityYearData)) {
+      this.zoomChart(this.charts.active, min, max);
+      this.SparkLineReportService.getMediaQualityData(this.timeSelected).then((response: Array<IMediaData>): void => {
+        this.qualityYearData = response;
+        this.updateQualityGraph(this.qualityYearData);
+        this.zoomChart(this.charts.active, min, max);
+      });
+    } else {
+      this.updateQualityGraph(this.qualityYearData);
+      this.zoomChart(this.charts.media, min, max);
+    }
+  }
+
+  private updateQualityGraph(data: Array<IMediaData>): void {
+    if (data.length === 0) {
+      this.mediaOptions.state = this.ReportConstants.EMPTY;
+    } else {
+      this.setMediaGraph(data);
+      this.mediaOptions.state = this.ReportConstants.SET;
+      this.mediaDropdown.disabled = false;
+    }
   }
 
   // Registered Endpoints Report Controls
@@ -608,7 +721,7 @@ class SparkReportCtrl {
     this.setMetrics(undefined);
     this.setMetricGraph(this.DummySparkDataService.dummyMetricsData());
     this.setDeviceGraph(this.DummySparkDataService.dummyDeviceData(this.timeSelected), undefined);
-    this.setMediaGraph(this.DummySparkDataService.dummyMediaData(this.timeSelected));
+    this.setMediaGraph(this.DummySparkDataService.dummyMediaData(this.timeSelected, this.displayNewReports));
 
     this.CardUtils.resize(0);
   }

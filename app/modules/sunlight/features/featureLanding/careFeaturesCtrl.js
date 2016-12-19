@@ -6,7 +6,7 @@
     .controller('CareFeaturesCtrl', CareFeaturesCtrl);
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $q, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification) {
+  function CareFeaturesCtrl($filter, $modal, $q, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification) {
     var vm = this;
     vm.init = init;
     var pageStates = {
@@ -27,7 +27,7 @@
       name: 'Search'
     };
     vm.template = null;
-
+    vm.openNewCareFeatureModal = openNewCareFeatureModal;
     /* LIST OF FEATURES
      *
      *  To add a New Feature (like Voice Templates)
@@ -37,7 +37,7 @@
      *  4. Define the formatter
      * */
     vm.features = [{
-      name: 'CT',
+      name: 'Ch',
       getFeature: CareFeatureList.getChatTemplates,
       formatter: CareFeatureList.formatChatTemplates,
       i18n: 'careChatTpl.chatTemplate',
@@ -99,7 +99,7 @@
     function handleFailures(response, feature) {
       vm.pageState = pageStates.error;
       Log.warn('Could not fetch features for customer with Id:', Authinfo.getOrgId());
-      Notification.errorResponse(response, 'careChatTpl.failedToLoad', {
+      Notification.errorWithTrackingId(response, 'careChatTpl.failedToLoad', {
         featureText: $filter('translate')(feature.i18n)
       });
     }
@@ -147,7 +147,7 @@
 
     function deleteCareFeature(feature) {
       featureToBeDeleted = feature;
-      if (feature.featureType == 'CT') {
+      if (feature.featureType === 'Ch') {
         $state.go('care.Features.DeleteFeature', {
           deleteFeatureName: feature.name,
           deleteFeatureId: feature.templateId,
@@ -160,6 +160,14 @@
       CTService.openEmbedCodeModal(feature.templateId, feature.name);
     }
 
+    function openNewCareFeatureModal() {
+      $modal.open({
+        templateUrl: 'modules/sunlight/features/featureLanding/newCareFeatureModal.tpl.html',
+        controller: 'NewCareFeatureModalCtrl',
+        controllerAs: 'NewCareFeatureModalCtrl'
+      });
+    }
+
     //list is updated by deleting a feature
     $scope.$on('CARE_FEATURE_DELETED', function () {
       listOfAllFeatures.splice(listOfAllFeatures.indexOf(featureToBeDeleted), 1);
@@ -170,6 +178,8 @@
       }
 
     });
+
+
   }
 
 })();

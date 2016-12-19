@@ -34,11 +34,14 @@ describe('Service: IncidentsService', function () {
     }
   };
 
-  beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('GSS'));
   beforeEach(inject(dependencies));
   afterEach(function () {
     $httpBackend.flush();
+    $httpBackend = IncidentsService = undefined;
+  });
+  afterAll(function () {
+    testData = undefined;
   });
 
   function dependencies(_$httpBackend_, _IncidentsService_) {

@@ -6,6 +6,13 @@
 
   describe('Template: actionColumn.tpl.html', function () {
 
+    afterEach(function () {
+      if (view) {
+        view.remove();
+      }
+      view = undefined;
+    });
+
     beforeEach(angular.mock.module('wx2AdminWebClientApp')); // need the states for template ui-sref
     beforeEach(angular.mock.module('Huron'));
     beforeEach(angular.mock.module('Sunlight'));
