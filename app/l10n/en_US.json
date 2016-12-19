@@ -2195,18 +2195,15 @@
       "downloading": "Downloading",
       "uninstalling": "Uninstalling",
       "running": "Running",
-      "needs_attention": "Needs attention",
-      "alarm": "Alarms",
-      "Unknown": "Registering",
-      "nohosts": "No Hosts Registered",
-      "no_hosts": "No Hosts Registered",
       "has_alarms": "Alarms",
       "upgrading": "Upgrading",
       "upgraded": "Upgraded",
       "pending": "Pending",
       "initializing": "Initializing",
-      "not_operational": "Not Operational",
-      "nonodes": "No Nodes Registered"
+      "not_operational": "Not operational",
+      "not_registered": "Registration not completed",
+      "urgentUpgradeAvailable": "Urgent upgrade available",
+      "registrationTimeout": "Registration timeout"
     },
     "resources": {
       "page_title": "Hybrid Data Security Service",

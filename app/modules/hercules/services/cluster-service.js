@@ -202,7 +202,8 @@
           return cluster;
         })
         .filter(function (cluster) {
-          return _.some(cluster.provisioning, { connectorType: type });
+          //return _.some(cluster.provisioning, { connectorType: type });
+          return cluster;
         })
         .value();
     }

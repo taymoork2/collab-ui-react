@@ -1,158 +1,15 @@
 <div ui-view="header"></div>
 
 <cs-sp-container class="hds-fix-paragraphs hds-settings-table">
-  <cs-sp-section ng-if="hdsClusterController.cluster.connectors.length > 0">
-    <div class="section-title-row section-name" translate="hds.alarms.alarms"></div>
-    <div class="feature-list" ng-if="hdsClusterController.cluster.aggregates.alarms.length > 0">
-      <ul>
-        <li class="feature" ng-repeat="alarm in hdsClusterController.cluster.aggregates.alarms" ng-class="{'list-item': !$first}">
-          <a ui-sref="hds-cluster-details.alarm-details({alarm: alarm})">
-            <i class="icon icon-error red status-icon"></i>
-            <span class="feature-name">{{alarm.title}}</span>
-            <i class="feature-arrow"></i>
-          </a>
-        </li>
-      </ul>
-    </div>
-    <p ng-if="hdsClusterController.cluster.aggregates.alarms.length === 0" translate="hds.alarms.noAlarms"></p>
-  </cs-sp-section>
-
-  <!--cs-sp-section ng-if="hdsClusterController.cluster.connectors.length > 0 && hdsClusterController.atlasHybridDataSecurity && hdsClusterController.resourceGroupName">
-    <div class="section-title-row section-name" translate="hercules.resourceGroups.resourceGroupHeading"></div>
-    <p>{{hdsClusterController.resourceGroupName}}</p>
-  </cs-sp-section-->
 
   <cs-sp-section ng-if="hdsClusterController.cluster.connectors.length > 0 && hdsClusterController.atlasHybridDataSecurity">
     <div class="section-title-row section-name" translate="hds.clusterSettings.releasechannelHeader"></div>
     <p>{{hdsClusterController.releaseChannel}}</p>
   </cs-sp-section>
 
-  <cs-sp-section ng-if="hdsClusterController.cluster.connectors.length > 0 && hdsClusterController.schedule">
-    <div class="section-title-row section-name" translate="hds.clusterSettings.upgradeScheduleSubHeader"></div>
-    <p>
-      <span>{{hdsClusterController.schedule.dateTime}}, </span>
-      <span>{{hdsClusterController.schedule.timeZone}}</span>
-    </p>
-  </cs-sp-section>
-
-  <cs-sp-section ng-if="hdsClusterController.cluster.connectors.length > 0 && hdsClusterController.schedule && hdsClusterController.hasEmergencyUpgradeFeatureToggle">
-    <div class="section-title-row section-name" translate="hds.clusterSettings.urgentUpgrade.title"></div>
-    <p>
-      <span>{{hdsClusterController.schedule.urgentScheduleTime}}, </span>
-      <span>{{hdsClusterController.schedule.timeZone}}</span>
-    </p>
-  </cs-sp-section>
-
-  <!--cs-sp-section ng-if="hdsClusterController.cluster.connectors.length > 0">
-    <div class="section-title-row section-name" translate="hercules.softwareUpgrade.softwareUpgrade"></div>
-    <div class="hercules-upgrade-section">
-      <div ng-if="!hdsClusterController.showManagementUpgradeProgress">
-        <p ng-if="!hdsClusterController.softwareUpgrade.isManagementUpgradeAvailable" translate="hercules.softwareUpgrade.upToDate" translate-values="{connectorType: hdsClusterController.localizedManagementConnectorName}"></p>
-        <p ng-if="hdsClusterController.softwareUpgrade.isManagementUpgradeAvailable && !hdsClusterController.softwareUpgrade.isManagementUrgent" translate="hercules.softwareUpgrade.upgradePossible" translate-values="{connectorType: hdsClusterController.localizedManagementConnectorName, availableVersion: hdsClusterController.softwareUpgrade.availableManagementVersion}"></p>
-        <p ng-if="hdsClusterController.softwareUpgrade.isManagementUpgradeAvailable && hdsClusterController.softwareUpgrade.isManagementUrgent" translate="hercules.softwareUpgrade.urgentUpgrade" translate-values="{connectorType: hdsClusterController.localizedManagementConnectorName, availableVersion: hdsClusterController.softwareUpgrade.availableManagementVersion}"></p>
-        <button class="btn btn--primary"
-                ng-click="hdsClusterController.showUpgradeDialog(['squared-fusion-mgmt'],'c_mgmt', hdsClusterController.softwareUpgrade.availableManagementVersion)"
-                ng-disabled="!hdsClusterController.softwareUpgrade.isManagementUpgradeAvailable"
-                translate="hercules.softwareUpgrade.upgradeNow">
-        </button>
-      </div>
-      <div ng-if="hdsClusterController.showManagementUpgradeProgress">
-        <div ng-if="hdsClusterController.fakeManagementUpgrade">
-          <div class="progressbar-info">
-            <span class="progressbar-label" translate="hercules.softwareUpgrade.pending"></span>
-            <span class="progressbar-progress">0 / {{hdsClusterController.softwareUpgrade.numberOfHosts}}</span>
-          </div>
-          <progressbar animate="true" value="10" max="100"></progressbar>
-        </div>
-        <div ng-if="!hdsClusterController.fakeManagementUpgrade">
-          <div class="progressbar-info">
-            <span ng-show="!hdsClusterController.managementUpgradeJustFinished && hdsClusterController.managementUpgradeDetails.upgradingHostname !== ''" class="progressbar-label" translate="hercules.softwareUpgrade.upgradingHost" translate-values="{host: hdsClusterController.managementUpgradeDetails.upgradingHostname, version: hdsClusterController.softwareUpgrade.provisionedManagementVersion}"></span>
-            <span ng-show="!hdsClusterController.managementUpgradeJustFinished && hdsClusterController.managementUpgradeDetails.upgradingHostname === ''" class="progressbar-label" translate="hercules.softwareUpgrade.upgradeProcessInitiating" translate-values="{version: hdsClusterController.softwareUpgrade.provisionedManagementVersion}"></span>
-            <span ng-if="hdsClusterController.upgradeJustFinished" class="progressbar-label" translate="hercules.softwareUpgrade.upgradeDone"></span>
-            <span class="progressbar-progress">{{hdsClusterController.managementUpgradeDetails.numberOfUpsmthngHosts}} / {{hdsClusterController.softwareUpgrade.numberOfHosts}}</span>
-          </div>
-          <progressbar ng-show="!hdsClusterController.upgradeJustFinished" animate="true" value="hdsClusterController.managementUpgradeDetails.numberOfUpsmthngHosts" max="hdsClusterController.softwareUpgrade.numberOfHosts"></progressbar>
-          <progressbar ng-show="hdsClusterController.upgradeJustFinished" type="success" value="1" max="1"></progressbar>
-        </div>
-      </div>
-    </div-->
-
-    <!--div class="hercules-upgrade-section">
-      <div ng-if="!hdsClusterController.showUpgradeProgress">
-        <p ng-if="!hdsClusterController.softwareUpgrade.isUpgradeAvailable" translate="hercules.softwareUpgrade.upToDate" translate-values="{connectorType: hdsClusterController.connectorName}"></p>
-        <p ng-if="hdsClusterController.softwareUpgrade.isUpgradeAvailable && !hdsClusterController.softwareUpgrade.isUrgent" translate="hercules.softwareUpgrade.upgradePossible" translate-values="{connectorType: hdsClusterController.connectorName, availableVersion: hdsClusterController.softwareUpgrade.availableVersion}"></p>
-        <p ng-if="hdsClusterController.softwareUpgrade.isUpgradeAvailable && hdsClusterController.softwareUpgrade.isUrgent" translate="hercules.softwareUpgrade.urgentUpgrade" translate-values="{connectorType: hdsClusterController.localizedConnectorName, availableVersion: hdsClusterController.softwareUpgrade.availableVersion}"></p>
-        <button class="btn btn--primary"
-                ng-click="hdsClusterController.showUpgradeDialog(hdsClusterController.servicesId, hdsClusterController.connectorType, hdsClusterController.softwareUpgrade.availableVersion)"
-                ng-disabled="!hdsClusterController.softwareUpgrade.isUpgradeAvailable"
-                translate="hercules.softwareUpgrade.upgradeNow">
-        </button>
-      </div>
-      <div ng-if="hdsClusterController.showUpgradeProgress">
-        <div ng-if="hdsClusterController.fakeUpgrade">
-          <div class="progressbar-info">
-            <span class="progressbar-label" translate="hercules.softwareUpgrade.pending"></span>
-            <span class="progressbar-progress">0 / {{hdsClusterController.softwareUpgrade.numberOfHosts}}</span>
-          </div>
-          <progressbar animate="true" value="10" max="100"></progressbar>
-        </div>
-        <div ng-if="!hdsClusterController.fakeUpgrade">
-          <div class="progressbar-info">
-            <span ng-show="!hdsClusterController.upgradeJustFinished && hdsClusterController.upgradeDetails.upgradingHostname !== ''" class="progressbar-label" translate="hercules.softwareUpgrade.upgradingHost" translate-values="{host: hdsClusterController.upgradeDetails.upgradingHostname, version: hdsClusterController.softwareUpgrade.provisionedVersion}"></span>
-            <span ng-show="!hdsClusterController.upgradeJustFinished && hdsClusterController.upgradeDetails.upgradingHostname === ''" class="progressbar-label" translate="hercules.softwareUpgrade.upgradeProcessInitiating" translate-values="{version: hdsClusterController.softwareUpgrade.provisionedVersion}"></span>
-            <span ng-if="hdsClusterController.upgradeJustFinished" class="progressbar-label" translate="hercules.softwareUpgrade.upgradeDone"></span>
-            <span class="progressbar-progress">{{hdsClusterController.upgradeDetails.numberOfUpsmthngHosts}} / {{hdsClusterController.softwareUpgrade.numberOfHosts}}</span>
-          </div>
-          <progressbar ng-show="!hdsClusterController.upgradeJustFinished" animate="true" value="hdsClusterController.upgradeDetails.numberOfUpsmthngHosts" max="hdsClusterController.softwareUpgrade.numberOfHosts"></progressbar>
-          <progressbar ng-show="hdsClusterController.upgradeJustFinished" type="success" value="1" max="1"></progressbar>
-        </div>
-      </div>
-    </div>
-    <div>
-      <p ng-if="hdsClusterController.softwareUpgrade.showUpgradeWarning()">
-        <i class="icon icon-warning no-data-warning hercules-update-warning-text"></i>
-        <span class="hercules-update-warning-text"
-              translate="hercules.softwareUpgrade.upgradeWarning"
-              translate-values="{ManagementConnector: hdsClusterController.localizedManagementConnectorName, CiscoCollaborationCloud: hdsClusterController.localizedCCCName}"></span>
-      </p>
-    </div>
-  </cs-sp-section-->
 
   <cs-sp-section ng-if="hdsClusterController.cluster.connectors.length > 0">
     <div class="section-title-row section-name" translate="hds.resources.connectors.hosts"></div>
-    <div class="feature-list">
-      <div ng-repeat="host in hdsClusterController.hosts | orderBy: 'hostname'">
-        <h6 class="feature">{{host.hostname}}</h6>
-        <ul>
-          <li class="feature" ng-repeat="connector in host.connectors | orderBy: hdsClusterController.sortConnectors ">
-            <a ng-if="connector.connectorType === 'c_mgmt'"
-               ui-sref="management-connector-details({host: host.hostname, clusterId: hdsClusterController.clusterId, connectorType: 'c_mgmt'})"
-            >
-              <i class="icon icon-circle status-indicator"
-                 ng-class="hdsClusterController.getSeverity(connector.state).cssClass"
-                 ng-if="!hdsClusterController.hasConnectorAlarm(connector)"></i>
-              <i class="icon icon-circle status-indicator danger"
-                 ng-if="hdsClusterController.hasConnectorAlarm(connector)" ></i>
-              <span class="feature-name">{{hdsClusterController.localizedManagementConnectorName}}</span>
-              <span ng-if="connector.connectorType !== 'c_mgmt'" class="feature-name">{{hdsClusterController.localizedConnectorName}}</span>
-              <span class="feature-status">{{connector.runningVersion}}</span>
-              <i class="feature-status feature-arrow"></i>
-            </a>
-            <a ng-if="connector.connectorType !== 'c_mgmt'"
-               ui-sref="cluster-details.host-details({host: host.hostname, clusterId: hdsClusterController.clusterId, connectorType: connector.connectorType})"
-            >
-              <i class="icon icon-circle status-indicator"
-                 ng-class="hdsClusterController.getSeverity(connector.state).cssClass"
-                 ng-if="!hdsClusterController.hasConnectorAlarm(connector)"></i>
-              <i class="icon icon-circle status-indicator danger"
-                 ng-if="hdsClusterController.hasConnectorAlarm(connector)" ></i>
-              <span class="feature-name">{{hdsClusterController.localizedConnectorName}}</span>
-              <span class="feature-status">{{connector.runningVersion}}</span>
-              <i class="feature-status feature-arrow"></i>
-            </a>
-          </li>
-        </ul>
-      </div>
     </div>
   </cs-sp-section>
 
@@ -160,8 +17,8 @@
     <div class="section-title-row section-name" translate="hds.clusterSettings.registration.heading"></div>
     <p translate="hds.clusterSettings.list.complete-registration"></p>
     <div>
-      <button class="btn" ng-click="hdsClusterController.openDeleteConfirm($ctrl.cluster)" translate="common.remove"></button>
-      <button class="btn btn--primary" ng-click="hdsClusterController.goToHds(hdsClusterController.cluster.allowedRedirectTarget.hostname)" translate="hds.cluserSettings.clusterSettings.go-to-hds"></button>
+      <button class="btn" translate="common.remove"></button>
+      <button class="btn btn--primary" translate="hds.cluserSettings.clusterSettings.go-to-hds"></button>
     </div>
   </cs-sp-section>
 
@@ -169,7 +26,7 @@
     <div class="section-title-row section-name" translate="hds.clusterSettings.registration.heading"></div>
     <p translate="hds.clusterSettings.list.registration-timeout-extended"></p>
     <div>
-      <button class="btn" ng-click="hdsClusterController.openDeleteConfirm()" translate="common.remove"></button>
+      <button class="btn" translate="common.remove"></button>
     </div>
   </cs-sp-section>
 

@@ -413,6 +413,7 @@
         'hds.settings', //Temporary  entitlement until updated in org setting
         'hds',
         'hds.list',
+        "hds-cluster-details",
       ],
       'spark-room-system': [
         'addDeviceFlow',

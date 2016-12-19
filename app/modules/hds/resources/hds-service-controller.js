@@ -6,7 +6,7 @@
     .controller('HDSServiceController', HDSServiceController);
 
   /* @ngInject */
-  function HDSServiceController($modal, $scope, $state, $stateParams, $translate, ClusterService, FusionClusterService, FeatureToggleService) {
+  function HDSServiceController($log, $modal, $scope, $state, $stateParams, $translate, ClusterService, FusionClusterService, FeatureToggleService) {
 
 
     ClusterService.subscribe('data', clustersUpdated, {
@@ -45,9 +45,12 @@
       onRegisterApi: function (gridApi) {
         $scope.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-          $scope.exp.showClusterSidepanel(row.entity);
+          $log.info('row selected', row);
+          $log.info('$scope', $scope);
+          showClusterSidepanel(row.entity);
         });
         if (!_.isUndefined($stateParams.clusterId) && $stateParams.clusterId !== null) {
+          $log.info('$stateParams', $stateParams);
           showClusterSidepanel(ClusterService.getCluster('hds_app', $stateParams.clusterId));
         }
       },
@@ -67,7 +70,7 @@
     function showClusterSidepanel(cluster) {
       $state.go('hds-cluster-details', {
         clusterId: cluster.id,
-        connectorType: vm.connectorType
+        connectorType: 'hds_app'
       });
     }
 
