@@ -3699,6 +3699,7 @@
     "software": "Software",
     "serial": "Serial",
     "ipAddr": "IP Address",
+    "networkConnectivity": "Network Connectivity",
     "macAddr": "MAC Address",
     "sipUrl": "SIP Address",
     "issues": "Issues",
@@ -4945,6 +4946,10 @@
       "Latest": "Latest",
       "Beta": "Beta",
       "Preview": "Preview"
+    },
+    "activeInterface": {
+      "lan": "Wired",
+      "wlan": "Wireless"
     },
     "errorCodes": {
       "mediaProtocol": {
