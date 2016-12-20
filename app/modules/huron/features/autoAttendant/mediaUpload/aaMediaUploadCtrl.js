@@ -5,7 +5,7 @@
   .controller('AAMediaUploadCtrl', AAMediaUploadCtrl);
 
   /* @ngInject */
-  function AAMediaUploadCtrl($scope, $translate, Upload, ModalService, AANotificationService, AACommonService, AAMediaUploadService, AAUiModelService, AutoAttendantCeMenuModelService) {
+  function AAMediaUploadCtrl($scope, $translate, Upload, ModalService, AANotificationService, AACommonService, AAMediaUploadService, AAUiModelService, AutoAttendantCeMenuModelService, Analytics, CryptoJS, Authinfo, AAMetricNameService) {
     var vm = this;
 
     vm.uploadFile = '';
@@ -93,6 +93,9 @@
     //upload set up ui model and state info
     function continueUpload(file) {
       Upload.mediaDuration(file).then(function (durationInSeconds) {
+        var metrics = {};
+        metrics.sizeInMB = file.size / 1024 / 1024;
+        metrics.durationInSeconds = durationInSeconds;
         AACommonService.setIsValid(uniqueCtrlIdentifier, false);
         vm.uploadFile = file.name;
         vm.uploadDate = moment().format("MM/DD/YYYY");
@@ -102,7 +105,7 @@
         modalCanceled = false;
         uploadServProm = AAMediaUploadService.upload(file);
         if (uploadServProm) {
-          uploadServProm.then(uploadSuccess, uploadError, uploadProgress).finally(cleanUp);
+          uploadServProm.then(uploadSuccess.bind(null, metrics), uploadError, uploadProgress).finally(cleanUp);
         } else {
           uploadError();
         }
@@ -111,12 +114,12 @@
       });
     }
 
-    function uploadSuccess(result) {
+    function uploadSuccess(metrics, result) {
       if (!modalCanceled) {
         var retrieve = AAMediaUploadService.retrieve(result);
-        if (retrieve) {
+        if (!_.isEmpty(retrieve)) {
           setUploadValues(retrieve.playback, retrieve.deleteUrl);
-          uploadComplete();
+          uploadComplete(metrics);
         } else {
           uploadError();
         }
@@ -129,12 +132,19 @@
       fd.uploadFile = vm.uploadFile;
       fd.uploadDate = vm.uploadDate;
       fd.uploadDuration = vm.uploadDuration;
-      fd.deleteUrl = deleteUrl;
+      vm.actionEntry.deleteUrl = deleteUrl;
       vm.actionEntry.value = value;
       vm.actionEntry.description = JSON.stringify(fd);
     }
 
-    function uploadComplete() {
+    function uploadComplete(metrics) {
+      var uuid = Authinfo.getUserId();
+      var orgid = Authinfo.getOrgId();
+      if (uuid && orgid) {
+        metrics.uuid = CryptoJS.SHA256(uuid).toString(CryptoJS.enc.Base64);
+        metrics.orgid = CryptoJS.SHA256(orgid).toString(CryptoJS.enc.Base64);
+        Analytics.trackEvent(AAMetricNameService.MEDIA_UPLOAD, metrics);
+      }
       setActionCopy();
       $scope.change();
       mediaResources.uploads.push(_.cloneDeep(vm.actionEntry));
@@ -257,9 +267,8 @@
         vm.uploadFile = desc.uploadFile;
         vm.uploadDate = desc.uploadDate;
         vm.uploadDuration = desc.uploadDuration;
-        if (playAction) {
-          playAction.description = vm.actionCopy.description;
-          playAction.value = vm.actionCopy.value;
+        if (!_.isUndefined(playAction)) {
+          playAction = _.cloneDeep(vm.actionCopy);
         }
         vm.state = vm.UPLOADED;
         vm.progress = 0;
@@ -275,6 +284,8 @@
       if (playAction) {
         playAction.description = '';
         playAction.value = '';
+        playAction.deleteUrl = '';
+        playAction.voice = '';
       }
       vm.state = vm.WAIT;
       vm.progress = 0;
@@ -298,12 +309,9 @@
     function setActionCopy() {
       if (!modalOpen) {
         var action = vm.actionEntry;
-        if (angular.isDefined(action)) {
+        if (!_.isUndefined(action)) {
           if (!_.isEmpty(action.getValue())) {
-            vm.actionCopy = {};
-            vm.actionCopy.description = action.getDescription();
-            vm.actionCopy.value = action.getValue();
-            vm.actionCopy.voice = action.getVoice();
+            vm.actionCopy = _.cloneDeep(action);
           }
         }
       }
@@ -425,7 +433,7 @@
     }
 
     function setUpEntry(action) {
-      if (_.startsWith(action.value.toLowerCase(), 'http')) {
+      if (action) {
         try {
           // description holds the file name plus the date plus the duration
           //dont set up the vm until the desc is parsed properly
@@ -440,6 +448,8 @@
           //catch and keep disallowed
           action.value = '';
           action.description = '';
+          action.deleteUrl = '';
+          action.voice = '';
         }
       } else {
         reset(action);

@@ -70,14 +70,18 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   describe('getWelcomeMenu', function () {
     it('should return welcomeMenu from parsing ceWelcome', function () {
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'openHours');
-      expect(angular.equals(_welcomeMenu, welcomeMenu)).toBe(true);
+      _.each(_.keys(_welcomeMenu), function (key) {
+        expect(_.isEqual(welcomeMenu[key], _welcomeMenu[key]));
+      });
     });
   });
 
   describe('getOptionMenu', function () {
     it('should return optionMenu from parsing ceOption', function () {
       var _optionMenu = AutoAttendantCeMenuModelService.getOptionMenu(ceOption, 'openHours');
-      expect(angular.equals(_optionMenu, optionMenu)).toBe(true);
+      _.each(_.keys(_optionMenu), function (key) {
+        expect(_.isEqual(optionMenu[key], _optionMenu[key]));
+      });
     });
   });
 
@@ -189,8 +193,9 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       expect(welcomeMenuSuccess).toBe(true);
 
       expect(customMenuSuccess).toBe(true);
-      expect(angular.equals(_ceRecord, ceMenuFull)).toBe(true);
-
+      _.each(_.keys(_ceRecord), function (key) {
+        expect(_.isEqual(_ceRecord[key], ceMenuFull[key]));
+      });
     });
   });
 

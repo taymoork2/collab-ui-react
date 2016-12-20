@@ -81,22 +81,15 @@ describe('Controller: AACallerInputCtrl', function () {
   }));
 
   afterEach(function () {
-
     $rootScope = null;
     $scope = null;
-
     featureToggleService = null;
     aaLanguageService = null;
-    aaCommonService = null;
     AAUiModelService = null;
     AutoAttendantCeMenuModelService = null;
-
     aaCommonService = null;
-
     controller = null;
-
     aaUiModel = null;
-
   });
 
   describe('add runActionsOnInput action', function () {
@@ -159,7 +152,6 @@ describe('Controller: AACallerInputCtrl', function () {
       controller.keyChanged(0, newKey);
       expect(controller.inputActions[0].key).toEqual(newKey);
       expect(aaCommonService.isFormDirty()).toEqual(true);
-
     });
   });
 
@@ -175,6 +167,7 @@ describe('Controller: AACallerInputCtrl', function () {
 
     });
   });
+
   describe('setType', function () {
     it('should change the inputType to DIGITS_CHOICE', function () {
 

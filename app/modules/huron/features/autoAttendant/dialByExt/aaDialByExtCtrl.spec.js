@@ -43,6 +43,17 @@ describe('Controller: AADialByExtCtrl', function () {
 
   }));
 
+  afterEach(function () {
+    $rootScope = null;
+    $scope = null;
+    $q = null;
+    $controller = null;
+    AAModelService = null;
+    AAUiModelService = null;
+    AutoAttendantCeMenuModelService = null;
+    FeatureToggleService = null;
+  });
+
   describe('AADialByExt', function () {
     var controller;
 

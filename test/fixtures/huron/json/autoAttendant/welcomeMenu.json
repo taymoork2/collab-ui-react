@@ -50,14 +50,17 @@
         }
       }, {
         "runActionsOnInput": {
-          "description": "",
+          "description": "{\"uploadFile\":\"testFile.wav\"}",
           "inputType": 4,
           "minNumberOfCharacters": 1,
           "maxNumberOfCharacters": 12,
           "variableName": "my variable name",
           "prompts": {
-            "sayList": [{"value" : "hello"
-            }]
+            "playList": [{
+              "url": "https://fileUrlPlayback.cisco.com",
+              "deleteUrl": "https://fileUrlDelete.cisco.com"
+            }],
+            "sayList": []
           },
           "rawInputActions": [{
             "assignVar": {
@@ -915,7 +918,7 @@
     "password": "",
     "url": ""
   }]
-  }, 
+  },
   "ceMenuFull": {
     "callExperienceName": "AA Custom",
     "assignedResources": [
@@ -977,13 +980,15 @@
           {
             "runActionsOnInput": {
               "inputType": 4,
-              "description": "",
+              "description": "{\"uploadFile\":\"testFile.wav\"}",
               "prompts": {
-                "sayList": [
+                "playList": [
                   {
-                    "value": "hello"
+                    "url": "https://fileUrlPlayback.cisco.com",
+                    "deleteUrl": "https://fileUrlDelete.cisco.com"
                   }
-                ]
+                ],
+                "sayList": []
               },
               "rawInputActions": [
                 {

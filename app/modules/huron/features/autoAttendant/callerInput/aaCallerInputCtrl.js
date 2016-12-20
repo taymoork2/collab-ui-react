@@ -87,7 +87,6 @@
     }
     //the user enteres a char into the key input area
     function keyInputChanged(keyIndex, whichKey) {
-
       vm.inputActions[keyIndex].value = whichKey.value;
 
       AACommonService.setCallerInputStatus(true);
@@ -199,11 +198,8 @@
       vm.menuEntry = uiMenu.entries[$scope.index];
       var action = getAction(vm.menuEntry);
       if (!action) {
-
         action = createCallerInputAction();
-
         vm.menuEntry.addAction(action);
-
       }
 
       vm.actionEntry = action;
@@ -229,7 +225,6 @@
         // type 3, make sure is defined if they click for type4
         vm.inputActions = vm.actionEntry.inputActions = [];
       }
-
 
       vm.languageOptions = _.sortBy(AALanguageService.getLanguageOptions(), properties.LABEL);
 

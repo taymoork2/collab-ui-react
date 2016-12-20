@@ -361,11 +361,10 @@
     function parseSayObject(menuEntry, inObject) {
       var action;
       action = new Action('say', decodeUtf8(inObject.value));
-
-      if (_.startsWith(action.value.toLowerCase(), 'http')) {
+      if (!action.value) {
         action.name = 'play';
-        action.description = menuEntry.description;
       }
+      action.description = menuEntry.description;
 
       if (angular.isDefined(inObject.voice)) {
         action.setVoice(inObject.voice);
@@ -379,6 +378,22 @@
       }
     }
 
+    function parsePlayObject(menuEntry, inObject) {
+      var action;
+      action = new Action('play', decodeUtf8(inObject.value));
+      if (angular.isDefined(inObject.voice)) {
+        action.setVoice(inObject.voice);
+      }
+      action.deleteUrl = inObject.deleteUrl;
+      menuEntry.addAction(action);
+    }
+
+    function parsePlayList(menuEntry, objects) {
+      _.each(objects, function (o) {
+        parsePlayObject(menuEntry, o);
+      });
+    }
+
     function createSayList(menuEntry) {
       var actions = menuEntry.actions;
 
@@ -386,8 +401,12 @@
       for (var i = 0; i < actions.length; i++) {
         newActionArray[i] = {};
         menuEntry.description = actions[i].description;
-
-        newActionArray[i].value = (actions[i].getValue() ? encodeUtf8(actions[i].getValue()) : '');
+        if (actions[i].deleteUrl && _.startsWith(actions[i].getValue(), 'http')) {
+          newActionArray[i].url = (actions[i].getValue() ? encodeUtf8(actions[i].getValue()) : '');
+          newActionArray[i].deleteUrl = actions[i].deleteUrl;
+        } else {
+          newActionArray[i].value = (actions[i].getValue() ? encodeUtf8(actions[i].getValue()) : '');
+        }
         if (!_.isUndefined(actions[i].voice) && actions[i].voice.length > 0) {
           newActionArray[i].voice = actions[i].voice;
         }
@@ -402,12 +421,15 @@
     }
 
     function parseAction(menuEntry, inAction) {
+      //read from db
       var action;
       if (!_.isUndefined(inAction.play)) {
         // convert file url to unique filename
         // var filename = MediaResourceService.getFileName(inAction.play.url);
         action = new Action('play', inAction.play.url);
         setDescription(action, inAction.play);
+        action.voice = inAction.play.voice;
+        action.deleteUrl = inAction.play.deleteUrl;
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.say)) {
         action = new Action('say', decodeUtf8(inAction.say.value));
@@ -478,37 +500,42 @@
           action.inputType = inAction.runActionsOnInput.inputType;
           // check if this dial-by-extension
           if (_.includes([DIGITS_DIAL_BY, DIGITS_RAW, DIGITS_CHOICE], action.inputType) &&
-            _.has(inAction, 'runActionsOnInput.prompts.sayList')) {
-            var sayList = inAction.runActionsOnInput.prompts.sayList;
-            if (sayList.length > 0 && _.has(sayList[0], 'value')) {
-              action.value = decodeUtf8(sayList[0].value);
-              action.voice = inAction.runActionsOnInput.voice;
-              action.description = inAction.runActionsOnInput.description;
-
-              action.maxNumberOfCharacters = inAction.runActionsOnInput.maxNumberOfCharacters;
-              action.minNumberOfCharacters = inAction.runActionsOnInput.minNumberOfCharacters;
-              menuEntry.voice = inAction.runActionsOnInput.voice;
-              menuEntry.language = inAction.runActionsOnInput.language;
-              menuEntry.attempts = inAction.runActionsOnInput.attempts;
-              if (_.includes([3, 4], action.inputType)) {
-                action.variableName = inAction.runActionsOnInput.rawInputActions[0].assignVar.variableName;
-                if (inAction.runActionsOnInput.inputs.length > 0) {
-                  action.inputActions = [];
-                  _.forEach(inAction.runActionsOnInput.inputs, function (inputItem) {
-                    var k = new KeyAction();
-                    k.key = inputItem.input;
-
-                    if (_.has(inputItem, 'actions[0].assignVar')) {
-                      k.value = _.get(inputItem.actions[0].assignVar, 'value');
-                    }
-                    action.inputActions.push(k);
-                  });
-                }
+            (_.has(inAction, 'runActionsOnInput.prompts.sayList') ||
+            _.has(inAction, 'runActionsOnInput.prompts.playList'))) {
+            var playList = inAction.runActionsOnInput.prompts.playList;
+            if (playList && playList.length > 0 && !_.isUndefined(playList[0].url)) {
+              action.url = decodeUtf8(inAction.runActionsOnInput.prompts.playList[0].url);
+              action.deleteUrl = inAction.runActionsOnInput.deleteUrl;
+            } else {
+              var sayList = inAction.runActionsOnInput.prompts.sayList;
+              if (sayList.length > 0 && _.has(sayList[0], 'value')) {
+                action.value = decodeUtf8(sayList[0].value);
               }
-
-              menuEntry.addAction(action);
-
             }
+            action.voice = inAction.runActionsOnInput.voice;
+            action.description = inAction.runActionsOnInput.description;
+            action.deleteUrl = inAction.runActionsOnInput.deleteUrl;
+            action.maxNumberOfCharacters = inAction.runActionsOnInput.maxNumberOfCharacters;
+            action.minNumberOfCharacters = inAction.runActionsOnInput.minNumberOfCharacters;
+            menuEntry.voice = inAction.runActionsOnInput.voice;
+            menuEntry.language = inAction.runActionsOnInput.language;
+            menuEntry.attempts = inAction.runActionsOnInput.attempts;
+            if (_.includes([3, 4], action.inputType)) {
+              action.variableName = inAction.runActionsOnInput.rawInputActions[0].assignVar.variableName;
+            }
+            if (_.has(inAction.runActionsOnInput, 'inputs') && inAction.runActionsOnInput.inputs.length > 0) {
+              action.inputActions = [];
+              _.forEach(inAction.runActionsOnInput.inputs, function (inputItem) {
+                var k = new KeyAction();
+                k.key = inputItem.input;
+
+                if (_.has(inputItem, 'actions[0].assignVar')) {
+                  k.value = _.get(inputItem.actions[0].assignVar, 'value');
+                }
+                action.inputActions.push(k);
+              });
+            }
+            menuEntry.addAction(action);
           }
         }
       } else if (!_.isUndefined(inAction.goto)) {
@@ -807,6 +834,9 @@
           if (!_.isUndefined(ceActionsOnInput.prompts.sayList)) {
             parseSayList(announcementMenuEntry, ceActionsOnInput.prompts.sayList);
           }
+          if (!_.isUndefined(ceActionsOnInput.prompts.playList)) {
+            parsePlayList(announcementMenuEntry, ceActionsOnInput.prompts.playList);
+          }
         }
 
         if (!_.isUndefined(ceActionsOnInput.language)) {
@@ -1092,6 +1122,8 @@
               newActionArray[i][actionName].voice = menuEntry.actions[0].voice;
             } else if (actionName === 'play') {
               newActionArray[i][actionName].url = menuEntry.actions[0].getValue();
+              newActionArray[i][actionName].voice = menuEntry.actions[0].voice;
+              newActionArray[i][actionName].deleteUrl = menuEntry.actions[0].deleteUrl;
               // newActionArray[i][actionName].url = MediaResourceService.getFileUrl(menuEntry.actions[0].getValue());
             } else if (actionName === 'route') {
               newActionArray[i][actionName].destination = menuEntry.actions[0].getValue();
@@ -1109,12 +1141,7 @@
               newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
             } else if (actionName === 'routeToQueue') {
               newActionArray[i][actionName] = populateRouteToQueue(menuEntry.actions[0]);
-              /*
-              *this code commented out may come back later, waiting on backend to be complete
-              */
-              //newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
             } else if (actionName === 'runActionsOnInput') {
-
               if (_.includes([DIGITS_DIAL_BY, DIGITS_RAW, DIGITS_CHOICE], menuEntry.actions[0].inputType)) {
                 // dial by extension of caller input
                 newActionArray[i][actionName] = populateRunActionsOnInput(menuEntry.actions[0]);
@@ -1156,7 +1183,9 @@
           newActionArray[i][actionName].voice = actions[i].voice;
         } else if (actionName === 'play') {
           // convert unique filename to corresponding URL
-          newActionArray[i][actionName].url = val;
+          newActionArray[i][actionName].url = encodeUtf8(val);
+          newActionArray[i][actionName].voice = actions[i].voice;
+          newActionArray[i][actionName].deleteUrl = actions[i].deleteUrl;
           // newActionArray[i][actionName].url = MediaResourceService.getFileUrl(val);
         } else if (actionName === 'route') {
           newActionArray[i][actionName].destination = val;
@@ -1172,10 +1201,6 @@
           newActionArray[i][actionName].ceid = val;
         } else if (actionName === 'routeToQueue') {
           newActionArray[i][actionName] = populateRouteToQueue(actions[i]);
-          /*
-          *this code commented out may come back later, waiting on backend to be complete
-          */
-          //newActionArray[i][actionName].id = val;
         } else if (actionName === 'disconnect') {
           if (val && val !== 'none') {
             newActionArray[i][actionName].treatment = val;
@@ -1236,9 +1261,9 @@
           //for default queue settings
           action.description = {
             musicOnHoldDescription: '',
-            periodicAnnouncementType: 'say',
+            periodicAnnouncementType: 'play',
             periodicAnnouncementDescription: '',
-            initialAnnouncementType: 'say',
+            initialAnnouncementType: 'play',
             initialAnnouncementDescription: ''
           };
         }
@@ -1253,20 +1278,27 @@
       var newAction = {};
       var prompts = {};
       var sayListArr = [];
+      var playListArr = [];
+      var playList = {};
       var sayList = {};
       var rawInputAction = {};
       var routeToExtension = {};
       var assignVar = {};
-
-
       if (!_.isUndefined(action.inputType)) {
         newAction.inputType = action.inputType;
-        if (newAction.inputType == 2 && !_.isUndefined(action.value)) {
-          newAction.description = action.description;
+        if (action.deleteUrl && _.startsWith(action.value, 'http')) {
+          playList.url = encodeUtf8(action.value);
+          playList.deleteUrl = encodeUtf8(action.deleteUrl);
+          playListArr[0] = playList;
+          prompts.playList = playListArr;
+        } else {
           sayList.value = encodeUtf8(action.value);
           sayListArr[0] = sayList;
           prompts.sayList = sayListArr;
-          newAction.prompts = prompts;
+        }
+        newAction.prompts = prompts;
+        if (newAction.inputType == 2 && !_.isUndefined(action.value)) {
+          newAction.description = action.description;
           routeToExtension.destination = '$Input';
           routeToExtension.description = action.description;
           rawInputAction.routeToExtension = routeToExtension;
@@ -1278,10 +1310,6 @@
           newAction.repeats = 2;
         } else {
           newAction.description = action.description;
-          sayList.value = encodeUtf8(action.value);
-          sayListArr[0] = sayList;
-          prompts.sayList = sayListArr;
-          newAction.prompts = prompts;
           assignVar.value = '$Input';
           assignVar.variableName = action.variableName;
           rawInputAction.assignVar = assignVar;
@@ -1366,7 +1394,16 @@
       if (aaMenu.headers.length > 0) {
         menuEntry = aaMenu.headers[0];
         inputAction.prompts = {};
-        inputAction.prompts.sayList = createSayList(menuEntry);
+        var list = createSayList(menuEntry);
+        //the playList is valid once a valid
+        //deleteUrl has been configured
+        //else it will go to a sayList, blank or otherwise
+        //which is used later to trigger play or say
+        if (list[0].deleteUrl) {
+          inputAction.prompts.playList = list;
+        } else {
+          inputAction.prompts.sayList = list;
+        }
         // say list moves the description from the action to
         // the menuEntry so it is saved here. DB complains otherwise
         inputAction.prompts.description = menuEntry.description;

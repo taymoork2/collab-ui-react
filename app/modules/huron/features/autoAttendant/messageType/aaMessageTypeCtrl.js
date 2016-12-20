@@ -131,10 +131,10 @@
 
     function populateUiModel() {
       // default
-      vm.messageOption = vm.messageOptions[actionType.SAY];
+      vm.messageOption = vm.messageOptions[actionType.PLAY];
 
       if (vm.actionEntry.name === 'runActionsOnInput') {
-        if (_.startsWith(vm.actionEntry.value.toLowerCase(), 'http')) {
+        if (AACommonService.isMediaUploadToggle()) {
           vm.messageOption = vm.messageOptions[actionType.PLAY];
         } else {
           vm.messageOption = vm.messageOptions[actionType.SAY];
