@@ -1,7 +1,6 @@
 <div class="notification-button" ng-click="$ctrl.toggleDropdown($event)" ng-class="{active: $ctrl.open, clickable: $ctrl.alarms.length > 0}">
   <div class="notification-number" ng-class="$ctrl.getNumberCSSClass()">{{$ctrl.alarms.length}}</div>
   <div class="notification-label" translate="hercules.notificationDropdown.label"></div>
-  <code> {{$ctrl.open}}</code>
 </div>
 <ul class="notification-dropdown" ng-if="$ctrl.open">
   <li class="notification-entry" ng-repeat="alarm in $ctrl.alarms">
