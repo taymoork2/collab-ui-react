@@ -189,11 +189,11 @@ describe('Service: Analytics', function () {
     });
   });
 
-  describe('_getAddUserOrgData', function () {
+  describe('_getOrgData', function () {
     it('should populate persistentProperties when they are empty', function () {
       Analytics.sections.ADD_USERS.persistentProperties = null;
       spyOn(Authinfo, 'getOrgId').and.returnValue('999');
-      Analytics._getAddUserOrgData('Add Users').then(function (result) {
+      Analytics._getOrgData('ADD_USERS').then(function (result) {
         expect(result.orgId).toBe('999');
         expect(Analytics.sections.ADD_USERS.persistentProperties.userCountPrior).toEqual('5');
         expect(Analytics.sections.ADD_USERS.persistentProperties.orgId).toBe('999');
@@ -206,7 +206,7 @@ describe('Service: Analytics', function () {
         userCountPrior: '4'
       };
 
-      Analytics._getAddUserOrgData('Add Users').then(function (result) {
+      Analytics._getOrgData('ADD_USERS').then(function (result) {
         expect(result.userCountPrior).toEqual('4');
       });
     });

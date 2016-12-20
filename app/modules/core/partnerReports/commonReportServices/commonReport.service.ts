@@ -36,7 +36,7 @@ export class CommonReportService {
   ) {}
 
   private readonly usageOptions: Array<string> = ['weeklyUsage', 'monthlyUsage', 'threeMonthUsage'];
-  private readonly altUsageOptions: Array<string> = ['dailyUsage', 'yearlyUsage'];
+  private readonly altUsageOptions: Array<string> = ['dailyUsage', 'weeklyUsage'];
   private readonly cacheValue: boolean = (_.toInteger(moment.utc().format('H')) >= 8);
   private urlBase = this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/reports/';
 
@@ -150,15 +150,15 @@ export class CommonReportService {
     let returnGraph: Array<any> = [];
 
     if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
-      for (let i = 8; i > 0; i--) {
+      for (let i = this.ReportConstants.DAYS; i >= 0; i--) {
         let tmpItem: any = _.clone(graphItem);
         tmpItem.date = moment().tz(this.ReportConstants.TIMEZONE)
-          .subtract(i, this.ReportConstants.DAY)
+          .subtract(i + 1, this.ReportConstants.DAY)
           .format(this.ReportConstants.DAY_FORMAT);
         returnGraph.push(tmpItem);
       }
     } else {
-      for (let z = 52; z >= 0; z--) {
+      for (let z = this.ReportConstants.YEAR; z >= 0; z--) {
         let item = _.clone(graphItem);
         item.date = moment().day(-1)
           .subtract(z, this.ReportConstants.WEEK)

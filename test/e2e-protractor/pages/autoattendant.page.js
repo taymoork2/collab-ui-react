@@ -114,6 +114,7 @@ var AutoAttendantPage = function () {
   this.callerInputFirst = element.all(by.css('div.aa-panel-body[name="Caller Input"]')).all(by.cssContainingText("h3", "Caller Input")).first();
   this.callerInputGetDigits = element(by.cssContainingText('cs-checkbox', 'Convert digit input to text string value'));
   this.callerInputTextFirst = element.all(by.name('callerInput')).first();
+  this.callerInputNameVariable = element(by.name('callerInputNameVariable'));
   this.callerInputAddAction = element(by.name('aa-caller-input-add-action'));
 
   this.phoneMenuTimeout = element(by.css('div.aa-pm-timeout .icon-chevron-down'));

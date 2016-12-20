@@ -20,10 +20,10 @@
       value: ''
     };
 
+    var runActionName = 'runActionsOnInput';
+
     var properties = {
-      NAME: ["play", "say"],
-      REPEAT_NAME: "repeatActionsOnInput",
-      LABEL: "label",
+      LABEL: "label"
     };
     var selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     var INPUT_DIGIT_MAX_LENGTH = 20;
@@ -36,7 +36,8 @@
     }
 
     vm.maxLengthOptions = [];
-    vm.maxOptionLength = INPUT_DIGIT_MAX_DEFAULT;
+    vm.maxStringLength = INPUT_DIGIT_MAX_DEFAULT;
+    vm.maxVariableLength = 32;
 
     vm.menuEntry = {};
     vm.actionEntry = {};
@@ -52,27 +53,45 @@
     vm.inputActions = [];
     vm.convertDigitState = false;
     vm.setVoiceOptions = setVoiceOptions;
-    vm.saveUiModel = saveUiModel;
+    vm.saveVoiceOption = saveVoiceOption;
+    vm.saveNameInput = saveNameInput;
+
     vm.addKeyAction = addKeyAction;
     vm.deleteKeyAction = deleteKeyAction;
     vm.keyChanged = keyChanged;
+    vm.keyInputChanged = keyInputChanged;
+    vm.setType = setType;
+    vm.setMaxStringLength = setMaxStringLength;
+
+    vm.nameInput = '';
+    vm.validationMsg = {
+      maxlength: $translate.instant('autoAttendant.callerInputVariableTooLongMsg')
+    };
 
     /////////////////////
     // the user has pressed the trash can icon for a key/action pair
     function deleteKeyAction(index) {
       vm.inputActions.splice(index, 1);
+
       setAvailableKeys();
-      setCallerInputFormDirty();
+
+      AACommonService.setCallerInputStatus(true);
+
     }
     // the user has changed the key for an existing action
-    function keyChanged(index, keyValue) {
-      vm.inputActions[index].key = keyValue;
+    function keyChanged(index, whichKey) {
+      vm.inputActions[index].key = whichKey;
       setAvailableKeys();
-      setCallerInputFormDirty();
-    }
-
-    function setCallerInputFormDirty() {
       AACommonService.setCallerInputStatus(true);
+
+    }
+    //the user enteres a char into the key input area
+    function keyInputChanged(keyIndex, whichKey) {
+
+      vm.inputActions[keyIndex].value = whichKey.value;
+
+      AACommonService.setCallerInputStatus(true);
+
     }
 
     function addKeyAction() {
@@ -85,6 +104,8 @@
       vm.inputActions.push(keyAction);
 
       setAvailableKeys();
+      AACommonService.setCallerInputStatus(true);
+
     }
 
     // determine which keys are still available.
@@ -95,10 +116,21 @@
     function getAvailableKeys(selectedKey) {
       return AACommonService.keyActionAvailable(selectedKey, vm.inputActions);
     }
+    function setType() {
+      vm.actionEntry.inputType = vm.convertDigitState ? AACommonService.DIGITS_CHOICE : AACommonService.DIGITS_RAW;
+      AACommonService.setCallerInputStatus(true);
+    }
+
+    function setMaxStringLength() {
+      vm.actionEntry.maxNumberOfCharacters = vm.maxStringLength;
+      AACommonService.setCallerInputStatus(true);
+    }
 
     function setVoiceOptions() {
       vm.voiceOptions = _.sortBy(AALanguageService.getVoiceOptions(vm.languageOption), properties.LABEL);
       setVoiceOption();
+      vm.menuEntry.actions[0].language = vm.languageOption.value;
+      AACommonService.setCallerInputStatus(true);
     }
 
     function setVoiceOption() {
@@ -111,57 +143,67 @@
       } else {
         vm.voiceOption = vm.voiceOptions[0];
       }
+      saveVoiceOption();
     }
 
-    function populateUiModel() {
-      vm.maxLengthOptions = _.drop(_.times(INPUT_DIGIT_MAX_LENGTH), 1);
-
-      vm.languageOptions = _.sortBy(AALanguageService.getLanguageOptions(), properties.LABEL);
-
-      vm.voiceOption = AALanguageService.getVoiceOption(vm.actionEntry.getVoice());
-      vm.languageOption = AALanguageService.getLanguageOption(vm.actionEntry.getVoice());
-
-      vm.voiceBackup = vm.voiceOption;
-      setVoiceOptions();
+    function saveVoiceOption() {
+      vm.menuEntry.actions[0].voice = vm.voiceOption.value;
+      AACommonService.setCallerInputStatus(true);
     }
 
     /*
     * Update voice option in the menu's say-message keys, menu's submenus and its
     * say-message keys.
     */
-    function saveUiModel() {
-      vm.actionEntry.setVoice(vm.voiceOption.value);
-
+    function saveNameInput() {
+      vm.actionEntry.variableName = vm.nameInput;
+      AACommonService.setCallerInputStatus(true);
     }
 
-    function createAction(action) {
-      return AutoAttendantCeMenuModelService.newCeActionEntry(action, '');
+    function createCallerInputAction() {
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry(runActionName, '');
+
+      setActionMinMax(action);
+
+      action.inputType = vm.convertDigitState ? AACommonService.DIGITS_CHOICE : AACommonService.DIGITS_RAW;
+      action.inputActions = [];
+
+      action.maxNumberOfCharacters = INPUT_DIGIT_MAX_DEFAULT;
+      action.variableName = '';
+
+      return action;
+
     }
 
     function getAction(menuEntry) {
       var action;
-      // at this point in the development (UI only) there are no actions
-      // this is a work in progress. Gets plumbed later
 
       action = _.get(menuEntry, 'actions[0]');
 
-      if (action) {
-        if (_.indexOf(properties.NAME, action.name) >= 0) {
-          return action;
-        }
+      if (_.get(action, 'name', '') === runActionName) {
+        return action;
       }
 
       return undefined;
 
     }
+
+    function setActionMinMax(action) {
+      action.minNumberOfCharacters = 0;
+      action.maxNumberOfCharacters = 0;
+    }
+
     function setActionEntry() {
       var ui = AAUiModelService.getUiModel();
       var uiMenu = ui[$scope.schedule];
       vm.menuEntry = uiMenu.entries[$scope.index];
       var action = getAction(vm.menuEntry);
       if (!action) {
-        action = createAction('play'); //default is now play
+
+        action = createCallerInputAction();
+
         vm.menuEntry.addAction(action);
+
       }
 
       vm.actionEntry = action;
@@ -169,10 +211,40 @@
       return;
     }
 
-    function populateOptionMenu() {
+    function populateMenu() {
+
+      vm.nameInput = vm.actionEntry.variableName;
+
+      // make it look like 1..20, drop the starting zero
+      vm.maxLengthOptions = _.drop(_.times(INPUT_DIGIT_MAX_LENGTH + 1), 1);
+
+      vm.maxStringLength = vm.actionEntry.maxNumberOfCharacters;
+
+      vm.convertDigitState = vm.actionEntry.inputType === AACommonService.DIGITS_CHOICE;
+
+      // if coming back as type 3, DIGITS_RAW, there is no inputActions defined
+      if (_.has(vm.actionEntry, 'inputActions')) {
+        vm.inputActions = vm.actionEntry.inputActions;
+      } else {
+        // type 3, make sure is defined if they click for type4
+        vm.inputActions = vm.actionEntry.inputActions = [];
+      }
+
+
+      vm.languageOptions = _.sortBy(AALanguageService.getLanguageOptions(), properties.LABEL);
+
+      vm.voiceOption = AALanguageService.getVoiceOption(vm.actionEntry.getVoice());
+      vm.languageOption = AALanguageService.getLanguageOption(vm.actionEntry.getVoice());
+
+      vm.voiceBackup = vm.voiceOption;
+
+      setVoiceOptions();
 
       // remove keys that are in use from the selection widget
       setAvailableKeys();
+
+      AACommonService.setCallerInputStatus(false);
+
     }
     // update the list of available keys for each action
     function setAvailableKeys() {
@@ -184,8 +256,7 @@
 
     function activate() {
       setActionEntry();
-      populateUiModel();
-      populateOptionMenu();
+      populateMenu();
     }
 
     activate();

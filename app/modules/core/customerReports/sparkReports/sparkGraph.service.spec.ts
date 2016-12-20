@@ -23,6 +23,9 @@ describe('Service: Customer Graph Service', function () {
       valueLineEnabled: true,
     },
     graphs: [],
+    legend: {
+      valueText: undefined,
+    },
     dataProvider: undefined,
     validateData: undefined,
   };

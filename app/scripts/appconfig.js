@@ -2530,9 +2530,6 @@
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
               },
-              hasMediaFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
-              }
             }
           })
           // Cluster settings
@@ -2545,12 +2542,6 @@
             resolve: {
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
-              },
-              hasEmergencyUpgradeFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade)
-                  .then(function (support) {
-                    return support;
-                  });
               },
             }
           })
@@ -2617,11 +2608,6 @@
             controller: 'MediafusionClusterSettingsController',
             controllerAs: 'clusterSettings',
             parent: 'main',
-            resolve: {
-              hasEmergencyUpgradeFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade);
-              },
-            }
           })
           // Add Resource modal
           .state('add-resource', {
@@ -2634,11 +2620,6 @@
                 controller: 'TypeSelectorController',
                 controllerAs: 'vm',
                 templateUrl: 'modules/hercules/fusion-pages/add-resource/common/type-selector.html'
-              }
-            },
-            resolve: {
-              hasMediaFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
               }
             },
             params: {
@@ -2872,12 +2853,6 @@
             resolve: {
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
-              },
-              hasEmergencyUpgradeFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade)
-                  .then(function (support) {
-                    return support;
-                  });
               },
             }
           })

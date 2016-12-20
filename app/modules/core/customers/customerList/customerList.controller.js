@@ -707,9 +707,7 @@ require('./_customer-list.scss');
     }
 
     function openAddTrialModal() {
-      if (vm.isTestOrg) {
-        Analytics.trackTrialSteps(Analytics.sections.TRIAL.eventNames.START_SETUP, $state.current.name, Authinfo.getOrgId());
-      }
+      Analytics.trackTrialSteps(Analytics.sections.TRIAL.eventNames.START_SETUP, $state.current.name, Authinfo.getOrgId());
       $state.go('trialAdd.info').then(function () {
         $state.modal.result.finally(resetLists);
       });

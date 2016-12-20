@@ -23,11 +23,9 @@ describe('Controller: FusionClusterListController', function () {
     spyOn(Authinfo, 'isEntitled').and.returnValue(true);
   }
 
-  function initController(options) {
-    var hasMediaFeatureToggle = _.get(options, 'hasMediaFeatureToggle', true);
+  function initController() {
     controller = $controller('FusionClusterListController', {
       hasF237FeatureToggle: false,
-      hasMediaFeatureToggle: hasMediaFeatureToggle
     });
   }
 
@@ -85,29 +83,6 @@ describe('Controller: FusionClusterListController', function () {
       expect(controller.displayedClusters.length).toBe(2);
     });
 
-    it('should filter hybrid media clusters if the feature toggle is missing', function () {
-      FusionClusterService.getAll.and.returnValue($q.resolve([{
-        targetType: 'c_mgmt',
-        connectors: [{
-          alarms: [],
-          connectorType: 'c_mgmt',
-          runningState: 'running',
-          hostname: 'a.elg.no'
-        }]
-      }, {
-        targetType: 'mf_mgmt',
-        connectors: [{
-          alarms: [],
-          connectorType: 'mf_mgmt',
-          runningState: 'running',
-          hostname: 'a.elg.no'
-        }]
-      }]));
-      initController({ hasMediaFeatureToggle: false });
-      $rootScope.$apply(); // force FusionClusterService.getAll() to return
-      expect(controller.displayedClusters.length).toBe(1);
-      expect(controller.displayedClusters[0].targetType).toBe('c_mgmt');
-    });
   });
 
 });

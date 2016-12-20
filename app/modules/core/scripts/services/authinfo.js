@@ -166,7 +166,9 @@
 
               switch (license.licenseType) {
                 case Config.licenseTypes.CONFERENCING:
-                  if ((this.isCustomerAdmin() || this.isReadOnlyAdmin()) && license.siteUrl && !_.includes(authData.roles, 'Site_Admin')) {
+                  if ((this.isCustomerAdmin() || this.isReadOnlyAdmin()) &&
+                    (license.siteUrl || license.linkedSiteUrl) &&
+                    !_.includes(authData.roles, 'Site_Admin')) {
                     authData.roles.push('Site_Admin');
                   }
                   service = new ServiceFeature($translate.instant(Config.confMap[license.offerName], {

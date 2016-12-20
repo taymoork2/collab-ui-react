@@ -13,11 +13,11 @@ describe('Controller: Dummy Customer Reports', function () {
 
   let updateLineDates: any = function (data: any, filter: ITimespan): any {
     if (filter.value === 0) {
-      for (let i = 7; i >= 0; i--) {
-        data[i].date = moment().subtract(8 - i, defaults.DAY).format(defaults.dayFormat);
+      for (let i = 6; i >= 0; i--) {
+        data[i].date = moment().subtract(7 - i, defaults.DAY).format(defaults.dayFormat);
       }
     } else {
-      for (let z = 0; z <= 52; z++) {
+      for (let z = 0; z <= 51; z++) {
         data[z].date = moment().day(-1).subtract(52 - z, defaults.WEEK).format(defaults.dayFormat);
       }
     }
@@ -87,8 +87,8 @@ describe('Controller: Dummy Customer Reports', function () {
     expect(this.DummySparkDataService.dummyMediaData(defaults.timeFilter[1], false)).toEqual(updateDates(dummyMedia.two, defaults.timeFilter[1]));
     expect(this.DummySparkDataService.dummyMediaData(defaults.timeFilter[2], false)).toEqual(updateDates(dummyMedia.three, defaults.timeFilter[2]));
 
-    expect(this.DummySparkDataService.dummyMediaData(defaults.timeFilter[0], true)).toEqual(updateLineDates(dummyMedia.four, defaults.timeFilter[0]));
-    expect(this.DummySparkDataService.dummyMediaData(defaults.timeFilter[1], true)).toEqual(updateLineDates(dummyMedia.five, defaults.timeFilter[1]));
+    expect(this.DummySparkDataService.dummyMediaData(defaults.timeFilter[0], true)).toEqual(updateLineDates(dummyMedia.one, defaults.timeFilter[0]));
+    expect(this.DummySparkDataService.dummyMediaData(defaults.timeFilter[1], true)).toEqual(updateLineDates(dummyMedia.four, defaults.timeFilter[1]));
   });
 
   it('dummyMetricsData should return the expected responses', function () {

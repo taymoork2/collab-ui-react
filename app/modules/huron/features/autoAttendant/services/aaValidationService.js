@@ -41,6 +41,11 @@
       errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToQueueTargetMissing'
     }];
 
+
+    var runActionInputName = 'runActionsOnInput';
+    var errMissingVariableNameMsg = 'autoAttendant.callerInputMenuErrorVariableNameMissing';
+    var errNoInputValuesEnteredMsg = 'autoAttendant.callerInputMenuErrorNoInputValuesEntered';
+
     var service = {
       isNameValidationSuccess: isNameValidationSuccess,
       isRouteToValidationSuccess: isRouteToValidationSuccess
@@ -103,7 +108,6 @@
         return _.isUndefined(ret);
 
       }
-
       /* checking entry for blank value. Not empty? auto passes */
       if (!_.isEmpty(action.value)) {
         return true;
@@ -185,6 +189,50 @@
 
       return outErrors;
 
+    }
+
+    function checkForValidCallerInputs(callerInputMenu, callerInputMenus, fromLane, translatedLabel) {
+
+      var action = callerInputMenu.actions[0];
+      var validAction = true;
+      var atLeastOneNonBlank = false;
+
+      // special case number two - runActionsOnInput inputType === 3,4
+      if (_.get(action, 'name', '') === runActionInputName && _.includes([AACommonService.DIGITS_RAW, AACommonService.DIGITS_CHOICE], action.inputType)) {
+        if (_.isEmpty(action.variableName)) {
+          validAction = false;
+          AANotificationService.error(errMissingVariableNameMsg, {
+            schedule: translatedLabel,
+            at: _.indexOf(callerInputMenus, callerInputMenu) + 1
+          });
+
+        }
+
+        if (action.inputType === 4) {
+          if (!action.inputActions || action.inputActions.length === 0) {
+            validAction = false;
+            AANotificationService.error(errNoInputValuesEnteredMsg, {
+              schedule: translatedLabel,
+              at: _.indexOf(callerInputMenus, callerInputMenu) + 1
+            });
+          }
+
+          _.forEach(action.inputActions, function (inputItem) {
+            if (!_.isEmpty(_.get(inputItem, 'value', ''))) {
+              atLeastOneNonBlank = true;
+            }
+          });
+
+          if (!atLeastOneNonBlank) {
+            validAction = false;
+            AANotificationService.error(errNoInputValuesEnteredMsg, {
+              schedule: translatedLabel,
+              at: _.indexOf(callerInputMenus, callerInputMenu) + 1
+            });
+          }
+        }
+      }
+      return validAction;
     }
 
     function checkForValidPhoneMenu(optionMenu, menuOptions, fromLane, translatedLabel) {
@@ -290,6 +338,10 @@
         });
       });
 
+      var callerInputsOnly = _.filter(uiCombinedMenu.entries, function (menu) {
+        return _.includes([AACommonService.DIGITS_RAW, AACommonService.DIGITS_CHOICE], _.get(menu, 'actions[0].inputType', ""));
+      });
+
       _.forEach(uiCombinedMenu.entries, function (optionMenu) {
 
         if (optionMenu.type === 'MENU_OPTION') {
@@ -297,6 +349,10 @@
             isValid = false;
           }
         } else {
+          if (!checkForValidCallerInputs(optionMenu, callerInputsOnly, fromLane, scheduleLabel)) {
+            isValid = false;
+          }
+
           /* else must be welcome menu - process routeCalls */
           if (!checkForValidRouteCall(optionMenu, routeTosOnly, fromLane, scheduleLabel)) {
             isValid = false;

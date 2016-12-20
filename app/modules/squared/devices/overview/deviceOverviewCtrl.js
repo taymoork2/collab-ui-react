@@ -77,27 +77,25 @@
     }
 
     function getEmergencyInformation() {
-      return FeatureToggleService.supports(FeatureToggleService.features.huronDeviceE911).then(function (result) {
-        if (!deviceOverview.currentDevice.isHuronDevice) {
-          deviceOverview.emergencyCallbackNumber = _.get(deviceOverview, 'lines[0].alternate');
-          deviceOverview.showE911 = deviceOverview.emergencyCallbackNumber;
-          if (!deviceOverview.showE911) {
-            deviceOverview.hideE911Edit = false;
-            EmergencyServicesService.getCompanyECN().then(function (result) {
-              deviceOverview.showE911 = true;
-              deviceOverview.emergencyCallbackNumber = result;
+      if (!deviceOverview.currentDevice.isHuronDevice) {
+        deviceOverview.emergencyCallbackNumber = _.get(deviceOverview, 'lines[0].alternate');
+        deviceOverview.showE911 = deviceOverview.emergencyCallbackNumber;
+        if (!deviceOverview.showE911) {
+          deviceOverview.hideE911Edit = false;
+          EmergencyServicesService.getCompanyECN().then(function (result) {
+            deviceOverview.showE911 = result;
+            deviceOverview.emergencyCallbackNumber = result;
+            if (result) {
               getEmergencyAddress();
-            });
-          } else {
-            getEmergencyAddress();
-          }
+            }
+          });
         } else {
-          deviceOverview.showE911 = true;
-          if (result) {
-            getEmergencyAddress();
-          }
+          getEmergencyAddress();
         }
-      });
+      } else {
+        deviceOverview.showE911 = true;
+        getEmergencyAddress();
+      }
     }
 
     function getEmergencyAddress() {
@@ -177,11 +175,7 @@
         deviceOverview.linesAreLoaded = true;
       }).then(function () {
         if (!deviceOverview.currentDevice.isHuronDevice) {
-          FeatureToggleService.supports(FeatureToggleService.features.cloudberryE911).then(function (result) {
-            if (result) {
-              getEmergencyInformation();
-            }
-          });
+          getEmergencyInformation();
         }
       });
     }
