@@ -14,8 +14,6 @@
     vm.servicesId = FusionUtils.connectorType2ServicesId(vm.connectorType);
     vm.serviceName = $translate.instant('hds.serviceName.' + vm.servicesId[0]);
     vm.connectorName = $translate.instant('hds.connectorName.' + vm.servicesId[0]);
-    vm.localizedManagementConnectorName = $translate.instant('hds.connectorNameFromConnectorType.hds_app');
-    vm.localizedConnectorName = $translate.instant('hds.connectorNameFromConnectorType.' + vm.connectorType);
     vm.getSeverity = ClusterService.getRunningStateSeverity;
     vm.hasConnectorAlarm = hasConnectorAlarm;
     vm.goToHds = goToHds;
