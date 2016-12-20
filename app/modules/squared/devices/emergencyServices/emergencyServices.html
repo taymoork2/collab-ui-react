@@ -25,6 +25,7 @@
             name="emergencyCallbackNumber"
             filter="true"
             refresh-data-fn="$ctrl.getoptions(filter)"
+            wait-time="0"
             is-disabled="$ctrl.showAddressEntry"
             on-change-fn="$ctrl.numberChange()">
           </cs-select>
