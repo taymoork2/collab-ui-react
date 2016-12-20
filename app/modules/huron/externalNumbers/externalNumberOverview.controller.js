@@ -5,7 +5,8 @@
     .controller('ExternalNumberOverviewCtrl', ExternalNumberOverview);
 
   /* @ngInject */
-  function ExternalNumberOverview($scope, $state, $stateParams, ExternalNumberService, Notification) {
+  function ExternalNumberOverview($scope, $state, $stateParams, ExternalNumberService, Notification,
+      ExternalNumberPool) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.loading = true;
@@ -23,7 +24,7 @@
 
     function updatePhoneNumberCount() {
       if (vm.currentCustomer && vm.currentCustomer.customerOrgId) {
-        ExternalNumberService.refreshNumbers(vm.currentCustomer.customerOrgId)
+        ExternalNumberService.refreshNumbers(vm.currentCustomer.customerOrgId, ExternalNumberPool.ALL_EXTERNAL_NUMBER_TYPES)
           .catch(function (response) {
             Notification.errorResponse(response, 'partnerHomePage.errGetPhoneNumberCount');
           })

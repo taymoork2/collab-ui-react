@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: TrialEditCtrl:', function () {
-  var controller, helpers, $scope, $state, $q, $translate, $window, $httpBackend, Notification, TrialService, TrialContextService, HuronCustomer, FeatureToggleService, Orgservice;
+  var controller, helpers, $scope, $state, $q, $translate, $window, $httpBackend, Analytics, Notification, TrialService, TrialContextService, HuronCustomer, FeatureToggleService, Orgservice;
 
   var stateParams = {
     currentTrial: {
@@ -15,7 +15,7 @@ describe('Controller: TrialEditCtrl:', function () {
   var addContextSpy, removeContextSpy;
 
   afterEach(function () {
-    controller = helpers = $scope = $state = $q = $translate = $window = $httpBackend = Notification = TrialService = TrialContextService = HuronCustomer = FeatureToggleService = Orgservice = undefined;
+    controller = helpers = $scope = $state = $q = $translate = $window = $httpBackend = Analytics = Notification = TrialService = TrialContextService = HuronCustomer = FeatureToggleService = Orgservice = undefined;
   });
 
   afterAll(function () {
@@ -27,7 +27,7 @@ describe('Controller: TrialEditCtrl:', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _$window_, _$httpBackend_, _Notification_, _TrialService_, _TrialContextService_, _HuronCustomer_, _FeatureToggleService_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _$window_, _$httpBackend_, _Analytics_, _Notification_, _TrialService_, _TrialContextService_, _HuronCustomer_, _FeatureToggleService_, _Orgservice_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $q = _$q_;
@@ -40,6 +40,7 @@ describe('Controller: TrialEditCtrl:', function () {
     HuronCustomer = _HuronCustomer_;
     FeatureToggleService = _FeatureToggleService_;
     Orgservice = _Orgservice_;
+    Analytics = _Analytics_;
 
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
@@ -57,11 +58,7 @@ describe('Controller: TrialEditCtrl:', function () {
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
-      if (param === FeatureToggleService.features.huronSimplifiedTrialFlow) {
-        return $q.when(false);
-      } else {
-        fail('the following toggle wasn\'t expected' + param); //taking control of which toggles this controller are using (explicit or implicit)
-      }
+      fail('the following toggle wasn\'t expected' + param); //taking control of which toggles this controller are using (explicit or implicit)
       return $q.when(false);
     });
     spyOn(Orgservice, 'getAdminOrgAsPromise').and.returnValue($q.when({
@@ -71,6 +68,7 @@ describe('Controller: TrialEditCtrl:', function () {
       }
     }));
     spyOn(Orgservice, 'getOrg');
+    spyOn(Analytics, 'trackTrialSteps');
 
     $httpBackend
       .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null?disableCache=false')

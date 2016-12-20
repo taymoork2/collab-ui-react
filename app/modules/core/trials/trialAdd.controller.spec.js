@@ -1,11 +1,11 @@
 'use strict';
 
 describe('Controller: TrialAddCtrl', function () {
-  var controller, $httpBackend, $q, $scope, $state, $translate, EmailService, FeatureToggleService, HuronCustomer, Notification, Orgservice, TrialContextService, TrialPstnService, TrialService;
+  var controller, $httpBackend, $q, $scope, $state, $translate, Analytics, EmailService, FeatureToggleService, HuronCustomer, Notification, Orgservice, TrialContextService, TrialPstnService, TrialService;
   var addContextSpy;
 
   afterEach(function () {
-    controller = $httpBackend = $q = $scope = $state = $translate = EmailService = FeatureToggleService = HuronCustomer = Notification = Orgservice = TrialContextService = TrialPstnService = TrialService = undefined;
+    controller = $httpBackend = $q = $scope = $state = $translate = EmailService = Analytics = FeatureToggleService = HuronCustomer = Notification = Orgservice = TrialContextService = TrialPstnService = TrialService = undefined;
     addContextSpy = undefined;
   });
 
@@ -14,7 +14,7 @@ describe('Controller: TrialAddCtrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Core'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$q_, _$state_, _$translate_, _EmailService_, _FeatureToggleService_, _HuronCustomer_, _Notification_, _Orgservice_, _TrialContextService_, _TrialPstnService_, _TrialService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$q_, _$state_, _$translate_, _Analytics_, _EmailService_, _FeatureToggleService_, _HuronCustomer_, _Notification_, _Orgservice_, _TrialContextService_, _TrialPstnService_, _TrialService_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     $q = _$q_;
@@ -28,6 +28,7 @@ describe('Controller: TrialAddCtrl', function () {
     TrialService = _TrialService_;
     TrialContextService = _TrialContextService_;
     TrialPstnService = _TrialPstnService_;
+    Analytics = _Analytics_;
 
     $state.modal = jasmine.createSpyObj('modal', ['close']);
     addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.when());
@@ -41,8 +42,6 @@ describe('Controller: TrialAddCtrl', function () {
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
       if (param == 'csdm-pstn') {
         return $q.when(false);
-      } else if (param === FeatureToggleService.features.huronSimplifiedTrialFlow) {
-        return $q.when(false);
       } else {
         fail('the following toggle wasn\'t expected ' + param);
       }
@@ -55,6 +54,7 @@ describe('Controller: TrialAddCtrl', function () {
     });
     spyOn($state, 'go');
     spyOn(TrialService, 'getDeviceTrialsLimit');
+    spyOn(Analytics, 'trackTrialSteps');
 
     $httpBackend
       .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null?disableCache=false')

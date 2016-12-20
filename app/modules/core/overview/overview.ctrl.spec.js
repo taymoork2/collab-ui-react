@@ -7,13 +7,13 @@ describe('Controller: OverviewCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var controller, controllerCareFeatureDisabled, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService;
+  var controller, controllerCareFeatureDisabled, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnSetupService, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
 
   afterEach(function () {
-    controller = controllerCareFeatureDisabled = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = OverviewNotificationFactory = ReportsService = ServiceDescriptor = ServiceStatusDecriptor = TrialService = FusionClusterService = SunlightReportService = undefined;
+    controller = controllerCareFeatureDisabled = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnSetupService = OverviewNotificationFactory = ReportsService = ServiceDescriptor = ServiceStatusDecriptor = TrialService = FusionClusterService = SunlightReportService = undefined;
   });
 
   afterAll(function () {
@@ -234,6 +234,19 @@ describe('Controller: OverviewCtrl', function () {
       setHybridServiceAcknowledged: jasmine.createSpy()
     };
 
+    PstnSetupService = {
+      getCustomerV2: function () {
+        return $q.when({
+          trial: true
+        });
+      },
+      getCustomerTrialV2: function () {
+        return $q.when({
+          acceptedDate: "today"
+        });
+      }
+    };
+
     ReportsService = {
       getOverviewMetrics: function () {},
       healthMonitor: function () {}
@@ -274,6 +287,7 @@ describe('Controller: OverviewCtrl', function () {
       $state: $state,
       ReportsService: ReportsService,
       Orgservice: Orgservice,
+      PstnSetupService: PstnSetupService,
       ServiceDescriptor: ServiceDescriptor,
       ServiceStatusDecriptor: ServiceStatusDecriptor,
       Config: Config,
@@ -294,6 +308,7 @@ describe('Controller: OverviewCtrl', function () {
       $state: $state,
       ReportsService: ReportsService,
       Orgservice: Orgservice,
+      PstnSetupService: PstnSetupService,
       ServiceDescriptor: ServiceDescriptor,
       ServiceStatusDecriptor: ServiceStatusDecriptor,
       Config: Config,

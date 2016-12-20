@@ -124,7 +124,7 @@
             <section ng-if="pstnNumbers.model.pstn.searchResults.length > 0">
               <div class="provider-flex">
                 <h5 translate="pstnSetup.searchResults"></h5>
-                <button type="button" class="btn btn--people" ng-click="pstnNumbers.addToCart('NUMBER_ORDER')" cs-btn loading="pstnNumbers.addLoading" ng-disabled="pstnNumbers.model.pstn.addDisabled"><span translate="common.add"></span></button>
+                <button type="button" class="btn btn--people" ng-click="pstnNumbers.addToCart('NUMBER_ORDER', 'did')" cs-btn loading="pstnNumbers.addLoading" ng-disabled="pstnNumbers.model.pstn.addDisabled"><span translate="common.add"></span></button>
               </div>
               <ul class="large-block-grid-3 medium-block-grid-2 search-results">
                 <li ng-repeat="searchResult in pstnNumbers.model.pstn.searchResults | startFrom: pstnNumbers.model.pstn.paginateOptions.currentPage*pstnNumbers.model.pstn.paginateOptions.pageSize | limitTo: pstnNumbers.model.pstn.paginateOptions.pageSize">
@@ -147,7 +147,7 @@
                 <div class="order-inline right-margin">
                     <input cs-input type="text" class="input-width text-center" id="advanceQuantityInput" ng-model="pstnNumbers.model.pstn.quantity" cs-input-label="{{::'pstnSetup.quantity' | translate}}">
                 </div>
-                <button type="button" class="btn btn--people btn--large order-inline" ng-click="pstnNumbers.addToCart('BLOCK_ORDER')" translate="pstnSetup.advancedOrder.addNumbers"></button>
+                <button type="button" class="btn btn--people btn--large order-inline" ng-click="pstnNumbers.addToCart('BLOCK_ORDER', 'did')" translate="pstnSetup.advancedOrder.addNumbers"></button>
             </section>
           </section>
         </cs-tab>
@@ -161,7 +161,7 @@
             <section ng-if="pstnNumbers.model.tollFree.searchResults.length > 0">
               <div class="provider-flex">
                 <h5 translate="pstnSetup.searchResults"></h5>
-                <button type="button" class="btn btn--people" ng-click="pstnNumbers.addToCart('TOLLFREE_ORDER')" cs-btn loading="pstnNumbers.addLoading" ng-disabled="pstnNumbers.model.tollFree.addDisabled"><span translate="common.add"></span></button>
+                <button type="button" class="btn btn--people" ng-click="pstnNumbers.addToCart('NUMBER_ORDER', 'tollfree')" cs-btn loading="pstnNumbers.addLoading" ng-disabled="pstnNumbers.model.tollFree.addDisabled"><span translate="common.add"></span></button>
               </div>
               <ul class="large-block-grid-3 medium-block-grid-2 search-results">
                 <li ng-repeat="searchResult in pstnNumbers.model.tollFree.searchResults | startFrom: pstnNumbers.model.tollFree.paginateOptions.currentPage*pstnNumbers.model.tollFree.paginateOptions.pageSize | limitTo: pstnNumbers.model.tollFree.paginateOptions.pageSize">
@@ -184,7 +184,7 @@
                 <div class="order-inline right-margin">
                     <input cs-input type="text" class="input-width text-center" id="advanceQuantityInput" ng-model="pstnNumbers.model.tollFree.quantity" cs-input-label="{{::'pstnSetup.quantity' | translate}}">
                 </div>
-                <button type="button" class="btn btn--people btn--large order-inline" ng-click="pstnNumbers.addToCart('TOLLFREE_BLOCK_ORDER')" translate="pstnSetup.advancedOrder.addNumbers"></button>
+                <button type="button" class="btn btn--people btn--large order-inline" ng-click="pstnNumbers.addToCart('BLOCK_ORDER', 'tollfree')" translate="pstnSetup.advancedOrder.addNumbers"></button>
             </section>
           </section>
         </cs-tab>

@@ -507,6 +507,8 @@
     "lastTwelveWeeks2": "last twelve weeks",
     "custom": "Custom",
     "custom2": "custom selection",
+    "fromDate": "From ",
+    "toDate": "To ",
     "customerLoadError": "There was an error while loading the customer list.",
     "unauthorizedError": "User is not authorized to access the customer reports.",
     "conversationError": "There was an error while loading room and file data.",
@@ -968,6 +970,7 @@
     "begin": "Begin",
     "cancel": "Cancel",
     "ciscoCollaborationCloud": "Cisco Collaboration Cloud",
+    "cluster": "Cluster",
     "close": "Close",
     "confirm": "Confirm",
     "continue": "Continue",
@@ -1231,6 +1234,8 @@
     "extensionError": "Extension not valid: ",
     "companyVoicemail": "Voicemail",
     "vmAccessNumber": "Voicemail Access Number",
+    "vmAccessModes": "Access Modes",
+    "vmAccessModesHelpText": "Customize the voicemail delivery options for your organization. Aside from phone delivery, you can let users retrieve voicemails attachments in Cisco Spark, email or both. Downloaded voicemail attachments are not secure.",
     "companyVoicemailDescription": "Select a phone number to reserve for dialing voicemail from outside the company.",
     "to": "to",
     "addMoreExtensionRanges": "Add more extension ranges",
@@ -1246,6 +1251,7 @@
     "voicemailGetError": "Failed to get company voicemail number.",
     "voicemailUpdateError": "Failed to update company voicemail number.",
     "voicemailNoExternalNumbersError": "You must have unassigned direct lines to turn on voicemail. Please contact your partner or administrator.",
+    "voicemailNoDirectNumbersError": "You must have unassigned direct lines to turn on external voicemail access.",
     "timezoneUpdateError": "Failed to update company timezone.",
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
@@ -1259,12 +1265,18 @@
     "singleNumberRangeError": "Extension Ranges cannot begin and end with the same number.",
     "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines.",
     "voicemailToEmailLabel": "Voicemail to Email",
+    "voicemailToPhoneLabel": "Voicemail to Phone",
+    "phoneVoicemailAddedCostText": "Using this number incurs a usage cost.",
+    "voicemailToSparkLabel": "Voicemail to Spark",
+    "voicemailToSparkAndPhoneLabel": "Voicemail to Spark and Phone",
+    "messageWaitingIndicatorText": "The Message Waiting Indicator (MWI) continues to blink until users access their voicemails from their phones.",
     "voicemailToEmailHelpText": "Warning: Voicemail attachments sent via email are not secure.",
+    "voicemailNumberCostHelpText" : "Using this number incurs a usage cost",
     "voicemailToEmailGetError": "Failed to get voicemail to email settings.",
     "voicemailToEmailUpdateError": "Failed to update voicemail to email settings.",
     "voicemailTimeZoneGetError": "Failed to get voicemail time zone.",
     "externalVoicemailAccessLabel": "External Voicemail Access",
-    "voicemailPilotHelpText": "Usage of this E164 number incurs usage cost.",
+    "voicemailPilotHelpText": "Usage of this E164 number incurs a usage cost.",
     "errorGettingOptionaVmDidToggle": "There was a problem getting the optionalVmDid toggle.",
     "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network.",
     "voicemailPrefixTitle": "Voicemail ID Prefix",
@@ -1290,7 +1302,7 @@
     "saveModal": {
       "title": "Dial Plan Settings",
       "message1": "Are you sure you want to change your dial plan settings?",
-      "message2": "Changing dial plan settings during business hours can take a few minutes to propagate through the system and prevent users from placing calls during that time."
+      "message2": "This change can take a few minutes to apply to the system and prevent users from placing calls at that time."
     }
   },
   "dirsyncModal": {
@@ -1438,7 +1450,16 @@
       "availableMessage": "This will open Advanced Settings in a new tab.<br><br>Access to Advanced Settings requires that you are on the same network as the room device."
     },
     "sameAsCompanyNum": "To edit your emergency service address, the emergency callback number for your device must be different from your company’s callback number.",
-    "impactedUserInfo": "Modifying the Emergency Service Address associated to the above selected Callback Number will impact the following users and/or places:"
+    "impactedUserInfo": "Modifying the Emergency Service Address associated to the above selected Callback Number will impact the following users and/or places:",
+    "export": {
+      "deviceExportTitle": "Export Device Attributes to CSV",
+      "deviceExportDescription": "Gathering data for export may take a while. During this time you cannon sign out or refresh your browser, or the export will be cancelled.",
+      "export": "Export",
+      "deviceExportInProgress": "Exporting Device Attributes to CSV",
+      "exportCompleted": "Export completed",
+      "deviceListReadyForDownload": "Your device list has been compiled and is ready to download.",
+      "deviceExportFailedOrCancelled": "Device Export failed or was cancelled."
+    }
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -1547,10 +1568,7 @@
       "listing": {
         "no_clusters_heading": "No Cisco Expressway clusters registered",
         "no_clusters_text": "See required actions above and documentation to get started."
-      },
-      "deregisterConfirmRemoval": "Confirm Removal",
-      "deregisterOpening": "You are about to deregister the Expressway cluster",
-      "willNoLongerBeUsed": "The Expressway cluster will no longer be used for Hybrid Services. All cluster peers will automatically be deregistered."
+      }
     },
     "status": {
       "unknown": "Status unknown",
@@ -1633,6 +1651,13 @@
       "c_ucmc": "Call Service",
       "c_mgmt": "Management Service"
     },
+    "clusterTypeFromServiceId": {
+      "squared-fusion-mgmt": "Expressway",
+      "squared-fusion-cal": "Expressway",
+      "squared-fusion-uc": "Expressway",
+      "squared-fusion-media": "Hybrid Media",
+      "spark-hybrid-datasecurity": "Hybrid Data Security"
+    },
     "serviceDescriptions": {
       "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets your users answer calls to their work phones and to place calls to other work phones, on their Cisco Spark client.",
       "squared-fusion-cal": "Calendar Service helps your users to collaborate instantly. Just add @spark to create a Spark room. Add @webex to attach a WebEx link to your invitation.",
@@ -1670,7 +1695,8 @@
       "calendarType": "Calendar Type",
       "exchange": "Microsoft Exchange",
       "google": "Google Calendar",
-      "notSetup": "Not currently set up"
+      "notSetup": "Not currently set up",
+      "sinceTime": "since {{timestamp}}"
     },
     "alarms": {
       "alarms": "Alarms",
@@ -1725,16 +1751,23 @@
       "deactivateServicesHeader": "Deactivate Services",
       "deactivateServicesParagraph": "Deactivate {{ServiceName}} to remove any service-related functionality from this cluster.",
       "deactivateServicesSubHeader": "Deactivate {{service}}",
-      "noHybridServicesProvisioned": "No Hybrid Services are enabled on this Expressway. To enable a Hybrid Service, go to the relevant service page.",
-      "deregisterClusterParagraph": "There are still services active on “{{ClusterName}}”.",
-      "deregisterClusterExplanation": "Remove this cluster from Cisco Collaboration Cloud. All services must be deactivated on a cluster before it can be removed.",
-      "clusterMainSectionHeader": "Cluster",
-      "renameClusterParagraph": "Rename the Expressway cluster.",
-      "renameClusterDescription": "The cluster name is only used for display purposes. Changing it will not update the name on the Expressway itself.",
-      "clusterNameCannotByEmpty": "Cluster name cannot be empty.",
-      "clusterNameSaved": "Cluster name saved successfully",
+      "noHybridServicesProvisioned": "No Hybrid Services are enabled on this Expressway. To enable a Hybrid Service, go to the relevant service page."
+    },
+    "renameAndDeregisterComponent": {
+      "clusterNameWatermark": "Enter cluster name…",
+      "renameClusterParagraph": "Rename the {{clusterType}} cluster.",
+      "clusterNameSaved": "Cluster name saved successfully.",
       "clusterNameCannotBeSaved": "Cluster name could not be saved. Try again later.",
-      "clusterNameWatermark": "Enter cluster name…"
+      "clusterNameCannotByEmpty": "Cluster name cannot be empty.",
+      "renameClusterDescription": "The cluster name is used for display purposes in Cloud Collaboration Managment and in email notifications.",
+      "deregisterClusterExplanation": "Remove this {{clusterType}} cluster from Cisco Collaboration Cloud.",
+      "deregisterClusterExplanation": "Click the \"Remove\" button to launch the Remove Cluster workflow.",
+      "deregisterClusterExplanationBlocked": "It is not possible to deregister an Expressway until all its services have been deactivated.",
+      "allServicesMustBeDeactivatedOnExpressway": "All services must be deactivated on an Expressway cluster before it can be removed.",
+      "couldNotDeregisterCluster": "Could not deregister cluster.",
+      "deregisterConfirmRemoval": "Confirm Removal",
+      "deregisterConfirmationText": "You are about to deregister the cluster <strong>{{clusterName}}</strong> from Cisco Collaboration Cloud.",
+      "deregisterConfirmPopup": "{{clusterName}} was removed successfully from Cisco Collaboration Cloud."
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate {{ServiceName}}",
@@ -1785,9 +1818,6 @@
         "certificatesModalHeading": "Remove Certificate",
         "certificatesModalText": "Are you sure you want to remove the following certificate?",
         "deactivateServiceOpening": "You are about to deactivate the following Hybrid Service:",
-        "fromCiscoSpark": "from your Cisco Spark organization {{orgName}}.",
-        "usersWillBeDisentitled": "{{serviceName}} will be disabled for all of your users.",
-        "connectorsAndDataWillBeWiped": "This action will remove {{connectorName}} from all of your Expressway clusters and delete all connectors' local settings.",
         "noClustersWillBeDeregistered": "No Expressway clusters will be deregistered from Cisco Collaboration Cloud, and they can still be used for hosting Hybrid Services.",
         "sipDomainHeading": "SIP Destination",
         "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
@@ -1908,6 +1938,9 @@
     },
     "registration": {
       "heading": "Registration"
+    },
+    "notificationDropdown": {
+      "label": "Service notifications"
     },
     "fusion": {
       "types": {
@@ -3073,7 +3106,8 @@
     "advanceOrder": "Advance Numbers",
     "newNumberOrder": "New Numbers",
     "portNumberOrder": "Porting Numbers",
-    "tollFreeNumberOrder": "Toll-Free Numbers",
+    "tollFreeNumberOrder": "New Toll-Free Numbers",
+    "tollFreeNumberAdvanceOrder": "Toll-Free Advance Numbers",
     "searchPlaceholder": "Search Orders"
   },
   "pstnOrderDetail": {
@@ -3162,6 +3196,9 @@
     "errors": {
       "states": "Failed to retrieve states",
       "inventory": "Failed to get PSTN inventory",
+      "orders": {
+        "missingNumber": "Number Missing in Order {{orderNumber}}"
+      },
       "tollfree": {
         "areacodes": "Failed to retrieve toll-free area codes.",
         "inventory": "Failed to retrieve toll-free number inventory."
@@ -3679,6 +3716,7 @@
     "software": "Software",
     "serial": "Serial",
     "ipAddr": "IP Address",
+    "networkConnectivity": "Network Connectivity",
     "macAddr": "MAC Address",
     "sipUrl": "SIP Address",
     "issues": "Issues",
@@ -3711,7 +3749,15 @@
     "analog": "Analog Telephone"
   },
   "ataSettings": {
-    "analog": "Analog Telephone"
+    "analog": "Analog Telephone",
+    "manage": "Manage Device Settings",
+    "title": "Device Settings",
+    "description": "Updating settings will affect the entire analog telephone adapter. You may need to perform testing on the connected analog device after saving your settings.",
+    "impedance": "Impedance",
+    "impedanceDescr": "Adjust the frequency response level for sound quality.",
+    "input": "Input Audio Level",
+    "output": "Output Audio Level",
+    "saved": "The settings are saved. You will have to reboot the device for the changes to take effect"
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
@@ -4135,7 +4181,6 @@
       "releaseChannelDesc": "Select a release channel for this cluster.",
       "deletecluster": "Delete Cluster",
       "deleteclusterHeadding": "Delete Hybrid Media Cluster",
-      "deleteclusterDesc": "Click the Delete Cluster button to launch the Delete Cluster workflow.",
       "deleteClusterBodyDesc": "Before you can delete this cluster you must either move all nodes to another cluster or deregister all the nodes. What would you like to do?",
       "makeASelection": "Make a selection:",
       "moveallnodes": "Move All Nodes",
@@ -4896,7 +4941,7 @@
     "status": "Status",
     "cluster": "Cluster",
     "sipUri": "Directory URI",
-    "errorMessage": "Error Message"
+    "details": "Details"
   },
   "validation": {
     "nonPrintable": "This entry contains nonprintable characters.",
@@ -4917,6 +4962,10 @@
       "Latest": "Latest",
       "Beta": "Beta",
       "Preview": "Preview"
+    },
+    "activeInterface": {
+      "lan": "Wired",
+      "wlan": "Wireless"
     },
     "errorCodes": {
       "mediaProtocol": {

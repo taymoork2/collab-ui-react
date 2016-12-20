@@ -179,6 +179,17 @@ describe('Service: DeviceFilter', function () {
       expect(DeviceFilter.getFilteredList(arr)[0].ip).toBe('192.168.0.5');
     });
 
+    it('should search on readableActiveInterface', function () {
+      var arr = [{
+        readableActiveInterface: 'telepathic'
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('telep');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].readableActiveInterface).toBe('telepathic');
+    });
+
     it('should search on mac', function () {
       var arr = [{
         mac: '1A:2B:3C:4D:5E:6F'

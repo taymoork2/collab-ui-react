@@ -1,4 +1,5 @@
 require('./_device-usage.scss');
+require('modules/core/reports/amcharts-export.scss');
 
 (function () {
   'use strict';

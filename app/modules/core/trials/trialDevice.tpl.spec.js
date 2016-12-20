@@ -2,7 +2,7 @@
 
 describe('Template: trialDevice.tpl.spec.js:', function () {
 
-  var $compile, $controller, $httpBackend, $scope, $templateCache, Orgservice;
+  var $compile, $controller, $httpBackend, $scope, $templateCache, Analytics, Orgservice;
   var view;
   var skipBtn, backBtn;
 
@@ -10,7 +10,7 @@ describe('Template: trialDevice.tpl.spec.js:', function () {
     if (view) {
       view.remove();
     }
-    $compile = $controller = $httpBackend = $scope = $templateCache = Orgservice = undefined;
+    $compile = $controller = $httpBackend = $scope = $templateCache = Analytics = Orgservice = undefined;
     view = skipBtn = backBtn = undefined;
   });
 
@@ -24,13 +24,14 @@ describe('Template: trialDevice.tpl.spec.js:', function () {
   beforeEach(compileView);
 
   // TODO - remove $httpBackend when MX300 are officially supported
-  function dependencies(_$compile_, _$controller_, _$httpBackend_, _$rootScope_, _$templateCache_, _Orgservice_) {
+  function dependencies(_$compile_, _$controller_, _$httpBackend_, _$rootScope_, _$templateCache_, _Analytics_, _Orgservice_) {
     $compile = _$compile_;
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $scope = _$rootScope_.$new();
     $templateCache = _$templateCache_;
     Orgservice = _Orgservice_;
+    Analytics = _Analytics_;
   }
 
   function initSpies() {
@@ -39,6 +40,7 @@ describe('Template: trialDevice.tpl.spec.js:', function () {
       .when('GET', 'https://identity.webex.com/identity/scim/null/v1/Users/me')
       .respond({});
     spyOn(Orgservice, 'getOrg');
+    spyOn(Analytics, 'trackTrialSteps');
   }
 
   function compileView() {

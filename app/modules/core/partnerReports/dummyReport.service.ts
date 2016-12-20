@@ -19,7 +19,7 @@ export class DummyReportService {
 
   private getTimeAndOffset(filter: ITimespan, index) {
     let offset = this.ReportConstants.DAYS - index;
-    let date: string = moment().subtract(index, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
+    let date: string = moment().subtract(index + 1, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
     if (filter.value === this.ReportConstants.MONTH_FILTER.value) {
       offset = this.ReportConstants.WEEKS - index;
       date = moment().startOf(this.ReportConstants.WEEK).subtract(1 + (index * 7), this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
@@ -38,7 +38,7 @@ export class DummyReportService {
     let dummyGraph: Array<IActiveUserData> = [];
 
     if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
-      for (let i = this.ReportConstants.DAYS; i >= 1; i--) {
+      for (let i = this.ReportConstants.DAYS; i >= 0; i--) {
         dummyGraph.push(this.getActiveUserDatapoint(filter, i));
       }
     } else if (filter.value === this.ReportConstants.MONTH_FILTER.value) {
@@ -97,7 +97,7 @@ export class DummyReportService {
     let dummyGraph: Array<IMediaQualityData> = [];
 
     if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
-      for (let i = this.ReportConstants.DAYS; i >= 1; i--) {
+      for (let i = this.ReportConstants.DAYS; i >= 0; i--) {
         dummyGraph.push(this.getMediaDatapoint(filter, i));
       }
     } else if (filter.value === this.ReportConstants.MONTH_FILTER.value) {

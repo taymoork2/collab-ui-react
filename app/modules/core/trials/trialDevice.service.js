@@ -46,12 +46,20 @@
         code: 'CR'
       },
       {
+        country: 'Cyprus',
+        code: 'CY'
+      },
+      {
         country: 'Czech Republic',
         code: 'CZ'
       },
       {
         country: 'Denmark',
         code: 'DK'
+      },
+      {
+        country: 'Estonia',
+        code: 'EE'
       },
       {
         country: 'Finland',
@@ -66,12 +74,24 @@
         code: 'GE'
       },
       {
+        country: 'Hungary',
+        code: 'HU'
+      },
+      {
         country: 'Ireland',
         code: 'IE'
       },
       {
         country: 'Italy',
         code: 'IT'
+      },
+      {
+        country: 'Lativa',
+        code: 'LV'
+      },
+      {
+        country: 'Lithuania',
+        code: 'LT'
       },
       {
         country: 'Luxembourg',
@@ -98,8 +118,16 @@
         code: 'PT'
       },
       {
+        country: 'Romania',
+        code: 'RO'
+      },
+      {
         country: 'Slovakia',
         code: 'SK'
+      },
+      {
+        country: 'Slovenia',
+        code: 'SI'
       },
       {
         country: 'Spain',
@@ -114,16 +142,21 @@
         code: 'SC'
       },
       {
+        country: 'Ukraine',
+        code: 'UA'
+      },
+      {
         country: 'United Kingdom',
         code: 'GB'
       }
     ];
     var _countries = {
       US: ['United States'],
-      ROLLOUT1: ['United States', 'Australia', 'Austria', 'Belgium', 'Canada', 'Czech Republic',
-        'Denmark', 'Finland', 'France', 'Germany', 'Ireland', 'Italy', 'Luxembourg', 'Netherlands', 'Norway', 'Poland',
-        'Portugal', 'Slovakia', 'Spain', 'Sweden', 'Switzerland', 'United Kingdom']
+      ROLLOUT1: ['United States', 'Australia', 'Austria', 'Belgium', 'Canada', 'Cyprus', 'Czech Republic',
+        'Denmark', 'Estonia', 'Finland', 'France', 'Germany', 'Hungary', 'Ireland', 'Italy', 'Latvia', 'Lithuania', 'Luxembourg', 'Netherlands', 'Norway', 'Poland',
+        'Portugal', 'Romania', 'Slovakia', 'Slovenia', 'Spain', 'Sweden', 'Switzerland', 'Ukraine', 'United Kingdom']
     };
+
     var _deviceLimit = {
       roomSystems: {
         min: 1,

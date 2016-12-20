@@ -45,9 +45,7 @@ require('./_partner-landing-trials.scss');
     }
 
     function openAddTrialModal() {
-      if ($scope.isTestOrg) {
-        Analytics.trackTrialSteps(Analytics.sections.TRIAL.eventNames.START_SETUP);
-      }
+      Analytics.trackTrialSteps(Analytics.sections.TRIAL.eventNames.START_SETUP);
       $state.go('trialAdd.info').then(function () {
         $state.modal.result.finally(getTrialsList);
       });

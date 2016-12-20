@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceClusterController', ExpresswayServiceClusterController);
 
   /* @ngInject */
-  function ExpresswayServiceClusterController($scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout, hasF237FeatureToggle, hasEmergencyUpgradeFeatureToggle, FusionClusterService, Notification, $window) {
+  function ExpresswayServiceClusterController($scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout, hasF237FeatureToggle, FusionClusterService, Notification, $window) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.clusterId;
@@ -23,7 +23,6 @@
     vm.fakeUpgrade = false;
     vm.fakeManagementUpgrade = false;
     vm.hasF237FeatureToggle = hasF237FeatureToggle;
-    vm.hasEmergencyUpgradeFeatureToggle = hasEmergencyUpgradeFeatureToggle;
     vm.hasConnectorAlarm = hasConnectorAlarm;
     vm.openDeleteConfirm = openDeleteConfirm;
     vm.goToExpressway = goToExpressway;
@@ -216,7 +215,7 @@
         },
         controller: 'ClusterDeregisterController',
         controllerAs: 'clusterDeregister',
-        templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html',
+        templateUrl: 'modules/hercules/fusion-pages/components/rename-and-deregister-cluster-section/deregister-dialog.html',
         type: 'dialog'
       }).result.then(function () {
         $state.go('calendar-service.list');

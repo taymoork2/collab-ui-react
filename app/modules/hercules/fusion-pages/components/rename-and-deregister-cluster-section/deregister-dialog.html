@@ -2,16 +2,12 @@
   <button type="button" class="close" ng-click="$dismiss()">
     <span class="sr-only" translate="common.close"></span>
   </button>
-  <h4 class="modal-title" translate="hercules.clusters.deregisterConfirmRemoval"></h4>
+  <h4 class="modal-title" translate="hercules.renameAndDeregisterComponent.deregisterConfirmRemoval"></h4>
 </div>
 <div class="modal-body hercules-fix-paragraphs deregister-expressway-modal">
 
-  <p>
-    <span translate="hercules.clusters.deregisterOpening"></span>
-    <strong>{{clusterDeregister.clustername}}</strong>
-    <span translate="hercules.settings.call.fromCiscoSpark"
-          translate-values="{orgName: clusterDeregister.companyName}"></span>
-    <span translate="hercules.clusters.willNoLongerBeUsed"></span>
+  <p translate="hercules.renameAndDeregisterComponent.deregisterConfirmationText"
+     translate-values="{clusterName: clusterDeregister.clustername}">
   </p>
 
 </div>
@@ -26,6 +22,6 @@
           type="button"
           ng-disabled="vm.loading"
           ng-click="clusterDeregister.deregister()">
-    <span translate="hercules.clusters.deregisterConfirmRemoval"></span>
+    <span translate="hercules.renameAndDeregisterComponent.deregisterConfirmRemoval"></span>
   </button>
 </div>

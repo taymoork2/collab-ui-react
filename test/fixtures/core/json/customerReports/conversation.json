@@ -1,15 +1,5 @@
 {
   "apiResponse": [{
-    "date": "2016-12-04T00:00:00.000Z",
-    "details": {
-      "avgRoomsPerUser": "8.031643486132829",
-      "numRoomsCreated": "247",
-      "numSingleRooms": "121",
-      "numGroupRooms": "127",
-      "numSharedCount": "1284",
-      "sharedSize": "4.849333602935076"
-    }
-  }, {
     "date": "2016-12-03T00:00:00.000Z",
     "details": {
       "avgRoomsPerUser": "8.745615519088705",
@@ -81,15 +71,6 @@
     }
   }],
   "response": [{
-    "date": "Nov 27",
-    "balloon": true,
-    "avgRooms": "8.03",
-    "contentShared": 1284,
-    "contentShareSizes": "4.85",
-    "groupRooms": 127,
-    "oneToOneRooms": 121,
-    "totalRooms": 247
-  }, {
     "date": "Nov 28",
     "balloon": true,
     "avgRooms": "8.75",
@@ -154,15 +135,6 @@
     "totalRooms": 0
   }],
   "emptyResponse": [{
-    "date": "Nov 27",
-    "balloon": true,
-    "avgRooms": 0,
-    "contentShared": 0,
-    "contentShareSizes": 0,
-    "groupRooms": 0,
-    "oneToOneRooms": 0,
-    "totalRooms": 0
-  }, {
     "date": "Nov 28",
     "balloon": true,
     "avgRooms": 0,
@@ -290,15 +262,6 @@
       "groupRooms": 150,
       "oneToOneRooms": 175,
       "totalRooms": 325
-    }, {
-      "date": "Dec 04",
-      "balloon": false,
-      "avgRooms": 0,
-      "contentShared": 175,
-      "contentShareSizes": 0,
-      "groupRooms": 175,
-      "oneToOneRooms": 200,
-      "totalRooms": 375
     }],
     "two": [{
       "date": "Dec 05",
@@ -768,15 +731,6 @@
       "groupRooms": 1275,
       "oneToOneRooms": 1300,
       "totalRooms": 2575
-    }, {
-      "date": "Dec 03",
-      "balloon": false,
-      "avgRooms": 0,
-      "contentShared": 1300,
-      "contentShareSizes": 0,
-      "groupRooms": 1300,
-      "oneToOneRooms": 1325,
-      "totalRooms": 2625
     }]
   }
 }

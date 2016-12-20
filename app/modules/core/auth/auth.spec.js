@@ -193,15 +193,26 @@ describe('Auth Service', function () {
       spyOn(TokenService, 'completeLogout');
     });
 
-    it('should refresh token and resend request', function () {
+    beforeEach(function () {
+      jasmine.clock().install();
+      jasmine.clock().mockDate();
+    });
+
+    afterEach(function () {
+      jasmine.clock().uninstall();
+    });
+
+    it('should refresh token and resend request with new access token', function () {
       $httpBackend
         .expectPOST('access_token_url')
         .respond(200, {
-          access_token: ''
+          access_token: 'new-access-token'
         });
 
       $httpBackend
-        .expectGET('foo')
+        .expectGET('foo', function (headers) {
+          return headers.Authorization === 'Bearer new-access-token';
+        })
         .respond(200, {
           bar: 'baz'
         });
@@ -221,6 +232,14 @@ describe('Auth Service', function () {
       }));
     });
 
+    it('should refresh token once if multiple retries requested during a 1 second span', function () {
+      expectRefreshCountFromTwoRetriesOverSpan(1, 999);
+    });
+
+    it('should refresh token multiple times if multiple retries requested after a 1 second span', function () {
+      expectRefreshCountFromTwoRetriesOverSpan(2, 1001);
+    });
+
     it('should not refresh token and resend request, should redirect to login', function () {
       OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
       $httpBackend
@@ -233,6 +252,44 @@ describe('Auth Service', function () {
       expect(promise).toBeRejectedWith(mockResponse(500));
       expect(TokenService.completeLogout).toHaveBeenCalledWith('logoutUrl');
     });
+
+    function expectRefreshCountFromTwoRetriesOverSpan(expectedRefreshCount, durationOfSpan) {
+      var refreshCount = 0;
+
+      $httpBackend
+        .whenPOST('access_token_url')
+        .respond(function () {
+          refreshCount += 1;
+          return [200];
+        });
+
+      $httpBackend
+        .expectGET('foo')
+        .respond(200);
+
+      Auth.refreshAccessTokenAndResendRequest({
+        config: {
+          method: 'GET',
+          url: 'foo'
+        }
+      });
+
+      jasmine.clock().tick(durationOfSpan);
+
+      $httpBackend
+        .expectGET('bar')
+        .respond(200);
+
+      Auth.refreshAccessTokenAndResendRequest({
+        config: {
+          method: 'GET',
+          url: 'bar'
+        }
+      });
+
+      $httpBackend.flush();
+      expect(refreshCount).toBe(expectedRefreshCount);
+    }
   });
 
   describe('setAccessToken()', function () {
