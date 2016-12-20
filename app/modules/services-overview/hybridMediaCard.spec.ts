@@ -28,33 +28,22 @@ describe('ServicesOverviewHybridMediaCard', () => {
     expect(card.loading).toBe(true);
   });
 
-  it('should stay hidden if the user is missing the feature toggle', () => {
-    Authinfo.isFusionMedia.and.returnValue(true);
-    Authinfo.getRoles.and.returnValue([Config.roles.full_admin]);
-    card = new ServicesOverviewHybridMediaCard(Authinfo, Config, FusionClusterStatesService);
-    card.hybridMediaFeatureToggleEventHandler(false);
-    expect(card.display).toBe(false);
-  });
-
   it('should stay hidden if the user is missing the entitlement', () => {
     Authinfo.isFusionMedia.and.returnValue(true);
     card = new ServicesOverviewHybridMediaCard(Authinfo, Config, FusionClusterStatesService);
-    card.hybridMediaFeatureToggleEventHandler(true);
     expect(card.display).toBe(false);
   });
 
   it('should stay hidden if the user is missing one of the acceptable role', () => {
     Authinfo.getRoles.and.returnValue([Config.roles.full_admin]);
     card = new ServicesOverviewHybridMediaCard(Authinfo, Config, FusionClusterStatesService);
-    card.hybridMediaFeatureToggleEventHandler(true);
     expect(card.display).toBe(false);
   });
 
-  it('should be displayed if we have feature toggle + roles + entitlement', () => {
+  it('should be displayed if we have roles + entitlement', () => {
     Authinfo.isFusionMedia.and.returnValue(true);
     Authinfo.getRoles.and.returnValue([Config.roles.full_admin]);
     card = new ServicesOverviewHybridMediaCard(Authinfo, Config, FusionClusterStatesService);
-    card.hybridMediaFeatureToggleEventHandler(true);
     expect(card.display).toBe(true);
   });
 

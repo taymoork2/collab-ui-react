@@ -5,7 +5,7 @@
     .controller('PstnOrderDetailCtrl', PstnOrderDetailCtrl);
 
   /* @ngInject */
-  function PstnOrderDetailCtrl($stateParams, $translate, TelephoneNumberService, FeatureToggleService, PstnSetupService) {
+  function PstnOrderDetailCtrl($stateParams, $translate, TelephoneNumberService, PstnSetupService) {
     var vm = this;
     vm.currentOrder = $stateParams.currentOrder;
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -14,14 +14,8 @@
     vm.info = [];
     vm.tosAccepted = true;
     var BLOCK_ORDER = 'BLOCK_ORDER';
-    var ftHuronSimplifiedTrialFlow = false;
 
-    FeatureToggleService.supports(FeatureToggleService.features.huronSimplifiedTrialFlow).then(function (ftResult) {
-      ftHuronSimplifiedTrialFlow = ftResult;
-      if (ftHuronSimplifiedTrialFlow) {
-        getTOSStatus();
-      }
-    });
+    getToSStatus();
 
     //parse order
     switch (vm.currentOrder.operation) {
@@ -57,7 +51,7 @@
       });
     }
 
-    function getTOSStatus() {
+    function getToSStatus() {
       PstnSetupService.getCustomerV2(vm.currentCustomer.customerOrgId).then(function (customer) {
         if (customer.trial) {
           PstnSetupService.getCustomerTrialV2(vm.currentCustomer.customerOrgId).then(function (trial) {

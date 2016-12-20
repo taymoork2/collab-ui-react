@@ -79,6 +79,7 @@
     vm._buildVoicemailPrefixOptions = _buildVoicemailPrefixOptions;
     vm.loadVoicemailNumber = loadVoicemailNumber;
     vm.loadAvrilVoicemailOptions = loadAvrilVoicemailOptions;
+    vm.loadPreferredLanguageOptions = loadPreferredLanguageOptions;
     vm.loadSite = loadSite;
 
     vm.processing = false;

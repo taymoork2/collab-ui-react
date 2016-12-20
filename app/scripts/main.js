@@ -40,6 +40,7 @@
     'ui.grid.infiniteScroll',
     'timer',
     'toaster',
+    'rzModule',
     'dragularModule',
     require('modules/core/analytics'),
     require('modules/core/featureToggle/featureToggle.service'),

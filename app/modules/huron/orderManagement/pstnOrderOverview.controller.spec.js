@@ -16,24 +16,25 @@ describe('Controller: PstnOrderOverviewCtrl', function () {
       customerOrgId: '5555-6666'
     };
 
-    var response = [{ uuid: 'eb8b5381-d908-4f28-9f23-bcd61d0792b6',
-      carrierOrderId: '12345',
-      carrierBatchId: '11',
-      status: 'PENDING',
-      numbers: [{ number: '9728134000', network: 'QUEUED' }]
-    },
-    { uuid: 'eb8b5381-d908-4f28-9f23-bcd61d0792b7',
-      carrierOrderId: '12345',
-      carrierBatchId: '12',
-      status: 'PROVISIONED',
-      numbers: [{ number: '9728134001', network: 'PROVISIONED' }]
-    },
-    { uuid: 'eb8b5381-d908-4f28-9f23-bcd61d0792b8',
-      carrierOrderId: '12346',
-      carrierBatchId: '11',
-      status: 'PENDING',
-      numbers: [{ number: '9728134002', network: 'QUEUED' }]
-    }
+    var response = [
+      { uuid: 'eb8b5381-d908-4f28-9f23-bcd61d0792b6',
+        carrierOrderId: '12345',
+        carrierBatchId: '11',
+        status: 'PENDING',
+        numbers: [{ number: '9728134000', network: 'QUEUED' }]
+      },
+      { uuid: 'eb8b5381-d908-4f28-9f23-bcd61d0792b7',
+        carrierOrderId: '12345',
+        carrierBatchId: '12',
+        status: 'PROVISIONED',
+        numbers: [{ number: '9728134001', network: 'PROVISIONED' }]
+      },
+      { uuid: 'eb8b5381-d908-4f28-9f23-bcd61d0792b8',
+        carrierOrderId: '12346',
+        carrierBatchId: '11',
+        status: 'PENDING',
+        numbers: [{ number: '9728134002', network: 'QUEUED' }]
+      }
     ];
 
     spyOn(PstnSetupService, 'getFormattedNumberOrders').and.returnValue($q.when(response));

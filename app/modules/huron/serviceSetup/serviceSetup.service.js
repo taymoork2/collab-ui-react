@@ -7,7 +7,7 @@
 
   /* @ngInject */
   function ServiceSetup($filter, $q, $translate, Authinfo, AvrilSiteService, AvrilSiteUpdateService, CeSiteService,
-  CustomerCommonService, CustomerCosRestrictionServiceV2, ExternalNumberPool, InternalNumberRangeService, SiteCountryService,
+  CustomerCommonService, CustomerCosRestrictionServiceV2, ExternalNumberPool, FeatureToggleService, InternalNumberRangeService, SiteCountryService,
   SiteLanguageService, SiteService, TimeZoneService, VoicemailService, VoicemailTimezoneService) {
     return {
       internalNumberRanges: [],
@@ -194,7 +194,20 @@
       },
 
       getSiteLanguages: function () {
-        return SiteLanguageService.query().$promise;
+        return SiteLanguageService.query().$promise.then(function (languages) {
+          return FeatureToggleService.supports(
+              FeatureToggleService.features.huronUserLocale2
+            ).then(function (isHuronUserLocale2Enabled) {
+              if (!isHuronUserLocale2Enabled) {
+                languages = _.filter(languages, function (tLanguage) {
+                  return (!tLanguage.featureToggle || tLanguage.featureToggle !== FeatureToggleService.features.huronUserLocale2);
+                });
+              }
+              return languages;
+            }).catch(function () {
+              return languages;
+            });
+        });
       },
 
       getTranslatedSiteLanguages: function (languages) {
