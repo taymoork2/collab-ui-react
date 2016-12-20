@@ -28,6 +28,10 @@
           {{callServiceAware.status.lastStateChangeText}}</span>
         <span class="cloud-extension-label status-off" ng-if="!callServiceAware.entitled" translate="common.off"></span>
         <span cs-loader ng-if="!callServiceAware.status && callServiceAware.entitled"></span>
+        <span ng-if="callServiceAware.entitled && callServiceAware.status"
+              class="cloud-extension-label right">
+          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.uc-history({serviceId: callServiceAware.id})" style="color: #3ca8e8">{{'hercules.userHistory.seeHistory' | translate}}</a>
+        </span>
       </div>
       <div ng-if="callServiceAware.entitled && callServiceAware.homedConnector">
         <span class="cloud-extension-label">{{'cloudExtensions.cluster' | translate}}:</span>
@@ -99,6 +103,10 @@
           {{callServiceConnect.status.lastStateChangeText}}</span>
       <span class="cloud-extension-label status-off" ng-if="!callServiceConnect.entitled" translate="common.off"></span>
       <span cs-loader ng-if="!callServiceConnect.status && callServiceConnect.entitled"></span>
+      <span ng-if="callServiceConnect.entitled && callServiceConnect.status"
+            class="cloud-extension-label right">
+          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.ec-history({serviceId: callServiceConnect.id})" style="color: #3ca8e8">{{'hercules.userHistory.seeHistory' | translate}}</a>
+        </span>
     </div>
 
     <div ng-if="callServiceConnect.entitled && callServiceConnect.status.state === 'error'"

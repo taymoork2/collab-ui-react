@@ -1172,6 +1172,15 @@
               extensions: {}
             }
           })
+          .state('user-overview.hybrid-services-squared-fusion-cal.history', {
+            template: '<user-status-history></user-status-history>',
+            data: {
+              displayName: 'Status History'
+            },
+            params: {
+              serviceId: {}
+            }
+          })
           .state('user-overview.hybrid-services-squared-fusion-gcal', {
             templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
             controller: 'CalendarServicePreviewCtrl',
@@ -1183,6 +1192,15 @@
               extensions: {}
             }
           })
+          .state('user-overview.hybrid-services-squared-fusion-gcal.history', {
+            template: '<user-status-history></user-status-history>',
+            data: {
+              displayName: 'Status History'
+            },
+            params: {
+              serviceId: {}
+            }
+          })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
             templateUrl: 'modules/hercules/user-sidepanel/callServicePreview.tpl.html',
             controller: 'CallServicePreviewCtrl',
@@ -1192,6 +1210,24 @@
             params: {
               extensionId: {},
               extensions: {}
+            }
+          })
+          .state('user-overview.hybrid-services-squared-fusion-uc.uc-history', {
+            template: '<user-status-history></user-status-history>',
+            data: {
+              displayName: 'Aware Status History'
+            },
+            params: {
+              serviceId: {}
+            }
+          })
+          .state('user-overview.hybrid-services-squared-fusion-uc.ec-history', {
+            template: '<user-status-history></user-status-history>',
+            data: {
+              displayName: 'Connect Status History'
+            },
+            params: {
+              serviceId: {}
             }
           })
           .state('user-overview.conferencing', {

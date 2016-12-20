@@ -2085,7 +2085,22 @@
       "userClearNote": "Note that any user assignments to this resource group will be cleared.",
       "remove": "Remove"
     },
-    "genericFailure": "An unexpected error occurred. Please try again later."
+    "genericFailure": "An unexpected error occurred. Please try again later.",
+    "userHistory": {
+      "history": "Status History",
+      "seeHistory": "See history",
+      "noLongerAssignedToResourceGroup": "User no longer assigned to any resource group",
+      "assignedToResourceGroup": "Assigned to resource group {{resourceGroupName}}",
+      "showingFirstEntries": "Showing first {{numEntries}} entries",
+      "serviceEnabled": "Pending activation",
+      "types": {
+        "AddEntitlement": "Service enabled",
+        "RemoveEntitlement": "Service disabled",
+        "AddUserResourceGroup": "Resource group changed",
+        "RemoveUserResourceGroup": "Resource group changed",
+        "SetUserStatus": "User status updated"
+      }
+    }
   },
   "hds": {
     "pageTitle": "Hybrid Data Security",
@@ -4937,7 +4952,8 @@
     "status": "Status",
     "cluster": "Cluster",
     "sipUri": "Directory URI",
-    "details": "Details"
+    "details": "Details",
+    "assignedTo": "Assigned to cluster {{clusterName}}"
   },
   "validation": {
     "nonPrintable": "This entry contains nonprintable characters.",

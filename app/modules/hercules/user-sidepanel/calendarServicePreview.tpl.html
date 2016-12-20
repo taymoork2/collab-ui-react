@@ -46,6 +46,10 @@
         <span class="cloud-extension-label disabled" ng-if="extension.entitled && extension.status && extension.status.lastStateChangeText">{{extension.status.lastStateChangeText}}</span>
         <span class="cloud-extension-label status-off" ng-if="!extension.entitled" translate="common.off"></span>
         <span cs-loader ng-if="!extension.status && extension.entitled"></span>
+        <span ng-if="extension.entitled && extension.status"
+              class="cloud-extension-label right">
+          <a ui-sref="user-overview.hybrid-services-{{extension.id}}.history({serviceId: extension.id})" style="color: #3ca8e8">{{'hercules.userHistory.seeHistory' | translate}}</a>
+        </span>
       </div>
 
       <div class="cloud-extension-label" ng-show="extension.entitled && extension.id === 'squared-fusion-cal' && extension.hasShowPreferredWebExSiteNameFeatureToggle">
