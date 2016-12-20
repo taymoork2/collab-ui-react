@@ -2,7 +2,7 @@
   <form name="nameVariableForm" novalidate>
     <div class="aa-flex-row">
       <div class="large-12 small-12 columns aa-name-variable">
-        <input cs-input type="text" name="callerInputNameVariable" id="callerInputNameVariable{{ schedule + index }}" placeholder="{{ :: 'autoAttendant.callerInputNamePlaceHolder' | translate }}" ng-maxlength = "aaCallerInput.maxVariableLength" cs-input-messages="aaCallerInput.validationMsg" ng-model="aaCallerInput.nameInput" ng-change="aaCallerInput.saveNameInput()" cs-input-group-size="medium-12" cs-input-label="{{ :: 'autoAttendant.callerInputLabel' | translate }}">
+        <input cs-input type="text" name="callerInputNameVariable" id="callerInputNameVariable{{ schedule + index }}" placeholder="{{ :: 'autoAttendant.callerInputNamePlaceHolder' | translate }}" ng-maxlength="aaCallerInput.maxVariableLength" cs-input-messages="aaCallerInput.validationMsg" ng-model="aaCallerInput.nameInput" ng-change="aaCallerInput.saveNameInput()" cs-input-group-size="medium-12" cs-input-label="{{ :: 'autoAttendant.callerInputLabel' | translate }}">
       </div>
     </div>
     <label class="add-name-input-help-desc" translate="autoAttendant.callerNameInputHelpText"></label>
@@ -37,13 +37,15 @@
               <cs-select ng-model="keyAction.key" options="keyAction.keys" placeholder="aaCallerInput.selectPlaceholder" on-change-fn="aaCallerInput.keyChanged($index, keyAction.key)" class="aa-pm-key-select" icon="icon-chevron-down" ng-class="{'not-selected':!keyAction.key}">
               </cs-select>
             </div>
-            <div class="small-9 columns">
-              <input cs-input type="text" name="callerInput" placeholder="{{ :: 'autoAttendant.callerInputValue' | translate }}" ng-change="aaCallerInput.keyInputChanged($index, keyAction)" ng-model="keyAction.value" class="aa-pm-action-input">
-              </input>
-            </div>
-            <div class="small-1 columns">
-              <i ng-if="aaCallerInput.inputActions.length > 1" class="aa-trash-icon" aria-label="common.delete" ng-click="aaCallerInput.deleteKeyAction($index); $event.stopPropagation();"></i>
-            </div>
+            <form name="nameKeyedInputForm" novalidate>
+              <div class="small-9 columns">
+                <input cs-input type="text" name="callerInput" placeholder="{{ :: 'autoAttendant.callerInputValue' | translate }}" ng-maxlength="aaCallerInput.maxVariableLength" cs-input-messages="aaCallerInput.validationMsg" ng-change="aaCallerInput.keyInputChanged($index, keyAction)" ng-model="keyAction.value" class="aa-pm-action-input">
+                </input>
+              </div>
+              <div class="small-1 columns">
+                <i ng-if="aaCallerInput.inputActions.length > 1" class="aa-trash-icon" aria-label="common.delete" ng-click="aaCallerInput.deleteKeyAction($index); $event.stopPropagation();"></i>
+              </div>
+            </form>
           </div>
         </div>
         <div class="row" ng-if="aaCallerInput.inputActions.length < 12">
