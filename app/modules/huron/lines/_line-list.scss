@@ -41,4 +41,7 @@
 .assignedTo {
   @include vr-spacing(pt, 0.75);
   @include vr-spacing(pl, 1.25);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
