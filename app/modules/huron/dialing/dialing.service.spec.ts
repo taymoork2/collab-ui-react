@@ -10,7 +10,8 @@ describe('Service: DialingService', () => {
       'HuronConfig',
       '$state',
       '$q',
-      'DialingService'
+      'DialingService',
+      'FeatureToggleService'
     );
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
