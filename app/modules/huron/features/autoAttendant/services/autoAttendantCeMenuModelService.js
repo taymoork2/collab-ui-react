@@ -287,6 +287,13 @@
   /* @ngInject */
   function AutoAttendantCeMenuModelService() {
 
+    // cannot use aaCommon's defined variables because of circular dependency.
+    // aaCommonService shou not have this service, need to refactor it out.
+
+    var DIGITS_DIAL_BY = 2;
+    var DIGITS_RAW = 3;
+    var DIGITS_CHOICE = 4;
+
     var service = {
       getWelcomeMenu: getWelcomeMenu,
       getCustomMenu: getCustomMenu,
@@ -470,7 +477,7 @@
         if (_.has(inAction.runActionsOnInput, 'inputType')) {
           action.inputType = inAction.runActionsOnInput.inputType;
           // check if this dial-by-extension
-          if (_.includes([2, 3, 4], action.inputType) &&
+          if (_.includes([DIGITS_DIAL_BY, DIGITS_RAW, DIGITS_CHOICE], action.inputType) &&
             _.has(inAction, 'runActionsOnInput.prompts.sayList')) {
             var sayList = inAction.runActionsOnInput.prompts.sayList;
             if (sayList.length > 0 && _.has(sayList[0], 'value')) {
@@ -1108,7 +1115,7 @@
               //newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
             } else if (actionName === 'runActionsOnInput') {
 
-              if (_.includes([2, 3, 4], menuEntry.actions[0].inputType)) {
+              if (_.includes([DIGITS_DIAL_BY, DIGITS_RAW, DIGITS_CHOICE], menuEntry.actions[0].inputType)) {
                 // dial by extension of caller input
                 newActionArray[i][actionName] = populateRunActionsOnInput(menuEntry.actions[0]);
                 newActionArray[i][actionName].attempts = menuEntry.attempts;

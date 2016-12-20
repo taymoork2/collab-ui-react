@@ -61,9 +61,6 @@ describe('Controller: AACallerInputCtrl', function () {
     $scope.menuId = menuId;
 
     var menu = AutoAttendantCeMenuModelService.newCeMenuEntry();
-    // var action = AutoAttendantCeMenuModelService.newCeActionEntry("", "");
-
-    // menu.addAction(action);
 
     aaUiModel['openHours'].addEntryAt(index, menu);
 
@@ -76,8 +73,28 @@ describe('Controller: AACallerInputCtrl', function () {
   }));
 
   afterEach(function () {
+    $rootScope = null;
+    $scope = null;
+
+    featureToggleService = null;
+    aaLanguageService = null;
+    aaCommonService = null;
+
+    AAUiModelService = null;
+    AutoAttendantCeMenuModelService = null;
+
+    aaCommonService = null;
+
+    controller = null;
+
+    aaUiModel = null;
+    inputActions = null;
+    schedule = null;
+    index = null;
+    menuId = null;
 
   });
+
   describe('add runActionsOnInput action', function () {
     it('should add runActionsOnInput action object menuEntry', function () {
       // appends a play action onto menuEntry
@@ -160,7 +177,7 @@ describe('Controller: AACallerInputCtrl', function () {
 
       controller.convertDigitState = true;
       controller.setType();
-      expect(controller.actionEntry.inputType).toEqual(4);
+      expect(controller.actionEntry.inputType).toEqual(aaCommonService.DIGITS_CHOICE);
       expect(aaCommonService.isFormDirty()).toEqual(true);
 
     });
@@ -168,7 +185,7 @@ describe('Controller: AACallerInputCtrl', function () {
 
       controller.convertDigitState = false;
       controller.setType();
-      expect(controller.actionEntry.inputType).toEqual(3);
+      expect(controller.actionEntry.inputType).toEqual(aaCommonService.DIGITS_RAW);
       expect(aaCommonService.isFormDirty()).toEqual(true);
 
     });

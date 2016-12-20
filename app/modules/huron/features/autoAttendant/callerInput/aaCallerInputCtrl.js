@@ -10,9 +10,6 @@
 
     var vm = this;
 
-    var DIGITS_RAW = 3;
-    var DIGITS_CHOICE = 4;
-
     var languageOption = {
       label: '',
       value: ''
@@ -40,6 +37,7 @@
 
     vm.maxLengthOptions = [];
     vm.maxStringLength = INPUT_DIGIT_MAX_DEFAULT;
+    vm.maxVariableLength = 32;
 
     vm.menuEntry = {};
     vm.actionEntry = {};
@@ -66,6 +64,9 @@
     vm.setMaxStringLength = setMaxStringLength;
 
     vm.nameInput = '';
+    vm.validationMsg = {
+      maxlength: $translate.instant('autoAttendant.callerInputVariableTooLongMsg')
+    };
 
     /////////////////////
     // the user has pressed the trash can icon for a key/action pair
@@ -86,6 +87,7 @@
     }
     //the user enteres a char into the key input area
     function keyInputChanged(keyIndex, whichKey) {
+
       vm.inputActions[keyIndex].value = whichKey.value;
 
       AACommonService.setCallerInputStatus(true);
@@ -115,7 +117,7 @@
       return AACommonService.keyActionAvailable(selectedKey, vm.inputActions);
     }
     function setType() {
-      vm.actionEntry.inputType = vm.convertDigitState ? DIGITS_CHOICE : DIGITS_RAW;
+      vm.actionEntry.inputType = vm.convertDigitState ? AACommonService.DIGITS_CHOICE : AACommonService.DIGITS_RAW;
       AACommonService.setCallerInputStatus(true);
     }
 
@@ -158,9 +160,16 @@
       AACommonService.setCallerInputStatus(true);
     }
 
-    function createAction(actionName) {
-      var action = AutoAttendantCeMenuModelService.newCeActionEntry(actionName, '');
+    function createCallerInputAction() {
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry(runActionName, '');
+
       setActionMinMax(action);
+
+      action.inputType = vm.convertDigitState ? AACommonService.DIGITS_CHOICE : AACommonService.DIGITS_RAW;
+      action.inputActions = [];
+
+      action.maxNumberOfCharacters = INPUT_DIGIT_MAX_DEFAULT;
+      action.variableName = '';
 
       return action;
 
@@ -171,7 +180,7 @@
 
       action = _.get(menuEntry, 'actions[0]');
 
-      if (action && (_.get(action, 'name', '') === runActionName)) {
+      if (_.get(action, 'name', '') === runActionName) {
         return action;
       }
 
@@ -190,14 +199,11 @@
       vm.menuEntry = uiMenu.entries[$scope.index];
       var action = getAction(vm.menuEntry);
       if (!action) {
-        action = createAction(runActionName);
 
-        action.inputType = vm.convertDigitState ? DIGITS_CHOICE : DIGITS_RAW;
-        action.inputActions = [];
-
-        action.maxNumberOfCharacters = INPUT_DIGIT_MAX_DEFAULT;
+        action = createCallerInputAction();
 
         vm.menuEntry.addAction(action);
+
       }
 
       vm.actionEntry = action;
@@ -214,13 +220,16 @@
 
       vm.maxStringLength = vm.actionEntry.maxNumberOfCharacters;
 
-      vm.convertDigitState = vm.actionEntry.inputType === DIGITS_CHOICE;
+      vm.convertDigitState = vm.actionEntry.inputType === AACommonService.DIGITS_CHOICE;
 
+      // if coming back as type 3, DIGITS_RAW, there is no inputActions defined
       if (_.has(vm.actionEntry, 'inputActions')) {
         vm.inputActions = vm.actionEntry.inputActions;
       } else {
+        // type 3, make sure is defined if they click for type4
         vm.inputActions = vm.actionEntry.inputActions = [];
       }
+
 
       vm.languageOptions = _.sortBy(AALanguageService.getLanguageOptions(), properties.LABEL);
 

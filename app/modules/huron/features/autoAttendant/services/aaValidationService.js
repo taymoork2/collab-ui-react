@@ -198,7 +198,7 @@
       var atLeastOneNonBlank = false;
 
       // special case number two - runActionsOnInput inputType === 3,4
-      if (_.get(action, 'name', '') === runActionInputName && _.includes([3, 4], action.inputType)) {
+      if (_.get(action, 'name', '') === runActionInputName && _.includes([AACommonService.DIGITS_RAW, AACommonService.DIGITS_CHOICE], action.inputType)) {
         if (_.isEmpty(action.variableName)) {
           validAction = false;
           AANotificationService.error(errMissingVariableNameMsg, {
@@ -339,7 +339,7 @@
       });
 
       var callerInputsOnly = _.filter(uiCombinedMenu.entries, function (menu) {
-        return _.includes([3, 4], _.get(menu, 'actions[0].inputType', ""));
+        return _.includes([AACommonService.DIGITS_RAW, AACommonService.DIGITS_CHOICE], _.get(menu, 'actions[0].inputType', ""));
       });
 
       _.forEach(uiCombinedMenu.entries, function (optionMenu) {
