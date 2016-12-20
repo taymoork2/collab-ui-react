@@ -10,7 +10,7 @@
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.clusterId;
-    vm.connectorType = $stateParams.connectorType;
+    vm.connectorType = 'hds_app';
     vm.servicesId = FusionUtils.connectorType2ServicesId(vm.connectorType);
     vm.serviceName = $translate.instant('hds.serviceName.' + vm.servicesId[0]);
     vm.connectorName = $translate.instant('hds.connectorName.' + vm.servicesId[0]);
@@ -27,7 +27,7 @@
     $scope.$watch(function () {
       return [
         ClusterService.getCluster(vm.connectorType, vm.clusterId),
-        ClusterService.getCluster('hds_app', vm.clusterId)
+        ClusterService.getCluster(vm.connectorType, vm.clusterId)
       ];
     }, function (newValue) {
       vm.cluster = newValue[0];
@@ -68,14 +68,6 @@
         return false;
       }
     }
-
-    vm.sortConnectors = function (connector) {
-      if (connector.connectorType === 'hds_app') {
-        return -1;
-      } else {
-        return connector.connectorType;
-      }
-    };
 
     function goToHds(hostname) {
       $window.open('https://' + encodeURIComponent(hostname) + '/fusionregistration');

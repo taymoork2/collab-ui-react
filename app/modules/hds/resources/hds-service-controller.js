@@ -66,8 +66,7 @@
 
     function showClusterSidepanel(cluster) {
       $state.go('hds-cluster-details', {
-        clusterId: cluster.id,
-        connectorType: 'hds_app'
+        clusterId: cluster.id
       });
     }
 

@@ -2608,13 +2608,7 @@
               displayName: 'Overview'
             },
             params: {
-              clusterId: null,
-              connectorType: null
-            },
-            resolve: {
-              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
-              },
+              clusterId: null
             }
           })
           .state('mediafusion-settings', {
