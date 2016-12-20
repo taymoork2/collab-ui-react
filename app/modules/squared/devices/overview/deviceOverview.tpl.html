@@ -132,6 +132,12 @@
           <p class="form-control-static">{{deviceOverview.currentDevice.ip}}</p>
         </div>
       </div>
+      <div class="form-group" ng-show="deviceOverview.currentDevice.readableActiveInterface">
+        <label class="col-sm-4 control-label" translate="deviceOverviewPage.networkConnectivity"></label>
+        <div class="col-sm-8">
+          <p class="form-control-static">{{deviceOverview.currentDevice.readableActiveInterface}}</p>
+        </div>
+      </div>
       <div class="form-group" ng-show="deviceOverview.currentDevice.mac">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.macAddr"></label>
         <div class="col-sm-8">

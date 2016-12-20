@@ -28,6 +28,7 @@
         this.cssColorClass = getCssColorClass(obj);
         this.state = getState(obj);
         this.upgradeChannel = getUpgradeChannel(obj);
+        this.readableActiveInterface = getActiveInterface(obj);
         this.diagnosticsEvents = getDiagnosticsEvents(obj);
         this.rsuKey = obj.remoteSupportUser && obj.remoteSupportUser.token;
         this.canDelete = true;
@@ -240,6 +241,15 @@
           label: label,
           value: channel
         };
+      }
+
+      function getActiveInterface(obj) {
+        if (obj.status) {
+          var translationKey = 'CsdmStatus.activeInterface.' + (obj.status.activeInterface || '').toLowerCase();
+          if (isTranslatable(translationKey)) {
+            return $translate.instant(translationKey);
+          }
+        }
       }
 
       function getIp(obj) {

@@ -131,7 +131,7 @@
       }
 
       function termMatchesAnyFieldOfItem(term, item) {
-        return ['displayName', 'product', 'ip', 'mac', 'serial'].some(function (field) {
+        return ['displayName', 'product', 'ip', 'mac', 'serial', 'readableActiveInterface'].some(function (field) {
           return item && (item[field] || '').toLowerCase().indexOf(term || '') != -1;
         });
       }
