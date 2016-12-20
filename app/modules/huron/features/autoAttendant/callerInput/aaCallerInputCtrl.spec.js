@@ -41,6 +41,14 @@ describe('Controller: AACallerInputCtrl', function () {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
 
+    schedule = 'openHours';
+    index = '0';
+    menuId = 'menu1';
+
+    aaUiModel = {
+      openHours: {}
+    };
+
     featureToggleService = _FeatureToggleService_;
     aaLanguageService = _AALanguageService_;
     aaCommonService = _AACommonService_;
@@ -73,13 +81,13 @@ describe('Controller: AACallerInputCtrl', function () {
   }));
 
   afterEach(function () {
+
     $rootScope = null;
     $scope = null;
 
     featureToggleService = null;
     aaLanguageService = null;
     aaCommonService = null;
-
     AAUiModelService = null;
     AutoAttendantCeMenuModelService = null;
 
@@ -88,10 +96,6 @@ describe('Controller: AACallerInputCtrl', function () {
     controller = null;
 
     aaUiModel = null;
-    inputActions = null;
-    schedule = null;
-    index = null;
-    menuId = null;
 
   });
 
@@ -114,7 +118,6 @@ describe('Controller: AACallerInputCtrl', function () {
       expect(aaCommonService.isFormDirty()).toEqual(true);
 
     });
-
     it('should add a new keyAction object into inputActions array without the key already in use', function () {
       var keys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '#', '*'];
       var keysWithout3 = ['0', '1', '2', '4', '5', '6', '7', '8', '9', '#', '*'];

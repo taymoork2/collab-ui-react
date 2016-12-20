@@ -33,11 +33,11 @@
       <div class="panel">
         <div ng-if="aaCallerInput.inputActions.length" class="row aa-pm-vertical-line" ng-repeat="keyAction in aaCallerInput.inputActions">
           <div class="row">
-            <div class="small-2 columns">
-              <cs-select ng-model="keyAction.key" options="keyAction.keys" placeholder="aaCallerInput.selectPlaceholder" on-change-fn="aaCallerInput.keyChanged($index, keyAction.key)" class="aa-pm-key-select" icon="icon-chevron-down" ng-class="{'not-selected':!keyAction.key}">
-              </cs-select>
-            </div>
             <form name="nameKeyedInputForm" novalidate>
+              <div class="small-2 columns">
+                <cs-select ng-model="keyAction.key" options="keyAction.keys" placeholder="aaCallerInput.selectPlaceholder" on-change-fn="aaCallerInput.keyChanged($index, keyAction.key)" class="aa-pm-key-select" icon="icon-chevron-down" ng-class="{'not-selected':!keyAction.key}">
+                </cs-select>
+              </div>
               <div class="small-9 columns">
                 <input cs-input type="text" name="callerInput" placeholder="{{ :: 'autoAttendant.callerInputValue' | translate }}" ng-maxlength="aaCallerInput.maxVariableLength" cs-input-messages="aaCallerInput.validationMsg" ng-change="aaCallerInput.keyInputChanged($index, keyAction)" ng-model="keyAction.value" class="aa-pm-action-input">
                 </input>
