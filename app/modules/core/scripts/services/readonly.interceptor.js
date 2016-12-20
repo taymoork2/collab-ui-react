@@ -27,7 +27,7 @@
       '/WBXService/XMLService',
       '/meetingsapi/v1/users/',
       '/meetingsapi/v1/files/',
-      '/releaseChannels'
+      '/channels'
     ];
 
     return {

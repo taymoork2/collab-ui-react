@@ -29,9 +29,9 @@
     function loadData() {
       return FusionClusterService.getResourceGroups()
         .then(function (response) {
-          var group = _.find(response.groups, { 'id': resourceGroup.id });
-          vm.originalData.availableClusters = filterHMClusters(response.unassigned);
-          vm.originalData.clustersInResourceGroup = filterHMClusters(group.clusters);
+          var group = _.find(response.groups, { id: resourceGroup.id });
+          vm.originalData.availableClusters = filterNonExpresswayClusters(response.unassigned);
+          vm.originalData.clustersInResourceGroup = group.clusters;
           vm.newData = angular.copy(vm.originalData);
           vm.loadingState = false;
         })
@@ -54,9 +54,9 @@
       vm.newData.availableClusters.push(cluster);
     }
 
-    function filterHMClusters(clusters) {
+    function filterNonExpresswayClusters(clusters) {
       return _.filter(clusters, function (cluster) {
-        return cluster.targetType !== 'mf_mgmt';
+        return cluster.targetType === 'c_mgmt';
       });
     }
 

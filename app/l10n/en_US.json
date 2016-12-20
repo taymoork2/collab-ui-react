@@ -1966,6 +1966,7 @@
         "add-resource-group": "Create new Resource Group",
         "expressway": "Expressway",
         "mediafusion": "Media",
+        "hds": "Data Security",
         "no-services": "No services",
         "missing-clusters": "<a ng-click=\"{{onclick}}\">Assign clusters</a> and users to complete this group",
         "missing-users": "<a ng-click=\"{{onclick}}\">Assign users</a> to complete this group",
