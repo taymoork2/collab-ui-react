@@ -3,10 +3,10 @@
 
   angular
     .module('HDS')
-    .controller('HDSClusterController', HDSClusterController);
+    .controller('HDSSidepanelClusterController', HDSSidepanelClusterController);
 
   /* @ngInject */
-  function HDSClusterController($scope, $state, $stateParams, $translate, ClusterService, FusionUtils, FusionClusterService, Notification, $window) {
+  function HDSSidepanelClusterController($scope, $state, $stateParams, $translate, ClusterService, FusionUtils, FusionClusterService, Notification, $window) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.clusterId;
@@ -25,13 +25,9 @@
     }
 
     $scope.$watch(function () {
-      return [
-        ClusterService.getCluster(vm.connectorType, vm.clusterId),
-        ClusterService.getCluster(vm.connectorType, vm.clusterId)
-      ];
+      return ClusterService.getCluster(vm.connectorType, vm.clusterId);
     }, function (newValue) {
-      vm.cluster = newValue[0];
-      vm.managementCluster = newValue[1];
+      vm.cluster = newValue;
 
       if (vm.cluster && _.size(vm.cluster.connectors) === 0) {
         FusionClusterService.getPreregisteredClusterAllowList()
@@ -62,11 +58,7 @@
     buildCluster();
 
     function hasConnectorAlarm(connector) {
-      if (connector.alarms.length > 0) {
-        return true;
-      } else {
-        return false;
-      }
+      return connector.alarms.length > 0;
     }
 
     function goToHds(hostname) {

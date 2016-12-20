@@ -2596,8 +2596,8 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                controllerAs: 'hdsClusterController',
-                controller: 'HDSClusterController',
+                controllerAs: 'hdsSidepanelClusterController',
+                controller: 'HDSSidepanelClusterController',
                 templateUrl: 'modules/hds/cluster-sidepanel/cluster-details.html'
               },
               'header@hds-cluster-details': {
