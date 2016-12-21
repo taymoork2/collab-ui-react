@@ -659,7 +659,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
           deferred.resolve(1);
           $scope.$digest();
           expect(AAMediaUploadService.upload).not.toHaveBeenCalled();
-          expect(AANotificationService.error).toHaveBeenCalledWith('autoattendant.fileUploadSizeIncorrect');
+          expect(AANotificationService.error).toHaveBeenCalledWith('autoAttendant.fileUploadSizeIncorrect');
           expect(Analytics.trackEvent).not.toHaveBeenCalled();
         });
 
