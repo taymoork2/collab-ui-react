@@ -82,13 +82,19 @@ class PlaceCallOverview implements ng.IComponentController {
       };
       this.features.push(service);
     }
-    service = {
-      name: this.$translate.instant('telephonyPreview.internationalDialing'),
-      state: 'internationalDialing',
-      detail: this.DialingService.getInternationalDialing(LineConsumerType.PLACES),
-      actionAvailable: true,
-    };
-    this.features.push(service);
+
+    this.DialingService.isDisableInternationalDialing().then((isDisableInternationalDialing) => {
+      if (!isDisableInternationalDialing) {
+        service = {
+          name: this.$translate.instant('telephonyPreview.internationalDialing'),
+          state: 'internationalDialing',
+          detail: this.DialingService.getInternationalDialing(LineConsumerType.PLACES),
+          actionAvailable: true,
+        };
+        this.features.push(service);
+      }
+    });
+
     if (this.currentPlace.type === 'huron') {
       service = {
         name: this.$translate.instant('telephonyPreview.localDialing'),

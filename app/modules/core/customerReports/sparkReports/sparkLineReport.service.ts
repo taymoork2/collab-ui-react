@@ -12,6 +12,7 @@ import {
   IConversation,
   IConversationWrapper,
   IMediaData,
+  IMetricsData,
 } from './sparkReportInterfaces';
 
 export class SparkLineReportService {
@@ -21,13 +22,16 @@ export class SparkLineReportService {
   private activeDeferred: ng.IDeferred<any>;
   private conversationsDeferred: ng.IDeferred<any>;
   private mediaDeferred: ng.IDeferred<any>;
+  private metricsDeferred: ng.IDeferred<any>;
   private mostActiveDeferred: ng.IDeferred<any>;
 
   /* @ngInject */
   constructor(
+    private $translate: ng.translate.ITranslateService,
     private $q: ng.IQService,
     private CommonReportService: CommonReportService,
     private ReportConstants: ReportConstants,
+    private chartColors,
   ) {}
 
   // Active User Data
@@ -277,6 +281,66 @@ export class SparkLineReportService {
       }
     }, (error): Array<IMediaData> => {
       return this.CommonReportService.returnErrorCheck(error, 'mediaQuality.customerError', []);
+    });
+  }
+
+  // Call Metrics Services
+  public getMetricsData(filter: ITimespan): ng.IHttpPromise<Array<IMetricsData>> {
+    // cancel any currently running jobs
+    if (this.metricsDeferred) {
+      this.metricsDeferred.resolve(this.ReportConstants.ABORT);
+    }
+    this.metricsDeferred = this.$q.defer();
+
+    let responseArray: Array<IMetricsData> = [];
+    let defaultMetrics: IMetricsData = {
+      dataProvider: [{
+        callCondition: this.$translate.instant('callMetrics.audioCalls'),
+        numCalls: 0,
+        percentage: 0,
+        color: this.chartColors.colorAttentionBase,
+      }, {
+        callCondition: this.$translate.instant('callMetrics.videoCalls'),
+        numCalls: 0,
+        percentage: 0,
+        color: this.chartColors.primaryColorBase,
+      }],
+      displayData: undefined,
+      dummy: false,
+    };
+
+    let options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter, 'callMetrics', this.SIMPLE_COUNT);
+    options.cache = false;
+    return this.CommonReportService.getCustomerAltReportByType(options, this.metricsDeferred).then((response: any): Array<IMetricsData> => {
+      let data: Array<any> = _.get(response, 'data.data', []);
+      _.forEach(data, (dataItem: any): void => {
+        let returnItem: IMetricsData = _.cloneDeep(defaultMetrics);
+        let details: any = _.get(dataItem, 'details', undefined);
+
+        if (details) {
+          let totalCalls: number = _.toInteger(details.totalCalls);
+          if (totalCalls > 0) {
+            let audioCalls: number = _.toInteger(details.sparkUcAudioCalls);
+            let successfulCalls: number = _.toInteger(details.totalSuccessfulCalls);
+            let videoCalls: number = _.toInteger(details.sparkUcVideoCalls) + _.toInteger(details.sparkVideoCalls);
+
+            returnItem.dataProvider[0].numCalls = audioCalls;
+            returnItem.dataProvider[0].percentage = this.CommonReportService.getPercentage(audioCalls, successfulCalls);
+            returnItem.dataProvider[1].numCalls = videoCalls;
+            returnItem.dataProvider[1].percentage = this.CommonReportService.getPercentage(videoCalls, successfulCalls);
+
+            returnItem.displayData = {
+              totalCalls: totalCalls,
+              totalAudioDuration: _.toInteger(details.totalAudioDuration),
+              totalFailedCalls: _.toInteger(details.totalFailedCalls),
+            };
+          }
+        }
+
+        responseArray.unshift(returnItem);
+      });
+
+      return responseArray;
     });
   }
 }

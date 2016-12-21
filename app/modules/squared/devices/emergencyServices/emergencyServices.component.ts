@@ -53,6 +53,11 @@ export class EmergencyServicesCtrl {
     this.EmergencyServicesService.getImpactedUsers(this.emergency.emergencyNumber).then(users => this.impactedUsers = users);
   }
 
+  public getoptions(filter: string): void {
+    this.EmergencyServicesService.getOptions(filter)
+      .then(options => this.options = options);
+  }
+
   public changes(): void {
     if (this.EmergencyServicesService.matchesOriginalConfig(this.emergency)) {
       this.resetSettings();

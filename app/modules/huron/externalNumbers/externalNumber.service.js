@@ -34,7 +34,7 @@
 
     return service;
 
-    function refreshNumbers(customerId, queryNumberType) {
+    function refreshNumbers(customerId, queryNumberType, filter) {
       return isTerminusCustomer(customerId)
         .then(function (isSupported) {
           if (isSupported) {
@@ -73,9 +73,10 @@
           if (!_.isEmpty(queryNumberType)) {
             externalNumberType = queryNumberType;
           }
+          filter = !filter ? ExternalNumberPool.NO_PATTERN_MATCHING : filter;
           return ExternalNumberPool.getExternalNumbers(
             customerId,
-            ExternalNumberPool.NO_PATTERN_MATCHING,
+            filter,
             ExternalNumberPool.ASSIGNED_AND_UNASSIGNED_NUMBERS,
             externalNumberType)
           .then(formatNumberLabels)

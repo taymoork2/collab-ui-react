@@ -358,7 +358,7 @@ export class SparkReportService {
     }
   }
 
-  // Call Metrics Dat
+  // Call Metrics Data
   public getCallMetricsData(filter: ITimespan): ng.IHttpPromise<IMetricsData> {
     // cancel any currently running jobs
     if (this.metricsDeferred) {
