@@ -120,6 +120,7 @@ describe('assignServices', function () {
 
     spyOn(_Orgservice_, 'getUnlicensedUsers');
     spyOn(_FeatureToggleService_, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(false));
+    spyOn(_FeatureToggleService_, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.resolve(false));
     spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(getLicensesUsage));
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
 
