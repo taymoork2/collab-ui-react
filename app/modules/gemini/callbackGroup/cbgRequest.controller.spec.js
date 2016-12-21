@@ -32,6 +32,7 @@ describe('controller: CbgRequestCtrl', function () {
 
   function initSpecs() {
     spyOn(Notification, 'error');
+    spyOn(Notification, 'notify');
     $state.modal = jasmine.createSpyObj('modal', ['close']);
     spyOn(cbgService, 'postRequest').and.returnValue($q.resolve());
     spyOn(cbgService, 'getCountries').and.returnValue($q.resolve());
@@ -128,7 +129,7 @@ describe('controller: CbgRequestCtrl', function () {
       cbgService.postRequest.and.returnValue($q.resolve(cbgsData));
       ctrl.onSubmit();
       $scope.$apply();
-      expect(Notification.error).toHaveBeenCalled();
+      expect(Notification.notify).toHaveBeenCalled();
     });
   });
 

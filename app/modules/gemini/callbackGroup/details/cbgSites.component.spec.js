@@ -34,7 +34,7 @@ describe('Component: cbgSites', function () {
   function initSpies() {
     spyOn($window, 'open');
     spyOn(PreviousState, 'go');
-    spyOn(Notification, 'error');
+    spyOn(Notification, 'notify');
     spyOn(cbgService, 'moveSite').and.returnValue($q.resolve());
     spyOn($modal, 'open').and.returnValue({ result: $q.resolve() });
   }
@@ -76,7 +76,7 @@ describe('Component: cbgSites', function () {
       expect(ctrl.sites.length).toBe(1);
     });
 
-    it('should call Notification.error in onmoveSite', function () {
+    it('should call Notification.notify in onmoveSite', function () {
       var moveSiteResponse = preData.common;
       moveSiteResponse.content.data.returnCode = 1000;
       var site = {
@@ -87,7 +87,7 @@ describe('Component: cbgSites', function () {
       cbgService.moveSite.and.returnValue($q.resolve(moveSiteResponse));
       ctrl.onClick(site, toGroupId);
       $scope.$apply();
-      expect(Notification.error).toHaveBeenCalled();
+      expect(Notification.notify).toHaveBeenCalled();
     });
 
     it('should cann PreviousState.go in oncancel', function () {

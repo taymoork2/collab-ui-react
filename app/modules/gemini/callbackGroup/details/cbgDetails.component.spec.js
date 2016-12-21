@@ -126,7 +126,7 @@ describe('Component: CbgDetails', function () {
       obj.CurrentCallbackGroup.content.data.returnCode = 1000;
       ctrl.$onInit();
       $scope.$apply();
-      expect(Notification.error).toHaveBeenCalled();
+      expect(Notification.notify).toHaveBeenCalled();
     });
   });
 

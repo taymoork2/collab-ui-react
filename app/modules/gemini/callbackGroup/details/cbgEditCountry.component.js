@@ -9,7 +9,7 @@
     });
 
   /* @ngInject */
-  function cbgEditCountry($scope, $state, $stateParams, $timeout, $translate, PreviousState, Notification, cbgService) {
+  function cbgEditCountry($scope, $state, $rootScope, $stateParams, $timeout, $translate, PreviousState, Notification, cbgService, gemService) {
     var vm = this;
     vm.$onInit = $onInit;
     vm.allCountries = [];
@@ -130,13 +130,14 @@
         .then(function (res) {
           var resJson = _.get(res.content, 'data');
           if (resJson.returnCode) {
-            Notification.error('Failed to update callback Group');
+            Notification.notify(gemService.showError(resJson.returnCode));
             return;
           }
-          PreviousState.go();
+          $rootScope.$emit('cbgsUpdate', true);
+          $state.go(PreviousState.get(), PreviousState.getParams(), { reload: true });
         })
         .catch(function (err) {
-          Notification.errorResponse(err, 'errors.statusError', { status: err.status }); // TODO will defined the wording
+          Notification.errorResponse(err, 'errors.statusError', { status: err.status });
         });
     }
 

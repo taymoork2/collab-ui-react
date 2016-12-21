@@ -53,15 +53,8 @@
         type: 'dialog',
         templateUrl: 'modules/gemini/callbackGroup/details/approveConfirm.tpl.html'
       }).result.then(function () {
-        vm.isNotReload = false;
+        setButtonStatus('Approve');
         updateCallbackGroupStatus('approve');
-        $modal.open({
-          type: 'dialog',
-          templateUrl: 'modules/gemini/callbackGroup/details/provisionConfirm.tpl.html'
-        }).result.then(function () {
-          vm.isNotReload = false;
-          updateCallbackGroupStatus('provision');
-        });
       });
     }
 
@@ -102,7 +95,7 @@
         .then(function (res) {
           var resJson = _.get(res.content, 'data');
           if (resJson.returnCode) {
-            Notification.error('Failed to get callback Group');
+            Notification.notify(gemService.showError(resJson.returnCode));
             return;
           }
           vm.model = resJson.body;
@@ -115,7 +108,7 @@
           vm.loading = false;
         })
         .catch(function (err) {
-          Notification.errorResponse(err, 'errors.statusError', { status: err.status }); // TODO will defined the wording
+          Notification.errorResponse(err, 'errors.statusError', { status: err.status });
         });
     }
 
@@ -124,7 +117,7 @@
         .then(function (res) {
           var returnCode = _.get(res.content, 'data.returnCode');
           if (returnCode) {
-            Notification.error('Fail to get notes');//TODO wording
+            Notification.notify(gemService.showError(returnCode));
             return;
           }
           vm.notes = _.get(res.content, 'data.body');
@@ -136,6 +129,7 @@
         .then(function (res) {
           var resArr = _.get(res.content, 'data');
           vm.remedyTicket = _.first(resArr);
+          vm.remedyTicket.createTime = moment(vm.remedyTicket.createTime).toDate().toString();
           vm.remedyTicketLoading = false;
         });
 
@@ -146,7 +140,7 @@
         .then(function (res) {
           var resJson = _.get(res.content, 'data');
           if (resJson.returnCode) {
-            Notification.error('Fail to get activity logs');//TODO wording
+            Notification.notify(gemService.showError(resJson.returnCode));
             return;
           }
           vm.allHistories = resJson.body;
@@ -163,13 +157,20 @@
             Notification.notify(gemService.showError(resJson.returnCode));
             return;
           }
-          $rootScope.$emit('cbgsUpdate', true);
-          if (!vm.isNotReload) {
-            $state.reload();
+
+          if (operation === 'approve') {
+            $modal.open({
+              type: 'dialog',
+              templateUrl: 'modules/gemini/callbackGroup/details/provisionConfirm.tpl.html'
+            }).result.then(function () {
+              updateCallbackGroupStatus('provision');
+            });
           }
+          $state.reload();
+          $rootScope.$emit('cbgsUpdate', true);
         })
         .catch(function (err) {
-          Notification.errorResponse(err, 'errors.statusError', { status: err.status }); // TODO will defined the wording
+          Notification.errorResponse(err, 'errors.statusError', { status: err.status });
         });
     }
 
