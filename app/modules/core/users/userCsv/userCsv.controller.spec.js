@@ -1,96 +1,203 @@
+/* globals fit fdescribe */
+
 'use strict';
 
-describe('OnboardCtrl: Ctrl', function () {
-  var controller, $controller, $modal, $scope, $timeout, $q, $state, $previousState, modalDefer, $interval, Analytics, Notification, Userservice, Orgservice, FeatureToggleService, Authinfo, CsvDownloadService, HuronCustomer, UserCsvService, ResourceGroupService, USSService;
-  var getUserMe, getMigrateUsers, getMyFeatureToggles;
-  var fusionServices, headers;
-  var customer;
-  var resourceGroups;
-  var uploadedDataCapture;
+var userCsvServiceModule = require('./userCsv.service');
+var csvDownloadModule = require('modules/core/csvDownload').default;
 
-  beforeEach(angular.mock.module('Core'));
-  beforeEach(angular.mock.module('Hercules'));
-  beforeEach(angular.mock.module('Huron'));
-  beforeEach(angular.mock.module('Sunlight'));
-  beforeEach(angular.mock.module('Messenger'));
+describe('userCsv.controller', function () {
 
-  beforeEach(inject(function (_$controller_, _$interval_, _$modal_, _$previousState_, _$q_, $rootScope, _$state_, _$timeout_, _Authinfo_, _Analytics_, _CsvDownloadService_, _FeatureToggleService_, _HuronCustomer_, _Notification_, _Orgservice_, _UserCsvService_, _Userservice_, _ResourceGroupService_, _USSService_) {
-    $scope = $rootScope.$new();
-    $controller = _$controller_;
-    $timeout = _$timeout_;
-    $interval = _$interval_;
-    $q = _$q_;
-    $state = _$state_;
-    $modal = _$modal_;
-    $previousState = _$previousState_;
+  beforeEach(init);
 
-    Notification = _Notification_;
-    Userservice = _Userservice_;
-    Orgservice = _Orgservice_;
-    FeatureToggleService = _FeatureToggleService_;
-    Authinfo = _Authinfo_;
-    CsvDownloadService = _CsvDownloadService_;
-    HuronCustomer = _HuronCustomer_;
-    UserCsvService = _UserCsvService_;
-    ResourceGroupService = _ResourceGroupService_;
-    USSService = _USSService_;
-    Analytics = _Analytics_;
+  ///////////////////////////////
 
-    spyOn($state, 'go').and.returnValue($q.resolve());
-    spyOn(Analytics, 'trackAddUsers').and.returnValue($q.resolve());
-    spyOn(Authinfo, 'isOnline').and.returnValue(true);
-    modalDefer = $q.defer();
-    spyOn($modal, 'open').and.returnValue({
-      result: modalDefer.promise
+  function init() {
+    this.initModules('Core', 'Hercules', 'Huron', 'Sunlight', 'Messenger', userCsvServiceModule, csvDownloadModule);
+
+    this.injectDependencies('$scope', '$controller', '$timeout', '$interval', '$q', '$state',
+      '$modal', '$previousState', 'Notification', 'Userservice', 'Orgservice', 'FeatureToggleService', 'Authinfo', 'CsvDownloadService', 'HuronCustomer',
+      'UserCsvService', 'ResourceGroupService', 'USSService', 'Analytics');
+
+    initFixtures.apply(this);
+    initMocks.apply(this);
+    initDependencySpies.apply(this);
+  }
+
+  function initDependencySpies() {
+    var _this = this;
+    spyOn(this.$state, 'go').and.returnValue(this.$q.resolve());
+    spyOn(this.Analytics, 'trackAddUsers').and.returnValue(this.$q.when());
+    spyOn(this.Authinfo, 'isOnline').and.returnValue(true);
+    this.modalDefer = this.$q.defer();
+    spyOn(this.$modal, 'open').and.returnValue({
+      result: this.modalDefer.promise
     });
 
-    getUserMe = getJSONFixture('core/json/users/me.json');
-    getMigrateUsers = getJSONFixture('core/json/users/migrate.json');
-    getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
-    fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
-    headers = getJSONFixture('core/json/users/headers.json');
-    customer = getJSONFixture('huron/json/settings/customer.json');
-    resourceGroups = getJSONFixture('core/json/users/resource_groups.json');
-
-    spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.resolve(fusionServices));
-    spyOn(CsvDownloadService, 'getCsv').and.callFake(function (type) {
+    spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.resolve(this.fusionServices));
+    spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
-        return $q.resolve(headers);
+        return this.$q.resolve(_this.headers);
       } else {
-        return $q.resolve({});
+        return this.$q.resolve({});
       }
     });
-    spyOn(Notification, 'notify');
-    spyOn(Notification, 'error');
-    spyOn(Orgservice, 'getUnlicensedUsers');
-    spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
-    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.resolve(false));
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
-    spyOn(Userservice, 'onboardUsers');
-    spyOn(Userservice, 'bulkOnboardUsers');
-    spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
-    spyOn(Userservice, 'migrateUsers').and.returnValue(getMigrateUsers);
-    spyOn(Userservice, 'updateUsers');
-    spyOn($scope, '$broadcast').and.callThrough();
-    spyOn(HuronCustomer, 'get').and.returnValue($q.resolve(customer));
-    spyOn(ResourceGroupService, 'getAll').and.returnValue($q.resolve(resourceGroups.items));
-    spyOn(USSService, 'getAllUserProps').and.returnValue($q.resolve([]));
-    spyOn(USSService, 'updateBulkUserProps').and.returnValue($q.resolve());
 
-    spyOn($previousState, 'get').and.returnValue({
+    spyOn(this.Notification, 'notify').and.callThrough();
+    spyOn(this.Notification, 'error').and.callThrough();
+    spyOn(this.Orgservice, 'getUnlicensedUsers').and.callThrough();
+
+    spyOn(this.FeatureToggleService, 'getFeaturesForUser').and.returnValue(this.getMyFeatureToggles);
+    spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'supports').and.callFake(function () {
+      return _this.$q.resolve(false);
+    });
+
+    spyOn(this.Userservice, 'onboardUsers').and.callThrough();
+    spyOn(this.Userservice, 'bulkOnboardUsers').and.callThrough();
+    spyOn(this.Userservice, 'getUser').and.returnValue(this.getUserMe);
+    spyOn(this.Userservice, 'migrateUsers').and.returnValue(this.getMigrateUsers);
+    spyOn(this.Userservice, 'updateUsers').and.callThrough();
+
+    spyOn(this.$scope, '$broadcast').and.callThrough();
+    spyOn(this.HuronCustomer, 'get').and.returnValue(this.$q.resolve(this.customer));
+    spyOn(this.ResourceGroupService, 'getAll').and.returnValue(this.$q.resolve(this.resourceGroups.items));
+
+    spyOn(this.USSService, 'getAllUserProps').and.returnValue(this.$q.resolve([]));
+    spyOn(this.USSService, 'updateBulkUserProps').and.returnValue(this.$q.resolve());
+
+    spyOn(this.$previousState, 'get').and.returnValue({
       state: {
         name: 'test.state'
       }
     });
-  }));
+  }
+
+  function initFixtures() {
+    this.getUserMe = getJSONFixture('core/json/users/me.json');
+    this.getMigrateUsers = getJSONFixture('core/json/users/migrate.json');
+    this.getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
+    this.fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
+    this.headers = getJSONFixture('core/json/users/headers.json');
+    this.customer = getJSONFixture('huron/json/settings/customer.json');
+    this.resourceGroups = getJSONFixture('core/json/users/resource_groups.json');
+  }
+
+  function initMocks() {
+
+    this.bulkOnboardUsersResponseMock = function (statusCode, additionalCodes) {
+      var _this = this;
+      var statusCodes = additionalCodes || [];
+
+      return function (uploadedData) {
+        _this.uploadedDataCapture = uploadedData;
+        return bulkOnboardSuccessResponse.apply(_this, [uploadedData, statusCode, statusCodes]);
+      };
+    };
+
+    this.bulkOnboardUsersErrorResponseMock = function (statusCode, headers, successAfterTries, successCode) {
+      var _this = this;
+      var triesUntilSuccess = successAfterTries || Number.MAX_VALUE;
+
+      return function (uploadedData) {
+        _this.uploadedDataCapture = uploadedData;
+        if (triesUntilSuccess > 0) {
+          // fail this request
+          triesUntilSuccess--;
+          var response = {
+            status: statusCode,
+            _headers: headers,
+            headers: function getHeader(name) {
+              return headers[name];
+            },
+            data: {
+              userResponse: []
+            }
+          };
+          return _this.$q.reject(response);
+        } else {
+          // reached number of tries before we pretend to succeed
+          return bulkOnboardSuccessResponse.apply(_this, [uploadedData, successCode]);
+        }
+      };
+    };
+
+
+    this.bulkOnboardUsersResponseUpperCaseEmailMock = function (statusCode) {
+      var _this = this;
+      return function (uploadedData) {
+        _this.uploadedDataCapture = uploadedData;
+        return bulkOnboardSuccessResponseUpperCaseEmail.apply(_this, [uploadedData, statusCode]);
+      };
+    };
+
+    /**
+     * Mock the response for the this.Userservice.bulkOnboardUsers function.
+     * If additionalCodes object supplied, randomly assigns these codes to users up to
+     * the specified number for each code.  Then uses StatusCode for the rest.
+     */
+
+    function bulkOnboardSuccessResponse(uploadedData, defaultStatusCode, statusCodes) {
+      statusCodes = statusCodes || [];
+      var response = {
+        data: {
+          userResponse: []
+        }
+      };
+
+      // set up the status codes to return
+      function pickRandomStatusCode() {
+        var status = defaultStatusCode;
+        if (statusCodes.length > 0) {
+          var idx = _.random(0, statusCodes.length - 1);
+          status = statusCodes[idx].status;
+          statusCodes[idx].users--;
+          if (statusCodes[idx].users === 0) {
+            statusCodes.splice(idx, 1);
+          }
+        }
+        return status;
+      }
+
+      _.forEach(uploadedData, function (user) {
+        var status = pickRandomStatusCode();
+        response.data.userResponse.push({
+          status: status,
+          httpStatus: status,
+          email: user.address,
+          uuid: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c'
+        });
+      });
+      return this.$q.resolve(response);
+    }
+
+    function bulkOnboardSuccessResponseUpperCaseEmail(uploadedData, defaultStatusCode) {
+      this.uploadedDataCapture = uploadedData;
+      var response = {
+        data: {
+          userResponse: []
+        }
+      };
+
+      _.forEach(uploadedData, function (user) {
+        response.data.userResponse.push({
+          status: defaultStatusCode,
+          httpStatus: defaultStatusCode,
+          email: _.toUpper(user.address),
+          uuid: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c'
+        });
+      });
+      return this.$q.resolve(response);
+    }
+
+  }
 
   function initController() {
-    controller = $controller('UserCsvCtrl', {
-      $scope: $scope,
-      $state: $state
+    this.controller = this.$controller('UserCsvCtrl', {
+      $scope: this.$scope,
+      $state: this.$state
     });
 
-    $scope.$apply();
+    this.$scope.$apply();
   }
 
   // generates a valid CSV with the specified number of users
@@ -121,115 +228,10 @@ describe('OnboardCtrl: Ctrl', function () {
     return $.csv.fromArrays(csv);
   }
 
-  //
-  // statusCode
-
-  /**
-   * Mock the response for the Userservice.bulkOnboardUsers function.
-   * If additionalCodes object supplied, randomly assigns these codes to users up to
-   * the specified number for each code.  Then uses StatusCode for the rest.
-   */
-
-  function bulkOnboardSuccessResponse(uploadedData, defaultStatusCode, statusCodes) {
-    statusCodes = statusCodes || [];
-    var response = {
-      data: {
-        userResponse: []
-      }
-    };
-
-    // set up the status codes to return
-    function pickRandomStatusCode() {
-      var status = defaultStatusCode;
-      if (statusCodes.length > 0) {
-        var idx = _.random(0, statusCodes.length - 1);
-        status = statusCodes[idx].status;
-        statusCodes[idx].users--;
-        if (statusCodes[idx].users === 0) {
-          statusCodes.splice(idx, 1);
-        }
-      }
-      return status;
-    }
-
-    _.forEach(uploadedData, function (user) {
-      var status = pickRandomStatusCode();
-      response.data.userResponse.push({
-        status: status,
-        httpStatus: status,
-        email: user.address,
-        uuid: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c'
-      });
-    });
-    return $q.resolve(response);
-  }
-
-
-  function bulkOnboardUsersResponseMock(statusCode, additionalCodes) {
-    var statusCodes = additionalCodes || [];
-
-    return function (uploadedData) {
-      uploadedDataCapture = uploadedData;
-      return bulkOnboardSuccessResponse(uploadedData, statusCode, statusCodes);
-    };
-  }
-
-  function bulkOnboardSuccessResponseUpperCaseEmail(uploadedData, defaultStatusCode) {
-    uploadedDataCapture = uploadedData;
-    var response = {
-      data: {
-        userResponse: []
-      }
-    };
-
-    _.forEach(uploadedData, function (user) {
-      response.data.userResponse.push({
-        status: defaultStatusCode,
-        httpStatus: defaultStatusCode,
-        email: _.toUpper(user.address),
-        uuid: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c'
-      });
-    });
-    return $q.resolve(response);
-  }
-
-  function bulkOnboardUsersResponseUpperCaseEmailMock(statusCode) {
-    return function (uploadedData) {
-      uploadedDataCapture = uploadedData;
-      return bulkOnboardSuccessResponseUpperCaseEmail(uploadedData, statusCode);
-    };
-  }
-
-  function bulkOnboardUsersErrorResponseMock(statusCode, headers, successAfterTries, successCode) {
-    var triesUntilSuccess = successAfterTries || Number.MAX_VALUE;
-
-    return function (uploadedData) {
-      uploadedDataCapture = uploadedData;
-      if (triesUntilSuccess > 0) {
-        // fail this request
-        triesUntilSuccess--;
-        var response = {
-          status: statusCode,
-          _headers: headers,
-          headers: function getHeader(name) {
-            return headers[name];
-          },
-          data: {
-            userResponse: []
-          }
-        };
-        return $q.reject(response);
-      } else {
-        // reached number of tries before we pretend to succeed
-        return bulkOnboardSuccessResponse(uploadedData, successCode);
-      }
-    };
-  }
+  //////////////////////////////
 
   describe('Bulk Users CSV', function () {
-    beforeEach(function () {
-      initController();
-    });
+
     var oneColumnValidUser = 'User ID/Email (Required),\njohndoe@example.com,';
     var oneColumnInvalidUser = 'First Name,\nJohn,';
     var twoValidUsers = generateUsersCsv(2);
@@ -237,200 +239,203 @@ describe('OnboardCtrl: Ctrl', function () {
     var twoValidUsersWithSpaces = 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\n , , ,johndoe@example.com, , ,true,true,true,true\n , , ,janedoe@example.com, ,  ,f,f,f,f';
     var threeUsersOneDuplicateEmail = 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nFirst0,Last0,First0 Last0,firstlast0@example.com,5001,,true,true,true,true\nFirst1,Last1,First1 Last1,firstlast1@example.com,5002,,true,true,true,true\nFirst2,Last2,First2 Last2,firstlast0@example.com,5002,,true,true,true,true';
 
-    beforeEach(installPromiseMatchers);
+    beforeEach(function () {
+      installPromiseMatchers.apply(this);
+      initController.apply(this);
+    });
 
     describe('Upload CSV', function () {
       describe('without file content', function () {
         it('should have 0 upload progress', function () {
-          expect(controller.model.uploadProgress).toEqual(0);
+          expect(this.controller.model.uploadProgress).toEqual(0);
         });
         it('should not go to the next step', function () {
-          var promise = controller.csvUploadNext();
-          $scope.$apply();
+          var promise = this.controller.csvUploadNext();
+          this.$scope.$apply();
           expect(promise).toBeRejected();
-          expect(Notification.error).toHaveBeenCalledWith('firstTimeWizard.uploadCsvEmpty');
+          expect(this.Notification.error).toHaveBeenCalledWith('firstTimeWizard.uploadCsvEmpty');
         });
       });
       describe('with file content', function () {
         beforeEach(function () {
-          controller.model.file = twoValidUsers;
-          $scope.$apply();
-          $timeout.flush();
+          this.controller.model.file = twoValidUsers;
+          this.$scope.$apply();
+          this.$timeout.flush();
         });
         it('should have 100 upload progress when the file model changes', function () {
-          expect(controller.model.uploadProgress).toEqual(100);
+          expect(this.controller.model.uploadProgress).toEqual(100);
         });
         it('should go to next step', function () {
-          var promise = controller.csvUploadNext();
-          $scope.$apply();
+          var promise = this.controller.csvUploadNext();
+          this.$scope.$apply();
           expect(promise).toBeResolved();
         });
         it('should not allow to go next after resetting file', function () {
-          controller.resetFile();
-          $scope.$apply();
-          $timeout.flush();
-          var promise = controller.csvUploadNext();
-          $scope.$apply();
+          this.controller.resetFile();
+          this.$scope.$apply();
+          this.$timeout.flush();
+          var promise = this.controller.csvUploadNext();
+          this.$scope.$apply();
           expect(promise).toBeRejected();
-          expect(Notification.error).toHaveBeenCalledWith('firstTimeWizard.uploadCsvEmpty');
+          expect(this.Notification.error).toHaveBeenCalledWith('firstTimeWizard.uploadCsvEmpty');
         });
       });
       it('should notify error on file size error', function () {
-        controller.onFileSizeError();
-        $scope.$apply();
-        expect(Notification.error).toHaveBeenCalledWith('firstTimeWizard.csvMaxSizeError');
+        this.controller.onFileSizeError();
+        this.$scope.$apply();
+        expect(this.Notification.error).toHaveBeenCalledWith('firstTimeWizard.csvMaxSizeError');
       });
       it('should notify error on file type error', function () {
-        controller.onFileTypeError();
-        $scope.$apply();
-        expect(Notification.error).toHaveBeenCalledWith('firstTimeWizard.csvFileTypeError');
+        this.controller.onFileTypeError();
+        this.$scope.$apply();
+        expect(this.Notification.error).toHaveBeenCalledWith('firstTimeWizard.csvFileTypeError');
       });
       describe('valid one column file content', function () {
         beforeEach(function () {
-          controller.model.file = oneColumnValidUser;
-          $scope.$apply();
-          $timeout.flush();
+          this.controller.model.file = oneColumnValidUser;
+          this.$scope.$apply();
+          this.$timeout.flush();
         });
         it('should have 100 upload progress', function () {
-          expect(controller.model.uploadProgress).toEqual(100);
+          expect(this.controller.model.uploadProgress).toEqual(100);
         });
         it('should go to next step', function () {
-          var promise = controller.csvUploadNext();
-          $scope.$apply();
+          var promise = this.controller.csvUploadNext();
+          this.$scope.$apply();
           expect(promise).toBeResolved();
         });
       });
       describe('invalid file content that does not have the required column', function () {
         beforeEach(function () {
-          controller.model.file = oneColumnInvalidUser;
-          $scope.$apply();
-          $timeout.flush();
+          this.controller.model.file = oneColumnInvalidUser;
+          this.$scope.$apply();
+          this.$timeout.flush();
         });
         it('should have 100 upload progress', function () {
-          expect(controller.model.uploadProgress).toEqual(100);
+          expect(this.controller.model.uploadProgress).toEqual(100);
         });
         it('should not go to the next step', function () {
-          var promise = controller.csvUploadNext();
-          $scope.$apply();
+          var promise = this.controller.csvUploadNext();
+          this.$scope.$apply();
           expect(promise).toBeRejected();
-          expect(Notification.error).toHaveBeenCalledWith('firstTimeWizard.uploadCsvEmpty');
+          expect(this.Notification.error).toHaveBeenCalledWith('firstTimeWizard.uploadCsvEmpty');
         });
       });
       describe('licenseUnavailable is set to true', function () {
         it('should invoke modal to have been called', function () {
-          controller.licenseBulkErrorModal();
-          $scope.$apply();
-          expect($modal.open).toHaveBeenCalled();
+          this.controller.licenseBulkErrorModal();
+          this.$scope.$apply();
+          expect(this.$modal.open).toHaveBeenCalled();
         });
       });
     });
 
     describe('Process CSV and Save Users', function () {
       beforeEach(function () {
-        controller.isCancelledByUser = false;
+        this.controller.isCancelledByUser = false;
         this.numCsvUsers = 13;
-        controller.model.file = generateUsersCsv(this.numCsvUsers);
-        $scope.$apply();
-        $timeout.flush();
+        this.controller.model.file = generateUsersCsv(this.numCsvUsers);
+        this.$scope.$apply();
+        this.$timeout.flush();
       });
 
       it('should fail all users on server error', function () {
-        Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersErrorResponseMock(403, {
+        this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersErrorResponseMock(403, {
           'tracking-id': 'UNIT-TEST'
         }));
-        controller.startUpload();
-        $scope.$apply();
-        $timeout.flush();
-        expect(controller.model.processProgress).toEqual(100);
-        expect(controller.model.numTotalUsers).toEqual(this.numCsvUsers);
-        expect(controller.model.userErrorArray.length).toEqual(this.numCsvUsers);
+        this.controller.startUpload();
+        this.$scope.$apply();
+        this.$timeout.flush();
+        expect(this.controller.model.processProgress).toEqual(100);
+        expect(this.controller.model.numTotalUsers).toEqual(this.numCsvUsers);
+        expect(this.controller.model.userErrorArray.length).toEqual(this.numCsvUsers);
       });
 
       it('should report new users', function () {
-        Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(201));
-        controller.startUpload();
-        $scope.$apply();
-        $timeout.flush();
-        expect(controller.model.processProgress).toEqual(100);
-        expect(controller.model.numTotalUsers).toEqual(this.numCsvUsers);
-        expect(controller.model.numNewUsers).toEqual(this.numCsvUsers);
-        expect(controller.model.numExistingUsers).toEqual(0);
-        expect(controller.model.userErrorArray.length).toEqual(0);
-        expect(controller.model.csvChunk).toEqual(2);
+        this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(201));
+        this.controller.startUpload();
+        this.$scope.$apply();
+        this.$timeout.flush();
+        expect(this.controller.model.processProgress).toEqual(100);
+        expect(this.controller.model.numTotalUsers).toEqual(this.numCsvUsers);
+        expect(this.controller.model.numNewUsers).toEqual(this.numCsvUsers);
+        expect(this.controller.model.numExistingUsers).toEqual(0);
+        expect(this.controller.model.userErrorArray.length).toEqual(0);
+        expect(this.controller.model.csvChunk).toEqual(2);
       });
 
       it('should report existing users', function () {
-        Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(200));
-        controller.startUpload();
-        $scope.$apply();
-        $timeout.flush();
-        expect(controller.model.processProgress).toEqual(100);
-        expect(controller.model.numTotalUsers).toEqual(this.numCsvUsers);
-        expect(controller.model.numNewUsers).toEqual(0);
-        expect(controller.model.numExistingUsers).toEqual(this.numCsvUsers);
-        expect(controller.model.userErrorArray.length).toEqual(0);
+        this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(200));
+        this.controller.startUpload();
+        this.$scope.$apply();
+        this.$timeout.flush();
+        expect(this.controller.model.processProgress).toEqual(100);
+        expect(this.controller.model.numTotalUsers).toEqual(this.numCsvUsers);
+        expect(this.controller.model.numNewUsers).toEqual(0);
+        expect(this.controller.model.numExistingUsers).toEqual(this.numCsvUsers);
+        expect(this.controller.model.userErrorArray.length).toEqual(0);
       });
 
       it('should report error users', function () {
-        Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(403));
-        controller.startUpload();
-        $scope.$apply();
-        $timeout.flush();
-        expect(controller.model.processProgress).toEqual(100);
-        expect(controller.model.numTotalUsers).toEqual(this.numCsvUsers);
-        expect(controller.model.numNewUsers).toEqual(0);
-        expect(controller.model.numExistingUsers).toEqual(0);
-        expect(controller.model.userErrorArray.length).toEqual(this.numCsvUsers);
+        this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(403));
+        this.controller.startUpload();
+        this.$scope.$apply();
+        this.$timeout.flush();
+        expect(this.controller.model.processProgress).toEqual(100);
+        expect(this.controller.model.numTotalUsers).toEqual(this.numCsvUsers);
+        expect(this.controller.model.numNewUsers).toEqual(0);
+        expect(this.controller.model.numExistingUsers).toEqual(0);
+        expect(this.controller.model.userErrorArray.length).toEqual(this.numCsvUsers);
       });
 
       it('should report error users when API fails', function () {
-        Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(500));
-        controller.startUpload();
-        $scope.$apply();
-        $timeout.flush();
-        expect(controller.model.processProgress).toEqual(100);
-        expect(controller.model.numTotalUsers).toEqual(this.numCsvUsers);
-        expect(controller.model.numNewUsers).toEqual(0);
-        expect(controller.model.numExistingUsers).toEqual(0);
-        expect(controller.model.userErrorArray.length).toEqual(this.numCsvUsers);
+        this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(500));
+        this.controller.startUpload();
+        this.$scope.$apply();
+        this.$timeout.flush();
+        expect(this.controller.model.processProgress).toEqual(100);
+        expect(this.controller.model.numTotalUsers).toEqual(this.numCsvUsers);
+        expect(this.controller.model.numNewUsers).toEqual(0);
+        expect(this.controller.model.numExistingUsers).toEqual(0);
+        expect(this.controller.model.userErrorArray.length).toEqual(this.numCsvUsers);
       });
 
       it('should report error users when invalid CSV', function () {
-        controller.model.file = twoInvalidUsers;
-        $scope.$apply();
-        $timeout.flush();
+        this.controller.model.file = twoInvalidUsers;
+        this.$scope.$apply();
+        this.$timeout.flush();
 
-        Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(201));
-        controller.startUpload();
-        $scope.$apply();
-        $timeout.flush();
+        this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(201));
+        this.controller.startUpload();
+        this.$scope.$apply();
+        this.$timeout.flush();
 
-        expect(controller.model.processProgress).toEqual(100);
-        expect(controller.model.numTotalUsers).toEqual(2);
-        expect(controller.model.numNewUsers).toEqual(0);
-        expect(controller.model.numExistingUsers).toEqual(0);
-        expect(controller.model.userErrorArray.length).toEqual(2);
+        expect(this.controller.model.processProgress).toEqual(100);
+        expect(this.controller.model.numTotalUsers).toEqual(2);
+        expect(this.controller.model.numNewUsers).toEqual(0);
+        expect(this.controller.model.numExistingUsers).toEqual(0);
+        expect(this.controller.model.userErrorArray.length).toEqual(2);
       });
 
       it('should report error for duplicate emails', function () {
-        controller.model.file = threeUsersOneDuplicateEmail;
-        $scope.$apply();
-        $timeout.flush();
+        this.controller.model.file = threeUsersOneDuplicateEmail;
+        this.$scope.$apply();
+        this.$timeout.flush();
 
-        Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(201));
-        controller.startUpload();
-        $scope.$apply();
-        $timeout.flush();
+        this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(201));
+        this.controller.startUpload();
+        this.$scope.$apply();
+        this.$timeout.flush();
 
-        expect(controller.model.processProgress).toEqual(100);
-        expect(controller.model.numTotalUsers).toEqual(3);
-        expect(controller.model.numNewUsers).toEqual(2);
-        expect(controller.model.numExistingUsers).toEqual(0);
-        expect(controller.model.userErrorArray.length).toEqual(1);
+        expect(this.controller.model.processProgress).toEqual(100);
+        expect(this.controller.model.numTotalUsers).toEqual(3);
+        expect(this.controller.model.numNewUsers).toEqual(2);
+        expect(this.controller.model.numExistingUsers).toEqual(0);
+        expect(this.controller.model.userErrorArray.length).toEqual(1);
       });
 
       it('should report indices for invalid csv users', function () {
-        controller.model.file = 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\n' +
+        this.controller.model.file = 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\n' +
           'Row2,Last0,No Error,firstlast0@example.com,5001,,true,true,true,true\n' +
           'Row3,Last1,Missing ID,,5002,,true,true,true,true\n' +
           '\n' +
@@ -438,70 +443,70 @@ describe('OnboardCtrl: Ctrl', function () {
           'Row6,Last3,Invalid Flag,firstlast3@example.com,5004,,true,treu,true,true\n' +
           '';
 
-        $scope.$apply();
-        $timeout.flush();
+        this.$scope.$apply();
+        this.$timeout.flush();
 
-        Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(201));
-        controller.startUpload();
-        $scope.$apply();
-        $timeout.flush();
+        this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(201));
+        this.controller.startUpload();
+        this.$scope.$apply();
+        this.$timeout.flush();
 
-        expect(controller.model.processProgress).toEqual(100);
-        expect(controller.model.numTotalUsers).toEqual(5);
-        expect(controller.model.numNewUsers).toEqual(2);
-        expect(controller.model.numExistingUsers).toEqual(0);
+        expect(this.controller.model.processProgress).toEqual(100);
+        expect(this.controller.model.numTotalUsers).toEqual(5);
+        expect(this.controller.model.numNewUsers).toEqual(2);
+        expect(this.controller.model.numExistingUsers).toEqual(0);
 
-        expect(controller.model.userErrorArray.length).toEqual(3);
-        expect(controller.model.userErrorArray).toContain(jasmine.objectContaining({
+        expect(this.controller.model.userErrorArray.length).toEqual(3);
+        expect(this.controller.model.userErrorArray).toContain(jasmine.objectContaining({
           row: 3
         }));
-        expect(controller.model.userErrorArray).toContain(jasmine.objectContaining({
+        expect(this.controller.model.userErrorArray).toContain(jasmine.objectContaining({
           row: 4
         }));
-        expect(controller.model.userErrorArray).toContain(jasmine.objectContaining({
+        expect(this.controller.model.userErrorArray).toContain(jasmine.objectContaining({
           row: 6
         }));
 
-        expect(controller.model.userErrorArray).not.toContain(jasmine.objectContaining({
+        expect(this.controller.model.userErrorArray).not.toContain(jasmine.objectContaining({
           row: 2
         }));
-        expect(controller.model.userErrorArray).not.toContain(jasmine.objectContaining({
+        expect(this.controller.model.userErrorArray).not.toContain(jasmine.objectContaining({
           row: 5
         }));
       });
 
       it('should stop processing when cancelled', function () {
-        Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(-1));
-        controller.startUpload();
-        $scope.$apply();
-        $timeout.flush();
-        expect(controller.model.processProgress).toEqual(100);
-        expect(controller.model.numTotalUsers).toEqual(this.numCsvUsers);
-        expect(controller.model.numNewUsers).toEqual(0);
-        expect(controller.model.numExistingUsers).toEqual(0);
-        expect(controller.model.userErrorArray.length).toEqual(this.numCsvUsers);
-        expect(controller.isCancelledByUser).toEqual(false);
-        controller.cancelProcessCsv();
-        $scope.$apply();
-        expect($scope.$broadcast).toHaveBeenCalledWith('timer-stop');
-        expect(controller.isCancelledByUser).toEqual(true);
+        this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(-1));
+        this.controller.startUpload();
+        this.$scope.$apply();
+        this.$timeout.flush();
+        expect(this.controller.model.processProgress).toEqual(100);
+        expect(this.controller.model.numTotalUsers).toEqual(this.numCsvUsers);
+        expect(this.controller.model.numNewUsers).toEqual(0);
+        expect(this.controller.model.numExistingUsers).toEqual(0);
+        expect(this.controller.model.userErrorArray.length).toEqual(this.numCsvUsers);
+        expect(this.controller.isCancelledByUser).toEqual(false);
+        this.controller.cancelProcessCsv();
+        this.$scope.$apply();
+        expect(this.$scope.$broadcast).toHaveBeenCalledWith('timer-stop');
+        expect(this.controller.isCancelledByUser).toEqual(true);
       });
 
       it('should provide correct data in error array', function () {
-        controller.model.file = twoValidUsers;
-        var csvData = $.csv.toObjects(controller.model.file);
+        this.controller.model.file = twoValidUsers;
+        var csvData = $.csv.toObjects(this.controller.model.file);
 
-        $scope.$apply();
-        $timeout.flush();
+        this.$scope.$apply();
+        this.$timeout.flush();
 
-        Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(-1));
-        controller.startUpload();
-        $scope.$apply();
-        $timeout.flush();
+        this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(-1));
+        this.controller.startUpload();
+        this.$scope.$apply();
+        this.$timeout.flush();
 
         // download the CSV
-        expect(controller.model.userErrorArray).toHaveLength(2);
-        _.forEach(controller.model.userErrorArray, function (value) {
+        expect(this.controller.model.userErrorArray).toHaveLength(2);
+        _.forEach(this.controller.model.userErrorArray, function (value) {
           expect(value.row).not.toBeEmpty();
           expect(value.error).not.toBeEmpty();
 
@@ -509,118 +514,115 @@ describe('OnboardCtrl: Ctrl', function () {
           var expectedEmail = csvData[row]['User ID/Email (Required)'];
           expect(value.email).toEqual(expectedEmail);
         });
-
-
       });
-
     });
 
     describe('Process CSV with spaces and Save Users', function () {
       beforeEach(function () {
-        controller.model.file = twoValidUsersWithSpaces;
-        $scope.$apply();
-        $timeout.flush();
+        this.controller.model.file = twoValidUsersWithSpaces;
+        this.$scope.$apply();
+        this.$timeout.flush();
       });
 
       it('should report new users', function () {
-        Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(201));
-        controller.startUpload();
-        $scope.$apply();
-        $timeout.flush();
-        expect(controller.model.processProgress).toEqual(100);
-        expect(controller.model.numTotalUsers).toEqual(2);
-        expect(controller.model.numNewUsers).toEqual(2);
-        expect(controller.model.numExistingUsers).toEqual(0);
-        expect(controller.model.userErrorArray.length).toEqual(0);
+        this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(201));
+        this.controller.startUpload();
+        this.$scope.$apply();
+        this.$timeout.flush();
+        expect(this.controller.model.processProgress).toEqual(100);
+        expect(this.controller.model.numTotalUsers).toEqual(2);
+        expect(this.controller.model.numNewUsers).toEqual(2);
+        expect(this.controller.model.numExistingUsers).toEqual(0);
+        expect(this.controller.model.userErrorArray.length).toEqual(0);
       });
     });
 
     describe('Process CSV with difference email cases and Save Users', function () {
       beforeEach(function () {
-        controller.model.file = twoValidUsersWithSpaces;
-        $scope.$apply();
-        $timeout.flush();
+        this.controller.model.file = twoValidUsersWithSpaces;
+        this.$scope.$apply();
+        this.$timeout.flush();
       });
 
       it('should report new users', function () {
-        Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseUpperCaseEmailMock(201));
-        controller.startUpload();
-        $scope.$apply();
-        $timeout.flush();
-        expect(controller.model.processProgress).toEqual(100);
-        expect(controller.model.numTotalUsers).toEqual(2);
-        expect(controller.model.numNewUsers).toEqual(2);
-        expect(controller.model.numExistingUsers).toEqual(0);
-        expect(controller.model.userErrorArray.length).toEqual(0);
+        this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseUpperCaseEmailMock(201));
+        this.controller.startUpload();
+        this.$scope.$apply();
+        this.$timeout.flush();
+        expect(this.controller.model.processProgress).toEqual(100);
+        expect(this.controller.model.numTotalUsers).toEqual(2);
+        expect(this.controller.model.numNewUsers).toEqual(2);
+        expect(this.controller.model.numExistingUsers).toEqual(0);
+        expect(this.controller.model.userErrorArray.length).toEqual(0);
       });
     });
 
     describe('Process CSV and handle retrying', function () {
       beforeEach(function () {
         this.numCsvUsers = 14;
-        controller.model.file = generateUsersCsv(this.numCsvUsers);
-        $scope.$apply();
-        $timeout.flush();
+        this.controller.model.file = generateUsersCsv(this.numCsvUsers);
+        this.$scope.$apply();
+        this.$timeout.flush();
 
         this.processRetries = function (retryAttempts) {
           for (var ii = retryAttempts; ii >= 0; ii--) {
-            $scope.$apply();
-            $timeout.flush();
-            $interval.flush(1000);
+            this.$scope.$apply();
+            this.$timeout.flush();
+            this.$interval.flush(1000);
           }
         };
       });
 
       it('should retry all users on a 429 Retry error', function () {
         var retryAttempts = 3;
-        controller.model.numRetriesToAttempt = retryAttempts;
-        $scope.$apply();
+        this.controller.model.numRetriesToAttempt = retryAttempts;
+        this.$scope.$apply();
 
         // we want to force retrying, but then succeed after a few attempts
         // Since SparkCall is enabled in the test users, we have to take that into
         // account for how many times the mock will be called (ie, if chunk size is 2,
         // and we have 10 users, the mock will be called 5 times.
-        Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersErrorResponseMock(429, {
+        this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersErrorResponseMock(429, {
           'tracking-id': 'UNIT-TEST',
           'retry-after': 200
-        }, retryAttempts * (this.numCsvUsers / UserCsvService.chunkSizeWithSparkCall), 201));
-        controller.startUpload();
+        }, retryAttempts * (this.numCsvUsers / this.UserCsvService.chunkSizeWithSparkCall), 201));
+        this.controller.startUpload();
 
         // we need to run the process loop to exceed the number of retries
         this.processRetries(retryAttempts);
 
-        expect(controller.model.processProgress).toEqual(100);
-        expect(controller.model.numTotalUsers).toEqual(this.numCsvUsers);
-        expect(controller.model.numNewUsers).toEqual(this.numCsvUsers);
-        expect(controller.model.numExistingUsers).toEqual(0);
-        expect(controller.model.userErrorArray.length).toEqual(0);
+        expect(this.controller.model.processProgress).toEqual(100);
+        expect(this.controller.model.numTotalUsers).toEqual(this.numCsvUsers);
+        expect(this.controller.model.numNewUsers).toEqual(this.numCsvUsers);
+        expect(this.controller.model.numExistingUsers).toEqual(0);
+        expect(this.controller.model.userErrorArray.length).toEqual(0);
       });
 
       it('should retry all users on a 503 error', function () {
         var retryAttempts = 3;
-        controller.model.numRetriesToAttempt = retryAttempts;
-        $scope.$apply();
+        this.controller.model.numRetriesToAttempt = retryAttempts;
+        this.$scope.$apply();
 
-        Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersErrorResponseMock(503, {
+        this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersErrorResponseMock(503, {
           'tracking-id': 'UNIT-TEST',
           'retry-after': 200
-        }, retryAttempts * (this.numCsvUsers / UserCsvService.chunkSizeWithSparkCall), 201));
-        controller.startUpload();
+        }, retryAttempts * (this.numCsvUsers / this.UserCsvService.chunkSizeWithSparkCall), 201));
+        this.controller.startUpload();
 
         // we need to run the process loop to exceed the number of retries
         this.processRetries(retryAttempts);
 
-        expect(controller.model.processProgress).toEqual(100);
-        expect(controller.model.numTotalUsers).toEqual(this.numCsvUsers);
-        expect(controller.model.numNewUsers).toEqual(this.numCsvUsers);
-        expect(controller.model.numExistingUsers).toEqual(0);
-        expect(controller.model.userErrorArray.length).toEqual(0);
+        expect(this.controller.model.processProgress).toEqual(100);
+        expect(this.controller.model.numTotalUsers).toEqual(this.numCsvUsers);
+        expect(this.controller.model.numNewUsers).toEqual(this.numCsvUsers);
+        expect(this.controller.model.numExistingUsers).toEqual(0);
+        expect(this.controller.model.userErrorArray.length).toEqual(0);
       });
 
       it('should retry individual users with 503 or 429 errors', function () {
         var retryAttempts = 1;
 
-        Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(201, [{
+        this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(201, [{
           status: 503,
           users: 4
         }, {
@@ -631,20 +633,20 @@ describe('OnboardCtrl: Ctrl', function () {
           users: 3
         }]));
 
-        controller.model.numRetriesToAttempt = retryAttempts;
-        controller.model.retryAfterDefault = 200;
-        $scope.$apply();
+        this.controller.model.numRetriesToAttempt = retryAttempts;
+        this.controller.model.retryAfterDefault = 200;
+        this.$scope.$apply();
 
-        controller.startUpload();
+        this.controller.startUpload();
 
         // we need to run the process loop to exceed the number of retries
         this.processRetries(retryAttempts);
 
-        expect(controller.model.processProgress).toEqual(100);
-        expect(controller.model.numTotalUsers).toEqual(this.numCsvUsers);
-        expect(controller.model.numNewUsers).toEqual(11);
-        expect(controller.model.numExistingUsers).toEqual(3);
-        expect(controller.model.userErrorArray.length).toEqual(0);
+        expect(this.controller.model.processProgress).toEqual(100);
+        expect(this.controller.model.numTotalUsers).toEqual(this.numCsvUsers);
+        expect(this.controller.model.numNewUsers).toEqual(11);
+        expect(this.controller.model.numExistingUsers).toEqual(3);
+        expect(this.controller.model.userErrorArray.length).toEqual(0);
       });
     });
   });
@@ -652,83 +654,93 @@ describe('OnboardCtrl: Ctrl', function () {
   describe('Process CSV with Hybrid Service Resource Groups', function () {
 
     beforeEach(function () {
-      FeatureToggleService.supports.and.returnValue($q.resolve(true));
-      fusionServices = getJSONFixture('core/json/users/hybridServices.json');
-      Orgservice.getHybridServiceAcknowledged.and.returnValue($q.resolve(fusionServices));
-      headers = getJSONFixture('core/json/users/headersForHybridServicesOld.json');
-      initController();
+      var _this = this;
+      this.FeatureToggleService.supports.and.callFake(function () {
+        return _this.$q.resolve(true);
+      });
+      this.fusionServices = getJSONFixture('core/json/users/hybridServices.json');
+      this.Orgservice.getHybridServiceAcknowledged.and.returnValue(this.$q.resolve(this.fusionServices));
+      this.headers = getJSONFixture('core/json/users/headersForHybridServicesOld.json');
+
+      initMocks.apply(this);
+      initController.apply(this);
     });
 
-    function setCsv(users, csvHeader) {
-      var header = csvHeader || ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Hybrid Calendar Service Resource Group', 'Hybrid Call Service Resource Group', 'Calendar Service', 'Call Service Aware'];
-      var csv = [header];
-      csv.push(users);
-      controller.model.file = $.csv.fromArrays(csv);
-      $scope.$apply();
-      $timeout.flush();
-    }
+    function initMocks() {
 
-    function initAndCaptureUpdatedUserProps(users, header) {
-      setCsv(users, header);
-      Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(201));
-      var updatedUserProps = [];
-      USSService.updateBulkUserProps.and.callFake(function (props) {
-        updatedUserProps = props;
-        return $q.resolve({});
-      });
-      controller.startUpload();
-      $scope.$apply();
-      $timeout.flush();
-      return updatedUserProps;
+      this.setCsv = function (users, csvHeader) {
+        var header = csvHeader || ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Hybrid Calendar Service Resource Group', 'Hybrid Call Service Resource Group', 'Calendar Service', 'Call Service Aware'];
+        var csv = [header];
+        csv.push(users);
+        this.controller.model.file = $.csv.fromArrays(csv);
+        this.$scope.$apply();
+        this.$timeout.flush();
+      };
+
+      this.initAndCaptureUpdatedUserProps = function (users, header) {
+        var _this = this;
+        this.setCsv(users, header);
+        this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(201));
+        var updatedUserProps = [];
+        this.USSService.updateBulkUserProps.and.callFake(function (props) {
+          updatedUserProps = props;
+          return _this.$q.resolve({});
+        });
+        this.controller.startUpload();
+        this.$scope.$apply();
+        this.$timeout.flush();
+        return updatedUserProps;
+      };
+
     }
 
     it('should not update USS when no resource group changes', function () {
-      setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', '', 'true', 'true']);
-      Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(201));
-      controller.startUpload();
-      $scope.$apply();
-      $timeout.flush();
-      expect(controller.isAtlasF237ResourceGroupsEnabled).toBeTruthy();
-      expect(controller.handleHybridServicesResourceGroups).toBeTruthy();
-      expect(controller.model.numTotalUsers).toEqual(1);
-      expect(controller.model.userErrorArray.length).toEqual(0);
-      expect(ResourceGroupService.getAll.calls.count()).toEqual(1);
-      expect(USSService.getAllUserProps.calls.count()).toEqual(1);
-      expect(USSService.updateBulkUserProps.calls.count()).toEqual(0);
+      this.setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', '', 'true', 'true']);
+      this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(201));
+      this.controller.startUpload();
+      this.$scope.$apply();
+      this.$timeout.flush();
+      expect(this.controller.isAtlasF237ResourceGroupsEnabled).toBeTruthy();
+      expect(this.controller.handleHybridServicesResourceGroups).toBeTruthy();
+      expect(this.controller.model.numTotalUsers).toEqual(1);
+      expect(this.controller.model.userErrorArray.length).toEqual(0);
+      expect(this.ResourceGroupService.getAll.calls.count()).toEqual(1);
+      expect(this.USSService.getAllUserProps.calls.count()).toEqual(1);
+      expect(this.USSService.updateBulkUserProps.calls.count()).toEqual(0);
     });
 
     it('should add an error if the calendar resource group does not exist in FMS', function () {
-      setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'DoesNotExist', '', 'true', 'true']);
-      controller.startUpload();
-      $scope.$apply();
-      $timeout.flush();
-      expect(controller.model.numTotalUsers).toEqual(1);
-      expect(controller.model.userErrorArray.length).toEqual(1);
-      expect(controller.model.userErrorArray[0].email).toEqual('tvasset@cisco.com');
-      expect(controller.model.userErrorArray[0].error).toEqual('firstTimeWizard.invalidCalendarServiceResourceGroup');
-      expect(ResourceGroupService.getAll.calls.count()).toEqual(1);
-      expect(USSService.getAllUserProps.calls.count()).toEqual(1);
-      expect(USSService.updateBulkUserProps.calls.count()).toEqual(0);
-      expect(Userservice.bulkOnboardUsers.calls.count()).toEqual(0);
+      this.setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'DoesNotExist', '', 'true', 'true']);
+      this.controller.startUpload();
+      this.$scope.$apply();
+      this.$timeout.flush();
+      expect(this.controller.model.numTotalUsers).toEqual(1);
+      expect(this.controller.model.userErrorArray.length).toEqual(1);
+      expect(this.controller.model.userErrorArray[0].email).toEqual('tvasset@cisco.com');
+      expect(this.controller.model.userErrorArray[0].error).toEqual('firstTimeWizard.invalidCalendarServiceResourceGroup');
+      expect(this.ResourceGroupService.getAll.calls.count()).toEqual(1);
+      expect(this.USSService.getAllUserProps.calls.count()).toEqual(1);
+      expect(this.USSService.updateBulkUserProps.calls.count()).toEqual(0);
+      expect(this.Userservice.bulkOnboardUsers.calls.count()).toEqual(0);
     });
 
     it('should add an error if the call resource group does not exist in FMS', function () {
-      setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'DoesNotExist', 'true', 'true']);
-      controller.startUpload();
-      $scope.$apply();
-      $timeout.flush();
-      expect(controller.model.numTotalUsers).toEqual(1);
-      expect(controller.model.userErrorArray.length).toEqual(1);
-      expect(controller.model.userErrorArray[0].email).toEqual('tvasset@cisco.com');
-      expect(controller.model.userErrorArray[0].error).toEqual('firstTimeWizard.invalidCallServiceResourceGroup');
-      expect(ResourceGroupService.getAll.calls.count()).toEqual(1);
-      expect(USSService.getAllUserProps.calls.count()).toEqual(1);
-      expect(USSService.updateBulkUserProps.calls.count()).toEqual(0);
-      expect(Userservice.bulkOnboardUsers.calls.count()).toEqual(0);
+      this.setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'DoesNotExist', 'true', 'true']);
+      this.controller.startUpload();
+      this.$scope.$apply();
+      this.$timeout.flush();
+      expect(this.controller.model.numTotalUsers).toEqual(1);
+      expect(this.controller.model.userErrorArray.length).toEqual(1);
+      expect(this.controller.model.userErrorArray[0].email).toEqual('tvasset@cisco.com');
+      expect(this.controller.model.userErrorArray[0].error).toEqual('firstTimeWizard.invalidCallServiceResourceGroup');
+      expect(this.ResourceGroupService.getAll.calls.count()).toEqual(1);
+      expect(this.USSService.getAllUserProps.calls.count()).toEqual(1);
+      expect(this.USSService.updateBulkUserProps.calls.count()).toEqual(0);
+      expect(this.Userservice.bulkOnboardUsers.calls.count()).toEqual(0);
     });
 
     it('should update USS with a new calendar resource group assignment', function () {
-      var updatedUserProps = initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group A', '', 'true', 'true']);
+      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group A', '', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(1);
       expect(updatedUserProps[0].userId).toEqual('b345abe1-5b9d-43b2-9a89-1e4e64ad478c');
       expect(updatedUserProps[0].resourceGroups).toBeDefined();
@@ -737,7 +749,7 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
     it('should update USS with a new call resource group assignment', function () {
-      var updatedUserProps = initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'Resource Group B', 'true', 'true']);
+      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'Resource Group B', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(1);
       expect(updatedUserProps[0].userId).toEqual('b345abe1-5b9d-43b2-9a89-1e4e64ad478c');
       expect(updatedUserProps[0].resourceGroups).toBeDefined();
@@ -746,29 +758,31 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
     it('should not update USS when the current resource groups are the same', function () {
-      USSService.getAllUserProps.and.returnValue($q.resolve([
-        { userId: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
+      this.USSService.getAllUserProps.and.returnValue(this.$q.resolve([
+        {
+          userId: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
           resourceGroups: {
             'squared-fusion-cal': 'be46e71f-c8ea-470b-ba13-2342d310a202',
             'squared-fusion-uc': 'be46e71f-c8ea-470b-ba13-2342d310a202'
           }
         }
       ]));
-      var updatedUserProps = initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group B', 'Resource Group B', 'true', 'true']);
+      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group B', 'Resource Group B', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(0);
-      expect(USSService.updateBulkUserProps.calls.count()).toEqual(0);
+      expect(this.USSService.updateBulkUserProps.calls.count()).toEqual(0);
     });
 
     it('should update USS when the current resource groups are different', function () {
-      USSService.getAllUserProps.and.returnValue($q.resolve([
-        { userId: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
+      this.USSService.getAllUserProps.and.returnValue(this.$q.resolve([
+        {
+          userId: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
           resourceGroups: {
             'squared-fusion-cal': 'be46e71f-c8ea-470b-ba13-2342d310a202',
             'squared-fusion-uc': '445a3f8e-06a3-476b-b6f1-215a7db09083'
           }
         }
       ]));
-      var updatedUserProps = initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group A', 'Resource Group B', 'true', 'true']);
+      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group A', 'Resource Group B', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(1);
       expect(updatedUserProps[0].userId).toEqual('b345abe1-5b9d-43b2-9a89-1e4e64ad478c');
       expect(updatedUserProps[0].resourceGroups).toBeDefined();
@@ -777,15 +791,16 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
     it('should update USS with empty resource groups when no longer in the CSV', function () {
-      USSService.getAllUserProps.and.returnValue($q.resolve([
-        { userId: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
+      this.USSService.getAllUserProps.and.returnValue(this.$q.resolve([
+        {
+          userId: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
           resourceGroups: {
             'squared-fusion-cal': 'be46e71f-c8ea-470b-ba13-2342d310a202',
             'squared-fusion-uc': '445a3f8e-06a3-476b-b6f1-215a7db09083'
           }
         }
       ]));
-      var updatedUserProps = initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', '', 'true', 'true']);
+      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', '', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(1);
       expect(updatedUserProps[0].userId).toEqual('b345abe1-5b9d-43b2-9a89-1e4e64ad478c');
       expect(updatedUserProps[0].resourceGroups).toBeDefined();
@@ -794,45 +809,47 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
     it('should add an error of the USS update fails', function () {
-      setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group A', '', 'true', 'true']);
-      Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(201));
-      USSService.updateBulkUserProps.and.callFake(function () {
-        return $q.reject();
+      var _this = this;
+      this.setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group A', '', 'true', 'true']);
+      this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(201));
+      this.USSService.updateBulkUserProps.and.callFake(function () {
+        return _this.$q.reject();
       });
-      controller.startUpload();
-      $scope.$apply();
-      $timeout.flush();
-      expect(controller.model.userErrorArray.length).toEqual(1);
-      expect(controller.model.userErrorArray[0].email).toEqual('tvasset@cisco.com');
-      expect(controller.model.userErrorArray[0].error).toEqual('firstTimeWizard.unableToUpdateResourceGroups');
+      this.controller.startUpload();
+      this.$scope.$apply();
+      this.$timeout.flush();
+      expect(this.controller.model.userErrorArray.length).toEqual(1);
+      expect(this.controller.model.userErrorArray[0].email).toEqual('tvasset@cisco.com');
+      expect(this.controller.model.userErrorArray[0].error).toEqual('firstTimeWizard.unableToUpdateResourceGroups');
     });
 
     it('should ignore resource group changes if unable to read groups from FMS', function () {
-      ResourceGroupService.getAll.and.returnValue($q.reject());
-      var updatedUserProps = initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'Resource Group B', 'true', 'true']);
+      this.ResourceGroupService.getAll.and.returnValue(this.$q.reject());
+      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'Resource Group B', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(0);
-      expect(USSService.updateBulkUserProps.calls.count()).toEqual(0);
-      expect(controller.handleHybridServicesResourceGroups).toBeFalsy();
+      expect(this.USSService.updateBulkUserProps.calls.count()).toEqual(0);
+      expect(this.controller.handleHybridServicesResourceGroups).toBeFalsy();
     });
 
     it('should ignore resource group changes if unable to read current props from USS', function () {
-      USSService.getAllUserProps.and.returnValue($q.reject());
-      var updatedUserProps = initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'Resource Group B', 'true', 'true']);
+      this.USSService.getAllUserProps.and.returnValue(this.$q.reject());
+      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'Resource Group B', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(0);
-      expect(USSService.updateBulkUserProps.calls.count()).toEqual(0);
-      expect(controller.handleHybridServicesResourceGroups).toBeFalsy();
+      expect(this.USSService.updateBulkUserProps.calls.count()).toEqual(0);
+      expect(this.controller.handleHybridServicesResourceGroups).toBeFalsy();
     });
 
     it('should not update USS if the CSV does not contain resource groups', function () {
-      USSService.getAllUserProps.and.returnValue($q.resolve([
-        { userId: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
+      this.USSService.getAllUserProps.and.returnValue(this.$q.resolve([
+        {
+          userId: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
           resourceGroups: {
             'squared-fusion-cal': 'be46e71f-c8ea-470b-ba13-2342d310a202',
             'squared-fusion-uc': '445a3f8e-06a3-476b-b6f1-215a7db09083'
           }
         }
       ]));
-      var updatedUserProps = initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'true', 'true'], ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Calendar Service', 'Call Service Aware']);
+      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'true', 'true'], ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Calendar Service', 'Call Service Aware']);
       expect(updatedUserProps.length).toEqual(0);
     });
   });
@@ -840,61 +857,67 @@ describe('OnboardCtrl: Ctrl', function () {
   describe('Process CSV with new Hybrid Calendar Service entitlements', function () {
 
     beforeEach(function () {
-      fusionServices = getJSONFixture('core/json/users/hybridServices.json');
-      Orgservice.getHybridServiceAcknowledged.and.returnValue($q.resolve(fusionServices));
-      headers = getJSONFixture('core/json/users/headersForHybridServicesNew.json');
-      initController();
+      this.fusionServices = getJSONFixture('core/json/users/hybridServices.json');
+      this.Orgservice.getHybridServiceAcknowledged.and.returnValue(this.$q.resolve(this.fusionServices));
+      this.headers = getJSONFixture('core/json/users/headersForHybridServicesNew.json');
+
+      initMocks.apply(this);
+      initController.apply(this);
     });
 
-    function setCsv(users, header) {
-      var csv = [header || ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Hybrid Calendar Service (Exchange)', 'Hybrid Calendar Service (Google)']];
-      csv.push(users);
-      controller.model.file = $.csv.fromArrays(csv);
-      $scope.$apply();
-      $timeout.flush();
+    function initMocks() {
+
+      this.setCsv = function (users, header) {
+        var csv = [header || ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Hybrid Calendar Service (Exchange)', 'Hybrid Calendar Service (Google)']];
+        csv.push(users);
+        this.controller.model.file = $.csv.fromArrays(csv);
+        this.$scope.$apply();
+        this.$timeout.flush();
+      };
+
     }
 
     it('should add an error if both calendar entitlements (Exchange and Google) are set', function () {
-      setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'true', 'true']);
-      controller.startUpload();
-      $scope.$apply();
-      $timeout.flush();
-      expect(controller.model.numTotalUsers).toEqual(1);
-      expect(controller.model.userErrorArray.length).toEqual(1);
-      expect(controller.model.userErrorArray[0].email).toEqual('tvasset@cisco.com');
-      expect(controller.model.userErrorArray[0].error).toEqual('firstTimeWizard.mutuallyExclusiveCalendarEntitlements');
-      expect(Userservice.bulkOnboardUsers.calls.count()).toEqual(0);
+      this.setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'true', 'true']);
+      this.controller.startUpload();
+      this.$scope.$apply();
+      this.$timeout.flush();
+      expect(this.controller.model.numTotalUsers).toEqual(1);
+      expect(this.controller.model.userErrorArray.length).toEqual(1);
+      expect(this.controller.model.userErrorArray[0].email).toEqual('tvasset@cisco.com');
+      expect(this.controller.model.userErrorArray[0].error).toEqual('firstTimeWizard.mutuallyExclusiveCalendarEntitlements');
+      expect(this.Userservice.bulkOnboardUsers.calls.count()).toEqual(0);
     });
 
     it('should allow setting the google calendar entitlement (squaredFusionGCal)', function () {
-      setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'false', 'true']);
-      Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(201));
-      controller.startUpload();
-      $scope.$apply();
-      $timeout.flush();
-      expect(controller.model.numTotalUsers).toEqual(1);
-      expect(controller.model.userErrorArray.length).toEqual(0);
-      expect(Userservice.bulkOnboardUsers.calls.count()).toEqual(1);
-      expect(uploadedDataCapture.length).toEqual(1);
-      expect(uploadedDataCapture[0].entitlements.length).toEqual(1);
-      expect(_.some(uploadedDataCapture[0].entitlements, function (entitlement) {
+      this.setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'false', 'true']);
+      this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(201));
+      this.controller.startUpload();
+      this.$scope.$apply();
+      this.$timeout.flush();
+      expect(this.controller.model.numTotalUsers).toEqual(1);
+      expect(this.controller.model.userErrorArray.length).toEqual(0);
+      expect(this.Userservice.bulkOnboardUsers.calls.count()).toEqual(1);
+      expect(this.uploadedDataCapture.length).toEqual(1);
+      expect(this.uploadedDataCapture[0].entitlements.length).toEqual(1);
+      expect(_.some(this.uploadedDataCapture[0].entitlements, function (entitlement) {
         return entitlement.entitlementName === 'squaredFusionGCal' && entitlement.entitlementState === 'ACTIVE';
       })).toBeTruthy();
     });
 
     it('should accept the old Calendar Service header after the backend rename to Hybrid Calendar Service (Exchange) is completed', function () {
       var oldHeaders = ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Calendar Service'];
-      setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'true'], oldHeaders);
-      Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(201));
-      controller.startUpload();
-      $scope.$apply();
-      $timeout.flush();
-      expect(controller.model.numTotalUsers).toEqual(1);
-      expect(controller.model.userErrorArray.length).toEqual(0);
-      expect(Userservice.bulkOnboardUsers.calls.count()).toEqual(1);
-      expect(uploadedDataCapture.length).toEqual(1);
-      expect(uploadedDataCapture[0].entitlements.length).toEqual(1);
-      expect(_.some(uploadedDataCapture[0].entitlements, function (entitlement) {
+      this.setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'true'], oldHeaders);
+      this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(201));
+      this.controller.startUpload();
+      this.$scope.$apply();
+      this.$timeout.flush();
+      expect(this.controller.model.numTotalUsers).toEqual(1);
+      expect(this.controller.model.userErrorArray.length).toEqual(0);
+      expect(this.Userservice.bulkOnboardUsers.calls.count()).toEqual(1);
+      expect(this.uploadedDataCapture.length).toEqual(1);
+      expect(this.uploadedDataCapture[0].entitlements.length).toEqual(1);
+      expect(_.some(this.uploadedDataCapture[0].entitlements, function (entitlement) {
         return entitlement.entitlementName === 'squaredFusionCal' && entitlement.entitlementState === 'ACTIVE';
       })).toBeTruthy();
     });

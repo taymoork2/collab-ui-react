@@ -72,6 +72,8 @@
     require('modules/core/auth/token.service'),
     require('modules/core/config/config'),
     require('modules/core/featureToggle').default,
+    require('modules/core/users').default,
+    require('modules/core/csvDownload').default,
     require('modules/core/l10n/languages'),
     require('modules/core/notifications').default,
     require('modules/core/scripts/services/authinfo'),

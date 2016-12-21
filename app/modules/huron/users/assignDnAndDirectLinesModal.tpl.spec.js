@@ -1,9 +1,11 @@
 'use strict';
 
+var csvDownloadModule = require('modules/core/csvDownload').default;
+
 describe('Template: assignDnAndDirectLinesModal', function () {
 
   function init() {
-    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp');
+    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp', csvDownloadModule);
     this.injectDependencies('$httpBackend', '$q', '$previousState', 'Orgservice', 'FeatureToggleService', 'CsvDownloadService', 'WebExUtilsFact');
     initDependencySpies.apply(this);
     this.compileView('OnboardCtrl', 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html');
