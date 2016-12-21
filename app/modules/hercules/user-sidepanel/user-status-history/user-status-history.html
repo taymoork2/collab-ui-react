@@ -12,17 +12,22 @@
       <span class="cloud-extension-label" translate="hercules.userHistory.serviceEnabled"></span>
     </div>
     <div ng-if="entry.payload.state === 'error' && entry.payload.description">
-      <p>
+      <span class="cloud-extension-label">
         {{entry.payload.description}}
-      </p>
+      </span>
     </div>
     <div ng-if="entry.payload.state !== 'error' && entry.payload.description">
-      <p>
+      <span class="cloud-extension-label">
         {{entry.payload.description}}
-      </p>
+      </span>
     </div>
     <div ng-if="entry.homedConnector">
-      <span class="cloud-extension-label" translate="cloudExtensions.assignedTo" translate-values='{ clusterName: entry.homedConnector.cluster_name}'></span>
+      <div>
+        <span class="cloud-extension-label">{{'cloudExtensions.cluster' | translate}}: {{entry.homedConnector.cluster_name}}</span>
+      </div>
+      <div>
+        <span class="cloud-extension-label">{{'hercules.connectors.host_name' | translate}}: {{entry.homedConnector.host_name}}</span>
+      </div>
     </div>
     <div ng-if="entry.resourceGroup">
       <span class="cloud-extension-label" translate="hercules.userHistory.assignedToResourceGroup" translate-values='{ resourceGroupName: entry.resourceGroup.name}'></span>

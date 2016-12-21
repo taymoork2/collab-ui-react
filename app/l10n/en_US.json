@@ -4952,8 +4952,7 @@
     "status": "Status",
     "cluster": "Cluster",
     "sipUri": "Directory URI",
-    "details": "Details",
-    "assignedTo": "Assigned to cluster {{clusterName}}"
+    "details": "Details"
   },
   "validation": {
     "nonPrintable": "This entry contains nonprintable characters.",
