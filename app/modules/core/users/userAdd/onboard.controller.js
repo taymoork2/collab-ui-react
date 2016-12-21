@@ -97,6 +97,12 @@ require('./_user-add.scss');
       $scope.isCareEnabled = careStatus && Authinfo.isCare();
     });
 
+    $scope.isCallBackEnabled = false;
+    $scope.enableCareService = true;
+    FeatureToggleService.atlasCareCallbackTrialsGetStatus().then(function (callBackStatus) {
+      $scope.isCallBackEnabled = callBackStatus;
+    });
+
     FeatureToggleService.atlasSMPGetStatus().then(function (smpStatus) {
       $scope.isSharedMultiPartyEnabled = smpStatus;
     });
@@ -2552,11 +2558,13 @@ require('./_user-add.scss');
     }
 
     function controlCare() {
-      if ($scope.radioStates.msgRadio && $scope.radioStates.commRadio) {
-        $scope.enableCareService = true;
-      } else {
-        $scope.enableCareService = false;
-        $scope.radioStates.careRadio = false;
+      if ($scope.isCallBackEnabled) {
+        if ($scope.radioStates.msgRadio && $scope.radioStates.commRadio) {
+          $scope.enableCareService = true;
+        } else {
+          $scope.enableCareService = false;
+          $scope.radioStates.careRadio = false;
+        }
       }
     }
 

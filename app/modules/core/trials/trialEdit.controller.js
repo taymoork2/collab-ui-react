@@ -17,7 +17,7 @@
     vm.showRoomSystems = false;
     vm.showContextServiceTrial = false;
     vm.showCare = false;
-
+    vm.isCallBackEnabled = false;
     var _messageTemplateOptionId = 'messageTrial';
     var _careDefaultQuantity = 15;
 
@@ -177,10 +177,10 @@
       },
       expressionProperties: {
         'templateOptions.required': function () {
-          return (vm.messageTrial.enabled && vm.callTrial.enabled); // Since, it depends on Message and Call Offer
+          return (vm.messageTrial.enabled && (!vm.isCallBackEnabled || vm.callTrial.enabled)); // Since, it depends on Message and Call Offer
         },
         'templateOptions.disabled': function () {
-          return messageOfferDisabledExpression() || callOfferDisabledExpression() || vm.preset.care;
+          return messageOfferDisabledExpression() || (vm.isCallBackEnabled && callOfferDisabledExpression()) || vm.preset.care;
         }
       }
     }, {
@@ -458,6 +458,7 @@
         ftContextServ: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
         tcHasService: TrialContextService.trialHasService(vm.currentTrial.customerOrgId),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
+        ftCallBackEnabled: FeatureToggleService.atlasCareCallbackTrialsGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function (err) {
           getAdminOrgError = true;
@@ -481,6 +482,7 @@
           vm.preset.context = results.tcHasService;
           vm.showCare = results.ftCareTrials;
           vm.careTrial.enabled = vm.preset.care;
+          vm.isCallBackEnabled = results.ftCallBackEnabled;
           vm.sbTrial = results.sbTrial;
           updateTrialService(_messageTemplateOptionId);
 
