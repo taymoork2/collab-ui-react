@@ -11,7 +11,7 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
   public readonly numEntriesToShow = 20;
   public readonly serviceId;
   public historyEntries: any[];
-  private readonly currentUser;
+  private readonly userId;
   private readonly eventTypes = ['AddEntitlement', 'RemoveEntitlement', 'AddUserResourceGroup', 'RemoveUserResourceGroup', 'SetUserStatus'];
 
   /* @ngInject */
@@ -26,12 +26,12 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
     private ResourceGroupService,
   ) {
     this.serviceId = this.$state.params.serviceId;
-    this.currentUser = this.$stateParams.currentUser;
+    this.userId = this.$stateParams.currentUser.id;
     this.historyEntries = [];
   }
 
   public $onInit() {
-    this.USSService.getUserJournal(this.currentUser.id, this.Authinfo.getOrgId(), 100, this.serviceId)
+    this.USSService.getUserJournal(this.userId, this.Authinfo.getOrgId(), 100, this.serviceId)
       .then(entries => {
         let filteredEntries = filter(<any[]>entries, entry => {
           return includes(this.eventTypes, entry.entry.type) && entry.entry.payload.serviceId === this.serviceId;
