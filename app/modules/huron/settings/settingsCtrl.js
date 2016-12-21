@@ -2151,9 +2151,9 @@
             voicemailPrefixLabel: digit.concat(vm.model.site.siteCode)
           });
         });
-        if ($scope.to) {
-          $scope.to.description = $translate.instant('serviceSetupModal.voicemailPrefixDesc', { 'number': vm.model.site.siteSteeringDigit.siteDialDigit, 'extensionLength0': extensionLength0, 'extensionLength9': extensionLength9 });
-          $scope.to.options = values;
+        if (localScope.to) {
+          localScope.to.description = $translate.instant('serviceSetupModal.voicemailPrefixDesc', { 'number': vm.model.site.siteSteeringDigit.siteDialDigit, 'extensionLength0': extensionLength0, 'extensionLength9': extensionLength9 });
+          localScope.to.options = values;
         }
       });
     }
