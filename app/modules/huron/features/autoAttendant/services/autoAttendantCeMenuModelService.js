@@ -380,7 +380,7 @@
 
     function parsePlayObject(menuEntry, inObject) {
       var action;
-      action = new Action('play', decodeUtf8(inObject.value));
+      action = new Action('play', decodeUtf8(inObject.url));
       if (angular.isDefined(inObject.voice)) {
         action.setVoice(inObject.voice);
       }
@@ -424,12 +424,10 @@
       //read from db
       var action;
       if (!_.isUndefined(inAction.play)) {
-        // convert file url to unique filename
-        // var filename = MediaResourceService.getFileName(inAction.play.url);
-        action = new Action('play', inAction.play.url);
+        action = new Action('play', decodeUtf8(inAction.play.url));
         setDescription(action, inAction.play);
         action.voice = inAction.play.voice;
-        action.deleteUrl = inAction.play.deleteUrl;
+        action.deleteUrl = decodeUtf8(inAction.play.deleteUrl);
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.say)) {
         action = new Action('say', decodeUtf8(inAction.say.value));
@@ -505,7 +503,7 @@
             var playList = inAction.runActionsOnInput.prompts.playList;
             if (playList && playList.length > 0 && !_.isUndefined(playList[0].url)) {
               action.url = decodeUtf8(inAction.runActionsOnInput.prompts.playList[0].url);
-              action.deleteUrl = inAction.runActionsOnInput.deleteUrl;
+              action.deleteUrl = decodeUtf8(inAction.runActionsOnInput.prompts.playList[0].deleteUrl);
             } else {
               var sayList = inAction.runActionsOnInput.prompts.sayList;
               if (sayList.length > 0 && _.has(sayList[0], 'value')) {
@@ -514,7 +512,6 @@
             }
             action.voice = inAction.runActionsOnInput.voice;
             action.description = inAction.runActionsOnInput.description;
-            action.deleteUrl = inAction.runActionsOnInput.deleteUrl;
             action.maxNumberOfCharacters = inAction.runActionsOnInput.maxNumberOfCharacters;
             action.minNumberOfCharacters = inAction.runActionsOnInput.minNumberOfCharacters;
             menuEntry.voice = inAction.runActionsOnInput.voice;

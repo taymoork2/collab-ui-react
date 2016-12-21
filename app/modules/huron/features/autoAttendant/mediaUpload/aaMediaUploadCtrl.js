@@ -340,6 +340,7 @@
       vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
       var actionHeader = getActionHeader(vm.menuEntry);
       var action = getAction(actionHeader);
+      action.description = actionHeader.description;
       if (action) {
         // existing say action from the existing header
         vm.actionEntry = action;

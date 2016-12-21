@@ -131,11 +131,16 @@
 
     function populateUiModel() {
       // default
-      vm.messageOption = vm.messageOptions[actionType.PLAY];
+      vm.messageOption = vm.messageOptions[actionType.SAY];
 
       if (vm.actionEntry.name === 'runActionsOnInput') {
         if (AACommonService.isMediaUploadToggle()) {
-          vm.messageOption = vm.messageOptions[actionType.PLAY];
+          if (vm.actionEntry.value && !_.startsWith(vm.actionEntry.value, 'http')) {
+            vm.messageOption = vm.messageOptions[actionType.SAY];
+            vm.messageInput = vm.actionEntry.value;
+          } else {
+            vm.messageOption = vm.messageOptions[actionType.PLAY];
+          }
         } else {
           vm.messageOption = vm.messageOptions[actionType.SAY];
           vm.messageInput = vm.actionEntry.value;
