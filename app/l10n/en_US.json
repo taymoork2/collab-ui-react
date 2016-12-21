@@ -2107,6 +2107,19 @@
     "genericError": "An unexpected error occurred. Please try again later.",
     "serviceDescription": "Hybrid Data Security Service Description.",
     "hdsServiceActivationFailure": "Problems enabling the service",
+    "alarms": {
+      "alarms": "Alarms",
+      "critical": "Critical",
+      "error": "Error",
+      "warning": "Warning",
+      "alert": "Alert",
+      "severity": "Severity",
+      "firstReported": "First Reported",
+      "lastReported": "Last Reported",
+      "description": "Description",
+      "noAlarms": "No alarms reported",
+      "action": "Action"
+    },
     "add-resource-dialog": {
       "cluster": "Create or select cluster",
       "hostname": "Enter FQDN or IP address",
@@ -2141,6 +2154,19 @@
         "no_clusters_text": "See required actions above and documentation to get started."
       }
     },
+    "clusterSettings": {
+      "releasechannelHeader": "Release Channel",
+      "registration": {
+        "heading": "Registration"
+      },
+      "list": {
+        "title": "Clusters",
+        "complete-registration": "Go to your Hybrid Data Security admin to complete the registration.",
+        "registration-timeout": "The registration timed out. Please remove this cluster and register the Hybrid Data Security node again.",
+        "registration-timeout-extended": "The registration timed out. Please remove this cluster and register the Hybrid Data Security node again in the Add Resource dialog."
+      }
+    },
+    "serviceName" : "Hybrid Data Security",
     "serviceStatus": {
       "unknown": "Status unknown",
       "not_configured": "Not configured",
@@ -2153,18 +2179,15 @@
       "downloading": "Downloading",
       "uninstalling": "Uninstalling",
       "running": "Running",
-      "needs_attention": "Needs attention",
-      "alarm": "Alarms",
-      "Unknown": "Registering",
-      "nohosts": "No Hosts Registered",
-      "no_hosts": "No Hosts Registered",
       "has_alarms": "Alarms",
       "upgrading": "Upgrading",
       "upgraded": "Upgraded",
       "pending": "Pending",
       "initializing": "Initializing",
-      "not_operational": "Not Operational",
-      "nonodes": "No Nodes Registered"
+      "not_operational": "Not operational",
+      "not_registered": "Registration not completed",
+      "urgentUpgradeAvailable": "Urgent upgrade available",
+      "registrationTimeout": "Registration timeout"
     },
     "resources": {
       "page_title": "Hybrid Data Security Service",
@@ -2592,6 +2615,7 @@
     "actionCallerInputHelp": "Set up the AA for capturing caller input",
     "callerInputCnvtDigit": "Convert digit input to text string value",
     "callerInputMaxLenStr": "Max Length of String",
+    "callerInputVariableTooLongMsg": "Maximum length of input variable is exceeded",
     "callerInputValue": "Input Value",
     "callerInputLabel": "Name",
     "callerInputNamePlaceHolder": "Name Variable",
@@ -2649,6 +2673,8 @@
     "phoneMenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Queue target.",
     "phoneMenuSubmenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Queue target.",
     "phoneMenuErrorRouteToAATargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Auto Attendant target.",
+    "callerInputMenuErrorVariableNameMissing": "{{schedule}} schedule at Caller Input Menu {{at}} is missing a variable name ",
+    "callerInputMenuErrorNoInputValuesEntered": "{{schedule}} schedule at Caller Input Menu {{at}} has no input values entered",
     "phoneMenuSubmenuErrorRouteToAATargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input Digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Auto Attendant target.",
     "phoneMenuErrorRouteToHGTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Hunt Group target.",
     "phoneMenuSubmenuErrorRouteToHGTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Hunt Group target.",
@@ -3728,6 +3754,7 @@
     "software": "Software",
     "serial": "Serial",
     "ipAddr": "IP Address",
+    "networkConnectivity": "Network Connectivity",
     "macAddr": "MAC Address",
     "sipUrl": "SIP Address",
     "issues": "Issues",
@@ -4974,6 +5001,10 @@
       "Beta": "Beta",
       "Preview": "Preview"
     },
+    "activeInterface": {
+      "lan": "Wired",
+      "wlan": "Wireless"
+    },
     "errorCodes": {
       "mediaProtocol": {
         "type": "Network Ports Blocked",
@@ -6159,7 +6190,7 @@
       "3002": "Failed to update callback group",
       "3003": "Failed to get callback group",
       "3004": "Failed to get callback group workflow status",
-      "3005": "Failed to sync callback group",
+      "3005": "Failed to synchronize callback group",
       "3006": "Failed to move sites between callback groups",
       "3007": "Failed to list callback groups",
       "3008": "Failed to check callback group name",
@@ -6177,7 +6208,7 @@
       "remedyTicket": "Remedy Ticket",
       "reqSubmission": "Request Submission",
       "approveCbg": "Approve Callback Group",
-      "editCountry": "Edit Countries/Regions",
+      "editCountry": "Edit Countries and Regions",
       "downloadCsv": "Download CSV Template",
       "csvFilename": "exported_callbackGroup.csv",
       "declineDialogTitle": "Decline Callback Group",
@@ -6187,8 +6218,8 @@
       "provisionMsg": "Do you want to complete this request and notify customer?",
       "cancelSubmissionTitle": "Are you sure you want to cancel the submission?",
       "cancelSubmissionMsg": "The associated remedy ticket will be deleted from the system.",
-      "declineDialogNote": "Note: Explaination will appear as a comment in the Callback Group history",
-      "approveMsg": "If you proceed, the system will auto-update the callback group with the selected countries",
+      "declineDialogNote": "Note: Explanation appears as a comment in the Callback Group history",
+      "approveMsg": "If you proceed, the system will automatically updates the callback group with the selected countries",
       "field": {
         "sites": "Site URL",
         "status_": "Status",
@@ -6216,10 +6247,10 @@
         "customerPlaceholder": "Who is this callback group for?",
         "labelCustomerAttr": "Partner CB Group Name",
         "customerAttrPlaceholder": "Enter a shorter name for quick reference",
-        "labelCountries": "Select Country/Regions",
-        "countriesPlaceholder": "Search to add country",
+        "labelCountries": "Selected Countries and Regions",
+        "countriesPlaceholder": "Search to add a country",
         "selectPlaceholder": "Select your country",
-        "syncPlaceholder": " Country/Regions Selected",
+        "syncPlaceholder": " Countries and Regions Selected",
         "countryDisplayNull": "No countries or regions yet"
       },
       "notes": {

@@ -46,6 +46,13 @@ describe('Directive: aaDialByExt', function () {
 
   }));
 
+  afterEach(function () {
+    $compile = null;
+    $rootScope = null;
+    $scope = null;
+    $q = null;
+  });
+
   it('replaces the element with the appropriate content', function () {
     element = $compile("<aa-dial-by-ext aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0'></aa-dial-by-ext>")($rootScope);
     $rootScope.$digest();

@@ -1,8 +1,13 @@
+import {
+  IMetricsData,
+} from './sparkReportInterfaces';
+
 describe('Service: Customer Reports Service', function () {
   let activeData = getJSONFixture('core/json/customerReports/activeUser.json');
   let conversationData = getJSONFixture('core/json/customerReports/conversation.json');
   let defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
   let mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
+  let metricsData = getJSONFixture('core/json/customerReports/callMetrics.json');
   let rejectError: any = {
     status: 500,
   };
@@ -29,7 +34,7 @@ describe('Service: Customer Reports Service', function () {
   };
 
   afterAll(function () {
-    mediaData = activeData = conversationData = defaults = rejectError = updateDates = dataResponse = undefined;
+    metricsData = mediaData = activeData = conversationData = defaults = rejectError = updateDates = dataResponse = undefined;
   });
 
   beforeEach(function () {
@@ -131,6 +136,33 @@ describe('Service: Customer Reports Service', function () {
       spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.reject(rejectError));
 
       this.SparkLineReportService.getMediaQualityData(defaults.timeFilter[0]).then(function (response) {
+        expect(response).toEqual([]);
+      });
+      this.$scope.$apply();
+    });
+  });
+
+  describe('Metrics Service', function () {
+    it('should getMetricsData', function () {
+      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.when(updateDates({
+        data: _.cloneDeep(metricsData.lineData),
+      })));
+
+      let lineResponse: Array<IMetricsData> = [];
+      for (let i = 0; i < 7; i++) {
+        lineResponse.push(_.cloneDeep(metricsData.lineResponse));
+      }
+
+      this.SparkLineReportService.getMetricsData(defaults.timeFilter[0]).then(function (response) {
+        expect(response).toEqual(lineResponse);
+      });
+      this.$scope.$apply();
+    });
+
+    it('should notify an error for getMetricsData', function () {
+      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.reject(rejectError));
+
+      this.SparkLineReportService.getMetricsData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual([]);
       });
       this.$scope.$apply();

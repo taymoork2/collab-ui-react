@@ -31,6 +31,13 @@ describe('Controller: AAMessageTypeCtrl', function () {
     $scope.index = index;
   }));
 
+  afterEach(function () {
+    $rootScope = null;
+    $scope = null;
+    AAUiModelService = null;
+    AutoAttendantCeMenuModelService = null;
+  });
+
   describe('AAMessageType', function () {
     var controller;
 
@@ -39,6 +46,10 @@ describe('Controller: AAMessageTypeCtrl', function () {
       controller = $controller;
       spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     }));
+
+    afterEach(function () {
+      controller = null;
+    });
 
     describe('activate', function () {
 

@@ -17,13 +17,6 @@ describe('Directive: aaMediaUpload', function () {
   var play = 'play';
   var element;
 
-  afterEach(function () {
-    if (element) {
-      element.remove();
-    }
-    element = undefined;
-  });
-
   beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_, _$q_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_) {
@@ -47,6 +40,20 @@ describe('Directive: aaMediaUpload', function () {
     playAction = AutoAttendantCeMenuModelService.newCeActionEntry(play, '');
     menuEntry.addAction(playAction);
   }));
+
+  afterEach(function () {
+    $compile = null;
+    $rootScope = null;
+    $scope = null;
+    $q = null;
+    AAUiModelService = null;
+    AutoAttendantCeMenuModelService = null;
+    FeatureToggleService = null;
+    if (element) {
+      element.remove();
+    }
+    element = null;
+  });
 
   describe('when the directive is an element', function () {
     beforeEach(function () {

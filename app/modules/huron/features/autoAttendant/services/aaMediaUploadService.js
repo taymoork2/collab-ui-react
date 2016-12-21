@@ -139,16 +139,8 @@
     function deleteResources(ctrl) {
       var target = _.get(ctrl, 'uploads', []);
       _.each(target, function (value) {
-        //every media upload controller stores the url
-        //in the value field for tropo
-        if (_.has(value, 'value')) {
-          try {
-            //initiate the deletion on the retrieved delete url
-            var desc = JSON.parse(value.description);
-            httpDeleteRetry(desc.deleteUrl, 0);
-          } catch (exception) {
-            //do nothing
-          }
+        if (_.has(value, 'deleteUrl')) {
+          httpDeleteRetry(value.deleteUrl, 0);
         }
       });
       if (target.length > 0) {
@@ -174,7 +166,7 @@
 
     //asynchronous delete on the resource, assumes url is valid
     function deleteRecording(deleteUrl) {
-      if (deleteUrl) {
+      if (deleteUrl && _.startsWith(deleteUrl, 'http')) {
         return $http.delete(deleteUrl);
       } else {
         return undefined;
@@ -218,8 +210,9 @@
         }
       } else {
         if (_.has(successResult, 'data.PlaybackUri')) {
-          urls.playback = deleteBaseUrl + successResult.data.PlaybackUri;
-          urls.deleteUrl = '';
+          var fullUrl = deleteBaseUrl + successResult.data.PlaybackUri;
+          urls.playback = fullUrl;
+          urls.deleteUrl = fullUrl;
         }
       }
       return urls;

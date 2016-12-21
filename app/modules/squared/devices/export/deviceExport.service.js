@@ -10,7 +10,7 @@
 
     function exportDevices(statusCallback) {
       var urlBase = UrlConfig.getCsdmServiceUrl();
-      var url = urlBase + '/organization/' + Authinfo.getOrgId() + '/devices?checkOnline=false&checkDisplayName=false';
+      var url = urlBase + '/organization/' + Authinfo.getOrgId() + '/devices?checkOnline=false&checkDisplayName=false&type=all';
       return exportData(url, statusCallback);
     }
 

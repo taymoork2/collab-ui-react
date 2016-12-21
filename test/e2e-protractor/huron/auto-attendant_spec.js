@@ -116,12 +116,14 @@ describe('Huron Auto Attendant', function () {
     it('should add Play Message, select Language and Voice to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
 
-      autoattendant.scrollIntoView(autoattendant.sayMessage);
+      autoattendant.scrollIntoView(autoattendant.messageOptions);
 
       // media upload
 
       utils.click(autoattendant.messageOptions);
+
       utils.click(autoattendant.playMessageOption);
+
       utils.wait(autoattendant.sayMediaUploadInput, 12000);
 
       $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
@@ -135,18 +137,23 @@ describe('Huron Auto Attendant', function () {
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
       // and delete
-      utils.click(autoattendant.deleteMedia);
-      utils.click(autoattendant.deleteConfirmationModalClose);
+      //utils.click(autoattendant.deleteMedia);
+      //utils.click(autoattendant.deleteConfirmationModalClose);
 
       // and save
-      utils.expectIsEnabled(autoattendant.saveButton);
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+      //utils.expectIsEnabled(autoattendant.saveButton);
+      //utils.click(autoattendant.saveButton);
+      //autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+
+      utils.click(autoattendant.messageOptions);
+      utils.click(autoattendant.sayMessageOption);
+
     }, 60000);
 
     it('should add SayMessage Message, select Language and Voice to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       utils.click(autoattendant.messageOptions);
       utils.click(autoattendant.sayMessageOption);
+
       autoattendant.scrollIntoView(autoattendant.sayMessage);
 
       // say message
@@ -175,6 +182,9 @@ describe('Huron Auto Attendant', function () {
       autoattendant.scrollIntoView(autoattendant.phoneMenuSay);
 
       utils.wait(autoattendant.phoneMenuSay, 12000);
+
+      utils.click(autoattendant.phoneMenuMessageOptions);
+      utils.click(autoattendant.phoneMenuSayMessageOption);
 
       //Add Phone Menu Say Message
       utils.click(autoattendant.phoneMenuSay);
@@ -213,18 +223,19 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuKeys.last());
       utils.click(autoattendant.phoneMenuKeyOptions.last().all(by.tagName('li')).last());
       utils.click(autoattendant.phoneMenuAction.last());
+
       utils.click(autoattendant.phoneMenuActionOptions.last().element(by.linkText('Say Message')));
-      utils.wait(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')), 12000);
+      utils.wait(autoattendant.phoneMenuActionTargetsMessageOption, 12000);
 
-      autoattendant.scrollIntoView(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')));
+      autoattendant.scrollIntoView(autoattendant.phoneMenuActionTargetsMessageOption);
 
-      utils.wait(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')), 12000);
+      utils.click(autoattendant.phoneMenuActionTargetsMessageOption, 12000);
 
-      utils.click(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')));
+      utils.click(autoattendant.phoneMenuActionTargetMessageOptions, 12000);
+
       utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')), "This is a phone menu say");
 
     });
-
     it('should delete one Phone Menu Repeat from the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       //Delete one repeatMenu
@@ -389,6 +400,9 @@ describe('Huron Auto Attendant', function () {
 
       utils.expectIsDisplayed(autoattendant.dialByExtension);
 
+      utils.click(autoattendant.dialByMessageOptions);
+      utils.click(autoattendant.dialBySayMessageOption);
+
       // say message
       utils.click(autoattendant.dialByMessageInput);
       utils.sendKeys(autoattendant.dialByMessageInput, "Enter the Extension");
@@ -433,7 +447,11 @@ describe('Huron Auto Attendant', function () {
 
       utils.expectIsDisabled(autoattendant.saveButton);
 
+      utils.click(autoattendant.dialByMessageOptions);
+      utils.click(autoattendant.dialBySayMessageOption);
+
     }, 60000);
+
 
     it('should add Caller Input via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       autoattendant.scrollIntoView(autoattendant.addStepLast);
@@ -445,6 +463,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.newStepCallerInput);
       utils.wait(autoattendant.callerInputFirst, 12000);
       autoattendant.scrollIntoView(autoattendant.callerInputFirst);
+      utils.sendKeys(autoattendant.callerInputNameVariable, "named Variable");
       utils.click(autoattendant.callerInputGetDigits);
       autoattendant.scrollIntoView(autoattendant.callerInputFirst);
       utils.click(autoattendant.callerInputAddAction);
@@ -581,8 +600,8 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.addAANumbers);
       autoattendant.scrollIntoView(autoattendant.sayMessageAll.first());
 
-      // Verify we have 3 Say Messages (2 sayMessage and PhoneMenu's) already:
-      utils.expectCount(autoattendant.sayMessageAll, 5);
+      // Verify we have 4 Say Messages (2 sayMessage and PhoneMenu's) already:
+      utils.expectCount(autoattendant.sayMessageAll, 4);
 
       // Verify two phone messages
 
@@ -597,6 +616,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.closeEditButton);
 
     });
+
     it('should delete new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
 
       // click delete X on the AA card for e2e test AA

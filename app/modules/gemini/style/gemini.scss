@@ -27,6 +27,14 @@
   .callback-groups {
     padding-left: 3.5rem;
   }
+
+  .page-option-buttons {
+    position: relative;
+
+    .btn--none {
+      cursor: default;
+    }
+  }
 }
 
 .gemini-request-callbackgroup {
@@ -158,4 +166,3 @@
     left: 0;
   }
 }
-

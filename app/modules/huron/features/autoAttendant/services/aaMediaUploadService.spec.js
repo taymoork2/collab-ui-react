@@ -97,7 +97,7 @@ describe('Service: AAMediaUploadService', function () {
     it('should return http promise given a truthy url', function () {
       var del = $q.defer();
       spyOn($http, 'delete').and.returnValue(del.promise);
-      expect(AAMediaUploadService.deleteRecording('url')).toEqual(del.promise);
+      expect(AAMediaUploadService.deleteRecording('http://url')).toEqual(del.promise);
       expect($http.delete).toHaveBeenCalled();
     });
 

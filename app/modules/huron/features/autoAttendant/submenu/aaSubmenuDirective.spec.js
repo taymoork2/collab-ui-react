@@ -77,11 +77,11 @@ describe('Directive: aaSubmenu', function () {
     expect(htmlText).toContain("aaSubmenu");
   });
 
-  it('replaces the element with the appropriate content, with a say action on the first button of the submenu', function () {
+  it('replaces the element with the appropriate content, with a play action on the first button of the submenu', function () {
 
     submenu.entries[0] = AutoAttendantCeMenuModelService.newCeMenuEntry();
     submenu.entries[0].type = 'MENU_OPTION';
-    submenu.entries[0].addAction(AutoAttendantCeMenuModelService.newCeActionEntry('say', ''));
+    submenu.entries[0].addAction(AutoAttendantCeMenuModelService.newCeActionEntry('play', ''));
 
     element = $compile("<aa-submenu aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0' aa-queues='" + $scope.queues + "'></aa-submenu>")($rootScope);
     $rootScope.$digest();

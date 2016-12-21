@@ -2619,6 +2619,25 @@
               }
             }
           })
+          .state('hds-cluster-details', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                controllerAs: 'hdsSidepanelClusterController',
+                controller: 'HDSSidepanelClusterController',
+                templateUrl: 'modules/hds/cluster-sidepanel/cluster-details.html'
+              },
+              'header@hds-cluster-details': {
+                templateUrl: 'modules/hds/cluster-sidepanel/cluster-header.html'
+              }
+            },
+            data: {
+              displayName: 'Overview'
+            },
+            params: {
+              clusterId: null
+            }
+          })
           .state('mediafusion-settings', {
             url: '/services/cluster/mediafusion/:id/settings',
             templateUrl: 'modules/hercules/fusion-pages/mediafusion-settings.html',

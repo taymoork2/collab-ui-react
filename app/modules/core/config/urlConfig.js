@@ -186,7 +186,7 @@
       dev: 'https://calendar-cloud-connector-integration.wbx2.com/api/v1',
       cfe: 'https://calendar-cloud-connector-integration.wbx2.com/api/v1',
       integration: 'https://calendar-cloud-connector-integration.wbx2.com/api/v1',
-      prod: 'https://calendar-cloud-connector-a.wbx2.com/api/v1/ping'
+      prod: 'https://calendar-cloud-connector-a.wbx2.com/api/v1'
     },
 
     // urls same for all environments

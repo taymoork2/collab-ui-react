@@ -139,14 +139,14 @@ describe('Service: cbgService', function () {
     $httpBackend.flush();
   });
 
-  it('should return empty array in cbgsExportCSV when ', function () {
+  it('should return empty array in cbgsExportCSV', function () {
     mockResponse.content.data.returnCode = 0;
     mockResponse.content.data.body = [];
     var url = UrlConfig.getGeminiUrl() + 'callbackgroup/customerId/' + customerId;
     $httpBackend.expectGET(url).respond(200, mockResponse);
 
     cbgService.cbgsExportCSV(customerId).then(function (res) {
-      expect(res.length).toEqual(0);
+      expect(res.length).toEqual(1);
     });
     $httpBackend.flush();
   });

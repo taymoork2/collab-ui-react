@@ -8,6 +8,7 @@ import {
 } from '../../partnerReports/partnerReportInterfaces';
 
 import {
+  IMetricsData,
   IMetricsLabel,
 } from './sparkReportInterfaces';
 
@@ -102,7 +103,10 @@ describe('Controller: Customer Reports Ctrl', function () {
         dataProvider: _.cloneDeep(devicesJson.response.graphData),
       });
 
-      spyOn(this.SparkReportService, 'getActiveUserData').and.returnValue(this.$q.when(_.cloneDeep(activeData.activeResponse)));
+      spyOn(this.SparkReportService, 'getActiveUserData').and.returnValue(this.$q.when({
+        graphData: _.cloneDeep(activeData.activeResponse),
+        isActiveUsers: true,
+      }));
       spyOn(this.SparkReportService, 'getMostActiveUserData').and.returnValue(this.$q.when(_.cloneDeep(activeData.mostActiveResponse)));
       spyOn(this.SparkReportService, 'getAvgRoomData').and.returnValue(this.$q.when(_.cloneDeep(roomData.response)));
       spyOn(this.SparkReportService, 'getFilesSharedData').and.returnValue(this.$q.when(_.cloneDeep(fileData.response)));
@@ -287,9 +291,15 @@ describe('Controller: Customer Reports Ctrl', function () {
         dataProvider: _.cloneDeep(mediaData.response),
         zoomToIndexes: zoomFunction,
       });
+      spyOn(this.SparkGraphService, 'setMetricsGraph').and.returnValue({
+        dataProvider: _.cloneDeep(metricsData.response.dataProvider),
+      });
       spyOn(this.SparkGraphService, 'showHideActiveLineGraph');
 
-      spyOn(this.SparkLineReportService, 'getActiveUserData').and.returnValue(this.$q.when(_.cloneDeep(activeData.activeLineResponse)));
+      spyOn(this.SparkLineReportService, 'getActiveUserData').and.returnValue(this.$q.when({
+        graphData: _.cloneDeep(activeData.activeLineResponse),
+        isActiveUsers: true,
+      }));
       spyOn(this.SparkLineReportService, 'getMediaQualityData').and.returnValue(this.$q.when(_.cloneDeep(mediaData.response)));
       spyOn(this.SparkLineReportService, 'getMostActiveUserData').and.returnValue(this.$q.when(_.cloneDeep(activeData.mostActiveResponse)));
       spyOn(this.SparkLineReportService, 'getConversationData').and.returnValue(this.$q.when({
@@ -298,9 +308,16 @@ describe('Controller: Customer Reports Ctrl', function () {
         hasFiles: true,
       }));
 
+      let lineResponse: Array<IMetricsData> = [];
+      for (let i = 0; i < 7; i++) {
+        lineResponse.push(_.cloneDeep(metricsData.lineResponse));
+      }
+      spyOn(this.SparkLineReportService, 'getMetricsData').and.returnValue(this.$q.when(lineResponse));
+
       spyOn(this.DummySparkDataService, 'dummyActiveUserData').and.callThrough();
       spyOn(this.DummySparkDataService, 'dummyConversationData').and.callThrough();
       spyOn(this.DummySparkDataService, 'dummyMediaData').and.callThrough();
+      spyOn(this.DummySparkDataService, 'dummyMetricsData').and.callThrough();
 
       controller = this.$controller('SparkReportCtrl', {
         $q: this.$q,
@@ -322,6 +339,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(this.DummySparkDataService.dummyActiveUserData).toHaveBeenCalledTimes(1);
         expect(this.DummySparkDataService.dummyConversationData).toHaveBeenCalledTimes(1);
         expect(this.DummySparkDataService.dummyMediaData).toHaveBeenCalledTimes(1);
+        expect(this.DummySparkDataService.dummyMetricsData).toHaveBeenCalledTimes(1);
 
         expect(this.SparkLineReportService.getActiveUserData).toHaveBeenCalledTimes(1);
         expect(this.SparkGraphService.setActiveLineGraph).toHaveBeenCalledTimes(2);
@@ -335,9 +353,12 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(this.SparkLineReportService.getMediaQualityData).toHaveBeenCalledTimes(1);
         expect(this.SparkGraphService.setQualityGraph).toHaveBeenCalledTimes(2);
 
+        expect(this.SparkLineReportService.getMetricsData).toHaveBeenCalledTimes(1);
+        expect(this.SparkGraphService.setMetricsGraph).toHaveBeenCalledTimes(2);
+
         expect(zoomFunction).not.toHaveBeenCalled();
 
-        expect(this.CommonReportService.createExportMenu).toHaveBeenCalledTimes(8);
+        expect(this.CommonReportService.createExportMenu).toHaveBeenCalledTimes(10);
         expect(this.SparkGraphService.showHideActiveLineGraph).toHaveBeenCalledTimes(2);
         expect(this.CardUtils.resize).toHaveBeenCalledTimes(1);
       });
@@ -358,7 +379,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(controller.activeOptions).toEqual(activeOptions);
         expect(controller.secondaryActiveOptions).toEqual(secondaryOptions);
         expect(controller.activeDropdown.array).toEqual(activeDropdownArray);
-        expect(controller.activeDropdown.disabled).toBeTruthy();
+        expect(controller.activeDropdown.disabled).toBeFalsy();
         expect(controller.activeDropdown.selected).toEqual(activeDropdownArray[0]);
         expect(controller.activeDropdown.click).toEqual(jasmine.any(Function));
 
@@ -369,6 +390,9 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(controller.mediaDropdown.array).toEqual(mediaDropdown.array);
         expect(controller.mediaDropdown.disabled).toEqual(mediaDropdown.disabled);
         expect(controller.mediaDropdown.selected).toEqual(mediaDropdown.selected);
+
+        expect(controller.metricsOptions).toEqual(metricsOptions);
+        expect(controller.metricsLabels).toEqual(metricsLabels);
 
         let reportFilter: Array<IFilterObject> = _.cloneDeep(ctrlData.reportFilter);
         _.forEach(controller.filterArray, function (filter, index: number) {
@@ -393,38 +417,21 @@ describe('Controller: Customer Reports Ctrl', function () {
 
         expect(this.DummySparkDataService.dummyActiveUserData).toHaveBeenCalledTimes(2);
         expect(this.SparkLineReportService.getActiveUserData).toHaveBeenCalledTimes(2);
-        expect(this.SparkGraphService.setActiveLineGraph).toHaveBeenCalledTimes(4);
+        expect(this.SparkGraphService.setActiveLineGraph).toHaveBeenCalledTimes(3);
         expect(this.$rootScope.$broadcast).toHaveBeenCalledTimes(6);
 
         expect(this.SparkLineReportService.getConversationData).toHaveBeenCalledTimes(2);
-        expect(this.SparkGraphService.setRoomGraph).toHaveBeenCalledTimes(4);
-        expect(this.SparkGraphService.setFilesGraph).toHaveBeenCalledTimes(4);
+        expect(this.SparkGraphService.setRoomGraph).toHaveBeenCalledTimes(3);
+        expect(this.SparkGraphService.setFilesGraph).toHaveBeenCalledTimes(3);
 
         expect(this.SparkLineReportService.getMediaQualityData).toHaveBeenCalledTimes(2);
-        expect(this.SparkGraphService.setQualityGraph).toHaveBeenCalledTimes(4);
+        expect(this.SparkGraphService.setQualityGraph).toHaveBeenCalledTimes(3);
+
+        expect(this.SparkLineReportService.getMetricsData).toHaveBeenCalledTimes(2);
+        expect(this.SparkGraphService.setMetricsGraph).toHaveBeenCalledTimes(3);
 
         expect(zoomFunction).toHaveBeenCalledTimes(8);
         expect(this.CardUtils.resize).toHaveBeenCalledTimes(2);
-
-        controller.timeSelected = defaults.altTimeFilter[defaults.altTimeFilter.length - 1];
-        controller.timeUpdates.sliderUpdate(5, 15);
-        this.$timeout.flush();
-        expect(controller.timeSelected).toEqual(defaults.altTimeFilter[defaults.altTimeFilter.length - 1]);
-
-        expect(this.DummySparkDataService.dummyActiveUserData).toHaveBeenCalledTimes(3);
-        expect(this.SparkLineReportService.getActiveUserData).toHaveBeenCalledTimes(2);
-        expect(this.SparkGraphService.setActiveLineGraph).toHaveBeenCalledTimes(6);
-        expect(this.$rootScope.$broadcast).toHaveBeenCalledTimes(7);
-
-        expect(this.SparkLineReportService.getConversationData).toHaveBeenCalledTimes(2);
-        expect(this.SparkGraphService.setRoomGraph).toHaveBeenCalledTimes(6);
-        expect(this.SparkGraphService.setFilesGraph).toHaveBeenCalledTimes(6);
-
-        expect(this.SparkLineReportService.getMediaQualityData).toHaveBeenCalledTimes(2);
-        expect(this.SparkGraphService.setQualityGraph).toHaveBeenCalledTimes(6);
-
-        expect(zoomFunction).toHaveBeenCalledTimes(12);
-        expect(this.CardUtils.resize).toHaveBeenCalledTimes(3);
       });
 
       it('should hide or show graphs as expected when changing the activeDropdown selection', function () {

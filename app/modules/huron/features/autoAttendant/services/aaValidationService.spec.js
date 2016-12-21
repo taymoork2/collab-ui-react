@@ -17,6 +17,12 @@ describe('Service: AAValidationService', function () {
   var data = getJSONFixture('huron/json/autoAttendant/aaPhoneMenuCtrl.json');
   var welcomeMenu = getJSONFixture('huron/json/autoAttendant/welcomeMenu.json');
 
+  function KeyAction() {
+    this.key = '';
+    this.value = '';
+    this.keys = [];
+  }
+
   function ce2CeInfo(rawCeInfo) {
     var _ceInfo = AutoAttendantCeInfoModelService.newCeInfo();
     for (var j = 0; j < rawCeInfo.assignedResources.length; j++) {
@@ -114,6 +120,170 @@ describe('Service: AAValidationService', function () {
     });
   });
 
+  describe('isCallerInputValidationSuccess', function () {
+    var ui;
+    beforeEach(function () {
+      spyOn(AANotificationService, 'error');
+      aaModel.ceInfos = [];
+      aaModel.aaRecords = [];
+      ui = {};
+      ui.isOpenHours = true;
+
+      ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+    });
+
+    it('should report Variable Name is blank validation', function () {
+      var valid;
+      var entry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+
+      actionEntry.inputType = 3;
+      actionEntry.variableName = '';
+      entry.addAction(actionEntry);
+
+      ui.openHours.addEntryAt(0, entry);
+
+      valid = AAValidationService.isRouteToValidationSuccess(ui);
+
+      expect(valid).toEqual(false);
+      expect(AANotificationService.error).toHaveBeenCalled();
+      expect(AANotificationService.error.calls.argsFor(0)).toEqual(['autoAttendant.callerInputMenuErrorVariableNameMissing', {
+        schedule: 'autoAttendant.scheduleOpen',
+        at: 1,
+      }]);
+
+    });
+
+    it('should report Variable Name is blank validation for menu two', function () {
+      var valid;
+      var entry1 = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      var entry2 = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      var actionEntry1 = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+      var actionEntry2 = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+
+      actionEntry1.inputType = 3;
+      actionEntry1.variableName = 'my variable';
+      entry1.addAction(actionEntry1);
+
+
+      actionEntry2.inputType = 3;
+      actionEntry2.variableName = '';
+      entry2.addAction(actionEntry2);
+
+      ui.openHours.addEntryAt(0, entry1);
+      ui.openHours.addEntryAt(1, entry2);
+
+      valid = AAValidationService.isRouteToValidationSuccess(ui);
+
+      expect(valid).toEqual(false);
+      expect(AANotificationService.error.calls.argsFor(0)).toEqual(['autoAttendant.callerInputMenuErrorVariableNameMissing', {
+        schedule: 'autoAttendant.scheduleOpen',
+        at: 2,
+      }]);
+
+    });
+
+    it('should not report Variable Name is blank', function () {
+      var valid;
+      var entry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+
+      actionEntry.inputType = 3;
+      actionEntry.variableName = 'my variable name';
+      entry.addAction(actionEntry);
+
+      ui.openHours.addEntryAt(0, entry);
+
+      valid = AAValidationService.isRouteToValidationSuccess(ui);
+
+      expect(valid).toEqual(true);
+      expect(AANotificationService.error).not.toHaveBeenCalled();
+
+    });
+
+    it('should report No input values validation', function () {
+      var valid;
+      var entry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+
+      actionEntry.inputType = 4;
+      actionEntry.variableName = 'my variable name';
+      entry.addAction(actionEntry);
+
+      ui.openHours.addEntryAt(0, entry);
+
+      valid = AAValidationService.isRouteToValidationSuccess(ui);
+
+      expect(valid).toEqual(false);
+
+      expect(AANotificationService.error.calls.argsFor(0)).toEqual(['autoAttendant.callerInputMenuErrorNoInputValuesEntered', {
+        schedule: 'autoAttendant.scheduleOpen',
+        at: 1,
+      }]);
+
+    });
+    it('should report no input values entered validation', function () {
+
+      var valid;
+      var entry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+
+      actionEntry.inputType = 4;
+      actionEntry.variableName = 'my variable name';
+      actionEntry.inputActions = [];
+      actionEntry.inputActions.push(new KeyAction());
+      actionEntry.inputActions.push(new KeyAction());
+      actionEntry.inputActions.push(new KeyAction());
+
+      entry.addAction(actionEntry);
+
+      ui.openHours.addEntryAt(0, entry);
+
+      valid = AAValidationService.isRouteToValidationSuccess(ui);
+
+      expect(valid).toEqual(false);
+
+      expect(AANotificationService.error.calls.argsFor(0)).toEqual(['autoAttendant.callerInputMenuErrorNoInputValuesEntered', {
+        schedule: 'autoAttendant.scheduleOpen',
+        at: 1,
+      }]);
+
+    });
+    it('should report No errors when at least one input value is entered', function () {
+      var goodKey = new KeyAction();
+
+      var valid;
+      var entry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+
+      actionEntry.inputType = 4;
+      actionEntry.variableName = 'my variable name';
+      goodKey.value = 'my value';
+      actionEntry.inputActions = [];
+      actionEntry.inputActions.push(new KeyAction());
+      actionEntry.inputActions.push(new KeyAction());
+      actionEntry.inputActions.push(goodKey);
+
+      entry.addAction(actionEntry);
+
+      ui.openHours.addEntryAt(0, entry);
+
+      valid = AAValidationService.isRouteToValidationSuccess(ui);
+
+      expect(valid).toEqual(true);
+      expect(AANotificationService.error).not.toHaveBeenCalled();
+
+    });
+
+  });
+
   describe('isPhoneMenuValidationSuccess', function () {
     var ui;
     beforeEach(function () {
@@ -131,6 +301,7 @@ describe('Service: AAValidationService', function () {
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
+
     });
 
     it('report validation error for an empty Route to Auto Attendant target', function () {

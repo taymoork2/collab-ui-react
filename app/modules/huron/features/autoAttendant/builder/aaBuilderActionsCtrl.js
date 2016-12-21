@@ -19,7 +19,7 @@
       help: $translate.instant('autoAttendant.sayMessageHelp') + appendSpecialCharHelp,
       metric: 'Say-Message-Title',
       showHelpLink: true,
-      actions: ['say', 'play']
+      actions: ['play', 'say']
     }, {
       title: $translate.instant('autoAttendant.actionPhoneMenu'),
       controller: 'AAPhoneMenuCtrl as aaPhoneMenu',
@@ -37,7 +37,7 @@
       help: $translate.instant('autoAttendant.actionDialByExtensionHelp'),
       metric: 'Dial-By-Extension-Title',
       showHelpLink: false,
-      type: 2, // to flag that this is not phonemenu, see setOption
+      type: [2], // to flag that this is not phonemenu, see setOption
       actions: ['runActionsOnInput']
     }, {
       title: $translate.instant('autoAttendant.actionRouteCall'),
@@ -123,7 +123,7 @@
         } else if (menuEntry.actions.length > 0 && menuEntry.actions[0].getName()) {
           var matchType = function (action) {
             return menuEntry.actions[0].getName() === action &&
-              menuEntry.actions[0].inputType === vm.options[i].type;
+              (_.has(vm.options[i], 'type') ? _.includes(vm.options[i].type, menuEntry.actions[0].inputType) : true);
           };
           for (var i = 0; i < vm.options.length; i++) {
             var isMatch = vm.options[i].actions.some(matchType);
@@ -144,8 +144,9 @@
           hint: $translate.instant('autoAttendant.actionCallerInputHint'),
           help: $translate.instant('autoAttendant.actionCallerInputHelp') + appendSpecialCharHelp,
           metric: 'Caller-Input-Title',
+          type: [3, 4],
           showHelpLink: true,
-          actions: ['callerInput']
+          actions: ['runActionsOnInput']
         });
       }
     }
