@@ -26,7 +26,7 @@
       vm.showRegionAndVoicemail = vm.isRegionAndVoicemail(pstnEnabled);
     });
 
-    FeatureToggleService.getCustomerHuronToggle(Authinfo.getOrgId(), FeatureToggleService.features.huronDateTimeFormat).then(function (result) {
+    FeatureToggleService.getCustomerHuronToggle(Authinfo.getOrgId(), FeatureToggleService.features.huronDateTimeEnable).then(function (result) {
       vm.callDateTimeFormat = result;
     });
     var DEFAULT_SITE_INDEX = '000001';
@@ -43,12 +43,12 @@
       value: 'US'
     };
     var DEFAULT_TF = {
-      label: '12 hour',
-      value: '12-hour'
+      label: '24 hour',
+      value: Config.timeFormat.HOUR_24
     };
     var DEFAULT_DF = {
       label: 'MM/DD/YYYY',
-      value: 'M-D-Y'
+      value: Config.dateFormat.MDY
     };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
@@ -103,10 +103,10 @@
     vm.timeZoneOptions = [];
     vm.timeFormatOptions = [{
       label: '12 hour',
-      value: '12-hour'
+      value: Config.timeFormat.HOUR_12
     }, {
       label: '24 hour',
-      value: '24-hour'
+      value: Config.timeFormat.HOUR_24
     }];
     vm.dateFormatOptions = [];
     vm.timeZoneInputPlaceholder = $translate.instant('serviceSetupModal.searchTimeZone');
@@ -1363,7 +1363,7 @@
     function loadDateFormatOptions() {
       return ServiceSetup.getDateFormats()
         .then(function (dateFormats) {
-          vm.dateFormatOptions = ServiceSetup.getTranslatedDateFormats(dateFormats);
+          vm.dateFormatOptions = dateFormats;
         });
     }
 

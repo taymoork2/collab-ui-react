@@ -6256,18 +6256,8 @@
       "by": "by",
       "showMore": "Show more"
     }
-  }, 
-  "dateFormats": {
-    "M-D-Y": "MM/DD/YYYY",
-    "D-M-Y": "DD/MM/YYYY",
-    "Y-M-D": "YYYY/MM/DD",
-    "MM-DD-YYYY": "MM-DD-YYYY",
-    "DD-MM-YYYY": "DD-MM-YYYY",
-    "YYYY-MM-DD": "YYYY-MM-DD",
-    "MM.DD.YYYY": "MM.DD.YYYY",
-    "DD.MM.YYYY": "DD.MM.YYYY",
-    "YYYY.MM.DD": "YYYY.MM.DD"
   },
+  
   "timeZones": {
     "Etc/GMT+12": "Etc/GMT+12",
     "Etc/GMT+11": "Etc/GMT+11",

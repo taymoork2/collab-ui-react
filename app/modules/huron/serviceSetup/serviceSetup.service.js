@@ -184,15 +184,6 @@
         return DateFormatService.query().$promise;
       },
 
-      getTranslatedDateFormats: function (dateFormats) {
-        var localizedDateFormats = _.map(dateFormats, function (dateFormat) {
-          return _.extend(dateFormat, {
-            label: $translate.instant('dateFormats.' + dateFormat.value)
-          });
-        });
-        return localizedDateFormats;
-      },
-
       getTimeZones: function () {
         return TimeZoneService.query().$promise;
       },
