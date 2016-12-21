@@ -2607,6 +2607,18 @@
               },
             }
           })
+          .state('hds-cluster-details.alarm-details', {
+            templateUrl: 'modules/hds/cluster-sidepanel/alarm-details.html',
+            controller: 'HDSAlarmController',
+            controllerAs: 'hdsAlarmController',
+            data: {
+              displayName: 'Alarm Details'
+            },
+            params: {
+              alarm: null,
+              host: null
+            }
+          })
           .state('mediafusion-settings', {
             url: '/services/cluster/mediafusion/:id/settings',
             templateUrl: 'modules/hercules/fusion-pages/mediafusion-settings.html',
