@@ -281,11 +281,11 @@ describe('Controller: TrialAddCtrl', function () {
 
       it('should notify success', function () {
         spyOn(HuronCustomer, 'create').and.returnValue($q.when());
-        spyOn(TrialPstnService, 'createPstnEntity').and.returnValue($q.when());
+        spyOn(TrialPstnService, 'createPstnEntityV2').and.returnValue($q.when());
         controller.startTrial();
         $scope.$apply();
         expect(HuronCustomer.create).toHaveBeenCalled();
-        expect(TrialPstnService.createPstnEntity).toHaveBeenCalled();
+        expect(TrialPstnService.createPstnEntityV2).toHaveBeenCalled();
         expect(Notification.success).toHaveBeenCalledWith('trialModal.addSuccess', jasmine.any(Object));
         expect(Notification.success.calls.count()).toEqual(1);
       });
