@@ -62,16 +62,21 @@
     var savedActionEntry = undefined;
     var uniqueCtrlIdentifier = 'mediaUploadCtrl' + AACommonService.getUniqueId();
     var mediaResources = AAMediaUploadService.getResources(uniqueCtrlIdentifier);
+    var MAX_FILE_SIZE_IN_B = 1048576;
 
     //////////////////////////////////////////////////////
 
     function upload(file) {
       if (file) {
         if (AAMediaUploadService.validateFile(file.name)) {
-          if (isOverwrite()) {
-            confirmOverwrite(file);
+          if (file.size <= MAX_FILE_SIZE_IN_B) {
+            if (isOverwrite()) {
+              confirmOverwrite(file);
+            } else {
+              continueUpload(file);
+            }
           } else {
-            continueUpload(file);
+            AANotificationService.error('autoAttendant.fileUploadSizeIncorrect');
           }
         } else {
           AANotificationService.error('fileUpload.errorFileType');
