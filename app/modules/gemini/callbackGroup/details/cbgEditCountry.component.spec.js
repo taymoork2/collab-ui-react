@@ -2,7 +2,7 @@
 
 describe('Component: cbgEditCountry', function () {
   var $q, $state, $scope, $componentCtrl;
-  var ctrl, defer, cbgService, Notification, PreviousState;
+  var ctrl, cbgService, Notification, PreviousState;
   var preData = getJSONFixture('gemini/common.json');
   var csvFile = 'COUNTRY\r\nAlbania\r\nAnguilla\r\nUnited Kingdom';
 
@@ -13,7 +13,7 @@ describe('Component: cbgEditCountry', function () {
   beforeEach(initController);
 
   afterEach(function () {
-    $q = $state = $scope = $componentCtrl = ctrl = defer = cbgService = Notification = PreviousState = undefined;
+    $q = $state = $scope = $componentCtrl = ctrl = cbgService = Notification = PreviousState = undefined;
   });
   afterAll(function () {
     preData = csvFile = undefined;
@@ -21,7 +21,6 @@ describe('Component: cbgEditCountry', function () {
 
   function dependencies(_$q_, _$state_, _$rootScope_, _$componentController_, _cbgService_, _Notification_, _PreviousState_) {
     $q = _$q_;
-    defer = $q.defer();
     $state = _$state_;
     cbgService = _cbgService_;
     $scope = _$rootScope_.$new();
@@ -31,8 +30,10 @@ describe('Component: cbgEditCountry', function () {
   }
 
   function initSpies() {
+    spyOn($state, 'go');
     spyOn(PreviousState, 'go');
     spyOn(Notification, 'error');
+    spyOn(Notification, 'notify');
     spyOn(Notification, 'errorResponse');
     spyOn(cbgService, 'getCountries').and.returnValue($q.resolve());
     spyOn(cbgService, 'updateCallbackGroup').and.returnValue($q.resolve());
@@ -82,7 +83,6 @@ describe('Component: cbgEditCountry', function () {
     });
 
     it('function onFileSizeError response error message', function () {
-      defer.reject({});
       ctrl.onFileSizeError();
       expect(Notification.error).toHaveBeenCalled();
     });
@@ -159,14 +159,14 @@ describe('Component: cbgEditCountry', function () {
       }
 
       beforeEach(initOnsave);
-      it('should call PreviousState.go when return correct response', function () {
+      it('should call $state.go when return correct response', function () {
         var cbgUpdateResData = preData.common;
         cbgUpdateResData.content.data.body = preData.saveCbgResponse;
         cbgService.updateCallbackGroup.and.returnValue($q.resolve(cbgUpdateResData));
 
         ctrl.onSave();
         $scope.$apply();
-        expect(PreviousState.go).toHaveBeenCalled();
+        expect($state.go).toHaveBeenCalled();
       });
 
       it('should call Notification.error when return error response', function () {
@@ -176,7 +176,7 @@ describe('Component: cbgEditCountry', function () {
 
         ctrl.onSave();
         $scope.$apply();
-        expect(Notification.error).toHaveBeenCalled();
+        expect(Notification.notify).toHaveBeenCalled();
       });
 
       it('should throw Notification.errorResponse', function () {

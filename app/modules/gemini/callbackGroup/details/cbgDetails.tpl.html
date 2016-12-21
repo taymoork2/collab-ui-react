@@ -111,7 +111,7 @@
       <button type="button" class="btn btn--primary" cs-btn loading="$ctrl.btnCancelSubmissionLoading" ng-click="$ctrl.onCancelSubmission()" ng-if="$ctrl.isShowCancelSubmission" ng-disabled="$ctrl.btnCancelSubmissionDisable">
         <span translate="gemini.button.cancelSubmission"></span>
       </button>
-      <button type="button" class="btn btn--primary" ng-click="$ctrl.onApprove()" ng-if="$ctrl.isShowDeclineApprove">
+      <button type="button" class="btn btn--primary" cs-btn loading="$ctrl.btnApproveLoading" ng-click="$ctrl.onApprove()" ng-if="$ctrl.isShowDeclineApprove" ng-disabled="$ctrl.btnApproveDisable">
         <span translate="gemini.button.approve"></span>
       </button>
       <button type="button" class="btn btn-default" ng-click="$ctrl.onDecline()" ng-if="$ctrl.isShowDeclineApprove">

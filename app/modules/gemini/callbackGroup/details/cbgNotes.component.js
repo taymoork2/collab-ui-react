@@ -8,7 +8,7 @@
       controller: CbgNotesCtrl
     });
   /* @ngInject */
-  function CbgNotesCtrl($state, $stateParams, $translate, cbgService, Notification, PreviousState) {
+  function CbgNotesCtrl($state, $stateParams, $translate, cbgService, Notification, PreviousState, gemService) {
     var vm = this;
     var showNotesNum = 5;
     var customerId = _.get($stateParams, 'obj.customerId', '');
@@ -39,7 +39,7 @@
         var arr = [];
         vm.loading = false;
         if (resJson.returnCode) {
-          Notification.error(resJson.message);//TODO
+          Notification.notify(gemService.showError(resJson.returnCode));
           return;
         }
         arr.push(resJson);
@@ -62,7 +62,7 @@
         .then(function (res) {
           var resJson = _.get(res.content, 'data');
           if (resJson.returnCode) {
-            Notification.error('Fail to get notes');//TODO wording
+            Notification.notify(gemService.showError(resJson.returnCode));
             return;
           }
           vm.allNotes = resJson.body;

@@ -6,7 +6,7 @@
     .controller('CbgRequestCtrl', CbgRequestCtrl);
 
   /* @ngInject */
-  function CbgRequestCtrl($state, $timeout, $scope, $rootScope, $stateParams, cbgService, Notification) {
+  function CbgRequestCtrl($state, $timeout, $scope, $rootScope, $stateParams, cbgService, Notification, gemService) {
     var vm = this;
     vm.allCountries = [];
     vm.isCsvValid = false;
@@ -93,7 +93,7 @@
         cbgService.postRequest(customerId, vm.model.postData).then(function (res) {
           var resJson = _.get(res.content, 'data');
           if (resJson.returnCode) {
-            Notification.error(resJson.message);//TODO when wording confirmed
+            Notification.notify(gemService.showError(resJson.returnCode));
             return;
           }
           $rootScope.$emit('cbgsUpdate', true);

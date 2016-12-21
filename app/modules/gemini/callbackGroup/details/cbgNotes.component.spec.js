@@ -30,7 +30,7 @@ describe('Component: cbgNotes', function () {
 
   function initSpies() {
     spyOn(PreviousState, 'go');
-    spyOn(Notification, 'error');
+    spyOn(Notification, 'notify');
     spyOn(cbgService, 'getNotes').and.returnValue($q.resolve());
     spyOn(cbgService, 'postNote').and.returnValue($q.resolve());
   }
@@ -57,7 +57,7 @@ describe('Component: cbgNotes', function () {
       cbgService.getNotes.and.returnValue($q.resolve(getNotesResponse));
       ctrl.$onInit();
       $scope.$apply();
-      expect(Notification.error).toHaveBeenCalled();
+      expect(Notification.notify).toHaveBeenCalled();
     });
   });
 
@@ -95,7 +95,7 @@ describe('Component: cbgNotes', function () {
       cbgService.postNote.and.returnValue($q.resolve(getNotesResponse));
       ctrl.onSave();
       $scope.$apply();
-      expect(Notification.error).toHaveBeenCalled();
+      expect(Notification.notify).toHaveBeenCalled();
     });
   });
 });
