@@ -2713,7 +2713,7 @@
     "holdMusic": "Hold Music",
     "standardTransferMusic": "Use Cisco Default",
     "uploadYourOwn": "Upload Your Own File",
-    "fileUploadSizeIncorrect": "The file uploaded must be less than 1 MB in size.",
+    "fileUploadSizeIncorrect": "The file uploaded must be less than 5 MB in size.",
     "musicOnHoldHelp": "Choose the audio that callers hear while on hold.",
     "cancelUpload": "Are you sure you want to cancel this upload?",
     "deleteUpload": "Are you sure you want to delete the current file?",
