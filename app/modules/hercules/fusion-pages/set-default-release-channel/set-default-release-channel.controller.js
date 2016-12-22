@@ -5,12 +5,12 @@
     .controller('SetDefaultReleaseChannelController', SetDefaultReleaseChannelController);
 
   /* @ngInject */
-  function SetDefaultReleaseChannelController($translate, $modalInstance, FusionClusterService, Notification, ResourceGroupService) {
+  function SetDefaultReleaseChannelController($q, $modalInstance, $translate, unassignedClusters, FusionClusterService, Notification, ResourceGroupService) {
     var vm = this;
     var restrictedChannels = ['beta', 'latest'];
     vm.saving = false;
     vm.isDisabled = isDisabled;
-    vm.save = save;
+    vm.saveReleaseChannel = saveReleaseChannel;
     vm.releaseChannelSelected = undefined;
     vm.releaseChannelOptions = [{
       label: $translate.instant('hercules.fusion.add-resource-group.release-channel.stable'),
@@ -24,20 +24,26 @@
       return vm.saving || vm.releaseChannelSelected === undefined;
     }
 
-    function save() {
+    function saveReleaseChannel(channel) {
       vm.saving = true;
       return FusionClusterService.setOrgSettings({
-        expresswayClusterReleaseChannel: vm.releaseChannelSelected.value,
+        expresswayClusterReleaseChannel: channel,
       })
-      .then(function () {
-        $modalInstance.close();
-      })
+      .then(_.partial(updateAllUnassignedClusters, channel))
+      .then($modalInstance.close)
       .catch(function (error) {
         Notification.errorWithTrackingId(error, 'default release channel not saved');
       })
       .finally(function () {
         vm.saving = false;
       });
+    }
+
+    function updateAllUnassignedClusters(channel) {
+      var promises = _.map(unassignedClusters, function (cluster) {
+        return FusionClusterService.setReleaseChannel(cluster.id, channel);
+      });
+      return $q.all(promises);
     }
 
     function getDefaultReleaseChannel() {

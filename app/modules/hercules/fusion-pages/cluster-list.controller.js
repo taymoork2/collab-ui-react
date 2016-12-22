@@ -160,7 +160,6 @@
 
     function setFilter(filter) {
       if (hasF237FeatureToggle) {
-        console.warn('filter.filterValue', filter.filterValue);
         if (filter.filterValue === 'all') {
           vm.displayedGroups = groupsCache;
         } else {
@@ -261,7 +260,7 @@
         type: 'full',
         controller: 'AddResourceGroupController',
         controllerAs: 'vm',
-        templateUrl: 'modules/hercules/fusion-pages/add-resource-group/add-resource-group.html'
+        templateUrl: 'modules/hercules/fusion-pages/add-resource-group/add-resource-group.html',
       }).result
       .then(refreshList);
     }
@@ -271,7 +270,12 @@
         type: 'small',
         controller: 'SetDefaultReleaseChannelController',
         controllerAs: 'vm',
-        templateUrl: 'modules/hercules/fusion-pages/set-default-release-channel/set-default-release-channel.html'
+        templateUrl: 'modules/hercules/fusion-pages/set-default-release-channel/set-default-release-channel.html',
+        resolve: {
+          unassignedClusters: function () {
+            return groupsCache[0].unassigned;
+          },
+        }
       }).result
       // TODO: display notifications
       .then(refreshList);
