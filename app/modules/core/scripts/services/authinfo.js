@@ -49,10 +49,6 @@
     };
 
     var isEntitled = function (entitlement) {
-      // hack
-      if (entitlement === Config.entitlements.hds) {
-        return true;
-      }
       var services = authData.services;
       if (services) {
         for (var i = 0; i < services.length; i++) {

@@ -87,10 +87,7 @@
                 clusters: sort(getClustersForResourceGroup(resourceGroup.id, org.clusters)),
               };
             }),
-            // careful, some hds_app hacking hack below
-            unassigned: sort(getUnassignedClusters(org.clusters)).concat([
-              _.assign({}, _.find(getUnassignedClusters(org.clusters), { targetType: 'c_mgmt', isEmptyExpresswayCluster: undefined }), { targetType: 'hds_app', name: 'HDS Cluster' })
-            ]),
+            unassigned: sort(getUnassignedClusters(org.clusters)),
           };
         })
         .then(addUserCount);
