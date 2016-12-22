@@ -324,6 +324,20 @@ describe('Service: ServiceSetup', function () {
     });
   });
 
+  describe('getDateFormats', function () {
+    beforeEach(function () {
+      $httpBackend.expectGET('modules/huron/serviceSetup/dateFormats.json').respond(getJSONFixture('huron/json/settings/dateFormat.json'));
+    });
+
+    it('should get the Date formats', function () {
+      ServiceSetup.getDateFormats().then(function (response) {
+        expect(response).toBeDefined();
+        expect(response.length).toBe(3);
+      });
+      $httpBackend.flush();
+    });
+  });
+
   describe('getTimeZones', function () {
     beforeEach(function () {
       $httpBackend.expectGET('modules/huron/serviceSetup/jodaTimeZones.json').respond(getJSONFixture('huron/json/timeZones/timeZones.json'));
