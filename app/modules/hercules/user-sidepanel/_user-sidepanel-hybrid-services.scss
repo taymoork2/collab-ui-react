@@ -110,6 +110,14 @@
   font-size: 0.875rem;
   line-height: 2.25rem;
   font-family: $brand-font-light;
+  a {
+    color: $color-primary-base;
+  }
+}
+
+.cloud-extension-label.description {
+  line-height: inherit;
+  word-break: break-all;
 }
 
 form {

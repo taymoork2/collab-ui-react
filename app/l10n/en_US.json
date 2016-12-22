@@ -2093,6 +2093,7 @@
       "assignedToResourceGroup": "Assigned to resource group {{resourceGroupName}}",
       "showingFirstEntries": "Showing first {{numEntries}} entries",
       "serviceEnabled": "Pending activation",
+      "time": "Time",
       "types": {
         "AddEntitlement": "Service enabled",
         "RemoveEntitlement": "Service disabled",

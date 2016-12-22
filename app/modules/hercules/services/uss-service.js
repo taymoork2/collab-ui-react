@@ -81,7 +81,7 @@
     }
 
     function extractJournalEntries(res) {
-      return res.data.entries;
+      return res.data.entries || [];
     }
 
     function decorateWithStatus(status) {

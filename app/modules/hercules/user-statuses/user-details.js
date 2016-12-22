@@ -87,7 +87,7 @@
       return [
         getUserName(userOrMachine),
         getType(userOrMachine),
-        status.connector ? status.connector.cluster_name : '',
+        status.connector ? status.connector.cluster_name + ' (' + status.connector.host_name + ')' : '',
         $translate.instant('hercules.activationStatus.' + USSService.decorateWithStatus(status)),
         status.description ? status.description.defaultMessage : '',
         status.userId,

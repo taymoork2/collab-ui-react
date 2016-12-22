@@ -1173,7 +1173,7 @@
             }
           })
           .state('user-overview.hybrid-services-squared-fusion-cal.history', {
-            template: '<user-status-history></user-status-history>',
+            template: '<user-status-history service-id="\'squared-fusion-cal\'"></user-status-history>',
             data: {
               displayName: 'Status History'
             },
@@ -1193,7 +1193,7 @@
             }
           })
           .state('user-overview.hybrid-services-squared-fusion-gcal.history', {
-            template: '<user-status-history></user-status-history>',
+            template: '<user-status-history service-id="\'squared-fusion-gcal\'"></user-status-history>',
             data: {
               displayName: 'Status History'
             },
@@ -1213,7 +1213,7 @@
             }
           })
           .state('user-overview.hybrid-services-squared-fusion-uc.uc-history', {
-            template: '<user-status-history></user-status-history>',
+            template: '<user-status-history service-id="\'squared-fusion-uc\'"></user-status-history>',
             data: {
               displayName: 'Aware Status History'
             },
@@ -1222,7 +1222,7 @@
             }
           })
           .state('user-overview.hybrid-services-squared-fusion-uc.ec-history', {
-            template: '<user-status-history></user-status-history>',
+            template: '<user-status-history service-id="\'squared-fusion-ec\'"></user-status-history>',
             data: {
               displayName: 'Connect Status History'
             },

@@ -9,7 +9,7 @@ import take = require('lodash/take');
 
 class UserStatusHistoryCtrl implements ng.IComponentController {
   public readonly numEntriesToShow = 20;
-  public readonly serviceId;
+  public serviceId: string;
   public historyEntries: any[];
   private readonly userId;
   private readonly eventTypes = ['AddEntitlement', 'RemoveEntitlement', 'AddUserResourceGroup', 'RemoveUserResourceGroup', 'SetUserStatus'];
@@ -17,7 +17,6 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private USSService,
-    private $state,
     private $stateParams,
     private Authinfo,
     private Notification: Notification,
@@ -25,12 +24,11 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
     private ClusterService,
     private ResourceGroupService,
   ) {
-    this.serviceId = this.$state.params.serviceId;
     this.userId = this.$stateParams.currentUser.id;
     this.historyEntries = [];
   }
 
-  public $onInit() {
+  public $onChanges() {
     this.USSService.getUserJournal(this.userId, this.Authinfo.getOrgId(), 100, this.serviceId)
       .then(entries => {
         let filteredEntries = filter(<any[]>entries, entry => {
@@ -93,4 +91,7 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
 export class UserStatusHistoryComponent implements ng.IComponentOptions {
   public controller = UserStatusHistoryCtrl;
   public templateUrl = 'modules/hercules/user-sidepanel/user-status-history/user-status-history.html';
+  public bindings = {
+    serviceId: '<',
+  };
 }
