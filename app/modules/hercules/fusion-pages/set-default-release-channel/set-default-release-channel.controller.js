@@ -32,7 +32,7 @@
       .then(_.partial(updateAllUnassignedClusters, channel))
       .then($modalInstance.close)
       .catch(function (error) {
-        Notification.errorWithTrackingId(error, 'default release channel not saved');
+        Notification.errorWithTrackingId(error, 'hercules.fusion.defaultReleaseChannelModal.error');
       })
       .finally(function () {
         vm.saving = false;
