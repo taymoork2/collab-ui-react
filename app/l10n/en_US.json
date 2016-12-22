@@ -4175,7 +4175,6 @@
       "deregisterErrorHeader": "Unexpected Error",
       "deregisterAreYouSure": "You are about to deregister media server {{clusterName}} from organization {{organizationName}}.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}.",
-      "releaseChannel": "Release Channel",
       "clusterSettings": "Cluster Settings",
       "deletecluster": "Delete Cluster",
       "deleteclusterHeadding": "Delete Hybrid Media Cluster",
