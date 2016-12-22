@@ -127,8 +127,6 @@
 
     function updateFilters() {
       if (hasF237FeatureToggle) {
-        // go through all entries, all groups, all unassigned clusters to find the total of clusters
-        // TODO: skip hidden entries?
         vm.placeholder.count = _.reduce(groupsCache, function (acc, entry) {
           if (entry.groups) {
             acc = acc + _.reduce(entry.groups, function (a, group) {
@@ -183,19 +181,27 @@
         if (searchStr === '') {
           vm.displayedGroups = groupsCache;
         } else {
-          vm.displayedGroups = {
-            groups: _.chain(groupsCache.groups)
-              .map(function (group) {
-                var response = _.cloneDeep(group);
-                response.clusters = $filter('filter')(response.clusters, { name: searchStr });
-                return response;
-              })
-              .filter(function (group) {
-                return group.clusters.length > 0;
-              })
-              .value(),
-            unassigned: $filter('filter')(groupsCache.unassigned, { name: searchStr }),
-          };
+          vm.displayedGroups = [
+            _.assign({}, vm.displayedGroups[0], {
+              groups: _.chain(vm.displayedGroups[0].groups)
+                .map(function (group) {
+                  var response = _.cloneDeep(group);
+                  response.clusters = $filter('filter')(response.clusters, { name: searchStr });
+                  return response;
+                })
+                .filter(function (group) {
+                  return group.clusters.length > 0;
+                })
+                .value(),
+              unassigned: $filter('filter')(vm.displayedGroups[0].unassigned, { name: searchStr }),
+            }),
+            _.assign({}, vm.displayedGroups[1], {
+              unassigned: $filter('filter')(vm.displayedGroups[1].unassigned, { name: searchStr }),
+            }),
+            _.assign({}, vm.displayedGroups[2], {
+              unassigned: $filter('filter')(vm.displayedGroups[2].unassigned, { name: searchStr }),
+            }),
+          ];
         }
       } else {
         if (searchStr === '') {
@@ -277,7 +283,6 @@
           },
         }
       }).result
-      // TODO: display notifications
       .then(refreshList);
     }
   }
