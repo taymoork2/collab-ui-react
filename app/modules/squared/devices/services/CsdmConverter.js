@@ -328,7 +328,7 @@
 
       function getLastConnectionTime(obj) {
         moment.localeData(moment.locale())._calendar.sameElse = 'lll';
-        return (obj.status && obj.status.lastConnectionTime) ? moment(obj.status.lastConnectionTime).calendar() : null;
+        return (obj.status && obj.status.lastStatusReceivedTime) ? moment(obj.status.lastStatusReceivedTime).calendar() : null;
       }
 
       function getHuronId(obj) {

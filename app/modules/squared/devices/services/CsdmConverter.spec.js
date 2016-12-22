@@ -368,7 +368,7 @@ describe('CsdmConverterSpec', function () {
     it('when long ago', function () {
       var arr = [{
         status: {
-          lastConnectionTime: '2015-01-09T08:00:00Z',
+          lastStatusReceivedTime: '2015-01-09T08:00:00Z',
           connectionStatus: 'UNKNOWN'
         }
       }];
@@ -378,7 +378,7 @@ describe('CsdmConverterSpec', function () {
     it('when today', function () {
       var arr = [{
         status: {
-          lastConnectionTime: new Date(),
+          lastStatusReceivedTime: new Date(),
           connectionStatus: 'UNKNOWN'
         }
       }];
