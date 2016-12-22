@@ -54,7 +54,7 @@
           });
         })
         .catch(function (error) {
-          Notification.errorWithTrackingId(error, 'default release channel not found');
+          Notification.errorWithTrackingId(error, 'hercules.fusion.defaultReleaseChannelModal.error');
         });
     }
 

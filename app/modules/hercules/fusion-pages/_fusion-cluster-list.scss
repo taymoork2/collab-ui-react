@@ -1,8 +1,4 @@
 .fusion-cluster-list {
-  .add-resource-button {
-    margin-left: 1rem;
-  }
-
   .loading-list {
     text-align: center;
     margin-top: 2rem;
@@ -19,6 +15,10 @@
 
   h5 {
     margin: 1rem 1rem 0;
+
+    .h5 {
+      margin: 0;
+    }
   }
 
   .dropdown-toggle {

@@ -5,7 +5,7 @@
       <cs-searchfilter filters="resourceList.filters" set-filter-fn="resourceList.setFilter(filter)" search-item-fn="resourceList.searchData(searchStr)" placeholder-text="{{resourceList.placeholder.name}}" ng-model="resourceList.placeholder.count"></cs-searchfilter>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <button class="btn btn--people add-resource-button"
+      <button class="btn btn--people"
               type="button"
               translate="hercules.fusion.list.add-resource"
               ng-click="resourceList.addResource()"></button>
@@ -21,13 +21,13 @@
     <div ng-if="!resourceList.loading">
       <div ng-if="resourceList.showResourceGroups">
         <div ng-if="resourceList.displayedGroups[0].display">
-          <h5>Expressway <span cs-dropdown>
+          <h5><span class="h5" translate="hercules.fusion.list.expressway"></span> <span cs-dropdown>
             <button cs-dropdown-toggle class="btn--none dropdown-toggle">
               <i class="icon icon-cog"></i>
             </button>
             <ul cs-dropdown-menu class="dropdown-menu dropdown-primary">
-              <li><a ng-click="resourceList.setDefaultReleaseChannel()">Set default release channel</a></li>
-              <li><a ng-click="resourceList.addResourceGroup()">Create new resource group</a></li>
+              <li><a ng-click="resourceList.setDefaultReleaseChannel()" translate="hercules.fusion.list.set-default-release-channel"></a></li>
+              <li><a ng-click="resourceList.addResourceGroup()" translate="hercules.fusion.list.add-resource-group"></a></li>
             </ul>
           </span></h5>
           <cs-card-layout block-view="true" class="resource-groups-list">
@@ -39,14 +39,14 @@
         </div>
         <!-- - -->
         <div ng-if="resourceList.displayedGroups[1].display">
-          <h5>Media</h5>
+          <h5 translate="hercules.fusion.list.mediafusion"></h5>
           <cs-card-layout block-view="true">
             <cluster-card ng-repeat="cluster in resourceList.displayedGroups[1].unassigned" cluster="cluster"></cluster-card>
           </cs-card-layout>
         </div>
         <!-- - -->
         <div ng-if="resourceList.displayedGroups[2].display">
-          <h5>Data Security</h5>
+          <h5 translate="hercules.fusion.list.hds"></h5>
           <cs-card-layout block-view="true">
             <cluster-card ng-repeat="cluster in resourceList.displayedGroups[2].unassigned" cluster="cluster"></cluster-card>
           </cs-card-layout>
