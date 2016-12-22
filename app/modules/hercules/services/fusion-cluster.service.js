@@ -251,9 +251,7 @@
 
     function setReleaseChannel(clusterId, releaseChannel) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
-      return $http.patch(url, {
-        releaseChannel: releaseChannel
-      })
+      return $http.patch(url, { releaseChannel: releaseChannel })
         .then(extractData);
     }
 
