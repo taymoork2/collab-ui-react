@@ -34,7 +34,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
   var fileNameValid2 = "ILTQq5.wav";
   var fileSize = 41236;
   var fileSize2 = 43451;
-  var fileSizeInvalid = 1048577;
+  var fileSizeInvalid = (5 * 1024 * 1024) + 1;
   var fileModified = 1470671405088;
   var fileModified2 = 1470671405088;
   var fileDate = '09/01/16';

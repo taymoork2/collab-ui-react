@@ -62,7 +62,7 @@
     var savedActionEntry = undefined;
     var uniqueCtrlIdentifier = 'mediaUploadCtrl' + AACommonService.getUniqueId();
     var mediaResources = AAMediaUploadService.getResources(uniqueCtrlIdentifier);
-    var MAX_FILE_SIZE_IN_B = 1048576;
+    var MAX_FILE_SIZE_IN_B = 5 * 1024 * 1024;
 
     //////////////////////////////////////////////////////
 
