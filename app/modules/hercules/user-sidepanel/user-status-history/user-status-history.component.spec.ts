@@ -18,7 +18,7 @@ describe('Component: userStatusHistory', () => {
     spyOn(this.ClusterService, 'getConnector').and.returnValue(this.$q.resolve(mockConnector));
     spyOn(this.ResourceGroupService, 'getAll').and.returnValue(this.$q.resolve(mockResourceGroups));
     this.compileComponent('userStatusHistory', {
-      serviceId: serviceId
+      serviceId: serviceId,
     });
   }
 
@@ -35,12 +35,11 @@ describe('Component: userStatusHistory', () => {
     expect(this.controller.historyEntries.length).toEqual(0);
   });
 
-  // TODO: figure out why the serviceId binding does not work
   it('should set and decorate history entries', function() {
     mockConnector = { cluster_name: 'Foo', host_name: 'Bar' };
     mockJournalEntries = [
       { time: '2016-12-19T06:34:14.176Z', entry: { type: 'SetUserStatus', payload: { state: 'error', connectorId: 'c_cal@ABCDEFG', serviceId: 'squared-fusion-cal' } } },
-      { time: '2016-12-19T06:30:12.186Z', entry: { type: 'AddEntitlement',  payload: { serviceId: 'squared-fusion-cal' } } }
+      { time: '2016-12-19T06:30:12.186Z', entry: { type: 'AddEntitlement',  payload: { serviceId: 'squared-fusion-cal' } } },
     ];
     initComponent.call(this);
     expect(this.controller.historyEntries).toBeDefined();
