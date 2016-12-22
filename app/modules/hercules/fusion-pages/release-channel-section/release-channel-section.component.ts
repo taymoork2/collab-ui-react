@@ -124,11 +124,17 @@ class ReleaseChannelSectionController implements ng.IComponentController {
   }
 
   public isDisabled(): boolean {
-    return this.releaseChannelOptions.length < 2 || this.clusterSettingsWithResourceGroup();
+    return this.releaseChannelOptions.length < 2 ||
+      this.clusterSettingsButHasResourceGroup() ||
+      this.expresswaySettings();
   }
 
-  public clusterSettingsWithResourceGroup(): boolean {
+  public clusterSettingsButHasResourceGroup(): boolean {
     return this.type === 'cluster' && this.data.resourceGroupId;
+  }
+
+  public expresswaySettings(): boolean {
+    return this.type === 'cluster' && !this.data.resourceGroupId && this.data.targetType === 'c_mgmt';
   }
 
   private setSelectedReleaseChannelOption(releaseChannel): void {

@@ -34,7 +34,7 @@
       <release-channel-section cluster="clusterSettings.cluster"></release-channel-section>
     </div>
 
-    <setting-section setting="clusterSettings.deactivateServices">
+    <setting-section setting="clusterSettings.deactivateServices" class="needs-border-top">
       <div ng-if="clusterSettings.enabledServices.length > 1">
         <div class="sub-section" ng-repeat="service in clusterSettings.enabledServices | filter: clusterSettings.filterServices | orderBy: service ">
             <h5 class="sub-section__label"

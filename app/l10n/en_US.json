@@ -2078,6 +2078,7 @@
       "releaseChannelHeader": "Release Channel",
       "releaseChannelClusterDescription": "Select the release channel for all Hybrid Services running in this cluster.",
       "releaseChannelResourceGroupDescription": "Select the release channel for all Hybrid Services running in this group.",
+      "expresswayTip": "To change the release channel for this cluster, change the default release channel for unassigned clusters or assign it to a resource group with the preferred release channel.",
       "releaseChannelTip": "To change the release channel for this cluster, assign it to a resource group with the preferred release channel.",
       "releaseChannelSaved": "Release channel saved successfully",
       "orgHasNoAccessToChannel": "The resource group is configured with the “{{currentReleaseChannel}}” release channel, which is no longer available to your organization. Set the release channel to “{{stableReleaseChannel}}” to restore service.",
@@ -2086,7 +2087,6 @@
     "changeReleaseChannelDialog": {
       "title": "Change Release Channel",
       "description": "Are you sure you want to change the release channel for \"{{name}}\" to {{channelName}}?",
-      "warning": "If other unassigned clusters do not have the same resource group, it may be a problem.",
       "change": "Change"
     },
     "confirmDeleteResourceGroupModal": {
