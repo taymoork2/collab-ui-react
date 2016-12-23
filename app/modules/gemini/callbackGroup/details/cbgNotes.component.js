@@ -33,7 +33,11 @@
         action: 'add_note',
         objectName: vm.model.postData
       };
+      var notes = _.get(postData, 'objectName');
       vm.loading = true;
+      if (getByteLength(notes) > 500) {
+        return;
+      }
       cbgService.postNote(postData).then(function (res) {
         var resJson = _.get(res.content, 'data.body');
         var arr = [];
@@ -70,6 +74,22 @@
           vm.notes = (_.size(vm.allNotes) <= showNotesNum ? vm.allNotes : vm.allNotes.slice(0, showNotesNum));
           vm.loading = false;
         });
+    }
+
+    function getByteLength(str) {
+      var totalLength = 0;
+      var charCode;
+      for (var i = 0; i < str.length; i++) {
+        charCode = str.charCodeAt(i);
+        if (charCode < 0x007f) {
+          totalLength = totalLength + 1;
+        } else if ((0x0080 <= charCode) && (charCode <= 0x07ff)) {
+          totalLength += 2;
+        } else if ((0x0800 <= charCode) && (charCode <= 0xffff)) {
+          totalLength += 3;
+        }
+      }
+      return totalLength;
     }
   }
 })();

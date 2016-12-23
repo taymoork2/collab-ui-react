@@ -37,6 +37,7 @@ describe('Component: cbgEditCountry', function () {
     spyOn(Notification, 'errorResponse');
     spyOn(cbgService, 'getCountries').and.returnValue($q.resolve());
     spyOn(cbgService, 'updateCallbackGroup').and.returnValue($q.resolve());
+    spyOn(cbgService, 'getDownloadCountryUrl').and.returnValue($q.resolve());
   }
 
   function initController() {
@@ -49,6 +50,7 @@ describe('Component: cbgEditCountry', function () {
     var allCountries = preData.getCountries;
     ctrl.model.info.countries = [];
     cbgService.getCountries.and.returnValue($q.resolve(allCountries));
+    cbgService.getDownloadCountryUrl.and.returnValue($q.resolve(''));
   }
 
   describe('$onInit', function () {
