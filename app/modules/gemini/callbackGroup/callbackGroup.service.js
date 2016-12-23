@@ -11,7 +11,7 @@
     var URL = {
       coutries: geminURL + 'countries',
       updateCallbackGroup: geminURL + 'callbackgroup/',
-      downloadCountryUrl: geminURL + 'callbackgroup/countryTemplate',
+      downloadCountryUrl: geminURL + 'callbackgroup/countryRegionTemplate',
       callbackGroup: geminURL + 'callbackgroup/customerId/',
       activityLogs: geminURL + 'activityLogs'
     };
@@ -25,7 +25,7 @@
       getCallbackGroups: getCallbackGroups,
       getOneCallbackGroup: getOneCallbackGroup,
       updateCallbackGroup: updateCallbackGroup,
-      downloadCountryUrl: URL.downloadCountryUrl,
+      getDownloadCountryUrl: getDownloadCountryUrl,
       updateCallbackGroupStatus: updateCallbackGroupStatus,
       postNote: postNote,
     };
@@ -79,6 +79,10 @@
     function getHistories(customerId, ccaGroupId) {
       var url = URL.activityLogs + '/' + customerId + '/' + ccaGroupId + '/Callback%20Group';
       return $http.get(url).then(extractData);
+    }
+
+    function getDownloadCountryUrl() {
+      return $http.get(URL.downloadCountryUrl).then(extractData);
     }
 
     function extractData(response) {

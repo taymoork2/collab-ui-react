@@ -35,6 +35,7 @@ describe('Controller: TrialAddCtrl', function () {
 
     spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasCreateTrialBackendEmailGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.when(false));
@@ -280,11 +281,11 @@ describe('Controller: TrialAddCtrl', function () {
 
       it('should notify success', function () {
         spyOn(HuronCustomer, 'create').and.returnValue($q.when());
-        spyOn(TrialPstnService, 'createPstnEntity').and.returnValue($q.when());
+        spyOn(TrialPstnService, 'createPstnEntityV2').and.returnValue($q.when());
         controller.startTrial();
         $scope.$apply();
         expect(HuronCustomer.create).toHaveBeenCalled();
-        expect(TrialPstnService.createPstnEntity).toHaveBeenCalled();
+        expect(TrialPstnService.createPstnEntityV2).toHaveBeenCalled();
         expect(Notification.success).toHaveBeenCalledWith('trialModal.addSuccess', jasmine.any(Object));
         expect(Notification.success.calls.count()).toEqual(1);
       });

@@ -6,10 +6,11 @@
     </i>
   </ul>
   <div class="feature-list">
-   <textarea rows="5" maxlength="200" ng-model="$ctrl.model.postData" class="form-control optional-row ng-pristine ng-untouched ng-valid ng-empty" placeholder="{{'gemini.cbgs.notes.enterNote' | translate}}"></textarea>
-   </textarea>
+    <form name="note" novalidate>
+      <textarea rows="5" ng-maxlength="500" ng-model="$ctrl.model.postData" required class="form-control optional-row" placeholder="{{'gemini.cbgs.notes.enterNote' | translate}}"></textarea>
+    </form>
     <div class="text-right ui-mt">
-      <button id="addnote" class="btn info ng-scope" translate="gemini.cbgs.notes.addNote"  ng-click="$ctrl.onSave()"></button>
+      <button id="addnote" class="btn info" translate="gemini.cbgs.notes.addNote"  ng-click="$ctrl.onSave()" ng-disabled="note.$invalid"></button>
     </div>
   </div>
   <div class="ui-mv ui-pt">

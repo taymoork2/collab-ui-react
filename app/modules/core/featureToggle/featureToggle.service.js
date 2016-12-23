@@ -87,6 +87,7 @@
       huronNetworkLocale: 'huron-l10n-network-locale',
       huronUserLocale: 'huron-l10n-user-locale',
       huronUserLocale2: 'huron-l10n-user-locale-2',
+      huronDateTimeEnable: 'huronDateTimeEnable',
       iosActionBar: 'ios-action-bar',
       iosAecType: 'ios-aec-type',
       iosCameraview: 'ios-cameraview',

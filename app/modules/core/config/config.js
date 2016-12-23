@@ -226,6 +226,17 @@
         hybridServicesComboError: '400094',
       },
 
+      timeFormat: {
+        HOUR_12: '12-hour',
+        HOUR_24: '24-hour'
+      },
+
+      dateFormat: {
+        MDY: 'M-D-Y',
+        DMY: 'D-M-Y',
+        YMD: 'Y-M-D'
+      },
+
       webexSiteStatus: {
         RECEIVED: 'RECEIVED',
         PENDING_PARM: 'PENDING_PARM',

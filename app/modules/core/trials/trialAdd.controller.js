@@ -25,6 +25,7 @@
     vm.customerOrgId = undefined;
     vm.showRoomSystems = false;
     vm.showCare = false;
+    vm.isCallBackEnabled = false;
     vm.details = vm.trialData.details;
     vm.messageTrial = vm.trialData.trials.messageTrial;
     vm.meetingTrial = vm.trialData.trials.meetingTrial;
@@ -344,11 +345,11 @@
       },
       expressionProperties: {
         'templateOptions.required': function () {
-          return (vm.messageTrial.enabled && vm.callTrial.enabled); // Since, it depends on Message and Call Offer
+          return (vm.messageTrial.enabled && (!vm.isCallBackEnabled || vm.callTrial.enabled)); // Since, it depends on Message and Call Offer
         },
         'templateOptions.disabled': function () {
           return vm.messageOfferDisabledExpression()
-            || vm.callOfferDisabledExpression();
+            || (vm.isCallBackEnabled && vm.callOfferDisabledExpression());
         }
       }
     }, {
@@ -495,6 +496,7 @@
     function init() {
       $q.all({
         atlasCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
+        atlasCareCallbackTrials: FeatureToggleService.atlasCareCallbackTrialsGetStatus(),
         atlasContextServiceTrials: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         placesEnabled: FeatureToggleService.supports(FeatureToggleService.features.csdmPstn),
@@ -518,7 +520,7 @@
           vm.showCare = results.atlasCareTrials;
           vm.careTrial.enabled = results.atlasCareTrials;
           vm.sbTrial = results.atlasDarling;
-
+          vm.isCallBackEnabled = results.atlasCareCallbackTrials;
           // TODO: US12063 overrides using this var but requests code to be left in for now
           //var devicesModal = _.find(vm.trialStates, {
           //  name: 'trialAdd.call'
@@ -760,7 +762,7 @@
                 return $q.reject(response);
               }).then(function () {
                 if (vm.pstnTrial.enabled) {
-                  return TrialPstnService.createPstnEntity(vm.customerOrgId, response.data.customerName);
+                  return TrialPstnService.createPstnEntityV2(vm.customerOrgId, response.data.customerName);
                 }
               });
           }

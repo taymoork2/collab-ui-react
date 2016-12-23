@@ -37,6 +37,7 @@
           CsdmDataModelService.reloadItem(rs.currentDevice).then(function (device) {
             if (device.rsuKey != rs.oldRsuKey) {
               rs.resetDone = true;
+              rs.currentDevice = device;
               return deferred.resolve();
             }
             if (new Date().getTime() > endTime) {

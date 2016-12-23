@@ -73,8 +73,7 @@
               </div>
               <!-- upload end-->
 
-              <a class="btn btn--none" download="ccaportal_regions_template.xls" ng-href="$ctrl.downloadCountryUrl"><small translate="gemini.cbgs.downloadCsv" class="color-primary-base"></small></a>
-
+            <a class="btn btn--none" download="ccaportal_regions_template.xls" ng-if="$ctrl.downloadUrl" ng-href="{{$ctrl.downloadUrl}}"><small translate="gemini.cbgs.downloadCsv" class="color-primary-base"></small></a>
           </div>
         </div>
       </div>
