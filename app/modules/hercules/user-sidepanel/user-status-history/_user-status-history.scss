@@ -1,3 +1,5 @@
+@import 'styles/toolkit/colors';
+
 user-status-history {
   .side-panel-section {
     padding-top: 1rem;
@@ -11,5 +13,19 @@ user-status-history {
     padding-top: 1rem;
     font-style: italic;
     font-weight: 500;
+  }
+
+  .history-label {
+    font-weight: 500;
+    margin: 0;
+    font-size: 0.875rem;
+    font-family: $brand-font-light;
+    a {
+      color: $color-primary-base;
+    }
+  }
+
+  .row {
+    padding-top: 0.5rem;
   }
 }
