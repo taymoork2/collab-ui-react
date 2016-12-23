@@ -22,13 +22,6 @@
       }).length > 0;
     };
 
-    FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
-      vm.showRegionAndVoicemail = vm.isRegionAndVoicemail(pstnEnabled);
-    });
-
-    FeatureToggleService.getCustomerHuronToggle(Authinfo.getOrgId(), FeatureToggleService.features.huronDateTimeEnable).then(function (result) {
-      vm.callDateTimeFormat = result;
-    });
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
       id: 'America/Los_Angeles',
@@ -177,10 +170,6 @@
 
     PstnSetupService.getCustomer(Authinfo.getOrgId()).then(function () {
       vm.isTerminusCustomer = true;
-    });
-
-    FeatureToggleService.getCustomerHuronToggle(Authinfo.getOrgId(), FeatureToggleService.features.avrilVmEnable).then(function (result) {
-      vm.voicemailAvrilCustomer = result;
     });
 
     vm.validations = {
@@ -1842,11 +1831,28 @@
       }
     }
 
+    function loadFeatureToggles() {
+      FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
+        vm.showRegionAndVoicemail = vm.isRegionAndVoicemail(pstnEnabled);
+      });
+
+      FeatureToggleService.supports(FeatureToggleService.features.huronDateTimeEnable).then(function (result) {
+        vm.callDateTimeFormat = result;
+      });
+
+      FeatureToggleService.getCustomerHuronToggle(Authinfo.getOrgId(), FeatureToggleService.features.avrilVmEnable).then(function (result) {
+        vm.voicemailAvrilCustomer = result;
+      });
+
+      return $q.resolve();
+    }
+
     function init() {
       vm.loading = true;
       errors = [];
 
       var promises = [];
+      promises.push(loadFeatureToggles());
       promises.push(loadCompanyInfo());
       promises.push(loadServiceAddress());
       promises.push(loadExternalNumbers());
