@@ -35,7 +35,7 @@
       };
       var notes = _.get(postData, 'objectName');
       vm.loading = true;
-      if (getByteLength(notes) > 500) {
+      if (getByteLength(notes) > 2048) {
         return;
       }
       cbgService.postNote(postData).then(function (res) {
