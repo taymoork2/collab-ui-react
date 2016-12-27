@@ -1441,6 +1441,7 @@
     "validatingAddr": "Validating Address...",
     "saving": "Saving...",
     "errorAddr": "The address you entered is invalid, please try again.",
+    "failedToDelete": "Failed to delete device. Reason:",
     "advancedSettings": {
       "advancedSettings": "Advanced Settings",
       "launchAdvancedSettings": "Launch Advanced Settings",
@@ -6273,7 +6274,6 @@
       "showMore": "Show more"
     }
   },
-  
   "timeZones": {
     "Etc/GMT+12": "Etc/GMT+12",
     "Etc/GMT+11": "Etc/GMT+11",
