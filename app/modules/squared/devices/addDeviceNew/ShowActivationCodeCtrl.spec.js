@@ -2,13 +2,14 @@
 
 describe('ShowActivationCodeCtrl: Ctrl', function () {
   var controller, stateParams, $q, state, $scope, CsdmDataModelService, CsdmHuronPlaceService;
-  var OtpService, CsdmEmailService, Notification, ActivationCodeEmailService, UserListService;
+  var qrImage, OtpService, CsdmEmailService, Notification, ActivationCodeEmailService, UserListService;
+  var mockStream;
   var $controller;
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Squared'));
 
-  beforeEach(inject(function (_$controller_, _$q_, $rootScope, _CsdmDataModelService_, _CsdmHuronPlaceService_, _OtpService_, _CsdmEmailService_, _ActivationCodeEmailService_, _Notification_, _UserListService_) {
+  beforeEach(inject(function (_$controller_, _$q_, $rootScope, _CsdmDataModelService_, _CsdmHuronPlaceService_, _qrImage_, _OtpService_, _CsdmEmailService_, _ActivationCodeEmailService_, _Notification_, _UserListService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -16,11 +17,16 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
     stateParams = {};
     CsdmDataModelService = _CsdmDataModelService_;
     CsdmHuronPlaceService = _CsdmHuronPlaceService_;
+    qrImage = _qrImage_;
     OtpService = _OtpService_;
     CsdmEmailService = _CsdmEmailService_;
     Notification = _Notification_;
     ActivationCodeEmailService = _ActivationCodeEmailService_;
     UserListService = _UserListService_;
+    mockStream = {
+      on: function () {}
+    };
+    initSpies();
   }));
 
   function initController() {
@@ -30,6 +36,11 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       $stateParams: stateParams,
       CsdmDataModelService: CsdmDataModelService
     });
+  }
+
+  function initSpies() {
+    spyOn(mockStream, 'on');
+    spyOn(qrImage, 'image').and.returnValue(mockStream);
   }
 
   afterEach(function () {
@@ -444,7 +455,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             activationCode: activationCode,
             expiryTime: expiryTime
           }));
-          spyOn(OtpService, 'getQrCodeUrl').and.returnValue($q.when({}));
           initController();
           $scope.$digest();
         });
@@ -452,7 +462,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         it('creates a new place and otp', function () {
           expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber);
           expect(CsdmDataModelService.createCodeForExisting).toHaveBeenCalledWith(cisUuid);
-          expect(OtpService.getQrCodeUrl).toHaveBeenCalledWith(activationCode);
+          expect(qrImage.image).toHaveBeenCalledWith(activationCode, jasmine.anything());
           expect(controller.activationCode).toBe(activationCode);
           expect(controller.expiryTime).toBe(expiryTime);
         });
@@ -487,7 +497,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             activationCode: activationCode,
             expiryTime: expiryTime
           }));
-          spyOn(OtpService, 'getQrCodeUrl').and.returnValue($q.when({}));
           initController();
           $scope.$digest();
         });
@@ -495,7 +504,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
         it('creates an otp', function () {
           expect(CsdmDataModelService.createCodeForExisting).toHaveBeenCalledWith(cisUuid);
-          expect(OtpService.getQrCodeUrl).toHaveBeenCalledWith(activationCode);
+          expect(qrImage.image).toHaveBeenCalledWith(activationCode, jasmine.anything());
           expect(controller.activationCode).toBe(activationCode);
           expect(controller.expiryTime).toBe(expiryTime);
         });
@@ -537,7 +546,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             activationCode: activationCode,
             expiryTime: expiryTime
           }));
-          spyOn(OtpService, 'getQrCodeUrl').and.returnValue($q.when({}));
           initController();
           $scope.$digest();
         });
@@ -546,7 +554,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         it('creates a new place and otp', function () {
           expect(CsdmDataModelService.createCmiPlace).toHaveBeenCalledWith(deviceName, directoryNumber, externalNumber);
           expect(CsdmHuronPlaceService.createOtp).toHaveBeenCalledWith(cisUuid);
-          expect(OtpService.getQrCodeUrl).toHaveBeenCalledWith(activationCode);
+          expect(qrImage.image).toHaveBeenCalledWith(activationCode, jasmine.anything());
           expect(controller.activationCode).toBe(activationCode);
           expect(controller.expiryTime).toBe(expiryTime);
           expect(controller.account.cisUuid).toBe(newPlace.cisUuid);
@@ -582,14 +590,13 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             activationCode: activationCode,
             expiryTime: expiryTime
           }));
-          spyOn(OtpService, 'getQrCodeUrl').and.returnValue($q.when({}));
           initController();
           $scope.$digest();
         });
 
         it('creates an otp', function () {
           expect(CsdmHuronPlaceService.createOtp).toHaveBeenCalledWith(cisUuid);
-          expect(OtpService.getQrCodeUrl).toHaveBeenCalledWith(activationCode);
+          expect(qrImage.image).toHaveBeenCalledWith(activationCode, jasmine.anything());
           expect(controller.activationCode).toBe(activationCode);
           expect(controller.expiryTime).toBe(expiryTime);
         });
@@ -624,14 +631,13 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             code: activationCode,
             friendlyExpiresOn: expiryTime
           }));
-          spyOn(OtpService, 'getQrCodeUrl').and.returnValue($q.when({}));
           initController();
           $scope.$digest();
         });
 
         it('creates an otp', function () {
           expect(OtpService.generateOtp).toHaveBeenCalledWith(userEmail);
-          expect(OtpService.getQrCodeUrl).toHaveBeenCalledWith(activationCode);
+          expect(qrImage.image).toHaveBeenCalledWith(activationCode, jasmine.anything());
           expect(controller.activationCode).toBe(activationCode);
           expect(controller.expiryTime).toBe(expiryTime);
         });

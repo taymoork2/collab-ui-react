@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ShowActivationCodeCtrl', ShowActivationCodeCtrl);
   /* @ngInject */
-  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmDataModelService, CsdmHuronPlaceService, $stateParams, ActivationCodeEmailService, $translate, Notification, CsdmEmailService) {
+  function ShowActivationCodeCtrl($q, qrImage, UserListService, OtpService, CsdmDataModelService, CsdmHuronPlaceService, $stateParams, ActivationCodeEmailService, $translate, Notification, CsdmEmailService) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
@@ -82,14 +82,17 @@
     };
 
     function generateQRCode() {
-      OtpService.getQrCodeUrl(vm.activationCode).then(function (qrcode) {
-        var arrayData = '';
-        for (var i in Object.keys(qrcode)) {
-          if (qrcode.hasOwnProperty(i)) {
-            arrayData += qrcode[i];
-          }
-        }
-        vm.qrCode = arrayData;
+      var qrStream = qrImage.image(vm.activationCode, {
+        ec_level: 'L',
+        size: 7,
+        margin: 5
+      });
+      var chunks = [];
+      qrStream.on('data', function (chunk) {
+        chunks.push(chunk);
+      });
+      qrStream.on('end', function () {
+        vm.qrCode = Buffer.concat(chunks).toString('base64');
         vm.isLoading = false;
       });
     }
