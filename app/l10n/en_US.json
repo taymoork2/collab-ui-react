@@ -1213,6 +1213,10 @@
     "timeZone": "Time Zone",
     "searchTimeZone": "Search for a time zone...",
     "tzDescription": "Specify the time zone to use for schedule-based call routing. For example, this time zone applies to calls routed based on business hours and holiday schedules.",
+    "dateFormat": "Date Format",
+    "dfDescription": "Specify the Date Format for user devices.",
+    "timeFormat": "Time Format",
+    "tfDescription": "Specify the Time Format for user devices.",
     "steeringDigit": "Outbound Dial Digit",
     "steeringDigitDescription": "Specify the number users must dial before placing an external call.",
     "emergencyAddressDescription": "This is the default address that will be used for emergency services. This can be overridden by each User or Place.",
@@ -1234,8 +1238,8 @@
     "extensionError": "Extension not valid: ",
     "companyVoicemail": "Voicemail",
     "vmAccessNumber": "Voicemail Access Number",
-    "vmAccessModes": "Access Modes",
-    "vmAccessModesHelpText": "Customize the voicemail delivery options for your organization. Aside from phone delivery, you can let users retrieve voicemails attachments in Cisco Spark, email or both. Downloaded voicemail attachments are not secure.",
+    "vmDeliveryMethods": "Delivery Methods",
+    "vmDeliveryMethodsHelpText": "Customize the voicemail delivery options for your organization. Aside from phone delivery, you can let users retrieve voicemails attachments in Cisco Spark, email or both. Downloaded voicemail attachments are not secure.",
     "companyVoicemailDescription": "Select a phone number to reserve for dialing voicemail from outside the company.",
     "to": "to",
     "addMoreExtensionRanges": "Add more extension ranges",
@@ -2085,7 +2089,23 @@
       "userClearNote": "Note that any user assignments to this resource group will be cleared.",
       "remove": "Remove"
     },
-    "genericFailure": "An unexpected error occurred. Please try again later."
+    "genericFailure": "An unexpected error occurred. Please try again later.",
+    "userHistory": {
+      "history": "Status History",
+      "seeHistory": "See history",
+      "noLongerAssignedToResourceGroup": "User no longer assigned to any resource group",
+      "assignedToResourceGroup": "Assigned to resource group {{resourceGroupName}}",
+      "showingFirstEntries": "Showing first {{numEntries}} entries",
+      "serviceEnabled": "Pending activation",
+      "time": "Time",
+      "types": {
+        "AddEntitlement": "Service enabled",
+        "RemoveEntitlement": "Service disabled",
+        "AddUserResourceGroup": "Resource group changed",
+        "RemoveUserResourceGroup": "Resource group changed",
+        "SetUserStatus": "User status updated"
+      }
+    }
   },
   "hds": {
     "pageTitle": "Hybrid Data Security",
