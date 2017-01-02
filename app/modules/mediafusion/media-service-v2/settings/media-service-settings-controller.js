@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceSettingsControllerV2($modal, $stateParams, ServiceDescriptor, MailValidatorService, Notification) {
+  function MediaServiceSettingsControllerV2($stateParams, ServiceDescriptor, MailValidatorService, Notification) {
     var vm = this;
     vm.config = "";
     vm.wx2users = "";
@@ -13,17 +13,12 @@
     vm.emailSection = {
       title: 'common.general'
     };
-    vm.deactivateSection = {
-      title: 'common.deactivate'
-    };
 
-    vm.confirmDisable = function () {
-      $modal.open({
-        templateUrl: "modules/mediafusion/media-service-v2/settings/confirm-disable-dialog.html",
-        controller: 'DisableMediaServiceController',
-        controllerAs: "disableServiceDialog",
-        type: 'small'
-      });
+    vm.deactivateModalOptions = {
+      templateUrl: 'modules/mediafusion/media-service-v2/settings/confirm-disable-dialog.html',
+      controller: 'DisableMediaServiceController',
+      controllerAs: 'disableServiceDialog',
+      type: 'small',
     };
 
     vm.config = "";
