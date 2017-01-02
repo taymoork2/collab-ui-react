@@ -7,7 +7,7 @@
   </ul>
   <div class="feature-list">
     <form name="note" novalidate>
-      <textarea rows="5" ng-maxlength="500" ng-model="$ctrl.model.postData" required class="form-control optional-row" placeholder="{{'gemini.cbgs.notes.enterNote' | translate}}"></textarea>
+      <textarea rows="5" ng-maxlength="2048" ng-model="$ctrl.model.postData" required class="form-control optional-row" placeholder="{{'gemini.cbgs.notes.enterNote' | translate}}"></textarea>
     </form>
     <div class="text-right ui-mt">
       <button id="addnote" class="btn info" translate="gemini.cbgs.notes.addNote"  ng-click="$ctrl.onSave()" ng-disabled="note.$invalid"></button>

@@ -20,7 +20,7 @@
             type="text"
             ng-maxlength="60"
             cs-input-messages="forms.messages"
-            ng-model="cbgrCtrl.model.postData.customerName"
+            ng-model="cbgrCtrl.model.info.customerName"
             cs-input-label="{{::'gemini.cbgs.request.labelCustomer' | translate}}"
             placeholder="{{::'gemini.cbgs.request.customerPlaceholder' | translate}}">
         </div>
@@ -29,7 +29,7 @@
             cs-input
             type="text"
             ng-maxlength="200"
-            ng-model="cbgrCtrl.model.postData.customerAttribute"
+            ng-model="cbgrCtrl.model.info.customerAttribute"
             placeholder="{{::'gemini.cbgs.request.customerAttrPlaceholder' | translate}}"
             cs-input-label="{{::'gemini.cbgs.request.labelCustomerAttr' | translate}}">
         </div>
@@ -42,54 +42,63 @@
       </div>
 
       <div class="cs-input-group section__content columns">
-        <div class="cs-input-group ui-grid-header-viewport">
-          <label class="cs-input__label" for="html-input" translate="gemini.cbgs.request.labelCountries"></label>
-          <div class="left small-10 input-icon">
-            <span class="icon icon-search"></span>
-            <input id="html-input" class="cs-input" type="text" placeholder="{{::'gemini.cbgs.request.countriesPlaceholder' | translate}}">
-            <input type="hidden" ng-model="cbgrCtrl.hideCountries" required="true">
+        <input type="hidden" ng-model="cbgrCtrl.hideCountries" required="true">
+        <cs-sp-section>
+          <div class="section-title-row">
+            <span class="section-name" translate="gemini.cbgs.editCountry"></span>
           </div>
-
-
-          <div class="small-2 right upload-file text-right">
+          <div class="medium-8">
+            <cs-select
+              multi="true"
+              filter="true"
+              options="cbgrCtrl.options"
+              ng-model="cbgrCtrl.selected"
+              singular="Country/Region"
+              plural="Countries/Regions"
+              on-change-fn="cbgrCtrl.onSelectChange()"
+              refresh-data-fn="cbgrCtrl.getOptions()"
+              placeholder="cbgrCtrl.selectPlaceholder"
+            ></cs-select>
+          </div>
+          <div class="ui-mt medium-12">
             <!-- upload start-->
-            <div class="user-csv-upload" ng-if="!cbgrCtrl.isCsvValid">
+            <div class="user-csv-upload">
               <div class="flex-center-container">
-                <div class="file-drop">
-                  <i class="icon icon-share-contain icon-2x upload-file-btn"></i>
-                  <input
-                    class="upload-file-input"
-                    id="upload"
-                    name="upload"
-                    type="file"
-                    cr-file-read
-                    file="cbgrCtrl.model.file"
-                    file-name="cbgrCtrl.model.fileName"
-                    file-max-size="10"
-                    file-max-size-error="cbgrCtrl.onFileSizeError()"
-                    file-type="text/csv, application/csv, application/vnd.ms-excel"
-                    file-suffix="csv"
-                    file-type-error="cbgrCtrl.onFileTypeError()"/>
+                <div class="gemini-select-country medium-12">
+
+                  <div class="pull-left upload-file-box" ng-if="!cbgrCtrl.isCsvValid">
+                    <span class="btn" translate="gemini.cbgs.importCsv"></span>
+                    <input
+                      class="country-upload-input"
+                      id="upload"
+                      name="upload"
+                      type="file"
+                      cr-file-read
+                      file="cbgrCtrl.model.file"
+                      file-name="cbgrCtrl.model.fileName"
+                      file-max-size="10"
+                      file-max-size-error="cbgrCtrl.onFileSizeError()"
+                      file-type="text/csv, application/csv, application/vnd.ms-excel"
+                      file-suffix="csv"
+                      file-type-error="cbgrCtrl.onFileTypeError()"/>
+                  </div>
+
+                  <div ng-if="cbgrCtrl.isCsvValid" class="file-name medium-7 ellipsis">
+                    <span class="name" title="{{cbgrCtrl.model.fileName}}">{{cbgrCtrl.model.fileName}}</span>
+                    <small ng-click="cbgrCtrl.onResetFile()" class="icon icon-exit primary-color"></small>
+                  </div>
+                  <a class="btn btn--none" download="ccaportal_regions_template.xls" ng-if="cbgrCtrl.downloadUrl" ng-href="{{cbgrCtrl.downloadUrl}}"><small translate="gemini.cbgs.downloadCsv"></small></a>
                 </div>
               </div>
             </div>
-            <!-- upload end-->
           </div>
-        </div>
+        </cs-sp-section>
 
-        <div ng-if="cbgrCtrl.isCsvValid" class="file-drop-inactive">
-          <div class="center-vert">
-            <span>{{cbgrCtrl.model.fileName}}</span>
-            <button type="button" ng-click="cbgrCtrl.resetFile()" class="btn--none">
-              <small class="icon icon-exit"></small>
-            </button>
-          </div>
-        </div>
-        <h3 ng-if="cbgrCtrl.model.postData.countries.length == 0" class="text-center">
+        <h3 ng-if="cbgrCtrl.model.info.countries.length == 0" class="text-center ui-mt">
           <small>{{::'gemini.cbgs.request.countryDisplayNull' | translate}}</small>
         </h3>
-        <div class="tag-container">
-          <span class="tag tag-country" ng-repeat="val in cbgrCtrl.model.postData.countries">
+        <div class="tag-container ui-mt">
+          <span class="tag tag-country" ng-repeat="val in cbgrCtrl.model.info.countries">
             <span>{{val.countryName}}</span>
             <i class="icon icon-close" ng-click="cbgrCtrl.removeCountry(val.countryName)"></i>
           </span>
