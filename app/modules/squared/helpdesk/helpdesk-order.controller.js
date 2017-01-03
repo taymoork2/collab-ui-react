@@ -40,8 +40,9 @@
 
     function initOrderView(order) {
       // Getting information from the order.
-      vm.order = order;
-      var orderObj = _.first(order);
+      var orderObj = _.find(order, function (res) {
+        return res.orderStatus === 'PROVISIONED';
+      });
       if (_.isUndefined(orderObj)) {
         return;
       }
