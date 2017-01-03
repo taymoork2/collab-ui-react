@@ -11,11 +11,12 @@
       options="vm.releaseChannelOptions"
       on-change-fn="vm.releaseChannelChanged()"
       is-disabled="vm.isDisabled()">
-    </cs-select>
+  </cs-select>
+  <p class="cs-input__help-text" translate="hercules.fusion.defaultReleaseChannelModal.help"></p>
 </div>
 <div class="modal-footer">
   <button class="btn btn-default" ng-click="$dismiss()" translate="common.cancel"></button>
-  <button cs-btn class="btn btn-primary" ng-click="vm.saveReleaseChannel(vm.releaseChannelSelected.value)" loading="vm.creating">
+  <button cs-btn class="btn btn-primary" ng-click="vm.saveReleaseChannel(vm.releaseChannelSelected.value)" loading="vm.isDisabled()">
     <span translate="common.save"></span>
   </button>
 </div>

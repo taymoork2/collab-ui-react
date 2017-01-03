@@ -8,7 +8,7 @@
   function SetDefaultReleaseChannelController($q, $modalInstance, $translate, unassignedClusters, FusionClusterService, Notification, ResourceGroupService) {
     var vm = this;
     var restrictedChannels = ['beta', 'latest'];
-    vm.saving = false;
+    var saving = false;
     vm.isDisabled = isDisabled;
     vm.saveReleaseChannel = saveReleaseChannel;
     vm.releaseChannelSelected = undefined;
@@ -21,21 +21,22 @@
       .then(getDefaultReleaseChannel);
 
     function isDisabled() {
-      return vm.saving || vm.releaseChannelSelected === undefined;
+      return saving || vm.releaseChannelSelected === undefined;
     }
 
     function saveReleaseChannel(channel) {
-      vm.saving = true;
+      saving = true;
       return FusionClusterService.setOrgSettings({
         expresswayClusterReleaseChannel: channel,
       })
       .then(_.partial(updateAllUnassignedClusters, channel))
-      .then($modalInstance.close)
       .catch(function (error) {
         Notification.errorWithTrackingId(error, 'hercules.fusion.defaultReleaseChannelModal.error');
+        return $q.reject(error);
       })
+      .then($modalInstance.close)
       .finally(function () {
-        vm.saving = false;
+        saving = false;
       });
     }
 

@@ -15,11 +15,11 @@
   <div ng-show="$ctrl.showResetSection" class="error-message">
     <i class="icon icon-error"></i>
     <p class="message"
-      translate="hercules.resourceGroupSettings.orgHasNoAccessToChannel"
+      translate="hercules.releaseChannelSection.orgHasNoAccessToChannel"
       translate-values="{currentReleaseChannel: $ctrl.localizedCurrentChannelName, stableReleaseChannel: $ctrl.localizedStableChannelName}"></p>
     <form>
       <button class="btn" type="submit" ng-click="$ctrl.resetReleaseChannel()">
-        <span translate="hercules.resourceGroupSettings.setToStable"
+        <span translate="hercules.releaseChannelSection.setToStable"
               translate-values="{stableReleaseChannel: $ctrl.localizedStableChannelName}"></span>
       </button>
     </form>

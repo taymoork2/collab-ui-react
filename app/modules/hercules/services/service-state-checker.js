@@ -271,11 +271,7 @@
     function checkUnassignedClusters() {
       f237Promise
         .then(function (support) {
-          if (support) {
-            return defaultReleaseChannelPromise;
-          } else {
-            return $q.rejec();
-          }
+          return support ? defaultReleaseChannelPromise : $q.reject();
         })
         .then(function (defaultReleaseChannel) {
           return FusionClusterService.getAll()

@@ -1921,7 +1921,7 @@
       },
       "release-channel": {
         "title": "Default Release Channel",
-        "description": "Some clusters not assigned to resources groups do not have the right default release schedule. <a ng-click=\"{{onclick}}\">Fix</a>."
+        "description": "Some clusters not assigned to resources groups do not have the right default release channel. <a ng-click=\"{{onclick}}\">Fix now</a>."
       },
       "user-activation-errors": {
         "title": "Activation Error",
@@ -2037,8 +2037,9 @@
         }
       },
       "defaultReleaseChannelModal": {
-        "title": "Set default Release Channel",
-        "description": "Pick the default Release Channel you want your Expressway clusters to use for Hybrid Call and Hybrid Calendar. It will also update the Release Channel for all clusters not assigned to any resource groups.",
+        "title": "Set Default Release Channel",
+        "description": "Select the default release channel that you want to use for your Expressway Hybrid Service clusters.",
+        "help": "This setting affects only Expressway clusters that aren't assigned to a resource group. Any clusters that are in a resource group continue to use that resource group release channel.",
         "error": "Default Release Channel update failed"
       }
     },
