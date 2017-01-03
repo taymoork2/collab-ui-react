@@ -1,0 +1,27 @@
+<setting-section setting="$ctrl.releaseChannelTexts" ng-if="$ctrl.releaseChannelOptions.length > 1 || $ctrl.showResetSection">
+  <h5 class="sub-section__label" translate="hercules.releaseChannelSection.releaseChannelHeader"></h5>
+  <p ng-if="$ctrl.type === 'resource-group'" class="sub-section__description" translate="hercules.releaseChannelSection.releaseChannelResourceGroupDescription"></p>
+  <p ng-if="!$ctrl.isDisabled() && $ctrl.type === 'cluster'" class="sub-section__description" translate="hercules.releaseChannelSection.releaseChannelClusterDescription"></p>
+  <p ng-if="$ctrl.clusterSettingsButHasResourceGroup()" class="sub-section__description" translate="hercules.releaseChannelSection.releaseChannelTip"></p>
+  <p ng-if="$ctrl.expresswaySettings()" class="sub-section__description" translate="hercules.releaseChannelSection.expresswayTip"></p>
+  <div class="medium-8" ng-hide="$ctrl.showResetSection">
+    <cs-select
+      ng-model="$ctrl.releaseChannelSelected"
+      options="$ctrl.releaseChannelOptions"
+      on-change-fn="$ctrl.releaseChannelChanged()"
+      is-disabled="$ctrl.isDisabled()">
+    </cs-select>
+  </div>
+  <div ng-show="$ctrl.showResetSection" class="error-message">
+    <i class="icon icon-error"></i>
+    <p class="message"
+      translate="hercules.releaseChannelSection.orgHasNoAccessToChannel"
+      translate-values="{currentReleaseChannel: $ctrl.localizedCurrentChannelName, stableReleaseChannel: $ctrl.localizedStableChannelName}"></p>
+    <form>
+      <button class="btn" type="submit" ng-click="$ctrl.resetReleaseChannel()">
+        <span translate="hercules.releaseChannelSection.setToStable"
+              translate-values="{stableReleaseChannel: $ctrl.localizedStableChannelName}"></span>
+      </button>
+    </form>
+  </div>
+</setting-section>

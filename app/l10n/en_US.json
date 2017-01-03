@@ -1750,9 +1750,6 @@
       "moveResourceGroupDialogParagraph": "{{ClusterName}} will be moved to \"{{NewResourceGroup}}\".",
       "moveResourceGroupDialogConnectorsList": "The following connectors will be upgraded in the next upgrade window: ",
       "moveResourceGroupSuccess": "{{ClusterName}} has been assigned to \"{{NewResourceGroup}}\".",
-      "releasechannelHeader": "Release Channel",
-      "releasechannelSubHeader": "Release Channel",
-      "releasechannelParagraph": "To change the release channel for this cluster, assign it to a resource group with the preferred release channel.",
       "deactivateServicesHeader": "Deactivate Services",
       "deactivateServicesParagraph": "Deactivate {{ServiceName}} to remove any service-related functionality from this cluster.",
       "deactivateServicesSubHeader": "Deactivate {{service}}",
@@ -1868,7 +1865,9 @@
       "hybridCalendarCommon": {
         "hybridCalendarSetUp": "Hybrid Calendar setup",
         "selectCalendarType": "Select Calendar type",
-        "serviceInto": "Hybrid Calendar Service supports Microsoft Exchange calendar via on-premises Expressway clusters, and Google Calendar."
+        "exchangeInfo": "Microsoft Exchange and Exchange Online (Office 365). Requires Expressway cluster.",
+        "serviceInto": "Hybrid Calendar supports Exchange calendars via on-premises Expressway clusters and Google Calendar.",
+        "smallprint": "Cisco Hybrid Service connectors collect and send certain information to the Cisco Collaboration Cloud about your Hybrid Service deployment. For more information click <a href=\"https://example.org/\" target=\"_blank\">here</a>."
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
@@ -1920,6 +1919,10 @@
         "title": "Verify a Domain",
         "description": "You need at least one verified domain to use call services. Add domains under settings."
       },
+      "release-channel": {
+        "title": "Default Release Channel",
+        "description": "Some clusters not assigned to resources groups do not have the right default release channel. <a ng-click=\"{{onclick}}\">Fix now</a>."
+      },
       "user-activation-errors": {
         "title": "Activation Error",
         "calendar-user-errors": "There are {{numberUsers}} users with Calendar Service activation errors.",
@@ -1966,9 +1969,11 @@
         "settings": "Settings",
         "all": "All",
         "add-resource": "Add Resource",
+        "set-default-release-channel": "Set default Release Channel",
         "add-resource-group": "Create new Resource Group",
         "expressway": "Expressway",
         "mediafusion": "Media",
+        "hds": "Data Security",
         "no-services": "No services",
         "missing-clusters": "<a ng-click=\"{{onclick}}\">Assign clusters</a> and users to complete this group",
         "missing-users": "<a ng-click=\"{{onclick}}\">Assign users</a> to complete this group",
@@ -2030,6 +2035,12 @@
           "saveReleaseChannelSuccess": "Release Channel updated successfully.",
           "saveReleaseChannelError": "Could Not save Release Channel. Try again later."
         }
+      },
+      "defaultReleaseChannelModal": {
+        "title": "Set Default Release Channel",
+        "description": "Select the default release channel that you want to use for your Expressway Hybrid Service clusters.",
+        "help": "This setting affects only Expressway clusters that aren't assigned to a resource group. Any clusters that are in a resource group continue to use that resource group release channel.",
+        "error": "Default Release Channel update failed"
       }
     },
     "resourceGroups": {
@@ -2062,11 +2073,8 @@
       "groupNameSaved": "Rename successful",
       "duplicateName": "A resource group with that name already exists. Please choose another name.",
       "loadFailed": "Unable to load the resource group details. Please try again later.",
-      "groupReleaseChannelSaved": "Release channel saved successfully",
       "removeGroupReq": "To remove this resource group, all assigned clusters must be removed first",
       "deleteSuccess": "Resource group successfully removed",
-      "orgHasNoAccessToChannel": "The resource group is configured with the “{{currentReleaseChannel}}” release channel, which is no longer available to your organization. Set the release channel to “{{stableReleaseChannel}}” to restore service.",
-      "setToStable": "Set to {{stableReleaseChannel}}",
       "failedToRemoveUsersFromGroup": "Remove group failed, unable to clear the existing user assignments",
       "assignSuccess": "The selected clusters are being moved. The connectors will be upgraded in the next upgrade window."
     },
@@ -2079,9 +2087,19 @@
       "noServices": "No services",
       "errorLoading": "Could not load the list of clusters."
     },
-    "confirmChangeReleaseChannelModal": {
+    "releaseChannelSection": {
+      "releaseChannelHeader": "Release Channel",
+      "releaseChannelClusterDescription": "Select the release channel for all Hybrid Services running in this cluster.",
+      "releaseChannelResourceGroupDescription": "Select the release channel for all Hybrid Services running in this group.",
+      "expresswayTip": "To change the release channel for this cluster, change the default release channel or assign it to a resource group with the preferred release channel.",
+      "releaseChannelTip": "To change the release channel for this cluster, assign it to a resource group with the preferred release channel.",
+      "releaseChannelSaved": "Release channel saved successfully",
+      "orgHasNoAccessToChannel": "The resource group is configured with the “{{currentReleaseChannel}}” release channel, which is no longer available to your organization. Set the release channel to “{{stableReleaseChannel}}” to restore service.",
+      "setToStable": "Set to {{stableReleaseChannel}}"
+    },
+    "changeReleaseChannelDialog": {
       "title": "Change Release Channel",
-      "description": "Are you sure you want to change the release channel for \"{{groupName}}\" to {{channelName}}?",
+      "description": "Are you sure you want to change the release channel for \"{{name}}\" to {{channelName}}?",
       "change": "Change"
     },
     "confirmDeleteResourceGroupModal": {
@@ -4170,7 +4188,6 @@
       "deregisterErrorHeader": "Unexpected Error",
       "deregisterAreYouSure": "You are about to deregister media server {{clusterName}} from organization {{organizationName}}.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}.",
-      "releaseChannel": "Release Channel",
       "clusterSettings": "Cluster Settings",
       "deletecluster": "Delete Cluster",
       "deleteclusterHeadding": "Delete Hybrid Media Cluster",
