@@ -3,7 +3,7 @@
 /* globals fit */
 
 describe('Controller: TrialPstnCtrl', function () {
-  var controller, trials, $httpBackend, $scope, $q, HuronConfig, Orgservice, TrialPstnService, TrialService, PstnSetupService, TerminusStateService, FeatureToggleService;
+  var controller, trials, $httpBackend, $scope, $q, Analytics, HuronConfig, Orgservice, TrialPstnService, TrialService, PstnSetupService, TerminusStateService, FeatureToggleService;
 
   var customerName = 'Wayne Enterprises';
   var customerEmail = 'batman@darknight.com';
@@ -78,11 +78,19 @@ describe('Controller: TrialPstnCtrl', function () {
     email: 'sample@snapple.com'
   };
 
+  afterEach(function () {
+    controller = trials = $httpBackend = $scope = $q = HuronConfig = Orgservice = Analytics = TrialPstnService = TrialService = PstnSetupService = TerminusStateService = FeatureToggleService = undefined;
+  });
+
+  afterAll(function () {
+    customerName = customerEmail = carrier = states = numberInfo = carrierId = stateSearch = areaCodeResponse = newAreaCodes = exchangesResponse = numbersResponse = contractInfo = undefined;
+  });
+
   beforeEach(angular.mock.module('core.trial'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Core'));
 
-  beforeEach(inject(function ($rootScope, _$q_, $controller, _$httpBackend_, _HuronConfig_, _Orgservice_, _TrialPstnService_, _TrialService_, _PstnSetupService_, _TerminusStateService_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, _$q_, $controller, _$httpBackend_, _Analytics_, _HuronConfig_, _Orgservice_, _TrialPstnService_, _TrialService_, _PstnSetupService_, _TerminusStateService_, _FeatureToggleService_) {
 
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
@@ -94,6 +102,7 @@ describe('Controller: TrialPstnCtrl', function () {
     TerminusStateService = _TerminusStateService_;
     FeatureToggleService = _FeatureToggleService_;
     Orgservice = _Orgservice_;
+    Analytics = _Analytics_;
     $q = _$q_;
 
     spyOn(TrialService, 'getDeviceTrialsLimit');
@@ -103,6 +112,7 @@ describe('Controller: TrialPstnCtrl', function () {
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(Orgservice, 'getOrg');
+    spyOn(Analytics, 'trackTrialSteps');
 
     //Test initialize
     $scope.trial = TrialService.getData();

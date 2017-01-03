@@ -11,7 +11,7 @@
     var URL = {
       coutries: geminURL + 'countries',
       updateCallbackGroup: geminURL + 'callbackgroup/',
-      downloadCountryUrl: geminURL + 'callbackgroup/countryTemplate',
+      downloadCountryUrl: geminURL + 'callbackgroup/countryRegionTemplate',
       callbackGroup: geminURL + 'callbackgroup/customerId/',
       activityLogs: geminURL + 'activityLogs'
     };
@@ -25,7 +25,7 @@
       getCallbackGroups: getCallbackGroups,
       getOneCallbackGroup: getOneCallbackGroup,
       updateCallbackGroup: updateCallbackGroup,
-      downloadCountryUrl: URL.downloadCountryUrl,
+      getDownloadCountryUrl: getDownloadCountryUrl,
       updateCallbackGroupStatus: updateCallbackGroupStatus,
       postNote: postNote,
     };
@@ -76,9 +76,13 @@
       return $http.get(url).then(extractData);
     }
 
-    function getHistories(customerId) {
-      var url = URL.activityLogs + '/' + customerId + '/Callback%20Group';
+    function getHistories(customerId, ccaGroupId) {
+      var url = URL.activityLogs + '/' + customerId + '/' + ccaGroupId + '/Callback%20Group';
       return $http.get(url).then(extractData);
+    }
+
+    function getDownloadCountryUrl() {
+      return $http.get(URL.downloadCountryUrl).then(extractData);
     }
 
     function extractData(response) {
@@ -90,7 +94,6 @@
       var exportedLines = [];
       return getCallbackGroups(customerId).then(function (res) {
         lines = res.content.data.body;
-        if (!lines.length) return [];
         var headerLine = {
           groupName: $translate.instant('gemini.cbgs.field.cbgName'),
           totalSites: $translate.instant('gemini.cbgs.field.totalSites'),
@@ -98,7 +101,11 @@
           customerAttribute: $translate.instant('gemini.cbgs.field.alias'),
           sites: $translate.instant('gemini.cbgs.field.sites')
         };
+
         exportedLines.push(headerLine);
+        if (!lines.length) {
+          return exportedLines; // only export the header when is empty
+        }
         _.forEach(lines, function (line) {
           exportedLines = exportedLines.concat(formateCsvData(line));
         });
@@ -109,11 +116,17 @@
     function formateCsvData(data) {
       var newData = [];
       var oneLine = {};
+      var cabte = data.customerAttribute;
+      var groupName = (data.groupName ? data.groupName : data.customerName);
+      var status = (data.status ? $translate.instant('gemini.cbgs.field.status.' + data.status) : '');
+      cabte = (_.isNumber(cabte) ? '="' + cabte + '"' : cabte);
+      groupName = (_.isNumber(groupName) ? '="' + groupName + '"' : groupName);
+
       if (!data.callbackGroupSites.length) {
-        oneLine.groupName = (data.groupName ? data.groupName : data.customerName);
+        oneLine.groupName = groupName;
         oneLine.totalSites = data.totalSites;
-        oneLine.status = (data.status ? $translate.instant('gemini.cbgs.field.status.' + data.status) : '');
-        oneLine.customerAttribute = data.customerAttribute;
+        oneLine.status = status;
+        oneLine.customerAttribute = cabte;
         oneLine.sites = '';
         newData.push(oneLine);
         return newData;
@@ -121,13 +134,11 @@
 
       _.forEach(data.callbackGroupSites, function (row, key) {
         oneLine = {};
-        if (!key) {
-          var groupName = data.groupName ? data.groupName : data.customerName;
-          groupName = (_.isNumber(groupName) ? '="' + groupName + '"' : groupName);
+        if (!key) { // the first
           oneLine.groupName = groupName;
           oneLine.totalSites = data.totalSites;
-          oneLine.status = (data.status ? $translate.instant('gemini.cbgs.field.status.' + data.status) : '');
-          oneLine.customerAttribute = data.customerAttribute;
+          oneLine.status = status;
+          oneLine.customerAttribute = cabte;
         } else {
           oneLine.groupName = '';
           oneLine.totalSites = '';

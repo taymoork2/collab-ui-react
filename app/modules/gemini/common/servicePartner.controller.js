@@ -22,7 +22,7 @@
         vm.loading = false;
         vm.data = resJson.body;
       } else {
-        Notification.error('gemini.msg.splsReponseErr');
+        Notification.error('gemini.msg.splsResponseErr');
       }
     });
   }

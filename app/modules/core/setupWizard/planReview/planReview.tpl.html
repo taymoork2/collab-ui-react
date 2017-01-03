@@ -95,7 +95,10 @@
             </div>
           </div>
           <!-- START Darling: Shared Mult-Party Licenses functionality -->
-          <div ng-if="planReview.confServices.services.length > 0 && planReview.isSharedMultiPartyEnabled" class="item-mtg-license">
+          <div class="item-mtg-license" 
+            ng-if="planReview.confServices.services.length > 0 && 
+            planReview.isSharedMultiPartyEnabled && 
+            multipleSubscriptions.showLicenses(planReview.confServices.services[0].license.billingServiceId, planReview.confServices.services[0].license.isTrial)">
             <span translate="firstTimeWizard.advancedMeetings"></span>
           </div>
           <div class="item-mtg"

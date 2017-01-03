@@ -56,7 +56,7 @@
 
     function formatChatTemplates(list) {
       var formattedList = _.map(list, function (tpl) {
-        tpl.featureType = 'CT';
+        tpl.featureType = 'Ch';
         tpl.color = 'attention';
         return tpl;
       });

@@ -1,17 +1,13 @@
-<form class="cs-form-head">
-  <div class="cs-form__section">
-    <div class="section__info">
-      <h5 class="section__title" translate="{{'mediaFusion.settings.deactivateServiceHeading'}}"></h5>
-      <p class="section__description" translate="{{'mediaFusion.settings.deactivateServiceV2'}}"></p>
-    </div>
-    <div class="section__content">
-      <div class="sub-section">
-        <button 
-        	class="btn"
-        	ng-click="mediaServiceSettings.confirmDisable()" 
-        	translate="{{'mediaFusion.settings.deactivate'}}" class="sub-section__label">
-        </button>
-      </div>
-    </div>
+<setting-section setting="mediaServiceSettings.deactivateSection" class="needs-border-top">
+  <div class="sub-section">
+    <h5 class="sub-section__label" translate="hercules.settings.deactivateServiceHeading"></h5>
+    <p class="sub-section__description" translate="mediaFusion.settings.deactivateServiceV2"></p>
+
+    <button
+      class="btn"
+      ng-click="mediaServiceSettings.confirmDisable()"
+      translate="{{'common.deactivate'}}">
+    </button>
+
   </div>
-</form>
+</setting-section>

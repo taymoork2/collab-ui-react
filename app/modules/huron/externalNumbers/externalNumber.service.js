@@ -34,7 +34,7 @@
 
     return service;
 
-    function refreshNumbers(customerId) {
+    function refreshNumbers(customerId, queryNumberType, filter) {
       return isTerminusCustomer(customerId)
         .then(function (isSupported) {
           if (isSupported) {
@@ -68,12 +68,17 @@
         .then(function () {
           // Specifying ASSIGNED_AND_UNASSIGNED_NUMBERS and FIXED_LINE_OR_MOBILE returns both
           // assigned and unassigned standard PSTN numbers.
-          // Toll-Free numbers should not be returned.
+          // Toll-Free numbers should not be returned by default, but can be overridden.
+          var externalNumberType = ExternalNumberPool.FIXED_LINE_OR_MOBILE;
+          if (!_.isEmpty(queryNumberType)) {
+            externalNumberType = queryNumberType;
+          }
+          filter = !filter ? ExternalNumberPool.NO_PATTERN_MATCHING : filter;
           return ExternalNumberPool.getExternalNumbers(
             customerId,
-            ExternalNumberPool.NO_PATTERN_MATCHING,
+            filter,
             ExternalNumberPool.ASSIGNED_AND_UNASSIGNED_NUMBERS,
-            ExternalNumberPool.FIXED_LINE_OR_MOBILE)
+            externalNumberType)
           .then(formatNumberLabels)
           .then(function (numbers) {
             unassignedNumbers = filterUnassigned(numbers);

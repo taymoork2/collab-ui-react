@@ -17,6 +17,7 @@ export class CommonReportService {
 
   // private API helpers
   private readonly CACHE: string = '&cache=';
+  private readonly TYPE: string = '?type=';
   private readonly ICOUNT: string = '&intervalCount=';
   private readonly ITYPE: string = '&intervalType=';
   private readonly SCOUNT: string = '&spanCount=';
@@ -35,7 +36,7 @@ export class CommonReportService {
   ) {}
 
   private readonly usageOptions: Array<string> = ['weeklyUsage', 'monthlyUsage', 'threeMonthUsage'];
-  private readonly altUsageOptions: Array<string> = ['dailyUsage', 'yearlyUsage'];
+  private readonly altUsageOptions: Array<string> = ['dailyUsage', 'weeklyUsage'];
   private readonly cacheValue: boolean = (_.toInteger(moment.utc().format('H')) >= 8);
   private urlBase = this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/reports/';
 
@@ -71,7 +72,7 @@ export class CommonReportService {
 
   // TODO: remove unnecessary IIntervalQuery options once API stops requiring them
   public getPartnerReportByReportType(options: IReportTypeQuery, extraOptions: IIntervalQuery, customers: Array<IReportsCustomer>, cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
-    let url = this.urlBase + options.action + '/managedOrgs/' + options.type + '?type=' + options.reportType + this.getQuery(extraOptions) + this.getCustomerQuery(customers);
+    let url = this.urlBase + options.action + '/managedOrgs/' + options.type + this.TYPE + options.reportType + this.getQuery(extraOptions) + this.getCustomerQuery(customers);
     return this.getService(url, cancelPromise);
   }
 
@@ -84,12 +85,17 @@ export class CommonReportService {
   }
 
   public getCustomerReportByType(options: ITypeQuery, cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
-    let url = this.urlBase + options.name + '?type=' + options.type + this.CACHE + options.cache;
+    let url = this.urlBase + options.name + this.TYPE + options.type + this.CACHE + options.cache;
     return this.getService(url, cancelPromise);
   }
 
   public getCustomerAltReportByType(options: ITypeQuery, cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
-    let url = this.urlBase + options.name + '/' + options.type + '?' + this.CACHE + options.cache;
+    let url = this.urlBase;
+    if (options.extension) {
+      url += options.extension + '/' + options.name + '/' + this.TYPE + options.type + this.CACHE + options.cache;
+    } else {
+      url += options.name + '/' + options.type + '?' + this.CACHE + options.cache;
+    }
     return this.getService(url, cancelPromise);
   }
 
@@ -144,15 +150,15 @@ export class CommonReportService {
     let returnGraph: Array<any> = [];
 
     if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
-      for (let i = 8; i > 0; i--) {
+      for (let i = this.ReportConstants.DAYS; i >= 0; i--) {
         let tmpItem: any = _.clone(graphItem);
         tmpItem.date = moment().tz(this.ReportConstants.TIMEZONE)
-          .subtract(i, this.ReportConstants.DAY)
+          .subtract(i + 1, this.ReportConstants.DAY)
           .format(this.ReportConstants.DAY_FORMAT);
         returnGraph.push(tmpItem);
       }
     } else {
-      for (let z = 52; z >= 0; z--) {
+      for (let z = this.ReportConstants.YEAR; z >= 0; z--) {
         let item = _.clone(graphItem);
         item.date = moment().day(-1)
           .subtract(z, this.ReportConstants.WEEK)
@@ -244,21 +250,24 @@ export class CommonReportService {
   public getTypeOptions(filter: ITimespan, name: string): ITypeQuery {
     return {
       name: name,
+      extension: undefined,
       type: this.usageOptions[filter.value],
       cache: this.cacheValue,
     };
   }
 
-  public getLineTypeOptions(filter: ITimespan, name: string): ITypeQuery {
+  public getLineTypeOptions(filter: ITimespan, name: string, extension: string | undefined): ITypeQuery {
     if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
       return {
         name: name,
+        extension: extension,
         type: this.altUsageOptions[0],
         cache: this.cacheValue,
       };
     } else {
       return {
         name: name,
+        extension: extension,
         type: this.altUsageOptions[1],
         cache: this.cacheValue,
       };

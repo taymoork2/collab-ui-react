@@ -6,13 +6,14 @@
     .service('gemService', gemService);
 
   /* @ngInject */
-  function gemService($http, UrlConfig, Authinfo) {
+  function gemService($http, UrlConfig, Authinfo, $translate) {
     var URL = {
       spData: UrlConfig.getGeminiUrl() + 'servicepartner',
       remedyTicket: UrlConfig.getGeminiUrl() + 'remedyTicket/customers/'
     };
     var service = {
       isAvops: isAvops,
+      showError: showError,
       getSpData: getSpData,
       isServicePartner: isServicePartner,
       getCbgRemedyTicket: getCbgRemedyTicket
@@ -27,6 +28,15 @@
       var url = URL.remedyTicket + customerId + '/siteId/0/type/9';
       return $http.get(url).then(extractData);
     }
+
+    function showError(errorCode) {
+      var errors = $translate.instant('gemini.errorCode.' + errorCode);
+      if (errors === 'gemini.errorCode.' + errorCode) {
+        return $translate.instant('gemini.errorCode.genericError');
+      }
+      return errors;
+    }
+
     function isAvops() {
       return Authinfo.getRoles().indexOf('Full_Admin') > -1;
     }

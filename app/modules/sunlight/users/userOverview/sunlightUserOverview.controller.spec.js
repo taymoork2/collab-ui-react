@@ -40,6 +40,7 @@ describe('sunlightUserOverviewCtrl', function () {
     spyOn($state, 'go');
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
+    spyOn(Notification, 'errorWithTrackingId');
 
     $stateParams = {
       currentUser: angular.copy(getJSONFixture('core/json/currentUser.json'))
@@ -96,7 +97,7 @@ describe('sunlightUserOverviewCtrl', function () {
     controller.updateUserData($stateParams.currentUser.id);
     updateUserInfoDeferred.reject(failureResponse);
     $scope.$apply();
-    expect(Notification.error).toHaveBeenCalledWith(jasmine.any(String), {
+    expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failureResponse, jasmine.any(String), {
       userId: 'CurrentUser'
     });
   });

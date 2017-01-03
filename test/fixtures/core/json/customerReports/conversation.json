@@ -1,0 +1,736 @@
+{
+  "apiResponse": [{
+    "date": "2016-12-03T00:00:00.000Z",
+    "details": {
+      "avgRoomsPerUser": "8.745615519088705",
+      "numRoomsCreated": "355",
+      "numSingleRooms": "167",
+      "numGroupRooms": "192",
+      "numSharedCount": "1762",
+      "sharedSize": "5.768405023962259"
+    }
+  }, {
+    "date": "2016-12-02T00:00:00.000Z",
+    "details": {
+      "avgRoomsPerUser": "26.094425366667735",
+      "numRoomsCreated": "3723",
+      "numSingleRooms": "1442",
+      "numGroupRooms": "2290",
+      "numSharedCount": "8251",
+      "sharedSize": "40.264807000756264"
+    }
+  }, {
+    "date": "2016-12-01T00:00:00.000Z",
+    "details": {
+      "avgRoomsPerUser": "19.555216349992016",
+      "numRoomsCreated": "3941",
+      "numSingleRooms": "1528",
+      "numGroupRooms": "2444",
+      "numSharedCount": "8851",
+      "sharedSize": "33.326989580877125"
+    }
+  }, {
+    "date": "2016-11-30T00:00:00.000Z",
+    "details": {
+      "avgRoomsPerUser": "0.0",
+      "numRoomsCreated": "0",
+      "numSingleRooms": "0",
+      "numGroupRooms": "0",
+      "numSharedCount": "0",
+      "sharedSize": "0.0"
+    }
+  }, {
+    "date": "2016-11-29T00:00:00.000Z",
+    "details": {
+      "avgRoomsPerUser": "0.0",
+      "numRoomsCreated": "0",
+      "numSingleRooms": "0",
+      "numGroupRooms": "0",
+      "numSharedCount": "0",
+      "sharedSize": "0.0"
+    }
+  }, {
+    "date": "2016-11-28T00:00:00.000Z",
+    "details": {
+      "avgRoomsPerUser": "22.965794920813934",
+      "numRoomsCreated": "3177",
+      "numSingleRooms": "1154",
+      "numGroupRooms": "2067",
+      "numSharedCount": "6983",
+      "sharedSize": "28.240271634422243"
+    }
+  }, {
+    "date": "2016-11-27T00:00:00.000Z",
+    "details": {
+      "avgRoomsPerUser": "0.0",
+      "numRoomsCreated": "0",
+      "numSingleRooms": "0",
+      "numGroupRooms": "0",
+      "numSharedCount": "0",
+      "sharedSize": "0.0"
+    }
+  }],
+  "response": [{
+    "date": "Nov 28",
+    "balloon": true,
+    "avgRooms": "8.75",
+    "contentShared": 1762,
+    "contentShareSizes": "5.77",
+    "groupRooms": 192,
+    "oneToOneRooms": 167,
+    "totalRooms": 355
+  }, {
+    "date": "Nov 29",
+    "balloon": true,
+    "avgRooms": "26.09",
+    "contentShared": 8251,
+    "contentShareSizes": "40.26",
+    "groupRooms": 2290,
+    "oneToOneRooms": 1442,
+    "totalRooms": 3723
+  }, {
+    "date": "Nov 30",
+    "balloon": true,
+    "avgRooms": "19.56",
+    "contentShared": 8851,
+    "contentShareSizes": "33.33",
+    "groupRooms": 2444,
+    "oneToOneRooms": 1528,
+    "totalRooms": 3941
+  }, {
+    "date": "Dec 01",
+    "balloon": true,
+    "avgRooms": 0,
+    "contentShared": 0,
+    "contentShareSizes": 0,
+    "groupRooms": 0,
+    "oneToOneRooms": 0,
+    "totalRooms": 0
+  }, {
+    "date": "Dec 02",
+    "balloon": true,
+    "avgRooms": 0,
+    "contentShared": 0,
+    "contentShareSizes": 0,
+    "groupRooms": 0,
+    "oneToOneRooms": 0,
+    "totalRooms": 0
+  }, {
+    "date": "Dec 03",
+    "balloon": true,
+    "avgRooms": "22.97",
+    "contentShared": 6983,
+    "contentShareSizes": "28.24",
+    "groupRooms": 2067,
+    "oneToOneRooms": 1154,
+    "totalRooms": 3177
+  }, {
+    "date": "Dec 04",
+    "balloon": true,
+    "avgRooms": 0,
+    "contentShared": 0,
+    "contentShareSizes": 0,
+    "groupRooms": 0,
+    "oneToOneRooms": 0,
+    "totalRooms": 0
+  }],
+  "emptyResponse": [{
+    "date": "Nov 28",
+    "balloon": true,
+    "avgRooms": 0,
+    "contentShared": 0,
+    "contentShareSizes": 0,
+    "groupRooms": 0,
+    "oneToOneRooms": 0,
+    "totalRooms": 0
+  }, {
+    "date": "Nov 29",
+    "balloon": true,
+    "avgRooms": 0,
+    "contentShared": 0,
+    "contentShareSizes": 0,
+    "groupRooms": 0,
+    "oneToOneRooms": 0,
+    "totalRooms": 0
+  }, {
+    "date": "Nov 30",
+    "balloon": true,
+    "avgRooms": 0,
+    "contentShared": 0,
+    "contentShareSizes": 0,
+    "groupRooms": 0,
+    "oneToOneRooms": 0,
+    "totalRooms": 0
+  }, {
+    "date": "Dec 01",
+    "balloon": true,
+    "avgRooms": 0,
+    "contentShared": 0,
+    "contentShareSizes": 0,
+    "groupRooms": 0,
+    "oneToOneRooms": 0,
+    "totalRooms": 0
+  }, {
+    "date": "Dec 02",
+    "balloon": true,
+    "avgRooms": 0,
+    "contentShared": 0,
+    "contentShareSizes": 0,
+    "groupRooms": 0,
+    "oneToOneRooms": 0,
+    "totalRooms": 0
+  }, {
+    "date": "Dec 03",
+    "balloon": true,
+    "avgRooms": 0,
+    "contentShared": 0,
+    "contentShareSizes": 0,
+    "groupRooms": 0,
+    "oneToOneRooms": 0,
+    "totalRooms": 0
+  }, {
+    "date": "Dec 04",
+    "balloon": true,
+    "avgRooms": 0,
+    "contentShared": 0,
+    "contentShareSizes": 0,
+    "groupRooms": 0,
+    "oneToOneRooms": 0,
+    "totalRooms": 0
+  }],
+  "dummyData": {
+    "one": [{
+      "date": "Nov 27",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 0,
+      "contentShareSizes": 0,
+      "groupRooms": 0,
+      "oneToOneRooms": 25,
+      "totalRooms": 25
+    }, {
+      "date": "Nov 28",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 25,
+      "contentShareSizes": 0,
+      "groupRooms": 25,
+      "oneToOneRooms": 50,
+      "totalRooms": 75
+    }, {
+      "date": "Nov 29",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 50,
+      "contentShareSizes": 0,
+      "groupRooms": 50,
+      "oneToOneRooms": 75,
+      "totalRooms": 125
+    }, {
+      "date": "Nov 30",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 75,
+      "contentShareSizes": 0,
+      "groupRooms": 75,
+      "oneToOneRooms": 100,
+      "totalRooms": 175
+    }, {
+      "date": "Dec 01",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 100,
+      "contentShareSizes": 0,
+      "groupRooms": 100,
+      "oneToOneRooms": 125,
+      "totalRooms": 225
+    }, {
+      "date": "Dec 02",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 125,
+      "contentShareSizes": 0,
+      "groupRooms": 125,
+      "oneToOneRooms": 150,
+      "totalRooms": 275
+    }, {
+      "date": "Dec 03",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 150,
+      "contentShareSizes": 0,
+      "groupRooms": 150,
+      "oneToOneRooms": 175,
+      "totalRooms": 325
+    }],
+    "two": [{
+      "date": "Dec 05",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 0,
+      "contentShareSizes": 0,
+      "groupRooms": 0,
+      "oneToOneRooms": 25,
+      "totalRooms": 25
+    }, {
+      "date": "Dec 12",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 25,
+      "contentShareSizes": 0,
+      "groupRooms": 25,
+      "oneToOneRooms": 50,
+      "totalRooms": 75
+    }, {
+      "date": "Dec 19",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 50,
+      "contentShareSizes": 0,
+      "groupRooms": 50,
+      "oneToOneRooms": 75,
+      "totalRooms": 125
+    }, {
+      "date": "Dec 26",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 75,
+      "contentShareSizes": 0,
+      "groupRooms": 75,
+      "oneToOneRooms": 100,
+      "totalRooms": 175
+    }, {
+      "date": "Jan 02",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 100,
+      "contentShareSizes": 0,
+      "groupRooms": 100,
+      "oneToOneRooms": 125,
+      "totalRooms": 225
+    }, {
+      "date": "Jan 09",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 125,
+      "contentShareSizes": 0,
+      "groupRooms": 125,
+      "oneToOneRooms": 150,
+      "totalRooms": 275
+    }, {
+      "date": "Jan 16",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 150,
+      "contentShareSizes": 0,
+      "groupRooms": 150,
+      "oneToOneRooms": 175,
+      "totalRooms": 325
+    }, {
+      "date": "Jan 23",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 175,
+      "contentShareSizes": 0,
+      "groupRooms": 175,
+      "oneToOneRooms": 200,
+      "totalRooms": 375
+    }, {
+      "date": "Jan 30",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 200,
+      "contentShareSizes": 0,
+      "groupRooms": 200,
+      "oneToOneRooms": 225,
+      "totalRooms": 425
+    }, {
+      "date": "Feb 06",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 225,
+      "contentShareSizes": 0,
+      "groupRooms": 225,
+      "oneToOneRooms": 250,
+      "totalRooms": 475
+    }, {
+      "date": "Feb 13",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 250,
+      "contentShareSizes": 0,
+      "groupRooms": 250,
+      "oneToOneRooms": 275,
+      "totalRooms": 525
+    }, {
+      "date": "Feb 20",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 275,
+      "contentShareSizes": 0,
+      "groupRooms": 275,
+      "oneToOneRooms": 300,
+      "totalRooms": 575
+    }, {
+      "date": "Feb 27",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 300,
+      "contentShareSizes": 0,
+      "groupRooms": 300,
+      "oneToOneRooms": 325,
+      "totalRooms": 625
+    }, {
+      "date": "Mar 05",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 325,
+      "contentShareSizes": 0,
+      "groupRooms": 325,
+      "oneToOneRooms": 350,
+      "totalRooms": 675
+    }, {
+      "date": "Mar 12",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 350,
+      "contentShareSizes": 0,
+      "groupRooms": 350,
+      "oneToOneRooms": 375,
+      "totalRooms": 725
+    }, {
+      "date": "Mar 19",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 375,
+      "contentShareSizes": 0,
+      "groupRooms": 375,
+      "oneToOneRooms": 400,
+      "totalRooms": 775
+    }, {
+      "date": "Mar 26",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 400,
+      "contentShareSizes": 0,
+      "groupRooms": 400,
+      "oneToOneRooms": 425,
+      "totalRooms": 825
+    }, {
+      "date": "Apr 02",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 425,
+      "contentShareSizes": 0,
+      "groupRooms": 425,
+      "oneToOneRooms": 450,
+      "totalRooms": 875
+    }, {
+      "date": "Apr 09",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 450,
+      "contentShareSizes": 0,
+      "groupRooms": 450,
+      "oneToOneRooms": 475,
+      "totalRooms": 925
+    }, {
+      "date": "Apr 16",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 475,
+      "contentShareSizes": 0,
+      "groupRooms": 475,
+      "oneToOneRooms": 500,
+      "totalRooms": 975
+    }, {
+      "date": "Apr 23",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 500,
+      "contentShareSizes": 0,
+      "groupRooms": 500,
+      "oneToOneRooms": 525,
+      "totalRooms": 1025
+    }, {
+      "date": "Apr 30",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 525,
+      "contentShareSizes": 0,
+      "groupRooms": 525,
+      "oneToOneRooms": 550,
+      "totalRooms": 1075
+    }, {
+      "date": "May 07",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 550,
+      "contentShareSizes": 0,
+      "groupRooms": 550,
+      "oneToOneRooms": 575,
+      "totalRooms": 1125
+    }, {
+      "date": "May 14",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 575,
+      "contentShareSizes": 0,
+      "groupRooms": 575,
+      "oneToOneRooms": 600,
+      "totalRooms": 1175
+    }, {
+      "date": "May 21",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 600,
+      "contentShareSizes": 0,
+      "groupRooms": 600,
+      "oneToOneRooms": 625,
+      "totalRooms": 1225
+    }, {
+      "date": "May 28",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 625,
+      "contentShareSizes": 0,
+      "groupRooms": 625,
+      "oneToOneRooms": 650,
+      "totalRooms": 1275
+    }, {
+      "date": "Jun 04",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 650,
+      "contentShareSizes": 0,
+      "groupRooms": 650,
+      "oneToOneRooms": 675,
+      "totalRooms": 1325
+    }, {
+      "date": "Jun 11",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 675,
+      "contentShareSizes": 0,
+      "groupRooms": 675,
+      "oneToOneRooms": 700,
+      "totalRooms": 1375
+    }, {
+      "date": "Jun 18",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 700,
+      "contentShareSizes": 0,
+      "groupRooms": 700,
+      "oneToOneRooms": 725,
+      "totalRooms": 1425
+    }, {
+      "date": "Jun 25",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 725,
+      "contentShareSizes": 0,
+      "groupRooms": 725,
+      "oneToOneRooms": 750,
+      "totalRooms": 1475
+    }, {
+      "date": "Jul 02",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 750,
+      "contentShareSizes": 0,
+      "groupRooms": 750,
+      "oneToOneRooms": 775,
+      "totalRooms": 1525
+    }, {
+      "date": "Jul 09",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 775,
+      "contentShareSizes": 0,
+      "groupRooms": 775,
+      "oneToOneRooms": 800,
+      "totalRooms": 1575
+    }, {
+      "date": "Jul 16",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 800,
+      "contentShareSizes": 0,
+      "groupRooms": 800,
+      "oneToOneRooms": 825,
+      "totalRooms": 1625
+    }, {
+      "date": "Jul 23",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 825,
+      "contentShareSizes": 0,
+      "groupRooms": 825,
+      "oneToOneRooms": 850,
+      "totalRooms": 1675
+    }, {
+      "date": "Jul 30",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 850,
+      "contentShareSizes": 0,
+      "groupRooms": 850,
+      "oneToOneRooms": 875,
+      "totalRooms": 1725
+    }, {
+      "date": "Aug 06",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 875,
+      "contentShareSizes": 0,
+      "groupRooms": 875,
+      "oneToOneRooms": 900,
+      "totalRooms": 1775
+    }, {
+      "date": "Aug 13",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 900,
+      "contentShareSizes": 0,
+      "groupRooms": 900,
+      "oneToOneRooms": 925,
+      "totalRooms": 1825
+    }, {
+      "date": "Aug 20",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 925,
+      "contentShareSizes": 0,
+      "groupRooms": 925,
+      "oneToOneRooms": 950,
+      "totalRooms": 1875
+    }, {
+      "date": "Aug 27",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 950,
+      "contentShareSizes": 0,
+      "groupRooms": 950,
+      "oneToOneRooms": 975,
+      "totalRooms": 1925
+    }, {
+      "date": "Sep 03",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 975,
+      "contentShareSizes": 0,
+      "groupRooms": 975,
+      "oneToOneRooms": 1000,
+      "totalRooms": 1975
+    }, {
+      "date": "Sep 10",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 1000,
+      "contentShareSizes": 0,
+      "groupRooms": 1000,
+      "oneToOneRooms": 1025,
+      "totalRooms": 2025
+    }, {
+      "date": "Sep 17",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 1025,
+      "contentShareSizes": 0,
+      "groupRooms": 1025,
+      "oneToOneRooms": 1050,
+      "totalRooms": 2075
+    }, {
+      "date": "Sep 24",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 1050,
+      "contentShareSizes": 0,
+      "groupRooms": 1050,
+      "oneToOneRooms": 1075,
+      "totalRooms": 2125
+    }, {
+      "date": "Oct 01",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 1075,
+      "contentShareSizes": 0,
+      "groupRooms": 1075,
+      "oneToOneRooms": 1100,
+      "totalRooms": 2175
+    }, {
+      "date": "Oct 08",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 1100,
+      "contentShareSizes": 0,
+      "groupRooms": 1100,
+      "oneToOneRooms": 1125,
+      "totalRooms": 2225
+    }, {
+      "date": "Oct 15",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 1125,
+      "contentShareSizes": 0,
+      "groupRooms": 1125,
+      "oneToOneRooms": 1150,
+      "totalRooms": 2275
+    }, {
+      "date": "Oct 22",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 1150,
+      "contentShareSizes": 0,
+      "groupRooms": 1150,
+      "oneToOneRooms": 1175,
+      "totalRooms": 2325
+    }, {
+      "date": "Oct 29",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 1175,
+      "contentShareSizes": 0,
+      "groupRooms": 1175,
+      "oneToOneRooms": 1200,
+      "totalRooms": 2375
+    }, {
+      "date": "Nov 05",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 1200,
+      "contentShareSizes": 0,
+      "groupRooms": 1200,
+      "oneToOneRooms": 1225,
+      "totalRooms": 2425
+    }, {
+      "date": "Nov 12",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 1225,
+      "contentShareSizes": 0,
+      "groupRooms": 1225,
+      "oneToOneRooms": 1250,
+      "totalRooms": 2475
+    }, {
+      "date": "Nov 19",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 1250,
+      "contentShareSizes": 0,
+      "groupRooms": 1250,
+      "oneToOneRooms": 1275,
+      "totalRooms": 2525
+    }, {
+      "date": "Nov 26",
+      "balloon": false,
+      "avgRooms": 0,
+      "contentShared": 1275,
+      "contentShareSizes": 0,
+      "groupRooms": 1275,
+      "oneToOneRooms": 1300,
+      "totalRooms": 2575
+    }]
+  }
+}

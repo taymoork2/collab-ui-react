@@ -87,17 +87,19 @@
     font-size: 14px;
     color: $gray-darkest;
 
-    .hs-header {
-      padding-left: 15px;
-      font-family: $brand-font-cisco-TT-Extra-Light;
+    .indented {
+      margin-left: 1.5rem;
     }
 
-    .hs-extension-list {
-      padding-top: 20px;
+    .column-padded {
+      padding: 1.5rem;
     }
 
-    .indentedCB {
-      margin-left: 27px;
+    .service-heading {
+      color: $color-primary-base;
+      font-family: $brand-font-light;
+      font-size: 14px;
+      line-height: 24px;
     }
   }
 }
@@ -108,6 +110,9 @@
   font-size: 0.875rem;
   line-height: 2.25rem;
   font-family: $brand-font-light;
+  a {
+    color: $color-primary-base;
+  }
 }
 
 form {

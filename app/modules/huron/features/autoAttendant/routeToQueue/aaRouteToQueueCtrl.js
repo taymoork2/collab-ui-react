@@ -144,11 +144,11 @@
 
     // This function is called from activateQueueSettings.
     // It adds the appropriate action (i.e. say or play) to the queueSettings.
-    function createAction(obj, type, sayOrPlayOrDisconnect) {
+    function createAction(settings, type, sayOrPlayOrDisconnect) {
       var action;
-      obj[type] = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      settings[type] = AutoAttendantCeMenuModelService.newCeMenuEntry();
       action = AutoAttendantCeMenuModelService.newCeActionEntry(sayOrPlayOrDisconnect, '');
-      obj[type].addAction(action);
+      settings[type].addAction(action);
     }
 
     // This function is called from activate.
@@ -162,10 +162,10 @@
         musicOnHold.setValue(CISCO_STD_MOH_URL);
       }
       if (!_.has(queueSettings, 'initialAnnouncement')) {
-        createAction(queueSettings, 'initialAnnouncement', 'say');
+        createAction(queueSettings, 'initialAnnouncement', 'play');
       }
       if (!_.has(queueSettings, 'periodicAnnouncement')) {
-        createAction(queueSettings, 'periodicAnnouncement', 'say');
+        createAction(queueSettings, 'periodicAnnouncement', 'play');
         var periodicAnnouncement = _.get(queueSettings, 'periodicAnnouncement.actions[0]');
         periodicAnnouncement.setDescription("");
         periodicAnnouncement.interval = periodicTime;

@@ -5,12 +5,12 @@
     .controller('TypeSelectorController', TypeSelectorController);
 
   /* @ngInject */
-  function TypeSelectorController($q, $stateParams, $translate, Authinfo, Config, FusionClusterService, hasMediaFeatureToggle) {
+  function TypeSelectorController($q, $stateParams, $translate, Authinfo, Config, FusionClusterService) {
     var vm = this;
     vm.UIstate = 'loading';
     vm.isEntitledTo = {
       expressway: Authinfo.isEntitled(Config.entitlements.fusion_mgmt),
-      mediafusion: hasMediaFeatureToggle && Authinfo.isEntitled(Config.entitlements.mediafusion)
+      mediafusion: Authinfo.isEntitled(Config.entitlements.mediafusion)
     };
     vm.selectedType = '';
     vm.next = next;

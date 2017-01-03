@@ -46,6 +46,7 @@
         return;
       }
       vm.orderUuid = orderObj.orderUuid;
+      vm.subscriptionId = orderObj.serviceId;
       var accountId = orderObj.accountId;
       vm.orderId = orderObj.externalOrderId;
 
@@ -60,6 +61,7 @@
       } else {
         vm.customerAdminEmail = _.get(orderObj, 'orderContent.common.customerInfo.endCustomerInfo.adminDetails.emailId');
       }
+      vm.oldcustomerAdminEmail = vm.customerAdminEmail;
 
       //Getting the partner info from order payload or update clientContent
       var partnerEmailUpdates = _.filter(emailUpdates, function (data) {
@@ -69,12 +71,13 @@
         partnerEmailUpdates = _.last(partnerEmailUpdates);
         vm.partnerAdminEmail = _.get(partnerEmailUpdates, 'adminDetails.emailId');
       } else {
-        if (orderObj.orderContent.common.resellerInfo) {
+        if (orderObj.orderContent.common.customerInfo.resellerInfo) {
           vm.partnerAdminEmail = _.get(orderObj, 'orderContent.common.customerInfo.resellerInfo.adminDetails.emailId');
         } else {
           vm.partnerAdminEmail = _.get(orderObj, 'orderContent.common.customerInfo.partnerInfo.adminDetails.emailId');
         }
       }
+      vm.oldpartnerAdminEmail = vm.partnerAdminEmail;
 
 
       // Getting the account details using the account Id from order.
@@ -126,7 +129,7 @@
             vm.customerEmailSent = null;
             var emailSent = getEmailSentTime(response);
             if (emailSent && emailSent.timestamp) {
-              vm.customerEmailSent = getUTCtime(emailSent.timestamp);
+              vm.customerEmailSent = HelpdeskService.unixTimestampToUTC(emailSent.timestamp);
             }
             vm.showCustomerEmailSent = true;
           }, vm._helpers.notifyError);
@@ -137,7 +140,7 @@
             vm.partnerEmailSent = null;
             var emailSent = getEmailSentTime(response);
             if (emailSent && emailSent.timestamp) {
-              vm.partnerEmailSent = getUTCtime(emailSent.timestamp);
+              vm.partnerEmailSent = HelpdeskService.unixTimestampToUTC(emailSent.timestamp);
             }
             vm.showPartnerEmailSent = true;
           }, vm._helpers.notifyError);
@@ -154,13 +157,6 @@
       return mailStat;
     }
 
-    // Convert Date from milliseconds to UTC format
-    function getUTCtime(timestamp) {
-      var newDate = new Date();
-      newDate.setTime(timestamp * 1000);
-      return newDate.toUTCString();
-    }
-
     // Allow Customer Admin Email address to be editted
     function showCustomerAdminEmailEdit() {
       vm.customerAdminEmailEdit = true;
@@ -168,9 +164,10 @@
 
     // Update Customer Admin Email and send welcome email
     function updateCustomerAdminEmail() {
-      HelpdeskService.editAdminEmail(vm.orderUuid, vm.customerAdminEmail, false)
+      HelpdeskService.editAdminEmail(vm.orderUuid, vm.customerAdminEmail, true)
         .then(function () {
           Notification.success('helpdesk.editAdminEmailSuccess');
+          vm.oldcustomerAdminEmail = vm.customerAdminEmail;
           vm.customerAdminEmailEdit = false;
           vm.showCustomerEmailSent = false;
           $timeout(function () {
@@ -184,6 +181,7 @@
     // Cancel (close) the Edit option
     function cancelCustomerAdminEmailEdit() {
       vm.customerAdminEmailEdit = false;
+      vm.customerAdminEmail = vm.oldcustomerAdminEmail;
     }
 
     // Allow Partner Admin Email address to be editted
@@ -196,6 +194,7 @@
       HelpdeskService.editAdminEmail(vm.orderUuid, vm.partnerAdminEmail, false)
         .then(function () {
           Notification.success('helpdesk.editAdminEmailSuccess');
+          vm.oldpartnerAdminEmail = vm.partnerAdminEmail;
           vm.partnerAdminEmailEdit = false;
           vm.showPartnerEmailSent = false;
           $timeout(function () {
@@ -209,6 +208,7 @@
     // Cancel (close) the Edit option
     function cancelPartnerAdminEmailEdit() {
       vm.partnerAdminEmailEdit = false;
+      vm.partnerAdminEmail = vm.oldpartnerAdminEmail;
     }
 
     // Resend the welcome email to specified party.  Attempt to last send date.

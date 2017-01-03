@@ -1,23 +1,34 @@
-import {
-  IActiveUserData,
-  IDropdownBase,
-} from '../../partnerReports/partnerReportInterfaces';
-
-import {
-  IAvgRoomData,
-  IEndpointWrapper,
-  IFilesShared,
-  IMediaData,
-} from './sparkReportInterfaces';
-
 describe('Service: Customer Graph Service', function () {
   let validateService: any;
-  const activeUsers: any = getJSONFixture('core/json/customerReports/activeUser.json');
-  const avgRooms: any = getJSONFixture('core/json/customerReports/roomData.json');
-  const devicesJson: any = getJSONFixture('core/json/customerReports/devices.json');
-  const fileData: any = getJSONFixture('core/json/customerReports/fileData.json');
-  const mediaData: any = getJSONFixture('core/json/customerReports/mediaQuality.json');
-  const metricsData: any = getJSONFixture('core/json/customerReports/callMetrics.json');
+  let activeUsers: any = getJSONFixture('core/json/customerReports/activeUser.json');
+  let avgRooms: any = getJSONFixture('core/json/customerReports/roomData.json');
+  let devicesJson: any = getJSONFixture('core/json/customerReports/devices.json');
+  let fileData: any = getJSONFixture('core/json/customerReports/fileData.json');
+  let mediaData: any = getJSONFixture('core/json/customerReports/mediaQuality.json');
+  let metricsData: any = getJSONFixture('core/json/customerReports/callMetrics.json');
+
+  afterAll(function () {
+    activeUsers = avgRooms = devicesJson = fileData = mediaData = metricsData = undefined;
+  });
+
+  afterEach(function () {
+    validateService = undefined;
+  });
+
+  const chart: any = {
+    categoryAxis: {
+      gridColor: 'color',
+    },
+    chartCursor: {
+      valueLineEnabled: true,
+    },
+    graphs: [],
+    legend: {
+      valueText: undefined,
+    },
+    dataProvider: undefined,
+    validateData: undefined,
+  };
 
   beforeEach(function () {
     this.initModules('Core');
@@ -25,41 +36,34 @@ describe('Service: Customer Graph Service', function () {
 
     validateService = {
       validateData: jasmine.createSpy('validateData'),
-      validateNow: jasmine.createSpy('validateNow'),
     };
   });
 
   describe('Active Users graph services', function () {
-    const data: Array<IActiveUserData> = _.cloneDeep(activeUsers.dummyData.one);
-    const filter: Array<IDropdownBase> = _.cloneDeep(activeUsers.dropdownOptions);
+    let data = _.cloneDeep(activeUsers.dummyData.one);
+    let filter = _.cloneDeep(activeUsers.dropdownOptions);
+
+    afterAll(function () {
+      data = filter = undefined;
+    });
 
     beforeEach(function () {
-      spyOn(AmCharts, 'makeChart').and.returnValue({
-        categoryAxis: {
-          gridColor: 'color',
-        },
-        chartCursor: {
-          valueLineEnabled: true,
-        },
-        graphs: [],
-        dataProvider: data,
-        validateData: validateService.validateData,
-        validateNow: validateService.validateNow,
-      });
+      let chartResponse: any = _.cloneDeep(chart);
+      chartResponse.dataProvider = data;
+      chartResponse.validateData = validateService.validateData;
+      spyOn(AmCharts, 'makeChart').and.returnValue(chartResponse);
     });
 
     it('should have created a line graph when setActiveLineGraph is called the first time', function () {
       this.SparkGraphService.setActiveLineGraph(data, null, filter[0]);
       expect(AmCharts.makeChart).toHaveBeenCalled();
       expect(validateService.validateData).not.toHaveBeenCalled();
-      expect(validateService.validateNow).not.toHaveBeenCalled();
     });
 
     it('should update graph when setActiveLineGraph is called a second time', function () {
       let chart = this.SparkGraphService.setActiveLineGraph(data, null, filter[0]);
       this.SparkGraphService.setActiveLineGraph(data, chart, filter[1]);
       expect(validateService.validateData).toHaveBeenCalled();
-      expect(validateService.validateNow).toHaveBeenCalled();
     });
 
     it('should have created a graph when setActiveUsersGraph is called the first time', function () {
@@ -76,13 +80,17 @@ describe('Service: Customer Graph Service', function () {
   });
 
   describe('Total Rooms graph services', function () {
-    const data: Array<IAvgRoomData> = _.cloneDeep(avgRooms.response);
+    let data = _.cloneDeep(avgRooms.response);
+
+    afterAll(function () {
+      data = undefined;
+    });
 
     beforeEach(function () {
-      spyOn(AmCharts, 'makeChart').and.returnValue({
-        dataProvider: data,
-        validateData: validateService.validateData,
-      });
+      let chartResponse: any = _.cloneDeep(chart);
+      chartResponse.dataProvider = data;
+      chartResponse.validateData = validateService.validateData;
+      spyOn(AmCharts, 'makeChart').and.returnValue(chartResponse);
     });
 
     it('should have created a graph when setAvgRoomsGraph is called the first time', function () {
@@ -96,16 +104,32 @@ describe('Service: Customer Graph Service', function () {
       this.SparkGraphService.setAvgRoomsGraph(data, chart);
       expect(validateService.validateData).toHaveBeenCalled();
     });
+
+    it('should have created a graph when setRoomGraph is called the first time', function () {
+      this.SparkGraphService.setRoomGraph(data, null);
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+      expect(validateService.validateData).not.toHaveBeenCalled();
+    });
+
+    it('should update graph when setRoomGraph is called a second time', function () {
+      let chart = this.SparkGraphService.setRoomGraph(data, null);
+      this.SparkGraphService.setRoomGraph(data, chart);
+      expect(validateService.validateData).toHaveBeenCalled();
+    });
   });
 
   describe('Files Shared graph services', function () {
-    const data: Array<IFilesShared> = _.cloneDeep(fileData.response);
+    let data = _.cloneDeep(fileData.response);
+
+    afterAll(function () {
+      data = undefined;
+    });
 
     beforeEach(function () {
-      spyOn(AmCharts, 'makeChart').and.returnValue({
-        dataProvider: data,
-        validateData: validateService.validateData,
-      });
+      let chartResponse: any = _.cloneDeep(chart);
+      chartResponse.dataProvider = data;
+      chartResponse.validateData = validateService.validateData;
+      spyOn(AmCharts, 'makeChart').and.returnValue(chartResponse);
     });
 
     it('should have created a graph when setFilesSharedGraph is called the first time', function () {
@@ -119,17 +143,33 @@ describe('Service: Customer Graph Service', function () {
       this.SparkGraphService.setFilesSharedGraph(data, chart);
       expect(validateService.validateData).toHaveBeenCalled();
     });
+
+    it('should have created a graph when setFilesGraph is called the first time', function () {
+      this.SparkGraphService.setFilesGraph(data, null);
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+      expect(validateService.validateData).not.toHaveBeenCalled();
+    });
+
+    it('should update graph when setFilesGraph is called a second time', function () {
+      let chart = this.SparkGraphService.setFilesGraph(data, null);
+      this.SparkGraphService.setFilesGraph(data, chart);
+      expect(validateService.validateData).toHaveBeenCalled();
+    });
   });
 
   describe('Media Quality graph services', function () {
-    const data: Array<IMediaData> = _.cloneDeep(mediaData.response);
-    const filter: Array<IDropdownBase> = _.cloneDeep(mediaData.dropdownFilter);
+    let data = _.cloneDeep(mediaData.response);
+    let filter = _.cloneDeep(mediaData.dropdownFilter);
+
+    afterAll(function () {
+      data = filter = undefined;
+    });
 
     beforeEach(function () {
-      spyOn(AmCharts, 'makeChart').and.returnValue({
-        dataProvider: data,
-        validateData: validateService.validateData,
-      });
+      let chartResponse: any = _.cloneDeep(chart);
+      chartResponse.dataProvider = data;
+      chartResponse.validateData = validateService.validateData;
+      spyOn(AmCharts, 'makeChart').and.returnValue(chartResponse);
     });
 
     it('should have created a graph when setMediaQualityGraph is called the first time', function () {
@@ -141,6 +181,18 @@ describe('Service: Customer Graph Service', function () {
     it('should update graph when setMediaQualityGraph is called a second time', function () {
       let chart = this.SparkGraphService.setMediaQualityGraph(data, null, filter[0]);
       this.SparkGraphService.setMediaQualityGraph(data, chart, filter[1]);
+      expect(validateService.validateData).toHaveBeenCalled();
+    });
+
+    it('should have created a graph when setQualityGraph is called the first time', function () {
+      this.SparkGraphService.setQualityGraph(data, null, filter[0]);
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+      expect(validateService.validateData).not.toHaveBeenCalled();
+    });
+
+    it('should update graph when setQualityGraph is called a second time', function () {
+      let chart = this.SparkGraphService.setQualityGraph(data, null, filter[0]);
+      this.SparkGraphService.setQualityGraph(data, chart, filter[1]);
       expect(validateService.validateData).toHaveBeenCalled();
     });
   });
@@ -167,8 +219,12 @@ describe('Service: Customer Graph Service', function () {
   });
 
   describe('Registered Devices graph services', function () {
-    const data: Array<IEndpointWrapper> = _.cloneDeep(devicesJson.response.graphData);
-    const filter: Array<IDropdownBase> = _.cloneDeep(devicesJson.response.filterArray);
+    let data = _.cloneDeep(devicesJson.response.graphData);
+    let filter = _.cloneDeep(devicesJson.response.filterArray);
+
+    afterAll(function () {
+      data = filter = undefined;
+    });
 
     beforeEach(function () {
       spyOn(AmCharts, 'makeChart').and.returnValue({

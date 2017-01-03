@@ -10,6 +10,7 @@ export default angular
     require('angular-resource'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/huron/telephony/telephonyConfig'),
+    require('modules/core/featureToggle/featureToggle.service'),
   ])
   .component('ucDialing', new DialingComponent())
   .service('DialingService', DialingService)

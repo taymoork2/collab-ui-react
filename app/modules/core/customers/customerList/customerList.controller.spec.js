@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Controller: CustomerListCtrl', function () {
-  var $httpBackend, $q, $scope, $state, Authinfo, Config, customerListToggle, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
-  var $controller;
+  var $httpBackend, $q, $controller, $state, $scope, Authinfo, Config, customerListToggle, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
+  var controller;
 
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
   var partnerService = getJSONFixture('core/json/partner/partner.service.json');
@@ -86,7 +86,7 @@ describe('Controller: CustomerListCtrl', function () {
   }));
 
   function initController() {
-    $controller('CustomerListCtrl', {
+    controller = $controller('CustomerListCtrl', {
       $scope: $scope,
       $state: $state,
       Authinfo: Authinfo,
@@ -100,7 +100,7 @@ describe('Controller: CustomerListCtrl', function () {
   describe('Controller', function () {
     beforeEach(initController);
     it('should initialize', function () {
-      expect($scope.activeFilter).toBe('all');
+      expect(controller.activeFilter).toBe('all');
     });
   });
 
@@ -146,32 +146,32 @@ describe('Controller: CustomerListCtrl', function () {
     it('should properly calculate trials past the grace period', function () {
       setTestDataExpired();
       testTrialData.daysLeft = -99;
-      expect($scope.isPastGracePeriod(testTrialData)).toBe(true);
+      expect(controller.isPastGracePeriod(testTrialData)).toBe(true);
       setTestDataActive();
-      expect($scope.isPastGracePeriod(testTrialData)).toBe(false);
+      expect(controller.isPastGracePeriod(testTrialData)).toBe(false);
       setTestDataTrial();
-      expect($scope.isPastGracePeriod(testTrialData)).toBe(false);
+      expect(controller.isPastGracePeriod(testTrialData)).toBe(false);
     });
 
     xit('should display N/A when trial is past grace period', function () {
       setTestDataExpired();
       testTrialData.daysLeft = -99;
-      expect($scope.getLicenseCountColumnText(testTrialData)).toBe('common.notAvailable');
-      expect($scope.getUserCountColumnText(testTrialData)).toBe('common.notAvailable');
+      expect(controller.getLicenseCountColumnText(testTrialData)).toBe('common.notAvailable');
+      expect(controller.getUserCountColumnText(testTrialData)).toBe('common.notAvailable');
     });
 
     it('should return the correct text for user count', function () {
       setTestDataTrial();
-      expect($scope.getUserCountColumnText(testTrialData)).toBe(testTrialData.activeUsers + ' / ' + testTrialData.numUsers);
+      expect(controller.getUserCountColumnText(testTrialData)).toBe(testTrialData.activeUsers + ' / ' + testTrialData.numUsers);
     });
 
     it('should return the correct account status', function () {
       setTestDataExpired();
-      expect($scope.getAccountStatus(testTrialData)).toBe('expired');
+      expect(controller.getAccountStatus(testTrialData)).toBe('expired');
       setTestDataTrial();
-      expect($scope.getAccountStatus(testTrialData)).toBe('trial');
+      expect(controller.getAccountStatus(testTrialData)).toBe('trial');
       setTestDataActive();
-      expect($scope.getAccountStatus(testTrialData)).toBe('active');
+      expect(controller.getAccountStatus(testTrialData)).toBe('active');
     });
   });
 
@@ -179,25 +179,25 @@ describe('Controller: CustomerListCtrl', function () {
     beforeEach(initController);
 
     it('should check if it is its own org', function () {
-      expect($scope.isOwnOrg($scope.managedOrgsList[0])).toBe(true);
+      expect(controller.isOwnOrg(controller.managedOrgsList[0])).toBe(true);
     });
 
     it('if myOrg not in managedOrgsList, myOrg should be added to the top of managedOrgsList ', function () {
       Authinfo.getOrgId.and.returnValue('wqeqwe21');
       initController();
-      expect($scope.managedOrgsList).toBeDefined();
-      expect($scope.managedOrgsList[0].customerName).toBe('testOrg');
-      expect($scope.managedOrgsList.length).toEqual(6);
-      expect($scope.managedOrgsList[1].customerName).toBe('Atlas_Test_Trial_vt453w4p8d');
-      expect($scope.totalOrgs).toBe(6);
+      expect(controller.managedOrgsList).toBeDefined();
+      expect(controller.managedOrgsList[0].customerName).toBe('testOrg');
+      expect(controller.managedOrgsList.length).toEqual(6);
+      expect(controller.managedOrgsList[1].customerName).toBe('Atlas_Test_Trial_vt453w4p8d');
+      expect(controller.totalOrgs).toBe(6);
     });
 
     it('if myOrg is in managedOrgsList, myOrg should not be added to the list', function () {
 
       initController();
-      expect($scope.managedOrgsList).toBeDefined();
-      expect($scope.managedOrgsList.length).toEqual(5);
-      expect($scope.totalOrgs).toBe(5);
+      expect(controller.managedOrgsList).toBeDefined();
+      expect(controller.managedOrgsList.length).toEqual(5);
+      expect(controller.totalOrgs).toBe(5);
     });
   });
 
@@ -207,7 +207,7 @@ describe('Controller: CustomerListCtrl', function () {
     it('not Terminus customer and has e164 numbers, should route to DID add', function () {
       $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + testOrg.customerOrgId).respond(404);
       $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + testOrg.customerOrgId + '/numbers?type=external').respond(numberResponse);
-      $scope.addNumbers(testOrg);
+      controller.addNumbers(testOrg);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('didadd', {
         currentOrg: testOrg
@@ -217,7 +217,7 @@ describe('Controller: CustomerListCtrl', function () {
     it('not Terminus customer and has no e164 numbers, should route to PSTN setup', function () {
       $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + testOrg.customerOrgId).respond(404);
       $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + testOrg.customerOrgId + '/numbers?type=external').respond(noNumberResponse);
-      $scope.addNumbers(testOrg);
+      controller.addNumbers(testOrg);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
         customerId: testOrg.customerOrgId,
@@ -229,7 +229,7 @@ describe('Controller: CustomerListCtrl', function () {
 
     it('exists as Terminus customer, should route to PSTN setup', function () {
       $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + testOrg.customerOrgId).respond(200);
-      $scope.addNumbers(testOrg);
+      controller.addNumbers(testOrg);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
         customerId: testOrg.customerOrgId,
@@ -244,8 +244,8 @@ describe('Controller: CustomerListCtrl', function () {
     beforeEach(initController);
 
     it('a proper query should call out to partnerService and trialservice', function () {
-      $scope.filterAction('1234');
-      expect($scope.searchStr).toBe('1234');
+      controller.filterAction('1234');
+      expect(controller.searchStr).toBe('1234');
       //this tests that getManagedOrgsList is  called , it is called once at init , so the count is expected to be 2 here
       expect(PartnerService.getManagedOrgsList.calls.count()).toEqual(2);
       expect(PartnerService.getManagedOrgsList).toHaveBeenCalledWith('1234');
@@ -260,7 +260,7 @@ describe('Controller: CustomerListCtrl', function () {
 
     it('should update the count on the filters based on the number of rows that met the criteria', function () {
 
-      $scope.filter.options = [{
+      controller.filter.options = [{
         value: 'trial',
         label: '',
         isSelected: false,
@@ -268,10 +268,10 @@ describe('Controller: CustomerListCtrl', function () {
         count: 0
       }];
 
-      //$scope.$apply();
+      //controller.$apply();
 
-      $scope._helpers.updateResultCount($scope.gridData);
-      var activeFilter = _.find($scope.filter.options, { value: 'trial' });
+      controller._helpers.updateResultCount(controller.gridOptions.data);
+      var activeFilter = _.find(controller.filter.options, { value: 'trial' });
       expect(activeFilter.count).toBe(2);
     });
   });
@@ -292,7 +292,7 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
     it('should enhance the source object with additional license data', function () {
-      var result = $scope._helpers.updateServiceForOrg(src, licenses, compareObject);
+      var result = controller._helpers.updateServiceForOrg(src, licenses, compareObject);
       expect(result.trialId).toBe('7db0f7c1-a961-41dd-995e-ef4eb204cc72');
       expect(result.licenseId).toBe('MS_8171ee27-424e-4ac2-ae98-4508f12ae8d4');
       expect(result.volume).toBe(100);
@@ -308,7 +308,7 @@ describe('Controller: CustomerListCtrl', function () {
       };
       licenses.push(additionalLicense);
 
-      var result = $scope._helpers.updateServiceForOrg(src, licenses, compareObject);
+      var result = controller._helpers.updateServiceForOrg(src, licenses, compareObject);
       expect(result.volume).toBe(300);
     });
   });
@@ -327,7 +327,7 @@ describe('Controller: CustomerListCtrl', function () {
         }]
       };
 
-      var result = $scope.getSubfields(entry, 'meeting');
+      var result = controller.getSubfields(entry, 'meeting');
       expect(result[0].columnGroup).toBe('conferencing');
     });
 
@@ -336,7 +336,7 @@ describe('Controller: CustomerListCtrl', function () {
         'licenseList': [{}]
       };
 
-      var result = $scope.getSubfields(entry, 'meeting');
+      var result = controller.getSubfields(entry, 'meeting');
       expect(result[1].offerCode).toBe('EE');
     });
 
@@ -354,7 +354,7 @@ describe('Controller: CustomerListCtrl', function () {
         }]
       };
 
-      var result = $scope.getSubfields(entry, 'meeting');
+      var result = controller.getSubfields(entry, 'meeting');
       expect(result[1].offerCode).toBe('CMR');
     });
   });
@@ -372,7 +372,7 @@ describe('Controller: CustomerListCtrl', function () {
         }
       };
       $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + org.customerOrgId).respond(200);
-      $scope.addNumbers(org);
+      controller.addNumbers(org);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
         customerId: org.customerOrgId,
@@ -392,7 +392,7 @@ describe('Controller: CustomerListCtrl', function () {
         }
       };
       $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + org.customerOrgId).respond(200);
-      $scope.addNumbers(org);
+      controller.addNumbers(org);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
         customerId: org.customerOrgId,
@@ -409,7 +409,7 @@ describe('Controller: CustomerListCtrl', function () {
         customerEmail: 'customer@cisco.com'
       };
       $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + org.customerOrgId).respond(200);
-      $scope.addNumbers(org);
+      controller.addNumbers(org);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
         customerId: org.customerOrgId,
@@ -430,7 +430,7 @@ describe('Controller: CustomerListCtrl', function () {
         }
       };
       $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + org.customerOrgId).respond(200);
-      $scope.addNumbers(org);
+      controller.addNumbers(org);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
         customerId: org.customerOrgId,
@@ -446,18 +446,8 @@ describe('Controller: CustomerListCtrl', function () {
 
     it('should have called PartnerService.modifyManagedOrgs', function () {
       expect(testOrg.customerOrgId).toBe('1234-34534-afdagfg-425345-afaf');
-      $scope.modifyManagedOrgs(testOrg.customerOrgId);
+      controller.modifyManagedOrgs(testOrg.customerOrgId);
       expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
-    });
-  });
-
-  describe('atlasCareTrialsGetStatus should be called, careField should be removed from gridOptions if atlasCareTrials feature toggle is disabled', function () {
-    beforeEach(initController);
-
-    it('should have called FeatureToggleService.atlasCareTrialsGetStatus', function () {
-      expect(FeatureToggleService.atlasCareTrialsGetStatus).toHaveBeenCalled();
-      //care column to be removed if feature toggle is disabled
-      expect($scope.gridColumns.length).toEqual(7);
     });
   });
 });

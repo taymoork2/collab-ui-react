@@ -5,6 +5,10 @@
     var PreviousState, $state;
     var state, stateParams;
 
+    afterEach(function () {
+      PreviousState = $state = state = stateParams = undefined;
+    });
+
     beforeEach(angular.mock.module('Core'));
 
     beforeEach(inject(function (_PreviousState_, _$state_) {

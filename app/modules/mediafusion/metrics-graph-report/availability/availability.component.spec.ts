@@ -1,13 +1,10 @@
 describe('Component: ucAvailabilityMetrics', () => {
-
   beforeEach(function () {
     this.initModules('Mediafusion');
-    this.injectDependencies('$compile', '$rootScope');
+    this.compileComponent('ucAvailabilityMetrics');
   });
   it('Replaces the element with the appropriate content', function () {
-    let element = this.$compile('<uc-availability-metrics></uc-availability-metrics>')(this.$rootScope);
-    this.$rootScope.$digest();
-    expect(element.html()).toContain('availability-card');
-    expect(element.html()).toContain('metrics-availability');
+    expect(this.view.html()).toContain('availability-card');
+    expect(this.view.html()).toContain('metrics-availability');
   });
 });

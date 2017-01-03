@@ -2,7 +2,7 @@
   'use strict';
 
   describe('Controller: TabsCtrl', function () {
-    var tabsController, $q, $controller, $rootScope, injectedRootScope, $scope, $location, Authinfo, Auth, UrlConfig, $httpBackend, $provide, $injector;
+    var tabsController, $q, $controller, $rootScope, injectedRootScope, $scope, $location, Authinfo, Auth, UrlConfig, $provide, $injector;
     var featureToggleService = {
       supports: function () {}
     };
@@ -34,13 +34,21 @@
 
     var states;
 
+    afterEach(function () {
+      tabsController = $q = $controller = $rootScope = injectedRootScope = $scope = $location = Authinfo = Auth = UrlConfig = $provide = $injector = states = undefined;
+    });
+
+    afterAll(function () {
+      featureToggleService = defaultConfig = defaultUser = undefined;
+    });
+
     beforeEach(angular.mock.module('Core'));
     beforeEach(angular.mock.module(function (_$provide_) {
       $provide = _$provide_;
       $provide.value("FeatureToggleService", featureToggleService);
     }));
 
-    beforeEach(inject(function (_$controller_, _$rootScope_, _$location_, _$q_, _Authinfo_, _Auth_, _UrlConfig_, _$httpBackend_, _$injector_) {
+    beforeEach(inject(function (_$controller_, _$rootScope_, _$location_, _$q_, _Authinfo_, _Auth_, _UrlConfig_, _$injector_) {
       $q = _$q_;
       $controller = _$controller_;
       $rootScope = _$rootScope_;
@@ -50,7 +58,6 @@
       Authinfo = _Authinfo_;
       Auth = _Auth_;
       UrlConfig = _UrlConfig_;
-      $httpBackend = _$httpBackend_;
       $injector = _$injector_;
 
       tabConfig = [{
@@ -103,7 +110,7 @@
     }
 
     //from authinfo
-    describe('autorize', function () {
+    describe('authorize', function () {
       beforeEach(function () {
         UrlConfig.getAdminServiceUrl = sinon.stub().returns('path/');
       });
@@ -112,75 +119,36 @@
 
         beforeEach(function () {
           UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
-          $httpBackend
-            .expectGET('path/userauthinfo')
-            .respond(200, {
+          spyOn(Auth, 'authorize').and.callFake(function () {
+            var deferred = $q.defer();
+            deferred.resolve({
               orgId: 1337,
               services: [{
                 ciService: 'foo',
-                sqService: 'bar',
+                sqService: 'bar'
               }],
               roles: ['User', 'WX2_User']
             });
-          $httpBackend
-            .expectGET('msn/orgs/1337/cisync/')
-            .respond(200, {});
+            return deferred.promise;
+          });
+          spyOn(Authinfo, 'isAllowedState').and.returnValue(true);
         });
         it('will initialize tabs if not admin', function (done) {
           tabConfig.push({
             tab: 'tabbover',
             state: 'overview'
           });
-          Auth.authorize().then(function () {
-
-            initTabsController({}, true);
-            expect(tabsController.tabs).toBeDefined();
-            expect(tabsController.tabs.length).toBeGreaterThan(0);
-            _.defer(done);
-          });
-
-          $httpBackend.flush();
-        });
-      });
-
-      describe('given admin has read only role', function () {
-
-        beforeEach(function () {
-          UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
-          $httpBackend
-            .expectGET('path/userauthinfo')
-            .respond(200, {
-              orgId: 1337,
-              services: [{
-                ciService: 'foo',
-                sqService: 'bar'
-              }]
-            });
-          $httpBackend
-            .expectGET('msn/orgs/1337/cisync/')
-            .respond(200, {});
-        });
-
-        it('will update account info and initialize tabs', function (done) {
-          Authinfo.isReadOnlyAdmin = sinon.stub().returns(true);
-          Authinfo.getOrgId = sinon.stub().returns(42);
-          Authinfo.updateAccountInfo = sinon.stub();
-
-          $httpBackend
-            .expectGET('path/customers?orgId=42')
-            .respond(200, {});
 
           Auth.authorize().then(function () {
             initTabsController({}, true);
             _.defer(done);
           });
 
-          $httpBackend.flush();
+          $scope.$digest();
 
-          // expect(Authinfo.initializeTabs.callCount).toBe(1);
-          expect(Authinfo.updateAccountInfo.callCount).toBe(1);
+          expect(tabsController.tabs).toBeDefined();
+          expect(tabsController.tabs.length).toBeGreaterThan(0);
         });
-
       });
 
       it('should remove all tabs not allowed', function () {

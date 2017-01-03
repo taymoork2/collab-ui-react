@@ -14,11 +14,10 @@
 
     vm.customerOrgId = undefined;
     vm.licenseCountChanged = false;
-    vm.showWebex = false;
     vm.showRoomSystems = false;
     vm.showContextServiceTrial = false;
     vm.showCare = false;
-
+    vm.isCallBackEnabled = false;
     var _messageTemplateOptionId = 'messageTrial';
     var _careDefaultQuantity = 15;
 
@@ -135,9 +134,6 @@
         id: 'webexTrial',
         class: '',
       },
-      'hideExpression': function () {
-        return !vm.showWebex;
-      },
       expressionProperties: {
         'templateOptions.disabled': function () {
           return vm.preset.webex;
@@ -181,10 +177,10 @@
       },
       expressionProperties: {
         'templateOptions.required': function () {
-          return vm.messageTrial.enabled; // Since, it depends on Message Offer
+          return (vm.messageTrial.enabled && (!vm.isCallBackEnabled || vm.callTrial.enabled)); // Since, it depends on Message and Call Offer
         },
         'templateOptions.disabled': function () {
-          return messageOfferDisabledExpression() || vm.preset.care;
+          return messageOfferDisabledExpression() || (vm.isCallBackEnabled && callOfferDisabledExpression()) || vm.preset.care;
         }
       }
     }, {
@@ -383,6 +379,11 @@
             field.model.details.quantity = newValue ? 5 : 0;
           }
         }
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.preset.sparkBoard;
+        },
       }
     }, {
       model: vm.sparkBoardTrial.details,
@@ -439,6 +440,7 @@
       hasEnabledAnyTrial: hasEnabledAnyTrial,
 
       messageOfferDisabledExpression: messageOfferDisabledExpression,
+      callOfferDisabledExpression: callOfferDisabledExpression,
       careLicenseInputDisabledExpression: careLicenseInputDisabledExpression,
       validateCareLicense: validateCareLicense,
       careLicenseCountLessThanTotalCount: careLicenseCountLessThanTotalCount
@@ -456,8 +458,8 @@
         ftContextServ: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
         tcHasService: TrialContextService.trialHasService(vm.currentTrial.customerOrgId),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
+        ftCallBackEnabled: FeatureToggleService.atlasCareCallbackTrialsGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
-        ftSimplifiedTrialFlow: FeatureToggleService.supports(FeatureToggleService.features.huronSimplifiedTrialFlow),
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function (err) {
           getAdminOrgError = true;
           return err;
@@ -472,8 +474,6 @@
           vm.sparkBoardTrial.enabled = vm.preset.sparkBoard;
           vm.webexTrial.enabled = vm.preset.webex;
           vm.meetingTrial.enabled = vm.preset.meeting;
-          // TODO: we enable globally by defaulting to 'true' here, but will revisit and refactor codepaths in a subsequent PR
-          vm.showWebex = true;
           vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
           vm.messageTrial.enabled = vm.preset.message;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;
@@ -482,8 +482,8 @@
           vm.preset.context = results.tcHasService;
           vm.showCare = results.ftCareTrials;
           vm.careTrial.enabled = vm.preset.care;
+          vm.isCallBackEnabled = results.ftCallBackEnabled;
           vm.sbTrial = results.sbTrial;
-          vm.simplifiedTrialFlow = results.ftSimplifiedTrialFlow;
           updateTrialService(_messageTemplateOptionId);
 
           // To determine whether to display the ship devices page
@@ -671,7 +671,7 @@
                 return $q.reject(response);
               }).then(function () {
                 if (vm.pstnTrial.enabled) {
-                  return TrialPstnService.createPstnEntity(vm.customerOrgId, response.data.customerName);
+                  return TrialPstnService.createPstnEntityV2(vm.customerOrgId, response.data.customerName);
                 }
               });
           }
@@ -815,6 +815,13 @@
         vm.careTrial.enabled = false;
       }
       return !vm.messageTrial.enabled;
+    }
+
+    function callOfferDisabledExpression() {
+      if (!vm.callTrial.enabled) {
+        vm.careTrial.enabled = false;
+      }
+      return !vm.callTrial.enabled;
     }
 
     function careLicenseInputDisabledExpression() {

@@ -21,8 +21,10 @@
         internal-numbers="$ctrl.internalNumbers"
         internal-is-warn="$ctrl.internalIsWarn"
         internal-warn-msg="$ctrl.internalWarnMsg"
+        internal-refresh-fn="$ctrl.refreshInternalNumbers(filter)"
         external-selected="$ctrl.lineOverviewData.line.external"
         external-numbers="$ctrl.externalNumbers"
+        external-refresh-fn="$ctrl.refreshExternalNumbers(filter)"
         on-change-fn="$ctrl.setDirectoryNumbers(internalNumber, externalNumber)">
       </uc-directory-number>
       <uc-call-forward

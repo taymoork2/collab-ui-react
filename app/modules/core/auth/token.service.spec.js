@@ -13,6 +13,14 @@ describe('TokenService', function () {
     }
   };
 
+  afterEach(function () {
+    SessionStorage = TokenService = $window = undefined;
+  });
+
+  afterAll(function () {
+    windowMock = undefined;
+  });
+
   beforeEach(inject(function (_SessionStorage_, _TokenService_) {
     SessionStorage = _SessionStorage_;
     TokenService = _TokenService_;
@@ -36,8 +44,7 @@ describe('TokenService', function () {
 
   describe('clientSessionId', function () {
     beforeEach(function () {
-      $window.localStorage.setItem.and.callThrough();
-      $window.localStorage.removeItem.and.callThrough();
+      TokenService.setClientSessionId();
     });
 
     it('should get existing or generate a new id', function () {

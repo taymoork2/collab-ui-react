@@ -134,6 +134,7 @@
     }
 
     function closePanel() {
+      $rootScope.$broadcast('CE Closed');
       AutoAttendantCeMenuModelService.clearCeMenuMap();
       unAssignAssigned().finally(function () {
         $state.go('huronfeatures');

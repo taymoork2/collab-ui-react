@@ -1,0 +1,96 @@
+@import 'styles/toolkit/colors';
+
+google-calendar-notifications-dropdown {
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-right: 1px solid $gray-light-3;
+
+  .notification-button {
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+
+    &.clickable:hover {
+      cursor: pointer;
+      background-color: $gray-light-3;
+    }
+
+    &.active {
+      background-color: $gray-light-3;
+    }
+  }
+
+  .notification-number {
+    $number-size: 20px;
+
+    width: $number-size;
+    height: $number-size;
+    border-radius: $number-size;
+    line-height: $number-size + 2px;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    background-color: $gray-light-1;
+
+    &.warning {
+      background-color: $color-attention-base;
+    }
+
+    &.alert {
+      margin: 0;
+      background-color: $color-alerts-base;
+    }
+  }
+
+  .notification-label {
+    padding-left: 0.5rem;
+  }
+
+  .notification-dropdown {
+    z-index: 1;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 450px;
+    border: 1px solid $gray-light-2;
+    background-color: #fff;
+    padding: 0;
+    margin: 0;
+  }
+
+  .badge {
+    margin: 0;
+  }
+
+  .notification-entry {
+    position: relative;
+    display: flex;
+    list-style: none;
+    padding: 1rem;
+
+    + .notification-entry {
+      border-top: 1px solid $gray-light-3;
+    }
+  }
+
+  .notification-entry-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .notification-entry-details {
+    margin-left: 1rem;
+  }
+
+  .notification-entry-title {
+    font-weight: bold;
+  }
+}

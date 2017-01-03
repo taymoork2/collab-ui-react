@@ -47,8 +47,8 @@
 
       tokenTimers: {
         timeoutTimer: 3000000, // 50 mins
-        refreshTimer: 39600000, // 11 hours
-        refreshDelay: 900000 // 15 mins
+        refreshTimer: 6600000, // 1 hour 50 mins (Access token expires in 120 mins)
+        refreshDelay: 540000 // 9 mins
       },
 
       siteDomainUrl: {
@@ -60,6 +60,7 @@
         squared: 'webex-squared',
         fusion_uc: 'squared-fusion-uc',
         fusion_cal: 'squared-fusion-cal',
+        fusion_gcal: 'squared-fusion-gcal',
         mediafusion: 'squared-fusion-media',
         hds: 'spark-hybrid-datasecurity',
         fusion_mgmt: 'squared-fusion-mgmt',
@@ -223,6 +224,17 @@
         insufficientEntitlementsError: '400111',
         hybridServicesError: '400087',
         hybridServicesComboError: '400094',
+      },
+
+      timeFormat: {
+        HOUR_12: '12-hour',
+        HOUR_24: '24-hour'
+      },
+
+      dateFormat: {
+        MDY: 'M-D-Y',
+        DMY: 'D-M-Y',
+        YMD: 'Y-M-D'
       },
 
       webexSiteStatus: {
@@ -412,6 +424,7 @@
         'hds.settings', //Temporary  entitlement until updated in org setting
         'hds',
         'hds.list',
+        "hds-cluster-details",
       ],
       'spark-room-system': [
         'addDeviceFlow',
@@ -434,6 +447,12 @@
         'calendar-service',
         'cluster-list',
         'expressway-settings',
+        'services-overview',
+      ],
+      'squared-fusion-gcal': [
+        'add-resource',
+        'google-calendar-service',
+        'cluster-list',
         'services-overview',
       ],
       'squared-team-member': [

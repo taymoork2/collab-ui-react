@@ -73,6 +73,9 @@ exports.dependencies = [{
   test: /(bootstrap-tokenfield).js$/,
   loader: 'imports?define=>false',
 }, {
+  test: /stickyfill.js$/,
+  loader: 'script',
+}, {
   test: /bard.js$/,
   loader: 'script',
 }, {

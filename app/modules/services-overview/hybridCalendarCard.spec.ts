@@ -26,7 +26,7 @@ describe('ServicesOverviewHybridCallCard', () => {
     expect(card.loading).toBe(true);
   });
 
-  it('should be displayed if the user has the hybrid cal entitlement but not the hybrid google cal entitlement and not feature toggle', () => {
+  it('should be displayed if the user has the hybrid cal entitlement but neither the hybrid google cal entitlement not the feature toggle', () => {
     Authinfo.isFusionCal.and.returnValue(true);
     Authinfo.isFusionGoogleCal.and.returnValue(false);
     card = new ServicesOverviewHybridCalendarCard(Authinfo, FusionClusterStatesService);
@@ -34,22 +34,20 @@ describe('ServicesOverviewHybridCallCard', () => {
     expect(card.display).toBe(true);
   });
 
-  // scenario that should never happen but could technically happen though
-  it('should not be displayed if the user has the hybrid cal entitlement but not the hybrid google cal entitlement but feature toggle', () => {
+  it('should be displayed if the user has the hybrid cal entitlement and the feature toggle but not the hybrid google cal entitlement', () => {
     Authinfo.isFusionCal.and.returnValue(true);
     Authinfo.isFusionGoogleCal.and.returnValue(false);
     card = new ServicesOverviewHybridCalendarCard(Authinfo, FusionClusterStatesService);
     card.googleCalendarFeatureToggleEventHandler(true);
-    expect(card.display).toBe(false);
+    expect(card.display).toBe(true);
   });
 
-  // scenario that should never happen but could technically happen though
-  it('should not be displayed if the user has the hybrid cal entitlement and the hybrid google cal entitlement but not the feature toggle', () => {
+  it('should be displayed if the user has the hybrid cal entitlement and the hybrid google cal entitlement but not the feature toggle', () => {
     Authinfo.isFusionCal.and.returnValue(true);
     Authinfo.isFusionGoogleCal.and.returnValue(true);
     card = new ServicesOverviewHybridCalendarCard(Authinfo, FusionClusterStatesService);
     card.googleCalendarFeatureToggleEventHandler(false);
-    expect(card.display).toBe(false);
+    expect(card.display).toBe(true);
   });
 
   it('should not be displayed if the user the hybrid cal entitlement, the hybrid google cal entitlement and the feature toggle', () => {

@@ -1,0 +1,32 @@
+<div ui-view="header"></div>
+
+<cs-sp-container class="hds-fix-paragraphs hds-settings-table">
+
+  <cs-sp-section ng-if="hdsSidepanelClusterController.cluster.connectors.length > 0">
+    <div class="section-title-row section-name" translate="hds.clusterSettings.releasechannelHeader"></div>
+    <p>{{hdsSidepanelClusterController.releaseChannel}}</p>
+  </cs-sp-section>
+
+
+  <cs-sp-section ng-if="hdsSidepanelClusterController.cluster.connectors.length > 0">
+    <div class="section-title-row section-name" translate="hds.resources.connectors.hosts"></div>
+    </div>
+  </cs-sp-section>
+
+  <cs-sp-section ng-if="hdsSidepanelClusterController.cluster.connectors.length === 0 && hdsSidepanelClusterController.cluster.allowedRedirectTarget">
+    <div class="section-title-row section-name" translate="hds.clusterSettings.registration.heading"></div>
+    <p translate="hds.clusterSettings.list.complete-registration"></p>
+    <div>
+      <button class="btn" translate="common.remove"></button>
+    </div>
+  </cs-sp-section>
+
+  <cs-sp-section ng-if="hdsSidepanelClusterController.cluster.connectors.length === 0 && !hdsSidepanelClusterController.cluster.allowedRedirectTarget">
+    <div class="section-title-row section-name" translate="hds.clusterSettings.registration.heading"></div>
+    <p translate="hds.clusterSettings.list.registration-timeout-extended"></p>
+    <div>
+      <button class="btn" translate="common.remove"></button>
+    </div>
+  </cs-sp-section>
+
+</cs-sp-container>

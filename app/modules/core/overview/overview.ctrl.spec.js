@@ -7,10 +7,18 @@ describe('Controller: OverviewCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var controller, controllerCareFeatureDisabled, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService;
+  var controller, controllerCareFeatureDisabled, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnSetupService, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
+
+  afterEach(function () {
+    controller = controllerCareFeatureDisabled = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnSetupService = OverviewNotificationFactory = ReportsService = ServiceDescriptor = ServiceStatusDecriptor = TrialService = FusionClusterService = SunlightReportService = undefined;
+  });
+
+  afterAll(function () {
+    orgServiceJSONFixture = usageOnlySharedDevicesFixture = services = undefined;
+  });
 
   describe('Wire up', function () {
     beforeEach(inject(defaultWireUpFunc));
@@ -55,8 +63,8 @@ describe('Controller: OverviewCtrl', function () {
 
   describe('Enable Devices', function () {
     beforeEach(function () {
-      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.when(usageOnlySharedDevicesFixture));
       inject(defaultWireUpFunc);
+      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.when(usageOnlySharedDevicesFixture));
     });
 
     it('should call do something', function () {
@@ -226,6 +234,19 @@ describe('Controller: OverviewCtrl', function () {
       setHybridServiceAcknowledged: jasmine.createSpy()
     };
 
+    PstnSetupService = {
+      getCustomerV2: function () {
+        return $q.when({
+          trial: true
+        });
+      },
+      getCustomerTrialV2: function () {
+        return $q.when({
+          acceptedDate: "today"
+        });
+      }
+    };
+
     ReportsService = {
       getOverviewMetrics: function () {},
       healthMonitor: function () {}
@@ -266,13 +287,15 @@ describe('Controller: OverviewCtrl', function () {
       $state: $state,
       ReportsService: ReportsService,
       Orgservice: Orgservice,
+      PstnSetupService: PstnSetupService,
       ServiceDescriptor: ServiceDescriptor,
       ServiceStatusDecriptor: ServiceStatusDecriptor,
       Config: Config,
       TrialService: TrialService,
       OverviewNotificationFactory: OverviewNotificationFactory,
       SunlightReportService: SunlightReportService,
-      hasCareFeatureToggle: true
+      hasCareFeatureToggle: true,
+      hasGoogleCalendarFeatureToggle: false,
     });
 
     // TODO Need to be removed once Care is graduated on atlas.
@@ -285,12 +308,14 @@ describe('Controller: OverviewCtrl', function () {
       $state: $state,
       ReportsService: ReportsService,
       Orgservice: Orgservice,
+      PstnSetupService: PstnSetupService,
       ServiceDescriptor: ServiceDescriptor,
       ServiceStatusDecriptor: ServiceStatusDecriptor,
       Config: Config,
       TrialService: TrialService,
       OverviewNotificationFactory: OverviewNotificationFactory,
-      hasCareFeatureToggle: false
+      hasCareFeatureToggle: false,
+      hasGoogleCalendarFeatureToggle: false,
     });
 
     $scope.$apply();

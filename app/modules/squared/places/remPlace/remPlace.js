@@ -15,7 +15,7 @@
             .then(function () {
               $modalInstance.close();
             }, function (error) {
-              Notification.errorWithTrackingId(error, 'placesPage.failedToDelete');
+              Notification.errorResponse(error, 'placesPage.failedToDelete');
             });
         };
       }

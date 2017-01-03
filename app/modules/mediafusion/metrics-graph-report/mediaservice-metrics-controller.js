@@ -1,3 +1,5 @@
+require('modules/core/reports/amcharts-export.scss');
+
 (function () {
   'use strict';
 

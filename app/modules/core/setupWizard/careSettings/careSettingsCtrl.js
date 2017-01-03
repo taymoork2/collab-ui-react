@@ -56,7 +56,7 @@
             enableNext();
             break;
           case 'Failure':
-            Notification.errorWithTrackingId(result, $translate.instant('sunlightDetails.settings.setUpCareFailure'));
+            Notification.errorWithTrackingId(result, $translate.instant('firstTimeWizard.setUpCareFailure'));
             vm.state = vm.NOT_ONBOARDED;
             stopPolling();
             break;

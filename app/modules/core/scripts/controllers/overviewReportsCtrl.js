@@ -97,10 +97,13 @@
 
       var graphs = [];
       graphs.push(CommonGraphService.getBaseVariable(LINE));
+      graphs[0].bullet = 'round';
       graphs[0].lineColor = colors;
       graphs[0].valueField = 'count';
       graphs[0].title = entTitle;
       graphs[0].balloonText = '[[value]]';
+      graphs[0].fillAlphas = 0;
+      graphs[0].lineAlpha = 1;
 
       var chartObject = CommonGraphService.getBaseSerialGraph(data, 0, valueAxes, graphs, 'date', catAxis);
       chartObject.marginTop = 20;

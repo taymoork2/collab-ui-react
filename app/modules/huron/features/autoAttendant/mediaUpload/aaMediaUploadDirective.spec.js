@@ -15,6 +15,7 @@ describe('Directive: aaMediaUpload', function () {
   var elementHtml = "<aa-media-upload aa-schedule='openHours' aa-index='0' name='mediaUploadInput'></aa-media-upload>";
   var attributeHtml = "<div aa-media-upload aa-schedule='openHours' aa-index='0' name='mediaUploadInput'></div>";
   var play = 'play';
+  var element;
 
   beforeEach(angular.mock.module('Huron'));
 
@@ -40,8 +41,21 @@ describe('Directive: aaMediaUpload', function () {
     menuEntry.addAction(playAction);
   }));
 
+  afterEach(function () {
+    $compile = null;
+    $rootScope = null;
+    $scope = null;
+    $q = null;
+    AAUiModelService = null;
+    AutoAttendantCeMenuModelService = null;
+    FeatureToggleService = null;
+    if (element) {
+      element.remove();
+    }
+    element = null;
+  });
+
   describe('when the directive is an element', function () {
-    var element;
     beforeEach(function () {
       element = $compile(elementHtml)($rootScope);
       $rootScope.$digest();
@@ -53,7 +67,6 @@ describe('Directive: aaMediaUpload', function () {
   });
 
   describe('when the directive is an attribute', function () {
-    var element;
     beforeEach(function () {
       element = $compile(attributeHtml)($rootScope);
       $rootScope.$digest();

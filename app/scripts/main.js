@@ -21,10 +21,7 @@
     'core.trackingId',
     'core.trial',
     'core.utils',
-    'core.windowlocation',
     'csDonut',
-    'ct.ui.router.extras.sticky',
-    'ct.ui.router.extras.future',
     'ct.ui.router.extras.previous',
     'cwill747.phonenumber',
     'ngAnimate',
@@ -43,6 +40,7 @@
     'ui.grid.infiniteScroll',
     'timer',
     'toaster',
+    'rzModule',
     'dragularModule',
     require('modules/core/analytics'),
     require('modules/core/featureToggle/featureToggle.service'),
@@ -50,8 +48,10 @@
     require('modules/core/scripts/services/userlist.service'),
     require('modules/core/users/userCsv/userCsv.service'),
     require('modules/core/cards').default,
+    require('modules/core/window').default,
     require('modules/online/digitalRiver').default // TODO make core.myCompany independent module
   ])
+    .constant('CryptoJS', require('crypto-js'))
     .constant('phone', require('google-libphonenumber'))
     .constant('addressparser', require('emailjs-addressparser'));
 

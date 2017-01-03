@@ -25,15 +25,25 @@
               id="callServiceAwareStatus"
               translate="hercules.activationStatus.{{getStatus(callServiceAware.status)}}"></span>
         <span class="cloud-extension-label disabled" ng-if="callServiceAware.entitled && callServiceAware.status && callServiceAware.status.lastStateChangeText">
-          ({{callServiceAware.status.lastStateChangeText}})</span>
+          {{callServiceAware.status.lastStateChangeText}}</span>
         <span class="cloud-extension-label status-off" ng-if="!callServiceAware.entitled" translate="common.off"></span>
         <span cs-loader ng-if="!callServiceAware.status && callServiceAware.entitled"></span>
+        <span ng-if="callServiceAware.entitled && callServiceAware.status"
+              class="cloud-extension-label right">
+          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.uc-history">{{'hercules.userHistory.seeHistory' | translate}}</a>
+        </span>
       </div>
       <div ng-if="callServiceAware.entitled && callServiceAware.homedConnector">
-        <span class="cloud-extension-label">{{'cloudExtensions.cluster' | translate}}:</span>
-        <span class="cloud-extension-label" ng-if="callServiceAware.entitled && callServiceAware.homedConnector">
-          <a href="https://{{callServiceAware.homedConnector.host_name}}" target="_blank" style="color: #3ca8e8">{{callServiceAware.homedConnector.cluster_name}}</a>
-        </span>
+        <div>
+          <span class="cloud-extension-label">{{'cloudExtensions.cluster' | translate}}:</span>
+          <span class="cloud-extension-label">{{callServiceAware.homedConnector.cluster_name}}</span>
+        </div>
+        <div>
+          <span class="cloud-extension-label">{{'hercules.connectors.host_name' | translate}}:</span>
+          <span class="cloud-extension-label">
+            <a href="https://{{callServiceAware.homedConnector.host_name}}" target="_blank">{{callServiceAware.homedConnector.host_name}}</a>
+          </span>
+        </div>
       </div>
       <div ng-if="callServiceAware.entitled && (callServiceAware.directoryUri || callServiceAware.status.state !== 'notActivated')">
         <span class="cloud-extension-label">{{'cloudExtensions.sipUri' | translate}}:</span>
@@ -61,7 +71,6 @@
 
       <div ng-if="callServiceAware.entitled
         && callServiceAware.status
-        && callServiceAware.status.state === 'notActivated'
         && callServiceAware.status.description"
            class="info-message">
         <i class="icon icon-info"></i>
@@ -97,9 +106,13 @@
             id="callServiceConnectStatus"
             translate="hercules.activationStatus.{{getStatus(callServiceConnect.status)}}"></span>
       <span class="cloud-extension-label disabled" ng-if="callServiceConnect.entitled && callServiceConnect.status && callServiceConnect.status.lastStateChangeText">
-          ({{callServiceConnect.status.lastStateChangeText}})</span>
+          {{callServiceConnect.status.lastStateChangeText}}</span>
       <span class="cloud-extension-label status-off" ng-if="!callServiceConnect.entitled" translate="common.off"></span>
       <span cs-loader ng-if="!callServiceConnect.status && callServiceConnect.entitled"></span>
+      <span ng-if="callServiceConnect.entitled && callServiceConnect.status"
+            class="cloud-extension-label right">
+          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.ec-history">{{'hercules.userHistory.seeHistory' | translate}}</a>
+        </span>
     </div>
 
     <div ng-if="callServiceConnect.entitled && callServiceConnect.status.state === 'error'"
@@ -112,7 +125,6 @@
 
     <div ng-if="callServiceConnect.entitled
       && callServiceConnect.status
-      && callServiceConnect.status.state === 'notActivated'
       && callServiceConnect.status.description"
          class="info-message">
       <i class="icon icon-info"></i>

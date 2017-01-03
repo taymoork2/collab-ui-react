@@ -24,7 +24,9 @@ const prodWebpack = merge.smart(commonWebpack, {
       inject: 'body',
       ngStrictDi: '',
     }),
-    new ExtractTextPlugin('styles/[name].[hash].css'),
+    new ExtractTextPlugin('styles/[name].[hash].css', {
+      allChunks: true,
+    }),
     new webpack.NoErrorsPlugin(),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.UglifyJsPlugin({

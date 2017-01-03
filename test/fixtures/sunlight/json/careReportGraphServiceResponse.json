@@ -438,7 +438,8 @@
       "gridAlpha": 0,
       "axisAlpha": 1,
       "stackType": "regular",
-      "title": "careReportsPage.tasks"
+      "title": "careReportsPage.tasks",
+      "maximum": 5
     }],
     "export": {
       "libs": {

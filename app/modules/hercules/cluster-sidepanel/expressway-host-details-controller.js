@@ -19,7 +19,7 @@
       cluster = newValue;
       vm.clustername = cluster.name;
       vm.host = _.find(cluster.connectors, {
-        hostname: $stateParams.host
+        hostSerial: $stateParams.hostSerial
       });
       vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.host.connectorType);
       vm.localizedConnectorSectionHeader = $translate.instant('hercules.connectors.localizedConnectorAndHostHeader', {

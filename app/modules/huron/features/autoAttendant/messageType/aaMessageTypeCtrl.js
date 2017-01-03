@@ -134,8 +134,13 @@
       vm.messageOption = vm.messageOptions[actionType.SAY];
 
       if (vm.actionEntry.name === 'runActionsOnInput') {
-        if (_.startsWith(vm.actionEntry.value.toLowerCase(), 'http')) {
-          vm.messageOption = vm.messageOptions[actionType.PLAY];
+        if (AACommonService.isMediaUploadToggle()) {
+          if (vm.actionEntry.value && !_.startsWith(vm.actionEntry.value, 'http')) {
+            vm.messageOption = vm.messageOptions[actionType.SAY];
+            vm.messageInput = vm.actionEntry.value;
+          } else {
+            vm.messageOption = vm.messageOptions[actionType.PLAY];
+          }
         } else {
           vm.messageOption = vm.messageOptions[actionType.SAY];
           vm.messageInput = vm.actionEntry.value;

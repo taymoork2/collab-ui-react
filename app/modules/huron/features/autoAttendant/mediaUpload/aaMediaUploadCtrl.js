@@ -5,7 +5,7 @@
   .controller('AAMediaUploadCtrl', AAMediaUploadCtrl);
 
   /* @ngInject */
-  function AAMediaUploadCtrl($scope, $translate, Upload, ModalService, AANotificationService, AACommonService, AAMediaUploadService, AAUiModelService, AutoAttendantCeMenuModelService) {
+  function AAMediaUploadCtrl($scope, $translate, Upload, ModalService, AANotificationService, AACommonService, AAMediaUploadService, AAUiModelService, AutoAttendantCeMenuModelService, Analytics, CryptoJS, Authinfo, AAMetricNameService) {
     var vm = this;
 
     vm.uploadFile = '';
@@ -21,6 +21,7 @@
     vm.dialogModalTypes = {
       cancel: 'cancel',
       overwrite: 'overwrite',
+      delete: 'delete',
     };
 
     vm.upload = upload;
@@ -28,6 +29,7 @@
     vm.progress = 0;
     vm.actionCopy = undefined;
     vm.isSquishable = isSquishable;
+    vm.clioDelete = AAMediaUploadService.isClioEnabled();
 
     var maxLanes = 3;
 
@@ -51,13 +53,15 @@
     };
 
     var sourceType = messageType.ACTION;
-    var uniqueCtrlIdentifer = 'mediaUploadCtrl';
     var modalOpen = false;
     var modalCanceled = false;
     var uploadServProm = undefined;
     var menuKeyIndex;
     var isMenuHeader;
     var numLanes;
+    var savedActionEntry = undefined;
+    var uniqueCtrlIdentifier = 'mediaUploadCtrl' + AACommonService.getUniqueId();
+    var mediaResources = AAMediaUploadService.getResources(uniqueCtrlIdentifier);
 
     //////////////////////////////////////////////////////
 
@@ -89,8 +93,10 @@
     //upload set up ui model and state info
     function continueUpload(file) {
       Upload.mediaDuration(file).then(function (durationInSeconds) {
-        uniqueCtrlIdentifer += AACommonService.getUniqueId();
-        AACommonService.setIsValid(uniqueCtrlIdentifer, false);
+        var metrics = {};
+        metrics.sizeInMB = file.size / 1024 / 1024;
+        metrics.durationInSeconds = durationInSeconds;
+        AACommonService.setIsValid(uniqueCtrlIdentifier, false);
         vm.uploadFile = file.name;
         vm.uploadDate = moment().format("MM/DD/YYYY");
         vm.uploadDuration = '(' + moment.utc(durationInSeconds * 1000).format('mm:ss') + ')';
@@ -98,8 +104,8 @@
         vm.progress = 0;
         modalCanceled = false;
         uploadServProm = AAMediaUploadService.upload(file);
-        if (!_.isUndefined(uploadServProm)) {
-          uploadServProm.then(uploadSuccess, uploadError, uploadProgress).finally(cleanUp);
+        if (uploadServProm) {
+          uploadServProm.then(uploadSuccess.bind(null, metrics), uploadError, uploadProgress).finally(cleanUp);
         } else {
           uploadError();
         }
@@ -108,27 +114,40 @@
       });
     }
 
-    function uploadSuccess(result) {
+    function uploadSuccess(metrics, result) {
       if (!modalCanceled) {
-        var playback = AAMediaUploadService.retrieve(result);
-        if (playback) {
-          setUploadValues(playback);
+        var retrieve = AAMediaUploadService.retrieve(result);
+        if (!_.isEmpty(retrieve)) {
+          setUploadValues(retrieve.playback, retrieve.deleteUrl);
+          uploadComplete(metrics);
         } else {
           uploadError();
         }
       }
     }
 
-    function setUploadValues(value) {
+    function setUploadValues(value, deleteUrl) {
       vm.state = vm.UPLOADED;
       var fd = {};
       fd.uploadFile = vm.uploadFile;
       fd.uploadDate = vm.uploadDate;
       fd.uploadDuration = vm.uploadDuration;
-      vm.actionEntry.setValue(value);
-      vm.actionEntry.setDescription(JSON.stringify(fd));
+      vm.actionEntry.deleteUrl = deleteUrl;
+      vm.actionEntry.value = value;
+      vm.actionEntry.description = JSON.stringify(fd);
+    }
+
+    function uploadComplete(metrics) {
+      var uuid = Authinfo.getUserId();
+      var orgid = Authinfo.getOrgId();
+      if (uuid && orgid) {
+        metrics.uuid = CryptoJS.SHA256(uuid).toString(CryptoJS.enc.Base64);
+        metrics.orgid = CryptoJS.SHA256(orgid).toString(CryptoJS.enc.Base64);
+        Analytics.trackEvent(AAMetricNameService.MEDIA_UPLOAD, metrics);
+      }
       setActionCopy();
       $scope.change();
+      mediaResources.uploads.push(_.cloneDeep(vm.actionEntry));
     }
 
     function uploadError() {
@@ -140,7 +159,7 @@
 
     function uploadProgress(evt) {
       //dont divide by zero for progress calculation
-      if (!_.isUndefined(evt) && !_.isEqual(evt.total, 0)) {
+      if (evt && !_.isEqual(evt.total, 0)) {
         vm.progress = parseInt((100.0 * ((evt.loaded - 1) / evt.total)), 10);
       } else {
         vm.progress = 0;
@@ -150,14 +169,18 @@
     //global media upload for save
     function cleanUp() {
       uploadServProm = undefined;
-      AACommonService.setIsValid(uniqueCtrlIdentifer, true);
+      AACommonService.setIsValid(uniqueCtrlIdentifier, true);
       AACommonService.setMediaUploadStatus(true);
     }
 
     function openModal(uploadModal) {
       var modalInstance = dialogModal(uploadModal, vm.dialogModalTypes);
       modalInstance.result.then(function () {
-        modalAction();
+        if (_.isEqual(uploadModal, vm.dialogModalTypes.delete)) {
+          modalDelete();
+        } else {
+          modalAction();
+        }
       }).finally(modalClosed);
     }
 
@@ -170,6 +193,15 @@
             message: $translate.instant('autoAttendant.cancelUpload'),
             close: $translate.instant('common.cancel'),
             dismiss: $translate.instant('common.no'),
+            type: 'negative'
+          });
+          break;
+        case types.delete:
+          modalInstance = ModalService.open({
+            title: $translate.instant('common.delete'),
+            message: $translate.instant('autoAttendant.deleteUpload'),
+            close: $translate.instant('common.delete'),
+            dismiss: $translate.instant('common.cancel'),
             type: 'negative'
           });
           break;
@@ -194,13 +226,31 @@
       modalCanceled = true;
     }
 
+    function modalDelete() {
+      if (mediaResources.uploads.length > 1) {
+        vm.actionEntry = _.cloneDeep(savedActionEntry);
+        //ok to delete at this point all the unsaved uploads
+        AAMediaUploadService.clearResourcesExcept(uniqueCtrlIdentifier, 0);
+        setUpEntry(vm.actionEntry);
+      } else {
+        //this case only occurs with a single saved action
+        //in the queue for deletion, so we can't delete it until save occurs
+        //we need to clean up the view, but hold the action until the save/close occurs
+        //can't actually call the delete
+        reset(vm.actionEntry);
+        mediaResources.uploads.push(_.cloneDeep(vm.actionEntry));
+      }
+      AACommonService.setIsValid(uniqueCtrlIdentifier, true);
+      AACommonService.setMediaUploadStatus(true);
+    }
+
     function modalClosed() {
       modalOpen = false;
     }
 
     //roll back, revert if history exists, else hard reset
     function rollBack() {
-      if (!_.isUndefined(uploadServProm)) {
+      if (uploadServProm) {
         uploadServProm.abort();
         uploadServProm = undefined;
       }
@@ -218,8 +268,7 @@
         vm.uploadDate = desc.uploadDate;
         vm.uploadDuration = desc.uploadDuration;
         if (!_.isUndefined(playAction)) {
-          playAction.setDescription(vm.actionCopy.description);
-          playAction.setValue(vm.actionCopy.value);
+          playAction = _.cloneDeep(vm.actionCopy);
         }
         vm.state = vm.UPLOADED;
         vm.progress = 0;
@@ -232,25 +281,37 @@
       vm.uploadFile = '';
       vm.uploadDate = '';
       vm.uploadDuration = '';
-      if (!_.isUndefined(playAction)) {
-        playAction.setDescription('');
-        playAction.setValue('');
+      if (playAction) {
+        playAction.description = '';
+        playAction.value = '';
+        playAction.deleteUrl = '';
+        playAction.voice = '';
       }
       vm.state = vm.WAIT;
       vm.progress = 0;
       vm.actionCopy = undefined;
     }
 
+    $scope.$on('CE Saved', function () {
+      AAMediaUploadService.notifyAsSaved(uniqueCtrlIdentifier, true);
+      savedActionEntry = _.cloneDeep(vm.actionEntry);
+    });
+
+    $scope.$on('$destroy', function () {
+      if (uploadServProm) {
+        modalCanceled = true;
+        uploadServProm.abort();
+      }
+      AAMediaUploadService.notifyAsActive(uniqueCtrlIdentifier, false);
+    });
+
     //if user cancels upload & previously uploaded media -> re-init/revert copy
     function setActionCopy() {
       if (!modalOpen) {
         var action = vm.actionEntry;
-        if (angular.isDefined(action)) {
+        if (!_.isUndefined(action)) {
           if (!_.isEmpty(action.getValue())) {
-            vm.actionCopy = {};
-            vm.actionCopy.description = action.getDescription();
-            vm.actionCopy.value = action.getValue();
-            vm.actionCopy.voice = action.getVoice();
+            vm.actionCopy = _.cloneDeep(action);
           }
         }
       }
@@ -279,6 +340,7 @@
       vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
       var actionHeader = getActionHeader(vm.menuEntry);
       var action = getAction(actionHeader);
+      action.description = actionHeader.description;
       if (action) {
         // existing say action from the existing header
         vm.actionEntry = action;
@@ -318,7 +380,6 @@
       var uiMenu = ui[$scope.schedule];
       vm.menuEntry = uiMenu.entries[$scope.index];
       vm.actionEntry = getAction(vm.menuEntry);
-
     }
 
     function setActionEntry() {
@@ -373,7 +434,7 @@
     }
 
     function setUpEntry(action) {
-      if (_.startsWith(action.getValue().toLowerCase(), 'http')) {
+      if (action) {
         try {
           // description holds the file name plus the date plus the duration
           //dont set up the vm until the desc is parsed properly
@@ -386,9 +447,13 @@
         } catch (exception) {
           //if somehow a bad format came through
           //catch and keep disallowed
-          action.setValue('');
-          action.setDescription('');
+          action.value = '';
+          action.description = '';
+          action.deleteUrl = '';
+          action.voice = '';
         }
+      } else {
+        reset(action);
       }
     }
 
@@ -396,14 +461,15 @@
       gatherMediaSource();
       //set up the view according to the play
       setUpEntry(vm.actionEntry);
-    }
-
-    $scope.$on('$destroy', function () {
-      if (!_.isUndefined(uploadServProm)) {
-        modalCanceled = true;
-        uploadServProm.abort();
+      //set up the last saved according to the play
+      savedActionEntry = _.cloneDeep(vm.actionEntry);
+      //set up the initial mediaUploads
+      mediaResources.uploads[0] = _.cloneDeep(savedActionEntry);
+      //if previously saved a real value, want to esure not deleted
+      if (savedActionEntry.description.length > 0) {
+        AAMediaUploadService.notifyAsSaved(uniqueCtrlIdentifier, true);
       }
-    });
+    }
 
     function isSquishable() {
       // if it is submenu header in the phone menu slightly squish the html to fit when open/closed and holidays are exposed.

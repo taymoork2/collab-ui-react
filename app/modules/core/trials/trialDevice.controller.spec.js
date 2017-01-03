@@ -1,4 +1,4 @@
-/* globals $controller, $httpBackend, $q, $rootScope, FeatureToggleService, Notification, Orgservice, TrialDeviceController, TrialCallService, TrialDeviceService, TrialRoomSystemService*/
+/* globals $controller, $httpBackend, $q, $rootScope, Analytics, FeatureToggleService, Notification, Orgservice, TrialDeviceController, TrialCallService, TrialDeviceService, TrialRoomSystemService*/
 
 'use strict';
 
@@ -6,6 +6,14 @@ describe('Controller: TrialDeviceController', function () {
   var controller, scope;
   var trialData = getJSONFixture('core/json/trials/trialData.json');
   var limitData = {};
+
+  afterEach(function () {
+    controller = scope = undefined;
+  });
+
+  afterAll(function () {
+    trialData = limitData = undefined;
+  });
 
   beforeEach(angular.mock.module('core.trial'));
   beforeEach(angular.mock.module('Core'));
@@ -25,7 +33,7 @@ describe('Controller: TrialDeviceController', function () {
       .respond({});
     spyOn(Orgservice, 'getOrg');
     limitData = TrialDeviceService.getDeviceLimit();
-
+    spyOn(Analytics, 'trackTrialSteps');
     initController();
   });
 

@@ -15,13 +15,14 @@
       require('modules/core/scripts/services/sessionstorage'),
       require('modules/core/scripts/services/storage'),
       require('modules/core/scripts/services/utils'),
-      require('modules/core/windowLocation/windowLocation'),
+      require('modules/core/window').default,
+      require('modules/huron/compass').default,
     ])
     .factory('Auth', Auth)
     .name;
 
   /* @ngInject */
-  function Auth($http, $injector, $q, $sanitize, $translate, Authinfo, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, Utils, WindowLocation) {
+  function Auth($http, $injector, $q, $sanitize, $translate, Authinfo, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, Utils, WindowLocation, HuronCompassService) {
 
     var service = {
       logout: logout,
@@ -40,23 +41,46 @@
       isOnlineOrg: isOnlineOrg
     };
 
+    var REFRESH_ACCESS_TOKEN_DEBOUNCE_MS = 1000;
+    var debouncedRefreshAccessToken = _.debounce(
+      refreshAccessToken,
+      REFRESH_ACCESS_TOKEN_DEBOUNCE_MS,
+      {
+        leading: true,
+        trailing: false
+      }
+    );
+
     return service;
 
-    var deferred;
+    var deferredAll;
 
     function authorize(options) {
       var reauthorize = _.get(options, 'reauthorize');
-      if (deferred && !reauthorize) {
-        return deferred;
+      if (deferredAll && !reauthorize) {
+        return deferredAll;
       }
 
-      deferred = httpGET(getAuthorizationUrl())
-        .then(replaceOrTweakServices)
-        .then(injectMessengerService)
-        .then(initializeAuthinfo)
+      deferredAll = httpGET(getAuthorizationUrl())
+        .then(function (res) {
+          return $q.all([
+            deferredAuth(res),
+            getHuronDomain(res)
+          ]);
+        })
+        .then(function (responseArray) {
+          return _.get(responseArray, '[0]');
+        })
         .catch(handleErrorAndResetAuthinfo);
 
-      return deferred;
+      return deferredAll;
+    }
+
+    function deferredAuth(res) {
+      return $q.when(res)
+        .then(replaceOrTweakServices)
+        .then(injectMessengerService)
+        .then(initializeAuthinfo);
     }
 
     var onlineOrg;
@@ -120,9 +144,11 @@
     }
 
     function refreshAccessTokenAndResendRequest(response) {
-      return refreshAccessToken()
+      return debouncedRefreshAccessToken()
         .then(function () {
           var $http = $injector.get('$http');
+          // replace the retried request with the new Authorization header
+          _.set(response, 'config.headers.Authorization', _.get($http, 'defaults.headers.common.Authorization'));
           return $http(response.config);
         });
     }
@@ -274,6 +300,7 @@
         return getCustomerAccount(Authinfo.getOrgId())
           .then(function (res) {
             Authinfo.updateAccountInfo(res.data);
+            return authData;
           });
       } else {
         return authData;
@@ -356,6 +383,11 @@
         Log.error(message, res && (res.data || res.text));
         return $q.reject(res);
       };
+    }
+
+    function getHuronDomain(res) {
+      var authData = _.get(res, 'data');
+      return HuronCompassService.fetchDomain(authData);
     }
   }
 })();
