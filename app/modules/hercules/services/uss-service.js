@@ -80,6 +80,10 @@
       return res.data.userProps;
     }
 
+    function extractJournalEntries(res) {
+      return res.data.entries || [];
+    }
+
     function decorateWithStatus(status) {
       if (!status) {
         return 'unknown';
@@ -184,10 +188,10 @@
         .then(extractData);
     }
 
-    function getUserJournal(userId, orgId, limit) {
+    function getUserJournal(userId, orgId, limit, serviceId) {
       return $http
-        .get(USSv2Url + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userJournal/' + userId + (limit ? '?limit=' + limit : ''))
-        .then(extractData);
+        .get(USSv2Url + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userJournal/' + userId + (limit ? '?limit=' + limit : '') + (serviceId ? '&serviceId=' + serviceId : ''))
+        .then(extractJournalEntries);
     }
   }
 }());

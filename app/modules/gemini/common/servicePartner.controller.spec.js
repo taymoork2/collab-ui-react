@@ -40,7 +40,7 @@ describe('controller: servicePartnerCtrl', function () {
   it('The body length is zero', function () {
     defer.resolve(spData.error1);
     $scope.$apply();
-    expect(Notification.error).toHaveBeenCalledWith('gemini.msg.splsReponseErr');
+    expect(Notification.error).toHaveBeenCalledWith('gemini.msg.splsResponseErr');
   });
 
   it('The response have message', function () {

@@ -46,6 +46,10 @@
         <span class="cloud-extension-label disabled" ng-if="extension.entitled && extension.status && extension.status.lastStateChangeText">{{extension.status.lastStateChangeText}}</span>
         <span class="cloud-extension-label status-off" ng-if="!extension.entitled" translate="common.off"></span>
         <span cs-loader ng-if="!extension.status && extension.entitled"></span>
+        <span ng-if="extension.entitled && extension.status"
+              class="cloud-extension-label right">
+          <a ui-sref="user-overview.hybrid-services-{{extension.id}}.history">{{'hercules.userHistory.seeHistory' | translate}}</a>
+        </span>
       </div>
 
       <div class="cloud-extension-label" ng-show="extension.entitled && extension.id === 'squared-fusion-cal' && extension.hasShowPreferredWebExSiteNameFeatureToggle">
@@ -54,10 +58,16 @@
       </div>
 
       <div ng-if="extension.entitled && extension.homedConnector">
-        <span class="cloud-extension-label">{{'cloudExtensions.cluster' | translate}}:</span>
-        <span ng-if="extension.entitled && extension.homedConnector" class="cloud-extension-label">
-          <a href="https://{{extension.homedConnector.host_name}}" target="_blank" style="color: #3ca8e8">{{extension.homedConnector.cluster_name}}</a>
-        </span>
+        <div>
+          <span class="cloud-extension-label">{{'cloudExtensions.cluster' | translate}}:</span>
+          <span ng-if="extension.entitled && extension.homedConnector" class="cloud-extension-label">{{extension.homedConnector.cluster_name}}</span>
+        </div>
+        <div>
+          <span class="cloud-extension-label">{{'hercules.connectors.host_name' | translate}}:</span>
+          <span ng-if="extension.entitled && extension.homedConnector" class="cloud-extension-label">
+            <a href="https://{{extension.homedConnector.host_name}}" target="_blank">{{extension.homedConnector.host_name}}</a>
+          </span>
+        </div>
       </div>
 
       <div ng-if="extension.entitled && extension.status && extension.status.state === 'error' && extension.status.description"

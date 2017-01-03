@@ -12,12 +12,11 @@ describe('WebEx Trial Creation', function () {
   });
 
   it('should confirm WebEx URL validator is working by entering URL that is already in use', function () {
-    utils.click(partner.trialFilter);
     utils.click(partner.addButton);
 
     utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
     utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
-    utils.setCheckboxIfDisplayed(partner.squaredUCTrialCheckbox, false, 100);
+    utils.setCheckboxIfDisplayed(partner.squaredUCTrialCheckbox, false, 1000);
     utils.setCheckboxIfDisplayed(partner.careTrialCheckbox, false, 100);
     utils.setCheckboxIfDisplayed(partner.roomSystemsTrialCheckbox, false, 100);
     utils.setCheckboxIfDisplayed(partner.sparkBoardTrialCheckbox, false, 100);
@@ -43,7 +42,6 @@ describe('WebEx Trial Creation', function () {
   });
 
   it('should find new trial', function () {
-    utils.click(partner.trialFilter);
     utils.search(partner.newTrial.customerName, -1);
     utils.waitIsDisplayed(partner.newTrialRow);
     partner.retrieveOrgId(partner.newTrialRow);
@@ -52,6 +50,7 @@ describe('WebEx Trial Creation', function () {
   it('should confirm trial created (long wait)', function () {
     utils.click(partner.newTrialRow);
     utils.waitIsDisplayed(partner.previewPanel);
+    utils.click(partner.openMeetingSidePanelLink);
     utils.waitIsDisplayed(partner.trialPending);
     expect(partner.expectTrialNotPending()).toBeTruthy();
   }, WEBEX_SITE_ACTIVATION_TIMEOUT);
@@ -61,7 +60,10 @@ describe('WebEx Trial Creation', function () {
 
     it('should launch customer portal via preview panel and display first time wizard', function () {
       appWindow = browser.getWindowHandle();
-
+      utils.click(partner.exitPreviewButton);
+      utils.search(partner.newTrial.customerName, -1);
+      utils.click(partner.newTrialRow);
+      
       utils.expectIsEnabled(partner.launchCustomerPanelButton);
       utils.click(partner.launchCustomerPanelButton);
       utils.switchToNewWindow().then(function () {

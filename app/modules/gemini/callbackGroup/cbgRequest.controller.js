@@ -6,16 +6,23 @@
     .controller('CbgRequestCtrl', CbgRequestCtrl);
 
   /* @ngInject */
-  function CbgRequestCtrl($state, $timeout, $scope, $rootScope, $stateParams, cbgService, Notification, gemService) {
+  function CbgRequestCtrl($state, $timeout, $scope, $rootScope, $stateParams, $translate, cbgService, Notification, gemService) {
     var vm = this;
     vm.allCountries = [];
     vm.isCsvValid = false;
+    vm.downloadCountryUrl = cbgService.downloadCountryUrl;
     vm.onSubmit = onSubmit;
-    vm.resetFile = resetFile;
     vm.validateCsv = validateCsv;
     vm.removeCountry = removeCountry;
     vm.onFileSizeError = onFileSizeError;
     vm.onFileTypeError = onFileTypeError;
+    vm.onSelectChange = onSelectChange;
+    vm.onResetFile = onResetFile;
+
+    vm.$onInit = $onInit;
+    vm.options = [];
+    vm.selected = [];
+    vm.selectPlaceholder = $translate.instant('gemini.cbgs.request.selectPlaceholder');
 
     vm.model = {
       file: null,
@@ -23,14 +30,65 @@
       processProgress: 0,
       isProcessing: false,
     };
-    vm.model.postData = {};
-    vm.model.postData.countries = [];
+    vm.model.info = {};
+    vm.model.info.countries = [];
 
-    $scope.$watchCollection(function () {
-      return vm.model.file;
-    }, function () {
-      $timeout(vm.validateCsv);
-    });
+    function $onInit() {
+      $scope.$watchCollection(function () {
+        return vm.model.file;
+      }, function () {
+        $timeout(vm.validateCsv);
+      });
+      getCountries();
+      getDownloadUrl();
+    }
+
+    function getCountries() {
+      cbgService.getCountries().then(function (res) {
+        _.forEach(res.content.data, function (country) {
+          vm.allCountries[country.countryName] = country;
+          vm.options.push({ value: country.countryId, label: country.countryName, isSelected: false });
+        });
+      });
+    }
+
+    function onSelectChange() {
+      vm.model.info.countries = [];
+      _.forEach(vm.selected, function (obj) {
+        var arr = { countryId: obj.value, countryName: obj.label };
+        if (obj.isSelected) {
+          vm.model.info.countries.push(arr);
+        } else {
+          _.remove(vm.model.info.countries, function (objc) {
+            return objc.countryName === obj.label;
+          });
+        }
+      });
+      syncSelectCountries();
+    }
+
+    function syncSelectCountries() {
+      vm.selected = [];
+      var selected_ = {};
+
+      _.forEach(vm.model.info.countries, function (country) {
+        if (vm.allCountries[country.countryName.trim()]) {
+          var newObj = { value: country.countryId, label: country.countryName, isSelected: true };
+          selected_[country.countryName] = newObj;
+          vm.selected.push(newObj);
+        }
+      });
+
+      _.forEach(vm.options, function (option) {
+        option.isSelected = !!selected_[option.label];
+      });
+      if (vm.model.info.countries.length > 0) {
+        vm.hideCountries = JSON.stringify(vm.model.info.countries);
+      } else {
+        vm.hideCountries = null;
+      }
+      vm.selectPlaceholder = vm.selected.length + $translate.instant('gemini.cbgs.request.syncPlaceholder');
+    }
 
     function validateCsv() {
       var csvArray = [];
@@ -61,13 +119,14 @@
     }
 
     function removeCountry(countryName) {
-      _.remove(vm.model.postData.countries, function (obj) {
+      _.remove(vm.model.info.countries, function (obj) {
         return obj.countryName === countryName;
       });
-      if (!vm.model.postData.countries.length) {
+      if (!vm.model.info.countries.length) {
         vm.model.file = null;
         vm.hideCountries = null;
       }
+      syncSelectCountries();
     }
 
     function onSubmit() {
@@ -76,45 +135,53 @@
       if (!customerId) {
         return;
       }
-      cbgService.getCountries().then(function (res) {
-        var countries = [];
-        var arr = _.get(res.content, 'data');
-        _.forEach(arr, function (country) {
-          vm.allCountries[country.countryName] = country;
-        });
-        _.forEach(vm.model.postData.countries, function (country) {
-          var selectedCountry = vm.allCountries[country.countryName.trim()];
-          if (selectedCountry) {
-            countries.push({ countryId: selectedCountry.countryId, countryName: selectedCountry.countryName });
-          }
-        });
-        vm.model.postData.countries = countries;
-      }).then(function () {
-        cbgService.postRequest(customerId, vm.model.postData).then(function (res) {
-          var resJson = _.get(res.content, 'data');
-          if (resJson.returnCode) {
-            Notification.notify(gemService.showError(resJson.returnCode));
-            return;
-          }
-          $rootScope.$emit('cbgsUpdate', true);
-          $state.modal.close();
-        });
+
+      cbgService.postRequest(customerId, vm.model.info).then(function (res) {
+        var resJson = _.get(res.content, 'data');
+        if (resJson.returnCode) {
+          Notification.notify(gemService.showError(resJson.returnCode));
+          return;
+        }
+        $rootScope.$emit('cbgsUpdate', true);
+        $state.modal.close();
       });
     }
 
     function formateCountries(data) {
       var countries = [];
+      var importCountries = [];
       _.forEach(data, function (row) {
-        countries.push({ countryName: row[0] });
+        importCountries.push({ countryName: row[0] });
       });
-      vm.model.postData.countries = countries;
-      vm.hideCountries = JSON.stringify(vm.model.postData.countries);
+
+      _.forEach(importCountries, function (country) {
+        if (vm.allCountries[country.countryName.trim()]) {
+          countries.push(vm.allCountries[country.countryName.trim()]);
+        }
+      });
+
+      _.forEach(vm.model.info.countries, function (existCountry) {
+        _.remove(countries, function (country) {
+          return country.countryName === existCountry.countryName;
+        });
+      });
+
+      _.forEach(countries, function (country) {
+        vm.model.info.countries.push(country);
+      });
+      syncSelectCountries();
     }
 
-    function resetFile() {
+    function onResetFile() {
       vm.model.file = null;
-      vm.model.postData.countries = [];
-      vm.hideCountries = null;
+      vm.model.info.countries = [];
+      syncSelectCountries();
+    }
+
+    function getDownloadUrl() {
+      cbgService.getDownloadCountryUrl().then(function (res) {
+        vm.downloadUrl = _.get(res.content, 'data.body');
+      });
     }
 
     function onFileSizeError() {

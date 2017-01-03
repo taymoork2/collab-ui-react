@@ -32,7 +32,7 @@ class PlaceCallOverview implements ng.IComponentController {
           this.initFeatures();
         });
       }, (response) => {
-        this.Notification.errorWithTrackingId(response, 'internationalDialingPanel.error');
+        this.Notification.errorResponse(response, 'internationalDialingPanel.error');
       });
     });
     this.$scope.$on(DialingType.LOCAL, (_e, data) => {
@@ -41,7 +41,7 @@ class PlaceCallOverview implements ng.IComponentController {
           this.initFeatures();
         });
       }, (response) => {
-        this.Notification.errorWithTrackingId(response, 'internationalDialingPanel.error');
+        this.Notification.errorResponse(response, 'internationalDialingPanel.error');
       });
     });
     this.$scope.$on(LINE_CHANGE, () => {

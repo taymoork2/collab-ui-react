@@ -47,6 +47,8 @@
     vm.validateCsv = validateCsv;
 
     function $onInit() {
+      getCountries();
+      getDownloadUrl();
       $scope.$watchCollection(function () {
         return vm.model.file;
       }, function () {
@@ -56,7 +58,6 @@
         vm.isReadonly = true;
       }
       $state.current.data.displayName = $translate.instant('gemini.cbgs.editCountry');
-      getCountries();
     }
 
     function getCountries() {
@@ -69,6 +70,11 @@
       });
     }
 
+    function getDownloadUrl() {
+      cbgService.getDownloadCountryUrl().then(function (res) {
+        vm.downloadUrl = _.get(res.content, 'data.body');
+      });
+    }
     function onCancel() {
       PreviousState.go();
     }

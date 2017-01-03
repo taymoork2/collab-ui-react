@@ -40,11 +40,11 @@ describe('Service: UserDetails', function () {
         entitled: true,
         state: 'activated',
         serviceId: 'squared-fusion-cal',
-        connector: { cluster_name: 'Tom is Awesome Cluster' },
+        connector: { cluster_name: 'Tom is Awesome Cluster', host_name: 'cool.cisco.com' },
       }];
       UserDetails.getUsers('5632-f806-org', simulatedResponse)
         .then(function (userRows) {
-          expectUserRow(userRows[0], 'sparkuser1@gmail.com', 'common.user', 'Tom is Awesome Cluster', 'activated', '', '111', 'squared-fusion-cal');
+          expectUserRow(userRows[0], 'sparkuser1@gmail.com', 'common.user', 'Tom is Awesome Cluster (cool.cisco.com)', 'activated', '', '111', 'squared-fusion-cal');
         });
       $httpBackend.flush();
     });
@@ -63,14 +63,14 @@ describe('Service: UserDetails', function () {
         entitled: true,
         state: 'activated',
         serviceId: 'squared-fusion-cal',
-        connector: { cluster_name: 'Tom is Awesome Cluster' },
+        connector: { cluster_name: 'Tom is Awesome Cluster', host_name: 'cool.cisco.com' },
         description: {
           defaultMessage: 'WebEx is not configured'
         }
       }];
       UserDetails.getUsers('5632-f806-org', simulatedResponse)
         .then(function (userRows) {
-          expectUserRow(userRows[0], 'sparkuser1@gmail.com', 'common.user', 'Tom is Awesome Cluster', 'activated', 'WebEx is not configured', '111', 'squared-fusion-cal');
+          expectUserRow(userRows[0], 'sparkuser1@gmail.com', 'common.user', 'Tom is Awesome Cluster (cool.cisco.com)', 'activated', 'WebEx is not configured', '111', 'squared-fusion-cal');
         });
       $httpBackend.flush();
     });
