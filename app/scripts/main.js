@@ -53,8 +53,7 @@
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('phone', require('google-libphonenumber'))
-    .constant('addressparser', require('emailjs-addressparser'))
-    .constant('qrImage', require('qr-image'));
+    .constant('addressparser', require('emailjs-addressparser'));
 
   // TODO fix circular dependencies between modules
   angular.module('Squared', ['Core', 'Hercules', 'Huron', 'Sunlight']);

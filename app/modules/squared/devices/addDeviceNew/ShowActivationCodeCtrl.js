@@ -1,10 +1,12 @@
 (function () {
   'use strict';
 
+  /* global qrImage */
+
   angular.module('Core')
     .controller('ShowActivationCodeCtrl', ShowActivationCodeCtrl);
   /* @ngInject */
-  function ShowActivationCodeCtrl($q, qrImage, UserListService, OtpService, CsdmDataModelService, CsdmHuronPlaceService, $stateParams, ActivationCodeEmailService, $translate, Notification, CsdmEmailService) {
+  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmDataModelService, CsdmHuronPlaceService, $stateParams, ActivationCodeEmailService, $translate, Notification, CsdmEmailService) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
@@ -82,19 +84,12 @@
     };
 
     function generateQRCode() {
-      var qrStream = qrImage.image(vm.activationCode, {
+      vm.qrCode = qrImage.imageSync(vm.activationCode, {
         ec_level: 'L',
-        size: 7,
+        size: 14,
         margin: 5
-      });
-      var chunks = [];
-      qrStream.on('data', function (chunk) {
-        chunks.push(chunk);
-      });
-      qrStream.on('end', function () {
-        vm.qrCode = Buffer.concat(chunks).toString('base64');
-        vm.isLoading = false;
-      });
+      }).toString('base64');
+      vm.isLoading = false;
     }
 
     function createHuronPlace(name, directoryNumber, externalNumber) {

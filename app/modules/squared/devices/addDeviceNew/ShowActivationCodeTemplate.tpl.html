@@ -28,7 +28,8 @@
       </div>
       <div class="qrCodeSection" ng-if="!showActivationCode.isLoading">
         <div class="qrCodePlaceholder"></div>
-        <img ng-style="{'visibility': showActivationCode.qrCode === undefined ? 'hidden' : 'visible'}"
+        <img class="qrCodeImage"
+             ng-style="{'visibility': showActivationCode.qrCode === undefined ? 'hidden' : 'visible'}"
              data-ng-src="data:image/PNG;base64,{{showActivationCode.qrCode}}">
         <div class="activation-code">
           <h2>
