@@ -31,6 +31,9 @@ describe('Controller: AddResourceController', function () {
     };
 
     fusionClusterServiceMock = {
+      getOrgSettings: sinon.stub().returns($q.resolve({
+        expresswayClusterReleaseChannel: 'stable'
+      })),
       provisionConnector: sinon.stub().returns($q.resolve({
         id: clusterIdOfNewCluster
       })),
