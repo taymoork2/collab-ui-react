@@ -138,7 +138,7 @@
 
     vm.editCareFeature = function (feature) {
       CareFeatureList.getChatTemplate(feature.templateId).then(function (template) {
-        $state.go('care.ChatSA', {
+        $state.go('care.setupAssistant', {
           isEditFeature: true,
           template: template
         });

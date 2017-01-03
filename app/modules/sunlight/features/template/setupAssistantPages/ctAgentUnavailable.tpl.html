@@ -12,7 +12,7 @@
           <section class="unavailable-preview unavailable" >
                 <i class="icon icon-warning ct-agent-unavailable-icon icon-2x"></i>
                 <div id="agentUnavailableMessage" class="unavailable-msg">
-                  {{careChatSA.getAttributeValue('displayText', 'agentUnavailableMessage', 'agentUnavailable')}}
+                  {{careSetupAssistant.getAttributeValue('displayText', 'agentUnavailableMessage', 'agentUnavailable')}}
                 </div>
               <button type="button" class="no-click btn"  translate="common.close"></button>
           </section>
@@ -31,10 +31,10 @@
             	type="text"
             	id="agentUnavailableMessageField"
             	name="agentUnavailableMessageField"
-            	ng-model="careChatSA.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText"
+            	ng-model="careSetupAssistant.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText"
             	ng-model-options="{ allowInvalid: true }"
-            	cs-input-messages="careChatSA.multiLineValidationMessage"
-            	ng-maxlength="careChatSA.lengthConstants.multiLineMaxCharLimit">
+            	cs-input-messages="careSetupAssistant.multiLineValidationMessage"
+            	ng-maxlength="careSetupAssistant.lengthConstants.multiLineMaxCharLimit">
             	</textarea>
             </div>
 

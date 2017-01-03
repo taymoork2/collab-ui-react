@@ -73,7 +73,7 @@
   function CustomerForm() {
     return {
       restrict: 'AE',
-      templateUrl: 'modules/sunlight/features/chat/setupAssistantPages/ctCustomerForm.tpl.html',
+      templateUrl: 'modules/sunlight/features/template/setupAssistantPages/ctCustomerForm.tpl.html',
       controller: ['$scope', CustomerFormController],
       scope: {
         fields: '=',

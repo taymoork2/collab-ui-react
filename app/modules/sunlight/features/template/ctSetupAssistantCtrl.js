@@ -5,11 +5,11 @@
 
   angular
     .module('Sunlight')
-    .controller('CareChatSetupAssistantCtrl', CareChatSetupAssistantCtrl);
+    .controller('CareSetupAssistantCtrl', CareSetupAssistantCtrl);
 
   /* @ngInject */
 
-  function CareChatSetupAssistantCtrl($modal, $scope, $state, $timeout, $translate, $window, Authinfo, CTService, Notification, SunlightConfigService, $stateParams, LogMetricsService) {
+  function CareSetupAssistantCtrl($modal, $scope, $state, $timeout, $translate, $window, Authinfo, CTService, Notification, SunlightConfigService, $stateParams, LogMetricsService) {
     var vm = this;
     init();
 
@@ -371,7 +371,7 @@
         })
       };
       $modal.open({
-        templateUrl: 'modules/sunlight/features/chat/ctCancelModal.tpl.html',
+        templateUrl: 'modules/sunlight/features/template/ctCancelModal.tpl.html',
         type: 'dialog',
         scope: $scope
       });
