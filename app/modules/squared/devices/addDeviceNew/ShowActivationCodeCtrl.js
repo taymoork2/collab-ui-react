@@ -1,8 +1,6 @@
 (function () {
   'use strict';
 
-  /* global qrImage */
-
   angular.module('Core')
     .controller('ShowActivationCodeCtrl', ShowActivationCodeCtrl);
   /* @ngInject */
@@ -84,6 +82,7 @@
     };
 
     function generateQRCode() {
+      var qrImage = require('qr-image');
       vm.qrCode = qrImage.imageSync(vm.activationCode, {
         ec_level: 'L',
         size: 14,

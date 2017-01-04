@@ -92,7 +92,6 @@ module.exports = (function makeWebpackConfig() {
       moment: 'moment',
       punycode: 'punycode',
       X2JS: 'x2js',
-      qrImage: 'qr-image',
     }),
   ];
 
