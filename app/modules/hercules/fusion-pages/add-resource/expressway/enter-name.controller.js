@@ -14,7 +14,7 @@
     vm.handleKeypress = handleKeypress;
     vm.provisioning = false;
     vm._translation = {
-      help: $translate.instant('hercules.expresswayClusterSettings.renameClusterDescription'),
+      help: $translate.instant('hercules.renameAndDeregisterComponent.renameClusterDescription'),
       placeholder: $translate.instant('hercules.addResourceDialog.clusternameWatermark')
     };
     vm.minlength = 1;
@@ -24,13 +24,19 @@
         min: vm.minlength
       })
     };
+    vm.releaseChannel = 'stable';
 
     ///////////////
+
+    FusionClusterService.getOrgSettings()
+      .then(function (data) {
+        vm.releaseChannel = data.expresswayClusterReleaseChannel;
+      });
 
     function provisionCluster(data) {
       vm.provisioning = true;
       vm.clusterId = null;
-      return FusionClusterService.preregisterCluster(data.name, 'stable', 'c_mgmt')
+      return FusionClusterService.preregisterCluster(data.name, vm.releaseChannel, 'c_mgmt')
         .then(function (cluster) {
           vm.clusterId = cluster.id;
           var promises = [];

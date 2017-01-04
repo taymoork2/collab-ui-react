@@ -24,7 +24,7 @@
   function createSetupAssistantPageDirective(pageFile) {
     var directive = {
       link: function () {},
-      templateUrl: 'modules/sunlight/features/chat/setupAssistantPages/' + pageFile,
+      templateUrl: 'modules/sunlight/features/template/setupAssistantPages/' + pageFile,
       restrict: 'EA',
       scope: false
     };

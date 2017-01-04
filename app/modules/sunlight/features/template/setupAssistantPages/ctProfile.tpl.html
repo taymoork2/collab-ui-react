@@ -10,21 +10,21 @@
           <article class="profile-preview ct-article">
             <header>
               <div class="img">
-                <div ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.org">
-                  <i class="icon icon-circle-computer-blank icon-3x" ng-hide="careChatSA.logoUploaded"></i>
-                  <img class="uploded-org-img" ngf-size="{{careChatSA.imgDetails.imageDim}}"ng-src="{{careChatSA.logoFile}}"
-                       ng-show="careChatSA.logoUploaded"/>
+                <div ng-if="careSetupAssistant.selectedTemplateProfile === careSetupAssistant.profiles.org">
+                  <i class="icon icon-circle-computer-blank icon-3x" ng-hide="careSetupAssistant.logoUploaded"></i>
+                  <img class="uploded-org-img" ngf-size="{{careSetupAssistant.imgDetails.imageDim}}"ng-src="{{careSetupAssistant.logoFile}}"
+                       ng-show="careSetupAssistant.logoUploaded"/>
                 </div>
-                <div class="agent" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
+                <div class="agent" ng-if="careSetupAssistant.selectedTemplateProfile === careSetupAssistant.profiles.agent">
                   <i class="icon icon-user-chat icon-2x"></i>
                 </div>
               </div>
-              <div class="h5 profile-name" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.org"
-                   title="{{careChatSA.getAttributeParam('value', 'organization', 'welcomeHeader')}}">
-                {{careChatSA.getAttributeParam('value', 'organization', 'welcomeHeader')}}
+              <div class="h5 profile-name" ng-if="careSetupAssistant.selectedTemplateProfile === careSetupAssistant.profiles.org"
+                   title="{{careSetupAssistant.getAttributeParam('value', 'organization', 'welcomeHeader')}}">
+                {{careSetupAssistant.getAttributeParam('value', 'organization', 'welcomeHeader')}}
               </div>
-              <div class="h5 profile-name" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
-                <div>{{careChatSA.agentNamePreview | translate}}</div>
+              <div class="h5 profile-name" ng-if="careSetupAssistant.selectedTemplateProfile === careSetupAssistant.profiles.agent">
+                <div>{{careSetupAssistant.agentNamePreview | translate}}</div>
               </div>
               <div class="right actions">
                 <i class="icon icon-minus"></i>
@@ -52,33 +52,33 @@
           <article class="profile-attributes ct-article">
             <section>
               <div class="h4 subheader-text" translate="careChatTpl.profileSelector"></div>
-              <cs-radio class="h6" ng-repeat="(key, profile) in careChatSA.profiles"
+              <cs-radio class="h6" ng-repeat="(key, profile) in careSetupAssistant.profiles"
                         label="profile" value="profile" name="{{profile}}" id="profile"
-                        ng-model="careChatSA.selectedTemplateProfile"></cs-radio>
-              <div class="profile-image" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.org">
+                        ng-model="careSetupAssistant.selectedTemplateProfile"></cs-radio>
+              <div class="profile-image" ng-if="careSetupAssistant.selectedTemplateProfile === careSetupAssistant.profiles.org">
                 <div class="h4 subheader-text" translate="careChatTpl.image"></div>
                 <div class="img-common">
-                  <i class="icon icon-circle-computer-blank preview-org-img" ng-hide="careChatSA.logoUploaded"></i>
-                  <img class="uploaded-org-img" ng-src="{{careChatSA.logoFile}}" ng-show="careChatSA.logoUploaded"/>
+                  <i class="icon icon-circle-computer-blank preview-org-img" ng-hide="careSetupAssistant.logoUploaded"></i>
+                  <img class="uploaded-org-img" ng-src="{{careSetupAssistant.logoFile}}" ng-show="careSetupAssistant.logoUploaded"/>
                 </div>
                 <div class="medium-4 ct-org-logo-text" translate="careChatTpl.configureOrgLogoMsg"/>
                 <div class="h4 ct-display-txt" translate="careChatTpl.displayText"></div>
                 <input focus-on class="h6"
                        cs-input type="text"
                        ng-readonly="true"
-                       ng-model="careChatSA.template.configuration.pages.customerInformation.fields.welcomeHeader.attributes[1].value"
+                       ng-model="careSetupAssistant.template.configuration.pages.customerInformation.fields.welcomeHeader.attributes[1].value"
                        cs-input-group-size="medium-14">
               </div>
-              <div class="profile-image" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
+              <div class="profile-image" ng-if="careSetupAssistant.selectedTemplateProfile === careSetupAssistant.profiles.agent">
                 <div class="h4 subheader-text" translate="careChatTpl.image"></div>
                 <div class="img-common agent-img">
                   <i class="icon icon-user-chat"></i>
                 </div>
                 <div class="h4 ct-display-txt" translate="careChatTpl.displayText"></div>
                 <div focus-on class="agent-name-options">
-                  <cs-radio ng-repeat="(key, name) in careChatSA.agentNames" label="name" value="name" name="{{name}}"
-                            id="name" ng-model="careChatSA.selectedAgentProfile"
-                            ng-click="careChatSA.setAgentProfile()"></cs-radio>
+                  <cs-radio ng-repeat="(key, name) in careSetupAssistant.agentNames" label="name" value="name" name="{{name}}"
+                            id="name" ng-model="careSetupAssistant.selectedAgentProfile"
+                            ng-click="careSetupAssistant.setAgentProfile()"></cs-radio>
                 </div>
               </div>
             </section>

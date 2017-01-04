@@ -65,7 +65,7 @@
 
     function getAllowedChannels() {
       return $http
-        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/releaseChannels')
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/channels')
         .then(extractDataFromResponse)
         .then(function (data) {
           var allowedChannels = [];

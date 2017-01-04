@@ -25,6 +25,7 @@
     var UPDATE = 'UPDATE';
     var DELETE = 'DELETE';
     var ADD = 'ADD';
+    var AUDIT = 'AUDIT';
     //did order status
     var PENDING = 'PENDING';
     var PROVISIONED = 'PROVISIONED';
@@ -506,7 +507,7 @@
         var promises = [];
         // Lookup each order and add the numbers to original response
         _.forEach(orders, function (order) {
-          if (order.operation != UPDATE && order.operation != DELETE && order.operation != ADD) {
+          if (order.operation != UPDATE && order.operation != DELETE && order.operation != ADD && order.operation != AUDIT) {
             var promise = getOrder(customerId, order.uuid).then(function (orderResponse) {
               order.numbers = orderResponse.numbers;
               if (!_.isUndefined(orderResponse.attributes.npa)) {
@@ -522,7 +523,7 @@
       .then(function (response) {
         return _.chain(response)
           .map(function (order) {
-            if (order.operation != UPDATE && order.operation != DELETE && order.operation != ADD) {
+            if (order.operation != UPDATE && order.operation != DELETE && order.operation != ADD && order.operation != AUDIT) {
               var newOrder = {
                 carrierOrderId: _.get(order, 'carrierOrderId'),
                 //not all orders have batches
@@ -615,7 +616,9 @@
       return listPendingOrders(customerId).then(function (orders) {
         var promises = [];
         _.forEach(orders, function (carrierOrder) {
-          if (_.get(carrierOrder, 'operation') === BLOCK_ORDER) {
+          if (_.get(carrierOrder, 'operation') === AUDIT) {
+            // noop. Don't get details of pending audit orders.
+          } else if (_.get(carrierOrder, 'operation') === BLOCK_ORDER) {
             var promise = getOrder(customerId, carrierOrder.uuid).then(function (response) {
               if (!_.isUndefined(response.attributes.npa)) {
                 var areaCode = response.attributes.npa;

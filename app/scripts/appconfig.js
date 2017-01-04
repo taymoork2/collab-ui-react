@@ -3152,12 +3152,12 @@
             controller: 'CareFeaturesCtrl',
             controllerAs: 'careFeaturesCtrl'
           })
-          .state('care.ChatSA', {
-            url: '/careChat',
+          .state('care.setupAssistant', {
+            url: '/setupAssistant',
             parent: 'care.Details',
-            templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
-            controller: 'CareChatSetupAssistantCtrl',
-            controllerAs: 'careChatSA',
+            templateUrl: 'modules/sunlight/features/template/ctSetupAssistant.tpl.html',
+            controller: 'CareSetupAssistantCtrl',
+            controllerAs: 'careSetupAssistant',
             params: {
               template: null,
               isEditFeature: null

@@ -42,8 +42,8 @@ describe('Directive: ct-customer Customer Information Page', function () {
   beforeEach(inject(function (_$compile_, _$rootScope_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
-    $rootScope.careChatSA = {};
-    $rootScope.careChatSA.activeItem = mockActiveItem;
+    $rootScope.careSetupAssistant = {};
+    $rootScope.careSetupAssistant.activeItem = mockActiveItem;
   }));
 
   function renderCtCustomerDirective() {
@@ -61,12 +61,12 @@ describe('Directive: ct-customer Customer Information Page', function () {
   it('Renders the Category Dropdown editor UI Elements if the activeItems field type is CATEGORY', function () {
     var ctCustomer = renderCtCustomerDirective();
     expect(ctCustomer.html()).toContainElement('.ct-customer-info-category-input > i.icon-add-contain');
-    expect(ctCustomer.find('.icon-add-contain').attr('ng-click')).toBe('careChatSA.addCategoryOption()');
+    expect(ctCustomer.find('.icon-add-contain').attr('ng-click')).toBe('careSetupAssistant.addCategoryOption()');
     expect(ctCustomer.html()).toContainElement('.ct-customer-info-category-input input.ct-attribute-field-textbox');
-    expect(ctCustomer.find('.ct-customer-info-category-input input.ct-attribute-field-textbox').attr('ng-keypress')).toBe('careChatSA.onEnterKey($event)');
-    expect(ctCustomer.find('.ct-customer-info-category-input input.ct-attribute-field-textbox').attr('ng-model')).toBe('careChatSA.categoryOptionTag');
+    expect(ctCustomer.find('.ct-customer-info-category-input input.ct-attribute-field-textbox').attr('ng-keypress')).toBe('careSetupAssistant.onEnterKey($event)');
+    expect(ctCustomer.find('.ct-customer-info-category-input input.ct-attribute-field-textbox').attr('ng-model')).toBe('careSetupAssistant.categoryOptionTag');
     expect(ctCustomer.html()).toContainElement('.ct-customer-info-category-input > div.category-tokens > input.token-input');
-    expect(ctCustomer.find('.ct-customer-info-category-input > div.category-tokens > input.token-input').attr('tokenfieldid')).toBe('careChatSA.categoryTokensId');
+    expect(ctCustomer.find('.ct-customer-info-category-input > div.category-tokens > input.token-input').attr('tokenfieldid')).toBe('careSetupAssistant.categoryTokensId');
     expect(ctCustomer.find('.ct-customer-info-category-input > div.category-tokens > input.token-input').attr('tokens')).toBe('attribute.categoryOptions');
   });
 });

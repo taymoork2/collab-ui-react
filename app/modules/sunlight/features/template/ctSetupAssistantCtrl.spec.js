@@ -141,7 +141,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       template: undefined,
       isEditFeature: false
     };
-    controller = $controller('CareChatSetupAssistantCtrl', {
+    controller = $controller('CareSetupAssistantCtrl', {
       $scope: $scope
     });
   };
@@ -636,7 +636,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       $scope.$apply();
 
       expect($modal.open).toHaveBeenCalledWith({
-        templateUrl: 'modules/sunlight/features/chat/ctEmbedCodeModal.tpl.html',
+        templateUrl: 'modules/sunlight/features/template/ctEmbedCodeModal.tpl.html',
         type: 'small',
         controller: 'EmbedCodeCtrl',
         controllerAs: 'embedCodeCtrl',
@@ -671,7 +671,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       $scope.$apply();
 
       expect($modal.open).toHaveBeenCalledWith({
-        templateUrl: 'modules/sunlight/features/chat/ctEmbedCodeModal.tpl.html',
+        templateUrl: 'modules/sunlight/features/template/ctEmbedCodeModal.tpl.html',
         type: 'small',
         controller: 'EmbedCodeCtrl',
         controllerAs: 'embedCodeCtrl',
