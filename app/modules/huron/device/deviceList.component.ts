@@ -1,3 +1,5 @@
+import './_hn-devices.scss';
+
 import { IActionItem } from '../../core/components/sectionTitle/sectionTitle.component';
 
 class DeviceList implements ng.IComponentController {
