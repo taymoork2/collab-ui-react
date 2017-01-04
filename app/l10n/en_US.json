@@ -3358,6 +3358,7 @@
     "customerInformation": "Customer Information",
     "termsOfTrial": "Terms of Trial",
     "trialServices": "Trial Services",
+    "activeServices": "Active Services",
     "nonTrialServices": "Non Trial Services",
     "sparkRoomSystem": "Spark Room Device",
     "trialButton": "Add Trial Customer",
@@ -3382,7 +3383,8 @@
     "roomSystems": "Room Devices",
     "roomSystem": "Room Device",
     "deviceBasedServices": "Device-based Services",
-    "call": "Call"
+    "call": "Call",
+    "activeServicesInformation": "These services are already purchased."
   },
   "trialModal": {
     "addTrial": {

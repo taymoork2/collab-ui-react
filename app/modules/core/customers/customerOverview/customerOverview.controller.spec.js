@@ -95,6 +95,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     );
     spyOn(FeatureToggleService, 'atlasCustomerListUpdateGetStatus').and.returnValue($q.resolve(true));
     spyOn(modal, 'open').and.callThrough();
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     initController();
   }));
@@ -115,6 +116,11 @@ describe('Controller: CustomerOverviewCtrl', function () {
 
     $scope.$apply();
   }
+
+  afterEach(function () {
+    $controller = $scope = $stateParams = $state = $window = $q = modal = Authinfo = BrandService = controller = currentCustomer = FeatureToggleService = identityCustomer = newCustomerViewToggle = Orgservice
+    = PartnerService = TrialService = Userservice = Notification = undefined;
+  });
 
   xit('should transition to trialEdit.info state', function () {
     controller.openEditTrialModal();

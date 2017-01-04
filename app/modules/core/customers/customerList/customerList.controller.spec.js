@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerListCtrl', function () {
-  var $httpBackend, $q, $controller, $state, $scope, Authinfo, Config, customerListToggle, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
+  var $httpBackend, $q, $controller, $state, $scope, Authinfo, Config, customerListToggle, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, trialForPaid, TrialService;
   var controller;
 
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
@@ -57,6 +57,7 @@ describe('Controller: CustomerListCtrl', function () {
     };
 
     customerListToggle = false;
+    trialForPaid = false;
 
     spyOn($state, 'go');
     spyOn(Notification, 'error');
@@ -91,7 +92,8 @@ describe('Controller: CustomerListCtrl', function () {
       $state: $state,
       Authinfo: Authinfo,
       Config: Config,
-      customerListToggle: customerListToggle
+      customerListToggle: customerListToggle,
+      trialForPaid: trialForPaid
     });
 
     $scope.$apply();
@@ -448,6 +450,19 @@ describe('Controller: CustomerListCtrl', function () {
       expect(testOrg.customerOrgId).toBe('1234-34534-afdagfg-425345-afaf');
       controller.modifyManagedOrgs(testOrg.customerOrgId);
       expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
+    });
+  });
+
+  xdescribe('getTrialRoute', function () {
+    it('should return a path to new \'trial\' with FT set to true', function () {
+      var result = controller._helpers.getTrialRoute(false, {});
+      expect(result.path).toEqual('trial.info');
+    });
+    it('should return a path to \'trialAdd\' when FT set to false', function () {
+      FeatureToggleService.supports.and.returnValue($q.when(false));
+      initController();
+      var result = controller._helpers.getTrialRoute(false, {});
+      expect(result.path).toEqual('trialAdd.info');
     });
   });
 });
