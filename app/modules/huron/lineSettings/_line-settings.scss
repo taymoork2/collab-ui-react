@@ -1,33 +1,4 @@
-/*****  _line-settings  *****/
-.confirmation-body {
-  .warning-icon {
-    @extend .icon;
-    @extend .icon-warning;
-
-    font-size: 30px;
-    color: $brand-warning;
-    float: left;
-  }
-
-  .confirmation-message {
-    margin-top: 7px;
-    margin-left: 40px;
-  }
-}
-
-.dn-help-icon {
-  @extend .icon;
-  @extend .icon-help;
-
-  font-size: 23px;
-  vertical-align: middle;
-
-  &:hover {
-    color: $brand-primary;
-  }
-
-  color: $gray-dark;
-}
+@import 'styles/toolkit/colors';
 
 .esn-number-field {
   &.steeringDigitOverlap,
@@ -49,34 +20,3 @@
 .top-padding-section-title {
   padding-top: 20px;
 }
-
-.side-panel-section {
-  .dn-warning-text {
-    @extend .warning;
-
-    font-size: 0.75rem;
-  }
-
-  .warning {
-    .select-toggle {
-      border-color: $brand-warning-dark;
-
-      .icon-arrow-down {
-        &::after {
-          // this is the X icon that appears when no DNs are available
-          @extend %icon-warning;
-
-          top: 0.125rem;
-          left: -23px;
-          position: absolute;
-          font-size: 1rem;
-          height: 17px;
-          width: 17px;
-          color: $brand-warning-dark;
-        }
-      }
-    }
-  }
-}
-
-/*****  _line-settings  *****/
