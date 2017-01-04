@@ -72,6 +72,11 @@
         fusion_google_cal: 'squared-fusion-gcal'
       },
 
+      licenseModel: {
+        cloudSharedMeeting: 'Cloud Shared Meeting',
+        hosts: 'hosts'
+      },
+
       offerTypes: {
         collab: 'COLLAB', //to be deprecated; use message && meeting
         spark1: 'SPARK1', //to be deprecated; use message
