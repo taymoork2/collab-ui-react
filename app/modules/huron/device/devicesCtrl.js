@@ -6,7 +6,7 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($q, $scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService, WizardFactory, FeatureToggleService, Userservice) {
+  function DevicesCtrlHuron($q, $scope, $state, $stateParams, Config, CsdmHuronUserDeviceService, WizardFactory, FeatureToggleService, Userservice) {
     var vm = this;
     vm.devices = {};
     vm.otps = [];
@@ -127,9 +127,6 @@
       vm.csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
       vm.csdmHuronUserDeviceService.fetch();
       vm.devices = vm.csdmHuronUserDeviceService.getDeviceList();
-      OtpService.loadOtps(vm.currentUser.id).then(function (otpList) {
-        vm.otps = otpList;
-      });
     }
 
     function isHuronEnabled() {
