@@ -1763,13 +1763,22 @@
       "clusterNameCannotByEmpty": "Cluster name cannot be empty.",
       "renameClusterDescription": "The cluster name is used for display purposes in Cloud Collaboration Managment and in email notifications.",
       "deregisterClusterExplanation": "Remove this {{clusterType}} cluster from Cisco Collaboration Cloud.",
-      "deregisterClusterExplanation": "Click the \"Remove\" button to launch the Remove Cluster workflow.",
+      "deregisterMediaClusterExplanation": "Click the \"Remove\" button to launch the Remove Cluster workflow.",
       "deregisterClusterExplanationBlocked": "It is not possible to deregister an Expressway until all its services have been deactivated.",
       "allServicesMustBeDeactivatedOnExpressway": "All services must be deactivated on an Expressway cluster before it can be removed.",
       "couldNotDeregisterCluster": "Could not deregister cluster.",
       "deregisterConfirmRemoval": "Confirm Removal",
       "deregisterConfirmationText": "You are about to deregister the cluster <strong>{{clusterName}}</strong> from Cisco Collaboration Cloud.",
       "deregisterConfirmPopup": "{{clusterName}} was removed successfully from Cisco Collaboration Cloud."
+    },
+    "deactivateServiceComponent": {
+      "deactivateServiceLabel": "Deactivate {{serviceName}}",
+      "deactivateServiceCommon": "Deactivating {{serviceName}} removes all service-related features for users.",
+      "expresswayDataWiped": "{{connectorName}} will be removed from all of your Expressway clusters, and all connectors' local settings will be deleted.",
+      "noClustersWillBeDeregistered": "Clusters will not be deregistered from Cisco Collaboration Cloud.",
+      "deactivateServiceConfirmationButton": "Confirm Deactivation",
+      "deactivateServiceConfirmationText": "You are about to deactivate {{serviceName}} from your Cisco Spark organization.",
+      "serviceWasDeactivated": "{{serviceName}} successfully deactivated."
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate {{ServiceName}}",
@@ -1819,8 +1828,6 @@
         "certificatesUpload": "Upload",
         "certificatesModalHeading": "Remove Certificate",
         "certificatesModalText": "Are you sure you want to remove the following certificate?",
-        "deactivateServiceOpening": "You are about to deactivate the following Hybrid Service:",
-        "noClustersWillBeDeregistered": "No Expressway clusters will be deregistered from Cisco Collaboration Cloud, and they can still be used for hosting Hybrid Services.",
         "sipDomainHeading": "SIP Destination",
         "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
@@ -4068,7 +4075,6 @@
       "nodes": "Nodes"
     },
     "settings": {
-      "deactivateServiceV2": "Deactivating Hybrid Media Service removes all service-related features for users.",
       "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
       "deactivateBody_2": "Deactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources.",
       "removeCluster": "REMOVE CLUSTER",

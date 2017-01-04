@@ -6,7 +6,7 @@
     .controller('CallServiceSettingsController', CallServiceSettingsController);
 
   /* @ngInject */
-  function CallServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService, MailValidatorService, CertService, Notification, CertificateFormatterService, $translate) {
+  function CallServiceSettingsController($modal, ServiceDescriptor, Authinfo, USSService, MailValidatorService, CertService, Notification, CertificateFormatterService, $translate) {
     var vm = this;
     vm.emailSubscribers = '';
     vm.formattedCertificateList = [];
@@ -40,9 +40,6 @@
     };
     vm.callServiceConnect = {
       title: 'hercules.serviceNames.squared-fusion-ec'
-    };
-    vm.deactivate = {
-      title: 'common.deactivate'
     };
 
     vm.storeEc = function (onlyDisable) {
@@ -116,22 +113,6 @@
             vm.savingEmail = false;
           });
       }
-    };
-
-    vm.confirmDisable = function (serviceId) {
-      $modal.open({
-        templateUrl: 'modules/hercules/service-settings/confirm-disable-dialog.html',
-        type: 'small',
-        controller: 'ConfirmDisableController',
-        controllerAs: 'confirmDisableDialog',
-        resolve: {
-          serviceId: function () {
-            return serviceId;
-          }
-        }
-      }).result.then(function () {
-        $state.go('services-overview');
-      });
     };
 
     vm.uploadCert = function (file) {
