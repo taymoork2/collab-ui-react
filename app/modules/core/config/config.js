@@ -394,7 +394,6 @@
         'device-overview',
         'devices',
         'didadd',
-        'generateauthcode',
         'huntgroups',
         'huronCallPark',
         'huronCallPickup',

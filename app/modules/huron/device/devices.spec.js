@@ -8,7 +8,6 @@ describe('Controller: DevicesCtrlHuron', function () {
   var deviceList = {};
 
   var userOverview = {
-    addGenerateAuthCodeLink: jasmine.createSpy(),
     enableAuthCodeLink: jasmine.createSpy(),
     disableAuthCodeLink: jasmine.createSpy()
   };
