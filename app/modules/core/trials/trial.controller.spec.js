@@ -1,16 +1,17 @@
 'use strict';
 
 describe('Controller: TrialCtrl:', function () {
-  var controller, helpers, $controller, $scope, $state, $q, $translate, $window, $httpBackend, Analytics, Notification, TrialService, TrialContextService, TrialPstnService, HuronCustomer, EmailService, FeatureToggleService, Orgservice;
+  var controller, helpers, $controller, $scope, $state, $q, $translate, $window, $httpBackend, Analytics, Config, Notification, TrialService, TrialContextService, TrialPstnService, HuronCustomer, EmailService, FeatureToggleService, Orgservice;
 
   var stateParams = {};
   var addContextSpy, removeContextSpy, addWatchSpy;
   var trialEditResponse = getJSONFixture('core/json/trials/trialEditResponse.json');
   var purchasedCustomerData = getJSONFixture('core/json/customers/customerWithLicensesNoTrial.json');
+  var purchasedWithTrialCustomerData = getJSONFixture('core/json/customers/customerWithLicensesAndTrial.json');
 
 
   afterEach(function () {
-    controller = helpers = $controller = $scope = $state = $q = $translate = $window = $httpBackend = Analytics = Notification = TrialService = TrialContextService = HuronCustomer = FeatureToggleService = Orgservice = undefined;
+    controller = helpers = $controller = $scope = $state = $q = $translate = $window = $httpBackend = Analytics = Config = Notification = TrialService = TrialContextService = HuronCustomer = FeatureToggleService = Orgservice = undefined;
   });
 
   afterAll(function () {
@@ -23,7 +24,7 @@ describe('Controller: TrialCtrl:', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _$q_, _$translate_, _$window_, _$httpBackend_, _Analytics_, _EmailService_, _Notification_, _TrialService_, _TrialContextService_, _TrialPstnService_, _HuronCustomer_, _FeatureToggleService_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _$q_, _$translate_, _$window_, _$httpBackend_, _Analytics_, _Config_, _EmailService_, _Notification_, _TrialService_, _TrialContextService_, _TrialPstnService_, _HuronCustomer_, _FeatureToggleService_, _Orgservice_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $state = _$state_;
@@ -40,6 +41,7 @@ describe('Controller: TrialCtrl:', function () {
     Orgservice = _Orgservice_;
     EmailService = _EmailService_;
     TrialPstnService = _TrialPstnService_;
+    Config = _Config_;
 
 
     spyOn(Notification, 'success');
@@ -57,7 +59,7 @@ describe('Controller: TrialCtrl:', function () {
     spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasCreateTrialBackendEmailGetStatus').and.returnValue($q.when(false));
-
+    spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
@@ -1531,20 +1533,83 @@ describe('Controller: TrialCtrl:', function () {
         expect(controller.devicesModal.enabled).toBeFalsy();
       });
     });
+  });
 
-    describe('New tests for add purchased', function () {
-      it('TODO: should find purchased services corectly', function () {
-        expect(true).toBeTruthy();
+  describe('Functions and functionality introduced for purchased customer trials', function () {
+    beforeEach(function () {
+      var stateParams = {
+        currentTrial: purchasedWithTrialCustomerData,
+        details: {},
+        mode: 'add',
+      };
+      addWatchSpy.and.callThrough();
+      initController(stateParams);
+    });
+
+    it('have purchased offer enabled', function () {
+      expect(controller.messageTrial.enabled).toBeTruthy();
+      expect(controller.meetingTrial.enabled).toBeTruthy();
+    });
+
+    it('have getPaidLicenseQty calculate quantity for purchased services corectly', function () {
+      var meetingLicenses = _.filter(controller.currentTrial.licenseList, { licenseType: 'CONFERENCING', isTrial: false });
+      expect(meetingLicenses.length).toEqual(2);
+      expect(meetingLicenses[0].volume).toEqual(69);
+      expect(meetingLicenses[1].volume).toEqual(70);
+      expect(controller.currentTrial.licenseList)
+      expect(controller.paidServices.meeting.qty).toEqual(139);
       });
-      it('TODO: should merge trial presets with purchase services', function () {
-        expect(true).toBeTruthy();
+
+      it('find offers correctly for multiple offer types', function () {
+        var result = controller._helpers.hasOfferType(Config.trials.meeting, Config.offerTypes.meetings, Config.offerTypes.webex);
+        expect(result).toBeTruthy();
       });
-      it('TODO: should disable purhcased services before saving trial', function () {
-        expect(true).toBeTruthy();
+
+      it('find offers correctly for single offer types', function () {
+        expect(controller._helpers.hasOfferType(Config.offerTypes.roomSystems)).toBeTruthy();
       });
-      it('TODO: should populate and and email fields', function () {
-        expect(true).toBeTruthy();
+
+      it('get paid services correctly', function () {
+        expect(controller.paidServices.message.qty).toEqual(49);
+        expect(controller.paidServices.meeting.qty).toEqual(139);
+        expect(controller.paidServices.webex.qty).toEqual(0);
+        expect(controller.paidServices.call.qty).toEqual(0);
+        expect(controller.paidServices.roomSystems.qty).toEqual(0);
+        expect(controller.paidServices.sparkBoard.qty).toEqual(0);
+        expect(controller.paidServices.care.qty).toEqual(0);
+        expect(controller.paidServices.context.qty).toEqual(0);
+      });
+
+      it('merge trial presets with purchased services', function () {
+        expect(controller.preset.message).toBeTruthy();
+        expect(controller.preset.meeting).toBeTruthy();
+        expect(controller.preset.webex).toBeTruthy();
+        expect(controller.preset.call).toBeFalsy();
+        expect(controller.preset.roomSystems).toBeTruthy();
+        expect(controller.preset.sparkBoard).toBeTruthy();
+        expect(controller.preset.care).toBeFalsy();
+        expect(controller.preset.context).toBeFalsy();
+      });
+
+      it('set purchased services to disabled before calling service to start trial', function () {
+        expect(controller.trialData.trials.messageTrial.enabled).toBeTruthy();
+        expect(controller.trialData.trials.meetingTrial.enabled).toBeTruthy();
+        //message and meeting should be disabled
+        spyOn(TrialService, 'startTrial').and.returnValue($q.when(getJSONFixture('core/json/trials/trialAddResponse.json')));
+        controller.startTrial();
+        $scope.$apply();
+        expect(controller.trialData.trials.messageTrial.enabled).toBeFalsy();
+        expect(controller.trialData.trials.meetingTrial.enabled).toBeFalsy();
+      });
+
+      it('should populate name and email fields', function () {
+        spyOn(TrialService, 'startTrial').and.returnValue($q.when(getJSONFixture('core/json/trials/trialAddResponse.json')));
+        controller.startTrial();
+        $scope.$apply();
+        expect(controller.trialData.details.customerEmail).toEqual(controller.currentTrial.customerEmail);
+        expect(controller.trialData.details.customerName).toEqual(controller.currentTrial.customerName);
       });
     });
   });
-});
+
+

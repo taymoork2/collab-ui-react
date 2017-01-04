@@ -41,6 +41,7 @@
     vm.showRoomSystems = false;
     vm.showContextServiceTrial = false;
     vm.showCare = false;
+    vm.isCallBackEnabled = false;
 
     vm.messageTrial = vm.trialData.trials.messageTrial;
     vm.meetingTrial = vm.trialData.trials.meetingTrial;
@@ -200,10 +201,10 @@
       },
       expressionProperties: {
         'templateOptions.required': function () {
-          return (vm.messageTrial.enabled && vm.callTrial.enabled); // Since, it depends on Message and Call Offer
+          return (vm.messageTrial.enabled && (!vm.isCallBackEnabled || vm.callTrial.enabled)); // Since, it depends on Message and Call Offer
         },
         'templateOptions.disabled': function () {
-          return messageOfferDisabledExpression() || callOfferDisabledExpression() || vm.preset.care;
+          return messageOfferDisabledExpression() || (vm.isCallBackEnabled && callOfferDisabledExpression()) || vm.preset.care;
         },
         'data.paid': function () {
           return vm.careTrial.paid;
@@ -565,7 +566,9 @@
       saveTrialPstn: saveTrialPstn,
       saveTrialContext: saveTrialContext,
       getNewOrgInitResults: getNewOrgInitResults,
-      getExistingOrgInitResults: getExistingOrgInitResults
+      getExistingOrgInitResults: getExistingOrgInitResults,
+      getPaidLicenseQty: getPaidLicenseQty,
+      hasOfferType: hasOfferType
     };
     vm.devicesModal = _.find(vm.trialStates, {
       name: 'trial.call'
@@ -578,12 +581,17 @@
     function init() {
       var isTestOrg = false;
       var overrideTestOrg = false;
+      var getAdminOrgError = false;
       vm.hasCallEntitlement = Authinfo.isSquaredUC() || vm.isNewTrial();
       var promises = {
+        atlasCareCallbackTrials: FeatureToggleService.atlasCareCallbackTrialsGetStatus(),
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
-        adminOrg: Orgservice.getAdminOrgAsPromise(),
+        adminOrg: Orgservice.getAdminOrgAsPromise().catch(function (err) {
+          getAdminOrgError = true;
+          return err;
+        }),
         placesEnabled: FeatureToggleService.supports(FeatureToggleService.features.csdmPstn),
         atlasCreateTrialBackendEmail: FeatureToggleService.atlasCreateTrialBackendEmailGetStatus(),
       };
@@ -597,10 +605,13 @@
           vm.showContextServiceTrial = true;
           vm.showCare = results.ftCareTrials;
           vm.sbTrial = results.atlasDarling;
+          vm.isCallBackEnabled = results.atlasCareCallbackTrials;
           vm.atlasTrialsShipDevicesEnabled = results.ftShipDevices;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;
           overrideTestOrg = results.ftShipDevices;
-          isTestOrg = _.get(results, 'adminOrg.data.isTestOrg');
+          if (!getAdminOrgError && results.adminOrg.data.success) {
+            isTestOrg = results.adminOrg.data.isTestOrg;
+          }
           vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
           vm.devicesModal.enabled = vm.canSeeDevicePage;
 
@@ -611,7 +622,11 @@
             vm.placesEnabled = results.placesEnabled;
           }
           updateTrialService(_messageTemplateOptionId);
-        }).finally(function () {
+        })
+        .catch(function (error) {
+          vm.error = error;
+        })
+        .finally(function () {
           $scope.$watch(function () {
             return vm.trialData.trials;
           }, function (newVal, oldVal) {
