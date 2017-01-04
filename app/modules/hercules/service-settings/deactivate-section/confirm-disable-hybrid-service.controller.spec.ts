@@ -1,5 +1,4 @@
-
-import { Notification } from '../../../core/notifications/notification.service';
+import { Notification } from 'modules/core/notifications';
 
 describe('Controller: ConfirmDisableHybridServiceCtrl ', () => {
 
@@ -35,7 +34,7 @@ describe('Controller: ConfirmDisableHybridServiceCtrl ', () => {
   }
 
   modalInstanceMock = {
-    close: sinon.stub(),
+    close: jasmine.createSpy('close'),
   };
 
   it('must call CloudConnectorService.deactivateService with the correct serviceId when disabling Google Calendar, and then pop a green Notification', () => {

@@ -1,4 +1,4 @@
-import { Notification } from '../../../core/notifications/notification.service';
+import { Notification } from 'modules/core/notifications';
 
 export class ConfirmDisableHybridServiceCtrl {
 
