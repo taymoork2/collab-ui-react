@@ -38,15 +38,6 @@
 }
 
 .ct-confirmation-body {
-  .warning-icon {
-    @extend .icon;
-    @extend .icon-warning;
-
-    font-size: 2rem;
-    color: $brand-warning;
-    float: left;
-  }
-
   .ct-confirmation-message {
     font-size: $h6-font-size;
     font-family: $brand-font-light;
@@ -58,4 +49,3 @@
 .sa-form {
   margin-top: 0;
 }
-
