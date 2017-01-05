@@ -237,9 +237,15 @@
       },
 
       dateFormat: {
-        MDY: 'M-D-Y',
-        DMY: 'D-M-Y',
-        YMD: 'Y-M-D'
+        MDY3: 'M-D-Y',
+        DMY3: 'D-M-Y',
+        YMD3: 'Y-M-D',
+        MDY2: 'M.D.Y',
+        DMY2: 'D.M.Y',
+        YMD2: 'Y.M.D',
+        MDY1: 'M/D/Y',
+        DMY1: 'D/M/Y',
+        YMD1: 'Y/M/D'
       },
 
       webexSiteStatus: {

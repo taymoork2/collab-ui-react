@@ -41,7 +41,7 @@
     };
     var DEFAULT_DF = {
       label: 'MM/DD/YYYY',
-      value: Config.dateFormat.MDY
+      value: Config.dateFormat.MDY1
     };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
