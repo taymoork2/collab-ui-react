@@ -1,32 +1,9 @@
 /*****  _line-settings  *****/
 .confirmation-body {
-  .warning-icon {
-    @extend .icon;
-    @extend .icon-warning;
-
-    font-size: 30px;
-    color: $brand-warning;
-    float: left;
-  }
-
   .confirmation-message {
     margin-top: 7px;
     margin-left: 40px;
   }
-}
-
-.dn-help-icon {
-  @extend .icon;
-  @extend .icon-help;
-
-  font-size: 23px;
-  vertical-align: middle;
-
-  &:hover {
-    color: $brand-primary;
-  }
-
-  color: $gray-dark;
 }
 
 .esn-number-field {
