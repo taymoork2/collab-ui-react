@@ -56,27 +56,3 @@
     margin-top: 0;
   }
 }
-
-.setupDidBtn,
-.deleteDidBtn {
-  display: none;
-}
-
-.did-badge {
-  margin-right: 5px;
-  line-height: $line-height-base;
-}
-
-.did-help-icon {
-  @extend .icon;
-  @extend .icon-help;
-
-  font-size: 23px;
-  vertical-align: middle;
-
-  &:hover {
-    color: $brand-primary;
-  }
-
-  color: $gray-dark;
-}
