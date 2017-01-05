@@ -7,16 +7,8 @@
             </div>
         </cs-page-sub-header-left>
         <cs-page-sub-header-right>
-            <button class="btn btn--link"
-                    type="button"
-                    translate="hercules.overview.report"
-                    ng-click="exp.openUserStatusReportModal('squared-fusion-uc')">
-            </button>
-            <button class="btn btn--people"
-                    type="submit"
-                    translate="hercules.overview.add-resource-button"
-                    ng-click="exp.openAddResourceModal()">
-            </button>
+            <user-status-report-button services-id="['squared-fusion-uc', 'squared-fusion-ec']"></user-status-report-button>
+            <add-resource-button service-id="'squared-fusion-uc'"></add-resource-button>
         </cs-page-sub-header-right>
     </cs-page-sub-header>
     <div ui-view="callServiceView" class="content-container"></div>

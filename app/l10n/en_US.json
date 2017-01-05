@@ -1534,6 +1534,7 @@
       "selectClusterPlaceholder": "Select an Expressway cluster…",
       "selectClusterPlaceholderNoneFound": "No eligible clusters found",
       "enterDisplayName": "Enter a name for the Expressway cluster:",
+      "nameHelptext": "The cluster name is used for display purposes in Cloud Collaboration Managment.",
       "clusternameWatermark": "Enter cluster name…",
       "cannotCreateCluster": "Could not create cluster. Try again later.",
       "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later.",

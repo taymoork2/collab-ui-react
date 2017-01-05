@@ -30,12 +30,12 @@ export abstract class ExpresswayContainerController {
             this.$modal.open({
                 resolve: {
                     connectorType: () => this.connectorType,
-                    servicesId: () => [this.serviceId],
+                    serviceId: () => this.serviceId,
                     firstTimeSetup: true
                 },
                 controller: 'AddResourceController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
+                templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/add-resource-modal.html',
                 type: 'small'
             })
             .result

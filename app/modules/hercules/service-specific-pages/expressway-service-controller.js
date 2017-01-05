@@ -16,7 +16,6 @@
     vm.servicesId = FusionUtils.connectorType2ServicesId(vm.connectorType);
 
     vm.openUserStatusReportModal = openUserStatusReportModal;
-    vm.openAddResourceModal = openAddResourceModal;
 
     //function clustersUpdated() {
     //  ServiceStateChecker.checkState(vm.connectorType, vm.servicesId[0]);
@@ -37,7 +36,7 @@
       $scope.modal = $modal.open({
         controller: 'ExportUserStatusesController',
         controllerAs: 'exportUserStatusesCtrl',
-        templateUrl: 'modules/hercules/user-statuses/export-user-statuses.html',
+        templateUrl: 'modules/hercules/service-specific-pages/components/user-status-report/export-user-statuses.html',
         type: 'small',
         resolve: {
           servicesId: function () {
@@ -50,26 +49,6 @@
       });
     }
 
-    function openAddResourceModal() {
-      $modal.open({
-        resolve: {
-          connectorType: function () {
-            return vm.connectorType;
-          },
-          servicesId: function () {
-            return vm.servicesId;
-          },
-          firstTimeSetup: false
-        },
-        controller: 'AddResourceController',
-        controllerAs: 'vm',
-        templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
-        type: 'small'
-      })
-      .result.finally(function () {
-        $state.reload();
-      });
-    }
 
   }
 }());

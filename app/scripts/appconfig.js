@@ -2856,7 +2856,7 @@
           .state('calendar-service.list', {
             url: '/services/calendar',
             views: {
-              callServiceView: {
+              calendarServiceView: {
                 templateUrl: 'modules/hercules/service-specific-pages/calendar-service-pages/calendar-service-resources.html'
               }
             },
@@ -2867,7 +2867,7 @@
           .state('calendar-service.settings', {
             url: '/services/calendar/settings',
             views: {
-              callServiceView: {
+              calendarServiceView: {
                 controllerAs: 'calendarSettings',
                 controller: 'CalendarSettingsController',
                 templateUrl: 'modules/hercules/service-settings/calendar-service-settings.html'
