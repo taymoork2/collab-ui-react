@@ -526,7 +526,7 @@
           }
         },
         hideExpression: function () {
-          if (vm.model.displayNumberRanges.length > 9) {
+          if (vm.model.displayNumberRanges.length > 19) {
             return true;
           } else {
             return vm.hideFieldInternalNumberRange;
