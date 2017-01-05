@@ -1,3 +1,5 @@
+require('./_hunt-group.scss');
+
 (function () {
   'use strict';
 
