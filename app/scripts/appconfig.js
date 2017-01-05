@@ -2690,6 +2690,23 @@
             },
             params: {
               clusterId: null
+            },
+            resolve: {
+              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
+              },
+            }
+          })
+          .state('hds-cluster-details.alarm-details', {
+            templateUrl: 'modules/hds/cluster-sidepanel/alarm-details.html',
+            controller: 'HDSAlarmController',
+            controllerAs: 'hdsAlarmController',
+            data: {
+              displayName: 'Alarm Details'
+            },
+            params: {
+              alarm: null,
+              host: null
             }
           })
           .state('mediafusion-settings', {

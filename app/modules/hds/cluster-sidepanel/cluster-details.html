@@ -3,6 +3,22 @@
 <cs-sp-container class="hds-fix-paragraphs hds-settings-table">
 
   <cs-sp-section ng-if="hdsSidepanelClusterController.cluster.connectors.length > 0">
+    <div class="section-title-row section-name" translate="hds.alarms.alarms"></div>
+    <div class="feature-list" ng-if="hdsSidepanelClusterController.cluster.aggregates.alarms.length > 0">
+      <ul>
+        <li class="feature" ng-repeat="alarm in hdsSidepanelClusterController.cluster.aggregates.alarms" ng-class="{'list-item': !$first}">
+          <a ui-sref="hds-cluster-details.alarm-details({alarm: alarm})">
+            <i class="icon icon-error red status-icon"></i>
+            <span class="feature-name">{{alarm.title}}</span>
+            <i class="feature-arrow"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <p ng-if="hdsSidepanelClusterController.cluster.aggregates.alarms.length === 0" translate="hds.alarms.noAlarms"></p>
+  </cs-sp-section>
+
+  <cs-sp-section ng-if="hdsSidepanelClusterController.cluster.connectors.length > 0 && hdsSidepanelClusterController.hasHDSFeatureToggle">
     <div class="section-title-row section-name" translate="hds.clusterSettings.releasechannelHeader"></div>
     <p>{{hdsSidepanelClusterController.releaseChannel}}</p>
   </cs-sp-section>
@@ -10,8 +26,27 @@
 
   <cs-sp-section ng-if="hdsSidepanelClusterController.cluster.connectors.length > 0">
     <div class="section-title-row section-name" translate="hds.resources.connectors.hosts"></div>
+    <div class="feature-list">
+      <div ng-repeat="host in hdsSidepanelClusterController.hosts | orderBy: 'hostname'">
+        <h6 class="feature">{{host.hostname}}</h6>
+        <ul>
+          <li class="feature" ng-repeat="connector in host.connectors">
+            <a ui-sref="hds-connector-details({host: host.hostname, clusterId: hdsSidepanelClusterController.clusterId})">
+              <i class="icon icon-circle status-indicator"
+                 ng-class="hdsSidepanelClusterController.getSeverity(connector.state).cssClass"
+                 ng-if="!hdsSidepanelClusterController.hasConnectorAlarm(connector)"></i>
+              <i class="icon icon-circle status-indicator danger"
+                 ng-if="hdsSidepanelClusterController.hasConnectorAlarm(connector)" ></i>
+              <span class="feature-name">{{hdsClusterController.localizedConnectorName}}</span>
+              <span class="feature-status">{{connector.runningVersion}}</span>
+              <i class="feature-status feature-arrow"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   </cs-sp-section>
+
 
   <cs-sp-section ng-if="hdsSidepanelClusterController.cluster.connectors.length === 0 && hdsSidepanelClusterController.cluster.allowedRedirectTarget">
     <div class="section-title-row section-name" translate="hds.clusterSettings.registration.heading"></div>
