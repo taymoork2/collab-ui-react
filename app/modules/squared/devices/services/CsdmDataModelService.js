@@ -219,8 +219,17 @@
       return service.updateItemName(objectToUpdate, newName)
         .then(function (updatedObject) {
 
-          _.each(updatedObject.devices, function (updatedDevice) {
+          //Keep the devices reference in the places dm:
+          var newDeviceList = updatedObject.devices;
+          updatedObject.devices = placesDataModel[objectToUpdate.url].devices;
+
+          _.each(newDeviceList, function (updatedDevice) {
             CsdmCacheUpdater.updateOne(theDeviceMap, updatedDevice.url, updatedDevice);
+
+            var deviceInPlace = _.find(updatedObject.devices, { url: updatedDevice.url });
+            if (deviceInPlace) {
+              CsdmCacheUpdater.updateSingle(deviceInPlace, updatedDevice.url, updatedDevice);
+            }
           });
 
           var updatedPlace = CsdmCacheUpdater.updateOne(placesDataModel, updatedObject.url, updatedObject, null, true);
