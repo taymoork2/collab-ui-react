@@ -46,8 +46,6 @@
 
     .delete-media {
       .trash-media-icon {
-        @extend .icon;
-        @extend .icon-trash;
         color: $gray-light-2;
         font-size: 1rem;
 
@@ -62,9 +60,6 @@
   .aa-dl-box {
     .cancel-media {
       .cancel-media-icon {
-        @extend .icon;
-        @extend .icon-close;
-
         color: $gray-light-2;
         font-size: 1rem;
 
