@@ -338,7 +338,7 @@
       }
     }
 
-    function saveAARecords() {
+    function saveAARecords(validateRouteTos) {
 
       var deferred = $q.defer();
       var aaRecords = vm.aaModel.aaRecords;
@@ -354,7 +354,7 @@
         return deferred.promise;
       }
 
-      if (!AAValidationService.isRouteToValidationSuccess(vm.ui)) {
+      if (validateRouteTos && !AAValidationService.isRouteToValidationSuccess(vm.ui)) {
         deferred.reject({
           statusText: '',
           status: 'VALIDATION_FAILURE'
@@ -604,6 +604,7 @@
       if (vm.ui.aaTemplate && vm.ui.aaTemplate === 'BusinessHours') {
         vm.save8To5Schedule(vm.ui.ceInfo.name).then(vm.saveCeDefinition).catch(vm.delete8To5Schedule);
       } else {
+        // on creation, allow the save even without valid entries in the phone menu
         vm.saveAARecords().then(
           function () {
             // Sucessfully created new CE Definition, time to move from Name-assignment page

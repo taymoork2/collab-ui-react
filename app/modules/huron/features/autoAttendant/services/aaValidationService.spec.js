@@ -392,6 +392,33 @@ describe('Service: AAValidationService', function () {
 
     });
 
+    it('should report a validation error for an empty target in Submenu', function () {
+
+      var topMenu, subMenu;
+
+      ui = {};
+      ui.isOpenHours = true;
+      ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+      subMenu = AutoAttendantCeMenuModelService.newCeMenu();
+      topMenu = AutoAttendantCeMenuModelService.newCeMenu();
+      topMenu.setType("MENU_OPTION");
+
+      ui.openHours.addEntryAt(0, topMenu);
+
+      subMenu.setType("MENU_OPTION");
+
+      // ui.openHours.entries[0].addEntryAt(0, subMenu);
+      topMenu.addEntryAt(0, subMenu);
+      topMenu.entries[0].key = "0";
+
+      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+
+      expect(valid).toEqual(false);
+
+      expect(AANotificationService.error).toHaveBeenCalled();
+
+    });
     it('should not report validation error for valid Route to Auto Attendant target in Submenu', function () {
 
       var topMenu, subMenu;
@@ -460,6 +487,26 @@ describe('Service: AAValidationService', function () {
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
+    });
+    it('should report validation error for a Phone Menu with no entries', function () {
+      var uiPhoneMenu = ui.openHours.entries[0];
+      uiPhoneMenu.entries.length = 1;
+
+      var uiKey2 = uiPhoneMenu.entries[0];
+      uiKey2.key = "";
+      uiKey2.actions[0].value = "";
+      uiKey2.actions[0].name = "";
+      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+
+      expect(valid).toEqual(false);
+      expect(AANotificationService.error).toHaveBeenCalled();
+
+      uiPhoneMenu.entries.length = 0;
+
+      valid = AAValidationService.isRouteToValidationSuccess(ui);
+
+      expect(valid).toEqual(false);
+      expect(AANotificationService.error).toHaveBeenCalled();
     });
 
     it('report validation error for an empty Route to User target', function () {

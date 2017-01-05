@@ -67,85 +67,7 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.sayMessage);
 
     }, 60000);
-
-    it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-
-      autoattendant.scrollIntoView(autoattendant.lanesWrapper);
-      utils.wait(autoattendant.addAANumbers, 12000);
-
-      utils.click(autoattendant.numberDropDownArrow);
-
-      // we are going to arbitrarily select the last one
-      utils.click(autoattendant.numberDropDownOptions.last());
-
-      // save and assert we see successful save message and save is disabled
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-
-      utils.expectIsDisabled(autoattendant.saveButton);
-
-    }, 60000);
-
-    it('should add SayMessage Message, select Language and Voice to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-
-      autoattendant.scrollIntoView(autoattendant.sayMessage);
-
-      // say message
-      utils.click(autoattendant.sayMessageInput);
-      utils.sendKeys(autoattendant.sayMessageInput, "Welcome to the AA");
-
-      // language
-      autoattendant.scrollIntoView(autoattendant.sayMessageLanguage);
-      utils.click(autoattendant.sayMessageLanguage);
-      utils.click(autoattendant.languageDropDownOptions);
-
-      // voice
-      utils.click(autoattendant.sayMessageVoice);
-      utils.click(autoattendant.sayMessageVoiceOptions);
-
-      // and save
-      utils.expectIsEnabled(autoattendant.saveButton);
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-
-      utils.expectIsDisabled(autoattendant.saveButton);
-    }, 60000);
-
-    it('should change the Phone Menu Say to an upload file for the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-      var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
-      autoattendant.scrollIntoView(autoattendant.phonesayMessageLanguage);
-      //change say to upload file
-      utils.click(autoattendant.phoneMenuMessageOptions);
-      utils.click(autoattendant.phoneMenuPlayMessageOption);
-      utils.wait(autoattendant.phoneMenuMediaUploadInput, 6000);
-      $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
-      utils.wait(autoattendant.saveButton, 12000);
-      utils.expectIsEnabled(autoattendant.saveButton);
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-    });
-
-    it('should add Phone Menu Say to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-      autoattendant.scrollIntoView(autoattendant.phonesayMessageLanguage);
-      utils.click(autoattendant.phoneMenuMessageOptions);
-      utils.click(autoattendant.phoneMenuSayMessageOption);
-      autoattendant.scrollIntoView(autoattendant.phoneMenuSay);
-      //Add Phone Menu Say Message
-      utils.click(autoattendant.phoneMenuSay);
-      utils.click(autoattendant.phonesayMessageInput);
-      utils.sendKeys(autoattendant.phonesayMessageInput, "Press a key at the menu");
-      utils.expectIsEnabled(autoattendant.saveButton);
-      // language and voice
-      autoattendant.scrollIntoView(autoattendant.phonesayMessageLanguage);
-      utils.click(autoattendant.phonesayMessageLanguage);
-      utils.click(autoattendant.phonelanguageDropDownOptions);
-      utils.click(autoattendant.phonesayMessageVoice);
-      utils.click(autoattendant.phonesayMessageVoiceOptions);
-      utils.expectIsEnabled(autoattendant.saveButton);
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-    });
-
+/*
     it('should add Phone Menu Repeat to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       // Main menu key 0 - repeat menu
@@ -157,11 +79,12 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first());
 
     });
+*/
 
     it('should add a submenu to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       // Main menu key 1 - play submenu
-      utils.click(autoattendant.repeatPlus);
+      utils.click(autoattendant.repeatPlusSubMenu);
 
       utils.click(autoattendant.phoneMenuKeys.get(1));
       autoattendant.scrollIntoView(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
@@ -174,6 +97,8 @@ describe('Huron Auto Attendant', function () {
 
     it('should add play message into submenu of the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       // 1st submenu play message
+     utils.wait(element(by.css('aa-message-type[name="aa-msg-input-only"]')))
+
       var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
       var sub = element.all(by.css('aa-message-type[name="aa-msg-input-only"]')).get(0);
       autoattendant.scrollIntoView(autoattendant.submenuSayMessageHeaderFirst);
@@ -181,24 +106,19 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.submenuMessageOptionSelect.first());
       utils.wait(sub.element(by.name('mediaUploadInput')), 6000);
       $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
-      utils.wait(autoattendant.saveButton, 12000);
-      utils.expectIsEnabled(autoattendant.saveButton);
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-      utils.click(autoattendant.submenuMessageOptionsFirst);
-      utils.click(autoattendant.submenuMessageOptionSelect.last());
+
     });
 
     it('should add say message into submenu of the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       // 1st submenu say message
+      utils.click(autoattendant.submenuMessageOptionsFirst);
+      utils.click(autoattendant.submenuMessageOptionSelect.last());
+
       autoattendant.scrollIntoView(autoattendant.submenuSayMessage.get(0));
       var textBox = autoattendant.submenuSayMessage.get(0).element(by.name('messageInput'));
       utils.click(textBox);
       utils.sendKeys(textBox, "Welcome to first AA submenu");
       utils.wait(autoattendant.saveButton, 12000);
-      utils.expectIsEnabled(autoattendant.saveButton);
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
     });
 
     it('should set first button of submenu to repeat menu', function () {
@@ -232,8 +152,8 @@ describe('Huron Auto Attendant', function () {
     it('should add a second submenu to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       // Main menu key 2 - play submenu
-      autoattendant.scrollIntoView(autoattendant.repeatPlus);
-      utils.click(autoattendant.repeatPlus);
+      autoattendant.scrollIntoView(autoattendant.repeatPlusSubMenu);
+      utils.click(autoattendant.repeatPlusSubMenu);
       utils.click(autoattendant.phoneMenuKeys.get(2));
       autoattendant.scrollIntoView(autoattendant.phoneMenuKeyOptions.get(2).all(by.tagName('li')).first());
       utils.click(autoattendant.phoneMenuKeyOptions.all(by.linkText(autoattendant.key2)).first());
@@ -244,8 +164,8 @@ describe('Huron Auto Attendant', function () {
     it('should add say message into the second submenu of the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       // 2nd submenu say message
-      utils.wait(autoattendant.submenuSayMessage, 12000);
-      autoattendant.scrollIntoView(autoattendant.submenuSayMessage.get(1));
+      utils.click(autoattendant.submenuMessageOptionsSecond);
+      utils.click(autoattendant.submenuMessageOptionSelectSecond.last());
       var textBox = autoattendant.submenuSayMessage.get(1).element(by.name('messageInput'));
       utils.click(textBox);
       utils.sendKeys(textBox, "Welcome to second AA submenu");
@@ -300,15 +220,14 @@ describe('Huron Auto Attendant', function () {
     });
 
     it('should contain two submenus previously created in AA "' + deleteUtils.testAAName, function () {
-      expect(autoattendant.phoneMenuAction.count()).toBe(3);
-      expect(autoattendant.phoneMenuKeyOptions.count()).toBe(3);
-      expect(autoattendant.phoneMenuKeysContent.get(0).getInnerHtml()).toContain(autoattendant.key0);
-      expect(autoattendant.phoneMenuActionContent.get(0).getInnerHtml()).toContain(autoattendant.repeatMenu);
-      expect(autoattendant.phoneMenuKeysContent.get(1).getInnerHtml()).toContain(autoattendant.key1);
-      expect(autoattendant.phoneMenuActionContent.get(1).getInnerHtml()).toContain(autoattendant.playSubmenu);
-      expect(autoattendant.phoneMenuKeysContent.get(2).getInnerHtml()).toContain(autoattendant.key2);
-      expect(autoattendant.phoneMenuActionContent.get(2).getInnerHtml()).toContain(autoattendant.playSubmenu);
+      expect(autoattendant.phoneMenuAction.count()).toBe(2);
+      expect(autoattendant.phoneMenuKeyOptions.count()).toBe(2);
 
+      expect(autoattendant.phoneMenuKeysContent.get(0).getInnerHtml()).toContain(autoattendant.key1);
+      expect(autoattendant.phoneMenuActionContent.get(0).getInnerHtml()).toContain(autoattendant.playSubmenu);
+
+      expect(autoattendant.phoneMenuKeysContent.get(1).getInnerHtml()).toContain(autoattendant.key2);
+      expect(autoattendant.phoneMenuActionContent.get(1).getInnerHtml()).toContain(autoattendant.playSubmenu);
       var submenuI = 0;
       expect(autoattendant.submenuKeysContent(submenuI).get(0).getInnerHtml()).toContain(autoattendant.key0);
       expect(autoattendant.submenuActionContent(submenuI).get(0).getInnerHtml()).toContain(autoattendant.repeatMenu);
@@ -320,7 +239,6 @@ describe('Huron Auto Attendant', function () {
       expect(autoattendant.submenuActionContent(submenuI).get(0).getInnerHtml()).toContain(autoattendant.repeatMenu);
       expect(autoattendant.submenuKeysContent(submenuI).get(1).getInnerHtml()).toContain(autoattendant.key1);
       expect(autoattendant.submenuActionContent(submenuI).get(1).getInnerHtml()).toContain(autoattendant.goBack);
-
     });
 
     it('should close AA edit and return to landing page', function () {

@@ -8,6 +8,7 @@ var AutoAttendantPage = function () {
   this.key0 = '0';
   this.key1 = '1';
   this.key2 = '2';
+
   this.firstTimeZone = 'Africa/Abidjan';
 
   this.routeQueueDetail = element(by.id('route-queue-detail'));
@@ -59,7 +60,9 @@ var AutoAttendantPage = function () {
 
   this.lanesWrapper = element.all(by.css('div.aa-lanes-wrapper')).first();
 
+  this.numberIconCloseAll = element.all(by.css('.icon-close'));
   this.numberIconClose = element.all(by.css('.icon-close')).last();
+
   this.sayMessageBody = element(by.css('div.aa-panel-body[name="Say Message"]'));
 
   this.messageOptions = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
@@ -107,7 +110,9 @@ var AutoAttendantPage = function () {
   this.phonesayMessageVoiceOptions = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
 
   this.addPlus = element(by.css('.aa-add-step-icon'));
-  this.repeatPlus = element(by.name('aa-phone-menu-add-action'));
+  this.repeatPlus = element.all(by.name('aa-phone-menu-add-action')).first();
+  this.repeatPlusSubMenu = element(by.name('aa-phone-menu-add-action'));
+
   this.phoneMenuKeys = element.all(by.css('div.aa-pm-key-select .icon-chevron-down'));
   this.phoneMenuKeysContent = element.all(by.css('div.aa-pm-key-select .select-toggle'));
   this.phoneMenuKeyOptions = element.all(by.css('div.aa-pm-key-select .dropdown-menu'));
@@ -118,7 +123,11 @@ var AutoAttendantPage = function () {
 
   this.phoneMenuActionTargetsMessageOption = this.phoneMenuActionTargets.last().element(by.css('select[name="messageSelect"] + div a.select-toggle'));
 
+  this.phoneMenuActionTargetsFirstMessageOption = this.phoneMenuActionTargets.first().element(by.css('select[name="messageSelect"] + div a.select-toggle'));
+
   this.phoneMenuActionTargetMessageOptions = this.phoneMenuActionTargets.last().element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
+
+  this.phoneMenuActionTargetFirstMessageOptions = this.phoneMenuActionTargets.first().element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
 
   this.callerInputFirst = element.all(by.css('div.aa-panel-body[name="Caller Input"]')).all(by.cssContainingText("h3", "Caller Input")).first();
   this.callerInputGetDigits = element(by.cssContainingText('cs-checkbox', 'Convert digit input to text string value'));
@@ -131,8 +140,15 @@ var AutoAttendantPage = function () {
   this.submenuRepeatPlus = element.all(by.css('aa-submenu .icon-plus-circle'));
   this.submenuSayMessage = element.all(by.css('aa-say-message[name="aa-submenu-say-message"]'));
   this.submenuSayMessageHeaderFirst = element.all(by.css('aa-message-type[name="aa-msg-input-only"]')).get(0);
+
   this.submenuMessageOptionsFirst = element.all(by.css('aa-message-type[name="aa-msg-input-only"]')).get(0).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
+
+  this.submenuMessageOptionsSecond = element.all(by.css('aa-message-type[name="aa-msg-input-only"]')).get(1).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
+
   this.submenuMessageOptionSelect = element.all(by.css('aa-message-type[name="aa-msg-input-only"]')).get(0).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li'));
+
+  this.submenuMessageOptionSelectSecond = element.all(by.css('aa-message-type[name="aa-msg-input-only"]')).get(1).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li'));
+
   this.submenuKeys = function (submenuI) {
     return element.all(by.css('aa-submenu')).get(submenuI).all(by.css('div.aa-sm-key-select .icon-chevron-down'));
   }
@@ -322,11 +338,16 @@ var AutoAttendantPage = function () {
   this.importContinue = element(by.id('importCtn'));
   this.importScheduleTitle = element.all(by.cssContainingText('.modal-title', 'Copy Schedule'));
   this.assertUpdateSuccess = assertUpdateSuccess;
+  this.assertUpdateError = assertUpdateError;
   this.assertCreateSuccess = assertCreateSuccess;
   this.assertImportSuccess = assertImportSuccess;
   this.assertCalendarUpdateSuccess = assertCalendarUpdateSuccess;
   this.assertDeleteSuccess = assertDeleteSuccess;
   this.scrollIntoView = scrollIntoView;
+
+  function assertUpdateError() {
+    notifications.assertError();
+  }
 
   function assertUpdateSuccess(test) {
     notifications.assertSuccess(test + ' updated successfully');
