@@ -1,8 +1,8 @@
 <div class="aa-flex-container">
   <div class="aa-vertical-line"></div>
   <div ng-show="!actions.option" name="newStepForm" class="aa-panel" id="newStepForm{{schedule + index}}">
-    <div class="aa-panel-body">
-      <div class="aa-flex-row">
+    <div class="panel-body aa-panel-body">
+      <div class="row aa-flex-row">
         <h3 class="text-info" translate="autoAttendant.builderNewStep"></h3>
         <aa-help content="{{ :: 'autoAttendant.builderNewStepHelp' | translate }}" metric="New-Step-Title"></aa-help>
         <div class="aa-action-delete">
@@ -11,10 +11,10 @@
           </a>
         </div>
       </div>
-      <div class="aa-flex-row">
+      <div class="row aa-flex-row">
         <p class="h6 aa-new-step-info" translate="autoAttendant.builderNewStepInfo"></p>
       </div>
-      <div class="aa-flex-row">
+      <div class="row aa-flex-row">
         <cs-select ng-model="actions.option" options="actions.options" labelfield="title" placeholder="actions.actionPlaceholder" icon="icon-chevron-down" id="actionSelect{{schedule + index}}" on-change-fn="actions.selectOption()"></cs-select>
         <aa-help content="{{ :: actions.getSelectHint() }}" metric="New-Step-Choose-Action"></aa-help>
       </div>
@@ -22,8 +22,8 @@
   </div>
 
   <div ng-if="actions.option" class="aa-panel-lane" name="actionForm">
-    <div class="aa-panel-body" name="{{actions.option.title}}">
-      <div class="aa-flex-row">
+    <div class="panel-body aa-panel-body" name="{{actions.option.title}}">
+      <div class="row aa-flex-row">
         <h3 class="text-info" translate="{{actions.option.title}}"></h3>
         <aa-help ng-if="actions.option.help" content="{{ :: actions.option.help }}" show-link="actions.option.showHelpLink" metric="{{ :: actions.option.metric }}"></aa-help>
         <div class="aa-action-delete">
@@ -32,16 +32,16 @@
           </a>
         </div>
       </div>
-      <div class="aa-flex-row">
+      <div class="row aa-flex-row">
         <div ng-controller="actions.getOptionController" ng-include="actions.option.url"></div>
       </div>
     </div>
   </div>
 
-  <div class="aa-panel">
+  <div class="panel aa-panel">
     <div class="aa-flex-container">
       <div class="aa-vertical-line"></div>
-      <div class="aa-panel-round">
+      <div class="panel-body aa-panel-round">
         <a ng-click="addAction({index: index})">
           <span class="icon icon-plus-circle aa-add-step-icon" popover=" {{ :: 'autoAttendant.builderAddNewStep' | translate }} " popover-trigger="mouseenter" popover-animation="true" popover-placement="right" popover-append-to-body="false"></span>
         </a>
