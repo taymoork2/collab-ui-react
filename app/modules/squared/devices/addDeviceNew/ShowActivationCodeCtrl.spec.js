@@ -122,15 +122,26 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
   describe('Search User', function () {
     var customerOrgId;
+    var adminFirstName;
+    var adminLastName;
+    var adminDisplayName;
+    var adminUserName;
+    var adminCisUuid;
     var adminOrgId;
     var returnedDataCustomerOrg;
-    var returnedDataAdminOrg;
     beforeEach(function () {
       stateParams.wizard = {
         state: function () {
           return {
             data: {
-              adminOrganizationId: adminOrgId,
+              admin: {
+                firstName: adminFirstName,
+                lastName: adminLastName,
+                displayName: adminDisplayName,
+                userName: adminUserName,
+                cisUuid: adminCisUuid,
+                organizationId: adminOrgId
+              },
               account: {
                 organizationId: customerOrgId,
                 type: 'shared'
@@ -140,25 +151,27 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
           };
         }
       };
-      spyOn(UserListService, 'listUsers').and.callFake(function (startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins, entitlements, orgId) {
-        if (orgId === adminOrgId) {
-          callback(returnedDataAdminOrg);
-        } else {
-          callback(returnedDataCustomerOrg);
-        }
-        expect(searchStr).toBe('tes');
+      spyOn(UserListService, 'listUsers').and.callFake(function (startIndex, count, sortBy, sortOrder, callback) {
+        callback(returnedDataCustomerOrg);
       });
       spyOn(CsdmDataModelService, 'createCsdmPlace').and.returnValue($q.when({}));
       spyOn(CsdmDataModelService, 'createCodeForExisting').and.returnValue($q.when());
     });
 
-    it('searches only in one org when admin is in his own org', function () {
+    it('does not add admin to results when admin is in his own org', function () {
       customerOrgId = 'customerOrgId';
-      adminOrgId = 'customerOrgId';
+      adminFirstName = 'adminFirstName';
+      adminLastName = 'adminLastName';
+      adminDisplayName = 'adminDisplayName';
+      adminUserName = 'adminUserName';
+      adminCisUuid = 'adminCisUuid';
+      adminOrgId = 'adminOrgId';
       returnedDataCustomerOrg = {
         Resources: [
           {
-            displayName: 'test'
+            displayName: 'test',
+            userName: '',
+            meta: {}
           }
         ]
       };
@@ -178,32 +191,32 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       expect(promiseExecuted).toBeTruthy();
     });
 
-    it('searches in both customer and own org when admin is in an org he is partner for', function () {
+    it('adds admin to results when admin is in an org he is partner for', function () {
       customerOrgId = 'customerOrgId';
+      adminFirstName = 'adminFirstName';
+      adminLastName = 'adminLastName';
+      adminDisplayName = 'adminDisplayName';
+      adminUserName = 'adminUserName';
+      adminCisUuid = 'adminCisUuid';
       adminOrgId = 'adminOrgId';
       returnedDataCustomerOrg = {
         Resources: [
           {
-            displayName: 'atest'
-          }
-        ]
-      };
-      returnedDataAdminOrg = {
-        Resources: [
-          {
-            displayName: 'btest'
+            displayName: 'atest',
+            userName: '',
+            meta: {}
           }
         ]
       };
       initController();
-      var resultPromise = controller.searchUser('tes');
+      var resultPromise = controller.searchUser('adm');
       var promiseExecuted = false;
       expect(resultPromise.then).toBeDefined();
       resultPromise.then(function (result) {
         expect(result.length).toBe(2);
-        expect(result[0].displayName).toBe('atest');
-        expect(result[1].displayName).toBe('btest');
-        expect(UserListService.listUsers).toHaveBeenCalledTimes(2);
+        expect(result[0].displayName).toBe('adminDisplayName');
+        expect(result[1].displayName).toBe('atest');
+        expect(UserListService.listUsers).toHaveBeenCalledTimes(1);
         promiseExecuted = true;
       }).catch(function () {
         fail();
@@ -212,56 +225,25 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       expect(promiseExecuted).toBeTruthy();
     });
 
-    it('no results in customer still shows results in own org', function () {
+    it('no results in customer still shows admin', function () {
       customerOrgId = 'customerOrgId';
+      adminFirstName = 'adminFirstName';
+      adminLastName = 'adminLastName';
+      adminDisplayName = 'adminDisplayName';
+      adminUserName = 'adminUserName';
+      adminCisUuid = 'adminCisUuid';
       adminOrgId = 'adminOrgId';
       returnedDataCustomerOrg = {
         Resources: []
       };
-      returnedDataAdminOrg = {
-        Resources: [
-          {
-            displayName: 'test'
-          }
-        ]
-      };
       initController();
-      var resultPromise = controller.searchUser('tes');
+      var resultPromise = controller.searchUser('adm');
       var promiseExecuted = false;
       expect(resultPromise.then).toBeDefined();
       resultPromise.then(function (result) {
         expect(result.length).toBe(1);
-        expect(result[0].displayName).toBe('test');
-        expect(UserListService.listUsers).toHaveBeenCalledTimes(2);
-        promiseExecuted = true;
-      }).catch(function () {
-        fail();
-      });
-      $scope.$digest();
-      expect(promiseExecuted).toBeTruthy();
-    });
-
-    it('no results in own still shows results in customer org', function () {
-      customerOrgId = 'customerOrgId';
-      adminOrgId = 'adminOrgId';
-      returnedDataCustomerOrg = {
-        Resources: [
-          {
-            displayName: 'test'
-          }
-        ]
-      };
-      returnedDataAdminOrg = {
-        Resources: []
-      };
-      initController();
-      var resultPromise = controller.searchUser('tes');
-      var promiseExecuted = false;
-      expect(resultPromise.then).toBeDefined();
-      resultPromise.then(function (result) {
-        expect(result.length).toBe(1);
-        expect(result[0].displayName).toBe('test');
-        expect(UserListService.listUsers).toHaveBeenCalledTimes(2);
+        expect(result[0].displayName).toBe('adminDisplayName');
+        expect(UserListService.listUsers).toHaveBeenCalledTimes(1);
         promiseExecuted = true;
       }).catch(function () {
         fail();

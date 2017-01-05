@@ -53,14 +53,20 @@ require('./_devices.scss');
           var userDetailsDeferred = $q.defer();
           Userservice.getUser('me', function (data) {
             if (data.success) {
-              vm.adminDisplayName = data.displayName;
+              vm.adminUserDetails = {
+                firstName: data.name && data.name.givenName,
+                lastName: data.name && data.name.familyName,
+                displayName: data.displayName,
+                userName: data.userName,
+                cisUuid: data.id,
+                organizationId: data.meta.organizationID
+              };
               if (data.name) {
                 vm.adminFirstName = data.name.givenName;
               }
               if (!vm.adminFirstName) {
                 vm.adminFirstName = data.displayName;
               }
-              vm.adminOrgId = data.meta.organizationID;
             }
             userDetailsDeferred.resolve();
           });
@@ -195,7 +201,7 @@ require('./_devices.scss');
               function: "addDevice",
               showATA: vm.showATA,
               showDarling: vm.showDarling,
-              adminOrganizationId: vm.adminOrgId,
+              admin: vm.adminUserDetails,
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isEntitledToHuron(),
@@ -205,9 +211,9 @@ require('./_devices.scss');
               },
               recipient: {
                 cisUuid: Authinfo.getUserId(),
-                displayName: vm.adminDisplayName,
+                displayName: vm.adminUserDetails.displayName,
                 email: Authinfo.getPrimaryEmail(),
-                organizationId: vm.adminOrgId,
+                organizationId: vm.adminUserDetails.organizationId,
                 firstName: vm.adminFirstName
               }
             },

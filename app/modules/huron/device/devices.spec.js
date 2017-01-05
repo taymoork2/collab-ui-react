@@ -146,6 +146,11 @@ describe('Controller: DevicesCtrlHuron', function () {
     var userCisUuid;
     var email;
     var orgId;
+    var adminFirstName;
+    var adminLastName;
+    var adminDisplayName;
+    var adminUserName;
+    var adminCisUuid;
     var adminOrgId;
     var showATA;
     var userName;
@@ -156,6 +161,11 @@ describe('Controller: DevicesCtrlHuron', function () {
       email = 'email@address.com';
       userName = 'usernameemailadresscom';
       orgId = 'orgId';
+      adminFirstName = 'adminFirstName';
+      adminLastName = 'adminLastName';
+      adminDisplayName = 'adminDisplayName';
+      adminUserName = 'adminUserName';
+      adminCisUuid = 'adminCisUuid';
       adminOrgId = 'adminOrgId';
       showATA = true;
       controller.currentUser = {
@@ -174,7 +184,14 @@ describe('Controller: DevicesCtrlHuron', function () {
         }
       };
       controller.showATA = showATA;
-      controller.adminOrgId = adminOrgId;
+      controller.adminUserDetails = {
+        firstName: adminFirstName,
+        lastName: adminLastName,
+        displayName: adminDisplayName,
+        userName: adminUserName,
+        cisUuid: adminCisUuid,
+        organizationId: adminOrgId
+      };
       spyOn($state, 'go');
       controller.resetCode();
       $scope.$apply();
@@ -184,7 +201,12 @@ describe('Controller: DevicesCtrlHuron', function () {
       var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
       expect(wizardState.title).toBe('addDeviceWizard.newDevice');
       expect(wizardState.showATA).toBe(showATA);
-      expect(wizardState.adminOrganizationId).toBe(adminOrgId);
+      expect(wizardState.admin.firstName).toBe(adminFirstName);
+      expect(wizardState.admin.lastName).toBe(adminLastName);
+      expect(wizardState.admin.displayName).toBe(adminDisplayName);
+      expect(wizardState.admin.userName).toBe(adminUserName);
+      expect(wizardState.admin.cisUuid).toBe(adminCisUuid);
+      expect(wizardState.admin.organizationId).toBe(adminOrgId);
       expect(wizardState.account.deviceType).toBe('huron');
       expect(wizardState.account.type).toBe('personal');
       expect(wizardState.account.name).toBe(displayName);
