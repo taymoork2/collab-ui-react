@@ -237,15 +237,15 @@
       },
 
       dateFormat: {
-        MDY3: 'M-D-Y',
-        DMY3: 'D-M-Y',
-        YMD3: 'Y-M-D',
-        MDY2: 'M.D.Y',
-        DMY2: 'D.M.Y',
-        YMD2: 'Y.M.D',
-        MDY1: 'M/D/Y',
-        DMY1: 'D/M/Y',
-        YMD1: 'Y/M/D'
+        MDY_H: 'M-D-Y',
+        DMY_H: 'D-M-Y',
+        YMD_H: 'Y-M-D',
+        MDY_P: 'M.D.Y',
+        DMY_P: 'D.M.Y',
+        YMD_P: 'Y.M.D',
+        MDY_S: 'M/D/Y',
+        DMY_S: 'D/M/Y',
+        YMD_S: 'Y/M/D'
       },
 
       webexSiteStatus: {
