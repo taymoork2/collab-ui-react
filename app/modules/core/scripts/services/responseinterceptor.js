@@ -11,6 +11,16 @@
   /* @ngInject */
   function ResponseInterceptor($q, $injector, Log) {
     var HAS_RETRIED = 'config.hasRetried';
+    var responseContains = _.rest(function (response, searchStrings) {
+      var responseData = _.get(response, 'data');
+      if (!responseData) {
+        return false;
+      }
+      var responseDataString = JSON.stringify(responseData);
+      return _.some(searchStrings, function (searchString) {
+        return _.includes(responseDataString, searchString);
+      });
+    });
 
     return {
       responseError: function (response) {
@@ -19,14 +29,10 @@
           return $q.reject(response);
         }
 
-        var Auth = $injector.get('Auth');
         // injected manually to get around circular dependency problem with $translateProvider
         // http://stackoverflow.com/questions/20647483/angularjs-injecting-service-into-a-http-interceptor-circular-dependency/21632161
-        if (is20001Error(response)) {
-          Log.warn('Refresh access token due to 20001 response.', response);
-          return refreshTokenAndRetry(response, Auth);
-        }
-        if (isHttpAuthError(response)) {
+        var Auth = $injector.get('Auth');
+        if (isHttpAuthorizationError(response)) {
           Log.warn('Refresh access token due to HTTP authentication error.', response);
           return refreshTokenAndRetry(response, Auth);
         }
@@ -35,15 +41,11 @@
           return refreshTokenAndRetry(response, Auth);
         }
 
-        if (refreshTokenHasExpired(response)) {
-          Log.warn('Refresh-token has expired.', response);
+        if (refreshTokenIsExpiredOrInvalid(response)) {
+          Log.warn('Refresh-token is expired or invalid.', response);
           return Auth.logout();
         }
 
-        if (refreshTokenIsInvalid(response)) {
-          Log.warn('Refresh-token is invalid.', response);
-          return Auth.logout();
-        }
 
         return $q.reject(response);
       }
@@ -58,32 +60,16 @@
       return _.get(response, HAS_RETRIED, false);
     }
 
-    function is20001Error(response) {
-      return response.status == 401 && responseContains(response, '200001');
-    }
-
-    function isHttpAuthError(response) {
-      return response.status == 401 && responseContains(response, 'This request requires HTTP authentication');
+    function isHttpAuthorizationError(response) {
+      return response.status == 401 && responseContains(response, 'This request requires HTTP authentication', 'Request unauthorized', '200001');
     }
 
     function isCIInvalidAccessTokenError(response) {
-      return response.status == 400 && responseContains(response, "Invalid access token");
+      return response.status == 400 && responseContains(response, 'Invalid access token');
     }
 
-    function refreshTokenHasExpired(response) {
-      return response.status == 400 && responseContains(response, "The refresh token provided is expired");
-    }
-
-    function refreshTokenIsInvalid(response) {
-      return response.status == 400 && responseContains(response, "The requested scope is invalid");
-    }
-
-    function responseContains(response, searchString) {
-      if (!response || !response.data) {
-        return false;
-      }
-      var responseData = JSON.stringify(response.data);
-      return responseData.indexOf(searchString) != -1;
+    function refreshTokenIsExpiredOrInvalid(response) {
+      return response.status == 400 && responseContains(response, 'The refresh token provided is expired', 'The requested scope is invalid');
     }
   }
 

@@ -1650,7 +1650,8 @@
     "connectorNameFromConnectorType": {
       "c_cal": "Calendar Connector",
       "c_ucmc": "Call Connector",
-      "c_mgmt": "Management Connector"
+      "c_mgmt": "Management Connector",
+      "hds_app": "Hybrid Data Security Connector"
     },
     "serviceNameFromConnectorType": {
       "c_cal": "Calendar Service",

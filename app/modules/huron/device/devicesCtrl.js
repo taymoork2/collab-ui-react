@@ -6,7 +6,7 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($q, $scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService, WizardFactory, FeatureToggleService, Userservice) {
+  function DevicesCtrlHuron($q, $scope, $state, $stateParams, Config, CsdmHuronUserDeviceService, WizardFactory, FeatureToggleService, Userservice) {
     var vm = this;
     vm.devices = {};
     vm.otps = [];
@@ -34,7 +34,14 @@
       var userDetailsDeferred = $q.defer();
       Userservice.getUser('me', function (data) {
         if (data.success) {
-          vm.adminOrgId = data.meta.organizationID;
+          vm.adminUserDetails = {
+            firstName: data.name && data.name.givenName,
+            lastName: data.name && data.name.familyName,
+            displayName: data.displayName,
+            userName: data.userName,
+            cisUuid: data.id,
+            organizationId: data.meta.organizationID
+          };
         }
         userDetailsDeferred.resolve();
       });
@@ -88,7 +95,7 @@
           function: 'showCode',
           title: 'addDeviceWizard.newDevice',
           showATA: vm.showATA,
-          adminOrganizationId: vm.adminOrgId,
+          admin: vm.adminUserDetails,
           account: {
             name: vm.currentUser.displayName,
             username: vm.currentUser.userName,
@@ -120,9 +127,6 @@
       vm.csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
       vm.csdmHuronUserDeviceService.fetch();
       vm.devices = vm.csdmHuronUserDeviceService.getDeviceList();
-      OtpService.loadOtps(vm.currentUser.id).then(function (otpList) {
-        vm.otps = otpList;
-      });
     }
 
     function isHuronEnabled() {
