@@ -17,19 +17,6 @@
     overflow-y: auto;
     background: $brand-white;
 
-    .trash-icon {
-      @extend .icon;
-      @extend .icon-trash;
-
-      font-size: 1.7rem;
-      color: $gray-light-1;
-      cursor: pointer;
-
-      &:hover {
-        color: $color-primary-base;
-      }
-    }
-
     .hide-delete {
       visibility: hidden;
     }
@@ -80,7 +67,7 @@
       padding-top: 24px;
       padding-left: 8px;
     }
-    
+
     .no-padding {
       padding: 0;
     }
