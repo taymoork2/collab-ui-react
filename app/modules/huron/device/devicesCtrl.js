@@ -6,7 +6,7 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($q, $scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService, WizardFactory, FeatureToggleService, Userservice) {
+  function DevicesCtrlHuron($q, $scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService, WizardFactory, FeatureToggleService, Userservice, Authinfo) {
     var vm = this;
     vm.devices = {};
     vm.otps = [];
@@ -25,7 +25,10 @@
       var ataPromise = FeatureToggleService.csdmATAGetStatus().then(function (result) {
         vm.showATA = result;
       });
-      $q.all([ataPromise, fetchDetailsForLoggedInUser()]).finally(function () {
+      var personalPromise = FeatureToggleService.cloudberryPersonalModeGetStatus().then(function (result) {
+        vm.showPersonal = result;
+      });
+      $q.all([ataPromise, personalPromise, fetchDetailsForLoggedInUser()]).finally(function () {
         vm.generateCodeIsDisabled = false;
       });
     }
@@ -47,6 +50,16 @@
       });
       return userDetailsDeferred.promise;
     }
+
+    vm.isEntitledToRoomSystem = function () {
+      return Authinfo.isDeviceMgmt();
+    };
+
+    vm.isEntitledToHuron = function () {
+      return _.filter(Authinfo.getLicenses(), function (l) {
+        return l.licenseType === 'COMMUNICATION';
+      }).length > 0;
+    };
 
     function addLinkOrButtonForActivationCode() {
       if (_.has(vm, 'csdmHuronUserDeviceService.dataLoaded')) {
@@ -95,13 +108,14 @@
           function: 'showCode',
           title: 'addDeviceWizard.newDevice',
           showATA: vm.showATA,
+          isEntitledToHuron: vm.isEntitledToHuron(),
+          isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
           admin: vm.adminUserDetails,
           account: {
             name: vm.currentUser.displayName,
             username: vm.currentUser.userName,
             organizationId: vm.currentUser.meta.organizationID,
             type: 'personal',
-            deviceType: 'huron',
           },
           recipient: {
             cisUuid: vm.currentUser.id,
@@ -112,13 +126,15 @@
           }
         },
         history: [],
-        currentStateName: 'addDeviceFlow.showActivationCode',
+        currentStateName: vm.showPersonal ? 'addDeviceFlow.chooseDeviceType' : 'addDeviceFlow.showActivationCode',
         wizardState: {
-          'addDeviceFlow.showActivationCode': {}
+          'addDeviceFlow.chooseDeviceType': {
+            next: 'addDeviceFlow.showActivationCode'
+          }
         }
       };
       var wizard = WizardFactory.create(wizardState);
-      $state.go('addDeviceFlow.showActivationCode', {
+      $state.go(vm.showPersonal ? 'addDeviceFlow.chooseDeviceType' : 'addDeviceFlow.showActivationCode', {
         wizard: wizard
       });
     };

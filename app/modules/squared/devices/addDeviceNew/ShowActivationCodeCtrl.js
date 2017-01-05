@@ -47,14 +47,18 @@
           createCodeForHuronUser(wizardData.account.username);
         }
       } else { // Cloudberry
-        if (vm.account.cisUuid) { // Existing place
-          createCodeForCloudberryPlace(vm.account.cisUuid).then(success, error);
-        } else { // New place
-          createCloudberryPlace(vm.account.name, wizardData.account.entitlements, wizardData.account.directoryNumber, wizardData.account.externalNumber)
-            .then(function (place) {
-              vm.account.cisUuid = place.cisUuid;
-              createCodeForCloudberryPlace(vm.account.cisUuid).then(success, error);
-            }, error);
+        if (vm.account.type === 'shared') {
+          if (vm.account.cisUuid) { // Existing place
+            createCodeForCloudberryPlace(vm.account.cisUuid).then(success, error);
+          } else { // New place
+            createCloudberryPlace(vm.account.name, wizardData.account.entitlements, wizardData.account.directoryNumber, wizardData.account.externalNumber)
+              .then(function (place) {
+                vm.account.cisUuid = place.cisUuid;
+                createCodeForCloudberryPlace(vm.account.cisUuid).then(success, error);
+              }, error);
+          }
+        } else { // Personal (never create new)
+          createCodeForHuronUser(wizardData.account.username);
         }
       }
     };
