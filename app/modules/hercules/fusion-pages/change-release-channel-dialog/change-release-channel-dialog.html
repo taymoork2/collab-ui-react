@@ -1,0 +1,10 @@
+<div class="modal-header">
+  <h3 class="modal-title" translate="hercules.changeReleaseChannelDialog.title"></h3>
+</div>
+<div class="modal-body">
+  <p translate="hercules.changeReleaseChannelDialog.description" translate-values="{ name: vm.data.name, channelName: vm.releaseChannelName }"></p>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="$dismiss()" translate="common.cancel"></button>
+  <button class="btn btn-primary" ng-click="vm.confirmChange()" translate="hercules.changeReleaseChannelDialog.change"></button>
+</div>

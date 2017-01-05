@@ -34,7 +34,7 @@ var auth = {
   },
   'partner-reports-sales-admin': {
     user: 'kingkuntauser4+1715@gmail.com',
-    pass: 'Cisco123!',
+    pass: 'C1sco123!',
     org: 'ce8d17f8-1734-4a54-8510-fae65acc505e'
   },
   'pbr-admin-test': {

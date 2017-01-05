@@ -71,9 +71,4 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
     controller.writeConfig();
     expect(Notification.error).toHaveBeenCalled();
   });
-  it('confirmDisable should open the respective modal', function () {
-    spyOn($modal, 'open');
-    controller.confirmDisable();
-    expect($modal.open).toHaveBeenCalled();
-  });
 });

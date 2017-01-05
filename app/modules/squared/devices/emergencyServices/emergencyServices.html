@@ -30,17 +30,17 @@
             on-change-fn="$ctrl.numberChange()">
           </cs-select>
         </div>
-        <div>
-          <div class="section-title-row">
-            <span class="section-name" translate="spacesPage.esa"></span>
+        <div class="section-title-row">
+          <span class="section-name" translate="spacesPage.esa"></span>
+        </div>
+        <div ng-class="{error: $ctrl.errorMessage}">
+          <div class="cs-input__messages">
+            <div class="message">{{$ctrl.errorMessage}}</div>
           </div>
-          <div ng-class="{error: $ctrl.errorMessage}">
-            <div class="cs-input__messages">
-              <div class="message">{{$ctrl.errorMessage}}</div>
-            </div>
-          </div>
+        </div>
+        <div ng-if="!$ctrl.addressFound">
           <div class="address-inputs" ng-if="$ctrl.showAddressEntry">
-             <div class="cs-checkbox-group">
+            <div class="cs-checkbox-group">
               <input
                 cs-input
                 form="$ctrl.form"
@@ -112,6 +112,13 @@
                 ng-required="!$ctrl.useCompanyAddress"
                 maxlength="5">
             </div>
+          </div>
+        </div>
+          <div ng-if="$ctrl.addressFound" class="text-center">
+            <h6 translate="trialModal.pstn.addrFound"></h6>
+            <h5>{{$ctrl.emergency.emergencyAddress.address1}} {{$ctrl.emergency.emergencyAddress.address2}}</h5>
+            <h5>{{$ctrl.emergency.emergencyAddress.city}}, {{$ctrl.emergency.emergencyAddress.state}}, {{$ctrl.emergency.emergencyAddress.zip}}</h5>
+            <a href="" class="primary" ng-click="$ctrl.resetAddress()" translate="trialModal.pstn.addrRetry"></a>
           </div>
           <div class="saved-address" ng-if="!$ctrl.showAddressEntry">
             <cs-overview-loader loading="$ctrl.loadingAddress" size="sm"></cs-overview-loader>

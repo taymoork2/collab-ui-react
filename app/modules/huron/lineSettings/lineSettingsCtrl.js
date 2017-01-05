@@ -645,6 +645,9 @@
                     if (option.value.externalCallerIdType === customCallerId_type) {
                       vm.callerIdInfo.customName = vm.directoryNumber.customCallerIdName;
                       vm.callerIdInfo.customNumber = TelephoneNumberService.getDestinationObject(vm.directoryNumber.customCallerIdNumber);
+                      if (!vm.callerIdInfo.customNumber) {
+                        vm.callerIdInfo.callerIdSelection = CallerId.getCallerIdOption(vm.callerIdOptions, blockedCallerId_type);
+                      }
                     } else {
                       vm.callerIdInfo.callerIdSelection = option;
                     }

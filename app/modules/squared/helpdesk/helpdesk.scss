@@ -176,6 +176,15 @@
       padding-top: 2rem;
       text-align: center;
     }
+
+    .helper-link {
+      &.margin-left {
+        margin-left: 0.6rem;
+      }
+      &.margin-right {
+        margin-right: 0.6rem;
+      }
+    }
   }
 
   .icon-info {

@@ -14,18 +14,7 @@
       </div>
     </setting-section>
 
-    <setting-section setting="clusterSettings.releaseChannel">
-      <div class="sub-section">
-      <h5 class="sub-section__label" translate="mediaFusion.clusters.releaseChannel"></h5>
-      <p class="sub-section__description" translate="mediaFusion.clusters.releaseChannelDesc"></p>
-        <div class="row">
-          <div class="large-3">
-            <cs-select ng-model="clusterSettings.selected" options="clusterSettings.releaseChannelOptions" placeholder="clusterSettings.selectPlaceholder" on-change-fn="clusterSettings.changeReleaseChannel()">
-            </cs-select>
-          </div>
-        </div>
-      </div>
-    </setting-section>
+    <release-channel-section cluster="clusterSettings.cluster"></release-channel-section>
 
     <rename-and-deregister-cluster-section
       service-id="'squared-fusion-media'"

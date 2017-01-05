@@ -33,7 +33,10 @@
       getExpirationPeriod: getExpirationPeriod,
       shallowValidation: shallowValidation,
       getDaysLeftForCurrentUser: getDaysLeftForCurrentUser,
-      notifyPartnerTrialExt: notifyPartnerTrialExt
+      notifyPartnerTrialExt: notifyPartnerTrialExt,
+      getAddTrialRoute: getAddTrialRoute,
+      getEditTrialRoute: getEditTrialRoute
+
     };
 
     return service;
@@ -140,8 +143,9 @@
         .error(logEditTrialMetric);
     }
 
-    function startTrial() {
+    function startTrial(custId) {
       var data = _trialData;
+      var addTrialUrl = (custId) ? trialsUrl + '?customerOrgId=' + custId : trialsUrl;
       var trialData = {
         customerName: data.details.customerName,
         customerEmail: data.details.customerEmail,
@@ -159,7 +163,7 @@
         LogMetricsService.logMetrics('Start Trial', LogMetricsService.getEventType('trialStarted'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, trialData);
       }
 
-      return $http.post(trialsUrl, trialData)
+      return $http.post(addTrialUrl, trialData)
         .success(logStartTrialMetric)
         .error(logStartTrialMetric);
     }
@@ -378,6 +382,35 @@
     function getDaysLeftForCurrentUser() {
       var trialIds = service.getTrialIds();
       return service.getExpirationPeriod(trialIds);
+    }
+
+    function getAddTrialRoute(isNewImplementation, currentCustomer) {
+      /*var params = {};
+      if (isNewImplementation) {
+        params.mode = 'add';
+        params.curentTrial = currentCustomer;
+      }*/
+      var result = {
+        path: (isNewImplementation) ? 'trial.info' : 'trialAdd.info',
+        params: (isNewImplementation) ? {
+          mode: 'add',
+          currentTrial: currentCustomer
+        } : {}
+      };
+      return result;
+    }
+
+    function getEditTrialRoute(isNewImplementation, currentCustomer, trialDetails) {
+      var params = {
+        currentTrial: currentCustomer,
+        details: trialDetails,
+        mode: 'edit'
+      };
+      var result = {
+        path: (isNewImplementation) ? 'trial.info' : 'trialEdit.info',
+        params: params
+      };
+      return result;
     }
   }
 })();

@@ -19,6 +19,7 @@ export class EmergencyServicesCtrl {
   public companyEmergencyNumber: string;
   public impactedUsers: any[];
   public staticNumber: boolean;
+  public addressFound: boolean;
 
   /* @ngInject */
   constructor(
@@ -104,13 +105,36 @@ export class EmergencyServicesCtrl {
   public save(): void {
     this.processing = true;
     if (!_.isEqual(this.emergency.emergencyNumber, this.EmergencyServicesService.getOriginalConfig().emergencyNumber)) {
-      this.EmergencyServicesService.save(this.emergency).then(() => this.saveAddress());
+      this.EmergencyServicesService.save(this.emergency).then(() => this.validateAndSaveAddress());
     } else {
+      this.validateAndSaveAddress();
+    }
+  }
+
+  public validateAndSaveAddress() {
+    if (this.addressFound) {
       this.saveAddress();
+    } else {
+      this.validateAddress();
     }
   }
 
   public saveAddress(): void {
+    this.loadingText = this.$translate.instant('spacesPage.saving');
+    this.EmergencyServicesService.saveAddress(this.emergency, this.emergency.emergencyAddress, this.useCompanyAddress).then(() => {
+      this.$state.go(_.get(this.$state, '$current.parent.name'));
+    }).catch(response => {
+      this.Notification.errorResponse(response);
+      this.loading = false;
+    }).finally(() => this.processing = false);
+  }
+
+  public resetAddress() {
+    this.emergency.emergencyAddress = {};
+    this.addressFound = false;
+  }
+
+  public validateAddress(): void {
     if (!_.isEqual(this.emergency.emergencyAddress, this.EmergencyServicesService.getOriginalConfig().emergencyAddress)) {
       this.loading = true;
       this.loadingText = this.$translate.instant('spacesPage.validatingAddr');
@@ -120,13 +144,10 @@ export class EmergencyServicesCtrl {
       }
       this.EmergencyServicesService.validateAddress(saveData).then(response => {
         if (response) {
-          this.loadingText = this.$translate.instant('spacesPage.saving');
-          this.EmergencyServicesService.saveAddress(this.emergency, response, this.useCompanyAddress).then(() => {
-            this.$state.go(_.get(this.$state, '$current.parent.name'));
-          }).catch(response => {
-            this.Notification.errorResponse(response);
-            this.loading = false;
-          }).finally(() => this.processing = false);
+          this.errorMessage = '';
+          this.addressFound = true;
+          this.emergency.emergencyAddress = response;
+          this.loading = false;
         } else {
           this.loading = false;
           this.errorMessage = this.$translate.instant('spacesPage.errorAddr');

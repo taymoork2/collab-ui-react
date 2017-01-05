@@ -24,27 +24,36 @@ describe('ResponseInterceptor', function () {
   }));
 
   it('should refresh token for 200001 errors', function () {
-    var response = {
+    testRefreshAccessTokenAndResendRequestForResponse({
       status: 401,
       data: {
         Errors: [{
           errorCode: '200001'
         }]
       }
-    };
-    testRefreshAccessTokenAndResendRequestForResponse(response);
+    });
   });
 
   it('should refresh token for HTTP auth errors', function () {
-    var response = {
+    testRefreshAccessTokenAndResendRequestForResponse({
       status: 401,
       data: 'This request requires HTTP authentication.'
-    };
-    testRefreshAccessTokenAndResendRequestForResponse(response);
+    });
+  });
+
+  it('should refresh token for Request unauthorized', function () {
+    testRefreshAccessTokenAndResendRequestForResponse({
+      status: 401,
+      data: {
+        error: {
+          message: 'Request unauthorized'
+        }
+      }
+    });
   });
 
   it('should refresh token for hercules 400 auth error responses', function () {
-    var response = {
+    testRefreshAccessTokenAndResendRequestForResponse({
       status: 400,
       data: {
         error: {
@@ -53,19 +62,25 @@ describe('ResponseInterceptor', function () {
           }]
         }
       }
-    };
-    testRefreshAccessTokenAndResendRequestForResponse(response);
+    });
   });
 
   it('should logout when token has expired', function () {
-    Interceptor.responseError({
+    testLogoutForResponse({
       status: 400,
       data: {
         error_description: 'The refresh token provided is expired'
       }
     });
+  });
 
-    expect(Auth.logout).toHaveBeenCalledTimes(1);
+  it('should logout when refresh token is invalid because requested scope is invalid', function () {
+    testLogoutForResponse({
+      status: 400,
+      data: {
+        error_description: 'The requested scope is invalid'
+      }
+    });
   });
 
   function testRefreshAccessTokenAndResendRequestForResponse(response) {
@@ -75,6 +90,11 @@ describe('ResponseInterceptor', function () {
     // Assume same request is retried - it should not invoke the refresh/resend again
     Interceptor.responseError(response);
     expect(Auth.refreshAccessTokenAndResendRequest).toHaveBeenCalledTimes(1);
+  }
+
+  function testLogoutForResponse(response) {
+    Interceptor.responseError(response);
+    expect(Auth.logout).toHaveBeenCalledTimes(1);
   }
 
 });
