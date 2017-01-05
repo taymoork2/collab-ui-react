@@ -1511,8 +1511,6 @@
       "loading": "Loading, please wait…",
       "status": "User Status",
       "report": "User Status Report",
-      "clusters-title": "Expressway Clusters",
-      "status-title": "Service Status",
       "add-resource-button": "Add Resource",
       "add-resource-button-information": "Click \"Add Resource\" to start the registration and configuration of your Expressways.",
       "setupCloudSipUriHeader": "Define Spark SIP Address"
@@ -1791,6 +1789,13 @@
       "deactivateServiceConfirmationButton": "Confirm Deactivation",
       "deactivateServiceConfirmationText": "You are about to deactivate {{serviceName}} from your Cisco Spark organization.",
       "serviceWasDeactivated": "{{serviceName}} successfully deactivated."
+    },
+    "clusterListComponent": {
+      "clusters-title-squared-fusion-cal": "Expressway Clusters 3k",
+      "clusters-title-squared-fusion-uc": "Expressway Clusters 4k",
+      "clusters-title-squared-fusion-media": "Media Clusters",
+      "clusters-title-spark-hybrid-datasecurity": "HDS Clusters",
+      "status-title": "Service Status"
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate {{ServiceName}}",
