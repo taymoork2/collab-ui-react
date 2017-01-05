@@ -1,3 +1,5 @@
+@import 'styles/toolkit/spacing';
+
 .hg-edit {
   height: calc(100vh - #{($top-bar-height + $page-header-height)}) !important;
   overflow-y: auto;
