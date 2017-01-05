@@ -106,8 +106,6 @@
 
   .warning-typeahead {
     .icon {
-      @extend .icon-warning;
-
       font-size: 0.75rem;
       color: $color-attention;
     }
