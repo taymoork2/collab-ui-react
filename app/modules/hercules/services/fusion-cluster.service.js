@@ -22,6 +22,7 @@
       postponeUpgradeSchedule: postponeUpgradeSchedule,
       deleteMoratoria: deleteMoratoria,
       setClusterName: setClusterName,
+      setReleaseChannel: setReleaseChannel,
       deregisterCluster: deregisterCluster,
       getReleaseNotes: getReleaseNotes,
       getAggregatedStatusForService: getAggregatedStatusForService,
@@ -37,6 +38,8 @@
       getUnassignedClusters: getUnassignedClusters,
       setClusterAllowListInfoForExpressway: setClusterAllowListInfoForExpressway,
       getAlarms: getAlarms,
+      getOrgSettings: getOrgSettings,
+      setOrgSettings: setOrgSettings,
     };
 
     return service;
@@ -62,11 +65,18 @@
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
         .then(extractData)
-        .then(function (org) {
+        .then(function addServicesStatusesToClusters(org) {
           org.clusters = addServicesStatuses(org.clusters);
           return org;
         })
-        .then(function (org) {
+        .then(function addInfoToEmptyExpresswayClusters(org) {
+          return setClusterAllowListInfoForExpressway(org.clusters)
+            .then(function (clusters) {
+              org.clusters = clusters;
+              return org;
+            });
+        })
+        .then(function formatData(org) {
           var resourceGroups = _.sortBy(org.resourceGroups, 'name');
           return {
             groups: _.map(resourceGroups, function (resourceGroup) {
@@ -78,9 +88,7 @@
               };
             }),
             unassigned: sort(getUnassignedClusters(org.clusters)),
-            clusters: org.clusters
           };
-
         })
         .then(addUserCount);
     }
@@ -238,6 +246,12 @@
       return $http.patch(url, {
         name: newClusterName
       })
+        .then(extractData);
+    }
+
+    function setReleaseChannel(clusterId, releaseChannel) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
+      return $http.patch(url, { releaseChannel: releaseChannel })
         .then(extractData);
     }
 
@@ -425,7 +439,7 @@
       return getPreregisteredClusterAllowList()
         .then(function (allowList) {
           return _.map(clusters, function (cluster) {
-            if (_.some(emptyExpresswayClusters, { id: cluster.id })) {
+            if (_.find(emptyExpresswayClusters, { id: cluster.id })) {
               cluster.isEmptyExpresswayCluster = true;
               cluster.allowedRedirectTarget = _.find(allowList, { clusterId: cluster.id });
               if (cluster.aggregates && !cluster.allowedRedirectTarget) {
@@ -449,6 +463,16 @@
     function getAlarms(serviceId, orgId) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/alarms?serviceId=' + serviceId + '&sourceType=cloud';
       return $http.get(url).then(extractData);
+    }
+
+    function getOrgSettings(orgId) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/settings';
+      return $http.get(url).then(extractData);
+    }
+
+    function setOrgSettings(data, orgId) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/settings';
+      return $http.patch(url, data).then(extractData);
     }
   }
 })();

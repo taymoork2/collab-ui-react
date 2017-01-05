@@ -158,7 +158,7 @@ class PlaceOverview implements ng.IComponentController {
       .updateItemName(this.currentPlace, newName)
       .then((updatedPlace) => this.displayPlace(updatedPlace))
       .catch((error) => {
-          this.Notification.errorWithTrackingId(error, 'placesPage.failedToSaveChanges');
+          this.Notification.errorResponse(error, 'placesPage.failedToSaveChanges');
         }
       );
   }

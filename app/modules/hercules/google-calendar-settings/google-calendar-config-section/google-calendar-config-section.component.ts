@@ -12,7 +12,6 @@ class GoogleCalendarConfigSectionCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $modal,
-    private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private CloudConnectorService,
     private Notification: Notification,
@@ -45,21 +44,6 @@ class GoogleCalendarConfigSectionCtrl implements ng.IComponentController {
     });
   }
 
-  public confirmDisable(serviceId) {
-    this.$modal.open({
-      templateUrl: 'modules/hercules/service-settings/confirm-disable-dialog.html',
-      type: 'small',
-      controller: 'ConfirmDisableController',
-      controllerAs: 'confirmDisableDialog',
-      resolve: {
-        serviceId: () => serviceId,
-      },
-    })
-    .result
-    .then(() => {
-      this.$state.go('services-overview');
-    });
-  }
 }
 
 export class GoogleCalendarConfigSectionComponent implements ng.IComponentOptions {

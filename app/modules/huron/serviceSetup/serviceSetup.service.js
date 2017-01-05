@@ -6,8 +6,8 @@
     .factory('ServiceSetup', ServiceSetup);
 
   /* @ngInject */
-  function ServiceSetup($filter, $q, $translate, Authinfo, AvrilSiteService, AvrilSiteUpdateService, CeSiteService,
-  CustomerCommonService, CustomerCosRestrictionServiceV2, ExternalNumberPool, FeatureToggleService, InternalNumberRangeService, SiteCountryService,
+  function ServiceSetup($filter, $q, $translate, Authinfo, AvrilSiteService, AvrilSiteUpdateService, CeSiteService, CustomerCommonService,
+  CustomerCosRestrictionServiceV2, DateFormatService, ExternalNumberPool, FeatureToggleService, InternalNumberRangeService, SiteCountryService,
   SiteLanguageService, SiteService, TimeZoneService, VoicemailService, VoicemailTimezoneService) {
     return {
       internalNumberRanges: [],
@@ -178,6 +178,10 @@
         }, angular.bind(this, function (internalNumberRanges) {
           this.internalNumberRanges = internalNumberRanges;
         })).$promise;
+      },
+
+      getDateFormats: function () {
+        return DateFormatService.query().$promise;
       },
 
       getTimeZones: function () {

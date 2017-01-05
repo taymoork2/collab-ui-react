@@ -1029,6 +1029,7 @@
     "proceed": "Proceed",
     "quantity": "Qty",
     "remove": "Remove",
+    "releaseChannel": "Release Channel",
     "rename": "Rename",
     "reset": "Reset",
     "resources": "Resources",
@@ -1213,6 +1214,10 @@
     "timeZone": "Time Zone",
     "searchTimeZone": "Search for a time zone...",
     "tzDescription": "Specify the time zone to use for schedule-based call routing. For example, this time zone applies to calls routed based on business hours and holiday schedules.",
+    "dateFormat": "Date Format",
+    "dfDescription": "Specify the Date Format for user devices.",
+    "timeFormat": "Time Format",
+    "tfDescription": "Specify the Time Format for user devices.",
     "steeringDigit": "Outbound Dial Digit",
     "steeringDigitDescription": "Specify the number users must dial before placing an external call.",
     "emergencyAddressDescription": "This is the default address that will be used for emergency services. This can be overridden by each User or Place.",
@@ -1234,8 +1239,8 @@
     "extensionError": "Extension not valid: ",
     "companyVoicemail": "Voicemail",
     "vmAccessNumber": "Voicemail Access Number",
-    "vmAccessModes": "Access Modes",
-    "vmAccessModesHelpText": "Customize the voicemail delivery options for your organization. Aside from phone delivery, you can let users retrieve voicemails attachments in Cisco Spark, email or both. Downloaded voicemail attachments are not secure.",
+    "vmDeliveryMethods": "Delivery Methods",
+    "vmDeliveryMethodsHelpText": "Customize the voicemail delivery options for your organization. Aside from phone delivery, you can let users retrieve voicemails attachments in Cisco Spark, email or both. Downloaded voicemail attachments are not secure.",
     "companyVoicemailDescription": "Select a phone number to reserve for dialing voicemail from outside the company.",
     "to": "to",
     "addMoreExtensionRanges": "Add more extension ranges",
@@ -1437,6 +1442,7 @@
     "validatingAddr": "Validating Address...",
     "saving": "Saving...",
     "errorAddr": "The address you entered is invalid, please try again.",
+    "failedToDelete": "Failed to delete device. Reason:",
     "advancedSettings": {
       "advancedSettings": "Advanced Settings",
       "launchAdvancedSettings": "Launch Advanced Settings",
@@ -1745,9 +1751,6 @@
       "moveResourceGroupDialogParagraph": "{{ClusterName}} will be moved to \"{{NewResourceGroup}}\".",
       "moveResourceGroupDialogConnectorsList": "The following connectors will be upgraded in the next upgrade window: ",
       "moveResourceGroupSuccess": "{{ClusterName}} has been assigned to \"{{NewResourceGroup}}\".",
-      "releasechannelHeader": "Release Channel",
-      "releasechannelSubHeader": "Release Channel",
-      "releasechannelParagraph": "To change the release channel for this cluster, assign it to a resource group with the preferred release channel.",
       "deactivateServicesHeader": "Deactivate Services",
       "deactivateServicesParagraph": "Deactivate {{ServiceName}} to remove any service-related functionality from this cluster.",
       "deactivateServicesSubHeader": "Deactivate {{service}}",
@@ -1761,13 +1764,22 @@
       "clusterNameCannotByEmpty": "Cluster name cannot be empty.",
       "renameClusterDescription": "The cluster name is used for display purposes in Cloud Collaboration Managment and in email notifications.",
       "deregisterClusterExplanation": "Remove this {{clusterType}} cluster from Cisco Collaboration Cloud.",
-      "deregisterClusterExplanation": "Click the \"Remove\" button to launch the Remove Cluster workflow.",
+      "deregisterMediaClusterExplanation": "Click the \"Remove\" button to launch the Remove Cluster workflow.",
       "deregisterClusterExplanationBlocked": "It is not possible to deregister an Expressway until all its services have been deactivated.",
       "allServicesMustBeDeactivatedOnExpressway": "All services must be deactivated on an Expressway cluster before it can be removed.",
       "couldNotDeregisterCluster": "Could not deregister cluster.",
       "deregisterConfirmRemoval": "Confirm Removal",
       "deregisterConfirmationText": "You are about to deregister the cluster <strong>{{clusterName}}</strong> from Cisco Collaboration Cloud.",
       "deregisterConfirmPopup": "{{clusterName}} was removed successfully from Cisco Collaboration Cloud."
+    },
+    "deactivateServiceComponent": {
+      "deactivateServiceLabel": "Deactivate {{serviceName}}",
+      "deactivateServiceCommon": "Deactivating {{serviceName}} removes all service-related features for users.",
+      "expresswayDataWiped": "{{connectorName}} will be removed from all of your Expressway clusters, and all connectors' local settings will be deleted.",
+      "noClustersWillBeDeregistered": "Clusters will not be deregistered from Cisco Collaboration Cloud.",
+      "deactivateServiceConfirmationButton": "Confirm Deactivation",
+      "deactivateServiceConfirmationText": "You are about to deactivate {{serviceName}} from your Cisco Spark organization.",
+      "serviceWasDeactivated": "{{serviceName}} successfully deactivated."
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate {{ServiceName}}",
@@ -1817,8 +1829,6 @@
         "certificatesUpload": "Upload",
         "certificatesModalHeading": "Remove Certificate",
         "certificatesModalText": "Are you sure you want to remove the following certificate?",
-        "deactivateServiceOpening": "You are about to deactivate the following Hybrid Service:",
-        "noClustersWillBeDeregistered": "No Expressway clusters will be deregistered from Cisco Collaboration Cloud, and they can still be used for hosting Hybrid Services.",
         "sipDomainHeading": "SIP Destination",
         "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
@@ -1863,7 +1873,9 @@
       "hybridCalendarCommon": {
         "hybridCalendarSetUp": "Hybrid Calendar setup",
         "selectCalendarType": "Select Calendar type",
-        "serviceInto": "Hybrid Calendar Service supports Microsoft Exchange calendar via on-premises Expressway clusters, and Google Calendar."
+        "exchangeInfo": "Microsoft Exchange and Exchange Online (Office 365). Requires Expressway cluster.",
+        "serviceInto": "Hybrid Calendar supports Exchange calendars via on-premises Expressway clusters and Google Calendar.",
+        "smallprint": "Cisco Hybrid Service connectors collect and send certain information to the Cisco Collaboration Cloud about your Hybrid Service deployment. For more information click <a href=\"https://example.org/\" target=\"_blank\">here</a>."
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
@@ -1915,6 +1927,10 @@
         "title": "Verify a Domain",
         "description": "You need at least one verified domain to use call services. Add domains under settings."
       },
+      "release-channel": {
+        "title": "Default Release Channel",
+        "description": "Some clusters not assigned to resources groups do not have the right default release channel. <a ng-click=\"{{onclick}}\">Fix now</a>."
+      },
       "user-activation-errors": {
         "title": "Activation Error",
         "calendar-user-errors": "There are {{numberUsers}} users with Calendar Service activation errors.",
@@ -1961,9 +1977,11 @@
         "settings": "Settings",
         "all": "All",
         "add-resource": "Add Resource",
+        "set-default-release-channel": "Set default Release Channel",
         "add-resource-group": "Create new Resource Group",
         "expressway": "Expressway",
         "mediafusion": "Media",
+        "hds": "Data Security",
         "no-services": "No services",
         "missing-clusters": "<a ng-click=\"{{onclick}}\">Assign clusters</a> and users to complete this group",
         "missing-users": "<a ng-click=\"{{onclick}}\">Assign users</a> to complete this group",
@@ -2025,6 +2043,12 @@
           "saveReleaseChannelSuccess": "Release Channel updated successfully.",
           "saveReleaseChannelError": "Could Not save Release Channel. Try again later."
         }
+      },
+      "defaultReleaseChannelModal": {
+        "title": "Set Default Release Channel",
+        "description": "Select the default release channel that you want to use for your Expressway Hybrid Service clusters.",
+        "help": "This setting affects only Expressway clusters that aren't assigned to a resource group. Any clusters that are in a resource group continue to use that resource group release channel.",
+        "error": "Default Release Channel update failed"
       }
     },
     "resourceGroups": {
@@ -2057,11 +2081,8 @@
       "groupNameSaved": "Rename successful",
       "duplicateName": "A resource group with that name already exists. Please choose another name.",
       "loadFailed": "Unable to load the resource group details. Please try again later.",
-      "groupReleaseChannelSaved": "Release channel saved successfully",
       "removeGroupReq": "To remove this resource group, all assigned clusters must be removed first",
       "deleteSuccess": "Resource group successfully removed",
-      "orgHasNoAccessToChannel": "The resource group is configured with the “{{currentReleaseChannel}}” release channel, which is no longer available to your organization. Set the release channel to “{{stableReleaseChannel}}” to restore service.",
-      "setToStable": "Set to {{stableReleaseChannel}}",
       "failedToRemoveUsersFromGroup": "Remove group failed, unable to clear the existing user assignments",
       "assignSuccess": "The selected clusters are being moved. The connectors will be upgraded in the next upgrade window."
     },
@@ -2074,9 +2095,19 @@
       "noServices": "No services",
       "errorLoading": "Could not load the list of clusters."
     },
-    "confirmChangeReleaseChannelModal": {
+    "releaseChannelSection": {
+      "releaseChannelHeader": "Release Channel",
+      "releaseChannelClusterDescription": "Select the release channel for all Hybrid Services running in this cluster.",
+      "releaseChannelResourceGroupDescription": "Select the release channel for all Hybrid Services running in this group.",
+      "expresswayTip": "To change the release channel for this cluster, change the default release channel or assign it to a resource group with the preferred release channel.",
+      "releaseChannelTip": "To change the release channel for this cluster, assign it to a resource group with the preferred release channel.",
+      "releaseChannelSaved": "Release channel saved successfully",
+      "orgHasNoAccessToChannel": "The resource group is configured with the “{{currentReleaseChannel}}” release channel, which is no longer available to your organization. Set the release channel to “{{stableReleaseChannel}}” to restore service.",
+      "setToStable": "Set to {{stableReleaseChannel}}"
+    },
+    "changeReleaseChannelDialog": {
       "title": "Change Release Channel",
-      "description": "Are you sure you want to change the release channel for \"{{groupName}}\" to {{channelName}}?",
+      "description": "Are you sure you want to change the release channel for \"{{name}}\" to {{channelName}}?",
       "change": "Change"
     },
     "confirmDeleteResourceGroupModal": {
@@ -2085,7 +2116,23 @@
       "userClearNote": "Note that any user assignments to this resource group will be cleared.",
       "remove": "Remove"
     },
-    "genericFailure": "An unexpected error occurred. Please try again later."
+    "genericFailure": "An unexpected error occurred. Please try again later.",
+    "userHistory": {
+      "history": "Status History",
+      "seeHistory": "See history",
+      "noLongerAssignedToResourceGroup": "User no longer assigned to any resource group",
+      "assignedToResourceGroup": "Assigned to resource group {{resourceGroupName}}",
+      "showingFirstEntries": "Showing first {{numEntries}} entries",
+      "serviceEnabled": "Pending activation",
+      "time": "Time",
+      "types": {
+        "AddEntitlement": "Service enabled",
+        "RemoveEntitlement": "Service disabled",
+        "AddUserResourceGroup": "Resource group changed",
+        "RemoveUserResourceGroup": "Resource group changed",
+        "SetUserStatus": "User status updated"
+      }
+    }
   },
   "hds": {
     "pageTitle": "Hybrid Data Security",
@@ -2715,6 +2762,7 @@
     "holdMusic": "Hold Music",
     "standardTransferMusic": "Use Cisco Default",
     "uploadYourOwn": "Upload Your Own File",
+    "fileUploadSizeIncorrect": "Upload a file that is less than 5 MB in size.",
     "musicOnHoldHelp": "Choose the audio that callers hear while on hold.",
     "cancelUpload": "Are you sure you want to cancel this upload?",
     "deleteUpload": "Are you sure you want to delete the current file?",
@@ -3312,6 +3360,7 @@
     "customerInformation": "Customer Information",
     "termsOfTrial": "Terms of Trial",
     "trialServices": "Trial Services",
+    "activeServices": "Active Services",
     "nonTrialServices": "Non Trial Services",
     "sparkRoomSystem": "Spark Room Device",
     "trialButton": "Add Trial Customer",
@@ -3336,7 +3385,8 @@
     "roomSystems": "Room Devices",
     "roomSystem": "Room Device",
     "deviceBasedServices": "Device-based Services",
-    "call": "Call"
+    "call": "Call",
+    "activeServicesInformation": "These services are already purchased."
   },
   "trialModal": {
     "addTrial": {
@@ -4024,30 +4074,12 @@
     "add-resource-button": "Add Resource",
     "genericError": "An unexpected error occurred. Please try again later.",
     "connectors": {
-      "group_by": "Group services by:",
-      "cluster_id": "Cluster",
-      "host_name": "Host",
-      "display_name": "Service Name",
-      "connector_type": "Connector Type",
-      "serial": "Serial",
-      "version": "Version",
       "status": "Status",
       "alarms": "Alarms",
-      "reportAlarm": "reported alarm.",
-      "reportAlarms": "reported alarms.",
       "software": "Software",
-      "deregister_host": "DEREGISTER HOST",
-      "goToHost": "Go to Host",
-      "hosts": "Hosts",
       "nodes": "Nodes"
     },
-    "activateService": {
-      "ingress": "Extend the Cloud to your On-Premise Environment",
-      "serviceName": "Media Service Activation",
-      "label": "ACTIVATE AND BEGIN SETUP"
-    },
     "settings": {
-      "deactivateServiceV2": "Deactivating Hybrid Media Service removes all service-related features for users.",
       "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
       "deactivateBody_2": "Deactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources.",
       "removeCluster": "REMOVE CLUSTER",
@@ -4062,7 +4094,6 @@
       "body2": "To make this node available again, you will need to reregister it."
     },
     "metrics": {
-      "title": "Metrics",
       "titlev2": "Reports Phase 2 POC",
       "historical": "Historical",
       "realTime": "Real time",
@@ -4078,45 +4109,25 @@
       "threeMonths": "Last Three Months",
       "threeMonths2": "last three months",
       "lastRefresh": "Last Refreshed at",
-      "cluster": "Cluster :",
-      "ecp": "ECP :",
-      "fromDate": "From :",
-      "toDate": "To :",
-      "outOfRange": "Date out of Range!",
-      "time": "Time :",
-      "callVolume": "Linus Call Volume for",
       "clusterAvailability": "Cluster Availability for",
       "callReject": "Call Rejects  for",
       "node": "Node",
       "callVolumes": "Call Activity",
-      "callVolumesDescription": "Total number of on-premises calls and calls that overflowed to the Cisco Collaboration Cloud.",
-      "callVolumesDescriptionForClusterSel": "Total number of calls hosted on this Hybrid Media Cluster and those that were redirected to another resource (cluster or cloud).",
-      "callLocalLegend": "On Premises",
-      "callRejectLegend": "Overflowed to Cloud",
       "callLocal": "Calls on premise",
       "callReject": "Calls overflowed to cloud",
       "callLocalCluster": "Calls local to cluster",
       "callRedirectedCluster": "Calls redirected by cluster",
-      "callsRedirected": "Calls Redirected",
       "availabilityOfCluster": "Cluster Availability",
       "availabilityOfHost": "Node Availability",
       "legendcallLocal": "Hosted On Premises",
       "legendcallReject": "Overflowed to Cloud",
       "legendcallLocalCluster": "Hosted On This Cluster",
       "legendcallRedirectedCluster": "Redirected to Another Cluster or Cloud",
-      "availabilityOfClusterDescription": "Availability of Hybrid Media Clusters to host calls.",
-      "availabilityOfHostDescription": "Availability of nodes in this Hybrid Media Cluster to host calls.",
       "availableTitle": "Available",
       "unavailableTitle": "Unavailable",
       "partialTitle": "Partially Available",
       "utilizationTitle": "Percentage Utilization",
-      "utilizationDescription": "Percentage utilization of all Hybrid Media Clusters including peak utilization over time.",
-      "peakutilization": "Peak Utilization",
-      "averageutilization": "Average Utilization",
       "clusteravailability": "Cluster Availability",
-      "peakUtilizationDescription": "Average amount of time that all Hybrid Media Clusters peaked above 80% utilization",
-      "avgerageUtilizationDescription": "Average utilization of all Hybrid Media Clusters",
-      "clusterAvailabilityDescription": "Percentage of all Hybrid Media Cluster resources available to host calls",
       "overallUtilizationGraphError": "There was an error while loading detailed utilization data",
       "overallCallVolumeGraphError": "There was an error while loading total number of calls",
       "overallAvailabilityGraphError": "There was an error while loading detailed availability data",
@@ -4124,7 +4135,6 @@
       "overallClusterAvailabilityGraphError": "There was an error while loading cluster availability data",
       "overallTotalNumberOfCallsError": "There was an error while loading Total Number of calls",
       "total_calls": "Total Calls",
-      "totalCallsDescription": "Calls hosted locally and that overflowed to the Cisco Collaboration Cloud.",
       "onpremcalls": "Hosted On-Premises",
       "cloudcalls": "Overflowed to Cloud",
       "hostedcalls": "Hosted by this Cluster",
@@ -4171,12 +4181,9 @@
       "nonodes": "No Nodes Registered"
     },
     "deleteGroup": {
-      "title": "Delete Cluster",
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
       "errorHeader": "Unexpected Error",
-      "errorMessage": "Unable delete {{groupName}}.",
-      "keep": "Keep",
-      "delete": "Delete"
+      "errorMessage": "Unable delete {{groupName}}."
     },
     "email": {
       "invalidEmail": "Please enter a list of comma-separated email addresses",
@@ -4188,22 +4195,12 @@
         "no_clusters_heading": "No Media Service clusters registered",
         "no_clusters_text": "See required actions above and documentation to get started."
       },
-      "deregister": "Deregister",
       "deregisterCancel": "Cancel",
       "deregisterConfirm": "Confirm",
-      "deregisterHeader": "Confirm Deregistration",
       "deregisterErrorHeader": "Unexpected Error",
       "deregisterAreYouSure": "You are about to deregister media server {{clusterName}} from organization {{organizationName}}.",
-      "deregisterCausesListItem1": "The system will no longer accept any calls.",
-      "deregisterCausesListItem2": "The pre-existing calls will continue.",
-      "defuseAreYouSure": "Are you sure you want to deregister media server {{clusterName}} from organization {{organizationName}}?",
-      "defuseCausesListItem1": "The cluster {{groupName}} will be removed from system.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}.",
-      "releaseChannel": "Release Channel",
-      "doYouStillWantToContinue": "Do you still want to continue ?",
-      "youHostNoAvailable": "Your host will no longer be available in future",
       "clusterSettings": "Cluster Settings",
-      "releaseChannelDesc": "Select a release channel for this cluster.",
       "deletecluster": "Delete Cluster",
       "deleteclusterHeadding": "Delete Hybrid Media Cluster",
       "deleteClusterBodyDesc": "Before you can delete this cluster you must either move all nodes to another cluster or deregister all the nodes. What would you like to do?",
@@ -4284,21 +4281,14 @@
       "of": " of 2"
     },
     "add-resource-dialog": {
-      "title": "Register a New media server",
-      "text1": "Create a new or choose an existing Media Cluster to assign the new media server to:",
-      "text2": "Enter the hostname or IP address of the media server that you want to register to the cloud. Click Next, and then log in to your media server to confirm registration.",
       "register": "Go To Node",
       "cancel": "Cancel",
       "cluster-placeholder": "Create or select cluster",
       "hostname-placeholder": "Enter FQDN or IP address",
       "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud. Node IP Address/FQDN: {{hostname}} Cluster: {{clustername}}",
-      "grant-registration-success-header-new-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, assigned to the new cluster <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
       "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration.",
       "next": "Next",
       "back": "Back",
-      "errorTitle": "Registration Error",
-      "errorOnlineText": "The Hybrid Media Node that you're registering already exists and is online.",
-      "errorOfflineText": "The Hybrid Media Node that you're registering already exists and is offline. Deregister the existing Hybrid Media Node before you try again.",
       "titleV2": "Register Hybrid Media Node",
       "text1V2": "Create a new or select an existing Hybrid Media Cluster where you want to add the Hybrid Media Node.",
       "text2V2": "Enter the hostname or IP address of the Hybrid Media Node that you want to the Cisco Collaboration Cloud.",
@@ -4344,41 +4334,17 @@
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
-    "serviceName": "Media Service",
-    "serviceDescription": "Media Service complement your on-premises conferencing environment and add further flexibility to your existing configuration. With Media Services, you can be certain that your meetings can happen anywhere and that the cloud resources will jump in to help when you need them.",
     "delete": "Delete",
     "cancel": "Cancel",
     "actionsHeader": "Actions",
-    "defuseConnector": "Deregister",
-    "confirmDefuse": "Confirm Deregistration",
-    "defuseText": "Are you sure? Clicking \"Yes\" will remove this device from Cisco Cloud Collaboration Management and stop the devices from accepting any new calls. (Preexisting calls will continue.)",
-    "yesDefuse": "Yes",
-    "defuseSuccess": "Deregistration successfully",
-    "deleteConnectorError": "Error deleting connector",
-    "groupAssignmentSuccess": "Cluster assigned successfully",
-    "groupAssignmentFailure": "Cluster not assigned",
-    "roleAssignmentSuccess": "Role assigned successfully",
-    "roleAssignmentFailure": "Role not assigned",
-    "cluster": "Cluster",
-    "role": "Role",
-    "switching": "Switching",
-    "transcoding": "Transcoding",
-    "confirmCluster": "Please press save to confirm cluster change.",
-    "disconnect": "Disconnected. Trying to reconnect...",
-    "name": "Name",
     "ipAddr": "IP Address",
     "status": "Status",
     "actions": "Actions",
     "offline": "Offline",
     "active": "Active",
-    "noCluster": "No Media Service Clusters Connected to Spark",
     "close": "Close",
-    "reassignCluster": "Reassign to Cluster",
-    "moveHost": "MOVE HOST",
     "moveHostSuccess": "Node moved successfully, Please wait for a moment...",
     "deleteNodeSuccess": "Node deregistered successfully, Please wait for a moment...",
-    "deleteCluster": "Delete cluster",
-    "openSettings": "Open settings",
     "installing": "Installing"
   },
   "webexUserSettings": {
@@ -5950,10 +5916,13 @@
     "editAdminEmailFailure": "Failed to update admin email.",
     "userStatusEventLog": "User Status Event Log",
     "emailStatus": "Email Status",
+    "clearBounce": "Clear Bounce",
+    "clearBounceSuccess": "Bounce cleared successfully. Try resending invite.",
     "emailStatuses": {
       "accepted": "Pending Delivery",
       "delivered": "Delivered",
       "failed": "Failed",
+      "bounced": "Bounced",
       "rejected": "Rejected",
       "unsubscribed": "Unsubscribed",
       "tooltips": {

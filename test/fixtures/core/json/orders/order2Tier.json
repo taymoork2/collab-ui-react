@@ -1,0 +1,210 @@
+[{
+      "orderStatus": "REJECTED",
+      "serviceProvisioningId": "1439868",
+      "orderingTool": "CCW",
+      "externalOrderId": "67892345",
+      "productProvisionStatus": {
+        "serviceStatus": [
+          {
+            "orderItemUuid": "43bd4c32-2e61-493b-9779-d8f459122723",
+            "status": "RECEIVED",
+            "offercode": "ST"
+          },
+          {
+            "orderItemUuid": "abc0f467-fdd8-46fa-bb40-9113400d421d",
+            "status": "RECEIVED",
+            "offercode": "CF"
+          },
+          {
+            "orderItemUuid": "ea94d264-6be0-4280-ad9e-b979867469b0",
+            "status": "RECEIVED",
+            "offercode": "MS"
+          }
+        ]
+      },
+      "orderReceived": "2016-11-08T09:38:19.987Z",
+      "serviceId": "Sub101930",
+      "orderContent": {
+        "common": {
+          "serviceProvisioningId": "1439868",
+          "callbackUrl": "https://api.cisco.com/sbp/provCallBack/1439868",
+          "SBPOrderId": "67441139",
+          "action": "New",
+          "offerName": "WEBEX",
+          "orderingTool": "CCW",
+          "intendedUse": "Resale",
+          "rtm": "2-Tier",
+          "customerInfo": {
+            "endCustomerInfo": {
+              "id": "402340909",
+              "name": "MEDIA test",
+              "adminDetails": {
+                "emailId": "orderPayload@test.com"
+              }
+            },
+            "partnerInfo": {
+              "id": "90661308",
+              "name": "partner",
+              "adminDetails": {
+                "emailId": "orderPayloadPartner@test.com"
+              }
+            },
+            "resellerInfo": {
+              "id": "90705800",
+              "name": "reseller",
+              "adminDetails": {
+                "emailId": "orderPayloadReseller@test.com"
+              }
+            }
+          }
+        },
+        "collabServiceInfoCommon": {
+          "serviceId": "Sub101930",
+          "orgName": "MEDIA MONITORS AUSTRALIA PTY LTD"
+        },
+        "serviceItems": {
+          "conferencing": [
+            {
+              "productName": "SQ",
+              "serviceName": "CF",
+              "serviceSubType": "",
+              "action": "New",
+              "licenseVolume": "1025",
+              "licenseOverage": "",
+              "attendeeCapacity": "1000",
+              "attendeeOverage": "true"
+            }
+          ],
+          "communications": [],
+          "messaging": [
+            {
+              "productName": "SQ",
+              "serviceName": "MS",
+              "serviceSubType": "",
+              "action": "New",
+              "licenseVolume": "1025",
+              "licenseOverage": ""
+            }
+          ],
+          "sharedDevices": [],
+          "storage": [
+            {
+              "productName": "SQ",
+              "serviceName": "ST",
+              "action": "New",
+              "licenseVolume": "775",
+              "licenseOverage": "true",
+              "storageCapacity": "775"
+            }
+          ]
+        }
+      },
+      "lastModified": "2016-11-08T09:39:29.667Z",
+      "orderUuid": "9feb25f4-d581-42f9-a732-ccccbe3e2e92"
+    },
+  {
+    "orderStatus": "PROVISIONED",
+    "serviceProvisioningId": "1439868",
+    "orderingTool": "CCW",
+    "externalOrderId": "67892345",
+    "productProvisionStatus": {
+      "serviceStatus": [
+        {
+          "orderItemUuid": "43bd4c32-2e61-493b-9779-d8f459122723",
+          "status": "PROVISIONED",
+          "offercode": "ST"
+        },
+        {
+          "orderItemUuid": "abc0f467-fdd8-46fa-bb40-9113400d421d",
+          "status": "PROVISIONED",
+          "offercode": "CF"
+        },
+        {
+          "orderItemUuid": "ea94d264-6be0-4280-ad9e-b979867469b0",
+          "status": "PROVISIONED",
+          "offercode": "MS"
+        }
+      ]
+    },
+    "orderReceived": "2016-11-08T09:38:19.987Z",
+    "serviceId": "Sub101930",
+    "accountId": "10f4f056-78b0-423b-bac2-d930b8f96cfa",
+    "orderContent": {
+      "common": {
+        "serviceProvisioningId": "1439868",
+        "callbackUrl": "https://api.cisco.com/sbp/provCallBack/1439868",
+        "SBPOrderId": "67441139",
+        "action": "New",
+        "offerName": "WEBEX",
+        "orderingTool": "CCW",
+        "intendedUse": "Resale",
+        "rtm": "2-Tier",
+        "customerInfo": {
+          "endCustomerInfo": {
+            "id": "402340909",
+            "name": "MEDIA test",
+            "adminDetails": {
+              "emailId": "orderPayload@test.com"
+            }
+          },
+          "partnerInfo": {
+            "id": "90661308",
+            "name": "partner",
+            "adminDetails": {
+              "emailId": "orderPayloadPartner@test.com"
+            }
+          },
+          "resellerInfo": {
+            "id": "90705800",
+            "name": "reseller",
+            "adminDetails": {
+              "emailId": "orderPayloadReseller@test.com"
+            }
+          }
+        }
+      },
+      "collabServiceInfoCommon": {
+        "serviceId": "Sub101930",
+        "orgName": "MEDIA MONITORS AUSTRALIA PTY LTD"
+      },
+      "serviceItems": {
+        "conferencing": [
+          {
+            "productName": "SQ",
+            "serviceName": "CF",
+            "serviceSubType": "",
+            "action": "New",
+            "licenseVolume": "1025",
+            "licenseOverage": "",
+            "attendeeCapacity": "1000",
+            "attendeeOverage": "true"
+          }
+        ],
+        "communications": [],
+        "messaging": [
+          {
+            "productName": "SQ",
+            "serviceName": "MS",
+            "serviceSubType": "",
+            "action": "New",
+            "licenseVolume": "1025",
+            "licenseOverage": ""
+          }
+        ],
+        "sharedDevices": [],
+        "storage": [
+          {
+            "productName": "SQ",
+            "serviceName": "ST",
+            "action": "New",
+            "licenseVolume": "775",
+            "licenseOverage": "true",
+            "storageCapacity": "775"
+          }
+        ]
+      }
+    },
+    "lastModified": "2016-11-08T09:39:29.667Z",
+    "orderUuid": "9feb25f4-d581-42f9-a732-ccccbe3e2e92"
+  }
+]

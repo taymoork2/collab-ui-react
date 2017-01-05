@@ -6,7 +6,7 @@
     .directive('herculesNotifications', herculesNotificationsDirective);
 
   /* @ngInject */
-  function HerculesNotificationsController(NotificationService, $state, $scope, $modal, ServiceDescriptor, ServiceStateChecker, USSService) {
+  function HerculesNotificationsController($q, $modal, $scope, $state, FusionClusterService, Notification, NotificationService, ServiceDescriptor, ServiceStateChecker, USSService) {
     var vm = this;
     vm.notificationsLength = function () {
       return NotificationService.getNotificationLength();
@@ -40,6 +40,19 @@
 
     vm.navigateToUsers = function () {
       $state.go('users.list');
+    };
+
+    vm.fixClusters = function (options) {
+      var promises = _.map(options.clusters, function (cluster) {
+        return FusionClusterService.setReleaseChannel(cluster.id, options.channel);
+      });
+      return $q.all(promises)
+        .then(function () {
+          NotificationService.removeNotification('defaultReleaseChannel');
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.fusion.defaultReleaseChannelModal.error');
+        });
     };
 
     vm.navigateToCallSettings = function () {

@@ -43,6 +43,7 @@
     .factory('DirectoryNumberUserService', DirectoryNumberUserService)
     .factory('DirectoryNumberSipEndPointService', DirectoryNumberSipEndPointService)
     .factory('SipEndpointDirectoryNumberService', SipEndpointDirectoryNumberService)
+    .factory('DateFormatService', DateFormatService)
     .factory('TimeZoneService', TimeZoneService)
     .factory('SiteLanguageService', SiteLanguageService)
     .factory('SiteCountryService', SiteCountryService)
@@ -438,6 +439,10 @@
     return $resource('modules/huron/serviceSetup/jodaTimeZones.json', {}, {});
   }
 
+  /* @ngInject */
+  function DateFormatService($resource) {
+    return $resource('modules/huron/serviceSetup/dateFormats.json', {}, {});
+  }
 
   /* @ngInject */
   function SiteLanguageService($resource) {

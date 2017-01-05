@@ -15,4 +15,12 @@
   "operation": "BLOCK_ORDER",
   "description": "Order for 1  Telephone Numbers in Area Code 123",
   "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/orders/29c63c1f-83b0-42b9-98ee-85624e4c7409"
+}, {
+  "uuid": "29c63c1f-83b0-42b9-98ee-85624e4c7410",
+  "type": "PSTN",
+  "status": "PENDING",
+  "carrier": "INTELEPEER",
+  "operation": "AUDIT",
+  "created": "Mon Nov 28 21:18:22 UTC 2016",
+  "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/orders/29c63c1f-83b0-42b9-98ee-85624e4c7410"
 }]

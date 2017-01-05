@@ -1172,6 +1172,15 @@
               extensions: {}
             }
           })
+          .state('user-overview.hybrid-services-squared-fusion-cal.history', {
+            template: '<user-status-history service-id="\'squared-fusion-cal\'"></user-status-history>',
+            data: {
+              displayName: 'Status History'
+            },
+            params: {
+              serviceId: {}
+            }
+          })
           .state('user-overview.hybrid-services-squared-fusion-gcal', {
             templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
             controller: 'CalendarServicePreviewCtrl',
@@ -1183,6 +1192,15 @@
               extensions: {}
             }
           })
+          .state('user-overview.hybrid-services-squared-fusion-gcal.history', {
+            template: '<user-status-history service-id="\'squared-fusion-gcal\'"></user-status-history>',
+            data: {
+              displayName: 'Status History'
+            },
+            params: {
+              serviceId: {}
+            }
+          })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
             templateUrl: 'modules/hercules/user-sidepanel/callServicePreview.tpl.html',
             controller: 'CallServicePreviewCtrl',
@@ -1192,6 +1210,24 @@
             params: {
               extensionId: {},
               extensions: {}
+            }
+          })
+          .state('user-overview.hybrid-services-squared-fusion-uc.uc-history', {
+            template: '<user-status-history service-id="\'squared-fusion-uc\'"></user-status-history>',
+            data: {
+              displayName: 'Aware Status History'
+            },
+            params: {
+              serviceId: {}
+            }
+          })
+          .state('user-overview.hybrid-services-squared-fusion-uc.ec-history', {
+            template: '<user-status-history service-id="\'squared-fusion-ec\'"></user-status-history>',
+            data: {
+              displayName: 'Connect Status History'
+            },
+            params: {
+              serviceId: {}
             }
           })
           .state('user-overview.conferencing', {
@@ -1824,8 +1860,10 @@
               customerListToggle: /* @ngInject */ function () {
                 // TODO:  remove this once the controllers are refactored
                 return true;
+              },
+              trialForPaid: function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
               }
-
             }
           })
           .state('customer-overview', {
@@ -2245,6 +2283,58 @@
             templateUrl: 'modules/core/trials/trialEmergAddress.tpl.html',
             controller: 'TrialEmergAddressCtrl',
             controllerAs: 'eAddressTrial'
+          })
+          .state('trial', {
+            abstract: true,
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<div ui-view></div>',
+                controller: 'TrialCtrl',
+                controllerAs: 'trial'
+              }
+            },
+            params: {
+              isEditing: false,
+              currentTrial: {},
+              details: {},
+              mode: {}
+            }
+          })
+          .state('trial.info', {
+            templateUrl: 'modules/core/trials/trial.tpl.html'
+          })
+          .state('trial.finishSetup', {
+            templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
+          })
+          .state('trial.webex', {
+            templateUrl: 'modules/core/trials/trialWebex.tpl.html',
+            controller: 'TrialWebexCtrl',
+            controllerAs: 'webexTrial'
+          })
+          .state('trial.call', {
+            templateUrl: 'modules/core/trials/trialDevice.tpl.html',
+            controller: 'TrialDeviceController',
+            controllerAs: 'callTrial'
+          })
+          .state('trial.pstn', {
+            templateUrl: 'modules/core/trials/trialPstn.tpl.html',
+            controller: 'TrialPstnCtrl',
+            controllerAs: 'pstnTrial'
+          })
+          .state('trial.emergAddress', {
+            templateUrl: 'modules/core/trials/trialEmergAddress.tpl.html',
+            controller: 'TrialEmergAddressCtrl',
+            controllerAs: 'eAddressTrial'
+          })
+          .state('trial.addNumbers', {
+            templateUrl: 'modules/core/trials/addNumbers.tpl.html',
+            controller: 'DidAddCtrl',
+            controllerAs: 'didAdd',
+            params: {
+              currentTrial: {},
+              currentOrg: {},
+            }
           })
           .state('generateauthcode', {
             parent: 'modal',
@@ -3116,12 +3206,12 @@
             controller: 'CareFeaturesCtrl',
             controllerAs: 'careFeaturesCtrl'
           })
-          .state('care.ChatSA', {
-            url: '/careChat',
+          .state('care.setupAssistant', {
+            url: '/setupAssistant',
             parent: 'care.Details',
-            templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
-            controller: 'CareChatSetupAssistantCtrl',
-            controllerAs: 'careChatSA',
+            templateUrl: 'modules/sunlight/features/template/ctSetupAssistant.tpl.html',
+            controller: 'CareSetupAssistantCtrl',
+            controllerAs: 'careSetupAssistant',
             params: {
               template: null,
               isEditFeature: null

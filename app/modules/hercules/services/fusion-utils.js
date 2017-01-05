@@ -13,7 +13,8 @@
       serviceId2ConnectorType: serviceId2ConnectorType,
       serviceId2Icon: serviceId2Icon,
       getLocalizedReleaseChannel: getLocalizedReleaseChannel,
-      getTimeSinceText: getTimeSinceText
+      getTimeSinceText: getTimeSinceText,
+      getLocalTimestamp: getLocalTimestamp
     };
 
     //////////
@@ -98,6 +99,14 @@
       return $translate.instant('hercules.cloudExtensions.sinceTime', {
         timestamp: timestampText
       });
+    }
+
+    function getLocalTimestamp(timestamp, format) {
+      var timezone = jstz.determine().name();
+      if (timezone === null || _.isUndefined(timezone)) {
+        timezone = 'UTC';
+      }
+      return moment(timestamp).local().tz(timezone).format(format || 'LLL (z)');
     }
   }
 }());

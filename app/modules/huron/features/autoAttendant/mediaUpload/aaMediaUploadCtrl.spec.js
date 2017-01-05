@@ -34,6 +34,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
   var fileNameValid2 = "ILTQq5.wav";
   var fileSize = 41236;
   var fileSize2 = 43451;
+  var fileSizeInvalid = (5 * 1024 * 1024) + 1;
   var fileModified = 1470671405088;
   var fileModified2 = 1470671405088;
   var fileDate = '09/01/16';
@@ -53,6 +54,11 @@ describe('Controller: AAMediaUploadCtrl', function () {
     lastModified: fileModified,
     name: fileNameInvalid,
     size: fileSize
+  };
+  var invalidFileBySize = {
+    lastModified: fileModified,
+    name: fileNameValid,
+    size: fileSizeInvalid,
   };
   var variantUrlPlayback = 'recordingPlayBackUrl';
   var uploadUrl = 'http://54.183.25.170:8001/api/notify/upload' + '?customerId=' + 'orgid';
@@ -645,6 +651,15 @@ describe('Controller: AAMediaUploadCtrl', function () {
           $scope.$digest();
           expect(AAMediaUploadService.upload).not.toHaveBeenCalled();
           expect(AANotificationService.error).toHaveBeenCalledWith('fileUpload.errorFileType');
+          expect(Analytics.trackEvent).not.toHaveBeenCalled();
+        });
+
+        it('should not upload given an invalid file size on upload call and print an error message', function () {
+          controller.upload(invalidFileBySize);
+          deferred.resolve(1);
+          $scope.$digest();
+          expect(AAMediaUploadService.upload).not.toHaveBeenCalled();
+          expect(AANotificationService.error).toHaveBeenCalledWith('autoAttendant.fileUploadSizeIncorrect');
           expect(Analytics.trackEvent).not.toHaveBeenCalled();
         });
 

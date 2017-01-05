@@ -191,7 +191,7 @@ require('./ediscovery.scss');
           var replace = '/';
           vm.roomInfo = result;
           vm.searchCriteria.startDate = vm.searchCriteria.startDate || _.replace(result.published, regex, replace).split('T')[0];
-          vm.searchCriteria.endDate = vm.searchCriteria.endDate || _.replace(result.lastRelevantActivityDate, regex, replace).split('T')[0];
+          vm.searchCriteria.endDate = result.lastRelevantActivityDate ? _.replace(result.lastRelevantActivityDate, regex, replace).split('T')[0] : vm.searchCriteria.startDate;
           vm.searchCriteria.displayName = result.displayName;
           _.forEach(result.participants.items, function (response) {
             vm.searchResults.emailAddresses.push(response.emailAddress);

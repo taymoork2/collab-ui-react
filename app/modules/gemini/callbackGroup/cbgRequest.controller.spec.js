@@ -39,25 +39,27 @@ describe('controller: CbgRequestCtrl', function () {
   }
 
   function initController() {
+    $state.current.data = {};
     ctrl = $controller('CbgRequestCtrl', {
       $scope: $scope,
       cbgService: cbgService,
+      $state: $state,
       $stateParams: $stateParams
     });
   }
 
-  it('test resetFile', function () {
+  it('test onResetFile', function () {
     ctrl.model.file = {
       file: null,
       uploadProgress: 0,
       processProgress: 0,
       isProcessing: false,
     };
-    ctrl.model.postData = { countries: 'China' };
+    ctrl.model.info = { countries: 'China' };
     ctrl.hideCountries = 'American';
-    ctrl.resetFile();
+    ctrl.onResetFile();
     expect(ctrl.model.file).toBe(null);
-    expect(ctrl.model.postData.countries.length).toBe(0);
+    expect(ctrl.model.info.countries.length).toBe(0);
     expect(ctrl.hideCountries).toBe(null);
   });
 
@@ -74,15 +76,15 @@ describe('controller: CbgRequestCtrl', function () {
   });
 
   it('test function removeCountry', function () {
-    ctrl.model.postData.countries = [{ countryName: 'America' }, { countryName: 'Japan' }];
+    ctrl.model.info.countries = [{ countryName: 'America' }, { countryName: 'Japan' }];
     ctrl.removeCountry('America');
-    expect(ctrl.model.postData.countries.length).toBe(1);
+    expect(ctrl.model.info.countries.length).toBe(1);
   });
 
   it('test function removeCountry', function () {
     ctrl.model.file = '';
     ctrl.hideCountries = '';
-    ctrl.model.postData.countries = [{ countryName: 'America' }];
+    ctrl.model.info.countries = [{ countryName: 'America' }];
     ctrl.removeCountry('America');
     expect(ctrl.model.file).toBe(null);
     expect(ctrl.hideCountries).toBe(null);
@@ -106,9 +108,9 @@ describe('controller: CbgRequestCtrl', function () {
       expect($state.modal.close).toHaveBeenCalled();
     });
 
-    it('should compare ctrl.model.postData.countries with correct counries', function () {
+    it('should compare ctrl.model.info.countries with correct counries', function () {
       $stateParams.customerId = 'ff808081582992dd01589a5b232410bb';
-      ctrl.model.postData.countries = [{
+      ctrl.model.info.countries = [{
         'countryId': 1,
         'countryName': 'Albania'
       }, {
@@ -119,10 +121,9 @@ describe('controller: CbgRequestCtrl', function () {
       cbgService.postRequest.and.returnValue($q.resolve(cbgsData));
       ctrl.onSubmit();
       $scope.$apply();
-      expect(ctrl.model.postData.countries.length).toBe(1);
+      expect(ctrl.model.info.countries.length).toBe(2);
     });
-
-    it('should call Notification.error', function () {
+    it('should call Notification.notify', function () {
       $stateParams.customerId = 'ff808081582992dd01589a5b232410bb';
       cbgsData.content.data.returnCode = 1000;
       cbgService.getCountries.and.returnValue($q.resolve(preData.getCountries));
@@ -137,7 +138,7 @@ describe('controller: CbgRequestCtrl', function () {
     it('should validate the csv file when the csv file is not empty', function () {
       ctrl.model.file = csvFile;
       ctrl.validateCsv();
-      expect(ctrl.model.postData.countries.length).toBe(2);
+      expect(ctrl.model.info.countries.length).toBe(0);
     });
 
     it('should validate the csv file when the csv file is empty', function () {

@@ -21,18 +21,20 @@
     </div>
   </cs-sp-header>
 
-  <cs-sp-container class="gemini-side-panel side-panel-country">
+  <cs-sp-container class="gemini-side-panel">
     <cs-sp-section>
-      <ul class="small-offset-0">
+      <div class="row">
+        <div class="pull-left medium-9">
           <span class="feature-name">{{::'gemini.cbgs.field.alias' | translate}}: {{$ctrl.model.customerAttribute}}</span>
+        </div>
+        <div class="columns medium-3">
           <span class="feature-status pull-right" ng-if="$ctrl.model.status">
             <i class="icon icon-circle status-indicator" ng-class="{'success': $ctrl.model.status === 'A' || $ctrl.model.status === 'P', 'danger': $ctrl.model.status === 'R' || $ctrl.model.status === 'L', 'warning': $ctrl.model.status === 'S', 'disabled': $ctrl.model.status === 'C'}"></i>
             {{$ctrl.model.status_}}
           </span>
-        </li>
-        </i>
-      </ul>
-        <div class="feature-list">
+        </div>
+      </div>
+      <div class="feature-list">
         <ul>
           <li class="feature" ng-if="$ctrl.model.callbackGroupSites.length">
             <a ui-sref="gemCbgDetails.sites({obj: {cbgs: $ctrl.cbgs, customerId: $ctrl.customerId, currCbg: $ctrl.model}})">
@@ -96,7 +98,8 @@
       <ul class="history-ul">
         <li ng-repeat="log in $ctrl.histories">
           <h6>{{log.action}}</h6>
-          <small>{{log.createdDate}} {{log.actionTime}} {{log.objectName}} {{::'gemini.cbgs.by' | translate}} {{log.userName}} {{!log.email ? '' : '(' + log.email + ')'}}</small>
+          <h6>{{log.objectName}}</h6>
+          <small>{{log.createdDate}} {{log.actionTime}} {{::'gemini.cbgs.by' | translate}} {{log.userName}} {{!log.email ? '' : '(' + log.email + ')'}}</small>
         </li>
       </ul>
       <p ng-if="$ctrl.isShowAllHistories" class="show-more">

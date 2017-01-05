@@ -199,7 +199,7 @@
         setTimeZone(newValue)
           .then(_.partial(waitForDeviceToUpdateTimeZone, newValue))
           .catch(function (error) {
-            Notification.errorWithTrackingId(error, 'deviceOverviewPage.failedToSaveChanges');
+            Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
             loadDeviceInfo();
           })
           .finally(function () {
@@ -215,7 +215,7 @@
         setCountry(newValue)
           .then(_.partial(waitForDeviceToUpdateCountry, newValue))
           .catch(function (error) {
-            Notification.errorWithTrackingId(error, 'deviceOverviewPage.failedToSaveChanges');
+            Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
             loadDeviceInfo();
           })
           .finally(function () {
@@ -304,7 +304,7 @@
           $window.open(res.data.url, '_blank');
         })
         .catch(function (response) {
-          Notification.errorWithTrackingId(response, 'deviceOverviewPage.failedToUploadLogs');
+          Notification.errorResponse(response, 'deviceOverviewPage.failedToUploadLogs');
         });
     };
 
@@ -351,7 +351,7 @@
         return CsdmDataModelService
           .updateTags(deviceOverview.currentDevice, deviceOverview.currentDevice.tags.concat(tag))
           .catch(function (response) {
-            Notification.errorWithTrackingId(response, 'deviceOverviewPage.failedToSaveChanges');
+            Notification.errorResponse(response, 'deviceOverviewPage.failedToSaveChanges');
           });
 
       } else {
@@ -370,7 +370,7 @@
       var tags = _.without(deviceOverview.currentDevice.tags, tag);
       return CsdmDataModelService.updateTags(deviceOverview.currentDevice, tags)
         .catch(function (response) {
-          Notification.errorWithTrackingId(response, 'deviceOverviewPage.failedToSaveChanges');
+          Notification.errorResponse(response, 'deviceOverviewPage.failedToSaveChanges');
         });
     };
 
@@ -397,11 +397,7 @@
         saveUpgradeChannel(newValue)
           .then(_.partial(waitForDeviceToUpdateUpgradeChannel, newValue))
           .catch(function (error) {
-            if (error.message) {
-              Notification.errorWithTrackingId(error, 'deviceOverviewPage.failedToSaveChanges');
-            } else {
-              Notification.error($translate.instant('deviceOverviewPage.failedToSaveChanges') + ' ' + error);
-            }
+            Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
             resetSelectedChannel();
           })
           .finally(function () {

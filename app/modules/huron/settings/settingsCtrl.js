@@ -15,14 +15,13 @@
 
     vm.NATIONAL = 'national';
     vm.LOCAL = 'local';
+    vm.callDateTimeFormat = false;
     vm.isRegionAndVoicemail = function (enabled) {
       return Authinfo.getLicenses().filter(function (license) {
         return enabled ? (license.licenseType !== Config.licenseTypes.SHARED_DEVICES || license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
       }).length > 0;
     };
-    FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
-      vm.showRegionAndVoicemail = vm.isRegionAndVoicemail(pstnEnabled);
-    });
+
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
       id: 'America/Los_Angeles',
@@ -35,6 +34,14 @@
     var DEFAULT_COUNTRY = {
       label: $translate.instant('countries.unitedStates'),
       value: 'US'
+    };
+    var DEFAULT_TF = {
+      label: '24 hour',
+      value: Config.timeFormat.HOUR_24
+    };
+    var DEFAULT_DF = {
+      label: 'MM/DD/YYYY',
+      value: Config.dateFormat.MDY
     };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
@@ -87,6 +94,14 @@
     vm.hasVoiceService = false;
     vm.assignedNumbers = [];
     vm.timeZoneOptions = [];
+    vm.timeFormatOptions = [{
+      label: '12 hour',
+      value: Config.timeFormat.HOUR_12
+    }, {
+      label: '24 hour',
+      value: Config.timeFormat.HOUR_24
+    }];
+    vm.dateFormatOptions = [];
     vm.timeZoneInputPlaceholder = $translate.instant('serviceSetupModal.searchTimeZone');
     vm.preferredLanguageOptions = [];
     vm.defaultCountryOptions = [];
@@ -113,6 +128,8 @@
         },
         siteCode: DEFAULT_SITE_CODE,
         timeZone: DEFAULT_TZ,
+        dateFormat: DEFAULT_DF,
+        timeFormat: DEFAULT_TF,
         voicemailPilotNumber: undefined,
         vmCluster: undefined,
         emergencyCallBackNumber: undefined,
@@ -153,10 +170,6 @@
 
     PstnSetupService.getCustomer(Authinfo.getOrgId()).then(function () {
       vm.isTerminusCustomer = true;
-    });
-
-    FeatureToggleService.getCustomerHuronToggle(Authinfo.getOrgId(), FeatureToggleService.features.avrilVmEnable).then(function (result) {
-      vm.voicemailAvrilCustomer = result;
     });
 
     vm.validations = {
@@ -799,8 +812,8 @@
             key: 'companyVoicemail',
             type: 'nested',
             templateOptions: {
-              label: $translate.instant('serviceSetupModal.vmAccessModes'),
-              description: $translate.instant('serviceSetupModal.vmAccessModesHelpText')
+              label: $translate.instant('serviceSetupModal.vmDeliveryMethods'),
+              description: $translate.instant('serviceSetupModal.vmDeliveryMethodsHelpText')
             }
           }]
         }, {
@@ -1274,6 +1287,12 @@
               vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
               vm.model.site.uuid = site.uuid;
               vm.model.site.voicemailPilotNumberGenerated = site.voicemailPilotNumberGenerated !== null ? site.voicemailPilotNumberGenerated : 'false';
+              if (_.get(site, 'dateFormat')) {
+                vm.model.site.dateFormat = site.dateFormat;
+              }
+              if (_.get(site, 'timeFormat')) {
+                vm.model.site.timeFormat = site.timeFormat;
+              }
               if (_.get(site, 'emergencyCallBackNumber.pattern')) {
                 vm.model.serviceNumber = {
                   pattern: site.emergencyCallBackNumber.pattern,
@@ -1328,6 +1347,13 @@
         errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailGetError'));
         return $q.reject(response);
       });
+    }
+
+    function loadDateFormatOptions() {
+      return ServiceSetup.getDateFormats()
+        .then(function (dateFormats) {
+          vm.dateFormatOptions = dateFormats;
+        });
     }
 
     function loadTimeZoneOptions() {
@@ -1530,6 +1556,7 @@
           clearCallerIdFields();
 
           if (vm.hasVoiceService) {
+            promises.push(loadDateFormatOptions());
             promises.push(loadTimeZoneOptions()
               .then(loadSite)
               .then(loadVoicemailTimeZone)
@@ -1804,11 +1831,28 @@
       }
     }
 
+    function loadFeatureToggles() {
+      FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
+        vm.showRegionAndVoicemail = vm.isRegionAndVoicemail(pstnEnabled);
+      });
+
+      FeatureToggleService.supports(FeatureToggleService.features.huronDateTimeEnable).then(function (result) {
+        vm.callDateTimeFormat = result;
+      });
+
+      FeatureToggleService.getCustomerHuronToggle(Authinfo.getOrgId(), FeatureToggleService.features.avrilVmEnable).then(function (result) {
+        vm.voicemailAvrilCustomer = result;
+      });
+
+      return $q.resolve();
+    }
+
     function init() {
       vm.loading = true;
       errors = [];
 
       var promises = [];
+      promises.push(loadFeatureToggles());
       promises.push(loadCompanyInfo());
       promises.push(loadServiceAddress());
       promises.push(loadExternalNumbers());
@@ -2151,9 +2195,9 @@
             voicemailPrefixLabel: digit.concat(vm.model.site.siteCode)
           });
         });
-        if ($scope.to) {
-          $scope.to.description = $translate.instant('serviceSetupModal.voicemailPrefixDesc', { 'number': vm.model.site.siteSteeringDigit.siteDialDigit, 'extensionLength0': extensionLength0, 'extensionLength9': extensionLength9 });
-          $scope.to.options = values;
+        if (localScope.to) {
+          localScope.to.description = $translate.instant('serviceSetupModal.voicemailPrefixDesc', { 'number': vm.model.site.siteSteeringDigit.siteDialDigit, 'extensionLength0': extensionLength0, 'extensionLength9': extensionLength9 });
+          localScope.to.options = values;
         }
       });
     }

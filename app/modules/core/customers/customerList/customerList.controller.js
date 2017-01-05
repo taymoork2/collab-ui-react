@@ -7,7 +7,7 @@ require('./_customer-list.scss');
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Analytics, Authinfo, Config, customerListToggle, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, TrialService) {
+  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Analytics, Authinfo, Config, customerListToggle, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, trialForPaid, TrialService) {
     var vm = this;
     vm.isCustomerPartner = !!Authinfo.isCustomerPartner;
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
@@ -25,7 +25,6 @@ require('./_customer-list.scss');
     vm.modifyManagedOrgs = modifyManagedOrgs;
     vm.getTrialsList = getTrialsList;
     vm.openAddTrialModal = openAddTrialModal;
-    vm.openEditTrialModal = openEditTrialModal;
     vm.actionEvents = actionEvents;
     vm.isLicenseInfoAvailable = isLicenseInfoAvailable;
     vm.isLicenseTypeATrial = isLicenseTypeATrial;
@@ -52,7 +51,7 @@ require('./_customer-list.scss');
 
     // TODO:  atlasCustomerListUpdate toggle is globally set to true. Needs refactoring to remove unused code
     vm.customerListToggle = customerListToggle;
-
+    vm.featureTrialForPaid = trialForPaid;
     // expecting this guy to be unset on init, and set every time after
     // check resetLists fn to see how its being used
     vm.activeFilter = 'all';
@@ -708,21 +707,12 @@ require('./_customer-list.scss');
 
     function openAddTrialModal() {
       Analytics.trackTrialSteps(Analytics.sections.TRIAL.eventNames.START_SETUP, $state.current.name, Authinfo.getOrgId());
-      $state.go('trialAdd.info').then(function () {
+      var route = TrialService.getAddTrialRoute(vm.featureTrialForPaid);
+      $state.go(route.path, route.params).then(function () {
         $state.modal.result.finally(resetLists);
       });
     }
 
-    function openEditTrialModal() {
-      TrialService.getTrial(vm.currentTrial.trialId).then(function (response) {
-        $state.go('trialEdit.info', {
-          currentTrial: vm.currentTrial,
-          details: response
-        }).then(function () {
-          $state.modal.result.finally(resetLists);
-        });
-      });
-    }
 
     function resetLists() {
       if (!vm.customerListToggle) {

@@ -93,13 +93,11 @@ var PartnerHomePage = function () {
   this.previewPanel = element(by.css('.customer-overview'));
   this.customerInfo = element(by.id('customer-info'));
   this.trialInfo = element(by.id('trial-info'));
-  this.trialPending = element(by.css('.trial-pending'));
+  this.trialPending = element(by.cssContainingText('span', 'Pending'));
   this.launchCustomerPanelButton = element(by.id('launchCustomer'));
   this.exitPreviewButton = element(by.css('.panel-close'));
   this.partnerFilter = element(by.id('partnerFilter'));
-  //this.trialFilter = element(by.cssContainingText('.filter', 'Trial'));
   this.searchFilter = element(by.id('searchFilter'));
-  //this.allFilter = element(by.cssContainingText('.filter', 'All'));
   this.partnerEmail = element.all(by.binding('userName'));
   this.messageTrialCheckbox = element(by.css('label[for="messageTrial"]'));
   this.roomSystemsCheckbox = element(by.css('label[for="trialRoomSystem"]'));
@@ -117,6 +115,7 @@ var PartnerHomePage = function () {
   this.closeBtnOnModal = element(by.id('modal-close'));
   this.videoModal = element(by.id('videoId'));
   this.webexSiteURL = element(by.id('siteUrl'));
+  this.openMeetingSidePanelLink = element(by.cssContainingText('.feature-name', 'Meeting 25 Party'));
 
   this.viewAllLink = element(by.id('viewAllLink'));
   this.customerList = element(by.id('customerListPanel'));
@@ -168,12 +167,20 @@ var PartnerHomePage = function () {
       partner.pendingCount++;
 
       browser.refresh();
-      //utils.click(partner.trialFilter);
+
+      // There is a bug in the trial view where entering search text
+      // too soon results in the search being ignored, so let's wait until a
+      // known trial shows up in the list...
+      utils.waitIsDisplayed(element(by.cssContainingText('.ui-grid-cell', 
+        'Atlas Test Partner Organization')));
+
       utils.search(partner.newTrial.customerName, -1);
       utils.waitIsDisplayed(partner.newTrialRow);
 
       utils.click(partner.newTrialRow);
       utils.waitIsDisplayed(partner.previewPanel);
+      utils.click(partner.openMeetingSidePanelLink);
+
       return utils.waitIsDisplayed(partner.trialPending, 55000).then(function () {
         return true;
       }, function () {

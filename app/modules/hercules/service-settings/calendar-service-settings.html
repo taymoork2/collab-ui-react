@@ -1,22 +1,7 @@
 <div class="fusion-cluster-settings">
   <div class="cs-form">
     <calendar-email-notifications-section service-id="'squared-fusion-cal'"></calendar-email-notifications-section>
-
-    <setting-section setting="calendarSettings.deactivateSection" class="needs-border-top">
-      <div class="sub-section">
-        <h5 class="sub-section__label" translate="hercules.settings.deactivateServiceHeading"
-            translate-values="{ServiceName: calendarSettings.localizedServiceName}"></h5>
-        <p class="sub-section__description" translate="hercules.settings.deactivateService"
-           translate-values="{ServiceName: calendarSettings.localizedServiceName, ConnectorName: calendarSettings.localizedConnectorName}"></p>
-
-        <button class="btn" id="deactivateService"
-                ng-click="calendarSettings.confirmDisable('squared-fusion-cal')"
-                translate="hercules.settings.deactivate">
-
-        </button>
-      </div>
-    </setting-section>
-
+    <deactivate-section service-id="'squared-fusion-cal'"></deactivate-section>
     <documentation-section service-id="'squared-fusion-cal'"></documentation-section>
   </div>
 </div>
