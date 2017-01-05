@@ -218,9 +218,15 @@
 
       return service.updateItemName(objectToUpdate, newName)
         .then(function (updatedObject) {
-          var place = placesDataModel[updatedObject.url];
-          updatedObject.devices = place.devices;
-          return CsdmCacheUpdater.updateOne(placesDataModel, updatedObject.url, updatedObject, null, true);
+
+          _.each(updatedObject.devices, function (updatedDevice) {
+            CsdmCacheUpdater.updateOne(theDeviceMap, updatedDevice.url, updatedDevice);
+          });
+
+          var updatedPlace = CsdmCacheUpdater.updateOne(placesDataModel, updatedObject.url, updatedObject, null, true);
+
+          notifyListeners();
+          return updatedPlace;
         });
     }
 
@@ -242,14 +248,14 @@
       }
       return service.updateTags(objectToUpdate.url, newTags)
         .then(function () {
-          objectToUpdate.tags = newTags;
+          //         objectToUpdate.tags = newTags;
 
           var existingDevice = theDeviceMap[objectToUpdate.url];
-          if (existingDevice && existingDevice !== objectToUpdate) {
+          if (existingDevice) {
             existingDevice.tags = newTags;
           }
 
-          return objectToUpdate;
+          return existingDevice || objectToUpdate;
         });
     }
 
@@ -264,20 +270,20 @@
           _.each(_.difference(_.values(item.devices), _.values(reloadedPlace.devices)), function (deletedDevice) {
             _.unset(theDeviceMap, [deletedDevice.url]);
           });
-          CsdmCacheUpdater.updateOne(placesDataModel, reloadedPlace.url, reloadedPlace, null, true);
+          var updatedPlace = CsdmCacheUpdater.updateOne(placesDataModel, reloadedPlace.url, reloadedPlace, null, true);
           _.each(reloadedPlace.devices, function (reloadedDevice) {
             CsdmCacheUpdater.updateOne(theDeviceMap, reloadedDevice.url, reloadedDevice);
           });
           notifyListeners();
-          return reloadedPlace;
+          return updatedPlace;
         });
       } else if (item.type === 'huron') {
         return $q.reject();
       } else {
         return service.fetchItem(item.url).then(function (reloadedDevice) {
-          CsdmCacheUpdater.updateOne(theDeviceMap, item.url, reloadedDevice);
+          var updatedDevice = CsdmCacheUpdater.updateOne(theDeviceMap, item.url, reloadedDevice);
           notifyListeners();
-          return reloadedDevice;
+          return updatedDevice;
         });
       }
     }
