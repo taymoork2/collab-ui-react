@@ -236,6 +236,34 @@ describe('Partner Service -', function () {
     }
   });
 
+  it('should successfully return a list customer orgs with orderedServices property from calling loadRetrievedDataToList with isCareEnabled being true', function () {
+    spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('partner@company.com');
+
+    var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), true, true);
+    var expectedServices = ["messaging", "communications", "webex", "roomSystems", "sparkBoard", "care"];
+    var expectedServicesManagedByOthers = ["conferencing"];
+
+    // Verify the ordered service property
+    expect(returnList[0].orderedServices.services.length).toBe(6);
+    expect(returnList[0].orderedServices.services).toEqual(expectedServices);
+    expect(returnList[0].orderedServices.servicesManagedByOthers.length).toBe(1);
+    expect(returnList[0].orderedServices.servicesManagedByOthers).toEqual(expectedServicesManagedByOthers);
+  });
+
+  it('should successfully return a list customer orgs with orderedServices property from calling loadRetrievedDataToList with isCareEnabled being false', function () {
+    spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('partner@company.com');
+
+    var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), true, false);
+    var expectedServices = ["messaging", "communications", "webex", "roomSystems", "sparkBoard"];
+    var expectedServicesManagedByOthers = ["conferencing"];
+
+    // Verify the ordered service property
+    expect(returnList[0].orderedServices.services.length).toBe(5);
+    expect(returnList[0].orderedServices.services).toEqual(expectedServices);
+    expect(returnList[0].orderedServices.servicesManagedByOthers.length).toBe(1);
+    expect(returnList[0].orderedServices.servicesManagedByOthers).toEqual(expectedServicesManagedByOthers);
+  });
+
   it('should successfully return an array of customers from calling exportCSV', function () {
     $httpBackend.whenGET(PartnerService.managedOrgsUrl).respond(testData.managedOrgsResponse.status, testData.managedOrgsResponse.data);
     var promise = PartnerService.exportCSV(false);
@@ -261,7 +289,8 @@ describe('Partner Service -', function () {
     });
 
     it('should call a patch if organization is not matched', function () {
-      $httpBackend.expectPATCH('https://atlas-integration.wbx2.com/admin/api/v1/organization/12345/users/roles').respond(200);
+      var url = UrlConfig.getAdminServiceUrl() + 'organization/12345/users/roles';
+      $httpBackend.expectPATCH(url).respond(200);
       PartnerService.modifyManagedOrgs('fake-customer-org-id-1');
       $httpBackend.flush();
     });
@@ -843,6 +872,46 @@ describe('Partner Service -', function () {
 
         var dataWithWebex = testData.customers[8];// This has 2 webex's in it, should only count 1
         expect(PartnerService.helpers.countUniqueServices(dataWithWebex)).toBe(2);
+      });
+    });
+
+    describe('isServiceManagedByCurrentPartner ', function () {
+      var services;
+
+      beforeEach(function () {
+        services = getJSONFixture('core/json/partner/partner.service.json').services;
+        spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(services.messaging.partnerEmail);
+        spyOn(Authinfo, 'getOrgId').and.returnValue(services.messaging.partnerOrgId);
+      });
+
+      it("should return true for messaging service (licensed and managed by current partner)", function () {
+        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.messaging)).toBe(true);
+      });
+
+      it("should return false for conferencing service (licensed and managed by a different partner)", function () {
+        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.conferencing)).toBe(false);
+      });
+
+      it("should return true for communications service (not licensed)", function () {
+        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.communications)).toBe(true);
+      });
+
+      it("should return true for webexEEConferencing service (licensed, without partnerOrdId properties, " +
+      "and managed by current partner)", function () {
+        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.webexEEConferencing)).toBe(true);
+      });
+
+      it("should return true for roomSystems service (licensed, without partnerEmail properties, " +
+      "and managed by current partner)", function () {
+        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.roomSystems)).toBe(true);
+      });
+
+      it("should return false for sparkBoard service (licensed and managed by a different partner)", function () {
+        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.sparkBoard)).toBe(false);
+      });
+
+      it("should return false for care service (licensed and without partnerOrgId or partnerEmail properties)", function () {
+        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.care)).toBe(false);
       });
     });
   });

@@ -3716,6 +3716,7 @@
     "domain": "{count, plural, one{Domain} other{Domains}}",
     "domains": "Domains",
     "quantityWithValue": "Qty: {{quantity}}",
+    "anotherPartner": "(Another Partner)",
     "filterSelectPlaceholder": "Select a filter...",
     "trialAccountsFilter": "Trial Accounts ({{count}})",
     "activeAccountsFilter": "Purchased Accounts ({{count}})",

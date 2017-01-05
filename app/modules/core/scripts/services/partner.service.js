@@ -34,7 +34,8 @@
       isDisplayableService: _isDisplayableService,
       calculatePurchaseStatus: _calculatePurchaseStatus,
       calculateTotalLicenses: _calculateTotalLicenses,
-      countUniqueServices: _countUniqueServices
+      countUniqueServices: _countUniqueServices,
+      isServiceManagedByCurrentPartner: isServiceManagedByCurrentPartner
     };
 
     var factory = {
@@ -386,6 +387,7 @@
         licenses: 0,
         deviceLicenses: 0,
         licenseList: [],
+        orderedServices: {},
         messaging: null,
         conferencing: null,
         communications: null,
@@ -460,9 +462,48 @@
       dataObj.totalLicenses = _calculateTotalLicenses(dataObj, isCareEnabled, customerListToggle);
       dataObj.uniqueServiceCount = _countUniqueServices(dataObj);
 
+      dataObj.orderedServices = _getOrderedServices(dataObj, isCareEnabled);
 
       setNotesSortOrder(dataObj);
       return dataObj;
+    }
+
+    // The information provided by this function will be used in displaying the service icons on the customer list page.
+    function _getOrderedServices(data, isCareEnabled) {
+      var servicesToProcess = ['messaging', 'conferencing', 'communications', 'webexEEConferencing',
+        'roomSystems', 'sparkBoard', 'care'];
+      var services = [];
+      var servicesManagedByOthers = [];
+
+      _.forEach(servicesToProcess, function (service) {
+        var serviceToAdd = service;
+        if (service === 'webexEEConferencing') {
+          serviceToAdd = 'webex';
+        }
+        if (service !== 'care' || (service === 'care' && isCareEnabled)) {
+          if (isServiceManagedByCurrentPartner(data[service])) {
+            services.push(serviceToAdd);
+          } else {
+            servicesManagedByOthers.push(serviceToAdd);
+          }
+        }
+      });
+
+      return { services: services, servicesManagedByOthers: servicesManagedByOthers };
+    }
+
+    function isServiceManagedByCurrentPartner(serviceObj) {
+      var currentPartnerId = Authinfo.getPrimaryEmail();
+      var currentPartnerOrgId = Authinfo.getOrgId();
+
+      var isInCurrentPartnerOrg = serviceObj.partnerOrgId === currentPartnerOrgId;
+      var isCurrentPartnerId = serviceObj.partnerEmail === currentPartnerId;
+      var isNotLicensed = serviceObj.volume === undefined && Object.keys(serviceObj).length === 4;
+      if (isInCurrentPartnerOrg || isCurrentPartnerId || isNotLicensed) {
+        return true;
+      }
+
+      return false;
     }
 
     function _calculatePurchaseStatus(customerData) {

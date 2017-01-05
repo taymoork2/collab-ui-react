@@ -19,10 +19,16 @@
     function link(scope) {
       scope.translateTypeToIcon = translateTypeToIcon;
       scope.getTooltipText = getTooltipText;
-      scope.isVisible = PartnerService.isLicenseTypeAny(scope.row, scope.type);
+      scope.isVisible = PartnerService.isLicenseTypeAny(scope.row, scope.type)
+        && scope.row.orderedServices.services.indexOf(scope.type) !== -1;
+      scope.isVisibleManagedByOthers = PartnerService.isLicenseTypeAny(scope.row, scope.type)
+        && scope.row.orderedServices.servicesManagedByOthers.indexOf(scope.type) !== -1;
       scope.$watch('row', _.throttle(function () {
         // When filtering, directives aren't "re-linked", so recalculate this
-        scope.isVisible = PartnerService.isLicenseTypeAny(scope.row, scope.type);
+        scope.isVisible = PartnerService.isLicenseTypeAny(scope.row, scope.type)
+          && scope.row.orderedServices.services.indexOf(scope.type) !== -1;
+        scope.isVisibleManagedByOthers = PartnerService.isLicenseTypeAny(scope.row, scope.type)
+          && scope.row.orderedServices.servicesManagedByOthers.indexOf(scope.type) !== -1;
       }, 25));
       // caching some of the expensive and repeated operations
       scope.TOOLTIP_TEMPLATE = $($templateCache.get('modules/core/customers/customerList/grid/serviceIconTooltip.tpl.html'));
@@ -60,9 +66,11 @@
       function getNonWebexTooltip(rowData, type) {
         var tooltip = scope.TOOLTIP_TEMPLATE.clone();
         var serviceStatus = getServiceStatus(rowData, type);
+        var serviceManagedByCurrentPartner = PartnerService.helpers.isServiceManagedByCurrentPartner(rowData[type]);
         var tooltipDataObj = {
           statusClass: serviceStatus
         };
+
         if (TYPE_TO_TRANSLATION_CONVERSIONS[type]) {
           tooltipDataObj.serviceName = $translate.instant('customerPage.' + TYPE_TO_TRANSLATION_CONVERSIONS[type]);
         } else {
@@ -73,17 +81,20 @@
             quantity: rowData[type].volume });
         }
         tooltipDataObj.status = $translate.instant('customerPage.' + serviceStatus);
+        if (!serviceManagedByCurrentPartner && serviceStatus !== POSSIBLE_SERVICE_STATUSES.free && rowData[type].volume) {
+          tooltipDataObj.anotherPartner = $translate.instant('customerPage.anotherPartner');
+        }
         // Note that the tooltip displays raw html, which can contain unsecure code!
         // In this case all input is put through $translate, sanitized, or changed to a constant
         return $interpolate(tooltip[0].outerHTML)(tooltipDataObj);
       }
-
 
       function getWebexTooltip(rowData) {
         var tooltip = scope.TOOLTIP_TEMPLATE.clone();
         tooltip.find('.service-name').text(scope.WEBEX_TRANSLATION);
         tooltip.find('.tooltip-qty').remove();
         tooltip.find('.service-status').remove();
+        tooltip.find('.tooltip-another-partner').remove();
         var webexServicesCounted = 0;
         var sitesFound = [];
         var webexTypes = _.without(Config.webexTypes, 'webexCMR');
@@ -113,6 +124,7 @@
       function createWebexTooltipBlock(rowData, licenseType, licenseData) {
         var tooltipBlock = scope.TOOLTIP_TEMPLATE_BLOCK.clone();
         var serviceStatus = getServiceStatus(rowData, licenseType);
+        var serviceManagedByCurrentPartner = PartnerService.helpers.isServiceManagedByCurrentPartner(rowData[licenseType]);
         var tooltipDataObj = {
           url: licenseData.siteUrl,
           qty: $translate.instant('customerPage.quantityWithValue', {
@@ -121,6 +133,11 @@
           statusClass: serviceStatus,
           status: $translate.instant('customerPage.' + serviceStatus)
         };
+
+        if (!serviceManagedByCurrentPartner && serviceStatus !== POSSIBLE_SERVICE_STATUSES.free && rowData[licenseType].volume) {
+          tooltipDataObj.anotherPartner = $translate.instant('customerPage.anotherPartner');
+        }
+
         return $interpolate(tooltipBlock[0].outerHTML)(tooltipDataObj);
       }
 

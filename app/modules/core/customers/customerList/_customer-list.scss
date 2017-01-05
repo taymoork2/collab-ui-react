@@ -33,6 +33,12 @@
     }
 
     .service-icon {
+      color: $gray-dark-2;
+      margin-right: 1rem;
+      font-size: 1rem;
+    }
+
+    .service-icon-managed-by-others {
       color: $gray-light-1;
       margin-right: 1rem;
       font-size: 1rem;

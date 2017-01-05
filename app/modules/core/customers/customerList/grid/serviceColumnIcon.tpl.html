@@ -3,3 +3,8 @@
   ng-class="translateTypeToIcon(type)"
   tooltip-html-unsafe="{{getTooltipText(row, type)}}"
   tooltip-append-to-body="true"></i>
+<i ng-if="isVisibleManagedByOthers"
+  class="service-icon-managed-by-others icon"
+  ng-class="translateTypeToIcon(type)"
+  tooltip-html-unsafe="{{getTooltipText(row, type)}}"
+  tooltip-append-to-body="true"></i>
