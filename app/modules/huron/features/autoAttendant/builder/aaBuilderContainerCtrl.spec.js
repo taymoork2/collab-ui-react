@@ -55,7 +55,7 @@ describe('Controller: AABuilderContainerCtrl', function () {
   describe('openScheduleModal', function () {
 
     it('should not open the Modal on Validation error', function () {
-      spyOn(AAValidationService, 'isRouteToValidationSuccess').and.returnValue(false);
+      spyOn(AAValidationService, 'isValidCES').and.returnValue(false);
 
       controller.openScheduleModal();
 
@@ -63,7 +63,7 @@ describe('Controller: AABuilderContainerCtrl', function () {
 
     });
     it('should open the Modal on Validation success', function () {
-      spyOn(AAValidationService, 'isRouteToValidationSuccess').and.returnValue(true);
+      spyOn(AAValidationService, 'isValidCES').and.returnValue(true);
 
       controller.openScheduleModal();
       fakeModal.close({

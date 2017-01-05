@@ -20,6 +20,7 @@ var AutoAttendantPage = function () {
   this.okQueueTreatment = element(by.id('okTreatmentBtn'));
   this.mohCustomUpload = element(by.id('uploadFileRadio1'));
   this.mohDefaultUpload = element(by.id('musicOnHoldRadio1'));
+  this.msgInputOnlyAll = element.all(by.css('aa-message-type[name="aa-msg-input-only"]'));
 
   this.periodicMessageTypeSelect = element(by.id('periodicAnnouncement')).element(by.css('aa-message-type [name="messageInput"]'));
   this.periodicSayMessageOption = element(by.id('periodicAnnouncement')).element(by.css('select[name="messageSelect"] + div a.select-toggle'));

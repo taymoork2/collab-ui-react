@@ -145,7 +145,7 @@ describe('Service: AAValidationService', function () {
 
       ui.openHours.addEntryAt(0, entry);
 
-      valid = AAValidationService.isRouteToValidationSuccess(ui);
+      valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -176,7 +176,7 @@ describe('Service: AAValidationService', function () {
       ui.openHours.addEntryAt(0, entry1);
       ui.openHours.addEntryAt(1, entry2);
 
-      valid = AAValidationService.isRouteToValidationSuccess(ui);
+      valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error.calls.argsFor(0)).toEqual(['autoAttendant.callerInputMenuErrorVariableNameMissing', {
@@ -198,7 +198,7 @@ describe('Service: AAValidationService', function () {
 
       ui.openHours.addEntryAt(0, entry);
 
-      valid = AAValidationService.isRouteToValidationSuccess(ui);
+      valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
@@ -217,7 +217,7 @@ describe('Service: AAValidationService', function () {
 
       ui.openHours.addEntryAt(0, entry);
 
-      valid = AAValidationService.isRouteToValidationSuccess(ui);
+      valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
 
@@ -245,7 +245,7 @@ describe('Service: AAValidationService', function () {
 
       ui.openHours.addEntryAt(0, entry);
 
-      valid = AAValidationService.isRouteToValidationSuccess(ui);
+      valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
 
@@ -275,7 +275,7 @@ describe('Service: AAValidationService', function () {
 
       ui.openHours.addEntryAt(0, entry);
 
-      valid = AAValidationService.isRouteToValidationSuccess(ui);
+      valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
@@ -297,7 +297,7 @@ describe('Service: AAValidationService', function () {
     });
 
     it('report validation success for a phone menu defined', function () {
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
@@ -308,7 +308,7 @@ describe('Service: AAValidationService', function () {
       var uiPhoneMenu = ui.openHours.entries[0];
       var uiKey2 = uiPhoneMenu.entries[1];
       uiKey2.actions[0].value = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -341,7 +341,7 @@ describe('Service: AAValidationService', function () {
 
       subMenu.entries[0].addAction(actionEntry);
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
 
@@ -384,7 +384,7 @@ describe('Service: AAValidationService', function () {
 
       subMenu.entries[0].addAction(actionEntry);
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
 
@@ -412,7 +412,7 @@ describe('Service: AAValidationService', function () {
       topMenu.addEntryAt(0, subMenu);
       topMenu.entries[0].key = "0";
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
 
@@ -449,7 +449,7 @@ describe('Service: AAValidationService', function () {
       ui.openHours.entries[0].entries[0].entries[0].setType("MENU_OPTION");
       ui.openHours.entries[0].entries[0].entries[0].setKey("1");
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
 
@@ -462,7 +462,7 @@ describe('Service: AAValidationService', function () {
       var uiKey2 = uiPhoneMenu.entries[1];
       uiKey2.key = "";
       uiKey2.actions[0].value = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
@@ -472,7 +472,7 @@ describe('Service: AAValidationService', function () {
       var uiPhoneMenu = ui.openHours.entries[0];
       var uiKey2 = uiPhoneMenu.entries[2];
       uiKey2.actions[0].value = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -483,7 +483,7 @@ describe('Service: AAValidationService', function () {
       var uiKey2 = uiPhoneMenu.entries[2];
       uiKey2.key = "";
       uiKey2.actions[0].value = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
@@ -496,14 +496,14 @@ describe('Service: AAValidationService', function () {
       uiKey2.key = "";
       uiKey2.actions[0].value = "";
       uiKey2.actions[0].name = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
 
       uiPhoneMenu.entries.length = 0;
 
-      valid = AAValidationService.isRouteToValidationSuccess(ui);
+      valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -513,7 +513,7 @@ describe('Service: AAValidationService', function () {
       var uiPhoneMenu = ui.openHours.entries[0];
       var uiKey2 = uiPhoneMenu.entries[3];
       uiKey2.actions[0].value = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -524,7 +524,7 @@ describe('Service: AAValidationService', function () {
       var uiKey2 = uiPhoneMenu.entries[3];
       uiKey2.key = "";
       uiKey2.actions[0].value = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
@@ -534,7 +534,7 @@ describe('Service: AAValidationService', function () {
       var uiPhoneMenu = ui.openHours.entries[0];
       var uiKey2 = uiPhoneMenu.entries[4];
       uiKey2.actions[0].value = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -545,7 +545,7 @@ describe('Service: AAValidationService', function () {
       var uiKey2 = uiPhoneMenu.entries[4];
       uiKey2.key = "";
       uiKey2.actions[0].value = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
@@ -558,7 +558,7 @@ describe('Service: AAValidationService', function () {
 
       spyOn(AACommonService, 'getInvalid').and.returnValue(undefined);
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
@@ -570,7 +570,7 @@ describe('Service: AAValidationService', function () {
       var uiPhoneMenu = ui.openHours.entries[0];
       var uiKey2 = uiPhoneMenu.entries[5];
       uiKey2.actions[0].value = "XXxX";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -581,7 +581,7 @@ describe('Service: AAValidationService', function () {
       var uiKey2 = uiPhoneMenu.entries[5];
       uiKey2.key = "";
       uiKey2.actions[0].value = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
@@ -591,7 +591,7 @@ describe('Service: AAValidationService', function () {
       var uiPhoneMenu = ui.openHours.entries[0];
       var uiKey2 = uiPhoneMenu.entries[6];
       uiKey2.actions[0].value = "";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
     });
@@ -606,7 +606,7 @@ describe('Service: AAValidationService', function () {
 
       spyOn(AACommonService, 'getInvalid').and.returnValue(false);
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -618,7 +618,7 @@ describe('Service: AAValidationService', function () {
       var uiKey2 = uiPhoneMenu.entries[6];
       uiKey2.key = "";
       uiKey2.actions[0].value = "Test Queue";
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
@@ -627,7 +627,7 @@ describe('Service: AAValidationService', function () {
        var uiPhoneMenu = uiCombinedMenu.entries[0];
        var uiKey2 = uiPhoneMenu.entries[6];
        uiKey2.actions[0].value = "Test Queue";
-       var valid = AAValidationService.isRouteToValidationSuccess(uiCombinedMenu);
+       var valid = AAValidationService.isValidCES(uiCombinedMenu);
        expect(valid).toEqual(true);
        expect(AANotificationService.error).not.toHaveBeenCalled();*/
     });
@@ -646,7 +646,7 @@ describe('Service: AAValidationService', function () {
 
       spyOn(AACommonService, 'getInvalid').and.returnValue(false);
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -661,7 +661,7 @@ describe('Service: AAValidationService', function () {
 
       spyOn(AACommonService, 'getInvalid').and.returnValue(false);
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -686,7 +686,7 @@ describe('Service: AAValidationService', function () {
 
       spyOn(AACommonService, 'getInvalid').and.returnValue(false);
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -719,7 +719,7 @@ describe('Service: AAValidationService', function () {
 
       routeTo.actions[0].value = 'UserVoiceMail';
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
@@ -736,7 +736,7 @@ describe('Service: AAValidationService', function () {
 
       sayMsg.actions[0].value = '';
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
@@ -753,7 +753,7 @@ describe('Service: AAValidationService', function () {
 
       routeTo.actions[0].value = '';
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -771,7 +771,7 @@ describe('Service: AAValidationService', function () {
 
       routeTo.actions[0].value = '';
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -790,7 +790,7 @@ describe('Service: AAValidationService', function () {
 
       routeTo.actions[0].value = '';
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -808,7 +808,7 @@ describe('Service: AAValidationService', function () {
 
       routeTo.actions[0].value = '';
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
@@ -828,7 +828,7 @@ describe('Service: AAValidationService', function () {
 
       spyOn(AACommonService, 'getInvalid').and.returnValue(false);
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalledWith(
@@ -848,7 +848,7 @@ describe('Service: AAValidationService', function () {
 
       routeTo.actions[0].value = 'XXXX';
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalledWith(
@@ -891,7 +891,7 @@ describe('Service: AAValidationService', function () {
 
       spyOn(AACommonService, 'getInvalid').and.returnValue(false);
 
-      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+      var valid = AAValidationService.isValidCES(ui);
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();

@@ -49,7 +49,7 @@
     var errSubMenuNoInputValuesEnteredMsg = 'autoAttendant.subMenuErrorNoInputValuesEntered';
     var service = {
       isNameValidationSuccess: isNameValidationSuccess,
-      isRouteToValidationSuccess: isRouteToValidationSuccess
+      isValidCES: isValidCES
     };
 
     return service;
@@ -324,7 +324,7 @@
       return isValid;
     }
 
-    function isRouteToValidationSuccess(ui) {
+    function isValidCES(ui) {
       var openHoursValid = true;
       var closedHoursValid = true;
       var holidaysValid = true;

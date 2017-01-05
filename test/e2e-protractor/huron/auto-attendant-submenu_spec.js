@@ -67,19 +67,6 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.sayMessage);
 
     }, 60000);
-/*
-    it('should add Phone Menu Repeat to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-
-      // Main menu key 0 - repeat menu
-      utils.click(autoattendant.phoneMenuKeys.first());
-      autoattendant.scrollIntoView(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
-      utils.click(autoattendant.phoneMenuKeyOptions.all(by.linkText(autoattendant.key0)).first());
-
-      utils.click(autoattendant.phoneMenuAction.first());
-      utils.click(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first());
-
-    });
-*/
 
     it('should add a submenu to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
@@ -97,10 +84,10 @@ describe('Huron Auto Attendant', function () {
 
     it('should add play message into submenu of the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       // 1st submenu play message
-     utils.wait(element(by.css('aa-message-type[name="aa-msg-input-only"]')))
+      utils.wait(autoattendant.msgInputOnlyAll.get(0), 6000);
 
       var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
-      var sub = element.all(by.css('aa-message-type[name="aa-msg-input-only"]')).get(0);
+      var sub = autoattendant.msgInputOnlyAll.get(0);
       autoattendant.scrollIntoView(autoattendant.submenuSayMessageHeaderFirst);
       utils.click(autoattendant.submenuMessageOptionsFirst);
       utils.click(autoattendant.submenuMessageOptionSelect.first());
