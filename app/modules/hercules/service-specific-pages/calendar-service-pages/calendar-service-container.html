@@ -1,0 +1,23 @@
+<div class="expressway-service hercules hercules-fix-paragraphs">
+    <cs-page-header title="hercules.hybridServiceNames.squared-fusion-cal" tabs="$ctrl.tabs" back="true" back-url="$ctrl.backState"></cs-page-header>
+    <cs-page-sub-header>
+        <cs-page-sub-header-left>
+            <div style="position:relative">
+                <hercules-notifications filter-tag="'squared-fusion-cal'"></hercules-notifications>
+            </div>
+        </cs-page-sub-header-left>
+        <cs-page-sub-header-right>
+            <button class="btn btn--link"
+                    type="button"
+                    translate="hercules.overview.report"
+                    ng-click="exp.openUserStatusReportModal('squared-fusion-cal')">
+            </button>
+            <button class="btn btn--people"
+                    type="submit"
+                    translate="hercules.overview.add-resource-button"
+                    ng-click="exp.openAddResourceModal()">
+            </button>
+        </cs-page-sub-header-right>
+    </cs-page-sub-header>
+    <div ui-view="callServiceView" class="content-container"></div>
+</div>
