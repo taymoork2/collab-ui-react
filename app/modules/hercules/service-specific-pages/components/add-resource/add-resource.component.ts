@@ -45,5 +45,5 @@ class AddResourceComponent implements ng.IComponentOptions {
 
 export default angular
   .module('Hercules')
-  .component('addResourceButton', new AddResourceComponent())
+  .component('addHybridResourceButton', new AddResourceComponent())
   .name;

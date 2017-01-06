@@ -16,9 +16,10 @@ export class CalendarServiceContainerController extends ExpresswayContainerContr
         $state,
         Notification,
         private $translate: ng.translate.ITranslateService,
-        ServiceDescriptor: any
+        ServiceDescriptor: any,
+        USSService: any
     ) {
-        super($modal, $state, Notification, ServiceDescriptor, 'squared-fusion-cal', 'c_cal');
+        super($modal, $state, Notification, ServiceDescriptor, USSService, ['squared-fusion-cal'], 'c_cal');
     }
 
 }

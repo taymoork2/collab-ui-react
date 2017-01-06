@@ -1,25 +1,32 @@
-import { Notification } from '../../core/notifications/notification.service';
+import { Notification } from 'modules/core/notifications';
 
 export abstract class ExpresswayContainerController {
 
     public backState = 'services-overview';
+    public userStatusesSummary = [];
+    protected subscribeStatusesSummary: any;
 
     /* @ngInject */
     constructor(
         private $modal: any,
         private $state: any,
         private Notification: Notification,
-        private ServiceDescriptor: any,
-        private serviceId: string,
+        protected ServiceDescriptor: any,
+        protected USSService: any,
+        protected servicesId: string[],
         private connectorType: string
-    ) { }
-
-    public $onInit() {
+    ) {
         this.firstTimeSetup();
+        this.extractSummary();
+        this.subscribeStatusesSummary = this.USSService.subscribeStatusesSummary('data', this.extractSummary.bind(this));
     }
 
-    private firstTimeSetup = () => {
-        this.ServiceDescriptor.isServiceEnabled(this.serviceId, (error, enabled) => {
+    public extractSummary(): void {
+        this.userStatusesSummary = this.USSService.extractSummaryForAService(this.servicesId);
+    }
+
+    protected firstTimeSetup(): void {
+        this.ServiceDescriptor.isServiceEnabled(this.servicesId[0], (error, enabled) => {
             if (error) {
                 this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
                 return;
@@ -30,13 +37,13 @@ export abstract class ExpresswayContainerController {
             this.$modal.open({
                 resolve: {
                     connectorType: () => this.connectorType,
-                    serviceId: () => this.serviceId,
-                    firstTimeSetup: true
+                    servicesId: () => this.servicesId[0],
+                    firstTimeSetup: true,
                 },
                 controller: 'AddResourceController',
                 controllerAs: 'vm',
                 templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/add-resource-modal.html',
-                type: 'small'
+                type: 'small',
             })
             .result
             .catch(() => {

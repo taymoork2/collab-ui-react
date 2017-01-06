@@ -41,12 +41,12 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
     this.$modal.open({
       resolve: {
         connectorType: () => 'c_cal',
-        servicesId: () => ['squared-fusion-cal'],
+        serviceId: () => ['squared-fusion-cal'],
         firstTimeSetup: true,
       },
       controller: 'AddResourceController',
       controllerAs: 'vm',
-      templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
+      templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/add-resource-modal.html',
       type: 'small',
     })
       .result

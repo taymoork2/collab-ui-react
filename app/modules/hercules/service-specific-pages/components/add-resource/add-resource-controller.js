@@ -242,13 +242,13 @@
         return;
       }
       $modal.open({
-        templateUrl: 'modules/hercules/add-resource/confirm-setup-cancel-dialog.html',
+        templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/confirm-setup-cancel-dialog.html',
         type: 'dialog'
       })
         .result.then(function (isAborting) {
           if (isAborting) {
-            $modalInstance.close();
-            $state.go('services-overview');
+              $state.go('services-overview');
+              $modalInstance.dismiss();
           }
         });
     }
