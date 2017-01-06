@@ -6,14 +6,13 @@
     .factory('OtpService', OtpService);
 
   /* @ngInject */
-  function OtpService($rootScope, Authinfo, UserOTPService, HuronUser, HermesQRCodeService) {
+  function OtpService($rootScope, Authinfo, UserOTPService, HuronUser) {
 
     var service = {
       loadOtps: loadOtps,
       hyphenateOtp: hyphenateOtp,
       generateOtp: generateOtp,
-      convertExpiryTime: convertExpiryTime,
-      getQrCodeUrl: getQrCodeUrl
+      convertExpiryTime: convertExpiryTime
     };
 
     return service;
@@ -72,13 +71,6 @@
         timezone = 'UTC';
       }
       return (moment(expiryTime).local().tz(timezone).format('MMMM DD, YYYY h:mm A (z)'));
-    }
-
-    function getQrCodeUrl(activationCode) {
-      return HermesQRCodeService.get({
-        oneTimePassword: activationCode
-      })
-        .$promise;
     }
 
   }

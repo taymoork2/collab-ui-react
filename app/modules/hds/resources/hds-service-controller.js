@@ -6,8 +6,12 @@
     .controller('HDSServiceController', HDSServiceController);
 
   /* @ngInject */
-  function HDSServiceController($scope, $translate, ClusterService, FusionClusterService, FeatureToggleService) {
+  function HDSServiceController($modal, $scope, $state, $stateParams, $translate, ClusterService, FusionClusterService, FeatureToggleService) {
 
+
+    ClusterService.subscribe('data', clustersUpdated, {
+      scope: $scope
+    });
 
     var vm = this;
     vm.serviceEnabled = null;
@@ -28,6 +32,7 @@
     vm.getSeverity = ClusterService.getRunningStateSeverity;
     vm.sortByProperty = sortByProperty;
     vm.clusterList = [];
+    vm.showClusterSidepanel = showClusterSidepanel;
 
     vm.clusterListGridOptions = {
       data: 'hdsServiceController.clusters',
@@ -40,8 +45,11 @@
       onRegisterApi: function (gridApi) {
         $scope.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-          vm.showClusterDetails(row.entity);
+          showClusterSidepanel(row.entity);
         });
+        if (!_.isUndefined($stateParams.clusterId) && $stateParams.clusterId !== null) {
+          showClusterSidepanel(ClusterService.getCluster('hds_app', $stateParams.clusterId));
+        }
       },
       columnDefs: [{
         field: 'groupName',
@@ -56,12 +64,39 @@
       }]
     };
 
+    function showClusterSidepanel(cluster) {
+      $state.go('hds-cluster-details', {
+        clusterId: cluster.id
+      });
+    }
 
     FusionClusterService.serviceIsSetUp('spark-hybrid-datasecurity').then(function (enabled) {
       if (enabled) {
         vm.serviceEnabled = enabled;
+      } else {
+        firstTimeSetup();
       }
     });
+
+    function clustersUpdated() {
+      vm.clusters = ClusterService.getClustersByConnectorType('hds_app');
+      vm.clusters.sort(sortByProperty('name'));
+    }
+
+    function firstTimeSetup() {
+      vm.serviceEnabled = true;
+      $modal.open({
+        type: 'small',
+        controller: 'HDSRedirectAddResourceController',
+        controllerAs: 'hdsRedirectAddResourceController',
+        templateUrl: 'modules/hds/add-resource/add-resource-modal.html',
+        modalClass: 'redirect-add-resource',
+        resolve: {
+          firstTimeSetup: true,
+          proceedSetup: false
+        },
+      });
+    }
 
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity)

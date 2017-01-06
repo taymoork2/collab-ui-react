@@ -6,7 +6,7 @@ report-slider, .report-slider {
 }
 .report-slider {
   .report-filter {
-    width: vr-adjust(200);
+    width: vr-adjust(160);
   }
   .slider {
     width: calc(100% - 280px);
@@ -25,6 +25,35 @@ report-slider, .report-slider {
       font-size: vr-adjust(10);
       color: $gray-base;
       left: vr-adjust(-16);
+    }
+  }
+  .visible-dropdown {
+    display: block;
+  }
+  .slider-dropdown {
+    position: relative;
+  }
+  .slider-close {
+    color: $gray-base;
+    cursor: pointer;
+  }
+  .grid-filter {
+    display: flex;
+  }
+  .slider-grid-filter {
+    @include vr-spacing(mt, 0.5);
+  }
+  .dropdown-toggle.filter {
+    .name {
+      font-size: vr-adjust(16);
+    }
+    .slider-name {
+      color: $gray-base;
+      cursor: default;
+    }
+    .icon-chevron-down {
+      position: relative;
+      left: vr-adjust(-12);
     }
   }
 }

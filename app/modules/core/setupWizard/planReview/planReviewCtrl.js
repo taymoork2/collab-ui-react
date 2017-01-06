@@ -61,20 +61,12 @@
       return vm.isCareEnabled ? 'small-3' : 'small-4';
     };
 
-    /* TODO For now we are using the site url to determine if the license is an SMP license. This logic will change;
-    we will be looking at licenseModel inside the licenses payload to determine if the license is SMP instead of the siteUrl. */
-    vm.isSharedMultiPartyLicense = function (siteUrl) {
-      return _.first(siteUrl.split('.')) === 'smp';
+    vm.isSharedMultiPartyLicense = function (service) {
+      return _.get(service, 'license.licenseModel') === Config.licenseModel.cloudSharedMeeting;
     };
 
-    // This logic needs to be changed to look for the provided audio type from license usage call when payload is ready from the backend
-    vm.determineLicenseAudio = function (siteUrl) {
-      return vm.isSharedMultiPartyLicense(siteUrl) ? $translate.instant('firstTimeWizard.partnerProvidedAudio') : $translate.instant('firstTimeWizard.webexProvidedAudio');
-    };
-
-    // This logic will be changed to look for the 'licenseModel' key when the payload is ready from the backend
-    vm.determineLicenseType = function (siteUrl) {
-      return vm.isSharedMultiPartyLicense(siteUrl) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.assignedLicenses');
+    vm.determineLicenseType = function (service) {
+      return vm.isSharedMultiPartyLicense(service) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.assignedLicenses');
     };
 
     init();

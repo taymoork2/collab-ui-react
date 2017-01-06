@@ -20,22 +20,32 @@
 
       <div ng-if="!isInvitePending">
         <span class="cloud-extension-label">{{'cloudExtensions.status' | translate}}:</span>
-        <span class="cloud-extension-label" ng-if="callServiceAware.entitled && callServiceAware.status"
-              ng-class="callServiceAware.entitled && callServiceAware.status ? 'status-' + callServiceAware.status.state : 'disabled'"
+        <span class="cloud-extension-label" ng-if="callServiceAware.currentUserEntitled && callServiceAware.status && !savingAwareEntitlement"
+              ng-class="'status-' + callServiceAware.status.state"
               id="callServiceAwareStatus"
               translate="hercules.activationStatus.{{getStatus(callServiceAware.status)}}"></span>
-        <span class="cloud-extension-label disabled" ng-if="callServiceAware.entitled && callServiceAware.status && callServiceAware.status.lastStateChangeText">
-          ({{callServiceAware.status.lastStateChangeText}})</span>
-        <span class="cloud-extension-label status-off" ng-if="!callServiceAware.entitled" translate="common.off"></span>
-        <span cs-loader ng-if="!callServiceAware.status && callServiceAware.entitled"></span>
-      </div>
-      <div ng-if="callServiceAware.entitled && callServiceAware.homedConnector">
-        <span class="cloud-extension-label">{{'cloudExtensions.cluster' | translate}}:</span>
-        <span class="cloud-extension-label" ng-if="callServiceAware.entitled && callServiceAware.homedConnector">
-          <a href="https://{{callServiceAware.homedConnector.host_name}}" target="_blank" style="color: #3ca8e8">{{callServiceAware.homedConnector.cluster_name}}</a>
+        <span class="cloud-extension-label disabled" ng-if="callServiceAware.currentUserEntitled && callServiceAware.status && callServiceAware.status.lastStateChangeText && !savingAwareEntitlement">
+          {{callServiceAware.status.lastStateChangeText}}</span>
+        <span class="cloud-extension-label status-off" ng-if="!callServiceAware.currentUserEntitled && !savingAwareEntitlement" translate="common.off"></span>
+        <span cs-loader ng-if="savingAwareEntitlement || (!callServiceAware.status && callServiceAware.currentUserEntitled)"></span>
+        <span ng-if="callServiceAware.currentUserEntitled && callServiceAware.status && !savingAwareEntitlement"
+              class="cloud-extension-label right">
+          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.uc-history">{{'hercules.userHistory.seeHistory' | translate}}</a>
         </span>
       </div>
-      <div ng-if="callServiceAware.entitled && (callServiceAware.directoryUri || callServiceAware.status.state !== 'notActivated')">
+      <div ng-if="callServiceAware.currentUserEntitled && callServiceAware.homedConnector">
+        <div>
+          <span class="cloud-extension-label">{{'cloudExtensions.cluster' | translate}}:</span>
+          <span class="cloud-extension-label">{{callServiceAware.homedConnector.cluster_name}}</span>
+        </div>
+        <div>
+          <span class="cloud-extension-label">{{'hercules.connectors.host_name' | translate}}:</span>
+          <span class="cloud-extension-label">
+            <a href="https://{{callServiceAware.homedConnector.host_name}}" target="_blank">{{callServiceAware.homedConnector.host_name}}</a>
+          </span>
+        </div>
+      </div>
+      <div ng-if="callServiceAware.directoryUri || (callServiceAware.status.state === 'error' || callServiceAware.status.state === 'activated')">
         <span class="cloud-extension-label">{{'cloudExtensions.sipUri' | translate}}:</span>
         <span class="cloud-extension-label status-notActivated">{{callServiceAware.directoryUri}}</span>
       </div>
@@ -48,23 +58,11 @@
           </p>
       </div>
 
-      <div ng-if="callServiceAware.entitled
+      <div ng-if="callServiceAware.currentUserEntitled
         && callServiceAware.status
-        && callServiceAware.status.state === 'error'
         && callServiceAware.status.description"
-           class="error-message">
-        <i class="icon icon-error"></i>
-        <p class="message">
-          {{callServiceAware.status.description.defaultMessage}}
-        </p>
-      </div>
-
-      <div ng-if="callServiceAware.entitled
-        && callServiceAware.status
-        && callServiceAware.status.state === 'notActivated'
-        && callServiceAware.status.description"
-           class="info-message">
-        <i class="icon icon-info"></i>
+           class="info-message" ng-class="callServiceAware.status.state === 'error' ? 'error-message' : 'info-message'">
+        <i class="icon" ng-class="callServiceAware.status.state === 'error' ? 'icon-error' : 'icon-info'"></i>
         <p class="message">
           {{callServiceAware.status.description.defaultMessage}}
         </p>
@@ -82,7 +80,7 @@
 
   </cs-sp-section>
   <cs-sp-section class="cloud-extensions"
-                 ng-if="callServiceAware.entitled && callServiceConnect.orgEntitled && callServiceConnect.enabledInFMS">
+                 ng-if="callServiceAware.currentUserEntitled && callServiceConnect.orgEntitled && callServiceConnect.enabledInFMS">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec"></span>
       <cs-toggle-switch toggle-id="callServiceConnectEntitledToggle" ng-model="callServiceConnect.entitled"
@@ -92,30 +90,25 @@
       translate}}</p>
     <div ng-if="!isInvitePending">
       <span class="cloud-extension-label">{{'cloudExtensions.status' | translate}}:</span>
-      <span class="cloud-extension-label" ng-if="callServiceConnect.entitled && callServiceConnect.status"
-            ng-class="callServiceConnect.entitled && callServiceConnect.status ? 'status-' + callServiceConnect.status.state : 'disabled'"
+      <span class="cloud-extension-label" ng-if="callServiceConnect.currentUserEntitled && callServiceConnect.status && !savingConnectEntitlement"
+            ng-class="'status-' + callServiceConnect.status.state"
             id="callServiceConnectStatus"
             translate="hercules.activationStatus.{{getStatus(callServiceConnect.status)}}"></span>
-      <span class="cloud-extension-label disabled" ng-if="callServiceConnect.entitled && callServiceConnect.status && callServiceConnect.status.lastStateChangeText">
-          ({{callServiceConnect.status.lastStateChangeText}})</span>
-      <span class="cloud-extension-label status-off" ng-if="!callServiceConnect.entitled" translate="common.off"></span>
-      <span cs-loader ng-if="!callServiceConnect.status && callServiceConnect.entitled"></span>
+      <span class="cloud-extension-label disabled" ng-if="callServiceConnect.currentUserEntitled && callServiceConnect.status && callServiceConnect.status.lastStateChangeText && !savingConnectEntitlement">
+          {{callServiceConnect.status.lastStateChangeText}}</span>
+      <span class="cloud-extension-label status-off" ng-if="!callServiceConnect.currentUserEntitled && !savingConnectEntitlement" translate="common.off"></span>
+      <span cs-loader ng-if="savingConnectEntitlement || (!callServiceConnect.status && callServiceConnect.currentUserEntitled)"></span>
+      <span ng-if="callServiceConnect.currentUserEntitled && callServiceConnect.status && !savingConnectEntitlement"
+            class="cloud-extension-label right">
+          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.ec-history">{{'hercules.userHistory.seeHistory' | translate}}</a>
+        </span>
     </div>
 
-    <div ng-if="callServiceConnect.entitled && callServiceConnect.status.state === 'error'"
-         class="error-message">
-      <i class="icon icon-error"></i>
-      <p class="message">
-        {{callServiceConnect.status.description.defaultMessage}}
-      </p>
-    </div>
-
-    <div ng-if="callServiceConnect.entitled
+    <div ng-if="callServiceConnect.currentUserEntitled
       && callServiceConnect.status
-      && callServiceConnect.status.state === 'notActivated'
       && callServiceConnect.status.description"
-         class="info-message">
-      <i class="icon icon-info"></i>
+         class="info-message" ng-class="callServiceConnect.status.state === 'error' ? 'error-message' : 'info-message'">
+      <i class="icon" ng-class="callServiceConnect.status.state === 'error' ? 'icon-error' : 'icon-info'"></i>
       <p class="message">
         {{callServiceConnect.status.description.defaultMessage}}
       </p>

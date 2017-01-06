@@ -12,6 +12,8 @@ class ReportSliderCtrl {
 
   /* @ngInject */
   constructor(
+    // cannot access breakpoint when rootscope is typed with ng.IRootScopeService
+    private $rootScope,
     private CommonReportService: CommonReportService,
     private ReportConstants: ReportConstants,
   ) {
@@ -21,14 +23,53 @@ class ReportSliderCtrl {
     };
   }
 
+  // breakpoint checking for screen sizes
+  public screenSmall(): boolean {
+    return this.screenXSmall() || this.$rootScope.breakpoint === 'screen-sm';
+  }
+
+  public screenXSmall(): boolean {
+    return this.$rootScope.breakpoint === 'screen-xs';
+  }
+
   // Slider Controls
   public translateSlider: Function;
-  public slider: boolean = false;
+  public startDate: boolean = false;
+  public endDate: boolean = false;
   public readonly dateArray: Array<any> = this.CommonReportService.getReturnLineGraph(this.ReportConstants.THREE_MONTH_FILTER, { date: '' });
   public ceil: number = this.ReportConstants.YEAR;
-  public floor: number = 1;
+  public floor: number = 0;
   private _min: number = this.ReportConstants.TWELVE_WEEKS;
   private _max: number = this.ReportConstants.YEAR;
+
+  public isCustom(): boolean {
+    return this.selected.value === this.ReportConstants.CUSTOM_FILTER.value;
+  }
+
+  public resetSelection(): void {
+    this.selected = this.ReportConstants.WEEK_FILTER;
+    this.sliderUpdate();
+  }
+
+  public toggleMinDate(): void {
+    this.startDate = !this.startDate;
+  }
+
+  public toggleMaxDate(): void {
+    this.endDate = !this.endDate;
+  }
+
+  public setMin(index: number): void {
+    this._min = index;
+    this.sliderUpdate();
+    this.startDate = !this.startDate;
+  }
+
+  public setMax(index: number): void {
+    this._max = index;
+    this.sliderUpdate();
+    this.endDate = !this.endDate;
+  }
 
   // getter/setter for _selected, _min, and _max
   public get min(): number {
@@ -51,10 +92,8 @@ class ReportSliderCtrl {
 
   public update(): void {
     if (this.selected.value === this.ReportConstants.CUSTOM_FILTER.value) {
-      this.slider = true;
       this.sliderUpdate();
     } else if (this.updateFunctions) {
-      this.slider = false;
       this.updateFunctions.update();
     }
   }

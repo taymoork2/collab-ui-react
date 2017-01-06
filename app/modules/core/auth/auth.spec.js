@@ -5,6 +5,10 @@ describe('Auth Service', function () {
 
   var Auth, Authinfo, $httpBackend, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig, WindowLocation, TokenService;
 
+  afterEach(function () {
+    Auth = Authinfo = $httpBackend = SessionStorage = $rootScope = $state = $q = OAuthConfig = UrlConfig = WindowLocation = TokenService = undefined;
+  });
+
   beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _SessionStorage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
     $q = _$q_;
     Auth = _Auth_;
@@ -20,6 +24,15 @@ describe('Auth Service', function () {
 
     spyOn(WindowLocation, 'set');
     spyOn($state, 'go').and.returnValue($q.when());
+
+    this.orgInfo = {
+      orgSettingsWithDomain: {
+        orgSettings: [
+          '{"sparkCallBaseDomain":"sparkc-eu.com"}',
+        ],
+      }
+    };
+
   }));
 
   afterEach(function () {
@@ -180,15 +193,26 @@ describe('Auth Service', function () {
       spyOn(TokenService, 'completeLogout');
     });
 
-    it('should refresh token and resend request', function () {
+    beforeEach(function () {
+      jasmine.clock().install();
+      jasmine.clock().mockDate();
+    });
+
+    afterEach(function () {
+      jasmine.clock().uninstall();
+    });
+
+    it('should refresh token and resend request with new access token', function () {
       $httpBackend
         .expectPOST('access_token_url')
         .respond(200, {
-          access_token: ''
+          access_token: 'new-access-token'
         });
 
       $httpBackend
-        .expectGET('foo')
+        .expectGET('foo', function (headers) {
+          return headers.Authorization === 'Bearer new-access-token';
+        })
         .respond(200, {
           bar: 'baz'
         });
@@ -208,6 +232,14 @@ describe('Auth Service', function () {
       }));
     });
 
+    it('should refresh token once if multiple retries requested during a 1 second span', function () {
+      expectRefreshCountFromTwoRetriesOverSpan(1, 999);
+    });
+
+    it('should refresh token multiple times if multiple retries requested after a 1 second span', function () {
+      expectRefreshCountFromTwoRetriesOverSpan(2, 1001);
+    });
+
     it('should not refresh token and resend request, should redirect to login', function () {
       OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
       $httpBackend
@@ -220,6 +252,44 @@ describe('Auth Service', function () {
       expect(promise).toBeRejectedWith(mockResponse(500));
       expect(TokenService.completeLogout).toHaveBeenCalledWith('logoutUrl');
     });
+
+    function expectRefreshCountFromTwoRetriesOverSpan(expectedRefreshCount, durationOfSpan) {
+      var refreshCount = 0;
+
+      $httpBackend
+        .whenPOST('access_token_url')
+        .respond(function () {
+          refreshCount += 1;
+          return [200];
+        });
+
+      $httpBackend
+        .expectGET('foo')
+        .respond(200);
+
+      Auth.refreshAccessTokenAndResendRequest({
+        config: {
+          method: 'GET',
+          url: 'foo'
+        }
+      });
+
+      jasmine.clock().tick(durationOfSpan);
+
+      $httpBackend
+        .expectGET('bar')
+        .respond(200);
+
+      Auth.refreshAccessTokenAndResendRequest({
+        config: {
+          method: 'GET',
+          url: 'bar'
+        }
+      });
+
+      $httpBackend.flush();
+      expect(refreshCount).toBe(expectedRefreshCount);
+    }
   });
 
   describe('setAccessToken()', function () {
@@ -435,13 +505,17 @@ describe('Auth Service', function () {
             orgId: 1337,
             roles: ['Full_Admin']
           });
+
+        $httpBackend
+          .expectGET('path/organizations/1337?disableCache=true')
+          .respond(200, this.orgInfo.orgSettingsWithDomain);
+
       });
 
       it('services should be fetched', function () {
         $httpBackend
           .expectGET('path/organizations/1337/services')
           .respond(500, {});
-
         Auth.authorize();
 
         $httpBackend.flush();
@@ -485,9 +559,15 @@ describe('Auth Service', function () {
               sqService: 'bar'
             }]
           });
+
+        $httpBackend
+          .expectGET('path/organizations/1337?disableCache=true')
+          .respond(200, this.orgInfo.orgSettingsWithDomain);
+
         $httpBackend
           .expectGET('msn/orgs/1337/cisync/')
           .respond(200, {});
+
         Authinfo.initialize = sinon.stub();
       });
 
@@ -539,6 +619,11 @@ describe('Auth Service', function () {
               sqService: 'bar'
             }]
           });
+
+        $httpBackend
+          .expectGET('path/organizations/1337?disableCache=true')
+          .respond(200, this.orgInfo.orgSettingsWithDomain);
+
         $httpBackend
           .expectGET('msn/orgs/1337/cisync/')
           .respond(200, {});
@@ -576,6 +661,10 @@ describe('Auth Service', function () {
         });
 
       $httpBackend
+        .expectGET('path/organizations/1337?disableCache=true')
+        .respond(200, this.orgInfo.orgSettingsWithDomain);
+
+      $httpBackend
         .expectGET('msn/orgs/1337/cisync/')
         .respond(200, {
           orgID: 'foo',
@@ -605,6 +694,10 @@ describe('Auth Service', function () {
           roles: ['Full_Admin'],
           services: []
         });
+
+      $httpBackend
+        .expectGET('path/organizations/1337?disableCache=true')
+        .respond(200, this.orgInfo.orgSettingsWithDomain);
 
       $httpBackend
         .expectGET('path/organizations/1337/services')
@@ -644,11 +737,14 @@ describe('Auth Service', function () {
         });
 
       $httpBackend
+        .expectGET('path/organizations/1337?disableCache=true')
+        .respond(200, this.orgInfo.orgSettingsWithDomain);
+
+      $httpBackend
         .expectGET('path/organizations/1337/services')
         .respond(200, {
           entitlements: ['foo']
         });
-
       $httpBackend
         .expectGET('msn/orgs/1337/cisync/')
         .respond(200, {
@@ -679,6 +775,10 @@ describe('Auth Service', function () {
           roles: ['PARTNER_ADMIN'],
           services: []
         });
+
+      $httpBackend
+        .expectGET('path/organizations/1337?disableCache=true')
+        .respond(200, this.orgInfo.orgSettingsWithDomain);
 
       $httpBackend
         .expectGET('path/organizations/1337/services')

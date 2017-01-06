@@ -123,19 +123,19 @@
       prod: 'https://wdm-a.wbx2.com/wdm/api/v1',
     },
     SunlightConfigServiceUrl: {
-      dev: 'https://config.dev.ciscoccservice.com/config/v1',
+      dev: 'https://config.devus1.ciscoccservice.com/config/v1',
       cfe: 'https://config.appstaging.ciscoccservice.com/config/v1',
       integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
       prod: 'https://config.produs1.ciscoccservice.com/config/v1'
     },
     SunlightBubbleUrl: {
-      dev: 'https://bubble.dev.ciscoccservice.com',
+      dev: 'https://bubble.devus1.ciscoccservice.com',
       cfe: 'https://bubble.appstaging.ciscoccservice.com',
       integration: 'https://bubble.appstaging.ciscoccservice.com',
       prod: 'https://bubble.produs1.ciscoccservice.com'
     },
     SunlightReportServiceUrl: {
-      dev: 'https://reporting.dev.ciscoccservice.com/reporting/v1',
+      dev: 'https://reporting.devus1.ciscoccservice.com/reporting/v1',
       cfe: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
       integration: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
       prod: 'https://reporting.produs1.ciscoccservice.com/reporting/v1'
@@ -181,6 +181,12 @@
       cfe: 'https://ucc-e.wbx2.com/ucm-service/api/v1',
       integration: 'https://ucc-integration.wbx2.com/ucm-service/api/v1',
       prod: 'https://ucc-a.wbx2.com/ucm-service/api/v1'
+    },
+    CccUrl: {
+      dev: 'https://calendar-cloud-connector-integration.wbx2.com/api/v1',
+      cfe: 'https://calendar-cloud-connector-integration.wbx2.com/api/v1',
+      integration: 'https://calendar-cloud-connector-integration.wbx2.com/api/v1',
+      prod: 'https://calendar-cloud-connector-a.wbx2.com/api/v1'
     },
 
     // urls same for all environments

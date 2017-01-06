@@ -97,9 +97,17 @@ require('./_user-add.scss');
       $scope.isCareEnabled = careStatus && Authinfo.isCare();
     });
 
+    $scope.isCallBackEnabled = false;
+    $scope.enableCareService = true;
+    FeatureToggleService.atlasCareCallbackTrialsGetStatus().then(function (callBackStatus) {
+      $scope.isCallBackEnabled = callBackStatus;
+    });
+
     FeatureToggleService.atlasSMPGetStatus().then(function (smpStatus) {
       $scope.isSharedMultiPartyEnabled = smpStatus;
     });
+
+    $scope.controlCare = controlCare;
 
     initController();
 
@@ -628,7 +636,8 @@ require('./_user-add.scss');
     }
 
     function setCareSevice() {
-      SunlightConfigService.getUserInfo($scope.currentUser.id)
+      if (getServiceDetails('CD')) {
+        SunlightConfigService.getUserInfo($scope.currentUser.id)
           .then(function () {
             Userservice.getUser($scope.currentUser.id, true, function (data) {
               if (data.success) {
@@ -638,6 +647,7 @@ require('./_user-add.scss');
                 if (hasSyncKms) {
                   $scope.radioStates.careRadio = true;
                   $scope.radioStates.initialCareRadioState = true;
+                  $scope.enableCareService = true;
                 }
               }
             });
@@ -645,6 +655,14 @@ require('./_user-add.scss');
         function () {
           $scope.radioStates.careRadio = false;
         });
+      }
+    }
+
+    function getServiceDetails(licensePrefix) {
+      var hasLicense = _.find($scope.currentUser.licenseID, function (userLicense) {
+        return (userLicense.substring(0, 2) === licensePrefix);
+      });
+      return hasLicense;
     }
 
 
@@ -658,6 +676,7 @@ require('./_user-add.scss');
         billing: _.get(obj, 'license.billingServiceId', ''),
         volume: _.get(obj, 'license.volume', ''),
         licenseId: _.get(obj, 'license.licenseId', ''),
+        licenseModel: _.get(obj, 'license.licenseModel', ''),
         offerName: _.get(obj, 'license.offerName', ''),
         label: obj.label,
         isTrial: _.get(obj, 'license.isTrial', false),
@@ -769,15 +788,12 @@ require('./_user-add.scss');
       populateConfInvitations();
     };
 
-    /* TODO For now we are using the site url to determine if the license is an SMP license. This logic will change;
-    we will be looking at licenseModel inside the licenses payload to determine if the license is SMP instead of the siteUrl. */
-    $scope.isSharedMultiPartyLicense = function (siteUrl) {
-      return _.first(siteUrl.split('.')) === 'smp';
+    $scope.isSharedMultiPartyLicense = function (license) {
+      return _.get(license, 'confLic[0].licenseModel') === Config.licenseModel.cloudSharedMeeting;
     };
 
-    // This logic will be changed to look for the 'licenseModel' key when the payload is ready from the backend
-    $scope.determineLicenseType = function (siteUrl) {
-      return $scope.isSharedMultiPartyLicense(siteUrl) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.assignedLicenses');
+    $scope.determineLicenseType = function (license) {
+      return $scope.isSharedMultiPartyLicense(license) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.assignedLicenses');
     };
 
     $scope.isSubscribeable = function (license) {
@@ -952,6 +968,8 @@ require('./_user-add.scss');
           }
         }
       }
+      // Control Care behavior
+      $scope.controlCare();
     });
 
     $scope.$watch('wizard.current.step', function () {
@@ -970,6 +988,11 @@ require('./_user-add.scss');
           $scope.validateDnForUser();
         }
       }
+    });
+
+    $scope.$watch('radioStates.msgRadio', function () {
+      // Control Care behavior
+      $scope.controlCare();
     });
 
     $scope.validateDnForUser = function () {
@@ -2530,6 +2553,17 @@ require('./_user-add.scss');
     function cancelModal() {
       Analytics.trackAddUsers(Analytics.eventNames.CANCEL_MODAL);
       $state.modal.dismiss();
+    }
+
+    function controlCare() {
+      if ($scope.isCallBackEnabled) {
+        if ($scope.radioStates.msgRadio && $scope.radioStates.commRadio) {
+          $scope.enableCareService = true;
+        } else {
+          $scope.enableCareService = false;
+          $scope.radioStates.careRadio = false;
+        }
+      }
     }
 
   }

@@ -32,6 +32,7 @@ describe('HelpdeskCardsService', function () {
     return {
       entitled: false,
       cal: entFalse,
+      gcal: entFalse,
       uc: entFalse,
       ec: entFalse
     };
@@ -145,6 +146,44 @@ describe('HelpdeskCardsService', function () {
       expect(card.entitled).toBeTruthy();
       expect(_.size(card.licensesByWebExSite)).toEqual(1);
       expect(_.size(card.licensesByWebExSite['testing.webex.com'])).toEqual(1);
+    });
+
+    it('Should return correct hybrid services card for user', function () {
+      var card = HelpdeskCardsUserService.getHybridServicesCardForUser({
+        entitlements: ['squared-fusion-cal']
+      });
+      expect(card.entitled).toBeTruthy();
+      expect(card.cal.entitled).toBeTruthy();
+      expect(card.gcal.entitled).toBeFalsy();
+      expect(card.uc.entitled).toBeFalsy();
+      expect(card.ec.entitled).toBeFalsy();
+
+      card = HelpdeskCardsUserService.getHybridServicesCardForUser({
+        entitlements: ['squared-fusion-gcal']
+      });
+      expect(card.entitled).toBeTruthy();
+      expect(card.cal.entitled).toBeFalsy();
+      expect(card.gcal.entitled).toBeTruthy();
+      expect(card.uc.entitled).toBeFalsy();
+      expect(card.ec.entitled).toBeFalsy();
+
+      card = HelpdeskCardsUserService.getHybridServicesCardForUser({
+        entitlements: ['squared-fusion-uc']
+      });
+      expect(card.entitled).toBeTruthy();
+      expect(card.cal.entitled).toBeFalsy();
+      expect(card.gcal.entitled).toBeFalsy();
+      expect(card.uc.entitled).toBeTruthy();
+      expect(card.ec.entitled).toBeFalsy();
+
+      card = HelpdeskCardsUserService.getHybridServicesCardForUser({
+        entitlements: ['squared-fusion-cal', 'squared-fusion-gcal', 'squared-fusion-uc', 'squared-fusion-ec']
+      });
+      expect(card.entitled).toBeTruthy();
+      expect(card.cal.entitled).toBeTruthy();
+      expect(card.gcal.entitled).toBeTruthy();
+      expect(card.uc.entitled).toBeTruthy();
+      expect(card.ec.entitled).toBeTruthy();
     });
 
   });

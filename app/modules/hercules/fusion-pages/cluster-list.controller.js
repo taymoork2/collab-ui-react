@@ -6,17 +6,14 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $modal, $state, $translate, Authinfo, Config, hasF237FeatureToggle, hasMediaFeatureToggle, FusionClusterService, Notification, WizardFactory) {
+  function FusionClusterListController($filter, $modal, $state, $translate, Authinfo, Config, hasF237FeatureToggle, FusionClusterService, Notification, WizardFactory) {
     var vm = this;
     if (hasF237FeatureToggle) {
-      var groupsCache = {};
-      vm.displayedGroups = {
-        groups: [],
-        unassigned: []
-      };
+      var groupsCache = [];
+      vm.displayedGroups = groupsCache;
     } else {
       var clustersCache = [];
-      vm.displayedClusters = [];
+      vm.displayedClusters = clustersCache;
     }
 
     vm.showResourceGroups = hasF237FeatureToggle;
@@ -28,28 +25,14 @@
       filterValue: 'all',
       count: 0
     };
+    vm.filters = setupFilters();
 
-    vm.filters = [];
-    if (Authinfo.isEntitled(Config.entitlements.fusion_mgmt)) {
-      vm.filters.push({
-        name: $translate.instant('hercules.fusion.list.expressway'),
-        filterValue: 'c_mgmt',
-        count: 0
-      });
-    }
-    if (hasMediaFeatureToggle && Authinfo.isEntitled(Config.entitlements.mediafusion)) {
-      vm.filters.push({
-        name: $translate.instant('hercules.fusion.list.mediafusion'),
-        filterValue: 'mf_mgmt',
-        count: 0
-      });
-    }
-
-    vm.setFilter = setFilter;
-    vm.searchData = searchData;
     vm.addResource = addResource;
     vm.addResourceGroup = addResourceGroup;
     vm.refreshList = refreshList;
+    vm.searchData = searchData;
+    vm.setDefaultReleaseChannel = setDefaultReleaseChannel;
+    vm.setFilter = setFilter;
 
     refreshList();
 
@@ -64,12 +47,6 @@
     function loadClusters() {
       vm.loading = true;
       FusionClusterService.getAll()
-        .then(function (clusters) {
-          if (!hasMediaFeatureToggle) {
-            return filterHMClusters(clusters);
-          }
-          return clusters;
-        })
         .then(FusionClusterService.setClusterAllowListInfoForExpressway)
         .then(function (clusters) {
           clustersCache = clusters;
@@ -87,19 +64,11 @@
     function loadResourceGroups() {
       vm.loading = true;
       FusionClusterService.getResourceGroups()
-        .then(removeHybridMediaClustersIfNecessary)
-        .then(function (groups) {
-          return FusionClusterService.setClusterAllowListInfoForExpressway(groups.clusters)
-            .then(function (clusters) {
-              // we replace groups.clusters with the one modified by setClusterAllowListInfoForExpressway
-              groups.clusters = clusters;
-              return groups;
-            });
-        })
-        .then(function (groups) {
-          groupsCache = groups;
+        .then(function (response) {
+          var formattedData = formatDataForTheUI(response);
+          groupsCache = formattedData;
           updateFilters();
-          vm.displayedGroups = groups;
+          vm.displayedGroups = formattedData;
         })
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'hercules.genericFailure');
@@ -109,47 +78,78 @@
         });
     }
 
-    function removeHybridMediaClustersIfNecessary(response) {
-      if (!hasMediaFeatureToggle) {
-        return {
-          // Hybrid Media should never be part of any resource group as of now
-          // but we never know so filter anyway…
-          groups: _.map(response.groups, function (group) {
-            var response = _.cloneDeep(group);
-            response.clusters = filterHMClusters(response.clusters);
-            return response;
-          }),
-          unassigned: filterHMClusters(response.unassigned),
-          clusters: filterHMClusters(response.clusters)
-        };
-      }
-      return response;
+    function formatDataForTheUI(response) {
+      return [
+        {
+          targetType: 'c_mgmt',
+          display: Authinfo.isEntitled(Config.entitlements.fusion_mgmt),
+          groups: response.groups,
+          unassigned: _.filter(response.unassigned, { targetType: 'c_mgmt' }),
+        },
+        {
+          targetType: 'mf_mgmt',
+          display: Authinfo.isEntitled(Config.entitlements.mediafusion),
+          unassigned: _.filter(response.unassigned, { targetType: 'mf_mgmt' }),
+        },
+        {
+          targetType: 'hds_app',
+          display: Authinfo.isEntitled(Config.entitlements.hds),
+          unassigned: _.filter(response.unassigned, { targetType: 'hds_app' }),
+        },
+      ];
     }
 
-    function filterHMClusters(clusters) {
-      return _.filter(clusters, function (cluster) {
-        return cluster.targetType !== 'mf_mgmt';
-      });
+    function setupFilters() {
+      var filters = [];
+      if (Authinfo.isEntitled(Config.entitlements.fusion_mgmt)) {
+        filters.push({
+          name: $translate.instant('hercules.fusion.list.expressway'),
+          filterValue: 'c_mgmt',
+          count: 0,
+        });
+      }
+      if (Authinfo.isEntitled(Config.entitlements.mediafusion)) {
+        filters.push({
+          name: $translate.instant('hercules.fusion.list.mediafusion'),
+          filterValue: 'mf_mgmt',
+          count: 0,
+        });
+      }
+      if (Authinfo.isEntitled(Config.entitlements.hds)) {
+        filters.push({
+          name: $translate.instant('hercules.fusion.list.hds'),
+          filterValue: 'hds_app',
+          count: 0,
+        });
+      }
+      return filters;
     }
 
     function updateFilters() {
       if (hasF237FeatureToggle) {
-        var assignedClustersCount = _.reduce(groupsCache.groups, function (acc, group) {
-          return acc + group.clusters.length;
+        vm.placeholder.count = _.reduce(groupsCache, function (acc, entry) {
+          if (entry.groups) {
+            acc = acc + _.reduce(entry.groups, function (a, group) {
+              return a + group.clusters.length;
+            }, 0);
+          }
+          acc = acc + entry.unassigned.length;
+          return acc;
         }, 0);
-        var unassignedClustersCount = groupsCache.unassigned.length;
-        vm.placeholder.count = assignedClustersCount + unassignedClustersCount;
-
-        _.each(vm.filters, function (filter, index) {
-          var filteredAssignedClustersCount = _.reduce(groupsCache.groups, function (acc, group) {
-            return acc + _.filter(group.clusters, { targetType: filter.filterValue }).length;
-          }, 0);
-          var filteredUnassignedClustersCount = _.filter(groupsCache.unassigned, { targetType: filter.filterValue }).length;
-          vm.filters[index].count = filteredAssignedClustersCount + filteredUnassignedClustersCount;
+        vm.filters = _.map(vm.filters, function (filter) {
+          var total = 0;
+          var entry = _.find(groupsCache, { targetType: filter.filterValue });
+          if (entry.groups) {
+            total = total + _.reduce(entry.groups, function (a, group) {
+              return a + group.clusters.length;
+            }, 0);
+          }
+          filter.count = total + entry.unassigned.length;
+          return filter;
         });
       } else {
         vm.placeholder.count = clustersCache.length;
-        _.each(vm.filters, function (filter, index) {
+        _.forEach(vm.filters, function (filter, index) {
           var clustersCount = _.filter(clustersCache, { targetType: filter.filterValue }).length;
           vm.filters[index].count = clustersCount;
         });
@@ -161,19 +161,10 @@
         if (filter.filterValue === 'all') {
           vm.displayedGroups = groupsCache;
         } else {
-          vm.displayedGroups = {
-            groups: _.chain(groupsCache.groups)
-              .map(function (group) {
-                var response = _.cloneDeep(group);
-                response.clusters = _.filter(response.clusters, { targetType: filter.filterValue });
-                return response;
-              })
-              .filter(function (group) {
-                return group.clusters.length > 0;
-              })
-              .value(),
-            unassigned: _.filter(groupsCache.unassigned, { targetType: filter.filterValue }),
-          };
+          vm.displayedGroups = _.map(groupsCache, function (group) {
+            group.display = filter.filterValue === group.targetType;
+            return group;
+          });
         }
       } else {
         if (filter.filterValue === 'all') {
@@ -190,19 +181,27 @@
         if (searchStr === '') {
           vm.displayedGroups = groupsCache;
         } else {
-          vm.displayedGroups = {
-            groups: _.chain(groupsCache.groups)
-              .map(function (group) {
-                var response = _.cloneDeep(group);
-                response.clusters = $filter('filter')(response.clusters, { name: searchStr });
-                return response;
-              })
-              .filter(function (group) {
-                return group.clusters.length > 0;
-              })
-              .value(),
-            unassigned: $filter('filter')(groupsCache.unassigned, { name: searchStr }),
-          };
+          vm.displayedGroups = [
+            _.assign({}, vm.displayedGroups[0], {
+              groups: _.chain(vm.displayedGroups[0].groups)
+                .map(function (group) {
+                  var response = _.cloneDeep(group);
+                  response.clusters = $filter('filter')(response.clusters, { name: searchStr });
+                  return response;
+                })
+                .filter(function (group) {
+                  return group.clusters.length > 0;
+                })
+                .value(),
+              unassigned: $filter('filter')(vm.displayedGroups[0].unassigned, { name: searchStr }),
+            }),
+            _.assign({}, vm.displayedGroups[1], {
+              unassigned: $filter('filter')(vm.displayedGroups[1].unassigned, { name: searchStr }),
+            }),
+            _.assign({}, vm.displayedGroups[2], {
+              unassigned: $filter('filter')(vm.displayedGroups[2].unassigned, { name: searchStr }),
+            }),
+          ];
         }
       } else {
         if (searchStr === '') {
@@ -264,10 +263,25 @@
 
     function addResourceGroup() {
       $modal.open({
-        type: 'modal',
+        type: 'full',
         controller: 'AddResourceGroupController',
         controllerAs: 'vm',
-        templateUrl: 'modules/hercules/fusion-pages/add-resource-group/add-resource-group.html'
+        templateUrl: 'modules/hercules/fusion-pages/add-resource-group/add-resource-group.html',
+      }).result
+      .then(refreshList);
+    }
+
+    function setDefaultReleaseChannel() {
+      $modal.open({
+        type: 'small',
+        controller: 'SetDefaultReleaseChannelController',
+        controllerAs: 'vm',
+        templateUrl: 'modules/hercules/fusion-pages/set-default-release-channel/set-default-release-channel.html',
+        resolve: {
+          unassignedClusters: function () {
+            return groupsCache[0].unassigned;
+          },
+        }
       }).result
       .then(refreshList);
     }

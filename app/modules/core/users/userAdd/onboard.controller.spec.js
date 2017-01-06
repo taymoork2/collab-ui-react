@@ -53,6 +53,7 @@ describe('OnboardCtrl: Ctrl', function () {
     this.mock.unlicensedUsers = getJSONFixture('core/json/organizations/unlicensedUsers.json');
     this.mock.allLicensesData = getJSONFixture('core/json/organizations/allLicenses.json');
     this.mock.getCareServices = getJSONFixture('core/json/authInfo/careServices.json');
+    this.mock.getCareServicesWithoutCareLicense = getJSONFixture('core/json/authInfo/careServicesWithoutCareLicense.json');
     this.mock.getLicensesUsage = getJSONFixture('core/json/organizations/usage.json');
 
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
@@ -86,6 +87,7 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(this.FeatureToggleService, 'getFeaturesForUser').and.returnValue(this.mock.getMyFeatureToggles);
     spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.when(false));
     spyOn(this.FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(this.$q.when(true));
+    spyOn(this.FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue(this.$q.when(true));
     spyOn(this.TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue(this.$q.when(this.mock.sites));
     spyOn(this.ServiceSetup, 'listSites').and.returnValue(this.$q.when(this.mock.sites));
 
@@ -366,6 +368,8 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(licenseFeatures[0].idOperation).toEqual('ADD');
         expect(this.$scope.messageFeatures[1].licenses[0].model).toEqual(true);
         expect(this.$scope.radioStates.msgRadio).toEqual(true);
+        expect(this.$scope.radioStates.careRadio).toEqual(false);
+        expect(this.$scope.enableCareService).toEqual(false);
       });
     });
   });
@@ -787,6 +791,41 @@ describe('OnboardCtrl: Ctrl', function () {
   });
 
   describe('With assigning care licenses', function () {
+    describe('Check if dependent services are selected correctly', function () {
+      beforeEach(function () {
+        spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
+        this.$stateParams.currentUser = {
+          licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd']
+        };
+      });
+      beforeEach(initController);
+      it('should enable care, when message or call is checked', function () {
+        this.$scope.radioStates.msgRadio = true;
+        this.$scope.radioStates.commRadio = true;
+        this.$scope.controlCare();
+        expect(this.$scope.radioStates.careRadio).toBe(false);
+        expect(this.$scope.enableCareService).toBe(true);
+      });
+      it('should disable care, when message or call is unchecked', function () {
+        this.$scope.radioStates.msgRadio = false;
+        this.$scope.radioStates.commRadio = true;
+        this.$scope.controlCare();
+        expect(this.$scope.radioStates.careRadio).toBe(false);
+        expect(this.$scope.enableCareService).toBe(false);
+        this.$scope.radioStates.msgRadio = true;
+        this.$scope.radioStates.commRadio = false;
+        this.$scope.controlCare();
+        expect(this.$scope.radioStates.careRadio).toBe(false);
+        expect(this.$scope.enableCareService).toBe(false);
+        this.$scope.radioStates.msgRadio = true;
+        this.$scope.radioStates.commRadio = true;
+        this.$scope.controlCare();
+        expect(this.$scope.radioStates.careRadio).toBe(false);
+        expect(this.$scope.enableCareService).toBe(true);
+      });
+    });
+
     describe('Check if single licenses get assigned correctly', function () {
       beforeEach(function () {
         spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
@@ -800,6 +839,32 @@ describe('OnboardCtrl: Ctrl', function () {
       it('should have care license', function () {
         expect(this.$scope.careFeatures[1].license.licenseType).toEqual('CARE');
         expect(this.$scope.radioStates.careRadio).toEqual(false);
+      });
+    });
+
+    describe('Check that careRadio remains false when user does not have the care License', function () {
+      var userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
+
+      beforeEach(function () {
+        spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+        spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServicesWithoutCareLicense.careLicense);
+        spyOn(this.LogMetricsService, 'logMetrics').and.callFake(function () {});
+        this.$stateParams.currentUser = {
+          licenseID: ['MS_cd66217d-a419-4cfb-92b4-a196b7fe3c74'],
+          entitlements: ['cloud-contact-center'],
+          id: userId
+        };
+      });
+      beforeEach(initController);
+
+
+      it('should call getAccountLicenses correctly', function () {
+        this.$httpBackend.flush();
+        this.$scope.radioStates.initialCareRadioState = false;
+        this.$scope.getAccountLicenses();
+        expect(this.$scope.radioStates.careRadio).toEqual(false);
+        this.$httpBackend.verifyNoOutstandingRequest();
       });
     });
 
@@ -831,6 +896,7 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(licenseFeatures[0].idOperation).toEqual('ADD');
         expect(this.$scope.careFeatures[1].license.licenseType).toEqual('CARE');
         expect(this.$scope.radioStates.careRadio).toEqual(true);
+        expect(this.$scope.enableCareService).toEqual(true);
         expect(this.LogMetricsService.logMetrics.calls.argsFor(0)[1]).toEqual('CAREENABLED');
       });
 

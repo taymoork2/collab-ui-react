@@ -209,7 +209,8 @@
 
     function createMenuEntry() {
       var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      menuEntry.addAction(createSayAction(actionType.SAY));
+      var type = AACommonService.isMediaUploadToggle ? actionType.PLAY : actionType.SAY;
+      menuEntry.addAction(createSayAction(type));
       return menuEntry;
     }
 
@@ -287,7 +288,7 @@
               if (keyAction) {
                 vm.actionEntry = keyAction;
               } else {
-                vm.actionEntry = createSayAction(actionType.SAY);
+                vm.actionEntry = (vm.isMediaUploadToggle ? createSayAction(actionType.PLAY) : createSayAction(actionType.SAY));
                 vm.menuEntry.entries[$scope.menuKeyIndex].actions[0] = vm.actionEntry;
               }
             } else {
@@ -312,7 +313,7 @@
             vm.menuEntry = uiMenu.entries[$scope.index];
             var sayAction = getSayAction(vm.menuEntry);
             if (!sayAction) {
-              sayAction = createSayAction(actionType.SAY);
+              sayAction = (vm.isMediaUploadToggle ? createSayAction(actionType.PLAY) : createSayAction(actionType.SAY));
               vm.menuEntry.addAction(sayAction);
             }
             vm.actionEntry = sayAction;

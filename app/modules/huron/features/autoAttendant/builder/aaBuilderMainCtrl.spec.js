@@ -9,6 +9,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   var FeatureToggleService;
   var ServiceSetup, timeZone, translatedTimeZone, sysModel;
   var Analytics, AAMetricNameService;
+  var element;
 
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var aCe = getJSONFixture('huron/json/autoAttendant/aCallExperience.json');
@@ -43,6 +44,13 @@ describe('Controller: AABuilderMainCtrl', function () {
     _ceInfo.setCeUrl(rawCeInfo.callExperienceURL);
     return _ceInfo;
   }
+
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
 
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
@@ -116,6 +124,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       return $q.when();
     });
     spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(sysModel.site));
+    spyOn($rootScope, '$broadcast').and.callThrough();
 
     controller = $controller('AABuilderMainCtrl as vm', {
       $scope: $scope,
@@ -204,6 +213,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.$apply();
       expect($state.go).toHaveBeenCalled();
       expect(AutoAttendantCeMenuModelService.clearCeMenuMap).toHaveBeenCalled();
+      expect($rootScope.$broadcast).toHaveBeenCalledWith('CE Closed');
     });
 
     it('should warn on CMI assignment failure on close', function () {
@@ -637,7 +647,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     it('should NOT display add step icons on aa-builder-lane', function () {
       $rootScope.schedule = 'openHours';
       $rootScope.index = 0;
-      var element = $compile("<aa-builder-lane aa-schedule='openHours'></aa-builder-lane>")($rootScope);
+      element = $compile("<aa-builder-lane aa-schedule='openHours'></aa-builder-lane>")($rootScope);
 
       $rootScope.$digest();
       expect(element.find('aa-panel').hasClass('ng-show')).toBe(false);
@@ -648,7 +658,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     it('should NOT display add step icons on aa-builder-actions', function () {
       $rootScope.schedule = 'openHours';
       $rootScope.index = 0;
-      var element = $compile("<aa-builder-actions></aa-builder-actions>")($rootScope);
+      element = $compile("<aa-builder-actions></aa-builder-actions>")($rootScope);
 
       $rootScope.$digest();
       expect(element.find('aa-panel').hasClass('ng-show')).toBe(false);

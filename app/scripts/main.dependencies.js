@@ -37,6 +37,7 @@ require('angular-timer/dist/angular-timer.js');
 require('angular-libphonenumber/dist/libphonenumber.full.js');
 require('angular-libphonenumber/dist/angular-libphonenumber.js');
 require('angularjs-toaster/toaster.js');
+require('angularjs-slider/dist/rzslider.min.js');
 require('ng-file-upload/dist/ng-file-upload.js');
 
 require('jstimezonedetect');
@@ -51,6 +52,7 @@ require('query-command-supported/dist/queryCommandSupported.js');
 require('ical.js/build/ical.js');
 require('angular-ical/dist/js/angular-ical.js');
 require('oclazyload');
+require('collab-ui-stickyfill/dist/stickyfill.js');
 
 require('expose?_!lodash'); // expose current lodash as a global since `pdfmake` is overwriting the previous global to custom 3.1.0
 

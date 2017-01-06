@@ -4,7 +4,11 @@ describe('Service: AAMediaUploadService', function () {
   var Upload;
   var AAMediaUploadService;
   var AACommonService;
+  var AACtrlResourcesService;
   var Config;
+  var $http;
+  var $q;
+  var $rootScope;
 
   var validFileByName = 'validFile.wav';
   var invalidFileByName = 'validFile.invalid';
@@ -71,15 +75,137 @@ describe('Service: AAMediaUploadService', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_Upload_, _Config_, _AACommonService_, _AAMediaUploadService_) {
+  beforeEach(inject(function (_Upload_, _Config_, _AACommonService_, _AAMediaUploadService_, _AACtrlResourcesService_, _$http_, _$q_, _$rootScope_) {
     Upload = _Upload_;
     AAMediaUploadService = _AAMediaUploadService_;
     AACommonService = _AACommonService_;
+    AACtrlResourcesService = _AACtrlResourcesService_;
     Config = _Config_;
+    $http = _$http_;
+    $q = _$q_;
+    $rootScope = _$rootScope_;
   }));
 
   afterEach(function () {
 
+  });
+
+  describe('deleteRecording', function () {
+    beforeEach(function () {
+    });
+
+    it('should return http promise given a truthy url', function () {
+      var del = $q.defer();
+      spyOn($http, 'delete').and.returnValue(del.promise);
+      expect(AAMediaUploadService.deleteRecording('http://url')).toEqual(del.promise);
+      expect($http.delete).toHaveBeenCalled();
+    });
+
+    it('should not return an http promise given a falsy url', function () {
+      spyOn($http, 'delete');
+      expect(AAMediaUploadService.deleteRecording('')).toEqual(undefined);
+      expect($http.delete).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('clearResourcesExcept', function () {
+    beforeEach(function () {
+    });
+
+    it('should not do anything if the index is less than zero', function () {
+      spyOn(AAMediaUploadService, 'getResources');
+      AAMediaUploadService.clearResourcesExcept('value', -1);
+      expect(AAMediaUploadService.getResources).not.toHaveBeenCalled();
+    });
+
+    it('should not do anything if the uploads length is less than or equal ot zero', function () {
+      spyOn(AAMediaUploadService, 'getResources').and.returnValue({
+        mediaUploadCtrlN: {
+          active: true,
+          saved: false,
+          uploads: []
+        }
+      });
+      AAMediaUploadService.clearResourcesExcept('value', 0);
+      expect(AAMediaUploadService.getResources).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('getResources', function () {
+    beforeEach(function () {
+    });
+
+    it('should return a resource map with a particular structure', function () {
+      expect(AAMediaUploadService.getResources('uniqueIdentifier')).toEqual(jasmine.objectContaining({
+        uploads: [],
+        active: true,
+        saved: false,
+      }));
+    });
+
+    it('should return undefined with no identifier to select', function () {
+      expect(AAMediaUploadService.getResources('')).toEqual(undefined);
+    });
+  });
+
+  describe('cleanResourceFieldIndex', function () {
+    beforeEach(function () {
+      spyOn(AAMediaUploadService, 'clearResourcesExcept').and.callFake(function () {
+        return;
+      });
+    });
+
+    it('should not execute clearResources if field is falsy', function () {
+      AAMediaUploadService.cleanResourceFieldIndex('', 'value', 'value');
+      expect(AAMediaUploadService.clearResourcesExcept).not.toHaveBeenCalled();
+    });
+
+    it('should not execute clearResources if key is falsy', function () {
+      AAMediaUploadService.cleanResourceFieldIndex('value', 'value', '');
+      expect(AAMediaUploadService.clearResourcesExcept).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('broadcasts', function () {
+    beforeEach(function () {
+      spyOn(AAMediaUploadService, 'cleanResourceFieldIndex').and.callFake(function (field, index, key) {
+        return key && index && field;
+      });
+      spyOn($rootScope, '$broadcast').and.callThrough();
+      spyOn(AACtrlResourcesService, 'getCtrlKeys').and.returnValue(['mediaUploadCtrlN']);
+    });
+
+    describe('AA Save', function () {
+      beforeEach(function () {
+      });
+
+      it('should delete the field information on aa save if not active', function () {
+        spyOn(AAMediaUploadService, 'getResources').and.returnValue({
+          mediaUploadCtrlN: {
+            active: false,
+            saved: '',
+            uploads: ['value']
+          }
+        });
+        $rootScope.$broadcast('CE Saved');
+        expect(AAMediaUploadService.cleanResourceFieldIndex).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('AA Close', function () {
+      beforeEach(function () {
+      });
+
+      it('should delete out the resources on aa close if not saved', function () {
+        spyOn(AAMediaUploadService, 'getResources').and.returnValue({
+          active: '',
+          saved: false,
+          uploads: ['value']
+        });
+        $rootScope.$broadcast('CE Closed');
+        expect(AAMediaUploadService.cleanResourceFieldIndex).not.toHaveBeenCalled();
+      });
+    });
   });
 
   describe('getRecordingUrl', function () {
@@ -130,7 +256,7 @@ describe('Service: AAMediaUploadService', function () {
       });
 
       it('should retrieve an empty string on a non iterable success result', function () {
-        expect(AAMediaUploadService.retrieve(1)).toEqual('');
+        expect(AAMediaUploadService.retrieve(1)).toEqual({});
       });
     });
 
@@ -144,11 +270,11 @@ describe('Service: AAMediaUploadService', function () {
       });
 
       it('should retrieve an empty string from a lacking path success result', function () {
-        expect(AAMediaUploadService.retrieve(successResultLackingPath)).toEqual('');
+        expect(AAMediaUploadService.retrieve(successResultLackingPath)).toEqual({});
       });
 
       it('should retrieve the recording url from a structure that has such in the success result', function () {
-        expect(AAMediaUploadService.retrieve(successResultRecording)).toEqual(variantUrlPlayback + orgId);
+        expect(AAMediaUploadService.retrieve(successResultRecording).playback).toEqual(variantUrlPlayback + orgId);
       });
     });
   });

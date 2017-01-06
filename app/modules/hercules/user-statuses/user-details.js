@@ -37,7 +37,7 @@
         $translate.instant('common.type'),
         $translate.instant('cloudExtensions.cluster'),
         $translate.instant('cloudExtensions.status'),
-        $translate.instant('cloudExtensions.errorMessage'),
+        $translate.instant('cloudExtensions.details'),
         $translate.instant('common.id'),
         $translate.instant('common.service')];
     }
@@ -87,9 +87,9 @@
       return [
         getUserName(userOrMachine),
         getType(userOrMachine),
-        status.connector ? status.connector.cluster_name : '',
+        status.connector ? status.connector.cluster_name + ' (' + status.connector.host_name + ')' : '',
         $translate.instant('hercules.activationStatus.' + USSService.decorateWithStatus(status)),
-        status.state === 'error' && status.description ? status.description.defaultMessage : '',
+        status.description ? status.description.defaultMessage : '',
         status.userId,
         status.serviceId === 'squared-fusion-uc' ? $translate.instant('hercules.serviceNames.squared-fusion-uc.full') : $translate.instant('hercules.serviceNames.' + status.serviceId)
       ];

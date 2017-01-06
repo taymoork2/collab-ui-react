@@ -25,6 +25,7 @@
     vm.customerOrgId = undefined;
     vm.showRoomSystems = false;
     vm.showCare = false;
+    vm.isCallBackEnabled = false;
     vm.details = vm.trialData.details;
     vm.messageTrial = vm.trialData.trials.messageTrial;
     vm.meetingTrial = vm.trialData.trials.meetingTrial;
@@ -56,7 +57,6 @@
     // Navigate trial modal in this order
     vm.navOrder = ['trialAdd.info', 'trialAdd.webex', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call'];
     vm.navStates = ['trialAdd.info'];
-    vm.showWebex = false;
     vm.startTrial = startTrial;
     vm.setDeviceModal = setDeviceModal;
     vm.devicesModal = _.find(vm.trialStates, {
@@ -218,9 +218,6 @@
         id: webexTemplateOptionId,
         label: $translate.instant('trials.webex')
       },
-      hideExpression: function () {
-        return !vm.showWebex;
-      },
     }];
 
     vm.callFields = [{
@@ -348,10 +345,11 @@
       },
       expressionProperties: {
         'templateOptions.required': function () {
-          return vm.messageTrial.enabled; // Since, it depends on Message Offer
+          return (vm.messageTrial.enabled && (!vm.isCallBackEnabled || vm.callTrial.enabled)); // Since, it depends on Message and Call Offer
         },
         'templateOptions.disabled': function () {
-          return vm.messageOfferDisabledExpression();
+          return vm.messageOfferDisabledExpression()
+            || (vm.isCallBackEnabled && vm.callOfferDisabledExpression());
         }
       }
     }, {
@@ -486,6 +484,7 @@
     vm.hasUserServices = hasUserServices;
 
     vm.messageOfferDisabledExpression = messageOfferDisabledExpression;
+    vm.callOfferDisabledExpression = callOfferDisabledExpression;
     vm.careLicenseInputDisabledExpression = careLicenseInputDisabledExpression;
     vm.validateCareLicense = validateCareLicense;
     vm.careLicenseCountLessThanTotalCount = careLicenseCountLessThanTotalCount;
@@ -497,10 +496,10 @@
     function init() {
       $q.all({
         atlasCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
+        atlasCareCallbackTrials: FeatureToggleService.atlasCareCallbackTrialsGetStatus(),
         atlasContextServiceTrials: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         placesEnabled: FeatureToggleService.supports(FeatureToggleService.features.csdmPstn),
-        huronSimplifiedTrialFlow: FeatureToggleService.supports(FeatureToggleService.features.huronSimplifiedTrialFlow),
         atlasCreateTrialBackendEmail: FeatureToggleService.atlasCreateTrialBackendEmailGetStatus(),
         atlasTrialsShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus()
       })
@@ -516,16 +515,12 @@
           vm.showContextServiceTrial = true;
           vm.atlasCreateTrialBackendEmailEnabled = results.atlasCreateTrialBackendEmail;
           vm.atlasTrialsShipDevicesEnabled = results.atlasTrialsShipDevices;
-
-          if (vm.webexTrial.enabled) {
-            vm.showWebex = true;
-            updateTrialService(messageTemplateOptionId);
-          }
+          updateTrialService(messageTemplateOptionId);
 
           vm.showCare = results.atlasCareTrials;
           vm.careTrial.enabled = results.atlasCareTrials;
           vm.sbTrial = results.atlasDarling;
-
+          vm.isCallBackEnabled = results.atlasCareCallbackTrials;
           // TODO: US12063 overrides using this var but requests code to be left in for now
           //var devicesModal = _.find(vm.trialStates, {
           //  name: 'trialAdd.call'
@@ -547,7 +542,6 @@
           meetingModal.enabled = true;
 
           vm.placesEnabled = results.placesEnabled;
-          vm.simplifiedTrialFlow = results.huronSimplifiedTrialFlow;
           setDeviceModal();
         })
         .finally(function () {
@@ -579,6 +573,13 @@
         vm.careTrial.enabled = false;
       }
       return !vm.messageTrial.enabled;
+    }
+
+    function callOfferDisabledExpression() {
+      if (!vm.callTrial.enabled) {
+        vm.careTrial.enabled = false;
+      }
+      return !vm.callTrial.enabled;
     }
 
     function careLicenseInputDisabledExpression() {
@@ -761,11 +762,7 @@
                 return $q.reject(response);
               }).then(function () {
                 if (vm.pstnTrial.enabled) {
-                  if (vm.simplifiedTrialFlow) {
-                    return TrialPstnService.createPstnEntityV2(vm.customerOrgId, response.data.customerName);
-                  } else {
-                    return TrialPstnService.createPstnEntity(vm.customerOrgId, response.data.customerName);
-                  }
+                  return TrialPstnService.createPstnEntityV2(vm.customerOrgId, response.data.customerName);
                 }
               });
           }

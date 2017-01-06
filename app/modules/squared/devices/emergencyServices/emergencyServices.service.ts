@@ -36,6 +36,7 @@ export class EmergencyServicesService {
       emergency: emergencyData,
       currentDevice: this.currentDevice,
       stateOptions: this.stateOptions,
+      staticNumber: this.$stateParams.staticNumber,
     };
   }
 
@@ -48,11 +49,11 @@ export class EmergencyServicesService {
     });
   }
 
-  public getOptions(): ng.IPromise<string[]> {
+  public getOptions(filter?): ng.IPromise<string[]> {
     let voicemailPilotNumber;
     return this.ServiceSetup.getVoicemailPilotNumber().then(voicemail =>
       voicemailPilotNumber = voicemail.pilotNumber).then(() => {
-        return this.ExternalNumberService.refreshNumbers(this.Authinfo.getOrgId()).then(() => {
+        return this.ExternalNumberService.refreshNumbers(this.Authinfo.getOrgId(), undefined, filter).then(() => {
               return _.chain(this.ExternalNumberService.getAssignedNumbers())
                 // remove the voicemail number if it exists
                 .reject(externalNumber => externalNumber.pattern === voicemailPilotNumber)

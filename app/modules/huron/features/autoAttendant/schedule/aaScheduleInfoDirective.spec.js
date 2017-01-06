@@ -3,6 +3,14 @@
 describe('Directive: aaScheduleInfo', function () {
   var $q, $compile, $rootScope, $scope;
   var AAICalService, AAModelService, AACalendarService;
+  var element;
+
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
 
   beforeEach(angular.mock.module('Huron'));
   var aaModel = {
@@ -33,7 +41,7 @@ describe('Directive: aaScheduleInfo', function () {
   }));
 
   it('replaces the element with the appropriate content', function () {
-    var element = $compile("<aa-schedule-info schedule='openHours'> </aa-schedule-info>")($rootScope);
+    element = $compile("<aa-schedule-info schedule='openHours'> </aa-schedule-info>")($rootScope);
     $rootScope.$digest();
     expect(element.html()).toContain("aa-panel");
   });

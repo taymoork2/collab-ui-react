@@ -13,7 +13,9 @@
     <!-- regional settings -->
     <div class="cs-form__section" ng-if="settings.showRegionAndVoicemail">
       <div class="section__info">
-        <h4 class="section__title" translate="serviceSetupModal.regionalSettings"></h4>
+        <div cs-sticky>
+          <h4 class="section__title" translate="serviceSetupModal.regionalSettings"></h4>
+        </div>
       </div>
       <div class="section__content">
         <div class="sub-section">
@@ -28,6 +30,34 @@
               valuefield="id"
               input-placeholder="settings.timeZoneInputPlaceholder"
               filter="true"
+            ></cs-select>
+          </div>
+        </div>
+        <div class="sub-section" ng-if="settings.callDateTimeFormat">
+          <label class="control-label" for="dateFormatSelect" translate="serviceSetupModal.dateFormat"></label>
+          <p class="description-block" translate="serviceSetupModal.dfDescription"></p>
+          <div class="medium-5">
+            <cs-select
+              name="dateFormatSelect"
+              ng-model="settings.model.site.dateFormat"
+              options="settings.dateFormatOptions"
+              labelfield="label"
+              valuefield="value"
+              filter="false"
+            ></cs-select>
+          </div>
+        </div>
+        <div class="sub-section" ng-if="settings.callDateTimeFormat">
+          <label class="control-label" for="timeFormatSelect" translate="serviceSetupModal.timeFormat"></label>
+          <p class="description-block" translate="serviceSetupModal.tfDescription"></p>
+          <div class="medium-5">
+            <cs-select
+              name="timeFormatSelect"
+              ng-model="settings.model.site.timeFormat"
+              options="settings.timeFormatOptions"
+              labelfield="label"
+              valuefield="value"
+              filter="false"
             ></cs-select>
           </div>
         </div>
@@ -65,7 +95,9 @@
     <!-- local dialing selection -->
     <div class="cs-form__section">
       <div class="section__info">
-        <h4 class="section__title" translate="serviceSetupModal.dialing"></h4>
+        <div cs-sticky>
+          <h4 class="section__title" translate="serviceSetupModal.dialing"></h4>
+        </div>
       </div>
       <div class="section__content">
         <div class="cs-radio-group" form="settings.form" name="dialingHabit">
@@ -106,7 +138,9 @@
     <!-- extension selection -->
     <div class="cs-form__section">
       <div class="section__info">
-        <h4 class="section__title" translate="serviceSetupModal.extension"></h4>
+        <div cs-sticky>
+          <h4 class="section__title" translate="serviceSetupModal.extension"></h4>
+        </div>
       </div>
       <div class="section__content">
         <formly-form model="settings.model" fields="settings.extensionLengthSelection" form="settings.form"></formly-form>
@@ -117,7 +151,9 @@
     <!-- reserved digits selection -->
     <div class="cs-form__section">
       <div class="section__info">
-        <h4 class="section__title" translate="serviceSetupModal.reservedDigits"></h4>
+        <div cs-sticky>
+          <h4 class="section__title" translate="serviceSetupModal.reservedDigits"></h4>
+        </div>
       </div>
       <div class="section__content">
         <formly-form model="settings.model" fields="settings.voicemailPrefixSelection" form="settings.form"></formly-form>
@@ -128,7 +164,9 @@
     <!-- international dialing selection -->
     <div class="cs-form__section">
       <div class="section__info">
-        <h4 class="section__title" translate="internationalDialing.internationalDialing"></h4>
+        <div cs-sticky>
+          <h4 class="section__title" translate="internationalDialing.internationalDialing"></h4>
+        </div>
       </div>
       <div class="section__content">
         <formly-form model="settings.model" fields="settings.internationalDialingSelection" form="settings.form"></formly-form>
@@ -138,8 +176,10 @@
     <!-- emergency service address selection -->
     <div class="cs-form__section" ng-show="settings.model.showServiceAddress">
       <div class="section__info">
-        <h4 class="section__title" translate="settingsServiceAddress.label"></h4>
-        <h6 class="section__description" translate="serviceSetupModal.emergencyAddressDescription"></h6>
+        <div cs-sticky>
+          <h4 class="section__title" translate="settingsServiceAddress.label"></h4>
+          <h6 class="section__description" translate="serviceSetupModal.emergencyAddressDescription"></h6>
+        </div>
       </div>
       <div class="section__content">
         <formly-form model="settings.model" fields="settings.emergencyServiceAddressSelection" form="settings.form"></formly-form>
@@ -149,8 +189,10 @@
     <!-- emergency service number selection -->
     <div class="cs-form__section" ng-show="settings.model.showServiceAddress">
       <div class="section__info">
-        <h4 class="section__title" translate="settingsServiceNumber.label"></h4>
-        <h6 class="section__description" translate="settingsServiceNumber.description"></h6>
+        <div cs-sticky>
+          <h4 class="section__title" translate="settingsServiceNumber.label"></h4>
+          <h6 class="section__description" translate="settingsServiceNumber.description"></h6>
+        </div>
       </div>
       <div class="section__content">
         <formly-form model="settings.model" fields="settings.emergencyServiceNumberSelection" form="settings.form"></formly-form>
@@ -160,8 +202,10 @@
     <!-- caller id selection -->
     <div class="cs-form__section">
       <div class="section__info">
-        <h4 class="section__title" translate="companyCallerId.companyCallerId"></h4>
-        <h6 class="section__description" translate="companyCallerId.companyCallerIdDesc"></h6>
+        <div cs-sticky>
+          <h4 class="section__title" translate="companyCallerId.companyCallerId"></h4>
+          <h6 class="section__description" translate="companyCallerId.companyCallerIdDesc"></h6>
+        </div>
       </div>
       <div class="section__content">
         <formly-form model="settings.model" fields="settings.callerIdSelection" form="settings.form"></formly-form>
@@ -171,10 +215,12 @@
     <!-- company voicemail selection -->
     <div class="cs-form__section" ng-if="settings.showRegionAndVoicemail">
       <div class="section__info">
-        <h4 class="section__title" translate="serviceSetupModal.companyVoicemail"></h4>
+        <div cs-sticky>
+          <h4 class="section__title" translate="serviceSetupModal.companyVoicemail"></h4>
+        </div>
       </div>
       <div class="section__content">
-        <formly-form model="settings.model" fields="settings.companyVoicemailSelection" form="settings.form"></formly-form>
+        <formly-form model="settings.model.companyVoicemail" fields="settings.companyVoicemailSelection" form="settings.form"></formly-form>
       </div>
     </div>
   </form>

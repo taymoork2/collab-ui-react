@@ -13,7 +13,7 @@
             </button>
             <ul class="dropdown-menu dropdown-primary actions-services" cs-dropdown-menu>
               <li ng-repeat="cbg in $ctrl.cbgs" ng-click="$ctrl.onClick(val,cbg.ccaGroupId)">
-                <small>{{cbg.groupName ? cbg.groupName : cbg.customerName}}</small>
+                <small class="ellipsis">{{cbg.groupName ? cbg.groupName : cbg.customerName}}</small>
               </li>
             </ul>
           </span>

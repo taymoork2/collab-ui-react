@@ -1,3 +1,5 @@
+@import 'styles/toolkit/spacing';
+
 .cs-overview-loader {
   display: flex;
   justify-content: center;
@@ -29,4 +31,8 @@
       font-size: 3rem;
     }
   }
+}
+
+.side-panel .text-center a {
+  color: $color-primary-base;
 }

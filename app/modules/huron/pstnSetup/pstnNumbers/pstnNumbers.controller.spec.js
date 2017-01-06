@@ -2,6 +2,7 @@
 
 describe('Controller: PstnNumbersCtrl', function () {
   var controller, $compile, $scope, $state, $q, $translate, PstnSetupService, PstnSetup, Notification, TerminusStateService, FeatureToggleService;
+  var element;
 
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
   var customerCarrierList = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
@@ -11,7 +12,8 @@ describe('Controller: PstnNumbersCtrl', function () {
     "data": {
       "numbers": "+12145551000"
     },
-    "type": "NUMBER_ORDER"
+    "numberype": "did",
+    "orderType": "NUMBER_ORDER"
   };
   var consecutiveOrder = {
     "data": {
@@ -20,7 +22,8 @@ describe('Controller: PstnNumbersCtrl', function () {
         "+12145551001"
       ]
     },
-    "type": "NUMBER_ORDER"
+    "numberype": "did",
+    "orderType": "NUMBER_ORDER"
   };
   var nonconsecutiveOrder = {
     "data": {
@@ -29,7 +32,8 @@ describe('Controller: PstnNumbersCtrl', function () {
         "+12145551678"
       ]
     },
-    "type": "NUMBER_ORDER"
+    "numberype": "did",
+    "orderType": "NUMBER_ORDER"
   };
   var portOrder = {
     "data": {
@@ -38,7 +42,7 @@ describe('Controller: PstnNumbersCtrl', function () {
         "+12145557002"
       ]
     },
-    "type": "PORT_ORDER"
+    "orderType": "PORT_ORDER"
   };
   var advancedOrder = {
     data: {
@@ -46,7 +50,8 @@ describe('Controller: PstnNumbersCtrl', function () {
       length: 2,
       consecutive: false
     },
-    type: "BLOCK_ORDER"
+    "numberype": "did",
+    orderType: "BLOCK_ORDER"
   };
   var advancedNxxOrder = {
     data: {
@@ -55,7 +60,8 @@ describe('Controller: PstnNumbersCtrl', function () {
       nxx: 201,
       consecutive: false
     },
-    type: "BLOCK_ORDER"
+    "numberype": "did",
+    orderType: "BLOCK_ORDER"
   };
   var advancedTollFreeOrder = {
     data: {
@@ -63,7 +69,8 @@ describe('Controller: PstnNumbersCtrl', function () {
       length: 3,
       consecutive: false
     },
-    type: "TOLLFREE_BLOCK_ORDER"
+    "numberype": "tollfree",
+    orderType: "BLOCK_ORDER"
   };
 
   var states = [{
@@ -88,6 +95,13 @@ describe('Controller: PstnNumbersCtrl', function () {
     state: 'TX',
     zip: '77777'
   };
+
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight')); // Remove this when FeatureToggleService is removed.
@@ -123,12 +137,42 @@ describe('Controller: PstnNumbersCtrl', function () {
     controller = compileTemplate();
   }));
 
+  afterEach(function () {
+    controller = undefined;
+    $compile = undefined;
+    $scope = undefined;
+    $state = undefined;
+    $q = undefined;
+    $translate = undefined;
+    PstnSetupService = undefined;
+    PstnSetup = undefined;
+    Notification = undefined;
+    TerminusStateService = undefined;
+    FeatureToggleService = undefined;
+  });
+
+  afterAll(function () {
+    customer = undefined;
+    customerCarrierList = undefined;
+    orderCart = undefined;
+    singleOrder = undefined;
+    consecutiveOrder = undefined;
+    nonconsecutiveOrder = undefined;
+    portOrder = undefined;
+    advancedOrder = undefined;
+    advancedNxxOrder = undefined;
+    advancedTollFreeOrder = undefined;
+    states = undefined;
+    response = undefined;
+    serviceAddress = undefined;
+  });
+
   function compileTemplate() {
     var template = '<div><div ng-controller="PstnNumbersCtrl as pstnNumbers" ng-include="\'modules/huron/pstnSetup/pstnNumbers/pstnNumbers.tpl.html\'"></div></div>';
-    var el = $compile(template)($scope);
+    element = $compile(template)($scope);
     $scope.$apply();
     $translate.instant.calls.reset();
-    return _.get(el.scope(), '$$childTail.pstnNumbers');
+    return _.get(element.scope(), '$$childTail.pstnNumbers');
   }
 
   describe('initial/default data', function () {
@@ -166,7 +210,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     it('should update with new numbers', function () {
       controller.orderCart = orderCart;
       $scope.$apply();
-      expect(controller.orderNumbersTotal).toEqual(4);
+      expect(controller.orderNumbersTotal).toEqual(6);
       controller.goToReview();
       expect($state.go).toHaveBeenCalledWith('pstnSetup.review');
     });
@@ -268,14 +312,15 @@ describe('Controller: PstnNumbersCtrl', function () {
       };
       controller.model.pstn.quantity = advancedOrder.data.length;
       controller.model.pstn.consecutive = advancedOrder.data.consecutive;
-      controller.addToCart(PstnSetupService.BLOCK_ORDER);
+      controller.addToCart(PstnSetupService.BLOCK_ORDER, PstnSetupService.NUMTYPE_DID);
       expect(controller.orderCart).toContain({
         data: {
           areaCode: advancedOrder.data.areaCode,
           length: advancedOrder.data.length,
           consecutive: advancedOrder.data.consecutive
         },
-        type: PstnSetupService.BLOCK_ORDER
+        numberType: PstnSetupService.NUMTYPE_DID,
+        orderType: PstnSetupService.BLOCK_ORDER
       });
     });
 
@@ -285,14 +330,15 @@ describe('Controller: PstnNumbersCtrl', function () {
       };
       controller.model.tollFree.quantity = advancedTollFreeOrder.data.length;
       controller.model.tollFree.consecutive = advancedTollFreeOrder.data.consecutive;
-      controller.addToCart(PstnSetupService.TOLLFREE_BLOCK_ORDER);
+      controller.addToCart(PstnSetupService.BLOCK_ORDER, PstnSetupService.NUMTYPE_TOLLFREE);
       expect(controller.orderCart).toContain({
         data: {
           areaCode: advancedTollFreeOrder.data.areaCode,
           length: advancedTollFreeOrder.data.length,
           consecutive: advancedTollFreeOrder.data.consecutive
         },
-        type: PstnSetupService.TOLLFREE_BLOCK_ORDER
+        numberType: PstnSetupService.NUMTYPE_TOLLFREE,
+        orderType: PstnSetupService.BLOCK_ORDER
       });
     });
   });

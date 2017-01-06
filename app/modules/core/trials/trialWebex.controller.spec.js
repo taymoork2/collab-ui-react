@@ -1,4 +1,4 @@
-/* globals $controller, $q, $rootScope, Orgservice, TrialWebexCtrl, TrialWebexService, TrialTimeZoneService, TrialService */
+/* globals $controller, $q, $rootScope, Analytics, Orgservice, TrialWebexCtrl, TrialWebexService, TrialTimeZoneService, TrialService */
 
 'use strict';
 
@@ -6,13 +6,21 @@ describe('Controller: Trial Webex', function () {
   var controller, scope;
   var trialData = getJSONFixture('core/json/trials/trialData.json');
 
+  afterEach(function () {
+    controller = scope = undefined;
+  });
+
+  afterAll(function () {
+    trialData = undefined;
+  });
+
   beforeEach(angular.mock.module('core.trial'));
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(function () {
-    bard.inject(this, '$controller', '$q', '$rootScope', 'Orgservice', 'TrialWebexService', 'TrialTimeZoneService', 'TrialService');
+    bard.inject(this, '$controller', '$q', '$rootScope', 'Analytics', 'Orgservice', 'TrialWebexService', 'TrialTimeZoneService', 'TrialService');
   });
 
   beforeEach(function () {
@@ -38,6 +46,7 @@ describe('Controller: Trial Webex', function () {
     });
 
     spyOn(Orgservice, 'getOrg');
+    spyOn(Analytics, 'trackTrialSteps');
 
     initController();
   });

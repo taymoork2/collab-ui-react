@@ -8,6 +8,13 @@ describe('Directive: icheck', function () {
   var element,
     scope;
 
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
+
   beforeEach(inject(function ($rootScope) {
     scope = $rootScope.$new();
   }));

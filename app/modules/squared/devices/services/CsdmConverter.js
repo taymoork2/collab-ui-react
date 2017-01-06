@@ -28,6 +28,7 @@
         this.cssColorClass = getCssColorClass(obj);
         this.state = getState(obj);
         this.upgradeChannel = getUpgradeChannel(obj);
+        this.readableActiveInterface = getActiveInterface(obj);
         this.diagnosticsEvents = getDiagnosticsEvents(obj);
         this.rsuKey = obj.remoteSupportUser && obj.remoteSupportUser.token;
         this.canDelete = true;
@@ -150,7 +151,7 @@
         this.url = obj.url;
         this.isPlace = true;
         this.type = obj.type || (obj.machineType == 'lyra_space' ? 'cloudberry' : 'huron');
-        this.readableType = getLocalizedType(obj.type);
+        this.readableType = getLocalizedType(this.type);
         this.entitlements = obj.entitlements;
         this.cisUuid = obj.cisUuid || obj.uuid;
         this.displayName = obj.displayName;
@@ -242,6 +243,15 @@
         };
       }
 
+      function getActiveInterface(obj) {
+        if (obj.status) {
+          var translationKey = 'CsdmStatus.activeInterface.' + (obj.status.activeInterface || '').toLowerCase();
+          if (isTranslatable(translationKey)) {
+            return $translate.instant(translationKey);
+          }
+        }
+      }
+
       function getIp(obj) {
         return _.chain(getEvents(obj))
           .filter({
@@ -318,7 +328,7 @@
 
       function getLastConnectionTime(obj) {
         moment.localeData(moment.locale())._calendar.sameElse = 'lll';
-        return (obj.status && obj.status.lastConnectionTime) ? moment(obj.status.lastConnectionTime).calendar() : null;
+        return (obj.status && obj.status.lastStatusReceivedTime) ? moment(obj.status.lastStatusReceivedTime).calendar() : null;
       }
 
       function getHuronId(obj) {

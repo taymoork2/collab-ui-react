@@ -70,7 +70,7 @@
 
         }, function (response) {
           Log.debug('Failed to save sunlight user information in sunlight config Service. Status: ' + response.status + ' statusText: ' + response.statusText);
-          Notification.error('contactCenterUserConfig.failureMessages.userUpdateFailureMessage', {
+          Notification.errorWithTrackingId(response, 'contactCenterUserConfig.failureMessages.userUpdateFailureMessage', {
             userId: vm.currentUser.userName
           });
         });

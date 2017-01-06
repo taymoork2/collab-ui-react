@@ -1,0 +1,208 @@
+{
+  "getCallbackGroups": [{
+    "ccaGroupId": "ff8080815708077601581d7bdd821a41",
+    "groupName": "czf_customer41",
+    "customerAttribute": "czf_groupName041",
+    "totalSites": 0,
+    "customerName": "czf_customer41",
+    "callbackGroupSites": [
+      {
+        "siteId": 858022,
+        "siteUrl": "atlascca2.webex.com"
+      },
+      {
+        "siteId": 858023,
+        "siteUrl": "atlascca1.webex.com"
+      }
+    ],
+    "status": "R"
+  }, {
+    "ccaGroupId": "ff8080815708077601581d7662721a3d",
+    "groupName": "czf_customer040",
+    "customerAttribute": "czf_groupName040",
+    "totalSites": 0,
+    "customerName": "czf_customer040",
+    "callbackGroupSites": [],
+    "status": "S"
+  }],
+  "servicePartners": [
+    {
+      "customerId": "ff808081570807760157d570572619f4",
+      "companyName": "atlas-Test1"
+    },
+    {
+      "customerId": "ff80808156b5630e0156b64536a40000",
+      "companyName": "C_Atlas-Test-3"
+    },
+    {
+      "customerId": "ff80808153878b6701554d8685330000",
+      "companyName": "h_Atlas-Test-8"
+    },
+    {
+      "customerId": "ff808081552992ec0155299619cb0001",
+      "companyName": "~!@#$<script>alert(1)</script>Atlas-Test-9"
+    }
+  ],
+  "getCountries": {
+    "links": [],
+    "content": {
+      "data": [{
+        "countryId": 1,
+        "countryName": "Albania"
+      }, {
+        "countryId": 2,
+        "countryName": "Algeria"
+      }, {
+        "countryId": 3,
+        "countryName": "American Samoa"
+      }, {
+        "countryId": 4,
+        "countryName": "Andorra"
+      }],
+      "health": {
+        "code": 200,
+        "status": "OK"
+      }
+    }
+  },
+  "getHistories": [{
+    "id": "cb18c322-bc4c-4628-bb6c-203cc361ec1b",
+    "userId": "71449abf-0a5b-4866-9208-5073e010a186",
+    "userName": "qing li",
+    "actionTime": "Dec 6, 2016 02:30:37",
+    "hasLogFile": false,
+    "objectName": null,
+    "siteID": "ff808081582992dd01589a5b232410bb",
+    "customerID": "ff808081570807760157d570572619f4",
+    "action": "submit_callback_group",
+    "actionFor": "Callback Group",
+    "email": "liqing@qa.webex.com"
+  }, {
+    "id": "98821913-3ef6-4b04-a5de-c5dfc58eeb5f",
+    "userId": "71449abf-0a5b-4866-9208-5073e010a186",
+    "userName": "qing li",
+    "actionTime": "Dec 6, 2016 01:47:24",
+    "hasLogFile": false,
+    "objectName": null,
+    "siteID": "ff808081582992dd0158d1cab057143f",
+    "customerID": "ff808081570807760157d570572619f4",
+    "action": "cancel_callback_group",
+    "actionFor": "Callback Group",
+    "email": "liqing@qa.webex.com"
+  }, {
+    "id": "ec583acb-2edf-4611-9a35-2c2d56a015d7",
+    "userId": "71449abf-0a5b-4866-9208-5073e010a186",
+    "userName": "qing li",
+    "actionTime": "Dec 6, 2016 01:41:15",
+    "hasLogFile": false,
+    "objectName": null,
+    "siteID": "ff808081582992dd0158d1cab057143f",
+    "customerID": "ff808081570807760157d570572619f4",
+    "action": "submit_callback_group",
+    "actionFor": "Callback Group",
+    "email": "liqing@qa.webex.com"
+  }],
+  "getNotes": [{
+    "id": "a09149c0-d464-4a1d-8483-0889e578bfd3",
+    "userId": "liqing@qa.webex.com",
+    "userName": "qing li",
+    "actionTime": "Nov 15, 2016 05:21:44",
+    "hasLogFile": false,
+    "objectName": "test",
+    "siteID": "ff8080815823e72c0158244952240022",
+    "customerID": "ff808081527ccb3f0152e39ec555010c",
+    "action": "add_note",
+    "actionFor": null,
+    "email": "liqing@qa.webex.com"
+  }, {
+    "id": "c253554d-32f6-4fc6-b584-2e8a45ab5c22",
+    "userId": "liqing@qa.webex.com",
+    "userName": "qing li",
+    "actionTime": "Nov 15, 2016 05:21:39",
+    "hasLogFile": false,
+    "objectName": "tete",
+    "siteID": "ff8080815823e72c0158244952240022",
+    "customerID": "ff808081527ccb3f0152e39ec555010c",
+    "action": "add_note",
+    "actionFor": null,
+    "email": "liqing@qa.webex.com"
+  }],
+  "getRemedyTicket": [{
+    "id": 2491354,
+    "siteId": "0",
+    "type": 9,
+    "datacenterId": 0,
+    "customerId": "ff808081570807760157d570572619f4",
+    "remedyTicketId": "WO0000000050140",
+    "status": "Assigned",
+    "ticketUrl": "https://smbtrws.webex.com/arsys/forms/smbtars/SHR%3ALandingConsole/Default+Administrator+View/?mode=search&F304255500=WOI:WorkOrder&F1000000076=FormOpen&F303647600=SearchTicketWithQual&F304255610=%271000000182%27=%22WO0000000050140%22",
+    "createTime": 1481014381000,
+    "memo": null,
+    "description": "ff808081582992dd01589a5b232410bb"
+  }, {
+    "id": 2491353,
+    "siteId": "0",
+    "type": 9,
+    "datacenterId": 0,
+    "customerId": "ff808081570807760157d570572619f4",
+    "remedyTicketId": "WO0000000050139",
+    "status": "Cancelled",
+    "ticketUrl": "https://smbtrws.webex.com/arsys/forms/smbtars/SHR%3ALandingConsole/Default+Administrator+View/?mode=search&F304255500=WOI:WorkOrder&F1000000076=FormOpen&F303647600=SearchTicketWithQual&F304255610=%271000000182%27=%22WO0000000050139%22",
+    "createTime": 1481011420000,
+    "memo": null,
+    "description": "ff808081582992dd0158d1cab057143f"
+  }],
+  "getCurrentCallbackGroup": {
+    "ccaGroupId": "ff808081582992dd01589a5b232410bb",
+    "groupId": "421BCDB400A228E9E050E00A652B16B8",
+    "groupName": "CB_Atlas-Test1_Test-1125",
+    "customerName": "test",
+    "customerAttribute": "test",
+    "callbackGroupSites": [],
+    "countries": [{
+      "countryId": 2,
+      "countryName": "Algeria"
+    }],
+    "status": "S"
+  },
+  "saveCbgResponse": {
+    "ccaGroupId": "ff808081582992dd0158dcfc6889144f",
+    "groupName": "customer_czf001",
+    "customerName": "submit1",
+    "customerId": "ff808081527ccb3f0153116a3531041e",
+    "customerAttribute": "submit1",
+    "callbackGroupSites": [],
+    "countries": [
+      {
+        "countryId": 6,
+        "countryName": "Anguilla"
+      },
+      {
+        "countryId": 1,
+        "countryName": "Albania"
+      },
+      {
+        "countryId": 4,
+        "countryName": "Andorra"
+      },
+      {
+        "countryId": 203,
+        "countryName": "United Kingdom"
+      }
+    ]
+  },
+  "common": {
+    "links": [],
+    "content": {
+      "data": {
+        "body": "",
+        "returnCode": 0,
+        "trackId": ""
+      },
+      "health": {
+        "code": 200,
+        "status": "OK"
+      }
+    }
+  }
+}

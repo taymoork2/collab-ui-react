@@ -7,34 +7,22 @@
         <h5 class="sub-section__label" translate="hercules.settings.scheduleUpgrade.title"></h5>
         <p class="sub-section__description" translate="hercules.settings.scheduleUpgrade.description"></p>
         <upgrade-schedule-configuration only-daily="true" cluster-id="clusterSettings.cluster.id"></upgrade-schedule-configuration>
-        <div class="emergency-upgrade-section" ng-if="clusterSettings.showEmergencyUpgrade">
+        <div class="emergency-upgrade-section">
           <h5 class="sub-section__label" translate="hercules.settings.emergencyUpgrade.mediafusion.title"></h5>
           <p class="sub-section__description" translate="hercules.settings.emergencyUpgrade.mediafusion.description"></p>
         </div>
       </div>
     </setting-section>
 
-    <setting-section setting="clusterSettings.releaseChannel">
-      <div class="sub-section">
-        <p translate="mediaFusion.clusters.releaseChannel"></p>
-        <div class="row">
-          <div class="large-3">
-            <cs-select ng-model="clusterSettings.selected" options="clusterSettings.releaseChannelOptions" placeholder="clusterSettings.selectPlaceholder" on-change-fn="clusterSettings.changeReleaseChannel()">
-            </cs-select>
-          </div>
-        </div>
-      </div>
-    </setting-section>
+    <release-channel-section cluster="clusterSettings.cluster"></release-channel-section>
 
-    <setting-section setting="clusterSettings.delete">
-      <div class="sub-section">
-        <div class="row">
-          <div class="large-3">
-            <button type="button" class="btn" translate="mediaFusion.clusters.deletecluster" ng-click="clusterSettings.deleteCluster();">
-            </button>
-         </div>
-        </div>
-      </div>
-    </setting-section>
+    <rename-and-deregister-cluster-section
+      service-id="'squared-fusion-media'"
+      cluster="clusterSettings.cluster"
+      on-name-update="clusterSettings.nameUpdated()"
+      deregister-modal-options="clusterSettings.deregisterModalOptions">
+    </rename-and-deregister-cluster-section>
+
+
   </div>
 </div>

@@ -87,7 +87,7 @@
         if (services) {
           _.forEach(vm.extensions, function (extension) {
             extension.enabled = ServiceDescriptor.filterEnabledServices(services).some(function (service) {
-              return extension.id === service.id;
+              return extension.id === service.id && extension.id !== "squared-fusion-gcal";
             });
             extension.isSetup = extension.enabled;
 
@@ -102,8 +102,9 @@
           var calServiceExchange = getExtension('squared-fusion-cal') || {};
           var calServiceGoogle = getExtension('squared-fusion-gcal');
           if (calServiceGoogle && vm.atlasHerculesGoogleCalendarFeatureToggle) {
-            CloudConnectorService.isServiceSetup('squared-fusion-gcal')
-              .then(function (isSetup) {
+            CloudConnectorService.getService('squared-fusion-gcal')
+              .then(function (service) {
+                var isSetup = service.setup;
                 calServiceGoogle.isSetup = isSetup;
                 var ignoreGoogle = calServiceExchange.enabled && !calServiceExchange.entitled && !calServiceGoogle.entitled;
                 if (isSetup && (!calServiceExchange.enabled || !calServiceExchange.entitled) && !ignoreGoogle) {

@@ -15,7 +15,7 @@
     //https://wwwin-github.cisco.com/collab-ui/collab-library/issues/79
     vm.warningMessage = 'DummyMessage';
     vm.hostname = '';
-    vm.releaseChannel = 'stable'; // clusters default to 'stable', must be changed via Resource Group
+    vm.releaseChannel = 'stable';
     vm.connectorType = connectorType;
     vm.servicesId = servicesId;
     vm.preregistrationCompletedGoToExpressway = false;
@@ -68,6 +68,10 @@
     vm.updateDropdownMenu = updateDropdownMenu;
 
     findAndPopulateExistingExpressways(vm.connectorType);
+    FusionClusterService.getOrgSettings()
+      .then(function (data) {
+        vm.releaseChannel = data.expresswayClusterReleaseChannel;
+      });
 
     vm.preregisterAndProvisionExpressway = function (connectorType) {
       vm.loading = true;

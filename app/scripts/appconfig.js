@@ -699,6 +699,9 @@
               // TODO Need to be removed once Care is graduated on atlas.
               hasCareFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials);
+              },
+              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
               }
             }
           })
@@ -1120,7 +1123,8 @@
             params: {
               currentAddress: {},
               currentNumber: '',
-              status: ''
+              status: '',
+              staticNumber: '',
             },
           })
           .state('user-overview.communication.voicemail', {
@@ -1168,6 +1172,15 @@
               extensions: {}
             }
           })
+          .state('user-overview.hybrid-services-squared-fusion-cal.history', {
+            template: '<user-status-history service-id="\'squared-fusion-cal\'"></user-status-history>',
+            data: {
+              displayName: 'Status History'
+            },
+            params: {
+              serviceId: {}
+            }
+          })
           .state('user-overview.hybrid-services-squared-fusion-gcal', {
             templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
             controller: 'CalendarServicePreviewCtrl',
@@ -1179,6 +1192,15 @@
               extensions: {}
             }
           })
+          .state('user-overview.hybrid-services-squared-fusion-gcal.history', {
+            template: '<user-status-history service-id="\'squared-fusion-gcal\'"></user-status-history>',
+            data: {
+              displayName: 'Status History'
+            },
+            params: {
+              serviceId: {}
+            }
+          })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
             templateUrl: 'modules/hercules/user-sidepanel/callServicePreview.tpl.html',
             controller: 'CallServicePreviewCtrl',
@@ -1188,6 +1210,24 @@
             params: {
               extensionId: {},
               extensions: {}
+            }
+          })
+          .state('user-overview.hybrid-services-squared-fusion-uc.uc-history', {
+            template: '<user-status-history service-id="\'squared-fusion-uc\'"></user-status-history>',
+            data: {
+              displayName: 'Aware Status History'
+            },
+            params: {
+              serviceId: {}
+            }
+          })
+          .state('user-overview.hybrid-services-squared-fusion-uc.ec-history', {
+            template: '<user-status-history service-id="\'squared-fusion-ec\'"></user-status-history>',
+            data: {
+              displayName: 'Connect Status History'
+            },
+            params: {
+              serviceId: {}
             }
           })
           .state('user-overview.conferencing', {
@@ -1533,6 +1573,7 @@
               currentAddress: {},
               currentNumber: '',
               status: '',
+              staticNumber: '',
             },
           })
           .state('place-overview.communication', {
@@ -1686,6 +1727,7 @@
               currentAddress: {},
               currentNumber: '',
               status: '',
+              staticNumber: '',
             },
           })
           .state('video', {
@@ -1810,6 +1852,7 @@
             url: '/customers',
             templateUrl: 'modules/core/customers/customerList/customerList.tpl.html',
             controller: 'CustomerListCtrl',
+            controllerAs: 'customerList',
             params: {
               filter: null
             },
@@ -1817,8 +1860,10 @@
               customerListToggle: /* @ngInject */ function () {
                 // TODO:  remove this once the controllers are refactored
                 return true;
+              },
+              trialForPaid: function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
               }
-
             }
           })
           .state('customer-overview', {
@@ -1846,6 +1891,9 @@
               newCustomerViewToggle: /* @ngInject */ function () {
                 // TODO:  remove this once the controllers are refactored
                 return true;
+              },
+              trialForPaid: function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
               },
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview').data.displayName = $translate.instant('common.overview');
@@ -2236,18 +2284,56 @@
             controller: 'TrialEmergAddressCtrl',
             controllerAs: 'eAddressTrial'
           })
-          .state('generateauthcode', {
+          .state('trial', {
+            abstract: true,
             parent: 'modal',
-            params: {
-              currentUser: {},
-              activationCode: {}
-            },
             views: {
               'modal@': {
-                templateUrl: 'modules/huron/device/generateActivationCodeModal.tpl.html',
-                controller: 'GenerateActivationCodeCtrl',
-                controllerAs: 'genAuthCode'
+                template: '<div ui-view></div>',
+                controller: 'TrialCtrl',
+                controllerAs: 'trial'
               }
+            },
+            params: {
+              isEditing: false,
+              currentTrial: {},
+              details: {},
+              mode: {}
+            }
+          })
+          .state('trial.info', {
+            templateUrl: 'modules/core/trials/trial.tpl.html'
+          })
+          .state('trial.finishSetup', {
+            templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
+          })
+          .state('trial.webex', {
+            templateUrl: 'modules/core/trials/trialWebex.tpl.html',
+            controller: 'TrialWebexCtrl',
+            controllerAs: 'webexTrial'
+          })
+          .state('trial.call', {
+            templateUrl: 'modules/core/trials/trialDevice.tpl.html',
+            controller: 'TrialDeviceController',
+            controllerAs: 'callTrial'
+          })
+          .state('trial.pstn', {
+            templateUrl: 'modules/core/trials/trialPstn.tpl.html',
+            controller: 'TrialPstnCtrl',
+            controllerAs: 'pstnTrial'
+          })
+          .state('trial.emergAddress', {
+            templateUrl: 'modules/core/trials/trialEmergAddress.tpl.html',
+            controller: 'TrialEmergAddressCtrl',
+            controllerAs: 'eAddressTrial'
+          })
+          .state('trial.addNumbers', {
+            templateUrl: 'modules/core/trials/addNumbers.tpl.html',
+            controller: 'DidAddCtrl',
+            controllerAs: 'didAdd',
+            params: {
+              currentTrial: {},
+              currentOrg: {},
             }
           })
           .state('didadd', {
@@ -2365,14 +2451,6 @@
             templateUrl: 'modules/huron/features/featureLanding/features.tpl.html',
             controller: 'HuronFeaturesCtrl',
             controllerAs: 'huronFeaturesCtrl',
-            resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/callPark'], loadModuleAndResolve($ocLazyLoad, resolve));
-                  require(['modules/huron/features/callPickup'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
-            }
           })
           .state('huronnewfeature', {
             url: '/newfeature',
@@ -2429,7 +2507,7 @@
             resolve: {
               lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
                 return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/callPickup/callPickupSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
+                  require(['modules/huron/features/callPickup'], loadModuleAndResolve($ocLazyLoad, resolve));
                 });
               }
             }
@@ -2438,6 +2516,13 @@
             url: '/huronCallPark',
             parent: 'hurondetails',
             template: '<uc-call-park></uc-call-park>',
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/callPark/callPark'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            }
           })
           .state('callparkedit', {
             url: '/features/cp/edit',
@@ -2521,9 +2606,6 @@
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
               },
-              hasMediaFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
-              }
             }
           })
           // Cluster settings
@@ -2536,12 +2618,6 @@
             resolve: {
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
-              },
-              hasEmergencyUpgradeFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade)
-                  .then(function (support) {
-                    return support;
-                  });
               },
             }
           })
@@ -2584,17 +2660,48 @@
               }
             }
           })
+          .state('hds-cluster-details', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                controllerAs: 'hdsSidepanelClusterController',
+                controller: 'HDSSidepanelClusterController',
+                templateUrl: 'modules/hds/cluster-sidepanel/cluster-details.html'
+              },
+              'header@hds-cluster-details': {
+                templateUrl: 'modules/hds/cluster-sidepanel/cluster-header.html'
+              }
+            },
+            data: {
+              displayName: 'Overview'
+            },
+            params: {
+              clusterId: null
+            },
+            resolve: {
+              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
+              },
+            }
+          })
+          .state('hds-cluster-details.alarm-details', {
+            templateUrl: 'modules/hds/cluster-sidepanel/alarm-details.html',
+            controller: 'HDSAlarmController',
+            controllerAs: 'hdsAlarmController',
+            data: {
+              displayName: 'Alarm Details'
+            },
+            params: {
+              alarm: null,
+              host: null
+            }
+          })
           .state('mediafusion-settings', {
             url: '/services/cluster/mediafusion/:id/settings',
             templateUrl: 'modules/hercules/fusion-pages/mediafusion-settings.html',
             controller: 'MediafusionClusterSettingsController',
             controllerAs: 'clusterSettings',
             parent: 'main',
-            resolve: {
-              hasEmergencyUpgradeFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade);
-              },
-            }
           })
           // Add Resource modal
           .state('add-resource', {
@@ -2607,11 +2714,6 @@
                 controller: 'TypeSelectorController',
                 controllerAs: 'vm',
                 templateUrl: 'modules/hercules/fusion-pages/add-resource/common/type-selector.html'
-              }
-            },
-            resolve: {
-              hasMediaFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
               }
             },
             params: {
@@ -2733,7 +2835,7 @@
             }
           })
           .state('calendar-service', {
-            templateUrl: 'modules/hercules/overview/overview.html',
+            templateUrl: 'modules/hercules/service-specific-cluster-lists/service-specific-cluster-list-container.html',
             controller: 'ExpresswayServiceController',
             controllerAs: 'exp',
             data: {
@@ -2754,7 +2856,7 @@
             url: '/services/calendar',
             views: {
               fullPane: {
-                templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
+                templateUrl: 'modules/hercules/service-specific-cluster-lists/service-specific-cluster-list.html'
               }
             },
             params: {
@@ -2769,15 +2871,24 @@
                 controller: 'CalendarSettingsController',
                 templateUrl: 'modules/hercules/service-settings/calendar-service-settings.html'
               }
-            },
+            }
+          })
+          .state('google-calendar-service', {
+            abstract: true,
+            parent: 'main',
+            template: '<div ui-view></div>',
             resolve: {
               hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
               }
             }
           })
+          .state('google-calendar-service.settings', {
+            url: '/services/google-calendar/settings',
+            template: '<google-calendar-settings-page ng-if="$resolve.hasGoogleCalendarFeatureToggle"></google-calendar-settings-page>',
+          })
           .state('call-service', {
-            templateUrl: 'modules/hercules/overview/overview.html',
+            templateUrl: 'modules/hercules/service-specific-cluster-lists/service-specific-cluster-list-container.html',
             controller: 'ExpresswayServiceController',
             controllerAs: 'exp',
             data: {
@@ -2797,7 +2908,7 @@
             url: '/services/call',
             views: {
               fullPane: {
-                templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
+                templateUrl: 'modules/hercules/service-specific-cluster-lists/service-specific-cluster-list.html'
               }
             },
             params: {
@@ -2837,12 +2948,6 @@
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
               },
-              hasEmergencyUpgradeFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade)
-                  .then(function (support) {
-                    return support;
-                  });
-              },
             }
           })
           .state('management-connector-details', {
@@ -2859,6 +2964,7 @@
             },
             params: {
               host: null,
+              hostSerial: null,
               clusterId: null,
               connectorType: 'c_mgmt'
             }
@@ -2884,6 +2990,7 @@
             },
             params: {
               host: null,
+              hostSerial: null,
               clusterId: null,
               connectorType: null
             }
@@ -3103,12 +3210,12 @@
             controller: 'CareFeaturesCtrl',
             controllerAs: 'careFeaturesCtrl'
           })
-          .state('care.ChatSA', {
-            url: '/careChat',
+          .state('care.setupAssistant', {
+            url: '/setupAssistant',
             parent: 'care.Details',
-            templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
-            controller: 'CareChatSetupAssistantCtrl',
-            controllerAs: 'careChatSA',
+            templateUrl: 'modules/sunlight/features/template/ctSetupAssistant.tpl.html',
+            controller: 'CareSetupAssistantCtrl',
+            controllerAs: 'careSetupAssistant',
             params: {
               template: null,
               isEditFeature: null

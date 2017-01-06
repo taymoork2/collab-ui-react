@@ -22,6 +22,7 @@
       postponeUpgradeSchedule: postponeUpgradeSchedule,
       deleteMoratoria: deleteMoratoria,
       setClusterName: setClusterName,
+      setReleaseChannel: setReleaseChannel,
       deregisterCluster: deregisterCluster,
       getReleaseNotes: getReleaseNotes,
       getAggregatedStatusForService: getAggregatedStatusForService,
@@ -35,7 +36,10 @@
       getResourceGroups: getResourceGroups,
       getClustersForResourceGroup: getClustersForResourceGroup,
       getUnassignedClusters: getUnassignedClusters,
-      setClusterAllowListInfoForExpressway: setClusterAllowListInfoForExpressway
+      setClusterAllowListInfoForExpressway: setClusterAllowListInfoForExpressway,
+      getAlarms: getAlarms,
+      getOrgSettings: getOrgSettings,
+      setOrgSettings: setOrgSettings,
     };
 
     return service;
@@ -45,7 +49,7 @@
     function get(clusterId) {
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '?fields=@wide')
-        .then(extractDataFromResponse);
+        .then(extractData);
     }
 
     function getAll(orgId) {
@@ -61,11 +65,18 @@
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
         .then(extractData)
-        .then(function (org) {
+        .then(function addServicesStatusesToClusters(org) {
           org.clusters = addServicesStatuses(org.clusters);
           return org;
         })
-        .then(function (org) {
+        .then(function addInfoToEmptyExpresswayClusters(org) {
+          return setClusterAllowListInfoForExpressway(org.clusters)
+            .then(function (clusters) {
+              org.clusters = clusters;
+              return org;
+            });
+        })
+        .then(function formatData(org) {
           var resourceGroups = _.sortBy(org.resourceGroups, 'name');
           return {
             groups: _.map(resourceGroups, function (resourceGroup) {
@@ -77,9 +88,7 @@
               };
             }),
             unassigned: sort(getUnassignedClusters(org.clusters)),
-            clusters: org.clusters
           };
-
         })
         .then(addUserCount);
     }
@@ -119,10 +128,6 @@
 
     function extractClustersFromResponse(response) {
       return _.get(extractData(response), 'clusters', []);
-    }
-
-    function extractDataFromResponse(res) {
-      return res.data;
     }
 
     function addServicesStatuses(clusters) {
@@ -175,7 +180,7 @@
         releaseChannel: releaseChannel,
         targetType: managementConnectorType
       })
-        .then(extractDataFromResponse);
+        .then(extractData);
     }
 
     function addPreregisteredClusterToAllowList(hostname, ttlInSeconds, clusterId) {
@@ -189,21 +194,21 @@
 
     function getPreregisteredClusterAllowList() {
       var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/allowedRedirectTargets';
-      return $http.get(url).then(extractDataFromResponse);
+      return $http.get(url).then(extractData);
     }
 
     function provisionConnector(clusterId, connectorType) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId +
         '/provisioning/actions/add/invoke?connectorType=' + connectorType;
       return $http.post(url)
-        .then(extractDataFromResponse);
+        .then(extractData);
     }
 
     function deprovisionConnector(clusterId, connectorType) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId +
         '/provisioning/actions/remove/invoke?connectorType=' + connectorType;
       return $http.post(url)
-        .then(extractDataFromResponse);
+        .then(extractData);
     }
 
     function buildSidepanelConnectorList(cluster, connectorTypeToKeep) {
@@ -241,19 +246,25 @@
       return $http.patch(url, {
         name: newClusterName
       })
-        .then(extractDataFromResponse);
+        .then(extractData);
+    }
+
+    function setReleaseChannel(clusterId, releaseChannel) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
+      return $http.patch(url, { releaseChannel: releaseChannel })
+        .then(extractData);
     }
 
     function deregisterCluster(clusterId) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/deregisterCluster/invoke?clusterId=' + clusterId;
       return $http.post(url)
-        .then(extractDataFromResponse);
+        .then(extractData);
     }
 
     function getReleaseNotes(releaseChannel, connectorType) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/channels/' + releaseChannel + '/packages/' + connectorType + '?fields=@wide';
       return $http.get(url)
-        .then(extractDataFromResponse)
+        .then(extractData)
         .then(function (data) {
           return _.get(data, 'releaseNotes', '');
         });
@@ -283,12 +294,7 @@
         })
         .value();
 
-      // if no data or invalid data, assume that something is wrong
-      if (statuses.length === 0) {
-        return 'outage';
-      }
-
-      if (_.every(statuses, function (value) {
+      if (statuses.length === 0 || _.every(statuses, function (value) {
         return value === 'not_installed';
       })) {
         return 'setupNotComplete';
@@ -341,10 +347,6 @@
     }
 
     function processClustersToSeeIfServiceIsSetup(serviceId, clusterList) {
-      if (!Authinfo.isEntitled(serviceId)) {
-        return false;
-      }
-
       var connectorType = FusionUtils.serviceId2ConnectorType(serviceId);
       if (connectorType === '') {
         return false; // Cannot recognize service, default to *not* enabled
@@ -392,11 +394,13 @@
     }
 
     function getStatusForService(serviceId, clusterList) {
-      return {
+      var serviceStatus = {
         serviceId: serviceId,
         setup: processClustersToSeeIfServiceIsSetup(serviceId, clusterList),
-        status: processClustersToAggregateStatusForService(serviceId, clusterList)
+        status: processClustersToAggregateStatusForService(serviceId, clusterList),
       };
+      serviceStatus.statusCss = FusionClusterStatesService.getStatusIndicatorCSSClass(serviceStatus.status);
+      return serviceStatus;
     }
 
     function addUserCount(response) {
@@ -435,7 +439,7 @@
       return getPreregisteredClusterAllowList()
         .then(function (allowList) {
           return _.map(clusters, function (cluster) {
-            if (_.some(emptyExpresswayClusters, { id: cluster.id })) {
+            if (_.find(emptyExpresswayClusters, { id: cluster.id })) {
               cluster.isEmptyExpresswayCluster = true;
               cluster.allowedRedirectTarget = _.find(allowList, { clusterId: cluster.id });
               if (cluster.aggregates && !cluster.allowedRedirectTarget) {
@@ -454,6 +458,21 @@
       return _.filter(clusters, function (cluster) {
         return cluster.targetType !== 'unknown';
       });
+    }
+
+    function getAlarms(serviceId, orgId) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/alarms?serviceId=' + serviceId + '&sourceType=cloud';
+      return $http.get(url).then(extractData);
+    }
+
+    function getOrgSettings(orgId) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/settings';
+      return $http.get(url).then(extractData);
+    }
+
+    function setOrgSettings(data, orgId) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '/settings';
+      return $http.patch(url, data).then(extractData);
     }
   }
 })();

@@ -26,18 +26,18 @@ module.exports = function (config) {
       'source-map-support',
     ],
 
-    files: [
-      {
-        pattern: './test/fixtures/**/*.json', included: false
-      },
-      {
-        pattern: './app/**/*.json', included: false
-      },
-      {
-        pattern: shimFile,
-        watched: false
-      },
-    ],
+    files: [{
+      pattern: './test/fixtures/**/*.json',
+      included: false,
+    },
+    {
+      pattern: './app/**/*.json',
+      included: false,
+    },
+    {
+      pattern: shimFile,
+      watched: false
+    }],
 
     exclude: [],
 

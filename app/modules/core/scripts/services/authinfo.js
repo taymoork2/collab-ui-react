@@ -166,7 +166,9 @@
 
               switch (license.licenseType) {
                 case Config.licenseTypes.CONFERENCING:
-                  if ((this.isCustomerAdmin() || this.isReadOnlyAdmin()) && license.siteUrl && !_.includes(authData.roles, 'Site_Admin')) {
+                  if ((this.isCustomerAdmin() || this.isReadOnlyAdmin()) &&
+                    (license.siteUrl || license.linkedSiteUrl) &&
+                    !_.includes(authData.roles, 'Site_Admin')) {
                     authData.roles.push('Site_Admin');
                   }
                   service = new ServiceFeature($translate.instant(Config.confMap[license.offerName], {
@@ -460,8 +462,7 @@
         return isEntitled(Config.entitlements.fusion_cal);
       },
       isFusionGoogleCal: function () {
-        /* Hard-coded list of orgs until https://atlas-integration.wbx2.com/admin/api/v1/organizations/(orgId)/services returns the Google Calendar entitlement  */
-        return this.getOrgId() === 'fe5acf7a-6246-484f-8f43-3e8c910fc50d' || this.getOrgId() === '5a0b787d-5a24-4e22-ae88-2c3e3edf03eb';
+        return isEntitled(Config.entitlements.fusion_google_cal);
       },
       isFusionEC: function () {
         return isEntitled(Config.entitlements.fusion_ec);

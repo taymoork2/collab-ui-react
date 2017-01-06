@@ -49,6 +49,9 @@ describe('Controller: UserDeleteCtrl', function () {
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
       $q.when(true)
     );
+    spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue(
+      $q.when(true)
+    );
     spyOn(Authinfo, 'isCare').and.returnValue(true);
   }
 

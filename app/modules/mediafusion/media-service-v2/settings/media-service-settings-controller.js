@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceSettingsControllerV2($modal, $stateParams, ServiceDescriptor, MailValidatorService, Notification) {
+  function MediaServiceSettingsControllerV2($stateParams, ServiceDescriptor, MailValidatorService, Notification) {
     var vm = this;
     vm.config = "";
     vm.wx2users = "";
@@ -10,27 +10,26 @@
     vm.serviceId = "squared-fusion-media";
     vm.cluster = $stateParams.cluster;
 
-    vm.confirmDisable = function () {
-      $modal.open({
-        templateUrl: "modules/mediafusion/media-service-v2/settings/confirm-disable-dialog.html",
-        controller: 'DisableMediaServiceController',
-        controllerAs: "disableServiceDialog",
-        type: 'small'
-      });
+    vm.emailSection = {
+      title: 'common.general'
+    };
+
+    vm.deactivateModalOptions = {
+      templateUrl: 'modules/mediafusion/media-service-v2/settings/confirm-disable-dialog.html',
+      controller: 'DisableMediaServiceController',
+      controllerAs: 'disableServiceDialog',
+      type: 'small',
     };
 
     vm.config = "";
-    ServiceDescriptor.getEmailSubscribers(vm.serviceId, function (error, emailSubscribers) {
-      if (!error) {
-        vm.emailSubscribers = _.map(_.without(emailSubscribers.split(','), ''), function (user) {
+    ServiceDescriptor.getEmailSubscribers(vm.serviceId)
+      .then(function (emailSubscribers) {
+        vm.emailSubscribers = _.map(emailSubscribers, function (user) {
           return {
             text: user
           };
         });
-      } else {
-        vm.emailSubscribers = [];
-      }
-    });
+      });
 
     vm.cluster = $stateParams.cluster;
 
@@ -42,14 +41,15 @@
         Notification.error('mediaFusion.email.invalidEmail');
       } else {
         vm.savingEmail = true;
-        ServiceDescriptor.setEmailSubscribers(vm.serviceId, emailSubscribers, function (statusCode) {
-          if (statusCode === 204) {
-            Notification.success('mediaFusion.email.emailNotificationsSavingSuccess');
-          } else {
-            Notification.error('mediaFusion.email.emailNotificationsSavingError');
-          }
-          vm.savingEmail = false;
-        });
+        ServiceDescriptor.setEmailSubscribers(vm.serviceId, emailSubscribers)
+          .then(function (response) {
+            if (response.status === 204) {
+              Notification.success('mediaFusion.email.emailNotificationsSavingSuccess');
+            } else {
+              Notification.error('mediaFusion.email.emailNotificationsSavingError');
+            }
+            vm.savingEmail = false;
+          });
       }
     };
   }

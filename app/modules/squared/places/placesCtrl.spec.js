@@ -45,24 +45,38 @@ describe('Controller: PlacesCtrl', function () {
   });
 
   describe('startAddPlaceFlow function', function () {
-    var displayName;
     var userCisUuid;
     var email;
     var orgId;
+    var adminFirstName;
+    var adminLastName;
+    var adminDisplayName;
+    var adminUserName;
+    var adminCisUuid;
     var adminOrgId;
     var isEntitledToHuron;
     var isEntitledToRoomSystem;
     beforeEach(function () {
       isEntitledToHuron = true;
       isEntitledToRoomSystem = true;
-      displayName = 'displayName';
       userCisUuid = 'userCisUuid';
       email = 'email@address.com';
       orgId = 'orgId';
+      adminFirstName = 'adminFirstName';
+      adminLastName = 'adminLastName';
+      adminDisplayName = 'adminDisplayName';
+      adminUserName = 'adminUserName';
+      adminCisUuid = 'adminCisUuid';
       adminOrgId = 'adminOrgId';
-      controller.adminDisplayName = displayName;
       controller.showATA = true;
-      controller.adminOrgId = adminOrgId;
+      controller.adminUserDetails = {
+        firstName: adminFirstName,
+        lastName: adminLastName,
+        displayName: adminDisplayName,
+        userName: adminUserName,
+        cisUuid: adminCisUuid,
+        organizationId: adminOrgId
+      };
       spyOn(controller, 'isEntitledToHuron').and.returnValue(isEntitledToHuron);
       spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(isEntitledToRoomSystem);
       spyOn(Authinfo, 'getUserId').and.returnValue(userCisUuid);
@@ -79,12 +93,17 @@ describe('Controller: PlacesCtrl', function () {
       expect(wizardState.title).toBe('addDeviceWizard.newSharedSpace.title');
       expect(wizardState.function).toBe('addPlace');
       expect(wizardState.showATA).toBe(true);
-      expect(wizardState.adminOrganizationId).toBe(adminOrgId);
+      expect(wizardState.admin.firstName).toBe(adminFirstName);
+      expect(wizardState.admin.lastName).toBe(adminLastName);
+      expect(wizardState.admin.displayName).toBe(adminDisplayName);
+      expect(wizardState.admin.userName).toBe(adminUserName);
+      expect(wizardState.admin.cisUuid).toBe(adminCisUuid);
+      expect(wizardState.admin.organizationId).toBe(adminOrgId);
       expect(wizardState.isEntitledToHuron).toBe(isEntitledToHuron);
       expect(wizardState.isEntitledToRoomSystem).toBe(isEntitledToRoomSystem);
       expect(wizardState.account.type).toBe('shared');
       expect(wizardState.account.organizationId).toBe(orgId);
-      expect(wizardState.recipient.displayName).toBe(displayName);
+      expect(wizardState.recipient.displayName).toBe(adminDisplayName);
       expect(wizardState.recipient.cisUuid).toBe(userCisUuid);
       expect(wizardState.recipient.email).toBe(email);
       expect(wizardState.recipient.organizationId).toBe(adminOrgId);

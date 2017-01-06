@@ -1,0 +1,9 @@
+google-calendar-settings-page {
+  display: block;
+  background: #fff;
+
+  .page-sub-header {
+    // used to position <google-calendar-notifications-dropdown>
+    position: relative;
+  }
+}

@@ -9,7 +9,7 @@
     });
 
   /* @ngInject */
-  function cbgSitesCtrl($state, $modal, $rootScope, $stateParams, $translate, cbgService, Notification, PreviousState) {
+  function cbgSitesCtrl($state, $modal, $rootScope, $stateParams, $translate, cbgService, Notification, PreviousState, gemService) {
     var vm = this;
     vm.onClick = onClick;
     vm.$onInit = $onInit;
@@ -51,7 +51,7 @@
       cbgService.moveSite(data).then(function (res) {
         var resJson = _.get(res.content, 'data');
         if (resJson.returnCode) {
-          Notification.error('Failed to Move Site!');
+          Notification.notify(gemService.showError(resJson.returnCode));
           return;
         }
         _.remove(vm.sites, function (obj) {

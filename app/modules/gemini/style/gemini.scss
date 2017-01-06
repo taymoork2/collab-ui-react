@@ -27,6 +27,14 @@
   .callback-groups {
     padding-left: 3.5rem;
   }
+
+  .page-option-buttons {
+    position: relative;
+
+    .btn--none {
+      cursor: default;
+    }
+  }
 }
 
 .gemini-request-callbackgroup {
@@ -45,26 +53,13 @@
       box-sizing: border-box;
     }
   }
-
-  .upload-file {
-    position: relative;
-
-    .upload-file-input {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 2.25rem;
-      cursor: pointer;
-      opacity: 0;
-    }
-
-    .upload-file-btn {
-      color: $color-primary-base;
-    }
-  }
 }
 
 .gemini-side-panel {
+  .side-panel-container {
+    padding-bottom: $ui-padding--huge;
+  }
+
   .side-panel-sites {
     .sites-ul {
       .action-movesite .actions-button {
@@ -98,22 +93,8 @@
       overflow-y: auto;
     }
 
-    .tag {
-      white-space: normal;
-    }
-
     .edit-country {
       padding-bottom: $ui-padding--huge;
-    }
-
-    .color-primary-base {
-      color: $color-primary-base;
-    }
-
-    .button-container {
-      top: auto;
-      bottom: 0;
-      left: 0;
     }
   }
 
@@ -143,5 +124,45 @@
       }
     }
   }
+
+  .button-container {
+    top: auto;
+    bottom: 0;
+    left: 0;
+  }
 }
 
+.gemini-select-country {
+  .upload-file-box {
+    position: relative;
+  }
+
+  .country-upload-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    opacity: 0;
+  }
+
+  .tag {
+    white-space: normal;
+  }
+
+  .file-name {
+    position: relative;
+    float: left;
+    padding-right: $ui-padding;
+    padding-top: $popover-arrow-width;
+
+    .name {
+      padding-top: $ui-padding;
+    }
+
+    .icon {
+      position: absolute;
+      top: $padding-base-horizontal;
+      right: 0;
+    }
+  }
+}

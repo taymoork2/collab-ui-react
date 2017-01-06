@@ -38,7 +38,11 @@
       invokeInviteEmail: invokeInviteEmail,
       getAccount: getAccount,
       getOrder: getOrder,
-      getEmailStatus: getEmailStatus
+      getEmailStatus: getEmailStatus,
+      hasBounceDetails: hasBounceDetails,
+      clearBounceDetails: clearBounceDetails,
+      getLatestEmailEvent: getLatestEmailEvent,
+      unixTimestampToUTC: unixTimestampToUTC,
     };
 
     if (!orgCache) {
@@ -135,12 +139,12 @@
 
     function getCorrectedDisplayName(user) {
       var displayName = '';
-      if (user.name != null) {
+      if (user.name) {
         displayName = user.name.givenName ? user.name.givenName : '';
         displayName += user.name.familyName ? ' ' + user.name.familyName : '';
       }
       if (!displayName) {
-        return user.displayName;
+        return user.displayName ? user.displayName : user.userName;
       }
       return displayName;
     }
@@ -523,10 +527,37 @@
         .then(extractData);
     }
 
+    function getLatestEmailEvent(email) {
+      return service.getEmailStatus(email).then(function (emailEvents) {
+        return _.first(emailEvents);
+      });
+    }
+
     function getEmailStatus(email) {
       return $http
         .get(urlBase + "email?email=" + encodeURIComponent(email))
         .then(extractItems);
+    }
+
+    function hasBounceDetails(email) {
+      return $http
+        .get(urlBase + "email/bounces?email=" + encodeURIComponent(email));
+    }
+
+    function clearBounceDetails(email) {
+      return $http
+        .delete(urlBase + "email/bounces?email=" + encodeURIComponent(email));
+    }
+
+    // Convert Date from seconds to UTC format
+    function unixTimestampToUTC(timestamp) {
+      if (!timestamp) {
+        return;
+      }
+      // convert seconds to ms
+      var newDate = new Date();
+      newDate.setTime(timestamp * 1000);
+      return newDate.toUTCString();
     }
 
     return service;

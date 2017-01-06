@@ -14,7 +14,7 @@ require('./_user-overview.scss');
     vm.entitlements = $stateParams.entitlements;
     vm.queryuserslist = $stateParams.queryuserslist;
     vm.services = [];
-    vm.dropDownItems = [];
+    vm.showGenerateOtpLink = false;
     vm.titleCard = '';
     vm.subTitleCard = '';
     vm.getAccountStatus = getAccountStatus;
@@ -49,21 +49,21 @@ require('./_user-overview.scss');
       icon: 'icon-circle-message',
       state: 'messaging',
       detail: $translate.instant('onboardModal.msgFree'),
-      actionAvailable: getDisplayableServices('MESSAGING')
+      actionAvailable: false
     };
     var commState = {
       name: $translate.instant('onboardModal.call'),
       icon: 'icon-circle-call',
       state: 'communication',
       detail: $translate.instant('onboardModal.callFree'),
-      actionAvailable: true
+      actionAvailable: false
     };
     var confState = {
       name: $translate.instant('onboardModal.meeting'),
       icon: 'icon-circle-group',
       state: 'conferencing',
       detail: $translate.instant('onboardModal.mtgFree'),
-      actionAvailable: getDisplayableServices('CONFERENCING') || _.isArray(vm.currentUser.trainSiteNames)
+      actionAvailable: false
     };
     var contactCenterState = {
       name: $translate.instant('onboardModal.contactCenter'),
@@ -98,26 +98,31 @@ require('./_user-overview.scss');
       if (hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
         if (getServiceDetails('MS')) {
           msgState.detail = $translate.instant('onboardModal.paidMsg');
+          msgState.actionAvailable = getDisplayableServices('MESSAGING');
         }
-        vm.services.push(msgState);
       }
+      vm.services.push(msgState);
+
       if (hasEntitlement('cloudmeetings')) {
+        confState.actionAvailable = getDisplayableServices('CONFERENCING') || _.isArray(vm.currentUser.trainSiteNames);
         if (vm.currentUser.trainSiteNames) {
           confState.detail = vm.isSharedMultiPartyEnabled ? $translate.instant('onboardModal.paidAdvancedConferencing') : $translate.instant('onboardModal.paidConfWebEx');
-          vm.services.push(confState);
         }
       } else if (hasEntitlement('squared-syncup')) {
         if (getServiceDetails('CF')) {
           confState.detail = $translate.instant('onboardModal.paidConf');
         }
-        vm.services.push(confState);
       }
+      vm.services.push(confState);
+
       if (hasEntitlement('ciscouc')) {
         if (getServiceDetails('CO')) {
           commState.detail = $translate.instant('onboardModal.paidComm');
+          commState.actionAvailable = true;
         }
-        vm.services.push(commState);
       }
+      vm.services.push(commState);
+
       if (hasEntitlement('cloud-contact-center')) {
         if (getServiceDetails('CD')) {
           SunlightConfigService.getUserInfo(vm.currentUser.id).then(
@@ -132,7 +137,7 @@ require('./_user-overview.scss');
 
     function initActionList() {
       var action = {
-        actionKey: 'usersPreview.editServices'
+        actionKey: 'common.edit'
       };
       if (Authinfo.isCSB()) {
         action.actionFunction = goToUserRedirect;
@@ -152,12 +157,6 @@ require('./_user-overview.scss');
       var url = $state.href('userRedirect');
       $window.open(url, '_blank');
     }
-
-    var generateOtpLink = {
-      name: 'generateAuthCode',
-      text: $translate.instant('usersPreview.generateActivationCode'),
-      state: 'generateauthcode({currentUser: userOverview.currentUser, activationCode: \'new\'})'
-    };
 
     function getDisplayableServices(serviceName) {
       var displayableServices = Authinfo.getServices();
@@ -280,13 +279,11 @@ require('./_user-overview.scss');
     }
 
     function enableAuthCodeLink() {
-      if (!_.includes(vm.dropDownItems, generateOtpLink)) {
-        vm.dropDownItems.push(generateOtpLink);
-      }
+      vm.showGenerateOtpLink = true;
     }
 
     function disableAuthCodeLink() {
-      _.pull(vm.dropDownItems, generateOtpLink);
+      vm.showGenerateOtpLink = false;
     }
 
     function getAccountStatus() {

@@ -6,7 +6,7 @@
     .controller('CallServicePreviewCtrl', CallServicePreviewCtrl);
 
   /*@ngInject*/
-  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService, UCCService) {
+  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService, UCCService, FusionUtils) {
     $scope.saveLoading = false;
     $scope.domainVerificationError = false;
     $scope.currentUser = $stateParams.currentUser;
@@ -28,15 +28,17 @@
     $scope.callServiceAware = {
       id: 'squared-fusion-uc',
       name: 'squaredFusionUC',
-      entitled: isEntitled('squared-fusion-uc'),
-      directoryUri: null
+      entitled: isEntitled('squared-fusion-uc'), // Tracks the entitlement as set in the UI (toggle)
+      directoryUri: null,
+      currentUserEntitled: isEntitled('squared-fusion-uc') // Tracks the actual entitlement on the user
     };
     $scope.callServiceConnect = {
       id: 'squared-fusion-ec',
       name: 'squaredFusionEC',
-      entitled: isEntitled('squared-fusion-ec'),
+      entitled: isEntitled('squared-fusion-ec'), // Tracks the entitlement as set in the UI (toggle)
       orgEntitled: Authinfo.isFusionEC(),
-      enabledInFMS: false
+      enabledInFMS: false,
+      currentUserEntitled: isEntitled('squared-fusion-ec') // Tracks the actual entitlement on the user
     };
     $scope.resourceGroup = {
       show: false,
@@ -115,15 +117,16 @@
           });
         }
         if ($scope.callServiceAware.status && $scope.callServiceAware.status.lastStateChange) {
-          $scope.callServiceAware.status.lastStateChangeText = moment($scope.callServiceAware.status.lastStateChange).fromNow(true);
+          $scope.callServiceAware.status.lastStateChangeText = FusionUtils.getTimeSinceText($scope.callServiceAware.status.lastStateChange);
         }
+
         if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.connectorId) {
           ClusterService.getConnector($scope.callServiceConnect.status.connectorId).then(function (connector) {
             $scope.callServiceConnect.homedConnector = connector;
           });
         }
         if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.lastStateChange) {
-          $scope.callServiceConnect.status.lastStateChangeText = moment($scope.callServiceConnect.status.lastStateChange).fromNow(true);
+          $scope.callServiceConnect.status.lastStateChangeText = FusionUtils.getTimeSinceText($scope.callServiceConnect.status.lastStateChange);
         }
         if ($scope.callServiceAware.entitled && $scope.callServiceAware.status) {
           UCCService.getUserDiscovery($scope.currentUser.id).then(function (userDiscovery) {
@@ -216,16 +219,22 @@
       if (!_.includes($stateParams.currentUser.entitlements, entitlement)) {
         $stateParams.currentUser.entitlements.push(entitlement);
       }
+      $scope.callServiceAware.currentUserEntitled = isEntitled($scope.callServiceAware.id);
+      $scope.callServiceConnect.currentUserEntitled = isEntitled($scope.callServiceConnect.id);
     };
 
     var removeEntitlementFromCurrentUser = function (entitlement) {
       _.remove($stateParams.currentUser.entitlements, function (e) {
         return e === entitlement;
       });
+      $scope.callServiceAware.currentUserEntitled = isEntitled($scope.callServiceAware.id);
+      $scope.callServiceConnect.currentUserEntitled = isEntitled($scope.callServiceConnect.id);
     };
 
     var updateEntitlements = function () {
       $scope.savingEntitlements = true;
+      $scope.savingAwareEntitlement = $scope.callServiceAware.currentUserEntitled !== $scope.callServiceAware.entitled;
+      $scope.savingConnectEntitlement = $scope.callServiceConnect.currentUserEntitled !== $scope.callServiceConnect.entitled;
       var user = [{
         'address': $scope.currentUser.userName
       }];
@@ -294,7 +303,7 @@
           };
           Notification.notify([entitleResult.msg], entitleResult.type);
         }
-        $scope.savingEntitlements = false;
+        $scope.savingEntitlements = $scope.savingAwareEntitlement = $scope.savingConnectEntitlement = false;
         $scope.saving = $scope.resourceGroup.saving;
       });
     };

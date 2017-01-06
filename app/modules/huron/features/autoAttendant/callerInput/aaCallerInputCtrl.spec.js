@@ -3,6 +3,7 @@
 describe('Controller: AACallerInputCtrl', function () {
   var featureToggleService;
   var aaLanguageService;
+  var aaCommonService;
 
   var controller;
   var AAUiModelService, AutoAttendantCeMenuModelService;
@@ -13,14 +14,17 @@ describe('Controller: AACallerInputCtrl', function () {
   };
   var inputActions = [{
     "key": "1",
+    "value": "",
     "keys": [
       "0", "1", "4", "5", "6", "7", "8", "9", "#", "*"
     ] }, {
       "key": "2",
+      "value": "",
       "keys": [
         "0", "2", "4", "5", "6", "7", "8", "9", "#", "*"
       ] }, {
         "key": "3",
+        "value": "",
         "keys": [
           "0", "3", "4", "5", "6", "7", "8", "9", "#", "*"
         ] }];
@@ -32,18 +36,30 @@ describe('Controller: AACallerInputCtrl', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, $q, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_, _AALanguageService_) {
+  beforeEach(inject(function ($controller, _$rootScope_, $q, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_, _AALanguageService_, _AACommonService_) {
+
     $rootScope = _$rootScope_;
     $scope = $rootScope;
 
+    schedule = 'openHours';
+    index = '0';
+    menuId = 'menu1';
+
+    aaUiModel = {
+      openHours: {}
+    };
+
     featureToggleService = _FeatureToggleService_;
     aaLanguageService = _AALanguageService_;
+    aaCommonService = _AACommonService_;
 
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     spyOn(featureToggleService, 'supports').and.returnValue($q.when(true));
+
+    aaCommonService.resetFormStatus();
 
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
@@ -53,9 +69,6 @@ describe('Controller: AACallerInputCtrl', function () {
     $scope.menuId = menuId;
 
     var menu = AutoAttendantCeMenuModelService.newCeMenuEntry();
-    var action = AutoAttendantCeMenuModelService.newCeActionEntry("", "");
-
-    menu.addAction(action);
 
     aaUiModel['openHours'].addEntryAt(index, menu);
 
@@ -68,12 +81,21 @@ describe('Controller: AACallerInputCtrl', function () {
   }));
 
   afterEach(function () {
-
+    $rootScope = null;
+    $scope = null;
+    featureToggleService = null;
+    aaLanguageService = null;
+    AAUiModelService = null;
+    AutoAttendantCeMenuModelService = null;
+    aaCommonService = null;
+    controller = null;
+    aaUiModel = null;
   });
-  describe('add play action', function () {
-    it('should add play action object menuEntry', function () {
+
+  describe('add runActionsOnInput action', function () {
+    it('should add runActionsOnInput action object menuEntry', function () {
       // appends a play action onto menuEntry
-      expect(controller.menuEntry.actions[1].name).toEqual('play');
+      expect(controller.menuEntry.actions[0].name).toEqual('runActionsOnInput');
     });
   });
 
@@ -86,9 +108,9 @@ describe('Controller: AACallerInputCtrl', function () {
       expect(controller.inputActions.length).toEqual(1);
       expect(controller.inputActions[0].keys.join()).toEqual(keys.join());
       expect(controller.inputActions[0].key).toEqual(headkey);
+      expect(aaCommonService.isFormDirty()).toEqual(true);
 
     });
-
     it('should add a new keyAction object into inputActions array without the key already in use', function () {
       var keys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '#', '*'];
       var keysWithout3 = ['0', '1', '2', '4', '5', '6', '7', '8', '9', '#', '*'];
@@ -104,6 +126,8 @@ describe('Controller: AACallerInputCtrl', function () {
       controller.addKeyAction();
       expect(controller.inputActions.length).toEqual(2);
       expect(controller.inputActions[1].keys.join()).toEqual(keysWithout3.join());
+      expect(aaCommonService.isFormDirty()).toEqual(true);
+
     });
   });
 
@@ -116,6 +140,8 @@ describe('Controller: AACallerInputCtrl', function () {
       controller.deleteKeyAction(0);
       expect(controller.inputActions.length).toEqual(2);
       expect(controller.inputActions[0].keys.join()).toEqual(keys.join());
+      expect(aaCommonService.isFormDirty()).toEqual(true);
+
     });
   });
 
@@ -125,8 +151,67 @@ describe('Controller: AACallerInputCtrl', function () {
       var newKey = '4';
       controller.keyChanged(0, newKey);
       expect(controller.inputActions[0].key).toEqual(newKey);
+      expect(aaCommonService.isFormDirty()).toEqual(true);
     });
   });
+
+  describe('keyInputChanged', function () {
+    it('should change the input value for an existing action', function () {
+      var whichKey = {};
+      whichKey.value = 'X';
+
+      controller.inputActions = angular.copy(inputActions);
+      controller.keyInputChanged(0, whichKey);
+      expect(controller.inputActions[0].value).toEqual('X');
+      expect(aaCommonService.isFormDirty()).toEqual(true);
+
+    });
+  });
+
+  describe('setType', function () {
+    it('should change the inputType to DIGITS_CHOICE', function () {
+
+      controller.convertDigitState = true;
+      controller.setType();
+      expect(controller.actionEntry.inputType).toEqual(aaCommonService.DIGITS_CHOICE);
+      expect(aaCommonService.isFormDirty()).toEqual(true);
+
+    });
+    it('should change the inputType to DIGITS_RAW', function () {
+
+      controller.convertDigitState = false;
+      controller.setType();
+      expect(controller.actionEntry.inputType).toEqual(aaCommonService.DIGITS_RAW);
+      expect(aaCommonService.isFormDirty()).toEqual(true);
+
+    });
+
+  });
+
+  describe('set Name Variable', function () {
+    it('should change the Name Variable', function () {
+
+      controller.nameInput = "Hello World";
+      controller.saveNameInput();
+      expect(controller.actionEntry.variableName).toEqual("Hello World");
+      expect(aaCommonService.isFormDirty()).toEqual(true);
+
+    });
+  });
+
+  describe('set Max String Length', function () {
+    it('should change the Maximum String Length', function () {
+
+      controller.maxStringLength = 30;
+
+      controller.setMaxStringLength();
+
+      expect(controller.actionEntry.maxNumberOfCharacters).toEqual(30);
+      expect(aaCommonService.isFormDirty()).toEqual(true);
+
+    });
+  });
+
   describe('voiceOption', function () {
     it('should find the voice option', function () {
       var voiceOptions = [{
@@ -169,6 +254,8 @@ describe('Controller: AACallerInputCtrl', function () {
       controller.voiceBackup = undefined;
       controller.setVoiceOptions();
       expect(controller.voiceOption.value).toEqual(voiceOptions[0].value);
+      expect(aaCommonService.isFormDirty()).toEqual(true);
+
     });
   });
 

@@ -1,15 +1,20 @@
 'use strict';
 
 describe('UrlConfigSpec', function () {
-
   beforeEach(angular.mock.module('core.urlconfig'));
 
   var UrlConfig, $location;
+
+  afterEach(function () {
+    UrlConfig = $location = undefined;
+  });
+
   beforeEach(inject(function (_$location_, _UrlConfig_) {
     UrlConfig = _UrlConfig_;
     $location = _$location_;
     spyOn($location, 'host');
   }));
+
 
   var devHost = 'localhost';
   var cfeHost = 'cfe-admin.ciscospark.com';
@@ -46,6 +51,10 @@ describe('UrlConfigSpec', function () {
       }
     };
   };
+
+  afterAll(function () {
+    devHost = cfeHost = intHost = prodHost = orgId = siteURL = whenCalling = undefined;
+  });
 
   it('should return correct identity user service url', function () {
     whenCalling('getScimUrl', orgId).expectUrlToBe({
@@ -337,7 +346,7 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct customer care url', function () {
     whenCalling('getSunlightConfigServiceUrl').expectUrlToBe({
-      dev: 'https://config.dev.ciscoccservice.com/config/v1',
+      dev: 'https://config.devus1.ciscoccservice.com/config/v1',
       cfe: 'https://config.appstaging.ciscoccservice.com/config/v1',
       integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
       prod: 'https://config.produs1.ciscoccservice.com/config/v1'
@@ -346,7 +355,7 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct sunlight chat bubble url', function () {
     whenCalling('getSunlightBubbleUrl').expectUrlToBe({
-      dev: 'https://bubble.dev.ciscoccservice.com',
+      dev: 'https://bubble.devus1.ciscoccservice.com',
       cfe: 'https://bubble.appstaging.ciscoccservice.com',
       integration: 'https://bubble.appstaging.ciscoccservice.com',
       prod: 'https://bubble.produs1.ciscoccservice.com'

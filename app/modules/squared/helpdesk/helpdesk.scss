@@ -1,3 +1,6 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/layout';
+
 .helpdesklaunch-state {
   @extend %page-background-white;
 }
@@ -6,24 +9,11 @@
   background-color: $brand-white;
   overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
   .top-bar {
-    .sparkstatus-info {
-      @extend .user-info;
-    }
-
-    .btn-sparkstatus {
-      @extend .btn--user;
-
+    .btn--history, .btn--sparkstatus {
       border-left: 1px solid $gray-light !important;
     }
 
-    .history-info {
-      @extend .user-info;
-    }
-
-    .btn-history {
-      @extend .btn--user;
-
-      border-left: 1px solid $gray-light !important;
+    .btn--history {
       color: $gray-light-1;
       font-size: 1.2rem;
 
@@ -186,6 +176,28 @@
       padding-top: 2rem;
       text-align: center;
     }
+
+    .helper-link {
+      &.margin-left {
+        margin-left: 0.6rem;
+      }
+      &.margin-right {
+        margin-right: 0.6rem;
+      }
+    }
+  }
+
+  .icon-info {
+    font-size: $paragraph-font-size;
+    margin-left: 0.3rem;
+    position: relative;
+    bottom: -1px;
+  }
+
+  .tooltip[popup-class="email-status"] .c-nub {
+    font-size: 0.75rem;
+    max-width: 250px;
+    width: 250px;
   }
 }
 
@@ -576,7 +588,6 @@
 
   h5 {
     margin-top: 0.5rem;
-    color: black;
   }
 
   .badge {
@@ -616,12 +627,24 @@
   color: $gray-base;
 }
 
+.helpdesk-default {
+  color: $gray-base;
+}
+
 .helpdesk-yellow {
   color: $color-attention-base;
 }
 
 .helpdesk-error {
   color: $color-negative-base;
+}
+
+.helpdesk-danger {
+  color: $color-negative-base;
+}
+
+.helpdesk-success {
+  color: $color-cta-base;
 }
 
 .helpdesk-ok {

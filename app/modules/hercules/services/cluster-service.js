@@ -10,7 +10,8 @@
     var clusterCache = {
       c_mgmt: {},
       c_ucmc: {},
-      c_cal: {}
+      c_cal: {},
+      hds_app: {}
     };
     var hub = CsdmHubFactory.create();
     var poller = CsdmPoller.create(fetch, hub);
@@ -221,14 +222,16 @@
           return {
             c_mgmt: clusterType('c_mgmt', clusters),
             c_ucmc: clusterType('c_ucmc', clusters),
-            c_cal: clusterType('c_cal', clusters)
+            c_cal: clusterType('c_cal', clusters),
+            hds_app: clusterType('hds_app', clusters)
           };
         })
         .then(function (clusters) {
           var result = {
             c_mgmt: addAggregatedData('c_mgmt', clusters.c_mgmt),
             c_ucmc: addAggregatedData('c_ucmc', clusters.c_ucmc),
-            c_cal: addAggregatedData('c_cal', clusters.c_cal)
+            c_cal: addAggregatedData('c_cal', clusters.c_cal),
+            hds_app: addAggregatedData('hds_app', clusters.hds_app)
           };
           return result;
         })
@@ -236,7 +239,8 @@
           var result = {
             c_mgmt: _.keyBy(clusters.c_mgmt, 'id'),
             c_ucmc: _.keyBy(clusters.c_ucmc, 'id'),
-            c_cal: _.keyBy(clusters.c_cal, 'id')
+            c_cal: _.keyBy(clusters.c_cal, 'id'),
+            hds_app: _.keyBy(clusters.hds_app, 'id')
           };
           return result;
         })
@@ -244,6 +248,7 @@
           CsdmCacheUpdater.update(clusterCache.c_mgmt, clusters.c_mgmt);
           CsdmCacheUpdater.update(clusterCache.c_ucmc, clusters.c_ucmc);
           CsdmCacheUpdater.update(clusterCache.c_cal, clusters.c_cal);
+          CsdmCacheUpdater.update(clusterCache.hds_app, clusters.hds_app);
           return clusterCache;
         });
     }

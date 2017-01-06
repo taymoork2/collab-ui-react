@@ -1,3 +1,5 @@
+require('./_places.scss');
+
 (function () {
   'use strict';
 
@@ -51,8 +53,14 @@
           var userDetailsDeferred = $q.defer();
           Userservice.getUser('me', function (data) {
             if (data.success) {
-              vm.adminDisplayName = data.displayName;
-              vm.adminOrgId = data.meta.organizationID;
+              vm.adminUserDetails = {
+                firstName: data.name && data.name.givenName,
+                lastName: data.name && data.name.familyName,
+                displayName: data.displayName,
+                userName: data.userName,
+                cisUuid: data.id,
+                organizationId: data.meta.organizationID
+              };
             }
             userDetailsDeferred.resolve();
           });
@@ -163,7 +171,7 @@
               function: "addPlace",
               showDarling: vm.showDarling,
               showATA: vm.showATA,
-              adminOrganizationId: vm.adminOrgId,
+              admin: vm.adminUserDetails,
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
               title: 'addDeviceWizard.newSharedSpace.title',
               isEntitledToHuron: vm.isEntitledToHuron(),
@@ -174,9 +182,9 @@
               },
               recipient: {
                 cisUuid: Authinfo.getUserId(),
-                displayName: vm.adminDisplayName,
+                displayName: vm.adminUserDetails.displayName,
                 email: Authinfo.getPrimaryEmail(),
-                organizationId: vm.adminOrgId
+                organizationId: vm.adminUserDetails.organizationId
               }
             },
             history: [],

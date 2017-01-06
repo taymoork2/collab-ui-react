@@ -128,13 +128,10 @@ describe('Service: Common Report Service', () => {
     // verify the correct number of objects are returned in the array
     it('should get expected responses for getReturnLineGraph', function () {
       let graph = this.CommonReportService.getReturnLineGraph(filter[0], defaults.graphItem);
-      expect(graph.length).toBe(8);
+      expect(graph.length).toBe(7);
 
       graph = this.CommonReportService.getReturnLineGraph(filter[1], defaults.graphItem);
-      expect(graph.length).toBe(53);
-
-      graph = this.CommonReportService.getReturnLineGraph(filter[2], defaults.graphItem);
-      expect(graph.length).toBe(53);
+      expect(graph.length).toBe(52);
     });
   });
 
@@ -207,6 +204,7 @@ describe('Service: Common Report Service', () => {
       let options: ITypeQuery = this.CommonReportService.getTypeOptions(filter[0], 'name');
       let updatedQuery = _.cloneDeep(queryFour);
       updatedQuery.type = defaults.usageOptions[0];
+      updatedQuery.extension = undefined;
       expect(options).toEqual(updatedQuery);
 
       options = this.CommonReportService.getTypeOptions(filter[1], 'name');
@@ -222,6 +220,7 @@ describe('Service: Common Report Service', () => {
       let options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter[0], 'name');
       let updatedQuery = _.cloneDeep(queryFour);
       updatedQuery.type = defaults.altUsageOptions[0];
+      updatedQuery.extension = undefined;
       expect(options).toEqual(updatedQuery);
 
       options = this.CommonReportService.getLineTypeOptions(filter[1], 'name');

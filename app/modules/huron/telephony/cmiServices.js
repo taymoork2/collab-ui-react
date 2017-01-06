@@ -36,16 +36,17 @@
     .factory('DirectoryNumberCopyService', DirectoryNumberCopyService)
     .factory('SiteService', SiteService)
     .factory('AvrilSiteService', AvrilSiteService)
+    .factory('AvrilSiteUpdateService', AvrilSiteUpdateService)
     .factory('InternalNumberRangeService', InternalNumberRangeService)
     .factory('UserEndpointService', UserEndpointService)
     .factory('SipEndpointService', SipEndpointService)
     .factory('DirectoryNumberUserService', DirectoryNumberUserService)
     .factory('DirectoryNumberSipEndPointService', DirectoryNumberSipEndPointService)
     .factory('SipEndpointDirectoryNumberService', SipEndpointDirectoryNumberService)
+    .factory('DateFormatService', DateFormatService)
     .factory('TimeZoneService', TimeZoneService)
     .factory('SiteLanguageService', SiteLanguageService)
     .factory('SiteCountryService', SiteCountryService)
-    .factory('HermesQRCodeService', HermesQRCodeService)
     .factory('DeviceLogApiService', DeviceLogApiService)
     .factory('UserLineAssociationService', UserLineAssociationService)
     .factory('UserLineAssociationCountService', UserLineAssociationCountService)
@@ -351,6 +352,21 @@
   }
 
   /* @ngInject */
+  function AvrilSiteUpdateService($resource, HuronConfig) {
+    return $resource(HuronConfig.getAvrilUrl() + '/customers/:customerId/sites/:siteId', {
+      customerId: '@customerId',
+      siteId: '@siteId'
+    }, {
+      update: {
+        method: 'PUT'
+      },
+      get: {
+        method: 'GET'
+      }
+    });
+  }
+
+  /* @ngInject */
   function InternalNumberRangeService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberranges/:internalNumberRangeId', {
       customerId: '@customerId',
@@ -422,6 +438,10 @@
     return $resource('modules/huron/serviceSetup/jodaTimeZones.json', {}, {});
   }
 
+  /* @ngInject */
+  function DateFormatService($resource) {
+    return $resource('modules/huron/serviceSetup/dateFormats.json', {}, {});
+  }
 
   /* @ngInject */
   function SiteLanguageService($resource) {
@@ -431,14 +451,6 @@
   /* @ngInject */
   function SiteCountryService($resource) {
     return $resource('modules/huron/serviceSetup/siteCountries.json', {}, {});
-  }
-
-  /* @ngInject */
-  function HermesQRCodeService($resource, HuronConfig) {
-    return $resource(HuronConfig.getEmailUrl() + '/:getqrima/encoded', {
-      getqrima: 'getqrimage',
-      oneTimePassword: '@oneTimePassword'
-    }, {});
   }
 
   /* @ngInject */

@@ -95,12 +95,12 @@
             </div>
           </div>
           <!-- START Darling: Shared Mult-Party Licenses functionality -->
-          <div ng-if="planReview.confServices.services.length > 0 && planReview.isSharedMultiPartyEnabled" class="item-mtg-license">
-            <span translate="firstTimeWizard.advancedMeetings"></span>
-          </div>
           <div class="item-mtg"
              ng-show="multipleSubscriptions.showLicenses(services[0].license.billingServiceId, services[0].license.isTrial) && planReview.isSharedMultiPartyEnabled"
              ng-repeat="(siteUrl,services) in planReview.sites">
+            <div class="item-mtg-license" ng-show="$first">
+              <span translate="firstTimeWizard.advancedMeetings"></span>
+            </div>
             {{siteUrl}}
             <div class="sub-item" ng-repeat="service in services">
               <div class="item-webex">
@@ -108,12 +108,9 @@
               </div>
               <div ng-if="service.license.isTrial || planReview.confServices.isNewTrial"
                  class="badge badge-warning" translate="firstTimeWizard.trial"></div>
-              <div class="quantity-mtg-details" ng-if="planReview.isSharedMultiPartyEnabled">
-                <span>{{planReview.determineLicenseAudio(siteUrl)}}</span>
-              </div>
               <div class="quantity-mtg-details">
                 <span>{{service.license.volume}}</span>
-                <span>{{planReview.determineLicenseType(siteUrl)}}</span>
+                <span>{{planReview.determineLicenseType(service)}}</span>
               </div>
               <div ng-if="service.license.isCI === false">
                 <a target="_blank"

@@ -6,7 +6,7 @@
   module.exports = Analytics;
 
   /* @ngInject */
-  function Analytics($q, $state, Authinfo, Config, Orgservice, TrialService, UserListService) {
+  function Analytics($q, $state, Authinfo, Config, CryptoJS, Orgservice, TrialService, UserListService) {
 
     var token = {
       PROD_KEY: 'a64cd4bbec043ed6bf9d5cd31e4b001c',
@@ -41,7 +41,7 @@
           START_SETUP: 'Trial flow: Start Trial Setup',
           START_TRIAL: 'Trial flow: Start Trial'
         },
-        prefixedEventNames: []
+        persistentProperties: null
       },
       PARTNER: {
         name: 'Partner',
@@ -49,14 +49,16 @@
           ASSIGN: 'Partner Admin Assigning',
           REMOVE: 'Partner Admin Removal',
           PATCH: 'Patch User Call'
-        }
+        },
+        persistentProperties: null,
       },
       USER_ONBOARDING: {
         name: 'User Onboarding',
         eventNames: {
           CMR_CHECKBOX: 'CMR Checkbox Unselected',
           CONVERT_USER: 'Convert User Search'
-        }
+        },
+        persistentProperties: null,
       },
       ADD_USERS: {
         name: 'Add Users',
@@ -96,8 +98,9 @@
       _buildTrialServicesArray: _buildTrialServicesArray,
       _buildTrialDevicesArray: _buildTrialDevicesArray,
       _getSelectedTrialDevices: _getSelectedTrialDevices,
-      _getAddUserOrgData: _getAddUserOrgData,
+      _getOrgData: _getOrgData,
       _getOrgStatus: _getOrgStatus,
+      _getDomainFromEmail: _getDomainFromEmail,
       checkIfTestOrg: checkIfTestOrg,
       eventNames: eventNames,
       sections: sections,
@@ -186,20 +189,23 @@
 
       var properties = {
         from: _.get($state, '$current.name'),
-        orgId: Authinfo.getOrgId(),
-        section: sections.TRIAL.name,
       };
-      if (trialData) {
-        properties.servicesArray = _buildTrialServicesArray(trialData.trials);
-        properties.duration = _.get(trialData, 'details.licenseDuration');
-        properties.licenseQty = _.get(trialData, 'details.licenseCount');
-        /* TODO: add this once we have a clear strategy
-        if (properties.from === 'trialAdd.call' || properties.from === 'trialEdit.call') {
-          properties.devicesArray = _buildTrialDevicesArray(trialData.trials);
-        }*/
-      }
-      _.extend(properties, additionalPayload);
-      return trackEvent(eventName, properties);
+      // populate static properties
+      _getOrgData('TRIAL').then(function (data) {
+        _.extend(properties, data);
+        delete properties.realOrgId;
+        if (trialData) {
+          properties.servicesArray = _buildTrialServicesArray(trialData.trials);
+          properties.duration = _.get(trialData, 'details.licenseDuration');
+          properties.licenseQty = _.get(trialData, 'details.licenseCount');
+          /* TODO: add this once we have a clear strategy
+          if (properties.from === 'trialAdd.call' || properties.from === 'trialEdit.call') {
+            properties.devicesArray = _buildTrialDevicesArray(trialData.trials);
+          }*/
+        }
+        _.extend(properties, additionalPayload);
+        return trackEvent(eventName, properties);
+      });
     }
 
 
@@ -211,8 +217,8 @@
         return $q.reject('eventName, uuid or orgId not passed');
       }
       var properties = {
-        uuid: UUID,
-        orgId: orgId,
+        uuid: _hashSha256(UUID),
+        orgId: _hashSha256(orgId),
         section: sections.PARTNER.name
       };
       return trackEvent(eventName, properties);
@@ -229,7 +235,7 @@
 
       var properties = {
         from: name,
-        orgId: orgId,
+        orgId: _hashSha256(orgId),
         section: sections.USER_ONBOARDING.name,
       };
 
@@ -252,12 +258,13 @@
         return $q.reject('eventName not passed');
       }
       var properties = {
-        from: _.get($state, '$current.name'),
-
+        from: _.get($state, '$current.name')
       };
+
       // populate static properties
-      _getAddUserOrgData(sections.ADD_USERS.name).then(function (data) {
+      _getOrgData('ADD_USERS').then(function (data) {
         _.extend(properties, data);
+        delete properties.realOrgId;
         //if changing upload method -- set.
         if (uploadMethod) {
           properties.uploadMethod = uploadMethod;
@@ -279,7 +286,6 @@
     * General Error Tracking
     */
 
-
     function trackError(errorObj, cause) {
       var message = _.get(errorObj, 'message');
       var stack = _.get(errorObj, 'stack');
@@ -292,8 +298,9 @@
         stack: stack,
         error: error,
         cause: cause,
-        userId: Authinfo.getUserId(),
-        orgId: Authinfo.getOrgId(),
+        userId: _hashSha256(Authinfo.getUserId()),
+        orgId: _hashSha256(Authinfo.getOrgId()),
+        domain: _getDomainFromEmail(Authinfo.getPrimaryEmail()),
         state: _.get($state, '$current.name')
       });
     }
@@ -325,18 +332,20 @@
       }
     }
 
-    /* Add Users Helpers */
-    function _getAddUserOrgData(section) {
-      if (sections.ADD_USERS.persistentProperties && sections.ADD_USERS.persistentProperties.orgId === Authinfo.getOrgId()) {
-        return $q.resolve(sections.ADD_USERS.persistentProperties);
+    /* General Helpers */
+    function _getOrgData(sectionName) {
+      if (sections[sectionName].persistentProperties && sections[sectionName].persistentProperties.realOrgId === Authinfo.getOrgId()) {
+        return $q.resolve(sections[sectionName].persistentProperties);
       }
       var licenses = Authinfo.getLicenses();
-      sections.ADD_USERS.persistentProperties = {
+      sections[sectionName].persistentProperties = {
         licenses: _.map(licenses, 'licenseType'),
-        orgId: Authinfo.getOrgId(),
-        uuid: Authinfo.getUserId(),
+        realOrgId: Authinfo.getOrgId(),
+        orgId: _hashSha256(Authinfo.getOrgId()),
+        domain: _getDomainFromEmail(Authinfo.getPrimaryEmail()),
+        uuid: _hashSha256(Authinfo.getUserId()),
         role: Authinfo.getRoles(),
-        section: section
+        section: sections[sectionName].name
       };
       var promises = {
         listUsers: UserListService.listUsers(0, 1, null, null, _.noop),
@@ -346,10 +355,11 @@
         trialDaysLeft: TrialService.getDaysLeftForCurrentUser()
       };
       return $q.all(promises).then(function (data) {
-        sections.ADD_USERS.persistentProperties.userCountPrior = _.get(data.listUsers, 'data.totalResults');
-        sections.ADD_USERS.persistentProperties.isPartner = _.get(data.getOrg, 'data.isPartner');
-        sections.ADD_USERS.persistentProperties.orgStatus = _getOrgStatus(data.trialDaysLeft, licenses);
-        return sections.ADD_USERS.persistentProperties;
+        sections[sectionName].persistentProperties.userCountPrior = _.get(data.listUsers, 'data.totalResults');
+        sections[sectionName].persistentProperties.isPartner = _.get(data.getOrg, 'data.isPartner');
+        sections[sectionName].persistentProperties.isTestOrg = _.get(data.getOrg, 'data.isTestOrg');
+        sections[sectionName].persistentProperties.orgStatus = _getOrgStatus(data.trialDaysLeft, licenses);
+        return sections[sectionName].persistentProperties;
       });
     }
 
@@ -362,6 +372,17 @@
 
       });
       return isTrial ? 'trial' : 'active';
+    }
+
+    function _hashSha256(id) {
+      if (!id) {
+        return null;
+      }
+      return CryptoJS.SHA256(id).toString(CryptoJS.enc.Base64);
+    }
+
+    function _getDomainFromEmail(email) {
+      return email ? email.split('@')[1] || '' : '';
     }
   }
 

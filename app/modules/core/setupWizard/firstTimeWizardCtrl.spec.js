@@ -7,6 +7,10 @@ describe('FirstTimeWizardCtrl', function () {
 
   var $controller, $q, $scope, Auth, Authinfo, FeatureToggleService, Userservice;
 
+  afterEach(function () {
+    $controller = $q = $scope = Auth = Authinfo = FeatureToggleService = Userservice = undefined;
+  });
+
   beforeEach(inject(function (_$controller_, _$q_, $rootScope, _Auth_, _Authinfo_,
     _FeatureToggleService_, _Userservice_) {
     $controller = _$controller_;
@@ -40,6 +44,10 @@ describe('FirstTimeWizardCtrl', function () {
       data: '',
       status: 404
     };
+
+    afterAll(function () {
+      successResponseWithCare = successResponseWithoutCare = failedResponse = undefined;
+    });
 
     function initController() {
       $controller('FirstTimeWizardCtrl', {

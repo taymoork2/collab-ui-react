@@ -134,8 +134,8 @@ describe('Manage Users - Manual -', function () {
         utils.searchAndClick(user.email);
         utils.expectIsDisplayed(users.servicesPanel);
 
-        utils.expectIsDisplayed(users.messageService);
-        utils.expectIsNotDisplayed(users.meetingService);
+        utils.expectIsDisplayed(users.messageServicePaid);
+        utils.expectIsDisplayed(users.meetingServiceFree);
         utils.click(users.closeSidePanel);
       });
     });

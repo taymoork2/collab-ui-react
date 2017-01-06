@@ -6,7 +6,7 @@
     .controller('CalendarServicePreviewCtrl', CalendarServicePreviewCtrl);
 
   /*@ngInject*/
-  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, ClusterService, $translate, ResourceGroupService, FeatureToggleService) {
+  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, ClusterService, $translate, ResourceGroupService, FeatureToggleService, FusionUtils) {
     $scope.entitlementNames = {
       'squared-fusion-cal': 'squaredFusionCal',
       'squared-fusion-gcal': 'squaredFusionGCal'
@@ -14,16 +14,17 @@
 
     $scope.currentUser = $stateParams.currentUser;
     $scope.isInvitePending = Userservice.isInvitePending($scope.currentUser);
-    $scope.localizedServiceName = $translate.instant('hercules.serviceNames..squared-fusion-cal');
+    $scope.localizedServiceName = $translate.instant('hercules.serviceNames.squared-fusion-cal');
     $scope.localizedConnectorName = $translate.instant('hercules.connectorNames.squared-fusion-cal');
     $scope.localizedOnboardingWarning = $translate.instant('hercules.userSidepanel.warningInvitePending', {
       ServiceName: $scope.localizedServiceName
     });
     $scope.extension = {
       id: $stateParams.extensionId,
-      entitled: $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf($stateParams.extensionId) > -1,
+      entitled: $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf($stateParams.extensionId) > -1, // Tracks the entitlement as set in the UI (toggle)
       hasShowPreferredWebExSiteNameFeatureToggle: false,
       preferredWebExSiteName: $translate.instant('hercules.cloudExtensions.preferredWebExSiteDefault'),
+      currentUserEntitled: $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf($stateParams.extensionId) > -1, // Tracks the actual entitlement on the user
       isExchange: function () {
         return this.id === 'squared-fusion-cal';
       }
@@ -136,7 +137,7 @@
           });
         }
         if ($scope.extension.status && $scope.extension.status.lastStateChange) {
-          $scope.extension.status.lastStateChangeText = moment($scope.extension.status.lastStateChange).fromNow(true);
+          $scope.extension.status.lastStateChangeText = FusionUtils.getTimeSinceText($scope.extension.status.lastStateChange);
         }
 
         // If we find no status in USS and the service is entitled, we try to refresh the user in USS and reload the statuses
@@ -232,6 +233,7 @@
                 return entitlement === $scope.extension.id;
               });
             }
+            $scope.extension.currentUserEntitled = isEntitled();
             $scope.calendarType.init();
             $scope.setShouldShowButtons();
             refreshUserInUss();
