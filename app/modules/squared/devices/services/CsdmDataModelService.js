@@ -257,7 +257,6 @@
       }
       return service.updateTags(objectToUpdate.url, newTags)
         .then(function () {
-          //         objectToUpdate.tags = newTags;
 
           var existingDevice = theDeviceMap[objectToUpdate.url];
           if (existingDevice) {

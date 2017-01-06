@@ -739,7 +739,7 @@ describe('Service: CsdmDataModelService', function () {
           var oldName = placeToUpdate.displayName;
           var oldSipUrl = placeToUpdate.sipUrl;
 
-          var placeToUpdateArgument = JSON.parse(JSON.stringify(placeToUpdate));
+          var placeToUpdateArgument = _.cloneDeep(placeToUpdate);
 
           CsdmDataModelService.updateItemName(placeToUpdateArgument, newName).then(function (updatedPlace) {
 
