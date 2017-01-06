@@ -2344,7 +2344,10 @@
       "description": "Description",
       "exportFormat": "Export Format",
       "totalResultSize": "Total Result Size",
-      "downloadContent": "Download content such as documents, images and media associated with this report."
+      "downloadContent": "Download content such as documents, images and media associated with this report.",
+      "reportSizeTooBig": "Report Size Too Big",
+      "reportSizeErrorSummary": "The estimated report size is over the 3 GB maximum size allowed for report generation. Go back to search and refine your results.",
+      "reportSizeErrorButton": "Go Back to Search"
     },
     "reportsList": {
       "name": "Name",
