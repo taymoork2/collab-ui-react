@@ -2,7 +2,7 @@
   'use strict';
 
   var $scope, $compile, $templateCache, $q, $controller, view;
-  var customerListToggle, Authinfo, FeatureToggleService, Orgservice, PartnerService, TrialService;
+  var customerListToggle, Authinfo, FeatureToggleService, Orgservice, PartnerService, trialForPaid, TrialService;
 
   describe('Template: actionColumn.tpl.html', function () {
 
@@ -40,6 +40,7 @@
       };
 
       customerListToggle = true;
+      trialForPaid = false;
 
       spyOn(TrialService, 'getTrialsList').and.returnValue($q.when({
         data: {}
@@ -62,7 +63,8 @@
     function compileViewWithMockData(mockData) {
       $controller('CustomerListCtrl', {
         $scope: $scope,
-        customerListToggle: customerListToggle
+        customerListToggle: customerListToggle,
+        trialForPaid: trialForPaid
       });
 
       _.extend($scope, mockData);

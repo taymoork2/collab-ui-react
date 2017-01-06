@@ -6,12 +6,17 @@
     .service('ServiceStateChecker', ServiceStateChecker);
 
   /*@ngInject*/
-  function ServiceStateChecker(NotificationService, ClusterService, USSService, ServiceDescriptor, Authinfo, FeatureToggleService, Orgservice, DomainManagementService) {
+  function ServiceStateChecker($q, Authinfo, ClusterService, DomainManagementService, FeatureToggleService, FusionClusterService, FusionUtils, NotificationService, Orgservice, ServiceDescriptor, USSService) {
     var vm = this;
     vm.isSipUriAcknowledged = false;
     vm.hasSipUriDomainConfigured = false;
     vm.hasVerifiedDomains = false;
     var allExpresswayServices = ['squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-cal', 'squared-fusion-mgmt'];
+    var defaultReleaseChannelPromise = FusionClusterService.getOrgSettings()
+      .then(function (data) {
+        return data.expresswayClusterReleaseChannel;
+      });
+    var f237Promise = FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
 
     function checkState(connectorType, serviceId) {
       if (checkIfFusePerformed()) {
@@ -24,6 +29,7 @@
           removeAllServiceAndUserNotifications();
         }
       }
+      checkUnassignedClusters();
     }
 
     function checkDomainVerified(serviceId) {
@@ -260,6 +266,42 @@
           return connector.state !== 'not_configured' && connector.state !== 'not_installed';
         })
         .value();
+    }
+
+    function checkUnassignedClusters() {
+      f237Promise
+        .then(function (support) {
+          return support ? defaultReleaseChannelPromise : $q.reject();
+        })
+        .then(function (defaultReleaseChannel) {
+          return FusionClusterService.getAll()
+            .then(function (clusters) {
+              var anomalies = _.filter(clusters, function (cluster) {
+                return cluster.targetType === 'c_mgmt' &&
+                  !cluster.resourceGroupId &&
+                  cluster.releaseChannel !== defaultReleaseChannel;
+              });
+              if (anomalies.length > 0) {
+                var serviceIds = _.chain(anomalies)
+                  .map(function (cluster) {
+                    return _.map(cluster.provisioning, function (p) {
+                      return FusionUtils.connectorType2ServicesId(p.connectorType);
+                    });
+                  })
+                  .flattenDeep()
+                  .uniq()
+                  .value();
+                NotificationService.addNotification(
+                  NotificationService.types.ALERT,
+                  'defaultReleaseChannel',
+                  5,
+                  'modules/hercules/notifications/release_channel.html',
+                  serviceIds,
+                  { clusters: anomalies, channel: defaultReleaseChannel }
+                );
+              }
+            });
+        });
     }
 
     return {

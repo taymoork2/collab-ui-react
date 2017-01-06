@@ -8,7 +8,7 @@ require('./_user-preview.scss');
     .controller('ConferencePreviewCtrl', ConferencePreviewCtrl);
 
   /* @ngInject */
-  function ConferencePreviewCtrl($scope, $state, $stateParams, $translate, Authinfo, FeatureToggleService) {
+  function ConferencePreviewCtrl($scope, $state, $stateParams, $translate, Authinfo, Config, FeatureToggleService) {
     var vm = this;
 
     vm.service = '';
@@ -49,13 +49,11 @@ require('./_user-preview.scss');
         $state.go('users.list');
       };
 
-      /* TODO For now we are using the site url to determine if the license is an SMP license. This logic will change;
-      we will be looking at licenseModel inside the licenses payload to determine if the license is SMP instead of the siteUrl. */
       $scope.isSharedMultiPartyLicense = function (siteUrl) {
-        return _.isString(siteUrl) && siteUrl.indexOf('.') > -1 ? _.first(siteUrl.split('.')) === 'smp' : false;
+        var service = _.find(vm.sites, { license: { siteUrl: siteUrl } });
+        return _.get(service, 'license.licenseModel') === Config.licenseModel.cloudSharedMeeting;
       };
 
-      // This logic will be changed to look for the 'licenseModel' key when the payload is ready from the backend
       $scope.determineLicenseType = function (siteUrl) {
         return $scope.isSharedMultiPartyLicense(siteUrl) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.assignedLicenses');
       };

@@ -50,4 +50,8 @@
       margin-bottom: 0 !important;
     }
   }
+
+  .needs-border-top {
+    border-top: 1px solid $gray-light-2;
+  }
 }

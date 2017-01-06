@@ -6,7 +6,7 @@
     .controller('RemDeviceController',
 
       /* @ngInject */
-      function ($modalInstance, $translate, CsdmDataModelService, device) {
+      function ($modalInstance, $translate, CsdmDataModelService, device, Notification) {
         var rdc = this;
 
         rdc.device = device;
@@ -27,7 +27,10 @@
 
         rdc.deleteDevice = function () {
           return CsdmDataModelService.deleteItem(rdc.device)
-            .then($modalInstance.close);
+            .then($modalInstance.close)
+            .catch(function (error) {
+              Notification.errorResponse(error, 'spacesPage.failedToDelete');
+            });
         };
       }
     )

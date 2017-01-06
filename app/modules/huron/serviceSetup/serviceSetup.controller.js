@@ -778,6 +778,8 @@
               vm.previousTimeZone = vm.model.site.timeZone;
               vm.model.site.voicemailPilotNumberGenerated = (site.voicemailPilotNumberGenerated !== null) ? site.voicemailPilotNumberGenerated : 'false';
             });
+          } else if (vm.model.numberRanges.length !== 0) {
+            vm.model.site.extensionLength = vm.model.numberRanges[0].endNumber.length;
           }
         });
       })

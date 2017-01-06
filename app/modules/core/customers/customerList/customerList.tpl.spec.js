@@ -3,7 +3,7 @@
 
   describe('Template: customerList.tpl.html', function () {
     var $scope, $compile, $templateCache, $q, $controller, controller, view;
-    var Authinfo, customerListToggle, Orgservice, PartnerService, FeatureToggleService, TrialService;
+    var Authinfo, customerListToggle, Orgservice, PartnerService, FeatureToggleService, TrialService, trialForPaid;
     var ADD_BUTTON = '#addTrial';
     var SEARCH_FILTER = '#searchFilter';
 
@@ -34,6 +34,8 @@
         USER: 1,
         CUSTOMER: 2
       };
+
+      trialForPaid = false;
 
       customerListToggle = false;
 
@@ -82,7 +84,8 @@
     function initAndCompile() {
       controller = $controller('CustomerListCtrl', {
         $scope: $scope,
-        customerListToggle: customerListToggle
+        customerListToggle: customerListToggle,
+        trialForPaid: trialForPaid
       });
       $scope.customerList = controller;
       var template = $templateCache.get('modules/core/customers/customerList/customerList.tpl.html');

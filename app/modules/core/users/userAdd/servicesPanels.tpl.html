@@ -146,7 +146,7 @@
           </div>
         </div>
         <div class="entitle-check-grp" ng-repeat="lic in advancedLicenses">
-          <div class="item-mtg-license" ng-if="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial) && advancedLicenses.indexOf(lic) === 0">
+          <div class="item-mtg-license" ng-if="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial) && $index == 0">
             <span translate="firstTimeWizard.advancedMeetings"></span>
           </div>
           <div class="item-mtg" ng-if="lic.site">
@@ -157,7 +157,7 @@
             <div ng-show="multipleSubscriptions.showLicenses(cfLic.billing, cfLic.isTrial)" ng-repeat="cfLic in lic.confLic">
               <div ng-if="lic.isCISite">
                 <input type="checkbox" cs-input id="{{cfLic.licenseId}}" ng-model="cfLic.confModel" ng-click="checkCMR(cfLic, lic.cmrLic)" cs-input-label="WebEx {{cfLic.label}}">
-                <span class="license-entity-type under-label-reposition">{{determineLicenseType(lic.site)}}</span>
+                <span class="license-entity-type under-label-reposition">{{determineLicenseType(lic)}}</span>
                 <div class="cs-checkbox-group cs-input--nested-1" ng-if="cfLic.offerName === 'MC' || cfLic.offerName === 'EE'">
                   <div ng-repeat="cmrLic in lic.cmrLic">
                     <input type="checkbox" cs-input id="{{cmrLic.licenseId}}" ng-click="cfLic.confModel=true;updateCmrLicensesForMetric(cmrLic.cmrModel, cmrLic.licenseId)" ng-model="cmrLic.cmrModel" cs-input-label="WebEx {{cmrLic.label}}">

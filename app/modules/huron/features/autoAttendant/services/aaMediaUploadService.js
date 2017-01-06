@@ -192,7 +192,7 @@
     function getDeleteUrl(metadata) {
       var recordingId = _.get(metadata, 'recordingId', '');
       if (recordingId) {
-        return deleteBaseUrl + recordingId;
+        return deleteBaseUrl + recordingId + '?orgId=' + Authinfo.getOrgId();
       }
       return recordingId;
     }

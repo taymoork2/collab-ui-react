@@ -154,7 +154,7 @@
             msg = 'In Care reports';
             eType = this.getEventType('careReports');
             break;
-          case 'care.ChatSA':
+          case 'care.setupAssistant':
             msg = 'In Care Template setup assistant';
             eType = this.getEventType('careTemplateInit');
             break;

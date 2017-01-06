@@ -73,9 +73,11 @@
       FusionClusterService.setClusterAllowListInfoForExpressway(ClusterService.getClustersByConnectorType(vm.connectorType))
         .then(function (clusters) {
           vm.clusters = clusters;
-        }).catch(function () {
+        })
+        .catch(function () {
           vm.clusters = ClusterService.getClustersByConnectorType(vm.connectorType);
-        }).finally(function () {
+        })
+        .finally(function () {
           vm.loadingClusters = false;
         });
     }

@@ -1860,8 +1860,10 @@
               customerListToggle: /* @ngInject */ function () {
                 // TODO:  remove this once the controllers are refactored
                 return true;
+              },
+              trialForPaid: function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
               }
-
             }
           })
           .state('customer-overview', {
@@ -2282,6 +2284,58 @@
             controller: 'TrialEmergAddressCtrl',
             controllerAs: 'eAddressTrial'
           })
+          .state('trial', {
+            abstract: true,
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<div ui-view></div>',
+                controller: 'TrialCtrl',
+                controllerAs: 'trial'
+              }
+            },
+            params: {
+              isEditing: false,
+              currentTrial: {},
+              details: {},
+              mode: {}
+            }
+          })
+          .state('trial.info', {
+            templateUrl: 'modules/core/trials/trial.tpl.html'
+          })
+          .state('trial.finishSetup', {
+            templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
+          })
+          .state('trial.webex', {
+            templateUrl: 'modules/core/trials/trialWebex.tpl.html',
+            controller: 'TrialWebexCtrl',
+            controllerAs: 'webexTrial'
+          })
+          .state('trial.call', {
+            templateUrl: 'modules/core/trials/trialDevice.tpl.html',
+            controller: 'TrialDeviceController',
+            controllerAs: 'callTrial'
+          })
+          .state('trial.pstn', {
+            templateUrl: 'modules/core/trials/trialPstn.tpl.html',
+            controller: 'TrialPstnCtrl',
+            controllerAs: 'pstnTrial'
+          })
+          .state('trial.emergAddress', {
+            templateUrl: 'modules/core/trials/trialEmergAddress.tpl.html',
+            controller: 'TrialEmergAddressCtrl',
+            controllerAs: 'eAddressTrial'
+          })
+          .state('trial.addNumbers', {
+            templateUrl: 'modules/core/trials/addNumbers.tpl.html',
+            controller: 'DidAddCtrl',
+            controllerAs: 'didAdd',
+            params: {
+              currentTrial: {},
+              currentOrg: {},
+            }
+          })
           .state('generateauthcode', {
             parent: 'modal',
             params: {
@@ -2636,6 +2690,23 @@
             },
             params: {
               clusterId: null
+            },
+            resolve: {
+              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
+              },
+            }
+          })
+          .state('hds-cluster-details.alarm-details', {
+            templateUrl: 'modules/hds/cluster-sidepanel/alarm-details.html',
+            controller: 'HDSAlarmController',
+            controllerAs: 'hdsAlarmController',
+            data: {
+              displayName: 'Alarm Details'
+            },
+            params: {
+              alarm: null,
+              host: null
             }
           })
           .state('mediafusion-settings', {
@@ -3152,12 +3223,12 @@
             controller: 'CareFeaturesCtrl',
             controllerAs: 'careFeaturesCtrl'
           })
-          .state('care.ChatSA', {
-            url: '/careChat',
+          .state('care.setupAssistant', {
+            url: '/setupAssistant',
             parent: 'care.Details',
-            templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
-            controller: 'CareChatSetupAssistantCtrl',
-            controllerAs: 'careChatSA',
+            templateUrl: 'modules/sunlight/features/template/ctSetupAssistant.tpl.html',
+            controller: 'CareSetupAssistantCtrl',
+            controllerAs: 'careSetupAssistant',
             params: {
               template: null,
               isEditFeature: null
