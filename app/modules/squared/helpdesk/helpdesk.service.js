@@ -139,7 +139,7 @@
 
     function getCorrectedDisplayName(user) {
       var displayName = '';
-      if (user.name !== null) {
+      if (user.name) {
         displayName = user.name.givenName ? user.name.givenName : '';
         displayName += user.name.familyName ? ' ' + user.name.familyName : '';
       }
