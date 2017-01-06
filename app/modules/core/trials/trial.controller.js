@@ -581,24 +581,19 @@
     function init() {
       var isTestOrg = false;
       var overrideTestOrg = false;
-      var getAdminOrgError = false;
       vm.hasCallEntitlement = Authinfo.isSquaredUC() || vm.isNewTrial();
       var promises = {
         atlasCareCallbackTrials: FeatureToggleService.atlasCareCallbackTrialsGetStatus(),
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
-        adminOrg: Orgservice.getAdminOrgAsPromise().catch(function (err) {
-          getAdminOrgError = true;
-          return err;
-        }),
+        adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
         placesEnabled: FeatureToggleService.supports(FeatureToggleService.features.csdmPstn),
-        atlasCreateTrialBackendEmail: FeatureToggleService.atlasCreateTrialBackendEmailGetStatus(),
+        atlasCreateTrialBackendEmail: FeatureToggleService.atlasCreateTrialBackendEmailGetStatus()
       };
       if (!vm.isNewTrial()) {
         promises.tcHasService = TrialContextService.trialHasService(vm.currentTrial.customerOrgId);
       }
-
       $q.all(promises)
         .then(function (results) {
           vm.showRoomSystems = true;
@@ -609,9 +604,7 @@
           vm.atlasTrialsShipDevicesEnabled = results.ftShipDevices;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;
           overrideTestOrg = results.ftShipDevices;
-          if (!getAdminOrgError && results.adminOrg.data.success) {
-            isTestOrg = results.adminOrg.data.isTestOrg;
-          }
+          isTestOrg = _.get(results.adminOrg, 'data.isTestOrg', false);
           vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
           vm.devicesModal.enabled = vm.canSeeDevicePage;
 
@@ -622,9 +615,6 @@
             vm.placesEnabled = results.placesEnabled;
           }
           updateTrialService(_messageTemplateOptionId);
-        })
-        .catch(function (error) {
-          vm.error = error;
         })
         .finally(function () {
           $scope.$watch(function () {

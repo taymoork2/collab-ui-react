@@ -1551,65 +1551,63 @@ describe('Controller: TrialCtrl:', function () {
       expect(controller.meetingTrial.enabled).toBeTruthy();
     });
 
-    it('have getPaidLicenseQty calculate quantity for purchased services corectly', function () {
+    it('have getPaidLicenseQty calculate quantity for purchased services correctly', function () {
       var meetingLicenses = _.filter(controller.currentTrial.licenseList, { licenseType: 'CONFERENCING', isTrial: false });
-      expect(meetingLicenses.length).toEqual(2);
-      expect(meetingLicenses[0].volume).toEqual(69);
-      expect(meetingLicenses[1].volume).toEqual(70);
-      expect(controller.currentTrial.licenseList)
-      expect(controller.paidServices.meeting.qty).toEqual(139);
-      });
+      expect(meetingLicenses.length).toBe(2);
+      expect(meetingLicenses[0].volume).toBe(69);
+      expect(meetingLicenses[1].volume).toBe(70);
+      expect(controller.currentTrial.licenseList);
+      expect(controller.paidServices.meeting.qty).toBe(139);
+    });
 
-      it('find offers correctly for multiple offer types', function () {
-        var result = controller._helpers.hasOfferType(Config.trials.meeting, Config.offerTypes.meetings, Config.offerTypes.webex);
-        expect(result).toBeTruthy();
-      });
+    it('find offers correctly for multiple offer types', function () {
+      var result = controller._helpers.hasOfferType(Config.trials.meeting, Config.offerTypes.meetings, Config.offerTypes.webex);
+      expect(result).toBeTruthy();
+    });
 
-      it('find offers correctly for single offer types', function () {
-        expect(controller._helpers.hasOfferType(Config.offerTypes.roomSystems)).toBeTruthy();
-      });
+    it('find offers correctly for single offer types', function () {
+      expect(controller._helpers.hasOfferType(Config.offerTypes.roomSystems)).toBeTruthy();
+    });
 
-      it('get paid services correctly', function () {
-        expect(controller.paidServices.message.qty).toEqual(49);
-        expect(controller.paidServices.meeting.qty).toEqual(139);
-        expect(controller.paidServices.webex.qty).toEqual(0);
-        expect(controller.paidServices.call.qty).toEqual(0);
-        expect(controller.paidServices.roomSystems.qty).toEqual(0);
-        expect(controller.paidServices.sparkBoard.qty).toEqual(0);
-        expect(controller.paidServices.care.qty).toEqual(0);
-        expect(controller.paidServices.context.qty).toEqual(0);
-      });
+    it('get paid services correctly', function () {
+      expect(controller.paidServices.message.qty).toBe(49);
+      expect(controller.paidServices.meeting.qty).toBe(139);
+      expect(controller.paidServices.webex.qty).toBe(0);
+      expect(controller.paidServices.call.qty).toBe(0);
+      expect(controller.paidServices.roomSystems.qty).toBe(0);
+      expect(controller.paidServices.sparkBoard.qty).toBe(0);
+      expect(controller.paidServices.care.qty).toBe(0);
+      expect(controller.paidServices.context.qty).toBe(0);
+    });
 
-      it('merge trial presets with purchased services', function () {
-        expect(controller.preset.message).toBeTruthy();
-        expect(controller.preset.meeting).toBeTruthy();
-        expect(controller.preset.webex).toBeTruthy();
-        expect(controller.preset.call).toBeFalsy();
-        expect(controller.preset.roomSystems).toBeTruthy();
-        expect(controller.preset.sparkBoard).toBeTruthy();
-        expect(controller.preset.care).toBeFalsy();
-        expect(controller.preset.context).toBeFalsy();
-      });
+    it('merge trial presets with purchased services', function () {
+      expect(controller.preset.message).toBeTruthy();
+      expect(controller.preset.meeting).toBeTruthy();
+      expect(controller.preset.webex).toBeTruthy();
+      expect(controller.preset.call).toBeFalsy();
+      expect(controller.preset.roomSystems).toBeTruthy();
+      expect(controller.preset.sparkBoard).toBeTruthy();
+      expect(controller.preset.care).toBeFalsy();
+      expect(controller.preset.context).toBeFalsy();
+    });
 
-      it('set purchased services to disabled before calling service to start trial', function () {
-        expect(controller.trialData.trials.messageTrial.enabled).toBeTruthy();
-        expect(controller.trialData.trials.meetingTrial.enabled).toBeTruthy();
-        //message and meeting should be disabled
-        spyOn(TrialService, 'startTrial').and.returnValue($q.when(getJSONFixture('core/json/trials/trialAddResponse.json')));
-        controller.startTrial();
-        $scope.$apply();
-        expect(controller.trialData.trials.messageTrial.enabled).toBeFalsy();
-        expect(controller.trialData.trials.meetingTrial.enabled).toBeFalsy();
-      });
+    it('set purchased services to disabled before calling service to start trial', function () {
+      expect(controller.trialData.trials.messageTrial.enabled).toBeTruthy();
+      expect(controller.trialData.trials.meetingTrial.enabled).toBeTruthy();
+      //message and meeting should be disabled
+      spyOn(TrialService, 'startTrial').and.returnValue($q.when(getJSONFixture('core/json/trials/trialAddResponse.json')));
+      controller.startTrial();
+      $scope.$apply();
+      expect(controller.trialData.trials.messageTrial.enabled).toBeFalsy();
+      expect(controller.trialData.trials.meetingTrial.enabled).toBeFalsy();
+    });
 
-      it('should populate name and email fields', function () {
-        spyOn(TrialService, 'startTrial').and.returnValue($q.when(getJSONFixture('core/json/trials/trialAddResponse.json')));
-        controller.startTrial();
-        $scope.$apply();
-        expect(controller.trialData.details.customerEmail).toEqual(controller.currentTrial.customerEmail);
-        expect(controller.trialData.details.customerName).toEqual(controller.currentTrial.customerName);
-      });
+    it('should populate name and email fields', function () {
+      spyOn(TrialService, 'startTrial').and.returnValue($q.when(getJSONFixture('core/json/trials/trialAddResponse.json')));
+      controller.startTrial();
+      $scope.$apply();
+      expect(controller.trialData.details.customerEmail).toBe(controller.currentTrial.customerEmail);
+      expect(controller.trialData.details.customerName).toBe(controller.currentTrial.customerName);
     });
   });
-
-
+});
