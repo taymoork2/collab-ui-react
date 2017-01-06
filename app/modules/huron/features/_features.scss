@@ -12,32 +12,7 @@
 @import 'styles/toolkit/colors';
 @import 'styles/toolkit/spacing';
 
-// these global overrides are used by all features setup assistants
-
-.typeahead-large {
-  .input-hint {
-    @include vr-spacing(p, 1);
-
-    border: 0;
-    border-top: solid rem(1px) $gray-light;
-    width: 100%;
-    text-align: center;
-    color: $gray;
-    font-style: italic;
-  }
-
-  input {
-    height: 44px; // prevents Firefox from clipping top of text
-    &:focus ~ .input-hint {
-      border-top: solid rem(1px) $brand-primary;
-    }
-
-    &.error ~ .input-hint {
-      border-top: solid rem(1px) $color-negative-base;
-    }
-  }
-}
-
+// these global overrides are used for layout of all features setup assistants
 .cs-setupassistant {
   margin: 0 auto;
   max-width: 100%;

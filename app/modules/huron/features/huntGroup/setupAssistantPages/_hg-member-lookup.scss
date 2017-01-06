@@ -4,11 +4,9 @@
 
 .typeahead-large .dropdown-menu,
 .typeahead .dropdown-menu {
-  @include vr-spacing(pb, 1);
-
   li .hunt-member-name {
-    @include vr-spacing(ph, 2);
-    @include vr-spacing(pt, 1);
+    @include vr-spacing(ph, 1);
+    @include vr-spacing(pt, 0.5);
     @include vr-spacing(pb, 0.25);
 
     background: $color-white;
@@ -16,7 +14,7 @@
   }
 
   li .hunt-member-line {
-    @include vr-spacing(ph, 2);
+    @include vr-spacing(ph, 1);
     @include vr-spacing(pv, 0.25);
 
     span {
