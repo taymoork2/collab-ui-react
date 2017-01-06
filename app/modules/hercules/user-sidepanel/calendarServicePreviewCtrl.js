@@ -21,9 +21,10 @@
     });
     $scope.extension = {
       id: $stateParams.extensionId,
-      entitled: $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf($stateParams.extensionId) > -1,
+      entitled: $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf($stateParams.extensionId) > -1, // Tracks the entitlement as set in the UI (toggle)
       hasShowPreferredWebExSiteNameFeatureToggle: false,
       preferredWebExSiteName: $translate.instant('hercules.cloudExtensions.preferredWebExSiteDefault'),
+      currentUserEntitled: $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf($stateParams.extensionId) > -1, // Tracks the actual entitlement on the user
       isExchange: function () {
         return this.id === 'squared-fusion-cal';
       }
@@ -232,6 +233,7 @@
                 return entitlement === $scope.extension.id;
               });
             }
+            $scope.extension.currentUserEntitled = isEntitled();
             $scope.calendarType.init();
             $scope.setShouldShowButtons();
             refreshUserInUss();
