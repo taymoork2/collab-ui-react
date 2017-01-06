@@ -80,8 +80,6 @@ describe('ChoosePersonalCtrl: Ctrl', function () {
     it('should set the wizardState with correct fields for show activation code modal', function () {
       expect($stateParams.wizard.next).toHaveBeenCalled();
       var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
-      expect(wizardState.account.deviceType).toBe('huron');
-      expect(wizardState.account.type).toBe('personal');
       expect(wizardState.account.name).toBe(displayName);
       expect(wizardState.account.cisUuid).toBe(userCisUuid);
       expect(wizardState.account.username).toBe(email);
