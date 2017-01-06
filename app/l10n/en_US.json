@@ -603,6 +603,9 @@
     "threeMonths2": "for the last three months",
     "threeMonthsTaskStatus": "handled and abandoned",
     "threeMonthsInterval": "given month",
+    "media_type_all": "All Contact Types",
+    "media_type_chat": "Chat",
+    "media_type_callback": "Callback",
     "taskDataGetError": "There was an error while loading the {{dataType}} data."
   },
   "activeUsers": {
