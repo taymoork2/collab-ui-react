@@ -10,7 +10,6 @@
     var cachedUserStatusSummary = [];
 
     var USSUrl = UrlConfig.getUssUrl() + 'uss/api/v1';
-    var USSv2Url = UrlConfig.getUssUrl() + 'uss/api/v2';
 
     var hub = CsdmHubFactory.create();
 
@@ -190,7 +189,7 @@
 
     function getUserJournal(userId, orgId, limit, serviceId) {
       return $http
-        .get(USSv2Url + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userJournal/' + userId + (limit ? '?limit=' + limit : '') + (serviceId ? '&serviceId=' + serviceId : ''))
+        .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userJournal/' + userId + (limit ? '?limit=' + limit : '') + (serviceId ? '&serviceId=' + serviceId : ''))
         .then(extractJournalEntries);
     }
   }
