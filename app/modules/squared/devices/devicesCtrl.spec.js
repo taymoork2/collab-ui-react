@@ -79,11 +79,15 @@ describe('Controller: DevicesCtrl', function () {
   });
 
   describe('startAddDeviceFlow function', function () {
-    var displayName;
     var userCisUuid;
     var firstName;
     var email;
     var orgId;
+    var adminFirstName;
+    var adminLastName;
+    var adminDisplayName;
+    var adminUserName;
+    var adminCisUuid;
     var adminOrgId;
     var isEntitledToHuron;
     var isEntitledToRoomSystem;
@@ -94,11 +98,15 @@ describe('Controller: DevicesCtrl', function () {
       isEntitledToRoomSystem = true;
       showDarling = true;
       showATA = true;
-      displayName = 'displayName';
       firstName = 'firstName';
       userCisUuid = 'userCisUuid';
       email = 'email@address.com';
       orgId = 'orgId';
+      adminFirstName = 'adminFirstName';
+      adminLastName = 'adminLastName';
+      adminDisplayName = 'adminDisplayName';
+      adminUserName = 'adminUserName';
+      adminCisUuid = 'adminCisUuid';
       adminOrgId = 'adminOrgId';
       spyOn(controller, 'isEntitledToHuron').and.returnValue(isEntitledToHuron);
       spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(isEntitledToRoomSystem);
@@ -106,10 +114,16 @@ describe('Controller: DevicesCtrl', function () {
       spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(email);
       spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
       spyOn($state, 'go');
-      controller.adminDisplayName = displayName;
       controller.adminFirstName = firstName;
       controller.showDarling = showDarling;
-      controller.adminOrgId = adminOrgId;
+      controller.adminUserDetails = {
+        firstName: adminFirstName,
+        lastName: adminLastName,
+        displayName: adminDisplayName,
+        userName: adminUserName,
+        cisUuid: adminCisUuid,
+        organizationId: adminOrgId
+      };
     });
 
     it('should set the wizardState with correct fields for the wizard if places toggle is on', function () {
@@ -122,11 +136,16 @@ describe('Controller: DevicesCtrl', function () {
       expect(wizardState.function).toBe('addDevice');
       expect(wizardState.showDarling).toBe(showDarling);
       expect(wizardState.showATA).toBe(showATA);
-      expect(wizardState.adminOrganizationId).toBe(adminOrgId);
+      expect(wizardState.admin.firstName).toBe(adminFirstName);
+      expect(wizardState.admin.lastName).toBe(adminLastName);
+      expect(wizardState.admin.displayName).toBe(adminDisplayName);
+      expect(wizardState.admin.userName).toBe(adminUserName);
+      expect(wizardState.admin.cisUuid).toBe(adminCisUuid);
+      expect(wizardState.admin.organizationId).toBe(adminOrgId);
       expect(wizardState.isEntitledToHuron).toBe(isEntitledToHuron);
       expect(wizardState.isEntitledToRoomSystem).toBe(isEntitledToRoomSystem);
       expect(wizardState.account.organizationId).toBe(orgId);
-      expect(wizardState.recipient.displayName).toBe(displayName);
+      expect(wizardState.recipient.displayName).toBe(adminDisplayName);
       expect(wizardState.recipient.firstName).toBe(firstName);
       expect(wizardState.recipient.cisUuid).toBe(userCisUuid);
       expect(wizardState.recipient.email).toBe(email);
@@ -143,11 +162,16 @@ describe('Controller: DevicesCtrl', function () {
       expect(wizardState.function).toBe('addDevice');
       expect(wizardState.showDarling).toBe(showDarling);
       expect(wizardState.showATA).toBe(showATA);
-      expect(wizardState.adminOrganizationId).toBe(adminOrgId);
+      expect(wizardState.admin.firstName).toBe(adminFirstName);
+      expect(wizardState.admin.lastName).toBe(adminLastName);
+      expect(wizardState.admin.displayName).toBe(adminDisplayName);
+      expect(wizardState.admin.userName).toBe(adminUserName);
+      expect(wizardState.admin.cisUuid).toBe(adminCisUuid);
+      expect(wizardState.admin.organizationId).toBe(adminOrgId);
       expect(wizardState.isEntitledToHuron).toBe(isEntitledToHuron);
       expect(wizardState.isEntitledToRoomSystem).toBe(isEntitledToRoomSystem);
       expect(wizardState.account.organizationId).toBe(orgId);
-      expect(wizardState.recipient.displayName).toBe(displayName);
+      expect(wizardState.recipient.displayName).toBe(adminDisplayName);
       expect(wizardState.recipient.firstName).toBe(firstName);
       expect(wizardState.recipient.cisUuid).toBe(userCisUuid);
       expect(wizardState.recipient.email).toBe(email);
