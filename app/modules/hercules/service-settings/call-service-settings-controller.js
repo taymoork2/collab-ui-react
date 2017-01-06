@@ -6,12 +6,10 @@
     .controller('CallServiceSettingsController', CallServiceSettingsController);
 
   /* @ngInject */
-  function CallServiceSettingsController($modal, ServiceDescriptor, Authinfo, USSService, MailValidatorService, CertService, Notification, CertificateFormatterService, $translate) {
+  function CallServiceSettingsController($modal, ServiceDescriptor, Authinfo, USSService, CertService, Notification, CertificateFormatterService, $translate) {
     var vm = this;
-    vm.emailSubscribers = '';
     vm.formattedCertificateList = [];
     vm.readCerts = readCerts;
-    vm.localizedAddEmailWatermark = $translate.instant('hercules.settings.emailNotificationsWatermark');
     vm.enableEmailSendingToUser = false;
     vm.squaredFusionEc = false;
     vm.squaredFusionEcEntitled = Authinfo.isFusionEC();
@@ -25,9 +23,6 @@
         }
       });
     }
-    vm.general = {
-      title: 'common.general'
-    };
     vm.help = {
       title: 'common.help'
     };
@@ -84,35 +79,6 @@
           vm.savingSip = false;
           Notification.errorWithTrackingId(error, 'hercules.errors.sipDomainInvalid');
         });
-    };
-    ServiceDescriptor.getEmailSubscribers('squared-fusion-uc')
-      .then(function (emailSubscribers) {
-        vm.emailSubscribers = _.map(emailSubscribers, function (user) {
-          return {
-            text: user
-          };
-        });
-      });
-
-    vm.writeConfig = function () {
-      var emailSubscribers = _.map(vm.emailSubscribers, function (data) {
-        return data.text;
-      }).toString();
-      if (emailSubscribers && !MailValidatorService.isValidEmailCsv(emailSubscribers)) {
-        Notification.error('hercules.errors.invalidEmail');
-      } else {
-        vm.savingEmail = true;
-
-        ServiceDescriptor.setEmailSubscribers('squared-fusion-uc', emailSubscribers)
-          .then(function (response) {
-            if (response.status === 204) {
-              Notification.success('hercules.settings.emailNotificationsSavingSuccess');
-            } else {
-              Notification.error('hercules.settings.emailNotificationsSavingError');
-            }
-            vm.savingEmail = false;
-          });
-      }
     };
 
     vm.uploadCert = function (file) {

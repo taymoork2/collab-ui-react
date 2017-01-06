@@ -94,17 +94,17 @@
     "moment-timezone": "^0.5.7",
     "ng-csv": "~0.3.1",
     "ng-file-upload": "~7.2.1",
-    "ng-tags-input": "~3.0.0",
+    "ng-tags-input": "^3.1.1",
     "ngclipboard": "~1.1.1",
     "oclazyload": "~1.0.9",
     "pako": "^1.0.3",
     "punycode": "^1.4.0",
     "qr-image": "^3.2.0",
     "query-command-supported": "~1.0.0",
+    "stickyfill": "git://github.com/collab-ui/stickyfill.git",
     "typeahead.js": "~0.10.2",
     "ui-router-extras": "^0.1.2",
-    "x2js": "git+https://github.com/abdmob/x2js.git#v1.2.0",
-    "stickyfill": "git://github.com/collab-ui/stickyfill.git"
+    "x2js": "git+https://github.com/abdmob/x2js.git#v1.2.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.5.7",
