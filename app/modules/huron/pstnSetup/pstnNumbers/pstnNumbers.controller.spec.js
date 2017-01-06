@@ -12,7 +12,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     "data": {
       "numbers": "+12145551000"
     },
-    "numberype": "did",
+    "numberType": "DID",
     "orderType": "NUMBER_ORDER"
   };
   var consecutiveOrder = {
@@ -22,7 +22,7 @@ describe('Controller: PstnNumbersCtrl', function () {
         "+12145551001"
       ]
     },
-    "numberype": "did",
+    "numberType": "DID",
     "orderType": "NUMBER_ORDER"
   };
   var nonconsecutiveOrder = {
@@ -32,7 +32,7 @@ describe('Controller: PstnNumbersCtrl', function () {
         "+12145551678"
       ]
     },
-    "numberype": "did",
+    "numberType": "DID",
     "orderType": "NUMBER_ORDER"
   };
   var portOrder = {
@@ -50,7 +50,7 @@ describe('Controller: PstnNumbersCtrl', function () {
       length: 2,
       consecutive: false
     },
-    "numberype": "did",
+    numberType: "DID",
     orderType: "BLOCK_ORDER"
   };
   var advancedNxxOrder = {
@@ -60,7 +60,7 @@ describe('Controller: PstnNumbersCtrl', function () {
       nxx: 201,
       consecutive: false
     },
-    "numberype": "did",
+    numberType: "DID",
     orderType: "BLOCK_ORDER"
   };
   var advancedTollFreeOrder = {
@@ -69,7 +69,7 @@ describe('Controller: PstnNumbersCtrl', function () {
       length: 3,
       consecutive: false
     },
-    "numberype": "tollfree",
+    numberType: "TOLLFREE",
     orderType: "BLOCK_ORDER"
   };
 
