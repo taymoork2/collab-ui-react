@@ -1762,38 +1762,42 @@
     }
 
     function updateVoicemailOptions() {
-      var featureOptions = {
-        features: {
-          VM2E: vm.model.companyVoicemail.voicemailToEmail,
-          VM2T: true,
-          VM2S: false
-        }
-      };
+      if (vm.voicemailAvrilCustomer) {
+        var featureOptions = {
+          features: {
+            VM2E: vm.model.companyVoicemail.voicemailToEmail,
+            VM2T: true,
+            VM2S: false
+          }
+        };
 
-      if (vm.model.companyVoicemail.companyVoicemailEnabled) {
-        switch (vm.model.companyVoicemail.voicemailOptions) {
-          case VM_SPARK : {
-            featureOptions.features.VM2S = true;
-            featureOptions.features.VM2T = false;
-            break;
+        if (vm.model.companyVoicemail.companyVoicemailEnabled) {
+          switch (vm.model.companyVoicemail.voicemailOptions) {
+            case VM_SPARK : {
+              featureOptions.features.VM2S = true;
+              featureOptions.features.VM2T = false;
+              break;
+            }
+            case VM_PHONE : {
+              featureOptions.features.VM2S = false;
+              featureOptions.features.VM2T = true;
+              break;
+            }
+            case VM_SPARKPHONE : {
+              featureOptions.features.VM2S = true;
+              featureOptions.features.VM2T = true;
+              break;
+            }
           }
-          case VM_PHONE : {
-            featureOptions.features.VM2S = false;
-            featureOptions.features.VM2T = true;
-            break;
-          }
-          case VM_SPARKPHONE : {
-            featureOptions.features.VM2S = true;
-            featureOptions.features.VM2T = true;
-            break;
-          }
+        } else {
+          featureOptions.features.VM2S = false;
+          featureOptions.features.VM2T = false;
+          featureOptions.features.VM2E = false;
         }
+        return ServiceSetup.updateAvrilSiteVoicemail(ServiceSetup.sites[0].uuid, featureOptions);
       } else {
-        featureOptions.features.VM2S = false;
-        featureOptions.features.VM2T = false;
-        featureOptions.features.VM2E = false;
+        return $q.resolve();
       }
-      return ServiceSetup.updateAvrilSiteVoicemail(ServiceSetup.sites[0].uuid, featureOptions);
     }
 
     function updateVoicemailPostalCode() {
