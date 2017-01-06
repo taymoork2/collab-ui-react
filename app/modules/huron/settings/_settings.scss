@@ -17,6 +17,16 @@
     overflow-y: auto;
     background: $brand-white;
 
+    .trash-icon {
+      font-size: 1.7rem;
+      color: $gray-light-1;
+      cursor: pointer;
+
+      &:hover {
+        color: $color-primary-base;
+      }
+    }
+
     .hide-delete {
       visibility: hidden;
     }

@@ -490,7 +490,7 @@
               key: 'deleteBtn',
               className: 'icon-button-delete',
               templateOptions: {
-                btnClass: 'icon trash-icon',
+                btnClass: 'icon icon-trash trash-icon',
                 onClick: function (options, scope) {
                   deleteInternalNumberRange(scope.model);
                 }
@@ -500,14 +500,14 @@
                   return vm.model.displayNumberRanges;
                 }, function (displayNumberRanges) {
                   if (displayNumberRanges.length === 1) {
-                    $scope.to.btnClass = 'trash-icon hide-delete';
+                    $scope.to.btnClass = 'icon icon-trash trash-icon hide-delete';
                   } else if (displayNumberRanges.length > 1 && !vm.firstTimeSetup && _.isUndefined($scope.model.uuid)) {
-                    $scope.to.btnClass = 'trash-icon';
+                    $scope.to.btnClass = 'icon icon-trash trash-icon';
                   } else if (displayNumberRanges.length > 1 && vm.firstTimeSetup && _.isUndefined($scope.model.uuid)) {
-                    $scope.to.btnClass = 'trash-icon';
+                    $scope.to.btnClass = 'icon icon-trash trash-icon';
                   } else if (vm.model.numberRanges.length === 1 && displayNumberRanges.length !== 1) {
                     if (!_.isUndefined(vm.model.numberRanges[0].uuid)) {
-                      $scope.to.btnClass = 'trash-icon hide-delete';
+                      $scope.to.btnClass = 'icon icon-trash trash-icon hide-delete';
                     }
                   }
                 });

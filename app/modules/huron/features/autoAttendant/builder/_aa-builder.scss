@@ -186,7 +186,7 @@ $aa-builder-text-color: $gray-dark-1;
   background-color: $color-white;
 
   #aa-name-detail {
-    // @extend h2;
+    // @extend h2 team; autoAttendant: please suggest alternative
 
     line-height: 1;
 
@@ -211,7 +211,7 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-name-edit {
-  // @extend h2;
+  // @extend h2; autoAttendant team: please suggest alternative
 
   min-width: 1rem;
   white-space: nowrap;
