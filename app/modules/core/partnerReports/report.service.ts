@@ -14,7 +14,7 @@ import {
 } from './partnerReportInterfaces';
 import { Notification } from 'modules/core/notifications';
 
-class ReportService {
+export class ReportService {
   private readonly POSITIVE: string = 'positive';
   private readonly NEGATIVE: string = 'negative';
   private readonly ACTIVE_USERS: string = 'activeUsers';
@@ -295,7 +295,7 @@ class ReportService {
     }
   }
 
-  public getMediaQualityMetrics(customers: Array<IReportsCustomer>, filter: ITimespan): Array<IMediaQualityData> {
+  public getMediaQualityMetrics(customers: Array<IReportsCustomer>, filter: ITimespan): ng.IHttpPromise<Array<IMediaQualityData>> {
     if (this.qualityCancelPromise) {
       this.qualityCancelPromise.resolve(this.ABORT);
     }
