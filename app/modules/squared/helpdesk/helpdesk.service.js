@@ -144,7 +144,7 @@
         displayName += user.name.familyName ? ' ' + user.name.familyName : '';
       }
       if (!displayName) {
-        return user.displayName;
+        return user.displayName ? user.displayName : user.userName;
       }
       return displayName;
     }
