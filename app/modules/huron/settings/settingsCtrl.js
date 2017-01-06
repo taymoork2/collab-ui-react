@@ -41,7 +41,7 @@
     };
     var DEFAULT_DF = {
       label: 'MM/DD/YYYY',
-      value: Config.dateFormat.MDY
+      value: Config.dateFormat.MDY_S
     };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
@@ -526,7 +526,7 @@
           }
         },
         hideExpression: function () {
-          if (vm.model.displayNumberRanges.length > 9) {
+          if (vm.model.displayNumberRanges.length > 19) {
             return true;
           } else {
             return vm.hideFieldInternalNumberRange;

@@ -603,6 +603,9 @@
     "threeMonths2": "for the last three months",
     "threeMonthsTaskStatus": "handled and abandoned",
     "threeMonthsInterval": "given month",
+    "media_type_all": "All Contact Types",
+    "media_type_chat": "Chat",
+    "media_type_callback": "Callback",
     "taskDataGetError": "There was an error while loading the {{dataType}} data."
   },
   "activeUsers": {
@@ -1650,7 +1653,8 @@
     "connectorNameFromConnectorType": {
       "c_cal": "Calendar Connector",
       "c_ucmc": "Call Connector",
-      "c_mgmt": "Management Connector"
+      "c_mgmt": "Management Connector",
+      "hds_app": "Hybrid Data Security Connector"
     },
     "serviceNameFromConnectorType": {
       "c_cal": "Calendar Service",
