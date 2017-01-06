@@ -60,20 +60,9 @@
 
       <div ng-if="callServiceAware.entitled
         && callServiceAware.status
-        && callServiceAware.status.state === 'error'
         && callServiceAware.status.description"
-           class="error-message">
-        <i class="icon icon-error"></i>
-        <p class="message">
-          {{callServiceAware.status.description.defaultMessage}}
-        </p>
-      </div>
-
-      <div ng-if="callServiceAware.entitled
-        && callServiceAware.status
-        && callServiceAware.status.description"
-           class="info-message">
-        <i class="icon icon-info"></i>
+           class="info-message" ng-class="callServiceAware.status.state === 'error' ? 'error-message' : 'info-message'">
+        <i class="icon" ng-class="callServiceAware.status.state === 'error' ? 'icon-error' : 'icon-info'"></i>
         <p class="message">
           {{callServiceAware.status.description.defaultMessage}}
         </p>
@@ -115,19 +104,11 @@
         </span>
     </div>
 
-    <div ng-if="callServiceConnect.entitled && callServiceConnect.status.state === 'error'"
-         class="error-message">
-      <i class="icon icon-error"></i>
-      <p class="message">
-        {{callServiceConnect.status.description.defaultMessage}}
-      </p>
-    </div>
-
     <div ng-if="callServiceConnect.entitled
       && callServiceConnect.status
       && callServiceConnect.status.description"
-         class="info-message">
-      <i class="icon icon-info"></i>
+         class="info-message" ng-class="callServiceConnect.status.state === 'error' ? 'error-message' : 'info-message'">
+      <i class="icon" ng-class="callServiceConnect.status.state === 'error' ? 'icon-error' : 'icon-info'"></i>
       <p class="message">
         {{callServiceConnect.status.description.defaultMessage}}
       </p>
