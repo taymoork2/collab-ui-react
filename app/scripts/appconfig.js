@@ -2573,8 +2573,9 @@
             url: '/hds/settings',
             views: {
               'fullPane': {
-                //TODO: change to hds-settings.html
-                templateUrl: 'modules/hds/resources/cluster-list.html'
+                controller: 'HDSSettingsController',
+                controllerAs: 'hdsSettings',
+                templateUrl: 'modules/hds/settings/hds-settings.html'
               }
             },
             resolve: {
