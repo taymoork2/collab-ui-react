@@ -426,7 +426,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             activationCode: activationCode,
             expiryTime: expiryTime
           }));
-          spyOn(OtpService, 'getQrCodeUrl').and.returnValue($q.when({}));
           initController();
           $scope.$digest();
         });
@@ -434,7 +433,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         it('creates a new place and otp', function () {
           expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber);
           expect(CsdmDataModelService.createCodeForExisting).toHaveBeenCalledWith(cisUuid);
-          expect(OtpService.getQrCodeUrl).toHaveBeenCalledWith(activationCode);
+          expect(controller.qrCode).toBeTruthy();
           expect(controller.activationCode).toBe(activationCode);
           expect(controller.expiryTime).toBe(expiryTime);
         });
@@ -469,7 +468,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             activationCode: activationCode,
             expiryTime: expiryTime
           }));
-          spyOn(OtpService, 'getQrCodeUrl').and.returnValue($q.when({}));
           initController();
           $scope.$digest();
         });
@@ -477,7 +475,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
         it('creates an otp', function () {
           expect(CsdmDataModelService.createCodeForExisting).toHaveBeenCalledWith(cisUuid);
-          expect(OtpService.getQrCodeUrl).toHaveBeenCalledWith(activationCode);
+          expect(controller.qrCode).toBeTruthy();
           expect(controller.activationCode).toBe(activationCode);
           expect(controller.expiryTime).toBe(expiryTime);
         });
@@ -519,7 +517,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             activationCode: activationCode,
             expiryTime: expiryTime
           }));
-          spyOn(OtpService, 'getQrCodeUrl').and.returnValue($q.when({}));
           initController();
           $scope.$digest();
         });
@@ -528,7 +525,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         it('creates a new place and otp', function () {
           expect(CsdmDataModelService.createCmiPlace).toHaveBeenCalledWith(deviceName, directoryNumber, externalNumber);
           expect(CsdmHuronPlaceService.createOtp).toHaveBeenCalledWith(cisUuid);
-          expect(OtpService.getQrCodeUrl).toHaveBeenCalledWith(activationCode);
+          expect(controller.qrCode).toBeTruthy();
           expect(controller.activationCode).toBe(activationCode);
           expect(controller.expiryTime).toBe(expiryTime);
           expect(controller.account.cisUuid).toBe(newPlace.cisUuid);
@@ -564,14 +561,13 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             activationCode: activationCode,
             expiryTime: expiryTime
           }));
-          spyOn(OtpService, 'getQrCodeUrl').and.returnValue($q.when({}));
           initController();
           $scope.$digest();
         });
 
         it('creates an otp', function () {
           expect(CsdmHuronPlaceService.createOtp).toHaveBeenCalledWith(cisUuid);
-          expect(OtpService.getQrCodeUrl).toHaveBeenCalledWith(activationCode);
+          expect(controller.qrCode).toBeTruthy();
           expect(controller.activationCode).toBe(activationCode);
           expect(controller.expiryTime).toBe(expiryTime);
         });
@@ -606,14 +602,13 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             code: activationCode,
             friendlyExpiresOn: expiryTime
           }));
-          spyOn(OtpService, 'getQrCodeUrl').and.returnValue($q.when({}));
           initController();
           $scope.$digest();
         });
 
         it('creates an otp', function () {
           expect(OtpService.generateOtp).toHaveBeenCalledWith(userEmail);
-          expect(OtpService.getQrCodeUrl).toHaveBeenCalledWith(activationCode);
+          expect(controller.qrCode).toBeTruthy();
           expect(controller.activationCode).toBe(activationCode);
           expect(controller.expiryTime).toBe(expiryTime);
         });

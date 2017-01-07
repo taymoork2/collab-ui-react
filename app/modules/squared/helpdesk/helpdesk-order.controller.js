@@ -35,6 +35,8 @@
       notifyError: notifyError
     };
 
+    var oneTier = '1-tier';
+
     // Get Order details
     HelpdeskService.searchOrders(vm.orderId).then(initOrderView, vm._helpers.notifyError);
 
@@ -72,7 +74,10 @@
         partnerEmailUpdates = _.last(partnerEmailUpdates);
         vm.partnerAdminEmail = _.get(partnerEmailUpdates, 'adminDetails.emailId');
       } else {
-        if (orderObj.orderContent.common.customerInfo.resellerInfo) {
+        vm.rtm = _.get(orderObj, 'orderContent.common.rtm').toLowerCase();
+        if (vm.rtm === oneTier) {
+          vm.partnerAdminEmail = _.get(orderObj, 'orderContent.common.customerInfo.partnerInfo.adminDetails.emailId');
+        } else if (orderObj.orderContent.common.customerInfo.resellerInfo && orderObj.orderContent.common.customerInfo.resellerInfo.id) {
           vm.partnerAdminEmail = _.get(orderObj, 'orderContent.common.customerInfo.resellerInfo.adminDetails.emailId');
         } else {
           vm.partnerAdminEmail = _.get(orderObj, 'orderContent.common.customerInfo.partnerInfo.adminDetails.emailId');

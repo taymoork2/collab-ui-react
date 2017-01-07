@@ -47,7 +47,6 @@
     .factory('TimeZoneService', TimeZoneService)
     .factory('SiteLanguageService', SiteLanguageService)
     .factory('SiteCountryService', SiteCountryService)
-    .factory('HermesQRCodeService', HermesQRCodeService)
     .factory('DeviceLogApiService', DeviceLogApiService)
     .factory('UserLineAssociationService', UserLineAssociationService)
     .factory('UserLineAssociationCountService', UserLineAssociationCountService)
@@ -452,14 +451,6 @@
   /* @ngInject */
   function SiteCountryService($resource) {
     return $resource('modules/huron/serviceSetup/siteCountries.json', {}, {});
-  }
-
-  /* @ngInject */
-  function HermesQRCodeService($resource, HuronConfig) {
-    return $resource(HuronConfig.getEmailUrl() + '/:getqrima/encoded', {
-      getqrima: 'getqrimage',
-      oneTimePassword: '@oneTimePassword'
-    }, {});
   }
 
   /* @ngInject */

@@ -71,7 +71,7 @@ describe('Service: PstnSetupService', function () {
 
   var portOrderTfnPayload = {
     numbers: ['+18004321010'],
-    numberType: "tollfree"
+    numberType: "TOLLFREE"
   };
 
   var pstnOrderPayload = {
@@ -305,7 +305,7 @@ describe('Service: PstnSetupService', function () {
 
   describe('getCarrierTollFreeInventory', function () {
     it('should call GET on Terminus V2 carrier number count API and query for toll free numbers', function () {
-      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/carriers/' + suite.carrierId + '/numbers/count?numberType=tollfree').respond(200);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/carriers/' + suite.carrierId + '/numbers/count?numberType=TOLLFREE').respond(200);
       PstnSetupService.getCarrierTollFreeInventory(suite.carrierId);
       $httpBackend.flush();
     });
@@ -313,7 +313,7 @@ describe('Service: PstnSetupService', function () {
 
   describe('searchCarrierTollFreeInventory', function () {
     it('should call the Terminus V2 carrier number API and query for toll free numbers', function () {
-      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/carriers/' + suite.carrierId + '/numbers?numberType=tollfree').respond(200);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/carriers/' + suite.carrierId + '/numbers?numberType=TOLLFREE').respond(200);
       PstnSetupService.searchCarrierTollFreeInventory(suite.carrierId);
       $httpBackend.flush();
     });
@@ -321,7 +321,7 @@ describe('Service: PstnSetupService', function () {
       var params = {
         npa: "800"
       };
-      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/carriers/' + suite.carrierId + '/numbers?npa=800&numberType=tollfree').respond(200);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/carriers/' + suite.carrierId + '/numbers?npa=800&numberType=TOLLFREE').respond(200);
       PstnSetupService.searchCarrierTollFreeInventory(suite.carrierId, params);
       $httpBackend.flush();
       params = undefined;
@@ -330,7 +330,7 @@ describe('Service: PstnSetupService', function () {
       var params = {
         count: 10
       };
-      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/carriers/' + suite.carrierId + '/numbers?count=10&numberType=tollfree').respond(200);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/carriers/' + suite.carrierId + '/numbers?count=10&numberType=TOLLFREE').respond(200);
       PstnSetupService.searchCarrierTollFreeInventory(suite.carrierId, params);
       $httpBackend.flush();
       params = undefined;
