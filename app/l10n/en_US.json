@@ -3218,6 +3218,7 @@
     "searchResults": "{count, plural, one{# search result} other{# search results}}"
   },
   "pstnOrderOverview": {
+    "cancelled": "Cancelled",
     "pstnOrders": "PSTN Orders",
     "successful": "Successful",
     "inProgress": "In Progress",
