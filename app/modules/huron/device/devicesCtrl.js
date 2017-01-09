@@ -116,6 +116,7 @@
             username: vm.currentUser.userName,
             organizationId: vm.currentUser.meta.organizationID,
             type: 'personal',
+            deviceType: vm.showPersonal ? undefined : 'huron'
           },
           recipient: {
             cisUuid: vm.currentUser.id,
