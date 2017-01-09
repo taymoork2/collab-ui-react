@@ -185,6 +185,7 @@ describe('Controller: DevicesCtrl', function () {
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(true));
       spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.when(true));
       spyOn(FeatureToggleService, 'atlasDeviceExportGetStatus').and.returnValue($q.when(true));
+      spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.when(true));
     });
 
     it('should resolve toggle loading', function () {

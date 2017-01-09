@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: DevicesCtrlHuron', function () {
-  var controller, $scope, $q, $stateParams, $state, CsdmHuronUserDeviceService, OtpService, poller, FeatureToggleService, Userservice;
+  var controller, $scope, $q, $stateParams, $state, CsdmHuronUserDeviceService, OtpService, poller, FeatureToggleService, Userservice, Authinfo;
 
   beforeEach(angular.mock.module('Huron'));
 
@@ -15,7 +15,7 @@ describe('Controller: DevicesCtrlHuron', function () {
 
   var emptyArray = [];
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _OtpService_, _CsdmHuronUserDeviceService_, _FeatureToggleService_, _Userservice_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _OtpService_, _CsdmHuronUserDeviceService_, _FeatureToggleService_, _Userservice_, _Authinfo_) {
     $scope = _$rootScope_.$new();
     $scope.userOverview = userOverview;
     $stateParams = _$stateParams_;
@@ -25,6 +25,7 @@ describe('Controller: DevicesCtrlHuron', function () {
     $state = _$state_;
     FeatureToggleService = _FeatureToggleService_;
     Userservice = _Userservice_;
+    Authinfo = _Authinfo_;
 
     $stateParams.currentUser = {
       "userName": "pregoldtx1sl+2callwaiting1@gmail.com",
@@ -52,7 +53,9 @@ describe('Controller: DevicesCtrlHuron', function () {
     spyOn(poller, 'getDeviceList').and.returnValue($q.when(deviceList));
     spyOn(OtpService, 'loadOtps').and.returnValue($q.when(emptyArray));
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.when(true));
     spyOn(Userservice, 'getUser');
+    spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(true);
 
     controller = _$controller_('DevicesCtrlHuron', {
       $scope: $scope,

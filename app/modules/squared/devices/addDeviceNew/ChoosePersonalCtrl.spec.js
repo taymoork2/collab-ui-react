@@ -34,7 +34,10 @@ describe('ChoosePersonalCtrl: Ctrl', function () {
         state: function () {
           return {
             data: {
-              title: title
+              title: title,
+              account: {
+                deviceType: 'cloudberry'
+              }
             }
           };
         }
@@ -60,7 +63,11 @@ describe('ChoosePersonalCtrl: Ctrl', function () {
       $stateParams.wizard = {
         state: function () {
           return {
-            data: {}
+            data: {
+              account: {
+                deviceType: 'cloudberry'
+              }
+            }
           };
         },
         next: function () {}
