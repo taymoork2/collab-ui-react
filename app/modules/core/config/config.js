@@ -237,9 +237,15 @@
       },
 
       dateFormat: {
-        MDY: 'M-D-Y',
-        DMY: 'D-M-Y',
-        YMD: 'Y-M-D'
+        MDY_H: 'M-D-Y',
+        DMY_H: 'D-M-Y',
+        YMD_H: 'Y-M-D',
+        MDY_P: 'M.D.Y',
+        DMY_P: 'D.M.Y',
+        YMD_P: 'Y.M.D',
+        MDY_S: 'M/D/Y',
+        DMY_S: 'D/M/Y',
+        YMD_S: 'Y/M/D'
       },
 
       webexSiteStatus: {
@@ -399,7 +405,6 @@
         'device-overview',
         'devices',
         'didadd',
-        'generateauthcode',
         'huntgroups',
         'huronCallPark',
         'huronCallPickup',

@@ -14,7 +14,7 @@ require('./_user-overview.scss');
     vm.entitlements = $stateParams.entitlements;
     vm.queryuserslist = $stateParams.queryuserslist;
     vm.services = [];
-    vm.dropDownItems = [];
+    vm.showGenerateOtpLink = false;
     vm.titleCard = '';
     vm.subTitleCard = '';
     vm.getAccountStatus = getAccountStatus;
@@ -158,12 +158,6 @@ require('./_user-overview.scss');
       $window.open(url, '_blank');
     }
 
-    var generateOtpLink = {
-      name: 'generateAuthCode',
-      text: $translate.instant('usersPreview.generateActivationCode'),
-      state: 'generateauthcode({currentUser: userOverview.currentUser, activationCode: \'new\'})'
-    };
-
     function getDisplayableServices(serviceName) {
       var displayableServices = Authinfo.getServices();
       if (Authinfo.hasAccount()) {
@@ -285,13 +279,11 @@ require('./_user-overview.scss');
     }
 
     function enableAuthCodeLink() {
-      if (!_.includes(vm.dropDownItems, generateOtpLink)) {
-        vm.dropDownItems.push(generateOtpLink);
-      }
+      vm.showGenerateOtpLink = true;
     }
 
     function disableAuthCodeLink() {
-      _.pull(vm.dropDownItems, generateOtpLink);
+      vm.showGenerateOtpLink = false;
     }
 
     function getAccountStatus() {

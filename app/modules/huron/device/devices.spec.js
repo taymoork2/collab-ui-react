@@ -1,27 +1,24 @@
 'use strict';
 
 describe('Controller: DevicesCtrlHuron', function () {
-  var controller, $scope, $q, $stateParams, $state, CsdmHuronUserDeviceService, OtpService, poller, FeatureToggleService, Userservice;
+  var controller, $scope, $q, $stateParams, $state, CsdmHuronUserDeviceService, poller, FeatureToggleService, Userservice;
 
   beforeEach(angular.mock.module('Huron'));
 
   var deviceList = {};
 
   var userOverview = {
-    addGenerateAuthCodeLink: jasmine.createSpy(),
     enableAuthCodeLink: jasmine.createSpy(),
     disableAuthCodeLink: jasmine.createSpy()
   };
 
-  var emptyArray = [];
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _OtpService_, _CsdmHuronUserDeviceService_, _FeatureToggleService_, _Userservice_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _CsdmHuronUserDeviceService_, _FeatureToggleService_, _Userservice_) {
     $scope = _$rootScope_.$new();
     $scope.userOverview = userOverview;
     $stateParams = _$stateParams_;
     $q = _$q_;
     CsdmHuronUserDeviceService = _CsdmHuronUserDeviceService_;
-    OtpService = _OtpService_;
     $state = _$state_;
     FeatureToggleService = _FeatureToggleService_;
     Userservice = _Userservice_;
@@ -50,7 +47,6 @@ describe('Controller: DevicesCtrlHuron', function () {
 
     spyOn(CsdmHuronUserDeviceService, 'create').and.returnValue(poller);
     spyOn(poller, 'getDeviceList').and.returnValue($q.when(deviceList));
-    spyOn(OtpService, 'loadOtps').and.returnValue($q.when(emptyArray));
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(false));
     spyOn(Userservice, 'getUser');
 
@@ -68,53 +64,45 @@ describe('Controller: DevicesCtrlHuron', function () {
 
   describe('activate() method', function () {
 
-    it('HuronDeviceService.getDeviceList() and OtpService.loadOtps() should only be called once', function () {
+    it('HuronDeviceService.getDeviceList() should only be called once', function () {
       expect(poller.getDeviceList.calls.count()).toEqual(1);
-      expect(OtpService.loadOtps.calls.count()).toEqual(1);
     });
 
     it('broadcast [deviceDeactivated] event', function () {
       $scope.$broadcast('deviceDeactivated');
       $scope.$apply();
       expect(poller.getDeviceList.calls.count()).toEqual(2);
-      expect(OtpService.loadOtps.calls.count()).toEqual(2);
     });
 
     it('broadcast [otpGenerated] event', function () {
       $scope.$broadcast('otpGenerated');
       $scope.$apply();
       expect(poller.getDeviceList.calls.count()).toEqual(2);
-      expect(OtpService.loadOtps.calls.count()).toEqual(2);
     });
 
     it('broadcast [entitlementsUpdated] event', function () {
       $scope.$broadcast('entitlementsUpdated');
       $scope.$apply();
       expect(poller.getDeviceList.calls.count()).toEqual(2);
-      expect(OtpService.loadOtps.calls.count()).toEqual(2);
     });
 
     it('should not call activate when Huron entitlement is removed', function () {
       poller.getDeviceList.calls.reset();
-      OtpService.loadOtps.calls.reset();
 
       $stateParams.currentUser.entitlements = ["squared-room-moderation", "webex-messenger", "squared-call-initiation", "webex-squared", "squared-syncup"];
       $scope.$broadcast('entitlementsUpdated');
       $scope.$apply();
 
       expect(poller.getDeviceList.calls.count()).toEqual(0);
-      expect(OtpService.loadOtps.calls.count()).toEqual(0);
     });
 
     it('should not call activate when currentUser is not defined', function () {
       poller.getDeviceList.calls.reset();
-      OtpService.loadOtps.calls.reset();
       $stateParams.currentUser = undefined;
       $scope.$broadcast('entitlementsUpdated');
       $scope.$apply();
 
       expect(poller.getDeviceList.calls.count()).toEqual(0);
-      expect(OtpService.loadOtps.calls.count()).toEqual(0);
     });
 
   });
@@ -146,6 +134,11 @@ describe('Controller: DevicesCtrlHuron', function () {
     var userCisUuid;
     var email;
     var orgId;
+    var adminFirstName;
+    var adminLastName;
+    var adminDisplayName;
+    var adminUserName;
+    var adminCisUuid;
     var adminOrgId;
     var showATA;
     var userName;
@@ -156,6 +149,11 @@ describe('Controller: DevicesCtrlHuron', function () {
       email = 'email@address.com';
       userName = 'usernameemailadresscom';
       orgId = 'orgId';
+      adminFirstName = 'adminFirstName';
+      adminLastName = 'adminLastName';
+      adminDisplayName = 'adminDisplayName';
+      adminUserName = 'adminUserName';
+      adminCisUuid = 'adminCisUuid';
       adminOrgId = 'adminOrgId';
       showATA = true;
       controller.currentUser = {
@@ -174,7 +172,14 @@ describe('Controller: DevicesCtrlHuron', function () {
         }
       };
       controller.showATA = showATA;
-      controller.adminOrgId = adminOrgId;
+      controller.adminUserDetails = {
+        firstName: adminFirstName,
+        lastName: adminLastName,
+        displayName: adminDisplayName,
+        userName: adminUserName,
+        cisUuid: adminCisUuid,
+        organizationId: adminOrgId
+      };
       spyOn($state, 'go');
       controller.resetCode();
       $scope.$apply();
@@ -184,7 +189,12 @@ describe('Controller: DevicesCtrlHuron', function () {
       var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
       expect(wizardState.title).toBe('addDeviceWizard.newDevice');
       expect(wizardState.showATA).toBe(showATA);
-      expect(wizardState.adminOrganizationId).toBe(adminOrgId);
+      expect(wizardState.admin.firstName).toBe(adminFirstName);
+      expect(wizardState.admin.lastName).toBe(adminLastName);
+      expect(wizardState.admin.displayName).toBe(adminDisplayName);
+      expect(wizardState.admin.userName).toBe(adminUserName);
+      expect(wizardState.admin.cisUuid).toBe(adminCisUuid);
+      expect(wizardState.admin.organizationId).toBe(adminOrgId);
       expect(wizardState.account.deviceType).toBe('huron');
       expect(wizardState.account.type).toBe('personal');
       expect(wizardState.account.name).toBe(displayName);

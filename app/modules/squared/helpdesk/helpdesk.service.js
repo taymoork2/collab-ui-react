@@ -139,12 +139,12 @@
 
     function getCorrectedDisplayName(user) {
       var displayName = '';
-      if (user.name !== null) {
+      if (user.name) {
         displayName = user.name.givenName ? user.name.givenName : '';
         displayName += user.name.familyName ? ' ' + user.name.familyName : '';
       }
       if (!displayName) {
-        return user.displayName;
+        return user.displayName ? user.displayName : user.userName;
       }
       return displayName;
     }
@@ -491,7 +491,9 @@
     }
 
     function elevateToReadonlyAdmin(orgId) {
-      return $http.post(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/actions/elevatereadonlyadmin/invoke');
+      return $http
+        .post(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/actions/elevatereadonlyadmin/invoke')
+        .then(USSService.notifyReadOnlyLaunch);
     }
 
     function getHybridStatusesForUser(userId, orgId) {

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: Care Reports Controller', function () {
-  var controller, $scope, $translate, $timeout, CareReportsService, DummyCareReportService, Notification, SunlightReportService, deferred;
+  var controller, $q, $scope, $translate, $timeout, CareReportsService, DummyCareReportService, FeatureToggleService, Notification, SunlightReportService, deferred;
   var timeOptions = [{
     value: 0,
     label: 'careReportsPage.today',
@@ -33,6 +33,16 @@ describe('Controller: Care Reports Controller', function () {
     intervalText: 'careReportsPage.threeMonthsInterval',
     categoryAxisTitle: 'careReportsPage.threeMonthsCategoryAxis'
   }];
+  var mediaTypeOptions = [{
+    name: 'all',
+    label: 'careReportsPage.media_type_all'
+  }, {
+    name: 'chat',
+    label: 'careReportsPage.media_type_chat'
+  }, {
+    name: 'callback',
+    label: 'careReportsPage.media_type_callback'
+  }];
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module(function ($provide) {
@@ -44,12 +54,14 @@ describe('Controller: Care Reports Controller', function () {
   };
   beforeEach(
     inject(function ($controller, _$q_, _$translate_, _$timeout_, $rootScope, _CareReportsService_,
-      _DummyCareReportService_, _Notification_, _SunlightReportService_) {
+      _DummyCareReportService_, _FeatureToggleService_, _Notification_, _SunlightReportService_) {
       $scope = $rootScope.$new();
       $translate = _$translate_;
       $timeout = _$timeout_;
+      $q = _$q_;
       SunlightReportService = _SunlightReportService_;
       Notification = _Notification_;
+      FeatureToggleService = _FeatureToggleService_;
       DummyCareReportService = _DummyCareReportService_;
       CareReportsService = _CareReportsService_;
       deferred = _$q_.defer();
@@ -60,6 +72,7 @@ describe('Controller: Care Reports Controller', function () {
         $translate: $translate,
         SunlightReportService: SunlightReportService,
         Notification: Notification,
+        FeatureToggleService: FeatureToggleService,
         DummyCareReportService: DummyCareReportService,
         CareReportsService: CareReportsService
       });
@@ -72,20 +85,38 @@ describe('Controller: Care Reports Controller', function () {
     SunlightReportService.getReportingData.calls.reset();
   });
 
-  describe('CareReportsController - Init', function () {
+  describe('CareReportsController - Callback feature enabled', function () {
+    it('should default to all contact types', function (done) {
+      spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.when(true));
+      $timeout(function () {
+        expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'all', true]);
+        done();
+      }, 100);
+      $timeout.flush();
+    });
+  });
 
+  describe('CareReportsController - Init', function () {
     it('should show five time options', function () {
       expect(controller).toBeDefined();
       expect(controller.timeOptions.length).toEqual(5);
     });
 
-    it('should make calls to data services with correct options', function () {
-      $timeout(function () {
-        expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([1]);
-        expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_stats', 1, 'chat']);
-        expect(SunlightReportService.getReportingData.calls.argsFor(1)).toEqual(['org_snapshot_stats', 1, 'chat']);
-      }, 1000);
+    it('should show three media type options', function () {
+      expect(controller.mediaTypeOptions.length).toEqual(3);
     });
+
+    it('should make calls to data services with correct options', function (done) {
+      spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.when(false));
+      $timeout(function () {
+        expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([0]);
+        expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'chat', true]);
+        expect(SunlightReportService.getReportingData.calls.argsFor(1)).toEqual(['org_stats', 0, 'chat']);
+        done();
+      }, 100);
+      $timeout.flush();
+    });
+
     it('should show Today and Task Incoming, Task Aggregate and Average Csat graphs on Init', function () {
       $timeout(function () {
         expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[0]).toEqual('taskIncomingdiv');
@@ -100,10 +131,11 @@ describe('Controller: Care Reports Controller', function () {
     });
   });
 
-  describe('CareReportsController - Time Update', function () {
+  describe('CareReportsController - Filters Update', function () {
     it('should send options for last week on selection', function () {
       controller.timeSelected = timeOptions[2];
-      controller.timeUpdate();
+      controller.mediaTypeSelected = mediaTypeOptions[1];
+      controller.filtersUpdate();
       expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([2]);
       expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_stats', 2, 'chat']);
       expect(SunlightReportService.getReportingData.calls.argsFor(1)).not.toEqual(['org_snapshot_stats', 1, 'chat']);
@@ -122,22 +154,24 @@ describe('Controller: Care Reports Controller', function () {
 
     it('should send options for last month on selection', function () {
       controller.timeSelected = timeOptions[3];
-      controller.timeUpdate();
+      controller.mediaTypeSelected = mediaTypeOptions[0];
+      controller.filtersUpdate();
       expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([3]);
-      expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_stats', 3, 'chat']);
-      expect(SunlightReportService.getReportingData.calls.argsFor(1)).not.toEqual(['org_snapshot_stats', 1, 'chat']);
+      expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_stats', 3, 'all']);
+      expect(SunlightReportService.getReportingData.calls.argsFor(1)).not.toEqual(['org_snapshot_stats', 1, 'all']);
     });
 
     it('should send options for last 3 months on selection', function () {
       controller.timeSelected = timeOptions[4];
-      controller.timeUpdate();
+      controller.mediaTypeSelected = mediaTypeOptions[2];
+      controller.filtersUpdate();
       expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([4]);
-      expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_stats', 4, 'chat']);
-      expect(SunlightReportService.getReportingData.calls.argsFor(1)).not.toEqual(['org_snapshot_stats', 1, 'chat']);
+      expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_stats', 4, 'callback']);
+      expect(SunlightReportService.getReportingData.calls.argsFor(1)).not.toEqual(['org_snapshot_stats', 1, 'callback']);
     });
   });
 
-  describe('CareReportsController - Time Update', function () {
+  describe('CareReportsController - Filters Update Errors', function () {
 
     var failureResponse = {
       'status': 500,
@@ -148,7 +182,8 @@ describe('Controller: Care Reports Controller', function () {
       deferred.reject();
       $scope.$apply();
       controller.timeSelected = timeOptions[0];
-      controller.timeUpdate().catch(function () {
+      controller.mediaTypeSelected = mediaTypeOptions[1];
+      controller.filtersUpdate().catch(function () {
         expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Customer Satisfaction' });
         expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Contact Time Measure' });
         expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Total Completed Contacts' });
@@ -159,12 +194,12 @@ describe('Controller: Care Reports Controller', function () {
       deferred.reject();
       $scope.$apply();
       controller.timeSelected = timeOptions[0];
-      controller.timeUpdate().catch(function () {
+      controller.mediaTypeSelected = mediaTypeOptions[1];
+      controller.filtersUpdate().catch(function () {
         expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Customer Satisfaction' });
         expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Aggregated Contacts' });
         expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Total Completed Contacts' });
       }).finally(done());
     });
-
   });
 });

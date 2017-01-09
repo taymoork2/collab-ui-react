@@ -56,6 +56,13 @@
               "emailId": "boulder.steamboat@gmail.com"
             },
             "isManager": true
+          },
+          "resellerInfo": {
+            "id": "",
+            "name": "",
+            "adminDetails": {
+              "emailId": ""
+            }
           }
         }
       },

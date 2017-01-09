@@ -25,8 +25,7 @@ class PlaceOverview implements ng.IComponentController {
 
   private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;
-  private adminDisplayName;
-  private adminOrgId;
+  private adminUserDetails;
   private pstnFeatureIsEnabledPromise: Promise<boolean> = this.FeatureToggleService.csdmPstnGetStatus();
 
   /* @ngInject */
@@ -41,7 +40,7 @@ class PlaceOverview implements ng.IComponentController {
               private Notification,
               private Userservice,
               private WizardFactory) {
-    this.csdmHuronUserDeviceService = this.CsdmHuronUserDeviceService.create(this.currentPlace.cisUuid);
+    this.csdmHuronUserDeviceService = this.CsdmHuronUserDeviceService.create(this.$stateParams.currentPlace.cisUuid);
     CsdmDataModelService.reloadItem(this.$stateParams.currentPlace).then((updatedPlace) => this.displayPlace(updatedPlace));
   }
 
@@ -96,8 +95,14 @@ class PlaceOverview implements ng.IComponentController {
     let userDetailsDeferred = this.$q.defer();
     this.Userservice.getUser('me', (data) => {
       if (data.success) {
-        this.adminDisplayName = data.displayName;
-        this.adminOrgId = data.meta.organizationID;
+        this.adminUserDetails = {
+          firstName: data.name && data.name.givenName,
+          lastName: data.name && data.name.familyName,
+          displayName: data.displayName,
+          userName: data.userName,
+          cisUuid: data.id,
+          organizationId: data.meta.organizationID,
+        };
       }
       userDetailsDeferred.resolve();
     });
@@ -192,7 +197,7 @@ class PlaceOverview implements ng.IComponentController {
         function: 'showCode',
         showATA: this.showATA,
         csdmHybridCallFeature: this.csdmHybridCallFeature,
-        adminOrganizationId: this.adminOrgId,
+        admin: this.adminUserDetails,
         account: {
           type: 'shared',
           deviceType: this.currentPlace.type,
@@ -203,8 +208,8 @@ class PlaceOverview implements ng.IComponentController {
         recipient: {
           cisUuid: this.Authinfo.getUserId(),
           email: this.Authinfo.getPrimaryEmail(),
-          displayName: this.adminDisplayName,
-          organizationId: this.adminOrgId,
+          displayName: this.adminUserDetails.displayName,
+          organizationId: this.adminUserDetails.organizationId,
         },
         title: 'addDeviceWizard.newCode',
       },

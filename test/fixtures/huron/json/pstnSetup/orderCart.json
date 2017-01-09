@@ -5,7 +5,7 @@
       "+12145557001"
     ]
   },
-  "numberType": "did",
+  "numberType": "DID",
   "orderType": "NUMBER_ORDER"
 }, {
   "data": {
@@ -21,7 +21,7 @@
     "length": 4,
     "consecutive": false
   },
-  "numberType": "did",
+  "numberType": "DID",
   "orderType": "BLOCK_ORDER"
 }, {
   "data": {
@@ -30,7 +30,7 @@
     "length": 10,
     "consecutive": true
   },
-  "numberType": "did",
+  "numberType": "DID",
   "orderType": "BLOCK_ORDER"
 }, {
   "data": {
@@ -39,13 +39,13 @@
       "+18005558001"
     ]
   },
-  "numberType": "tollfree",
+  "numberType": "TOLLFREE",
   "orderType": "NUMBER_ORDER"
 }, {
   "data": {
     "areaCode": 888,
     "length": 3
   },
-  "numberType": "tollfree",
+  "numberType": "TOLLFREE",
   "orderType": "BLOCK_ORDER"
 }]

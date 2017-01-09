@@ -3,7 +3,7 @@
 
   angular.module('Sunlight').controller('CareReportsController', CareReportsController);
   /* @ngInject */
-  function CareReportsController($timeout, $translate, CardUtils, CareReportsService, DummyCareReportService, Notification, ReportConstants, SunlightReportService) {
+  function CareReportsController($timeout, $translate, CardUtils, CareReportsService, DummyCareReportService, FeatureToggleService, Notification, ReportConstants, SunlightReportService) {
     var vm = this;
     var REFRESH = 'refresh';
     var SET = 'set';
@@ -48,9 +48,22 @@
     });
 
     vm.timeSelected = vm.timeOptions[0];
-    vm.timeUpdate = timeUpdate;
+    vm.filtersUpdate = filtersUpdate;
 
-    function timeUpdate() {
+    var mediaTypes = ['all', 'chat', 'callback'];
+    vm.mediaTypeOptions = _.map(mediaTypes, function (name, i) {
+      return {
+        value: i,
+        name: name,
+        label: $translate.instant('careReportsPage.media_type_' + name)
+      };
+    });
+
+    vm.mediaTypeSelected = vm.mediaTypeOptions[1];
+
+    vm.callbackFeature = false;
+
+    function filtersUpdate() {
       vm.dataStatus = REFRESH;
       vm.snapshotDataStatus = REFRESH;
       setFilterBasedTextForCare();
@@ -86,7 +99,7 @@
         showSnapshotReportWithRealData();
       }
       var categoryAxisTitle = vm.timeSelected.categoryAxisTitle;
-      return SunlightReportService.getReportingData('org_stats', vm.timeSelected.value, 'chat')
+      return SunlightReportService.getReportingData('org_stats', vm.timeSelected.value, vm.mediaTypeSelected.name)
         .then(function (data) {
           if (data.length === 0) {
             vm.dataStatus = EMPTY;
@@ -109,7 +122,7 @@
 
     function showSnapshotReportWithRealData() {
       var isSnapshot = true;
-      SunlightReportService.getReportingData('org_snapshot_stats', vm.timeSelected.value, 'chat', isSnapshot)
+      SunlightReportService.getReportingData('org_snapshot_stats', vm.timeSelected.value, vm.mediaTypeSelected.name, isSnapshot)
         .then(function (data) {
           if (data.length === 0) {
             vm.snapshotDataStatus = EMPTY;
@@ -169,7 +182,14 @@
     }
 
     $timeout(function () {
-      timeUpdate();
+      FeatureToggleService.atlasCareCallbackTrialsGetStatus()
+        .then(function (enabled) {
+          vm.callbackFeature = enabled;
+          if (vm.callbackFeature) {
+            vm.mediaTypeSelected = vm.mediaTypeOptions[0];
+          }
+          filtersUpdate();
+        });
     }, 30);
   }
 })();
