@@ -1,3 +1,5 @@
+import './_cp-reversion-timer.scss';
+
 import { CallParkReversionTimerComponent } from './callParkReversionTimer.component';
 
 export default angular
