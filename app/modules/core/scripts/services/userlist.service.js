@@ -270,14 +270,14 @@
           if (_.isArray(_.get(response, 'data[0].data'))) {
             count = _.chain(response.data[0].data)
               .dropRightWhile(function (d) { // skip '0' count
-                return d.details.totalRegisteredUsers === '0';
+                return d.details.totalRegisteredUsers == 0;
               })
               .last()
               .get('details.totalRegisteredUsers')
               .parseInt()
               .value();
           }
-          return count;
+          return (_.isNaN(count) ? 0 : count);
         });
     }
 
