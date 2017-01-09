@@ -223,10 +223,10 @@ describe('Controller: DevicesCtrlHuron', function () {
         expect(wizardState.admin.userName).toBe(adminUserName);
         expect(wizardState.admin.cisUuid).toBe(adminCisUuid);
         expect(wizardState.admin.organizationId).toBe(adminOrgId);
+        expect(wizardState.account.cisUuid).toBe(userCisUuid);
         expect(wizardState.account.deviceType).toBeUndefined();
         expect(wizardState.account.type).toBe('personal');
         expect(wizardState.account.name).toBe(displayName);
-        expect(wizardState.account.cisUuid).toBeUndefined();
         expect(wizardState.account.organizationId).toBe(orgId);
         expect(wizardState.account.username).toBe(userName);
         expect(wizardState.recipient.displayName).toBe(displayName);
@@ -258,7 +258,7 @@ describe('Controller: DevicesCtrlHuron', function () {
         expect(wizardState.account.deviceType).toBe('huron');
         expect(wizardState.account.type).toBe('personal');
         expect(wizardState.account.name).toBe(displayName);
-        expect(wizardState.account.cisUuid).toBeUndefined();
+        expect(wizardState.account.cisUuid).toBe(userCisUuid);
         expect(wizardState.account.organizationId).toBe(orgId);
         expect(wizardState.account.username).toBe(userName);
         expect(wizardState.recipient.displayName).toBe(displayName);

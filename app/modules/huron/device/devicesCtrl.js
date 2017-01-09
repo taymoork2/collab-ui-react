@@ -112,6 +112,7 @@
           isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
           admin: vm.adminUserDetails,
           account: {
+            cisUuid: vm.currentUser.id,
             name: vm.currentUser.displayName,
             username: vm.currentUser.userName,
             organizationId: vm.currentUser.meta.organizationID,
