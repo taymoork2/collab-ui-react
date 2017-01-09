@@ -1,6 +1,6 @@
 <div id="callerInput{{ schedule + index }}" class="aa-call-input-message-panel">
   <form name="nameVariableForm" novalidate>
-    <div class="aa-flex-row">
+    <div class="row aa-flex-row">
       <div class="large-12 small-12 columns aa-name-variable">
         <input cs-input type="text" name="callerInputNameVariable" id="callerInputNameVariable{{ schedule + index }}" placeholder="{{ :: 'autoAttendant.callerInputNamePlaceHolder' | translate }}" ng-maxlength="aaCallerInput.maxVariableLength" cs-input-messages="aaCallerInput.validationMsg" ng-model="aaCallerInput.nameInput" ng-change="aaCallerInput.saveNameInput()" cs-input-group-size="medium-12" cs-input-label="{{ :: 'autoAttendant.callerInputLabel' | translate }}">
       </div>
@@ -43,7 +43,7 @@
                 </input>
               </div>
               <div class="small-1 columns">
-                <i ng-if="aaCallerInput.inputActions.length > 1" class="aa-trash-icon" aria-label="common.delete" ng-click="aaCallerInput.deleteKeyAction($index); $event.stopPropagation();"></i>
+                <i ng-if="aaCallerInput.inputActions.length > 1" class="icon icon-trash aa-trash-icon" aria-label="common.delete" ng-click="aaCallerInput.deleteKeyAction($index); $event.stopPropagation();"></i>
               </div>
             </form>
           </div>
