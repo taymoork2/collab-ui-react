@@ -1,11 +1,11 @@
 import { Notification } from 'modules/core/notifications';
 
-class CalendarEmailNotificationsSectionCtrl implements ng.IComponentController {
+class EmailNotificationsSectionCtrl implements ng.IComponentController {
   public generalSectionTexts = {
     title: 'common.general',
   };
   public localizedAddEmailWatermark = this.$translate.instant('hercules.settings.emailNotificationsWatermark');
-  public emailSubscribers: {}[] = [];
+  public emailSubscribers: { text: string }[] = [];
   public enableEmailSendingToUser = false;
   public savingEmail = false;
   public hasCalsvcOneButtonToPushIntervalFeatureToggle = false;
@@ -54,6 +54,10 @@ class CalendarEmailNotificationsSectionCtrl implements ng.IComponentController {
       });
   }
 
+  public isCalendarService() {
+    return this.serviceId === 'squared-fusion-cal' || this.serviceId === 'squared-fusion-gcal';
+  }
+
   public writeConfig() {
     const emailSubscribers = _.map(this.emailSubscribers, 'text').toString();
     if (emailSubscribers && !this.MailValidatorService.isValidEmailCsv(emailSubscribers)) {
@@ -95,9 +99,9 @@ class CalendarEmailNotificationsSectionCtrl implements ng.IComponentController {
   };
 }
 
-export class CalendarEmailNotificationsSectionComponent implements ng.IComponentOptions {
-  public controller = CalendarEmailNotificationsSectionCtrl;
-  public templateUrl = 'modules/hercules/google-calendar-settings/calendar-email-notifications-section/calendar-email-notifications-section.html';
+export class EmailNotificationsSectionComponent implements ng.IComponentOptions {
+  public controller = EmailNotificationsSectionCtrl;
+  public templateUrl = 'modules/hercules/email-notifications-section/email-notifications-section.html';
   public bindings = {
     serviceId: '<',
   };
