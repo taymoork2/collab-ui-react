@@ -1516,6 +1516,12 @@
       "add-resource-button-information": "Click \"Add Resource\" to start the registration and configuration of your Expressways.",
       "setupCloudSipUriHeader": "Define Spark SIP Address"
     },
+    "deleteClusterNodeDialog": {
+      "confirmationDialogHeader": "Confirm Node Removal",
+      "confirmationDialogBody": "Are you sure you want to remove this node?",
+      "successNodeRemoval": "Node removed successfully.",
+      "failedNodeRemoval": "Failed to remove node."
+  },
     "addResourceDialog": {
       "title": "{{ServiceName}} Setup",
       "alreadyBeenSetupTitle": "Add Expressway Cluster",
