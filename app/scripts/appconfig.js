@@ -2336,20 +2336,6 @@
               currentOrg: {},
             }
           })
-          .state('generateauthcode', {
-            parent: 'modal',
-            params: {
-              currentUser: {},
-              activationCode: {}
-            },
-            views: {
-              'modal@': {
-                templateUrl: 'modules/huron/device/generateActivationCodeModal.tpl.html',
-                controller: 'GenerateActivationCodeCtrl',
-                controllerAs: 'genAuthCode'
-              }
-            }
-          })
           .state('didadd', {
             parent: 'modal',
             params: {

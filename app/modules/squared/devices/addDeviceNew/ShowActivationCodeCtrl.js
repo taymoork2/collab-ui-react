@@ -82,16 +82,13 @@
     };
 
     function generateQRCode() {
-      OtpService.getQrCodeUrl(vm.activationCode).then(function (qrcode) {
-        var arrayData = '';
-        for (var i in Object.keys(qrcode)) {
-          if (qrcode.hasOwnProperty(i)) {
-            arrayData += qrcode[i];
-          }
-        }
-        vm.qrCode = arrayData;
-        vm.isLoading = false;
-      });
+      var qrImage = require('qr-image');
+      vm.qrCode = qrImage.imageSync(vm.activationCode, {
+        ec_level: 'L',
+        size: 14,
+        margin: 5
+      }).toString('base64');
+      vm.isLoading = false;
     }
 
     function createHuronPlace(name, directoryNumber, externalNumber) {
