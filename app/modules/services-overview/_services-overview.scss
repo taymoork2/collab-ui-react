@@ -15,12 +15,8 @@
   }
 
   .services-list {
-    padding: 1rem 1.5rem;
+    padding: 0 1.5rem;
     margin-top: 1rem;
-    display: block;
-    min-height: 85vh;
-    width: 100%;
-    width: calc(100% + 2rem);
 
     .cluster-list.header-bar header::after {
       border-top-color: transparent !important;
@@ -98,6 +94,10 @@
             padding: 1px 1rem;
             margin-top: 1rem;
             width: auto !important;
+
+            &:focus {
+              box-shadow: none;
+            }
 
             &.disabled {
               color: $gray-dark-1;
