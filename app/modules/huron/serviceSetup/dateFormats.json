@@ -1,28 +1,28 @@
 [{
-    "value": "M/D/Y",
-    "label": "MM/DD/YYYY"
-}, {
-    "value": "D/M/Y",
-    "label": "DD/MM/YYYY"
-}, {
-    "value": "Y/M/D",
-    "label": "YYYY/MM/DD"
-}, {
-    "value": "M.D.Y",
-    "label": "MM.DD.YYYY"
-}, {
-    "value": "D.M.Y",
-    "label": "DD.MM.YYYY"
-}, {
-    "value": "Y.M.D",
-    "label": "YYYY.MM.DD"
-}, {
     "value": "M-D-Y",
-    "label": "MM-DD-YYYY"
+    "label": "MM-DD-YY"
 }, {
     "value": "D-M-Y",
-    "label": "DD-MM-YYYY"
+    "label": "DD-MM-YY"
 }, {
     "value": "Y-M-D",
-    "label": "YYYY-MM-DD"
+    "label": "YY-MM-DD"
+}, {
+    "value": "M/D/Y",
+    "label": "MM/DD/YY"
+}, {
+    "value": "D/M/Y",
+    "label": "DD/MM/YY"
+}, {
+    "value": "Y/M/D",
+    "label": "YY/MM/DD"
+}, {
+    "value": "M.D.Y",
+    "label": "MM.DD.YY"
+}, {
+    "value": "D.M.Y",
+    "label": "DD.MM.YY"
+}, {
+    "value": "Y.M.D",
+    "label": "YY.MM.DD"
 }]

@@ -40,8 +40,8 @@
       value: Config.timeFormat.HOUR_24
     };
     var DEFAULT_DF = {
-      label: 'MM/DD/YYYY',
-      value: Config.dateFormat.MDY_S
+      label: 'MM-DD-YY',
+      value: Config.dateFormat.MDY_H
     };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
