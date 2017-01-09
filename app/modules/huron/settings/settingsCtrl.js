@@ -1844,7 +1844,7 @@
         vm.callDateTimeFormat = result;
       });
 
-      FeatureToggleService.getCustomerHuronToggle(Authinfo.getOrgId(), FeatureToggleService.features.avrilVmEnable).then(function (result) {
+      FeatureToggleService.supports(FeatureToggleService.features.avrilVmEnable).then(function (result) {
         vm.voicemailAvrilCustomer = result;
       });
 
