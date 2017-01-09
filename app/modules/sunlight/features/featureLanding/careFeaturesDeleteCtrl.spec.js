@@ -35,7 +35,7 @@ describe('Care Feature Delete Ctrl', function () {
     Log = _Log_;
 
     deferred = $q.defer();
-    spyOn(CareFeatureList, 'deleteChatTemplate').and.returnValue(deferred.promise);
+    spyOn(CareFeatureList, 'deleteTemplate').and.returnValue(deferred.promise);
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
     spyOn(Notification, 'errorWithTrackingId');

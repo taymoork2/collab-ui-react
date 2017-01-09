@@ -17,13 +17,11 @@
 
     function deleteFeature() {
       vm.deleteBtnDisabled = true;
-      if (vm.featureType === 'Ch') {
-        CareFeatureList.deleteChatTemplate(vm.featureId).then(function () {
-          deleteSuccess();
-        }, function (response) {
-          deleteError(response);
-        });
-      }
+      CareFeatureList.deleteTemplate(vm.featureId).then(function () {
+        deleteSuccess();
+      }, function (response) {
+        deleteError(response);
+      });
     }
 
     function reInstantiateMasonry() {
