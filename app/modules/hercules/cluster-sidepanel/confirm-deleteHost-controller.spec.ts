@@ -1,4 +1,4 @@
-import { Notification } from '../../core/notifications/notification.service';
+import { Notification } from '/notifications/notifications';
 
 describe('Controller: ConfirmDeleteHostController ', () => {
   let $controller: ng.IControllerService, ClusterService, $scope: ng.IRootScopeService, Notification: Notification, $state: ng.ui.IStateService, $q: ng.IQService, controller: any, modalInstanceMock: any;
