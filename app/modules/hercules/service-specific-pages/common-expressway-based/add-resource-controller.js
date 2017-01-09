@@ -247,8 +247,8 @@
       })
         .result.then(function (isAborting) {
           if (isAborting) {
-              $state.go('services-overview');
-              $modalInstance.dismiss();
+            $state.go('services-overview');
+            $modalInstance.dismiss();
           }
         });
     }

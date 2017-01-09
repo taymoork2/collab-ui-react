@@ -5,10 +5,10 @@ export class CallServiceContainerController extends ExpresswayContainerControlle
 
     public tabs: any = [{
         title: this.$translate.instant('common.resources'),
-        state: 'call-service.list'
+        state: 'call-service.list',
     }, {
         title: this.$translate.instant('common.settings'),
-        state: 'call-service.settings'
+        state: 'call-service.settings',
     }];
 
     public addResourceModal: any = {
@@ -44,7 +44,7 @@ export class CallServiceContainerController extends ExpresswayContainerControlle
                 this.extractSummary();
                 this.subscribeStatusesSummary = this.USSService.subscribeStatusesSummary('data', this.extractSummary.bind(this));
             }
-        })
+        });
     }
 
 }

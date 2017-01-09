@@ -1,8 +1,8 @@
-interface clusterIdStateParam extends ng.ui.IStateParamsService {
+interface IClusterIdStateParam extends ng.ui.IStateParamsService {
     clusterId?: any;
 }
 
-interface gridApiScope extends ng.IScope {
+interface IGridApiScope extends ng.IScope {
     gridApi?: any;
 }
 
@@ -18,9 +18,9 @@ class HybridServiceClusterListCtrl implements ng.IComponentController {
     /* @ngInject */
     constructor(
         private $translate: ng.translate.ITranslateService,
-        private $scope: gridApiScope,
+        private $scope: IGridApiScope,
         private $state: ng.ui.IStateService,
-        private $stateParams: clusterIdStateParam,
+        private $stateParams: IClusterIdStateParam,
         private ClusterService,
         private FusionClusterService,
         private FusionUtils,
@@ -63,7 +63,7 @@ class HybridServiceClusterListCtrl implements ng.IComponentController {
         };
 
         this.ClusterService.subscribe('data', this.updateClusters, {
-            scope: this.$scope
+            scope: this.$scope,
         });
     }
 
@@ -75,7 +75,7 @@ class HybridServiceClusterListCtrl implements ng.IComponentController {
             })
             .catch(() => {
                 this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
-            })
+            });
 
     };
 

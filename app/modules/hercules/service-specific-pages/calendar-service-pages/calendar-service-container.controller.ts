@@ -4,10 +4,10 @@ export class CalendarServiceContainerController extends ExpresswayContainerContr
 
     public tabs: any = [{
         title: this.$translate.instant('common.resources'),
-        state: 'calendar-service.list'
+        state: 'calendar-service.list',
     }, {
         title: this.$translate.instant('common.settings'),
-        state: 'calendar-service.settings'
+        state: 'calendar-service.settings',
     }];
 
     public addResourceModal: any = {
