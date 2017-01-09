@@ -5,9 +5,8 @@
     .controller('ExternalNumberDetailCtrl', ExternalNumberDetail);
 
   /* @ngInject */
-  function ExternalNumberDetail($interval, $scope, $stateParams, $translate, DialPlanService,
-      ExternalNumberService, ExternalNumberPool, ModalService, Notification,
-      TelephoneNumberService) {
+  function ExternalNumberDetail($stateParams, $translate, DialPlanService, ExternalNumberService,
+      ModalService, Notification, TelephoneNumberService) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
 
@@ -15,19 +14,26 @@
     getNumbers();
 
     // Initialize filtered arrays for translation directives
-    vm.filteredAllNumbers = [];
-    vm.filteredPendingNumbers = [];
     vm.filteredUnassignedNumbers = [];
 
     vm.showPstnSetup = false;
 
-    vm.allText = $translate.instant('common.all');
+    vm.assignedModel = '';
+    vm.unassignedModel = '';
+    vm.loading = false;
+
+    vm.assignedText = $translate.instant('common.assigned');
     vm.pendingText = $translate.instant('common.pending');
     vm.unassignedText = $translate.instant('common.unassigned');
+    vm.findNumber = $translate.instant('externalNumberPanel.findNumber');
 
     vm.deleteNumber = deleteNumber;
     vm.listPhoneNumbers = listPhoneNumbers;
     vm.getQuantity = getQuantity;
+    vm.getAllAssignedNumbers = getAllAssignedNumbers;
+    vm.getAllUnassignedNumbers = getAllUnassignedNumbers;
+    vm.refreshAssignedOnDelete = refreshAssignedOnDelete;
+    vm.refreshUnassignedOnDelete = refreshUnassignedOnDelete;
 
     vm.isNumberValid = TelephoneNumberService.validateDID;
 
@@ -37,17 +43,13 @@
       setCountryCode()
         .then(function () {
           listPhoneNumbers();
-          var interval = $interval(listPhoneNumbers, 10000);
-          $scope.$on('$destroy', function () {
-            $interval.cancel(interval);
-          });
         });
     }
 
     function listPhoneNumbers() {
       if (vm.currentCustomer && vm.currentCustomer.customerOrgId) {
         vm.refresh = true;
-        return ExternalNumberService.refreshNumbers(vm.currentCustomer.customerOrgId, ExternalNumberPool.ALL_EXTERNAL_NUMBER_TYPES)
+        return ExternalNumberService.getPendingNumberAndOrder(vm.currentCustomer.customerOrgId)
           .catch(function (response) {
             Notification.errorResponse(response, 'externalNumberPanel.listError');
           })
@@ -70,7 +72,7 @@
       ModalService.open({
         title: $translate.instant('externalNumberPanel.deleteNumber'),
         message: $translate.instant('externalNumberPanel.deleteConfirmation', {
-          pattern: number.label
+          pattern: number.number
         }) + '<br>' + $translate.instant('externalNumberPanel.deleteWarning'),
         close: $translate.instant('common.yes'),
         dismiss: $translate.instant('common.no'),
@@ -79,28 +81,67 @@
         return ExternalNumberService.deleteNumber(vm.currentCustomer.customerOrgId, number)
           .then(function () {
             Notification.success('notifications.successDelete', {
-              item: number.pattern
+              item: number.number
             });
-            _.remove(vm.allNumbers, number);
-            ExternalNumberService.setAllNumbers(vm.allNumbers);
-            getNumbers();
+            listPhoneNumbers();
           }).catch(function (response) {
             Notification.errorResponse(response, 'notifications.errorDelete', {
-              item: number.pattern
+              item: number.number
             });
           });
       });
     }
 
     function getNumbers() {
-      vm.allNumbers = ExternalNumberService.getAllNumbers().concat(ExternalNumberService.getPendingOrders());
+      getAllAssignedNumbers('');
+      getAllUnassignedNumbers('');
       vm.pendingList = ExternalNumberService.getPendingNumbers().concat(ExternalNumberService.getPendingOrders());
-      vm.unassignedNumbers = ExternalNumberService.getUnassignedNumbersWithoutPending();
       vm.refresh = false;
     }
 
     function getQuantity(type) {
       return ExternalNumberService.getQuantity(type);
+    }
+
+    function getAllAssignedNumbers(hint) {
+      if (!vm.currentCustomer.customerOrgId) {
+        vm.assignedNumbers = [];
+        return;
+      }
+      vm.loading = true;
+
+      ExternalNumberService.getAssignedNumbersV2(vm.currentCustomer.customerOrgId, hint).then(function (data) {
+        vm.assignedNumbers = data;
+      }).finally(function () {
+        vm.loading = false;
+      });
+    }
+
+    function getAllUnassignedNumbers(hint) {
+      if (!vm.currentCustomer.customerOrgId) {
+        vm.unassignedNumbers = [];
+        return;
+      }
+
+      vm.loading = true;
+
+      ExternalNumberService.getUnassignedNumbersV2(vm.currentCustomer.customerOrgId, hint).then(function (data) {
+        vm.unassignedNumbers = data;
+      }).finally(function () {
+        vm.loading = false;
+      });
+    }
+
+    function refreshAssignedOnDelete(event) {
+      if (event.keyCode === 8 && vm.assignedModel === '') {
+        getAllAssignedNumbers('');
+      }
+    }
+
+    function refreshUnassignedOnDelete(event) {
+      if (event.keyCode === 8 && vm.unassignedModel === '') {
+        getAllUnassignedNumbers('');
+      }
     }
   }
 })();

@@ -5,13 +5,14 @@
     .factory('ExternalNumberService', ExternalNumberService);
 
   /* @ngInject */
-  function ExternalNumberService($q, $translate, ExternalNumberPool, NumberSearchServiceV2, PstnSetupService, TelephoneNumberService) {
+  function ExternalNumberService($q, $translate, ExternalNumberPool, NumberSearchServiceV2, PstnSetupService) {
     var service = {
       refreshNumbers: refreshNumbers,
       clearNumbers: clearNumbers,
       setAllNumbers: setAllNumbers,
       getAllNumbers: getAllNumbers,
       getAssignedNumbers: getAssignedNumbers,
+      getPendingNumberAndOrder: getPendingNumberAndOrder,
       getPendingNumbers: getPendingNumbers,
       getPendingOrders: getPendingOrders,
       getUnassignedNumbers: getUnassignedNumbers,
@@ -19,7 +20,9 @@
       deleteNumber: deleteNumber,
       isTerminusCustomer: isTerminusCustomer,
       getPendingOrderQuantity: getPendingOrderQuantity,
-      getQuantity: getQuantity
+      getQuantity: getQuantity,
+      getAssignedNumbersV2: getAssignedNumbersV2,
+      getUnassignedNumbersV2: getUnassignedNumbersV2
     };
     var allNumbers = [];
     var pendingNumbers = [];
@@ -35,6 +38,35 @@
     return service;
 
     function refreshNumbers(customerId, queryNumberType, filter) {
+      return getPendingNumberAndOrder(customerId)
+        .then(function () {
+          // Specifying ASSIGNED_AND_UNASSIGNED_NUMBERS and FIXED_LINE_OR_MOBILE returns both
+          // assigned and unassigned standard PSTN numbers.
+          // Toll-Free numbers should not be returned by default, but can be overridden.
+          var externalNumberType = ExternalNumberPool.FIXED_LINE_OR_MOBILE;
+          if (!_.isEmpty(queryNumberType)) {
+            externalNumberType = queryNumberType;
+          }
+          filter = !filter ? ExternalNumberPool.NO_PATTERN_MATCHING : filter;
+          return ExternalNumberPool.getExternalNumbers(
+            customerId,
+            filter,
+            ExternalNumberPool.ASSIGNED_AND_UNASSIGNED_NUMBERS,
+            externalNumberType)
+          .then(formatNumberLabels)
+          .then(function (numbers) {
+            unassignedNumbers = filterUnassigned(numbers);
+            assignedNumbers = filterAssigned(numbers);
+            allNumbers = pendingNumbers.concat(getNumbersWithoutPending(numbers));
+          });
+        })
+        .catch(function (response) {
+          clearNumbers();
+          return $q.reject(response);
+        });
+    }
+
+    function getPendingNumberAndOrder(customerId) {
       return isTerminusCustomer(customerId)
         .then(function (isSupported) {
           if (isSupported) {
@@ -64,31 +96,6 @@
             pendingNumbers = [];
             pendingOrders = [];
           }
-        })
-        .then(function () {
-          // Specifying ASSIGNED_AND_UNASSIGNED_NUMBERS and FIXED_LINE_OR_MOBILE returns both
-          // assigned and unassigned standard PSTN numbers.
-          // Toll-Free numbers should not be returned by default, but can be overridden.
-          var externalNumberType = ExternalNumberPool.FIXED_LINE_OR_MOBILE;
-          if (!_.isEmpty(queryNumberType)) {
-            externalNumberType = queryNumberType;
-          }
-          filter = !filter ? ExternalNumberPool.NO_PATTERN_MATCHING : filter;
-          return ExternalNumberPool.getExternalNumbers(
-            customerId,
-            filter,
-            ExternalNumberPool.ASSIGNED_AND_UNASSIGNED_NUMBERS,
-            externalNumberType)
-          .then(formatNumberLabels)
-          .then(function (numbers) {
-            unassignedNumbers = filterUnassigned(numbers);
-            assignedNumbers = filterAssigned(numbers);
-            allNumbers = pendingNumbers.concat(getNumbersWithoutPending(numbers));
-          });
-        })
-        .catch(function (response) {
-          clearNumbers();
-          return $q.reject(response);
         });
     }
 
@@ -96,7 +103,7 @@
       return isTerminusCustomer(customerId)
         .then(function (isSupported) {
           if (isSupported) {
-            return PstnSetupService.deleteNumber(customerId, number.pattern);
+            return PstnSetupService.deleteNumber(customerId, number.number);
           } else {
             return ExternalNumberPool.deletePool(customerId, number.uuid);
           }
@@ -118,7 +125,7 @@
         } else if (_.has(number, 'orderNumber')) {
           number.label = $translate.instant('pstnSetup.orderNumber') + ' ' + number.orderNumber;
         } else {
-          number.label = TelephoneNumberService.getDIDLabel(number.pattern);
+          number.label = number.pattern;
         }
       });
       return numbers;
@@ -153,6 +160,17 @@
       return assignedNumbers;
     }
 
+    function getAssignedNumbersV2(customerId, hint) {
+      return NumberSearchServiceV2.get({
+        number: hint,
+        customerId: customerId,
+        type: 'external',
+        assigned: 'true'
+      }).$promise.then(function (data) {
+        return data.numbers;
+      });
+    }
+
     function getPendingNumbers() {
       return pendingNumbers;
     }
@@ -163,6 +181,17 @@
 
     function getUnassignedNumbers() {
       return unassignedNumbers;
+    }
+
+    function getUnassignedNumbersV2(customerId, hint) {
+      return NumberSearchServiceV2.get({
+        number: hint,
+        customerId: customerId,
+        type: 'external',
+        assigned: 'false'
+      }).$promise.then(function (data) {
+        return data.numbers;
+      });
     }
 
     function getUnassignedNumbersWithoutPending() {

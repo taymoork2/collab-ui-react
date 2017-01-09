@@ -1049,6 +1049,7 @@
     "trackingId": "Tracking Id: {{trackingId}}.",
     "tryAgain": "Try Again",
     "turnOff": "Turn Off",
+    "assigned": "Assigned",
     "unassigned": "Unassigned",
     "unknown": "Unknown",
     "update": "Update",
@@ -3181,7 +3182,8 @@
     "allNumbers": "{count, plural, one{# Number} other{# Numbers}}",
     "pendingNumbers": "{count, plural, one{# Pending Number} other{# Pending Numbers}}",
     "unassignedNumbers": "{count, plural, one{# Unassigned Number} other{# Unassigned Numbers}}",
-    "searchResults": "{count, plural, one{# search result} other{# search results}}"
+    "searchResults": "{count, plural, one{# search result} other{# search results}}",
+    "findNumber": "Find a number..."
   },
   "pstnOrderOverview": {
     "cancelled": "Cancelled",
