@@ -41,7 +41,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
     this.$modal.open({
       resolve: {
         connectorType: () => 'c_cal',
-        serviceId: () => ['squared-fusion-cal'],
+        serviceId: () => 'squared-fusion-cal',
         firstTimeSetup: true,
       },
       controller: 'AddResourceController',
