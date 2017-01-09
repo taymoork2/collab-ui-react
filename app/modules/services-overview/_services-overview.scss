@@ -95,6 +95,10 @@
             margin-top: 1rem;
             width: auto !important;
 
+            &:focus {
+              box-shadow: none;
+            }
+
             &.disabled {
               color: $gray-dark-1;
               cursor: default;
