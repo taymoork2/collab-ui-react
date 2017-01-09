@@ -46,7 +46,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
       },
       controller: 'AddResourceController',
       controllerAs: 'vm',
-      templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/add-resource-modal.html',
+      templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html',
       type: 'small',
     })
       .result

@@ -1,4 +1,4 @@
-import { ExpresswayContainerController } from '../expressway-common-container.controller';
+import { ExpresswayContainerController } from '../common-expressway-based/expressway-common-container.controller';
 import { Notification } from 'modules/core/notifications';
 
 export class CallServiceContainerController extends ExpresswayContainerController {
@@ -10,6 +10,18 @@ export class CallServiceContainerController extends ExpresswayContainerControlle
         title: this.$translate.instant('common.settings'),
         state: 'call-service.settings'
     }];
+
+    public addResourceModal: any = {
+        resolve: {
+            connectorType: () => 'c_ucmc',
+            serviceId: () => 'squared-fusion-uc',
+            firstTimeSetup: false,
+        },
+        controller: 'AddResourceController',
+        controllerAs: 'vm',
+        templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html',
+        type: 'small',
+    };
 
     /* @ngInject */
     constructor(

@@ -1,4 +1,4 @@
-import { ExpresswayContainerController } from '../expressway-common-container.controller';
+import { ExpresswayContainerController } from '../common-expressway-based/expressway-common-container.controller';
 
 export class CalendarServiceContainerController extends ExpresswayContainerController {
 
@@ -9,6 +9,18 @@ export class CalendarServiceContainerController extends ExpresswayContainerContr
         title: this.$translate.instant('common.settings'),
         state: 'calendar-service.settings'
     }];
+
+    public addResourceModal: any = {
+        resolve: {
+            connectorType: () => 'c_cal',
+            serviceId: () => 'squared-fusion-cal',
+            firstTimeSetup: false,
+        },
+        controller: 'AddResourceController',
+        controllerAs: 'vm',
+        templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html',
+        type: 'small',
+    };
 
     /* @ngInject */
     constructor(

@@ -22,12 +22,15 @@ class HybridServiceClusterListCtrl implements ng.IComponentController {
         private $state: ng.ui.IStateService,
         private $stateParams: clusterIdStateParam,
         private ClusterService,
+        private FusionClusterService,
         private FusionUtils,
+        private ServiceStateChecker,
     ) {  }
 
     public $onInit() {
         this.connectorType = this.FusionUtils.serviceId2ConnectorType(this.serviceId);
-        this.updateClusters();
+        this.ServiceStateChecker.checkState(this.connectorType, this.serviceId);
+        this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
 
         this.clusterListGridOptions = {
             data: '$ctrl.clusterList',
@@ -65,7 +68,15 @@ class HybridServiceClusterListCtrl implements ng.IComponentController {
     }
 
     private updateClusters = () => {
-        this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
+        this.ServiceStateChecker.checkState(this.connectorType, this.serviceId);
+        this.FusionClusterService.setClusterAllowListInfoForExpressway(this.ClusterService.getClustersByConnectorType(this.connectorType))
+            .then((clusters) => {
+                this.clusterList = clusters;
+            })
+            .catch(() => {
+                this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
+            })
+
     };
 
     private goToSidepanel = (clusterId: string) => {

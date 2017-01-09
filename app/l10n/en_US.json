@@ -1792,8 +1792,8 @@
       "serviceWasDeactivated": "{{serviceName}} successfully deactivated."
     },
     "clusterListComponent": {
-      "clusters-title-squared-fusion-cal": "Expressway Clusters 3k",
-      "clusters-title-squared-fusion-uc": "Expressway Clusters 4k",
+      "clusters-title-squared-fusion-cal": "Expressway Clusters",
+      "clusters-title-squared-fusion-uc": "Expressway Clusters",
       "clusters-title-squared-fusion-media": "Media Clusters",
       "clusters-title-spark-hybrid-datasecurity": "HDS Clusters",
       "status-title": "Service Status"
