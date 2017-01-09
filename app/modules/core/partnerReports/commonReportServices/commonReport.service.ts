@@ -89,13 +89,17 @@ export class CommonReportService {
     return this.getService(url, cancelPromise);
   }
 
+  public getCustomerActiveUserData(options: ITypeQuery, cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
+    return this.getService(this.urlBase + options.name + '/' + options.type + '?' + this.CACHE + options.cache, cancelPromise);
+  }
+
   public getCustomerAltReportByType(options: ITypeQuery, cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
     let url = this.urlBase;
     if (options.extension) {
-      url += options.extension + '/' + options.name + '/' + this.TYPE + options.type + this.CACHE + options.cache;
-    } else {
-      url += options.name + '/' + options.type + '?' + this.CACHE + options.cache;
+      url += options.extension + '/';
     }
+    url += options.name + this.TYPE + options.type + this.CACHE + options.cache;
+
     return this.getService(url, cancelPromise);
   }
 
