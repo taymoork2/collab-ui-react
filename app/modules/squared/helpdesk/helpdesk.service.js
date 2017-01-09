@@ -491,7 +491,9 @@
     }
 
     function elevateToReadonlyAdmin(orgId) {
-      return $http.post(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/actions/elevatereadonlyadmin/invoke');
+      return $http
+        .post(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/actions/elevatereadonlyadmin/invoke')
+        .then(USSService.notifyReadOnlyLaunch);
     }
 
     function getHybridStatusesForUser(userId, orgId) {

@@ -27,7 +27,8 @@
       '/WBXService/XMLService',
       '/meetingsapi/v1/users/',
       '/meetingsapi/v1/files/',
-      '/channels'
+      '/channels',
+      '/api/v1/internals/actions/invalidateUser/invoke'
     ];
 
     return {

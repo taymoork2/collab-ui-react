@@ -31,6 +31,7 @@
       refreshEntitlementsForUser: refreshEntitlementsForUser,
       getUserCountFromResourceGroup: getUserCountFromResourceGroup,
       getUserJournal: getUserJournal,
+      notifyReadOnlyLaunch: notifyReadOnlyLaunch,
     };
 
     CsdmPoller.create(fetchStatusesSummary, hub);
@@ -191,6 +192,10 @@
       return $http
         .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userJournal/' + userId + (limit ? '?limit=' + limit : '') + (serviceId ? '&serviceId=' + serviceId : ''))
         .then(extractJournalEntries);
+    }
+
+    function notifyReadOnlyLaunch() {
+      return $http.post(USSUrl + '/internals/actions/invalidateUser/invoke');
     }
   }
 }());
