@@ -21,7 +21,7 @@
     <div ng-if="!resourceList.loading">
       <div ng-if="resourceList.showResourceGroups">
         <div ng-if="resourceList.displayedGroups[0].display">
-          <h5><span class="h5" translate="hercules.fusion.list.expressway"></span> <span cs-dropdown>
+          <h5><span class="h5 remove-margin" translate="hercules.fusion.list.expressway"></span> <span cs-dropdown>
             <button cs-dropdown-toggle class="btn--none dropdown-toggle">
               <i class="icon icon-cog"></i>
             </button>
@@ -30,6 +30,7 @@
               <li><a ng-click="resourceList.addResourceGroup()" translate="hercules.fusion.list.add-resource-group"></a></li>
             </ul>
           </span></h5>
+          <p class="no-clusters" ng-if="resourceList.displayedGroups[0].groups.length === 0 && resourceList.displayedGroups[0].unassigned.length === 0" translate="hercules.fusion.list.empty"></p>
           <cs-card-layout block-view="true" class="resource-groups-list">
             <resource-group-card ng-repeat="group in resourceList.displayedGroups[0].groups" resource-group="group" on-change="resourceList.refreshList()" force-open="resourceList.openAllGroups"></resource-group-card>
           </cs-card-layout>
@@ -40,6 +41,7 @@
         <!-- - -->
         <div ng-if="resourceList.displayedGroups[1].display">
           <h5 translate="hercules.fusion.list.mediafusion"></h5>
+          <p class="no-clusters" ng-if="resourceList.displayedGroups[1].unassigned.length === 0" translate="hercules.fusion.list.empty"></p>
           <cs-card-layout block-view="true">
             <cluster-card ng-repeat="cluster in resourceList.displayedGroups[1].unassigned" cluster="cluster"></cluster-card>
           </cs-card-layout>
@@ -47,6 +49,7 @@
         <!-- - -->
         <div ng-if="resourceList.displayedGroups[2].display">
           <h5 translate="hercules.fusion.list.hds"></h5>
+          <p class="no-clusters" ng-if="resourceList.displayedGroups[2].unassigned.length === 0" translate="hercules.fusion.list.empty"></p>
           <cs-card-layout block-view="true">
             <cluster-card ng-repeat="cluster in resourceList.displayedGroups[2].unassigned" cluster="cluster"></cluster-card>
           </cs-card-layout>

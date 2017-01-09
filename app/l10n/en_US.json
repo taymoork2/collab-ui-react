@@ -1939,7 +1939,7 @@
       },
       "release-channel": {
         "title": "Default Release Channel",
-        "description": "Some clusters not assigned to resources groups do not have the right default release channel. <a ng-click=\"{{onclick}}\">Fix now</a>."
+        "description": "Some clusters not assigned to resource groups do not have the right default release channel. <a ng-click=\"{{onclick}}\">Fix now</a>."
       },
       "user-activation-errors": {
         "title": "Activation Error",
