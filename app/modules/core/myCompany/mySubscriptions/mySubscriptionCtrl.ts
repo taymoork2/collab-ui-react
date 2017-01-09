@@ -84,7 +84,7 @@ class MySubscriptionCtrl {
   }
 
   public determineLicenseType(subscription) {
-    return this.isSharedMultiPartyLicense(subscription) ? this.$translate.instant('firstTimeWizard.sharedLicenses') : this.$translate.instant('firstTimeWizard.assignedLicenses');
+    return this.isSharedMultiPartyLicense(subscription) ? this.$translate.instant('firstTimeWizard.sharedLicenses') : this.$translate.instant('firstTimeWizard.namedLicenses');
   }
 
   private initFeatures() {
