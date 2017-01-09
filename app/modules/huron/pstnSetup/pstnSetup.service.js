@@ -27,6 +27,7 @@
     var ADD = 'ADD';
     var AUDIT = 'AUDIT';
     //did order status
+    var CANCELLED = "CANCELLED";
     var PENDING = 'PENDING';
     var PROVISIONED = 'PROVISIONED';
     var QUEUED = "QUEUED";
@@ -38,8 +39,8 @@
     var BLOCK = 'block';
     var ORDER = 'order';
     var PORT = 'port';
-    var NUMTYPE_DID = 'did';
-    var NUMTYPE_TOLLFREE = 'tollfree';
+    var NUMTYPE_DID = 'DID';
+    var NUMTYPE_TOLLFREE = 'TOLLFREE';
     //misc
     var PSTN = "PSTN";
     var TYPE_PORT = "PORT";
@@ -538,6 +539,8 @@
               //translate order status
               if (order.status === PROVISIONED) {
                 newOrder.status = $translate.instant('pstnOrderOverview.successful');
+              } else if (order.status === CANCELLED) {
+                newOrder.status = $translate.instant('pstnOrderOverview.cancelled');
               } else if (order.status === PENDING) {
                 newOrder.status = $translate.instant('pstnOrderOverview.inProgress');
               } else if (order.status === QUEUED) {

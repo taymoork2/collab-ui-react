@@ -125,6 +125,7 @@
       mercury51: 'mercury5.1',
       modifyConvoActivityLimits: 'modify-convo-activity-limits',
       multigetCi: 'multiget-ci',
+      multiGeoEnable: 'multi-geo-enable',
       muteByDefault: 'mute-by-default',
       newMessageBanner: 'new-message-banner',
       newMessageBannerAndroid: 'new-message-banner-android',

@@ -41,8 +41,8 @@
 </div>
 
 <div class="modal-footer">
-  <div class="footer-padding">
-    <span class="pull-left">{{'mediaFusion.deactivate.step' | translate}} {{disableServiceDialog.step}} {{'mediaFusion.deactivate.of' | translate}}</span>
+  <div class="modal-footer-padding">
+    <span class="stick-left">{{'mediaFusion.deactivate.step' | translate}} {{disableServiceDialog.step}} {{'mediaFusion.deactivate.of' | translate}}</span>
   </div>
   <button ng-click="disableServiceDialog.cancel()" class="btn ">{{'common.cancel' | translate}}</button>
   <button ng-click="disableServiceDialog.continue()" ng-show="disableServiceDialog.step === '1'" ng-disabled="!disableServiceDialog.checkboxModel" class="btn btn--primary pull-right">{{'common.continue' | translate}}</button>

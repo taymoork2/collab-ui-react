@@ -350,6 +350,9 @@
 
         return CsdmDataModelService
           .updateTags(deviceOverview.currentDevice, deviceOverview.currentDevice.tags.concat(tag))
+          .then(function (updatedDevice) {
+            displayDevice(updatedDevice);
+          })
           .catch(function (response) {
             Notification.errorResponse(response, 'deviceOverviewPage.failedToSaveChanges');
           });
@@ -369,6 +372,9 @@
     deviceOverview.removeTag = function (tag) {
       var tags = _.without(deviceOverview.currentDevice.tags, tag);
       return CsdmDataModelService.updateTags(deviceOverview.currentDevice, tags)
+        .then(function (updatedDevice) {
+          displayDevice(updatedDevice);
+        })
         .catch(function (response) {
           Notification.errorResponse(response, 'deviceOverviewPage.failedToSaveChanges');
         });
