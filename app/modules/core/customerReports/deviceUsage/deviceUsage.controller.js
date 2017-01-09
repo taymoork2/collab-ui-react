@@ -44,7 +44,7 @@ require('modules/core/reports/amcharts-export.scss');
       }
     ];
 
-    vm.timeOptions = _.cloneDeep(ReportConstants.timeFilter);
+    vm.timeOptions = _.cloneDeep(ReportConstants.TIME_FILTER);
     vm.timeSelected = vm.timeOptions[0];
 
     function timeUpdate() {
