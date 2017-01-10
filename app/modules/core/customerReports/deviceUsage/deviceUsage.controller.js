@@ -131,6 +131,9 @@ require('modules/core/reports/amcharts-export.scss');
 
     function init() {
       var chart = DeviceUsageTotalService.getLineChart();
+      chart.startEffect = 'easeInSine';
+      chart.startDuration = 0.5;
+      chart.zoomOutOnDataUpdate = true;
       chart.listeners = [
         { event: 'rollOverGraphItem', method: rollOverGraphItem },
         { event: 'rollOutGraphItem', method: rollOutGraphItem },
@@ -202,6 +205,7 @@ require('modules/core/reports/amcharts-export.scss');
         }
       }
       amChart.validateData();
+      amChart.animateAgain();
       vm.showDevices = false;
       fillInStats(data);
     }

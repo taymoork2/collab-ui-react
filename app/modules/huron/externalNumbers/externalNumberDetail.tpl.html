@@ -5,13 +5,53 @@
     </div>
 
     <tabset justified="true">
-      <tab heading="{{::externalNumbers.allText}}">
-        <hr-external-number-list
-          numbers="externalNumbers.allNumbers"
-          count-translate-key="externalNumberPanel.allNumbers"
-          external-numbers="externalNumbers"
-          quantity="externalNumbers.getQuantity('all')">
-        </hr-external-number-list>
+      <tab heading="{{::externalNumbers.assignedText}}">
+        <div class="tab-content center">
+          <div class="filter search-margin">
+            <input
+              ng-model="externalNumbers.assignedModel"
+              id="allNumberSearch"
+              type="text"
+              typeahead="number for number in externalNumbers.getAllAssignedNumbers($viewValue)"
+              placeholder="{{::externalNumbers.findNumber}}"
+              typeahead-min-length="3"
+              typeahead-wait-ms="100"
+              ng-keyup="externalNumbers.refreshAssignedOnDelete($event)"/>
+            <i class="icon icon-search"></i>
+          </div>
+          <ul class="list-group">
+            <li class="list-group-item list-token" ng-repeat="number in externalNumbers.assignedNumbers">
+              <span ng-bind="::number.number"></span>
+              <button ng-if="number.uuid && !number.directoryNumber" type="button" class="close" ng-click="externalNumbers.deleteNumber(number)">
+                <span class="sr-only" translate="common.delete"></span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </tab>
+      <tab heading="{{::externalNumbers.unassignedText}}">
+        <div class="tab-content center">
+          <div class="filter search-margin">
+            <input
+              ng-model="externalNumbers.unassignedModel"
+              id="unassignedNumberSearch"
+              type="text"
+              typeahead="number for number in externalNumbers.getAllUnassignedNumbers($viewValue)"
+              placeholder="{{::externalNumbers.findNumber}}"
+              typeahead-min-length="3"
+              typeahead-wait-ms="100"
+              ng-keyup="externalNumbers.refreshUnassignedOnDelete($event)"/>
+            <i class="icon icon-search"></i>
+          </div>
+          <ul class="list-group">
+            <li class="list-group-item list-token" ng-repeat="number in externalNumbers.unassignedNumbers">
+              <span ng-bind="::number.number"></span>
+              <button ng-if="number.uuid && !number.directoryNumber" type="button" class="close" ng-click="externalNumbers.deleteNumber(number)">
+                <span class="sr-only" translate="common.delete"></span>
+              </button>
+            </li>
+          </ul>
+        </div>
       </tab>
       <tab heading="{{::externalNumbers.pendingText}}">
         <hr-external-number-list
@@ -23,15 +63,6 @@
           quantity="externalNumbers.getQuantity('pending')">
         </hr-external-number-list>
       </tab>
-      <tab heading="{{::externalNumbers.unassignedText}}">
-        <hr-external-number-list
-          numbers="externalNumbers.unassignedNumbers"
-          count-translate-key="externalNumberPanel.unassignedNumbers"
-          external-numbers="externalNumbers"
-          quantity="externalNumbers.getQuantity('unassigned')">
-        </hr-external-number-list>
-      </tab>
     </tabset>
-
   </cs-sp-section>
 </cs-sp-container>
