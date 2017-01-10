@@ -3,10 +3,11 @@ class UriVerificationService {
 
   /* @ngInject */
   constructor(
-    private   DomainManagementService,
-  ) {}
+    private DomainManagementService,
+  ) {
+  }
 
-  public isDomainVerified(domainList, uri): any {
+  public isDomainVerified(domainList, uri): boolean {
     if (!domainList) {
       return false;
     }
@@ -19,7 +20,7 @@ class UriVerificationService {
     }
     uriDomain = uriDomain ? uriDomain.toLowerCase() : uriDomain;
 
-    return _.some(domainList,  (domain: any) => {
+    return _.some(domainList, (domain: any) => {
       return domain.status && domain.text && (domain.status === this.DomainManagementService.states.verified || domain.status === this.DomainManagementService.states.claimed) && (uriDomain === domain.text || uriDomain.indexOf('.' + domain.text, uriDomain.length - domain.text.length - 1) !== -1);
 
     });
