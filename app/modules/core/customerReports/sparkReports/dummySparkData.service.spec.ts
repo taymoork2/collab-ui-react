@@ -2,6 +2,10 @@ import {
   ITimespan,
 } from '../../partnerReports/partnerReportInterfaces';
 
+import {
+  IEndpointWrapper,
+} from './sparkReportInterfaces';
+
 describe('Controller: Dummy Customer Reports', function () {
   let defaults: any = getJSONFixture('core/json/partnerReports/commonReportService.json');
   let dummyData: any = getJSONFixture('core/json/partnerReports/dummyReportData.json');
@@ -103,8 +107,25 @@ describe('Controller: Dummy Customer Reports', function () {
     devicesData.two[0].graph = updateDates(devicesData.two[0].graph, defaults.timeFilter[1]);
     devicesData.three[0].graph = updateDates(devicesData.three[0].graph, defaults.timeFilter[2]);
 
-    expect(this.DummySparkDataService.dummyDeviceData(defaults.timeFilter[0])).toEqual(devicesData.one);
-    expect(this.DummySparkDataService.dummyDeviceData(defaults.timeFilter[1])).toEqual(devicesData.two);
-    expect(this.DummySparkDataService.dummyDeviceData(defaults.timeFilter[2])).toEqual(devicesData.three);
+    expect(this.DummySparkDataService.dummyDeviceData(defaults.timeFilter[0], false)).toEqual(devicesData.one);
+    expect(this.DummySparkDataService.dummyDeviceData(defaults.timeFilter[1], false)).toEqual(devicesData.two);
+    expect(this.DummySparkDataService.dummyDeviceData(defaults.timeFilter[2], false)).toEqual(devicesData.three);
+
+    let endpoints: IEndpointWrapper = {
+      deviceType: 'registeredEndpoints.allDevices',
+      graph: [],
+      balloon: false,
+      emptyGraph: false,
+    };
+
+    for (let i = 0; i < 52; i++) {
+      endpoints.graph.push({
+        date: moment().tz(defaults.timezone).day(-1).subtract(51 - i, defaults.WEEK).format(defaults.dayFormat),
+        totalRegisteredDevices: 15 + (15 * i),
+      });
+    }
+
+    expect(this.DummySparkDataService.dummyDeviceData(defaults.timeFilter[0], true)).toEqual(devicesData.one);
+    expect(this.DummySparkDataService.dummyDeviceData(defaults.timeFilter[1], true)).toEqual([endpoints]);
   });
 });

@@ -1,6 +1,11 @@
 @import 'styles/toolkit/colors';
 
+.device-usage-report-pages-waiting {
+  opacity: 0.5;
+  background-color: $gray-light-2;
+}
 .device-usage-report-pages {
+  position: relative;
   .customer-report-filter {
     width: 12.5rem;
   }
@@ -47,6 +52,14 @@
     background-color: #FFF;
     box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
 
+    .header {
+      padding-top: 1rem;
+      padding-left: 1rem;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #d7d7d8;
+    }
+
     .corrected {
       padding-left: 1rem;
       padding-right: 1rem;
@@ -91,17 +104,24 @@
     }
   }
 
-  .loading-indicator {
-    position: absolute;
-    top: 150px;
-    left: 40%;
-
-    .loading-text {
-      width: 200%;
-      background-color: white;
-      border: 1px solid gray;
-      text-align: center;
+  .lm-table {
+    table-layout: fixed;
+    width: 100%;
+    white-space: nowrap;
+    td, th {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
+  }
+
+  .least-most {
+    @extend .card-look;
+    margin-top: 0.5rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    min-height: 16rem;
   }
 
   .no-border {
@@ -116,5 +136,26 @@
     .full.side-info-card.cs-card {
       display: block;
     }
+  }
+}
+
+.loading-reports-indicator {
+  opacity: 1.0;
+  z-index: 100;
+  width: 300px;
+  height: 100px;
+  padding: 20px;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  margin: -70px 0 0 -170px;
+
+  .loading-text {
+    font-size: 2rem;
+    width: 100%;
+    background-color: white;
+    text-align: center;
+    border-radius: 2px;
+    box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
   }
 }

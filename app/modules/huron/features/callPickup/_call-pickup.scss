@@ -1,54 +1,44 @@
-$overlay-panel-height: 93px;
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/spacing';
 
-.cs-setupassistant {
-  margin: 0 auto;
-  max-width: 100%;
-  padding: 0 1rem;
+.call-pickup-member-lookup {
+  .call-pickup-members {
+    .cs-card-layout {
+      height: 16rem !important;
+      @include vr-spacing(ml, 28.5, 0px, true);
+      @include vr-spacing(pb, 1);
+      position: fixed;
+      width: 58rem;
+      left: 50%;
+      margin-right: auto;
+      overflow: auto;
+      display: inline-flex;
+      flex-flow: row wrap;
+      flex: 1;
+      align-content: flex-start;
+      justify-content: center;
+    }
 
-  .btn--right.saveCallPickup:not(.disabled) {
-    background: $color-cta;
-  }
-
-  .helptext-btn--right.enabled {
-    color: $color-cta;
-  }
-}
-
-div#cs-card-members div.cs-card-layout {
-  height: 16rem !important;
-  @include vr-spacing(ml, 28.5, 0px, true);
-  @include vr-spacing(pb, 1);
-  position: fixed;
-  width: 58rem;
-  left: 50%;
-  margin-right: auto;
-  overflow: auto;
-  display: inline-flex;
-  flex-flow: row wrap;
-  flex: 1;
-  align-content: flex-start;
-  justify-content: center;
-}
-
-#cs-card-members .card-member {
-  .upper-panel {
-    background: $color-primary-base;
-    .middle-panel > p, .right-panel > .icon {
-      color: $white;
+    .card-member {
+      .upper-panel {
+        background: $color-primary-base;
+        .middle-panel > p, .right-panel > .icon {
+          color: $white;
+        }
+      }
+      .lower-panel > .remove {
+        color: $color-primary-base;
+      }
     }
   }
-  .lower-panel > .remove {
-    color: $color-primary-base;
+
+  .member-warning {
+    @include vr-spacing(pl, 0);
+    color: $gray-darkest;
   }
-}
 
-.member-warning {
-  @include vr-spacing(pl, 0);
-  color: $gray-darkest;
-}
-
-.pi-cs-input__messages {
-  @extend .cs-input__messages;
-  display: block;
-  visibility: hidden;
+  .pi-cs-input__messages {
+    display: block;
+    visibility: hidden;
+  }
 }

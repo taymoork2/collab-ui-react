@@ -364,6 +364,14 @@
           padding-left: 30px;
         }
 
+        .reportError {
+          padding: 1.5rem;
+
+          .reportWarning {
+            color: $color-attention-base;
+          }
+        }
+
         .input-section {
           padding-bottom: 1.5rem;
 

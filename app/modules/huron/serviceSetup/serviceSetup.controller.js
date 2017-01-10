@@ -120,7 +120,7 @@
       vm.isTerminusCustomer = true;
     });
 
-    FeatureToggleService.getCustomerHuronToggle(Authinfo.getOrgId(), FeatureToggleService.features.avrilVmEnable).then(function (result) {
+    FeatureToggleService.supports(FeatureToggleService.features.avrilVmEnable).then(function (result) {
       vm.voicemailAvrilCustomer = result;
     });
 
@@ -778,6 +778,8 @@
               vm.previousTimeZone = vm.model.site.timeZone;
               vm.model.site.voicemailPilotNumberGenerated = (site.voicemailPilotNumberGenerated !== null) ? site.voicemailPilotNumberGenerated : 'false';
             });
+          } else if (vm.model.numberRanges.length !== 0) {
+            vm.model.site.extensionLength = vm.model.numberRanges[0].endNumber.length;
           }
         });
       })

@@ -1,3 +1,7 @@
+@import 'styles/toolkit/fonts';
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/spacing';
+
 .hg-edit {
   height: calc(100vh - #{($top-bar-height + $page-header-height)}) !important;
   overflow-y: auto;
@@ -106,8 +110,6 @@
 
   .warning-typeahead {
     .icon {
-      @extend .icon-warning;
-
       font-size: 0.75rem;
       color: $color-attention;
     }
@@ -152,7 +154,7 @@
   }
 
   > a {
-    @include box-shadow(0px 1px 2px 1px rgba(52, 53, 55, 0.18));
+    box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
     @include vr-spacing(pb, 0.5);
     @include vr-spacing(pt, 1);
 

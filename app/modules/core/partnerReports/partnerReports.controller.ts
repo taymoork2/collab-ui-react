@@ -1,5 +1,9 @@
 import './_partner-reports.scss';
-
+import { CommonReportService } from './commonReportServices/commonReport.service';
+import { ReportConstants } from './commonReportServices/reportConstants.service';
+import { DummyReportService } from './dummyReport.service';
+import { GraphService } from './graph.service';
+import { ReportService } from './report.service';
 import {
   IActiveUserData,
   IActiveUserReturnData,
@@ -43,11 +47,11 @@ class PartnerReportCtrl {
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private CardUtils: CardUtils,
-    private CommonReportService,
-    private ReportConstants,
-    private DummyReportService,
-    private GraphService,
-    private ReportService,
+    private CommonReportService: CommonReportService,
+    private ReportConstants: ReportConstants,
+    private DummyReportService: DummyReportService,
+    private GraphService: GraphService,
+    private ReportService: ReportService,
   ) {
     this.ALL = this.ReportConstants.ALL;
     this.ENGAGEMENT = this.ReportConstants.ENGAGEMENT;
@@ -225,7 +229,7 @@ class PartnerReportCtrl {
   public customerSelected: Array<IReportsCustomer> = [];
 
   // Timefilter controls
-  public timeOptions: Array<ITimespan> = _.cloneDeep(this.ReportConstants.timeFilter);
+  public timeOptions: Array<ITimespan> = _.cloneDeep(this.ReportConstants.TIME_FILTER);
   public timeSelected: ITimespan = this.timeOptions[0];
 
   // private functions
@@ -311,7 +315,7 @@ class PartnerReportCtrl {
 
   // media controls
   private getMediaQualityReports(): void {
-    return this.ReportService.getMediaQualityMetrics(this.customerSelected, this.timeSelected).then((response: Array<IMediaQualityData>) => {
+    this.ReportService.getMediaQualityMetrics(this.customerSelected, this.timeSelected).then((response: Array<IMediaQualityData>) => {
       if (_.isArray(response)) {
         this.setMediaQualityGraph(response);
         this.mediaReportOptions.state = this.ReportConstants.EMPTY;
@@ -319,7 +323,6 @@ class PartnerReportCtrl {
           this.mediaReportOptions.state = this.ReportConstants.SET;
         }
       }
-      return;
     });
   }
 
@@ -335,7 +338,7 @@ class PartnerReportCtrl {
 
   // metrics controls
   private getCallMetricsReports(): void {
-    return this.ReportService.getCallMetricsData(this.customerSelected, this.timeSelected).then((response: ICallMetricsData) => {
+    this.ReportService.getCallMetricsData(this.customerSelected, this.timeSelected).then((response: ICallMetricsData) => {
       if (response) {
         this.callMetricsReportOptions.state = this.ReportConstants.EMPTY;
         if (_.isArray(response.dataProvider) && response.dataProvider.length > 0) {

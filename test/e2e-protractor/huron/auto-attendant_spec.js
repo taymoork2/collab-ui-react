@@ -88,10 +88,10 @@ describe('Huron Auto Attendant', function () {
 
     it('should delete a phone number from the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
-      utils.click(autoattendant.numberIconClose);
-      utils.click(autoattendant.numberIconClose);
+      utils.click(autoattendant.numberByNameClose);
+      utils.click(autoattendant.numberByNameClose);
 
-      expect(autoattendant.numberIconCloseAll.count()).toEqual(1);
+      expect(autoattendant.numberByNameCloseAll.count()).toEqual(0);
 
       // No save and until valid Phone Menu - see AutoAttn 922 
 
@@ -192,9 +192,15 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuKeys.first());
 
       autoattendant.scrollIntoView(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
+      utils.wait(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
+
       utils.click(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
       utils.click(autoattendant.phoneMenuAction.first());
+      utils.wait(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first(), 5000);
+
       autoattendant.scrollIntoView(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first());
+      utils.wait(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first(), 5000);
+
       utils.click(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first());
 
     });

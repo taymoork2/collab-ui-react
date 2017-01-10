@@ -2336,20 +2336,6 @@
               currentOrg: {},
             }
           })
-          .state('generateauthcode', {
-            parent: 'modal',
-            params: {
-              currentUser: {},
-              activationCode: {}
-            },
-            views: {
-              'modal@': {
-                templateUrl: 'modules/huron/device/generateActivationCodeModal.tpl.html',
-                controller: 'GenerateActivationCodeCtrl',
-                controllerAs: 'genAuthCode'
-              }
-            }
-          })
           .state('didadd', {
             parent: 'modal',
             params: {
@@ -2690,6 +2676,23 @@
             },
             params: {
               clusterId: null
+            },
+            resolve: {
+              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
+              },
+            }
+          })
+          .state('hds-cluster-details.alarm-details', {
+            templateUrl: 'modules/hds/cluster-sidepanel/alarm-details.html',
+            controller: 'HDSAlarmController',
+            controllerAs: 'hdsAlarmController',
+            data: {
+              displayName: 'Alarm Details'
+            },
+            params: {
+              alarm: null,
+              host: null
             }
           })
           .state('mediafusion-settings', {
@@ -2698,6 +2701,11 @@
             controller: 'MediafusionClusterSettingsController',
             controllerAs: 'clusterSettings',
             parent: 'main',
+            resolve: {
+              hasMFFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
+              }
+            }
           })
           // Add Resource modal
           .state('add-resource', {
@@ -3207,7 +3215,7 @@
             controllerAs: 'careFeaturesCtrl'
           })
           .state('care.setupAssistant', {
-            url: '/setupAssistant',
+            url: '/setupAssistant/:type',
             parent: 'care.Details',
             templateUrl: 'modules/sunlight/features/template/ctSetupAssistant.tpl.html',
             controller: 'CareSetupAssistantCtrl',

@@ -1,21 +1,7 @@
 <div class="fusion-cluster-settings">
-  <setting-section setting="callServiceSettings.general">
-    <div class="sub-section">
-      <p class="sub-section__label" translate="hercules.settings.emailNotificationsHeading"></p>
-      <p><span translate="hercules.settings.emailAdministratorNotification"></span></p>
-      <tags-input add-on-blur="true"
-                on-tag-added="callServiceSettings.writeConfig()"
-                on-tag-removed="callServiceSettings.writeConfig()"
-                placeholder={{callServiceSettings.localizedAddEmailWatermark}}
-                ng-disabled="callServiceSettings.savingEmail"
-                ng-model="callServiceSettings.emailSubscribers"
-                type="email"
-                allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
-      <span class="right" ng-show="callServiceSettings.savingEmail"><span translate="hercules.settings.emailNotificationsSaving"></span> <i class="icon icon-spinner"/></span>
-    </div>
-  </setting-section>
+  <email-notifications-section service-id="'squared-fusion-uc'"></email-notifications-section>
 
-  <setting-section setting="callServiceSettings.callServiceAware">
+  <setting-section setting="callServiceSettings.callServiceAware" class="needs-border-top">
     <div class="sub-section">
       <p class="sub-section__label" translate="hercules.serviceNames.squared-fusion-uc.full"></p>
       <p><span translate="hercules.settings.call.aware"></span><br></p>

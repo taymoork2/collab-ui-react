@@ -1,3 +1,5 @@
+require('./_new-feature.scss');
+
 (function () {
   'use strict';
 

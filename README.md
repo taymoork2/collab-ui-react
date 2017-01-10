@@ -96,7 +96,7 @@ lean to help this process flow quicker.
   * `git pull --rebase` to update your master branch with the latest from github
   * `git merge <local-branch>` (resolve conflicts if necessary)
   * `git push gauntlet master`
-    * Use your CEC username and [internal password](https://sqbu-jenkins-01.cisco.com:8443/job/utilities/job/internal-utilities-password-changer/).
+    * Use your CEC username and [internal password](https://sqbu-jenkins-01.cisco.com:8443/job/utilities/job/internal-utilities-password-changer/) (**:warning: it is not the same password as your CEC password :warning:**).
     * Consider putting your internal password into ~/.netrc
     * You can [monitor the gauntlet queue here](https://gauntlet.wbx2.com/queue.html?queue=atlas-web)
 9. Jenkins Build Triage

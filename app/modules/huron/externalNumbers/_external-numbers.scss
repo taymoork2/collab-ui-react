@@ -58,6 +58,11 @@
   .bottom-pad {
     padding-bottom: 1rem;
   }
+
+  .search-margin {
+    @include vr-spacing(mt, 1);
+    @include vr-spacing(mb, 2);
+  }
 }
 
 .pstn-order-detail {

@@ -6,7 +6,7 @@
     .controller('HDSSidepanelClusterController', HDSSidepanelClusterController);
 
   /* @ngInject */
-  function HDSSidepanelClusterController($scope, $state, $stateParams, $translate, ClusterService, FusionUtils, FusionClusterService, Notification, $window) {
+  function HDSSidepanelClusterController($scope, $state, $stateParams, $translate, $window, ClusterService, FusionUtils, FusionClusterService, Notification, hasHDSFeatureToggle) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.clusterId;
@@ -17,6 +17,8 @@
     vm.getSeverity = ClusterService.getRunningStateSeverity;
     vm.hasConnectorAlarm = hasConnectorAlarm;
     vm.goToHds = goToHds;
+    vm.hasHDSFeatureToggle = hasHDSFeatureToggle;
+    vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
 
     if (!vm.connectorType || !vm.clusterId) {
       return;

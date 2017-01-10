@@ -25,12 +25,12 @@ done
 # update webdriver
 npm run webdriver
 
-# Run a different test suite if this is a nightly build
+# Run a different test suite if this is a nightly build (and run against integration)
 if [ $NIGHTLY ]; then
     test_suite="--specs=test/e2e-protractor/nightly/*_spec.js"
     export E2E_RUN_COUNTER_MAX=0
 else
-    test_suite="--suite jenkins"
+    test_suite="--production-backend --suite jenkins"
 fi
 
 # notes:
@@ -39,7 +39,7 @@ fi
 #   - 1 => tests failed (sauce link available)
 #   - 100 => protractor terminated abnormally (no sauce link available)
 # - write exit status to temp file (used later to determine whether to set the build 'UNSTABLE')
-node ./protractor/e2e --production-backend ${test_suite} --sauce
+node ./protractor/e2e ${test_suite} --sauce
 e2e_exit_code=$?
 echo "$e2e_exit_code" > "${WX2_ADMIN_WEB_CLIENT_HOME}/.cache/${E2E_EXIT_CODE_FILE}"
 

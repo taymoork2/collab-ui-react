@@ -4,13 +4,8 @@
 .careChatSetup {
   @extend %content-header;
 
-  .cs-setupassistant {
-    margin: 0 auto;
-  }
 
   .cs-setupassistant--content {
-    height: calc(100vh - #{$top-bar-height + $overlay-panel-height});
-
     .cs-card-container {
       @include vr-spacing(p, 0);
     }
@@ -38,15 +33,6 @@
 }
 
 .ct-confirmation-body {
-  .warning-icon {
-    @extend .icon;
-    @extend .icon-warning;
-
-    font-size: 2rem;
-    color: $brand-warning;
-    float: left;
-  }
-
   .ct-confirmation-message {
     font-size: $h6-font-size;
     font-family: $brand-font-light;
@@ -58,4 +44,3 @@
 .sa-form {
   margin-top: 0;
 }
-

@@ -1,3 +1,5 @@
+@import 'styles/toolkit/colors';
+
 google-calendar-settings-page {
   display: block;
   background: #fff;
@@ -5,5 +7,9 @@ google-calendar-settings-page {
   .page-sub-header {
     // used to position <google-calendar-notifications-dropdown>
     position: relative;
+  }
+
+  .needs-border-top {
+    border-top: 1px solid $gray-light-2;
   }
 }

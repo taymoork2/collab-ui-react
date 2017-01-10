@@ -1,3 +1,5 @@
+require('./_hn-devices.scss');
+
 (function () {
   'use strict';
 

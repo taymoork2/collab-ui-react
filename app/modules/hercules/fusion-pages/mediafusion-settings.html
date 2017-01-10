@@ -14,6 +14,24 @@
       </div>
     </setting-section>
 
+    <div ng-if="clusterSettings.hasMFFeatureToggle">
+      <setting-section setting="clusterSettings.sipRegistration" class="needs-border-top">
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="mediaFusion.sipconfiguration.title"></h5>
+          <p class="sub-section__description" translate="mediaFusion.sipconfiguration.description"></p>
+          <input 
+            cs-input
+            type="text"
+            id="sipurlconfiguration"
+            placeholder="{{'mediaFusion.sipconfiguration.placeholder' | translate}}"
+            ng-model="clusterSettings.sipurlconfiguration"
+            cs-input-group-size="medium-4"
+            cs-input-help-text="{{'mediaFusion.sipconfiguration.example' | translate}}">
+          <button type="button" class="btn media-service-btn-padding" ng-click="clusterSettings.saveSipTrunk()" translate="common.save"></button>  
+        </div>
+      </setting-section>
+    </div>
+
     <release-channel-section cluster="clusterSettings.cluster"></release-channel-section>
 
     <rename-and-deregister-cluster-section
@@ -22,7 +40,6 @@
       on-name-update="clusterSettings.nameUpdated()"
       deregister-modal-options="clusterSettings.deregisterModalOptions">
     </rename-and-deregister-cluster-section>
-
 
   </div>
 </div>
