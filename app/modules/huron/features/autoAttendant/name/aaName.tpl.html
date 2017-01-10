@@ -1,6 +1,6 @@
 <div class="row" ng-controller="aaBuilderNameCtrl as nameCtrl">
   <cs-setup-assistant previous="nameCtrl.previousButton()" next="nameCtrl.nextButton()" next-fn="nameCtrl.nextPage()">
-    <ng-form id="nameForm" ng-submit="nameCtrl.saveAARecord()">
+    <ng-form id="nameForm">
       <div class="typeahead-large typeahead-large__no-icon typeahead-group">
         <input aa-builder-autofocus aa-keypress maxlength="64" ng-model="nameCtrl.name" id="aa-name-detail" class="underline" name="aaName" placeholder="{{'autoAttendant.namePlaceholder' | translate }}"
           ng-keyup="nameCtrl.evalKeyPress($event.keyCode)" />
