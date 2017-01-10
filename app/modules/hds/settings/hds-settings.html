@@ -1,7 +1,5 @@
-<div class="hds-settings">
-
+<div class="fusion-cluster-settings">
   <div class="cs-form">
-
     <setting-section setting="hdsSettings.general">
       <div class="sub-section">
         <h5 class="sub-section__label" translate="hds.settings.emailNotificationsHeading"></h5>
@@ -14,12 +12,12 @@
                     type="email"
                     allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
         <i class="sub-section__description">{{'hds.settings.emailExample' | translate}}</i>
-        <span class="right" ng-show="hdsSettings.savingEmail"><span translate="hds.settings.emailNotificationsSaving"></span> <i class="icon icon-spinner"/></span>
+        <span class="right" ng-show="true || hdsSettings.savingEmail"><span translate="hds.settings.emailNotificationsSaving"></span> <i class="icon icon-spinner"/></span>
       </div>
     </setting-section>
-
-    <!--
-    <documentation-section service-id="'spark-hybrid-datasecurity'"></documentation-section>
+    <!-- TODO: we need to talk with UE team to see if we can use the standard one, also, check backend API to be standard as well
+    <calendar-email-notifications-section service-id="'spark-hybrid-datasecurity'"></calendar-email-notifications-section>
+    <email-notifications-section service-id="'spark-hybrid-datasecurity'"></email-notifications-section>
     -->
 
     <!-- Service Status -->
@@ -58,37 +56,8 @@
         </button>
       </div>
     </setting-section>
-
-    <!--
-        <button ng-disabled="!obtainedTotalUserCount" id="manageUsers" class="btn btn--people" ng-click="onManageUsers()"
-                translate="usersPage.manageUsers">
-        </button>
+    
     <documentation-section service-id="'spark-hybrid-datasecurity'"></documentation-section>
-    -->
-
-    <setting-section setting="hdsSettings.documentationSection" ng-hide="hdsSettings.hasGoogleCalendarFeatureToggle">
-      <div class="sub-section">
-        <h5 class="sub-section__label" translate="hercules.settings.documentationHeading"></h5>
-        <p class="sub-section__description" translate="hercules.settings.documentationHelpLink"></p>
-        <p class="sub-section__description" translate="hercules.settings.documentationDownloadLink"></p>
-      </div>
-    </setting-section>
-
-    <setting-section setting="hdsSettings.deactivateSection" ng-hide="hdsSettings.hasGoogleCalendarFeatureToggle">
-      <div class="sub-section">
-        <h5 class="sub-section__label" translate="hercules.settings.deactivateServiceHeading"
-            translate-values="{ServiceName: hdsSettings.localizedServiceName}"></h5>
-        <p class="sub-section__description" translate="hercules.settings.deactivateService"
-           translate-values="{ServiceName: hdsSettings.localizedServiceName, ConnectorName: hdsSettings.localizedConnectorName}"></p>
-
-        <button class="btn" id="deactivateService"
-                ng-click="hdsSettings.confirmDisable('squared-fusion-cal')"
-                translate="hercules.settings.deactivate">
-
-        </button>
-      </div>
-    </setting-section>
-
+    <deactivate-section service-id="'spark-hybrid-datasecurity'"></deactivate-section>
   </div>
-
 </div>

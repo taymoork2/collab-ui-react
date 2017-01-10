@@ -21,12 +21,6 @@
     vm.servicestatus = {
       title: 'hds.settings.servicestatus_title'
     };
-    vm.deactivateSection = {
-      title: 'common.deactivate'
-    };
-    vm.documentationSection = {
-      title: 'common.help'
-    };
 
     var DEFAULT_SERVICE_MODE = vm.TRIAL;
 
@@ -36,9 +30,6 @@
 
     function openAddTrialUsersModal() {
       $modal.open({
-        //controller: 'ExportUserStatusesController',
-        //controllerAs: 'exportUserStatusesCtrl',
-        //templateUrl: 'modules/hercules/user-statuses/export-user-statuses.html',
         controller: 'AddTrialUsersController',
         controllerAs: 'addTrialUsersCtrl',
         templateUrl: 'modules/hds/settings/addtrialusers_modal/add-trial-users.html',
