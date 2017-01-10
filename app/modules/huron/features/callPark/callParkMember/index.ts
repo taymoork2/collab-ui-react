@@ -1,3 +1,5 @@
+import './_cp-member-lookup.scss';
+
 import { CallParkMemberComponent } from './callParkMember.component';
 import { callParkMemberNumbersFilter } from './callParkMemberNumbers.filter';
 import { NoDirtyOverride } from './noDirty.directive';

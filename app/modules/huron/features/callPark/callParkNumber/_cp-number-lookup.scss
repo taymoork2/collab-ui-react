@@ -1,3 +1,7 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/fonts';
+@import 'styles/toolkit/spacing';
+
 .cs-setupassistant--content {
   .typeahead-large {
     &.cpselect {
@@ -23,63 +27,58 @@
         font-family: $brand-font-light;
         font-size: $font-size-h4;
       }
-    }
 
-    .cs-input-group {
-      width: 100%;
-    }
-
-    input {
-      font-size: $font-size-h2;
-      width: 100%;
-      border-left: 0;
-      border-right: 0;
-      border-top: 0;
-      border-bottom: 1px solid $gray-light-2;
-      font-family: 'CiscoSansTT Thin';
-      border-radius: 0;
-      padding-bottom: rem(11);
-
-      .dropdown-menu {
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
+      .cs-input-group {
+        width: 100%;
       }
 
-      &:focus {
-        border-bottom: 1px solid $color-primary-base;
-      }
-
-      .error & {
-        background-color: $input-bg-color;
-        border-color: $input-error-border-color;
-      }
-    }
-
-    input[type='number']::-webkit-inner-spin-button,
-    input[type='number']::-webkit-outer-spin-button {
-      /* stylelint-disable property-no-vendor-prefix */
-      -webkit-appearance: none;
-      /* stylelint-enable property-no-vendor-prefix */
-      margin: 0;
-    }
-
-    .error input {
-      background-color: $input-bg-color;
-      border-color: $input-error-border-color;
-    }
-
-    .cp-edit-range .range-to {
-      line-height: 2.8rem;
-      font-family: 'CiscoSansTT Thin';
-
-      span {
+      input {
         font-size: $font-size-h2;
-      }
-    }
+        width: 100%;
+        border-left: 0;
+        border-right: 0;
+        border-top: 0;
+        border-bottom: 1px solid $gray-light-2;
+        font-family: 'CiscoSansTT Thin';
+        border-radius: 0;
+        padding-bottom: rem(11);
 
-    .input-hint {
-      border: none !important;
-      padding-top: 0.75rem;
+        .dropdown-menu {
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
+        }
+
+        &:focus {
+          border-bottom: 1px solid $color-primary-base;
+        }
+
+        .error & {
+          background-color: $white;
+          border-color: $color-alerts;
+        }
+      }
+
+      input[type='number']::-webkit-inner-spin-button,
+      input[type='number']::-webkit-outer-spin-button {
+        /* stylelint-disable property-no-vendor-prefix */
+        -webkit-appearance: none;
+        /* stylelint-enable property-no-vendor-prefix */
+        margin: 0;
+      }
+
+      .error input {
+        background-color: $white;
+        border-color: $color-alerts;
+      }
+
+      .cp-edit-range .range-to {
+        line-height: 2.8rem;
+        font-family: 'CiscoSansTT Thin';
+
+        span {
+          font-size: $font-size-h2;
+        }
+      }
     }
   }
 

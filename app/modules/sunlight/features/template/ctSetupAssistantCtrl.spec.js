@@ -1,12 +1,12 @@
 'use strict';
 
-describe('Care Chat Setup Assistant Ctrl', function () {
+describe('Care Setup Assistant Ctrl', function () {
 
   var controller, $scope, $modal, $q, CTService, getLogoDeferred, getLogoUrlDeferred, SunlightConfigService, $state, $stateParams, LogMetricsService;
   var Notification, $translate;
 
   var escapeKey = 27;
-  var templateName = 'Atlas UT Chat Template';
+  var templateName = 'Atlas UT Template';
   var NAME_PAGE_INDEX = 0;
   var OVERVIEW_PAGE_INDEX = 1;
   var AGENT_UNAVAILABLE_PAGE_INDEX = 3;
@@ -125,6 +125,8 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     Notification = _Notification_;
     $stateParams = _$stateParams_;
     LogMetricsService = _LogMetricsService_;
+
+    $stateParams.type = 'chat';
 
     // set language to en_US to show AM and PM for startTime and endTime
     $translate.use(businessHours.userLang);
@@ -606,7 +608,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       spyOn(SunlightConfigService, 'editChatTemplate').and.returnValue(deferred.promise);
     });
 
-    it("When save chat template failed, the 'saveCTErrorOccurred' is set", function () {
+    it("When save template failed, the 'saveCTErrorOccurred' is set", function () {
       //by default, this flag is false
       expect(controller.saveCTErrorOccurred).toBeFalsy();
       deferred.reject(failedData);
@@ -618,7 +620,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String));
     });
 
-    it("should submit chat template successfully", function () {
+    it("should submit template successfully", function () {
       //by default, this flag is false
       expect(controller.saveCTErrorOccurred).toBeFalsy();
 
@@ -653,7 +655,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       expect(LogMetricsService.logMetrics.calls.argsFor(0)[1]).toEqual('CARETEMPLATEFINISH');
     });
 
-    it("should submit chat template successfully for Edit", function () {
+    it("should submit template successfully for Edit", function () {
       //by default, this flag is false
       expect(controller.saveCTErrorOccurred).toBeFalsy();
 
@@ -754,6 +756,21 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     it("next button should be enabled when unavailable msg is present", function () {
       controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = templateName;
       checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, true);
+    });
+  });
+
+  describe('For callback media', function () {
+    beforeEach(inject(intializeCtrl));
+    beforeEach(function () {
+      controller.type = 'callback';
+      controller.setStates();
+      controller.getDefaultTemplate();
+    });
+    it('the page order should be as expected', function () {
+      expect(controller.states).toEqual(['name', 'summary']);
+    });
+    it('default template should be of type callback', function () {
+      expect(controller.template.configuration.mediaType).toEqual('callback');
     });
   });
 

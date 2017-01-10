@@ -1,3 +1,5 @@
+require('./_line-settings.scss');
+
 (function () {
   'use strict';
 

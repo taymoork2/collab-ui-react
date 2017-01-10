@@ -6,7 +6,7 @@
     .controller('ExpresswayHostDetailsController', ExpresswayHostDetailsController);
 
   /* @ngInject */
-  function ExpresswayHostDetailsController($scope, $stateParams, $state, ClusterService, Notification, $translate) {
+  function ExpresswayHostDetailsController($scope, $stateParams, ClusterService, $translate, $modal) {
     var cluster;
     var vm = this;
     vm.deleteHost = deleteHost;
@@ -29,19 +29,23 @@
     }, true);
 
     function deleteHost() {
-      return ClusterService.deleteHost(cluster.id, vm.host.hostSerial)
-        .then(function () {
-          if (ClusterService.getCluster($stateParams.connectorType, cluster.id)) {
-            $state.go('cluster-details', {
-              clusterId: cluster.id
-            });
-          } else {
-            $state.sidepanel.close();
-          }
-        })
-        .catch(function (error) {
-          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-        });
+      $modal.open({
+        templateUrl: 'modules/hercules/cluster-sidepanel/confirm-deleteHost-dialog.html',
+        type: 'dialog',
+        controller: 'ConfirmDeleteHostController',
+        controllerAs: 'confirmDeleteHostDialog',
+        resolve: {
+          cluster: function () {
+            return cluster;
+          },
+          hostSerial: function () {
+            return vm.host.hostSerial;
+          },
+          connectorType: function () {
+            return vm.host.connectorType;
+          },
+        }
+      });
     }
   }
 }());

@@ -1,3 +1,5 @@
+require('./_cdr-logs.scss');
+
 (function () {
   'use strict';
 

@@ -259,6 +259,27 @@ describe('User List Service', function () {
       $httpBackend.flush();
     });
 
+    it('should return 0 when no users in response data', function () {
+      var userCountUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day';
+      $httpBackend.expectGET(userCountUrl).respond(200, {
+        "data": [{
+          "data": [
+            { "details": { "totalRegisteredUsers": "0" } }, { "details": { "totalRegisteredUsers": "0" } }, { "details": { "totalRegisteredUsers": "0" } },
+            { "details": { "totalRegisteredUsers": "0" } }, { "details": { "totalRegisteredUsers": "0" } }, { "details": { "totalRegisteredUsers": "0" } },
+            { "details": { "totalRegisteredUsers": "0" } }]
+        }]
+      });
+
+      UserListService.getUserCount()
+        .then(function (count) {
+          expect(count).toEqual(0);
+        })
+        .catch(function () {
+          expect('reject called').toBeFalsy();
+        });
+
+      $httpBackend.flush();
+    });
 
     it('should reject promise when error occurs', function () {
       var userCountUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day';

@@ -50,8 +50,6 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-flex-row {
-  @extend .row;
-
   display: flex;
   flex-direction: row;
   margin-left: 10px;
@@ -75,12 +73,6 @@ $aa-builder-text-color: $gray-dark-1;
   flex: 1 1 auto;
   align-items: flex-end;
   justify-content: center;
-}
-
-.aa-setup-assistant {
-  .cs-setupassistant--content {
-    height: auto;
-  }
 }
 
 #aa-header-row {
@@ -108,9 +100,6 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-edit-icon {
-  @extend .icon;
-  @extend .icon-edit;
-
   font-size: 1.5rem;
   color: $aa-builder-icon-color;
 
@@ -125,9 +114,6 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-trash-icon {
-  @extend .icon;
-  @extend .icon-trash;
-
   font-size: 1.25rem;
   color: $aa-builder-icon-color;
 
@@ -141,9 +127,6 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-schedule-icon {
-  @extend .icon;
-  @extend .icon-clock;
-
   font-size: 2.5rem;
   color: $aa-builder-icon-color;
 
@@ -197,8 +180,6 @@ $aa-builder-text-color: $gray-dark-1;
   background-color: $color-white;
 
   #aa-name-detail {
-    @extend h2;
-
     line-height: 1;
 
     @include vr-spacing(mh, 0);
@@ -222,8 +203,6 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-name-edit {
-  @extend h2;
-
   min-width: 1rem;
   white-space: nowrap;
   color: $aa-builder-text-color;
@@ -246,8 +225,6 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-panel-numbers {
-  @extend .panel;
-
   text-align: left;
   width: 16rem;
 
@@ -274,7 +251,6 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-panel {
-  @extend .panel;
   @extend .aa-transition;
 
   @include vr-spacing(m, 0);
@@ -299,8 +275,6 @@ $aa-builder-text-color: $gray-dark-1;
   }
 
   .aa-panel-body {
-    @extend .panel-body;
-
     @include vr-spacing(p, 1.25);
 
     margin: 0;
@@ -335,8 +309,6 @@ $aa-builder-text-color: $gray-dark-1;
   }
 
   .aa-panel-round {
-    @extend .panel-body;
-
     @include vr-spacing(m, 0);
     @include vr-spacing(p, 0);
 
@@ -389,9 +361,6 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-add-step-icon {
-  @extend .icon;
-  @extend .icon-plus-circle;
-
   font-size: 2rem;
   padding-right: $aa-builder-border-size;
   color: $anchor-font-color;
@@ -406,9 +375,6 @@ $aa-builder-text-color: $gray-dark-1;
   margin-left: auto;
 
   .aa-action-delete-icon {
-    @extend .icon;
-    @extend .icon-close;
-
     color: $gray-light-2;
     font-size: 1.5rem;
 
@@ -495,9 +461,6 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-endcall-icon {
-  @extend .icon;
-  @extend .icon-end-call;
-
   font-size: 2.25rem;
   color: $aa-builder-icon-color;
 }

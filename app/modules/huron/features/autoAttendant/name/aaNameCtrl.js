@@ -71,8 +71,9 @@
 
     function evalKeyPress($keyCode) {
       switch ($keyCode) {
-        //right arrow
+        //right arrow - CR
         case 39:
+        case 13:
           nextPage();
           break;
 

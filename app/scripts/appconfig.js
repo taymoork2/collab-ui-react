@@ -2696,12 +2696,22 @@
               host: null
             }
           })
+          .state('hds-cluster-settings', {
+            url: '/services/cluster/hds/:id/settings',
+            template: '<hybrid-data-security-cluster-settings></hybrid-data-security-cluster-settings>',
+            parent: 'main',
+          })
           .state('mediafusion-settings', {
             url: '/services/cluster/mediafusion/:id/settings',
             templateUrl: 'modules/hercules/fusion-pages/mediafusion-settings.html',
             controller: 'MediafusionClusterSettingsController',
             controllerAs: 'clusterSettings',
             parent: 'main',
+            resolve: {
+              hasMFFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
+              }
+            }
           })
           // Add Resource modal
           .state('add-resource', {
@@ -3211,7 +3221,7 @@
             controllerAs: 'careFeaturesCtrl'
           })
           .state('care.setupAssistant', {
-            url: '/setupAssistant',
+            url: '/setupAssistant/:type',
             parent: 'care.Details',
             templateUrl: 'modules/sunlight/features/template/ctSetupAssistant.tpl.html',
             controller: 'CareSetupAssistantCtrl',

@@ -227,10 +227,10 @@ describe('Service: Customer Graph Service', function () {
     });
 
     beforeEach(function () {
-      spyOn(AmCharts, 'makeChart').and.returnValue({
-        dataProvider: data,
-        validateData: validateService.validateData,
-      });
+      let chartResponse: any = _.cloneDeep(chart);
+      chartResponse.dataProvider = data;
+      chartResponse.validateData = validateService.validateData;
+      spyOn(AmCharts, 'makeChart').and.returnValue(chartResponse);
     });
 
     it('should have created a graph when setDeviceGraph is called the first time', function () {
@@ -242,6 +242,18 @@ describe('Service: Customer Graph Service', function () {
     it('should update graph when setDeviceGraph is called a second time', function () {
       let chart = this.SparkGraphService.setDeviceGraph(data, null, filter[0]);
       this.SparkGraphService.setDeviceGraph(data, chart, filter[1]);
+      expect(validateService.validateData).toHaveBeenCalled();
+    });
+
+    it('should have created a graph when setDeviceLineGraph is called the first time', function () {
+      this.SparkGraphService.setDeviceLineGraph(data, null, filter[0]);
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+      expect(validateService.validateData).not.toHaveBeenCalled();
+    });
+
+    it('should update graph when setDeviceGraph is called a second time', function () {
+      let chart = this.SparkGraphService.setDeviceLineGraph(data, null, filter[0]);
+      this.SparkGraphService.setDeviceLineGraph(data, chart, filter[1]);
       expect(validateService.validateData).toHaveBeenCalled();
     });
   });

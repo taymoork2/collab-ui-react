@@ -33,7 +33,7 @@
     vm.sortByProperty = sortByProperty;
     vm.clusterList = [];
     vm.showClusterSidepanel = showClusterSidepanel;
-
+    vm.addResource = addResource;
     vm.clusterListGridOptions = {
       data: 'hdsServiceController.clusters',
       enableSorting: false,
@@ -71,10 +71,8 @@
     }
 
     FusionClusterService.serviceIsSetUp('spark-hybrid-datasecurity').then(function (enabled) {
-      if (enabled) {
-        vm.serviceEnabled = enabled;
-      } else {
-        firstTimeSetup();
+      if (!enabled) {
+        addResource();
       }
     });
 
@@ -83,8 +81,7 @@
       vm.clusters.sort(sortByProperty('name'));
     }
 
-    function firstTimeSetup() {
-      vm.serviceEnabled = true;
+    function addResource() {
       $modal.open({
         type: 'small',
         controller: 'HDSRedirectAddResourceController',
@@ -92,12 +89,10 @@
         templateUrl: 'modules/hds/add-resource/add-resource-modal.html',
         modalClass: 'redirect-add-resource',
         resolve: {
-          firstTimeSetup: true,
           proceedSetup: false
         },
       });
     }
-
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity)
       .then(function (reply) {

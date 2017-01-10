@@ -151,7 +151,7 @@ describe('Controller: DeviceUsageCtrl', function () {
     amChart.dataProvider = null;
     amChart.categoryAxis = {};
     amChart.validateData = function () {};
+    amChart.animateAgain = function () {};
     return amChart;
   };
 });
-

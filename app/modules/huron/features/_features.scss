@@ -4,10 +4,28 @@
 
 @import 'components/callFeatureEdit/call-feature-edit';
 @import 'components/callFeatureMembers/call-feature-members';
-@import 'featureLanding/feature-landing';
-@import 'newFeature/new-feature';
-@import 'huntGroup/hunt-group';
-@import 'callPark/call-park';
 @import 'autoAttendant/aa';
-@import 'pagingGroup/paging-group';
-@import 'callPickup/call-pickup';
+
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/spacing';
+
+// these global overrides are used for layout of all features setup assistants
+.cs-setupassistant {
+  margin: 0 auto;
+  max-width: 100%;
+  padding: 0 1rem;
+
+  .btn--right.saveCallPark:not(.disabled),
+  .btn--right.saveCallPickup:not(.disabled),
+  .btn--right.savePagingGroup:not(.disabled) {
+    background: $color-cta;
+  }
+
+  .helptext-btn--right.enabled {
+    color: $color-cta;
+  }
+}
+
+.cs-setupassistant--content {
+  height: calc(100vh - #{$top-bar-height + $overlay-panel-height});
+}
