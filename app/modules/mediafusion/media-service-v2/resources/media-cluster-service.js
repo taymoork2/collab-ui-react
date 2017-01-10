@@ -277,6 +277,19 @@
       return $http.post(url);
     }
 
+    function getProperties(clusterId) {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/properties';
+      return $http
+        .get(url)
+        .then(extractDataFromResponse);
+    }
+
+    function setProperties(clusterId, payLoad) {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/properties';
+      return $http
+        .post(url, payLoad);
+    }
+
     function getClustersByConnectorType(type) {
       var clusters = _.chain(clusterCache[type])
         .values() // turn them to an array
@@ -317,6 +330,8 @@
       deleteClusterWithConnector: deleteClusterWithConnector,
       upgradeCluster: upgradeCluster,
       moveV2Host: moveV2Host,
+      getProperties: getProperties,
+      setProperties: setProperties,
       getClustersByConnectorType: getClustersByConnectorType,
       getRunningStateSeverity: getRunningStateSeverity,
       mergeAllAlarms: mergeAllAlarms,

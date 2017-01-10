@@ -6,12 +6,24 @@
     .controller('MediafusionClusterSettingsController', MediafusionClusterSettingsController);
 
   /* @ngInject */
-  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, Notification) {
+  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, Notification, MediaClusterServiceV2, hasMFFeatureToggle) {
     var vm = this;
     vm.backUrl = 'cluster-list';
+    vm.saveSipTrunk = saveSipTrunk;
+    vm.hasMFFeatureToggle = hasMFFeatureToggle;
+    //vm.sipurlconfiguration = '';
     vm.upgradeSchedule = {
       title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader'
     };
+
+    vm.sipRegistration = {
+      title: 'mediaFusion.sipconfiguration.title'
+    };
+
+    MediaClusterServiceV2.getProperties($stateParams.id)
+      .then(function (properties) {
+        vm.sipurlconfiguration = properties['mf.ucSipTrunk'];
+      });
 
     vm.deregisterModalOptions = {
       resolve: {
@@ -47,6 +59,19 @@
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'hercules.genericFailure');
         });
+    }
+
+    function saveSipTrunk() {
+      vm.payLoad = {
+        'mf.ucSipTrunk': vm.sipurlconfiguration
+      };
+      MediaClusterServiceV2
+        .setProperties($stateParams.id, vm.payLoad)
+          .then(function () {
+            Notification.success('mediaFusion.sipconfiguration.success');
+          }, function (err) {
+            Notification.errorWithTrackingId(err, 'hercules.genericFailure');
+          });
     }
 
     /* Callback function used by <rename-and-deregister-cluster-section>  */

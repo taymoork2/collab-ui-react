@@ -4091,6 +4091,13 @@
       "software": "Software",
       "nodes": "Nodes"
     },
+    "sipconfiguration": {
+      "success": "UC SIP Trunk saved successfully.",
+      "title": "UC SIP Trunk",
+      "description": "Description for this section comes here.",
+      "placeholder": "UC SIP Trunk goes here",
+      "example": "Example: sips://173.36.248.22:5062"
+    },
     "settings": {
       "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
       "deactivateBody_2": "Deactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources.",
