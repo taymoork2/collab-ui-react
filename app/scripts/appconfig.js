@@ -2701,6 +2701,11 @@
             controller: 'MediafusionClusterSettingsController',
             controllerAs: 'clusterSettings',
             parent: 'main',
+            resolve: {
+              hasMFFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
+              }
+            }
           })
           // Add Resource modal
           .state('add-resource', {
