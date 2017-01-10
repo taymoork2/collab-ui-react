@@ -416,7 +416,7 @@
           if (searchResultsIndex < model.searchResults.length) {
             var numbers = model.searchResults[searchResultsIndex];
             if (numberType === NUMTYPE_DID) {
-              reservation = PstnSetupService.reserveCarrierInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers, PstnSetup.isCustomerExists());
+              reservation = PstnSetupService.reserveCarrierInventoryV2(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers, PstnSetup.isCustomerExists());
             } else if (numberType === NUMTYPE_TOLLFREE) {
               reservation = PstnSetupService.reserveCarrierTollFreeInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers, PstnSetup.isCustomerExists());
             }
@@ -497,7 +497,7 @@
         PstnSetupService.releaseCarrierTollFreeInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.numbers, order.reservationId, PstnSetup.isCustomerExists())
           .then(_.partial(removeOrderFromCart, order));
       } else {
-        PstnSetupService.releaseCarrierInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.numbers, PstnSetup.isCustomerExists())
+        PstnSetupService.releaseCarrierInventoryV2(PstnSetup.getCustomerId(), order.reservationId, order.data.numbers, PstnSetup.isCustomerExists())
           .then(_.partial(removeOrderFromCart, order));
       }
     }

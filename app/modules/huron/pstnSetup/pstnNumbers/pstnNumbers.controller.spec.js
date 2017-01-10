@@ -123,6 +123,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     PstnSetup.setProvider(customerCarrierList[0]);
 
     spyOn(PstnSetupService, 'releaseCarrierInventory').and.returnValue($q.when());
+    spyOn(PstnSetupService, 'releaseCarrierInventoryV2').and.returnValue($q.when());
     spyOn(PstnSetupService, 'getCarrierInventory').and.returnValue($q.when(response));
     spyOn(PstnSetupService, 'getCarrierTollFreeInventory').and.returnValue($q.when(response));
     spyOn(PstnSetup, 'getServiceAddress').and.returnValue(serviceAddress);
