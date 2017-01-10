@@ -13,6 +13,12 @@
     var vm = this;
     init();
 
+    vm.type = $stateParams.type;
+
+    vm.mediaTypes = {
+      chat: 'chat',
+      callback: 'callback'
+    };
     vm.cancelModal = cancelModal;
     vm.evalKeyPress = evalKeyPress;
 
@@ -30,16 +36,14 @@
     vm.isEditFeature = $stateParams.isEditFeature;
 
     // Setup Assistant pages with index
-    vm.states = ['name',
-      'overview',
-      'customerInformation',
-      'agentUnavailable',
-      'offHours',
-      'feedback',
-      'profile',
-      'chatStatusMessages',
-      'summary'
-    ];
+    vm.states = {};
+
+    vm.setStates = function () {
+      vm.states = CTService.getStatesBasedOnType(vm.type);
+    };
+
+    vm.setStates();
+
     vm.currentState = vm.states[0];
     vm.animationTimeout = 10;
     vm.escapeKey = 27;
@@ -159,35 +163,40 @@
         id: typeId
       });
     };
-    vm.overlayTitle = $translate.instant('careChatTpl.createTitle');
+    vm.overlayTitle = vm.type === vm.mediaTypes.chat ? $translate.instant('careChatTpl.createTitle') :
+        $translate.instant('careChatTpl.createCallbackTitle');
 
     //Template related constants  variables used after editing template
     if ($stateParams.isEditFeature) {
       var config = $stateParams.template.configuration;
-      vm.selectedTemplateProfile = config.mediaSpecificConfiguration.useOrgProfile ?
-        vm.profiles.org : vm.profiles.agent;
-      vm.selectedAgentProfile = config.mediaSpecificConfiguration.useAgentRealName ?
-        vm.agentNames.displayName : vm.agentNames.alias;
-      vm.orgName = config.mediaSpecificConfiguration.displayText;
-      vm.logoUrl = config.mediaSpecificConfiguration.orgLogoUrl;
-      vm.timings.startTime.label = config.pages.offHours.schedule.timings.startTime;
-      vm.timings.endTime.label = config.pages.offHours.schedule.timings.endTime;
-      vm.scheduleTimeZone = CTService.getTimeZone(config.pages.offHours.schedule.timezone);
-      var businessDays = config.pages.offHours.schedule.businessDays;
-      vm.days = _.map(CTService.getDays(), function (day) {
-        var selectedDay = day;
-        selectedDay.isSelected = _.includes(businessDays, day.label);
-        return selectedDay;
-      });
-      vm.overlayTitle = $translate.instant('careChatTpl.editTitle');
+      vm.type = config.mediaType;
+      if (config.mediaType && config.mediaType === vm.mediaTypes.chat) {
+        vm.selectedTemplateProfile = config.mediaSpecificConfiguration.useOrgProfile ?
+            vm.profiles.org : vm.profiles.agent;
+        vm.selectedAgentProfile = config.mediaSpecificConfiguration.useAgentRealName ?
+            vm.agentNames.displayName : vm.agentNames.alias;
+        vm.orgName = config.mediaSpecificConfiguration.displayText;
+        vm.logoUrl = config.mediaSpecificConfiguration.orgLogoUrl;
+        vm.timings.startTime.label = config.pages.offHours.schedule.timings.startTime;
+        vm.timings.endTime.label = config.pages.offHours.schedule.timings.endTime;
+        vm.scheduleTimeZone = CTService.getTimeZone(config.pages.offHours.schedule.timezone);
+        var businessDays = config.pages.offHours.schedule.businessDays;
+        vm.days = _.map(CTService.getDays(), function (day) {
+          var selectedDay = day;
+          selectedDay.isSelected = _.includes(businessDays, day.label);
+          return selectedDay;
+        });
+      }
+      vm.overlayTitle = config.mediaType && config.mediaType === vm.mediaTypes.chat ?
+          $translate.instant('careChatTpl.editTitle') : $translate.instant('careChatTpl.editCallbackTitle');
     }
     setDayPreview();
 
-    /* Template */
-    vm.template = {
+    /* Templates */
+    var defaultChatTemplate = {
       name: '',
       configuration: {
-        mediaType: 'chat',
+        mediaType: vm.mediaTypes.chat,
         mediaSpecificConfiguration: {
           useOrgProfile: true,
           displayText: vm.orgName,
@@ -330,6 +339,153 @@
         }
       }
     };
+
+    var defaultCallBackTemplate = {
+      name: '',
+      configuration: {
+        mediaType: vm.mediaTypes.callback,
+        mediaSpecificConfiguration: {
+          useOrgProfile: true,
+          displayText: vm.orgName,
+          orgLogoUrl: vm.logoUrl,
+          useAgentRealName: false
+        },
+        pages: {
+          customerInformation: {
+            enabled: true,
+            fields: {
+              'welcomeHeader': {
+                attributes: [{
+                  name: 'header',
+                  value: $translate.instant('careChatTpl.defaultWelcomeText')
+                }, {
+                  name: 'organization',
+                  value: vm.orgName
+                }]
+              },
+              'field1': {
+                attributes: [{
+                  name: 'required',
+                  value: 'required'
+                }, {
+                  name: 'category',
+                  value: vm.getCategoryTypeObject('customerInfo')
+                }, {
+                  name: 'label',
+                  value: $translate.instant('careChatTpl.defaultNameText')
+                }, {
+                  name: 'hintText',
+                  value: $translate.instant('careChatTpl.defaultNameHint')
+                }, {
+                  name: 'type',
+                  value: vm.getTypeObject('name'),
+                  categoryOptions: ''
+                }]
+              },
+
+              'field2': {
+                attributes: [{
+                  name: 'required',
+                  value: 'required'
+                }, {
+                  name: 'category',
+                  value: vm.getCategoryTypeObject('customerInfo')
+                }, {
+                  name: 'label',
+                  value: $translate.instant('careChatTpl.defaultEmailText')
+                }, {
+                  name: 'hintText',
+                  value: $translate.instant('careChatTpl.defaultEmail')
+                }, {
+                  name: 'type',
+                  value: vm.getTypeObject('phone'),
+                  categoryOptions: ''
+                }]
+              },
+              'field3': {
+                attributes: [{
+                  name: 'required',
+                  value: 'optional'
+                }, {
+                  name: 'category',
+                  value: vm.getCategoryTypeObject('requestInfo')
+                }, {
+                  name: 'label',
+                  value: $translate.instant('careChatTpl.defaultQuestionText')
+                }, {
+                  name: 'hintText',
+                  value: $translate.instant('careChatTpl.field3HintText')
+                }, {
+                  name: 'type',
+                  value: vm.getTypeObject('category'),
+                  categoryOptions: ''
+                }]
+              },
+              'field4': {
+                attributes: [{
+                  name: 'required',
+                  value: 'optional'
+                }, {
+                  name: 'category',
+                  value: vm.getCategoryTypeObject('requestInfo')
+                }, {
+                  name: 'label',
+                  value: $translate.instant('careChatTpl.defaultQuestionText')
+                }, {
+                  name: 'hintText',
+                  value: $translate.instant('careChatTpl.field3HintText')
+                }, {
+                  name: 'type',
+                  value: vm.getTypeObject('email'),
+                  categoryOptions: ''
+                }]
+              }
+            }
+          },
+          agentUnavailable: {
+            enabled: true,
+            fields: {
+              agentUnavailableMessage: {
+                displayText: $translate.instant('careChatTpl.agentUnavailableMessage')
+              }
+            }
+          },
+          offHours: {
+            enabled: true,
+            message: $translate.instant('careChatTpl.offHoursDefaultMessage'),
+            schedule: {
+              businessDays: _.map(_.filter(vm.days, 'isSelected'), 'label'),
+              open24Hours: true,
+              timings: {
+                startTime: vm.timings.startTime.label,
+                endTime: vm.timings.endTime.label
+              },
+              timezone: vm.scheduleTimeZone.value
+            }
+          },
+          callbackConfirmation: {
+            enabled: true,
+            fields: {
+              callbackConfirmationMessage: {
+                displayText: "Your callback request has been received."
+              }
+            }
+          }
+        }
+      }
+    };
+
+    vm.template = {};
+
+    vm.getDefaultTemplate = function () {
+      if (vm.type == vm.mediaTypes.chat) {
+        vm.template = defaultChatTemplate;
+      } else if (vm.type == vm.mediaTypes.callback) {
+        vm.template = defaultCallBackTemplate;
+      }
+    };
+
+    vm.getDefaultTemplate();
 
     vm.singleLineValidationMessage = CTService.getValidationMessages(0, vm.lengthConstants.singleLineMaxCharLimit);
     vm.multiLineValidationMessage = CTService.getValidationMessages(0, vm.lengthConstants.multiLineMaxCharLimit);
@@ -684,7 +840,7 @@
         })
         .catch(function (response) {
           handleChatTemplateError();
-          Notification.errorWithTrackingId(response, 'careChatTpl.createChatTemplateFailureText');
+          Notification.errorWithTrackingId(response, vm.getLocalisedText('careChatTpl.createChatTemplateFailureText'));
         });
     }
 
@@ -696,7 +852,7 @@
         })
         .catch(function (response) {
           handleChatTemplateError();
-          Notification.errorWithTrackingId(response, 'careChatTpl.editChatTemplateFailureText');
+          Notification.errorWithTrackingId(response, vm.getLocalisedText('careChatTpl.editChatTemplateFailureText'));
         });
     }
 
@@ -704,7 +860,8 @@
       vm.creatingChatTemplate = false;
       var responseTemplateId = response.headers('Location').split('/').pop();
       $state.go('care.Features');
-      Notification.success('careChatTpl.createSuccessText', {
+      var successMsg = vm.type === vm.mediaTypes.chat ? 'careChatTpl.createSuccessText' : 'careChatTpl.createSuccessText_callback';
+      Notification.success(successMsg, {
         featureName: vm.template.name
       });
       CTService.openEmbedCodeModal(responseTemplateId, vm.template.name);
@@ -714,7 +871,8 @@
     function handleChatTemplateEdit(response, templateId) {
       vm.creatingChatTemplate = false;
       $state.go('care.Features');
-      Notification.success('careChatTpl.editSuccessText', {
+      var successMsg = vm.type === vm.mediaTypes.chat ? 'careChatTpl.editSuccessText' : 'careChatTpl.editSuccessText_callback';
+      Notification.success(successMsg, {
         featureName: vm.template.name
       });
       CTService.openEmbedCodeModal(templateId, vm.template.name);
@@ -767,5 +925,12 @@
         vm.logoUploaded = true;
       });
     }
+
+    vm.getLocalisedText = function (name) {
+      switch (vm.type) {
+        case 'chat': return $translate.instant(name);
+        case 'callback': return $translate.instant(name + '_' + vm.type);
+      }
+    };
   }
 })();

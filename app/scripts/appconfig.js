@@ -3210,7 +3210,7 @@
             controllerAs: 'careFeaturesCtrl'
           })
           .state('care.setupAssistant', {
-            url: '/setupAssistant',
+            url: '/setupAssistant/:type',
             parent: 'care.Details',
             templateUrl: 'modules/sunlight/features/template/ctSetupAssistant.tpl.html',
             controller: 'CareSetupAssistantCtrl',
