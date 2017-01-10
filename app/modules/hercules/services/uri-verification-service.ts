@@ -7,7 +7,7 @@ class UriVerificationService {
   ) {
   }
 
-  public isDomainVerified(domainList:string[], uri:string): boolean {
+  public isDomainVerified(domainList: string[], uri: string): boolean {
     if (!domainList) {
       return false;
     }
