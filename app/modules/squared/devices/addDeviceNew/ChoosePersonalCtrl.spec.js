@@ -34,7 +34,10 @@ describe('ChoosePersonalCtrl: Ctrl', function () {
         state: function () {
           return {
             data: {
-              title: title
+              title: title,
+              account: {
+                deviceType: 'cloudberry'
+              }
             }
           };
         }
@@ -60,7 +63,11 @@ describe('ChoosePersonalCtrl: Ctrl', function () {
       $stateParams.wizard = {
         state: function () {
           return {
-            data: {}
+            data: {
+              account: {
+                deviceType: 'cloudberry'
+              }
+            }
           };
         },
         next: function () {}
@@ -80,8 +87,6 @@ describe('ChoosePersonalCtrl: Ctrl', function () {
     it('should set the wizardState with correct fields for show activation code modal', function () {
       expect($stateParams.wizard.next).toHaveBeenCalled();
       var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
-      expect(wizardState.account.deviceType).toBe('huron');
-      expect(wizardState.account.type).toBe('personal');
       expect(wizardState.account.name).toBe(displayName);
       expect(wizardState.account.cisUuid).toBe(userCisUuid);
       expect(wizardState.account.username).toBe(email);

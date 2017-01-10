@@ -2701,6 +2701,11 @@
             controller: 'MediafusionClusterSettingsController',
             controllerAs: 'clusterSettings',
             parent: 'main',
+            resolve: {
+              hasMFFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
+              }
+            }
           })
           // Add Resource modal
           .state('add-resource', {
@@ -3210,7 +3215,7 @@
             controllerAs: 'careFeaturesCtrl'
           })
           .state('care.setupAssistant', {
-            url: '/setupAssistant',
+            url: '/setupAssistant/:type',
             parent: 'care.Details',
             templateUrl: 'modules/sunlight/features/template/ctSetupAssistant.tpl.html',
             controller: 'CareSetupAssistantCtrl',

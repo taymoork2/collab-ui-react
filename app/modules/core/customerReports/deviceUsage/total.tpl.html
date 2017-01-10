@@ -1,4 +1,4 @@
-<div class="device-usage-report-pages">
+<div class="device-usage-report-pages" ng-class="{'device-usage-report-pages-waiting': deviceUsage.loading}">
   <cs-page-sub-header>
     <cs-page-sub-header-left tabs="deviceUsage.tabs">
     </cs-page-sub-header-left>
@@ -6,7 +6,7 @@
       <cs-select id="timeFilter" name="timeFilter" class='customer-report-filter' ng-model="deviceUsage.timeSelected" options="deviceUsage.timeOptions" on-change-fn="deviceUsage.timeUpdate()"></cs-select>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
-  
+
   <div class="card-look">
     <div class="row">
       <div class="columns full" style="padding: 0;">
@@ -40,7 +40,6 @@
     </div>
   </div>
 
-
   <div class="card-look">
     <div class="row">
       <div class="corrected columns large-6 medium-6 small-12">
@@ -51,20 +50,14 @@
         </cs-select>
       </div>
     </div>
-    <!--
-    <div class="clearfix device-select right" ng-hide="deviceUsage.loading">
-      <cs-select ng-model="deviceUsage.deviceFilter" options="deviceUsage.deviceOptions" on-change-fn="deviceUsage.deviceUpdate()">
-      </cs-select>
-    </div>
-    -->
     <div id="device-usage-total-chart" class="device-usage-total-chart">
     </div>
   </div>
+</div>
 
-  <div ng-show="deviceUsage.loading" class="loading-indicator">
-    <div class="loading-text">
-      <span translate="reportsPage.usageReports.collectingData"></span>
-      <div cs-loader class="loader-example--small"></div>
-    </div>
+<div ng-show="deviceUsage.loading" class="loading-reports-indicator">
+  <div class="loading-text">
+    <span translate="reportsPage.usageReports.collectingData"></span>
+    <div cs-loader class="loader-example--small"></div>
   </div>
 </div>

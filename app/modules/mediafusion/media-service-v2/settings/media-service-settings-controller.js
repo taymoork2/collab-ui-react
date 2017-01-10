@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceSettingsControllerV2($stateParams, ServiceDescriptor, MailValidatorService, Notification) {
+  function MediaServiceSettingsControllerV2($stateParams) {
     var vm = this;
     vm.config = "";
     vm.wx2users = "";
@@ -19,38 +19,6 @@
       controller: 'DisableMediaServiceController',
       controllerAs: 'disableServiceDialog',
       type: 'small',
-    };
-
-    vm.config = "";
-    ServiceDescriptor.getEmailSubscribers(vm.serviceId)
-      .then(function (emailSubscribers) {
-        vm.emailSubscribers = _.map(emailSubscribers, function (user) {
-          return {
-            text: user
-          };
-        });
-      });
-
-    vm.cluster = $stateParams.cluster;
-
-    vm.writeConfig = function () {
-      var emailSubscribers = _.map(vm.emailSubscribers, function (data) {
-        return data.text;
-      }).toString();
-      if (emailSubscribers && !MailValidatorService.isValidEmailCsv(emailSubscribers)) {
-        Notification.error('mediaFusion.email.invalidEmail');
-      } else {
-        vm.savingEmail = true;
-        ServiceDescriptor.setEmailSubscribers(vm.serviceId, emailSubscribers)
-          .then(function (response) {
-            if (response.status === 204) {
-              Notification.success('mediaFusion.email.emailNotificationsSavingSuccess');
-            } else {
-              Notification.error('mediaFusion.email.emailNotificationsSavingError');
-            }
-            vm.savingEmail = false;
-          });
-      }
     };
   }
 

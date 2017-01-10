@@ -673,6 +673,70 @@ export class SparkGraphService {
     return [graph];
   }
 
+  // Device Line Graph
+  public setDeviceLineGraph(data: Array<IEndpointWrapper>, chart: any, filter: IDropdownBase | undefined): any {
+    if (data.length > 0 && chart) {
+      const graphNumber: number = _.get(filter, 'value', 0);
+      chart.categoryAxis.gridColor = this.chartColors.grayLightTwo;
+      if (!data[graphNumber].balloon) {
+        chart.categoryAxis.gridColor = this.chartColors.grayLightThree;
+      }
+
+      chart.dataProvider = data[graphNumber].graph;
+      chart.graphs = this.deviceLineGraphs(data, filter);
+      chart.validateData();
+    } else if (data.length > 0) {
+      chart = this.createDeviceLineGraph(data, filter);
+    }
+    return chart;
+  }
+
+  private createDeviceLineGraph(data: Array<IEndpointWrapper>, filter: IDropdownBase | undefined): any {
+    const graphNumber: number = _.get(filter, 'value', 0);
+    let catAxis: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LINE_AXIS);
+    let valueAxes: any = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
+    valueAxes[0].integersOnly = true;
+    valueAxes[0].stackType = 'regular';
+
+    if (!data[graphNumber].balloon) {
+      catAxis.gridColor = this.chartColors.grayLightThree;
+    }
+
+    let chartCursor: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.CURSOR);
+    chartCursor.valueLineAlpha = 1;
+    chartCursor.valueLineEnabled = true;
+    chartCursor.valueLineBalloonEnabled = true;
+    chartCursor.cursorColor = this.chartColors.grayLightTwo;
+
+    let chartData: any = this.CommonGraphService.getBaseSerialGraph(data[graphNumber].graph, 0, valueAxes, this.deviceLineGraphs(data, filter), this.CommonGraphService.DATE, catAxis);
+    chartData.numberFormatter = this.CommonGraphService.getBaseVariable(this.CommonGraphService.NUMFORMAT);
+    chartData.legend = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LEGEND);
+    chartData.chartCursor = chartCursor;
+    chartData.autoMargins = true;
+    return AmCharts.makeChart(this.devicesDiv, chartData);
+  }
+
+  private deviceLineGraphs(data: Array<IEndpointWrapper>, filter: IDropdownBase | undefined): Array<any> {
+    const graphNumber: number = _.get(filter, 'value', 0);
+    const title: string = this.$translate.instant('registeredEndpoints.registeredEndpoints');
+    let color: string = this.chartColors.colorPeopleBase;
+    if (!data[0].balloon) {
+      color = this.chartColors.grayLighter;
+    }
+
+    let graph: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LINE);
+    graph.title = title;
+    graph.colorField = color;
+    graph.lineColor = color;
+    graph.fillAlphas = 0;
+    graph.lineThickness = 3;
+    graph.valueField = 'totalRegisteredDevices';
+    graph.balloonText = SparkGraphService.graphTextSpan + title + ' <span class="device-number">[[totalRegisteredDevices]] </span></span>';
+    graph.showBalloon = data[graphNumber].balloon;
+
+    return [graph];
+  }
+
   // Call Metrics Donut Chart
   public setMetricsGraph(data: IMetricsData, chart: any): any {
     let balloonText = SparkGraphService.graphTextSpan + '[[numCalls]] [[callCondition]] ([[percentage]]%)</span>';

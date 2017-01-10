@@ -23,7 +23,8 @@
       generateCodeSnippet: generateCodeSnippet,
       openEmbedCodeModal: openEmbedCodeModal,
       getLengthValidationConstants: getLengthValidationConstants,
-      getValidationMessages: getValidationMessages
+      getValidationMessages: getValidationMessages,
+      getStatesBasedOnType: getStatesBasedOnType
     };
     return service;
 
@@ -222,6 +223,27 @@
           'max': maxLength
         })
       };
+    }
+
+    function getStatesBasedOnType(type) {
+      if (type === 'chat') {
+        return ['name',
+          'overview',
+          'customerInformation',
+          'agentUnavailable',
+          'offHours',
+          'feedback',
+          'profile',
+          'chatStatusMessages',
+          'summary'
+        ];
+      } else if (type === 'callback') {
+        return ['name',
+          'summary'
+        ];
+      } else {
+        return [];
+      }
     }
   }
 })();

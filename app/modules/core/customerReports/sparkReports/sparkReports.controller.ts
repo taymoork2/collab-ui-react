@@ -24,6 +24,7 @@ import {
   IConversation,
   IConversationWrapper,
   IEndpointContainer,
+  IEndpointData,
   IEndpointWrapper,
   IFilesShared,
   IMediaData,
@@ -52,7 +53,6 @@ class SparkReportCtrl {
   constructor(
     private $rootScope: ng.IRootScopeService,
     private $timeout: ng.ITimeoutService,
-    private $translate: ng.translate.ITranslateService,
     private CardUtils: CardUtils,
     private CommonReportService: CommonReportService,
     private SparkGraphService: SparkGraphService,
@@ -76,7 +76,7 @@ class SparkReportCtrl {
       this.displayNewReports = response;
 
       if (this.displayNewReports) {
-        this.timeOptions = _.cloneDeep(this.ReportConstants.altTimeFilter);
+        this.timeOptions = _.cloneDeep(this.ReportConstants.ALT_TIME_FILTER);
         this.secondaryActiveOptions.alternateTranslations = true;
         this.activeDropdown = {
           array: this.activeArray,
@@ -94,6 +94,7 @@ class SparkReportCtrl {
           this.setConversationGraphs(this.timeSelected.min, this.timeSelected.max);
           this.setCallQualityGraph(this.timeSelected.min, this.timeSelected.max);
           this.setCallMetricsGraph(this.timeSelected.min, this.timeSelected.max);
+          this.setRegisteredDeviceGraph(this.timeSelected.min, this.timeSelected.max);
         } else {
           this.setDummyData();
           this.setAllGraphs();
@@ -133,7 +134,7 @@ class SparkReportCtrl {
   public filterArray: Array<IFilterObject> = _.cloneDeep(this.ReportConstants.filterArray);
 
   // Time Filter Controls
-  public timeOptions: Array<ITimespan> = _.cloneDeep(this.ReportConstants.timeFilter);
+  public timeOptions: Array<ITimespan> = _.cloneDeep(this.ReportConstants.TIME_FILTER);
   public timeSelected: ITimespan = this.ReportConstants.WEEK_FILTER;
   public timeUpdates: ITimeSliderFunctions = {
     sliderUpdate: (min: number, max: number): void => {
@@ -165,6 +166,7 @@ class SparkReportCtrl {
     this.setConversationGraphs(min, max);
     this.setCallQualityGraph(min, max);
     this.setCallMetricsGraph(min, max);
+    this.setRegisteredDeviceGraph(min, max);
   }
 
   private timeUpdate(): void {
@@ -182,7 +184,7 @@ class SparkReportCtrl {
   }
 
   // Active User Report Controls
-  private activeArray: Array<IDropdownBase> = _.cloneDeep(this.ReportConstants.activeFilter);
+  private activeArray: Array<IDropdownBase> = _.cloneDeep(this.ReportConstants.ACTIVE_FILTER);
   public activeDropdown: IReportDropdown;
 
   public activeOptions: IReportCard = {
@@ -518,7 +520,7 @@ class SparkReportCtrl {
 
   // Media Quality Report Controls
   private mediaData: Array<IMediaData> = [];
-  private mediaArray: Array<IDropdownBase> = _.cloneDeep(this.ReportConstants.mediaFilter);
+  private mediaArray: Array<IDropdownBase> = _.cloneDeep(this.ReportConstants.MEDIA_FILTER);
 
   public mediaOptions: IReportCard = {
     animate: true,
@@ -630,10 +632,6 @@ class SparkReportCtrl {
 
   // Registered Endpoints Report Controls
   private currentDeviceGraphs: Array<IEndpointWrapper> = [];
-  private defaultDeviceFilter: IDropdownBase = {
-    value: 0,
-    label: this.$translate.instant('registeredEndpoints.allDevices'),
-  };
 
   public deviceOptions: IReportCard = {
     animate: true,
@@ -647,31 +645,46 @@ class SparkReportCtrl {
   };
 
   public deviceDropdown: IReportDropdown = {
-    array: [this.defaultDeviceFilter],
+    array: [this.ReportConstants.DEFAULT_ENDPOINT],
     click: (): void => {
-      if (this.currentDeviceGraphs[this.deviceDropdown.selected.value].emptyGraph) {
-        this.setDeviceGraph(this.DummySparkDataService.dummyDeviceData(this.timeSelected), undefined);
-        this.deviceOptions.state = this.ReportConstants.EMPTY;
+      if (this.displayNewReports) {
+        if (this.deviceWeekData && this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
+          this.updateDeviceGraph(this.deviceWeekData, !this.deviceWeekData.graphData[this.deviceDropdown.selected.value].emptyGraph);
+        } else if (this.deviceYearData && this.deviceYearVisible) {
+          this.updateDeviceGraph(this.deviceYearData, this.deviceYearVisible);
+        }
       } else {
-        this.setDeviceGraph(this.currentDeviceGraphs, this.deviceDropdown.selected);
-        this.deviceOptions.state = this.ReportConstants.SET;
+        if (this.currentDeviceGraphs[this.deviceDropdown.selected.value].emptyGraph) {
+          this.setDeviceGraph(this.DummySparkDataService.dummyDeviceData(this.timeSelected, this.displayNewReports), undefined);
+          this.deviceOptions.state = this.ReportConstants.EMPTY;
+        } else {
+          this.setDeviceGraph(this.currentDeviceGraphs, this.deviceDropdown.selected);
+          this.deviceOptions.state = this.ReportConstants.SET;
+        }
       }
     },
     disabled: true,
-    selected: this.defaultDeviceFilter,
+    selected: this.ReportConstants.DEFAULT_ENDPOINT,
   };
 
-  private setDeviceGraph(data: Array<IEndpointWrapper>, deviceFilter: IDropdownBase | undefined) {
+  private setDeviceGraph(data: Array<IEndpointWrapper>, deviceFilter: IDropdownBase | undefined): void {
     this.exportArrays.device = null;
-    let tempDevicesChart: any = this.SparkGraphService.setDeviceGraph(data, this.charts.device, deviceFilter);
+    let tempDevicesChart: any;
+
+    if (this.displayNewReports) {
+      tempDevicesChart = this.SparkGraphService.setDeviceLineGraph(data, this.charts.device, deviceFilter);
+    } else {
+      tempDevicesChart = this.SparkGraphService.setDeviceGraph(data, this.charts.device, deviceFilter);
+    }
+
     if (tempDevicesChart) {
       this.charts.device = tempDevicesChart;
       this.exportArrays.device = this.CommonReportService.createExportMenu(this.charts.device);
     }
   }
 
-  private setDeviceData() {
-    this.deviceDropdown.array = [this.defaultDeviceFilter];
+  private setDeviceData(): void {
+    this.deviceDropdown.array = [this.ReportConstants.DEFAULT_ENDPOINT];
     this.deviceDropdown.selected = this.deviceDropdown.array[0];
     this.currentDeviceGraphs = [];
     this.deviceDropdown.disabled = true;
@@ -699,6 +712,77 @@ class SparkReportCtrl {
         this.deviceOptions.state = this.ReportConstants.EMPTY;
       }
     });
+  }
+
+  // Devices Line Graph
+  private deviceWeekData: IEndpointContainer;
+  private deviceYearData: IEndpointContainer;
+  private deviceYearVisible: boolean;
+
+  private setRegisteredDeviceGraph(min: number, max: number): void {
+    this.deviceDropdown.array = [this.ReportConstants.DEFAULT_ENDPOINT];
+    this.deviceDropdown.selected = this.deviceDropdown.array[0];
+    this.deviceDropdown.disabled = true;
+    this.deviceOptions.state = this.ReportConstants.REFRESH;
+    this.setDeviceGraph(this.DummySparkDataService.dummyDeviceData(this.timeSelected, this.displayNewReports), undefined);
+
+    if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
+      if (_.isUndefined(this.deviceWeekData)) {
+        this.SparkLineReportService.getDeviceData(this.timeSelected).then((response: IEndpointContainer): void => {
+          this.deviceWeekData = response;
+          this.updateDeviceGraph(this.deviceWeekData, !this.deviceWeekData.graphData[this.deviceDropdown.selected.value].emptyGraph);
+        });
+      } else {
+        this.updateDeviceGraph(this.deviceWeekData, !this.deviceWeekData.graphData[this.deviceDropdown.selected.value].emptyGraph);
+      }
+    } else if (_.isUndefined(this.deviceYearData)) {
+      this.zoomChart(this.charts.media, min, max);
+      this.SparkLineReportService.getDeviceData(this.timeSelected).then((response: IEndpointContainer): void => {
+        this.deviceYearData = response;
+        this.deviceYearVisible = this.devicePopulated(this.deviceYearData, min, max);
+        this.updateDeviceGraph(this.deviceYearData, this.deviceYearVisible);
+        this.zoomChart(this.charts.device, min, max);
+      });
+    } else {
+      this.deviceYearVisible = this.devicePopulated(this.deviceYearData, min, max);
+      this.updateDeviceGraph(this.deviceYearData, this.deviceYearVisible);
+      this.zoomChart(this.charts.device, min, max);
+    }
+  }
+
+  private updateDeviceGraph(data: IEndpointContainer, visible: boolean): void {
+    if (data.filterArray.length > 0) {
+      this.deviceDropdown.array = data.filterArray.sort((a: IDropdownBase, b: IDropdownBase): number => {
+        if (a.label) {
+          return a.label.localeCompare(b.label);
+        } else if (a > b) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+    }
+
+    this.deviceOptions.state = this.ReportConstants.EMPTY;
+    if (visible) {
+      this.setDeviceGraph(data.graphData, this.deviceDropdown.selected);
+      this.deviceOptions.state = this.ReportConstants.SET;
+      this.deviceDropdown.disabled = false;
+    }
+  }
+
+  private devicePopulated(data: IEndpointContainer, min: number, max: number) {
+    let graphData: IEndpointWrapper = data.graphData[this.deviceDropdown.selected.value];
+    let length: number = graphData.graph.length;
+    if (!graphData.emptyGraph && (length > min) && (length > max)) {
+      for (let i = min; i <= max; i++) {
+        let datapoint: IEndpointData = _.cloneDeep(graphData.graph[i]);
+        if (datapoint.totalRegisteredDevices > 0) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   // Call Metrics Report Controls
@@ -850,7 +934,7 @@ class SparkReportCtrl {
     this.setFilesGraph(this.DummySparkDataService.dummyFilesSharedData(this.timeSelected));
     this.setMetrics(undefined);
     this.setMetricGraph(this.DummySparkDataService.dummyMetricsData());
-    this.setDeviceGraph(this.DummySparkDataService.dummyDeviceData(this.timeSelected), undefined);
+    this.setDeviceGraph(this.DummySparkDataService.dummyDeviceData(this.timeSelected, this.displayNewReports), undefined);
     this.setMediaGraph(this.DummySparkDataService.dummyMediaData(this.timeSelected, this.displayNewReports));
 
     this.CardUtils.resize(0);

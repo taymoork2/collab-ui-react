@@ -40,7 +40,10 @@ require('./_devices.scss');
           var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
             vm.csdmHybridCallFeature = feature;
           });
-          $q.all([darlingPromise, ataPromise, pstnPromise, hybridPromise, fetchDetailsForLoggedInUser()]).finally(function () {
+          var personalPromise = FeatureToggleService.cloudberryPersonalModeGetStatus().then(function (result) {
+            vm.showPersonal = result;
+          });
+          $q.all([darlingPromise, ataPromise, pstnPromise, hybridPromise, personalPromise, fetchDetailsForLoggedInUser()]).finally(function () {
             vm.addDeviceIsDisabled = false;
           });
 
@@ -222,7 +225,7 @@ require('./_devices.scss');
             wizardState: {
               'addDeviceFlow.chooseDeviceType': {
                 nextOptions: {
-                  cloudberry: 'addDeviceFlow.chooseSharedSpace',
+                  cloudberry: vm.showPersonal ? 'addDeviceFlow.chooseAccountType' : 'addDeviceFlow.chooseSharedSpace',
                   huron: 'addDeviceFlow.chooseAccountType'
                 }
               },

@@ -11,6 +11,9 @@ import {
   IActiveUserWrapper,
   IConversation,
   IConversationWrapper,
+  IEndpointContainer,
+  IEndpointData,
+  IEndpointWrapper,
   IMediaData,
   IMetricsData,
 } from './sparkReportInterfaces';
@@ -21,6 +24,7 @@ export class SparkLineReportService {
   // Promise Tracking
   private activeDeferred: ng.IDeferred<any>;
   private conversationsDeferred: ng.IDeferred<any>;
+  private deviceDeferred: ng.IDeferred<any>;
   private mediaDeferred: ng.IDeferred<any>;
   private metricsDeferred: ng.IDeferred<any>;
   private mostActiveDeferred: ng.IDeferred<any>;
@@ -48,7 +52,7 @@ export class SparkLineReportService {
     };
 
     let options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter, 'activeUsers', undefined);
-    return this.CommonReportService.getCustomerAltReportByType(options, this.activeDeferred).then((response: any): IActiveUserWrapper => {
+    return this.CommonReportService.getCustomerActiveUserData(options, this.activeDeferred).then((response: any): IActiveUserWrapper => {
       let data = _.get(response, 'data.data');
       if (data) {
         return this.adjustActiveData(data, filter, returnData);
@@ -114,7 +118,7 @@ export class SparkLineReportService {
     let deferred: ng.IDeferred<Array<IActiveTableBase>> = this.$q.defer();
     let responseArray: Array<IActiveTableBase> = [];
     let options: ITypeQuery = this.CommonReportService.getTypeOptions(filter, 'mostActive');
-    this.CommonReportService.getCustomerAltReportByType(options, this.mostActiveDeferred).then((response: any): void => {
+    this.CommonReportService.getCustomerActiveUserData(options, this.mostActiveDeferred).then((response: any): void => {
       let responseData: any = _.get(response, 'data.data');
       if (responseData) {
         _.forEach(responseData, (item: any): void => {
@@ -342,6 +346,72 @@ export class SparkLineReportService {
 
       return responseArray;
     });
+  }
+
+  // Registered Devices Data
+  public getDeviceData(filter: ITimespan): ng.IHttpPromise<IEndpointContainer> {
+    // cancel any currently running jobs
+    if (this.deviceDeferred) {
+      this.deviceDeferred.resolve(this.ReportConstants.ABORT);
+    }
+    this.deviceDeferred = this.$q.defer();
+    let deviceArray: IEndpointContainer = {
+      graphData: [{
+        deviceType: this.ReportConstants.DEFAULT_ENDPOINT.label,
+        graph: [],
+        emptyGraph: true,
+        balloon: true,
+      }],
+      filterArray: [this.ReportConstants.DEFAULT_ENDPOINT],
+    };
+
+    let options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter, 'devicecountsbytype', undefined);
+    options.cache = false;
+    return this.CommonReportService.getCustomerAltReportByType(options, this.deviceDeferred).then((response: any): IEndpointContainer => {
+      return this.analyzeDeviceData(response, filter, deviceArray);
+    }).catch((error: any): IEndpointContainer => {
+      return this.CommonReportService.returnErrorCheck(error, 'registeredEndpoints.customerError', deviceArray);
+    });
+  }
+
+  private analyzeDeviceData(response: any, filter: ITimespan, deviceArray: IEndpointContainer): IEndpointContainer {
+    let data: Array<any> = _.get(response, 'data.data', []);
+    let graphItem: IEndpointData = {
+      date: '',
+      totalRegisteredDevices: 0,
+    };
+    let defaultGraph: Array<IEndpointData> = this.CommonReportService.getReturnLineGraph(filter, graphItem);
+    deviceArray.graphData[0].graph = _.cloneDeep(defaultGraph);
+
+    _.forEach(data, (item: any, index: number): void => {
+      deviceArray.filterArray.push({
+        value: (index + 1),
+        label: item.deviceType,
+      });
+      let tempGraph: IEndpointWrapper = {
+        deviceType: item.deviceType,
+        graph: _.cloneDeep(defaultGraph),
+        emptyGraph: true,
+        balloon: true,
+      };
+
+      _.forEach(item.details, (detail: string, date: string): void => {
+        let registeredDevices: number = _.toInteger(detail);
+        let modifiedDate: string = this.CommonReportService.getModifiedDate(date, filter);
+
+        _.forEach(tempGraph.graph, (graphPoint: IEndpointData, index: number): void => {
+          if (graphPoint.date === modifiedDate && (registeredDevices > 0)) {
+            graphPoint.totalRegisteredDevices = registeredDevices;
+            tempGraph.emptyGraph = false;
+
+            deviceArray.graphData[0].graph[index].totalRegisteredDevices += registeredDevices;
+            deviceArray.graphData[0].emptyGraph = false;
+          }
+        });
+      });
+      deviceArray.graphData.push(tempGraph);
+    });
+    return deviceArray;
   }
 }
 

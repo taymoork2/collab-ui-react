@@ -1,3 +1,5 @@
+require('./_did-add.scss');
+
 (function () {
   'use strict';
 
