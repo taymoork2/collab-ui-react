@@ -284,10 +284,7 @@
         .then(extractDataFromResponse);
     }
 
-    function setProperties(clusterId, sipUri) {
-      var payLoad = {
-        "mf.ucSipTrunk": sipUri
-      };
+    function setProperties(clusterId, payLoad) {
       var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/properties';
       return $http
         .post(url, payLoad);

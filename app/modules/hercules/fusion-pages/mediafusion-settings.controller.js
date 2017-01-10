@@ -22,7 +22,7 @@
 
     MediaClusterServiceV2.getProperties($stateParams.id)
       .then(function (properties) {
-        vm.sipurlconfiguration = properties["mf.ucSipTrunk"];
+        vm.sipurlconfiguration = properties['mf.ucSipTrunk'];
       });
 
     vm.deregisterModalOptions = {
@@ -62,8 +62,11 @@
     }
 
     function saveSipTrunk() {
+      vm.payLoad = {
+        'mf.ucSipTrunk': vm.sipurlconfiguration
+      };
       MediaClusterServiceV2
-        .setProperties($stateParams.id, vm.sipurlconfiguration)
+        .setProperties($stateParams.id, vm.payLoad)
           .then(function () {
             Notification.success('mediaFusion.sipconfiguration.success');
           }, function (err) {

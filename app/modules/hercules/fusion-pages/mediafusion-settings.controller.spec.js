@@ -7,7 +7,7 @@ describe('Controller: MediafusionClusterSettingsController', function () {
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var $httpBackend, controller, Authinfo, MediaClusterServiceV2, $q, Notification, properties;
+  var $httpBackend, controller, Authinfo, MediaClusterServiceV2, $q, properties;
 
   Authinfo = {
     getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873')
@@ -17,7 +17,7 @@ describe('Controller: MediafusionClusterSettingsController', function () {
     $provide.value('Authinfo', Authinfo);
   }));
 
-  beforeEach(inject(function (_$httpBackend_, $controller, _MediaClusterServiceV2_, _$q_, _Notification_) {
+  beforeEach(inject(function (_$httpBackend_, $controller, _MediaClusterServiceV2_, _$q_) {
     $httpBackend = _$httpBackend_;
     $httpBackend.when('GET', 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/5632f806-ad09-4a26-a0c0-a49a13f38873?fields=@wide').respond({});
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
@@ -28,7 +28,6 @@ describe('Controller: MediafusionClusterSettingsController', function () {
 
     spyOn(MediaClusterServiceV2, 'getProperties').and.returnValue($q.when(properties));
 
-    Notification = _Notification_;
     controller = $controller('MediafusionClusterSettingsController', {
       $stateParams: {
         id: '1234-5678-90'
@@ -36,7 +35,6 @@ describe('Controller: MediafusionClusterSettingsController', function () {
       MediaClusterServiceV2: MediaClusterServiceV2,
       $q: $q,
       hasMFFeatureToggle: true,
-      Notification: Notification,
     });
   }));
 
@@ -49,7 +47,7 @@ describe('Controller: MediafusionClusterSettingsController', function () {
   });
 
   it('check if saveSipTrunk is called', function () {
-    spyOn(MediaClusterServiceV2, 'setProperties').and.returnValue($q.when());
+    spyOn(MediaClusterServiceV2, 'setProperties').and.returnValue($q.resolve());
     controller.saveSipTrunk();
     expect(MediaClusterServiceV2.setProperties).toHaveBeenCalled();
   });
