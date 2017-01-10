@@ -41,7 +41,8 @@
         // an unfortunate requirement since (some of) the translations don't match the object names
         messaging: 'message',
         communications: 'call',
-        conferencing: 'meeting'
+        conferencing: 'meeting',
+        roomSystems: 'roomSystem'
       };
 
       // necessary to call this function due to the way that both toolkit's tooltip works
@@ -158,6 +159,8 @@
             return 'icon-webex';
           case 'roomSystems':
             return 'icon-devices';
+          case 'sparkBoard':
+            return 'icon-whiteboard';
           case 'care':
             return 'icon-headset';
         }
