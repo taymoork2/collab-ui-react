@@ -6,7 +6,7 @@
     .controller('HDSRedirectAddResourceController', HDSRedirectAddResourceController);
 
   /* @ngInject */
-  function HDSRedirectAddResourceController($modal, $modalInstance, $state, $translate, $window, HDSAddResourceCommonService, Notification, firstTimeSetup, proceedSetup) {
+  function HDSRedirectAddResourceController($modal, $modalInstance, $state, $translate, $window, HDSAddResourceCommonService, Notification, proceedSetup) {
     var vm = this;
     vm.clusterList = [];
     vm.selectPlaceholder = $translate.instant('hds.add-resource-dialog.cluster');
@@ -15,7 +15,6 @@
     vm.enableRedirectToTarget = false;
     vm.selectedCluster = '';
     vm.selectedClusterId = '';
-    vm.firstTimeSetup = firstTimeSetup;
     vm.closeSetupModal = closeSetupModal;
     vm.radio = 1;
     vm.noProceed = false;
@@ -32,15 +31,11 @@
     function redirectToTargetAndCloseWindowClicked(hostName, enteredCluster) {
       $modalInstance.close();
       HDSAddResourceCommonService.addRedirectTargetClicked(hostName, enteredCluster).then(function () {
-        HDSAddResourceCommonService.redirectPopUpAndClose(hostName, enteredCluster, vm.selectedClusterId, vm.firstTimeSetup);
+        HDSAddResourceCommonService.redirectPopUpAndClose(hostName, enteredCluster, vm.selectedClusterId);
       });
     }
 
     function closeSetupModal(isCloseOk) {
-      if (!vm.firstTimeSetup) {
-        $modalInstance.close();
-        return;
-      }
       if (isCloseOk) {
         $modalInstance.close();
         $state.go('services-overview');
@@ -72,7 +67,7 @@
     }
 
     function canGoNext() {
-      if (vm.firstTimeSetup && !vm.proceedSetup) {
+      if (!vm.proceedSetup) {
         return true;
       } else if (vm.proceedSetup && !_.isUndefined(vm.hostName) && vm.hostName !== '' && !_.isUndefined(vm.selectedCluster) && vm.selectedCluster !== '') {
         return true;
