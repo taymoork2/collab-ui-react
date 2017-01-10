@@ -6,9 +6,10 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($q, $scope, $state, $stateParams, Config, CsdmHuronUserDeviceService, WizardFactory, FeatureToggleService, Userservice, Authinfo) {
+  function DevicesCtrlHuron($q, $scope, $state, $stateParams, Config, CsdmHuronUserDeviceService, CsdmDeviceService, WizardFactory, FeatureToggleService, Userservice, Authinfo) {
     var vm = this;
     vm.devices = {};
+    vm.loadedCloudberry = false;
     vm.otps = [];
     vm.currentUser = $stateParams.currentUser;
     vm.csdmHuronUserDeviceService = null;
@@ -63,7 +64,7 @@
 
     function addLinkOrButtonForActivationCode() {
       if (_.has(vm, 'csdmHuronUserDeviceService.dataLoaded')) {
-        if (vm.csdmHuronUserDeviceService.dataLoaded()) {
+        if (vm.csdmHuronUserDeviceService.dataLoaded() && vm.loadedCloudberry) {
           if (_.size(vm.devices)) {
             $scope.userOverview.enableAuthCodeLink();
             vm.showGenerateOtpButton = false;
@@ -76,7 +77,7 @@
     }
 
     $scope.$watch(function () {
-      if (_.has(vm, 'csdmHuronUserDeviceService.dataLoaded')) {
+      if (_.has(vm, 'csdmHuronUserDeviceService.dataLoaded') && vm.loadedCloudberry) {
         return vm.csdmHuronUserDeviceService.dataLoaded();
       }
     }, addLinkOrButtonForActivationCode);
@@ -105,7 +106,7 @@
       }
       var wizardState = {
         data: {
-          function: 'showCode',
+          function: 'addDevice',
           title: 'addDeviceWizard.newDevice',
           showATA: vm.showATA,
           isEntitledToHuron: vm.isEntitledToHuron(),
@@ -144,7 +145,12 @@
     function activate() {
       vm.csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
       vm.csdmHuronUserDeviceService.fetch();
-      vm.devices = vm.csdmHuronUserDeviceService.getDeviceList();
+      _.extend(vm.devices, vm.csdmHuronUserDeviceService.getDeviceList());
+      CsdmDeviceService.fetchDevicesForUser(vm.currentUser.id).then(function (res) {
+        _.extend(vm.devices, res);
+      }).finally(function () {
+        vm.loadedCloudberry = true;
+      });
     }
 
     function isHuronEnabled() {
