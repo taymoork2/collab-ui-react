@@ -292,13 +292,35 @@ export class DummySparkDataService {
     };
   }
 
-  public dummyDeviceData(filter: ITimespan): Array<IEndpointWrapper> {
-    return [{
-      deviceType: this.$translate.instant('registeredEndpoints.allDevices'),
-      graph: this.getDummyData(filter, this.getDeviceDataPoint),
-      balloon: false,
-      emptyGraph: false,
-    }];
+  public dummyDeviceData(filter: ITimespan, linegraph: boolean): Array<IEndpointWrapper> {
+    if (linegraph) {
+      let dummyGraph: Array<IEndpointData> = [];
+      let timespan: number;
+
+      if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
+        timespan = this.ReportConstants.DAYS;
+      } else {
+        timespan = this.ReportConstants.YEAR;
+      }
+
+      for (let i = timespan; i >= 0; i--) {
+        dummyGraph.push(this.getDeviceData(filter, i, timespan - i));
+      }
+
+      return [{
+        deviceType: this.$translate.instant('registeredEndpoints.allDevices'),
+        graph: dummyGraph,
+        balloon: false,
+        emptyGraph: false,
+      }];
+    } else {
+      return [{
+        deviceType: this.$translate.instant('registeredEndpoints.allDevices'),
+        graph: this.getDummyData(filter, this.getDeviceDataPoint),
+        balloon: false,
+        emptyGraph: false,
+      }];
+    }
   }
 
   private getDeviceDataPoint(filter: ITimespan, index: number, constants: any): IEndpointData {
@@ -307,6 +329,20 @@ export class DummySparkDataService {
     return {
       date: commonData.date,
       totalRegisteredDevices: 15 + (15 * commonData.count),
+    };
+  }
+
+  private getDeviceData(filter: ITimespan, index: number, count: number): IEndpointData {
+    let date: string;
+    if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
+      date = moment().subtract(index + 1, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
+    } else {
+      date = moment().day(-1).subtract(index, this.ReportConstants.WEEK).format(this.ReportConstants.DAY_FORMAT);
+    }
+
+    return {
+      date: date,
+      totalRegisteredDevices: 15 + (15 * count),
     };
   }
 }

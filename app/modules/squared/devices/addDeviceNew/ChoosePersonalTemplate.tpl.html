@@ -7,7 +7,7 @@
   <div class="chooseExistingUser">
     <form class="chooseExistingUserForm" onsubmit="$('#next-button').click()">
       <h4 translate="addDeviceWizard.choosePersonal.whichUser"></h4>
-      <p translate="addDeviceWizard.choosePersonal.existingUserInstructions"></p>
+      <p translate="addDeviceWizard.choosePersonal.existingUserInstructions" ng-if="choosePersonal.deviceType === 'huron'"></p>
       <div>
         <input type="text"
                class="existingUserInput"

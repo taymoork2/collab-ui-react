@@ -1,6 +1,6 @@
 describe('Component: CallFeatureName', () => {
   const NAME_INPUT = 'input';
-  const HINT_TEXT = 'p.input-hint.ng-binding';
+  const HINT_TEXT = 'p.input-description';
 
   beforeEach(function () {
     this.initModules('huron.call-feature-name');

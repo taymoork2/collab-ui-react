@@ -75,8 +75,16 @@ describe('Service: Common Report Service', () => {
     });
 
     it('getCustomerAltReportByType should fetch report data', function () {
-      this.$httpBackend.whenGET(defaults.dummyUrls[4].replace('{{cache}}', cacheValue)).respond(dummyResponse);
+      this.$httpBackend.whenGET(defaults.dummyUrls[3].replace('{{cache}}', cacheValue)).respond(dummyResponse);
       this.CommonReportService.getCustomerAltReportByType(queryFour, undefined).then(function (response) {
+        expect(response.data).toEqual(dummyResponse);
+      });
+      this.$httpBackend.flush();
+    });
+
+    it('getCustomerActiveUserData should fetch report data', function () {
+      this.$httpBackend.whenGET(defaults.dummyUrls[4].replace('{{cache}}', cacheValue)).respond(dummyResponse);
+      this.CommonReportService.getCustomerActiveUserData(queryFour, undefined).then(function (response) {
         expect(response.data).toEqual(dummyResponse);
       });
       this.$httpBackend.flush();

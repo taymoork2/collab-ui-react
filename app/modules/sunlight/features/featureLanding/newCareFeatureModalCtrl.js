@@ -44,9 +44,13 @@
 
     function ok(featureId) {
       if (featureId === 'Ch') {
-        $state.go('care.setupAssistant');
+        $state.go('care.setupAssistant', {
+          type: 'chat'
+        });
       } else if (featureId === 'Ca') {
-        $state.go('care.setupAssistant');
+        $state.go('care.setupAssistant', {
+          type: 'callback'
+        });
       }
       $modalInstance.close(featureId);
     }

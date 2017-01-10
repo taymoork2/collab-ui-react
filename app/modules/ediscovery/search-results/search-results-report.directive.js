@@ -5,7 +5,6 @@
     .module('Ediscovery')
     .directive('searchResultsReport', searchResultsReport);
 
-  //TODO: expand the template so only the template calls showLicenses
   function searchResultsReport() {
     var directive = {
       restrict: 'E',

@@ -1,16 +1,33 @@
 @import 'styles/toolkit/colors';
 @import 'styles/toolkit/fonts';
 
-calendar-email-notifications-section {
+email-notifications-section {
   display: block;
 
+  tags-input.ng-invalid .tags {
+    border-color: $color-alerts-base;
+    box-shadow: none;
+  }
+
   .tags {
-    border-radius: 3px;
+    border-radius: 4px;
+    box-shadow: none;
+    border-color: $gray-light-2;
+
+    &:hover {
+      border-color: $gray-light-1;
+    }
+
+    &.focused {
+      box-shadow: none;
+      border-color: $color-primary-darker;
+    }
 
     .tag-item {
-      background: none;
-      background-color: $brand-primary-light;
+      background: $brand-primary-light;
+      border: 0;
       color: $brand-white;
+      line-height: 24px;
 
       .remove-button {
         color: $brand-white;

@@ -1516,6 +1516,12 @@
       "add-resource-button-information": "Click \"Add Resource\" to start the registration and configuration of your Expressways.",
       "setupCloudSipUriHeader": "Define Spark SIP Address"
     },
+    "deleteClusterNodeDialog": {
+      "confirmationDialogHeader": "Confirm Node Removal",
+      "confirmationDialogBody": "Are you sure you want to remove this node?",
+      "successNodeRemoval": "Node removed successfully.",
+      "failedNodeRemoval": "Failed to remove node."
+  },
     "addResourceDialog": {
       "title": "{{ServiceName}} Setup",
       "alreadyBeenSetupTitle": "Add Expressway Cluster",
@@ -1933,7 +1939,7 @@
       },
       "release-channel": {
         "title": "Default Release Channel",
-        "description": "Some clusters not assigned to resources groups do not have the right default release channel. <a ng-click=\"{{onclick}}\">Fix now</a>."
+        "description": "Some clusters not assigned to resource groups do not have the right default release channel. <a ng-click=\"{{onclick}}\">Fix now</a>."
       },
       "user-activation-errors": {
         "title": "Activation Error",
@@ -2338,7 +2344,10 @@
       "description": "Description",
       "exportFormat": "Export Format",
       "totalResultSize": "Total Result Size",
-      "downloadContent": "Download content such as documents, images and media associated with this report."
+      "downloadContent": "Download content such as documents, images and media associated with this report.",
+      "reportSizeTooBig": "Report Size Too Big",
+      "reportSizeErrorSummary": "The estimated report size is over the 3 GB maximum size allowed for report generation. Go back to search and refine your results.",
+      "reportSizeErrorButton": "Go Back to Search"
     },
     "reportsList": {
       "name": "Name",
@@ -4188,11 +4197,6 @@
       "errorHeader": "Unexpected Error",
       "errorMessage": "Unable delete {{groupName}}."
     },
-    "email": {
-      "invalidEmail": "Please enter a list of comma-separated email addresses",
-      "emailNotificationsSavingSuccess": "The email subscriber list was successfully saved.",
-      "emailNotificationsSavingError": "Your changes to the email subscriber list could not be saved. Try again later."
-    },
     "clusters": {
       "listing": {
         "no_clusters_heading": "No Media Service clusters registered",
@@ -5196,22 +5200,31 @@
     "createChatTemplateFailureText": "Failed to create chat template.",
     "editSuccessText": "{{ featureName }} chat template has been updated successfully",
     "editChatTemplateFailureText": "Failed to edit {{ featureName }} chat template.",
+    "createSuccessText_callback": "{{ featureName }} callback template has been created successfully",
+    "createTemplateFailureText_callback": "Failed to create callback template.",
+    "editSuccessText_callback": "{{ featureName }} callback template has been updated successfully",
+    "editTemplateFailureText_callback": "Failed to edit {{ featureName }} callback template.",
     "deleteSuccessText": "{{ featureName }} {{ featureText }} has been deleted successfully",
     "deleteFailedText": "Failed to delete {{ featureName }} {{ featureText }}.",
     "messageError": "Message {{ message }}",
     "failedToLoad": "Failed to load {{ featureText }}(s).",
     "chatTemplate": "chat template",
+    "chatTemplate_callback": "callback template",
     "namePlaceholder": "Name the Chat Template",
+    "namePlaceholder_callback": "Name the Callback Template",
     "nameHint": "Enter a name for you to identify this chat template",
+    "nameHint_callback": "Enter a name for you to identify this callback template",
     "createTitle": "Create Chat Template",
     "editTitle": "Edit Chat Template",
+    "createTitle_callback": "Create Callback Template",
+    "editTitle_callback": "Edit Callback Template",
     "profile": "Chat Template Profile",
     "overview": "Chat Template Overview",
+    "chatStatusMessages": "Chat Status Messages",
     "customerInfo": "Customer Info Screen",
     "feedback": "Feedback Screen",
     "agentUnavailable": "Agent Unavailable",
     "offHours": "Off-Hours",
-    "chatStatusMessages": "Chat Status Messages",
     "embedCode": "Embed Code",
     "profileDesc": "Configure how you want the organization and user profile to be represented for your company",
     "overviewDesc": "Toggle cards to customize what screens you want your customer to see on contacting Care",
@@ -5322,6 +5335,10 @@
     "editSummaryDesc": "You have edited the chat template. Click Finish to save the configuration so you can start using the new version of this chat template on your organization website.",
     "editCodeWarnMsg2Line1": "It can take up to 15 minutes for the chat template changes to be reflected.",
     "editCodeWarnMsg2Line2":"Open the chat template in a new browser tab after this time to view the changes.",
+    "summaryDesc_callback": "You have configured the callback template. Click Finish to save the configuration and generate embed code so you can start using this callback template on your organization website.",
+    "editSummaryDesc_callback": "You have edited the callback template. Click Finish to save the configuration so you can start using the new version of this callback template on your organization website.",
+    "editCodeWarnMsg2Line1_callback": "It can take up to 15 minutes for the callback template changes to be reflected.",
+    "editCodeWarnMsg2Line2_callback":"Open the callback template in a new browser tab after this time to view the changes.",
     "copyEmbedCode": "Copy Embed Code",
     "errorCreateChatTemplate": "Error generating embed code, please try again.",
     "agentUnavailableMessage": "Sorry, we are unavailable at the moment. Please try again later.",
@@ -5341,6 +5358,7 @@
     "downloadEmbedCode": "Download Embed Code",
     "embedCodeWarnMsg": "It is important to verify all domains where you want to use chat bubble. You will not be able to embed chat bubble on unverified domains.",
     "embedCodeFor": "Embed Code for ",
+    "embedCodeWarnMsg_callback": "It is important to verify all domains where you want to use callback template. You will not be able to embed callback template on unverified domains.",
     "configureOrgLogoMsg": "Go to Settings page to modify your organization logo"
   },
   "huronHuntGroup": {
@@ -5918,16 +5936,20 @@
     "editAdminEmailSuccess": "Admin email was updated successfully.",
     "editAdminEmailFailure": "Failed to update admin email.",
     "userStatusEventLog": "User Status Event Log",
-    "emailStatus": "Email Status",
+    "lastEmailSent": "Last Email Sent",
     "clearBounce": "Clear Bounce",
     "clearBounceSuccess": "Bounce cleared successfully. Try resending invite.",
     "emailStatuses": {
       "accepted": "Pending Delivery",
+      "rejected": "Rejected",
       "delivered": "Delivered",
       "failed": "Failed",
-      "bounced": "Bounced",
-      "rejected": "Rejected",
+      "opened": "Opened",
+      "clicked": "Clicked",
       "unsubscribed": "Unsubscribed",
+      "complained": "Complained",
+      "stored": "Stored",
+      "bounced": "Bounced",
       "tooltips": {
         "accepted": "Email is waiting in queue.",
         "delivered": "Email was delivered.",

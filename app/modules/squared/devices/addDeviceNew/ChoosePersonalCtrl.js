@@ -12,6 +12,7 @@
     vm.selected = undefined;
     vm.selectedStates = [];
     vm.selectUser = selectUser;
+    vm.deviceType = wizardData.account.deviceType;
 
     vm.model = {
       userInputOption: 0,
@@ -62,7 +63,11 @@
           vm.noResults = _.isEmpty(userList);
           deferred.resolve(userList);
         };
-        UserListService.listUsers(0, 10, null, null, callback, searchString, false, 'ciscouc');
+        if (vm.deviceType === 'huron') {
+          UserListService.listUsers(0, 10, null, null, callback, searchString, false, 'ciscouc');
+        } else {
+          UserListService.listUsers(0, 10, null, null, callback, searchString, false);
+        }
       } else {
         deferred.resolve([]);
       }
@@ -70,7 +75,7 @@
     };
 
     function selectUser($item) {
-      if (!_.includes($item.entitlements, 'ciscouc')) {
+      if (vm.deviceType === 'huron' && !_.includes($item.entitlements, 'ciscouc')) {
         vm.userError = true;
       }
       vm.cisUuid = $item.id;
@@ -84,8 +89,6 @@
     vm.next = function () {
       $stateParams.wizard.next({
         account: {
-          deviceType: 'huron',
-          type: 'personal',
           name: vm.displayName,
           cisUuid: vm.cisUuid,
           username: vm.userName

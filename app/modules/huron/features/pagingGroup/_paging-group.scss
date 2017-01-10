@@ -1,18 +1,4 @@
-$overlay-panel-height: 93px;
-
-.cs-setupassistant {
-  margin: 0 auto;
-  max-width: 100%;
-  padding: 0 1rem;
-
-  .btn--right.savePagingGroup:not(.disabled) {
-    background: $color-cta;
-  }
-
-  .helptext-btn--right.enabled {
-    color: $color-cta;
-  }
-}
+@import 'styles/toolkit/spacing';
 
 .paging-group-member-lookup .cs-card-layout {
   @include vr-spacing(ml, 28.5, 0px, true);

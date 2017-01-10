@@ -74,7 +74,7 @@ describe('Service: Customer Reports Service', function () {
     });
 
     it('should getMostActiveUserData', function () {
-      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.when({
+      spyOn(this.CommonReportService, 'getCustomerActiveUserData').and.returnValue(this.$q.when({
         data: _.cloneDeep(activeData.mostActive),
       }));
 
@@ -85,7 +85,7 @@ describe('Service: Customer Reports Service', function () {
     });
 
     it('should notify an error for getMostActiveUserData', function () {
-      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.reject(rejectError));
+      spyOn(this.CommonReportService, 'getCustomerActiveUserData').and.returnValue(this.$q.reject(rejectError));
 
       this.SparkReportService.getMostActiveUserData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual([]);

@@ -25,4 +25,31 @@
   "createdTime": "2016-05-25T07:03:31.340Z",
   "templateId": "c9ff84c0-2246-11e6-9058-7b47ee0838d5",
   "updatedBy": "a1fb29f8-42b2-48f2-8be8-fb88dd1a19d2"
+}, {
+  "mediaType": "callback",
+  "name": "Sunlight Callback Dev Template",
+  "lastUpdatedTime": "2016-05-25T11:02:10.632Z",
+  "uri": "/config/v1/organization/676a82cd-64e9-4ebd-933c-4dce087a02bd/template/20e689b0-2268-11e6-a9a1-8fc7e8695bd0",
+  "orgId": "676a82cd-64e9-4ebd-933c-4dce087a02bd",
+  "createdTime": "2016-05-25T11:02:10.632Z",
+  "templateId": "20e689b0-2268-11e6-a9a1-8fc7e8695bd0",
+  "updatedBy": "a1fb29f8-42b2-48f2-8be8-fb88dd1a19d2"
+}, {
+  "mediaType": "callback",
+  "name": "Sunlight Callback PR Template",
+  "lastUpdatedTime": "2016-05-25T07:03:39.189Z",
+  "uri": "/config/v1/organization/676a82cd-64e9-4ebd-933c-4dce087a02bd/template/ceed2e50-2246-11e6-9058-7b47ee0838d5",
+  "orgId": "676a82cd-64e9-4ebd-933c-4dce087a02bd",
+  "createdTime": "2016-05-25T07:03:39.189Z",
+  "templateId": "ceed2e50-2246-11e6-9058-7b47ee0838d5",
+  "updatedBy": "a1fb29f8-42b2-48f2-8be8-fb88dd1a19d2"
+}, {
+  "mediaType": "callback",
+  "name": "Sunlight Callback Staging Template",
+  "lastUpdatedTime": "2016-05-25T07:03:31.340Z",
+  "uri": "/config/v1/organization/676a82cd-64e9-4ebd-933c-4dce087a02bd/template/c9ef84c0-2246-11e6-9058-7b47ee0838d5",
+  "orgId": "676a82cd-64e9-4ebd-933c-4dce087a02bd",
+  "createdTime": "2016-05-25T07:03:31.340Z",
+  "templateId": "c9ef84c0-2246-11e6-9058-7b47ee0838d5",
+  "updatedBy": "a1fb29f8-42b2-48f2-8be8-fb88dd1a19d2"
 }]
