@@ -118,7 +118,7 @@
                ng-click="callServiceSettings.confirmCertDelete(cert)"
                popover-trigger="mouseenter"
                popover-placement="left"
-               popover="{{'hercules.settings.call.certificateDeleteTooltip' | translate}}">
+               popover="hercules.settings.call.certificateDeleteTooltip">
               </i>
             </td>
           </tr>
@@ -132,7 +132,7 @@
             ngf-select="callServiceSettings.uploadCert($file, $event)"
             ng-model="certFile"
             loading="callServiceSettings.uploadingCert"
-            translate="{{'hercules.settings.call.certificatesUpload'}}">
+            translate="hercules.settings.call.certificatesUpload">
     </button>
     </div>
   </setting-section>
