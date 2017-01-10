@@ -80,12 +80,28 @@ class PgEditComponentCtrl implements ng.IComponentController {
                   memberWithPic.member.userName = this.FeatureMemberService.getUserNameFromUser(user);
                   memberWithPic.picturePath = this.FeatureMemberService.getUserPhoto(user);
                   this.saveAndSortLists(memberWithPic, 'USER');
+                })
+                .catch((error) => {
+                  if (error && error.status === 404) {
+                    //Found out of Sync between UPDM and PagingService, update PagingService to fix it
+                    this.userCount--;
+                    this.pg.members = _.reject(this.pg.members, mem);
+                    this.PagingGroupService.updatePagingGroup(this.pg);
+                  }
                 });
             } else {
               this.FeatureMemberService.getPlace(mem.memberId).then(
                 (place) => {
                   memberWithPic.member.displayName = place.displayName;
                   this.saveAndSortLists(memberWithPic, 'PLACE');
+                })
+                .catch((error) => {
+                  if (error && error.status === 404) {
+                    //Found out of Sync between UPDM and PagingService, update PagingService to fix it
+                    this.placeCount--;
+                    this.pg.members = _.reject(this.pg.members, mem);
+                    this.PagingGroupService.updatePagingGroup(this.pg);
+                  }
                 });
             }
           });

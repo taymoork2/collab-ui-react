@@ -56,6 +56,12 @@ describe('Component: pgEdit', () => {
       }],
   };
 
+  let memberFailureResp = {
+    data: 'Not Found',
+    status: 404,
+    statusText: 'Not Found',
+  };
+
   beforeEach(function () {
     this.initModules('huron.paging-group.edit');
     this.injectDependencies(
@@ -303,7 +309,6 @@ describe('Component: pgEdit', () => {
       this.controller.removeMembers(memWithPic);
       expect(this.controller.members.length).toEqual(0);
     });
-
   });
 
   describe('search member test', () => {
@@ -400,38 +405,56 @@ describe('Component: pgEdit', () => {
       this.controller.numberOfCardsUsers = undefined;
       expect(this.controller.showLessButton('USER_REAL_USER')).toBeTruthy;
     });
+  });
 
-    describe('Test getUserCount and getPlaceCount', () => {
-      beforeEach(initComponent);
+  describe('Test getUserCount and getPlaceCount', () => {
+    beforeEach(initComponent);
 
-      it('incrementCount test', function () {
-        this.controller.userCount = 0;
-        this.controller.placeCount = 0;
-        let mem = angular.copy(membersList[0]);
-        this.controller.incrementCount(mem);
-        expect(this.controller.getUserCount()).toEqual(1);
-        expect(this.controller.getPlaceCount()).toEqual(0);
+    it('incrementCount test', function () {
+      this.controller.userCount = 0;
+      this.controller.placeCount = 0;
+      let mem = angular.copy(membersList[0]);
+      this.controller.incrementCount(mem);
+      expect(this.controller.getUserCount()).toEqual(1);
+      expect(this.controller.getPlaceCount()).toEqual(0);
 
-        let mem1 = angular.copy(membersList[1]);
-        this.controller.incrementCount(mem1);
-        expect(this.controller.getUserCount()).toEqual(1);
-        expect(this.controller.getPlaceCount()).toEqual(1);
-      });
+      let mem1 = angular.copy(membersList[1]);
+      this.controller.incrementCount(mem1);
+      expect(this.controller.getUserCount()).toEqual(1);
+      expect(this.controller.getPlaceCount()).toEqual(1);
+    });
 
-      it('decreaseCount test', function () {
-        this.controller.userCount = 1;
-        this.controller.placeCount = 1;
-        let mem = angular.copy(membersList[0]);
-        this.controller.decreaseCount(mem);
-        expect(this.controller.getUserCount()).toEqual(0);
-        expect(this.controller.getPlaceCount()).toEqual(1);
+    it('decreaseCount test', function () {
+      this.controller.userCount = 1;
+      this.controller.placeCount = 1;
+      let mem = angular.copy(membersList[0]);
+      this.controller.decreaseCount(mem);
+      expect(this.controller.getUserCount()).toEqual(0);
+      expect(this.controller.getPlaceCount()).toEqual(1);
 
-        let mem1 = angular.copy(membersList[1]);
-        this.controller.decreaseCount(mem1);
-        expect(this.controller.getUserCount()).toEqual(0);
-        expect(this.controller.getPlaceCount()).toEqual(0);
-      });
+      let mem1 = angular.copy(membersList[1]);
+      this.controller.decreaseCount(mem1);
+      expect(this.controller.getUserCount()).toEqual(0);
+      expect(this.controller.getPlaceCount()).toEqual(0);
+    });
+  });
 
+  describe('Test User out of Sync scenario', () => {
+    beforeEach(initComponent);
+
+    it('should update pg to clear out outOfSync if not find an user in UPDM', function () {
+      this.getNumberSuggestionsDefer.resolve(_.cloneDeep(pilotNumbers));
+      this.getPagingGroupDefer.resolve(_.cloneDeep(pg));
+      this.getUserDefer.reject(memberFailureResp);
+      this.getPlaceDefer.reject(memberFailureResp);
+      expect(this.controller.loading).toBeTruthy();
+      this.$scope.$apply();
+      expect(this.PagingGroupService.getPagingGroup).toHaveBeenCalledWith(this.pg.groupId);
+      expect(this.controller.name).toEqual(this.pg.name);
+      expect(this.controller.number).toEqual(this.pg.extension);
+      expect(this.controller.loading).toBeFalsy();
+      expect(this.PagingGroupService.updatePagingGroup).toHaveBeenCalled();
+      expect(this.PagingNumberService.getNumberSuggestions).toHaveBeenCalled();
     });
   });
 });
