@@ -177,7 +177,7 @@
 
     var toggles = {};
 
-    var orgResource = $resource(UrlConfig.getWdmUrl() + '/features/rules/:id', {
+    var orgResource = $resource(UrlConfig.getFeatureUrl() + '/features/rules/:id', {
       id: '@id'
     }, {
       get: {
@@ -190,7 +190,7 @@
       }
     });
 
-    var userResource = $resource(UrlConfig.getWdmUrl() + '/features/users/:id', {
+    var userResource = $resource(UrlConfig.getFeatureUrl() + '/features/users/:id', {
       id: '@id'
     }, {
       get: {
