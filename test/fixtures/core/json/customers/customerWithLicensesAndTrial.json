@@ -1,0 +1,290 @@
+{
+    "trialId": "e5c4d575-df52-461d-a72d-badc83678eb3",
+    "customerOrgId": "e87b40eb-a21b-4fce-b531-2dfb106de6c5",
+    "customerName": "Atlas_Test_bradm14699",
+    "customerEmail": "notrealbm+14699@gmail.com",
+    "endDate": "Mar 21, 2017",
+    "startDate": "2016-12-22T00:00:00.000Z",
+    "numUsers": 0,
+    "activeUsers": 0,
+    "daysLeft": 76,
+    "usage": 0,
+    "licenses": 1,
+    "deviceLicenses": 3,
+    "licenseList": [
+        {
+            "licenseId": "EE_cc9eebcd-ba42-4cdb-b0b7-96035ff068ce_trialForPaid.webex.com",
+            "offerName": "EE",
+            "licenseType": "CONFERENCING",
+            "features": [
+                "cloudmeetings"
+            ],
+            "volume": 100,
+            "isTrial": true,
+            "trialId": "e5c4d575-df52-461d-a72d-badc83678eb3",
+            "status": "PENDING",
+            "capacity": 200,
+            "siteUrl": "trialForPaid.webex.com",
+            "partnerOrg": "Seattle Autobots",
+            "partnerEmail": "fakeuserunodostres+admin1@gmail.com",
+            "isCIUnifiedSite": true
+        },
+        {
+            "licenseId": "CMR_f7fa5286-e734-4623-8601-1f1d0038d0d2_trialForPaid.webex.com",
+            "offerName": "CMR",
+            "licenseType": "CMR",
+            "features": [],
+            "volume": 100,
+            "isTrial": true,
+            "trialId": "e5c4d575-df52-461d-a72d-badc83678eb3",
+            "status": "PENDING",
+            "capacity": 200,
+            "siteUrl": "trialForPaid.webex.com",
+            "partnerOrg": "Seattle Autobots",
+            "partnerEmail": "fakeuserunodostres+admin1@gmail.com",
+            "isCIUnifiedSite": true
+        },
+        {
+            "licenseId": "SD_02da49d9-fdde-4923-b70e-3aeb72f3a76a",
+            "offerName": "SD",
+            "licenseType": "SHARED_DEVICES",
+            "features": [
+                "spark-room-system"
+            ],
+            "volume": 2,
+            "isTrial": true,
+            "trialId": "e5c4d575-df52-461d-a72d-badc83678eb3",
+            "status": "PENDING",
+            "partnerOrg": "Seattle Autobots",
+            "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
+        },
+        {
+            "licenseId": "ST_15c7d738-fc34-4988-8ace-ab6613d9e038",
+            "offerName": "ST",
+            "licenseType": "STORAGE",
+            "features": [],
+            "volume": 100,
+            "isTrial": true,
+            "trialId": "e5c4d575-df52-461d-a72d-badc83678eb3",
+            "status": "PENDING",
+            "partnerOrg": "Seattle Autobots",
+            "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
+        },
+        {
+            "licenseId": "SB_b4004d55-2113-4b67-bc12-78b16dd1b725",
+            "offerName": "SB",
+            "licenseType": "SHARED_DEVICES",
+            "features": [
+                "spark-room-system"
+            ],
+            "volume": 1,
+            "isTrial": true,
+            "trialId": "e5c4d575-df52-461d-a72d-badc83678eb3",
+            "status": "PENDING",
+            "partnerOrg": "Seattle Autobots",
+            "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
+        },
+        {
+            "licenseId": "MS_003d9623-2c96-4c23-8ff9-b69240de38eb",
+            "offerName": "MS",
+            "licenseType": "MESSAGING",
+            "billingServiceId": "Atlas_Test_bradm3285P2",
+            "features": [
+                "squared-room-moderation"
+            ],
+            "volume": 49,
+            "isTrial": false,
+            "status": "ACTIVE",
+            "partnerOrg": "Seattle Autobots",
+            "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
+        },
+        {
+            "licenseId": "CF_8379b349-9532-4fda-ba1d-17cd9cd755f4",
+            "offerName": "CF",
+            "licenseType": "CONFERENCING",
+            "billingServiceId": "Atlas_Test_bradm3285P2",
+            "features": [
+                "squared-syncup"
+            ],
+            "volume": 69,
+            "isTrial": false,
+            "status": "ACTIVE",
+            "partnerOrg": "Seattle Autobots",
+            "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
+        },
+        {
+            "licenseId": "CF_8379b349-9532-4fda-ba1d-17cd9cd755f5",
+            "offerName": "CF",
+            "licenseType": "CONFERENCING",
+            "billingServiceId": "Atlas_Test_bradm3285P2",
+            "features": [
+                "squared-syncup"
+            ],
+            "volume": 70,
+            "isTrial": false,
+            "status": "ACTIVE",
+            "partnerOrg": "Seattle Autobots",
+            "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
+        }
+    ],
+    "daysUsed": 14,
+    "percentUsed": 16,
+    "duration": 90,
+    "offer": {
+        "trialServices": [
+            {
+                "name": "WebEx Enterprise Edition",
+                "sub": [
+                    {
+                        "name": "WebEx Enterprise Edition",
+                        "order": 1,
+                        "qty": 100,
+                        "isWebex": true
+                    },
+                    {
+                        "name": "WebEx Enterprise Edition",
+                        "order": 1,
+                        "qty": 100,
+                        "isWebex": true
+                    },
+                    {
+                        "name": "WebEx Enterprise Edition",
+                        "order": 1,
+                        "qty": 100,
+                        "isWebex": true
+                    },
+                    {
+                        "name": "WebEx Enterprise Edition",
+                        "order": 1,
+                        "qty": 100,
+                        "isWebex": true
+                    },
+                    {
+                        "name": "WebEx Enterprise Edition",
+                        "order": 1,
+                        "qty": 100,
+                        "isWebex": true
+                    }
+                ],
+                "qty": 100,
+                "icon": "icon-circle-group",
+                "order": 1,
+                "hasWebex": true
+            },
+            {
+                "name": "Room Devices",
+                "icon": "icon-circle-telepresence",
+                "isRoom": true,
+                "order": 6,
+                "sub": [
+                    {
+                        "offerType": "SPARKBOARDS",
+                        "name": "Cisco Spark Board",
+                        "order": 2,
+                        "qty": 1
+                    },
+                    {
+                        "offerType": "ROOMSYSTEMS",
+                        "name": "DX, MX or SX system",
+                        "order": 1,
+                        "qty": 2
+                    }
+                ],
+                "qty": 3
+            }
+        ]
+    },
+    "offers": [
+        {
+            "id": "WEBEX",
+            "licenseCount": 100,
+            "usageCount": 0
+        },
+        {
+            "id": "WEBEX",
+            "licenseCount": 100,
+            "usageCount": 0
+        },
+        {
+            "id": "ROOMSYSTEMS",
+            "licenseCount": 2,
+            "usageCount": 0
+        },
+        {
+            "id": "ROOMSYSTEMS",
+            "licenseCount": 2,
+            "usageCount": 0
+        },
+        {
+            "id": "SPARKBOARDS",
+            "licenseCount": 1,
+            "usageCount": 0
+        },
+        {
+            "id": "SPARKBOARDS",
+            "licenseCount": 1,
+            "usageCount": 0
+        },
+        {
+            "id": "WEBEX",
+            "licenseCount": 100,
+            "usageCount": 0
+        },
+        {
+            "id": "WEBEX",
+            "licenseCount": 100,
+            "usageCount": 0
+        },
+        {
+            "id": "WEBEX",
+            "licenseCount": 100,
+            "usageCount": 0
+        },
+        {
+            "id": "ROOMSYSTEMS",
+            "licenseCount": 2,
+            "usageCount": 0
+        },
+        {
+            "id": "ROOMSYSTEMS",
+            "licenseCount": 2,
+            "usageCount": 0
+        },
+        {
+            "id": "ROOMSYSTEMS",
+            "licenseCount": 2,
+            "usageCount": 0
+        },
+        {
+            "id": "SPARKBOARDS",
+            "licenseCount": 1,
+            "usageCount": 0
+        },
+        {
+            "id": "SPARKBOARDS",
+            "licenseCount": 1,
+            "usageCount": 0
+        },
+        {
+            "id": "SPARKBOARDS",
+            "licenseCount": 1,
+            "usageCount": 0
+        }
+    ],
+    "status": "ACTIVE",
+    "state": "ACTIVE",
+    "isAllowedToManage": true,
+    "isSquaredUcOffer": false,
+    "notes": {
+        "daysLeft": 76,
+        "sortOrder": 99,
+        "text": "76 days left to purchase"
+    },
+    "isPartner": false,
+    "isTrialData": false,
+    "isRoomSystems": true,
+    "purchased": false,
+    "totalLicenses": 221,
+    "uniqueServiceCount": 5,
+    "$$hashKey": "uiGrid-0077"
+}

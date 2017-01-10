@@ -1,3 +1,5 @@
+import './_call-pickup.scss';
+
 import { CallPickupSetupAssistantComponent } from './callPickupSetupAssistant.component';
 import callPickupName from './callPickupName';
 import callPickupMembers from './callPickupMembers';

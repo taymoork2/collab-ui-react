@@ -1,3 +1,7 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/fonts';
+@import 'styles/toolkit/spacing';
+
 .cs-setupassistant--content {
   .typeahead-large {
     &.cpselect {
@@ -49,8 +53,8 @@
         }
 
         .error & {
-          background-color: $input-bg-color;
-          border-color: $input-error-border-color;
+          background-color: $white;
+          border-color: $color-alerts;
         }
       }
 
@@ -63,8 +67,8 @@
       }
 
       .error input {
-        background-color: $input-bg-color;
-        border-color: $input-error-border-color;
+        background-color: $white;
+        border-color: $color-alerts;
       }
 
       .cp-edit-range .range-to {
