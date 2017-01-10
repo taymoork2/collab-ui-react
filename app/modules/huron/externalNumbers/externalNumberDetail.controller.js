@@ -49,7 +49,7 @@
     function listPhoneNumbers() {
       if (vm.currentCustomer && vm.currentCustomer.customerOrgId) {
         vm.refresh = true;
-        return ExternalNumberService.getPendingNumberAndOrder(vm.currentCustomer.customerOrgId)
+        return ExternalNumberService.getPendingNumbersAndOrders(vm.currentCustomer.customerOrgId)
           .catch(function (response) {
             Notification.errorResponse(response, 'externalNumberPanel.listError');
           })

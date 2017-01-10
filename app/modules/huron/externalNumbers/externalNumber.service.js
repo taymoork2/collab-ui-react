@@ -5,14 +5,14 @@
     .factory('ExternalNumberService', ExternalNumberService);
 
   /* @ngInject */
-  function ExternalNumberService($q, $translate, ExternalNumberPool, NumberSearchServiceV2, PstnSetupService) {
+  function ExternalNumberService($q, $translate, ExternalNumberPool, NumberSearchServiceV2, PstnSetupService, TelephoneNumberService) {
     var service = {
       refreshNumbers: refreshNumbers,
       clearNumbers: clearNumbers,
       setAllNumbers: setAllNumbers,
       getAllNumbers: getAllNumbers,
       getAssignedNumbers: getAssignedNumbers,
-      getPendingNumberAndOrder: getPendingNumberAndOrder,
+      getPendingNumbersAndOrders: getPendingNumbersAndOrders,
       getPendingNumbers: getPendingNumbers,
       getPendingOrders: getPendingOrders,
       getUnassignedNumbers: getUnassignedNumbers,
@@ -34,11 +34,12 @@
     var ALL = 'all';
     var PENDING = 'pending';
     var UNASSIGNED = 'unassigned';
+    var EXTERNAL = 'external';
 
     return service;
 
     function refreshNumbers(customerId, queryNumberType, filter) {
-      return getPendingNumberAndOrder(customerId)
+      return getPendingNumbersAndOrders(customerId)
         .then(function () {
           // Specifying ASSIGNED_AND_UNASSIGNED_NUMBERS and FIXED_LINE_OR_MOBILE returns both
           // assigned and unassigned standard PSTN numbers.
@@ -66,7 +67,7 @@
         });
     }
 
-    function getPendingNumberAndOrder(customerId) {
+    function getPendingNumbersAndOrders(customerId) {
       return isTerminusCustomer(customerId)
         .then(function (isSupported) {
           if (isSupported) {
@@ -125,7 +126,7 @@
         } else if (_.has(number, 'orderNumber')) {
           number.label = $translate.instant('pstnSetup.orderNumber') + ' ' + number.orderNumber;
         } else {
-          number.label = number.pattern;
+          number.label = TelephoneNumberService.getDIDLabel(number.pattern);
         }
       });
       return numbers;
@@ -164,7 +165,7 @@
       return NumberSearchServiceV2.get({
         number: hint,
         customerId: customerId,
-        type: 'external',
+        type: EXTERNAL,
         assigned: 'true'
       }).$promise.then(function (data) {
         return data.numbers;
@@ -187,7 +188,7 @@
       return NumberSearchServiceV2.get({
         number: hint,
         customerId: customerId,
-        type: 'external',
+        type: EXTERNAL,
         assigned: 'false'
       }).$promise.then(function (data) {
         return data.numbers;

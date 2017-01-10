@@ -36,7 +36,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     spyOn(ExternalNumberService, 'isTerminusCustomer').and.returnValue($q.when());
     spyOn(ExternalNumberService, 'getAssignedNumbersV2').and.returnValue($q.when(externalNumbers));
     spyOn(ExternalNumberService, 'getUnassignedNumbersV2').and.returnValue($q.when());
-    spyOn(ExternalNumberService, 'getPendingNumberAndOrder').and.returnValue($q.when());
+    spyOn(ExternalNumberService, 'getPendingNumbersAndOrders').and.returnValue($q.when());
 
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise
@@ -76,7 +76,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
       controller.listPhoneNumbers();
       $scope.$apply();
 
-      expect(ExternalNumberService.getPendingNumberAndOrder).toHaveBeenCalledWith(
+      expect(ExternalNumberService.getPendingNumbersAndOrders).toHaveBeenCalledWith(
         $stateParams.currentCustomer.customerOrgId);
     });
   });
@@ -94,7 +94,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
   });
 
   it('should show no pending numbers on error', function () {
-    ExternalNumberService.getPendingNumberAndOrder.and.returnValue($q.reject());
+    ExternalNumberService.getPendingNumbersAndOrders.and.returnValue($q.reject());
     controller.listPhoneNumbers();
     $scope.$apply();
     expect(Notification.errorResponse).toHaveBeenCalled();
