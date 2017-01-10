@@ -20,7 +20,7 @@ describe('Service: ExternalNumberService', function () {
     customerId = '12345-67890-12345';
     externalNumber = {
       uuid: '22222-33333',
-      pattern: '+14795552233'
+      number: '+14795552233'
     };
 
     pendingNumbers = [{
@@ -229,7 +229,7 @@ describe('Service: ExternalNumberService', function () {
     ExternalNumberService.deleteNumber(customerId, externalNumber);
     $rootScope.$apply();
 
-    expect(PstnSetupService.deleteNumber).toHaveBeenCalledWith(customerId, externalNumber.pattern);
+    expect(PstnSetupService.deleteNumber).toHaveBeenCalledWith(customerId, externalNumber.number);
     expect(ExternalNumberPool.deletePool).not.toHaveBeenCalled();
   });
 

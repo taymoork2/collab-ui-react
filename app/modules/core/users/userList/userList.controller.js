@@ -63,7 +63,6 @@ require('./_user-list.scss');
     $scope.isCSB = Authinfo.isCSB();
 
     $scope.exportType = $rootScope.typeOfExport.USER;
-    $scope.userExportThreshold = CsvDownloadService.userExportThreshold;
     $scope.totalUsers = 0;
     $scope.obtainedTotalUserCount = false;
     $scope.isEmailStatusToggled = false;
@@ -342,21 +341,22 @@ require('./_user-list.scss');
 
             if (!$scope.obtainedTotalUserCount) {
               if (Authinfo.isCisco()) { // allow Cisco org (even > 10K) to export new CSV format
-                $scope.totalUsers = $scope.userExportThreshold;
+                $scope.totalUsers = CsvDownloadService.userExportThreshold;
                 $scope.obtainedTotalUserCount = true;
               } else {
                 UserListService.getUserCount()
                   .then(function (count) {
                     if (_.isNull(count) || _.isNaN(count) || count === -1) {
                       // can't determine number of users, so assume over threshold
-                      count = $scope.userExportThreshold + 1;
+                      count = CsvDownloadService.userExportThreshold;
                     }
                     $scope.totalUsers = count;
                     $scope.obtainedTotalUserCount = true;
                   })
                   .catch(function (response) {
                     Log.debug('Failed to get User Count. Status: ' + response);
-                    $scope.totalUsers = $scope.userExportThreshold + 1;
+                    // can't determine number of users, so assume over threshold
+                    $scope.totalUsers = CsvDownloadService.userExportThreshold;
                     $scope.obtainedTotalUserCount = false;
                   });
               }
@@ -660,7 +660,7 @@ require('./_user-list.scss');
 
     function onManageUsers() {
       $state.go('users.manage', {
-        isOverExportThreshold: ($scope.totalUsers > $scope.userExportThreshold)
+        isOverExportThreshold: ($scope.totalUsers >= CsvDownloadService.userExportThreshold)
       });
     }
 

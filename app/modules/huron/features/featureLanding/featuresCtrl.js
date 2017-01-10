@@ -1,3 +1,5 @@
+require('./_feature-landing.scss');
+
 (function () {
   'use strict';
 

@@ -13,10 +13,13 @@
   padding: 0.1rem;
 }
 
-.footer-padding {
-  padding-top: 11px;
+.modal-footer-padding {
   padding-left: 16px;
-  display: inline-block;
+}
+
+.stick-left {
+  padding-top: 13px;
+  float: left !important;
 }
 
 .media-modal-text {

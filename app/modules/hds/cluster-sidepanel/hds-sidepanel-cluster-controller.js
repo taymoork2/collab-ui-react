@@ -6,7 +6,7 @@
     .controller('HDSSidepanelClusterController', HDSSidepanelClusterController);
 
   /* @ngInject */
-  function HDSSidepanelClusterController($scope, $state, $stateParams, $translate, ClusterService, FusionUtils, FusionClusterService, Notification, $window) {
+  function HDSSidepanelClusterController($scope, $state, $stateParams, $translate, ClusterService, FusionUtils, FusionClusterService, Notification, hasHDSFeatureToggle) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.clusterId;
@@ -16,7 +16,8 @@
     vm.connectorName = $translate.instant('hds.connectorName.' + vm.servicesId[0]);
     vm.getSeverity = ClusterService.getRunningStateSeverity;
     vm.hasConnectorAlarm = hasConnectorAlarm;
-    vm.goToHds = goToHds;
+    vm.hasHDSFeatureToggle = hasHDSFeatureToggle;
+    vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
 
     if (!vm.connectorType || !vm.clusterId) {
       return;
@@ -59,8 +60,5 @@
       return connector.alarms.length > 0;
     }
 
-    function goToHds(hostname) {
-      $window.open('https://' + encodeURIComponent(hostname) + '/fusionregistration');
-    }
   }
 }());

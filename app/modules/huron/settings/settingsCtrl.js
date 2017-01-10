@@ -40,8 +40,8 @@
       value: Config.timeFormat.HOUR_24
     };
     var DEFAULT_DF = {
-      label: 'MM/DD/YYYY',
-      value: Config.dateFormat.MDY
+      label: 'MM-DD-YY',
+      value: Config.dateFormat.MDY_H
     };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
@@ -490,7 +490,7 @@
               key: 'deleteBtn',
               className: 'icon-button-delete',
               templateOptions: {
-                btnClass: 'icon trash-icon',
+                btnClass: 'icon icon-trash trash-icon',
                 onClick: function (options, scope) {
                   deleteInternalNumberRange(scope.model);
                 }
@@ -500,14 +500,14 @@
                   return vm.model.displayNumberRanges;
                 }, function (displayNumberRanges) {
                   if (displayNumberRanges.length === 1) {
-                    $scope.to.btnClass = 'trash-icon hide-delete';
+                    $scope.to.btnClass = 'icon icon-trash trash-icon hide-delete';
                   } else if (displayNumberRanges.length > 1 && !vm.firstTimeSetup && _.isUndefined($scope.model.uuid)) {
-                    $scope.to.btnClass = 'trash-icon';
+                    $scope.to.btnClass = 'icon icon-trash trash-icon';
                   } else if (displayNumberRanges.length > 1 && vm.firstTimeSetup && _.isUndefined($scope.model.uuid)) {
-                    $scope.to.btnClass = 'trash-icon';
+                    $scope.to.btnClass = 'icon icon-trash trash-icon';
                   } else if (vm.model.numberRanges.length === 1 && displayNumberRanges.length !== 1) {
                     if (!_.isUndefined(vm.model.numberRanges[0].uuid)) {
-                      $scope.to.btnClass = 'trash-icon hide-delete';
+                      $scope.to.btnClass = 'icon icon-trash trash-icon hide-delete';
                     }
                   }
                 });
@@ -526,7 +526,7 @@
           }
         },
         hideExpression: function () {
-          if (vm.model.displayNumberRanges.length > 9) {
+          if (vm.model.displayNumberRanges.length > 19) {
             return true;
           } else {
             return vm.hideFieldInternalNumberRange;
@@ -1762,38 +1762,42 @@
     }
 
     function updateVoicemailOptions() {
-      var featureOptions = {
-        features: {
-          VM2E: vm.model.companyVoicemail.voicemailToEmail,
-          VM2T: true,
-          VM2S: false
-        }
-      };
+      if (vm.voicemailAvrilCustomer) {
+        var featureOptions = {
+          features: {
+            VM2E: vm.model.companyVoicemail.voicemailToEmail,
+            VM2T: true,
+            VM2S: false
+          }
+        };
 
-      if (vm.model.companyVoicemail.companyVoicemailEnabled) {
-        switch (vm.model.companyVoicemail.voicemailOptions) {
-          case VM_SPARK : {
-            featureOptions.features.VM2S = true;
-            featureOptions.features.VM2T = false;
-            break;
+        if (vm.model.companyVoicemail.companyVoicemailEnabled) {
+          switch (vm.model.companyVoicemail.voicemailOptions) {
+            case VM_SPARK : {
+              featureOptions.features.VM2S = true;
+              featureOptions.features.VM2T = false;
+              break;
+            }
+            case VM_PHONE : {
+              featureOptions.features.VM2S = false;
+              featureOptions.features.VM2T = true;
+              break;
+            }
+            case VM_SPARKPHONE : {
+              featureOptions.features.VM2S = true;
+              featureOptions.features.VM2T = true;
+              break;
+            }
           }
-          case VM_PHONE : {
-            featureOptions.features.VM2S = false;
-            featureOptions.features.VM2T = true;
-            break;
-          }
-          case VM_SPARKPHONE : {
-            featureOptions.features.VM2S = true;
-            featureOptions.features.VM2T = true;
-            break;
-          }
+        } else {
+          featureOptions.features.VM2S = false;
+          featureOptions.features.VM2T = false;
+          featureOptions.features.VM2E = false;
         }
+        return ServiceSetup.updateAvrilSiteVoicemail(ServiceSetup.sites[0].uuid, featureOptions);
       } else {
-        featureOptions.features.VM2S = false;
-        featureOptions.features.VM2T = false;
-        featureOptions.features.VM2E = false;
+        return $q.resolve();
       }
-      return ServiceSetup.updateAvrilSiteVoicemail(ServiceSetup.sites[0].uuid, featureOptions);
     }
 
     function updateVoicemailPostalCode() {
@@ -1840,7 +1844,7 @@
         vm.callDateTimeFormat = result;
       });
 
-      FeatureToggleService.getCustomerHuronToggle(Authinfo.getOrgId(), FeatureToggleService.features.avrilVmEnable).then(function (result) {
+      FeatureToggleService.supports(FeatureToggleService.features.avrilVmEnable).then(function (result) {
         vm.voicemailAvrilCustomer = result;
       });
 

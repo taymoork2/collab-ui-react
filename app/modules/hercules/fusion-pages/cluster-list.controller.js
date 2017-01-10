@@ -159,7 +159,10 @@
     function setFilter(filter) {
       if (hasF237FeatureToggle) {
         if (filter.filterValue === 'all') {
-          vm.displayedGroups = groupsCache;
+          vm.displayedGroups = _.map(groupsCache, function (group) {
+            group.display = true;
+            return group;
+          });
         } else {
           vm.displayedGroups = _.map(groupsCache, function (group) {
             group.display = filter.filterValue === group.targetType;

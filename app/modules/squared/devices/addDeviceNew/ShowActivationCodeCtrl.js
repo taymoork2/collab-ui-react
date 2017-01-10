@@ -47,14 +47,18 @@
           createCodeForHuronUser(wizardData.account.username);
         }
       } else { // Cloudberry
-        if (vm.account.cisUuid) { // Existing place
-          createCodeForCloudberryPlace(vm.account.cisUuid).then(success, error);
-        } else { // New place
-          createCloudberryPlace(vm.account.name, wizardData.account.entitlements, wizardData.account.directoryNumber, wizardData.account.externalNumber)
-            .then(function (place) {
-              vm.account.cisUuid = place.cisUuid;
-              createCodeForCloudberryPlace(vm.account.cisUuid).then(success, error);
-            }, error);
+        if (vm.account.type === 'shared') {
+          if (vm.account.cisUuid) { // Existing place
+            createCodeForCloudberryAccount(vm.account.cisUuid).then(success, error);
+          } else { // New place
+            createCloudberryPlace(vm.account.name, wizardData.account.entitlements, wizardData.account.directoryNumber, wizardData.account.externalNumber)
+              .then(function (place) {
+                vm.account.cisUuid = place.cisUuid;
+                createCodeForCloudberryAccount(vm.account.cisUuid).then(success, error);
+              }, error);
+          }
+        } else { // Personal (never create new)
+          createCodeForCloudberryAccount(vm.account.cisUuid).then(success, error);
         }
       }
     };
@@ -82,16 +86,13 @@
     };
 
     function generateQRCode() {
-      OtpService.getQrCodeUrl(vm.activationCode).then(function (qrcode) {
-        var arrayData = '';
-        for (var i in Object.keys(qrcode)) {
-          if (qrcode.hasOwnProperty(i)) {
-            arrayData += qrcode[i];
-          }
-        }
-        vm.qrCode = arrayData;
-        vm.isLoading = false;
-      });
+      var qrImage = require('qr-image');
+      vm.qrCode = qrImage.imageSync(vm.activationCode, {
+        ec_level: 'L',
+        size: 14,
+        margin: 5
+      }).toString('base64');
+      vm.isLoading = false;
     }
 
     function createHuronPlace(name, directoryNumber, externalNumber) {
@@ -115,7 +116,7 @@
       return CsdmDataModelService.createCsdmPlace(name, entitlements, directoryNumber, externalNumber);
     }
 
-    function createCodeForCloudberryPlace(cisUuid) {
+    function createCodeForCloudberryAccount(cisUuid) {
       return CsdmDataModelService.createCodeForExisting(cisUuid);
     }
 
@@ -160,45 +161,35 @@
     vm.searchUser = function (searchString) {
       if (searchString.length >= 3) {
         var deferredCustomerOrg = $q.defer();
-        var deferredOwnOrg = $q.defer();
+        var deferredAdmin = $q.defer();
         var transformResults = function (deferred) {
           return function (data) {
             var userList = data.Resources.map(function (r) {
-              var name = null;
-              var firstName = null;
-              if (r.name) {
-                name = r.name.givenName;
-                firstName = name.givenName;
-                if (r.name.familyName) {
-                  name += ' ' + r.name.familyName;
-                }
-              }
-              if (_.isEmpty(name)) {
-                name = r.displayName;
-              }
-              if (_.isEmpty(firstName)) {
-                firstName = r.displayName;
-              }
-              if (_.isEmpty(name)) {
-                name = r.userName;
-              }
-              if (_.isEmpty(firstName)) {
-                firstName = r.userName;
-              }
-              r.extractedName = name;
-              r.firstName = firstName;
-              return r;
+              var firstName = r.name && r.name.givenName;
+              var lastName = r.name && r.name.familyName;
+              return extractUserObject(firstName, lastName, r.displayName, r.userName, r.id, r.meta.organizationID);
             });
             deferred.resolve(userList);
           };
         };
+        var searchMatchesAdmin = function () {
+          return _.startsWith(wizardData.admin.userName, searchString) ||
+            _.startsWith(wizardData.admin.firstName, searchString) ||
+            _.startsWith(wizardData.admin.lastName, searchString) ||
+            _.startsWith(wizardData.admin.displayName, searchString);
+        };
         UserListService.listUsers(0, 6, null, null, transformResults(deferredCustomerOrg), searchString, false);
-        if (wizardData.adminOrganizationId !== wizardData.account.organizationId && vm.account.type === 'shared') { // Excluding personal since Hermes does not allow emailing to a partner at the moment.
-          UserListService.listUsers(0, 6, null, null, transformResults(deferredOwnOrg), searchString, false, null, wizardData.adminOrganizationId);
+        if (wizardData.admin.organizationId !== wizardData.account.organizationId && searchMatchesAdmin()) {
+          deferredAdmin.resolve([extractUserObject(wizardData.admin.firstName,
+            wizardData.admin.lastName,
+            wizardData.admin.displayName,
+            wizardData.admin.userName,
+            wizardData.admin.cisUuid,
+            wizardData.admin.organizationId)]);
         } else {
-          deferredOwnOrg.resolve([]);
+          deferredAdmin.resolve([]);
         }
-        return deferredOwnOrg.promise.then(function (ownOrgResults) {
+        return deferredAdmin.promise.then(function (ownOrgResults) {
           return deferredCustomerOrg.promise.then(function (customerOrgResults) {
             return _.sortBy(ownOrgResults.concat(customerOrgResults), ['extractedName', 'userName']);
           });
@@ -208,13 +199,48 @@
       }
     };
 
+    var extractUserObject = function (firstName, lastName, displayName, userName, cisUuid, orgId) {
+      var name = null;
+      var returnFirstName = firstName;
+      if (!_.isEmpty(firstName)) {
+        name = firstName;
+        if (!_.isEmpty(lastName)) {
+          name += ' ' + lastName;
+        }
+      }
+
+      if (_.isEmpty(name)) {
+        name = displayName;
+      }
+      if (_.isEmpty(name)) {
+        name = lastName;
+      }
+      if (_.isEmpty(name)) {
+        name = userName;
+      }
+      if (_.isEmpty(returnFirstName)) {
+        returnFirstName = displayName;
+      }
+      if (_.isEmpty(returnFirstName)) {
+        returnFirstName = userName;
+      }
+      return {
+        extractedName: name,
+        firstName: returnFirstName,
+        userName: userName,
+        displayName: displayName,
+        cisUuid: cisUuid,
+        orgId: orgId
+      };
+    };
+
     vm.selectUser = function ($item) {
       vm.selectedUser = {
         nameWithEmail: "" + $item.extractedName + " (" + $item.userName + ")",
         email: $item.userName,
-        cisUuid: $item.id,
+        cisUuid: $item.cisUuid,
         firstName: $item.firstName,
-        orgId: $item.meta.organizationID
+        orgId: $item.orgId
       };
       vm.foundUser = "";
     };

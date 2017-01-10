@@ -1,15 +1,15 @@
-<div class="aa-panel">
-  <div class="aa-panel-body">
-    <div class="aa-flex-row">
+<div class="panel aa-panel">
+  <div class="panel-body aa-panel-body">
+    <div class="row aa-flex-row">
       <h3 class="text-info" translate="autoAttendant.builderNumbers"></h3>
       <aa-help content="{{ :: 'autoAttendant.numberInfoPopover' | translate }}" metric='Numbers-Title'></aa-help>
     </div>
     <div class="row" ng-controller="AABuilderNumbersCtrl as aa">
-      <div class="aa-panel-numbers">
+      <div class="panel aa-panel-numbers">
         <p class="h6" ng-if="aa.ui.ceInfo.getResources().length == 0" translate="autoAttendant.addNumberMsg"></p>
         <div class="aa-builder-number-tile" ng-repeat="phoneNum in aa.ui.ceInfo.getResources()">
           <span class="phone-number">{{phoneNum.getNumber() |telephoneNumber}}</span>
-          <i class="icon icon-close" ng-click="aa.removeNumber(phoneNum.getNumber())"></i>
+          <i name="numberClose" class="icon icon-close" ng-click="aa.removeNumber(phoneNum.getNumber())"></i>
         </div>
         <form>
           <cs-select class="aa-selected-phones" ng-model="aa.selected" options="aa.availablePhoneNums" refresh-data-fn="aa.loadNums(filter)" labelfield="label" valuefield="value" placeholder="aa.selectPlaceHolder" input-placeholder="aa.inputPlaceHolder" filter="true" on-change-fn="aa.addNumber(value.value)" icon="icon-chevron-down" filter="true">

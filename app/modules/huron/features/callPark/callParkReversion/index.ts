@@ -1,3 +1,5 @@
+import './_cp-reversion.scss';
+
 import { CallParkReversionComponent } from './callParkReversion.component';
 import { callParkReversionDirectoryNumberFilter } from './callParkReversionDirectoryNumber.filter';
 import memberService from 'modules/huron/members';

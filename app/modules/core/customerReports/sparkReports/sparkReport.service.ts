@@ -117,7 +117,7 @@ export class SparkReportService {
     let deferred: ng.IDeferred<Array<IActiveTableBase>> = this.$q.defer();
     let returnArray: Array<IActiveTableBase> = [];
     let options: ITypeQuery = this.CommonReportService.getTypeOptions(filter, 'mostActive');
-    this.CommonReportService.getCustomerAltReportByType(options, this.mostActiveDeferred).then((response: any): void => {
+    this.CommonReportService.getCustomerActiveUserData(options, this.mostActiveDeferred).then((response: any): void => {
       let responseData: any = _.get(response, 'data.data');
       if (responseData) {
         _.forEach(responseData, (item: any): void => {
@@ -504,15 +504,12 @@ export class SparkReportService {
     this.deviceDeferred = this.$q.defer();
     let deviceArray: IEndpointContainer = {
       graphData: [{
-        deviceType: this.$translate.instant('registeredEndpoints.allDevices'),
+        deviceType: this.ReportConstants.DEFAULT_ENDPOINT.label,
         graph: [],
         emptyGraph: true,
         balloon: true,
       }],
-      filterArray: [{
-        value: 0,
-        label: this.$translate.instant('registeredEndpoints.allDevices'),
-      }],
+      filterArray: [this.ReportConstants.DEFAULT_ENDPOINT],
     };
 
     let options: ITypeQuery = this.CommonReportService.getTypeOptions(filter, 'deviceType');

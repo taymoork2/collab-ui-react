@@ -319,21 +319,31 @@ describe('Service: CsdmDataModelService', function () {
         var deviceToUpdate = devices[deviceUrlToUpdate];
         var originalTagsCount = deviceToUpdate.tags.length;
         var newTag = "This Is A New Tag added by test";
-        var newTags = deviceToUpdate.tags.concat(newTag);
+        var deviceToUpdateArgument = JSON.parse(JSON.stringify(deviceToUpdate));
+
+        var newTags = deviceToUpdateArgument.tags.concat(newTag);
 
         CsdmDataModelService.getPlacesMap().then(function (places) {
 
-          var arrayWithDevice;
-          arrayWithDevice = places[placeUrl].devices;
+          var arrayWithDevice = places[placeUrl].devices;
 
           expect(arrayWithDevice[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount);
 
-          CsdmDataModelService.updateTags(deviceToUpdate, newTags).then(function (updatedDevice) {
+          CsdmDataModelService.updateTags(deviceToUpdateArgument, newTags).then(function (updatedDevice) {
 
+            //Argument should not be updated:
+            expect(deviceToUpdateArgument.tags).toHaveLength(originalTagsCount);
+            expect(deviceToUpdateArgument.tags).not.toContain(newTag);
+
+            //response object should be updated:
             expect(updatedDevice.tags).toHaveLength(originalTagsCount + 1);
             expect(updatedDevice.tags).toContain(newTag);
+
+            //devices map should be updated:
             expect(devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount + 1);
             expect(devices[deviceUrlToUpdate].tags).toContain(newTag);
+
+            //devices on the place should be updated:
             expect(arrayWithDevice[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount + 1);
             expect(arrayWithDevice[deviceUrlToUpdate].tags).toContain(newTag);
 
@@ -376,8 +386,8 @@ describe('Service: CsdmDataModelService', function () {
 
           CsdmDataModelService.updateTags(deviceToUpdateClone, newTags).then(function (updatedDevice) {
 
-            expect(deviceToUpdateClone.tags).toHaveLength(originalTagsCount + 1);
-            expect(deviceToUpdateClone.tags).toContain(newTag);
+            expect(deviceToUpdateClone.tags).toHaveLength(originalTagsCount);
+            expect(deviceToUpdateClone.tags).not.toContain(newTag);
             expect(updatedDevice.tags).toHaveLength(originalTagsCount + 1);
             expect(updatedDevice.tags).toContain(newTag);
             expect(devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount + 1);
@@ -692,6 +702,74 @@ describe('Service: CsdmDataModelService', function () {
       });
       $httpBackend.flush();
       expect(expectCall).toBe(true);
+      expect(changeNotification).toBeTruthy();
+    });
+
+    it('updateItemName should update place and devices', function () {
+      var promiseExecuted, changeNotification;
+
+      var placeToUpdateUrl = pWithDeviceUrl;
+      var deviceToUpdateUrl = device1Url;
+
+      var newName = "new name from test";
+      var newSipUrl = "This Is A sip url from test";
+
+      var placeReturnedFromPatch = {
+        'url': placeToUpdateUrl,
+        'sipUrl': newSipUrl,
+        'displayName': newName,
+        'devices': {
+          deviceToUpdateUrl: { 'url': deviceToUpdateUrl, 'sipUrl': newSipUrl }
+        }
+      };
+
+      $httpBackend.expectPATCH(placeToUpdateUrl).respond(placeReturnedFromPatch);
+
+      expect(changeNotification).toBeFalsy();
+      CsdmDataModelService.subscribeToChanges(testScope, function () {
+        changeNotification = "YES";
+      });
+
+      CsdmDataModelService.getDevicesMap().then(function (devices) {
+        CsdmDataModelService.getPlacesMap().then(function (places) {
+
+          var placeToUpdate = places[placeToUpdateUrl];
+          var deviceToUpdate = devices[deviceToUpdateUrl];
+
+          var oldName = placeToUpdate.displayName;
+          var oldSipUrl = placeToUpdate.sipUrl;
+
+          var placeToUpdateArgument = _.cloneDeep(placeToUpdate);
+
+          CsdmDataModelService.updateItemName(placeToUpdateArgument, newName).then(function (updatedPlace) {
+
+            //argument should not be updated:
+            expect(placeToUpdateArgument.displayName).toEqual(oldName);
+            expect(placeToUpdateArgument.sipUrl).toEqual(oldSipUrl);
+
+            //Place in place map should be updated:
+            expect(placeToUpdate.displayName).toEqual(newName);
+            expect(placeToUpdate.sipUrl).toEqual(newSipUrl);
+
+            //Device in place in place map should be updated:
+            expect(_.find(placeToUpdate.devices, { url: deviceToUpdateUrl }).displayName).toEqual(newName);
+            expect(_.find(placeToUpdate.devices, { url: deviceToUpdateUrl }).sipUrl).toEqual(newSipUrl);
+
+            //Device in device map should be updated:
+            expect(deviceToUpdate.displayName).toEqual(newName);
+            expect(deviceToUpdate.sipUrl).toEqual(newSipUrl);
+
+            //Returned object should be updated:
+            expect(updatedPlace.displayName).toEqual(newName);
+            expect(updatedPlace.sipUrl).toEqual(newSipUrl);
+
+            promiseExecuted = "YES";
+          });
+        });
+      });
+
+      $httpBackend.flush();
+      expect(promiseExecuted).toBeTruthy();
       expect(changeNotification).toBeTruthy();
     });
 

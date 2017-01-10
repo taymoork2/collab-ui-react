@@ -1,3 +1,5 @@
+import './_paging-group.scss';
+
 import { PagingGroupService } from './pagingGroup.service';
 import { PagingNumberService } from './pgNumber.service';
 

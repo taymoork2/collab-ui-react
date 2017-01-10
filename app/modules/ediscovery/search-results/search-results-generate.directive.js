@@ -5,7 +5,6 @@
     .module('Ediscovery')
     .directive('searchResultsGenerate', searchResultsGenerate);
 
-  //TODO: expand the template so only the template calls showLicenses
   function searchResultsGenerate() {
     var directive = {
       restrict: 'E',

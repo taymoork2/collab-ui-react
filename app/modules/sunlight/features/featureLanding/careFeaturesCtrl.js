@@ -15,6 +15,7 @@
       loading: 'Loading',
       error: 'Error'
     };
+    var allFeaturesOrderedMap = [];
     var listOfAllFeatures = [];
     var featureToBeDeleted = {};
     vm.searchData = searchData;
@@ -37,12 +38,21 @@
      *  4. Define the formatter
      * */
     vm.features = [{
+      order: 0,
       name: 'Ch',
       getFeature: CareFeatureList.getChatTemplates,
       formatter: CareFeatureList.formatChatTemplates,
       i18n: 'careChatTpl.chatTemplate',
       isEmpty: false,
       color: 'attention'
+    }, {
+      order: 1,
+      name: 'Ca',
+      getFeature: CareFeatureList.getCallbackTemplates,
+      formatter: CareFeatureList.formatCallbackTemplates,
+      i18n: 'careChatTpl.chatTemplate',
+      isEmpty: false,
+      color: 'alerts'
     }];
     init();
 
@@ -59,6 +69,12 @@
 
       $q.all(featuresPromises).then(function () {
         showNewFeaturePageIfNeeded();
+      }).finally(function () {
+        var flatList = _.filter(_.flatten(allFeaturesOrderedMap));
+        if (flatList.length > 0) {
+          vm.listOfFeatures = vm.listOfFeatures.concat(flatList);
+          vm.pageState = pageStates.showFeatures;
+        }
       });
     }
 
@@ -73,16 +89,12 @@
     }
 
     function handleFeatureData(data, feature) {
-
       var list = feature.formatter(data);
       if (list.length > 0) {
-
-        vm.pageState = pageStates.showFeatures;
         feature.isEmpty = false;
-        vm.listOfFeatures = vm.listOfFeatures.concat(list);
+        allFeaturesOrderedMap[feature.order] = list;
         listOfAllFeatures = listOfAllFeatures.concat(list);
       } else if (list.length === 0) {
-
         feature.isEmpty = true;
         showReloadPageIfNeeded();
       }
@@ -90,7 +102,7 @@
 
     function getListOfFeatures() {
       var promises = [];
-      vm.features.forEach(function (value) {
+      _.forEach(vm.features, function (value) {
         promises.push(value.getFeature());
       });
       return promises;
@@ -113,7 +125,6 @@
     }
 
     function showNewFeaturePageIfNeeded() {
-
       if (vm.pageState !== pageStates.showFeatures && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
         vm.pageState = pageStates.newFeature;
       }
@@ -137,23 +148,22 @@
     }
 
     vm.editCareFeature = function (feature) {
-      CareFeatureList.getChatTemplate(feature.templateId).then(function (template) {
+      CareFeatureList.getTemplate(feature.templateId).then(function (template) {
         $state.go('care.setupAssistant', {
           isEditFeature: true,
-          template: template
+          template: template,
+          type: template.configuration.mediaType
         });
       });
     };
 
     function deleteCareFeature(feature) {
       featureToBeDeleted = feature;
-      if (feature.featureType === 'Ch') {
-        $state.go('care.Features.DeleteFeature', {
-          deleteFeatureName: feature.name,
-          deleteFeatureId: feature.templateId,
-          deleteFeatureType: feature.featureType
-        });
-      }
+      $state.go('care.Features.DeleteFeature', {
+        deleteFeatureName: feature.name,
+        deleteFeatureId: feature.templateId,
+        deleteFeatureType: feature.featureType
+      });
     }
 
     function openEmbedCodeModal(feature) {
@@ -178,8 +188,6 @@
       }
 
     });
-
-
   }
 
 })();

@@ -33,9 +33,8 @@
               cs-input-help-text="{{::'userManage.org.bulkDetails'|translate: {maxUsersInCSV: umoc.maxUsersInCSV} }}">
             <p class="csv-export-link">
               <cr-user-csv-export
-                is-over-export-threshold="csv.isOverExportThreshold"
+                is-over-export-threshold="umoc.isOverExportThreshold"
                 as-link="{{::'userManage.bulk.exportUserList'|translate}}"
-                on-status-change="csv.onExportDownloadStatus(isExporting, dataUrl)"
                 use-csv-download-directive="true">
               </cr-user-csv-export>
             </p>

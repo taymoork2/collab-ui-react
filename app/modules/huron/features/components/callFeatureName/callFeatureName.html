@@ -1,5 +1,5 @@
 <div ng-form="featureNameForm">
-  <div class="typeahead-large" ng-if="$ctrl.isNew">
+  <div class="typeahead-large typeahead-large__no-icon" ng-if="$ctrl.isNew">
     <input
       class="form-control"
       placeholder={{::$ctrl.placeholder}}
@@ -8,7 +8,7 @@
       ng-keypress="$ctrl.onHandleKeyPress($event.keyCode)"
       ng-required="$ctrl.isRequired"
       focus-on>
-    <p class="input-hint">{{::$ctrl.nameHint}}</p>
+    <p class="input-description">{{::$ctrl.nameHint}}</p>
   </div>
 
   <div ng-if="!$ctrl.isNew">

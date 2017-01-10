@@ -191,13 +191,15 @@
           'fillAlphas': 1,
           'balloonText': '<b>[[availability]]</b></br><b>[[nodes]]</b>'
         },
+        "balloon": {
+          "fixedPosition": false
+        },
         'rotate': true,
         'categoryField': 'category',
         'segmentsField': 'segments',
         'colorField': 'color',
-        'startField': 'start',
-        'endField': 'end',
-        'durationField': 'duration',
+        "startDateField": "startTime",
+        "endDateField": "endTime",
         'dataProvider': data,
         'valueScrollbar': {
           'autoGridCount': true,

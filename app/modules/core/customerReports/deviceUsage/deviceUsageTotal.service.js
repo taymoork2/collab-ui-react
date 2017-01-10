@@ -13,7 +13,7 @@
     var csdmUrlBase = UrlConfig.getCsdmServiceUrl() + '/organization';
     var csdmUrl = csdmUrlBase + '/' + Authinfo.getOrgId() + '/places/';
 
-    var timeoutInMillis = 10000;
+    var timeoutInMillis = 20000;
     var intervalType = 'day'; // Used as long as week and month is not implemented
 
     function getDateRangeForLastNTimeUnits(count, granularity) {

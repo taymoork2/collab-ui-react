@@ -42,8 +42,8 @@ describe('placeOverview component', () => {
   };
 
   describe('and invoke onGenerateOtpFn', () => {
-    let showATA, showHybrid, currentDevice, deviceName, displayName, email, userCisUuid, placeCisUuid;
-    let orgId, adminOrgId, goStateName, goStateData;
+    let showATA, showHybrid, currentDevice, deviceName, displayName, email, userCisUuid, placeCisUuid, orgId;
+    let adminFirstName, adminLastName, adminDisplayName, adminUserName, adminCisUuid, adminOrgId, goStateName, goStateData;
     beforeEach(() => {
 
       showATA = true;
@@ -54,6 +54,11 @@ describe('placeOverview component', () => {
       userCisUuid = 'userCisUuid';
       placeCisUuid = 'placeCisUuid';
       orgId = 'orgId';
+      adminFirstName = 'adminFirstName';
+      adminLastName = 'adminLastName';
+      adminDisplayName = 'adminDisplayName';
+      adminUserName = 'adminUserName';
+      adminCisUuid = 'adminCisUuid';
       adminOrgId = 'adminOrgId';
       currentDevice = {
         displayName: deviceName,
@@ -97,7 +102,14 @@ describe('placeOverview component', () => {
                 function: 'showCode',
                 showATA: true,
                 csdmHybridCallFeature: true,
-                adminOrganizationId: adminOrgId,
+                admin: {
+                  firstName: adminFirstName,
+                  lastName: adminLastName,
+                  displayName: adminDisplayName,
+                  userName: adminUserName,
+                  cisUuid: adminCisUuid,
+                  organizationId: adminOrgId,
+                },
                 account: { type: 'sharede', deviceType: 'cloudberry', cisUuid: placeCisUuid, name: deviceName, organizationId: orgId },
                 recipient: { cisUuid: userCisUuid, organizationId: orgId, displayName: displayName, email: email },
                 title: 'addDeviceWizard.newCode',
@@ -135,7 +147,14 @@ describe('placeOverview component', () => {
                 function: 'showCode',
                 showATA: true,
                 csdmHybridCallFeature: true,
-                adminOrganizationId: adminOrgId,
+                admin: {
+                  firstName: adminFirstName,
+                  lastName: adminLastName,
+                  displayName: adminDisplayName,
+                  userName: adminUserName,
+                  cisUuid: adminCisUuid,
+                  organizationId: adminOrgId,
+                },
                 account: { type: 'shared', deviceType: 'huron', cisUuid: placeCisUuid, organizationId: orgId, name: deviceName },
                 recipient: { cisUuid: userCisUuid, organizationId: orgId, displayName: displayName, email: email },
                 title: 'addDeviceWizard.newCode',

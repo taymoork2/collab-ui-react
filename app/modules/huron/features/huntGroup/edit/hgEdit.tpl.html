@@ -7,10 +7,10 @@
   </div>
   <a class="hunt-member-line">
     <span
-      ng-if="match.label.selectableNumber" 
+      ng-if="match.label.selectableNumber"
       ng-bind-html="(match.label.selectableNumber | huntMemberTelephone) | typeaheadHighlight:query"></span>
     <span
-      ng-if="match.label.searchNumber" 
+      ng-if="match.label.searchNumber"
       ng-bind-html="(match.label.searchNumber) | typeaheadHighlight:query"></span>
   </a>
 </script>
@@ -49,7 +49,7 @@
           </cs-call-destination>
         </div>
         <div class="ellipsis warning-typeahead" ng-if="hge.shouldShowFallbackWarning()">
-            <span class="icon"></span> <span class="message">{{:: 'huronHuntGroup.invalidFallback' | translate}}</span>
+            <span class="icon icon-warning"></span> <span class="message">{{:: 'huronHuntGroup.invalidFallback' | translate}}</span>
         </div>
         <div ng-if="hge.shouldShowFallbackPill()">
           <div class="clearfix">
@@ -146,7 +146,7 @@
                    placeholder="{{:: 'huronHuntGroup.addMemberLabel' | translate}}">
 
             <div class="ellipsis warning-typeahead" ng-if="hge.isMembersInvalid()">
-              <span class="icon"></span> <span class="message">{{:: 'huronHuntGroup.invalidMember' | translate}}</span>
+              <span class="icon icon-warning"></span> <span class="message">{{:: 'huronHuntGroup.invalidMember' | translate}}</span>
             </div>
           </div>
           <p>{{:: 'huronHuntGroup.membersDesc' | translate}}</p>

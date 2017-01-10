@@ -10,6 +10,12 @@
    };
    var templateList = getJSONFixture('sunlight/json/features/chatTemplates/chatTemplateList.json');
 
+   var getTemplates = function (mediaType, data) {
+     return _.filter(data, function (template) {
+       return template.mediaType === mediaType;
+     });
+   };
+
    beforeEach(angular.mock.module('Sunlight'));
    beforeEach(angular.mock.module(function ($provide) {
      $provide.value("Authinfo", spiedAuthinfo);
@@ -30,33 +36,45 @@
      $httpBackend.verifyNoOutstandingRequest();
    });
 
-   it('should be able to get list of templates for a given org', function () {
-     $httpBackend.expectGET(getTemplatesUrl).respond(200, templateList);
+   it('should be able to get list of chat templates for a given org', function (done) {
+     $httpBackend.expectGET(getTemplatesUrl).respond(200, getTemplates('chat', templateList));
      careFeatureService.getChatTemplates().then(function (list) {
-       expect(angular.equals(list, templateList)).toBeTruthy();
+       expect(angular.equals(list, getTemplates('chat', templateList))).toBeTruthy();
      });
+     done();
    });
 
-   it('should fail to get list of templates when server gives an error', function () {
+   it('should be able to get list of callback templates for a given org', function (done) {
+     $httpBackend.expectGET(getTemplatesUrl).respond(200, getTemplates('callback', templateList));
+     careFeatureService.getCallbackTemplates().then(function (list) {
+       expect(angular.equals(list, getTemplates('callback', templateList))).toBeTruthy();
+     });
+     done();
+   });
+
+   it('should fail to get list of templates when server gives an error', function (done) {
      $httpBackend.expectGET(getTemplatesUrl).respond(500);
      careFeatureService.getChatTemplates().then(function () {}, function (response) {
        expect(response.status).toEqual(500);
      });
+     done();
    });
 
-   it('should be able to delete a given template for a given orgId', function () {
+   it('should be able to delete a given template for a given orgId', function (done) {
      $httpBackend.expectDELETE(deleteTemplateUrl).respond('OK');
-     careFeatureService.deleteChatTemplate(templateId).then(function (resp) {
+     careFeatureService.deleteTemplate(templateId).then(function (resp) {
        expect(resp[0]).toEqual('O');
        expect(resp[1]).toEqual('K');
      });
+     done();
    });
 
-   it('should fail to delete a given template when server gives an error', function () {
+   it('should fail to delete a given template when server gives an error', function (done) {
      $httpBackend.expectDELETE(deleteTemplateUrl).respond(500);
-     careFeatureService.deleteChatTemplate(templateId).then(function () {}, function (response) {
+     careFeatureService.deleteTemplate(templateId).then(function () {}, function (response) {
        expect(response.status).toEqual(500);
      });
+     done();
    });
 
  });

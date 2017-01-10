@@ -40,7 +40,10 @@ require('./_devices.scss');
           var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
             vm.csdmHybridCallFeature = feature;
           });
-          $q.all([darlingPromise, ataPromise, pstnPromise, hybridPromise, fetchDetailsForLoggedInUser()]).finally(function () {
+          var personalPromise = FeatureToggleService.cloudberryPersonalModeGetStatus().then(function (result) {
+            vm.showPersonal = result;
+          });
+          $q.all([darlingPromise, ataPromise, pstnPromise, hybridPromise, personalPromise, fetchDetailsForLoggedInUser()]).finally(function () {
             vm.addDeviceIsDisabled = false;
           });
 
@@ -53,14 +56,20 @@ require('./_devices.scss');
           var userDetailsDeferred = $q.defer();
           Userservice.getUser('me', function (data) {
             if (data.success) {
-              vm.adminDisplayName = data.displayName;
+              vm.adminUserDetails = {
+                firstName: data.name && data.name.givenName,
+                lastName: data.name && data.name.familyName,
+                displayName: data.displayName,
+                userName: data.userName,
+                cisUuid: data.id,
+                organizationId: data.meta.organizationID
+              };
               if (data.name) {
                 vm.adminFirstName = data.name.givenName;
               }
               if (!vm.adminFirstName) {
                 vm.adminFirstName = data.displayName;
               }
-              vm.adminOrgId = data.meta.organizationID;
             }
             userDetailsDeferred.resolve();
           });
@@ -195,7 +204,7 @@ require('./_devices.scss');
               function: "addDevice",
               showATA: vm.showATA,
               showDarling: vm.showDarling,
-              adminOrganizationId: vm.adminOrgId,
+              admin: vm.adminUserDetails,
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isEntitledToHuron(),
@@ -205,9 +214,9 @@ require('./_devices.scss');
               },
               recipient: {
                 cisUuid: Authinfo.getUserId(),
-                displayName: vm.adminDisplayName,
+                displayName: vm.adminUserDetails.displayName,
                 email: Authinfo.getPrimaryEmail(),
-                organizationId: vm.adminOrgId,
+                organizationId: vm.adminUserDetails.organizationId,
                 firstName: vm.adminFirstName
               }
             },
@@ -216,7 +225,7 @@ require('./_devices.scss');
             wizardState: {
               'addDeviceFlow.chooseDeviceType': {
                 nextOptions: {
-                  cloudberry: 'addDeviceFlow.chooseSharedSpace',
+                  cloudberry: vm.showPersonal ? 'addDeviceFlow.chooseAccountType' : 'addDeviceFlow.chooseSharedSpace',
                   huron: 'addDeviceFlow.chooseAccountType'
                 }
               },

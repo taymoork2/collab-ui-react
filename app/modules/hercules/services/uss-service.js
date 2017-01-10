@@ -10,7 +10,6 @@
     var cachedUserStatusSummary = [];
 
     var USSUrl = UrlConfig.getUssUrl() + 'uss/api/v1';
-    var USSv2Url = UrlConfig.getUssUrl() + 'uss/api/v2';
 
     var hub = CsdmHubFactory.create();
 
@@ -32,6 +31,7 @@
       refreshEntitlementsForUser: refreshEntitlementsForUser,
       getUserCountFromResourceGroup: getUserCountFromResourceGroup,
       getUserJournal: getUserJournal,
+      notifyReadOnlyLaunch: notifyReadOnlyLaunch,
     };
 
     CsdmPoller.create(fetchStatusesSummary, hub);
@@ -190,8 +190,12 @@
 
     function getUserJournal(userId, orgId, limit, serviceId) {
       return $http
-        .get(USSv2Url + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userJournal/' + userId + (limit ? '?limit=' + limit : '') + (serviceId ? '&serviceId=' + serviceId : ''))
+        .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userJournal/' + userId + (limit ? '?limit=' + limit : '') + (serviceId ? '&serviceId=' + serviceId : ''))
         .then(extractJournalEntries);
+    }
+
+    function notifyReadOnlyLaunch() {
+      return $http.post(USSUrl + '/internals/actions/invalidateUser/invoke');
     }
   }
 }());

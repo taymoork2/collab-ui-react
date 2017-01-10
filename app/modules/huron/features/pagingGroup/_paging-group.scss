@@ -1,65 +1,49 @@
-$overlay-panel-height: 93px;
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/spacing';
+@import 'styles/toolkit/layout';
 
-.cs-setupassistant {
-  margin: 0 auto;
-  max-width: 100%;
-  padding: 0 1rem;
+.paging-group-member-lookup {
+  .cs-card-layout {
+    @include vr-spacing(ml, 28.5, 0px, true);
+    @include vr-spacing(pb, 1);
 
-  .btn--right.savePagingGroup:not(.disabled) {
-    background: $color-cta;
+    position: fixed !important;
+    height: 16rem !important;
+    width: 58rem;
+    left: 50%;
+    margin-right: auto;
+    overflow: auto;
+    display: inline-flex;
+    flex-flow: row wrap;
+    flex: 1;
+    align-content: flex-start;
+    justify-content: center;
   }
 
-  .helptext-btn--right.enabled {
-    color: $color-cta;
+  .pg-header {
+    margin: auto;
+    width: 54.5rem;
+
+    .member-count {
+      color: $gray-light;
+    }
   }
-}
 
-.paging-group-member-lookup .cs-card-layout {
-  @include vr-spacing(ml, 28.5, 0px, true);
-  @include vr-spacing(pb, 1);
+  .member-warning {
+    @include vr-spacing(pl, 0);
 
-  position: fixed !important;
-  height: 16rem !important;
-  width: 58rem;
-  left: 50%;
-  margin-right: auto;
-  overflow: auto;
-  display: inline-flex;
-  flex-flow: row wrap;
-  flex: 1;
-  align-content: flex-start;
-  justify-content: center;
-}
-
-.pg-header {
-  margin: auto;
-  width: 54.5rem;
-
-  .member-count {
-    color: $gray-light;
+    color: $gray-darkest;
   }
-}
 
-.cs-setupassistant--content {
-  height: calc(100vh - #{$top-bar-height + $overlay-panel-height});
-}
+  .pg-cs-input__messages {
+    display: block;
+    visibility: hidden;
+  }
 
-.member-warning {
-  @include vr-spacing(pl, 0);
-
-  color: $gray-darkest;
-}
-
-.pg-cs-input__messages {
-  @extend .cs-input__messages;
-
-  display: block;
-  visibility: hidden;
-}
-
-.warning .pg-cs-input__messages {
-  margin-top: -1rem;
-  visibility: visible;
+  .warning .pg-cs-input__messages {
+    margin-top: -1rem;
+    visibility: visible;
+  }
 }
 
 .pg-edit {
@@ -68,9 +52,7 @@ $overlay-panel-height: 93px;
   position: relative;
   background: $color-white;
 
-  .cs-form__section-first {
-    @extend .cs-form__section;
-
+  .cs-form__section--first {
     padding-top: 4rem;
 
     .cs-input {
@@ -82,9 +64,7 @@ $overlay-panel-height: 93px;
     width: 10rem;
   }
 
-  .cs-form__section-member {
-    @extend .cs-form__section;
-
+  .cs-form__section--member {
     overflow-y: auto;
     overflow: hidden;
     height: 100%;

@@ -79,6 +79,10 @@
         $state.go('mediafusion-settings', {
           id: id
         });
+      } else if (type === 'hds_app') {
+        $state.go('hds-cluster-settings', {
+          id: id
+        });
       }
     }
 

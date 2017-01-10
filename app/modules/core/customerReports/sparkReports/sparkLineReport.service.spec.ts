@@ -1,4 +1,6 @@
 import {
+  IEndpointContainer,
+  IEndpointData,
   IMetricsData,
 } from './sparkReportInterfaces';
 
@@ -6,6 +8,7 @@ describe('Service: Customer Reports Service', function () {
   let activeData = getJSONFixture('core/json/customerReports/activeUser.json');
   let conversationData = getJSONFixture('core/json/customerReports/conversation.json');
   let defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
+  let devicesJson = getJSONFixture('core/json/customerReports/devices.json');
   let mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
   let metricsData = getJSONFixture('core/json/customerReports/callMetrics.json');
   let rejectError: any = {
@@ -34,7 +37,7 @@ describe('Service: Customer Reports Service', function () {
   };
 
   afterAll(function () {
-    metricsData = mediaData = activeData = conversationData = defaults = rejectError = updateDates = dataResponse = undefined;
+    devicesJson = metricsData = mediaData = activeData = conversationData = defaults = rejectError = updateDates = dataResponse = undefined;
   });
 
   beforeEach(function () {
@@ -50,7 +53,7 @@ describe('Service: Customer Reports Service', function () {
 
   describe('Active User Services', function () {
     it('should return column data getActiveUserData', function () {
-      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.when(dataResponse(updateDates(_.cloneDeep(activeData.activeLineData), undefined, undefined))));
+      spyOn(this.CommonReportService, 'getCustomerActiveUserData').and.returnValue(this.$q.when(dataResponse(updateDates(_.cloneDeep(activeData.activeLineData), undefined, undefined))));
 
       this.SparkLineReportService.getActiveUserData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual({
@@ -62,7 +65,7 @@ describe('Service: Customer Reports Service', function () {
     });
 
     it('should notify an error for getActiveUserData', function () {
-      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.reject(rejectError));
+      spyOn(this.CommonReportService, 'getCustomerActiveUserData').and.returnValue(this.$q.reject(rejectError));
 
       this.SparkLineReportService.getActiveUserData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual({
@@ -74,7 +77,7 @@ describe('Service: Customer Reports Service', function () {
     });
 
     it('should getMostActiveUserData', function () {
-      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.when({
+      spyOn(this.CommonReportService, 'getCustomerActiveUserData').and.returnValue(this.$q.when({
         data: _.cloneDeep(activeData.mostActive),
       }));
 
@@ -85,7 +88,7 @@ describe('Service: Customer Reports Service', function () {
     });
 
     it('should notify an error for getMostActiveUserData', function () {
-      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.reject(rejectError));
+      spyOn(this.CommonReportService, 'getCustomerActiveUserData').and.returnValue(this.$q.reject(rejectError));
 
       this.SparkLineReportService.getMostActiveUserData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual([]);
@@ -94,7 +97,7 @@ describe('Service: Customer Reports Service', function () {
     });
   });
 
-  describe('Active User Services', function () {
+  describe('Conversation Service', function () {
     it('should return column data getConversationData', function () {
       spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.when(dataResponse(updateDates(_.cloneDeep(conversationData.apiResponse), undefined, undefined))));
 
@@ -164,6 +167,70 @@ describe('Service: Customer Reports Service', function () {
 
       this.SparkLineReportService.getMetricsData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual([]);
+      });
+      this.$scope.$apply();
+    });
+  });
+
+  describe('Registered Endpoints Service', function () {
+    let devicesData: any = _.cloneDeep(devicesJson.deviceData);
+    let endpoints: IEndpointContainer = {
+      graphData: [{
+        deviceType: 'registeredEndpoints.allDevices',
+        graph: [],
+        balloon: true,
+        emptyGraph: false,
+      }],
+      filterArray: [{
+        value: 0,
+        label: 'registeredEndpoints.allDevices',
+      }],
+    };
+    _.forEach(devicesData, (item: any, index: number): void => {
+      item.details = {};
+      let graph: Array<IEndpointData> = [];
+      for (let i = 1; i <= 7; i++) {
+        let date: string = moment().tz(defaults.timezone).subtract(i, defaults.DAY).format();
+        item.details[date] = 5 * i;
+        graph.unshift({
+          date: moment(date).format(defaults.dayFormat),
+          totalRegisteredDevices: 5 * i,
+        });
+
+        if (_.isUndefined(endpoints.graphData[0].graph[i - 1])) {
+          endpoints.graphData[0].graph.unshift({
+            date: moment(date).format(defaults.dayFormat),
+            totalRegisteredDevices: 5 * devicesData.length * i,
+          });
+        }
+      }
+
+      endpoints.filterArray.push({
+        value: index + 1,
+        label: item.deviceType,
+      });
+      endpoints.graphData.push({
+        deviceType: item.deviceType,
+        graph: graph,
+        balloon: true,
+        emptyGraph: false,
+      });
+    });
+
+    it('should getDeviceData', function () {
+      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.when(dataResponse(devicesData)));
+
+      this.SparkLineReportService.getDeviceData(defaults.timeFilter[0]).then(function (response) {
+        expect(response).toEqual(endpoints);
+      });
+      this.$scope.$apply();
+    });
+
+    it('should notify an error for getDeviceData', function () {
+      spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.reject(rejectError));
+
+      this.SparkLineReportService.getDeviceData(defaults.timeFilter[0]).then(function (response) {
+        expect(response).toEqual(devicesJson.emptyData);
       });
       this.$scope.$apply();
     });

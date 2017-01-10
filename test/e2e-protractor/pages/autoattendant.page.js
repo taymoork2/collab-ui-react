@@ -61,8 +61,8 @@ var AutoAttendantPage = function () {
 
   this.lanesWrapper = element.all(by.css('div.aa-lanes-wrapper')).first();
 
-  this.numberIconCloseAll = element.all(by.css('.icon-close'));
-  this.numberIconClose = element.all(by.css('.icon-close')).last();
+  this.numberByNameCloseAll = element.all(by.name('numberClose'));
+  this.numberByNameClose = element.all(by.name('numberClose')).last();
 
   this.sayMessageBody = element(by.css('div.aa-panel-body[name="Say Message"]'));
 

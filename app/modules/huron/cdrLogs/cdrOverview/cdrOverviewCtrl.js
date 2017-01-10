@@ -1,3 +1,5 @@
+require('./_cdr-overview.scss');
+
 (function () {
   'use strict';
 

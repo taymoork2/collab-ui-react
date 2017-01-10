@@ -9,7 +9,7 @@ require('modules/core/reports/amcharts-export.scss');
     .controller('DeviceUsageCtrl', DeviceUsageCtrl);
 
   /* @ngInject */
-  function DeviceUsageCtrl($log, $q, $translate, $scope, DeviceUsageTotalService, Notification, DeviceUsageSplunkMetricsService, ReportConstants, CardUtils, deviceUsageFeatureToggle, $state) {
+  function DeviceUsageCtrl($log, $q, $translate, $scope, DeviceUsageTotalService, Notification, DeviceUsageSplunkMetricsService, ReportConstants, deviceUsageFeatureToggle, $state) {
     var vm = this;
     var amChart;
     var apiToUse = 'backend';
@@ -44,7 +44,7 @@ require('modules/core/reports/amcharts-export.scss');
       }
     ];
 
-    vm.timeOptions = _.cloneDeep(ReportConstants.timeFilter);
+    vm.timeOptions = _.cloneDeep(ReportConstants.TIME_FILTER);
     vm.timeSelected = vm.timeOptions[0];
 
     function timeUpdate() {
@@ -131,6 +131,9 @@ require('modules/core/reports/amcharts-export.scss');
 
     function init() {
       var chart = DeviceUsageTotalService.getLineChart();
+      chart.startEffect = 'easeInSine';
+      chart.startDuration = 0.5;
+      chart.zoomOutOnDataUpdate = true;
       chart.listeners = [
         { event: 'rollOverGraphItem', method: rollOverGraphItem },
         { event: 'rollOutGraphItem', method: rollOutGraphItem },
@@ -202,6 +205,7 @@ require('modules/core/reports/amcharts-export.scss');
         }
       }
       amChart.validateData();
+      amChart.animateAgain();
       vm.showDevices = false;
       fillInStats(data);
     }
@@ -270,8 +274,7 @@ require('modules/core/reports/amcharts-export.scss');
       vm.leastUsedDevices = [];
 
       resolveDeviceData(stats.most, vm.mostUsedDevices)
-        .then(resolveDeviceData(stats.least, vm.leastUsedDevices))
-        .then(reInstantiateMasonry);
+        .then(resolveDeviceData(stats.least, vm.leastUsedDevices));
     }
 
     function resolveDeviceData(stats, target) {
@@ -281,10 +284,6 @@ require('modules/core/reports/amcharts-export.scss');
             target.push({ "name": deviceInfo[index].displayName, "duration": secondsTohhmmss(device.totalDuration), "calls": device.callCount });
           });
         });
-    }
-
-    function reInstantiateMasonry() {
-      CardUtils.resize(0, 'score-card.cs-card-layout');
     }
 
     function secondsTohhmmss(totalSeconds) {

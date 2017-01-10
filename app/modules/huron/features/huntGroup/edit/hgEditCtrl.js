@@ -1,3 +1,5 @@
+require('./_hg-edit.scss');
+
 (function () {
   'use strict';
 

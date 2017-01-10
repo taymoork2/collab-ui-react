@@ -87,7 +87,7 @@
         if (services) {
           _.forEach(vm.extensions, function (extension) {
             extension.enabled = ServiceDescriptor.filterEnabledServices(services).some(function (service) {
-              return extension.id === service.id && extension.id !== "squared-fusion-gcal";
+              return extension.id === service.id && extension.id !== 'squared-fusion-gcal';
             });
             extension.isSetup = extension.enabled;
 
@@ -109,6 +109,7 @@
                 var ignoreGoogle = calServiceExchange.enabled && !calServiceExchange.entitled && !calServiceGoogle.entitled;
                 if (isSetup && (!calServiceExchange.enabled || !calServiceExchange.entitled) && !ignoreGoogle) {
                   calServiceGoogle.enabled = true;
+                  vm.isEnabled = true;
                   calServiceExchange.enabled = false;
                   if (!delayedUpdateTimer) {
                     updateStatusForUser();

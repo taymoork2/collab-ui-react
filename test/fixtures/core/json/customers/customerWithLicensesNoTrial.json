@@ -23,65 +23,6 @@
         "partnerOrg": "Seattle Autobots",
         "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
     }],
-    "messaging": {
-        "status": "ACTIVE",
-        "daysLeft": null,
-        "customerName": "Atlas_Test_Cloudberry-603a",
-        "sortOrder": 0
-    },
-    "conferencing": {
-        "status": "ACTIVE",
-        "daysLeft": null,
-        "customerName": "Atlas_Test_Cloudberry-603a",
-        "sortOrder": 0
-    },
-    "communications": {
-        "status": "ACTIVE",
-        "daysLeft": null,
-        "customerName": "Atlas_Test_Cloudberry-603a",
-        "sortOrder": 0
-    },
-    "roomSystems": {
-        "licenseId": "SD_9334ccfd-7785-499c-92b3-d28d883285d1",
-        "offerName": "SD",
-        "licenseType": "SHARED_DEVICES",
-        "billingServiceId": "Test-SvcId-CB-603a",
-        "features": [
-            "spark-room-system"
-        ],
-        "volume": 10,
-        "isTrial": false,
-        "status": "ACTIVE",
-        "partnerOrg": "Seattle Autobots",
-        "partnerEmail": "fakeuserunodostres+admin1@gmail.com",
-        "daysLeft": null,
-        "customerName": "Atlas_Test_Cloudberry-603a",
-        "sortOrder": 2
-    },
-    "sparkConferencing": {
-        "status": "ACTIVE",
-        "daysLeft": null,
-        "customerName": "Atlas_Test_Cloudberry-603a",
-        "sortOrder": 0
-    },
-    "webexEEConferencing": {
-        "status": "ACTIVE",
-        "daysLeft": null,
-        "customerName": "Atlas_Test_Cloudberry-603a",
-        "sortOrder": 0
-    },
-    "webexCMR": {
-        "status": "ACTIVE",
-        "daysLeft": null,
-        "customerName": "Atlas_Test_Cloudberry-603a",
-        "sortOrder": 0
-    },
-    "care": {
-        "status": "ACTIVE",
-        "daysLeft": null,
-        "customerName": "Atlas_Test_Cloudberry-603a",
-        "sortOrder": 0
-    },
     "daysUsed": null,
     "percentUsed": null,
     "offer": {
@@ -98,44 +39,6 @@
     },
     "isPartner": false,
     "isTrialData": false,
-    "unmodifiedLicenses": [{
-        "licenseId": "SD_9334ccfd-7785-499c-92b3-d28d883285d1",
-        "offerName": "SD",
-        "licenseType": "SHARED_DEVICES",
-        "billingServiceId": "Test-SvcId-CB-603a",
-        "features": [
-            "spark-room-system"
-        ],
-        "volume": 10,
-        "isTrial": false,
-        "status": "ACTIVE",
-        "partnerOrg": "Seattle Autobots",
-        "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
-    }],
-    "webexEventCenter": {
-        "status": "ACTIVE",
-        "daysLeft": null,
-        "customerName": "Atlas_Test_Cloudberry-603a",
-        "sortOrder": 0
-    },
-    "webexMeetingCenter": {
-        "status": "ACTIVE",
-        "daysLeft": null,
-        "customerName": "Atlas_Test_Cloudberry-603a",
-        "sortOrder": 0
-    },
-    "webexSupportCenter": {
-        "status": "ACTIVE",
-        "daysLeft": null,
-        "customerName": "Atlas_Test_Cloudberry-603a",
-        "sortOrder": 0
-    },
-    "webexTrainingCenter": {
-        "status": "ACTIVE",
-        "daysLeft": null,
-        "customerName": "Atlas_Test_Cloudberry-603a",
-        "sortOrder": 0
-    },
     "purchased": true,
     "totalLicenses": 10,
     "uniqueServiceCount": 4
