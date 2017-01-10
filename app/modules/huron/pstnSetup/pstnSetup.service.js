@@ -74,11 +74,13 @@
       orderNumbersV2: orderNumbersV2,
       portNumbers: portNumbers,
       listPendingOrders: listPendingOrders,
+      listPendingOrdersWithDetail: listPendingOrdersWithDetail,
       getOrder: getOrder,
       getFormattedNumberOrders: getFormattedNumberOrders,
       translateStatusMessage: translateStatusMessage,
       listPendingNumbers: listPendingNumbers,
       deleteNumber: deleteNumber,
+      getAreaCode: getAreaCode,
       INTELEPEER: INTELEPEER,
       TATA: TATA,
       TELSTRA: TELSTRA,
@@ -477,32 +479,67 @@
     function listPendingOrders(customerId) {
       var pendingOrders = [];
       pendingOrders.push(
-        TerminusOrderV2Service.get({
-          customerId: customerId,
-          type: PSTN,
-          status: PENDING
-        }).$promise
+        queryPendingOrders(customerId, PSTN)
       );
       pendingOrders.push(
-        TerminusOrderV2Service.get({
-          customerId: customerId,
-          type: TYPE_PORT,
-          status: PENDING
-        }).$promise
+        queryPendingOrders(customerId, TYPE_PORT)
       );
       return $q.all(pendingOrders)
         .then(_.flatten);
     }
 
-    function getOrder(customerId, orderId) {
+    // TODO (jlowery): Remove this function when Terminus implements
+    // a 'wide' parameter for the list orders API that will return the
+    // numbers with the order list so we don't have to make another
+    // backend call to get the details for each order.
+    function listPendingOrdersWithDetail(customerId) {
+      var pendingOrdersWithDetail = [];
+      pendingOrdersWithDetail.push(
+        queryPendingOrders(customerId, PSTN)
+          .then(function (orders) {
+            var orderDetailPromises = [];
+            _.forEach(orders, function (order) {
+              orderDetailPromises.push(
+                getOrder(customerId, order.uuid).then(function (orderDetail) {
+                  return orderDetail;
+                }));
+            });
+            return $q.all(orderDetailPromises);
+          })
+      );
+      pendingOrdersWithDetail.push(
+        queryPendingOrders(customerId, TYPE_PORT)
+          .then(function (orders) {
+            var orderDetailPromises = [];
+            _.forEach(orders, function (order) {
+              orderDetailPromises.push(
+                getOrder(customerId, order.uuid).then(function (orderDetail) {
+                  return orderDetail;
+                }));
+            });
+            return $q.all(orderDetailPromises);
+          })
+      );
+      return $q.all(pendingOrdersWithDetail).then(_.flatten);
+    }
+
+    function queryPendingOrders(customerId, orderType) {
       return TerminusOrderV2Service.query({
         customerId: customerId,
-        orderId: orderId
+        type: orderType,
+        status: PENDING
+      }).$promise;
+    }
+
+    function getOrder(customerId, orderId) {
+      return TerminusOrderV2Service.get({
+        customerId: customerId,
+        orderId: orderId,
       }).$promise;
     }
 
     function getFormattedNumberOrders(customerId) {
-      return TerminusOrderV2Service.get({
+      return TerminusOrderV2Service.query({
         customerId: customerId
       }).$promise.then(function (orders) {
         var promises = [];

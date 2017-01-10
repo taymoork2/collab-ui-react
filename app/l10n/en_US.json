@@ -5162,7 +5162,8 @@
     "getCountError": "Failed to fetch record counts.",
     "phoneNumbers": "Phone Numbers",
     "assignedTo": "Assigned to",
-    "inProgress": "In Progress"
+    "inProgress": "In Progress",
+    "quantity": "Quantity: {{count}}"
   },
   "messengerCiSync": {
     "authRedirectHeading": "Redirect Messenger Users to Common Identity Login Flow",
