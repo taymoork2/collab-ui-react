@@ -3,20 +3,19 @@ class UserStatusReportComponentCtrl implements ng.IComponentController {
   private userStatuses: any;
 
   /* @ngInject */
-  constructor(
-    private $modal,
-  ) {  }
+  constructor(private $modal, ) {
+  }
 
   public openUserStatusReportModal = () => {
-      this.$modal.open({
-          controller: 'ExportUserStatusesController',
-          controllerAs: 'exportUserStatusesCtrl',
-          templateUrl: 'modules/hercules/service-specific-pages/components/user-status-report/export-user-statuses.html',
-          type: 'small',
-          resolve: {
-            userStatusSummary: () => this.userStatuses,
-          },
-      });
+    this.$modal.open({
+      controller: 'ExportUserStatusesController',
+      controllerAs: 'exportUserStatusesCtrl',
+      templateUrl: 'modules/hercules/service-specific-pages/components/user-status-report/export-user-statuses.html',
+      type: 'small',
+      resolve: {
+        userStatusSummary: () => this.userStatuses,
+      },
+    });
   }
 
 }
