@@ -1,23 +1,22 @@
-require('./_user-overview.scss');
-
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .controller('UserOverviewCtrl', UserOverviewCtrl);
+  module.exports = UserOverviewCtrl;
 
   /* @ngInject */
-  function UserOverviewCtrl($http, $scope, $state, $stateParams, $translate, $resource, $window, $q, Auth, Authinfo, Config, FeatureToggleService, Notification, SunlightConfigService, UrlConfig, Userservice, Utils, WebExUtilsFact) {
+  function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window,
+    Authinfo, FeatureToggleService, Notification, SunlightConfigService,
+    Userservice, UserOverviewService) {
     var vm = this;
+
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
     vm.queryuserslist = $stateParams.queryuserslist;
+
     vm.services = [];
     vm.showGenerateOtpLink = false;
     vm.titleCard = '';
     vm.subTitleCard = '';
-    vm.getAccountStatus = getAccountStatus;
     vm.resendInvitation = resendInvitation;
     vm.pendingStatus = false;
     vm.dirsyncEnabled = false;
@@ -33,16 +32,6 @@ require('./_user-overview.scss');
     vm.clickService = clickService;
     vm.actionList = [];
     vm.isSharedMultiPartyEnabled = false;
-
-    if (vm.currentUser.trainSiteNames) {
-      var ciTrainSiteNames = vm.currentUser.trainSiteNames.filter(
-        function (chkSiteUrl) {
-          return WebExUtilsFact.isCIEnabledSite(chkSiteUrl);
-        }
-      );
-
-      vm.currentUser.trainSiteNames = (0 < ciTrainSiteNames.length) ? ciTrainSiteNames : null;
-    }
 
     var msgState = {
       name: $translate.instant('onboardModal.message'),
@@ -72,67 +61,41 @@ require('./_user-overview.scss');
       detail: $translate.instant('onboardModal.freeContactCenter'),
       actionAvailable: true
     };
-    var invitationResource = $resource(UrlConfig.getAdminServiceUrl() + 'organization/:customerId/invitations/:userId', {
-      customerId: '@customerId',
-      userId: '@userId'
-    });
 
     init();
 
     /////////////////////////////
 
     function init() {
-      vm.services = [];
-      FeatureToggleService.atlasSMPGetStatus().then(function (smpStatus) {
-        vm.isSharedMultiPartyEnabled = smpStatus;
-      })
-      .then(initServices)
-      .finally(function () {
-        initActionList();
-        getAccountStatus();
-        updateUserTitleCard();
+
+      $scope.$on('USER_LIST_UPDATED', function () {
+        getCurrentUser();
       });
+
+      $scope.$on('entitlementsUpdated', function () {
+        getCurrentUser();
+      });
+
+      vm.services = [];
+      FeatureToggleService.atlasSMPGetStatus()
+        .then(function (smpStatus) {
+          vm.isSharedMultiPartyEnabled = smpStatus;
+          initServices();
+        })
+        .then(function () {
+          initActionList();
+          updateUserTitleCard();
+          getUserFeatures();
+        });
     }
 
-    function initServices() {
-      if (hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
-        if (getServiceDetails('MS')) {
-          msgState.detail = $translate.instant('onboardModal.paidMsg');
-          msgState.actionAvailable = getDisplayableServices('MESSAGING');
-        }
-      }
-      vm.services.push(msgState);
-
-      if (hasEntitlement('cloudmeetings')) {
-        confState.actionAvailable = getDisplayableServices('CONFERENCING') || _.isArray(vm.currentUser.trainSiteNames);
-        if (vm.currentUser.trainSiteNames) {
-          confState.detail = vm.isSharedMultiPartyEnabled ? $translate.instant('onboardModal.paidAdvancedConferencing') : $translate.instant('onboardModal.paidConfWebEx');
-        }
-      } else if (hasEntitlement('squared-syncup')) {
-        if (getServiceDetails('CF')) {
-          confState.detail = $translate.instant('onboardModal.paidConf');
-        }
-      }
-      vm.services.push(confState);
-
-      if (hasEntitlement('ciscouc')) {
-        if (getServiceDetails('CO')) {
-          commState.detail = $translate.instant('onboardModal.paidComm');
-          commState.actionAvailable = true;
-        }
-      }
-      vm.services.push(commState);
-
-      if (hasEntitlement('cloud-contact-center')) {
-        if (getServiceDetails('CD')) {
-          SunlightConfigService.getUserInfo(vm.currentUser.id).then(
-            function () {
-              setCareCheck(false);
-            }
-          );
-        }
-
-      }
+    function getCurrentUser() {
+      UserOverviewService.getUser(vm.currentUser.id)
+        .then(function (response) {
+          vm.currentUser = response.user;
+          vm.entitlements = response.sqEntitlements;
+          init();
+        });
     }
 
     function initActionList() {
@@ -158,6 +121,10 @@ require('./_user-overview.scss');
       $window.open(url, '_blank');
     }
 
+    function clickService(feature) {
+      $state.go('user-overview.' + feature.state);
+    }
+
     function getDisplayableServices(serviceName) {
       var displayableServices = Authinfo.getServices();
       if (Authinfo.hasAccount()) {
@@ -168,14 +135,7 @@ require('./_user-overview.scss');
       return _.isArray(displayableServices) && (displayableServices.length > 0);
     }
 
-    function hasEntitlement(entitlement) {
-      var index = _.findIndex(vm.currentUser.entitlements, function (ent) {
-        return ent === entitlement;
-      });
-      return index > -1;
-    }
-
-    function getServiceDetails(license) {
+    function hasLicense(license) {
       var userLicenses = vm.currentUser.licenseID;
       if (userLicenses) {
         for (var l = userLicenses.length - 1; l >= 0; l--) {
@@ -186,40 +146,6 @@ require('./_user-overview.scss');
         }
       }
       return false;
-    }
-
-    function getInvitationDetails(invitations, license) {
-      if (invitations) {
-        var idx = _.findIndex(invitations, function (invite) {
-          return invite.id.substring(0, 2) === license && invite.idOperation === "ADD";
-        });
-        if (idx > -1) {
-          if (license === 'CF') {
-            return invitations[idx].id;
-          } else {
-            return true;
-          }
-        } else {
-          if (license === 'CF') {
-            return null;
-          } else {
-            return false;
-          }
-        }
-      }
-      return false;
-    }
-
-    function getCurrentUser() {
-      var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + vm.currentUser.id;
-
-      $http.get(userUrl)
-        .then(function (response) {
-          angular.copy(response.data, vm.currentUser);
-          vm.entitlements = Utils.getSqEntitlements(vm.currentUser);
-          updateUserTitleCard();
-          init();
-        });
     }
 
     function getUserFeatures() {
@@ -248,16 +174,6 @@ require('./_user-overview.scss');
       return Authinfo.isSquaredTeamMember() || Authinfo.isAppAdmin();
     }
 
-    getUserFeatures();
-
-    $scope.$on('USER_LIST_UPDATED', function () {
-      getCurrentUser();
-    });
-
-    $scope.$on('entitlementsUpdated', function () {
-      getCurrentUser();
-    });
-
     function updateUserTitleCard() {
       if (vm.currentUser.displayName) {
         vm.titleCard = vm.currentUser.displayName;
@@ -270,9 +186,11 @@ require('./_user-overview.scss');
       if (vm.currentUser.title) {
         vm.subTitleCard = vm.currentUser.title;
       }
+
       if (_.isArray(vm.currentUser.addresses) && vm.currentUser.addresses.length) {
         vm.subTitleCard += ' ' + (vm.currentUser.addresses[0].locality || '');
       }
+
       if (!vm.subTitleCard && vm.titleCard != vm.currentUser.userName) {
         vm.subTitleCard = vm.currentUser.userName;
       }
@@ -286,73 +204,52 @@ require('./_user-overview.scss');
       vm.showGenerateOtpLink = false;
     }
 
-    function getAccountStatus() {
-      // user status
-      var promises = {
-        isOnlineOrg: Auth.isOnlineOrg()
-      };
-      $q.all(promises).then(function (result) {
-        vm.currentUser.pendingStatus = false;
-        var userHasSignedUp = _.some(vm.currentUser.userSettings, function (userSetting) {
-          return userSetting.indexOf('spark.signUpDate') > 0;
-        });
-        var isActiveUser = !_.isEmpty(vm.currentUser.entitlements) &&
-          (userHasSignedUp || result.isOnlineOrg || hasEntitlement('ciscouc'));
-        vm.pendingStatus = !isActiveUser;
-        vm.currentUser.pendingStatus = vm.pendingStatus;
-      });
+    // update the list of services available to this user
+    // this uses the entitlements returned from the getUser CI call.
+    function initServices() {
 
-      // if no licenses/services found from CI,
-      // then get the invitation list from Cassandra
-      if (_.isEmpty(vm.services)) {
-        invitationResource.get({
-          customerId: Authinfo.getOrgId(),
-          userId: vm.currentUser.id
-        }).$promise.then(function (response) {
-          if (_.isArray(response.effectiveLicenses) && !_.isEmpty(response.effectiveLicenses)) {
-            vm.currentUser.invitations = {
-              ms: false,
-              cf: '',
-              cc: false
-            };
-            if (getInvitationDetails(response.effectiveLicenses, 'MS')) {
-              msgState.detail = $translate.instant('onboardModal.paidMsg');
-              vm.services.push(msgState);
-              vm.currentUser.invitations.ms = true;
-            }
-            var confId = getInvitationDetails(response.effectiveLicenses, 'CF');
-            if (confId) {
-              confState.detail = $translate.instant('onboardModal.paidConf');
-              vm.services.push(confState);
-              vm.currentUser.invitations.cf = confId;
-            }
-            if (getInvitationDetails(response.effectiveLicenses, 'CD')) {
-              SunlightConfigService.getUserInfo(vm.currentUser.id).then(
-                function () {
-                  setCareCheck(true);
-                }
-              );
-            }
-          }
-        });
-      }
-    }
-
-    function setCareCheck(setCCInvitationReqd) {
-      Userservice.getUser(vm.currentUser.id, true, function (data) {
-        if (data.success) {
-          var hasSyncKms = _.find(data.roles, function (r) {
-            return r === Config.backend_roles.spark_synckms;
-          });
-          if (hasSyncKms) {
-            contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
-            vm.services.push(contactCenterState);
-            if (setCCInvitationReqd) {
-              vm.currentUser.invitations.cc = true;
-            }
-          }
+      if (vm.currentUser.hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
+        if (hasLicense('MS')) {
+          msgState.detail = $translate.instant('onboardModal.paidMsg');
+          msgState.actionAvailable = getDisplayableServices('MESSAGING');
         }
-      });
+      }
+      vm.services.push(msgState);
+
+      if (vm.currentUser.hasEntitlement('cloudmeetings')) {
+        confState.actionAvailable = getDisplayableServices('CONFERENCING') || _.isArray(vm.currentUser.trainSiteNames);
+        if (vm.currentUser.trainSiteNames) {
+          confState.detail = vm.isSharedMultiPartyEnabled ? $translate.instant('onboardModal.paidAdvancedConferencing') : $translate.instant('onboardModal.paidConfWebEx');
+        }
+      } else if (vm.currentUser.hasEntitlement('squared-syncup')) {
+        if (hasLicense('CF')) {
+          confState.detail = $translate.instant('onboardModal.paidConf');
+        }
+      }
+      vm.services.push(confState);
+
+      if (vm.currentUser.hasEntitlement('ciscouc')) {
+        if (hasLicense('CO')) {
+          commState.detail = $translate.instant('onboardModal.paidComm');
+          commState.actionAvailable = true;
+        }
+      }
+      vm.services.push(commState);
+
+      if (vm.currentUser.hasEntitlement('cloud-contact-center')) {
+        if (hasLicense('CD')) {
+          SunlightConfigService.getUserInfo(vm.currentUser.id)
+            .then(function () {
+              var hasSyncKms = _.find(vm.currentUser.roles, function (r) {
+                return r === this.Config.backend_roles.spark_synckms;
+              });
+              if (hasSyncKms) {
+                contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+                vm.services.push(contactCenterState);
+              }
+            });
+        }
+      }
     }
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
@@ -365,8 +262,6 @@ require('./_user-overview.scss');
       angular.element('.open').removeClass('open');
     }
 
-    function clickService(feature) {
-      $state.go('user-overview.' + feature.state);
-    }
+
   }
 })();
