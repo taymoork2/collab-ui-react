@@ -1,3 +1,5 @@
+import './_call-park.scss';
+
 import { CallParkComponent } from './callPark.component';
 import callParkNumber from './callParkNumber';
 import callParkMember from './callParkMember';

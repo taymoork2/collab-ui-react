@@ -1049,6 +1049,7 @@
     "trackingId": "Tracking Id: {{trackingId}}.",
     "tryAgain": "Try Again",
     "turnOff": "Turn Off",
+    "assigned": "Assigned",
     "unassigned": "Unassigned",
     "unknown": "Unknown",
     "update": "Update",
@@ -2719,6 +2720,8 @@
     "phoneMenuSubmenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Queue target.",
     "phoneMenuErrorRouteToAATargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Auto Attendant target.",
     "callerInputMenuErrorVariableNameMissing": "{{schedule}} schedule at Caller Input Menu {{at}} is missing a variable name ",
+    "phoneMenuMenuErrorNoInputValuesEntered": "{{schedule}} schedule at Phone Menu {{at}} has no input values entered",
+    "subMenuErrorNoInputValuesEntered": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: SubMenu has no input values entered",
     "callerInputMenuErrorNoInputValuesEntered": "{{schedule}} schedule at Caller Input Menu {{at}} has no input values entered",
     "phoneMenuSubmenuErrorRouteToAATargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input Digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Auto Attendant target.",
     "phoneMenuErrorRouteToHGTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Hunt Group target.",
@@ -3181,7 +3184,8 @@
     "allNumbers": "{count, plural, one{# Number} other{# Numbers}}",
     "pendingNumbers": "{count, plural, one{# Pending Number} other{# Pending Numbers}}",
     "unassignedNumbers": "{count, plural, one{# Unassigned Number} other{# Unassigned Numbers}}",
-    "searchResults": "{count, plural, one{# search result} other{# search results}}"
+    "searchResults": "{count, plural, one{# search result} other{# search results}}",
+    "findNumber": "Find a number..."
   },
   "pstnOrderOverview": {
     "cancelled": "Cancelled",

@@ -2695,6 +2695,11 @@
               host: null
             }
           })
+          .state('hds-cluster-settings', {
+            url: '/services/cluster/hds/:id/settings',
+            template: '<hybrid-data-security-cluster-settings></hybrid-data-security-cluster-settings>',
+            parent: 'main',
+          })
           .state('mediafusion-settings', {
             url: '/services/cluster/mediafusion/:id/settings',
             templateUrl: 'modules/hercules/fusion-pages/mediafusion-settings.html',

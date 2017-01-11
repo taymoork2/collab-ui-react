@@ -68,7 +68,7 @@
       </div>
     </div>
       <!-- paid services: TODO: refactor as a component -->
-    <div class="cs-form__section">
+    <div class="cs-form__section" ng-if="trial.getPaidServicesForDisplay().length">
       <div class="section__info">
         <h4  translate="partnerHomePage.activeServices"></h4>
         <p class="cs-input__help-text" translate="partnerHomePage.activeServicesInformation"></p>
@@ -88,7 +88,7 @@
       <div class="section__info">
         <h4 translate="trials.licenseQuantity"></h5>
       </div>
-      <div class="section__content"><!-- AG: WHY? -->
+      <div class="section__content">
         <formly-form model="trial.trialData.trials" fields="trial.licenseCountFields"></formly-form>
       </div>
     </div>

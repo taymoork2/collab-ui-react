@@ -78,22 +78,22 @@ describe('Huron Auto Attendant', function () {
       // we are going to arbitrarily select the last one
       utils.click(autoattendant.numberDropDownOptions.last());
 
-      // save and assert we see successful save message and save is disabled
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+      utils.click(autoattendant.numberDropDownArrow);
 
-      utils.expectIsDisabled(autoattendant.saveButton);
+      utils.click(autoattendant.numberDropDownOptions.last());
+
+      // No save and until valid Phone Menu - see AutoAttn 922 
 
     }, 60000);
 
     it('should delete a phone number from the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
-      utils.click(autoattendant.numberIconClose);
+      utils.click(autoattendant.numberByNameClose);
+      utils.click(autoattendant.numberByNameClose);
 
-      // save and assert we see successful save message and save is disabled
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-      utils.expectIsDisabled(autoattendant.saveButton);
+      expect(autoattendant.numberByNameCloseAll.count()).toEqual(0);
+
+      // No save and until valid Phone Menu - see AutoAttn 922 
 
     }, 60000);
 
@@ -104,12 +104,7 @@ describe('Huron Auto Attendant', function () {
       // we are going to arbitrarily select the last one
       utils.click(autoattendant.numberDropDownOptions.last());
 
-      // save and assert we see successful save message and save is disabled
-      utils.click(autoattendant.saveButton);
-
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-
-      utils.expectIsDisabled(autoattendant.saveButton);
+      // No save and until valid Phone Menu - see AutoAttn 922 
 
     }, 60000);
 
@@ -128,26 +123,17 @@ describe('Huron Auto Attendant', function () {
 
       $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
 
-      // and save
-      utils.wait(autoattendant.saveButton, 12000);
-
-      utils.expectIsEnabled(autoattendant.saveButton);
-      utils.click(autoattendant.saveButton);
-
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+      // No save and until valid Phone Menu - see AutoAttn 922 
 
       // and delete
       //utils.click(autoattendant.deleteMedia);
       //utils.click(autoattendant.deleteConfirmationModalClose);
 
-      // and save
-      //utils.expectIsEnabled(autoattendant.saveButton);
-      //utils.click(autoattendant.saveButton);
-      //autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-
       utils.click(autoattendant.messageOptions);
-      utils.click(autoattendant.sayMessageOption);
 
+      // No save and until valid Phone Menu - see AutoAttn 922 
+
+      utils.click(autoattendant.sayMessageOption);
     }, 60000);
 
     it('should add SayMessage Message, select Language and Voice to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
@@ -169,12 +155,8 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.sayMessageVoice);
       utils.click(autoattendant.sayMessageVoiceOptions);
 
-      // and save
-      utils.expectIsEnabled(autoattendant.saveButton);
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+      // No save and until valid Phone Menu - see AutoAttn 922 
 
-      utils.expectIsDisabled(autoattendant.saveButton);
     }, 60000);
 
     it('should add Phone Menu Say to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
@@ -182,6 +164,9 @@ describe('Huron Auto Attendant', function () {
       autoattendant.scrollIntoView(autoattendant.phoneMenuSay);
 
       utils.wait(autoattendant.phoneMenuSay, 12000);
+
+      autoattendant.scrollIntoView(autoattendant.phoneMenuMessageOptions);
+      utils.wait(autoattendant.phoneMenuMessageOptions, 12000);
 
       utils.click(autoattendant.phoneMenuMessageOptions);
       utils.click(autoattendant.phoneMenuSayMessageOption);
@@ -207,9 +192,15 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuKeys.first());
 
       autoattendant.scrollIntoView(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
+      utils.wait(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
+
       utils.click(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
       utils.click(autoattendant.phoneMenuAction.first());
+      utils.wait(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first(), 5000);
+
       autoattendant.scrollIntoView(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first());
+      utils.wait(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first(), 5000);
+
       utils.click(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first());
 
     });
@@ -351,11 +342,35 @@ describe('Huron Auto Attendant', function () {
       // On timing issues here, see AUTOATTN-556
       utils.expectCount(autoattendant.phoneMenuAll, 2);
 
+      autoattendant.scrollIntoView(autoattendant.phoneMenuAll.first());
+
       utils.click(autoattendant.saveButton);
 
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+      // should error as it is an invalid phone menu - no inputs
+      autoattendant.assertUpdateError();
 
       // phone menu has been completely tested elsewhere
+
+      // but leave in a saveable state
+
+      // Press add new key plus sign
+      utils.click(autoattendant.repeatPlus);
+
+      //Add Say Message phone menu
+      utils.click(autoattendant.phoneMenuKeys.first());
+      utils.click(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).last());
+      utils.click(autoattendant.phoneMenuAction.first());
+
+      utils.click(autoattendant.phoneMenuActionOptions.first().element(by.linkText('Say Message')));
+      utils.wait(autoattendant.phoneMenuActionTargetsFirstMessageOption, 12000);
+
+      autoattendant.scrollIntoView(autoattendant.phoneMenuActionTargetsFirstMessageOption);
+
+      utils.click(autoattendant.phoneMenuActionTargetsFirstMessageOption, 12000);
+
+      utils.click(autoattendant.phoneMenuActionTargetFirstMessageOptions, 12000);
+
+      utils.sendKeys(autoattendant.phoneMenuActionTargets.first().element(by.tagName('textarea')), "Updated the second phone menu??");
 
     }, 120000);
 

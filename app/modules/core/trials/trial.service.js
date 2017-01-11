@@ -385,11 +385,6 @@
     }
 
     function getAddTrialRoute(isNewImplementation, currentCustomer) {
-      /*var params = {};
-      if (isNewImplementation) {
-        params.mode = 'add';
-        params.curentTrial = currentCustomer;
-      }*/
       var result = {
         path: (isNewImplementation) ? 'trial.info' : 'trialAdd.info',
         params: (isNewImplementation) ? {

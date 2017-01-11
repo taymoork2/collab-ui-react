@@ -1,3 +1,5 @@
+import './_cp-number-lookup.scss';
+
 import { CallParkNumberComponent } from './callParkNumber.component';
 import { CallParkRangeValidator } from './cpValidateRange.directive';
 import { CallParkRangeLengthValidator } from './cpValidateRangeLength.directive';

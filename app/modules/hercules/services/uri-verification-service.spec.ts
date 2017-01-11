@@ -1,43 +1,42 @@
-'use strict';
+describe('URI Verification Service', () => {
 
-describe('URI Verification Service', function () {
   beforeEach(angular.mock.module('Hercules'));
 
-  var service;
+  let service;
 
-  var dvList = [{
+  let dvList = [{
     text: 'pendingdomain.com',
-    status: 'pending'
+    status: 'pending',
   }, {
     text: 'validdomain.com',
-    status: 'verified'
+    status: 'verified',
   }, {
     text: 'validsubdomain.unverified.com',
-    status: 'verified'
+    status: 'verified',
   }, {
     text: 'claimeddomain.com',
-    status: 'claimed'
+    status: 'claimed',
   }];
 
-  beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("DomainManagementService", {
-      getVerifiedDomains: function () {
+  beforeEach(angular.mock.module(($provide) => {
+    $provide.value('DomainManagementService', {
+      getVerifiedDomains: () => {
         return null;
       },
       domainList: dvList,
       states: {
         pending: 'pending',
         verified: 'verified',
-        claimed: 'claimed'
-      }
+        claimed: 'claimed',
+      },
     });
   }));
 
-  beforeEach(inject(function (UriVerificationService) {
+  beforeEach(inject((UriVerificationService) => {
     service = UriVerificationService;
   }));
 
-  it('should return false for invalid uris', function () {
+  it('should return false for invalid uris', () => {
     expect(service.isDomainVerified(dvList)).toBe(false);
     expect(service.isDomainVerified(dvList, null)).toBe(false);
     expect(service.isDomainVerified(dvList, '')).toBe(false);
@@ -45,7 +44,7 @@ describe('URI Verification Service', function () {
     expect(service.isDomainVerified(dvList, 'valid@')).toBe(false);
   });
 
-  it('should return false for valid non-verified domain', function () {
+  it('should return false for valid non-verified domain', () => {
 
     expect(service.isDomainVerified(dvList, 'nonVerifiedDomain.com')).toBe(false); //nonVerifiedDomain.com
     expect(service.isDomainVerified(dvList, 'hostname.nonVerifiedDomain.com')).toBe(false); //hostname.nonVerifiedDomain.com
@@ -66,7 +65,7 @@ describe('URI Verification Service', function () {
 
   });
 
-  it('should return true for valid verified domains', function () {
+  it('should return true for valid verified domains', () => {
 
     expect(service.isDomainVerified(dvList, 'validDomain.com')).toBe(true); //validDomain.com
     expect(service.isDomainVerified(dvList, 'VALIDDOMAIN.com')).toBe(true); //validDomain.com

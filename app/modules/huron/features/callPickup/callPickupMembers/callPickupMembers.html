@@ -20,12 +20,12 @@
       focus-on>
     <p class="input-description" translate="callPickup.memberHint"></p>
     <div class="warning">
-      <div class="pi-cs-input__messages">
+      <div class="cs-input__messages pi-cs-input__messages">
         <div class="message member-warning" translate="callPickup.memberWarning"></div>
       </div>
     </div>
   </div>
-  <div id="cs-card-members">
+  <div class="call-pickup-members">
     <cs-card-layout>
       <cs-card-member
         ng-repeat="member in $ctrl.selectedMembers track by $index"
