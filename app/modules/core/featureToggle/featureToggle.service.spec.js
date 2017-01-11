@@ -7,7 +7,7 @@ describe('FeatureToggleService', function () {
   var userId = '1';
   var getUserMe;
   var getUserFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
-  var userRegex = /.*\/wdm\/api\/v1\/features\/users\.*/;
+  var userRegex = /.*\/feature\/api\/v1\/features\/users\.*/;
   var identityMe = 'https://identity.webex.com/identity/scim/null/v1/Users/me';
   var dirSyncRegex = /.*\/organization\/.*\/dirsync\.*/;
 
