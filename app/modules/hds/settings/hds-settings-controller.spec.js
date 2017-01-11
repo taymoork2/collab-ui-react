@@ -1,45 +1,29 @@
 'use strict';
 
-describe('Controller: CalendarSettingsController', function () {
+describe('Controller: HDSSettingsController', function () {
 
-  beforeEach(angular.mock.module('Hercules'));
-  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module('HDS'));
 
-  var controller, $controller, $rootScope, $scope, $q, ServiceDescriptor;
+  var ctrl, $controller, $rootScope, $scope;
 
-
-  beforeEach(inject(function (_$controller_, _$rootScope_, _$q_, _ServiceDescriptor_) {
+  beforeEach(inject(function (_$controller_, _$rootScope_) {
     $controller = _$controller_;
     $rootScope = _$rootScope_;
-    $q = _$q_;
-    ServiceDescriptor = _ServiceDescriptor_;
-
-    initSpies();
-
   }));
 
-  function initSpies() {
-    spyOn(ServiceDescriptor, 'getDisableEmailSendingToUser').and.returnValue($q.resolve());
-    spyOn(ServiceDescriptor, 'getEmailSubscribers').and.returnValue();
-  }
-
-  function initController(hasMediaFeatureToggle) {
+  function initController() {
     $scope = $rootScope.$new();
-    controller = $controller('CalendarSettingsController', {
-      hasGoogleCalendarFeatureToggle: hasMediaFeatureToggle,
-      ServiceDescriptor: ServiceDescriptor
-    });
+    ctrl = $controller('HDSSettingsController');
     $scope.$apply();
   }
 
-  it('should hide the Google Calendar section if your user is *not* feature toggled', function () {
-    initController(false);
-    expect(controller.googleCalendarSection).toBeUndefined();
+  it('controller should be defined', function () {
+    initController();
+    expect(ctrl).toBeDefined();
   });
-
-  it('should show the Google Calendar section if your user is feature toggled', function () {
-    initController(true);
-    expect(controller.googleCalendarSection).toBeDefined();
+  it('should service model set to trial mode by default', function () {
+    initController(false);
+    expect(ctrl.model.serviceMode).toBe(ctrl.TRIAL);
   });
 
 });
