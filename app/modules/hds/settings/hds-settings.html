@@ -1,28 +1,10 @@
 <div class="fusion-cluster-settings">
   <div class="cs-form">
-    <setting-section setting="hdsSettings.general">
-      <div class="sub-section">
-        <h5 class="sub-section__label" translate="hds.settings.emailNotificationsHeading"></h5>
-        <p class="sub-section__description" translate="hds.settings.emailAdministratorNotification"></p>
-        <tags-input add-on-blur="true"
-                    on-tag-added="hdsSettings.writeConfig()"
-                    on-tag-removed="hdsSettings.writeConfig()"
-                    placeholder={{hdsSettings.localizedAddEmailWatermark}}
-                    ng-model="hdsSettings.emailSubscribers"
-                    type="email"
-                    allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
-        <i class="sub-section__description">{{'hds.settings.emailExample' | translate}}</i>
-        <span class="right" ng-show="true || hdsSettings.savingEmail"><span translate="hds.settings.emailNotificationsSaving"></span> <i class="icon icon-spinner"/></span>
-      </div>
-    </setting-section>
-    <!-- TODO: we need to talk with UE team to see if we can use the standard one, also, check backend API to be standard as well
-    <calendar-email-notifications-section service-id="'spark-hybrid-datasecurity'"></calendar-email-notifications-section>
     <email-notifications-section service-id="'spark-hybrid-datasecurity'"></email-notifications-section>
-    -->
 
     <!-- Service Status -->
     <!-- (copied from) local dialing selection -->
-    <setting-section setting="hdsSettings.servicestatus">
+    <setting-section setting="hdsSettings.servicestatus" class="needs-border-top">
       <div class="sub-section">
         <div class="cs-radio-group" form="settings.form" name="dialingHabit">
           <input
