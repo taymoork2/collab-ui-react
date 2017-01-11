@@ -11,7 +11,7 @@
         <!-- Search By Row-->
         <div class="row">
           <div class="col-md-6 large-3 searchBox">
-            <span class="searchText" translate="ediscovery.searchParameters.searchBy"></span>    
+            <span class="searchText" translate="ediscovery.searchParameters.searchBy"></span>
             <cs-select ng-model="ediscoverySearchCtrl.searchBySelected"
               ng-change="ediscoverySearchCtrl.searchByParameters()"
               options="ediscoverySearchCtrl.searchByOptions"
@@ -20,17 +20,17 @@
           </div>
           <div class="col-md-6" id="midBreak">
             <input cs-input type="text"
-              ng-model="ediscoverySearchCtrl.searchModel" autofocus="true" 
-              ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)"       
+              ng-model="ediscoverySearchCtrl.searchModel" autofocus="true"
+              ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)"
               placeholder="{{ediscoverySearchCtrl.searchPlaceholder}}">
-          </div> 
+          </div>
         </div>
         <!-- Date Range Row -->
         <div class="row">
           <div class="row">
             <span class="searchText" id="smallBreak" translate="common.dateRange"></span>
           </div>
-          <div class="col-md-5 searchBox">   
+          <div class="col-md-5 searchBox">
             <cs-datepicker ng-model="ediscoverySearchCtrl.searchCriteria.startDate" view-format="YYYY-MM-DD"
               placeholder="{{'ediscovery.search.startDatePlaceholder' | translate}}" required>
             </cs-datepicker>
@@ -46,10 +46,10 @@
             <span class="searchText" id="largeBreak" translate="ediscovery.searchParameters.textAndFileName"></span>
             <input class="cs-input" id="textInput" type="text" placeholder="{{'ediscovery.searchParameters.textAndFileNamePlaceholder' | translate}}">
           </div>
-          
+
         </div>
         <div class="row" id="midBreak">
-          <button type="submit" class="btn btn--primary searchButton" translate="{{'common.search' | translate}}"
+          <button type="submit" class="btn btn--primary searchButton" translate="common.search"
           ng-click="ediscoverySearchCtrl.searchByService()"
           ng-disabled="ediscoverySearchCtrl.searchButtonDisabled()"></button>
           <div ng-if="ediscoverySearchCtrl.error">
@@ -78,7 +78,7 @@
         <span>{{ediscoverySearchCtrl.error}}</span>
       </div>
     </div>
-   
+
     <div ng-show="ediscoverySearchCtrl.searchingForRoom">
       <span class="search-spinner">
         <i class="icon icon-spinner"></i>

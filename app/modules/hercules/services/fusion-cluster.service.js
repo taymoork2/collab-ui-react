@@ -430,17 +430,22 @@
     }
 
     function setClusterAllowListInfoForExpressway(clusters) {
-      var emptyExpresswayClusters = _.filter(clusters, function (cluster) {
-        return cluster.targetType === 'c_mgmt' && _.size(cluster.connectors) === 0;
-      });
+      var emptyExpresswayClusters = _.chain(clusters)
+        .filter(function (cluster) {
+          return cluster.targetType === 'c_mgmt' && _.size(cluster.connectors) === 0;
+        })
+        .map(function (cluster) {
+          cluster.isEmptyExpresswayCluster = true;
+          return cluster;
+        })
+        .value();
       if (_.size(emptyExpresswayClusters) === 0) {
         return $q.resolve(clusters);
       }
       return getPreregisteredClusterAllowList()
         .then(function (allowList) {
           return _.map(clusters, function (cluster) {
-            if (_.find(emptyExpresswayClusters, { id: cluster.id })) {
-              cluster.isEmptyExpresswayCluster = true;
+            if (cluster.isEmptyExpresswayCluster) {
               cluster.allowedRedirectTarget = _.find(allowList, { clusterId: cluster.id });
               if (cluster.aggregates && !cluster.allowedRedirectTarget) {
                 cluster.aggregates.state = 'registrationTimeout';
