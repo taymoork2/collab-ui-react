@@ -1,4 +1,5 @@
 import { ExpresswayContainerController } from '../common-expressway-based/expressway-common-container.controller';
+import { Notification } from 'modules/core/notifications';
 
 export class CalendarServiceContainerController extends ExpresswayContainerController {
 
@@ -25,11 +26,11 @@ export class CalendarServiceContainerController extends ExpresswayContainerContr
     /* @ngInject */
     constructor(
         $modal,
-        $state,
-        Notification,
+        $state: ng.ui.IStateService,
+        Notification: Notification,
         private $translate: ng.translate.ITranslateService,
-        ServiceDescriptor: any,
-        USSService: any
+        ServiceDescriptor,
+        USSService,
     ) {
         super($modal, $state, Notification, ServiceDescriptor, USSService, ['squared-fusion-cal'], 'c_cal');
     }

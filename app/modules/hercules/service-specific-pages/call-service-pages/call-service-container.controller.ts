@@ -26,11 +26,11 @@ export class CallServiceContainerController extends ExpresswayContainerControlle
     /* @ngInject */
     constructor(
         $modal,
-        $state,
+        $state: ng.ui.IStateService,
         Notification: Notification,
         private $translate: ng.translate.ITranslateService,
-        ServiceDescriptor: any,
-        USSService: any
+        ServiceDescriptor,
+        USSService,
     ) {
         super($modal, $state, Notification, ServiceDescriptor, USSService, ['squared-fusion-uc'], 'c_ucmc');
         this.addConnectIfEnabled();

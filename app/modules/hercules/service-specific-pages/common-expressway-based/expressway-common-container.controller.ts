@@ -8,13 +8,13 @@ export abstract class ExpresswayContainerController {
 
     /* @ngInject */
     constructor(
-        private $modal: any,
-        private $state: any,
+        private $modal,
+        private $state: ng.ui.IStateService,
         private Notification: Notification,
-        protected ServiceDescriptor: any,
-        protected USSService: any,
+        protected ServiceDescriptor,
+        protected USSService,
         protected servicesId: string[],
-        private connectorType: string
+        private connectorType: string,
     ) {
         this.firstTimeSetup();
         this.extractSummary();

@@ -4,7 +4,7 @@ class UserStatusReportComponentCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $modal: any,
+    private $modal,
   ) {  }
 
   public openUserStatusReportModal = () => {

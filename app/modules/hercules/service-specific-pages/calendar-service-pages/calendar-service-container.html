@@ -1,5 +1,5 @@
 <div class="expressway-service hercules hercules-fix-paragraphs">
-    <cs-page-header title="hercules.hybridServiceNames.squared-fusion-cal" tabs="$ctrl.tabs" back="true" back-url="$ctrl.backState"></cs-page-header>
+    <cs-page-header title="hercules.hybridServiceNames.squared-fusion-cal" tabs="vm.tabs" back="true" back-url="vm.backState"></cs-page-header>
     <cs-page-sub-header>
         <cs-page-sub-header-left>
             <div style="position:relative">
@@ -7,8 +7,8 @@
             </div>
         </cs-page-sub-header-left>
         <cs-page-sub-header-right>
-            <user-status-report-button user-statuses="$ctrl.userStatusesSummary"></user-status-report-button>
-            <add-hybrid-resource-button modal-window-options="$ctrl.addResourceModal"></add-hybrid-resource-button>
+            <user-status-report-button user-statuses="vm.userStatusesSummary"></user-status-report-button>
+            <add-hybrid-resource-button modal-window-options="vm.addResourceModal"></add-hybrid-resource-button>
         </cs-page-sub-header-right>
     </cs-page-sub-header>
     <div ui-view="calendarServiceView" class="content-container"></div>

@@ -2846,7 +2846,7 @@
           .state('calendar-service', {
             templateUrl: 'modules/hercules/service-specific-pages/calendar-service-pages/calendar-service-container.html',
             controller: 'CalendarServiceContainerController',
-            controllerAs: '$ctrl',
+            controllerAs: 'vm',
             params: {
               clusterId: null
             },
@@ -2891,7 +2891,7 @@
           .state('call-service', {
             templateUrl: 'modules/hercules/service-specific-pages/call-service-pages/call-service-container.html',
             controller: 'CallServiceContainerController',
-            controllerAs: '$ctrl',
+            controllerAs: 'vm',
             params: {
               clusterId: null
             },
