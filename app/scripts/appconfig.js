@@ -1045,14 +1045,12 @@
               }
             },
             resolve: {
-              currentUser: /* @ngInject */ function ($http, $stateParams, Config, Utils, Authinfo, UrlConfig) {
-                var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUserId;
-                return $http.get(userUrl)
+              currentUser: /* @ngInject */ function (UserOverviewService, $stateParams) {
+                return UserOverviewService.getUser($stateParams.currentUserId)
                   .then(function (response) {
-                    angular.copy(response.data, this.currentUser);
-                    this.entitlements = Utils.getSqEntitlements(this.currentUser);
-                    return response.data;
-                  }.bind($stateParams));
+                    $stateParams.currentUser = response.user;
+                    $stateParams.entitlements = response.sqEntitlements;
+                  });
               }
             },
             params: {
@@ -2844,28 +2842,20 @@
             }
           })
           .state('calendar-service', {
-            templateUrl: 'modules/hercules/service-specific-cluster-lists/service-specific-cluster-list-container.html',
-            controller: 'ExpresswayServiceController',
-            controllerAs: 'exp',
-            data: {
-              connectorType: 'c_cal'
-            },
+            templateUrl: 'modules/hercules/service-specific-pages/calendar-service-pages/calendar-service-container.html',
+            controller: 'CalendarServiceContainerController',
+            controllerAs: 'vm',
             params: {
               clusterId: null
             },
             parent: 'main',
             abstract: true,
-            resolve: {
-              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
-              }
-            }
           })
           .state('calendar-service.list', {
             url: '/services/calendar',
             views: {
-              fullPane: {
-                templateUrl: 'modules/hercules/service-specific-cluster-lists/service-specific-cluster-list.html'
+              calendarServiceView: {
+                templateUrl: 'modules/hercules/service-specific-pages/calendar-service-pages/calendar-service-resources.html'
               }
             },
             params: {
@@ -2875,7 +2865,7 @@
           .state('calendar-service.settings', {
             url: '/services/calendar/settings',
             views: {
-              fullPane: {
+              calendarServiceView: {
                 controllerAs: 'calendarSettings',
                 controller: 'CalendarSettingsController',
                 templateUrl: 'modules/hercules/service-settings/calendar-service-settings.html'
@@ -2897,27 +2887,19 @@
             template: '<google-calendar-settings-page ng-if="$resolve.hasGoogleCalendarFeatureToggle"></google-calendar-settings-page>',
           })
           .state('call-service', {
-            templateUrl: 'modules/hercules/service-specific-cluster-lists/service-specific-cluster-list-container.html',
-            controller: 'ExpresswayServiceController',
-            controllerAs: 'exp',
-            data: {
-              connectorType: 'c_ucmc'
-            },
+            templateUrl: 'modules/hercules/service-specific-pages/call-service-pages/call-service-container.html',
+            controller: 'CallServiceContainerController',
+            controllerAs: 'vm',
             params: {
               clusterId: null
             },
             parent: 'main',
-            resolve: {
-              hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
-              }
-            }
           })
           .state('call-service.list', {
             url: '/services/call',
             views: {
-              fullPane: {
-                templateUrl: 'modules/hercules/service-specific-cluster-lists/service-specific-cluster-list.html'
+              callServiceView: {
+                templateUrl: 'modules/hercules/service-specific-pages/call-service-pages/call-service-resources.html'
               }
             },
             params: {
@@ -2927,7 +2909,7 @@
           .state('call-service.settings', {
             url: '/services/call/settings',
             views: {
-              fullPane: {
+              callServiceView: {
                 controllerAs: 'callServiceSettings',
                 controller: 'CallServiceSettingsController',
                 templateUrl: 'modules/hercules/service-settings/call-service-settings.html'

@@ -13,7 +13,7 @@ describe('Controller: DevicesCtrlHuron', function () {
   };
 
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _CsdmHuronUserDeviceService_, _FeatureToggleService_, _Userservice_, _Authinfo_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _CsdmHuronUserDeviceService_, _CsdmDeviceService_, _FeatureToggleService_, _Userservice_, _Authinfo_) {
     $scope = _$rootScope_.$new();
     $scope.userOverview = userOverview;
     $stateParams = _$stateParams_;
@@ -47,6 +47,7 @@ describe('Controller: DevicesCtrlHuron', function () {
       }
     };
 
+    spyOn(_CsdmDeviceService_, 'fetchDevicesForUser').and.returnValue($q.when({}));
     spyOn(CsdmHuronUserDeviceService, 'create').and.returnValue(poller);
     spyOn(poller, 'getDeviceList').and.returnValue($q.when(deviceList));
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(false));

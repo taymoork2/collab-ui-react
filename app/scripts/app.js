@@ -74,6 +74,7 @@
     require('modules/core/notifications').default,
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/healthMonitor/healthService'),
+    require('modules/core/users').default,
     require('modules/core/scripts/services/storage'),
     require('modules/core/scripts/services/localize'),
     require('modules/core/scripts/services/utils'),

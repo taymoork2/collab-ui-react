@@ -169,7 +169,7 @@ describe('Controller: AddResourceController', function () {
       $window: windowMock,
       $translate: translateMock,
       connectorType: newConnectorType,
-      servicesId: 'squared-fusion-cal',
+      serviceId: 'squared-fusion-cal',
       ClusterService: clusterServiceMock,
       FusionClusterService: fusionClusterServiceMock,
       firstTimeSetup: false,

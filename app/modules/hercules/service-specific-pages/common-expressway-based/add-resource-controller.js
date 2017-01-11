@@ -7,7 +7,7 @@
 
 
   /* @ngInject */
-  function AddResourceController($modalInstance, $window, $translate, connectorType, servicesId, firstTimeSetup, Notification, FusionClusterService, FusionUtils, $modal, $state, ResourceGroupService, FeatureToggleService) {
+  function AddResourceController($modalInstance, $window, $translate, connectorType, serviceId, firstTimeSetup, Notification, FusionClusterService, FusionUtils, $modal, $state, ResourceGroupService, FeatureToggleService) {
     var vm = this;
     vm.connectors = [];
     vm.warning = warning;
@@ -17,7 +17,7 @@
     vm.hostname = '';
     vm.releaseChannel = 'stable';
     vm.connectorType = connectorType;
-    vm.servicesId = servicesId;
+    vm.serviceId = serviceId;
     vm.preregistrationCompletedGoToExpressway = false;
     vm.provisioningToExistingExpresswayCompleted = false;
     vm.gettingResourceGroupInput = false;
@@ -26,7 +26,7 @@
     vm.firstTimeSetup = firstTimeSetup;
     vm.welcomeScreenAccepted = !firstTimeSetup;
     vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
-    vm.localizedServiceName = $translate.instant('hercules.serviceNames.' + vm.servicesId[0]);
+    vm.localizedServiceName = $translate.instant('hercules.serviceNames.' + vm.serviceId);
     vm.localizedManagementConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
     vm.localizedAddNewExpressway = $translate.instant('hercules.addResourceDialog.registerNewExpressway');
     vm.localizedAddNewExpresswayHelp = $translate.instant('hercules.addResourceDialog.registerNewExpresswayHelp');
@@ -48,7 +48,7 @@
       required: $translate.instant('common.invalidRequired')
     };
     vm.clustername = '';
-    vm.localizedHostNameHelpText = $translate.instant('hercules.expresswayClusterSettings.renameClusterDescription');
+    vm.localizedHostNameHelpText = $translate.instant('hercules.addResourceDialog.nameHelptext');
     vm.localizedClusternameWatermark = $translate.instant('hercules.addResourceDialog.clusternameWatermark');
 
     vm.selectedCluster = '';
@@ -233,7 +233,7 @@
     }
 
     function getIconClassForService() {
-      return FusionUtils.serviceId2Icon(vm.servicesId[0]);
+      return FusionUtils.serviceId2Icon(vm.serviceId);
     }
 
     function closeSetupModal() {
@@ -242,13 +242,13 @@
         return;
       }
       $modal.open({
-        templateUrl: 'modules/hercules/add-resource/confirm-setup-cancel-dialog.html',
-        type: 'dialog'
+        templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/confirm-setup-cancel-dialog.html',
+        type: 'dialog',
       })
         .result.then(function (isAborting) {
           if (isAborting) {
-            $modalInstance.close();
             $state.go('services-overview');
+            $modalInstance.dismiss();
           }
         });
     }

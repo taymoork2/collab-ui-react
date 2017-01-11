@@ -7,7 +7,7 @@
 <div class="modal-body media-modal-text">
   <span ng-if="disableServiceDialog.step === '1'">
     <p>
-      <span translate="{{'mediaFusion.deactivate.deregister'}}"/>
+      <span translate="mediaFusion.deactivate.deregister"></span>
       <div class="media-cluster-list" ng-repeat="ecp in disableServiceDialog.clusterNames">
         {{ecp}}</br>
       </div>
@@ -19,7 +19,7 @@
           <div class="cs-input-group cs-input-checkbox">
             <input type="checkbox" id="individualcheckbox" ng-model="disableServiceDialog.checkboxModel">
             <label for="individualcheckbox">
-              <span translate="{{'mediaFusion.deactivate.ready'}}"/>
+              <span translate="mediaFusion.deactivate.ready"></span>
             </label>
           </div>
         </div>
@@ -29,12 +29,12 @@
 
   <span ng-if="disableServiceDialog.step === '2'">
     <p>
-      <span translate="{{'mediaFusion.deactivate.areYou'}}"/><br>
-      <span translate="{{'mediaFusion.deactivate.future'}}"/>
+      <span translate="mediaFusion.deactivate.areYou"></span><br>
+      <span translate="mediaFusion.deactivate.future"></span>
     </p>
     <br>
     <p>
-      <span translate="{{'mediaFusion.deactivate.complete'}}"/>
+      <span translate="mediaFusion.deactivate.complete"></span>
     </p>
   </span>
 
