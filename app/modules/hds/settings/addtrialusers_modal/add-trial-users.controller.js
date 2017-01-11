@@ -9,7 +9,7 @@
   function AddTrialUsersController($translate, MailValidatorService, Notification) {
     var vm = this;
     vm.emailTrialUsers = '';
-    vm.localizedAddEmailWatermark = $translate.instant('hds.settings.emailNotificationsWatermark');
+    vm.localizedAddEmailWatermark = $translate.instant('hds.addtrialusers.emailNotificationsWatermark');
     vm.savingEmail = false;
 
     // TODO: get existing emails of the trial users here IF add trial users needs to show existing users.
