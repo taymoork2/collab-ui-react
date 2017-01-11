@@ -14,6 +14,7 @@ class GoogleCalendarSettingsCtrl implements ng.IComponentController {
   ) {}
 
   public $onInit() {
+    this.extractSummary();
     this.subscribeStatusesSummary = this.USSService.subscribeStatusesSummary('data', this.extractSummary.bind(this));
   }
 

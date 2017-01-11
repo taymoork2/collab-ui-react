@@ -27,8 +27,7 @@
       <div class="hercules-sip-settings">
       <p class="sub-section__description">
         <span class="sub-section__label" translate="hercules.settings.call.sipDomainHeading"></span>
-        <i tooltip="{{'hercules.settings.call.sipDomainButtonTooltip' |
-  translate}}"
+        <i tooltip="{{'hercules.settings.call.sipDomainButtonTooltip' | translate}}"
            tooltip-placement="right"
            tooltip-trigger="mouseenter"
            class="icon icon-information sip-domain-icon"></i>
@@ -118,7 +117,7 @@
                ng-click="callServiceSettings.confirmCertDelete(cert)"
                popover-trigger="mouseenter"
                popover-placement="left"
-               popover="hercules.settings.call.certificateDeleteTooltip">
+               popover="{{'hercules.settings.call.certificateDeleteTooltip' | translate}}">
               </i>
             </td>
           </tr>
