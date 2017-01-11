@@ -1,3 +1,4 @@
+require('./_add-resource.scss');
 
 class AddResourceComponentCtrl implements ng.IComponentController {
 
