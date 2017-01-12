@@ -22,6 +22,41 @@ require('modules/core/reports/amcharts-export.scss');
       $state.go('login');
     }
 
+    // Models Selection
+    vm.modelsSelected = [];
+    vm.modelOptions = [];
+    // Will have format ala this.
+    /*
+    vm.modelOptions = [
+      {
+        'value': 'Cisco TelePresence SX10',
+        'label': 'Cisco TelePresence SX10',
+        isSelected: false
+      },
+      {
+        'value': 'Cisco TelePresence MX200 G2',
+        'label': 'Cisco TelePresence MX200 G2',
+        isSelected: false
+      },
+      {
+        'value': 'Cisco Spark Board 55',
+        'label': 'Cisco Spark Board 55',
+        isSelected: false
+      },
+      {
+        'value': 'Cisco TelePresence DX70',
+        'label': 'Cisco TelePresence DX70',
+        isSelected: false
+      },
+      {
+        'value': 'Cisco TelePresence DX80',
+        'label': 'Cisco TelePresence DX80',
+        isSelected: false
+      }
+    ];
+    */
+    vm.selectModelsPlaceholder = 'Select models to filter on';
+
     vm.leastUsedDevices = [];
     vm.mostUsedDevices = [];
 
@@ -48,6 +83,8 @@ require('modules/core/reports/amcharts-export.scss');
     vm.timeSelected = vm.timeOptions[0];
 
     function timeUpdate() {
+      vm.modelsSelected = [];
+      vm.modelOptions = [];
       DeviceUsageSplunkMetricsService.reportOperation(DeviceUsageSplunkMetricsService.eventTypes.timeRangeSelected, vm.timeSelected);
       vm.deviceFilter = vm.deviceOptions[0];
       switch (vm.timeSelected.value) {

@@ -3,7 +3,8 @@
     <cs-page-sub-header-left tabs="deviceUsage.tabs">
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <cs-select id="timeFilter" name="timeFilter" class='customer-report-filter' ng-model="deviceUsage.timeSelected" options="deviceUsage.timeOptions" on-change-fn="deviceUsage.timeUpdate()"></cs-select>
+        <cs-select id="timeFilter" name="timeFilter" class="customer-report-filter" ng-model="deviceUsage.timeSelected" options="deviceUsage.timeOptions" on-change-fn="deviceUsage.timeUpdate()"></cs-select>
+        <cs-select class="model-filter" ng-if="deviceUsage.modelOptions.length > 0" ng-model="deviceUsage.modelsSelected" options="deviceUsage.modelOptions" placeholder="deviceUsage.selectModelsPlaceholder" multi="true" singular="Model" plural="Models"></cs-select>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
 
@@ -53,11 +54,11 @@
     <div id="device-usage-total-chart" class="device-usage-total-chart">
     </div>
   </div>
-</div>
-
-<div ng-show="deviceUsage.loading" class="loading-reports-indicator">
-  <div class="loading-text">
-    <span translate="reportsPage.usageReports.collectingData"></span>
-    <div cs-loader class="loader-example--small"></div>
   </div>
-</div>
+
+  <div ng-show="deviceUsage.loading" class="loading-reports-indicator">
+    <div class="loading-text">
+      <span translate="reportsPage.usageReports.collectingData"></span>
+      <div cs-loader class="loader-example--small"></div>
+    </div>
+  </div>
