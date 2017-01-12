@@ -154,13 +154,32 @@
   },
   "metricsLabels": [{
     "number": 14554,
-    "text": "callMetrics.totalCalls"
+    "text": "callMetrics.totalCalls",
+    "hidden": false
   }, {
     "number": 169298,
-    "text": "callMetrics.callMinutes"
+    "text": "callMetrics.callMinutes",
+    "hidden": false
   }, {
-    "number": "0.35",
-    "text": "callMetrics.failureRate"
+    "number": "0.35%",
+    "text": "callMetrics.failureRate",
+    "hidden": false
+  }],
+  "qualityLabels":[{
+    "class": "good",
+    "number": 4284,
+    "text": "mediaQuality.good",
+    "hidden": false
+  }, {
+    "class": "fair",
+    "number": 52,
+    "text": "mediaQuality.fair",
+    "hidden": false
+  }, {
+    "class": "poor",
+    "number": 53,
+    "text": "mediaQuality.poor",
+    "hidden": false
   }],
   "exportMenu": [{
     "id": "saveAs",

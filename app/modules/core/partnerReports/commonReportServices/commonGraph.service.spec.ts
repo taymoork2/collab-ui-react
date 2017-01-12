@@ -3,6 +3,7 @@ describe('Service: Common Graph Service', () => {
   const CURSOR: string = 'cursor';
   const COLUMN: string = 'column';
   const LINE: string = 'line';
+  const SINGLE_LINE: string = 'singleLine';
   const AXIS: string = 'axis';
   const LEGEND: string = 'legend';
   const NUMFORMAT: string = 'numFormat';
@@ -26,6 +27,7 @@ describe('Service: Common Graph Service', () => {
     expect(this.CommonGraphService.getBaseVariable(NUMFORMAT)).toEqual(responseData.baseVariables[NUMFORMAT]);
     expect(this.CommonGraphService.getBaseVariable(BALLOON)).toEqual(responseData.baseVariables[BALLOON]);
     expect(this.CommonGraphService.getBaseVariable(PREFIXES)).toEqual(responseData.baseVariables[PREFIXES]);
+    expect(this.CommonGraphService.getBaseVariable(SINGLE_LINE)).toEqual(responseData.baseVariables[SINGLE_LINE]);
 
     let exportVariable = this.CommonGraphService.getBaseVariable(EXPORT);
     expect(exportVariable).toEqual(responseData.baseVariables[EXPORT]);

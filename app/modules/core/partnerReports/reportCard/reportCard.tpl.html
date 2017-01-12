@@ -2,7 +2,7 @@
   <article>
     <header>
       <span class='report-section-header' translate="{{::$ctrl.options.headerTitle}}"></span>
-      <i ng-if="$ctrl.isPopover()" class='icon icon-information' tooltip="{{::$ctrl.getPopoverText()}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="true"></i>
+      <i ng-if="$ctrl.isPopover()" class='icon icon-information' tooltip="{{::$ctrl.getPopoverText()}}" tooltip-trigger="mouseenter" tooltip-placement="bottom" tooltip-animation="true"></i>
       <div ng-if="$ctrl.exportDropdown" class="grid-filter dropdown pull-right">
         <a ng-click="$ctrl.toggleExportMenu()">
           <i class='icon icon-three-dots export-dots'></i>
@@ -19,7 +19,7 @@
     <section class="report-{{$ctrl.options.reportType}}">
       <p>{{$ctrl.getDescription($ctrl.options.description)}}</p>
       <cs-select ng-if="$ctrl.dropdown" id="{{::$ctrl.options.id}}Filter" class='report-dropdown' ng-model="$ctrl.dropdown.selected" options="$ctrl.dropdown.array" on-change-fn="$ctrl.dropdown.click()" is-disabled="$ctrl.dropdown.disabled"></cs-select>
-      <div ng-if="!$ctrl.isTable()" id="{{::$ctrl.options.id}}Chart" ng-class="{'active-chart': $ctrl.isSet() && $ctrl.options.animate, 'barchart': !$ctrl.isDonut(), 'barchart-shift': !$ctrl.isDonut() && $ctrl.dropdown, 'timechartDiv': $ctrl.isDonut()}"></div>
+      <div ng-if="!$ctrl.isTable()" id="{{::$ctrl.options.id}}Chart" ng-class="{'active-chart': $ctrl.isSet() && $ctrl.options.animate, 'axischart': !$ctrl.isDonut(), 'axischart-shift': !$ctrl.isDonut() && $ctrl.dropdown, 'timechartDiv': $ctrl.isDonut(), 'label-chart': !$ctrl.isDonut() && $ctrl.labels}"></div>
       <table ng-if="$ctrl.isTable()" class="table table-bordered" ng-class="{'dummyTable': $ctrl.options.table.dummy}">
         <thead>
           <th ng-repeat="header in $ctrl.options.table.headers" class="bold vertical-center {{header.class}}">{{$ctrl.getHeader(header.title)}}</th>
@@ -45,10 +45,16 @@
           <span translate='reportsPage.noCustomerData'></span>
         </h3>
       </div>
-      <div class="row" ng-if="$ctrl.isSet() && $ctrl.labels">
-        <div ng-repeat="label in $ctrl.labels" class="columns medium-4 label-display">
-          <p class="label-number">{{label.number}}</p>
-          <span class="label-text" translate='{{label.text}}'></span>
+      <div class="row" ng-if="$ctrl.isSet() && $ctrl.labels" ng-class="{'line-labels': !$ctrl.isDonut() && $ctrl.labels}">
+        <div ng-repeat="label in $ctrl.labels" class="columns medium-4 label-display" ng-click="label.click()" ng-class="{'label-click': label.click}">
+          <p class="label-number" ng-class="$ctrl.getClass(label)">{{label.number}}</p>
+          <span class="label-text" translate='{{::label.text}}'></span>
+        </div>
+      </div>
+      <div class="row" ng-if="$ctrl.tooltip">
+        <div class="columns tooltip-column">
+          <span class="tooltip-title" translate="{{::$ctrl.tooltip.title}}"></span>
+          <i class="icon icon-information tooltip-icon" tooltip="{{::$ctrl.getTranslation($ctrl.tooltip.text)}}" tooltip-trigger="mouseenter" tooltip-animation="true"></i>
         </div>
       </div>
 

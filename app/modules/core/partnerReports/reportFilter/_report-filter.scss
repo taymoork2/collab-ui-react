@@ -1,3 +1,9 @@
-.visible-report-filter {
-  display: block;
+.report-filter {
+  .filter-icon {
+    position: relative;
+    left: vr-adjust(-12);
+  }
+  .visible-report-filter {
+    display: block;
+  }
 }

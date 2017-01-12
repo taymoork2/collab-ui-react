@@ -71,7 +71,7 @@ export class ReportConstants {
       value: 0,
       label: this.$translate.instant('reportsPage.week'),
       description: this.$translate.instant('reportsPage.week2'),
-      min: 1,
+      min: 0,
       max: this.DAYS,
     };
   }

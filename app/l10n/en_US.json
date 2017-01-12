@@ -521,8 +521,6 @@
     "lastTwelveWeeks2": "last twelve weeks",
     "custom": "Custom",
     "custom2": "custom selection",
-    "fromDate": "From ",
-    "toDate": "To ",
     "customerLoadError": "There was an error while loading the customer list.",
     "unauthorizedError": "User is not authorized to access the customer reports.",
     "conversationError": "There was an error while loading room and file data.",
@@ -687,7 +685,9 @@
     "mediaQualityGraphError": "There was an error while loading call quality data for the selected customer(s).",
     "packetLossDefinition": "When determining call quality, packet loss is calculated as the percentage of lost packets during the call. If the loss ratio is less than 1.5%, then the call is classified as 'Good'.  If the loss ratio is between 1.5% and 3%, then the call is classified as 'Fair'. All remaining calls, where the loss ratio is greater than 3%, are classified as 'Poor'.",
     "customerError": "There was an error while loading call quality data.",
-    "minutes": "Minutes"
+    "minutes": "Minutes",
+    "avgMinutes": "Average Minutes",
+    "minTooltip": "Click on a quality number to toggle the good, fair or poor call metrics on and off the graph."
   },
   "callMetrics": {
     "calls": "Calls",
