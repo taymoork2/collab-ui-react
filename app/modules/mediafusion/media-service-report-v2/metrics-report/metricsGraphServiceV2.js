@@ -47,8 +47,8 @@
     var availabilityStatus = $translate.instant('mediaFusion.metrics.availabilityStatus');
     var availabilityOfHost = $translate.instant('mediaFusion.metrics.availabilityOfHost');
     var clusterTitle = $translate.instant('mediaFusion.metrics.clusterTitle');
-    var availabilityLegendCluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.metricsRed }];
-    var availabilityLegendAllcluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.metricsRed }, { 'title': partialTitle, 'color': chartColors.metricYellow }];
+    var availabilityLegendCluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.negativeDarker }];
+    var availabilityLegendAllcluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.negativeDarker }, { 'title': partialTitle, 'color': chartColors.attentionBase }];
 
     return {
       setUtilizationGraph: setUtilizationGraph,
@@ -327,7 +327,7 @@
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       } else if (utilizationChart !== null && !_.isUndefined(utilizationChart)) {
-        if (data[0].colorTwo === chartColors.dummyGray) {
+        if (data[0].colorTwo === chartColors.grayLightTwo) {
           isDummy = true;
         }
         var startDuration = 1;
@@ -352,7 +352,7 @@
         utilizationChart.validateData();
         return utilizationChart;
       } else {
-        if (data[0].colorTwo === chartColors.dummyGray) {
+        if (data[0].colorTwo === chartColors.grayLightTwo) {
           isDummy = true;
         }
 
@@ -365,7 +365,7 @@
         utilizationChart.chartCursor.valueLineEnabled = true;
         utilizationChart.chartCursor.valueBalloonsEnabled = true;
         utilizationChart.chartCursor.oneBalloonOnly = true;
-        utilizationChart.chartCursor.balloonColor = chartColors.grayLight;
+        utilizationChart.chartCursor.balloonColor = chartColors.grayLightTwo;
         if (isDummy) {
           utilizationChart.chartCursor.valueLineBalloonEnabled = false;
           utilizationChart.chartCursor.valueLineEnabled = false;

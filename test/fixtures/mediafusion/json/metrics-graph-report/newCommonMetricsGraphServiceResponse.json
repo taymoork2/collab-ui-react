@@ -4,14 +4,14 @@
       "type": "column",
       "fillAlphas": 1,
       "lineAlpha": 0,
-      "balloonColor": "#ccc"
+      "balloonColor": "#D7D7D8"
     },
     "smoothedLine": {
       "type": "smoothedLine",
-      "lineColor": "#ccc",
+      "lineColor": "#D7D7D8",
       "lineThickness": 2,
-      "balloonColor": "#ccc",
-      "negativeLineColor": "#ccc",
+      "balloonColor": "#D7D7D8",
+      "negativeLineColor": "#D7D7D8",
       "negativeBase": 100
     },
     "line": {
@@ -23,20 +23,20 @@
       "hidden": false
     },
     "axis": {
-      "axisColor": "#ccc",
-      "gridColor": "#ccc",
-      "color": "#444",
+      "axisColor": "#D7D7D8",
+      "gridColor": "#D7D7D8",
+      "color": "#343537",
       "gridAlpha": 0,
       "axisAlpha": 1,
       "tickLength": 0,
-      "titleColor": "#444",
+      "titleColor": "#343537",
       "fontFamily": "CiscoSansTT Light"
     },
     "guideaxis": {
-      "axisColor": "#ccc",
-      "gridColor": "#ccc",
-      "color": "#444",
-      "titleColor": "#ccc",
+      "axisColor": "#D7D7D8",
+      "gridColor": "#D7D7D8",
+      "color": "#343537",
+      "titleColor": "#D7D7D8",
       "fontFamily": "CiscoSansTT Light",
       "gridAlpha": 0,
       "axisAlpha": 1,
@@ -50,7 +50,7 @@
       }]
     },
     "legend": {
-      "color": "#444",
+      "color": "#343537",
       "autoMargins": false,
       "align": "center",
       "position": "bottom",
@@ -74,7 +74,7 @@
       "adjustBorderColor": true,
       "borderThickness": 1,
       "fillAlpha": 1,
-      "fillColor": "#fff",
+      "fillColor": "#FFFFFF",
       "fixedPosition": true,
       "shadowAlpha": 0
     },
@@ -133,7 +133,7 @@
     "startEffect": "easeOutSine",
     "addClassNames": true,
     "fontFamily": "CiscoSansTT Extra Light",
-    "backgroundColor": "#fff",
+    "backgroundColor": "#FFFFFF",
     "backgroundAlpha": 1,
     "autoMarginOffset": 25,
     "marginLeft": 60,

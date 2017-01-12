@@ -3,6 +3,7 @@
 
   var chartColors = {
     // Toolkit Colors
+    alertsBase: '#F96452',
     attentionBase: '#F5A623',
     brandWhite: '#FFFFFF',
     ctaBase: '#43A942',
@@ -18,6 +19,7 @@
     grayLightThree: '#EBEBEC',
     grayLightFour: '#F5F5F6',
     negativeBase: '#F5483F',
+    negativeDarker: '#D03D35',
     peopleBase: '#14A792',
     peopleLight: '#6ec9bc',
     peopleLighter: '#C9EBE6',
@@ -27,25 +29,11 @@
 
     // Non-Toolkit Colors
     colorPurple: '#8E5ACF',
-    colorLightGreen: '#43A942',
     colorLightGreenFill: '#017900',
-    colorLightRed: '#F96452',
     colorLightRedFill: '#FF0000',
-    colorLightYellow: '#F5A623',
     colorLightYellowFill: '#FFA200',
-    dummyGray: '#ECECEC',
-    dummyGrayFillDark: '#D7D7D8',
-    dummyGrayFillDarker: '#AEAEAF',
-    dummyGrayFillLight: '#F5F5F6',
-    dummyGrayFillLighter: '#EBEBEC',
-    dummyGrayLight: '#F3F3F3',
     gray: '#aaa',
-    grayDarkest: '#444',
-    grayLight: '#ccc',
-    metricBlue: '#049FD9',
-    metricDarkGreen: '#417505',
-    metricsRed: '#D03D35',
-    metricYellow: '#F5A623'
+    metricDarkGreen: '#417505'
   };
 
   angular
