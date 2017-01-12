@@ -6,7 +6,7 @@
     .controller('HDSSettingsController', HDSSettingsController);
 
   /* @ngInject */
-  function HDSSettingsController($modal, $log) {
+  function HDSSettingsController($modal) {
     var vm = this;
     vm.TRIAL = 'trial';    // service status trial/production mode
     vm.PRODUCTION = 'production';
@@ -14,7 +14,7 @@
     vm.openEditTrialUsersModal = openEditTrialUsersModal;
 
     vm.servicestatus = {
-      title: 'hds.settings.servicestatus_title'
+      title: 'hds.settings.servicestatusTitle'
     };
 
     var DEFAULT_SERVICE_MODE = vm.TRIAL;
@@ -40,7 +40,5 @@
         type: 'small'
       });
     }
-
-    $log.info('Started dialog');
   }
 }());

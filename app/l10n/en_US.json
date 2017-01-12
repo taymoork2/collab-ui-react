@@ -2237,7 +2237,7 @@
       "nonodes": "No Nodes Registered"
     },
     "settings": {
-      "servicestatus_title": "Service Status",
+      "servicestatusTitle": "Service Status",
       "serviceTrialModeTitle": "Trial Mode",
       "serviceTrialModeDesc": "Trial Started Month DD, YYYY at HH:MM PM",
       "serviceProductionModeTitle": "Production Mode",
@@ -2245,7 +2245,7 @@
       "addTrialUsers": "Add Trial Users",
       "editTrialUsers": "Edit Users in Trial"
     },
-    "addtrialusers": {
+    "addTrialUsers": {
       "modalTitle": "Assign Data Security to Users",
       "modalHeading": "Manually Assign Users",
       "modalDesc": "Enter the email addresses of the users that will be assigned to the Data Security Service",
@@ -2253,7 +2253,7 @@
       "emailExample": "For example: John Doe john.doe@email.com, Kate Williams kate.williams@email.com",
       "modalSST": "Start Service Trial"
     },
-    "edittrialusers": {
+    "editTrialUsers": {
       "modalTitle": "Edit Data Security Trial Users",
       "modalHeadingAddUser": "To Add Users to this Service Trial",
       "modalAddUserDesc1": "&bull; Go to the Users page",

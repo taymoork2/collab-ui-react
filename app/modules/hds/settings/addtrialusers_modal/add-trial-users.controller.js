@@ -9,37 +9,40 @@
   function AddTrialUsersController($translate, MailValidatorService, Notification) {
     var vm = this;
     vm.emailTrialUsers = '';
-    vm.localizedAddEmailWatermark = $translate.instant('hds.addtrialusers.emailNotificationsWatermark');
+    vm.localizedAddEmailWatermark = $translate.instant('hds.addTrialUsers.emailNotificationsWatermark');
     vm.savingEmail = false;
+    vm.addUser = addUser;
+    vm.removeUser = removeUser;
+    vm.saveTrialUsers = saveTrialUsers;
 
     // TODO: get existing emails of the trial users here IF add trial users needs to show existing users.
     //       from the UE, it seems only new trial users here.
 
-    vm.addUser = function () {
+    function addUser() {
       var emailTrialUsers = _.map(vm.emailTrialUsers, function (data) {
         return data.text;
-      }).toString();
+      }).join(',');
       if (isValidEmails(emailTrialUsers)) {
         vm.savingEmail = true;
       }
-    };
+    }
 
-    vm.removeUser = function () {
+    function removeUser() {
       var emailTrialUsers = _.map(vm.emailTrialUsers, function (data) {
         return data.text;
-      }).toString();
+      }).join(',');
       if (isValidEmails(emailTrialUsers)) {
         vm.savingEmail = true;
       }
-      if (0 == vm.emailTrialUsers.length) {
+      if (vm.emailTrialUsers.length === 0) {
         vm.savingEmail = false;
       }
-    };
+    }
 
-    vm.saveTrialUsers = function () {
+    function saveTrialUsers() {
       var emailTrialUsers = _.map(vm.emailTrialUsers, function (data) {
         return data.text;
-      }).toString();
+      }).join(',');
       if (isValidEmails(emailTrialUsers)) {
         // TODO: use the real API when available
         /*ServiceDescriptor.setEmailSubscribers('squared-fusion-uc', emailSubscribers, function (statusCode) {
@@ -52,7 +55,7 @@
         });*/
         vm.savingEmail = false;
       }
-    };
+    }
 
     function isValidEmails(emails) {
       if (emails && !MailValidatorService.isValidEmailCsv(emails)) {

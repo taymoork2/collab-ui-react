@@ -26,12 +26,12 @@
             cs-input-label="{{:: 'hds.settings.serviceProductionModeTitle' | translate}}"
             cs-input-help-text="{{:: 'hds.settings.serviceTrialModeDesc' | translate}}">
         </div>
-        <button class="btn btn--people" id="addHDSTrialUser"
+        <button class="btn btn--people"
                 ng-show="hdsSettings.model.serviceMode === hdsSettings.TRIAL"
                 ng-click="hdsSettings.openAddTrialUsersModal()"
                 translate="hds.settings.addTrialUsers">
         </button>
-        <button class="btn btn--people" id="editHDSTrialUser"
+        <button class="btn btn--people"
                 ng-show="hdsSettings.model.serviceMode === hdsSettings.TRIAL"
                 ng-click="hdsSettings.openEditTrialUsersModal()"
                 translate="hds.settings.editTrialUsers">
