@@ -9,7 +9,7 @@ require('modules/core/reports/amcharts-export.scss');
     .controller('DeviceUsageCtrl', DeviceUsageCtrl);
 
   /* @ngInject */
-  function DeviceUsageCtrl($log, $q, $translate, $scope, DeviceUsageTotalService, Notification, DeviceUsageSplunkMetricsService, ReportConstants, deviceUsageFeatureToggle, $state) {
+  function DeviceUsageCtrl($log, $q, $translate, $scope, DeviceUsageTotalService, DeviceUsageExportService, Notification, DeviceUsageSplunkMetricsService, ReportConstants, deviceUsageFeatureToggle, $state, $modal) {
     var vm = this;
     var amChart;
     var apiToUse = 'backend';
@@ -68,7 +68,6 @@ require('modules/core/reports/amcharts-export.scss');
     vm.exporting = false;
     vm.noDataForRange = false;
 
-    vm.exportRawData = exportRawData;
     vm.init = init;
     vm.timeUpdate = timeUpdate;
 
@@ -340,11 +339,41 @@ require('modules/core/reports/amcharts-export.scss');
       return result;
     }
 
-    function exportRawData() {
-      vm.exporting = true;
-      var exportStarted = moment();
-      DeviceUsageTotalService.exportRawData(dateRange.start, dateRange.end, apiToUse).then(function () {
-        //$log.info("export finished");
+    var exportProgressDialog;
+    vm.openExportProgressTracker = function () {
+      exportProgressDialog = $modal.open({
+        templateUrl: 'modules/core/customerReports/deviceUsage/deviceUsageExport/devices-usage-export-progress.html',
+        type: 'dialog',
+        controller: function () {
+          var vm = this;
+          vm.cancelExport = function () {
+            DeviceUsageExportService.cancelExport();
+          };
+        },
+        controllerAs: 'vm',
+      });
+      exportProgressDialog.opened.then(function () {
+        vm.exporting = true;
+        exportStarted = moment();
+        DeviceUsageExportService.exportData(dateRange.start, dateRange.end, apiToUse, vm.exportStatus);
+      });
+    };
+
+    vm.startDeviceUsageExport = function () {
+      $modal.open({
+        templateUrl: "modules/core/customerReports/deviceUsage/deviceUsageExport/devices-usage-export.html",
+        type: 'dialog'
+      }).result.then(function () {
+        vm.openExportProgressTracker();
+      }, function () {
+        vm.exporting = false;
+      });
+    };
+
+    var exportStarted;
+    vm.exportStatus = function (percent) {
+      if (percent === 100) {
+        exportProgressDialog.close();
         var now = moment();
         var data = {
           timeSelected: vm.timeSelected,
@@ -352,13 +381,16 @@ require('modules/core/reports/amcharts-export.scss');
         };
         DeviceUsageSplunkMetricsService.reportOperation(DeviceUsageSplunkMetricsService.eventTypes.fullReportDownload, data);
         vm.exporting = false;
-      })
-      .catch(function (err) {
-        $log.warn("Export failed", err);
+        var title = $translate.instant('reportsPage.usageReports.export.exportCompleted');
+        var text = $translate.instant('reportsPage.usageReports.export.deviceUsageListReadyForDownload');
+        Notification.success(text, title);
+      } else if (percent === -1) {
+        exportProgressDialog.close();
         vm.exporting = false;
-        Notification.notify("An error occured while exporting usage data", 'error');
-      });
-    }
+        var warn = $translate.instant('reportsPage.usageReports.export.deviceUsageExportFailedOrCancelled');
+        Notification.warning(warn);
+      }
+    };
 
   }
 

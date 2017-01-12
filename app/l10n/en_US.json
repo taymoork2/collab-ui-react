@@ -561,6 +561,15 @@
         "all": "All",
         "roomSystems": "DX, MX, and SX Devices",
         "sparkBoard": "Spark Board"
+      },
+      "export": {
+        "deviceUsageExportTitle": "Export Device Usage Attributes to CSV",
+        "deviceUsageExportDescription": "Gathering data for export may take a while. During this time you cannon sign out or refresh your browser, or the export will be cancelled.",
+        "export": "Export",
+        "deviceUsageExportInProgress": "Exporting Device Usage Attributes to CSV",
+        "exportCompleted": "Export completed",
+        "deviceUsageListReadyForDownload": "Your device usage list has been compiled and is ready to download.",
+        "deviceUsageExportFailedOrCancelled": "Device Usage Export failed or was cancelled."
       }
     }
   },

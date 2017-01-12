@@ -3,7 +3,7 @@
 describe('Controller: DeviceUsageCtrl', function () {
 
   beforeEach(angular.mock.module('Core'));
-  var DeviceUsageTotalService, DeviceUsageSplunkMetricsService;
+  var DeviceUsageTotalService, DeviceUsageSplunkMetricsService, DeviceUsageExportService;
   var $controller;
   var controller;
   var splunkService;
@@ -11,19 +11,22 @@ describe('Controller: DeviceUsageCtrl', function () {
   var $q;
   var $state;
   var Notification;
+  var $modal;
 
   afterEach(function () {
     DeviceUsageTotalService = DeviceUsageSplunkMetricsService = $controller = controller = splunkService = $scope = $q = $state = undefined;
   });
 
-  beforeEach(inject(function (_$q_, _$rootScope_, _DeviceUsageTotalService_, _DeviceUsageSplunkMetricsService_, _$controller_, _$state_, _Notification_) {
+  beforeEach(inject(function (_$q_, _$rootScope_, _DeviceUsageTotalService_, _DeviceUsageExportService_, _DeviceUsageSplunkMetricsService_, _$controller_, _$state_, _Notification_, _$modal_) {
     DeviceUsageTotalService = _DeviceUsageTotalService_;
+    DeviceUsageExportService = _DeviceUsageExportService_;
     DeviceUsageSplunkMetricsService = _DeviceUsageSplunkMetricsService_;
     $controller = _$controller_;
     $scope = _$rootScope_.$new();
     $q = _$q_;
     $state = _$state_;
     Notification = _Notification_;
+    $modal = _$modal_;
 
     sinon.stub(DeviceUsageTotalService, 'makeChart');
     DeviceUsageTotalService.makeChart.returns(amchartMock());
@@ -78,72 +81,85 @@ describe('Controller: DeviceUsageCtrl', function () {
       done();
     });
 
-    describe('export', function () {
+    it('splunk is reported when date range is selected', function () {
+      controller.timeUpdate();
+      expect(splunkService.callCount).toBe(1);
+    });
+
+    describe('export device usage data', function () {
+      var fakeModal;
 
       beforeEach(function () {
-        sinon.stub(DeviceUsageTotalService, 'getDataForLastNTimeUnits');
-        DeviceUsageTotalService.getDataForLastNTimeUnits.returns($q.when([]));
-        sinon.stub(DeviceUsageTotalService, 'exportRawData');
-        sinon.stub(Notification, 'notify');
-      });
 
-      it('exporting raw data successful', function (done) {
-        DeviceUsageTotalService.exportRawData.returns($q.when());
+        fakeModal = {
+          result: {
+            then: function (okCallback, cancelCallback) {
+              this.okCallback = okCallback;
+              this.cancelCallback = cancelCallback;
+            }
+          },
+          opened: {
+            then: function (okCallback) {
+              okCallback();
+            }
+          },
+          close: function (item) {
+            this.result.okCallback(item);
+          },
+          dismiss: function (type) {
+            this.result.cancelCallback(type);
+          }
+        };
+        spyOn($modal, 'open').and.returnValue(fakeModal);
+        spyOn(Notification, 'success');
+        spyOn(Notification, 'warning');
+        spyOn(DeviceUsageExportService, 'exportData');
+
         controller.init();
-        expect(controller.exporting).toBeFalsy();
         expect(controller.timeSelected.value).toBe(0);
-        controller.exportRawData();
-        expect(controller.exporting).toBeTruthy();
-        $scope.$apply();
-
-        // Initally, last 7 days are selected
-        var expectStartDate = moment().subtract(7, 'days').format("YYYY-MM-DD");
-        var expectEndDate = moment().subtract(1, 'days').format("YYYY-MM-DD");
-
-        expect(DeviceUsageTotalService.exportRawData).toHaveBeenCalledWith(expectStartDate, expectEndDate, sinon.match.any);
-        expect(controller.exporting).toBeFalsy();
-        done();
       });
 
-      it('exporting raw data fails', function (done) {
-        DeviceUsageTotalService.exportRawData.returns($q.reject());
-        controller.init();
-        controller.exportRawData();
+      it('starts export and shows progress dialog after acknowledged in initial dialog', function () {
+        controller.startDeviceUsageExport();
+        expect($modal.open).toHaveBeenCalled();  // initial dialog
+        fakeModal.close(); // user acks the export
+        expect($modal.open).toHaveBeenCalled(); // progress dialog
+        expect(DeviceUsageExportService.exportData).toHaveBeenCalled();
         expect(controller.exporting).toBeTruthy();
-        $scope.$apply();
-        expect(Notification.notify).toHaveBeenCalledWith(sinon.match.any, 'error');
+      });
+
+      it('does not export device usage data after cancelled in initial dialog', function () {
+        controller.startDeviceUsageExport();
+        expect($modal.open).toHaveBeenCalled();
+        fakeModal.dismiss(); // used cancels the export
+        expect(DeviceUsageExportService.exportData).not.toHaveBeenCalled();
         expect(controller.exporting).toBeFalsy();
-        done();
+        expect(splunkService.callCount).toBe(0);
+      });
+
+      it('exports status 100 indicates export progress finished', function () {
+        controller.startDeviceUsageExport();
+        fakeModal.close();
+        expect(controller.exporting).toBeTruthy();
+        controller.exportStatus(100);
+        expect(Notification.success).toHaveBeenCalledWith('reportsPage.usageReports.export.deviceUsageListReadyForDownload', 'reportsPage.usageReports.export.exportCompleted');
+        expect(controller.exporting).toBeFalsy();
+        expect(splunkService.callCount).toBe(1);
+      });
+
+      it('export cancelled (for some reason) mid-flight closes the dialog and shows a toaster', function () {
+        controller.startDeviceUsageExport();
+        fakeModal.close();
+        expect(controller.exporting).toBeTruthy();
+
+        controller.exportStatus(-1);
+        expect(Notification.warning).toHaveBeenCalledWith('reportsPage.usageReports.export.deviceUsageExportFailedOrCancelled');
+        expect(controller.exporting).toBeFalsy();
+        expect(splunkService.callCount).toBe(0);
       });
 
     });
 
-    describe('splunk reporting', function () {
-      it('when date range is selected', function () {
-        controller.timeUpdate();
-        expect(splunkService.callCount).toBe(1);
-      });
-
-      it('when exporting raw data', function (done) {
-
-        sinon.stub(DeviceUsageTotalService, 'exportRawData');
-        DeviceUsageTotalService.exportRawData.returns($q.when());
-
-        sinon.stub(DeviceUsageTotalService, 'getDataForLastNTimeUnits');
-        DeviceUsageTotalService.getDataForLastNTimeUnits.returns($q.when([]));
-
-        controller.init();
-
-        expect(controller.exporting).toBeFalsy();
-        expect(controller.timeSelected.value).toBe(0);
-        controller.exportRawData();
-        expect(controller.exporting).toBeTruthy();
-        $scope.$apply();
-        expect(controller.exporting).toBeFalsy();
-        expect(splunkService.callCount).toBe(1);
-        done();
-      });
-    });
   });
 
   var amchartMock = function () {
