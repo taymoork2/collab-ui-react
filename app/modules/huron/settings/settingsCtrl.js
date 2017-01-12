@@ -1268,7 +1268,7 @@
                 siteDialDigit: site.siteSteeringDigit,
                 voicemailPrefixLabel: site.siteSteeringDigit.concat(site.siteCode)
               };
-              vm.model.site.extensionLength = vm.model.previousLength = vm.previousModel.site.extensionLength = site.extensionLength;
+              vm.model.site.extensionLength = vm.model.previousLength = site.extensionLength;
               vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
                 return timezone.id === site.timeZone;
               });
@@ -1301,6 +1301,7 @@
               } else {
                 vm.model.serviceNumberWarning = true;
               }
+              vm.previousModel.site = _.cloneDeep(vm.model.site);
             });
         }
       });
@@ -1800,11 +1801,26 @@
       }
     }
 
+    function shouldUpdateVoicemailPostalCode() {
+      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled) {
+        if (vm.model.companyVoicemail.companyVoicemailEnabled && !vm.previousModel.companyVoicemail.companyVoicemailEnabled) {
+          return true;
+        } else if (vm.model.site.siteSteeringDigit.siteDialDigit !== vm.previousModel.site.siteSteeringDigit.siteDialDigit) {
+          return true;
+        } else if (vm.model.site.extensionLength !== vm.previousModel.site.extensionLength) {
+          return true;
+        } else if (!_.eq(_.toSafeInteger(vm.model.site.siteCode), _.toSafeInteger(vm.previousModel.site.siteCode))) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+
     function updateVoicemailPostalCode() {
-      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled
-        && (vm.model.site.siteSteeringDigit.siteDialDigit !== vm.previousModel.site.siteSteeringDigit.siteDialDigit
-        || vm.model.site.extensionLength !== vm.previousModel.site.extensionLength
-        || !_.eq(_.toSafeInteger(vm.model.site.siteCode), _.toSafeInteger(vm.previousModel.site.siteCode)))) {
+      if (shouldUpdateVoicemailPostalCode()) {
         var postalCode = [vm.model.site.siteSteeringDigit.siteDialDigit, vm.model.site.siteCode, vm.model.site.extensionLength].join('-');
         return ServiceSetup.updateVoicemailPostalcode(postalCode, vm.voicemailUserTemplate.objectId)
           .catch(function (response) {
@@ -1905,6 +1921,7 @@
         })
         .finally(function () {
           vm.processing = false;
+          vm.previousModel.companyVoicemail.companyVoicemailEnabled = vm.model.companyVoicemail.companyVoicemailEnabled;
           var existingCompanyVoicemailEnabled = savedModel.companyVoicemail.companyVoicemailEnabled;
           savedModel = angular.copy(vm.model);
           if (!existingCompanyVoicemailEnabled &&
