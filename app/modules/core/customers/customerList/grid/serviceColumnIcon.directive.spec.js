@@ -41,7 +41,7 @@ describe('Directive: crServiceColumnIcon', function () {
 
   it('should properly compile a trial tooltip', function () {
     var tooltipHtml = $(compileDirective('roomSystems').children().attr('tooltip-html-unsafe'));
-    verifyTooltip(tooltipHtml, 'trial', 'roomSystems');
+    verifyTooltip(tooltipHtml, 'trial', 'roomSystem');
   });
 
   it('should properly compile an active tooltip', function () {

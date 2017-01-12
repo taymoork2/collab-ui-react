@@ -144,8 +144,9 @@
 
     function activate() {
       vm.csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
-      vm.csdmHuronUserDeviceService.fetch();
-      _.extend(vm.devices, vm.csdmHuronUserDeviceService.getDeviceList());
+      vm.csdmHuronUserDeviceService.fetch().then(function () {
+        _.extend(vm.devices, vm.csdmHuronUserDeviceService.getDeviceList());
+      });
       CsdmDeviceService.fetchDevicesForUser(vm.currentUser.id).then(function (res) {
         _.extend(vm.devices, res);
       }).finally(function () {

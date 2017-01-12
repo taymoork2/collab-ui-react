@@ -1045,14 +1045,12 @@
               }
             },
             resolve: {
-              currentUser: /* @ngInject */ function ($http, $stateParams, Config, Utils, Authinfo, UrlConfig) {
-                var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUserId;
-                return $http.get(userUrl)
+              currentUser: /* @ngInject */ function (UserOverviewService, $stateParams) {
+                return UserOverviewService.getUser($stateParams.currentUserId)
                   .then(function (response) {
-                    angular.copy(response.data, this.currentUser);
-                    this.entitlements = Utils.getSqEntitlements(this.currentUser);
-                    return response.data;
-                  }.bind($stateParams));
+                    $stateParams.currentUser = response.user;
+                    $stateParams.entitlements = response.sqEntitlements;
+                  });
               }
             },
             params: {

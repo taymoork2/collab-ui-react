@@ -583,6 +583,11 @@ describe('Partner Service -', function () {
         expect(result[Config.offerCodes.CF].licenseType).toBe(Config.licenseTypes.CONFERENCING);
       });
 
+      it('should createRoomDeviceMapping with SHARED_DEVICES license type', function () {
+        var result = PartnerService.helpers.createRoomDeviceMapping();
+        expect(result[Config.offerCodes.SD].licenseType).toBe(Config.licenseTypes.SHARED_DEVICES);
+      });
+
       it('should  createLicenseMapping with proper icons', function () {
         var result = PartnerService.helpers.createLicenseMapping();
         expect(result[Config.licenseTypes.COMMUNICATION].icon).toBe('icon-circle-call');
@@ -752,6 +757,60 @@ describe('Partner Service -', function () {
         expect(result).toBeDefined();
         expect(result[0].licenseType).toBe(Config.licenseTypes.CONFERENCING);
         expect(result[0].sub).not.toBeDefined();
+      });
+
+      it('should return an array with (1) shared devices when spark board or room system is present', function () {
+        var options = { isCareEnabled: true, isTrial: false };
+        var licenses = _.cloneDeep(customer.licenseList);
+        licenses.push({
+          offerName: 'SB',
+          licenseType: 'SHARED_DEVICES',
+          volume: 100,
+          isTrial: false
+        });
+        _.each(licenses, function (license) {
+          license.isTrial = true;
+        });
+        licenses[6].isTrial = false;
+        customer = {
+          licenseList: licenses
+        };
+        var result = PartnerService.getFreeOrActiveServices(customer, options);
+        expect(result).toBeDefined();
+        expect(result[0].licenseType).toBe(Config.licenseTypes.SHARED_DEVICES);
+        expect(result[0].sub).toBeDefined();
+        expect(result[0].sub.length).toBe(1);
+      });
+
+      it('should return an array with (2) shared devices when both spark board and room system are present', function () {
+        var options = { isCareEnabled: true, isTrial: false };
+        var licenses = _.cloneDeep(customer.licenseList);
+        licenses.push({
+          offerName: 'SB',
+          licenseType: 'SHARED_DEVICES',
+          volume: 100,
+          isTrial: false
+        });
+        licenses.push({
+          offerName: 'SD',
+          licenseType: 'SHARED_DEVICES',
+          volume: 50,
+          isTrial: false
+        });
+        _.each(licenses, function (license) {
+          license.isTrial = true;
+        });
+        licenses[6].isTrial = false;
+        licenses[7].isTrial = false;
+        customer = {
+          licenseList: licenses
+        };
+        var result = PartnerService.getFreeOrActiveServices(customer, options);
+        expect(result).toBeDefined();
+        expect(result[0].licenseType).toBe(Config.licenseTypes.SHARED_DEVICES);
+        expect(result[0].qty).toBe(150);
+        expect(result[0].sub).toBeDefined();
+        expect(result[0].sub.length).toBe(2);
       });
     });
 

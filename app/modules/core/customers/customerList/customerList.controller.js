@@ -80,7 +80,12 @@ require('./_customer-list.scss');
         isAccountFilter: false
       }, {
         value: 'roomSystems',
-        label: $translate.instant('customerPage.roomSystems'),
+        label: $translate.instant('customerPage.roomSystem'),
+        isSelected: false,
+        isAccountFilter: false
+      }, {
+        value: 'sparkBoard',
+        label: $translate.instant('customerPage.sparkBoard'),
         isSelected: false,
         isAccountFilter: false
       }, {
