@@ -1985,7 +1985,7 @@
       "heading": "Registration"
     },
     "notificationDropdown": {
-      "label": "Service notifications"
+      "label": "{number, plural, one{# notification} other{# notifications}}"
     },
     "fusion": {
       "types": {
