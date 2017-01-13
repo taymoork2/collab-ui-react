@@ -83,10 +83,10 @@
                 <div class="onboard-fieldset"
                   ng-show="multipleSubscriptions.showLicenses(license.billingServiceId, license.isTrial)"
                   ng-repeat="license in msgFeature.licenses | filter:isSubscribeable | orderBy:'billingServiceId'">
-                  <cs-checkbox ckid="{{license.licenseId}}" ng-model="license.model"
-                  label="{{::msgFeature.label | translate}}"></cs-checkbox>
+                  <cs-checkbox ckid="{{license.licenseId}}" ng-model="license.model" ng-if="!isSharedMultiPartyEnabled"
+                  label="{{license.billingServiceId}}"></cs-checkbox>
                   <cs-checkbox ckid="{{license.licenseId}}" ng-model="license.model" ng-if="isSharedMultiPartyEnabled"
-                  label="{{::onboardModal.paidCiscoSparkMessaging | translate}}"></cs-checkbox>
+                  label="{{'onboardModal.paidCiscoSparkMessaging' | translate}}"></cs-checkbox>
                   <span ng-if="isSharedMultiPartyEnabled" class="license-entity under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
                 </div>
             </div>
