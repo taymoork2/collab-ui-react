@@ -98,6 +98,7 @@
     'ct.ui.router.extras.sticky',
     'ct.ui.router.extras.previous',
     'ngAnimate',
+    require('angular-aria'),
     'ngCookies',
     'ngResource',
     'ngSanitize',
