@@ -1104,6 +1104,7 @@
     "remove": "Remove",
     "releaseChannel": "Release Channel",
     "rename": "Rename",
+    "required": "Required",
     "reset": "Reset",
     "resources": "Resources",
     "retry": "Retry",
@@ -6132,6 +6133,12 @@
         "delivered": "Email was delivered.",
         "unsubscribed": "Email can not be delivered because the user unsubscribed."
       }
+    },
+    "org": {
+      "duplicateName": "Organization name already in use",
+      "validationFailure": "Unable to validate",
+      "editNameSuccess": "Organization name successfully updated.",
+      "editNameFailure": "Failed to update customer name."
     }
   },
   "activation": {
