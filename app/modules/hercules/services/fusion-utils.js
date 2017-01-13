@@ -40,7 +40,7 @@
           return ['squared-fusion-mgmt'];
         case 'mf_mgmt':
           return ['squared-fusion-media'];
-        case 'hds_appt':
+        case 'hds_app':
           return ['spark-hybrid-datasecurity'];
         default:
           return [];

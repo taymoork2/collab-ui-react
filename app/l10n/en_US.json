@@ -2073,7 +2073,6 @@
     },
     "resourceGroupSettings": {
       "pageTitle": "{{groupName}} Settings",
-      "releaseChannelHeader": "Release Channel",
       "releaseChannelDescription": "Select the release channel for all Hybrid Services running in this group.",
       "clustersHeader": "Clusters",
       "clustersAssign": "Assign Clusters",
@@ -2207,7 +2206,8 @@
         "complete-registration": "Go to your Hybrid Data Security admin to complete the registration.",
         "registration-timeout": "The registration timed out. Please remove this cluster and register the Hybrid Data Security node again.",
         "registration-timeout-extended": "The registration timed out. Please remove this cluster and register the Hybrid Data Security node again in the Add Resource dialog."
-      }
+      },
+      "upgradeScheduleSubHeader": "Upgrade Schedule"
     },
     "serviceName" : "Hybrid Data Security",
     "serviceStatus": {
@@ -2231,6 +2231,9 @@
       "not_registered": "Registration not completed",
       "urgentUpgradeAvailable": "Urgent upgrade available",
       "registrationTimeout": "Registration timeout"
+    },
+    "softwareUpgrade": {
+      "explanation": "You are about to upgrade {{connectorType}} to version {{newVersion}} on all nodes in your Hybrid Data Security cluster"
     },
     "resources": {
       "page_title": "Hybrid Data Security Service",
