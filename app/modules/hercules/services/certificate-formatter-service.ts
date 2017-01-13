@@ -31,13 +31,13 @@ interface IformattedCertificate {
 }
 
 interface IcertificatesAsMap {
-  EMAILADDRESS?: string;
-  CN?: string;
-  OU?: string;
-  O?: string;
-  L?: string;
-  ST?: string;
-  C?: string;
+  EMAILADDRESS: string;
+  CN: string;
+  OU: string;
+  O: string;
+  L: string;
+  ST: string;
+  C: string;
 }
 
 export class CertificateFormatterService {
@@ -47,18 +47,17 @@ export class CertificateFormatterService {
 
     if (!_.isArray(certificates)) {
        return [];
-     }
+    }
 
     return _.map(certificates, (certificate: ICertificate) => {
       let certificateAsArray = _.get(certificate, 'decoded.subjectDN', '').split(/,(?:\s)(?=(?:(?:[^"]*"){2})*[^"]*$)/);
       let certificatesAsMap: IcertificatesAsMap = _.chain(certificateAsArray)
         .map( (s) => {
-          return s.split('=');
+          const result = s.split('=');
+          result[1] = _.replace(result[1], /^"|"$/g, '');
+          return result;
         })
-        .reduce((map, kv) => {
-          map[kv[0]] = _.replace(kv[1], /^"|"$/g, '');
-          return map;
-        }, {})
+        .fromPairs()
         .value();
       const formattedCertificate: IformattedCertificate = {
         emailAddress: certificatesAsMap.EMAILADDRESS || 'N/A',
