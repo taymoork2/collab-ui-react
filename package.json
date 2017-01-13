@@ -45,7 +45,9 @@
     "webdriver": "webdriver-manager update"
   },
   "dependencies": {
-    "@ciscospark/plugin-encryption": "^0.7.12",
+    "@ciscospark/plugin-encryption": "^0.7.36",
+    "@ciscospark/plugin-search": "^0.7.36",
+    "@ciscospark/spark-core": "^0.7.36",
     "angular": "~1.5.7",
     "angular-animate": "~1.5.5",
     "angular-aria": "~1.5.5",

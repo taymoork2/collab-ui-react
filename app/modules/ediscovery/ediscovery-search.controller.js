@@ -1,11 +1,13 @@
 require('./ediscovery.scss');
+require('@ciscospark/plugin-search');
+var Spark = require('@ciscospark/spark-core').default;
 
 (function () {
   'use strict';
 
   /* @ngInject */
-  function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, $state, $window, EdiscoveryService, EdiscoveryNotificationService,
-    FeatureToggleService, Notification) {
+  function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, $window, EdiscoveryService, EdiscoveryNotificationService,
+    FeatureToggleService, Notification, TokenService) {
     $scope.$on('$viewContentLoaded', function () {
       angular.element('#searchInput').focus();
     });
@@ -13,6 +15,7 @@ require('./ediscovery.scss');
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
     var vm = this;
+    var spark;
     vm.searchByParameters = searchByParameters;
     vm.goToSearchPage = goToSearchPage;
     vm.searchByService = searchByService;
@@ -55,7 +58,7 @@ require('./ediscovery.scss');
     vm.isReportMaxRooms = false;
 
     vm.generateDescription = '';
-    vm.exportOptions = ['CSV', 'PDF'];
+    vm.exportOptions = ['CSV', 'JSON'];
     vm.exportSelected = '' || vm.exportOptions[0];
 
     init($stateParams.report, $stateParams.reRun);
@@ -94,9 +97,7 @@ require('./ediscovery.scss');
     }
 
     function goToSearchPage() {
-      $state.go('ediscovery.search', {
-        report: $stateParams.report
-      });
+      vm.roomInfo = false;
     }
 
     function getStartDate() {
@@ -105,6 +106,18 @@ require('./ediscovery.scss');
 
     function getEndDate() {
       return vm.searchCriteria.endDate;
+    }
+
+    function formatDate(reason, date) {
+      var regex = new RegExp('-', 'g');
+      var replace = '/';
+      var formattedDate;
+      if (reason == 'display') {
+        formattedDate = _.replace(date, regex, replace).split('T')[0];
+      } else if (reason == 'api') {
+        formattedDate = moment(date).toISOString();
+      }
+      return formattedDate;
     }
 
     function dateErrors(start, end) {
@@ -162,15 +175,42 @@ require('./ediscovery.scss');
 
     function advancedSearch() {
       vm.searchingForRoom = true;
-      EdiscoveryService.getArgonautServiceUrl(vm.searchModel, 'kms://cisco.com/keys/7831cef0-f0ad-4327-a170-465c88dab9d1', vm.searchCriteria.startDate, vm.searchCriteria.endDate)
-        .then(function (result) {
-          vm.roomInfo = result;
-          vm.searchResults.numFiles = result.data.numFiles;
-          vm.searchResults.numMessages = result.data.numMessages;
-          vm.searchResults.totalSize = result.data.totalSizeInBytes;
+      vm.searchResults.emailAddresses = [];
+      vm.encryptionKeyUrl = '';
+      vm.encryptedKeywords = '';
+      vm.accessToken = TokenService.getAccessToken();
+      spark = new Spark({
+        credentials: {
+          access_token: vm.accessToken
+        }
+      });
+      spark.mercury.connect()
+        .then(function () {
+          return spark.encryption.kms.createUnboundKeys({
+            count: 1
+          });
         })
-        .finally(function () {
-          vm.searchingForRoom = false;
+        .then(function (result) {
+          vm.encryptionKeyUrl = result[0].uri;
+          return spark.encryption.encryptText(result[0], vm.searchModel);
+        })
+        .then(function (result) {
+          vm.encryptedKeywords = result;
+          var start = formatDate('api', getStartDate());
+          var end = formatDate('api', getEndDate());
+          return EdiscoveryService.getArgonautServiceUrl(vm.encryptedKeywords, vm.encryptionKeyUrl, start, end)
+            .then(function (result) {
+              vm.roomInfo = result;
+              vm.searchCriteria.startDate = formatDate('display', getStartDate());
+              vm.searchCriteria.endDate = formatDate('display', getEndDate());
+              vm.searchResults.emailAddresses.push(vm.searchModel);
+              vm.searchResults.numFiles = result.data.numFiles;
+              vm.searchResults.numMessages = result.data.numMessages;
+              vm.searchResults.totalSize = result.data.totalSizeInBytes;
+            })
+            .finally(function () {
+              vm.searchingForRoom = false;
+            });
         });
     }
 
@@ -178,6 +218,7 @@ require('./ediscovery.scss');
       vm.ongoingSearch = true;
       disableAvalonPolling();
       vm.roomInfo = null;
+      vm.searchResults.emailAddresses = [];
       vm.report = null;
       vm.error = null;
       vm.searchCriteria.roomId = roomId;
@@ -187,11 +228,9 @@ require('./ediscovery.scss');
           return EdiscoveryService.getAvalonRoomInfo(result.avalonRoomsUrl + '/' + roomId);
         })
         .then(function (result) {
-          var regex = new RegExp('-', 'g');
-          var replace = '/';
           vm.roomInfo = result;
-          vm.searchCriteria.startDate = vm.searchCriteria.startDate || _.replace(result.published, regex, replace).split('T')[0];
-          vm.searchCriteria.endDate = result.lastRelevantActivityDate ? _.replace(result.lastRelevantActivityDate, regex, replace).split('T')[0] : vm.searchCriteria.startDate;
+          vm.searchCriteria.startDate = formatDate('display', getStartDate()) || formatDate('display', result.published);
+          vm.searchCriteria.endDate = result.lastRelevantActivityDate ? formatDate('display', getEndDate()) : formatDate('display', result.lastRelevantActivityDate);
           vm.searchCriteria.displayName = result.displayName;
           _.forEach(result.participants.items, function (response) {
             vm.searchResults.emailAddresses.push(response.emailAddress);
@@ -232,7 +271,7 @@ require('./ediscovery.scss');
         state: 'INIT',
         progress: 0
       };
-      EdiscoveryService.createReport(vm.searchCriteria.displayName, vm.searchCriteria.roomId, vm.searchCriteria.startDate, vm.searchCriteria.endDate)
+      EdiscoveryService.createReport(vm.searchCriteria.displayName, vm.searchCriteria.roomId, getStartDate(), getEndDate())
         .then(function (res) {
           vm.currentReportId = res.id;
           runReport(res.runUrl, res.url);
@@ -275,7 +314,7 @@ require('./ediscovery.scss');
     }
 
     function runReport(runUrl, url) {
-      EdiscoveryService.runReport(runUrl, vm.searchCriteria.roomId, url, vm.searchCriteria.startDate, vm.searchCriteria.endDate)
+      EdiscoveryService.runReport(runUrl, vm.searchCriteria.roomId, url, getStartDate(), getEndDate())
         .catch(function () {
           Notification.error('ediscovery.search.runFailed');
           EdiscoveryService.patchReport(vm.currentReportId, {

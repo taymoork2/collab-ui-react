@@ -37,7 +37,7 @@
     }
 
     function getArgonautServiceUrl(emailAddress, encryptionKeyUrl, startDate, endDate) {
-      var url = 'https://argonaut-a.wbx2.com/argonaut/api/v1/compliance/report/size';
+      var url = UrlConfig.getArgonautReportSizeUrl();
       return $http
         .post(url, {
           emailAddress: emailAddress,
@@ -102,6 +102,31 @@
           }
         })
         .then(extractData);
+    }
+
+    //new report generation api using argonaut notes:
+    // caller must pass an options object with the following properties:
+    // - 'emailAddresses' => a list of email addresses as ...
+    // - 'query' => ...
+    // - 'roomIds' => ...
+    // - 'encryptionKeyUrl' => ...
+    // - 'responseUrl' => ...
+    // - 'startDate' => ...
+    // - 'endDate' => ...
+    function generateReport(emailAddresses, query, roomIds, encryptionKeyUrl, responseUrl, startDate, endDate) {
+      var url = UrlConfig.getArgonautReportUrl();
+      var sd = (startDate !== null) ? moment.utc(startDate).toISOString() : null;
+      var ed = (endDate !== null) ? moment.utc(endDate).add(1, 'days').toISOString() : null;
+      return $http
+        .post(url, {
+          emailAddresses: emailAddresses,
+          query: query,
+          roomIds: roomIds,
+          encryptionKeyUrl: encryptionKeyUrl,
+          responseUri: responseUrl,
+          startDate: sd,
+          endDate: ed
+        });
     }
 
     function runReport(runUrl, roomId, responseUrl, startDate, endDate) {
@@ -175,6 +200,7 @@
       getReports: getReports,
       deleteReports: deleteReports,
       createReport: createReport,
+      generateReport: generateReport,
       runReport: runReport,
       patchReport: patchReport,
       deleteReport: deleteReport,
