@@ -1,0 +1,55 @@
+<div class="inline-edit-text">
+  <div
+    ng-if="!$ctrl.editEnabled"
+    class="inline-edit-text-flex">
+    <a href
+      ng-if="$ctrl.showTextLink"
+      ng-click="$ctrl.onTextClick()"
+      class="read-only-text"
+      title="{{$ctrl.value}}"
+      ng-bind="$ctrl.value">
+    </a>
+    <span
+      ng-if="!$ctrl.showTextLink"
+      class="read-only-text"
+      title="{{$ctrl.value}}"
+      ng-bind="$ctrl.value">
+    </span>
+    <i class="icon icon-edit" ng-click="$ctrl.enableEdit()"></i>
+  </div>
+  <form
+    name="$ctrl.form"
+    ng-if="$ctrl.editEnabled"
+    class="inline-edit-text-flex input-wrapper"
+    autocomplete="off"
+    ng-submit="$ctrl.save()">
+    <input
+      type="text"
+      name="editInput"
+      cs-input
+      cs-input-group-size="small-12"
+      cs-input-messages="$ctrl.validationMessages"
+      cs-input-validators="$ctrl.validators"
+      cs-input-async-validators="$ctrl.asyncValidators"
+      select-me
+      required
+      ng-model="$ctrl.newValue"
+      ng-model-options="$ctrl.modelOptions"
+      ng-disabled="$ctrl.saveInProgress"
+      ng-keyup="$ctrl.keyPress($event)"/>
+    <button
+      type="button"
+      ng-click="$ctrl.disableEdit()"
+      class="btn--circle btn--white btn--small">
+      <i class="icon icon-remove"></i>
+    </button>
+    <button
+      cs-btn
+      loading="$ctrl.saveInProgress"
+      type="submit"
+      ng-disabled="!$ctrl.form.$valid"
+      class="btn--circle btn--white btn--small btn--primary">
+      <i class="icon icon-check"></i>
+    </button>
+  </form>
+</div>

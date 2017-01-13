@@ -50,6 +50,8 @@
     .module('Squared')
     .directive('sqEditableInput', sqEditableInput)
     .directive('focusOn', focusOn)
+    .directive('focusMe', focusMe)
+    .directive('selectMe', selectMe)
     .directive('selectText', selectText);
 
   /* @ngInject */
@@ -76,6 +78,30 @@
               $element.focus();
             }
           }, 500);
+        });
+      }
+    };
+  }
+
+  /* @ngInject */
+  function focusMe($timeout) {
+    return {
+      restrict: 'A',
+      link: function ($scope, $element) {
+        $timeout(function () {
+          $element.focus();
+        });
+      }
+    };
+  }
+
+  /* @ngInject */
+  function selectMe($timeout) {
+    return {
+      restrict: 'A',
+      link: function ($scope, $element) {
+        $timeout(function () {
+          $element.select();
         });
       }
     };
