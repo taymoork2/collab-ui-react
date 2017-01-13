@@ -1,19 +1,12 @@
 (function () {
   'use strict';
 
-  module.exports = angular.module('core.featuretoggle', [
-    require('modules/core/config/config'),
-    require('modules/core/scripts/services/authinfo'),
-    require('modules/core/scripts/services/org.service'),
-    require('modules/huron/telephony/telephonyConfig'),
-  ])
-    .factory('HuronFeatureToggleService', HuronFeatureToggleService)
-    .service('FeatureToggleService', FeatureToggleService)
-    .name;
+  module.exports = FeatureToggleService;
 
   /* @ngInject */
-  function FeatureToggleService($http, $q, $resource, $state, Authinfo, HuronFeatureToggleService, UrlConfig, Orgservice) {
+  function FeatureToggleService($http, $q, $resource, $state, Authinfo, HuronConfig, UrlConfig, Orgservice) {
     var features = {
+      requireAcceptTos: 'atlas-tos-required',
       dirSync: 'atlas-dir-sync',
       atlasCareTrials: 'atlas-care-trials',
       atlasCareCallbackTrials: 'atlas-care-callback-trials',
@@ -177,27 +170,40 @@
 
     var toggles = {};
 
+    var huronResource = $resource(HuronConfig.getMinervaUrl() + '/features/users/:userId/developer/:featureName', {
+      userId: '@userId',
+      featureName: '@featureName'
+    },
+      {
+        get: {
+          method: 'GET',
+          cache: true
+        }
+      });
+
     var orgResource = $resource(UrlConfig.getFeatureUrl() + '/features/rules/:id', {
       id: '@id'
-    }, {
-      get: {
-        method: 'GET',
-        cache: true
-      },
-      refresh: {
-        method: 'GET',
-        cache: false
-      }
-    });
+    },
+      {
+        get: {
+          method: 'GET',
+          cache: true
+        },
+        refresh: {
+          method: 'GET',
+          cache: false
+        }
+      });
 
     var userResource = $resource(UrlConfig.getFeatureUrl() + '/features/users/:id', {
       id: '@id'
-    }, {
-      get: {
-        method: 'GET',
-        cache: true
-      }
-    });
+    },
+      {
+        get: {
+          method: 'GET',
+          cache: true
+        }
+      });
 
     var dirSyncConfigurationResource = $resource(UrlConfig.getAdminServiceUrl() + 'organization/:customerId/dirsync', {
       customerId: '@customerId'
@@ -288,7 +294,7 @@
     }
 
     function getHuronToggleForUser(userId, feature) {
-      return HuronFeatureToggleService.get({
+      return huronResource.get({
         userId: userId,
         featureName: feature
       }).$promise.then(function (data) {
@@ -383,9 +389,10 @@
           } else {
             return $q.reject(response);
           }
-        }, null, {
-          cache: false
-        });
+        }, null,
+          {
+            cache: false
+          });
       });
     }
 
@@ -433,17 +440,4 @@
     }
   }
 
-  /* @ngInject */
-  function HuronFeatureToggleService($resource, HuronConfig) {
-    // returns feature toggle value for the given user or user's org
-    return $resource(HuronConfig.getMinervaUrl() + '/features/users/:userId/developer/:featureName', {
-      userId: '@userId',
-      featureName: '@featureName'
-    }, {
-      get: {
-        method: 'GET',
-        cache: true
-      }
-    });
-  }
 })();

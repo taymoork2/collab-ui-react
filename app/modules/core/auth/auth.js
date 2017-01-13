@@ -2,18 +2,16 @@
   'use strict';
 
   module.exports = angular
-    .module('core.auth', [
+    .module('core.auth.auth', [
       'pascalprecht.translate',
-      'ui.router',
+      require('angular-ui-router'),
       require('angular-sanitize'),
       require('modules/core/auth/token.service'),
-      require('modules/core/config/config'),
       require('modules/core/config/oauthConfig'),
       require('modules/core/config/urlConfig'),
       require('modules/core/scripts/services/authinfo'),
       require('modules/core/scripts/services/log'),
       require('modules/core/scripts/services/sessionstorage'),
-      require('modules/core/scripts/services/storage'),
       require('modules/core/scripts/services/utils'),
       require('modules/core/window').default,
       require('modules/huron/compass').default,
