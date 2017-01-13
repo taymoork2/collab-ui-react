@@ -5,35 +5,24 @@
     .module('Huron')
     .controller('SingleNumberReachInfoCtrl', SingleNumberReachInfoCtrl);
 
-  function SingleNumberReachInfoCtrl($scope, $stateParams, RemoteDestinationService, TelephonyInfoService, Notification, $translate, CountryCodes, $q, DialPlanService, Authinfo) {
+  function SingleNumberReachInfoCtrl($scope, $stateParams, $timeout, RemoteDestinationService, TelephonyInfoService, TelephoneNumberService, Notification, $translate, DialPlanService, Authinfo) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.saveSingleNumberReach = saveSingleNumberReach;
     vm.reset = reset;
+    vm.setSnr = setSnr;
     vm.snrInfo = angular.copy(TelephonyInfoService.getTelephonyInfo().snrInfo);
-    vm.customerLocalDialing = false;
     vm.regionCode = '';
 
-    function getCountryInfo(code) {
-      var deferred = $q.defer();
-      var isCountryCodeFound = false;
+    vm.callDestInputs = ['external', 'uri', 'custom'];
+    vm.getRegionCode = getRegionCode;
 
-      if (_.isString(code)) {
-        code = code.toLowerCase();
-        _.forEach(CountryCodes, function (value) {
-          if (code === value.code) {
-            deferred.resolve(value);
-            isCountryCodeFound = true;
-          }
-        });
-        if (!isCountryCodeFound) {
-          deferred.reject();
-        }
-      } else {
-        deferred.reject();
-      }
+    function getRegionCode() {
+      return DialPlanService.getCustomerVoice(Authinfo.getOrgId());
+    }
 
-      return deferred.promise;
+    function setSnr(info) {
+      vm.snrInfo.remoteDest = info;
     }
 
     vm.snrWaitSecondsOptions = [{
@@ -59,34 +48,7 @@
     }];
     vm.snrLineOption = vm.snrOptions[0];
 
-    DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
-      vm.regionCode = response.regionCode;
-      vm.customerLocalDialing = !!vm.regionCode;
-
-      if (!vm.customerLocalDialing) {
-        vm.snrFormFields = [{
-          key: 'remoteDest',
-          type: 'countrylist',
-          templateOptions: {
-            placeholder: $translate.instant('singleNumberReachPanel.snrRemoteDestinationNumberPlaceholder'),
-            inputClass: 'col-sm-12',
-            maxLength: '24',
-            required: true,
-            options: [{
-              name: $translate.instant('singleNumberReachPanel.unitedStates'),
-              code: 'us',
-              number: '1'
-            }, {
-              name: $translate.instant('singleNumberReachPanel.austrailia'),
-              code: 'au',
-              number: '61'
-            }]
-          }
-        }];
-      }
-
-      init();
-    });
+    init();
 
     $scope.$on('telephonyInfoUpdated', function () {
       init();
@@ -98,21 +60,8 @@
 
       if (snrInfo.remoteDest) {
         vm.snrInfo.remoteDest = snrInfo.remoteDest;
-      } else if (snrInfo.destination && vm.customerLocalDialing) {
-        vm.snrInfo.remoteDest = {
-          number: snrInfo.destination,
-          phoneNumber: snrInfo.destination
-        };
       } else if (snrInfo.destination) {
-        getCountryInfo(phoneUtils.getRegionCodeForNumber(snrInfo.destination))
-          .then(function (data) {
-            vm.snrInfo.remoteDest = {
-              name: data.name,
-              code: data.code,
-              number: data.number,
-              phoneNumber: snrInfo.destination
-            };
-          });
+        vm.snrInfo.remoteDest = TelephoneNumberService.getDestinationObject(snrInfo.destination);
       } else {
         resetForm();
       }
@@ -135,8 +84,10 @@
 
     function resetForm() {
       if (vm.form) {
-        vm.form.$setPristine();
-        vm.form.$setUntouched();
+        $timeout(function () {
+          vm.form.$setPristine();
+          vm.form.$setUntouched();
+        }, 100);
       }
     }
 

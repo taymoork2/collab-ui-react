@@ -15,29 +15,28 @@
       <div class="form-group-wrapper" ng-if="snr.snrInfo.singleNumberReachEnabled">
         <div class="form-group">
           <label for="snrDestinationNumber" translate="singleNumberReachPanel.snrRemoteDestinationNumber"></label>
-          <div class="snr-remote-destination-number" ng-if="!snr.customerLocalDialing">
-            <formly-form model="snr.snrInfo" fields="snr.snrFormFields"></formly-form>
-          </div>
-          <div class="snr-remote-destination-number" ng-if="snr.customerLocalDialing">
-            <input
-              cs-input
-              ng-model="snr.snrInfo.remoteDest.phoneNumber" 
-              name="snrDestinationNumber"
-              class="col-sm-6" 
-              type="text">
+          <div class="snr-remote-destination-number">
+            <cs-call-destination
+              model="snr.snrInfo.remoteDest"
+              size="medium-12"
+              inputs="snr.callDestInputs"
+              select-type="select"
+              external-number-region-code-fn="snr.getRegionCode()"
+              on-change-fn="snr.setSnr(model)">
+            </cs-call-destination>
           </div>
         </div>
-
-        <div class="form-group clearfix">
+        <div class="form-group">
           <label for="snrWaitSeconds" translate="singleNumberReachPanel.snrWaitSeconds"></label>
-          <cs-select
-            class="snr-wait-seconds"
-            name="snrWaitSeconds"
-            ng-model="snr.snrWaitSeconds"
-            options="snr.snrWaitSecondsOptions"
-            labelfield="name"
-            valuefield="value">
-          </cs-select>
+          <div class="medium-2 snr-wait-seconds">
+            <cs-select
+              name="snrWaitSeconds"
+              ng-model="snr.snrWaitSeconds"
+              options="snr.snrWaitSecondsOptions"
+              labelfield="name"
+              valuefield="value">
+            </cs-select>
+          </div>
           <span class="snr-wait-seconds-label" translate="singleNumberReachPanel.snrSeconds"></span>
         </div>
       </div>

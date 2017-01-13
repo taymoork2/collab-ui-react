@@ -5,7 +5,7 @@
     .controller('EnterpriseSettingsCtrl', EnterpriseSettingsCtrl);
 
   /* @ngInject */
-  function EnterpriseSettingsCtrl($q, $rootScope, $scope, $timeout, $translate, $window, Authinfo, Config, Log, Notification, ServiceSetup, SSOService, Orgservice, UrlConfig) {
+  function EnterpriseSettingsCtrl($q, $rootScope, $scope, $timeout, $translate, $window, Authinfo, Config, Log, Notification, ServiceSetup, PersonalMeetingRoomManagementService, SSOService, Orgservice, UrlConfig) {
     var strEntityDesc = '<EntityDescriptor ';
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
@@ -29,7 +29,21 @@
       label: $translate.instant('timeZones.America/Los_Angeles')
     };
     var vm = this;
-    vm.inputValue = '';
+
+    vm.pmrField = {
+      inputValue: '',
+      isDisabled: false,
+      isAvailable: false,
+      isButtonDisabled: false,
+      isLoading: false,
+      isConfirmed: null,
+      availableUrlValue: '',
+      isRoomLicensed: false,
+      domainSuffix: UrlConfig.getSparkDomainCheckUrl(),
+      errorMsg: $translate.instant('firstTimeWizard.setPersonalMeetingRoomInputFieldErrorMessage')
+    };
+
+    var pmrField = vm.pmrField;
     vm.timeZoneOptions = [];
     vm._buildTimeZoneOptions = _buildTimeZoneOptions;
     vm.loadTimeZoneOptions = loadTimeZoneOptions;
@@ -44,7 +58,7 @@
       key: 'timeZone',
       type: 'select',
       templateOptions: {
-        inputClass: 'medium-4',
+        inputClass: 'medium-5',
         label: $translate.instant('serviceSetupModal.timeZone'),
         options: [],
         labelfield: 'label',
@@ -61,9 +75,102 @@
     init();
 
     function init() {
-      validatePMRSiteURL();
+      setPMRSiteUrlFromSipDomain();
       updateSSO();
     }
+
+    // Personal Meeting Room Controller code
+
+    function setPMRSiteUrlFromSipDomain() {
+      var pmrSiteUrl = '';
+      Orgservice.getOrg(function (data, status) {
+        if (status === 200) {
+          var sparkDomainStr = UrlConfig.getSparkDomainCheckUrl();
+          var sipCloudDomain = _.get(data.orgSettings, 'sipCloudDomain');
+          pmrSiteUrl = sipCloudDomain ? data.orgSettings.sipCloudDomain.replace(sparkDomainStr, Config.siteDomainUrl.webexUrl) : '';
+          Orgservice.validateSiteUrl(pmrSiteUrl).then(function (response) {
+            if (response.isValid) {
+              pmrField.inputValue = pmrSiteUrl.replace(Config.siteDomainUrl.webexUrl, '');
+              pmrField.isAvailable = true;
+              pmrField.availableUrlValue = pmrField.inputValue;
+              pmrField.isError = false;
+            } else {
+              pmrField.inputValue = '';
+            }
+          });
+        }
+      });
+    }
+
+    vm.checkPMRSiteUrlAvailability = function () {
+      var pmrSiteUrl = pmrField.inputValue + Config.siteDomainUrl.webexUrl;
+      pmrField.isAvailable = false;
+      pmrField.isLoading = true;
+      pmrField.isButtonDisabled = true;
+      pmrField.errorMsg = $translate.instant('firstTimeWizard.setPersonalMeetingRoomInputFieldErrorMessage');
+      return Orgservice.validateSiteUrl(pmrSiteUrl)
+        .then(function (response) {
+          if (response.isValid) {
+            pmrField.isAvailable = true;
+            pmrField.availableUrlValue = pmrField.inputValue;
+            pmrField.isError = false;
+          } else {
+            pmrField.isError = true;
+            pmrField.isButtonDisabled = false;
+          }
+          pmrField.isLoading = false;
+        })
+        .catch(function (response) {
+          if (response.status === 400) {
+            pmrField.errorMsg = $translate.instant('firstTimeWizard.personalMeetingRoomServiceErrorMessage');
+            pmrField.isError = true;
+          } else {
+            Notification.error('firstTimeWizard.personalMeetingRoomServiceErrorMessage');
+          }
+          pmrField.isLoading = false;
+          pmrField.isButtonDisabled = false;
+        });
+    };
+
+    vm._savePersonalMeetingRoomSiteUrl = function () {
+      var url = pmrField.inputValue;
+      if (pmrField.isAvailable && pmrField.isConfirmed) {
+        PersonalMeetingRoomManagementService.addPmrSiteUrl(url)
+          .then(function () {
+            pmrField.isError = false;
+            pmrField.isDisabled = true;
+            pmrField.isButtonDisabled = true;
+            Notification.success('firstTimeWizard.setPersonalMeetingRoomSuccessMessage');
+            $rootScope.$broadcast('DISMISS_PMR_NOTIFICATION');
+          })
+          .catch(function (response) {
+            Notification.errorResponse(response, 'firstTimeWizard.personalMeetingRoomServiceErrorMessage');
+          });
+      }
+    };
+
+    $scope.$on('wizard-enterprise-pmr-event', $scope._savePersonalMeetingRoomSiteUrl);
+
+    vm.validatePmrSiteUrl = function () {
+      if (pmrField.inputValue.length > 40) {
+        pmrField.isError = true;
+      }
+
+      return pmrField.isError;
+    };
+
+    vm.onPmrInputChange = function (inputValue) {
+      if (inputValue !== pmrField.availableUrlValue && !pmrField.isDisabled) {
+        pmrField.isAvailable = false;
+        pmrField.isError = false;
+        pmrField.isButtonDisabled = false;
+        pmrField.isConfirmed = false;
+      } else if (inputValue === pmrField.availableUrlValue) {
+        pmrField.isAvailable = true;
+      }
+    };
+
+    // SSO controller code
 
     function updateSSO() {
       //ssoEnabled should be set already in the userCard.js
@@ -112,24 +219,6 @@
       name: 'finalssoOptions',
       id: 'finalSsoNoProvider'
     }];
-
-    function validatePMRSiteURL() {
-      var pmrSiteUrl = '';
-      Orgservice.getOrg(function (data, status) {
-        if (status == 200) {
-          var sparkDomainStr = UrlConfig.getSparkDomainCheckUrl();
-          var cloudDomain = _.get(data, 'orgSettings.sipCloudDomain', '');
-          pmrSiteUrl = _.replace(cloudDomain, sparkDomainStr, Config.siteDomainUrl.webexUrl);
-          Orgservice.validateSiteUrl(pmrSiteUrl).then(function (response) {
-            if (response.isValid) {
-              vm.inputValue = pmrSiteUrl.replace(Config.siteDomainUrl.webexUrl, '');
-            } else {
-              vm.inputValue = '';
-            }
-          });
-        }
-      });
-    }
 
     $scope.$watch('options.configureSSO', function (updatedConfigureSSOValue) {
       if ($rootScope.ssoEnabled && updatedConfigureSSOValue === 1) {
@@ -394,31 +483,38 @@
     }
 
     function checkNewEntityId() {
-      var start = $scope.idpFile.file.indexOf(strEntityDesc);
-      start = $scope.idpFile.file.indexOf(strEntityId, start) + strEntityId.length;
-      var end = $scope.idpFile.file.indexOf(strEntityIdEnd, start);
-      var newEntityId = $scope.idpFile.file.substring(start, end);
-      return newEntityId;
+      var file = _.get($scope, 'idpFile.file');
+      if (_.isString(file)) {
+        var start = file.indexOf(strEntityDesc);
+        start = file.indexOf(strEntityId, start) + strEntityId.length;
+        var end = file.indexOf(strEntityIdEnd, start);
+        var newEntityId = file.substring(start, end);
+        return newEntityId;
+      }
     }
 
     function checkReqBinding() {
-      var start = $scope.idpFile.file.indexOf(strSignOn);
-      start = $scope.idpFile.file.indexOf(bindingStr, start);
-      var end = $scope.idpFile.file.indexOf(strLocation, start) - strBindingEnd.length;
-      var reqBinding = $scope.idpFile.file.substring(start + bindingStr.length, end);
-      return reqBinding;
+      var file = _.get($scope, 'idpFile.file');
+      if (_.isString(file)) {
+        var start = file.indexOf(strSignOn);
+        start = file.indexOf(bindingStr, start);
+        var end = file.indexOf(strLocation, start) - strBindingEnd.length;
+        var reqBinding = file.substring(start + bindingStr.length, end);
+        return reqBinding;
+      }
     }
 
     $scope.openTest = function () {
-      var entityId = null;
+      var entityId;
+      var reqBinding;
       $scope.testOpened = true;
       SSOService.getMetaInfo(function (data, status) {
         if (data.success) {
           if (data.data.length > 0) {
             entityId = data.data[0].entityId;
-            var reqBinding = checkReqBinding(data);
+            reqBinding = checkReqBinding(data);
           }
-          if (entityId !== null) {
+          if (entityId && reqBinding) {
             var testUrl = UrlConfig.getSSOTestUrl() + '?metaAlias=/' + Authinfo.getOrgId() + '/sp&idpEntityID=' + encodeURIComponent(entityId) + '&binding=' + _BINDINGS + 'HTTP-POST&reqBinding=' + _BINDINGS + reqBinding;
             $window.open(testUrl);
           } else {

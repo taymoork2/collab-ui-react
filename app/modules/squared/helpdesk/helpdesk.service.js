@@ -12,6 +12,7 @@
       searchOrgs: searchOrgs,
       searchOrders: searchOrders,
       resendAdminEmail: resendAdminEmail,
+      editAdminEmail: editAdminEmail,
       getUser: getUser,
       getOrg: getOrg,
       isEmailBlocked: isEmailBlocked,
@@ -37,7 +38,11 @@
       invokeInviteEmail: invokeInviteEmail,
       getAccount: getAccount,
       getOrder: getOrder,
-      getEmailStatus: getEmailStatus
+      getEmailStatus: getEmailStatus,
+      hasBounceDetails: hasBounceDetails,
+      clearBounceDetails: clearBounceDetails,
+      getLatestEmailEvent: getLatestEmailEvent,
+      unixTimestampToUTC: unixTimestampToUTC,
     };
 
     if (!orgCache) {
@@ -134,12 +139,12 @@
 
     function getCorrectedDisplayName(user) {
       var displayName = '';
-      if (user.name != null) {
+      if (user.name) {
         displayName = user.name.givenName ? user.name.givenName : '';
         displayName += user.name.familyName ? ' ' + user.name.familyName : '';
       }
       if (!displayName) {
-        return user.displayName;
+        return user.displayName ? user.displayName : user.userName;
       }
       return displayName;
     }
@@ -156,8 +161,8 @@
       return $http
         .get(url, config)
         .catch(function (error) {
-          error.cancelled = error.config.timeout.cancelled;
-          error.timedout = error.config.timeout.timedout;
+          error.cancelled = _.get(error, 'config.timeout.cancelled', false);
+          error.timedout = _.get(error, 'config.timeout.timedout', false);
           return $q.reject(error);
         });
     }
@@ -191,22 +196,41 @@
     }
 
     function searchOrders(searchString) {
-      // TODO - if (useMock()) {
-      //  return deferredResolve(HelpdeskMockData.orders);
-      //}
-
       return cancelableHttpGET(urlBase + 'commerce/orders/search?webOrderId=' + encodeURIComponent(searchString))
         .then(extractData);
     }
 
     function resendAdminEmail(orderUUID, toCustomer) {
       var url;
-      if (toCustomer === true) {
+      if (toCustomer) {
         url = urlBase + "helpdesk/orders/" + orderUUID + "/actions/resendcustomeradminemail/invoke";
       } else {
         url = urlBase + "helpdesk/orders/" + orderUUID + "/actions/resendpartneradminemail/invoke";
       }
       return $http.post(url).then(extractData);
+    }
+
+    function editAdminEmail(orderUUID, adminEmail, toCustomer) {
+      var url = '';
+      if (_.isUndefined(orderUUID) || !_.isString(orderUUID)) {
+        $q.reject('A proper order UUID must be passed');
+      }
+      if (_.isUndefined(adminEmail) || !_.isString(adminEmail)) {
+        $q.reject('A valid admin email must be passed');
+      }
+      if (_.isUndefined(toCustomer) || !_.isBoolean(toCustomer)) {
+        $q.reject('Need specify email recipient');
+      }
+      var payload = {
+        emailId: adminEmail
+      };
+
+      if (toCustomer) {
+        url = urlBase + "helpdesk/orders/" + orderUUID + "/customerAdminEmail";
+      } else {
+        url = urlBase + "helpdesk/orders/" + orderUUID + "/partnerAdminEmail";
+      }
+      return $http.post(url, payload).then(extractData);
     }
 
     function getUser(orgId, userId) {
@@ -467,7 +491,9 @@
     }
 
     function elevateToReadonlyAdmin(orgId) {
-      return $http.post(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/actions/elevatereadonlyadmin/invoke');
+      return $http
+        .post(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/actions/elevatereadonlyadmin/invoke')
+        .then(USSService.notifyReadOnlyLaunch);
     }
 
     function getHybridStatusesForUser(userId, orgId) {
@@ -503,10 +529,37 @@
         .then(extractData);
     }
 
+    function getLatestEmailEvent(email) {
+      return service.getEmailStatus(email).then(function (emailEvents) {
+        return _.first(emailEvents);
+      });
+    }
+
     function getEmailStatus(email) {
       return $http
         .get(urlBase + "email?email=" + encodeURIComponent(email))
         .then(extractItems);
+    }
+
+    function hasBounceDetails(email) {
+      return $http
+        .get(urlBase + "email/bounces?email=" + encodeURIComponent(email));
+    }
+
+    function clearBounceDetails(email) {
+      return $http
+        .delete(urlBase + "email/bounces?email=" + encodeURIComponent(email));
+    }
+
+    // Convert Date from seconds to UTC format
+    function unixTimestampToUTC(timestamp) {
+      if (!timestamp) {
+        return;
+      }
+      // convert seconds to ms
+      var newDate = new Date();
+      newDate.setTime(timestamp * 1000);
+      return newDate.toUTCString();
     }
 
     return service;

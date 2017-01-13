@@ -14,12 +14,11 @@
       <div class="ds-sync columns medium-7">
         <i class="working icon icon-circle" ng-class="{'failing': !ummc.isDirSyncEnabled}"></i>
         <div class="details">
-          <h6 ng-if="ctrl.isDirSyncEnabled" translate="userManage.ad.adStatus"></h6>
-          <h6 ng-if="!ctrl.isDirSyncEnabled" translate="userManage.ad.adStatusDisabled"></h6>
+          <h6 ng-if="ummc.isDirSyncEnabled" translate="userManage.ad.adStatus"></h6>
+          <h6 ng-if="!ummc.isDirSyncEnabled" translate="userManage.ad.adStatusDisabled"></h6>
           <p translate="userManage.ad.adStatusDetails"></p>
-          <a class="p" ng-click="umadc.onTurnOffDS()" translate="userManage.ad.turnOffDS"
-             tooltip="{{::'userManage.ad.turnOffDSToolTip'|translate}}"
-             tooltip-placement="bottom"></a>
+          <a class="p" ng-click="umadc.onTurnOffDS()" translate="userManage.ad.turnOffDS" tooltip="{{::'userManage.ad.turnOffDSToolTip'|translate}}"
+            tooltip-placement="bottom"></a>
         </div>
       </div>
     </div>
@@ -36,26 +35,38 @@
           <div class="cs-radio-group">
             <ul>
               <li>
-                <input cs-input type="radio" ng-model="umadc.manageType" id="ad-manual" ng-value="'manual'"
-                       cs-input-label="{{::'userManage.ad.manualLabel'|translate}}"
-                       cs-input-help-text="{{'userManage.ad.manualDetails'|translate: {maxUsersInManual: umadc.maxUsersInManual} }}">
+                <input cs-input
+                  type="radio"
+                  ng-model="umadc.manageType"
+                  id="ad-manual"
+                  ng-value="'manual'"
+                  cs-input-label="{{::'userManage.ad.manualLabel'|translate}}"
+                  cs-input-help-text="{{'userManage.ad.manualDetails'|translate: {maxUsersInManual: umadc.maxUsersInManual} }}">
               </li>
               <li>
-                <input cs-input type="radio" ng-model="umadc.manageType" id="ad-bulk" ng-value="'bulk'"
-                       cs-input-label="{{::'userManage.ad.bulkLabel'|translate}}"
-                       cs-input-help-text="{{'userManage.ad.bulkDetails'|translate: {maxUsersInCSV: umadc.maxUsersInCSV} }}">
+                <input cs-input
+                  type="radio"
+                  ng-model="umadc.manageType"
+                  id="ad-bulk"
+                  ng-value="'bulk'"
+                  cs-input-label="{{::'userManage.ad.bulkLabel'|translate}}"
+                  cs-input-help-text="{{'userManage.ad.bulkDetails'|translate: {maxUsersInCSV: umadc.maxUsersInCSV} }}">
                 <p class="csv-export-link">
-                  <cr-user-csv-export is-over-export-threshold="csv.isOverExportThreshold"
-                                      as-link="{{::'userManage.bulk.exportUserList'|translate}}"
-                                      on-status-change="csv.onExportDownloadStatus(isExporting, dataUrl)"
-                                      use-csv-download-directive="true">
+                  <cr-user-csv-export
+                    is-over-export-threshold="umadc.isOverExportThreshold"
+                    as-link="{{::'userManage.bulk.exportUserList'|translate}}"
+                    use-csv-download-directive="true">
                   </cr-user-csv-export>
                 </p>
               </li>
               <li>
-                <input cs-input type="radio" ng-model="umadc.manageType" id="ad-advanced" ng-value="'advanced'"
-                       cs-input-label="{{::'userManage.ad.advancedLabel'|translate}}"
-                       cs-input-help-text="{{::'userManage.ad.advancedDetails'|translate}}">
+                <input cs-input
+                  type="radio"
+                  ng-model="umadc.manageType"
+                  id="ad-advanced"
+                  ng-value="'advanced'"
+                  cs-input-label="{{::'userManage.ad.advancedLabel'|translate}}"
+                  cs-input-help-text="{{::'userManage.ad.advancedDetails'|translate}}">
               </li>
             </ul>
           </div>
@@ -66,7 +77,7 @@
 </div>
 
 <div class="modal-footer">
-  <button type="button" id="btnClear" class="btn" ng-click="$dismiss()"><span translate="common.back"></span></button>
+  <button type="button" id="btnClear" class="btn" ng-click="$dismiss()"><span translate="common.cancel"></span></button>
   <button type="button" class="btn btn--primary" ng-click="umadc.onNext()"><span translate="common.next"></span>
   </button>
 </div>

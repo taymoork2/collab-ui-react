@@ -1,10 +1,5 @@
-$overlay-panel-height: 93px;
-
-@import 'setupAssistantPages/hg-pilot-lookup';
-@import 'setupAssistantPages/hg-method';
-@import 'setupAssistantPages/hg-member-lookup';
-@import 'setupAssistantPages/hg-fallback-destination';
-@import 'edit/hg-edit';
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/spacing';
 
 .huntgroup {
   &.overlay-panel {
@@ -22,60 +17,4 @@ $overlay-panel-height: 93px;
     align-content: center;
     align-items: center;
   }
-}
-
-///// Type ahead input box styling with icon ///////
-.typeahead-large {
-  .input-hint {
-    @include vr-spacing(p, 1);
-
-    border: 0;
-    border-top: solid rem(1px) $gray-light;
-    width: 100%;
-    text-align: center;
-    color: $gray;
-    font-style: italic;
-  }
-
-  // Input control.
-  input {
-    height: 44px; // prevents Firefox from clipping top of text
-    &:focus ~ .input-hint {
-      border-top: solid rem(1px) $brand-primary;
-    }
-  }
-}
-
-[fallback-destination] {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
-  overflow: auto;
-
-  > div {
-    height: calc(100vh - #{$top-bar-height + $overlay-panel-height});
-  }
-
-  .cs-card {
-    float: none;
-    width: 45%;
-    margin: 0 auto;
-
-    @include vr-spacing(mb, 1);
-  }
-
-  .typeahead-large {
-    margin-top: calc(51vh - #{$top-bar-height + $overlay-panel-height});
-  }
-}
-
-.cs-setupassistant {
-  margin: 0 auto;
-  max-width: 1080px;
-}
-
-.cs-setupassistant--content {
-  height: calc(100vh - #{$top-bar-height + $overlay-panel-height});
 }

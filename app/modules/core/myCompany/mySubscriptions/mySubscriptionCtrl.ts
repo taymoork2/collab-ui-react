@@ -1,3 +1,4 @@
+import './_mySubscription.scss';
 import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { Notification } from 'modules/core/notifications';
 
@@ -34,6 +35,7 @@ class MySubscriptionCtrl {
   public trialUrlFailed = false;
   public loading = false;
   public digitalRiverSubscriptionsUrl: string;
+  public isSharedMultiPartyEnabled: boolean;
 
   /* @ngInject */
   constructor(
@@ -41,6 +43,8 @@ class MySubscriptionCtrl {
     private $rootScope: ng.IRootScopeService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
+    private Config,
+    private FeatureToggleService,
     private DigitalRiverService: DigitalRiverService,
     private Notification: Notification,
     private Orgservice,
@@ -72,6 +76,21 @@ class MySubscriptionCtrl {
       this.hybridServicesRetrieval();
     }
     this.subscriptionRetrieval();
+    this.initFeatures();
+  }
+
+  public isSharedMultiPartyLicense(subscription) {
+    return _.get(subscription, 'offers[0].licenseModel') === this.Config.licenseModel.cloudSharedMeeting;
+  }
+
+  public determineLicenseType(subscription) {
+    return this.isSharedMultiPartyLicense(subscription) ? this.$translate.instant('firstTimeWizard.sharedLicenses') : this.$translate.instant('firstTimeWizard.namedLicenses');
+  }
+
+  private initFeatures() {
+    this.FeatureToggleService.atlasSMPGetStatus().then((smpStatus) => {
+        this.isSharedMultiPartyEnabled = smpStatus;
+    });
   }
 
   private initIframe(): void {
@@ -178,6 +197,7 @@ class MySubscriptionCtrl {
             let offer = {
               licenseId: license.licenseId,
               licenseType: license.licenseType,
+              licenseModel: _.get(license, 'licenseModel', ''),
               offerName: license.offerName,
               usage: license.usage,
               volume: license.volume,

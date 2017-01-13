@@ -1,3 +1,9 @@
+import './_partner-reports.scss';
+import { CommonReportService } from './commonReportServices/commonReport.service';
+import { ReportConstants } from './commonReportServices/reportConstants.service';
+import { DummyReportService } from './dummyReport.service';
+import { GraphService } from './graph.service';
+import { ReportService } from './report.service';
 import {
   IActiveUserData,
   IActiveUserReturnData,
@@ -14,15 +20,16 @@ import {
 } from './partnerReportInterfaces';
 import { CardUtils } from 'modules/core/cards';
 
+interface ICharts {
+  active: any | null;
+  metrics: any | null;
+  media: any | null;
+  population: any | null;
+}
+
 class PartnerReportCtrl {
   // tracking when initialization has completed
   private initialized: boolean = false;
-
-  // page charts
-  private activeUsersChart: any = null;
-  private callMetricsChart: any = null;
-  private mediaQualityChart: any = null;
-  private popChart: any = null;
 
   // reports filter
   public filterArray: Array<IFilterObject>;
@@ -40,10 +47,11 @@ class PartnerReportCtrl {
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private CardUtils: CardUtils,
-    private ReportConstants,
-    private DummyReportService,
-    private GraphService,
-    private ReportService
+    private CommonReportService: CommonReportService,
+    private ReportConstants: ReportConstants,
+    private DummyReportService: DummyReportService,
+    private GraphService: GraphService,
+    private ReportService: ReportService,
   ) {
     this.ALL = this.ReportConstants.ALL;
     this.ENGAGEMENT = this.ReportConstants.ENGAGEMENT;
@@ -77,6 +85,20 @@ class PartnerReportCtrl {
       this.initialized = true;
     });
   }
+
+  // charts and export tracking
+  private charts: ICharts = {
+    active: null,
+    metrics: null,
+    media: null,
+    population: null,
+  };
+  public exportArrays: ICharts = {
+    active: null,
+    metrics: null,
+    media: null,
+    population: null,
+  };
 
   // Active User Options
   public activeUserReportOptions: IReportCard = {
@@ -207,7 +229,7 @@ class PartnerReportCtrl {
   public customerSelected: Array<IReportsCustomer> = [];
 
   // Timefilter controls
-  public timeOptions: Array<ITimespan> = _.cloneDeep(this.ReportConstants.timeFilter);
+  public timeOptions: Array<ITimespan> = _.cloneDeep(this.ReportConstants.TIME_FILTER);
   public timeSelected: ITimespan = this.timeOptions[0];
 
   // private functions
@@ -256,17 +278,21 @@ class PartnerReportCtrl {
   }
 
   private setActiveUserGraph(data: Array<IActiveUserData>): void {
-    let tempActiveUsersChart = this.GraphService.getActiveUsersGraph(data, this.activeUsersChart);
-    if (tempActiveUsersChart) {
-      this.activeUsersChart = tempActiveUsersChart;
+    this.exportArrays.active = null;
+    let tempactive = this.GraphService.getActiveUsersGraph(data, this.charts.active);
+    if (tempactive) {
+      this.charts.active = tempactive;
+      this.exportArrays.active = this.CommonReportService.createExportMenu(this.charts.active);
       this.CardUtils.resize(0);
     }
   }
 
   private setActivePopulationGraph(data: Array<IPopulationData>): void {
-    let tempPopChart = this.GraphService.getActiveUserPopulationGraph(data, this.popChart);
-    if (tempPopChart) {
-      this.popChart = tempPopChart;
+    this.exportArrays.population = null;
+    let tempPopulation = this.GraphService.getActiveUserPopulationGraph(data, this.charts.population);
+    if (tempPopulation) {
+      this.charts.population = tempPopulation;
+      this.exportArrays.population = this.CommonReportService.createExportMenu(this.charts.population);
       this.CardUtils.resize(0);
     }
   }
@@ -289,7 +315,7 @@ class PartnerReportCtrl {
 
   // media controls
   private getMediaQualityReports(): void {
-    return this.ReportService.getMediaQualityMetrics(this.customerSelected, this.timeSelected).then((response: Array<IMediaQualityData>) => {
+    this.ReportService.getMediaQualityMetrics(this.customerSelected, this.timeSelected).then((response: Array<IMediaQualityData>) => {
       if (_.isArray(response)) {
         this.setMediaQualityGraph(response);
         this.mediaReportOptions.state = this.ReportConstants.EMPTY;
@@ -297,21 +323,22 @@ class PartnerReportCtrl {
           this.mediaReportOptions.state = this.ReportConstants.SET;
         }
       }
-      return;
     });
   }
 
   private setMediaQualityGraph(data: Array<IMediaQualityData>): void {
-    let tempMediaChart = this.GraphService.getMediaQualityGraph(data, this.mediaQualityChart);
+    this.exportArrays.media = null;
+    let tempMediaChart = this.GraphService.getMediaQualityGraph(data, this.charts.media);
     if (tempMediaChart) {
-      this.mediaQualityChart = tempMediaChart;
+      this.charts.media = tempMediaChart;
+      this.exportArrays.media = this.CommonReportService.createExportMenu(this.charts.media);
       this.CardUtils.resize(0);
     }
   }
 
   // metrics controls
   private getCallMetricsReports(): void {
-    return this.ReportService.getCallMetricsData(this.customerSelected, this.timeSelected).then((response: ICallMetricsData) => {
+    this.ReportService.getCallMetricsData(this.customerSelected, this.timeSelected).then((response: ICallMetricsData) => {
       if (response) {
         this.callMetricsReportOptions.state = this.ReportConstants.EMPTY;
         if (_.isArray(response.dataProvider) && response.dataProvider.length > 0) {
@@ -324,9 +351,11 @@ class PartnerReportCtrl {
   }
 
   private setCallMetricsGraph(data: ICallMetricsData): void {
-    let tempMetricsChart = this.GraphService.getCallMetricsDonutChart(data, this.callMetricsChart);
+    this.exportArrays.metrics = null;
+    let tempMetricsChart = this.GraphService.getCallMetricsDonutChart(data, this.charts.metrics);
     if (tempMetricsChart) {
-      this.callMetricsChart = tempMetricsChart;
+      this.charts.metrics = tempMetricsChart;
+      this.exportArrays.metrics = this.CommonReportService.createExportMenu(this.charts.metrics);
       this.CardUtils.resize(0);
     }
   }
@@ -407,7 +436,6 @@ class PartnerReportCtrl {
     }
   }
 
-  // public functions
   // resizing for Most Active Users Table
   public resizeMostActive() {
     this.CardUtils.resize(0);

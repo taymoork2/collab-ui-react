@@ -133,7 +133,7 @@
             <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
           </div>
-          <div ng-if="helpdeskOrgCtrl.supportsLocalDialing">
+          <div>
             <h5 translate="helpdesk.dialing"></h5>
             <span>{{helpdeskOrgCtrl.callCard.dialing}}</span>
             <div ng-if="helpdeskOrgCtrl.callCard.areaCode">
@@ -209,34 +209,13 @@
         </div>
       </header>
       <section>
-        <h5 translate="helpdesk.enabledServices"></h5>
-
-        <div ng-repeat="hybridService in helpdeskOrgCtrl.hybridServicesCard.enabledHybridServices">
+        <h5 translate="common.status"></h5>
+        <div ng-repeat="hybridService in helpdeskOrgCtrl.hybridServicesCard.services">
           <span>
             <i class="icon icon-circle circle-status-icon"
-               ng-class="hybridService.status ? ('helpdesk-' + hybridService.status) : 'helpdesk-grey'"></i>
+               ng-class="'helpdesk-' + hybridService.statusCss"></i>
           </span>
-          <span ng-if="hybridService.id != 'squared-fusion-uc'"
-                translate="{{'hercules.serviceNames.' + hybridService.id}}"></span>
-          <span ng-if="hybridService.id == 'squared-fusion-uc'"
-                translate="hercules.serviceNames.squared-fusion-uc.full"></span>
-        </div>
-        <div
-          ng-if="!helpdeskOrgCtrl.hybridServicesCard.enabledHybridServices || helpdeskOrgCtrl.hybridServicesCard.enabledHybridServices.length === 0">
-          <span translate="helpdesk.none"></span>
-        </div>
-
-        <h5 translate="helpdesk.availableServices"></h5>
-
-        <div
-          ng-if="!helpdeskOrgCtrl.hybridServicesCard.availableHybridServices || helpdeskOrgCtrl.hybridServicesCard.availableHybridServices.length === 0">
-          <span translate="helpdesk.none"></span>
-        </div>
-        <div ng-repeat="hybridService in helpdeskOrgCtrl.hybridServicesCard.availableHybridServices">
-          <span ng-if="hybridService.id != 'squared-fusion-uc'"
-                translate="{{'hercules.serviceNames.' + hybridService.id}}"></span>
-          <span ng-if="hybridService.id == 'squared-fusion-uc'"
-                translate="hercules.serviceNames.squared-fusion-uc.full"></span>
+          <span translate="{{'overview.cards.hybrid.services.' + hybridService.serviceId}}"></span>
         </div>
       </section>
       <footer></footer>

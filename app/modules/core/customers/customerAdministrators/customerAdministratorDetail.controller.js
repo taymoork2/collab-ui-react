@@ -43,8 +43,8 @@
           var users = _.get(response, 'data.Resources', []);
           vm.assignedAdmins = _.map(users, getAdminProfileFromUser);
         })
-        .catch(function () {
-          Notification.error('customerAdminPanel.customerAdministratorServiceError');
+        .catch(function (response) {
+          Notification.errorResponse(response, 'customerAdminPanel.customerAdministratorServiceError');
         });
     }
 
@@ -65,8 +65,8 @@
           Notification.success('customerAdminPanel.customerAdministratorAddSuccess');
           Analytics.trackPartnerActions(Analytics.sections.PARTNER.eventNames.ASSIGN, uuid, Authinfo.getOrgId());
         })
-        .catch(function () {
-          Notification.error('customerAdminPanel.customerAdministratorAddFailure');
+        .catch(function (response) {
+          Notification.errorResponse(response, 'customerAdminPanel.customerAdministratorAddFailure');
         })
         .finally(function () {
           vm.loading = false;
@@ -95,8 +95,8 @@
             Notification.success('customerAdminPanel.customerAdministratorRemoveSuccess');
             Analytics.trackPartnerActions(Analytics.sections.PARTNER.eventNames.REMOVE, uuid, Authinfo.getOrgId());
           })
-          .catch(function () {
-            Notification.error('customerAdminPanel.customerAdministratorRemoveFailure');
+          .catch(function (response) {
+            Notification.errorResponse(response, 'customerAdminPanel.customerAdministratorRemoveFailure');
           });
       });
     }
@@ -110,9 +110,9 @@
         var fullName = Userservice.getFullNameFromUser(user);
         var email = Userservice.getPrimaryEmailFromUser(user);
         var stringMatches = {
-          fullName: _.includes(fullName, lcaseStr),
-          displayName: _.includes(user.displayName, lcaseStr),
-          email: _.includes(email, lcaseStr)
+          fullName: fullName && _.includes(fullName.toLowerCase(), lcaseStr),
+          displayName: user.displayName && _.includes(user.displayName.toLowerCase(), lcaseStr),
+          email: email && _.includes(email.toLowerCase(), lcaseStr)
         };
         if (_.some(stringMatches)) {
           adminProfile = getAdminProfileFromUser(user);
@@ -137,11 +137,11 @@
             return _.map(searchUsers, 'fullName');
           }
         })
-        .catch(function (err) {
-          if (_.get(err, 'status') === 403 && _.get(err, 'data.Errors[0].errorCode') === '200046') {
+        .catch(function (response) {
+          if (_.get(response, 'status') === 403 && _.get(response, 'data.Errors[0].errorCode') === '200046') {
             setResultsError('customerAdminPanel.tooManyResultsError');
           }
-          Notification.error('customerAdminPanel.customerAdministratorServiceError');
+          Notification.errorResponse(response, 'customerAdminPanel.customerAdministratorServiceError');
         });
     }
 

@@ -47,8 +47,8 @@
 
       tokenTimers: {
         timeoutTimer: 3000000, // 50 mins
-        refreshTimer: 39600000, // 11 hours
-        refreshDelay: 900000 // 15 mins
+        refreshTimer: 6600000, // 1 hour 50 mins (Access token expires in 120 mins)
+        refreshDelay: 540000 // 9 mins
       },
 
       siteDomainUrl: {
@@ -60,14 +60,21 @@
         squared: 'webex-squared',
         fusion_uc: 'squared-fusion-uc',
         fusion_cal: 'squared-fusion-cal',
+        fusion_gcal: 'squared-fusion-gcal',
         mediafusion: 'squared-fusion-media',
-        hds: 'hybrid-data-security',
+        hds: 'spark-hybrid-datasecurity',
         fusion_mgmt: 'squared-fusion-mgmt',
         room_system: 'spark-room-system',
         fusion_ec: 'squared-fusion-ec',
         messenger: 'webex-messenger',
         care: 'cloud-contact-center',
-        context: 'contact-center-context'
+        context: 'contact-center-context',
+        fusion_google_cal: 'squared-fusion-gcal'
+      },
+
+      licenseModel: {
+        cloudSharedMeeting: 'Cloud Shared Meeting',
+        hosts: 'hosts'
       },
 
       offerTypes: {
@@ -142,7 +149,8 @@
         helpdesk: 'atlas-portal.partner.helpdesk',
         orderadmin: 'atlas-portal.partner.orderadmin',
         spark_synckms: 'spark.synckms',
-        readonly_admin: 'id_readonly_admin'
+        readonly_admin: 'id_readonly_admin',
+        tech_support: 'atlas-portal.cisco.techsupport'
       },
 
       roles: {
@@ -157,7 +165,8 @@
         orderadmin: 'Order_Admin',
         spark_synckms: 'Spark_SyncKms',
         readonly_admin: 'Readonly_Admin',
-        compliance_user: 'Compliance_User'
+        compliance_user: 'Compliance_User',
+        tech_support: 'Tech_Support'
       },
 
       roleState: {
@@ -220,6 +229,23 @@
         insufficientEntitlementsError: '400111',
         hybridServicesError: '400087',
         hybridServicesComboError: '400094',
+      },
+
+      timeFormat: {
+        HOUR_12: '12-hour',
+        HOUR_24: '24-hour'
+      },
+
+      dateFormat: {
+        MDY_H: 'M-D-Y',
+        DMY_H: 'D-M-Y',
+        YMD_H: 'Y-M-D',
+        MDY_P: 'M.D.Y',
+        DMY_P: 'D.M.Y',
+        YMD_P: 'Y.M.D',
+        MDY_S: 'M/D/Y',
+        DMY_S: 'D/M/Y',
+        YMD_S: 'Y/M/D'
       },
 
       webexSiteStatus: {
@@ -325,6 +351,8 @@
         'dr-login-forward',
         'editService',
         'firsttimewizard',
+        'gem',
+        'gemCbgDetails',
         'my-company',
         'overview',
         'profile',
@@ -337,14 +365,14 @@
         'userRedirect',
         'userprofile',
         'users',
-        'gss'
       ],
-      Support: ['gss', 'support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'reports-metrics'],
+      Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
+      Tech_Support: ['gss'],
       WX2_User: ['overview', 'support', 'activateProduct'],
-      WX2_Support: ['gss', 'overview', 'reports', 'support'],
+      WX2_Support: ['overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
-      PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
-      PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
+      PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'gem', 'gemOverview', 'gemCbgDetails', 'customer-overview', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
+      PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
       CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
       //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
       User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
@@ -355,7 +383,7 @@
         'site-csv-results',
         'site-settings',
         'site-setting',
-        'webex-reports',
+        'reports.webex',
         'webex-reports-iframe',
         'services-overview',
       ],
@@ -373,15 +401,14 @@
         'autoattendant',
         'callpark',
         'callparkedit',
-        'callpickup',
-        'callrouting',
+        'callpickups',
         'device-overview',
         'devices',
         'didadd',
-        'generateauthcode',
         'huntgroups',
         'huronCallPark',
         'huronCallPickup',
+        'huronPickupGroupEdit',
         'hurondetails',
         'huronfeatures',
         'huronHuntGroup',
@@ -401,11 +428,14 @@
       'squared-fusion-mgmt': [
         'cluster-details',
         'management-connector-details',
-        'management-service',
         'services-overview',
         'resource-group-settings',
         'cluster-list',
-        'hds-settings', //Temporrary entitlement until updated in org setting
+        'hds.settings', //Temporary  entitlement until updated in org setting
+        'hds',
+        'hds.list',
+        'hds-cluster-details',
+        'hds-cluster-settings',
       ],
       'spark-room-system': [
         'addDeviceFlow',
@@ -430,11 +460,17 @@
         'expressway-settings',
         'services-overview',
       ],
+      'squared-fusion-gcal': [
+        'add-resource',
+        'google-calendar-service',
+        'cluster-list',
+        'services-overview',
+      ],
       'squared-team-member': [
         'organization',
       ],
-      'hybrid-data-security': [
-        'hds-settings'
+      'spark-hybrid-datasecurity': [
+        'hds.settings'
       ],
       'squared-fusion-media': [
         'add-resource',
@@ -444,7 +480,7 @@
         'media-service-v2',
         'mediafusion-settings',
         'metrics',
-        'reports-metrics',
+        'reports.metrics',
         'services-overview',
         'cluster-list',
       ],
@@ -474,7 +510,6 @@
         'fusion',
         'hurondetails',
         'huronsettings',
-        'management-service',
         'media-service',
         'media-service-v2',
         'mediafusion-settings',

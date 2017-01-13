@@ -8,10 +8,7 @@ $aa-builder-text-color: $gray-dark-1;
 
 @mixin aa-builder-height($rem_offset) {
   /* base-offset includes top-bar, overlay-heading and aa-builder-header (elements from top of page) */
-  $overlay-heading-height: 93px;
-
-  /* no global variable */
-  $aa-builder-base-offset: rem($top-bar-height + $overlay-heading-height + $aa-builder-header-height);
+  $aa-builder-base-offset: rem($top-bar-height + $overlay-panel-height + $aa-builder-header-height);
 
   /* add to offset any additional value */
   $aa-builder-offset: $aa-builder-base-offset + $rem_offset;
@@ -50,8 +47,6 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-flex-row {
-  @extend .row;
-
   display: flex;
   flex-direction: row;
   margin-left: 10px;
@@ -75,12 +70,6 @@ $aa-builder-text-color: $gray-dark-1;
   flex: 1 1 auto;
   align-items: flex-end;
   justify-content: center;
-}
-
-.aa-setup-assistant {
-  .cs-setupassistant--content {
-    height: auto;
-  }
 }
 
 #aa-header-row {
@@ -108,9 +97,6 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-edit-icon {
-  @extend .icon;
-  @extend .icon-edit;
-
   font-size: 1.5rem;
   color: $aa-builder-icon-color;
 
@@ -125,9 +111,6 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-trash-icon {
-  @extend .icon;
-  @extend .icon-trash;
-
   font-size: 1.25rem;
   color: $aa-builder-icon-color;
 
@@ -141,9 +124,6 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-schedule-icon {
-  @extend .icon;
-  @extend .icon-clock;
-
   font-size: 2.5rem;
   color: $aa-builder-icon-color;
 
@@ -185,45 +165,13 @@ $aa-builder-text-color: $gray-dark-1;
   }
 }
 
-.aa-flex-name-item {
-  display: flex;
-  flex: 1 1 auto;
-  align-items: center;
-  justify-content: center;
-
-  @include aa-builder-height($h2-font-size);
-
-  width: 65vw;
-  background-color: $color-white;
-
-  #aa-name-detail {
-    @extend h2;
-
-    line-height: 1;
-
-    @include vr-spacing(mh, 0);
-
-    width: 50vw;
-    text-align: center;
-    border: none;
-    border-bottom: 1px solid $color-primary-base;
-    outline: none;
-    border-radius: 0;
-    background-color: transparent;
-
-    &:focus {
-      border: none;
-      outline: none;
-      border-bottom: 1px solid $color-primary-darker;
-      box-shadow: none;
-      background-color: transparent;
-    }
+.aa-setup-assistant {
+  .cs-setupassistant--content {
+    @include aa-builder-height(0);
   }
 }
 
 .aa-name-edit {
-  @extend h2;
-
   min-width: 1rem;
   white-space: nowrap;
   color: $aa-builder-text-color;
@@ -246,8 +194,6 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-panel-numbers {
-  @extend .panel;
-
   text-align: left;
   width: 16rem;
 
@@ -274,7 +220,6 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-panel {
-  @extend .panel;
   @extend .aa-transition;
 
   @include vr-spacing(m, 0);
@@ -299,8 +244,6 @@ $aa-builder-text-color: $gray-dark-1;
   }
 
   .aa-panel-body {
-    @extend .panel-body;
-
     @include vr-spacing(p, 1.25);
 
     margin: 0;
@@ -335,8 +278,6 @@ $aa-builder-text-color: $gray-dark-1;
   }
 
   .aa-panel-round {
-    @extend .panel-body;
-
     @include vr-spacing(m, 0);
     @include vr-spacing(p, 0);
 
@@ -389,9 +330,6 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-add-step-icon {
-  @extend .icon;
-  @extend .icon-plus-circle;
-
   font-size: 2rem;
   padding-right: $aa-builder-border-size;
   color: $anchor-font-color;
@@ -406,9 +344,6 @@ $aa-builder-text-color: $gray-dark-1;
   margin-left: auto;
 
   .aa-action-delete-icon {
-    @extend .icon;
-    @extend .icon-close;
-
     color: $gray-light-2;
     font-size: 1.5rem;
 
@@ -495,15 +430,12 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-endcall-icon {
-  @extend .icon;
-  @extend .icon-end-call;
-
   font-size: 2.25rem;
   color: $aa-builder-icon-color;
 }
 
 .loading-container {
-  @include aa-builder-height($h2-font-size);
+  @include aa-builder-height(0);
 
   display: flex;
   justify-content: center;

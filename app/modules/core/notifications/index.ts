@@ -1,8 +1,7 @@
-import { AlertService } from './alert.service';
 import { BindUnsafeHtml } from './bindUnsafeHtml.directive';
-import { Confirmation } from './confirmation.directive';
 import { Notification } from './notification.service';
 import { ToasterConfig } from './toaster.config';
+import windowModule from 'modules/core/window';
 
 export { Notification };
 
@@ -13,10 +12,9 @@ export default angular
     require('angular-translate'),
     require('modules/core/config/config'),
     require('modules/core/scripts/services/log'),
+    windowModule,
   ])
     .config(ToasterConfig)
     .directive('crBindUnsafeHtml', BindUnsafeHtml.directive)
-    .directive('crConfirmation', Confirmation.directive)
-    .service('AlertService', AlertService)
     .service('Notification', Notification)
     .name;

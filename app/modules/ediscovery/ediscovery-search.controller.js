@@ -1,9 +1,11 @@
+require('./ediscovery.scss');
+
 (function () {
   'use strict';
 
   /* @ngInject */
-  function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, EdiscoveryService, $window, EdiscoveryNotificationService,
-    Notification) {
+  function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, $state, $window, EdiscoveryService, EdiscoveryNotificationService,
+    FeatureToggleService, Notification) {
     $scope.$on('$viewContentLoaded', function () {
       angular.element('#searchInput').focus();
     });
@@ -11,6 +13,10 @@
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
     var vm = this;
+    vm.searchByParameters = searchByParameters;
+    vm.goToSearchPage = goToSearchPage;
+    vm.searchByService = searchByService;
+    vm.advancedSearch = advancedSearch;
     vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;
     vm.runReport = runReport;
@@ -21,16 +27,45 @@
     vm.downloadReport = downloadReport;
     vm.retrySearch = retrySearch;
     vm.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
+    vm.ediscoveryToggle = false;
     vm.createReportInProgress = false;
     vm.searchingForRoom = false;
     vm.searchInProgress = false;
     vm.currentReportId = null;
     vm.ongoingSearch = false;
 
+    /* initial search variables page */
+    vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchByEmailPlaceholder');
+    vm.searchByOptions = ['Email ID', 'Room ID'];
+    vm.searchBySelected = '' || vm.searchByOptions[0];
+    vm.searchModel = '';
+
+    vm.searchResults = {
+      emailAddresses: [],
+      numFiles: null,
+      numMessages: null,
+      totalSize: null
+    };
+
+    /* generate report status pages */
+    vm.isReport = true;
+    vm.isReportGenerating = false;
+    vm.isReportComplete = false;
+    vm.isReportTooBig = false;
+    vm.isReportMaxRooms = false;
+
+    vm.generateDescription = '';
+    vm.exportOptions = ['CSV', 'PDF'];
+    vm.exportSelected = '' || vm.exportOptions[0];
+
     init($stateParams.report, $stateParams.reRun);
 
     $scope.$on('$destroy', function () {
       disableAvalonPolling();
+    });
+
+    FeatureToggleService.atlasEdiscoveryGetStatus().then(function (result) {
+      vm.ediscoveryToggle = result;
     });
 
     function init(report, reRun) {
@@ -42,10 +77,10 @@
           displayName: report.displayName
         };
         vm.searchCriteria = {
-          "roomId": report.roomQuery.roomId,
-          "startDate": report.roomQuery.startDate,
-          "endDate": report.roomQuery.endDate,
-          "displayName": report.displayName
+          roomId: report.roomQuery.roomId,
+          startDate: report.roomQuery.startDate,
+          endDate: report.roomQuery.endDate,
+          displayName: report.displayName
         };
         if (!reRun) {
           vm.report = report;
@@ -56,6 +91,12 @@
         vm.searchCriteria = {};
         vm.roomInfo = null;
       }
+    }
+
+    function goToSearchPage() {
+      $state.go('ediscovery.search', {
+        report: $stateParams.report
+      });
     }
 
     function getStartDate() {
@@ -103,6 +144,36 @@
       validateDate();
     });
 
+    function searchByParameters() {
+      if (_.eq(vm.searchByOptions[0], vm.searchBySelected)) {
+        vm.searchPlaceholder = $translate.instant("ediscovery.searchParameters.searchByEmailPlaceholder");
+      } else if (_.eq(vm.searchByOptions[1], vm.searchBySelected)) {
+        vm.searchPlaceholder = $translate.instant("ediscovery.searchParameters.searchByRoomPlaceholder");
+      }
+    }
+
+    function searchByService() {
+      if (_.eq(vm.searchByOptions[0], vm.searchBySelected)) {
+        advancedSearch();
+      } else if (_.eq(vm.searchByOptions[1], vm.searchBySelected)) {
+        searchForRoom(vm.searchModel);
+      }
+    }
+
+    function advancedSearch() {
+      vm.searchingForRoom = true;
+      EdiscoveryService.getArgonautServiceUrl(vm.searchModel, 'kms://cisco.com/keys/7831cef0-f0ad-4327-a170-465c88dab9d1', vm.searchCriteria.startDate, vm.searchCriteria.endDate)
+        .then(function (result) {
+          vm.roomInfo = result;
+          vm.searchResults.numFiles = result.data.numFiles;
+          vm.searchResults.numMessages = result.data.numMessages;
+          vm.searchResults.totalSize = result.data.totalSizeInBytes;
+        })
+        .finally(function () {
+          vm.searchingForRoom = false;
+        });
+    }
+
     function searchForRoom(roomId) {
       vm.ongoingSearch = true;
       disableAvalonPolling();
@@ -116,10 +187,15 @@
           return EdiscoveryService.getAvalonRoomInfo(result.avalonRoomsUrl + '/' + roomId);
         })
         .then(function (result) {
+          var regex = new RegExp('-', 'g');
+          var replace = '/';
           vm.roomInfo = result;
-          vm.searchCriteria.startDate = vm.searchCriteria.startDate || result.published;
-          vm.searchCriteria.endDate = vm.searchCriteria.endDate || result.lastReadableActivityDate;
+          vm.searchCriteria.startDate = vm.searchCriteria.startDate || _.replace(result.published, regex, replace).split('T')[0];
+          vm.searchCriteria.endDate = result.lastRelevantActivityDate ? _.replace(result.lastRelevantActivityDate, regex, replace).split('T')[0] : vm.searchCriteria.startDate;
           vm.searchCriteria.displayName = result.displayName;
+          _.forEach(result.participants.items, function (response) {
+            vm.searchResults.emailAddresses.push(response.emailAddress);
+          });
         })
         .catch(function (err) {
           var status = err && err.status ? err.status : 500;
@@ -148,6 +224,8 @@
     }
 
     function createReport() {
+      vm.isReport = false;
+      vm.isReportGenerating = true;
       disableAvalonPolling();
       vm.report = {
         displayName: vm.searchCriteria.displayName,
@@ -178,7 +256,8 @@
     }
 
     function searchButtonDisabled() {
-      return (!vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true);
+      var disable = !vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true;
+      return vm.ediscoveryToggle ? (disable && vm.searchModel === '') : disable;
     }
 
     function pollAvalonReport() {
@@ -190,6 +269,7 @@
         } else {
           EdiscoveryNotificationService.notify(report);
           disableAvalonPolling();
+          vm.isReportComplete = true;
         }
       });
     }

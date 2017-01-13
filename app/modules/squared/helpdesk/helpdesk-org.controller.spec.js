@@ -1,23 +1,27 @@
 'use strict';
 
+// TODO: convert APIs sinon -> jasmine spy
 describe('Controller: HelpdeskOrgController', function () {
   beforeEach(angular.mock.module('Squared'));
 
-  var Authinfo, q, XhrNotificationService, $stateParams, HelpdeskService, LicenseService, $controller, $translate, $scope, orgController, Config, FeatureToggleService, HelpdeskHuronService;
+  var Authinfo, q, $stateParams, HelpdeskService, LicenseService, $controller, $translate, $scope, orgController, Config, FeatureToggleService, HelpdeskHuronService, Notification, FusionClusterService;
 
-  beforeEach(inject(function (_Authinfo_, _LicenseService_, _$q_, _XhrNotificationService_, _$stateParams_, _$translate_, _$rootScope_, _HelpdeskService_, _$controller_, _Config_, _FeatureToggleService_, _HelpdeskHuronService_) {
+  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$stateParams_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _HelpdeskHuronService_, _HelpdeskService_, _LicenseService_, _Notification_, _FusionClusterService_) {
     HelpdeskService = _HelpdeskService_;
     FeatureToggleService = _FeatureToggleService_;
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
     Config = _Config_;
     $stateParams = _$stateParams_;
-    XhrNotificationService = _XhrNotificationService_;
     q = _$q_;
     LicenseService = _LicenseService_;
     $translate = _$translate_;
     Authinfo = _Authinfo_;
     HelpdeskHuronService = _HelpdeskHuronService_;
+    Notification = _Notification_;
+    FusionClusterService = _FusionClusterService_;
+
+    sinon.stub(FusionClusterService, 'getAll').returns(q.resolve([]));
   }));
 
   describe('Org controller', function () {
@@ -37,7 +41,7 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService
+        FusionClusterService: FusionClusterService
       });
     });
 
@@ -64,6 +68,35 @@ describe('Controller: HelpdeskOrgController', function () {
 
   });
 
+  describe('Org controller error notification', function () {
+    beforeEach(function () {
+      sinon.stub(FeatureToggleService, 'supports').returns(q.resolve(false));
+    });
+
+    it('call errorWithTrackingId and supply the response data when promise is rejected', function () {
+      sinon.stub(Notification, 'errorWithTrackingId');
+      sinon.stub(HelpdeskService, 'getOrg');
+      var rejectData = {
+        data: {
+          errorCode: 420000
+        }
+      };
+      var promise = q.reject(rejectData);
+      HelpdeskService.getOrg.returns(promise);
+      $scope.$apply();
+
+      orgController = $controller('HelpdeskOrgController', {
+        HelpdeskService: HelpdeskService,
+        $scope: $scope,
+        Notification: Notification
+      });
+      $scope.$apply();
+      expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+      expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(rejectData, 'helpdesk.unexpectedError');
+    });
+
+  });
+
   describe('read only access', function () {
     beforeEach(function () {
       sinon.stub(HelpdeskService, 'usersWithRole').returns(q.resolve({}));
@@ -77,7 +110,6 @@ describe('Controller: HelpdeskOrgController', function () {
 
       sinon.stub(HelpdeskService, 'getOrgDisplayName').returns(q.resolve("Marvel"));
       sinon.stub(FeatureToggleService, 'supports').returns(q.resolve(false));
-      sinon.stub(FeatureToggleService, 'getCustomerHuronToggle').returns(q.resolve(false));
     });
 
     it('sets cardsAvailable and adminUsersAvailable to true when data has been collected', function () {
@@ -99,7 +131,6 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService,
         Authinfo: Authinfo
       });
       expect(orgController.cardsAvailable).toBeFalsy();
@@ -127,7 +158,6 @@ describe('Controller: HelpdeskOrgController', function () {
       sinon.restore(HelpdeskHuronService, 'supgetTenantInfoports');
 
       sinon.stub(FeatureToggleService, 'supports').returns(q.resolve(true));
-      sinon.stub(FeatureToggleService, 'getCustomerHuronToggle').returns(q.resolve(true));
 
       sinon.stub(HelpdeskHuronService, 'getOrgSiteInfo');
       var deferredSiteInfoResult = q.defer();
@@ -157,7 +187,6 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService,
         Authinfo: Authinfo
       });
       $scope.$apply();
@@ -184,7 +213,6 @@ describe('Controller: HelpdeskOrgController', function () {
       sinon.restore(HelpdeskHuronService, 'supgetTenantInfoports');
 
       sinon.stub(FeatureToggleService, 'supports').returns(q.resolve(true));
-      sinon.stub(FeatureToggleService, 'getCustomerHuronToggle').returns(q.resolve(true));
 
       sinon.stub(HelpdeskHuronService, 'getOrgSiteInfo');
       var deferredSiteInfoResult = q.defer();
@@ -211,7 +239,6 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService,
         Authinfo: Authinfo
       });
       $scope.$apply();
@@ -241,7 +268,6 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService,
         Authinfo: Authinfo
       });
       $scope.$apply();
@@ -263,7 +289,6 @@ describe('Controller: HelpdeskOrgController', function () {
 
       sinon.restore(FeatureToggleService, 'supports');
       sinon.stub(FeatureToggleService, 'supports').returns(q.resolve(true));
-      sinon.stub(FeatureToggleService, 'getCustomerHuronToggle').returns(q.resolve(false));
 
       orgController = $controller('HelpdeskOrgController', {
         HelpdeskService: HelpdeskService,
@@ -273,7 +298,6 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService,
         Authinfo: Authinfo
       });
       $scope.$apply();
@@ -300,7 +324,6 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService,
         Authinfo: Authinfo
       });
       $scope.$apply();
@@ -327,7 +350,6 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService
       });
       $scope.$apply();
       expect(orgController.allowLaunchAtlas).toBeFalsy();
@@ -353,7 +375,6 @@ describe('Controller: HelpdeskOrgController', function () {
         LicenseService: LicenseService,
         Config: Config,
         $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService,
         Authinfo: Authinfo
       });
       $scope.$apply();
@@ -379,8 +400,7 @@ describe('Controller: HelpdeskOrgController', function () {
         $scope: $scope,
         LicenseService: LicenseService,
         Config: Config,
-        $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService
+        $stateParams: $stateParams
       });
       $scope.$apply();
       expect(orgController.allowLaunchAtlas).toBeFalsy();
@@ -396,7 +416,6 @@ describe('Controller: HelpdeskOrgController', function () {
       Authinfo.getOrgId.returns("ce8d17f8-1734-4a54-8510-fae65acc505e");
       sinon.stub(HelpdeskService, 'getOrgDisplayName').returns(q.resolve("Marvel"));
       sinon.stub(FeatureToggleService, 'supports').returns(q.resolve(false));
-      sinon.stub(FeatureToggleService, 'getCustomerHuronToggle').returns(q.resolve(false));
       sinon.stub(HelpdeskHuronService, 'getOrgSiteInfo').returns(q.resolve({}));
       sinon.stub(HelpdeskHuronService, 'getTenantInfo').returns(q.resolve({}));
 
@@ -416,8 +435,7 @@ describe('Controller: HelpdeskOrgController', function () {
         $scope: $scope,
         LicenseService: LicenseService,
         Config: Config,
-        $stateParams: $stateParams,
-        XhrNotificationService: XhrNotificationService
+        $stateParams: $stateParams
       });
 
     });

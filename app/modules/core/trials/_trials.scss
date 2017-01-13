@@ -1,3 +1,7 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/fonts';
+@import 'styles/toolkit/spacing';
+
 // TODO: rip this out once confirmed no longer needed
 .trial-modal.form-horizontal {
   color: $gray-dark-2;
@@ -190,7 +194,7 @@
   }
 
   .padding-l {
-    padding-left: .5rem;
+    padding-left: 0.5rem;
   }
 
   .cs-form__section {
@@ -283,6 +287,7 @@
       color: $color-primary-base;
     }
   }
+
 }
 
 .small-hint {
@@ -306,10 +311,6 @@
 
 .progress {
   margin-bottom: 0;
-}
-
-.days-left span {
-  @extend .small;
 }
 
 .banner-msg {

@@ -1,9 +1,15 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .factory('UserCsvService', UserCsvService);
+  module.exports = angular.module('core.UserCsvService', [
+    require('modules/core/scripts/services/authinfo'),
+    require('modules/core/scripts/services/log'),
+    require('modules/core/scripts/services/utils'),
+    require('modules/core/config/urlConfig'),
+    require('modules/core/trackingId/trackingId.module'),
+  ])
+    .service('UserCsvService', UserCsvService)
+    .name;
 
   /* @ngInject */
   function UserCsvService($translate, Config, TrackingId) {
@@ -198,7 +204,8 @@
       return responseMessage;
     }
 
-    function addErrorWithTrackingID(errorMsg, response, headers) {
+    function addErrorWithTrackingID(_errorMsg, response, headers) {
+      var errorMsg = _errorMsg || '';
       var headersFunc = (response && response.headers) ? response.headers : headers;
       if (_.isFunction(headersFunc)) {
         if (errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {

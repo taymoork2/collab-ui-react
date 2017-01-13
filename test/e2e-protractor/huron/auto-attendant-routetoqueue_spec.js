@@ -4,8 +4,10 @@
 
 
 describe('Huron Auto Attendant', function () {
+  var remote = require('selenium-webdriver/remote');
 
   beforeAll(function () {
+    browser.setFileDetector(new remote.FileDetector());
 
     login.login('aa-admin');
 
@@ -53,6 +55,39 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
+    /*
+     * Test case to check Queue Settings modal opens (with Language and Voice options)
+     * when opened from New Step -> Route Call -> Queue Call
+     */
+    it('should display Language and Voice options in Queue Settings opened from New Step', function () {
+
+      utils.scrollIntoView(autoattendant.addStepFirst);
+      //Click on the + icon to open New Step
+      utils.click(autoattendant.addStepFirst);
+      utils.expectIsDisplayed(autoattendant.newStepForm);
+
+      //Select Route Call from New Step drop down menu
+      utils.click(autoattendant.newStepDropDownActionSelectopenHours0);
+      utils.click(autoattendant.newStepSelectRouteCall);
+      utils.expectIsDisplayed(autoattendant.routeCall);
+
+      //Select Queue Call from Route Call drop down menu
+      utils.click(autoattendant.routeCallChoose);
+      utils.click(autoattendant.routeQueueCall);
+      utils.expectIsDisplayed(autoattendant.queueSetting);
+
+      //Click on Queue Settings link to open Queue Settings modal
+      utils.click(autoattendant.queueSetting);
+      utils.expectIsDisplayed(autoattendant.queueSettingsModal);
+
+      // Check that Language and Voice options should be displayed.
+      utils.expectIsDisplayed(autoattendant.languageSelectopenHours0);
+      utils.expectIsDisplayed(autoattendant.voiceSelectopenHours0);
+
+      // Click cancel to close Queue Settings modal and come back to main menu to continue further tests
+      utils.scrollIntoView(autoattendant.cancelTreatmentFeature);
+      utils.click(autoattendant.cancelTreatmentFeature);
+    });
 
     it('should add Phone Menu Say to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
@@ -86,6 +121,33 @@ describe('Huron Auto Attendant', function () {
       utils.scrollIntoView(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
 
     });
+    it('should click queue setting hyperlink and set and play periodic message and upload media to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      // it is for selecting the queue for route to queue option
+      utils.scrollIntoView(autoattendant.repeatPlus);
+      var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
+      utils.scrollIntoView(autoattendant.repeatPlus);
+      utils.click(autoattendant.queueSetting);
+      utils.scrollIntoView(autoattendant.repeatPlus);
+
+      // select say message
+      utils.click(autoattendant.periodicMessageTypeSelect);
+      utils.sendKeys(autoattendant.periodicMessageTypeSelect, "Welcome to Queue Settings Periodic Message");
+
+      //select media upload
+      utils.click(autoattendant.periodicSayMessageOption);
+      utils.click(autoattendant.periodicMediaUploadSelectOption);
+      utils.click(autoattendant.periodicMediaUploadInput);
+      $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
+      utils.scrollIntoView(autoattendant.repeatPlus);
+      utils.click(autoattendant.periodicMin);
+      utils.click(autoattendant.periodicMinOption.get(1));
+      utils.click(autoattendant.periodicSec);
+      utils.click(autoattendant.periodicSecOption.get(2));
+      utils.wait(autoattendant.okQueueTreatment, 12000);
+      utils.click(autoattendant.okQueueTreatment);
+      utils.click(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+    });
 
     it('should click queue setting hyperlink and set and play music on hold and upload media to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
@@ -106,56 +168,6 @@ describe('Huron Auto Attendant', function () {
       expect(utils.isSelected(autoattendant.mohCustomUpload)).toBeTruthy();
       utils.click(autoattendant.okQueueTreatment);
     });
-
-    it('should be able to select all fallback options in Call treatment modal of the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-        // it is for selecting all the fallback options in the Call treatment modal
-      utils.expectIsDisplayed(autoattendant.queueDestDisconnect);
-      utils.click(autoattendant.queueDest);
-      utils.click(autoattendant.queueDestOption.get(1));
-      utils.click(autoattendant.queueDestAction);
-      utils.click(autoattendant.queueDestActionOption.get(1));
-      utils.click(autoattendant.queueDest);
-      utils.click(autoattendant.queueDestOption.get(2));
-      utils.click(autoattendant.queueDestAction);
-      utils.click(autoattendant.queueDestActionOption.get(1));
-      utils.click(autoattendant.queueDest);
-      utils.click(autoattendant.queueDestOption.get(3));
-      utils.expectIsDisplayed(autoattendant.queueDestRouteToPhoneNumber);
-      utils.click(autoattendant.queueDest);
-      utils.click(autoattendant.queueDestOption.get(4));
-      utils.click(autoattendant.queueDestAction);
-      utils.click(autoattendant.queueDestActionOption.get(1));
-      utils.click(autoattendant.queueDest);
-      utils.click(autoattendant.queueDestOption.get(5));
-      utils.expectIsDisplayed(autoattendant.queueDestAction);
-      utils.click(autoattendant.queueDest);
-      utils.click(autoattendant.queueDestOption.get(0));
-      utils.expectIsDisplayed(autoattendant.queueDestDisconnect);
-    });
-
-    it('should open queue treatment modal and set the values of IA to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-      utils.scrollIntoView(autoattendant.repeatPlus);
-
-      utils.click(autoattendant.queueSetting);
-
-      //for say message
-      utils.click(autoattendant.initialMessage);
-      utils.sendKeys(autoattendant.initialMessage, "Enter the IA message");
-
-      //for media upload
-      var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
-      utils.click(autoattendant.initialMessageOptions);
-      utils.click(autoattendant.initialPlayMessageOption);
-      utils.wait(autoattendant.initialMediaUploadInput, 12000);
-      $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
-
-      // and save
-      utils.click(autoattendant.scheduleCloseButton);
-      // save AA
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-      utils.expectIsDisabled(autoattendant.saveButton);
-    }, 120000);
 
     it('should add another route to queue to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
@@ -182,8 +194,11 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.queueSetting);
       utils.click(autoattendant.queueMin);
       utils.click(autoattendant.queueMinOption.get(3));
-   // for now close the modal. when backend will come we will save the modal before closing.
-      utils.click(autoattendant.scheduleCloseButton);
+      utils.wait(autoattendant.okQueueTreatment, 12000);
+      utils.click(autoattendant.okQueueTreatment);
+      utils.click(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+
     });
 
     it('should save AA and return to landing page', function () {
@@ -215,10 +230,10 @@ describe('Huron Auto Attendant', function () {
     it('should contain two route to queues previously created in AA "' + deleteUtils.testAAName, function () {
       expect(autoattendant.phoneMenuAction.count()).toBe(2);
       expect(autoattendant.phoneMenuKeyOptions.count()).toBe(2);
-      expect(autoattendant.phoneMenuKeysContent.get(0).getAttribute('innerHTML')).toContain(autoattendant.key0);
-      expect(autoattendant.phoneMenuActionContent.get(0).getAttribute('innerHTML')).toContain(autoattendant.routeToQueue);
-      expect(autoattendant.phoneMenuKeysContent.get(1).getAttribute('innerHTML')).toContain(autoattendant.key1);
-      expect(autoattendant.phoneMenuActionContent.get(1).getAttribute('innerHTML')).toContain(autoattendant.routeToQueue);
+      expect(autoattendant.phoneMenuKeysContent.get(0).getInnerHtml()).toContain(autoattendant.key0);
+      expect(autoattendant.phoneMenuActionContent.get(0).getInnerHtml()).toContain(autoattendant.routeToQueue);
+      expect(autoattendant.phoneMenuKeysContent.get(1).getInnerHtml()).toContain(autoattendant.key1);
+      expect(autoattendant.phoneMenuActionContent.get(1).getInnerHtml()).toContain(autoattendant.routeToQueue);
     });
 
     it('should close AA edit and return to landing page', function () {

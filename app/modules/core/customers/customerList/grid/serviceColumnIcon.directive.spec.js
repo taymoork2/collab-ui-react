@@ -1,7 +1,14 @@
 'use strict';
 
 describe('Directive: crServiceColumnIcon', function () {
-  var $compile, scope;
+  var $compile, scope, element;
+
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    element = undefined;
+  });
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
@@ -12,10 +19,10 @@ describe('Directive: crServiceColumnIcon', function () {
   }));
 
   function compileDirective(columnType) {
-    var element = angular.element('<cr-service-column-icon row="mockData" type="' + columnType + '"></cr-service-column-icon>');
-    var compiledElement = $compile(element)(scope);
+    var template = angular.element('<cr-service-column-icon row="mockData" type="' + columnType + '"></cr-service-column-icon>');
+    element = $compile(template)(scope);
     scope.$digest();
-    return $(compiledElement);
+    return element;
   }
 
   function verifyTooltip(tooltipHtml, statusType, serviceType) {
@@ -34,7 +41,7 @@ describe('Directive: crServiceColumnIcon', function () {
 
   it('should properly compile a trial tooltip', function () {
     var tooltipHtml = $(compileDirective('roomSystems').children().attr('tooltip-html-unsafe'));
-    verifyTooltip(tooltipHtml, 'trial', 'roomSystems');
+    verifyTooltip(tooltipHtml, 'trial', 'roomSystem');
   });
 
   it('should properly compile an active tooltip', function () {

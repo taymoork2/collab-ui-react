@@ -1,3 +1,5 @@
+require('./_user-delete.scss');
+
 (function () {
   'use strict';
 
@@ -97,7 +99,7 @@
       if (response.status == 404) {
         return;
       }
-      Notification.error('usersPage.deleteCareUserFailure', {
+      Notification.errorResponse(response, 'usersPage.deleteCareUserFailure', {
         email: vm.deleteUsername
       });
     }

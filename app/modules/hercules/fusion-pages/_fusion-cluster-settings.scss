@@ -1,3 +1,5 @@
+@import 'styles/toolkit/colors';
+
 .fusion-cluster-settings {
   background-color: #fff;
 
@@ -26,6 +28,14 @@
   .emergency-upgrade-section {
     margin-top: 2.375rem;
   }
+
+  .needs-border-top {
+    border-top: 1px solid $gray-light-2;
+  }
+
+  .media-service-btn-padding {
+    margin-left: 25px;
+  }
 }
 
 .deregister-expressway-modal {
@@ -43,5 +53,9 @@
     li.sub-section__description {
       margin-bottom: 0 !important;
     }
+  }
+
+  .needs-border-top {
+    border-top: 1px solid $gray-light-2;
   }
 }

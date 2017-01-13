@@ -1,0 +1,27 @@
+<cs-sp-container>
+  <cs-sp-section class="side-panel-sites">
+    <div class="section-title-row">
+      <span class="section-name" translate="gemini.cbgs.field.totalSites"></span>
+    </div>
+    <div class="feature-list">
+      <ul class="sites-ul">
+        <li class="feature" ng-repeat="val in $ctrl.sites">
+          <span class="feature-name">{{val.siteUrl}}</span>
+          <span class="action-menu dropdown pull-right action-movesite" cs-dropdown>
+            <button class="actions-button btn--none dropdown-toggle small" cs-dropdown-toggle>
+              Move Site
+            </button>
+            <ul class="dropdown-menu dropdown-primary actions-services" cs-dropdown-menu>
+              <li ng-repeat="cbg in $ctrl.cbgs" ng-click="$ctrl.onClick(val,cbg.ccaGroupId)">
+                <small class="ellipsis">{{cbg.groupName ? cbg.groupName : cbg.customerName}}</small>
+              </li>
+            </ul>
+          </span>
+        </li>
+      </ul>
+    </div>
+  </cs-sp-section>
+  <cs-sp-buttons>
+    <button type="button" class="btn btn-default" ng-click="$ctrl.onCancel()"><span translate="common.cancel"></span></button>
+  </cs-sp-buttons>
+</cs-sp-container>

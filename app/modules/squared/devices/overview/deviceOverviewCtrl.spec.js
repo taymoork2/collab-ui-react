@@ -1,8 +1,9 @@
 'use strict';
 
 describe('Controller: DeviceOverviewCtrl', function () {
-  var $scope, $controller, controller, $httpBackend;
-  var $q, CsdmConfigService, CsdmDeviceService, CsdmCodeService, Authinfo, Notification, RemoteSupportModal, HuronConfig;
+  var $scope, $controller, $state, controller, $httpBackend;
+  var $q, CsdmConfigService, CsdmDeviceService, Authinfo, Notification;
+  var RemoteSupportModal, HuronConfig, FeatureToggleService, Userservice;
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
@@ -12,15 +13,19 @@ describe('Controller: DeviceOverviewCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _CsdmDeviceService_, _CsdmCodeService_, _Authinfo_, _Notification_, _RemoteSupportModal_, _HuronConfig_) {
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _CsdmDeviceService_,
+                        _Authinfo_, _Notification_, _RemoteSupportModal_, _HuronConfig_, _FeatureToggleService_,
+                        _Userservice_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
+    $state = {};
+    FeatureToggleService = _FeatureToggleService_;
+    Userservice = _Userservice_;
 
     CsdmConfigService = _CsdmConfigService_;
     CsdmDeviceService = _CsdmDeviceService_;
-    CsdmCodeService = _CsdmCodeService_;
     Authinfo = _Authinfo_;
     Notification = _Notification_;
     RemoteSupportModal = _RemoteSupportModal_;
@@ -30,12 +35,18 @@ describe('Controller: DeviceOverviewCtrl', function () {
   function initSpies() {
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false').respond(200);
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/upgradeChannels').respond(200);
+    $httpBackend.whenGET('http://thedeviceurl').respond(200);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/sipendpoints/3/addonmodules').respond(200);
+    $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond([{
+      name: "Texas",
+      abbreviation: "TX"
+    }]);
   }
 
   var $stateParams = {
     currentDevice: {
+      url: 'http://thedeviceurl',
       isHuronDevice: false,
       product: 'Cisco 8865',
       cisUuid: 2,
@@ -48,7 +59,10 @@ describe('Controller: DeviceOverviewCtrl', function () {
     controller = $controller('DeviceOverviewCtrl', {
       $scope: $scope,
       channels: {},
-      $stateParams: $stateParams
+      $stateParams: $stateParams,
+      $state: $state,
+      Userservice: Userservice,
+      FeatureToggleService: FeatureToggleService
     });
     $scope.$apply();
   }
@@ -140,21 +154,6 @@ describe('Controller: DeviceOverviewCtrl', function () {
       expect(controller.newTag).toBeUndefined();
     });
 
-    it('should post new tags to CsdmCodeDeviceService for activation codes', function () {
-      controller.newTag = 'new tag';
-      controller.currentDevice = {
-        isCode: true,
-        tags: [],
-        url: 'testUrl',
-        needsActivation: true
-      };
-      spyOn(CsdmCodeService, 'updateTags').and.returnValue($q.resolve());
-      controller.addTag();
-      $scope.$apply();
-      expect(CsdmCodeService.updateTags).toHaveBeenCalled();
-      expect(CsdmCodeService.updateTags).toHaveBeenCalledWith('testUrl', ['new tag']);
-    });
-
     it('should post new tags to CsdmDeviceService for cloudberry devices', function () {
       controller.newTag = 'new tag';
       controller.currentDevice = {
@@ -234,7 +233,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
 describe('Huron Device', function () {
   var $scope, $controller, controller, $httpBackend;
   var $q, CsdmConfigService;
-  var $stateParams, ServiceSetup, timeZone, newTimeZone;
+  var $stateParams, ServiceSetup, timeZone, newTimeZone, countries, newCountry, HuronConfig;
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
@@ -244,15 +243,17 @@ describe('Huron Device', function () {
   beforeEach(initSpies);
 
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _ServiceSetup_) {
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _ServiceSetup_, _HuronConfig_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     CsdmConfigService = _CsdmConfigService_;
     ServiceSetup = _ServiceSetup_;
+    HuronConfig = _HuronConfig_;
     $stateParams = {
       currentDevice: {
+        url: 'http://thedeviceurl',
         isHuronDevice: true
       },
       huronDeviceService: CsdmHuronDeviceService($q)
@@ -264,14 +265,23 @@ describe('Huron Device', function () {
     "label": "America/Anchorage"
   };
 
+  newCountry = {
+    "label": "Canada",
+    "value": "CA"
+  };
+
   function CsdmHuronDeviceService(q) {
 
     function setTimezoneForDevice() {
       return q.resolve(true);
     }
 
-    function getTimezoneForDevice() {
-      return q.resolve('America/Los_Angeles');
+    function setCountryForDevice() {
+      return q.resolve(true);
+    }
+
+    function getDeviceInfo() {
+      return q.resolve({ timeZone: 'America/Los_Angeles', country: 'US' });
     }
 
     function getLinesForDevice() {
@@ -280,7 +290,8 @@ describe('Huron Device', function () {
 
     return {
       setTimezoneForDevice: setTimezoneForDevice,
-      getTimezoneForDevice: getTimezoneForDevice,
+      setCountryForDevice: setCountryForDevice,
+      getDeviceInfo: getDeviceInfo,
       getLinesForDevice: getLinesForDevice
     };
   }
@@ -289,9 +300,19 @@ describe('Huron Device', function () {
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false').respond(200);
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/upgradeChannels').respond(200);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
+    $httpBackend.whenGET('http://thedeviceurl').respond(200);
+    $httpBackend.whenGET(HuronConfig.getTerminusV2Url() + '/customers/numbers/e911').respond(200);
+    $httpBackend.whenGET('modules/huron/pstnSetup/states.json').respond([{
+      name: "Texas",
+      abbreviation: "TX"
+    }]);
+    countries = getJSONFixture('huron/json/settings/countries.json');
 
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timeZone));
+    spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.when(countries));
     spyOn($stateParams.huronDeviceService, 'setTimezoneForDevice').and.returnValue($q.when(true));
+    spyOn($stateParams.huronDeviceService, 'setCountryForDevice').and.returnValue($q.when(true));
+
 
   }
 
@@ -319,6 +340,22 @@ describe('Huron Device', function () {
       $scope.$apply();
 
       expect($stateParams.huronDeviceService.setTimezoneForDevice).toHaveBeenCalledWith(jasmine.any(Object), newTimeZone.id);
+    });
+  });
+
+  describe('country support', function () {
+    beforeEach(initController);
+
+    it('should init controller', function () {
+      expect(controller).toBeDefined();
+    });
+
+    it('should update country value', function () {
+      controller.selectedCountry = newCountry;
+      controller.saveCountryAndWait();
+      $scope.$apply();
+
+      expect($stateParams.huronDeviceService.setCountryForDevice).toHaveBeenCalledWith(jasmine.any(Object), newCountry.value);
     });
   });
 });

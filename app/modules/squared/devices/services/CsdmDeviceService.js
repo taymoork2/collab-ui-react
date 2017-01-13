@@ -16,7 +16,13 @@
       });
     }
 
-    function fetchDevice(url) {
+    function fetchDevicesForUser(userId) {
+      return $http.get(devicesUrl + '?cisUuid=' + userId).then(function (res) {
+        return CsdmConverter.convertCloudberryDevices(res.data);
+      });
+    }
+
+    function fetchItem(url) {
       return $http.get(url).then(function (res) {
         return CsdmConverter.convertCloudberryDevice(res.data);
       });
@@ -27,13 +33,7 @@
     }
 
     function deleteItem(device) {
-      return $http.delete(device.url);
-    }
-
-    function updateItemName(device, newName) {
-      return $http.patch(device.url, {
-        name: newName
-      });
+      return $http.delete(device.url + '?keepPlace=true');
     }
 
     function updateTags(deviceUrl, tags) {
@@ -55,6 +55,16 @@
       });
     }
 
+    function sendAdvancedSettingsOtp(deviceUrl, token, email, displayName) {
+      return notifyDevice(deviceUrl, {
+        command: "localAccess",
+        eventType: "room.localAccess",
+        displayName: displayName,
+        email: email,
+        token: token
+      });
+    }
+
     function renewRsuKey(deviceUrl, feedbackId, email) {
       return notifyDevice(deviceUrl, {
         command: "renewRSU",
@@ -67,17 +77,16 @@
 
     return {
       fetchDevices: fetchDevices,
+      fetchDevicesForUser: fetchDevicesForUser,
       deleteItem: deleteItem,
-      updateItemName: updateItemName,
       updateTags: updateTags,
-      fetchDevice: fetchDevice,
+      fetchItem: fetchItem,
+      notifyDevice: notifyDevice,
+      sendAdvancedSettingsOtp: sendAdvancedSettingsOtp,
 
 //Grey list:
-      //on: deviceCache.on,
-      //getDevice: getDevice,
       uploadLogs: uploadLogs,
       deleteDevice: deleteDevice,
-
       renewRsuKey: renewRsuKey
     };
   }

@@ -111,7 +111,9 @@
     return {
       getBaseVariable: getBaseVariable,
       getBaseStackSerialGraph: getBaseStackSerialGraph,
-      getGanttGraph: getGanttGraph
+      getGanttGraph: getGanttGraph,
+      getBasePieChart: getBasePieChart,
+      getDummyPieChart: getDummyPieChart
     };
 
     function getBaseVariable(key) {
@@ -132,7 +134,7 @@
         'backgroundColor': chartColors.brandWhite,
         'backgroundAlpha': 1,
         'balloon': baseVariables['balloon'],
-        "autoMarginOffset": 25,
+        'autoMarginOffset': 25,
         'marginLeft': 60,
         'marginTop': 60,
         'marginRight': 60,
@@ -147,16 +149,16 @@
         'categoryField': categoryField,
         'categoryAxis': catAxis,
         'mouseWheelZoomEnabled': false,
-        "chartCursor": {
-          "cursorColor": "#55bb76",
-          "categoryBalloonDateFormat": "JJ:NN, DD MMMM",
-          "valueBalloonsEnabled": false,
-          "cursorAlpha": 0,
-          "valueLineAlpha": 0.5,
-          "valueLineBalloonEnabled": true,
-          "valueLineEnabled": true,
-          "zoomable": true,
-          "valueZoomable": false
+        'chartCursor': {
+          'cursorColor': '#55bb76',
+          'categoryBalloonDateFormat': 'JJ:NN, DD MMMM',
+          'valueBalloonsEnabled': false,
+          'cursorAlpha': 0,
+          'valueLineAlpha': 0.5,
+          'valueLineBalloonEnabled': true,
+          'valueLineEnabled': true,
+          'zoomable': true,
+          'valueZoomable': false
         },
         'chartScrollbar': {
           'offset': 30,
@@ -189,13 +191,15 @@
           'fillAlphas': 1,
           'balloonText': '<b>[[availability]]</b></br><b>[[nodes]]</b>'
         },
+        "balloon": {
+          "fixedPosition": false
+        },
         'rotate': true,
         'categoryField': 'category',
         'segmentsField': 'segments',
         'colorField': 'color',
-        'startField': 'start',
-        'endField': 'end',
-        'durationField': 'duration',
+        "startDateField": "startTime",
+        "endDateField": "endTime",
         'dataProvider': data,
         'valueScrollbar': {
           'autoGridCount': true,
@@ -214,6 +218,86 @@
           'valueZoomable': true
         },
         'export': exportData
+      });
+    }
+
+    function getBasePieChart(data, chartOptions) {
+      return angular.copy({
+        'type': 'pie',
+        'startDuration': 0,
+        'balloonText': chartOptions.balloonText,
+        'outlineThickness': 0,
+        'hoverAlpha': 0.5,
+        'labelRadius': 1,
+        'marginBottom': 40,
+        'marginLeft': 40,
+        'marginRight': 40,
+        'marginTop': 40,
+        'autoMargins': false,
+        'pullOutRadius': '1%',
+        'titleField': 'name',
+        'valueField': 'value',
+        'theme': 'light',
+        'allLabels': [],
+        'balloon': {},
+        'fontSize': 10,
+        'legend': {
+          'enabled': true,
+          'align': 'center',
+          'forceWidth': true,
+          'switchable': false,
+          'valueText': '',
+          'markerSize': 8
+        },
+        'titles': [],
+        'dataProvider': data.dataProvider
+      });
+    }
+
+    function getDummyPieChart() {
+      return angular.copy({
+        'type': 'pie',
+        'startDuration': 0,
+        'labelRadius': 1,
+        'marginBottom': 40,
+        'marginLeft': 40,
+        'marginRight': 40,
+        'marginTop': 40,
+        'autoMargins': false,
+        'balloonText': '',
+        'labelText': '[[title]]',
+        'pullOutRadius': '1%',
+        'colorField': 'color',
+        'outlineColor': '#ECECEC',
+        'titleField': 'name',
+        'valueField': 'value',
+        'borderColor': '#A4ACAC',
+        'fontSize': 10,
+        'theme': 'light',
+        'balloon': {
+          'fontSize': 0
+        },
+        'legend': {
+          'enabled': true,
+          'align': 'center',
+          'labelWidth': 0,
+          'markerBorderThickness': 5,
+          'markerLabelGap': 6,
+          'markerSize': 5,
+          'valueAlign': 'left',
+          'valueText': '',
+          'switchable': false
+        },
+        'titles': [],
+        'dataProvider': [{
+          'name': 'No data',
+          'value': '60',
+          'color': '#ececec'
+        }, {
+          'name': 'No data',
+          'value': '40',
+          'color': '#d9d9d9'
+        }]
       });
     }
   }

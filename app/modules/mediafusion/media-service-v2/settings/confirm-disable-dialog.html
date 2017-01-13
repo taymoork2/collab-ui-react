@@ -1,25 +1,25 @@
 <div class="modal-header">
-  <div class="modal-title">
-    {{'mediaFusion.settings.deactivateServiceHeading' | translate}}</span>
-  </div>
+  <span class="modal-title"
+        translate="hercules.settings.deactivateServiceHeading"
+        translate-values="{ServiceName: 'Hybrid Media Service'}"></span>
 </div>
 
 <div class="modal-body media-modal-text">
   <span ng-if="disableServiceDialog.step === '1'">
     <p>
-      <span translate="{{'mediaFusion.deactivate.deregister'}}"/>
+      <span translate="mediaFusion.deactivate.deregister"></span>
       <div class="media-cluster-list" ng-repeat="ecp in disableServiceDialog.clusterNames">
         {{ecp}}</br>
       </div>
     </p>
     <br>
-    <p>  
+    <p>
       <div class="form-group">
         <div class="cs-checkbox-group">
           <div class="cs-input-group cs-input-checkbox">
             <input type="checkbox" id="individualcheckbox" ng-model="disableServiceDialog.checkboxModel">
             <label for="individualcheckbox">
-              <span translate="{{'mediaFusion.deactivate.ready'}}"/>
+              <span translate="mediaFusion.deactivate.ready"></span>
             </label>
           </div>
         </div>
@@ -29,22 +29,22 @@
 
   <span ng-if="disableServiceDialog.step === '2'">
     <p>
-      <span translate="{{'mediaFusion.deactivate.areYou'}}"/><br>
-      <span translate="{{'mediaFusion.deactivate.future'}}"/>
+      <span translate="mediaFusion.deactivate.areYou"></span><br>
+      <span translate="mediaFusion.deactivate.future"></span>
     </p>
     <br>
     <p>
-      <span translate="{{'mediaFusion.deactivate.complete'}}"/>
+      <span translate="mediaFusion.deactivate.complete"></span>
     </p>
-  </span>  
+  </span>
 
 </div>
 
 <div class="modal-footer">
-  <div class="footer-padding">
-    <span class="pull-left">{{'mediaFusion.deactivate.step' | translate}} {{disableServiceDialog.step}} {{'mediaFusion.deactivate.of' | translate}}</span>
+  <div class="modal-footer-padding">
+    <span class="stick-left">{{'mediaFusion.deactivate.step' | translate}} {{disableServiceDialog.step}} {{'mediaFusion.deactivate.of' | translate}}</span>
   </div>
-  <button ng-click="disableServiceDialog.cancel()" class="btn ">{{'mediaFusion.settings.cancel' | translate}}</button>
+  <button ng-click="disableServiceDialog.cancel()" class="btn ">{{'common.cancel' | translate}}</button>
   <button ng-click="disableServiceDialog.continue()" ng-show="disableServiceDialog.step === '1'" ng-disabled="!disableServiceDialog.checkboxModel" class="btn btn--primary pull-right">{{'common.continue' | translate}}</button>
   <button ng-click="disableServiceDialog.deactivate()" ng-show="disableServiceDialog.step === '2'"  class="btn btn--primary pull-right">{{'mediaFusion.deactivate.button-deactivate' | translate}}</button>
 </div>

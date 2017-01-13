@@ -1,3 +1,5 @@
+require('./_csv-download.scss');
+
 (function () {
   'use strict';
 
@@ -22,7 +24,8 @@
         type: '@',
         filename: '@',
         statusMessage: '@',
-        downloadState: '@'
+        downloadState: '@',
+        analyticsEventname: '@'
       },
       link: link,
       controller: 'csvDownloadController',
@@ -49,7 +52,7 @@
   }
 
   /* @ngInject */
-  function csvDownloadController($scope, $element, $rootScope, $window, $q, $translate, $timeout, $modal, $state, Authinfo, CsvDownloadService, Notification, FeatureToggleService) {
+  function csvDownloadController($scope, $element, $rootScope, $window, $q, $translate, $timeout, $modal, $state, Analytics, CsvDownloadService, Notification, FeatureToggleService) {
     var vm = this;
 
     $scope.downloading = false;
@@ -62,14 +65,9 @@
     vm.$onInit = onInit;
     vm.$onDestroy = onDestroy;
 
-    // Allow Cisco org to download the new user report API
-    if (Authinfo.isCisco()) {
-      $scope.newUserExportToggle = true;
-    } else {
-      FeatureToggleService.atlasNewUserExportGetStatus().then(function (result) {
-        $scope.newUserExportToggle = result;
-      });
-    }
+    FeatureToggleService.atlasNewUserExportGetStatus().then(function (result) {
+      $scope.newUserExportToggle = result;
+    });
 
     ////////////////////
     var FILENAME = $scope.filename || 'exported_file.csv';
@@ -85,6 +83,9 @@
 
     function downloadCsv(csvType, tooManyUsers) {
       csvType = csvType || $scope.type;
+      if ($scope.analyticsEventname) {
+        Analytics.trackCsv($scope.analyticsEventname);
+      }
 
       if (csvType === CsvDownloadService.typeTemplate || csvType === CsvDownloadService.typeUser || csvType === CsvDownloadService.typeError) {
         startDownload(csvType);

@@ -9,7 +9,7 @@
         <h5 class="sub-section__label" translate="hercules.settings.scheduleUpgrade.title"></h5>
         <p class="sub-section__description" translate="hercules.settings.scheduleUpgrade.description"></p>
         <upgrade-schedule-configuration cluster-id="clusterSettings.cluster.id"></upgrade-schedule-configuration>
-        <div class="emergency-upgrade-section" ng-if="clusterSettings.showEmergencyUpgrade">
+        <div class="emergency-upgrade-section">
           <h5 class="sub-section__label" translate="hercules.settings.emergencyUpgrade.expressway.title"></h5>
           <p class="sub-section__description" translate="hercules.settings.emergencyUpgrade.expressway.description"></p>
           <emergency-upgrade-configuration cluster-id="clusterSettings.cluster.id"></emergency-upgrade-configuration>
@@ -17,34 +17,24 @@
       </div>
     </setting-section>
 
-    <setting-section setting="clusterSettings.resourceGroup" ng-if="clusterSettings.showResourceGroups">
-      <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.resourceGroupsSubHeader" id="RG-section-test"></h5>
-      <p class="sub-section__description" translate="hercules.expresswayClusterSettings.resourcegroupsParagraph"></p>
-      <div class="medium-8">
-        <cs-select
-          ng-model="clusterSettings.selectedResourceGroup"
-          options="clusterSettings.resourceGroupOptions"
-          on-change-fn="clusterSettings.showResourceGroupModal()"
-        >
-        </cs-select>
-      </div>
-    </setting-section>
+    <div ng-if="clusterSettings.showResourceGroups">
+      <setting-section setting="clusterSettings.resourceGroup" class="needs-border-top">
+        <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.resourceGroupsSubHeader" id="RG-section-test"></h5>
+        <p class="sub-section__description" translate="hercules.expresswayClusterSettings.resourcegroupsParagraph"></p>
+        <div class="medium-8">
+          <cs-select
+            ng-model="clusterSettings.selectedResourceGroup"
+            options="clusterSettings.resourceGroupOptions"
+            on-change-fn="clusterSettings.showResourceGroupModal()"
+          >
+          </cs-select>
+        </div>
+      </setting-section>
 
-    <setting-section setting="clusterSettings.releasechannel" ng-if="clusterSettings.showResourceGroups && clusterSettings.allowedChannels.length > 1">
-      <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.releasechannelSubHeader" id="RC-section-test"></h5>
-      <p class="sub-section__description" translate="hercules.expresswayClusterSettings.releasechannelParagraph"></p>
-      <div class="medium-8">
-        <cs-select
-          ng-model="clusterSettings.releasechannelsSelected"
-          options="clusterSettings.releasechannelsOptions"
-          placeholder="clusterSettings.releasechannelsPlaceholder"
-          is-disabled="true"
-        >
-        </cs-select>
-      </div>
-    </setting-section>
+      <release-channel-section cluster="clusterSettings.cluster"></release-channel-section>
+    </div>
 
-    <setting-section setting="clusterSettings.deactivateServices">
+    <setting-section setting="clusterSettings.deactivateServices" class="needs-border-top">
       <div ng-if="clusterSettings.enabledServices.length > 1">
         <div class="sub-section" ng-repeat="service in clusterSettings.enabledServices | filter: clusterSettings.filterServices | orderBy: service ">
             <h5 class="sub-section__label"
@@ -65,40 +55,12 @@
       </div>
     </setting-section>
 
-    <setting-section setting="clusterSettings.renameClusterSection">
-      <div class="sub-section">
-        <h5 class="sub-section__label" translate="common.rename"></h5>
-        <p class="sub-section__description" translate="hercules.expresswayClusterSettings.renameClusterParagraph"></p>
-
-        <div class="row">
-          <input
-            cs-input
-            type="text"
-            placeholder={{clusterSettings.localizedClusterNameWatermark}}
-            ng-model="clusterSettings.newClusterName"
-            cs-input-group-size="medium-8"
-            cs-input-help-text="{{'hercules.expresswayClusterSettings.renameClusterDescription' | translate}}"
-          >
-          <button
-            type="button"
-            class="btn btn--primary btn-save-new-name"
-            ng-click="clusterSettings.setClusterName(clusterSettings.newClusterName)"
-            translate="common.save"
-          ></button>
-        </div>
-      </div>
-      <div class="sub-section">
-        <h5 class="sub-section__label cap-long-names" translate="common.remove"></h5>
-        <p class="sub-section__description" translate="hercules.expresswayClusterSettings.deregisterClusterExplanation"></p>
-        <div ng-if="clusterSettings.enabledServices.length > 1">
-          <button type="button" class="btn" disabled="disabled" translate="common.remove"></button>
-          <p class="cap-long-names remove-warning" translate="hercules.expresswayClusterSettings.deregisterClusterParagraph" translate-values="{ ClusterName: clusterSettings.cluster.name}"></p>
-        </div>
-        <div ng-if="clusterSettings.enabledServices.length < 2">
-          <button type="button" class="btn" ng-click="clusterSettings.deregisterCluster(clusterSettings.cluster)" translate="common.remove"></button>
-        </div>
-      </div>
-    </setting-section>
+    <rename-and-deregister-cluster-section
+      service-id="'squared-fusion-cal'"
+      cluster="clusterSettings.cluster"
+      show-rename-section="true"
+      on-name-update="clusterSettings.nameUpdated()">
+    </rename-and-deregister-cluster-section>
 
   </div>
 </div>

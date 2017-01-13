@@ -1,0 +1,42 @@
+[
+    {
+        "uuid": "0001",
+        "type": "USER_REAL_USER",
+        "firstName": "Chuck",
+        "lastName": "Norris",
+        "userName": "chuck.norris@kickyourbutt.com",
+        "displayName": null
+    },
+    {
+        "uuid": "0002",
+        "type": "USER_PLACE",
+        "firstName": null,
+        "lastName": null,
+        "userName": null,
+        "displayName": "Koala Lounge"
+    },
+    {
+        "uuid": "0003",
+        "type": "USER_REAL_USER",
+        "firstName": "Tom",
+        "lastName": null,
+        "userName": "tom@kickyourbutt.com",
+        "displayName": null
+    },
+    {
+        "uuid": "0004",
+        "type": "USER_REAL_USER",
+        "firstName": null,
+        "lastName": "Smith",
+        "userName": "smith@kickyourbutt.com",
+        "displayName": null
+    },
+    {
+        "uuid": "0005",
+        "type": "USER_REAL_USER",
+        "firstName": null,
+        "lastName": null,
+        "userName": "peter@kickyourbutt.com",
+        "displayName": null
+    }
+]

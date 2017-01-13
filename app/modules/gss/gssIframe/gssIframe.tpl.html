@@ -1,19 +1,20 @@
-<div class="status">
+<div class="gss-iframe">
   <cs-page-header id="statusPanel"
-                  title="{{::gssIframe.pageTitle}}"
+                  title="{{ ::gssIframeCtrl.pageTitle }}"
                   back="false"
-                  tabs="gssIframe.headerTabs">
+                  tabs="gssIframeCtrl.headerTabs">
   </cs-page-header>
 
-  <div class="row">
-    <cs-select
-      ng-model="gssIframe.selected"
-      options="gssIframe.options"
-      placeholder="::'gss.servicesPlaceholder' | translate"
-      nested="false"
-      icon="icon-chevron-down">
-    </cs-select>
-  </div>
+  <cs-select
+    id="serviceSelector"
+    ng-model="gssIframeCtrl.selected"
+    options="gssIframeCtrl.options"
+    placeholder="::'gss.servicesPlaceholder' | translate"
+    on-change-fn="gssIframeCtrl.onServiceSelectionChanged()"
+    nested="false"
+    class="service-selector"
+    icon="icon-chevron-down">
+  </cs-select>
 
-  <div class="status-page-wraper" ui-view></div>
+  <div class="gss-page-wrapper" ui-view></div>
 </div>

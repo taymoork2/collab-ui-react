@@ -24,19 +24,20 @@ describe('crUserCsvExport Component', function () {
 
   function init() {
     this.initModules('Core', 'Huron', 'Sunlight');
-    this.injectDependencies('$componentController', '$scope', '$rootScope', '$timeout', '$q', '$compile', '$modal', '$translate', 'Notification', 'CsvDownloadService');
+    this.injectDependencies('$compile', '$componentController', '$modal', '$q', '$scope', '$rootScope', '$timeout', '$translate', 'Analytics', 'CsvDownloadService', 'Notification');
     initDependencySpies.apply(this);
     initUtils.apply(this);
   }
 
   function initDependencySpies() {
-    spyOn(this.Notification, 'notify');
-    spyOn(this.Notification, 'error');
+    spyOn(this.Notification, 'success');
     spyOn(this.CsvDownloadService, 'getCsv').and.returnValue(this.$q.when(DATA_URL));
     spyOn(this.CsvDownloadService, 'cancelDownload');
     spyOn(this.$modal, 'open').and.returnValue(fakeModal);
     spyOn(this.$translate, 'instant').and.returnValue(TRANSLATED_STRING);
     spyOn(this.$rootScope, '$emit');
+    spyOn(this.Analytics, 'trackAddUsers').and.returnValue(this.$q.when({}));
+
   }
 
   function initUtils() {
@@ -67,6 +68,12 @@ describe('crUserCsvExport Component', function () {
     this.$scope.$apply();
     this.vm.$onInit();
   }
+
+  afterEach(function () {
+    if (this.element) {
+      this.element.remove();
+    }
+  });
 
   beforeEach(init);
 
@@ -118,7 +125,7 @@ describe('crUserCsvExport Component', function () {
       this.$timeout.flush();
       expect(this.vm.isDownloading).toBeFalsy();
       expect(this.$scope.onTestExportDownloadStatus).toHaveBeenCalledWith(false, DATA_URL);
-      expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+      expect(this.Notification.success).toHaveBeenCalled();
       expect(this.$rootScope.$emit).toHaveBeenCalledWith('csv-download-end');
     });
 
@@ -141,7 +148,7 @@ describe('crUserCsvExport Component', function () {
       this.$timeout.flush();
       expect(this.vm.isDownloading).toBeFalsy();
       expect(this.$scope.onTestExportDownloadStatus).toHaveBeenCalledWith(false, DATA_URL);
-      expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+      expect(this.Notification.success).toHaveBeenCalled();
       expect(this.$rootScope.$emit).toHaveBeenCalledWith('csv-download-end');
     });
 
@@ -186,7 +193,7 @@ describe('crUserCsvExport Component', function () {
       this.$timeout.flush();
       expect(this.vm.isDownloading).toBeFalsy();
       expect(this.$scope.onTestExportDownloadStatus).toHaveBeenCalledWith(false, DATA_URL);
-      expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+      expect(this.Notification.success).toHaveBeenCalled();
       expect(this.$rootScope.$emit).toHaveBeenCalledWith('csv-download-end');
     });
 

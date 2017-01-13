@@ -1,3 +1,6 @@
+require('./_partner-home.scss');
+require('./_partner-landing-trials.scss');
+
 (function () {
   'use strict';
 
@@ -42,9 +45,7 @@
     }
 
     function openAddTrialModal() {
-      if ($scope.isTestOrg) {
-        Analytics.trackTrialSteps(Analytics.sections.TRIAL.eventNames.START_SETUP);
-      }
+      Analytics.trackTrialSteps(Analytics.sections.TRIAL.eventNames.START_SETUP);
       $state.go('trialAdd.info').then(function () {
         $state.modal.result.finally(getTrialsList);
       });
@@ -67,11 +68,8 @@
     function getTrialsList() {
       $scope.showTrialsRefresh = true;
       TrialService.getTrialsList()
-        .catch(function (err) {
-          Log.debug('Failed to retrieve trial information. Status: ' + err.status);
-          Notification.error('partnerHomePage.errGetTrialsQuery', {
-            status: err.status
-          });
+        .catch(function (response) {
+          Notification.errorResponse(response, 'partnerHomePage.errGetTrialsQuery');
         })
         .then(function (response) {
           return PartnerService.loadRetrievedDataToList(_.get(response, 'data.trials', []), true);

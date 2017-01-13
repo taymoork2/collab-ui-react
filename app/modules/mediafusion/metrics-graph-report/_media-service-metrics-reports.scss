@@ -2,6 +2,7 @@
 @import 'availability/_availability';
 @import 'utilization/_utilization';
 @import 'metricsInfoCard/_metrics-info';
+@import '_media-metrics-report-card';
 
 @keyframes graphAxisFade {
   0% {
@@ -80,7 +81,7 @@
     }
   }
 
-  .report-card {
+  .media-metrics-report-card {
     animation: scaleUpCard 0.5s linear;
 
     article {
@@ -199,6 +200,9 @@
     .amcharts-value-axis .amcharts-axis-label {
       opacity: 0;
       animation: graphAxisFade 2s ease-in-out 1 forwards;
+    }
+    .media-service-card {
+      min-height: auto!important;
     }
   }
 }

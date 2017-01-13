@@ -3,12 +3,18 @@
 'use strict';
 
 describe('User Service', function () {
+  var orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
+  var spiedAuthinfo = {
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue(orgId)
+  };
   beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module(function ($provide) {
+    $provide.value("Authinfo", spiedAuthinfo);
+  }));
   beforeEach(function () {
     bard.appModule('Huron');
     bard.inject(this, '$httpBackend', '$injector', '$rootScope', 'Authinfo', 'Config', 'Userservice', 'UrlConfig');
     spyOn($rootScope, '$broadcast').and.returnValue({});
-    spyOn(Authinfo, 'getOrgId').and.returnValue('abc123efg456');
   });
 
   afterEach(function () {
@@ -75,7 +81,8 @@ describe('User Service', function () {
       .expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/users/onboard')
       .respond(200, testData.onboard_success_response);
     var userId = testData.onboard_success_response.userResponse[0].uuid;
-    $httpBackend.expectPUT(UrlConfig.getSunlightConfigServiceUrl() + '/user' + '/' + userId).respond(200);
+    $httpBackend.expectPUT(UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() +
+      '/user' + '/' + userId).respond(200);
     $httpBackend.expectGET(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userId).respond(200);
     $httpBackend.expectPATCH(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userId).respond(200);
     Userservice.onboardUsers(testData.usersDataArray, testData.entitlements, [testData.sunlight_license]);
@@ -96,6 +103,20 @@ describe('User Service', function () {
       .respond(200, testData.onboard_success_response);
     Userservice.onboardUsers(testData.usersDataArray, testData.entitlements, [testData.non_sunlight_license]);
     $httpBackend.flush();
+  });
+
+  it('getUserLicence() should pass if the email is in different case', function () {
+    var userEmail = 'Abc@Def.com';
+    var users = [{
+      email: 'abc@def.com',
+      licenses: [{
+        name: 'license1'
+      }, {
+        name: 'license2'
+      }]
+    }];
+    var licenses = Userservice.getUserLicence(userEmail, users);
+    expect(_.isEmpty(licenses)).toBeFalsy();
   });
 
   describe('User Photo', function () {
@@ -160,7 +181,7 @@ describe('User Service', function () {
   describe('getUserAsPromise():', function () {
     it('should GET from CI to fetch details for a user for the current org', function () {
       var fakeUserId = 'fake-userid';
-      var expectedUrl = 'https://identity.webex.com/identity/scim/abc123efg456/v1/Users/fake-userid';
+      var expectedUrl = 'https://identity.webex.com/identity/scim/deba1221-ab12-cd34-de56-abcdef123456/v1/Users/fake-userid';
       $httpBackend.expectGET(expectedUrl).respond(200);
       Userservice.getUserAsPromise(fakeUserId);
       $httpBackend.flush();

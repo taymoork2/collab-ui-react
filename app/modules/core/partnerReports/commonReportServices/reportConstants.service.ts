@@ -8,15 +8,15 @@ export class ReportConstants {
   public readonly ABORT: string = 'ABORT';
 
   // Numerical Constants
-  public readonly DAYS: number = 7;
+  public readonly DAYS: number = 6;
   public readonly FIXED: number = 2;
-  public readonly INTEGER_BASE = 10;
-  public readonly LINE_WEEKS: number = 4;
   public readonly MONTHS: number = 2;
   public readonly PERCENTAGE_MULTIPLIER: number = 100;
   public readonly THIRTEEN_WEEKS: number = 13;
   public readonly WEEKS: number = 3;
-  public readonly YEAR: number = 52;
+  public readonly YEAR: number = 51;
+  public readonly FOUR_WEEKS: number = 48;
+  public readonly TWELVE_WEEKS: number = 40;
 
   // moment formatting helpers
   public readonly DAY_FORMAT: string = 'MMM DD';
@@ -66,49 +66,96 @@ export class ReportConstants {
     private $translate: ng.translate.ITranslateService
   ) {}
 
-  // Time Filter
-  public FILTER_ONE: ITimespan = {
-    value: 0,
-    label: this.$translate.instant('reportsPage.week'),
-    description: this.$translate.instant('reportsPage.week2'),
-  };
-  public FILTER_TWO: ITimespan = {
-    value: 1,
-    label: this.$translate.instant('reportsPage.month'),
-    description: this.$translate.instant('reportsPage.month2'),
-  };
-  public FILTER_THREE: ITimespan = {
-    value: 2,
-    label: this.$translate.instant('reportsPage.threeMonths'),
-    description: this.$translate.instant('reportsPage.threeMonths2'),
-  };
-  public timeFilter: Array<ITimespan> = [this.FILTER_ONE, this.FILTER_TWO, this.FILTER_THREE];
+  get WEEK_FILTER(): ITimespan {
+    return {
+      value: 0,
+      label: this.$translate.instant('reportsPage.week'),
+      description: this.$translate.instant('reportsPage.week2'),
+      min: 1,
+      max: this.DAYS,
+    };
+  }
+  get MONTH_FILTER(): ITimespan {
+    return {
+      value: 1,
+      label: this.$translate.instant('reportsPage.month'),
+      description: this.$translate.instant('reportsPage.month2'),
+      min: this.FOUR_WEEKS,
+      max: this.YEAR,
+    };
+  }
+  get THREE_MONTH_FILTER(): ITimespan {
+    return {
+      value: 2,
+      label: this.$translate.instant('reportsPage.threeMonths'),
+      description: this.$translate.instant('reportsPage.threeMonths2'),
+      min: this.TWELVE_WEEKS,
+      max: this.YEAR,
+    };
+  }
+  get CUSTOM_FILTER(): ITimespan {
+    return {
+      value: 'custom',
+      label: this.$translate.instant('reportsPage.custom'),
+      description: this.$translate.instant('reportsPage.custom2'),
+      min: 0,
+      max: this.YEAR,
+    };
+  }
+  get TIME_FILTER(): Array<ITimespan> {
+    return [this.WEEK_FILTER, this.MONTH_FILTER, this.THREE_MONTH_FILTER];
+  }
+  get ALT_TIME_FILTER(): Array<ITimespan> {
+    return [this.WEEK_FILTER, this.MONTH_FILTER, this.THREE_MONTH_FILTER, this.CUSTOM_FILTER];
+  }
 
   // active user line graph filterArray
-  public ACTIVE_FILTER_ONE: IDropdownBase = {
-    value: 0,
-    label: this.$translate.instant('activeUsers.allUsers'),
-  };
-  public ACTIVE_FILTER_TWO: IDropdownBase = {
-    value: 1,
-    label: this.$translate.instant('activeUsers.activeUsers'),
-  };
-  public activeFilter: Array<IDropdownBase> = [this.ACTIVE_FILTER_ONE, this.ACTIVE_FILTER_TWO];
+  get ACTIVE_FILTER_ONE(): IDropdownBase {
+    return {
+      value: 0,
+      label: this.$translate.instant('activeUsers.allUsers'),
+    };
+  }
+  get ACTIVE_FILTER_TWO(): IDropdownBase {
+    return {
+      value: 1,
+      label: this.$translate.instant('activeUsers.activeUsers'),
+    };
+  }
+  get ACTIVE_FILTER(): Array<IDropdownBase> {
+    return [this.ACTIVE_FILTER_ONE, this.ACTIVE_FILTER_TWO];
+  }
 
   // media graph filter
-  public MEDIA_FILTER_ONE: IDropdownBase = {
-    value: 0,
-    label: this.$translate.instant('reportsPage.allCalls'),
-  };
-  public MEDIA_FILTER_TWO: IDropdownBase = {
-    value: 1,
-    label: this.$translate.instant('reportsPage.audioCalls'),
-  };
-  public MEDIA_FILTER_THREE: IDropdownBase = {
-    value: 2,
-    label: this.$translate.instant('reportsPage.videoCalls'),
-  };
-  public mediaFilter: Array<IDropdownBase> = [this.MEDIA_FILTER_ONE, this.MEDIA_FILTER_TWO, this.MEDIA_FILTER_THREE];
+  get MEDIA_FILTER_ONE(): IDropdownBase {
+    return {
+      value: 0,
+      label: this.$translate.instant('reportsPage.allCalls'),
+    };
+  }
+  get MEDIA_FILTER_TWO(): IDropdownBase {
+    return {
+      value: 1,
+      label: this.$translate.instant('reportsPage.audioCalls'),
+    };
+  }
+  get MEDIA_FILTER_THREE(): IDropdownBase {
+    return {
+      value: 2,
+      label: this.$translate.instant('reportsPage.videoCalls'),
+    };
+  }
+  get MEDIA_FILTER(): Array<IDropdownBase> {
+    return [this.MEDIA_FILTER_ONE, this.MEDIA_FILTER_TWO, this.MEDIA_FILTER_THREE];
+  }
+
+  // Registered Endpoint filter default
+  get DEFAULT_ENDPOINT(): IDropdownBase {
+    return {
+      value: 0,
+      label: this.$translate.instant('registeredEndpoints.allDevices'),
+    };
+  }
 }
 
 angular.module('Core')

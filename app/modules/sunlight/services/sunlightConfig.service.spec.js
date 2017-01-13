@@ -5,10 +5,11 @@
 "use strict";
 
 describe(' sunlightConfigService', function () {
-  var sunlightConfigService, $httpBackend, sunlightUserConfigUrl, $window,
+  var sunlightConfigService, $httpBackend, sunlightUserConfigUrl, sunlightCSOnboardUrl,
     sunlightChatConfigUrl, sunlightChatTemplateUrl, chatConfig, userData, userId, orgId, csConnString, templateId;
   var spiedAuthinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org')
   };
   var errorData = {
     'errorType': 'Internal Server Error'
@@ -19,11 +20,10 @@ describe(' sunlightConfigService', function () {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 
-  beforeEach(inject(function (_SunlightConfigService_, _$httpBackend_, UrlConfig, _$window_) {
+  beforeEach(inject(function (_SunlightConfigService_, _$httpBackend_, UrlConfig) {
     sunlightConfigService = _SunlightConfigService_;
     $httpBackend = _$httpBackend_;
-    $window = _$window_;
-    sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/user';
+    sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/user';
     userData = getJSONFixture('sunlight/json/sunlightTestUser.json');
     chatConfig = getJSONFixture('sunlight/json/features/config/sunlightTestChatConfig.json');
     csConnString = 'FakeConnectionString';
@@ -32,6 +32,7 @@ describe(' sunlightConfigService', function () {
     templateId = 'adba1221-ab12-cd34-de56-abcdef123456';
     sunlightChatTemplateUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/template';
     sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
+    sunlightCSOnboardUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/csonboard';
   }));
 
   it('should get Chat Config for a give orgId', function () {
@@ -84,6 +85,25 @@ describe(' sunlightConfigService', function () {
     var userInfo = angular.copy(getJSONFixture('sunlight/json/sunlightTestUser.json'));
     $httpBackend.whenPUT(sunlightUserConfigUrl + '/' + userId).respond(500, errorData);
     sunlightConfigService.updateUserInfo(userInfo, userId).then(function () {}, function (response) {
+      expect(response.data).toEqual(errorData);
+      expect(response.status).toBe(500);
+    });
+    $httpBackend.flush();
+  });
+
+  it('should update chatConfig in sunlight config service', function () {
+    var chatConfig = angular.copy(getJSONFixture('sunlight/json/features/config/sunlightTestChatConfig.json'));
+    $httpBackend.whenPUT(sunlightChatConfigUrl).respond(200, {});
+    sunlightConfigService.updateChatConfig(chatConfig).then(function (response) {
+      expect(response.status).toBe(200);
+    });
+    $httpBackend.flush();
+  });
+
+  it('should fail to update chatConfig in sunlight config service when there is an http error', function () {
+    var chatConfig = angular.copy(getJSONFixture('sunlight/json/features/config/sunlightTestChatConfig.json'));
+    $httpBackend.whenPUT(sunlightChatConfigUrl).respond(500, errorData);
+    sunlightConfigService.updateChatConfig(chatConfig).then(function () {}, function (response) {
       expect(response.data).toEqual(errorData);
       expect(response.status).toBe(500);
     });
@@ -157,11 +177,10 @@ describe(' sunlightConfigService', function () {
     });
   });
 
-  it('should open a new tab, when onBoardCare is called', function () {
-    spyOn($window, 'open').and.callFake(function () {
-      return true;
+  it('should call config cs onboard api, when onBoardCare is called', function () {
+    $httpBackend.whenPUT(sunlightCSOnboardUrl).respond(200, {});
+    sunlightConfigService.onBoardCare().then(function (response) {
+      expect(response.status).toBe(200);
     });
-    sunlightConfigService.onBoardCare();
-    expect($window.open).toHaveBeenCalled();
   });
 });

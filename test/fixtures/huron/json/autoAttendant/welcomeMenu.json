@@ -48,7 +48,110 @@
           "description": "",
           "ceid": "3333"
         }
-      }]
+      }, {
+        "runActionsOnInput": {
+          "description": "{\"uploadFile\":\"testFile.wav\"}",
+          "inputType": 4,
+          "minNumberOfCharacters": 1,
+          "maxNumberOfCharacters": 12,
+          "variableName": "my variable name",
+          "prompts": {
+            "playList": [{
+              "url": "https://fileUrlPlayback.cisco.com",
+              "deleteUrl": "https://fileUrlDelete.cisco.com"
+            }],
+            "sayList": []
+          },
+          "rawInputActions": [{
+            "assignVar": {
+              "variableName": "my assign Var"
+            }
+          }],
+          "voice" : "miss piggy",
+          "language": "porker",
+          "attempts": 3,
+          "inputs" : [{
+            "input": 0,
+            "actions" : [{
+              "assignVar" : {
+                "variableName": "Preferred Language",
+                "value": "English"
+              }
+            }]
+          }]
+        }
+      }, {
+      "routeToQueue": {
+        "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}",
+        "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+        "queueInitialAnnouncement": "",
+        "queuePeriodicAnnouncements": [{
+          "queuePeriodicAnnouncement": "",
+          "queuePeriodicAnnouncementInterval": "45"
+        }],
+        "queueMaxTime": 15,
+        "queueFallback": {
+          "disconnect": {
+            "treatment": "none"
+          }
+        }
+      }
+    }, {
+      "routeToQueue": {
+        "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}",
+        "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+        "queueInitialAnnouncement": "",
+        "queuePeriodicAnnouncements": [{
+          "queuePeriodicAnnouncement": "",
+          "queuePeriodicAnnouncementInterval": "45"
+        }],
+        "queueMaxTime": 15,
+        "queueFallback": {
+          "goto": {
+            "ceid": "c5495dc2-2754-473d-9a45-f7c33d87b829",
+            "description": ""
+          }
+        }
+      }
+    }, {
+      "routeToQueue": {
+        "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}",
+        "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+        "queueInitialAnnouncement": "",
+        "queuePeriodicAnnouncements": [{
+          "queuePeriodicAnnouncement": "",
+          "queuePeriodicAnnouncementInterval": "45"
+        }],
+        "queueMaxTime": 15,
+        "queueFallback": {
+          "route": {
+            "destination": "+112345678900",
+            "description": ""
+          }
+        }
+      }
+    }, {
+      "routeToQueue": {
+        "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}",
+        "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+        "queueInitialAnnouncement": "",
+        "queuePeriodicAnnouncements": [{
+          "queuePeriodicAnnouncement": "",
+          "queuePeriodicAnnouncementInterval": "45"
+        }],
+        "queueMaxTime": 15,
+        "queueFallback": {
+          "routeToVoiceMail": {
+            "id": "5991528f-d5c9-461a-b95f-a1e533dea0fc",
+            "description": ""
+          }
+        }
+      }
+    }]
     }]
   },
 
@@ -99,7 +202,200 @@
         "goto": {
           "ceid": "3333"
         }
-      }]
+      }, {
+        "routeToQueue": {
+          "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+          "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+          "queueInitialAnnouncement": "",
+          "queuePeriodicAnnouncements": [{
+            "queuePeriodicAnnouncement": "",
+            "queuePeriodicAnnouncementInterval": "45"
+          }],
+          "queueMaxTime": 15,
+          "queueFallback": {
+            "disconnect": {
+              "treatment": "none"
+            }
+          },
+          "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}"
+        }
+      }, {
+      "routeToQueue": {
+        "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+        "queueInitialAnnouncement": "",
+        "queuePeriodicAnnouncements": [{
+          "queuePeriodicAnnouncement": "",
+          "queuePeriodicAnnouncementInterval": "45"
+        }],
+        "queueMaxTime": 15,
+        "queueFallback": {
+          "goto": {
+            "ceid": "c5495dc2-2754-473d-9a45-f7c33d87b829",
+            "description": ""
+          }
+        },
+        "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}"
+      }
+    }, {
+      "routeToQueue": {
+        "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+        "queueInitialAnnouncement": "",
+        "queuePeriodicAnnouncements": [{
+          "queuePeriodicAnnouncement": "",
+          "queuePeriodicAnnouncementInterval": "45"
+        }],
+        "queueMaxTime": 15,
+        "queueFallback": {
+          "route": {
+            "destination": "+112345678900",
+            "description": ""
+          }
+        },
+        "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}"
+      }
+    }, {
+      "routeToQueue": {
+        "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+        "queueInitialAnnouncement": "",
+        "queuePeriodicAnnouncements": [{
+          "queuePeriodicAnnouncement": "",
+          "queuePeriodicAnnouncementInterval": "45"
+        }],
+        "queueMaxTime": 15,
+        "queueFallback": {
+          "routeToVoiceMail": {
+            "id": "5991528f-d5c9-461a-b95f-a1e533dea0fc",
+            "description": ""
+          }
+        },
+        "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}"
+      }
+    }]
+    }]
+  },
+
+  "ceWelcomeNoDescriptionTemp": {
+    "callExperienceName": "AA Welcome",
+    "assignedResources": [{
+      "trigger": "incomingCall",
+      "type": "directoryNumber",
+      "id": "e7d68d8c-9e92-4330-a881-5fc9ace1f7d3"
+    }],
+    "defaultActionSet": "openHours",
+    "scheduleEventTypeMap": {
+      "open": "openHours"
+    },
+    "actionSets": [{
+      "name": "openHours",
+      "actions": [{
+        "play": {
+          "description": "Welcome prompt",
+          "url": "file1.avi"
+        }
+      }, {
+        "route": {
+          "description": "Operator",
+          "destination": "1111"
+        }
+      }, {
+        "say": {
+          "value": "Welcome to the AA",
+          "voice": "Kate"
+        }
+      }, {
+        "routeToUser": {
+          "description": "user 1",
+          "id": "0000"
+        }
+      }, {
+        "routeToVoiceMail": {
+          "description": "voice 1",
+          "id": "1111"
+        }
+      }, {
+        "routeToHuntGroup": {
+          "description": "Hunt Group 1",
+          "id": "2222"
+        }
+      }, {
+        "goto": {
+          "ceid": "3333"
+        }
+      }, {
+        "routeToQueue": {
+          "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+          "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+          "queueInitialAnnouncement": "",
+          "queuePeriodicAnnouncements": [{
+            "queuePeriodicAnnouncement": "",
+            "queuePeriodicAnnouncementInterval": "45"
+          }],
+          "queueMaxTime": 15,
+          "queueFallback": {
+            "disconnect": {
+              "treatment": "none"
+            }
+          },
+          "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}"
+        }
+      }, {
+      "routeToQueue": {
+        "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+        "queueInitialAnnouncement": "",
+        "queuePeriodicAnnouncements": [{
+          "queuePeriodicAnnouncement": "",
+          "queuePeriodicAnnouncementInterval": "45"
+        }],
+        "queueMaxTime": 15,
+        "queueFallback": {
+          "goto": {
+            "ceid": "c5495dc2-2754-473d-9a45-f7c33d87b829",
+            "description": ""
+          }
+        },
+        "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}"
+      }
+    }, {
+      "routeToQueue": {
+        "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+        "queueInitialAnnouncement": "",
+        "queuePeriodicAnnouncements": [{
+          "queuePeriodicAnnouncement": "",
+          "queuePeriodicAnnouncementInterval": "45"
+        }],
+        "queueMaxTime": 15,
+        "queueFallback": {
+          "route": {
+            "destination": "+112345678900",
+            "description": ""
+          }
+        },
+        "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}"
+      }
+    }, {
+      "routeToQueue": {
+        "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+        "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+        "queueInitialAnnouncement": "",
+        "queuePeriodicAnnouncements": [{
+          "queuePeriodicAnnouncement": "",
+          "queuePeriodicAnnouncementInterval": "45"
+        }],
+        "queueMaxTime": 15,
+        "queueFallback": {
+          "routeToVoiceMail": {
+            "id": "5991528f-d5c9-461a-b95f-a1e533dea0fc",
+            "description": ""
+          }
+        },
+        "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}"
+      }
+    }]
     }]
   },
 
@@ -219,6 +515,518 @@
       "url": "",
       "language": "",
       "voice": ""
-    }]
+    }, {
+      "description": "",
+      "type": "",
+      "key": "",
+      "url": "",
+      "username": "",
+      "password": "",
+      "actions": [{
+        "description": "",
+        "inputType": 4,
+        "maxNumberOfCharacters": 12,
+        "minNumberOfCharacters": 1,
+        "name": "runActionsOnInput",
+        "value": "hello" ,
+        "variableName": "my assign Var",
+        "voice": "miss piggy",
+        "inputActions": [{
+          "key": 0,
+          "keys": [],
+          "value": "English"
+        }]
+      }],
+      "timeout": "",
+      "voice" : "miss piggy",
+      "language": "porker",
+      "attempts": 3
+    }, {
+    "description": "",
+    "type": "",
+    "key": "",
+    "actions": [{
+      "name": "routeToQueue",
+      "value": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+      "description": {
+        "musicOnHoldDescription": "",
+        "periodicAnnouncementType": "say",
+        "periodicAnnouncementDescription": "",
+        "initialAnnouncementType": "say",
+        "initialAnnouncementDescription": ""
+      },
+      "voice": "",
+      "queueSettings": {
+        "maxWaitTime": 15,
+        "musicOnHold": {
+          "description": "",
+          "type": "",
+          "key": "",
+          "actions": [{
+            "name": "play",
+            "value": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        },
+        "initialAnnouncement": {
+          "description": "",
+          "type": "",
+          "key": "",
+          "actions": [{
+            "name": "say",
+            "value": "",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        },
+        "periodicAnnouncement": {
+          "description": "",
+          "type": "",
+          "key": "",
+          "actions": [{
+            "name": "say",
+            "value": "",
+            "description": "",
+            "voice": "",
+            "interval": "45"
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        },
+        "fallback": {
+          "description": "",
+          "type": "",
+          "key": "",
+          "actions": [{
+            "name": "disconnect",
+            "value": "",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        }
+      }
+    }],
+    "timeout": "",
+    "language": "",
+    "voice": "",
+    "username": "",
+    "password": "",
+    "url": ""
+  }, {
+    "description": "",
+    "type": "",
+    "key": "",
+    "actions": [{
+      "name": "routeToQueue",
+      "value": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+      "description": {
+        "musicOnHoldDescription": "",
+        "periodicAnnouncementType": "say",
+        "periodicAnnouncementDescription": "",
+        "initialAnnouncementType": "say",
+        "initialAnnouncementDescription": ""
+      },
+      "voice": "",
+      "queueSettings": {
+        "maxWaitTime": 15,
+        "musicOnHold": {
+          "description": "",
+          "type": "",
+          "key": "",
+          "actions": [{
+            "name": "play",
+            "value": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        },
+        "initialAnnouncement": {
+          "description": "",
+          "type": "",
+          "key": "",
+          "actions": [{
+            "name": "say",
+            "value": "",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        },
+        "periodicAnnouncement": {
+          "description": "",
+          "type": "",
+          "key": "",
+          "actions": [{
+            "name": "say",
+            "value": "",
+            "description": "",
+            "voice": "",
+            "interval": "45"
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        },
+        "fallback": {
+          "description": "",
+          "type": "",
+          "key": "",
+          "actions": [{
+            "name": "goto",
+            "value": "c5495dc2-2754-473d-9a45-f7c33d87b829",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        }
+      }
+    }],
+    "timeout": "",
+    "language": "",
+    "voice": "",
+    "username": "",
+    "password": "",
+    "url": ""
+  }, {
+    "description": "",
+    "type": "",
+    "key": "",
+    "actions": [{
+      "name": "routeToQueue",
+      "value": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+      "description": {
+        "musicOnHoldDescription": "",
+        "periodicAnnouncementType": "say",
+        "periodicAnnouncementDescription": "",
+        "initialAnnouncementType": "say",
+        "initialAnnouncementDescription": ""
+      },
+      "voice": "",
+      "queueSettings": {
+        "maxWaitTime": 15,
+        "musicOnHold": {
+          "description": "",
+          "type": "",
+          "key": "",
+          "actions": [{
+            "name": "play",
+            "value": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        },
+        "initialAnnouncement": {
+          "description": "",
+          "type": "",
+          "key": "",
+          "actions": [{
+            "name": "say",
+            "value": "",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        },
+        "periodicAnnouncement": {
+          "description": "",
+          "type": "",
+          "key": "",
+          "actions": [{
+            "name": "say",
+            "value": "",
+            "description": "",
+            "voice": "",
+            "interval": "45"
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        },
+        "fallback": {
+          "description": "",
+          "type": "",
+          "key": "",
+          "actions": [{
+            "name": "route",
+            "value": "+112345678900",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        }
+      }
+    }],
+    "timeout": "",
+    "language": "",
+    "voice": "",
+    "username": "",
+    "password": "",
+    "url": ""
+  }, {
+    "description": "",
+    "type": "",
+    "key": "",
+    "actions": [{
+      "name": "routeToQueue",
+      "value": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
+      "description": {
+        "musicOnHoldDescription": "",
+        "periodicAnnouncementType": "say",
+        "periodicAnnouncementDescription": "",
+        "initialAnnouncementType": "say",
+        "initialAnnouncementDescription": ""
+      },
+      "voice": "",
+      "queueSettings": {
+        "maxWaitTime": 15,
+        "musicOnHold": {
+          "description": "",
+          "type": "",
+          "key": "",
+          "actions": [{
+            "name": "play",
+            "value": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        },
+        "initialAnnouncement": {
+          "description": "",
+          "type": "",
+          "key": "",
+          "actions": [{
+            "name": "say",
+            "value": "",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        },
+        "periodicAnnouncement": {
+          "description": "",
+          "type": "",
+          "key": "",
+          "actions": [{
+            "name": "say",
+            "value": "",
+            "description": "",
+            "voice": "",
+            "interval": "45"
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        },
+        "fallback": {
+          "description": "",
+          "type": "",
+          "key": "",
+          "actions": [{
+            "name": "routeToVoiceMail",
+            "value": "5991528f-d5c9-461a-b95f-a1e533dea0fc",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        }
+      }
+    }],
+    "timeout": "",
+    "language": "",
+    "voice": "",
+    "username": "",
+    "password": "",
+    "url": ""
+  }]
+  },
+  "ceMenuFull": {
+    "callExperienceName": "AA Custom",
+    "assignedResources": [
+      {
+        "trigger": "incomingCall",
+        "type": "directoryNumber",
+        "id": "e7d68d8c-9e92-4330-a881-5fc9ace1f7d3"
+      }
+    ],
+    "defaultActionSet": "openHours",
+    "scheduleEventTypeMap": {
+      "open": "openHours"
+    },
+    "actionSets": [
+      {
+        "name": "openHours",
+        "actions": [
+          {
+            "play": {
+              "description": "Welcome prompt",
+              "url": "file1.avi"
+            }
+          },
+          {
+            "route": {
+              "description": "Operator",
+              "destination": "1111"
+            }
+          },
+          {
+            "say": {
+              "value": "Welcome to the AA",
+              "voice": "Kate"
+            }
+          },
+          {
+            "routeToUser": {
+              "description": "user 1",
+              "id": "0000"
+            }
+          },
+          {
+            "routeToVoiceMail": {
+              "description": "voice 1",
+              "id": "1111"
+            }
+          },
+          {
+            "routeToHuntGroup": {
+              "description": "Hunt Group 1",
+              "id": "2222"
+            }
+          },
+          {
+            "goto": {
+              "ceid": "3333"
+            }
+          },
+          {
+            "runActionsOnInput": {
+              "inputType": 4,
+              "description": "{\"uploadFile\":\"testFile.wav\"}",
+              "prompts": {
+                "playList": [
+                  {
+                    "url": "https://fileUrlPlayback.cisco.com",
+                    "deleteUrl": "https://fileUrlDelete.cisco.com"
+                  }
+                ],
+                "sayList": []
+              },
+              "rawInputActions": [
+                {
+                  "assignVar": {
+                    "value": "$Input",
+                    "variableName": "my assign Var"
+                  }
+                }
+              ],
+              "inputs": [
+                {
+                  "actions": [
+                    {
+                      "assignVar": {
+                        "variableName": "my assign Var",
+                        "value": "English"
+                      }
+                    }
+                  ],
+                  "input": 0
+                }
+              ],
+              "minNumberOfCharacters": 1,
+              "maxNumberOfCharacters": 12,
+              "voice": "miss piggy",
+              "attempts": 3
+            }
+          },
+          {
+            "runCustomActions": {
+              "description": "",
+              "username": "userabc",
+              "password": "passwordabc",
+              "url": "https:\/\/aws\/custom\/menu"
+            }
+          }
+        ]
+      }
+    ]
   }
 }

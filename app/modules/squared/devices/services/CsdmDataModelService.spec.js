@@ -6,6 +6,7 @@ describe('Service: CsdmDataModelService', function () {
   var CsdmDataModelService;
   var $httpBackend;
   var $rootScope;
+  var testScope;
   var $timeout;
 
   var placesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/';
@@ -14,9 +15,6 @@ describe('Service: CsdmDataModelService', function () {
   var pWithDeviceUrl = placesUrl + 'a19b308a-PlaceWithDevice-71898e423bec';
   var device1Url = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f';
   var devicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices';
-
-  var codeUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/ad233bb2-code1-for-place-with-one-code-9333278b3a0c';
-  var pWithOnlyCodeUrl = placesUrl + 'a19b308a-PlaceWithOnlyCode-71898e423bec';
 
   var huronDevicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices/?type=huron';
   var pWithHuronDevice2Url = placesUrl + '68351854-Place2WithHuronDevice-c9c844421ec2';
@@ -33,11 +31,9 @@ describe('Service: CsdmDataModelService', function () {
 
   var initialHuronDevices = getJSONFixture('squared/json/huronDevices.json');
   var initialHttpDevices = getJSONFixture('squared/json/devices.json');
-  var codes = getJSONFixture('squared/json/activationCodes.json');
   var accounts = getJSONFixture('squared/json/accounts.json');
 
-  beforeEach(inject(function (FeatureToggleService, $q, Authinfo) {
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+  beforeEach(inject(function (Authinfo) {
     spyOn(Authinfo, 'getOrgId').and.returnValue('testOrg');
   }));
 
@@ -46,17 +42,18 @@ describe('Service: CsdmDataModelService', function () {
     $httpBackend = _$httpBackend_;
     $rootScope = _$rootScope_;
     $timeout = _$timeout_;
+    testScope = $rootScope.$new();
 
     $httpBackend.whenGET(devicesUrl + '?checkDisplayName=false&checkOnline=false').respond(initialHttpDevices);
     $httpBackend.whenGET(devicesUrl).respond(initialHttpDevices);
     $httpBackend.whenGET(huronDevicesUrl).respond(initialHuronDevices);
-    $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/codes').respond(codes);
     $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/?shallow=true&type=all').respond(accounts);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/testOrg/v1/Users/me').respond({});
 
   }));
 
   afterEach(function () {
+    testScope.$destroy();
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
   });
@@ -162,52 +159,24 @@ describe('Service: CsdmDataModelService', function () {
       });
     });
 
-    it('add code is reflected in device list and places map', function () {
-      executeGetCallsAndInitPromises();
-      var codeToAddUrl = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/codes/12121-code-to-add-21212";
-      var placeUuid = "place-id";
-      var placeToBeAddedUrl = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/" + placeUuid;
-      $httpBackend.expectPOST("https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/")
-        .respond({ cisUuid: placeUuid, url: placeToBeAddedUrl });
-      $httpBackend.expectPOST("https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/codes")
-        .respond({ url: codeToAddUrl, id: placeUuid }); //api uses id
-      var promiseExecuted;
-
-      CsdmDataModelService.getDevicesMap().then(function (devicesMap) {
-        CsdmDataModelService.getPlacesMap().then(function (places) {
-          CsdmDataModelService.createCsdmPlace("newPlace", "cloudberry").then(function (place) {
-            CsdmDataModelService.createCodeForExisting(place.cisUuid).then(function (createdCode) {
-              expect(devicesMap[codeToAddUrl]).toBe(createdCode);
-              expect(Object.keys(places[place.url].codes).length).toBe(1);
-              promiseExecuted = "YES";
-            });
-          });
-        });
-      });
-
-      $httpBackend.flush();
-      expect(promiseExecuted).toBeTruthy();
-    });
-
-    it('add code to an existing place is reflected in device list and place map with place containing new code', function () {
+    it('add code to an existing place is not reflected in device list', function () {
       executeGetCallsAndInitPromises();
       var codeToAddUrl = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/codes/12121-code-to-add-21212";
 
       $httpBackend.expectPOST("https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/codes")
         .respond({ url: codeToAddUrl, id: pWithoutDeviceUuid });  //api uses id
-      var promiseExecuted;
+      var promiseExecuted, changeNotification;
 
       CsdmDataModelService.getDevicesMap().then(function (deviceMap) {
-        CsdmDataModelService.getPlacesMap().then(function (places) {
+        CsdmDataModelService.getPlacesMap().then(function () {
 
-          expect(Object.keys(places[pWithoutDeviceUrl].devices).length).toBe(0);
-          expect(Object.keys(places[pWithoutDeviceUrl].codes).length).toBe(0);
+          CsdmDataModelService.subscribeToChanges(testScope, function () {
+            changeNotification = "YES";
+          });
 
-          CsdmDataModelService.createCodeForExisting(pWithoutDeviceUuid).then(function (createdCode) {
+          CsdmDataModelService.createCodeForExisting(pWithoutDeviceUuid).then(function () {
 
-            expect(deviceMap[codeToAddUrl]).toBe(createdCode);
-            expect(Object.keys(places[pWithoutDeviceUrl].devices).length).toBe(0);
-            expect(Object.keys(places[pWithoutDeviceUrl].codes).length).toBe(1);
+            expect(deviceMap[codeToAddUrl]).toBeUndefined();
             promiseExecuted = "YES";
           });
 
@@ -215,17 +184,14 @@ describe('Service: CsdmDataModelService', function () {
       });
       $httpBackend.flush();
       expect(promiseExecuted).toBeTruthy();
-    });
-
-    it('add code to non existing place is reflected in code list and place map', function () {
-
+      expect(changeNotification).toBeFalsy();
     });
 
     it('failing to delete device is not reflected in device list and place list returned by earlier getDevicesMap', function () {
       executeGetCallsAndInitPromises();
       var deviceToDeleteUrl = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
 
-      $httpBackend.expectDELETE(deviceToDeleteUrl).respond(403);
+      $httpBackend.expectDELETE(deviceToDeleteUrl + '?keepPlace=true').respond(403);
 
       var promiseExecuted;
 
@@ -240,6 +206,7 @@ describe('Service: CsdmDataModelService', function () {
           CsdmDataModelService.deleteItem(deviceToDelete).catch(function () {
 
             expect(devices[deviceToDeleteUrl]).toBe(deviceToDelete);
+            expect(places[pWithDeviceUrl]).toBeDefined();
             expect(Object.keys(places[pWithDeviceUrl].devices).length).toBe(3);
             promiseExecuted = "YES";
           });
@@ -256,39 +223,41 @@ describe('Service: CsdmDataModelService', function () {
     function testDeleteDeviceIsReflectedInDevAndPlaceList(deviceUrlToDelete, placeUrl) {
       executeGetCallsAndInitPromises();
 
-      var promiseExecuted;
-      $httpBackend.expectDELETE(deviceUrlToDelete).respond(204);
+      var promiseExecuted, changeNotification;
 
       CsdmDataModelService.getDevicesMap().then(function (devices) {
 
         CsdmDataModelService.getPlacesMap().then(function (places) {
 
           var deviceToDelete = devices[deviceUrlToDelete];
+          if (deviceToDelete.isCloudberryDevice) {
+            $httpBackend.expectDELETE(deviceUrlToDelete + '?keepPlace=true').respond(204);
+          } else {
+            $httpBackend.expectDELETE(deviceUrlToDelete).respond(204);
+          }
 
           var place = places[placeUrl];
           var devicesInPlace;
 
-          if (deviceToDelete.isCode) {
-            devicesInPlace = _.values(place.codes);
-          } else {
-            devicesInPlace = _.values(place.devices);
-          }
+          devicesInPlace = _.values(place.devices);
 
           var initalDeviceCountForPlace = devicesInPlace.length;
 
           expect(devicesInPlace).toContain(deviceToDelete);
 
+          CsdmDataModelService.subscribeToChanges(testScope, function () {
+            changeNotification = "YES";
+          });
+
           CsdmDataModelService.deleteItem(deviceToDelete).then(function () {
 
             expect(devices[deviceUrlToDelete]).toBeUndefined();
-            if (!deviceToDelete.isHuronDevice) {
+            if (!deviceToDelete.isHuronDevice && !deviceToDelete.isCloudberryDevice) {
               expect(places[placeUrl]).toBeUndefined();
-            }
-            if (deviceToDelete.isCode) {
-              devicesInPlace = _.values(place.codes);
             } else {
-              devicesInPlace = _.values(place.devices);
+              expect(places[placeUrl]).toBeDefined();
             }
+            devicesInPlace = _.values(place.devices);
 
             expect(devicesInPlace).toHaveLength(initalDeviceCountForPlace - 1);
 
@@ -299,6 +268,7 @@ describe('Service: CsdmDataModelService', function () {
 
       $httpBackend.flush();
       expect(promiseExecuted).toBeTruthy();
+      expect(changeNotification).toBeTruthy();
     }
 
     it('delete cloudberry device is reflected in device list (all devices under same place) and place list', function () {
@@ -306,22 +276,16 @@ describe('Service: CsdmDataModelService', function () {
       testDeleteDeviceIsReflectedInDevAndPlaceList(deviceUrlToDelete, pWithDeviceUrl);
     });
 
-    it('delete code is reflected in device list (all devices under same place) and place list', function () {
-      testDeleteDeviceIsReflectedInDevAndPlaceList(codeUrl, pWithOnlyCodeUrl);
-    });
-
     it('delete huron device is reflected in device list (all devices under same place) and place list', function () {
       testDeleteDeviceIsReflectedInDevAndPlaceList(huronDevice2Url, pWithHuronDevice2Url);
     });
 
-    it('change device name is reflected in device list and place list', function () {
+    it('change device name is not possible', function () {
       executeGetCallsAndInitPromises();
       var deviceUrlToUpdate = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
       var originalName = "test device 2";
       var newDeviceName = "This Is The New name !!";
-      var promiseExecuted;
-
-      $httpBackend.expectPATCH(deviceUrlToUpdate).respond(204);
+      var promiseRejected;
 
       CsdmDataModelService.getDevicesMap().then(function (devices) {
 
@@ -329,49 +293,16 @@ describe('Service: CsdmDataModelService', function () {
 
           expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].displayName).toBe(originalName);
 
-          CsdmDataModelService.updateItemName(devices[deviceUrlToUpdate], newDeviceName).then(function (updatedDevice) {
-
-            expect(updatedDevice.displayName).toEqual(newDeviceName);
-            expect(devices[deviceUrlToUpdate].displayName).toEqual(newDeviceName);
-            expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].displayName).toEqual(newDeviceName);
-            expect(places[pWithDeviceUrl].displayName).toEqual(newDeviceName);
-
-            promiseExecuted = "YES";
+          CsdmDataModelService.updateItemName(devices[deviceUrlToUpdate], newDeviceName).then(function () {
+            fail('Should be rejected');
+          }).catch(function () {
+            promiseRejected = "YES";
           });
         });
       });
 
-      $httpBackend.flush();
-      expect(promiseExecuted).toBeTruthy();
-    });
-
-    it('failing to change device name is not reflected in device list and place list', function () {
-      executeGetCallsAndInitPromises();
-      var deviceUrlToUpdate = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f';
-
-      var originalName = "test device 2";
-      var newDeviceName = "This Could have been The New name !!";
-      var promiseExecuted;
-
-      $httpBackend.expectPATCH(deviceUrlToUpdate).respond(403);
-
-      CsdmDataModelService.getDevicesMap().then(function (devices) {
-
-        CsdmDataModelService.getPlacesMap().then(function (places) {
-
-          expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].displayName).toBe(originalName);
-
-          CsdmDataModelService.updateItemName(devices[deviceUrlToUpdate], newDeviceName).catch(function () {
-
-            expect(devices[deviceUrlToUpdate].displayName).toEqual(originalName);
-            expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].displayName).toEqual(originalName);
-            promiseExecuted = "YES";
-          });
-        });
-      });
-
-      $httpBackend.flush();
-      expect(promiseExecuted).toBeTruthy();
+      $rootScope.$digest();
+      expect(promiseRejected).toBeTruthy();
     });
 
     function testAddTagIsReflectedInDevAndPlaceList(deviceUrlToUpdate, placeUrl) {
@@ -388,25 +319,31 @@ describe('Service: CsdmDataModelService', function () {
         var deviceToUpdate = devices[deviceUrlToUpdate];
         var originalTagsCount = deviceToUpdate.tags.length;
         var newTag = "This Is A New Tag added by test";
-        var newTags = deviceToUpdate.tags.concat(newTag);
+        var deviceToUpdateArgument = JSON.parse(JSON.stringify(deviceToUpdate));
+
+        var newTags = deviceToUpdateArgument.tags.concat(newTag);
 
         CsdmDataModelService.getPlacesMap().then(function (places) {
 
-          var arrayWithDevice;
-          if (deviceToUpdate.isCode) {
-            arrayWithDevice = places[placeUrl].codes;
-          } else {
-            arrayWithDevice = places[placeUrl].devices;
-          }
+          var arrayWithDevice = places[placeUrl].devices;
 
           expect(arrayWithDevice[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount);
 
-          CsdmDataModelService.updateTags(deviceToUpdate, newTags).then(function (updatedDevice) {
+          CsdmDataModelService.updateTags(deviceToUpdateArgument, newTags).then(function (updatedDevice) {
 
+            //Argument should not be updated:
+            expect(deviceToUpdateArgument.tags).toHaveLength(originalTagsCount);
+            expect(deviceToUpdateArgument.tags).not.toContain(newTag);
+
+            //response object should be updated:
             expect(updatedDevice.tags).toHaveLength(originalTagsCount + 1);
             expect(updatedDevice.tags).toContain(newTag);
+
+            //devices map should be updated:
             expect(devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount + 1);
             expect(devices[deviceUrlToUpdate].tags).toContain(newTag);
+
+            //devices on the place should be updated:
             expect(arrayWithDevice[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount + 1);
             expect(arrayWithDevice[deviceUrlToUpdate].tags).toContain(newTag);
 
@@ -423,10 +360,6 @@ describe('Service: CsdmDataModelService', function () {
       var deviceUrlToUpdate = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
       testAddTagIsReflectedInDevAndPlaceList(deviceUrlToUpdate, pWithDeviceUrl);
     });
-
-    // it('add a code tag is reflected in device list and place list', function () {
-    //   testAddTagIsReflectedInDevAndPlaceList(codeUrl, pWithOnlyCodeUrl);
-    // });
 
     it('add a huron device tag is reflected in device list and place list', function () {
       testAddTagIsReflectedInDevAndPlaceList(huronDevice2Url, pWithHuronDevice2Url);
@@ -453,8 +386,8 @@ describe('Service: CsdmDataModelService', function () {
 
           CsdmDataModelService.updateTags(deviceToUpdateClone, newTags).then(function (updatedDevice) {
 
-            expect(deviceToUpdateClone.tags).toHaveLength(originalTagsCount + 1);
-            expect(deviceToUpdateClone.tags).toContain(newTag);
+            expect(deviceToUpdateClone.tags).toHaveLength(originalTagsCount);
+            expect(deviceToUpdateClone.tags).not.toContain(newTag);
             expect(updatedDevice.tags).toHaveLength(originalTagsCount + 1);
             expect(updatedDevice.tags).toContain(newTag);
             expect(devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount + 1);
@@ -572,10 +505,6 @@ describe('Service: CsdmDataModelService', function () {
       $httpBackend.flush();
       expect(promiseExecuted).toBeTruthy();
     });
-
-    it('codes should be presented as non-activated devices', function () {
-      //TODO: Not implemented.
-    });
   });
 
   describe('places', function () {
@@ -583,13 +512,12 @@ describe('Service: CsdmDataModelService', function () {
       executeGetCallsAndInitPromises();
     });
 
-    it('should return a list of places including those containing devices and codes', function () {
+    it('should return a list of places including those containing devices', function () {
       var expectExecuted;
       CsdmDataModelService.getPlacesMap().then(function (places) {
         expect(Object.keys(places).length).toBe(initialPlaceCount);
         expect(_.values(places).length).toBe(initialPlaceCount);
         expect(Object.keys(places[pWithDeviceUrl].devices).length).toBe(3);
-        expect(Object.keys(places[pWithDeviceUrl].codes).length).toBe(2);
         expectExecuted = true;
       });
       $rootScope.$digest();
@@ -601,7 +529,6 @@ describe('Service: CsdmDataModelService', function () {
       CsdmDataModelService.getPlacesMap().then(function (places) {
 
         expect(Object.keys(places[pWithDeviceUrl].devices).length).toBe(3);
-        expect(Object.keys(places[pWithDeviceUrl].codes).length).toBe(2);
 
         expect(places[pWithDeviceUrl].displayName).toBe('PlaceWithDevice');
         expect(places[pWithDeviceUrl].type).toBe('cloudberry');
@@ -619,7 +546,6 @@ describe('Service: CsdmDataModelService', function () {
       CsdmDataModelService.getPlacesMap().then(function (places) {
 
         expect(Object.keys(places[pWithoutDeviceUrl].devices).length).toBe(0);
-        expect(Object.keys(places[pWithoutDeviceUrl].codes).length).toBe(0);
 
         expect(places[pWithoutDeviceUrl].displayName).toBe('PlaceWithoutMissingNonExistingDevice');
         expect(places[pWithoutDeviceUrl].type).toBe('cloudberry');
@@ -637,7 +563,6 @@ describe('Service: CsdmDataModelService', function () {
       CsdmDataModelService.getPlacesMap().then(function (places) {
 
         expect(Object.keys(places[huronPlaceWithoutDeviceUrl].devices).length).toBe(0);
-        expect(Object.keys(places[huronPlaceWithoutDeviceUrl].codes).length).toBe(0);
 
         expect(places[huronPlaceWithoutDeviceUrl].displayName).toBe('HuronPlaceWithoutDevices');
         expect(places[huronPlaceWithoutDeviceUrl].type).toBe('huron');
@@ -659,27 +584,8 @@ describe('Service: CsdmDataModelService', function () {
       expect(expectExecuted).toBe(true);
     });
 
-    it('should return a list of places where places generated from a code should contain all place fields', function () {
-      var expectExecuted;
-      var placeWithOneCodeUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/a19b308a-PlaceWithOnlyCode-71898e423bec';
-      CsdmDataModelService.getPlacesMap().then(function (places) {
 
-        expect(Object.keys(places[placeWithOneCodeUrl].devices).length).toBe(0);
-        expect(Object.keys(places[placeWithOneCodeUrl].codes).length).toBe(1);
-
-        expect(places[placeWithOneCodeUrl].displayName).toBe('8A64E0C8576F667801576F66CF320002');
-        expect(places[placeWithOneCodeUrl].type).toBe('cloudberry');
-        expect(places[placeWithOneCodeUrl].readableType).toBe('addDeviceWizard.chooseDeviceType.roomSystem');
-        expect(places[placeWithOneCodeUrl].sipUrl).toBeUndefined();
-        expect(places[placeWithOneCodeUrl].cisUuid).toBe('a19b308a-PlaceWithOnlyCode-71898e423bec');
-        expectExecuted = true;
-      });
-      $rootScope.$digest();
-      expect(expectExecuted).toBe(true);
-    });
-
-
-    it('should return a list of places including those not containing devices or codes', function () {
+    it('should return a list of places including those not containing devices', function () {
 
       var expectCall;
       CsdmDataModelService.getPlacesMap().then(function (places) {
@@ -688,7 +594,6 @@ describe('Service: CsdmDataModelService', function () {
         expect(_.values(places).length).toBe(initialPlaceCount);
 
         expect(Object.keys(places[pWithoutDeviceUrl].devices).length).toBe(0);
-        expect(Object.keys(places[pWithoutDeviceUrl].codes).length).toBe(0);
 
         expectCall = true;
       });
@@ -696,29 +601,31 @@ describe('Service: CsdmDataModelService', function () {
       expect(expectCall).toBe(true);
     });
 
-    it('get should return an updated huron item and update the model when a code was activated', function () {
+    it('get should return an updated item and update the model when a device was activated', function () {
 
-      var expectCall;
+      var expectCall, changeNotification;
       var placeToUpdateUrl = huronPlaceWithoutDeviceUrl;
-      var placeToUpdateId = huronPlaceWithoutDeviceUrl.split('/').slice(-1)[0];
-      var placeToFindDevicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices/?cisUuid=' + placeToUpdateId + '&type=huron';
 
-      var phonesForPlace = { 'http://new/device': { 'url': 'http://new/device' } };
-      $httpBackend.expectGET(placeToFindDevicesUrl).respond(phonesForPlace);
+      var updatedPlace = {
+        'url': huronPlaceWithoutDeviceUrl,
+        'devices': { 'http://new/device': { 'url': 'http://new/device' } }
+      };
+      $httpBackend.expectGET(placeToUpdateUrl).respond(updatedPlace);
 
       CsdmDataModelService.getPlacesMap().then(function (places) {
         expect(Object.keys(places).length).toBe(initialPlaceCount);
         var placeToUpdate = places[placeToUpdateUrl];
 
         expect(Object.keys(placeToUpdate.devices)).toHaveLength(0);
-        expect(Object.keys(placeToUpdate.codes)).toHaveLength(0);
         expect(initialDeviceMap['http://new/device']).toBeUndefined();
         expect(Object.keys(initialDeviceMap)).not.toContain('http://new/device');
+        CsdmDataModelService.subscribeToChanges(testScope, function () {
+          changeNotification = "YES";
+        });
 
-        CsdmDataModelService.reloadItem(placeToUpdate).then(function () {
-
+        CsdmDataModelService.reloadItem(placeToUpdate).then(function (returnedPlace) {
+          expect(Object.keys(returnedPlace.devices)).toHaveLength(1);
           expect(Object.keys(placeToUpdate.devices)).toHaveLength(1);
-          expect(Object.keys(placeToUpdate.codes)).toHaveLength(0);
 
           expect(Object.keys(initialDeviceMap)).toContain('http://new/device');
 
@@ -727,25 +634,169 @@ describe('Service: CsdmDataModelService', function () {
       });
       $httpBackend.flush();
       expect(expectCall).toBe(true);
+      expect(changeNotification).toBeTruthy();
     });
 
-    it('delete should remove place from place list', function () {
+    it('get should return an updated item and update the model when place was renamed', function () {
 
-      var expectCall;
-      var placeToRemoveUrl = pWithoutDeviceUrl;
-      $httpBackend.expectDELETE(placeToRemoveUrl).respond(200);
+      var expectCall, changeNotification;
+      var placeToUpdateUrl = huronPlaceWithoutDeviceUrl;
+
+      var newDisplayName = 'New display name! Wow!';
+      var updatedPlace = {
+        'displayName': newDisplayName,
+        'url': huronPlaceWithoutDeviceUrl
+      };
+      $httpBackend.expectGET(placeToUpdateUrl).respond(updatedPlace);
+
       CsdmDataModelService.getPlacesMap().then(function (places) {
         expect(Object.keys(places).length).toBe(initialPlaceCount);
-        var placeToRemove = places[placeToRemoveUrl];
+        var placeToUpdate = places[placeToUpdateUrl];
 
-        CsdmDataModelService.deleteItem(placeToRemove).then(function () {
-          expect(places[placeToRemove.url]).toBeUndefined();
-          expect(Object.keys(places).length).toBe(initialPlaceCount - 1);
+        CsdmDataModelService.subscribeToChanges(testScope, function () {
+          changeNotification = "YES";
+        });
+
+        CsdmDataModelService.reloadItem(placeToUpdate).then(function (returnedPlace) {
+          expect(returnedPlace.displayName).toBe(newDisplayName);
+          expect(placeToUpdate.displayName).toBe(newDisplayName);
+
           expectCall = true;
         });
       });
       $httpBackend.flush();
       expect(expectCall).toBe(true);
+      expect(changeNotification).toBeTruthy();
+    });
+
+    it('get should return an updated item and update the model when a device was deleted', function () {
+
+      var expectCall, changeNotification;
+      var placeToUpdateUrl = pWithDeviceUrl;
+
+      var updatedPlace = {
+        'url': pWithDeviceUrl,
+        'devices': {}
+      };
+      $httpBackend.expectGET(placeToUpdateUrl).respond(updatedPlace);
+
+      CsdmDataModelService.getPlacesMap().then(function (places) {
+        expect(Object.keys(places).length).toBe(initialPlaceCount);
+        var placeToUpdate = places[placeToUpdateUrl];
+
+        expect(Object.keys(placeToUpdate.devices).length).toBeGreaterThan(0);
+        expect(initialDeviceMap[device1Url]).toBeDefined();
+        expect(Object.keys(initialDeviceMap)).toContain(device1Url);
+        CsdmDataModelService.subscribeToChanges(testScope, function () {
+          changeNotification = "YES";
+        });
+
+        CsdmDataModelService.reloadItem(placeToUpdate).then(function (returnedPlace) {
+          expect(Object.keys(returnedPlace.devices)).toHaveLength(0);
+          expect(Object.keys(placeToUpdate.devices)).toHaveLength(0);
+
+          expect(Object.keys(initialDeviceMap)).not.toContain(device1Url);
+
+          expectCall = true;
+        });
+      });
+      $httpBackend.flush();
+      expect(expectCall).toBe(true);
+      expect(changeNotification).toBeTruthy();
+    });
+
+    it('updateItemName should update place and devices', function () {
+      var promiseExecuted, changeNotification;
+
+      var placeToUpdateUrl = pWithDeviceUrl;
+      var deviceToUpdateUrl = device1Url;
+
+      var newName = "new name from test";
+      var newSipUrl = "This Is A sip url from test";
+
+      var placeReturnedFromPatch = {
+        'url': placeToUpdateUrl,
+        'sipUrl': newSipUrl,
+        'displayName': newName,
+        'devices': {
+          deviceToUpdateUrl: { 'url': deviceToUpdateUrl, 'sipUrl': newSipUrl }
+        }
+      };
+
+      $httpBackend.expectPATCH(placeToUpdateUrl).respond(placeReturnedFromPatch);
+
+      expect(changeNotification).toBeFalsy();
+      CsdmDataModelService.subscribeToChanges(testScope, function () {
+        changeNotification = "YES";
+      });
+
+      CsdmDataModelService.getDevicesMap().then(function (devices) {
+        CsdmDataModelService.getPlacesMap().then(function (places) {
+
+          var placeToUpdate = places[placeToUpdateUrl];
+          var deviceToUpdate = devices[deviceToUpdateUrl];
+
+          var oldName = placeToUpdate.displayName;
+          var oldSipUrl = placeToUpdate.sipUrl;
+
+          var placeToUpdateArgument = _.cloneDeep(placeToUpdate);
+
+          CsdmDataModelService.updateItemName(placeToUpdateArgument, newName).then(function (updatedPlace) {
+
+            //argument should not be updated:
+            expect(placeToUpdateArgument.displayName).toEqual(oldName);
+            expect(placeToUpdateArgument.sipUrl).toEqual(oldSipUrl);
+
+            //Place in place map should be updated:
+            expect(placeToUpdate.displayName).toEqual(newName);
+            expect(placeToUpdate.sipUrl).toEqual(newSipUrl);
+
+            //Device in place in place map should be updated:
+            expect(_.find(placeToUpdate.devices, { url: deviceToUpdateUrl }).displayName).toEqual(newName);
+            expect(_.find(placeToUpdate.devices, { url: deviceToUpdateUrl }).sipUrl).toEqual(newSipUrl);
+
+            //Device in device map should be updated:
+            expect(deviceToUpdate.displayName).toEqual(newName);
+            expect(deviceToUpdate.sipUrl).toEqual(newSipUrl);
+
+            //Returned object should be updated:
+            expect(updatedPlace.displayName).toEqual(newName);
+            expect(updatedPlace.sipUrl).toEqual(newSipUrl);
+
+            promiseExecuted = "YES";
+          });
+        });
+      });
+
+      $httpBackend.flush();
+      expect(promiseExecuted).toBeTruthy();
+      expect(changeNotification).toBeTruthy();
+    });
+
+    it('delete should remove place from place list', function () {
+      var placeToRemoveUrl = pWithoutDeviceUrl;
+      $httpBackend.expectDELETE(placeToRemoveUrl).respond(200);
+      var promiseExecuted, changeNotification;
+
+      CsdmDataModelService.getPlacesMap().then(function (places) {
+        expect(Object.keys(places).length).toBe(initialPlaceCount);
+        var placeToRemove = places[placeToRemoveUrl];
+
+        CsdmDataModelService.subscribeToChanges(testScope, function () {
+          changeNotification = "YES";
+        });
+
+        CsdmDataModelService.deleteItem(placeToRemove).then(function () {
+          expect(places[placeToRemove.url]).toBeUndefined();
+          expect(Object.keys(places).length).toBe(initialPlaceCount - 1);
+          promiseExecuted = true;
+        });
+      });
+
+
+      $httpBackend.flush();
+      expect(promiseExecuted).toBeTruthy();
+      expect(changeNotification).toBeTruthy();
     });
 
     it('fail to delete should not remove place from place list', function () {
@@ -793,33 +844,78 @@ describe('Service: CsdmDataModelService', function () {
       expect(expectCall).toBe(true);
     });
 
-    it('delete place with codes should remove place from place list and codes from codes list', function () {
+    it('should notify all devices in a place when notifyDevicesInPlace', function () {
+      $httpBackend.expectPOST('https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f/notify').respond(201, '');
+      $httpBackend.expectPOST('https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f/notify').respond(201, '');
+      $httpBackend.expectPOST('https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/6ae09bec-c0f0-58af-b490-60ed6a695a89/notify').respond(201, '');
 
-      var expectCall;
-      var placeToRemoveUrl = pWithDeviceUrl;
-      $httpBackend.expectDELETE(placeToRemoveUrl).respond(200);
-      CsdmDataModelService.getPlacesMap().then(function (places) {
-        expect(Object.keys(places).length).toBe(initialPlaceCount);
+      CsdmDataModelService.notifyDevicesInPlace('a19b308a-PlaceWithDevice-71898e423bec', { foo: 'bar' });
 
-        var placeToRemove = places[placeToRemoveUrl];
-        var code0Url = _.values(placeToRemove.codes)[0].url;
-        var code1Url = _.values(placeToRemove.codes)[1].url;
-
-        expect(initialDeviceMap[code0Url]).toBe(_.values(placeToRemove.codes)[0]);
-        expect(initialDeviceMap[code1Url]).toBe(_.values(placeToRemove.codes)[1]);
-
-        CsdmDataModelService.deleteItem(placeToRemove).then(function () {
-          expect(places[placeToRemove.url]).toBeUndefined();
-          expect(Object.keys(places).length).toBe(initialPlaceCount - 1);
-
-          expect(initialDeviceMap[code0Url]).toBeUndefined();
-          expect(initialDeviceMap[code1Url]).toBeUndefined();
-
-          expectCall = true;
-        });
-      });
       $httpBackend.flush();
-      expect(expectCall).toBe(true);
+      $httpBackend.verifyNoOutstandingRequest();
+      $httpBackend.verifyNoOutstandingExpectation();
+    });
+
+    it('should not notify any devices in a place when place does not exist', function () {
+      CsdmDataModelService.notifyDevicesInPlace('a19b308a-PlaceDoesNotExist-71898e423bec', { foo: 'bar' });
+      $httpBackend.verifyNoOutstandingRequest();
+      $httpBackend.verifyNoOutstandingExpectation();
+    });
+  });
+
+  describe('re-fetch places', function () {
+    var scope;
+
+    beforeEach(function () {
+      scope = $rootScope.$new();
+
+      $rootScope.$apply();
+
+      CsdmDataModelService.getPlacesMap(true);
+
+      $rootScope.$digest();
+      $timeout.flush(1000);
+      $httpBackend.flush();
+      $rootScope.$apply();
+    });
+
+    afterEach(function () {
+
+      $httpBackend.verifyNoOutstandingRequest();
+      $httpBackend.verifyNoOutstandingExpectation();
+
+      scope.$destroy();
+    });
+
+    it('has done the initial poll', function () {
+      $httpBackend.verifyNoOutstandingRequest();
+      $httpBackend.verifyNoOutstandingExpectation();
+    });
+
+    it('asking before grace time should not trigger fetching', function () {
+
+      $timeout.flush(3000);
+
+      CsdmDataModelService.getPlacesMap(true);
+
+      $rootScope.$digest();
+
+      $httpBackend.verifyNoOutstandingRequest();
+      $httpBackend.verifyNoOutstandingExpectation();
+    });
+
+    it('asking after grace time should trigger fetching', function () {
+
+      $timeout.flush(300000);
+
+      CsdmDataModelService.getPlacesMap(true);
+
+      $rootScope.$digest();
+
+      $httpBackend.flush(2);
+
+      $httpBackend.verifyNoOutstandingRequest();
+      $httpBackend.verifyNoOutstandingExpectation();
     });
   });
 
@@ -974,36 +1070,6 @@ describe('Service: CsdmDataModelService', function () {
         expect(Object.keys(initialDeviceMap).length).toBe(initialDeviceCount);
         expect(initialDeviceMap[moddedDevUrl].displayName).toEqual(newDisplayName);
         expect(initialDeviceMap[moddedDevUrl]).toBe(moddedDeviceRef);
-      });
-
-      it('will mark a code as usedif a new device is activated for the same uuid', function () {
-
-        var addedDevUrl = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/aaaaaa-ed35-4e00-a20d-d4d3519efb4f";
-
-        var existingCodeUrl = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/ad233bb2-code1-for-place-with-one-code-9333278b3a0c";
-        var devicesWithOneAdded = JSON.parse(JSON.stringify(initialHttpDevices));
-
-        devicesWithOneAdded[addedDevUrl] = {
-          "displayName": "addedDevice",
-          "cisUuid": "a19b308a-PlaceWithOnlyCode-71898e423bec",
-          "accountType": "MACHINE",
-          "url": "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/aaaaaa-ed35-4e00-a20d-d4d3519efb4f",
-          "createTime": "2016-09-15T01:12:01.105Z",
-          "description": "[\"one\", \"two\", \"three\"]",
-          "product": "SX10",
-          "state": "CLAIMED"
-        };
-
-        $httpBackend.expectGET(devicesUrl).respond(devicesWithOneAdded);
-
-        $timeout.flush(31000);
-
-        $httpBackend.flush();
-
-        expect(Object.keys(initialDeviceMap).length).toBe(initialDeviceCount + 1);
-        expect(initialDeviceMap[addedDevUrl].cisUuid).toEqual('a19b308a-PlaceWithOnlyCode-71898e423bec');
-        expect(initialDeviceMap[existingCodeUrl].isUsed).toBeTruthy();
-
       });
     });
   });

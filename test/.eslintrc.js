@@ -51,6 +51,10 @@ module.exports = {
     expect: true,
     exports: true,
     getJSONFixture: true,
+    gssDashboard: true,
+    gssComponent: true,
+    gssService: true,
+    gssIncident: true,
     helper: true,
     huntGroup: true,
     huronFeatures: true,
@@ -93,6 +97,5 @@ module.exports = {
     wizard: true,
     xdescribe: true,
     xit: true,
-    componentPage: true,
   }
 };

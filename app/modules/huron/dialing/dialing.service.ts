@@ -34,7 +34,7 @@ export class DialingService {
   private dialingService: IDialingResource;
   private cosRestriction: ICOSRestrictionResponse;
   private dialingUuids = {};
-
+  public disableInternationalDialing: boolean;
   /* @ngInject */
   constructor(
     private $translate,
@@ -42,6 +42,7 @@ export class DialingService {
     private $resource: ng.resource.IResourceService,
     private HuronConfig,
     private Authinfo,
+    private FeatureToggleService,
     private $state: ng.ui.IStateService) {
 
     let updateAction: ng.resource.IActionDescriptor = {
@@ -163,7 +164,7 @@ export class DialingService {
     switch (value) {
       case 0: return this.cbNeverAllow;
       case 1: return this.cbAlwaysAllow;
-      case -1:  return this.cbUseGlobal;
+      case -1: return this.cbUseGlobal;
     }
   }
 
@@ -202,4 +203,24 @@ export class DialingService {
     });
     return deferred.promise;
   }
+
+  public isDisableInternationalDialing(): ng.IPromise<boolean> {
+    return this.FeatureToggleService.supports(this.FeatureToggleService.features.huronInternationalDialingTrialOverride)
+      .then((data) => {
+        this.disableInternationalDialing = this.getLicenseCommunicationIsTrial(data);
+        return this.disableInternationalDialing;
+      });
+  }
+
+  public getLicenseCommunicationIsTrial(isOverride: boolean): boolean {
+    if (isOverride) {
+      // customer has trial override feature toggle for international dialing
+      this.disableInternationalDialing = false;
+      return this.disableInternationalDialing;
+    }
+    // no override, check if communication license is in trial period
+    this.disableInternationalDialing = this.Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc');
+    return _.isUndefined(this.disableInternationalDialing) || this.disableInternationalDialing;
+  }
+
 }

@@ -1,3 +1,5 @@
+require('./_customer-overview.scss');
+
 (function () {
   'use strict';
 
@@ -6,7 +8,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, newCustomerViewToggle, Notification, Orgservice, PartnerService, TrialService, Userservice) {
+  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, newCustomerViewToggle, Notification, Orgservice, PartnerService, trialForPaid, TrialService, Userservice) {
     var vm = this;
 
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -36,7 +38,7 @@
     vm.isTest = false;
     vm.isDeleting = false;
     vm.isOrgSetup = false;
-    vm.isUpdateStatusEnabled = false;
+    vm.isUpdateStatusEnabled = true;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
@@ -46,7 +48,16 @@
     vm.freeOrPaidServices = [];
     vm.trialActions = [];
 
+    vm._helpers = {
+      canUpdateLicensesForSelf: canUpdateLicensesForSelf,
+      openCustomerPortal: openCustomerPortal,
+      updateUsers: updateUsers
+    };
+
+    // TODO:  atlasCustomerListUpdate toggle is globally set to true. Needs refactoring to remove unused code
     vm.newCustomerViewToggle = newCustomerViewToggle;
+    vm.featureTrialForPaid = trialForPaid;
+    //vm.featureTrialForPaid = true;
 
     var QTY = _.toUpper($translate.instant('common.quantity'));
     var FREE = _.toUpper($translate.instant('customerPage.free'));
@@ -60,11 +71,6 @@
         setOffers(isCareEnabled);
       });
 
-
-    FeatureToggleService.atlasCustomerListUpdateGetStatus()
-      .then(function (result) {
-        vm.isUpdateStatusEnabled = result;
-      });
 
     function setOffers(isCareEnabled) {
       var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, { isCareEnabled: isCareEnabled,
@@ -112,10 +118,19 @@
     }
 
     function initTrialActions() {
-      vm.trialActions.push({
-        actionKey: 'customerPage.edit',
-        actionFunction: openEditTrialModal
-      });
+      if (vm.currentCustomer.trialId) {
+        vm.trialActions.push({
+          actionKey: 'customerPage.edit',
+          actionFunction: openEditTrialModal
+        });
+      } else {
+        if (vm.featureTrialForPaid) {
+          vm.trialActions.push({
+            actionKey: 'customerPage.addTrial',
+            actionFunction: openAddTrialModal
+          });
+        }
+      }
     }
 
     function resetForm() {
@@ -198,27 +213,33 @@
       if (vm.isPartnerAdmin) {
         promise = PartnerService.modifyManagedOrgs(vm.customerOrgId);
       }
-      promise.then(function () {
-        if (licIds.length > 0) {
-          Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop);
-          openCustomerPortal();
-        } else {
-          AccountOrgService.getAccount(vm.customerOrgId).then(function (response) {
-            var accountsLength = _.get(response, 'data.accounts.length');
-            if (accountsLength) {
-              var updateUsersList = [];
-              for (var i = 0; i < accountsLength; i++) {
-                var account = response.data.accounts[i];
-                var lics = account.licenses;
-                var licIds = collectLicenseIdsForWebexSites(lics);
-                updateUsersList.push(Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop));
-              }
-              $q.all(updateUsersList).then(openCustomerPortal);
-            } else {
-              openCustomerPortal();
-            }
-          });
+      return promise.then(function () {
+        // non-admin users (e.g. sales admins) should not try to update their own licenses, but
+        // instead launch the portal immediately
+        if (!vm._helpers.canUpdateLicensesForSelf()) {
+          return vm._helpers.openCustomerPortal();
         }
+
+        if (licIds.length > 0) {
+          return vm._helpers.updateUsers([emailObj], licIds).then(vm._helpers.openCustomerPortal);
+        }
+
+        AccountOrgService.getAccount(vm.customerOrgId).then(function (response) {
+          var accountsLength = _.get(response, 'data.accounts.length', 0);
+          if (!accountsLength) {
+            return vm._helpers.openCustomerPortal();
+          }
+
+          var updateUsersList = [];
+          for (var i = 0; i < accountsLength; i++) {
+            var account = response.data.accounts[i];
+            var lics = account.licenses;
+            var licIds = collectLicenseIdsForWebexSites(lics);
+            updateUsersList.push(vm._helpers.updateUsers([emailObj], licIds));
+          }
+
+          return $q.all(updateUsersList).then(vm._helpers.openCustomerPortal);
+        });
       })
       .catch(function (response) {
         Notification.errorWithTrackingId(response, 'customerPage.launchCustomerPortalError');
@@ -226,26 +247,50 @@
       });
     }
 
+    function canUpdateLicensesForSelf() {
+      return Authinfo.isAdmin();
+    }
+
+    // TODO: 'Userservice.updateUsers' needs to be heavily re-worked, so we shim the logic we need
+    //   to reject as-needed here instead to expedite the fix for ATLAS-1465.
+    function updateUsers(userInfoList, licenses) {
+      if (!vm._helpers.canUpdateLicensesForSelf()) {
+        Notification.error('customerPage.updateLicensesAuthError');
+        return $q.reject();
+      }
+
+      return Userservice.updateUsers(userInfoList, licenses, null, 'updateUserLicense', _.noop);
+    }
+
     function openCustomerPortal() {
-      $window.open($state.href('login_swap', {
+      return $window.open($state.href('login_swap', {
         customerOrgId: vm.customerOrgId,
         customerOrgName: vm.customerName
       }));
     }
 
     function openEditTrialModal() {
+      //var isAddTrial = options.isAddTrial;
       TrialService.getTrial(vm.currentCustomer.trialId).then(function (response) {
-        $state.go('trialEdit.info', {
-          currentTrial: vm.currentCustomer,
-          details: response
-        })
-          .then(function () {
-            $state.modal.result.then(function () {
-              $state.go('partnercustomers.list', {}, {
-                reload: true
-              });
+        var route = TrialService.getEditTrialRoute(vm.featureTrialForPaid, vm.currentCustomer, response);
+        $state.go(route.path, route.params).then(function () {
+          $state.modal.result.then(function () {
+            $state.go('partnercustomers.list', {}, {
+              reload: true
             });
           });
+        });
+      });
+    }
+
+    function openAddTrialModal() {
+      var route = TrialService.getAddTrialRoute(vm.featureTrialForPaid, vm.currentCustomer);
+      $state.go(route.path, route.params).then(function () {
+        $state.modal.result.then(function () {
+          $state.go('partnercustomers.list', {}, {
+            reload: true
+          });
+        });
       });
     }
 
@@ -272,9 +317,8 @@
           return response.createdBy === vm.currentAdminId;
         })
         .catch(function (error) {
-          Notification.error('customerPage.errGetTrial', {
-            customer: vm.customerName,
-            message: error.data.message
+          Notification.errorResponse(error, 'customerPage.errGetTrial', {
+            customer: vm.customerName
           });
           return false;
         });
@@ -317,9 +361,8 @@
           isPartnerCreator()
             .then(function (isPartnerCreator) {
               if (isPartnerCreator) {
-                Notification.error('customerPage.isSetupDoneError', {
-                  orgName: vm.customerName,
-                  message: error.data.message
+                Notification.errorResponse(error, 'customerPage.isSetupDoneError', {
+                  orgName: vm.customerName
                 });
               }
             });
@@ -360,14 +403,14 @@
             });
           }).catch(function (error) {
             vm.isDeleting = false;
-            Notification.error('customerPage.deleteOrgError', {
-              orgName: vm.customerName,
-              message: error.data.message
+            Notification.errorResponse(error, 'customerPage.deleteOrgError', {
+              orgName: vm.customerName
             });
           });
         });
       }
     }
+
 
   }
 })();

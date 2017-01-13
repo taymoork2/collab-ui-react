@@ -1,3 +1,5 @@
+require('./_hunt-group.scss');
+
 (function () {
   'use strict';
 
@@ -10,7 +12,7 @@
   /* @ngInject */
   function HuntGroupSetupAssistantCtrl($q, $state, $modal, $timeout,
     Authinfo, Notification, HuntGroupService,
-    HuntGroupFallbackDataService, HuntGroupMemberDataService) {
+    HuntGroupFallbackDataService, HuntGroupMemberDataService, DialPlanService) {
     var vm = this;
     var customerId = Authinfo.getOrgId();
 
@@ -65,7 +67,7 @@
     vm.removeFallbackDest = removeFallbackDest;
     vm.isErrorFallbackInput = isErrorFallbackInput;
     vm.fallbackSuggestionsAvailable = false;
-    vm.disableVoicemail = false;
+    vm.disableVoicemail = true;
 
     // ==================================================
     // The below methods have elevated access only to be
@@ -74,14 +76,24 @@
     vm.populateHuntPilotNumbers = populateHuntPilotNumbers;
     vm.populateHuntMembers = populateHuntMembers;
     vm.populateFallbackDestination = populateFallbackDestination;
-    vm.allowLocalValidation = false;
+
+    vm.externalRegionCodeFn = getRegionCode;
+    vm.setSelectedFallbackNumber = setSelectedFallbackNumber;
+    vm.callDestInputs = ['internal', 'external'];
 
     init();
 
     function init() {
       HuntGroupFallbackDataService.reset();
       HuntGroupMemberDataService.reset();
-      allowLocalValidation();
+    }
+
+    function setSelectedFallbackNumber(model) {
+      vm.selectedFallbackNumber = model;
+    }
+
+    function getRegionCode() {
+      return DialPlanService.getCustomerVoice(Authinfo.getOrgId());
     }
 
     function fetchNumbers(typedNumber) {
@@ -223,7 +235,7 @@
     }
 
     function fetchHuntMembers(nameHint) {
-      return $q.when(HuntGroupMemberDataService.fetchHuntMembers(nameHint)).then(function (members) {
+      return $q.when(HuntGroupMemberDataService.fetchHuntMembers(nameHint, true)).then(function (members) {
         if (HuntGroupService.suggestionsNeeded(nameHint)) {
           vm.errorMemberInput = (members && members.length === 0);
         } else {
@@ -255,6 +267,9 @@
       vm.selectedFallbackMember = HuntGroupFallbackDataService.setFallbackMember($item);
       HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get($item, 'selectableNumber.uuid')).then(function (isVoicemailDisabled) {
         vm.disableVoicemail = isVoicemailDisabled;
+      })
+      .catch(function () {
+        vm.disableVoicemail = true;
       });
     }
 
@@ -274,7 +289,7 @@
     }
 
     function fetchFallbackDestination(nameHint) {
-      return $q.when(HuntGroupMemberDataService.fetchMembers(nameHint)).then(function (mems) {
+      return $q.when(HuntGroupMemberDataService.fetchMembers(nameHint, false)).then(function (mems) {
         vm.fallbackSuggestionsAvailable = (mems && mems.length > 0);
         return mems;
       });
@@ -295,7 +310,7 @@
     }
 
     function populateFallbackDestination(data) {
-      data.fallbackDestination = HuntGroupFallbackDataService.getFallbackDestinationJSON(vm.allowLocalValidation);
+      data.fallbackDestination = HuntGroupFallbackDataService.getFallbackDestinationJSON();
     }
     /////////////////////////////////////////////////////////
 
@@ -336,12 +351,6 @@
           type: number.type,
           number: number.number
         });
-      });
-    }
-
-    function allowLocalValidation() {
-      HuntGroupFallbackDataService.allowLocalValidation().then(function (result) {
-        vm.allowLocalValidation = result;
       });
     }
   }

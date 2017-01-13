@@ -20,7 +20,10 @@
       getExampleNumbers: getExampleNumbers,
       getPhoneNumberType: getPhoneNumberType,
       isTollFreeNumber: isTollFreeNumber,
-      isPossibleAreaCode: isPossibleAreaCode
+      isPossibleAreaCode: isPossibleAreaCode,
+      getDestinationObject: getDestinationObject,
+      checkPhoneNumberType: checkPhoneNumberType,
+      internationalNumberValidator: internationalNumberValidator
     };
     var TOLL_FREE = 'TOLL_FREE';
     var PREMIUM_RATE = 'PREMIUM_RATE';
@@ -60,7 +63,11 @@
     }
 
     function getPhoneNumberType(number) {
-      return phoneUtils.getNumberType(number, regionCode);
+      try {
+        return phoneUtils.getNumberType(number, regionCode);
+      } catch (e) {
+        return '';
+      }
     }
 
     function getRegionCode() {
@@ -128,12 +135,72 @@
 
     function isPossibleAreaCode(areaCode) {
       //TODO: needs to be looked at again when service in other countries is available
-      if (regionCode === 'us') {
-        return phoneUtils.isPossibleNumber(areaCode + '0000000', regionCode);
-      } else if (regionCode === 'au') {
-        return phoneUtils.isValidNumber(areaCode + '00000000', regionCode);
+      try {
+        if (regionCode === 'us') {
+          return phoneUtils.isPossibleNumber(areaCode + '0000000', regionCode);
+        } else if (regionCode === 'au') {
+          return phoneUtils.isValidNumber(areaCode + '00000000', regionCode);
+        } else {
+          return true;
+        }
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function getDestinationObject(number) {
+      try {
+        var data = getCountryInfo(phoneUtils.getRegionCodeForNumber(number));
+        return {
+          name: data.name,
+          code: data.code,
+          number: data.number,
+          phoneNumber: number
+        };
+      } catch (exception) {
+        return { phoneNumber: number };
+      }
+    }
+
+    function getCountryInfo(code) {
+      if (_.isString(code)) {
+        code = code.toLowerCase();
+        var data = _.find(CountryCodes, function (value) {
+          return code === value.code;
+        });
+        if (_.isUndefined(data)) {
+          throw new Error('Country not found');
+        } else {
+          return data;
+        }
       } else {
-        return true;
+        throw new Error('Code not found');
+      }
+    }
+
+    function checkPhoneNumberType(number) {
+      var phoneNumberType;
+      try {
+        if (phoneUtils.isValidNumberForRegion(number, regionCode)) {
+          phoneNumberType = phoneUtils.getNumberType(number, regionCode);
+        }
+      } catch (e) {
+        phoneNumberType = undefined;
+      }
+      return phoneNumberType;
+    }
+
+    function internationalNumberValidator(number) {
+      try {
+        var phoneNumber = phoneUtils.formatE164(number);
+        var regionCode = phoneUtils.getRegionCodeForNumber(phoneNumber).toLowerCase();
+        if (phoneUtils.isValidNumberForRegion(phoneNumber, regionCode)) {
+          return true;
+        } else {
+          return false;
+        }
+      } catch (e) {
+        return false;
       }
     }
   }

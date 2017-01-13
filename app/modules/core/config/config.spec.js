@@ -5,6 +5,11 @@ describe('Config', function () {
   beforeEach(angular.mock.module('Core'));
 
   var Config, $location, tabConfig, Storage;
+
+  afterEach(function () {
+    Config = $location = tabConfig = Storage = undefined;
+  });
+
   beforeEach(inject(function (_$location_, _Config_, _tabConfig_, _Storage_) {
     Config = _Config_;
     Storage = _Storage_;

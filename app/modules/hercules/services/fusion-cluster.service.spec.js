@@ -4,7 +4,6 @@ describe('Service: FusionClusterService', function () {
   var $httpBackend, $q, FusionClusterService, USSService;
 
   beforeEach(angular.mock.module('Hercules'));
-  // beforeEach(angular.mock.module('core.urlconfig'));
   beforeEach(angular.mock.module(mockDependencies));
   beforeEach(inject(dependencies));
 
@@ -79,12 +78,33 @@ describe('Service: FusionClusterService', function () {
       $httpBackend.flush();
     });
 
+    it('should filter out clusters with targetType unknown', function () {
+      $httpBackend
+        .expectGET('http://elg.no/organizations/0FF1C3?fields=@wide')
+        .respond({
+          clusters: [{
+            targetType: 'unknown',
+            connectors: []
+          }, {
+            targetType: 'c_mgmt',
+            connectors: []
+          }]
+        });
+      FusionClusterService.getAll()
+        .then(function (clusters) {
+          expect(clusters.length).toBe(1);
+        })
+        .catch(function () {
+          expect('reject called').toBeFalsy();
+        });
+      $httpBackend.flush();
+    });
+
     it('should add servicesStatuses property to each cluster', function () {
       $httpBackend
         .expectGET('http://elg.no/organizations/0FF1C3?fields=@wide')
         .respond({
           clusters: [{
-            state: 'fused',
             targetType: 'c_mgmt',
             connectors: [{
               alarms: [],
@@ -98,7 +118,6 @@ describe('Service: FusionClusterService', function () {
               hostname: 'b.elg.no'
             }]
           }, {
-            state: 'fused',
             targetType: 'mf_mgmt',
             connectors: [{
               alarms: [],
@@ -416,9 +435,11 @@ describe('Service: FusionClusterService', function () {
   describe('processClustersToAggregateStatusForService()', function () {
 
     var twoClusters;
+    var emptyClusters;
     beforeEach(function () {
       jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
       twoClusters = getJSONFixture('hercules/fusion-cluster-service-test-clusters.json');
+      emptyClusters = getJSONFixture('hercules/empty-clusters.json');
     });
 
     it('should return *operational* when all hosts are *running*', function () {
@@ -492,15 +513,15 @@ describe('Service: FusionClusterService', function () {
       expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('operational');
     });
 
-    it('should handle invalid service types by falling back to *outage*', function () {
-      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-invalid-service', twoClusters)).toBe('outage');
+    it('should handle invalid service types by falling back to *setupNotComplete*', function () {
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-invalid-service', twoClusters)).toBe('setupNotComplete');
     });
 
     it('should handle invalid cluster lists by falling back to *outage*', function () {
       var malformedClusterList = {
         clusters: 'not exactly a valid list of clusters'
       };
-      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-call', malformedClusterList)).toBe('outage');
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', malformedClusterList)).toBe('setupNotComplete');
     });
 
     it('should return *outage* when all hosts are *upgrading*', function () {
@@ -517,6 +538,11 @@ describe('Service: FusionClusterService', function () {
       twoClusters[1].servicesStatuses[2].serviceId = 'squared-fusion-media';
       twoClusters[1].servicesStatuses[2].state.name = 'upgrading';
       expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-media', twoClusters)).toBe('impaired');
+    });
+
+    it('should return *setupNotComplete* if no connectors in the cluster', function () {
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', emptyClusters)).toBe('setupNotComplete');
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-uc', emptyClusters)).toBe('setupNotComplete');
     });
   });
 
@@ -628,6 +654,7 @@ describe('Service: FusionClusterService', function () {
       jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
       var org = getJSONFixture('hercules/org-with-resource-groups.json');
       $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond(org);
+      $httpBackend.expectGET('http://ulv.no/organizations/0FF1C3/allowedRedirectTargets').respond(204, '');
     });
 
     afterEach(function () {
@@ -637,20 +664,22 @@ describe('Service: FusionClusterService', function () {
     });
 
     it('extract unassigned clusters and sort them by name', function () {
-      FusionClusterService.getResourceGroups(function (response) {
-        expect(response.unassigned.length).toBe(3);
-        expect(response.unassigned[0].name).toBe('Augusta National Golf Club');
-        expect(response.unassigned[2].name).toBe('Tom er en hippie');
-      });
+      FusionClusterService.getResourceGroups()
+        .then(function (response) {
+          expect(response.unassigned.length).toBe(3);
+          expect(response.unassigned[0].name).toBe('Augusta National Golf Club');
+          expect(response.unassigned[2].name).toBe('Cisco Oppsal');
+        });
     });
 
     it('extract resource groups and put clusters inside, sorted by name', function () {
-      FusionClusterService.getResourceGroups(function (response) {
-        expect(response.groups.length).toBe(4);
-        expect(response.groups[0].name).toBe('ACE');
-        expect(response.groups[0].clusters.length).toBe(1);
-        expect(response.groups[3].name).toBe('🐷');
-      });
+      FusionClusterService.getResourceGroups()
+        .then(function (response) {
+          expect(response.groups.length).toBe(4);
+          expect(response.groups[0].name).toBe('ACE');
+          expect(response.groups[0].clusters.length).toBe(1);
+          expect(response.groups[3].name).toBe('🐷');
+        });
     });
   });
 

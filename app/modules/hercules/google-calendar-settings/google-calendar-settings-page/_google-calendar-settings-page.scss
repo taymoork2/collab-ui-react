@@ -1,0 +1,10 @@
+@import 'styles/toolkit/colors';
+
+google-calendar-settings-page {
+  display: block;
+  background: #fff;
+
+  .needs-border-top {
+    border-top: 1px solid $gray-light-2;
+  }
+}

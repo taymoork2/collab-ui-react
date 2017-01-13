@@ -1,0 +1,54 @@
+<div class="metrics-reports">
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <div class="grid-filter" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
+        <div class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm'">
+          <span class="name" ng-class="{'active' : nav.displayHistorical}" translate="mediaFusion.metrics.historical"></span>
+          <span class="name" ng-class="{'active' : nav.displayRealtime}" translate="mediaFusion.metrics.realTime"></span>
+          <i class="icon icon-chevron-down"></i>
+        </div>
+        <ul ng-class="{'dropdown-menu dropdown-primary' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }" >
+          <li class="filter" ng-class="{'active' : nav.displayHistorical}" ng-click="nav.changeTabs(true, false);">
+           <a id="allReports"  >
+              <span class="name" translate="mediaFusion.metrics.historical"></span>
+            </a>
+          </li>
+          <li class="filter" ng-class="{'active' : nav.displayRealtime}" ng-click="nav.changeTabs(false, true);">
+             <a id="engagementReports" >
+              <span class="name" translate="mediaFusion.metrics.realTime"></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+      <cs-select id="clusterFilter" name="clusterFilter" class='metrics-report-filter' ng-model="nav.clusterSelected" options="nav.clusterOptions" on-change-fn="nav.clusterUpdate()"></cs-select>
+    </cs-page-sub-header-right>  
+  </cs-page-sub-header>
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      {{nav.label}} ({{nav.date}})
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right ng-show="nav.displayHistorical">
+      <cs-select id="timeFilter" name="timeFilter" class='metrics-report-filter' ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.timeUpdate()"></cs-select>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+  <div class="content-container scrollpadding">
+    <div class="row" >
+      <cs-card-layout>
+        <div ng-if="nav.displayHistorical">
+          <uc-metrics-historical-info-card></uc-metrics-historical-info-card>
+          <uc-utilization-historical-graph></uc-utilization-historical-graph>
+          <uc-call-volume-historical-graph></uc-call-volume-historical-graph>
+          <uc-availability-historical-graph></uc-availability-historical-graph>
+        </div>
+        <div ng-if="nav.displayRealtime">
+          <uc-new-metrics-info-card></uc-new-metrics-info-card>
+          <uc-utilization-real-graph></uc-utilization-real-graph>
+          <uc-call-volume-real-graph></uc-call-volume-real-graph>
+          <uc-availability-real-graph></uc-availability-real-graph>
+        </div>
+      </cs-card-layout>
+    </div>
+  </div>
+</div>

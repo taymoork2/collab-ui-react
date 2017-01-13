@@ -1,3 +1,6 @@
+@import 'styles/toolkit/fonts';
+@import 'styles/toolkit/spacing';
+
 .report-card,
 .report-box {
   header {
@@ -35,15 +38,34 @@
   .box-match {
     @include vr-spacing(ph, 1.5);
   }
+
   .report-dropdown {
     float: right;
     margin-right: rem-calc(35);
     position: relative;
     top: rem-calc(-15);
     width: rem-calc(200);
-    z-index: 1000;
+    z-index: 60;
+
     .select-options {
       @include vr-spacing(p, 0);
+    }
+  }
+
+  .export-dots {
+    color: $gray-base;
+  }
+  .export-dots:hover {
+    color: $color-primary-base;
+  }
+  .dropdown-menu.dropdown-primary.export-visible {
+    display: inline-block;
+    width: rem-calc(100);
+    position: absolute;
+    left: rem-calc(-75);
+    @include vr-spacing(p, 0);
+    .export-item:first-of-type:hover {
+      background: none;
     }
   }
 
@@ -71,23 +93,23 @@
   .timechartDiv {
     font-size: rem-calc(11);
     height: vr-adjust(380);
-    width: 100%;
+    width: 95%;
     position: relative;
     top: rem-calc(-50);
   }
 
   .barchart {
     font-size: rem-calc(11);
-    height: vr-adjust(375);
+    height: vr-adjust(368);
     width: 85%;
-    margin-left: auto;
+    margin-left: 5%;
     margin-right: auto;
     z-index: 50;
   }
 
   .barchart-shift {
     position: relative;
-    top: rem-calc(-64);
+    top: vr-adjust(12);
   }
 
   .report-table {
@@ -178,6 +200,7 @@
       }
     }
   }
+
   .percent-large {
     font-size: vr-adjust(24);
     font-family: $brand-font-cisco-TT-Light;
@@ -278,12 +301,24 @@
     opacity: 0;
     animation: graphAxisFade 2s ease-in-out 1 forwards;
   }
-  #avgRoomsChart {
-    .room-number {
-      font-size: rem-calc(18);
-      color: $color-primary-base;
-      text-align: left;
+
+  // !important necessary to override AmCharts putting css directly on the divs
+  .amcharts-main-div, .amcharts-chart-div, .amcharts-balloon-div {
+    overflow: visible !important;
+  }
+  .amcharts-main-div {
+    .amcharts-chart-div svg {
+      left: 10px !important;
     }
+    .amcharts-chart-div .amcharts-balloon-div {
+      margin-left: 10px !important;
+    }
+  }
+
+  #avgRoomsChart .room-number {
+    font-size: rem-calc(18);
+    color: $color-primary-base;
+    text-align: left;
   }
 
   #mediaQualityChart {

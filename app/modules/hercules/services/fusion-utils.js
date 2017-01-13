@@ -7,15 +7,15 @@
 
   /*@ngInject*/
   function FusionUtils($translate) {
-    var service = {
+    return {
       connectorType2RouteName: connectorType2RouteName,
       connectorType2ServicesId: connectorType2ServicesId,
       serviceId2ConnectorType: serviceId2ConnectorType,
       serviceId2Icon: serviceId2Icon,
       getLocalizedReleaseChannel: getLocalizedReleaseChannel,
+      getTimeSinceText: getTimeSinceText,
+      getLocalTimestamp: getLocalTimestamp
     };
-
-    return service;
 
     //////////
 
@@ -25,8 +25,6 @@
           return 'calendar-service';
         case 'c_ucmc':
           return 'call-service';
-        case 'c_mgmt':
-          return 'management-service';
         default:
           return '';
       }
@@ -42,6 +40,8 @@
           return ['squared-fusion-mgmt'];
         case 'mf_mgmt':
           return ['squared-fusion-media'];
+        case 'hds_appt':
+          return ['spark-hybrid-datasecurity'];
         default:
           return [];
       }
@@ -58,6 +58,8 @@
           return 'c_mgmt';
         case 'squared-fusion-media':
           return 'mf_mgmt';
+        case 'spark-hybrid-datasecurity':
+          return 'hds_app';
         default:
           return '';
       }
@@ -69,6 +71,7 @@
       }
       switch (serviceId) {
         case 'squared-fusion-cal':
+        case 'squared-fusion-gcal':
           return 'icon icon-circle-calendar';
         case 'squared-fusion-uc':
           return 'icon icon-circle-call';
@@ -85,5 +88,25 @@
       return $translate.instant('hercules.fusion.add-resource-group.release-channel.' + channel);
     }
 
+    function getTimeSinceText(timestamp) {
+      var timestampText = moment(timestamp).calendar(null, {
+        sameElse: 'LL' // e.g. December 15, 2016
+      });
+      if (timestampText.startsWith('Last') || timestampText.startsWith('Today') || timestampText.startsWith('Tomorrow') || timestampText.startsWith('Yesterday')) {
+        // Lowercase the first letter for some well known English terms (it just looked bad with these uppercase). Other languages are left alone.
+        timestampText = timestampText[0].toLowerCase() + timestampText.slice(1);
+      }
+      return $translate.instant('hercules.cloudExtensions.sinceTime', {
+        timestamp: timestampText
+      });
+    }
+
+    function getLocalTimestamp(timestamp, format) {
+      var timezone = jstz.determine().name();
+      if (timezone === null || _.isUndefined(timezone)) {
+        timezone = 'UTC';
+      }
+      return moment(timestamp).local().tz(timezone).format(format || 'LLL (z)');
+    }
   }
 }());

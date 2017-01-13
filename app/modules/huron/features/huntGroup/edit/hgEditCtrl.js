@@ -1,3 +1,5 @@
+require('./_hg-edit.scss');
+
 (function () {
   'use strict';
 
@@ -7,7 +9,8 @@
   /* @ngInject */
   function HuntGroupEditCtrl($state, $q, $stateParams, $translate,
     Authinfo, HuntGroupService, Notification, HuntGroupFallbackDataService,
-    HuntGroupMemberDataService, HuntGroupEditDataService) {
+    HuntGroupMemberDataService, HuntGroupEditDataService, DialPlanService,
+    TelephoneNumberService) {
     var vm = this;
     vm.selectHuntMethod = selectHuntMethod;
     vm.resetForm = resetForm;
@@ -45,10 +48,12 @@
     vm.validateFallbackNumber = validateFallbackNumber;
     vm.removeFallbackDest = removeFallbackDest;
     vm.checkFallbackDirtiness = checkFallbackDirtiness;
-    vm.selectedFallbackNumber = undefined;
+    vm.setFallbackNumber = setFallbackNumber;
     vm.selectedFallbackMember = undefined;
     vm.disableVoicemail = false;
-    vm.allowLocalValidation = false;
+
+    vm.externalRegionCodeFn = getRegionCode;
+    vm.callDestInputs = ['internal', 'external'];
 
     vm.showDisableSave = showDisableSave;
 
@@ -67,7 +72,6 @@
     ////////////////
 
     function init() {
-      allowLocalValidation();
       HuntGroupEditDataService.reset();
       HuntGroupEditDataService.fetchHuntGroup(customerId, vm.hgId)
         .then(function (pristineData) {
@@ -89,6 +93,14 @@
         });
     }
 
+    function setFallbackNumber(model) {
+      vm.selectedFallbackNumber = model;
+    }
+
+    function getRegionCode() {
+      return DialPlanService.getCustomerVoice(Authinfo.getOrgId());
+    }
+
     function updateModal(pristineData, resetFromBackend) {
       HuntGroupFallbackDataService.reset(resetFromBackend);
       HuntGroupMemberDataService.reset(resetFromBackend);
@@ -103,11 +115,13 @@
         vm.title = vm.model.name;
         updatePilotNumbers(pristineData);
         vm.selectedHuntMembers = HuntGroupMemberDataService.getHuntMembers();
-        vm.selectedFallbackNumber = HuntGroupFallbackDataService.getFallbackNumber();
+        vm.selectedFallbackNumber = TelephoneNumberService.getDestinationObject(HuntGroupFallbackDataService.getFallbackNumber());
         vm.selectedFallbackMember = HuntGroupFallbackDataService.getFallbackMember();
-        HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get(pristineData, 'fallbackDestination.numberUuid')).then(function (isVoicemailDisabled) {
-          vm.disableVoicemail = isVoicemailDisabled;
-        });
+        if (customerId && _.get(pristineData, 'fallbackDestination.numberUuid')) {
+          HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get(pristineData, 'fallbackDestination.numberUuid')).then(function (isVoicemailDisabled) {
+            vm.disableVoicemail = isVoicemailDisabled;
+          });
+        }
         if (resetFromBackend) {
           initializeFields();
         }
@@ -143,14 +157,12 @@
       }
     }
 
-    function fetchHuntMembers(nameHint) {
-      return HuntGroupMemberDataService.fetchHuntMembers(nameHint);
+    function fetchHuntMembers(nameHint, onlyMembers) {
+      return HuntGroupMemberDataService.fetchHuntMembers(nameHint, onlyMembers);
     }
 
     function showDisableSave() {
-      return (vm.form.$invalid ||
-        (HuntGroupFallbackDataService.isFallbackInvalid() && !vm.allowLocalValidation) ||
-        vm.isMembersInvalid());
+      return (vm.form.$invalid || HuntGroupFallbackDataService.isFallbackInvalid() || vm.isMembersInvalid());
     }
 
     function shouldShowFallbackLookup() {
@@ -159,14 +171,18 @@
     }
 
     function shouldShowFallbackPill() {
-      return HuntGroupFallbackDataService.isFallbackValidMember();
+      return (vm.selectedFallbackMember === undefined &&
+      vm.model.fallbackDestination.number &&
+      HuntGroupFallbackDataService.isValidInternalOrgNumber()) ||
+      HuntGroupFallbackDataService.isFallbackValidMember();
     }
 
     function shouldShowFallbackWarning() {
-      return HuntGroupFallbackDataService.isFallbackInvalid() && !vm.allowLocalValidation;
+      return HuntGroupFallbackDataService.isFallbackInvalid();
     }
 
     function removeFallbackDest() {
+      vm.selectedFallbackNumber = undefined;
       vm.selectedFallbackMember = HuntGroupFallbackDataService.removeFallbackMember();
       vm.form.$setDirty();
     }
@@ -184,7 +200,7 @@
     }
 
     function fetchFallbackDestination(nameHint) {
-      return HuntGroupMemberDataService.fetchMembers(nameHint);
+      return HuntGroupMemberDataService.fetchMembers(nameHint, false);
     }
 
     function selectHuntGroupMember(member) {
@@ -252,7 +268,7 @@
         huntMethod: vm.model.huntMethod,
         maxRingSecs: vm.model.maxRingSecs.value,
         maxWaitMins: vm.model.maxWaitMins.value,
-        fallbackDestination: HuntGroupFallbackDataService.getFallbackDestinationJSON(vm.allowLocalValidation),
+        fallbackDestination: HuntGroupFallbackDataService.getFallbackDestinationJSON(),
         members: HuntGroupMemberDataService.getMembersNumberUuidJSON()
       };
     }
@@ -260,11 +276,20 @@
     function saveForm() {
       vm.saveInProgress = true;
       var updateJSONRequest = hgUpdateReqBody();
+      var tempExternalNumber;
+      if (_.isObject(updateJSONRequest.fallbackDestination.number) && _.has(updateJSONRequest, 'fallbackDestination.number.phoneNumber')) {
+        tempExternalNumber = updateJSONRequest.fallbackDestination.number;
+        updateJSONRequest.fallbackDestination.number = TelephoneNumberService.getDIDValue(updateJSONRequest.fallbackDestination.number.phoneNumber);
+      }
       HuntGroupService.updateHuntGroup(customerId, vm.hgId, updateJSONRequest).then(function () {
         vm.saveInProgress = false;
         Notification.success('huronHuntGroup.successUpdate', {
           huntGroupName: vm.model.name
         });
+
+        if (angular.isDefined(tempExternalNumber)) {
+          updateJSONRequest.fallbackDestination.number = tempExternalNumber;
+        }
 
         HuntGroupEditDataService.setPristine(updateJSONRequest);
         HuntGroupFallbackDataService.setAsPristine();
@@ -358,12 +383,6 @@
         }
       }];
       vm.isLoadingCompleted = true;
-    }
-
-    function allowLocalValidation() {
-      HuntGroupFallbackDataService.allowLocalValidation().then(function (result) {
-        vm.allowLocalValidation = result;
-      });
     }
   }
 })();

@@ -4,6 +4,10 @@ describe('Service: WebExSiteRowService', function () {
 
   var $rootScope, $q, WebExSiteRowService, Auth, Authinfo, FeatureToggleService, WebExUtilsFact, WebExApiGatewayService, WebExApiGatewayConstsService, deferred_licenseInfo, deferredIsSiteSupportsIframe, deferredCsvStatus;
 
+  afterEach(function () {
+    $rootScope = $q = WebExSiteRowService = Auth = Authinfo = FeatureToggleService = WebExUtilsFact = WebExApiGatewayService = WebExApiGatewayConstsService = deferred_licenseInfo = deferredIsSiteSupportsIframe = deferredCsvStatus = undefined;
+  });
+
   var fakeSiteRow1 = {
     "label": "Meeting Center 200",
     "value": 1,
@@ -190,6 +194,10 @@ describe('Service: WebExSiteRowService', function () {
     "capacity": "100"
   }];
 
+  afterAll(function () {
+    fakeSiteRow1 = fakeSiteRow2 = fakeConferenceService2 = fakeConferenceServicesArray = fake_allSitesLicenseInfo = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
@@ -277,6 +285,36 @@ describe('Service: WebExSiteRowService', function () {
 
     var searchResult = WebExSiteRowService.getSiteRow("sjsite04.webex.com");
     expect(searchResult.license.licenseId).toBe("MC_66e1a7c9-3549-442f-942f-41a53b020689_sjsite04.webex.com");
+  });
+
+  it('can correctly create site list grid with linked site', function () {
+    var fakeLinkedConferenceService = {
+      "label": "Meeting Center 200",
+      "value": 1,
+      "name": "confRadio",
+      "license": {
+        "licenseId": "MC_5320533d-da5d-4f92-b95e-1a42567c55a0_cisjsite031.webex.com",
+        "offerName": "MC",
+        "licenseType": "CONFERENCING",
+        "billingServiceId": "1446768353",
+        "features": ["cloudmeetings"],
+        "volume": 25,
+        "isTrial": false,
+        "status": "ACTIVE",
+        "capacity": 200,
+        "linkedSiteUrl": "sjsite07.webex.com"
+      },
+      "isCustomerPartner": false
+    };
+    spyOn(Authinfo, 'getConferenceServicesWithLinkedSiteUrl').and.returnValue([fakeLinkedConferenceService]);
+
+    WebExSiteRowService.getLinkedConferenceServices();
+
+    var siteRowArray = WebExSiteRowService.getSiteRows();
+    expect(siteRowArray.length).toBe(1);
+
+    var searchResult = WebExSiteRowService.getSiteRow("sjsite07.webex.com");
+    expect(searchResult.isLinkedSite).toBeTruthy();
   });
 
   /////////// isIframeSupported, isAdminReportEnabled flags' tests ////////////

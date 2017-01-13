@@ -19,7 +19,7 @@
       help: $translate.instant('autoAttendant.sayMessageHelp') + appendSpecialCharHelp,
       metric: 'Say-Message-Title',
       showHelpLink: true,
-      actions: ['say', 'play']
+      actions: ['play', 'say']
     }, {
       title: $translate.instant('autoAttendant.actionPhoneMenu'),
       controller: 'AAPhoneMenuCtrl as aaPhoneMenu',
@@ -37,7 +37,7 @@
       help: $translate.instant('autoAttendant.actionDialByExtensionHelp'),
       metric: 'Dial-By-Extension-Title',
       showHelpLink: false,
-      type: 2, // to flag that this is not phonemenu, see setOption
+      type: [2], // to flag that this is not phonemenu, see setOption
       actions: ['runActionsOnInput']
     }, {
       title: $translate.instant('autoAttendant.actionRouteCall'),
@@ -47,7 +47,7 @@
       help: $translate.instant('autoAttendant.routeCallMenuHelp'),
       metric: 'Route-Call-Title',
       showHelpLink: false,
-      actions: ['route', 'goto', 'routeToUser', 'routeToVoiceMail', 'routeToHuntGroup']
+      actions: ['route', 'goto', 'routeToUser', 'routeToVoiceMail', 'routeToHuntGroup', 'routeToQueue']
     }];
 
     vm.actionPlaceholder = $translate.instant("autoAttendant.actionPlaceholder");
@@ -60,8 +60,10 @@
     vm.getSelectHint = getSelectHint;
     vm.removeAction = removeAction;
 
-    /////////////////////
 
+    var PHONE_MENU_INDEX = 1;
+
+    /////////////////////
     function selectOption() {
       // if we are selecting a phone menu, re-initialize uiMenu.entries[vm.index] with a CeMenu.
       if (vm.option.actions[0] === 'runActionsOnInput' && !_.has(vm.option, 'type')) {
@@ -117,11 +119,11 @@
       if ($scope.index >= 0) {
         var menuEntry = vm.ui[vm.schedule].getEntryAt($scope.index);
         if (menuEntry.type == "MENU_OPTION") {
-          vm.option = vm.options[1];
+          vm.option = vm.options[PHONE_MENU_INDEX];
         } else if (menuEntry.actions.length > 0 && menuEntry.actions[0].getName()) {
           var matchType = function (action) {
             return menuEntry.actions[0].getName() === action &&
-              menuEntry.actions[0].inputType === vm.options[i].type;
+              (_.has(vm.options[i], 'type') ? _.includes(vm.options[i].type, menuEntry.actions[0].inputType) : true);
           };
           for (var i = 0; i < vm.options.length; i++) {
             var isMatch = vm.options[i].actions.some(matchType);
@@ -133,7 +135,24 @@
       }
     }
 
+    function setFeatureToggledActions() {
+      if (AACommonService.isCallerInputToggle()) {
+        vm.options.push({
+          title: $translate.instant('autoAttendant.actionCallerInput'),
+          controller: 'AACallerInputCtrl as aaCallerInput',
+          url: 'modules/huron/features/autoAttendant/callerInput/aaCallerInput.tpl.html',
+          hint: $translate.instant('autoAttendant.actionCallerInputHint'),
+          help: $translate.instant('autoAttendant.actionCallerInputHelp') + appendSpecialCharHelp,
+          metric: 'Caller-Input-Title',
+          type: [3, 4],
+          showHelpLink: true,
+          actions: ['runActionsOnInput']
+        });
+      }
+    }
+
     function activate() {
+      setFeatureToggledActions();
       vm.index = $scope.index;
       vm.schedule = $scope.schedule;
       vm.ui = AAUiModelService.getUiModel();

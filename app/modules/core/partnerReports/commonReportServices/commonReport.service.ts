@@ -1,4 +1,6 @@
+import { ReportConstants } from './reportConstants.service';
 import {
+  IExportMenu,
   ITimespan,
   IIntervalQuery,
   ICustomerIntervalQuery,
@@ -15,6 +17,7 @@ export class CommonReportService {
 
   // private API helpers
   private readonly CACHE: string = '&cache=';
+  private readonly TYPE: string = '?type=';
   private readonly ICOUNT: string = '&intervalCount=';
   private readonly ITYPE: string = '&intervalType=';
   private readonly SCOUNT: string = '&spanCount=';
@@ -25,15 +28,16 @@ export class CommonReportService {
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
+    private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private Notification: Notification,
-    private ReportConstants,
+    private ReportConstants: ReportConstants,
     private UrlConfig,
   ) {}
 
   private readonly usageOptions: Array<string> = ['weeklyUsage', 'monthlyUsage', 'threeMonthUsage'];
-  private readonly altUsageOptions: Array<string> = ['dailyUsage', 'monthlyUsage', 'yearlyUsage'];
-  private readonly cacheValue: boolean = (parseInt(moment.utc().format('H'), this.ReportConstants.INTEGER_BASE) >= 8);
+  private readonly altUsageOptions: Array<string> = ['dailyUsage', 'weeklyUsage'];
+  private readonly cacheValue: boolean = (_.toInteger(moment.utc().format('H')) >= 8);
   private urlBase = this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/reports/';
 
   private getService(url: string, cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
@@ -68,7 +72,7 @@ export class CommonReportService {
 
   // TODO: remove unnecessary IIntervalQuery options once API stops requiring them
   public getPartnerReportByReportType(options: IReportTypeQuery, extraOptions: IIntervalQuery, customers: Array<IReportsCustomer>, cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
-    let url = this.urlBase + options.action + '/managedOrgs/' + options.type + '?type=' + options.reportType + this.getQuery(extraOptions) + this.getCustomerQuery(customers);
+    let url = this.urlBase + options.action + '/managedOrgs/' + options.type + this.TYPE + options.reportType + this.getQuery(extraOptions) + this.getCustomerQuery(customers);
     return this.getService(url, cancelPromise);
   }
 
@@ -81,12 +85,21 @@ export class CommonReportService {
   }
 
   public getCustomerReportByType(options: ITypeQuery, cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
-    let url = this.urlBase + options.name + '?type=' + options.type + this.CACHE + options.cache;
+    let url = this.urlBase + options.name + this.TYPE + options.type + this.CACHE + options.cache;
     return this.getService(url, cancelPromise);
   }
 
+  public getCustomerActiveUserData(options: ITypeQuery, cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
+    return this.getService(this.urlBase + options.name + '/' + options.type + '?' + this.CACHE + options.cache, cancelPromise);
+  }
+
   public getCustomerAltReportByType(options: ITypeQuery, cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
-    let url = this.urlBase + options.name + '/' + options.type + '?' + this.CACHE + options.cache;
+    let url = this.urlBase;
+    if (options.extension) {
+      url += options.extension + '/';
+    }
+    url += options.name + this.TYPE + options.type + this.CACHE + options.cache;
+
     return this.getService(url, cancelPromise);
   }
 
@@ -114,7 +127,7 @@ export class CommonReportService {
       if (date === '') {
         date = moment().subtract(1, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
       }
-      let dayOffset: number = this.getOffset(parseInt(moment.tz(date, this.ReportConstants.TIMEZONE).format('e'), this.ReportConstants.INTEGER_BASE));
+      let dayOffset: number = this.getOffset(_.toInteger(moment.tz(date, this.ReportConstants.TIMEZONE).format('e')));
       for (let x = 3; x >= 0; x--) {
         let temp: any = _.clone(graphItem);
         temp.date = moment().tz(this.ReportConstants.TIMEZONE)
@@ -140,24 +153,16 @@ export class CommonReportService {
   public getReturnLineGraph(filter: ITimespan, graphItem: any): Array<any> {
     let returnGraph: Array<any> = [];
 
-    if (filter.value === 0) {
-      for (let i = 8; i > 0; i--) {
+    if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
+      for (let i = this.ReportConstants.DAYS; i >= 0; i--) {
         let tmpItem: any = _.clone(graphItem);
         tmpItem.date = moment().tz(this.ReportConstants.TIMEZONE)
-          .subtract(i, this.ReportConstants.DAY)
+          .subtract(i + 1, this.ReportConstants.DAY)
           .format(this.ReportConstants.DAY_FORMAT);
         returnGraph.push(tmpItem);
       }
-    } else if (filter.value === 1) {
-      for (let x = 4; x >= 0; x--) {
-        let temp: any = _.clone(graphItem);
-        temp.date = moment().day(-1)
-          .subtract(x, this.ReportConstants.WEEK)
-          .format(this.ReportConstants.DAY_FORMAT);
-        returnGraph.push(temp);
-      }
     } else {
-      for (let z = 52; z >= 0; z--) {
+      for (let z = this.ReportConstants.YEAR; z >= 0; z--) {
         let item = _.clone(graphItem);
         item.date = moment().day(-1)
           .subtract(z, this.ReportConstants.WEEK)
@@ -249,20 +254,31 @@ export class CommonReportService {
   public getTypeOptions(filter: ITimespan, name: string): ITypeQuery {
     return {
       name: name,
+      extension: undefined,
       type: this.usageOptions[filter.value],
       cache: this.cacheValue,
     };
   }
 
-  public getLineTypeOptions(filter: ITimespan, name: string): ITypeQuery {
-    return {
-      name: name,
-      type: this.altUsageOptions[filter.value],
-      cache: this.cacheValue,
-    };
+  public getLineTypeOptions(filter: ITimespan, name: string, extension: string | undefined): ITypeQuery {
+    if (filter.value === this.ReportConstants.WEEK_FILTER.value) {
+      return {
+        name: name,
+        extension: extension,
+        type: this.altUsageOptions[0],
+        cache: this.cacheValue,
+      };
+    } else {
+      return {
+        name: name,
+        extension: extension,
+        type: this.altUsageOptions[1],
+        cache: this.cacheValue,
+      };
+    }
   }
 
-  public getCustomerOptions(filter: ITimespan, type: string, action: string, customerView: boolean): ICustomerIntervalQuery {
+  public getCustomerOptions(filter: ITimespan, type: string, action: string, customerView: boolean | undefined): ICustomerIntervalQuery {
     let reportOptions: ICustomerIntervalQuery = {
       action: action,
       type: type,
@@ -285,7 +301,7 @@ export class CommonReportService {
     return reportOptions;
   }
 
-  public getAltCustomerOptions(filter: ITimespan, type: string, action: string, customerView: boolean): ICustomerIntervalQuery {
+  public getAltCustomerOptions(filter: ITimespan, type: string, action: string, customerView: boolean | undefined): ICustomerIntervalQuery {
     let reportOptions: ICustomerIntervalQuery = {
       action: action,
       type: type,
@@ -308,7 +324,7 @@ export class CommonReportService {
 
   public getModifiedDate(date: string, filter: ITimespan): string {
     let modifiedDate: string = moment.tz(date, this.ReportConstants.TIMEZONE).format(this.ReportConstants.DAY_FORMAT);
-    if (filter.value > 1) {
+    if (filter.value === this.ReportConstants.THREE_MONTH_FILTER.value) {
       modifiedDate = moment.tz(date, this.ReportConstants.TIMEZONE).format(this.ReportConstants.MONTH_FORMAT);
     }
     return modifiedDate;
@@ -316,6 +332,77 @@ export class CommonReportService {
 
   public getModifiedLineDate(date: string): string {
     return moment.tz(date, this.ReportConstants.TIMEZONE).format(this.ReportConstants.DAY_FORMAT);
+  }
+
+  public getPercentage(numberOne: number, numberTwo: number): number {
+    return Math.round((numberOne / numberTwo) * this.ReportConstants.PERCENTAGE_MULTIPLIER);
+  }
+
+  // export functions
+  public createExportMenu(chart: any): Array<IExportMenu> {
+    return [{
+      id: 'saveAs',
+      label: this.$translate.instant('reportsPage.saveAs'),
+      click: undefined,
+    }, {
+      id: 'jpg',
+      label: this.$translate.instant('reportsPage.jpg'),
+      click: (): void => {
+        this.exportJPG(chart);
+      },
+    }, {
+      id: 'png',
+      label: this.$translate.instant('reportsPage.png'),
+      click: (): void => {
+        this.exportPNG(chart);
+      },
+    }, {
+      id: 'pdf',
+      label: this.$translate.instant('reportsPage.pdf'),
+      click: (): void => {
+        this.exportPDF(chart);
+      },
+    }];
+  }
+
+  private exportJPG(chart: any): void {
+    if (chart) {
+      // 'this' is the AmCharts export object
+      chart.export.capture({}, function (): void {
+        this.toJPG({}, function (data: any): void {
+            this.download(data, 'application/jpg', 'amCharts.jpg');
+        });
+      });
+    }
+  }
+
+  private exportPNG(chart: any): void {
+    if (chart) {
+      // 'this' is the AmCharts export object
+      chart.export.capture({}, function (): void {
+        this.toPNG({}, function (data: any): void {
+            this.download(data, 'application/png', 'amCharts.png');
+        });
+      });
+    }
+  }
+
+  private exportPDF(chart: any): void {
+    if (chart) {
+      // 'this' is the AmCharts export object
+      chart.export.capture({}, function (): void {
+        this.toJPG({}, function (data: any): void {
+          chart.export.toPDF({
+            content: [{
+              image: data,
+              fit: [523, 300],
+            }],
+          }, function (downloadData: any): void {
+            this.download(downloadData, 'application/pdf', 'amCharts.pdf');
+          });
+        });
+      });
+    }
   }
 }
 

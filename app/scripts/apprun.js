@@ -4,7 +4,9 @@
   module.exports = wx2AdminWebClientApp;
 
   /* @ngInject */
-  function wx2AdminWebClientApp($animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config, HealthService, Localize, Log, LogMetricsService, OnlineUpgradeService, PreviousState, SessionStorage, TokenService, TrackingId, Utils) {
+  function wx2AdminWebClientApp($animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config,
+    HealthService, Localize, Log, LogMetricsService, OnlineUpgradeService, PreviousState, SessionStorage,
+    TokenService, TrackingId, Utils, TOSService) {
     //Expose the localize service globally.
     $rootScope.Localize = Localize;
     $rootScope.Utils = Utils;
@@ -33,31 +35,39 @@
     }
 
     $rootScope.$on('$stateChangeStart', function (e, to, toParams) {
+
       if (typeof to.authenticate === 'undefined' || to.authenticate) {
         if (Authinfo.isInitialized()) {
-          if (!Authinfo.isAllowedState(to.name)) {
-            e.preventDefault();
-            $state.go('unauthorized');
-          } else if (OnlineUpgradeService.shouldForceUpgrade()) {
-            e.preventDefault();
-            OnlineUpgradeService.openUpgradeModal();
-          } else if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin() && to.name !== 'firsttimewizard') {
-            e.preventDefault();
-            $state.go('firsttimewizard');
-          }
+
+          TOSService.hasAcceptedTOS()
+            .then(function (acceptedTOS) {
+              if (!Authinfo.isAllowedState(to.name)) {
+                e.preventDefault();
+                $state.go('unauthorized');
+              } else if (OnlineUpgradeService.shouldForceUpgrade()) {
+                e.preventDefault();
+                OnlineUpgradeService.openUpgradeModal();
+              } else if (!acceptedTOS) {
+                e.preventDefault();
+                TOSService.openTOSModal();
+              } else if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin() && to.name !== 'firsttimewizard') {
+                e.preventDefault();
+                $state.go('firsttimewizard');
+              }
+            });
         } else {
           e.preventDefault();
           SessionStorage.put(storedState, to.name);
           SessionStorage.putObject(storedParams, toParams);
           SessionStorage.putObject(queryParams, $location.search());
           HealthService.getHealthStatus()
-          .then(function (status) {
-            if (status === 'online') {
-              $state.go('login');
-            }
-          }).catch(function () {
-            $state.go('server-maintenance');
-          });
+            .then(function (status) {
+              if (status === 'online') {
+                $state.go('login');
+              }
+            }).catch(function () {
+              $state.go('server-maintenance');
+            });
         }
       }
     });
@@ -97,7 +107,7 @@
       $interval.cancel(delay);
       if (TokenService.getAccessToken()) {
         Log.debug('starting refresh timer...');
-          //start refresh cycle after 15 minutes
+        //start refresh cycle after 15 minutes
         refreshToken();
       } else {
         Auth.redirectToLogin();
@@ -145,5 +155,6 @@
       }
       return result;
     }
+
   }
-}());
+})();

@@ -2,6 +2,8 @@ describe('Component: pgSetupAssistant', () => {
 
   let saveFailureResp = getJSONFixture('huron/json/features/pagingGroup/errorResponse.json');
   let pg = getJSONFixture('huron/json/features/pagingGroup/pg.json');
+  let pgWithMembers = getJSONFixture('huron/json/features/pagingGroup/pgWithMembers.json');
+  let members = getJSONFixture('huron/json/features/pagingGroup/membersList2.json');
 
   beforeEach(function () {
     this.initModules('huron.paging-group.setup-assistant');
@@ -34,8 +36,8 @@ describe('Component: pgSetupAssistant', () => {
   describe('lastIndex', () => {
     beforeEach(initComponent);
 
-    it('should return 1', function () {
-      expect(this.controller.lastIndex).toEqual(1);
+    it('should return 2', function () {
+      expect(this.controller.lastIndex).toEqual(2);
     });
   });
 
@@ -123,9 +125,34 @@ describe('Component: pgSetupAssistant', () => {
       expect(this.controller.nextButton()).toBeTruthy();
     });
 
-    it('default case should return true', function () {
+    it('index = 2, members undefined return false', function () {
       this.controller.index = 2;
+      this.controller.selectedMembers = undefined;
+      expect(this.controller.nextButton()).toBeFalsy();
+    });
+
+    it('index = 2, members empty array return false', function () {
+      this.controller.index = 2;
+      this.controller.selectedMembers = [];
+      expect(this.controller.nextButton()).toBeFalsy();
+    });
+
+    it('index = 2, at least one member return true', function () {
+      this.controller.index = 2;
+      this.controller.selectedMembers = members;
       expect(this.controller.nextButton()).toBeTruthy();
+    });
+
+    it('default case should return true', function () {
+      this.controller.index = 3;
+      expect(this.controller.nextButton()).toBeTruthy();
+    });
+
+    it('Test enterNextPage', function () {
+      spyOn(this.controller, 'nextPage');
+      spyOn(this.controller, 'nextButton').and.returnValue(true);
+      this.controller.enterNextPage(13);
+      expect(this.controller.nextPage).toHaveBeenCalled();
     });
   });
 
@@ -154,16 +181,6 @@ describe('Component: pgSetupAssistant', () => {
       expect(this.controller.index).toEqual(1);
     });
 
-    it('last index should call save', function () {
-      spyOn(this.controller, 'savePagingGroup');
-      this.controller.index = this.controller.lastIndex;
-      this.controller.nextPage();
-      this.$timeout.flush();
-      this.$timeout.verifyNoPendingTasks();
-      expect(this.controller.animation).toEqual('slide-left');
-      expect(this.controller.index).toEqual(1);
-      expect(this.controller.savePagingGroup).toHaveBeenCalled();
-    });
   });
 
   describe('nextText', () => {
@@ -194,20 +211,6 @@ describe('Component: pgSetupAssistant', () => {
       spyOn(this.controller, 'nextPage');
       spyOn(this.controller, 'nextButton').and.returnValue(true);
       this.controller.evalKeyPress(39);
-      expect(this.controller.nextPage).toHaveBeenCalled();
-    });
-
-    it('enter key and next button invalid should not call nextPage', function () {
-      spyOn(this.controller, 'nextPage');
-      spyOn(this.controller, 'nextButton').and.returnValue(false);
-      this.controller.evalKeyPress(13);
-      expect(this.controller.nextPage).not.toHaveBeenCalled();
-    });
-
-    it('enter key and next button valid should call nextPage', function () {
-      spyOn(this.controller, 'nextPage');
-      spyOn(this.controller, 'nextButton').and.returnValue(true);
-      this.controller.evalKeyPress(13);
       expect(this.controller.nextPage).toHaveBeenCalled();
     });
 
@@ -257,16 +260,53 @@ describe('Component: pgSetupAssistant', () => {
     });
   });
 
+  describe('onUpdateMember', () => {
+    beforeEach(initComponent);
+
+    it('should change selectedMembers', function () {
+      this.controller.onUpdateMember(members);
+      expect(this.controller.selectedMembers).toEqual(members);
+    });
+  });
+
   describe('savePagingGroup', () => {
     beforeEach(initComponent);
 
-    it('should save with success', function () {
+    it('should save with error', function () {
+      let mem1 = angular.copy(members[0]);
+      let memWithPic = {
+        member: mem1,
+        picturePath: '',
+      };
       this.savePagingGroupDefer.resolve(pg);
       this.controller.name = pg.name;
       this.controller.number = pg.extension;
+      this.controller.selectedMembers.push(memWithPic);
       this.controller.savePagingGroup();
       this.$timeout.flush();
-      expect(this.Notification.success).toHaveBeenCalledWith('pagingGroup.successSave', { pagingGroupName: pg.name });
+      expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorSavePartial', { pagingGroupName: pg.name, message: [ '0001' ] });
+      expect(this.$state.go).toHaveBeenCalledWith('huronfeatures');
+    });
+
+    it('should save with success', function () {
+      let mem1 = angular.copy(members[0]);
+      let memWithPic1 = {
+        member: mem1,
+        picturePath: '',
+      };
+      let mem2 = angular.copy(members[1]);
+      let memWithPic2 = {
+        member: mem2,
+        picturePath: '',
+      };
+      this.savePagingGroupDefer.resolve(pgWithMembers);
+      this.controller.name = pgWithMembers.name;
+      this.controller.number = pgWithMembers.extension;
+      this.controller.selectedMembers.push(memWithPic1);
+      this.controller.selectedMembers.push(memWithPic2);
+      this.controller.savePagingGroup();
+      this.$timeout.flush();
+      expect(this.Notification.success).toHaveBeenCalledWith('pagingGroup.successSave', { pagingGroupName: pgWithMembers.name });
       expect(this.$state.go).toHaveBeenCalledWith('huronfeatures');
     });
 

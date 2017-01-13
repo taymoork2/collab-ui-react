@@ -6,34 +6,41 @@
     .controller('RemDeviceController',
 
       /* @ngInject */
-      function ($rootScope, $modalInstance, CsdmDataModelService, CsdmUnusedAccountsService, deviceOrCode) {
+      function ($modalInstance, $translate, CsdmDataModelService, device, Notification) {
         var rdc = this;
 
-        rdc.deviceOrCode = deviceOrCode;
+        rdc.device = device;
 
-        rdc.deleteDeviceOrCode = function () {
-          if (rdc.deviceOrCode.isUnused) {
-            return CsdmUnusedAccountsService.deleteAccount(rdc.deviceOrCode)
-              .then($modalInstance.close)
-              .finally(rdc.updateDeviceList);
-          } else {
-            return CsdmDataModelService.deleteItem(rdc.deviceOrCode)
-              .then($modalInstance.close)
-              .finally(rdc.updateDeviceList);
+        rdc.getDeleteText = function () {
+          if (device.isATA) {
+            return $translate.instant('deviceOverviewPage.deleteDeviceType', { deviceType: device.product });
           }
+          return $translate.instant('spacesPage.deleteDevice');
         };
-        rdc.updateDeviceList = function () {
-          $rootScope.$emit('updateDeviceList');
+
+        rdc.getDeleteConfText = function () {
+          if (device.isATA) {
+            return $translate.instant('deviceOverviewPage.deleteATAConfText');
+          }
+          return $translate.instant('spacesPage.deleteDeviceConfText');
+        };
+
+        rdc.deleteDevice = function () {
+          return CsdmDataModelService.deleteItem(rdc.device)
+            .then($modalInstance.close)
+            .catch(function (error) {
+              Notification.errorResponse(error, 'spacesPage.failedToDelete');
+            });
         };
       }
     )
     .service('RemDeviceModal',
       /* @ngInject */
       function ($modal) {
-        function open(deviceOrCode) {
+        function open(device) {
           return $modal.open({
             resolve: {
-              deviceOrCode: _.constant(deviceOrCode)
+              device: _.constant(device)
             },
             controllerAs: 'rdc',
             controller: 'RemDeviceController',

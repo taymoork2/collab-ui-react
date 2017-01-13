@@ -2,7 +2,7 @@
 
 describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', function () {
 
-  var $q, $httpBackend, filter, controller, $scope, Notification, HuntGroupFallbackDataService;
+  var $httpBackend, filter, controller, $scope, Notification;
 
   var user1 = getJSONFixture('huron/json/features/huntGroup/user1.json');
   var user2 = getJSONFixture('huron/json/features/huntGroup/user2.json');
@@ -48,15 +48,11 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  beforeEach(inject(function ($rootScope, $controller, _$q_, _$httpBackend_, _$filter_, _Notification_, _HuntGroupFallbackDataService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$filter_, _Notification_) {
     $scope = $rootScope.$new();
-    $q = _$q_;
     Notification = _Notification_;
     $httpBackend = _$httpBackend_;
     filter = _$filter_('huntMemberTelephone');
-    HuntGroupFallbackDataService = _HuntGroupFallbackDataService_;
-
-    spyOn(HuntGroupFallbackDataService, 'allowLocalValidation').and.returnValue($q.when(false));
 
     controller = $controller('HuntGroupSetupAssistantCtrl', {
       $scope: $scope,
@@ -219,5 +215,17 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
     $scope.$apply();
     $httpBackend.flush(); // Request made.
     expect(controller.errorMemberInput).toBeFalsy();
+  });
+
+  it("does not search on the number api when looking for members", function () {
+    controller.selectHuntGroupMember(member1);
+    var noSuggestion = {
+      "users": []
+    };
+    $httpBackend.expectGET(MemberLookupUrl).respond(200, noSuggestion);
+    controller.fetchHuntMembers("123");
+    $scope.$apply();
+    $httpBackend.flush(); // Request made.
+    expect(controller.errorMemberInput).toBeTruthy();
   });
 });

@@ -5,30 +5,84 @@
     .controller('EditServicesCtrl', EditServicesCtrl);
   /* @ngInject */
   function EditServicesCtrl($stateParams, $scope, Notification, CsdmDataModelService) {
+    var ciscouc = 'ciscouc';
+    var fusionec = 'fusionec';
+
     var vm = this;
-    vm.wizardData = $stateParams.wizard.state().data;
-    vm.service = (vm.wizardData.entitlements || []).indexOf('ciscouc') > -1 ? 'sparkCall' : 'sparkOnly';
+    var wizardData = $stateParams.wizard.state().data;
+    vm.title = wizardData.title;
+    var initialService = getService(wizardData.account.entitlements);
+    vm.service = initialService;
+    vm.sparkCallConnectEnabled = !!wizardData.csdmHybridCallFeature || vm.service === 'sparkCallConnect';
 
     vm.next = function () {
       $stateParams.wizard.next({
-        service: vm.service
-      });
+        account: {
+          entitlements: getUpdatedEntitlements()
+        }
+      }, vm.service);
     };
 
+    vm.hasNextStep = function () {
+      return wizardData.function !== 'editServices' || ((vm.service === 'sparkCall' || vm.service === 'sparkCallConnect') && vm.service !== initialService);
+    };
+
+    vm.hasBackStep = function () {
+      return wizardData.function !== 'editServices';
+    };
+
+    function getUpdatedEntitlements() {
+      var entitlements = (wizardData.account.entitlements || ['webex-squared']);
+      entitlements = _.difference(entitlements, [ciscouc, fusionec]);
+      if (vm.service === 'sparkCall') {
+        entitlements.push(ciscouc);
+      } else if (vm.service === 'sparkCallConnect') {
+        entitlements.push(fusionec);
+      }
+      return entitlements;
+    }
+
+    function getService(entitlements) {
+      var service = 'sparkOnly';
+
+      _.intersection(entitlements || [], [ciscouc, fusionec]).forEach(function (entitlement) {
+        switch (entitlement) {
+          case ciscouc:
+            service = 'sparkCall';
+            break;
+          case fusionec:
+            service = 'sparkCallConnect';
+            break;
+          default:
+        }
+      });
+      return service;
+    }
+
     vm.save = function () {
-      vm.isLoading = true;
-      var entitlements = (vm.wizardData.entitlements || []);
-      var sparkCallIndex = entitlements.indexOf('ciscouc');
-      if (sparkCallIndex > -1) {
-        entitlements.splice(sparkCallIndex, 1);
-        CsdmDataModelService.updateCloudberryPlace(vm.wizardData.selectedPlace, entitlements)
-          .then(function () {
-            $scope.$dismiss();
-            Notification.success("addDeviceWizard.editServices.servicesSaved");
-          })
-          .catch(function (error) {
+      if (vm.service === 'sparkOnly') {
+        vm.isLoading = true;
+        if (vm.service !== initialService) {
+          CsdmDataModelService.getPlacesMap().then(function (list) {
+            var place = _.find(_.values(list), { 'cisUuid': wizardData.account.cisUuid });
+            if (place) {
+              CsdmDataModelService.updateCloudberryPlace(place, getUpdatedEntitlements())
+                .then(function () {
+                  $scope.$dismiss();
+                  Notification.success("addDeviceWizard.editServices.servicesSaved");
+                }, function (error) {
+                  Notification.errorResponse(error, 'addDeviceWizard.assignPhoneNumber.placeEditError');
+                });
+            } else {
+              vm.isLoading = false;
+              Notification.warning('addDeviceWizard.assignPhoneNumber.placeNotFound');
+            }
+          }, function (error) {
             Notification.errorResponse(error, 'addDeviceWizard.assignPhoneNumber.placeEditError');
           });
+        } else {
+          $scope.$dismiss();
+        }
       } else {
         $scope.$dismiss();
       }

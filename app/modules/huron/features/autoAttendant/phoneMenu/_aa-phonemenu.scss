@@ -19,16 +19,6 @@
   }
 }
 
-%aa-menu-textarea {
-  line-height: 1.25rem;
-  width: 100%;
-
-  @include vr-spacing(pv, 0.5);
-  @include vr-spacing(ph, 0.75);
-
-  resize: none;
-}
-
 %aa-menu-control-label {
   @include vr-spacing(pl, 0.25);
   @include vr-spacing(mt, 0.25);
@@ -78,11 +68,7 @@
   width: 100%;
 
   .csSelect-container {
-    @include vr-spacing(pt, 1);
-  }
-
-  textarea {
-    @extend %aa-menu-textarea;
+    @include vr-spacing(pt, 0);
   }
 
   .control-label {
@@ -98,11 +84,11 @@
   }
 }
 
-@mixin aa-menu-key-button($background_color) {
+@mixin aa-menu-key-button($background_color, $width) {
   .select-toggle {
     padding-left: 0.8rem;
     padding-top: 0.5rem;
-    width: vr-adjust(56);
+    width: vr-adjust($width);
   }
 
   // selected option
@@ -203,7 +189,7 @@
   }
 
   .aa-pm-key-select {
-    @include aa-menu-key-button($color-cta-base);
+    @include aa-menu-key-button($color-cta-base, 56);
   }
 
   .aa-pm-add-text {

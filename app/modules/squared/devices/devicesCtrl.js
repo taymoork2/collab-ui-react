@@ -1,3 +1,5 @@
+require('./_devices.scss');
+
 (function () {
   'use strict';
 
@@ -5,9 +7,12 @@
     .controller('DevicesCtrl',
 
       /* @ngInject */
-      function ($scope, $rootScope, $state, $translate, $templateCache, DeviceFilter, CsdmUnusedAccountsService, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, CsdmPlaceService) {
+      function ($q, $scope, $state, $translate, $templateCache, Userservice, DeviceFilter, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, FeatureToggleService, $modal, Notification, DeviceExportService) {
         var vm = this;
         var filteredDevices = [];
+        var exportProgressDialog = undefined;
+        vm.addDeviceIsDisabled = true;
+
         AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
           vm.showLicenseWarning = !!_.find(data.accounts, {
             licenses: [{
@@ -18,11 +23,63 @@
           vm.licenseError = vm.showLicenseWarning ? $translate.instant('spacesPage.licenseSuspendedWarning') : "";
         });
 
+        function init() {
+          fetchAsyncSettings();
+        }
+
+        function fetchAsyncSettings() {
+          var darlingPromise = FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
+            vm.showDarling = result;
+          });
+          var ataPromise = FeatureToggleService.csdmATAGetStatus().then(function (result) {
+            vm.showATA = result;
+          });
+          var pstnPromise = FeatureToggleService.csdmPstnGetStatus().then(function (result) {
+            vm.showPstn = result && Authinfo.isSquaredUC();
+          });
+          var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
+            vm.csdmHybridCallFeature = feature;
+          });
+          var personalPromise = FeatureToggleService.cloudberryPersonalModeGetStatus().then(function (result) {
+            vm.showPersonal = result;
+          });
+          $q.all([darlingPromise, ataPromise, pstnPromise, hybridPromise, personalPromise, fetchDetailsForLoggedInUser()]).finally(function () {
+            vm.addDeviceIsDisabled = false;
+          });
+
+          FeatureToggleService.atlasDeviceExportGetStatus().then(function (result) {
+            vm.deviceExportFeature = result;
+          });
+        }
+
+        function fetchDetailsForLoggedInUser() {
+          var userDetailsDeferred = $q.defer();
+          Userservice.getUser('me', function (data) {
+            if (data.success) {
+              vm.adminUserDetails = {
+                firstName: data.name && data.name.givenName,
+                lastName: data.name && data.name.familyName,
+                displayName: data.displayName,
+                userName: data.userName,
+                cisUuid: data.id,
+                organizationId: data.meta.organizationID
+              };
+              if (data.name) {
+                vm.adminFirstName = data.name.givenName;
+              }
+              if (!vm.adminFirstName) {
+                vm.adminFirstName = data.displayName;
+              }
+            }
+            userDetailsDeferred.resolve();
+          });
+          return userDetailsDeferred.promise;
+        }
+
+        init();
+
         vm.deviceFilter = DeviceFilter;
         vm.deviceFilter.resetFilters();
-        $rootScope.$on('updateDeviceList', function () {
-          vm.updateListAndFilter();
-        });
 
         CsdmDataModelService.getDevicesMap().then(function (devicesMap) {
           vm.devicesMap = devicesMap;
@@ -39,11 +96,6 @@
 
         var csdmHuronOrgDeviceService = CsdmHuronOrgDeviceService.create(Authinfo.getOrgId());
 
-        vm.showPlaces = false;
-        CsdmPlaceService.placesFeatureIsEnabled().then(function (result) {
-          vm.showPlaces = result;
-        });
-
         vm.setCurrentSearch = function (searchStr) {
           vm.deviceFilter.setCurrentSearch(searchStr);
           vm.updateListAndFilter();
@@ -54,7 +106,10 @@
         };
 
         vm.existsDevices = function () {
-          return (vm.shouldShowList() && CsdmDataModelService.hasDevices());
+          if (!vm._existsDevices) {
+            vm._existsDevices = (vm.shouldShowList() && CsdmDataModelService.hasDevices());
+          }
+          return vm._existsDevices;
         };
 
         vm.shouldShowList = function () {
@@ -66,7 +121,9 @@
         };
 
         vm.isEntitledToHuron = function () {
-          return Authinfo.isSquaredUC();
+          return _.filter(Authinfo.getLicenses(), function (l) {
+            return l.licenseType === 'COMMUNICATION';
+          }).length > 0;
         };
 
         vm.isEntitled = function () {
@@ -79,12 +136,13 @@
         vm.updateListAndFilter = function () {
           var allDevices = _.chain({})
             .extend(vm.devicesMap)
-            .extend(CsdmUnusedAccountsService.getAccountList())
             .values()
             .value();
           filteredDevices = vm.deviceFilter.getFilteredList(allDevices);
           return filteredDevices;
         };
+
+        CsdmDataModelService.subscribeToChanges($scope, vm.updateListAndFilter.bind(this));
 
         vm.showDeviceDetails = function (device) {
           vm.currentDevice = device; // fixme: modals depend on state set here
@@ -140,52 +198,34 @@
           }]
         };
 
-        vm.wizardWithoutPlaces = function () {
-          return {
-            data: {
-              function: "addDevice",
-              showPlaces: false,
-              title: "addDeviceWizard.newDevice",
-              isEntitledToHuron: vm.isEntitledToHuron(),
-              isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
-              allowUserCreation: false
-            },
-            history: [],
-            currentStateName: 'addDeviceFlow.chooseDeviceType',
-            wizardState: {
-              'addDeviceFlow.chooseDeviceType': {
-                nextOptions: {
-                  cloudberry: 'addDeviceFlow.chooseSharedSpace',
-                  huron: 'addDeviceFlow.choosePersonal'
-                }
-              },
-              'addDeviceFlow.choosePersonal': {
-                next: 'addDeviceFlow.showActivationCode'
-              },
-              'addDeviceFlow.chooseSharedSpace': {
-                next: 'addDeviceFlow.showActivationCode'
-              },
-              'addDeviceFlow.showActivationCode': {}
-            }
-          };
-        };
-
         vm.wizardWithPlaces = function () {
           return {
             data: {
               function: "addDevice",
-              showPlaces: true,
+              showATA: vm.showATA,
+              showDarling: vm.showDarling,
+              admin: vm.adminUserDetails,
+              csdmHybridCallFeature: vm.csdmHybridCallFeature,
               title: "addDeviceWizard.newDevice",
               isEntitledToHuron: vm.isEntitledToHuron(),
               isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
-              allowUserCreation: true
+              account: {
+                organizationId: Authinfo.getOrgId()
+              },
+              recipient: {
+                cisUuid: Authinfo.getUserId(),
+                displayName: vm.adminUserDetails.displayName,
+                email: Authinfo.getPrimaryEmail(),
+                organizationId: vm.adminUserDetails.organizationId,
+                firstName: vm.adminFirstName
+              }
             },
             history: [],
             currentStateName: 'addDeviceFlow.chooseDeviceType',
             wizardState: {
               'addDeviceFlow.chooseDeviceType': {
                 nextOptions: {
-                  cloudberry: 'addDeviceFlow.chooseSharedSpace',
+                  cloudberry: vm.showPersonal ? 'addDeviceFlow.chooseAccountType' : 'addDeviceFlow.chooseSharedSpace',
                   huron: 'addDeviceFlow.chooseAccountType'
                 }
               },
@@ -196,18 +236,27 @@
                 }
               },
               'addDeviceFlow.choosePersonal': {
-                nextOptions: {
-                  existing: 'addDeviceFlow.showActivationCode'
-                }
+                next: 'addDeviceFlow.showActivationCode'
               },
               'addDeviceFlow.chooseSharedSpace': {
                 nextOptions: {
-                  cloudberry: 'addDeviceFlow.showActivationCode',
+                  cloudberry_existing: 'addDeviceFlow.showActivationCode',
+                  cloudberry_create: vm.showPstn ? 'addDeviceFlow.editServices' : 'addDeviceFlow.showActivationCode',
                   huron_existing: 'addDeviceFlow.showActivationCode',
                   huron_create: 'addDeviceFlow.addLines'
                 }
               },
+              'addDeviceFlow.editServices': {
+                nextOptions: {
+                  sparkCall: 'addDeviceFlow.addLines',
+                  sparkCallConnect: 'addDeviceFlow.callConnectOptions',
+                  sparkOnly: 'addDeviceFlow.showActivationCode'
+                }
+              },
               'addDeviceFlow.addLines': {
+                next: 'addDeviceFlow.showActivationCode'
+              },
+              'addDeviceFlow.callConnectOptions': {
                 next: 'addDeviceFlow.showActivationCode'
               },
               'addDeviceFlow.showActivationCode': {}
@@ -216,16 +265,54 @@
         };
 
         vm.startAddDeviceFlow = function () {
-          var wizardState = undefined;
-          if (vm.showPlaces) {
-            wizardState = vm.wizardWithPlaces();
-          } else {
-            wizardState = vm.wizardWithoutPlaces();
-          }
-          var wizard = WizardFactory.create(wizardState);
+          var wizard = WizardFactory.create(vm.wizardWithPlaces());
           $state.go(wizard.state().currentStateName, {
             wizard: wizard
           });
+        };
+
+        vm.startDeviceExport = function () {
+          $modal.open({
+            templateUrl: "modules/squared/devices/export/devices-export.html",
+            type: 'dialog'
+          }).result.then(function () {
+            vm.openExportProgressTracker();
+          }, function () {
+            vm.exporting = false;
+          });
+        };
+
+        vm.openExportProgressTracker = function () {
+          exportProgressDialog = $modal.open({
+            templateUrl: 'modules/squared/devices/export/devices-export-progress.html',
+            type: 'dialog',
+            controller: function () {
+              var vm = this;
+              vm.cancelExport = function () {
+                DeviceExportService.cancelExport();
+              };
+            },
+            controllerAs: 'vm',
+          });
+          exportProgressDialog.opened.then(function () {
+            vm.exporting = true;
+            DeviceExportService.exportDevices(vm.exportStatus);
+          });
+        };
+
+        vm.exportStatus = function (percent) {
+          if (percent === 100) {
+            exportProgressDialog.close();
+            vm.exporting = false;
+            var title = $translate.instant('spacesPage.export.exportCompleted');
+            var text = $translate.instant('spacesPage.export.deviceListReadyForDownload');
+            Notification.success(text, title);
+          } else if (percent === -1) {
+            exportProgressDialog.close();
+            vm.exporting = false;
+            var warn = $translate.instant('spacesPage.export.deviceExportFailedOrCancelled');
+            Notification.warning(warn);
+          }
         };
 
         function getTemplate(name) {

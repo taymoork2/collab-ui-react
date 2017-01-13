@@ -1,3 +1,5 @@
+require('./_user-csv.scss');
+
 (function () {
   'use strict';
 
@@ -7,7 +9,7 @@
 
   /* @ngInject */
   function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState, $stateParams,
-                       Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
+                       Analytics, Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
                        Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService) {
     // variables
     var vm = this;
@@ -25,8 +27,15 @@
     var saveDeferred;
     var csvHeaders = null;
     var orgHeaders;
-
+    var renamedHeaders = {
+      'Calendar Service': 'Hybrid Calendar Service (Exchange)'
+    };
+    var mutuallyExclusiveCalendarEntitlements = {
+      'squaredFusionCal': 'squaredFusionGCal',
+      'squaredFusionGCal': 'squaredFusionCal'
+    };
     var USER_ID_EMAIL_HEADER = 'User ID/Email (Required)';
+    var NO_RESOURCE_GROUP = '**no resource group**';
 
     CsvDownloadService.getCsv('headers').then(function (csvData) {
       orgHeaders = angular.copy(csvData.columns || []);
@@ -111,11 +120,11 @@
     vm.onExportDownloadStatus = onExportDownloadStatus;
 
     vm.onFileSizeError = function () {
-      $timeout(Notification.error('firstTimeWizard.csvMaxSizeError'));
+      Notification.error('firstTimeWizard.csvMaxSizeError');
     };
 
     vm.onFileTypeError = function () {
-      $timeout(Notification.error('firstTimeWizard.csvFileTypeError'));
+      Notification.error('firstTimeWizard.csvFileTypeError');
     };
 
     vm.resetFile = function () {
@@ -144,10 +153,12 @@
 
     var rootState = $previousState.get().state.name;
     vm.onBack = function () {
+      Analytics.trackAddUsers(Analytics.eventNames.BACK);
       $state.go(rootState);
     };
 
     vm.startUpload = function () {
+      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD);
       beforeSubmitCsv().then(function () {
         bulkSaveWithIndividualLicenses();
         $state.go('users.csv.results');
@@ -171,8 +182,19 @@
           vm.cancelProcessCsv();
         });
       } else {
+        Analytics.trackAddUsers(Analytics.eventNames.CANCEL_MODAL);
         $scope.$dismiss();
       }
+    };
+
+    vm.onDoneImport = function () {
+      var analyticsData = {
+        numberOfErrors: vm.model.userErrorArray.length,
+        usersAdded: vm.model.numNewUsers,
+        usersUpdated: vm.model.numExistingUsers
+      };
+      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.FINISH, null, analyticsData);
+      $state.modal.dismiss();
     };
 
     vm.cancelProcessCsv = function () {
@@ -180,6 +202,11 @@
       cancelDeferred.resolve();
       saveDeferred.resolve();
       $scope.$broadcast('timer-stop');
+    };
+
+    vm.onCancelModal = function () {
+      Analytics.trackAddUsers(Analytics.eventNames.CANCEL_MODAL);
+      $state.modal.dismiss();
     };
 
     vm.licenseBulkErrorModal = function () {
@@ -353,7 +380,7 @@
 
     function findHeaderIndex(name) {
       var index = _.findIndex(headers, function (h) {
-        return h.name == name;
+        return h.name === name;
       });
       if (index !== -1) {
         return headers[index].csvColIndex;
@@ -370,7 +397,7 @@
       } else {
         _.forEach(userHeaders, function (uHeader, k) {
           index = _.findIndex(serverHeaders, function (sHeader) {
-            return sHeader.name == uHeader;
+            return sHeader.name === uHeader || sHeader.name === renamedHeaders[uHeader];
           });
           if (index !== -1) {
             var h = serverHeaders[index];
@@ -389,8 +416,8 @@
       function successCallback(response, onboardedUsers) {
 
         function onboardedUserWithEmail(email) {
-          return _.find(onboardedUsers, {
-            'address': email
+          return _.find(onboardedUsers, function (user) {
+            return _.toLower(user.address) === _.toLower(email);
           });
         }
 
@@ -492,18 +519,8 @@
           var currentProps = _.find(vm.hybridServicesUserProps, function (prop) {
             return prop.userId === user.uuid;
           });
-          var oldCalProps = currentProps ? currentProps.resourceGroups['squared-fusion-cal'] : undefined;
-          var newCalProps = user.resourceGroups['squared-fusion-cal'];
-          var calResourceGroupChanged = oldCalProps !== newCalProps;
-          if (calResourceGroupChanged && !newCalProps) {
-            user.resourceGroups['squared-fusion-cal'] = ''; // Will clear the group in USS
-          }
-          var oldUCProps = currentProps ? currentProps.resourceGroups['squared-fusion-uc'] : undefined;
-          var newUCProps = user.resourceGroups['squared-fusion-uc'];
-          var ucResourceGroupChanged = oldUCProps !== newUCProps;
-          if (ucResourceGroupChanged && !newUCProps) {
-            user.resourceGroups['squared-fusion-uc'] = ''; // Will clear the group in USS
-          }
+          var calResourceGroupChanged = tweakResourceGroups(user, 'squared-fusion-cal', currentProps);
+          var ucResourceGroupChanged = tweakResourceGroups(user, 'squared-fusion-uc', currentProps);
           if (calResourceGroupChanged || ucResourceGroupChanged) {
             updatedUserProps.push({ userId: user.uuid, resourceGroups: user.resourceGroups });
           }
@@ -516,6 +533,23 @@
             });
           });
         }
+      }
+
+      function tweakResourceGroups(user, entitlement, currentProps) {
+        var resourceGroupChanged = false;
+        var newProps = user.resourceGroups[entitlement];
+        if (newProps) {
+          var oldProps = currentProps ? (currentProps.resourceGroups[entitlement] || NO_RESOURCE_GROUP) : NO_RESOURCE_GROUP;
+          resourceGroupChanged = oldProps !== newProps;
+          if (newProps === NO_RESOURCE_GROUP) {
+            if (resourceGroupChanged) {
+              user.resourceGroups[entitlement] = '';
+            } else {
+              delete user.resourceGroups[entitlement];
+            }
+          }
+        }
+        return resourceGroupChanged;
       }
 
       function getResourceGroup(name) {
@@ -590,6 +624,8 @@
               } else {
                 calendarServiceResourceGroup = resourceGroup.id;
               }
+            } else {
+              calendarServiceResourceGroup = NO_RESOURCE_GROUP;
             }
           }
           index = findHeaderIndex('Hybrid Call Service Resource Group');
@@ -605,6 +641,8 @@
               } else {
                 callServiceResourceGroup = resourceGroup.id;
               }
+            } else {
+              callServiceResourceGroup = NO_RESOURCE_GROUP;
             }
           }
         }
@@ -648,7 +686,12 @@
                   // if lincense is Calendar Service, only process if it is enabled
                   if (entitlement.toUpperCase().indexOf('SQUAREDFUSIONCAL') === -1 || isCalendarServiceEnabled) {
                     if (isTrue(input)) {
-                      entitleList.push(new Feature(entitlement, true));
+                      if (hasMutuallyExclusiveCalendarEntitlements(entitlement, entitleList)) {
+                        processingError = true;
+                        addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.mutuallyExclusiveCalendarEntitlements'));
+                      } else {
+                        entitleList.push(new Feature(entitlement, true));
+                      }
                     } else if (isFalse(input)) {
                       if (vm.model.enableRemove) {
                         entitleList.push(new Feature(entitlement, false));
@@ -703,7 +746,19 @@
             return null;
           }
         }
+      }
 
+      /**
+       * We only allow squared-fusion-cal OR squared-fusion-gcal entitlement to be set per user
+       */
+      function hasMutuallyExclusiveCalendarEntitlements(entitlement, currentFeatureList) {
+        var badEntitlement = mutuallyExclusiveCalendarEntitlements[entitlement];
+        if (!badEntitlement) {
+          return false;
+        }
+        return _.some(currentFeatureList, function (feature) {
+          return feature.entitlementName === badEntitlement && feature.entitlementState === 'ACTIVE';
+        });
       }
 
       /**
@@ -835,15 +890,15 @@
             vm.hybridServicesUserProps = userProps;
             ResourceGroupService.getAll().then(function (resourceGroups) {
               vm.resourceGroups = resourceGroups;
-            }).catch(function () {
+            }).catch(function (response) {
               vm.handleHybridServicesResourceGroups = false;
-              Notification.error('firstTimeWizard.fmsResourceGroupsLoadFailed');
+              Notification.errorResponse(response, 'firstTimeWizard.fmsResourceGroupsLoadFailed');
             }).finally(function () {
               processCsvRows();
             });
-          }).catch(function () {
+          }).catch(function (response) {
             vm.handleHybridServicesResourceGroups = false;
-            Notification.error('firstTimeWizard.ussUserPropsLoadFailed');
+            Notification.errorResponse(response, 'firstTimeWizard.ussUserPropsLoadFailed');
             processCsvRows();
           });
         } else {

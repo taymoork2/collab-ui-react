@@ -1,3 +1,6 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/spacing';
+
 .users-download-csv {
   .file-download {
     height: rem(300);
@@ -6,8 +9,6 @@
     justify-content: center;
 
     .file-download-content {
-      @extend .center;
-
       align-self: center;
 
       .csv-download {
@@ -109,10 +110,8 @@
       margin-top: rem(-15);
     }
 
-    .retry-label span {
-      @extend .progressbar-progress;
-
-      float: none;
+    .progressbar-label span {
+      font-size: inherit;
     }
   }
 

@@ -1,0 +1,59 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/spacing';
+
+report-slider, .report-slider {
+  width: 100%;
+}
+.report-slider {
+  .report-filter {
+    width: vr-adjust(160);
+  }
+  .slider {
+    width: calc(100% - 280px);
+    @include vr-spacing(mr, 2);
+    position: relative;
+    top: vr-adjust(8);
+    .insidebar, .sliderPointer {
+      background-color: $color-primary-base;
+    }
+    .sliderLabel {
+      font-size: vr-adjust(16);
+      top: vr-adjust(-36);
+      color: $gray-base;
+    }
+    .hashLabel {
+      font-size: vr-adjust(10);
+      color: $gray-base;
+      left: vr-adjust(-16);
+    }
+  }
+  .visible-dropdown {
+    display: block;
+  }
+  .slider-dropdown {
+    position: relative;
+  }
+  .slider-close {
+    color: $gray-base;
+    cursor: pointer;
+  }
+  .grid-filter {
+    display: flex;
+  }
+  .slider-grid-filter {
+    @include vr-spacing(mt, 0.5);
+  }
+  .dropdown-toggle.filter {
+    .name {
+      font-size: vr-adjust(16);
+    }
+    .slider-name {
+      color: $gray-base;
+      cursor: default;
+    }
+    .icon-chevron-down {
+      position: relative;
+      left: vr-adjust(-12);
+    }
+  }
+}

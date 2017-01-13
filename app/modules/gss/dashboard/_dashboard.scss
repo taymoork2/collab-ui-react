@@ -1,0 +1,128 @@
+.status-dashboard {
+  .incident-section {
+    @include vr_spacing(mt, 1);
+    @include vr_spacing(p, 1);
+    background-color: $white;
+
+    .no-incident-notification {
+      border: 1px dashed $gray-base;
+      @include vr_spacing(p, 1.25);
+    }
+
+    .incidents-list {
+      @include vr_spacing(ml, 0);
+
+      > li {
+        @include vr_spacing(mt, 0.5);
+        list-style: none;
+
+        > div:first-child {
+          height: 40px;
+
+          &.none, &.maintenance {
+            background-color: $gray-dark-3;
+          }
+          &.minor {
+            background-color: $color-attention-base;
+          }
+          &.major {
+            background-color: $color-meetings-base;
+          }
+          &.critical {
+            background-color: $color-negative-dark;
+          }
+
+          > span {
+            @include vr_spacing(mt, 0.75, 2px);
+            @include vr_spacing(ml, 0.5);
+            color: $white;
+            font-size: 1rem;
+
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            height: inherit;
+            max-width: 70%;
+          }
+
+          > a {
+            @include vr_spacing(mr, 0.75, 2px);
+            @include vr_spacing(mt, 0.5, 2px);
+
+            font-size: 1rem;
+            border: 2px solid $white;
+            color: $white;
+          }
+        }
+
+        > div:last-child {
+          border: 1px solid;
+          &.none, &.maintenance {
+            border-color: $gray-dark-3;
+          }
+          &.minor {
+            border-color: $color-attention-base;
+          }
+          &.major {
+            border-color: $color-meetings-base;
+          }
+          &.critical {
+            border-color: $color-negative-dark;
+          }
+
+          @include vr_spacing(p, 0.75, 2px);
+
+          > h6:first-child {
+            color: $gray-dark-4;
+          }
+        }
+      }
+    }
+  }
+
+  .component-section {
+    @include vr_spacing(mt, 1);
+    @include vr_spacing(mb, 1);
+    @include vr_spacing(p, 1);
+    background-color: $white;
+
+    .no-component-notification {
+      border: 1px dashed $gray-base;
+      @include vr_spacing(p, 1.25);
+    }
+
+    .components-list {
+      > li {
+        @include vr_spacing(pt, 1);
+
+        ul {
+          @include vr_spacing(ml, 0);
+
+          .row .columns:first-of-type {
+            @include vr_spacing(pl, 2);
+          }
+        }
+      }
+
+      .component-status-operational {
+        color: $color-cta-base;
+      }
+
+      .component-status-degraded_performance {
+        color: $color-negative-base;
+      }
+
+      .component-status-under_maintenance {
+        color: $color-primary-base;
+      }
+
+      .component-status-partial_outage {
+        color: $color-meetings-base;
+      }
+
+      .component-status-major_outage {
+        color: $color-alerts-base;
+      }
+    }
+  }
+}

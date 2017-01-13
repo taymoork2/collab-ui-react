@@ -101,6 +101,24 @@ describe('Controller: AARouteToQueueCtrl', function () {
       controller.openQueueTreatmentModal();
       $scope.$apply();
       expect($modal.open).toHaveBeenCalled();
+      modal.resolve();
+      $scope.$apply();
+    });
+
+    it('should open the Modal on Validation success when from Route Call', function () {
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+      controller.menuEntry.actions = [];
+      controller.menuEntry.actions[0] = action;
+      $scope.fromRouteCall = true;
+      controller = $controller('AARouteToQueueCtrl', {
+        $scope: $scope
+      });
+      $scope.$apply();
+      controller.openQueueTreatmentModal();
+      $scope.$apply();
+      expect($modal.open).toHaveBeenCalled();
+      modal.resolve();
+      $scope.$apply();
     });
 
     describe('fromRouteCall', function () {
@@ -377,6 +395,36 @@ describe('Controller: AARouteToQueueCtrl', function () {
         expect(controller.queueSelected.id).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
         expect(controller.menuEntry.actions[0].name).toEqual('routeToQueue');
         expect(controller.menuEntry.actions[0].value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
+      });
+
+      it('should be able to update queue settings voice via saveUIModel', function () {
+        var controller = $controller('AARouteToQueueCtrl', {
+          $scope: $scope
+        });
+        controller.queueSelected = {
+          name: "Test Queue",
+          id: "c16a6027-caef-4429-b3af-9d61ddc7964b"
+        };
+
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+        action.queueSettings = {
+          voice: ''
+        };
+        controller.menuKeyEntry.actions = [];
+        controller.menuKeyEntry.actions[0] = action;
+
+        var headerEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        controller.menuEntry.headers = [];
+        headerEntry.setVoice("Anna");
+        controller.menuEntry.headers.push(headerEntry);
+
+        controller.saveUiModel();
+        $scope.$apply();
+
+        expect(controller.menuKeyEntry.actions[0].value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
+
+        var queueSettings = _.get(controller.menuKeyEntry, 'actions[0].queueSettings');
+        expect(queueSettings.voice).toEqual("Anna");
       });
     });
 

@@ -2,26 +2,25 @@
   'use strict';
 
   module.exports = angular
-    .module('core.auth', [
+    .module('core.auth.auth', [
       'pascalprecht.translate',
-      'ui.router',
+      require('angular-ui-router'),
       require('angular-sanitize'),
       require('modules/core/auth/token.service'),
-      require('modules/core/config/config'),
       require('modules/core/config/oauthConfig'),
       require('modules/core/config/urlConfig'),
       require('modules/core/scripts/services/authinfo'),
       require('modules/core/scripts/services/log'),
       require('modules/core/scripts/services/sessionstorage'),
-      require('modules/core/scripts/services/storage'),
       require('modules/core/scripts/services/utils'),
-      require('modules/core/windowLocation/windowLocation'),
+      require('modules/core/window').default,
+      require('modules/huron/compass').default,
     ])
     .factory('Auth', Auth)
     .name;
 
   /* @ngInject */
-  function Auth($http, $injector, $q, $sanitize, $translate, Authinfo, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, Utils, WindowLocation) {
+  function Auth($http, $injector, $q, $sanitize, $translate, Authinfo, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, Utils, WindowLocation, HuronCompassService) {
 
     var service = {
       logout: logout,
@@ -40,23 +39,46 @@
       isOnlineOrg: isOnlineOrg
     };
 
+    var REFRESH_ACCESS_TOKEN_DEBOUNCE_MS = 1000;
+    var debouncedRefreshAccessToken = _.debounce(
+      refreshAccessToken,
+      REFRESH_ACCESS_TOKEN_DEBOUNCE_MS,
+      {
+        leading: true,
+        trailing: false
+      }
+    );
+
     return service;
 
-    var deferred;
+    var deferredAll;
 
     function authorize(options) {
       var reauthorize = _.get(options, 'reauthorize');
-      if (deferred && !reauthorize) {
-        return deferred;
+      if (deferredAll && !reauthorize) {
+        return deferredAll;
       }
 
-      deferred = httpGET(getAuthorizationUrl())
-        .then(replaceOrTweakServices)
-        .then(injectMessengerService)
-        .then(initializeAuthinfo)
+      deferredAll = httpGET(getAuthorizationUrl())
+        .then(function (res) {
+          return $q.all([
+            deferredAuth(res),
+            getHuronDomain(res)
+          ]);
+        })
+        .then(function (responseArray) {
+          return _.get(responseArray, '[0]');
+        })
         .catch(handleErrorAndResetAuthinfo);
 
-      return deferred;
+      return deferredAll;
+    }
+
+    function deferredAuth(res) {
+      return $q.when(res)
+        .then(replaceOrTweakServices)
+        .then(injectMessengerService)
+        .then(initializeAuthinfo);
     }
 
     var onlineOrg;
@@ -87,8 +109,9 @@
     }
 
     function getNewAccessToken(params) {
+      var clientSessionId = TokenService.getOrGenerateClientSessionId();
       var url = OAuthConfig.getAccessTokenUrl();
-      var data = OAuthConfig.getNewAccessTokenPostData(params.code);
+      var data = OAuthConfig.getNewAccessTokenPostData(params.code, clientSessionId);
       var token = OAuthConfig.getOAuthClientRegistrationCredentials();
 
       // Security: verify authentication request came from our site
@@ -119,9 +142,11 @@
     }
 
     function refreshAccessTokenAndResendRequest(response) {
-      return refreshAccessToken()
+      return debouncedRefreshAccessToken()
         .then(function () {
           var $http = $injector.get('$http');
+          // replace the retried request with the new Authorization header
+          _.set(response, 'config.headers.Authorization', _.get($http, 'defaults.headers.common.Authorization'));
           return $http(response.config);
         });
     }
@@ -138,8 +163,10 @@
 
     function logout() {
       var redirectUrl = OAuthConfig.getLogoutUrl();
-      TokenService.triggerGlobalLogout();
-      return service.logoutAndRedirectTo(redirectUrl);
+      return service.logoutAndRedirectTo(redirectUrl)
+        .finally(function () {
+          return TokenService.triggerGlobalLogout();
+        });
     }
 
     function logoutAndRedirectTo(redirectUrl) {
@@ -148,7 +175,10 @@
         .then(function (response) {
           var promises = [];
           var clientTokens = _.filter(response.data.data, {
-            client_id: OAuthConfig.getClientId()
+            client_id: OAuthConfig.getClientId(),
+            user_info: {
+              client_session_id: TokenService.getClientSessionId()
+            }
           });
 
           _.each(clientTokens, function (tokenData) {
@@ -268,6 +298,7 @@
         return getCustomerAccount(Authinfo.getOrgId())
           .then(function (res) {
             Authinfo.updateAccountInfo(res.data);
+            return authData;
           });
       } else {
         return authData;
@@ -350,6 +381,11 @@
         Log.error(message, res && (res.data || res.text));
         return $q.reject(res);
       };
+    }
+
+    function getHuronDomain(res) {
+      var authData = _.get(res, 'data');
+      return HuronCompassService.fetchDomain(authData);
     }
   }
 })();

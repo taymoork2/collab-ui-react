@@ -124,7 +124,7 @@
             <section ng-if="pstnNumbers.model.pstn.searchResults.length > 0">
               <div class="provider-flex">
                 <h5 translate="pstnSetup.searchResults"></h5>
-                <button type="button" class="btn btn--people" ng-click="pstnNumbers.addToCart('NUMBER_ORDER')" cs-btn loading="pstnNumbers.addLoading" ng-disabled="pstnNumbers.model.pstn.addDisabled"><span translate="common.add"></span></button>
+                <button type="button" class="btn btn--people" ng-click="pstnNumbers.addToCart('NUMBER_ORDER', 'DID')" cs-btn loading="pstnNumbers.addLoading" ng-disabled="pstnNumbers.model.pstn.addDisabled"><span translate="common.add"></span></button>
               </div>
               <ul class="large-block-grid-3 medium-block-grid-2 search-results">
                 <li ng-repeat="searchResult in pstnNumbers.model.pstn.searchResults | startFrom: pstnNumbers.model.pstn.paginateOptions.currentPage*pstnNumbers.model.pstn.paginateOptions.pageSize | limitTo: pstnNumbers.model.pstn.paginateOptions.pageSize">
@@ -147,7 +147,7 @@
                 <div class="order-inline right-margin">
                     <input cs-input type="text" class="input-width text-center" id="advanceQuantityInput" ng-model="pstnNumbers.model.pstn.quantity" cs-input-label="{{::'pstnSetup.quantity' | translate}}">
                 </div>
-                <button type="button" class="btn btn--people btn--large order-inline" ng-click="pstnNumbers.addToCart('BLOCK_ORDER')" translate="pstnSetup.advancedOrder.addNumbers"></button>
+                <button type="button" class="btn btn--people btn--large order-inline" ng-click="pstnNumbers.addToCart('BLOCK_ORDER', 'DID')" translate="pstnSetup.advancedOrder.addNumbers"></button>
             </section>
           </section>
         </cs-tab>
@@ -161,7 +161,7 @@
             <section ng-if="pstnNumbers.model.tollFree.searchResults.length > 0">
               <div class="provider-flex">
                 <h5 translate="pstnSetup.searchResults"></h5>
-                <button type="button" class="btn btn--people" ng-click="pstnNumbers.addToCart('TOLLFREE_ORDER')" cs-btn loading="pstnNumbers.addLoading" ng-disabled="pstnNumbers.model.tollFree.addDisabled"><span translate="common.add"></span></button>
+                <button type="button" class="btn btn--people" ng-click="pstnNumbers.addToCart('NUMBER_ORDER', 'TOLLFREE')" cs-btn loading="pstnNumbers.addLoading" ng-disabled="pstnNumbers.model.tollFree.addDisabled"><span translate="common.add"></span></button>
               </div>
               <ul class="large-block-grid-3 medium-block-grid-2 search-results">
                 <li ng-repeat="searchResult in pstnNumbers.model.tollFree.searchResults | startFrom: pstnNumbers.model.tollFree.paginateOptions.currentPage*pstnNumbers.model.tollFree.paginateOptions.pageSize | limitTo: pstnNumbers.model.tollFree.paginateOptions.pageSize">
@@ -184,7 +184,7 @@
                 <div class="order-inline right-margin">
                     <input cs-input type="text" class="input-width text-center" id="advanceQuantityInput" ng-model="pstnNumbers.model.tollFree.quantity" cs-input-label="{{::'pstnSetup.quantity' | translate}}">
                 </div>
-                <button type="button" class="btn btn--people btn--large order-inline" ng-click="pstnNumbers.addToCart('TOLLFREE_BLOCK_ORDER')" translate="pstnSetup.advancedOrder.addNumbers"></button>
+                <button type="button" class="btn btn--people btn--large order-inline" ng-click="pstnNumbers.addToCart('BLOCK_ORDER', 'TOLLFREE')" translate="pstnSetup.advancedOrder.addNumbers"></button>
             </section>
           </section>
         </cs-tab>
@@ -197,9 +197,6 @@
             <cs-token-field class="port-numbers" tokens="pstnNumbers.unsavedTokens" tokenfieldid="pstnNumbers.tokenfieldId" tokenplacehoder="pstnNumbers.tokenplacehoder" tokenoptions="pstnNumbers.tokenoptions" tokenmethods="pstnNumbers.tokenmethods"></cs-token-field>
           <div class="warning-message" ng-if="pstnNumbers.invalidCount > 0">
             <span class="icon icon-error"></span><p translate="pstnSetup.invalidNumberPrompt"></p>
-          </div>
-          <div class="warning-message" ng-if="pstnNumbers.tollFreeNumberCount > 0">
-            <span class="icon icon-error"></span><p translate="pstnSetup.portNumbersNoTollFree"></p>
           </div>
         </cs-tab>
       </cs-tabset>

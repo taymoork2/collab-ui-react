@@ -41,11 +41,11 @@ exports.resolvePath = function (filePath) {
 };
 
 exports.writeFile = function (file, text) {
-  return fs.writeFile(file, text);
+  return fs.writeFileSync(file, text);
 };
 
 exports.deleteFile = function (file) {
-  return fs.unlink(file);
+  return fs.unlinkSync(file);
 };
 
 exports.searchField = element(by.id('searchFilter'));
@@ -789,7 +789,7 @@ exports.quickDeleteUser = function (bFirst, name) {
     this.search(name, -1);
   }
 
-  return waitUntilElemIsPresent(users.userListAction, 2000).then(function () {
+  return exports.waitUntilElemIsPresent(users.userListAction, 2000).then(function () {
     exports.click(users.userListAction);
     exports.click(users.deleteUserOption);
     exports.expectIsDisplayed(users.deleteUserModal);
@@ -802,12 +802,14 @@ exports.quickDeleteUser = function (bFirst, name) {
     return false;
   });
 
-  function waitUntilElemIsPresent(elem, timeout) {
-    return exports.wait(elem, timeout).then(function () {
-      return elem.isDisplayed();
-    })
-  }
 };
+
+exports.waitUntilElemIsPresent = function (elem, timeout) {
+  return exports.wait(elem, timeout).then(function () {
+    return elem.isDisplayed();
+  })
+};
+
 
 exports.waitForModal = function () {
   return this.wait(element(by.css('.reveal-modal')));

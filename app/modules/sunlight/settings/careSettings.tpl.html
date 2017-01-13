@@ -12,8 +12,7 @@
           <br>
           <button id="ccfsBtn" cs-btn class="btn--primary loading-button" loading="localCareSettings.state === localCareSettings.IN_PROGRESS"
             ng-click="localCareSettings.onboardToCs()"
-            ng-disabled="localCareSettings.isPartner ||
-            localCareSettings.state === localCareSettings.IN_PROGRESS ||
+            ng-disabled="localCareSettings.state === localCareSettings.IN_PROGRESS ||
             localCareSettings.state === localCareSettings.ONBOARDED">
           <span translate="firstTimeWizard.careSettingsButton"></span>
           </button>

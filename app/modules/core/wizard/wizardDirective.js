@@ -1,3 +1,5 @@
+require('./_wizard.scss');
+
 (function () {
   'use strict';
 
@@ -297,9 +299,14 @@
 
     function executeNextStep(subTabControllerAs) {
       new PromiseHook($scope, getStepName() + 'Next', getTab().controllerAs, subTabControllerAs).then(function () {
-        if (getTab().name === 'enterpriseSettings' && getStep().name === 'enterpriseSipUrl') {
-          $rootScope.$broadcast('wizard-enterprise-sip-url-event');
+        if (getTab().name === 'enterpriseSettings') {
+          if (getStep().name === 'enterpriseSipUrl') {
+            $rootScope.$broadcast('wizard-enterprise-sip-url-event');
+          } else if (getStep().name === 'enterprisePmrSetup') {
+            $rootScope.$broadcast('wizard-enterprise-pmr-event');
+          }
         }
+
         var steps = getSteps();
         if (_.isArray(steps)) {
           var index = steps.indexOf(getStep());
@@ -386,7 +393,8 @@
       }
 
       // enable/disable skip tab button
-      vm.showSkipTabBtn = (vm.isFirstTime() && vm.current.tab.name === 'addUsers' && vm.isFirstStep());
+      vm.showSkipTabBtn = (vm.isFirstTime() && (vm.current.tab.name === 'addUsers' || vm.current.tab.name === 'careSettings')
+        && vm.isFirstStep());
     }
 
     $scope.$on('wizardNextButtonDisable', function (event, status) {

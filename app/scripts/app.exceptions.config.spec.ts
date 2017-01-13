@@ -1,6 +1,8 @@
 describe('$exceptionHandler', function () {
   beforeEach(function () {
     this.initModules('wx2AdminWebClientApp');
+    angular.mock.module('Core');
+    angular.mock.module('Huron');
     angular.mock.module(($provide, $exceptionHandlerProvider) => {
       $provide.value('BadService', {
         badFunction: () => {

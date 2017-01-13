@@ -56,18 +56,30 @@
       }
     }
 
-    function getHuntMembers(hint) {
+    function getHuntMembers(hint, onlyMembers) {
       if (suggestionsNeeded(hint)) {
         var helper = getServiceHelper();
-        helper.setService(UserSearchServiceV2);
-        helper.setApiArgs({
-          name: hint,
-          wide: true,
-        });
-        helper.setExtractData(function (data) {
-          return data.users;
-        });
-        helper.setMapping(constructUserNumberMappingForUI);
+        if (isNaN(hint) || onlyMembers) {
+          helper.setService(UserSearchServiceV2);
+          helper.setApiArgs({
+            name: hint,
+            wide: true,
+          });
+          helper.setExtractData(function (data) {
+            return data.users;
+          });
+          helper.setMapping(constructUserNumberMappingForUI);
+        } else {
+          helper.setService(NumberSearchServiceV2);
+          helper.setApiArgs({
+            number: hint,
+            assigned: 'true',
+          });
+          helper.setExtractData(function (data) {
+            return data.numbers;
+          });
+          helper.setMapping(constructNumberListForUI);
+        }
         return helper;
       }
       return undefined;
@@ -242,6 +254,17 @@
       });
 
       return huntMembers;
+    }
+
+    function constructNumberListForUI(numbers) {
+      var huntNumbers = [];
+      _.forEach(numbers, function (number) {
+        huntNumbers.push({
+          searchNumber: number.number,
+          uuid: _.get(number, 'directoryNumber.uuid')
+        });
+      });
+      return huntNumbers;
     }
 
     function getHuntMemberWithSelectedNumber(user) {

@@ -7,7 +7,8 @@
 
   /* @ngInject */
   function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
-    AAModelService, AACommonService, Authinfo, AANotificationService, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService) {
+        AAModelService, AACommonService, Authinfo, AANotificationService, $translate,
+        telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService, ExternalNumberPool) {
     var vm = this;
 
     vm.addNumber = addNumber;
@@ -317,8 +318,10 @@
     function getExternalNumbers(pattern) {
 
       vm.externalNumberList = [];
-
-      return TelephonyInfoService.loadExternalNumberPool(pattern).then(function (extPool) {
+      return TelephonyInfoService.loadExternalNumberPool(
+        pattern,
+        ExternalNumberPool.ALL_EXTERNAL_NUMBER_TYPES
+      ).then(function (extPool) {
         for (var i = 0; i < extPool.length; i++) {
 
           if (extPool[i].uuid.toUpperCase() === "NONE") {

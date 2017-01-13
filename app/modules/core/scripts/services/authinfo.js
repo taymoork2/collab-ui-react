@@ -128,6 +128,7 @@
           var cmrLicenses = [];
           var careLicenses = [];
           var confLicensesWithoutSiteUrl = [];
+          var confLicensesLinkedSiteUrl = [];
           var customerAccounts = data.customers || [];
 
           if (customerAccounts.length > 0) {
@@ -165,7 +166,9 @@
 
               switch (license.licenseType) {
                 case Config.licenseTypes.CONFERENCING:
-                  if ((this.isCustomerAdmin() || this.isReadOnlyAdmin()) && license.siteUrl && !_.includes(authData.roles, 'Site_Admin')) {
+                  if ((this.isCustomerAdmin() || this.isReadOnlyAdmin()) &&
+                    (license.siteUrl || license.linkedSiteUrl) &&
+                    !_.includes(authData.roles, 'Site_Admin')) {
                     authData.roles.push('Site_Admin');
                   }
                   service = new ServiceFeature($translate.instant(Config.confMap[license.offerName], {
@@ -173,6 +176,9 @@
                   }), x + 1, 'confRadio', license);
                   if (license.siteUrl) {
                     confLicensesWithoutSiteUrl.push(service);
+                  }
+                  if (license.linkedSiteUrl) {
+                    confLicensesLinkedSiteUrl.push(service);
                   }
                   confLicenses.push(service);
                   break;
@@ -211,6 +217,9 @@
           }
           if (confLicensesWithoutSiteUrl.length !== 0) {
             authData.conferenceServicesWithoutSiteUrl = confLicensesWithoutSiteUrl;
+          }
+          if (confLicensesLinkedSiteUrl.length !== 0) {
+            authData.conferenceServicesWithLinkedSiteUrl = confLicensesLinkedSiteUrl;
           }
           $rootScope.$broadcast('AccountinfoUpdated');
         } //end if
@@ -274,6 +283,9 @@
       },
       getConferenceServicesWithoutSiteUrl: function () {
         return authData.conferenceServicesWithoutSiteUrl;
+      },
+      getConferenceServicesWithLinkedSiteUrl: function () {
+        return authData.conferenceServicesWithLinkedSiteUrl;
       },
       getRoles: function () {
         return authData.roles;
@@ -398,6 +410,9 @@
       isSupportUser: function () {
         return this.hasRole('Support') && !this.isAdmin();
       },
+      isTechSupport: function () {
+        return this.hasRole('Tech_Support');
+      },
       isHelpDeskUser: function () {
         return this.hasRole(Config.roles.helpdesk);
       },
@@ -446,11 +461,20 @@
       isFusionCal: function () {
         return isEntitled(Config.entitlements.fusion_cal);
       },
-      isDeviceMgmt: function () {
-        return isEntitled(Config.entitlements.room_system);
+      isFusionGoogleCal: function () {
+        return isEntitled(Config.entitlements.fusion_google_cal);
       },
       isFusionEC: function () {
         return isEntitled(Config.entitlements.fusion_ec);
+      },
+      isFusionMedia: function () {
+        return isEntitled(Config.entitlements.mediafusion);
+      },
+      isFusionHDS: function () {
+        return isEntitled(Config.entitlements.hds);
+      },
+      isDeviceMgmt: function () {
+        return isEntitled(Config.entitlements.room_system);
       },
       isWebexSquared: function () {
         return isEntitled(Config.entitlements.squared);

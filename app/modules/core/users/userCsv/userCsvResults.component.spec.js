@@ -48,7 +48,7 @@ describe('crUserCsvResults Component', function () {
 
   function init() {
     this.initModules('Core', 'Huron', 'Sunlight');
-    this.injectDependencies('$componentController', '$scope', '$rootScope', '$timeout', '$q', '$compile', '$modal', '$translate', 'Notification', 'CsvDownloadService', 'FeatureToggleService');
+    this.injectDependencies('$compile', '$componentController', '$modal', '$rootScope', '$scope', '$timeout', '$translate', '$q', 'Analytics', 'CsvDownloadService', 'FeatureToggleService', 'Notification');
     initDependencySpies.apply(this);
     initUtils.apply(this);
   }
@@ -59,7 +59,8 @@ describe('crUserCsvResults Component', function () {
     spyOn(this.$modal, 'open').and.returnValue(fakeModal);
     spyOn(this.$translate, 'instant').and.returnValue(TRANSLATED_STRING);
     spyOn(this.$rootScope, '$emit');
-    spyOn(this.FeatureToggleService, 'atlasNewUserExportGetStatus').and.returnValue(this.$q.when(true));
+    spyOn(this.FeatureToggleService, 'atlasNewUserExportGetStatus').and.returnValue(this.$q.when(false));
+    spyOn(this.Analytics, 'trackAddUsers').and.returnValue(this.$q.when({}));
   }
 
   function initUtils() {
@@ -96,6 +97,12 @@ describe('crUserCsvResults Component', function () {
     this.$scope.$apply();
     this.$ctrl.$onInit();
   }
+
+  afterEach(function () {
+    if (this.element) {
+      this.element.remove();
+    }
+  });
 
   beforeEach(init);
 

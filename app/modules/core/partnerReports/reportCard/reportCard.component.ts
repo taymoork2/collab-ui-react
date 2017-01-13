@@ -1,4 +1,6 @@
+import { ReportConstants } from '../commonReportServices/reportConstants.service';
 import {
+  IExportMenu,
   ITimespan,
   IReportCard,
   IReportDropdown,
@@ -14,6 +16,10 @@ class ReportCardCtrl {
   public labels: Array<IReportLabel>;
   public show: boolean = true;
   public time: ITimespan;
+
+  // export menu
+  public exportDropdown: Array<IExportMenu>;
+  public exportMenu: boolean = false;
 
   // Secondary Report Variables
   public secondaryOptions: ISecondaryReport;
@@ -32,7 +38,7 @@ class ReportCardCtrl {
     private $translate: ng.translate.ITranslateService,
     private $scope: ng.IScope,
     private $state,
-    private ReportConstants
+    private ReportConstants: ReportConstants,
   ) {
     this.setTotalPages();
     this.setSortOptions();
@@ -56,7 +62,7 @@ class ReportCardCtrl {
   }
 
   public getDescription(description: string, useAlt: boolean): string {
-    if (this.time && this.time.value === this.ReportConstants.FILTER_THREE.value && useAlt) {
+    if (this.time && this.time.value === this.ReportConstants.THREE_MONTH_FILTER.value && useAlt) {
       return this.$translate.instant(description, {
         time: this.$translate.instant('reportsPage.lastTwelveWeeks2'),
       });
@@ -66,7 +72,7 @@ class ReportCardCtrl {
   }
 
   public getHeader(header: string, useAlt: boolean): string {
-    if (this.time && this.time.value === this.ReportConstants.FILTER_THREE.value && useAlt) {
+    if (this.time && this.time.value === this.ReportConstants.THREE_MONTH_FILTER.value && useAlt) {
       return this.$translate.instant(header, {
         time: this.$translate.instant('reportsPage.lastTwelveWeeks'),
       });
@@ -109,6 +115,18 @@ class ReportCardCtrl {
 
   public isTable(): boolean {
     return this.options.reportType === this.ReportConstants.TABLE;
+  }
+
+  // export menu Controls
+  public dropdownSelect(menuItem: IExportMenu): void {
+    if (menuItem.click) {
+      this.toggleExportMenu();
+      menuItem.click();
+    }
+  }
+
+  public toggleExportMenu(): void {
+    this.exportMenu = !this.exportMenu;
   }
 
   // Secondary Report Controls
@@ -250,6 +268,7 @@ angular.module('Core')
     controller: ReportCardCtrl,
     bindings: {
       dropdown: '<',
+      exportDropdown: '<',
       options: '<',
       labels: '<',
       secondaryOptions: '<',

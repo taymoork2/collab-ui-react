@@ -46,12 +46,20 @@
         code: 'CR'
       },
       {
+        country: 'Cyprus',
+        code: 'CY'
+      },
+      {
         country: 'Czech Republic',
         code: 'CZ'
       },
       {
         country: 'Denmark',
         code: 'DK'
+      },
+      {
+        country: 'Estonia',
+        code: 'EE'
       },
       {
         country: 'Finland',
@@ -66,12 +74,24 @@
         code: 'GE'
       },
       {
+        country: 'Hungary',
+        code: 'HU'
+      },
+      {
         country: 'Ireland',
         code: 'IE'
       },
       {
         country: 'Italy',
         code: 'IT'
+      },
+      {
+        country: 'Lativa',
+        code: 'LV'
+      },
+      {
+        country: 'Lithuania',
+        code: 'LT'
       },
       {
         country: 'Luxembourg',
@@ -98,8 +118,16 @@
         code: 'PT'
       },
       {
+        country: 'Romania',
+        code: 'RO'
+      },
+      {
         country: 'Slovakia',
         code: 'SK'
+      },
+      {
+        country: 'Slovenia',
+        code: 'SI'
       },
       {
         country: 'Spain',
@@ -114,15 +142,81 @@
         code: 'SC'
       },
       {
+        country: 'Ukraine',
+        code: 'UA'
+      },
+      {
         country: 'United Kingdom',
         code: 'GB'
       }
     ];
     var _countries = {
       US: ['United States'],
-      ROLLOUT1: ['United States', 'Australia', 'Austria', 'Belgium', 'Canada', 'Czech Republic',
-        'Denmark', 'Finland', 'France', 'Germany', 'Ireland', 'Italy', 'Luxembourg', 'Netherlands', 'Norway', 'Poland',
-        'Portugal', 'Slovakia', 'Spain', 'Sweden', 'Switzerland', 'United Kingdom']
+      ROLLOUT1: ['United States', 'Australia', 'Austria', 'Belgium', 'Canada', 'Cyprus', 'Czech Republic',
+        'Denmark', 'Estonia', 'Finland', 'France', 'Germany', 'Hungary', 'Ireland', 'Italy', 'Latvia', 'Lithuania', 'Luxembourg', 'Netherlands', 'Norway', 'Poland',
+        'Portugal', 'Romania', 'Slovakia', 'Slovenia', 'Spain', 'Sweden', 'Switzerland', 'Ukraine', 'United Kingdom']
+    };
+
+    var _deviceLimit = {
+      roomSystems: {
+        min: 1,
+        max: 3,
+        type: 'ROOM_SYSTEMS',
+        errorMessage: 'trialModal.call.invalidRoomSystemsQuantity'
+      },
+      callDevices: {
+        min: 1,
+        max: 4,
+        type: 'CALL_DEVICES',
+        errorMessage: 'trialModal.call.invalidPhonesQuantity'
+      },
+      totalDevices: {
+        min: 1,
+        max: 5,
+        type: 'TOTAL'
+      },
+      CISCO_SX10: {
+        min: 1,
+        max: 3,
+        model: 'CISCO_SX10',
+        type: 'ROOM_SYSTEMS'
+      },
+      CISCO_DX80: {
+        min: 1,
+        max: 3,
+        model: 'CISCO_DX80',
+        type: 'ROOM_SYSTEMS'
+      },
+      CISCO_MX300: {
+        min: 1,
+        max: 1,
+        model: 'CISCO_MX300',
+        type: 'ROOM_SYSTEMS'
+      },
+      CISCO_8865: {
+        min: 1,
+        max: 4,
+        model: 'CISCO_8865',
+        type: 'CALL_DEVICES'
+      },
+      CISCO_8845: {
+        min: 1,
+        max: 4,
+        model: 'CISCO_8845',
+        type: 'CALL_DEVICES'
+      },
+      CISCO_8841: {
+        min: 1,
+        max: 4,
+        model: 'CISCO_8841',
+        type: 'CALL_DEVICES'
+      },
+      CISCO_7841: {
+        min: 1,
+        max: 4,
+        model: 'CISCO_7841',
+        type: 'CALL_DEVICES'
+      }
     };
 
     var countryListTypes = {
@@ -136,6 +230,7 @@
       CISCO_7841: 'US'
     };
 
+
     var service = {
       getData: getData,
       reset: reset,
@@ -143,12 +238,17 @@
       getStates: getStates,
       getCountries: getCountries,
       canAddDevice: canAddDevice,
-      getCountryCodeByName: getCountryCodeByName
+      getCountryCodeByName: getCountryCodeByName,
+      getDeviceLimit: getDeviceLimit
     };
 
     return service;
 
     ////////////////
+
+    function getDeviceLimit() {
+      return _deviceLimit;
+    }
 
     function getData() {
       return _trialData || _makeTrial();

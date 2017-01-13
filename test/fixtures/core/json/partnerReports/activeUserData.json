@@ -4,43 +4,43 @@
       "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
       "orgName": "Test Org One",
       "data": [{
-        "date": "2016-02-25T00:00:00.000Z",
+        "date": "2016-10-26T00:45:00.000Z",
         "details": {
           "activeUsers": "3",
           "totalRegisteredUsers": "5"
         }
       }, {
-        "date": "2016-02-26T00:00:00.000Z",
+        "date": "2016-10-27T00:45:00.000Z",
         "details": {
           "activeUsers": "3",
           "totalRegisteredUsers": "5"
         }
       }, {
-        "date": "2016-02-27T00:00:00.000Z",
+        "date": "2016-10-28T00:45:00.000Z",
         "details": {
           "activeUsers": "3",
           "totalRegisteredUsers": "5"
         }
       }, {
-        "date": "2016-02-28T00:00:00.000Z",
+        "date": "2016-10-29T00:45:00.000Z",
         "details": {
           "activeUsers": "3",
           "totalRegisteredUsers": "5"
         }
       }, {
-        "date": "2016-02-29T00:00:00.000Z",
+        "date": "2016-10-30T00:45:00.000Z",
         "details": {
           "activeUsers": "3",
           "totalRegisteredUsers": "5"
         }
       }, {
-        "date": "2016-03-01T00:00:00.000Z",
+        "date": "2016-10-31T00:45:00.000Z",
         "details": {
           "activeUsers": "3",
           "totalRegisteredUsers": "5"
         }
       }, {
-        "date": "2016-03-02T00:00:00.000Z",
+        "date": "2016-11-01T00:45:00.000Z",
         "details": {
           "activeUsers": "3",
           "totalRegisteredUsers": "5"
@@ -50,55 +50,49 @@
       "orgId": "b7e25333-6750-4b17-841c-ce5124f8ddbb",
       "orgName": "Test Org 2",
       "data": [{
-        "date": "2016-02-25T00:00:00.000Z",
+        "date": "2016-10-26T00:45:00.000Z",
         "details": {
           "activeUsers": "0",
           "totalRegisteredUsers": "4"
         }
       }, {
-        "date": "2016-02-26T00:00:00.000Z",
+        "date": "2016-10-27T00:45:00.000Z",
         "details": {
           "activeUsers": "0",
           "totalRegisteredUsers": "4"
         }
       }, {
-        "date": "2016-02-27T00:00:00.000Z",
+        "date": "2016-10-28T00:45:00.000Z",
         "details": {
           "activeUsers": "0",
           "totalRegisteredUsers": "4"
         }
       }, {
-        "date": "2016-02-28T00:00:00.000Z",
+        "date": "2016-10-29T00:45:00.000Z",
         "details": {
           "activeUsers": "0",
           "totalRegisteredUsers": "4"
         }
       }, {
-        "date": "2016-02-29T00:00:00.000Z",
+        "date": "2016-10-30T00:45:00.000Z",
         "details": {
           "activeUsers": "0",
           "totalRegisteredUsers": "4"
         }
       }, {
-        "date": "2016-03-01T00:00:00.000Z",
+        "date": "2016-10-31T00:45:00.000Z",
         "details": {
           "activeUsers": "0",
           "totalRegisteredUsers": "4"
         }
       }, {
-        "date": "2016-03-02T00:00:00.000Z",
+        "date": "2016-11-01T00:45:00.000Z",
         "details": {
           "activeUsers": "0",
           "totalRegisteredUsers": "4"
         }
       }]
-    }],
-    "type": "activeUsers",
-    "date": "2016-03-03T21:23:21.890Z",
-    "spanCount": 1,
-    "spanType": "day",
-    "intervalCount": 7,
-    "intervalType": "day"
+    }]
   },
   "mostActiveAPI": {
     "data": [{
@@ -274,43 +268,43 @@
     "activeUsers": 3,
     "percentage": 33,
     "balloon": true,
-    "date": "Feb 25"
+    "date": "Oct 26"
   }, {
     "totalRegisteredUsers": 9,
     "activeUsers": 3,
     "percentage": 33,
     "balloon": true,
-    "date": "Feb 26"
+    "date": "Oct 27"
   }, {
     "totalRegisteredUsers": 9,
     "activeUsers": 3,
     "percentage": 33,
     "balloon": true,
-    "date": "Feb 27"
+    "date": "Oct 28"
   }, {
     "totalRegisteredUsers": 9,
     "activeUsers": 3,
     "percentage": 33,
     "balloon": true,
-    "date": "Feb 28"
+    "date": "Oct 29"
   }, {
     "totalRegisteredUsers": 9,
     "activeUsers": 3,
     "percentage": 33,
     "balloon": true,
-    "date": "Feb 29"
+    "date": "Oct 30"
   }, {
     "totalRegisteredUsers": 9,
     "activeUsers": 3,
     "percentage": 33,
     "balloon": true,
-    "date": "Mar 01"
+    "date": "Oct 31"
   }, {
     "totalRegisteredUsers": 9,
     "activeUsers": 3,
     "percentage": 33,
     "balloon": true,
-    "date": "Mar 02"
+    "date": "Nov 01"
   }],
   "mostActiveResponse": [{
     "orgName": "Test Org One",

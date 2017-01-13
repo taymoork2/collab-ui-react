@@ -60,6 +60,14 @@ describe('Controller: AASayMessageCtrl', function () {
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
   }));
 
+  afterEach(function () {
+    $rootScope = null;
+    $scope = null;
+    AAUiModelService = null;
+    AutoAttendantCeMenuModelService = null;
+    controller = null;
+  });
+
   describe('create say action', function () {
     beforeEach(inject(function ($controller) {
       $scope = $rootScope;
@@ -77,7 +85,7 @@ describe('Controller: AASayMessageCtrl', function () {
         expect(controller.getFooter()).toBeTruthy();
         expect(controller.getMessageLabel()).toBeTruthy();
         expect(aaUiModel[schedule]['entries'][index]['actions'].length).toEqual(1);
-        expect(aaUiModel[schedule]['entries'][index]['actions'][0].name).toEqual('say');
+        expect(aaUiModel[schedule]['entries'][index]['actions'][0].name).toEqual('play');
       });
 
       it('should set the available languages', function () {
@@ -152,7 +160,7 @@ describe('Controller: AASayMessageCtrl', function () {
         expect(controller.getFooter()).toBeTruthy();
         expect(controller.getMessageLabel()).toBeTruthy();
         expect(aaUiModel[schedule]['entries'][index]['headers'][0]['actions'].length).toEqual(1);
-        expect(aaUiModel[schedule]['entries'][index]['headers'][0]['actions'][0].name).toEqual('say');
+        expect(aaUiModel[schedule]['entries'][index]['headers'][0]['actions'][0].name).toEqual('play');
         expect(controller.languageOptions.length > 0).toEqual(true);
 
       });
@@ -284,7 +292,7 @@ describe('Controller: AASayMessageCtrl', function () {
     describe('activate', function () {
       it('should initialize say action in headers of new submenu with main menu voice', function () {
         var submenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-        expect(submenu.headers[0].actions[0].name).toBe('say');
+        expect(submenu.headers[0].actions[0].name).toBe('play');
         expect(submenu.headers[0].actions[0].getVoice()).toBe(voice);
         expect(submenu.headers[0].getVoice()).toBe(voice);
       });
@@ -303,7 +311,7 @@ describe('Controller: AASayMessageCtrl', function () {
         expect(controller).toBeDefined();
         expect(controller.messageInput).toEqual(message);
         expect(submenu['headers'][0]['actions'].length).toEqual(1);
-        expect(submenu['headers'][0]['actions'][0].name).toEqual('say');
+        expect(submenu['headers'][0]['actions'][0].name).toEqual('play');
         expect(submenu['headers'][0]['actions'][0].value).toEqual(message);
         expect(controller.updateVoiceOption).not.toHaveBeenCalled();
       });
@@ -399,7 +407,7 @@ describe('Controller: AASayMessageCtrl', function () {
         expect(controller).toBeDefined();
         expect(controller.messageInput).toEqual(message);
         expect(aaUiModel[schedule]['entries'][index]['entries'][keyIndex]['actions'].length).toEqual(2);
-        expect(aaUiModel[schedule]['entries'][index]['entries'][keyIndex]['actions'][0].name).toEqual('say');
+        expect(aaUiModel[schedule]['entries'][index]['entries'][keyIndex]['actions'][0].name).toEqual('play');
         expect(aaUiModel[schedule]['entries'][index]['entries'][keyIndex]['actions'][0].value).toEqual(message);
         expect(controller.updateVoiceOption).not.toHaveBeenCalled();
       });

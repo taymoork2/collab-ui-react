@@ -11,7 +11,7 @@
     });
 
   /* @ngInject */
-  function ClusterCardController($state, FusionClusterService, FeatureToggleService, FusionUtils) {
+  function ClusterCardController($state, FusionClusterService, FeatureToggleService, FusionUtils, $window, $modal) {
     var ctrl = this;
 
     ctrl.countHosts = countHosts;
@@ -19,6 +19,8 @@
     ctrl.openService = openService;
     ctrl.openSettings = openSettings;
     ctrl.hasServices = hasServices;
+    ctrl.goToExpressway = goToExpressway;
+    ctrl.openDeleteConfirm = openDeleteConfirm;
     ctrl.formatTimeAndDate = FusionClusterService.formatTimeAndDate;
     ctrl.hasF237FeatureToggle = false;
     ctrl.getLocalizedReleaseChannel = FusionUtils.getLocalizedReleaseChannel;
@@ -77,9 +79,32 @@
         $state.go('mediafusion-settings', {
           id: id
         });
+      } else if (type === 'hds_app') {
+        $state.go('hds-cluster-settings', {
+          id: id
+        });
       }
     }
 
-  }
+    function openDeleteConfirm(cluster) {
+      $modal.open({
+        resolve: {
+          cluster: function () {
+            return cluster;
+          }
+        },
+        controller: 'ClusterDeregisterController',
+        controllerAs: 'clusterDeregister',
+        templateUrl: 'modules/hercules/fusion-pages/components/rename-and-deregister-cluster-section/deregister-dialog.html',
+        type: 'dialog'
+      }).result.then(function () {
+        $state.go('cluster-list', {}, { reload: true });
+      });
+    }
 
+    function goToExpressway(hostname) {
+      $window.open('https://' + encodeURIComponent(hostname) + '/fusionregistration');
+
+    }
+  }
 })();

@@ -25,7 +25,7 @@
 
     var helpers = {
       createConferenceMapping: _createConferenceMapping,
-      createRoomMapping: _createRoomMapping,
+      createRoomDeviceMapping: _createRoomDeviceMapping,
       createLicenseMapping: _createLicenseMapping,
       createFreeServicesMapping: _createFreeServicesMapping,
       LicensedService: _LicensedService,
@@ -102,18 +102,26 @@
       return conferenceMapping;
     }
 
-    function _createRoomMapping() {
+    function _createRoomDeviceMapping() {
       var offerMapping = {};
       offerMapping[Config.offerCodes.SD] = {
-        translatedOfferCode: $translate.instant('trials.sharedDevice'),
-        icon: 'icon-circle-telepresence',
+        translatedOfferCode: $translate.instant('trials.roomSystem'),
         order: 6
       };
       offerMapping[Config.offerCodes.SB] = {
         translatedOfferCode: $translate.instant('trials.sparkBoardSystem'),
-        icon: 'icon-circle-telepresence',
-        order: 6
+        order: 7
       };
+
+      offerMapping = _.mapValues(offerMapping, function (offer) {
+        return {
+          name: offer.translatedOfferCode,
+          order: offer.order,
+          licenseType: Config.licenseTypes.SHARED_DEVICES
+        };
+      });
+
+      return offerMapping;
     }
 
     function _createLicenseMapping() {
@@ -182,7 +190,7 @@
       if (isConference) {
         service = (licenseInfo.offerName) ? mapping[licenseInfo.offerName] : mapping[Config.offerCodes.CF];
       } else {
-        service = mapping[licenseInfo.licenseType];
+        service = mapping[licenseInfo.licenseType] || mapping[licenseInfo.offerName];
         service.licenseType = licenseInfo.licenseType;
       }
 
@@ -240,8 +248,8 @@
       return Auth.getAuthorizationUrlList().then(function (response) {
         if (response.status === 200 && (_.indexOf(response.data.managedOrgs, customerOrgId) < 0)) {
           var primaryEmail = Authinfo.getPrimaryEmail();
-          UserRoleService.enableFullAdmin(primaryEmail, customerOrgId);
           Analytics.trackPartnerActions(Analytics.sections.TRIAL.eventNames.PATCH, response.data.orgId, response.data.uuid);
+          return UserRoleService.enableFullAdmin(primaryEmail, customerOrgId);
         }
       });
     }
@@ -430,7 +438,6 @@
 
       // havent figured out what this is doing yet...
       dataObj.sparkConferencing = initializeService(customer.licenses, Config.offerCodes.CF, serviceEntry, customerListToggle);
-      dataObj.webexCMR = initializeService(customer.licenses, Config.offerCodes.CMR, serviceEntry, customerListToggle);
       dataObj.communications = initializeService(customer.licenses, Config.offerCodes.CO, serviceEntry, customerListToggle);
       dataObj.webexEventCenter = initializeService(customer.licenses, Config.offerCodes.EC, serviceEntry, customerListToggle);
       dataObj.webexEEConferencing = initializeService(customer.licenses, Config.offerCodes.EE, serviceEntry, customerListToggle);
@@ -438,6 +445,7 @@
       dataObj.messaging = initializeService(customer.licenses, Config.offerCodes.MS, serviceEntry, customerListToggle);
       dataObj.webexSupportCenter = initializeService(customer.licenses, Config.offerCodes.SC, serviceEntry, customerListToggle);
       dataObj.roomSystems = initializeService(customer.licenses, Config.offerCodes.SD, serviceEntry, customerListToggle);
+      dataObj.sparkBoard = initializeService(customer.licenses, Config.offerCodes.SB, serviceEntry, customerListToggle);
       dataObj.webexTrainingCenter = initializeService(customer.licenses, Config.offerCodes.TC, serviceEntry, customerListToggle);
       dataObj.webexCMR = initializeService(customer.licenses, Config.offerCodes.CMR, serviceEntry, customerListToggle);
       dataObj.care = initializeService(customer.licenses, Config.offerCodes.CDC, serviceEntry, customerListToggle);
@@ -748,6 +756,7 @@
 
       var paidServices = [];
       var meetingServices = [];
+      var roomDevices = [];
       var service = null;
       var result = null;
       var isCareEnabled = options.isCareEnabled;
@@ -761,8 +770,17 @@
         order: 1
       };
 
+      var roomDevicesHeader = {
+        licenseType: Config.licenseTypes.SHARED_DEVICES,
+        isRoom: true,
+        name: $translate.instant('subscriptions.room'),
+        icon: 'icon-circle-telepresence',
+        order: 26
+      };
+
       var licenseMapping = helpers.createLicenseMapping();
       var conferenceMapping = helpers.createConferenceMapping();
+      var roomDeviceMapping = helpers.createRoomDeviceMapping();
       var freeServices = helpers.createFreeServicesMapping();
 
       _.forEach(_.get(customer, 'licenseList', []), function (licenseInfo) {
@@ -774,6 +792,9 @@
             if (licenseInfo.licenseType === Config.licenseTypes.CONFERENCING || licenseInfo.licenseType === Config.licenseTypes.CMR) {
               service = new helpers.LicensedService(licenseInfo, conferenceMapping);
               helpers.addService(meetingServices, service);
+            } else if (licenseInfo.licenseType === Config.licenseTypes.SHARED_DEVICES) {
+              service = new helpers.LicensedService(licenseInfo, roomDeviceMapping);
+              helpers.addService(roomDevices, service);
             } else {
               service = new helpers.LicensedService(licenseInfo, licenseMapping);
               helpers.addService(paidServices, service);
@@ -781,7 +802,7 @@
           }
         }
       });
-
+      // handle meeting services
       //if only one meeting service -- move to the services list
       if (meetingServices.length === 1) {
         var singleMeetingService = meetingServices.shift();
@@ -791,20 +812,29 @@
       //if there is more than one
       if (meetingServices.length >= 1) {
         var totalQ = _.reduce(meetingServices, function (prev, curr) {
-
           return (curr.licenseType !== Config.licenseTypes.CMR) ? {
             qty: prev.qty + curr.qty
           } : {
             qty: prev.qty + 0
           };
         });
-
         _.merge(meetingHeader, {
           qty: totalQ.qty,
           sub: _.sortBy(meetingServices, 'order')
         });
-
         paidServices.push(meetingHeader);
+      }
+
+      //handle room devices
+      if (roomDevices.length) {
+        totalQ = _.reduce(roomDevices, function (prev, curr) {
+          return prev + curr.qty;
+        }, 0);
+        _.merge(roomDevicesHeader, {
+          qty: totalQ,
+          sub: _.sortBy(roomDevices, 'order')
+        });
+        paidServices.push(roomDevicesHeader);
       }
 
       if (freeServices.length > 0 || paidServices.length > 0) {

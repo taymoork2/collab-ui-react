@@ -1,4 +1,5 @@
 import {
+  IExportMenu,
   ITimespan,
   IIntervalQuery,
   ICustomerIntervalQuery,
@@ -8,6 +9,7 @@ import {
 } from '../partnerReportInterfaces';
 
 describe('Service: Common Report Service', () => {
+  const ctrlData = getJSONFixture('core/json/partnerReports/ctrl.json');
   const customerData = getJSONFixture('core/json/partnerReports/customerResponse.json');
   const defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
   const cacheValue: boolean = (parseInt(moment.utc().format('H'), 10) >= 8);
@@ -73,8 +75,16 @@ describe('Service: Common Report Service', () => {
     });
 
     it('getCustomerAltReportByType should fetch report data', function () {
-      this.$httpBackend.whenGET(defaults.dummyUrls[4].replace('{{cache}}', cacheValue)).respond(dummyResponse);
+      this.$httpBackend.whenGET(defaults.dummyUrls[3].replace('{{cache}}', cacheValue)).respond(dummyResponse);
       this.CommonReportService.getCustomerAltReportByType(queryFour, undefined).then(function (response) {
+        expect(response.data).toEqual(dummyResponse);
+      });
+      this.$httpBackend.flush();
+    });
+
+    it('getCustomerActiveUserData should fetch report data', function () {
+      this.$httpBackend.whenGET(defaults.dummyUrls[4].replace('{{cache}}', cacheValue)).respond(dummyResponse);
+      this.CommonReportService.getCustomerActiveUserData(queryFour, undefined).then(function (response) {
         expect(response.data).toEqual(dummyResponse);
       });
       this.$httpBackend.flush();
@@ -111,100 +121,25 @@ describe('Service: Common Report Service', () => {
   });
 
   describe('getReturnGraph responses:', function () {
-    let getOffset = (date: number): number => {
-      if (date >= 4) {
-        return 7 - date;
-      } else {
-        return -date;
-      }
-    };
-
-    let buildResponse = (responseType: any): Array<any> => {
-      let returnGraph: Array<any> = [];
-
-      if (responseType === 0) {
-        for (let i = 7; i > 0; i--) {
-          let tmpItem = _.cloneDeep(defaults.graphItem);
-          tmpItem.date = moment().tz(defaults.timezone)
-            .subtract(i, defaults.DAY)
-            .format(defaults.dayFormat);
-          returnGraph.push(tmpItem);
-        }
-      } else if (responseType === 1) {
-        let dayOffset = getOffset(parseInt(moment().format('e'), 10));
-        for (let x = 3; x >= 0; x--) {
-          let temp = _.cloneDeep(defaults.graphItem);
-          temp.date = moment().tz(defaults.timezone)
-            .startOf(defaults.WEEK)
-            .subtract(dayOffset + (x * 7), defaults.DAY)
-            .format(defaults.dayFormat);
-          returnGraph.push(temp);
-        }
-      } else {
-        for (let y = 2; y >= 0; y--) {
-          let item = _.cloneDeep(defaults.graphItem);
-          item.date = moment().tz(defaults.timezone)
-            .subtract(y, defaults.MONTH)
-            .startOf(defaults.MONTH)
-            .format(defaults.monthFormat);
-          returnGraph.push(item);
-        }
-      }
-
-      return returnGraph;
-    };
-
+    // verify the correct number of objects are returned in the array
     it('should get expected responses for getReturnGraph', function () {
       let graph = this.CommonReportService.getReturnGraph(filter[0], today, defaults.graphItem);
-      expect(graph).toEqual(buildResponse(0));
+      expect(graph.length).toBe(7);
 
       graph = this.CommonReportService.getReturnGraph(filter[1], today, defaults.graphItem);
-      expect(graph).toEqual(buildResponse(1));
+      expect(graph.length).toBe(4);
 
       graph = this.CommonReportService.getReturnGraph(filter[2], today, defaults.graphItem);
-      expect(graph).toEqual(buildResponse(2));
+      expect(graph.length).toBe(3);
     });
 
-    let buildAltResponse = (responseType: any): Array<any> => {
-      let returnGraph: Array<any> = [];
-
-      if (responseType === 0) {
-        for (let i = 8; i > 0; i--) {
-          let tmpItem = _.cloneDeep(defaults.graphItem);
-          tmpItem.date = moment().subtract(i, defaults.DAY)
-            .format(defaults.dayFormat);
-          returnGraph.push(tmpItem);
-        }
-      } else if (responseType === 1) {
-        for (let x = 4; x >= 0; x--) {
-          let temp = _.cloneDeep(defaults.graphItem);
-          temp.date = moment().day(-1)
-            .subtract(x, defaults.WEEK)
-            .format(defaults.dayFormat);
-          returnGraph.push(temp);
-        }
-      } else {
-        for (let y = 52; y >= 0; y--) {
-          let item = _.cloneDeep(defaults.graphItem);
-          item.date = moment().day(-1)
-            .subtract(y, defaults.WEEK)
-            .format(defaults.dayFormat);
-          returnGraph.push(item);
-        }
-      }
-
-      return returnGraph;
-    };
-
+    // verify the correct number of objects are returned in the array
     it('should get expected responses for getReturnLineGraph', function () {
       let graph = this.CommonReportService.getReturnLineGraph(filter[0], defaults.graphItem);
-      expect(graph).toEqual(buildAltResponse(0));
+      expect(graph.length).toBe(7);
 
       graph = this.CommonReportService.getReturnLineGraph(filter[1], defaults.graphItem);
-      expect(graph).toEqual(buildAltResponse(1));
-
-      graph = this.CommonReportService.getReturnLineGraph(filter[2], defaults.graphItem);
-      expect(graph).toEqual(buildAltResponse(2));
+      expect(graph.length).toBe(52);
     });
   });
 
@@ -277,6 +212,7 @@ describe('Service: Common Report Service', () => {
       let options: ITypeQuery = this.CommonReportService.getTypeOptions(filter[0], 'name');
       let updatedQuery = _.cloneDeep(queryFour);
       updatedQuery.type = defaults.usageOptions[0];
+      updatedQuery.extension = undefined;
       expect(options).toEqual(updatedQuery);
 
       options = this.CommonReportService.getTypeOptions(filter[1], 'name');
@@ -292,6 +228,7 @@ describe('Service: Common Report Service', () => {
       let options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter[0], 'name');
       let updatedQuery = _.cloneDeep(queryFour);
       updatedQuery.type = defaults.altUsageOptions[0];
+      updatedQuery.extension = undefined;
       expect(options).toEqual(updatedQuery);
 
       options = this.CommonReportService.getLineTypeOptions(filter[1], 'name');
@@ -299,7 +236,7 @@ describe('Service: Common Report Service', () => {
       expect(options).toEqual(updatedQuery);
 
       options = this.CommonReportService.getLineTypeOptions(filter[2], 'name');
-      updatedQuery.type = defaults.altUsageOptions[2];
+      updatedQuery.type = defaults.altUsageOptions[1];
       expect(options).toEqual(updatedQuery);
     });
 
@@ -352,6 +289,24 @@ describe('Service: Common Report Service', () => {
       let responseDate: string = moment.tz(today, defaults.timezone).format(defaults.monthFormat);
       let date: string = this.CommonReportService.getModifiedDate(today, filter[2]);
       expect(date).toEqual(responseDate);
+    });
+  });
+
+  it('getPercentage should return percentage of two numbers', function () {
+    expect(this.CommonReportService.getPercentage(1, 2)).toEqual(50);
+  });
+
+  it('should return the export menu', function () {
+    let exportMenu: Array<IExportMenu> = this.CommonReportService.createExportMenu({});
+    expect(exportMenu.length).toBe(4);
+    _.forEach(exportMenu, (exportItem: IExportMenu, index: number): void => {
+      expect(exportItem.id).toEqual(ctrlData.exportMenu[index].id);
+      expect(exportItem.label).toEqual(ctrlData.exportMenu[index].label);
+      if (index > 0) {
+        expect(exportItem.click).toEqual(jasmine.any(Function));
+      } else {
+        expect(exportItem.click).toBeUndefined();
+      }
     });
   });
 });

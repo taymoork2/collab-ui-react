@@ -1,14 +1,14 @@
-<table class="table-condensed table extreme-table">
+<table class="table lm-table">
   <thead>
   <th class="extreme-table-entry" translate="reportsPage.usageReports.deviceName"></th>
-  <th class="extreme-table-entry" translate="reportsPage.usageReports.hoursUsed"></th>
-  <th class="extreme-table-entry" translate="reportsPage.usageReports.callCount"></th>
+  <th class="extreme-table-entry right-aligned" translate="reportsPage.usageReports.hoursUsed"></th>
+  <th class="extreme-table-entry right-aligned" translate="reportsPage.usageReports.callCount"></th>
 
   </thead>
   <tr class="no-border" ng-repeat="device in deviceUsage.mostUsedDevices">
     <td class="extreme-table-entry">{{device.name}}</td>
-    <td class="extreme-table-entry">{{device.duration}}</td>
-    <td class="extreme-table-entry">{{device.calls}}</td>
+    <td class="extreme-table-entry right-aligned">{{device.duration}}</td>
+    <td class="extreme-table-entry right-aligned">{{device.calls}}</td>
 
   </tr>
 </table>

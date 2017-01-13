@@ -3,7 +3,7 @@
 'use strict';
 
 describe('UserListCtrl: Ctrl', function () {
-  var $controller, $scope, $state, $q, Userservice, UserListService, Orgservice, Authinfo, Auth, Config, Notification, FeatureToggleService;
+  var $controller, $scope, $state, $q, Userservice, UserListService, Orgservice, Authinfo, Auth, Config, Notification, FeatureToggleService, CsvDownloadService;
   var photoUsers, currentUser, listUsers, listUsersMore, listAdmins, listAdminsMore, listPartners, getOrgJson;
   var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements, telstraUser, failedData;
   photoUsers = getJSONFixture('core/json/users/userlist.controller.json');
@@ -18,7 +18,7 @@ describe('UserListCtrl: Ctrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, _$state_, _$controller_, _$q_, _Userservice_, _UserListService_, _Orgservice_, _Authinfo_, _Auth_, _Config_, _Notification_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, _$state_, _$controller_, _$q_, _Userservice_, _UserListService_, _Orgservice_, _Authinfo_, _Auth_, _Config_, _Notification_, _FeatureToggleService_, _CsvDownloadService_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $controller = _$controller_;
@@ -31,6 +31,7 @@ describe('UserListCtrl: Ctrl', function () {
     Config = _Config_;
     Notification = _Notification_;
     FeatureToggleService = _FeatureToggleService_;
+    CsvDownloadService = _CsvDownloadService_;
 
     $rootScope.typeOfExport = {
       USER: 1,
@@ -73,9 +74,7 @@ describe('UserListCtrl: Ctrl', function () {
     spyOn(Auth, 'isOnlineOrg').and.returnValue($q.when(false));
 
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasCsvEnhancementGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasUserPendingStatusGetStatus').and.returnValue($q.when(true));
   }));
 
   function initController() {
@@ -219,28 +218,6 @@ describe('UserListCtrl: Ctrl', function () {
     });
   });
 
-  describe('startExportUserList', function () {
-    beforeEach(initController);
-
-    it('should emit csv-download-request', function () {
-      $scope.startExportUserList();
-      $scope.$apply();
-      expect($scope.$emit).toHaveBeenCalledWith("csv-download-request", {
-        csvType: "user",
-        tooManyUsers: false
-      });
-    });
-    it('should emit csv-download-request with tooManyUsers when there are too many users in the org', function () {
-      $scope.totalUsers = $scope.userExportThreshold + 1;
-      $scope.startExportUserList();
-      $scope.$apply();
-      expect($scope.$emit).toHaveBeenCalledWith("csv-download-request", {
-        csvType: "user",
-        tooManyUsers: true
-      });
-    });
-  });
-
   describe('getUserList sort event', function () {
     beforeEach(initController);
 
@@ -275,7 +252,7 @@ describe('UserListCtrl: Ctrl', function () {
       // $scope.obtainedTotalUserCount = false;
       $scope.getUserList(); // 0 index
       expect($scope.obtainedTotalUserCount).toEqual(true);
-      expect($scope.totalUsers).toEqual($scope.userExportThreshold + 1);
+      expect($scope.totalUsers).toEqual(CsvDownloadService.userExportThreshold);
     });
   });
 

@@ -45,8 +45,8 @@
           <span>{{'helpdesk.status' | translate}}:</span>
         </div>
         <div class="large-7 columns details-value">
-          <span style="margin-right: 1rem;">{{helpdeskUserCtrl.userStatusesAsString}}</span>
-          <span>
+          <span>{{helpdeskUserCtrl.userStatusesAsString}}</span>
+          <span class="helper-link margin-left">
             <a ng-if="helpdeskUserCtrl.resendInviteEnabled"
               ng-click="helpdeskUserCtrl.resendInviteEmail()"
               translate="helpdesk.resend"></a>
@@ -62,6 +62,36 @@
           <span>
             <a ng-href="mailto:{{helpdeskUserCtrl.user.userName}}">{{helpdeskUserCtrl.user.userName}}</a>
           </span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="medium-5 columns details-heading">
+          <span>{{'helpdesk.lastEmailSent' | translate}}:</span>
+        </div>
+        <div
+          class="medium-7 columns details-value"
+          ng-if="helpdeskUserCtrl.hasEmailStatus()">
+          <span>{{helpdeskUserCtrl.user.lastEmailStatus.displayStatus}}</span>
+          <span
+            class="helper-link margin-left margin-right"
+            ng-if="helpdeskUserCtrl.hasEmailProblem()">
+            <span ng-switch="helpdeskUserCtrl.user.lastEmailStatus.problemState">
+              <span ng-switch-when="loading">...</span>
+              <span ng-switch-when="bounced">
+                <a
+                  ng-click="helpdeskUserCtrl.clear(helpdeskUserCtrl.user.userName, 'bounced');"
+                  translate="helpdesk.clearBounce"></a>
+              </span>
+            </span>
+          </span>
+          <a>
+            <i
+              class="icon icon-info"
+              tooltip-html="helpdeskUserCtrl.user.lastEmailStatus.toolTipHtml"
+              tooltip-placement="right"
+              tooltip-class="email-status"></i>
+          </a>
         </div>
       </div>
 

@@ -1,9 +1,9 @@
 'use strict';
 
-/* global inviteusers */
+/* global inviteusers manageUsersPage */
 /* global LONG_TIMEOUT */
 
-xdescribe('Onboard users through Manual Invite', function () {
+describe('Onboard users through Manual Invite', function () {
   var token;
   var userList = [utils.randomTestGmailwithSalt('manual'), utils.randomTestGmailwithSalt('manual')];
 
@@ -15,27 +15,28 @@ xdescribe('Onboard users through Manual Invite', function () {
       });
   });
 
-  it('should Manually Invite multiple users by email address (Message On).', function () {
-    // Select Invite from setup menu
-    utils.click(landing.serviceSetup); //TODO this is invalid, since the wizard will only be shown when !isSetupDone
-    utils.click(navigation.addUsers);
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
+  it('should select manually add/modify users', function () {
+    utils.click(navigation.usersTab);
+    utils.click(manageUsersPage.buttons.manageUsers);
+    utils.expectTextToBeSet(manageUsersPage.select.title, 'Add or Modify Users');
+    utils.click(manageUsersPage.select.radio.orgManual);
+    utils.click(manageUsersPage.buttons.next);
+    utils.expectTextToBeSet(manageUsersPage.select.title, 'Manually Add or Modify Users');
+  });
 
-    // Manual import
-    utils.click(inviteusers.manualUpload);
-    utils.click(inviteusers.nextButton);
+  it('should Manually Invite multiple users by email address (Message On).', function () {
 
     // Enter test email into edit box
-    utils.click(users.emailAddressRadio);
-    utils.sendKeys(users.addUsersField, userList[0] + ', ' + userList[1]);
-    utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
-    utils.click(inviteusers.nextButton);
+    utils.click(manageUsersPage.manual.radio.emailAddress);
+    utils.sendKeys(manageUsersPage.manual.emailAddress.addUsersField, userList[0] + ', ' + userList[1]);
+    utils.sendKeys(manageUsersPage.manual.emailAddress.addUsersField, protractor.Key.ENTER);
+    utils.click(manageUsersPage.buttons.next);
 
     // Need a license for valid HS services
-    utils.click(users.paidMsgCheckbox);
-    utils.click(inviteusers.nextButton);
-    utils.expectIsDisplayed(users.saveButton);
-    utils.click(users.saveButton);
+    utils.click(manageUsersPage.manual.paidMsgCheckbox);
+    utils.expectIsDisplayed(manageUsersPage.buttons.save);
+    utils.click(manageUsersPage.buttons.save);
+    utils.click(manageUsersPage.buttons.finish);
 
     _.each(userList, function (alias) {
       activate.setup(null, alias);
@@ -48,14 +49,14 @@ xdescribe('Onboard users through Manual Invite', function () {
       utils.expectIsDisplayed(users.servicesPanel);
 
       utils.expectIsDisplayed(users.messageService);
-      utils.expectIsNotDisplayed(users.meetingService);
+      utils.expectIsDisplayed(users.meetingService);
       utils.click(users.closeSidePanel);
     });
   });
 
-  // afterAll(function () {
-    // _.each(userList, function (user) {
-    //   deleteUtils.deleteUser(user, token);
-    // });
-  // });
+  afterAll(function () {
+    _.each(userList, function (user) {
+      deleteUtils.deleteUser(user, token);
+    });
+  });
 });

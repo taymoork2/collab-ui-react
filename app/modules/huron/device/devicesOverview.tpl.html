@@ -1,6 +1,6 @@
 <div class="section-title-row">
   <span class="section-name" translate="usersPreview.devicesPreview"></span>
-      <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="userOverview.dropDownItems.length > 0">
+      <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="userOverview.showGenerateOtpLink">
         <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
           <i class="icon icon-three-dots"></i>
         </button>
@@ -16,6 +16,7 @@
     <div class="generate-activation-code" translate="usersPreview.generateActivationCodeDesc"></div>
     <button class="btn btn--people btn-center"
             ng-click="ucDevices.resetCode()"
+            ng-disabled="ucDevices.generateCodeIsDisabled"
             translate="usersPreview.generateActivationCode"></button>
   </div>
 </div>

@@ -8,7 +8,10 @@
     'atlas.templates',
     'collab.ui',
     'cisco.formly',
-    'core.auth',
+    require('modules/core/auth/tos').default,
+    require('modules/core/auth/user').default,
+    require('modules/core/auth/auth'),
+    require('modules/core/auth/token.service'),
     'core.body',
     'core.languages',
     'core.localize',
@@ -17,14 +20,10 @@
     'core.onboard',
     'core.pageparam',
     'core.previousstate',
-    'core.token',
     'core.trackingId',
     'core.trial',
     'core.utils',
-    'core.windowlocation',
     'csDonut',
-    'ct.ui.router.extras.sticky',
-    'ct.ui.router.extras.future',
     'ct.ui.router.extras.previous',
     'cwill747.phonenumber',
     'ngAnimate',
@@ -43,14 +42,18 @@
     'ui.grid.infiniteScroll',
     'timer',
     'toaster',
+    'rzModule',
     'dragularModule',
     require('modules/core/analytics'),
-    require('modules/core/featureToggle/featureToggle.service'),
+    require('modules/core/featureToggle').default,
     require('modules/core/scripts/services/org.service'),
+    require('modules/core/scripts/services/userlist.service'),
+    require('modules/core/users/userCsv/userCsv.service'),
     require('modules/core/cards').default,
+    require('modules/core/window').default,
     require('modules/online/digitalRiver').default // TODO make core.myCompany independent module
   ])
-    .constant('pako', require('pako'))
+    .constant('CryptoJS', require('crypto-js'))
     .constant('phone', require('google-libphonenumber'))
     .constant('addressparser', require('emailjs-addressparser'));
 
@@ -62,15 +65,17 @@
   angular.module('Huron', [
     'Core',
     'uc.device',
-    'uc.callrouting',
     'uc.didadd',
     'uc.overview',
     'uc.hurondetails',
     'uc.cdrlogsupport',
+    'uc.autoattendant',
     'ngIcal',
     'huron.paging-group',
+    'huron.call-pickup',
     'huron.telephoneNumber',
     'huron.call-park',
+    'huron.bulk-enable-vm',
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
   ]);

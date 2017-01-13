@@ -1,3 +1,6 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/spacing';
+
 .iframe-container {
   display: inline;
 }
@@ -20,6 +23,25 @@
 
     .row {
       border-bottom: rem-calc(1) solid $gray-light-3;
+    }
+
+    .link { 
+      color: $color-primary-base;
+    }
+
+    .audio-type {
+      font-size: 0.75rem;
+    }
+
+    .smp-license-report-period {
+      font-size: 0.5rem;
+      position: absolute;
+      top: 55px;
+      left: -5px;
+    }
+
+    .license-count-indicator {
+      position: relative;
     }
 
     .row:last-of-type {

@@ -2,7 +2,7 @@
 
 describe('Features Controller', function () {
 
-  var featureCtrl, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, TelephoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService, PagingGroupService;
+  var featureCtrl, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, TelephoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService, PagingGroupService, CallPickupGroupService;
   var listOfPGs = getJSONFixture('huron/json/features/pagingGroup/pgList.json');
   var emptyListOfPGs = [];
   var getPGListSuccessResp = function (data) {
@@ -34,7 +34,7 @@ describe('Features Controller', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _TelephoneNumberService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _Log_, _Notification_, _FeatureToggleService_, _CallParkService_, _PagingGroupService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _TelephoneNumberService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _Log_, _Notification_, _FeatureToggleService_, _CallParkService_, _PagingGroupService_, _CallPickupGroupService_) {
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
     $state = _$state_;
@@ -45,6 +45,7 @@ describe('Features Controller', function () {
     HuntGroupService = _HuntGroupService_;
     CallParkService = _CallParkService_;
     PagingGroupService = _PagingGroupService_;
+    CallPickupGroupService = _CallPickupGroupService_;
     TelephoneNumberService = _TelephoneNumberService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AAModelService = _AAModelService_;
@@ -57,7 +58,8 @@ describe('Features Controller', function () {
 
     //Using a Jasmine Spy to return a promise when methods of the PagingGroupService are called
     spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.when([]));
-    spyOn(CallParkService, 'getListOfCallParks').and.returnValue($q.when([]));
+    spyOn(CallParkService, 'getCallParkList').and.returnValue($q.when([]));
+    spyOn(CallPickupGroupService, 'getListOfPickupGroups').and.returnValue($q.when());
     spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue(getDeferred.promise);
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.when([]));
     spyOn(AAModelService, 'newAAModel').and.returnValue(getDeferred.promise);

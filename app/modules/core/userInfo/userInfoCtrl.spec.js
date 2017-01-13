@@ -5,6 +5,10 @@ describe('UserInfoController', function () {
 
   var $window, $scope, FeedbackService, Userservice, Utils, deferred, $rootScope;
 
+  afterEach(function () {
+    $window = $scope = FeedbackService = Userservice = Utils = deferred = $rootScope = undefined;
+  });
+
   beforeEach(angular.mock.module('WebExApp'));
 
   beforeEach(inject(function (_$rootScope_, $controller, $q) {

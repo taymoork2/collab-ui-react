@@ -41,16 +41,16 @@
     <div class="cs-form__section">
       <div class="section__info">
         <h4 translate="trialModal.call.selectDevicesHeader"></h4>
-        <p class="section__description" translate="trialModal.call.deviceLimitDescription" translate-values='{ max: callTrial.maxTotalDevices}'></p>
+        <p class="section__description" translate="trialModal.call.deviceLimitDescription" translate-values='{ max: callTrial.deviceLimit.totalDevices.max}'></p>
         <p class="section__description" translate="trialModal.call.trialDeviceShipmentLocations"></p>
       </div>
       <div class="section__content">
         <div class="sub-section">
-          <h5 class="sub-section__label" translate="trialModal.call.meetingRoomCamera"></h5>
+          <h5 class="sub-section__label" translate="trialModal.call.meetingRoomCamera" translate-values='{ max: callTrial.deviceLimit.roomSystems.max}'></h5>
           <formly-form model="callTrial.details.roomSystems" fields="callTrial.roomSystemFields"></formly-form>
         </div>
         <div class="sub-section">
-          <h5 class="sub-section__label" translate="trialModal.call.deskPhones" translate-values='{ max: callTrial.maxCallDevices}'></h5>
+          <h5 class="sub-section__label" translate="trialModal.call.deskPhones" translate-values='{ max: callTrial.deviceLimit.callDevices.max}'></h5>
           <formly-form model="callTrial.details.phones" fields="callTrial.deskPhoneFields"></formly-form>
         </div>
       </div>

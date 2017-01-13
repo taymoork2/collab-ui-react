@@ -1,0 +1,37 @@
+<div class="report-header">
+  <header><h4 translate="ediscovery.searchResults.generateReport"></h4></header>
+  <p translate="ediscovery.searchResults.generateText"></p>
+</div>
+<div class="row" ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.state === 'COMPLETED'">
+  <div class="columns small-12 medium-12 large-10">
+    <div class="result-section">
+      <h6 translate="ediscovery.search.reportSize"></h6>
+      <span>{{ediscoverySearchCtrl.report.sizeInBytes | bytesFilter : 2 }}</span>
+    </div>
+  </div>
+</div>
+<div class="report-parameters">
+  <div class="columns small-12 medium-12 large-10">
+    <div class="input-section">
+      <h6 translate="ediscovery.search.reportName"></h6>
+      <input required id="displayName" class="cs-input report-name" ng-model="ediscoverySearchCtrl.searchCriteria.displayName">
+      <h6 translate="ediscovery.searchResults.description"></h6>
+      <input id="displayName" class="cs-input report-name" ng-model="ediscoverySearchCtrl.generateDescription">
+      <h6 translate="ediscovery.searchResults.exportFormat"></h6>
+      <cs-select ng-model="ediscoverySearchCtrl.exportSelected" 
+        options="ediscoverySearchCtrl.exportOptions"
+        placeholder="ediscoverySearchCtrl.exportOptions[0]"></cs-select>
+    </div>
+  </div>
+  <div ng-show="!ediscoverySearchCtrl.report || (ediscoverySearchCtrl.report.state === 'FAILED' || ediscoverySearchCtrl.report.state === 'ABORTED')">
+    <div class="columns small-12 medium-12 large-10">
+      <div class="input-section" ng-if="!ediscoverySearchCtrl.createReportInProgress">
+        <button translate="ediscovery.search.generateReport"
+          ng-disabled="!ediscoverySearchCtrl.searchCriteria.displayName || ediscoverySearchCtrl.dateValidationError"
+          type="button"
+          class="btn--primary"
+          ng-click="(ediscoverySearchCtrl.report.state === 'FAILED' || ediscoverySearchCtrl.report.state === 'ABORTED') ? ediscoverySearchCtrl.retrySearch() : ediscoverySearchCtrl.createReport()"></button>
+      </div>
+    </div>
+    </div>
+</div>

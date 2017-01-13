@@ -134,6 +134,7 @@
     }
 
     function closePanel() {
+      $rootScope.$broadcast('CE Closed');
       AutoAttendantCeMenuModelService.clearCeMenuMap();
       unAssignAssigned().finally(function () {
         $state.go('huronfeatures');
@@ -337,14 +338,14 @@
       }
     }
 
-    function saveAARecords() {
+    function saveAARecords(validateCES) {
 
       var deferred = $q.defer();
       var aaRecords = vm.aaModel.aaRecords;
       var aaRecord = vm.aaModel.aaRecord;
 
       var aaRecordUUID = vm.aaModel.aaRecordUUID;
-      vm.ui.builder.ceInfo_name = vm.ui.builder.ceInfo_name.trim();
+      vm.ui.builder.ceInfo_name = _.trim(vm.ui.builder.ceInfo_name);
       if (!AAValidationService.isNameValidationSuccess(vm.ui.builder.ceInfo_name, aaRecordUUID)) {
         deferred.reject({
           statusText: '',
@@ -353,7 +354,7 @@
         return deferred.promise;
       }
 
-      if (!AAValidationService.isRouteToValidationSuccess(vm.ui)) {
+      if (validateCES && !AAValidationService.isValidCES(vm.ui)) {
         deferred.reject({
           statusText: '',
           status: 'VALIDATION_FAILURE'
@@ -574,7 +575,7 @@
     }
 
     function saveCeDefinition() {
-      return vm.saveAARecords().then(
+      return vm.saveAARecords(false).then(
         function () {
           // Sucessfully created new CE Definition, leave Name-assignment page
           vm.isAANameDefined = true;
@@ -603,7 +604,8 @@
       if (vm.ui.aaTemplate && vm.ui.aaTemplate === 'BusinessHours') {
         vm.save8To5Schedule(vm.ui.ceInfo.name).then(vm.saveCeDefinition).catch(vm.delete8To5Schedule);
       } else {
-        vm.saveAARecords().then(
+        // on creation, allow the save even without valid entries in the phone menu
+        vm.saveAARecords(false).then(
           function () {
             // Sucessfully created new CE Definition, time to move from Name-assignment page
             // to the overlay panel.
@@ -619,9 +621,23 @@
     function setUpFeatureToggles() {
       var featureToggleDefault = false;
       AACommonService.setMediaUploadToggle(featureToggleDefault);
-      return FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload).then(function (result) {
-        AACommonService.setMediaUploadToggle(result);
+      AACommonService.setCallerInputToggle(featureToggleDefault);
+      FeatureToggleService.supports(FeatureToggleService.features.huronAACallerInput).then(function (result) {
+        AACommonService.setCallerInputToggle(result);
       });
+      AACommonService.setClioToggle(featureToggleDefault);
+      AACommonService.setRouteQueueToggle(featureToggleDefault);
+      return function () {
+        FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload).then(function (result) {
+          AACommonService.setMediaUploadToggle(result);
+        });
+        FeatureToggleService.supports(FeatureToggleService.features.huronAACallQueue).then(function (result) {
+          AACommonService.setRouteQueueToggle(result);
+        });
+        FeatureToggleService.supports(FeatureToggleService.features.huronAAClioMedia).then(function (result) {
+          AACommonService.setClioToggle(result);
+        });
+      }();
     }
 
     function activate() {

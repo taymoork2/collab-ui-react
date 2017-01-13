@@ -1,3 +1,5 @@
+require('./_user-list.scss');
+
 (function () {
   'use strict';
 
@@ -61,9 +63,7 @@
     $scope.isCSB = Authinfo.isCSB();
 
     $scope.exportType = $rootScope.typeOfExport.USER;
-    $scope.userExportThreshold = CsvDownloadService.userExportThreshold;
     $scope.totalUsers = 0;
-    $scope.isCsvEnhancementToggled = false;
     $scope.obtainedTotalUserCount = false;
     $scope.isEmailStatusToggled = false;
 
@@ -90,7 +90,6 @@
     $scope.getUserPhoto = Userservice.getUserPhoto;
     $scope.firstOfType = firstOfType;
     $scope.isValidThumbnail = Userservice.isValidThumbnail;
-    $scope.startExportUserList = startExportUserList;
     $scope.isNotDirSyncOrException = false;
 
     $scope.getUserList = getUserList;
@@ -99,23 +98,18 @@
 
     ////////////////
     var eventListeners = [];
-    var isUserPendingStatusToggled;
     var isOnlineOrg;
 
     function onInit() {
 
       var promises = {
-        csvEnhancement: FeatureToggleService.atlasCsvEnhancementGetStatus(),
         atlasEmailStatus: FeatureToggleService.atlasEmailStatusGetStatus(),
-        atlasUserPendingStatus: FeatureToggleService.atlasUserPendingStatusGetStatus(),
         configureGrid: vm.configureGrid(),
         isOnlineOrg: Auth.isOnlineOrg()
       };
 
       $q.all(promises).then(function (results) {
-        $scope.isCsvEnhancementToggled = results.csvEnhancement;
         $scope.isEmailStatusToggled = results.atlasEmailStatus;
-        isUserPendingStatusToggled = results.atlasUserPendingStatus;
         isOnlineOrg = results.isOnlineOrg;
 
         checkOrg();
@@ -290,20 +284,16 @@
                 // todo - why are we looping through ALL users here, and not just the new ones?
                 _.forEach($scope.userList.allUsers, function (user) {
                   // user status
-                  if (isUserPendingStatusToggled) {
-                    var userHasSignedUp = _.some(user.userSettings, function (userSetting) {
-                      return userSetting.indexOf('spark.signUpDate') > 0;
-                    });
-                    var index = _.findIndex(user.entitlements, function (ent) {
-                      return ent === 'ciscouc';
-                    });
-                    var hasCiscoUC = index > -1;
-                    var isActiveUser = !_.isEmpty(user.entitlements) &&
-                      (userHasSignedUp || isOnlineOrg || hasCiscoUC);
-                    user.userStatus = isActiveUser ? 'active' : 'pending';
-                  } else {
-                    user.userStatus = (_.indexOf(user.accountStatus, 'pending') >= 0) ? 'pending' : 'active';
-                  }
+                  var userHasSignedUp = _.some(user.userSettings, function (userSetting) {
+                    return userSetting.indexOf('spark.signUpDate') > 0;
+                  });
+                  var index = _.findIndex(user.entitlements, function (ent) {
+                    return ent === 'ciscouc';
+                  });
+                  var hasCiscoUC = index > -1;
+                  var isActiveUser = !_.isEmpty(user.entitlements) &&
+                    (userHasSignedUp || isOnlineOrg || hasCiscoUC);
+                  user.userStatus = isActiveUser ? 'active' : 'pending';
 
                   // email status
                   if (!user.active && $scope.isEmailStatusToggled) {
@@ -351,21 +341,22 @@
 
             if (!$scope.obtainedTotalUserCount) {
               if (Authinfo.isCisco()) { // allow Cisco org (even > 10K) to export new CSV format
-                $scope.totalUsers = $scope.userExportThreshold;
+                $scope.totalUsers = CsvDownloadService.userExportThreshold;
                 $scope.obtainedTotalUserCount = true;
               } else {
                 UserListService.getUserCount()
                   .then(function (count) {
                     if (_.isNull(count) || _.isNaN(count) || count === -1) {
                       // can't determine number of users, so assume over threshold
-                      count = $scope.userExportThreshold + 1;
+                      count = CsvDownloadService.userExportThreshold;
                     }
                     $scope.totalUsers = count;
                     $scope.obtainedTotalUserCount = true;
                   })
                   .catch(function (response) {
                     Log.debug('Failed to get User Count. Status: ' + response);
-                    $scope.totalUsers = $scope.userExportThreshold + 1;
+                    // can't determine number of users, so assume over threshold
+                    $scope.totalUsers = CsvDownloadService.userExportThreshold;
                     $scope.obtainedTotalUserCount = false;
                   });
               }
@@ -667,17 +658,9 @@
       }
     }
 
-    function startExportUserList() {
-      var options = {
-        csvType: CsvDownloadService.typeUser,
-        tooManyUsers: ($scope.totalUsers > $scope.userExportThreshold)
-      };
-      $scope.$emit('csv-download-request', options);
-    }
-
     function onManageUsers() {
       $state.go('users.manage', {
-        isOverExportThreshold: ($scope.totalUsers > $scope.userExportThreshold)
+        isOverExportThreshold: ($scope.totalUsers >= CsvDownloadService.userExportThreshold)
       });
     }
 

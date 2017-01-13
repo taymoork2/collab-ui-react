@@ -18,28 +18,10 @@ $user-statuses-bar-height: 7.25rem;
     }
   }
 
-  .add-resource-button {
-    margin-left: 1rem;
+  .trash-icon {
+    margin-left: 10px;
+    margin-top: 5px;
   }
-}
-
-.hercules.call-service {
-  .call-aware,
-  .call-connect {
-    padding-bottom: 2rem;
-  }
-
-  .call-connect {
-    padding-top: 2rem;
-  }
-
-  .feature-settings {
-    padding-bottom: 1rem;
-  }
-}
-
-.hercules-trash-icon {
-  color: $color-alerts;
 }
 
 /**
@@ -242,7 +224,7 @@ Special stuff currently used for out own mail input field...
   }
 
   .sip-domain-icon {
-    margin-left: 30px;
+    margin-left: 10px;
   }
 }
 
@@ -316,3 +298,66 @@ Special stuff currently used for out own mail input field...
 .hercules-upgrade-section {
   margin-bottom: 20px;
 }
+
+
+.hercules-upload-key-modal {
+
+  .hercules-upload-key-section {
+    margin-bottom: 25px;
+  }
+
+  .hercules-upload-key-header {
+    margin-bottom: 10px;
+  }
+
+  .file-drop-content > label {
+    cursor: pointer;
+    color: $link-color;
+
+    &:hover {
+      color: $link-hover-color;
+    }
+  }
+
+  .file-drop {
+    border: 1px dashed $gray-light;
+    height: 300px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+
+    &.dragover {
+      border-color: $link-hover-color;
+      background: $gray-lightest;
+    }
+  }
+
+  .file-drop-content {
+    position: relative;
+    align-self: center;
+
+    .icon {
+      font-size: 5rem;
+      margin-bottom: 2rem;
+      color: $color-primary-base;
+      display: block;
+    }
+  }
+
+  .file-drop-inactive {
+    @extend .file-drop;
+
+    border: 1px solid $gray-light;
+
+    .file-drop-content {
+      width: 50%;
+    }
+  }
+
+  .file-drop-content > input {
+    display: none;
+  }
+
+}
+
+

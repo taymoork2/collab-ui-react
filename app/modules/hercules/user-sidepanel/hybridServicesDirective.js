@@ -7,12 +7,12 @@
     .controller('HybridServicesCtrl', HybridServicesCtrl);
 
   /* @ngInject */
-  function HybridServicesCtrl($scope, $rootScope, $timeout, Authinfo, USSService, FusionUtils, ServiceDescriptor, Orgservice, Notification, Userservice) {
+  function HybridServicesCtrl($scope, $rootScope, $timeout, Authinfo, USSService, FusionUtils, ServiceDescriptor, Notification, Userservice, CloudConnectorService, FeatureToggleService) {
     if (!Authinfo.isFusion()) {
       return;
     }
     var vm = this;
-    var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-ec'];
+    var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-gcal', 'squared-fusion-uc', 'squared-fusion-ec'];
     var extensionCallEntitlements = ['squared-fusion-uc', 'squared-fusion-ec'];
     var stopDelayedUpdates = false;
     var delayedUpdateTimer = null;
@@ -20,6 +20,11 @@
     vm.isEnabled = false;
     vm.userStatusLoaded = false;
     vm.isInvitePending = vm.user ? Userservice.isInvitePending(vm.user) : false;
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
+      .then(function (supported) {
+        vm.atlasHerculesGoogleCalendarFeatureToggle = supported;
+      });
 
     vm.allExceptUcFilter = function (item) {
       return item && item.enabled === true && item.id !== 'squared-fusion-ec';
@@ -70,31 +75,11 @@
       return;
     }
 
-    Orgservice.getLicensesUsage()
-      .then(function (subscriptions) {
-        var hasAnyLicense = _.some(subscriptions, function (subscription) {
-          return subscription.licenses && subscription.licenses.length > 0;
-        });
-        if (hasAnyLicense) {
-          checkEntitlements({
-            enforceLicenseCheck: true
-          });
-        } else {
-          checkEntitlements({
-            enforceLicenseCheck: false
-          });
-        }
-      }, function () {
-        checkEntitlements({
-          enforceLicenseCheck: false
-        });
-      })
-      .catch(function (error) {
-        Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-      });
+    var enforceLicenseCheck = _.size(Authinfo.getLicenses()) > 0;
+    checkEntitlements(enforceLicenseCheck);
 
-    function checkEntitlements(options) {
-      if (options.enforceLicenseCheck && !hasCaaSLicense()) {
+    function checkEntitlements(enforceLicenseCheck) {
+      if (enforceLicenseCheck && !hasCaaSLicense()) {
         return;
       }
       // Filter out extensions that are not enabled in FMS
@@ -102,9 +87,11 @@
         if (services) {
           _.forEach(vm.extensions, function (extension) {
             extension.enabled = ServiceDescriptor.filterEnabledServices(services).some(function (service) {
-              return extension.id === service.id;
+              return extension.id === service.id && extension.id !== 'squared-fusion-gcal';
             });
-            // can't have huron (ciscouc) and call service at the same time
+            extension.isSetup = extension.enabled;
+
+            // Can't have huron (ciscouc) and call service at the same time
             if (extension.id === 'squared-fusion-uc' && hasEntitlement('ciscouc')) {
               extension.enabled = false;
             }
@@ -112,6 +99,26 @@
               vm.isEnabled = true;
             }
           });
+          var calServiceExchange = getExtension('squared-fusion-cal') || {};
+          var calServiceGoogle = getExtension('squared-fusion-gcal');
+          if (calServiceGoogle && vm.atlasHerculesGoogleCalendarFeatureToggle) {
+            CloudConnectorService.getService('squared-fusion-gcal')
+              .then(function (service) {
+                var isSetup = service.setup;
+                calServiceGoogle.isSetup = isSetup;
+                var ignoreGoogle = calServiceExchange.enabled && !calServiceExchange.entitled && !calServiceGoogle.entitled;
+                if (isSetup && (!calServiceExchange.enabled || !calServiceExchange.entitled) && !ignoreGoogle) {
+                  calServiceGoogle.enabled = true;
+                  vm.isEnabled = true;
+                  calServiceExchange.enabled = false;
+                  if (!delayedUpdateTimer) {
+                    updateStatusForUser();
+                  }
+                }
+              }).catch(function (error) {
+                Notification.errorWithTrackingId(error, 'hercules.settings.googleCalendar.couldNotReadGoogleCalendarStatus');
+              });
+          }
           if (vm.isEnabled) {
             // Only poll for statuses if there are enabled extensions
             updateStatusForUser();
@@ -164,6 +171,12 @@
           };
         }
       }));
+    }
+
+    function getExtension(id) {
+      return _.find(vm.extensions, function (extension) {
+        return extension.id === id;
+      });
     }
 
     function getCallExtensions() {

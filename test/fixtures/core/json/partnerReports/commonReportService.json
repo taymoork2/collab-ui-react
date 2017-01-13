@@ -18,32 +18,46 @@
   "timeFilter": [{
     "value": 0,
     "label": "reportsPage.week",
-    "description": "reportsPage.week2"
+    "description": "reportsPage.week2",
+    "min": 1,
+    "max": 6
   }, {
     "value": 1,
     "label": "reportsPage.month",
-    "description": "reportsPage.month2"
+    "description": "reportsPage.month2",
+    "min": 48,
+    "max": 51
   }, {
     "value": 2,
     "label": "reportsPage.threeMonths",
-    "description": "reportsPage.threeMonths2"
+    "description": "reportsPage.threeMonths2",
+    "min": 40,
+    "max": 51
   }],
   "altTimeFilter": [{
     "value": 0,
     "label": "reportsPage.week",
-    "description": "reportsPage.week2"
+    "description": "reportsPage.week2",
+    "min": 1,
+    "max": 6
   }, {
     "value": 1,
     "label": "reportsPage.month",
-    "description": "reportsPage.month2"
+    "description": "reportsPage.month2",
+    "min": 48,
+    "max": 51
   }, {
     "value": 2,
     "label": "reportsPage.threeMonths",
-    "description": "reportsPage.threeMonths2"
+    "description": "reportsPage.threeMonths2",
+    "min": 40,
+    "max": 51
   }, {
-    "value": 3,
-    "label": "reportsPage.twelveMonths",
-    "description": "reportsPage.twelveMonths2"
+    "value": "custom",
+    "label": "reportsPage.custom",
+    "description": "reportsPage.custom2",
+    "min": 0,
+    "max": 51
   }],
   "intervalQuery": {
     "action": "action",
@@ -108,5 +122,5 @@
     "date": ""
   },
   "usageOptions": ["weeklyUsage", "monthlyUsage", "threeMonthUsage"],
-  "altUsageOptions": ["dailyUsage", "monthlyUsage", "yearlyUsage"]
+  "altUsageOptions": ["dailyUsage", "weeklyUsage"]
 }

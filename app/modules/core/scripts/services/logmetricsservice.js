@@ -44,6 +44,7 @@
         trialDidEntered: 'TRIALDIDENTERED',
         trialStarted: 'TRIALSTARTED',
         trialEdited: 'TRIALEDITED',
+        trialExtPartnerNotify: 'TRIALEXTPARTNERNOTIFY',
         organizationPage: 'ORGANIZATIONPAGE',
         organizationCreated: 'ORGANIZATIONCREATED',
         customerLogin: 'CUSTOMERLOGIN',
@@ -65,6 +66,7 @@
         domainManageInstructions: 'DOMAININST',
         helpdeskSearch: 'HELPDESKSEARCH',
         helpdeskOperation: 'HELPDESKOPERATION',
+        deviceUsageReportOperation: 'DEVICEUSAGEREPORTOPERATION',
         careTemplateInit: 'CARETEMPLATEINIT',
         careTemplateFinish: 'CARETEMPLATEFINISH',
         careReports: 'CAREREPORTS',
@@ -152,7 +154,7 @@
             msg = 'In Care reports';
             eType = this.getEventType('careReports');
             break;
-          case 'care.ChatSA':
+          case 'care.setupAssistant':
             msg = 'In Care Template setup assistant';
             eType = this.getEventType('careTemplateInit');
             break;

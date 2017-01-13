@@ -1,0 +1,8 @@
+<div class="user-statuses-card" ng-repeat="summary in $ctrl.userStatuses | orderBy: 'serviceId' : true ">
+  <div class="user-statuses-title"><span translate="{{::'hercules.cloudExtensions.serviceNames.' + summary.serviceId}}"></span>&nbsp;–&nbsp;<span translate="hercules.overview.status"></span></div>
+  <ul class="user-statuses-content">
+    <li><span translate="hercules.overview.activated"></span>: {{summary.activated}}</li>
+    <li><span translate="hercules.overview.pending"></span>: {{summary.notActivated}}</li>
+    <li><span translate="hercules.overview.error"></span>: <span ng-class="{'red': summary.error > 0}">{{summary.error}}</span></li>
+  </ul>
+</div>

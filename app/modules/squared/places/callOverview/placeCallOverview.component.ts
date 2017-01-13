@@ -8,6 +8,7 @@ import { Notification } from 'modules/core/notifications';
 class PlaceCallOverview implements ng.IComponentController {
 
   public currentPlace;
+  public hasSparkCall: boolean;
   public actionList: IActionItem[];
   public features: IFeature[];
 
@@ -17,13 +18,20 @@ class PlaceCallOverview implements ng.IComponentController {
   constructor(
     private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
-    private $stateParams: any,
+    $stateParams: any,
     private $translate: ng.translate.ITranslateService,
+    CsdmDataModelService: any,
     private LineService: LineService,
     private DialingService: DialingService,
     private Notification: Notification,
   ) {
-    this.currentPlace = this.$stateParams.currentPlace;
+
+    this.displayPlace($stateParams.currentPlace);
+    CsdmDataModelService.getPlacesMap().then((placesMap) => {
+      //Replace the $stateParams clone with a real reference!
+      this.displayPlace(placesMap[$stateParams.currentPlace.url]);
+    });
+    this.hasSparkCall = this.hasEntitlement('ciscouc');
     this.$scope.$on(DialingType.INTERNATIONAL, (_e, data) => {
       this.DialingService.setInternationalDialing(data, LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
         this.DialingService.initializeDialing(LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
@@ -48,11 +56,17 @@ class PlaceCallOverview implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    this.initActions();
-    this.DialingService.initializeDialing(LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
-      this.initFeatures();
-    });
-    this.initNumbers();
+    if (this.hasSparkCall) {
+      this.initActions();
+      this.DialingService.initializeDialing(LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
+        this.initFeatures();
+      });
+      this.initNumbers();
+    }
+  }
+
+  private displayPlace(newPlace) {
+    this.currentPlace = newPlace;
   }
 
   private initActions(): void {
@@ -78,13 +92,19 @@ class PlaceCallOverview implements ng.IComponentController {
       };
       this.features.push(service);
     }
-    service = {
-      name: this.$translate.instant('telephonyPreview.internationalDialing'),
-      state: 'internationalDialing',
-      detail: this.DialingService.getInternationalDialing(LineConsumerType.PLACES),
-      actionAvailable: true,
-    };
-    this.features.push(service);
+
+    this.DialingService.isDisableInternationalDialing().then((isDisableInternationalDialing) => {
+      if (!isDisableInternationalDialing) {
+        service = {
+          name: this.$translate.instant('telephonyPreview.internationalDialing'),
+          state: 'internationalDialing',
+          detail: this.DialingService.getInternationalDialing(LineConsumerType.PLACES),
+          actionAvailable: true,
+        };
+        this.features.push(service);
+      }
+    });
+
     if (this.currentPlace.type === 'huron') {
       service = {
         name: this.$translate.instant('telephonyPreview.localDialing'),
@@ -99,6 +119,18 @@ class PlaceCallOverview implements ng.IComponentController {
   private initNumbers(): void {
     this.LineService.getLineList(LineConsumerType.PLACES, this.currentPlace.cisUuid)
       .then(lines => this.directoryNumbers = lines);
+  }
+
+  private hasEntitlement(entitlement: string): boolean {
+    let hasEntitlement = false;
+    if (this.currentPlace.entitlements) {
+      this.currentPlace.entitlements.forEach(element => {
+        if (element === entitlement) {
+          hasEntitlement = true;
+        }
+      });
+    }
+    return hasEntitlement;
   }
 
   public clickFeature(feature: IFeature) {

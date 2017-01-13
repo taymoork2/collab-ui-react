@@ -1,5 +1,7 @@
 'use strict';
 
+var testModule = require('./authinfo');
+
 describe('Authinfo:', function () {
   var injector, Service;
 
@@ -28,7 +30,7 @@ describe('Authinfo:', function () {
   };
 
   beforeEach(function () {
-    angular.mock.module('Core');
+    angular.mock.module(testModule);
     inject(function ($injector) {
       injector = $injector;
     });
@@ -251,6 +253,44 @@ describe('Authinfo:', function () {
         }]
       }]
     };
+
+    it('is patched with Site_Admin role if customer has full admin role.', function () {
+      var Authinfo = setupUser({
+        roles: ['Full_Admin']
+      });
+      Authinfo.updateAccountInfo(accountData);
+      expect(Authinfo.getRoles()).toEqual(["Full_Admin", "Site_Admin"]);
+    });
+
+    it('is patched with Site_Admin role if customer has read only admin role.', function () {
+      var Authinfo = setupUser({
+        roles: ['Readonly_Admin']
+      });
+      Authinfo.updateAccountInfo(accountData);
+      expect(Authinfo.getRoles()).toEqual(["Readonly_Admin", "Site_Admin"]);
+    });
+  });
+
+  describe('customer with CONFERENCING and linkedSiteUrl', function () {
+    var accountData = {
+      "customers": [{
+        "customerId": "1",
+        "customerName": "Atlas_Test_2",
+        "licenses": [{
+          "licenseType": "CONFERENCING",
+          "linkedSiteUrl": "www.abc.com"
+        }]
+      }]
+    };
+
+    it('have linked site conference service', function () {
+      var Authinfo = setupUser({
+        roles: ['Full_Admin']
+      });
+      Authinfo.updateAccountInfo(accountData);
+      expect(Authinfo.getConferenceServicesWithLinkedSiteUrl()).toBeTruthy();
+      expect(Authinfo.getConferenceServicesWithLinkedSiteUrl().length).toBe(1);
+    });
 
     it('is patched with Site_Admin role if customer has full admin role.', function () {
       var Authinfo = setupUser({

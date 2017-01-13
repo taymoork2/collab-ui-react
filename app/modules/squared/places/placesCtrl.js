@@ -1,3 +1,5 @@
+require('./_places.scss');
+
 (function () {
   'use strict';
 
@@ -5,33 +7,67 @@
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($rootScope, $scope, $state, $templateCache, $translate, CsdmDataModelService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
+      function ($q, $scope, $state, $templateCache, $translate, CsdmDataModelService, Userservice, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService) {
         var vm = this;
 
         vm.data = [];
         vm.placesLoaded = false;
+        vm.addPlaceIsDisabled = true;
         vm.placeFilter = PlaceFilter;
         vm.placeFilter.resetFilters();
         var filteredPlaces;
         var placesList;
 
         function init() {
+          fetchAsyncSettings();
           loadList();
         }
 
+        function fetchAsyncSettings() {
+          var darlingPromise = FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
+            vm.showDarling = result;
+          });
+          var ataPromise = FeatureToggleService.csdmATAGetStatus().then(function (result) {
+            vm.showATA = result;
+          });
+          var pstnPromise = FeatureToggleService.csdmPstnGetStatus().then(function (result) {
+            vm.showPstn = result && Authinfo.isSquaredUC();
+          });
+          var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
+            vm.csdmHybridCallFeature = feature;
+          });
+          $q.all([darlingPromise, ataPromise, pstnPromise, hybridPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
+            vm.addPlaceIsDisabled = false;
+          });
+        }
+
         function loadList() {
-          CsdmDataModelService.getPlacesMap().then(function (list) {
+          CsdmDataModelService.getPlacesMap(true).then(function (list) {
             placesList = list;
             vm.placesLoaded = true;
             vm.updateListAndFilter();
           });
         }
 
-        init();
+        function fetchDisplayNameForLoggedInUser() {
+          var userDetailsDeferred = $q.defer();
+          Userservice.getUser('me', function (data) {
+            if (data.success) {
+              vm.adminUserDetails = {
+                firstName: data.name && data.name.givenName,
+                lastName: data.name && data.name.familyName,
+                displayName: data.displayName,
+                userName: data.userName,
+                cisUuid: data.id,
+                organizationId: data.meta.organizationID
+              };
+            }
+            userDetailsDeferred.resolve();
+          });
+          return userDetailsDeferred.promise;
+        }
 
-        $rootScope.$on('PLACE_LIST_UPDATED', function () {
-          vm.updateListAndFilter();
-        });
+        init();
 
         vm.existsDevices = function () {
           return (vm.shouldShowList() && (Object.keys(placesList).length > 0));
@@ -46,7 +82,9 @@
         };
 
         vm.isEntitledToHuron = function () {
-          return Authinfo.isSquaredUC();
+          return _.filter(Authinfo.getLicenses(), function (l) {
+            return l.licenseType === 'COMMUNICATION';
+          }).length > 0;
         };
 
         vm.setCurrentSearch = function (searchStr) {
@@ -67,6 +105,8 @@
           filteredPlaces = PlaceFilter.getFilteredList(_.values(placesList));
           return filteredPlaces;
         };
+
+        CsdmDataModelService.subscribeToChanges($scope, vm.updateListAndFilter.bind(this));
 
         vm.numDevices = function (place) {
           return _.size(place.devices);
@@ -129,31 +169,49 @@
           var wizardState = {
             data: {
               function: "addPlace",
-              accountType: 'shared',
-              showPlaces: true,
+              showDarling: vm.showDarling,
+              showATA: vm.showATA,
+              admin: vm.adminUserDetails,
+              csdmHybridCallFeature: vm.csdmHybridCallFeature,
               title: 'addDeviceWizard.newSharedSpace.title',
               isEntitledToHuron: vm.isEntitledToHuron(),
               isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
-              allowUserCreation: false
+              account: {
+                type: 'shared',
+                organizationId: Authinfo.getOrgId()
+              },
+              recipient: {
+                cisUuid: Authinfo.getUserId(),
+                displayName: vm.adminUserDetails.displayName,
+                email: Authinfo.getPrimaryEmail(),
+                organizationId: vm.adminUserDetails.organizationId
+              }
             },
             history: [],
             currentStateName: 'addDeviceFlow.newSharedSpace',
             wizardState: {
               'addDeviceFlow.newSharedSpace': {
-                next: 'addDeviceFlow.chooseDeviceType',
-                cloudberry: 'addDeviceFlow.showActivationCode',
-                huron_create: 'addDeviceFlow.addLines'
+                next: 'addDeviceFlow.chooseDeviceType'
               },
               'addDeviceFlow.chooseDeviceType': {
                 nextOptions: {
-                  cloudberry: 'addDeviceFlow.showActivationCode',
+                  cloudberry: vm.showPstn ? 'addDeviceFlow.editServices' : 'addDeviceFlow.showActivationCode',
                   huron: 'addDeviceFlow.addLines'
                 }
               },
-              'addDeviceFlow.addLines': {
+              'addDeviceFlow.editServices': {
+                nextOptions: {
+                  sparkCall: 'addDeviceFlow.addLines',
+                  sparkCallConnect: 'addDeviceFlow.callConnectOptions',
+                  sparkOnly: 'addDeviceFlow.showActivationCode'
+                }
+              },
+              'addDeviceFlow.callConnectOptions': {
                 next: 'addDeviceFlow.showActivationCode'
               },
-              'addDeviceFlow.generateAuthCode': {}
+              'addDeviceFlow.addLines': {
+                next: 'addDeviceFlow.showActivationCode'
+              }
             }
           };
 

@@ -1,7 +1,7 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="$dismiss()">
   </button>
-  <h3 class="modal-title" translate="{{editServices.wizardData.title}}"></h3>
+  <h3 class="modal-title" translate="{{editServices.title}}"></h3>
 </div>
 <div class="modal-body">
   <div>
@@ -31,6 +31,16 @@
             value="sparkCall"
             cs-input-label="{{'addDeviceWizard.editServices.sparkCall' | translate}}"
             cs-input-help-text="{{'addDeviceWizard.editServices.sparkCallHelp' | translate}}">
+          <input
+            cs-input
+            type="radio"
+            ng-model="editServices.service"
+            id="service3"
+            name="service"
+            value="sparkCallConnect"
+            ng-if="editServices.sparkCallConnectEnabled"
+            cs-input-label="{{'addDeviceWizard.editServices.sparkCallConnect' | translate}}"
+            cs-input-help-text="{{'addDeviceWizard.editServices.sparkCallConnectHelp' | translate}}">
         </div>
       </div>
     </form>
@@ -39,9 +49,17 @@
 <div class="modal-footer">
 
   <button
+    id="back-button"
+    class="btn"
+    sq-click-promise="editServices.back()"
+    ng-class="{'ng-hide':!editServices.hasBackStep()}"
+    translate="common.back">
+  </button>
+  <button
     type="button"
     class="btn"
     ng-click="$dismiss()"
+    ng-class="{'ng-hide':editServices.hasBackStep()}"
     translate="common.cancel">
   </button>
   <button
@@ -49,7 +67,7 @@
     id="save-button"
     loading="editServices.isLoading"
     class="btn btn--primary"
-    ng-class="{'ng-hide':editServices.service === 'sparkCall'}"
+    ng-class="{'ng-hide':editServices.hasNextStep()}"
     ng-click="editServices.save()">
     <span translate="common.save"></span>
   </button>
@@ -57,7 +75,7 @@
     cs-btn
     id="next-button"
     class="btn btn--primary"
-    ng-class="{'ng-hide':editServices.service === 'sparkOnly'}"
+    ng-class="{'ng-hide':!editServices.hasNextStep()}"
     ng-click="editServices.next()">
     <span translate="common.next"></span>
   </button>

@@ -73,12 +73,7 @@
     //not for phone menu, dial by ext, or submenu at this point
     //and is also feature toggled
     function isMediaUploadToggle() {
-      var mediaUploadOn = false;
-      if (vm.sayMessageType == sayMessageType.ACTION && (AACommonService.isMediaUploadToggle())) {
-        mediaUploadOn = true;
-      }
-
-      return mediaUploadOn;
+      return AACommonService.isMediaUploadToggle();
     }
 
     function setVoiceOptions() {
@@ -137,6 +132,11 @@
 
       vm.voiceBackup = vm.voiceOption;
       setVoiceOptions();
+
+      var menu = vm.menuEntry;
+      if (menu.entries) {
+        updateQueueSettingsLanguageVoice(menu);
+      }
     }
 
     /*
@@ -145,6 +145,8 @@
     */
     function updateVoiceOption(menu) {
       if (menu.entries) {
+        updateQueueSettingsLanguageVoice(menu);
+
         _.each(menu.entries, function (entry) {
           if (AutoAttendantCeMenuModelService.isCeMenu(entry)) {
             var submenuHeader = getSayActionHeader(entry);
@@ -207,7 +209,8 @@
 
     function createMenuEntry() {
       var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      menuEntry.addAction(createSayAction(actionType.SAY));
+      var type = AACommonService.isMediaUploadToggle ? actionType.PLAY : actionType.SAY;
+      menuEntry.addAction(createSayAction(type));
       return menuEntry;
     }
 
@@ -285,7 +288,7 @@
               if (keyAction) {
                 vm.actionEntry = keyAction;
               } else {
-                vm.actionEntry = createSayAction(actionType.SAY);
+                vm.actionEntry = (vm.isMediaUploadToggle ? createSayAction(actionType.PLAY) : createSayAction(actionType.SAY));
                 vm.menuEntry.entries[$scope.menuKeyIndex].actions[0] = vm.actionEntry;
               }
             } else {
@@ -310,7 +313,7 @@
             vm.menuEntry = uiMenu.entries[$scope.index];
             var sayAction = getSayAction(vm.menuEntry);
             if (!sayAction) {
-              sayAction = createSayAction(actionType.SAY);
+              sayAction = (vm.isMediaUploadToggle ? createSayAction(actionType.PLAY) : createSayAction(actionType.SAY));
               vm.menuEntry.addAction(sayAction);
             }
             vm.actionEntry = sayAction;
@@ -318,6 +321,16 @@
             return;
           }
       }
+    }
+
+    function updateQueueSettingsLanguageVoice(menu) {
+      _.each(menu.entries, function (entry) {
+        var queueSettings = _.get(entry, 'actions[0].queueSettings');
+        if (queueSettings) {
+          queueSettings.language = AALanguageService.getLanguageCode(vm.languageOption);
+          queueSettings.voice = vm.voiceOption.value;
+        }
+      });
     }
 
     function activate() {

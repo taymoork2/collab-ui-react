@@ -1,3 +1,5 @@
+require('./_user-preview.scss');
+
 (function () {
   'use strict';
 
@@ -6,18 +8,23 @@
     .controller('ConferencePreviewCtrl', ConferencePreviewCtrl);
 
   /* @ngInject */
-  function ConferencePreviewCtrl($scope, $state, $stateParams, Authinfo) {
+  function ConferencePreviewCtrl($scope, $state, $stateParams, $translate, Authinfo, Config, FeatureToggleService) {
     var vm = this;
 
     vm.service = '';
     vm.sites = [];
     vm.siteUrls = [];
+    $scope.isSharedMultiPartyEnabled = false;
 
     init();
 
     ////////////////
 
     function init() {
+      FeatureToggleService.atlasSMPGetStatus().then(function (smpStatus) {
+        $scope.isSharedMultiPartyEnabled = smpStatus;
+      });
+
       if ($stateParams.service) {
         vm.service = $stateParams.service;
       }
@@ -40,6 +47,15 @@
 
       $scope.closePreview = function () {
         $state.go('users.list');
+      };
+
+      $scope.isSharedMultiPartyLicense = function (siteUrl) {
+        var service = _.find(vm.sites, { license: { siteUrl: siteUrl } });
+        return _.get(service, 'license.licenseModel') === Config.licenseModel.cloudSharedMeeting;
+      };
+
+      $scope.determineLicenseType = function (siteUrl) {
+        return $scope.isSharedMultiPartyLicense(siteUrl) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.namedLicenses');
       };
     }
   }

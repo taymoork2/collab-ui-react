@@ -1,0 +1,31 @@
+.call-feature-edit {
+  .typeahead .dropdown-menu {
+    .active > a {
+      background: $gray-light-2;
+    }
+
+    span {
+      font-size: $font-size-h4;
+      font-family: $brand-font-cisco-TT-Light;
+      color: $gray-dark-2;
+    }
+
+    li .member__name {
+      @include vr-spacing(ph, 0.5);
+    }
+
+    li .member__line {
+      @include vr-spacing(ph, 0.5);
+
+      span {
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+.typeahead-large .dropdown-menu {
+  li .member__line {
+    @include vr-spacing(ph, 1);
+  }
+}

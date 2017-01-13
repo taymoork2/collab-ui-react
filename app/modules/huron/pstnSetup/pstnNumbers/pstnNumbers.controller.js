@@ -15,8 +15,8 @@
 
   /* @ngInject */
   function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification,
-                           PstnSetup, PstnSetupService, TelephoneNumberService, TerminusStateService, ValidationService,
-                           FeatureToggleService) {
+      PstnSetup, PstnSetupService, TelephoneNumberService, TerminusStateService, ValidationService,
+      FeatureToggleService) {
     var vm = this;
 
     vm.provider = PstnSetup.getProvider();
@@ -54,8 +54,8 @@
     var BLOCK_ORDER = PstnSetupService.BLOCK_ORDER;
     var PORT_ORDER = PstnSetupService.PORT_ORDER;
     var NUMBER_ORDER = PstnSetupService.NUMBER_ORDER;
-    var TOLLFREE_BLOCK_ORDER = PstnSetupService.TOLLFREE_BLOCK_ORDER;
-    var TOLLFREE_ORDER = PstnSetupService.TOLLFREE_ORDER;
+    var NUMTYPE_DID = PstnSetupService.NUMTYPE_DID;
+    var NUMTYPE_TOLLFREE = PstnSetupService.NUMTYPE_TOLLFREE;
     var NXX = 'nxx';
     var NXX_EMPTY = '--';
     var MIN_BLOCK_QUANTITY = 2;
@@ -357,8 +357,7 @@
       var field = this;
       var params = {
         npa: vm.model.tollFree.areaCode.code,
-        count: vm.model.tollFree.quantity,
-        sequential: vm.model.tollFree.consecutive
+        count: vm.model.tollFree.quantity === 1 ? undefined : vm.model.tollFree.quantity
       };
       vm.model.tollFree.searchResults = [];
       vm.model.tollFree.searchResultsModel = {};
@@ -384,34 +383,32 @@
         });
     }
 
-    function addToCart(type) {
-      switch (type) {
+    function addToCart(orderType, numberType) {
+      switch (orderType) {
         case NUMBER_ORDER:
-        case TOLLFREE_ORDER:
-          addToOrder(type);
+          addToOrder(numberType);
           break;
         case PORT_ORDER:
           addPortNumbersToOrder();
           break;
         case BLOCK_ORDER:
-        case TOLLFREE_BLOCK_ORDER:
-          addAdvancedOrder(type);
+          addAdvancedOrder(numberType);
           break;
       }
     }
 
-    function addToOrder(type) {
+    function addToOrder(numberType) {
       var model;
       var promises = [];
       var reservation;
       vm.addLoading = true;
       // add to cart
-      if (type === NUMBER_ORDER) {
+      if (numberType === NUMTYPE_DID) {
         model = vm.model.pstn;
-      } else if (type === TOLLFREE_ORDER) {
+      } else if (numberType === NUMTYPE_TOLLFREE) {
         model = vm.model.tollFree;
       } else {
-        Notification.error('pstnSetup.errors.unsupportedOrderType', type);
+        Notification.error('pstnSetup.errors.unsupportedOrderType', numberType);
       }
       _.forIn(model.searchResultsModel, function (value, _key) {
         if (value) {
@@ -419,18 +416,20 @@
           var searchResultsIndex = (model.paginateOptions.currentPage * model.paginateOptions.pageSize) + key;
           if (searchResultsIndex < model.searchResults.length) {
             var numbers = model.searchResults[searchResultsIndex];
-            if (type === NUMBER_ORDER) {
+            if (numberType === NUMTYPE_DID) {
               reservation = PstnSetupService.reserveCarrierInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers, PstnSetup.isCustomerExists());
-            } else if (type === TOLLFREE_ORDER) {
+            } else if (numberType === NUMTYPE_TOLLFREE) {
               reservation = PstnSetupService.reserveCarrierTollFreeInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers, PstnSetup.isCustomerExists());
             }
             var promise = reservation
-              .then(function () {
+              .then(function (reservationData) {
                 var order = {
                   data: {
                     numbers: numbers
                   },
-                  type: type
+                  numberType: numberType,
+                  orderType: NUMBER_ORDER,
+                  reservationId: reservationData.uuid
                 };
                 vm.orderCart.push(order);
                 // return the index to be used in the promise callback
@@ -464,12 +463,11 @@
       });
     }
 
-    function addAdvancedOrder(type) {
+    function addAdvancedOrder(numberType) {
       var model;
-      if (type === BLOCK_ORDER) {
+      if (numberType === NUMTYPE_DID) {
         model = vm.model.pstn;
-      }
-      if (type === TOLLFREE_BLOCK_ORDER) {
+      } else if (numberType === NUMTYPE_TOLLFREE) {
         model = vm.model.tollFree;
       }
       var advancedOrder = {
@@ -478,7 +476,8 @@
           length: parseInt(model.quantity, 10),
           consecutive: model.consecutive
         },
-        type: type
+        numberType: numberType,
+        orderType: BLOCK_ORDER
       };
       var nxx = getNxxValue();
       if (nxx !== null) {
@@ -495,8 +494,8 @@
     function removeOrder(order) {
       if (isPortOrder(order) || isAdvancedOrder(order)) {
         removeOrderFromCart(order);
-      } else if (_.get(order, 'type') === TOLLFREE_ORDER) {
-        PstnSetupService.releaseCarrierTollFreeInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.numbers, PstnSetup.isCustomerExists())
+      } else if (_.get(order, 'orderType') === PstnSetupService.NUMBER_ORDER && _.get(order, 'numberType') === PstnSetupService.NUMTYPE_TOLLFREE) {
+        PstnSetupService.releaseCarrierTollFreeInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.numbers, order.reservationId, PstnSetup.isCustomerExists())
           .then(_.partial(removeOrderFromCart, order));
       } else {
         PstnSetupService.releaseCarrierInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.numbers, PstnSetup.isCustomerExists())
@@ -505,14 +504,12 @@
     }
 
     function formatTelephoneNumber(telephoneNumber) {
-      switch (_.get(telephoneNumber, 'type')) {
+      switch (_.get(telephoneNumber, 'orderType')) {
         case NUMBER_ORDER:
-        case TOLLFREE_ORDER:
           return getCommonPattern(telephoneNumber.data.numbers);
         case PORT_ORDER:
           return PORTING_NUMBERS;
-        case BLOCK_ORDER:
-        case TOLLFREE_BLOCK_ORDER: {
+        case BLOCK_ORDER: {
           var pstn = 'XXX-XXXX';
           if (_.has(telephoneNumber.data, NXX)) {
             pstn = telephoneNumber.data.nxx + '-' + 'XXXX';
@@ -547,7 +544,6 @@
     vm.unsavedTokens = [];
     vm.validCount = 0;
     vm.invalidCount = 0;
-    vm.tollFreeNumberCount = 0;
     vm.tokenfieldId = 'pstn-port-numbers';
 
     vm.tokenoptions = {
@@ -575,9 +571,6 @@
       if (isTokenInvalid(e.attrs.value)) {
         angular.element(e.relatedTarget).addClass('invalid');
         e.attrs.invalid = true;
-        if (TelephoneNumberService.isTollFreeNumber(e.attrs.value)) {
-          vm.tollFreeNumberCount++;
-        }
       } else {
         vm.validCount++;
       }
@@ -589,7 +582,6 @@
 
     function isTokenInvalid(value) {
       return !TelephoneNumberService.validateDID(value) ||
-        TelephoneNumberService.isTollFreeNumber(value) ||
         _.includes(DidService.getDidList(), value);
     }
 
@@ -610,7 +602,6 @@
       // reset valid and list before setTokens
       vm.validCount = 0;
       vm.invalidCount = 0;
-      vm.tollFreeNumberCount = 0;
       DidService.clearDidList();
       angular.element('#' + vm.tokenfieldId).tokenfield('setTokens', tmpDids);
     }
@@ -624,19 +615,19 @@
     }
 
     function isPortOrder(order) {
-      return _.get(order, 'type') === PORT_ORDER;
+      return _.get(order, 'orderType') === PORT_ORDER;
     }
 
     function addPortNumbersToOrder() {
       var portOrder = {
         data: {},
-        type: PORT_ORDER
+        orderType: PORT_ORDER
       };
       var portNumbersPartition = _.partition(getTokens(), 'invalid');
       var invalidPortNumbers = _.map(portNumbersPartition[0], 'value');
       portOrder.data.numbers = _.map(portNumbersPartition[1], 'value');
       var existingPortOrder = _.find(vm.orderCart, {
-        type: PORT_ORDER
+        orderType: PORT_ORDER
       });
       if (existingPortOrder) {
         var newPortNumbers = _.difference(portOrder.data.numbers, existingPortOrder.data.numbers);
@@ -696,14 +687,12 @@
     }
 
     function getOrderQuantity(order) {
-      switch (_.get(order, 'type')) {
+      switch (_.get(order, 'orderType')) {
         case NUMBER_ORDER:
-        case TOLLFREE_ORDER:
           return order.data.numbers.length;
         case PORT_ORDER:
           return order.data.numbers.length;
         case BLOCK_ORDER:
-        case TOLLFREE_BLOCK_ORDER:
           return order.data.length;
         case undefined:
           return;
@@ -723,8 +712,7 @@
     }
 
     function isAdvancedOrder(order) {
-      var orderType = _.get(order, 'type');
-      return (orderType === BLOCK_ORDER || orderType === TOLLFREE_BLOCK_ORDER);
+      return _.get(order, 'orderType') === BLOCK_ORDER;
     }
 
     $scope.$watchCollection(function () {

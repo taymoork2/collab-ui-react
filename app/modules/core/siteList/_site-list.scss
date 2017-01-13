@@ -1,3 +1,6 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/layout';
+
 .site-list {
   @extend %grid-header;
   @extend %page-background-white;
@@ -49,6 +52,10 @@
 
   .attention-color {
     color: $color-attention-base;
+  }
+
+  .webex-hidden-form {
+    display: none;
   }
 }
 

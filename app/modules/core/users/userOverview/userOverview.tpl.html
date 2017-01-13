@@ -1,12 +1,13 @@
 <div ui-view="header"></div>
-<div ng-if="userOverview.pendingStatus">
+<div ng-if="userOverview.currentUser.pendingStatus">
   <div ui-view="userPending"></div>
 </div>
-<cs-sp-container ng-class="{'user-pending': userOverview.pendingStatus}">
+<cs-sp-container ng-class="{'user-pending': userOverview.currentUser.pendingStatus}">
   <cs-sp-section>
     <section-title
       title-key="usersPreview.servicesPreview"
-      action-list="userOverview.actionList">
+      action-list="userOverview.actionList"
+      as-button="true">
     </section-title>
     <feature-list
       features="userOverview.services"

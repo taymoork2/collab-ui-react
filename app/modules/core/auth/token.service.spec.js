@@ -1,7 +1,9 @@
 'use strict';
 
+var testModule = require('./token.service');
+
 describe('TokenService', function () {
-  beforeEach(angular.mock.module('core.token'));
+  beforeEach(angular.mock.module(testModule));
 
   var SessionStorage, TokenService, $window;
   var windowMock = {
@@ -12,6 +14,14 @@ describe('TokenService', function () {
       removeItem: function () {}
     }
   };
+
+  afterEach(function () {
+    SessionStorage = TokenService = $window = undefined;
+  });
+
+  afterAll(function () {
+    windowMock = undefined;
+  });
 
   beforeEach(inject(function (_SessionStorage_, _TokenService_) {
     SessionStorage = _SessionStorage_;
@@ -32,5 +42,21 @@ describe('TokenService', function () {
   it('should call the SessionStorage service to set the refreshToken', function () {
     TokenService.setRefreshToken('test');
     expect(SessionStorage.put).toHaveBeenCalledWith('refreshToken', 'test');
+  });
+
+  describe('clientSessionId', function () {
+    beforeEach(function () {
+      TokenService.setClientSessionId();
+    });
+
+    it('should get existing or generate a new id', function () {
+      expect(TokenService.getClientSessionId()).toBeFalsy();
+
+      var clientSessionId = TokenService.getOrGenerateClientSessionId();
+      expect(clientSessionId).toBeTruthy();
+
+      var clientSessionIdAgain = TokenService.getOrGenerateClientSessionId();
+      expect(clientSessionId).toEqual(clientSessionIdAgain);
+    });
   });
 });

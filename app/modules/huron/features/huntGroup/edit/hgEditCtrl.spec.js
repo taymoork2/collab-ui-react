@@ -65,7 +65,6 @@ describe('Hunt Group EditCtrl Controller', function () {
     spyOn(HuntGroupService, 'getDetails').and.returnValue($q.when(hgFeature));
     spyOn(HuntGroupService, 'getAllUnassignedPilotNumbers').and.returnValue($q.when(pilotNumbers));
     spyOn(HuntGroupFallbackDataService, 'isVoicemailDisabled').and.returnValue($q.defer().promise);
-    spyOn(HuntGroupFallbackDataService, 'allowLocalValidation').and.returnValue($q.when());
     member1ResponseHandler = $httpBackend.whenGET(GetMember1Url).respond(200, user1);
     member2ResponseHandler = $httpBackend.whenGET(GetMember2Url).respond(200, user2);
 
@@ -212,7 +211,6 @@ describe('Hunt Group EditCtrl Controller', function () {
     hgEditCtrl.form.$invalid = false;
     expect(hgEditCtrl.showDisableSave()).toBeFalsy();
     hgEditCtrl.removeFallbackDest();
-    hgEditCtrl.allowLocalValidation = false;
     expect(hgEditCtrl.showDisableSave()).toBeTruthy();
 
     hgEditCtrl.selectedFallbackNumber = "+19723453456";
@@ -300,6 +298,7 @@ describe('Hunt Group EditCtrl Controller', function () {
 
   it('on validateFallbackNumber, applies validation and dirties the form', function () {
     spyOn(hgEditCtrl.form, '$setDirty');
+    hgEditCtrl.selectedFallbackNumber = '+19723453456';
     hgEditCtrl.validateFallbackNumber();
     expect(hgEditCtrl.form.$setDirty).not.toHaveBeenCalled();
 
@@ -406,4 +405,13 @@ describe('Hunt Group EditCtrl Controller', function () {
       expect(
         HuntGroupMemberDataService.getHuntMembers()[1].uuid).toEqual(member2.uuid);
     });
+
+  it("does not search on the number api when looking for members", function () {
+    var noSuggestion = {
+      "users": []
+    };
+    $httpBackend.expectGET(GetMemberListUrl).respond(200, noSuggestion);
+    hgEditCtrl.fetchHuntMembers("123", true);
+    $scope.$apply();
+  });
 });

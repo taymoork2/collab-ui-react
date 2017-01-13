@@ -4,6 +4,13 @@
     var $timeout, $compile, $rootScope, $scope;
     var AAScrollBar, container, target0, target1;
 
+    afterEach(function () {
+      if (container) {
+        container.remove();
+      }
+      container = undefined;
+    });
+
     beforeEach(angular.mock.module('uc.autoattendant'));
     beforeEach(angular.mock.module('Huron'));
     beforeEach(inject(function (_$timeout_, _$compile_, _$rootScope_, _AAScrollBar_) {

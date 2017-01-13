@@ -10,7 +10,8 @@
     var clusterCache = {
       c_mgmt: {},
       c_ucmc: {},
-      c_cal: {}
+      c_cal: {},
+      hds_app: {}
     };
     var hub = CsdmHubFactory.create();
     var poller = CsdmPoller.create(fetch, hub);
@@ -20,7 +21,6 @@
       fetch: fetch,
       getCluster: getCluster,
       getClustersByConnectorType: getClustersByConnectorType,
-      getAll: getAll,
       getConnector: getConnector,
       getRunningStateSeverity: getRunningStateSeverity,
       subscribe: hub.on,
@@ -58,6 +58,7 @@
           cssClass = 'success';
           break;
         case 'not_installed':
+        case 'not_registered':
           label = 'neutral';
           value = 1;
           cssClass = 'disabled';
@@ -78,6 +79,7 @@
         case 'stopped':
         case 'not_operational':
         case 'unknown':
+        case 'registrationTimeout':
         default:
           label = 'error';
           value = 3;
@@ -139,12 +141,18 @@
     }
 
     function mergeRunningState(connectors) {
+      if (_.size(connectors) === 0) {
+        return {
+          state: 'not_registered',
+          stateSeverity: 'neutral',
+          stateSeverityValue: 1
+        };
+      }
       return _.chain(connectors)
         .map(overrideStateIfAlarms)
         .reduce(getMostSevereRunningState, {
           stateSeverityValue: -1
         })
-        // .get('state')
         .value();
     }
 
@@ -194,7 +202,7 @@
           return cluster;
         })
         .filter(function (cluster) {
-          return cluster.connectors.length > 0;
+          return _.some(cluster.provisioning, { connectorType: type });
         })
         .value();
     }
@@ -204,9 +212,9 @@
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
         .then(extractDataFromResponse)
         .then(function (response) {
-          // only keep fused clusters
+          // only keep clusters that has a targetType (just to be on the safe side)
           return _.filter(response.clusters, function (cluster) {
-            return cluster.state ? cluster.state === 'fused' : true;
+            return cluster.targetType !== 'unknown';
           });
         })
         .then(function (clusters) {
@@ -214,14 +222,16 @@
           return {
             c_mgmt: clusterType('c_mgmt', clusters),
             c_ucmc: clusterType('c_ucmc', clusters),
-            c_cal: clusterType('c_cal', clusters)
+            c_cal: clusterType('c_cal', clusters),
+            hds_app: clusterType('hds_app', clusters)
           };
         })
         .then(function (clusters) {
           var result = {
             c_mgmt: addAggregatedData('c_mgmt', clusters.c_mgmt),
             c_ucmc: addAggregatedData('c_ucmc', clusters.c_ucmc),
-            c_cal: addAggregatedData('c_cal', clusters.c_cal)
+            c_cal: addAggregatedData('c_cal', clusters.c_cal),
+            hds_app: addAggregatedData('hds_app', clusters.hds_app)
           };
           return result;
         })
@@ -229,7 +239,8 @@
           var result = {
             c_mgmt: _.keyBy(clusters.c_mgmt, 'id'),
             c_ucmc: _.keyBy(clusters.c_ucmc, 'id'),
-            c_cal: _.keyBy(clusters.c_cal, 'id')
+            c_cal: _.keyBy(clusters.c_cal, 'id'),
+            hds_app: _.keyBy(clusters.hds_app, 'id')
           };
           return result;
         })
@@ -237,17 +248,8 @@
           CsdmCacheUpdater.update(clusterCache.c_mgmt, clusters.c_mgmt);
           CsdmCacheUpdater.update(clusterCache.c_ucmc, clusters.c_ucmc);
           CsdmCacheUpdater.update(clusterCache.c_cal, clusters.c_cal);
+          CsdmCacheUpdater.update(clusterCache.hds_app, clusters.hds_app);
           return clusterCache;
-        });
-    }
-
-    function getAll() {
-      return $http
-        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
-        .then(extractDataFromResponse)
-        .then(function (data) {
-          // only keep fused clusters
-          return _.filter(data.clusters, { state: 'fused' });
         });
     }
 

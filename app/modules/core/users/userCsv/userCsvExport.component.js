@@ -1,3 +1,5 @@
+require('./_user-csv.scss');
+
 (function () {
   'use strict';
 
@@ -15,7 +17,7 @@
 
   /////////////////
   /* @ngInject */
-  function UserCsvExportController($scope, $rootScope, $modal, $translate, $timeout, $window, $element, CsvDownloadService, Notification) {
+  function UserCsvExportController($scope, $rootScope, $modal, $translate, $timeout, $window, $element, Analytics, CsvDownloadService, Notification) {
     var vm = this;
 
     vm.$onInit = onInit;
@@ -71,6 +73,7 @@
     }
 
     function exportCsv() {
+      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.EXPORT_USER_LIST);
       $modal.open({
         type: 'dialog',
         templateUrl: 'modules/core/users/userCsv/userCsvExportConfirm.tpl.html'
@@ -175,13 +178,10 @@
 
         setAnchorData('', '');
 
-        var title = '<span class="toast-title">' + $translate.instant('userManage.bulk.exportSuccessTitle') + '</span>';
-        var str = $translate.instant('userManage.bulk.exportSuccessBody', {
+        Notification.success('userManage.bulk.exportSuccessBody', {
           type: csvType,
           filename: filename
-        });
-
-        Notification.notify([title, str], 'success');
+        }, 'userManage.bulk.exportSuccessTitle');
         $rootScope.$emit('csv-download-end');
       });
     }

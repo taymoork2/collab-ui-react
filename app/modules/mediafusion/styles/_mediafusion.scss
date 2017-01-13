@@ -3,9 +3,9 @@
  ************************************/
 
 @import '../mediaservice';
-@import '../media-service-v2/mediaservice';
 @import '../media-service-v2/add-resources/redirect-add-resource';
 @import '../media-service-v2/settings/settings';
 @import '../media-service-v2/delete-cluster/deletecluster';
 @import '../media-service-v2/side-panel/host-deregister-dialogStyle';
 @import '../metrics-graph-report/media-service-metrics-reports';
+@import '../media-service-report-v2/media-service-metrics-reports-v2';

@@ -1,9 +1,15 @@
 'use strict';
 
+var testModule = require('./auth');
+
 describe('Auth Service', function () {
-  beforeEach(angular.mock.module('core.auth'));
+  beforeEach(angular.mock.module(testModule));
 
   var Auth, Authinfo, $httpBackend, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig, WindowLocation, TokenService;
+
+  afterEach(function () {
+    Auth = Authinfo = $httpBackend = SessionStorage = $rootScope = $state = $q = OAuthConfig = UrlConfig = WindowLocation = TokenService = undefined;
+  });
 
   beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _SessionStorage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
     $q = _$q_;
@@ -20,6 +26,15 @@ describe('Auth Service', function () {
 
     spyOn(WindowLocation, 'set');
     spyOn($state, 'go').and.returnValue($q.when());
+
+    this.orgInfo = {
+      orgSettingsWithDomain: {
+        orgSettings: [
+          '{"sparkCallBaseDomain":"sparkc-eu.com"}',
+        ],
+      }
+    };
+
   }));
 
   afterEach(function () {
@@ -180,15 +195,26 @@ describe('Auth Service', function () {
       spyOn(TokenService, 'completeLogout');
     });
 
-    it('should refresh token and resend request', function () {
+    beforeEach(function () {
+      jasmine.clock().install();
+      jasmine.clock().mockDate();
+    });
+
+    afterEach(function () {
+      jasmine.clock().uninstall();
+    });
+
+    it('should refresh token and resend request with new access token', function () {
       $httpBackend
         .expectPOST('access_token_url')
         .respond(200, {
-          access_token: ''
+          access_token: 'new-access-token'
         });
 
       $httpBackend
-        .expectGET('foo')
+        .expectGET('foo', function (headers) {
+          return headers.Authorization === 'Bearer new-access-token';
+        })
         .respond(200, {
           bar: 'baz'
         });
@@ -208,6 +234,14 @@ describe('Auth Service', function () {
       }));
     });
 
+    it('should refresh token once if multiple retries requested during a 1 second span', function () {
+      expectRefreshCountFromTwoRetriesOverSpan(1, 999);
+    });
+
+    it('should refresh token multiple times if multiple retries requested after a 1 second span', function () {
+      expectRefreshCountFromTwoRetriesOverSpan(2, 1001);
+    });
+
     it('should not refresh token and resend request, should redirect to login', function () {
       OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
       $httpBackend
@@ -220,6 +254,44 @@ describe('Auth Service', function () {
       expect(promise).toBeRejectedWith(mockResponse(500));
       expect(TokenService.completeLogout).toHaveBeenCalledWith('logoutUrl');
     });
+
+    function expectRefreshCountFromTwoRetriesOverSpan(expectedRefreshCount, durationOfSpan) {
+      var refreshCount = 0;
+
+      $httpBackend
+        .whenPOST('access_token_url')
+        .respond(function () {
+          refreshCount += 1;
+          return [200];
+        });
+
+      $httpBackend
+        .expectGET('foo')
+        .respond(200);
+
+      Auth.refreshAccessTokenAndResendRequest({
+        config: {
+          method: 'GET',
+          url: 'foo'
+        }
+      });
+
+      jasmine.clock().tick(durationOfSpan);
+
+      $httpBackend
+        .expectGET('bar')
+        .respond(200);
+
+      Auth.refreshAccessTokenAndResendRequest({
+        config: {
+          method: 'GET',
+          url: 'bar'
+        }
+      });
+
+      $httpBackend.flush();
+      expect(refreshCount).toBe(expectedRefreshCount);
+    }
   });
 
   describe('setAccessToken()', function () {
@@ -263,6 +335,7 @@ describe('Auth Service', function () {
       OAuthConfig.getOauthDeleteRefreshTokenUrl = sinon.stub().returns('refreshtoken=');
       OAuthConfig.getClientId = sinon.stub().returns('ewvmpibn34inbr433f23f4');
       spyOn(TokenService, 'completeLogout');
+      spyOn(TokenService, 'getClientSessionId').and.returnValue('testSessionId123');
     });
 
     it('should delete access tokens, logout, and redirect to a provided url', function () {
@@ -276,7 +349,10 @@ describe('Auth Service', function () {
             client_id: 'ewvmpibn34inbr433f23f4',
             last_used_time: '2016-07-28 21:39:06',
             token_id: 'OauthDeleteRefreshTokenUrl',
-            client_name: 'Admin Portal'
+            client_name: 'Admin Portal',
+            user_info: {
+              client_session_id: 'testSessionId123',
+            },
           }]
         });
 
@@ -302,7 +378,10 @@ describe('Auth Service', function () {
             client_id: 'ewvmpibn34inbr433f23f4',
             last_used_time: '2016-07-28 21:39:06',
             token_id: 'OauthDeleteRefreshTokenUrl',
-            client_name: 'Admin Portal'
+            client_name: 'Admin Portal',
+            user_info: {
+              client_session_id: 'testSessionId123',
+            },
           }]
         });
 
@@ -314,6 +393,31 @@ describe('Auth Service', function () {
 
       $httpBackend.flush();
       expect(promise).toBeRejectedWith(mockResponse(500));
+      expect(TokenService.completeLogout).toHaveBeenCalledWith('customLogoutUrl');
+    });
+
+    it('should logout and redirect to a provided url even if we didnt match any refresh tokens on client_session_id', function () {
+      $httpBackend
+        .expectGET('OauthListTokenUrl')
+        .respond(200, {
+          total: 1,
+          data: [{
+            device_type: null,
+            create_time: '2016-07-28 21:39:06',
+            client_id: 'ewvmpibn34inbr433f23f4',
+            last_used_time: '2016-07-28 21:39:06',
+            token_id: 'OauthDeleteRefreshTokenUrl',
+            client_name: 'Admin Portal',
+            user_info: {
+              client_session_id: 'testSessionId123-not-correct',
+            },
+          }]
+        });
+
+      var promise = Auth.logoutAndRedirectTo('customLogoutUrl');
+
+      $httpBackend.flush();
+      expect(promise).toBeResolved();
       expect(TokenService.completeLogout).toHaveBeenCalledWith('customLogoutUrl');
     });
 
@@ -331,20 +435,25 @@ describe('Auth Service', function () {
   });
 
   describe('logout()', function () {
+    beforeEach(function () {
+      spyOn(TokenService, 'triggerGlobalLogout');
+    });
+
     it('should logout and redirect to the default logout url', function () {
       var logoutDefer = $q.defer();
       OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
       Auth.logoutAndRedirectTo = sinon.stub().returns(logoutDefer.promise);
       var promise = Auth.logout();
 
+      expect(TokenService.triggerGlobalLogout).not.toHaveBeenCalled(); // should not be called before logout (token revocation) is complete
       logoutDefer.resolve();
       expect(promise).toBeResolved();  // seems unnecessary, but should be the same promise returned from logoutAndRedirectTo()
       expect(Auth.logoutAndRedirectTo.calledWith('logoutUrl')).toBe(true);
+      expect(TokenService.triggerGlobalLogout).toHaveBeenCalled(); // should only be called after logout (token revocation)
     });
   });
 
   describe('authorize()', function () {
-
     beforeEach(function () {
       SessionStorage.get = sinon.stub();
       UrlConfig.getAdminServiceUrl = sinon.stub().returns('path/');
@@ -398,13 +507,17 @@ describe('Auth Service', function () {
             orgId: 1337,
             roles: ['Full_Admin']
           });
+
+        $httpBackend
+          .expectGET('path/organizations/1337?disableCache=true')
+          .respond(200, this.orgInfo.orgSettingsWithDomain);
+
       });
 
       it('services should be fetched', function () {
         $httpBackend
           .expectGET('path/organizations/1337/services')
           .respond(500, {});
-
         Auth.authorize();
 
         $httpBackend.flush();
@@ -448,9 +561,15 @@ describe('Auth Service', function () {
               sqService: 'bar'
             }]
           });
+
+        $httpBackend
+          .expectGET('path/organizations/1337?disableCache=true')
+          .respond(200, this.orgInfo.orgSettingsWithDomain);
+
         $httpBackend
           .expectGET('msn/orgs/1337/cisync/')
           .respond(200, {});
+
         Authinfo.initialize = sinon.stub();
       });
 
@@ -502,6 +621,11 @@ describe('Auth Service', function () {
               sqService: 'bar'
             }]
           });
+
+        $httpBackend
+          .expectGET('path/organizations/1337?disableCache=true')
+          .respond(200, this.orgInfo.orgSettingsWithDomain);
+
         $httpBackend
           .expectGET('msn/orgs/1337/cisync/')
           .respond(200, {});
@@ -539,6 +663,10 @@ describe('Auth Service', function () {
         });
 
       $httpBackend
+        .expectGET('path/organizations/1337?disableCache=true')
+        .respond(200, this.orgInfo.orgSettingsWithDomain);
+
+      $httpBackend
         .expectGET('msn/orgs/1337/cisync/')
         .respond(200, {
           orgID: 'foo',
@@ -568,6 +696,10 @@ describe('Auth Service', function () {
           roles: ['Full_Admin'],
           services: []
         });
+
+      $httpBackend
+        .expectGET('path/organizations/1337?disableCache=true')
+        .respond(200, this.orgInfo.orgSettingsWithDomain);
 
       $httpBackend
         .expectGET('path/organizations/1337/services')
@@ -607,11 +739,14 @@ describe('Auth Service', function () {
         });
 
       $httpBackend
+        .expectGET('path/organizations/1337?disableCache=true')
+        .respond(200, this.orgInfo.orgSettingsWithDomain);
+
+      $httpBackend
         .expectGET('path/organizations/1337/services')
         .respond(200, {
           entitlements: ['foo']
         });
-
       $httpBackend
         .expectGET('msn/orgs/1337/cisync/')
         .respond(200, {
@@ -642,6 +777,10 @@ describe('Auth Service', function () {
           roles: ['PARTNER_ADMIN'],
           services: []
         });
+
+      $httpBackend
+        .expectGET('path/organizations/1337?disableCache=true')
+        .respond(200, this.orgInfo.orgSettingsWithDomain);
 
       $httpBackend
         .expectGET('path/organizations/1337/services')

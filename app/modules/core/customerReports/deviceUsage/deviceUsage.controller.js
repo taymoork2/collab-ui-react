@@ -1,3 +1,6 @@
+require('./_device-usage.scss');
+require('modules/core/reports/amcharts-export.scss');
+
 (function () {
   'use strict';
 
@@ -6,10 +9,53 @@
     .controller('DeviceUsageCtrl', DeviceUsageCtrl);
 
   /* @ngInject */
-  function DeviceUsageCtrl($log, $translate, $state, $scope, DeviceUsageTotalService, Notification, deviceUsageFeatureToggle, DeviceUsageCommonService) {
+  function DeviceUsageCtrl($log, $q, $translate, $scope, DeviceUsageTotalService, DeviceUsageExportService, Notification, DeviceUsageSplunkMetricsService, ReportConstants, deviceUsageFeatureToggle, $state, $modal) {
     var vm = this;
     var amChart;
-    var apiToUse = 'mock';
+    var apiToUse = 'backend';
+    var missingDays;
+    var dateRange;
+
+    if (!deviceUsageFeatureToggle) {
+      // simulate a 404
+      $log.warn("State not allowed.");
+      $state.go('login');
+    }
+
+    // Models Selection
+    vm.modelsSelected = [];
+    vm.modelOptions = [];
+    // Will have format ala this.
+    /*
+    vm.modelOptions = [
+      {
+        'value': 'Cisco TelePresence SX10',
+        'label': 'Cisco TelePresence SX10',
+        isSelected: false
+      },
+      {
+        'value': 'Cisco TelePresence MX200 G2',
+        'label': 'Cisco TelePresence MX200 G2',
+        isSelected: false
+      },
+      {
+        'value': 'Cisco Spark Board 55',
+        'label': 'Cisco Spark Board 55',
+        isSelected: false
+      },
+      {
+        'value': 'Cisco TelePresence DX70',
+        'label': 'Cisco TelePresence DX70',
+        isSelected: false
+      },
+      {
+        'value': 'Cisco TelePresence DX80',
+        'label': 'Cisco TelePresence DX80',
+        isSelected: false
+      }
+    ];
+    */
+    vm.selectModelsPlaceholder = 'Select models to filter on';
 
     vm.leastUsedDevices = [];
     vm.mostUsedDevices = [];
@@ -20,9 +66,43 @@
 
     vm.loading = true;
     vm.exporting = false;
+    vm.noDataForRange = false;
 
-    var dateRange;
-    vm.exportRawData = exportRawData;
+    vm.init = init;
+    vm.timeUpdate = timeUpdate;
+
+    vm.tabs = [
+      {
+        title: $translate.instant('reportsPage.usageReports.all'),
+        state: 'reports.device-usage'
+      }
+    ];
+
+    vm.timeOptions = _.cloneDeep(ReportConstants.TIME_FILTER);
+    vm.timeSelected = vm.timeOptions[0];
+
+    function timeUpdate() {
+      vm.modelsSelected = [];
+      vm.modelOptions = [];
+      DeviceUsageSplunkMetricsService.reportOperation(DeviceUsageSplunkMetricsService.eventTypes.timeRangeSelected, vm.timeSelected);
+      vm.deviceFilter = vm.deviceOptions[0];
+      switch (vm.timeSelected.value) {
+        case 0:
+          loadLastWeek();
+          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
+          break;
+        case 1:
+          loadLastMonth();
+          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(4, 'week');
+          break;
+        case 2:
+          loadLast3Months();
+          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(3, 'month');
+          break;
+        default:
+          loadLastWeek();
+      }
+    }
 
     vm.deviceOptions = [
       {
@@ -50,7 +130,7 @@
           loadChartDataForDeviceType(extractDeviceType('ce'));
           break;
         case 2:
-          loadChartDataForDeviceType(extractDeviceType('sparkboard'));
+          loadChartDataForDeviceType(extractDeviceType('SparkBoard'));
           break;
       }
     };
@@ -73,22 +153,35 @@
         }
         return result;
       }, {}).map(function (value, key) {
-        value.totalDuration = (value.totalDuration / 60).toFixed(2);
+        value.totalDuration = (value.totalDuration / 3600).toFixed(2);
         value.time = key;
         return value;
       }).value();
-      $log.info('extractDeviceType extract', extract);
+      //$log.info('extractDeviceType extract', extract);
       return extract;
     }
 
-    if (!deviceUsageFeatureToggle) {
-      // simulate a 404
-      $state.go('login');
+    $scope.$watch(function () {
+      return angular.element('#device-usage-total-chart').is(':visible');
+    }, init);
+
+    function init() {
+      var chart = DeviceUsageTotalService.getLineChart();
+      chart.startEffect = 'easeInSine';
+      chart.startDuration = 0.5;
+      chart.zoomOutOnDataUpdate = true;
+      chart.listeners = [
+        { event: 'rollOverGraphItem', method: rollOverGraphItem },
+        { event: 'rollOutGraphItem', method: rollOutGraphItem },
+        { event: 'dataUpdated', method: graphRendered },
+        { event: 'clickGraphItem', method: graphClick }
+      ];
+      amChart = DeviceUsageTotalService.makeChart('device-usage-total-chart', chart);
+      loadInitData();
     }
 
-    $scope.$on('time-range-changed', function (event, timeSelected) {
-      vm.deviceFilter = vm.deviceOptions[0];
-      switch (timeSelected.value) {
+    function loadInitData() {
+      switch (vm.timeSelected.value) {
         case 0:
           loadLastWeek();
           dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
@@ -99,50 +192,11 @@
           break;
         case 2:
           loadLast3Months();
-          dateRange = DeviceUsageTotalService.getDateRangeForPeriod(3, 'month');
-          break;
-        default:
-          loadLastWeek();
-      }
-    });
-
-    $scope.$watch(function () {
-      return angular.element('#device-usage-total-chart').is(':visible');
-    }, init);
-
-    function init() {
-      var chart = DeviceUsageTotalService.getLineChart();
-      chart.listeners = [
-      { event: 'rollOverGraphItem', method: rollOverGraphItem },
-      { event: 'rollOutGraphItem', method: rollOutGraphItem },
-      { event: 'dataUpdated', method: graphRendered }
-      ];
-
-      amChart = AmCharts.makeChart('device-usage-total-chart', chart);
-      _.each(amChart.graphs, function (graph) {
-        graph.balloonFunction = renderBalloon;
-      });
-      loadInitData();
-    }
-
-
-    function loadInitData() {
-      switch (DeviceUsageCommonService.getTimeSelected()) {
-        case 0:
-          DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
-          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
-          break;
-        case 1:
-          DeviceUsageTotalService.getDataForLastNTimeUnits(4, 'week', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
-          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(4, 'week');
-          break;
-        case 2:
-          DeviceUsageTotalService.getDataForLastMonths(3, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
-          dateRange = DeviceUsageTotalService.getDateRangeForPeriod(3, 'month');
+          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(3, 'month');
           break;
         default:
           $log.warn("Unknown time period selected");
-          DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          loadLastWeek();
           dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
       }
 
@@ -150,6 +204,10 @@
 
     function graphRendered() {
       vm.loading = false;
+    }
+
+    function graphClick() {
+      DeviceUsageSplunkMetricsService.reportOperation(DeviceUsageSplunkMetricsService.eventTypes.graphClick);
     }
 
     function handleReject(reject) {
@@ -162,17 +220,28 @@
       }
       amChart.dataProvider = [];
       amChart.validateData();
-      vm.dateRange = '';
+      dateRange = '';
       Notification.notify(errors, 'error');
     }
 
     function loadChartData(data, title) {
+      if (data.length === 0) {
+        vm.noDataForRange = true;
+        var warning = 'No report data available for : \n' + dateRange.start + ' to ' + dateRange.end;
+        Notification.notify([warning], 'warning');
+      } else {
+        vm.noDataForRange = false;
+      }
       vm.reportData = data;
       amChart.dataProvider = data;
       if (title) {
         amChart.categoryAxis.title = title;
+        if (missingDays) {
+          amChart.categoryAxis.title += missingDays;
+        }
       }
       amChart.validateData();
+      amChart.animateAgain();
       vm.showDevices = false;
       fillInStats(data);
     }
@@ -183,24 +252,41 @@
     }
 
     function loadLastWeek() {
+      missingDays = null;
+      var missingDaysDeferred = $q.defer();
+      missingDaysDeferred.promise.then(handleMissingDays);
       vm.loading = true;
-      DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(function (data) {
+      DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse, missingDaysDeferred).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last7Days'));
       }, handleReject);
     }
 
     function loadLastMonth() {
+      missingDays = null;
+      var missingDaysDeferred = $q.defer();
+      missingDaysDeferred.promise.then(handleMissingDays);
       vm.loading = true;
-      DeviceUsageTotalService.getDataForLastNTimeUnits(4, 'week', ['ce', 'sparkboard'], apiToUse).then(function (data) {
+      DeviceUsageTotalService.getDataForLastNTimeUnits(4, 'week', ['ce', 'sparkboard'], apiToUse, missingDaysDeferred).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last4Weeks'));
       }, handleReject);
     }
 
     function loadLast3Months() {
+      missingDays = null;
+      var missingDaysDeferred = $q.defer();
+      missingDaysDeferred.promise.then(handleMissingDays);
       vm.loading = true;
-      DeviceUsageTotalService.getDataForLastMonths(3, 'month', ['ce', 'sparkboard'], apiToUse).then(function (data) {
+      DeviceUsageTotalService.getDataForLastNTimeUnits(3, 'month', ['ce', 'sparkboard'], apiToUse, missingDaysDeferred).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last3Months'));
       }, handleReject);
+    }
+
+    function handleMissingDays(info) {
+      //$log.info('missingDays', info);
+      var nbrOfMissingDays = info.missingDays.length;
+      var warning = $translate.instant('reportsPage.usageReports.missingDays', { nbrOfMissingDays: nbrOfMissingDays }); //' (Data missing for ' + nbrOfMissingDays + ' days)';
+      missingDays = warning;
+      //Notification.notify([warning], 'warning');
     }
 
     function rollOverGraphItem(event) {
@@ -214,71 +300,97 @@
       $scope.$apply();
     }
 
-    function renderBalloon(graphDataItem) {
-      var text = '<div><h5>' + $translate.instant('reportsPage.usageReports.callDuration') + ' : ' + graphDataItem.dataContext.totalDuration + '</h5>';
-      text = text + $translate.instant('reportsPage.usageReports.callCount') + ' : ' + graphDataItem.dataContext.callCount + ' <br/> ';
-      text = text + $translate.instant('reportsPage.usageReports.pairedCount') + ' : ' + graphDataItem.dataContext.pairedCount + '<br/>';
-      return text;
-    }
-
     function fillInStats(data) {
       var stats = DeviceUsageTotalService.extractStats(data);
-      vm.totalDuration = formatSecondsToHrsMinSec(stats.totalDuration);
+      vm.totalDuration = secondsTohhmmss(stats.totalDuration);
       vm.noOfCalls = stats.noOfCalls;
       vm.noOfDevices = stats.noOfDevices;
 
-      DeviceUsageTotalService.resolveDeviceData(stats.most)
-        .then(function (deviceInfo) {
-          vm.mostUsedDevices = [];
-          _.each(stats.most, function (topDevice, index) {
-            vm.mostUsedDevices.push({ "name": deviceInfo[index].displayName, "duration": formatSecondsToHrsMinSec(topDevice.totalDuration), "calls": topDevice.callCount });
-          });
-        });
+      vm.mostUsedDevices = [];
+      vm.leastUsedDevices = [];
 
-      DeviceUsageTotalService.resolveDeviceData(stats.least)
+      resolveDeviceData(stats.most, vm.mostUsedDevices)
+        .then(resolveDeviceData(stats.least, vm.leastUsedDevices));
+    }
+
+    function resolveDeviceData(stats, target) {
+      return DeviceUsageTotalService.resolveDeviceData(stats)
         .then(function (deviceInfo) {
-          vm.leastUsedDevices = [];
-          _.each(stats.least, function (bottomDevice, index) {
-            vm.leastUsedDevices.push({ "name": deviceInfo[index].displayName, "duration": formatSecondsToHrsMinSec(bottomDevice.totalDuration), "calls": bottomDevice.callCount });
+          _.each(stats, function (device, index) {
+            target.push({ "name": deviceInfo[index].displayName, "duration": secondsTohhmmss(device.totalDuration), "calls": device.callCount });
           });
         });
     }
 
-    function pad(num, size) {
-      var s = "00000000" + num;
-      return s.substr(s.length - size);
-    }
+    function secondsTohhmmss(totalSeconds) {
+      var hours = Math.floor(totalSeconds / 3600);
+      var minutes = Math.floor((totalSeconds - (hours * 3600)) / 60);
+      var seconds = totalSeconds - (hours * 3600) - (minutes * 60);
 
-    function formatSecondsToHrsMinSec(sec) {
-      var hours = parseInt(sec / 3600, 10);
-      var minutes = parseInt((sec - (hours * 3600)) / 60, 10);
-      var seconds = Math.floor((sec - ((hours * 3600) + (minutes * 60))));
+      // round seconds
+      seconds = Math.round(seconds * 100) / 100;
+
+      var result = hours > 0 ? hours + 'h ' : '';
       if (hours > 99) {
-        return hours + "h ";
-      } else if (hours > 9) {
-        return hours + "h " + pad(minutes, 2) + "m";
-      } else if (hours >= 1) {
-        return pad(hours, 2) + "h " + pad(minutes, 2) + "m";
-      } else if (minutes > 10) {
-        return pad(minutes, 2) + "m";
-      } else if (minutes > 1) {
-        return pad(minutes, 2) + "m " + pad(seconds, 2) + "s";
-      } else {
-        return "    " + pad(seconds, 2) + "s";
+        return result;
       }
+      result += minutes > 0 ? minutes + 'm ' : '';
+      result += hours < 10 ? seconds + 's' : '';
+      return result;
     }
 
-    function exportRawData() {
-      vm.exporting = true;
-      $log.info("Exporting data for range", dateRange);
-      DeviceUsageTotalService.exportRawData(dateRange.start, dateRange.end).then(function () {
-        $log.info("export finished");
-        vm.exporting = false;
-      })
-      .catch(function (err) {
-        $log.warn("Export failed", err);
+    var exportProgressDialog;
+    vm.openExportProgressTracker = function () {
+      exportProgressDialog = $modal.open({
+        templateUrl: 'modules/core/customerReports/deviceUsage/deviceUsageExport/devices-usage-export-progress.html',
+        type: 'dialog',
+        controller: function () {
+          var vm = this;
+          vm.cancelExport = function () {
+            DeviceUsageExportService.cancelExport();
+          };
+        },
+        controllerAs: 'vm',
       });
-    }
+      exportProgressDialog.opened.then(function () {
+        vm.exporting = true;
+        exportStarted = moment();
+        DeviceUsageExportService.exportData(dateRange.start, dateRange.end, apiToUse, vm.exportStatus);
+      });
+    };
+
+    vm.startDeviceUsageExport = function () {
+      $modal.open({
+        templateUrl: "modules/core/customerReports/deviceUsage/deviceUsageExport/devices-usage-export.html",
+        type: 'dialog'
+      }).result.then(function () {
+        vm.openExportProgressTracker();
+      }, function () {
+        vm.exporting = false;
+      });
+    };
+
+    var exportStarted;
+    vm.exportStatus = function (percent) {
+      if (percent === 100) {
+        exportProgressDialog.close();
+        var now = moment();
+        var data = {
+          timeSelected: vm.timeSelected,
+          duration: now.diff(exportStarted).valueOf()
+        };
+        DeviceUsageSplunkMetricsService.reportOperation(DeviceUsageSplunkMetricsService.eventTypes.fullReportDownload, data);
+        vm.exporting = false;
+        var title = $translate.instant('reportsPage.usageReports.export.exportCompleted');
+        var text = $translate.instant('reportsPage.usageReports.export.deviceUsageListReadyForDownload');
+        Notification.success(text, title);
+      } else if (percent === -1) {
+        exportProgressDialog.close();
+        vm.exporting = false;
+        var warn = $translate.instant('reportsPage.usageReports.export.deviceUsageExportFailedOrCancelled');
+        Notification.warning(warn);
+      }
+    };
 
   }
 

@@ -1,5 +1,10 @@
 @import 'reportCard/_report-card';
 @import 'reportFilter/_report-filter';
+@import 'reportSlider/_report-slider';
+
+@import 'styles/toolkit/fonts';
+@import 'styles/toolkit/layout';
+@import 'styles/toolkit/spacing';
 
 @keyframes graphAxisFade {
   0% {

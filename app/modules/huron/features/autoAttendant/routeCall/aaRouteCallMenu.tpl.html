@@ -1,5 +1,4 @@
-
-<div class="aa-flex-row aa-route-call">
+<div class="row aa-flex-row aa-route-call">
   <div class="aa-route-call-select">
     <cs-select ng-model="aaRouteCallMenu.selected" options="aaRouteCallMenu.options" labelfield="label" valuefield="value" placeholder="aaRouteCallMenu.actionPlaceholder" icon="icon-chevron-down" filter="false">
     </cs-select>
@@ -7,7 +6,7 @@
   <aa-help content=" {{ :: 'autoAttendant.routeCallPopover' | translate }} " metric="Route-Call-Choose-Action"></aa-help>
 </div>
 
-<div class="aa-flex-row">
+<div class="row aa-flex-row">
   <div class="aa-route-call-select">
     <div ng-switch="aaRouteCallMenu.selected.value" class="aa-route-action">
       <aa-route-to-aa ng-switch-when="goto" aa-schedule="{{schedule}}" aa-from-route-call="true" aa-index="index"></aa-route-to-aa>
@@ -15,6 +14,7 @@
       <aa-route-to-user ng-switch-when="routeToVoiceMail"  voicemail=true aa-schedule="{{schedule}}" aa-index="index" aa-from-route-call="true"></aa-route-to-user>
       <aa-route-to-user ng-switch-when="routeToUser"  aa-schedule="{{schedule}}" aa-index="index" aa-from-route-call="true"></aa-route-to-user>
       <aa-route-to-ext-num ng-switch-when="route" aa-schedule="{{schedule}}" aa-from-route-call="true" aa-index="index"></aa-route-to-ext-num>
+      <aa-route-to-queue ng-switch-when="routeToQueue" aa-schedule="{{schedule}}" aa-from-route-call="true" aa-index="index" aa-queues="{{aaRouteCallMenu.queues}}"></aa-route-to-queue>
     </div>
   </div>
 </div>

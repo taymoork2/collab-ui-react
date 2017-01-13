@@ -1,4 +1,4 @@
-/* globals LONG_TIMEOUT, manageUsersPage */
+/* globals LONG_TIMEOUT, manageUsersPage fdescribe */
 
 'use strict';
 
@@ -31,62 +31,15 @@ describe('Squared Add User Flow', function () {
 
   //////////////////////////
 
-  xdescribe('Add users through modal', function () {
-    it('should login as pbr org admin and view users', function () {
-      login.login('pbr-admin', '#/users')
-        .then(function (bearerToken) {
-          token = bearerToken;
-        });
-    });
-
-    it('click on add button should pop up the adduser modal', function () {
-      utils.click(users.addUsers);
-      utils.expectIsDisplayed(users.manageDialog);
-      utils.expectIsDisplayed(users.nextButton);
-      utils.expectIsNotDisplayed(users.onboardButton);
-      utils.expectIsNotDisplayed(users.entitleButton);
-      utils.expectIsNotDisplayed(users.addButton);
-    });
-
-    it('should add users successfully', function () {
-      manuallyAddUsers();
-
-      utils.expectIsDisplayed(users.finishButton);
-      utils.click(users.finishButton);
-      utils.expectIsNotDisplayed(users.manageDialog);
-    });
-
-    it('should show add pending status on new user 1', function () {
-      utils.search(inviteEmail);
-      utils.expectText(users.userListStatus, 'Invite Pending');
-    });
-
-    it('should resend user invitation to pending user', function () {
-      utils.click(users.userListAction);
-      utils.click(users.resendInviteOption);
-      notifications.assertSuccess('Email sent successfully');
-    });
-
-    it('should show invite pending status on new user 2', function () {
-      utils.search(inviteEmail2);
-      utils.expectText(users.userListStatus, 'Invite Pending');
-    });
-
-    afterAll(function () {
-      deleteUtils.deleteUser(inviteEmail, token);
-      deleteUtils.deleteUser(inviteEmail2, token);
-    });
-
-  });
-
-  //////////////////////////
-
   describe('Add users through first-time setup wizard', function () {
 
     var appWindow;
 
     it('should login as partner', function () {
-      login.login('partner-admin', '#/partner/overview');;
+      login.login('partner-admin', '#/partner/overview')
+        .then(function (bearerToken) {
+          token = bearerToken;
+        });
     });
 
     it('should display correct navigation colors', function () {
@@ -169,7 +122,7 @@ describe('Squared Add User Flow', function () {
       browser.switchTo().window(appWindow);
 
       // make sure we delete the partner org we created
-      utils.click(partner.trialFilter);
+      //utils.click(partner.trialFilter);
       utils.search(partner.newTrial.customerName, -1);
       utils.click(partner.newTrialRow);
       utils.expectIsDisplayed(partner.previewPanel);
@@ -182,7 +135,61 @@ describe('Squared Add User Flow', function () {
         });
       });
 
+      navigation.logout();
+
     });
 
   });
+
+  ////////////////////////////
+
+  describe('Add users through modal', function () {
+    it('should login as pbr org admin and view users', function () {
+      login.login('pbr-admin', '#/users')
+        .then(function (bearerToken) {
+          token = bearerToken;
+        });
+    });
+
+    it('should open the Manage Users->Manually add users modal', function () {
+      utils.click(navigation.usersTab);
+      utils.click(manageUsersPage.buttons.manageUsers);
+      utils.expectTextToBeSet(manageUsersPage.select.title, 'Add or Modify Users');
+      utils.click(manageUsersPage.select.radio.orgManual);
+      utils.click(manageUsersPage.buttons.next);
+      utils.expectTextToBeSet(manageUsersPage.select.title, 'Manually Add or Modify Users');
+    });
+
+    it('should add users successfully', function () {
+      manuallyAddUsers();
+
+      utils.expectIsDisplayed(users.finishButton);
+      utils.click(users.finishButton);
+      utils.expectIsNotDisplayed(users.manageDialog);
+    });
+
+    it('should show add pending status on new user 1', function () {
+      utils.search(inviteEmail);
+      utils.expectText(users.userListStatus, 'Invite Pending');
+    });
+
+    it('should resend user invitation to pending user', function () {
+      utils.click(users.userListAction);
+      utils.click(users.resendInviteOption);
+      notifications.assertSuccess('Email sent successfully');
+    });
+
+    it('should show invite pending status on new user 2', function () {
+      utils.search(inviteEmail2);
+      utils.expectText(users.userListStatus, 'Invite Pending');
+    });
+
+    afterAll(function () {
+      deleteUtils.deleteUser(inviteEmail, token);
+      deleteUtils.deleteUser(inviteEmail2, token);
+    });
+
+
+  });
+
 });

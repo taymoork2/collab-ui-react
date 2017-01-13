@@ -6,9 +6,19 @@
       </cs-searchfilter>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <button class="btn btn--people add-button" ng-click="sc.startAddDeviceFlow()">
+      <span
+        ng-if="sc.deviceExportFeature"
+        class="icon icon-download export-button"
+        ng-click="sc.startDeviceExport()"
+        ng-hide="sc.exporting">
+      </span>
+      <button
+        class="btn btn--people add-button"
+        ng-click="sc.startAddDeviceFlow()"
+        ng-disabled="sc.addDeviceIsDisabled">
         <span translate="spacesPage.addBtn"></span>
       </button>
+
     </cs-page-sub-header-right>
   </cs-page-sub-header>
   <div class="content-container" >

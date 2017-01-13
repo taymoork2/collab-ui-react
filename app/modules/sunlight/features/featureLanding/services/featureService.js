@@ -10,9 +10,11 @@
 
     var service = {
       getChatTemplates: getChatTemplates,
+      getCallbackTemplates: getCallbackTemplates,
+      getTemplate: getTemplate,
       formatChatTemplates: formatChatTemplates,
-      deleteChatTemplate: deleteChatTemplate,
-      getChatTemplate: getChatTemplate,
+      formatCallbackTemplates: formatCallbackTemplates,
+      deleteTemplate: deleteTemplate,
       filterCards: filterCards
     };
 
@@ -25,14 +27,21 @@
       }).$promise;
     }
 
-    function deleteChatTemplate(templateId) {
+    function getCallbackTemplates() {
+      return ConfigTemplateService.query({
+        orgId: Authinfo.getOrgId(),
+        mediaType: 'callback'
+      }).$promise;
+    }
+
+    function deleteTemplate(templateId) {
       return ConfigTemplateService.delete({
         orgId: Authinfo.getOrgId(),
         templateId: templateId
       }).$promise;
     }
 
-    function getChatTemplate(templateId) {
+    function getTemplate(templateId) {
       return ConfigTemplateService.get({
         orgId: Authinfo.getOrgId(),
         templateId: templateId
@@ -56,8 +65,19 @@
 
     function formatChatTemplates(list) {
       var formattedList = _.map(list, function (tpl) {
-        tpl.featureType = 'CT';
+        tpl.featureType = 'Ch';
         tpl.color = 'attention';
+
+        return tpl;
+      });
+      return orderByCardName(formattedList);
+    }
+
+    function formatCallbackTemplates(list) {
+      var formattedList = _.map(list, function (tpl) {
+        tpl.featureType = 'Ca';
+        tpl.color = 'alerts';
+
         return tpl;
       });
       return orderByCardName(formattedList);

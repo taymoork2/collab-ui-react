@@ -4,6 +4,13 @@ describe('Template: planReview', function () {
   var $scope, $controller, $httpBackend, controller, $q, $templateCache, $compile, view;
   var FeatureToggleService, Userservice, UrlConfig, getUserMe;
 
+  afterEach(function () {
+    if (view) {
+      view.remove();
+    }
+    view = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
@@ -45,6 +52,7 @@ describe('Template: planReview', function () {
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasSMPGetStatus').and.returnValue($q.when(false));
     getUserMe = getJSONFixture('core/json/users/me.json');
 
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {

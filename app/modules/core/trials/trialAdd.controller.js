@@ -20,13 +20,12 @@
 
     vm.trialData = TrialService.getData();
     $scope.trialData = vm.trialData;
-    vm.nameError = false;
-    vm.emailError = false;
     vm.uniqueName = false;
     vm.uniqueEmail = false;
     vm.customerOrgId = undefined;
     vm.showRoomSystems = false;
     vm.showCare = false;
+    vm.isCallBackEnabled = false;
     vm.details = vm.trialData.details;
     vm.messageTrial = vm.trialData.trials.messageTrial;
     vm.meetingTrial = vm.trialData.trials.meetingTrial;
@@ -58,7 +57,6 @@
     // Navigate trial modal in this order
     vm.navOrder = ['trialAdd.info', 'trialAdd.webex', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call'];
     vm.navStates = ['trialAdd.info'];
-    vm.showWebex = false;
     vm.startTrial = startTrial;
     vm.setDeviceModal = setDeviceModal;
     vm.devicesModal = _.find(vm.trialStates, {
@@ -220,9 +218,6 @@
         id: webexTemplateOptionId,
         label: $translate.instant('trials.webex')
       },
-      hideExpression: function () {
-        return !vm.showWebex;
-      },
     }];
 
     vm.callFields = [{
@@ -350,10 +345,11 @@
       },
       expressionProperties: {
         'templateOptions.required': function () {
-          return vm.messageTrial.enabled; // Since, it depends on Message Offer
+          return (vm.messageTrial.enabled && (!vm.isCallBackEnabled || vm.callTrial.enabled)); // Since, it depends on Message and Call Offer
         },
         'templateOptions.disabled': function () {
-          return vm.messageOfferDisabledExpression();
+          return vm.messageOfferDisabledExpression()
+            || (vm.isCallBackEnabled && vm.callOfferDisabledExpression());
         }
       }
     }, {
@@ -375,6 +371,9 @@
           return vm.careLicenseInputDisabledExpression();
         }
       },
+      modelOptions: {
+        allowInvalid: true
+      },
       validators: {
         quantity: {
           expression: function ($viewValue, $modelValue) {
@@ -382,6 +381,16 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialCareQuantity');
+          }
+        }
+      },
+      watcher: {
+        expression: function () {
+          return vm.details.licenseCount;
+        },
+        listener: function (field, newValue, oldValue) {
+          if (newValue !== oldValue) {
+            field.formControl.$validate();
           }
         }
       }
@@ -397,6 +406,9 @@
         inputClass: 'medium-5',
         type: 'number',
         secondaryLabel: $translate.instant('trials.users'),
+      },
+      modelOptions: {
+        allowInvalid: true
       },
       expressionProperties: {
         'templateOptions.required': function () {
@@ -417,7 +429,7 @@
       validators: {
         count: {
           expression: function ($viewValue, $modelValue) {
-            return !vm.licenseCountFields.enabled || ValidationService.trialLicenseCount($viewValue, $modelValue);
+            return !hasUserServices() || ValidationService.trialLicenseCount($viewValue, $modelValue);
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
@@ -429,6 +441,16 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.careLicenseCountExceedsTotalCount');
+          }
+        }
+      },
+      watcher: {
+        expression: function () {
+          return vm.careTrial.details.quantity;
+        },
+        listener: function (field, newValue, oldValue) {
+          if (newValue !== oldValue) {
+            field.formControl.$validate();
           }
         }
       }
@@ -462,6 +484,7 @@
     vm.hasUserServices = hasUserServices;
 
     vm.messageOfferDisabledExpression = messageOfferDisabledExpression;
+    vm.callOfferDisabledExpression = callOfferDisabledExpression;
     vm.careLicenseInputDisabledExpression = careLicenseInputDisabledExpression;
     vm.validateCareLicense = validateCareLicense;
     vm.careLicenseCountLessThanTotalCount = careLicenseCountLessThanTotalCount;
@@ -472,32 +495,32 @@
 
     function init() {
       $q.all({
-        atlasWebexTrials: FeatureToggleService.atlasWebexTrialsGetStatus(),
         atlasCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
+        atlasCareCallbackTrials: FeatureToggleService.atlasCareCallbackTrialsGetStatus(),
         atlasContextServiceTrials: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
-        placesEnabled: FeatureToggleService.supports(FeatureToggleService.features.csdmPstn)
+        placesEnabled: FeatureToggleService.supports(FeatureToggleService.features.csdmPstn),
+        atlasCreateTrialBackendEmail: FeatureToggleService.atlasCreateTrialBackendEmailGetStatus(),
+        atlasTrialsShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus()
       })
         .then(function (results) {
           vm.showRoomSystems = true;
           vm.roomSystemTrial.enabled = true;
           vm.sparkBoardTrial.enabled = results.atlasDarling;
-          vm.webexTrial.enabled = results.atlasWebexTrials;
+          vm.webexTrial.enabled = true; // TODO: we enable globally by defaulting to 'true' here, but will revisit and refactor codepaths in a subsequent PR
           vm.callTrial.enabled = vm.hasCallEntitlement;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;
           vm.messageTrial.enabled = true;
           vm.meetingTrial.enabled = true;
           vm.showContextServiceTrial = true;
-
-          if (vm.webexTrial.enabled) {
-            vm.showWebex = true;
-            updateTrialService(messageTemplateOptionId);
-          }
+          vm.atlasCreateTrialBackendEmailEnabled = results.atlasCreateTrialBackendEmail;
+          vm.atlasTrialsShipDevicesEnabled = results.atlasTrialsShipDevices;
+          updateTrialService(messageTemplateOptionId);
 
           vm.showCare = results.atlasCareTrials;
           vm.careTrial.enabled = results.atlasCareTrials;
           vm.sbTrial = results.atlasDarling;
-
+          vm.isCallBackEnabled = results.atlasCareCallbackTrials;
           // TODO: US12063 overrides using this var but requests code to be left in for now
           //var devicesModal = _.find(vm.trialStates, {
           //  name: 'trialAdd.call'
@@ -514,7 +537,9 @@
 
           pstnModal.enabled = vm.pstnTrial.enabled;
           emergAddressModal.enabled = vm.pstnTrial.enabled;
-          meetingModal.enabled = results.atlasWebexTrials;
+          // TODO: we enable globally by defaulting to 'true' here, but will revisit and refactor codepaths in a subsequent PR
+
+          meetingModal.enabled = true;
 
           vm.placesEnabled = results.placesEnabled;
           setDeviceModal();
@@ -548,6 +573,13 @@
         vm.careTrial.enabled = false;
       }
       return !vm.messageTrial.enabled;
+    }
+
+    function callOfferDisabledExpression() {
+      if (!vm.callTrial.enabled) {
+        vm.careTrial.enabled = false;
+      }
+      return !vm.callTrial.enabled;
     }
 
     function careLicenseInputDisabledExpression() {
@@ -693,20 +725,14 @@
     }
 
     function startTrial(addNumbersCallback) {
-      vm.nameError = false;
-      vm.emailError = false;
       vm.loading = true;
       sendToAnalytics(Analytics.sections.TRIAL.eventNames.START_TRIAL);
 
       return TrialService.startTrial()
         .catch(function (response) {
-          vm.loading = false;
-          Notification.notify([response.data.message], 'error');
-          if ((response.data.message).indexOf('Org') > -1) {
-            vm.nameError = true;
-          } else if ((response.data.message).indexOf('Admin User') > -1) {
-            vm.emailError = true;
-          }
+          Notification.errorResponse(response, 'trialModal.addError', {
+            customerName: vm.details.customerName
+          });
           return $q.reject(response);
         })
         .then(function (response) {
@@ -714,13 +740,13 @@
           return response;
         })
         .then(function (response) {
-          // suppress email if 'atlas-webex-trial' feature-toggle is enabled (more appropriately
+          // suppress email if webex trial is enabled (more appropriately
           // handled by the backend process once provisioning is complete)
-          if (!vm.webexTrial.enabled) {
+          if (!vm.webexTrial.enabled && !vm.atlasCreateTrialBackendEmailEnabled) {
             return EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
-                vm.details.licenseDuration, Authinfo.getOrgId())
-              .catch(function () {
-                Notification.error('didManageModal.emailFailText');
+              vm.details.licenseDuration, Authinfo.getOrgId())
+              .catch(function (response) {
+                Notification.errorResponse(response, 'didManageModal.emailFailText');
               })
               .then(function () {
                 return response;
@@ -732,12 +758,11 @@
           if (vm.callTrial.enabled) {
             return HuronCustomer.create(vm.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
-                vm.loading = false;
                 Notification.errorResponse(response, 'trialModal.squareducError');
                 return $q.reject(response);
               }).then(function () {
                 if (vm.pstnTrial.enabled) {
-                  return TrialPstnService.createPstnEntity(vm.customerOrgId, response.data.customerName);
+                  return TrialPstnService.createPstnEntityV2(vm.customerOrgId, response.data.customerName);
                 }
               });
           }
@@ -746,20 +771,18 @@
           if (vm.contextTrial.enabled) {
             return TrialContextService.addService(vm.customerOrgId)
               .catch(function (response) {
-                vm.loading = false;
                 Notification.errorResponse(response, 'trialModal.startTrialContextServiceError');
                 return $q.reject(response);
               });
           }
         })
         .then(function () {
-          var successMessage = [$translate.instant('trialModal.addSuccess', {
-            customerName: vm.details.customerName
-          })];
           sendToAnalytics(Analytics.sections.TRIAL.eventNames.FINISH);
-          Notification.notify(successMessage, 'success');
+          Notification.success('trialModal.addSuccess', {
+            customerName: vm.details.customerName
+          });
 
-          if (addNumbersCallback) {
+          if (_.isFunction(addNumbersCallback)) {
             return addNumbersCallback(vm.customerOrgId)
               .catch(_.noop); //don't throw an error
           }
@@ -794,16 +817,12 @@
     }
 
     function setDeviceModal() {
-      var overrideTestOrg = false;
+      var overrideTestOrg = vm.atlasTrialsShipDevicesEnabled;
       var isTestOrg = false;
 
-      $q.all([
-        FeatureToggleService.atlasTrialsShipDevicesGetStatus(),
-        Orgservice.getAdminOrg(_.noop)
-      ]).then(function (results) {
-        overrideTestOrg = results[0];
-        if (results[1].data.success) {
-          isTestOrg = results[1].data.isTestOrg;
+      Orgservice.getAdminOrg(_.noop).then(function (results) {
+        if (results.data.success) {
+          isTestOrg = results.data.isTestOrg;
         }
       }).finally(function () {
         // Display devices modal if not a test org or if toggle is set

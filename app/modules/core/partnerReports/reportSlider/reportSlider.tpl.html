@@ -1,0 +1,46 @@
+<div class="report-slider">
+  <!-- Large && Medium Screen Slider -->
+  <cs-slider ng-if="$ctrl.isCustom() && !$ctrl.screenSmall()" class="slider" slider-floor="$ctrl.floor" slider-ceil="$ctrl.ceil" slider-model="$ctrl.min" slider-high="$ctrl.max" slider-translate="$ctrl.translateSlider"></cs-slider>
+
+  <!-- filter select -->
+  <cs-select ng-if="!($ctrl.screenXSmall() && $ctrl.isCustom())" class="pull-right report-filter" id="timeFilter" name="timeFilter" ng-model="$ctrl.selected" options="$ctrl.options" on-change-fn="$ctrl.update()"></cs-select>
+  <!-- for screen-xs only -->
+  <div id="closeCustom" class="pull-right slider-close" ng-if="$ctrl.screenXSmall() && $ctrl.isCustom()" ng-click="$ctrl.resetSelection()">
+    <i class="icon icon-close"></i>
+  </div>
+
+  <!-- Small Screen Selection -->
+  <div ng-if="$ctrl.isCustom() && $ctrl.screenSmall()" class="pull-right grid-filter dropdown">
+    <!-- Start Date -->
+    <div id="startDate" class="dropdown-toggle filter" ng-click="$ctrl.toggleMinDate()" ng-class="{'slider-grid-filter': !$ctrl.screenXSmall()}">
+      <span class="name slider-name" translate="reportsPage.fromDate"></span>
+      <span class="name">{{$ctrl.dateArray[$ctrl.min].date}}</span>
+      <i class="icon icon-chevron-down"></i>
+    </div>
+    <div id="startDateMenu" class="slider-dropdown">
+      <ul class="dropdown-menu dropdown-primary" ng-class="{'visible-dropdown': $ctrl.startDate}">
+        <li class="filter" ng-repeat="date in $ctrl.dateArray" ng-if="$index < $ctrl.max" ng-class="{'active' : object.selected}" ng-click="$ctrl.setMin($index)">
+          <a id="start{{$index}}">
+            <span class="name">{{date.date}}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- End Date -->
+    <div id="endDate" class="dropdown-toggle filter" ng-click="$ctrl.toggleMaxDate()" ng-class="{'slider-grid-filter': !$ctrl.screenXSmall()}">
+      <span class="name slider-name" translate="reportsPage.toDate"></span>
+      <span class="name">{{$ctrl.dateArray[$ctrl.max].date}}</span>
+      <i class="icon icon-chevron-down"></i>
+    </div>
+    <div id="endDateMenu" class="slider-dropdown">
+      <ul class="dropdown-menu dropdown-primary" ng-class="{'visible-dropdown': $ctrl.endDate}">
+        <li class="filter" ng-repeat="date in $ctrl.dateArray" ng-if="$index > $ctrl.min" ng-class="{'active' : object.selected}" ng-click="$ctrl.setMax($index)">
+          <a id="end{{$index}}">
+            <span class="name">{{date.date}}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

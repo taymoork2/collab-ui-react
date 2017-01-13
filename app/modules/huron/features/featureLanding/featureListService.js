@@ -12,6 +12,7 @@
       callParks: callParks,
       huntGroups: huntGroups,
       pagingGroups: pagingGroups,
+      pickupGroups: pickupGroups,
       filterCards: filterCards,
       orderByFilter: orderByFilter
     };
@@ -79,7 +80,7 @@
 
     function callParks(data) {
       var formattedList = [];
-      _.forEach(data.callparks, function (callPark) {
+      _.forEach(data, function (callPark) {
         formattedCard.cardName = callPark.name;
         formattedCard.id = callPark.uuid;
         formattedCard.startRange = callPark.startRange;
@@ -123,6 +124,19 @@
       return orderByCardName(formattedList);
     }
 
+    function pickupGroups(data) {
+      var formattedList = [];
+      _.forEach(data, function (pickupGroup) {
+        formattedCard.cardName = pickupGroup.name;
+        formattedCard.memberCount = pickupGroup.memberCount;
+        formattedCard.id = pickupGroup.uuid;
+        formattedCard.featureName = 'huronFeatureDetails.pi';
+        formattedCard.filterValue = 'PI';
+        formattedList.push(formattedCard);
+        formattedCard = {};
+      });
+      return orderByCardName(formattedList);
+    }
     /*
      Card can be searched by cardName, numbers, and memberCount (if Hunt Group Card)
      Card can be filtered by the specifying the filterValue (ex: AA, HG, CP)

@@ -1,0 +1,31 @@
+<div class="delete-service-page">
+    <h1 translate="gss.deleteService" translate-values="{ serviceName: deleteServiceCtrl.serviceName }"></h1>
+
+    <p>
+      <em translate="common.warning"></em>
+      <strong translate="gss.deletingServiceCannotBeUndone"></strong>
+      <span translate="gss.deleteEnsureAction"></span>
+    </p>
+
+    <p translate="gss.deleteConfirmation"></p>
+
+    <input class="cs-input"
+           ng-model="deleteServiceCtrl.confirmText"
+           type="text"
+           ng-pattern="deleteServiceCtrl.delConfirmText">
+
+
+    <button cs-btn
+            class="btn activate-button btn--negative"
+            ng-disabled="!deleteServiceCtrl.isValid()"
+            loading="deleteServiceCtrl.isLoading"
+            ng-click="deleteServiceCtrl.deleteService()">
+      <span translate="common.delete"></span>
+    </button>
+
+    <button cs-btn
+            class="btn"
+            ng-click="deleteServiceCtrl.goBack()">
+      <span translate="common.cancel"></span>
+    </button>
+</div>

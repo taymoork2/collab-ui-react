@@ -1,3 +1,5 @@
+require('./_user-manage.scss');
+
 (function () {
   'use strict';
 
@@ -5,8 +7,8 @@
     .controller('UserManageAdvancedController', UserManageAdvancedController);
 
   /* @ngInject */
-  function UserManageAdvancedController($state, $rootScope, $scope, $previousState, $translate, $modal, $timeout,
-    FeatureToggleService, Notification) {
+  function UserManageAdvancedController($modal, $previousState, $rootScope, $scope, $state, $timeout, $translate,
+    Analytics, FeatureToggleService, Notification) {
     var vm = this;
 
     vm.onInit = onInit;
@@ -21,10 +23,11 @@
     vm.onInit();
 
     $scope.$on('modal.closing', function (ev) {
-      if ($scope.csv.model.isProcessing) {
+      if (isCsvProcessing()) {
         onCancelImport();
         ev.preventDefault();
       }
+      Analytics.trackAddUsers(Analytics.eventNames.CANCEL_MODAL);
     });
 
     //////////////////
@@ -47,6 +50,7 @@
       $rootScope.$on('add-user-dirsync-error', function () {
         vm.isNextDisabled = true;
         vm.dirSyncStatusMessage = $translate.instant('userManage.ad.dirSyncError');
+        Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_ERROR, null, { error: 'Directory Sync Error' });
       });
 
       // adapt so we an use the userCsvResults page since we want the DirSync results to look the same
@@ -79,7 +83,7 @@
     };
 
     function onCancelImport() {
-      if ($scope.csv.model.isProcessing) {
+      if (isCsvProcessing()) {
         $modal.open({
           type: 'dialog',
           templateUrl: 'modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html'
@@ -88,9 +92,13 @@
           $scope.csv.isCancelledByUser = true;
           $scope.csv.model.cancelProcessCsv();
         });
-      } else {
+      } else if (_.isFunction($scope.$dismiss)) {
         $scope.$dismiss();
       }
+    }
+
+    function isCsvProcessing() {
+      return _.get($scope, 'csv.model.isProcessing', false);
     }
 
     function getCurrentState() {
@@ -100,6 +108,7 @@
     function onBack() {
       var curState = getCurrentState();
       var nextState = transitions[curState].prev;
+      Analytics.trackAddUsers(Analytics.eventNames.BACK);
       if (curState === 'syncStatus') {
         $state.go('users.manage.activedir');
       } else {
@@ -119,13 +128,16 @@
         FeatureToggleService.supportsDirSync().then(function (dirSyncEnabled) {
           vm.isBusy = false;
           if (dirSyncEnabled) {
+            Analytics.trackAddUsers(Analytics.eventNames.NEXT);
             $state.go(nextState);
           } else {
-            Notification.notify([$translate.instant('userManage.advanced.noDirSync')], 'warning');
+            Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_ERROR, null, { error: 'Directory Connector not installed' });
+            Notification.warning('userManage.advanced.noDirSync');
           }
         });
       } else {
         // move on
+        Analytics.trackAddUsers(Analytics.eventNames.NEXT);
         $state.go(nextState);
       }
     }
@@ -133,6 +145,7 @@
     function onClose() {
       vm.isBusy = true;
       $timeout(function () {
+        Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.DONE);
         $scope.$dismiss();
       });
     }

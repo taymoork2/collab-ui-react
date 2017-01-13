@@ -1,3 +1,114 @@
 <div class="status-dashboard">
-	 
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <h2 translate="gss.dashboard"></h2>
+    </cs-page-sub-header-left>
+  </cs-page-sub-header>
+
+  <div class="incident-section medium-10 center-block">
+    <cs-page-sub-header>
+      <cs-page-sub-header-left>
+        <h3 translate="gss.incidents"/>
+      </cs-page-sub-header-left>
+      <cs-page-sub-header-right>
+        <button class="btn btn-primary" ng-click="dashboardCtrl.goToNewIncidentPage()"
+                translate="gss.incidentsPage.newIncidentBtn">
+        </button>
+      </cs-page-sub-header-right>
+    </cs-page-sub-header>
+
+    <div ng-if="!dashboardCtrl.showList" class="no-incident-notification">
+      <h6 translate="gss.incidentsPage.noIncidentContent1"></h6>
+      <span translate="gss.incidentsPage.noIncidentContent2"></span>
+      <a translate="gss.incidentsPage.noIncidentContentLink" ng-click="dashboardCtrl.goToNewIncidentPage()"></a>
+    </div>
+
+    <ul ng-if="dashboardCtrl.showList" class="incidents-list">
+      <li ng-repeat="incident in dashboardCtrl.incidentList | orderBy:'lastModifiedTime':true">
+        <div ng-class="incident.impact">
+          <span class="pull-left">{{ incident.incidentName }}</span>
+
+          <a class="pull-right" ng-click="dashboardCtrl.goToUpdateIncidentPage(incident)"
+             translate="gss.updateIncident">
+          </a>
+        </div>
+
+        <div ng-class="incident.impact">
+          <h6><strong>{{ dashboardCtrl.getLocalizedIncidentStatus(incident.status) }}</strong></h6>
+          <h6>{{ incident.message }}</h6>
+          <h6 class="body-small">{{ incident.lastModifiedTime | date: "MMM d, y HH:mm" : "UTC" }} UTC</h6>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="component-section medium-10 center-block">
+    <cs-page-sub-header>
+      <cs-page-sub-header-left>
+        <h3 translate="gss.componentStatuses"></h3>
+      </cs-page-sub-header-left>
+      <cs-page-sub-header-right>
+        <button class="btn btn--primary" type="submit"
+                translate="gss.componentsPage.addComponent"
+                ng-click="dashboardCtrl.addComponent()"></button>
+      </cs-page-sub-header-right>
+    </cs-page-sub-header>
+
+    <ul ng-if="dashboardCtrl.components.length" class="components-list icon-ul">
+      <li ng-repeat="component in dashboardCtrl.components | orderBy: 'position'">
+        <div class="row" ng-init="isCollapse = true">
+          <div class="columns medium-4">
+            <strong>
+              <i class="icon-li icon" ng-class="{'icon-chevron-right':isCollapse,'icon-chevron-down':!isCollapse}"
+                 ng-click="isCollapse = !isCollapse">
+              </i>
+
+              <span class="icon icon-circle component-status-{{component.status}}"></span>
+
+                {{ component.componentName }}
+            </strong>
+          </div>
+
+          <div class="columns medium-2">
+            <a ng-show="!component.isOverridden"
+               ng-click="dashboardCtrl.toggleOverridden(component)" translate="gss.overrideStatus">
+            </a>
+
+            <a ng-show="component.isOverridden"
+               ng-click="dashboardCtrl.toggleOverridden(component)" translate="gss.useDerivedStatus">
+            </a>
+          </div>
+
+          <div class="columns medium-6">
+            <cs-select ng-model="component.statusObj" options="dashboardCtrl.statuses"
+                       is-disabled="component.isOverridden"
+                       on-change-fn="dashboardCtrl.modifyGroupComponentStatus(component)">
+            </cs-select>
+          </div>
+        </div>
+
+        <ul collapse="isCollapse" class="icon-ul">
+          <li class="row" ng-repeat="subComponent in component.components">
+            <div class="row">
+              <div class="columns medium-6">
+                <span class="icon icon-circle component-status-{{subComponent.status}}"></span>
+                <span>{{ subComponent.componentName }}</span>
+              </div>
+
+              <div class="columns medium-6">
+                <cs-select ng-model="subComponent.statusObj" options="dashboardCtrl.statuses"
+                           on-change-fn="dashboardCtrl.modifySubComponentStatus(component, subComponent)">
+                </cs-select>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <div ng-if="!dashboardCtrl.components.length" class="no-component-notification">
+      <h6 translate="gss.componentsPage.listing.noComponentHeading"></h6>
+      <a translate="gss.componentsPage.listing.noComponentText" ng-click="dashboardCtrl.addComponent()"></a>
+    </div>
+  </div>
 </div>

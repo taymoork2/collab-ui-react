@@ -31,6 +31,13 @@ describe('Controller: AAMessageTypeCtrl', function () {
     $scope.index = index;
   }));
 
+  afterEach(function () {
+    $rootScope = null;
+    $scope = null;
+    AAUiModelService = null;
+    AutoAttendantCeMenuModelService = null;
+  });
+
   describe('AAMessageType', function () {
     var controller;
 
@@ -39,6 +46,10 @@ describe('Controller: AAMessageTypeCtrl', function () {
       controller = $controller;
       spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     }));
+
+    afterEach(function () {
+      controller = null;
+    });
 
     describe('activate', function () {
 
@@ -285,22 +296,125 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
       });
 
-      it('should be able to create new AA entry creating a say action', function () {
-        var c;
-        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+    });
+    it('should be able to create new AA entry creating a say action for Menu Header', function () {
+      var c;
+      var action;
 
-        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
-        aaUiModel.openHours.addEntryAt(0, menuEntry);
+      $scope.isMenuHeader = "true";
 
-        // setup the options menu
-        c = controller('AAMessageTypeCtrl', {
-          $scope: $scope
-        });
+      menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
 
-        expect(c.menuEntry.actions[0].name).toEqual('say');
+      action = (AutoAttendantCeMenuModelService.newCeActionEntry('say', 'value for say message'));
+
+      menuEntry.actions.push(action);
+
+      aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+      aaUiModel.openHours.type = "MENU_OPTION_ANNOUNCEMENT";
+
+      aaUiModel.openHours.headers[0] = menuEntry;
+      aaUiModel.openHours.headers[0].type = "MENU_OPTION_ANNOUNCEMENT";
+
+      spyOn(AutoAttendantCeMenuModelService, 'getCeMenu').and.returnValue(aaUiModel.openHours);
+
+      // setup the options menu
+      c = controller('AAMessageTypeCtrl', {
+        $scope: $scope
       });
+
+      expect(c.actionEntry.name).toEqual('say');
+    });
+
+    it('should be able to create new AA entry creating a say action for Phone Menu type', function () {
+      var c;
+      var action;
+
+      $scope.menuId = "001";
+      $scope.menuKeyIndex = '0';
+
+      menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      action = (AutoAttendantCeMenuModelService.newCeActionEntry('say', 'value for say message'));
+
+      menuEntry.actions.push(action);
+
+      aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+      aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+      spyOn(AutoAttendantCeMenuModelService, 'getCeMenu').and.returnValue(aaUiModel.openHours);
+
+      // setup the options menu
+      c = controller('AAMessageTypeCtrl', {
+        $scope: $scope
+      });
+
+      expect(c.actionEntry.name).toEqual('say');
+    });
+
+    it('should be able to create new AA entry creating a say action for Phone Menu type: sub menu', function () {
+      var c;
+      var action;
+
+      $scope.menuId = '1';
+
+      menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      action = (AutoAttendantCeMenuModelService.newCeActionEntry('say', 'value for say message'));
+
+      menuEntry.actions.push(action);
+
+      aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+      aaUiModel.openHours.type = "MENU_OPTION_ANNOUNCEMENT";
+
+      aaUiModel.openHours.headers[0] = menuEntry;
+      aaUiModel.openHours.headers[0].type = "MENU_OPTION_ANNOUNCEMENT";
+
+      spyOn(AutoAttendantCeMenuModelService, 'getCeMenu').and.returnValue(aaUiModel.openHours);
+
+      // setup the options menu
+      c = controller('AAMessageTypeCtrl', {
+        $scope: $scope
+      });
+
+      expect(c.actionEntry.name).toEqual('say');
 
     });
 
+    it('should be able to create new AA action entry Queue type', function () {
+      var c;
+      var action;
+      var moh;
+
+      $scope.menuId = "001";
+      $scope.menuKeyIndex = '0';
+      $scope.type = "moh";
+      menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+      action = (AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'value for say message'));
+      moh = {};
+
+      moh.actions = [];
+
+      moh.actions[0] = (AutoAttendantCeMenuModelService.newCeActionEntry('play', 'Music on hold'));
+
+      action.queueSettings = {};
+      action.queueSettings.moh = moh;
+
+      menuEntry.addAction(action);
+
+      aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+      aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+      spyOn(AutoAttendantCeMenuModelService, 'getCeMenu').and.returnValue(aaUiModel.openHours);
+
+      // setup the options menu
+      c = controller('AAMessageTypeCtrl', {
+        $scope: $scope
+      });
+
+      expect(c.actionEntry.name).toEqual('play');
+    });
+
   });
+
 });

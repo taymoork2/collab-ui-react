@@ -13,17 +13,15 @@
     vm.featureId = $stateParams.deleteFeatureId;
     vm.featureName = $stateParams.deleteFeatureName;
     vm.featureType = $stateParams.deleteFeatureType;
-    vm.featureText = vm.featureType == 'CT' ? $translate.instant('careChatTpl.chatTemplate') : '';
+    vm.featureText = vm.featureType === 'Ch' ? $translate.instant('careChatTpl.chatTemplate') : '';
 
     function deleteFeature() {
       vm.deleteBtnDisabled = true;
-      if (vm.featureType == 'CT') {
-        CareFeatureList.deleteChatTemplate(vm.featureId).then(function () {
-          deleteSuccess();
-        }, function (response) {
-          deleteError(response);
-        });
-      }
+      CareFeatureList.deleteTemplate(vm.featureId).then(function () {
+        deleteSuccess();
+      }, function (response) {
+        deleteError(response);
+      });
     }
 
     function reInstantiateMasonry() {
@@ -59,24 +57,7 @@
         featureName: vm.featureName,
         featureText: vm.featureText
       });
-      if (response) {
-        if (response.status) {
-          error += ' ' + $translate.instant('errors.statusError', {
-            status: response.status
-          });
-          if (response.data && _.isString(response.data)) {
-            error += ' ' + $translate.instant('careChatTpl.messageError', {
-              message: response.data
-            });
-          }
-        } else {
-          error += ' Request failed.';
-          if (_.isString(response.data)) {
-            error += ' ' + response.data;
-          }
-        }
-      }
-      Notification.error(error);
+      Notification.errorWithTrackingId(response, error);
     }
 
   }

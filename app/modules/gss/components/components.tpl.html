@@ -1,0 +1,37 @@
+<div class="component-page gss-components">
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+        {{componentsCtrl.title}}
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+      <button class="btn btn--primary add-component-button" type="submit"
+              translate="gss.componentsPage.addComponent"
+              ng-click="componentsCtrl.addComponent()"></button>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+
+  <ul ng-if="componentsCtrl.components.length" class="gss-components-list icon-ul small-12 large-10 xlarge-8">
+    <li ng-repeat="component in componentsCtrl.components | orderBy: 'position'" ng-init="hide = false">
+      <i class="icon-li icon" ng-class="{'icon-chevron-right':hide,'icon-chevron-down':!hide}" ng-click="hide = !hide"></i>
+      <span class="icon icon-circle component-status-{{component.status}}"></span>
+      {{component.componentName}}
+      <a translate="common.delete" ng-click="componentsCtrl.delComponent(component)"></a>
+      <a translate="common.edit" ng-click="componentsCtrl.updateComponent(component)"></a>
+      <ul collapse="hide">
+        <li ng-repeat="subComponent in component.components">
+          <span class="icon icon-circle component-status-{{subComponent.status}}"></span>
+          {{subComponent.componentName}}
+          <a translate="common.delete" ng-click="componentsCtrl.delComponent(subComponent)"></a>
+          <a translate="common.edit" ng-click="componentsCtrl.updateComponent(subComponent, component)"></a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <div ng-if="!componentsCtrl.components.length">
+    <div class="centered-info-pane">
+      <h3 translate="gss.componentsPage.listing.noComponentHeading"></h3>
+      <p translate="gss.componentsPage.listing.noComponentText"></p>
+    </div>
+  </div>
+</div>

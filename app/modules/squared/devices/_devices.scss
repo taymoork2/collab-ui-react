@@ -1,3 +1,7 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/spacing';
+@import 'styles/toolkit/layout';
+
 .sq-devices-page {
   @extend %grid-subheader;
   @extend %page-background-white;
@@ -10,6 +14,14 @@
       margin: 4px 5px 4px 30px;
       width: 35px;
     }
+  }
+  .export-button {
+    font-size:1.5rem;
+    padding-right:2rem;
+  }
+  .export-button:hover {
+    cursor: pointer;
+    color: $link-color;
   }
 }
 
@@ -46,7 +58,13 @@
   }
 }
 
-.sq-devices-page-overview {
+.sq-devices-page-overview, .sq-devices-emergency-services {
+  .dropdown-menu li {
+    min-width: 190px !important;
+    width: auto;
+    padding: 0.5em 1em;
+  }
+
   .activation-code-pane h3 {
     color: $color-people-light;
   }
@@ -89,27 +107,6 @@
     width: 141px;
   }
 
-  .activationOverview {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .activationImage {
-    margin: 15px 0 40px;
-    width: 116px;
-  }
-
-  .activationDescription {
-    text-align: center;
-  }
-
-  .activationButtons {
-    margin-top: 40px;
-    display: flex;
-    justify-content: center;
-  }
-
   .overview {
     display: flex;
     align-items: center;
@@ -134,8 +131,51 @@
     padding-bottom: 10px;
   }
 
-  .timeZoneSelector {
+  .timeZoneSelector, .countrySelector {
     width: 280px;
+  }
+}
+
+.sq-devices-emergency-services {
+  .breadcrumbs {
+    @include vr-spacing(mb, 1);
+  }
+
+  hr-settings-service-address > div {
+    background-color: $gray-light-3;
+  }
+
+  .label-margin {
+    @include vr-spacing(mb, 0.5, 0px, false);
+  }
+
+  .save-section {
+    @include vr-spacing(mt, 3, -1px, true);
+    @include vr-spacing(pr, 1);
+    @include vr-spacing(pt, 0.5);
+    @include vr-spacing(pb, 0.5);
+    @include vr-spacing(pl, 1.5, 1px, false);
+    @include vr-spacing(ml, 1.5, -1px, true);
+
+    width: 100%;
+    background-color: $gray-light-4;
+    border-bottom: none;
+  }
+
+  .modify-button {
+    color: $color-primary-base;
+  }
+
+  .saved-address {
+    @include vr-spacing(p, 0.75);
+    @include vr-spacing(mb, 0.5);
+
+    position: relative;
+    background-color: $gray-light-3;
+  }
+
+  .cs-input__messages {
+    @include vr-spacing(pb, 1);
   }
 }
 
@@ -309,7 +349,8 @@
       margin-bottom: 16px;
 
       .typeButton {
-        @extend .ui-grid-disable-selection;
+        user-select: none;
+        cursor: default;
 
         display: flex;
         flex-direction: column;
@@ -350,6 +391,23 @@
   }
 }
 
+.showActivationCode {
+  .activationCodeFailure {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    font-size: 7em;
+
+    i {
+      @include vr-spacing(mb, 1.5);
+      color: $gray-light-1;
+    }
+  }
+}
+
 .errorBox {
   display: flex;
   align-items: flex-start;
@@ -362,12 +420,6 @@
 
 .choose-shared {
   display: flex;
-
-  .createNewPlace,
-  .chooseExistingPlace {
-    flex-grow: 1;
-    display: flex;
-  }
 
   .createNewPlaceForm,
   .chooseExistingPlaceForm {
@@ -412,10 +464,6 @@
 
   .chooseExistingUserForm input {
     width: 250px;
-  }
-
-  .existingUserSpacing {
-    height: 24px;
   }
 }
 
@@ -581,5 +629,123 @@
 
   .kem-number {
     @include vr-spacing(pr, 2);
+  }
+}
+
+.ataDeviceModal {
+  button{
+    width: auto !important;
+  }
+  .rzSliderStyle{
+    .rz-bubble{
+      display: none;
+    }
+    .rz-bar{
+      background-color: $gray-light-2;
+      height: 2px;
+    }
+    .rz-bar.rz-selection, .rz-selection{
+      background-color: $brand-primary;
+    }
+  }
+  .rangeSliderWrap{
+    position: relative;
+    width: 100%;
+    max-width: 600px !important;
+    margin-top: 0.75em;
+    margin-bottom: 1.5em;
+
+    .rzSliderStyle{
+      display: block;
+      width: 80%;
+      width: calc(100% - 60px);
+      max-width: 600px !important;
+      position: relative;
+      margin-top: -2em;
+      margin-left: 0.5em;
+      margin-right: 0.7em;
+      .rz-pointer{
+        left: 389px;
+        top: -11px;
+        width: 22px;
+        height: 22px;
+        background-color: white;
+        border: 1px solid $gray-light-2;
+        &::after{
+          display: none;
+        }
+      }
+    }
+    .rzSliderStyle,.icon{
+      float: left;
+    }
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 80%;
+      width: calc(100% - 60px);
+      background: transparent;
+      background-color: rgba(255, 255, 255, 0);
+      margin-bottom: 3em;
+      margin-top: 1em;
+      margin-left: 1.5em;
+      margin-right: 0.65em;
+      height: 2px;
+      border-radius: 1px;
+      border-color: $brand-primary;
+      color: $gray-light-3;
+      border-width: 0;
+      z-index: 1 !important;
+      position: relative;
+      &::-moz-range-track {
+        background-color:rgba(255, 255, 255, 0);
+        opacity: 0;
+      }
+      &::-ms-track {
+        background-color:rgba(255, 255, 255, 0);
+        opacity: 0;
+      }
+
+      &::-ms-fill-lower {
+        background-color:rgba(255, 255, 255, 0);
+        opacity: 0;
+      }
+      &::-ms-fill-upper {
+        background-color:rgba(255, 255, 255, 0);
+        opacity: 0;
+      }
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+    }
+
+    input[type=range]:focus {
+      outline: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      margin-top: -3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: white;
+      border: 1px solid $gray-light-2;
+    }
+    input[type=range]::-moz-range-thumb {
+      margin-top: -3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: white;
+      border: 1px solid $gray-light-2;
+    }
+    input[type=range]::-ms-thumb {
+      margin-top: -3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: white;
+      border: 1px solid $gray-light-2;
+    }
   }
 }

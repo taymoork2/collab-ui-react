@@ -1,0 +1,51 @@
+.hybrid-calendar-setup {
+  .service-select-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    width: 90%;
+  }
+
+  .sub-service-select {
+    margin: 10px;
+    width: 50%;
+    height: 300px;
+    line-height: 300px;
+    position: relative;
+    text-align: center;
+
+    img {
+      padding-left: 15%;
+      padding-right: 15%;
+      display: inline-block;
+    }
+
+    p {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      text-align: center;
+      font-size: 12px;
+      padding: 0 2rem;
+    }
+  }
+
+  .service-not-selected {
+    border-width: 1px;
+    border-style: solid;
+    border-color: $gray-light-3;
+  }
+
+  .service-selected {
+    border-width: 1px;
+    border-style: solid;
+    border-color: $color-primary-base;
+  }
+
+  .smallprint {
+    font-size: 12px;
+    max-width: 75%;
+  }
+}

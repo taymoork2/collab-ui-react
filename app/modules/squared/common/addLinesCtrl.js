@@ -4,15 +4,14 @@
   angular.module('Squared')
     .controller('AddLinesCtrl', AddLinesCtrl);
   /* @ngInject */
-  function AddLinesCtrl($stateParams, $state, $scope, Notification, $translate, $q, CommonLineService, Authinfo, CsdmHuronPlaceService, CsdmDataModelService, DialPlanService) {
+  function AddLinesCtrl($stateParams, $scope, Notification, $translate, $q, CommonLineService, CsdmDataModelService, DialPlanService) {
     var vm = this;
-    vm.wizardData = $stateParams.wizard.state().data;
+    var wizardData = $stateParams.wizard.state().data;
+    vm.title = wizardData.title;
 
     $scope.entitylist = [{
-      name: vm.wizardData.deviceName
+      name: wizardData.account.name
     }];
-    $scope.internalNumberPool = [];
-    $scope.externalNumberPool = [];
     $scope.telephonyInfo = {};
     vm.isMapped = false;
     vm.isMapInProgress = false;
@@ -28,87 +27,68 @@
 
     $scope.returnInternalNumberlist = CommonLineService.returnInternalNumberList;
     $scope.returnExternalNumberList = CommonLineService.returnExternalNumberList;
+    $scope.getInternalNumberPool = CommonLineService.getInternalNumberPool;
+    $scope.getExternalNumberPool = CommonLineService.getExternalNumberPool;
     $scope.syncGridDidDn = syncGridDidDn;
     $scope.checkDnOverlapsSteeringDigit = CommonLineService.checkDnOverlapsSteeringDigit;
 
+    vm.hasNextStep = function () {
+      return wizardData.function !== 'editServices';
+    };
+
     vm.next = function () {
-      vm.isLoading = true;
-      function successCallback(code) {
-
-        if (code && code.activationCode && code.activationCode.length > 0) {
-          vm.isLoading = false;
-          $stateParams.wizard.next({
-            deviceName: vm.wizardData.deviceName,
-            code: code,
-            cisUuid: Authinfo.getUserId(),
-            userName: Authinfo.getUserName(),
-            displayName: Authinfo.getUserName(),
-            organizationId: Authinfo.getOrgId()
-          });
-        } else {
-          vm.isLoading = false;
-          $state.go('users.list');
+      var numbers = vm.getSelectedNumbers();
+      $stateParams.wizard.next({
+        account: {
+          directoryNumber: numbers.directoryNumber,
+          externalNumber: numbers.externalNumber
         }
-      }
-
-      function failCallback() {
-        vm.isLoading = false;
-      }
-
-      function addPlace() {
-        _.forEach($scope.entitylist, function (entity) {
-          var placeEntity = {
-            name: entity.name,
-            directoryNumber: entity.assignedDn.pattern
-          };
-
-          if (entity.externalNumber && entity.externalNumber.pattern !== 'None') {
-            placeEntity.externalNumber = entity.externalNumber.pattern;
-          }
-
-          CsdmDataModelService.createCmiPlace(entity.name, entity.assignedDn.pattern, placeEntity.externalNumber)
-            .then(successcb)
-            .catch(function (error) {
-              Notification.errorResponse(error, 'addDeviceWizard.assignPhoneNumber.placeError');
-            });
-        });
-      }
-      function successcb(place) {
-        vm.place = place;
-        CsdmHuronPlaceService
-            .createOtp(place.cisUuid)
-            .then(successCallback)
-            .catch(failCallback);
-      }
-      addPlace();
+      });
     };
 
     vm.save = function () {
       vm.isLoading = true;
-      _.forEach($scope.entitylist, function (entity) {
-        var placeEntity = {
-          name: entity.name,
-          directoryNumber: entity.assignedDn.pattern
-        };
+      var numbers = vm.getSelectedNumbers();
+      if (numbers.directoryNumber || numbers.externalNumber) {
+        CsdmDataModelService.getPlacesMap().then(function (list) {
+          var place = _.find(_.values(list), { 'cisUuid': wizardData.account.cisUuid });
+          if (place) {
+            CsdmDataModelService.updateCloudberryPlace(place, wizardData.account.entitlements, numbers.directoryNumber, numbers.externalNumber)
+              .then(function () {
+                $scope.$dismiss();
+                Notification.success("addDeviceWizard.assignPhoneNumber.linesSaved");
+              }, function (error) {
+                vm.isLoading = false;
+                Notification.errorResponse(error, 'addDeviceWizard.assignPhoneNumber.placeEditError');
+              });
+          } else {
+            vm.isLoading = false;
+            Notification.warning('addDeviceWizard.assignPhoneNumber.placeNotFound');
+          }
+        }, function (error) {
+          vm.isLoading = false;
+          Notification.errorResponse(error, 'addDeviceWizard.assignPhoneNumber.placeEditError');
+        });
+      } else {
+        vm.isLoading = false;
+        Notification.warning('addDeviceWizard.assignPhoneNumber.placeEditNoChanges');
+      }
+    };
 
-        if (entity.externalNumber && entity.externalNumber.pattern !== 'None') {
-          placeEntity.externalNumber = entity.externalNumber.pattern;
-        }
-
-        var entitlements = vm.wizardData.entitlements;
-        var sparkCallIndex = entitlements.indexOf('ciscouc');
-        if (sparkCallIndex == -1) {
-          entitlements.push('ciscouc');
-        }
-        CsdmDataModelService.updateCloudberryPlace(vm.wizardData.selectedPlace, entitlements, entity.assignedDn.pattern, placeEntity.externalNumber)
-          .then(function () {
-            $scope.$dismiss();
-            Notification.success("addDeviceWizard.assignPhoneNumber.linesSaved");
-          })
-          .catch(function (error) {
-            Notification.errorResponse(error, 'addDeviceWizard.assignPhoneNumber.placeEditError');
-          });
-      });
+    vm.getSelectedNumbers = function () {
+      var entity = $scope.entitylist[0];
+      var directoryNumber;
+      if (entity.assignedDn) {
+        directoryNumber = entity.assignedDn.pattern;
+      }
+      var externalNumber;
+      if (entity.externalNumber && entity.externalNumber.pattern !== 'None') {
+        externalNumber = entity.externalNumber.pattern;
+      }
+      return {
+        directoryNumber: directoryNumber,
+        externalNumber: externalNumber
+      };
     };
 
     vm.back = function () {
@@ -118,18 +98,9 @@
     function activateDID() {
       $q.all([CommonLineService.loadInternalNumberPool(), CommonLineService.loadExternalNumberPool(), CommonLineService.loadPrimarySiteInfo(), toggleShowExtensions()])
         .finally(function () {
-          $scope.internalNumberPool = CommonLineService.getInternalNumberPool();
-          $scope.externalNumberPool = CommonLineService.getExternalNumberPool();
-          $scope.externalNumber = $scope.externalNumberPool[0];
+          $scope.externalNumber = _.head(CommonLineService.getExternalNumberPool());
           $scope.telephonyInfo = CommonLineService.getTelephonyInfo();
-          /*if ($scope.internalNumberPool.length === 0 || $scope.externalNumberPool.length === 0) {
-            vm.isDisabled = true;
-          } else {
-            vm.isDisabled = false;
-          }*/
-
-          vm.isDisabled = !!($scope.internalNumberPool.length === 0 || $scope.externalNumberPool.length === 0);
-
+          vm.isDisabled = !!(CommonLineService.getInternalNumberPool().length === 0 || CommonLineService.getExternalNumberPool().length === 0);
 
           if (vm.showExtensions === true) {
             CommonLineService.assignDNForUserList($scope.entitylist);
@@ -206,7 +177,7 @@
         var dnLength = rowEntity.assignedDn.pattern.length;
         // if the internalNumber was changed, find a matching DID and set the externalNumber to match
         if (modifiedFieldName === "internalNumber") {
-          var matchingDid = _.find($scope.externalNumberPool, function (extNum) {
+          var matchingDid = _.find(CommonLineService.getExternalNumberPool(), function (extNum) {
             return extNum.pattern.substr(-dnLength) === rowEntity.assignedDn.pattern;
           });
           if (matchingDid) {
@@ -215,7 +186,7 @@
         }
         // if the externalNumber was changed, find a matching DN and set the internalNumber to match
         if (modifiedFieldName === "externalNumber") {
-          var matchingDn = _.find($scope.internalNumberPool, {
+          var matchingDn = _.find(CommonLineService.getInternalNumberPool(), {
             pattern: rowEntity.externalNumber.pattern.substr(-dnLength)
           });
           if (matchingDn) {
@@ -230,7 +201,7 @@
 
     var internalExtensionTemplate = '<div ng-show="row.entity.assignedDn !== undefined"> ' +
       '<cs-select name="internalNumber" ' +
-      'ng-model="row.entity.assignedDn" options="grid.appScope.internalNumberPool" ' +
+      'ng-model="row.entity.assignedDn" options="grid.appScope.getInternalNumberPool()" ' +
       'refresh-data-fn="grid.appScope.returnInternalNumberlist(filter)" wait-time="0" ' +
       'placeholder="placeholder" input-placeholder="inputPlaceholder" ' +
       'on-change-fn="grid.appScope.syncGridDidDn(row.entity, \'internalNumber\')"' +
@@ -245,14 +216,14 @@
 
     var externalExtensionTemplate = '<div ng-show="row.entity.didDnMapMsg === undefined"> ' +
       '<cs-select name="externalNumber" ' +
-      'ng-model="row.entity.externalNumber" options="grid.appScope.externalNumberPool" ' +
+      'ng-model="row.entity.externalNumber" options="grid.appScope.getExternalNumberPool()" ' +
       'refresh-data-fn="grid.appScope.returnExternalNumberList(filter)" wait-time="0" ' +
       'placeholder= "placeholder" input-placeholder="inputPlaceholder" ' +
       'on-change-fn="grid.appScope.syncGridDidDn(row.entity, \'externalNumber\')"' +
       'labelfield="pattern" valuefield="uuid" required="true" filter="true"> </cs-select></div> ' +
       '<div ng-show="row.entity.didDnMapMsg !== undefined"> ' +
       '<cs-select name="noExternalNumber" ' +
-      'ng-model="row.entity.externalNumber" options="grid.appScope.externalNumberPool" class="select-warning"' +
+      'ng-model="row.entity.externalNumber" options="grid.appScope.getExternalNumberPool()" class="select-warning"' +
       'labelfield="pattern" valuefield="uuid" required="true" filter="true"> </cs-select>' +
       '<span class="warning did-map-error">{{row.entity.didDnMapMsg | translate }}</span> </div> ';
 

@@ -1,6 +1,6 @@
 describe('Component: CallFeatureName', () => {
   const NAME_INPUT = 'input';
-  const HINT_TEXT = 'p.input-hint.ng-binding';
+  const HINT_TEXT = 'p.input-description';
 
   beforeEach(function () {
     this.initModules('huron.call-feature-name');
@@ -18,6 +18,7 @@ describe('Component: CallFeatureName', () => {
       placeholderKey: 'callPark.namePlaceholder',
       nameHintKey: 'callPark.nameHint',
       name: 'name',
+      isNew: 'true',
       onChangeFn: 'onChangeFn(value)',
       onKeyPressFn: 'onKeyPressFn(keyCode)',
     });

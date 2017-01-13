@@ -14,39 +14,39 @@
     .factory('UserOTPService', UserOTPService)
     .factory('LineResource', LineService)
     .factory('RemoteDestinationService', RemoteDestinationService)
-    .factory('UnassignedDirectoryNumberService', UnassignedDirectoryNumberService)
     .factory('UserDirectoryNumberService', UserDirectoryNumberService)
     .factory('DirectoryNumberService', DirectoryNumberService)
     .factory('CustomerCommonService', CustomerCommonService)
     .factory('UserServiceCommon', UserServiceCommon)
     .factory('UserServiceCommonV2', UserServiceCommonV2)
     .factory('UserSearchServiceV2', UserSearchServiceV2)
+    .factory('UserNumberService', UserNumberService)
     .factory('NumberSearchServiceV2', NumberSearchServiceV2)
     .factory('HuntGroupServiceV2', HuntGroupServiceV2)
-    .factory('CallParkServiceV2', CallParkServiceV2)
     .factory('AssignAutoAttendantService', AssignAutoAttendantService)
     .factory('UserServiceVoice', UserServiceVoice)
     .factory('VoicemailService', VoicemailService)
     .factory('VoicemailTimezoneService', VoicemailTimezoneService)
     .factory('VoicemailMessageActionService', VoicemailMessageActionService)
     .factory('CompanyNumberService', CompanyNumberService)
-    // Will remove this service later
-    .factory('CallRouterService', CallRouterService)
     .factory('SimultaneousCallsServiceV2', SimultaneousCallsServiceV2)
     .factory('InternalNumberPoolService', InternalNumberPoolService)
     .factory('ExternalNumberPoolService', ExternalNumberPoolService)
     .factory('AlternateNumberService', AlternateNumberService)
     .factory('DirectoryNumberCopyService', DirectoryNumberCopyService)
     .factory('SiteService', SiteService)
+    .factory('AvrilSiteService', AvrilSiteService)
+    .factory('AvrilSiteUpdateService', AvrilSiteUpdateService)
     .factory('InternalNumberRangeService', InternalNumberRangeService)
     .factory('UserEndpointService', UserEndpointService)
     .factory('SipEndpointService', SipEndpointService)
     .factory('DirectoryNumberUserService', DirectoryNumberUserService)
     .factory('DirectoryNumberSipEndPointService', DirectoryNumberSipEndPointService)
     .factory('SipEndpointDirectoryNumberService', SipEndpointDirectoryNumberService)
+    .factory('DateFormatService', DateFormatService)
     .factory('TimeZoneService', TimeZoneService)
     .factory('SiteLanguageService', SiteLanguageService)
-    .factory('HermesQRCodeService', HermesQRCodeService)
+    .factory('SiteCountryService', SiteCountryService)
     .factory('DeviceLogApiService', DeviceLogApiService)
     .factory('UserLineAssociationService', UserLineAssociationService)
     .factory('UserLineAssociationCountService', UserLineAssociationCountService)
@@ -106,13 +106,6 @@
   }
 
   /* @ngInject */
-  function UnassignedDirectoryNumberService($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/unassigneddirectorynumbers', {
-      customerId: '@customerId'
-    });
-  }
-
-  /* @ngInject */
   function UserDirectoryNumberService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId/directorynumbers/:directoryNumberId', {
       customerId: '@customerId',
@@ -163,6 +156,11 @@
   }
 
   /* @ngInject */
+  function UserNumberService($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/users/:userId/numbers');
+  }
+
+  /* @ngInject */
   function UserSearchServiceV2($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/users/:userId', {
       customerId: '@customerId',
@@ -186,22 +184,6 @@
     return $resource(baseUrl + '/customers/:customerId/features/huntgroups/:huntGroupId', {
       customerId: '@customerId',
       huntGroupId: '@huntGroupId'
-    }, {
-      update: {
-        method: 'PUT'
-      },
-      delete: {
-        method: 'DELETE'
-      }
-    });
-  }
-
-  /* @ngInject */
-  function CallParkServiceV2($resource, HuronConfig) {
-    var baseUrl = HuronConfig.getCmiV2Url();
-    return $resource(baseUrl + '/customers/:customerId/features/callparks/:callParkId', {
-      customerId: '@customerId',
-      callParkId: '@callParkId'
     }, {
       update: {
         method: 'PUT'
@@ -290,18 +272,6 @@
   }
 
   /* @ngInject */
-  function CallRouterService($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/companynumbers/:companyNumberId', {
-      customerId: '@customerId',
-      companyNumberId: '@companyNumberId'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
-  }
-
-  /* @ngInject */
   function InternalNumberPoolService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberpools/:internalNumberId', {
       customerId: '@customerId',
@@ -363,6 +333,35 @@
     }, {
       update: {
         method: 'PUT'
+      }
+    });
+  }
+
+  /* @ngInject */
+  function AvrilSiteService($resource, HuronConfig) {
+    return $resource(HuronConfig.getAvrilUrl() + '/customers/:customerId/sites/', {
+      customerId: '@customerId'
+    }, {
+      save: {
+        method: 'POST',
+        headers: {
+          'Access-Control-Expose-Headers': 'Location'
+        }
+      }
+    });
+  }
+
+  /* @ngInject */
+  function AvrilSiteUpdateService($resource, HuronConfig) {
+    return $resource(HuronConfig.getAvrilUrl() + '/customers/:customerId/sites/:siteId', {
+      customerId: '@customerId',
+      siteId: '@siteId'
+    }, {
+      update: {
+        method: 'PUT'
+      },
+      get: {
+        method: 'GET'
       }
     });
   }
@@ -439,6 +438,10 @@
     return $resource('modules/huron/serviceSetup/jodaTimeZones.json', {}, {});
   }
 
+  /* @ngInject */
+  function DateFormatService($resource) {
+    return $resource('modules/huron/serviceSetup/dateFormats.json', {}, {});
+  }
 
   /* @ngInject */
   function SiteLanguageService($resource) {
@@ -446,11 +449,8 @@
   }
 
   /* @ngInject */
-  function HermesQRCodeService($resource, HuronConfig) {
-    return $resource(HuronConfig.getEmailUrl() + '/:getqrima/encoded', {
-      getqrima: 'getqrimage',
-      oneTimePassword: '@oneTimePassword'
-    }, {});
+  function SiteCountryService($resource) {
+    return $resource('modules/huron/serviceSetup/siteCountries.json', {}, {});
   }
 
   /* @ngInject */
@@ -548,7 +548,7 @@
   }
 
   function transformEnvelope(response) {
-    var responseObj = angular.fromJson(response);
+    var responseObj = _.isString(response) ? JSON.parse(response) : response;
     return _.get(responseObj, '[0]', responseObj);
   }
 

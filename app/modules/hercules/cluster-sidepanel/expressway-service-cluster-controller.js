@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceClusterController', ExpresswayServiceClusterController);
 
   /* @ngInject */
-  function ExpresswayServiceClusterController($scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout, hasF237FeatureToggle, hasEmergencyUpgradeFeatureToggle, FusionClusterService) {
+  function ExpresswayServiceClusterController($scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout, hasF237FeatureToggle, FusionClusterService, Notification, $window) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.clusterId;
@@ -23,8 +23,9 @@
     vm.fakeUpgrade = false;
     vm.fakeManagementUpgrade = false;
     vm.hasF237FeatureToggle = hasF237FeatureToggle;
-    vm.hasEmergencyUpgradeFeatureToggle = hasEmergencyUpgradeFeatureToggle;
     vm.hasConnectorAlarm = hasConnectorAlarm;
+    vm.openDeleteConfirm = openDeleteConfirm;
+    vm.goToExpressway = goToExpressway;
 
     var promise = null;
     if (!vm.connectorType || !vm.clusterId) {
@@ -40,6 +41,15 @@
       vm.cluster = newValue[0];
       vm.managementCluster = newValue[1];
 
+      if (vm.cluster && _.size(vm.cluster.connectors) === 0) {
+        FusionClusterService.getPreregisteredClusterAllowList()
+          .then(function (allowList) {
+            vm.cluster.allowedRedirectTarget = _.find(allowList, { clusterId: vm.cluster.id });
+          })
+          .catch(function (error) {
+            Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+          });
+      }
       vm.releaseChannel = $translate.instant('hercules.fusion.add-resource-group.release-channel.' + vm.cluster.releaseChannel);
       if (vm.cluster.resourceGroupId) {
         findResourceGroupName(vm.cluster.resourceGroupId)
@@ -192,9 +202,28 @@
       if (connector.connectorType === 'c_mgmt') {
         return -1;
       } else {
-        return connector.connectorType;
+        return connector.connectorType + connector.hostSerial;
       }
     };
 
+    function openDeleteConfirm() {
+      $modal.open({
+        resolve: {
+          cluster: function () {
+            return vm.cluster;
+          }
+        },
+        controller: 'ClusterDeregisterController',
+        controllerAs: 'clusterDeregister',
+        templateUrl: 'modules/hercules/fusion-pages/components/rename-and-deregister-cluster-section/deregister-dialog.html',
+        type: 'dialog'
+      }).result.then(function () {
+        $state.go('calendar-service.list');
+      });
+    }
+
+    function goToExpressway(hostname) {
+      $window.open('https://' + encodeURIComponent(hostname) + '/fusionregistration');
+    }
   }
 }());

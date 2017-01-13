@@ -9,6 +9,14 @@
     var TRACKING_ID = 'TrackingID';
     var SEPARATOR = '_';
 
+    afterEach(function () {
+      TrackingIdInterceptor = undefined;
+    });
+
+    afterAll(function () {
+      EXPOSE_HEADERS = TRACKING_ID = SEPARATOR = undefined;
+    });
+
     function buildRequest(url) {
       return {
         url: url,
@@ -26,20 +34,22 @@
       TrackingIdInterceptor = _TrackingIdInterceptor_;
     }));
 
-    it('should add a TrackingID header', function () {
+    it('should add a TrackingID and Access-Control-Expose-Header header if blacklist doesn\'t exist for http domain', function () {
       var response = TrackingIdInterceptor.request(buildRequest('http://cmi.huron-dev.com/some/url'));
 
       expect(_.has(response.headers, TRACKING_ID)).toBeTruthy();
+      expect(response.headers[EXPOSE_HEADERS]).toContain(TRACKING_ID);
     });
 
-    it('should add an Access-Control-Expose-Header header if doesn\'t exist', function () {
-      var response = TrackingIdInterceptor.request(buildRequest('http://cmi.huron-dev.com/some/url'));
+    it('should add a TrackingID and Access-Control-Expose-Header header if blacklist doesn\'t exist for https domain', function () {
+      var response = TrackingIdInterceptor.request(buildRequest('https://cmi.huron-dev.com/some/url'));
 
+      expect(_.has(response.headers, TRACKING_ID)).toBeTruthy();
       expect(response.headers[EXPOSE_HEADERS]).toContain(TRACKING_ID);
     });
 
     it('should add an Access-Control-Expose-Header header if another header already exists', function () {
-      var response = TrackingIdInterceptor.request(buildRequestWithExistingHeaders('http://cmi.huron-dev.com/some/url'));
+      var response = TrackingIdInterceptor.request(buildRequestWithExistingHeaders('https://cmi.huron-dev.com/some/url'));
 
       expect(response.headers[EXPOSE_HEADERS]).toContain(TRACKING_ID);
       expect(response.headers[EXPOSE_HEADERS]).toContain('Location');
@@ -87,13 +97,13 @@
     });
 
     it('should increment tracking id when making multiple http requests', function () {
-      var response = TrackingIdInterceptor.request(buildRequest('http://cmi.huron-dev.com/some/url'));
+      var response = TrackingIdInterceptor.request(buildRequest('https://cmi.huron-dev.com/some/url'));
       var trackingIdComponents = response.headers[TRACKING_ID].split(SEPARATOR);
 
       // Non-http request shouldn't affect increment
       TrackingIdInterceptor.request(buildRequest('some:fake/url'));
 
-      response = TrackingIdInterceptor.request(buildRequest('http://cmi.huron-dev.com/some/url'));
+      response = TrackingIdInterceptor.request(buildRequest('https://cmi.huron-dev.com/some/url'));
       var trackingId2Components = response.headers[TRACKING_ID].split(SEPARATOR);
 
       // Same sender

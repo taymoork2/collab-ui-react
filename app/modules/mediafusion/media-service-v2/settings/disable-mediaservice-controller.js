@@ -36,6 +36,7 @@
           MediaServiceActivationV2.setisMediaServiceEnabled(false);
           MediaServiceActivationV2.setServiceAcknowledged(vm.serviceId, false);
           MediaServiceActivationV2.disableOrpheusForMediaFusion();
+          MediaServiceActivationV2.deactivateHybridMedia();
           $state.go('overview');
           Notification.success('mediaFusion.deactivate.success');
         } else {

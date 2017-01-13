@@ -1,14 +1,21 @@
 (function () {
   'use strict';
 
+  var authModule = require('modules/core/auth/auth');
+  var configModule = require('modules/core/config/config');
+  var urlConfigModule = require('modules/core/config/urlConfig');
+  var authinfoModule = require('modules/core/scripts/services/authinfo');
+  var logModule = require('modules/core/scripts/services/log');
+  var utilsModule = require('modules/core/scripts/services/utils');
+
   module.exports = angular
     .module('core.org', [
-      require('modules/core/auth/auth'),
-      require('modules/core/config/config'),
-      require('modules/core/config/urlConfig'),
-      require('modules/core/scripts/services/authinfo'),
-      require('modules/core/scripts/services/log'),
-      require('modules/core/scripts/services/utils'),
+      authModule,
+      authinfoModule,
+      configModule,
+      logModule,
+      urlConfigModule,
+      utilsModule
     ])
     .factory('Orgservice', Orgservice)
     .name;
@@ -346,12 +353,16 @@
       var serviceUrl = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/';
       if (serviceName === 'calendar-service') {
         serviceUrl = serviceUrl.concat(Config.entitlements.fusion_cal);
+      } else if (serviceName === 'google-calendar-service') {
+        serviceUrl = serviceUrl.concat(Config.entitlements.fusion_gcal);
       } else if (serviceName === 'call-aware-service') {
         serviceUrl = serviceUrl.concat(Config.entitlements.fusion_uc);
       } else if (serviceName === 'call-connect-service') {
         serviceUrl = serviceUrl.concat(Config.entitlements.fusion_ec);
       } else if (serviceName === 'squared-fusion-media') {
         serviceUrl = serviceUrl.concat(Config.entitlements.mediafusion);
+      } else if (serviceName === 'spark-hybrid-datasecurity') {
+        serviceUrl = serviceUrl.concat(Config.entitlements.hds);
       } else {
         return $q(function (resolve, reject) {
           reject('serviceName is invalid: ' + serviceName);
@@ -429,7 +440,7 @@
       };
 
       return $http(config).then(function (response) {
-        var data = response.data.properties[0];
+        var data = _.get(response, 'data.properties[0]', {});
         var isValid = (data.isValid === 'true' && data.errorCode === '0');
         return {
           isValid: isValid

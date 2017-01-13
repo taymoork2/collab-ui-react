@@ -6,16 +6,17 @@
     .controller('CallServicePreviewCtrl', CallServicePreviewCtrl);
 
   /*@ngInject*/
-  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, ServiceDescriptor, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService) {
+  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService, UCCService, FusionUtils) {
     $scope.saveLoading = false;
+    $scope.domainVerificationError = false;
     $scope.currentUser = $stateParams.currentUser;
     var isEntitled = function (ent) {
       return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf(ent) > -1;
     };
-
-    var sipUri = _.find($scope.currentUser.sipAddresses, {
-      type: "enterprise"
-    });
+    var isSetup = function (id) {
+      var extension = _.find($stateParams.extensions, { id: id });
+      return extension ? extension.isSetup : false;
+    };
 
     $scope.isInvitePending = Userservice.isInvitePending($scope.currentUser);
     $scope.localizedServiceName = $translate.instant('hercules.serviceNames.' + $stateParams.extensionId);
@@ -27,15 +28,17 @@
     $scope.callServiceAware = {
       id: 'squared-fusion-uc',
       name: 'squaredFusionUC',
-      entitled: isEntitled('squared-fusion-uc'),
-      sipUri: sipUri ? sipUri.value : null
+      entitled: isEntitled('squared-fusion-uc'), // Tracks the entitlement as set in the UI (toggle)
+      directoryUri: null,
+      currentUserEntitled: isEntitled('squared-fusion-uc') // Tracks the actual entitlement on the user
     };
     $scope.callServiceConnect = {
       id: 'squared-fusion-ec',
       name: 'squaredFusionEC',
-      entitled: isEntitled('squared-fusion-ec'),
+      entitled: isEntitled('squared-fusion-ec'), // Tracks the entitlement as set in the UI (toggle)
       orgEntitled: Authinfo.isFusionEC(),
-      enabledInFMS: false
+      enabledInFMS: false,
+      currentUserEntitled: isEntitled('squared-fusion-ec') // Tracks the actual entitlement on the user
     };
     $scope.resourceGroup = {
       show: false,
@@ -66,11 +69,7 @@
 
     // Only show callServiceConnect if it's enabled
     if ($scope.callServiceConnect.orgEntitled) {
-      ServiceDescriptor.isServiceEnabled($scope.callServiceConnect.id, function (error, enabled) {
-        if (!error) {
-          $scope.callServiceConnect.enabledInFMS = enabled;
-        }
-      });
+      $scope.callServiceConnect.enabledInFMS = isSetup($scope.callServiceConnect.id);
     }
 
     $scope.$watch('callServiceAware.entitled', function (newVal, oldVal) {
@@ -117,9 +116,30 @@
             $scope.callServiceAware.homedConnector = connector;
           });
         }
+        if ($scope.callServiceAware.status && $scope.callServiceAware.status.lastStateChange) {
+          $scope.callServiceAware.status.lastStateChangeText = FusionUtils.getTimeSinceText($scope.callServiceAware.status.lastStateChange);
+        }
+
         if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.connectorId) {
           ClusterService.getConnector($scope.callServiceConnect.status.connectorId).then(function (connector) {
             $scope.callServiceConnect.homedConnector = connector;
+          });
+        }
+        if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.lastStateChange) {
+          $scope.callServiceConnect.status.lastStateChangeText = FusionUtils.getTimeSinceText($scope.callServiceConnect.status.lastStateChange);
+        }
+        if ($scope.callServiceAware.entitled && $scope.callServiceAware.status) {
+          UCCService.getUserDiscovery($scope.currentUser.id).then(function (userDiscovery) {
+            $scope.callServiceAware.directoryUri = userDiscovery.directoryURI;
+            if ($scope.callServiceAware.directoryUri) {
+              DomainManagementService.getVerifiedDomains().then(function (domainList) {
+                if (!UriVerificationService.isDomainVerified(domainList, $scope.callServiceAware.directoryUri)) {
+                  $scope.domainVerificationError = true;
+                }
+              });
+            } else {
+              $scope.domainVerificationError = false;
+            }
           });
         }
       }).catch(function (response) {
@@ -199,16 +219,22 @@
       if (!_.includes($stateParams.currentUser.entitlements, entitlement)) {
         $stateParams.currentUser.entitlements.push(entitlement);
       }
+      $scope.callServiceAware.currentUserEntitled = isEntitled($scope.callServiceAware.id);
+      $scope.callServiceConnect.currentUserEntitled = isEntitled($scope.callServiceConnect.id);
     };
 
     var removeEntitlementFromCurrentUser = function (entitlement) {
       _.remove($stateParams.currentUser.entitlements, function (e) {
         return e === entitlement;
       });
+      $scope.callServiceAware.currentUserEntitled = isEntitled($scope.callServiceAware.id);
+      $scope.callServiceConnect.currentUserEntitled = isEntitled($scope.callServiceConnect.id);
     };
 
     var updateEntitlements = function () {
       $scope.savingEntitlements = true;
+      $scope.savingAwareEntitlement = $scope.callServiceAware.currentUserEntitled !== $scope.callServiceAware.entitled;
+      $scope.savingConnectEntitlement = $scope.callServiceConnect.currentUserEntitled !== $scope.callServiceConnect.entitled;
       var user = [{
         'address': $scope.currentUser.userName
       }];
@@ -277,7 +303,7 @@
           };
           Notification.notify([entitleResult.msg], entitleResult.type);
         }
-        $scope.savingEntitlements = false;
+        $scope.savingEntitlements = $scope.savingAwareEntitlement = $scope.savingConnectEntitlement = false;
         $scope.saving = $scope.resourceGroup.saving;
       });
     };
@@ -324,24 +350,6 @@
     $scope.getStatus = function (status) {
       return USSService.decorateWithStatus(status);
     };
-
-    $scope.domainVerificationError = false; // need to be to be backwards compatible.
-    $scope.checkIfDomainIsVerified = function (awareEntitled) {
-      if (awareEntitled) {
-        if (sipUri) {
-          DomainManagementService.getVerifiedDomains().then(function (domainList) {
-            if (!UriVerificationService.isDomainVerified(domainList, sipUri.value)) {
-              $scope.domainVerificationError = true;
-            }
-          });
-        }
-      } else {
-        $scope.domainVerificationError = false;
-      }
-    };
-
-    // Do this at construct time
-    $scope.checkIfDomainIsVerified($scope.callServiceAware.entitled);
 
     $scope.navigateToCallSettings = function () {
       $state.go('call-service.settings');

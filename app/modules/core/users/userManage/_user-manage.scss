@@ -1,3 +1,6 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/spacing';
+
 .modal-usermanage-dialog {
   width: 900px;
 }
@@ -119,12 +122,6 @@
 
     .cs-input-radio.cs-input-group {
       @include vr-spacing(mb, 0);
-
-      p {
-        @extend .cs-radio-help;
-
-        @include vr-spacing(pl, 0);
-      }
     }
   }
 

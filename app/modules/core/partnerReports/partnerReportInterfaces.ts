@@ -1,9 +1,4 @@
 // base interfaces
-export interface ICallMetricsBase {
-  labelData: ICallMetricsLabels;
-  dummy: boolean;
-}
-
 export interface IGraphBase {
   date: string;
   balloon: boolean;
@@ -14,9 +9,23 @@ export interface IDropdownBase {
   label: string;
 }
 
-// Used by the time Filter
+// export menu
+export interface IExportMenu {
+  id: string;
+  label: string;
+  click: Function | undefined;
+}
+
+// time slider
+export interface ITimeSliderFunctions {
+  sliderUpdate: Function | undefined;
+  update: Function;
+}
+
 export interface ITimespan extends IDropdownBase {
   description: string;
+  min: number;
+  max: number;
 }
 
 // Used by the Customer Filter
@@ -96,8 +105,10 @@ export interface IEndpointData {
 }
 
 // Call Metrics Interfaces
-export interface ICallMetricsData extends ICallMetricsBase {
+export interface ICallMetricsData {
   dataProvider: Array<ICallMetricsDataProvider>;
+  labelData: ICallMetricsLabels;
+  dummy: boolean;
 }
 
 export interface ICallMetricsLabels {
@@ -134,12 +145,15 @@ export interface IActiveUserData extends IGraphBase {
   percentage: number;
 }
 
-export interface IActiveTableData {
-  orgName: string;
+export interface IActiveTableBase {
   numCalls: number;
   totalActivity: number;
   sparkMessages: number;
   userName: string;
+}
+
+export interface IActiveTableData extends IActiveTableBase {
+  orgName: string;
 }
 
 export interface IPopulationData {
@@ -170,6 +184,7 @@ export interface IIntervalQuery {
 
 export interface ITypeQuery {
   name: string;
+  extension: string | undefined;
   type: string;
   cache: boolean;
 }
@@ -189,5 +204,5 @@ export interface ICustomerIntervalQuery {
   spanCount: number;
   spanType: string;
   cache: boolean;
-  customerView: boolean;
+  customerView: boolean | undefined;
 }

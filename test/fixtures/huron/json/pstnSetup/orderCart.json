@@ -5,7 +5,8 @@
       "+12145557001"
     ]
   },
-  "type": "NUMBER_ORDER"
+  "numberType": "DID",
+  "orderType": "NUMBER_ORDER"
 }, {
   "data": {
     "numbers": [
@@ -13,14 +14,15 @@
       "+12145557001"
     ]
   },
-  "type": "PORT_ORDER"
+  "orderType": "PORT_ORDER"
 }, {
   "data": {
     "areaCode": 123,
     "length": 4,
     "consecutive": false
   },
-  "type": "BLOCK_ORDER"
+  "numberType": "DID",
+  "orderType": "BLOCK_ORDER"
 }, {
   "data": {
     "areaCode": 123,
@@ -28,5 +30,22 @@
     "length": 10,
     "consecutive": true
   },
-  "type": "BLOCK_ORDER"
+  "numberType": "DID",
+  "orderType": "BLOCK_ORDER"
+}, {
+  "data": {
+    "numbers": [
+      "+18005558000",
+      "+18005558001"
+    ]
+  },
+  "numberType": "TOLLFREE",
+  "orderType": "NUMBER_ORDER"
+}, {
+  "data": {
+    "areaCode": 888,
+    "length": 3
+  },
+  "numberType": "TOLLFREE",
+  "orderType": "BLOCK_ORDER"
 }]

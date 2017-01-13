@@ -6,8 +6,9 @@
     .factory('ServiceSetup', ServiceSetup);
 
   /* @ngInject */
-  function ServiceSetup($q, $translate, $filter, Authinfo, SiteService, InternalNumberRangeService, TimeZoneService, SiteLanguageService, ExternalNumberPoolService, VoicemailTimezoneService, VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2, CeSiteService) {
-
+  function ServiceSetup($filter, $q, $translate, Authinfo, AvrilSiteService, AvrilSiteUpdateService, CeSiteService, CustomerCommonService,
+  CustomerCosRestrictionServiceV2, DateFormatService, ExternalNumberPool, FeatureToggleService, InternalNumberRangeService, SiteCountryService,
+  SiteLanguageService, SiteService, TimeZoneService, VoicemailService, VoicemailTimezoneService) {
     return {
       internalNumberRanges: [],
       sites: [],
@@ -34,11 +35,38 @@
         }).$promise;
       },
 
+      getAvrilSite: function (siteUuid) {
+        return AvrilSiteUpdateService.get({
+          customerId: Authinfo.getOrgId(),
+          siteId: siteUuid
+        }).$promise;
+      },
+
       updateSite: function (siteUuid, site) {
         return SiteService.update({
           customerId: Authinfo.getOrgId(),
           siteId: siteUuid
         }, site).$promise;
+      },
+
+      updateAvrilSite: function (siteUuid, features) {
+        return AvrilSiteUpdateService.update({
+          customerId: Authinfo.getOrgId(),
+          siteId: siteUuid
+        }, features).$promise;
+      },
+
+      createAvrilSite: function (siteUuid, siteStrDigit, code, lang, timezone, extLength, voicemailPilotNumber) {
+        return AvrilSiteService.save({
+          customerId: Authinfo.getOrgId(),
+          guid: siteUuid,
+          siteCode: code,
+          siteSteeringDigit: siteStrDigit,
+          language: lang,
+          timeZone: timezone,
+          extensionLength: extLength,
+          pilotNumber: voicemailPilotNumber
+        }).$promise;
       },
 
       saveAutoAttendantSite: function (site) {
@@ -49,13 +77,12 @@
 
       loadExternalNumberPool: function (pattern) {
         var extNumPool = [];
-        var patternQuery = pattern ? '%' + pattern + '%' : undefined;
-        return ExternalNumberPoolService.query({
-          customerId: Authinfo.getOrgId(),
-          directorynumber: '',
-          order: 'pattern',
-          pattern: patternQuery
-        }, angular.bind(this, function (extPool) {
+        return ExternalNumberPool.getExternalNumbers(
+          Authinfo.getOrgId(),
+          pattern,
+          ExternalNumberPool.UNASSIGNED_NUMBERS,
+          ExternalNumberPool.FIXED_LINE_OR_MOBILE
+        ).then(angular.bind(this, function (extPool) {
           _.forEach(extPool, function (extNum) {
             extNumPool.push({
               uuid: extNum.uuid,
@@ -63,7 +90,7 @@
             });
           });
           this.externalNumberPool = extNumPool;
-        })).$promise;
+        }));
       },
 
       listVoicemailTimezone: function () {
@@ -154,6 +181,10 @@
         })).$promise;
       },
 
+      getDateFormats: function () {
+        return DateFormatService.query().$promise;
+      },
+
       getTimeZones: function () {
         return TimeZoneService.query().$promise;
       },
@@ -168,7 +199,20 @@
       },
 
       getSiteLanguages: function () {
-        return SiteLanguageService.query().$promise;
+        return SiteLanguageService.query().$promise.then(function (languages) {
+          return FeatureToggleService.supports(
+              FeatureToggleService.features.huronUserLocale2
+            ).then(function (isHuronUserLocale2Enabled) {
+              if (!isHuronUserLocale2Enabled) {
+                languages = _.filter(languages, function (tLanguage) {
+                  return (!tLanguage.featureToggle || tLanguage.featureToggle !== FeatureToggleService.features.huronUserLocale2);
+                });
+              }
+              return languages;
+            }).catch(function () {
+              return languages;
+            });
+        });
       },
 
       getTranslatedSiteLanguages: function (languages) {
@@ -178,6 +222,19 @@
           });
         });
         return localizedLanguages;
+      },
+
+      getSiteCountries: function () {
+        return SiteCountryService.query().$promise;
+      },
+
+      getTranslatedSiteCountries: function (countries) {
+        var localizedCountries = _.map(countries, function (country) {
+          return _.assign(country, {
+            label: $translate.instant(country.label)
+          });
+        });
+        return localizedCountries;
       },
 
       isOverlapping: function (x1, x2, y1, y2) {

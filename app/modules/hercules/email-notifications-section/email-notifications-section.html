@@ -1,0 +1,43 @@
+<setting-section setting="$ctrl.generalSectionTexts">
+  <div class="sub-section">
+    <h5 class="sub-section__label" translate="hercules.settings.emailNotificationsHeading"></h5>
+    <p class="sub-section__description" translate="hercules.settings.emailAdministratorNotification"></p>
+    <tags-input add-on-blur="true"
+                on-tag-added="$ctrl.writeConfig()"
+                on-tag-removed="$ctrl.writeConfig()"
+                placeholder={{$ctrl.localizedAddEmailWatermark}}
+                ng-model="$ctrl.emailSubscribers"
+                type="email"
+                allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?">
+    </tags-input>
+    <span class="right" ng-show="$ctrl.savingEmail"><span translate="hercules.settings.emailNotificationsSaving"></span> <i class="icon icon-spinner"/></span>
+  </div>
+
+  <div class="sub-section" ng-if="$ctrl.isCalendarService()">
+    <h5 class="sub-section__label" translate="hercules.settings.emailUserHeading"></h5>
+    <p class="sub-section__description" translate="hercules.settings.emailUserNotification"></p>
+    <cs-toggle-switch ng-model="$ctrl.enableEmailSendingToUser"
+                      ng-click="$ctrl.setEnableEmailSendingToUser()"
+                      toggle-id="toggleEnableEmailSendingToUser"
+                      name="toggleEnableEmailSendingToUser"
+                      size="small">
+    </cs-toggle-switch>
+  </div>
+
+  <div class="sub-section" ng-show="$ctrl.hasCalsvcOneButtonToPushIntervalFeatureToggle && $ctrl.isCalendarService()">
+    <h5 class="sub-section__label" translate="hercules.settings.oneButtonToPushIntervalHeading"></h5>
+    <p class="sub-section__description" translate="hercules.settings.oneButtonToPushInterval"></p>
+    <div class="row remove-margins">
+      <div class="medium-2 columns">
+        <cs-select
+          ng-model="$ctrl.oneButtonToPushIntervalMinutes"
+          options="$ctrl.oneButtonToPushIntervalOptions"
+          on-change-fn="$ctrl.setOneButtonToPushIntervalMinutes()"
+        >
+        </cs-select>
+      </div>
+      <div class="medium-10 columns custom-line-height" translate="hercules.settings.oneButtonToPushIntervalSecondaryLabel">
+      </div>
+    </div>
+  </div>
+</setting-section>

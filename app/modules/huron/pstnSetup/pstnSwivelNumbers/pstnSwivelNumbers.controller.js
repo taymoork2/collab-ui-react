@@ -51,9 +51,14 @@
     }
 
     function createToken(e) {
-      var tokenNumber = e.attrs.label;
-      e.attrs.value = TelephoneNumberService.getDIDValue(tokenNumber);
-      e.attrs.label = TelephoneNumberService.getDIDLabel(tokenNumber);
+      if (e.attrs.value.charAt(0) !== '+') {
+        e.attrs.value = '+'.concat(e.attrs.value);
+      }
+      try {
+        e.attrs.value = e.attrs.label = phoneUtils.formatE164(e.attrs.value);
+      } catch (e) {
+        //noop
+      }
 
       var duplicate = _.find(getSwivelNumberTokens(), {
         value: e.attrs.value
@@ -67,9 +72,7 @@
       if (e.attrs.duplicate) {
         $timeout(function () {
           var tokens = getSwivelNumberTokens();
-          _.remove(tokens, function (e) {
-            return e.duplicate;
-          });
+          tokens = tokens.splice(_.indexOf(tokens, e.attrs), 1);
           Notification.error('pstnSetup.duplicateNumber', {
             number: e.attrs.label
           });
@@ -77,7 +80,7 @@
             return token.value;
           }));
         });
-      } else if (!TelephoneNumberService.validateDID(e.attrs.value)) {
+      } else if (!TelephoneNumberService.internationalNumberValidator(e.attrs.value)) {
         angular.element(e.relatedTarget).addClass('invalid');
         e.attrs.invalid = true;
       }

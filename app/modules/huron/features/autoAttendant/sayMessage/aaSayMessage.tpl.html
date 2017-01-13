@@ -3,7 +3,7 @@
     <div class="row">
       <div class="small-12 columns">
         <label for="sayMessageInput{{ schedule + index + menuKeyIndex }}" translate="{{ :: aaSay.getMessageLabel() }}"></label>
-        <textarea class="aa-message-textarea" aa-keypress ng-change="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index + menuKeyIndex }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" cols="50" rows="5" maxlength="2000" ></textarea>
+        <textarea class="aa-message-textarea" aa-keypress ng-change="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index + menuKeyIndex }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" cols="31" rows="5" maxlength="2000" ></textarea>
       </div>
     </div>
     <div class="row">
@@ -24,9 +24,9 @@
       </div>
     </div>
   </div>
-  <div ng-if="aaSay.isMessageInputOnly()">
+  <div ng-if="aaSay.isMessageInputOnly()" class="aa-message-panel-input-only">
     <label class="control-label" for="sayMessageInput{{ schedule + index + menuKeyIndex }}" translate="{{ :: aaSay.getMessageLabel() }}"></label>
-    <textarea aa-keypress ng-change="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index + menuKeyIndex }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" rows="4" maxlength="2000"></textarea>
+    <textarea class="aa-message-textarea" aa-keypress ng-change="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index + menuKeyIndex }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" rows="4" cols="31" maxlength="2000"></textarea>
   </div>
 </div>
 <div ng-if="aaSay.isMediaUploadToggle()">
@@ -47,7 +47,7 @@
       <span class="small-12 columns aa-message-subtext" translate="autoAttendant.sayAndError"></span>
       <hr class="aa-message-line-break"></hr>
     </div>
-    <div aa-message-type aa-index="index" aa-schedule="{{schedule}}"></div>
+    <aa-message-type aa-key-index={{menuKeyIndex}} aa-index="index" aa-schedule="{{schedule}}" aa-menu-header="{{isMenuHeader}}" aa-menu-id="{{menuId}}"></aa-message-type>
     <div class="row">
       <div class="small-12 columns">
         <p class="body-small aa-message-footer" translate="{{ :: aaSay.getFooter() }}"></p>
@@ -55,7 +55,6 @@
     </div>
   </div>
   <div ng-if="aaSay.isMessageInputOnly()">
-    <label class="control-label" for="sayMessageInput{{ schedule + index + menuKeyIndex }}" translate="{{ :: aaSay.getMessageLabel() }}"></label>
-    <textarea aa-keypress ng-change="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index + menuKeyIndex }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" rows="4" maxlength="2000"></textarea>
+     <aa-message-type name="aa-msg-input-only" aa-from-sub-menu={{fromSubMenu}} aa-key-index={{menuKeyIndex}} aa-index="index" aa-schedule="{{schedule}}" aa-menu-header="{{isMenuHeader}}" aa-menu-id="{{menuId}}"></aa-message-type>
   </div>
 </div>

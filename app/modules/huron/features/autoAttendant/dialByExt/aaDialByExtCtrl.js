@@ -123,7 +123,6 @@
     }
 
     function setActionEntry() {
-
       if (vm.menuEntry.actions.length === 0) {
         var action = AutoAttendantCeMenuModelService.newCeActionEntry(runActionName, '');
         action.inputType = 2;
@@ -144,27 +143,25 @@
     }
 
     function activate() {
-      if ($scope.keyIndex) {
+      if ($scope.menuKeyIndex) {
         // called from phone menu, no support for lang/voice/timeout
         var uiPhoneMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         vm.isTextOnly = true;
 
         // Read an existing dialByExt entry if exist or initialize it if not
-        if ($scope.keyIndex < uiPhoneMenu.entries.length) {
-          vm.menuEntry = uiPhoneMenu.entries[$scope.keyIndex];
+        if ($scope.menuKeyIndex < uiPhoneMenu.entries.length) {
+          vm.menuEntry = uiPhoneMenu.entries[$scope.menuKeyIndex];
         } else {
           vm.menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
           var action = AutoAttendantCeMenuModelService.newCeActionEntry(runActionName, '');
           vm.menuEntry.addAction(action);
         }
-
         setPhoneMenuMinMaxEntry();
 
       } else {
         var uiModel = AAUiModelService.getUiModel();
         var uiCombinedMenu = uiModel[$scope.schedule];
         vm.menuEntry = uiCombinedMenu.entries[$scope.index];
-
         setActionEntry();
       }
 

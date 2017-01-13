@@ -1,5 +1,11 @@
 <cs-sp-container>
-  <cs-sp-section>
+  <cs-sp-section ng-if="$ctrl.currentPlace.sipUrl">
+    <section-title
+      title-key="deviceOverviewPage.sipUrl">
+    </section-title>
+    <p>{{$ctrl.currentPlace.sipUrl}}</p>
+  </cs-sp-section>
+  <cs-sp-section ng-if="$ctrl.hasSparkCall">
     <section-title
       title-key="directoryNumberPanel.directNumbers"
       action-list="$ctrl.actionList">
@@ -11,7 +17,7 @@
       voicemail-enabled="$ctrl.voicemailEnabled">
     </directory-number-list>
   </cs-sp-section>
-  <cs-sp-section>
+  <cs-sp-section ng-if="$ctrl.hasSparkCall">
     <section-title
       title-key="telephonyPreview.features">
     </section-title>

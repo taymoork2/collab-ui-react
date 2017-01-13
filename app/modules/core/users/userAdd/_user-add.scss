@@ -1,3 +1,8 @@
+@import 'modules/core/setupWizard/planReview/plan-container';
+
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/fonts';
+
 .modal-useradd-dialog {
   width: 900px;
 }
@@ -240,9 +245,6 @@
 }
 
 .warning-icon {
-  @extend .icon;
-  @extend .icon-warning;
-
   margin-right: 12px;
   font-size: 15px;
   color: $brand-warning;
@@ -312,9 +314,6 @@
   }
 
   .plus-icon {
-    @extend .icon;
-    @extend .icon-plus;
-
     border-radius: 50%;
     font-size: 25px;
     margin-left: 10px;
@@ -417,6 +416,43 @@
     margin-left: -20px;
     margin-right: -20px;
   }
+}
+
+.license-entity-type {
+  font-family: $brand-font-light;
+  font-size: 14px;
+  color: $gray-base;
+  display: block;
+}
+
+.license-entity {
+  font-family: $brand-font-light;
+  font-size: 12px;
+  color: $gray-base;
+  display: block;
+}
+
+.license-siteUrl {
+  color: $color-primary-base;
+  font-family: $brand-font-light;
+  font-size: 12px;
+}
+
+.under-label-reposition {
+  margin-top: -12px;
+  margin-left: 32px;
+}
+
+.license-entity-tooltip {
+  color: $color-primary-base;
+  font-size: 12px;
+}
+
+.license-tooltip-html {
+  font-size: 12px;
+  text-align: center;
+  width: 170px;
+  height: auto;
 }
 
 .wizard-main {
@@ -572,43 +608,11 @@
   .form-control[disabled].select-toggle {
     border: 1px solid $brand-danger;
     background-color: transparent;
-
-    .icon-arrow-down {
-      &::after {
-        // this is the X icon that appears when no DNs are available
-        @extend %icon-error;
-
-        top: 0;
-        left: -12px;
-        position: absolute;
-        font-size: 18px;
-        line-height: 35px;
-        height: 17px;
-        width: 17px;
-        color: $brand-danger;
-      }
-    }
   }
 
   .select-warning .select-toggle {
     border: 1px solid $brand-warning-dark;
     background-color: transparent;
-
-    .icon-arrow-down {
-      &::after {
-        // this is the X icon that appears when no DNs are available
-        @extend %icon-warning;
-
-        top: 0;
-        left: -12px;
-        position: absolute;
-        font-size: 18px;
-        line-height: 35px;
-        height: 17px;
-        width: 17px;
-        color: $brand-warning-dark;
-      }
-    }
   }
 
   .icon-arrow-down {
@@ -642,4 +646,10 @@
 
 .users-upload-results {
   min-height: 0px;
+}
+
+.care-information-text {
+  cursor: default;
+  font-size: 12px;
+  width: auto;
 }

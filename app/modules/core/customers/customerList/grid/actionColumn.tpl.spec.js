@@ -2,9 +2,16 @@
   'use strict';
 
   var $scope, $compile, $templateCache, $q, $controller, view;
-  var customerListToggle, Authinfo, FeatureToggleService, Orgservice, PartnerService, TrialService;
+  var customerListToggle, Authinfo, FeatureToggleService, Orgservice, PartnerService, trialForPaid, TrialService;
 
   describe('Template: actionColumn.tpl.html', function () {
+
+    afterEach(function () {
+      if (view) {
+        view.remove();
+      }
+      view = undefined;
+    });
 
     beforeEach(angular.mock.module('wx2AdminWebClientApp')); // need the states for template ui-sref
     beforeEach(angular.mock.module('Huron'));
@@ -32,7 +39,8 @@
         CUSTOMER: 2
       };
 
-      customerListToggle = false;
+      customerListToggle = true;
+      trialForPaid = false;
 
       spyOn(TrialService, 'getTrialsList').and.returnValue($q.when({
         data: {}
@@ -50,12 +58,14 @@
       spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
         $q.when(true)
       );
+      spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(false));
     }
 
     function compileViewWithMockData(mockData) {
       $controller('CustomerListCtrl', {
         $scope: $scope,
-        customerListToggle: customerListToggle
+        customerListToggle: customerListToggle,
+        trialForPaid: trialForPaid
       });
 
       _.extend($scope, mockData);

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerOverviewCtrl', function () {
-  var $controller, $scope, $stateParams, $state, $window, $q, modal, Authinfo, BrandService, controller, currentCustomer, FeatureToggleService, identityCustomer, newCustomerViewToggle, Orgservice, PartnerService, TrialService, Userservice, Notification;
+  var $controller, $scope, $stateParams, $state, $window, $q, modal, Authinfo, BrandService, controller, currentCustomer, FeatureToggleService, identityCustomer, newCustomerViewToggle, Orgservice, PartnerService, trialForPaid, TrialService, Userservice, Notification;
 
   var licenseString = 'MC_cfb817d0-ddfe-403d-a976-ada57d32a3d7_100_t30citest.webex.com';
 
@@ -29,6 +29,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
       services: ['webex-squared', 'ciscouc']
     };
     $scope.newCustomerViewToggle = newCustomerViewToggle;
+    $scope.trialForPaid = trialForPaid;
     Userservice = {
       updateUsers: function () {}
     };
@@ -94,11 +95,13 @@ describe('Controller: CustomerOverviewCtrl', function () {
     );
     spyOn(FeatureToggleService, 'atlasCustomerListUpdateGetStatus').and.returnValue($q.resolve(true));
     spyOn(modal, 'open').and.callThrough();
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     initController();
   }));
 
-  function initController() {
+  function initController(options) {
+    var trialForPaid = _.get(options, 'hasTrialForPaidFT', false);
     controller = $controller('CustomerOverviewCtrl', {
       $scope: $scope,
       identityCustomer: identityCustomer,
@@ -107,11 +110,17 @@ describe('Controller: CustomerOverviewCtrl', function () {
       BrandService: BrandService,
       FeatureToggleService: FeatureToggleService,
       newCustomerViewToggle: newCustomerViewToggle,
-      $modal: modal
+      $modal: modal,
+      trialForPaid: trialForPaid
     });
 
     $scope.$apply();
   }
+
+  afterEach(function () {
+    $controller = $scope = $stateParams = $state = $window = $q = modal = Authinfo = BrandService = controller = currentCustomer = FeatureToggleService = identityCustomer = newCustomerViewToggle = Orgservice
+    = PartnerService = TrialService = Userservice = Notification = undefined;
+  });
 
   xit('should transition to trialEdit.info state', function () {
     controller.openEditTrialModal();
@@ -123,6 +132,19 @@ describe('Controller: CustomerOverviewCtrl', function () {
     $scope.$apply(); // modal is closed and promise is resolved
     expect($state.go).toHaveBeenCalled();
     expect($state.go.calls.mostRecent().args[0]).toEqual('partnercustomers.list');
+  });
+
+  describe('Trial for Paid  Customer feature toggle Trial Actions', function () {
+    it('should be empty for paid customer without feature toggle', function () {
+      initController({ hasTrialForPaidFT: false });
+      expect(controller.trialActions.length).toBe(0);
+    });
+
+    it('should have \'add\' action for paid customer with feature toggle', function () {
+      initController({ hasTrialForPaidFT: true });
+      expect(controller.trialActions.length).toBe(1);
+      expect(controller.trialActions[0].actionKey).toBe('customerPage.addTrial');
+    });
   });
 
   it('should display correct customer portal launch button via var isOrgSetup', function () {
@@ -144,28 +166,53 @@ describe('Controller: CustomerOverviewCtrl', function () {
     expect(controller.isSquaredUC).toEqual(true);
   });
 
+
   describe('launchCustomerPortal', function () {
     beforeEach(function () {
       Userservice.updateUsers.and.returnValue($q.when());
-      controller.launchCustomerPortal();
-      $scope.$apply();
     });
 
-    it('should call modifyManagedOrgs', function () {
-      expect(controller.customerOrgId).toBe(currentCustomer.customerOrgId);
-      expect(Authinfo.isPartnerAdmin()).toBe(true);
-      expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
-    });
+    describe('as a full-admin', function () {
+      beforeEach(function () {
+        spyOn(controller._helpers, 'canUpdateLicensesForSelf').and.returnValue(true);
+        controller.launchCustomerPortal();
+        $scope.$apply();
+      });
 
-    it('should create proper url', function () {
-      expect($state.href).toHaveBeenCalledWith('login_swap', {
-        customerOrgId: controller.currentCustomer.customerOrgId,
-        customerOrgName: controller.currentCustomer.customerName
+      it('should call modifyManagedOrgs', function () {
+        expect(controller.customerOrgId).toBe(currentCustomer.customerOrgId);
+        expect(Authinfo.isPartnerAdmin()).toBe(true);
+        expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
+      });
+
+      it('should create proper url', function () {
+        expect($state.href).toHaveBeenCalledWith('login_swap', {
+          customerOrgId: controller.currentCustomer.customerOrgId,
+          customerOrgName: controller.currentCustomer.customerName
+        });
+      });
+
+      it('should call $window.open', function () {
+        expect($window.open).toHaveBeenCalled();
       });
     });
 
-    it('should call $window.open', function () {
-      expect($window.open).toHaveBeenCalled();
+    describe('as a non-full-admin', function () {
+      beforeEach(function () {
+        controller.isPartnerAdmin = false;
+        spyOn(controller._helpers, 'canUpdateLicensesForSelf').and.returnValue(false);
+        spyOn(controller._helpers, 'openCustomerPortal');
+        controller.launchCustomerPortal();
+        $scope.$apply();
+      });
+
+      it('should not call "modifyManagedOrgs()"', function () {
+        expect(PartnerService.modifyManagedOrgs).not.toHaveBeenCalled();
+      });
+
+      it('should call "openCustomerPortal()"', function () {
+        expect(controller._helpers.openCustomerPortal).toHaveBeenCalled();
+      });
     });
   });
 

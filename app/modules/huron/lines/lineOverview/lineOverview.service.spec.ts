@@ -87,11 +87,13 @@ describe('Service: LineOverviewService', () => {
         firstName: 'Scary',
         lastName: 'User',
         userName: 'scary.user@haunted.com',
+        numbers: [],
       }),
       new Member({
         uuid: '0002',
         type: 'USER_PLACE',
         displayName: 'Scary Place',
+        numbers: [],
       }),
     ];
 

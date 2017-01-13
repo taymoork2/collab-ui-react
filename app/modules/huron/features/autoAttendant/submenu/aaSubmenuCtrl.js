@@ -51,7 +51,7 @@
     }, {
       label: $translate.instant('autoAttendant.actionSayMessage'),
       name: 'phoneMenuSayMessage',
-      action: 'say'
+      action: ['say', 'play'],
     }, {
       label: $translate.instant('autoAttendant.phoneMenuDialExt'),
       name: 'phoneMenuDialExt',
@@ -194,7 +194,11 @@
                   if (this.name === 'repeatActionsOnInput') {
                     return (this.name === keyAction.action && this.level === keyAction.level);
                   } else {
-                    return this.name === keyAction.action;
+                    if (this.name === keyAction.action) {
+                      return true;
+                    } else if (keyAction.action.length > 1) {
+                      return (this.name === keyAction.action[0] || this.name === keyAction.action[1]);
+                    }
                   }
                 }, menuEntry.actions[0]));
               } else {

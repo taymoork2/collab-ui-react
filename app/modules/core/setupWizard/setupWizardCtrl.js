@@ -1,10 +1,12 @@
+require('./_setup-wizard.scss');
+
 (function () {
   'use strict';
 
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($http, $scope, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, UrlConfig, Utils) {
+  function SetupWizardCtrl($scope, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, Utils) {
 
     FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
       $scope.pstnEnabled = pstnEnabled;
@@ -92,9 +94,6 @@
           name: 'init',
           template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
         }, {
-          name: 'domainEntry',
-          template: 'modules/core/setupWizard/addUsers/addUsers.domainEntry.tpl.html'
-        }, {
           name: 'installConnector',
           template: 'modules/core/setupWizard/addUsers/addUsers.installConnector.tpl.html'
         }, {
@@ -147,11 +146,7 @@
       if (Authinfo.isCare()) {
         FeatureToggleService.atlasCareTrialsGetStatus().then(function (careToggle) {
           if (careToggle) {
-            $http.get(UrlConfig.getAdminServiceUrl() + 'userauthinfo').then(function (authData) {
-              if (!isPartner(authData.data)) {
-                addCareStep();
-              }
-            });
+            addCareStep();
           }
         });
       }
@@ -245,21 +240,13 @@
       }
     }
 
-    function isPartner(authData) {
-      var roles = authData.roles;
-      if (_.indexOf(roles, 'PARTNER_USER') > -1 || _.indexOf(roles, 'PARTNER_ADMIN') > -1) {
-        return true;
-      }
-      return false;
-    }
-
     function filterTabs(tabs) {
       if (!($stateParams.onlyShowSingleTab && $stateParams.currentTab)) {
         return tabs;
       }
 
       var filteredTabs = _.filter(tabs, function (tab) {
-        return ($stateParams.currentTab == tab.name);
+        return ($stateParams.currentTab === tab.name);
       });
 
       if ($stateParams.currentStep && filteredTabs.length === 1 && filteredTabs[0].steps) {

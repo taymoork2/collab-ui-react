@@ -5,10 +5,10 @@ var AutoAttendantPage = function () {
   this.playSubmenu = 'Play Submenu';
   this.goBack = 'Go Back';
   this.routeToQueue = 'Queue Call';
-
   this.key0 = '0';
   this.key1 = '1';
   this.key2 = '2';
+
   this.firstTimeZone = 'Africa/Abidjan';
 
   this.routeQueueDetail = element(by.id('route-queue-detail'));
@@ -20,18 +20,17 @@ var AutoAttendantPage = function () {
   this.okQueueTreatment = element(by.id('okTreatmentBtn'));
   this.mohCustomUpload = element(by.id('uploadFileRadio1'));
   this.mohDefaultUpload = element(by.id('musicOnHoldRadio1'));
+  this.msgInputOnlyAll = element.all(by.css('aa-message-type[name="aa-msg-input-only"]'));
 
-  this.queueDestDisconnect = element(by.linkText('Disconnect'));
-  this.queueDest = element(by.id('destinationSelect'));
-  this.queueDestOption = element(by.id('destinationSelect')).all(by.tagName('li'));
-  this.queueDestAction = element(by.linkText('Search or Select'));
-  this.queueDestActionOption = element(by.css('div.dropdown-menu.visible')).all(by.tagName('li'));
-  this.queueDestRouteToPhoneNumber = element(by.name('phoneNumberInput'));
+  this.periodicMessageTypeSelect = element(by.id('periodicAnnouncement')).element(by.css('aa-message-type [name="messageInput"]'));
+  this.periodicSayMessageOption = element(by.id('periodicAnnouncement')).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
+  this.periodicMediaUploadSelectOption = element(by.id('periodicAnnouncement')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.periodicMediaUploadInput = element(by.id('periodicAnnouncement')).element(by.css('aa-message-type [name="mediaUploadSend"]'));
 
-  this.initialMessage = element(by.id('initialAnnouncement')).element(by.css('aa-message-type [name="messageInput"]'));
-  this.initialMessageOptions = element(by.id('initialAnnouncement')).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
-  this.initialPlayMessageOption = element(by.id('initialAnnouncement')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
-  this.initialMediaUploadInput = element(by.id('initialAnnouncement')).element(by.name('mediaUploadInput'));
+  this.periodicMin = element(by.linkText('0'));
+  this.periodicMinOption = element(by.id('periodicMinId')).all(by.tagName('li'));
+  this.periodicSec = element(by.linkText('45'));
+  this.periodicSecOption = element(by.id('periodicSecId')).all(by.tagName('li'));
 
   this.searchBox = element(by.id('searchFilter'));
   this.aaTitle = element(by.tagName('aa-builder-name-edit'));
@@ -62,8 +61,11 @@ var AutoAttendantPage = function () {
 
   this.lanesWrapper = element.all(by.css('div.aa-lanes-wrapper')).first();
 
-  this.numberIconClose = element.all(by.css('.icon-close')).last();
+  this.numberByNameCloseAll = element.all(by.name('numberClose'));
+  this.numberByNameClose = element.all(by.name('numberClose')).last();
+
   this.sayMessageBody = element(by.css('div.aa-panel-body[name="Say Message"]'));
+
   this.messageOptions = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
   this.playMessageOption = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
 
@@ -71,6 +73,8 @@ var AutoAttendantPage = function () {
 
   this.dialByMessageOptions = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
   this.dialByPlayMessageOption = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+
+  this.dialBySayMessageOption = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
 
   this.sayMediaUploadInput = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.name('mediaUploadInput'));
 
@@ -80,6 +84,9 @@ var AutoAttendantPage = function () {
 
   this.mediaFileToUpload = './../data/sample-media-upload.wav';
 
+  this.deleteMedia = element(by.css('.delete-media a'));
+  this.deleteConfirmationModalClose = element(by.css('.modal-footer')).element(by.cssContainingText('button', 'Delete'));
+
   this.sayMessage = element(by.css('div.aa-panel-body[name="Say Message"]'));
   this.sayMessageInput = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.name('messageInput'));
   this.sayMessageLanguage = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="languageSelect"] + div a.select-toggle'));
@@ -87,16 +94,26 @@ var AutoAttendantPage = function () {
   this.sayMessageVoice = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="voiceSelect"] + div a.select-toggle'));
   this.sayMessageVoiceOptions = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
 
+  this.phoneMenuMessageOptions = element(by.css('div.aa-panel-body[name="Phone Menu"]')).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
+
+  this.phoneMenuPlayMessageOption = element(by.css('div.aa-panel-body[name="Phone Menu"]')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+
+  this.phoneMenuSayMessageOption = element(by.css('div.aa-panel-body[name="Phone Menu"]')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
+
+  this.phoneMenuMediaUploadInput = element(by.css('div.aa-panel-body[name="Phone Menu"]')).element(by.name('mediaUploadInput'));
   this.phoneMenuAll = element.all(by.css('div.aa-panel-body[name="Phone Menu"]')).all(by.cssContainingText("h3", "Phone Menu"));
-  this.phoneMenuSay = element.all(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message')).first();
-  this.phonesayMessageInput = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message [name="sayMessageInput"]'));
+  this.phoneMenuSay = element.all(by.css('div.aa-panel-body[name="Phone Menu"] aa-message-type')).first();
+  this.phonesayMessageInput = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-message-type [name="messageInput"]'));
   this.phonesayMessageLanguage = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message select[name="languageSelect"] + div a.select-toggle'));
   this.phonelanguageDropDownOptions = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message select[name="languageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
-  this.phonelanguageDropDownOptions = element(by.css('div.aa-panel-body[name="Phone Menu"]')).element(by.css('select[name="languageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
-  this.phonesayMessageVoice = this.phoneMenuSay.element(by.css('select[name="voiceSelect"] + div a.select-toggle'));
-  this.phonesayMessageVoiceOptions = this.phoneMenuSay.element(by.css('select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+
+  this.phonesayMessageVoice = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message select[name="voiceSelect"] + div a.select-toggle'));
+  this.phonesayMessageVoiceOptions = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+
   this.addPlus = element(by.css('.aa-add-step-icon'));
-  this.repeatPlus = element(by.name('aa-phone-menu-add-action'));
+  this.repeatPlus = element.all(by.name('aa-phone-menu-add-action')).first();
+  this.repeatPlusSubMenu = element(by.name('aa-phone-menu-add-action'));
+
   this.phoneMenuKeys = element.all(by.css('div.aa-pm-key-select .icon-chevron-down'));
   this.phoneMenuKeysContent = element.all(by.css('div.aa-pm-key-select .select-toggle'));
   this.phoneMenuKeyOptions = element.all(by.css('div.aa-pm-key-select .dropdown-menu'));
@@ -105,11 +122,34 @@ var AutoAttendantPage = function () {
   this.phoneMenuActionOptions = element.all(by.css('div.aa-pm-action-select div.dropdown-menu'));
   this.phoneMenuActionTargets = element.all(by.css('div.aa-pm-action'));
 
+  this.phoneMenuActionTargetsMessageOption = this.phoneMenuActionTargets.last().element(by.css('select[name="messageSelect"] + div a.select-toggle'));
+
+  this.phoneMenuActionTargetsFirstMessageOption = this.phoneMenuActionTargets.first().element(by.css('select[name="messageSelect"] + div a.select-toggle'));
+
+  this.phoneMenuActionTargetMessageOptions = this.phoneMenuActionTargets.last().element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
+
+  this.phoneMenuActionTargetFirstMessageOptions = this.phoneMenuActionTargets.first().element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
+
+  this.callerInputFirst = element.all(by.css('div.aa-panel-body[name="Caller Input"]')).all(by.cssContainingText("h3", "Caller Input")).first();
+  this.callerInputGetDigits = element(by.cssContainingText('cs-checkbox', 'Convert digit input to text string value'));
+  this.callerInputTextFirst = element.all(by.name('callerInput')).first();
+  this.callerInputNameVariable = element(by.name('callerInputNameVariable'));
+  this.callerInputAddAction = element(by.name('aa-caller-input-add-action'));
+
   this.phoneMenuTimeout = element(by.css('div.aa-pm-timeout .icon-chevron-down'));
   this.phoneMenuTimeoutOptions = element(by.css('div.aa-pm-timeout div.dropdown-menu')).all(by.tagName('li')).first();
-
   this.submenuRepeatPlus = element.all(by.css('aa-submenu .icon-plus-circle'));
   this.submenuSayMessage = element.all(by.css('aa-say-message[name="aa-submenu-say-message"]'));
+  this.submenuSayMessageHeaderFirst = element.all(by.css('aa-message-type[name="aa-msg-input-only"]')).get(0);
+
+  this.submenuMessageOptionsFirst = element.all(by.css('aa-message-type[name="aa-msg-input-only"]')).get(0).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
+
+  this.submenuMessageOptionsSecond = element.all(by.css('aa-message-type[name="aa-msg-input-only"]')).get(1).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
+
+  this.submenuMessageOptionSelect = element.all(by.css('aa-message-type[name="aa-msg-input-only"]')).get(0).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li'));
+
+  this.submenuMessageOptionSelectSecond = element.all(by.css('aa-message-type[name="aa-msg-input-only"]')).get(1).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li'));
+
   this.submenuKeys = function (submenuI) {
     return element.all(by.css('aa-submenu')).get(submenuI).all(by.css('div.aa-sm-key-select .icon-chevron-down'));
   }
@@ -148,7 +188,14 @@ var AutoAttendantPage = function () {
   .all(by.css("div.aa-flex-row"))
   .last();
 
-  // first item in newStep dropdown: Say Message
+  this.newStepForm = element.all(by.css('div.aa-panel[name="newStepForm"]')).first();
+  this.newStepDropDownActionSelectopenHours0 = element(by.id('actionSelectopenHours0'));
+  this.queueSettingsModal = element(by.css('div.aa-queue-settings-modal'));
+  this.languageSelectopenHours0 = element(by.id('languageSelectopenHours0'));
+  this.voiceSelectopenHours0 = element(by.id('voiceSelectopenHours0'));
+  this.cancelTreatmentFeature = element(by.id('cancelTreatmentFeature'));
+
+  // last item in newStep dropdown: Say Message
   this.newStepSelectSayMessage = element.all(by.css('div.aa-panel[name="newStepForm"]'))
     .filter(function (el) {
       return el.isDisplayed();
@@ -157,32 +204,10 @@ var AutoAttendantPage = function () {
     .all(by.css("div.aa-flex-row"))
     .last()
     .all(by.tagName('li'))
-    .get(3);
+    .get(4);
 
-  // second item in newStep dropdown: Phone Menu
+  // third item in newStep dropdown: Phone Menu
   this.newStepSelectPhoneMenu = element.all(by.css('div.aa-panel[name="newStepForm"]'))
-    .filter(function (el) {
-      return el.isDisplayed();
-    })
-    .first()
-    .all(by.css("div.aa-flex-row"))
-    .last()
-    .all(by.tagName('li'))
-    .get(1);
-
-  // third item in newStep dropdown: Dial By Extension
-  this.newStepSelectDialByExt = element.all(by.css('div.aa-panel[name="newStepForm"]'))
-    .filter(function (el) {
-      return el.isDisplayed();
-    })
-    .first()
-    .all(by.css("div.aa-flex-row"))
-    .last()
-    .all(by.tagName('li'))
-    .get(0);
-
-  // last/third item in newStep dropdown: Route Call
-  this.newStepSelectRouteCall = element.all(by.css('div.aa-panel[name="newStepForm"]'))
     .filter(function (el) {
       return el.isDisplayed();
     })
@@ -192,6 +217,39 @@ var AutoAttendantPage = function () {
     .all(by.tagName('li'))
     .get(2);
 
+  // second item in newStep dropdown: Dial By Extension
+  this.newStepSelectDialByExt = element.all(by.css('div.aa-panel[name="newStepForm"]'))
+    .filter(function (el) {
+      return el.isDisplayed();
+    })
+    .first()
+    .all(by.css("div.aa-flex-row"))
+    .last()
+    .all(by.tagName('li'))
+    .get(1);
+
+  // fourth item in newStep dropdown: Route Call
+  this.newStepSelectRouteCall = element.all(by.css('div.aa-panel[name="newStepForm"]'))
+    .filter(function (el) {
+      return el.isDisplayed();
+    })
+    .first()
+    .all(by.css("div.aa-flex-row"))
+    .last()
+    .all(by.tagName('li'))
+    .get(3);
+
+  // first item is caller input
+  this.newStepCallerInput = element.all(by.css('div.aa-panel[name="newStepForm"]'))
+      .filter(function (el) {
+        return el.isDisplayed();
+      })
+      .first()
+      .all(by.css("div.aa-flex-row"))
+      .last()
+      .all(by.tagName('li'))
+      .get(0)
+
   // since we added a Say Message via Add New Step, there should be more than 1 from now on.
   // Get them all so we can check:
 
@@ -199,8 +257,6 @@ var AutoAttendantPage = function () {
 
   // and select the first one (which we added via Add New Step) for further tests
   this.sayMessageInputFirst = this.sayMessageAll.first().element(by.name('sayMessageInput'));
-
-  this.phoneSayMessageLanguageFirst = this.phoneMenuSay.all(by.name('languageSelect')).first().element(by.css('a.select-toggle'));
 
   // let's select galician (10th selection starting from 0 == 9) for a change of pace
   this.phoneLanguageDropDownOptionsTenth = this.phoneMenuSay.all(by.name('languageSelect'))
@@ -212,9 +268,14 @@ var AutoAttendantPage = function () {
   this.routeCall = element(by.css('div.aa-panel-body[name="Route Call"]'));
   this.routeCallChoose = this.routeCall.element(by.css('div.dropdown'));
   this.routeExternal = this.routeCall.element(by.css('div.dropdown-menu')).all(by.tagName('li')).last();
+  this.routeQueueCall = this.routeCall.element(by.css('div.dropdown-menu')).all(by.tagName('li')).get(0);
   this.routeExternalNumber = this.routeCall.element(by.css('input.phone-number'));
 
   this.dialByExtension = element(by.css('div.aa-panel-body[name="Dial by Extension"]'));
+
+  this.dialByMessageOptions = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
+
+  this.dialBySayMessageOption = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
 
   this.dialByMessageInput = element(by.css('div.aa-panel-body[name="Dial by Extension"] aa-message-type [name="messageInput"]'));
   this.dialByMessageLanguage = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="languageSelect"] + div a.select-toggle'));
@@ -234,8 +295,8 @@ var AutoAttendantPage = function () {
   this.deleteHoliday = element(by.name('aaScheduleModalCtrl.holidaysForm')).all(by.css('i.icon-trash'));
   this.holidayName = element(by.css('#holidayName'));
   this.holidayName2 = element(by.css('div.content.active')).element(by.css('#holidayName'));
-  this.recurAnnually = element(by.name('recurAnnually1'));
-  this.exactDate = element(by.name('exactDate1'));
+  this.recurAnnually = element.all(by.cssContainingText('.cs-checkbox', 'Recur Annually')).last();
+  this.exactDate = element.all(by.cssContainingText('.cs-checkbox', 'Exact Date')).last();
   this.selectEvery = element(by.css('div.content.active')).element(by.css('select[name="month"] + div a.select-toggle'));
   this.selectEveryJanuary = element(by.css('div.content.active')).element(by.css('select[name="month"] + div div.dropdown-menu')).all(by.tagName('li')).first();
   this.selectRank = element(by.css('div.content.active')).element(by.css('select[name="rank"] + div a.select-toggle'));
@@ -278,11 +339,16 @@ var AutoAttendantPage = function () {
   this.importContinue = element(by.id('importCtn'));
   this.importScheduleTitle = element.all(by.cssContainingText('.modal-title', 'Copy Schedule'));
   this.assertUpdateSuccess = assertUpdateSuccess;
+  this.assertUpdateError = assertUpdateError;
   this.assertCreateSuccess = assertCreateSuccess;
   this.assertImportSuccess = assertImportSuccess;
   this.assertCalendarUpdateSuccess = assertCalendarUpdateSuccess;
   this.assertDeleteSuccess = assertDeleteSuccess;
   this.scrollIntoView = scrollIntoView;
+
+  function assertUpdateError() {
+    notifications.assertError();
+  }
 
   function assertUpdateSuccess(test) {
     notifications.assertSuccess(test + ' updated successfully');

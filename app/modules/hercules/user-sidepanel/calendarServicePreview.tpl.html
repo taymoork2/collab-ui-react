@@ -10,36 +10,80 @@
       <cs-toggle-switch toggle-id="entitledToggle" ng-model="extension.entitled" size="small"></cs-toggle-switch>
     </div>
     <div>
-      <p class="extension-description">{{'hercules.cloudExtensions.serviceDescriptions.' + extension.id |
-        translate}}</p>
+      <p class="extension-description">{{'hercules.cloudExtensions.serviceDescriptions.' + extension.id | translate}}</p>
+
+      <div ng-if="atlasHerculesGoogleCalendarFeatureToggle">
+        <span class="cloud-extension-label">{{'hercules.cloudExtensions.calendarType' | translate}}:</span>
+        <input
+          cs-input
+          type="radio"
+          ng-model="calendarType.selected"
+          name="selectedType"
+          value="squared-fusion-cal"
+          id="selectedType_exchange"
+          ng-disabled="!calendarType.exchangeEnabled"
+          ng-change="selectedCalendarTypeChanged('squared-fusion-cal')"
+          cs-input-label="{{calendarType.exchangeName}}"
+          cs-input-help-text="{{calendarType.exchangeSetup ? '' : calendarType.notSetupText}}">
+        <input
+          cs-input
+          type="radio"
+          ng-model="calendarType.selected"
+          name="selectedType"
+          value="squared-fusion-gcal"
+          id="selectedType_google"
+          ng-disabled="!calendarType.googleEnabled"
+          ng-change="selectedCalendarTypeChanged('squared-fusion-gcal')"
+          cs-input-label="{{calendarType.googleName}}"
+          cs-input-help-text="{{calendarType.googleSetup ? '' : calendarType.notSetupText}}">
+      </div>
+
       <div ng-if="!isInvitePending">
-        <span class="cloud-extension-label" translate="cloudExtensions.status"></span>
-        <span class="cloud-extension-label" ng-if="extension.entitled && extension.status"
-              ng-class="extension.entitled && extension.status ? 'status-' + extension.status.state : 'disabled'"
+        <span class="cloud-extension-label">{{'cloudExtensions.status' | translate}}:</span>
+        <span class="cloud-extension-label" ng-if="extension.currentUserEntitled && extension.status && !savingEntitlements"
+              ng-class="'status-' + extension.status.state"
               translate="hercules.activationStatus.{{getStatus(extension.status)}}"></span>
-        <span class="cloud-extension-label status-off" ng-if="!extension.entitled" translate="common.off"></span>
-        <span cs-loader ng-if="!extension.status && extension.entitled"></span>
-
-      </div>
-
-      <div class="cloud-extension-label" ng-show="extension.entitled && extension.id === 'squared-fusion-cal'">
-        <span class="cloud-extension-label" translate="hercules.cloudExtensions.defaultWebExSite"></span>
-        <span class="cloud-extension-label">{{extension.defaultWebExSiteName}}</span>
-      </div>
-
-      <div ng-if="extension.entitled && extension.homedConnector">
-        <span class="cloud-extension-label" translate="cloudExtensions.host"></span>
-        <span ng-if="extension.entitled && extension.homedConnector" class="cloud-extension-label">
-          <a href="https://{{extension.homedConnector.host_name}}" target="_blank" style="color: #3ca8e8">{{extension.homedConnector.host_name}}</a>
+        <span class="cloud-extension-label disabled" ng-if="extension.currentUserEntitled && extension.status && extension.status.lastStateChangeText && !savingEntitlements">{{extension.status.lastStateChangeText}}</span>
+        <span class="cloud-extension-label status-off" ng-if="!extension.currentUserEntitled && !savingEntitlements" translate="common.off"></span>
+        <span cs-loader ng-if="savingEntitlements || (!extension.status && extension.currentUserEntitled)"></span>
+        <span ng-if="extension.currentUserEntitled && extension.status && !savingEntitlements"
+              class="cloud-extension-label right">
+          <a ui-sref="user-overview.hybrid-services-{{extension.id}}.history">{{'hercules.userHistory.seeHistory' | translate}}</a>
         </span>
       </div>
 
-      <div ng-if="extension.entitled && extension.status && extension.status.state === 'error' && extension.status.description"
+      <div class="cloud-extension-label" ng-show="extension.currentUserEntitled && extension.id === 'squared-fusion-cal' && extension.hasShowPreferredWebExSiteNameFeatureToggle">
+        <span class="cloud-extension-label">{{'hercules.cloudExtensions.preferredWebExSite' | translate}}:</span>
+        <span class="cloud-extension-label">{{extension.preferredWebExSiteName}}</span>
+      </div>
+
+      <div ng-if="extension.currentUserEntitled && extension.homedConnector">
+        <div>
+          <span class="cloud-extension-label">{{'cloudExtensions.cluster' | translate}}:</span>
+          <span class="cloud-extension-label">{{extension.homedConnector.cluster_name}}</span>
+        </div>
+        <div>
+          <span class="cloud-extension-label">{{'hercules.connectors.host_name' | translate}}:</span>
+          <span class="cloud-extension-label">
+            <a href="https://{{extension.homedConnector.host_name}}" target="_blank">{{extension.homedConnector.host_name}}</a>
+          </span>
+        </div>
+      </div>
+
+      <div ng-if="extension.currentUserEntitled && extension.status && extension.status.state === 'error' && extension.status.description"
            class="error-message">
          <i class="icon icon-error"></i>
          <p class="message">
           {{extension.status.description.defaultMessage}}
          </p>
+      </div>
+
+      <div ng-if="extension.currentUserEntitled && extension.status && extension.status.state !== 'error' && extension.status.description"
+           class="info-message">
+        <i class="icon icon-info"></i>
+        <p class="message">
+          {{extension.status.description.defaultMessage}}
+        </p>
       </div>
 
       <div

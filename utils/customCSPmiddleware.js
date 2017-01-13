@@ -28,6 +28,9 @@ module.exports = csp({
     frameSrc: [
       'https://buy.ciscospark.com', // Digital River
     ],
+    objectSrc: [
+      'http://www.cisco.com', // Terms of Service
+    ],
     connectSrc: [
       '\'self\'',
       'https://*.cisco.com',
@@ -44,6 +47,8 @@ module.exports = csp({
       'https://api.mixpanel.com',
       'https://cdn.mxpnl.com',
       'http://54.183.25.170:8001',
+      'https://clio-manager-a.wbx2.com',
+      'https://clio-manager-integration.wbx2.com',
       // manual DNS entry for local dev:
       'http://dev-admin.ciscospark.com:8000',
       'ws://dev-admin.ciscospark.com:8000',

@@ -1,14 +1,20 @@
 'use strict';
 
 describe('Controller: TrialAddCtrl', function () {
-  var controller, $httpBackend, $q, $scope, $state, $translate, EmailService, FeatureToggleService, HuronCustomer, Notification, Orgservice, TrialContextService, TrialPstnService, TrialService;
+  var controller, $httpBackend, $q, $scope, $state, $translate, Analytics, EmailService, FeatureToggleService, HuronCustomer, Notification, Orgservice, TrialContextService, TrialPstnService, TrialService;
   var addContextSpy;
+
+  afterEach(function () {
+    controller = $httpBackend = $q = $scope = $state = $translate = EmailService = Analytics = FeatureToggleService = HuronCustomer = Notification = Orgservice = TrialContextService = TrialPstnService = TrialService = undefined;
+    addContextSpy = undefined;
+  });
+
   beforeEach(angular.mock.module('core.trial'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Core'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$q_, _$state_, _$translate_, _EmailService_, _FeatureToggleService_, _HuronCustomer_, _Notification_, _Orgservice_, _TrialContextService_, _TrialPstnService_, _TrialService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$q_, _$state_, _$translate_, _Analytics_, _EmailService_, _FeatureToggleService_, _HuronCustomer_, _Notification_, _Orgservice_, _TrialContextService_, _TrialPstnService_, _TrialService_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     $q = _$q_;
@@ -22,31 +28,34 @@ describe('Controller: TrialAddCtrl', function () {
     TrialService = _TrialService_;
     TrialContextService = _TrialContextService_;
     TrialPstnService = _TrialPstnService_;
+    Analytics = _Analytics_;
 
     $state.modal = jasmine.createSpyObj('modal', ['close']);
     addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.when());
 
     spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
-    spyOn(FeatureToggleService, 'atlasWebexTrialsGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasCreateTrialBackendEmailGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
-      if (param == 'csdm-places' || param == 'csdm-pstn') {
+      if (param == 'csdm-pstn') {
         return $q.when(false);
-      } else if (param != 'csdm-pstn') {
+      } else {
         fail('the following toggle wasn\'t expected ' + param);
       }
     });
 
-    spyOn(Notification, 'notify');
+    spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
     spyOn($state, 'go');
     spyOn(TrialService, 'getDeviceTrialsLimit');
+    spyOn(Analytics, 'trackTrialSteps');
 
     $httpBackend
       .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null?disableCache=false')
@@ -150,7 +159,7 @@ describe('Controller: TrialAddCtrl', function () {
       });
 
       it('should notify success', function () {
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+        expect(Notification.success).toHaveBeenCalledWith('trialModal.addSuccess', jasmine.any(Object));
       });
 
       it('should have a customer org id set', function () {
@@ -158,7 +167,7 @@ describe('Controller: TrialAddCtrl', function () {
       });
     });
 
-    describe('with atlas-webex-trial feature-toggle enabled', function () {
+    describe('with atlas-webex-trial enabled', function () {
       beforeEach(function () {
         controller.callTrial.enabled = false;
         controller.pstnTrial.enabled = false;
@@ -172,8 +181,9 @@ describe('Controller: TrialAddCtrl', function () {
       });
     });
 
-    describe('with atlas-webex-trial feature-toggle disabled', function () {
+    describe('with atlas-webex-trial disabled and backend email feature-toggle disabled', function () {
       beforeEach(function () {
+        controller.atlasCreateTrialBackendEmailEnabled = false;
         controller.callTrial.enabled = false;
         controller.pstnTrial.enabled = false;
         controller.webexTrial.enabled = false;
@@ -183,6 +193,21 @@ describe('Controller: TrialAddCtrl', function () {
 
       it('should send an email', function () {
         expect(EmailService.emailNotifyTrialCustomer).toHaveBeenCalled();
+      });
+    });
+
+    describe('with atlas-webex-trial disabled and backend email feature-toggle enabled', function () {
+      beforeEach(function () {
+        controller.atlasCreateTrialBackendEmailEnabled = true;
+        controller.callTrial.enabled = false;
+        controller.pstnTrial.enabled = false;
+        controller.webexTrial.enabled = false;
+        controller.startTrial(callback);
+        $scope.$apply();
+      });
+
+      it('should not send an email', function () {
+        expect(EmailService.emailNotifyTrialCustomer).not.toHaveBeenCalled();
       });
     });
 
@@ -235,8 +260,8 @@ describe('Controller: TrialAddCtrl', function () {
         controller.startTrial();
         $scope.$apply();
         expect(HuronCustomer.create).toHaveBeenCalled();
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
-        expect(Notification.notify.calls.count()).toEqual(1);
+        expect(Notification.success).toHaveBeenCalledWith('trialModal.addSuccess', jasmine.any(Object));
+        expect(Notification.success.calls.count()).toEqual(1);
       });
 
       it('error should notify error', function () {
@@ -256,13 +281,13 @@ describe('Controller: TrialAddCtrl', function () {
 
       it('should notify success', function () {
         spyOn(HuronCustomer, 'create').and.returnValue($q.when());
-        spyOn(TrialPstnService, 'createPstnEntity').and.returnValue($q.when());
+        spyOn(TrialPstnService, 'createPstnEntityV2').and.returnValue($q.when());
         controller.startTrial();
         $scope.$apply();
         expect(HuronCustomer.create).toHaveBeenCalled();
-        expect(TrialPstnService.createPstnEntity).toHaveBeenCalled();
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
-        expect(Notification.notify.calls.count()).toEqual(1);
+        expect(TrialPstnService.createPstnEntityV2).toHaveBeenCalled();
+        expect(Notification.success).toHaveBeenCalledWith('trialModal.addSuccess', jasmine.any(Object));
+        expect(Notification.success.calls.count()).toEqual(1);
       });
 
       it('error should notify error', function () {
@@ -366,9 +391,8 @@ describe('Controller: TrialAddCtrl', function () {
   });
 
   describe('Start a new trial with error', function () {
-    var startTrialSpy;
     beforeEach(function () {
-      startTrialSpy = spyOn(TrialService, 'startTrial').and.returnValue($q.reject({
+      spyOn(TrialService, 'startTrial').and.returnValue($q.reject({
         data: {
           message: 'An error occurred'
         }
@@ -378,33 +402,11 @@ describe('Controller: TrialAddCtrl', function () {
     });
 
     it('should notify error', function () {
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      expect(Notification.errorResponse).toHaveBeenCalled();
     });
 
     it('should not have closed the modal', function () {
       expect($state.modal.close).not.toHaveBeenCalled();
-    });
-
-    it('should show a name error', function () {
-      startTrialSpy.and.returnValue($q.reject({
-        data: {
-          message: 'Org'
-        }
-      }));
-      controller.startTrial();
-      $scope.$apply();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
-    });
-
-    it('should show an email error', function () {
-      startTrialSpy.and.returnValue($q.reject({
-        data: {
-          message: 'Admin User'
-        }
-      }));
-      controller.startTrial();
-      $scope.$apply();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
   });
 
@@ -425,7 +427,8 @@ describe('Controller: TrialAddCtrl', function () {
   describe('Care offer trial', function () {
 
     describe('primary behaviors:', function () {
-      it('Message and Care are enabled by default', function () {
+      it('Message, Call and Care are enabled by default', function () {
+        expect(controller.callTrial.enabled).toBeTruthy();
         expect(controller.messageTrial.enabled).toBeTruthy();
         expect(controller.careTrial.enabled).toBeTruthy();
       });
@@ -444,6 +447,19 @@ describe('Controller: TrialAddCtrl', function () {
           controller.messageTrial.enabled = true;
           expect(controller.messageOfferDisabledExpression()).toBeFalsy();
           //Care is a choice to enable/disable when Message is enabled.
+          expect(controller.careTrial.enabled).toBeFalsy();
+        });
+      });
+
+      describe('callOfferDisabledExpression:', function () {
+        it('should be disabled if call is disabled.', function () {
+          controller.callTrial.enabled = false;
+          expect(controller.callOfferDisabledExpression()).toBeTruthy();
+          expect(controller.careTrial.enabled).toBeFalsy();
+
+          controller.callTrial.enabled = true;
+          expect(controller.callOfferDisabledExpression()).toBeFalsy();
+          //Care is a choice to enable/disable when Call is enabled.
           expect(controller.careTrial.enabled).toBeFalsy();
         });
       });
@@ -570,7 +586,7 @@ describe('Controller: TrialAddCtrl', function () {
     }
 
     _.times(testCase.length, function (index) {
-      var testMsg = 'should confirm ' + angular.toJson(testCase[index].retVal) + ' validates as ' + testCase[index].targetVal;
+      var testMsg = 'should confirm ' + JSON.stringify(testCase[index].retVal) + ' validates as ' + testCase[index].targetVal;
       it(testMsg, function () {
         doTestCase(index);
       });

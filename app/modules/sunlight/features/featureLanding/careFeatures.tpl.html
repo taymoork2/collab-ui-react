@@ -4,10 +4,10 @@
      <!--Show New Feature when no features are present-->
      <div ng-switch-when = "NewFeature" class="no-features content-container">
        <i class="icon icon-circle-contact-centre"></i>
-       <div class="h2" translate="sunlightDetails.featuresNotYetConfiguredPage.createCT"></div>
-       <div class="h6 ct-desc" translate="sunlightDetails.featuresNotYetConfiguredPage.createCTDesc"></div>
+       <div class="h2" translate="sunlightDetails.featuresNotYetConfiguredPage.createCareTemplate"></div>
+       <div class="h6 ct-desc" translate="sunlightDetails.featuresNotYetConfiguredPage.createCareTemplateDesc"></div>
        <div class="new-btn">
-         <button type="button" class="btn--people" ui-sref="care.ChatSA" translate="sunlightDetails.featuresNotYetConfiguredPage.new"></button>
+         <button type="button" class="btn--people" ng-click="careFeaturesCtrl.openNewCareFeatureModal()" translate="sunlightDetails.featuresNotYetConfiguredPage.new"></button>
        </div>
      </div>
 
@@ -32,8 +32,8 @@
            </cs-searchfilter>
          </cs-page-sub-header-left>
          <cs-page-sub-header-right>
-           <button class="btn btn--people new-feature-button" ui-sref="care.ChatSA">
-             <span translate="sunlightDetails.newFeatureButtonText"></span>
+           <button class="btn btn--people new-feature-button" ng-click="careFeaturesCtrl.openNewCareFeatureModal()">
+             <span translate="sunlightDetails.newFeatures.newFeatureButtonText"></span>
            </button>
          </cs-page-sub-header-right>
        </cs-page-sub-header>

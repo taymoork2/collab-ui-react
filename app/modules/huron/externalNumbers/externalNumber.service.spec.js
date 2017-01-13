@@ -20,7 +20,7 @@ describe('Service: ExternalNumberService', function () {
     customerId = '12345-67890-12345';
     externalNumber = {
       uuid: '22222-33333',
-      pattern: '+14795552233'
+      number: '+14795552233'
     };
 
     pendingNumbers = [{
@@ -82,9 +82,55 @@ describe('Service: ExternalNumberService', function () {
     spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.when());
     spyOn(PstnSetupService, 'deleteNumber');
     spyOn(ExternalNumberPool, 'deletePool');
-    spyOn(ExternalNumberPool, 'getAll').and.returnValue($q.when(externalNumbers));
+    spyOn(ExternalNumberPool, 'getExternalNumbers').and.returnValue($q.when(externalNumbers));
     spyOn($translate, 'instant');
   }));
+
+  describe('refreshNumbers', function () {
+    it('should query for did (fixed line) numbers only by default', function () {
+      ExternalNumberService.refreshNumbers(customerId);
+      $rootScope.$apply();
+
+      expect(ExternalNumberPool.getExternalNumbers).toHaveBeenCalledWith(
+        customerId,
+        ExternalNumberPool.NO_PATTERN_MATCHING,
+        ExternalNumberPool.ASSIGNED_AND_UNASSIGNED_NUMBERS,
+        ExternalNumberPool.FIXED_LINE_OR_MOBILE);
+    });
+
+    it('should query for did numbers only when FIXED_LINE_OR_MOBILE is used', function () {
+      ExternalNumberService.refreshNumbers(customerId, ExternalNumberPool.FIXED_LINE_OR_MOBILE);
+      $rootScope.$apply();
+
+      expect(ExternalNumberPool.getExternalNumbers).toHaveBeenCalledWith(
+        customerId,
+        ExternalNumberPool.NO_PATTERN_MATCHING,
+        ExternalNumberPool.ASSIGNED_AND_UNASSIGNED_NUMBERS,
+        ExternalNumberPool.FIXED_LINE_OR_MOBILE);
+    });
+
+    it('should query for all number types when ALL_EXTERNAL_NUMBER_TYPES is used', function () {
+      ExternalNumberService.refreshNumbers(customerId, ExternalNumberPool.ALL_EXTERNAL_NUMBER_TYPES);
+      $rootScope.$apply();
+
+      expect(ExternalNumberPool.getExternalNumbers).toHaveBeenCalledWith(
+        customerId,
+        ExternalNumberPool.NO_PATTERN_MATCHING,
+        ExternalNumberPool.ASSIGNED_AND_UNASSIGNED_NUMBERS,
+        ExternalNumberPool.ALL_EXTERNAL_NUMBER_TYPES);
+    });
+
+    it('should query for toll free numbers when TOLL_FREE is used', function () {
+      ExternalNumberService.refreshNumbers(customerId, ExternalNumberPool.TOLL_FREE);
+      $rootScope.$apply();
+
+      expect(ExternalNumberPool.getExternalNumbers).toHaveBeenCalledWith(
+        customerId,
+        ExternalNumberPool.NO_PATTERN_MATCHING,
+        ExternalNumberPool.ASSIGNED_AND_UNASSIGNED_NUMBERS,
+        ExternalNumberPool.TOLL_FREE);
+    });
+  });
 
   it('should only retrieve external numbers if not a terminus customer', function () {
     $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customerId + '/numbers?type=external').respond(numberResponse);
@@ -136,7 +182,7 @@ describe('Service: ExternalNumberService', function () {
   it('should get unassigned numbers that aren\'t pending', function () {
     var unassignedAndPendingNumbers = unassignedNumbers.concat(pendingNumbers);
     var externalNumbers = unassignedAndPendingNumbers.concat(assignedNumbers);
-    ExternalNumberPool.getAll.and.returnValue($q.when(externalNumbers));
+    ExternalNumberPool.getExternalNumbers.and.returnValue($q.when(externalNumbers));
 
     ExternalNumberService.refreshNumbers();
 
@@ -170,7 +216,7 @@ describe('Service: ExternalNumberService', function () {
   });
 
   it('should clear numbers on external number error', function () {
-    ExternalNumberPool.getAll.and.returnValue($q.reject({}));
+    ExternalNumberPool.getExternalNumbers.and.returnValue($q.reject({}));
     ExternalNumberService.refreshNumbers();
 
     $rootScope.$apply();
@@ -183,7 +229,7 @@ describe('Service: ExternalNumberService', function () {
     ExternalNumberService.deleteNumber(customerId, externalNumber);
     $rootScope.$apply();
 
-    expect(PstnSetupService.deleteNumber).toHaveBeenCalledWith(customerId, externalNumber.pattern);
+    expect(PstnSetupService.deleteNumber).toHaveBeenCalledWith(customerId, externalNumber.number);
     expect(ExternalNumberPool.deletePool).not.toHaveBeenCalled();
   });
 

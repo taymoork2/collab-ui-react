@@ -1,0 +1,54 @@
+<div class="hercules-upload-key-section row">
+  <h3 translate="hercules.settings.googleCalendar.uploadNewPrivateKey"
+      class="hercules-upload-key-header"></h3>
+  <p translate="hercules.settings.googleCalendar.uploadNewPrivateKeyExplanation"
+     class="medium-8"></p>
+</div>
+
+<div class="row hercules-upload-key-section">
+  <input
+    cs-input
+    type="text"
+    placeholder="{{uploadKey.enterServiceAccountPlaceholder}}"
+    ng-model="uploadKey.data.googleServiceAccount"
+    cs-input-group-size="medium-4"
+    cs-input-label="{{uploadKey.serviceAccountName}}"
+  >
+</div>
+
+
+<div
+  ng-if="!uploadKey.data.file"
+  class="file-drop"
+  cr-file-drop
+  reading-strategy="dataURL"
+  file="uploadKey.data.file"
+  file-name="uploadKey.data.fileName">
+  <div class="file-drop-content">
+    <div class="icon icon-upload-contain center"></div>
+    <input
+      cr-file-read
+      id="upload"
+      name="upload"
+      type="file"
+      file="uploadKey.data.file"
+      file-name="uploadKey.data.fileName"
+      reading-strategy="dataURL"
+    />
+    <span translate="hercules.settings.googleCalendar.dragAndDropKeyFileHere"></span>
+    <label for='upload' translate="hercules.settings.googleCalendar.clickToBrowse"></label>
+  </div>
+</div>
+
+<div class="file-drop-inactive" ng-if="uploadKey.data.file">
+  <div class="file-drop-content">
+    <p><span translate="hercules.settings.googleCalendar.fileReadyForImport"></span>: {{uploadKey.data.fileName}}</p>
+    <p ng-if="uploadKey.warnInvalidCertificate()">
+      <span class="hercules-update-warning-text"
+            translate="hercules.settings.googleCalendar.certificateWarning"
+            translate-values="{fileName: uploadKey.data.fileName}"></span>
+      </p>
+    <p><a ng-click="uploadKey.clearFile()" translate="hercules.settings.googleCalendar.removeFile"></a></p>
+  </div>
+</div>
+

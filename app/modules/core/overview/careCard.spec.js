@@ -3,6 +3,14 @@ describe('OverviewCareCard', function () {
   var OverviewCareCard, $rootScope;
   var dummyStats = getJSONFixture('sunlight/json/features/careReport/sunlightReportStats.json');
 
+  afterEach(function () {
+    OverviewCareCard = $rootScope = undefined;
+  });
+
+  afterAll(function () {
+    dummyStats = undefined;
+  });
+
   beforeEach(angular.mock.module('Core'));
 
   function dependencies(_OverviewCareCard_, _$rootScope_) {

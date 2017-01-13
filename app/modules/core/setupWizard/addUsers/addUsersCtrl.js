@@ -5,9 +5,10 @@
     .controller('AddUserCtrl', AddUserCtrl);
 
   /* @ngInject */
-  function AddUserCtrl($scope, $rootScope, $q, $location, addressparser, DirSyncService, Log, $translate, Notification,
-    UserListService, $filter, Userservice, LogMetricsService, Config, FeatureToggleService) {
+  function AddUserCtrl($filter, $location, $q, $rootScope, $scope, $translate, addressparser, Analytics, DirSyncService, Log, Notification,
+    UserListService, Userservice, LogMetricsService, Config, FeatureToggleService) {
     $scope.maxUsers = 1100;
+    var getStatusCount = 0;
     var invalidcount = 0;
     $scope.options = {
       addUsers: 0
@@ -63,6 +64,10 @@
         deferred.reject();
       }
       return deferred.promise;
+    };
+
+    $scope.trackInstall = function () {
+      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.INSTALL_CONNECTOR);
     };
 
     var allSteps = ['chooseSync', 'domain', 'installCloud', 'syncStatus', 'manual'];
@@ -203,6 +208,7 @@
         }
         $('#chooseSyncTab').addClass('ng-show');
         $('#chooseSyncTab').removeClass('ng-hide');
+        Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.INSTALL_CONNECTOR);
       } else {
         $('#chooseSyncTab').removeClass('ng-show');
         $('#chooseSyncTab').addClass('ng-hide');
@@ -285,8 +291,8 @@
       $scope.userList = [];
       $scope.useNameList = [];
       $scope.dirsyncUserCountText = '';
-
       $rootScope.$emit('add-user-dirsync-started');
+      getStatusCount += 1;
 
       DirSyncService.getDirSyncStatus(function (data, status) {
         if (data.success) {
@@ -295,12 +301,14 @@
             $scope.dirsyncStatus = data.result;
             $scope.lastEndTime = data.lastEndTime;
           }
+          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_REFRESH, null, { result: 'success', clicks: getStatusCount });
         } else {
           Log.debug('Failed to retrieve directory sync status. Status: ' + status);
           $rootScope.$emit('add-user-dirsync-error');
           Notification.error('dirsyncModal.getStatusFailed', {
             status: status
           });
+          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.SYNC_REFRESH, null, { result: 'error', clicks: getStatusCount });
         }
       });
 
@@ -471,9 +479,7 @@
           }
 
         } else {
-          Log.error('Could not process invitation.  Status: ' + status, data);
-          var error = [$translate.instant('usersPage.errInvite', data)];
-          Notification.notify(error, 'error');
+          Notification.error('usersPage.errInvite', data);
           isComplete = false;
           $scope.btnInviteLoad = false;
         }
@@ -500,9 +506,7 @@
         }
 
       } else {
-        Log.debug('No users entered.');
-        var error = [$filter('translate')('usersPage.validEmailInput')];
-        Notification.notify(error, 'error');
+        Notification.error('usersPage.validEmailInput');
       }
 
     };

@@ -1,3 +1,5 @@
+require('./_user-manage.scss');
+
 (function () {
   'use strict';
 
@@ -5,7 +7,7 @@
     .controller('UserManageActiveDirController', UserManageActiveDirController);
 
   /* @ngInject */
-  function UserManageActiveDirController($state, $modal, $resource, UrlConfig, Authinfo, UserCsvService, OnboardService, Notification) {
+  function UserManageActiveDirController($state, $stateParams, $modal, $resource, UrlConfig, Authinfo, UserCsvService, OnboardService, Notification) {
     var vm = this;
 
     vm.onInit = onInit;
@@ -14,6 +16,8 @@
     vm.manageType = 'manual';
     vm.maxUsersInCSV = UserCsvService.maxUsersInCSV;
     vm.maxUsersInManual = OnboardService.maxUsersInManual;
+    vm.isOverExportThreshold = !!$stateParams.isOverExportThreshold;
+
     var dirSyncResource = $resource(UrlConfig.getAdminServiceUrl() + 'organization/:customerId/dirsync/mode?enabled=false', {
       customerId: '@customerId'
     }, {
@@ -34,14 +38,12 @@
       }).result.then(function () {
         dirSyncResource.patch({
           customerId: Authinfo.getOrgId()
-        }).$promise.then(
-          function () {
-            Notification.success('userManage.ad.dirSyncDisableSuccess');
-            $state.go('users.manage.org');
-          },
-          function (response) {
-            Notification.error(Notification.processErrorResponse(response, 'userManage.ad.dirSyncDisableFailure'));
-          });
+        }).$promise.then(function () {
+          Notification.success('userManage.ad.dirSyncDisableSuccess');
+          $state.go('users.manage.org');
+        }).catch(function (response) {
+          Notification.errorResponse(response, 'userManage.ad.dirSyncDisableFailure');
+        });
       });
     }
 

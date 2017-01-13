@@ -1,0 +1,55 @@
+<script type="text/ng-template" id="callParkMemberTemplate.html">
+  <a class="member__name">
+    <span ng-bind-html="match.label.firstName | typeaheadHighlight:query" ng-if="match.label.firstName"></span>
+    <span ng-bind-html="match.label.lastName | typeaheadHighlight:query" ng-if="match.label.lastName"></span>
+    <span ng-show="match.label.lastName">(<span ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>)</span>
+    <span ng-show="!match.label.lastName && !match.label.displayName" ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>
+    <span ng-show="!match.label.userName" ng-bind-html="match.label.displayName | typeaheadHighlight:query"></span>
+  </a>
+  <div class="member__line">
+    <span ng-bind-html="(match.label.numbers | callParkMemberNumbersFilter) | typeaheadHighlight:query"></span>
+  </div>
+</script>
+<div class="typeahead-large" ng-if="$ctrl.isNew">
+  <input
+    id="userInput"
+    ng-model="$ctrl.selectedMember"
+    ng-class="{'error': $ctrl.errorMemberInput}"
+    typeahead="member for member in $ctrl.getMemberList($viewValue) | limitTo:10"
+    typeahead-on-select="$ctrl.selectCallParkMember($item)"
+    typeahead-template-url="callParkMemberTemplate.html"
+    typeahead-min-length="3"
+    typeahead-wait-ms="200"
+    placeholder="{{:: 'callPark.memberPlaceholder' | translate}}"
+    ng-keypress="$ctrl.onHandleKeyPress($event.keyCode)"
+    autocomplete="off"
+    focus-on>
+  <p class="input-description" translate="callPark.memberHint"></p>
+</div>
+<div ng-if="!$ctrl.isNew" class="typeahead">
+  <input
+    cs-input
+    id="userInput"
+    ng-model="$ctrl.selectedMember"
+    typeahead="member for member in $ctrl.getMemberList($viewValue) | limitTo:10"
+    typeahead-on-select="$ctrl.selectCallParkMember($item)"
+    typeahead-template-url="callParkMemberTemplate.html"
+    typeahead-min-length="3"
+    typeahead-wait-ms="200"
+    placeholder="{{:: 'callPark.memberPlaceholder' | translate}}"
+    cs-input-size="small-12"
+    autocomplete="off"
+    no-dirty>
+</div>
+<cs-card-layout>
+  <cs-card-member
+    ng-repeat="member in $ctrl.members track by member.memberUuid"
+    cs-type="simple"
+    cs-member-type="member.memberType"
+    cs-id="member.memberUuid"
+    cs-title="member.memberName"
+    cs-subtitle="member.number"
+    cs-image="member.thumbnailSrc"
+    on-remove="$ctrl.unSelectCallParkMember(member)">
+  </cs-card-member>
+</cs-card-layout>

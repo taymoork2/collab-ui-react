@@ -1,23 +1,32 @@
 'use strict';
 
 describe('Directive: csvDownload', function () {
-  var $compile, $rootScope, $scope, $timeout, $httpBackend, CsvDownloadService, FeatureToggleService, $q, $window;
+  var $compile, $rootScope, $scope, $timeout, $httpBackend, Analytics, CsvDownloadService, FeatureToggleService, $q, $window, element;
+
+  afterEach(function () {
+    if (element) {
+      element.remove();
+    }
+    $compile = $rootScope = $scope = $timeout = $httpBackend = Analytics = CsvDownloadService = FeatureToggleService = $q = $window = element = undefined;
+  });
 
   beforeEach(angular.mock.module('Core'));
-  beforeEach(inject(function (_FeatureToggleService_, _$q_, _$compile_, _$rootScope_, _$timeout_, _$window_) {
+  beforeEach(angular.mock.module('Huron'));
+
+  beforeEach(inject(function (_$compile_, _$q_, _$rootScope_, _$timeout_, _$window_, _Analytics_, _FeatureToggleService_) {
     FeatureToggleService = _FeatureToggleService_;
     $compile = _$compile_;
     $timeout = _$timeout_;
     $rootScope = _$rootScope_;
     $q = _$q_;
     $window = _$window_;
+    Analytics = _Analytics_;
     $scope = $rootScope.$new();
-    spyOn(FeatureToggleService, 'atlasNewUserExportGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasNewUserExportGetStatus').and.returnValue($q.when(false));
+    spyOn(Analytics, 'trackCsv').and.returnValue($q.when());
   }));
 
   describe("Controller", function () {
-
-    this.element = null;
 
     it('should register for event handlers on creation', function () {
 
@@ -29,9 +38,9 @@ describe('Directive: csvDownload', function () {
       expect(_.has(listeners, 'csv-download-request')).toBeFalsy();
 
       var pscope = $scope.$new();
-      this.element = $compile('<csv-download type="any"></csv-download>')(pscope);
+      element = $compile('<csv-download type="any"></csv-download>')(pscope);
       $scope.$digest();
-      this.elemScope = this.element.isolateScope();
+      this.elemScope = element.isolateScope();
 
       // make sure we have event handlers registered
       expect(_.isFunction(listeners['csv-download-begin'][0])).toBeTruthy();
@@ -57,7 +66,7 @@ describe('Directive: csvDownload', function () {
     }));
 
     it('should replace the element with the appropriate content', function () {
-      var element = $compile('<csv-download type="template" filename="template.csv"></csv-download>')($scope);
+      element = $compile('<csv-download type="template" filename="template.csv"></csv-download>')($scope);
       $scope.$digest();
 
       var isolated = element.isolateScope();
@@ -68,21 +77,21 @@ describe('Directive: csvDownload', function () {
     });
 
     it('should replace the icon when attribute icon is present', function () {
-      var element = $compile('<csv-download type="template" filename="template.csv" icon="abc-icon"></csv-download>')($scope);
+      element = $compile('<csv-download type="template" filename="template.csv" icon="abc-icon"></csv-download>')($scope);
       $scope.$digest();
 
       expect(element.html()).toContain("abc-icon");
     });
 
     it('should remove the icon class icon-circle-download when no-icon is present', function () {
-      var element = $compile('<csv-download type="any" filename="some.csv" no-icon></csv-download>')($scope);
+      element = $compile('<csv-download type="any" filename="some.csv" no-icon></csv-download>')($scope);
       $scope.$digest();
 
       expect(element.html()).not.toContain("icon-circle-download");
     });
 
     it('should download template by clicking the anchor', function () {
-      var element = $compile('<csv-download type="template" filename="template.csv"></csv-download>')($scope);
+      element = $compile('<csv-download type="template" filename="template.csv"></csv-download>')($scope);
       $scope.$digest();
 
       var downloadAnchor = element.find('a');
@@ -109,7 +118,7 @@ describe('Directive: csvDownload', function () {
     });
 
     it('should contain tooltip for download type=user', function () {
-      var element = $compile('<csv-download type="user" filename="exported_users.csv"></csv-download>')($scope);
+      element = $compile('<csv-download type="user" filename="exported_users.csv"></csv-download>')($scope);
       $scope.$digest();
 
       expect(element.html()).toContain("usersPage.csvBtnTitle");
@@ -127,7 +136,7 @@ describe('Directive: csvDownload', function () {
     }));
 
     it('should download template by clicking the anchor', function () {
-      var element = $compile('<csv-download type="template" filename="template.csv"></csv-download>')($scope);
+      element = $compile('<csv-download type="template" filename="template.csv"></csv-download>')($scope);
       $scope.$digest();
 
       var downloadAnchor = element.find('a');

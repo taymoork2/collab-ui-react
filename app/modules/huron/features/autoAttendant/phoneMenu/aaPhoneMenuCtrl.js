@@ -16,7 +16,7 @@
   }
 
   /* @ngInject */
-  function AAPhoneMenuCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, FeatureToggleService, QueueHelperService) {
+  function AAPhoneMenuCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, QueueHelperService) {
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
@@ -50,7 +50,7 @@
     }, {
       label: $translate.instant('autoAttendant.actionSayMessage'),
       name: 'phoneMenuSayMessage',
-      action: 'say'
+      action: ['say', 'play'],
     }, {
       label: $translate.instant('autoAttendant.phoneMenuDialExt'),
       name: 'phoneMenuDialExt',
@@ -228,7 +228,15 @@
                     if (_.has(this, 'inputType')) {
                       return this.name === keyAction.action && this.inputType === keyAction.inputType;
                     } else if (!_.has(keyAction, 'inputType')) {
-                      return this.name === keyAction.action;
+                      if (this.name === keyAction.action) {
+                        return true;
+                      } else {
+                        if (keyAction.action.length > 1) {
+                          return (this.name === keyAction.action[0] || this.name === keyAction.action[1]);
+                        } else {
+                          return false;
+                        }
+                      }
                     }
                     return false;
                   }, menuEntry.actions[0]));
@@ -270,44 +278,28 @@
      * This push the Route To Queue option in Phone Menu List and push get all the queues
     */
     function getQueues() {
-      if (AACommonService.isRouteQueueToggle) {
-        return QueueHelperService.listQueues().then(function (aaQueueList) {
-          if (aaQueueList.length > 0) {
-            vm.keyActions.push({
-              label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
-              name: 'phoneMenuRouteQueue',
-              action: 'routeToQueue'
+      return QueueHelperService.listQueues().then(function (aaQueueList) {
+        if (aaQueueList.length > 0) {
+          vm.keyActions.push({
+            label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
+            name: 'phoneMenuRouteQueue',
+            action: 'routeToQueue'
+          });
+          _.each(aaQueueList, function (aaQueue) {
+            var idPos = aaQueue.queueUrl.lastIndexOf("/");
+            vm.queues.push({
+              description: aaQueue.queueName,
+              id: aaQueue.queueUrl.substr(idPos + 1)
             });
-            _.each(aaQueueList, function (aaQueue) {
-              var idPos = aaQueue.queueUrl.lastIndexOf("/");
-              vm.queues.push({
-                description: aaQueue.queueName,
-                id: aaQueue.queueUrl.substr(idPos + 1)
-              });
-            });
-          }
-        });
-      }
-    }
-    /**
-     * This include the list of feature which are not production ready yet
-     */
-    function toggleRouteToQueueFeature() {
-      return FeatureToggleService.supports(FeatureToggleService.features.huronAACallQueue).then(function (result) {
-        if (result) {
-          AACommonService.setRouteQueueToggle(true);
-        } else {
-          AACommonService.setRouteQueueToggle(false);
+          });
         }
-      }).catch(function () {
-        AACommonService.setRouteQueueToggle(false);
       });
     }
 
     /////////////////////
 
     function activate() {
-      vm.keyActions.sort(AACommonService.sortByProperty('name'));
+      vm.keyActions.sort(AACommonService.sortByProperty('label'));
 
       if (vm.menuEntry.type === 'MENU_OPTION') {
         // If this is a new phone menu, add button zero
@@ -330,8 +322,11 @@
       vm.entries = vm.uiMenu.entries;
       vm.menuEntry = vm.entries[$scope.index];
       vm.menuId = vm.menuEntry.id;
-      AACommonService.setRouteQueueToggle(false);
-      toggleRouteToQueueFeature().finally(getQueues().finally(activate));
+      if (AACommonService.isRouteQueueToggle) {
+        getQueues().finally(activate);
+      } else {
+        activate();
+      }
     }
 
     init();

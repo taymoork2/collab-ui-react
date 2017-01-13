@@ -4,14 +4,15 @@
   angular.module('Core')
     .controller('ChoosePersonalCtrl', ChoosePersonalCtrl);
   /* @ngInject */
-  function ChoosePersonalCtrl($q, UserListService, OtpService, Notification, $stateParams, $translate) {
+  function ChoosePersonalCtrl($q, UserListService, $stateParams, $translate) {
     var vm = this;
-    vm.wizardData = $stateParams.wizard.state().data;
-    vm.userType = 'existing';
+    var wizardData = $stateParams.wizard.state().data;
+    vm.title = wizardData.title;
     vm.error = false;
     vm.selected = undefined;
     vm.selectedStates = [];
     vm.selectUser = selectUser;
+    vm.deviceType = wizardData.account.deviceType;
 
     vm.model = {
       userInputOption: 0,
@@ -20,13 +21,6 @@
 
     vm.placeholder = $translate.instant('directoryNumberPanel.chooseNumber');
     vm.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
-
-    vm.isExistingCollapsed = vm.wizardData.allowUserCreation;
-    vm.isLoading = false;
-
-    vm.validateTokens = function () {
-      vm.deviceName = "NOT IMPLEMENTED";
-    };
 
     vm.search = function (searchString) {
       vm.userError = false;
@@ -42,8 +36,10 @@
           }
           var userList = _(data.Resources).map(function (r) {
             var name = null;
+            var firstName = null;
             if (r.name) {
               name = r.name.givenName;
+              firstName = name.givenName;
               if (r.name.familyName) {
                 name += ' ' + r.name.familyName;
               }
@@ -51,16 +47,27 @@
             if (_.isEmpty(name)) {
               name = r.displayName;
             }
+            if (_.isEmpty(firstName)) {
+              firstName = r.displayName;
+            }
             if (_.isEmpty(name)) {
               name = r.userName;
             }
+            if (_.isEmpty(firstName)) {
+              firstName = r.userName;
+            }
             r.extractedName = name;
+            r.firstName = firstName;
             return r;
           }).value();
           vm.noResults = _.isEmpty(userList);
           deferred.resolve(userList);
         };
-        UserListService.listUsers(0, 10, null, null, callback, searchString, false, 'ciscouc');
+        if (vm.deviceType === 'huron') {
+          UserListService.listUsers(0, 10, null, null, callback, searchString, false, 'ciscouc');
+        } else {
+          UserListService.listUsers(0, 10, null, null, callback, searchString, false);
+        }
       } else {
         deferred.resolve([]);
       }
@@ -68,37 +75,32 @@
     };
 
     function selectUser($item) {
-      if (!_.includes($item.entitlements, 'ciscouc')) {
+      if (vm.deviceType === 'huron' && !_.includes($item.entitlements, 'ciscouc')) {
         vm.userError = true;
       }
       vm.cisUuid = $item.id;
-      vm.deviceName = $item.displayName;
       vm.userName = $item.userName;
       vm.displayName = $item.displayName;
       vm.selected = $item.extractedName;
+      vm.firstName = $item.firstName;
       vm.organizationId = $item.meta.organizationID;
     }
 
     vm.next = function () {
-      vm.isLoading = true;
-      if (vm.cisUuid) {
-        OtpService.generateOtp(vm.userName).then(function (code) {
-          vm.isLoading = false;
-          $stateParams.wizard.next({
-            deviceName: vm.deviceName,
-            activationCode: code.code,
-            code: code,
-            expiryTime: code.friendlyExpiresOn,
-            cisUuid: vm.cisUuid,
-            email: vm.userName,
-            displayName: vm.displayName,
-            organizationId: vm.organizationId
-          }, vm.userType);
-        }, function (err) {
-          vm.isLoading = false;
-          Notification.error(err.statusText);
-        });
-      }
+      $stateParams.wizard.next({
+        account: {
+          name: vm.displayName,
+          cisUuid: vm.cisUuid,
+          username: vm.userName
+        },
+        recipient: {
+          displayName: vm.displayName,
+          firstName: vm.firstName,
+          cisUuid: vm.cisUuid,
+          email: vm.userName,
+          organizationId: vm.organizationId
+        }
+      });
     };
 
     vm.back = function () {
@@ -110,6 +112,5 @@
         return true;
       }
     };
-
   }
 })();

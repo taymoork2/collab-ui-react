@@ -30,6 +30,8 @@
       removeAllUsersFromResourceGroup: removeAllUsersFromResourceGroup,
       refreshEntitlementsForUser: refreshEntitlementsForUser,
       getUserCountFromResourceGroup: getUserCountFromResourceGroup,
+      getUserJournal: getUserJournal,
+      notifyReadOnlyLaunch: notifyReadOnlyLaunch,
     };
 
     CsdmPoller.create(fetchStatusesSummary, hub);
@@ -76,6 +78,10 @@
 
     function extractUserProps(res) {
       return res.data.userProps;
+    }
+
+    function extractJournalEntries(res) {
+      return res.data.entries || [];
     }
 
     function decorateWithStatus(status) {
@@ -180,6 +186,16 @@
       return $http
         .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userProps/count?containingResourceGroupId=' + resourceGroupId)
         .then(extractData);
+    }
+
+    function getUserJournal(userId, orgId, limit, serviceId) {
+      return $http
+        .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userJournal/' + userId + (limit ? '?limit=' + limit : '') + (serviceId ? '&serviceId=' + serviceId : ''))
+        .then(extractJournalEntries);
+    }
+
+    function notifyReadOnlyLaunch() {
+      return $http.post(USSUrl + '/internals/actions/invalidateUser/invoke');
     }
   }
 }());

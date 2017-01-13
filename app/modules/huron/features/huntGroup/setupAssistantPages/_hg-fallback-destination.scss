@@ -1,25 +1,37 @@
-.fallback-container {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  height: 16rem !important;
-  width: 48rem !important;
-  overflow-x: hidden;
-  overflow-y: auto;
-  margin: auto;
-}
+@import 'styles/toolkit/spacing';
 
-.fallback-container .cs-card-layout {
-  margin: auto;
+.fallback-destination-sa {
+  .fallback-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 16rem;
+    width: 48rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin: auto;
+  }
 
-  @include vr-spacing(mv, 0);
-  @include vr-spacing(mb, 1);
-}
+  .fallback-container .cs-card-layout {
+    margin: auto;
 
-.fallback-container-item {
-  @include vr-spacing(pv, 1);
+    @include vr-spacing(mv, 0);
+    @include vr-spacing(mb, 1);
+  }
 
-  label.cs-checkbox {
-    @include vr-spacing(m, 0);
+  .fallback-container-item {
+    @include vr-spacing(pv, 1);
+
+    label.cs-checkbox {
+      margin: auto;
+    }
+  }
+
+  .typeahead-large {
+    margin-top: calc(32vh - 143px);
+  }
+
+  .country-list {
+    border: 0 none;
   }
 }

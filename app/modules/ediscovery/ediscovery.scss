@@ -1,0 +1,576 @@
+@import 'styles/toolkit/colors';
+
+.ediscovery-app-container {
+  background-color: $brand-white;
+  overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
+  min-height: 100vh;
+
+  a:focus {
+    box-shadow: none;
+  }
+
+  .header-tabs {
+    position: fixed;
+    left: 0px;
+    top: 3.3rem;
+    height: 3rem;
+    text-align: left;
+    font-size: 1rem;
+    padding-left: 6.3rem;
+    width: 100%;
+    background: $brand-white;
+    border-bottom: 1px solid $gray-light-3;
+
+    .menu-container {
+      padding-bottom: 5px;
+
+      ul.menu {
+        margin-left: 0;
+        padding: 0;
+
+        li {
+          display: inline;
+          margin-right: 1rem;
+
+          a {
+            color: #aeaeaf;
+            font-size: 1.0625rem;
+            //border-bottom: 3px solid transparent;
+            //padding-bottom: 0.5rem;
+          }
+
+          a.active {
+            //border-bottom-color: $page-header-nav-active-border-bottom-color;
+            color: $page-header-nav-active-color;
+          }
+
+          a:hover {
+            //border-bottom-color: #AEAEAF;
+          }
+        }
+      }
+    }
+  }
+
+  .ediscovery-content-view {
+    font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+    button.fit {
+      height: 30px;
+      width: 30px;
+      line-height: 30px;
+      margin-top: 4px;
+      margin-bottom: 4px;
+    }
+
+    label.fit {
+      text-align: left;
+      margin-bottom: 0;
+    }
+
+    button.align {
+      margin-top: 1.5rem;
+    }
+
+    .cs-input-group {
+      padding-left: 1rem;
+    }
+
+    a:focus {
+      outline: none;
+      box-shadow: none;
+    }
+
+    .circle-status-icon {
+      font-size: 0.575rem;
+      margin-right: 0.5rem;
+    }
+  }
+
+  .ediscovery-search {
+    height: 100vh;
+    background-color: $brand-white;
+    padding-top: 9rem;
+
+    @media only screen and (max-height: 950px) {
+      padding-top: 7rem;
+    }
+
+    div.search-result-area {
+      background-color: $gray-light-4;
+      min-height: calc(100% - 145px);
+      padding-top: 2.25rem;
+
+      @media only screen and (max-height: 950px) {
+        padding-top: 1rem;
+        min-height: calc(100% - 113px);
+      }
+    }
+
+    div.search-error {
+      padding-top: 2rem;
+    }
+
+    .search-spinner {
+      position: relative;
+      top: 2rem;
+      font-size: 3rem;
+    }
+
+    .ediscovery-search-bar {
+      text-align: center;
+      padding-bottom: 3rem;
+
+      @media only screen and (max-height: 950px) {
+        padding-bottom: 1rem;
+      }
+
+      .pointer {
+        cursor: pointer;
+      }
+
+      .main-heading {
+        padding-top: 2rem;
+
+        h1 {
+          font-size: 2.2rem;
+          color: $color-primary-base;
+
+          @media only screen and (max-width: 640px) {
+            font-size: 2rem;
+          }
+
+          @media only screen and (max-width: 500px) {
+            font-size: 1.5rem;
+          }
+        }
+
+        span {
+          padding-top: 1rem;
+        }
+      }
+
+      .searchWarning {
+        color: $color-attention-base;
+      }
+
+      .searchByRoom {
+        margin-top: 48px;
+        display: inline-block;
+        width: 50%;
+
+        .cs-input {
+          width: 100%;
+        }
+
+        .cs-datapicker-normal {
+          max-width: 100%;
+        }
+
+        .searchText {
+          float: left;
+          padding-left: 0.5rem;
+        }
+
+        .searchBox {
+          padding-left: 0px;
+        }
+
+        .selectList {
+          width: 50%;
+        }
+
+        .searchButton {
+          float: left;
+          width: 100px;
+        }
+
+        #textInput {
+          margin-left: 0.5rem;
+        }
+
+        #smallBreak {
+          margin-top: 16px;
+        }
+
+        #midBreak{
+          padding-top: 24px;
+        }
+
+        #largeBreak {
+          margin-top: 36px;
+        }
+      }
+
+      .typeahead-large .input-description::before {
+        display: none;
+      }
+
+      .typeahead-large .input-description {
+        padding: 0;
+      }
+
+      .typeahead-large {
+        position: relative;
+        margin-top: 1rem;
+        max-width: 100%;
+
+        @media only screen and (max-width: 640px) {
+          max-width: 90%;
+        }
+
+        .searchInputForm {
+          margin-bottom: 0;
+        }
+
+        input {
+          border: 0;
+          font-size: 24px;
+          width: 33rem;
+
+          @media only screen and (max-width: 640px) {
+            font-size: 21px;
+            width: 80%;
+            padding-bottom: 0;
+          }
+
+          @media only screen and (max-width: 500px) {
+            font-size: 18px;
+            width: 80%;
+            padding-bottom: 0;
+          }
+        }
+
+        .icon-search {
+          position: absolute;
+          right: 0;
+          bottom: 0.75rem;
+          font-size: 1rem;
+          width: 2.5rem;
+          height: 2.5rem;
+          z-index: 3;
+          min-width: 2.5rem;
+
+          @media screen and (-moz-images-in-menus: 0) {
+            top: 0 !important;
+          }
+
+          @media only screen and (max-width: 640px) {
+            font-size: 1rem;
+            width: 2rem;
+            height: 2rem;
+            min-width: 2rem;
+          }
+
+          @media only screen and (max-width: 500px) {
+            font-size: 0.75rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            min-width: 1.5rem;
+          }
+        }
+      }
+
+      .search-tip {
+        color: $gray-light-1;
+        font-style: italic;
+        padding-top: 0.5rem;
+      }
+    }
+
+    .cs-form__section .section__content .sub-section {
+      margin-bottom: 0.5rem;
+
+      h5.large {
+        font-size: 2rem;
+        margin-bottom: 0.25rem;
+        line-height: 2rem;
+        margin-top: 1rem;
+      }
+    }
+
+    .cs-form__section .section__content .sub-section__label {
+      line-height: 0.5rem;
+      margin-bottom: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .search-result {
+      .create-form {
+        padding: 2.5rem 2.5rem 5rem 0;
+
+        @media only screen and (max-width: 800px) {
+          padding-left: 1.25rem;
+          padding-right: 1.25rem;
+        }
+
+        @media only screen and (max-height: 950px) {
+          padding-top: 1.25rem;
+          padding-bottom: 2.5rem;
+        }
+
+        @media only screen and (max-width: 640px) {
+          padding-left: 1rem;
+        }
+
+        h2 {
+          padding-right: 1rem;
+          color: $gray-dark-3;
+
+          @media only screen and (max-width: 800px) {
+            font-size: 1.5rem;
+          }
+        }
+
+        .cancel-or-download {
+          width: 50%;
+          padding-top: 1rem;
+
+          .buttons {
+            padding-top: 1rem;
+          }
+        }
+
+        .room-id {
+          color: $gray-base;
+          padding-bottom: 2.25rem;
+
+          @media only screen and (max-width: 800px) {
+            font-size: 1rem;
+          }
+        }
+
+        .result-title {
+          font-size: 12px;
+          font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        .result-info {
+          font-size: 16px;
+          font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+          padding-top: 0px;
+          padding-bottom: 0px;
+        }
+
+        .report-header {
+          padding: 14px 18px;
+        }
+
+        .report-parameters {
+          padding: 12px 32px;
+        }
+
+        .summaryHeader {
+          padding-left: 30px;
+        }
+
+        .reportError {
+          padding: 1.5rem;
+
+          .reportWarning {
+            color: $color-attention-base;
+          }
+        }
+
+        .input-section {
+          padding-bottom: 1.5rem;
+
+          .report-name {
+            width: 100%;
+          }
+
+          .date-error {
+            margin-bottom: 0;
+            color: $color-negative-base;
+          }
+
+          h6 {
+            padding-bottom: 0.25rem;
+            color: $gray-dark-2;
+          }
+        }
+
+        .result-section {
+          padding-bottom: 1.5rem;
+
+          h6 {
+            font-size: 14px;
+            padding-bottom: 0.25rem;
+            color: $gray-base;
+          }
+
+          .progressbar-info {
+            padding-top: 0.5rem;
+          }
+
+          i.icon-warning {
+            color: $color-attention-base;
+          }
+
+          .report-timeout {
+            padding-top: 1rem;
+          }
+
+          .failure {
+            color: $gray-base;
+            font-size: 16px;
+            padding: 0;
+          }
+        }
+
+        .expiry-info {
+          padding-top: 1.5rem;
+        }
+
+        .last-input-row {
+          padding-bottom: 0.75rem;
+        }
+      }
+
+      .report-logo-column {
+        max-width: 406px;
+
+        @media only screen and (max-width: 640px) {
+          max-width: 100%;
+        }
+      }
+
+      .report-logo {
+        color: $gray-base;
+        font-size: 210px;
+        padding-top: 1.5rem;
+
+        @media only screen and (max-width: 800px) {
+          font-size: 10rem;
+          padding-top: 0.75rem;
+        }
+
+        @media only screen and (max-width: 640px) {
+          font-size: 4rem;
+          height: 5rem;
+        }
+      }
+
+      span.cancel-icon {
+        position: relative;
+        top: 2rem;
+        font-size: 2rem;
+        color: $gray-light-1;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .ediscovery-reports {
+    padding-top: 9.5rem;
+    background-color: $gray-light-4;
+    min-height: 100vh;
+
+    .group-icon {
+      font-size: 1.5rem;
+      vertical-align: middle;
+      padding-right: 0.3rem;
+    }
+
+    .action-icons {
+      font-size: 1.1rem;
+      vertical-align: middle;
+      top: 5px;
+      padding-right: 1rem;
+      color: $gray-light-1;
+    }
+
+    .action-icons.disabled {
+      color: $gray-light-3;
+    }
+
+    .action-icons.disabled:hover {
+      color: $gray-light-3;
+    }
+
+    .action-icons:hover {
+      color: $color-primary-base;
+    }
+
+    .download-wait {
+      position: relative;
+
+      .icon-download {
+        color: $color-primary-darker;
+      }
+
+      .icon-spinner {
+        position: absolute;
+        top: -3px;
+        left: -7px;
+        font-size: 1.8rem;
+      }
+    }
+
+    .cancel-wait {
+      position: relative;
+
+      .icon-exit {
+        color: $color-primary-darker;
+      }
+
+      .icon-spinner {
+        position: absolute;
+        top: -5px;
+        left: -7px;
+        font-size: 1.8rem;
+      }
+    }
+
+    .column-air {
+      margin-left: 6.3rem;
+      margin-right: 6.3rem;
+
+      @media only screen and (max-width: 1280px) {
+        margin-left: 2rem;
+        margin-right: 2rem;
+      }
+    }
+
+    .search-spinner {
+      position: relative;
+      top: 1rem;
+      font-size: 3rem;
+    }
+
+    .with-scroll {
+      min-height: 60vh;
+      background-color: $brand-white;
+      border: 1px solid $gray-light-3;
+    }
+
+    .ui-grid-header-cell-primary-focus:first-child {
+      background-color: $gray-light-3;
+      margin-right: -2rem;
+    }
+
+    .cs-tooltip {
+      max-width: none;
+    }
+
+    .gridStyle {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .fit-in-cell {
+      line-height: 35px;
+    }
+
+    i.icon-warning {
+      font-size: 1rem;
+      color: $color-attention-base;
+      vertical-align: middle;
+      padding-right: 0.3rem;
+    }
+
+    span.progressbar-progress {
+      color: $gray-dark-1;
+    }
+  }
+}

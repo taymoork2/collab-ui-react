@@ -28,13 +28,13 @@
         this.cssColorClass = getCssColorClass(obj);
         this.state = getState(obj);
         this.upgradeChannel = getUpgradeChannel(obj);
-        this.needsActivation = getNeedsActivation(obj);
+        this.readableActiveInterface = getActiveInterface(obj);
         this.diagnosticsEvents = getDiagnosticsEvents(obj);
         this.rsuKey = obj.remoteSupportUser && obj.remoteSupportUser.token;
         this.canDelete = true;
         this.canReportProblem = true;
         this.hasRemoteSupport = true;
-        this.canEditDisplayName = this.accountType === 'MACHINE';
+        this.hasAdvancedSettings = true;
         this.supportsCustomTags = true;
         this.update = function (updated) {
           this.displayName = updated.displayName;
@@ -45,6 +45,7 @@
       function HuronDevice(obj) {
         this.url = obj.url;
         this.type = 'huron';
+        this.isATA = (obj.product || '').indexOf('ATA') > 0;
         this.mac = obj.mac;
         this.ip = getIp(obj);
         this.cisUuid = obj.cisUuid;
@@ -110,68 +111,19 @@
           displayName: "Cisco 8865NR"
         },
         "MODEL_CISCO_ATA_190": {
-          displayName: "Cisco ATA 190"
+          displayName: "Cisco ATA190-SC Port 1"
         }
       };
 
-      function UnusedAccount(obj) {
-        this.url = obj.url;
-        this.type = 'cloudberry';
-        this.cisUuid = obj.id;
-        this.displayName = obj.displayName;
-        this.product = t('spacesPage.account');
-        this.cssColorClass = 'device-status-gray';
-        this.state = {
-          readableState: t('CsdmStatus.Inactive'),
-          priority: "4"
-        };
-        this.isOnline = false;
-        this.isUnused = true;
-        this.canDelete = true;
-        this.hasIssues = true;
-        this.accountType = obj.accountType || 'MACHINE';
-        this.image = "images/devices-hi/unknown.png";
-        this.diagnosticsEvents = [{
-          type: translateOrDefault('CsdmStatus.errorCodes.inactive.type', 'Account with no device'),
-          message: translateOrDefault("CsdmStatus.errorCodes.inactive.message", "An account exists for a device, but there's no corresponding device or activation code. You can delete this account.")
-        }];
-      }
-
       function Code(obj) {
-        obj.state = obj.status;
-        this.isCode = true;
-
-        this.url = obj.url;
-        this.type = obj.type || 'cloudberry';
-        this.cisUuid = obj.id;
-        this.tags = getTags(obj.description);
         this.expiryTime = obj.expiryTime;
-        this.expiresOn = obj.expiryTime;
-        this.friendlyExpiryTime = convertExpiryTime(obj.expiryTime);
-        this.product = t('spacesPage.unactivatedDevice');
-        this.tags = getTags(obj.description);
-        this.displayName = obj.displayName;
         this.activationCode = obj.activationCode;
-        this.state = getState(obj);
-        this.cssColorClass = getCssColorClass(obj);
-        this.needsActivation = getNeedsActivation(obj);
-        this.readableActivationCode = getReadableActivationCode(obj);
-        this.canDelete = true;
-        this.canEditDisplayName = true;
-        this.image = "images/devices-hi/unknown.png";
-        this.accountType = obj.accountType || 'MACHINE';
-        this.supportsCustomTags = true;
-        this.updateName = function (newName) {
-          this.displayName = newName;
-        };
       }
 
       function updatePlaceFromItem(place, item) {
 
         if (item.isPlace) {
           updatePlaceFromPlace(place, item);
-        } else if (item.isCode) {
-          updatePlaceFromCode(place, item);
         } else {
           updatePlaceFromDevice(place, item);
         }
@@ -186,32 +138,20 @@
         Place.bind(updatedPlace)(updatedPlace);
       }
 
-      function updatePlaceFromCode(place, code) {
-        var updatedPlace = place;
-        updatedPlace.type = code.type || 'cloudberry';
-        updatedPlace.cisUuid = code.cisUuid || code.uuid;
-        updatedPlace.displayName = code.displayName;
-        Place.bind(updatedPlace)(updatedPlace);
-      }
-
       function updatePlaceFromPlace(place, placeToUpdateFrom) {
 
         if (_.isEmpty(placeToUpdateFrom.devices)) {
           placeToUpdateFrom = _.merge(placeToUpdateFrom, _.pick(place, ['devices']));
         }
-        if (_.isEmpty(placeToUpdateFrom.codes)) {
-          placeToUpdateFrom = _.merge(placeToUpdateFrom, _.pick(place, ['codes']));
-        }
         Place.bind(place)(placeToUpdateFrom);
         place.devices = placeToUpdateFrom.devices;
-        place.codes = placeToUpdateFrom.codes;
       }
 
       function Place(obj) {
         this.url = obj.url;
         this.isPlace = true;
         this.type = obj.type || (obj.machineType == 'lyra_space' ? 'cloudberry' : 'huron');
-        this.readableType = getLocalizedType(obj.type);
+        this.readableType = getLocalizedType(this.type);
         this.entitlements = obj.entitlements;
         this.cisUuid = obj.cisUuid || obj.uuid;
         this.displayName = obj.displayName;
@@ -220,19 +160,23 @@
         this.canDelete = true;
         this.accountType = obj.placeType || 'MACHINE';
         this.image = "images/devices-hi/unknown.png";
+        this.devices = convertDevicesForPlace(obj.devices || {}, this.type, this.displayName);
+        this.codes = obj.codes || {};
+      }
+
+      // Hack, these two fields should be set correctly in CSDM. Adding here until we can fix this.
+      function convertDevicesForPlace(devices, type, displayName) {
+        var converted = type === 'huron' ? convertHuronDevices(devices) : convertCloudberryDevices(devices);
+        return _.map(converted, function (device) {
+          device.accountType = 'MACHINE';
+          device.displayName = displayName;
+          return device;
+        });
       }
 
       function decodeHuronTags(description) {
         var tagString = _.replace(description, /\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
         return tagString;
-      }
-
-      function convertExpiryTime(expiryTime) {
-        return moment().to(expiryTime);
-      }
-
-      function convertCodes(data) {
-        return _.mapValues(data, convertCode);
       }
 
       function convertCloudberryDevices(data) {
@@ -241,10 +185,6 @@
 
       function convertHuronDevices(data) {
         return _.mapValues(data, convertHuronDevice);
-      }
-
-      function convertAccounts(data) {
-        return _.mapValues(data, convertAccount);
       }
 
       function convertPlaces(data) {
@@ -257,10 +197,6 @@
 
       function convertHuronDevice(data) {
         return new HuronDevice(data);
-      }
-
-      function convertAccount(data) {
-        return new UnusedAccount(data);
       }
 
       function convertPlace(data) {
@@ -305,6 +241,15 @@
           label: label,
           value: channel
         };
+      }
+
+      function getActiveInterface(obj) {
+        if (obj.status) {
+          var translationKey = 'CsdmStatus.activeInterface.' + (obj.status.activeInterface || '').toLowerCase();
+          if (isTranslatable(translationKey)) {
+            return $translate.instant(translationKey);
+          }
+        }
       }
 
       function getIp(obj) {
@@ -377,23 +322,13 @@
         return (obj.status && obj.status.events) || [];
       }
 
-      function getNeedsActivation(obj) {
-        return obj.state == 'UNCLAIMED';
-      }
-
-      function getReadableActivationCode(obj) {
-        if (obj.activationCode) {
-          return obj.activationCode.match(/.{4}/g).join(' ');
-        }
-      }
-
       function getIsOnline(obj) {
         return (obj.status || {}).connectionStatus == 'CONNECTED';
       }
 
       function getLastConnectionTime(obj) {
         moment.localeData(moment.locale())._calendar.sameElse = 'lll';
-        return (obj.status && obj.status.lastConnectionTime) ? moment(obj.status.lastConnectionTime).calendar() : null;
+        return (obj.status && obj.status.lastStatusReceivedTime) ? moment(obj.status.lastStatusReceivedTime).calendar() : null;
       }
 
       function getHuronId(obj) {
@@ -479,13 +414,10 @@
         convertPlace: convertPlace,
         convertPlaces: convertPlaces,
         convertCode: convertCode,
-        convertCodes: convertCodes,
         convertCloudberryDevice: convertCloudberryDevice,
         convertCloudberryDevices: convertCloudberryDevices,
         convertHuronDevice: convertHuronDevice,
-        convertHuronDevices: convertHuronDevices,
-        convertAccount: convertAccount,
-        convertAccounts: convertAccounts
+        convertHuronDevices: convertHuronDevices
       };
 
     }

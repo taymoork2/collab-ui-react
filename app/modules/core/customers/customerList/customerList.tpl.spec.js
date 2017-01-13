@@ -2,10 +2,17 @@
   'use strict';
 
   describe('Template: customerList.tpl.html', function () {
-    var $scope, $compile, $templateCache, $q, $controller, view;
-    var Authinfo, customerListToggle, Orgservice, PartnerService, FeatureToggleService, TrialService;
+    var $scope, $compile, $templateCache, $q, $controller, controller, view;
+    var Authinfo, customerListToggle, Orgservice, PartnerService, FeatureToggleService, TrialService, trialForPaid;
     var ADD_BUTTON = '#addTrial';
     var SEARCH_FILTER = '#searchFilter';
+
+    afterEach(function () {
+      if (view) {
+        view.remove();
+      }
+      view = undefined;
+    });
 
     beforeEach(angular.mock.module('Core'));
     beforeEach(angular.mock.module('Huron'));
@@ -28,6 +35,8 @@
         CUSTOMER: 2
       };
 
+      trialForPaid = false;
+
       customerListToggle = false;
 
       spyOn(TrialService, 'getTrialsList').and.returnValue($q.when({
@@ -45,9 +54,8 @@
         }, 200);
       });
       spyOn(Authinfo, 'isCare').and.returnValue(true);
-      spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
-        $q.when(true)
-      );
+      spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
+      spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(false));
     }));
 
     describe('Add trial button', function () {
@@ -66,19 +74,22 @@
     describe('Customer name Search filter', function () {
       it('clicking search box should call filterList', function () {
         initAndCompile();
-        spyOn($scope, 'filterList').and.callFake(function () {});
+        spyOn(controller, 'filterList').and.callFake(function () {});
         view.find(SEARCH_FILTER).val('customerName').change();
-        expect($scope.filterList).toHaveBeenCalledWith('customerName');
+        expect(controller.filterList).toHaveBeenCalledWith('customerName');
       });
     });
 
     function initAndCompile() {
-      $controller('CustomerListCtrl', {
+      controller = $controller('CustomerListCtrl', {
         $scope: $scope,
-        customerListToggle: customerListToggle
+        customerListToggle: customerListToggle,
+        trialForPaid: trialForPaid
       });
+      $scope.customerList = controller;
       var template = $templateCache.get('modules/core/customers/customerList/customerList.tpl.html');
-      view = $compile(angular.element(template))($scope);
+      var elem = angular.element(template);
+      view = $compile(elem)($scope);
       $scope.$apply();
     }
   });

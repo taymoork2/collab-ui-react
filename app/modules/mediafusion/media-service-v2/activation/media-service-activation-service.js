@@ -170,6 +170,11 @@
         });
     };
 
+    var deactivateHybridMedia = function () {
+      var url = MediaConfigServiceV2.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId() + '/deactivate_hybrid_media';
+      return $http.delete(url);
+    };
+
     return {
       setisMediaServiceEnabled: setisMediaServiceEnabled,
       getMediaServiceState: getMediaServiceState,
@@ -180,7 +185,8 @@
       setUserIdentityOrgToMediaAgentOrgMapping: setUserIdentityOrgToMediaAgentOrgMapping,
       deleteUserIdentityOrgToMediaAgentOrgMapping: deleteUserIdentityOrgToMediaAgentOrgMapping,
       enableMediaService: enableMediaService,
-      disableOrpheusForMediaFusion: disableOrpheusForMediaFusion
+      disableOrpheusForMediaFusion: disableOrpheusForMediaFusion,
+      deactivateHybridMedia: deactivateHybridMedia
     };
   }
 })();

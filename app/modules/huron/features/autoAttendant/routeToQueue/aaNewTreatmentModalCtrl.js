@@ -6,45 +6,77 @@
     .controller('AANewTreatmentModalCtrl', AANewTreatmentModalCtrl);
 
   /* @ngInject */
-  function AANewTreatmentModalCtrl($modalInstance, $translate, $scope, AACommonService, AutoAttendantCeMenuModelService, AAUiModelService, aa_schedule, aa_menu_id, aa_index, aa_key_index) {
+  function AANewTreatmentModalCtrl($modalInstance, $translate, $scope, AALanguageService, AACommonService, AutoAttendantCeMenuModelService, AAUiModelService, aa_schedule, aa_menu_id, aa_index, aa_key_index, aa_from_route_call) {
     var vm = this;
 
+    var properties = {
+      LABEL: "label"
+    };
+
+    vm.showLanguageAndVoiceOptions = false;
+
+    var languageOption = {
+      label: '',
+      value: ''
+    };
+
+    var voiceOption = {
+      label: '',
+      value: ''
+    };
+
     vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
-    vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
+
     vm.destinationOptions = [{
       label: $translate.instant('autoAttendant.destinations.Disconnect'),
-      name: 'Disconnect',
-      action: 'disconnect',
-      level: 0
+      action: 'disconnect'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
-      name: 'destinationMenuRouteHunt',
       action: 'routeToHuntGroup'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
-      name: 'destinationMenuRouteAA',
       action: 'goto'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
-      name: 'destinationMenuRouteUser',
       action: 'routeToUser'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
-      name: 'destinationMenuRouteMailbox',
       action: 'routeToVoiceMail'
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
-      name: 'destinationMenuRouteToExtNum',
       action: 'route'
     }];
     vm.destination = vm.destinationOptions[0];
     vm.musicOnHold = '';
     vm.menuEntry = undefined;
-    vm.mohPlayAction = undefined;
-    vm.iaAction = undefined;
     vm.ok = ok;
     vm.isSaveEnabled = isSaveEnabled;
     vm.uploadMohTrigger = uploadMohTrigger;
+
+    vm.destination = '';
+    vm.maxWaitTime = '';
+
+    vm.languageOption = languageOption;
+    vm.voiceOption = voiceOption;
+
+    vm.languageOptions = AALanguageService.getLanguageOptions();
+    vm.voiceOptions = AALanguageService.getVoiceOptions();
+
+    vm.setVoiceOptions = setVoiceOptions;
+
+    vm.periodicMinutes = [];
+    vm.periodicSeconds = [];
+    vm.periodicSecond = {};
+    vm.periodicMinute = {};
+    vm.minutes = [];
+
+    vm.changedPeriodicMinValue = changedPeriodicMinValue;
+
+    vm.isDisabled = isDisabled;
+
+    var mohPlayAction = undefined;
+    var fallbackAction = undefined;
+    var paAction = undefined;
 
     var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
     var DEFAULT_MOH = 'musicOnHoldDefault';
@@ -54,15 +86,39 @@
 
     //else the dismiss was called
     function ok() {
+      updateLanguageVoice();
+      updateMaxWaitTime();
+      updatePeriodicTime();
       autoValidate();
       AACommonService.setQueueSettingsStatus(true);
       $modalInstance.close();
     }
 
     function autoValidate() {
+      if (_.isEqual(mohPlayAction.value, '')) {
+        vm.musicOnHold = DEFAULT_MOH;
+      }
       if (_.isEqual(vm.musicOnHold, DEFAULT_MOH)) {
         defaultMoh();
       }
+    }
+
+    function updateLanguageVoice() {
+      if (vm.showLanguageAndVoiceOptions) {
+        vm.menuEntry.actions[0].queueSettings.language = vm.languageOption.value;
+        vm.menuEntry.actions[0].queueSettings.voice = vm.voiceOption.value;
+      }
+    }
+
+    function updatePeriodicTime() {
+      var periodicMinutes = (vm.periodicMinute * 60);
+      var periodicTime = periodicMinutes + vm.periodicSecond;
+
+      paAction.interval = periodicTime;
+    }
+
+    function updateMaxWaitTime() {
+      vm.menuEntry.actions[0].queueSettings.maxWaitTime = vm.maxWaitTime;
     }
 
     //auto set the radio option
@@ -72,33 +128,110 @@
 
     //the queueSettings save gets linked to main save
     function isSaveEnabled() {
-      return AACommonService.isValid();
+      return (AACommonService.isValid() && isDestinationValid());
     }
 
     function defaultMoh() {
-      vm.mohPlayAction.value = CISCO_STD_MOH_URL;
-      vm.mohPlayAction.description = '';
+      mohPlayAction.setValue(CISCO_STD_MOH_URL);
+      mohPlayAction.setDescription('');
     }
 
-    function populateMaxTime() {
-      vm.minutes = [];
-      _.times(60, function (i) {
-        vm.minutes.push({
-          index: i,
-          label: i + 1
-        });
-      });
-      //setting maxWaitTime's default value
-      vm.maxWaitTime = vm.minutes[14];
+    function isDisabled() {
+      return _.isEqual(vm.periodicMinute, 5);
+    }
+
+    function changedPeriodicMinValue() {
+      if (_.isEqual(vm.periodicMinute, 0)) {
+        // remove 'zero' from selection
+        if (_.isEqual(vm.periodicSeconds[0], 0)) {
+          vm.periodicSeconds.splice(0, 1);
+        }
+
+        if (_.isEqual(vm.periodicSecond, 0)) {
+          vm.periodicSecond = vm.periodicSeconds[0];
+        }
+        return;
+      }
+
+      if (_.indexOf(vm.periodicSeconds, 0) === -1) {
+        vm.periodicSeconds.splice(0, 1, 0);
+      }
+
+      if (_.isEqual(vm.periodicMinute, 5)) {
+        vm.periodicSecond = vm.periodicSeconds[0];
+      }
+      return;
+    }
+
+    function isDestinationValid() {
+      var isValid = true;
+      if (!_.isEqual(vm.destination.action, 'disconnect') && _.isEmpty(fallbackAction.value)) {
+        isValid = false;
+      }
+
+      return isValid;
+    }
+
+    function setVoiceOptions() {
+      vm.voiceOptions = _.sortBy(AALanguageService.getVoiceOptions(vm.languageOption), properties.LABEL);
+      setVoiceOption();
+    }
+
+    function setVoiceOption() {
+      if (vm.voiceBackup && _.find(vm.voiceOptions, {
+        "value": vm.voiceBackup.value
+      })) {
+        vm.voiceOption = vm.voiceBackup;
+      } else if (_.find(vm.voiceOptions, AALanguageService.getVoiceOption())) {
+        vm.voiceOption = AALanguageService.getVoiceOption();
+      } else {
+        vm.voiceOption = vm.voiceOptions[0];
+      }
+    }
+
+    function populateLanguageVoice() {
+      if (vm.showLanguageAndVoiceOptions) {
+        vm.languageOptions.sort(AACommonService.sortByProperty(properties.LABEL));
+        vm.voiceOptions.sort(AACommonService.sortByProperty(properties.LABEL));
+
+        var voice = vm.menuEntry.actions[0].queueSettings.voice;
+
+        vm.voiceOption = AALanguageService.getVoiceOption(voice);
+        vm.languageOption = AALanguageService.getLanguageOption(voice);
+        vm.voiceBackup = vm.voiceOption;
+        setVoiceOptions();
+      }
+    }
+
+    function populatePeriodicTime() {
+      vm.periodicMinutes = _.range(6);
+
+      vm.periodicSeconds = _.range(0, 60, 5);
+
+      if (!_.isEqual(paAction.interval, '')) {
+        vm.periodicMinute = parseInt(paAction.interval / 60, 10);
+        vm.periodicSecond = paAction.interval - (vm.periodicMinute * 60);
+      } else {
+        vm.periodicMinute = vm.periodicMinutes[0];
+        vm.periodicSecond = vm.periodicSeconds[8];
+      }
+    }
+
+    function populateMaxWaitTime() {
+      vm.minutes = _.range(1, 61);
     }
 
     //populating fallback drop down in sorted order
-    function populateDropDown() {
-      vm.destinationOptions.sort(AACommonService.sortByProperty('label'));
+    function populateFallbackDropDown() {
+      vm.destinationOptions.sort(AACommonService.sortByProperty(properties.LABEL));
+
+      vm.destination = _.find(vm.destinationOptions, function (option) {
+        return (_.isEqual(option.action, fallbackAction.name));
+      });
     }
 
     function populateMohRadio() {
-      if (_.isEqual(vm.mohPlayAction.description, '')) { //no metadata set, so no file uploaded
+      if (_.isEqual(mohPlayAction.description, '')) { //no metadata set, so no file uploaded
         vm.musicOnHold = DEFAULT_MOH;
       } else {
         vm.musicOnHold = CUSTOM_MOH;
@@ -107,16 +240,19 @@
 
     //get queueSettings menuEntry -> inner menu entry type (moh, initial, periodic...)
     function setUpEntry() {
-      if ($scope.keyIndex && $scope.menuId) { //came from a phone menu
+      if ($scope.keyIndex && $scope.menuId && !$scope.fromRouteCall) { //came from a phone menu
         var phMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         vm.menuEntry = phMenu.entries[$scope.keyIndex];
       } else { //came from a route call
         var ui = AAUiModelService.getUiModel();
         var rcMenu = ui[$scope.schedule];
         vm.menuEntry = rcMenu.entries[$scope.index];
+        vm.showLanguageAndVoiceOptions = true;
       }
-      vm.mohPlayAction = vm.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
-      vm.iaAction = vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0];
+      mohPlayAction = vm.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
+      paAction = vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0];
+      fallbackAction = vm.menuEntry.actions[0].queueSettings.fallback.actions[0];
+      vm.maxWaitTime = vm.menuEntry.actions[0].queueSettings.maxWaitTime;
     }
 
     function populateScope() {
@@ -124,18 +260,22 @@
       $scope.index = aa_index;
       $scope.menuId = aa_menu_id;
       $scope.keyIndex = aa_key_index;
+      $scope.fromRouteCall = aa_from_route_call;
     }
 
     function initializeView() {
+      populateLanguageVoice();
       populateMohRadio();
-      populateMaxTime();
-      populateDropDown();
+      populatePeriodicTime();
+      populateMaxWaitTime();
+      populateFallbackDropDown();
     }
 
     function populateUiModel() {
       populateScope();
       setUpEntry();
       initializeView();
+      setVoiceOptions();
     }
 
     function activate() {

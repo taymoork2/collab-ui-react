@@ -1,5 +1,5 @@
 @import 'expressway-service';
-@import '../add-resource/add-resource';
+@import '../service-specific-pages/common-expressway-based/add-resource';
 @import '../fusion-pages/add-resource-group/add-resource-group-modal';
 @import '../fusion-pages/add-resource/add-resource-modal';
 @import '../fusion-pages/components/cluster-card';
@@ -9,6 +9,7 @@
 @import '../fusion-pages/fusion-cluster-list';
 @import '../fusion-pages/fusion-cluster-settings';
 @import '../fusion-pages/resource-group-settings/assign-clusters';
-@import '../notifications/hercules-notifications';
+@import '../fusion-pages/release-channel-section/release-channel-section';
 @import '../user-sidepanel/user-sidepanel-hybrid-services';
+@import '../service-settings/calendar-service-setup/hybrid-calendar-setup';
 @import 'shared';

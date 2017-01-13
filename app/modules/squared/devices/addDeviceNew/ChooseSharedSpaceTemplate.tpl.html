@@ -1,13 +1,13 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="$dismiss()">
   </button>
-  <h3 class="modal-title" translate="{{choosePlace.wizardData.title}}"></h3>
+  <h3 class="modal-title" translate="{{choosePlace.title}}"></h3>
 </div>
 <div class="modal-body device-wizard choose-shared">
   <div ng-hide="choosePlace.onlyNew()">
     <h4 translate="addDeviceWizard.chooseSharedSpace.existingOrNewPlace"></h4>
-    <p class="wizardDescription" ng-show="choosePlace.wizardData.deviceType === 'huron'" translate="addDeviceWizard.chooseSharedSpace.existingOrNewPlaceDeskPhoneInstructions"></p>
-    <p class="wizardDescription" ng-hide="choosePlace.wizardData.deviceType === 'huron'">
+    <p class="wizardDescription" ng-show="choosePlace.deviceType === 'huron'" translate="addDeviceWizard.chooseSharedSpace.existingOrNewPlaceDeskPhoneInstructions"></p>
+    <p class="wizardDescription" ng-hide="choosePlace.deviceType === 'huron'">
       <span translate="placesPage.placesDefinition"></span>
       <span translate="addDeviceWizard.chooseSharedSpace.existingOrNewPlaceCollaborationDeviceInstructions"></span>
     </p>
@@ -47,8 +47,8 @@
   <div class="chooseExistingPlace" ng-hide="choosePlace.isExistingCollapsed || !choosePlace.hasRooms || !choosePlace.placesLoaded">
     <form class="chooseExistingPlaceForm" onsubmit="$('#next-button').click()">
       <h4 translate="addDeviceWizard.chooseSharedSpace.whichPlace"></h4>
-      <p ng-show="choosePlace.wizardData.deviceType === 'huron'" translate="addDeviceWizard.chooseSharedSpace.existingDeskPhonePlaceInstructions"></p>
-      <p ng-hide="choosePlace.wizardData.deviceType === 'huron'" translate="addDeviceWizard.chooseSharedSpace.existingCollaborationDevicePlaceInstructions"></p>
+      <p ng-show="choosePlace.deviceType === 'huron'" translate="addDeviceWizard.chooseSharedSpace.existingDeskPhonePlaceInstructions"></p>
+      <p ng-hide="choosePlace.deviceType === 'huron'" translate="addDeviceWizard.chooseSharedSpace.existingCollaborationDevicePlaceInstructions"></p>
       <div>
         <input type="text"
                ng-model="choosePlace.selected"
@@ -69,8 +69,7 @@
 
   <div class="createNewPlace" ng-hide="choosePlace.isNewCollapsed">
     <form name="placeForm" class="createNewPlaceForm" onsubmit="$('#next-button').click()">
-      <h4 ng-show="choosePlace.wizardData.showPlaces" translate="addDeviceWizard.chooseSharedSpace.placeLocation"></h4>
-      <h4 ng-hide="choosePlace.wizardData.showPlaces" translate="addDeviceWizard.chooseSharedSpace.deviceInstalled"></h4>
+      <h4 translate="addDeviceWizard.chooseSharedSpace.placeLocation"></h4>
       <p>{{ choosePlace.localizedCreateInstructions() }}</p>
       <div class="newPlaceSpacing" ng-show="choosePlace.onlyNew()"></div>
       <div class="cs-input-group" ng-class="{'error': placeForm.newPlace.$invalid && placeForm.newPlace.$touched}">
@@ -110,7 +109,6 @@
 
   <button
       cs-btn
-      loading="choosePlace.isLoading"
       id="next-button"
       class="btn btn--primary"
       ng-click="choosePlace.next()"

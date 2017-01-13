@@ -14,7 +14,7 @@ var auth = {
   },
   'pbr-admin': {
     user: 'pbr-org-admin@squared2webex.com',
-    pass: 'P@ssword123',
+    pass: 'Atlas123!',
     org: '4214d345-7caf-4e32-b015-34de878d1158'
   },
   'partner-admin': {
@@ -34,7 +34,7 @@ var auth = {
   },
   'partner-reports-sales-admin': {
     user: 'kingkuntauser4+1715@gmail.com',
-    pass: 'Cisco123!',
+    pass: 'C1sco123!',
     org: 'ce8d17f8-1734-4a54-8510-fae65acc505e'
   },
   'pbr-admin-test': {
@@ -191,6 +191,11 @@ var auth = {
   },
   'wbx-siteCsvTestAdmin': {
     user: 'dev-dmz-e2e@mailinator.com',
+    pass: 'Cisco!23',
+    org: '06db50d9-a129-4a1f-9ee9-bcff65246b15'
+  },
+  'gss-testAdmin': {
+    user: 'sjsite14-lhsieh@mailinator.com',
     pass: 'Cisco!23',
     org: '06db50d9-a129-4a1f-9ee9-bcff65246b15'
   }

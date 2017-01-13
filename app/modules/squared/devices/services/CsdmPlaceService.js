@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmPlaceService($window, $http, Authinfo, CsdmConfigService, CsdmConverter, FeatureToggleService, $q) {
+  function CsdmPlaceService($http, Authinfo, CsdmConfigService, CsdmConverter) {
 
     var csdmPlacesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/places/';
 
@@ -11,36 +11,22 @@
     }
 
     function getPlacesList() {
-      return placesFeatureIsEnabled()
+      return $http.get(csdmPlacesUrl + "?shallow=true&type=all")
         .then(function (res) {
-          if (res) {
-            return $http.get(csdmPlacesUrl + "?shallow=true&type=all")
-              .then(function (res) {
-                return CsdmConverter.convertPlaces(res.data);
-              });
-          } else {
-            return $q.reject('feature not enabled');
-          }
+          return CsdmConverter.convertPlaces(res.data);
         });
-    }
-
-    function placesFeatureIsEnabled() {
-      if ($window.location.search.indexOf("enablePlaces=true") > -1) {
-        return $q.when(true);
-      } else {
-        return FeatureToggleService.supports(FeatureToggleService.features.csdmPlaces);
-      }
     }
 
     function updateItemName(place, name) {
       return $http.patch(place.url, {
         name: name
       }).then(function (res) {
+        res.data.type = place.type;
         return CsdmConverter.convertPlace(res.data);
       });
     }
 
-    function fetchPlace(placeUrl) {
+    function fetchItem(placeUrl) {
       return $http.get(placeUrl).then(function (res) {
         return CsdmConverter.convertPlace(res.data);
       });
@@ -50,12 +36,19 @@
       return $http.delete(place.url);
     }
 
-    function createCsdmPlace(name, deviceType) {
+    function createCsdmPlace(name, entitlements, directoryNumber, externalNumber) {
       return $http.post(csdmPlacesUrl, {
         name: name,
-        placeType: deviceType
+        directoryNumber: directoryNumber,
+        externalNumber: externalNumber,
+        entitlements: entitlements || ['webex-squared'],
+        machineType: 'lyra_space'
       }).then(function (res) {
-        return CsdmConverter.convertPlace(res.data);
+        var convertedPlace = CsdmConverter.convertPlace(res.data);
+        // TODO: Don't need to set these here when CSDM returns the lines on place creation
+        convertedPlace.directoryNumber = convertedPlace.directoryNumber || directoryNumber;
+        convertedPlace.externalNumber = convertedPlace.externalNumber || externalNumber;
+        return convertedPlace;
       });
     }
 
@@ -70,10 +63,9 @@
     }
 
     return {
-      placesFeatureIsEnabled: placesFeatureIsEnabled,
       deletePlace: deletePlace,
       deleteItem: deletePlace,
-      fetchItem: fetchPlace,
+      fetchItem: fetchItem,
       createCsdmPlace: createCsdmPlace,
       getPlacesList: getPlacesList,
       updateItemName: updateItemName,

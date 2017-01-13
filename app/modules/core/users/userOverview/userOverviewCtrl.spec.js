@@ -1,246 +1,285 @@
 'use strict';
 
+var testModule = require('./index').default;
+
 describe('Controller: UserOverviewCtrl', function () {
-  var controller, $controller, $scope, $httpBackend, $rootScope, $q, Config, Authinfo, Auth, Userservice, FeatureToggleService, Notification, WebExUtilsFact;
 
-  var $stateParams, currentUser, updatedUser, getUserFeatures, UrlConfig;
-  var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements, invitations;
-
-  beforeEach(angular.mock.module('Core'));
-  beforeEach(angular.mock.module('Huron'));
-  beforeEach(angular.mock.module('Sunlight'));
-  beforeEach(angular.mock.module('WebExApp'));
-
-  beforeEach(inject(function (_$controller_, _$httpBackend_, _$q_, _$rootScope_, _Config_, _Authinfo_, _Auth_, _Userservice_, _FeatureToggleService_, _UrlConfig_, _Notification_, _WebExUtilsFact_) {
-    $controller = _$controller_;
-    $scope = _$rootScope_.$new();
-    $httpBackend = _$httpBackend_;
-    $rootScope = _$rootScope_;
-    $q = _$q_;
-    Config = _Config_;
-    Authinfo = _Authinfo_;
-    Auth = _Auth_;
-    UrlConfig = _UrlConfig_;
-    Userservice = _Userservice_;
-    FeatureToggleService = _FeatureToggleService_;
-    Notification = _Notification_;
-    WebExUtilsFact = _WebExUtilsFact_;
-
-    var deferred = $q.defer();
-    deferred.resolve('true');
-    currentUser = angular.copy(getJSONFixture('core/json/currentUser.json'));
-    invitations = getJSONFixture('core/json/users/invitations.json');
-    updatedUser = angular.copy(currentUser);
-    getUserFeatures = getJSONFixture('core/json/users/me/featureToggles.json');
-    var deferred2 = $q.defer();
-    deferred2.resolve(getUserFeatures);
-
-    $stateParams = {
-      currentUser: currentUser
-    };
-
-    spyOn(Authinfo, 'getOrgId').and.returnValue(currentUser.meta.organizationID);
-    spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
-      callback(currentUser, 200);
-    });
-    spyOn(Userservice, 'resendInvitation').and.returnValue($q.when({}));
-    spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(deferred.promise);
-    spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(deferred2.promise);
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'atlasUserPendingStatusGetStatus').and.returnValue($q.when(true));
-    spyOn(Authinfo, 'isCSB').and.returnValue(false);
-    spyOn(Auth, 'isOnlineOrg').and.returnValue($q.when(false));
-    spyOn(Notification, 'success');
-    spyOn(WebExUtilsFact, 'isCIEnabledSite').and.returnValue(true);
-    spyOn(Authinfo, 'isSquaredTeamMember').and.returnValue(false);
-
-    // eww
-    var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + currentUser.id;
-    $httpBackend.whenGET(userUrl).respond(updatedUser);
-    var inviteUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + currentUser.meta.organizationID + '/invitations/' + currentUser.id;
-    $httpBackend.whenGET(inviteUrl).respond(invitations);
-
-    initController();
-  }));
-
-  function initController() {
-    controller = $controller('UserOverviewCtrl', {
-      $scope: $scope,
-      $stateParams: $stateParams,
-      Config: Config,
-      Authinfo: Authinfo,
-      Userservice: Userservice,
-      FeatureToggleService: FeatureToggleService
-    });
-    $scope.$apply();
+  function init() {
+    this.initModules(testModule, 'WebExApp', 'Sunlight', 'Huron');
+    this.injectDependencies('$scope', '$controller', '$q', 'UserOverviewService', 'Utils', 'FeatureToggleService', 'Config', 'Authinfo', 'Userservice', 'UrlConfig', 'Notification');
+    initData.apply(this);
+    initDependencySpies.apply(this);
+    initStateParams.apply(this);
   }
 
-  afterEach(function () {
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
+  function initData() {
+    this.pristineCurrentUser = angular.copy(getJSONFixture('core/json/currentUser.json'));
+    this.updatedUser = _.cloneDeep(this.pristineCurrentUser);
+    this.updatedUser.trainSiteNames = ['testSite'];
+    this.invitations = getJSONFixture('core/json/users/invitations.json');
+    this.featureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
+  }
+
+  function initDependencySpies() {
+    var _this = this;
+
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue(this.pristineCurrentUser.meta.organizationID);
+
+    this.getUserSpy = spyOn(this.UserOverviewService, 'getUser').and.callFake(function () {
+      var getUserResponse = {
+        user: _.cloneDeep(_this.updatedUser),
+        sqEntitlements: _this.Utils.getSqEntitlements(_this.updatedUser)
+      };
+      getUserResponse.user.hasEntitlement = function (entitlement) {
+        var index = _.findIndex(this.entitlements, function (ent) {
+          return ent === entitlement;
+        });
+        return index > -1;
+      };
+      return _this.$q.when(getUserResponse);
+    });
+
+    spyOn(this.Userservice, 'resendInvitation').and.returnValue(this.$q.when({}));
+    spyOn(this.FeatureToggleService, 'getFeatureForUser').and.returnValue(this.$q.when(function () { return true; }));
+    spyOn(this.FeatureToggleService, 'getFeaturesForUser').and.returnValue(this.$q.when(function () { return _this.featureToggles; }));
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
+    spyOn(this.FeatureToggleService, 'atlasSMPGetStatus').and.returnValue(this.$q.when(false));
+    spyOn(this.Authinfo, 'isCSB').and.returnValue(false);
+
+    spyOn(this.Notification, 'success');
+    spyOn(this.Authinfo, 'isSquaredTeamMember').and.returnValue(false);
+  }
+
+  function initStateParams() {
+    var _this = this;
+    this.UserOverviewService.getUser()
+      .then(function (response) {
+        _this.$stateParams = {
+          currentUser: response.user,
+          entitlements: response.sqEntitlements
+        };
+      });
+    this.$scope.$apply();
+  }
+
+  function initController() {
+    this.controller = this.$controller('UserOverviewCtrl', {
+      $scope: this.$scope,
+      $stateParams: this.$stateParams,
+      Config: this.Config,
+      Authinfo: this.Authinfo,
+      Userservice: this.Userservice,
+      FeatureToggleService: this.FeatureToggleService
+    });
+    this.$scope.$apply();
+  }
+
+  beforeEach(init);
+
+  beforeEach(function () {
+    // save the original $stateParams so we can ensure it was not changed
+    this.orginalStateParams = _.cloneDeep(this.$stateParams);
   });
 
+  afterEach(function () {
+    // make sure the controller did NOT modify the $stateParams. If it did, this is a bug!
+    expect(this.$stateParams).toEqual(this.orginalStateParams);
+  });
+
+  ////////////////////
+
   describe('init', function () {
-    it('should handle an empty response from feature toggles', function () {
-      Authinfo.isSquaredTeamMember.and.returnValue(true);
-      FeatureToggleService.getFeaturesForUser.and.returnValue($q.resolve({}));
-      expect(initController).not.toThrow();
-    });
-
-    it('should reload the user data from identity response when user list is updated', function () {
-      expect(currentUser.entitlements.length).toEqual(2);
-      updatedUser.entitlements.push('ciscouc');
-      $scope.$broadcast('USER_LIST_UPDATED');
-      $httpBackend.flush();
-      expect(currentUser.entitlements.length).toEqual(3);
-    });
-
-    it('should reload the user data from identity response when entitlements are updated', function () {
-      expect(currentUser.entitlements.length).toEqual(2);
-      updatedUser.entitlements.push('ciscouc');
-      $scope.$broadcast('entitlementsUpdated');
-      $httpBackend.flush();
-      expect(currentUser.entitlements.length).toEqual(3);
-    });
-
-    it('should set the title to displayName when user data is updated with displayName', function () {
-      updatedUser.displayName = "Display Name";
-      $scope.$broadcast('entitlementsUpdated');
-      $httpBackend.flush();
-      expect(controller.titleCard).toEqual("Display Name");
-    });
 
     it('should not set features list by default', function () {
-      expect(controller.features).toBeUndefined();
+      initController.apply(this);
+      expect(this.controller.features).toBeUndefined();
+    });
+
+    it('should handle an empty response from feature toggles', function () {
+      this.Authinfo.isSquaredTeamMember.and.returnValue(true);
+      this.FeatureToggleService.getFeaturesForUser.and.returnValue(this.$q.when());
+
+      initController.apply(this);
+      expect(this.FeatureToggleService.getFeaturesForUser).toHaveBeenCalled();
+      expect(this.Authinfo.isSquaredTeamMember).toHaveBeenCalled();
+      expect(this.controller.isSharedMultiPartyEnabled).toBeFalsy();
+
+    });
+
+    it('should not set trainSiteNames list by default', function () {
+      initController.apply(this);
+      expect(this.controller.trainSiteNames).toBeUndefined();
+    });
+
+    it('should set trainSiteNames list when specified', function () {
+      this.$stateParams.currentUser.trainSiteNames = ['testSite'];
+      initController.apply(this);
+      expect(this.controller.currentUser.trainSiteNames).toHaveLength(1);
+    });
+  });
+
+  describe('Reload User on events', function () {
+    beforeEach(function () {
+      initController.apply(this);
     });
 
     it('should reload the user data from identity response and set subTitleCard to title', function () {
-      updatedUser.title = "Test";
-      updatedUser.displayName = "Display Name";
-      $scope.$broadcast('USER_LIST_UPDATED');
-      $httpBackend.flush();
-      expect(controller.subTitleCard).toBe("Test");
+      this.updatedUser.title = "Test";
+      this.updatedUser.displayName = "Display Name";
+      this.$scope.$broadcast('USER_LIST_UPDATED');
+      this.$scope.$digest();
+      expect(this.controller.subTitleCard).toBe("Test");
     });
 
     it('should reload the user data from identity response and set title with givenName and FamilyName', function () {
-      updatedUser.name = {
+      this.updatedUser.name = {
         givenName: "Given Name",
         familyName: "Family Name"
       };
-      $scope.$broadcast('entitlementsUpdated');
-      $httpBackend.flush();
-      expect(controller.titleCard).toEqual("Given Name Family Name");
+      this.$scope.$broadcast('entitlementsUpdated');
+      this.$scope.$digest();
+      expect(this.controller.titleCard).toEqual("Given Name Family Name");
     });
 
     it('should reload the user data from identity response and set subTitleCard to addresses', function () {
-      updatedUser.addresses.push({
+      this.updatedUser.addresses.push({
         "locality": "AddressLine1"
       });
-      $scope.$broadcast('USER_LIST_UPDATED');
-      $httpBackend.flush();
-      expect(controller.subTitleCard).toBe(" AddressLine1 AddressLine1");
+      this.$scope.$broadcast('USER_LIST_UPDATED');
+      this.$scope.$digest();
+      expect(this.controller.subTitleCard).toBe(' AddressLine1');
 
+    });
+  });
+
+  describe('Handle entitlement changes', function () {
+    beforeEach(function () {
+      initController.apply(this);
+    });
+
+    it('should reload the user data from identity response when user list is updated', function () {
+      expect(this.controller.currentUser.entitlements.length).toEqual(2);
+      this.updatedUser.entitlements.push('ciscouc');
+      this.$scope.$broadcast('USER_LIST_UPDATED');
+      this.$scope.$digest();
+      expect(this.controller.currentUser.entitlements.length).toEqual(3);
+    });
+
+    it('should reload the user data from identity response when entitlements are updated', function () {
+      expect(this.controller.currentUser.entitlements.length).toEqual(2);
+      this.updatedUser.entitlements.push('ciscouc');
+      this.$scope.$broadcast('entitlementsUpdated');
+      this.$scope.$digest();
+      expect(this.controller.currentUser.entitlements.length).toEqual(3);
+    });
+
+    it('should set the title to displayName when user data is updated with displayName', function () {
+      this.updatedUser.displayName = "Display Name";
+      this.$scope.$broadcast('entitlementsUpdated');
+      this.$scope.$digest();
+      expect(this.controller.titleCard).toEqual("Display Name");
     });
 
     it('should reload the user data from identity when user list is updated with cloud-contact-center entitlement', function () {
-      expect(currentUser.entitlements.length).toEqual(2);
-      updatedUser.entitlements.push('cloud-contact-center');
-      $scope.$broadcast('entitlementsUpdated');
-      $httpBackend.flush();
-      expect(currentUser.entitlements.length).toEqual(3);
+      expect(this.controller.currentUser.entitlements.length).toEqual(2);
+      this.updatedUser.entitlements.push('cloud-contact-center');
+      this.$scope.$broadcast('entitlementsUpdated');
+      this.$scope.$digest();
+      expect(this.controller.currentUser.entitlements.length).toEqual(3);
     });
 
     it('should reload the user data from identity when user list is updated with squared-syncup entitlement', function () {
-      expect(currentUser.entitlements.length).toEqual(2);
-      updatedUser.entitlements.push('squared-syncup');
-      $scope.$broadcast('entitlementsUpdated');
-      $httpBackend.flush();
-      expect(currentUser.entitlements.length).toEqual(3);
+      expect(this.controller.currentUser.entitlements.length).toEqual(2);
+      this.updatedUser.entitlements.push('squared-syncup');
+      this.$scope.$broadcast('entitlementsUpdated');
+      this.$scope.$digest();
+      expect(this.controller.currentUser.entitlements.length).toEqual(3);
     });
 
     it('should reload user data from identity response when squared-syncup licenseID is updated', function () {
-      updatedUser.entitlements.push('squared-syncup');
-      updatedUser.licenseID.push('CF_xyz');
-      $scope.$broadcast('USER_LIST_UPDATED');
-      $httpBackend.flush();
-      expect(currentUser.licenseID.length).toEqual(1);
+      this.updatedUser.entitlements.push('squared-syncup');
+      this.updatedUser.licenseID.push('CF_xyz');
+      this.$scope.$broadcast('USER_LIST_UPDATED');
+      this.$scope.$digest();
+      expect(this.controller.currentUser.licenseID.length).toEqual(1);
     });
 
     it('should reload user data from identity response when contact center licenseID is updated', function () {
-      updatedUser.entitlements.push('cloud-contact-center');
-      updatedUser.licenseID.push('CC_xyz');
-      $scope.$broadcast('USER_LIST_UPDATED');
-      $httpBackend.flush();
-      expect(currentUser.licenseID.length).toEqual(1);
+      this.updatedUser.entitlements.push('cloud-contact-center');
+      this.updatedUser.licenseID.push('CC_xyz');
+      this.$scope.$broadcast('USER_LIST_UPDATED');
+      this.$scope.$digest();
+      expect(this.controller.currentUser.licenseID.length).toEqual(1);
     });
 
     it('should reload user data from identity response when communication licenseID is updated', function () {
-      updatedUser.licenseID.push('CO_xyz');
-      $scope.$broadcast('USER_LIST_UPDATED');
-      $httpBackend.flush();
-      expect(currentUser.licenseID.length).toEqual(1);
+      this.updatedUser.licenseID.push('CO_xyz');
+      this.$scope.$broadcast('USER_LIST_UPDATED');
+      this.$scope.$digest();
+      expect(this.controller.currentUser.licenseID.length).toEqual(1);
     });
 
     it('should reload user data from identity response when messaging licenseID is updated', function () {
-      updatedUser.licenseID.push('MS_xyz');
-      $scope.$broadcast('USER_LIST_UPDATED');
-      $httpBackend.flush();
-      expect(currentUser.licenseID.length).toEqual(1);
+      this.updatedUser.licenseID.push('MS_xyz');
+      this.$scope.$broadcast('USER_LIST_UPDATED');
+      this.$scope.$digest();
+      expect(this.controller.currentUser.licenseID.length).toEqual(1);
     });
+
   });
 
   describe('AuthCodeLink', function () {
-    it('should load dropdown items when addGenerateAuthCodeLink method is called on controller', function () {
-      controller.enableAuthCodeLink();
-      expect(controller.dropDownItems.length).toBe(1);
-      expect(controller.dropDownItems[0].name).toBe("generateAuthCode");
-      expect(controller.dropDownItems[0].text).toBe("usersPreview.generateActivationCode");
+
+    beforeEach(function () {
+      initController.apply(this);
     });
 
-    it('should find existing auth code link when addGenerateAuthCodeLink is called second time', function () {
-      controller.enableAuthCodeLink();
-      expect(controller.dropDownItems.length).toBe(1);
+    it('should set showGenerateOtpLink to true when addGenerateAuthCodeLink method is called on controller', function () {
+      this.controller.enableAuthCodeLink();
+      expect(this.controller.showGenerateOtpLink).toBeTruthy();
     });
 
-  });
+    it('should set showGenerateOtpLink to false when disableAuthCodeLink method is called on controller', function () {
+      this.controller.disableAuthCodeLink();
+      expect(this.controller.showGenerateOtpLink).toBeFalsy();
+    });
 
-  describe('getAccountStatus should be called properly', function () {
-    it('and should check if status is pending', function () {
-      expect(controller.pendingStatus).toBe(true);
-      expect(controller.currentUser.pendingStatus).toBe(true);
-    });
-    it('and should check if status is not pending', function () {
-      updatedUser.licenseID.push('MS_d9fb2e50-2a92-4b0f-b1a4-e7003ecc93ec');
-      updatedUser.userSettings = [];
-      updatedUser.userSettings.push('{spark.signUpDate:1470262687261}');
-      $scope.$broadcast('USER_LIST_UPDATED');
-      $httpBackend.flush();
-      expect(controller.pendingStatus).toBe(false);
-      expect(controller.currentUser.pendingStatus).toBe(false);
-    });
   });
 
   describe('resendInvitation', function () {
     beforeEach(function () {
-      userEmail = 'testOrg12345@gmail';
-      userName = 'testOrgEmail';
-      uuid = '111112';
-      userStatus = 'pending';
-      dirsyncEnabled = true;
-      entitlements = ["squared-call-initiation", "spark", "webex-squared"];
+      initController.apply(this);
+
+      this.inviteData = {
+        userEmail: 'testOrg12345@gmail',
+        userName: 'testOrgEmail',
+        uuid: '111112',
+        userStatus: 'pending',
+        dirsyncEnabled: true,
+        entitlements: ["squared-call-initiation", "spark", "webex-squared"]
+      };
     });
 
     it('should call resendInvitation successfully', function () {
-      controller.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements);
-      $rootScope.$apply();
-      expect(Notification.success).toHaveBeenCalled();
+      this.controller.resendInvitation(
+        this.inviteData.userEmail,
+        this.inviteData.userName,
+        this.inviteData.uuid,
+        this.inviteData.userStatus,
+        this.inviteData.dirsyncEnabled,
+        this.inviteData.entitlements);
+      this.$scope.$digest();
+      expect(this.Notification.success).toHaveBeenCalled();
     });
   });
 
   describe('When Authinfo.isCSB returns false', function () {
+    beforeEach(function () {
+      initController.apply(this);
+    });
+
     it('should set the controller.isCSB to false', function () {
-      expect(controller.isCSB).toBe(false);
+      expect(this.controller.isCSB).toBe(false);
     });
   });
-
 });

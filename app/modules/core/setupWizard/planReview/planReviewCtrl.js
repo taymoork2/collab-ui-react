@@ -61,6 +61,18 @@
       return vm.isCareEnabled ? 'small-3' : 'small-4';
     };
 
+    vm.isSharedMultiPartyLicense = function (service) {
+      return _.get(service, 'license.licenseModel') === Config.licenseModel.cloudSharedMeeting;
+    };
+
+    vm.determineLicenseType = function (service) {
+      return vm.isSharedMultiPartyLicense(service) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.namedLicenses');
+    };
+
+    vm.generateLicenseTooltip = function (service) {
+      return vm.isSharedMultiPartyLicense(service) ? '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.sharedLicenseTooltip') + '</div>' : '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.namedLicenseTooltip') + '</div>';
+    };
+
     init();
 
     function getUserServiceRowClass(hasRoomSystem) {
@@ -81,6 +93,9 @@
         vm.isCareEnabled = careStatus && Authinfo.isCare();
       });
 
+      FeatureToggleService.atlasSMPGetStatus().then(function (smpStatus) {
+        vm.isSharedMultiPartyEnabled = smpStatus;
+      });
 
       vm.messagingServices.services = Authinfo.getMessageServices() || [];
       _.forEach(vm.messagingServices.services, function (service) {
@@ -113,6 +128,29 @@
           }
         }
       });
+
+      vm.hasAdvancedLicenses = function () {
+        _.each(vm.confServices.services, function (service) {
+          if (_.has(service, 'license.siteUrl')) {
+            return true;
+          }
+        });
+      };
+
+      vm.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
+        var hasAdvancedLicense = false;
+        var advancedLicensesInSubscription = [];
+        if (vm.hasAdvancedLicenses) {
+          advancedLicensesInSubscription = _.filter(vm.confServices.services, { license: { billingServiceId: subscriptionId } });
+          _.each(advancedLicensesInSubscription, function (subscription) {
+            if (_.has(subscription, 'license.siteUrl')) {
+              hasAdvancedLicense = true;
+            }
+          });
+        }
+
+        return hasAdvancedLicense;
+      };
 
       vm.commServices.services = Authinfo.getCommunicationServices() || [];
       _.forEach(vm.commServices.services, function (service) {
@@ -183,6 +221,7 @@
           }
         }
       });
+
       if (Object.prototype.toString.call(vm.cmrServices.services) == '[object Array]') {
         _.forEach(vm.cmrServices.services, function (service) {
           if (service.license) {
