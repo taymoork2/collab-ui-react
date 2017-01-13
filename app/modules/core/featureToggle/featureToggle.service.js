@@ -170,8 +170,21 @@
 
     var toggles = {};
 
-    var huronResource = $resource(HuronConfig.getMinervaUrl() + '/features/users/:userId/developer/:featureName', {
+    // returns huron feature toggle value for the given user or user's org
+    var huronUserResource = $resource(HuronConfig.getMinervaUrl() + '/features/users/:userId/developer/:featureName', {
       userId: '@userId',
+      featureName: '@featureName'
+    },
+      {
+        get: {
+          method: 'GET',
+          cache: true
+        }
+      });
+
+    // returns huron feature toggle value for the given customer; must be full admin or partner admin for the customer
+    var huronCustomerResource = $resource(HuronConfig.getMinervaUrl() + '/features/customers/:customerId/developer/:featureName', {
+      customerId: '@customerId',
       featureName: '@featureName'
     },
       {
@@ -287,15 +300,32 @@
 
     function getHuronToggle(feature) {
       if (Authinfo.isSquaredUC()) {
+        if (Authinfo.isCustomerLaunchedFromPartner()) {
+          return getHuronToggleForCustomer(Authinfo.getOrgId(), feature);
+        }
+
         return getHuronToggleForUser(Authinfo.getUserId(), feature);
-      } else {
-        return $q.when(false);
       }
+
+      return $q.when(false);
     }
 
     function getHuronToggleForUser(userId, feature) {
-      return huronResource.get({
+      return huronUserResource.get({
         userId: userId,
+        featureName: feature
+      }).$promise.then(function (data) {
+        toggles[feature] = data.val;
+        return data.val;
+      }).catch(function () {
+        return false;
+      });
+    }
+
+
+    function getHuronToggleForCustomer(customerId, feature) {
+      return huronCustomerResource.get({
+        customerId: customerId,
         featureName: feature
       }).$promise.then(function (data) {
         toggles[feature] = data.val;
