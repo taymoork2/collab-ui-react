@@ -344,18 +344,22 @@ require('./_customer-list.scss');
     function init() {
       setNotesTextOrder();
       initColumns();
-      FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
-        vm.isCareEnabled = careStatus;
-        // FIXME: Remove this if block once the customer list refactor goes live
-        // (This check is taken care of in the compactServiceColumn directive)
+
+      var promises = {
+        atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
+        careTrials: FeatureToggleService.atlasCareTrialsGetStatus()
+      };
+      $q.all(promises)
+      .then(function (results) {
+        vm.isCareEnabled = results.careTrials;
         if (!vm.isCareEnabled) {
           _.remove(vm.filter.options, { value: 'care' });
         }
-      }, function () {
-        // FIXME: Remove this if block once the customer list refactor goes live
-        // if getting care feature status fails, fall back to the old behavior
-        _.remove(vm.filter.options, { value: 'care' });
-      }).finally(function () {
+        if (!results.atlasDarling) {
+          _.remove(vm.filter.options, { value: 'sparkBoard' });
+        }
+      })
+      .finally(function () {
         resetLists().then(function () {
           if (!vm.customerListToggle) {
             setFilter($stateParams.filter);

@@ -257,7 +257,7 @@ require('./ediscovery.scss');
 
     function searchButtonDisabled() {
       var disable = !vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true;
-      return !vm.ediscoveryToggle ? (disable && vm.searchModel === '') : disable;
+      return vm.ediscoveryToggle ? (disable && vm.searchModel === '') : disable;
     }
 
     function pollAvalonReport() {
