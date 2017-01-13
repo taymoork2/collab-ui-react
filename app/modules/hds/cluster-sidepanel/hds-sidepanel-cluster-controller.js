@@ -51,7 +51,6 @@
       }
       vm.releaseChannel = FusionUtils.getLocalizedReleaseChannel(vm.cluster.releaseChannel);
       var isUpgrading = vm.cluster.aggregates.upgradeState === 'upgrading';
-
       vm.softwareUpgrade = {
         provisionedVersion: vm.cluster.aggregates.provisioning.provisionedVersion,
         availableVersion: vm.cluster.aggregates.provisioning.availableVersion,
@@ -98,6 +97,7 @@
         }
       }).result.then(function () {
         vm.upgradeInProgress = true;
+        vm.softwareUpgrade.isUpgrading = true;
       });
 
       $scope.$on('$destroy', function () {
