@@ -29,7 +29,7 @@ class PlaceOverview implements ng.IComponentController {
   private pstnFeatureIsEnabledPromise: Promise<boolean> = this.FeatureToggleService.csdmPstnGetStatus();
 
   /* @ngInject */
-  constructor(private $q,
+  constructor(private $q: ng.IQService,
               private $state: ng.ui.IStateService,
               private $stateParams,
               private $translate: ng.translate.ITranslateService,
@@ -164,6 +164,7 @@ class PlaceOverview implements ng.IComponentController {
       .then((updatedPlace) => this.displayPlace(updatedPlace))
       .catch((error) => {
           this.Notification.errorResponse(error, 'placesPage.failedToSaveChanges');
+          return this.$q.reject(error);
         }
       );
   }
