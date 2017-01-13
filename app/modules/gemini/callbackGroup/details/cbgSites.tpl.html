@@ -12,7 +12,7 @@
               Move Site
             </button>
             <ul class="dropdown-menu dropdown-primary actions-services" cs-dropdown-menu>
-              <li ng-repeat="cbg in $ctrl.cbgs" ng-click="$ctrl.onClick(val,cbg.ccaGroupId)">
+              <li ng-repeat="cbg in $ctrl.cbgs" ng-click="$ctrl.onClick(val,{ toCcaGroupId:cbg.ccaGroupId, toGroupName: cbg.groupName })">
                 <small class="ellipsis">{{cbg.groupName ? cbg.groupName : cbg.customerName}}</small>
               </li>
             </ul>
