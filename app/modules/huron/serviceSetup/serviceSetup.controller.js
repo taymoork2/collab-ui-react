@@ -36,8 +36,10 @@
 
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
-    var VOICE_VOICEMAIL_AVRIL = 'DEMO_STANDARD';
+    var VOICE_VOICEMAIL_AVRIL = 'VOICE_VOICEMAIL_AVRIL';
 
+    vm.avrilTzUpdated = false;
+    vm.avrilDialPlanUpdated = false;
     vm.voicemailAvrilCustomer = false;
     vm.addInternalNumberRange = addInternalNumberRange;
     vm.deleteInternalNumberRange = deleteInternalNumberRange;
@@ -1221,12 +1223,31 @@
         if (!_.isEmpty(siteData)) {
           return ServiceSetup.updateSite(ServiceSetup.sites[0].uuid, siteData)
             .then(function () {
-              if (vm.voicemailAvrilCustomer && isAvrilVoiceEnabled) {
+              if (vm.voicemailAvrilCustomer && (isAvrilVoiceEnabled || vm.customer.servicePackage === 'VOICE_VOICEMAIL_AVRIL')) {
                 var setupSites = ServiceSetup.sites[0];
-                ServiceSetup.updateAvrilSite(setupSites.uuid, setupSites.siteSteeringDigit,
-                     setupSites.siteCode, setupSites.timeZone,
-                     setupSites.extensionLength, setupSites.voicemailPilotNumber, siteData);
+                var currentSetupSite = vm.model.site;
+                var mSite = {
+                  siteCode: currentSetupSite.siteCode,
+                  siteSteeringDigit: vm.model.voicemailPrefix.value,
+                  language: currentSetupSite.preferredLanguage.value,
+                  timeZone: currentSetupSite.timeZone.id,
+                  extensionLength: currentSetupSite.extensionLength,
+                  pilotNumber: currentSetupSite.voicemailPilotNumber
+                };
+
+                return ServiceSetup.getAvrilSite(ServiceSetup.sites[0].uuid).then(function () {
+                  if (vm.avrilTzUpdated || vm.avrilDialPlanUpdated) {
+                    ServiceSetup.updateAvrilSite(setupSites.uuid, mSite);
+                  }
+                })
+                .catch(function () {
+                  ServiceSetup.createAvrilSite(setupSites.uuid, currentSetupSite.siteSteeringDigit,
+                     currentSetupSite.siteCode, currentSetupSite.preferredLanguage.value, currentSetupSite.timeZone.id,
+                     currentSetupSite.extensionLength, currentSetupSite.voicemailPilotNumber, siteData);
+                });
               }
+            })
+            .then(function () {
               if (vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled && siteData && siteData.voicemailPilotNumber) {
                 return updateVoicemailSettings();
               }
@@ -1286,6 +1307,7 @@
           // so no need to check for timeZoneToggle here
           if (_.get(vm, 'model.site.timeZone.id') !== _.get(vm, 'previousTimeZone.id')) {
             siteData.timeZone = vm.model.site.timeZone.id;
+            vm.avrilTzUpdated = true;
           }
           if (_.get(vm, 'model.site.preferredLanguage.value') !== _.get(vm, 'model.ftswPreferredLanguage.value')) {
             siteData.preferredLanguage = vm.model.site.preferredLanguage.value;
@@ -1295,12 +1317,16 @@
           }
           if (vm.model.site.siteSteeringDigit !== vm.model.voicemailPrefix.value) {
             siteData.siteSteeringDigit = vm.model.voicemailPrefix.value;
+            vm.avrilDialPlanUpdated = true;
           }
           if (vm.model.site.steeringDigit !== vm.model.ftswSteeringDigit) {
             siteData.steeringDigit = vm.model.site.steeringDigit;
           }
           if (vm.model.site.extensionLength !== vm.model.extensionLength) {
             siteData.extensionLength = vm.model.site.extensionLength;
+            if (vm.extensionLengthChanged) {
+              vm.avrilDialPlanUpdated = true;
+            }
           }
           if (voicemailToggleEnabled) {
             // When the toggle is ON, update the site if the pilot number changed or wasn't set,

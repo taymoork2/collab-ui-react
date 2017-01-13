@@ -28,6 +28,9 @@ module.exports = csp({
     frameSrc: [
       'https://buy.ciscospark.com', // Digital River
     ],
+    objectSrc: [
+      'http://www.cisco.com', // Terms of Service
+    ],
     connectSrc: [
       '\'self\'',
       'https://*.cisco.com',
