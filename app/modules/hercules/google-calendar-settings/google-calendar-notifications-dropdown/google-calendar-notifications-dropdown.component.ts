@@ -94,11 +94,7 @@ class GoogleCalendarNotificationsDropdownCtrl implements ng.IComponentController
   }
 
   public getBadgeCSSClass(severity) {
-    if (severity === 'warning') {
-      return 'warning';
-    } else {
-      return 'alert';
-    }
+    return severity === 'warning' ? 'warning' : 'alert';
   }
 }
 

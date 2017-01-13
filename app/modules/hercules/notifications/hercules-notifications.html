@@ -1,31 +1,16 @@
 <div class="hercules-notifications">
-  <span class="notification-bell" ng-click="notificationController.handleClick()">
-    <i class="icon icon-bell"></i>
-    <!-- Bubble with amount of notifications. If there are none (length == 0) it doesn't get shown -->
-    <div class="amountBubble" ng-if="notificationController.filteredNotifications().length > 0">
-      <span class="notification-{{notificationController.amountBubbleType()}}">{{notificationController.filteredNotifications().length}}</span>
-    </div>
-  </span>
-
-  <!-- List of notifications -->
-  <div class="container" ng-if="notificationController.showNotifications && notificationController.filteredNotifications().length > 0">
-    <span class="icon icon-close icon-lg right notification-close" ng-click="notificationController.handleClick()"/>
-    <ul class="entries">
-      <li class="notif" ng-repeat="notification in notificationController.filteredNotifications() | orderBy:'priority' ">
-        <span class="badge-wrapper badge notification-{{notification.type}}">{{notificationController.typeDisplayName(notification.type)}}</span>
-        <div class="notif-wrapper">
-          <ng-include src="notification.template"></ng-include>
-        </div>
-      </li>
-    </ul>
+  <div class="notification-button" ng-click="notificationController.handleClick()" ng-class="[{active: notificationController.showNotifications, clickable: notificationController.filteredNotifications().length > 0}, notificationController.getNumberCSSClass()]">
+    <div class="icon icon-bell"></div>
+    <div class="notification-label" translate="hercules.notificationDropdown.label" translate-values="{number: notificationController.filteredNotifications().length}" translate-interpolation="messageformat"></div>
   </div>
-
-  <div class="container" ng-if="notificationController.showNotifications && notificationController.filteredNotifications().length == 0">
-    <span class="icon icon-close icon-lg right notification-close" ng-click="notificationController.handleClick()"/>
-    <ul class="entries" ng-if="notificationController.showNotifications && notificationController.filteredNotifications().length == 0">
-      <li class="notif">
-        <div class="notif-wrapper">
-          <p translate="hercules.notifications.no-notifications"></p>
+  <div class="notification-dropdown-container" ng-if="notificationController.showNotifications && notificationController.filteredNotifications().length > 0">
+    <ul class="notification-dropdown">
+      <li class="notification-entry" ng-repeat="notification in notificationController.filteredNotifications()">
+        <div class="notification-entry-severity">
+          <span class="badge" ng-class="notificationController.getBadgeCSSClass(notification.type)">{{::notificationController.typeDisplayName(notification.type)}}</span>
+        </div>
+        <div class="notification-entry-details">
+          <ng-include src="notification.template"></ng-include>
         </div>
       </li>
     </ul>

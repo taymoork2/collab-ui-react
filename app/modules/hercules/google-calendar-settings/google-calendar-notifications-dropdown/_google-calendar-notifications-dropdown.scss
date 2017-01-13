@@ -1,5 +1,9 @@
 @import 'styles/toolkit/colors';
 
+// Until we merge the code in the Google Calendar page
+// and the other expressways service pages, we have to deal
+// with both .hercules-notifications and google-calendar-notifications-dropdown
+.hercules-notifications,
 google-calendar-notifications-dropdown {
   position: relative;
   display: flex;
@@ -12,6 +16,10 @@ google-calendar-notifications-dropdown {
     font-size: 14px;
     border-radius: 2rem;
     background-color: $gray-light-1;
+
+    &.todo {
+      background-color: $color-cta-base;
+    }
 
     &.warning {
       background-color: $color-attention-base;
