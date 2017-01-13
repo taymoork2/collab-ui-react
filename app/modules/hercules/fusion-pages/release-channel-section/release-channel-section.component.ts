@@ -13,7 +13,6 @@ class ReleaseChannelSectionController implements ng.IComponentController {
     label: this.$translate.instant('hercules.fusion.add-resource-group.release-channel.stable'),
     value: 'stable',
   }];
-
   public releaseChannelTexts: any = {
     title: 'hercules.releaseChannelSection.releaseChannelHeader',
   };
@@ -23,6 +22,7 @@ class ReleaseChannelSectionController implements ng.IComponentController {
   public showResetSection: boolean = false;
   public type: undefined | 'cluster' | 'resource-group' = undefined;
   private data: any = {};
+  public defaultReleaseChannel: string;
 
   /* @ngInject */
   constructor(
@@ -34,6 +34,13 @@ class ReleaseChannelSectionController implements ng.IComponentController {
     private Notification: Notification,
     private ResourceGroupService,
   ) {}
+
+  public $onInit() {
+    this.FusionClusterService.getOrgSettings()
+      .then(({ expresswayClusterReleaseChannel }) => {
+        this.defaultReleaseChannel = expresswayClusterReleaseChannel;
+      });
+  }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
     let { cluster, resourceGroup } = changes;
@@ -107,18 +114,21 @@ class ReleaseChannelSectionController implements ng.IComponentController {
   }
 
   public resetReleaseChannel(): ng.IPromise<any> {
+    let releaseChannel;
     return this.$q.resolve()
       .then(() => {
         if (this.type === 'cluster') {
-          return this.FusionClusterService.setReleaseChannel(this.data.id, 'stable');
+          releaseChannel = this.defaultReleaseChannel;
+          return this.FusionClusterService.setReleaseChannel(this.data.id, releaseChannel);
         } else if (this.type === 'resource-group') {
-          return this.ResourceGroupService.setReleaseChannel(this.data.id, 'stable');
+          releaseChannel = 'stable';
+          return this.ResourceGroupService.setReleaseChannel(this.data.id, releaseChannel);
         }
       })
       .then(() => {
-        this.releaseChannelSelected = this.releaseChannelOptions[0];
+        this.releaseChannelSelected = _.find(this.releaseChannelOptions, { value: releaseChannel });
         this.showResetSection = false;
-        this.Notification.success('hercules.resourceGroupSettings.releaseChannelSection');
+        this.Notification.success('hercules.releaseChannelSection.releaseChannelSaved');
       })
       .catch(error => this.Notification.errorWithTrackingId(error, 'hercules.genericFailure'));
   }
@@ -126,22 +136,21 @@ class ReleaseChannelSectionController implements ng.IComponentController {
   public isDisabled(): boolean {
     return this.releaseChannelOptions.length < 2 ||
       this.clusterSettingsButHasResourceGroup() ||
-      this.expresswaySettings();
+      this.isExpresswayClusterSettings();
   }
 
   public clusterSettingsButHasResourceGroup(): boolean {
     return this.type === 'cluster' && this.data.resourceGroupId;
   }
 
-  public expresswaySettings(): boolean {
+  public isExpresswayClusterSettings(): boolean {
     return this.type === 'cluster' && !this.data.resourceGroupId && this.data.targetType === 'c_mgmt';
   }
 
   private setSelectedReleaseChannelOption(releaseChannel): void {
-    this.releaseChannelSelected = _.find(this.releaseChannelOptions, {
-      value: releaseChannel.toLowerCase(),
-    });
-    if (!this.releaseChannelSelected) {
+    this.releaseChannelSelected = _.find(this.releaseChannelOptions, { value: releaseChannel });
+    if (!this.releaseChannelSelected ||
+      (this.type === 'cluster' && this.data.targetType === 'c_mgmt' && releaseChannel !== this.defaultReleaseChannel)) {
       this.showResetSection = true;
       this.localizedCurrentChannelName = this.$translate.instant(`hercules.fusion.add-resource-group.release-channel.${releaseChannel}`);
     }
