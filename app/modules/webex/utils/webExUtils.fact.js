@@ -307,14 +307,24 @@
       return enableT30UnifiedAdmin;
     }; // getEnableT30UnifiedAdmin()
 
+    obj.getOrgWebexLicenses = function (orgInfo) {
+      var orgWebexLicenses = _.get(orgInfo, 'data.customers[0].licenses');
+      if (null == orgWebexLicenses) {
+        orgWebexLicenses = _.get(orgInfo, 'data.customers[0].subscriptions[0].licenses');
+      }
+
+      return orgWebexLicenses;
+    }; // getOrgWebexLicenses()
+
     obj.getAllSitesWebexLicenseInfo = function () {
       var deferredGetWebexLicenseInfo = $q.defer();
 
       Auth.getCustomerAccount(Authinfo.getOrgId()).then(
         function getValidLicensesSuccess(response) {
-          var licenses = _.get(response, 'data.customers[0].licenses');
           // var funcName = "getValidLicensesSuccess()";
           // var logMsg = "";
+
+          var licenses = obj.getOrgWebexLicenses(response);
 
           // logMsg = funcName + ": " + "\n" +
           //   "licenses=" + JSON.stringify(licenses);

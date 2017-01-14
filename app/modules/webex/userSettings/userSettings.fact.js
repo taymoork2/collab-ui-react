@@ -546,55 +546,64 @@
             var funcName = "getOrgLicensesSuccess()";
             var logMsg = "";
 
-            var orgLicenses = _.get(response, 'data.customers[0].licenses');
             var currSite = $stateParams.site;
             var userLicenses = $stateParams.currentUser.licenseID;
+            var orgLicenses = WebExUtilsFact.getOrgWebexLicenses(response);
 
-            _.forEach(userLicenses,
-              function (userLicense) {
-                var userLicenseItems = userLicense.split("_");
-                var userLicenseType = userLicenseItems[0];
+            if (null == orgLicenses) {
+              logMsg = funcName + "\n" +
+                "ERROR - no org licenses found in Atlas!" + "\n" +
+                "userName=" + $stateParams.currentUser.userName + "\n" +
+                "userLicenses=" + JSON.stringify(userLicenses) + "\n" +
+                "currSite=" + currSite;
+              $log.log(logMsg);
+            } else {
+              _.forEach(userLicenses,
+                function (userLicense) {
+                  var userLicenseItems = userLicense.split("_");
+                  var userLicenseType = userLicenseItems[0];
 
-                // only check for webex center type of license
-                if (
-                  ("EE" == userLicenseType) ||
-                  ("MC" == userLicenseType) ||
-                  ("EC" == userLicenseType) ||
-                  ("SC" == userLicenseType) ||
-                  ("TC" == userLicenseType)
-                ) {
+                  // only check for webex center type of license
+                  if (
+                    ("EE" == userLicenseType) ||
+                    ("MC" == userLicenseType) ||
+                    ("EC" == userLicenseType) ||
+                    ("SC" == userLicenseType) ||
+                    ("TC" == userLicenseType)
+                  ) {
 
-                  var userLicenseSiteUrl = userLicenseItems[userLicenseItems.length - 1];
+                    var userLicenseSiteUrl = userLicenseItems[userLicenseItems.length - 1];
 
-                  // check that the license is for the current site
-                  if (userLicenseSiteUrl == currSite) {
-                    // verify that the user's webex center license is valid for the org
-                    orgLicenses.forEach(
-                      function (orgLicense) {
-                        if (userLicense == orgLicense.licenseId) {
-                          if ("EE" == userLicenseType) {
-                            WebexUserSettingsSvc.meetingCenter.isEntitledOnAtlas = true;
-                            WebexUserSettingsSvc.trainingCenter.isEntitledOnAtlas = true;
-                            WebexUserSettingsSvc.eventCenter.isEntitledOnAtlas = true;
-                            WebexUserSettingsSvc.supportCenter.isEntitledOnAtlas = true;
-                          } else {
-                            if (WebexUserSettingsSvc.meetingCenter.id == userLicenseType) {
+                    // check that the license is for the current site
+                    if (userLicenseSiteUrl == currSite) {
+                      // verify that the user's webex center license is valid for the org
+                      orgLicenses.forEach(
+                        function (orgLicense) {
+                          if (userLicense == orgLicense.licenseId) {
+                            if ("EE" == userLicenseType) {
                               WebexUserSettingsSvc.meetingCenter.isEntitledOnAtlas = true;
-                            } else if (WebexUserSettingsSvc.trainingCenter.id == userLicenseType) {
                               WebexUserSettingsSvc.trainingCenter.isEntitledOnAtlas = true;
-                            } else if (WebexUserSettingsSvc.eventCenter.id == userLicenseType) {
                               WebexUserSettingsSvc.eventCenter.isEntitledOnAtlas = true;
-                            } else if (WebexUserSettingsSvc.supportCenter.id == userLicenseType) {
                               WebexUserSettingsSvc.supportCenter.isEntitledOnAtlas = true;
+                            } else {
+                              if (WebexUserSettingsSvc.meetingCenter.id == userLicenseType) {
+                                WebexUserSettingsSvc.meetingCenter.isEntitledOnAtlas = true;
+                              } else if (WebexUserSettingsSvc.trainingCenter.id == userLicenseType) {
+                                WebexUserSettingsSvc.trainingCenter.isEntitledOnAtlas = true;
+                              } else if (WebexUserSettingsSvc.eventCenter.id == userLicenseType) {
+                                WebexUserSettingsSvc.eventCenter.isEntitledOnAtlas = true;
+                              } else if (WebexUserSettingsSvc.supportCenter.id == userLicenseType) {
+                                WebexUserSettingsSvc.supportCenter.isEntitledOnAtlas = true;
+                              }
                             }
                           }
-                        }
-                      } // compareOrgLicense()
-                    ); // orgLicenses.forEach()
+                        } // compareOrgLicense()
+                      ); // orgLicenses.forEach()
+                    }
                   }
-                }
-              } // checkLicense()
-            ); // userLicenses.forEach(()
+                } // checkLicense()
+              ); // userLicenses.forEach(()
+            }
 
             if (
               !WebexUserSettingsSvc.meetingCenter.isEntitledOnAtlas &&
