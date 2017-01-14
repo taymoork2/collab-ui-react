@@ -321,8 +321,8 @@
 
       Auth.getCustomerAccount(Authinfo.getOrgId()).then(
         function getValidLicensesSuccess(response) {
-          // var funcName = "getValidLicensesSuccess()";
-          // var logMsg = "";
+          var funcName = "getValidLicensesSuccess()";
+          var logMsg = "";
 
           var licenses = obj.getOrgWebexLicenses(response);
 
@@ -332,28 +332,35 @@
 
           var allSitesLicenseInfo = [];
 
-          licenses.forEach(
-            function checkLicense(license) {
-              if (
-                ("CONFERENCING" == license.licenseType) ||
-                ("CMR" == license.licenseType)
-              ) {
+          if (null == licenses) {
+            logMsg = funcName + "\n" +
+              "ERROR - no org licenses found in Atlas!" + "\n" +
+              "licenses=" + JSON.stringify(licenses);
+            $log.log(logMsg);
+          } else {
+            licenses.forEach(
+              function checkLicense(license) {
+                if (
+                  ("CONFERENCING" == license.licenseType) ||
+                  ("CMR" == license.licenseType)
+                ) {
 
-                var capacity = license.capacity;
-                var licenseFields = license.licenseId.split("_");
-                var webexSite = licenseFields[licenseFields.length - 1];
-                var offerCode = licenseFields[0];
+                  var capacity = license.capacity;
+                  var licenseFields = license.licenseId.split("_");
+                  var webexSite = licenseFields[licenseFields.length - 1];
+                  var offerCode = licenseFields[0];
 
-                var licenseInfo = {
-                  'webexSite': webexSite,
-                  'offerCode': offerCode,
-                  'capacity': capacity,
-                };
+                  var licenseInfo = {
+                    'webexSite': webexSite,
+                    'offerCode': offerCode,
+                    'capacity': capacity,
+                  };
 
-                allSitesLicenseInfo.push(licenseInfo);
-              }
-            } // checkLicense()
-          ); // licenses.forEach()
+                  allSitesLicenseInfo.push(licenseInfo);
+                }
+              } // checkLicense()
+            ); // licenses.forEach()
+          }
 
           if (0 < allSitesLicenseInfo.length) {
             deferredGetWebexLicenseInfo.resolve(allSitesLicenseInfo);
