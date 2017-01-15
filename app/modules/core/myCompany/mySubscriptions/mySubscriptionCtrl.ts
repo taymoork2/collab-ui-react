@@ -35,7 +35,7 @@ class MySubscriptionCtrl {
   public trialUrlFailed = false;
   public loading = false;
   public digitalRiverSubscriptionsUrl: string;
-  public isSharedMultiPartyEnabled: boolean;
+  public isSharedMultiPartyReportsEnabled: boolean;
 
   /* @ngInject */
   constructor(
@@ -88,8 +88,8 @@ class MySubscriptionCtrl {
   }
 
   private initFeatures() {
-    this.FeatureToggleService.atlasSMPGetStatus().then((smpStatus) => {
-        this.isSharedMultiPartyEnabled = smpStatus;
+    this.FeatureToggleService.atlasSmpReportsGetStatus().then((smpReportsStatus) => {
+        this.isSharedMultiPartyReportsEnabled = smpReportsStatus;
     });
   }
 

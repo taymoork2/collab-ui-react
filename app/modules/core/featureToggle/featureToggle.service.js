@@ -39,6 +39,7 @@
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasSMP: 'atlas-smp',
+      atlasSmpReports: 'atlas-smp-reports',
       atlasTrialsShipDevices: 'atlasTrialsShipDevices',
       atlasDeviceUsageReport: 'atlas-device-usage-report',
       atlasStartTrialForPaid: 'atlas-start-trial-for-paid',

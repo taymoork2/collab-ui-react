@@ -6,7 +6,7 @@
     .controller('MultipleSubscriptionsCtrl', MultipleSubscriptionsCtrl);
 
   /* @ngInject */
-  function MultipleSubscriptionsCtrl(Authinfo, Notification, Orgservice) {
+  function MultipleSubscriptionsCtrl($log, Authinfo, Notification, Orgservice) {
     var vm = this;
 
     vm.oneBilling = false;
@@ -22,6 +22,11 @@
       var licensesInfo = Authinfo.getLicenses();
       if (!_.isEmpty(licensesInfo)) {
         Orgservice.getLicensesUsage().then(function (subscriptions) {
+          $log.log('license usage call data: ', subscriptions);
+          $log.log('getServices from Authinfo: ', Authinfo.getServices());
+          $log.log('getLicenses from Authinfo: ', Authinfo.getLicenses());
+          $log.log('getSubscriptions from Authinfo', Authinfo.getSubscriptions());
+          $log.log('getSubscriptions from Authinfo', Authinfo.getConferenceServices());
           vm.subscriptionOptions = _.uniq(_.map(subscriptions, 'subscriptionId'));
           vm.selectedSubscription = _.head(vm.subscriptionOptions);
           vm.oneBilling = _.size(vm.subscriptionOptions) === 1;
