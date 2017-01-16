@@ -15,7 +15,7 @@
             <div class="h5 offhours-preview-message">{{careSetupAssistant.template.configuration.pages.offHours.message}}</div>
             <div ng-if="!careSetupAssistant.isBusinessHoursDisabled" class="business-hours">
               <div class="h5 message" translate="careChatTpl.businessHours"></div>
-              <div class="h6" ng-if="!careSetupAssistant.template.configuration.pages.offHours.schedule.open24Hours">{{careSetupAssistant.scheduleTimeZone.label}}</div>
+              <div class="h6">{{careSetupAssistant.scheduleTimeZone.label}}</div>
               <div class="h6 day-time-preview days" ng-model="careSetupAssistant.daysPreview">{{careSetupAssistant.daysPreview}}</div>
               <div class="h6 day-time-preview" ng-if="careSetupAssistant.template.configuration.pages.offHours.schedule.open24Hours" translate="careChatTpl.open24Hours"></div>
               <div class="h6 day-time-preview" ng-if="!careSetupAssistant.template.configuration.pages.offHours.schedule.open24Hours">
@@ -81,16 +81,18 @@
                                  options="careSetupAssistant.endTimeOptions"></cs-select>
                     </div>
                   </div>
+                </div>
+                <div ng-if="!careSetupAssistant.isBusinessHoursDisabled">
                   <div class="timezone-picker">
                     <div class="h5" translate="careChatTpl.offHoursTimeZone"></div>
                     <cs-select
-                            labelfield="label"
-                            valuefield="value"
-                            filter="true"
-                            name="businessHours-timezonePicker"
-                            ng-model="careSetupAssistant.scheduleTimeZone"
-                            options="careSetupAssistant.timezoneOptions"
-                            placeholder="'Select a timezone'"></cs-select>
+                      labelfield="label"
+                      valuefield="value"
+                      filter="true"
+                      name="businessHours-timezonePicker"
+                      ng-model="careSetupAssistant.scheduleTimeZone"
+                      options="careSetupAssistant.timezoneOptions"
+                      placeholder="'Select a timezone'"></cs-select>
                   </div>
                 </div>
               </div>
@@ -98,6 +100,6 @@
           </section>
         </article>
       </cs-card >
-      </cs-card-layout>
-    </div>
+    </cs-card-layout>
+  </div>
 </div>
