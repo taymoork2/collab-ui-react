@@ -100,11 +100,12 @@
       }
       var valueAxis = createValueAxis(data);
       var catAxes = CommonReportsGraphService.getBaseVariable(AXIS);
+      catAxes.labelFunction = formatLabel;
       catAxes.listeners = [{
         "event": "clickItem",
         "method": function (event) {
           $rootScope.$broadcast('clusterClickEvent', {
-            data: event.value
+            data: event.serialDataItem.category
           });
         }
       }];
@@ -155,6 +156,14 @@
         });
       });
       return chart;
+    }
+
+    function formatLabel(label) {
+      if (label.length > 10) {
+        return label.substring(0, 10) + "..";
+      } else {
+        return label;
+      }
     }
   }
 })();

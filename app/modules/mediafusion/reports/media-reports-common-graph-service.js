@@ -38,14 +38,7 @@
       'fontFamily': 'CiscoSansTT Light',
       'gridAlpha': 0,
       'axisAlpha': 1,
-      'tickLength': 0,
-      "labelFunction": function (label) {
-        if (label.length > 10) {
-          return label.substring(0, 10) + "..";
-        } else {
-          return label;
-        }
-      },
+      'tickLength': 0
     };
     baseVariables['guideaxis'] = {
       'axisColor': chartColors.grayLight,

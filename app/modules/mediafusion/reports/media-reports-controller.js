@@ -145,7 +145,9 @@
               vm.Map[cluster.name] = cluster.id;
             }
           });
-          vm.clusterOptions = _.sortBy(vm.clusterOptions);
+          vm.clusterOptions = _.sortBy(vm.clusterOptions, function (cluster) {
+            return cluster.toLowerCase();
+          });
           vm.clusterOptions.unshift(vm.allClusters);
           deferred.resolve(vm.Map);
           vm.clusterId = vm.clusterOptions[0];
