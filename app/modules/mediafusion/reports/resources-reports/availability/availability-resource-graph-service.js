@@ -21,8 +21,8 @@
     var unavailableTitle = $translate.instant('mediaFusion.metrics.unavailableTitle');
     var partialTitle = $translate.instant('mediaFusion.metrics.partialTitle');
 
-    var availabilityLegendCluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.metricsRed }];
-    var availabilityLegendAllcluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.metricsRed }, { 'title': partialTitle, 'color': chartColors.metricYellow }];
+    var availabilityLegendCluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.negativeDarker }];
+    var availabilityLegendAllcluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.negativeDarker }, { 'title': partialTitle, 'color': chartColors.attentionBase }];
 
     return {
       setAvailabilityGraph: setAvailabilityGraph
