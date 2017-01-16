@@ -65,6 +65,7 @@
           if (availabilityData.length === 0) {
             return false;
           }
+          availabilityData = _.sortBy(availabilityData, 'category');
           tempData.data[0].clusterCategories = availabilityData;
         }
       }

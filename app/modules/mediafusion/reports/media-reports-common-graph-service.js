@@ -182,7 +182,7 @@
         'balloon': baseVariables['balloon'],
         'autoMarginOffset': 25,
         'autoMargins': false,
-        'marginLeft': 58,
+        'marginLeft': 40,
         'marginTop': 60,
         'marginRight': 60,
         'usePrefixes': true,
@@ -221,7 +221,7 @@
           'color': '#AAAAAA'
         },
         'valueScrollbar': {
-          'offset': 15,
+          'offset': 35,
           'color': '#AAAAAA',
           'backgroundColor': '#ffffff',
           'backgroundAlpha': 1,
@@ -263,13 +263,13 @@
           'backgroundColor': '#D7DBDD',
           'backgroundAlpha': 1
         },
-        'chartScrollbar': {
+        /*'chartScrollbar': {
           'offset': 15,
           'color': '#AAAAAA',
           'backgroundColor': '#D7DBDD',
           'backgroundAlpha': 1,
           //'oppositeAxis': false
-        },
+        },*/
         'chartCursor': {
           'cursorColor': '#55bb76',
           'valueBalloonsEnabled': false,

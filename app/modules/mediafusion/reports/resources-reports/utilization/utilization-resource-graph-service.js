@@ -155,6 +155,7 @@
           tempData.push(value);
         }
       });
+      tempData = _.sortBy(tempData, 'title');
       return tempData;
     }
 
