@@ -5,7 +5,7 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, MediaClusterServiceV2, UtilizationResourceGraphService, MediaReportsService, Notification, $log, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService) {
+  function MediaReportsController($q, $scope, $translate, $interval, MediaClusterServiceV2, UtilizationResourceGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -93,11 +93,11 @@
     }
 
     function loadAdaptionDatas() {
-      $log.log('Adaption goes here!');
+      //Adoption changes here
+      setRefreshInterval();
     }
 
     function clusterUpdate() {
-      $log.log("cluster update");
       if (vm.clusterSelected !== vm.allClusters) {
         vm.clusterId = vm.Map[vm.clusterSelected];
         vm.hosted_heading = vm.hosted_calls_heading;
@@ -122,7 +122,6 @@
     });
 
     function timeUpdate() {
-      $log.log("time update");
       setRefreshInterval();
       $interval.cancel(interval);
       if (vm.displayResources) {
@@ -147,8 +146,7 @@
             }
           });
           vm.clusterOptions = _.sortBy(vm.clusterOptions);
-          vm.clusterOptions[0] = vm.allClusters;
-          $log.log(vm.clusterOptions);
+          vm.clusterOptions.unshift(vm.allClusters);
           deferred.resolve(vm.Map);
           vm.clusterId = vm.clusterOptions[0];
           vm.clusterSelected = vm.clusterOptions[0];
@@ -162,7 +160,6 @@
     function setTotalCallsData() {
       var deferred = $q.defer();
       MediaReportsService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
-        $log.log(vm.clusterSelected);
         if (vm.clusterId === vm.allClusters) {
           if (response === vm.ABORT) {
             return;
@@ -213,7 +210,6 @@
             vm.total = vm.onprem + vm.cloud;
           }
         }
-        $log.log("total " + vm.total);
         deferred.resolve();
       });
       return deferred.promise;
@@ -229,7 +225,6 @@
         } else {
           vm.clusterAvailability = response.data.availabilityPercent + vm.percentage;
         }
-        $log.log("clusterAvailability " + vm.clusterAvailability);
       });
     }
 
