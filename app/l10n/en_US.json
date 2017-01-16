@@ -4094,9 +4094,9 @@
     "sipconfiguration": {
       "success": "UC SIP Trunk saved successfully.",
       "title": "UC SIP Trunk",
-      "description": "Description for this section comes here.",
-      "placeholder": "UC SIP Trunk goes here",
-      "example": "Example: sips://173.36.248.22:5062"
+      "description": "Enter the SIP trunk address to connect Hybrid Media Cluster to your Unified Communications Manager. This connection provides optimized video callback.",
+      "placeholder": "Enter the SIP trunk address...",
+      "example": "Example: sips://203.0.113.0:5062"
     },
     "settings": {
       "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
