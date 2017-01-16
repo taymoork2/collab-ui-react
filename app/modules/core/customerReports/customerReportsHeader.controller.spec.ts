@@ -77,7 +77,7 @@ describe('Controller: Customer Reports Ctrl', function () {
     });
 
     it('should only display spark reports tab', function () {
-      expect(this.controller.headerTabs).toEqual([headerTabs[1]]);
+      expect(this.controller.headerTabs).toEqual([headerTabs[0]]);
     });
   });
 
