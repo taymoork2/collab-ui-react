@@ -143,7 +143,7 @@
       </div>
       <!-- START - Shared Multi Party enabled -->
       <div id="conference" ng-if="isSharedMultiPartyEnabled" class="small-4 columns column-paid">
-        <div class="item-mtg-license" ng-if="hasBasicLicenses" translate="firstTimeWizard.basicMeetings"></div>
+        <div class="item-mtg-license" ng-if="selectedSubscriptionHasBasicLicenses(multipleSubscriptions.selectedSubscription)" translate="firstTimeWizard.basicMeetings"></div>
         <div class="entitle-check-grp" ng-repeat="lic in basicLicenses">
           <div class="ckbx" id="paidMtg" ng-show="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial)" ng-if="!lic.site">
             <div class="cs-checkbox-group">

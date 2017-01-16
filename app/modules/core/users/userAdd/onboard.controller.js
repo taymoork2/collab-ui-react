@@ -791,6 +791,22 @@ require('./_user-add.scss');
       populateConfInvitations();
     };
 
+    /* TODO: Refactor this functions into MultipleSubscriptions Controller */
+    $scope.selectedSubscriptionHasBasicLicenses = function (subscriptionId) {
+      var hasBasicLicense = false;
+      var basicLicensesInSubscription = [];
+      if ($scope.hasBasicLicenses) {
+        basicLicensesInSubscription = _.filter($scope.basicLicenses, { billing: subscriptionId });
+        _.each(basicLicensesInSubscription, function (subscription) {
+          if (!_.has(subscription, 'site')) {
+            hasBasicLicense = true;
+          }
+        });
+      }
+      return hasBasicLicense;
+    };
+
+    /* TODO: Refactor this functions into MultipleSubscriptions Controller */
     $scope.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
       var hasAdvancedLicense = false;
       var advancedLicensesInSubscription = [];

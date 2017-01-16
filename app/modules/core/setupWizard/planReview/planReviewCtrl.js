@@ -137,6 +137,31 @@
         });
       };
 
+      vm.hasBasicLicenses = function () {
+        _.each(vm.confServices.services, function (service) {
+          if (!_.has(service, 'license.siteUrl')) {
+            return true;
+          }
+        });
+      };
+
+      /* TODO: Refactor this functions into MultipleSubscriptions Controller */
+      vm.selectedSubscriptionHasBasicLicenses = function (subscriptionId) {
+        var hasBasicLicense = false;
+        var basicLicensesInSubscription = [];
+        if (vm.hasBasicLicenses) {
+          basicLicensesInSubscription = _.filter(vm.confServices.services, { license: { billingServiceId: subscriptionId } });
+          _.each(basicLicensesInSubscription, function (subscription) {
+            if (!_.has(subscription, 'license.siteUrl')) {
+              hasBasicLicense = true;
+            }
+          });
+        }
+
+        return hasBasicLicense;
+      };
+
+      /* TODO: Refactor this functions into MultipleSubscriptions Controller */
       vm.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
         var hasAdvancedLicense = false;
         var advancedLicensesInSubscription = [];
@@ -220,6 +245,18 @@
             vm.sites[service.license.siteUrl].push(service);
           }
         }
+      });
+
+      vm.sitesBasedOnBillingId = {};
+      _.forEach(vm.sites, function (services) {
+        _.forEach(services, function (service) {
+          if (_.has(service, 'license.billingServiceId')) {
+            if (!vm.sitesBasedOnBillingId[service.license.billingServiceId]) {
+              vm.sitesBasedOnBillingId[service.license.billingServiceId] = [];
+            }
+            vm.sitesBasedOnBillingId[service.license.billingServiceId].push(service);
+          }
+        });
       });
 
       if (Object.prototype.toString.call(vm.cmrServices.services) == '[object Array]') {

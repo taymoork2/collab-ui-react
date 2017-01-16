@@ -89,7 +89,7 @@
           <div ng-if="planReview.confServices.services.length > 0 && !planReview.isSharedMultiPartyEnabled" class="item-license">
             <span translate="firstTimeWizard.meeting"></span>
           </div>
-          <div ng-if="planReview.confServices.services.length > 0 && planReview.isSharedMultiPartyEnabled" class="item-mtg-license">
+          <div ng-if="planReview.selectedSubscriptionHasBasicLicenses(multipleSubscriptions.selectedSubscription) && planReview.isSharedMultiPartyEnabled" class="item-mtg-license">
             <span translate="firstTimeWizard.basicMeetings"></span>
           </div>
           <div ng-repeat="service in planReview.confServices.services" ng-hide="service.license.offerName !== 'CF'">
@@ -117,7 +117,7 @@
           </div>
           <div class="item-mtg"
              ng-show="multipleSubscriptions.showLicenses(services[0].license.billingServiceId, services[0].license.isTrial) && planReview.isSharedMultiPartyEnabled"
-             ng-repeat="(siteUrl,services) in planReview.sites">
+             ng-repeat="services in planReview.sitesBasedOnBillingId">
             <div class="sub-item" ng-repeat="service in services">
               <div ng-if="service.license.isTrial || planReview.confServices.isNewTrial"
                  class="badge badge-warning" translate="firstTimeWizard.trial"></div>
@@ -132,7 +132,7 @@
                   </i>
                 </span>
               </div>
-              <div class="license-siteUrl">{{siteUrl}}</div>
+              <div class="license-siteUrl">{{service.license.siteUrl}}</div>
               <div ng-if="service.license.isCI === false">
                 <a target="_blank"
                    href= "{{service.license.siteAdminUrl}}"
