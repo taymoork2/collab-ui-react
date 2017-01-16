@@ -8,6 +8,17 @@
     "privacy": "Privacy Statement",
     "copyright": "Cisco and/or affiliates. All rights reserved."
   },
+  "termsOfService": {
+    "title": "Terms of Service",
+    "disagree": "Decline",
+    "agree": "Accept ",
+    "ciscoSpark": "Cisco Spark",
+    "version": "Version: {{version}}",
+    "copyright1": "Copyright &copy; 2016 Cisco Systems.",
+    "copyright2": "All rights reserved.",
+    "description": "Cisco Spark is a collaboration application that provides messaging(IM), voice, and video calling capabilities.",
+    "loggingOut": "Logging off..."
+  },
   "usersPage": {
     "assignServices": "Assign Services",
     "assignDnAndDirectLines": "Assign Numbers",
@@ -510,8 +521,6 @@
     "lastTwelveWeeks2": "last twelve weeks",
     "custom": "Custom",
     "custom2": "custom selection",
-    "fromDate": "From ",
-    "toDate": "To ",
     "customerLoadError": "There was an error while loading the customer list.",
     "unauthorizedError": "User is not authorized to access the customer reports.",
     "conversationError": "There was an error while loading room and file data.",
@@ -564,6 +573,15 @@
         "all": "All",
         "roomSystems": "DX, MX, and SX Devices",
         "sparkBoard": "Spark Board"
+      },
+      "export": {
+        "deviceUsageExportTitle": "Export Device Usage Attributes to CSV",
+        "deviceUsageExportDescription": "Gathering data for export may take a while. During this time you cannon sign out or refresh your browser, or the export will be cancelled.",
+        "export": "Export",
+        "deviceUsageExportInProgress": "Exporting Device Usage Attributes to CSV",
+        "exportCompleted": "Export completed",
+        "deviceUsageListReadyForDownload": "Your device usage list has been compiled and is ready to download.",
+        "deviceUsageExportFailedOrCancelled": "Device Usage Export failed or was cancelled."
       }
     }
   },
@@ -667,7 +685,9 @@
     "mediaQualityGraphError": "There was an error while loading call quality data for the selected customer(s).",
     "packetLossDefinition": "When determining call quality, packet loss is calculated as the percentage of lost packets during the call. If the loss ratio is less than 1.5%, then the call is classified as 'Good'.  If the loss ratio is between 1.5% and 3%, then the call is classified as 'Fair'. All remaining calls, where the loss ratio is greater than 3%, are classified as 'Poor'.",
     "customerError": "There was an error while loading call quality data.",
-    "minutes": "Minutes"
+    "minutes": "Minutes",
+    "avgMinutes": "Average Minutes",
+    "minTooltip": "Click on a quality number to toggle the good, fair or poor call metrics on and off the graph."
   },
   "callMetrics": {
     "calls": "Calls",
@@ -1976,7 +1996,7 @@
       "heading": "Registration"
     },
     "notificationDropdown": {
-      "label": "Service notifications"
+      "label": "{number, plural, one{# notification} other{# notifications}}"
     },
     "fusion": {
       "types": {
@@ -2643,7 +2663,7 @@
     "code": "AA",
     "title": "Auto Attendant",
     "modalDescription": "Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.",
-    "namePlaceholder": "Enter Name",
+    "namePlaceholder": "Name the Auto Attendant",
     "repeatMenu": "Repeat",
     "queueSettings": "Queue Settings",
     "maxWaitTime": "Maximum Wait Time",
@@ -4113,9 +4133,9 @@
     "sipconfiguration": {
       "success": "UC SIP Trunk saved successfully.",
       "title": "UC SIP Trunk",
-      "description": "Description for this section comes here.",
-      "placeholder": "UC SIP Trunk goes here",
-      "example": "Example: sips://173.36.248.22:5062"
+      "description": "Enter the SIP trunk address to connect Hybrid Media Cluster to your Unified Communications Manager. This connection provides optimized video callback.",
+      "placeholder": "Enter the SIP trunk address...",
+      "example": "Example: sips://203.0.113.0:5062"
     },
     "report" : {
       "title": "Hybrid Media",
@@ -4999,15 +5019,15 @@
     "errorCodes": {
       "mediaProtocol": {
         "type": "Network Ports Blocked",
-        "message": "Firewall may be blocking media on UDP port 33434. Call quality may be impacted."
+        "message": "Firewall may be blocking media on UDP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls and Network Requirements for the Cisco Spark App</a>."
       },
       "TCPMediaFallback": {
         "type": "Network Ports Blocked",
-        "message": "Firewall may be blocking media on UDP port 33434. Call quality may be impacted."
+        "message": "Firewall may be blocking media on UDP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls and Network Requirements for the Cisco Spark App</a>."
       },
       "MediaBlockingDetected": {
         "type": "Network Ports Blocked",
-        "message": "Firewall may be blocking media on UDP and TCP port 33434. Calls will fail to connect."
+        "message": "Firewall may be blocking media on UDP and TCP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls and Network Requirements for the Cisco Spark App</a>."
       },
       "TemperatureCheck": {
         "type": "High temperature",
@@ -5375,8 +5395,8 @@
     "errorCreateChatTemplate": "Error generating embed code, please try again.",
     "agentUnavailableMessage": "Sorry, we are unavailable at the moment. Please try again later.",
     "message": "Message",
-    "bubbleTitle":"Get Started",
-    "bubbleTitleMessage":"Click here to chat with Customer Care",
+    "bubbleTitle": "Get Started",
+    "bubbleTitleMessage": "Click here to chat with Customer Care",
     "connecting": "Connecting",
     "connectingMessage": "Connecting you to an Agent",
     "waiting": "Waiting",

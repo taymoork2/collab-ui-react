@@ -1,0 +1,42 @@
+<div class="modal-header">
+  <h3 class="modal-title" translate="termsOfService.title"></h3>
+</div>
+
+<div class="modal-body">
+  <div class="tos-row">
+    <div class="tos-column">
+      <div class="centered-content">
+        <div class="info">
+          <div class="info-row">
+            <div class="left-col">
+              <img class="logo" src="images/spark-logo.svg">
+            </div>
+            <div class="right-col">
+              <h2 translate="termsOfService.ciscoSpark"></h2>
+              <div translate="termsOfService.copyright1"></div>
+              <div translate="termsOfService.copyright2"></div>
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="desc">
+              <div translate="termsOfService.description"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tos-column">
+      <iframe id="tos-frame-id" name="tos-frame" class="tos-container">
+      </iframe>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn--default" cs-btn ng-click="$ctrl.disagree()">
+    <span translate="termsOfService.disagree"></span>
+  </button>
+  <button class="btn btn--primary" cs-btn ng-disabled="!$ctrl.hasReadAggreement" ng-click="$ctrl.agree()">
+    <span translate="termsOfService.agree"></span>
+  </button>
+</div>

@@ -2,7 +2,7 @@
   "baseVariables": {
     "axis": {
       "axisColor": "#D7D7D8",
-      "gridColor": "#ccc",
+      "gridColor": "#D7D7D8",
       "color": "#6A6B6C",
       "fontFamily": "CiscoSansTT Light",
       "fontSize": 12,
@@ -24,7 +24,7 @@
       "fillAlphas": 0.1
     },
     "legend": {
-      "color": "#444",
+      "color": "#343537",
       "align": "center",
       "autoMargins": false,
       "switchable": false,
@@ -44,7 +44,7 @@
       "borderThickness": 1,
       "borderAlpha": 1,
       "fillAlpha": 1,
-      "fillColor": "#fff",
+      "fillColor": "#FFFFFF",
       "fixedPosition": true,
       "shadowAlpha": 0
     },
@@ -82,7 +82,7 @@
   "getBaseSerialGraph": {
     "dataProvider": "dummyData",
     "legend": {
-      "color": "#444",
+      "color": "#343537",
       "align": "center",
       "autoMargins": false,
       "switchable": false,
@@ -120,7 +120,7 @@
     "categoryField": "dummyField",
     "categoryAxis": {
       "axisColor": "#D7D7D8",
-      "gridColor": "#ccc",
+      "gridColor": "#D7D7D8",
       "color": "#6A6B6C",
       "fontFamily": "CiscoSansTT Light",
       "fontSize": 12,
@@ -132,7 +132,7 @@
     },
     "valueAxes": {
       "axisColor": "#D7D7D8",
-      "gridColor": "#ccc",
+      "gridColor": "#D7D7D8",
       "color": "#6A6B6C",
       "fontFamily": "CiscoSansTT Light",
       "fontSize": 12,
@@ -170,12 +170,12 @@
     "marginTop": 40,
     "marginLeft": 50,
     "plotAreaBorderAlpha": 0,
-    "balloon": { "adjustBorderColor": true, "borderThickness": 1, "borderAlpha": 1, "fillAlpha": 1, "fillColor": "#fff", "fixedPosition": true, "shadowAlpha": 0 }
+    "balloon": { "adjustBorderColor": true, "borderThickness": 1, "borderAlpha": 1, "fillAlpha": 1, "fillColor": "#FFFFFF", "fixedPosition": true, "shadowAlpha": 0 }
   },
   "taskIncomingReportToday": {
     "dataProvider": "dummyData",
     "legend": {
-      "color": "#444",
+      "color": "#343537",
       "align": "center",
       "autoMargins": false,
       "switchable": false,
@@ -233,7 +233,7 @@
     "categoryField": "createdTime",
     "categoryAxis": {
       "axisColor": "#D7D7D8",
-      "gridColor": "#ccc",
+      "gridColor": "#D7D7D8",
       "color": "#6A6B6C",
       "fontFamily": "CiscoSansTT Light",
       "fontSize": 12,
@@ -247,7 +247,7 @@
     },
     "valueAxes": [{
       "axisColor": "#D7D7D8",
-      "gridColor": "#ccc",
+      "gridColor": "#D7D7D8",
       "color": "#6A6B6C",
       "fontFamily": "CiscoSansTT Light",
       "fontSize": 12,
@@ -295,7 +295,7 @@
       "borderThickness": 1,
       "borderAlpha": 1,
       "fillAlpha": 1,
-      "fillColor": "#fff",
+      "fillColor": "#FFFFFF",
       "fixedPosition": true,
       "shadowAlpha": 0
     }
@@ -385,7 +385,7 @@
       {
         "title": "careReportsPage.averageCsat",
         "lineColor": "#43A942",
-        "fillColors": "#fff",
+        "fillColors": "#FFFFFF",
         "valueField": "avgCsatScores",
         "showBalloon": true,
         "balloonFunction": "undefined",
@@ -415,7 +415,7 @@
     "categoryField": "createdTime",
     "categoryAxis": {
       "axisColor": "#D7D7D8",
-      "gridColor": "#ccc",
+      "gridColor": "#D7D7D8",
       "color": "#6A6B6C",
       "fontFamily": "CiscoSansTT Light",
       "fontSize": 12,
@@ -429,7 +429,7 @@
     },
     "valueAxes": [{
       "axisColor": "#D7D7D8",
-      "gridColor": "#ccc",
+      "gridColor": "#D7D7D8",
       "color": "#6A6B6C",
       "fontFamily": "CiscoSansTT Light",
       "fontSize": 12,
@@ -478,7 +478,7 @@
       "borderThickness": 1,
       "borderAlpha": 1,
       "fillAlpha": 1,
-      "fillColor": "#fff",
+      "fillColor": "#FFFFFF",
       "fixedPosition": true,
       "shadowAlpha": 0
     }

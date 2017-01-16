@@ -186,6 +186,10 @@ describe('Component: reportCard', () => {
     let options: IReportCard = _.cloneDeep(ctrlData.callOptions);
     let labels: Array<IReportLabel> = _.cloneDeep(ctrlData.metricsLabels);
     options.table = undefined;
+    labels[0].class = 'test';
+    labels[0].click = jasmine.createSpy('labelClick');
+    labels[1].class = 'test';
+    labels[1].hidden = true;
     let reportDropdown: IReportDropdown = {
       array: [{
         value: 0,
@@ -258,12 +262,17 @@ describe('Component: reportCard', () => {
       expect(this.view).not.toContain(exportOptions);
       expect(exportArray[1].click).toHaveBeenCalledTimes(1);
 
-      // verify the labels are present
+      // verify the labels are present and work as expected
       expect(this.view.find(graphLabels).length).toEqual(3);
       _.forEach(labels, function (label, index) {
         expect(view.find(numberLabels)[index].innerText).toEqual(label.number.toString());
         expect(view.find(textLabels)[index].innerText).toEqual(label.text);
       });
+      expect(this.view.find(numberLabels)[0]).toHaveClass('test');
+      expect(this.view.find(numberLabels)[1]).not.toHaveClass('test');
+      expect(labels[0].click).toHaveBeenCalledTimes(0);
+      this.view.find(graphLabels)[0].click();
+      expect(labels[0].click).toHaveBeenCalledTimes(1);
 
       // verify secondary report is not visible and link to open it is not present
       expect(this.view).not.toContainElement(reportTable);

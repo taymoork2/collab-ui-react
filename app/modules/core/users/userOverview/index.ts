@@ -1,20 +1,22 @@
 import { UserOverviewService } from './userOverview.service';
 let UserOverviewCtrl = require('./userOverviewCtrl');
 
-import notifiactionModule from 'modules/core/notifications';
+import featureToggleServiceModule from 'modules/core/featureToggle';
+import notifictionModule from 'modules/core/notifications';
 
 let coreAuthModule = require('modules/core/auth/auth');
-let featureToggleServiceModule = require('modules/core/featureToggle/featureToggle.service');
+let ngResourceModule = require('angular-resource');
 
 import './_user-overview.scss';
 
 export default angular
   .module('core.users.userOverview', [
     'atlas.templates',
+    'collab.ui',
+    ngResourceModule,
+    notifictionModule,
     coreAuthModule,
     featureToggleServiceModule,
-    notifiactionModule,
-    'ngResource',
   ])
   .service('UserOverviewService', UserOverviewService)
   .controller('UserOverviewCtrl', UserOverviewCtrl)

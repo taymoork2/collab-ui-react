@@ -408,24 +408,24 @@
     "percentage": 60,
     "overallPopulation": 33,
     "balloon": true,
-    "labelColorField": "#444"
+    "labelColorField": "#343537"
   }, {
     "customerName": "Test Org Three",
     "percentage": 0,
     "overallPopulation": 33,
     "balloon": true,
-    "labelColorField": "#444"
+    "labelColorField": "#343537"
   }, {
     "customerName": "Test Org Two",
     "percentage": 0,
     "overallPopulation": 33,
     "balloon": true,
-    "labelColorField": "#444"
+    "labelColorField": "#343537"
   }, {
     "customerName": "Test Partner",
     "percentage": 0,
     "overallPopulation": 33,
     "balloon": true,
-    "labelColorField": "#444"
+    "labelColorField": "#343537"
   }]
 }

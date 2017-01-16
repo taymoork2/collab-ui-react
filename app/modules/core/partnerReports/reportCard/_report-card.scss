@@ -90,6 +90,29 @@
     }
   }
 
+  .line-labels .label-display {
+    top: rem-calc(12);
+    .good {
+      color: $color-primary-base;
+      opacity: 0.6;
+    }
+    .fair {
+      color: $color-attention-base;
+      opacity: 0.6;
+    }
+    .poor {
+      color: $color-negative-base;
+      opacity: 0.6;
+    }
+    .label-text {
+      color: $gray-base;
+    }
+  }
+
+  .label-click {
+    cursor: pointer;
+  }
+
   .timechartDiv {
     font-size: rem-calc(11);
     height: vr-adjust(380);
@@ -98,7 +121,7 @@
     top: rem-calc(-50);
   }
 
-  .barchart {
+  .axischart {
     font-size: rem-calc(11);
     height: vr-adjust(368);
     width: 85%;
@@ -107,9 +130,13 @@
     z-index: 50;
   }
 
-  .barchart-shift {
+  .axischart-shift {
     position: relative;
     top: vr-adjust(12);
+  }
+
+  .label-chart {
+    height: vr-adjust(276);
   }
 
   .report-table {
@@ -300,6 +327,24 @@
   .active-chart .amcharts-value-axis .amcharts-axis-label {
     opacity: 0;
     animation: graphAxisFade 2s ease-in-out 1 forwards;
+  }
+
+  .tooltip-column {
+    text-align: center;
+    position: relative;
+    top: rem-calc(58);
+    .tooltip-title, .tooltip-icon {
+      color: $gray-base;
+    }
+    .tooltip-icon {
+      position: relative;
+      top: rem-calc(6);
+      font-size: rem-calc(22);
+      cursor: pointer;
+    }
+    .tooltip-icon:hover {
+      color: $color-primary-base;
+    }
   }
 
   // !important necessary to override AmCharts putting css directly on the divs

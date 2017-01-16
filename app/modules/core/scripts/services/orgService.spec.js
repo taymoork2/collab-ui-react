@@ -1,7 +1,9 @@
 'use strict';
 
+var testModule = require('./org.service');
+
 describe('orgService', function () {
-  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module(testModule));
 
   var httpBackend, Orgservice, Auth, Authinfo, Config, Log, UrlConfig;
   var eftSettingRegex = /.*\/settings\/eft\.*/;

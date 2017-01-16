@@ -19,7 +19,7 @@
     "value": 0,
     "label": "reportsPage.week",
     "description": "reportsPage.week2",
-    "min": 1,
+    "min": 0,
     "max": 6
   }, {
     "value": 1,
@@ -38,7 +38,7 @@
     "value": 0,
     "label": "reportsPage.week",
     "description": "reportsPage.week2",
-    "min": 1,
+    "min": 0,
     "max": 6
   }, {
     "value": 1,

@@ -55,7 +55,7 @@ export class OnlineUpgradeService {
   public cancelSubscriptions(): ng.IPromise<any> {
     let hasError = false;
     return this.$q.all(_.map(this.Authinfo.getSubscriptions(), (subscription) => {
-      return this.cancelSubscription(_.get<string>(subscription, 'subscriptionId'))
+      return this.cancelSubscription(_.get<string>(subscription, 'externalSubscriptionId'))
         .catch((response) => {
           hasError = true;
           this.Notification.errorWithTrackingId(response, 'subscriptions.cancelError');
