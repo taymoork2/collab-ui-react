@@ -4994,15 +4994,15 @@
     "errorCodes": {
       "mediaProtocol": {
         "type": "Network Ports Blocked",
-        "message": "Firewall may be blocking media on UDP port 33434. Call quality may be impacted."
+        "message": "Firewall may be blocking media on UDP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls and Network Requirements for the Cisco Spark App</a>."
       },
       "TCPMediaFallback": {
         "type": "Network Ports Blocked",
-        "message": "Firewall may be blocking media on UDP port 33434. Call quality may be impacted."
+        "message": "Firewall may be blocking media on UDP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls and Network Requirements for the Cisco Spark App</a>."
       },
       "MediaBlockingDetected": {
         "type": "Network Ports Blocked",
-        "message": "Firewall may be blocking media on UDP and TCP port 33434. Calls will fail to connect."
+        "message": "Firewall may be blocking media on UDP and TCP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls and Network Requirements for the Cisco Spark App</a>."
       },
       "TemperatureCheck": {
         "type": "High temperature",

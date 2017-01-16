@@ -62,7 +62,7 @@
           <p>
             {{event.type}}
           </p>
-          <p>{{event.message}}</p>
+          <p ng-bind-html="event.message"></p>
         </li>
       </ul>
     </cs-sp-section>
