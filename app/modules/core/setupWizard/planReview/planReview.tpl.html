@@ -72,6 +72,9 @@
               <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
               <span>{{service.license.volume}}</span>
             </div>
+            <div ng-if="planReview.isSharedMultiPartyEnabled" class="item-webex"
+              translate="onboardModal.paidCiscoSparkMessaging">
+            </div>
             <div class="quantity-msg-details" ng-if="planReview.isSharedMultiPartyEnabled">
                 <span class="license-type">{{service.license.volume}} {{planReview.determineLicenseType(service)}}</span>
             </div>
@@ -186,6 +189,9 @@
             <div class="quantity" ng-if="!planReview.isSharedMultiPartyEnabled">
               <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
               <span>{{service.license.volume}}</span>
+            </div>
+            <div ng-if="planReview.isSharedMultiPartyEnabled" class="item-webex"
+              translate="onboardModal.paidCiscoSparkMessaging">
             </div>
             <div class="quantity-call-details" ng-if="planReview.isSharedMultiPartyEnabled">
                 <span class="license-type">{{planReview.determineLicenseType(service)}}</span>
