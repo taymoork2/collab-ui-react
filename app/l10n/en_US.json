@@ -4117,6 +4117,11 @@
       "placeholder": "UC SIP Trunk goes here",
       "example": "Example: sips://173.36.248.22:5062"
     },
+    "report" : {
+      "title": "Hybrid Media",
+      "adoption-title": "Adoption",
+      "resources-title": "Resources"
+    },
     "settings": {
       "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
       "deactivateBody_2": "Deactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources.",

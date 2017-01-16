@@ -1403,6 +1403,16 @@
               }
             }
           })
+          .state('reports.media', {
+            url: '/reports/media',
+            views: {
+              'tabContent': {
+                controllerAs: 'nav',
+                controller: 'MediaReportsController',
+                templateUrl: 'modules/mediafusion/reports/media-reports.html'
+              }
+            }
+          })
           .state('reports.care', {
             url: '/reports/care',
             views: {
