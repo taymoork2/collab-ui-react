@@ -2,14 +2,14 @@ describe('Controller: Customer Reports Ctrl', function () {
   let WebexReportService: any;
 
   let headerTabs: any = [{
-    title: 'mediaFusion.report.title',
-    state: 'reports.metrics',
-  }, {
     title: 'reportsPage.sparkReports',
     state: 'reports.spark',
   }, {
     title: 'reportsPage.webex',
     state: 'reports.webex',
+  }, {
+    title: 'mediaFusion.report.title',
+    state: 'reports.media',
   }, {
     title: 'reportsPage.careTab',
     state: 'reports.care',
