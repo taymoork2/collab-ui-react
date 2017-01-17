@@ -130,51 +130,33 @@
       });
 
       vm.hasAdvancedLicenses = function () {
-        _.each(vm.confServices.services, function (service) {
-          if (_.has(service, 'license.siteUrl')) {
-            return true;
-          }
+        return _.some(vm.confServices.services, function (service) {
+          return _.has(service, 'license.siteUrl');
         });
       };
 
       vm.hasBasicLicenses = function () {
-        _.each(vm.confServices.services, function (service) {
-          if (!_.has(service, 'license.siteUrl')) {
-            return true;
-          }
+        return _.some(vm.confServices.services, function (service) {
+          return !_.has(service, 'license.siteUrl');
         });
       };
 
       /* TODO: Refactor this functions into MultipleSubscriptions Controller */
       vm.selectedSubscriptionHasBasicLicenses = function (subscriptionId) {
-        var hasBasicLicense = false;
-        var basicLicensesInSubscription = [];
-        if (vm.hasBasicLicenses) {
-          basicLicensesInSubscription = _.filter(vm.confServices.services, { license: { billingServiceId: subscriptionId } });
-          _.each(basicLicensesInSubscription, function (subscription) {
-            if (!_.has(subscription, 'license.siteUrl')) {
-              hasBasicLicense = true;
-            }
-          });
-        }
-
-        return hasBasicLicense;
+        return _.some(vm.confServices.services, function (service) {
+          if (_.get(service, 'license.billingServiceId') === subscriptionId) {
+            return !_.has(service, 'license.siteUrl');
+          }
+        });
       };
 
       /* TODO: Refactor this functions into MultipleSubscriptions Controller */
       vm.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
-        var hasAdvancedLicense = false;
-        var advancedLicensesInSubscription = [];
-        if (vm.hasAdvancedLicenses) {
-          advancedLicensesInSubscription = _.filter(vm.confServices.services, { license: { billingServiceId: subscriptionId } });
-          _.each(advancedLicensesInSubscription, function (subscription) {
-            if (_.has(subscription, 'license.siteUrl')) {
-              hasAdvancedLicense = true;
-            }
-          });
-        }
-
-        return hasAdvancedLicense;
+        return _.some(vm.confServices.services, function (service) {
+          if (_.get(service, 'license.billingServiceId') === subscriptionId) {
+            return _.has(service, 'license.siteUrl');
+          }
+        });
       };
 
       vm.commServices.services = Authinfo.getCommunicationServices() || [];

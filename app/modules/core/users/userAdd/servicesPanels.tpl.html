@@ -143,10 +143,10 @@
       </div>
       <!-- START - Shared Multi Party enabled -->
       <div id="conference" ng-if="isSharedMultiPartyEnabled" class="small-4 columns column-paid">
-        <div class="item-mtg-license" ng-if="selectedSubscriptionHasBasicLicenses(multipleSubscriptions.selectedSubscription)" translate="firstTimeWizard.basicMeetings"></div>
+        <div class="item-mtg-license item-space" ng-if="selectedSubscriptionHasBasicLicenses(multipleSubscriptions.selectedSubscription)" translate="firstTimeWizard.basicMeetings"></div>
         <div class="entitle-check-grp" ng-repeat="lic in basicLicenses">
-          <div class="ckbx" id="paidMtg" ng-show="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial)" ng-if="!lic.site">
-            <div class="cs-checkbox-group">
+          <div class="ckbx license-space" id="paidMtg" ng-show="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial)" ng-if="!lic.site">
+            <div>
               <input
                 cs-input
                 type="checkbox"
@@ -168,8 +168,8 @@
         </div>
         <div class="item-mtg-license item-space" ng-if="selectedSubscriptionHasAdvancedLicenses(multipleSubscriptions.selectedSubscription)" translate="firstTimeWizard.advancedMeetings"></div>
         <div class="entitle-check-grp" ng-repeat="lic in advancedLicenses">
-          <div class="item-mtg license-space" ng-if="lic.site">
-            <div ng-show="multipleSubscriptions.showLicenses(cfLic.billing, cfLic.isTrial)" ng-repeat="cfLic in lic.confLic">
+          <div class="item-mtg" ng-if="lic.site">
+            <div class="license-space" ng-show="multipleSubscriptions.showLicenses(cfLic.billing, cfLic.isTrial)" ng-repeat="cfLic in lic.confLic">
               <div ng-if="lic.isCISite">
                 <input 
                   cs-input
@@ -194,7 +194,7 @@
               </div>
               <div ng-if="!lic.isCISite" class="item-webex">
                 <span>WebEx {{cfLic.label}}</span><br>
-                <span class="sub-item">
+                <span class="license-siteUrl">
                   <a target="_blank"
                     href= "{{lic.siteAdminUrl}}"
                     id="{{lic.siteUrl}}_siteAdminUrl">
@@ -204,7 +204,7 @@
               </div>
               <div ng-show="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial)">
                 <span class="under-label-reposition license-siteUrl" ng-if="lic.isCISite">{{lic.site}}</span>
-                <span ng-if="!lic.isCISite">{{lic.site}}</span>
+                <span class="license-siteUrl" ng-if="!lic.isCISite">{{lic.site}}</span>
               </div>
             </div>
           </div>
