@@ -26,7 +26,7 @@
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       } else {
-        if (data[0].colorTwo === chartColors.dummyGray) {
+        if (data[0].colorTwo === chartColors.grayLightTwo) {
           isDummy = true;
         }
         var startDuration = 1;
@@ -43,7 +43,7 @@
         utilizationChart.chartCursor.valueLineEnabled = true;
         utilizationChart.chartCursor.categoryBalloonEnabled = true;
         utilizationChart.chartCursor.oneBalloonOnly = true;
-        utilizationChart.chartCursor.balloonColor = chartColors.grayLight;
+        utilizationChart.chartCursor.balloonColor = chartColors.grayLightTwo;
         utilizationChart.chartCursor.valueBalloonsEnabled = true;
         if (isDummy) {
           utilizationChart.chartCursor.valueLineBalloonEnabled = false;

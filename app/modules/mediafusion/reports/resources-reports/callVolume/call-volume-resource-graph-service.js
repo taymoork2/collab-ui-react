@@ -65,7 +65,7 @@
       catAxis.startOnAxis = true;
       catAxis.axisAlpha = 0.5;
       catAxis.axisColor = '#1C1C1C';
-      catAxis.gridAlpha = 0.3;
+      catAxis.gridAlpha = 0.1;
       catAxis.minorGridAlpha = 0.1;
       catAxis.minorGridEnabled = false;
       catAxis.minPeriod = 'mm';
