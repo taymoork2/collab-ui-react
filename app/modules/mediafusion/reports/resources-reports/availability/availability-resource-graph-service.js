@@ -92,6 +92,9 @@
       };
       var catAxes = CommonReportsGraphService.getBaseVariable(AXIS);
       catAxes.labelFunction = formatLabel;
+      catAxes.autoGridCount = false;
+      catAxes.gridCount = 10;
+      catAxes.gridAlpha = 0.3;
       catAxes.listeners = [{
         "event": "clickItem",
         "method": function (event) {
