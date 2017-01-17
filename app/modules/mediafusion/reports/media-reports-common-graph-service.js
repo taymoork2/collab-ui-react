@@ -31,13 +31,13 @@
       'hidden': false
     };
     baseVariables['axis'] = {
-      'axisColor': chartColors.grayLight,
-      'gridColor': chartColors.grayLight,
-      'color': chartColors.grayDarkest,
-      'titleColor': chartColors.grayDarkest,
+      'axisColor': '#1C1C1C',
+      'gridColor': '#1C1C1C',
+      'color': chartColors.grayDarkThree,
+      'titleColor': chartColors.grayDarkThree,
       'fontFamily': 'CiscoSansTT Light',
       'gridAlpha': 0,
-      'axisAlpha': 1,
+      'axisAlpha': 0.5,
       'tickLength': 0
     };
     baseVariables['guideaxis'] = {

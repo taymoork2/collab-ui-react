@@ -35,19 +35,6 @@
       return localTime;
     }
 
-    function createValueAxis(data) {
-      var endTime = data.data[0].endTime;
-      endTime = convertToLocalTime(endTime);
-      var startTime = data.data[0].startTime;
-      startTime = convertToLocalTime(startTime);
-
-      var valueAxis = CommonReportsGraphService.getBaseVariable(AXIS);
-      valueAxis.maximumDate = endTime;
-      valueAxis.minimumDate = startTime;
-      valueAxis.type = 'date';
-      return valueAxis;
-    }
-
     function setAvailabilityGraph(data, availabilityChart, selectedCluster, cluster, daterange, Idmap) {
       var tempData = angular.copy(data);
       if (_.isUndefined(data.data[0].isDummy)) {
@@ -98,7 +85,11 @@
           legend[key].color = '#AAB3B3';
         });
       }
-      var valueAxis = createValueAxis(data);
+      var valueAxis = CommonReportsGraphService.getBaseVariable(AXIS);
+      valueAxis.type = 'date';
+      valueAxis.balloonTextFunction = function (date) {
+        return moment(date.toString()).format('HH:mm, DD MMMM');
+      };
       var catAxes = CommonReportsGraphService.getBaseVariable(AXIS);
       catAxes.labelFunction = formatLabel;
       catAxes.listeners = [{
