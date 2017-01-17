@@ -117,6 +117,18 @@ describe('Service: CsdmDataModelService', function () {
       });
     });
 
+    it('get devices should call huron when requested', function () {
+      executeGetCallsAndInitPromises();
+
+      $httpBackend.expectGET(huronDevicesUrl);
+
+      CsdmDataModelService.getDevicesMap(true).then(function (devices) {
+        expect(Object.keys(devices).length).toBe(initialDeviceCount);
+      });
+
+      $httpBackend.flush();
+    });
+
     it('should have converted devices', function () {
       executeGetCallsAndInitPromises();
       CsdmDataModelService.getDevicesMap().then(function (devices) {

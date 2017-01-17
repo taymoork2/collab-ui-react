@@ -45,10 +45,10 @@ describe('Controller: Dummy Metrics Reports', function () {
       expect(responseForLastMonth).toBeDefined();
       expect(responseForLastThreeMonth).toBeDefined();
 
-      expect(responseFor24hrs[0].colorTwo).toBe(chartColors.dummyGray);
-      expect(respomseForLastWeek[0].colorTwo).toBe(chartColors.dummyGray);
-      expect(responseForLastMonth[0].colorTwo).toBe(chartColors.dummyGray);
-      expect(responseForLastThreeMonth[0].colorTwo).toBe(chartColors.dummyGray);
+      expect(responseFor24hrs[0].colorTwo).toBe(chartColors.grayLightTwo);
+      expect(respomseForLastWeek[0].colorTwo).toBe(chartColors.grayLightTwo);
+      expect(responseForLastMonth[0].colorTwo).toBe(chartColors.grayLightTwo);
+      expect(responseForLastThreeMonth[0].colorTwo).toBe(chartColors.grayLightTwo);
 
     });
   });

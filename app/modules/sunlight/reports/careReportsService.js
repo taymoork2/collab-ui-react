@@ -10,9 +10,9 @@
     var today = true;
 
     function dummifyGraph(chartConfig) {
-      var dummyColors = [chartColors.dummyGrayFillDarker, chartColors.dummyGrayFillDark];
+      var dummyColors = [chartColors.grayLightOne, chartColors.grayLightTwo];
       if (today) {
-        dummyColors = [chartColors.dummyGrayFillDarker, chartColors.dummyGrayFillDark, chartColors.dummyGrayFillLighter, chartColors.dummyGrayFillLight];
+        dummyColors = [chartColors.grayLightOne, chartColors.grayLightTwo, chartColors.grayLightThree, chartColors.grayLightFour];
       }
 
       var dummyGraphs = _.map(chartConfig.graphs, function (graph, i) {
@@ -63,7 +63,7 @@
 
       var abandonedGraph = {
         title: $translate.instant('careReportsPage.abandoned'),
-        lineColor: chartColors.colorLightRed,
+        lineColor: chartColors.alertsBase,
         fillColors: chartColors.colorLightRedFill,
         valueField: 'numTasksAbandonedState',
         showBalloon: true,
@@ -72,7 +72,7 @@
 
       var handledGraph = {
         title: $translate.instant('careReportsPage.handled'),
-        lineColor: chartColors.colorLightGreen,
+        lineColor: chartColors.ctaBase,
         valueField: 'numTasksHandledState'
       };
 
@@ -194,8 +194,8 @@
 
       var queueGraph = {
         title: $translate.instant('careReportsPage.queueTime'),
-        lineColor: chartColors.colorLightYellow,
-        fillColors: chartColors.colorLightYellow,
+        lineColor: chartColors.attentionBase,
+        fillColors: chartColors.attentionBase,
         valueField: 'avgTaskWaitTime',
         dashLength: 2,
         fillAlphas: 1,
@@ -205,7 +205,7 @@
       };
       var handleGraph = {
         title: $translate.instant('careReportsPage.handleTime'),
-        lineColor: chartColors.colorLightGreen,
+        lineColor: chartColors.ctaBase,
         fillColors: chartColors.colorLightGreenFill,
         valueField: 'avgTaskCloseTime'
       };
@@ -256,8 +256,8 @@
 
       var inQueueGraph = {
         title: $translate.instant('careReportsPage.in-queue'),
-        lineColor: chartColors.colorLightYellow,
-        fillColors: chartColors.colorLightYellow,
+        lineColor: chartColors.attentionBase,
+        fillColors: chartColors.attentionBase,
         valueField: 'numPendingTasks',
         dashLength: 2,
         fillAlphas: 1,
@@ -268,7 +268,7 @@
 
       var assignedGraph = {
         title: $translate.instant('careReportsPage.assigned'),
-        lineColor: chartColors.colorLightYellow,
+        lineColor: chartColors.attentionBase,
         fillColors: chartColors.colorLightYellowFill,
         valueField: 'numWorkingTasks',
       };
@@ -314,7 +314,7 @@
 
       var csatGraph = {
         title: $translate.instant('careReportsPage.averageCsat'),
-        lineColor: chartColors.colorLightGreen,
+        lineColor: chartColors.ctaBase,
         fillColors: chartColors.brandWhite,
         valueField: 'avgCsatScores',
         showBalloon: true,

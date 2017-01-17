@@ -92,7 +92,7 @@
       var catAxis = CommonGraphService.getBaseVariable(AXIS);
       catAxis.gridPosition = 'start';
       catAxis.title = $translate.instant('reports.weekOf');
-      catAxis.gridColor = chartColors.grayLight;
+      catAxis.gridColor = chartColors.grayLightTwo;
       catAxis.gridAlpha = 1;
 
       var graphs = [];
@@ -113,7 +113,7 @@
       chartObject.export = undefined;
       chartObject.colors = [colors];
       chartObject.plotAreaBorderAlpha = 0;
-      chartObject.plotAreaBorderColor = chartColors.grayDarkest;
+      chartObject.plotAreaBorderColor = chartColors.grayDarkThree;
       chartObject.balloon.borderThickness = 2;
       chartObject.balloon.fillAlpha = 0.8;
       chartObject.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
@@ -121,7 +121,7 @@
         'enabled': showCursor,
         'valueLineEnabled': true,
         'valueLineBalloonEnabled': true,
-        'cursorColor': chartColors.grayDarkest,
+        'cursorColor': chartColors.grayDarkThree,
         'valueBalloonsEnabled': false,
         'cursorPosition': 'mouse'
       };
@@ -210,7 +210,7 @@
         }
         $scope.entCount = _.round(dataCount);
 
-        updateChart(formattedData, chartColors.blue, true);
+        updateChart(formattedData, chartColors.primaryBase, true);
       } else {
         errorMessage(entTitle, response);
         $scope.entCount = 0;
@@ -218,7 +218,7 @@
       }
       if ($scope.entCount === 0) {
         $scope.entitlementStatus = NO_DATA;
-        updateChart(dummyChartVals, chartColors.grayLight, false);
+        updateChart(dummyChartVals, chartColors.grayLightTwo, false);
       }
     });
   }

@@ -481,6 +481,7 @@
         'mediafusion-settings',
         'metrics',
         'reports.metrics',
+        'reports.media',
         'services-overview',
         'cluster-list',
       ],

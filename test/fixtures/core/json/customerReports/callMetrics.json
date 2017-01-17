@@ -161,12 +161,12 @@
       "callCondition": "callMetrics.audioCalls",
       "numCalls": 1000,
       "percentage": 10,
-      "color": "#F3F3F3"
+      "color": "#EBEBEC"
     }, {
       "callCondition": "callMetrics.videoCalls",
       "numCalls": 9000,
       "percentage": 90,
-      "color": "#ECECEC"
+      "color": "#D7D7D8"
     }],
     "dummy": true
   },

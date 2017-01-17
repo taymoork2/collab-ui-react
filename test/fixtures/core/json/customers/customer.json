@@ -6,28 +6,48 @@
     "isTrial": true,
     "licenseId": 12345,
     "daysLeft": -10,
-    "volume": 25
+    "volume": 25,
+    "partnerOrgId": "partner-org-id",
+    "partnerEmail": "partner@company.com"
   },
   "conferencing": {
     "isTrial": false,
     "licenseId": 12345,
     "daysLeft": "NaN",
-    "volume": 50
+    "volume": 50,
+    "partnerOrgId": "other-partner-org2-id",
+    "partnerEmail": "otherPartner@othercompany.com"
   },
   "messaging": {
+    "customerName": "customer org name",
+    "status": "ACTIVE",
+    "daysLeft": 46,
+    "sortOrder": 1
   },
   "roomSystems": {
     "isTrial": true,
     "licenseId": 12345,
     "daysLeft": 10,
-    "volume": 10
+    "volume": 10,
+    "partnerOrgId": "partner-org-id",
+    "partnerEmail": "partner@company.com"
+  },
+  "sparkBoard": {
+    "isTrial": true,
+    "licenseId": 12345,
+    "daysLeft": 10,
+    "volume": 10,
+    "partnerOrgId": "other-partner-org-id",
+    "partnerEmail": "other-partner@company.com"
   },
   "webexCMR": {
     "isTrial": true,
     "licenseId": 12345,
     "daysLeft": 15,
     "volume": 50,
-    "siteUrl": "example.webex.com"
+    "siteUrl": "example.webex.com",
+    "partnerOrgId": "partner-org-id",
+    "partnerEmail": "partner@company.com"
   },
   "licenseList": [{
     "name": "webexCMR",
@@ -69,12 +89,17 @@
     "volume": 50,
     "siteUrl": "example.webex.com"
   }],
+  "orderedServices": {
+    "servicesManagedByCurrentPartner": ["messaging", "communications", "webex", "roomSystems"],
+    "servicesManagedByAnotherPartner": ["conferencing", "sparkBoard"]
+  },
   "webexEEConferencing": {
     "isTrial": true,
     "licenseId": 12346,
     "daysLeft": 15,
     "volume": 50,
-    "siteUrl": "example.webex.com"
+    "siteUrl": "example.webex.com",
+    "partnerEmail": "partner@company.com"
   },
   "webexEventCenter": {},
   "webexMeetingCenter": {},

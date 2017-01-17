@@ -81,7 +81,7 @@ require('./_devices.scss');
         vm.deviceFilter = DeviceFilter;
         vm.deviceFilter.resetFilters();
 
-        CsdmDataModelService.getDevicesMap().then(function (devicesMap) {
+        CsdmDataModelService.getDevicesMap(true).then(function (devicesMap) {
           vm.devicesMap = devicesMap;
           vm.updateListAndFilter();
         });

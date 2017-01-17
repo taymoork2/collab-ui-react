@@ -644,7 +644,10 @@ require('./_user-add.scss');
                 var hasSyncKms = _.find(data.roles, function (r) {
                   return r === Config.backend_roles.spark_synckms;
                 });
-                if (hasSyncKms) {
+                var hasContextServiceEntitlement = _.find(data.entitlements, function (r) {
+                  return r === Config.entitlements.context;
+                });
+                if (hasSyncKms && hasContextServiceEntitlement) {
                   $scope.radioStates.careRadio = true;
                   $scope.radioStates.initialCareRadioState = true;
                   $scope.enableCareService = true;
@@ -788,19 +791,21 @@ require('./_user-add.scss');
       populateConfInvitations();
     };
 
-    $scope.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
-      var hasAdvancedLicense = false;
-      var advancedLicensesInSubscription = [];
-      if ($scope.hasAdvancedLicenses) {
-        advancedLicensesInSubscription = _.filter($scope.advancedLicenses, { confLic: [{ billing: subscriptionId }] });
-        _.each(advancedLicensesInSubscription, function (subscription) {
-          if (_.has(subscription, 'site')) {
-            hasAdvancedLicense = true;
-          }
-        });
-      }
+    /* TODO: Refactor this functions into MultipleSubscriptions Controller */
+    $scope.selectedSubscriptionHasBasicLicenses = function (subscriptionId) {
+      return _.some($scope.basicLicenses, function (service) {
+        if (_.get(service, 'billing') === subscriptionId) {
+          return !_.has(service, 'site');
+        }
+      });
+    };
 
-      return hasAdvancedLicense;
+    /* TODO: Refactor this functions into MultipleSubscriptions Controller */
+    $scope.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
+      var advancedLicensesInSubscription = _.filter($scope.advancedLicenses, { confLic: [{ billing: subscriptionId }] });
+      return _.some(advancedLicensesInSubscription, function (service) {
+        return _.has(service, 'site');
+      });
     };
 
     $scope.isSharedMultiPartyLicense = function (license) {

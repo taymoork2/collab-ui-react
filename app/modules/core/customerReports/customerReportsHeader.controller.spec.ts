@@ -2,14 +2,14 @@ describe('Controller: Customer Reports Ctrl', function () {
   let WebexReportService: any;
 
   let headerTabs: any = [{
-    title: 'mediaFusion.page_title',
-    state: 'reports.metrics',
-  }, {
     title: 'reportsPage.sparkReports',
     state: 'reports.spark',
   }, {
     title: 'reportsPage.webex',
     state: 'reports.webex',
+  }, {
+    title: 'mediaFusion.report.title',
+    state: 'reports.media',
   }, {
     title: 'reportsPage.careTab',
     state: 'reports.care',
@@ -47,7 +47,7 @@ describe('Controller: Customer Reports Ctrl', function () {
 
   describe('when all featuretoggles return false and there are no webex sites', function () {
     beforeEach(function () {
-      spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsGetStatus').and.returnValue(this.$q.when(false));
+      spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneOneGetStatus').and.returnValue(this.$q.when(false));
       spyOn(this.FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(this.$q.when(false));
       spyOn(this.FeatureToggleService, 'atlasDeviceUsageReportGetStatus').and.returnValue(this.$q.when(false));
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(false));
@@ -77,13 +77,13 @@ describe('Controller: Customer Reports Ctrl', function () {
     });
 
     it('should only display spark reports tab', function () {
-      expect(this.controller.headerTabs).toEqual([headerTabs[1]]);
+      expect(this.controller.headerTabs).toEqual([headerTabs[0]]);
     });
   });
 
   describe('when all featuretoggles return true and there are webex sites', function () {
     beforeEach(function () {
-      spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsGetStatus').and.returnValue(this.$q.when(true));
+      spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneOneGetStatus').and.returnValue(this.$q.when(true));
       spyOn(this.FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(this.$q.when(true));
       spyOn(this.FeatureToggleService, 'atlasDeviceUsageReportGetStatus').and.returnValue(this.$q.when(true));
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(true));

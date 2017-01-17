@@ -13,6 +13,7 @@ describe('Component: Example', () => {
       'ExampleService'
     );
 
+    spyOn(this.$state, 'go').and.callThrough();
     spyOn(this.ExampleService, 'getAndAddSomething');
 
     this.compileComponent('atlas-example');

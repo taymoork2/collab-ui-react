@@ -1,5 +1,10 @@
-<i ng-if="isVisible"
+<i ng-if="showServiceManagedByCurrentPartner"
   class="service-icon icon"
+  ng-class="translateTypeToIcon(type)"
+  tooltip-html-unsafe="{{getTooltipText(row, type)}}"
+  tooltip-append-to-body="true"></i>
+<i ng-if="showServiceManagedByAnotherPartner"
+  class="service-icon-managed-by-others icon"
   ng-class="translateTypeToIcon(type)"
   tooltip-html-unsafe="{{getTooltipText(row, type)}}"
   tooltip-append-to-body="true"></i>
