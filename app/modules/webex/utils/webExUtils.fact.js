@@ -308,9 +308,28 @@
     }; // getEnableT30UnifiedAdmin()
 
     obj.getOrgWebexLicenses = function (orgInfo) {
-      var orgWebexLicenses = _.get(orgInfo, 'data.customers[0].licenses');
-      if (null == orgWebexLicenses) {
-        orgWebexLicenses = _.get(orgInfo, 'data.customers[0].subscriptions[0].licenses');
+      var orgWebexLicenses = null;
+
+      if (null != orgInfo) {
+        var customerInfo = _.get(orgInfo, 'data.customers[0]');
+        var custLicenses = customerInfo.licenses;
+        var custSubscriptions = customerInfo.subscriptions;
+
+        if (null != custLicenses) {
+          orgWebexLicenses = custLicenses;
+        } else if (null != custSubscriptions) {
+          custSubscriptions.forEach(
+            function (custSubscription) {
+              var subscriptionLicenses = custSubscription.licenses;
+
+              if (null != subscriptionLicenses) {
+                orgWebexLicenses = (
+                  null == orgWebexLicenses
+                ) ? subscriptionLicenses : orgWebexLicenses.concat(subscriptionLicenses);
+              }
+            }
+          );
+        }
       }
 
       return orgWebexLicenses;
