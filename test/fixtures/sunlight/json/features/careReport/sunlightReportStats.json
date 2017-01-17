@@ -219,5 +219,184 @@
       "viewType": "daily",
       "mediaType": "chat"
     }
+  },
+  "reportUsersFifteenMinutesStats": {
+    "data": [{
+      "avgCsatScore":5,
+      "contactsAssigned":0,
+      "contactsHandled":0,
+      "createdTime":"2017-01-09T19:00:00.000Z",
+      "handleTime":0,
+      "mediaType":"chat",
+      "numCsatScores":0,
+      "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
+      "userId":"7d1d3d8c-3a9c-4317-a567-db678d24b24f"
+    }, {
+      "avgCsatScore":2,
+      "contactsAssigned":0,
+      "contactsHandled":1,
+      "createdTime":"2017-01-09T20:00:00.000Z",
+      "handleTime":0,
+      "mediaType":"chat",
+      "numCsatScores":0,
+      "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
+      "userId":"7d1d3d8c-3a9c-4317-a567-db678d24b24f"
+    }, {
+      "avgCsatScore":3.6666666666666665,
+      "contactsAssigned":4,
+      "contactsHandled":3,
+      "createdTime":"2017-01-10T04:30:00.000Z",
+      "handleTime":27887,
+      "mediaType":"chat",
+      "numCsatScores":3,
+      "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
+      "userId":"3c3dd56c-67c3-4054-8d07-b090945e00b3"
+    }, {
+      "avgCsatScore":4,
+      "contactsAssigned":0,
+      "contactsHandled":0,
+      "createdTime":"2017-01-10T04:30:00.000Z",
+      "handleTime":0,
+      "mediaType":"chat",
+      "numCsatScores":1,
+      "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
+      "userId":"459d78ae-d720-4ad8-8e94-f88cf403aade"
+    }, {
+      "avgCsatScore":4,
+      "contactsAssigned":0,
+      "contactsHandled":0,
+      "createdTime":"2017-01-10T04:30:00.000Z",
+      "handleTime":0,
+      "mediaType":"chat",
+      "numCsatScores":1,
+      "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
+      "userId":"77cacfcd-f089-418b-b70e-8406f6e67911"
+    }, {
+      "avgCsatScore":0,
+      "contactsAssigned":3,
+      "contactsHandled":0,
+      "createdTime":"2017-01-10T04:45:00.000Z",
+      "handleTime":0,
+      "mediaType":"chat",
+      "numCsatScores":0,
+      "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
+      "userId":"459d78ae-d720-4ad8-8e94-f88cf403aade"
+    }, {
+      "avgCsatScore":4,
+      "contactsAssigned":3,
+      "contactsHandled":4,
+      "createdTime":"2017-01-10T05:00:00.000Z",
+      "handleTime":481947,
+      "mediaType":"chat",
+      "numCsatScores":3,
+      "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
+      "userId":"459d78ae-d720-4ad8-8e94-f88cf403aade"
+    }, {
+      "avgCsatScore":0,
+      "contactsAssigned":3,
+      "contactsHandled":3,
+      "createdTime":"2017-01-10T05:15:00.000Z",
+      "handleTime":295342,
+      "mediaType":"chat",
+      "numCsatScores":0,
+      "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
+      "userId":"459d78ae-d720-4ad8-8e94-f88cf403aade"
+    }, {
+      "avgCsatScore":4,
+      "contactsAssigned":1,
+      "contactsHandled":0,
+      "createdTime":"2017-01-10T06:00:00.000Z",
+      "handleTime":0,
+      "mediaType":"chat",
+      "numCsatScores":1,
+      "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
+      "userId":"459d78ae-d720-4ad8-8e94-f88cf403aade"
+    }, {
+      "avgCsatScore":4,
+      "contactsAssigned":1,
+      "contactsHandled":0,
+      "createdTime":"2017-01-10T06:00:00.000Z",
+      "handleTime":0,
+      "mediaType":"chat",
+      "numCsatScores":1,
+      "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
+      "userId":"00000000-d720-4ad8-8e94-f88cf403aade"
+    }],
+    "metadata": {
+      "jobName": "user_contact_stats_fifteen_minutes",
+      "lastRunTime": "2017-01-10T09:30:00.000Z"
+    }
+  },
+    "reportUsersHourlyStats": {
+    "data": [{
+      "avgCsatScore":5,
+      "contactsAssigned":0,
+      "contactsHandled":0,
+      "createdTime":"2017-01-09T19:00:00.000Z",
+      "handleTime":0,
+      "mediaType":"chat",
+      "numCsatScores":1,
+      "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
+      "userId":"7d1d3d8c-3a9c-4317-a567-db678d24b24f"
+    }, {
+      "avgCsatScore":4,
+      "contactsAssigned":3,
+      "contactsHandled":4,
+      "createdTime":"2017-01-10T05:00:00.000Z",
+      "handleTime":481947,
+      "mediaType":"chat",
+      "numCsatScores":3,
+      "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
+      "userId":"459d78ae-d720-4ad8-8e94-f88cf403aade"
+    }, {
+      "avgCsatScore":4,
+      "contactsAssigned":1,
+      "contactsHandled":0,
+      "createdTime":"2017-01-10T06:00:00.000Z",
+      "handleTime":0,
+      "mediaType":"chat",
+      "numCsatScores":1,
+      "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
+      "userId":"459d78ae-d720-4ad8-8e94-f88cf403aade"
+    }],
+    "metadata": {
+      "jobName": "user_contact_stats_hourly",
+      "lastRunTime": "2017-01-10T09:30:00.000Z"
+    }
+  },
+  "ciUserStats": {
+    "data": {
+        "Resources": [{
+          "displayName":"GT User 5",
+          "name": {
+            "givenName": "A GT",
+            "familyName": "user5"
+          },
+          "id": "7d1d3d8c-3a9c-4317-a567-db678d24b24f",
+          "emails": [{
+            "value": "sunlight@outlook.com"
+          }]
+        }, {
+          "displayName":"display GT User 4",
+          "id": "3c3dd56c-67c3-4054-8d07-b090945e00b3",
+          "emails": [{
+            "value": "sunlight-test-user4@outlook.com"
+          }]
+        }, {
+          "displayName":"GT User 3",
+          "name": {
+            "familyName": "A GT user5"
+          },
+          "id": "459d78ae-d720-4ad8-8e94-f88cf403aade",
+          "emails": [{
+            "value": "sunlight-test@outlook.com"
+          }]
+        }, {
+          "id": "77cacfcd-f089-418b-b70e-8406f6e67911",
+          "emails": [{
+            "value": "sunlight-user1@outlook.com"
+          }]
+        }]
+    }
   }
 }
