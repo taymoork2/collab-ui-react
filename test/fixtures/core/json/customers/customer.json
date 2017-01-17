@@ -90,8 +90,8 @@
     "siteUrl": "example.webex.com"
   }],
   "orderedServices": {
-    "services": ["messaging", "communications", "webex", "roomSystems"],
-    "servicesManagedByOthers": ["conferencing", "sparkBoard"]
+    "servicesManagedByCurrentPartner": ["messaging", "communications", "webex", "roomSystems"],
+    "servicesManagedByAnotherPartner": ["conferencing", "sparkBoard"]
   },
   "webexEEConferencing": {
     "isTrial": true,

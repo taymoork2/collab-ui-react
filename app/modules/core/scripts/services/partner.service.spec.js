@@ -240,28 +240,28 @@ describe('Partner Service -', function () {
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('partner@company.com');
 
     var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), true, true);
-    var expectedServices = ["messaging", "communications", "webex", "roomSystems", "sparkBoard", "care"];
-    var expectedServicesManagedByOthers = ["conferencing"];
+    var expectedServices = ['messaging', 'communications', 'webex', 'roomSystems', 'sparkBoard', 'care'];
+    var expectedServicesManagedByOthers = ['conferencing'];
 
     // Verify the ordered service property
-    expect(returnList[0].orderedServices.services.length).toBe(6);
-    expect(returnList[0].orderedServices.services).toEqual(expectedServices);
-    expect(returnList[0].orderedServices.servicesManagedByOthers.length).toBe(1);
-    expect(returnList[0].orderedServices.servicesManagedByOthers).toEqual(expectedServicesManagedByOthers);
+    expect(returnList[0].orderedServices.servicesManagedByCurrentPartner.length).toBe(6);
+    expect(returnList[0].orderedServices.servicesManagedByCurrentPartner).toEqual(expectedServices);
+    expect(returnList[0].orderedServices.servicesManagedByAnotherPartner.length).toBe(1);
+    expect(returnList[0].orderedServices.servicesManagedByAnotherPartner).toEqual(expectedServicesManagedByOthers);
   });
 
   it('should successfully return a list customer orgs with orderedServices property from calling loadRetrievedDataToList with isCareEnabled being false', function () {
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('partner@company.com');
 
     var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), true, false);
-    var expectedServices = ["messaging", "communications", "webex", "roomSystems", "sparkBoard"];
-    var expectedServicesManagedByOthers = ["conferencing"];
+    var expectedServices = ['messaging', 'communications', 'webex', 'roomSystems', 'sparkBoard'];
+    var expectedServicesManagedByOthers = ['conferencing'];
 
     // Verify the ordered service property
-    expect(returnList[0].orderedServices.services.length).toBe(5);
-    expect(returnList[0].orderedServices.services).toEqual(expectedServices);
-    expect(returnList[0].orderedServices.servicesManagedByOthers.length).toBe(1);
-    expect(returnList[0].orderedServices.servicesManagedByOthers).toEqual(expectedServicesManagedByOthers);
+    expect(returnList[0].orderedServices.servicesManagedByCurrentPartner.length).toBe(5);
+    expect(returnList[0].orderedServices.servicesManagedByCurrentPartner).toEqual(expectedServices);
+    expect(returnList[0].orderedServices.servicesManagedByAnotherPartner.length).toBe(1);
+    expect(returnList[0].orderedServices.servicesManagedByAnotherPartner).toEqual(expectedServicesManagedByOthers);
   });
 
   it('should successfully return an array of customers from calling exportCSV', function () {

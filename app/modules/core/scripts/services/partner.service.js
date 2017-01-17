@@ -472,8 +472,8 @@
     function _getOrderedServices(data, isCareEnabled) {
       var servicesToProcess = ['messaging', 'conferencing', 'communications', 'webexEEConferencing',
         'roomSystems', 'sparkBoard', 'care'];
-      var services = [];
-      var servicesManagedByOthers = [];
+      var servicesManagedByCurrentPartner = [];
+      var servicesManagedByAnotherPartner = [];
 
       _.forEach(servicesToProcess, function (service) {
         var serviceToAdd = service;
@@ -482,14 +482,15 @@
         }
         if (service !== 'care' || (service === 'care' && isCareEnabled)) {
           if (isServiceManagedByCurrentPartner(data[service])) {
-            services.push(serviceToAdd);
+            servicesManagedByCurrentPartner.push(serviceToAdd);
           } else {
-            servicesManagedByOthers.push(serviceToAdd);
+            servicesManagedByAnotherPartner.push(serviceToAdd);
           }
         }
       });
 
-      return { services: services, servicesManagedByOthers: servicesManagedByOthers };
+      return { servicesManagedByCurrentPartner: servicesManagedByCurrentPartner,
+        servicesManagedByAnotherPartner: servicesManagedByAnotherPartner };
     }
 
     function isServiceManagedByCurrentPartner(serviceObj) {
