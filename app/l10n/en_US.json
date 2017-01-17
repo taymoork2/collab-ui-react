@@ -516,9 +516,12 @@
     "month2": "last four weeks",
     "threeMonths": "Last 3 Months",
     "threeMonths2": "last three months",
-    "threePlusMonths": "Last 3+ Months",
     "lastTwelveWeeks": "Last 12 Weeks",
     "lastTwelveWeeks2": "last twelve weeks",
+    "sixMonths": "Last 6 Months",
+    "sixMonths2": "last six months",
+    "year": "Last 12 Months",
+    "year2": "last twelve months",
     "custom": "Custom",
     "custom2": "custom selection",
     "customerLoadError": "There was an error while loading the customer list.",
@@ -654,7 +657,7 @@
     "noActiveUsers": "During the last {{time}}, there have been no active users.  To see user status and resend invitations to those still pending, visit the ",
     "errorActiveUsers": "This data is temporarily unavailable.  Our servers are working to return it soon, please check back again shortly.",
     "usersTab": "users tab.",
-    "customMessage": "The Most Active Users table is unavailable when the custom date selector is active."
+    "customMessage": "The Most Active Users table is unavailable for the six month and full year time periods, or when the custom date selector is active."
   },
   "avgRooms": {
     "avgRooms": "Total Rooms",

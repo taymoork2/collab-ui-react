@@ -24,14 +24,20 @@ describe('Service: Report Constants Service', () => {
     expect(this.ReportConstants.THREE_MONTH_FILTER).toEqual(defaults.altTimeFilter[2]);
     expect(this.$translate.instant).toHaveBeenCalledTimes(6);
 
-    expect(this.ReportConstants.CUSTOM_FILTER).toEqual(defaults.altTimeFilter[3]);
+    expect(this.ReportConstants.SIX_MONTH_FILTER).toEqual(defaults.altTimeFilter[3]);
     expect(this.$translate.instant).toHaveBeenCalledTimes(8);
 
+    expect(this.ReportConstants.YEAR_FILTER).toEqual(defaults.altTimeFilter[4]);
+    expect(this.$translate.instant).toHaveBeenCalledTimes(10);
+
+    expect(this.ReportConstants.CUSTOM_FILTER).toEqual(defaults.altTimeFilter[5]);
+    expect(this.$translate.instant).toHaveBeenCalledTimes(12);
+
     expect(this.ReportConstants.TIME_FILTER).toEqual(defaults.timeFilter);
-    expect(this.$translate.instant).toHaveBeenCalledTimes(14);
+    expect(this.$translate.instant).toHaveBeenCalledTimes(18);
 
     expect(this.ReportConstants.ALT_TIME_FILTER).toEqual(defaults.altTimeFilter);
-    expect(this.$translate.instant).toHaveBeenCalledTimes(22);
+    expect(this.$translate.instant).toHaveBeenCalledTimes(30);
   });
 
   it('should return the expected constants for the active user filter and have fresh translations each time', function () {

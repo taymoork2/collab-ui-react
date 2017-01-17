@@ -221,7 +221,7 @@ class SparkReportCtrl {
 
     this.activeDropdown.selected = this.activeDropdown.array[0];
     this.activeOptions.titlePopover = this.ReportConstants.UNDEF;
-    if (this.timeSelected.value === this.ReportConstants.CUSTOM_FILTER.value) {
+    if (this.timeSelected.value !== this.ReportConstants.WEEK_FILTER.value && this.timeSelected.value !== this.ReportConstants.MONTH_FILTER.value && this.timeSelected.value !== this.ReportConstants.THREE_MONTH_FILTER.value) {
       this.activeOptions.titlePopover = 'activeUsers.customMessage';
     }
 
