@@ -363,7 +363,7 @@
           'categoryBalloonDateFormat': 'YYYY-MM-DD',
           //'valueLineEnabled': true,
           //'valueLineBalloonEnabled': true,
-          'cursorColor': chartColors.primaryColorDarker,
+          'cursorColor': chartColors.primaryDarker,
           'cursorAlpha': 0.5,
           'valueLineAlpha': 0.5
         },
@@ -391,7 +391,7 @@
             'fillAlphas': 0.6,
             'lineAlpha': 0.0,
             //'bulletSize': 10,
-            'lineColor': chartColors.primaryColorDarker,
+            'lineColor': chartColors.primaryDarker,
             'bulletColor': '#ffffff',
             'bulletBorderAlpha': 1,
             'useLineColorForBulletBorder': true,
@@ -406,7 +406,7 @@
             'valueField': 'whiteboarding',
             'lineThickness': 2,
             'bulletSize': 6,
-            'lineColor': chartColors.primaryColorLight
+            'lineColor': chartColors.primaryLight
           }
           */
         ],

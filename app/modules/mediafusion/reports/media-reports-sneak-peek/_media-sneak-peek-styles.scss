@@ -1,0 +1,39 @@
+.media-reports {
+  .tooltipDiv{
+    text-align: left;
+  }
+  .media-tooltip{
+    color: #E39A20;
+    font-size: 1rem;
+    bottom: 0rem;
+  }
+  .media-tooltip:hover{
+    color: #D08D1D;
+  }
+  .tooltip[popup-class="metrics-tooltip"] .c-nub{
+    max-width: 350px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-right: -30px;
+  }
+  .tooltip[popup-class="metrics-tooltip"] .nub {
+    border: solid 6px #292929;
+    border-color: transparent transparent #292929 transparent;
+  }
+  .lowPerformingCluster{
+    color: #FFF; 
+    font-weight: bold;
+    font-size: .8rem;
+  }
+  .lowPerformingCluster:hover{
+    color: #FFF; 
+  }
+  .performingCluster{
+    color: #FFF; 
+    font-weight: bold;
+    font-size: .8rem;
+  }
+  .performingCluster:hover{
+    color: #FFF;
+  } 
+}

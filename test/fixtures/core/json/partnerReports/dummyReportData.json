@@ -255,7 +255,7 @@
     "overallPopulation": 50,
     "color": "#F5F5F6",
     "balloon": false,
-    "labelColorField": "#ccc"
+    "labelColorField": "#D7D7D8"
   }],
   "activeUser": {
     "one": [{
