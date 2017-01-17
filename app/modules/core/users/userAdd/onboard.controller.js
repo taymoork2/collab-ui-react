@@ -793,33 +793,19 @@ require('./_user-add.scss');
 
     /* TODO: Refactor this functions into MultipleSubscriptions Controller */
     $scope.selectedSubscriptionHasBasicLicenses = function (subscriptionId) {
-      var hasBasicLicense = false;
-      var basicLicensesInSubscription = [];
-      if ($scope.hasBasicLicenses) {
-        basicLicensesInSubscription = _.filter($scope.basicLicenses, { billing: subscriptionId });
-        _.each(basicLicensesInSubscription, function (subscription) {
-          if (!_.has(subscription, 'site')) {
-            hasBasicLicense = true;
-          }
-        });
-      }
-      return hasBasicLicense;
+      return _.some($scope.basicLicenses, function (service) {
+        if (_.get(service, 'billing') === subscriptionId) {
+          return !_.has(service, 'site');
+        }
+      });
     };
 
     /* TODO: Refactor this functions into MultipleSubscriptions Controller */
     $scope.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
-      var hasAdvancedLicense = false;
-      var advancedLicensesInSubscription = [];
-      if ($scope.hasAdvancedLicenses) {
-        advancedLicensesInSubscription = _.filter($scope.advancedLicenses, { confLic: [{ billing: subscriptionId }] });
-        _.each(advancedLicensesInSubscription, function (subscription) {
-          if (_.has(subscription, 'site')) {
-            hasAdvancedLicense = true;
-          }
-        });
-      }
-
-      return hasAdvancedLicense;
+      var advancedLicensesInSubscription = _.filter($scope.advancedLicenses, { confLic: [{ billing: subscriptionId }] });
+      return _.some(advancedLicensesInSubscription, function (service) {
+        return _.has(service, 'site');
+      });
     };
 
     $scope.isSharedMultiPartyLicense = function (license) {
