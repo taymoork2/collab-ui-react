@@ -24,7 +24,8 @@
   <div ng-if="actions.option" class="aa-panel-lane" name="actionForm">
     <div class="panel-body aa-panel-body" name="{{actions.option.title}}">
       <div class="row aa-flex-row">
-        <h3 class="text-info" translate="{{actions.option.title}}"></h3>
+        <h3 ng-if="actions.option.title1" class="text-info" translate="{{actions.option.title1}}"></h3>
+        <h3 ng-if="!actions.option.title1" class="text-info" translate="{{actions.option.title}}"></h3>
         <aa-help ng-if="actions.option.help" content="{{ :: actions.option.help }}" show-link="actions.option.showHelpLink" metric="{{ :: actions.option.metric }}"></aa-help>
         <div class="aa-action-delete">
           <a ng-click="actions.removeAction(index)">

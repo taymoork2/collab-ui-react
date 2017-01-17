@@ -36,6 +36,8 @@
 
     var rtQueue = 'routeToQueue';
     var fromRouteCall = false;
+    var fromDecision = false;
+
 
     var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
     var periodicTime = '45';
@@ -50,10 +52,10 @@
 
     function openQueueTreatmentModal() {
       // deep copy used to roll back from the modal changes
-      var master = angular.copy(fromRouteCall ? vm.menuEntry.actions[0] : vm.menuKeyEntry.actions[0]);
+      var master = angular.copy(fromRouteCall || fromDecision ? vm.menuEntry.actions[0] : vm.menuKeyEntry.actions[0]);
       openQueueSettings().result.then(function () {
         // keep changes as modal was resolved with close
-        if (fromRouteCall) {
+        if (fromRouteCall || fromDecision) {
           vm.menuEntry.actions[0].description = {
             musicOnHoldDescription: vm.menuEntry.actions[0].queueSettings.musicOnHold.actions[0].description,
             periodicAnnouncementType: vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].name,
@@ -72,7 +74,7 @@
         }
       }, function () {
         // discard changes as modal was dismissed
-        if (fromRouteCall) {
+        if (fromRouteCall || fromDecision) {
           vm.menuEntry.actions[0] = master;
         } else {
           vm.menuKeyEntry.actions[0] = master;
@@ -101,6 +103,9 @@
           },
           aa_from_route_call: function () {
             return $scope.fromRouteCall;
+          },
+          aa_from_decision: function () {
+            return $scope.fromDecision;
           }
         },
         modalClass: 'aa-queue-settings-modal'
@@ -108,12 +113,20 @@
     }
 
     function populateUiModel() {
+      var action;
 
-      if (fromRouteCall) {
-        vm.queueSelected.id = vm.menuEntry.actions[0].getValue();
+      if (fromRouteCall || fromDecision) {
+        action = vm.menuEntry.actions[0];
       } else {
-        vm.queueSelected.id = vm.menuKeyEntry.actions[0].getValue();
+        action = vm.menuKeyEntry.actions[0];
       }
+
+      if (_.get(action, 'name') === 'decision') {
+        action = action.then;
+      }
+
+      vm.queueSelected.id = action.getValue();
+
       try {
         vm.queues = JSON.parse($scope.queues);
         if (vm.queueSelected.id == '' && vm.hideQueues && vm.queues.length > 0) {
@@ -129,8 +142,14 @@
     }
 
     function saveUiModel() {
-      if (fromRouteCall) {
-        vm.menuEntry.actions[0].setValue(vm.queueSelected.id);
+      var action;
+      if (fromRouteCall || fromDecision) {
+        action = vm.menuEntry.actions[0];
+        if (_.get(action, 'name') === 'decision') {
+          action.then.setValue(vm.queueSelected.id);
+        } else {
+          action.setValue(vm.queueSelected.id);
+        }
       } else {
         vm.menuKeyEntry.actions[0].setValue(vm.queueSelected.id);
         if (!_.isEmpty(vm.menuEntry.headers[0].voice)) {
@@ -154,7 +173,13 @@
     // This function is called from activate.
     // It is checking and creating queueSettings (i.e. MoH, IA, PA, FB).
     function activateQueueSettings(menuEntryParam) {
-      var queueSettings = _.get(menuEntryParam, 'actions[0].queueSettings');
+      var action = _.get(menuEntryParam, 'actions[0]');
+
+      if (_.get(action, 'name') === 'decision') {
+        action = action.then;
+      }
+
+      var queueSettings = _.get(action, 'queueSettings');
 
       if (!_.has(queueSettings, 'musicOnHold')) {
         createAction(queueSettings, 'musicOnHold', 'play');
@@ -186,41 +211,76 @@
       }
     }
 
+    function checkForRouteToQueue(action) {
+
+      // make sure action is route To Q not External Number, User, etc
+      if (!(action.getName() === rtQueue)) {
+        action.setName(rtQueue);
+        action.setValue('');
+        delete action.queueSettings;
+      }
+    }
+
     function activate() {
-      if ($scope.fromRouteCall) {
-        var ui = AAUiModelService.getUiModel();
+
+      var ui = AAUiModelService.getUiModel();
+
+      if ($scope.fromDecision) {
+        var decisionAction;
+        fromDecision = true;
+
         vm.uiMenu = ui[$scope.schedule];
         vm.menuEntry = vm.uiMenu.entries[$scope.index];
-        fromRouteCall = true;
-
-        if (vm.menuEntry.actions.length === 0) {
-          action = AutoAttendantCeMenuModelService.newCeActionEntry(rtQueue, '');
-          vm.menuEntry.addAction(action);
-        } else {
-          // make sure action is HG not AA, User, extNum, etc
-          if (!(vm.menuEntry.actions[0].getName() === rtQueue)) {
-            vm.menuEntry.actions[0].setName(rtQueue);
-            vm.menuEntry.actions[0].setValue('');
-          } // else let saved value be used
+        decisionAction = _.get(vm.menuEntry, 'actions[0]', '');
+        if (!decisionAction) {
+          decisionAction = AutoAttendantCeMenuModelService.newCeActionEntry('decision', '');
         }
-        if (!_.has(_.get(vm.menuEntry, 'actions[0]'), 'queueSettings')) {
-          vm.menuEntry.actions[0].queueSettings = {};
+        if (!decisionAction.then) {
+          decisionAction.then = {};
+          decisionAction.then = AutoAttendantCeMenuModelService.newCeActionEntry(rtQueue, '');
+        } else {
+          checkForRouteToQueue(decisionAction.then);
+        }
+
+        if (!_.has(decisionAction.then, 'queueSettings')) {
+          decisionAction.then.queueSettings = {};
         }
 
         activateQueueSettings(vm.menuEntry);
+
       } else {
-        vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-        if ($scope.keyIndex < vm.menuEntry.entries.length) {
-          vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
+
+        if ($scope.fromRouteCall) {
+          vm.uiMenu = ui[$scope.schedule];
+          vm.menuEntry = vm.uiMenu.entries[$scope.index];
+          fromRouteCall = true;
+
+          if (vm.menuEntry.actions.length === 0) {
+            action = AutoAttendantCeMenuModelService.newCeActionEntry(rtQueue, '');
+            vm.menuEntry.addAction(action);
+          } else {
+            checkForRouteToQueue(vm.menuEntry.actions[0]);
+          }
+          if (!_.has(_.get(vm.menuEntry, 'actions[0]'), 'queueSettings')) {
+            vm.menuEntry.actions[0].queueSettings = {};
+          }
+
+          activateQueueSettings(vm.menuEntry);
+
         } else {
-          vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtQueue, '');
-          vm.menuKeyEntry.addAction(action);
+          vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+          if ($scope.keyIndex < vm.menuEntry.entries.length) {
+            vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
+          } else {
+            vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+            var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtQueue, '');
+            vm.menuKeyEntry.addAction(action);
+          }
+          if (!_.has(_.get(vm.menuKeyEntry, 'actions[0]'), 'queueSettings')) {
+            vm.menuKeyEntry.actions[0].queueSettings = {};
+          }
+          activateQueueSettings(vm.menuKeyEntry);
         }
-        if (!_.has(_.get(vm.menuKeyEntry, 'actions[0]'), 'queueSettings')) {
-          vm.menuKeyEntry.actions[0].queueSettings = {};
-        }
-        activateQueueSettings(vm.menuKeyEntry);
       }
 
       populateUiModel();

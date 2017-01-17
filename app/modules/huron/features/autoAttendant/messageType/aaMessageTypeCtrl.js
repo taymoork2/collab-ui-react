@@ -205,7 +205,12 @@
             uiMenu = ui[$scope.schedule];
             vm.menuEntry = uiMenu.entries[$scope.index];
             if ($scope.type) {
-              queueAction = vm.menuEntry.actions[0];
+              queueAction = _.get(vm.menuEntry, 'actions[0]');
+
+              if (_.get(queueAction, 'name') === 'decision') {
+                queueAction = queueAction.then;
+              }
+
               sourceMenu = queueAction.queueSettings[$scope.type];
               vm.actionEntry = getAction(sourceMenu);
             } else {

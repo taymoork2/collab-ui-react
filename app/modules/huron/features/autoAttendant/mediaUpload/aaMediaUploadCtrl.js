@@ -374,7 +374,12 @@
         var ui = AAUiModelService.getUiModel();
         var uiMenu = ui[$scope.schedule];
         vm.menuEntry = uiMenu.entries[$scope.index];
-        queueAction = vm.menuEntry.actions[0];
+        queueAction = _.get(vm.menuEntry, 'actions[0]');
+
+        if (_.get(queueAction, 'name') === 'decision') {
+          queueAction = queueAction.then;
+        }
+
         sourceMenu = queueAction.queueSettings[$scope.type];
         vm.actionEntry = getAction(sourceMenu);
       }

@@ -6,7 +6,7 @@
     .controller('AANewTreatmentModalCtrl', AANewTreatmentModalCtrl);
 
   /* @ngInject */
-  function AANewTreatmentModalCtrl($modalInstance, $translate, $scope, AALanguageService, AACommonService, AutoAttendantCeMenuModelService, AAUiModelService, aa_schedule, aa_menu_id, aa_index, aa_key_index, aa_from_route_call) {
+  function AANewTreatmentModalCtrl($modalInstance, $translate, $scope, AALanguageService, AACommonService, AutoAttendantCeMenuModelService, AAUiModelService, aa_schedule, aa_menu_id, aa_index, aa_key_index, aa_from_route_call, aa_from_decision) {
     var vm = this;
 
     var properties = {
@@ -83,6 +83,12 @@
     var CUSTOM_MOH = 'musicOnHoldUpload';
 
     //////////////////////////////////
+    function chkDecision(action) {
+      if (_.get(action, 'name') === 'decision') {
+        action = action.then;
+      }
+      return action;
+    }
 
     //else the dismiss was called
     function ok() {
@@ -104,9 +110,13 @@
     }
 
     function updateLanguageVoice() {
+      var action;
+
       if (vm.showLanguageAndVoiceOptions) {
-        vm.menuEntry.actions[0].queueSettings.language = vm.languageOption.value;
-        vm.menuEntry.actions[0].queueSettings.voice = vm.voiceOption.value;
+        action = chkDecision(vm.menuEntry.actions[0]);
+
+        action.queueSettings.language = vm.languageOption.value;
+        action.queueSettings.voice = vm.voiceOption.value;
       }
     }
 
@@ -118,7 +128,11 @@
     }
 
     function updateMaxWaitTime() {
-      vm.menuEntry.actions[0].queueSettings.maxWaitTime = vm.maxWaitTime;
+      var action;
+
+      action = chkDecision(vm.menuEntry.actions[0]);
+
+      action.queueSettings.maxWaitTime = vm.maxWaitTime;
     }
 
     //auto set the radio option
@@ -190,11 +204,14 @@
     }
 
     function populateLanguageVoice() {
+      var action;
+
       if (vm.showLanguageAndVoiceOptions) {
         vm.languageOptions.sort(AACommonService.sortByProperty(properties.LABEL));
         vm.voiceOptions.sort(AACommonService.sortByProperty(properties.LABEL));
+        action = chkDecision(vm.menuEntry.actions[0]);
 
-        var voice = vm.menuEntry.actions[0].queueSettings.voice;
+        var voice = action.queueSettings.voice;
 
         vm.voiceOption = AALanguageService.getVoiceOption(voice);
         vm.languageOption = AALanguageService.getLanguageOption(voice);
@@ -240,19 +257,24 @@
 
     //get queueSettings menuEntry -> inner menu entry type (moh, initial, periodic...)
     function setUpEntry() {
+      var action;
+
       if ($scope.keyIndex && $scope.menuId && !$scope.fromRouteCall) { //came from a phone menu
         var phMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         vm.menuEntry = phMenu.entries[$scope.keyIndex];
-      } else { //came from a route call
+      } else { //came from a route call or decision
         var ui = AAUiModelService.getUiModel();
         var rcMenu = ui[$scope.schedule];
         vm.menuEntry = rcMenu.entries[$scope.index];
         vm.showLanguageAndVoiceOptions = true;
       }
-      mohPlayAction = vm.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
-      paAction = vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0];
-      fallbackAction = vm.menuEntry.actions[0].queueSettings.fallback.actions[0];
-      vm.maxWaitTime = vm.menuEntry.actions[0].queueSettings.maxWaitTime;
+
+      action = chkDecision(vm.menuEntry.actions[0]);
+
+      mohPlayAction = action.queueSettings.musicOnHold.actions[0];
+      paAction = action.queueSettings.periodicAnnouncement.actions[0];
+      fallbackAction = action.queueSettings.fallback.actions[0];
+      vm.maxWaitTime = action.queueSettings.maxWaitTime;
     }
 
     function populateScope() {
@@ -261,6 +283,7 @@
       $scope.menuId = aa_menu_id;
       $scope.keyIndex = aa_key_index;
       $scope.fromRouteCall = aa_from_route_call;
+      $scope.fromDecision = aa_from_decision;
     }
 
     function initializeView() {
