@@ -308,7 +308,7 @@
     }; // getEnableT30UnifiedAdmin()
 
     obj.getOrgWebexLicenses = function (orgInfo) {
-      var orgWebexLicenses = null;
+      var orgWebexLicenses = [];
 
       if (null != orgInfo) {
         var customerInfo = _.get(orgInfo, 'data.customers[0]');
@@ -316,16 +316,14 @@
         var custSubscriptions = customerInfo.subscriptions;
 
         if (null != custLicenses) {
-          orgWebexLicenses = custLicenses;
+          orgWebexLicenses = orgWebexLicenses.concat(custLicenses);
         } else if (null != custSubscriptions) {
           custSubscriptions.forEach(
             function (custSubscription) {
               var subscriptionLicenses = custSubscription.licenses;
 
               if (null != subscriptionLicenses) {
-                orgWebexLicenses = (
-                  null == orgWebexLicenses
-                ) ? subscriptionLicenses : orgWebexLicenses.concat(subscriptionLicenses);
+                orgWebexLicenses = orgWebexLicenses.concat(subscriptionLicenses);
               }
             }
           );
