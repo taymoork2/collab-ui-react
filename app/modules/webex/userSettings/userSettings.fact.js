@@ -550,7 +550,7 @@
             var userLicenses = $stateParams.currentUser.licenseID;
             var orgLicenses = WebExUtilsFact.getOrgWebexLicenses(response);
 
-            if (null == orgLicenses) {
+            if (0 >= orgLicenses.size) {
               logMsg = funcName + "\n" +
                 "ERROR - no org licenses found in Atlas!" + "\n" +
                 "userName=" + $stateParams.currentUser.userName + "\n" +

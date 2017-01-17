@@ -349,7 +349,7 @@
 
           var allSitesLicenseInfo = [];
 
-          if (null == licenses) {
+          if (0 >= licenses.size) {
             logMsg = funcName + "\n" +
               "ERROR - no org licenses found in Atlas!" + "\n" +
               "licenses=" + JSON.stringify(licenses);
