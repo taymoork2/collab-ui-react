@@ -19,7 +19,7 @@
     vm.callDateTimeFormat = false;
     vm.isRegionAndVoicemail = function (enabled) {
       return Authinfo.getLicenses().filter(function (license) {
-        return enabled ? (license.licenseType !== Config.licenseTypes.SHARED_DEVICES || license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
+        return enabled ? (license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
       }).length > 0;
     };
 
