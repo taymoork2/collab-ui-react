@@ -644,7 +644,10 @@ require('./_user-add.scss');
                 var hasSyncKms = _.find(data.roles, function (r) {
                   return r === Config.backend_roles.spark_synckms;
                 });
-                if (hasSyncKms) {
+                var hasContextServiceEntitlement = _.find(data.entitlements, function (r) {
+                  return r === Config.entitlements.context;
+                });
+                if (hasSyncKms && hasContextServiceEntitlement) {
                   $scope.radioStates.careRadio = true;
                   $scope.radioStates.initialCareRadioState = true;
                   $scope.enableCareService = true;
@@ -701,7 +704,7 @@ require('./_user-add.scss');
     var generateConfChk = function (confs, cmrs) {
       $scope.confChk = [];
       $scope.allLicenses = [];
-      $scope.standardLicenses = [];
+      $scope.basicLicenses = [];
       $scope.advancedLicenses = [];
 
       var formatLicense = function (site) {
@@ -772,20 +775,35 @@ require('./_user-add.scss');
         $scope.confChk.push(temp);
       }
 
-      // Distinguish between standard license and advanced license types
+      // Distinguish between basic license and advanced license types
       _.forEach($scope.allLicenses, function (license) {
         if (license.site) {
           $scope.advancedLicenses.push(license);
         } else {
-          $scope.standardLicenses.push(license);
+          $scope.basicLicenses.push(license);
         }
       });
 
-      $scope.hasStandardLicenses = !_.isEmpty($scope.standardLicenses);
+      $scope.hasBasicLicenses = !_.isEmpty($scope.basicLicenses);
       $scope.hasAdvancedLicenses = !_.isEmpty($scope.advancedLicenses);
 
       populateConf();
       populateConfInvitations();
+    };
+
+    $scope.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
+      var hasAdvancedLicense = false;
+      var advancedLicensesInSubscription = [];
+      if ($scope.hasAdvancedLicenses) {
+        advancedLicensesInSubscription = _.filter($scope.advancedLicenses, { confLic: [{ billing: subscriptionId }] });
+        _.each(advancedLicensesInSubscription, function (subscription) {
+          if (_.has(subscription, 'site')) {
+            hasAdvancedLicense = true;
+          }
+        });
+      }
+
+      return hasAdvancedLicense;
     };
 
     $scope.isSharedMultiPartyLicense = function (license) {
@@ -793,7 +811,11 @@ require('./_user-add.scss');
     };
 
     $scope.determineLicenseType = function (license) {
-      return $scope.isSharedMultiPartyLicense(license) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.assignedLicenses');
+      return $scope.isSharedMultiPartyLicense(license) ? $translate.instant('firstTimeWizard.sharedLicense') : $translate.instant('firstTimeWizard.namedLicense');
+    };
+
+    $scope.generateLicenseTooltip = function (license) {
+      return $scope.isSharedMultiPartyLicense(license) ? '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.sharedLicenseTooltip') + '</div>' : '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.namedLicenseTooltip') + '</div>';
     };
 
     $scope.isSubscribeable = function (license) {

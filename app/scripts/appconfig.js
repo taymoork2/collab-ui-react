@@ -1403,6 +1403,16 @@
               }
             }
           })
+          .state('reports.media', {
+            url: '/reports/media',
+            views: {
+              'tabContent': {
+                controllerAs: 'nav',
+                controller: 'MediaReportsController',
+                templateUrl: 'modules/mediafusion/reports/media-reports.html'
+              }
+            }
+          })
           .state('reports.care', {
             url: '/reports/care',
             views: {
@@ -3001,41 +3011,6 @@
           });
 
         $stateProvider
-
-          .state('media-service-v2.reports', {
-            url: '/mediaservicereport',
-            templateUrl: 'modules/mediafusion/media-service-report-v2/media-service-reports.tpl.html',
-            controller: 'MediaServiceReportsController',
-            controllerAs: 'nav',
-            parent: 'main',
-            params: {
-              tab: null,
-              siteUrl: null
-            }
-          })
-          .state('media-service-v2.reports-metrics', {
-            url: '/mediaservicereport/metrics',
-            templateUrl: 'modules/mediafusion/media-service-report-v2/media-service-reports.tpl.html',
-            controller: 'MediaServiceReportsController',
-            controllerAs: 'nav',
-            parent: 'main',
-            params: {
-              tab: 'metrics',
-              siteUrl: null
-            }
-          })
-          .state('media-service-v2.reports-meetings', {
-            url: '/mediaservicereport/meetings',
-            templateUrl: 'modules/mediafusion/media-service-report-v2/media-service-reports.tpl.html',
-            controller: 'MediaServiceReportsController',
-            controllerAs: 'nav',
-            parent: 'main',
-            params: {
-              tab: 'meetings',
-              siteUrl: null
-            }
-          })
-
         //V2 API changes
           .state('media-service-v2', {
             templateUrl: 'modules/mediafusion/media-service-v2/overview.html',

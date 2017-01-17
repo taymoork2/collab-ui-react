@@ -1,39 +1,25 @@
 @import 'styles/toolkit/colors';
 
+// Until we merge the code in the Google Calendar page
+// and the other expressways service pages, we have to deal
+// with both .hercules-notifications and google-calendar-notifications-dropdown
+.hercules-notifications,
 google-calendar-notifications-dropdown {
+  position: relative;
   display: flex;
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  border-right: 1px solid $gray-light-3;
 
   .notification-button {
     display: flex;
     align-items: center;
-    padding: 0 2rem;
-
-    &.clickable:hover {
-      cursor: pointer;
-      background-color: $gray-light-3;
-    }
-
-    &.active {
-      background-color: $gray-light-3;
-    }
-  }
-
-  .notification-number {
-    $number-size: 20px;
-
-    width: $number-size;
-    height: $number-size;
-    border-radius: $number-size;
-    line-height: $number-size + 2px;
-    font-size: 12px;
+    padding: 0.375rem 1rem;
     color: #fff;
-    text-align: center;
+    font-size: 14px;
+    border-radius: 2rem;
     background-color: $gray-light-1;
+
+    &.todo {
+      background-color: $color-cta-base;
+    }
 
     &.warning {
       background-color: $color-attention-base;
@@ -41,7 +27,11 @@ google-calendar-notifications-dropdown {
 
     &.alert {
       margin: 0;
-      background-color: $color-alerts-base;
+      background-color: $color-negative-base;
+    }
+
+    &.clickable:hover {
+      cursor: pointer;
     }
   }
 
@@ -49,12 +39,39 @@ google-calendar-notifications-dropdown {
     padding-left: 0.5rem;
   }
 
-  .notification-dropdown {
+  .notification-dropdown-container {
     z-index: 1;
     position: absolute;
     left: 0;
-    top: 100%;
+    top: 50px;
     width: 450px;
+    box-shadow: 0 1px 3px 0 rgba(40, 40, 40, 0.25), inset 0 1px 0 0 rgba(235, 235, 236, 0.5);
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      border-style: solid;
+      display: block;
+      width: 0;
+    }
+
+    &::before {
+      top: -  10px;
+      left: 13px;
+      border-width: 0 11px 11px;
+      border-color: $gray-light-2 transparent;
+    }
+
+    &::after {
+      top: -9px;
+      left: 14px;
+      border-width: 0 10px 10px;
+      border-color: #fff transparent;
+    }
+  }
+
+  .notification-dropdown {
     border: 1px solid $gray-light-2;
     background-color: #fff;
     padding: 0;
@@ -70,6 +87,7 @@ google-calendar-notifications-dropdown {
     display: flex;
     list-style: none;
     padding: 1rem;
+    overflow: hidden;
 
     + .notification-entry {
       border-top: 1px solid $gray-light-3;
@@ -87,7 +105,7 @@ google-calendar-notifications-dropdown {
   }
 
   .notification-entry-details {
-    margin-left: 1rem;
+    margin: 0 1rem;
   }
 
   .notification-entry-title {

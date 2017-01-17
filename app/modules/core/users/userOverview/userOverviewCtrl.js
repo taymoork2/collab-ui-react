@@ -5,8 +5,8 @@
 
   /* @ngInject */
   function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window,
-    Authinfo, FeatureToggleService, Notification, SunlightConfigService,
-    Userservice, UserOverviewService) {
+                            Authinfo, Config, FeatureToggleService, Notification, SunlightConfigService,
+                            Userservice, UserOverviewService) {
     var vm = this;
 
     vm.currentUser = $stateParams.currentUser;
@@ -241,9 +241,12 @@
           SunlightConfigService.getUserInfo(vm.currentUser.id)
             .then(function () {
               var hasSyncKms = _.find(vm.currentUser.roles, function (r) {
-                return r === this.Config.backend_roles.spark_synckms;
+                return r === Config.backend_roles.spark_synckms;
               });
-              if (hasSyncKms) {
+              var hasContextServiceEntitlement = _.find(vm.currentUser.entitlements, function (r) {
+                return r === Config.entitlements.context;
+              });
+              if (hasSyncKms && hasContextServiceEntitlement) {
                 contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
                 vm.services.push(contactCenterState);
               }

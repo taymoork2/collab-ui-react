@@ -2,7 +2,7 @@
   'use strict';
 
   module.exports = angular
-    .module('core.token', [
+    .module('core.auth.token', [
       require('angular-cookies'),
       require('modules/core/config/config'),
       require('modules/core/scripts/services/storage'),

@@ -66,7 +66,11 @@
     };
 
     vm.determineLicenseType = function (service) {
-      return vm.isSharedMultiPartyLicense(service) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.assignedLicenses');
+      return vm.isSharedMultiPartyLicense(service) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.namedLicenses');
+    };
+
+    vm.generateLicenseTooltip = function (service) {
+      return vm.isSharedMultiPartyLicense(service) ? '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.sharedLicenseTooltip') + '</div>' : '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.namedLicenseTooltip') + '</div>';
     };
 
     init();
@@ -124,6 +128,29 @@
           }
         }
       });
+
+      vm.hasAdvancedLicenses = function () {
+        _.each(vm.confServices.services, function (service) {
+          if (_.has(service, 'license.siteUrl')) {
+            return true;
+          }
+        });
+      };
+
+      vm.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
+        var hasAdvancedLicense = false;
+        var advancedLicensesInSubscription = [];
+        if (vm.hasAdvancedLicenses) {
+          advancedLicensesInSubscription = _.filter(vm.confServices.services, { license: { billingServiceId: subscriptionId } });
+          _.each(advancedLicensesInSubscription, function (subscription) {
+            if (_.has(subscription, 'license.siteUrl')) {
+              hasAdvancedLicense = true;
+            }
+          });
+        }
+
+        return hasAdvancedLicense;
+      };
 
       vm.commServices.services = Authinfo.getCommunicationServices() || [];
       _.forEach(vm.commServices.services, function (service) {

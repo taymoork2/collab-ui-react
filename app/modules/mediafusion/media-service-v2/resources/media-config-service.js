@@ -25,7 +25,7 @@
     var getCalliopeUrl = function () {
       return baseCalliopeUrl;
     };
-    var getAthenaServiceUrl = function () {
+    var getAthenaUrl = function () {
       return baseAthenaServiceUrl;
     };
 
@@ -34,7 +34,7 @@
       getV2Url: getV2Url,
       getUSSUrl: getUSSUrl,
       getCalliopeUrl: getCalliopeUrl,
-      getAthenaServiceUrl: getAthenaServiceUrl
+      getAthenaUrl: getAthenaUrl
     };
   }
 })();

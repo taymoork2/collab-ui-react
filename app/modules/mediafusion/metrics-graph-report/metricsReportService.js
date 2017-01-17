@@ -132,16 +132,16 @@
     function adjustCallVolumeData(activeData, returnData, startTime, endTime) {
       var returnDataArray = [];
       var graphItem = {
-        colorOne: chartColors.metricBlue,
-        colorTwo: chartColors.metricYellow,
+        colorOne: chartColors.primaryBase,
+        colorTwo: chartColors.attentionBase,
         balloon: true,
         call_reject: 0,
         active_calls: 0,
         timestamp: null
       };
       var startDate = {
-        colorOne: chartColors.metricBlue,
-        colorTwo: chartColors.metricYellow,
+        colorOne: chartColors.primaryBase,
+        colorTwo: chartColors.attentionBase,
         call_reject: 0,
         active_calls: 0,
         timestamp: startTime
@@ -155,8 +155,8 @@
         returnDataArray.push(tmpItem);
       }
       var endDate = {
-        colorOne: chartColors.metricBlue,
-        colorTwo: chartColors.metricYellow,
+        colorOne: chartColors.primaryBase,
+        colorTwo: chartColors.attentionBase,
         timestamp: endTime
       };
       returnDataArray.push(endDate);

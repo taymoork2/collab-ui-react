@@ -22,7 +22,7 @@
 
     baseVariables['axis'] = {
       'axisColor': '#D7D7D8',
-      'gridColor': chartColors.grayLight,
+      'gridColor': chartColors.grayLightTwo,
       'color': '#6A6B6C',
       'fontFamily': 'CiscoSansTT Light',
       'fontSize': 12,
@@ -34,7 +34,7 @@
     };
 
     baseVariables['legend'] = {
-      'color': chartColors.grayDarkest,
+      'color': chartColors.grayDarkThree,
       'align': 'center',
       'autoMargins': false,
       'switchable': false,
