@@ -68,18 +68,21 @@
       </div>
     </div>
       <!-- paid services: TODO: refactor as a component -->
-    <div class="cs-form__section" ng-if="trial.getPaidServicesForDisplay().length">
+    <div class="cs-form__section" ng-if="trial.paidServicesForDisplay.length">
       <div class="section__info">
         <h4  translate="partnerHomePage.activeServices"></h4>
         <p class="cs-input__help-text" translate="partnerHomePage.activeServicesInformation"></p>
       </div>
       <!-- paid services: TODO: refactor as a component -->
       <div class="section__content">
-        <div class="sub-section" ng-repeat="trial in trial.getPaidServicesForDisplay()">
-          <input type="checkbox" checked  disabled="disabled">
-          <label class="cs-checkbox disabled" for="messageTrial" ng-class="{disabled: disabledBool}">
-            <span >{{::trial.label}} </span>&nbsp;&nbsp;&nbsp;<span translate="common.quantity"></span>: {{::trial.qty}}
-          </label>
+        <div class="sub-section" ng-repeat="org in trial.paidServicesForDisplay">
+          <h5 class="sub-section__label" translate="trials.managedBy" translate-values="{ org: org.org }"></h5>
+          <div class="sub-section" ng-repeat="service in org.services">
+            <input type="checkbox" checked  disabled="disabled">
+            <label class="cs-checkbox disabled" for="messageTrial" ng-class="{disabled: disabledBool}">
+              <span >{{::service.label}} </span>&nbsp;&nbsp;&nbsp;<span translate="common.quantity"></span>: {{::service.qty}}
+            </label>
+          </div>
         </div>
       </div>
     </div>

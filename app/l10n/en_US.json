@@ -3500,8 +3500,8 @@
     "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
     "invalidTrialRoomSystemQuantity": "Number of Licenses should be between 1 and 20.",
-    "invalidTrialCareQuantity": "Number of Licenses must be between 1 and total users or maximum 50.",
-    "careLicenseCountExceedsTotalCount": "Care license requested is more than the total license quantity.",
+    "invalidTrialCareQuantity": "Number of Licenses must be between 1 and message license quantity or maximum 50.",
+    "careLicenseCountExceedsTotalCount": "Care license requested is more than the message license quantity.",
     "individualUserServices": "Individual User Services",
     "roomSystems": "Room Devices",
     "roomSystem": "Room Device",
@@ -3673,7 +3673,9 @@
     "requestConfirmPartialFailNotifyMsg": "Due to an error, notification to some of your account managers at {{partnerOrgName}} of your intent to purchase has failed. Please contact your partner directly.",
     "requestConfirmTotalFailNotifyMsg": "Due to an error, notification of your intent to purchase has failed. Please contact your partner directly",
     "trialDuration": "Trial Duration",
-    "callServiceDisabled": "This service is temporarily unavailable for trial."
+    "callServiceDisabled": "This service is temporarily unavailable for trial.",
+    "managedBy": "Managed by {{org}}",
+    "anotherPartner": "another partner"
   },
   "status": {
     "noResults": "No results available.",

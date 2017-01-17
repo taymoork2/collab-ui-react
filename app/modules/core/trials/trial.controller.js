@@ -42,6 +42,7 @@
     vm.showContextServiceTrial = false;
     vm.showCare = false;
     vm.isCallBackEnabled = false;
+    vm.paidServicesForDisplay = null;
 
     vm.messageTrial = vm.trialData.trials.messageTrial;
     vm.meetingTrial = vm.trialData.trials.meetingTrial;
@@ -64,9 +65,6 @@
     var preset = (!vm.isExistingOrg()) ? getNewOrgPreset() : getExistingOrgPreset();
     var paidServices = (!vm.isExistingOrg()) ? {} : getPaidServices();
     _.extend(vm.paidServices, paidServices);
-    _.assignWith(preset, paidServices, function (oVal, sVal) {
-      return oVal || sVal.qty !== 0;
-    });
     _.extend(vm.preset, preset);
     var stateDefaults = (vm.isNewTrial()) ? getAddModeStateDefaults() : getEditModeStateDefaults();
     _.extend(vm.stateDefaults, stateDefaults);
@@ -167,7 +165,7 @@
       key: 'enabled',
       type: 'checkbox',
       templateOptions: {
-        //label: $translate.instant('trials.call'),
+        label: $translate.instant('trials.call'),
         id: _callTemplateOptionId,
 
         inputClass: 'medium-5 small-offset-1',
@@ -400,7 +398,7 @@
         },
         countWithCare: {
           expression: function () {
-            return careLicenseCountLessThanTotalCount();
+            return careLicenseCountLessThanMessageCount();
           },
           message: function () {
             return $translate.instant('partnerHomePage.careLicenseCountExceedsTotalCount');
@@ -540,14 +538,12 @@
     vm.launchCustomerPortal = launchCustomerPortal;
     vm.showDefaultFinish = showDefaultFinish;
     vm.cancelModal = cancelModal;
-    vm.hasNextStep = hasNextStep;
     vm.getNextState = getNextState;
     vm.hasTrial = hasTrial;
     vm.messageOfferDisabledExpression = messageOfferDisabledExpression;
     vm.careLicenseInputDisabledExpression = careLicenseInputDisabledExpression;
     vm.validateCareLicense = validateCareLicense;
-    vm.careLicenseCountLessThanTotalCount = careLicenseCountLessThanTotalCount;
-    vm.getPaidServicesForDisplay = getPaidServicesForDisplay;
+    vm.careLicenseCountLessThanMessageCount = careLicenseCountLessThanMessageCount;
     vm._helpers = {
       hasEnabled: hasEnabled,
       hasEnabledMessageTrial: hasEnabledMessageTrial,
@@ -562,13 +558,14 @@
       callOfferDisabledExpression: callOfferDisabledExpression,
       careLicenseInputDisabledExpression: careLicenseInputDisabledExpression,
       validateCareLicense: validateCareLicense,
-      careLicenseCountLessThanTotalCount: careLicenseCountLessThanTotalCount,
+      careLicenseCountLessThanMessageCount: careLicenseCountLessThanMessageCount,
       saveTrialPstn: saveTrialPstn,
       saveTrialContext: saveTrialContext,
       getNewOrgInitResults: getNewOrgInitResults,
       getExistingOrgInitResults: getExistingOrgInitResults,
-      getPaidLicenseQty: getPaidLicenseQty,
-      hasOfferType: hasOfferType
+      getPaidLicense: getPaidLicense,
+      hasOfferType: hasOfferType,
+      getPaidServicesForDisplay: getPaidServicesForDisplay
     };
     vm.devicesModal = _.find(vm.trialStates, {
       name: 'trial.call'
@@ -615,6 +612,7 @@
             vm.placesEnabled = results.placesEnabled;
           }
           updateTrialService(_messageTemplateOptionId);
+          vm.paidServicesForDisplay = getPaidServicesForDisplay(Authinfo.getOrgId(), Authinfo.getOrgName());
         })
         .finally(function () {
           $scope.$watch(function () {
@@ -869,11 +867,6 @@
       vm.loading = true;
       sendToAnalytics(Analytics.sections.TRIAL.eventNames.START_TRIAL);
       if (isNewTrial() && isExistingOrg()) {
-        _.each(vm.trialData.trials, function (trial) {
-          if (trial.paid) {
-            trial.enabled = false;
-          }
-        });
         vm.trialData.details.customerEmail = vm.currentTrial.customerEmail;
         vm.trialData.details.customerName = vm.currentTrial.customerName;
       }
@@ -930,20 +923,26 @@
     }
 
 
-    function getPaidLicenseQty(licenseType, offerNames) {
+    function getPaidLicense(licenseType, offerNames, label) {
+      var result = {
+        label: label,
+        qty: 0,
+        partnerOrgId: null
+      };
       if (offerNames && !_.isArray(offerNames)) {
         offerNames = [offerNames];
       }
 
-      var result = _.reduce(vm.currentTrial.licenseList, function (sum, license) {
+      var license = _.reduce(vm.currentTrial.licenseList, function (sum, license) {
         if (license.licenseType === licenseType && !license.isTrial && (!offerNames || _.includes(offerNames, license.offerName))) {
-          return sum + license.volume;
-        } else {
-          return sum;
+          result.qty = result.qty + license.volume;
+          result.partnerOrgId = license.partnerOrgId;
         }
-      }, 0);
+        return result;
 
-      return result;
+      }, result);
+
+      return license;
     }
 
 
@@ -1034,18 +1033,22 @@
         hasEnabledCareTrial(vm.careTrial, vmPreset);
     }
 
+    function hasService(service) {
+      return service.enabled || service.paid > 0;
+    }
+
     function messageOfferDisabledExpression() {
-      if (!vm.messageTrial.enabled) {
+      if (!hasService(vm.messageTrial)) {
         vm.careTrial.enabled = false;
       }
-      return !vm.messageTrial.enabled;
+      return !hasService(vm.messageTrial); //vm.messageTrial.enabled;
     }
 
     function callOfferDisabledExpression() {
-      if (!vm.callTrial.enabled) {
+      if (!hasService(vm.callTrial)) {
         vm.careTrial.enabled = false;
       }
-      return !vm.callTrial.enabled;
+      return !hasService(vm.callTrial);
     }
 
     function careLicenseInputDisabledExpression() {
@@ -1058,8 +1061,10 @@
         $viewValue, $modelValue, vm.details.licenseCount);
     }
 
-    function careLicenseCountLessThanTotalCount() {
-      return (!vm.careTrial.enabled || +vm.details.licenseCount >= +vm.careTrial.details.quantity);
+    function careLicenseCountLessThanMessageCount() {
+      //if we are trying message -- using licenseCount as quantity otherwise if purchased -- use message quantity
+      var messageLicenseCount = (vm.messageTrial.enabled) ? vm.details.licenseCount : vm.messageTrial.paid;
+      return (!vm.careTrial.enabled || messageLicenseCount >= vm.careTrial.details.quantity);
     }
 
     // TODO: this can be refactored as it is mostly a dupe of 'TrialAddCtrl.launchCustomerPortal'
@@ -1147,12 +1152,12 @@
         webex: hasOfferType(Config.trials.meeting, Config.offerTypes.meetings, Config.offerTypes.webex),
         call: hasOfferType(Config.trials.call, Config.offerTypes.call),
         roomSystems: hasOfferType(Config.offerTypes.roomSystems),
-        roomSystemsValue: getServiceLicenseCount(Config.offerTypes.roomSystems, Config.licenseTypes.SHARED_DEVICES, Config.offerCodes.SD), //? _.get(findOffer(Config.offerTypes.roomSystems), 'licenseCount', 0),
+        roomSystemsValue: _.get(findOffer(Config.offerTypes.roomSystems), 'licenseCount', 0),
         sparkBoard: hasOfferType(Config.offerTypes.sparkBoard),
-        sparkBoardValue: getServiceLicenseCount(Config.offerTypes.sparkBoard, Config.licenseTypes.SHARED_DEVICES, Config.offerCodes.SB), //_.get(findOffer(Config.offerTypes.sparkBoard), 'licenseCount', 0),
+        sparkBoardValue: _.get(findOffer(Config.offerTypes.sparkBoard), 'licenseCount', 0),
         licenseDuration: _.get(vm, 'currentTrial.duration', 0),
         care: hasOfferType(Config.offerTypes.care),
-        careLicenseValue: getServiceLicenseCount(Config.offerTypes.care, Config.licenseTypes.CARE), //_.get(findOffer(Config.offerTypes.care), 'licenseCount', 0),
+        careLicenseValue: _.get(findOffer(Config.offerTypes.care), 'licenseCount', 0),
         context: false // we don't know this yet, so default to false
       };
     }
@@ -1160,48 +1165,16 @@
 
     function getPaidServices() {
       return {
-        message: {
-          label: $translate.instant('trials.message'),
-          qty: getPaidLicenseQty(Config.licenseTypes.MESSAGING)
-        },
-        meeting: {
-          label: $translate.instant('trials.meeting'),
-          qty: getPaidLicenseQty(Config.licenseTypes.CONFERENCING, [undefined, Config.offerCodes.CF])
-        },
-        webex: {
-          label: $translate.instant('trials.webex'),
-          qty: getPaidLicenseQty(Config.licenseTypes.CONFERENCING, [Config.offerCodes.EE, Config.offerCodes.MC, Config.offerCodes.SC, Config.offerCodes.TC, Config.offerCodes.EC, Config.offerCodes.CMR])
-        },
-        call: {
-          label: $translate.instant('trials.call'),
-          qty: getPaidLicenseQty(Config.licenseTypes.COMMUNICATION)
-        },
-        roomSystems: {
-          label: $translate.instant('trials.roomSystem'),
-          qty: getPaidLicenseQty(Config.licenseTypes.SHARED_DEVICES, Config.offerCodes.SD)
-        },
-
-        sparkBoard: {
-          label: $translate.instant('trials.sparkBoardSystem'),
-          qty: getPaidLicenseQty(Config.licenseTypes.SHARED_DEVICES, Config.offerCodes.SB)
-        },
-
-        care: {
-          label: $translate.instant('trials.care'),
-          qty: getPaidLicenseQty(Config.licenseTypes.CARE)
-        },
-        context: {
-          label: $translate.instant('trials.context'),
-          qty: 0 // we don't know this yet, so default to false
-        }
+        message: getPaidLicense(Config.licenseTypes.MESSAGING, undefined, $translate.instant('trials.message')),
+        meeting: getPaidLicense(Config.licenseTypes.CONFERENCING, [undefined, Config.offerCodes.CF], $translate.instant('trials.meeting')),
+        webex: getPaidLicense(Config.licenseTypes.CONFERENCING, [Config.offerCodes.EE, Config.offerCodes.MC, Config.offerCodes.SC, Config.offerCodes.TC, Config.offerCodes.EC, Config.offerCodes.CMR], $translate.instant('trials.webex')),
+        call: getPaidLicense(Config.licenseTypes.COMMUNICATION, undefined, $translate.instant('trials.call')),
+        roomSystems: getPaidLicense(Config.licenseTypes.SHARED_DEVICES, Config.offerCodes.SD, $translate.instant('trials.roomSystem')),
+        sparkBoard: getPaidLicense(Config.licenseTypes.SHARED_DEVICES, Config.offerCodes.SB, $translate.instant('trials.sparkBoardSystem')),
+        care: getPaidLicense(Config.licenseTypes.CARE, undefined, $translate.instant('trials.care')),
+        context: getPaidLicense(Config.licenseTypes.CONTEXT, undefined, $translate.instant('trials.context')),
       };
     }
-
-    function getServiceLicenseCount(trialOfferCode, paidLicenseKey, paidOfferCode) {
-      var licenseQty = _.get(findOffer(trialOfferCode), 'volume', 0) + getPaidLicenseQty(paidLicenseKey, paidOfferCode);
-      return licenseQty;
-    }
-
 
     function getAddModeStateDefaults() {
       return {
@@ -1219,10 +1192,29 @@
       return stateDefaults;
     }
 
-    function getPaidServicesForDisplay() {
-      return _.filter(vm.paidServices, function (service) {
+    function getPaidServicesForDisplay(myOrgId, myOrgName) {
+      var result = _.chain(vm.paidServices).filter(function (service) {
         return service.qty > 0;
-      });
+      })
+      .map(function (service) {
+        if (service.partnerOrgId !== myOrgId) {
+          service.partnerOrg = $translate.instant('trials.anotherPartner');
+        } else {
+          service.partnerOrg = myOrgName;
+        }
+        return service;
+      })
+      .groupBy('partnerOrg')
+      .map(function (value, key) {
+        return { org: key, services: value };
+      })
+      .value();
+      // sort so that user's org is on top.
+      var myOrg = _.remove(result, { org: myOrgName });
+      if (myOrg) {
+        result.unshift(myOrg[0]);
+      }
+      return result;
     }
 
     function getNewOrgInitResults(results, hasCallEntitlement, stateDefaults) {
@@ -1255,7 +1247,7 @@
       _.set(initResults, 'messageTrial.enabled', preset.message);
       _.set(initResults, 'messageTrial.paid', paidServices.message.qty);
       _.set(initResults, 'roomSystemTrial.details.quantity', preset.roomSystemsValue || paidServices.roomSystems.qty);
-      _.set(initResults, 'sparkBoardTrial.details.quantity', paidServices.sparkBoardValue || paidServices.sparkBoard.qty);
+      _.set(initResults, 'sparkBoardTrial.details.quantity', preset.sparkBoardValue || paidServices.sparkBoard.qty);
       _.set(initResults, 'careTrial.enabled', preset.care);
       _.set(initResults, 'careTrial.paid', paidServices.care.qty);
       _.set(initResults, 'careTrial.details.quantity', preset.careLicenseValue || paidServices.care.qty);

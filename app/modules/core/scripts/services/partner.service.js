@@ -56,6 +56,7 @@
       getSiteUrls: getSiteUrls,
       isLicenseTypeAny: isLicenseTypeAny,
       getTrialMeetingServices: getTrialMeetingServices,
+      canAdminTrial: canAdminTrial,
       helpers: helpers
     };
 
@@ -883,6 +884,14 @@
         result = _.sortBy(_.union(freeServices, paidServices), 'order');
       }
       return result;
+    }
+
+    function canAdminTrial(licenseList) {
+      //no trials -- can't admin.
+      //right now all services in trial are managed by the same org. So - one matches => all match.
+      //it is possible that partnerOrg is null. In that case -- check email
+      return _.find(licenseList, { isTrial: true, partnerOrgId: Authinfo.getOrgId() }) ||
+      _.find(licenseList, function (license) { return license.isTrial && (license.partnerEmail === Authinfo.getPrimaryEmail()) && _.isNil(license.partnerOrgId); });
     }
 
     function getSiteUrls(customerId) {

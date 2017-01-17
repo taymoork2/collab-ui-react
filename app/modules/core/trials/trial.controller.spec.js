@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: TrialCtrl:', function () {
-  var controller, helpers, $controller, $scope, $state, $q, $translate, $window, $httpBackend, Analytics, Config, Notification, TrialService, TrialContextService, TrialPstnService, HuronCustomer, EmailService, FeatureToggleService, Orgservice;
+  var controller, helpers, $controller, $scope, $state, $q, $translate, $window, $httpBackend, Authinfo, Analytics, Config, Notification, TrialService, TrialContextService, TrialPstnService, HuronCustomer, EmailService, FeatureToggleService, Orgservice;
 
   var stateParams = {};
   var addContextSpy, removeContextSpy, addWatchSpy;
@@ -11,7 +11,7 @@ describe('Controller: TrialCtrl:', function () {
 
 
   afterEach(function () {
-    controller = helpers = $controller = $scope = $state = $q = $translate = $window = $httpBackend = Analytics = Config = Notification = TrialService = TrialContextService = HuronCustomer = FeatureToggleService = Orgservice = undefined;
+    controller = helpers = $controller = $scope = $state = $q = $translate = $window = $httpBackend = Analytics = Authinfo = Config = Notification = TrialService = TrialContextService = HuronCustomer = FeatureToggleService = Orgservice = undefined;
   });
 
   afterAll(function () {
@@ -24,7 +24,7 @@ describe('Controller: TrialCtrl:', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _$q_, _$translate_, _$window_, _$httpBackend_, _Analytics_, _Config_, _EmailService_, _Notification_, _TrialService_, _TrialContextService_, _TrialPstnService_, _HuronCustomer_, _FeatureToggleService_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _$q_, _$translate_, _$window_, _$httpBackend_, _Analytics_, _Authinfo_, _Config_, _EmailService_, _Notification_, _TrialService_, _TrialContextService_, _TrialPstnService_, _HuronCustomer_, _FeatureToggleService_, _Orgservice_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $state = _$state_;
@@ -33,6 +33,7 @@ describe('Controller: TrialCtrl:', function () {
     $window = _$window_;
     $httpBackend = _$httpBackend_;
     Analytics = _Analytics_;
+    Authinfo = _Authinfo_;
     Notification = _Notification_;
     TrialService = _TrialService_;
     TrialContextService = _TrialContextService_;
@@ -572,19 +573,19 @@ describe('Controller: TrialCtrl:', function () {
           });
         });
 
-        describe('careLicenseCountLessThanTotalCount:', function () {
+        describe('careLicenseCountLessThanMessageCount:', function () {
           it('total license count cannot be lesser than Care license count.', function () {
             controller.details.licenseCount = 10;
             controller.careTrial.enabled = true;
             controller.careTrial.details.quantity = 20;
-            expect(helpers.careLicenseCountLessThanTotalCount()).toBeFalsy();
+            expect(helpers.careLicenseCountLessThanMessageCount()).toBeFalsy();
           });
 
           it('total license validation with Care succeeds when careTrial is not enabled.', function () {
             controller.details.licenseCount = 10;
             controller.careTrial.enabled = false;
             controller.careTrial.details.quantity = 20;
-            expect(helpers.careLicenseCountLessThanTotalCount()).toBeTruthy();
+            expect(helpers.careLicenseCountLessThanMessageCount()).toBeTruthy();
           });
         });
       });
@@ -1100,19 +1101,19 @@ describe('Controller: TrialCtrl:', function () {
           });
         });
 
-        describe('careLicenseCountLessThanTotalCount:', function () {
+        describe('careLicenseCountLessThanMessageCount:', function () {
           it('Total license count cannot be lesser than Care license count.', function () {
             controller.details.licenseCount = 10;
             controller.careTrial.enabled = true;
             controller.careTrial.details.quantity = 20;
-            expect(controller.careLicenseCountLessThanTotalCount()).toBeFalsy();
+            expect(controller.careLicenseCountLessThanMessageCount()).toBeFalsy();
           });
 
           it('Total license validation with Care is applicable only when careTrial is enabled.', function () {
             controller.details.licenseCount = 10;
             controller.careTrial.enabled = false;
             controller.careTrial.details.quantity = 20;
-            expect(controller.careLicenseCountLessThanTotalCount()).toBeTruthy();
+            expect(controller.careLicenseCountLessThanMessageCount()).toBeTruthy();
           });
         });
       });
@@ -1204,11 +1205,12 @@ describe('Controller: TrialCtrl:', function () {
       expect(controller).toBeDefined();
     });
 
-    it('should have purchased offer enabled', function () {
+    it('should have purchased offer disabled and set to paid', function () {
       expect(controller.messageTrial.enabled).toBeFalsy();
       expect(controller.meetingTrial.enabled).toBeFalsy();
       expect(controller.webexTrial.enabled).toBeFalsy();
-      expect(controller.roomSystemTrial.enabled).toBeTruthy();
+      expect(controller.roomSystemTrial.enabled).toBeFalsy();
+      expect(controller.roomSystemTrial.paid).not.toBeFalsy();
       expect(controller.sparkBoardTrial.enabled).toBeFalsy();
       expect(controller.callTrial.enabled).toBeFalsy();
       expect(controller.contextTrial.enabled).toBeFalsy();
@@ -1243,7 +1245,7 @@ describe('Controller: TrialCtrl:', function () {
     it('should set call trial to false and disable pstn trial', function () {
       controller.pstnTrial.enabled = true;
       controller.callTrial.enabled = false;
-      controller.roomSystemTrial.enabled = false;
+      controller.roomSystemTrial.enabled = true;
       $scope.$apply();
       $scope.$digest();
       expect(controller.pstnTrial.enabled).toBeFalsy();
@@ -1546,12 +1548,16 @@ describe('Controller: TrialCtrl:', function () {
       initController(stateParams);
     });
 
-    it('have purchased offer enabled', function () {
-      expect(controller.messageTrial.enabled).toBeTruthy();
-      expect(controller.meetingTrial.enabled).toBeTruthy();
+    it('have purchased offer disable', function () {
+      expect(controller.messageTrial.enabled).toBeFalsy();
+      expect(controller.meetingTrial.enabled).toBeFalsy();
+      expect(controller.roomSystemTrial.enabled).toBeTruthy();
+      expect(controller.sparkBoardTrial.enabled).toBeTruthy();
+      expect(controller.webexTrial.enabled).toBeTruthy();
+      expect(controller.callTrial.enabled).toBeFalsy();
     });
 
-    it('have getPaidLicenseQty calculate quantity for purchased services correctly', function () {
+    it('have getPaidLicense calculate quantity for purchased services correctly', function () {
       var meetingLicenses = _.filter(controller.currentTrial.licenseList, { licenseType: 'CONFERENCING', isTrial: false });
       expect(meetingLicenses.length).toBe(2);
       expect(meetingLicenses[0].volume).toBe(69);
@@ -1581,8 +1587,8 @@ describe('Controller: TrialCtrl:', function () {
     });
 
     it('merge trial presets with purchased services', function () {
-      expect(controller.preset.message).toBeTruthy();
-      expect(controller.preset.meeting).toBeTruthy();
+      expect(controller.preset.message).toBeFalsy();
+      expect(controller.preset.meeting).toBeFalsy();
       expect(controller.preset.webex).toBeTruthy();
       expect(controller.preset.call).toBeFalsy();
       expect(controller.preset.roomSystems).toBeTruthy();
@@ -1591,15 +1597,17 @@ describe('Controller: TrialCtrl:', function () {
       expect(controller.preset.context).toBeFalsy();
     });
 
-    it('set purchased services to disabled before calling service to start trial', function () {
-      expect(controller.trialData.trials.messageTrial.enabled).toBeTruthy();
-      expect(controller.trialData.trials.meetingTrial.enabled).toBeTruthy();
-      //message and meeting should be disabled
-      spyOn(TrialService, 'startTrial').and.returnValue($q.when(getJSONFixture('core/json/trials/trialAddResponse.json')));
-      controller.startTrial();
-      $scope.$apply();
-      expect(controller.trialData.trials.messageTrial.enabled).toBeFalsy();
-      expect(controller.trialData.trials.meetingTrial.enabled).toBeFalsy();
+    it('should group purchased services by partner', function () {
+      spyOn(Authinfo, 'getOrgId').and.returnValue('12345');
+      spyOn(Authinfo, 'getOrgName').and.returnValue('My Org Name');
+      var stateParams = {
+        currentTrial: purchasedWithTrialCustomerData,
+        details: {},
+        mode: 'add',
+      };
+      initController(stateParams);
+      expect(controller.paidServicesForDisplay.length).toBe(2);
+      expect(controller.paidServicesForDisplay[0].org).toBe('My Org Name');
     });
 
     it('should populate name and email fields', function () {
