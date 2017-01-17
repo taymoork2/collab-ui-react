@@ -137,7 +137,7 @@
 
     }
     function setIfDecision() {
-      vm.actionEntry.if.leftCondition = vm.ifOption.label;
+      vm.actionEntry.if.leftCondition = vm.ifOption.value;
       switch (vm.ifOption.value) {
         case 'callerReturned':
           vm.actionEntry.if.rightCondition = vm.callerReturnedOption.value;
