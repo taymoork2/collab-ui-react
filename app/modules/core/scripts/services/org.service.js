@@ -132,7 +132,7 @@
     function getAdminOrgUsage(oid) {
       var orgId = oid || Authinfo.getOrgId();
       var adminUrl = UrlConfig.getAdminServiceUrl() + 'customers/' + orgId + '/usage';
-      return $http.get(adminUrl);
+      return $http.get(adminUrl, { cache: true });
     }
 
     function getLicensesUsage() {
