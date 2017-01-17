@@ -4,8 +4,7 @@
   "entitlements": ["squared-call-initiation",
     "squared-fusion-mgmt",
     "webex-squared",
-    "spark-room-system",
-    "contact-center-context"],
+    "spark-room-system"],
   "id": "111",
   "meta": {
     "organizationID": "222"

@@ -644,7 +644,10 @@ require('./_user-add.scss');
                 var hasSyncKms = _.find(data.roles, function (r) {
                   return r === Config.backend_roles.spark_synckms;
                 });
-                if (hasSyncKms) {
+                var hasContextServiceEntitlement = _.find(data.entitlements, function (r) {
+                  return r === Config.entitlements.context;
+                });
+                if (hasSyncKms && hasContextServiceEntitlement) {
                   $scope.radioStates.careRadio = true;
                   $scope.radioStates.initialCareRadioState = true;
                   $scope.enableCareService = true;

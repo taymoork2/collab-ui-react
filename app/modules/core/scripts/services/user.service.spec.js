@@ -81,10 +81,21 @@ describe('User Service', function () {
       .expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/users/onboard')
       .respond(200, testData.onboard_success_response);
     var userId = testData.onboard_success_response.userResponse[0].uuid;
-    $httpBackend.expectPUT(UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() +
-      '/user' + '/' + userId).respond(200);
     $httpBackend.expectGET(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userId).respond(200);
     $httpBackend.expectPATCH(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userId).respond(200);
+    $httpBackend.expectPUT(UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() +
+      '/user' + '/' + userId).respond(200);
+    Userservice.onboardUsers(testData.usersDataArray, testData.entitlements, [testData.sunlight_license]);
+    $httpBackend.flush();
+  });
+
+  it('checkAndPatchSunlightRolesAndEntitlements failure should not send PUT request to Sunlight Config', function () {
+    $httpBackend
+      .expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/users/onboard')
+      .respond(200, testData.onboard_success_response);
+    var userId = testData.onboard_success_response.userResponse[0].uuid;
+    $httpBackend.expectGET(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userId).respond(200);
+    $httpBackend.expectPATCH(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userId).respond(500);
     Userservice.onboardUsers(testData.usersDataArray, testData.entitlements, [testData.sunlight_license]);
     $httpBackend.flush();
   });

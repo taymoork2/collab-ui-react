@@ -460,36 +460,48 @@
         if (_helpers.isSunlightUserUpdateRequired(userLicenses)) {
           var userData = _helpers.createUserData();
           var userId = userResponseSuccess.uuid;
-          SunlightConfigService.updateUserInfo(userData, userId)
-            .then(function () {
-              checkAndPatchSyncKmsRole(userId);
-            })
-            .catch(function (response) {
-              Notification.errorWithTrackingId(response, 'usersPage.careAddUserError');
-            });
+          // Get user to check for roles and entitlements
+          getUser(userId, function (data) {
+            if (data.success) {
+              var hasSyncKms = _.find(data.roles, function (r) {
+                return r === Config.backend_roles.spark_synckms;
+              });
+              var hasContextServiceEntitlement = _.find(data.entitlements, function (r) {
+                return r === Config.entitlements.context;
+              });
+              checkAndPatchSunlightRolesAndEntitlements(userId, hasSyncKms, hasContextServiceEntitlement)
+                .then(function () {
+                  SunlightConfigService.updateUserInfo(userData, userId)
+                    .catch(function (response) {
+                      Notification.errorResponse(response, 'usersPage.careAddUserError');
+                    });
+                })
+                .catch(function (response) {
+                  Notification.errorResponse(response, 'usersPage.careAddUserRoleError');
+                });
+            }
+          });
         }
       });
-
     }
 
-    function checkAndPatchSyncKmsRole(userId) {
-      getUser(userId, function (data) {
-        if (data.success) {
-          var hasSyncKms = _.find(data.roles, function (r) {
-            return r === Config.backend_roles.spark_synckms;
-          });
-          if (!hasSyncKms) {
-            var userRoleData = {
-              schemas: Config.scimSchemas,
-              roles: [Config.backend_roles.spark_synckms]
-            };
-            updateUserProfile(userId, userRoleData)
-              .catch(function (response) {
-                Notification.errorWithTrackingId(response, 'usersPage.careAddUserRoleError');
-              });
-          }
-        }
-      });
+    function checkAndPatchSunlightRolesAndEntitlements(userId, hasSyncKms, hasContextServiceEntitlement) {
+      var userRoleData = {
+        schemas: Config.scimSchemas
+      };
+      if (!hasSyncKms) {
+        userRoleData.roles = [Config.backend_roles.spark_synckms];
+      }
+      if (!hasContextServiceEntitlement) {
+        userRoleData.entitlements = [Config.entitlements.context];
+      }
+      if (!hasSyncKms || !hasContextServiceEntitlement) {
+        return updateUserProfile(userId, userRoleData);
+      } else {
+        var defer = $q.defer();
+        defer.resolve();
+        return defer.promise;
+      }
     }
 
     function createUserData() {
