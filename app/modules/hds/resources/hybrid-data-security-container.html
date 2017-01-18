@@ -3,8 +3,7 @@
     <cs-page-header title="{{hdsServiceController.pageTitle}}" tabs="hdsServiceController.tabs" back="true" back-url="hdsServiceController.backState"></cs-page-header>
     <cs-page-sub-header>
       <cs-page-sub-header-right>
-        <button class="btn btn--people add-resource-button" type="submit" ng-click="hdsServiceController.addResource()"
-                translate="hds.resources.add-resource-button"></button>
+        <add-hybrid-resource-button modal-window-options="hdsServiceController.addResourceModal"></add-hybrid-resource-button>
       </cs-page-sub-header-right>
     </cs-page-sub-header>
 
