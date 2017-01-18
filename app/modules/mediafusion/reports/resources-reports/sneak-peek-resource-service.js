@@ -20,10 +20,11 @@
           return clusterValue === val.cluster;
         });
         if (val.value !== 100 && cluster_name !== "" && cluster_name !== null && !_.isUndefined(cluster_name)) {
-          values.push({ key: cluster_name, value: val.value });
+          ///values.push({ key: cluster_name, value: val.value });
+          values.push(cluster_name + " " + val.value + "%");
         }
       });
-      values = _.orderBy(values, ['value'], ['asc']);
+      //values = _.orderBy(values, ['value'], ['asc']);
 
       if (clusterAvailability && clusterId === vm.allClusters && values.length > 0) {
         isShow = true;
