@@ -32,7 +32,6 @@
       atlasNurturingEmails: 'atlas-nurturing-emails',
       atlasPinSettings: 'atlas-pin-settings',
       atlasPMRonM2: 'atlas-pmr-on-m2',
-      atlasPstnTfn: 'atlas-pstn-tfn',
       atlasReadOnlyAdmin: 'atlas-read-only-admin',
       atlasReportsUpdate: 'atlas-reports-update',
       atlasComplianceRole: 'atlas-compliance-role',

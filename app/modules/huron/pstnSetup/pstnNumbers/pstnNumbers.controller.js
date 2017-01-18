@@ -15,8 +15,7 @@
 
   /* @ngInject */
   function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification,
-      PstnSetup, PstnSetupService, TelephoneNumberService, TerminusStateService, ValidationService,
-      FeatureToggleService) {
+      PstnSetup, PstnSetupService, TelephoneNumberService, TerminusStateService, ValidationService) {
     var vm = this;
 
     vm.provider = PstnSetup.getProvider();
@@ -50,7 +49,7 @@
 
     vm.orderNumbersTotal = 0;
     vm.showPortNumbers = !PstnSetup.getIsTrial();
-    vm.showTollFreeNumbers = null; // Replace with !PstnSetup.getIsTrial(); when feature toggle is removed
+    vm.showTollFreeNumbers = !PstnSetup.getIsTrial();
     var BLOCK_ORDER = PstnSetupService.BLOCK_ORDER;
     var PORT_ORDER = PstnSetupService.PORT_ORDER;
     var NUMBER_ORDER = PstnSetupService.NUMBER_ORDER;
@@ -740,14 +739,6 @@
         getTollFreeInventory();
       }
     });
-
-    function toggleTollFreeNumberFeature() {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasPstnTfn).then(function (result) {
-        vm.showTollFreeNumbers = result;
-      });
-    }
-
-    toggleTollFreeNumberFeature();
 
     // We want to capture the modal close event and clear didList from service.
     if ($state.modal) {
