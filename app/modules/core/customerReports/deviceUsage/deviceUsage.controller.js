@@ -9,7 +9,7 @@ require('modules/core/reports/amcharts-export.scss');
     .controller('DeviceUsageCtrl', DeviceUsageCtrl);
 
   /* @ngInject */
-  function DeviceUsageCtrl($log, $q, $translate, $scope, DeviceUsageTotalService, DeviceUsageGraphService, DeviceUsageExportService, Notification, DeviceUsageSplunkMetricsService, ReportConstants, deviceUsageFeatureToggle, $state, $modal) {
+  function DeviceUsageCtrl($log, $q, $translate, $scope, DeviceUsageTotalService, DeviceUsageGraphService, DeviceUsageDateService, DeviceUsageExportService, Notification, DeviceUsageSplunkMetricsService, ReportConstants, deviceUsageFeatureToggle, $state, $modal) {
     var vm = this;
     var amChart;
     var apiToUse = 'backend';
@@ -89,15 +89,15 @@ require('modules/core/reports/amcharts-export.scss');
       switch (vm.timeSelected.value) {
         case 0:
           loadLastWeek();
-          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
+          dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(7, 'day');
           break;
         case 1:
           loadLastMonth();
-          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(4, 'week');
+          dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(4, 'week');
           break;
         case 2:
           loadLast3Months();
-          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(3, 'month');
+          dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(3, 'month');
           break;
         default:
           loadLastWeek();
@@ -184,20 +184,20 @@ require('modules/core/reports/amcharts-export.scss');
       switch (vm.timeSelected.value) {
         case 0:
           loadLastWeek();
-          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
+          dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(7, 'day');
           break;
         case 1:
           loadLastMonth();
-          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(4, 'week');
+          dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(4, 'week');
           break;
         case 2:
           loadLast3Months();
-          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(3, 'month');
+          dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(3, 'month');
           break;
         default:
           $log.warn("Unknown time period selected");
           loadLastWeek();
-          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
+          dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(7, 'day');
       }
 
     }
