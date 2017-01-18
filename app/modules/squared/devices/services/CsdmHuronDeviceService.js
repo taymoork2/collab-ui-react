@@ -207,6 +207,9 @@
       if (jsonTags.length >= 128) {
         return $q.reject("List of tags is longer than supported.");
       }
+      if (!/^[^"%\\&<>]*$/.test(jsonTags)) {
+        return $q.reject("'" + tags[tags.length - 1] + "' contains invalid character(s).");
+      }
 
       return $http.put(url, {
         description: jsonTags
