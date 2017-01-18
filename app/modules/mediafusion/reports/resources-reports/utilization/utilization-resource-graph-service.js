@@ -180,7 +180,7 @@
 
     function legendHandler(evt) {
       var state = evt.dataItem.hidden;
-      if (evt.dataItem.id == 'all') {
+      if (evt.dataItem.id === 'all') {
         _.forEach(evt.chart.graphs, function (graph) {
           if (graph.id != 'all') {
             evt.chart[state ? 'hideGraph' : 'showGraph'](graph);
