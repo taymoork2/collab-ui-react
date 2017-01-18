@@ -337,6 +337,46 @@ describe('Partner Service -', function () {
     });
   });
 
+  describe('isServiceManagedByCurrentPartner function', function () {
+    var services;
+
+    beforeEach(function () {
+      services = getJSONFixture('core/json/partner/partner.service.json').services;
+      spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(services.messaging.partnerEmail);
+      spyOn(Authinfo, 'getOrgId').and.returnValue(services.messaging.partnerOrgId);
+    });
+
+    it("should return true for messaging service (licensed and managed by current partner)", function () {
+      expect(PartnerService.isServiceManagedByCurrentPartner(services.messaging)).toBe(true);
+    });
+
+    it("should return false for conferencing service (licensed and managed by a different partner)", function () {
+      expect(PartnerService.isServiceManagedByCurrentPartner(services.conferencing)).toBe(false);
+    });
+
+    it("should return true for communications service (not licensed)", function () {
+      expect(PartnerService.isServiceManagedByCurrentPartner(services.communications)).toBe(true);
+    });
+
+    it("should return true for webexEEConferencing service (licensed, without partnerOrdId properties, " +
+    "and managed by current partner)", function () {
+      expect(PartnerService.isServiceManagedByCurrentPartner(services.webexEEConferencing)).toBe(true);
+    });
+
+    it("should return true for roomSystems service (licensed, without partnerEmail properties, " +
+    "and managed by current partner)", function () {
+      expect(PartnerService.isServiceManagedByCurrentPartner(services.roomSystems)).toBe(true);
+    });
+
+    it("should return false for sparkBoard service (licensed and managed by a different partner)", function () {
+      expect(PartnerService.isServiceManagedByCurrentPartner(services.sparkBoard)).toBe(false);
+    });
+
+    it("should return false for care service (licensed and without partnerOrgId or partnerEmail properties)", function () {
+      expect(PartnerService.isServiceManagedByCurrentPartner(services.care)).toBe(false);
+    });
+  });
+
   describe('helper functions -', function () {
     describe('getTrialMeetingServices', function () {
       var licenses;
@@ -918,43 +958,24 @@ describe('Partner Service -', function () {
       });
     });
 
-    describe('isServiceManagedByCurrentPartner ', function () {
+    describe('isServiceNotLicensed function', function () {
       var services;
 
       beforeEach(function () {
         services = getJSONFixture('core/json/partner/partner.service.json').services;
-        spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(services.messaging.partnerEmail);
-        spyOn(Authinfo, 'getOrgId').and.returnValue(services.messaging.partnerOrgId);
       });
 
-      it("should return true for messaging service (licensed and managed by current partner)", function () {
-        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.messaging)).toBe(true);
-      });
-
-      it("should return false for conferencing service (licensed and managed by a different partner)", function () {
-        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.conferencing)).toBe(false);
+      it("should return false for messaging service (licensed)", function () {
+        expect(PartnerService.helpers.isServiceNotLicensed(services.messaging)).toBe(false);
       });
 
       it("should return true for communications service (not licensed)", function () {
-        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.communications)).toBe(true);
+        expect(PartnerService.helpers.isServiceNotLicensed(services.communications)).toBe(true);
       });
 
-      it("should return true for webexEEConferencing service (licensed, without partnerOrdId properties, " +
-      "and managed by current partner)", function () {
-        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.webexEEConferencing)).toBe(true);
-      });
-
-      it("should return true for roomSystems service (licensed, without partnerEmail properties, " +
-      "and managed by current partner)", function () {
-        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.roomSystems)).toBe(true);
-      });
-
-      it("should return false for sparkBoard service (licensed and managed by a different partner)", function () {
-        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.sparkBoard)).toBe(false);
-      });
-
-      it("should return false for care service (licensed and without partnerOrgId or partnerEmail properties)", function () {
-        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.care)).toBe(false);
+      it("should return false for sparkBoard service (licensed, but without volume property)", function () {
+        services.sparkBoard.volume = undefined;
+        expect(PartnerService.helpers.isServiceNotLicensed(services.sparkBoard)).toBe(false);
       });
     });
   });
