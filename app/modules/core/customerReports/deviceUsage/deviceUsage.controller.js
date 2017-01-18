@@ -9,7 +9,7 @@ require('modules/core/reports/amcharts-export.scss');
     .controller('DeviceUsageCtrl', DeviceUsageCtrl);
 
   /* @ngInject */
-  function DeviceUsageCtrl($log, $q, $translate, $scope, DeviceUsageTotalService, DeviceUsageExportService, Notification, DeviceUsageSplunkMetricsService, ReportConstants, deviceUsageFeatureToggle, $state, $modal) {
+  function DeviceUsageCtrl($log, $q, $translate, $scope, DeviceUsageTotalService, DeviceUsageGraphService, DeviceUsageExportService, Notification, DeviceUsageSplunkMetricsService, ReportConstants, deviceUsageFeatureToggle, $state, $modal) {
     var vm = this;
     var amChart;
     var apiToUse = 'backend';
@@ -166,7 +166,7 @@ require('modules/core/reports/amcharts-export.scss');
     }, init);
 
     function init() {
-      var chart = DeviceUsageTotalService.getLineChart();
+      var chart = DeviceUsageGraphService.getLineChart();
       chart.startEffect = 'easeInSine';
       chart.startDuration = 0.5;
       chart.zoomOutOnDataUpdate = true;
@@ -176,7 +176,7 @@ require('modules/core/reports/amcharts-export.scss');
         { event: 'dataUpdated', method: graphRendered },
         { event: 'clickGraphItem', method: graphClick }
       ];
-      amChart = DeviceUsageTotalService.makeChart('device-usage-total-chart', chart);
+      amChart = DeviceUsageGraphService.makeChart('device-usage-total-chart', chart);
       loadInitData();
     }
 
