@@ -6,7 +6,7 @@
     .service('DeviceUsageTotalService', DeviceUsageTotalService);
 
   /* @ngInject */
-  function DeviceUsageTotalService($log, $q, $timeout, $http, DeviceUsageMockData, UrlConfig, Authinfo) {
+  function DeviceUsageTotalService($log, $q, $timeout, $http, DeviceUsageMockData, DeviceUsageDateService, UrlConfig, Authinfo) {
     var localUrlBase = 'http://localhost:8080/atlas-server/admin/api/v1/organization';
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
 
@@ -16,23 +16,8 @@
     var timeoutInMillis = 20000;
     var intervalType = 'day'; // Used as long as week and month is not implemented
 
-    function getDateRangeForLastNTimeUnits(count, granularity) {
-      var start, end;
-      if (granularity === 'day') {
-        start = moment().subtract(count, granularity + 's').format('YYYY-MM-DD');
-        end = moment().subtract(1, granularity + 's').format('YYYY-MM-DD');
-      } else if (granularity === 'week') {
-        start = moment().isoWeekday(1).subtract(count, granularity + 's').format("YYYY-MM-DD");
-        end = moment().isoWeekday(7).subtract(1, granularity + 's').format("YYYY-MM-DD");
-      } else if (granularity === 'month') {
-        start = moment().startOf('month').subtract(count, 'months').format('YYYY-MM-DD');
-        end = moment().startOf('month').subtract(1, 'days').format('YYYY-MM-DD');
-      }
-      return { start: start, end: end };
-    }
-
     function getDataForLastNTimeUnits(count, granularity, deviceCategories, api, missingDaysDeferred) {
-      var dateRange = getDateRangeForLastNTimeUnits(count, granularity);
+      var dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(count, granularity);
       return getDataForRange(dateRange.start, dateRange.end, granularity, deviceCategories, api, missingDaysDeferred);
     }
 
@@ -327,7 +312,6 @@
       extractStats: extractStats,
       resolveDeviceData: resolveDeviceData,
       getDataForLastNTimeUnits: getDataForLastNTimeUnits,
-      getDateRangeForLastNTimeUnits: getDateRangeForLastNTimeUnits,
       reduceAllData: reduceAllData
     };
   }
