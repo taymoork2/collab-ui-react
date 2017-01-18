@@ -119,10 +119,25 @@
       dateLabel = _.replace(dateLabel, /\s/g, '_');
       var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + dateLabel + '_' + new Date();
 
+      graphs.push({
+        'title': 'All',
+        'id': 'all'
+      });
+
       var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       chartData.legend = CommonReportsGraphService.getBaseVariable(LEGEND);
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;
+
+      chartData.legend.listeners = [{
+        'event': 'hideItem',
+        "method": legendHandler
+      }, {
+        'event': 'showItem',
+        'method': legendHandler
+      }];
+
+
       var chart = AmCharts.makeChart(utilizationdiv, chartData);
       chart.addListener('rendered', zoomChart);
       zoomChart(chart);
@@ -161,6 +176,17 @@
 
     function zoomChart(chart) {
       chart.zoomToIndexes(chart.dataProvider.length - 40, chart.dataProvider.length - 1);
+    }
+
+    function legendHandler(evt) {
+      var state = evt.dataItem.hidden;
+      if (evt.dataItem.id == 'all') {
+        _.forEach(evt.chart.graphs, function (graph) {
+          if (graph.id != 'all') {
+            evt.chart[state ? 'hideGraph' : 'showGraph'](graph);
+          }
+        });
+      }
     }
   }
 })();
