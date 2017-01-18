@@ -101,6 +101,7 @@
         type: 'full',
         windowClass: 'assign-clusters-modal',
       }).result.then(function (result) {
+        determineIfRemoveAllowed();
         if (result.change) {
           Notification.success('hercules.resourceGroupSettings.assignSuccess');
         }
