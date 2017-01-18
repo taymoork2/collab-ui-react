@@ -51,17 +51,6 @@ describe('WebEx Sitelist: ' + webExCommon.BTS2.siteUrl + ": ", function () {
       utils.wait(webExCommon.BTS2.isCIID);
     }
   });
-
-  it('should not detect WebEx CSV operation icon', function () {
-    if (setup) {
-      expect(webExCommon.BTS2.csvCogDisabled.isPresent()).toBeFalsy();
-      expect(webExCommon.BTS2.csvCogEnabled.isPresent()).toBeFalsy();
-      expect(webExCommon.BTS2.csvSpinner.isPresent()).toBeFalsy();
-      expect(webExCommon.BTS2.csvResult.isPresent()).toBeFalsy();
-      expect(webExCommon.BTS2.csvIcon.isPresent()).toBeFalsy();
-    }
-  });
-
 });
 
 describe('WebEx Sitelist: ' + webExCommon.BTS1.siteUrl + ": ", function () {
