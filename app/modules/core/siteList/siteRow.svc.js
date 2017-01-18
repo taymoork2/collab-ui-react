@@ -13,7 +13,6 @@
     Authinfo,
     Auth,
     Userservice,
-    FeatureToggleService,
     WebExUtilsFact,
     UrlConfig,
     WebExApiGatewayService,
@@ -24,7 +23,6 @@
       _this.siteRows = {
         gridData: [],
         gridOptions: {},
-        showCSVIconAndResults: false,
       };
     }; // initSiteRowsObj()
 
@@ -55,16 +53,6 @@
         siteUrl: siteUrl
       });
       return siteRow;
-    };
-
-    this.logSiteRows = function () {
-      // var funcName = "logSiteRows()";
-      // var logMsg = funcName + "\n" + JSON.stringify(_this.siteRows.gridData);
-      //      $log.log(logMsg);
-      //      $log.log("_this.siteRows.showGridData = " + _this.siteRows.showGridData + "\n");
-      //      $log.log("_this.siteRows.gridOptions = " + JSON.stringify(_this.siteRows.gridOptions) + "\n");
-      //      $log.log("_this.siteRows.showCSVIconAndResults = " + _this.siteRows.showCSVIconAndResults + "\n");
-
     };
 
     this.stopPolling = function () {
@@ -162,6 +150,7 @@
             conferenceService.showCSVInfo = false;
             conferenceService.csvStatusObj = null;
             conferenceService.csvPollIntervalObj = null;
+            conferenceService.showCSVIconAndResults = true;
 
             conferenceService.isIframeSupported = false;
             conferenceService.isAdminReportEnabled = false;
@@ -177,7 +166,6 @@
             conferenceService.webexAdvancedUrl = null;
             conferenceService.siteUrl = newSiteUrl;
             conferenceService.siteAdminUrl = null;
-
             conferenceService.showLicenseTypes = false;
             conferenceService.multipleWebexServicesLicensed = false;
             conferenceService.licenseTypeContentDisplay = null;
@@ -250,7 +238,7 @@
       // var logMsg = "";
 
       if (!_.isUndefined(Authinfo.getPrimaryEmail())) {
-        _this.checkAndUpdateGridOptions();
+        _this.updateGridColumns();
       } else {
         Userservice.getUser('me', function (data) {
           if (
@@ -258,53 +246,11 @@
             (data.emails)
           ) {
             Authinfo.setEmails(data.emails);
-            _this.checkAndUpdateGridOptions();
+            _this.updateGridColumns();
           }
         });
       }
-
     }; //updateConferenceServices()
-
-    this.checkAndUpdateGridOptions = function () {
-      // var funcName = "checkAndUpdateGridOptions()";
-      // var logMsg = "";
-
-      // logMsg = funcName + "\n" +
-      //   "siteRows.gridData=" + JSON.stringify(_this.siteRows.gridData);
-      // $log.log(logMsg);
-
-      // remove grid column(s) based on feature toggles
-      FeatureToggleService.supports(FeatureToggleService.features.webexCSV).then(
-        function checkWebExFeaturToggleSuccess(adminUserSupportCSV) {
-          // var funcName = "checkAndUpdateGridOptions().checkWebExFeaturToggleSuccess()";
-          // var logMsg = "";
-
-          // logMsg = funcName + "\n" +
-          //   "adminUserSupportCSV=" + adminUserSupportCSV;
-          // $log.log(logMsg);
-
-          // Start of hide CSV info if admin user does not have feature toggle
-          _this.siteRows.gridData.forEach(
-            function processSiteRow(siteRow) {
-              // var funcName = "checkWebExFeaturToggleSuccess().processSiteRow()";
-              // var logMsg = "";
-
-              siteRow.showCSVIconAndResults = adminUserSupportCSV;
-            } // processSiteRow()
-          ); // gridData.forEach()
-
-          _this.updateGridColumns();
-        }, // checkWebExFeaturToggleSuccess()
-
-        function checkWebExFeaturToggleError() {
-          // var funcName = "checkAndUpdateGridOptions().checkWebExFeaturToggleError()";
-          // var logMsg = "";
-
-          _this.updateGridColumns();
-        } // checkWebExFeaturToggleError()
-      ); // FeatureToggleService.supports().then()
-
-    }; //checkAndUpdateGridOptions
 
     this.updateGridColumns = function () {
       // var funcName = "updateGridColumns()";
