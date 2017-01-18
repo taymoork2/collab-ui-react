@@ -75,12 +75,12 @@
       </div>
       <!-- paid services: TODO: refactor as a component -->
       <div class="section__content">
-        <div class="sub-section" ng-repeat="org in trial.paidServicesForDisplay">
-          <h5 class="sub-section__label" translate="trials.managedBy" translate-values="{ org: org.org }"></h5>
-          <div class="sub-section" ng-repeat="service in org.services">
+        <div class="sub-section" ng-repeat="item in trial.paidServicesForDisplay">
+          <h5 class="sub-section__label" translate="trials.managedBy" translate-values="{ org: item.org }"></h5>
+          <div class="sub-section" ng-repeat="paidService in item.services">
             <input type="checkbox" checked  disabled="disabled">
             <label class="cs-checkbox disabled" for="messageTrial" ng-class="{disabled: disabledBool}">
-              <span >{{::service.label}} </span>&nbsp;&nbsp;&nbsp;<span translate="common.quantity"></span>: {{::service.qty}}
+              <span >{{::paidService.label}} </span>&nbsp;&nbsp;&nbsp;<span translate="common.quantity"></span>: {{::paidService.qty}}
             </label>
           </div>
         </div>

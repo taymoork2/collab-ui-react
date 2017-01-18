@@ -540,10 +540,7 @@
     vm.cancelModal = cancelModal;
     vm.getNextState = getNextState;
     vm.hasTrial = hasTrial;
-    vm.messageOfferDisabledExpression = messageOfferDisabledExpression;
-    vm.careLicenseInputDisabledExpression = careLicenseInputDisabledExpression;
     vm.validateCareLicense = validateCareLicense;
-    vm.careLicenseCountLessThanMessageCount = careLicenseCountLessThanMessageCount;
     vm._helpers = {
       hasEnabled: hasEnabled,
       hasEnabledMessageTrial: hasEnabledMessageTrial,
@@ -927,22 +924,35 @@
       var result = {
         label: label,
         qty: 0,
-        partnerOrgId: null
+        licenseItems: []
       };
       if (offerNames && !_.isArray(offerNames)) {
         offerNames = [offerNames];
       }
+      //Iterate through the license list.
+      // If found the matching license matched by licenseType and, if needed, offerName
+      // Add quantity to aggregate.
+      // If this license doesn't exist in the list (matched by orgId): add to array, otherwise: add quantity to the existing license
 
-      var license = _.reduce(vm.currentTrial.licenseList, function (sum, license) {
+      var licenseTypeAggregate = _.reduce(vm.currentTrial.licenseList, function (sum, license) {
         if (license.licenseType === licenseType && !license.isTrial && (!offerNames || _.includes(offerNames, license.offerName))) {
           result.qty = result.qty + license.volume;
-          result.partnerOrgId = license.partnerOrgId;
+          var index = _.findIndex(result.licenseItems, { partnerOrgId: license.partnerOrgId });
+          if (index > -1) {
+            result.licenseItems[index].qty += license.volume;
+          } else {
+            result.licenseItems.push({
+              partnerOrgId: license.partnerOrgId,
+              label: label,
+              qty: license.volume
+            });
+          }
         }
         return result;
 
       }, result);
 
-      return license;
+      return licenseTypeAggregate;
     }
 
 
@@ -1041,7 +1051,7 @@
       if (!hasService(vm.messageTrial)) {
         vm.careTrial.enabled = false;
       }
-      return !hasService(vm.messageTrial); //vm.messageTrial.enabled;
+      return !hasService(vm.messageTrial);
     }
 
     function callOfferDisabledExpression() {
@@ -1062,9 +1072,9 @@
     }
 
     function careLicenseCountLessThanMessageCount() {
-      //if we are trying message -- using licenseCount as quantity otherwise if purchased -- use message quantity
+      //if message in trial -- use licenseCount -- otherwise use purchased quantity
       var messageLicenseCount = (vm.messageTrial.enabled) ? vm.details.licenseCount : vm.messageTrial.paid;
-      return (!vm.careTrial.enabled || messageLicenseCount >= vm.careTrial.details.quantity);
+      return (!vm.careTrial.enabled || +messageLicenseCount >= +vm.careTrial.details.quantity);
     }
 
     // TODO: this can be refactored as it is mostly a dupe of 'TrialAddCtrl.launchCustomerPortal'
@@ -1196,6 +1206,8 @@
       var result = _.chain(vm.paidServices).filter(function (service) {
         return service.qty > 0;
       })
+      .map('licenseItems')
+      .flatten()
       .map(function (service) {
         if (service.partnerOrgId !== myOrgId) {
           service.partnerOrg = $translate.instant('trials.anotherPartner');
@@ -1210,9 +1222,9 @@
       })
       .value();
       // sort so that user's org is on top.
-      var myOrg = _.remove(result, { org: myOrgName });
-      if (myOrg) {
-        result.unshift(myOrg[0]);
+      var myOrgsPaidServices = _.remove(result, { org: myOrgName });
+      if (myOrgsPaidServices.length) {
+        result.unshift(myOrgsPaidServices[0]);
       }
       return result;
     }

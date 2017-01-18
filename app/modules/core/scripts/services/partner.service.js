@@ -887,11 +887,18 @@
     }
 
     function canAdminTrial(licenseList) {
-      //no trials -- can't admin.
-      //right now all services in trial are managed by the same org. So - one matches => all match.
-      //it is possible that partnerOrg is null. In that case -- check email
-      return _.find(licenseList, { isTrial: true, partnerOrgId: Authinfo.getOrgId() }) ||
-      _.find(licenseList, function (license) { return license.isTrial && (license.partnerEmail === Authinfo.getPrimaryEmail()) && _.isNil(license.partnerOrgId); });
+      // no trials -- can't admin.
+      // right now all services in trial are managed by the same org. So - one matches => all match.
+      // it is possible that partnerOrg is null. In that case -- check email
+      return !!_.find(licenseList, function (license) {
+        var partnerOrgId = _.get(license, 'partnerOrgId');
+        if (license.isTrial) {
+          if (_.isNil(partnerOrgId)) {
+            return _.get(license, 'partnerEmail') === Authinfo.getPrimaryEmail();
+          }
+          return partnerOrgId === Authinfo.getOrgId();
+        }
+      });
     }
 
     function getSiteUrls(customerId) {

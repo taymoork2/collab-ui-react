@@ -300,7 +300,7 @@ describe('Partner Service -', function () {
     var licenses;
     beforeEach(function () {
       licenses = _.cloneDeep(testData.licenses);
-      _.each(licenses, function (license) {
+      _.forEach(licenses, function (license) {
         license.isTrial = true;
         license.partnerOrgId = 'other-partner-org2-id';
         license.partnerEmail = 'otherPartner@othercompany.com';
@@ -312,21 +312,20 @@ describe('Partner Service -', function () {
     });
 
     it('should return false if the partnerOrgId property on any license does not match the org id of the logged in user', function () {
-      expect(PartnerService.canAdminTrial(licenses)).toBeFalsy();
+      expect(PartnerService.canAdminTrial(licenses)).toBe(false);
     });
 
     it('should return true if the partnerOrgId property on any license matches the org id of the logged in user', function () {
       licenses[1].partnerOrgId = '12345';
-      expect(PartnerService.canAdminTrial(licenses)).toBeTruthy();
-         // return 'fake-primaryEmail';
+      expect(PartnerService.canAdminTrial(licenses)).toBe(true);
     });
 
-    it('should return if the partnerOrgId property is underfined and email in any service matches the email of the logged in user', function () {
+    it('should return if the partnerOrgId property is undefined and email in any service matches the email of the logged in user', function () {
       _.each(licenses, function (license) {
         license.partnerOrgId = undefined;
       });
       licenses[0].partnerEmail = 'fake-primaryEmail';
-      expect(PartnerService.canAdminTrial(licenses)).toBeTruthy();
+      expect(PartnerService.canAdminTrial(licenses)).toBe(true);
     });
 
     it('should return false if the partnerOrgId is null and email is null in all services', function () {
@@ -334,7 +333,7 @@ describe('Partner Service -', function () {
         license.partnerOrgId = undefined;
         license.partnerEmail = undefined;
       });
-      expect(PartnerService.canAdminTrial(licenses)).toBeFalsy();
+      expect(PartnerService.canAdminTrial(licenses)).toBe(false);
     });
   });
 

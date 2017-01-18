@@ -1049,11 +1049,11 @@ describe('Controller: TrialCtrl:', function () {
         describe('messageOfferDisabledExpression:', function () {
           it('should be disabled if message is disabled.', function () {
             controller.messageTrial.enabled = false;
-            expect(controller.messageOfferDisabledExpression()).toBeTruthy();
+            expect(controller._helpers.messageOfferDisabledExpression()).toBeTruthy();
             expect(controller.careTrial.enabled).toBeFalsy();
 
             controller.messageTrial.enabled = true;
-            expect(controller.messageOfferDisabledExpression()).toBeFalsy();
+            expect(controller._helpers.messageOfferDisabledExpression()).toBeFalsy();
             //Care is a choice to enable/disable when Message is enabled.
             expect(controller.careTrial.enabled).toBeFalsy();
           });
@@ -1063,21 +1063,21 @@ describe('Controller: TrialCtrl:', function () {
           it('care license count disabled expression works correctly.', function () {
             controller.careTrial.enabled = true;
             controller.careTrial.details.quantity = CARE_LICENSE_COUNT;
-            expect(controller.careLicenseInputDisabledExpression()).toBeFalsy();
+            expect(controller._helpers.careLicenseInputDisabledExpression()).toBeFalsy();
             expect(controller.careTrial.details.quantity).toEqual(CARE_LICENSE_COUNT);
           });
 
           it('care license count resets to 0 when disabled.', function () {
             controller.careTrial.details.quantity = CARE_LICENSE_COUNT;
             controller.careTrial.enabled = false;
-            expect(controller.careLicenseInputDisabledExpression()).toBeTruthy();
+            expect(controller._helpers.careLicenseInputDisabledExpression()).toBeTruthy();
             expect(controller.careTrial.details.quantity).toEqual(0);
           });
 
           it('care license count shows default value when enabled.', function () {
             controller.careTrial.details.quantity = 0;
             controller.careTrial.enabled = true;
-            expect(controller.careLicenseInputDisabledExpression()).toBeFalsy();
+            expect(controller._helpers.careLicenseInputDisabledExpression()).toBeFalsy();
             expect(controller.careTrial.details.quantity).toEqual(CARE_LICENSE_COUNT_DEFAULT);
           });
         });
@@ -1106,14 +1106,14 @@ describe('Controller: TrialCtrl:', function () {
             controller.details.licenseCount = 10;
             controller.careTrial.enabled = true;
             controller.careTrial.details.quantity = 20;
-            expect(controller.careLicenseCountLessThanMessageCount()).toBeFalsy();
+            expect(controller._helpers.careLicenseCountLessThanMessageCount()).toBeFalsy();
           });
 
           it('Total license validation with Care is applicable only when careTrial is enabled.', function () {
             controller.details.licenseCount = 10;
             controller.careTrial.enabled = false;
             controller.careTrial.details.quantity = 20;
-            expect(controller.careLicenseCountLessThanMessageCount()).toBeTruthy();
+            expect(controller._helpers.careLicenseCountLessThanMessageCount()).toBeTruthy();
           });
         });
       });
@@ -1548,7 +1548,7 @@ describe('Controller: TrialCtrl:', function () {
       initController(stateParams);
     });
 
-    it('have purchased offer disable', function () {
+    it('have purchased offer disabled', function () {
       expect(controller.messageTrial.enabled).toBeFalsy();
       expect(controller.meetingTrial.enabled).toBeFalsy();
       expect(controller.roomSystemTrial.enabled).toBeTruthy();
