@@ -1374,7 +1374,8 @@
     "warning": {
       "siteSteering": "First digit of Voicemail Access Prefix conflicts with the first digit of an internal extension range. If you use this prefix, it may cause a delay when dialing extensions starting with the same number.",
       "outboundDialDigit": "Outbound Dial Digit conflicts with the first digit of an internal extension range. If you use this digit, it may cause a delay when dialing extensions starting with the same number.",
-      "localDialing": "To use local dialing, you must setup your PSTN service. Contact your partner admin to begin PSTN service setup."
+      "localDialing": "To use local dialing, you must setup your PSTN service. Contact your partner admin to begin PSTN service setup.",
+      "outboundDialing": "The outbound dial digit is only applicable when using a PSTN service. Contact your partner admin to begin PSTN setup."
     },
     "saveModal": {
       "title": "Dial Plan Settings",
