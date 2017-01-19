@@ -751,7 +751,7 @@
     "drilldownTitle": "Most Active Users {{time}}",
     "drilldownDescription": "{{time}}, these are the most active users. The table can be sorted by user’s name or total number of contacts handled.",
     "drilldownErrorDescription": "This data is temporarily unavailable. Our servers are working to return it soon, please check back again shortly.",
-    "drilldownEmptyDescription": "During the last {{interval}} there have been no active users. To see user status and resend invitations to those still pending, visit the users tab.",
+    "drilldownEmptyDescription": "{{time}}, there have been no active users. To see user status and resend invitations to those still pending, visit the users tab.",
     "contactsHandled": "Contacts Handled",
     "user": "User",
     "drilldownSearchPlaceholder": "Search"
@@ -764,7 +764,7 @@
     "drilldownTitle": "Most efficient Users {{time}}",
     "drilldownDescription": "{{time}}, these are the users who handled tasks efficiently with less handle time. The table can be sorted by user’s name or average handle time.",
     "drilldownErrorDescription": "This data is temporarily unavailable. Our servers are working to return it soon, please check back again shortly.",
-    "drilldownEmptyDescription": "During the last {{interval}} there have been no active users. To see user status and resend invitations to those still pending, visit the users tab.",
+    "drilldownEmptyDescription": "{{time}}, there have been no active users. To see user status and resend invitations to those still pending, visit the users tab.",
     "averageHandleTime": "Average Handle Time",
     "user": "User",
     "drilldownSearchPlaceholder": "Search"
@@ -777,7 +777,7 @@
     "drilldownTitle": "Highest Rated Users {{time}}",
     "drilldownDescription": "{{time}}, these are the users who got the best CSAT ratings. The table can be sorted by user’s name or averege CSAT rating.",
     "drilldownErrorDescription": "This data is temporarily unavailable. Our servers are working to return it soon, please check back again shortly.",
-    "drilldownEmptyDescription": "During the last {{interval}} there have been no active users. To see user status and resend invitations to those still pending, visit the users tab.",
+    "drilldownEmptyDescription": "{{time}}, there have been no active users. To see user status and resend invitations to those still pending, visit the users tab.",
     "user": "User",
     "averageCsat": "Average CSAT",
     "drilldownSearchPlaceholder": "Search"

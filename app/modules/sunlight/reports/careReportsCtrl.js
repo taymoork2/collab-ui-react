@@ -5,13 +5,13 @@
   /* @ngInject */
   function CareReportsController($log, $q, $scope, $timeout, $translate, CardUtils, CareReportsService, DrillDownReportProps, DummyCareReportService, FeatureToggleService, Notification, ReportConstants, SunlightReportService) {
     var vm = this;
-    vm.REFRESH = 'refresh';
-    vm.SET = 'set';
-    vm.EMPTY = 'empty';
+    var REFRESH = 'refresh';
+    var SET = 'set';
+    var EMPTY = 'empty';
 
-    vm.dataStatus = vm.REFRESH;
-    vm.tableDataStatus = vm.EMPTY;
-    vm.snapshotDataStatus = vm.REFRESH;
+    vm.dataStatus = REFRESH;
+    vm.tableDataStatus = EMPTY;
+    vm.snapshotDataStatus = REFRESH;
     vm.taskIncomingDescription = "";
     vm.taskTimeDescription = "";
     vm.averageCsatDescription = "";
@@ -81,9 +81,9 @@
     vm.callbackFeature = false;
 
     function filtersUpdate() {
-      vm.dataStatus = vm.REFRESH;
-      vm.snapshotDataStatus = vm.REFRESH;
-      vm.tableDataStatus = vm.EMPTY;
+      vm.dataStatus = REFRESH;
+      vm.snapshotDataStatus = REFRESH;
+      vm.tableDataStatus = EMPTY;
       vm.tableData = [];
       setFilterBasedTextForCare();
 
@@ -98,9 +98,9 @@
 
     function saveReportingAndUserData(mergedData) {
       if (mergedData && mergedData.length > 0) {
-        vm.tableDataStatus = vm.SET;
+        vm.tableDataStatus = SET;
       } else {
-        vm.tableDataStatus = vm.EMPTY;
+        vm.tableDataStatus = EMPTY;
       }
       vm.tableData = mergedData;
       return $q.resolve(vm.tableData);
@@ -116,7 +116,7 @@
     }
 
     vm.showTable = function (onSuccess, onError) {
-      if (vm.tableDataStatus === vm.SET) {
+      if (vm.tableDataStatus === SET) {
         onSuccess(vm.tableData);
         return $q.resolve(vm.tableData);
       } else if (vm.tableDataPromise) {
@@ -128,7 +128,7 @@
     };
 
     function collapseDrilldownReports() {
-      $log.warn("Sending Broadcast to reset...");
+      $log.info("Sending Broadcast to reset...");
       $scope.$broadcast(DrillDownReportProps.broadcastReset, {});
     }
 
@@ -159,16 +159,16 @@
       return SunlightReportService.getReportingData('org_stats', vm.timeSelected.value, vm.mediaTypeSelected.name)
         .then(function (data) {
           if (data.length === 0) {
-            vm.dataStatus = vm.EMPTY;
+            vm.dataStatus = EMPTY;
           } else {
-            vm.dataStatus = vm.SET;
+            vm.dataStatus = SET;
             CareReportsService.showTaskIncomingGraph('taskIncomingdiv', data, categoryAxisTitle, isToday);
             CareReportsService.showTaskTimeGraph('taskTimeDiv', data, categoryAxisTitle, isToday);
             CareReportsService.showAverageCsatGraph('averageCsatDiv', data, categoryAxisTitle, isToday);
             resizeCards();
           }
         }, function (data) {
-          vm.dataStatus = vm.EMPTY;
+          vm.dataStatus = EMPTY;
           Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Customer Satisfaction' }));
           if (!isToday) {
             Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Contact Time Measure' }));
@@ -182,25 +182,25 @@
       SunlightReportService.getReportingData('org_snapshot_stats', vm.timeSelected.value, vm.mediaTypeSelected.name, isSnapshot)
         .then(function (data) {
           if (data.length === 0) {
-            vm.snapshotDataStatus = vm.EMPTY;
+            vm.snapshotDataStatus = EMPTY;
           } else {
-            vm.snapshotDataStatus = vm.SET;
+            vm.snapshotDataStatus = SET;
             CareReportsService.showTaskAggregateGraph('taskAggregateDiv', data, vm.timeSelected.categoryAxisTitle);
             resizeCards();
           }
         }, function (data) {
-          vm.snapshotDataStatus = vm.EMPTY;
+          vm.snapshotDataStatus = EMPTY;
           Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Aggregated Contacts' }));
         });
     }
 
     // Graph data status checks
     vm.isRefresh = function (tab) {
-      return tab === vm.REFRESH;
+      return tab === REFRESH;
     };
 
     vm.isEmpty = function (tab) {
-      return tab === vm.EMPTY;
+      return tab === EMPTY;
     };
 
     function showReportsWithDummyData() {
