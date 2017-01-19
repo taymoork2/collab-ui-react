@@ -55,7 +55,7 @@ require('./_user-preview.scss');
       };
 
       $scope.determineLicenseType = function (siteUrl) {
-        return $scope.isSharedMultiPartyLicense(siteUrl) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.assignedLicenses');
+        return $scope.isSharedMultiPartyLicense(siteUrl) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.namedLicenses');
       };
     }
   }

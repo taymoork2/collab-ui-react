@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Directive: csvDownload', function () {
-  var $compile, $rootScope, $scope, $timeout, $httpBackend, Analytics, CsvDownloadService, FeatureToggleService, $q, $window, element;
+  var $compile, $rootScope, $scope, $timeout, $httpBackend, Analytics, CsvDownloadService, FeatureToggleService, $q, $window, element, UrlConfig;
 
   afterEach(function () {
     if (element) {
@@ -13,8 +13,9 @@ describe('Directive: csvDownload', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_$compile_, _$q_, _$rootScope_, _$timeout_, _$window_, _Analytics_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$compile_, _$q_, _$rootScope_, _$timeout_, _$window_, _Analytics_, _FeatureToggleService_, _UrlConfig_) {
     FeatureToggleService = _FeatureToggleService_;
+    UrlConfig = _UrlConfig_;
     $compile = _$compile_;
     $timeout = _$timeout_;
     $rootScope = _$rootScope_;
@@ -60,8 +61,9 @@ describe('Directive: csvDownload', function () {
   describe("Browser: Firefox, Chrome, and cross-browser tests", function () {
 
     beforeEach(inject(function (_$httpBackend_) {
+      var url = UrlConfig.getAdminServiceUrl() + 'csv/organizations/null/users/template';
       $httpBackend = _$httpBackend_;
-      $httpBackend.when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/csv/organizations/null/users/template').respond({});
+      $httpBackend.when('GET', url).respond({});
       $window.navigator.msSaveOrOpenBlob = undefined;
     }));
 

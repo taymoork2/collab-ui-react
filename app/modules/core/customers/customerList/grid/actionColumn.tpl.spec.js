@@ -58,6 +58,7 @@
       spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
         $q.when(true)
       );
+      spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(false));
     }
 
     function compileViewWithMockData(mockData) {

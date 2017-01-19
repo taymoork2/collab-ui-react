@@ -1,8 +1,0 @@
-<div class="tooltipDiv">
-<h1 translate ='mediaFusion.metrics.lowAvailableClusters'></h1>
-<hr>
-	<div ng-repeat="option in nav.clusterAvailabilityArray | limitTo:5">
-	<a ng-click="nav.clusterUpdateFromTooltip(option.clusterName)"
-	ng-class="{lowPerformingCluster: option.clusterAvailability < 90, performingCluster: option.clusterAvailability > 90}">
-	{{option.clusterName}}: {{option.clusterAvailability}}%</a></div>
-</div>

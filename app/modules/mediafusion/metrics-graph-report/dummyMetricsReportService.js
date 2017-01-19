@@ -19,7 +19,7 @@
       var start;
       var end;
       var duration;
-      var color = chartColors.dummyGray;
+      var color = chartColors.grayLightTwo;
       var period;
       if (filter.value === 0) {
         end = moment().utc().format(timeFormat);
@@ -90,8 +90,8 @@
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
-            colorOne: chartColors.dummyGrayLight,
-            colorTwo: chartColors.dummyGray
+            colorOne: chartColors.grayLightThree,
+            colorTwo: chartColors.grayLightTwo
           });
         }
       } else if (filter.value === 1) {
@@ -101,8 +101,8 @@
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
-            colorOne: chartColors.dummyGrayLight,
-            colorTwo: chartColors.dummyGray
+            colorOne: chartColors.grayLightThree,
+            colorTwo: chartColors.grayLightTwo
           });
         }
       } else if (filter.value === 2) {
@@ -112,8 +112,8 @@
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
-            colorOne: chartColors.dummyGrayLight,
-            colorTwo: chartColors.dummyGray
+            colorOne: chartColors.grayLightThree,
+            colorTwo: chartColors.grayLightTwo
           });
         }
       } else {
@@ -123,8 +123,8 @@
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
-            colorOne: chartColors.dummyGrayLight,
-            colorTwo: chartColors.dummyGray
+            colorOne: chartColors.grayLightThree,
+            colorTwo: chartColors.grayLightTwo
           });
         }
       }
@@ -175,7 +175,7 @@
         title: vm.average_utilzation,
         valueField: vm.average_utilzation,
         dashLength: 4,
-        lineColor: chartColors.dummyGray,
+        lineColor: chartColors.grayLightTwo,
         showBalloon: false
       });
       return dummyGraph;

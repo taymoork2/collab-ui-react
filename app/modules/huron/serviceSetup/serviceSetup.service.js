@@ -35,13 +35,6 @@
         }).$promise;
       },
 
-      updateSite: function (siteUuid, site) {
-        return SiteService.update({
-          customerId: Authinfo.getOrgId(),
-          siteId: siteUuid
-        }, site).$promise;
-      },
-
       getAvrilSite: function (siteUuid) {
         return AvrilSiteUpdateService.get({
           customerId: Authinfo.getOrgId(),
@@ -49,20 +42,28 @@
         }).$promise;
       },
 
-      updateAvrilSiteVoicemail: function (siteUuid, features) {
+      updateSite: function (siteUuid, site) {
+        return SiteService.update({
+          customerId: Authinfo.getOrgId(),
+          siteId: siteUuid
+        }, site).$promise;
+      },
+
+      updateAvrilSite: function (siteUuid, features) {
         return AvrilSiteUpdateService.update({
           customerId: Authinfo.getOrgId(),
           siteId: siteUuid
         }, features).$promise;
       },
 
-      updateAvrilSite: function (siteUuid, siteStrDigit, code, timeZone, extLength, voicemailPilotNumber) {
+      createAvrilSite: function (siteUuid, siteStrDigit, code, lang, timezone, extLength, voicemailPilotNumber) {
         return AvrilSiteService.save({
           customerId: Authinfo.getOrgId(),
           guid: siteUuid,
           siteCode: code,
           siteSteeringDigit: siteStrDigit,
-          timezone: timeZone,
+          language: lang,
+          timeZone: timezone,
           extensionLength: extLength,
           pilotNumber: voicemailPilotNumber
         }).$promise;

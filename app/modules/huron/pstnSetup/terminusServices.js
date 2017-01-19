@@ -98,18 +98,7 @@
 
   /* @ngInject */
   function TerminusOrderV2Service($resource, HuronConfig) {
-    return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId/numbers/orders/:orderId', {}, {
-      query: {
-        method: 'GET',
-        isArray: false,
-        cache: false
-      },
-      get: {
-        method: 'GET',
-        isArray: true,
-        cache: false
-      }
-    });
+    return $resource(HuronConfig.getTerminusV2Url() + '/customers/:customerId/numbers/orders/:orderId', {}, {});
   }
 
   /* @ngInject */

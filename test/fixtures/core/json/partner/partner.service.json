@@ -185,7 +185,8 @@
           "volume": 100,
           "isTrial": true,
           "trialId": "7db0f7c1-a961-41dd-995e-ef4eb204cc72",
-          "status": "PENDING"
+          "status": "PENDING",
+          "partnerEmail": "partner@company.com"
         }, {
           "licenseId": "CF_4de94b6e-8e5a-4901-a837-8951720daf87",
           "offerName": "CF",
@@ -198,7 +199,8 @@
           "volume": 100,
           "isTrial": true,
           "trialId": "7db0f7c1-a961-41dd-995e-ef4eb204cc72",
-          "status": "PENDING"
+          "status": "PENDING",
+          "partnerEmail": "otherpartner@othercompany.com"
         }, {
           "licenseId": "CDC_237397c1-7aa0-4f46-8803-98a3a80a81e2",
           "offerName": "CDC",
@@ -212,7 +214,8 @@
           "volume": 100,
           "isTrial": true,
           "trialId": "7db0f7c1-a961-41dd-995e-ef4eb204cc72",
-          "status": "PENDING"
+          "status": "PENDING",
+          "partnerEmail": "partner@company.com"
         }],
         "state": "ACTIVE",
         "createdBy": "17256dc8-db74-41b5-8a7c-e20e4f594a0a",
@@ -543,7 +546,6 @@
     "customerEmail": "collabctg+Atlas_Test_Trial_vt453w4p8d@gmail.com",
     "trialId": "7db0f7c1-a961-41dd-995e-ef4eb204cc72",
     "isAllowedToManage": false,
-    "status": "ACTIVE",
     "createdDate": "2015-08-05T00:00:00.000Z"
   }, {
     "customerOrgId": "1803daee-4247-4d67-a812-932382682642",
@@ -589,7 +591,6 @@
     "customerEmail": "collabctg+Atlas_Test_Trial_t81tts9by9@gmail.com",
     "trialId": "f4c2397f-75a3-4a00-8e93-fe6aa2b9890f",
     "isAllowedToManage": false,
-    "status": "ACTIVE",
     "daysLeft": 0,
     "isTrial": true,
     "createdDate": "2015-08-19T00:00:00.000Z"
@@ -815,7 +816,6 @@
     "customerName": "Atlas_Test_Trial_t81tts9by9",
     "customerEmail": "collabctg+Atlas_Test_Trial_t81tts9by9@gmail.com",
     "isAllowedToManage": false,
-    "status": "ACTIVE",
     "daysLeft": 0,
     "isTrial": false,
     "createdDate": "2015-08-19T00:00:00.000Z"
@@ -976,5 +976,113 @@
     "licenseType": "CONFERENCING",
     "volume": 100,
     "isTrial": true
-  }]
+  }],
+  "services": {
+    "messaging": {
+      "customerName": "Atlas_Test_MikeM193",
+      "daysLeft": 46,
+      "sortOrder": 1,
+      "licenseId": "MS_3ec3ce66-58d7-49e8-9721-837212c19998",
+      "offerName": "MS",
+      "licenseType": "MESSAGING",
+      "features": [
+        "squared-room-moderation"
+      ],
+      "volume": 100,
+      "isTrial": true,
+      "trialId": "f76198f1-a393-405b-aa6f-4be9ef9be025",
+      "status": "ACTIVE",
+      "partnerOrgId": "d69426bf-0ace-4c53-bc65-cd5a5c25b610",
+      "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
+    },
+    "conferencing": {
+      "customerName": "Atlas_Test_MikeM193",
+      "licenseId": "CF_cd921f94-6529-4971-ba49-ce8f09e70bae",
+      "offerName": "CF",
+      "licenseType": "CONFERENCING",
+      "features": [
+        "squared-syncup"
+      ],
+      "volume": 100,
+      "isTrial": false,
+      "billingServiceId": "Test-Sub-1234abcd",
+      "status": "ACTIVE",
+      "daysLeft": 46,
+      "sortOrder": 1,
+      "partnerOrgId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
+      "partnerEmail": "marvelpartners@gmail.com"
+    },
+    "communications": {
+      "customerName": "Atlas_Test_MikeM193",
+      "status": "ACTIVE",
+      "daysLeft": 46,
+      "sortOrder": 1
+    },
+    "webexEEConferencing": {
+      "customerName": "Atlas_Test_MikeM193",
+      "licenseId": "EE_f0fc6b78-d6c8-4038-951c-9c1ffca18319_atlas-test193.webex.com",
+      "offerName": "EE",
+      "licenseType": "CONFERENCING",
+      "features": [
+        "cloudmeetings"
+      ],
+      "volume": 100,
+      "isTrial": true,
+      "trialId": "f76198f1-a393-405b-aa6f-4be9ef9be025",
+      "status": "ACTIVE",
+      "capacity": 200,
+      "daysLeft": 46,
+      "sortOrder": 1,
+      "siteUrl": "atlas-test193.webex.com",
+      "partnerEmail": "fakeuserunodostres+admin1@gmail.com",
+      "isCIUnifiedSite": true
+    },
+    "roomSystems": {
+      "customerName": "Atlas_Test_MikeM193",
+      "daysLeft": 46,
+      "sortOrder": 1,
+      "licenseId": "SD_aabb7520-c677-4e7f-adf2-3dae7c0d909a",
+      "offerName": "SD",
+      "licenseType": "SHARED_DEVICES",
+      "features": [
+        "spark-room-system"
+      ],
+      "volume": 5,
+      "isTrial": true,
+      "trialId": "f76198f1-a393-405b-aa6f-4be9ef9be025",
+      "status": "ACTIVE",
+      "partnerOrgId": "d69426bf-0ace-4c53-bc65-cd5a5c25b610"
+    },
+    "sparkBoard": {
+      "customerName": "Atlas_Test_MikeM193",
+      "daysLeft": 46,
+      "sortOrder": 1,
+      "licenseId": "SB_c8af73ca-d9d7-11e6-8191-48d705dab091",
+      "offerName": "SB",
+      "licenseType": "SHARED_DEVICES",
+      "features": [
+        "spark-room-system"
+      ],
+      "volume": 5,
+      "billingServiceId": "Test-Sub-1234abcd",
+      "status": "ACTIVE",
+      "partnerOrgId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
+      "partnerEmail": "marvelpartners@gmail.com"
+    },
+    "care": {
+      "customerName": "Atlas_Test_MikeM193",
+      "licenseId": "CDC_f5a25631-e605-4004-9440-31f37fb4aa28",
+      "offerName": "CDC",
+      "licenseType": "CARE",
+      "features": [
+        "cloud-contact-center"
+      ],
+      "volume": 15,
+      "isTrial": true,
+      "trialId": "f76198f1-a393-405b-aa6f-4be9ef9be025",
+      "status": "ACTIVE",
+      "daysLeft": 46,
+      "sortOrder": 1
+    }
+  }
 }

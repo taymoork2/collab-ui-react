@@ -109,6 +109,14 @@ describe('Service: AACalendarService', function () {
       expect(actual).toEqual(ranks);
     });
   });
+  describe('getDefaultDayHours', function () {
+    it('should return the default hours', function () {
+      var days = AAICalService.getDefaultDayHours();
+      expect(days).toBeDefined();
+      expect(days.length).toEqual(7);
+    });
+  });
+
 
   describe('addHoursRange - getHoursRanges', function () {
     it('add valid hours range to the calendar and should get the same range', function () {
@@ -460,12 +468,17 @@ describe('Service: AACalendarService', function () {
       expect(rangeFromCalendar[0].recurAnnually).toEqual(range.recurAnnually);
     });
 
-    // Disabling, see https://jira-eng-chn-sjc1.cisco.com/jira/browse/ATLAS-1533
-    xit('add multiple holidays and get them sorted', function () {
+    it('add multiple holidays and get them sorted', function () {
       //The holidays are sort chronologically based on today, so this test will fail at some point.
       var calendarRaw = {};
       calendarRaw.scheduleData = 'BEGIN:VCALENDAR \n' + 'BEGIN:VTIMEZONE\n' + 'TZID:UTC/GMT\n' + 'X-LIC-LOCATION:UTC/GMT\n' + 'END:VTIMEZONE\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'RRULE:FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=1\n' + 'DESCRIPTION:First day of Feb\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20150201T000000\n' + 'DTEND;TZID=UTC/GMT:20150201T235900\n' + 'END:VEVENT\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'RRULE:FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=10\n' + 'DESCRIPTION:Feb 10th\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20150210T000000\n' + 'DTEND;TZID=UTC/GMT:20150210T235900\n' + 'END:VEVENT\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'RRULE:FREQ=YEARLY;BYMONTH=2;BYDAY=WE;BYSETPOS=2\n' + 'DESCRIPTION:Second Wed of Feb;2;2;WE\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20170208T000000\n' + 'DTEND;TZID=UTC/GMT:20170208T235900\n' + 'END:VEVENT\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=TH;BYSETPOS=4\n' + 'DESCRIPTION:Thanksgiving;11;4;TH\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20161124T000000\n' + 'DTEND;TZID=UTC/GMT:20161124T235900\n' + 'END:VEVENT\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'DESCRIPTION:Christmas\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20101225T000000\n' + 'DTEND;TZID=UTC/GMT:20101225T235900\n' + 'END:VEVENT\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'DESCRIPTION:Last Tuesday of Jan;1;-1;TU\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20120124T000000\n' + 'DTEND;TZID=UTC/GMT:20120124T235900\n' + 'END:VEVENT\n' + 'END:VCALENDAR';
+
+      // test will fail if a rolling date is used. eg, thanksgiving 2016 becomes 2017 as soon as tday is done for that year.
+
+      jasmine.clock().mockDate(new Date(2016, 9, 23));
+
       var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).holidays;
+
       expect(rangeFromCalendar.length).toEqual(6);
       expect(rangeFromCalendar[0].name).toEqual("Christmas");
       expect(rangeFromCalendar[1].name).toEqual("Last Tuesday of Jan");
@@ -473,6 +486,17 @@ describe('Service: AACalendarService', function () {
       expect(rangeFromCalendar[3].name).toEqual("First day of Feb");
       expect(rangeFromCalendar[4].name).toEqual("Second Wed of Feb");
       expect(rangeFromCalendar[5].name).toEqual("Feb 10th");
+
+      jasmine.clock().mockDate(new Date(2017, 0, 9));
+      rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).holidays;
+
+      expect(rangeFromCalendar[0].name).toEqual("Christmas");
+      expect(rangeFromCalendar[1].name).toEqual("Last Tuesday of Jan");
+      expect(rangeFromCalendar[2].name).toEqual("First day of Feb");
+      expect(rangeFromCalendar[3].name).toEqual("Second Wed of Feb");
+      expect(rangeFromCalendar[4].name).toEqual("Feb 10th");
+      expect(rangeFromCalendar[5].name).toEqual("Thanksgiving");
+
     });
   });
 });

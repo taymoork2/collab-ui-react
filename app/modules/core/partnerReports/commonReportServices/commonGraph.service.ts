@@ -8,7 +8,8 @@ export class CommonGraphService {
   public readonly LINE: string = 'line';
   public readonly LINE_AXIS: string = 'lineAxis';
   public readonly NUMFORMAT: string = 'numFormat';
-  public readonly prefixes: string = 'prefixesOfBigNumbers';
+  public readonly PREFIXES: string = 'prefixesOfBigNumbers';
+  public readonly SINGLE_LINE: string = 'singleLine';
   public readonly START: string = 'start';
   public readonly TITLE: string = 'title';
 
@@ -19,10 +20,10 @@ export class CommonGraphService {
 
   private baseVariables = {
     axis: {
-      axisColor: this.chartColors.grayLight,
-      gridColor: this.chartColors.grayLight,
-      color: this.chartColors.grayDarkest,
-      titleColor: this.chartColors.grayDarkest,
+      axisColor: this.chartColors.grayLightTwo,
+      gridColor: this.chartColors.grayLightTwo,
+      color: this.chartColors.grayDarkThree,
+      titleColor: this.chartColors.grayDarkThree,
       fontFamily: 'CiscoSansTT Light',
       gridAlpha: 0,
       axisAlpha: 1,
@@ -40,7 +41,7 @@ export class CommonGraphService {
       type: 'column',
       fillAlphas: 1,
       lineAlpha: 0,
-      balloonColor: this.chartColors.grayLight,
+      balloonColor: this.chartColors.grayLightTwo,
       columnWidth: 0.6,
     },
     cursor: {
@@ -58,7 +59,7 @@ export class CommonGraphService {
       menu: [],
     },
     legend: {
-      color: this.chartColors.grayDarkest,
+      color: this.chartColors.grayDarkThree,
       align: 'center',
       switchable: false,
       fontSize: 13,
@@ -76,15 +77,27 @@ export class CommonGraphService {
       type: 'line',
       bullet: 'none',
       fillAlphas: 0.5,
-      lineAlpha: 1,
+      lineAlpha: 0.5,
       lineThickness: 1,
       hidden: false,
     },
+    singleLine: {
+      type: 'line',
+      bullet: 'round',
+      bulletBorderAlpha: 1,
+      bulletColor: this.chartColors.brandWhite,
+      bulletSize: 5,
+      fillAlphas: 0,
+      lineAlpha: 1,
+      lineThickness: 3,
+      hideBulletsCount: 25,
+      useLineColorForBulletBorder: true,
+    },
     lineAxis: {
-      axisColor: this.chartColors.grayLight,
+      axisColor: this.chartColors.grayLightTwo,
       gridColor: this.chartColors.grayLightTwo,
-      color: this.chartColors.grayDarkest,
-      titleColor: this.chartColors.grayDarkest,
+      color: this.chartColors.grayDarkThree,
+      titleColor: this.chartColors.grayDarkThree,
       fontFamily: 'CiscoSansTT Light',
       gridAlpha: 1,
       axisAlpha: 1,

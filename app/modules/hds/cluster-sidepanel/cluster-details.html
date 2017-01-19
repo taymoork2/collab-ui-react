@@ -47,21 +47,4 @@
     </div>
   </cs-sp-section>
 
-
-  <cs-sp-section ng-if="hdsSidepanelClusterController.cluster.connectors.length === 0 && hdsSidepanelClusterController.cluster.allowedRedirectTarget">
-    <div class="section-title-row section-name" translate="hds.clusterSettings.registration.heading"></div>
-    <p translate="hds.clusterSettings.list.complete-registration"></p>
-    <div>
-      <button class="btn" translate="common.remove"></button>
-    </div>
-  </cs-sp-section>
-
-  <cs-sp-section ng-if="hdsSidepanelClusterController.cluster.connectors.length === 0 && !hdsSidepanelClusterController.cluster.allowedRedirectTarget">
-    <div class="section-title-row section-name" translate="hds.clusterSettings.registration.heading"></div>
-    <p translate="hds.clusterSettings.list.registration-timeout-extended"></p>
-    <div>
-      <button class="btn" translate="common.remove"></button>
-    </div>
-  </cs-sp-section>
-
 </cs-sp-container>

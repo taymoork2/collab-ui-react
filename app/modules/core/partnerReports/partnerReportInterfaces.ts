@@ -93,7 +93,15 @@ export interface IReportSortOption {
 }
 
 export interface IReportLabel {
+  class: string | undefined;
+  click: Function | undefined;
+  hidden: boolean;
   number: number | string;
+  text: string;
+}
+
+export interface IReportTooltip {
+  title: string;
   text: string;
 }
 

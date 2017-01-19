@@ -66,7 +66,11 @@
     };
 
     vm.determineLicenseType = function (service) {
-      return vm.isSharedMultiPartyLicense(service) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.assignedLicenses');
+      return vm.isSharedMultiPartyLicense(service) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.namedLicenses');
+    };
+
+    vm.generateLicenseTooltip = function (service) {
+      return vm.isSharedMultiPartyLicense(service) ? '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.sharedLicenseTooltip') + '</div>' : '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.namedLicenseTooltip') + '</div>';
     };
 
     init();
@@ -124,6 +128,36 @@
           }
         }
       });
+
+      vm.hasAdvancedLicenses = function () {
+        return _.some(vm.confServices.services, function (service) {
+          return _.has(service, 'license.siteUrl');
+        });
+      };
+
+      vm.hasBasicLicenses = function () {
+        return _.some(vm.confServices.services, function (service) {
+          return !_.has(service, 'license.siteUrl');
+        });
+      };
+
+      /* TODO: Refactor this functions into MultipleSubscriptions Controller */
+      vm.selectedSubscriptionHasBasicLicenses = function (subscriptionId) {
+        return _.some(vm.confServices.services, function (service) {
+          if (_.get(service, 'license.billingServiceId') === subscriptionId) {
+            return !_.has(service, 'license.siteUrl');
+          }
+        });
+      };
+
+      /* TODO: Refactor this functions into MultipleSubscriptions Controller */
+      vm.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
+        return _.some(vm.confServices.services, function (service) {
+          if (_.get(service, 'license.billingServiceId') === subscriptionId) {
+            return _.has(service, 'license.siteUrl');
+          }
+        });
+      };
 
       vm.commServices.services = Authinfo.getCommunicationServices() || [];
       _.forEach(vm.commServices.services, function (service) {
@@ -193,6 +227,18 @@
             vm.sites[service.license.siteUrl].push(service);
           }
         }
+      });
+
+      vm.sitesBasedOnBillingId = {};
+      _.forEach(vm.sites, function (services) {
+        _.forEach(services, function (service) {
+          if (_.has(service, 'license.billingServiceId')) {
+            if (!vm.sitesBasedOnBillingId[service.license.billingServiceId]) {
+              vm.sitesBasedOnBillingId[service.license.billingServiceId] = [];
+            }
+            vm.sitesBasedOnBillingId[service.license.billingServiceId].push(service);
+          }
+        });
       });
 
       if (Object.prototype.toString.call(vm.cmrServices.services) == '[object Array]') {

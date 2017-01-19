@@ -25,7 +25,7 @@
 
     var helpers = {
       createConferenceMapping: _createConferenceMapping,
-      createRoomMapping: _createRoomMapping,
+      createRoomDeviceMapping: _createRoomDeviceMapping,
       createLicenseMapping: _createLicenseMapping,
       createFreeServicesMapping: _createFreeServicesMapping,
       LicensedService: _LicensedService,
@@ -34,7 +34,8 @@
       isDisplayableService: _isDisplayableService,
       calculatePurchaseStatus: _calculatePurchaseStatus,
       calculateTotalLicenses: _calculateTotalLicenses,
-      countUniqueServices: _countUniqueServices
+      countUniqueServices: _countUniqueServices,
+      isServiceManagedByCurrentPartner: isServiceManagedByCurrentPartner
     };
 
     var factory = {
@@ -102,18 +103,26 @@
       return conferenceMapping;
     }
 
-    function _createRoomMapping() {
+    function _createRoomDeviceMapping() {
       var offerMapping = {};
       offerMapping[Config.offerCodes.SD] = {
-        translatedOfferCode: $translate.instant('trials.sharedDevice'),
-        icon: 'icon-circle-telepresence',
+        translatedOfferCode: $translate.instant('trials.roomSystem'),
         order: 6
       };
       offerMapping[Config.offerCodes.SB] = {
         translatedOfferCode: $translate.instant('trials.sparkBoardSystem'),
-        icon: 'icon-circle-telepresence',
-        order: 6
+        order: 7
       };
+
+      offerMapping = _.mapValues(offerMapping, function (offer) {
+        return {
+          name: offer.translatedOfferCode,
+          order: offer.order,
+          licenseType: Config.licenseTypes.SHARED_DEVICES
+        };
+      });
+
+      return offerMapping;
     }
 
     function _createLicenseMapping() {
@@ -182,7 +191,7 @@
       if (isConference) {
         service = (licenseInfo.offerName) ? mapping[licenseInfo.offerName] : mapping[Config.offerCodes.CF];
       } else {
-        service = mapping[licenseInfo.licenseType];
+        service = mapping[licenseInfo.licenseType] || mapping[licenseInfo.offerName];
         service.licenseType = licenseInfo.licenseType;
       }
 
@@ -378,6 +387,7 @@
         licenses: 0,
         deviceLicenses: 0,
         licenseList: [],
+        orderedServices: {},
         messaging: null,
         conferencing: null,
         communications: null,
@@ -430,7 +440,6 @@
 
       // havent figured out what this is doing yet...
       dataObj.sparkConferencing = initializeService(customer.licenses, Config.offerCodes.CF, serviceEntry, customerListToggle);
-      dataObj.webexCMR = initializeService(customer.licenses, Config.offerCodes.CMR, serviceEntry, customerListToggle);
       dataObj.communications = initializeService(customer.licenses, Config.offerCodes.CO, serviceEntry, customerListToggle);
       dataObj.webexEventCenter = initializeService(customer.licenses, Config.offerCodes.EC, serviceEntry, customerListToggle);
       dataObj.webexEEConferencing = initializeService(customer.licenses, Config.offerCodes.EE, serviceEntry, customerListToggle);
@@ -438,6 +447,7 @@
       dataObj.messaging = initializeService(customer.licenses, Config.offerCodes.MS, serviceEntry, customerListToggle);
       dataObj.webexSupportCenter = initializeService(customer.licenses, Config.offerCodes.SC, serviceEntry, customerListToggle);
       dataObj.roomSystems = initializeService(customer.licenses, Config.offerCodes.SD, serviceEntry, customerListToggle);
+      dataObj.sparkBoard = initializeService(customer.licenses, Config.offerCodes.SB, serviceEntry, customerListToggle);
       dataObj.webexTrainingCenter = initializeService(customer.licenses, Config.offerCodes.TC, serviceEntry, customerListToggle);
       dataObj.webexCMR = initializeService(customer.licenses, Config.offerCodes.CMR, serviceEntry, customerListToggle);
       dataObj.care = initializeService(customer.licenses, Config.offerCodes.CDC, serviceEntry, customerListToggle);
@@ -452,9 +462,49 @@
       dataObj.totalLicenses = _calculateTotalLicenses(dataObj, isCareEnabled, customerListToggle);
       dataObj.uniqueServiceCount = _countUniqueServices(dataObj);
 
+      dataObj.orderedServices = _getOrderedServices(dataObj, isCareEnabled);
 
       setNotesSortOrder(dataObj);
       return dataObj;
+    }
+
+    // The information provided by this function will be used in displaying the service icons on the customer list page.
+    function _getOrderedServices(data, isCareEnabled) {
+      var servicesToProcess = ['messaging', 'conferencing', 'communications', 'webexEEConferencing',
+        'roomSystems', 'sparkBoard', 'care'];
+      var servicesManagedByCurrentPartner = [];
+      var servicesManagedByAnotherPartner = [];
+
+      _.forEach(servicesToProcess, function (service) {
+        var serviceToAdd = service;
+        if (service === 'webexEEConferencing') {
+          serviceToAdd = 'webex';
+        }
+        if (service !== 'care' || (service === 'care' && isCareEnabled)) {
+          if (isServiceManagedByCurrentPartner(data[service])) {
+            servicesManagedByCurrentPartner.push(serviceToAdd);
+          } else {
+            servicesManagedByAnotherPartner.push(serviceToAdd);
+          }
+        }
+      });
+
+      return { servicesManagedByCurrentPartner: servicesManagedByCurrentPartner,
+        servicesManagedByAnotherPartner: servicesManagedByAnotherPartner };
+    }
+
+    function isServiceManagedByCurrentPartner(serviceObj) {
+      var currentPartnerId = Authinfo.getPrimaryEmail();
+      var currentPartnerOrgId = Authinfo.getOrgId();
+
+      var isInCurrentPartnerOrg = serviceObj.partnerOrgId === currentPartnerOrgId;
+      var isCurrentPartnerId = serviceObj.partnerEmail === currentPartnerId;
+      var isNotLicensed = serviceObj.volume === undefined && Object.keys(serviceObj).length === 4;
+      if (isInCurrentPartnerOrg || isCurrentPartnerId || isNotLicensed) {
+        return true;
+      }
+
+      return false;
     }
 
     function _calculatePurchaseStatus(customerData) {
@@ -748,6 +798,7 @@
 
       var paidServices = [];
       var meetingServices = [];
+      var roomDevices = [];
       var service = null;
       var result = null;
       var isCareEnabled = options.isCareEnabled;
@@ -761,8 +812,17 @@
         order: 1
       };
 
+      var roomDevicesHeader = {
+        licenseType: Config.licenseTypes.SHARED_DEVICES,
+        isRoom: true,
+        name: $translate.instant('subscriptions.room'),
+        icon: 'icon-circle-telepresence',
+        order: 26
+      };
+
       var licenseMapping = helpers.createLicenseMapping();
       var conferenceMapping = helpers.createConferenceMapping();
+      var roomDeviceMapping = helpers.createRoomDeviceMapping();
       var freeServices = helpers.createFreeServicesMapping();
 
       _.forEach(_.get(customer, 'licenseList', []), function (licenseInfo) {
@@ -774,6 +834,9 @@
             if (licenseInfo.licenseType === Config.licenseTypes.CONFERENCING || licenseInfo.licenseType === Config.licenseTypes.CMR) {
               service = new helpers.LicensedService(licenseInfo, conferenceMapping);
               helpers.addService(meetingServices, service);
+            } else if (licenseInfo.licenseType === Config.licenseTypes.SHARED_DEVICES) {
+              service = new helpers.LicensedService(licenseInfo, roomDeviceMapping);
+              helpers.addService(roomDevices, service);
             } else {
               service = new helpers.LicensedService(licenseInfo, licenseMapping);
               helpers.addService(paidServices, service);
@@ -781,7 +844,7 @@
           }
         }
       });
-
+      // handle meeting services
       //if only one meeting service -- move to the services list
       if (meetingServices.length === 1) {
         var singleMeetingService = meetingServices.shift();
@@ -791,20 +854,29 @@
       //if there is more than one
       if (meetingServices.length >= 1) {
         var totalQ = _.reduce(meetingServices, function (prev, curr) {
-
           return (curr.licenseType !== Config.licenseTypes.CMR) ? {
             qty: prev.qty + curr.qty
           } : {
             qty: prev.qty + 0
           };
         });
-
         _.merge(meetingHeader, {
           qty: totalQ.qty,
           sub: _.sortBy(meetingServices, 'order')
         });
-
         paidServices.push(meetingHeader);
+      }
+
+      //handle room devices
+      if (roomDevices.length) {
+        totalQ = _.reduce(roomDevices, function (prev, curr) {
+          return prev + curr.qty;
+        }, 0);
+        _.merge(roomDevicesHeader, {
+          qty: totalQ,
+          sub: _.sortBy(roomDevices, 'order')
+        });
+        paidServices.push(roomDevicesHeader);
       }
 
       if (freeServices.length > 0 || paidServices.length > 0) {

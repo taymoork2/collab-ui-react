@@ -37,6 +37,7 @@ describe('Controller: MySubscriptionCtrl', function () {
 
     spyOn(ServiceDescriptor, 'servicesInOrg').and.returnValue($q.when(data.servicesResponse));
     spyOn(FeatureToggleService, 'atlasSMPGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasSmpReportsGetStatus').and.returnValue($q.when(false));
     spyOn(rootScope, '$broadcast').and.callThrough();
   }));
 

@@ -1,5 +1,7 @@
 'use strict';
 
+var testModule = require('./authinfo');
+
 describe('Authinfo:', function () {
   var injector, Service;
 
@@ -28,7 +30,7 @@ describe('Authinfo:', function () {
   };
 
   beforeEach(function () {
-    angular.mock.module('Core');
+    angular.mock.module(testModule);
     inject(function ($injector) {
       injector = $injector;
     });

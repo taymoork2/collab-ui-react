@@ -1,0 +1,25 @@
+<cs-card class="large-3 medium-6 small-12 menu-card header-bar overview-card" ng-class="$ctrl.headercolor">
+  <article>
+    <header>
+      <div class="metrics-header"> {{$ctrl.headername}} </div>
+    </header>
+    <section>
+      <div class="metrics-info">
+        <div class="no-data" ng-if="$ctrl.value === $ctrl.parentcntrl.noData">{{$ctrl.value}}</div>
+        <div ng-if="$ctrl.value !== $ctrl.parentcntrl.noData">
+          <div class="call-counts">{{$ctrl.value}}
+            <span ng-if="$ctrl.tooltipOptions.isShow" ng-init="popoverOpened1=false" ng-mouseover="popoverOpened1=true" ng-mouseleave="popoverOpened1=false">
+              <a class="icon icon-info-outline media-tooltip" 
+              tooltip-template="'modules/mediafusion/reports/media-reports-sneak-peek/media-sneek-peek.html'"
+              tooltip-class="metrics-tooltip" tooltip-trigger="none" tooltip-placement="bottom-right" tooltip-is-open="popoverOpened1" >
+              </a>
+            </span>
+          </div>
+          <div class="spinner-position" ng-if="!$ctrl.value && $ctrl.value !== 0">
+            <i class='icon icon-spinner icon-2x'></i>
+          </div>
+        </div>
+      </div>
+    </section>
+  </article>
+</cs-card>

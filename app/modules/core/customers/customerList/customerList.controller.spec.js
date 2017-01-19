@@ -72,7 +72,7 @@ describe('Controller: CustomerListCtrl', function () {
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
       $q.when(false)
     );
-
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(false));
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback) {
       callback(adminJSONFixture.getAdminOrg, 200);
     });
@@ -257,6 +257,46 @@ describe('Controller: CustomerListCtrl', function () {
 
   });
 
+
+  describe('filterColumns', function () {
+    beforeEach(initController);
+    it('return 8 items in the filter list without sparkBoard or Care with care and spark board FT turned off', function () {
+      expect(controller.filter.options.length).toBe(8);
+      expect(controller.filter.options).not.toContain(jasmine.objectContaining({
+        value: 'sparkBoard'
+      }));
+      expect(controller.filter.options).not.toContain(jasmine.objectContaining({
+        value: 'care'
+      }));
+    });
+
+    it('show care in the filter list with care FT on', function () {
+      FeatureToggleService.atlasCareTrialsGetStatus.and.returnValue($q.when(true));
+      initController();
+      $scope.$apply();
+      expect(controller.filter.options.length).toBe(9);
+      expect(controller.filter.options).toContain(jasmine.objectContaining({
+        value: 'care'
+      }));
+      expect(controller.filter.options).not.toContain(jasmine.objectContaining({
+        value: 'sparkBoard'
+      }));
+    });
+
+    it('show sparkBoard in the filter list with spark FT on', function () {
+      FeatureToggleService.atlasDarlingGetStatus.and.returnValue($q.when(true));
+      initController();
+      $scope.$apply();
+      expect(controller.filter.options.length).toBe(9);
+      expect(controller.filter.options).toContain(jasmine.objectContaining({
+        value: 'sparkBoard'
+      }));
+      expect(controller.filter.options).not.toContain(jasmine.objectContaining({
+        value: 'care'
+      }));
+    });
+  });
+
   describe('updateResultCount function', function () {
     beforeEach(initController);
 
@@ -269,8 +309,6 @@ describe('Controller: CustomerListCtrl', function () {
         isAccountFilter: true,
         count: 0
       }];
-
-      //controller.$apply();
 
       controller._helpers.updateResultCount(controller.gridOptions.data);
       var activeFilter = _.find(controller.filter.options, { value: 'trial' });

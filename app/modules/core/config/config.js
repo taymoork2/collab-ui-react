@@ -434,7 +434,8 @@
         'hds.settings', //Temporary  entitlement until updated in org setting
         'hds',
         'hds.list',
-        "hds-cluster-details",
+        'hds-cluster-details',
+        'hds-cluster-settings',
       ],
       'spark-room-system': [
         'addDeviceFlow',
@@ -480,6 +481,7 @@
         'mediafusion-settings',
         'metrics',
         'reports.metrics',
+        'reports.media',
         'services-overview',
         'cluster-list',
       ],

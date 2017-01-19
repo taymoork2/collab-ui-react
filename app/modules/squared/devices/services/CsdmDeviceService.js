@@ -16,6 +16,12 @@
       });
     }
 
+    function fetchDevicesForUser(userId) {
+      return $http.get(devicesUrl + '?cisUuid=' + userId).then(function (res) {
+        return CsdmConverter.convertCloudberryDevices(res.data);
+      });
+    }
+
     function fetchItem(url) {
       return $http.get(url).then(function (res) {
         return CsdmConverter.convertCloudberryDevice(res.data);
@@ -71,6 +77,7 @@
 
     return {
       fetchDevices: fetchDevices,
+      fetchDevicesForUser: fetchDevicesForUser,
       deleteItem: deleteItem,
       updateTags: updateTags,
       fetchItem: fetchItem,

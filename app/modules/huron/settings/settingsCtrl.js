@@ -6,6 +6,7 @@
     .controller('HuronSettingsCtrl', HuronSettingsCtrl);
 
   /* @ngInject */
+
   function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CeService, CallerId, Config,
       DirectoryNumberService, DialPlanService, ExternalNumberService, FeatureToggleService, HuronCustomer,
       HuntGroupServiceV2, InternationalDialing, ModalService, Notification, PstnSetupService,
@@ -18,7 +19,7 @@
     vm.callDateTimeFormat = false;
     vm.isRegionAndVoicemail = function (enabled) {
       return Authinfo.getLicenses().filter(function (license) {
-        return enabled ? (license.licenseType !== Config.licenseTypes.SHARED_DEVICES || license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
+        return enabled ? (license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
       }).length > 0;
     };
 
@@ -51,7 +52,7 @@
     var DEFAULT_TO = '5999';
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
-    var VOICE_VOICEMAIL_AVRIL = 'DEMO_STANDARD';
+    var VOICE_VOICEMAIL_AVRIL = 'VOICE_VOICEMAIL_AVRIL';
     var NO_VOICEMAIL_NUMBER = 'NONE';
     var INTERNATIONAL_DIALING = 'DIALINGCOSTAG_INTERNATIONAL';
     var COMPANY_CALLER_ID_TYPE = 'Company Caller ID';
@@ -64,6 +65,8 @@
     var savedModel = null;
     var errors = [];
 
+    vm.avrilTzUpdated = false;
+    vm.avrilDialPlanUpdated = false;
     vm.voicemailAvrilCustomer = false;
     vm.isAvrilVoiceEnabled = false;
     vm.init = init;
@@ -1068,12 +1071,29 @@
             } else if (siteData.disableVoicemail) {
               vm.model.site.voicemailPilotNumber = undefined;
             }
-
-            if (vm.voicemailAvrilCustomer && vm.isAvrilVoiceEnabled) {
+            if (vm.voicemailAvrilCustomer && (vm.isAvrilVoiceEnabled || vm.customer.servicePackage === 'VOICE_VOICEMAIL_AVRIL')) {
               var setupSites = ServiceSetup.sites[0];
-              ServiceSetup.updateAvrilSite(setupSites.uuid, setupSites.siteSteeringDigit,
-                    setupSites.siteCode, setupSites.timeZone,
-                     setupSites.extensionLength, setupSites.voicemailPilotNumber, siteData);
+              var currentSetupSite = vm.model.site;
+
+              var mSite = {
+                siteCode: currentSetupSite.siteCode,
+                siteSteeringDigit: currentSetupSite.siteSteeringDigit.siteDialDigit,
+                language: currentSetupSite.preferredLanguage.value,
+                timeZone: currentSetupSite.timeZone.id,
+                extensionLength: currentSetupSite.extensionLength,
+                pilotNumber: currentSetupSite.voicemailPilotNumber
+              };
+
+              return ServiceSetup.getAvrilSite(ServiceSetup.sites[0].uuid).then(function () {
+                if (vm.avrilTzUpdated || vm.avrilDialPlanUpdated) {
+                  ServiceSetup.updateAvrilSite(setupSites.uuid, mSite);
+                }
+              })
+                .catch(function () {
+                  ServiceSetup.createAvrilSite(setupSites.uuid, currentSetupSite.siteSteeringDigit.siteDialDigit,
+                     currentSetupSite.siteCode, currentSetupSite.preferredLanguage.value, currentSetupSite.timeZone.id,
+                     currentSetupSite.extensionLength, currentSetupSite.voicemailPilotNumber, siteData);
+                });
             }
           })
           // in the case when voicemail is getting enabled, reload voicemail info such as (timezone and vm2email settings)
@@ -1114,6 +1134,7 @@
 
       if (vm.model.site.timeZone.id !== savedModel.site.timeZone.id) {
         siteData.timeZone = vm.model.site.timeZone.id;
+        vm.avrilTzUpdated = true;
       }
 
       if (vm.model.site.preferredLanguage.value !== savedModel.site.preferredLanguage.value) {
@@ -1130,6 +1151,7 @@
 
       if (vm.model.site.siteSteeringDigit.siteDialDigit !== savedModel.site.siteSteeringDigit.siteDialDigit) {
         siteData.siteSteeringDigit = vm.model.site.siteSteeringDigit.siteDialDigit;
+        vm.avrilDialPlanUpdated = true;
       }
 
       // Save the existing site voicemail pilot number, before overwritting with the new value
@@ -1268,7 +1290,7 @@
                 siteDialDigit: site.siteSteeringDigit,
                 voicemailPrefixLabel: site.siteSteeringDigit.concat(site.siteCode)
               };
-              vm.model.site.extensionLength = vm.model.previousLength = vm.previousModel.site.extensionLength = site.extensionLength;
+              vm.model.site.extensionLength = vm.model.previousLength = site.extensionLength;
               vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
                 return timezone.id === site.timeZone;
               });
@@ -1301,6 +1323,7 @@
               } else {
                 vm.model.serviceNumberWarning = true;
               }
+              vm.previousModel.site = _.cloneDeep(vm.model.site);
             });
         }
       });
@@ -1794,17 +1817,32 @@
           featureOptions.features.VM2T = false;
           featureOptions.features.VM2E = false;
         }
-        return ServiceSetup.updateAvrilSiteVoicemail(ServiceSetup.sites[0].uuid, featureOptions);
+        return ServiceSetup.updateAvrilSite(ServiceSetup.sites[0].uuid, featureOptions);
       } else {
         return $q.resolve();
       }
     }
 
+    function shouldUpdateVoicemailPostalCode() {
+      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled) {
+        if (vm.model.companyVoicemail.companyVoicemailEnabled && !vm.previousModel.companyVoicemail.companyVoicemailEnabled) {
+          return true;
+        } else if (vm.model.site.siteSteeringDigit.siteDialDigit !== vm.previousModel.site.siteSteeringDigit.siteDialDigit) {
+          return true;
+        } else if (vm.model.site.extensionLength !== vm.previousModel.site.extensionLength) {
+          return true;
+        } else if (!_.eq(_.toSafeInteger(vm.model.site.siteCode), _.toSafeInteger(vm.previousModel.site.siteCode))) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+
     function updateVoicemailPostalCode() {
-      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled
-        && (vm.model.site.siteSteeringDigit.siteDialDigit !== vm.previousModel.site.siteSteeringDigit.siteDialDigit
-        || vm.model.site.extensionLength !== vm.previousModel.site.extensionLength
-        || !_.eq(_.toSafeInteger(vm.model.site.siteCode), _.toSafeInteger(vm.previousModel.site.siteCode)))) {
+      if (shouldUpdateVoicemailPostalCode()) {
         var postalCode = [vm.model.site.siteSteeringDigit.siteDialDigit, vm.model.site.siteCode, vm.model.site.extensionLength].join('-');
         return ServiceSetup.updateVoicemailPostalcode(postalCode, vm.voicemailUserTemplate.objectId)
           .catch(function (response) {
@@ -1905,6 +1943,7 @@
         })
         .finally(function () {
           vm.processing = false;
+          vm.previousModel.companyVoicemail.companyVoicemailEnabled = vm.model.companyVoicemail.companyVoicemailEnabled;
           var existingCompanyVoicemailEnabled = savedModel.companyVoicemail.companyVoicemailEnabled;
           savedModel = angular.copy(vm.model);
           if (!existingCompanyVoicemailEnabled &&
