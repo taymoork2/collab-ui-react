@@ -640,6 +640,7 @@
     "media_type_all": "All Contact Types",
     "media_type_chat": "Chat",
     "media_type_callback": "Callback",
+    "media_type_voice": "Inbound Call",
     "taskDataGetError": "There was an error while loading the {{dataType}} data.",
     "tableDataGetError": "There was an error while loading the detailed efficient user data."
   },
