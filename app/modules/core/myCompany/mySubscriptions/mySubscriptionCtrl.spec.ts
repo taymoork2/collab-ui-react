@@ -5,6 +5,8 @@ describe('Controller: MySubscriptionCtrl', function () {
   let data = getJSONFixture('core/json/myCompany/subscriptionData.json');
   let trialUrl = 'https://atlas-integration.wbx2.com/admin/api/v1/commerce/online/subID';
   let trialUrlResponse = 'trialUrlResponse';
+  let productInstance = 'https://atlas-integration.wbx2.com/admin/api/v1/commerce/productinstances?ciUUID=ciUUID';
+  let productInstanceResponse = 'productInstanceResponse';
 
   data.licensesFormatted.forEach(function (item){
     item.subscriptions[0].siteUrl = undefined;
@@ -17,8 +19,10 @@ describe('Controller: MySubscriptionCtrl', function () {
   data.subscriptionsFormatted[0].licenses[7].siteUrl = undefined;
   data.subscriptionsFormatted[0].licenses[8].siteUrl = undefined;
   data.subscriptionsFormatted[0].upgradeTrialUrl = undefined;
+  data.subscriptionsFormatted[0].productInstanceId = undefined;
   data.trialSubscriptionData[0].licenses[0].siteUrl = undefined;
   data.trialSubscriptionData[0].upgradeTrialUrl = undefined;
+  data.trialSubscriptionData[0].productInstanceId = undefined;
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Hercules'));
@@ -138,9 +142,11 @@ describe('Controller: MySubscriptionCtrl', function () {
 
   xit('should initialize with expected data for online trial orgs', function () {
     $httpBackend.whenGET(trialUrl).respond($q.when(trialUrlResponse));
+    $httpBackend.whenGET(productInstance).respond($q.when(productInstanceResponse));
     spyOn(Authinfo, 'isOnline').and.returnValue(true);
     spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(data.subscriptionsTrialResponse));
     data.trialSubscriptionData[0].upgradeTrialUrl = trialUrlResponse;
+    data.trialSubscriptionData[0].productInstance = productInstanceResponse;
 
     startController();
     $scope.$apply();
