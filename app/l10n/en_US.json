@@ -5302,6 +5302,7 @@
     "editTitle_callback": "Edit Callback Template",
     "profile": "Chat Template Profile",
     "overview": "Chat Template Overview",
+    "overview_callback": "Callback Template Overview",
     "chatStatusMessages": "Chat Status Messages",
     "customerInfo": "Customer Info Screen",
     "feedback": "Feedback Screen",
@@ -5310,7 +5311,9 @@
     "embedCode": "Embed Code",
     "profileDesc": "Configure how you want the organization and user profile to be represented for your company",
     "overviewDesc": "Toggle cards to customize what screens you want your customer to see on contacting Care",
+    "overviewDesc_callback": "Toggle cards to customize what screens you want your customer to see when requesting a callback from customer care",
     "customerInfoDesc": "This is the screen a customer fills in to start chat with an agent",
+    "customerInfoToggleTooltipMessage": "This screen is required for this template and cannot be disabled.",
     "feedbackDesc": "This screen is used to collect feedback from a customer after the chat ends",
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
     "offHoursDesc": "This screen is shown to a customer during business off-hours",
@@ -5397,7 +5400,8 @@
     "ctOverview": {
       "customerInformation": {
         "title": "Customer Info",
-        "desc": "This is the screen a customer fills in to start chat with an agent"
+        "desc": "This is the screen a customer fills in to start chat with an agent",
+        "desc_callback": "This is the screen a customer fills in to request a callback from an agent"
       },
       "agentUnavailable": {
         "title": "Agent Unavailable",
@@ -5405,7 +5409,8 @@
       },
       "offHours": {
         "title": "Off-Hours",
-        "desc": "This screen is shown to a customer during business off-hours"
+        "desc": "This screen is shown to a customer during business off-hours",
+        "desc_callback": "This screen is shown to a customer during business off-hours"
       },
       "feedback": {
         "title": "Feedback",
