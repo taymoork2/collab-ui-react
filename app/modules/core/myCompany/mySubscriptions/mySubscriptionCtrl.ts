@@ -111,7 +111,7 @@ class MySubscriptionCtrl {
       } else {
         return this.emptyOnlineTrialUrl();
       }
-    }, (error) => {
+    }).catch((error) => {
       return this.upgradeTrialErrorResponse(error, subId);
     });
   }
@@ -130,13 +130,13 @@ class MySubscriptionCtrl {
 
   private getProductInstanceId(subId) {
     return this.$http.get<any>(this.UrlConfig.getAdminServiceUrl() + 'commerce/productinstances?ciUUID=' + this.Authinfo.getUserId()).then((response) => {
-      if (response.data && response.data.productGroups[0] &&
-          response.data.productGroups[0].productInstance[0]) {
-        return response.data.productGroups[0].productInstance[0].productInstanceId;
+      let productInstanceId = _.get<string>(response, 'data.productGroups[0].productInstance[0].productInstanceId');
+      if (productInstanceId) {
+        return productInstanceId;
       } else {
         return this.emptyOnlineProductInstance();
       }
-    }, (error) => {
+    }).catch((error) => {
       return this.productInstanceErrorResponse(error, subId);
     });
   }
