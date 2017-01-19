@@ -572,22 +572,6 @@ describe('Controller: TrialCtrl:', function () {
             expect(helpers.validateCareLicense(CARE_LICENSE_COUNT, CARE_LICENSE_COUNT)).toBeFalsy();
           });
         });
-
-        describe('careLicenseCountLessThanMessageCount:', function () {
-          it('total license count cannot be lesser than Care license count.', function () {
-            controller.details.licenseCount = 10;
-            controller.careTrial.enabled = true;
-            controller.careTrial.details.quantity = 20;
-            expect(helpers.careLicenseCountLessThanMessageCount()).toBeFalsy();
-          });
-
-          it('total license validation with Care succeeds when careTrial is not enabled.', function () {
-            controller.details.licenseCount = 10;
-            controller.careTrial.enabled = false;
-            controller.careTrial.details.quantity = 20;
-            expect(helpers.careLicenseCountLessThanMessageCount()).toBeTruthy();
-          });
-        });
       });
 
       describe('care checkbox disabled/enabled', function () {
@@ -1085,35 +1069,26 @@ describe('Controller: TrialCtrl:', function () {
         describe('validateCareLicense:', function () {
           it('care license validation is not used when care is not selected.', function () {
             controller.careTrial.enabled = false;
-            expect(controller.validateCareLicense()).toBeTruthy();
+            expect(controller._helpers.validateCareLicense()).toBeTruthy();
           });
 
           it('care license validation allows value between 1 and 50.', function () {
             controller.details.licenseCount = 100;
             controller.careTrial.enabled = true;
-            expect(controller.validateCareLicense(CARE_LICENSE_COUNT, CARE_LICENSE_COUNT)).toBeTruthy();
+            expect(controller._helpers.validateCareLicense(CARE_LICENSE_COUNT, CARE_LICENSE_COUNT)).toBeTruthy();
           });
 
           it('care license validation disallows value greater than total users.', function () {
             controller.details.licenseCount = 10;
             controller.careTrial.enabled = true;
-            expect(controller.validateCareLicense(CARE_LICENSE_COUNT + 1, CARE_LICENSE_COUNT + 1)).toBeFalsy();
+            expect(controller._helpers.validateCareLicense(CARE_LICENSE_COUNT + 1, CARE_LICENSE_COUNT + 1)).toBeFalsy();
           });
-        });
-
-        describe('careLicenseCountLessThanMessageCount:', function () {
-          it('Total license count cannot be lesser than Care license count.', function () {
+          it('if message is purchased care license <= message licenses regardless of licenseCount', function () {
             controller.details.licenseCount = 10;
             controller.careTrial.enabled = true;
-            controller.careTrial.details.quantity = 20;
-            expect(controller._helpers.careLicenseCountLessThanMessageCount()).toBeFalsy();
-          });
-
-          it('Total license validation with Care is applicable only when careTrial is enabled.', function () {
-            controller.details.licenseCount = 10;
-            controller.careTrial.enabled = false;
-            controller.careTrial.details.quantity = 20;
-            expect(controller._helpers.careLicenseCountLessThanMessageCount()).toBeTruthy();
+            controller.messageTrial.enabled = false;
+            controller.messageTrial.paid = 40;
+            expect(controller._helpers.validateCareLicense(CARE_LICENSE_COUNT + 1, CARE_LICENSE_COUNT + 1)).toBe(true);
           });
         });
       });
