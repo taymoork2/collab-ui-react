@@ -136,6 +136,9 @@
     </div>
   </setting-section>
 
+  <hybrid-voicemail-settings is-call-service-connect-enabled="callServiceSettings.squaredFusionEc"
+                             ng-if="callServiceSettings.hasVoicemailFeatureToggle"></hybrid-voicemail-settings>
+
   <deactivate-section service-id="'squared-fusion-uc'"></deactivate-section>
   <documentation-section service-id="'squared-fusion-uc'"></documentation-section>
 </div>
