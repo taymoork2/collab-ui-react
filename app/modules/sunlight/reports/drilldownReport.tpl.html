@@ -1,0 +1,29 @@
+<div ng-if="dd.props.hasData">
+  <div ng-if="dd.props.display" class="report-table">
+    <h4 class="box-match">{{dd.props.title()}}</h4>
+    <p ng-if="!dd.isDataEmpty() && !dd.isDataError()">{{dd.props.description()}}</p>
+    <p ng-if="dd.isDataEmpty()">
+      {{dd.props.emptyDescription()}}
+    </p>
+    <p ng-if="dd.isDataError()">
+      <i class="icon icon-warning no-data-warning"></i>
+      <span translate="{{dd.props.errorDescription()}}"></span>
+    </p>
+    <div class="report-search" ng-if="dd.isDataAvailable() && dd.props.search">
+      <i class="icon icon-search"></i>
+      <input type="text" placeholder="dd.props.searchPlaceholder" ng-model="gridApi.grid.columns[0].filters[0].term"></input>
+    </div>
+    <div class="care-table-wrapper">
+      <div ng-if="dd.isDataAvailable()" class="careGrid" ui-grid="dd.props.table.gridOptions" ui-grid-auto-resize></div>
+    </div>
+    <div class="table-spinner" ng-if="dd.isDataRefreshing()">
+      <i class='icon icon-spinner icon-2x'></i>
+    </div>
+  </div>
+  <div class="box-match">
+    <a ng-click="dd.toggleDrilldownReport()">
+      <span ng-if="!dd.display()">{{dd.props.show()}}</span>
+      <span ng-if="dd.display()">{{dd.props.hide()}}</span>
+    </a>
+  </div>
+</div>
