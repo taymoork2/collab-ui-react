@@ -8,7 +8,7 @@ require('./_customer-overview.scss');
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, newCustomerViewToggle, Notification, Orgservice, PartnerService, trialForPaid, TrialService, Userservice) {
+  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, trialForPaid, TrialService, Userservice) {
     var vm = this;
 
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -54,8 +54,6 @@ require('./_customer-overview.scss');
       updateUsers: updateUsers
     };
 
-    // TODO:  atlasCustomerListUpdate toggle is globally set to true. Needs refactoring to remove unused code
-    vm.newCustomerViewToggle = newCustomerViewToggle;
     vm.featureTrialForPaid = trialForPaid;
     //vm.featureTrialForPaid = true;
 
@@ -85,15 +83,13 @@ require('./_customer-overview.scss');
           });
         })
         .value();
-      if (vm.newCustomerViewToggle) {
-        vm.freeOrPaidServices = _.map(PartnerService.getFreeOrActiveServices(vm.currentCustomer, { isCareEnabled: isCareEnabled,
-          isTrial: false }), function (service) {
-          return _.assign({}, service, {
-            detail: service.free ? FREE : service.qty + ' ' + QTY,
-            actionAvailable: hasSubview(service)
-          });
+      vm.freeOrPaidServices = _.map(PartnerService.getFreeOrActiveServices(vm.currentCustomer, { isCareEnabled: isCareEnabled,
+        isTrial: false }), function (service) {
+        return _.assign({}, service, {
+          detail: service.free ? FREE : service.qty + ' ' + QTY,
+          actionAvailable: hasSubview(service)
         });
-      }
+      });
     }
 
     init();
@@ -332,11 +328,7 @@ require('./_customer-overview.scss');
 
     function hasSubview(service) {
       var hasWebexOrMultMeeting = (service.hasWebex === true || service.isMeeting);
-      if (!newCustomerViewToggle) {
-        return false;
-      } else {
-        return hasWebexOrMultMeeting || service.isRoom;
-      }
+      return hasWebexOrMultMeeting || service.isRoom;
     }
 
     function goToSubview(service, options) {

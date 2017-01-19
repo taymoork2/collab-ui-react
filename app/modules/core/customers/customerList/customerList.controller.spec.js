@@ -1,13 +1,12 @@
 'use strict';
 
 describe('Controller: CustomerListCtrl', function () {
-  var $httpBackend, $q, $controller, $state, $scope, Authinfo, Config, customerListToggle, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, trialForPaid, TrialService;
+  var $httpBackend, $q, $controller, $state, $scope, Authinfo, Config, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, trialForPaid, TrialService;
   var controller;
 
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
   var partnerService = getJSONFixture('core/json/partner/partner.service.json');
   var managedOrgsResponse = partnerService.managedOrgsResponse;
-  var trialsResponse = partnerService.trialsResponse;
   var orgId = 'b93b10ad-ae24-4abf-9c21-76e8b86faf01';
   var orgName = 'testOrg';
   var testOrg = {
@@ -56,7 +55,6 @@ describe('Controller: CustomerListCtrl', function () {
       CUSTOMER: 2
     };
 
-    customerListToggle = false;
     trialForPaid = false;
 
     spyOn($state, 'go');
@@ -81,7 +79,6 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
     spyOn(TrialService, 'getTrial').and.returnValue($q.resolve());
-    spyOn(TrialService, 'getTrialsList').and.returnValue($q.resolve(trialsResponse));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 
   }));
@@ -92,7 +89,6 @@ describe('Controller: CustomerListCtrl', function () {
       $state: $state,
       Authinfo: Authinfo,
       Config: Config,
-      customerListToggle: customerListToggle,
       trialForPaid: trialForPaid
     });
 
@@ -251,8 +247,6 @@ describe('Controller: CustomerListCtrl', function () {
       //this tests that getManagedOrgsList is  called , it is called once at init , so the count is expected to be 2 here
       expect(PartnerService.getManagedOrgsList.calls.count()).toEqual(2);
       expect(PartnerService.getManagedOrgsList).toHaveBeenCalledWith('1234');
-      expect(TrialService.getTrialsList.calls.count()).toEqual(2);
-      expect(TrialService.getTrialsList).toHaveBeenCalledWith('1234');
     });
 
   });
