@@ -31,6 +31,26 @@
       return returnData;
     }
 
+    function adjustParticipantDistributionData(activeData, returnData, startTime, endTime, graphs) {
+      var returnDataArray = [];
+      var startDate = {
+        time: startTime
+      };
+      activeData.unshift(startDate);
+      for (var i = 0; i < activeData.length; i++) {
+        var tmpItem = {};
+        tmpItem = activeData[i];
+        returnDataArray.push(tmpItem);
+      }
+      var endDate = {
+        time: endTime
+      };
+      returnDataArray.push(endDate);
+      returnData.graphData = returnDataArray;
+      returnData.graphs = graphs;
+      return returnData;
+    }
+
     function adjustCallVolumeData(activeData, returnData, startTime, endTime) {
       var returnDataArray = [];
       var graphItem = {
@@ -137,6 +157,25 @@
       });
     }
 
+    function getParticipantDistributionData(time, cluster) {
+      vm.callDistributionUrl = '/clusters_call_volume';
+
+      var returnData = {
+        graphData: [],
+        graphs: []
+      };
+      return $http.get(vm.urlBase + getQuerys(vm.callDistributionUrl, cluster, time)).then(function (response) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
+          returnData.graphData.push(response.data.chartData);
+          return adjustParticipantDistributionData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
+        } else {
+          return returnData;
+        }
+      }, function (error) {
+        return returnErrorCheck(error, 'Call Distribution data not returned for customer.', $translate.instant('mediaFusion.metrics.overallCallDistributionGraphError'), returnData);
+      });
+    }
+
     function getAvailabilityData(time, cluster) {
       vm.clusterAvailabilityUrl = '/clusters_availability';
 
@@ -209,6 +248,7 @@
     return {
       getUtilizationData: getUtilizationData,
       getCallVolumeData: getCallVolumeData,
+      getParticipantDistributionData: getParticipantDistributionData,
       getAvailabilityData: getAvailabilityData,
       getClusterAvailabilityData: getClusterAvailabilityData,
       getTotalCallsData: getTotalCallsData,

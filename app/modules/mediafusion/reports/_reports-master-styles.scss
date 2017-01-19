@@ -2,6 +2,7 @@
 @import 'resources-reports/callVolume/_call-volume-styles';
 @import 'resources-reports/availability/_availability-styles';
 @import 'resources-reports/utilization/_media-utilization-styles';
+@import 'resources-reports/participantDistribution/_media-participant-distribution-styles';
 .media-reports {
   @extend %content-subheader;
   @extend %page-content-padding;

@@ -5,7 +5,7 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, MediaClusterServiceV2, UtilizationResourceGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService) {
+  function MediaReportsController($q, $scope, $translate, $interval, MediaClusterServiceV2, UtilizationResourceGraphService, ParticipantDistributionResourceGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -17,6 +17,7 @@
 
     vm.utilizationStatus = vm.REFRESH;
     vm.callVolumeStatus = vm.REFRESH;
+    vm.participantDistributionStatus = vm.REFRESH;
     vm.availabilityStatus = vm.REFRESH;
 
     vm.clusterFilter = null;
@@ -89,6 +90,7 @@
       setClusterAvailability();
       setUtilizationData();
       setCallVolumeData();
+      setParticipantDistributionData();
       setAvailabilityData();
     }
 
@@ -263,6 +265,25 @@
       });
     }
 
+    function setParticipantDistributionData() {
+      MediaReportsService.getParticipantDistributionData(vm.timeSelected, vm.allClusters).then(function (response) {
+        if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
+          setDummyParticipantDistribution();
+        } else {
+          deferred.promise.then(function () {
+            //set the call distribution graphs here
+            setParticipantDistributionGraph(response);
+            vm.participantDistributionStatus = vm.SET;
+          }, function () {
+            //map is nor formed so we shoud show dummy graphs
+            setDummyParticipantDistribution();
+          });
+        }
+      }, function () {
+        setDummyParticipantDistribution();
+      });
+    }
+
     function setAvailabilityData() {
       MediaReportsService.getAvailabilityData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (_.isUndefined(response.data) || !_.isArray(response.data) || response.data.length === 0 || _.isUndefined(response.data[0].clusterCategories) || response.data[0].clusterCategories.length === 0) {
@@ -299,6 +320,10 @@
       vm.utilizationChart = UtilizationResourceGraphService.setUtilizationGraph(response, vm.utilizationChart, vm.clusterSelected, vm.clusterId, vm.timeSelected, vm.Map);
     }
 
+    function setParticipantDistributionGraph(response) {
+      vm.participantDistributionChart = ParticipantDistributionResourceGraphService.setParticipantDistributionGraph(response, vm.participantDistributionChart, vm.clusterSelected, vm.clusterId, vm.timeSelected, vm.Map);
+    }
+
     function setCallVolumeGraph(response) {
       vm.callVolumeChart = CallVolumeResourceGraphService.setCallVolumeGraph(response.graphData, vm.callVolumeChart, vm.clusterSelected, vm.timeSelected);
     }
@@ -314,6 +339,15 @@
         graphs: MediaReportsDummyGraphService.dummyUtilizationGraph()
       };
       setUtilizationGraph(response);
+    }
+
+    function setDummyParticipantDistribution() {
+      vm.callDistributionStatus = vm.EMPTY;
+      var response = {
+        graphData: MediaReportsDummyGraphService.dummyParticipantDistributionData(vm.timeSelected),
+        graphs: MediaReportsDummyGraphService.dummyParticipantDistributionGraph()
+      };
+      setParticipantDistributionGraph(response);
     }
 
     function setDummyCallVolume() {
