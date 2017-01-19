@@ -4223,7 +4223,7 @@
       "participantDistributionTitle": "Participant Distribution",
       "clusteravailability": "Cluster Availability",
       "overallUtilizationGraphError": "There was an error while loading detailed utilization data",
-      "overallCallDistributionGraphError": "There was an error while loading detailed call distribution data",
+      "overallParticipantDistributionGraphError": "There was an error while loading detailed participant distribution data",
       "overallCallVolumeGraphError": "There was an error while loading total number of calls",
       "overallAvailabilityGraphError": "There was an error while loading detailed availability data",
       "overallAverageUtilizationGraphError": "There was an error while loading Average/Peak utilization data",

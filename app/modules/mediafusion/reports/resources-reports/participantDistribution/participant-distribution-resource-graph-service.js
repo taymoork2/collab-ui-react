@@ -3,7 +3,7 @@
 
   angular.module('Mediafusion').service('ParticipantDistributionResourceGraphService', ParticipantDistributionResourceGraphService);
   /* @ngInject */
-  function ParticipantDistributionResourceGraphService(CommonReportsGraphService, chartColors, $translate, $log) {
+  function ParticipantDistributionResourceGraphService(CommonReportsGraphService, chartColors, $translate) {
 
     var vm = this;
     var participantDistributiondiv = 'participantDistributiondiv';
@@ -157,7 +157,6 @@
         }
       });
       tempData = _.sortBy(tempData, 'title');
-      $log.log(JSON.stringify(tempData));
       return tempData;
     }
 

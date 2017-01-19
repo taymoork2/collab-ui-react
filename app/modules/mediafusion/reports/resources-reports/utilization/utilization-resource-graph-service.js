@@ -3,7 +3,7 @@
 
   angular.module('Mediafusion').service('UtilizationResourceGraphService', UtilizationResourceGraphService);
   /* @ngInject */
-  function UtilizationResourceGraphService(CommonReportsGraphService, chartColors, $translate, $log) {
+  function UtilizationResourceGraphService(CommonReportsGraphService, chartColors, $translate) {
 
     var utilizationdiv = 'utilizationdiv';
     var GUIDEAXIS = 'guideaxis';
@@ -171,7 +171,6 @@
         }
       });
       tempData = _.sortBy(tempData, 'title');
-      $log.log(JSON.stringify(tempData));
       return tempData;
     }
 

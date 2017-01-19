@@ -172,7 +172,7 @@
           return returnData;
         }
       }, function (error) {
-        return returnErrorCheck(error, 'Call Distribution data not returned for customer.', $translate.instant('mediaFusion.metrics.overallCallDistributionGraphError'), returnData);
+        return returnErrorCheck(error, 'Participant Distribution data not returned for customer.', $translate.instant('mediaFusion.metrics.overallParticipantDistributionGraphError'), returnData);
       });
     }
 
