@@ -398,7 +398,7 @@
         },
         countWithCare: {
           expression: function () {
-            return careLicenseCountLessThanMessageCount();
+            return validateCareLicense(vm.careTrial.details.quantity);
           },
           message: function () {
             return $translate.instant('partnerHomePage.careLicenseCountExceedsTotalCount');
@@ -540,7 +540,6 @@
     vm.cancelModal = cancelModal;
     vm.getNextState = getNextState;
     vm.hasTrial = hasTrial;
-    vm.validateCareLicense = validateCareLicense;
     vm._helpers = {
       hasEnabled: hasEnabled,
       hasEnabledMessageTrial: hasEnabledMessageTrial,
@@ -555,7 +554,6 @@
       callOfferDisabledExpression: callOfferDisabledExpression,
       careLicenseInputDisabledExpression: careLicenseInputDisabledExpression,
       validateCareLicense: validateCareLicense,
-      careLicenseCountLessThanMessageCount: careLicenseCountLessThanMessageCount,
       saveTrialPstn: saveTrialPstn,
       saveTrialContext: saveTrialContext,
       getNewOrgInitResults: getNewOrgInitResults,
@@ -1067,14 +1065,10 @@
     }
 
     function validateCareLicense($viewValue, $modelValue) {
-      return !vm.careTrial.enabled || ValidationService.trialCareQuantity(
-        $viewValue, $modelValue, vm.details.licenseCount);
-    }
-
-    function careLicenseCountLessThanMessageCount() {
       //if message in trial -- use licenseCount -- otherwise use purchased quantity
       var messageLicenseCount = (vm.messageTrial.enabled) ? vm.details.licenseCount : vm.messageTrial.paid;
-      return (!vm.careTrial.enabled || +messageLicenseCount >= +vm.careTrial.details.quantity);
+      return !vm.careTrial.enabled || ValidationService.trialCareQuantity(
+        $viewValue, $modelValue, messageLicenseCount);
     }
 
     // TODO: this can be refactored as it is mostly a dupe of 'TrialAddCtrl.launchCustomerPortal'
