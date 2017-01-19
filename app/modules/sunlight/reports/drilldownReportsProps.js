@@ -35,7 +35,7 @@
         hasData: true,
         emptyDescription: function () {
           return $translate.instant('taskIncoming.drilldownEmptyDescription', {
-            interval: timeSelected().intervalTxt
+            time: timeSelected().drilldownDescription
           });
         },
         errorDescription: function () {
@@ -99,7 +99,7 @@
         hasData: true,
         emptyDescription: function () {
           return $translate.instant('averageCsat.drilldownEmptyDescription', {
-            interval: timeSelected().intervalTxt
+            time: timeSelected().drilldownDescription
           });
         },
         errorDescription: function () {
@@ -164,7 +164,7 @@
         hasData: true,
         emptyDescription: function () {
           return $translate.instant('taskTime.drilldownEmptyDescription', {
-            interval: timeSelected().intervalTxt
+            time: timeSelected().drilldownDescription
           });
         },
         errorDescription: function () {

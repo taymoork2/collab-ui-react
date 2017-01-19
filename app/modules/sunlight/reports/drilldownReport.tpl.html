@@ -11,7 +11,7 @@
     </p>
     <div class="report-search" ng-if="dd.isDataAvailable() && dd.props.search">
       <i class="icon icon-search"></i>
-      <input type="text" placeholder="dd.props.searchPlaceholder" ng-model="gridApi.grid.columns[0].filters[0].term"></input>
+      <input type="text" placeholder="{{dd.props.searchPlaceholder}}" ng-model="gridApi.grid.columns[0].filters[0].term"></input>
     </div>
     <div class="care-table-wrapper">
       <div ng-if="dd.isDataAvailable()" class="careGrid" ui-grid="dd.props.table.gridOptions" ui-grid-auto-resize></div>

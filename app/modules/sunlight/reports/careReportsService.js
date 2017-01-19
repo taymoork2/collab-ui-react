@@ -345,7 +345,8 @@
       getTaskIncomingGraphConfig: getTaskIncomingGraphConfig,
       getTaskTimeGraphConfig: getTaskTimeGraphConfig,
       getAverageCsatGraphConfig: getAverageCsatGraphConfig,
-      getTaskAggregateGraphConfig: getTaskAggregateGraphConfig
+      getTaskAggregateGraphConfig: getTaskAggregateGraphConfig,
+      millisToTime: millisToTime
     };
 
     return service;
