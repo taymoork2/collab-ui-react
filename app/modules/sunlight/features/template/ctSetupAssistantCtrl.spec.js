@@ -772,8 +772,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.states).toEqual([
         'name',
         'overview',
-        // TODO: Uncomment customer information once form is ready.
-        //'customerInformation',
+        'customerInformation',
         'offHours',
         'summary'
       ]);
