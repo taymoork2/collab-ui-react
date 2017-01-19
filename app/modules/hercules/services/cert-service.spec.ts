@@ -1,15 +1,14 @@
 describe('Service: CertService', () => {
-  let  CertService, $httpBackend: any, UrlConfig: any, $q: ng.IQService, $scope;
+  let  CertService, $httpBackend: any, UrlConfig: any, $q: ng.IQService;
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies (_CertService_, _$httpBackend_, _UrlConfig_,  _$q_, _$rootScope_): void {
+  function dependencies (_CertService_, _$httpBackend_, _UrlConfig_,  _$q_): void {
     CertService = _CertService_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     UrlConfig = _UrlConfig_;
-    $scope = _$rootScope_.$new();
   }
 
   function initSpies(): void {

@@ -16,13 +16,13 @@ export class CertService {
     return res.data;
   }
 
-  public getCerts(orgId) {
+  public getCerts(orgId: string): ng.IPromise<any> {
     return this.$http
       .get(`${this.CertsUrl}/certificates?expand=decoded&orgId=${orgId}`)
       .then(this.extractData);
   }
 
-  public uploadCert(orgId, file) {
+  public uploadCert(orgId: string, file: any): ng.IPromise<any> {
     let deferred = this.$q.defer();
     let reader = new this.$window.FileReader();
     reader.onloadend =  () => {
@@ -35,7 +35,7 @@ export class CertService {
     return deferred.promise;
   }
 
-  public deleteCert(certId) {
+  public deleteCert(certId: string): ng.IPromise<any> {
     return this.$http.delete(`${this.CertsUrl}/certificates/${certId}`);
   }
 }
