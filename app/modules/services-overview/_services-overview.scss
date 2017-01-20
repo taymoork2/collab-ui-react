@@ -94,6 +94,7 @@
             padding: 1px 1rem;
             margin-top: 1rem;
             width: auto !important;
+            font-size: 14px;
 
             &:focus {
               box-shadow: none;
@@ -128,13 +129,13 @@
         }
 
         footer {
-          border-top: 1px solid $gray-light-4;
           display: flex;
 
           div {
             width: 100%;
             justify-content: flex-start;
             padding-top: rem(12);
+            text-align: center;
           }
 
           .status {
@@ -171,6 +172,63 @@
       padding-top: 0.9rem;
       padding-bottom: 1rem;
       color: inherit;
+    }
+  }
+
+  .cs-card.large > article header {
+    padding-top: 0.5rem;
+  }
+
+  .hybrid-calendar-large {
+    display: flex;
+    flex-direction: column;
+
+    .semi-card-container {
+      display: flex;
+      flex-direction: row;
+      flex: 1;
+      padding: 0 1.5rem 0.5rem;
+    }
+
+    .semi-card {
+      background: $gray-light-4;
+      border-radius: 2px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+
+      &:first-child {
+        margin-right: 1rem;
+      }
+    }
+
+    .semi-card-title {
+      @extend %h6;
+      margin: 1.5rem 0 1rem;
+      text-align: center;
+
+      img {
+        height: 30px;
+      }
+    }
+
+    .semi-card-content {
+      flex: 1;
+      text-align: center;
+    }
+
+    .semi-card-footer {
+      text-align: center;
+      height: 3rem;
+      line-height: 3rem;
+
+      a {
+        color: $gray-base;
+      }
+    }
+
+    .btn--primary {
+      width: calc(100% - 1rem);
     }
   }
 }

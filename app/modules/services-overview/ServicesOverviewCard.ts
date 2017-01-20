@@ -29,11 +29,11 @@ export interface ICardParams {
 
 export abstract class ServicesOverviewCard {
 
-  private cardClass: string;
   private cardType: CardType;
   private description: string;
   private icon: string;
   private template: string;
+  public cardClass: string;
   public active: boolean;
   public display: boolean;
   public loading = true;
