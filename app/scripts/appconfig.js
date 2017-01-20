@@ -2925,7 +2925,12 @@
                 controller: 'CallServiceSettingsController',
                 templateUrl: 'modules/hercules/service-settings/call-service-settings.html'
               }
-            }
+            },
+            resolve: {
+              hasVoicemailFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridVoicemail);
+              },
+            },
           })
           .state('cluster-details', {
             parent: 'sidepanel',
