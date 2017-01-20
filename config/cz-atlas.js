@@ -21,10 +21,10 @@ module.exports = {
       name: 'type',
       message: 'Select the type of change that you\'re committing:',
       choices: [{
-        name: 'feat:     A new feature (use WIP until feature is complete)',
+        name: 'feat:     A new feature (100% complete, otherwise it\'s WIP)',
         value: 'feat'
       }, {
-        name: 'fix:      A bug fix (use WIP until fix is complete)',
+        name: 'fix:      A bug fix (100% fixed, otherwise it\'s WIP)',
         value: 'fix'
       }, {
         name: 'docs:     Documentation only changes',
@@ -45,7 +45,7 @@ module.exports = {
         name: 'chore:    Changes to the build process or auxiliary tools\n            and libraries such as documentation generation',
         value: 'chore'
       }, {
-        name: 'revert:   Revert to a commit',
+        name: 'revert:   Undo the changes introduced by a previous commit',
         value: 'revert'
       }, {
         name: 'WIP:      Work in progress',
@@ -64,14 +64,15 @@ module.exports = {
         'huron',
         'mediafusion',
         'messenger',
+        'release',
         'sunglight',
         'support',
         'trials',
         'users',
         'webex',
         '*',
-        'CHANGELOG',
-        'custom'
+        'custom',
+        'CHANGELOG'
       ]
     }, {
       type: 'input',
@@ -83,7 +84,7 @@ module.exports = {
     }, {
       type: 'input',
       name: 'subject',
-      message: 'Write a short description of the change (<80 chars). Begin with User Story or defect # if applicable:\n',
+      message: 'Write a short (<80 chars) description of the change. Include the User Story or defect # (if applicable). e.g. "US1234 - update backend URLs":\n',
       validate: function (value) {
         return !!(value && value.length < 80);
       },
@@ -94,7 +95,7 @@ module.exports = {
     }, {
       type: 'input',
       name: 'footer',
-      message: 'Provide any helpful links (e.g. Fixes #123).  User story, defect, or gist links are mandatory. Use "|" to break new line:\n'
+      message: 'Provide any helpful links. User story and defect links are mandatory. For Github issues, use "Fixes #123" or equivalent. Use "|" to break new line:\n'
     }, {
       type: 'expand',
       name: 'confirmCommit',
