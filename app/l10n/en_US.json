@@ -2695,7 +2695,7 @@
     "callerReturnedTwoWeeks": "2 Weeks",
     "callerReturnedOneMonth": "1 Month",
     "callerReturnedWhen": "Within the last",
-    "callerNumberInfo": "Enter one or more numbers here; separate multiple entries with commas. Example: +012065551212,+01111555121",
+    "callerNumberInfo": "Enter one or more numbers here; separate multiple entries with commas. Example: +012065551212,+011115551212",
     "callerNameInfo": "Enter one or more caller names here; separate multiple entries with commas. Example: \"John Smith\", \"Jane Doe\"",
     "countryCodeInfo": "Enter one or more numbers here; separate multiple entries with commas. Example: 01, 05",
     "areaCodeInfo": "Enter one or more numbers here; separate multiple entries with commas. Example: 206, 425",

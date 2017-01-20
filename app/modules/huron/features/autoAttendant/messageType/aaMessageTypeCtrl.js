@@ -8,6 +8,7 @@
   function AAMessageTypeCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
 
     var vm = this;
+    var conditional = 'conditional';
 
     var properties = {
       NAME: ["play", "say", "runActionsOnInput"],
@@ -207,7 +208,7 @@
             if ($scope.type) {
               queueAction = _.get(vm.menuEntry, 'actions[0]');
 
-              if (_.get(queueAction, 'name') === 'decision') {
+              if (_.get(queueAction, 'name') === conditional) {
                 queueAction = queueAction.then;
               }
 

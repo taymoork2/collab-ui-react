@@ -10,6 +10,8 @@
   function AARouteToQueueCtrl($scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AANotificationService, AALanguageService) {
 
     var vm = this;
+    var conditional = 'conditional';
+
     vm.hideQueues = true;
     vm.queueSelected = {
       description: '',
@@ -53,15 +55,23 @@
     function openQueueTreatmentModal() {
       // deep copy used to roll back from the modal changes
       var master = angular.copy(fromRouteCall || fromDecision ? vm.menuEntry.actions[0] : vm.menuKeyEntry.actions[0]);
+      var action;
+
       openQueueSettings().result.then(function () {
         // keep changes as modal was resolved with close
         if (fromRouteCall || fromDecision) {
-          vm.menuEntry.actions[0].description = {
-            musicOnHoldDescription: vm.menuEntry.actions[0].queueSettings.musicOnHold.actions[0].description,
-            periodicAnnouncementType: vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].name,
-            periodicAnnouncementDescription: vm.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].description,
-            initialAnnouncementType: vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0].name,
-            initialAnnouncementDescription: vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0].description
+          action = vm.menuEntry.actions[0];
+
+          if (_.get(action, 'name') === conditional) {
+            action = action.then;
+          }
+
+          action.description = {
+            musicOnHoldDescription: action.queueSettings.musicOnHold.actions[0].description,
+            periodicAnnouncementType: action.queueSettings.periodicAnnouncement.actions[0].name,
+            periodicAnnouncementDescription: action.queueSettings.periodicAnnouncement.actions[0].description,
+            initialAnnouncementType: action.queueSettings.initialAnnouncement.actions[0].name,
+            initialAnnouncementDescription: action.queueSettings.initialAnnouncement.actions[0].description
           };
         } else {
           vm.menuKeyEntry.actions[0].description = {
@@ -121,8 +131,8 @@
         action = vm.menuKeyEntry.actions[0];
       }
 
-      if (_.get(action, 'name') === 'decision') {
-        action = action.then;
+      if (_.get(action, 'name') === conditional) {
+        action = _.get(action.then, 'queueSettings.fallback.actions[0]', action.then);
       }
 
       vm.queueSelected.id = action.getValue();
@@ -145,7 +155,7 @@
       var action;
       if (fromRouteCall || fromDecision) {
         action = vm.menuEntry.actions[0];
-        if (_.get(action, 'name') === 'decision') {
+        if (_.get(action, 'name') === conditional) {
           action.then.setValue(vm.queueSelected.id);
         } else {
           action.setValue(vm.queueSelected.id);
@@ -175,7 +185,7 @@
     function activateQueueSettings(menuEntryParam) {
       var action = _.get(menuEntryParam, 'actions[0]');
 
-      if (_.get(action, 'name') === 'decision') {
+      if (_.get(action, 'name') === conditional) {
         action = action.then;
       }
 
@@ -226,24 +236,24 @@
       var ui = AAUiModelService.getUiModel();
 
       if ($scope.fromDecision) {
-        var decisionAction;
+        var conditionalAction;
         fromDecision = true;
 
         vm.uiMenu = ui[$scope.schedule];
         vm.menuEntry = vm.uiMenu.entries[$scope.index];
-        decisionAction = _.get(vm.menuEntry, 'actions[0]', '');
-        if (!decisionAction) {
-          decisionAction = AutoAttendantCeMenuModelService.newCeActionEntry('decision', '');
+        conditionalAction = _.get(vm.menuEntry, 'actions[0]', '');
+        if (!conditionalAction) {
+          conditionalAction = AutoAttendantCeMenuModelService.newCeActionEntry(conditional, '');
         }
-        if (!decisionAction.then) {
-          decisionAction.then = {};
-          decisionAction.then = AutoAttendantCeMenuModelService.newCeActionEntry(rtQueue, '');
+        if (!conditionalAction.then) {
+          conditionalAction.then = {};
+          conditionalAction.then = AutoAttendantCeMenuModelService.newCeActionEntry(rtQueue, '');
         } else {
-          checkForRouteToQueue(decisionAction.then);
+          checkForRouteToQueue(conditionalAction.then);
         }
 
-        if (!_.has(decisionAction.then, 'queueSettings')) {
-          decisionAction.then.queueSettings = {};
+        if (!_.has(conditionalAction.then, 'queueSettings')) {
+          conditionalAction.then.queueSettings = {};
         }
 
         activateQueueSettings(vm.menuEntry);

@@ -9,6 +9,7 @@
   function AARouteToExtNumCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
 
     var vm = this;
+    var conditional = 'conditional';
 
     vm.model = {};
 
@@ -54,8 +55,8 @@
         entry = _.get(vm.menuKeyEntry, 'queueSettings.fallback', vm.menuKeyEntry);
       }
       action = _.get(entry, 'actions[0]');
-      if (action && _.get(action, 'name') === 'decision') {
-        action = action.then;
+      if (action && _.get(action, 'name') === conditional) {
+        action = _.get(action.then, 'queueSettings.fallback.actions[0]', action.then);
       }
 
       vm.model.phoneNumberInput.phoneNumber = action.getValue();
@@ -78,7 +79,7 @@
 
       action = _.get(entry, 'actions[0]');
 
-      if (_.get(action, 'name') === 'decision') {
+      if (_.get(action, 'name') === conditional) {
         action = _.get(action.then, 'queueSettings.fallback.actions[0]', action.then);
       }
 
@@ -126,21 +127,21 @@
       var ui = AAUiModelService.getUiModel();
 
       if ($scope.fromDecision) {
-        var decisionAction;
+        var conditionalAction;
         fromDecision = true;
 
         vm.uiMenu = ui[$scope.schedule];
         vm.menuEntry = vm.uiMenu.entries[$scope.index];
-        decisionAction = _.get(vm.menuEntry, 'actions[0]', '');
-        if (!decisionAction) {
-          decisionAction = AutoAttendantCeMenuModelService.newCeActionEntry('decision', '');
+        conditionalAction = _.get(vm.menuEntry, 'actions[0]', '');
+        if (!conditionalAction) {
+          conditionalAction = AutoAttendantCeMenuModelService.newCeActionEntry(conditional, '');
         }
-        if ($scope.fromFallback) {
-          if (!decisionAction.then) {
-            decisionAction.then = {};
-            decisionAction.then = AutoAttendantCeMenuModelService.newCeActionEntry(rtExtNum, '');
+        if (!$scope.fromFallback) {
+          if (!conditionalAction.then) {
+            conditionalAction.then = {};
+            conditionalAction.then = AutoAttendantCeMenuModelService.newCeActionEntry(rtExtNum, '');
           } else {
-            checkForRouteToExt(decisionAction.then);
+            checkForRouteToExt(conditionalAction.then);
           }
         }
       } else {
@@ -193,6 +194,9 @@
           entry = vm.menuKeyEntry;
         } else {
           entry = vm.menuEntry.actions[0];
+        }
+        if (_.get(entry, 'name') === conditional) {
+          entry = entry.then;
         }
 
         var fallbackAction = _.get(entry, 'queueSettings.fallback.actions[0]');

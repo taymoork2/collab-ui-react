@@ -9,6 +9,7 @@
   function AARouteToAACtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService) {
 
     var vm = this;
+    var conditional = 'conditional';
 
     vm.aaModel = {};
     vm.menuEntry = {};
@@ -60,8 +61,8 @@
       entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
       action = _.get(entry, 'actions[0]');
 
-      if (action && _.get(action, 'name') === 'decision') {
-        action = action.then;
+      if (action && _.get(action, 'name') === conditional) {
+        action = _.get(action.then, 'queueSettings.fallback.actions[0]', action.then);
       }
 
       vm.aaName = ceId2aaName(action.value);
@@ -75,7 +76,7 @@
 
       action = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback.actions[0]', vm.menuEntry.actions[0]);
 
-      if (_.get(action, 'name') === 'decision') {
+      if (_.get(action, 'name') === conditional) {
         action = _.get(action.then, 'queueSettings.fallback.actions[0]', action.then);
       }
       action.setValue(aaName2CeId(vm.aaName));
@@ -97,20 +98,20 @@
       var uiModel = AAUiModelService.getUiModel();
 
       if ($scope.fromDecision) {
-        var decisionAction;
+        var conditionalAction;
 
         uiCombinedMenu = uiModel[$scope.schedule];
         vm.menuEntry = uiCombinedMenu.entries[$scope.index];
-        decisionAction = _.get(vm.menuEntry, 'actions[0]', '');
-        if (!decisionAction) {
-          decisionAction = AutoAttendantCeMenuModelService.newCeActionEntry('decision', '');
+        conditionalAction = _.get(vm.menuEntry, 'actions[0]', '');
+        if (!conditionalAction) {
+          conditionalAction = AutoAttendantCeMenuModelService.newCeActionEntry(conditional, '');
         }
         if (!$scope.fromFallback) {
-          if (!decisionAction.then) {
-            decisionAction.then = {};
-            decisionAction.then = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
+          if (!conditionalAction.then) {
+            conditionalAction.then = {};
+            conditionalAction.then = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
           } else {
-            checkForRouteToAA(decisionAction.then);
+            checkForRouteToAA(conditionalAction.then);
           }
         }
       } else {
@@ -143,7 +144,7 @@
 
       if ($scope.fromFallback) {
         var fb_action = _.get(vm.menuEntry, 'actions[0]');
-        if (_.get(fb_action, 'name') === 'decision') {
+        if (_.get(fb_action, 'name') === conditional) {
           fb_action = fb_action.then;
         }
         var fallbackAction = _.get(fb_action, 'queueSettings.fallback.actions[0]');

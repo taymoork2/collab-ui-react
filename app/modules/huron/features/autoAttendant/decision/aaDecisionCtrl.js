@@ -10,7 +10,7 @@
 
     var vm = this;
 
-    var actionName = 'decision';
+    var actionName = 'conditional';
     vm.queues = [];
 
     vm.menuEntry = {};
@@ -24,25 +24,31 @@
       value: ''
     };
 
-
     vm.ifOptions = [{
+      /* caller returned not implemented yet */
       label: $translate.instant('autoAttendant.decisionCallerReturned'),
       value: 'callerReturned',
+      buffer: ''
     }, {
       label: $translate.instant('autoAttendant.decisionNumberDialed'),
-      value: 'numberDialed'
+      value: 'Original-Called-Number',
+      buffer: ''
     }, {
       label: $translate.instant('autoAttendant.decisionCallerNumber'),
-      value: 'callerNumber',
+      value: 'Original-Caller-Number',
+      buffer: ''
     }, {
       label: $translate.instant('autoAttendant.decisionCallerName'),
-      value: 'callerName',
+      value: 'Original-Remote-Party-ID',
+      buffer: ''
     }, {
       label: $translate.instant('autoAttendant.decisionCallerCountryCode'),
-      value: 'countryCode',
+      value: 'Original-Caller-Country-Code',
+      buffer: ''
     }, {
       label: $translate.instant('autoAttendant.decisionCallerAreaCode'),
-      value: 'areaCode'
+      value: 'Original-Caller-Area-Code',
+      buffer: ''
     }];
 
     vm.thenOption = {
@@ -67,6 +73,7 @@
       value: 'route'
     }];
 
+    /* caller returned options will be implemented later */
     vm.callerReturnedOption = {
       label: $translate.instant('autoAttendant.callerReturnedOneWeek'),
       value: 'One Week'
@@ -92,39 +99,17 @@
       value: 'Never',
     }];
 
-    vm.callerNumber = '';
-    vm.numberDialed = '';
-    vm.callerName = '';
-    vm.countryCode = '';
-    vm.areaCode = '';
-
     vm.setIfDecision = setIfDecision;
-    vm.setCallerReturned = setCallerReturned;
-    vm.saveNumberDialed = saveNumberDialed;
-    vm.saveCallerNumbers = saveCallerNumbers;
-    vm.saveCallerName = saveCallerName;
-    vm.saveCountryCode = saveCountryCode;
-    vm.saveAreaCode = saveAreaCode;
+    vm.save = save;
 
     /////////////////////
-    function saveCallerNumbers() {
-      vm.actionEntry.if.rightCondition = vm.callerNumber;
-    }
+    function save(which) {
 
-    function saveNumberDialed() {
-      vm.actionEntry.if.rightCondition = vm.numberDialed;
-    }
-    function saveCallerName() {
-      vm.actionEntry.if.rightCondition = vm.callerName;
-    }
-    function saveCountryCode() {
-      vm.actionEntry.if.rightCondition = vm.countryCode;
-    }
-    function saveAreaCode() {
-      vm.actionEntry.if.rightCondition = vm.areaCode;
-    }
-    function setCallerReturned() {
-      vm.actionEntry.if.rightCondition = vm.callerReturnedOption.value;
+      AACommonService.setDecisionStatus(true);
+
+      var option = _.find(vm.ifOptions, { 'value': which });
+      vm.actionEntry.if.rightCondition = option.buffer;
+
     }
 
     function createDecisionAction() {
@@ -132,29 +117,19 @@
       action.if = {};
       action.if.leftCondition = '';
       action.if.rightCondition = '';
+      /* the various controller, routeTo's, will create a 'then' action for their type */
 
       return action;
 
     }
     function setIfDecision() {
       vm.actionEntry.if.leftCondition = vm.ifOption.value;
-      switch (vm.ifOption.value) {
-        case 'callerReturned':
-          vm.actionEntry.if.rightCondition = vm.callerReturnedOption.value;
-          break;
-        case 'numberDialed':
-          vm.actionEntry.if.rightCondition = vm.numberDialed;
-          break;
-        case 'callerName':
-          vm.actionEntry.if.rightCondition = vm.callerName;
-          break;
-        case 'countryCode':
-          vm.actionEntry.if.rightCondition = vm.countryCode;
-          break;
-        case 'areaCode':
-          vm.actionEntry.if.rightCondition = vm.areaCode;
-          break;
-      }
+
+      var option = _.find(vm.ifOptions, { 'value': vm.ifOption.value });
+      vm.actionEntry.if.rightCondition = option.buffer;
+
+      AACommonService.setDecisionStatus(true);
+
     }
 
     function getAction(menuEntry) {
@@ -186,6 +161,14 @@
     }
 
     function populateMenu() {
+      if (!_.isEmpty(vm.actionEntry.if.leftCondition)) {
+        vm.ifOption = _.find(vm.ifOptions, { 'value': vm.actionEntry.if.leftCondition });
+        vm.ifOption.buffer = vm.actionEntry.if.rightCondition;
+      }
+      if (_.has(vm.actionEntry, 'then.name')) {
+        vm.thenOption = _.find(vm.thenOptions, { 'value': vm.actionEntry.then.name });
+      }
+
     }
     function getQueues() {
       return QueueHelperService.listQueues().then(function (aaQueueList) {
@@ -210,17 +193,24 @@
     }
 
     function activate() {
+      /* remove callerReturned until US264303 */
+      vm.ifOptions.splice(0, 1);
+
       setActionEntry();
-      if (AACommonService.isRouteQueueToggle()) {
-        getQueues().finally(sortAndSetActionType);
-      } else {
-        sortAndSetActionType();
-      }
+      sortAndSetActionType();
 
       populateMenu();
     }
 
-    activate();
+    function init() {
+      if (AACommonService.isRouteQueueToggle()) {
+        getQueues().finally(activate);
+      } else {
+        activate();
+      }
+    }
+
+    init();
 
   }
 

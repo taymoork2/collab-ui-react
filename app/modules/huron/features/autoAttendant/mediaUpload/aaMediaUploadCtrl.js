@@ -7,6 +7,7 @@
   /* @ngInject */
   function AAMediaUploadCtrl($scope, $translate, Upload, ModalService, AANotificationService, AACommonService, AAMediaUploadService, AAUiModelService, AutoAttendantCeMenuModelService, Analytics, CryptoJS, Authinfo, AAMetricNameService) {
     var vm = this;
+    var conditional = 'conditional';
 
     vm.uploadFile = '';
     vm.uploadDate = '';
@@ -376,7 +377,7 @@
         vm.menuEntry = uiMenu.entries[$scope.index];
         queueAction = _.get(vm.menuEntry, 'actions[0]');
 
-        if (_.get(queueAction, 'name') === 'decision') {
+        if (_.get(queueAction, 'name') === conditional) {
           queueAction = queueAction.then;
         }
 

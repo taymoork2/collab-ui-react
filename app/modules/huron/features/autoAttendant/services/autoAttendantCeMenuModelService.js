@@ -419,6 +419,25 @@
         action.setDescription(task.description);
       }
     }
+    function makeRouteToQueue(inAction) {
+      var action;
+      action = new Action('routeToQueue', inAction.routeToQueue.id);
+      setDescription(action, inAction.routeToQueue);
+      try {
+        action.description = JSON.parse(action.description);
+      } catch (exception) {
+        action.description = '';
+      }
+      cesLanguageVoice(action, inAction.routeToQueue);
+      cesMaxWaitTime(action, inAction.routeToQueue);
+      cesMoh(action, inAction.routeToQueue);
+      cesIa(action, inAction.routeToQueue);
+      cesPa(action, inAction.routeToQueue);
+      cesFallback(action, inAction.routeToQueue);
+
+      return action;
+
+    }
 
     function parseAction(menuEntry, inAction) {
       //read from db
@@ -544,20 +563,39 @@
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.routeToQueue)) {
         //this occurs on the way in from the db
-        action = new Action('routeToQueue', inAction.routeToQueue.id);
-        setDescription(action, inAction.routeToQueue);
-        try {
-          action.description = JSON.parse(action.description);
-        } catch (exception) {
-          return;
-        }
-        cesLanguageVoice(action, inAction.routeToQueue);
-        cesMaxWaitTime(action, inAction.routeToQueue);
-        cesMoh(action, inAction.routeToQueue);
-        cesIa(action, inAction.routeToQueue);
-        cesPa(action, inAction.routeToQueue);
-        cesFallback(action, inAction.routeToQueue);
+        action = makeRouteToQueue(inAction);
         menuEntry.addAction(action);
+      } else if (inAction.conditional) {
+        var exp;
+
+        action = new Action('conditional');
+        action.if = {};
+        exp = parseLeftRightExpression(inAction.conditional.expression);
+
+        action.if.leftCondition = exp[0];
+        action.if.rightCondition = exp[1];
+
+        if (inAction.conditional.true[0].route) {
+          action.then = new Action("route", inAction.conditional.true[0].route.destination);
+        }
+        if (inAction.conditional.true[0].routeToHuntGroup) {
+          action.then = new Action("routeToHuntGroup", inAction.conditional.true[0].routeToHuntGroup.id);
+        }
+        if (inAction.conditional.true[0].goto) {
+          action.then = new Action("goto", inAction.conditional.true[0].goto.ceid);
+        }
+        if (inAction.conditional.true[0].routeToUser) {
+          action.then = new Action("routeToUser", inAction.conditional.true[0].routeToUser.id);
+        }
+        if (inAction.conditional.true[0].routeToVoiceMail) {
+          action.then = new Action("routeToVoiceMail", inAction.conditional.true[0].routeToVoiceMail.id);
+        }
+        if (inAction.conditional.true[0].routeToQueue) {
+          action.then = makeRouteToQueue(inAction.conditional.true[0]);
+        }
+
+        menuEntry.addAction(action);
+
       } else {
         // insert an empty action
         action = new Action('', '');
@@ -567,6 +605,17 @@
         menuEntry.addAction(action);
       }
     }
+    function parseLeftRightExpression(expression) {
+      var inParens = expression.match(/\(([^)]+)\)/);
+      var chunk = inParens[1].match(/'([^']+)'/g);
+
+      var pieces = [];
+      pieces[0] = chunk[0].replace(/'/g, '');
+      pieces[1] = chunk[1].replace(/'/g, '');
+
+      return pieces;
+    }
+
 
     function cesLanguageVoice(action, inAction) {
       if (action) {
@@ -1146,11 +1195,64 @@
                 newActionArray[i][actionName].voice = menuEntry.actions[0].voice;
                 newActionArray[i][actionName].language = menuEntry.actions[0].language;
               }
+            } else if (actionName === 'conditional') {
+              newActionArray[i][actionName] = createConditional(menuEntry.actions[0]);
             }
           }
         }
       }
       return newActionArray;
+    }
+    function createInListObj(action) {
+      var out;
+      out = "var func=function() {if(this['" + action.if.leftCondition + "'] in '" + action.if.rightCondition + "') {return true;} return false;};";
+
+      return out;
+
+    }
+    function createObj(tag, action) {
+      var out = {};
+      var destObj = {};
+      /* special case routeToQueue */
+      if (_.get(action.then, 'name') === 'routeToQueue') {
+        destObj = populateRouteToQueue(action.then);
+      } else {
+        destObj[tag] = action.then.value;
+      }
+      out[action.then.name] = destObj;
+
+      return out;
+
+    }
+
+
+    function createConditional(action) {
+      var out = {};
+      var tag;
+
+      /* as of now, all are InList type expressions. callerReturned is not
+         implemented yet.
+      */
+
+      out.expression = createInListObj(action);
+
+      out.true = [];
+
+      switch (action.then.name) {
+        case 'route':
+          tag = 'destination';
+          break;
+        case 'goto':
+          tag = 'ceid';
+          break;
+        default:
+          tag = 'id';
+      }
+
+      out.true.push(createObj(tag, action));
+
+      return out;
+
     }
 
     function updateWelcomeMenu(ceRecord, actionSetName, aaMenu) {

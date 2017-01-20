@@ -8,6 +8,7 @@
   /* @ngInject */
   function AANewTreatmentModalCtrl($modalInstance, $translate, $scope, AALanguageService, AACommonService, AutoAttendantCeMenuModelService, AAUiModelService, aa_schedule, aa_menu_id, aa_index, aa_key_index, aa_from_route_call, aa_from_decision) {
     var vm = this;
+    var conditional = 'conditional';
 
     var properties = {
       LABEL: "label"
@@ -84,7 +85,7 @@
 
     //////////////////////////////////
     function chkDecision(action) {
-      if (_.get(action, 'name') === 'decision') {
+      if (_.get(action, 'name') === conditional) {
         action = action.then;
       }
       return action;

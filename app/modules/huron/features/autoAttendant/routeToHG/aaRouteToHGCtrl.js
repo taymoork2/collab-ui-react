@@ -9,6 +9,7 @@
   function AARouteToHGCtrl($scope, $translate, HuntGroupService, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
 
     var vm = this;
+    var conditional = 'conditional';
 
     vm.hgSelected = {
       description: '',
@@ -46,8 +47,8 @@
       }
 
       action = _.get(entry, 'actions[0]');
-      if (action && _.get(action, 'name') === 'decision') {
-        action = action.then;
+      if (action && _.get(action, 'name') === conditional) {
+        action = _.get(action.then, 'queueSettings.fallback.actions[0]', action.then);
       }
 
       vm.hgSelected.id = action.getValue();
@@ -70,9 +71,10 @@
 
       action = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]', entry.actions[0]);
 
-      if (_.get(action, 'name') === 'decision') {
+      if (_.get(action, 'name') === conditional) {
         action = _.get(action.then, 'queueSettings.fallback.actions[0]', action.then);
       }
+      action.setValue(vm.hgSelected.id);
     }
 
     function getHuntGroups() {
@@ -103,21 +105,21 @@
       var ui = AAUiModelService.getUiModel();
 
       if ($scope.fromDecision) {
-        var decisionAction;
+        var conditionalAction;
         fromDecision = true;
 
         vm.uiMenu = ui[$scope.schedule];
         vm.menuEntry = vm.uiMenu.entries[$scope.index];
-        decisionAction = _.get(vm.menuEntry, 'actions[0]', '');
-        if (!decisionAction) {
-          decisionAction = AutoAttendantCeMenuModelService.newCeActionEntry('decision', '');
+        conditionalAction = _.get(vm.menuEntry, 'actions[0]', '');
+        if (!conditionalAction) {
+          conditionalAction = AutoAttendantCeMenuModelService.newCeActionEntry(conditional, '');
         }
-        if ($scope.fromFallback) {
-          if (!decisionAction.then) {
-            decisionAction.then = {};
-            decisionAction.then = AutoAttendantCeMenuModelService.newCeActionEntry(rtHG, '');
+        if (!$scope.fromFallback) {
+          if (!conditionalAction.then) {
+            conditionalAction.then = {};
+            conditionalAction.then = AutoAttendantCeMenuModelService.newCeActionEntry(rtHG, '');
           } else {
-            checkForRouteToHG(decisionAction.then);
+            checkForRouteToHG(conditionalAction.then);
           }
         }
       } else {
@@ -149,13 +151,12 @@
 
       if ($scope.fromFallback) {
         var entry;
-        if (_.has(vm.menuKeyEntry, 'actions[0]')) {
-          entry = vm.menuKeyEntry;
-        } else {
-          entry = vm.menuEntry;
-        }
+        entry = _.get(vm.menuKeyEntry, 'actions[0]', vm.menuEntry.actions[0]);
 
-        var fallbackAction = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]');
+        if (_.get(entry, 'name') === conditional) {
+          entry = entry.then;
+        }
+        var fallbackAction = _.get(entry, 'queueSettings.fallback.actions[0]');
         if (fallbackAction && (fallbackAction.getName() !== rtHG)) {
           fallbackAction.setName(rtHG);
           fallbackAction.setValue('');

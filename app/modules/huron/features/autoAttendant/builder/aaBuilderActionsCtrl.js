@@ -57,7 +57,7 @@
       help: $translate.instant('autoAttendant.actionDecisionHelp'),
       metric: 'Decision-Title',
       showHelpLink: true,
-      actions: ['decision']
+      actions: ['conditional']
     }];
 
     vm.actionPlaceholder = $translate.instant("autoAttendant.actionPlaceholder");
