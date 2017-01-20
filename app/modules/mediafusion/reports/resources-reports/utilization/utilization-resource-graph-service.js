@@ -121,7 +121,19 @@
 
       graphs.push({
         'title': 'All',
-        'id': 'all'
+        'id': 'all',
+        'bullet': 'square',
+        'bulletSize': 10,
+        'lineColor': '#000000',
+        'hidden': true
+      });
+
+      graphs.push({
+        'title': 'None',
+        'id': 'none',
+        'bullet': 'square',
+        'bulletSize': 10,
+        'lineColor': '#000000'
       });
 
       var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames));
@@ -179,11 +191,21 @@
     }
 
     function legendHandler(evt) {
-      var state = evt.dataItem.hidden;
       if (evt.dataItem.id === 'all') {
         _.forEach(evt.chart.graphs, function (graph) {
           if (graph.id != 'all') {
-            evt.chart[state ? 'hideGraph' : 'showGraph'](graph);
+            evt.chart.showGraph(graph);
+          } else if (graph.id === 'all') {
+            evt.chart.hideGraph(graph);
+          }
+
+        });
+      } else if (evt.dataItem.id === 'none') {
+        _.forEach(evt.chart.graphs, function (graph) {
+          if (graph.id != 'all') {
+            evt.chart.hideGraph(graph);
+          } else if (graph.id === 'all') {
+            evt.chart.showGraph(graph);
           }
         });
       }
