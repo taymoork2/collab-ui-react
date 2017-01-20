@@ -316,11 +316,6 @@
         var events = _.reject(getEvents(obj), function (e) {
           return e.level == 'INFO' && (e.type == 'ip' || e.type == 'software' || e.type == 'upgradeChannel');
         });
-        if (events.length > 0) {
-          events.push({
-            type: 'TCPMediaFallback'
-          });
-        }
         return events;
       }
 

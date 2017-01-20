@@ -17,7 +17,7 @@ class ReportCardCtrl {
   public labels: Array<IReportLabel>;
   public show: boolean = true;
   public time: ITimespan;
-  public tooltip: IReportTooltip;
+  public lowerTooltip: IReportTooltip;
 
   // export menu
   public exportDropdown: Array<IExportMenu>;
@@ -285,6 +285,6 @@ angular.module('Core')
       resizePage: '&',
       show: '<',
       time: '<',
-      tooltip: '<',
+      lowerTooltip: '<',
     },
 });

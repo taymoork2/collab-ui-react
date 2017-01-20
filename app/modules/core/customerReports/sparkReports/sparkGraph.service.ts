@@ -553,6 +553,7 @@ export class SparkGraphService {
     let valueAxes: any = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
     valueAxes[0].integersOnly = true;
     valueAxes[0].title = this.$translate.instant('mediaQuality.minutes');
+    valueAxes[0].titleColor = this.chartColors.grayBase;
     valueAxes[0].stackType = 'regular';
 
     if (!data[0].balloon) {
@@ -698,7 +699,6 @@ export class SparkGraphService {
 
     let chartData: any = this.CommonGraphService.getBaseSerialGraph(data[graphNumber].graph, 0, valueAxes, this.deviceLineGraphs(data, filter), this.CommonGraphService.DATE, catAxis);
     chartData.numberFormatter = this.CommonGraphService.getBaseVariable(this.CommonGraphService.NUMFORMAT);
-    chartData.legend = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LEGEND);
     chartData.chartCursor = chartCursor;
     chartData.autoMargins = true;
     return AmCharts.makeChart(this.devicesDiv, chartData);

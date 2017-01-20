@@ -1,21 +1,40 @@
 <div>
   <div class="ct-title">
-    <span class="h2 ct-title-overview" translate="careChatTpl.overview"></span>
+    <span class="h2 ct-title-overview" translate="{{careSetupAssistant.getLocalisedText('careChatTpl.overview')}}"></span>
   </div>
-  <div class="h4 ct-title-desc" translate="careChatTpl.overviewDesc"></div>
+  <div class="h4 ct-title-desc" translate="{{careSetupAssistant.getLocalisedText('careChatTpl.overviewDesc')}}"></div>
+
   <div class="ct-sa-content overview-card-layout">
     <cs-card-layout block-view="true" class="ct-card-center">
-      <cs-card ng-repeat="(page, status) in careSetupAssistant.template.configuration.pages" class="medium">
-        <article ng-class="{'ct-card-border-enabled': status.enabled ,'ct-card-border-disabled': !status.enabled}" class="ct-card-overview">
-          <i ng-class="['icon', 'icon-' + careChatSA.overview.{{page}},'icon-4x','ct-card-img']"></i>
-          <div class="h4 ct-card-title" translate="careChatTpl.ctOverview.{{page}}.title"></div>
+      <cs-card ng-repeat="pageName in careSetupAssistant.overviewCards" class="medium">
+        <article ng-class="{'ct-card-border-enabled': careSetupAssistant.template.configuration.pages[pageName].enabled,
+                 'ct-card-border-disabled': !careSetupAssistant.template.configuration.pages[pageName].enabled}"
+                 class="ct-card-overview">
+          <i ng-class="['icon', 'icon-' + careChatSA.overview.{{pageName}},'icon-4x','ct-card-img']"></i>
+          <div class="h4 ct-card-title" translate="careChatTpl.ctOverview.{{pageName}}.title"></div>
           <section>
-            <div class="h6 ct-card-desc" translate="careChatTpl.ctOverview.{{page}}.desc"></div>
-            <div class="ct-toggle-position">
-            <cs-toggle-switch ng-model="status.enabled"
-                              toggle-id={{page}}
-                              size="small">
-            </cs-toggle-switch>
+            <div class="h6 ct-card-desc"
+                 translate="{{careSetupAssistant.getLocalisedText('careChatTpl.ctOverview.' + pageName + '.desc')}}">
+            </div>
+            <div class="ct-toggle-position"
+                 ng-switch on="careSetupAssistant.template.configuration.mediaType == 'callback'
+                              && pageName == 'customerInformation'">
+              <div ng-switch-when="true">
+                <div tooltip="{{::'careChatTpl.customerInfoToggleTooltipMessage' | translate}}"
+                     tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-animation="false">
+                  <cs-toggle-switch ng-model="careSetupAssistant.template.configuration.pages[pageName].enabled"
+                                    toggle-id={{pageName}}
+                                    is-disabled="true"
+                                    size="small">
+                  </cs-toggle-switch>
+                </div>
+              </div>
+              <div ng-switch-default>
+                <cs-toggle-switch ng-model="careSetupAssistant.template.configuration.pages[pageName].enabled"
+                                  toggle-id={{pageName}}
+                                  size="small">
+                </cs-toggle-switch>
+              </div>
             </div>
           </section>
         </article>

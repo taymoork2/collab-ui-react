@@ -70,11 +70,11 @@ describe('Controller: DeviceUsageCtrl', function () {
 
 
     it('starts with fetching initial data based on default last 7 days range', function (done) {
-      sinon.stub(DeviceUsageTotalService, 'getDataForLastNTimeUnits');
+      sinon.stub(DeviceUsageTotalService, 'getDataForRange');
       var deviceData = [
         { whatever: 42 }
       ];
-      DeviceUsageTotalService.getDataForLastNTimeUnits.returns($q.when(deviceData));
+      DeviceUsageTotalService.getDataForRange.returns($q.when(deviceData));
       expect(controller.loading).toBe(true);
       controller.init();
       expect(controller.timeSelected.value).toBe(0);

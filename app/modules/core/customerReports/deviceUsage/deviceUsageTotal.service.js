@@ -6,7 +6,7 @@
     .service('DeviceUsageTotalService', DeviceUsageTotalService);
 
   /* @ngInject */
-  function DeviceUsageTotalService($log, $q, $timeout, $http, DeviceUsageMockData, DeviceUsageDateService, UrlConfig, Authinfo) {
+  function DeviceUsageTotalService($log, $q, $timeout, $http, DeviceUsageMockData, UrlConfig, Authinfo) {
     var localUrlBase = 'http://localhost:8080/atlas-server/admin/api/v1/organization';
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
 
@@ -15,11 +15,6 @@
 
     var timeoutInMillis = 20000;
     var intervalType = 'day'; // Used as long as week and month is not implemented
-
-    function getDataForLastNTimeUnits(count, granularity, deviceCategories, api, missingDaysDeferred) {
-      var dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(count, granularity);
-      return getDataForRange(dateRange.start, dateRange.end, granularity, deviceCategories, api, missingDaysDeferred);
-    }
 
     function getDataForRange(start, end, granularity, deviceCategories, api, missingDaysDeferred) {
       var startDate = moment(start);
@@ -311,7 +306,6 @@
       getDataForRange: getDataForRange,
       extractStats: extractStats,
       resolveDeviceData: resolveDeviceData,
-      getDataForLastNTimeUnits: getDataForLastNTimeUnits,
       reduceAllData: reduceAllData
     };
   }
