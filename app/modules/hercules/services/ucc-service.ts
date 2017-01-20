@@ -1,3 +1,9 @@
+interface IResult {
+  errors?: any;
+  message: string;
+  trackingId: string;
+}
+
 export class UCCService {
 
   private uccUrl: string;
@@ -15,12 +21,12 @@ export class UCCService {
     return res.data;
   }
 
-  public getUserDiscovery(userId: string, orgId?: string): ng.IPromise<any> {
+  public getUserDiscovery(userId: string, orgId?: string): ng.IPromise<IResult> {
     if (_.isUndefined(orgId)) {
       orgId = this.Authinfo.getOrgId();
     }
     return this.$http
-      .get(`${this.uccUrl}/userDiscovery/${orgId}/${userId}`)
+      .get<IResult>(`${this.uccUrl}/userDiscovery/${orgId}/${userId}`)
       .then(this.extractData);
   }
 
