@@ -6,7 +6,7 @@
     .factory('HuronUser', HuronUser);
 
   /* @ngInject */
-  function HuronUser(Authinfo, UserServiceCommon, UserServiceCommonV2, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, UserOTPService, LogMetricsService, Notification, CallerId) {
+  function HuronUser(Authinfo, UserServiceCommon, UserServiceCommonV2, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, LogMetricsService, Notification, CallerId) {
 
     function deleteUser(uuid) {
       return UserServiceCommon.remove({
@@ -81,31 +81,6 @@
         .then(function () {
           if (acquireOTPFlg) {
             return acquireOTP(userName);
-          } else {
-            return UserOTPService.query({
-              customerId: customerId,
-              userId: uuid
-            }).$promise
-              .then(function (otps) {
-                var otpList = [];
-                for (var i = 0; i < otps.length; i++) {
-                  if (otps[i].expires.status === "valid") {
-                    var otp = {
-                      password: otps[i].activationCode,
-                      expiresOn: otps[i].expires.time,
-                      valid: otps[i].expires.status
-                    };
-                    otpList.push(otp);
-                  }
-                }
-
-                if (otpList.length > 0) {
-                  return otpList[0];
-                } else {
-                  return acquireOTP(userName);
-                }
-
-              });
           }
         })
         .then(function (otpInfo) {
