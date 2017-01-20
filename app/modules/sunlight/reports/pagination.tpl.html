@@ -1,0 +1,16 @@
+  <button type="button" ng-click="selectPage(1, $event)" class="carousel-control" ng-if="::boundaryLinks" ng-class="{disabled: noPrevious()}"  uib-tabindex-toggle>
+    <span href ng-disabled="noPrevious()">{{::getText('first')}}</span>
+  </button>
+  <button type="button" class="carousel-control icon icon-chevron-left" ng-if="::directionLinks" ng-disabled="noPrevious()" ng-click="selectPage(page - 1, $event)" >
+    <!--<span href ng-disabled="noPrevious()" uib-tabindex-toggle>{{::getText('previous')}}</span>-->
+  </button>
+  <button type="button" class="btn" ng-click="selectPage(page.number, $event)" ng-repeat="page in pages track by $index"
+          ng-class="{'btn--primary': page.active, 'btn--link carousel-btn': !page.active}" uib-tabindex-toggle>
+    <span href >{{page.text}}</span>
+  </button>
+  <button type="button" class="carousel-control icon icon-chevron-right" ng-if="::directionLinks"  ng-disabled="noNext()" ng-click="selectPage(page + 1, $event)" uib-tabindex-toggle>
+    <!--<span ng-class="i"  >{{::getText('next')}}</span>-->
+  </button>
+  <button type="button" class="carousel-control" ng-if="::boundaryLinks" ng-class="{disabled: noNext()}" ng-click="selectPage(totalPages, $event)"  uib-tabindex-toggle>
+    <span href ng-disabled="noNext()">{{::getText('last')}}</span>
+  </button>

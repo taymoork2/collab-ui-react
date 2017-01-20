@@ -7,7 +7,7 @@
 describe('drilldownReports Controller Positive Test cases', function () {
   var $componentController, $log, ReportConstants, $timeout, CardUtils, $rootScope;
   var $scope, ddController, callbackSpy;
-  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$componentController_, _$log_, _ReportConstants_, _$timeout_, _CardUtils_, _$rootScope_) {
     $componentController = _$componentController_;

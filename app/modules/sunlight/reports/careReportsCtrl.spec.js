@@ -211,7 +211,7 @@ describe('Controller: Care Reports Controller', function () {
   });
 
   describe('CareReportsController - Show Drill-down table data', function () {
-    var notCalled = function () { fail('Callback function call unexpected.'); };
+    var notCalled = function (err) { fail('Callback function call unexpected. ' + JSON.stringify(err)); };
     var dummyStats = getJSONFixture('sunlight/json/features/careReport/sunlightReportStats.json');
     var allUserFifteenMinutesStats = dummyStats.reportUsersFifteenMinutesStats;
     var ciUserStats = dummyStats.ciUserStats;
@@ -219,11 +219,12 @@ describe('Controller: Care Reports Controller', function () {
     it('should fetch drill-down data on clicking show', function (done) {
       controller.timeSelected = timeOptions[0];
       controller.mediaTypeSelected = mediaTypeOptions[1];
+      controller.filtersUpdate();
       var testOnSuccess = function (data) {
         expect(data).toBeDefined();
         done();
       };
-      controller.showTable(testOnSuccess, notCalled);
+      controller.showTable(testOnSuccess, notCalled, controller.mediaTypeSelected, controller.timeSelected);
       expect(SunlightReportService.getAllUsersAggregatedData.calls.argsFor(0)).toEqual(['all_user_stats', 0, 'chat']);
       deferredReportingData.resolve(allUserFifteenMinutesStats.data);
       deferredTableData.resolve(ciUserStats);
@@ -233,12 +234,13 @@ describe('Controller: Care Reports Controller', function () {
     it('should piggy-back on existing promise, if present ', function (done) {
       controller.timeSelected = timeOptions[0];
       controller.mediaTypeSelected = mediaTypeOptions[1];
+      controller.filtersUpdate();
       var data1 = null;
       var testOnSuccess = function (data) {
         expect(data).toBeDefined();
         data1 = data;
       };
-      controller.showTable(testOnSuccess, notCalled);
+      controller.showTable(testOnSuccess, notCalled, controller.mediaTypeSelected, controller.timeSelected);
       expect(SunlightReportService.getAllUsersAggregatedData.calls.argsFor(0)).toEqual(['all_user_stats', 0, 'chat']);
       deferredReportingData.resolve(allUserFifteenMinutesStats.data);
       deferredTableData.resolve(ciUserStats);
@@ -248,7 +250,7 @@ describe('Controller: Care Reports Controller', function () {
         expect(data).toEqual(data1);
         done();
       };
-      controller.showTable(testOnSuccess2, notCalled);
+      controller.showTable(testOnSuccess2, notCalled, controller.mediaTypeSelected, controller.timeSelected);
       $scope.$digest();
     });
 
@@ -264,9 +266,33 @@ describe('Controller: Care Reports Controller', function () {
         expect(SunlightReportService.getAllUsersAggregatedData).not.toHaveBeenCalled();
         done();
       };
-      controller.showTable(testOnSuccess, notCalled);
+      controller.showTable(testOnSuccess, notCalled, controller.mediaTypeSelected, controller.timeSelected);
       $scope.$digest();
     });
+
+    it('should ignore dirty data, if media type or time filters are updated', function (done) {
+
+      controller.timeSelected = timeOptions[2];
+      controller.mediaTypeSelected = mediaTypeOptions[0];
+      controller.filtersUpdate();
+
+      var testOnError = function (err) {
+        expect(_.get(err, 'reason')).toEqual('filtersChanged');
+        done();
+      };
+
+      controller.showTable(notCalled, testOnError, controller.mediaTypeSelected, controller.timeSelected);
+      expect(SunlightReportService.getAllUsersAggregatedData.calls.argsFor(0)).toEqual(['all_user_stats', 2, 'all']);
+
+      controller.timeSelected = timeOptions[1];
+      controller.mediaTypeSelected = mediaTypeOptions[1];
+      controller.filtersUpdate();
+
+      deferredReportingData.resolve(allUserFifteenMinutesStats.data);
+      deferredTableData.resolve(ciUserStats);
+      $scope.$digest();
+    });
+
 
     it('should fetch data afresh, if media type or time filters are updated', function (done) {
 
@@ -282,7 +308,7 @@ describe('Controller: Care Reports Controller', function () {
         expect(data).not.toEqual([{ name: 'Test User' }]);
         done();
       };
-      controller.showTable(testOnSuccess, notCalled);
+      controller.showTable(testOnSuccess, notCalled, controller.mediaTypeSelected, controller.timeSelected);
       expect(SunlightReportService.getAllUsersAggregatedData.calls.argsFor(0)).toEqual(['all_user_stats', 2, 'all']);
       deferredReportingData.resolve(allUserFifteenMinutesStats.data);
       deferredTableData.resolve(ciUserStats);
@@ -296,7 +322,7 @@ describe('Controller: Care Reports Controller', function () {
         expect(err).toEqual('testError');
         done();
       };
-      controller.showTable(notCalled, testOnError);
+      controller.showTable(notCalled, testOnError, controller.mediaTypeSelected, controller.timeSelected);
       expect(SunlightReportService.getAllUsersAggregatedData.calls.argsFor(0)).toEqual(['all_user_stats', 3, 'callback']);
       deferredReportingData.resolve(allUserFifteenMinutesStats.data);
       deferredTableData.reject('testError');

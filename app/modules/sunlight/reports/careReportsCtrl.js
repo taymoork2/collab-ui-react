@@ -18,6 +18,7 @@
 
     vm.tableData = [];
     vm.tableDataPromise = undefined;
+    var tableDataFor = { mediaTypeSelected: vm.mediaTypeSelected, timeSelected: vm.timeSelected };
 
     vm.allReports = 'all';
     vm.engagement = 'engagement';
@@ -84,6 +85,10 @@
       vm.snapshotDataStatus = REFRESH;
       vm.tableDataStatus = EMPTY;
       vm.tableData = [];
+      tableDataFor = _.pick(vm, ['mediaTypeSelected', 'timeSelected']);
+      if (vm.tableDataPromise) {
+        vm.tableDataPromise = undefined;
+      }
       setFilterBasedTextForCare();
 
       showReportsWithDummyData();
@@ -95,33 +100,43 @@
       return promise;
     }
 
-    function saveReportingAndUserData(mergedData) {
-      if (mergedData && mergedData.length > 0) {
-        vm.tableDataStatus = SET;
-      } else {
-        vm.tableDataStatus = EMPTY;
-      }
-      vm.tableData = mergedData;
-      return $q.resolve(vm.tableData);
+    function saveReportingAndUserData(mediaTypeSelected, timeSelected) {
+      return function (mergedData) {
+        if (!isTableDataClean(mediaTypeSelected, timeSelected)) {
+          return $q.reject({ reason: 'filtersChanged' });
+        }
+        if (mergedData && mergedData.length > 0) {
+          vm.tableDataStatus = SET;
+        } else {
+          vm.tableDataStatus = EMPTY;
+        }
+        vm.tableData = mergedData;
+        return $q.resolve(vm.tableData);
+      };
     }
 
-    function getTableData(onSuccess, onError) {
-      return SunlightReportService.getAllUsersAggregatedData('all_user_stats', vm.timeSelected.value, vm.mediaTypeSelected.name)
-        .then(saveReportingAndUserData)
-        .then(onSuccess, onError)
+    function getTableData(mediaTypeSelected, timeSelected) {
+      return SunlightReportService.getAllUsersAggregatedData('all_user_stats', timeSelected.value, mediaTypeSelected.name)
+        .then(saveReportingAndUserData(mediaTypeSelected, timeSelected))
         .finally(function () {
           vm.tableDataPromise = undefined;
         });
     }
 
-    vm.showTable = function (onSuccess, onError) {
+    function isTableDataClean(mediaTypeSelected, timeSelected) {
+      return tableDataFor.mediaTypeSelected === mediaTypeSelected && tableDataFor.timeSelected === timeSelected;
+    }
+
+    vm.showTable = function (onSuccess, onError, mediaTypeSelected, timeSelected) {
       if (vm.tableDataStatus === SET) {
         onSuccess(vm.tableData);
         return $q.resolve(vm.tableData);
-      } else if (vm.tableDataPromise) {
-        return vm.tableDataPromise.then(onSuccess, onError);
+      } else if (vm.tableDataPromise && isTableDataClean(mediaTypeSelected, timeSelected)) {
+        vm.tableDataPromise.then(onSuccess, onError);
+        return vm.tableDataPromise;
       } else {
-        vm.tableDataPromise = getTableData(onSuccess, onError);
+        vm.tableDataPromise = getTableData(mediaTypeSelected, timeSelected);
+        vm.tableDataPromise.then(onSuccess, onError);
         return vm.tableDataPromise;
       }
     };
@@ -218,7 +233,7 @@
     }
 
     function delayedResize() {
-      CardUtils.resize(500);
+      CardUtils.resize(100);
     }
 
     function enableReportingFilters() {
