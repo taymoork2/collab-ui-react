@@ -28,7 +28,6 @@
       atlasNewCiDataModel: 'atlas-new-ci-data-model',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
       atlasNewUserExport: 'atlas-new-user-export',
-      atlasNotifyPartnerTrialExtBackendEmail: 'atlas-notify-partner-trial-ext-backend-email',
       atlasNurturingEmails: 'atlas-nurturing-emails',
       atlasPinSettings: 'atlas-pin-settings',
       atlasPMRonM2: 'atlas-pmr-on-m2',
