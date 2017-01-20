@@ -1,4 +1,4 @@
-require('modules/hercules/service-settings/voicemail-settings-section/_voicemail-settings.scss');
+require('./_voicemail-settings.scss');
 
 class HybridVoicemailCtrl implements ng.IComponentController {
 

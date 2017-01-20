@@ -2928,7 +2928,7 @@
             },
             resolve: {
               hasVoicemailFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasVoicemail);
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridVoicemail);
               },
             },
           })
