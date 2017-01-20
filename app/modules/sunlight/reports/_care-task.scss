@@ -1,3 +1,4 @@
+@import 'styles/toolkit/colors';
 .care-card-report {
   .areachart {
     position: relative;
@@ -7,4 +8,53 @@
   graph-text.care-graph-text {
     text-align: center;
   }
+
+ .ui-grid-viewport {
+    height: auto !important;
+  }
+
+  .ui-grid {
+    height: auto !important;
+    border-bottom: rem-calc(1) solid $gray-light-2;
+    margin-bottom: rem-calc(20);
+  }
+
+  .ui-grid-row {
+    border-color: $gray-light-2;
+    color: $gray-dark-1;
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  .ui-grid-header-cell-wrapper {
+    background-color: $gray-light-3;
+    text-align: left;
+    cursor: default;
+  }
+
+  .ui-grid-header-cell-label {
+    font-weight: bold;
+    font-size: 0.875rem;
+    color: $gray-dark-1;
+  }
+
+  .care-table-wrapper {
+    width: 95%;
+    padding-left: 1.5rem;
+  }
+
+  .ui-grid-header-cell:first-child,
+  .ui-grid-cell:first-child {
+    border-right: rem-calc(1) solid $gray-light-2;
+    border-left: rem-calc(1) solid $gray-light-2;
+  }
+
+  .ui-grid-header-cell:last-child,
+  .ui-grid-cell:last-child {
+    text-align: center;
+    border-right: rem-calc(1) solid $gray-light-2;
+  }
+
+  .ui-grid-filter-container { display: none!important; }
 }

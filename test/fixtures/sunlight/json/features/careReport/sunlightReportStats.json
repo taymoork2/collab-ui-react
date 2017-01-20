@@ -365,38 +365,36 @@
     }
   },
   "ciUserStats": {
-    "data": {
-        "Resources": [{
-          "displayName":"GT User 5",
-          "name": {
-            "givenName": "A GT",
-            "familyName": "user5"
-          },
-          "id": "7d1d3d8c-3a9c-4317-a567-db678d24b24f",
-          "emails": [{
-            "value": "sunlight@outlook.com"
-          }]
-        }, {
-          "displayName":"display GT User 4",
-          "id": "3c3dd56c-67c3-4054-8d07-b090945e00b3",
-          "emails": [{
-            "value": "sunlight-test-user4@outlook.com"
-          }]
-        }, {
-          "displayName":"GT User 3",
-          "name": {
-            "familyName": "A GT user5"
-          },
-          "id": "459d78ae-d720-4ad8-8e94-f88cf403aade",
-          "emails": [{
-            "value": "sunlight-test@outlook.com"
-          }]
-        }, {
-          "id": "77cacfcd-f089-418b-b70e-8406f6e67911",
-          "emails": [{
-            "value": "sunlight-user1@outlook.com"
-          }]
-        }]
-    }
+    "Resources": [{
+      "displayName":"GT User 5",
+      "name": {
+        "givenName": "A GT",
+        "familyName": "user5"
+      },
+      "id": "7d1d3d8c-3a9c-4317-a567-db678d24b24f",
+      "emails": [{
+        "value": "sunlight@outlook.com"
+      }]
+    }, {
+      "displayName":"display GT User 4",
+      "id": "3c3dd56c-67c3-4054-8d07-b090945e00b3",
+      "emails": [{
+        "value": "sunlight-test-user4@outlook.com"
+      }]
+    }, {
+      "displayName":"GT User 3",
+      "name": {
+        "familyName": "A GT user5"
+      },
+      "id": "459d78ae-d720-4ad8-8e94-f88cf403aade",
+      "emails": [{
+        "value": "sunlight-test@outlook.com"
+      }]
+    }, {
+      "id": "77cacfcd-f089-418b-b70e-8406f6e67911",
+      "emails": [{
+        "value": "sunlight-user1@outlook.com"
+      }]
+    }]
   }
 }
