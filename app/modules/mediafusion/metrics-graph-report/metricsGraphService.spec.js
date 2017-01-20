@@ -70,7 +70,7 @@ describe('Service: Metrics Graph Service', function () {
   it('setCallVolumeGraph should return an amchart object successfully', function () {
     var data = [{
       baloon: "true",
-      colorTwo: chartColors.dummyGray
+      colorTwo: chartColors.grayLightTwo
     }];
     var callVolumeChart = {
       dataProvider: [],
@@ -83,7 +83,7 @@ describe('Service: Metrics Graph Service', function () {
     expect(setCallVolumeGraphResponse.dataProvider).toEqual(
       [{
         baloon: "true",
-        colorTwo: chartColors.dummyGray
+        colorTwo: chartColors.grayLightTwo
       }]);
   });
   it('setCallVolumeGraph should return an amchart object successfully when callVolumeChart is unavailable', function () {
@@ -102,7 +102,7 @@ describe('Service: Metrics Graph Service', function () {
   it('setUtilizationGraph should return an amchart object successfully', function () {
     var data = [{
       baloon: "false",
-      colorTwo: chartColors.dummyGray
+      colorTwo: chartColors.grayLightTwo
     }];
     var graphs = [{
       title: "graphTitle",
@@ -133,13 +133,13 @@ describe('Service: Metrics Graph Service', function () {
     expect(setUtilizationGraphResponse.dataProvider).toEqual(
       [{
         baloon: "false",
-        colorTwo: chartColors.dummyGray
+        colorTwo: chartColors.grayLightTwo
       }]);
   });
   it('setUtilizationGraph should return an amchart object successfully when utilizationChart is unavailable', function () {
     var data = [{
       baloon: "false",
-      colorTwo: chartColors.dummyGray
+      colorTwo: chartColors.grayLightTwo
     }];
     var graphs = [{
       title: "graphTitle",
@@ -155,7 +155,7 @@ describe('Service: Metrics Graph Service', function () {
     expect(setUtilizationGraphResponse.dataProvider).toEqual(
       [{
         baloon: "false",
-        colorTwo: chartColors.dummyGray
+        colorTwo: chartColors.grayLightTwo
       }]);
   });
   xdescribe('Active Users graph services', function () {

@@ -1,0 +1,45 @@
+<div class="fusion-cluster-settings">
+  <div class="cs-form">
+    <email-notifications-section service-id="'spark-hybrid-datasecurity'"></email-notifications-section>
+
+    <!-- Service Status -->
+    <!-- (copied from) local dialing selection -->
+    <setting-section setting="hdsSettings.servicestatus" class="needs-border-top">
+      <div class="sub-section">
+        <div class="cs-radio-group" form="settings.form" name="dialingHabit">
+          <input
+            cs-input
+            type="radio"
+            ng-model="hdsSettings.model.serviceMode"
+            name="trialServiceModeRadio"
+            id="trialService"
+            value="{{::hdsSettings.TRIAL}}"
+            cs-input-label="{{:: 'hds.settings.serviceTrialModeTitle' | translate}}"
+            cs-input-help-text="{{:: 'hds.settings.serviceTrialModeDesc' | translate}}">
+          <input
+            cs-input
+            type="radio"
+            ng-model="hdsSettings.model.serviceMode"
+            id="productionService"
+            name="productionServiceModeRadio"
+            value="{{::hdsSettings.PRODUCTION}}"
+            cs-input-label="{{:: 'hds.settings.serviceProductionModeTitle' | translate}}"
+            cs-input-help-text="{{:: 'hds.settings.serviceTrialModeDesc' | translate}}">
+        </div>
+        <button class="btn btn--people"
+                ng-show="hdsSettings.model.serviceMode === hdsSettings.TRIAL"
+                ng-click="hdsSettings.openAddTrialUsersModal()"
+                translate="hds.settings.addTrialUsers">
+        </button>
+        <button class="btn btn--people"
+                ng-show="hdsSettings.model.serviceMode === hdsSettings.TRIAL"
+                ng-click="hdsSettings.openEditTrialUsersModal()"
+                translate="hds.settings.editTrialUsers">
+        </button>
+      </div>
+    </setting-section>
+    
+    <documentation-section service-id="'spark-hybrid-datasecurity'"></documentation-section>
+    <deactivate-section service-id="'spark-hybrid-datasecurity'"></deactivate-section>
+  </div>
+</div>

@@ -7,6 +7,7 @@
       <div class="care-card-report">
         <p class="report-description">{{nav.taskIncomingDescription}}</p>
         <div id="taskIncomingdiv" class="areachart"></div>
+        <drilldown-report props="nav.taskIncomingDrilldownProps" callback="nav.showTable(onSuccess, onError)"></drilldown-report>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.dataStatus)">
           <i class='icon icon-spinner icon-2x'></i>
         </div>

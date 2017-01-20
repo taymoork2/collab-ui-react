@@ -95,14 +95,14 @@ export class SparkGraphService {
     const activeUsers: string = this.$translate.instant('activeUsers.activeUsers');
     const users: string = this.$translate.instant('activeUsers.users');
 
-    let colors: Array<string> = [this.chartColors.colorPeopleLighter, this.chartColors.colorPeopleLight];
+    let colors: Array<string> = [this.chartColors.peopleLighter, this.chartColors.peopleLight];
     let balloons: Array<boolean> = [true, true];
     let values: Array<string> = ['totalRegisteredUsers', 'activeUsers'];
     let titles: Array<string> = [users, activeUsers];
     let graphs: Array<any> = [];
 
     if (!data[0].balloon) {
-      colors = [this.chartColors.dummyGrayLight, this.chartColors.dummyGray];
+      colors = [this.chartColors.grayLightThree, this.chartColors.grayLightTwo];
       balloons = [false, false];
     }
 
@@ -177,9 +177,9 @@ export class SparkGraphService {
   private activeUserGraphs(data: Array<IActiveUserData>): Array<any> {
     const balloonText: string = SparkGraphService.graphTextSpan + this.$translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br>' + SparkGraphService.graphTextSpan +  this.$translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
 
-    let colors: Array<string> = [this.chartColors.brandSuccessLight, this.chartColors.brandSuccessDark];
+    let colors: Array<string> = [this.chartColors.ctaLight, this.chartColors.ctaBase];
     if (!data[0].balloon) {
-      colors = [this.chartColors.dummyGrayLight, this.chartColors.dummyGray];
+      colors = [this.chartColors.grayLightThree, this.chartColors.grayLightTwo];
     }
     let values = ['totalRegisteredUsers', 'activeUsers'];
     let titles = [this.$translate.instant('activeUsers.users'), this.$translate.instant('activeUsers.activeUsers')];
@@ -247,9 +247,9 @@ export class SparkGraphService {
 
     let titles: Array<string> = [group, oneToOne];
     let values: Array<string> = ['totalRooms', 'oneToOneRooms'];
-    let colors: Array<string> = [this.chartColors.primaryColorLight, this.chartColors.primaryColorDarker];
+    let colors: Array<string> = [this.chartColors.primaryLight, this.chartColors.primaryDarker];
     if (!data[0].balloon) {
-      colors = [this.chartColors.dummyGrayLight, this.chartColors.dummyGray];
+      colors = [this.chartColors.grayLightThree, this.chartColors.grayLightTwo];
     }
 
     let graphs: Array<any> = [];
@@ -302,6 +302,7 @@ export class SparkGraphService {
     let chartData: any = this.CommonGraphService.getBaseSerialGraph(data, 0, valueAxes, this.roomGraphs(data), this.CommonGraphService.DATE, catAxis);
     chartData.numberFormatter = this.CommonGraphService.getBaseVariable(this.CommonGraphService.NUMFORMAT);
     chartData.legend = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LEGEND);
+    chartData.legend.reversedOrder = true;
     chartData.chartCursor = chartCursor;
     chartData.autoMargins = true;
 
@@ -317,11 +318,11 @@ export class SparkGraphService {
     // graph variables
     const balloonText: string = SparkGraphService.graphTextSpan + group + ' <span class="room-number">[[groupRooms]]</span><br>' + oneToOne + ' <span class="room-number">[[oneToOneRooms]]</span><br>' + total + ' <span class="room-number">[[avgRooms]]</span></span>';
 
-    let titles: Array<string> = [group, oneToOne];
-    let values: Array<string> = ['groupRooms', 'oneToOneRooms'];
-    let colors: Array<string> = [this.chartColors.primaryColorLight, this.chartColors.primaryColorDarker];
+    let titles: Array<string> = [oneToOne, group];
+    let values: Array<string> = ['oneToOneRooms', 'groupRooms'];
+    let colors: Array<string> = [this.chartColors.primaryDarker, this.chartColors.primaryLight];
     if (!data[0].balloon) {
-      colors = [this.chartColors.dummyGrayLight, this.chartColors.dummyGray];
+      colors = [this.chartColors.grayLightTwo, this.chartColors.grayLightThree];
     }
 
     let graphs: Array<any> = [];
@@ -381,10 +382,10 @@ export class SparkGraphService {
     const gb: string = this.$translate.instant('filesShared.gb');
 
     const balloonText: string = SparkGraphService.graphTextSpan + filesShared + ' <span class="graph-number">[[contentShared]]</span><br>' + fileSizes + ' <span class="graph-number">[[contentShareSizes]] ' + gb + '</span></span>';
-    let color: string = this.chartColors.brandSuccess;
+    let color: string = this.chartColors.ctaLight;
 
     if (!data[0].balloon) {
-      color = this.chartColors.dummyGray;
+      color = this.chartColors.grayLightTwo;
     }
 
     let graph: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.COLUMN);
@@ -443,17 +444,15 @@ export class SparkGraphService {
     const fileSizes: string = this.$translate.instant('filesShared.fileSizes');
     const gb: string = this.$translate.instant('filesShared.gb');
 
-    let color: string = this.chartColors.brandSuccess;
+    let color: string = this.chartColors.ctaBase;
     if (!data[0].balloon) {
-      color = this.chartColors.dummyGray;
+      color = this.chartColors.grayLightTwo;
     }
 
-    let graph: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LINE);
+    let graph: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.SINGLE_LINE);
     graph.title = filesShared;
     graph.colorField = color;
     graph.lineColor = color;
-    graph.fillAlphas = 0;
-    graph.lineThickness = 3;
     graph.valueField = 'contentShared';
     graph.showBalloon = data[0].balloon;
     graph.balloonText = SparkGraphService.graphTextSpan + filesShared + ' <span class="graph-number">[[contentShared]]</span><br>' + fileSizes + ' <span class="graph-number">[[contentShareSizes]] ' + gb + '</span></span>';
@@ -511,9 +510,9 @@ export class SparkGraphService {
     }
 
     let titles: Array<string> = [this.$translate.instant('mediaQuality.good'), this.$translate.instant('mediaQuality.fair'), this.$translate.instant('mediaQuality.poor')];
-    let colors: Array<string> = [this.chartColors.blue, this.chartColors.brandWarning, this.chartColors.brandDanger];
+    let colors: Array<string> = [this.chartColors.primaryBase, this.chartColors.attentionBase, this.chartColors.negativeBase];
     if (!data[0].balloon) {
-      colors = [this.chartColors.dummyGrayLighter, this.chartColors.dummyGrayLight, this.chartColors.dummyGray];
+      colors = [this.chartColors.grayLightFour, this.chartColors.grayLightThree, this.chartColors.grayLightTwo];
     }
 
     let graphs: Array<any> = [];
@@ -535,10 +534,8 @@ export class SparkGraphService {
   public setQualityGraph(data: Array<IMediaData>, chart: any, filter: IDropdownBase): any {
     if (data.length > 0 && chart) {
       chart.categoryAxis.gridColor = this.chartColors.grayLightTwo;
-      chart.legend.valueText = '[[title]] [[value]]';
       if (!data[0].balloon) {
         chart.categoryAxis.gridColor = this.chartColors.grayLightThree;
-        chart.legend.valueText = '[[title]] -';
       }
 
       chart.dataProvider = data;
@@ -552,10 +549,16 @@ export class SparkGraphService {
 
   private createQualityGraph(data, filter) {
     let catAxis: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LINE_AXIS);
+    catAxis.gridColor = this.chartColors.grayLightTwo;
     let valueAxes: any = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
     valueAxes[0].integersOnly = true;
     valueAxes[0].title = this.$translate.instant('mediaQuality.minutes');
+    valueAxes[0].titleColor = this.chartColors.grayBase;
     valueAxes[0].stackType = 'regular';
+
+    if (!data[0].balloon) {
+      catAxis.gridColor = this.chartColors.grayLightThree;
+    }
 
     let chartCursor: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.CURSOR);
     chartCursor.valueLineAlpha = 1;
@@ -565,21 +568,7 @@ export class SparkGraphService {
 
     let chartData: any = this.CommonGraphService.getBaseSerialGraph(data, 0, valueAxes, this.qualityGraphs(data, filter), this.CommonGraphService.DATE, catAxis);
     chartData.numberFormatter = this.CommonGraphService.getBaseVariable(this.CommonGraphService.NUMFORMAT);
-    chartData.legend = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LEGEND);
-    chartData.legend.valueAlign = 'left';
-    chartData.legend.reversedOrder = true;
-    chartData.legend.valueText = '[[title]] [[value]]';
-    chartData.legend.periodValueText = '[[title]] -';
-    chartData.legend.labelText = '';
-    chartData.legend.valueWidth = 100;
-    chartData.legend.verticalGap = 0;
-    chartData.legend.markerLabelGap = 0;
     chartData.chartCursor = chartCursor;
-
-    if (!data[0].balloon) {
-      chartData.legend.valueText = '[[title]] -';
-      chartData.categoryAxis.gridColor = this.chartColors.grayLightThree;
-    }
 
     return AmCharts.makeChart(this.mediaQualityDiv, chartData);
   }
@@ -596,7 +585,7 @@ export class SparkGraphService {
     }
 
     let titles: Array<string> = [this.$translate.instant('mediaQuality.poor'), this.$translate.instant('mediaQuality.fair'), this.$translate.instant('mediaQuality.good')];
-    let colors: Array<string> = [this.chartColors.brandDanger, this.chartColors.brandWarning, this.chartColors.blue];
+    let colors: Array<string> = [this.chartColors.negativeBase, this.chartColors.attentionBase, this.chartColors.primaryBase];
     if (!data[0].balloon) {
       colors = [this.chartColors.grayLightOne, this.chartColors.grayLightTwo, this.chartColors.grayLightThree];
     }
@@ -657,9 +646,9 @@ export class SparkGraphService {
   private deviceGraphs(data: Array<IEndpointWrapper>, filter: IDropdownBase | undefined): Array<any> {
     const graphNumber: number = _.get(filter, 'value', 0);
     const title: string = this.$translate.instant('registeredEndpoints.registeredEndpoints');
-    let color: string = this.chartColors.colorPeopleBase;
+    let color: string = this.chartColors.peopleBase;
     if (!data[0].balloon) {
-      color = this.chartColors.grayLighter;
+      color = this.chartColors.grayLightThree;
     }
 
     let graph: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.COLUMN);
@@ -710,7 +699,6 @@ export class SparkGraphService {
 
     let chartData: any = this.CommonGraphService.getBaseSerialGraph(data[graphNumber].graph, 0, valueAxes, this.deviceLineGraphs(data, filter), this.CommonGraphService.DATE, catAxis);
     chartData.numberFormatter = this.CommonGraphService.getBaseVariable(this.CommonGraphService.NUMFORMAT);
-    chartData.legend = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LEGEND);
     chartData.chartCursor = chartCursor;
     chartData.autoMargins = true;
     return AmCharts.makeChart(this.devicesDiv, chartData);
@@ -719,17 +707,15 @@ export class SparkGraphService {
   private deviceLineGraphs(data: Array<IEndpointWrapper>, filter: IDropdownBase | undefined): Array<any> {
     const graphNumber: number = _.get(filter, 'value', 0);
     const title: string = this.$translate.instant('registeredEndpoints.registeredEndpoints');
-    let color: string = this.chartColors.colorPeopleBase;
+    let color: string = this.chartColors.peopleBase;
     if (!data[0].balloon) {
-      color = this.chartColors.grayLighter;
+      color = this.chartColors.grayLightThree;
     }
 
-    let graph: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LINE);
+    let graph: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.SINGLE_LINE);
     graph.title = title;
     graph.colorField = color;
     graph.lineColor = color;
-    graph.fillAlphas = 0;
-    graph.lineThickness = 3;
     graph.valueField = 'totalRegisteredDevices';
     graph.balloonText = SparkGraphService.graphTextSpan + title + ' <span class="device-number">[[totalRegisteredDevices]] </span></span>';
     graph.showBalloon = data[graphNumber].balloon;

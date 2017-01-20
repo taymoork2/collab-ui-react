@@ -5,6 +5,7 @@ import {
   IReportCard,
   IReportDropdown,
   IReportSortOption,
+  IReportTooltip,
   IReportLabel,
   ISecondaryReport,
 } from '../partnerReportInterfaces';
@@ -16,6 +17,7 @@ class ReportCardCtrl {
   public labels: Array<IReportLabel>;
   public show: boolean = true;
   public time: ITimespan;
+  public lowerTooltip: IReportTooltip;
 
   // export menu
   public exportDropdown: Array<IExportMenu>;
@@ -51,7 +53,15 @@ class ReportCardCtrl {
   private previousSearch: string = '';
 
   // Top Report Controls
-  private getTranslation(text: string, displayType: string): string {
+  public getClass(label: IReportLabel): string | void {
+    if (!label.hidden && label.class) {
+      return label.class;
+    } else {
+      return;
+    }
+  }
+
+  public getTranslation(text: string, displayType: string): string {
     if (this.time) {
       return this.$translate.instant(text, {
         time: this.time[displayType],
@@ -275,5 +285,6 @@ angular.module('Core')
       resizePage: '&',
       show: '<',
       time: '<',
+      lowerTooltip: '<',
     },
 });

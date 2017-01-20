@@ -36,19 +36,15 @@ class ReportSliderCtrl {
   public translateSlider: Function;
   public startDate: boolean = false;
   public endDate: boolean = false;
+  public optionPicker: boolean = false;
   public readonly dateArray: Array<any> = this.CommonReportService.getReturnLineGraph(this.ReportConstants.THREE_MONTH_FILTER, { date: '' });
   public ceil: number = this.ReportConstants.YEAR;
   public floor: number = 0;
-  private _min: number = this.ReportConstants.TWELVE_WEEKS;
+  private _min: number = this.ReportConstants.TWENTY_FOUR_WEEKS;
   private _max: number = this.ReportConstants.YEAR;
 
   public isCustom(): boolean {
     return this.selected.value === this.ReportConstants.CUSTOM_FILTER.value;
-  }
-
-  public resetSelection(): void {
-    this.selected = this.ReportConstants.WEEK_FILTER;
-    this.sliderUpdate();
   }
 
   public toggleMinDate(): void {
@@ -57,6 +53,10 @@ class ReportSliderCtrl {
 
   public toggleMaxDate(): void {
     this.endDate = !this.endDate;
+  }
+
+  public toggleOptionPicker(): void {
+    this.optionPicker = !this.optionPicker;
   }
 
   public setMin(index: number): void {
@@ -88,6 +88,12 @@ class ReportSliderCtrl {
   public set max(max: number) {
     this._max = max;
     this.sliderUpdate();
+  }
+
+  public updateSmallScreen(option: ITimespan): void {
+    this.selected = option;
+    this.update();
+    this.optionPicker = !this.optionPicker;
   }
 
   public update(): void {

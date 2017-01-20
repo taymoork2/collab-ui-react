@@ -1,16 +1,18 @@
-<div class="notification-button" ng-click="$ctrl.toggleDropdown($event)" ng-class="{active: $ctrl.open, clickable: $ctrl.alarms.length > 0}">
-  <div class="notification-number" ng-class="$ctrl.getNumberCSSClass()">{{$ctrl.alarms.length}}</div>
-  <div class="notification-label" translate="hercules.notificationDropdown.label"></div>
+<div class="notification-button" ng-click="$ctrl.toggleDropdown($event)" ng-class="[{active: $ctrl.open, clickable: $ctrl.alarms.length > 0}, $ctrl.getNumberCSSClass()]">
+  <div class="icon icon-bell"></div>
+  <div class="notification-label" translate="hercules.notificationDropdown.label" translate-values="{number: $ctrl.alarms.length}" translate-interpolation="messageformat"></div>
 </div>
-<ul class="notification-dropdown" ng-if="$ctrl.open">
-  <li class="notification-entry" ng-repeat="alarm in $ctrl.alarms">
-    <div class="notification-entry-close" ng-click="$ctrl.removeAlarm($event, alarm)"><i class="icon icon-close"></i></div>
-    <div class="notification-entry-severity">
-      <span class="badge" ng-class="$ctrl.getBadgeCSSClass(alarm.severity)">{{::alarm.severity}}</span>
-    </div>
-    <div class="notification-entry-details">
-      <div class="notification-entry-title">{{::alarm.title}}</div>
-      <div class="notification-entry-description">{{::alarm.description}}</div>
-    </div>
-  </li>
-</ul>
+<div class="notification-dropdown-container" ng-if="$ctrl.open">
+  <ul class="notification-dropdown">
+    <li class="notification-entry" ng-repeat="alarm in $ctrl.alarms">
+      <div class="notification-entry-close" ng-click="$ctrl.removeAlarm($event, alarm)"><i class="icon icon-close"></i></div>
+      <div class="notification-entry-severity">
+        <span class="badge" ng-class="$ctrl.getBadgeCSSClass(alarm.severity)">{{::alarm.severity}}</span>
+      </div>
+      <div class="notification-entry-details">
+        <div class="notification-entry-title">{{::alarm.title}}</div>
+        <div class="notification-entry-description">{{::alarm.description}}</div>
+      </div>
+    </li>
+  </ul>
+</div>

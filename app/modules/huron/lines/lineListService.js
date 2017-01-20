@@ -48,59 +48,66 @@
       var linesPromise = UserLineAssociationService.query(queryString).$promise;
 
       return ExternalNumberService.isTerminusCustomer(customerId).then(function () {
-        var orderPromise = PstnSetupService.listPendingOrders(customerId);
+        var orderPromise = PstnSetupService.listPendingOrdersWithDetail(customerId);
 
-        return $q.all([linesPromise, orderPromise])
-            .then(function (results) {
-              var lines = results[0];
-              var orders = results[1];
+        return $q.all([linesPromise, orderPromise]).then(function (results) {
+          var lines = results[0];
+          var orders = results[1];
 
-              var pendingLines = [];
-              var nonProvisionedPendingLines = [];
+          var pendingLines = [];
+          var nonProvisionedPendingLines = [];
 
-              if (lines.length === 0) {
-                return lines;
-              }
+          if (lines.length === 0) {
+            return lines;
+          }
 
-              _.forEach(orders, function (order) {
-                try {
-                  var parsedResponse = JSON.parse(order.response);
-                  var numbers = parsedResponse[order.carrierOrderId];
-                } catch (error) {
-                  return;
-                }
-                _.forEach(numbers, function (number) {
-                  var lineFound = _.find(lines, function (line) {
-                    return (number.e164 && number.e164 === line.externalNumber);
-                  });
-                  if (lineFound) {
-                    dedupGrid(lineFound, gridData);
-                    lineFound.status = order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress');
-                    lineFound.tooltip = PstnSetupService.translateStatusMessage(order);
-                    pendingLines.push(lineFound);
-                  } else {
-                    nonProvisionedPendingLines.push({
-                      externalNumber: number.e164,
-                      status: order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress'),
-                      tooltip: PstnSetupService.translateStatusMessage(order)
-                    });
-                  }
-                });
-              });
-
-              if (startIndex !== 0) {
-                return lines;
-              } else if (filterType === 'pending') {
-                return pendingLines.concat(nonProvisionedPendingLines);
-              } else if (filterType === 'all') {
-                return lines.concat(nonProvisionedPendingLines);
+          _.forEach(orders, function (order) {
+            if (_.get(order, 'operation') === PstnSetupService.BLOCK_ORDER) {
+              if (!_.isUndefined(order.attributes.npa)) {
+                var areaCode = order.attributes.npa;
               } else {
-                return lines;
+                areaCode = PstnSetupService.getAreaCode(order);
               }
-            });
+              nonProvisionedPendingLines.push({
+                externalNumber: '(' + areaCode + ') XXX-XXXX ' + $translate.instant('linesPage.quantity', { count: order.numbers.length }),
+                status: order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress'),
+                tooltip: PstnSetupService.translateStatusMessage(order),
+              });
+            } else {
+              var numbers = _.get(order, 'numbers', []);
+              _.forEach(numbers, function (number) {
+                var lineFound = _.find(lines, function (line) {
+                  return (number.number && number.number === line.externalNumber);
+                });
+                if (lineFound) {
+                  dedupGrid(lineFound, gridData);
+                  lineFound.status = order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress');
+                  lineFound.tooltip = PstnSetupService.translateStatusMessage(order);
+                  pendingLines.push(lineFound);
+                } else {
+                  nonProvisionedPendingLines.push({
+                    externalNumber: number.number,
+                    status: order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress'),
+                    tooltip: PstnSetupService.translateStatusMessage(order)
+                  });
+                }
+              });
+            }
+          });
+
+          if (startIndex !== 0) {
+            return lines;
+          } else if (filterType === 'pending') {
+            return pendingLines.concat(nonProvisionedPendingLines);
+          } else if (filterType === 'all') {
+            return lines.concat(nonProvisionedPendingLines);
+          } else {
+            return lines;
+          }
+        });
       })
         .catch(function () {
-          return $q.when(linesPromise).then(function (results) {
+          return $q.resolve(linesPromise).then(function (results) {
             if (filterType === 'pending') {
               return [];
             } else {

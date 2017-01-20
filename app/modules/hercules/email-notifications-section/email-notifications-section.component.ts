@@ -36,21 +36,16 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
       .then((emailSubscribers: string[]) => {
         this.emailSubscribers = _.map(emailSubscribers, user => ({ text: user }));
       });
+    this.ServiceDescriptor.getOrgSettings()
+      .then(orgSettings => {
+        this.enableEmailSendingToUser = !orgSettings.calSvcDisableEmailSendingToEndUser;
+        if (orgSettings.bgbIntervalMinutes !== undefined) {
+          this.oneButtonToPushIntervalMinutes = orgSettings.bgbIntervalMinutes;
+        }
+      });
     this.FeatureToggleService.calsvcOneButtonToPushIntervalGetStatus()
       .then(support => {
         this.hasCalsvcOneButtonToPushIntervalFeatureToggle = support;
-        if (support) {
-          this.ServiceDescriptor.getOrgSettings()
-            .then(orgSettings => {
-              this.enableEmailSendingToUser = !orgSettings.calSvcDisableEmailSendingToEndUser;
-              if (orgSettings.bgbIntervalMinutes === undefined) {
-                this.oneButtonToPushIntervalMinutes = 5;
-                this.setOneButtonToPushIntervalMinutes();
-              } else {
-                this.oneButtonToPushIntervalMinutes = orgSettings.bgbIntervalMinutes;
-              }
-            });
-        }
       });
   }
 

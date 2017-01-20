@@ -6,7 +6,7 @@
     .service('DeviceUsageTotalService', DeviceUsageTotalService);
 
   /* @ngInject */
-  function DeviceUsageTotalService($translate, $document, $window, $log, $q, $timeout, $http, chartColors, DeviceUsageMockData, UrlConfig, Authinfo) {
+  function DeviceUsageTotalService($log, $q, $timeout, $http, DeviceUsageMockData, UrlConfig, Authinfo) {
     var localUrlBase = 'http://localhost:8080/atlas-server/admin/api/v1/organization';
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
 
@@ -15,26 +15,6 @@
 
     var timeoutInMillis = 20000;
     var intervalType = 'day'; // Used as long as week and month is not implemented
-
-    function getDateRangeForLastNTimeUnits(count, granularity) {
-      var start, end;
-      if (granularity === 'day') {
-        start = moment().subtract(count, granularity + 's').format('YYYY-MM-DD');
-        end = moment().subtract(1, granularity + 's').format('YYYY-MM-DD');
-      } else if (granularity === 'week') {
-        start = moment().isoWeekday(1).subtract(count, granularity + 's').format("YYYY-MM-DD");
-        end = moment().isoWeekday(7).subtract(1, granularity + 's').format("YYYY-MM-DD");
-      } else if (granularity === 'month') {
-        start = moment().startOf('month').subtract(count, 'months').format('YYYY-MM-DD');
-        end = moment().startOf('month').subtract(1, 'days').format('YYYY-MM-DD');
-      }
-      return { start: start, end: end };
-    }
-
-    function getDataForLastNTimeUnits(count, granularity, deviceCategories, api, missingDaysDeferred) {
-      var dateRange = getDateRangeForLastNTimeUnits(count, granularity);
-      return getDataForRange(dateRange.start, dateRange.end, granularity, deviceCategories, api, missingDaysDeferred);
-    }
 
     function getDataForRange(start, end, granularity, deviceCategories, api, missingDaysDeferred) {
       var startDate = moment(start);
@@ -303,200 +283,6 @@
       }
     }
 
-    function makeChart(id, chart) {
-      var amChart = AmCharts.makeChart(id, chart);
-      _.each(amChart.graphs, function (graph) {
-        graph.balloonFunction = renderBalloon;
-      });
-      return amChart;
-    }
-
-    function renderBalloon(graphDataItem) {
-      var totalDuration = secondsTohhmmss(parseFloat(graphDataItem.dataContext.totalDuration) * 3600);
-      var text = '<div><h5>' + $translate.instant('reportsPage.usageReports.callDuration') + ' : ' + totalDuration + '</h5>';
-      text = text + $translate.instant('reportsPage.usageReports.callCount') + ' : ' + graphDataItem.dataContext.callCount + ' <br/> ';
-      //text = text + $translate.instant('reportsPage.usageReports.pairedCount') + ' : ' + graphDataItem.dataContext.pairedCount + '<br/>';
-      return text;
-    }
-
-    function secondsTohhmmss(totalSeconds) {
-      var hours = Math.floor(totalSeconds / 3600);
-      var minutes = Math.floor((totalSeconds - (hours * 3600)) / 60);
-      var seconds = totalSeconds - (hours * 3600) - (minutes * 60);
-
-      // round seconds
-      seconds = Math.round(seconds * 100) / 100;
-
-      var result = hours > 0 ? hours + 'h ' : '';
-      if (hours > 99) {
-        return result;
-      }
-      result += minutes > 0 ? minutes + 'm ' : '';
-      result += hours < 10 ? seconds + 's' : '';
-      return result;
-    }
-
-    function getLabel(item) {
-      return secondsTohhmmss(parseFloat(item.dataContext.totalDuration) * 3600);
-    }
-
-    function getLineChart() {
-      return {
-        'type': 'serial',
-        'categoryField': 'time',
-        'dataDateFormat': 'YYYY-MM-DD',
-        'addClassNames': true,
-        'categoryAxis': {
-          'minPeriod': 'DD',
-          'parseDates': true,
-          'autoGridCount': true,
-          'title': 'Last 7 Days',
-          'centerLabels': true,
-          'equalSpacing': true
-        },
-        'listeners': [],
-        'export': {
-          'enabled': true
-        },
-        'chartCursor': {
-          'enabled': true,
-          'categoryBalloonDateFormat': 'YYYY-MM-DD',
-          //'valueLineEnabled': true,
-          //'valueLineBalloonEnabled': true,
-          'cursorColor': chartColors.primaryColorDarker,
-          'cursorAlpha': 0.5,
-          'valueLineAlpha': 0.5
-        },
-        // 'chartScrollbar': {
-        //   'scrollbarHeight': 2,
-        //   'offset': -1,
-        //   'backgroundAlpha': 0.1,
-        //   'backgroundColor': '#888888',
-        //   'selectedBackgroundColor': '#67b7dc',
-        //   'selectedBackgroundAlpha': 1
-        // },
-        'trendLines': [
-
-        ],
-        'graphs': [
-          {
-            'type': 'column', //line', //smoothedLine', //column',
-            'labelText': '[[value]]',
-            'labelPosition': 'top',
-            //'bullet': 'round',
-            'id': 'video',
-            'title': $translate.instant('reportsPage.usageReports.callDuration'),
-            'valueField': 'totalDuration',
-            'lineThickness': 2,
-            'fillAlphas': 0.6,
-            'lineAlpha': 0.0,
-            //'bulletSize': 10,
-            'lineColor': chartColors.primaryColorDarker,
-            'bulletColor': '#ffffff',
-            'bulletBorderAlpha': 1,
-            'useLineColorForBulletBorder': true,
-            'labelFunction': getLabel,
-            'labelOffset': -2
-          }
-          /*
-          {
-            'bullet': 'diamond',
-            'id': 'whiteboarding',
-            'title': 'Whiteboarding',
-            'valueField': 'whiteboarding',
-            'lineThickness': 2,
-            'bulletSize': 6,
-            'lineColor': chartColors.primaryColorLight
-          }
-          */
-        ],
-        'guides': [
-
-        ],
-        'valueAxes': [
-          {
-            'id': 'ValueAxis-1',
-            'title': $translate.instant('reportsPage.usageReports.callHours')
-          }
-        ],
-        'allLabels': [
-
-        ],
-        'balloon': {
-          'cornerRadius': 4
-        },
-        'legend': {
-          'enabled': false,
-          'useGraphSettings': true,
-          'valueWidth': 100
-        },
-        // 'titles': [
-        //   {
-        //     'id': 'Title-1',
-        //     'size': 15,
-        //     'text': $translate.instant('reportsPage.usageReports.deviceUsage')
-        //   }
-        // ]
-      };
-    }
-
-    function exportRawData(startDate, endDate, api) {
-      var granularity = "day";
-      var deviceCategories = ['ce', 'sparkboard'];
-      var baseUrl = '';
-      if (api === 'mock') {
-        $log.info("Not implemented export for mock data");
-        return;
-      }
-      if (api === 'local') {
-        baseUrl = localUrlBase;
-      } else {
-        baseUrl = urlBase;
-      }
-      var url = baseUrl + '/' + Authinfo.getOrgId() + '/reports/device/call/export?';
-      url = url + 'intervalType=' + granularity;
-      url = url + '&rangeStart=' + startDate + '&rangeEnd' + endDate;
-      url = url + '&deviceCategories=' + deviceCategories.join();
-      url = url + '&accounts=__';
-      url = url + '&sendMockData=false';
-
-      $log.info("Trying to export data using url:", url);
-      return downloadReport(url);
-    }
-
-    // Mainly copied from Helpdesk's downloadReport
-    // TODO: Find a better way ?
-    function downloadReport(url) {
-      return $http.get(url, {
-        responseType: 'arraybuffer'
-      }).success(function (data) {
-        var fileName = 'device-usage.csv';
-        var file = new $window.Blob([data], {
-          type: 'application/json'
-        });
-        if ($window.navigator.msSaveOrOpenBlob) {
-          // IE
-          $window.navigator.msSaveOrOpenBlob(file, fileName);
-        } else if (!('download' in $window.document.createElement('a'))) {
-          // Safari…
-          $window.location.href = $window.URL.createObjectURL(file);
-        } else {
-          var downloadContainer = angular.element('<div data-tap-disabled="true"><a></a></div>');
-          var downloadLink = angular.element(downloadContainer.children()[0]);
-          downloadLink.attr({
-            'href': $window.URL.createObjectURL(file),
-            'download': fileName,
-            'target': '_blank'
-          });
-          $document.find('body').append(downloadContainer);
-          $timeout(function () {
-            downloadLink[0].click();
-            downloadLink.remove();
-          }, 100);
-        }
-      });
-    }
-
     function resolveDeviceData(devices) {
       var promises = [];
       _.each(devices, function (device) {
@@ -518,13 +304,8 @@
 
     return {
       getDataForRange: getDataForRange,
-      getLineChart: getLineChart,
-      makeChart: makeChart,
-      exportRawData: exportRawData,
       extractStats: extractStats,
       resolveDeviceData: resolveDeviceData,
-      getDataForLastNTimeUnits: getDataForLastNTimeUnits,
-      getDateRangeForLastNTimeUnits: getDateRangeForLastNTimeUnits,
       reduceAllData: reduceAllData
     };
   }

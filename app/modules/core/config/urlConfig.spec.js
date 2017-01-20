@@ -309,11 +309,11 @@ describe('UrlConfigSpec', function () {
   });
 
   it('should return correct wdm url', function () {
-    whenCalling('getWdmUrl').expectUrlToBe({
-      dev: 'https://wdm-a.wbx2.com/wdm/api/v1',
-      cfe: 'http://wdm.cfe.wbx2.com/wdm/api/v1',
-      integration: 'https://wdm-a.wbx2.com/wdm/api/v1',
-      prod: 'https://wdm-a.wbx2.com/wdm/api/v1'
+    whenCalling('getFeatureUrl').expectUrlToBe({
+      dev: 'https://feature-a.wbx2.com/feature/api/v1',
+      cfe: 'http://feature.cfe.wbx2.com/feature/api/v1',
+      integration: 'https://feature-a.wbx2.com/feature/api/v1',
+      prod: 'https://feature-a.wbx2.com/feature/api/v1'
     });
   });
 

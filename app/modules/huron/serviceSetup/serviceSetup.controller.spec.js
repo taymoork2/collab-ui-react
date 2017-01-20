@@ -3,7 +3,7 @@
 describe('Controller: ServiceSetup', function () {
   var $scope, $state, $previousState, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer, DialPlanService;
   var Authinfo, VoicemailMessageAction, Orgservice;
-  var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction, FeatureToggleService, languages, countries;
+  var model, customer, voicemail, avrilSites, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction, FeatureToggleService, languages, countries;
   var $rootScope, PstnSetupService;
   var dialPlanDetailsNorthAmerica = [{
     countryCode: "+1",
@@ -93,6 +93,7 @@ describe('Controller: ServiceSetup', function () {
     messageAction = getJSONFixture('huron/json/settings/messageAction.json');
     languages = getJSONFixture('huron/json/settings/languages.json');
     countries = getJSONFixture('huron/json/settings/countries.json');
+    avrilSites = getJSONFixture('huron/json/settings/AvrilSite.json');
 
     spyOn($previousState, 'get').and.returnValue({
       state: {
@@ -142,6 +143,10 @@ describe('Controller: ServiceSetup', function () {
     spyOn(VoicemailMessageAction, 'get').and.returnValue($q.when(messageAction));
     spyOn(VoicemailMessageAction, 'update').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+
+    spyOn(ServiceSetup, 'getAvrilSite').and.returnValue($q.when(avrilSites));
+    spyOn(ServiceSetup, 'updateAvrilSite').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'createAvrilSite').and.returnValue($q.when());
 
     $httpBackend
       .expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + customer.uuid + '/directorynumbers')
@@ -820,6 +825,47 @@ describe('Controller: ServiceSetup', function () {
 
         expect(ServiceSetup.updateSite).toHaveBeenCalled();
         expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
+        expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
+        expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
+        expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
+        expect(ModalService.open).not.toHaveBeenCalled();
+      });
+
+      it('avril enabled customer enabling voicemail should update avril site and voicemail timezone', function () {
+        var selectedPilotNumber = {
+          pattern: '+19728965000',
+          label: '(972) 896-5000'
+        };
+
+        controller.hasSites = true;
+        controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
+        controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
+        controller.hasVoicemailService = false;
+        controller.model.site.timeZone = {
+          id: 'bogus'
+        };
+
+        controller.model.site.preferredLanguage = {
+          id: 'es_US'
+        };
+        controller.model.site.country = {
+          value: 'US'
+        };
+        controller.previousTimeZone = controller.model.site.timeZone;
+
+        controller.voicemailAvrilCustomer = true;
+        controller.customer.servicePackage = 'VOICE_VOICEMAIL_AVRIL';
+        controller.avrilTzUpdated = true;
+
+        //remove singlenumber range for it to pass
+        controller.deleteInternalNumberRange(model.numberRanges[2]);
+        controller.initNext();
+        $scope.$apply();
+
+        expect(ServiceSetup.updateSite).toHaveBeenCalled();
+        expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
+        expect(ServiceSetup.updateAvrilSite).toHaveBeenCalled();
+        expect(ServiceSetup.getAvrilSite).toHaveBeenCalled();
         expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
         expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
         expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();

@@ -122,8 +122,10 @@ describe('Service: OnlineUpgradeService', () => {
     beforeEach(function () {
       this.Authinfo.getSubscriptions.and.returnValue([{
         subscriptionId: '123',
+        externalSubscriptionId: '123',
       }, {
         subscriptionId: '456',
+        externalSubscriptionId: '789',
       }]);
 
       installPromiseMatchers();
@@ -135,7 +137,7 @@ describe('Service: OnlineUpgradeService', () => {
 
     it('cancelSubscriptions() should invoke PATCH for each subscription', function () {
       this.$httpBackend.expectPATCH(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/subscriptions/123', patchPayload).respond(200);
-      this.$httpBackend.expectPATCH(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/subscriptions/456', patchPayload).respond(200);
+      this.$httpBackend.expectPATCH(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/subscriptions/789', patchPayload).respond(200);
 
       let cancelSubscriptionsPromise = this.OnlineUpgradeService.cancelSubscriptions();
       this.$httpBackend.flush();
@@ -144,7 +146,7 @@ describe('Service: OnlineUpgradeService', () => {
 
     it('cancelSubscriptions() should reject promise if one PATCH fails', function () {
       this.$httpBackend.expectPATCH(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/subscriptions/123', patchPayload).respond(200);
-      this.$httpBackend.expectPATCH(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/subscriptions/456', patchPayload).respond(500);
+      this.$httpBackend.expectPATCH(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/subscriptions/789', patchPayload).respond(500);
 
       let cancelSubscriptionsPromise = this.OnlineUpgradeService.cancelSubscriptions();
       this.$httpBackend.flush();

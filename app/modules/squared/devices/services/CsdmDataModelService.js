@@ -33,14 +33,7 @@
         //First time: kick off get huron devices: //If we disable device polling,
         // we could move csdmHuronOrgDeviceService.fetch out of (!devicesFastFetchedDeferred)
         // so it is refreshed on "single poll"
-
-        csdmHuronOrgDeviceService.fetchDevices()
-          .then(function (huronDeviceMap) {
-            updateDeviceMap(huronDeviceMap, function (existing) {
-              return !existing.isHuronDevice;
-            });
-          })
-          .finally(setHuronDevicesLoaded);
+        fetchHuronDevices();
 
         devicesFastFetchedDeferred = CsdmDeviceService.fetchDevices() //fast
           .then(function (deviceMap) {
@@ -63,6 +56,16 @@
         .finally(setCloudBerryDevicesLoaded);
 
       return devicesFetchedDeferred.promise;
+    }
+
+    function fetchHuronDevices() {
+      csdmHuronOrgDeviceService.fetchDevices()
+        .then(function (huronDeviceMap) {
+          updateDeviceMap(huronDeviceMap, function (existing) {
+            return !existing.isHuronDevice;
+          });
+        })
+        .finally(setHuronDevicesLoaded);
     }
 
     function updateDeviceMap(deviceMap, keepFunction) {
@@ -136,9 +139,11 @@
       return accountsFetchedDeferred.promise;
     }
 
-    function getDevicesMap() {
+    function getDevicesMap(refreshHuron) {
       if (!devicesFetchedDeferred) {
         fetchDevices();
+      } else if (refreshHuron) {
+        fetchHuronDevices();
       }
 
       return devicesFetchedDeferred.promise;

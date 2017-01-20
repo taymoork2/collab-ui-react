@@ -24,7 +24,8 @@
       openEmbedCodeModal: openEmbedCodeModal,
       getLengthValidationConstants: getLengthValidationConstants,
       getValidationMessages: getValidationMessages,
-      getStatesBasedOnType: getStatesBasedOnType
+      getStatesBasedOnType: getStatesBasedOnType,
+      getOverviewPageCards: getOverviewPageCards
     };
     return service;
 
@@ -225,24 +226,46 @@
       };
     }
 
-    function getStatesBasedOnType(type) {
-      if (type === 'chat') {
-        return ['name',
-          'overview',
-          'customerInformation',
-          'agentUnavailable',
-          'offHours',
-          'feedback',
-          'profile',
-          'chatStatusMessages',
-          'summary'
-        ];
-      } else if (type === 'callback') {
-        return ['name',
-          'summary'
-        ];
-      } else {
-        return [];
+    function getOverviewPageCards(mediaType) {
+      switch (mediaType) {
+        case 'chat':
+          return ['customerInformation',
+            'agentUnavailable',
+            'offHours',
+            'feedback'
+          ];
+        case 'callback':
+          return ['customerInformation',
+            'offHours'
+          ];
+        default:
+          return [];
+      }
+    }
+
+    function getStatesBasedOnType(mediaType) {
+      switch (mediaType) {
+        case 'chat':
+          return ['name',
+            'overview',
+            'customerInformation',
+            'agentUnavailable',
+            'offHours',
+            'feedback',
+            'profile',
+            'chatStatusMessages',
+            'summary'
+          ];
+        case 'callback':
+          return ['name',
+            'overview',
+            // TODO: Uncomment customer information once form is ready.
+            // 'customerInformation',
+            'offHours',
+            'summary'
+          ];
+        default:
+          return [];
       }
     }
   }

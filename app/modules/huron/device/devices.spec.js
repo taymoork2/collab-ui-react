@@ -38,7 +38,9 @@ describe('Controller: DevicesCtrlHuron', function () {
     };
 
     poller = {
-      fetch: function () {},
+      fetch: function () {
+        return $q.when();
+      },
       getDeviceList: function () {
         return null;
       },

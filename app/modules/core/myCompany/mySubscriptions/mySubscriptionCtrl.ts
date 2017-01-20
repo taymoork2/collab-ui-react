@@ -35,7 +35,7 @@ class MySubscriptionCtrl {
   public trialUrlFailed = false;
   public loading = false;
   public digitalRiverSubscriptionsUrl: string;
-  public isSharedMultiPartyEnabled: boolean;
+  public isSharedMultiPartyReportsEnabled: boolean;
 
   /* @ngInject */
   constructor(
@@ -84,12 +84,12 @@ class MySubscriptionCtrl {
   }
 
   public determineLicenseType(subscription) {
-    return this.isSharedMultiPartyLicense(subscription) ? this.$translate.instant('firstTimeWizard.sharedLicenses') : this.$translate.instant('firstTimeWizard.assignedLicenses');
+    return this.isSharedMultiPartyLicense(subscription) ? this.$translate.instant('firstTimeWizard.sharedLicenses') : this.$translate.instant('firstTimeWizard.namedLicenses');
   }
 
   private initFeatures() {
-    this.FeatureToggleService.atlasSMPGetStatus().then((smpStatus) => {
-        this.isSharedMultiPartyEnabled = smpStatus;
+    this.FeatureToggleService.atlasSmpReportsGetStatus().then((smpReportsStatus) => {
+        this.isSharedMultiPartyReportsEnabled = smpReportsStatus;
     });
   }
 

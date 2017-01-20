@@ -19,7 +19,7 @@
     "value": 0,
     "label": "reportsPage.week",
     "description": "reportsPage.week2",
-    "min": 1,
+    "min": 0,
     "max": 6
   }, {
     "value": 1,
@@ -38,7 +38,7 @@
     "value": 0,
     "label": "reportsPage.week",
     "description": "reportsPage.week2",
-    "min": 1,
+    "min": 0,
     "max": 6
   }, {
     "value": 1,
@@ -51,6 +51,18 @@
     "label": "reportsPage.threeMonths",
     "description": "reportsPage.threeMonths2",
     "min": 40,
+    "max": 51
+  }, {
+    "value": 3,
+    "label": "reportsPage.sixMonths",
+    "description": "reportsPage.sixMonths2",
+    "min": 28,
+    "max": 51
+  }, {
+    "value": 4,
+    "label": "reportsPage.year",
+    "description": "reportsPage.year2",
+    "min": 0,
     "max": 51
   }, {
     "value": "custom",

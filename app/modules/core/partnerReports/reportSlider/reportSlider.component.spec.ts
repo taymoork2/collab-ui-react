@@ -17,12 +17,14 @@ describe('Component: reportSlider', () => {
   const filter: string = '.pull-right.report-filter';
   const openFilter: string = 'div.select-list div.dropdown a.select-toggle';
   const dropdown: string = '.dropdown-menu ul.select-options li a';
-  const closeCustom: string = '#closeCustom';
   const startDate: string = '#startDate';
   const endDate: string = '#endDate';
   const startDateMenu: string = '#startDateMenu';
   const endDateMenu: string = '#endDateMenu';
+  const time: string = '#timeFilter';
+  const timeMenu: string = '#timeFilterMenu';
   const menuOptions: string = ' .dropdown-menu .filter';
+  const span: string = ' span';
 
   // screen sizes
   const SCREEN_LG = 'screen-lg';
@@ -47,7 +49,6 @@ describe('Component: reportSlider', () => {
     expect(this.view).not.toContainElement(slider);
     expect(this.view).not.toContainElement(startDate);
     expect(this.view).not.toContainElement(endDate);
-    expect(this.view).not.toContainElement(closeCustom);
     expect(this.view).not.toContainElement(startDateMenu);
     expect(this.view).not.toContainElement(endDateMenu);
     expect(this.view).toContainElement(filter);
@@ -95,20 +96,22 @@ describe('Component: reportSlider', () => {
     expect(this.view).not.toContainElement(slider);
     expect(this.view).not.toContainElement(startDate);
     expect(this.view).not.toContainElement(endDate);
-    expect(this.view).not.toContainElement(closeCustom);
     expect(this.view).not.toContainElement(startDateMenu);
     expect(this.view).not.toContainElement(endDateMenu);
-    expect(this.view).toContainElement(filter);
-    expect(this.view).toContainElement(openFilter);
+    expect(this.view).not.toContainElement(filter);
+    expect(this.view).not.toContainElement(openFilter);
+    expect(this.view).toContainElement(time);
+    expect(this.view.find(time + span).html()).toEqual(timeFilter[0].label);
 
     // Select Custom option
-    this.view.find(openFilter).click();
-    this.$timeout.flush();
-    this.view.find(dropdown)[timeFilter.length - 1].click();
+    this.view.find(time).click();
+    expect(this.view.find(timeMenu + menuOptions).length).toEqual(timeFilter.length);
+    this.view.find(timeMenu + menuOptions)[timeFilter.length - 1].click();
+    expect(this.view.find(time + span).html()).toEqual(timeFilter[timeFilter.length - 1].label);
+
     expect(this.view).not.toContainElement(slider);
     expect(this.view).not.toContainElement(filter);
     expect(this.view).not.toContainElement(openFilter);
-    expect(this.view).toContainElement(closeCustom);
     expect(this.view).toContainElement(startDate);
     expect(this.view).toContainElement(endDate);
     expect(this.view).toContainElement(startDateMenu);
@@ -118,8 +121,6 @@ describe('Component: reportSlider', () => {
 
     let dateOne: string = this.view.find(startDate)[0].innerText;
     let dateTwo: string = this.view.find(endDate)[0].innerText;
-    expect(dateOne).toContain('reportsPage.fromDate');
-    expect(dateTwo).toContain('reportsPage.toDate');
 
     // change start date
     this.view.find(startDate).click();
@@ -133,21 +134,8 @@ describe('Component: reportSlider', () => {
     this.view.find(endDate).click();
     expect(this.view.find(endDateMenu + menuOptions).length).toEqual(45);
     this.view.find(endDateMenu + menuOptions)[0].click();
-    expect(this.view.find(endDate)[0].innerText).not.toEqual(dateOne);
+    expect(this.view.find(endDate)[0].innerText).not.toEqual(dateTwo);
     expect(updateFunctions.sliderUpdate).toHaveBeenCalledTimes(4);
-    expect(updateFunctions.update).toHaveBeenCalledTimes(1);
-
-    // return from custom
-    this.view.find(closeCustom).click();
-    expect(this.view).not.toContainElement(slider);
-    expect(this.view).not.toContainElement(startDate);
-    expect(this.view).not.toContainElement(endDate);
-    expect(this.view).not.toContainElement(closeCustom);
-    expect(this.view).not.toContainElement(startDateMenu);
-    expect(this.view).not.toContainElement(endDateMenu);
-    expect(this.view).toContainElement(filter);
-    expect(this.view).toContainElement(openFilter);
-    expect(updateFunctions.sliderUpdate).toHaveBeenCalledTimes(5);
     expect(updateFunctions.update).toHaveBeenCalledTimes(1);
   });
 });

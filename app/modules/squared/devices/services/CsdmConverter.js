@@ -313,9 +313,10 @@
       }
 
       function getNotOkEvents(obj) {
-        return _.reject(getEvents(obj), function (e) {
+        var events = _.reject(getEvents(obj), function (e) {
           return e.level == 'INFO' && (e.type == 'ip' || e.type == 'software' || e.type == 'upgradeChannel');
         });
+        return events;
       }
 
       function getEvents(obj) {

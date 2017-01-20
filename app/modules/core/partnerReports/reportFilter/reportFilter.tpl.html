@@ -1,7 +1,7 @@
-<div class="grid-filter" ng-class="{'dropdown': $ctrl.getBreakpoint()}">
+<div class="report-filter grid-filter" ng-class="{'dropdown': $ctrl.getBreakpoint()}">
   <div class="dropdown-toggle filter" ng-if="$ctrl.getBreakpoint()" ng-click="$ctrl.toggleOpen()">
     <span class="name" ng-repeat="object in $ctrl.filterArray" ng-if="object.selected" translate="{{object.label}}"></span>
-    <i class="icon icon-chevron-down"></i>
+    <i class="icon icon-chevron-down filter-icon"></i>
   </div>
   <ul ng-class="{'dropdown-menu dropdown-primary': $ctrl.getBreakpoint(), 'visible-report-filter': $ctrl.getBreakpoint() && $ctrl.isOpen()}">
     <li class="filter" ng-repeat="object in $ctrl.filterArray" ng-class="{'active' : object.selected}" ng-click="$ctrl.select(object)">
