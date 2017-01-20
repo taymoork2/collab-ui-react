@@ -73,6 +73,7 @@
     "collab-ui": "~2.37.1",
     "collab-ui-formly": "~2.0.3",
     "collab-ui-ng": "~3.0.1",
+    "collab-ui-stickyfill": "~1.1.5",
     "crypto-js": "~3.1.8",
     "d3": "~3.5.5",
     "draggable.js": "git+https://github.com/gtramontina/draggable.js.git#v1.0.1",
@@ -101,7 +102,6 @@
     "punycode": "^1.4.0",
     "qr-image": "^3.2.0",
     "query-command-supported": "~1.0.0",
-    "stickyfill": "git://github.com/collab-ui/stickyfill.git",
     "typeahead.js": "~0.10.2",
     "ui-router-extras": "^0.1.2",
     "x2js": "git+https://github.com/abdmob/x2js.git#v1.2.0"
