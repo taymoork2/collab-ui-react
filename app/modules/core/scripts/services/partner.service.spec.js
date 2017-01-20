@@ -296,6 +296,47 @@ describe('Partner Service -', function () {
     });
   });
 
+  describe('canAdminTrial function', function () {
+    var licenses;
+    beforeEach(function () {
+      licenses = _.cloneDeep(testData.licenses);
+      _.forEach(licenses, function (license) {
+        license.isTrial = true;
+        license.partnerOrgId = 'other-partner-org2-id';
+        license.partnerEmail = 'otherPartner@othercompany.com';
+      });
+      $scope.$digest();
+    });
+    afterEach(function () {
+      licenses = null;
+    });
+
+    it('should return false if the partnerOrgId property on any license does not match the org id of the logged in user', function () {
+      expect(PartnerService.canAdminTrial(licenses)).toBe(false);
+    });
+
+    it('should return true if the partnerOrgId property on any license matches the org id of the logged in user', function () {
+      licenses[1].partnerOrgId = '12345';
+      expect(PartnerService.canAdminTrial(licenses)).toBe(true);
+    });
+
+    it('should return if the partnerOrgId property is undefined and email in any service matches the email of the logged in user', function () {
+      _.each(licenses, function (license) {
+        license.partnerOrgId = undefined;
+      });
+      licenses[0].partnerEmail = 'fake-primaryEmail';
+      expect(PartnerService.canAdminTrial(licenses)).toBe(true);
+    });
+
+    it('should return false if the partnerOrgId is null and email is null in all services', function () {
+      _.each(licenses, function (license) {
+        license.partnerOrgId = undefined;
+        license.partnerEmail = undefined;
+      });
+      expect(PartnerService.canAdminTrial(licenses)).toBe(false);
+    });
+  });
+
   describe('helper functions -', function () {
     describe('getTrialMeetingServices', function () {
       var licenses;
