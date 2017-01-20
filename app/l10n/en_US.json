@@ -2080,8 +2080,10 @@
           "stableHelpText": "The official release software for Hybrid Services",
           "beta": "Beta",
           "betaHelpText": "Use this channel so that users can test new features before they are released.",
+          "alpha": "Alpha",
+          "alphaHelpText": "Internal early adopters.",
           "latest": "Latest",
-          "latestHelpText": "For developers and early adopters",
+          "latestHelpText": "For developers only",
           "error": "Could not create the Resource Group",
           "saveReleaseChannelSuccess": "Release Channel updated successfully.",
           "saveReleaseChannelError": "Could Not save Release Channel. Try again later."
