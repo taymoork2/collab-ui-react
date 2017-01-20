@@ -106,6 +106,27 @@
           }
         }
 
+        .setup-mode {
+          display: flex;
+          flex-direction: column;
+
+          .description {
+            flex: 1;
+          }
+
+          .card-button {
+            margin-bottom: 1.5rem;
+          }
+
+          .btn--primary {
+            width: 100%;
+          }
+
+          button {
+            margin-bottom: 0;
+          }
+        }
+
         footer {
           border-top: 1px solid $gray-light-4;
           display: flex;

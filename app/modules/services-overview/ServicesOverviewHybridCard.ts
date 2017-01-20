@@ -60,6 +60,7 @@ export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
       routerState: this.routerState,
     };
     this.active = filterAndGetEnabledService(servicesStatuses, this.service);
+    this.setupMode = !this.active;
     this.loading = false;
   }
 }
