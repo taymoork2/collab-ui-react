@@ -3,7 +3,7 @@
 
   angular.module('Mediafusion').service('UtilizationResourceGraphService', UtilizationResourceGraphService);
   /* @ngInject */
-  function UtilizationResourceGraphService(CommonReportsGraphService, chartColors, $translate) {
+  function UtilizationResourceGraphService(CommonReportsGraphService, chartColors, $translate, $log, $rootScope) {
 
     var utilizationdiv = 'utilizationdiv';
     var GUIDEAXIS = 'guideaxis';
@@ -14,6 +14,12 @@
     var average_utilzation = $translate.instant('mediaFusion.metrics.avgutilization');
     var allClusters = $translate.instant('mediaFusion.metrics.allclusters');
     var utilization = $translate.instant('mediaFusion.metrics.utilization');
+
+    var zoomedEndTime = null;
+    var zoomedStartTime = null;
+
+    var timeDiff = null;
+    var dateSelected = null;
 
     return {
       setUtilizationGraph: setUtilizationGraph
@@ -61,6 +67,7 @@
         return;
       }
       var valueAxes = [CommonReportsGraphService.getBaseVariable(GUIDEAXIS)];
+      dateSelected = daterange;
       valueAxes[0].integersOnly = true;
       valueAxes[0].axisAlpha = 0.5;
       valueAxes[0].axisColor = '#1C1C1C';
@@ -92,7 +99,7 @@
         catAxis.minPeriod = 'hh';
       } else if (dateValue === 3) {
         catAxis.minPeriod = '3hh';
-      } else {
+      } else if (dateValue === 4) {
         catAxis.minPeriod = '8hh';
       }
 
@@ -141,7 +148,34 @@
       var chart = AmCharts.makeChart(utilizationdiv, chartData);
       chart.addListener('rendered', zoomChart);
       zoomChart(chart);
+      // listen for zoomed event and call "handleZoom" method
+      chart.addListener('zoomed', handleZoom);
       return chart;
+    }
+
+    // this method is called each time the selected period of the chart is changed
+    function handleZoom(event) {
+      zoomedStartTime = event.startDate;
+      zoomedEndTime = event.endDate;
+      var selectedTime = {
+        startTime: zoomedStartTime,
+        endTime: zoomedEndTime
+      };
+      $log.log("date selected ", dateSelected);
+      $log.log("trying moments starttime", moment(zoomedEndTime).diff(moment(zoomedStartTime)));
+      $log.log("diff in minutes", Math.floor(moment(zoomedEndTime).diff(moment(zoomedStartTime)) / 60000));
+      $log.log("start time is ", zoomedStartTime);
+      $log.log("end time is ", zoomedEndTime);
+      timeDiff = Math.floor(moment(zoomedEndTime).diff(moment(zoomedStartTime)) / 60000);
+      if (_.isUndefined(dateSelected.value) && zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) {
+        $rootScope.$broadcast('zoomedTime', {
+          data: selectedTime
+        });
+      } else if (timeDiff !== 240 && zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) {
+        $rootScope.$broadcast('zoomedTime', {
+          data: selectedTime
+        });
+      }
     }
 
     function getClusterName(graphs, clusterMap, clusterSelected, clusterId) {

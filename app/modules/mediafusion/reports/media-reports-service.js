@@ -85,7 +85,7 @@
         return '/?relativeTime=7d';
       } else if (time.value === 3) {
         return '/?relativeTime=30d';
-      } else {
+      } else if (time.value === 4) {
         return '/?relativeTime=90d';
       }
     }

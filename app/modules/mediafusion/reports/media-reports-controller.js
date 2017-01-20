@@ -5,7 +5,7 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, MediaClusterServiceV2, UtilizationResourceGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService) {
+  function MediaReportsController($q, $scope, $translate, $interval, MediaClusterServiceV2, UtilizationResourceGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, $log) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -56,6 +56,8 @@
     vm.setClusterAvailability = setClusterAvailability;
     vm.setTotalCallsData = setTotalCallsData;
     vm.setSneekPeekData = setSneekPeekData;
+    vm.setAvailabilityData = setAvailabilityData;
+    vm.setCallVolumeData = setCallVolumeData;
 
     vm.showAvailabilityTooltip = false;
     vm.showHostedOnPremTooltip = false;
@@ -83,13 +85,13 @@
     getCluster();
 
     function loadResourceDatas() {
-      setTotalCallsData().then(function () {
-        setSneekPeekData();
-      });
-      setClusterAvailability();
+      // setTotalCallsData().then(function () {
+      //   setSneekPeekData();
+      // });
+      // setClusterAvailability();
       setUtilizationData();
-      setCallVolumeData();
-      setAvailabilityData();
+      // setCallVolumeData();
+      // setAvailabilityData();
     }
 
     function loadAdaptionDatas() {
@@ -119,6 +121,17 @@
       if (vm.clusterSelected === vm.allClusters) {
         clusterUpdateFromTooltip(data.data);
       }
+    });
+
+    $scope.$on('zoomedTime', function (event, data) {
+      $log.log("time obj", data);
+      vm.timeSelected = {
+        startTime: data.data.startTime,
+        endTime: data.data.endTime
+      };
+      $log.log("cont start time is ", vm.timeSelected.startTime);
+      $log.log("cont end time is ", vm.timeSelected.endTime);
+      timeUpdate();
     });
 
     function timeUpdate() {
