@@ -20,7 +20,8 @@
 
           <section>
             <ct-customer-form
-              ct-model='careSetupAssistant'
+              ct-model='careSetupAssistant',
+              media-type-attr="careSetupAssistant.type",
               fields='careSetupAssistant.template.configuration.pages.customerInformation.fields'
               ignore-fields='["welcomeHeader"]'
               type-attr='type'
@@ -30,9 +31,14 @@
             </ct-customer-form>
           </section>
 
-          <footer class="ct-footer">
+          <footer class="ct-footer" ng-show="{{careSetupAssistant.type === 'chat'}}">
             <label class="h5 typeText" translate="careChatTpl.defaultTypeMessageText"></label>
           </footer>
+
+          <div ng-show="{{careSetupAssistant.type === 'callback'}}">
+            <a href="" class="btn btn--medium disabled actionBtn ct-flex-center" translate="careChatTpl.labelCallBackBtn"></a>
+          </div>
+
 
         </article>
       </cs-card>
@@ -40,13 +46,11 @@
       <cs-card class="ct-customer-card">
         <div class="h4 cardHeader1" translate="careChatTpl.attributes"></div>
         <article class="customer-attributes-article ct-article articleHeight">
-          <section class="ct-attribute-section item-not-selected ct-flex-center" ng-hide="careSetupAssistant.activeItem !== undefined">
+          <section class="ct-attribute-section item-not-selected ct-flex-center" ng-show="careSetupAssistant.activeItem === undefined">
             <div class="ct-default-msg h6 medium-8" translate="careChatTpl.defaultRightCardText"></div>
           </section>
-
           <section class="ct-attribute-section ng-hide" ng-hide="careSetupAssistant.activeItem === undefined">
             <div class="row ct-attribute-row" ng-repeat="attribute in careSetupAssistant.activeItem.attributes">
-
               <label
                       ng-if="attribute.name === 'header'"
                       class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.windowTitleLabel">
@@ -75,11 +79,13 @@
                 cs-input-messages="careSetupAssistant.singleLineValidationMessage"
                 ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit"
                 ng-model-options="{ allowInvalid: true }"
+                ng-disabled="careSetupAssistant.isSecondFieldForCallBack() && attribute.name === 'hintText'"
               />
 
               <div ng-if="attribute.name === 'required'" class="h6 cs-radio-group ct-attribute-field-radio">
                 <input
                   cs-input
+                  ng-disabled="careSetupAssistant.isSecondFieldForCallBack()"
                   ng-repeat="option in careSetupAssistant.requiredOptions"
                   type="radio"
                   ng-model="attribute.value"
@@ -98,6 +104,7 @@
                         options="careSetupAssistant.typeOptions"
                         labelfield="text"
                         valuefield="id"
+                        is-disabled="careSetupAssistant.isSecondFieldForCallBack()"
                         ng-class="careSetupAssistant.validateType(attribute.value) ? 'ct-attribute-field-textbox' : 'ct-attribute-field-textbox_error'"
                         placeholder="attribute.defaultValue">
                 </cs-select>
