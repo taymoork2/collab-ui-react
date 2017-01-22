@@ -87,9 +87,9 @@
   }
 
   .labelText {
-    @include vr-spacing(mt, 1);
+    @include vr-spacing(mt, 0.5);
     @include vr-spacing(ml, 1);
-    @include vr-spacing(mb, 0.25);
+    @include vr-spacing(mb, 0.1);
 
     color: $gray-dark-2;
     opacity: 0.5;
@@ -133,7 +133,7 @@
 
   .ct-left-cs-input {
     @include vr-spacing(ml, 1);
-    @include vr-spacing(mb, 1);
+    @include vr-spacing(mb, .5);
 
     @extend .cs-input;
 
@@ -156,6 +156,23 @@
     }
 
     background-color: $white !important;
+  }
+
+  .ct-left-cs-text-area {
+    @include vr-spacing(ml, 1);
+    @include vr-spacing(mb, 0.5);
+
+    @include vr-spacing(pl, 0.5);
+
+    border-color: $gray-light-3;
+    cursor: default;
+    pointer-events: none;
+    font-family: 'CiscoSansTT Light';
+    font-size: rem-calc(16px);
+    width: 90%;
+    background-color: $white !important;
+    height: 3rem;
+    resize: none;
   }
 
   .ct-footer {
@@ -366,5 +383,57 @@
     align-items: center;
     justify-content: center;
     width: 100% !important;
+  }
+
+  .actionBtn {
+    @include vr-spacing(pl, 1);
+    @include vr-spacing(pr, 1);
+    @include vr-spacing(ml, 6);
+    @include vr-spacing(mt, 1);
+    @include vr-spacing(mb, 1);
+  }
+  
+  .block-display{
+    display: flex;
+  }
+
+  .alert-message {
+    color: $color-alerts-base;
+    line-height: 1rem;
+    @include vr-spacing(ml ,1.5);
+    @include vr-spacing(mt ,0.125);
+  }
+  .alert-icon {
+    color: $color-alerts-base;
+  }
+
+  .ct-country-select {
+    @include vr-spacing(pl, 1);
+    @include vr-spacing(mb, 1);
+    width: 94%;
+
+    [disabled].select-toggle {
+      background-color: white;
+    }
+    .icon-chevron-down {
+      display: none;
+    }
+  }
+
+  .phone-number {
+    width: 100%;
+    font-size: 16px;
+    input[type="text"] {
+      width: 100%;
+      @include vr-spacing(pl, 0.25);
+      &:disabled {
+        background-color: white;
+      }
+    }
+  }
+
+  .select-toggle {
+    padding-right: 0rem;
+    margin-right: 0rem;
   }
 }

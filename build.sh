@@ -63,8 +63,7 @@ else
         tar -cpf $BUILD_DEPS_ARCHIVE \
             $last_refreshed_file \
             $manifest_checksums_file \
-            .cache/npm-deps-for-*.tar.gz \
-            .cache/npm-shrinkwrap-for-*.tar.gz
+            .cache/npm-deps-for-*.tar.gz
 
     # setup failed
     else

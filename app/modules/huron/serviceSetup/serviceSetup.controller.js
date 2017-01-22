@@ -13,7 +13,7 @@
     var vm = this;
     vm.isTimezoneAndVoicemail = function (enabled) {
       return Authinfo.getLicenses().filter(function (license) {
-        return enabled ? (license.licenseType !== Config.licenseTypes.SHARED_DEVICES || license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
+        return enabled ? (license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
       }).length > 0;
     };
     FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
@@ -1527,7 +1527,7 @@
 
       if (vm.firstTimeSetup) {
         return saveProcess();
-      } else {
+      } else if (vm.showTimezoneAndVoicemail) {
         return ModalService.open({
           title: $translate.instant('serviceSetupModal.saveModal.title'),
           message: $translate.instant('serviceSetupModal.saveModal.message1') + '<br/><br/>'

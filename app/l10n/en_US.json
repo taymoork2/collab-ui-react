@@ -1374,7 +1374,8 @@
     "warning": {
       "siteSteering": "First digit of Voicemail Access Prefix conflicts with the first digit of an internal extension range. If you use this prefix, it may cause a delay when dialing extensions starting with the same number.",
       "outboundDialDigit": "Outbound Dial Digit conflicts with the first digit of an internal extension range. If you use this digit, it may cause a delay when dialing extensions starting with the same number.",
-      "localDialing": "To use local dialing, you must setup your PSTN service. Contact your partner admin to begin PSTN service setup."
+      "localDialing": "To use local dialing, you must setup your PSTN service. Contact your partner admin to begin PSTN service setup.",
+      "outboundDialing": "The outbound dial digit is only applicable when using a PSTN service. Contact your partner admin to begin PSTN setup."
     },
     "saveModal": {
       "title": "Dial Plan Settings",
@@ -5392,7 +5393,12 @@
     "defaultNameHint": "",
     "defaultEmailText": "Email",
     "defaultEmail": "e.g. abc@xyz.com",
+    "defaultPhoneText": "Phone Number",
+    "defaultPhoneHintText": "234-555-6789",
     "defaultQuestionText": "How may I assist you?",
+    "additionalDetails": "Additional Details",
+    "additionalDetailsAbtIssue": "Describe the issue you are experiencing",
+    "labelCallBackBtn": "Request Callback",
     "optionalText": "(Optional)",
     "field3HintText": "Select from the list or type",
     "defaultTypeMessageText": "Type your message and press enter",
@@ -5434,6 +5440,7 @@
     "typeId": "Id",
     "typePhone": "Phone",
     "typeCustom": "Custom",
+    "typeReason": "Reason",
     "ctValidation": {
       "errorChar250": "Character length cannot be more than 250.",
       "errorChar50": "Character length cannot be more than 50.",
@@ -5804,6 +5811,7 @@
     "purchase": "Purchase",
     "changePlan": "Change Plan",
     "onlineTrialUpgradeUrlError": "Unable to retrieve purchase url for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
+    "onlineProductInstanceError": "Unable to retrieve product instance for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
     "loadError": "An error occurred while loading subscriptions.",
     "licenseTypes": {
       "MS": "Standard Team Rooms",
@@ -6067,9 +6075,13 @@
     "editAdminEmailSuccess": "Admin email was updated successfully.",
     "editAdminEmailFailure": "Failed to update admin email.",
     "userStatusEventLog": "User Status Event Log",
-    "lastEmailSent": "Last Email Sent",
+    "lastEmailEvent": "Last Email Event",
     "clearBounce": "Clear Bounce",
     "clearBounceSuccess": "Bounce cleared successfully. Try resending invite.",
+    "clearUnsubscribe": "Clear Unsubscribe",
+    "clearUnsubscribeSuccess": "Unsubscribe cleared successfully. Try resending invite.",
+    "clearComplaint": "Clear Complaint",
+    "clearComplaintSuccess": "Complaint cleared successfully. Try resending invite.",
     "emailStatuses": {
       "accepted": "Pending Delivery",
       "rejected": "Rejected",
