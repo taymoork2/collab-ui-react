@@ -19,6 +19,8 @@
         stableHelpText: $translate.instant('hercules.fusion.add-resource-group.release-channel.stableHelpText'),
         beta: $translate.instant('hercules.fusion.add-resource-group.release-channel.beta'),
         betaHelpText: $translate.instant('hercules.fusion.add-resource-group.release-channel.betaHelpText'),
+        alpha: $translate.instant('hercules.fusion.add-resource-group.release-channel.alpha'),
+        alphaHelpText: $translate.instant('hercules.fusion.add-resource-group.release-channel.alphaHelpText'),
         latest: $translate.instant('hercules.fusion.add-resource-group.release-channel.latest'),
         latestHelpText: $translate.instant('hercules.fusion.add-resource-group.release-channel.latestHelpText'),
       },

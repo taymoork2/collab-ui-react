@@ -2,11 +2,11 @@
   'use strict';
 
   angular
-    .module('Sunlight')
-    .controller('CareFeaturesCtrl', CareFeaturesCtrl);
+      .module('Sunlight')
+      .controller('CareFeaturesCtrl', CareFeaturesCtrl);
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $modal, $q, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, FeatureToggleService) {
     var vm = this;
     vm.init = init;
     var pageStates = {
@@ -15,7 +15,8 @@
       loading: 'Loading',
       error: 'Error'
     };
-    var allFeaturesOrderedMap = [];
+    var listOfChatFeature = [];
+    var listOfCallbackFeature = [];
     var listOfAllFeatures = [];
     var featureToBeDeleted = {};
     vm.searchData = searchData;
@@ -27,8 +28,10 @@
     vm.placeholder = {
       name: 'Search'
     };
+    vm.filterText = '';
     vm.template = null;
     vm.openNewCareFeatureModal = openNewCareFeatureModal;
+    vm.setFilter = setFilter;
     /* LIST OF FEATURES
      *
      *  To add a New Feature (like Voice Templates)
@@ -44,7 +47,7 @@
       formatter: CareFeatureList.formatChatTemplates,
       i18n: 'careChatTpl.chatTemplate',
       isEmpty: false,
-      color: 'attention'
+      color: 'primary'
     }, {
       order: 1,
       name: 'Ca',
@@ -54,6 +57,21 @@
       isEmpty: false,
       color: 'alerts'
     }];
+    vm.filters = [];
+    FeatureToggleService.atlasCareCallbackTrialsGetStatus().then(function (result) {
+      if (result) {
+        vm.filters = [{
+          name: $translate.instant('common.all'),
+          filterValue: 'all'
+        }, {
+          name: $translate.instant('sunlightDetails.chatMediaType'),
+          filterValue: 'chat'
+        }, {
+          name: $translate.instant('sunlightDetails.callbackMediaType'),
+          filterValue: 'callback'
+        }];
+      }
+    });
     init();
 
     function init() {
@@ -70,7 +88,7 @@
       $q.all(featuresPromises).then(function () {
         showNewFeaturePageIfNeeded();
       }).finally(function () {
-        var flatList = _.filter(_.flatten(allFeaturesOrderedMap));
+        var flatList = _.filter(_.flatten(listOfAllFeatures));
         if (flatList.length > 0) {
           vm.listOfFeatures = vm.listOfFeatures.concat(flatList);
           vm.pageState = pageStates.showFeatures;
@@ -92,8 +110,12 @@
       var list = feature.formatter(data);
       if (list.length > 0) {
         feature.isEmpty = false;
-        allFeaturesOrderedMap[feature.order] = list;
-        listOfAllFeatures = listOfAllFeatures.concat(list);
+        if (feature.order === 0) {
+          listOfChatFeature = list;
+        } else {
+          listOfCallbackFeature = list;
+        }
+        listOfAllFeatures = listOfChatFeature.concat(listOfCallbackFeature);
       } else if (list.length === 0) {
         feature.isEmpty = true;
         showReloadPageIfNeeded();
@@ -140,10 +162,16 @@
       }
     }
 
+    //Switches Data that populates the Features tab
+    function setFilter(filterValue) {
+      vm.listOfFeatures = CareFeatureList.filterCards(listOfAllFeatures, filterValue, vm.filterText);
+      reInstantiateMasonry();
+    }
+
     /* This function does an in-page search for the string typed in search box*/
     function searchData(searchStr) {
       vm.filterText = searchStr;
-      vm.listOfFeatures = CareFeatureList.filterCards(listOfAllFeatures, vm.filterText);
+      vm.listOfFeatures = CareFeatureList.filterCards(listOfAllFeatures, 'all', vm.filterText);
       reInstantiateMasonry();
     }
 

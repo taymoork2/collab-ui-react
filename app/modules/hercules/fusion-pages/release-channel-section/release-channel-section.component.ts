@@ -6,7 +6,7 @@ interface ISelectOption {
 }
 
 class ReleaseChannelSectionController implements ng.IComponentController {
-  public static restrictedChannels: string[] = ['beta', 'latest'];
+  public static restrictedChannels: string[] = ['beta', 'alpha', 'latest'];
 
   public releaseChannelSelected: ISelectOption;
   public releaseChannelOptions: Array<ISelectOption> = [{
