@@ -28,16 +28,90 @@
       "numPendingTasks": 0
     };
 
+    var emptyUserstats = {
+      "contactsHandled": 0,
+      "contactsAssigned": 0,
+      "avgCsatScore": 0,
+      "handleTime": 0,
+      "numCsatScores": 0
+    };
+
     var service = {
       getStats: getStats,
       getReportingData: getReportingData,
-      getOverviewData: getOverviewData
+      getOverviewData: getOverviewData,
+      getAllUsersAggregatedData: getAllUsersAggregatedData
     };
 
     return service;
 
     function getStats(reportName, config) {
       return $http.get(sunlightReportUrl + reportName, config);
+    }
+
+    function getCareUsers() {
+      return $http.get(UrlConfig.getScimUrl(Authinfo.getOrgId()) + encodeURI('?filter=entitlements eq cloud-contact-center'));
+    }
+
+    function getAllUsersAggregatedData(reportName, timeSelected, mediaType) {
+      return getReportingData(reportName, timeSelected, mediaType)
+        .then(addUserDataToReportingData);
+    }
+
+    function addUserDataToReportingData(reportingUserData) {
+      if (reportingUserData && reportingUserData.length > 0) {
+        return getCareUsers()
+          .then(function (ciUsersData) {
+            if (_.isEmpty(_.get(ciUsersData, 'data.Resources'))) {
+              return [];
+            } else {
+              return mergeReportingAndUserData(reportingUserData, ciUsersData);
+            }
+          });
+      } else {
+        return $q.resolve([]);
+      }
+    }
+
+    function mergeReportingAndUserData(aggregatedUserData, ciUserData) {
+      var careUserIDNameMap = getCareUserIDNameMap(ciUserData);
+      return finalAggregatedData(aggregatedUserData, careUserIDNameMap);
+    }
+
+    function finalAggregatedData(aggregatedData, careUserIDNameMap) {
+      _.forEach(aggregatedData, function (reportingUserData) {
+        reportingUserData.displayName = careUserIDNameMap[reportingUserData.userId];
+        reportingUserData.avgCsatScore = reportingUserData.avgCsatScore ? roundTwoDecimalPlaces(reportingUserData.avgCsatScore) : '-';
+        reportingUserData.handleTime = Number((reportingUserData.handleTime).toFixed(0));
+      });
+      return _.filter(aggregatedData, function (userData) {
+        return userData.displayName;
+      });
+    }
+
+    function getDisplayName(ciUser) {
+      if (ciUser.name) {
+        if (ciUser.name.givenName && !ciUser.name.familyName) {
+          return ciUser.name.givenName;
+        } else if (!ciUser.name.givenName && ciUser.name.familyName) {
+          return ciUser.name.familyName;
+        } else {
+          return ciUser.name.givenName + " " + ciUser.name.familyName;
+        }
+      } else if (ciUser.displayName) {
+        return ciUser.displayName;
+      } else {
+        return ciUser.emails[0].value;
+      }
+    }
+
+    function getCareUserIDNameMap(ciUserData) {
+      var ciUsers = ciUserData.data.Resources;
+      var careUserIDNameMap = {};
+      _.forEach(ciUsers, function (ciUserDetailedData) {
+        careUserIDNameMap[ciUserDetailedData.id] = getDisplayName(ciUserDetailedData);
+      });
+      return careUserIDNameMap;
     }
 
     function getOverviewData() {
@@ -96,10 +170,17 @@
           config = getQueryConfig('fifteen_minutes', mediaType, startTimeStamp, endTimeStamp);
           dataPromise = getStats(reportName, config)
           .then(function (response) {
-            var localTimeData = downSampleByHour(response.data.data, isSnapshot);
-            return fillEmptyData(
-              (moment.range(startTimeStamp.add(1, 'hours').toDate(), endTimeStamp.toDate())),
-              'h', localTimeData, hourFormat, false);
+            if (reportName === "all_user_stats") {
+              var reportingUserWithUserID = _.filter(response.data.data, function (userData) {
+                return userData.userId;
+              });
+              return downSampleByUserId(reportingUserWithUserID);
+            } else {
+              var localTimeData = downSampleByHour(response.data.data, isSnapshot);
+              return fillEmptyData(
+                (moment.range(startTimeStamp.add(1, 'hours').toDate(), endTimeStamp.toDate())),
+                'h', localTimeData, hourFormat, false);
+            }
           });
           break;
 
@@ -110,10 +191,17 @@
           config = getQueryConfig('fifteen_minutes', mediaType, startTimeStamp, endTimeStamp);
           dataPromise = getStats(reportName, config)
           .then(function (response) {
-            var localTimeData = downSampleByHour(response.data.data);
-            return fillEmptyData(
-              (moment.range(startTimeStamp.add(1, 'hours').toDate(), endTimeStamp.toDate())),
-              'h', localTimeData, hourFormat, false);
+            if (reportName === "all_user_stats") {
+              var reportingUserWithUserID = _.filter(response.data.data, function (userData) {
+                return userData.userId;
+              });
+              return downSampleByUserId(reportingUserWithUserID);
+            } else {
+              var localTimeData = downSampleByHour(response.data.data);
+              return fillEmptyData(
+                (moment.range(startTimeStamp.add(1, 'hours').toDate(), endTimeStamp.toDate())),
+                'h', localTimeData, hourFormat, false);
+            }
           });
           break;
 
@@ -124,9 +212,16 @@
           config = getQueryConfig('hourly', mediaType, startTimeStamp, endTimeStamp);
           dataPromise = getStats(reportName, config)
           .then(function (response) {
-            var localTimeData = downSampleByDay(response.data.data);
-            return fillEmptyData((moment.range(startTimeStamp.toDate(), endTimeStamp.toDate())),
+            if (reportName === "all_user_stats") {
+              var reportingUserWithUserID = _.filter(response.data.data, function (userData) {
+                return userData.userId;
+              });
+              return downSampleByUserId(reportingUserWithUserID);
+            } else {
+              var localTimeData = downSampleByDay(response.data.data);
+              return fillEmptyData((moment.range(startTimeStamp.toDate(), endTimeStamp.toDate())),
               'd', localTimeData, dayFormat, true);
+            }
           });
           break;
 
@@ -137,9 +232,16 @@
           config = getQueryConfig('daily', mediaType, startTimeStamp, endTimeStamp);
           dataPromise = getStats(reportName, config)
           .then(function (response) {
-            var localTimeData = downSampleByWeek(response.data.data);
-            return fillEmptyData((moment.range(startTimeStamp.toDate(), endTimeStamp.toDate())),
+            if (reportName === "all_user_stats") {
+              var reportingUserWithUserID = _.filter(response.data.data, function (userData) {
+                return userData.userId;
+              });
+              return downSampleByUserId(reportingUserWithUserID);
+            } else {
+              var localTimeData = downSampleByWeek(response.data.data);
+              return fillEmptyData((moment.range(startTimeStamp.toDate(), endTimeStamp.toDate())),
               'w', localTimeData, dayFormat, true);
+            }
           });
           break;
 
@@ -150,9 +252,16 @@
           config = getQueryConfig('daily', mediaType, startTimeStamp, endTimeStamp);
           dataPromise = getStats(reportName, config)
           .then(function (response) {
-            var localTimeData = downSampleByMonth(response.data.data);
-            return fillEmptyData((moment.range(startTimeStamp.toDate(), endTimeStamp.toDate())),
-              'M', localTimeData, monthFormat, false);
+            if (reportName === "all_user_stats") {
+              var reportingUserWithUserID = _.filter(response.data.data, function (userData) {
+                return userData.userId;
+              });
+              return downSampleByUserId(reportingUserWithUserID);
+            } else {
+              var localTimeData = downSampleByMonth(response.data.data);
+              return fillEmptyData((moment.range(startTimeStamp.toDate(), endTimeStamp.toDate())),
+                'M', localTimeData, monthFormat, false);
+            }
           });
           break;
 
@@ -249,6 +358,28 @@
       return downSampledStatsByMonth;
     }
 
+    function downSampleByUserId(data) {
+      var statsGroupedByUserId = _.groupBy(data, function (stats) {
+        return stats.userId;
+      });
+      var downSampledStatsByUserId = [];
+      _.map(statsGroupedByUserId, function (statsList) {
+        var reducedForUserId = _.reduce(statsList, reduceUserStats, emptyUserstats);
+        downSampledStatsByUserId.push(reducedForUserId);
+      });
+      return downSampledStatsByUserId;
+    }
+
+    function reduceUserStats(stats1, stats2) {
+      var resultStats = _.clone(stats2);
+      resultStats.contactsHandled = stats1.contactsHandled + stats2.contactsHandled;
+      resultStats.contactsAssigned = stats1.contactsAssigned + stats2.contactsAssigned;
+      resultStats.numCsatScores = stats1.numCsatScores + stats2.numCsatScores;
+      resultStats.handleTime = calculateAvgHandleTime(stats1, stats2);
+      resultStats.avgCsatScore = calculateUserAverageCsat(stats1, stats2);
+      return resultStats;
+    }
+
     function reduceOrgSnapshotStatsByHour(stats1, stats2) {
       var resultStats = reduceOrgSnapshotStats(stats1, stats2);
       resultStats.createdTime = moment(stats2.createdTime).startOf('hour').add(1, 'hours').format(hourFormat);
@@ -295,7 +426,7 @@
       resultStats.numTasksAbandonedState = stats1.numTasksAbandonedState + stats2.numTasksAbandonedState;
       resultStats.numTasksHandledState = stats1.numTasksHandledState + stats2.numTasksHandledState;
       resultStats.numCsatScores = stats1.numCsatScores + stats2.numCsatScores;
-      resultStats.avgCsatScores = calculateAverageCsat(stats1, stats2);
+      resultStats.avgCsatScores = calculateOrgAverageCsat(stats1, stats2);
       return resultStats;
     }
 
@@ -325,10 +456,24 @@
       return ((totalTasks != 0) ? (duration / totalTasks) : 0);
     }
 
-    function calculateAverageCsat(stats1, stats2) {
+    function calculateAvgHandleTime(stats1, stats2) {
+      var totalHandledContacts = stats1.contactsHandled + stats2.contactsHandled;
+      var handleTime = (stats1.contactsHandled * stats1.handleTime) + (stats2.contactsHandled * stats2.handleTime);
+      return ((totalHandledContacts != 0) ? (handleTime / totalHandledContacts) : 0);
+    }
+
+    function calculateOrgAverageCsat(stats1, stats2) {
       var totalCsatScores = stats1.numCsatScores + stats2.numCsatScores;
       var csat = (totalCsatScores > 0) ?
         ((stats1.avgCsatScores * stats1.numCsatScores) + (stats2.avgCsatScores * stats2.numCsatScores)) /
+        (stats1.numCsatScores + stats2.numCsatScores) : 0;
+      return csat;
+    }
+
+    function calculateUserAverageCsat(stats1, stats2) {
+      var totalNumCsats = stats1.numCsatScores + stats2.numCsatScores;
+      var csat = (totalNumCsats > 0) ?
+        ((stats1.avgCsatScore * stats1.numCsatScores) + (stats2.avgCsatScore * stats2.numCsatScores)) /
         (stats1.numCsatScores + stats2.numCsatScores) : 0;
       return csat;
     }

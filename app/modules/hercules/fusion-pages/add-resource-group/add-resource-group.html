@@ -63,6 +63,17 @@
               type="radio"
               ng-model="vm.releaseChannel"
               name="releaseChannel"
+              value="alpha"
+              id="releaseChannel_alpha"
+              ng-keypress="vm.handleKeypress($event)"
+              cs-input-label="{{vm._translation.releaseChannel.alpha}}"
+              cs-input-help-text="{{vm._translation.releaseChannel.alphaHelpText}}"
+              ng-if="vm.showChannelOption('alpha')">
+            <input
+              cs-input
+              type="radio"
+              ng-model="vm.releaseChannel"
+              name="releaseChannel"
               value="latest"
               id="releaseChannel_latest"
               ng-keypress="vm.handleKeypress($event)"

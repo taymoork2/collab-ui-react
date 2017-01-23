@@ -23,7 +23,7 @@
         <div class="tag-container" ng-show="deviceOverview.currentDevice.tags && deviceOverview.currentDevice.tags.length > 0">
         <span class="tag" ng-repeat="tag in deviceOverview.currentDevice.tags">
           <span ng-bind-html="tag"></span>
-          <i class="icon icon-close" ng-click="deviceOverview.removeTag(tag)"></i>
+          <i class="icon icon-close" ng-show="!deviceOverview.currentDevice.isHuronDevice || !$first" ng-click="deviceOverview.removeTag(tag)"></i>
         </span>
         </div>
         <div class="tag-container">
@@ -156,7 +156,7 @@
         </div>
       </div>
 
-      <div class="form-group" ng-show="deviceOverview.timeZone">
+      <div class="form-group" ng-show="deviceOverview.currentDevice.isHuronDevice">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.timeZone"></label>
         <div class="col-sm-8" cs-loader ng-hide="deviceOverview.tzIsLoaded"></div>
         <div class="col-sm-3" ng-show="deviceOverview.tzIsLoaded">
@@ -227,13 +227,13 @@
       <div class="form-group" ng-show="deviceOverview.currentDevice.hasAdvancedSettings" cr-feature-toggle feature-show="atlas-devices-advanced-settings">
         <label class="col-sm-4 control-label" translate="spacesPage.advancedSettings.advancedSettings"></label>
         <div class="col-sm-8">
-          <a sq-click-promise="deviceOverview.showAdvancedSettingsDialog()" translate="spacesPage.advancedSettings.launchAdvancedSettings"></a>
+          <a sq-click-promise="deviceOverview.showAdvancedSettingsDialog()" class="internal-link" translate="spacesPage.advancedSettings.launchAdvancedSettings"></a>
         </div>
       </div>
       <div class="form-group" ng-show="deviceOverview.currentDevice.hasRemoteSupport">
         <label class="col-sm-4 control-label" translate="spacesPage.ciscoSupport"></label>
         <div class="col-sm-8">
-          <a sq-click-promise="deviceOverview.showRemoteSupportDialog()" translate="spacesPage.remoteAccessKey"></a>
+          <a sq-click-promise="deviceOverview.showRemoteSupportDialog()" class="internal-link" translate="spacesPage.remoteAccessKey"></a>
         </div>
       </div>
     </cs-sp-section>

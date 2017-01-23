@@ -44,6 +44,12 @@
 
     vm.setStates();
 
+    vm.overviewCards = {};
+    vm.setOverviewCards = function () {
+      vm.overviewCards = CTService.getOverviewPageCards(vm.type);
+    };
+    vm.setOverviewCards();
+
     vm.currentState = vm.states[0];
     vm.animationTimeout = 10;
     vm.escapeKey = 27;
@@ -133,6 +139,13 @@
         fieldSet: 'cisco.base.ccc.pod',
         fieldName: 'cccCustom'
       }
+    }, {
+      id: 'reason',
+      text: $translate.instant('careChatTpl.typeReason'),
+      dictionaryType: {
+        fieldSet: 'cisco.base.ccc.pod',
+        fieldName: 'cccChatReason'
+      }
     }];
 
     vm.categoryTypeOptions = [{
@@ -170,13 +183,15 @@
     if ($stateParams.isEditFeature) {
       var config = $stateParams.template.configuration;
       vm.type = config.mediaType;
-      if (config.mediaType && config.mediaType === vm.mediaTypes.chat) {
-        vm.selectedTemplateProfile = config.mediaSpecificConfiguration.useOrgProfile ?
+      if (config.mediaType) {
+        if (config.mediaType === vm.mediaTypes.chat) {
+          vm.selectedTemplateProfile = config.mediaSpecificConfiguration.useOrgProfile ?
             vm.profiles.org : vm.profiles.agent;
-        vm.selectedAgentProfile = config.mediaSpecificConfiguration.useAgentRealName ?
+          vm.selectedAgentProfile = config.mediaSpecificConfiguration.useAgentRealName ?
             vm.agentNames.displayName : vm.agentNames.alias;
-        vm.orgName = config.mediaSpecificConfiguration.displayText;
-        vm.logoUrl = config.mediaSpecificConfiguration.orgLogoUrl;
+          vm.orgName = config.mediaSpecificConfiguration.displayText;
+          vm.logoUrl = config.mediaSpecificConfiguration.orgLogoUrl;
+        }
         vm.timings.startTime.label = config.pages.offHours.schedule.timings.startTime;
         vm.timings.endTime.label = config.pages.offHours.schedule.timings.endTime;
         vm.scheduleTimeZone = CTService.getTimeZone(config.pages.offHours.schedule.timezone);
@@ -392,10 +407,10 @@
                   value: vm.getCategoryTypeObject('customerInfo')
                 }, {
                   name: 'label',
-                  value: $translate.instant('careChatTpl.defaultEmailText')
+                  value: $translate.instant('careChatTpl.defaultPhoneText')
                 }, {
                   name: 'hintText',
-                  value: $translate.instant('careChatTpl.defaultEmail')
+                  value: $translate.instant('careChatTpl.defaultPhoneHintText')
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('phone'),
@@ -430,20 +445,20 @@
                   value: vm.getCategoryTypeObject('requestInfo')
                 }, {
                   name: 'label',
-                  value: $translate.instant('careChatTpl.defaultQuestionText')
+                  value: $translate.instant('careChatTpl.additionalDetails')
                 }, {
                   name: 'hintText',
-                  value: $translate.instant('careChatTpl.field3HintText')
+                  value: $translate.instant('careChatTpl.additionalDetailsAbtIssue')
                 }, {
                   name: 'type',
-                  value: vm.getTypeObject('email'),
+                  value: vm.getTypeObject('reason'),
                   categoryOptions: ''
                 }]
               }
             }
           },
           agentUnavailable: {
-            enabled: true,
+            enabled: false,
             fields: {
               agentUnavailableMessage: {
                 displayText: $translate.instant('careChatTpl.agentUnavailableMessage')
@@ -464,7 +479,7 @@
             }
           },
           callbackConfirmation: {
-            enabled: true,
+            enabled: false,
             fields: {
               callbackConfirmationMessage: {
                 displayText: "Your callback request has been received."
@@ -489,6 +504,7 @@
 
     vm.singleLineValidationMessage = CTService.getValidationMessages(0, vm.lengthConstants.singleLineMaxCharLimit);
     vm.multiLineValidationMessage = CTService.getValidationMessages(0, vm.lengthConstants.multiLineMaxCharLimit);
+
 
     vm.overview = {
       customerInformation: 'circle-user',
@@ -720,6 +736,7 @@
     }
 
     vm.activeItem = undefined;
+    vm.activeItemName = undefined;
 
     /**
      * Utility Methods Section
@@ -769,6 +786,10 @@
 
     vm.setActiveItem = function (val) {
       vm.activeItem = vm.getFieldByName(val.toString());
+    };
+
+    vm.isSecondFieldForCallBack = function () {
+      return vm.type === vm.mediaTypes.callback && vm.activeItemName === 'field2';
     };
 
     vm.isDynamicFieldType = function (val) {

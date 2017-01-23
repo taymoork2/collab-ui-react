@@ -9,7 +9,7 @@ require('modules/core/reports/amcharts-export.scss');
     .controller('DeviceUsageCtrl', DeviceUsageCtrl);
 
   /* @ngInject */
-  function DeviceUsageCtrl($log, $q, $translate, $scope, DeviceUsageTotalService, DeviceUsageExportService, Notification, DeviceUsageSplunkMetricsService, ReportConstants, deviceUsageFeatureToggle, $state, $modal) {
+  function DeviceUsageCtrl($log, $q, $translate, $scope, DeviceUsageTotalService, DeviceUsageGraphService, DeviceUsageDateService, DeviceUsageExportService, Notification, DeviceUsageSplunkMetricsService, ReportConstants, deviceUsageFeatureToggle, $state, $modal) {
     var vm = this;
     var amChart;
     var apiToUse = 'backend';
@@ -88,19 +88,21 @@ require('modules/core/reports/amcharts-export.scss');
       vm.deviceFilter = vm.deviceOptions[0];
       switch (vm.timeSelected.value) {
         case 0:
-          loadLastWeek();
-          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
+          dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(7, 'day');
+          loadLastWeek(dateRange);
           break;
         case 1:
-          loadLastMonth();
-          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(4, 'week');
+          dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(4, 'week');
+          loadLastMonth(dateRange);
           break;
         case 2:
-          loadLast3Months();
-          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(3, 'month');
+          dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(3, 'month');
+          loadLast3Months(dateRange);
           break;
         default:
-          loadLastWeek();
+          $log.warn("Unknown time period selected");
+          dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(7, 'day');
+          loadLastWeek(dateRange);
       }
     }
 
@@ -166,7 +168,7 @@ require('modules/core/reports/amcharts-export.scss');
     }, init);
 
     function init() {
-      var chart = DeviceUsageTotalService.getLineChart();
+      var chart = DeviceUsageGraphService.getLineChart();
       chart.startEffect = 'easeInSine';
       chart.startDuration = 0.5;
       chart.zoomOutOnDataUpdate = true;
@@ -176,28 +178,28 @@ require('modules/core/reports/amcharts-export.scss');
         { event: 'dataUpdated', method: graphRendered },
         { event: 'clickGraphItem', method: graphClick }
       ];
-      amChart = DeviceUsageTotalService.makeChart('device-usage-total-chart', chart);
+      amChart = DeviceUsageGraphService.makeChart('device-usage-total-chart', chart);
       loadInitData();
     }
 
     function loadInitData() {
       switch (vm.timeSelected.value) {
         case 0:
-          loadLastWeek();
-          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
+          dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(7, 'day');
+          loadLastWeek(dateRange);
           break;
         case 1:
-          loadLastMonth();
-          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(4, 'week');
+          dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(4, 'week');
+          loadLastMonth(dateRange);
           break;
         case 2:
-          loadLast3Months();
-          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(3, 'month');
+          dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(3, 'month');
+          loadLast3Months(dateRange);
           break;
         default:
           $log.warn("Unknown time period selected");
-          loadLastWeek();
-          dateRange = DeviceUsageTotalService.getDateRangeForLastNTimeUnits(7, 'day');
+          dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(7, 'day');
+          loadLastWeek(dateRange);
       }
 
     }
@@ -251,32 +253,32 @@ require('modules/core/reports/amcharts-export.scss');
       amChart.validateData();
     }
 
-    function loadLastWeek() {
+    function loadLastWeek(dates) {
       missingDays = null;
       var missingDaysDeferred = $q.defer();
       missingDaysDeferred.promise.then(handleMissingDays);
       vm.loading = true;
-      DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse, missingDaysDeferred).then(function (data) {
+      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'day', ['ce', 'sparkboard'], apiToUse, missingDaysDeferred).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last7Days'));
       }, handleReject);
     }
 
-    function loadLastMonth() {
+    function loadLastMonth(dates) {
       missingDays = null;
       var missingDaysDeferred = $q.defer();
       missingDaysDeferred.promise.then(handleMissingDays);
       vm.loading = true;
-      DeviceUsageTotalService.getDataForLastNTimeUnits(4, 'week', ['ce', 'sparkboard'], apiToUse, missingDaysDeferred).then(function (data) {
+      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'week', ['ce', 'sparkboard'], apiToUse, missingDaysDeferred).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last4Weeks'));
       }, handleReject);
     }
 
-    function loadLast3Months() {
+    function loadLast3Months(dates) {
       missingDays = null;
       var missingDaysDeferred = $q.defer();
       missingDaysDeferred.promise.then(handleMissingDays);
       vm.loading = true;
-      DeviceUsageTotalService.getDataForLastNTimeUnits(3, 'month', ['ce', 'sparkboard'], apiToUse, missingDaysDeferred).then(function (data) {
+      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'month', ['ce', 'sparkboard'], apiToUse, missingDaysDeferred).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last3Months'));
       }, handleReject);
     }

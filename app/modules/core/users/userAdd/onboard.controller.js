@@ -92,15 +92,11 @@ require('./_user-add.scss');
     $scope.cancelModal = cancelModal;
     var currentUserHasCall = false;
 
-    $scope.isCareEnabled = false;
-    FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
-      $scope.isCareEnabled = careStatus && Authinfo.isCare();
-    });
-
-    $scope.isCallBackEnabled = false;
+    $scope.isCareEnabled = Authinfo.isCare();
+    $scope.isCareCallBackEnabled = false;
     $scope.enableCareService = true;
     FeatureToggleService.atlasCareCallbackTrialsGetStatus().then(function (callBackStatus) {
-      $scope.isCallBackEnabled = callBackStatus;
+      $scope.isCareCallBackEnabled = callBackStatus;
     });
 
     FeatureToggleService.atlasSMPGetStatus().then(function (smpStatus) {
@@ -2580,7 +2576,7 @@ require('./_user-add.scss');
     }
 
     function controlCare() {
-      if ($scope.isCallBackEnabled) {
+      if ($scope.isCareCallBackEnabled) {
         if ($scope.radioStates.msgRadio && $scope.radioStates.commRadio) {
           $scope.enableCareService = true;
         } else {

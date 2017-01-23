@@ -28,11 +28,11 @@ describe('Controller: SubscriptionHeaderCtrl', function () {
   it('should update on broadcast', function () {
     rootscope.$broadcast('SUBSCRIPTION::upgradeData', {
       isTrial: true,
-      subId: 'subId',
+      productInstanceId: 'productInstanceId',
       upgradeTrialUrl: 'Url',
     });
     expect(controller.isTrial).toBeTruthy();
-    expect(controller.subId).toBe('subId');
+    expect(controller.productInstanceId).toBe('productInstanceId');
     expect(controller.upgradeTrialUrl).toBe('Url');
   });
 });

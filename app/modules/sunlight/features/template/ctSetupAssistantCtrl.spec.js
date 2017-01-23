@@ -764,13 +764,36 @@ describe('Care Setup Assistant Ctrl', function () {
     beforeEach(function () {
       controller.type = 'callback';
       controller.setStates();
+      controller.setOverviewCards();
       controller.getDefaultTemplate();
     });
+
     it('the page order should be as expected', function () {
-      expect(controller.states).toEqual(['name', 'summary']);
+      expect(controller.states).toEqual([
+        'name',
+        'overview',
+        'customerInformation',
+        'offHours',
+        'summary'
+      ]);
     });
+
+    it('the overview page should have expected cards', function () {
+      expect(controller.overviewCards).toEqual([
+        'customerInformation',
+        'offHours'
+      ]);
+    });
+
     it('default template should be of type callback', function () {
       expect(controller.template.configuration.mediaType).toEqual('callback');
+    });
+
+    it('should initialize only customer info & off-hours cards as enabled', function () {
+      expect(controller.template.configuration.pages.customerInformation.enabled).toBe(true);
+      expect(controller.template.configuration.pages.agentUnavailable.enabled).toBe(false);
+      expect(controller.template.configuration.pages.offHours.enabled).toBe(true);
+      expect(controller.template.configuration.pages.callbackConfirmation.enabled).toBe(false);
     });
   });
 

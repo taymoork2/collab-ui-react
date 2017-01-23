@@ -3,7 +3,7 @@
 describe('Controller: DeviceUsageCtrl', function () {
 
   beforeEach(angular.mock.module('Core'));
-  var DeviceUsageTotalService, DeviceUsageSplunkMetricsService, DeviceUsageExportService;
+  var DeviceUsageTotalService, DeviceUsageGraphService, DeviceUsageSplunkMetricsService, DeviceUsageExportService;
   var $controller;
   var controller;
   var splunkService;
@@ -14,12 +14,13 @@ describe('Controller: DeviceUsageCtrl', function () {
   var $modal;
 
   afterEach(function () {
-    DeviceUsageTotalService = DeviceUsageSplunkMetricsService = $controller = controller = splunkService = $scope = $q = $state = undefined;
+    DeviceUsageTotalService = DeviceUsageGraphService = DeviceUsageSplunkMetricsService = $controller = controller = splunkService = $scope = $q = $state = undefined;
   });
 
-  beforeEach(inject(function (_$q_, _$rootScope_, _DeviceUsageTotalService_, _DeviceUsageExportService_, _DeviceUsageSplunkMetricsService_, _$controller_, _$state_, _Notification_, _$modal_) {
+  beforeEach(inject(function (_$q_, _$rootScope_, _DeviceUsageTotalService_, _DeviceUsageGraphService_, _DeviceUsageExportService_, _DeviceUsageSplunkMetricsService_, _$controller_, _$state_, _Notification_, _$modal_) {
     DeviceUsageTotalService = _DeviceUsageTotalService_;
     DeviceUsageExportService = _DeviceUsageExportService_;
+    DeviceUsageGraphService = _DeviceUsageGraphService_;
     DeviceUsageSplunkMetricsService = _DeviceUsageSplunkMetricsService_;
     $controller = _$controller_;
     $scope = _$rootScope_.$new();
@@ -28,8 +29,8 @@ describe('Controller: DeviceUsageCtrl', function () {
     Notification = _Notification_;
     $modal = _$modal_;
 
-    sinon.stub(DeviceUsageTotalService, 'makeChart');
-    DeviceUsageTotalService.makeChart.returns(amchartMock());
+    sinon.stub(DeviceUsageGraphService, 'makeChart');
+    DeviceUsageGraphService.makeChart.returns(amchartMock());
 
 
   }));
@@ -40,6 +41,7 @@ describe('Controller: DeviceUsageCtrl', function () {
       sinon.stub($state, 'go');
       controller = $controller('DeviceUsageCtrl', {
         DeviceUsageTotalService: DeviceUsageTotalService,
+        DeviceUsageGraphService: DeviceUsageGraphService,
         DeviceUsageSplunkMetricsService: DeviceUsageSplunkMetricsService,
         $scope: $scope,
         deviceUsageFeatureToggle: false,
@@ -56,6 +58,7 @@ describe('Controller: DeviceUsageCtrl', function () {
     beforeEach(function () {
       controller = $controller('DeviceUsageCtrl', {
         DeviceUsageTotalService: DeviceUsageTotalService,
+        DeviceUsageGraphService: DeviceUsageGraphService,
         DeviceUsageSplunkMetricsService: DeviceUsageSplunkMetricsService,
         $scope: $scope,
         deviceUsageFeatureToggle: true,
@@ -67,11 +70,11 @@ describe('Controller: DeviceUsageCtrl', function () {
 
 
     it('starts with fetching initial data based on default last 7 days range', function (done) {
-      sinon.stub(DeviceUsageTotalService, 'getDataForLastNTimeUnits');
+      sinon.stub(DeviceUsageTotalService, 'getDataForRange');
       var deviceData = [
         { whatever: 42 }
       ];
-      DeviceUsageTotalService.getDataForLastNTimeUnits.returns($q.when(deviceData));
+      DeviceUsageTotalService.getDataForRange.returns($q.when(deviceData));
       expect(controller.loading).toBe(true);
       controller.init();
       expect(controller.timeSelected.value).toBe(0);
