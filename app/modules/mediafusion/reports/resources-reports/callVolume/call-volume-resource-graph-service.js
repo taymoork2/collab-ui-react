@@ -101,16 +101,10 @@
       chartData.legend = CommonReportsGraphService.getBaseVariable(LEGEND);
       chartData.legend.labelText = '[[title]]';
       var chart = AmCharts.makeChart(callVolumediv, chartData);
-      // chart.addListener('rendered', zoomChart);
-      // zoomChart(chart);
       // listen for zoomed event and call "handleZoom" method
       chart.addListener('zoomed', handleZoom);
       return chart;
     }
-
-    // function zoomChart(chart) {
-    //   chart.zoomToIndexes(chart.dataProvider.length - 40, chart.dataProvider.length - 1);
-    // }
 
     // this method is called each time the selected period of the chart is changed
     function handleZoom(event) {
@@ -121,11 +115,7 @@
         endTime: zoomedEndTime
       };
 
-      if (_.isUndefined(dateSelected.value) && zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) {
-        $rootScope.$broadcast('zoomedTime', {
-          data: selectedTime
-        });
-      } else if (zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) {
+      if ((_.isUndefined(dateSelected.value) && zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) || (zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime)) {
         $rootScope.$broadcast('zoomedTime', {
           data: selectedTime
         });

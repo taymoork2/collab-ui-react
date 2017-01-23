@@ -181,9 +181,6 @@
 
 
       var chart = AmCharts.makeChart(utilizationdiv, chartData);
-      // chart.addListener('rendered', zoomChart);
-      // zoomChart(chart);
-      // listen for zoomed event and call "handleZoom" method
       chart.addListener('zoomed', handleZoom);
       return chart;
     }
@@ -196,11 +193,7 @@
         startTime: zoomedStartTime,
         endTime: zoomedEndTime
       };
-      if (_.isUndefined(dateSelected.value) && zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) {
-        $rootScope.$broadcast('zoomedTime', {
-          data: selectedTime
-        });
-      } else if (zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) {
+      if ((_.isUndefined(dateSelected.value) && zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) || (zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime)) {
         $rootScope.$broadcast('zoomedTime', {
           data: selectedTime
         });
@@ -236,10 +229,6 @@
       tempData = _.sortBy(tempData, 'title');
       return tempData;
     }
-
-    // function zoomChart(chart) {
-    //   chart.zoomToIndexes(chart.dataProvider.length - 40, chart.dataProvider.length - 1);
-    // }
 
     function legendHandler(evt) {
       if (evt.dataItem.id === 'all') {

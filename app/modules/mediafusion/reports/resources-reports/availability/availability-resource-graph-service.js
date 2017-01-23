@@ -143,8 +143,7 @@
         }
       }];
       var chart = AmCharts.makeChart(availabilitydiv, chartData, 0);
-      // listen for zoomed event and call "handleZoom" method
-      //chart.addListener('zoomed', handleZoom);
+
       chart.addListener('init', function () {
         // listen for zoomed event and call "handleZoom" method
         chart.valueAxis.addListener('axisZoomed', handleZoom);
@@ -170,11 +169,7 @@
         endTime: zoomedEndTime
       };
 
-      if (_.isUndefined(dateSelected.value) && zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) {
-        $rootScope.$broadcast('zoomedTime', {
-          data: selectedTime
-        });
-      } else if (zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) {
+      if ((_.isUndefined(dateSelected.value) && zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) || (zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime)) {
         $rootScope.$broadcast('zoomedTime', {
           data: selectedTime
         });
