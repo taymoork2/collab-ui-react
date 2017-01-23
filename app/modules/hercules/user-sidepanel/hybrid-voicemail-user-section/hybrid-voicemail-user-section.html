@@ -1,0 +1,27 @@
+<cs-sp-section class="cloud-extensions">
+  <div class="section-title-row">
+    <span class="section-name">Voicemail!</span>
+    <cs-toggle-switch size="small"
+                      ng-if="false"
+                      is-disabled="true"></cs-toggle-switch>
+    <cs-toggle-switch size="small"
+                      ng-if="true"
+                      ng-model="$ctrl.callServiceConnectEnabledForUser"
+                      is-disabled="true"></cs-toggle-switch>
+  </div>
+
+  <div class="extension-description">Users can check their voicemailz directly from Cisco Spark!!</div>
+
+  <div>
+    <span class="cloud-extension-label"
+          translate="cloudExtensions.status"></span><span>:</span>
+    <span ng-if="$ctrl.callServiceConnectEnabledForUser">Enabled-ish!</span>
+    <span ng-if="!$ctrl.callServiceConnectEnabledForUser">Off…</span>
+  </div>
+
+  <div ng-if="$ctrl.callServiceConnectEnabledForUser">
+    <span class="cloud-extension-label">Pilot:</span>
+    <span>(+1) 555-5689-5614</span>
+  </div>
+
+</cs-sp-section>

@@ -115,6 +115,9 @@
     </div>
 
   </cs-sp-section>
+  <hybrid-voicemail-user-section call-service-connect-enabled-for-user="callServiceConnect.entitled"
+                                 ng-if="callServiceAware.currentUserEntitled && callServiceConnect.orgEntitled && callServiceConnect.enabledInFMS"></hybrid-voicemail-user-section>
+
   <cs-sp-section class="cloud-extensions" ng-if="resourceGroup.show">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.resourceGroups.resourceGroupHeading"></span>
