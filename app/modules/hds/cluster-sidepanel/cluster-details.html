@@ -18,12 +18,12 @@
     <p ng-if="hdsSidepanelClusterController.cluster.aggregates.alarms.length === 0" translate="hds.alarms.noAlarms"></p>
   </cs-sp-section>
 
-  <cs-sp-section ng-if="hdsSidepanelClusterController.cluster.connectors.length == 0 && hdsSidepanelClusterController.hasHDSFeatureToggle">
+  <cs-sp-section ng-if="hdsSidepanelClusterController.cluster.connectors.length > 0 && hdsSidepanelClusterController.hasHDSFeatureToggle">
     <div class="section-title-row section-name" translate="hds.clusterSettings.releasechannelHeader"></div>
     <p>{{hdsSidepanelClusterController.releaseChannel}}</p>
   </cs-sp-section>
 
-  <cs-sp-section ng-if="hdsSidepanelClusterController.cluster.connectors.length == 0 && hdsSidepanelClusterController.schedule">
+  <cs-sp-section ng-if="hdsSidepanelClusterController.cluster.connectors.length > 0 && hdsSidepanelClusterController.schedule">
     <div class="section-title-row section-name" translate="hds.clusterSettings.upgradeScheduleSubHeader"></div>
     <p>
       <span>{{hdsSidepanelClusterController.schedule.dateTime}}, </span>
@@ -31,7 +31,7 @@
     </p>
   </cs-sp-section>
 
-  <cs-sp-section ng-if="hdsSidepanelClusterController.cluster.connectors.length == 0">
+  <cs-sp-section ng-if="hdsSidepanelClusterController.cluster.connectors.length > 0">
     <div class="section-title-row section-name" translate="hercules.softwareUpgrade.softwareUpgrade"></div>
     <div class="hercules-upgrade-section">
         <p ng-if="!hdsSidepanelClusterController.softwareUpgrade.isUpgradeAvailable" translate="hercules.softwareUpgrade.upToDate" translate-values="{connectorType: hdsSidepanelClusterController.connectorName}"></p>

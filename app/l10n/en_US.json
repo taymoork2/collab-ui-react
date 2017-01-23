@@ -2073,7 +2073,6 @@
     },
     "resourceGroupSettings": {
       "pageTitle": "{{groupName}} Settings",
-      "releaseChannelDescription": "Select the release channel for all Hybrid Services running in this group.",
       "clustersHeader": "Clusters",
       "clustersAssign": "Assign Clusters",
       "clustersDescription": "Add one or more existing Expressway clusters to this group.",

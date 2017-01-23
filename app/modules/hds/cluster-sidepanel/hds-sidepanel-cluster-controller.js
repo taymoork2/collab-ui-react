@@ -6,7 +6,7 @@
     .controller('HDSSidepanelClusterController', HDSSidepanelClusterController);
 
   /* @ngInject */
-  function HDSSidepanelClusterController($modal, $scope, $state, $stateParams, $translate, $timeout, ClusterService, FusionUtils, FusionClusterService, Notification, hasHDSFeatureToggle) {
+  function HDSSidepanelClusterController($modal, $scope, $state, $stateParams, $translate, ClusterService, FusionUtils, FusionClusterService, Notification, hasHDSFeatureToggle) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.clusterId;
@@ -15,6 +15,7 @@
     vm.serviceName = $translate.instant('hds.serviceName.' + vm.servicesId[0]);
     vm.connectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
     vm.localizedCCCName = $translate.instant('common.ciscoCollaborationCloud');
+    vm.upgradeInProgress = false;
     vm.getSeverity = ClusterService.getRunningStateSeverity;
     vm.hasConnectorAlarm = hasConnectorAlarm;
     vm.hasHDSFeatureToggle = hasHDSFeatureToggle;
@@ -24,15 +25,11 @@
       return;
     }
 
-    var promise = null;
-
-    vm.upgradeInProgress = false;
-
     $scope.$watch(function () {
       return ClusterService.getCluster(vm.connectorType, vm.clusterId);
     }, function (newValue) {
       //The following code is executed right after upgrade API, so let's skip it once if we
-      //deceided to upgrade and wait for the next heatbeat.
+      //decided to upgrade and wait for the next heartbeat.
       if (vm.upgradeInProgress) {
         vm.upgradeInProgress = false;
         return;
@@ -100,9 +97,6 @@
         vm.softwareUpgrade.isUpgrading = true;
       });
 
-      $scope.$on('$destroy', function () {
-        $timeout.cancel(promise);
-      });
     }
 
     function findUpgradingHostname(hostnames) {
