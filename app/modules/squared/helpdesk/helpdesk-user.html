@@ -67,7 +67,7 @@
 
       <div class="row">
         <div class="medium-5 columns details-heading">
-          <span>{{'helpdesk.lastEmailSent' | translate}}:</span>
+          <span>{{'helpdesk.lastEmailEvent' | translate}}:</span>
         </div>
         <div
           class="medium-7 columns details-value"
@@ -82,6 +82,16 @@
                 <a
                   ng-click="helpdeskUserCtrl.clear(helpdeskUserCtrl.user.userName, 'bounced');"
                   translate="helpdesk.clearBounce"></a>
+              </span>
+              <span ng-switch-when="unsubscribed">
+                <a
+                  ng-click="helpdeskUserCtrl.clear(helpdeskUserCtrl.user.userName, 'unsubscribed');"
+                  translate="helpdesk.clearUnsubscribe"></a>
+              </span>
+              <span ng-switch-when="complained">
+                <a
+                  ng-click="helpdeskUserCtrl.clear(helpdeskUserCtrl.user.userName, 'complained');"
+                  translate="helpdesk.clearComplaint"></a>
               </span>
             </span>
           </span>

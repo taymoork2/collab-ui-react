@@ -63,12 +63,12 @@ describe('Features Controller', function () {
     getDeferred = $q.defer();
 
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue(getDeferred.promise);
-    spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.when());
-    spyOn(CallParkService, 'getCallParkList').and.returnValue($q.when(emptyListOfCPs.callparks));
+    spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.resolve());
+    spyOn(CallParkService, 'getCallParkList').and.returnValue($q.resolve(emptyListOfCPs.callparks));
     spyOn(CallPickupGroupService, 'getListOfPickupGroups').and.returnValue(getDeferred.promise);
-    spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue($q.when());
+    spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue($q.resolve());
     spyOn(Notification, 'error');
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when());
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve());
 
     spyOn($state, 'go');
 

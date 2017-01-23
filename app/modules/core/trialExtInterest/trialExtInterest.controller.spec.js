@@ -65,7 +65,7 @@ describe('Controller: TrialExtInterestCtrl', function () {
 
     describe('With a successful service call', function () {
       beforeEach(function () {
-        TrialExtInterestService.notifyPartnerAdmin.and.returnValue($q.when());
+        TrialExtInterestService.notifyPartnerAdmin.and.returnValue($q.resolve());
         initController();
       });
 

@@ -49,7 +49,7 @@ describe('ExportUserStatusesController', function () {
 
     USSService = {
       getStatuses: function () {
-        return $q.when({
+        return $q.resolve({
           // 51 to be over numberOfUsersPrCiRequest (which should be 50)
           userStatuses: _.range(51).map(function (item, i) {
             return {
@@ -71,7 +71,7 @@ describe('ExportUserStatusesController', function () {
 
     ClusterService = {
       getConnector: function (id) {
-        return $q.when({
+        return $q.resolve({
           id: id,
           cluster_id: 'a5140c4a-9f6e-11e5-a58e-005056b12db1',
           display_name: 'Calendar Connector',
@@ -85,7 +85,7 @@ describe('ExportUserStatusesController', function () {
 
     UserDetails = {
       getUsers: function (stateInfos) {
-        return $q.when(stateInfos);
+        return $q.resolve(stateInfos);
       },
       getCSVColumnHeaders: function () {
         return ['whatever', 'foo', 'bar'];

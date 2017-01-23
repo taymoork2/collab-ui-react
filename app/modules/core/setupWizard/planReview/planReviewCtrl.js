@@ -89,9 +89,7 @@
 
     function init() {
 
-      FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
-        vm.isCareEnabled = careStatus && Authinfo.isCare();
-      });
+      vm.isCareEnabled = Authinfo.isCare();
 
       FeatureToggleService.atlasSMPGetStatus().then(function (smpStatus) {
         vm.isSharedMultiPartyEnabled = smpStatus;

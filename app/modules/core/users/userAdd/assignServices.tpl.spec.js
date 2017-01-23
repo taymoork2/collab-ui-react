@@ -119,16 +119,15 @@ describe('assignServices', function () {
     authinfo.updateAccountInfo(accountData);
 
     spyOn(_Orgservice_, 'getUnlicensedUsers');
-    spyOn(_FeatureToggleService_, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(false));
     spyOn(_FeatureToggleService_, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.resolve(false));
-    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(getLicensesUsage));
-    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
+    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.resolve(getLicensesUsage));
+    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.resolve(false));
 
     spyOn(csvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
-        return $q.when(headers);
+        return $q.resolve(headers);
       } else {
-        return $q.when({});
+        return $q.resolve({});
       }
     });
 

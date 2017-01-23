@@ -101,38 +101,38 @@ describe('Controller: ServiceSetup', function () {
       }
     });
 
-    spyOn(ServiceSetup, 'createInternalNumberRange').and.returnValue($q.when());
-    spyOn(ServiceSetup, 'deleteInternalNumberRange').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'createInternalNumberRange').and.returnValue($q.resolve());
+    spyOn(ServiceSetup, 'deleteInternalNumberRange').and.returnValue($q.resolve());
     spyOn(ServiceSetup, 'listSites').and.callFake(function () {
       ServiceSetup.sites = [model.site];
-      return $q.when();
+      return $q.resolve();
     });
-    spyOn(ServiceSetup, 'createSite').and.returnValue($q.when());
-    spyOn(ServiceSetup, 'updateSite').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'createSite').and.returnValue($q.resolve());
+    spyOn(ServiceSetup, 'updateSite').and.returnValue($q.resolve());
 
-    spyOn(HuronCustomer, 'get').and.returnValue($q.when(customer));
-    spyOn(HuronCustomer, 'put').and.returnValue($q.when());
-    spyOn(ServiceSetup, 'listVoicemailTimezone').and.returnValue($q.when(usertemplate));
-    spyOn(ServiceSetup, 'loadExternalNumberPool').and.returnValue($q.when(externalNumberPool));
-    spyOn(ServiceSetup, 'updateCustomer').and.returnValue($q.when());
-    spyOn(ServiceSetup, 'updateVoicemailTimezone').and.returnValue($q.when());
-    spyOn(ServiceSetup, 'updateVoicemailUserTemplate').and.returnValue($q.when());
-    spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
-    spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.when());
+    spyOn(HuronCustomer, 'get').and.returnValue($q.resolve(customer));
+    spyOn(HuronCustomer, 'put').and.returnValue($q.resolve());
+    spyOn(ServiceSetup, 'listVoicemailTimezone').and.returnValue($q.resolve(usertemplate));
+    spyOn(ServiceSetup, 'loadExternalNumberPool').and.returnValue($q.resolve(externalNumberPool));
+    spyOn(ServiceSetup, 'updateCustomer').and.returnValue($q.resolve());
+    spyOn(ServiceSetup, 'updateVoicemailTimezone').and.returnValue($q.resolve());
+    spyOn(ServiceSetup, 'updateVoicemailUserTemplate').and.returnValue($q.resolve());
+    spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.resolve());
+    spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.resolve());
     spyOn(ServiceSetup, 'listInternalNumberRanges').and.callFake(function () {
       ServiceSetup.internalNumberRanges = model.numberRanges;
-      return $q.when();
+      return $q.resolve();
     });
 
-    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timeZone));
-    spyOn(ServiceSetup, 'getSiteLanguages').and.returnValue($q.when(languages));
-    spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.when(countries));
+    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.resolve(timeZone));
+    spyOn(ServiceSetup, 'getSiteLanguages').and.returnValue($q.resolve(languages));
+    spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.resolve(countries));
     spyOn(Notification, 'notify');
     spyOn(Notification, 'errorResponse');
-    spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.when({
+    spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.resolve({
       dialPlanDetails: dialPlanDetailsNorthAmerica
     }));
-    spyOn(DialPlanService, 'updateCustomerVoice').and.returnValue($q.when());
+    spyOn(DialPlanService, 'updateCustomerVoice').and.returnValue($q.resolve());
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise
     });
@@ -140,13 +140,13 @@ describe('Controller: ServiceSetup', function () {
     spyOn(Authinfo, 'getOrgName').and.returnValue('Cisco Org Name');
     spyOn(Authinfo, 'getOrgId').and.returnValue(customer.uuid);
 
-    spyOn(VoicemailMessageAction, 'get').and.returnValue($q.when(messageAction));
-    spyOn(VoicemailMessageAction, 'update').and.returnValue($q.when());
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+    spyOn(VoicemailMessageAction, 'get').and.returnValue($q.resolve(messageAction));
+    spyOn(VoicemailMessageAction, 'update').and.returnValue($q.resolve());
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
 
-    spyOn(ServiceSetup, 'getAvrilSite').and.returnValue($q.when(avrilSites));
-    spyOn(ServiceSetup, 'updateAvrilSite').and.returnValue($q.when());
-    spyOn(ServiceSetup, 'createAvrilSite').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'getAvrilSite').and.returnValue($q.resolve(avrilSites));
+    spyOn(ServiceSetup, 'updateAvrilSite').and.returnValue($q.resolve());
+    spyOn(ServiceSetup, 'createAvrilSite').and.returnValue($q.resolve());
 
     $httpBackend
       .expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + customer.uuid + '/directorynumbers')
@@ -198,8 +198,8 @@ describe('Controller: ServiceSetup', function () {
         }],
         previousSiteCode: 200
       };
-      spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(model.site));
-      spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(voicemail));
+      spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(model.site));
+      spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.resolve(voicemail));
 
       controller = $controller('ServiceSetupCtrl', {
         $scope: $scope,
@@ -1146,8 +1146,8 @@ describe('Controller: ServiceSetup', function () {
         pilotNumber: "+911234123412341234123412341234123412341234",
         label: "(650) 667-9080"
       };
-      spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(model.site));
-      spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(voicemail));
+      spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(model.site));
+      spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.resolve(voicemail));
       spyOn(ServiceSetup, 'generateVoiceMailNumber').and.returnValue('+911234123412341234123412341234123412341234');
       controller = $controller('ServiceSetupCtrl', {
         $scope: $scope,
@@ -1243,8 +1243,8 @@ describe('Controller: ServiceSetup', function () {
         pilotNumber: "+6506679080",
         label: "(650) 667-9080"
       };
-      spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(model.site));
-      spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(voicemail));
+      spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(model.site));
+      spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.resolve(voicemail));
       spyOn(ServiceSetup, 'generateVoiceMailNumber').and.returnValue('+911234123412341234123412341234123412341234');
       controller = $controller('ServiceSetupCtrl', {
         $scope: $scope,

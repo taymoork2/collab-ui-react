@@ -31,18 +31,18 @@ describe('Controller: TrialAddCtrl', function () {
     Analytics = _Analytics_;
 
     $state.modal = jasmine.createSpyObj('modal', ['close']);
-    addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.when());
+    addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.resolve());
 
-    spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
-    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'atlasCreateTrialBackendEmailGetStatus').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
+    spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.resolve());
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasCreateTrialBackendEmailGetStatus').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
       if (param == 'csdm-pstn') {
-        return $q.when(false);
+        return $q.resolve(false);
       } else {
         fail('the following toggle wasn\'t expected ' + param);
       }
@@ -146,8 +146,8 @@ describe('Controller: TrialAddCtrl', function () {
   describe('Start a new trial', function () {
     var callback;
     beforeEach(function () {
-      callback = jasmine.createSpy('addNumbersCallback').and.returnValue($q.when());
-      spyOn(TrialService, 'startTrial').and.returnValue($q.when(getJSONFixture('core/json/trials/trialAddResponse.json')));
+      callback = jasmine.createSpy('addNumbersCallback').and.returnValue($q.resolve());
+      spyOn(TrialService, 'startTrial').and.returnValue($q.resolve(getJSONFixture('core/json/trials/trialAddResponse.json')));
     });
 
     describe('basic behavior', function () {
@@ -256,7 +256,7 @@ describe('Controller: TrialAddCtrl', function () {
       });
 
       it('should notify success', function () {
-        spyOn(HuronCustomer, 'create').and.returnValue($q.when());
+        spyOn(HuronCustomer, 'create').and.returnValue($q.resolve());
         controller.startTrial();
         $scope.$apply();
         expect(HuronCustomer.create).toHaveBeenCalled();
@@ -280,8 +280,8 @@ describe('Controller: TrialAddCtrl', function () {
       });
 
       it('should notify success', function () {
-        spyOn(HuronCustomer, 'create').and.returnValue($q.when());
-        spyOn(TrialPstnService, 'createPstnEntityV2').and.returnValue($q.when());
+        spyOn(HuronCustomer, 'create').and.returnValue($q.resolve());
+        spyOn(TrialPstnService, 'createPstnEntityV2').and.returnValue($q.resolve());
         controller.startTrial();
         $scope.$apply();
         expect(HuronCustomer.create).toHaveBeenCalled();
@@ -412,7 +412,7 @@ describe('Controller: TrialAddCtrl', function () {
 
   describe('Set ship devices modal display with Orgservice call', function () {
     it('should disable ship devices modal for test org', function () {
-      spyOn(Orgservice, 'getAdminOrg').and.returnValue($q.when({
+      spyOn(Orgservice, 'getAdminOrg').and.returnValue($q.resolve({
         data: {
           success: true,
           isTestOrg: true
@@ -575,7 +575,7 @@ describe('Controller: TrialAddCtrl', function () {
     });
 
     function doTestCase(index) {
-      spyOn(TrialService, 'shallowValidation').and.returnValue($q.when(testCase[index].retVal));
+      spyOn(TrialService, 'shallowValidation').and.returnValue($q.resolve(testCase[index].retVal));
 
       orgInput.asyncValidators.uniqueName.expression('test', 'test', orgInput);
       emailInput.asyncValidators.uniqueEmail.expression('test', 'test', emailInput);

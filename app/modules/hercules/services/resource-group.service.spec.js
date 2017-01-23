@@ -82,7 +82,7 @@ describe('Service: ResourceGroupService', function () {
       var resourceGroupId = '';
       var connectorType = 'c_cal';
 
-      spyOn(FusionClusterService, 'getAll').and.returnValue($q.when([]));
+      spyOn(FusionClusterService, 'getAll').and.returnValue($q.resolve([]));
       ResourceGroupService.resourceGroupHasEligibleCluster(resourceGroupId, connectorType)
         .then(function (hasEligibleCluster) {
           resolvedValue = hasEligibleCluster;
@@ -99,7 +99,7 @@ describe('Service: ResourceGroupService', function () {
       var resourceGroupId = '2c2bdd6d-8149-4090-bbb6-fd87edd5416f';
       var connectorType = 'c_cal';
 
-      spyOn(FusionClusterService, 'getAll').and.returnValue($q.when(clusterList));
+      spyOn(FusionClusterService, 'getAll').and.returnValue($q.resolve(clusterList));
       ResourceGroupService.resourceGroupHasEligibleCluster(resourceGroupId, connectorType)
         .then(function (hasEligibleCluster) {
           resolvedValue = hasEligibleCluster;
@@ -115,7 +115,7 @@ describe('Service: ResourceGroupService', function () {
       var resourceGroupId = '00e48fd5-4d2e-4f24-b5a8-80e14aa06a01';
       var connectorType = 'c_cal';
 
-      spyOn(FusionClusterService, 'getAll').and.returnValue($q.when(clusterList));
+      spyOn(FusionClusterService, 'getAll').and.returnValue($q.resolve(clusterList));
       ResourceGroupService.resourceGroupHasEligibleCluster(resourceGroupId, connectorType)
         .then(function (hasEligibleCluster) {
           resolvedValue = hasEligibleCluster;
@@ -131,7 +131,7 @@ describe('Service: ResourceGroupService', function () {
       var resourceGroupId = '';
       var connectorType = 'c_cal';
 
-      spyOn(FusionClusterService, 'getAll').and.returnValue($q.when(clusterList));
+      spyOn(FusionClusterService, 'getAll').and.returnValue($q.resolve(clusterList));
       ResourceGroupService.resourceGroupHasEligibleCluster(resourceGroupId, connectorType)
         .then(function (hasEligibleCluster) {
           resolvedValue = hasEligibleCluster;
@@ -147,7 +147,7 @@ describe('Service: ResourceGroupService', function () {
       var resourceGroupId = '2c2bdd6d-8149-4090-bbb6-fd87edd5416f';
       var connectorType = 'c_jose_mourinho';
 
-      spyOn(FusionClusterService, 'getAll').and.returnValue($q.when(clusterList));
+      spyOn(FusionClusterService, 'getAll').and.returnValue($q.resolve(clusterList));
 
       ResourceGroupService.resourceGroupHasEligibleCluster(resourceGroupId, connectorType)
         .then(function (hasEligibleCluster) {

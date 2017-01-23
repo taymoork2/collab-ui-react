@@ -39,7 +39,7 @@ describe('Controller: ReassignClusterControllerV2', function () {
     windowMock = {
       open: sinon.stub()
     };
-    spyOn(MediaClusterServiceV2, 'getAll').and.returnValue($q.when(clusterList));
+    spyOn(MediaClusterServiceV2, 'getAll').and.returnValue($q.resolve(clusterList));
 
     controller = $controller('ReassignClusterControllerV2', {
       cluster: cluster,
@@ -60,7 +60,7 @@ describe('Controller: ReassignClusterControllerV2', function () {
     controller.clusterDetail = {
       id: 'id'
     };
-    spyOn(MediaClusterServiceV2, 'moveV2Host').and.returnValue($q.when({}));
+    spyOn(MediaClusterServiceV2, 'moveV2Host').and.returnValue($q.resolve({}));
     controller.reassign();
     httpMock.verifyNoOutstandingExpectation();
     expect(controller.saving).toBe(true);
@@ -89,7 +89,7 @@ describe('Controller: ReassignClusterControllerV2', function () {
       "id": "a050fcc7-9ade-4790-a06d-cca596910421",
       "name": "MFA_TEST2"
     }];
-    spyOn(MediaClusterServiceV2, 'createClusterV2').and.returnValue($q.when({
+    spyOn(MediaClusterServiceV2, 'createClusterV2').and.returnValue($q.resolve({
       data: ""
     }));
     controller.reassign();

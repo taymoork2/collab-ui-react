@@ -39,11 +39,11 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(orgServiceJSONFixture.getOrg, getOrgStatus);
     });
-    spyOn(Orgservice, 'validateSiteUrl').and.returnValue($q.when({ isValid: true }));
+    spyOn(Orgservice, 'validateSiteUrl').and.returnValue($q.resolve({ isValid: true }));
 
     spyOn(Notification, 'error');
 
-    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.resolve());
     spyOn(ServiceSetup, 'getTranslatedTimeZones').and.returnValue(['1', '2', '3']);
   }
 
@@ -138,7 +138,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       });
 
       spyOn(Orgservice, 'validateSiteUrl').and.callFake(function () {
-        return $q.when({
+        return $q.resolve({
           isValid: true,
         });
       });
@@ -158,7 +158,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       });
 
       spyOn(Orgservice, 'validateSiteUrl').and.callFake(function () {
-        return $q.when({
+        return $q.resolve({
           isValid: true,
         });
       });

@@ -75,7 +75,7 @@
     }
 
     function deferredAuth(res) {
-      return $q.when(res)
+      return $q.resolve(res)
         .then(replaceOrTweakServices)
         .then(injectMessengerService)
         .then(initializeAuthinfo);

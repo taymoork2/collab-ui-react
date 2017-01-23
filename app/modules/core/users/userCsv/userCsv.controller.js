@@ -51,7 +51,7 @@ require('./_user-csv.scss');
       vm.isAtlasF237ResourceGroupsEnabled = enabled;
     });
 
-    var csvPromiseChain = $q.when();
+    var csvPromiseChain = $q.resolve();
     var uniqueEmails = [];
     var processingError;
     var headers;
@@ -833,7 +833,7 @@ require('./_user-csv.scss');
                 vm.model.isRetrying = false;
                 $interval.cancel(ip);
 
-                var retryPromises = $q.when();
+                var retryPromises = $q.resolve();
                 var tempUserArray = [];
                 var users = vm.model.usersToRetry;
                 vm.model.usersToRetry = [];
@@ -859,7 +859,7 @@ require('./_user-csv.scss');
       }
 
       vm.model.csvChunk = 0;
-      csvPromiseChain = $q.when();
+      csvPromiseChain = $q.resolve();
       uniqueEmails = [];
 
       saveDeferred = $q.defer();

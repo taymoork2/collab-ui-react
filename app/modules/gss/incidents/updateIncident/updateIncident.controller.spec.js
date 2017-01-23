@@ -79,12 +79,12 @@ describe('controller: UpdateIncidentCtrl', function () {
   }
 
   function initSpies() {
-    spyOn(IncidentsService, 'getIncident').and.returnValue($q.when(200, testData.incidentForUpdate));
-    spyOn(IncidentsService, 'getComponents').and.returnValue($q.when(200, testData.components));
-    spyOn(IncidentsService, 'updateIncidentNameAndImpact').and.returnValue($q.when());
-    spyOn(IncidentsService, 'updateIncident').and.returnValue($q.when());
-    spyOn(IncidentsService, 'updateIncidentMessage').and.returnValue($q.when());
-    spyOn(IncidentsService, 'getAffectedComponents').and.returnValue($q.when());
+    spyOn(IncidentsService, 'getIncident').and.returnValue($q.resolve(200, testData.incidentForUpdate));
+    spyOn(IncidentsService, 'getComponents').and.returnValue($q.resolve(200, testData.components));
+    spyOn(IncidentsService, 'updateIncidentNameAndImpact').and.returnValue($q.resolve());
+    spyOn(IncidentsService, 'updateIncident').and.returnValue($q.resolve());
+    spyOn(IncidentsService, 'updateIncidentMessage').and.returnValue($q.resolve());
+    spyOn(IncidentsService, 'getAffectedComponents').and.returnValue($q.resolve());
     spyOn($state, 'go');
   }
 
