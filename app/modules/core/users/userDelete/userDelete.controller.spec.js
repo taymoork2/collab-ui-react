@@ -46,9 +46,6 @@ describe('Controller: UserDeleteCtrl', function () {
     spyOn(SunlightConfigService, 'deleteUser').and.returnValue(
       $q.when(deferred.promise)
     );
-    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
-      $q.when(true)
-    );
     spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue(
       $q.when(true)
     );
@@ -110,9 +107,6 @@ describe('Controller: UserDeleteCtrl', function () {
         });
         expect(Notification.errorResponse).not.toHaveBeenCalled();
       });
-      it('should have called FeatureToggleService.atlasCareTrialsGetStatus', function () {
-        expect(FeatureToggleService.atlasCareTrialsGetStatus).toHaveBeenCalled();
-      });
       it('should have called Authinfo.isCare', function () {
         expect(Authinfo.isCare).toHaveBeenCalled();
       });
@@ -140,9 +134,6 @@ describe('Controller: UserDeleteCtrl', function () {
       it('should have notified error', function () {
         expect(Notification.success).not.toHaveBeenCalled();
         expect(Notification.errorResponse).toHaveBeenCalled();
-      });
-      it('should not call FeatureToggleService.atlasCareTrialsGetStatus', function () {
-        expect(FeatureToggleService.atlasCareTrialsGetStatus).not.toHaveBeenCalled();
       });
       it('should not have call Authinfo.isCare', function () {
         expect(Authinfo.isCare).not.toHaveBeenCalled();

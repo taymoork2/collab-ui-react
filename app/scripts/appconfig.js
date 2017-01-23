@@ -696,10 +696,6 @@
             controllerAs: 'overview',
             parent: 'main',
             resolve: {
-              // TODO Need to be removed once Care is graduated on atlas.
-              hasCareFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials);
-              },
               hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
               }
@@ -2925,7 +2921,12 @@
                 controller: 'CallServiceSettingsController',
                 templateUrl: 'modules/hercules/service-settings/call-service-settings.html'
               }
-            }
+            },
+            resolve: {
+              hasVoicemailFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridVoicemail);
+              },
+            },
           })
           .state('cluster-details', {
             parent: 'sidepanel',

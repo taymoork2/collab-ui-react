@@ -1,7 +1,7 @@
 class SubscriptionHeaderCtrl {
   public isTrial = false;
   public isOnline = false;
-  public subId: string;
+  public productInstanceId: string;
   public upgradeTrialUrl: string;
 
   /* @ngInject */
@@ -13,7 +13,7 @@ class SubscriptionHeaderCtrl {
 
     this.$scope.$on('SUBSCRIPTION::upgradeData', (_event, response) => {
       this.isTrial = response.isTrial;
-      this.subId = response.subId;
+      this.productInstanceId = response.productInstanceId;
       this.upgradeTrialUrl = response.upgradeTrialUrl;
     });
   }

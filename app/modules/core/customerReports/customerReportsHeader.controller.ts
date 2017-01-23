@@ -22,7 +22,7 @@ class CustomerReportsHeaderCtrl {
           });
         }
       }
-      if (Authinfo.isCare() && features.care) {
+      if (Authinfo.isCare()) {
         this.headerTabs.push({
           title: $translate.instant('reportsPage.careTab'),
           state: 'reports.care',
@@ -47,7 +47,6 @@ class CustomerReportsHeaderCtrl {
   private webex: boolean = false;
   private promises: any = {
     mf: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneOneGetStatus(),
-    care: this.FeatureToggleService.atlasCareTrialsGetStatus(),
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
     deviceUsage: this.FeatureToggleService.atlasDeviceUsageReportGetStatus(),
   };

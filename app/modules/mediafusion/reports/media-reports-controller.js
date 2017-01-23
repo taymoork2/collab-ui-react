@@ -251,8 +251,11 @@
         } else {
           deferred.promise.then(function () {
             //set the utilization graphs here
-            setUtilizationGraph(response);
-            vm.utilizationStatus = vm.SET;
+            if (_.isUndefined(setUtilizationGraph(response))) {
+              setDummyUtilization();
+            } else {
+              vm.utilizationStatus = vm.SET;
+            }
           }, function () {
             //map is nor formed so we shoud show dummy graphs
             setDummyUtilization();
@@ -297,6 +300,7 @@
 
     function setUtilizationGraph(response) {
       vm.utilizationChart = UtilizationResourceGraphService.setUtilizationGraph(response, vm.utilizationChart, vm.clusterSelected, vm.clusterId, vm.timeSelected, vm.Map);
+      return vm.utilizationChart;
     }
 
     function setCallVolumeGraph(response) {

@@ -8,7 +8,7 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $modal, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasCareFeatureToggle, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, SunlightReportService, TrialService, UrlConfig, PstnSetupService) {
+  function OverviewCtrl($rootScope, $modal, $state, $scope, $translate, Authinfo, CardUtils, Config, FeatureToggleService, FusionClusterService, hasGoogleCalendarFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, SunlightReportService, TrialService, UrlConfig, PstnSetupService) {
     var vm = this;
 
     var PSTN_TOS_ACCEPT = 'pstn-tos-accept-event';
@@ -22,15 +22,11 @@ require('./_overview.scss');
       OverviewCardFactory.createMessageCard(),
       OverviewCardFactory.createMeetingCard(),
       OverviewCardFactory.createCallCard(),
+      OverviewCardFactory.createCareCard(),
       OverviewCardFactory.createRoomSystemsCard(),
       OverviewCardFactory.createHybridServicesCard(),
       OverviewCardFactory.createUsersCard()
     ];
-    // TODO Need to be removed once Care is graduated on atlas.
-    if (hasCareFeatureToggle) {
-      // Add care card after call card
-      vm.cards.splice(3, 0, OverviewCardFactory.createCareCard());
-    }
 
     vm.notifications = [];
     vm.pstnToSNotification = null;
