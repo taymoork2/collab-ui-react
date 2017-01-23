@@ -67,7 +67,7 @@
           return true;
         }
         var matchedStringProperty = _.some(filterStringProperties, function (stringProperty) {
-          return _.includes(_.get(feature, stringProperty), filterText);
+          return _.includes(_.get(feature, stringProperty).toLowerCase(), filterText.toLowerCase());
         });
         return matchedStringProperty;
       });
