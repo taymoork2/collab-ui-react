@@ -5,7 +5,7 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, MediaClusterServiceV2, UtilizationResourceGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, $log) {
+  function MediaReportsController($q, $scope, $translate, $interval, MediaClusterServiceV2, UtilizationResourceGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -85,13 +85,13 @@
     getCluster();
 
     function loadResourceDatas() {
-      // setTotalCallsData().then(function () {
-      //   setSneekPeekData();
-      // });
-      // setClusterAvailability();
+      setTotalCallsData().then(function () {
+        setSneekPeekData();
+      });
+      setClusterAvailability();
       setUtilizationData();
-      // setCallVolumeData();
-      // setAvailabilityData();
+      setCallVolumeData();
+      setAvailabilityData();
     }
 
     function loadAdaptionDatas() {
@@ -124,13 +124,10 @@
     });
 
     $scope.$on('zoomedTime', function (event, data) {
-      $log.log("time obj", data);
       vm.timeSelected = {
         startTime: data.data.startTime,
         endTime: data.data.endTime
       };
-      $log.log("cont start time is ", vm.timeSelected.startTime);
-      $log.log("cont end time is ", vm.timeSelected.endTime);
       timeUpdate();
     });
 
@@ -321,7 +318,7 @@
     }
 
     function setAvailabilityGraph(response) {
-      vm.availabilityChart = AvailabilityResourceGraphService.setAvailabilityGraph(response, vm.availabilityChart, vm.clusterId, vm.clusterSelected, vm.timeSelected.label, vm.Map);
+      vm.availabilityChart = AvailabilityResourceGraphService.setAvailabilityGraph(response, vm.availabilityChart, vm.clusterId, vm.clusterSelected, vm.timeSelected, vm.Map);
     }
 
     function setDummyUtilization() {
@@ -349,8 +346,10 @@
     function setRefreshInterval() {
       if (vm.timeSelected.value === 0) {
         vm.updateInterval = 60000;
-      } else {
+      } else if (!_.isUndefined(vm.timeSelected.value)) {
         vm.updateInterval = 300000;
+      } else {
+        vm.updateInterval = 7200000;
       }
     }
 

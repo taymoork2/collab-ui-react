@@ -255,7 +255,8 @@
           'autoGridCount': true,
           'color': '#AAAAAA',
           'backgroundColor': '#D7DBDD',
-          'backgroundAlpha': 1
+          'backgroundAlpha': 1,
+          'updateOnReleaseOnly': true
         },
         /*'chartScrollbar': {
           'offset': 15,

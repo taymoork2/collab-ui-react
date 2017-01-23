@@ -3,7 +3,7 @@
 
   angular.module('Mediafusion').service('UtilizationResourceGraphService', UtilizationResourceGraphService);
   /* @ngInject */
-  function UtilizationResourceGraphService(CommonReportsGraphService, chartColors, $translate, $log, $rootScope) {
+  function UtilizationResourceGraphService(CommonReportsGraphService, chartColors, $translate, $rootScope) {
 
     var utilizationdiv = 'utilizationdiv';
     var GUIDEAXIS = 'guideaxis';
@@ -99,16 +99,31 @@
       var dateLabel = daterange.label;
       var dateValue = daterange.value;
 
-      if (dateValue === 0) {
-        catAxis.minPeriod = '1mm';
-      } else if (dateValue === 1) {
-        catAxis.minPeriod = '10mm';
-      } else if (dateValue === 2) {
-        catAxis.minPeriod = 'hh';
-      } else if (dateValue === 3) {
-        catAxis.minPeriod = '3hh';
-      } else if (dateValue === 4) {
-        catAxis.minPeriod = '8hh';
+      if (_.isUndefined(daterange.value)) {
+        timeDiff = Math.floor(moment(dateSelected.endTime).diff(moment(dateSelected.startTime)) / 60000);
+        if (timeDiff <= 240) {
+          catAxis.minPeriod = '1mm';
+        } else if (timeDiff > 240 && timeDiff <= 1440) {
+          catAxis.minPeriod = '10mm';
+        } else if (timeDiff > 1440 && timeDiff <= 10080) {
+          catAxis.minPeriod = 'hh';
+        } else if (timeDiff > 10080 && timeDiff <= 43200) {
+          catAxis.minPeriod = '3hh';
+        } else if (timeDiff > 43200) {
+          catAxis.minPeriod = '8hh';
+        }
+      } else {
+        if (dateValue === 0) {
+          catAxis.minPeriod = '1mm';
+        } else if (dateValue === 1) {
+          catAxis.minPeriod = '10mm';
+        } else if (dateValue === 2) {
+          catAxis.minPeriod = 'hh';
+        } else if (dateValue === 3) {
+          catAxis.minPeriod = '3hh';
+        } else if (dateValue === 4) {
+          catAxis.minPeriod = '8hh';
+        }
       }
 
       var startDuration = 1;
@@ -166,8 +181,8 @@
 
 
       var chart = AmCharts.makeChart(utilizationdiv, chartData);
-      chart.addListener('rendered', zoomChart);
-      zoomChart(chart);
+      // chart.addListener('rendered', zoomChart);
+      // zoomChart(chart);
       // listen for zoomed event and call "handleZoom" method
       chart.addListener('zoomed', handleZoom);
       return chart;
@@ -181,17 +196,11 @@
         startTime: zoomedStartTime,
         endTime: zoomedEndTime
       };
-      $log.log("date selected ", dateSelected);
-      $log.log("trying moments starttime", moment(zoomedEndTime).diff(moment(zoomedStartTime)));
-      $log.log("diff in minutes", Math.floor(moment(zoomedEndTime).diff(moment(zoomedStartTime)) / 60000));
-      $log.log("start time is ", zoomedStartTime);
-      $log.log("end time is ", zoomedEndTime);
-      timeDiff = Math.floor(moment(zoomedEndTime).diff(moment(zoomedStartTime)) / 60000);
       if (_.isUndefined(dateSelected.value) && zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) {
         $rootScope.$broadcast('zoomedTime', {
           data: selectedTime
         });
-      } else if (timeDiff !== 240 && zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) {
+      } else if (zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) {
         $rootScope.$broadcast('zoomedTime', {
           data: selectedTime
         });
@@ -228,9 +237,9 @@
       return tempData;
     }
 
-    function zoomChart(chart) {
-      chart.zoomToIndexes(chart.dataProvider.length - 40, chart.dataProvider.length - 1);
-    }
+    // function zoomChart(chart) {
+    //   chart.zoomToIndexes(chart.dataProvider.length - 40, chart.dataProvider.length - 1);
+    // }
 
     function legendHandler(evt) {
       if (evt.dataItem.id === 'all') {

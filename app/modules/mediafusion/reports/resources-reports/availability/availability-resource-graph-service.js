@@ -9,6 +9,10 @@
     var AXIS = 'axis';
     var LEGEND = 'legend';
 
+    var dateSelected = null;
+    var zoomedEndTime = null;
+    var zoomedStartTime = null;
+
     var allClusters = $translate.instant('mediaFusion.metrics.allclusters');
     var clusterTitle = $translate.instant('mediaFusion.metrics.clusterTitle');
     var startTime = $translate.instant('mediaFusion.metrics.startTime');
@@ -75,6 +79,7 @@
         return;
       }
       var legend;
+      dateSelected = daterange;
       if (selectedCluster === allClusters) {
         legend = angular.copy(availabilityLegendAllcluster);
       } else {
@@ -138,9 +143,13 @@
         }
       }];
       var chart = AmCharts.makeChart(availabilitydiv, chartData, 0);
-      chart.addListener("init", function () {
-        chart.categoryAxis.addListener("rollOverItem", function (event) {
-          event.target.setAttr("cursor", "default");
+      // listen for zoomed event and call "handleZoom" method
+      //chart.addListener('zoomed', handleZoom);
+      chart.addListener('init', function () {
+        // listen for zoomed event and call "handleZoom" method
+        chart.valueAxis.addListener('axisZoomed', handleZoom);
+        chart.categoryAxis.addListener('rollOverItem', function (event) {
+          event.target.setAttr('cursor', 'default');
           event.chart.balloon.followCursor(true);
           event.chart.balloon.showBalloon(event.serialDataItem.category);
         });
@@ -150,6 +159,26 @@
         });
       });
       return chart;
+    }
+
+    // this method is called each time the selected period of the chart is changed
+    function handleZoom(event) {
+      zoomedStartTime = moment(event.startValue);
+      zoomedEndTime = moment(event.endValue);
+      var selectedTime = {
+        startTime: zoomedStartTime,
+        endTime: zoomedEndTime
+      };
+
+      if (_.isUndefined(dateSelected.value) && zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) {
+        $rootScope.$broadcast('zoomedTime', {
+          data: selectedTime
+        });
+      } else if (zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) {
+        $rootScope.$broadcast('zoomedTime', {
+          data: selectedTime
+        });
+      }
     }
 
     function formatLabel(label) {
