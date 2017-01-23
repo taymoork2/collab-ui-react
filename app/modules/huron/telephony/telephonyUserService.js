@@ -52,11 +52,11 @@
         customerId: Authinfo.getOrgId()
       }, user).$promise
         .then(function () {
-          return sendWelcomeEmail(user.userName, user.lastName, uuid, Authinfo.getOrgId(), true);
+          return sendWelcomeEmail(user.userName, user.lastName, uuid, Authinfo.getOrgId());
         });
     }
 
-    function sendWelcomeEmail(userName, lastName, uuid, customerId, acquireOTPFlg) {
+    function sendWelcomeEmail(userName, lastName, uuid, customerId) {
 
       var emailInfo = {
         'email': userName,
@@ -79,9 +79,7 @@
           }
         })
         .then(function () {
-          if (acquireOTPFlg) {
-            return acquireOTP(userName);
-          }
+          return acquireOTP(userName);
         })
         .then(function (otpInfo) {
           emailInfo.oneTimePassword = otpInfo.password;

@@ -755,7 +755,7 @@
           return response;
         })
         .then(function (response) {
-          if (vm.callTrial.enabled) {
+          if (vm.placesEnabled ? (vm.callTrial.enabled || vm.roomSystemTrial.enabled) : vm.callTrial.enabled) {
             return HuronCustomer.create(vm.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
                 Notification.errorResponse(response, 'trialModal.squareducError');
