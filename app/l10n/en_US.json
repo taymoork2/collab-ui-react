@@ -3317,7 +3317,11 @@
     "updateLineError": "Could not update details for this line.",
     "createSharedLinesError": "Could not create shared line.",
     "deleteSharedLineError": "Could not delete shared line member.",
-    "updateSharedLinePhoneError": "Could not update shared line phone list."
+    "updateSharedLinePhoneError": "Could not update shared line phone list.",
+    "preferredLanguage": "Preferred Language",
+    "preferredLanguageDescription": "Choose the preferred language for this place. This will override the default organization setting.",
+    "preferredLanguagePlaceholder": "Select your language",
+    "organizationSetting": "Organization Setting - "
   },
   "callForwardPanel": {
     "title": "Call Forwarding",
@@ -5438,7 +5442,8 @@
     "deletePlace": "Delete Place",
     "deletePlaceConfText": "Are you sure you want to delete {{ placeName }}?",
     "failedToSaveChanges": "Failed to save changes to place. Reason:",
-    "failedToDelete": "Failed to delete place. Reason:"
+    "failedToDelete": "Failed to delete place. Reason:",
+    "placesCallOverviewSaveSuccess": "Places call overview saved successfully"
   },
   "linesPage": {
     "manageLines": "Numbers",

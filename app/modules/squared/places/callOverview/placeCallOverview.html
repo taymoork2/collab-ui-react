@@ -1,9 +1,35 @@
+<cs-sp-buttons ng-class="{invisible: !$ctrl.onPrefLanguageChange}">
+  <button cs-btn loading="$ctrl.placeCallOverviewSaveInProcess" class="btn btn--primary" ng-click="$ctrl.savePlaceCallOverview()" ng-disabled="$ctrl.placeCallOverviewSaveInProcess" type="click">
+    <span translate="common.save"></span>PrefLang
+  </button>
+  <button cs-btn ng-click="$ctrl.onCancelPlaceCallOverview()">
+    <span translate="common.cancel"></span>
+  </button>
+</cs-sp-buttons>
 <cs-sp-container>
   <cs-sp-section ng-if="$ctrl.currentPlace.sipUrl">
     <section-title
       title-key="deviceOverviewPage.sipUrl">
     </section-title>
     <p>{{$ctrl.currentPlace.sipUrl}}</p>
+  </cs-sp-section>
+  <cs-sp-section ng-if="$ctrl.hasSparkCall">
+    <div class="section-title-row">
+      <span class="section-name" translate="directoryNumberPanel.preferredLanguage"></span>
+    </div>
+    <p class="description-block" translate="directoryNumberPanel.preferredLanguageDescription"></p>
+    <div class="" cs-loader ng-hide="$ctrl.plIsLoaded"></div>
+    <div class="" ng-show="$ctrl.plIsLoaded">
+      <cs-select
+        name="languageSelect"
+        ng-model="$ctrl.preferredLanguage"
+        options="$ctrl.preferredLanguageOptions"
+        labelfield="label"
+        valuefield="value"
+        filter="false"
+        on-change-fn="$ctrl.onPrefLanguageChange=true"
+      ></cs-select>
+    </div>
   </cs-sp-section>
   <cs-sp-section ng-if="$ctrl.hasSparkCall">
     <section-title
@@ -14,7 +40,8 @@
       directory-numbers="$ctrl.directoryNumbers"
       directory-number-sref="place-overview.communication.line-overview({numberId: directoryNumber.uuid})"
       line-threshold="5"
-      voicemail-enabled="$ctrl.voicemailEnabled">
+      voicemail-enabled="$ctrl.voicemailEnabled"
+      on-directory-number-click="$ctrl.onCancelPlaceCallOverview()">
     </directory-number-list>
   </cs-sp-section>
   <cs-sp-section ng-if="$ctrl.hasSparkCall">
@@ -23,7 +50,7 @@
     </section-title>
     <feature-list
       features="$ctrl.features"
-      on-feature-click="$ctrl.clickFeature(feature)">
+      on-feature-click="$ctrl.clickFeature(feature);">
     </feature-list>
   </cs-sp-section>
 </cs-sp-container>
