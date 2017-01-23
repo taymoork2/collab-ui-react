@@ -5183,7 +5183,9 @@
     "sorryMessage": "Sorry, something went wrong ",
     "reloadMessage": "Please try reloading the page",
     "chatTemplateCode": "Ch",
+    "chatMediaType": "Chat",
     "callbackTemplateCode": "Ca",
+    "callbackMediaType": "Callback",
     "newFeatures": {
       "newFeatureButtonText": "New",
       "newCareTemplateModalTitle": "Create New Care Template",
