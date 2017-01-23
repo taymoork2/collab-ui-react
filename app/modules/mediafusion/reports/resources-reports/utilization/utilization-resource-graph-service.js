@@ -26,15 +26,23 @@
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       } else {
-        if (data[0].colorTwo === chartColors.grayLightTwo) {
+        if (graphs[0].isDummy) {
           isDummy = true;
+        }
+        if (clusterId !== allClusters && !isDummy) {
+          var cluster = _.find(graphs, function (value) {
+            return value.valueField === clusterId;
+          });
+          if (_.isUndefined(cluster)) {
+            return undefined;
+          }
         }
         var startDuration = 1;
         if (!data[0].balloon) {
           startDuration = 0;
         }
 
-        utilizationChart = createutilizationGraph(data, graphs, clusterSelected, daterange);
+        utilizationChart = createutilizationGraph(data, graphs, clusterSelected, daterange, isDummy);
         utilizationChart.dataProvider = data;
         utilizationChart.graphs = graphs;
         utilizationChart.startDuration = startDuration;
@@ -56,7 +64,7 @@
       }
     }
 
-    function createutilizationGraph(data, graphs, clusterSelected, daterange) {
+    function createutilizationGraph(data, graphs, clusterSelected, daterange, isDummy) {
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       }
@@ -118,12 +126,24 @@
       var cluster = _.replace(clusterSelected, /\s/g, '_');
       dateLabel = _.replace(dateLabel, /\s/g, '_');
       var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + dateLabel + '_' + new Date();
+      if (!isDummy) {
+        graphs.push({
+          'title': 'All',
+          'id': 'all',
+          'bullet': 'square',
+          'bulletSize': 10,
+          'lineColor': '#000000',
+          'hidden': true
+        });
 
-      graphs.push({
-        'title': 'All',
-        'id': 'all'
-      });
-
+        graphs.push({
+          'title': 'None',
+          'id': 'none',
+          'bullet': 'square',
+          'bulletSize': 10,
+          'lineColor': '#000000'
+        });
+      }
       var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       chartData.legend = CommonReportsGraphService.getBaseVariable(LEGEND);
       chartData.legend.labelText = '[[title]]';
@@ -179,11 +199,21 @@
     }
 
     function legendHandler(evt) {
-      var state = evt.dataItem.hidden;
       if (evt.dataItem.id === 'all') {
         _.forEach(evt.chart.graphs, function (graph) {
           if (graph.id != 'all') {
-            evt.chart[state ? 'hideGraph' : 'showGraph'](graph);
+            evt.chart.showGraph(graph);
+          } else if (graph.id === 'all') {
+            evt.chart.hideGraph(graph);
+          }
+
+        });
+      } else if (evt.dataItem.id === 'none') {
+        _.forEach(evt.chart.graphs, function (graph) {
+          if (graph.id != 'all') {
+            evt.chart.hideGraph(graph);
+          } else if (graph.id === 'all') {
+            evt.chart.showGraph(graph);
           }
         });
       }
