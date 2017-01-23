@@ -38,11 +38,11 @@ describe('Controller: UserRolesCtrl', function () {
     });
 
     spyOn(Userservice, 'patchUserRoles').and.callFake(function () {
-      return $q.when({ data: { userResponse: [currentUser] } });
+      return $q.resolve({ data: { userResponse: [currentUser] } });
     });
 
     spyOn(Userservice, 'updateUserProfile').and.callFake(function () {
-      return $q.when({ data: currentUser });
+      return $q.resolve({ data: currentUser });
     });
 
   }));

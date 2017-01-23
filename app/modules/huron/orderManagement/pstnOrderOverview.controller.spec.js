@@ -37,7 +37,7 @@ describe('Controller: PstnOrderOverviewCtrl', function () {
       }
     ];
 
-    spyOn(PstnSetupService, 'getFormattedNumberOrders').and.returnValue($q.when(response));
+    spyOn(PstnSetupService, 'getFormattedNumberOrders').and.returnValue($q.resolve(response));
 
     controller = $controller('PstnOrderOverviewCtrl', {
       $scope: $scope,

@@ -79,13 +79,13 @@ describe('AddLinesCtrl: Ctrl', function () {
     spyOn(Notification, 'notify');
 
     spyOn(CommonLineService, 'getInternalNumberPool').and.returnValue(internalNumbers);
-    spyOn(CommonLineService, 'loadInternalNumberPool').and.returnValue($q.when(internalNumbers));
+    spyOn(CommonLineService, 'loadInternalNumberPool').and.returnValue($q.resolve(internalNumbers));
     spyOn(CommonLineService, 'getExternalNumberPool').and.returnValue(externalNumbers);
 
-    spyOn(CommonLineService, 'loadExternalNumberPool').and.returnValue($q.when(externalNumbers));
-    spyOn(CommonLineService, 'loadPrimarySiteInfo').and.returnValue($q.when(sites));
-    spyOn(CommonLineService, 'mapDidToDn').and.returnValue($q.when(externalNumberPoolMap));
-    spyOn(DialPlanService, 'getCustomerDialPlanDetails').and.returnValue($q.when({
+    spyOn(CommonLineService, 'loadExternalNumberPool').and.returnValue($q.resolve(externalNumbers));
+    spyOn(CommonLineService, 'loadPrimarySiteInfo').and.returnValue($q.resolve(sites));
+    spyOn(CommonLineService, 'mapDidToDn').and.returnValue($q.resolve(externalNumberPoolMap));
+    spyOn(DialPlanService, 'getCustomerDialPlanDetails').and.returnValue($q.resolve({
       extensionGenerated: 'false'
     }));
 
@@ -224,8 +224,8 @@ describe('AddLinesCtrl: Ctrl', function () {
           externalNumber: externalNumber
         });
         var place = { cisUuid: deviceCisUuid };
-        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.when({ 'http://placeurl': place }));
-        spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.when());
+        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({ 'http://placeurl': place }));
+        spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.resolve());
         controller.save();
         $scope.$apply();
         expect(CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, entitlements, directoryNumber, externalNumber);
@@ -238,7 +238,7 @@ describe('AddLinesCtrl: Ctrl', function () {
           directoryNumber: directoryNumber,
           externalNumber: externalNumber
         });
-        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.when({ 'http://placeurl': {} }));
+        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({ 'http://placeurl': {} }));
         controller.save();
         $scope.$apply();
         expect(Notification.warning).toHaveBeenCalled();
@@ -262,7 +262,7 @@ describe('AddLinesCtrl: Ctrl', function () {
           directoryNumber: directoryNumber,
           externalNumber: externalNumber
         });
-        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.when({ 'http://placeurl': { cisUuid: deviceCisUuid } }));
+        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({ 'http://placeurl': { cisUuid: deviceCisUuid } }));
         spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.reject());
         controller.save();
         $scope.$apply();

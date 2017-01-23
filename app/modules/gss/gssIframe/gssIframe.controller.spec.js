@@ -39,10 +39,10 @@ describe('controller:GssIframeCtrl', function () {
   }
 
   function initSpies() {
-    spyOn(GSSService, 'getServices').and.returnValue($q.when(testData.services));
+    spyOn(GSSService, 'getServices').and.returnValue($q.resolve(testData.services));
     spyOn(GSSService, 'getServiceId').and.callThrough();
     spyOn($modal, 'open').and.returnValue({
-      result: $q.when()
+      result: $q.resolve()
     });
     spyOn($scope, '$broadcast').and.callThrough();
     spyOn($state, 'go');

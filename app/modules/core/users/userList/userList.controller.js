@@ -190,7 +190,7 @@ require('./_user-list.scss');
         $scope.gridApi.infiniteScroll.resetScroll();
       } else if (!isMoreDataToLoad()) {
         // no more data to load, so don't waste time
-        return $q.when();
+        return $q.resolve();
       }
 
       $scope.gridRefresh = true; // show spinning icon

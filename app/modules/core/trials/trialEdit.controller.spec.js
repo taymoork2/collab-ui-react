@@ -50,19 +50,19 @@ describe('Controller: TrialEditCtrl:', function () {
     spyOn($window, 'open');
     spyOn($scope, '$watch');
     spyOn(TrialService, 'getDeviceTrialsLimit');
-    addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.when());
-    removeContextSpy = spyOn(TrialContextService, 'removeService').and.returnValue($q.when());
+    addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.resolve());
+    removeContextSpy = spyOn(TrialContextService, 'removeService').and.returnValue($q.resolve());
     spyOn(TrialContextService, 'trialHasService').and.returnValue(false);
-    spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
       fail('the following toggle wasn\'t expected' + param); //taking control of which toggles this controller are using (explicit or implicit)
-      return $q.when(false);
+      return $q.resolve(false);
     });
-    spyOn(Orgservice, 'getAdminOrgAsPromise').and.returnValue($q.when({
+    spyOn(Orgservice, 'getAdminOrgAsPromise').and.returnValue($q.resolve({
       data: {
         success: true,
         isTestOrg: true
@@ -112,7 +112,7 @@ describe('Controller: TrialEditCtrl:', function () {
 
     describe('Interacting with TrialService.editTrial', function () {
       beforeEach(function () {
-        spyOn(TrialService, 'editTrial').and.returnValue($q.when(getJSONFixture('core/json/trials/trialEditResponse.json')));
+        spyOn(TrialService, 'editTrial').and.returnValue($q.resolve(getJSONFixture('core/json/trials/trialEditResponse.json')));
         controller.editTrial();
         $scope.$apply();
       });
@@ -588,7 +588,7 @@ describe('Controller: TrialEditCtrl:', function () {
 
   describe('with context service', function () {
     beforeEach(function () {
-      spyOn(TrialService, 'editTrial').and.returnValue($q.when(getJSONFixture('core/json/trials/trialEditResponse.json')));
+      spyOn(TrialService, 'editTrial').and.returnValue($q.resolve(getJSONFixture('core/json/trials/trialEditResponse.json')));
     });
 
     describe('enabled', function () {

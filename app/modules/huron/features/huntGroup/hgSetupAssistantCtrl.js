@@ -235,7 +235,7 @@ require('./_hunt-group.scss');
     }
 
     function fetchHuntMembers(nameHint) {
-      return $q.when(HuntGroupMemberDataService.fetchHuntMembers(nameHint, true)).then(function (members) {
+      return $q.resolve(HuntGroupMemberDataService.fetchHuntMembers(nameHint, true)).then(function (members) {
         if (HuntGroupService.suggestionsNeeded(nameHint)) {
           vm.errorMemberInput = (members && members.length === 0);
         } else {
@@ -289,7 +289,7 @@ require('./_hunt-group.scss');
     }
 
     function fetchFallbackDestination(nameHint) {
-      return $q.when(HuntGroupMemberDataService.fetchMembers(nameHint, false)).then(function (mems) {
+      return $q.resolve(HuntGroupMemberDataService.fetchMembers(nameHint, false)).then(function (mems) {
         vm.fallbackSuggestionsAvailable = (mems && mems.length > 0);
         return mems;
       });

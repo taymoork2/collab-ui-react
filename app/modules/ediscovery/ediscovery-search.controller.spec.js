@@ -15,7 +15,7 @@ describe('Controller: EdiscoverySearchController', function () {
     FeatureToggleService = _FeatureToggleService_;
     Notification = _Notification_;
 
-    spyOn(FeatureToggleService, 'atlasEdiscoveryGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasEdiscoveryGetStatus').and.returnValue($q.resolve(false));
 
   }));
 
@@ -37,11 +37,11 @@ describe('Controller: EdiscoverySearchController', function () {
       var lastReadableActivityDate = moment().subtract(1, 'day');
       var publishedDate = moment().subtract(2, 'day');
 
-      var promiseUrl = $q.when({
+      var promiseUrl = $q.resolve({
         avalonRoomsUrl: 'https://whatever.com/myFancyRoomsApi',
       });
 
-      var promise = $q.when({
+      var promise = $q.resolve({
         id: '1234',
         displayName: 'whatever',
         participants: {

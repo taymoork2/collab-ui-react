@@ -90,9 +90,9 @@ describe('Controller:MediaReportsController', function () {
   describe('Initializing Controller', function () {
     it('should be created successfully and all expected calls completed', function () {
       expect(controller).toBeDefined();
-      spyOn(MediaReportsService, 'getCallVolumeData').and.returnValue($q.when(callVolumeGraphData));
-      spyOn(MediaReportsService, 'getAvailabilityData').and.returnValue($q.when(clusteravailabilityData));
-      spyOn(MediaReportsService, 'getUtilizationData').and.returnValue($q.when(utilizationGraphData));
+      spyOn(MediaReportsService, 'getCallVolumeData').and.returnValue($q.resolve(callVolumeGraphData));
+      spyOn(MediaReportsService, 'getAvailabilityData').and.returnValue($q.resolve(clusteravailabilityData));
+      spyOn(MediaReportsService, 'getUtilizationData').and.returnValue($q.resolve(utilizationGraphData));
       $timeout(function () {
 
         expect(MediaReportsService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0]);
@@ -114,9 +114,9 @@ describe('Controller:MediaReportsController', function () {
     });
     it('All graphs should update on cluster filter changes', function () {
       controller.clusterSelected = allClusters;
-      spyOn(MediaReportsService, 'getCallVolumeData').and.returnValue($q.when(callVolumeGraphData));
-      spyOn(MediaReportsService, 'getAvailabilityData').and.returnValue($q.when(clusteravailabilityData));
-      spyOn(MediaReportsService, 'getUtilizationData').and.returnValue($q.when(utilizationGraphData));
+      spyOn(MediaReportsService, 'getCallVolumeData').and.returnValue($q.resolve(callVolumeGraphData));
+      spyOn(MediaReportsService, 'getAvailabilityData').and.returnValue($q.resolve(clusteravailabilityData));
+      spyOn(MediaReportsService, 'getUtilizationData').and.returnValue($q.resolve(utilizationGraphData));
       controller.clusterUpdate();
       expect(MediaReportsService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
       expect(MediaReportsService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
@@ -172,7 +172,7 @@ describe('Controller:MediaReportsController', function () {
           'callsRedirect': 30
         }
       };
-      spyOn(MediaReportsService, 'getTotalCallsData').and.returnValue($q.when(response));
+      spyOn(MediaReportsService, 'getTotalCallsData').and.returnValue($q.resolve(response));
       controller.setTotalCallsData();
       httpMock.flush();
       expect(MediaReportsService.getTotalCallsData).toHaveBeenCalled();
@@ -187,7 +187,7 @@ describe('Controller:MediaReportsController', function () {
           'availabilityPercent': 20
         }
       };
-      spyOn(MediaReportsService, 'getClusterAvailabilityData').and.returnValue($q.when(response));
+      spyOn(MediaReportsService, 'getClusterAvailabilityData').and.returnValue($q.resolve(response));
       controller.setClusterAvailability();
       httpMock.flush();
       expect(MediaReportsService.getClusterAvailabilityData).toHaveBeenCalled();

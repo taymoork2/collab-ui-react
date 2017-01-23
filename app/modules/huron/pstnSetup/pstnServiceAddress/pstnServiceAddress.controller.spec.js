@@ -20,7 +20,7 @@ describe('Controller: PstnServiceAddressCtrl', function () {
     PstnSetup.setCustomerName(customer.name);
     PstnSetup.setCustomerEmail(customer.email);
 
-    spyOn(PstnServiceAddressService, 'lookupAddress').and.returnValue($q.when(address));
+    spyOn(PstnServiceAddressService, 'lookupAddress').and.returnValue($q.resolve(address));
     spyOn($state, 'go');
     spyOn(Notification, 'error');
 
@@ -49,7 +49,7 @@ describe('Controller: PstnServiceAddressCtrl', function () {
   });
 
   it('should notify error if address is not valid', function () {
-    PstnServiceAddressService.lookupAddress.and.returnValue($q.when());
+    PstnServiceAddressService.lookupAddress.and.returnValue($q.resolve());
     controller.validateAddress();
     $scope.$apply();
 

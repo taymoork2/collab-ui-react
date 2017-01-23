@@ -26,7 +26,7 @@ describe('Controller: MediafusionClusterSettingsController', function () {
       'mf.ucSipTrunk': 'sipurl'
     };
 
-    spyOn(MediaClusterServiceV2, 'getProperties').and.returnValue($q.when(properties));
+    spyOn(MediaClusterServiceV2, 'getProperties').and.returnValue($q.resolve(properties));
 
     controller = $controller('MediafusionClusterSettingsController', {
       $stateParams: {

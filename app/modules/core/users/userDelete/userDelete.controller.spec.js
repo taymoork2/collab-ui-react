@@ -35,19 +35,19 @@ describe('Controller: UserDeleteCtrl', function () {
 
   function initSpies() {
     spyOn(Userservice, 'getUser');
-    spyOn(Userservice, 'deactivateUser').and.returnValue($q.when());
+    spyOn(Userservice, 'deactivateUser').and.returnValue($q.resolve());
     $scope.$close = jasmine.createSpy('$close');
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
-    spyOn(SyncService, 'isMessengerSyncEnabled').and.returnValue($q.when(false));
+    spyOn(SyncService, 'isMessengerSyncEnabled').and.returnValue($q.resolve(false));
     spyOn($rootScope, '$broadcast').and.callThrough();
     spyOn($translate, 'instant').and.returnValue('YES');
     var deferred = $q.defer();
     spyOn(SunlightConfigService, 'deleteUser').and.returnValue(
-      $q.when(deferred.promise)
+      $q.resolve(deferred.promise)
     );
     spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue(
-      $q.when(true)
+      $q.resolve(true)
     );
     spyOn(Authinfo, 'isCare').and.returnValue(true);
   }
