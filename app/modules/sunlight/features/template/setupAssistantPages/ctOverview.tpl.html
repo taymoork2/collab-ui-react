@@ -1,8 +1,8 @@
 <div>
   <div class="ct-title">
-    <span class="h2 ct-title-overview" translate="{{careSetupAssistant.getLocalisedText('careChatTpl.overview')}}"></span>
+    <span class="h2 ct-title-overview">{{careSetupAssistant.getLocalisedText('careChatTpl.overview')}}</span>
   </div>
-  <div class="h4 ct-title-desc" translate="{{careSetupAssistant.getLocalisedText('careChatTpl.overviewDesc')}}"></div>
+  <div class="h4 ct-title-desc">{{careSetupAssistant.getLocalisedText('careChatTpl.overviewDesc')}}</div>
 
   <div class="ct-sa-content overview-card-layout">
     <cs-card-layout block-view="true" class="ct-card-center">
@@ -13,8 +13,8 @@
           <i ng-class="['icon', 'icon-' + careChatSA.overview.{{pageName}},'icon-4x','ct-card-img']"></i>
           <div class="h4 ct-card-title" translate="careChatTpl.ctOverview.{{pageName}}.title"></div>
           <section>
-            <div class="h6 ct-card-desc"
-                 translate="{{careSetupAssistant.getLocalisedText('careChatTpl.ctOverview.' + pageName + '.desc')}}">
+            <div class="h6 ct-card-desc">
+                 {{careSetupAssistant.getLocalisedText('careChatTpl.ctOverview.' + pageName + '.desc')}}
             </div>
             <div class="ct-toggle-position"
                  ng-switch on="careSetupAssistant.template.configuration.mediaType == 'callback'

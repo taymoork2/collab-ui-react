@@ -90,6 +90,7 @@
     @include vr-spacing(mt, 0.5);
     @include vr-spacing(ml, 1);
     @include vr-spacing(mb, 0.1);
+    @include vr-spacing(pr, 0.15);
 
     color: $gray-dark-2;
     opacity: 0.5;
