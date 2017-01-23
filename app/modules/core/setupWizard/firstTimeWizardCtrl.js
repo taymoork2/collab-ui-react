@@ -6,7 +6,7 @@
 
   /* @ngInject */
   function FirstTimeWizardCtrl($q, $scope, $state, $translate, Auth, Authinfo,
-    Config, FeatureToggleService, Log, Orgservice, Userservice) {
+    Config, Log, Orgservice, Userservice) {
     $scope.greeting = $translate.instant('index.greeting', {
       name: Authinfo.getUserName()
     });
@@ -33,28 +33,20 @@
        * Patch the first time admin login with SyncKms role and Care entitlements.
        */
       if (adminPatchNeeded()) {
-        FeatureToggleService.atlasCareTrialsGetStatus()
-          .then(getCareAdminUser)
-          .then(isPatchRequired)
-          .then(patchAdmin)
-          .then(updateAccessToken)
-          .then(function () {
-            Log.info('Admin user patched successfully.');
-          })
-          .catch(onFailure);
+        Userservice.getUserAsPromise('me')
+         .then(isPatchRequired)
+         .then(patchAdmin)
+         .then(updateAccessToken)
+         .then(function () {
+           Log.info('Admin user patched successfully.');
+         })
+         .catch(onFailure);
       }
     }
 
     function adminPatchNeeded() {
       return (!Authinfo.isInDelegatedAdministrationOrg() &&
         Authinfo.getCareServices().length > 0);
-    }
-
-    function getCareAdminUser(careEnabled) {
-      if (!careEnabled) {
-        return $q.reject();
-      }
-      return Userservice.getUser('me', _.noop);
     }
 
     function isPatchRequired(response) {

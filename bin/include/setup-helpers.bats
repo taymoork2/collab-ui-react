@@ -22,53 +22,6 @@ source ./setup-helpers
     rm -rf ${tmp_git_dir}
 }
 
-@test "get_npm_shrinkwrap_file - should print a full-path to a .../npm-shrinkwrap-for-*.json' file" {
-    run get_npm_shrinkwrap_file "myid"
-    [ $status -eq 0 ]
-    [ "$output" = "${WX2_ADMIN_WEB_CLIENT_HOME}/.cache/npm-shrinkwrap-for-myid.json" ]
-}
-
-@test "mv_npm_shrinkwrap_file - should mv an existing 'npm-shrinkwrap.json' to 'npm-shrinkwrap-for-*.json' in the './.cache' subdir" {
-    local expected_npm_shrinkwrap_file="${WX2_ADMIN_WEB_CLIENT_HOME}/.cache/npm-shrinkwrap-for-myid.json"
-
-    cd ${WX2_ADMIN_WEB_CLIENT_HOME}
-
-    # 'npm-shrinkwrap.json' already present, move it out of the way
-    if [ -f npm-shrinkwrap.json ]; then
-        cp -a npm-shrinkwrap.json npm-shrinkwrap.json.orig
-    fi
-    touch npm-shrinkwrap.json
-    run mv_npm_shrinkwrap_file "myid"
-
-    [ $status -eq 0 ]
-    [ -f ${expected_npm_shrinkwrap_file} ]
-
-    rm -f ${expected_npm_shrinkwrap_file}
-
-    # restore any 'npm-shrinkwrap.json' if one was present
-    if [ -f npm-shrinkwrap.json.orig ]; then
-        mv npm-shrinkwrap.json.orig npm-shrinkwrap.json
-    fi
-    cd ~-
-}
-
-@test "mk_npm_shrinkwrap_tar - should make a 'npm-shrinkwrap-for-*.tar.gz' archive in the './.cache' subdir" {
-    local expected_npm_shrinkwrap_file="${WX2_ADMIN_WEB_CLIENT_HOME}/.cache/npm-shrinkwrap-for-myid.json"
-    local expected_archive_file="${WX2_ADMIN_WEB_CLIENT_HOME}/.cache/npm-shrinkwrap-for-myid.tar.gz"
-
-    cd ${WX2_ADMIN_WEB_CLIENT_HOME}
-    touch ${expected_npm_shrinkwrap_file}
-    run mk_npm_shrinkwrap_tar "myid"
-
-    [ $status -eq 0 ]
-    [ -f ${expected_archive_file} ]
-    [ ".cache/npm-shrinkwrap-for-myid.json" = "`tar -tf ${expected_archive_file}`" ]
-
-    rm -f ${expected_archive_file}
-    rm -f ${expected_npm_shrinkwrap_file}
-    cd ~-
-}
-
 @test "mk_npm_deps_tar - should make a 'npm-deps-for-*.tar.gz' archive in the './.cache' subdir" {
     local expected_archive_file=${WX2_ADMIN_WEB_CLIENT_HOME}/.cache/npm-deps-for-myid.tar.gz
 

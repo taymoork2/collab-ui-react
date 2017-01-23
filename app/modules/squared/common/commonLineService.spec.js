@@ -20,8 +20,8 @@ describe('Service: CommonLineService', function () {
     externalNumberPool = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
     externalNumberPool = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPool.json');
 
-    spyOn(TelephonyInfoService, 'loadInternalNumberPool').and.returnValue($q.when(internalNumberPool));
-    spyOn(TelephonyInfoService, 'loadExternalNumberPool').and.returnValue($q.when(externalNumberPool));
+    spyOn(TelephonyInfoService, 'loadInternalNumberPool').and.returnValue($q.resolve(internalNumberPool));
+    spyOn(TelephonyInfoService, 'loadExternalNumberPool').and.returnValue($q.resolve(externalNumberPool));
     spyOn(TelephonyInfoService, 'loadExtPoolWithMapping');
   }));
 
@@ -114,7 +114,7 @@ describe('Service: CommonLineService', function () {
   describe('checkDnOverlapsSteeringDigit function', function () {
     var entity;
     beforeEach(function () {
-      spyOn(TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue($q.when({
+      spyOn(TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue($q.resolve({
         steeringDigit: '9'
       }));
       entity = {
@@ -132,7 +132,7 @@ describe('Service: CommonLineService', function () {
     });
 
     it('should be false if telephonyInfo is undefined', function () {
-      TelephonyInfoService.getPrimarySiteInfo.and.returnValue($q.when());
+      TelephonyInfoService.getPrimarySiteInfo.and.returnValue($q.resolve());
       expect(CommonLineService.checkDnOverlapsSteeringDigit(entity)).toBe(false);
       CommonLineService.loadPrimarySiteInfo();
       $rootScope.$digest();

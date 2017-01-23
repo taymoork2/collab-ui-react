@@ -49,10 +49,10 @@ describe('Template: planReview', function () {
   }
 
   function initSpies() {
-    spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'atlasSMPGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasSMPGetStatus').and.returnValue($q.resolve(false));
     getUserMe = getJSONFixture('core/json/users/me.json');
 
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {

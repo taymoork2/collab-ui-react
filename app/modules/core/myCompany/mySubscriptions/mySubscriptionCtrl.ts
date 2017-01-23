@@ -33,6 +33,7 @@ class MySubscriptionCtrl {
   public visibleSubscriptions = false;
   public isOnline = false;
   public trialUrlFailed = false;
+  public productInstanceFailed = false;
   public loading = false;
   public digitalRiverSubscriptionsUrl: string;
   public isSharedMultiPartyReportsEnabled: boolean;
@@ -110,7 +111,7 @@ class MySubscriptionCtrl {
       } else {
         return this.emptyOnlineTrialUrl();
       }
-    }, (error) => {
+    }).catch((error) => {
       return this.upgradeTrialErrorResponse(error, subId);
     });
   }
@@ -127,10 +128,36 @@ class MySubscriptionCtrl {
     return undefined;
   }
 
+  private getProductInstanceId(subId) {
+    return this.$http.get<any>(this.UrlConfig.getAdminServiceUrl() + 'commerce/productinstances?ciUUID=' + this.Authinfo.getUserId()).then((response) => {
+      let productInstanceId = _.get<string>(response, 'data.productGroups[0].productInstance[0].productInstanceId');
+      if (productInstanceId) {
+        return productInstanceId;
+      } else {
+        return this.emptyOnlineProductInstance();
+      }
+    }).catch((error) => {
+      return this.productInstanceErrorResponse(error, subId);
+    });
+  }
+
+  private productInstanceErrorResponse(error, subId) {
+    this.Notification.errorWithTrackingId(error, 'subscriptions.onlineProductInstanceError', {
+      trialId: subId,
+    });
+    return this.emptyOnlineTrialUrl();
+  }
+
+  private emptyOnlineProductInstance() {
+    this.productInstanceFailed = true;
+    return undefined;
+  }
+
   private broadcastSingleSubscription(subscription, trialUrl)  {
     this.$rootScope.$broadcast('SUBSCRIPTION::upgradeData', {
       isTrial: subscription.isTrial,
       subId: subscription.internalSubscriptionId,
+      productInstanceId: subscription.productInstanceId,
       upgradeTrialUrl: trialUrl,
     });
   }
@@ -182,8 +209,10 @@ class MySubscriptionCtrl {
           internalSubscriptionId: undefined,
           licenses: [] as any[],
           isTrial: false,
+          isOnline: this.isOnline,
           viewAll: false,
           upgradeTrialUrl: undefined,
+          productInstanceId: undefined,
         };
         if (subscription.subscriptionId && (subscription.subscriptionId !== 'unknown')) {
           newSubscription.subscriptionId = subscription.subscriptionId;
@@ -276,7 +305,12 @@ class MySubscriptionCtrl {
         if (subscription.isTrial && this.isOnline) {
           this.upgradeTrialUrl(subscription.internalSubscriptionId).then((response) => {
             if (response && this.subscriptionDetails.length === 1) {
-              this.broadcastSingleSubscription(this.subscriptionDetails[0], response);
+              this.getProductInstanceId(subscription.internalSubscriptionId).then((prodResponse) => {
+                if (prodResponse) {
+                  this.subscriptionDetails[0].productInstanceId = prodResponse;
+                  this.broadcastSingleSubscription(this.subscriptionDetails[0], response);
+                }
+              });
             }
             subscription.upgradeTrialUrl = response;
           });

@@ -20,7 +20,7 @@ describe('Controller: LineListCtrl', function () {
     spyOn(Notification, 'errorResponse');
     spyOn(Notification, 'error');
 
-    spyOn(LineListService, 'getLineList').and.returnValue($q.when(lines));
+    spyOn(LineListService, 'getLineList').and.returnValue($q.resolve(lines));
     spyOn(FeatureToggleService, 'supports');
 
     controller = $controller('LinesListCtrl', {
@@ -56,7 +56,7 @@ describe('Controller: LineListCtrl', function () {
     });
 
     it('should call getLineList with filter assignedLines', function () {
-      FeatureToggleService.supports.and.returnValue($q.when(true));
+      FeatureToggleService.supports.and.returnValue($q.resolve(true));
 
       controller.setFilter('assignedLines');
       $scope.$apply();
@@ -66,7 +66,7 @@ describe('Controller: LineListCtrl', function () {
     });
 
     it('should call getLineList with filter unassignedLines', function () {
-      FeatureToggleService.supports.and.returnValue($q.when(true));
+      FeatureToggleService.supports.and.returnValue($q.resolve(true));
 
       controller.setFilter('unassignedLines');
       $scope.$apply();

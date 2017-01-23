@@ -1,5 +1,5 @@
 <div ng-repeat="(fieldName, field) in getFilteredFields(fields)">
-  <div class="row ct-left-row ct-selectable-container" selectable ng-click="setActiveItem(field)">
+  <div class="row ct-left-row ct-selectable-container" selectable ng-click="setActiveItem(field, fieldName)">
     <div class="ct-flex-container">
       <label
         title="{{getLabel(field)}}"
@@ -12,14 +12,40 @@
         <em id="opt-{{fieldName}}" translate="careChatTpl.optionalText"></em></label>
     </div>
 
-    <div class="ct-flex-container">
-      <input
-        id="text-{{fieldName}}"
-        class="h5 ct-left-cs-input large-11"
-        type="text"
-        placeholder="{{getPlaceholder(field)}}"
-        ng-disabled="true">
-      <i id="img-{{fieldName}}" class="icon icon-chevron-down" ng-if="getType(field).id === 'category'"></i>
+    <div ng-switch="getType(field).id">
+      <div class="ct-flex-container">
+        <div class="ct-country-select h5" ng-switch-when="phone" >
+          <cs-country-select
+                  id="phone-{{fieldName}}"
+                  name="phone"
+                  ng-model="defaultPhoneNumber"
+                  is-disabled="true">
+          </cs-country-select>
+        </div>
+      </div>
+
+      <div class="ct-flex-container" ng-switch-when="reason">
+         <textarea
+                 id="textArea-{{fieldName}}"
+                 class="h5 ct-left-cs-text-area large-11"
+                 type="text"
+                 ng-bind="getPlaceholder(field)"
+                 ng-disabled="true">
+        </textarea>
+      </div>
+      <div class="ct-flex-container" ng-switch-default >
+        <input
+                id="text-{{fieldName}}"
+                class="h5 ct-left-cs-input large-11"
+                type="text"
+                placeholder="{{getPlaceholder(field)}}"
+                ng-disabled="true">
+        </input>
+        <i id="img-{{fieldName}}" class="icon icon-chevron-down" ng-if="getType(field).id === 'category'"></i>
+      </div>
+
     </div>
+
   </div>
+
 </div>

@@ -13,7 +13,7 @@
     var vm = this;
     vm.isTimezoneAndVoicemail = function (enabled) {
       return Authinfo.getLicenses().filter(function (license) {
-        return enabled ? (license.licenseType !== Config.licenseTypes.SHARED_DEVICES || license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
+        return enabled ? (license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
       }).length > 0;
     };
     FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
@@ -1259,7 +1259,7 @@
               return $q.reject(response);
             });
         } else {
-          return $q.when();
+          return $q.resolve();
         }
       }
 
@@ -1387,7 +1387,7 @@
       }
 
       function saveVoicemailToEmail() {
-        return $q.when(true)
+        return $q.resolve(true)
           .then(function () {
             if (shouldSaveVoicemailToEmail()) {
               return VoicemailMessageAction.update(vm.model.ftswCompanyVoicemail.ftswVoicemailToEmail, vm.voicemailTimeZone.objectId, vm.voicemailMessageAction.objectId)
@@ -1454,7 +1454,7 @@
       }
 
       function saveInternalNumbers() {
-        return $q.when(true).then(function () {
+        return $q.resolve(true).then(function () {
           if (vm.hideFieldInternalNumberRange === false && (_.isArray(_.get(vm, 'model.displayNumberRanges')))) {
             _.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
               if (_.isUndefined(internalNumberRange.uuid)) {
@@ -1486,7 +1486,7 @@
       // hence the noop catch in the end to allow previous re-thrown rejections
       // to be ignored after processing this promise chain.
       function saveCompanySite() {
-        return $q.when(true)
+        return $q.resolve(true)
           .then(displayDisableVoicemailWarning)
           .then(saveCustomer)
           .then(saveSite)
@@ -1515,7 +1515,7 @@
       // voice service is setup, then process the form.
       // Errors are collected in an array and processed in the end.
       function saveProcess() {
-        return $q.when(true)
+        return $q.resolve(true)
           .then(setupVoiceService)
           .then(saveForm)
           .catch(_.noop)
@@ -1527,7 +1527,7 @@
 
       if (vm.firstTimeSetup) {
         return saveProcess();
-      } else {
+      } else if (vm.showTimezoneAndVoicemail) {
         return ModalService.open({
           title: $translate.instant('serviceSetupModal.saveModal.title'),
           message: $translate.instant('serviceSetupModal.saveModal.message1') + '<br/><br/>'

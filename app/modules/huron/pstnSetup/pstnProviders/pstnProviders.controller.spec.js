@@ -25,11 +25,11 @@ describe('Controller: PstnProvidersCtrl', function () {
     PstnSetup.setCustomerId(customer.uuid);
     PstnSetup.setCustomerName(customer.name);
 
-    spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.when());
-    spyOn(PstnSetupService, 'listCustomerCarriers').and.returnValue($q.when(customerCarrierList));
-    spyOn(PstnSetupService, 'listResellerCarriers').and.returnValue($q.when(resellerCarrierList));
-    spyOn(PstnSetupService, 'listDefaultCarriers').and.returnValue($q.when(carrierList));
-    spyOn(PstnServiceAddressService, 'listCustomerSites').and.returnValue($q.when(customerSiteList));
+    spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.resolve());
+    spyOn(PstnSetupService, 'listCustomerCarriers').and.returnValue($q.resolve(customerCarrierList));
+    spyOn(PstnSetupService, 'listResellerCarriers').and.returnValue($q.resolve(resellerCarrierList));
+    spyOn(PstnSetupService, 'listDefaultCarriers').and.returnValue($q.resolve(carrierList));
+    spyOn(PstnServiceAddressService, 'listCustomerSites').and.returnValue($q.resolve(customerSiteList));
     spyOn(PstnSetup, 'setSingleCarrierReseller');
     spyOn(PstnSetup, 'clearProviderSpecificData');
     spyOn(Notification, 'errorResponse');
@@ -58,7 +58,7 @@ describe('Controller: PstnProvidersCtrl', function () {
       controller = $controller('PstnProvidersCtrl', {
         $scope: $scope
       });
-      PstnSetupService.listCustomerCarriers.and.returnValue($q.when(swivelCustomerCarrierList));
+      PstnSetupService.listCustomerCarriers.and.returnValue($q.resolve(swivelCustomerCarrierList));
       $scope.$apply();
 
       expect(controller.providers).toEqual([jasmine.objectContaining({
@@ -73,7 +73,7 @@ describe('Controller: PstnProvidersCtrl', function () {
     });
 
     it('should be initialized with customers carrier Intelepeer and transition to service address if site doesn\'t exist', function () {
-      PstnServiceAddressService.listCustomerSites.and.returnValue($q.when([]));
+      PstnServiceAddressService.listCustomerSites.and.returnValue($q.resolve([]));
       controller = $controller('PstnProvidersCtrl', {
         $scope: $scope
       });
@@ -94,7 +94,7 @@ describe('Controller: PstnProvidersCtrl', function () {
       PstnSetupService.getCustomer.and.returnValue($q.reject({
         status: 404
       }));
-      PstnSetupService.listResellerCarriers.and.returnValue($q.when([]));
+      PstnSetupService.listResellerCarriers.and.returnValue($q.resolve([]));
       controller = $controller('PstnProvidersCtrl', {
         $scope: $scope
       });
@@ -144,7 +144,7 @@ describe('Controller: PstnProvidersCtrl', function () {
       PstnSetupService.listCustomerCarriers.and.returnValue($q.reject({
         status: 404
       }));
-      PstnSetupService.listResellerCarriers.and.returnValue($q.when([]));
+      PstnSetupService.listResellerCarriers.and.returnValue($q.resolve([]));
       controller = $controller('PstnProvidersCtrl', {
         $scope: $scope
       });
@@ -170,7 +170,7 @@ describe('Controller: PstnProvidersCtrl', function () {
       PstnSetupService.getCustomer.and.returnValue($q.reject({
         status: 404
       }));
-      PstnSetupService.listResellerCarriers.and.returnValue($q.when(resellerCarrierList));
+      PstnSetupService.listResellerCarriers.and.returnValue($q.resolve(resellerCarrierList));
       controller = $controller('PstnProvidersCtrl', {
         $scope: $scope
       });
@@ -190,8 +190,8 @@ describe('Controller: PstnProvidersCtrl', function () {
 
     it('should notify an error if customer carriers fail to load', function () {
       PstnSetupService.listCustomerCarriers.and.returnValue($q.reject({}));
-      PstnSetupService.listResellerCarriers.and.returnValue($q.when([]));
-      PstnSetupService.listDefaultCarriers.and.returnValue($q.when([]));
+      PstnSetupService.listResellerCarriers.and.returnValue($q.resolve([]));
+      PstnSetupService.listDefaultCarriers.and.returnValue($q.resolve([]));
       controller = $controller('PstnProvidersCtrl', {
         $scope: $scope
       });

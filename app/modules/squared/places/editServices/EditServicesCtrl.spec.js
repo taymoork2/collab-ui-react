@@ -325,10 +325,10 @@ describe('EditServicesCtrl: Ctrl', function () {
         var place = { cisUuid: deviceCisUuid };
         CsdmDataModelService.getPlacesMap = function () {
         };
-        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.when({ 'http://placeurl': place }));
+        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({ 'http://placeurl': place }));
         CsdmDataModelService.updateCloudberryPlace = function () {
         };
-        spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.when());
+        spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.resolve());
         initController();
         controller.service = 'sparkOnly';
         controller.save();
@@ -351,7 +351,7 @@ describe('EditServicesCtrl: Ctrl', function () {
             };
           }
         };
-        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.when({ 'http://placeurl': {} }));
+        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({ 'http://placeurl': {} }));
         initController();
         controller.service = 'sparkOnly';
         controller.save();
@@ -395,7 +395,7 @@ describe('EditServicesCtrl: Ctrl', function () {
             };
           }
         };
-        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.when({ 'http://placeurl': { cisUuid: deviceCisUuid } }));
+        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({ 'http://placeurl': { cisUuid: deviceCisUuid } }));
         spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.reject());
         initController();
         controller.service = 'sparkOnly';

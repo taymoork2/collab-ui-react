@@ -66,8 +66,13 @@
     vm.taskTimeDrilldownProps = DrillDownReportProps.taskTimeDrilldownProps(timeSelected);
 
     vm.filtersUpdate = filtersUpdate;
+    vm.inboundCallFeature = false;
 
     var mediaTypes = ['all', 'chat', 'callback'];
+    //check if inbound-call feature flag is enabled
+    if (vm.inboundCallFeature) {
+      mediaTypes.push("voice");
+    }
     vm.mediaTypeOptions = _.map(mediaTypes, function (name, i) {
       return {
         value: i,
@@ -77,9 +82,7 @@
     });
 
     vm.mediaTypeSelected = vm.mediaTypeOptions[1];
-
     vm.callbackFeature = false;
-
     function filtersUpdate() {
       vm.dataStatus = REFRESH;
       vm.snapshotDataStatus = REFRESH;
@@ -237,16 +240,18 @@
       resizeCards();
       delayedResize();
     }
-
     $timeout(function () {
-      FeatureToggleService.atlasCareCallbackTrialsGetStatus()
-        .then(function (enabled) {
-          vm.callbackFeature = enabled;
-          if (vm.callbackFeature) {
-            vm.mediaTypeSelected = vm.mediaTypeOptions[0];
-          }
-          filtersUpdate();
-        });
+      $q.all({
+        callbackFeature: FeatureToggleService.atlasCareCallbackTrialsGetStatus(),
+        inboundCallFeature: FeatureToggleService.atlasCareInboundTrialsGetStatus()
+      }).then(function (results) {
+        vm.callbackFeature = results.callbackFeature;
+        vm.inboundCallFeature = results.inboundCallFeature;
+        if (vm.callbackFeature || vm.inboundCallFeature) {
+          vm.mediaTypeSelected = vm.mediaTypeOptions[0];
+        }
+        filtersUpdate();
+      });
     }, 30);
   }
 })();

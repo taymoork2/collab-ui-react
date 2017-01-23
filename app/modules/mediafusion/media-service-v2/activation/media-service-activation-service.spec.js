@@ -124,7 +124,7 @@ describe('MediaServiceActivationV2', function () {
     });
     $httpBackend.when('PATCH', /^\w+.*/).respond({});
     $httpBackend.when('PUT', /^\w+.*/).respond({});
-    spyOn(Service, 'setServiceEnabled').and.returnValue($q.when({}));
+    spyOn(Service, 'setServiceEnabled').and.returnValue($q.resolve({}));
     Service.enableMediaService(serviceId);
     expect($httpBackend.flush).not.toThrow();
   });
@@ -140,7 +140,7 @@ describe('MediaServiceActivationV2', function () {
 
   it('MediaServiceActivationV2 isServiceEnabled should be called for getMediaServiceState', function () {
     $httpBackend.when('GET', /^\w+.*/).respond({});
-    spyOn(FusionClusterService, 'serviceIsSetUp').and.returnValue($q.when(true));
+    spyOn(FusionClusterService, 'serviceIsSetUp').and.returnValue($q.resolve(true));
     Service.getMediaServiceState();
     $httpBackend.verifyNoOutstandingExpectation();
     expect(FusionClusterService.serviceIsSetUp).toHaveBeenCalled();
@@ -177,8 +177,8 @@ describe('MediaServiceActivationV2', function () {
     });
     $httpBackend.when('DELETE', /^\w+.*/).respond({});
     spyOn(Notification, 'error');
-    spyOn(Service, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when({}));
-    spyOn(Service, 'deleteUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when({}));
+    spyOn(Service, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.resolve({}));
+    spyOn(Service, 'deleteUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.resolve({}));
     Service.disableOrpheusForMediaFusion();
     expect($httpBackend.flush).not.toThrow();
     expect(Notification.error).not.toHaveBeenCalled();
@@ -191,8 +191,8 @@ describe('MediaServiceActivationV2', function () {
     });
     $httpBackend.when('DELETE', /^\w+.*/).respond(500, null);
     spyOn(Notification, 'error');
-    spyOn(Service, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when({}));
-    spyOn(Service, 'deleteUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when({}));
+    spyOn(Service, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.resolve({}));
+    spyOn(Service, 'deleteUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.resolve({}));
     Service.disableOrpheusForMediaFusion();
     $httpBackend.flush();
     expect(Notification.error).toHaveBeenCalled();
@@ -205,8 +205,8 @@ describe('MediaServiceActivationV2', function () {
     });
     $httpBackend.when('PUT', /^\w+.*/).respond({});
     spyOn(Notification, 'error');
-    spyOn(Service, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when({}));
-    spyOn(Service, 'setUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when({}));
+    spyOn(Service, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.resolve({}));
+    spyOn(Service, 'setUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.resolve({}));
     Service.disableOrpheusForMediaFusion();
     expect($httpBackend.flush).not.toThrow();
     expect(Notification.error).not.toHaveBeenCalled();
@@ -219,8 +219,8 @@ describe('MediaServiceActivationV2', function () {
     });
     $httpBackend.when('PUT', /^\w+.*/).respond(500, null);
     spyOn(Notification, 'error');
-    spyOn(Service, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when({}));
-    spyOn(Service, 'setUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when({}));
+    spyOn(Service, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.resolve({}));
+    spyOn(Service, 'setUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.resolve({}));
     Service.disableOrpheusForMediaFusion();
     $httpBackend.flush();
     expect(Notification.error).toHaveBeenCalled();

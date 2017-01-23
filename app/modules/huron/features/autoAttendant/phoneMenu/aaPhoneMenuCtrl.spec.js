@@ -89,8 +89,8 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     AACommonService = _AACommonService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(QueueHelperService, 'listQueues').and.returnValue($q.when(queues));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+    spyOn(QueueHelperService, 'listQueues').and.returnValue($q.resolve(queues));
 
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     AACommonService.setRouteQueueToggle(true);

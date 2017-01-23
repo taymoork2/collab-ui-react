@@ -10,6 +10,7 @@
       dirSync: 'atlas-dir-sync',
       atlasCareTrials: 'atlas-care-trials',
       atlasCareCallbackTrials: 'atlas-care-callback-trials',
+      atlasCareInboundTrials: 'atlas-care-inbound-trials',
       atlasContextServiceTrials: 'atlas-context-service-trials',
       atlasCreateTrialBackendEmail: 'atlas-create-trial-backend-email',
       atlasCustomerListUpdate: 'atlas-customer-list-update',
@@ -308,7 +309,7 @@
         return getHuronToggleForUser(Authinfo.getUserId(), feature);
       }
 
-      return $q.when(false);
+      return $q.resolve(false);
     }
 
     function getHuronToggleForUser(userId, feature) {

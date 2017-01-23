@@ -25,7 +25,7 @@ describe('Auth Service', function () {
     WindowLocation = _WindowLocation_;
 
     spyOn(WindowLocation, 'set');
-    spyOn($state, 'go').and.returnValue($q.when());
+    spyOn($state, 'go').and.returnValue($q.resolve());
 
     this.orgInfo = {
       orgSettingsWithDomain: {

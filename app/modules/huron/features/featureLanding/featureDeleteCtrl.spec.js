@@ -43,8 +43,8 @@ describe('Huron Feature DeleteCtrl for AA', function () {
     featDefer = $q.defer();
     spyOn(AutoAttendantCeService, 'deleteCe').and.returnValue(featDefer.promise);
     spyOn(AutoAttendantCeInfoModelService, 'deleteCeInfo');
-    spyOn(AutoAttendantCeService, 'readCe').and.returnValue($q.when(callExperience));
-    spyOn(AACalendarService, 'deleteCalendar').and.returnValue($q.when());
+    spyOn(AutoAttendantCeService, 'readCe').and.returnValue($q.resolve(callExperience));
+    spyOn(AACalendarService, 'deleteCalendar').and.returnValue($q.resolve());
 
     spyOn($rootScope, '$broadcast').and.callThrough();
 

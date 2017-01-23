@@ -63,6 +63,8 @@
       searchCarrierTollFreeInventory: searchCarrierTollFreeInventory,
       reserveCarrierInventory: reserveCarrierInventory,
       releaseCarrierInventory: releaseCarrierInventory,
+      reserveCarrierInventoryV2: reserveCarrierInventoryV2,
+      releaseCarrierInventoryV2: releaseCarrierInventoryV2,
       releaseCarrierTollFreeInventory: releaseCarrierTollFreeInventory,
       reserveCarrierTollFreeInventory: reserveCarrierTollFreeInventory,
       isCarrierSwivel: isCarrierSwivel,
@@ -280,6 +282,60 @@
         // Otherwise release with carrier
         return TerminusCarrierInventoryRelease.save({
           carrierId: carrierId
+        }, {
+          numbers: numbers
+        }).$promise;
+      }
+    }
+
+    function reserveCarrierInventoryV2(customerId, carrierId, numbers, isCustomerExists) {
+      if (!_.isArray(numbers)) {
+        numbers = [numbers];
+      }
+
+      if (isCustomerExists) {
+        // If a customer exists, reserve with the customer
+        return TerminusV2CustomerNumberReservationService.save({
+          customerId: customerId
+        }, {
+          numberType: NUMTYPE_DID,
+          numbers: numbers
+        }, function (data, headers) {
+          data.uuid = headers('location').split("/").pop();
+          return data;
+        }).$promise;
+      } else {
+        // Otherwise reserve with carrier
+        return TerminusV2ResellerCarrierNumberReservationService.save({
+          resellerId: Authinfo.getOrgId(),
+          carrierId: carrierId
+        }, {
+          numberType: NUMTYPE_DID,
+          numbers: numbers
+        }, function (data, headers) {
+          data.uuid = headers('location').split("/").pop();
+          return data;
+        }).$promise;
+      }
+    }
+
+    function releaseCarrierInventoryV2(customerId, reservationId, numbers, isCustomerExists) {
+      if (!_.isArray(numbers)) {
+        numbers = [numbers];
+      }
+      if (isCustomerExists) {
+        // If a customer exists, release with the customer
+        return TerminusV2CustomerNumberReservationService.delete({
+          customerId: customerId,
+          reservationId: reservationId
+        }, {
+          numbers: numbers
+        }).$promise;
+      } else {
+        // Otherwise release with carrier
+        return TerminusV2ResellerNumberReservationService.delete({
+          resellerId: Authinfo.getOrgId(),
+          reservationId: reservationId
         }, {
           numbers: numbers
         }).$promise;

@@ -154,8 +154,8 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       spyOn(UserListService, 'listUsers').and.callFake(function (startIndex, count, sortBy, sortOrder, callback) {
         callback(returnedDataCustomerOrg);
       });
-      spyOn(CsdmDataModelService, 'createCsdmPlace').and.returnValue($q.when({}));
-      spyOn(CsdmDataModelService, 'createCodeForExisting').and.returnValue($q.when());
+      spyOn(CsdmDataModelService, 'createCsdmPlace').and.returnValue($q.resolve({}));
+      spyOn(CsdmDataModelService, 'createCodeForExisting').and.returnValue($q.resolve());
     });
 
     it('does not add admin to results when admin is in his own org', function () {
@@ -421,8 +421,8 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       describe('with new place', function () {
         beforeEach(function () {
           stateParams.wizard = cloudberryNewPlace;
-          spyOn(CsdmDataModelService, 'createCsdmPlace').and.returnValue($q.when({ cisUuid: cisUuid }));
-          spyOn(CsdmDataModelService, 'createCodeForExisting').and.returnValue($q.when({
+          spyOn(CsdmDataModelService, 'createCsdmPlace').and.returnValue($q.resolve({ cisUuid: cisUuid }));
+          spyOn(CsdmDataModelService, 'createCodeForExisting').and.returnValue($q.resolve({
             activationCode: activationCode,
             expiryTime: expiryTime
           }));
@@ -441,7 +441,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         describe('sending an activation email', function () {
 
           it('should send it to selected user and notify success', function () {
-            spyOn(CsdmEmailService, 'sendCloudberryEmail').and.returnValue($q.when({}));
+            spyOn(CsdmEmailService, 'sendCloudberryEmail').and.returnValue($q.resolve({}));
             spyOn(Notification, 'notify').and.callThrough();
 
             controller.sendActivationCodeEmail();
@@ -464,7 +464,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       describe('with existing place', function () {
         beforeEach(function () {
           stateParams.wizard = cloudberryExistingPlace;
-          spyOn(CsdmDataModelService, 'createCodeForExisting').and.returnValue($q.when({
+          spyOn(CsdmDataModelService, 'createCodeForExisting').and.returnValue($q.resolve({
             activationCode: activationCode,
             expiryTime: expiryTime
           }));
@@ -483,7 +483,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         describe('sending an activation email', function () {
 
           it('should send it to selected user and notify success', function () {
-            spyOn(CsdmEmailService, 'sendCloudberryEmail').and.returnValue($q.when({}));
+            spyOn(CsdmEmailService, 'sendCloudberryEmail').and.returnValue($q.resolve({}));
             spyOn(Notification, 'notify').and.callThrough();
 
             controller.sendActivationCodeEmail();
@@ -512,8 +512,8 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
           stateParams.wizard = huronNewPlace;
 
           newPlace = { cisUuid: cisUuid };
-          spyOn(CsdmDataModelService, 'createCmiPlace').and.returnValue($q.when(newPlace));
-          spyOn(CsdmHuronPlaceService, 'createOtp').and.returnValue($q.when({
+          spyOn(CsdmDataModelService, 'createCmiPlace').and.returnValue($q.resolve(newPlace));
+          spyOn(CsdmHuronPlaceService, 'createOtp').and.returnValue($q.resolve({
             activationCode: activationCode,
             expiryTime: expiryTime
           }));
@@ -534,7 +534,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         describe('sending an activation email', function () {
 
           it('should send it to selected user and notify success', function () {
-            spyOn(CsdmEmailService, 'sendHuronEmail').and.returnValue($q.when({}));
+            spyOn(CsdmEmailService, 'sendHuronEmail').and.returnValue($q.resolve({}));
             spyOn(Notification, 'notify').and.callThrough();
 
             controller.sendActivationCodeEmail();
@@ -557,7 +557,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       describe('with existing place', function () {
         beforeEach(function () {
           stateParams.wizard = huronExistingPlace;
-          spyOn(CsdmHuronPlaceService, 'createOtp').and.returnValue($q.when({
+          spyOn(CsdmHuronPlaceService, 'createOtp').and.returnValue($q.resolve({
             activationCode: activationCode,
             expiryTime: expiryTime
           }));
@@ -575,7 +575,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         describe('sending an activation email', function () {
 
           it('should send it to selected user and notify success', function () {
-            spyOn(CsdmEmailService, 'sendHuronEmail').and.returnValue($q.when());
+            spyOn(CsdmEmailService, 'sendHuronEmail').and.returnValue($q.resolve());
             spyOn(Notification, 'notify').and.callThrough();
 
             controller.sendActivationCodeEmail();
@@ -598,7 +598,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       describe('with existing user', function () {
         beforeEach(function () {
           stateParams.wizard = huronExistingUser;
-          spyOn(OtpService, 'generateOtp').and.returnValue($q.when({
+          spyOn(OtpService, 'generateOtp').and.returnValue($q.resolve({
             code: activationCode,
             friendlyExpiresOn: expiryTime
           }));

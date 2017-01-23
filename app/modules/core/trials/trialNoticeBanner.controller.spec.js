@@ -70,7 +70,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
 
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
-    spyOn(UserListService, 'listPartnersAsPromise').and.returnValue($q.when(fakePartnerInfoData));
+    spyOn(UserListService, 'listPartnersAsPromise').and.returnValue($q.resolve(fakePartnerInfoData));
     $httpBackend.whenGET(/organization\/trials$/).respond(fakeTrialPeriodData);
 
     controller = controller('TrialNoticeBannerCtrl', {
@@ -119,7 +119,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
             'notifyPartnerEmailStatusList': []
           }
         };
-        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.when(fakePartnerNotifyResponse));
+        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.resolve(fakePartnerNotifyResponse));
 
         controller.sendRequest().then(function () {
           expect(TrialService.notifyPartnerTrialExt).toHaveBeenCalled();
@@ -189,7 +189,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
             notifyPartnerEmailStatusList: []
           }
         };
-        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.when(fakePartnerNotifyResponse));
+        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.resolve(fakePartnerNotifyResponse));
 
         controller.sendRequest().then(function () {
           expect(Notification.error).toHaveBeenCalled();
@@ -211,7 +211,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
             }]
           }
         };
-        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.when(fakePartnerNotifyResponse));
+        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.resolve(fakePartnerNotifyResponse));
 
         controller.sendRequest().then(function () {
           expect(Notification.error).toHaveBeenCalled();
@@ -233,7 +233,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
             }]
           }
         };
-        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.when(fakePartnerNotifyResponse));
+        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.resolve(fakePartnerNotifyResponse));
 
         controller.sendRequest().then(function () {
           expect(Notification.error).toHaveBeenCalled();
@@ -255,7 +255,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
             }]
           }
         };
-        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.when(fakePartnerNotifyResponse));
+        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.resolve(fakePartnerNotifyResponse));
 
         controller.sendRequest().then(function () {
           expect(Notification.success).toHaveBeenCalled();

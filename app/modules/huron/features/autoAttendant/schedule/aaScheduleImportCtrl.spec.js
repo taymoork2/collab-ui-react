@@ -26,8 +26,8 @@ describe('Controller: AAScheduleImportCtrl', function () {
     Analytics = _Analytics_;
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
-    spyOn(AACalendarService, 'readCalendar').and.returnValue($q.when({}));
-    spyOn(AACalendarService, 'listCalendars').and.returnValue($q.when([{
+    spyOn(AACalendarService, 'readCalendar').and.returnValue($q.resolve({}));
+    spyOn(AACalendarService, 'listCalendars').and.returnValue($q.resolve([{
       scheduleUrl: '/schedules/url-1',
       scheduleName: 'Calendar for AA1'
     }, {
@@ -37,7 +37,7 @@ describe('Controller: AAScheduleImportCtrl', function () {
 
     spyOn(AAICalService, 'getHoursRanges').and.returnValue({});
     $modalInstance = jasmine.createSpyObj('$modalInstance', ['close', 'dismiss']);
-    spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
+    spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve({}));
     controller = $controller('AAScheduleImportCtrl as vm', {
       $scope: $scope,
       $modalInstance: $modalInstance
