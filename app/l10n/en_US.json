@@ -490,6 +490,7 @@
     "startSearching": "To begin, search for an organization",
     "noSearchResults": "Search yielded no results",
     "allowBetaChannels": "Allow Beta Release Channel",
+    "allowAlphaChannels": "Allow Alpha Release Channel",
     "allowLatestChannels": "Allow Latest Release Channel",
     "releaseChannelToggleSuccess": "Allow Release Channel update successful",
     "releaseChannelToggleFailure": "Allow Release Channel update failed. Please try again later.",
