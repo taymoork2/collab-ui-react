@@ -17,6 +17,7 @@ class ReleaseChannelSectionController implements ng.IComponentController {
     title: 'hercules.releaseChannelSection.releaseChannelHeader',
   };
   public localizedCurrentChannelName: string;
+  public localizedDefaultChannelName: string;
   public localizedStableChannelName: string = this.$translate.instant('hercules.fusion.add-resource-group.release-channel.stable');
 
   public showResetSection: boolean = false;
@@ -39,6 +40,7 @@ class ReleaseChannelSectionController implements ng.IComponentController {
     this.FusionClusterService.getOrgSettings()
       .then(({ expresswayClusterReleaseChannel }) => {
         this.defaultReleaseChannel = expresswayClusterReleaseChannel;
+        this.localizedDefaultChannelName = this.$translate.instant(`hercules.fusion.add-resource-group.release-channel.${expresswayClusterReleaseChannel}`);
       });
   }
 

@@ -2193,8 +2193,7 @@
       "releaseChannelTip": "To change the release channel for this cluster, assign it to a resource group with the preferred release channel.",
       "releaseChannelSaved": "Release channel saved successfully",
       "orgHasNoAccessToChannel": "The resource group is configured with the “{{currentReleaseChannel}}” release channel, which is no longer available to your organization. Set the release channel to “{{stableReleaseChannel}}” to restore service.",
-      "clusterHasNotTheDefault": "This Expressway cluster uses a release channel that is different than the default one. Choose the default release channel to avoid inconsistencies with Hybrid Services.",
-      "setToDefault": "Set to Default",
+      "clusterHasNotTheDefault": "This Expressway cluster uses a release channel that is different than the default one. Choose the default release channel ({{releaseChannel}}) to avoid inconsistencies with Hybrid Services.",
       "setTo": "Set to {{releaseChannel}}"
     },
     "changeReleaseChannelDialog": {
