@@ -56,6 +56,8 @@
     vm.setClusterAvailability = setClusterAvailability;
     vm.setTotalCallsData = setTotalCallsData;
     vm.setSneekPeekData = setSneekPeekData;
+    vm.setAvailabilityData = setAvailabilityData;
+    vm.setCallVolumeData = setCallVolumeData;
 
     vm.showAvailabilityTooltip = false;
     vm.showHostedOnPremTooltip = false;
@@ -119,6 +121,14 @@
       if (vm.clusterSelected === vm.allClusters) {
         clusterUpdateFromTooltip(data.data);
       }
+    });
+
+    $scope.$on('zoomedTime', function (event, data) {
+      vm.timeSelected = {
+        startTime: data.data.startTime,
+        endTime: data.data.endTime
+      };
+      timeUpdate();
     });
 
     function timeUpdate() {
@@ -308,7 +318,7 @@
     }
 
     function setAvailabilityGraph(response) {
-      vm.availabilityChart = AvailabilityResourceGraphService.setAvailabilityGraph(response, vm.availabilityChart, vm.clusterId, vm.clusterSelected, vm.timeSelected.label, vm.Map);
+      vm.availabilityChart = AvailabilityResourceGraphService.setAvailabilityGraph(response, vm.availabilityChart, vm.clusterId, vm.clusterSelected, vm.timeSelected, vm.Map);
     }
 
     function setDummyUtilization() {
@@ -336,8 +346,10 @@
     function setRefreshInterval() {
       if (vm.timeSelected.value === 0) {
         vm.updateInterval = 60000;
-      } else {
+      } else if (!_.isUndefined(vm.timeSelected.value)) {
         vm.updateInterval = 300000;
+      } else {
+        vm.updateInterval = 7200000;
       }
     }
 
