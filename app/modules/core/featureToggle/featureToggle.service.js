@@ -75,6 +75,7 @@
       huronAAMediaUpload: 'huron-aa-mediaupload',
       huronAACallerInput: 'huron-aa-callerinput',
       huronAAClioMedia: 'huron-aa-cliomedia',
+      huronAADecision: 'huron-aa-decision',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       huronPagingGroup: 'huronPagingGroup',

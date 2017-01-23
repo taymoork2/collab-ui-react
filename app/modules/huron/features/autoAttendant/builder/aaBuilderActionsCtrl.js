@@ -48,16 +48,6 @@
       metric: 'Route-Call-Title',
       showHelpLink: false,
       actions: ['route', 'goto', 'routeToUser', 'routeToVoiceMail', 'routeToHuntGroup', 'routeToQueue']
-    }, {
-      title: $translate.instant('autoAttendant.actionDecision'),
-      title1: $translate.instant('autoAttendant.actionIfDecision'),
-      controller: 'AADecisionCtrl as aaDecisionCtrl',
-      url: 'modules/huron/features/autoAttendant/decision/aaDecision.tpl.html',
-      hint: $translate.instant('autoAttendant.actionDecisionHint'),
-      help: $translate.instant('autoAttendant.actionDecisionHelp'),
-      metric: 'Decision-Title',
-      showHelpLink: true,
-      actions: ['conditional']
     }];
 
     vm.actionPlaceholder = $translate.instant("autoAttendant.actionPlaceholder");
@@ -157,6 +147,19 @@
           type: [3, 4],
           showHelpLink: true,
           actions: ['runActionsOnInput']
+        });
+      }
+      if (AACommonService.isDecisionToggle()) {
+        vm.options.push({
+          title: $translate.instant('autoAttendant.actionDecision'),
+          title1: $translate.instant('autoAttendant.actionIfDecision'),
+          controller: 'AADecisionCtrl as aaDecisionCtrl',
+          url: 'modules/huron/features/autoAttendant/decision/aaDecision.tpl.html',
+          hint: $translate.instant('autoAttendant.actionDecisionHint'),
+          help: $translate.instant('autoAttendant.actionDecisionHelp'),
+          metric: 'Decision-Title',
+          showHelpLink: true,
+          actions: ['conditional']
         });
       }
     }

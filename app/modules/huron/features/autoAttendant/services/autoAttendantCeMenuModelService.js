@@ -606,14 +606,21 @@
       }
     }
     function parseLeftRightExpression(expression) {
-      var inParens = expression.match(/\(([^)]+)\)/);
-      var chunk = inParens[1].match(/'([^']+)'/g);
+      /* expression looks like: "var func=function() {if(this['Original-Caller-Number'] in ['987','2387','292874']) {return true;} return false;};"
+       *
+       * grab the stuff btw the brackets
+       */
+
+      var inBrackets = expression.match(/\[([^\]]+)\]/g);
 
       var pieces = [];
-      pieces[0] = chunk[0].replace(/'/g, '');
-      pieces[1] = chunk[1].replace(/'/g, '');
+
+      /* remove brackets and single quotes */
+      pieces[0] = inBrackets[0].replace(/[[\]']/g, '');
+      pieces[1] = inBrackets[1].replace(/[[\]']/g, '');
 
       return pieces;
+
     }
 
 
@@ -1205,7 +1212,13 @@
     }
     function createInListObj(action) {
       var out;
-      out = "var func=function() {if(this['" + action.if.leftCondition + "'] in '" + action.if.rightCondition + "') {return true;} return false;};";
+      var list;
+
+      var arry = _.toArray(action.if.rightCondition.split(","));
+
+      list = JSON.stringify(arry).replace(/"/g, "'");
+
+      out = "var func=function() {if(this['" + action.if.leftCondition + "'] in " + list + ") {return true;} return false;};";
 
       return out;
 

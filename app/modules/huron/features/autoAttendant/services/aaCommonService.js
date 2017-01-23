@@ -19,6 +19,7 @@
     var routeQueueToggle = false;
     var mediaUploadToggle = false;
     var callerInputToggle = false;
+    var decisionToggle = false;
     var clioToggle = false;
     var uniqueId = 0;
 
@@ -33,6 +34,7 @@
       setDialByExtensionStatus: setDialByExtensionStatus,
       setCENumberStatus: setCENumberStatus,
       setMediaUploadStatus: setMediaUploadStatus,
+      setDecisionToggle: setDecisionToggle,
       setQueueSettingsStatus: setQueueSettingsStatus,
       setMediaUploadToggle: setMediaUploadToggle,
       setCallerInputToggle: setCallerInputToggle,
@@ -40,6 +42,7 @@
       setClioToggle: setClioToggle,
       isRouteQueueToggle: isRouteQueueToggle,
       isCallerInputToggle: isCallerInputToggle,
+      isDecisionToggle: isDecisionToggle,
       isMediaUploadToggle: isMediaUploadToggle,
       isClioToggle: isClioToggle,
       isValid: isValid,
@@ -151,6 +154,9 @@
     function setCallerInputToggle(status) {
       callerInputToggle = status;
     }
+    function setDecisionToggle(status) {
+      decisionToggle = status;
+    }
 
     /**
      * Will check the toggle status for clio enabled upload
@@ -172,6 +178,9 @@
 
     function isCallerInputToggle() {
       return callerInputToggle;
+    }
+    function isDecisionToggle() {
+      return decisionToggle;
     }
 
     function saveUiModel(ui, aaRecord) {
