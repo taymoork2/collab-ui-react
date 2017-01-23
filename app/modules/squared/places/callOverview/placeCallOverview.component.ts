@@ -32,7 +32,7 @@ class PlaceCallOverview implements ng.IComponentController {
     private LineService: LineService,
     private DialingService: DialingService,
     private Notification: Notification,
-    private PlaceCallOverviewService: PlaceCallOverviewService
+    private PlaceCallOverviewService: PlaceCallOverviewService,
   ) {
 
     this.displayPlace($stateParams.currentPlace);
