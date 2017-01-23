@@ -2,26 +2,37 @@
   <div class="section-title-row">
     <span class="section-name">Voicemail!</span>
     <cs-toggle-switch size="small"
-                      ng-if="false"
+                      ng-if="$ctrl.isEnabledOrgWide && !$ctrl.callServiceConnectEnabledForUser"
                       is-disabled="true"></cs-toggle-switch>
     <cs-toggle-switch size="small"
-                      ng-if="true"
+                      ng-if="$ctrl.isEnabledOrgWide && $ctrl.callServiceConnectEnabledForUser"
                       ng-model="$ctrl.callServiceConnectEnabledForUser"
+                      is-disabled="true"></cs-toggle-switch>
+    <cs-toggle-switch size="small"
+                      ng-if="!$ctrl.isEnabledOrgWide"
                       is-disabled="true"></cs-toggle-switch>
   </div>
 
   <div class="extension-description">Users can check their voicemailz directly from Cisco Spark!!</div>
 
-  <div>
-    <span class="cloud-extension-label"
-          translate="cloudExtensions.status"></span><span>:</span>
-    <span ng-if="$ctrl.callServiceConnectEnabledForUser">Enabled-ish!</span>
-    <span ng-if="!$ctrl.callServiceConnectEnabledForUser">Off…</span>
+  <div ng-if="$ctrl.isEnabledOrgWide && $ctrl.callServiceConnectEnabledForUser">
+    <div>
+      <span class="cloud-extension-label"
+            translate="cloudExtensions.status"></span><span>:</span>
+      <span>Enabled-ish!</span>
+    </div>
+    <div>
+      <span class="cloud-extension-label">Pilot:</span>
+      <span>{{$ctrl.pilotNumber}}</span>
+    </div>
   </div>
 
-  <div ng-if="$ctrl.callServiceConnectEnabledForUser">
-    <span class="cloud-extension-label">Pilot:</span>
-    <span>(+1) 555-5689-5614</span>
+  <div ng-if="!$ctrl.callServiceConnectEnabledForUser">
+    <p>Voicemail is automatically enabled when Call Service Connect is enabled!!?!</p>
+  </div>
+
+  <div ng-if="!$ctrl.isEnabledOrgWide && $ctrl.callServiceConnectEnabledForUser">
+    <p>To turn on voicemailz for your users, enable voicemail in Hybrid Call Settings!!?!</p>
   </div>
 
 </cs-sp-section>
