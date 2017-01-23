@@ -48,7 +48,7 @@ describe('Directive: aaRouteToHg', function () {
     $scope.aaKey = keyIndex;
     $scope.menuId = menuId;
 
-    spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.when(huntGroups));
+    spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.resolve(huntGroups));
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     AutoAttendantCeMenuModelService.clearCeMenuMap();

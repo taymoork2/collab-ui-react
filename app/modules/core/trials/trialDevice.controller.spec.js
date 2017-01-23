@@ -68,7 +68,7 @@ describe('Controller: TrialDeviceController', function () {
     // TODO: remove when MX300 support is official
     describe('feature toggle for displaying new room systems', function () {
       it('should show MX300 when feature toggle is true', function () {
-        spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+        spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
         initController();
 
         expect(controller.showNewRoomSystems).toBe(true);
@@ -76,7 +76,7 @@ describe('Controller: TrialDeviceController', function () {
       });
 
       it('should show MX300 when feature toggle is false', function () {
-        spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+        spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
         initController();
 
         expect(controller.showNewRoomSystems).toBe(true);
@@ -193,7 +193,7 @@ describe('Controller: TrialDeviceController', function () {
     it('should set device trial limits', function () {
       bard.mockService(TrialDeviceService, {
         getData: trialData.enabled.trials.deviceTrial,
-        getLimitsPromise: $q.when({
+        getLimitsPromise: $q.resolve({
           activeDeviceTrials: 17,
           maxDeviceTrials: 20
         }),
@@ -209,7 +209,7 @@ describe('Controller: TrialDeviceController', function () {
     it('should set limitReached', function () {
       bard.mockService(TrialDeviceService, {
         getData: trialData.enabled.trials.deviceTrial,
-        getLimitsPromise: $q.when({
+        getLimitsPromise: $q.resolve({
           activeDeviceTrials: 20,
           maxDeviceTrials: 20
         }),
@@ -238,7 +238,7 @@ describe('Controller: TrialDeviceController', function () {
       spyOn(Notification, 'warning');
       bard.mockService(TrialDeviceService, {
         getData: trialData.enabled.trials.deviceTrial,
-        getLimitsPromise: $q.when({
+        getLimitsPromise: $q.resolve({
           activeDeviceTrials: 17,
           maxDeviceTrials: 20
         }),
@@ -609,7 +609,7 @@ describe('Controller: TrialDeviceController', function () {
 
       bard.mockService(TrialDeviceService, {
         getData: trialData.enabled.trials.deviceTrial,
-        getLimitsPromise: $q.when({
+        getLimitsPromise: $q.resolve({
           activeDeviceTrials: 20,
           maxDeviceTrials: 20
         }),
@@ -627,7 +627,7 @@ describe('Controller: TrialDeviceController', function () {
     it('should return true when the limit is not reached', function () {
       bard.mockService(TrialDeviceService, {
         getData: trialData.enabled.trials.deviceTrial,
-        getLimitsPromise: $q.when({
+        getLimitsPromise: $q.resolve({
           activeDeviceTrials: 15,
           maxDeviceTrials: 20
         }),

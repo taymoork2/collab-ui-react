@@ -50,12 +50,12 @@ describe('Controller: PstnOrderDetailCtrl', function () {
 
     PstnSetupService = {
       getCustomerV2: function () {
-        return $q.when({
+        return $q.resolve({
           trial: true
         });
       },
       getCustomerTrialV2: function () {
-        return $q.when({
+        return $q.resolve({
           acceptedDate: "today"
         });
       }

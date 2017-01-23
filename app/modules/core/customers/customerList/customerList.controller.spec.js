@@ -66,13 +66,13 @@ describe('Controller: CustomerListCtrl', function () {
     spyOn(Authinfo, 'getOrgName').and.returnValue(orgName);
     spyOn(Authinfo, 'isPartnerAdmin').and.returnValue(true);
 
-    spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.when(managedOrgsResponse));
-    spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.when({}));
+    spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.resolve(managedOrgsResponse));
+    spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.resolve({}));
 
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
-      $q.when(false)
+      $q.resolve(false)
     );
-    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(false));
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback) {
       callback(adminJSONFixture.getAdminOrg, 200);
     });
@@ -80,9 +80,9 @@ describe('Controller: CustomerListCtrl', function () {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
 
-    spyOn(TrialService, 'getTrial').and.returnValue($q.when());
-    spyOn(TrialService, 'getTrialsList').and.returnValue($q.when(trialsResponse));
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(TrialService, 'getTrial').and.returnValue($q.resolve());
+    spyOn(TrialService, 'getTrialsList').and.returnValue($q.resolve(trialsResponse));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 
   }));
 
@@ -271,7 +271,7 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
     it('show care in the filter list with care FT on', function () {
-      FeatureToggleService.atlasCareTrialsGetStatus.and.returnValue($q.when(true));
+      FeatureToggleService.atlasCareTrialsGetStatus.and.returnValue($q.resolve(true));
       initController();
       $scope.$apply();
       expect(controller.filter.options.length).toBe(9);
@@ -284,7 +284,7 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
     it('show sparkBoard in the filter list with spark FT on', function () {
-      FeatureToggleService.atlasDarlingGetStatus.and.returnValue($q.when(true));
+      FeatureToggleService.atlasDarlingGetStatus.and.returnValue($q.resolve(true));
       initController();
       $scope.$apply();
       expect(controller.filter.options.length).toBe(9);
@@ -497,7 +497,7 @@ describe('Controller: CustomerListCtrl', function () {
       expect(result.path).toEqual('trial.info');
     });
     it('should return a path to \'trialAdd\' when FT set to false', function () {
-      FeatureToggleService.supports.and.returnValue($q.when(false));
+      FeatureToggleService.supports.and.returnValue($q.resolve(false));
       initController();
       var result = controller._helpers.getTrialRoute(false, {});
       expect(result.path).toEqual('trialAdd.info');

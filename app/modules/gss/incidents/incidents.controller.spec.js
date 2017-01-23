@@ -38,7 +38,7 @@ describe('controller: IncidentsCtrl', function () {
 
   function initSpies() {
     spyOn(GSSService, 'getServiceId').and.returnValue('testServiceId');
-    spyOn(IncidentsService, 'getIncidents').and.returnValue($q.when());
+    spyOn(IncidentsService, 'getIncidents').and.returnValue($q.resolve());
     spyOn($state, 'go');
   }
 

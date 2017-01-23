@@ -448,7 +448,7 @@
           timeout: 250
         });
 
-        promise = $q.when(jqpromise); //convert into angularjs promise
+        promise = $q.resolve(jqpromise); //convert into angularjs promise
       }
 
       return promise;

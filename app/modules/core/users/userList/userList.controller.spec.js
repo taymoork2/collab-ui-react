@@ -51,7 +51,7 @@ describe('UserListCtrl: Ctrl', function () {
 
     spyOn($scope, '$emit').and.callThrough();
     spyOn(Notification, 'success');
-    spyOn(Userservice, 'resendInvitation').and.returnValue($q.when({}));
+    spyOn(Userservice, 'resendInvitation').and.returnValue($q.resolve({}));
     spyOn(UserListService, 'listUsers').and.callFake(function (startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins) {
       var response;
       if (getAdmins) {
@@ -64,17 +64,17 @@ describe('UserListCtrl: Ctrl', function () {
     spyOn(UserListService, 'listPartners').and.callFake(function (orgId, callback) {
       callback(_.extend(listPartners, successData), 200);
     });
-    spyOn(UserListService, 'getUserCount').and.returnValue($q.when(100));
+    spyOn(UserListService, 'getUserCount').and.returnValue($q.resolve(100));
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(getOrgJson, 200);
     });
     spyOn(Authinfo, 'isCSB').and.returnValue(true);
     spyOn(Authinfo, 'getOrgId').and.returnValue(currentUser.meta.organizationID);
     spyOn(Authinfo, 'isCisco').and.returnValue(false);
-    spyOn(Auth, 'isOnlineOrg').and.returnValue($q.when(false));
+    spyOn(Auth, 'isOnlineOrg').and.returnValue($q.resolve(false));
 
-    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue($q.resolve(false));
   }));
 
   function initController() {
@@ -97,7 +97,7 @@ describe('UserListCtrl: Ctrl', function () {
           dataLoaded: jasmine.createSpy().and.returnValue()
         }
       };
-      return $q.when();
+      return $q.resolve();
     });
 
     ctrl.$onInit();
@@ -118,7 +118,7 @@ describe('UserListCtrl: Ctrl', function () {
   describe('initController', function () {
     beforeEach(function () {
       Authinfo.isCisco.and.returnValue(false);
-      FeatureToggleService.supportsDirSync.and.returnValue($q.when(true));
+      FeatureToggleService.supportsDirSync.and.returnValue($q.resolve(true));
       initController();
     });
 
@@ -205,7 +205,7 @@ describe('UserListCtrl: Ctrl', function () {
         "userName": "telstraUser",
         "licenseID": undefined,
       };
-      FeatureToggleService.supportsDirSync.and.returnValue($q.when(true));
+      FeatureToggleService.supportsDirSync.and.returnValue($q.resolve(true));
       initController();
     });
 
@@ -244,7 +244,7 @@ describe('UserListCtrl: Ctrl', function () {
       UserListService.listUsers.and.callFake(function (startIndex, count, sortBy, sortOrder, callback, searchStr) {
         callback(failedData, 200, searchStr);
       });
-      UserListService.getUserCount.and.returnValue($q.when(NaN));
+      UserListService.getUserCount.and.returnValue($q.resolve(NaN));
       initController();
     });
 

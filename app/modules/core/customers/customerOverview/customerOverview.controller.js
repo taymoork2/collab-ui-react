@@ -209,7 +209,7 @@ require('./_customer-overview.scss');
       var emailObj = {
         'address': partnerEmail
       };
-      var promise = $q.when();
+      var promise = $q.resolve();
       if (vm.isPartnerAdmin) {
         promise = PartnerService.modifyManagedOrgs(vm.customerOrgId);
       }

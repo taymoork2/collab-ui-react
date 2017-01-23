@@ -38,7 +38,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
       fullName: 'Frank Sinatra',
       uuid: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a'
     }];
-    spyOn(CustomerAdministratorService, 'removeCustomerAdmin').and.returnValue($q.when({}));
+    spyOn(CustomerAdministratorService, 'removeCustomerAdmin').and.returnValue($q.resolve({}));
     spyOn(CustomerAdministratorService, 'getPartnerUsers').and.returnValue($q.reject({
       data: {
         Errors: [{
@@ -49,7 +49,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
       },
       status: 403
     }));
-    spyOn(CustomerAdministratorService, 'getCustomerAdmins').and.returnValue($q.when({
+    spyOn(CustomerAdministratorService, 'getCustomerAdmins').and.returnValue($q.resolve({
       data: {
         Resources: [{
           name: {
@@ -71,7 +71,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise
     });
-    spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
+    spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve({}));
     spyOn(Notification, 'error');
     spyOn(Notification, 'success');
 
@@ -143,7 +143,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
 
   describe('addCustomerAdmin when admin does not have full-admin or sales-admin role: ', function () {
     beforeEach(function () {
-      CustomerAdministratorService.addCustomerAdmin = jasmine.createSpy('CustomerAdministratorService').and.returnValue($q.when({
+      CustomerAdministratorService.addCustomerAdmin = jasmine.createSpy('CustomerAdministratorService').and.returnValue($q.resolve({
         userName: 'frank.sinatra+sinatrahelpdesk@gmail.com',
         emails: [{
           primary: true,
@@ -184,7 +184,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
 
   describe('Upon addCustomerAdmin : ', function () {
     beforeEach(function () {
-      CustomerAdministratorService.addCustomerAdmin = jasmine.createSpy('CustomerAdministratorService').and.returnValue($q.when({
+      CustomerAdministratorService.addCustomerAdmin = jasmine.createSpy('CustomerAdministratorService').and.returnValue($q.resolve({
         userName: 'frank.sinatra+sinatrahelpdesk@gmail.com',
         emails: [{
           primary: true,
@@ -209,7 +209,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
 
   describe('addCustomerAdmin when admin has full-admin or sales-admin role: ', function () {
     beforeEach(function () {
-      CustomerAdministratorService.addCustomerAdmin = jasmine.createSpy('CustomerAdministratorService').and.returnValue($q.when({
+      CustomerAdministratorService.addCustomerAdmin = jasmine.createSpy('CustomerAdministratorService').and.returnValue($q.resolve({
         userName: 'frank.sinatra+sinatrahelpdesk@gmail.com',
         emails: [{
           primary: true,

@@ -60,13 +60,13 @@ describe('Features Controller', function () {
     //create mock deferred object which will be used to return promises
     getDeferred = $q.defer();
     //Using a Jasmine Spy to return a promise when methods of the PagingGroupService are called
-    spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.when([]));
-    spyOn(CallParkService, 'getCallParkList').and.returnValue($q.when([]));
+    spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.resolve([]));
+    spyOn(CallParkService, 'getCallParkList').and.returnValue($q.resolve([]));
     spyOn(CallPickupGroupService, 'getListOfPickupGroups').and.returnValue(getDeferred.promise);
-    spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue($q.when());
-    spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.when([]));
-    spyOn(AAModelService, 'newAAModel').and.returnValue($q.when([]));
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue($q.resolve());
+    spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.resolve([]));
+    spyOn(AAModelService, 'newAAModel').and.returnValue($q.resolve([]));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn($state, 'go');
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');

@@ -181,7 +181,7 @@
     }
 
     function placeOrder() {
-      var promise = $q.when();
+      var promise = $q.resolve();
       startPlaceOrderLoad();
       if (!PstnSetup.isCustomerExists()) {
         promise = promise.then(createCustomerV2);

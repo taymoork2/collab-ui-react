@@ -1022,7 +1022,7 @@ require('./_line-settings.scss');
             });
           });
       } else {
-        return $q.when([]);
+        return $q.resolve([]);
       }
     }
 

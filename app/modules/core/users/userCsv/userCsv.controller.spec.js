@@ -37,7 +37,7 @@ describe('OnboardCtrl: Ctrl', function () {
     Analytics = _Analytics_;
 
     spyOn($state, 'go').and.returnValue($q.resolve());
-    spyOn(Analytics, 'trackAddUsers').and.returnValue($q.when());
+    spyOn(Analytics, 'trackAddUsers').and.returnValue($q.resolve());
     spyOn(Authinfo, 'isOnline').and.returnValue(true);
     modalDefer = $q.defer();
     spyOn($modal, 'open').and.returnValue({
