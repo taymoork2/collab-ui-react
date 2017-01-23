@@ -5,20 +5,19 @@ describe('FirstTimeWizardCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var $controller, $q, $scope, Auth, Authinfo, FeatureToggleService, Userservice;
+  var $controller, $q, $scope, Auth, Authinfo, Userservice;
 
   afterEach(function () {
-    $controller = $q = $scope = Auth = Authinfo = FeatureToggleService = Userservice = undefined;
+    $controller = $q = $scope = Auth = Authinfo = Userservice = undefined;
   });
 
   beforeEach(inject(function (_$controller_, _$q_, $rootScope, _Auth_, _Authinfo_,
-    _FeatureToggleService_, _Userservice_) {
+    _Userservice_) {
     $controller = _$controller_;
     $q = _$q_;
     $scope = $rootScope.$new();
     Auth = _Auth_;
     Authinfo = _Authinfo_;
-    FeatureToggleService = _FeatureToggleService_;
     Userservice = _Userservice_;
   }));
 
@@ -57,17 +56,15 @@ describe('FirstTimeWizardCtrl', function () {
     }
 
     function initControllerWith(data) {
-      FeatureToggleService.atlasCareTrialsGetStatus.and.returnValue($q.when(data.atlasCareTrialsOn));
       Authinfo.isInDelegatedAdministrationOrg.and.returnValue(data.asDelegatedAdmin);
       Authinfo.getCareServices.and.returnValue(data.careServices);
-      Userservice.getUser.and.returnValue($q.when(data.getUserResponse));
+      Userservice.getUserAsPromise.and.returnValue($q.when(data.getUserResponse));
       Userservice.updateUserProfile.and.returnValue($q.when(data.updateUserProfileResponse));
       initController();
     }
 
     beforeEach(function () {
-      spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus');
-      spyOn(Userservice, 'getUser');
+      spyOn(Userservice, 'getUserAsPromise');
       spyOn(Userservice, 'updateUserProfile');
       spyOn(Authinfo, 'isInDelegatedAdministrationOrg');
       spyOn(Authinfo, 'getCareServices');
@@ -75,30 +72,19 @@ describe('FirstTimeWizardCtrl', function () {
       spyOn(Auth, 'logout').and.stub();
     });
 
-    it('should not check care feature toggle, if isInDelegatedAdministrationOrg is true', function () {
-      initControllerWith({
-        asDelegatedAdmin: true
-      });
-
-      // We will handle partner scenarios later.
-      expect(FeatureToggleService.atlasCareTrialsGetStatus).not.toHaveBeenCalled();
-    });
-
     it('should not get user details if there are no care licenses', function () {
       initControllerWith({
         asDelegatedAdmin: false,
-        atlasCareTrialsOn: true,
         careServices: []
       });
 
       expect(Authinfo.getCareServices).toHaveBeenCalled();
-      expect(Userservice.getUser).not.toHaveBeenCalled();
+      expect(Userservice.getUserAsPromise).not.toHaveBeenCalled();
     });
 
     it('should not patch user if get user failed', function () {
       initControllerWith({
         asDelegatedAdmin: false,
-        atlasCareTrialsOn: true,
         careServices: [{
           type: 'CDC_xxx'
         }],
@@ -106,14 +92,13 @@ describe('FirstTimeWizardCtrl', function () {
       });
 
       expect(Authinfo.getCareServices).toHaveBeenCalled();
-      expect(Userservice.getUser).toHaveBeenCalled();
+      expect(Userservice.getUserAsPromise).toHaveBeenCalled();
       expect(Userservice.updateUserProfile).not.toHaveBeenCalled();
     });
 
     it('do not logout if patch user failed', function () {
       initControllerWith({
         asDelegatedAdmin: false,
-        atlasCareTrialsOn: true,
         careServices: [{
           type: 'CDC_xxx'
         }],
@@ -122,7 +107,7 @@ describe('FirstTimeWizardCtrl', function () {
       });
 
       expect(Authinfo.getCareServices).toHaveBeenCalled();
-      expect(Userservice.getUser).toHaveBeenCalled();
+      expect(Userservice.getUserAsPromise).toHaveBeenCalled();
       expect(Userservice.updateUserProfile).toHaveBeenCalled();
       expect(Auth.logout).not.toHaveBeenCalled();
     });
@@ -132,7 +117,6 @@ describe('FirstTimeWizardCtrl', function () {
       function () {
         initControllerWith({
           asDelegatedAdmin: false,
-          atlasCareTrialsOn: true,
           careServices: [{
             type: 'CDC_xxx'
           }],
@@ -147,7 +131,6 @@ describe('FirstTimeWizardCtrl', function () {
       function () {
         initControllerWith({
           asDelegatedAdmin: false,
-          atlasCareTrialsOn: true,
           careServices: [{
             type: 'CDC_xxx'
           }],

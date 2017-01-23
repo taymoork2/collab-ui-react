@@ -490,6 +490,7 @@
     "startSearching": "To begin, search for an organization",
     "noSearchResults": "Search yielded no results",
     "allowBetaChannels": "Allow Beta Release Channel",
+    "allowAlphaChannels": "Allow Alpha Release Channel",
     "allowLatestChannels": "Allow Latest Release Channel",
     "releaseChannelToggleSuccess": "Allow Release Channel update successful",
     "releaseChannelToggleFailure": "Allow Release Channel update failed. Please try again later.",
@@ -640,6 +641,7 @@
     "media_type_all": "All Contact Types",
     "media_type_chat": "Chat",
     "media_type_callback": "Callback",
+    "media_type_voice": "Inbound Call",
     "taskDataGetError": "There was an error while loading the {{dataType}} data.",
     "tableDataGetError": "There was an error while loading the detailed efficient user data."
   },
@@ -1374,7 +1376,8 @@
     "warning": {
       "siteSteering": "First digit of Voicemail Access Prefix conflicts with the first digit of an internal extension range. If you use this prefix, it may cause a delay when dialing extensions starting with the same number.",
       "outboundDialDigit": "Outbound Dial Digit conflicts with the first digit of an internal extension range. If you use this digit, it may cause a delay when dialing extensions starting with the same number.",
-      "localDialing": "To use local dialing, you must setup your PSTN service. Contact your partner admin to begin PSTN service setup."
+      "localDialing": "To use local dialing, you must setup your PSTN service. Contact your partner admin to begin PSTN service setup.",
+      "outboundDialing": "The outbound dial digit is only applicable when using a PSTN service. Contact your partner admin to begin PSTN setup."
     },
     "saveModal": {
       "title": "Dial Plan Settings",
@@ -2121,9 +2124,11 @@
           "stable": "Stable",
           "stableHelpText": "The official release software for Hybrid Services",
           "beta": "Beta",
-          "betaHelpText": "Use this channel so that users can test new features before they are released.",
+          "betaHelpText": "Use this channel so that users can test new features before they are released",
+          "alpha": "Alpha",
+          "alphaHelpText": "Internal early adopters",
           "latest": "Latest",
-          "latestHelpText": "For developers and early adopters",
+          "latestHelpText": "For developers only",
           "error": "Could not create the Resource Group",
           "saveReleaseChannelSuccess": "Release Channel updated successfully.",
           "saveReleaseChannelError": "Could Not save Release Channel. Try again later."
@@ -5181,7 +5186,9 @@
     "sorryMessage": "Sorry, something went wrong ",
     "reloadMessage": "Please try reloading the page",
     "chatTemplateCode": "Ch",
+    "chatMediaType": "Chat",
     "callbackTemplateCode": "Ca",
+    "callbackMediaType": "Callback",
     "newFeatures": {
       "newFeatureButtonText": "New",
       "newCareTemplateModalTitle": "Create New Care Template",
@@ -5357,6 +5364,7 @@
     "overviewDesc": "Toggle cards to customize what screens you want your customer to see on contacting Care",
     "overviewDesc_callback": "Toggle cards to customize what screens you want your customer to see when requesting a callback from customer care",
     "customerInfoDesc": "This is the screen a customer fills in to start chat with an agent",
+    "customerInfoDesc_callback": "This is the screen a customer fills in to request a callback from an agent",
     "customerInfoToggleTooltipMessage": "This screen is required for this template and cannot be disabled.",
     "feedbackDesc": "This screen is used to collect feedback from a customer after the chat ends",
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
@@ -5392,7 +5400,12 @@
     "defaultNameHint": "",
     "defaultEmailText": "Email",
     "defaultEmail": "e.g. abc@xyz.com",
+    "defaultPhoneText": "Phone Number",
+    "defaultPhoneHintText": "234-555-6789",
     "defaultQuestionText": "How may I assist you?",
+    "additionalDetails": "Additional Details",
+    "additionalDetailsAbtIssue": "Describe the issue you are experiencing",
+    "labelCallBackBtn": "Request Callback",
     "optionalText": "(Optional)",
     "field3HintText": "Select from the list or type",
     "defaultTypeMessageText": "Type your message and press enter",
@@ -5434,6 +5447,7 @@
     "typeId": "Id",
     "typePhone": "Phone",
     "typeCustom": "Custom",
+    "typeReason": "Reason",
     "ctValidation": {
       "errorChar250": "Character length cannot be more than 250.",
       "errorChar50": "Character length cannot be more than 50.",
@@ -5804,6 +5818,7 @@
     "purchase": "Purchase",
     "changePlan": "Change Plan",
     "onlineTrialUpgradeUrlError": "Unable to retrieve purchase url for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
+    "onlineProductInstanceError": "Unable to retrieve product instance for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
     "loadError": "An error occurred while loading subscriptions.",
     "licenseTypes": {
       "MS": "Standard Team Rooms",
@@ -6067,9 +6082,13 @@
     "editAdminEmailSuccess": "Admin email was updated successfully.",
     "editAdminEmailFailure": "Failed to update admin email.",
     "userStatusEventLog": "User Status Event Log",
-    "lastEmailSent": "Last Email Sent",
+    "lastEmailEvent": "Last Email Event",
     "clearBounce": "Clear Bounce",
     "clearBounceSuccess": "Bounce cleared successfully. Try resending invite.",
+    "clearUnsubscribe": "Clear Unsubscribe",
+    "clearUnsubscribeSuccess": "Unsubscribe cleared successfully. Try resending invite.",
+    "clearComplaint": "Clear Complaint",
+    "clearComplaintSuccess": "Complaint cleared successfully. Try resending invite.",
     "emailStatuses": {
       "accepted": "Pending Delivery",
       "rejected": "Rejected",

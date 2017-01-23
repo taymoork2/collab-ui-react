@@ -144,11 +144,7 @@ require('./_setup-wizard.scss');
       }
 
       if (Authinfo.isCare()) {
-        FeatureToggleService.atlasCareTrialsGetStatus().then(function (careToggle) {
-          if (careToggle) {
-            addCareStep();
-          }
-        });
+        addCareStep();
       }
 
       if (!Authinfo.isSetupDone()) {

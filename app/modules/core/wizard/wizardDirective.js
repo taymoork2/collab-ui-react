@@ -49,7 +49,7 @@ require('./_wizard.scss');
   }
 
   /* @ngInject */
-  function WizardCtrl($controller, $modal, $rootScope, $scope, $state, $stateParams, $translate, Authinfo, Config, ModalService, PromiseHook, ServiceSetup, SessionStorage) {
+  function WizardCtrl($controller, $modal, $rootScope, $scope, $state, $stateParams, $translate, Authinfo, Config, ModalService, PromiseHook, ServiceSetup, SessionStorage, FeatureToggleService) {
     var vm = this;
     vm.current = {};
 
@@ -97,6 +97,16 @@ require('./_wizard.scss');
 
     vm.firstTimeSetup = true;
     vm.showSkipTabBtn = false;
+
+    vm.isTimezoneAndVoicemail = function (enabled) {
+      return Authinfo.getLicenses().filter(function (license) {
+        return enabled ? (license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
+      }).length > 0;
+    };
+
+    FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
+      vm.showTimezoneAndVoicemail = vm.isTimezoneAndVoicemail(pstnEnabled);
+    });
 
     // If tabs change (feature support in SetupWizard) and a step is not defined, re-initialize
     $scope.$watchCollection('tabs', function (tabs) {
@@ -281,7 +291,7 @@ require('./_wizard.scss');
 
     function nextStep() {
       var subTabControllerAs = _.isUndefined(getSubTab()) ? undefined : getSubTab().controllerAs;
-      if (getTab().name === 'serviceSetup' && getStep().name === 'init' && vm.firstTimeSetup) {
+      if (getTab().name === 'serviceSetup' && getStep().name === 'init' && vm.firstTimeSetup && vm.showTimezoneAndVoicemail) {
         return ModalService.open({
           title: $translate.instant('common.warning'),
           message: $translate.instant('serviceSetupModal.saveCallSettingsExtensionLengthAllowed'),

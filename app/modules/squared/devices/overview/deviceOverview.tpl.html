@@ -227,13 +227,13 @@
       <div class="form-group" ng-show="deviceOverview.currentDevice.hasAdvancedSettings" cr-feature-toggle feature-show="atlas-devices-advanced-settings">
         <label class="col-sm-4 control-label" translate="spacesPage.advancedSettings.advancedSettings"></label>
         <div class="col-sm-8">
-          <a sq-click-promise="deviceOverview.showAdvancedSettingsDialog()" translate="spacesPage.advancedSettings.launchAdvancedSettings"></a>
+          <a sq-click-promise="deviceOverview.showAdvancedSettingsDialog()" class="internal-link" translate="spacesPage.advancedSettings.launchAdvancedSettings"></a>
         </div>
       </div>
       <div class="form-group" ng-show="deviceOverview.currentDevice.hasRemoteSupport">
         <label class="col-sm-4 control-label" translate="spacesPage.ciscoSupport"></label>
         <div class="col-sm-8">
-          <a sq-click-promise="deviceOverview.showRemoteSupportDialog()" translate="spacesPage.remoteAccessKey"></a>
+          <a sq-click-promise="deviceOverview.showRemoteSupportDialog()" class="internal-link" translate="spacesPage.remoteAccessKey"></a>
         </div>
       </div>
     </cs-sp-section>

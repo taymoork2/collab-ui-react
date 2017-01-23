@@ -6,7 +6,7 @@
         .controller('NewCareFeatureModalCtrl', NewCareFeatureModalCtrl);
 
     /* @ngInject */
-  function NewCareFeatureModalCtrl($modalInstance, $scope, $state, FeatureToggleService) {
+  function NewCareFeatureModalCtrl($modalInstance, $scope, $state, Authinfo, FeatureToggleService) {
     var vm = $scope;
 
     vm.features = [];
@@ -27,11 +27,9 @@
       icon: 'icon-calls'
     };
 
-    FeatureToggleService.atlasCareTrialsGetStatus().then(function (result) {
-      if (result) {
-        vm.features.push(careChatService);
-      }
-    });
+    if (Authinfo.isCare()) {
+      vm.features.push(careChatService);
+    }
 
     FeatureToggleService.atlasCareCallbackTrialsGetStatus().then(function (result) {
       if (result) {

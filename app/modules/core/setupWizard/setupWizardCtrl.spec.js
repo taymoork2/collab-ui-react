@@ -194,7 +194,6 @@ describe('SetupWizardCtrl', function () {
     beforeEach(function () {
       Authinfo.isCare.and.returnValue(true);
       Authinfo.isCSB.and.returnValue(false);
-      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
       initController();
     });
 
@@ -210,7 +209,6 @@ describe('SetupWizardCtrl', function () {
   describe('When Authinfo.isCare is enabled ', function () {
     beforeEach(function () {
       Authinfo.isCare.and.returnValue(true);
-      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
       initController();
     });
 
@@ -222,7 +220,6 @@ describe('SetupWizardCtrl', function () {
   describe('When Authinfo.isCare is enabled and not first time setup', function () {
     beforeEach(function () {
       Authinfo.isCare.and.returnValue(true);
-      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
       Authinfo.isSetupDone.and.returnValue(true);
       initController();
     });
@@ -273,7 +270,6 @@ describe('SetupWizardCtrl', function () {
 
       FeatureToggleService.supports.and.returnValue($q.when(true));
       FeatureToggleService.supportsDirSync.and.returnValue($q.when(true));
-      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
 
       initController();
     });
