@@ -235,7 +235,7 @@ xdescribe('ServiceStateChecker', function () {
       }]);
 
       USSService.getOrgId.returns('orgId');
-      USSService.getOrg.returns($q.when({}));
+      USSService.getOrg.returns($q.resolve({}));
 
       ServiceDescriptor.isServiceEnabled = function (type, cb) {
         cb(null, true);

@@ -26,7 +26,7 @@ describe('Huron Setup Assistant Ctrl', function () {
     spyOn($state, 'go');
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
-    spyOn(HuntGroupService, 'saveHuntGroup').and.returnValue($q.when());
+    spyOn(HuntGroupService, 'saveHuntGroup').and.returnValue($q.resolve());
 
     controller = $controller('HuntGroupSetupAssistantCtrl', {
       $scope: $scope,

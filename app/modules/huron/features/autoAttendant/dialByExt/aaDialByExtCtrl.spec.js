@@ -62,7 +62,7 @@ describe('Controller: AADialByExtCtrl', function () {
       $scope.keyIndex = '0';
       $scope.menuId = menuId;
 
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
 
       spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
@@ -150,7 +150,7 @@ describe('Controller: AADialByExtCtrl', function () {
       $scope = $rootScope;
       $scope.keyIndex = undefined;
 
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
       spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
@@ -223,7 +223,7 @@ describe('Controller: AADialByExtCtrl', function () {
       $scope = $rootScope;
       $scope.keyIndex = undefined;
 
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
       spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);

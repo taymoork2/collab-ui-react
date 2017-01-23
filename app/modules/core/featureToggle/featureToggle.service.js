@@ -310,7 +310,7 @@
         return getHuronToggleForUser(Authinfo.getUserId(), feature);
       }
 
-      return $q.when(false);
+      return $q.resolve(false);
     }
 
     function getHuronToggleForUser(userId, feature) {

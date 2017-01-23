@@ -37,7 +37,7 @@ describe('Directive: aaDialByExt', function () {
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     FeatureToggleService = _FeatureToggleService_;
 
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     AutoAttendantCeMenuModelService.clearCeMenuMap();

@@ -23,8 +23,8 @@ describe('Directive: csvDownload', function () {
     $window = _$window_;
     Analytics = _Analytics_;
     $scope = $rootScope.$new();
-    spyOn(FeatureToggleService, 'atlasNewUserExportGetStatus').and.returnValue($q.when(false));
-    spyOn(Analytics, 'trackCsv').and.returnValue($q.when());
+    spyOn(FeatureToggleService, 'atlasNewUserExportGetStatus').and.returnValue($q.resolve(false));
+    spyOn(Analytics, 'trackCsv').and.returnValue($q.resolve());
   }));
 
   describe("Controller", function () {
@@ -132,7 +132,7 @@ describe('Directive: csvDownload', function () {
       CsvDownloadService = _CsvDownloadService_;
       $window.navigator.msSaveOrOpenBlob = jasmine.createSpy('msSaveOrOpenBlob').and.callFake(function () { });
 
-      spyOn(CsvDownloadService, 'getCsv').and.returnValue($q.when('blob'));
+      spyOn(CsvDownloadService, 'getCsv').and.returnValue($q.resolve('blob'));
       spyOn(CsvDownloadService, 'openInIE').and.callFake(function () { });
       spyOn(CsvDownloadService, 'revokeObjectUrl').and.callFake(function () { });
     }));

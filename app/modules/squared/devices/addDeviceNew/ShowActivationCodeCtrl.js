@@ -195,7 +195,7 @@
           });
         });
       } else {
-        return $q.when([]);
+        return $q.resolve([]);
       }
     };
 

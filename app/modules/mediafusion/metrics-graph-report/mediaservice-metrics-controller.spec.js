@@ -62,10 +62,10 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       'dataProvider': dummydata
     });
     httpMock.when('GET', /^\w+.*/).respond({});
-    spyOn(MetricsReportService, 'getCallVolumeData').and.returnValue($q.when(callVolumeGraphData));
-    spyOn(MetricsReportService, 'getAvailabilityData').and.returnValue($q.when(clusteravailabilityData));
-    spyOn(MetricsReportService, 'getUtilizationData').and.returnValue($q.when(dummydata));
-    spyOn(MetricsReportService, 'getClusterAvailabilityData').and.returnValue($q.when(clusteravailabilityData));
+    spyOn(MetricsReportService, 'getCallVolumeData').and.returnValue($q.resolve(callVolumeGraphData));
+    spyOn(MetricsReportService, 'getAvailabilityData').and.returnValue($q.resolve(clusteravailabilityData));
+    spyOn(MetricsReportService, 'getUtilizationData').and.returnValue($q.resolve(dummydata));
+    spyOn(MetricsReportService, 'getClusterAvailabilityData').and.returnValue($q.resolve(clusteravailabilityData));
     spyOn(MediaClusterServiceV2, 'getAll').and.callThrough();
 
     controller = $controller('MediaServiceMetricsContoller', {
@@ -159,7 +159,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
         }
       };
 
-      spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
+      spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.resolve(response));
 
       controller.setTotalCallsData();
       expect(controller.onprem).toBe(8);
@@ -181,7 +181,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
         }
       };
 
-      spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
+      spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.resolve(response));
 
       controller.setTotalCallsData();
       expect(controller.onprem).toBe(23);
@@ -201,7 +201,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
         }
       };
 
-      spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
+      spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.resolve(response));
 
       controller.setTotalCallsData();
       expect(controller.onprem).toBe('N/A');
@@ -222,7 +222,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
         }
       };
 
-      spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
+      spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.resolve(response));
 
       controller.setTotalCallsData();
       expect(controller.onprem).toBe(0);
@@ -245,7 +245,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
         }
       };
 
-      spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
+      spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.resolve(response));
 
       controller.setTotalCallsData();
       expect(controller.onprem).toBe('N/A');
@@ -265,7 +265,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
         }
       };
 
-      spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
+      spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.resolve(response));
 
       controller.setTotalCallsData();
       expect(controller.onprem).toBe('N/A');

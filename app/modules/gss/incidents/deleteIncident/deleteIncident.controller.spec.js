@@ -31,7 +31,7 @@ describe('controller: DeleteIncidentCtrl', function () {
   }
 
   function initSpies() {
-    spyOn(IncidentsService, 'deleteIncident').and.returnValue($q.when());
+    spyOn(IncidentsService, 'deleteIncident').and.returnValue($q.resolve());
     spyOn($state, 'go');
   }
 

@@ -29,7 +29,7 @@ describe('Directive: aaMediaUpload', function () {
     FeatureToggleService = _FeatureToggleService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(ui);
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 
     $scope.schedule = schedule;
     $scope.index = index;

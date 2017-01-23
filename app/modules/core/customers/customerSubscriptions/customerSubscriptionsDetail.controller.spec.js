@@ -28,8 +28,8 @@ describe('Controller: customerSubscriptionsDetailCtrl', function () {
     Auth = _Auth_;
     Userservice = _Userservice_;
     CustomerAdministratorService = _CustomerAdministratorService_;
-    spyOn(Auth, 'getCustomerAccount').and.returnValue($q.when({ data: customerResponseTest }));
-    spyOn(CustomerAdministratorService, 'getCustomerAdmins').and.returnValue($q.when(customerAdmins));
+    spyOn(Auth, 'getCustomerAccount').and.returnValue($q.resolve({ data: customerResponseTest }));
+    spyOn(CustomerAdministratorService, 'getCustomerAdmins').and.returnValue($q.resolve(customerAdmins));
     spyOn(Userservice, 'getPrimaryEmailFromUser').and.returnValue('email@email.net');
 
   }));

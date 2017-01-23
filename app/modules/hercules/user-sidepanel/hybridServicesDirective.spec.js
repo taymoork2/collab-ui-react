@@ -26,8 +26,8 @@ describe('Directive Controller: HybridServicesCtrl', function () {
 
     sinon.stub(ServiceDescriptor, 'services').returns({});
     sinon.stub(Userservice, 'isInvitePending').returns(false);
-    sinon.stub(CloudConnectorService, 'getService').returns($q.when({ setup: false }));
-    sinon.stub(FeatureToggleService, 'supports').returns($q.when(false));
+    sinon.stub(CloudConnectorService, 'getService').returns($q.resolve({ setup: false }));
+    sinon.stub(FeatureToggleService, 'supports').returns($q.resolve(false));
 
   }));
 

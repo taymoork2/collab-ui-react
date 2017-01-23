@@ -54,24 +54,24 @@ describe('Controller: TrialCtrl:', function () {
     addWatchSpy = spyOn($scope, '$watch');
     spyOn(TrialService, 'getDeviceTrialsLimit');
     spyOn(Analytics, 'trackTrialSteps');
-    addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.when());
-    removeContextSpy = spyOn(TrialContextService, 'removeService').and.returnValue($q.when());
+    addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.resolve());
+    removeContextSpy = spyOn(TrialContextService, 'removeService').and.returnValue($q.resolve());
     spyOn(TrialContextService, 'trialHasService').and.returnValue(false);
-    spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'atlasCreateTrialBackendEmailGetStatus').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasCreateTrialBackendEmailGetStatus').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
       if (param == 'csdm-pstn') {
-        return $q.when(false);
+        return $q.resolve(false);
       } else {
         fail('the following toggle wasn\'t expected' + param); //taking control of which toggles this controller are using (explicit or implicit)
       }
-      return $q.when(false);
+      return $q.resolve(false);
     });
-    spyOn(Orgservice, 'getAdminOrgAsPromise').and.returnValue($q.when({
+    spyOn(Orgservice, 'getAdminOrgAsPromise').and.returnValue($q.resolve({
       data: {
         success: true,
         isTestOrg: true
@@ -86,7 +86,7 @@ describe('Controller: TrialCtrl:', function () {
       .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null?disableCache=false')
       .respond({});
 
-    spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
+    spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.resolve());
   }));
 
   function initController(params) {
@@ -150,7 +150,7 @@ describe('Controller: TrialCtrl:', function () {
       describe('Interacting with TrialService.editTrial', function () {
         beforeEach(function () {
           trialEditResponse.data.customerOrgId = '12345';
-          spyOn(TrialService, 'editTrial').and.returnValue($q.when(trialEditResponse));
+          spyOn(TrialService, 'editTrial').and.returnValue($q.resolve(trialEditResponse));
           controller.editTrial();
           $scope.$apply();
         });
@@ -611,7 +611,7 @@ describe('Controller: TrialCtrl:', function () {
     describe('with context service', function () {
       beforeEach(function () {
         trialEditResponse.data.customerOrgId = '12345';
-        spyOn(TrialService, 'editTrial').and.returnValue($q.when(trialEditResponse));
+        spyOn(TrialService, 'editTrial').and.returnValue($q.resolve(trialEditResponse));
       });
 
       describe('enabled', function () {
@@ -754,8 +754,8 @@ describe('Controller: TrialCtrl:', function () {
     describe('Start a new trial', function () {
       var callback;
       beforeEach(function () {
-        callback = jasmine.createSpy('addNumbersCallback').and.returnValue($q.when());
-        spyOn(TrialService, 'startTrial').and.returnValue($q.when(getJSONFixture('core/json/trials/trialAddResponse.json')));
+        callback = jasmine.createSpy('addNumbersCallback').and.returnValue($q.resolve());
+        spyOn(TrialService, 'startTrial').and.returnValue($q.resolve(getJSONFixture('core/json/trials/trialAddResponse.json')));
       });
 
 
@@ -850,7 +850,7 @@ describe('Controller: TrialCtrl:', function () {
         });
 
         it('should notify success', function () {
-          spyOn(HuronCustomer, 'create').and.returnValue($q.when());
+          spyOn(HuronCustomer, 'create').and.returnValue($q.resolve());
           controller.startTrial();
           $scope.$apply();
           expect(HuronCustomer.create).toHaveBeenCalled();
@@ -874,8 +874,8 @@ describe('Controller: TrialCtrl:', function () {
         });
 
         it('should notify success', function () {
-          spyOn(HuronCustomer, 'create').and.returnValue($q.when());
-          spyOn(TrialPstnService, 'createPstnEntity').and.returnValue($q.when());
+          spyOn(HuronCustomer, 'create').and.returnValue($q.resolve());
+          spyOn(TrialPstnService, 'createPstnEntity').and.returnValue($q.resolve());
           controller.startTrial();
           $scope.$apply();
           expect(HuronCustomer.create).toHaveBeenCalled();
@@ -1006,7 +1006,7 @@ describe('Controller: TrialCtrl:', function () {
 
     describe('Set ship devices modal display with Orgservice call', function () {
       it('should disable ship devices modal for test org', function () {
-        spyOn(Orgservice, 'getAdminOrg').and.returnValue($q.when({
+        spyOn(Orgservice, 'getAdminOrg').and.returnValue($q.resolve({
           data: {
             success: true,
             isTestOrg: true
@@ -1145,7 +1145,7 @@ describe('Controller: TrialCtrl:', function () {
       });
 
       function doTestCase(index) {
-        spyOn(TrialService, 'shallowValidation').and.returnValue($q.when(testCase[index].retVal));
+        spyOn(TrialService, 'shallowValidation').and.returnValue($q.resolve(testCase[index].retVal));
 
         orgInput.asyncValidators.uniqueName.expression('test', 'test', orgInput);
         emailInput.asyncValidators.uniqueEmail.expression('test', 'test', emailInput);
@@ -1247,8 +1247,8 @@ describe('Controller: TrialCtrl:', function () {
     describe('Start a new trial', function () {
       var callback;
       beforeEach(function () {
-        callback = jasmine.createSpy('addNumbersCallback').and.returnValue($q.when());
-        spyOn(TrialService, 'startTrial').and.returnValue($q.when(getJSONFixture('core/json/trials/trialAddResponse.json')));
+        callback = jasmine.createSpy('addNumbersCallback').and.returnValue($q.resolve());
+        spyOn(TrialService, 'startTrial').and.returnValue($q.resolve(getJSONFixture('core/json/trials/trialAddResponse.json')));
       });
 
 
@@ -1339,7 +1339,7 @@ describe('Controller: TrialCtrl:', function () {
         });
 
         it('should notify success', function () {
-          spyOn(HuronCustomer, 'create').and.returnValue($q.when());
+          spyOn(HuronCustomer, 'create').and.returnValue($q.resolve());
           controller.startTrial();
           $scope.$apply();
           expect(HuronCustomer.create).toHaveBeenCalled();
@@ -1368,8 +1368,8 @@ describe('Controller: TrialCtrl:', function () {
         });
 
         it('should notify success', function () {
-          spyOn(HuronCustomer, 'create').and.returnValue($q.when());
-          spyOn(TrialPstnService, 'createPstnEntity').and.returnValue($q.when());
+          spyOn(HuronCustomer, 'create').and.returnValue($q.resolve());
+          spyOn(TrialPstnService, 'createPstnEntity').and.returnValue($q.resolve());
           controller.startTrial();
           $scope.$apply();
           expect(HuronCustomer.create).toHaveBeenCalled();
@@ -1500,7 +1500,7 @@ describe('Controller: TrialCtrl:', function () {
 
     describe('Set ship devices modal display with Orgservice call', function () {
       it('should disable ship devices modal for test org', function () {
-        spyOn(Orgservice, 'getAdminOrg').and.returnValue($q.when({
+        spyOn(Orgservice, 'getAdminOrg').and.returnValue($q.resolve({
           data: {
             success: true,
             isTestOrg: true
@@ -1586,7 +1586,7 @@ describe('Controller: TrialCtrl:', function () {
     });
 
     it('should populate name and email fields', function () {
-      spyOn(TrialService, 'startTrial').and.returnValue($q.when(getJSONFixture('core/json/trials/trialAddResponse.json')));
+      spyOn(TrialService, 'startTrial').and.returnValue($q.resolve(getJSONFixture('core/json/trials/trialAddResponse.json')));
       controller.startTrial();
       $scope.$apply();
       expect(controller.trialData.details.customerEmail).toBe(controller.currentTrial.customerEmail);

@@ -47,7 +47,7 @@ describe('Controller: OverviewCtrl', function () {
   describe('Enable Devices', function () {
     beforeEach(function () {
       inject(defaultWireUpFunc);
-      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.when(usageOnlySharedDevicesFixture));
+      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.resolve(usageOnlySharedDevicesFixture));
     });
 
     it('should call do something', function () {
@@ -187,7 +187,7 @@ describe('Controller: OverviewCtrl', function () {
     Orgservice = {
       getAdminOrg: function () {},
       getAdminOrgUsage: function () {
-        return $q.when({
+        return $q.resolve({
           data: orgServiceJSONFixture.getLicensesUsage.singleSub
         });
       },
@@ -219,12 +219,12 @@ describe('Controller: OverviewCtrl', function () {
 
     PstnSetupService = {
       getCustomerV2: function () {
-        return $q.when({
+        return $q.resolve({
           trial: true
         });
       },
       getCustomerTrialV2: function () {
-        return $q.when({
+        return $q.resolve({
           acceptedDate: "today"
         });
       }
@@ -256,10 +256,10 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
     spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(true);
-    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.when(true));
-    spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.when(1));
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.resolve(true));
+    spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.resolve(1));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
 
     controller = $controller('OverviewCtrl', {
       $scope: $scope,

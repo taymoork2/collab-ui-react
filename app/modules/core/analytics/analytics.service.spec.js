@@ -44,8 +44,8 @@ describe('Service: Analytics', function () {
   function initSpies() {
     spyOn(Config, 'isProd');
     spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue(5);
-    spyOn(UserListService, 'listUsers').and.returnValue($q.when(listUsersData));
-    spyOn(Analytics, '_init').and.returnValue($q.when());
+    spyOn(UserListService, 'listUsers').and.returnValue($q.resolve(listUsersData));
+    spyOn(Analytics, '_init').and.returnValue($q.resolve());
     spyOn(Analytics, '_track').and.callFake(_.noop);
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback({
@@ -53,7 +53,7 @@ describe('Service: Analytics', function () {
         isTestOrg: true
       }, 200);
     });
-    spyOn(Orgservice, 'getAdminOrgAsPromise').and.returnValue($q.when(getOrgData));
+    spyOn(Orgservice, 'getAdminOrgAsPromise').and.returnValue($q.resolve(getOrgData));
   }
 
   function setIsProd(isProd) {

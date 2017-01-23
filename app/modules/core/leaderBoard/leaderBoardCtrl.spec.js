@@ -24,8 +24,8 @@ describe('LeaderBoard', function () {
     TrialService = _TrialService_;
     WebExUtilsFact = _WebExUtilsFact_;
 
-    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(usageOnlySharedDevicesFixture));
-    spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.when());
+    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.resolve(usageOnlySharedDevicesFixture));
+    spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.resolve());
     spyOn(WebExUtilsFact, 'isCIEnabledSite').and.returnValue(false);
     spyOn(WebExUtilsFact, 'getSiteAdminUrl').and.returnValue('https://siteAdminUrl.junk.com');
   }));

@@ -47,7 +47,7 @@ describe('controller: DashboardCtrl', function () {
 
   function initSpies() {
     spyOn($state, 'go');
-    spyOn(DashboardService, 'modifyComponent').and.returnValue($q.when());
+    spyOn(DashboardService, 'modifyComponent').and.returnValue($q.resolve());
     spyOn($modal, 'open').and.returnValue({
       result: $q.resolve()
     });

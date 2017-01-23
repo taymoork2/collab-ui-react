@@ -27,14 +27,14 @@ describe('Controller: PstnReviewCtrl', function () {
     PstnSetup.setSiteExists(true);
     PstnSetup.setOrders(orderCart);
 
-    spyOn(PstnSetupService, 'createCustomerV2').and.returnValue($q.when());
-    spyOn(PstnSetupService, 'updateCustomerCarrier').and.returnValue($q.when());
-    spyOn(PstnSetupService, 'orderNumbersV2').and.returnValue($q.when());
-    spyOn(PstnSetupService, 'orderTollFreeBlock').and.returnValue($q.when());
-    spyOn(PstnSetupService, 'portNumbers').and.returnValue($q.when());
-    spyOn(PstnSetupService, 'orderBlock').and.returnValue($q.when());
-    spyOn(PstnServiceAddressService, 'createCustomerSite').and.returnValue($q.when());
-    spyOn(ExternalNumberPool, 'create').and.returnValue($q.when());
+    spyOn(PstnSetupService, 'createCustomerV2').and.returnValue($q.resolve());
+    spyOn(PstnSetupService, 'updateCustomerCarrier').and.returnValue($q.resolve());
+    spyOn(PstnSetupService, 'orderNumbersV2').and.returnValue($q.resolve());
+    spyOn(PstnSetupService, 'orderTollFreeBlock').and.returnValue($q.resolve());
+    spyOn(PstnSetupService, 'portNumbers').and.returnValue($q.resolve());
+    spyOn(PstnSetupService, 'orderBlock').and.returnValue($q.resolve());
+    spyOn(PstnServiceAddressService, 'createCustomerSite').and.returnValue($q.resolve());
+    spyOn(ExternalNumberPool, 'create').and.returnValue($q.resolve());
     spyOn($state, 'go');
 
     controller = $controller('PstnReviewCtrl', {

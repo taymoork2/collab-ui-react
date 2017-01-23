@@ -33,7 +33,7 @@ describe('Directive: aaSayMessage', function () {
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
     $scope.schedule = schedule;
