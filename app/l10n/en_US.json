@@ -2016,8 +2016,8 @@
         "description": "You need at least one verified domain to use call services. Add domains under settings."
       },
       "release-channel": {
-        "title": "Default Release Channel",
-        "description": "Some clusters not assigned to resource groups do not have the right default release channel. <a ng-click=\"{{onclick}}\">Fix now</a>."
+        "title": "\"{{name}}\" Release Channel",
+        "description": "\"{{name}}\" is using a different release channel ({{current}}) than the default one ({{default}}). <a ng-click=\"{{onclick}}\">Change the release channel</a> to avoid inconsistencies with Hybrid Services."
       },
       "user-activation-errors": {
         "title": "Activation Error",
@@ -2193,7 +2193,8 @@
       "releaseChannelTip": "To change the release channel for this cluster, assign it to a resource group with the preferred release channel.",
       "releaseChannelSaved": "Release channel saved successfully",
       "orgHasNoAccessToChannel": "The resource group is configured with the “{{currentReleaseChannel}}” release channel, which is no longer available to your organization. Set the release channel to “{{stableReleaseChannel}}” to restore service.",
-      "setToStable": "Set to {{stableReleaseChannel}}"
+      "clusterHasNotTheDefault": "This Expressway cluster uses a release channel that is different than the default one. Choose the default release channel ({{releaseChannel}}) to avoid inconsistencies with Hybrid Services.",
+      "setTo": "Set to {{releaseChannel}}"
     },
     "changeReleaseChannelDialog": {
       "title": "Change Release Channel",
