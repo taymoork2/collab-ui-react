@@ -39,7 +39,6 @@ describe('Controller: PlanReviewCtrl', function () {
     });
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasSMPGetStatus').and.returnValue($q.when(false));
     spyOn(WebExUtilsFact, "isCIEnabledSite").and.callFake(function (siteUrl) {
       if (siteUrl === "sjsite04.webex.com") {
@@ -80,11 +79,6 @@ describe('Controller: PlanReviewCtrl', function () {
 
     it('should calculate trial used percentage correctly', function () {
       expect(controller.trialUsedPercentage).toEqual(56);
-    });
-
-    it('should have called FeatureToggleService.atlasCareTrialsGetStatus', function () {
-      expect(FeatureToggleService.atlasCareTrialsGetStatus).toHaveBeenCalled();
-      expect(controller.isCareEnabled).toEqual(true);
     });
 
     it('should have Care service info populated', function () {

@@ -259,8 +259,7 @@
         case 'callback':
           return ['name',
             'overview',
-            // TODO: Uncomment customer information once form is ready.
-            // 'customerInformation',
+            'customerInformation',
             'offHours',
             'summary'
           ];

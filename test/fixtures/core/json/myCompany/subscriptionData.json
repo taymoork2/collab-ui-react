@@ -55,6 +55,7 @@
       "class": "icon-message"
     }],
     "isTrial": true,
+    "isOnline": false,
     "viewAll": false
   }],
   "subscriptionsResponse": [{
@@ -368,6 +369,7 @@
       "class": "icon-meeting-room"
     }],
     "isTrial": false,
+    "isOnline": false,
     "viewAll": false
   }],
   "servicesResponse": [{

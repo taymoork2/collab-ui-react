@@ -41,6 +41,10 @@
       getEmailStatus: getEmailStatus,
       hasBounceDetails: hasBounceDetails,
       clearBounceDetails: clearBounceDetails,
+      hasComplaintDetails: hasComplaintDetails,
+      clearComplaintDetails: clearComplaintDetails,
+      hasUnsubscribeDetails: hasUnsubscribeDetails,
+      clearUnsubscribeDetails: clearUnsubscribeDetails,
       getLatestEmailEvent: getLatestEmailEvent,
       unixTimestampToUTC: unixTimestampToUTC,
     };
@@ -537,18 +541,32 @@
 
     function getEmailStatus(email) {
       return $http
-        .get(urlBase + "email?email=" + encodeURIComponent(email))
+        .get(urlBase + 'email?email=' + encodeURIComponent(email))
         .then(extractItems);
     }
 
     function hasBounceDetails(email) {
-      return $http
-        .get(urlBase + "email/bounces?email=" + encodeURIComponent(email));
+      return $http.get(urlBase + 'email/bounces?email=' + encodeURIComponent(email));
     }
 
     function clearBounceDetails(email) {
-      return $http
-        .delete(urlBase + "email/bounces?email=" + encodeURIComponent(email));
+      return $http.delete(urlBase + 'email/bounces?email=' + encodeURIComponent(email));
+    }
+
+    function hasComplaintDetails(email) {
+      return $http.get(urlBase + 'email/complaints?email=' + encodeURIComponent(email));
+    }
+
+    function clearComplaintDetails(email) {
+      return $http.delete(urlBase + 'email/complaints?email=' + encodeURIComponent(email));
+    }
+
+    function hasUnsubscribeDetails(email) {
+      return $http.get(urlBase + 'email/unsubscribes?email=' + encodeURIComponent(email));
+    }
+
+    function clearUnsubscribeDetails(email) {
+      return $http.delete(urlBase + 'email/unsubscribes?email=' + encodeURIComponent(email));
     }
 
     // Convert Date from seconds to UTC format
