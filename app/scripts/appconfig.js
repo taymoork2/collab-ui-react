@@ -2595,7 +2595,7 @@
         $stateProvider
           .state('services-overview', {
             url: '/services',
-            templateUrl: 'modules/services-overview/overview.html',
+            templateUrl: 'modules/services-overview/services-overview.html',
             controller: 'ServicesOverviewCtrl',
             controllerAs: 'servicesOverviewCtrl',
             parent: 'main'
