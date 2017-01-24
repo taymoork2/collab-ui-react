@@ -175,12 +175,27 @@ describe('Care Feature Ctrl should ', function () {
     expect(controller.listOfFeatures.length).toEqual(0);
   });
 
-  it('set the view to searched data', function () {
+  it('set the view to searched data and the chat template should come first and then callback template', function () {
     deferred.resolve(getTemplatesSuccess('chat', templateList));
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
     $scope.$apply();
     $timeout.flush();
     controller.searchData('Dev');
+    expect(controller.listOfFeatures.length).toEqual(2);
+    expect(controller.listOfFeatures[0].name).toEqual('Sunlight Dev Template');
+    expect(controller.listOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');
+  });
+
+  it('set the view to the searched data which is case insensitive and the chat template should come first and then callback template', function () {
+    deferred.resolve(getTemplatesSuccess('chat', templateList));
+    callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    $scope.$apply();
+    $timeout.flush();
+    controller.searchData('Dev');
+    expect(controller.listOfFeatures.length).toEqual(2);
+    expect(controller.listOfFeatures[0].name).toEqual('Sunlight Dev Template');
+    expect(controller.listOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');
+    controller.searchData('dev');
     expect(controller.listOfFeatures.length).toEqual(2);
     expect(controller.listOfFeatures[0].name).toEqual('Sunlight Dev Template');
     expect(controller.listOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');

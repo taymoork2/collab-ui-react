@@ -52,6 +52,14 @@
     </div>
     <div class="row">
       <div class="small-10 columns" >
+        <span translate="organizationsPage.allowAlphaChannels"></span>
+      </div>
+      <div class="small-2 columns">
+        <cs-toggle-switch ng-model="alphaChannel.newAllow" toggle-id="allowAlphaReleaseChannelToggle" size="small" ng-click="toggleReleaseChannelAllowed(alphaChannel)"></cs-toggle-switch>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-10 columns" >
         <span translate="organizationsPage.allowLatestChannels"></span>
       </div>
       <div class="small-2 columns">

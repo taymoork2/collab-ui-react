@@ -4,7 +4,7 @@
     <th class="extreme-table-entry right-aligned" translate="reportsPage.usageReports.hoursUsed"></th>
     <th class="extreme-table-entry right-aligned" translate="reportsPage.usageReports.callCount"></th>
   </thead>
-  <tr class="no-border" ng-repeat="device in deviceUsage.leastUsedDevices">
+  <tr class="no-border" ng-repeat="device in $ctrl.usedDevices">
     <td class="extreme-table-entry">{{device.name}}</td>
     <td class="extreme-table-entry right-aligned">{{device.duration}}</td>
     <td class="extreme-table-entry right-aligned">{{device.calls}}</td>

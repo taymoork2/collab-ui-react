@@ -3,7 +3,7 @@
 
   angular.module('Mediafusion').service('UtilizationResourceGraphService', UtilizationResourceGraphService);
   /* @ngInject */
-  function UtilizationResourceGraphService(CommonReportsGraphService, chartColors, $translate) {
+  function UtilizationResourceGraphService(CommonReportsGraphService, chartColors, $translate, $rootScope) {
 
     var utilizationdiv = 'utilizationdiv';
     var GUIDEAXIS = 'guideaxis';
@@ -14,6 +14,12 @@
     var average_utilzation = $translate.instant('mediaFusion.metrics.avgutilization');
     var allClusters = $translate.instant('mediaFusion.metrics.allclusters');
     var utilization = $translate.instant('mediaFusion.metrics.utilization');
+
+    var zoomedEndTime = null;
+    var zoomedStartTime = null;
+
+    var timeDiff = null;
+    var dateSelected = null;
 
     return {
       setUtilizationGraph: setUtilizationGraph
@@ -69,6 +75,7 @@
         return;
       }
       var valueAxes = [CommonReportsGraphService.getBaseVariable(GUIDEAXIS)];
+      dateSelected = daterange;
       valueAxes[0].integersOnly = true;
       valueAxes[0].axisAlpha = 0.5;
       valueAxes[0].axisColor = '#1C1C1C';
@@ -92,16 +99,31 @@
       var dateLabel = daterange.label;
       var dateValue = daterange.value;
 
-      if (dateValue === 0) {
-        catAxis.minPeriod = '1mm';
-      } else if (dateValue === 1) {
-        catAxis.minPeriod = '10mm';
-      } else if (dateValue === 2) {
-        catAxis.minPeriod = 'hh';
-      } else if (dateValue === 3) {
-        catAxis.minPeriod = '3hh';
+      if (_.isUndefined(daterange.value)) {
+        timeDiff = Math.floor(moment(dateSelected.endTime).diff(moment(dateSelected.startTime)) / 60000);
+        if (timeDiff <= 240) {
+          catAxis.minPeriod = '1mm';
+        } else if (timeDiff > 240 && timeDiff <= 1440) {
+          catAxis.minPeriod = '10mm';
+        } else if (timeDiff > 1440 && timeDiff <= 10080) {
+          catAxis.minPeriod = 'hh';
+        } else if (timeDiff > 10080 && timeDiff <= 43200) {
+          catAxis.minPeriod = '3hh';
+        } else if (timeDiff > 43200) {
+          catAxis.minPeriod = '8hh';
+        }
       } else {
-        catAxis.minPeriod = '8hh';
+        if (dateValue === 0) {
+          catAxis.minPeriod = '1mm';
+        } else if (dateValue === 1) {
+          catAxis.minPeriod = '10mm';
+        } else if (dateValue === 2) {
+          catAxis.minPeriod = 'hh';
+        } else if (dateValue === 3) {
+          catAxis.minPeriod = '3hh';
+        } else if (dateValue === 4) {
+          catAxis.minPeriod = '8hh';
+        }
       }
 
       var startDuration = 1;
@@ -159,9 +181,23 @@
 
 
       var chart = AmCharts.makeChart(utilizationdiv, chartData);
-      chart.addListener('rendered', zoomChart);
-      zoomChart(chart);
+      chart.addListener('zoomed', handleZoom);
       return chart;
+    }
+
+    // this method is called each time the selected period of the chart is changed
+    function handleZoom(event) {
+      zoomedStartTime = event.startDate;
+      zoomedEndTime = event.endDate;
+      var selectedTime = {
+        startTime: zoomedStartTime,
+        endTime: zoomedEndTime
+      };
+      if ((_.isUndefined(dateSelected.value) && zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) || (zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime)) {
+        $rootScope.$broadcast('zoomedTime', {
+          data: selectedTime
+        });
+      }
     }
 
     function getClusterName(graphs, clusterMap, clusterSelected, clusterId) {
@@ -192,10 +228,6 @@
       });
       tempData = _.sortBy(tempData, 'title');
       return tempData;
-    }
-
-    function zoomChart(chart) {
-      chart.zoomToIndexes(chart.dataProvider.length - 40, chart.dataProvider.length - 1);
     }
 
     function legendHandler(evt) {

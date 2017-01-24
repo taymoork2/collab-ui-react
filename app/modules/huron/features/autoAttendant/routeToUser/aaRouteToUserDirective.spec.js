@@ -81,7 +81,7 @@ describe('Directive: aaRouteToUser', function () {
     $scope.aaKey = keyIndex;
     $scope.menuId = menuId;
 
-    spyOn(UserListService, 'listUsers').and.returnValue($q.when(userListCmiResponse));
+    spyOn(UserListService, 'listUsers').and.returnValue($q.resolve(userListCmiResponse));
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     AutoAttendantCeMenuModelService.clearCeMenuMap();

@@ -37,7 +37,7 @@ describe('Partner Service -', function () {
     UrlConfig = _UrlConfig_;
 
     testData = getJSONFixture('core/json/partner/partner.service.json');
-    spyOn(Auth, 'getAuthorizationUrlList').and.returnValue($q.when({}));
+    spyOn(Auth, 'getAuthorizationUrlList').and.returnValue($q.resolve({}));
     spyOn(Analytics, 'trackPartnerActions');
   }));
 
@@ -284,7 +284,7 @@ describe('Partner Service -', function () {
 
   describe('modifyManagedOrgs function', function () {
     beforeEach(function () {
-      Auth.getAuthorizationUrlList.and.returnValue($q.when(testData.getAuthorizationUrlListResponse));
+      Auth.getAuthorizationUrlList.and.returnValue($q.resolve(testData.getAuthorizationUrlListResponse));
       $scope.$apply();
     });
 

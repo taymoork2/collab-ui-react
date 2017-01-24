@@ -18,9 +18,9 @@ describe('Controller: RemDeviceController', function () {
 
     CsdmHuronDeviceService = CsdmHuronOrgDeviceService.create();
 
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(CsdmHuronOrgDeviceService, 'create').and.returnValue(CsdmHuronDeviceService);
-    spyOn(CsdmHuronDeviceService, 'deleteItem').and.returnValue($q.when());
+    spyOn(CsdmHuronDeviceService, 'deleteItem').and.returnValue($q.resolve());
   }));
 
   describe('Expected Responses', function () {
@@ -42,8 +42,8 @@ describe('Controller: RemDeviceController', function () {
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/nonExistingDevices').respond([]);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/places/?shallow=true&type=all').respond(accounts);
 
-      spyOn(CsdmDeviceService, 'deleteItem').and.returnValue($q.when());
-      spyOn(CsdmPlaceService, 'deleteItem').and.returnValue($q.when());
+      spyOn(CsdmDeviceService, 'deleteItem').and.returnValue($q.resolve());
+      spyOn(CsdmPlaceService, 'deleteItem').and.returnValue($q.resolve());
       spyOn(fakeModal, 'close');
 
       controller = $controller('RemDeviceController', {

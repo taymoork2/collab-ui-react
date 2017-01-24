@@ -170,19 +170,6 @@ describe('CsdmConverterSpec', function () {
   });
 
   describe('state and cssColorClass', function () {
-    it('should convert device with issues yellow color and show status', function () {
-      var arr = [{
-        state: 'CLAIMED',
-        status: {
-          level: "error",
-          connectionStatus: 'CONNECTED'
-        }
-      }];
-      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.OnlineWithIssues');
-      expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("1");
-      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('warning');
-    });
-
     it('should convert device with issues yellow color but keep status', function () {
       var arr = [{
         status: {
@@ -193,27 +180,6 @@ describe('CsdmConverterSpec', function () {
       expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.OnlineWithIssues');
       expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("1");
       expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('warning');
-    });
-
-    it('should convert state UNCLAIMED to Requires Activation and gray', function () {
-      var arr = [{
-        state: 'UNCLAIMED'
-      }];
-      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.RequiresActivation');
-      expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("3");
-      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('disabled');
-    });
-
-    it('should convert state CLAIMED and connection status CONNECTED to Online and green', function () {
-      var arr = [{
-        state: 'CLAIMED',
-        status: {
-          connectionStatus: 'CONNECTED'
-        }
-      }];
-      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.Online');
-      expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("5");
-      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('success');
     });
 
     it('should convert connection status CONNECTED to Online and green', function () {
@@ -227,32 +193,11 @@ describe('CsdmConverterSpec', function () {
       expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('success');
     });
 
-    it('should convert state CLAIMED and connection status UNKNOWN to Offline and red', function () {
-      var arr = [{
-        state: 'CLAIMED',
-        status: {
-          connectionStatus: 'UNKNOWN'
-        }
-      }];
-      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.Offline');
-      expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("2");
-      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('danger');
-    });
-
     it('should convert connection status UNKNOWN to Offline and red', function () {
       var arr = [{
         status: {
           connectionStatus: 'UNKNOWN'
         }
-      }];
-      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.Offline');
-      expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("2");
-      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('danger');
-    });
-
-    it('should convert state CLAIMED and no connection status to Offline and red', function () {
-      var arr = [{
-        state: 'CLAIMED'
       }];
       expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.Offline');
       expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("2");

@@ -62,8 +62,8 @@ describe('Hunt Group EditCtrl Controller', function () {
     spyOn($state, 'go');
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
-    spyOn(HuntGroupService, 'getDetails').and.returnValue($q.when(hgFeature));
-    spyOn(HuntGroupService, 'getAllUnassignedPilotNumbers').and.returnValue($q.when(pilotNumbers));
+    spyOn(HuntGroupService, 'getDetails').and.returnValue($q.resolve(hgFeature));
+    spyOn(HuntGroupService, 'getAllUnassignedPilotNumbers').and.returnValue($q.resolve(pilotNumbers));
     spyOn(HuntGroupFallbackDataService, 'isVoicemailDisabled').and.returnValue($q.defer().promise);
     member1ResponseHandler = $httpBackend.whenGET(GetMember1Url).respond(200, user1);
     member2ResponseHandler = $httpBackend.whenGET(GetMember2Url).respond(200, user2);
@@ -334,7 +334,7 @@ describe('Hunt Group EditCtrl Controller', function () {
     expect(hgFeaturePristine.name).toEqual("HuntGroupUnitTest");
 
     hgEditCtrl.model.name = "NewHuntGroup";
-    spyOn(HuntGroupService, 'updateHuntGroup').and.returnValue($q.when());
+    spyOn(HuntGroupService, 'updateHuntGroup').and.returnValue($q.resolve());
     hgEditCtrl.saveForm();
     $scope.$apply();
 

@@ -211,7 +211,8 @@
           'selectedGraphFillAlpha': 0,
           'selectedGraphLineAlpha': 1,
           'autoGridCount': true,
-          'color': '#AAAAAA'
+          'color': '#AAAAAA',
+          'updateOnReleaseOnly': true
         },
         'valueScrollbar': {
           'offset': 35,
@@ -254,7 +255,8 @@
           'autoGridCount': true,
           'color': '#AAAAAA',
           'backgroundColor': '#D7DBDD',
-          'backgroundAlpha': 1
+          'backgroundAlpha': 1,
+          'updateOnReleaseOnly': true
         },
         /*'chartScrollbar': {
           'offset': 15,

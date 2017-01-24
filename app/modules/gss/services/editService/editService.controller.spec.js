@@ -21,7 +21,7 @@ describe('controller: EditServiceCtrl', function () {
   }
 
   function initSpies() {
-    spyOn(GSSService, 'modifyService').and.returnValue($q.when());
+    spyOn(GSSService, 'modifyService').and.returnValue($q.resolve());
   }
 
   function initController() {

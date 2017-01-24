@@ -1054,7 +1054,7 @@
     function updateVoicemailTimeZone() {
       if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled &&
         (_.get(vm, 'model.site.timeZone.id') !== _.get(vm, 'model.voicemailTimeZone.id'))) {
-        return $q.when(true)
+        return $q.resolve(true)
           .then(function () {
             return updateVoicemailUserTemplate();
           });
@@ -1107,7 +1107,7 @@
             return $q.reject(response);
           });
       } else {
-        return $q.when();
+        return $q.resolve();
       }
     }
 
@@ -1607,7 +1607,7 @@
     }
 
     function saveVoicemailNumber() {
-      return $q.when(true)
+      return $q.resolve(true)
         .then(showDisableVoicemailWarning)
         .then(updateCustomerVoicemail)
         .then(updateSite)
@@ -1620,7 +1620,7 @@
     }
 
     function saveExternalNumbers() {
-      return $q.when(true)
+      return $q.resolve(true)
         .then(releaseCallerIdNumber)
         .then(saveVoicemailNumber)
         .then(saveCallerId)
@@ -1636,7 +1636,7 @@
     }
 
     function saveInternalNumberRanges() {
-      return $q.when(true)
+      return $q.resolve(true)
         .then(function () {
           var promises = [];
           var hasNewInternalNumberRange = false;
@@ -1701,7 +1701,7 @@
       var newCallerIdNumber = _.find(vm.allExternalNumbers, function (externalNumber) {
         return externalNumber.pattern === rawPattern;
       });
-      return $q.when(true)
+      return $q.resolve(true)
         .then(function () {
           if (vm.model.callerId.callerIdEnabled && (vm.model.callerId.callerIdName && vm.model.callerId.callerIdNumber)) {
             if (!(savedModel.callerId.callerIdEnabled) ||
@@ -1712,7 +1712,7 @@
                 pattern: rawPattern
               };
 
-              return $q.when(true)
+              return $q.resolve(true)
                 .then(deleteCallerId)
                 .then(function () {
                   return CallerId.saveCompanyNumber(data);
@@ -1743,7 +1743,7 @@
               }
             }
           } else if (!_.isEmpty(_.get(vm, 'model.callerId.externalNumber.uuid'))) {
-            return $q.when(true)
+            return $q.resolve(true)
               .then(deleteCallerId)
               .then(clearCallerIdFields);
           }
@@ -1758,7 +1758,7 @@
         restriction: INTERNATIONAL_DIALING
       };
 
-      return $q.when(true)
+      return $q.resolve(true)
         .then(InternationalDialing.isDisableInternationalDialing)
         .then(function (isSaveDisabled) {
           if (!isSaveDisabled) {
@@ -1769,7 +1769,7 @@
     }
 
     function updateVoicemailToEmail() {
-      return $q.when(true)
+      return $q.resolve(true)
         .then(function () {
           if (shouldUpdateVoicemailToEmail()) {
             return VoicemailMessageAction.update(vm.model.companyVoicemail.voicemailToEmail, vm.voicemailUserTemplate.objectId, vm.voicemailMessageAction.objectId)

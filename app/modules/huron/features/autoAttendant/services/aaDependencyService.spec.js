@@ -23,7 +23,7 @@ describe('Service: AADependencyService', function () {
     };
 
     beforeEach(function () {
-      spyOn(AACalendarService, 'updateCalendarName').and.returnValue($q.when());
+      spyOn(AACalendarService, 'updateCalendarName').and.returnValue($q.resolve());
       spyOn(AANotificationService, 'error');
       spyOn(AANotificationService, 'errorResponse');
     });

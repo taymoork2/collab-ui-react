@@ -39,9 +39,9 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
     Analytics = _Analytics_;
 
     spyOn(TerminusStateService, 'query').and.returnValue({
-      '$promise': $q.when(states)
+      '$promise': $q.resolve(states)
     });
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(Analytics, 'trackTrialSteps');
   }
 

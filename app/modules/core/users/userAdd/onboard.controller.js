@@ -1984,7 +1984,7 @@ require('./_user-add.scss');
       var deferred = $q.defer();
 
       if (getUsersList().length === 0) {
-        $q.when($scope.wizard.nextTab()).then(function () {
+        $q.resolve($scope.wizard.nextTab()).then(function () {
           deferred.reject();
         });
       } else {
@@ -2530,7 +2530,7 @@ require('./_user-add.scss');
       // Onboard users in chunks
       // Separate chunks on invalid rows
       var csvChunk = isCommunicationSelected ? 2 : 10; // Rate limit for Huron
-      var csvPromise = $q.when();
+      var csvPromise = $q.resolve();
       var tempUserArray = [];
       var uniqueEmails = [];
       var processingError;

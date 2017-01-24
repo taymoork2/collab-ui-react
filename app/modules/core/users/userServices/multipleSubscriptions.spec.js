@@ -17,7 +17,7 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
     Authinfo = _Authinfo_;
 
     getLicensesUsage = getJSONFixture('core/json/organizations/Orgservice.json').getLicensesUsage;
-    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when());
+    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.resolve());
     spyOn(Authinfo, 'getLicenses').and.returnValue('anything');
   }));
 
@@ -38,7 +38,7 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
 
     describe('for single subscriptions', function () {
       beforeEach(function () {
-        Orgservice.getLicensesUsage.and.returnValue($q.when(getLicensesUsage.singleSub));
+        Orgservice.getLicensesUsage.and.returnValue($q.resolve(getLicensesUsage.singleSub));
         initController();
       });
 
@@ -53,7 +53,7 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
 
     describe('for multiple subscriptions', function () {
       beforeEach(function () {
-        Orgservice.getLicensesUsage.and.returnValue($q.when(getLicensesUsage.multiSub));
+        Orgservice.getLicensesUsage.and.returnValue($q.resolve(getLicensesUsage.multiSub));
         initController();
       });
 
@@ -68,7 +68,7 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
 
     describe('for trial subscriptions', function () {
       beforeEach(function () {
-        Orgservice.getLicensesUsage.and.returnValue($q.when(getLicensesUsage.trialSub));
+        Orgservice.getLicensesUsage.and.returnValue($q.resolve(getLicensesUsage.trialSub));
         initController();
       });
 
