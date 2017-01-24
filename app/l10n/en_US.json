@@ -2160,8 +2160,6 @@
     },
     "resourceGroupSettings": {
       "pageTitle": "{{groupName}} Settings",
-      "releaseChannelHeader": "Release Channel",
-      "releaseChannelDescription": "Select the release channel for all Hybrid Services running in this group.",
       "clustersHeader": "Clusters",
       "clustersAssign": "Assign Clusters",
       "clustersDescription": "Add one or more existing Expressway clusters to this group.",
@@ -2295,7 +2293,8 @@
         "complete-registration": "Go to your Hybrid Data Security admin to complete the registration.",
         "registration-timeout": "The registration timed out. Please remove this cluster and register the Hybrid Data Security node again.",
         "registration-timeout-extended": "The registration timed out. Please remove this cluster and register the Hybrid Data Security node again in the Add Resource dialog."
-      }
+      },
+      "upgradeScheduleSubHeader": "Upgrade Schedule"
     },
     "serviceName" : "Hybrid Data Security",
     "serviceStatus": {
@@ -2316,37 +2315,43 @@
       "pending": "Pending",
       "initializing": "Initializing",
       "not_operational": "Not Operational",
-      "nonodes": "No Nodes Registered"
+      "nonodes": "No Nodes Registered",
+      "not_registered": "Registration not completed",
+      "urgentUpgradeAvailable": "Urgent upgrade available",
+      "registrationTimeout": "Registration timeout"
     },
-    "settings": {
-      "servicestatusTitle": "Service Status",
-      "serviceTrialModeTitle": "Trial Mode",
-      "serviceTrialModeDesc": "Trial Started Month DD, YYYY at HH:MM PM",
-      "serviceProductionModeTitle": "Production Mode",
-      "serviceProductionModeDesc": "In this mode all users in your org will use this service",
-      "addTrialUsers": "Add Trial Users",
-      "editTrialUsers": "Edit Users in Trial"
+    "softwareUpgrade": {
+      "explanation": "You are about to upgrade {{connectorType}} to version {{newVersion}} on all nodes in your Hybrid Data Security cluster"
     },
-    "addTrialUsers": {
-      "modalTitle": "Assign Data Security to Users",
-      "modalHeading": "Manually Assign Users",
-      "modalDesc": "Enter the email addresses of the users that will be assigned to the Data Security Service",
-      "emailNotificationsWatermark": "Email addresses",
-      "emailExample": "For example: John Doe john.doe@email.com, Kate Williams kate.williams@email.com",
-      "modalSST": "Start Service Trial"
-    },
-    "editTrialUsers": {
-      "modalTitle": "Edit Data Security Trial Users",
-      "modalHeadingAddUser": "To Add Users to this Service Trial",
-      "modalAddUserDesc1": "&bull; Go to the Users page",
-      "modalAddUserDesc2": "&bull; Search for the user you want to add to this Trial, and upon finding them, select the user (by clicking the row)",
-      "modalAddUserDesc3": "&bull; Navigate to Hybrid Services and then assign them to the Data Security Service Trial by flipping the Service toggle ON",
-      "modalHeadingRemoveUser": "To Remove a User from this Service Trial",
-      "modalRemoveUserDesc1": "&bull; Go to the Users page",
-      "modalRemoveUserDesc2": "&bull; Search for the user you want to remove from this Trial, and upon finding them, select the user (by clicking the row). If necessary, you can <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">download your Service Trial Users</a> for reference.",
-      "modalRemoveUserDesc3": "&bull; Navigate to Hybrid Services and then assign them to the Data Security Service Trial by flipping the Service toggle ON"
-    },
-    "resources" : {
+    "resources": {
+      "settings": {
+        "servicestatusTitle": "Service Status",
+        "serviceTrialModeTitle": "Trial Mode",
+        "serviceTrialModeDesc": "Trial Started Month DD, YYYY at HH:MM PM",
+        "serviceProductionModeTitle": "Production Mode",
+        "serviceProductionModeDesc": "In this mode all users in your org will use this service",
+        "addTrialUsers": "Add Trial Users",
+        "editTrialUsers": "Edit Users in Trial"
+      },
+      "addTrialUsers": {
+        "modalTitle": "Assign Data Security to Users",
+        "modalHeading": "Manually Assign Users",
+        "modalDesc": "Enter the email addresses of the users that will be assigned to the Data Security Service",
+        "emailNotificationsWatermark": "Email addresses",
+        "emailExample": "For example: John Doe john.doe@email.com, Kate Williams kate.williams@email.com",
+        "modalSST": "Start Service Trial"
+      },
+      "editTrialUsers": {
+        "modalTitle": "Edit Data Security Trial Users",
+        "modalHeadingAddUser": "To Add Users to this Service Trial",
+        "modalAddUserDesc1": "&bull; Go to the Users page",
+        "modalAddUserDesc2": "&bull; Search for the user you want to add to this Trial, and upon finding them, select the user (by clicking the row)",
+        "modalAddUserDesc3": "&bull; Navigate to Hybrid Services and then assign them to the Data Security Service Trial by flipping the Service toggle ON",
+        "modalHeadingRemoveUser": "To Remove a User from this Service Trial",
+        "modalRemoveUserDesc1": "&bull; Go to the Users page",
+        "modalRemoveUserDesc2": "&bull; Search for the user you want to remove from this Trial, and upon finding them, select the user (by clicking the row). If necessary, you can <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">download your Service Trial Users</a> for reference.",
+        "modalRemoveUserDesc3": "&bull; Navigate to Hybrid Services and then assign them to the Data Security Service Trial by flipping the Service toggle ON"
+      },
       "page_title": "Hybrid Data Security Service",
       "genericError": "An unexpected error occurred. Please try again later.",
       "loading": "Loading",
@@ -2367,8 +2372,8 @@
         "goToHost": "Go to Host",
         "hosts": "Hosts",
         "nodes": "Nodes"
-      }
     }
+   }
   },
   "ediscovery": {
     "browserTabHeaderTitle": "Spark Activity Reports",
