@@ -8,6 +8,7 @@
     var REFRESH = 'refresh';
     var SET = 'set';
     var EMPTY = 'empty';
+    var RESIZE_DELAY_IN_MS = 100;
 
     vm.dataStatus = REFRESH;
     vm.tableDataStatus = EMPTY;
@@ -105,7 +106,7 @@
         if (!isTableDataClean(mediaTypeSelected, timeSelected)) {
           return $q.reject({ reason: 'filtersChanged' });
         }
-        if (mergedData && mergedData.length > 0) {
+        if (_.get(mergedData, 'length')) {
           vm.tableDataStatus = SET;
         } else {
           vm.tableDataStatus = EMPTY;
@@ -132,12 +133,10 @@
         onSuccess(vm.tableData);
         return $q.resolve(vm.tableData);
       } else if (vm.tableDataPromise && isTableDataClean(mediaTypeSelected, timeSelected)) {
-        vm.tableDataPromise.then(onSuccess, onError);
-        return vm.tableDataPromise;
+        return vm.tableDataPromise.then(onSuccess, onError);
       } else {
         vm.tableDataPromise = getTableData(mediaTypeSelected, timeSelected);
-        vm.tableDataPromise.then(onSuccess, onError);
-        return vm.tableDataPromise;
+        return vm.tableDataPromise.then(onSuccess, onError);
       }
     };
 
@@ -233,7 +232,7 @@
     }
 
     function delayedResize() {
-      CardUtils.resize(100);
+      CardUtils.resize(RESIZE_DELAY_IN_MS);
     }
 
     function enableReportingFilters() {

@@ -93,6 +93,13 @@ describe('Controller: Care Reports Controller', function () {
   afterEach(function () {
     DummyCareReportService.dummyOrgStatsData.calls.reset();
     SunlightReportService.getReportingData.calls.reset();
+    SunlightReportService.getAllUsersAggregatedData.calls.reset();
+    $scope = $translate = $timeout = $q = SunlightReportService = Notification = FeatureToggleService = DummyCareReportService =
+      CareReportsService = deferredReportingData = deferredTableData = controller = undefined;
+  });
+
+  afterAll(function () {
+    timeOptions = mediaTypeOptions = spiedAuthinfo = undefined;
   });
 
   describe('CareReportsController - Callback feature enabled', function () {
@@ -216,6 +223,10 @@ describe('Controller: Care Reports Controller', function () {
     var allUserFifteenMinutesStats = dummyStats.reportUsersFifteenMinutesStats;
     var ciUserStats = dummyStats.ciUserStats;
 
+    afterAll(function () {
+      notCalled = dummyStats = allUserFifteenMinutesStats = ciUserStats = undefined;
+    });
+
     it('should fetch drill-down data on clicking show', function (done) {
       controller.timeSelected = timeOptions[0];
       controller.mediaTypeSelected = mediaTypeOptions[1];
@@ -225,6 +236,7 @@ describe('Controller: Care Reports Controller', function () {
         done();
       };
       controller.showTable(testOnSuccess, notCalled, controller.mediaTypeSelected, controller.timeSelected);
+      //expect(SunlightReportService.getAllUsersAggregatedData).toHaveBeenCalled();
       expect(SunlightReportService.getAllUsersAggregatedData.calls.argsFor(0)).toEqual(['all_user_stats', 0, 'chat']);
       deferredReportingData.resolve(allUserFifteenMinutesStats.data);
       deferredTableData.resolve(ciUserStats);
@@ -336,6 +348,10 @@ describe('Controller: Care Reports Controller', function () {
       'status': 500,
       'statusText': 'Intenal Server Error'
     };
+
+    afterAll(function () {
+      failureResponse = undefined;
+    });
 
     it('should notify with error toaster on failure for yesterday', function (done) {
       deferredReportingData.reject();

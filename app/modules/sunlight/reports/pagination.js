@@ -1,10 +1,10 @@
-/**
- * Created by bijnair on 21/01/17.
- */
-
+// IMPORTANT:
+// - PLEASE DO NOT USE OR EXTEND ANY OF THESE MODULES YET
+// - these components `Sunlight.tabindex`, `Sunlight.paging`, `Sunlight.pagination` are all prototype code for Sunlight's teams short-term needs
+// - TODO: work with toolkit team to migrate this code into more generally reusable toolkit components
 
 angular.module('Sunlight.tabindex', [])
-  .directive('uibTabindexToggle', function () {
+  .directive('slTabindexToggle', function () {
     return {
       restrict: 'A',
       link: function (scope, elem, attrs) {
@@ -17,7 +17,7 @@ angular.module('Sunlight.tabindex', [])
 
 
 angular.module('Sunlight.paging', [])
-  .factory('uibPaging', function ($parse) {
+  .factory('slPaging', function ($parse) {
     return {
       create: function (ctrl, $scope, $attrs) {
         ctrl.setNumPages = $attrs.numPages ? $parse($attrs.numPages).assign : angular.noop;
@@ -106,19 +106,19 @@ angular.module('Sunlight.paging', [])
   });
 
 
-angular.module('Sunlight.pagination', ['Sunlight.paging', 'Sunlight.tabindex']).controller('UibPaginationController',
-  function ($scope, $attrs, $parse, uibPaging, uibPaginationConfig) {
+angular.module('Sunlight.pagination', ['Sunlight.paging', 'Sunlight.tabindex', 'atlas.templates']).controller('SlPaginationController',
+  function ($scope, $attrs, $parse, slPaging, slPaginationConfig) {
     var ctrl = this;
     // Setup configuration parameters
-    var maxSize = angular.isDefined($attrs.maxSize) ? $scope.$parent.$eval($attrs.maxSize) : uibPaginationConfig.maxSize,
-      rotate = angular.isDefined($attrs.rotate) ? $scope.$parent.$eval($attrs.rotate) : uibPaginationConfig.rotate,
-      forceEllipses = angular.isDefined($attrs.forceEllipses) ? $scope.$parent.$eval($attrs.forceEllipses) : uibPaginationConfig.forceEllipses,
-      boundaryLinkNumbers = angular.isDefined($attrs.boundaryLinkNumbers) ? $scope.$parent.$eval($attrs.boundaryLinkNumbers) : uibPaginationConfig.boundaryLinkNumbers,
-      pageLabel = angular.isDefined($attrs.pageLabel) ? function (idx) { return $scope.$parent.$eval($attrs.pageLabel, { $page: idx }); } : angular.identity;
-    $scope.boundaryLinks = angular.isDefined($attrs.boundaryLinks) ? $scope.$parent.$eval($attrs.boundaryLinks) : uibPaginationConfig.boundaryLinks;
-    $scope.directionLinks = angular.isDefined($attrs.directionLinks) ? $scope.$parent.$eval($attrs.directionLinks) : uibPaginationConfig.directionLinks;
+    var maxSize = angular.isDefined($attrs.maxSize) ? $scope.$parent.$eval($attrs.maxSize) : slPaginationConfig.maxSize;
+    var rotate = angular.isDefined($attrs.rotate) ? $scope.$parent.$eval($attrs.rotate) : slPaginationConfig.rotate;
+    var forceEllipses = angular.isDefined($attrs.forceEllipses) ? $scope.$parent.$eval($attrs.forceEllipses) : slPaginationConfig.forceEllipses;
+    var boundaryLinkNumbers = angular.isDefined($attrs.boundaryLinkNumbers) ? $scope.$parent.$eval($attrs.boundaryLinkNumbers) : slPaginationConfig.boundaryLinkNumbers;
+    var pageLabel = angular.isDefined($attrs.pageLabel) ? function (idx) { return $scope.$parent.$eval($attrs.pageLabel, { $page: idx }); } : angular.identity;
+    $scope.boundaryLinks = angular.isDefined($attrs.boundaryLinks) ? $scope.$parent.$eval($attrs.boundaryLinks) : slPaginationConfig.boundaryLinks;
+    $scope.directionLinks = angular.isDefined($attrs.directionLinks) ? $scope.$parent.$eval($attrs.directionLinks) : slPaginationConfig.directionLinks;
 
-    uibPaging.create(this, $scope, $attrs);
+    slPaging.create(this, $scope, $attrs);
 
     if ($attrs.maxSize) {
       ctrl._watchers.push($scope.$parent.$watch($parse($attrs.maxSize), function (value) {
@@ -216,7 +216,7 @@ angular.module('Sunlight.pagination', ['Sunlight.paging', 'Sunlight.tabindex']).
     };
   })
 
-  .constant('uibPaginationConfig', {
+  .constant('slPaginationConfig', {
     itemsPerPage: 10,
     boundaryLinks: false,
     boundaryLinkNumbers: false,
@@ -229,7 +229,7 @@ angular.module('Sunlight.pagination', ['Sunlight.paging', 'Sunlight.tabindex']).
     forceEllipses: false
   })
 
-  .directive('uibPagination', function (uibPaginationConfig) {
+  .directive('slPagination', function (slPaginationConfig) {
     return {
       scope: {
         totalItems: '=',
@@ -239,9 +239,9 @@ angular.module('Sunlight.pagination', ['Sunlight.paging', 'Sunlight.tabindex']).
         lastText: '@',
         ngDisabled: '='
       },
-      require: ['uibPagination', '?ngModel'],
+      require: ['slPagination', '?ngModel'],
       restrict: 'A',
-      controller: 'UibPaginationController',
+      controller: 'SlPaginationController',
       controllerAs: 'pagination',
       templateUrl: 'modules/sunlight/reports/pagination.tpl.html',
       link: function (scope, element, attrs, ctrls) {
@@ -252,7 +252,7 @@ angular.module('Sunlight.pagination', ['Sunlight.paging', 'Sunlight.tabindex']).
           return; // do nothing if no ng-model
         }
 
-        paginationCtrl.init(ngModelCtrl, uibPaginationConfig);
+        paginationCtrl.init(ngModelCtrl, slPaginationConfig);
       }
     };
   });

@@ -105,6 +105,7 @@
     dd.resetDrilldownView = function () {
       dd.setDataEmpty();
       dd.setDisplay(false);
+      dd.resetCurrentPage();
     };
 
     dd.display = function () {
@@ -157,6 +158,10 @@
 
     dd.resizeCards = function () {
       CardUtils.resize(100);
+    };
+
+    dd.resetCurrentPage = function () {
+      dd.props.table.gridOptions.paginationCurrentPage = 1;
     };
   }
 

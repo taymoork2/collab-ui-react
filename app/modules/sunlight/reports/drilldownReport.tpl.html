@@ -16,20 +16,28 @@
         ng-change="dd.resizeCards()"></input>
     </div>
     <div class="care-table-wrapper">
-      <div ng-if="dd.isDataAvailable()" class="grid" ui-grid="dd.props.table.gridOptions" ui-grid-pagination></div>
+      <div ng-if="dd.isDataAvailable()" class="grid" ui-grid="dd.props.table.gridOptions"  ui-grid-pagination></div>
     </div>
     <div class="table-spinner" ng-if="dd.isDataRefreshing()">
       <i class='icon icon-spinner icon-2x'></i>
     </div>
   </div>
-  <div class="box-match">
-    <a ng-click="dd.toggleDrilldownReport()">
-      <span ng-if="!dd.display()">{{dd.props.show()}}</span>
-      <span ng-if="dd.display()">{{dd.props.hide()}}</span>
-    </a>
-    <div id="paginator" ng-show="dd.isDataAvailable() && gridApi.pagination.getTotalPages() > 1"  uib-pagination
-      total-items="dd.props.table.gridOptions.totalItems" items-per-page="dd.props.table.gridOptions.paginationPageSize"
-      max-size="3" previous-text="&lsaquo;" next-text="&rsaquo;"
-      ng-model="dd.props.table.gridOptions.paginationCurrentPage" ng-change="dd.resizeCards()" iconclass="icon icon-chevron-left"></div>
+  <div style="width: 98%;" class="box-match">
+    <div id="paginator"
+         ng-show="dd.isDataAvailable() && gridApi.pagination.getTotalPages() > 1 && dd.display()"
+         sl-pagination
+         total-items="dd.props.table.gridOptions.totalItems"
+         items-per-page="dd.props.table.gridOptions.paginationPageSize"
+         max-size="3"
+         previous-text="&lsaquo;" next-text="&rsaquo;"
+         ng-model="dd.props.table.gridOptions.paginationCurrentPage"
+         ng-change="dd.resizeCards()">
+    </div>
+    <div class="pull-left">
+      <a ng-click="dd.toggleDrilldownReport()">
+        <div ng-if="!dd.display()">{{dd.props.show()}}</div>
+        <div ng-if="dd.display()">{{dd.props.hide()}}</div>
+      </a>
+    </div>
   </div>
 </div>

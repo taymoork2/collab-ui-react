@@ -68,6 +68,11 @@ describe('drilldownReports Controller Positive Test cases', function () {
     $log.warn($rootScope);
   });
 
+  afterEach(function () {
+    $componentController = $log = ReportConstants = $timeout = CardUtils = $rootScope = $scope = ddController = callbackSpy = undefined;
+  });
+
+
   it('Binding Props and caallback test', function () {
 
     $log.warn("Controller......", ddController);

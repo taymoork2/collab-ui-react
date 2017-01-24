@@ -1,9 +1,9 @@
+@import 'styles/toolkit/colors';
 
 .pagination {
   display: inline-block;
   padding-left: 0;
-  margin: $line-height-computed 0;        //$line-height-computed:    floor(($font-size-base * $line-height-base)) !default; // ~20px
-  //  border-radius: $border-radius-base;     //$border-radius-base:        4px !default;
+  margin: $line-height-computed 0;
 
   .carousel-btn {
     border: 1px solid $gray-dark-1;

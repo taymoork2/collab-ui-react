@@ -1,4 +1,6 @@
 @import 'styles/toolkit/colors';
+@import 'modules/sunlight/reports/_pagination';
+
 .care-card-report {
   .areachart {
     position: relative;
@@ -64,6 +66,13 @@
     margin-top: 0;
     padding-bottom: 0;
     padding-top: 0;
+  }
+
+  span.pushright {
+    position: relative;
+  }
+  span.pushleft {
+    position: relative;
   }
 
 }
