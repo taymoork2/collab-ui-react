@@ -9,7 +9,10 @@
 
     <cs-page-sub-header-right class="action-panel" ng-show="Utils.isAdminPage()">
       <div class="export-users">
-        <csv-download type="any" filename="exported_file.csv" no-icon status-message="{{::'usersPage.exportingUserAttributes' | translate}}" download-state="users.csv"></csv-download>
+        <csv-download type="any" filename="exported_file.csv"
+          no-icon="true"
+          status-message="{{::'usersPage.exportingUserAttributes' | translate}}"
+          download-state="users.csv"></csv-download>
         <button ng-disabled="!obtainedTotalUserCount" id="manageUsers" class="btn btn--people" ng-click="onManageUsers()"
                 translate="usersPage.manageUsers">
         </button>

@@ -6207,7 +6207,8 @@
     "isRunning": "An export task is already running. Please try again later.",
     "inProgress": "Background task 'Export {{type}} list' is running...",
     "success": "Your {{type}} list has been compiled and your download has started.",
-    "error": "Export user reports failed."
+    "error": "Export user reports failed.",
+    "unsupported": "Unsupported Export Type Requested"
   },
   "servicesOverview": {
     "title": "Services",

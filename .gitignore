@@ -23,6 +23,7 @@ stats.json
 .sauce
 .sonar
 .tmp
+.history
 .vscode
 yarn.lock
 

@@ -1,5 +1,7 @@
 'use strict';
 
+var csvDownloadModule = require('modules/core/csvDownload').default;
+
 describe('assignServices', function () {
   var $scope, $state, $previousState, $httpBackend, $q;
   var view, authinfo, csvDownloadService, Orgservice, FeatureToggleService;
@@ -52,6 +54,7 @@ describe('assignServices', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Messenger'));
   beforeEach(angular.mock.module('WebExApp'));
+  beforeEach(angular.mock.module(csvDownloadModule));
 
   beforeEach(inject(function ($compile, $rootScope, $templateCache, _$httpBackend_,
     $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_, _FeatureToggleService_,

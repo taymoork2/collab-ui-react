@@ -61,6 +61,7 @@ module.exports = csp({
       'http://dev-admin.ciscospark.com:8080',
       'http://dpm.demdex.net', // Adobe DTM Omniture
       'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
+      'https://*.clouddrive.com' // CSV download
     ],
     fontSrc: [
       '\'self\'',

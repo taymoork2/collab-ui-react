@@ -7,12 +7,11 @@ require('./_user-manage.scss');
     .controller('UserManageModalController', UserManageModalController);
 
   /* @ngInject */
-  function UserManageModalController($state, Analytics, FeatureToggleService) {
+  function UserManageModalController($state, $stateParams, Analytics, FeatureToggleService) {
     var vm = this;
 
     vm.onInit = onInit;
     vm.cancelModal = cancelModal;
-
 
     vm.onInit();
 
@@ -21,16 +20,18 @@ require('./_user-manage.scss');
     function onInit() {
 
       vm.isDirSyncEnabled = false;
+      vm.isOverExportThreshold = !!$stateParams.isOverExportThreshold;
 
       // Is DirSync enabled or not? Our options depend on it.
-      FeatureToggleService.supportsDirSync().then(function (dirSyncEnabled) {
-        vm.isDirSyncEnabled = dirSyncEnabled;
-        if (dirSyncEnabled) {
-          $state.go('users.manage.activedir');
-        } else {
-          $state.go('users.manage.org');
-        }
-      });
+      FeatureToggleService.supportsDirSync()
+        .then(function (dirSyncEnabled) {
+          vm.isDirSyncEnabled = dirSyncEnabled;
+          if (dirSyncEnabled) {
+            $state.go('users.manage.activedir');
+          } else {
+            $state.go('users.manage.org');
+          }
+        });
 
     }
 

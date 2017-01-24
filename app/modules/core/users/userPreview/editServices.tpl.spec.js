@@ -1,12 +1,14 @@
 'use strict';
 
+var csvDownloadModule = require('modules/core/csvDownload').default;
+
 describe('Template: editServices', function () {
 
   var SAVE_BUTTON = '#btnSaveEnt';
   var userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
 
   function init() {
-    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp');
+    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp', csvDownloadModule);
     this.injectDependencies('$httpBackend', '$q', '$previousState', 'CsvDownloadService', 'FeatureToggleService', 'Orgservice', 'UrlConfig');
     initDependencySpies.apply(this);
     this.compileView('OnboardCtrl', 'modules/core/users/userPreview/editServices.tpl.html');
