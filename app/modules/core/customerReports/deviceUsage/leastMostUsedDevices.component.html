@@ -1,12 +1,15 @@
-<table class="table lm-table">
-  <thead>
-    <th class="extreme-table-entry" translate="reportsPage.usageReports.deviceName"></th>
-    <th class="extreme-table-entry right-aligned" translate="reportsPage.usageReports.hoursUsed"></th>
-    <th class="extreme-table-entry right-aligned" translate="reportsPage.usageReports.callCount"></th>
-  </thead>
-  <tr class="no-border" ng-repeat="device in $ctrl.usedDevices">
-    <td class="extreme-table-entry">{{device.name}}</td>
-    <td class="extreme-table-entry right-aligned">{{device.duration}}</td>
-    <td class="extreme-table-entry right-aligned">{{device.calls}}</td>
-  </tr>
-</table>
+<div class="least-most">
+  <h4 class="header" translate="{{$ctrl.title}}"></h4>
+  <table class="table least-most-table">
+    <thead>
+      <th class="extreme-table-entry" translate="reportsPage.usageReports.deviceName"></th>
+      <th class="extreme-table-entry right-aligned" translate="reportsPage.usageReports.hoursUsed"></th>
+      <th class="extreme-table-entry right-aligned" translate="reportsPage.usageReports.callCount"></th>
+    </thead>
+    <tr class="no-border" ng-repeat="device in $ctrl.usedDevices">
+      <td class="extreme-table-entry">{{device.name}}</td>
+      <td class="extreme-table-entry right-aligned">{{device.duration}}</td>
+      <td class="extreme-table-entry right-aligned">{{device.calls}}</td>
+    </tr>
+  </table>
+</div>
