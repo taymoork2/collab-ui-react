@@ -1861,10 +1861,6 @@
               filter: null
             },
             resolve: {
-              customerListToggle: /* @ngInject */ function () {
-                // TODO:  remove this once the controllers are refactored
-                return true;
-              },
               trialForPaid: function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
               }
@@ -1891,10 +1887,6 @@
                 function orgCallback(data) {
                   defer.resolve(data);
                 }
-              },
-              newCustomerViewToggle: /* @ngInject */ function () {
-                // TODO:  remove this once the controllers are refactored
-                return true;
               },
               trialForPaid: function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerOverviewCtrl', function () {
-  var $controller, $scope, $stateParams, $state, $window, $q, modal, Authinfo, BrandService, controller, currentCustomer, FeatureToggleService, identityCustomer, newCustomerViewToggle, Orgservice, PartnerService, trialForPaid, TrialService, Userservice, Notification;
+  var $controller, $scope, $stateParams, $state, $window, $q, modal, Authinfo, BrandService, controller, currentCustomer, FeatureToggleService, identityCustomer, Orgservice, PartnerService, trialForPaid, TrialService, Userservice, Notification;
 
   var licenseString = 'MC_cfb817d0-ddfe-403d-a976-ada57d32a3d7_100_t30citest.webex.com';
 
@@ -28,7 +28,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     identityCustomer = {
       services: ['webex-squared', 'ciscouc']
     };
-    $scope.newCustomerViewToggle = newCustomerViewToggle;
+
     $scope.trialForPaid = trialForPaid;
     Userservice = {
       updateUsers: function () {}
@@ -93,7 +93,6 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
       $q.resolve(true)
     );
-    spyOn(FeatureToggleService, 'atlasCustomerListUpdateGetStatus').and.returnValue($q.resolve(true));
     spyOn(modal, 'open').and.callThrough();
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 
@@ -109,7 +108,6 @@ describe('Controller: CustomerOverviewCtrl', function () {
       Authinfo: Authinfo,
       BrandService: BrandService,
       FeatureToggleService: FeatureToggleService,
-      newCustomerViewToggle: newCustomerViewToggle,
       $modal: modal,
       trialForPaid: trialForPaid
     });
@@ -118,7 +116,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
   }
 
   afterEach(function () {
-    $controller = $scope = $stateParams = $state = $window = $q = modal = Authinfo = BrandService = controller = currentCustomer = FeatureToggleService = identityCustomer = newCustomerViewToggle = Orgservice
+    $controller = $scope = $stateParams = $state = $window = $q = modal = Authinfo = BrandService = controller = currentCustomer = FeatureToggleService = identityCustomer = Orgservice
     = PartnerService = TrialService = Userservice = Notification = undefined;
   });
 
