@@ -4,7 +4,7 @@
   module.exports = FeatureToggleService;
 
   /* @ngInject */
-  function FeatureToggleService($http, $q, $resource, $state, Authinfo, HuronConfig, UrlConfig, Orgservice) {
+  function FeatureToggleService($http, $q, $resource, $rootScope, $state, Authinfo, HuronConfig, UrlConfig, Orgservice) {
     var features = {
       requireAcceptTos: 'atlas-tos-required',
       dirSync: 'atlas-dir-sync',
@@ -172,28 +172,10 @@
     var toggles = {};
 
     // returns huron feature toggle value for the given user or user's org
-    var huronUserResource = $resource(HuronConfig.getMinervaUrl() + '/features/users/:userId/developer/:featureName', {
-      userId: '@userId',
-      featureName: '@featureName'
-    },
-      {
-        get: {
-          method: 'GET',
-          cache: true
-        }
-      });
+    var huronUserResource;
 
     // returns huron feature toggle value for the given customer; must be full admin or partner admin for the customer
-    var huronCustomerResource = $resource(HuronConfig.getMinervaUrl() + '/features/customers/:customerId/developer/:featureName', {
-      customerId: '@customerId',
-      featureName: '@featureName'
-    },
-      {
-        get: {
-          method: 'GET',
-          cache: true
-        }
-      });
+    var huronCustomerResource;
 
     var orgResource = $resource(UrlConfig.getFeatureUrl() + '/features/rules/:id', {
       id: '@id'
@@ -242,6 +224,13 @@
     return service;
 
     function init() {
+      setHuronUserResource(HuronConfig.getMinervaUrl());
+      setHuronCustomerResource(HuronConfig.getMinervaUrl());
+      // setup listener
+      $rootScope.$on('COMPASS_BASE_DOMAIN_CHANGED', function () {
+        setHuronUserResource(HuronConfig.getMinervaUrl());
+        setHuronCustomerResource(HuronConfig.getMinervaUrl());
+      });
       return _.reduce(features, function (status, feature, key) {
         status[key + 'GetStatus'] = function () {
           return supports(features[key]);
@@ -469,6 +458,33 @@
         feature.val = false;
       }
     }
+
+    function setHuronUserResource() {
+      huronUserResource = $resource(HuronConfig.getMinervaUrl() + '/features/users/:userId/developer/:featureName', {
+        userId: '@userId',
+        featureName: '@featureName'
+      },
+        {
+          get: {
+            method: 'GET',
+            cache: true
+          }
+        });
+    }
+
+    function setHuronCustomerResource() {
+      huronCustomerResource = $resource(HuronConfig.getMinervaUrl() + '/features/customers/:customerId/developer/:featureName', {
+        customerId: '@customerId',
+        featureName: '@featureName'
+      },
+        {
+          get: {
+            method: 'GET',
+            cache: true
+          }
+        });
+    }
+
   }
 
 })();
