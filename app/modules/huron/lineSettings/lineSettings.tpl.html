@@ -53,7 +53,7 @@
             id="allDirectVoicemail"
             name="allDirectVoicemail"
             ng-model="lineSettings.allDirectVoicemail"
-            disabled="lineSettings.telephonyInfo.voicemail !== 'On'"
+            isdisabled="lineSettings.telephonyInfo.voicemail !== 'On'"
             cs-input-label="{{::'callForwardPanel.directVoicemail' | translate}}">
         </div>
         <input
@@ -84,12 +84,12 @@
               id="internalDirectVoicemail"
               name="internalDirectVoicemail"
               ng-model="lineSettings.internalDirectVoicemail"
-              disabled="lineSettings.telephonyInfo.voicemail !== 'On'"
+              isdisabled="lineSettings.telephonyInfo.voicemail !== 'On'"
               cs-input-label="{{::'callForwardPanel.directVoicemail' | translate}}">
             <input
               cs-input
               type="checkbox"
-              ng-disabled="{{lineSettings.cfModel.forward === 'all'}}"
+              isdisabled="{{lineSettings.cfModel.forward === 'all'}}"
               id="forwardExternalCalls"
               name="forwardExternalCalls"
               ng-model="lineSettings.cfModel.forwardExternalCalls"
@@ -115,7 +115,7 @@
               id="externalDirectVoicemail"
               name="externalDirectVoicemail"
               ng-model="lineSettings.externalDirectVoicemail"
-              is-disabled="lineSettings.telephonyInfo.voicemail !== 'On'"
+              isdisabled="lineSettings.telephonyInfo.voicemail !== 'On'"
               cs-input-label="{{::'callForwardPanel.directVoicemail' | translate}}">
           </div>
         </div>
