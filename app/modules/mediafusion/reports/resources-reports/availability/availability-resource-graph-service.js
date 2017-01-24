@@ -177,7 +177,11 @@
     }
 
     function formatLabel(label) {
-      return (label.length > 10) ? label.substring(0, 10) + ".." : label;
+      if (label.length > 10) {
+        return (label.length <= 12) ? label : label.substring(0, 10) + "..";
+      } else {
+        return label;
+      }
     }
   }
 })();

@@ -239,8 +239,8 @@
     function setSneekPeekData() {
       MediaReportsService.getClusterAvailabilityTooltip(vm.timeSelected).then(function (response) {
         vm.availabilityTooltipOptions = MediaSneekPeekResourceService.getClusterAvailabilitySneekPeekValues(response, vm.Map, vm.clusterAvailability, vm.clusterId);
-        vm.availabilityTooltipOptions['sneakPeekModel'] = vm.availabilityTooltipOptions.values[0];
-        vm.availabilityTooltipOptions['sneakPeekHandler'] = clusterUpdateFromTooltip;
+        vm.availabilityTooltipOptions['tooltipModel'] = vm.availabilityTooltipOptions.values[0];
+        vm.availabilityTooltipOptions['tooltipClickHandler'] = clusterUpdateFromTooltip;
       }, function () {
         Notification.error('mediaFusion.genericError');
       });
@@ -371,10 +371,10 @@
     }
 
     function clusterUpdateFromTooltip() {
-      vm.selectedClusterSneakPeek = vm.availabilityTooltipOptions['sneakPeekModel'];
+      vm.selectedClusterSneakPeek = vm.availabilityTooltipOptions['tooltipModel'];
       var selectedCluster = vm.selectedClusterSneakPeek;
-      selectedCluster = selectedCluster.split('.').join("");
-      selectedCluster = selectedCluster.substring(0, selectedCluster.lastIndexOf("  "));
+      selectedCluster = selectedCluster.split('.').join('');
+      selectedCluster = selectedCluster.substring(0, selectedCluster.lastIndexOf('  '));
       _.forEach(vm.clusterOptions, function (val) {
         selectedCluster = _.includes(val, selectedCluster) ? val : selectedCluster;
       });

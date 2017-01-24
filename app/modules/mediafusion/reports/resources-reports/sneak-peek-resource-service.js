@@ -25,10 +25,10 @@
         }
       });
       values = _.orderBy(values, ['value'], ['asc']);
-      _.forEach(values, function (v) {
-        var c_name = v.key;
+      _.forEach(values, function (clusterList) {
+        var c_name = clusterList.key;
         c_name = (c_name.length > 17) ? c_name.substring(0, 17) + ".." : c_name;
-        valuesArray.push(c_name + " " + " " + v.value + "%");
+        valuesArray.push(c_name + " " + " " + clusterList.value + "%");
       });
 
       if (clusterAvailability && clusterId === vm.allClusters && values.length > 0) {
@@ -38,8 +38,7 @@
       }
       var availabilityTooltipOptions = {
         isShow: isShow,
-        values: valuesArray,
-        heading: $translate.instant('mediaFusion.metrics.lowAvailableClusters')
+        values: valuesArray
       };
       return availabilityTooltipOptions;
     }
@@ -64,8 +63,7 @@
       }
       var onPremisesTooltipOptions = {
         isShow: isShow,
-        values: values,
-        heading: $translate.instant('mediaFusion.metrics.clusterTakingMoreCalls')
+        values: values
       };
       return onPremisesTooltipOptions;
     }

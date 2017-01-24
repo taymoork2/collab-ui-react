@@ -14,6 +14,6 @@
         </div>
       </div>
     </section>
-    <cs-select ng-class="{'vis-hidden': $ctrl.tooltipOptions.isShow==false || $ctrl.tooltipOptions.isShow==undefined}" class='sneak-peek-filter' ng-model="$ctrl.tooltipOptions.sneakPeekModel" options="$ctrl.tooltipOptions.values" on-change-fn="$ctrl.tooltipOptions.sneakPeekHandler()"></cs-select>
+    <cs-select ng-class="{'vis-hidden': $ctrl.tooltipOptions.isShow==false || $ctrl.tooltipOptions.isShow==undefined}" class='sneak-peek-filter' ng-model="$ctrl.tooltipOptions.tooltipModel" options="$ctrl.tooltipOptions.values" on-change-fn="$ctrl.tooltipOptions.tooltipClickHandler()"></cs-select>
   </article>
 </cs-card>

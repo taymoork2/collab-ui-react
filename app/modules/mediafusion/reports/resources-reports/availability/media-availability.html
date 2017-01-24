@@ -2,14 +2,14 @@
   <article class="media-service-card">
     <graphheader>
       <div class="legendDiv" >
-        <table class="headerTable" ng-if="$ctrl.parentcntrl.clusterSelected == 'All Clusters'">
+        <table class="headerTable" ng-if="$ctrl.parentcntrl.clusterSelected == $ctrl.parentcntrl.allClusters">
           <tr>
             <td>
               <h4 class='report-section-header' translate='mediaFusion.metrics.availabilityOfCluster'></h4>
             </td>
           </tr>
         </table>
-        <table class="headerTable" ng-if="$ctrl.parentcntrl.clusterSelected != 'All Clusters'">
+        <table class="headerTable" ng-if="$ctrl.parentcntrl.clusterSelected != $ctrl.parentcntrl.allClusters">
           <tr>
             <td>
               <h4 class='report-section-header' translate='mediaFusion.metrics.availabilityOfHost'></h4>
@@ -19,7 +19,7 @@
       </div>
     </graphheader>
     <section>
-      <div class="availability-reports" ng-class="{'availabilityCursor': $ctrl.parentcntrl.clusterSelected == 'All Clusters'}">
+      <div class="availability-reports" ng-class="{'availabilityCursor': $ctrl.parentcntrl.clusterSelected == $ctrl.parentcntrl.allClusters}">
         <div id="availabilitydiv" class="barchart" ng-class="{'availability-chart': !$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.availabilityStatus) && !$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.availabilityStatus)}"></div>
         <div class="spinner-position" ng-if="$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.availabilityStatus)">
           <i class='icon icon-spinner icon-2x'></i>
