@@ -44,8 +44,8 @@
 
     vm.Map = {};
 
-    vm.displayAdoption = true;
-    vm.displayResources = false;
+    vm.displayAdoption = false;
+    vm.displayResources = true;
 
     vm.changeTabs = changeTabs;
     vm.setRefreshInterval = setRefreshInterval;
@@ -80,18 +80,19 @@
     }];
     vm.timeSelected = vm.timeOptions[0];
 
-    loadAdaptionDatas();
     setRefreshInterval();
     getCluster();
+    timeUpdate();
 
     function loadResourceDatas() {
-      setTotalCallsData().then(function () {
+      deferred.promise.then(function () {
+        setTotalCallsData();
+        setAvailabilityData();
         setSneekPeekData();
+        setClusterAvailability();
+        setUtilizationData();
+        setCallVolumeData();
       });
-      setClusterAvailability();
-      setUtilizationData();
-      setCallVolumeData();
-      setAvailabilityData();
     }
 
     function loadAdaptionDatas() {
@@ -166,7 +167,6 @@
     }
 
     function setTotalCallsData() {
-      var deferred = $q.defer();
       MediaReportsService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
         if (vm.clusterId === vm.allClusters) {
           if (response === vm.ABORT) {
@@ -218,9 +218,7 @@
             vm.total = vm.onprem + vm.cloud;
           }
         }
-        deferred.resolve();
       });
-      return deferred.promise;
     }
 
     function setClusterAvailability() {
