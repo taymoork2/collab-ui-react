@@ -1898,6 +1898,12 @@
       "oneButtonToPushIntervalSecondaryLabel": "minutes before the meeting",
       "oneButtonToPushIntervalMinutesSavingSuccess": "Early join time was successfully saved.",
       "oneButtonToPushIntervalMinutesSavingError": "Could not save the change to early join time. Try again later.",
+      "voicemail": {
+        "heading": "Voicemail",
+        "description": "Allow users in your organization to access on-premise voicemail by using the Cisco Spark app.",
+        "enableDescription": "All users with both Hybrid Call Service Aware and Connect can use voicemail now",
+        "disableDescription": "Voicemail is disabled for all users"
+      },
       "documentation": {
         "heading": "Documentation and Software",
         "help": "Visit <a href=\"{{helpLink}}\" target=\"_blank\">Help Central</a> for further information about {{localizedServiceName}}.",
