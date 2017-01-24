@@ -25,6 +25,7 @@ stats.json
 .tmp
 .history
 .vscode
+.history
 yarn.lock
 
 build
