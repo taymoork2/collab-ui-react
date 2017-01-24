@@ -2,9 +2,15 @@
 @import 'resources-reports/callVolume/_call-volume-styles';
 @import 'resources-reports/availability/_availability-styles';
 @import 'resources-reports/utilization/_media-utilization-styles';
+@import 'media-report-card/_media_report_card';
+
+.overview-card {
+  animation: scaleUpMediaCards 0.5s linear;
+}
 .media-reports {
   @extend %content-subheader;
   @extend %page-content-padding;
+
   .reports-select-filter {
     width: rem-calc(220);
     margin-left: 30px;
@@ -18,6 +24,7 @@
     padding-top: 0.1rem;
   }
   .media-metrics-report-card {
+    animation: scaleUpMediaCards 0.5s linear;
     .report-section-header {
       font-family: $brand-font-cisco-TT-Light;
       font-size: rem-calc(22);
@@ -97,9 +104,21 @@
       animation: graphAxisFade 2s ease-in-out 1 forwards;
     }
   }
-  .availability-reports {
-    .amcharts-category-axis .amcharts-axis-label {
-      cursor: pointer;
-    }
+}
+.availabilityCursor{
+  .amcharts-category-axis .amcharts-axis-label {
+    cursor: pointer;
+  }
+}
+
+@keyframes scaleUpMediaCards {
+  0% {
+    transform: scale(0, 0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1, 1);
+    opacity: 1;
   }
 }
