@@ -2,7 +2,6 @@
 
 * On macOS: install Xcode toolchain: `xcode-select --install`
 * Project requires node v6 and npm v3.
-* Project supports (deprecated) node v4 and npm v2.
 * Use [nvm](https://github.com/creationix/nvm) to manage your node versions
   * `nvm install lts/boron` to install the latest [LTS](https://github.com/nodejs/LTS) version
   * `nvm ls-remote` to see list of available versions
