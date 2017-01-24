@@ -3506,6 +3506,7 @@
     "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
     "invalidTrialRoomSystemQuantity": "Number of Licenses should be between 1 and 20.",
+    "invalidTrialSparkBoardQuantity": "Number of Licenses should be between 1 and 20.",
     "invalidTrialCareQuantity": "Number of Licenses must be between 1 and message license quantity or maximum 50.",
     "careLicenseCountExceedsTotalCount": "Care license requested is more than the message license quantity.",
     "individualUserServices": "Individual User Services",
@@ -4211,9 +4212,9 @@
       "nodes": "Nodes"
     },
     "sipconfiguration": {
-      "success": "UC SIP Trunk saved successfully.",
-      "title": "UC SIP Trunk",
-      "description": "Enter the SIP trunk address to connect Hybrid Media Cluster to your Unified Communications Manager. This connection provides optimized video callback.",
+      "success": "Unified CM SIP Trunk saved successfully.",
+      "title": "Unified CM SIP Trunk",
+      "description": "Enter the SIP trunk address to connect the Hybrid Media cluster to your Unified Communications Manager. This connection provides optimized video callback.",
       "placeholder": "Enter the SIP trunk address...",
       "example": "Example: sips://203.0.113.0:5062"
     },

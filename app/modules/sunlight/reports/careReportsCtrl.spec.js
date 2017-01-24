@@ -101,6 +101,7 @@ describe('Controller: Care Reports Controller', function () {
       spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.resolve(true));
       $timeout(function () {
         expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'all', true]);
+        expect(controller.mediaTypeOptions[2].name).toEqual('callback');
         done();
       }, 100);
       $timeout.flush();
@@ -113,6 +114,7 @@ describe('Controller: Care Reports Controller', function () {
       spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.resolve(false));
       $timeout(function () {
         expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'all', true]);
+        expect(controller.mediaTypeOptions[2].name).toEqual('voice');
         done();
       }, 100);
       $timeout.flush();
@@ -138,8 +140,8 @@ describe('Controller: Care Reports Controller', function () {
       expect(controller.timeOptions.length).toEqual(5);
     });
 
-    it('should show three media type options', function () {
-      expect(controller.mediaTypeOptions.length).toEqual(3);
+    it('should show two media type options', function () {
+      expect(controller.mediaTypeOptions.length).toEqual(2);
     });
 
     it('should make calls to data services with correct options', function (done) {

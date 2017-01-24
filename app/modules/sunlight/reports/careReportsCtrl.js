@@ -68,11 +68,7 @@
     vm.filtersUpdate = filtersUpdate;
     vm.inboundCallFeature = false;
 
-    var mediaTypes = ['all', 'chat', 'callback'];
-    //check if inbound-call feature flag is enabled
-    if (vm.inboundCallFeature) {
-      mediaTypes.push("voice");
-    }
+    var mediaTypes = ['all', 'chat'];
     vm.mediaTypeOptions = _.map(mediaTypes, function (name, i) {
       return {
         value: i,
@@ -225,6 +221,22 @@
       CardUtils.resize(500);
     }
 
+    function enableReportingFilters() {
+      if (vm.callbackFeature) {
+        mediaTypes.push("callback");
+      }
+      if (vm.inboundCallFeature) {
+        mediaTypes.push("voice");
+      }
+      vm.mediaTypeOptions = _.map(mediaTypes, function (name, i) {
+        return {
+          value: i,
+          name: name,
+          label: $translate.instant('careReportsPage.media_type_' + name)
+        };
+      });
+    }
+
     function resetCards(filter) {
       if (vm.currentFilter !== filter) {
         vm.displayEngagement = false;
@@ -250,6 +262,7 @@
         if (vm.callbackFeature || vm.inboundCallFeature) {
           vm.mediaTypeSelected = vm.mediaTypeOptions[0];
         }
+        enableReportingFilters();
         filtersUpdate();
       });
     }, 30);
