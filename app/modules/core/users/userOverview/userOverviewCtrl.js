@@ -4,9 +4,9 @@
   module.exports = UserOverviewCtrl;
 
   /* @ngInject */
-  function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window,
-                            Authinfo, Config, FeatureToggleService, Notification, SunlightConfigService,
-                            Userservice, UserOverviewService) {
+  function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window, $q,
+    Authinfo, Config, FeatureToggleService, Notification, SunlightConfigService,
+    Userservice, UserOverviewService) {
     var vm = this;
 
     vm.currentUser = $stateParams.currentUser;
@@ -80,12 +80,14 @@
       FeatureToggleService.atlasSMPGetStatus()
         .then(function (smpStatus) {
           vm.isSharedMultiPartyEnabled = smpStatus;
-          initServices();
+          return initServices();
         })
         .then(function () {
-          initActionList();
-          updateUserTitleCard();
-          getUserFeatures();
+          return $q.all([
+            initActionList(),
+            updateUserTitleCard(),
+            getUserFeatures()
+          ]);
         });
     }
 
@@ -108,6 +110,7 @@
         action.actionFunction = goToEditService;
       }
       vm.actionList.push(action);
+      return $q.resolve();
     }
 
     function goToEditService() {
@@ -151,10 +154,10 @@
     function getUserFeatures() {
       // to see user features, you must either be a support member or a team member
       if (!canQueryUserFeatures()) {
-        return;
+        return $q.resolve();
       }
 
-      FeatureToggleService.getFeaturesForUser(vm.currentUser.id).then(function (response) {
+      return FeatureToggleService.getFeaturesForUser(vm.currentUser.id).then(function (response) {
         vm.features = [];
         _.forEach(_.get(response, 'developer'), function (el) {
           if (el.val !== 'false' && el.val !== '0') {
@@ -194,6 +197,8 @@
       if (!vm.subTitleCard && vm.titleCard != vm.currentUser.userName) {
         vm.subTitleCard = vm.currentUser.userName;
       }
+
+      return $q.resolve();
     }
 
     function enableAuthCodeLink() {
