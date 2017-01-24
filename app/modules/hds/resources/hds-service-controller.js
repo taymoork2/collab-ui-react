@@ -64,15 +64,15 @@
     };
 
     vm.addResourceModal = {
-        type: 'small',
-        controller: 'HDSRedirectAddResourceController',
-        controllerAs: 'hdsRedirectAddResourceController',
-        templateUrl: 'modules/hds/add-resource/add-resource-modal.html',
-        modalClass: 'redirect-add-resource',
-        resolve: {
-          proceedSetup: false
-        },
-      };
+      type: 'small',
+      controller: 'HDSRedirectAddResourceController',
+      controllerAs: 'hdsRedirectAddResourceController',
+      templateUrl: 'modules/hds/add-resource/add-resource-modal.html',
+      modalClass: 'redirect-add-resource',
+      resolve: {
+        proceedSetup: false
+      },
+    };
 
     function showClusterSidepanel(cluster) {
       $state.go('hds-cluster-details', {
@@ -82,7 +82,7 @@
 
     FusionClusterService.serviceIsSetUp('spark-hybrid-datasecurity').then(function (enabled) {
       if (!enabled) {
-        addResource();
+        $modal.open(vm.addResourceModal);
       }
     });
 
