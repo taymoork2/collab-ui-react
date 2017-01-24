@@ -118,6 +118,7 @@ describe('Controller:MediaReportsController', function () {
       spyOn(MediaReportsService, 'getAvailabilityData').and.returnValue($q.resolve(clusteravailabilityData));
       spyOn(MediaReportsService, 'getUtilizationData').and.returnValue($q.resolve(utilizationGraphData));
       controller.clusterUpdate();
+      httpMock.flush();
       expect(MediaReportsService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
       expect(MediaReportsService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
       expect(MediaReportsService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
@@ -174,7 +175,7 @@ describe('Controller:MediaReportsController', function () {
       };
       spyOn(MediaReportsService, 'getTotalCallsData').and.returnValue($q.resolve(response));
       controller.setTotalCallsData();
-      httpMock.flush();
+      httpMock.verifyNoOutstandingExpectation();
       expect(MediaReportsService.getTotalCallsData).toHaveBeenCalled();
       expect(controller.onprem).toBe(20);
       expect(controller.cloud).toBe(30);
