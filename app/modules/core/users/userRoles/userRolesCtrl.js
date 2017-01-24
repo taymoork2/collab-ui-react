@@ -27,7 +27,9 @@ require('./_user-roles.scss');
     $scope.helpdeskOnCheckedHandler = helpdeskOnCheckedHandler;
     $scope.resetFormData = resetFormData;
     $scope.enableReadonlyAdminOption = false;
-    $scope.rolesObj = {};
+    $scope.rolesObj = {
+      adminRadioValue: 0
+    };
     $scope.noAdmin = {
       label: $translate.instant('rolesPanel.noAdmin'),
       value: 0,
@@ -49,14 +51,18 @@ require('./_user-roles.scss');
     $scope.partialAdmin = {
       label: $translate.instant('rolesPanel.partialAdmin'),
       value: 2,
-      name: 'adminRoles',
+      name: 'partialAdmin',
       id: 'partialAdmin'
     };
     $scope.messages = {
       displayName: {
         notblank: $translate.instant('profilePage.displayNameEmptyError')
+      },
+      partialAdmin: {
+        noSelection: $translate.instant('rolesPanel.partialAdminError')
       }
     };
+
     $scope.checkAdminDisplayName = checkAdminDisplayName;
 
     $scope.updatingUser = false;
@@ -170,6 +176,8 @@ require('./_user-roles.scss');
       if (_.has($scope, 'rolesEdit.form')) {
         _.attempt($scope.rolesEdit.form.$setPristine);
         _.attempt($scope.rolesEdit.form.$setUntouched);
+        _.attempt($scope.rolesEdit.form.displayName.$setValidity('notblank', true));
+        _.attempt($scope.rolesEdit.form.partialAdmin.$setValidity('noSelection', true));
       }
     }
 
@@ -336,7 +344,7 @@ require('./_user-roles.scss');
 
     function patchUserData() {
       // Add or delete properties depending on whether or not their value is empty/blank.
-      // With property value set to "", the back-end will respond with a 400 error.
+      // With property value set to '', the back-end will respond with a 400 error.
       // Guidance from CI team is to not specify any property containing an empty string
       // value. Instead, add the property to meta.attribute to have its value be deleted.
       var userData = {
@@ -349,12 +357,12 @@ require('./_user-roles.scss');
 
       if ($scope.formUserData.name) {
         if ($scope.formUserData.name.givenName) {
-          userData.name["givenName"] = $scope.formUserData.name.givenName;
+          userData.name['givenName'] = $scope.formUserData.name.givenName;
         } else {
           userData.meta.attributes.push('name.givenName');
         }
         if ($scope.formUserData.name.familyName) {
-          userData.name["familyName"] = $scope.formUserData.name.familyName;
+          userData.name['familyName'] = $scope.formUserData.name.familyName;
         } else {
           userData.meta.attributes.push('name.familyName');
         }
@@ -420,10 +428,11 @@ require('./_user-roles.scss');
         var lastName = _.get($scope.formUserData, 'name.familyName', null);
         var displayName = _.get($scope.formUserData, 'displayName', null);
         var notAllBlank = !_.isEmpty(firstName) || !_.isEmpty(lastName) || !_.isEmpty(displayName);
-        $scope.rolesEdit.form.displayName.$setValidity("notblank", notAllBlank);
+        $scope.rolesEdit.form.displayName.$setValidity('notblank', notAllBlank);
       } else {
-        $scope.rolesEdit.form.displayName.$setValidity("notblank", true);
+        $scope.rolesEdit.form.displayName.$setValidity('notblank', true);
       }
+      $scope.rolesEdit.form.partialAdmin.$setValidity('noSelection', getPartialAdminValidity());
     }
 
     function orderadminOnCheckedHandler() {
@@ -437,6 +446,14 @@ require('./_user-roles.scss');
       if ($scope.rolesObj.helpdeskValue === false) {
         $scope.rolesObj.orderAdminValue = false;
         $scope.rolesEdit.form.$dirty = true;
+      }
+    }
+
+    function getPartialAdminValidity() {
+      if ($scope.rolesObj.adminRadioValue === $scope.partialAdmin.value) {
+        return $scope.rolesObj.salesAdminValue || $scope.rolesObj.userAdminValue || $scope.rolesObj.billingAdminValue || $scope.rolesObj.supportAdminValue;
+      } else {
+        return true;
       }
     }
   }
