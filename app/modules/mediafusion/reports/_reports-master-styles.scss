@@ -4,9 +4,6 @@
 @import 'resources-reports/utilization/_media-utilization-styles';
 @import 'media-report-card/_media_report_card';
 
-.overview-card {
-  animation: scaleUpMediaCards 0.5s linear;
-}
 .media-reports {
   @extend %content-subheader;
   @extend %page-content-padding;
@@ -22,6 +19,9 @@
     padding-right: 1rem;
     padding-left: 0.1rem;
     padding-top: 0.1rem;
+  }
+  .overview-card {
+    animation: scaleUpMediaCards 0.5s linear;
   }
   .media-metrics-report-card {
     animation: scaleUpMediaCards 0.5s linear;
