@@ -1,5 +1,3 @@
-/* globals fdescribe fit */
-
 import testModule from './index';
 
 describe('crUserCsvResults Component', () => {

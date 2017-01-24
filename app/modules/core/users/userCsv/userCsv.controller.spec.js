@@ -1,5 +1,3 @@
-/* globals fit fdescribe */
-
 'use strict';
 
 var userCsvServiceModule = require('./userCsv.service');

@@ -1,5 +1,3 @@
-/* globals fdescribe fit */
-
 'use strict';
 
 describe('UserListCtrl: Ctrl', function () {

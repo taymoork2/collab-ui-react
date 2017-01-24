@@ -78,7 +78,7 @@ class CsvDownloadCtrl implements ng.IComponentController {
 
     this.FeatureToggleService.atlasNewUserExportGetStatus()
       .then((result) => {
-        this.newUserExportToggle = result || true;
+        this.newUserExportToggle = result;
       });
 
     this.iconClass = '';
