@@ -171,7 +171,7 @@
     };
 
     var deactivateHybridMedia = function () {
-      var url = MediaConfigServiceV2.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId() + '/deactivate_hybrid_media';
+      var url = MediaConfigServiceV2.getAthenaUrl() + '/organizations/' + Authinfo.getOrgId() + '/deactivate_hybrid_media';
       return $http.delete(url);
     };
 

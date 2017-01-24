@@ -83,7 +83,8 @@
         labelAttr: '@',
         placeholderAttr: '@',
         requiredAttr: '@',
-        categoryAttr: '@'
+        categoryAttr: '@',
+        mediaTypeAttr: '='
       }
     };
   }
@@ -109,8 +110,13 @@
       return getAttribute(field, $scope.typeAttr || 'type');
     };
 
-    $scope.setActiveItem = function (field) {
+    $scope.setActiveItem = function (field, fieldName) {
+      $scope.ctModel.activeItemName = fieldName;
       $scope.ctModel.activeItem = field;
+    };
+
+    $scope.getMediaTypeAttr = function () {
+      return $scope.mediaTypeAttr;
     };
 
     $scope.getFilteredFields = function (fields) {
@@ -120,9 +126,17 @@
       } catch (e) {
         //ignore
       }
-      return _.pickBy(fields, function (val, key) {
+      var data = _.pickBy(fields, function (val, key) {
         return !_.includes(ignoreFields, key);
       });
+      return sortObjectByKeyName(data);
+    };
+
+    $scope.defaultPhoneNumber = {
+      name: 'US',
+      code: 'us',
+      number: '1',
+      phoneNumber: '+12345556789'
     };
 
     var getAttribute = function (field, attributeName) {
@@ -133,5 +147,24 @@
         return attr.value;
       }
     };
+
+    function sortObjectByKeyName(o) {
+      var sorted = {};
+      var key, a = [];
+
+      for (key in o) {
+        if (o.hasOwnProperty(key)) {
+          a.push(key);
+        }
+      }
+
+      a.sort();
+
+      for (key = 0; key < a.length; key++) {
+        sorted[a[key]] = o[a[key]];
+      }
+      return sorted;
+    }
+
   }
 })();

@@ -7,13 +7,13 @@ describe('Controller: OverviewCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var controller, controllerCareFeatureDisabled, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnSetupService, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService;
+  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, PstnSetupService, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
 
   afterEach(function () {
-    controller = controllerCareFeatureDisabled = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnSetupService = OverviewNotificationFactory = ReportsService = ServiceDescriptor = ServiceStatusDecriptor = TrialService = FusionClusterService = SunlightReportService = undefined;
+    controller = $rootScope = $scope = $q = $state = $translate = Authinfo = Config = FeatureToggleService = Log = Orgservice = PstnSetupService = OverviewNotificationFactory = ReportsService = ServiceDescriptor = ServiceStatusDecriptor = TrialService = FusionClusterService = SunlightReportService = undefined;
   });
 
   afterAll(function () {
@@ -39,23 +39,6 @@ describe('Controller: OverviewCtrl', function () {
       expect(_.includes(cardnames, 'overview.cards.undefined.title')).toBeFalsy();
     });
 
-    // TODO Need to be removed once Care is graduated on atlas.
-    it('should not display care card if feature is toggled off', function () {
-      expect(controllerCareFeatureDisabled.cards).toBeDefined();
-
-      var cardnames = _.map(controllerCareFeatureDisabled.cards, function (card) {
-        return card.name;
-      });
-      expect(_.includes(cardnames, 'overview.cards.message.title')).toBeTruthy();
-      expect(_.includes(cardnames, 'overview.cards.meeting.title')).toBeTruthy();
-      expect(_.includes(cardnames, 'overview.cards.roomSystem.title')).toBeTruthy();
-      expect(_.includes(cardnames, 'overview.cards.call.title')).toBeTruthy();
-      expect(_.includes(cardnames, 'overview.cards.care.title')).toBeFalsy();
-      expect(_.includes(cardnames, 'overview.cards.hybrid.title')).toBeTruthy();
-      expect(_.includes(cardnames, 'overview.cards.users.title')).toBeTruthy();
-      expect(_.includes(cardnames, 'overview.cards.undefined.title')).toBeFalsy();
-    });
-
     it('should have properly set trialDaysLeft', function () {
       expect(controller.trialDaysLeft).toEqual(1);
     });
@@ -64,7 +47,7 @@ describe('Controller: OverviewCtrl', function () {
   describe('Enable Devices', function () {
     beforeEach(function () {
       inject(defaultWireUpFunc);
-      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.when(usageOnlySharedDevicesFixture));
+      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.resolve(usageOnlySharedDevicesFixture));
     });
 
     it('should call do something', function () {
@@ -204,7 +187,7 @@ describe('Controller: OverviewCtrl', function () {
     Orgservice = {
       getAdminOrg: function () {},
       getAdminOrgUsage: function () {
-        return $q.when({
+        return $q.resolve({
           data: orgServiceJSONFixture.getLicensesUsage.singleSub
         });
       },
@@ -236,12 +219,12 @@ describe('Controller: OverviewCtrl', function () {
 
     PstnSetupService = {
       getCustomerV2: function () {
-        return $q.when({
+        return $q.resolve({
           trial: true
         });
       },
       getCustomerTrialV2: function () {
-        return $q.when({
+        return $q.resolve({
           acceptedDate: "today"
         });
       }
@@ -273,10 +256,10 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
     spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(true);
-    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.when(true));
-    spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.when(1));
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.resolve(true));
+    spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.resolve(1));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
 
     controller = $controller('OverviewCtrl', {
       $scope: $scope,
@@ -294,27 +277,6 @@ describe('Controller: OverviewCtrl', function () {
       TrialService: TrialService,
       OverviewNotificationFactory: OverviewNotificationFactory,
       SunlightReportService: SunlightReportService,
-      hasCareFeatureToggle: true,
-      hasGoogleCalendarFeatureToggle: false,
-    });
-
-    // TODO Need to be removed once Care is graduated on atlas.
-    controllerCareFeatureDisabled = $controller('OverviewCtrl', {
-      $scope: $scope,
-      $rootScope: $rootScope,
-      Log: Log,
-      Authinfo: Authinfo,
-      $translate: $translate,
-      $state: $state,
-      ReportsService: ReportsService,
-      Orgservice: Orgservice,
-      PstnSetupService: PstnSetupService,
-      ServiceDescriptor: ServiceDescriptor,
-      ServiceStatusDecriptor: ServiceStatusDecriptor,
-      Config: Config,
-      TrialService: TrialService,
-      OverviewNotificationFactory: OverviewNotificationFactory,
-      hasCareFeatureToggle: false,
       hasGoogleCalendarFeatureToggle: false,
     });
 

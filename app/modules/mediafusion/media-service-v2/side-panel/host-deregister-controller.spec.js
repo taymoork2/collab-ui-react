@@ -51,7 +51,7 @@ describe('Controller: HostDeregisterControllerV2', function () {
   });
 
   it('check if Deregister is called', function () {
-    spyOn(MediaClusterServiceV2, 'defuseV2Connector').and.returnValue($q.when());
+    spyOn(MediaClusterServiceV2, 'defuseV2Connector').and.returnValue($q.resolve());
     controller.deregister();
     expect(MediaClusterServiceV2.defuseV2Connector).toHaveBeenCalled();
     expect(controller.saving).toBe(true);
@@ -60,7 +60,7 @@ describe('Controller: HostDeregisterControllerV2', function () {
 
   it('check if Deregister is called with  clusterId', function () {
 
-    spyOn(MediaClusterServiceV2, 'defuseV2Connector').and.returnValue($q.when());
+    spyOn(MediaClusterServiceV2, 'defuseV2Connector').and.returnValue($q.resolve());
     controller.deregister();
     expect(MediaClusterServiceV2.defuseV2Connector).toHaveBeenCalledWith(cluster.id);
   });

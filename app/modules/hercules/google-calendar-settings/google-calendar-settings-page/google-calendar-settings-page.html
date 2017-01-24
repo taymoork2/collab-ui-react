@@ -4,11 +4,7 @@
     <google-calendar-notifications-dropdown></google-calendar-notifications-dropdown>
   </cs-page-sub-header-left>
   <cs-page-sub-header-right>
-    <button class="btn btn--link"
-            type="button"
-            translate="hercules.overview.report"
-            ng-click="$ctrl.openUserStatusReportModal()">
-    </button>
+    <user-status-report-button user-statuses="$ctrl.userStatusesSummary"></user-status-report-button>
   </cs-page-sub-header-right>
 </cs-page-sub-header>
 <user-statuses-bar user-statuses="$ctrl.userStatusesSummary"></user-statuses-bar>

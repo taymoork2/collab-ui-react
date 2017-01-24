@@ -3,7 +3,7 @@
 describe('Controller: ServiceSetup', function () {
   var $scope, $state, $previousState, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer, DialPlanService;
   var Authinfo, VoicemailMessageAction, Orgservice;
-  var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction, FeatureToggleService, languages, countries;
+  var model, customer, voicemail, avrilSites, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction, FeatureToggleService, languages, countries;
   var $rootScope, PstnSetupService;
   var dialPlanDetailsNorthAmerica = [{
     countryCode: "+1",
@@ -93,6 +93,7 @@ describe('Controller: ServiceSetup', function () {
     messageAction = getJSONFixture('huron/json/settings/messageAction.json');
     languages = getJSONFixture('huron/json/settings/languages.json');
     countries = getJSONFixture('huron/json/settings/countries.json');
+    avrilSites = getJSONFixture('huron/json/settings/AvrilSite.json');
 
     spyOn($previousState, 'get').and.returnValue({
       state: {
@@ -100,38 +101,38 @@ describe('Controller: ServiceSetup', function () {
       }
     });
 
-    spyOn(ServiceSetup, 'createInternalNumberRange').and.returnValue($q.when());
-    spyOn(ServiceSetup, 'deleteInternalNumberRange').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'createInternalNumberRange').and.returnValue($q.resolve());
+    spyOn(ServiceSetup, 'deleteInternalNumberRange').and.returnValue($q.resolve());
     spyOn(ServiceSetup, 'listSites').and.callFake(function () {
       ServiceSetup.sites = [model.site];
-      return $q.when();
+      return $q.resolve();
     });
-    spyOn(ServiceSetup, 'createSite').and.returnValue($q.when());
-    spyOn(ServiceSetup, 'updateSite').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'createSite').and.returnValue($q.resolve());
+    spyOn(ServiceSetup, 'updateSite').and.returnValue($q.resolve());
 
-    spyOn(HuronCustomer, 'get').and.returnValue($q.when(customer));
-    spyOn(HuronCustomer, 'put').and.returnValue($q.when());
-    spyOn(ServiceSetup, 'listVoicemailTimezone').and.returnValue($q.when(usertemplate));
-    spyOn(ServiceSetup, 'loadExternalNumberPool').and.returnValue($q.when(externalNumberPool));
-    spyOn(ServiceSetup, 'updateCustomer').and.returnValue($q.when());
-    spyOn(ServiceSetup, 'updateVoicemailTimezone').and.returnValue($q.when());
-    spyOn(ServiceSetup, 'updateVoicemailUserTemplate').and.returnValue($q.when());
-    spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
-    spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.when());
+    spyOn(HuronCustomer, 'get').and.returnValue($q.resolve(customer));
+    spyOn(HuronCustomer, 'put').and.returnValue($q.resolve());
+    spyOn(ServiceSetup, 'listVoicemailTimezone').and.returnValue($q.resolve(usertemplate));
+    spyOn(ServiceSetup, 'loadExternalNumberPool').and.returnValue($q.resolve(externalNumberPool));
+    spyOn(ServiceSetup, 'updateCustomer').and.returnValue($q.resolve());
+    spyOn(ServiceSetup, 'updateVoicemailTimezone').and.returnValue($q.resolve());
+    spyOn(ServiceSetup, 'updateVoicemailUserTemplate').and.returnValue($q.resolve());
+    spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.resolve());
+    spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.resolve());
     spyOn(ServiceSetup, 'listInternalNumberRanges').and.callFake(function () {
       ServiceSetup.internalNumberRanges = model.numberRanges;
-      return $q.when();
+      return $q.resolve();
     });
 
-    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timeZone));
-    spyOn(ServiceSetup, 'getSiteLanguages').and.returnValue($q.when(languages));
-    spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.when(countries));
+    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.resolve(timeZone));
+    spyOn(ServiceSetup, 'getSiteLanguages').and.returnValue($q.resolve(languages));
+    spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.resolve(countries));
     spyOn(Notification, 'notify');
     spyOn(Notification, 'errorResponse');
-    spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.when({
+    spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.resolve({
       dialPlanDetails: dialPlanDetailsNorthAmerica
     }));
-    spyOn(DialPlanService, 'updateCustomerVoice').and.returnValue($q.when());
+    spyOn(DialPlanService, 'updateCustomerVoice').and.returnValue($q.resolve());
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise
     });
@@ -139,9 +140,13 @@ describe('Controller: ServiceSetup', function () {
     spyOn(Authinfo, 'getOrgName').and.returnValue('Cisco Org Name');
     spyOn(Authinfo, 'getOrgId').and.returnValue(customer.uuid);
 
-    spyOn(VoicemailMessageAction, 'get').and.returnValue($q.when(messageAction));
-    spyOn(VoicemailMessageAction, 'update').and.returnValue($q.when());
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+    spyOn(VoicemailMessageAction, 'get').and.returnValue($q.resolve(messageAction));
+    spyOn(VoicemailMessageAction, 'update').and.returnValue($q.resolve());
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
+
+    spyOn(ServiceSetup, 'getAvrilSite').and.returnValue($q.resolve(avrilSites));
+    spyOn(ServiceSetup, 'updateAvrilSite').and.returnValue($q.resolve());
+    spyOn(ServiceSetup, 'createAvrilSite').and.returnValue($q.resolve());
 
     $httpBackend
       .expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + customer.uuid + '/directorynumbers')
@@ -193,8 +198,8 @@ describe('Controller: ServiceSetup', function () {
         }],
         previousSiteCode: 200
       };
-      spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(model.site));
-      spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(voicemail));
+      spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(model.site));
+      spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.resolve(voicemail));
 
       controller = $controller('ServiceSetupCtrl', {
         $scope: $scope,
@@ -826,6 +831,47 @@ describe('Controller: ServiceSetup', function () {
         expect(ModalService.open).not.toHaveBeenCalled();
       });
 
+      it('avril enabled customer enabling voicemail should update avril site and voicemail timezone', function () {
+        var selectedPilotNumber = {
+          pattern: '+19728965000',
+          label: '(972) 896-5000'
+        };
+
+        controller.hasSites = true;
+        controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
+        controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
+        controller.hasVoicemailService = false;
+        controller.model.site.timeZone = {
+          id: 'bogus'
+        };
+
+        controller.model.site.preferredLanguage = {
+          id: 'es_US'
+        };
+        controller.model.site.country = {
+          value: 'US'
+        };
+        controller.previousTimeZone = controller.model.site.timeZone;
+
+        controller.voicemailAvrilCustomer = true;
+        controller.customer.servicePackage = 'VOICE_VOICEMAIL_AVRIL';
+        controller.avrilTzUpdated = true;
+
+        //remove singlenumber range for it to pass
+        controller.deleteInternalNumberRange(model.numberRanges[2]);
+        controller.initNext();
+        $scope.$apply();
+
+        expect(ServiceSetup.updateSite).toHaveBeenCalled();
+        expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
+        expect(ServiceSetup.updateAvrilSite).toHaveBeenCalled();
+        expect(ServiceSetup.getAvrilSite).toHaveBeenCalled();
+        expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
+        expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
+        expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
+        expect(ModalService.open).not.toHaveBeenCalled();
+      });
+
       it('customer with new outbound steering digit should update site', function () {
         controller.hasSites = true;
         controller.model.ftswSteeringDigit = '5';
@@ -1100,8 +1146,8 @@ describe('Controller: ServiceSetup', function () {
         pilotNumber: "+911234123412341234123412341234123412341234",
         label: "(650) 667-9080"
       };
-      spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(model.site));
-      spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(voicemail));
+      spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(model.site));
+      spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.resolve(voicemail));
       spyOn(ServiceSetup, 'generateVoiceMailNumber').and.returnValue('+911234123412341234123412341234123412341234');
       controller = $controller('ServiceSetupCtrl', {
         $scope: $scope,
@@ -1197,8 +1243,8 @@ describe('Controller: ServiceSetup', function () {
         pilotNumber: "+6506679080",
         label: "(650) 667-9080"
       };
-      spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(model.site));
-      spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(voicemail));
+      spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(model.site));
+      spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.resolve(voicemail));
       spyOn(ServiceSetup, 'generateVoiceMailNumber').and.returnValue('+911234123412341234123412341234123412341234');
       controller = $controller('ServiceSetupCtrl', {
         $scope: $scope,

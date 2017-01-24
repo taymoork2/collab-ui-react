@@ -5,11 +5,29 @@
     .module('Sunlight')
     .controller('EmbedCodeCtrl', EmbedCodeCtrl);
 
-  function EmbedCodeCtrl($window, CTService, templateId, templateHeader) {
+  function EmbedCodeCtrl($window, CTService, SunlightConfigService, templateId, templateHeader) {
     var vm = this;
     vm.embedCodeSnippet = CTService.generateCodeSnippet(templateId);
     vm.downloadEmbedCode = downloadEmbedCode;
     vm.templateHeader = templateHeader;
+    vm.isLoading = true;
+
+    SunlightConfigService.getChatConfig()
+      .then(function (response) {
+        var allowedOrigins = _.get(response, 'data.allowedOrigins');
+        var warn = false;
+        if (allowedOrigins.length === 1 && allowedOrigins[0] === '.*') {
+          allowedOrigins = null;
+          warn = true;
+        }
+        vm.domainInfo = { data: allowedOrigins, error: false, warn: warn };
+      })
+      .catch(function () {
+        vm.domainInfo = { data: null, error: true, warn: false };
+      })
+      .finally(function () {
+        vm.isLoading = false;
+      });
 
     function downloadEmbedCode($event) {
       var anchorElement = $window.document.getElementById('downloadChatCodeTxt');

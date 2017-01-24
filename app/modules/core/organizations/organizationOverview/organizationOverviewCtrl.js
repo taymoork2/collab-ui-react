@@ -55,6 +55,7 @@ require('./_organization-overview.scss');
           };
         };
         $scope.betaChannel = new ReleaseChannel('beta', _.includes($scope.currentOrganization.services, 'squared-fusion-mgmt-channel-beta'));
+        $scope.alphaChannel = new ReleaseChannel('alpha', _.includes($scope.currentOrganization.services, 'squared-fusion-mgmt-channel-alpha'));
         $scope.latestChannel = new ReleaseChannel('latest', _.includes($scope.currentOrganization.services, 'squared-fusion-mgmt-channel-latest'));
       }
     }

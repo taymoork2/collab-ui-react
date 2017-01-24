@@ -17,7 +17,7 @@ describe('Controller: RemPlaceController', function () {
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(inject(function (FeatureToggleService, $q, Authinfo) {
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(Authinfo, 'getOrgId').and.returnValue('testOrg');
   }));
 
@@ -39,7 +39,7 @@ describe('Controller: RemPlaceController', function () {
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/?shallow=true&type=all').respond(accounts);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices/?type=huron').respond([]);
 
-      spyOn(CsdmPlaceService, 'deleteItem').and.returnValue($q.when());
+      spyOn(CsdmPlaceService, 'deleteItem').and.returnValue($q.resolve());
       spyOn(fakeModal, 'close');
 
       controller = $controller('RemPlaceController', {

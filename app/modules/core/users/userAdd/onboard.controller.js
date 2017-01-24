@@ -92,15 +92,11 @@ require('./_user-add.scss');
     $scope.cancelModal = cancelModal;
     var currentUserHasCall = false;
 
-    $scope.isCareEnabled = false;
-    FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
-      $scope.isCareEnabled = careStatus && Authinfo.isCare();
-    });
-
-    $scope.isCallBackEnabled = false;
+    $scope.isCareEnabled = Authinfo.isCare();
+    $scope.isCareCallBackEnabled = false;
     $scope.enableCareService = true;
     FeatureToggleService.atlasCareCallbackTrialsGetStatus().then(function (callBackStatus) {
-      $scope.isCallBackEnabled = callBackStatus;
+      $scope.isCareCallBackEnabled = callBackStatus;
     });
 
     FeatureToggleService.atlasSMPGetStatus().then(function (smpStatus) {
@@ -644,7 +640,10 @@ require('./_user-add.scss');
                 var hasSyncKms = _.find(data.roles, function (r) {
                   return r === Config.backend_roles.spark_synckms;
                 });
-                if (hasSyncKms) {
+                var hasContextServiceEntitlement = _.find(data.entitlements, function (r) {
+                  return r === Config.entitlements.context;
+                });
+                if (hasSyncKms && hasContextServiceEntitlement) {
                   $scope.radioStates.careRadio = true;
                   $scope.radioStates.initialCareRadioState = true;
                   $scope.enableCareService = true;
@@ -701,7 +700,7 @@ require('./_user-add.scss');
     var generateConfChk = function (confs, cmrs) {
       $scope.confChk = [];
       $scope.allLicenses = [];
-      $scope.standardLicenses = [];
+      $scope.basicLicenses = [];
       $scope.advancedLicenses = [];
 
       var formatLicense = function (site) {
@@ -772,20 +771,37 @@ require('./_user-add.scss');
         $scope.confChk.push(temp);
       }
 
-      // Distinguish between standard license and advanced license types
+      // Distinguish between basic license and advanced license types
       _.forEach($scope.allLicenses, function (license) {
         if (license.site) {
           $scope.advancedLicenses.push(license);
         } else {
-          $scope.standardLicenses.push(license);
+          $scope.basicLicenses.push(license);
         }
       });
 
-      $scope.hasStandardLicenses = !_.isEmpty($scope.standardLicenses);
+      $scope.hasBasicLicenses = !_.isEmpty($scope.basicLicenses);
       $scope.hasAdvancedLicenses = !_.isEmpty($scope.advancedLicenses);
 
       populateConf();
       populateConfInvitations();
+    };
+
+    /* TODO: Refactor this functions into MultipleSubscriptions Controller */
+    $scope.selectedSubscriptionHasBasicLicenses = function (subscriptionId) {
+      return _.some($scope.basicLicenses, function (service) {
+        if (_.get(service, 'billing') === subscriptionId) {
+          return !_.has(service, 'site');
+        }
+      });
+    };
+
+    /* TODO: Refactor this functions into MultipleSubscriptions Controller */
+    $scope.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
+      var advancedLicensesInSubscription = _.filter($scope.advancedLicenses, { confLic: [{ billing: subscriptionId }] });
+      return _.some(advancedLicensesInSubscription, function (service) {
+        return _.has(service, 'site');
+      });
     };
 
     $scope.isSharedMultiPartyLicense = function (license) {
@@ -793,7 +809,11 @@ require('./_user-add.scss');
     };
 
     $scope.determineLicenseType = function (license) {
-      return $scope.isSharedMultiPartyLicense(license) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.assignedLicenses');
+      return $scope.isSharedMultiPartyLicense(license) ? $translate.instant('firstTimeWizard.sharedLicense') : $translate.instant('firstTimeWizard.namedLicense');
+    };
+
+    $scope.generateLicenseTooltip = function (license) {
+      return $scope.isSharedMultiPartyLicense(license) ? '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.sharedLicenseTooltip') + '</div>' : '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.namedLicenseTooltip') + '</div>';
     };
 
     $scope.isSubscribeable = function (license) {
@@ -1964,7 +1984,7 @@ require('./_user-add.scss');
       var deferred = $q.defer();
 
       if (getUsersList().length === 0) {
-        $q.when($scope.wizard.nextTab()).then(function () {
+        $q.resolve($scope.wizard.nextTab()).then(function () {
           deferred.reject();
         });
       } else {
@@ -2510,7 +2530,7 @@ require('./_user-add.scss');
       // Onboard users in chunks
       // Separate chunks on invalid rows
       var csvChunk = isCommunicationSelected ? 2 : 10; // Rate limit for Huron
-      var csvPromise = $q.when();
+      var csvPromise = $q.resolve();
       var tempUserArray = [];
       var uniqueEmails = [];
       var processingError;
@@ -2556,7 +2576,7 @@ require('./_user-add.scss');
     }
 
     function controlCare() {
-      if ($scope.isCallBackEnabled) {
+      if ($scope.isCareCallBackEnabled) {
         if ($scope.radioStates.msgRadio && $scope.radioStates.commRadio) {
           $scope.enableCareService = true;
         } else {

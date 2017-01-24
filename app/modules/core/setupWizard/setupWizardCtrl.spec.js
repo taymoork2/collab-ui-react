@@ -35,11 +35,11 @@ describe('SetupWizardCtrl', function () {
       licenseType: 'SHARED_DEVICES'
     }]);
 
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.when(false));
-    spyOn(Orgservice, 'getAdminOrgUsage').and.returnValue($q.when(usageFixture));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.resolve(false));
+    spyOn(Orgservice, 'getAdminOrgUsage').and.returnValue($q.resolve(usageFixture));
   }));
 
   function _expectStepIndex(step, index) {
@@ -150,9 +150,9 @@ describe('SetupWizardCtrl', function () {
       }]);
       FeatureToggleService.supports.and.callFake(function (val) {
         if (val === FeatureToggleService.features.atlasSipUriDomain) {
-          return $q.when(true);
+          return $q.resolve(true);
         }
-        return $q.when(false);
+        return $q.resolve(false);
       });
       initController();
     });
@@ -168,7 +168,7 @@ describe('SetupWizardCtrl', function () {
 
   describe('When dirsync is enabled', function () {
     beforeEach(function () {
-      FeatureToggleService.supportsDirSync.and.returnValue($q.when(true));
+      FeatureToggleService.supportsDirSync.and.returnValue($q.resolve(true));
       initController();
     });
 
@@ -194,7 +194,6 @@ describe('SetupWizardCtrl', function () {
     beforeEach(function () {
       Authinfo.isCare.and.returnValue(true);
       Authinfo.isCSB.and.returnValue(false);
-      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
       initController();
     });
 
@@ -210,7 +209,6 @@ describe('SetupWizardCtrl', function () {
   describe('When Authinfo.isCare is enabled ', function () {
     beforeEach(function () {
       Authinfo.isCare.and.returnValue(true);
-      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
       initController();
     });
 
@@ -222,7 +220,6 @@ describe('SetupWizardCtrl', function () {
   describe('When Authinfo.isCare is enabled and not first time setup', function () {
     beforeEach(function () {
       Authinfo.isCare.and.returnValue(true);
-      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
       Authinfo.isSetupDone.and.returnValue(true);
       initController();
     });
@@ -236,9 +233,9 @@ describe('SetupWizardCtrl', function () {
     beforeEach(function () {
       FeatureToggleService.supports.and.callFake(function (val) {
         if (val === FeatureToggleService.features.atlasSipUriDomainEnterprise) {
-          return $q.when(true);
+          return $q.resolve(true);
         }
-        return $q.when(false);
+        return $q.resolve(false);
       });
       initController();
     });
@@ -250,8 +247,8 @@ describe('SetupWizardCtrl', function () {
 
   describe('When there are only shared device licenses', function () {
     beforeEach(function () {
-      FeatureToggleService.atlasDarlingGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
-      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.when(usageOnlySharedDevicesFixture));
+      FeatureToggleService.atlasDarlingGetStatus = jasmine.createSpy().and.returnValue($q.resolve(true));
+      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.resolve(usageOnlySharedDevicesFixture));
 
       initController();
     });
@@ -271,9 +268,8 @@ describe('SetupWizardCtrl', function () {
       }]);
       Authinfo.isCare.and.returnValue(true);
 
-      FeatureToggleService.supports.and.returnValue($q.when(true));
-      FeatureToggleService.supportsDirSync.and.returnValue($q.when(true));
-      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
+      FeatureToggleService.supports.and.returnValue($q.resolve(true));
+      FeatureToggleService.supportsDirSync.and.returnValue($q.resolve(true));
 
       initController();
     });

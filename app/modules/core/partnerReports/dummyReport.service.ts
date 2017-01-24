@@ -89,7 +89,7 @@ export class DummyReportService {
       overallPopulation: 50,
       color: this.chartColors.grayLightFour,
       balloon: false,
-      labelColorField: this.chartColors.grayLight,
+      labelColorField: this.chartColors.grayLightTwo,
     };
   }
 

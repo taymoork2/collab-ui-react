@@ -27,6 +27,7 @@
             "siteUrl": "trialForPaid.webex.com",
             "partnerOrg": "Seattle Autobots",
             "partnerEmail": "fakeuserunodostres+admin1@gmail.com",
+            "partnerOrgId": "12345",
             "isCIUnifiedSite": true
         },
         {
@@ -41,6 +42,7 @@
             "capacity": 200,
             "siteUrl": "trialForPaid.webex.com",
             "partnerOrg": "Seattle Autobots",
+            "partnerOrgId": "12345",
             "partnerEmail": "fakeuserunodostres+admin1@gmail.com",
             "isCIUnifiedSite": true
         },
@@ -53,6 +55,7 @@
             ],
             "volume": 2,
             "isTrial": true,
+            "partnerOrgId": "12345",
             "trialId": "e5c4d575-df52-461d-a72d-badc83678eb3",
             "status": "PENDING",
             "partnerOrg": "Seattle Autobots",
@@ -65,6 +68,7 @@
             "features": [],
             "volume": 100,
             "isTrial": true,
+            "partnerOrgId": "12345",
             "trialId": "e5c4d575-df52-461d-a72d-badc83678eb3",
             "status": "PENDING",
             "partnerOrg": "Seattle Autobots",
@@ -79,6 +83,7 @@
             ],
             "volume": 1,
             "isTrial": true,
+            "partnerOrgId": "12345",
             "trialId": "e5c4d575-df52-461d-a72d-badc83678eb3",
             "status": "PENDING",
             "partnerOrg": "Seattle Autobots",
@@ -95,6 +100,7 @@
             "volume": 49,
             "isTrial": false,
             "status": "ACTIVE",
+            "partnerOrgId": "12345",
             "partnerOrg": "Seattle Autobots",
             "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
         },
@@ -108,6 +114,7 @@
             ],
             "volume": 69,
             "isTrial": false,
+            "partnerOrgId": "123456",
             "status": "ACTIVE",
             "partnerOrg": "Seattle Autobots",
             "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
@@ -115,6 +122,7 @@
         {
             "licenseId": "CF_8379b349-9532-4fda-ba1d-17cd9cd755f5",
             "offerName": "CF",
+            "partnerOrgId": "123456",
             "licenseType": "CONFERENCING",
             "billingServiceId": "Atlas_Test_bradm3285P2",
             "features": [

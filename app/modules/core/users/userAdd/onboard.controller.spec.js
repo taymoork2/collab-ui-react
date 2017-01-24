@@ -44,6 +44,8 @@ describe('OnboardCtrl: Ctrl', function () {
     this.mock.externalNumberPool = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPool.json');
     this.mock.externalNumberPoolMap = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPoolMap.json');
     this.mock.getUserMe = getJSONFixture('core/json/users/me.json');
+    this.mock.getUserWithoutKms = getJSONFixture('core/json/users/noKms.json');
+    this.mock.getUserWithoutContext = getJSONFixture('core/json/users/noContext.json');
     this.mock.getMigrateUsers = getJSONFixture('core/json/users/migrate.json');
     this.mock.getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
     this.mock.sites = getJSONFixture('huron/json/settings/sites.json');
@@ -86,7 +88,6 @@ describe('OnboardCtrl: Ctrl', function () {
 
     spyOn(this.FeatureToggleService, 'getFeaturesForUser').and.returnValue(this.mock.getMyFeatureToggles);
     spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.when(false));
-    spyOn(this.FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(this.$q.when(true));
     spyOn(this.FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue(this.$q.when(true));
     spyOn(this.TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue(this.$q.when(this.mock.sites));
     spyOn(this.ServiceSetup, 'listSites').and.returnValue(this.$q.when(this.mock.sites));
@@ -868,6 +869,68 @@ describe('OnboardCtrl: Ctrl', function () {
       });
     });
 
+    describe('Check that careRadio remains false when user does not have the context entitlement', function () {
+      var userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
+
+      beforeEach(function () {
+        spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+        spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
+        spyOn(this.LogMetricsService, 'logMetrics').and.callFake(function () {});
+        this.$httpBackend.expectGET(this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/'
+          + this.Authinfo.getOrgId() + '/user' + '/' + userId).respond(200);
+        this.$httpBackend.expectGET(this.UrlConfig.getScimUrl('null') + '/' + userId).respond(
+          200, this.mock.getUserWithoutContext);
+        this.$stateParams.currentUser = {
+          licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
+          entitlements: ['cloud-contact-center'],
+          roles: ['spark.synckms'],
+          id: userId
+        };
+      });
+      beforeEach(initController);
+
+
+      it('should call getAccountLicenses correctly', function () {
+        this.$httpBackend.flush();
+        this.$scope.radioStates.initialCareRadioState = false;
+        this.$scope.getAccountLicenses();
+        expect(this.$scope.radioStates.careRadio).toEqual(false);
+        this.$httpBackend.verifyNoOutstandingRequest();
+      });
+    });
+
+    describe('Check that careRadio remains false when user does not have the kms scopes', function () {
+      var userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
+
+      beforeEach(function () {
+        spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+        spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
+        spyOn(this.LogMetricsService, 'logMetrics').and.callFake(function () {});
+        this.$httpBackend.expectGET(this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/'
+          + this.Authinfo.getOrgId() + '/user' + '/' + userId).respond(200);
+        this.$httpBackend.expectGET(this.UrlConfig.getScimUrl('null') + '/' + userId).respond(
+          200, this.mock.getUserWithoutKms);
+        this.$stateParams.currentUser = {
+          licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
+          entitlements: ['cloud-contact-center', 'contact-center-context'],
+          id: userId
+        };
+      });
+      beforeEach(initController);
+
+
+      it('should call getAccountLicenses correctly', function () {
+        this.$httpBackend.flush();
+        this.$scope.radioStates.initialCareRadioState = false;
+        this.$scope.getAccountLicenses();
+        expect(this.$scope.radioStates.careRadio).toEqual(false);
+        this.$httpBackend.verifyNoOutstandingRequest();
+      });
+    });
+
+
     describe('Check if multiple licenses get assigned correctly', function () {
       var userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
 
@@ -881,7 +944,8 @@ describe('OnboardCtrl: Ctrl', function () {
         this.$httpBackend.expectGET(this.UrlConfig.getScimUrl('null') + '/' + userId).respond(200, this.mock.getUserMe);
         this.$stateParams.currentUser = {
           licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
-          entitlements: ['cloud-contact-center'],
+          entitlements: ['cloud-contact-center', 'contact-center-context'],
+          roles: ['spark.synckms'],
           id: userId
         };
       });

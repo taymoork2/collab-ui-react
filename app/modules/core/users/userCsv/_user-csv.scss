@@ -126,7 +126,7 @@
       }
     }
 
-    .user-csv-export {
+    .user-csv-export, .user-csv-upload {
       .hotspot {
         cursor: pointer;
 
@@ -135,12 +135,16 @@
         }
       }
 
+      label.hotspot {
+        font-size: vr-adjust(16);
+      }
+
       .csv-download {
         @include vr-spacing(m, 0);
       }
 
       .prompt {
-        width: 10rem;
+        min-width: 10rem;
       }
 
       .icon {

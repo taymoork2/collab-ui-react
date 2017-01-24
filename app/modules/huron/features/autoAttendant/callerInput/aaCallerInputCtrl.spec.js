@@ -57,7 +57,7 @@ describe('Controller: AACallerInputCtrl', function () {
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
-    spyOn(featureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(featureToggleService, 'supports').and.returnValue($q.resolve(true));
 
     aaCommonService.resetFormStatus();
 

@@ -5,9 +5,14 @@
   background-color: $gray-light-2;
 }
 .device-usage-report-pages {
+  @import 'least-most.scss';
   position: relative;
   .customer-report-filter {
     width: 12.5rem;
+  }
+  .model-filter {
+    margin-left: 1rem;
+    width: 20rem;
   }
 
   .cs-card.large, .cs-card.full {

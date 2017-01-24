@@ -44,11 +44,12 @@
 
     var runActionInputName = 'runActionsOnInput';
     var errMissingVariableNameMsg = 'autoAttendant.callerInputMenuErrorVariableNameMissing';
-    var errNoInputValuesEnteredMsg = 'autoAttendant.callerInputMenuErrorNoInputValuesEntered';
-
+    var errCallerInputNoInputValuesEnteredMsg = 'autoAttendant.callerInputMenuErrorNoInputValuesEntered';
+    var errPhoneMenuNoInputValuesEnteredMsg = 'autoAttendant.phoneMenuMenuErrorNoInputValuesEntered';
+    var errSubMenuNoInputValuesEnteredMsg = 'autoAttendant.subMenuErrorNoInputValuesEntered';
     var service = {
       isNameValidationSuccess: isNameValidationSuccess,
-      isRouteToValidationSuccess: isRouteToValidationSuccess
+      isValidCES: isValidCES
     };
 
     return service;
@@ -141,8 +142,15 @@
       return;
     }
 
-    /* whichLane - openHours, closeHours, holiday */
+    function noEntriesCeMenu(entry, outErrors, whichLane) {
+      if (noInputsEntered(entry)) {
+        return true;
+      }
+      checkAllKeys(entry, whichLane, outErrors);
+      return false;
+    }
 
+    /* whichLane - openHours, closeHours, holiday */
     function checkAllKeys(optionMenu, whichLane, outErrors) {
 
       _.forEach(optionMenu.entries, function (entry) {
@@ -153,7 +161,14 @@
 
         var saveKey = optionMenu.key;
         if (AutoAttendantCeMenuModelService.isCeMenu(entry)) {
-          checkAllKeys(entry, whichLane, outErrors);
+          // submenu
+          if (noEntriesCeMenu(entry, outErrors, whichLane)) {
+            outErrors.push({
+              msg: errSubMenuNoInputValuesEnteredMsg,
+              key: entry.key
+            });
+          }
+
           return;
         } else {
           if (actionValid(entry, whichLane)) {
@@ -211,7 +226,7 @@
         if (action.inputType === 4) {
           if (!action.inputActions || action.inputActions.length === 0) {
             validAction = false;
-            AANotificationService.error(errNoInputValuesEnteredMsg, {
+            AANotificationService.error(errCallerInputNoInputValuesEnteredMsg, {
               schedule: translatedLabel,
               at: _.indexOf(callerInputMenus, callerInputMenu) + 1
             });
@@ -225,7 +240,7 @@
 
           if (!atLeastOneNonBlank) {
             validAction = false;
-            AANotificationService.error(errNoInputValuesEnteredMsg, {
+            AANotificationService.error(errCallerInputNoInputValuesEnteredMsg, {
               schedule: translatedLabel,
               at: _.indexOf(callerInputMenus, callerInputMenu) + 1
             });
@@ -234,15 +249,37 @@
       }
       return validAction;
     }
+    function noInputsEntered(optionMenu) {
+      var actions = _.filter(_.get(optionMenu, 'entries', []), function (elem) {
+        if (!_.has(elem, 'actions[0]')) {
+          //submenu, don't check now
+          return true;
+        }
+
+        return !_.isEmpty(elem.actions[0].name);
+
+      });
+      return actions.length === 0;
+    }
 
     function checkForValidPhoneMenu(optionMenu, menuOptions, fromLane, translatedLabel) {
       var errors = [];
       var isValid = true;
 
-      if (_.has(optionMenu, 'entries')) {
-        checkAllKeys(optionMenu, fromLane, errors, 0);
-      }
+      if (_.has(optionMenu, 'entries') && (optionMenu.entries.length > 0)) {
 
+        if (noInputsEntered(optionMenu)) {
+          errors.push({
+            msg: errPhoneMenuNoInputValuesEnteredMsg
+          });
+        } else {
+          checkAllKeys(optionMenu, fromLane, errors, 0);
+        }
+      } else {
+        errors.push({
+          msg: errPhoneMenuNoInputValuesEnteredMsg
+        });
+      }
       _.forEach(errors, function (err) {
         isValid = false;
 
@@ -287,7 +324,7 @@
       return isValid;
     }
 
-    function isRouteToValidationSuccess(ui) {
+    function isValidCES(ui) {
       var openHoursValid = true;
       var closedHoursValid = true;
       var holidaysValid = true;

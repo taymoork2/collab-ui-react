@@ -4,12 +4,12 @@ import {
   IDropdownBase,
   IReportCard,
   IReportDropdown,
+  IReportLabel,
   ISecondaryReport,
 } from '../../partnerReports/partnerReportInterfaces';
 
 import {
   IMetricsData,
-  IMetricsLabel,
 } from './sparkReportInterfaces';
 
 describe('Controller: Customer Reports Ctrl', function () {
@@ -33,7 +33,8 @@ describe('Controller: Customer Reports Ctrl', function () {
   let filesSharedCard: IReportCard = _.cloneDeep(ctrlData.filesSharedOptions);
   let mediaOptions: IReportCard = _.cloneDeep(ctrlData.mediaOptions);
   let metricsOptions: IReportCard = _.cloneDeep(ctrlData.callOptions);
-  let metricsLabels: Array<IMetricsLabel> = _.cloneDeep(ctrlData.metricsLabels);
+  let metricsLabels: Array<IReportLabel> = _.cloneDeep(ctrlData.metricsLabels);
+  let qualityLabels: Array<IReportLabel> = _.cloneDeep(ctrlData.qualityLabels);
   activeOptions.description = 'activeUsers.customerPortalDescription';
   activeOptions.table = undefined;
   secondaryActiveOptions.description = 'activeUsers.customerMostActiveDescription';
@@ -191,7 +192,13 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(controller.mediaDropdown.selected).toEqual(mediaDropdown.selected);
 
         expect(controller.metricsOptions).toEqual(metricsOptions);
-        expect(controller.metricsLabels).toEqual(metricsLabels);
+        _.forEach(controller.metricsLabels, (label: IReportLabel, index: number): void => {
+          expect(label.class).toBeUndefined();
+          expect(label.click).toBeUndefined();
+          expect(label.hidden).toEqual(metricsLabels[index].hidden);
+          expect(label.number).toEqual(metricsLabels[index].number);
+          expect(label.text).toEqual(metricsLabels[index].text);
+        });
 
         let reportFilter: Array<IFilterObject> = _.cloneDeep(ctrlData.reportFilter);
         _.forEach(controller.filterArray, function (filter, index: number) {
@@ -400,9 +407,26 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(controller.mediaDropdown.array).toEqual(mediaDropdown.array);
         expect(controller.mediaDropdown.disabled).toEqual(mediaDropdown.disabled);
         expect(controller.mediaDropdown.selected).toEqual(mediaDropdown.selected);
+        _.forEach(controller.qualityLabels, (label: IReportLabel, index: number): void => {
+          expect(label.class).toEqual(qualityLabels[index].class);
+          expect(label.click).toEqual(jasmine.any(Function));
+          expect(label.hidden).toEqual(qualityLabels[index].hidden);
+          expect(label.number).toEqual(qualityLabels[index].number);
+          expect(label.text).toEqual(qualityLabels[index].text);
+        });
+        expect(controller.qualityTooltip).toEqual({
+          title: 'mediaQuality.avgMinutes',
+          text: 'mediaQuality.minTooltip',
+        });
 
         expect(controller.metricsOptions).toEqual(metricsOptions);
-        expect(controller.metricsLabels).toEqual(metricsLabels);
+        _.forEach(controller.metricsLabels, (label: IReportLabel, index: number): void => {
+          expect(label.class).toBeUndefined();
+          expect(label.click).toBeUndefined();
+          expect(label.hidden).toEqual(metricsLabels[index].hidden);
+          expect(label.number).toEqual(metricsLabels[index].number);
+          expect(label.text).toEqual(metricsLabels[index].text);
+        });
 
         expect(controller.deviceOptions).toEqual(deviceCard);
         _.forEach(_.cloneDeep(devicesJson.response.filterArray), function (filter) {

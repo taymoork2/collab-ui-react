@@ -8,10 +8,7 @@ $aa-builder-text-color: $gray-dark-1;
 
 @mixin aa-builder-height($rem_offset) {
   /* base-offset includes top-bar, overlay-heading and aa-builder-header (elements from top of page) */
-  $overlay-heading-height: 93px;
-
-  /* no global variable */
-  $aa-builder-base-offset: rem($top-bar-height + $overlay-heading-height + $aa-builder-header-height);
+  $aa-builder-base-offset: rem($top-bar-height + $overlay-panel-height + $aa-builder-header-height);
 
   /* add to offset any additional value */
   $aa-builder-offset: $aa-builder-base-offset + $rem_offset;
@@ -168,37 +165,9 @@ $aa-builder-text-color: $gray-dark-1;
   }
 }
 
-.aa-flex-name-item {
-  display: flex;
-  flex: 1 1 auto;
-  align-items: center;
-  justify-content: center;
-
-  @include aa-builder-height($h2-font-size);
-
-  width: 65vw;
-  background-color: $color-white;
-
-  #aa-name-detail {
-    line-height: 1;
-
-    @include vr-spacing(mh, 0);
-
-    width: 50vw;
-    text-align: center;
-    border: none;
-    border-bottom: 1px solid $color-primary-base;
-    outline: none;
-    border-radius: 0;
-    background-color: transparent;
-
-    &:focus {
-      border: none;
-      outline: none;
-      border-bottom: 1px solid $color-primary-darker;
-      box-shadow: none;
-      background-color: transparent;
-    }
+.aa-setup-assistant {
+  .cs-setupassistant--content {
+    @include aa-builder-height(0);
   }
 }
 
@@ -466,7 +435,7 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .loading-container {
-  @include aa-builder-height($h2-font-size);
+  @include aa-builder-height(0);
 
   display: flex;
   justify-content: center;

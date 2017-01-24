@@ -63,6 +63,8 @@
       searchCarrierTollFreeInventory: searchCarrierTollFreeInventory,
       reserveCarrierInventory: reserveCarrierInventory,
       releaseCarrierInventory: releaseCarrierInventory,
+      reserveCarrierInventoryV2: reserveCarrierInventoryV2,
+      releaseCarrierInventoryV2: releaseCarrierInventoryV2,
       releaseCarrierTollFreeInventory: releaseCarrierTollFreeInventory,
       reserveCarrierTollFreeInventory: reserveCarrierTollFreeInventory,
       isCarrierSwivel: isCarrierSwivel,
@@ -74,11 +76,13 @@
       orderNumbersV2: orderNumbersV2,
       portNumbers: portNumbers,
       listPendingOrders: listPendingOrders,
+      listPendingOrdersWithDetail: listPendingOrdersWithDetail,
       getOrder: getOrder,
       getFormattedNumberOrders: getFormattedNumberOrders,
       translateStatusMessage: translateStatusMessage,
       listPendingNumbers: listPendingNumbers,
       deleteNumber: deleteNumber,
+      getAreaCode: getAreaCode,
       INTELEPEER: INTELEPEER,
       TATA: TATA,
       TELSTRA: TELSTRA,
@@ -284,6 +288,60 @@
       }
     }
 
+    function reserveCarrierInventoryV2(customerId, carrierId, numbers, isCustomerExists) {
+      if (!_.isArray(numbers)) {
+        numbers = [numbers];
+      }
+
+      if (isCustomerExists) {
+        // If a customer exists, reserve with the customer
+        return TerminusV2CustomerNumberReservationService.save({
+          customerId: customerId
+        }, {
+          numberType: NUMTYPE_DID,
+          numbers: numbers
+        }, function (data, headers) {
+          data.uuid = headers('location').split("/").pop();
+          return data;
+        }).$promise;
+      } else {
+        // Otherwise reserve with carrier
+        return TerminusV2ResellerCarrierNumberReservationService.save({
+          resellerId: Authinfo.getOrgId(),
+          carrierId: carrierId
+        }, {
+          numberType: NUMTYPE_DID,
+          numbers: numbers
+        }, function (data, headers) {
+          data.uuid = headers('location').split("/").pop();
+          return data;
+        }).$promise;
+      }
+    }
+
+    function releaseCarrierInventoryV2(customerId, reservationId, numbers, isCustomerExists) {
+      if (!_.isArray(numbers)) {
+        numbers = [numbers];
+      }
+      if (isCustomerExists) {
+        // If a customer exists, release with the customer
+        return TerminusV2CustomerNumberReservationService.delete({
+          customerId: customerId,
+          reservationId: reservationId
+        }, {
+          numbers: numbers
+        }).$promise;
+      } else {
+        // Otherwise release with carrier
+        return TerminusV2ResellerNumberReservationService.delete({
+          resellerId: Authinfo.getOrgId(),
+          reservationId: reservationId
+        }, {
+          numbers: numbers
+        }).$promise;
+      }
+    }
+
     function releaseCarrierTollFreeInventory(customerId, carrierId, numbers, reservationId, isCustomerExists) {
       if (!_.isArray(numbers)) {
         numbers = [numbers];
@@ -477,32 +535,67 @@
     function listPendingOrders(customerId) {
       var pendingOrders = [];
       pendingOrders.push(
-        TerminusOrderV2Service.get({
-          customerId: customerId,
-          type: PSTN,
-          status: PENDING
-        }).$promise
+        queryPendingOrders(customerId, PSTN)
       );
       pendingOrders.push(
-        TerminusOrderV2Service.get({
-          customerId: customerId,
-          type: TYPE_PORT,
-          status: PENDING
-        }).$promise
+        queryPendingOrders(customerId, TYPE_PORT)
       );
       return $q.all(pendingOrders)
         .then(_.flatten);
     }
 
-    function getOrder(customerId, orderId) {
+    // TODO (jlowery): Remove this function when Terminus implements
+    // a 'wide' parameter for the list orders API that will return the
+    // numbers with the order list so we don't have to make another
+    // backend call to get the details for each order.
+    function listPendingOrdersWithDetail(customerId) {
+      var pendingOrdersWithDetail = [];
+      pendingOrdersWithDetail.push(
+        queryPendingOrders(customerId, PSTN)
+          .then(function (orders) {
+            var orderDetailPromises = [];
+            _.forEach(orders, function (order) {
+              orderDetailPromises.push(
+                getOrder(customerId, order.uuid).then(function (orderDetail) {
+                  return orderDetail;
+                }));
+            });
+            return $q.all(orderDetailPromises);
+          })
+      );
+      pendingOrdersWithDetail.push(
+        queryPendingOrders(customerId, TYPE_PORT)
+          .then(function (orders) {
+            var orderDetailPromises = [];
+            _.forEach(orders, function (order) {
+              orderDetailPromises.push(
+                getOrder(customerId, order.uuid).then(function (orderDetail) {
+                  return orderDetail;
+                }));
+            });
+            return $q.all(orderDetailPromises);
+          })
+      );
+      return $q.all(pendingOrdersWithDetail).then(_.flatten);
+    }
+
+    function queryPendingOrders(customerId, orderType) {
       return TerminusOrderV2Service.query({
         customerId: customerId,
-        orderId: orderId
+        type: orderType,
+        status: PENDING
+      }).$promise;
+    }
+
+    function getOrder(customerId, orderId) {
+      return TerminusOrderV2Service.get({
+        customerId: customerId,
+        orderId: orderId,
       }).$promise;
     }
 
     function getFormattedNumberOrders(customerId) {
-      return TerminusOrderV2Service.get({
+      return TerminusOrderV2Service.query({
         customerId: customerId
       }).$promise.then(function (orders) {
         var promises = [];

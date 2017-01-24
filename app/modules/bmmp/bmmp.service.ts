@@ -9,7 +9,7 @@ export class BmmpService  {
 
   public init(): void {
     this.$timeout(() => {
-      bmmp.init('', '', this.Authinfo.getOrgId(), 'atlas', this.$translate.use(), '', this.UrlConfig.getBmmpUrl());
+      bmmp.init('', '', this.Authinfo.getUserId(), 'atlas', this.$translate.use(), '', this.UrlConfig.getBmmpUrl());
     });
   }
 }

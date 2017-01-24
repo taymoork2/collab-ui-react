@@ -16,7 +16,7 @@
     vm.openScheduleModal = openScheduleModal;
 
     function openScheduleModal(sectionToToggle) {
-      if (!AAValidationService.isRouteToValidationSuccess(vm.ui)) {
+      if (!AAValidationService.isValidCES(vm.ui)) {
         return;
       }
 

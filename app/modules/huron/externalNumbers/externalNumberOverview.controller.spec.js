@@ -29,10 +29,10 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
       'pattern': '456'
     }];
 
-    spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
+    spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.resolve());
     spyOn(ExternalNumberService, 'getAllNumbers').and.returnValue(externalNumbers);
     spyOn(ExternalNumberService, 'getQuantity').and.returnValue(2);
-    spyOn(ExternalNumberService, 'isTerminusCustomer').and.returnValue($q.when(true));
+    spyOn(ExternalNumberService, 'isTerminusCustomer').and.returnValue($q.resolve(true));
     spyOn(Notification, 'errorResponse');
     spyOn($state, 'go');
 
@@ -93,7 +93,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
           isTrial: true
         }
       };
-      ExternalNumberService.isTerminusCustomer.and.returnValue($q.when(true));
+      ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
       $scope.$apply();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
@@ -113,7 +113,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
           isTrial: false
         }
       };
-      ExternalNumberService.isTerminusCustomer.and.returnValue($q.when(true));
+      ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
       $scope.$apply();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
@@ -130,7 +130,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         customerName: 'ControllerTestOrg',
         customerEmail: 'customer@cisco.com'
       };
-      ExternalNumberService.isTerminusCustomer.and.returnValue($q.when(true));
+      ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
       $scope.$apply();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
@@ -151,7 +151,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
           isTrial: true
         }
       };
-      ExternalNumberService.isTerminusCustomer.and.returnValue($q.when(true));
+      ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
       $scope.$apply();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {

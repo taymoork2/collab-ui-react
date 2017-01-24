@@ -6,11 +6,13 @@
     .controller('HelpdeskUserController', HelpdeskUserController);
 
   /* @ngInject */
-  function HelpdeskUserController($modal, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, FusionUtils) {
+  function HelpdeskUserController($modal, $q, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, FusionUtils) {
     var vm = this;
-    var PROBLEM_STATE = {
+    var SUPPRESSED_STATE = {
       LOADING: 'loading',
       BOUNCED: 'bounced',
+      UNSUBSCRIBED: 'unsubscribed',
+      COMPLAINED: 'complained',
     };
     if ($stateParams.user) {
       vm.userId = $stateParams.user.id;
@@ -101,11 +103,42 @@
       }
     }
 
-    function mailgunEventTypeToL10nKey(eventType) {
+    function translateMailgunFailureStatusByCode(emailEvent) {
+      var CODE_BOUNCED = 605;
+      var CODE_UNSUBSCRIBED = 606;
+      var CODE_COMPLAINED = 607;
+
+      // 'failed' email event with certain 'delivery-status.code' values can be better re-classified
+      switch (_.get(emailEvent, 'delivery-status.code')) {
+
+        // 605 => email has bounced
+        case CODE_BOUNCED:
+          return SUPPRESSED_STATE.BOUNCED;
+
+        // 606 => user has unsubscribed
+        case CODE_UNSUBSCRIBED:
+          return SUPPRESSED_STATE.UNSUBSCRIBED;
+
+        // 607 => user has complained
+        case CODE_COMPLAINED:
+          return SUPPRESSED_STATE.COMPLAINED;
+
+        default:
+          return 'failed';
+      }
+    }
+
+    function mailgunEventTypeToL10nKey(emailEvent) {
+      var eventType = _.get(emailEvent, 'event');
       var emailStatuses = ['unsubscribed', 'delivered', 'failed', 'accepted', 'rejected'];
       if (!_.includes(emailStatuses, eventType)) {
         return 'common.unknown';
       }
+
+      if (eventType === 'failed') {
+        eventType = translateMailgunFailureStatusByCode(emailEvent);
+      }
+
       return 'helpdesk.emailStatuses.' + eventType;
     }
 
@@ -122,8 +155,7 @@
     }
 
     function getDisplayStatus(emailEvent) {
-      var eventType = _.get(emailEvent, 'event');
-      var l10nKey = mailgunEventTypeToL10nKey(eventType);
+      var l10nKey = mailgunEventTypeToL10nKey(emailEvent);
       return $translate.instant(l10nKey);
     }
 
@@ -146,7 +178,7 @@
 
     function mkTooltipBodyHtml(eventType, deliveryCode, deliveryText) {
       // notes:
-      // - currently, we predefine tooltip messages for certain Mailgun API statuses
+      // - currently as of 2017-01-19 we predefine tooltip messages for certain Mailgun API statuses
       var eventTypeWithPredefinedMsg = ['accepted', 'delivered', 'unsubscribed'];
       var eventTypeToUseDeliveryProps = ['failed', 'rejected'];
       if (_.includes(eventTypeWithPredefinedMsg, eventType)) {
@@ -178,28 +210,35 @@
     }
 
     function clear(email, origProblemState) {
-      // default to 'bounced' for now (since we don't support 'unsubscribed' or 'complained' yet)
-      origProblemState = origProblemState || PROBLEM_STATE.BOUNCED;
-
       // determine which delete function to use
       // - currently as of 2016-12-15, we only support clearing 'bounced' state
       var clearFn;
+      var successL10nKey;
       switch (origProblemState) {
-        case PROBLEM_STATE.BOUNCED:
+        case SUPPRESSED_STATE.BOUNCED:
           clearFn = HelpdeskService.clearBounceDetails;
+          successL10nKey = 'helpdesk.clearBounceSuccess';
+          break;
+        case SUPPRESSED_STATE.UNSUBSCRIBED:
+          clearFn = HelpdeskService.clearUnsubscribeDetails;
+          successL10nKey = 'helpdesk.clearUnsubscribeSuccess';
+          break;
+        case SUPPRESSED_STATE.COMPLAINED:
+          clearFn = HelpdeskService.clearComplaintDetails;
+          successL10nKey = 'helpdesk.clearComplaintSuccess';
           break;
         default:
           break;
       }
 
       // set to loading state
-      vm.user.lastEmailStatus.problemState = PROBLEM_STATE.LOADING;
+      vm.user.lastEmailStatus.problemState = SUPPRESSED_STATE.LOADING;
 
       // attempt delete, update the state, and notify
       return clearFn(email)
         .then(function () {
           vm.user.lastEmailStatus.problemState = null;
-          Notification.success('helpdesk.clearBounceSuccess');
+          Notification.success(successL10nKey);
         })
         .catch(function (response) {
           vm.user.lastEmailStatus.problemState = origProblemState;
@@ -215,6 +254,61 @@
       return !!_.get(vm, 'user.lastEmailStatus.problemState');
     }
 
+    function checkAllMailgunSuppressionTypes(email, emailEvent) {
+      var deferred = $q.defer();
+      var numEndpointsChecked = 0;
+
+      // three mailgun supression-types total
+      // - bounces
+      // - unsubscribes
+      // - complaints
+      var TOTAL_ENDPOINTS = 3;
+
+      var wrappedEmailEvent = {
+        emailEvent: emailEvent
+      };
+
+      // notes:
+      // - make three async calls (one for each endpoint)
+      // - currently as of 2017-01-19, doesn't matter if user is on multiple suppression lists (this
+      //   is an unlikely, but not impossible scenario)
+      // - first http 200 response wins (and user is designated in that problem state)
+      // - if all three 404, user is not on any suppression list, so we simply resolve
+
+      function _resolveIfAllEndpointsChecked() {
+        numEndpointsChecked = numEndpointsChecked + 1;
+        if (numEndpointsChecked === TOTAL_ENDPOINTS) {
+          deferred.resolve(wrappedEmailEvent);
+        }
+      }
+
+      // bounces
+      HelpdeskService.hasBounceDetails(email)
+        .then(function () {
+          wrappedEmailEvent.problemState = SUPPRESSED_STATE.BOUNCED;
+          deferred.resolve(wrappedEmailEvent);
+        })
+        .catch(_resolveIfAllEndpointsChecked);
+
+      // unsubscribes
+      HelpdeskService.hasUnsubscribeDetails(email)
+        .then(function () {
+          wrappedEmailEvent.problemState = SUPPRESSED_STATE.UNSUBSCRIBED;
+          deferred.resolve(wrappedEmailEvent);
+        })
+        .catch(_resolveIfAllEndpointsChecked);
+
+      // complaints
+      HelpdeskService.hasComplaintDetails(email)
+        .then(function () {
+          wrappedEmailEvent.problemState = SUPPRESSED_STATE.COMPLAINED;
+          deferred.resolve(wrappedEmailEvent);
+        })
+        .catch(_resolveIfAllEndpointsChecked);
+
+      return deferred.promise;
+    }
+
     function refreshEmailStatus(email) {
       var lastEmailStatus = {};
 
@@ -223,20 +317,11 @@
       //   status separately (it's also managed by a separate end-point anyways)
       return HelpdeskService.getLatestEmailEvent(email)
         .then(function (emailEvent) {
-          var eventType = _.get(emailEvent, 'event');
-          if (eventType === 'failed') {
-            // fetch from bounces endpoint and update state
-            // - always pass original email event payload down the chain regardless
-            return HelpdeskService.hasBounceDetails(email)
-              .then(function () {
-                lastEmailStatus.problemState = PROBLEM_STATE.BOUNCED;
-                return emailEvent;
-              })
-              .catch(function () {
-                return emailEvent;
-              });
-          }
-          return emailEvent;
+          return checkAllMailgunSuppressionTypes(email, emailEvent);
+        })
+        .then(function (wrappedEmailEvent) {
+          lastEmailStatus.problemState = wrappedEmailEvent.problemState;
+          return wrappedEmailEvent.emailEvent;
         })
         .then(function (emailEvent) {
           var displayStatus = getDisplayStatus(emailEvent);

@@ -3,7 +3,8 @@
     <cs-page-sub-header-left tabs="deviceUsage.tabs">
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <cs-select id="timeFilter" name="timeFilter" class='customer-report-filter' ng-model="deviceUsage.timeSelected" options="deviceUsage.timeOptions" on-change-fn="deviceUsage.timeUpdate()"></cs-select>
+        <cs-select id="timeFilter" name="timeFilter" class="customer-report-filter" ng-model="deviceUsage.timeSelected" options="deviceUsage.timeOptions" on-change-fn="deviceUsage.timeUpdate()"></cs-select>
+        <cs-select class="model-filter" ng-if="deviceUsage.modelOptions.length > 0" ng-model="deviceUsage.modelsSelected" options="deviceUsage.modelOptions" placeholder="deviceUsage.selectModelsPlaceholder" multi="true" singular="Model" plural="Models"></cs-select>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
 
@@ -15,7 +16,7 @@
             <h4 translate="reportsPage.usageReports.deviceMetrics"></h4>
           </div>
           <div class="columns large-3 medium-3 small-12">
-            <button ng-disabled="deviceUsage.noDataForRange" cs-btn class="btn btn-primary right" loading="deviceUsage.exporting" ng-click="deviceUsage.exportRawData()">
+            <button ng-disabled="deviceUsage.noDataForRange" cs-btn class="btn btn-primary right" loading="deviceUsage.exporting" ng-click="deviceUsage.startDeviceUsageExport()">
               <span translate="reportsPage.usageReports.downloadFullReport"></span>
             </button>
           </div>
@@ -27,16 +28,10 @@
 
   <div class="row">
     <div class="columns large-6 medium-6 small-12">
-      <div class="least-most">
-        <h4 class="header" translate="reportsPage.usageReports.mostUsed"></h4>
-        <div ng-include="'modules/core/customerReports/deviceUsage/mostUsedDevices.tpl.html'"></div>
-      </div>
+      <least-most-used used-devices="deviceUsage.mostUsedDevices" title="'reportsPage.usageReports.mostUsed'"></least-most-used>
     </div>
     <div class="columns large-6 medium-6 small-12">
-      <div class="least-most">
-        <h4 class="header" translate="reportsPage.usageReports.leastUsed"></h4>
-        <div ng-include="'modules/core/customerReports/deviceUsage/leastUsedDevices.tpl.html'"></div>
-      </div>
+      <least-most-used used-devices="deviceUsage.leastUsedDevices" title="'reportsPage.usageReports.leastUsed'"></least-most-used>
     </div>
   </div>
 
@@ -53,11 +48,11 @@
     <div id="device-usage-total-chart" class="device-usage-total-chart">
     </div>
   </div>
-</div>
-
-<div ng-show="deviceUsage.loading" class="loading-reports-indicator">
-  <div class="loading-text">
-    <span translate="reportsPage.usageReports.collectingData"></span>
-    <div cs-loader class="loader-example--small"></div>
   </div>
-</div>
+
+  <div ng-show="deviceUsage.loading" class="loading-reports-indicator">
+    <div class="loading-text">
+      <span translate="reportsPage.usageReports.collectingData"></span>
+      <div cs-loader class="loader-example--small"></div>
+    </div>
+  </div>

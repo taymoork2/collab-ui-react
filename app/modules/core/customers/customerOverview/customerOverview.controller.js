@@ -118,13 +118,13 @@ require('./_customer-overview.scss');
     }
 
     function initTrialActions() {
-      if (vm.currentCustomer.trialId) {
+      if (PartnerService.canAdminTrial(vm.currentCustomer.licenseList)) {
         vm.trialActions.push({
           actionKey: 'customerPage.edit',
           actionFunction: openEditTrialModal
         });
       } else {
-        if (vm.featureTrialForPaid) {
+        if (vm.featureTrialForPaid && !vm.currentCustomer.trialId) {
           vm.trialActions.push({
             actionKey: 'customerPage.addTrial',
             actionFunction: openAddTrialModal
@@ -209,7 +209,7 @@ require('./_customer-overview.scss');
       var emailObj = {
         'address': partnerEmail
       };
-      var promise = $q.when();
+      var promise = $q.resolve();
       if (vm.isPartnerAdmin) {
         promise = PartnerService.modifyManagedOrgs(vm.customerOrgId);
       }

@@ -42,7 +42,7 @@ describe('Controller: AARouteCallMenuCtrl', function () {
     AACommonService = _AACommonService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
-    spyOn(QueueHelperService, 'listQueues').and.returnValue($q.when(queues));
+    spyOn(QueueHelperService, 'listQueues').and.returnValue($q.resolve(queues));
 
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
     $scope.schedule = 'openHours';

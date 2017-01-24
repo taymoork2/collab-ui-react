@@ -1,0 +1,124 @@
+@import 'media-reports-sneak-peek/_media-sneak-peek-styles';
+@import 'resources-reports/callVolume/_call-volume-styles';
+@import 'resources-reports/availability/_availability-styles';
+@import 'resources-reports/utilization/_media-utilization-styles';
+@import 'media-report-card/_media_report_card';
+
+.media-reports {
+  @extend %content-subheader;
+  @extend %page-content-padding;
+
+  .reports-select-filter {
+    width: rem-calc(220);
+    margin-left: 30px;
+  }
+  .cs-card-layout {
+    margin-bottom: rem-calc(15);
+  }
+  .cs-card > article graphheader {
+    padding-right: 1rem;
+    padding-left: 0.1rem;
+    padding-top: 0.1rem;
+  }
+  .overview-card {
+    animation: scaleUpMediaCards 0.5s linear;
+  }
+  .media-metrics-report-card {
+    animation: scaleUpMediaCards 0.5s linear;
+    .report-section-header {
+      font-family: $brand-font-cisco-TT-Light;
+      font-size: rem-calc(22);
+      text-align: left;
+      padding: rem-calc(15);
+    }
+    .barchart {
+      font-size: rem-calc(11);
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      z-index: 50;
+    }
+    .amExportButton {
+      left: calc(95% + 0.1rem);
+      ul,
+      .export-main,
+      .export-list {
+        overflow: visible;
+      }
+      .export-main {
+        padding-bottom: rem-calc(5);
+        ul {
+          padding: 0;
+        }
+      }
+    }
+    .graph-text {
+      font-family: $brand-font-cisco-TT-Regular;
+      font-size: rem-calc(15);
+      color: $gray-dark-1;
+      text-align: left;
+      float: left;
+      .graph-number {
+        font-size: rem-calc(18);
+        color: $brand-success;
+        text-align: left;
+      }
+      .graph-media {
+        font-size: rem-calc(18);
+      }
+    }
+    .spinner-position {
+      position: absolute;
+      z-index: 100;
+      top: rem-calc(235);
+      left: rem-calc(-3);
+      width: 100%;
+      .icon-2x {
+        font-size: 4em;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+    .no-data-warning {
+      color: #f7c100;
+      padding-right: rem-calc(15);
+    }
+    .no-data-center {
+      position: absolute;
+      z-index: 100;
+      height: 0;
+      left: 0;
+      top: rem-calc(185);
+      width: 100%;
+      .no-data {
+        color: $gray-darkest;
+        font-family: $brand-font-cisco-TT-Light;
+        font-size: rem-calc(16);
+        text-align: center;
+        margin: 0;
+      }
+    }
+    .amcharts-value-axis .amcharts-axis-label {
+      opacity: 0;
+      animation: graphAxisFade 2s ease-in-out 1 forwards;
+    }
+  }
+}
+.availabilityCursor{
+  .amcharts-category-axis .amcharts-axis-label {
+    cursor: pointer;
+  }
+}
+
+@keyframes scaleUpMediaCards {
+  0% {
+    transform: scale(0, 0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+}

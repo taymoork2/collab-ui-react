@@ -322,7 +322,7 @@
       vm.entries = vm.uiMenu.entries;
       vm.menuEntry = vm.entries[$scope.index];
       vm.menuId = vm.menuEntry.id;
-      if (AACommonService.isRouteQueueToggle) {
+      if (AACommonService.isRouteQueueToggle()) {
         getQueues().finally(activate);
       } else {
         activate();

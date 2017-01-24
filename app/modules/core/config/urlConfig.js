@@ -116,11 +116,11 @@
       integration: 'https://certs-integration.wbx2.com/',
       prod: 'https://certs-a.wbx2.com/'
     },
-    WdmUrl: {
-      dev: 'https://wdm-a.wbx2.com/wdm/api/v1',
-      cfe: 'http://wdm.cfe.wbx2.com/wdm/api/v1',
-      integration: 'https://wdm-a.wbx2.com/wdm/api/v1',
-      prod: 'https://wdm-a.wbx2.com/wdm/api/v1',
+    FeatureUrl: {
+      dev: 'https://feature-a.wbx2.com/feature/api/v1',
+      cfe: 'http://feature.cfe.wbx2.com/feature/api/v1',
+      integration: 'https://feature-a.wbx2.com/feature/api/v1',
+      prod: 'https://feature-a.wbx2.com/feature/api/v1',
     },
     SunlightConfigServiceUrl: {
       dev: 'https://config.devus1.ciscoccservice.com/config/v1',
@@ -181,6 +181,12 @@
       cfe: 'https://ucc-e.wbx2.com/ucm-service/api/v1',
       integration: 'https://ucc-integration.wbx2.com/ucm-service/api/v1',
       prod: 'https://ucc-a.wbx2.com/ucm-service/api/v1'
+    },
+    HybridVoicemailUrl: {
+      dev: 'https://ucc-integration.wbx2.com/voicemail/api/v1',
+      cfe: 'https://ucc-e.wbx2.com/voicemail/api/v1',
+      integration: 'https://ucc-integration.wbx2.com/voicemail/api/v1',
+      prod: 'https://ucc-a.wbx2.com/voicemail/api/v1'
     },
     CccUrl: {
       dev: 'https://calendar-cloud-connector-integration.wbx2.com/api/v1',

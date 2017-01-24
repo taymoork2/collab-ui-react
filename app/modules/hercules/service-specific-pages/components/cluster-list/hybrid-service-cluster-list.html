@@ -1,0 +1,9 @@
+<div class="hercules-clusters-list">
+    <div ng-if="$ctrl.clusterList.length !== 0" class="gridStyle" ui-grid="$ctrl.clusterListGridOptions" ui-grid-selection></div>
+    <div ng-if="$ctrl.clusterList.length === 0">
+        <div class="centered-info-pane">
+            <h3 translate="{{'hercules.clusters.listing.no_clusters_heading'}}"></h3>
+            <p translate="{{'hercules.clusters.listing.no_clusters_text'}}"></p>
+        </div>
+    </div>
+</div>

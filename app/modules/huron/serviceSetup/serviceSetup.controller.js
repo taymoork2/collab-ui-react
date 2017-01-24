@@ -13,7 +13,7 @@
     var vm = this;
     vm.isTimezoneAndVoicemail = function (enabled) {
       return Authinfo.getLicenses().filter(function (license) {
-        return enabled ? (license.licenseType !== Config.licenseTypes.SHARED_DEVICES || license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
+        return enabled ? (license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
       }).length > 0;
     };
     FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
@@ -36,8 +36,10 @@
 
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
-    var VOICE_VOICEMAIL_AVRIL = 'DEMO_STANDARD';
+    var VOICE_VOICEMAIL_AVRIL = 'VOICE_VOICEMAIL_AVRIL';
 
+    vm.avrilTzUpdated = false;
+    vm.avrilDialPlanUpdated = false;
     vm.voicemailAvrilCustomer = false;
     vm.addInternalNumberRange = addInternalNumberRange;
     vm.deleteInternalNumberRange = deleteInternalNumberRange;
@@ -1221,12 +1223,31 @@
         if (!_.isEmpty(siteData)) {
           return ServiceSetup.updateSite(ServiceSetup.sites[0].uuid, siteData)
             .then(function () {
-              if (vm.voicemailAvrilCustomer && isAvrilVoiceEnabled) {
+              if (vm.voicemailAvrilCustomer && (isAvrilVoiceEnabled || vm.customer.servicePackage === 'VOICE_VOICEMAIL_AVRIL')) {
                 var setupSites = ServiceSetup.sites[0];
-                ServiceSetup.updateAvrilSite(setupSites.uuid, setupSites.siteSteeringDigit,
-                     setupSites.siteCode, setupSites.timeZone,
-                     setupSites.extensionLength, setupSites.voicemailPilotNumber, siteData);
+                var currentSetupSite = vm.model.site;
+                var mSite = {
+                  siteCode: currentSetupSite.siteCode,
+                  siteSteeringDigit: vm.model.voicemailPrefix.value,
+                  language: currentSetupSite.preferredLanguage.value,
+                  timeZone: currentSetupSite.timeZone.id,
+                  extensionLength: currentSetupSite.extensionLength,
+                  pilotNumber: currentSetupSite.voicemailPilotNumber
+                };
+
+                return ServiceSetup.getAvrilSite(ServiceSetup.sites[0].uuid).then(function () {
+                  if (vm.avrilTzUpdated || vm.avrilDialPlanUpdated) {
+                    ServiceSetup.updateAvrilSite(setupSites.uuid, mSite);
+                  }
+                })
+                .catch(function () {
+                  ServiceSetup.createAvrilSite(setupSites.uuid, currentSetupSite.siteSteeringDigit,
+                     currentSetupSite.siteCode, currentSetupSite.preferredLanguage.value, currentSetupSite.timeZone.id,
+                     currentSetupSite.extensionLength, currentSetupSite.voicemailPilotNumber, siteData);
+                });
               }
+            })
+            .then(function () {
               if (vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled && siteData && siteData.voicemailPilotNumber) {
                 return updateVoicemailSettings();
               }
@@ -1238,7 +1259,7 @@
               return $q.reject(response);
             });
         } else {
-          return $q.when();
+          return $q.resolve();
         }
       }
 
@@ -1286,6 +1307,7 @@
           // so no need to check for timeZoneToggle here
           if (_.get(vm, 'model.site.timeZone.id') !== _.get(vm, 'previousTimeZone.id')) {
             siteData.timeZone = vm.model.site.timeZone.id;
+            vm.avrilTzUpdated = true;
           }
           if (_.get(vm, 'model.site.preferredLanguage.value') !== _.get(vm, 'model.ftswPreferredLanguage.value')) {
             siteData.preferredLanguage = vm.model.site.preferredLanguage.value;
@@ -1295,12 +1317,16 @@
           }
           if (vm.model.site.siteSteeringDigit !== vm.model.voicemailPrefix.value) {
             siteData.siteSteeringDigit = vm.model.voicemailPrefix.value;
+            vm.avrilDialPlanUpdated = true;
           }
           if (vm.model.site.steeringDigit !== vm.model.ftswSteeringDigit) {
             siteData.steeringDigit = vm.model.site.steeringDigit;
           }
           if (vm.model.site.extensionLength !== vm.model.extensionLength) {
             siteData.extensionLength = vm.model.site.extensionLength;
+            if (vm.extensionLengthChanged) {
+              vm.avrilDialPlanUpdated = true;
+            }
           }
           if (voicemailToggleEnabled) {
             // When the toggle is ON, update the site if the pilot number changed or wasn't set,
@@ -1361,7 +1387,7 @@
       }
 
       function saveVoicemailToEmail() {
-        return $q.when(true)
+        return $q.resolve(true)
           .then(function () {
             if (shouldSaveVoicemailToEmail()) {
               return VoicemailMessageAction.update(vm.model.ftswCompanyVoicemail.ftswVoicemailToEmail, vm.voicemailTimeZone.objectId, vm.voicemailMessageAction.objectId)
@@ -1428,7 +1454,7 @@
       }
 
       function saveInternalNumbers() {
-        return $q.when(true).then(function () {
+        return $q.resolve(true).then(function () {
           if (vm.hideFieldInternalNumberRange === false && (_.isArray(_.get(vm, 'model.displayNumberRanges')))) {
             _.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
               if (_.isUndefined(internalNumberRange.uuid)) {
@@ -1460,7 +1486,7 @@
       // hence the noop catch in the end to allow previous re-thrown rejections
       // to be ignored after processing this promise chain.
       function saveCompanySite() {
-        return $q.when(true)
+        return $q.resolve(true)
           .then(displayDisableVoicemailWarning)
           .then(saveCustomer)
           .then(saveSite)
@@ -1489,7 +1515,7 @@
       // voice service is setup, then process the form.
       // Errors are collected in an array and processed in the end.
       function saveProcess() {
-        return $q.when(true)
+        return $q.resolve(true)
           .then(setupVoiceService)
           .then(saveForm)
           .catch(_.noop)
@@ -1501,7 +1527,7 @@
 
       if (vm.firstTimeSetup) {
         return saveProcess();
-      } else {
+      } else if (vm.showTimezoneAndVoicemail) {
         return ModalService.open({
           title: $translate.instant('serviceSetupModal.saveModal.title'),
           message: $translate.instant('serviceSetupModal.saveModal.message1') + '<br/><br/>'

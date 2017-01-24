@@ -20,8 +20,8 @@ describe('Controller: InternationalDialingInfoCtrl', function () {
     $q = _$q_;
 
     spyOn(Notification, 'success');
-    spyOn(InternationalDialing, 'listCosRestrictions').and.returnValue($q.when(cosRestrictionsObject));
-    spyOn(InternationalDialing, 'updateCosRestriction').and.returnValue($q.when());
+    spyOn(InternationalDialing, 'listCosRestrictions').and.returnValue($q.resolve(cosRestrictionsObject));
+    spyOn(InternationalDialing, 'updateCosRestriction').and.returnValue($q.resolve());
 
     controller = $controller('InternationalDialingInfoCtrl', {
       $scope: $scope,

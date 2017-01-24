@@ -23,9 +23,9 @@ describe('Controller: PstnToSCtrl', function () {
       callback({ id: '1234512345' }, 200);
     });
 
-    spyOn(PstnSetupService, 'getCustomerV2').and.returnValue($q.when({ trial: true }));
-    spyOn(PstnSetupService, 'getCustomerTrialV2').and.returnValue($q.when({ termsOfServiceUrl: 'http://server/tos' }));
-    spyOn(PstnSetupService, 'setCustomerTrialV2').and.returnValue($q.when());
+    spyOn(PstnSetupService, 'getCustomerV2').and.returnValue($q.resolve({ trial: true }));
+    spyOn(PstnSetupService, 'getCustomerTrialV2').and.returnValue($q.resolve({ termsOfServiceUrl: 'http://server/tos' }));
+    spyOn(PstnSetupService, 'setCustomerTrialV2').and.returnValue($q.resolve());
 
     controller = $controller('PstnToSCtrl', {
       $scope: $scope,

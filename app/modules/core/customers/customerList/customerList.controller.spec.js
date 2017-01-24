@@ -66,13 +66,13 @@ describe('Controller: CustomerListCtrl', function () {
     spyOn(Authinfo, 'getOrgName').and.returnValue(orgName);
     spyOn(Authinfo, 'isPartnerAdmin').and.returnValue(true);
 
-    spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.when(managedOrgsResponse));
-    spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.when({}));
+    spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.resolve(managedOrgsResponse));
+    spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.resolve({}));
 
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
-      $q.when(false)
+      $q.resolve(false)
     );
-
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(false));
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback) {
       callback(adminJSONFixture.getAdminOrg, 200);
     });
@@ -80,9 +80,9 @@ describe('Controller: CustomerListCtrl', function () {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
 
-    spyOn(TrialService, 'getTrial').and.returnValue($q.when());
-    spyOn(TrialService, 'getTrialsList').and.returnValue($q.when(trialsResponse));
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(TrialService, 'getTrial').and.returnValue($q.resolve());
+    spyOn(TrialService, 'getTrialsList').and.returnValue($q.resolve(trialsResponse));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 
   }));
 
@@ -257,6 +257,46 @@ describe('Controller: CustomerListCtrl', function () {
 
   });
 
+
+  describe('filterColumns', function () {
+    beforeEach(initController);
+    it('return 8 items in the filter list without sparkBoard or Care with care and spark board FT turned off', function () {
+      expect(controller.filter.options.length).toBe(8);
+      expect(controller.filter.options).not.toContain(jasmine.objectContaining({
+        value: 'sparkBoard'
+      }));
+      expect(controller.filter.options).not.toContain(jasmine.objectContaining({
+        value: 'care'
+      }));
+    });
+
+    it('show care in the filter list with care FT on', function () {
+      FeatureToggleService.atlasCareTrialsGetStatus.and.returnValue($q.resolve(true));
+      initController();
+      $scope.$apply();
+      expect(controller.filter.options.length).toBe(9);
+      expect(controller.filter.options).toContain(jasmine.objectContaining({
+        value: 'care'
+      }));
+      expect(controller.filter.options).not.toContain(jasmine.objectContaining({
+        value: 'sparkBoard'
+      }));
+    });
+
+    it('show sparkBoard in the filter list with spark FT on', function () {
+      FeatureToggleService.atlasDarlingGetStatus.and.returnValue($q.resolve(true));
+      initController();
+      $scope.$apply();
+      expect(controller.filter.options.length).toBe(9);
+      expect(controller.filter.options).toContain(jasmine.objectContaining({
+        value: 'sparkBoard'
+      }));
+      expect(controller.filter.options).not.toContain(jasmine.objectContaining({
+        value: 'care'
+      }));
+    });
+  });
+
   describe('updateResultCount function', function () {
     beforeEach(initController);
 
@@ -269,8 +309,6 @@ describe('Controller: CustomerListCtrl', function () {
         isAccountFilter: true,
         count: 0
       }];
-
-      //controller.$apply();
 
       controller._helpers.updateResultCount(controller.gridOptions.data);
       var activeFilter = _.find(controller.filter.options, { value: 'trial' });
@@ -459,7 +497,7 @@ describe('Controller: CustomerListCtrl', function () {
       expect(result.path).toEqual('trial.info');
     });
     it('should return a path to \'trialAdd\' when FT set to false', function () {
-      FeatureToggleService.supports.and.returnValue($q.when(false));
+      FeatureToggleService.supports.and.returnValue($q.resolve(false));
       initController();
       var result = controller._helpers.getTrialRoute(false, {});
       expect(result.path).toEqual('trialAdd.info');

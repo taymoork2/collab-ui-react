@@ -19,7 +19,7 @@
     "value": 0,
     "label": "reportsPage.week",
     "description": "reportsPage.week2",
-    "min": 1,
+    "min": 0,
     "max": 6
   }, {
     "value": 1,
@@ -38,7 +38,7 @@
     "value": 0,
     "label": "reportsPage.week",
     "description": "reportsPage.week2",
-    "min": 1,
+    "min": 0,
     "max": 6
   }, {
     "value": 1,
@@ -51,6 +51,18 @@
     "label": "reportsPage.threeMonths",
     "description": "reportsPage.threeMonths2",
     "min": 40,
+    "max": 51
+  }, {
+    "value": 3,
+    "label": "reportsPage.sixMonths",
+    "description": "reportsPage.sixMonths2",
+    "min": 28,
+    "max": 51
+  }, {
+    "value": 4,
+    "label": "reportsPage.year",
+    "description": "reportsPage.year2",
+    "min": 0,
     "max": 51
   }, {
     "value": "custom",
@@ -122,5 +134,27 @@
     "date": ""
   },
   "usageOptions": ["weeklyUsage", "monthlyUsage", "threeMonthUsage"],
-  "altUsageOptions": ["dailyUsage", "weeklyUsage"]
+  "altUsageOptions": ["dailyUsage", "weeklyUsage"],
+  "returnGraph": [{
+    "date": "Oct 26",
+    "fullDate": "2016-10-26T00:45:00.000Z"
+  }, {
+    "date": "Oct 27",
+    "fullDate": "2016-10-27T00:45:00.000Z"
+  }, {
+    "date": "Oct 28",
+    "fullDate": "2016-10-28T00:45:00.000Z"
+  }, {
+    "date": "Oct 29",
+    "fullDate": "2016-10-29T00:45:00.000Z"
+  }, {
+    "date": "Oct 30",
+    "fullDate": "2016-10-30T00:45:00.000Z"
+  },  {
+    "date": "Oct 31",
+    "fullDate": "2016-10-31T00:45:00.000Z"
+  },{
+    "date": "Nov 01",
+    "fullDate": "2016-11-01T00:45:00.000Z"
+  }]
 }

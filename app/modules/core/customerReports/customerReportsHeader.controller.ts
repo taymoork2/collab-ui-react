@@ -9,13 +9,20 @@ class CustomerReportsHeaderCtrl {
     private WebExApiGatewayService,
   ) {
     this.$q.all(this.promises).then((features: any): void => {
-      if (features.mf && features.isMfEnabled) {
-        this.headerTabs.unshift({
-          title: $translate.instant('mediaFusion.page_title'),
-          state: 'reports.metrics',
-        });
+      if (features.isMfEnabled) {
+        if (features.mf) {
+          this.headerTabs.push({
+            title: $translate.instant('mediaFusion.report.title'),
+            state: 'reports.media',
+          });
+        } else {
+          this.headerTabs.push({
+            title: $translate.instant('mediaFusion.report.title'),
+            state: 'reports.metrics',
+          });
+        }
       }
-      if (Authinfo.isCare() && features.care) {
+      if (Authinfo.isCare()) {
         this.headerTabs.push({
           title: $translate.instant('reportsPage.careTab'),
           state: 'reports.care',
@@ -39,8 +46,7 @@ class CustomerReportsHeaderCtrl {
 
   private webex: boolean = false;
   private promises: any = {
-    mf: this.FeatureToggleService.atlasMediaServiceMetricsGetStatus(),
-    care: this.FeatureToggleService.atlasCareTrialsGetStatus(),
+    mf: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneOneGetStatus(),
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
     deviceUsage: this.FeatureToggleService.atlasDeviceUsageReportGetStatus(),
   };

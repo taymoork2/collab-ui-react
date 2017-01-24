@@ -69,7 +69,7 @@ export class GraphService {
     const balloonText = '<span class="graph-text">' + this.$translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br><span class="graph-text">' + this.$translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
     const values = ['totalRegisteredUsers', 'activeUsers'];
     const titles = [this.$translate.instant('activeUsers.users'), this.$translate.instant('activeUsers.activeUsers')];
-    let colors = [this.chartColors.brandSuccessLight, this.chartColors.brandSuccessDark];
+    let colors = [this.chartColors.ctaLight, this.chartColors.ctaBase];
     if (!data[0].balloon) {
       colors = [this.chartColors.grayLightFour, this.chartColors.grayLightThree];
     }
@@ -134,7 +134,7 @@ export class GraphService {
     const totalCalls = this.$translate.instant('mediaQuality.totalCalls');
     const values = ['totalDurationSum', 'partialSum', 'poorQualityDurationSum'];
     const titles = ['mediaQuality.good', 'mediaQuality.fair', 'mediaQuality.poor'];
-    let colors = [this.chartColors.primaryColorBase, this.chartColors.brandWarning, this.chartColors.brandDanger];
+    let colors = [this.chartColors.primaryBase, this.chartColors.primaryBase, this.chartColors.negativeBase];
     if (!data[0].balloon) {
       colors = [this.chartColors.grayLightFour, this.chartColors.grayLightThree, this.chartColors.grayLightTwo];
     }
@@ -215,7 +215,7 @@ export class GraphService {
   private populationGraphs(data: Array<IPopulationData>) {
     const balloonTextOne = '<span class="percent-label">' + this.$translate.instant('activeUserPopulation.averageLabel') + '</span><br><span class="percent-large">[[percentage]]%</span>';
     const balloonTextTwo = '<span class="percent-label">' + this.$translate.instant('activeUserPopulation.averageLabel') + '<br>' + this.$translate.instant('activeUserPopulation.acrossCustomers') + '</span><br><span class="percent-large">[[overallPopulation]]%</span>';
-    let color = this.chartColors.primaryColorBase;
+    let color = this.chartColors.primaryBase;
     if (!data[0].balloon) {
       color = this.chartColors.grayLightThree;
     }
@@ -248,9 +248,9 @@ export class GraphService {
       _.forEach(data, (item: IPopulationData) => {
         if (item.balloon) {
           if ((item.percentage - item.overallPopulation) >= 0) {
-            item.color = this.chartColors.brandInfo;
+            item.color = this.chartColors.peopleLight;
           } else {
-            item.color = this.chartColors.brandDanger;
+            item.color = this.chartColors.negativeBase;
           }
         }
       });

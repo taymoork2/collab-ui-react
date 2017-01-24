@@ -22,7 +22,7 @@ describe('Service: Webex Trial Service', function () {
           'provOrderStatus': orderStatus
         };
         return {
-          '$promise': $q.when(status)
+          '$promise': $q.resolve(status)
         };
       }
     });

@@ -45,7 +45,7 @@ describe('Controller: ProcessorderCtrl', function () {
   describe('primary behaviors:', function () {
     describe('init (before async calls):', function () {
       beforeEach(function () {
-        Orgservice.createOrg.and.returnValue($q.when({}));
+        Orgservice.createOrg.and.returnValue($q.resolve({}));
       });
       beforeEach(initControllerNoApply);
 
@@ -61,7 +61,7 @@ describe('Controller: ProcessorderCtrl', function () {
     describe('init (after all async calls flushed):', function () {
       describe('when "Orgservice.createOrg()" resolves:', function () {
         beforeEach(function () {
-          Orgservice.createOrg.and.returnValue($q.when({
+          Orgservice.createOrg.and.returnValue($q.resolve({
             redirectUrl: 'fake-redirect-url'
           }));
         });

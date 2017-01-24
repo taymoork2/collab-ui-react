@@ -42,13 +42,13 @@
       customerListToggle = true;
       trialForPaid = false;
 
-      spyOn(TrialService, 'getTrialsList').and.returnValue($q.when({
+      spyOn(TrialService, 'getTrialsList').and.returnValue($q.resolve({
         data: {}
       }));
-      spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.when({
+      spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.resolve({
         data: {}
       }));
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
       spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
         callback({
           success: true
@@ -56,8 +56,9 @@
       });
       spyOn(Authinfo, 'isCare').and.returnValue(true);
       spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
-        $q.when(true)
+        $q.resolve(true)
       );
+      spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(false));
     }
 
     function compileViewWithMockData(mockData) {

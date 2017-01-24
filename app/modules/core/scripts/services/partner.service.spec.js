@@ -37,7 +37,7 @@ describe('Partner Service -', function () {
     UrlConfig = _UrlConfig_;
 
     testData = getJSONFixture('core/json/partner/partner.service.json');
-    spyOn(Auth, 'getAuthorizationUrlList').and.returnValue($q.when({}));
+    spyOn(Auth, 'getAuthorizationUrlList').and.returnValue($q.resolve({}));
     spyOn(Analytics, 'trackPartnerActions');
   }));
 
@@ -236,6 +236,34 @@ describe('Partner Service -', function () {
     }
   });
 
+  it('should successfully return a list customer orgs with orderedServices property from calling loadRetrievedDataToList with isCareEnabled being true', function () {
+    spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('partner@company.com');
+
+    var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), true, true);
+    var expectedServices = ['messaging', 'communications', 'webex', 'roomSystems', 'sparkBoard', 'care'];
+    var expectedServicesManagedByOthers = ['conferencing'];
+
+    // Verify the ordered service property
+    expect(returnList[0].orderedServices.servicesManagedByCurrentPartner.length).toBe(6);
+    expect(returnList[0].orderedServices.servicesManagedByCurrentPartner).toEqual(expectedServices);
+    expect(returnList[0].orderedServices.servicesManagedByAnotherPartner.length).toBe(1);
+    expect(returnList[0].orderedServices.servicesManagedByAnotherPartner).toEqual(expectedServicesManagedByOthers);
+  });
+
+  it('should successfully return a list customer orgs with orderedServices property from calling loadRetrievedDataToList with isCareEnabled being false', function () {
+    spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('partner@company.com');
+
+    var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), true, false);
+    var expectedServices = ['messaging', 'communications', 'webex', 'roomSystems', 'sparkBoard'];
+    var expectedServicesManagedByOthers = ['conferencing'];
+
+    // Verify the ordered service property
+    expect(returnList[0].orderedServices.servicesManagedByCurrentPartner.length).toBe(5);
+    expect(returnList[0].orderedServices.servicesManagedByCurrentPartner).toEqual(expectedServices);
+    expect(returnList[0].orderedServices.servicesManagedByAnotherPartner.length).toBe(1);
+    expect(returnList[0].orderedServices.servicesManagedByAnotherPartner).toEqual(expectedServicesManagedByOthers);
+  });
+
   it('should successfully return an array of customers from calling exportCSV', function () {
     $httpBackend.whenGET(PartnerService.managedOrgsUrl).respond(testData.managedOrgsResponse.status, testData.managedOrgsResponse.data);
     var promise = PartnerService.exportCSV(false);
@@ -256,14 +284,56 @@ describe('Partner Service -', function () {
 
   describe('modifyManagedOrgs function', function () {
     beforeEach(function () {
-      Auth.getAuthorizationUrlList.and.returnValue($q.when(testData.getAuthorizationUrlListResponse));
+      Auth.getAuthorizationUrlList.and.returnValue($q.resolve(testData.getAuthorizationUrlListResponse));
       $scope.$apply();
     });
 
     it('should call a patch if organization is not matched', function () {
-      $httpBackend.expectPATCH('https://atlas-integration.wbx2.com/admin/api/v1/organization/12345/users/roles').respond(200);
+      var url = UrlConfig.getAdminServiceUrl() + 'organization/12345/users/roles';
+      $httpBackend.expectPATCH(url).respond(200);
       PartnerService.modifyManagedOrgs('fake-customer-org-id-1');
       $httpBackend.flush();
+    });
+  });
+
+  describe('canAdminTrial function', function () {
+    var licenses;
+    beforeEach(function () {
+      licenses = _.cloneDeep(testData.licenses);
+      _.forEach(licenses, function (license) {
+        license.isTrial = true;
+        license.partnerOrgId = 'other-partner-org2-id';
+        license.partnerEmail = 'otherPartner@othercompany.com';
+      });
+      $scope.$digest();
+    });
+    afterEach(function () {
+      licenses = null;
+    });
+
+    it('should return false if the partnerOrgId property on any license does not match the org id of the logged in user', function () {
+      expect(PartnerService.canAdminTrial(licenses)).toBe(false);
+    });
+
+    it('should return true if the partnerOrgId property on any license matches the org id of the logged in user', function () {
+      licenses[1].partnerOrgId = '12345';
+      expect(PartnerService.canAdminTrial(licenses)).toBe(true);
+    });
+
+    it('should return if the partnerOrgId property is undefined and email in any service matches the email of the logged in user', function () {
+      _.each(licenses, function (license) {
+        license.partnerOrgId = undefined;
+      });
+      licenses[0].partnerEmail = 'fake-primaryEmail';
+      expect(PartnerService.canAdminTrial(licenses)).toBe(true);
+    });
+
+    it('should return false if the partnerOrgId is null and email is null in all services', function () {
+      _.each(licenses, function (license) {
+        license.partnerOrgId = undefined;
+        license.partnerEmail = undefined;
+      });
+      expect(PartnerService.canAdminTrial(licenses)).toBe(false);
     });
   });
 
@@ -583,6 +653,11 @@ describe('Partner Service -', function () {
         expect(result[Config.offerCodes.CF].licenseType).toBe(Config.licenseTypes.CONFERENCING);
       });
 
+      it('should createRoomDeviceMapping with SHARED_DEVICES license type', function () {
+        var result = PartnerService.helpers.createRoomDeviceMapping();
+        expect(result[Config.offerCodes.SD].licenseType).toBe(Config.licenseTypes.SHARED_DEVICES);
+      });
+
       it('should  createLicenseMapping with proper icons', function () {
         var result = PartnerService.helpers.createLicenseMapping();
         expect(result[Config.licenseTypes.COMMUNICATION].icon).toBe('icon-circle-call');
@@ -753,6 +828,60 @@ describe('Partner Service -', function () {
         expect(result[0].licenseType).toBe(Config.licenseTypes.CONFERENCING);
         expect(result[0].sub).not.toBeDefined();
       });
+
+      it('should return an array with (1) shared devices when spark board or room system is present', function () {
+        var options = { isCareEnabled: true, isTrial: false };
+        var licenses = _.cloneDeep(customer.licenseList);
+        licenses.push({
+          offerName: 'SB',
+          licenseType: 'SHARED_DEVICES',
+          volume: 100,
+          isTrial: false
+        });
+        _.each(licenses, function (license) {
+          license.isTrial = true;
+        });
+        licenses[6].isTrial = false;
+        customer = {
+          licenseList: licenses
+        };
+        var result = PartnerService.getFreeOrActiveServices(customer, options);
+        expect(result).toBeDefined();
+        expect(result[0].licenseType).toBe(Config.licenseTypes.SHARED_DEVICES);
+        expect(result[0].sub).toBeDefined();
+        expect(result[0].sub.length).toBe(1);
+      });
+
+      it('should return an array with (2) shared devices when both spark board and room system are present', function () {
+        var options = { isCareEnabled: true, isTrial: false };
+        var licenses = _.cloneDeep(customer.licenseList);
+        licenses.push({
+          offerName: 'SB',
+          licenseType: 'SHARED_DEVICES',
+          volume: 100,
+          isTrial: false
+        });
+        licenses.push({
+          offerName: 'SD',
+          licenseType: 'SHARED_DEVICES',
+          volume: 50,
+          isTrial: false
+        });
+        _.each(licenses, function (license) {
+          license.isTrial = true;
+        });
+        licenses[6].isTrial = false;
+        licenses[7].isTrial = false;
+        customer = {
+          licenseList: licenses
+        };
+        var result = PartnerService.getFreeOrActiveServices(customer, options);
+        expect(result).toBeDefined();
+        expect(result[0].licenseType).toBe(Config.licenseTypes.SHARED_DEVICES);
+        expect(result[0].qty).toBe(150);
+        expect(result[0].sub).toBeDefined();
+        expect(result[0].sub.length).toBe(2);
+      });
     });
 
     describe('massage data helpers', function () {
@@ -784,6 +913,46 @@ describe('Partner Service -', function () {
 
         var dataWithWebex = testData.customers[8];// This has 2 webex's in it, should only count 1
         expect(PartnerService.helpers.countUniqueServices(dataWithWebex)).toBe(2);
+      });
+    });
+
+    describe('isServiceManagedByCurrentPartner ', function () {
+      var services;
+
+      beforeEach(function () {
+        services = getJSONFixture('core/json/partner/partner.service.json').services;
+        spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(services.messaging.partnerEmail);
+        spyOn(Authinfo, 'getOrgId').and.returnValue(services.messaging.partnerOrgId);
+      });
+
+      it("should return true for messaging service (licensed and managed by current partner)", function () {
+        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.messaging)).toBe(true);
+      });
+
+      it("should return false for conferencing service (licensed and managed by a different partner)", function () {
+        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.conferencing)).toBe(false);
+      });
+
+      it("should return true for communications service (not licensed)", function () {
+        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.communications)).toBe(true);
+      });
+
+      it("should return true for webexEEConferencing service (licensed, without partnerOrdId properties, " +
+      "and managed by current partner)", function () {
+        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.webexEEConferencing)).toBe(true);
+      });
+
+      it("should return true for roomSystems service (licensed, without partnerEmail properties, " +
+      "and managed by current partner)", function () {
+        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.roomSystems)).toBe(true);
+      });
+
+      it("should return false for sparkBoard service (licensed and managed by a different partner)", function () {
+        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.sparkBoard)).toBe(false);
+      });
+
+      it("should return false for care service (licensed and without partnerOrgId or partnerEmail properties)", function () {
+        expect(PartnerService.helpers.isServiceManagedByCurrentPartner(services.care)).toBe(false);
       });
     });
   });

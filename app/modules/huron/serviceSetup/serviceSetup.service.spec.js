@@ -108,7 +108,7 @@ describe('Service: ServiceSetup', function () {
     });
   });
 
-  describe('updateAvrilSiteVoicemail', function () {
+  describe('updateAvrilSite', function () {
     var site = {
       guid: '1234567890'
     };
@@ -123,13 +123,13 @@ describe('Service: ServiceSetup', function () {
     });
 
     it('should update avril voicemail', function () {
-      ServiceSetup.updateAvrilSiteVoicemail(site.guid, voicemailFeatures);
+      ServiceSetup.updateAvrilSite(site.guid, voicemailFeatures);
       $httpBackend.flush();
     });
   });
 
 
-  describe('updateAvrilSite', function () {
+  describe('createAvrilSite', function () {
     var site = {
       guid: '1234567890',
       siteCode: '8',
@@ -147,8 +147,8 @@ describe('Service: ServiceSetup', function () {
       $httpBackend.whenPOST(HuronConfig.getAvrilUrl() + '/customers/1/sites').respond(201);
     });
 
-    it('should update avril site', function () {
-      ServiceSetup.updateAvrilSite(site.guid, site.siteSteeringDigit, site.code, site.timezone, site.extensionLength, site.pilotNumber);
+    it('should create avril site', function () {
+      ServiceSetup.createAvrilSite(site.guid, site.siteSteeringDigit, site.code, site.timezone, site.extensionLength, site.pilotNumber);
       $httpBackend.flush();
     });
   });
@@ -355,7 +355,7 @@ describe('Service: ServiceSetup', function () {
   describe('getSiteLanguages', function () {
     beforeEach(function () {
       $httpBackend.expectGET('modules/huron/serviceSetup/siteLanguages.json').respond(getJSONFixture('huron/json/settings/languages.json'));
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     });
 
     it('should get site default languages & additional languages since userlocale2 feature toggle was enabled', function () {
@@ -372,7 +372,7 @@ describe('Service: ServiceSetup', function () {
     });
 
     it('should get site default languages only since userlocale2 feature toggle was disabled', function () {
-      FeatureToggleService.supports = jasmine.createSpy().and.returnValue($q.when(false));
+      FeatureToggleService.supports = jasmine.createSpy().and.returnValue($q.resolve(false));
       ServiceSetup.getSiteLanguages().then(function (response) {
         expect(response).toBeDefined();
         expect(response.length).toBe(2);

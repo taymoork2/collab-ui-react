@@ -36,7 +36,7 @@
   function CsdmHuronDeviceService($http, $q, Authinfo, HuronConfig, CsdmConverter, CsdmConfigService, devicesUrl) {
 
     function huronEnabled() {
-      return $q.when(Authinfo.isSquaredUC());
+      return $q.resolve(Authinfo.isSquaredUC());
     }
 
     function getFindDevicesUrl(userId) {
@@ -72,7 +72,7 @@
 
     function fetch() {
       return huronEnabled().then(function (enabled) {
-        return !enabled ? $q.when([]) : $http.get(devicesUrl).then(function (res) {
+        return !enabled ? $q.resolve([]) : $http.get(devicesUrl).then(function (res) {
           loadedData = true;
           _.extend(deviceList, CsdmConverter.convertHuronDevices(res.data));
         }, function () {
@@ -206,6 +206,9 @@
       var jsonTags = encodeHuronTags(JSON.stringify(tags || []));
       if (jsonTags.length >= 128) {
         return $q.reject("List of tags is longer than supported.");
+      }
+      if (!/^[^"%\\&<>]*$/.test(jsonTags)) {
+        return $q.reject("'" + tags[tags.length - 1] + "' contains invalid character(s).");
       }
 
       return $http.put(url, {

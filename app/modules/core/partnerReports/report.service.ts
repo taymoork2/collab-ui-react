@@ -101,7 +101,7 @@ export class ReportService {
       percentage: undefined,
       overallPopulation: this.overallPopulation,
       color: undefined,
-      labelColorField: this.chartColors.grayDarkest,
+      labelColorField: this.chartColors.grayDarkThree,
       balloon: true,
     };
     let totalActive = 0;
@@ -187,7 +187,7 @@ export class ReportService {
         overallPopulation: this.overallPopulation,
         balloon: true,
         color: undefined,
-        labelColorField: this.chartColors.grayDarkest,
+        labelColorField: this.chartColors.grayDarkThree,
       };
       let orgData: IActiveUserCustomerData = this.activeUserCustomerGraphs[org.value];
 
@@ -413,11 +413,11 @@ export class ReportService {
           dataProvider: [{
             label: this.$translate.instant('callMetrics.callConditionFail'),
             value: 0,
-            color: this.chartColors.grayDarkest,
+            color: this.chartColors.grayDarkThree,
           }, {
             label: this.$translate.instant('callMetrics.callConditionSuccessful'),
             value: 0,
-            color: this.chartColors.brandInfo,
+            color: this.chartColors.peopleLight,
           }],
           labelData: {
             numTotalCalls: 0,

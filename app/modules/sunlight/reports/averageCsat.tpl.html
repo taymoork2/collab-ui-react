@@ -1,4 +1,4 @@
-<cs-card id='average-csat-card' class="large report-card" ng-class="{'hideCard': !nav.displayQuality}">
+<cs-card id='average-csat-card' class="large report-card" ng-class="{'hideCard': !nav.displayQuality || nav.mediaTypeSelected.value === 2}">
   <article>
     <header>
       <h4 class='report-section-header' translate='averageCsat.title'></h4>
@@ -7,6 +7,7 @@
       <div class="care-card-report">
         <p class="report-description">{{nav.averageCsatDescription}}</p>
         <div id="averageCsatDiv" class="areachart"></div>
+        <drilldown-report props="nav.avgCsatDrilldownProps"  callback="nav.showTable(onSuccess, onError)"></drilldown-report>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.dataStatus)">
           <i class='icon icon-spinner icon-2x'></i>
         </div>

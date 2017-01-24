@@ -28,7 +28,7 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
     spyOn(TelephonyInfoService, 'getTelephonyInfo').and.returnValue(telephonyInfoWithDest);
     spyOn(TelephonyInfoService, 'getRemoteDestinationInfo');
     spyOn(Notification, 'notify');
-    spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.when({ regionCode: '' }));
+    spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.resolve({ regionCode: '' }));
 
     controller = $controller('SingleNumberReachInfoCtrl', {
       $scope: $scope,

@@ -1,7 +1,9 @@
 'use strict';
 
+var testModule = require('./auth');
+
 describe('Auth Service', function () {
-  beforeEach(angular.mock.module('core.auth'));
+  beforeEach(angular.mock.module(testModule));
 
   var Auth, Authinfo, $httpBackend, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig, WindowLocation, TokenService;
 
@@ -23,7 +25,7 @@ describe('Auth Service', function () {
     WindowLocation = _WindowLocation_;
 
     spyOn(WindowLocation, 'set');
-    spyOn($state, 'go').and.returnValue($q.when());
+    spyOn($state, 'go').and.returnValue($q.resolve());
 
     this.orgInfo = {
       orgSettingsWithDomain: {
