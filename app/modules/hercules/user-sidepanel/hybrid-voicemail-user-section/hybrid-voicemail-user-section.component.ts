@@ -1,4 +1,5 @@
-import { UCCService } from '../../services/ucc-service';
+import { UCCService } from 'modules/hercules/services/ucc-service.ts';
+
 class HybridVoicemailUserSectionCtrl implements ng.IComponentController {
 
   public callServiceConnectEnabledForUser: boolean;
@@ -8,6 +9,7 @@ class HybridVoicemailUserSectionCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
+    private $state: ng.ui.IStateService,
     private UCCService: UCCService,
   ) { }
 
@@ -35,6 +37,10 @@ class HybridVoicemailUserSectionCtrl implements ng.IComponentController {
             });
         }
       });
+  }
+
+  public navigateToCallServiceSettings(): void {
+    this.$state.go('call-service.settings');
   }
 
 }

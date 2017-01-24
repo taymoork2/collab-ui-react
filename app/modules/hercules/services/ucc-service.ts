@@ -28,7 +28,7 @@ export class UCCService {
   private uccUrl: string;
   private hybridVoicemailUrl: string;
 
-  private hybridVoicemailHasBeenEnabled = true; // Hard coded for now, remove once API is online.
+  private hybridVoicemailHasBeenEnabled = false; // Hard coded for now, remove once API is online.
 
   /* @ngInject */
   constructor(

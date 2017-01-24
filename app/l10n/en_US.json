@@ -1869,6 +1869,14 @@
       "clusters-title-spark-hybrid-datasecurity": "HDS Clusters",
       "status-title": "Service Status"
     },
+    "hybridVoicemailUserSection": {
+      "automaticallyEnabled": "Voicemail is automatically enabled when Call Service Connect is enabled.",
+      "description": "Users can check their voicemail directly from Cisco Spark.",
+      "header": "Voicemail",
+      "on": "On",
+      "pilot": "Pilot",
+      "toTurnOn": "To turn on voicemail for your users, enable voicemail in <a ng-click=\"{{onclick}}\">Hybrid Call Settings</a>."
+    },
     "settings": {
       "deactivateServiceHeading": "Deactivate {{ServiceName}}",
       "deactivateService": "Deactivating {{ServiceName}} uninstalls {{ConnectorName}} from your Expressway clusters and disables the service for users.",
