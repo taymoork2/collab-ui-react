@@ -2,6 +2,7 @@ import { UCCService } from 'modules/hercules/services/ucc-service.ts';
 
 class HybridVoicemailUserSectionCtrl implements ng.IComponentController {
 
+  public isFeatureToggled: boolean = false;
   public callServiceConnectEnabledForUser: boolean;
   public pilotNumber: number;
   private isEnabledOrgWide: boolean;
@@ -10,11 +11,18 @@ class HybridVoicemailUserSectionCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
+    private FeatureToggleService,
     private UCCService: UCCService,
   ) { }
 
   public $onInit() {
     this.isEnabledOrgWide = false;
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridVoicemail)
+      .then((enabled) => {
+        if (enabled) {
+          this.isFeatureToggled = true;
+        }
+      });
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
