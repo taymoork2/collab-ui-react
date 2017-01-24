@@ -2626,7 +2626,7 @@
             }
           })
           .state('hds', {
-            templateUrl: 'modules/hds/resources/overview.html',
+            templateUrl: 'modules/hds/resources/hybrid-data-security-container.html',
             controller: 'HDSServiceController',
             controllerAs: 'hdsServiceController',
             parent: 'main',

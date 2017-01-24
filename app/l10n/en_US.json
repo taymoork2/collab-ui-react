@@ -2348,7 +2348,6 @@
     },
     "resources" : {
       "page_title": "Hybrid Data Security Service",
-      "add-resource-button": "Add Resource",
       "genericError": "An unexpected error occurred. Please try again later.",
       "loading": "Loading",
       "connectors": {
