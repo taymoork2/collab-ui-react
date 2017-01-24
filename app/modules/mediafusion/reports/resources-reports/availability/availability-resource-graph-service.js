@@ -133,7 +133,7 @@
       chartData.legend = CommonReportsGraphService.getBaseVariable(LEGEND);
       chartData.legend.labelText = '[[title]]';
       chartData.legend.data = legend;
-      chartData.graph.showHandOnHover = true;
+      chartData.graph.showHandOnHover = (selectedCluster === allClusters);
       chartData.listeners = [{
         "event": "clickGraphItem",
         "method": function (event) {
@@ -177,11 +177,7 @@
     }
 
     function formatLabel(label) {
-      if (label.length > 10) {
-        return label.substring(0, 10) + "..";
-      } else {
-        return label;
-      }
+      return (label.length > 10) ? label.substring(0, 10) + ".." : label;
     }
   }
 })();

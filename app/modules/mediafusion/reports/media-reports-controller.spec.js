@@ -197,7 +197,9 @@ describe('Controller:MediaReportsController', function () {
     it('setSneekPeekData should call MediaReportsService and MediaSneekPeekResourceService', function () {
       spyOn(MediaReportsService, 'getClusterAvailabilityTooltip').and.callThrough();
       spyOn(MediaReportsService, 'getHostedOnPremisesTooltip').and.callThrough();
-      spyOn(MediaSneekPeekResourceService, 'getClusterAvailabilitySneekPeekValues').and.returnValue();
+      spyOn(MediaSneekPeekResourceService, 'getClusterAvailabilitySneekPeekValues').and.returnValue({
+        values: ["dummyCluster"]
+      });
       spyOn(MediaSneekPeekResourceService, 'getHostedOnPremisesSneekPeekValues').and.returnValue();
       controller.setSneekPeekData();
       httpMock.flush();

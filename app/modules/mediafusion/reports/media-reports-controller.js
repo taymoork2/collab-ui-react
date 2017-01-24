@@ -112,14 +112,10 @@
       loadResourceDatas();
     }
 
-    function clusterUpdateFromTooltip(selectedCluster) {
-      vm.clusterSelected = selectedCluster;
-      clusterUpdate();
-    }
-
     $scope.$on('clusterClickEvent', function (event, data) {
       if (vm.clusterSelected === vm.allClusters) {
-        clusterUpdateFromTooltip(data.data);
+        vm.clusterSelected = data.data;
+        clusterUpdate();
       }
     });
 
@@ -243,6 +239,8 @@
     function setSneekPeekData() {
       MediaReportsService.getClusterAvailabilityTooltip(vm.timeSelected).then(function (response) {
         vm.availabilityTooltipOptions = MediaSneekPeekResourceService.getClusterAvailabilitySneekPeekValues(response, vm.Map, vm.clusterAvailability, vm.clusterId);
+        vm.availabilityTooltipOptions['sneakPeekModel'] = vm.availabilityTooltipOptions.values[0];
+        vm.availabilityTooltipOptions['sneakPeekHandler'] = clusterUpdateFromTooltip;
       }, function () {
         Notification.error('mediaFusion.genericError');
       });
@@ -370,6 +368,19 @@
 
     function isRefresh(tab) {
       return tab === vm.REFRESH;
+    }
+
+    function clusterUpdateFromTooltip() {
+      vm.selectedClusterSneakPeek = vm.availabilityTooltipOptions['sneakPeekModel'];
+      var selectedCluster = vm.selectedClusterSneakPeek;
+      selectedCluster = selectedCluster.split('.').join("");
+      selectedCluster = selectedCluster.substring(0, selectedCluster.lastIndexOf("  "));
+      _.forEach(vm.clusterOptions, function (val) {
+        selectedCluster = _.includes(val, selectedCluster) ? val : selectedCluster;
+      });
+      vm.selectedClusterSneakPeek = vm.availabilityTooltipOptions.values[0];
+      vm.clusterSelected = selectedCluster;
+      clusterUpdate();
     }
   }
 })();

@@ -19,7 +19,7 @@
       </div>
     </graphheader>
     <section>
-      <div class="availability-reports">
+      <div class="availability-reports" ng-class="{'availabilityCursor': $ctrl.parentcntrl.clusterSelected == 'All Clusters'}">
         <div id="availabilitydiv" class="barchart" ng-class="{'availability-chart': !$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.availabilityStatus) && !$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.availabilityStatus)}"></div>
         <div class="spinner-position" ng-if="$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.availabilityStatus)">
           <i class='icon icon-spinner icon-2x'></i>
