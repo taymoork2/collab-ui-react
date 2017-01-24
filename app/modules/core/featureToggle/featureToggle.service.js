@@ -12,7 +12,6 @@
       atlasCareCallbackTrials: 'atlas-care-callback-trials',
       atlasCareInboundTrials: 'atlas-care-inbound-trials',
       atlasContextServiceTrials: 'atlas-context-service-trials',
-      atlasCreateTrialBackendEmail: 'atlas-create-trial-backend-email',
       atlasDarling: 'atlas-darling',
       atlasDataRetentionSettings: 'atlas-data-retention-settings',
       atlasDevicesAdvancedSettings: 'atlas-devices-advanced-settings',
