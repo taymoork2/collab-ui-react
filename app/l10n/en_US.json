@@ -3385,6 +3385,7 @@
     "swivel": "SWIVEL",
     "swivelAddError": "Failed to add {{number}}.",
     "swivelDuplicateError": "Failed to add {{number}}. Number already exists.",
+    "resellerCreateError": "Failed to create Reseller",
     "customerCreateError": "Failed to create customer with the carrier.",
     "customerUpdateError": "Failed to update customer with the carrier.",
     "siteCreateError": "Failed to create the service address.",

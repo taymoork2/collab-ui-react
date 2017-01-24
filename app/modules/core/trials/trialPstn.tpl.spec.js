@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Template: trialPstn.tpl.spec.js:', function () {
-  var $q, $compile, $controller, $scope, $templateCache, Analytics, Orgservice, TerminusStateService, FeatureToggleService;
+  var $q, $compile, $controller, $scope, $templateCache, Analytics, Orgservice, TerminusStateService, FeatureToggleService, PstnSetupService;
   var view;
   var skipBtn, backBtn;
 
@@ -14,7 +14,7 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
     if (view) {
       view.remove();
     }
-    $q = $compile = $controller = $scope = $templateCache = Analytics = Orgservice = TerminusStateService = FeatureToggleService = undefined;
+    $q = $compile = $controller = $scope = $templateCache = Analytics = Orgservice = TerminusStateService = FeatureToggleService = PstnSetupService = undefined;
     view = skipBtn = backBtn = undefined;
   });
 
@@ -27,7 +27,7 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
   beforeEach(compileView);
 
 
-  function dependencies(_$q_, _$compile_, _$controller_, _$rootScope_, _$templateCache_, _Analytics_, _Orgservice_, _TerminusStateService_, _FeatureToggleService_) {
+  function dependencies(_$q_, _$compile_, _$controller_, _$rootScope_, _$templateCache_, _Analytics_, _Orgservice_, _TerminusStateService_, _FeatureToggleService_, _PstnSetupService_) {
     $q = _$q_;
     $compile = _$compile_;
     $controller = _$controller_;
@@ -37,12 +37,14 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
     FeatureToggleService = _FeatureToggleService_;
     Orgservice = _Orgservice_;
     Analytics = _Analytics_;
+    PstnSetupService = _PstnSetupService_;
 
     spyOn(TerminusStateService, 'query').and.returnValue({
       '$promise': $q.resolve(states)
     });
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(Analytics, 'trackTrialSteps');
+    spyOn(PstnSetupService, 'getResellerV2').and.returnValue($q.resolve());
   }
 
   function compileView() {
