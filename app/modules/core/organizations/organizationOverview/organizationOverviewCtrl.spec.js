@@ -20,13 +20,13 @@ describe('Controller: organizationOverviewCtrl', function () {
     $q = _$q_;
     currentOrganization = getJSONFixture('core/json/organizations/adminServices.json').getAdminOrg;
 
-    spyOn(Orgservice, 'getEftSetting').and.returnValue($q.when({
+    spyOn(Orgservice, 'getEftSetting').and.returnValue($q.resolve({
       data: {
         eft: true
       }
     }));
-    spyOn(Orgservice, 'setEftSetting').and.returnValue($q.when({}));
-    spyOn(Orgservice, 'setHybridServiceReleaseChannelEntitlement').and.returnValue($q.when({}));
+    spyOn(Orgservice, 'setEftSetting').and.returnValue($q.resolve({}));
+    spyOn(Orgservice, 'setHybridServiceReleaseChannelEntitlement').and.returnValue($q.resolve({}));
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback) {
       callback(currentOrganization, 200);
     });
@@ -165,7 +165,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       Orgservice.setHybridServiceReleaseChannelEntitlement.and.callFake(function (orgId, channel, allow) {
         channelSentToBackend = channel;
         allowSentToBackend = allow;
-        return $q.when({});
+        return $q.resolve({});
       });
       $scope.betaChannel.newAllow = true;
       $scope.toggleReleaseChannelAllowed($scope.betaChannel);
@@ -183,7 +183,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       Orgservice.setHybridServiceReleaseChannelEntitlement.and.callFake(function (orgId, channel, allow) {
         channelSentToBackend = channel;
         allowSentToBackend = allow;
-        return $q.when({});
+        return $q.resolve({});
       });
       $scope.alphaChannel.newAllow = true;
       $scope.toggleReleaseChannelAllowed($scope.alphaChannel);
@@ -201,7 +201,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       Orgservice.setHybridServiceReleaseChannelEntitlement.and.callFake(function (orgId, channel, allow) {
         channelSentToBackend = channel;
         allowSentToBackend = allow;
-        return $q.when({});
+        return $q.resolve({});
       });
       $scope.latestChannel.newAllow = true;
       $scope.toggleReleaseChannelAllowed($scope.latestChannel);
@@ -219,7 +219,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       Orgservice.setHybridServiceReleaseChannelEntitlement.and.callFake(function (orgId, channel, allow) {
         channelSentToBackend = channel;
         allowSentToBackend = allow;
-        return $q.when({});
+        return $q.resolve({});
       });
       $scope.betaChannel.newAllow = false;
       $scope.toggleReleaseChannelAllowed($scope.betaChannel);
@@ -237,7 +237,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       Orgservice.setHybridServiceReleaseChannelEntitlement.and.callFake(function (orgId, channel, allow) {
         channelSentToBackend = channel;
         allowSentToBackend = allow;
-        return $q.when({});
+        return $q.resolve({});
       });
       $scope.alphaChannel.newAllow = false;
       $scope.toggleReleaseChannelAllowed($scope.alphaChannel);
@@ -255,7 +255,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       Orgservice.setHybridServiceReleaseChannelEntitlement.and.callFake(function (orgId, channel, allow) {
         channelSentToBackend = channel;
         allowSentToBackend = allow;
-        return $q.when({});
+        return $q.resolve({});
       });
       $scope.latestChannel.newAllow = false;
       $scope.toggleReleaseChannelAllowed($scope.latestChannel);

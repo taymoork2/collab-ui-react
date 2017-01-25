@@ -6,7 +6,7 @@
     .service('ServiceStateChecker', ServiceStateChecker);
 
   /*@ngInject*/
-  function ServiceStateChecker($q, Authinfo, ClusterService, DomainManagementService, FeatureToggleService, FusionClusterService, FusionUtils, NotificationService, Orgservice, ServiceDescriptor, USSService) {
+  function ServiceStateChecker($q, $translate, Authinfo, ClusterService, DomainManagementService, FeatureToggleService, FusionClusterService, FusionUtils, NotificationService, Orgservice, ServiceDescriptor, USSService) {
     var vm = this;
     vm.isSipUriAcknowledged = false;
     vm.hasSipUriDomainConfigured = false;
@@ -282,23 +282,28 @@
                   cluster.releaseChannel !== defaultReleaseChannel;
               });
               if (anomalies.length > 0) {
-                var serviceIds = _.chain(anomalies)
-                  .map(function (cluster) {
-                    return _.map(cluster.provisioning, function (p) {
+                _.forEach(anomalies, function (cluster) {
+                  var serviceIds = _.chain(cluster.provisioning)
+                    .map(function (p) {
                       return FusionUtils.connectorType2ServicesId(p.connectorType);
-                    });
-                  })
-                  .flattenDeep()
-                  .uniq()
-                  .value();
-                NotificationService.addNotification(
-                  NotificationService.types.ALERT,
-                  'defaultReleaseChannel',
-                  5,
-                  'modules/hercules/notifications/release_channel.html',
-                  serviceIds,
-                  { clusters: anomalies, channel: defaultReleaseChannel }
-                );
+                    })
+                    .flatten()
+                    .uniq()
+                    .value();
+                  NotificationService.addNotification(
+                    NotificationService.types.ALERT,
+                    'defaultReleaseChannel' + cluster.id,
+                    5,
+                    'modules/hercules/notifications/release_channel.html',
+                    serviceIds,
+                    {
+                      clusterId: cluster.id,
+                      clusterName: cluster.name,
+                      currentReleaseChannel: $translate.instant('hercules.fusion.add-resource-group.release-channel.' + cluster.releaseChannel),
+                      defaultReleaseChannel: $translate.instant('hercules.fusion.add-resource-group.release-channel.' + cluster.defaultReleaseChannel),
+                    }
+                  );
+                });
               }
             });
         });

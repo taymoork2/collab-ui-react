@@ -20,7 +20,7 @@ describe('controller: DelComponentCtrl', function () {
   }
 
   function initSpies() {
-    spyOn(ComponentsService, 'delComponent').and.returnValue($q.when());
+    spyOn(ComponentsService, 'delComponent').and.returnValue($q.resolve());
     spyOn($state, 'go');
   }
 

@@ -58,8 +58,8 @@ describe('FirstTimeWizardCtrl', function () {
     function initControllerWith(data) {
       Authinfo.isInDelegatedAdministrationOrg.and.returnValue(data.asDelegatedAdmin);
       Authinfo.getCareServices.and.returnValue(data.careServices);
-      Userservice.getUserAsPromise.and.returnValue($q.when(data.getUserResponse));
-      Userservice.updateUserProfile.and.returnValue($q.when(data.updateUserProfileResponse));
+      Userservice.getUserAsPromise.and.returnValue($q.resolve(data.getUserResponse));
+      Userservice.updateUserProfile.and.returnValue($q.resolve(data.updateUserProfileResponse));
       initController();
     }
 

@@ -39,7 +39,7 @@
 
     this.getToggle_webexSelectLatestVersionAlways = function () {
       var selectLatest = "latest_version";
-      return $q.when(selectLatest);
+      return $q.resolve(selectLatest);
     };
 
     /**

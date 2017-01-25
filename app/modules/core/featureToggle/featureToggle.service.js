@@ -13,7 +13,6 @@
       atlasCareInboundTrials: 'atlas-care-inbound-trials',
       atlasContextServiceTrials: 'atlas-context-service-trials',
       atlasCreateTrialBackendEmail: 'atlas-create-trial-backend-email',
-      atlasCustomerListUpdate: 'atlas-customer-list-update',
       atlasDarling: 'atlas-darling',
       atlasDataRetentionSettings: 'atlas-data-retention-settings',
       atlasDevicesAdvancedSettings: 'atlas-devices-advanced-settings',
@@ -29,7 +28,6 @@
       atlasNewCiDataModel: 'atlas-new-ci-data-model',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
       atlasNewUserExport: 'atlas-new-user-export',
-      atlasNotifyPartnerTrialExtBackendEmail: 'atlas-notify-partner-trial-ext-backend-email',
       atlasNurturingEmails: 'atlas-nurturing-emails',
       atlasPinSettings: 'atlas-pin-settings',
       atlasPMRonM2: 'atlas-pmr-on-m2',
@@ -38,8 +36,8 @@
       atlasComplianceRole: 'atlas-compliance-role',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
-      atlasSMP: 'atlas-smp',
-      atlasSmpReports: 'atlas-smp-reports',
+      atlasSharedMeetings: 'atlas-shared-meetings',
+      atlasSharedMeetingsReports: 'atlas-shared-meetings-reports',
       atlasTrialsShipDevices: 'atlasTrialsShipDevices',
       atlasDeviceUsageReport: 'atlas-device-usage-report',
       atlasStartTrialForPaid: 'atlas-start-trial-for-paid',
@@ -310,7 +308,7 @@
         return getHuronToggleForUser(Authinfo.getUserId(), feature);
       }
 
-      return $q.when(false);
+      return $q.resolve(false);
     }
 
     function getHuronToggleForUser(userId, feature) {

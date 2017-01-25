@@ -23,12 +23,12 @@ describe('Controller: PlacesCtrl', function () {
   }
 
   function initSpies() {
-    spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.when({}));
+    spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({}));
     spyOn(Userservice, 'getUser');
-    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when());
-    spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.when());
-    spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when());
-    spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.when());
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve());
+    spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.resolve());
+    spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve());
+    spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve());
   }
 
   function initController() {

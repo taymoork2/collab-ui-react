@@ -21,7 +21,7 @@ describe('Controller: WebexOverviewController', function () {
     };
 
 
-    spyOn(PartnerService, 'getSiteUrls').and.returnValue($q.when({
+    spyOn(PartnerService, 'getSiteUrls').and.returnValue($q.resolve({
       data: {
         provOrderStatusResponses: [
           {

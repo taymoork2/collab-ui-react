@@ -309,8 +309,15 @@
       return deferred.promise;
     }
 
+    function resetEmailStatus() {
+      // reset property to remove any previous display value
+      vm.user.lastEmailStatus = null;
+    }
+
     function refreshEmailStatus(email) {
       var lastEmailStatus = {};
+
+      resetEmailStatus();
 
       // notes:
       // - even though we retrieve user details from 'getUser()', we fetch a user's email

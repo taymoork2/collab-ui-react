@@ -4,7 +4,7 @@
   <div class="content-container services-list">
     <h5><span translate="servicesOverview.cloudServices"></span></h5>
     <cs-card-layout>
-      <cs-card class="large-3 medium-6 small-12 header-bar"
+      <cs-card class="small header-bar"
                ng-class="card.cardClass"
                ng-repeat="card in servicesOverviewCtrl.getCloudCards()"
                ng-if="card.display">
@@ -14,7 +14,7 @@
 
     <h5><span translate="servicesOverview.hybridServices"></span></h5>
     <cs-card-layout>
-      <cs-card class="large-3 medium-6 small-12 header-bar gray-light"
+      <cs-card class="small header-bar gray-light"
                ng-class="card.cardClass"
                ng-repeat="card in servicesOverviewCtrl.getHybridCards()"
                ng-if="card.display">

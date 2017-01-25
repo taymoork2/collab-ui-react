@@ -22,8 +22,8 @@ describe('controller: UpdateComponentCtrl', function () {
   }
 
   function initSpies() {
-    spyOn(ComponentsService, 'getGroupComponents').and.returnValue($q.when());
-    spyOn(ComponentsService, 'modifyComponent').and.returnValue($q.when());
+    spyOn(ComponentsService, 'getGroupComponents').and.returnValue($q.resolve());
+    spyOn(ComponentsService, 'modifyComponent').and.returnValue($q.resolve());
   }
 
   function initController() {

@@ -42,7 +42,7 @@ describe('Controller: Trial Webex', function () {
     });
 
     bard.mockService(TrialTimeZoneService, {
-      getTimeZones: $q.when([])
+      getTimeZones: $q.resolve([])
     });
 
     spyOn(Orgservice, 'getOrg');

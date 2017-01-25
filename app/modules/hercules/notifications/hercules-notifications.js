@@ -17,6 +17,7 @@
     vm.getBadgeCSSClass = getBadgeCSSClass;
     vm.navigateToUsers = navigateToUsers;
     vm.fixClusters = fixClusters;
+    vm.goToClusterSettings = goToClusterSettings;
     vm.navigateToCallSettings = navigateToCallSettings;
     vm.locatedinCallSettings = locatedinCallSettings;
     vm.navigateToCurrentServiceSettings = navigateToCurrentServiceSettings;
@@ -85,6 +86,10 @@
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'hercules.fusion.defaultReleaseChannelModal.error');
         });
+    }
+
+    function goToClusterSettings(clusterId) {
+      $state.go('expressway-settings', { id: clusterId });
     }
 
     function navigateToCallSettings() {

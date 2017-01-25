@@ -44,8 +44,8 @@
 
     vm.Map = {};
 
-    vm.displayAdoption = true;
-    vm.displayResources = false;
+    vm.displayAdoption = false;
+    vm.displayResources = true;
 
     vm.changeTabs = changeTabs;
     vm.setRefreshInterval = setRefreshInterval;
@@ -56,6 +56,8 @@
     vm.setClusterAvailability = setClusterAvailability;
     vm.setTotalCallsData = setTotalCallsData;
     vm.setSneekPeekData = setSneekPeekData;
+    vm.setAvailabilityData = setAvailabilityData;
+    vm.setCallVolumeData = setCallVolumeData;
 
     vm.showAvailabilityTooltip = false;
     vm.showHostedOnPremTooltip = false;
@@ -78,18 +80,19 @@
     }];
     vm.timeSelected = vm.timeOptions[0];
 
-    loadAdaptionDatas();
     setRefreshInterval();
     getCluster();
+    timeUpdate();
 
     function loadResourceDatas() {
-      setTotalCallsData().then(function () {
+      deferred.promise.then(function () {
+        setTotalCallsData();
+        setAvailabilityData();
         setSneekPeekData();
+        setClusterAvailability();
+        setUtilizationData();
+        setCallVolumeData();
       });
-      setClusterAvailability();
-      setUtilizationData();
-      setCallVolumeData();
-      setAvailabilityData();
     }
 
     function loadAdaptionDatas() {
@@ -110,15 +113,19 @@
       loadResourceDatas();
     }
 
-    function clusterUpdateFromTooltip(selectedCluster) {
-      vm.clusterSelected = selectedCluster;
-      clusterUpdate();
-    }
-
     $scope.$on('clusterClickEvent', function (event, data) {
       if (vm.clusterSelected === vm.allClusters) {
-        clusterUpdateFromTooltip(data.data);
+        vm.clusterSelected = data.data;
+        clusterUpdate();
       }
+    });
+
+    $scope.$on('zoomedTime', function (event, data) {
+      vm.timeSelected = {
+        startTime: data.data.startTime,
+        endTime: data.data.endTime
+      };
+      timeUpdate();
     });
 
     function timeUpdate() {
@@ -160,7 +167,6 @@
     }
 
     function setTotalCallsData() {
-      var deferred = $q.defer();
       MediaReportsService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
         if (vm.clusterId === vm.allClusters) {
           if (response === vm.ABORT) {
@@ -212,9 +218,7 @@
             vm.total = vm.onprem + vm.cloud;
           }
         }
-        deferred.resolve();
       });
-      return deferred.promise;
     }
 
     function setClusterAvailability() {
@@ -233,6 +237,8 @@
     function setSneekPeekData() {
       MediaReportsService.getClusterAvailabilityTooltip(vm.timeSelected).then(function (response) {
         vm.availabilityTooltipOptions = MediaSneekPeekResourceService.getClusterAvailabilitySneekPeekValues(response, vm.Map, vm.clusterAvailability, vm.clusterId);
+        vm.availabilityTooltipOptions['tooltipModel'] = vm.availabilityTooltipOptions.values[0];
+        vm.availabilityTooltipOptions['tooltipClickHandler'] = clusterUpdateFromTooltip;
       }, function () {
         Notification.error('mediaFusion.genericError');
       });
@@ -308,7 +314,7 @@
     }
 
     function setAvailabilityGraph(response) {
-      vm.availabilityChart = AvailabilityResourceGraphService.setAvailabilityGraph(response, vm.availabilityChart, vm.clusterId, vm.clusterSelected, vm.timeSelected.label, vm.Map);
+      vm.availabilityChart = AvailabilityResourceGraphService.setAvailabilityGraph(response, vm.availabilityChart, vm.clusterId, vm.clusterSelected, vm.timeSelected, vm.Map);
     }
 
     function setDummyUtilization() {
@@ -336,8 +342,10 @@
     function setRefreshInterval() {
       if (vm.timeSelected.value === 0) {
         vm.updateInterval = 60000;
-      } else {
+      } else if (!_.isUndefined(vm.timeSelected.value)) {
         vm.updateInterval = 300000;
+      } else {
+        vm.updateInterval = 7200000;
       }
     }
 
@@ -358,6 +366,19 @@
 
     function isRefresh(tab) {
       return tab === vm.REFRESH;
+    }
+
+    function clusterUpdateFromTooltip() {
+      vm.selectedClusterSneakPeek = vm.availabilityTooltipOptions['tooltipModel'];
+      var selectedCluster = vm.selectedClusterSneakPeek;
+      selectedCluster = selectedCluster.split('.').join('');
+      selectedCluster = selectedCluster.substring(0, selectedCluster.lastIndexOf('  '));
+      _.forEach(vm.clusterOptions, function (val) {
+        selectedCluster = _.includes(val, selectedCluster) ? val : selectedCluster;
+      });
+      vm.selectedClusterSneakPeek = vm.availabilityTooltipOptions.values[0];
+      vm.clusterSelected = selectedCluster;
+      clusterUpdate();
     }
   }
 })();

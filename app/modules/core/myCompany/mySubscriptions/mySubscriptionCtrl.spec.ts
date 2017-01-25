@@ -40,8 +40,8 @@ describe('Controller: MySubscriptionCtrl', function () {
     $q = _$q_;
 
     spyOn(ServiceDescriptor, 'servicesInOrg').and.returnValue($q.when(data.servicesResponse));
-    spyOn(FeatureToggleService, 'atlasSMPGetStatus').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasSmpReportsGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasSharedMeetingsReportsGetStatus').and.returnValue($q.when(false));
     spyOn(rootScope, '$broadcast').and.callThrough();
   }));
 
@@ -159,4 +159,31 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(controller.isOnline).toBeTruthy();
     expect(rootScope.$broadcast).toHaveBeenCalled();
   });
+
+  describe('Tests for Named User Licenses : ', function () {
+    let dataWithNamedUserLicense = { offers: [{ licenseModel: 'hosts' }] };
+
+    it('The isSharedMeetingsLicense() function should return false for a service that does not have shared Licenses ', function () {
+      expect(controller.isSharedMeetingsLicense(dataWithNamedUserLicense)).toEqual(false);
+    });
+
+    it('The determineLicenseType() function should return licenseType Named User License string', function () {
+      let result = controller.determineLicenseType(dataWithNamedUserLicense);
+      expect(result).toEqual('firstTimeWizard.namedLicenses');
+    });
+  });
+
+  describe('Tests for Shared Meeting Licenses : ', function () {
+    let dataWithSharedMeetingsLicense = { offers: [{ licenseModel: 'Cloud Shared Meeting' }] };
+
+    it('The isSharedMeetingsLicense() function should return true for a service that has shared licenses', function () {
+      expect(controller.isSharedMeetingsLicense(dataWithSharedMeetingsLicense)).toEqual(true);
+    });
+
+    it('The determineLicenseType() function should return licenseType Shared Meeting License string', function () {
+      let result = controller.determineLicenseType(dataWithSharedMeetingsLicense);
+      expect(result).toEqual('firstTimeWizard.sharedLicenses');
+    });
+  });
+
 });

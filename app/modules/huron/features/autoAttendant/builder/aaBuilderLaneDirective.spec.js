@@ -28,7 +28,7 @@ describe('Directive: aaBuilderLane', function () {
     FeatureToggleService = _FeatureToggleService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
   }));
 
   it('should NOT contain aa-builder-actions when aaUiModel[openHours] is empty', function () {

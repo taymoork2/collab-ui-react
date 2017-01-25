@@ -3,7 +3,7 @@
 
   angular.module('Mediafusion').service('CallVolumeResourceGraphService', CallVolumeResourceGraphService);
   /* @ngInject */
-  function CallVolumeResourceGraphService(CommonReportsGraphService, $translate) {
+  function CallVolumeResourceGraphService(CommonReportsGraphService, $translate, $rootScope) {
 
     var callVolumediv = 'callVolumediv';
     var COLUMN = 'column';
@@ -12,6 +12,9 @@
     var LEGEND = 'legend';
     var titles = [];
     var baloontitles = [];
+    var dateSelected = null;
+    var zoomedEndTime = null;
+    var zoomedStartTime = null;
 
     var allClusters = $translate.instant('mediaFusion.metrics.allclusters');
     var timeStamp = $translate.instant('mediaFusion.metrics.timeStamp');
@@ -52,6 +55,7 @@
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       }
+      dateSelected = daterange;
       var valueAxes = [CommonReportsGraphService.getBaseVariable(AXIS)];
       valueAxes[0].integersOnly = true;
       valueAxes[0].axisAlpha = 0.5;
@@ -97,13 +101,25 @@
       chartData.legend = CommonReportsGraphService.getBaseVariable(LEGEND);
       chartData.legend.labelText = '[[title]]';
       var chart = AmCharts.makeChart(callVolumediv, chartData);
-      chart.addListener('rendered', zoomChart);
-      zoomChart(chart);
+      // listen for zoomed event and call "handleZoom" method
+      chart.addListener('zoomed', handleZoom);
       return chart;
     }
 
-    function zoomChart(chart) {
-      chart.zoomToIndexes(chart.dataProvider.length - 40, chart.dataProvider.length - 1);
+    // this method is called each time the selected period of the chart is changed
+    function handleZoom(event) {
+      zoomedStartTime = event.startDate;
+      zoomedEndTime = event.endDate;
+      var selectedTime = {
+        startTime: zoomedStartTime,
+        endTime: zoomedEndTime
+      };
+
+      if ((_.isUndefined(dateSelected.value) && zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) || (zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime)) {
+        $rootScope.$broadcast('zoomedTime', {
+          data: selectedTime
+        });
+      }
     }
 
     function callVolumeGraphs(data, cluster, daterange) {

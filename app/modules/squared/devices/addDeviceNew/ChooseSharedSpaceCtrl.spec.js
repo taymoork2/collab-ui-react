@@ -72,7 +72,7 @@ describe('ChooseSharedSpaceCtrl: Ctrl', function () {
         },
         next: function () {}
       };
-      spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.when({}));
+      spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({}));
       initController();
       controller.deviceName = deviceDisplayName;
       controller.place = { cisUuid: deviceCisUuid };

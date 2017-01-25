@@ -95,7 +95,7 @@
           }
         });
       } else {
-        return $q.when();
+        return $q.resolve();
       }
     }
 
@@ -568,7 +568,7 @@
       if ((userStatus === 'pending' || userStatus === 'error') && !isHuronUser(entitlements)) {
         return sendSparkWelcomeEmail(userEmail, userName);
       } else if (isHuronUser(entitlements) && !dirsyncEnabled) {
-        return HuronUser.sendWelcomeEmail(userEmail, userName, uuid, Authinfo.getOrgId(), false);
+        return HuronUser.sendWelcomeEmail(userEmail, userName, uuid, Authinfo.getOrgId());
       }
       return $q.reject('invitation not sent');
     }

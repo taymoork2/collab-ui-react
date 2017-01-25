@@ -16,10 +16,10 @@ describe('Controller: SettingsServiceAddressCtrl', function () {
     PstnServiceAddressService = _PstnServiceAddressService_;
     Notification = _Notification_;
 
-    spyOn(PstnServiceAddressService, 'getAddress').and.returnValue($q.when(address));
-    spyOn(PstnServiceAddressService, 'lookupAddress').and.returnValue($q.when(updatedAddress));
-    spyOn(PstnServiceAddressService, 'createCustomerSite').and.returnValue($q.when());
-    spyOn(PstnServiceAddressService, 'updateAddress').and.returnValue($q.when());
+    spyOn(PstnServiceAddressService, 'getAddress').and.returnValue($q.resolve(address));
+    spyOn(PstnServiceAddressService, 'lookupAddress').and.returnValue($q.resolve(updatedAddress));
+    spyOn(PstnServiceAddressService, 'createCustomerSite').and.returnValue($q.resolve());
+    spyOn(PstnServiceAddressService, 'updateAddress').and.returnValue($q.resolve());
     spyOn(Notification, 'error');
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');

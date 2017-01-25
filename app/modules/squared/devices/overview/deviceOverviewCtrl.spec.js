@@ -308,10 +308,10 @@ describe('Huron Device', function () {
     }]);
     countries = getJSONFixture('huron/json/settings/countries.json');
 
-    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timeZone));
-    spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.when(countries));
-    spyOn($stateParams.huronDeviceService, 'setTimezoneForDevice').and.returnValue($q.when(true));
-    spyOn($stateParams.huronDeviceService, 'setCountryForDevice').and.returnValue($q.when(true));
+    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.resolve(timeZone));
+    spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.resolve(countries));
+    spyOn($stateParams.huronDeviceService, 'setTimezoneForDevice').and.returnValue($q.resolve(true));
+    spyOn($stateParams.huronDeviceService, 'setCountryForDevice').and.returnValue($q.resolve(true));
 
 
   }

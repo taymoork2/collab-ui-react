@@ -74,7 +74,7 @@ describe('Controller: DeviceUsageCtrl', function () {
       var deviceData = [
         { whatever: 42 }
       ];
-      DeviceUsageTotalService.getDataForRange.returns($q.when(deviceData));
+      DeviceUsageTotalService.getDataForRange.returns($q.resolve(deviceData));
       expect(controller.loading).toBe(true);
       controller.init();
       expect(controller.timeSelected.value).toBe(0);

@@ -90,9 +90,9 @@ describe('Controller:MediaReportsController', function () {
   describe('Initializing Controller', function () {
     it('should be created successfully and all expected calls completed', function () {
       expect(controller).toBeDefined();
-      spyOn(MediaReportsService, 'getCallVolumeData').and.returnValue($q.when(callVolumeGraphData));
-      spyOn(MediaReportsService, 'getAvailabilityData').and.returnValue($q.when(clusteravailabilityData));
-      spyOn(MediaReportsService, 'getUtilizationData').and.returnValue($q.when(utilizationGraphData));
+      spyOn(MediaReportsService, 'getCallVolumeData').and.returnValue($q.resolve(callVolumeGraphData));
+      spyOn(MediaReportsService, 'getAvailabilityData').and.returnValue($q.resolve(clusteravailabilityData));
+      spyOn(MediaReportsService, 'getUtilizationData').and.returnValue($q.resolve(utilizationGraphData));
       $timeout(function () {
 
         expect(MediaReportsService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0]);
@@ -114,10 +114,11 @@ describe('Controller:MediaReportsController', function () {
     });
     it('All graphs should update on cluster filter changes', function () {
       controller.clusterSelected = allClusters;
-      spyOn(MediaReportsService, 'getCallVolumeData').and.returnValue($q.when(callVolumeGraphData));
-      spyOn(MediaReportsService, 'getAvailabilityData').and.returnValue($q.when(clusteravailabilityData));
-      spyOn(MediaReportsService, 'getUtilizationData').and.returnValue($q.when(utilizationGraphData));
+      spyOn(MediaReportsService, 'getCallVolumeData').and.returnValue($q.resolve(callVolumeGraphData));
+      spyOn(MediaReportsService, 'getAvailabilityData').and.returnValue($q.resolve(clusteravailabilityData));
+      spyOn(MediaReportsService, 'getUtilizationData').and.returnValue($q.resolve(utilizationGraphData));
       controller.clusterUpdate();
+      httpMock.flush();
       expect(MediaReportsService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
       expect(MediaReportsService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
       expect(MediaReportsService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
@@ -172,9 +173,9 @@ describe('Controller:MediaReportsController', function () {
           'callsRedirect': 30
         }
       };
-      spyOn(MediaReportsService, 'getTotalCallsData').and.returnValue($q.when(response));
+      spyOn(MediaReportsService, 'getTotalCallsData').and.returnValue($q.resolve(response));
       controller.setTotalCallsData();
-      httpMock.flush();
+      httpMock.verifyNoOutstandingExpectation();
       expect(MediaReportsService.getTotalCallsData).toHaveBeenCalled();
       expect(controller.onprem).toBe(20);
       expect(controller.cloud).toBe(30);
@@ -187,7 +188,7 @@ describe('Controller:MediaReportsController', function () {
           'availabilityPercent': 20
         }
       };
-      spyOn(MediaReportsService, 'getClusterAvailabilityData').and.returnValue($q.when(response));
+      spyOn(MediaReportsService, 'getClusterAvailabilityData').and.returnValue($q.resolve(response));
       controller.setClusterAvailability();
       httpMock.flush();
       expect(MediaReportsService.getClusterAvailabilityData).toHaveBeenCalled();
@@ -197,7 +198,9 @@ describe('Controller:MediaReportsController', function () {
     it('setSneekPeekData should call MediaReportsService and MediaSneekPeekResourceService', function () {
       spyOn(MediaReportsService, 'getClusterAvailabilityTooltip').and.callThrough();
       spyOn(MediaReportsService, 'getHostedOnPremisesTooltip').and.callThrough();
-      spyOn(MediaSneekPeekResourceService, 'getClusterAvailabilitySneekPeekValues').and.returnValue();
+      spyOn(MediaSneekPeekResourceService, 'getClusterAvailabilitySneekPeekValues').and.returnValue({
+        values: ["dummyCluster"]
+      });
       spyOn(MediaSneekPeekResourceService, 'getHostedOnPremisesSneekPeekValues').and.returnValue();
       controller.setSneekPeekData();
       httpMock.flush();

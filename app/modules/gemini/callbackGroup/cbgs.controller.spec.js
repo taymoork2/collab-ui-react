@@ -34,8 +34,8 @@ describe('controller: CbgsCtrl', function () {
   function initSpecs() {
     innerFilterSpy = jasmine.createSpy();
     filter = jasmine.createSpy().and.returnValue(innerFilterSpy);
-    spyOn($state, 'go').and.returnValue($q.when());
-    spyOn(Notification, 'errorResponse').and.returnValue($q.when());
+    spyOn($state, 'go').and.returnValue($q.resolve());
+    spyOn(Notification, 'errorResponse').and.returnValue($q.resolve());
     spyOn(cbgService, 'cbgsExportCSV').and.returnValue(deferCSV.promise);
     spyOn(cbgService, 'getCallbackGroups').and.returnValue(defer.promise);
   }

@@ -23,15 +23,15 @@ require('./_wizard.scss');
         }
 
         if (_.has(scope, name)) {
-          promises.push($q.when(scope[name]()));
+          promises.push($q.resolve(scope[name]()));
           return;
         } else if (tabControllerAs || subTabControllerAs) {
           if (_.has(scope, tabControllerAs + '.' + name)) {
-            promises.push($q.when(scope[tabControllerAs][name]()));
+            promises.push($q.resolve(scope[tabControllerAs][name]()));
             return;
           }
           if (_.has(scope, subTabControllerAs + '.' + name)) {
-            promises.push($q.when(scope[subTabControllerAs][name]()));
+            promises.push($q.resolve(scope[subTabControllerAs][name]()));
             return;
           }
         }

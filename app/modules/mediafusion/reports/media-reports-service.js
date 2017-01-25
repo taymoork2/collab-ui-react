@@ -76,7 +76,7 @@
 
     function formTimeURL(time) {
       if (!_.isUndefined(time.startTime) && !_.isUndefined(time.endTime)) {
-        return '/?startTime=' + time.startTime + '&endTime=' + time.endTime;
+        return '/?startTime=' + moment.utc(time.startTime, 'YYYY-MM-DDTHH:mm:ssZ').toJSON() + '&endTime=' + moment.utc(time.endTime, 'YYYY-MM-DDTHH:mm:ssZ').toJSON();
       } else if (time.value === 0) {
         return '/?relativeTime=4h';
       } else if (time.value === 1) {
@@ -85,7 +85,7 @@
         return '/?relativeTime=7d';
       } else if (time.value === 3) {
         return '/?relativeTime=30d';
-      } else {
+      } else if (time.value === 4) {
         return '/?relativeTime=90d';
       }
     }

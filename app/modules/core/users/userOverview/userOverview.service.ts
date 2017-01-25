@@ -211,6 +211,10 @@ export class UserOverviewService {
                 });
             }
           }
+        })
+        .catch(() => {
+          // user has no invitations.
+          return this.$q.resolve();
         });
     }
     return promise.then(() => userData);

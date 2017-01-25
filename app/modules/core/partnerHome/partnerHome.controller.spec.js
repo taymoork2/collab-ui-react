@@ -34,7 +34,7 @@ describe('Controller: PartnerHomeCtrl', function () {
       CUSTOMER: 2
     };
 
-    spyOn(PartnerService, 'getTrialList').and.returnValue($q.when(trialsListFixture));
+    spyOn(PartnerService, 'getTrialList').and.returnValue($q.resolve(trialsListFixture));
 
     $controller('PartnerHomeCtrl', {
       $scope: $scope

@@ -447,14 +447,14 @@ describe('HelpdeskService', function () {
 
   describe('getLatestEmailEvent:', function () {
     it('calls through to getEmailStatus()', function () {
-      spyOn(Service, 'getEmailStatus').and.returnValue($q.when());
+      spyOn(Service, 'getEmailStatus').and.returnValue($q.resolve());
       Service.getLatestEmailEvent('fake-email@example.com');
       expect(Service.getEmailStatus.calls.count()).toBe(1);
       expect(Service.getEmailStatus).toHaveBeenCalledWith('fake-email@example.com');
     });
 
     it('should return the first item of the resolved promise\'s list', function () {
-      spyOn(Service, 'getEmailStatus').and.returnValue($q.when([{ fake: 'data' }]));
+      spyOn(Service, 'getEmailStatus').and.returnValue($q.resolve([{ fake: 'data' }]));
       Service.getLatestEmailEvent('fake-email@example.com').then(function (latestEvent) {
         expect(latestEvent).toEqual({ fake: 'data' });
       });
@@ -490,7 +490,7 @@ describe('HelpdeskService', function () {
     });
 
     it('always checks the feature-toggle FeatureToggleService.features.atlasEmailStatus', function () {
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
 
       Service.resendInviteEmail(fakeUserData);
       $scope.$apply();
@@ -500,7 +500,7 @@ describe('HelpdeskService', function () {
     });
 
     it('when feature-toggle disabled: simply calls invokeInviteEmail', function () {
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
 
       Service.resendInviteEmail(fakeUserData);
       $scope.$apply();
@@ -510,8 +510,8 @@ describe('HelpdeskService', function () {
     });
 
     it('when feature-toggle enabled: checks isEmailBlocked and does a delete before calling invokeInviteEmail', function () {
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-      spyOn(Service, 'isEmailBlocked').and.returnValue($q.when());
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+      spyOn(Service, 'isEmailBlocked').and.returnValue($q.resolve());
 
       $httpBackend
         .expectDELETE(/email\/bounces\?email=/).respond(200);

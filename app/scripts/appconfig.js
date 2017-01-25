@@ -1861,10 +1861,6 @@
               filter: null
             },
             resolve: {
-              customerListToggle: /* @ngInject */ function () {
-                // TODO:  remove this once the controllers are refactored
-                return true;
-              },
               trialForPaid: function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
               }
@@ -1891,10 +1887,6 @@
                 function orgCallback(data) {
                   defer.resolve(data);
                 }
-              },
-              newCustomerViewToggle: /* @ngInject */ function () {
-                // TODO:  remove this once the controllers are refactored
-                return true;
               },
               trialForPaid: function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
@@ -2595,7 +2587,7 @@
         $stateProvider
           .state('services-overview', {
             url: '/services',
-            templateUrl: 'modules/services-overview/overview.html',
+            templateUrl: 'modules/services-overview/services-overview.html',
             controller: 'ServicesOverviewCtrl',
             controllerAs: 'servicesOverviewCtrl',
             parent: 'main'
@@ -2626,7 +2618,7 @@
             }
           })
           .state('hds', {
-            templateUrl: 'modules/hds/resources/overview.html',
+            templateUrl: 'modules/hds/resources/hybrid-data-security-container.html',
             controller: 'HDSServiceController',
             controllerAs: 'hdsServiceController',
             parent: 'main',

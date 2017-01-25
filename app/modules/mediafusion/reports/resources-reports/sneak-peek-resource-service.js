@@ -14,6 +14,7 @@
 
     function getClusterAvailabilitySneekPeekValues(response, clusterMap, clusterAvailability, clusterId) {
       var values = [];
+      var valuesArray = [];
       var isShow, cluster_name;
       _.forEach(response.data, function (val) {
         cluster_name = _.findKey(clusterMap, function (clusterValue) {
@@ -24,6 +25,11 @@
         }
       });
       values = _.orderBy(values, ['value'], ['asc']);
+      _.forEach(values, function (clusterList) {
+        var c_name = clusterList.key;
+        c_name = (c_name.length > 17) ? c_name.substring(0, 17) + ".." : c_name;
+        valuesArray.push(c_name + " " + " " + clusterList.value + "%");
+      });
 
       if (clusterAvailability && clusterId === vm.allClusters && values.length > 0) {
         isShow = true;
@@ -32,8 +38,7 @@
       }
       var availabilityTooltipOptions = {
         isShow: isShow,
-        values: values,
-        heading: $translate.instant('mediaFusion.metrics.lowAvailableClusters')
+        values: valuesArray
       };
       return availabilityTooltipOptions;
     }
@@ -58,8 +63,7 @@
       }
       var onPremisesTooltipOptions = {
         isShow: isShow,
-        values: values,
-        heading: $translate.instant('mediaFusion.metrics.clusterTakingMoreCalls')
+        values: values
       };
       return onPremisesTooltipOptions;
     }

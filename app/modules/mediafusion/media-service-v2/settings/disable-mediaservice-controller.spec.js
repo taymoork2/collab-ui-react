@@ -58,7 +58,7 @@ describe('Controller: DisableMediaServiceController', function () {
     var respnse = {
       'status': 204
     };
-    spyOn(MediaClusterServiceV2, 'deleteClusterWithConnector').and.returnValue($q.when(respnse));
+    spyOn(MediaClusterServiceV2, 'deleteClusterWithConnector').and.returnValue($q.resolve(respnse));
     spyOn(MediaServiceActivationV2, 'setServiceEnabled');
     spyOn(MediaServiceActivationV2, 'setisMediaServiceEnabled');
     spyOn(MediaServiceActivationV2, 'setServiceAcknowledged');
@@ -80,7 +80,7 @@ describe('Controller: DisableMediaServiceController', function () {
     expect(modalInstance.close).toHaveBeenCalled();
   });
   it('should notify error when deactivate call fails', function () {
-    spyOn(MediaClusterServiceV2, 'deleteClusterWithConnector').and.returnValue($q.when({
+    spyOn(MediaClusterServiceV2, 'deleteClusterWithConnector').and.returnValue($q.resolve({
       'status': 500
     }));
     spyOn(Notification, 'error');

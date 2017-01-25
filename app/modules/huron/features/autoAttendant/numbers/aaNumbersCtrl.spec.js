@@ -546,7 +546,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     it('should not warn when assignments return no error', function () {
 
       spyOn(AANumberAssignmentService, 'checkAANumberAssignments').and.callFake(function () {
-        return $q.when("{}");
+        return $q.resolve("{}");
       });
 
       controller.warnOnAssignedNumberDiscrepancies();
@@ -560,7 +560,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       spyOn(AANumberAssignmentService, 'checkAANumberAssignments').and.callFake(function (customerId, cesId, resources, onlyResources, onlyCMI) {
         onlyCMI.push('5551212');
         onlyResources.push('5552323');
-        return $q.when("{}");
+        return $q.resolve("{}");
       });
 
       var resource = AutoAttendantCeInfoModelService.newResource();

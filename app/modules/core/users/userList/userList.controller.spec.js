@@ -1,11 +1,9 @@
-/* globals fdescribe fit */
-
 'use strict';
 
 describe('UserListCtrl: Ctrl', function () {
-  var $controller, $scope, $state, $q, Userservice, UserListService, Orgservice, Authinfo, Auth, Config, Notification, FeatureToggleService, CsvDownloadService;
+  var $controller, $scope, $state, $q, Userservice, UserListService, Orgservice, Authinfo, Auth, Config, Notification, FeatureToggleService;
   var photoUsers, currentUser, listUsers, listUsersMore, listAdmins, listAdminsMore, listPartners, getOrgJson;
-  var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements, telstraUser, failedData;
+  var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements, telstraUser;
   photoUsers = getJSONFixture('core/json/users/userlist.controller.json');
   currentUser = getJSONFixture('core/json/currentUser.json');
   listUsers = getJSONFixture('core/json/users/listUsers.json');
@@ -18,7 +16,7 @@ describe('UserListCtrl: Ctrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, _$state_, _$controller_, _$q_, _Userservice_, _UserListService_, _Orgservice_, _Authinfo_, _Auth_, _Config_, _Notification_, _FeatureToggleService_, _CsvDownloadService_) {
+  beforeEach(inject(function ($rootScope, _$state_, _$controller_, _$q_, _Userservice_, _UserListService_, _Orgservice_, _Authinfo_, _Auth_, _Config_, _Notification_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $controller = _$controller_;
@@ -31,7 +29,6 @@ describe('UserListCtrl: Ctrl', function () {
     Config = _Config_;
     Notification = _Notification_;
     FeatureToggleService = _FeatureToggleService_;
-    CsvDownloadService = _CsvDownloadService_;
 
     $rootScope.typeOfExport = {
       USER: 1,
@@ -41,17 +38,18 @@ describe('UserListCtrl: Ctrl', function () {
     var successData = {
       success: true
     };
-    failedData = {
-      success: false,
-      status: 403,
-      Errors: [{
-        errorCode: '100106'
-      }]
-    };
+
+    // var failedData = {
+    //   success: false,
+    //   status: 403,
+    //   Errors: [{
+    //     errorCode: '100106'
+    //   }]
+    // };
 
     spyOn($scope, '$emit').and.callThrough();
     spyOn(Notification, 'success');
-    spyOn(Userservice, 'resendInvitation').and.returnValue($q.when({}));
+    spyOn(Userservice, 'resendInvitation').and.returnValue($q.resolve({}));
     spyOn(UserListService, 'listUsers').and.callFake(function (startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins) {
       var response;
       if (getAdmins) {
@@ -64,17 +62,19 @@ describe('UserListCtrl: Ctrl', function () {
     spyOn(UserListService, 'listPartners').and.callFake(function (orgId, callback) {
       callback(_.extend(listPartners, successData), 200);
     });
-    spyOn(UserListService, 'getUserCount').and.returnValue($q.when(100));
+    spyOn(UserListService, 'getUserCount').and.returnValue($q.resolve(100));
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(getOrgJson, 200);
     });
     spyOn(Authinfo, 'isCSB').and.returnValue(true);
     spyOn(Authinfo, 'getOrgId').and.returnValue(currentUser.meta.organizationID);
     spyOn(Authinfo, 'isCisco').and.returnValue(false);
-    spyOn(Auth, 'isOnlineOrg').and.returnValue($q.when(false));
+    spyOn(Auth, 'isOnlineOrg').and.returnValue($q.resolve(false));
 
-    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue($q.resolve(false));
+
+    installPromiseMatchers();
   }));
 
   function initController() {
@@ -97,7 +97,7 @@ describe('UserListCtrl: Ctrl', function () {
           dataLoaded: jasmine.createSpy().and.returnValue()
         }
       };
-      return $q.when();
+      return $q.resolve();
     });
 
     ctrl.$onInit();
@@ -118,7 +118,7 @@ describe('UserListCtrl: Ctrl', function () {
   describe('initController', function () {
     beforeEach(function () {
       Authinfo.isCisco.and.returnValue(false);
-      FeatureToggleService.supportsDirSync.and.returnValue($q.when(true));
+      FeatureToggleService.supportsDirSync.and.returnValue($q.resolve(true));
       initController();
     });
 
@@ -131,10 +131,13 @@ describe('UserListCtrl: Ctrl', function () {
     beforeEach(initController);
 
     it('should populate list with users, admins, and partners when querying from 0 index', function () {
-      $scope.getUserList(); // 0 index
-      expect($scope.userList.allUsers).toEqual(listUsers.Resources);
-      expect($scope.userList.adminUsers).toEqual(listAdmins.Resources);
-      expect($scope.userList.partnerUsers).toEqual(listPartners.partners);
+      var promise = $scope.getUserList()
+        .then(function () {
+          expect($scope.userList.allUsers).toEqual(listUsers.Resources);
+          expect($scope.userList.adminUsers).toEqual(listAdmins.Resources);
+          expect($scope.userList.partnerUsers).toEqual(listPartners.partners);
+        });
+      expect(promise).toBeResolved();
     });
 
     it('should return additional pages of data when they exist', function () {
@@ -144,10 +147,13 @@ describe('UserListCtrl: Ctrl', function () {
       var scrollingListAdmins = listAdmins.Resources.concat(listAdminsMore.Resources);
       listAdmins.totalResults = _.size(scrollingListAdmins);
 
-      $scope.getUserList(100); // >0 index
-      expect($scope.userList.allUsers).toEqual(scrollingListUsers);
-      expect($scope.userList.adminUsers).toEqual(scrollingListAdmins);
-      expect($scope.userList.partnerUsers).toEqual(listPartners.partners);
+      var promise = $scope.getUserList(100)
+        .then(function () {
+          expect($scope.userList.allUsers).toEqual(scrollingListUsers);
+          expect($scope.userList.adminUsers).toEqual(scrollingListAdmins);
+          expect($scope.userList.partnerUsers).toEqual(listPartners.partners);
+        });
+      expect(promise).toBeResolved();
     });
   });
 
@@ -205,7 +211,7 @@ describe('UserListCtrl: Ctrl', function () {
         "userName": "telstraUser",
         "licenseID": undefined,
       };
-      FeatureToggleService.supportsDirSync.and.returnValue($q.when(true));
+      FeatureToggleService.supportsDirSync.and.returnValue($q.resolve(true));
       initController();
     });
 
@@ -236,23 +242,6 @@ describe('UserListCtrl: Ctrl', function () {
       $scope.sortDirection($scope, sortColumns);
       expect(UserListService.listUsers.calls.count()).toEqual(2);
       expect(UserListService.listUsers.calls.mostRecent().args[0]).toEqual(0, 100, 'displayName', 'ascending', Function, '');
-    });
-  });
-
-  describe('getUserCount() returns NaN', function () {
-    beforeEach(function () {
-      UserListService.listUsers.and.callFake(function (startIndex, count, sortBy, sortOrder, callback, searchStr) {
-        callback(failedData, 200, searchStr);
-      });
-      UserListService.getUserCount.and.returnValue($q.when(NaN));
-      initController();
-    });
-
-    it('should set user count to userExportThreshold + 1', function () {
-      // $scope.obtainedTotalUserCount = false;
-      $scope.getUserList(); // 0 index
-      expect($scope.obtainedTotalUserCount).toEqual(true);
-      expect($scope.totalUsers).toEqual(CsvDownloadService.userExportThreshold);
     });
   });
 

@@ -170,15 +170,15 @@ describe('Controller: AAScheduleModalCtrl', function () {
     };
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
-    spyOn(AACalendarService, 'readCalendar').and.returnValue($q.when(calendar));
-    spyOn(AACalendarService, 'createCalendar').and.returnValue($q.when(calendar));
-    spyOn(AACalendarService, 'updateCalendar').and.returnValue($q.when(calendar));
-    spyOn(AACalendarService, 'deleteCalendar').and.returnValue($q.when());
+    spyOn(AACalendarService, 'readCalendar').and.returnValue($q.resolve(calendar));
+    spyOn(AACalendarService, 'createCalendar').and.returnValue($q.resolve(calendar));
+    spyOn(AACalendarService, 'updateCalendar').and.returnValue($q.resolve(calendar));
+    spyOn(AACalendarService, 'deleteCalendar').and.returnValue($q.resolve());
     spyOn(AAICalService, 'getDefaultRange').and.returnValue(defaultRange);
     spyOn(AAICalService, 'createCalendar').and.returnValue(new ical.Component('vcalendar'));
     spyOn(AAICalService, 'getHoursRanges').and.returnValue(data);
     spyOn(AAICalService, 'addHoursRange');
-    spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.when());
+    spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.resolve());
     spyOn($modal, 'open').and.returnValue(fakeModal);
     spyOn(AACommonService, 'saveUiModel');
     AANotificationService = jasmine.createSpyObj('AANotificationService', ['success', 'error']);
@@ -767,7 +767,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
     });
 
     it('should close a modal for importing and send analytics', function () {
-      spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
+      spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve({}));
       controller.openImportModal();
       fakeModal.dismiss('cancel');
       $scope.$apply();

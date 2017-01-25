@@ -115,12 +115,12 @@ describe('Controller: WizardCtrl', function () {
     spyOn($state, 'go');
     spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(getMyFeatureToggles);
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(Authinfo, 'getLicenses').and.returnValue([{
       licenseType: 'COMMUNICATION'
     }]);
     spyOn(rootScope, '$broadcast').and.callThrough();
-    spyOn(ServiceSetup, 'listSites').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'listSites').and.returnValue($q.resolve());
 
     controller = $controller('WizardCtrl', {
       $rootScope: rootScope,

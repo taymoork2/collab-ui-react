@@ -7,7 +7,7 @@ require('./_customer-list.scss');
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Analytics, Authinfo, Config, customerListToggle, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, trialForPaid, TrialService) {
+  function CustomerListCtrl($q, $rootScope, $scope, $state, $templateCache, $translate, $window, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, trialForPaid, TrialService) {
     var vm = this;
     vm.isCustomerPartner = !!Authinfo.isCustomerPartner;
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
@@ -23,7 +23,6 @@ require('./_customer-list.scss');
     vm.getSubfields = getSubfields;
     vm.filterAction = filterAction;
     vm.modifyManagedOrgs = modifyManagedOrgs;
-    vm.getTrialsList = getTrialsList;
     vm.openAddTrialModal = openAddTrialModal;
     vm.actionEvents = actionEvents;
     vm.isLicenseInfoAvailable = isLicenseInfoAvailable;
@@ -49,8 +48,6 @@ require('./_customer-list.scss');
     vm.exportType = $rootScope.typeOfExport.CUSTOMER;
     vm.filterList = _.debounce(filterAction, vm.timeoutVal);
 
-    // TODO:  atlasCustomerListUpdate toggle is globally set to true. Needs refactoring to remove unused code
-    vm.customerListToggle = customerListToggle;
     vm.featureTrialForPaid = trialForPaid;
     // expecting this guy to be unset on init, and set every time after
     // check resetLists fn to see how its being used
@@ -144,17 +141,7 @@ require('./_customer-list.scss');
       updateServiceForOrg: updateServiceForOrg
     };
 
-    // common between new + old
     var nameTemplate = $templateCache.get('modules/core/customers/customerList/grid/nameColumn.tpl.html');
-    // old templates. These should be deleted once the customer list redesign rolls out publiclly
-    // FIXME: Delete when customer list redesign is published
-    var serviceTemplate = $templateCache.get('modules/core/customers/customerList/grid/serviceColumn.tpl.html');
-    var multiServiceTemplate = $templateCache.get('modules/core/customers/customerList/grid/multiServiceColumn.tpl.html');
-    var oldNoteTemplate = $templateCache.get('modules/core/customers/customerList/grid/noteColumn.tpl.html');
-    var actionTemplate = $templateCache.get('modules/core/customers/customerList/grid/actionColumn.tpl.html');
-    // END SECTION TO BE DELETED
-
-    // new templates (These should be kept when feature toggle is removed)
     var licenseCountTemplate = $templateCache.get('modules/core/customers/customerList/grid/licenseCountColumn.tpl.html');
     /*AG TODO:  temporarily hidden until we have data:
     var totalUsersTemplate = $templateCache.get('modules/core/customers/customerList/grid/totalUsersColumn.tpl.html');*/
@@ -162,60 +149,6 @@ require('./_customer-list.scss');
     var accountStatusTemplate = $templateCache.get('modules/core/customers/customerList/grid/accountStatusColumn.tpl.html');
     var newNoteTemplate = $templateCache.get('modules/core/customers/customerList/grid/newNoteColumn.tpl.html');
 
-    // old grid column defs. These should be deleted once the customer list redesign rolls out publiclly
-    //AG TODO:  Delete when customerList redesign is published
-    var careField = {
-      field: 'care',
-      displayName: $translate.instant('customerPage.care'),
-      width: '12%',
-      cellTemplate: serviceTemplate,
-      headerCellClass: 'align-center',
-      sortingAlgorithm: serviceSort
-    };
-    var actionField = {
-      field: 'action',
-      displayName: $translate.instant('customerPage.actionHeader'),
-      sortable: false,
-      cellTemplate: actionTemplate,
-      width: '95',
-      cellClass: 'align-center'
-    };
-    var oldNotesField = {
-      field: 'notes',
-      displayName: $translate.instant('customerPage.notes'),
-      cellTemplate: oldNoteTemplate,
-      sortingAlgorithm: notesSort
-    };
-    var splitServicesFields = [{
-      field: 'messaging',
-      displayName: $translate.instant('customerPage.message'),
-      width: '12%',
-      cellTemplate: serviceTemplate,
-      headerCellClass: 'align-center',
-      sortingAlgorithm: serviceSort
-    }, {
-      field: 'meeting',
-      displayName: $translate.instant('customerPage.meeting'),
-      width: '14%',
-      cellTemplate: multiServiceTemplate,
-      headerCellClass: 'align-center',
-      sortingAlgorithm: serviceSort
-    }, {
-      field: 'communications',
-      displayName: $translate.instant('customerPage.call'),
-      width: '12%',
-      cellTemplate: serviceTemplate,
-      headerCellClass: 'align-center',
-      sortingAlgorithm: serviceSort
-    }, careField, {
-      field: 'roomSystems',
-      displayName: $translate.instant('customerPage.roomSystems'),
-      width: '12%',
-      cellTemplate: serviceTemplate,
-      headerCellClass: 'align-center',
-      sortingAlgorithm: serviceSort
-    }];
-    // END SECTION TO BE DELETED
 
     // new column defs for the customer list redesign. These should stay once the feature is rolled out
     var customerNameField = {
@@ -290,9 +223,6 @@ require('./_customer-list.scss');
           if (vm.load) {
             vm.currentDataPosition++;
             vm.load = false;
-            if (!vm.customerListToggle) {
-              getTrialsList((vm.currentDataPosition * Config.usersperpage) + 1);
-            }
             vm.gridApi.infiniteScroll.dataLoaded();
           }
         });
@@ -360,11 +290,7 @@ require('./_customer-list.scss');
         }
       })
       .finally(function () {
-        resetLists().then(function () {
-          if (!vm.customerListToggle) {
-            setFilter($stateParams.filter);
-          }
-        });
+        resetLists();
       });
 
       Orgservice.getOrg(function (data, status) {
@@ -391,13 +317,9 @@ require('./_customer-list.scss');
 
     function initColumns() {
       var columns = [customerNameField];
-      if (vm.customerListToggle) {
-        /* AG TODO: Once we have total users info -- user this line
-        columns = columns.concat(allServicesField, accountStatusField, licenseQuantityField, totalUsersField, notesField); */
-        columns = columns.concat(allServicesField, accountStatusField, licenseQuantityField, notesField);
-      } else {
-        columns = columns.concat(splitServicesFields, oldNotesField, actionField);
-      }
+      /* AG TODO: Once we have total users info -- use this line
+      columns = columns.concat(allServicesField, accountStatusField, licenseQuantityField, totalUsersField, notesField); */
+      columns = columns.concat(allServicesField, accountStatusField, licenseQuantityField, notesField);
       vm.gridColumns = columns;
       vm.gridOptions.columnDefs = columns;
     }
@@ -537,10 +459,6 @@ require('./_customer-list.scss');
     // No changes to the length of rows can be made here, only visibility
 
     function rowFilter(rows) {
-      if (!vm.customerListToggle) {
-        // never want to filter with old design
-        return rows;
-      }
       var selectedFilters = {
         account: _.filter(vm.filter.selected, { isAccountFilter: true }),
         license: _.filter(vm.filter.selected, { isAccountFilter: false })
@@ -601,7 +519,7 @@ require('./_customer-list.scss');
         var licenses = Authinfo.getLicenses();
         Orgservice.getAdminOrg(function (data, status) {
           if (status === 200) {
-            var myOrg = PartnerService.loadRetrievedDataToList([data], false, vm.isCareEnabled, vm.customerListToggle);
+            var myOrg = PartnerService.loadRetrievedDataToList([data], false, vm.isCareEnabled);
             // Not sure why this is set again, afaik it is the same as myOrg
             //AG 9/27 getAdminOrg returns licenses without offerCodes so services are not populated therefore this is needed
             myOrg[0].customerName = custName;
@@ -651,7 +569,7 @@ require('./_customer-list.scss');
           if (results) {
             var orgList = _.get(results, 'managedOrgs.data.organizations', []);
             var managed = PartnerService.loadRetrievedDataToList(orgList, false,
-              vm.isCareEnabled, vm.customerListToggle);
+              vm.isCareEnabled);
             var indexMyOwnOrg = _.findIndex(managed, {
               customerOrgId: Authinfo.getOrgId()
             });
@@ -698,21 +616,6 @@ require('./_customer-list.scss');
       PartnerService.modifyManagedOrgs(customerOrgId);
     }
 
-     // WARNING: not sure if this is needed, getManagedOrgsList contains a superset of this list
-    // can be filtered by `createdBy` and `license.isTrial` but we have a second endpoint that
-    // may at one point in the future return something other than the subset
-    // AG : this will go away in refactor. We are getting rid of trials endpoint call
-    function getTrialsList(searchText) {
-      return TrialService.getTrialsList(searchText)
-        .catch(function (response) {
-          Notification.errorResponse(response, 'partnerHomePage.errGetTrialsQuery');
-        })
-        .then(function (response) {
-          vm.trialsList = PartnerService.loadRetrievedDataToList(_.get(response, 'data.trials', []), true,
-            vm.isCareEnabled);
-          vm.totalTrials = _.get(vm, 'trialsList', []).length;
-        });
-    }
 
     function openAddTrialModal() {
       Analytics.trackTrialSteps(Analytics.sections.TRIAL.eventNames.START_SETUP, $state.current.name, Authinfo.getOrgId());
@@ -724,14 +627,10 @@ require('./_customer-list.scss');
 
 
     function resetLists() {
-      if (!vm.customerListToggle) {
-        return $q.all([getTrialsList(vm.searchStr), getManagedOrgsList(vm.searchStr)]);
-      } else {
-        return getManagedOrgsList(vm.searchStr).then(function () {
-          vm.gridOptions.data = _.get(vm, 'managedOrgsList', []);
-          vm.totalOrgs = _.get(vm, 'managedOrgsList', []).length;
-        });
-      }
+      return getManagedOrgsList(vm.searchStr).then(function () {
+        vm.gridOptions.data = _.get(vm, 'managedOrgsList', []);
+        vm.totalOrgs = _.get(vm, 'managedOrgsList', []).length;
+      });
     }
 
     function launchCustomerPortal(trial) {

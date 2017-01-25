@@ -32,7 +32,7 @@ describe('controller: DeleteServiceCtrl', function () {
   }
 
   function initSpies() {
-    spyOn(GSSService, 'deleteService').and.returnValue($q.when());
+    spyOn(GSSService, 'deleteService').and.returnValue($q.resolve());
     spyOn($state, 'go');
     spyOn($scope, '$emit').and.callThrough();
   }
