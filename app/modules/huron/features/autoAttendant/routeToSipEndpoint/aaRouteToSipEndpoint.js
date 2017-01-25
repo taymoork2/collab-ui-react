@@ -34,24 +34,26 @@
       if (fromRouteCall) {
         entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
       } else {
-        entry = _.get(vm.menuKeyEntry, 'queueSettings.fallback', vm.menuKeyEntry);
+        entry = _.get(vm.menuKeyEntry, 'actions[0].queueSettings.fallback', vm.menuKeyEntry);
       }
-      vm.sipInput = entry.actions[0].getValue();
+      if (_.isEmpty(entry.actions[0].getValue())) {
+        vm.sipInput = 'sip';
+      } else {
+        vm.sipInput = entry.actions[0].getValue();
+      }
     }
 
     function saveUiModel() {
       AACommonService.setPhoneMenuStatus(true);
       var entry;
-      var endPoint = vm.sipInput;
 
       if (fromRouteCall) {
         entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
       } else {
-        entry = _.get(vm.menuKeyEntry, 'queueSettings.fallback', vm.menuKeyEntry);
+        entry = _.get(vm.menuKeyEntry, 'actions[0].queueSettings.fallback', vm.menuKeyEntry);
       }
-      entry.actions[0].setValue(endPoint);
+      entry.actions[0].setValue(vm.sipInput);
     }
-
 
     function activate() {
 
@@ -78,37 +80,26 @@
         }
 
       } else {
-        var action;
         vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-        if ($scope.keyIndex < _.size(_.get(vm.menuEntry, 'entries', []))) {
-          var entry = vm.menuEntry.entries[$scope.keyIndex];
-          action = _.get(entry, 'actions[0]');
-       /*   if (action && _.get(action, 'name') === 'routeToSipEndpoint') {
-            vm.menuKeyEntry = action;
-          } else {*/
-          vm.menuKeyEntry = entry;
+        if ($scope.keyIndex < vm.menuEntry.entries.length) {
+          vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
         } else {
           vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToSipEndpoint, '');
+          var action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToSipEndpoint, '');
           vm.menuKeyEntry.addAction(action);
         }
-
-        vm.menuKeyEntry.routeToId = $scope.$id;
-
-        // used by aaValidationService to identify this menu
-
-        vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, vm.menuKeyEntry.routeToId);
 
       }
 
       if ($scope.fromFallback) {
-        if (_.has(vm.menuKeyEntry, 'queueSettings')) {
+        var entry;
+        if (_.has(vm.menuKeyEntry, 'actions[0]')) {
           entry = vm.menuKeyEntry;
         } else {
-          entry = vm.menuEntry.actions[0];
+          entry = vm.menuEntry;
         }
 
-        var fallbackAction = _.get(entry, 'queueSettings.fallback.actions[0]');
+        var fallbackAction = _.get(entry, 'actions[0].queueSettings.fallback.actions[0]');
         if (fallbackAction && (fallbackAction.getName() !== routeToSipEndpoint)) {
           fallbackAction.setName(routeToSipEndpoint);
           fallbackAction.setValue('');
@@ -116,7 +107,6 @@
       }
 
       populateUiModel();
-
     }
 
     activate();

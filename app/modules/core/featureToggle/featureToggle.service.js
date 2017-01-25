@@ -76,7 +76,7 @@
       huronAAMediaUpload: 'huron-aa-mediaupload',
       huronAACallerInput: 'huron-aa-callerinput',
       huronAAClioMedia: 'huron-aa-cliomedia',
-      huronAASIPEndpoint: 'huronAACallQueue', //'huron-aa-routeroom',
+      huronAASIPEndpoint: 'huron-aa-routeroom',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       huronPagingGroup: 'huronPagingGroup',
