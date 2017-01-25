@@ -104,19 +104,6 @@
       return Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
     };
 
-    var setServiceEnabled = function (serviceId, enabled, callback) {
-      $http
-        .patch(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
-          enabled: enabled
-        })
-        .success(function () {
-          callback(null);
-        })
-        .error(function () {
-          callback(arguments);
-        });
-    };
-
     var enableService = function (serviceId) {
       var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId;
       return $http.patch(url, {
@@ -164,7 +151,6 @@
       filterAllExceptManagement: filterAllExceptManagement,
       isFusionEnabled: isFusionEnabled,
       isServiceEnabled: isServiceEnabled,
-      setServiceEnabled: setServiceEnabled,
       acknowledgeService: acknowledgeService,
       getServices: getServices,
       servicesInOrg: servicesInOrg,

@@ -6,7 +6,7 @@ class HybridVoicemailCtrl implements ng.IComponentController {
     title: 'hercules.settings.voicemail.heading',
     };
 
- private voicemail: boolean;
+ private voicemailToggle: boolean;
  private OrgId: string;
 
   /* @ngInject */
@@ -17,44 +17,29 @@ class HybridVoicemailCtrl implements ng.IComponentController {
 ) {}
 
   public $onInit() {
-    this.OrgId=this.Authinfo.getOrgId();
-    this.UCCService.getOrgVoicemailConfiguration(this.OrgId).then((data)=>{
-      switch(data.orgVoicemailStatus) {
-        case 'ENABLED':
-          this.voicemail=true;
-        case 'DISABLED':
-          this.voicemail=false;
-        default:
-          this.voicemail=true;
-      }
-        }).catch((data)=>{
-        console.log(data)
-        })
+    this.OrgId = this.Authinfo.getOrgId();
+    this.UCCService.getOrgVoicemailConfiguration(this.OrgId).then((data) => {
+      this.voicemailToggle = data.voicemailOrgEnableInfo.orgHybridVoicemailEnabled;
+        }).catch((response) => {
+      this.Notification.errorWithTrackingId(response, 'hercules.settings.voicemail.voicemailStatusError');
+        });
   }
 
-  public $onChanges() {
-
-  }
-
-public change = () => {
-  console.log('change');
-  this.Notification.success('hercules.settings.voicemail.successDescription');
-  }
-
-public deactivateVoicemail =  _.debounce(value => {
-  if (value === false) {
-    this.UCCService.setOrgVoicemailConfiguration(true, this.OrgId).then(() => {
+public toggleVoicemail = (enableVoiceMail: boolean) => {
+  if (!enableVoiceMail) {
+    this.UCCService.enableHybridVoicemail(this.OrgId).then(() => {
       this.Notification.success('hercules.settings.voicemail.enableDescription');
+    }).catch((response) => {
+      this.Notification.errorWithTrackingId(response, 'hercules.settings.voicemail.voicemailEnableError');
     });
-    } else {
-    this.UCCService.setOrgVoicemailConfiguration(false, this.OrgId).then(() => {
+  } else {
+    this.UCCService.disableHybridVoicemail(this.OrgId).then(() => {
       this.Notification.success('hercules.settings.voicemail.disableDescription');
-      })
-        }
-   }, 2000, {
-      leading: true,
-     trailing: false,
-  });
+    }).catch((response) => {
+      this.Notification.errorWithTrackingId(response, 'hercules.settings.voicemail.voicemailDisableError');
+    });
+  }
+  }
 }
 
 class HybridVoicemailSectionComponent implements ng.IComponentOptions {

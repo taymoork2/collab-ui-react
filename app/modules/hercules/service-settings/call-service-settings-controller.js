@@ -6,7 +6,7 @@
     .controller('CallServiceSettingsController', CallServiceSettingsController);
 
   /* @ngInject */
-  function CallServiceSettingsController($modal, ServiceDescriptor, Authinfo, USSService, CertService, Notification, CertificateFormatterService, $translate, hasVoicemailFeatureToggle) {
+  function CallServiceSettingsController($modal, ServiceDescriptor, Authinfo, USSService, CertService, Notification, CertificateFormatterService, $translate, hasVoicemailFeatureToggle, UCCService) {
     var vm = this;
     vm.formattedCertificateList = [];
     vm.readCerts = readCerts;
@@ -39,22 +39,27 @@
     };
 
     vm.storeEc = function (onlyDisable) {
-      if ((onlyDisable && !vm.squaredFusionEc) || !onlyDisable) {
-        // Only store when disabling. The enabling is done in the Save button handler
-        // need this hack because the switch call backs twice, every time the user clicks it:
-        // one time with the old value, one time with the new value
-        ServiceDescriptor.setServiceEnabled('squared-fusion-ec', vm.squaredFusionEc,
-          function (err) {
-            // TODO: fix this callback crap!
-            if (err) {
-              vm.squaredFusionEc = !vm.squaredFusionEc;
-              Notification.errorWithTrackingId(err, 'hercules.errors.failedToEnableConnect');
-            }
+      if (!onlyDisable) {
+        ServiceDescriptor.enableService('squared-fusion-ec')
+          .then(function () {
+            readCerts();
+            Notification.success('hercules.notifications.connect.connectEnabled');
+          })
+          .catch(function (response) {
+            Notification.errorWithTrackingId(response, 'hercules.errors.failedToEnableConnect');
+          });
+      } else {
+        ServiceDescriptor.disableService('squared-fusion-ec').then(function () {
+          Notification.success('hercules.notifications.connect.connectDisabled');
+          if (hasVoicemailFeatureToggle) {
+            UCCService.disableHybridVoicemail(Authinfo.getOrgId())
+              .catch(function (response) {
+                Notification.errorWithTrackingId(response, 'hercules.voicemail.voicemailDisableError');
+              });
           }
-        );
-      }
-      if (vm.squaredFusionEc) {
-        readCerts();
+        }).catch(function (response) {
+          Notification.errorWithTrackingId(response, 'hercules.error.failedToDisableConnect');
+        });
       }
     };
 
@@ -72,7 +77,6 @@
 
       USSService.updateOrg(vm.org)
         .then(function () {
-          vm.storeEc(false);
           vm.savingSip = false;
           Notification.success('hercules.errors.sipDomainSaved');
         })
