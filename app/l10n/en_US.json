@@ -3279,6 +3279,15 @@
     "customNumberValidation": "Field can contain digits 0 to 9 and +. For example: +15556667777.",
     "saveConfirmation": "Do you want to save your changes?"
   },
+  "autoAnswerPanel": {
+    "title": "Auto Answer",
+    "description": "Enable to choose which devices to automatically answer this line when a call comes in.",
+    "userSharedLineDescription": "This line is shared, setting auto answer for this user will turn it off for the {{type}}, {{name}}",
+    "multiDeviceLineDescription": "If auto answer is set, the call will be answered by the selected phone. Other phones will not ring.",
+    "speaker": "Speaker",
+    "headset": "Headset",
+    "noSupportedDevices": "No supported devices"
+  },
   "sharedLinePanel": {
     "title": "Shared Line",
     "description": "Simultaneously ring other users' lines when this line is called.",

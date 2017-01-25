@@ -162,7 +162,8 @@
       atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',
       avrilVmEnable: 'avril-vm-enable',
       avrilVoicemaill1249: 'avril-voicemail-l1249',
-      cloudberryPersonalMode: 'ce-enable-personal-mode'
+      cloudberryPersonalMode: 'ce-enable-personal-mode',
+      autoAnswer: 'huron-auto-answer'
     };
 
     var toggles = {};

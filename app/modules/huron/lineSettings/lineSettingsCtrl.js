@@ -11,7 +11,7 @@ require('./_line-settings.scss');
   function LineSettingsCtrl($scope, $state, $stateParams, $timeout, $translate, $q, $modal, Notification,
       DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser,
       UserListService, SharedLineInfoService, CallerId, DialPlanService,
-      ExternalNumberPool, TelephoneNumberService, Authinfo) {
+      ExternalNumberPool, TelephoneNumberService, Authinfo, AutoAnswerService, FeatureToggleService) {
     var vm = this;
 
     vm.actionList = [{
@@ -96,6 +96,16 @@ require('./_line-settings.scss');
       startAt: 0
     };
     // end SharedLine Info ---
+
+    var lines = require('modules/huron/lines/services');
+    vm.autoAnswerFeatureToggleEnabled = false;
+    vm.autoAnswer = {
+      phones: [],
+      member: {},
+      enabledForSharedLineMember: false,
+    };
+    vm.origAutoAnswerPhones = [];
+    vm.setAutoAnswer = setAutoAnswer;
 
     var name = getUserName(vm.currentUser.name, vm.currentUser.userName);
 
@@ -295,6 +305,7 @@ require('./_line-settings.scss');
           initCallerId().then(function () {
             defer.resolve();
           });
+          initAutoAnswer();
         });
 
         if (typeof vm.telephonyInfo.alternateDirectoryNumber.uuid !== 'undefined' && vm.telephonyInfo.alternateDirectoryNumber.uuid !== '') {
@@ -473,6 +484,13 @@ require('./_line-settings.scss');
                 return LineSettings.updateLineSettings(vm.directoryNumber);
               }
             }));
+
+          if (!_.isEqual(vm.origAutoAnswerPhones, vm.autoAnswer.phones)) {
+            var updateData = AutoAnswerService.createUpdateAutoAnswerPayload(vm.origAutoAnswerPhones, vm.autoAnswer.phones);
+            if (!_.isUndefined(updateData) && !_.isNull(updateData)) {
+              promises.push(AutoAnswerService.updateAutoAnswer(lines.LineConsumerType.USERS, vm.currentUser.id, vm.telephonyInfo.currentDirectoryNumber.uuid, updateData));
+            }
+          }
 
           $q.all(promises)
             .then(function () {
@@ -1210,6 +1228,33 @@ require('./_line-settings.scss');
         overlaps = true;
       }
       return overlaps;
+    }
+
+    function initAutoAnswer() {
+      FeatureToggleService.supports(FeatureToggleService.features.autoAnswer).then(function (autoAnswerEnabled) {
+        vm.autoAnswerFeatureToggleEnabled = autoAnswerEnabled;
+
+        if (autoAnswerEnabled) {
+          AutoAnswerService.getSupportedPhonesAndMember(lines.LineConsumerType.USERS, vm.currentUser.id, vm.telephonyInfo.currentDirectoryNumber.uuid)
+          .then(function (data) {
+            vm.autoAnswer = data;
+
+            if (!_.isUndefined(data) && !_.isNull(data)) {
+              if (!_.isUndefined(data.member) && !_.isNull(data.member) && data.member.uuid !== vm.currentUser.id) {
+                vm.autoAnswer.enabledForSharedLineMember = true;
+              }
+
+              if (!_.isUndefined(data.phones) && !_.isNull(data.phones) && Array.isArray(data.phones) && data.phones.length !== 0) {
+                vm.origAutoAnswerPhone = data.phones;
+              }
+            }
+          });
+        }
+      });
+    }
+
+    function setAutoAnswer(phoneId, enabled, mode) {
+      AutoAnswerService.setAutoAnswer(vm.autoAnswer.phones, phoneId, enabled, mode);
     }
 
     init();

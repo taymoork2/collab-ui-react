@@ -9,6 +9,7 @@ import sharedLine from '../../sharedLine';
 import siteService from '../../sites';
 import memberService from '../../members';
 import notifications from 'modules/core/notifications';
+import autoAnswer from '../../autoAnswer';
 
 export * from './lineOverview.service';
 
@@ -27,6 +28,7 @@ export default angular
     notifications,
     siteService,
     memberService,
+    autoAnswer,
   ])
   .component('ucLineOverview', new LineOverviewComponent())
   .service('LineOverviewService', LineOverviewService)
