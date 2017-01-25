@@ -1,12 +1,5 @@
 import { CsvDownloadTypes, CsvDownloadService } from 'modules/core/csvDownload';
-
-interface IToolkitModalSettings extends ng.ui.bootstrap.IModalSettings {
-  type: string;
-}
-
-interface IToolkitModalService extends ng.ui.bootstrap.IModalService {
-  open(options: IToolkitModalSettings): ng.ui.bootstrap.IModalServiceInstance;
-}
+import { IToolkitModalService } from 'modules/core/modal';
 
 /* UI for allowing user to export the Csv and Template. Does not do downloading on its own! See csvDownload.component */
 export class UserCsvExportComponent {

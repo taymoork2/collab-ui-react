@@ -1,15 +1,8 @@
 import { Notification } from 'modules/core/notifications';
+import { IToolkitModalService, IToolkitModalServiceInstance } from 'modules/core/modal';
 
 interface ISubscriptionResource extends ng.resource.IResourceClass<ng.resource.IResource<any>> {
   patch: ng.resource.IResourceMethod<any>;
-}
-
-interface IToolkitModalSettings extends ng.ui.bootstrap.IModalSettings {
-  type: string;
-}
-
-interface IToolkitModalService extends ng.ui.bootstrap.IModalService {
-  open(options: IToolkitModalSettings): ng.ui.bootstrap.IModalServiceInstance;
 }
 
 const CANCELLED = 'CANCELLED';
@@ -17,7 +10,7 @@ const CANCEL = 'CANCEL';
 
 export class OnlineUpgradeService {
   private subscriptionResource: ISubscriptionResource;
-  private upgradeModal: ng.ui.bootstrap.IModalServiceInstance;
+  private upgradeModal: IToolkitModalServiceInstance;
 
   /* @ngInject */
   constructor(
