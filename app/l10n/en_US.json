@@ -6359,6 +6359,8 @@
       "overview": "Overview",
       "openedOn": "Opened on",
       "moveSite": "Move Site",
+      "moveFrom": "move from",
+      "siteMoved": "Site Moved",
       "placeholder-text": "All",
       "importCsv": "Import CSV",
       "title": "Callback Groups",

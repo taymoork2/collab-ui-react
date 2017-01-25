@@ -105,6 +105,10 @@
   }
 
   .side-panel-history {
+    .side-panel-section {
+      border-bottom: none;
+    }
+
     .history-ul {
       list-style-type: none;
       margin: 0;
@@ -147,22 +151,5 @@
 
   .tag {
     white-space: normal;
-  }
-
-  .file-name {
-    position: relative;
-    float: left;
-    padding-right: $ui-padding;
-    padding-top: $popover-arrow-width;
-
-    .name {
-      padding-top: $ui-padding;
-    }
-
-    .icon {
-      position: absolute;
-      top: $padding-base-horizontal;
-      right: 0;
-    }
   }
 }
