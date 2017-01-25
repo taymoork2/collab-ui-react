@@ -4,31 +4,34 @@
 
   <alarm-list-section alarms="clusterDetailsCtrl.cluster.aggregates.alarms"></alarm-list-section>
 
-  <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0 && clusterDetailsCtrl.hasF237FeatureToggle && clusterDetailsCtrl.resourceGroupName">
-    <div class="section-title-row section-name" translate="hercules.resourceGroups.resourceGroupHeading"></div>
-    <p>{{clusterDetailsCtrl.resourceGroupName}}</p>
-  </cs-sp-section>
+  <schedule-info-section cluster="clusterDetailsCtrl.cluster"
+                         has-f237-feature-toggle="clusterDetailsCtrl.hasF237FeatureToggle"></schedule-info-section>
 
-  <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0 && clusterDetailsCtrl.hasF237FeatureToggle">
-    <div class="section-title-row section-name" translate="common.releaseChannel"></div>
-    <p>{{clusterDetailsCtrl.releaseChannel}}</p>
-  </cs-sp-section>
+  <!--<cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0 && clusterDetailsCtrl.hasF237FeatureToggle && clusterDetailsCtrl.resourceGroupName">-->
+    <!--<div class="section-title-row section-name" translate="hercules.resourceGroups.resourceGroupHeading"></div>-->
+    <!--<p>{{clusterDetailsCtrl.resourceGroupName}}</p>-->
+  <!--</cs-sp-section>-->
 
-  <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0 && clusterDetailsCtrl.schedule">
-    <div class="section-title-row section-name" translate="hercules.expresswayClusterSettings.upgradeScheduleSubHeader"></div>
-    <p>
-      <span>{{clusterDetailsCtrl.schedule.dateTime}}, </span>
-      <span>{{clusterDetailsCtrl.schedule.timeZone}}</span>
-    </p>
-  </cs-sp-section>
+  <!--<cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0 && clusterDetailsCtrl.hasF237FeatureToggle">-->
+    <!--<div class="section-title-row section-name" translate="common.releaseChannel"></div>-->
+    <!--<p>{{clusterDetailsCtrl.releaseChannel}}</p>-->
+  <!--</cs-sp-section>-->
 
-  <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0 && clusterDetailsCtrl.schedule">
-    <div class="section-title-row section-name" translate="hercules.fusion.urgentUpgrade.title"></div>
-    <p>
-      <span>{{clusterDetailsCtrl.schedule.urgentScheduleTime}}, </span>
-      <span>{{clusterDetailsCtrl.schedule.timeZone}}</span>
-    </p>
-  </cs-sp-section>
+  <!--<cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0 && clusterDetailsCtrl.schedule">-->
+    <!--<div class="section-title-row section-name" translate="hercules.expresswayClusterSettings.upgradeScheduleSubHeader"></div>-->
+    <!--<p>-->
+      <!--<span>{{clusterDetailsCtrl.schedule.dateTime}}, </span>-->
+      <!--<span>{{clusterDetailsCtrl.schedule.timeZone}}</span>-->
+    <!--</p>-->
+  <!--</cs-sp-section>-->
+
+  <!--<cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0 && clusterDetailsCtrl.schedule">-->
+    <!--<div class="section-title-row section-name" translate="hercules.fusion.urgentUpgrade.title"></div>-->
+    <!--<p>-->
+      <!--<span>{{clusterDetailsCtrl.schedule.urgentScheduleTime}}, </span>-->
+      <!--<span>{{clusterDetailsCtrl.schedule.timeZone}}</span>-->
+    <!--</p>-->
+  <!--</cs-sp-section>-->
 
   <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0">
     <div class="section-title-row section-name" translate="hercules.softwareUpgrade.softwareUpgrade"></div>

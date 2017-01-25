@@ -1,0 +1,36 @@
+<cs-sp-section>
+  <div class="section-title-row section-name"
+       translate="hercules.scheduleInfoComponent.headerIfF237Enabled"
+       ng-if="$ctrl.hasF237FeatureToggle"></div>
+
+  <div class="section-title-row section-name"
+       translate="hercules.scheduleInfoComponent.header"
+       ng-if="!$ctrl.hasF237FeatureToggle"></div>
+
+  <div ng-if="$ctrl.hasF237FeatureToggle">
+    <span class="cloud-extension-label"
+          translate="common.releaseChannel"></span>:
+    <span class="cloud-extension-label">{{$ctrl.releaseChannelName}}</span>
+  </div>
+
+  <div ng-if="$ctrl.hasF237FeatureToggle && $ctrl.resourceGroupName">
+    <span class="cloud-extension-label"
+          translate="hercules.resourceGroups.resourceGroupHeading"></span>:
+    <span class="cloud-extension-label">{{$ctrl.resourceGroupName}}</span>
+  </div>
+
+  <div ng-if="$ctrl.schedule">
+    <span class="cloud-extension-label"
+          translate="hercules.expresswayClusterSettings.upgradeScheduleSubHeader"></span>:
+    <span class="cloud-extension-label">{{$ctrl.schedule.dateTime}}, </span>
+    <span class="cloud-extension-label">{{$ctrl.schedule.timeZone}}</span>
+  </div>
+
+  <div ng-if="$ctrl.schedule">
+    <span class="cloud-extension-label"
+          translate="hercules.fusion.urgentUpgrade.title"></span>:
+    <span class="cloud-extension-label">{{$ctrl.schedule.urgentScheduleTime}}, </span>
+    <span class="cloud-extension-label">{{$ctrl.schedule.timeZone}}</span>
+  </div>
+
+</cs-sp-section>
