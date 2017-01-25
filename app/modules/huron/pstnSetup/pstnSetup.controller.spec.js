@@ -26,6 +26,7 @@ describe('Controller: PstnSetupCtrl', function () {
     $stateParams.customerId = customer.uuid;
     $stateParams.customerName = customer.name;
     $stateParams.customerCommunicationLicenseIsTrial = customer.isTrial;
+    $stateParams.customerRoomSystemsLicenseIsTrial = customer.isTrial;
     deferred = $q.defer();
     $state.modal = {
       result: deferred.promise

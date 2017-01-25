@@ -2356,7 +2356,8 @@
               customerId: {},
               customerName: {},
               customerEmail: {},
-              customerCommunicationLicenseIsTrial: {}
+              customerCommunicationLicenseIsTrial: {},
+              customerRoomSystemsLicenseIsTrial: {}
             },
             views: {
               'modal@': {
