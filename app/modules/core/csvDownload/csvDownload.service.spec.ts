@@ -183,15 +183,15 @@ describe('CsvDownloadService', () => {
 
       this.$httpBackend.expectGET('https://storage101.example.com/userExport-b15ef877-901d-4a73-bab1-ed91670422b6.tar.gz').respond(200, this.blobData);
       this.$httpBackend.whenDELETE('http://example.com/getUserReport').respond(204);
-    });
 
-    it('should get user export file using the report API', function (done) {
-      spyOn(this.ExtractTarService, 'extractFile').and.callFake(() => {
+      this.extractTarServiceSpy = spyOn(this.ExtractTarService, 'extractFile').and.callFake(() => {
         // return a Blob containing dummy data. We don't care what is in the data, just
         // that it is a Blob
         return this.$q.resolve(this.blobData);
       });
+    });
 
+    it('should get user export file using the report API', function (done) {
       let promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true)
         .then((dataUrl) => {
           expect(dataUrl).toContain('blob:http://');
@@ -203,8 +203,21 @@ describe('CsvDownloadService', () => {
       expect(promise).toBeResolved();
     });
 
+    it('should always get user export file using the report API when Cicso org', function (done) {
+      spyOn(this.Authinfo, 'isCisco').and.returnValue(true);
+      let promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', false)
+        .then((dataUrl) => {
+          expect(dataUrl).toContain('blob:http://');
+        })
+        .finally(() => {
+          _.defer(done);
+        });
+      this.$httpBackend.flush();
+      expect(promise).toBeResolved();
+    });
+
     it('should reject promise if there was a problem extracting the file', function () {
-      spyOn(this.ExtractTarService, 'extractFile').and.callFake(() => {
+      this.extractTarServiceSpy.and.callFake(() => {
         return this.$q.reject('extract failed');
       });
 
