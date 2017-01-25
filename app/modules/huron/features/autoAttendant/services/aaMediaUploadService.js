@@ -35,7 +35,7 @@
     var deleteBaseUrl = null;
     var clioEnabled = false;
     var CLIO_APP_TYPE = 'AutoAttendant';
-    var ENCRYPTION_POLICY = '{"encryptionPolicy":{"strategy":"NONE"}}';
+    var ENCRYPTION_POLICY = '{"encryptionPolicy":{"strategy":"SERVER"}}';
     //media upload controllers will map their unique control identifiers
     //from aa common service to an array of media resources located in clio
     //after specifying whether or not that media upload is active or not
