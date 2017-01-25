@@ -1117,6 +1117,18 @@ describe('OnboardCtrl: Ctrl', function () {
     });
   });
 
+  describe('opening convert users in the manage users model', function () {
+    it('should go to users.manage when gotToManageUsers() is called', function () {
+      this.$stateParams.manageUsers = true;
+      initController.apply(this);
+      this.$scope.$apply();
+
+      expect(this.$scope.manageUsers).toBeTruthy();
+      this.$scope.goToManageUsers();
+      expect(this.$state.go).toHaveBeenCalledWith('users.manage', {});
+    });
+  });
+
   function initUserShouldAddCall() {
     this.$scope.radioStates.commRadio = true;
     this.$scope.$apply();

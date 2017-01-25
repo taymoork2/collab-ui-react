@@ -949,6 +949,9 @@
                   }
                 }
               }
+            },
+            params: {
+              manageUsers: false
             }
           })
           .state('users.convert.services', {
