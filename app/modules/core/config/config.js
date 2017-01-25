@@ -73,7 +73,7 @@
       },
 
       licenseModel: {
-        cloudSharedMeeting: 'Cloud Shared Meeting',
+        cloudSharedMeeting: 'cloud shared meeting',
         hosts: 'hosts'
       },
 

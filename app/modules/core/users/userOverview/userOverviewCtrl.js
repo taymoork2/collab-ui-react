@@ -31,7 +31,8 @@
     vm.isValidThumbnail = Userservice.isValidThumbnail;
     vm.clickService = clickService;
     vm.actionList = [];
-    vm.isSharedMultiPartyEnabled = false;
+    vm.isSharedMeetingsEnabled = false;
+    vm.temporarilyOverrideSharedMeetingsFeatureToggle = { default: true, defaultValue: true };
 
     var msgState = {
       name: $translate.instant('onboardModal.message'),
@@ -77,18 +78,19 @@
       });
 
       vm.services = [];
-      FeatureToggleService.atlasSMPGetStatus()
-        .then(function (smpStatus) {
-          vm.isSharedMultiPartyEnabled = smpStatus;
-          return initServices();
-        })
-        .then(function () {
-          return $q.all([
-            initActionList(),
-            updateUserTitleCard(),
-            getUserFeatures()
-          ]);
+
+      if (_.get(vm, 'temporarilyOverrideSharedMeetingsFeatureToggle.default') === true) {
+        vm.isSharedMeetingsEnabled = _.get(vm, 'temporarilyOverrideSharedMeetingsFeatureToggle.defaultValue', false);
+      } else {
+        FeatureToggleService.atlasSharedMeetingsGetStatus().then(function (smpStatus) {
+          vm.isSharedMeetingsEnabled = smpStatus;
         });
+      }
+
+      initServices();
+      initActionList();
+      updateUserTitleCard();
+      getUserFeatures();
     }
 
     function getCurrentUser() {
@@ -224,7 +226,7 @@
       if (vm.currentUser.hasEntitlement('cloudmeetings')) {
         confState.actionAvailable = getDisplayableServices('CONFERENCING') || _.isArray(vm.currentUser.trainSiteNames);
         if (vm.currentUser.trainSiteNames) {
-          confState.detail = vm.isSharedMultiPartyEnabled ? $translate.instant('onboardModal.paidAdvancedConferencing') : $translate.instant('onboardModal.paidConfWebEx');
+          confState.detail = vm.isSharedMeetingsEnabled ? $translate.instant('onboardModal.paidAdvancedConferencing') : $translate.instant('onboardModal.paidConfWebEx');
         }
       } else if (vm.currentUser.hasEntitlement('squared-syncup')) {
         if (hasLicense('CF')) {
