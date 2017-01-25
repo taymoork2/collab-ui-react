@@ -19,6 +19,12 @@ fi
 SC_URL="https://saucelabs.com/downloads/${SC_PACKAGE}"
 SC_PACKAGE_PATH="${WORK_DIR}/${SC_PACKAGE}"
 
+# 'SAUCE__RM_WORK_DIR' => jenkins job config env var
+# - see: https://sqbu-jenkins.cisco.com:8443/job/team/job/atlas/job/atlas-web/configure
+if [ "$SAUCE__RM_WORK_DIR" = "true" ]; then
+  rm -rf $WORK_DIR
+fi
+
 mkdir -p $WORK_DIR
 
 if [ ! -d $SC_DIR ]; then
