@@ -2,18 +2,17 @@
   'use strict';
 
   angular
-    .module('Sunlight')
-    .service('CareFeatureList', CareFeatureList);
+      .module('Sunlight')
+      .service('CareFeatureList', CareFeatureList);
 
   /* @ngInject */
-  function CareFeatureList($filter, Authinfo, ConfigTemplateService) {
+  function CareFeatureList(Authinfo, ConfigTemplateService) {
 
     var service = {
       getChatTemplates: getChatTemplates,
       getCallbackTemplates: getCallbackTemplates,
       getTemplate: getTemplate,
-      formatChatTemplates: formatChatTemplates,
-      formatCallbackTemplates: formatCallbackTemplates,
+      formatTemplates: formatTemplates,
       deleteTemplate: deleteTemplate,
       filterCards: filterCards
     };
@@ -55,32 +54,33 @@
       });
     }
 
-    function filterCards(list, filterText) {
-      var filteredList = $filter('filter')(list, {
-        name: filterText
+    function filterCards(list, filterValue, filterText) {
+      var filterStringProperties = [
+        'name'
+      ];
+      var filteredList = _.filter(list, function (feature) {
+        if (feature.mediaType !== filterValue && filterValue !== 'all') {
+          return false;
+        }
+        if (_.isEmpty(filterText)) {
+          return true;
+        }
+        var matchedStringProperty = _.some(filterStringProperties, function (stringProperty) {
+          return _.includes(_.get(feature, stringProperty).toLowerCase(), filterText.toLowerCase());
+        });
+        return matchedStringProperty;
       });
-
-      return orderByCardName(filteredList);
+      return filteredList;
     }
 
-    function formatChatTemplates(list) {
+    function formatTemplates(list, feature) {
       var formattedList = _.map(list, function (tpl) {
-        tpl.featureType = 'Ch';
-        tpl.color = 'attention';
-
+        tpl.featureType = feature.name;
+        tpl.color = feature.color;
         return tpl;
       });
       return orderByCardName(formattedList);
-    }
 
-    function formatCallbackTemplates(list) {
-      var formattedList = _.map(list, function (tpl) {
-        tpl.featureType = 'Ca';
-        tpl.color = 'alerts';
-
-        return tpl;
-      });
-      return orderByCardName(formattedList);
     }
 
   }

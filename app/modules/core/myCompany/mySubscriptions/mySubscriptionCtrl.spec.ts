@@ -5,6 +5,8 @@ describe('Controller: MySubscriptionCtrl', function () {
   let data = getJSONFixture('core/json/myCompany/subscriptionData.json');
   let trialUrl = 'https://atlas-integration.wbx2.com/admin/api/v1/commerce/online/subID';
   let trialUrlResponse = 'trialUrlResponse';
+  let productInstance = 'https://atlas-integration.wbx2.com/admin/api/v1/commerce/productinstances?ciUUID=ciUUID';
+  let productInstanceResponse = 'productInstanceResponse';
 
   data.licensesFormatted.forEach(function (item){
     item.subscriptions[0].siteUrl = undefined;
@@ -17,8 +19,10 @@ describe('Controller: MySubscriptionCtrl', function () {
   data.subscriptionsFormatted[0].licenses[7].siteUrl = undefined;
   data.subscriptionsFormatted[0].licenses[8].siteUrl = undefined;
   data.subscriptionsFormatted[0].upgradeTrialUrl = undefined;
+  data.subscriptionsFormatted[0].productInstanceId = undefined;
   data.trialSubscriptionData[0].licenses[0].siteUrl = undefined;
   data.trialSubscriptionData[0].upgradeTrialUrl = undefined;
+  data.trialSubscriptionData[0].productInstanceId = undefined;
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Hercules'));
@@ -36,8 +40,8 @@ describe('Controller: MySubscriptionCtrl', function () {
     $q = _$q_;
 
     spyOn(ServiceDescriptor, 'servicesInOrg').and.returnValue($q.when(data.servicesResponse));
-    spyOn(FeatureToggleService, 'atlasSMPGetStatus').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasSmpReportsGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasSharedMeetingsReportsGetStatus').and.returnValue($q.when(false));
     spyOn(rootScope, '$broadcast').and.callThrough();
   }));
 
@@ -138,9 +142,11 @@ describe('Controller: MySubscriptionCtrl', function () {
 
   xit('should initialize with expected data for online trial orgs', function () {
     $httpBackend.whenGET(trialUrl).respond($q.when(trialUrlResponse));
+    $httpBackend.whenGET(productInstance).respond($q.when(productInstanceResponse));
     spyOn(Authinfo, 'isOnline').and.returnValue(true);
     spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(data.subscriptionsTrialResponse));
     data.trialSubscriptionData[0].upgradeTrialUrl = trialUrlResponse;
+    data.trialSubscriptionData[0].productInstance = productInstanceResponse;
 
     startController();
     $scope.$apply();
@@ -153,4 +159,31 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(controller.isOnline).toBeTruthy();
     expect(rootScope.$broadcast).toHaveBeenCalled();
   });
+
+  describe('Tests for Named User Licenses : ', function () {
+    let dataWithNamedUserLicense = { offers: [{ licenseModel: 'hosts' }] };
+
+    it('The isSharedMeetingsLicense() function should return false for a service that does not have shared Licenses ', function () {
+      expect(controller.isSharedMeetingsLicense(dataWithNamedUserLicense)).toEqual(false);
+    });
+
+    it('The determineLicenseType() function should return licenseType Named User License string', function () {
+      let result = controller.determineLicenseType(dataWithNamedUserLicense);
+      expect(result).toEqual('firstTimeWizard.namedLicenses');
+    });
+  });
+
+  describe('Tests for Shared Meeting Licenses : ', function () {
+    let dataWithSharedMeetingsLicense = { offers: [{ licenseModel: 'Cloud Shared Meeting' }] };
+
+    it('The isSharedMeetingsLicense() function should return true for a service that has shared licenses', function () {
+      expect(controller.isSharedMeetingsLicense(dataWithSharedMeetingsLicense)).toEqual(true);
+    });
+
+    it('The determineLicenseType() function should return licenseType Shared Meeting License string', function () {
+      let result = controller.determineLicenseType(dataWithSharedMeetingsLicense);
+      expect(result).toEqual('firstTimeWizard.sharedLicenses');
+    });
+  });
+
 });

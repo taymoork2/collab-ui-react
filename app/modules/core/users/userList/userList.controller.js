@@ -1,4 +1,5 @@
 require('./_user-list.scss');
+var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service').CsvDownloadService;
 
 (function () {
   'use strict';
@@ -9,7 +10,7 @@ require('./_user-list.scss');
 
   /* @ngInject */
   function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Auth, Config, FeatureToggleService,
-    Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, CsvDownloadService) {
+    Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils) {
 
     var vm = this;
 
@@ -190,7 +191,7 @@ require('./_user-list.scss');
         $scope.gridApi.infiniteScroll.resetScroll();
       } else if (!isMoreDataToLoad()) {
         // no more data to load, so don't waste time
-        return $q.when();
+        return $q.resolve();
       }
 
       $scope.gridRefresh = true; // show spinning icon
@@ -346,10 +347,6 @@ require('./_user-list.scss');
               } else {
                 UserListService.getUserCount()
                   .then(function (count) {
-                    if (_.isNull(count) || _.isNaN(count) || count === -1) {
-                      // can't determine number of users, so assume over threshold
-                      count = CsvDownloadService.userExportThreshold;
-                    }
                     $scope.totalUsers = count;
                     $scope.obtainedTotalUserCount = true;
                   })
@@ -660,6 +657,7 @@ require('./_user-list.scss');
 
     function onManageUsers() {
       $state.go('users.manage', {
+        // todo - this can be removed once we start using the new export API
         isOverExportThreshold: ($scope.totalUsers >= CsvDownloadService.userExportThreshold)
       });
     }

@@ -80,7 +80,7 @@
     }
 
     function updateAddress() {
-      $q.when()
+      $q.resolve()
         .then(function () {
           // If address wasn't initalized, create a new site, otherwise update the existing address
           if (_.isEmpty(origAddress)) {

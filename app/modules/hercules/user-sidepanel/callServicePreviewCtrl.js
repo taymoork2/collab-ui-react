@@ -38,7 +38,8 @@
       entitled: isEntitled('squared-fusion-ec'), // Tracks the entitlement as set in the UI (toggle)
       orgEntitled: Authinfo.isFusionEC(),
       enabledInFMS: false,
-      currentUserEntitled: isEntitled('squared-fusion-ec') // Tracks the actual entitlement on the user
+      currentUserEntitled: isEntitled('squared-fusion-ec'), // Tracks the actual entitlement on the user
+      userId: $scope.currentUser.id,
     };
     $scope.resourceGroup = {
       show: false,

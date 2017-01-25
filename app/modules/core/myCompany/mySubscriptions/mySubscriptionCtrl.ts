@@ -33,9 +33,13 @@ class MySubscriptionCtrl {
   public visibleSubscriptions = false;
   public isOnline = false;
   public trialUrlFailed = false;
+  public productInstanceFailed = false;
   public loading = false;
   public digitalRiverSubscriptionsUrl: string;
-  public isSharedMultiPartyReportsEnabled: boolean;
+  public isSharedMeetingsReportsEnabled: boolean;
+  public isSharedMeetingsEnabled: boolean;
+  public temporarilyOverrideSharedMeetingsFeatureToggle = { default: true, defaultValue: true };
+  public temporarilyOverrideSharedMeetingsReportsFeatureToggle = { default: false, defaultValue: true };
 
   /* @ngInject */
   constructor(
@@ -79,18 +83,30 @@ class MySubscriptionCtrl {
     this.initFeatures();
   }
 
-  public isSharedMultiPartyLicense(subscription) {
-    return _.get(subscription, 'offers[0].licenseModel') === this.Config.licenseModel.cloudSharedMeeting;
+  public isSharedMeetingsLicense(subscription) {
+    return _.lowerCase(_.get(subscription, 'offers[0].licenseModel', '')) === this.Config.licenseModel.cloudSharedMeeting;
   }
 
   public determineLicenseType(subscription) {
-    return this.isSharedMultiPartyLicense(subscription) ? this.$translate.instant('firstTimeWizard.sharedLicenses') : this.$translate.instant('firstTimeWizard.namedLicenses');
+    return this.isSharedMeetingsLicense(subscription) ? this.$translate.instant('firstTimeWizard.sharedLicenses') : this.$translate.instant('firstTimeWizard.namedLicenses');
   }
 
-  private initFeatures() {
-    this.FeatureToggleService.atlasSmpReportsGetStatus().then((smpReportsStatus) => {
-        this.isSharedMultiPartyReportsEnabled = smpReportsStatus;
-    });
+  private initFeatures(): void {
+    if (this.temporarilyOverrideSharedMeetingsFeatureToggle.default === true) {
+      this.isSharedMeetingsEnabled = this.temporarilyOverrideSharedMeetingsFeatureToggle.defaultValue;
+    } else {
+      this.FeatureToggleService.atlasSharedMeetingsGetStatus().then((smpStatus) => {
+        this.isSharedMeetingsEnabled = smpStatus;
+      });
+    }
+
+    if (this.temporarilyOverrideSharedMeetingsReportsFeatureToggle.default) {
+      this.isSharedMeetingsReportsEnabled = this.temporarilyOverrideSharedMeetingsReportsFeatureToggle.defaultValue;
+    } else {
+      this.FeatureToggleService.atlasSharedMeetingsReportsGetStatus().then((smpReportsStatus) => {
+        this.isSharedMeetingsReportsEnabled = smpReportsStatus;
+      });
+    }
   }
 
   private initIframe(): void {
@@ -110,7 +126,7 @@ class MySubscriptionCtrl {
       } else {
         return this.emptyOnlineTrialUrl();
       }
-    }, (error) => {
+    }).catch((error) => {
       return this.upgradeTrialErrorResponse(error, subId);
     });
   }
@@ -127,10 +143,36 @@ class MySubscriptionCtrl {
     return undefined;
   }
 
+  private getProductInstanceId(subId) {
+    return this.$http.get<any>(this.UrlConfig.getAdminServiceUrl() + 'commerce/productinstances?ciUUID=' + this.Authinfo.getUserId()).then((response) => {
+      let productInstanceId = _.get<string>(response, 'data.productGroups[0].productInstance[0].productInstanceId');
+      if (productInstanceId) {
+        return productInstanceId;
+      } else {
+        return this.emptyOnlineProductInstance();
+      }
+    }).catch((error) => {
+      return this.productInstanceErrorResponse(error, subId);
+    });
+  }
+
+  private productInstanceErrorResponse(error, subId) {
+    this.Notification.errorWithTrackingId(error, 'subscriptions.onlineProductInstanceError', {
+      trialId: subId,
+    });
+    return this.emptyOnlineTrialUrl();
+  }
+
+  private emptyOnlineProductInstance() {
+    this.productInstanceFailed = true;
+    return undefined;
+  }
+
   private broadcastSingleSubscription(subscription, trialUrl)  {
     this.$rootScope.$broadcast('SUBSCRIPTION::upgradeData', {
       isTrial: subscription.isTrial,
       subId: subscription.internalSubscriptionId,
+      productInstanceId: subscription.productInstanceId,
       upgradeTrialUrl: trialUrl,
     });
   }
@@ -182,8 +224,10 @@ class MySubscriptionCtrl {
           internalSubscriptionId: undefined,
           licenses: [] as any[],
           isTrial: false,
+          isOnline: this.isOnline,
           viewAll: false,
           upgradeTrialUrl: undefined,
+          productInstanceId: undefined,
         };
         if (subscription.subscriptionId && (subscription.subscriptionId !== 'unknown')) {
           newSubscription.subscriptionId = subscription.subscriptionId;
@@ -276,7 +320,12 @@ class MySubscriptionCtrl {
         if (subscription.isTrial && this.isOnline) {
           this.upgradeTrialUrl(subscription.internalSubscriptionId).then((response) => {
             if (response && this.subscriptionDetails.length === 1) {
-              this.broadcastSingleSubscription(this.subscriptionDetails[0], response);
+              this.getProductInstanceId(subscription.internalSubscriptionId).then((prodResponse) => {
+                if (prodResponse) {
+                  this.subscriptionDetails[0].productInstanceId = prodResponse;
+                  this.broadcastSingleSubscription(this.subscriptionDetails[0], response);
+                }
+              });
             }
             subscription.upgradeTrialUrl = response;
           });

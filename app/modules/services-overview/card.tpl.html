@@ -1,8 +1,11 @@
 <header>
   <h4 class="size-{{card.cardType}}"><i class="icon" ng-class="card.icon"></i> {{::card.name | translate}}</h4>
 </header>
-<section ng-if="!card.loading">
-  <p>{{::card.description | translate}}</p>
+<section ng-if="card.loading">
+  <i class="icon icon-spinner icon-2x"></i>
+</section>
+<section ng-if="!card.loading" ng-class="{'setup-mode': card.setupMode}">
+  <p class="description">{{::card.description | translate}}</p>
   <div class="card-button">
     <div ng-repeat="button in card.getButtons()">
       <a ng-if="!button.routerState" class="disabled" ng-class="button.buttonClass">{{::button.name | translate}}</a>
@@ -12,9 +15,6 @@
       <a ui-sref="{{card.getShowMoreButton().routerState}}" ng-class="button.buttonClass" class="btn-link">{{::card.getShowMoreButton().name | translate}}</a>
     </div>
   </div>
-</section>
-<section ng-if="card.loading">
-  <i class="icon icon-spinner icon-2x"></i>
 </section>
 <footer ng-if="card.showStatus()">
   <div>

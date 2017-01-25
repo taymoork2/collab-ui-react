@@ -44,19 +44,16 @@
       });
     }
 
-    function createCustomer() {
-      return PstnSetupService.createCustomer(
+    function createCustomerV2() {
+      return PstnSetupService.createCustomerV2(
         PstnSetup.getCustomerId(),
         PstnSetup.getCustomerName(),
         PstnSetup.getCustomerFirstName(),
         PstnSetup.getCustomerLastName(),
         PstnSetup.getCustomerEmail(),
         PstnSetup.getProviderId(),
-        getNumbers(vm.newOrders),
         PstnSetup.getIsTrial()
-      ).then(function () {
-        PstnSetup.setCustomerExists(true);
-      }).catch(function (response) {
+      ).catch(function (response) {
         Notification.errorResponse(response, 'pstnSetup.customerCreateError');
         return $q.reject(response);
       });
@@ -115,15 +112,6 @@
       }
     }
 
-    function getNumbers(orders) {
-      return _.chain(orders)
-        .map(function (order) {
-          return _.get(order, 'data.numbers');
-        })
-        .flatten()
-        .value();
-    }
-
     function createNumbers() {
       var promises = [];
       var errors = [];
@@ -133,10 +121,8 @@
         errors.push(Notification.processErrorResponse(response));
       }
 
-      var numbers = getNumbers(vm.newOrders);
-
-      if (numbers.length > 0) {
-        promise = PstnSetupService.orderNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers)
+      if (vm.newOrders.length > 0) {
+        promise = PstnSetupService.orderNumbersV2(PstnSetup.getCustomerId(), vm.newOrders)
           .catch(pushErrorArray);
         promises.push(promise);
       }
@@ -195,10 +181,10 @@
     }
 
     function placeOrder() {
-      var promise = $q.when();
+      var promise = $q.resolve();
       startPlaceOrderLoad();
       if (!PstnSetup.isCustomerExists()) {
-        promise = promise.then(createCustomer);
+        promise = promise.then(createCustomerV2);
       } else if (!PstnSetup.isCarrierExists()) {
         promise = promise.then(updateCustomerCarrier);
       }

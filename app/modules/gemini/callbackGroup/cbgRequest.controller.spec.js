@@ -2,155 +2,80 @@
 
 describe('controller: CbgRequestCtrl', function () {
   var $q, $state, $scope, $controller, $stateParams;
-  var ctrl, cbgService, Notification;
-  var cbgsData = getJSONFixture('gemini/callbackGroups.json');
+  var ctrl, cbgService, gemService, Notification;
   var preData = getJSONFixture('gemini/common.json');
-  var csvFile = 'COUNTRY\r\nAlbania\r\nAnguilla\r\nUnited Kingdom';
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Gemini'));
   beforeEach(inject(dependencies));
-  beforeEach(initSpecs);
+  beforeEach(initSpies);
   beforeEach(initController);
 
   afterEach(function () {
-    $q = $state = $scope = $controller = $stateParams = ctrl = cbgService = Notification = undefined;
+    $q = $state = $scope = $controller = $stateParams = ctrl = cbgService = undefined;
   });
   afterAll(function () {
-    cbgsData = preData = csvFile = undefined;
+    preData = undefined;
   });
 
-  function dependencies(_$q_, _$state_, $rootScope, _$controller_, _$stateParams_, _cbgService_, _Notification_) {
+  function dependencies(_$q_, _$state_, $rootScope, _$controller_, _$stateParams_, _Notification_, _gemService_, _cbgService_) {
     $q = _$q_;
     $state = _$state_;
+    gemService = _gemService_;
     cbgService = _cbgService_;
     $scope = $rootScope.$new();
-    $stateParams = _$stateParams_;
     $controller = _$controller_;
+    $stateParams = _$stateParams_;
     Notification = _Notification_;
   }
 
-  function initSpecs() {
-    spyOn(Notification, 'error');
+  function initSpies() {
     spyOn(Notification, 'notify');
+    spyOn(gemService, 'showError');
     $state.modal = jasmine.createSpyObj('modal', ['close']);
     spyOn(cbgService, 'postRequest').and.returnValue($q.resolve());
-    spyOn(cbgService, 'getCountries').and.returnValue($q.resolve());
   }
 
   function initController() {
-    $state.current.data = {};
+    $stateParams.customerId = 'ff808081552992ec0155299619cb0001';
     ctrl = $controller('CbgRequestCtrl', {
       $scope: $scope,
-      cbgService: cbgService,
-      $state: $state,
       $stateParams: $stateParams
     });
+
+    ctrl.countries = preData.getCountries.content.data;
   }
 
-  it('test onResetFile', function () {
-    ctrl.model.file = {
-      file: null,
-      uploadProgress: 0,
-      processProgress: 0,
-      isProcessing: false,
-    };
-    ctrl.model.info = { countries: 'China' };
-    ctrl.hideCountries = 'American';
-    ctrl.onResetFile();
-    expect(ctrl.model.file).toBe(null);
-    expect(ctrl.model.info.countries.length).toBe(0);
-    expect(ctrl.hideCountries).toBe(null);
-  });
+  describe('$onInit', function () {
+    it('should be show if countries is not empty', function () {
+      ctrl.countries.pop();
+      ctrl.$onInit();
+      $scope.$apply();
+      expect(ctrl.countryDisable).toBe('show');
+    });
 
-  it('function onFileSizeError response error message', function () {
-    cbgService.postRequest.and.returnValue($q.reject({}));
-    $stateParams.a = '';
-    ctrl.onFileSizeError();
-    expect(Notification.error).toHaveBeenCalled();
-  });
-
-  it('function onFileTypeError response error message', function () {
-    ctrl.onFileTypeError();
-    expect(Notification.error).toHaveBeenCalled();
-  });
-
-  it('test function removeCountry', function () {
-    ctrl.model.info.countries = [{ countryName: 'America' }, { countryName: 'Japan' }];
-    ctrl.removeCountry('America');
-    expect(ctrl.model.info.countries.length).toBe(1);
-  });
-
-  it('test function removeCountry', function () {
-    ctrl.model.file = '';
-    ctrl.hideCountries = '';
-    ctrl.model.info.countries = [{ countryName: 'America' }];
-    ctrl.removeCountry('America');
-    expect(ctrl.model.file).toBe(null);
-    expect(ctrl.hideCountries).toBe(null);
+    it('should be null if countries is empty', function () {
+      ctrl.countries = [];
+      ctrl.$onInit();
+      $scope.$apply();
+      expect(ctrl.countryDisable).toBe('');
+    });
   });
 
   describe('onSubmit', function () {
-    it('should return when customerId is null', function () {
-      $stateParams.customerId = null;
-      ctrl.loading = false;
-      ctrl.onSubmit();
-      $scope.$apply();
-      expect(ctrl.loading).toBe(true);
-    });
-
-    it('', function () {
-      $stateParams.customerId = 'ff808081582992dd01589a5b232410bb';
-      cbgService.getCountries.and.returnValue($q.resolve(preData.getCountries));
-      cbgService.postRequest.and.returnValue($q.resolve(cbgsData));
+    it('should call $state.modal.close', function () {
+      cbgService.postRequest.and.returnValue($q.resolve(preData.common));
       ctrl.onSubmit();
       $scope.$apply();
       expect($state.modal.close).toHaveBeenCalled();
     });
 
-    it('should compare ctrl.model.info.countries with correct counries', function () {
-      $stateParams.customerId = 'ff808081582992dd01589a5b232410bb';
-      ctrl.model.info.countries = [{
-        'countryId': 1,
-        'countryName': 'Albania'
-      }, {
-        'countryId': 2,
-        'countryName': 'Algeria12'
-      }];
-      cbgService.getCountries.and.returnValue($q.resolve(preData.getCountries));
-      cbgService.postRequest.and.returnValue($q.resolve(cbgsData));
-      ctrl.onSubmit();
-      $scope.$apply();
-      expect(ctrl.model.info.countries.length).toBe(2);
-    });
     it('should call Notification.notify', function () {
-      $stateParams.customerId = 'ff808081582992dd01589a5b232410bb';
-      cbgsData.content.data.returnCode = 1000;
-      cbgService.getCountries.and.returnValue($q.resolve(preData.getCountries));
-      cbgService.postRequest.and.returnValue($q.resolve(cbgsData));
+      preData.common.content.data.returnCode = 1000;
+      cbgService.postRequest.and.returnValue($q.resolve(preData.common));
       ctrl.onSubmit();
       $scope.$apply();
       expect(Notification.notify).toHaveBeenCalled();
-    });
-  });
-
-  describe('csvFile', function () {
-    it('should validate the csv file when the csv file is not empty', function () {
-      ctrl.model.file = csvFile;
-      ctrl.validateCsv();
-      expect(ctrl.model.info.countries.length).toBe(0);
-    });
-
-    it('should validate the csv file when the csv file is empty', function () {
-      ctrl.model.file = '';
-      ctrl.validateCsv();
-      expect(ctrl.isCsvValid).toBe(false);
-    });
-
-    it('should return when the header of the csv file is empty', function () {
-      ctrl.model.file = '\0\r\n\0';
-      ctrl.validateCsv();
-      expect(ctrl.isCsvValid).toBe(false);
     });
   });
 });

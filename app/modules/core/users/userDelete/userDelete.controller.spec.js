@@ -35,22 +35,19 @@ describe('Controller: UserDeleteCtrl', function () {
 
   function initSpies() {
     spyOn(Userservice, 'getUser');
-    spyOn(Userservice, 'deactivateUser').and.returnValue($q.when());
+    spyOn(Userservice, 'deactivateUser').and.returnValue($q.resolve());
     $scope.$close = jasmine.createSpy('$close');
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
-    spyOn(SyncService, 'isMessengerSyncEnabled').and.returnValue($q.when(false));
+    spyOn(SyncService, 'isMessengerSyncEnabled').and.returnValue($q.resolve(false));
     spyOn($rootScope, '$broadcast').and.callThrough();
     spyOn($translate, 'instant').and.returnValue('YES');
     var deferred = $q.defer();
     spyOn(SunlightConfigService, 'deleteUser').and.returnValue(
-      $q.when(deferred.promise)
-    );
-    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
-      $q.when(true)
+      $q.resolve(deferred.promise)
     );
     spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue(
-      $q.when(true)
+      $q.resolve(true)
     );
     spyOn(Authinfo, 'isCare').and.returnValue(true);
   }
@@ -110,9 +107,6 @@ describe('Controller: UserDeleteCtrl', function () {
         });
         expect(Notification.errorResponse).not.toHaveBeenCalled();
       });
-      it('should have called FeatureToggleService.atlasCareTrialsGetStatus', function () {
-        expect(FeatureToggleService.atlasCareTrialsGetStatus).toHaveBeenCalled();
-      });
       it('should have called Authinfo.isCare', function () {
         expect(Authinfo.isCare).toHaveBeenCalled();
       });
@@ -140,9 +134,6 @@ describe('Controller: UserDeleteCtrl', function () {
       it('should have notified error', function () {
         expect(Notification.success).not.toHaveBeenCalled();
         expect(Notification.errorResponse).toHaveBeenCalled();
-      });
-      it('should not call FeatureToggleService.atlasCareTrialsGetStatus', function () {
-        expect(FeatureToggleService.atlasCareTrialsGetStatus).not.toHaveBeenCalled();
       });
       it('should not have call Authinfo.isCare', function () {
         expect(Authinfo.isCare).not.toHaveBeenCalled();

@@ -1,0 +1,38 @@
+.vis-hidden{
+	visibility: hidden;
+}
+.sneak-peek-filter{
+	width: rem-calc(220);
+    margin: 0 auto;
+    cursor: pointer;
+
+	.select-toggle, 
+	.select-toggle:active, 
+	.select-toggle:hover{
+		border: none;
+		color: rgb(92, 164, 229);
+		outline: none;
+		text-align: center;
+		cursor: pointer;
+	}
+	.select-list .open > a:focus, 
+	.select-list .open > a:hover{
+		border: none;
+		color: rgb(92, 164, 229);
+		outline: none;
+		text-align: center;
+		cursor: pointer;
+	}
+	.select-toggle > i.icon{
+		color: rgb(92, 164, 229);
+	}
+	.select-options > .li > a,
+	.select-options > li > a{
+		color: #6A6B6C;
+		line-height:10px;
+		font-size: 0.75rem;
+	}
+	.select-options .select-selected > a{
+		color: #FFFFFF;
+	}
+}

@@ -44,11 +44,6 @@ export class ServicesOverviewCtrl {
 
     this.loadHybridServicesStatuses();
 
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasCareTrials)
-      .then(supports => {
-        this.forwardEvent('careFeatureToggleEventHandler', supports);
-      });
-
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasPMRonM2)
       .then(supports => {
         if (supports) {

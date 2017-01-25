@@ -100,7 +100,7 @@
 
       if (connectorIds.length === 0) {
         // we have nothing to do
-        return $q.when(statuses);
+        return $q.resolve(statuses);
       }
 
       // Get more information about the connector IDs we collected

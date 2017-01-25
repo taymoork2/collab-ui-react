@@ -211,7 +211,8 @@
           'selectedGraphFillAlpha': 0,
           'selectedGraphLineAlpha': 1,
           'autoGridCount': true,
-          'color': '#AAAAAA'
+          'color': '#AAAAAA',
+          'updateOnReleaseOnly': true
         },
         'valueScrollbar': {
           'offset': 35,
@@ -246,23 +247,16 @@
         'categoryAxis': catAxis,
         'segmentsField': 'segments',
         'colorField': 'color',
-        'startField': 'start',
-        'endField': 'end',
-        'durationField': 'duration',
+        'startDateField': 'startTime',
+        'endDateField': 'endTime',
         'dataProvider': data,
         'valueScrollbar': {
           'autoGridCount': true,
           'color': '#AAAAAA',
           'backgroundColor': '#D7DBDD',
-          'backgroundAlpha': 1
-        },
-        /*'chartScrollbar': {
-          'offset': 15,
-          'color': '#AAAAAA',
-          'backgroundColor': '#D7DBDD',
           'backgroundAlpha': 1,
-          //'oppositeAxis': false
-        },*/
+          'updateOnReleaseOnly': true
+        },
         'chartCursor': {
           'cursorColor': '#55bb76',
           'valueBalloonsEnabled': false,

@@ -1,6 +1,6 @@
 <div class="cs-card-container">
   <cs-card-layout>
-    <cs-card ng-repeat="careFeature in careFeaturesCtrl.listOfFeatures" class="small header-bar" ng-class="careFeaturesCtrl.cardColor[careFeature.featureType]">
+    <cs-card ng-repeat="careFeature in careFeaturesCtrl.filteredListOfFeatures" class="small header-bar" ng-class="careFeature.color">
       <article>
         <header>
           <div class="header-with-right-icon">

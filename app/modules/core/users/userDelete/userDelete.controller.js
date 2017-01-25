@@ -7,7 +7,7 @@ require('./_user-delete.scss');
     .controller('UserDeleteCtrl', UserDeleteCtrl);
 
   /* @ngInject */
-  function UserDeleteCtrl($scope, $rootScope, $stateParams, $timeout, $translate, Authinfo, FeatureToggleService, Notification, SunlightConfigService, Userservice, Config, SyncService) {
+  function UserDeleteCtrl($scope, $rootScope, $stateParams, $timeout, $translate, Authinfo, Notification, SunlightConfigService, Userservice, Config, SyncService) {
     var vm = this;
 
     vm.deleteUserOrgId = $stateParams.deleteUserOrgId;
@@ -77,15 +77,11 @@ require('./_user-delete.scss');
 
       var userId = vm.deleteUserUuId;
 
-      FeatureToggleService.atlasCareTrialsGetStatus()
-      .then(function (careStatus) {
-        var isCareEnabled = Authinfo.isCare() && careStatus;
-        if (isCareEnabled) {
-          SunlightConfigService.deleteUser(userId)
-          .then(deleteFromCareSuccess)
-          .catch(deleteFromCareFailure);
-        }
-      });
+      if (Authinfo.isCare()) {
+        SunlightConfigService.deleteUser(userId)
+        .then(deleteFromCareSuccess)
+        .catch(deleteFromCareFailure);
+      }
       $timeout(refreshUserList, 500);
     }
 

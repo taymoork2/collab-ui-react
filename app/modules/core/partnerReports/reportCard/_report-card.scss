@@ -1,8 +1,67 @@
 @import 'styles/toolkit/fonts';
 @import 'styles/toolkit/spacing';
 
+@keyframes graphAxisFade {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleDownCard {
+  0% {
+    transform: scale(1, 1);
+    height: auto;
+    margin-top: 1rem;
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0, 0);
+    height: 0;
+    margin: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes scaleUpCard {
+  0% {
+    transform: scale(0, 0);
+    height: auto;
+    margin: 0;
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1, 1);
+    height: auto;
+    margin-top: 1rem;
+    opacity: 1;
+  }
+}
+
+.report-box article {
+  min-height: vr-adjust(600);
+}
+
+.report-box.long-card article {
+  min-height: vr-adjust(640);
+}
+
 .report-card,
 .report-box {
+  min-width: rem-calc(650);
+  animation: scaleUpCard 0.5s linear;
+
+  article {
+    min-width: rem-calc(650);
+    padding: rem-calc(15);
+    animation: scaleUpCard 0.5s linear;
+  }
+
   header {
     .report-section-header {
       font-family: $brand-font-cisco-TT-Light;
@@ -32,6 +91,78 @@
         max-width: rem-calc(325);
         text-align: left;
       }
+    }
+  }
+
+  .no-data-warning {
+    color: $color-attention-base;
+    padding-right: rem-calc(15);
+  }
+
+  .no-data-center {
+    position: absolute;
+    z-index: 100;
+    height: 0;
+    top: rem-calc(235);
+    width: 100%;
+  }
+
+  .no-data {
+    color: $gray-darkest;
+    font-family: $brand-font-cisco-TT-Light;
+    font-size: rem-calc(16);
+    text-align: center;
+    margin: 0;
+
+    span {
+      position: relative;
+      top: -3px;
+    }
+  }
+
+  .spinner-position {
+    position: absolute;
+    z-index: 100;
+    top: rem-calc(235);
+    left: rem-calc(-3);
+    width: 100%;
+  }
+
+  .icon-2x {
+    font-size: 4em;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .horizontal-center {
+    text-align: center;
+  }
+
+  .vertical-center {
+    vertical-align: middle;
+  }
+
+  .bold {
+    font-weight: bold;
+  }
+
+  .pointer {
+    cursor: pointer;
+  }
+
+  .graph-text {
+    font-family: $brand-font-cisco-TT-Regular;
+    font-size: rem-calc(15);
+    color: $gray-darkest;
+    text-align: left;
+    float: left;
+
+    .graph-number {
+      font-family: $brand-font-cisco-TT-Regular;
+      font-size: rem-calc(18);
+      color: $brand-success;
+      text-align: left;
     }
   }
 
@@ -69,24 +200,51 @@
     }
   }
 
-  .label-display {
-    height: rem-calc(10);
-    overflow: visible;
-    position: relative;
-    text-align: center;
-    top: rem-calc(-60);
-    color: $gray-light-1;
+  .row.label-row {
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
 
-    .label-number {
-      font-size: rem-calc(25);
-      font-weight: bold;
-      @include vr-spacing(p, 0);
+    .label-display {
+      height: rem-calc(10);
+      overflow: visible;
+      position: relative;
+      text-align: center;
+      top: rem-calc(-60);
+      color: $gray-light-1;
+
+      .label-number {
+        font-size: rem-calc(25);
+        font-weight: bold;
+        @include vr-spacing(p, 0);
+      }
+
+      .label-text {
+        font-size: rem-calc(15);
+        position: relative;
+        top: rem-calc(-10);
+      }
+
+      .label-click {
+        cursor: pointer;
+      }
     }
 
-    .label-text {
-      font-size: rem-calc(15);
-      position: relative;
-      top: rem-calc(-10);
+    &.line-labels .label-display {
+      top: rem-calc(52);
+      cursor: pointer;
+      .good {
+        color: $color-primary-base;
+        opacity: 0.6;
+      }
+      .fair {
+        color: $color-attention-base;
+        opacity: 0.6;
+      }
+      .poor {
+        color: $color-negative-base;
+        opacity: 0.6;
+      }
     }
   }
 
@@ -332,9 +490,9 @@
   .tooltip-column {
     text-align: center;
     position: relative;
-    top: rem-calc(58);
+    top: rem-calc(98);
     .tooltip-title, .tooltip-icon {
-      color: $gray-base;
+      color: $gray-light-1;
     }
     .tooltip-icon {
       position: relative;
@@ -400,6 +558,25 @@
 
     .amcharts-balloon-div {
       margin-top: 5px !important;
+    }
+  }
+}
+
+.report-box.hideCard,
+.report-card.hideCard {
+  height: 0;
+  margin: 0;
+  transform: scale(1, 0);
+  animation: scaleDownCard 0.5s linear;
+
+  article {
+    transform: scale(1, 0);
+    animation: scaleDownCard 0.5s linear;
+
+    .timechartDiv,
+    .barchart,
+    .table {
+      display: none;
     }
   }
 }

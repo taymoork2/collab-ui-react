@@ -460,7 +460,7 @@
     }
 
     function getInternationalDialing(userUuid) {
-      return $q.when(InternationalDialing.isDisableInternationalDialing())
+      return $q.resolve(InternationalDialing.isDisableInternationalDialing())
         .then(function (isHide) {
           telephonyInfo.hideInternationalDialing = isHide;
 

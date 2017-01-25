@@ -1,14 +1,10 @@
 'use strict';
 
 describe('Controller: TrialNoticeBannerCtrl:', function () {
-  var $scope,
-    controller,
+  var controller,
     $httpBackend,
     $q,
     Authinfo,
-    deferred,
-    EmailService,
-    FeatureToggleService,
     Notification,
     TrialService,
     UserListService;
@@ -48,7 +44,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
   }];
 
   afterEach(function () {
-    $scope = controller = $httpBackend = $q = Authinfo = deferred = EmailService = Notification = TrialService = UserListService = undefined;
+    controller = $httpBackend = $q = Authinfo = Notification = TrialService = UserListService = undefined;
   });
 
   afterAll(function () {
@@ -61,32 +57,24 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
   /* @ngInject */
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$q_, _Authinfo_, _EmailService_,
-                              _FeatureToggleService_, _Notification_, _TrialService_, _UserListService_) {
+  beforeEach(inject(function ($controller, _$httpBackend_, _$q_, _Authinfo_,
+                              _Notification_, _TrialService_, _UserListService_) {
 
-    $scope = $rootScope.$new();
     controller = $controller;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     Authinfo = _Authinfo_;
-    EmailService = _EmailService_;
-    FeatureToggleService = _FeatureToggleService_;
     Notification = _Notification_;
     TrialService = _TrialService_;
     UserListService = _UserListService_;
 
-    spyOn(FeatureToggleService, 'atlasNotifyPartnerTrialExtBackendEmailGetStatus').and.returnValue($q.when(false));
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
-    spyOn(UserListService, 'listPartnersAsPromise').and.returnValue($q.when(fakePartnerInfoData));
+    spyOn(UserListService, 'listPartnersAsPromise').and.returnValue($q.resolve(fakePartnerInfoData));
     $httpBackend.whenGET(/organization\/trials$/).respond(fakeTrialPeriodData);
-
-    deferred = _$q_.defer();
 
     controller = controller('TrialNoticeBannerCtrl', {
       Authinfo: Authinfo,
-      EmailService: EmailService,
-      FeatureToggleService: FeatureToggleService,
       Notification: Notification,
       TrialService: TrialService,
       UserListService: UserListService
@@ -125,27 +113,13 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
     });
 
     describe('sendRequest():', function () {
-      it('should have called "sendEmail()" when notification via backend request toggle is disabled', function () {
-        spyOn(controller._helpers, 'sendEmail').and.returnValue($q.when());
-
-        controller.sendRequest().then(function () {
-          expect(controller._helpers.sendEmail).toHaveBeenCalled();
-        });
-      });
-    });
-
-    describe('sendRequest():', function () {
-      beforeEach(function () {
-        controller.isAtlasNotifyPartnerTrialExtBackendEmailEnabled = true;
-      });
-
-      it('should have called "TrialService.notifyPartnerTrialExt()" when notification via backend request toggle is enabled', function () {
+      it('should have called "TrialService.notifyPartnerTrialExt()"', function () {
         var fakePartnerNotifyResponse = {
           'data': {
             'notifyPartnerEmailStatusList': []
           }
         };
-        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.when(fakePartnerNotifyResponse));
+        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.resolve(fakePartnerNotifyResponse));
 
         controller.sendRequest().then(function () {
           expect(TrialService.notifyPartnerTrialExt).toHaveBeenCalled();
@@ -166,97 +140,6 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
             expect(controller.partnerAdmin[1].userName).toBe('fake-partner-email2@example.com');
 
           });
-        });
-      });
-    });
-
-    describe('sendEmail():', function () {
-      beforeEach(function () {
-        controller.partnerAdmin = fakePartnerInfoData.data.partners;
-      });
-      it('should have called "EmailService.emailNotifyPartnerTrialConversionRequest()" once for each partner admin with correct userName', function () {
-
-        spyOn(Authinfo, 'getConferenceServices').and.callFake(function () {
-          return null;
-        });
-        spyOn(EmailService, 'emailNotifyPartnerTrialConversionRequest').and.returnValue(deferred.promise);
-        deferred.resolve({});
-        $scope.$apply();
-
-        controller._helpers.sendEmail('fake-cust-name', 'fake-cust-admin-email');
-        expect(EmailService.emailNotifyPartnerTrialConversionRequest)
-          .toHaveBeenCalledWith(
-            'fake-cust-name', 'fake-cust-admin-email', 'fake-partner-email2@example.com', null);
-        expect(EmailService.emailNotifyPartnerTrialConversionRequest)
-          .toHaveBeenCalledWith(
-            'fake-cust-name', 'fake-cust-admin-email', 'fake-partner-email@example.com', null);
-      });
-
-      it('should return the results array of length equal to the number of admins and value corresponding to the resolve object', function () {
-
-        spyOn(Authinfo, 'getConferenceServices').and.callFake(function () {
-          return null;
-        });
-        spyOn(EmailService, 'emailNotifyPartnerTrialConversionRequest').and.returnValue(deferred.promise);
-        deferred.resolve({
-          status: 400
-        });
-        $scope.$apply();
-
-        controller._helpers.sendEmail('fake-cust-name', 'fake-cust-admin-email').then(function (results) {
-          expect(results[0].status).toBe(400);
-          expect(results.length).toBe(2);
-        });
-
-      });
-    });
-
-    describe('sendRequest():', function () {
-
-      it('should set requestResult to true when all emails were sent succesfully with status 200', function () {
-
-        var emailResult = [{
-          status: 200
-        }, {
-          status: 200
-        }];
-
-        spyOn(controller._helpers, 'sendEmail').and.returnValue($q.when(emailResult));
-        controller.sendRequest().then(function () {
-          expect(controller.requestResult).toBe(controller.requestResultEnum.SUCCESS);
-          expect(Notification.success).toHaveBeenCalled();
-
-        });
-      });
-
-      it('should set requestResult to false when some emails were not sent with status 400', function () {
-
-        var emailResult = [{
-          status: 400
-        }, {
-          status: 200
-        }];
-
-        spyOn(controller._helpers, 'sendEmail').and.returnValue($q.when(emailResult));
-
-        controller.sendRequest().then(function () {
-          expect(controller.requestResult).toBe(controller.requestResultEnum.PARTIAL_FAILURE);
-          expect(Notification.error).toHaveBeenCalled();
-        });
-      });
-
-      it('should set requestResult to false when all emails were rejected with status 400', function () {
-
-        var emailResult = [{
-          status: 400
-        }, {
-          status: 400
-        }];
-        spyOn(controller._helpers, 'sendEmail').and.returnValue($q.when(emailResult));
-
-        controller.sendRequest().then(function () {
-          expect(controller.requestResult).toBe(controller.requestResultEnum.TOTAL_FAILURE);
-          expect(Notification.error).toHaveBeenCalled();
         });
       });
     });
@@ -288,11 +171,11 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
       });
     });
 
-    describe('sendNotifyPartnerRequest():', function () {
+    describe('sendRequest():', function () {
       it('should set requestResult to TOTAL_FAILURE when the request to notify partners fails', function () {
         spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.reject('error'));
 
-        controller._helpers.sendNotifyPartnerRequest().then(function () {
+        controller.sendRequest().then(function () {
           expect(Notification.errorResponse).toHaveBeenCalled();
           expect(Notification.errorResponse.calls.count()).toEqual(1);
           expect(controller.requestResult).toBe(controller.requestResultEnum.TOTAL_FAILURE);
@@ -306,9 +189,9 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
             notifyPartnerEmailStatusList: []
           }
         };
-        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.when(fakePartnerNotifyResponse));
+        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.resolve(fakePartnerNotifyResponse));
 
-        controller._helpers.sendNotifyPartnerRequest().then(function () {
+        controller.sendRequest().then(function () {
           expect(Notification.error).toHaveBeenCalled();
           expect(Notification.error.calls.count()).toEqual(1);
           expect(controller.requestResult).toBe(controller.requestResultEnum.TOTAL_FAILURE);
@@ -328,9 +211,9 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
             }]
           }
         };
-        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.when(fakePartnerNotifyResponse));
+        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.resolve(fakePartnerNotifyResponse));
 
-        controller._helpers.sendNotifyPartnerRequest().then(function () {
+        controller.sendRequest().then(function () {
           expect(Notification.error).toHaveBeenCalled();
           expect(Notification.error.calls.count()).toEqual(1);
           expect(controller.requestResult).toBe(controller.requestResultEnum.TOTAL_FAILURE);
@@ -350,9 +233,9 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
             }]
           }
         };
-        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.when(fakePartnerNotifyResponse));
+        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.resolve(fakePartnerNotifyResponse));
 
-        controller._helpers.sendNotifyPartnerRequest().then(function () {
+        controller.sendRequest().then(function () {
           expect(Notification.error).toHaveBeenCalled();
           expect(Notification.error.calls.count()).toEqual(1);
           expect(controller.requestResult).toBe(controller.requestResultEnum.PARTIAL_FAILURE);
@@ -372,9 +255,9 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
             }]
           }
         };
-        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.when(fakePartnerNotifyResponse));
+        spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.resolve(fakePartnerNotifyResponse));
 
-        controller._helpers.sendNotifyPartnerRequest().then(function () {
+        controller.sendRequest().then(function () {
           expect(Notification.success).toHaveBeenCalled();
           expect(Notification.success.calls.count()).toEqual(1);
           expect(controller.requestResult).toBe(controller.requestResultEnum.SUCCESS);

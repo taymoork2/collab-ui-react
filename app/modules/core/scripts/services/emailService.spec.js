@@ -53,30 +53,5 @@ describe('emailService', function () {
         });
       });
     });
-
-    describe('mkTrialConversionReqPayload()', function () {
-      it('returns a custom-formed object composed from the args', function () {
-        var mkTrialConversionReqPayload = EmailService._helpers.mkTrialConversionReqPayload,
-          fakeCustName = 'Fake Customer, Inc.',
-          fakeCustEmail = 'fake-customer-admin@example.com',
-          fakePartnerEmail = 'fake-partner-admin@example.com',
-          webexSiteUrl = 'fake.webex.com',
-          NOTIFY_PARTNER_ADMIN_CUSTOMER_TRIAL_EXT_INTEREST =
-          EmailService._types.NOTIFY_PARTNER_ADMIN_CUSTOMER_TRIAL_EXT_INTEREST;
-
-        expect(mkTrialConversionReqPayload(fakeCustName, fakeCustEmail, fakePartnerEmail, webexSiteUrl))
-          .toEqual({
-            type: NOTIFY_PARTNER_ADMIN_CUSTOMER_TRIAL_EXT_INTEREST,
-            addressTo: fakePartnerEmail,
-            properties: {
-              CUSTOMER_NAME: fakeCustName,
-              CUSTOMER_EMAIL: fakeCustEmail,
-              PARTNER_EMAIL: fakePartnerEmail,
-              WEBEX_SITE_URL: webexSiteUrl,
-              SUBJECT: fakeCustName + ' wants to order or extend their trial'
-            }
-          });
-      });
-    });
   });
 });

@@ -37,7 +37,7 @@ describe('Partner Service -', function () {
     UrlConfig = _UrlConfig_;
 
     testData = getJSONFixture('core/json/partner/partner.service.json');
-    spyOn(Auth, 'getAuthorizationUrlList').and.returnValue($q.when({}));
+    spyOn(Auth, 'getAuthorizationUrlList').and.returnValue($q.resolve({}));
     spyOn(Analytics, 'trackPartnerActions');
   }));
 
@@ -113,10 +113,10 @@ describe('Partner Service -', function () {
   });
 
   it('should successfully return the corresponding license object or an empty object from calling getLicense', function () {
-    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.MS)).toEqual(testData.licenses[0]);
-    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CF)).toEqual(testData.licenses[1]);
-    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CO)).toEqual(testData.licenses[2]);
-    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CDC)).toEqual(testData.licenses[6]);
+    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.MS)[0]).toEqual(testData.licenses[0]);
+    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CF)[0]).toEqual(testData.licenses[1]);
+    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CO)[0]).toEqual(testData.licenses[2]);
+    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CDC)[0]).toEqual(testData.licenses[6]);
   });
 
   it('should successfully return a boolean on whether or not a license is available from calling isLicenseInfoAvailable', function () {
@@ -284,7 +284,7 @@ describe('Partner Service -', function () {
 
   describe('modifyManagedOrgs function', function () {
     beforeEach(function () {
-      Auth.getAuthorizationUrlList.and.returnValue($q.when(testData.getAuthorizationUrlListResponse));
+      Auth.getAuthorizationUrlList.and.returnValue($q.resolve(testData.getAuthorizationUrlListResponse));
       $scope.$apply();
     });
 
@@ -296,13 +296,56 @@ describe('Partner Service -', function () {
     });
   });
 
+  describe('canAdminTrial function', function () {
+    var licenses;
+    beforeEach(function () {
+      licenses = _.cloneDeep(testData.licenses);
+      _.forEach(licenses, function (license) {
+        license.isTrial = true;
+        license.partnerOrgId = 'other-partner-org2-id';
+        license.partnerEmail = 'otherPartner@othercompany.com';
+      });
+      $scope.$digest();
+    });
+    afterEach(function () {
+      licenses = null;
+    });
+
+    it('should return false if the partnerOrgId property on any license does not match the org id of the logged in user', function () {
+      expect(PartnerService.canAdminTrial(licenses)).toBe(false);
+    });
+
+    it('should return true if the partnerOrgId property on any license matches the org id of the logged in user', function () {
+      licenses[1].partnerOrgId = '12345';
+      expect(PartnerService.canAdminTrial(licenses)).toBe(true);
+    });
+
+    it('should return if the partnerOrgId property is undefined and email in any service matches the email of the logged in user', function () {
+      _.each(licenses, function (license) {
+        license.partnerOrgId = undefined;
+      });
+      licenses[0].partnerEmail = 'fake-primaryEmail';
+      expect(PartnerService.canAdminTrial(licenses)).toBe(true);
+    });
+
+    it('should return false if the partnerOrgId is null and email is null in all services', function () {
+      _.each(licenses, function (license) {
+        license.partnerOrgId = undefined;
+        license.partnerEmail = undefined;
+      });
+      expect(PartnerService.canAdminTrial(licenses)).toBe(false);
+    });
+  });
+
   describe('helper functions -', function () {
     describe('getTrialMeetingServices', function () {
       var licenses;
       beforeEach(function () {
         licenses = _.cloneDeep(testData.licenses);
       });
-
+      afterEach(function () {
+        licenses = null;
+      });
       it('should return a list of meeting and webex for services for trials', function () {
         licenses.push({
           licenseId: 'EE_abdd0d28-a886-452a-b2b0-97861baa2a54',

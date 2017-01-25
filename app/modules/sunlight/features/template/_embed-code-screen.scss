@@ -46,3 +46,39 @@
     }
   }
 }
+
+.warning-msg {
+  color: $gray-dark-2;
+  line-height: $h5-line-height;
+  font-family: $brand-font-cisco-TT-Light;
+}
+
+.warning-msg-2 {
+  @include vr-spacing(mt, 0.5);
+  font-family: $brand-font-cisco-TT-Light;
+}
+
+.error-msg-1 {
+  color: $color-alerts-base;
+  line-height: $h5-line-height;
+}
+
+.domain-names-style {
+  line-height: $h5-font-size;
+  @include vr-spacing(mt, 0.625);
+}
+
+.red-error-icon {
+  color: $brand-danger;
+  @include vr-spacing(mr, 0.625);
+  float: left;
+}
+
+.flex-display {
+  display: flex;
+}
+
+.domain-list {
+  @include vr-spacing(mt, 0.25);
+  @include vr-spacing(mb, 0.875);
+}

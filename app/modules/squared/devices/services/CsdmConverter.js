@@ -316,11 +316,6 @@
         var events = _.reject(getEvents(obj), function (e) {
           return e.level == 'INFO' && (e.type == 'ip' || e.type == 'software' || e.type == 'upgradeChannel');
         });
-        if (events.length > 0) {
-          events.push({
-            type: 'TCPMediaFallback'
-          });
-        }
         return events;
       }
 
@@ -342,48 +337,35 @@
       }
 
       function getState(obj) {
-        switch (obj.state) {
-          case 'UNCLAIMED':
+        switch ((obj.status || {}).connectionStatus) {
+          case 'CONNECTED':
+            if (hasIssues(obj)) {
+              return {
+                readableState: t('CsdmStatus.OnlineWithIssues'),
+                priority: "1"
+              };
+            }
             return {
-              readableState: t('CsdmStatus.RequiresActivation'),
-              priority: "3"
+              readableState: t('CsdmStatus.Online'),
+              priority: "5"
             };
           default:
-            switch ((obj.status || {}).connectionStatus) {
-              case 'CONNECTED':
-                if (hasIssues(obj)) {
-                  return {
-                    readableState: t('CsdmStatus.OnlineWithIssues'),
-                    priority: "1"
-                  };
-                }
-                return {
-                  readableState: t('CsdmStatus.Online'),
-                  priority: "5"
-                };
-              default:
-                return {
-                  readableState: t('CsdmStatus.Offline'),
-                  priority: "2"
-                };
-            }
+            return {
+              readableState: t('CsdmStatus.Offline'),
+              priority: "2"
+            };
         }
       }
 
       function getCssColorClass(obj) {
-        switch (obj.state) {
-          case 'UNCLAIMED':
-            return 'disabled';
-          default:
-            switch ((obj.status || {}).connectionStatus) {
-              case 'CONNECTED':
-                if (hasIssues(obj)) {
-                  return 'warning';
-                }
-                return 'success';
-              default:
-                return 'danger';
+        switch ((obj.status || {}).connectionStatus) {
+          case 'CONNECTED':
+            if (hasIssues(obj)) {
+              return 'warning';
             }
+            return 'success';
+          default:
+            return 'danger';
         }
       }
 

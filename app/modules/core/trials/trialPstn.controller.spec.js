@@ -107,10 +107,10 @@ describe('Controller: TrialPstnCtrl', function () {
 
     spyOn(TrialService, 'getDeviceTrialsLimit');
     spyOn(TerminusStateService, 'query').and.returnValue({
-      '$promise': $q.when(states)
+      '$promise': $q.resolve(states)
     });
 
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(Orgservice, 'getOrg');
     spyOn(Analytics, 'trackTrialSteps');
 
@@ -119,15 +119,16 @@ describe('Controller: TrialPstnCtrl', function () {
     $scope.trial.details.customerName = customerName;
     $scope.trial.details.customerEmail = customerEmail;
 
+    spyOn(PstnSetupService, 'getResellerV2').and.returnValue($q.resolve());
+    spyOn(PstnSetupService, 'listResellerCarriers');
+    spyOn(PstnSetupService, 'listDefaultCarriers');
+
     controller = $controller('TrialPstnCtrl', {
       $scope: $scope,
       TrialPstnService: TrialPstnService,
     });
 
     trials = TrialPstnService.getData();
-
-    spyOn(PstnSetupService, 'listResellerCarriers');
-    spyOn(PstnSetupService, 'listDefaultCarriers');
 
     $scope.$apply();
   }));
@@ -202,7 +203,7 @@ describe('Controller: TrialPstnCtrl', function () {
         "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c"
       }];
       PstnSetupService.listResellerCarriers.and.returnValue($q.reject());
-      PstnSetupService.listDefaultCarriers.and.returnValue($q.when(swivelCarrierDetails));
+      PstnSetupService.listDefaultCarriers.and.returnValue($q.resolve(swivelCarrierDetails));
       controller._getCarriers($scope);
       $scope.$apply();
       expect(controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
@@ -224,7 +225,7 @@ describe('Controller: TrialPstnCtrl', function () {
         "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c"
       }];
       PstnSetupService.listResellerCarriers.and.returnValue($q.reject());
-      PstnSetupService.listDefaultCarriers.and.returnValue($q.when(orderCarrierDetails));
+      PstnSetupService.listDefaultCarriers.and.returnValue($q.resolve(orderCarrierDetails));
       controller._getCarriers($scope);
       $scope.$apply();
       expect(controller.trialData.details.pstnProvider).toEqual(orderCarrierDetails[0]);
@@ -247,7 +248,7 @@ describe('Controller: TrialPstnCtrl', function () {
         "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c"
       }];
       PstnSetupService.listResellerCarriers.and.returnValue($q.reject());
-      PstnSetupService.listDefaultCarriers.and.returnValue($q.when(swivelCarrierDetails));
+      PstnSetupService.listDefaultCarriers.and.returnValue($q.resolve(swivelCarrierDetails));
       controller._getCarriers($scope);
       $scope.$apply();
       expect(controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
@@ -288,7 +289,7 @@ describe('Controller: TrialPstnCtrl', function () {
         "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c"
       }];
       PstnSetupService.listResellerCarriers.and.returnValue($q.reject());
-      PstnSetupService.listDefaultCarriers.and.returnValue($q.when(swivelCarrierDetails));
+      PstnSetupService.listDefaultCarriers.and.returnValue($q.resolve(swivelCarrierDetails));
       controller._getCarriers($scope);
       $scope.$apply();
       expect(controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
@@ -330,7 +331,7 @@ describe('Controller: TrialPstnCtrl', function () {
         "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c"
       }];
       PstnSetupService.listResellerCarriers.and.returnValue($q.reject());
-      PstnSetupService.listDefaultCarriers.and.returnValue($q.when(orderCarrierDetails));
+      PstnSetupService.listDefaultCarriers.and.returnValue($q.resolve(orderCarrierDetails));
       controller._getCarriers($scope);
       $scope.$apply();
       expect(controller.trialData.details.pstnProvider).toEqual(orderCarrierDetails[0]);

@@ -30,23 +30,24 @@
       $state.current.data.displayName = $translate.instant('gemini.cbgs.field.totalSites');
     }
 
-    function onClick(site, toGroupId) {
+    function onClick(site, toCbg) {
       $modal.open({
         type: 'dialog',
         templateUrl: 'modules/gemini/callbackGroup/details/moveSiteConfirm.tpl.html'
       }).result.then(function () {
-        moveSite(site, toGroupId);
+        moveSite(site, toCbg);
       });
     }
 
-    function moveSite(site, toGroupId) {
+    function moveSite(site, toCbg) {
       var data = {
         siteId: site.siteId,
         siteUrl: site.siteUrl,
-        targetGroupId: toGroupId,
         spCustomerId: vm.customerId,
-        groupName: vm.currCbg.groupName,
-        sourceGroupId: vm.currCbg.ccaGroupId
+        targetGroupId: toCbg.toCcaGroupId,
+        targetGroupName: toCbg.toGroupName, // TO,  targetGroupName , DB: Object_ID
+        sourceGroupId: vm.currCbg.ccaGroupId,
+        sourceGroupName: vm.currCbg.groupName // From, DB: Object_Name
       };
       cbgService.moveSite(data).then(function (res) {
         var resJson = _.get(res.content, 'data');
@@ -54,10 +55,10 @@
           Notification.notify(gemService.showError(resJson.returnCode));
           return;
         }
+        $rootScope.$emit('cbgsUpdate', true);
         _.remove(vm.sites, function (obj) {
           return obj.siteId === site.siteId;
         });
-        $rootScope.$emit('cbgsUpdate', true);
       });
     }
 

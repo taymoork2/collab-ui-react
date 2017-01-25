@@ -1,13 +1,12 @@
 'use strict';
 
 describe('Controller: CustomerListCtrl', function () {
-  var $httpBackend, $q, $controller, $state, $scope, Authinfo, Config, customerListToggle, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, trialForPaid, TrialService;
+  var $httpBackend, $q, $controller, $state, $scope, Authinfo, Config, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, trialForPaid, TrialService;
   var controller;
 
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
   var partnerService = getJSONFixture('core/json/partner/partner.service.json');
   var managedOrgsResponse = partnerService.managedOrgsResponse;
-  var trialsResponse = partnerService.trialsResponse;
   var orgId = 'b93b10ad-ae24-4abf-9c21-76e8b86faf01';
   var orgName = 'testOrg';
   var testOrg = {
@@ -56,7 +55,6 @@ describe('Controller: CustomerListCtrl', function () {
       CUSTOMER: 2
     };
 
-    customerListToggle = false;
     trialForPaid = false;
 
     spyOn($state, 'go');
@@ -66,13 +64,13 @@ describe('Controller: CustomerListCtrl', function () {
     spyOn(Authinfo, 'getOrgName').and.returnValue(orgName);
     spyOn(Authinfo, 'isPartnerAdmin').and.returnValue(true);
 
-    spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.when(managedOrgsResponse));
-    spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.when({}));
+    spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.resolve(managedOrgsResponse));
+    spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.resolve({}));
 
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
-      $q.when(false)
+      $q.resolve(false)
     );
-    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(false));
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback) {
       callback(adminJSONFixture.getAdminOrg, 200);
     });
@@ -80,9 +78,8 @@ describe('Controller: CustomerListCtrl', function () {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
 
-    spyOn(TrialService, 'getTrial').and.returnValue($q.when());
-    spyOn(TrialService, 'getTrialsList').and.returnValue($q.when(trialsResponse));
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(TrialService, 'getTrial').and.returnValue($q.resolve());
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
 
   }));
 
@@ -92,7 +89,6 @@ describe('Controller: CustomerListCtrl', function () {
       $state: $state,
       Authinfo: Authinfo,
       Config: Config,
-      customerListToggle: customerListToggle,
       trialForPaid: trialForPaid
     });
 
@@ -207,7 +203,7 @@ describe('Controller: CustomerListCtrl', function () {
     beforeEach(initController);
 
     it('not Terminus customer and has e164 numbers, should route to DID add', function () {
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + testOrg.customerOrgId).respond(404);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + testOrg.customerOrgId).respond(404);
       $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + testOrg.customerOrgId + '/numbers?type=external').respond(numberResponse);
       controller.addNumbers(testOrg);
       $httpBackend.flush();
@@ -217,7 +213,7 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
     it('not Terminus customer and has no e164 numbers, should route to PSTN setup', function () {
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + testOrg.customerOrgId).respond(404);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + testOrg.customerOrgId).respond(404);
       $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + testOrg.customerOrgId + '/numbers?type=external').respond(noNumberResponse);
       controller.addNumbers(testOrg);
       $httpBackend.flush();
@@ -230,7 +226,7 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
     it('exists as Terminus customer, should route to PSTN setup', function () {
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + testOrg.customerOrgId).respond(200);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + testOrg.customerOrgId).respond(200);
       controller.addNumbers(testOrg);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
@@ -251,8 +247,6 @@ describe('Controller: CustomerListCtrl', function () {
       //this tests that getManagedOrgsList is  called , it is called once at init , so the count is expected to be 2 here
       expect(PartnerService.getManagedOrgsList.calls.count()).toEqual(2);
       expect(PartnerService.getManagedOrgsList).toHaveBeenCalledWith('1234');
-      expect(TrialService.getTrialsList.calls.count()).toEqual(2);
-      expect(TrialService.getTrialsList).toHaveBeenCalledWith('1234');
     });
 
   });
@@ -271,7 +265,7 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
     it('show care in the filter list with care FT on', function () {
-      FeatureToggleService.atlasCareTrialsGetStatus.and.returnValue($q.when(true));
+      FeatureToggleService.atlasCareTrialsGetStatus.and.returnValue($q.resolve(true));
       initController();
       $scope.$apply();
       expect(controller.filter.options.length).toBe(9);
@@ -284,7 +278,7 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
     it('show sparkBoard in the filter list with spark FT on', function () {
-      FeatureToggleService.atlasDarlingGetStatus.and.returnValue($q.when(true));
+      FeatureToggleService.atlasDarlingGetStatus.and.returnValue($q.resolve(true));
       initController();
       $scope.$apply();
       expect(controller.filter.options.length).toBe(9);
@@ -411,7 +405,7 @@ describe('Controller: CustomerListCtrl', function () {
           isTrial: true
         }
       };
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + org.customerOrgId).respond(200);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
@@ -431,7 +425,7 @@ describe('Controller: CustomerListCtrl', function () {
           isTrial: false
         }
       };
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + org.customerOrgId).respond(200);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
@@ -448,7 +442,7 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: 'ControllerTestOrg',
         customerEmail: 'customer@cisco.com'
       };
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + org.customerOrgId).respond(200);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
@@ -469,7 +463,7 @@ describe('Controller: CustomerListCtrl', function () {
           isTrial: true
         }
       };
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + org.customerOrgId).respond(200);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
@@ -497,7 +491,7 @@ describe('Controller: CustomerListCtrl', function () {
       expect(result.path).toEqual('trial.info');
     });
     it('should return a path to \'trialAdd\' when FT set to false', function () {
-      FeatureToggleService.supports.and.returnValue($q.when(false));
+      FeatureToggleService.supports.and.returnValue($q.resolve(false));
       initController();
       var result = controller._helpers.getTrialRoute(false, {});
       expect(result.path).toEqual('trialAdd.info');

@@ -320,8 +320,8 @@ describe('Service: Trial Service:', function () {
         beforeEach(function () {
           getDaysLeftForCurrentUser = TrialService.getDaysLeftForCurrentUser;
           spyOn(TrialService, 'getTrialIds').and.returnValue([fakeTrialId]);
-          spyOn(TrialService, 'getExpirationPeriod').and.returnValue($q.when(1));
-          spyOn(TrialService, 'getTrialPeriodData').and.returnValue($q.when(fakeTrialPeriodData));
+          spyOn(TrialService, 'getExpirationPeriod').and.returnValue($q.resolve(1));
+          spyOn(TrialService, 'getTrialPeriodData').and.returnValue($q.resolve(fakeTrialPeriodData));
         });
 
         it('should resolve with the return value from "TrialService.getExpirationPeriod()"', function () {
@@ -346,7 +346,7 @@ describe('Service: Trial Service:', function () {
       describe('getTrialPeriodData():', function () {
         describe('successful fetch of trial data:', function () {
           beforeEach(function () {
-            spyOn(TrialService, 'getTrial').and.returnValue($q.when(fakeTrialPeriodData));
+            spyOn(TrialService, 'getTrial').and.returnValue($q.resolve(fakeTrialPeriodData));
           });
 
           describe('resolves with an object that:', function () {
@@ -389,7 +389,7 @@ describe('Service: Trial Service:', function () {
             });
 
             it('should resolve with 29, given 1 day passed since the start date and trial period is 30', function () {
-              var fakeTrialPeriodData = $q.when({
+              var fakeTrialPeriodData = $q.resolve({
                 startDate: '2016-01-01T00:00:00.000Z',
                 trialPeriod: 30
               });
@@ -402,7 +402,7 @@ describe('Service: Trial Service:', function () {
             });
 
             it('should resolve with 30, given start date and current date are the same and trial period is 30', function () {
-              var fakeTrialPeriodData = $q.when({
+              var fakeTrialPeriodData = $q.resolve({
                 startDate: '2016-01-02T00:00:00.000Z',
                 trialPeriod: 30
               });
@@ -415,7 +415,7 @@ describe('Service: Trial Service:', function () {
             });
 
             it('should resolve with -1, given 31 days passed since the start date and trial period is 30', function () {
-              var fakeTrialPeriodData = $q.when({
+              var fakeTrialPeriodData = $q.resolve({
                 startDate: '2015-12-02T00:00:00.000Z',
                 trialPeriod: 30
               });

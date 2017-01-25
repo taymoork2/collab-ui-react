@@ -9,18 +9,12 @@ require('modules/core/reports/amcharts-export.scss');
     .controller('DeviceUsageCtrl', DeviceUsageCtrl);
 
   /* @ngInject */
-  function DeviceUsageCtrl($log, $q, $translate, $scope, DeviceUsageTotalService, DeviceUsageGraphService, DeviceUsageDateService, DeviceUsageExportService, Notification, DeviceUsageSplunkMetricsService, ReportConstants, deviceUsageFeatureToggle, $state, $modal) {
+  function DeviceUsageCtrl($log, $q, $translate, $scope, DeviceUsageTotalService, DeviceUsageGraphService, DeviceUsageDateService, DeviceUsageExportService, Notification, DeviceUsageSplunkMetricsService, FeatureToggleService, ReportConstants, $modal) {
     var vm = this;
     var amChart;
     var apiToUse = 'backend';
     var missingDays;
     var dateRange;
-
-    if (!deviceUsageFeatureToggle) {
-      // simulate a 404
-      $log.warn("State not allowed.");
-      $state.go('login');
-    }
 
     // Models Selection
     vm.modelsSelected = [];
@@ -70,6 +64,10 @@ require('modules/core/reports/amcharts-export.scss');
 
     vm.init = init;
     vm.timeUpdate = timeUpdate;
+
+    // Preliminary beta functionality
+    vm.v2 = FeatureToggleService.atlasDeviceUsageReportV2GetStatus();
+    $log.info("Device Usage Report V2 toggle set to:", vm.v2);
 
     vm.tabs = [
       {

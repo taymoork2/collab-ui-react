@@ -490,6 +490,7 @@
     "startSearching": "To begin, search for an organization",
     "noSearchResults": "Search yielded no results",
     "allowBetaChannels": "Allow Beta Release Channel",
+    "allowAlphaChannels": "Allow Alpha Release Channel",
     "allowLatestChannels": "Allow Latest Release Channel",
     "releaseChannelToggleSuccess": "Allow Release Channel update successful",
     "releaseChannelToggleFailure": "Allow Release Channel update failed. Please try again later.",
@@ -516,9 +517,12 @@
     "month2": "last four weeks",
     "threeMonths": "Last 3 Months",
     "threeMonths2": "last three months",
-    "threePlusMonths": "Last 3+ Months",
     "lastTwelveWeeks": "Last 12 Weeks",
     "lastTwelveWeeks2": "last twelve weeks",
+    "sixMonths": "Last 6 Months",
+    "sixMonths2": "last six months",
+    "year": "Last 12 Months",
+    "year2": "last twelve months",
     "custom": "Custom",
     "custom2": "custom selection",
     "customerLoadError": "There was an error while loading the customer list.",
@@ -608,26 +612,38 @@
     "today2": "for today",
     "todayTaskStatus": "handled and abandoned",
     "todayInterval": "one hour time interval",
+    "todayDrilldownTitle": "for Today",
+    "todayDrilldownDescription": "For today",
     "yesterday": "Yesterday",
     "yesterday2": "for yesterday",
     "yesterdayTaskStatus": "handled and abandoned",
     "yesterdayInterval": "one hour time interval",
+    "yesterdayDrilldownTitle": "for Yesterday",
+    "yesterdayDrilldownDescription": "For yesterday",
     "week": "Last Week",
     "week2": "for the last week",
     "weekTaskStatus": "handled and abandoned",
     "weekInterval": "given day",
+    "weekDrilldownTitle": "in the Last Week",
+    "weekDrilldownDescription": "During the last week",
     "month": "Last Month",
     "month2": "for the last month",
     "monthTaskStatus": "handled and abandoned",
     "monthInterval": "given week",
+    "monthDrilldownTitle": "in the Last Month",
+    "monthDrilldownDescription": "During the last month",
     "threeMonths": "Last Three Months",
     "threeMonths2": "for the last three months",
     "threeMonthsTaskStatus": "handled and abandoned",
     "threeMonthsInterval": "given month",
+    "threeMonthsDrilldownTitle": "in the Last Three Months",
+    "threeMonthsDrilldownDescription": "During the three months",
     "media_type_all": "All Contact Types",
     "media_type_chat": "Chat",
     "media_type_callback": "Callback",
-    "taskDataGetError": "There was an error while loading the {{dataType}} data."
+    "media_type_voice": "Inbound Call",
+    "taskDataGetError": "There was an error while loading the {{dataType}} data.",
+    "tableDataGetError": "There was an error while loading the detailed efficient user data."
   },
   "activeUsers": {
     "active": "Active",
@@ -654,7 +670,7 @@
     "noActiveUsers": "During the last {{time}}, there have been no active users.  To see user status and resend invitations to those still pending, visit the ",
     "errorActiveUsers": "This data is temporarily unavailable.  Our servers are working to return it soon, please check back again shortly.",
     "usersTab": "users tab.",
-    "customMessage": "The Most Active Users table is unavailable when the custom date selector is active."
+    "customMessage": "The Most Active Users table is unavailable for the six month and full year time periods, or when the custom date selector is active."
   },
   "avgRooms": {
     "avgRooms": "Total Rooms",
@@ -729,13 +745,44 @@
     "title": "Total Completed Contacts",
     "description": "The graph depicts the total number of customer contacts completed {{time}}. Hover over the area chart for a breakdown of {{taskStatus}} contacts during a {{interval}}."
   },
+  "taskIncoming": {
+    "title": "Total Completed Contacts",
+    "description": "The graph depicts the total number of customer contacts completed {{time}}. Hover over the area chart for a breakdown of {{taskStatus}} contacts during a {{interval}}.",
+    "drilldownShow": "Show most active users",
+    "drilldownHide": "Hide most active users",
+    "drilldownTitle": "Most Active Users {{time}}",
+    "drilldownDescription": "{{time}}, these are the most active users. The table can be sorted by user’s name or total number of contacts handled.",
+    "drilldownErrorDescription": "This data is temporarily unavailable. Our servers are working to return it soon, please check back again shortly.",
+    "drilldownEmptyDescription": "{{time}}, there have been no active users. To see user status and resend invitations to those still pending, visit the users tab.",
+    "contactsHandled": "Contacts Handled",
+    "user": "User",
+    "drilldownSearchPlaceholder": "Search"
+  },
   "taskTime": {
     "title": "Contact Time Measure",
-    "description": "The graph depicts the average time spent by a customer waiting for an agent and in getting their enquiries handled {{time}}. Hover over the area chart for a breakdown of average waiting time and average time taken to handle a customer enquiry during a {{interval}}."
+    "description": "The graph depicts the average time spent by a customer waiting for an agent and in getting their enquiries handled {{time}}. Hover over the area chart for a breakdown of average waiting time and average time taken to handle a customer enquiry during a {{interval}}.",
+    "drilldownShow": "Show most efficient users",
+    "drilldownHide": "Hide most efficient users",
+    "drilldownTitle": "Most efficient Users {{time}}",
+    "drilldownDescription": "{{time}}, these are the users who handled tasks efficiently with less handle time. The table can be sorted by user’s name or average handle time.",
+    "drilldownErrorDescription": "This data is temporarily unavailable. Our servers are working to return it soon, please check back again shortly.",
+    "drilldownEmptyDescription": "{{time}}, there have been no active users. To see user status and resend invitations to those still pending, visit the users tab.",
+    "averageHandleTime": "Average Handle Time",
+    "user": "User",
+    "drilldownSearchPlaceholder": "Search"
   },
   "averageCsat": {
     "title": "Customer Satisfaction",
-    "description": "The graph depicts the customer satisfaction rating {{time}}. Hover over the trend line to know the average customer satisfaction rating during a {{interval}}.​​"
+    "description": "The graph depicts the customer satisfaction rating {{time}}. Hover over the trend line to know the average customer satisfaction rating during a {{interval}}.",
+    "drilldownShow": "Show users with best CSAT",
+    "drilldownHide": "Hide users with best CSAT",
+    "drilldownTitle": "Highest Rated Users {{time}}",
+    "drilldownDescription": "{{time}}, these are the users who got the best CSAT ratings. The table can be sorted by user’s name or averege CSAT rating.",
+    "drilldownErrorDescription": "This data is temporarily unavailable. Our servers are working to return it soon, please check back again shortly.",
+    "drilldownEmptyDescription": "{{time}}, there have been no active users. To see user status and resend invitations to those still pending, visit the users tab.",
+    "user": "User",
+    "averageCsat": "Average CSAT",
+    "drilldownSearchPlaceholder": "Search"
   },
   "taskAggregate": {
     "title": "Aggregated Contacts",
@@ -1329,7 +1376,8 @@
     "warning": {
       "siteSteering": "First digit of Voicemail Access Prefix conflicts with the first digit of an internal extension range. If you use this prefix, it may cause a delay when dialing extensions starting with the same number.",
       "outboundDialDigit": "Outbound Dial Digit conflicts with the first digit of an internal extension range. If you use this digit, it may cause a delay when dialing extensions starting with the same number.",
-      "localDialing": "To use local dialing, you must setup your PSTN service. Contact your partner admin to begin PSTN service setup."
+      "localDialing": "To use local dialing, you must setup your PSTN service. Contact your partner admin to begin PSTN service setup.",
+      "outboundDialing": "The outbound dial digit is only applicable when using a PSTN service. Contact your partner admin to begin PSTN setup."
     },
     "saveModal": {
       "title": "Dial Plan Settings",
@@ -1821,6 +1869,14 @@
       "clusters-title-spark-hybrid-datasecurity": "HDS Clusters",
       "status-title": "Service Status"
     },
+    "hybridVoicemailUserSection": {
+      "automaticallyEnabled": "Voicemail is automatically enabled when Call Service Connect is enabled.",
+      "description": "Users can check their voicemail directly from Cisco Spark.",
+      "header": "Voicemail",
+      "on": "On",
+      "pilot": "Pilot",
+      "toTurnOn": "To turn on voicemail for your users, enable voicemail in <a ng-click=\"{{onclick}}\">Hybrid Call Settings</a>."
+    },
     "settings": {
       "deactivateServiceHeading": "Deactivate {{ServiceName}}",
       "deactivateService": "Deactivating {{ServiceName}} uninstalls {{ConnectorName}} from your Expressway clusters and disables the service for users.",
@@ -1968,8 +2024,8 @@
         "description": "You need at least one verified domain to use call services. Add domains under settings."
       },
       "release-channel": {
-        "title": "Default Release Channel",
-        "description": "Some clusters not assigned to resource groups do not have the right default release channel. <a ng-click=\"{{onclick}}\">Fix now</a>."
+        "title": "\"{{name}}\" Release Channel",
+        "description": "\"{{name}}\" is using a different release channel ({{current}}) than the default one ({{default}}). <a ng-click=\"{{onclick}}\">Change the release channel</a> to avoid inconsistencies with Hybrid Services."
       },
       "user-activation-errors": {
         "title": "Activation Error",
@@ -2076,9 +2132,11 @@
           "stable": "Stable",
           "stableHelpText": "The official release software for Hybrid Services",
           "beta": "Beta",
-          "betaHelpText": "Use this channel so that users can test new features before they are released.",
+          "betaHelpText": "Use this channel so that users can test new features before they are released",
+          "alpha": "Alpha",
+          "alphaHelpText": "Internal early adopters",
           "latest": "Latest",
-          "latestHelpText": "For developers and early adopters",
+          "latestHelpText": "For developers only",
           "error": "Could not create the Resource Group",
           "saveReleaseChannelSuccess": "Release Channel updated successfully.",
           "saveReleaseChannelError": "Could Not save Release Channel. Try again later."
@@ -2102,8 +2160,6 @@
     },
     "resourceGroupSettings": {
       "pageTitle": "{{groupName}} Settings",
-      "releaseChannelHeader": "Release Channel",
-      "releaseChannelDescription": "Select the release channel for all Hybrid Services running in this group.",
       "clustersHeader": "Clusters",
       "clustersAssign": "Assign Clusters",
       "clustersDescription": "Add one or more existing Expressway clusters to this group.",
@@ -2143,7 +2199,8 @@
       "releaseChannelTip": "To change the release channel for this cluster, assign it to a resource group with the preferred release channel.",
       "releaseChannelSaved": "Release channel saved successfully",
       "orgHasNoAccessToChannel": "The resource group is configured with the “{{currentReleaseChannel}}” release channel, which is no longer available to your organization. Set the release channel to “{{stableReleaseChannel}}” to restore service.",
-      "setToStable": "Set to {{stableReleaseChannel}}"
+      "clusterHasNotTheDefault": "This Expressway cluster uses a release channel that is different than the default one. Choose the default release channel ({{releaseChannel}}) to avoid inconsistencies with Hybrid Services.",
+      "setTo": "Set to {{releaseChannel}}"
     },
     "changeReleaseChannelDialog": {
       "title": "Change Release Channel",
@@ -2236,7 +2293,8 @@
         "complete-registration": "Go to your Hybrid Data Security admin to complete the registration.",
         "registration-timeout": "The registration timed out. Please remove this cluster and register the Hybrid Data Security node again.",
         "registration-timeout-extended": "The registration timed out. Please remove this cluster and register the Hybrid Data Security node again in the Add Resource dialog."
-      }
+      },
+      "upgradeScheduleSubHeader": "Upgrade Schedule"
     },
     "serviceName" : "Hybrid Data Security",
     "serviceStatus": {
@@ -2257,39 +2315,44 @@
       "pending": "Pending",
       "initializing": "Initializing",
       "not_operational": "Not Operational",
-      "nonodes": "No Nodes Registered"
+      "nonodes": "No Nodes Registered",
+      "not_registered": "Registration not completed",
+      "urgentUpgradeAvailable": "Urgent upgrade available",
+      "registrationTimeout": "Registration timeout"
     },
-    "settings": {
-      "servicestatusTitle": "Service Status",
-      "serviceTrialModeTitle": "Trial Mode",
-      "serviceTrialModeDesc": "Trial Started Month DD, YYYY at HH:MM PM",
-      "serviceProductionModeTitle": "Production Mode",
-      "serviceProductionModeDesc": "In this mode all users in your org will use this service",
-      "addTrialUsers": "Add Trial Users",
-      "editTrialUsers": "Edit Users in Trial"
+    "softwareUpgrade": {
+      "explanation": "You are about to upgrade {{connectorType}} to version {{newVersion}} on all nodes in your Hybrid Data Security cluster"
     },
-    "addTrialUsers": {
-      "modalTitle": "Assign Data Security to Users",
-      "modalHeading": "Manually Assign Users",
-      "modalDesc": "Enter the email addresses of the users that will be assigned to the Data Security Service",
-      "emailNotificationsWatermark": "Email addresses",
-      "emailExample": "For example: John Doe john.doe@email.com, Kate Williams kate.williams@email.com",
-      "modalSST": "Start Service Trial"
-    },
-    "editTrialUsers": {
-      "modalTitle": "Edit Data Security Trial Users",
-      "modalHeadingAddUser": "To Add Users to this Service Trial",
-      "modalAddUserDesc1": "&bull; Go to the Users page",
-      "modalAddUserDesc2": "&bull; Search for the user you want to add to this Trial, and upon finding them, select the user (by clicking the row)",
-      "modalAddUserDesc3": "&bull; Navigate to Hybrid Services and then assign them to the Data Security Service Trial by flipping the Service toggle ON",
-      "modalHeadingRemoveUser": "To Remove a User from this Service Trial",
-      "modalRemoveUserDesc1": "&bull; Go to the Users page",
-      "modalRemoveUserDesc2": "&bull; Search for the user you want to remove from this Trial, and upon finding them, select the user (by clicking the row). If necessary, you can <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">download your Service Trial Users</a> for reference.",
-      "modalRemoveUserDesc3": "&bull; Navigate to Hybrid Services and then assign them to the Data Security Service Trial by flipping the Service toggle ON"
-    },
-    "resources" : {
+    "resources": {
+      "settings": {
+        "servicestatusTitle": "Service Status",
+        "serviceTrialModeTitle": "Trial Mode",
+        "serviceTrialModeDesc": "Trial Started Month DD, YYYY at HH:MM PM",
+        "serviceProductionModeTitle": "Production Mode",
+        "serviceProductionModeDesc": "In this mode all users in your org will use this service",
+        "addTrialUsers": "Add Trial Users",
+        "editTrialUsers": "Edit Users in Trial"
+      },
+      "addTrialUsers": {
+        "modalTitle": "Assign Data Security to Users",
+        "modalHeading": "Manually Assign Users",
+        "modalDesc": "Enter the email addresses of the users that will be assigned to the Data Security Service",
+        "emailNotificationsWatermark": "Email addresses",
+        "emailExample": "For example: John Doe john.doe@email.com, Kate Williams kate.williams@email.com",
+        "modalSST": "Start Service Trial"
+      },
+      "editTrialUsers": {
+        "modalTitle": "Edit Data Security Trial Users",
+        "modalHeadingAddUser": "To Add Users to this Service Trial",
+        "modalAddUserDesc1": "&bull; Go to the Users page",
+        "modalAddUserDesc2": "&bull; Search for the user you want to add to this Trial, and upon finding them, select the user (by clicking the row)",
+        "modalAddUserDesc3": "&bull; Navigate to Hybrid Services and then assign them to the Data Security Service Trial by flipping the Service toggle ON",
+        "modalHeadingRemoveUser": "To Remove a User from this Service Trial",
+        "modalRemoveUserDesc1": "&bull; Go to the Users page",
+        "modalRemoveUserDesc2": "&bull; Search for the user you want to remove from this Trial, and upon finding them, select the user (by clicking the row). If necessary, you can <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">download your Service Trial Users</a> for reference.",
+        "modalRemoveUserDesc3": "&bull; Navigate to Hybrid Services and then assign them to the Data Security Service Trial by flipping the Service toggle ON"
+      },
       "page_title": "Hybrid Data Security Service",
-      "add-resource-button": "Add Resource",
       "genericError": "An unexpected error occurred. Please try again later.",
       "loading": "Loading",
       "connectors": {
@@ -2309,8 +2372,8 @@
         "goToHost": "Go to Host",
         "hosts": "Hosts",
         "nodes": "Nodes"
-      }
     }
+   }
   },
   "ediscovery": {
     "browserTabHeaderTitle": "Spark Activity Reports",
@@ -3322,6 +3385,7 @@
     "swivel": "SWIVEL",
     "swivelAddError": "Failed to add {{number}}.",
     "swivelDuplicateError": "Failed to add {{number}}. Number already exists.",
+    "resellerCreateError": "Failed to create Reseller",
     "customerCreateError": "Failed to create customer with the carrier.",
     "customerUpdateError": "Failed to update customer with the carrier.",
     "siteCreateError": "Failed to create the service address.",
@@ -3455,8 +3519,9 @@
     "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
     "invalidTrialRoomSystemQuantity": "Number of Licenses should be between 1 and 20.",
-    "invalidTrialCareQuantity": "Number of Licenses must be between 1 and total users or maximum 50.",
-    "careLicenseCountExceedsTotalCount": "Care license requested is more than the total license quantity.",
+    "invalidTrialSparkBoardQuantity": "Number of Licenses should be between 1 and 20.",
+    "invalidTrialCareQuantity": "Number of Licenses must be between 1 and message license quantity or maximum 50.",
+    "careLicenseCountExceedsTotalCount": "Care license requested is more than the message license quantity.",
     "individualUserServices": "Individual User Services",
     "roomSystems": "Room Devices",
     "roomSystem": "Room Device",
@@ -3628,7 +3693,9 @@
     "requestConfirmPartialFailNotifyMsg": "Due to an error, notification to some of your account managers at {{partnerOrgName}} of your intent to purchase has failed. Please contact your partner directly.",
     "requestConfirmTotalFailNotifyMsg": "Due to an error, notification of your intent to purchase has failed. Please contact your partner directly",
     "trialDuration": "Trial Duration",
-    "callServiceDisabled": "This service is temporarily unavailable for trial."
+    "callServiceDisabled": "This service is temporarily unavailable for trial.",
+    "managedBy": "Managed by {{org}}",
+    "anotherPartner": "another partner"
   },
   "status": {
     "noResults": "No results available.",
@@ -4158,9 +4225,9 @@
       "nodes": "Nodes"
     },
     "sipconfiguration": {
-      "success": "UC SIP Trunk saved successfully.",
-      "title": "UC SIP Trunk",
-      "description": "Enter the SIP trunk address to connect Hybrid Media Cluster to your Unified Communications Manager. This connection provides optimized video callback.",
+      "success": "Unified CM SIP Trunk saved successfully.",
+      "title": "Unified CM SIP Trunk",
+      "description": "Enter the SIP trunk address to connect the Hybrid Media cluster to your Unified Communications Manager. This connection provides optimized video callback.",
       "placeholder": "Enter the SIP trunk address...",
       "example": "Example: sips://203.0.113.0:5062"
     },
@@ -5134,7 +5201,9 @@
     "sorryMessage": "Sorry, something went wrong ",
     "reloadMessage": "Please try reloading the page",
     "chatTemplateCode": "Ch",
+    "chatMediaType": "Chat",
     "callbackTemplateCode": "Ca",
+    "callbackMediaType": "Callback",
     "newFeatures": {
       "newFeatureButtonText": "New",
       "newCareTemplateModalTitle": "Create New Care Template",
@@ -5299,6 +5368,7 @@
     "editTitle_callback": "Edit Callback Template",
     "profile": "Chat Template Profile",
     "overview": "Chat Template Overview",
+    "overview_callback": "Callback Template Overview",
     "chatStatusMessages": "Chat Status Messages",
     "customerInfo": "Customer Info Screen",
     "feedback": "Feedback Screen",
@@ -5307,7 +5377,10 @@
     "embedCode": "Embed Code",
     "profileDesc": "Configure how you want the organization and user profile to be represented for your company",
     "overviewDesc": "Toggle cards to customize what screens you want your customer to see on contacting Care",
+    "overviewDesc_callback": "Toggle cards to customize what screens you want your customer to see when requesting a callback from customer care",
     "customerInfoDesc": "This is the screen a customer fills in to start chat with an agent",
+    "customerInfoDesc_callback": "This is the screen a customer fills in to request a callback from an agent",
+    "customerInfoToggleTooltipMessage": "This screen is required for this template and cannot be disabled.",
     "feedbackDesc": "This screen is used to collect feedback from a customer after the chat ends",
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
     "offHoursDesc": "This screen is shown to a customer during business off-hours",
@@ -5342,7 +5415,12 @@
     "defaultNameHint": "",
     "defaultEmailText": "Email",
     "defaultEmail": "e.g. abc@xyz.com",
+    "defaultPhoneText": "Phone Number",
+    "defaultPhoneHintText": "234-555-6789",
     "defaultQuestionText": "How may I assist you?",
+    "additionalDetails": "Additional Details",
+    "additionalDetailsAbtIssue": "Describe the issue you are experiencing",
+    "labelCallBackBtn": "Request Callback",
     "optionalText": "(Optional)",
     "field3HintText": "Select from the list or type",
     "defaultTypeMessageText": "Type your message and press enter",
@@ -5384,6 +5462,7 @@
     "typeId": "Id",
     "typePhone": "Phone",
     "typeCustom": "Custom",
+    "typeReason": "Reason",
     "ctValidation": {
       "errorChar250": "Character length cannot be more than 250.",
       "errorChar50": "Character length cannot be more than 50.",
@@ -5394,7 +5473,8 @@
     "ctOverview": {
       "customerInformation": {
         "title": "Customer Info",
-        "desc": "This is the screen a customer fills in to start chat with an agent"
+        "desc": "This is the screen a customer fills in to start chat with an agent",
+        "desc_callback": "This is the screen a customer fills in to request a callback from an agent"
       },
       "agentUnavailable": {
         "title": "Agent Unavailable",
@@ -5402,7 +5482,8 @@
       },
       "offHours": {
         "title": "Off-Hours",
-        "desc": "This screen is shown to a customer during business off-hours"
+        "desc": "This screen is shown to a customer during business off-hours",
+        "desc_callback": "This screen is shown to a customer during business off-hours"
       },
       "feedback": {
         "title": "Feedback",
@@ -5435,7 +5516,19 @@
     "chatting": "Chatting",
     "chattingMessage": "You are chatting with our Agent",
     "downloadEmbedCode": "Download Embed Code",
-    "embedCodeWarnMsg": "It is important to verify all domains where you want to use chat bubble. You will not be able to embed chat bubble on unverified domains.",
+    "embed-code": {
+      "no-verified-domains" : {
+        "warn": "There are no verified domains for your organization. Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains."
+      },
+      "verified-domains": {
+        "info": "These are the verified domains for your organization:",
+        "warn": "Care templates will not appear on unverified domains. Go to Settings page to add and verify domains."
+      },
+      "domain-fetch-error" : {
+        "info": "There was an error while loading the verified domains for your organization. Please try again.",
+        "warn": "Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains."
+      }
+    },
     "embedCodeFor": "Embed Code for ",
     "embedCodeWarnMsg_callback": "It is important to verify all domains where you want to use callback template. You will not be able to embed callback template on unverified domains.",
     "configureOrgLogoMsg": "Go to Settings page to modify your organization logo"
@@ -5752,6 +5845,7 @@
     "purchase": "Purchase",
     "changePlan": "Change Plan",
     "onlineTrialUpgradeUrlError": "Unable to retrieve purchase url for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
+    "onlineProductInstanceError": "Unable to retrieve product instance for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
     "loadError": "An error occurred while loading subscriptions.",
     "licenseTypes": {
       "MS": "Standard Team Rooms",
@@ -6015,9 +6109,13 @@
     "editAdminEmailSuccess": "Admin email was updated successfully.",
     "editAdminEmailFailure": "Failed to update admin email.",
     "userStatusEventLog": "User Status Event Log",
-    "lastEmailSent": "Last Email Sent",
+    "lastEmailEvent": "Last Email Event",
     "clearBounce": "Clear Bounce",
     "clearBounceSuccess": "Bounce cleared successfully. Try resending invite.",
+    "clearUnsubscribe": "Clear Unsubscribe",
+    "clearUnsubscribeSuccess": "Unsubscribe cleared successfully. Try resending invite.",
+    "clearComplaint": "Clear Complaint",
+    "clearComplaintSuccess": "Complaint cleared successfully. Try resending invite.",
     "emailStatuses": {
       "accepted": "Pending Delivery",
       "rejected": "Rejected",
@@ -6115,7 +6213,8 @@
     "isRunning": "An export task is already running. Please try again later.",
     "inProgress": "Background task 'Export {{type}} list' is running...",
     "success": "Your {{type}} list has been compiled and your download has started.",
-    "error": "Export user reports failed."
+    "error": "Export user reports failed.",
+    "unsupported": "Unsupported Export Type Requested"
   },
   "servicesOverview": {
     "title": "Services",
@@ -6134,6 +6233,7 @@
       "meeting": {
         "title": "Meeting",
         "description": "WebEx Meeting Center and Cisco Spark configurations for your organization and individuals.",
+        "SPDescription": "WebEx Meeting Center and Cisco Spark configurations.",
         "pmrText": "Configure your Personal Meeting Room"
       },
       "call": {
@@ -6261,6 +6361,8 @@
       "overview": "Overview",
       "openedOn": "Opened on",
       "moveSite": "Move Site",
+      "moveFrom": "move from",
+      "siteMoved": "Site Moved",
       "placeholder-text": "All",
       "importCsv": "Import CSV",
       "title": "Callback Groups",
@@ -6268,6 +6370,9 @@
       "remedyTicket": "Remedy Ticket",
       "reqSubmission": "Request Submission",
       "approveCbg": "Approve Callback Group",
+      "requestCountry": "Select countries and regions",
+      "requestTip": "Select or import countries and regions to add to this Callback Group.",
+      "selectedCountry": "Selected countries and regions",
       "editCountry": "Edit Countries and Regions",
       "downloadCsv": "Download CSV Template",
       "csvFilename": "exported_callbackGroup.csv",
@@ -6280,6 +6385,9 @@
       "cancelSubmissionMsg": "The associated remedy ticket will be deleted from the system.",
       "declineDialogNote": "Note: Explanation appears as a comment in the Callback Group history",
       "approveMsg": "If you proceed, the system will automatically updates the callback group with the selected countries",
+      "cancelSubmissionMsg": "A request has been submitted.",
+      "cancelSubmissionLink": "Cancel request",
+      "rejectSubmissionMsg": "A request has been rejected.",
       "field": {
         "sites": "Site URL",
         "status_": "Status",
@@ -6302,10 +6410,10 @@
         "button": "Request",
         "modalTitle": "Request Callback Group",
         "groupName": "Naming",
-        "groupCountries": "Countries",
+        "groupCountries": "Countries and Regions",
         "labelCustomer": "Customer Name",
         "customerPlaceholder": "Who is this callback group for?",
-        "labelCustomerAttr": "Partner CB Group Name",
+        "labelCustomerAttr": "Partner CB Group Name (optional)",
         "customerAttrPlaceholder": "Enter a shorter name for quick reference",
         "labelCountries": "Selected Countries and Regions",
         "countriesPlaceholder": "Search to add a country",

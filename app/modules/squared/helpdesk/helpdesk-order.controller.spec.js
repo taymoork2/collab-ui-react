@@ -26,7 +26,7 @@ describe('Controller: HelpdeskOrderController', function () {
   describe('Order Controller Initialization with 1-tier order', function () {
     beforeEach(function () {
       $stateParams.id = '67891234';
-      spyOn(HelpdeskService, 'searchOrders').and.returnValue($q.when(order1TierJson));
+      spyOn(HelpdeskService, 'searchOrders').and.returnValue($q.resolve(order1TierJson));
       orderController = $controller('HelpdeskOrderController', {
         HelpdeskService: HelpdeskService,
         $stateParams: $stateParams
@@ -82,7 +82,7 @@ describe('Controller: HelpdeskOrderController', function () {
   describe('Order Controller Initialization with 2-tier order', function () {
     beforeEach(function () {
       $stateParams.id = '67891234';
-      spyOn(HelpdeskService, 'searchOrders').and.returnValue($q.when(order2TierJson));
+      spyOn(HelpdeskService, 'searchOrders').and.returnValue($q.resolve(order2TierJson));
       orderController = $controller('HelpdeskOrderController', {
         HelpdeskService: HelpdeskService,
         $stateParams: $stateParams

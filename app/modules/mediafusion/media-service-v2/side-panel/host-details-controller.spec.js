@@ -216,7 +216,7 @@ describe('Controller: HostDetailsControllerV2', function () {
       actualOptions = options;
       return fakeModal;
     });
-    spyOn(MediaClusterServiceV2, 'getOrganization').and.returnValue($q.when({
+    spyOn(MediaClusterServiceV2, 'getOrganization').and.returnValue($q.resolve({
       data: {
         success: true,
         displayName: "fakeDisplayName"
