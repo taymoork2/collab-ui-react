@@ -38,8 +38,8 @@
       title: 'hercules.serviceNames.squared-fusion-ec'
     };
 
-    vm.storeEc = function (onlyDisable) {
-      if (!onlyDisable) {
+    vm.storeEc = function (toggleConnect) {
+      if (!toggleConnect) {
         ServiceDescriptor.enableService('squared-fusion-ec')
           .then(function () {
             readCerts();
@@ -122,5 +122,4 @@
         });
     }
   }
-
 }());
