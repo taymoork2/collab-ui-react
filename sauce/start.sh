@@ -3,7 +3,7 @@
 set -e
 
 PLATFORM=$(uname)
-SC_VERSION="4.3.7"
+SC_VERSION="4.4.2"
 WORK_DIR="$(pwd)/.sauce"
 
 SC_DIR="${WORK_DIR}/sc"
