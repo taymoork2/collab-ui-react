@@ -6233,6 +6233,7 @@
       "meeting": {
         "title": "Meeting",
         "description": "WebEx Meeting Center and Cisco Spark configurations for your organization and individuals.",
+        "SPDescription": "WebEx Meeting Center and Cisco Spark configurations.",
         "pmrText": "Configure your Personal Meeting Room"
       },
       "call": {
@@ -6369,6 +6370,9 @@
       "remedyTicket": "Remedy Ticket",
       "reqSubmission": "Request Submission",
       "approveCbg": "Approve Callback Group",
+      "requestCountry": "Select countries and regions",
+      "requestTip": "Select or import countries and regions to add to this Callback Group.",
+      "selectedCountry": "Selected countries and regions",
       "editCountry": "Edit Countries and Regions",
       "downloadCsv": "Download CSV Template",
       "csvFilename": "exported_callbackGroup.csv",
@@ -6381,6 +6385,9 @@
       "cancelSubmissionMsg": "The associated remedy ticket will be deleted from the system.",
       "declineDialogNote": "Note: Explanation appears as a comment in the Callback Group history",
       "approveMsg": "If you proceed, the system will automatically updates the callback group with the selected countries",
+      "cancelSubmissionMsg": "A request has been submitted.",
+      "cancelSubmissionLink": "Cancel request",
+      "rejectSubmissionMsg": "A request has been rejected.",
       "field": {
         "sites": "Site URL",
         "status_": "Status",
@@ -6403,10 +6410,10 @@
         "button": "Request",
         "modalTitle": "Request Callback Group",
         "groupName": "Naming",
-        "groupCountries": "Countries",
+        "groupCountries": "Countries and Regions",
         "labelCustomer": "Customer Name",
         "customerPlaceholder": "Who is this callback group for?",
-        "labelCustomerAttr": "Partner CB Group Name",
+        "labelCustomerAttr": "Partner CB Group Name (optional)",
         "customerAttrPlaceholder": "Enter a shorter name for quick reference",
         "labelCountries": "Selected Countries and Regions",
         "countriesPlaceholder": "Search to add a country",

@@ -42,10 +42,17 @@
     </div>
   </div>
 
+  <div ng-if="$ctrl.selected.length > 0">
+    <h4 class="ui-mt">
+      <small>{{::'gemini.cbgs.selectedCountry' | translate}}</small>
+    </h4>
+  </div>
+
   <div ng-if="$ctrl.selected.length == 0">
-    <h3 class="text-center ui-mt">
+    <h3 class="ui-mt">
       <small>{{::'gemini.cbgs.request.countryDisplayNull' | translate}}</small>
     </h3>
+    <h5><small>{{::'gemini.cbgs.requestTip' | translate}}</small></h5>
   </div>
 
   <div class="tag-container edit-country ui-mt">
