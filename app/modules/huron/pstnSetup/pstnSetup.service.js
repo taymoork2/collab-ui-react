@@ -12,6 +12,7 @@
     TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease,
     TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease,
     TerminusCustomerCarrierDidService, TerminusCustomerPortService, TerminusResellerCarrierService,
+    TerminusV2ResellerService,
     TerminusV2CarrierNumberCountService, TerminusV2CarrierNumberService,
     TerminusV2ResellerNumberReservationService, TerminusV2ResellerCarrierNumberReservationService,
     TerminusV2CustomerNumberReservationService,
@@ -68,6 +69,8 @@
       releaseCarrierTollFreeInventory: releaseCarrierTollFreeInventory,
       reserveCarrierTollFreeInventory: reserveCarrierTollFreeInventory,
       isCarrierSwivel: isCarrierSwivel,
+      getResellerV2: getResellerV2,
+      createResellerV2: createResellerV2,
       listCustomerCarriers: listCustomerCarriers,
       listResellerCarriers: listResellerCarriers,
       orderBlock: orderBlock,
@@ -134,6 +137,21 @@
         payload.resellerId = Authinfo.getOrgId();
       }
       return TerminusCustomerV2Service.save({}, payload).$promise;
+    }
+
+    function getResellerV2() {
+      return TerminusV2ResellerService.get({
+        resellerId: Authinfo.getOrgId()
+      }).$promise;
+    }
+
+    function createResellerV2() {
+      var payload = {
+        uuid: Authinfo.getOrgId(),
+        name: Authinfo.getOrgName(),
+        email: Authinfo.getPrimaryEmail()
+      };
+      return TerminusV2ResellerService.save({}, payload).$promise;
     }
 
     function updateCustomerCarrier(customerId, pstnCarrierId) {

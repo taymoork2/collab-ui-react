@@ -203,7 +203,7 @@ describe('Controller: CustomerListCtrl', function () {
     beforeEach(initController);
 
     it('not Terminus customer and has e164 numbers, should route to DID add', function () {
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + testOrg.customerOrgId).respond(404);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + testOrg.customerOrgId).respond(404);
       $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + testOrg.customerOrgId + '/numbers?type=external').respond(numberResponse);
       controller.addNumbers(testOrg);
       $httpBackend.flush();
@@ -213,7 +213,7 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
     it('not Terminus customer and has no e164 numbers, should route to PSTN setup', function () {
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + testOrg.customerOrgId).respond(404);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + testOrg.customerOrgId).respond(404);
       $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + testOrg.customerOrgId + '/numbers?type=external').respond(noNumberResponse);
       controller.addNumbers(testOrg);
       $httpBackend.flush();
@@ -226,7 +226,7 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
     it('exists as Terminus customer, should route to PSTN setup', function () {
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + testOrg.customerOrgId).respond(200);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + testOrg.customerOrgId).respond(200);
       controller.addNumbers(testOrg);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
@@ -405,7 +405,7 @@ describe('Controller: CustomerListCtrl', function () {
           isTrial: true
         }
       };
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + org.customerOrgId).respond(200);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
@@ -425,7 +425,7 @@ describe('Controller: CustomerListCtrl', function () {
           isTrial: false
         }
       };
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + org.customerOrgId).respond(200);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
@@ -442,7 +442,7 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: 'ControllerTestOrg',
         customerEmail: 'customer@cisco.com'
       };
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + org.customerOrgId).respond(200);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
@@ -463,7 +463,7 @@ describe('Controller: CustomerListCtrl', function () {
           isTrial: true
         }
       };
-      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + org.customerOrgId).respond(200);
+      $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
       $httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {

@@ -212,7 +212,7 @@
       if (_.find(terminusDetails, { customerId: customerId })) {
         return $q.resolve(true);
       }
-      return PstnSetupService.getCustomer(customerId)
+      return PstnSetupService.getCustomerV2(customerId)
         .then(_.partial(allowPstnSetup, customerId))
         .catch(_.partial(hasExternalNumbers, customerId));
     }
