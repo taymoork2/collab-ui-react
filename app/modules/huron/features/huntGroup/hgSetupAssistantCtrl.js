@@ -31,6 +31,9 @@ require('./_hunt-group.scss');
     vm.animation = 'slide-left';
 
     vm.huntGroupName = '';
+    vm.huntGroupNameMinLength = 1;
+    vm.huntGroupNameMaxLength = 50;
+    vm.huntGroupNamePattern = /^[a-zA-Z 0-9._-]*$/;
 
     // Hunt pilot numbers controller functions
     vm.selectPilotNumber = selectPilotNumber;
@@ -132,7 +135,7 @@ require('./_hunt-group.scss');
     function nextButton($index) {
       switch ($index) {
         case 0:
-          return !(vm.huntGroupName === '');
+          return !(vm.huntGroupName === undefined || vm.huntGroupName.length === 0);
         case 1:
           return !(vm.selectedPilotNumbers.length === 0);
         case 2:
@@ -215,7 +218,7 @@ require('./_hunt-group.scss');
 
     function enterNextPage($keyCode) {
       if ($keyCode === 13 && nextButton(getPageIndex()) === true) {
-        if (vm.selectedPilotNumber === undefined || vm.userSelected === undefined || vm.huntGroupName !== '') {
+        if (vm.selectedPilotNumber === undefined || vm.userSelected === undefined || vm.huntGroupName === undefined) {
           nextPage();
         }
       }
