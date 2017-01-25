@@ -12,6 +12,7 @@
     vm.readCerts = readCerts;
     vm.enableEmailSendingToUser = false;
     vm.squaredFusionEc = false;
+    vm.OrgId = Authinfo.getOrgId();
     vm.squaredFusionEcEntitled = Authinfo.isFusionEC();
     vm.localizedServiceName = $translate.instant('hercules.serviceNames.squared-fusion-uc');
     vm.localizedConnectorName = $translate.instant('hercules.connectorNames.squared-fusion-uc');
@@ -52,10 +53,18 @@
         ServiceDescriptor.disableService('squared-fusion-ec').then(function () {
           Notification.success('hercules.notifications.connect.connectDisabled');
           if (hasVoicemailFeatureToggle) {
-            UCCService.disableHybridVoicemail(Authinfo.getOrgId())
-              .catch(function (response) {
-                Notification.errorWithTrackingId(response, 'hercules.voicemail.voicemailDisableError');
-              });
+            UCCService.getOrgVoicemailConfiguration(vm.OrgId).then(function (data) {
+              if (data.voicemailOrgEnableInfo.orgHybridVoicemailEnabled) {
+                UCCService.disableHybridVoicemail(vm.OrgId).then(function () {
+                  Notification.success('hercules.settings.voicemail.disableDescription');
+                })
+                  .catch(function (response) {
+                    Notification.errorWithTrackingId(response, 'hercules.voicemail.voicemailDisableError');
+                  });
+              }
+            });
+
+
           }
         }).catch(function (response) {
           Notification.errorWithTrackingId(response, 'hercules.error.failedToDisableConnect');
