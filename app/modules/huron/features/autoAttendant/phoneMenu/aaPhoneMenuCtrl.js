@@ -296,6 +296,14 @@
       });
     }
 
+    function addRouteToSipEndPoint() {
+      vm.keyActions.push({
+        label: $translate.instant('autoAttendant.phoneMenuRouteToSipEndpoint'),
+        name: 'phoneMenuRouteToSipEndpoint',
+        action: 'routeToSipEndpoint'
+      });
+    }
+
     /////////////////////
 
     function activate() {
@@ -322,6 +330,11 @@
       vm.entries = vm.uiMenu.entries;
       vm.menuEntry = vm.entries[$scope.index];
       vm.menuId = vm.menuEntry.id;
+
+      if (AACommonService.isRouteSIPAddressToggle()) {
+        addRouteToSipEndPoint();
+      }
+
       if (AACommonService.isRouteQueueToggle()) {
         getQueues().finally(activate);
       } else {

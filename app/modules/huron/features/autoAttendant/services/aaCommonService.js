@@ -19,6 +19,7 @@
     var mediaUploadToggle = false;
     var callerInputToggle = false;
     var clioToggle = false;
+    var routeSIPAddressToggle = false;
     var uniqueId = 0;
 
     var invalidList = {};
@@ -35,11 +36,13 @@
       setMediaUploadToggle: setMediaUploadToggle,
       setCallerInputToggle: setCallerInputToggle,
       setRouteQueueToggle: setRouteQueueToggle,
+      setRouteSIPAddressToggle: setRouteSIPAddressToggle,
       setClioToggle: setClioToggle,
       isRouteQueueToggle: isRouteQueueToggle,
       isCallerInputToggle: isCallerInputToggle,
       isMediaUploadToggle: isMediaUploadToggle,
       isClioToggle: isClioToggle,
+      isRouteSIPAddressToggle: isRouteSIPAddressToggle,
       isValid: isValid,
       setIsValid: setIsValid,
       getInvalid: getInvalid,
@@ -130,7 +133,6 @@
       routeQueueToggle = status;
     }
 
-
     function setQueueSettingsStatus(status) {
       aaQueueSettingsStatus = status;
     }
@@ -145,6 +147,10 @@
 
     function setCallerInputToggle(status) {
       callerInputToggle = status;
+    }
+
+    function setRouteSIPAddressToggle(status) {
+      routeSIPAddressToggle = status;
     }
 
     /**
@@ -167,6 +173,10 @@
 
     function isCallerInputToggle() {
       return callerInputToggle;
+    }
+
+    function isRouteSIPAddressToggle() {
+      return routeSIPAddressToggle;
     }
 
     function saveUiModel(ui, aaRecord) {

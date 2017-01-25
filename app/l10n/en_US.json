@@ -2820,6 +2820,7 @@
     "phoneMenuRouteAA": "Route to Auto Attendant",
     "phoneMenuGoBack": "Go Back",
     "phoneMenuRouteQueue": "Queue Call",
+    "phoneMenuRouteToSipEndpoint": "Route to SIP Endpoint",
     "phoneMenuListening": "While listening for the following user input",
     "phoneMenuRepeatOnce": "Once",
     "phoneMenuRepeatTwice": "Twice",
@@ -2860,6 +2861,7 @@
     "sayMessageVoice": "Voice",
     "sayMessageInvalidChar": "Invalid character. Character '{{char}}' is not allowed.",
     "messageType": "Message Type",
+    "sipAddressPlaceholder": "Sip Address",
     "destinationHelpMessage": "Choose where to route an unanswered call after a set period of waiting time.",
     "destinationLabel": "Destination",
     "destinations": {

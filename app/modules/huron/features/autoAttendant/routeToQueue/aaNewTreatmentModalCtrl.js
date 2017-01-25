@@ -45,6 +45,9 @@
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
       action: 'route'
+    }, {
+      label: $translate.instant('autoAttendant.phoneMenuRouteToSipEndpoint'),
+      action: 'routeToSipEndpoint'
     }];
     vm.destination = vm.destinationOptions[0];
     vm.musicOnHold = '';

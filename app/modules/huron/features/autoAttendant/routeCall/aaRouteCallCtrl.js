@@ -91,6 +91,11 @@
       vm.menuEntry = ui[$scope.schedule].entries[$scope.index];
       if (AACommonService.isRouteQueueToggle()) {
         getQueues().finally(sortAndSetActionType);
+      } if (AACommonService.isRouteSIPAddressToggle()) {
+        vm.options.push({
+          "label": $translate.instant('autoAttendant.phoneMenuRouteToSipEndpoint'),
+          "value": 'routeToSipEndpoint'
+        });
       } else {
         sortAndSetActionType();
       }
