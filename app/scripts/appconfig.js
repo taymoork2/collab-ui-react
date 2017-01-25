@@ -1425,16 +1425,20 @@
               'tabContent': {
                 controllerAs: 'deviceUsage',
                 controller: 'DeviceUsageCtrl',
-                templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html',
-                resolve: {
-                  deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                    return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
-                  }
-                }
+                templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html'
               }
             }
           })
-
+          .state('reports.device-usage-v2', {
+            url: '/reports/device/usagev2',
+            views: {
+              'tabContent': {
+                controllerAs: 'deviceUsage',
+                controller: 'DeviceUsageCtrl',
+                templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html',
+              }
+            }
+          })
           .state('reports.webex', {
             url: '/reports/webex',
             views: {

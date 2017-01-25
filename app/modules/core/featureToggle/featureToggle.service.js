@@ -39,7 +39,7 @@
       atlasSharedMeetings: 'atlas-shared-meetings',
       atlasSharedMeetingsReports: 'atlas-shared-meetings-reports',
       atlasTrialsShipDevices: 'atlasTrialsShipDevices',
-      atlasDeviceUsageReport: 'atlas-device-usage-report',
+      atlasDeviceUsageReportV2: 'atlas-device-usage-report-v2',
       atlasStartTrialForPaid: 'atlas-start-trial-for-paid',
       androidAddGuestRelease: 'android-add-guest-release',
       androidDirectUpload: 'android-direct-upload',
