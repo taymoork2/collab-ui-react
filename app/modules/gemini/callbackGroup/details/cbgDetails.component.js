@@ -99,6 +99,7 @@
           }
           vm.model = resJson.body;
           var status = vm.model.status;
+          vm.isShowReject = status === 'R';
           vm.isShowCommplet = (gemService.isAvops() && status === 'A');
           vm.model.isEdit = !(status === 'S' || status === 'A');
           vm.isShowDeclineApprove = (gemService.isAvops() && status === 'S');
