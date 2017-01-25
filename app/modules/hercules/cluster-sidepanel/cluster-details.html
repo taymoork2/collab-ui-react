@@ -1,21 +1,8 @@
 <div ui-view="header"></div>
 
 <cs-sp-container class="hercules-fix-paragraphs hercules-settings-table">
-  <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0">
-    <div class="section-title-row section-name" translate="hercules.alarms.alarms"></div>
-    <div class="feature-list" ng-if="clusterDetailsCtrl.cluster.aggregates.alarms.length > 0">
-      <ul>
-        <li class="feature" ng-repeat="alarm in clusterDetailsCtrl.cluster.aggregates.alarms" ng-class="{'list-item': !$first}">
-          <a ui-sref="cluster-details.alarm-details({alarm: alarm})">
-            <i class="icon icon-error red status-icon"></i>
-            <span class="feature-name">{{alarm.title}}</span>
-            <i class="feature-arrow"></i>
-          </a>
-        </li>
-      </ul>
-    </div>
-    <p ng-if="clusterDetailsCtrl.cluster.aggregates.alarms.length === 0" translate="hercules.alarms.noAlarms"></p>
-  </cs-sp-section>
+
+  <alarm-list-section alarms="clusterDetailsCtrl.cluster.aggregates.alarms"></alarm-list-section>
 
   <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0 && clusterDetailsCtrl.hasF237FeatureToggle && clusterDetailsCtrl.resourceGroupName">
     <div class="section-title-row section-name" translate="hercules.resourceGroups.resourceGroupHeading"></div>
