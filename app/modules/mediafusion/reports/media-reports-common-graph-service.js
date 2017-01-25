@@ -247,9 +247,8 @@
         'categoryAxis': catAxis,
         'segmentsField': 'segments',
         'colorField': 'color',
-        'startField': 'start',
-        'endField': 'end',
-        'durationField': 'duration',
+        'startDateField': 'startTime',
+        'endDateField': 'endTime',
         'dataProvider': data,
         'valueScrollbar': {
           'autoGridCount': true,
@@ -258,13 +257,6 @@
           'backgroundAlpha': 1,
           'updateOnReleaseOnly': true
         },
-        /*'chartScrollbar': {
-          'offset': 15,
-          'color': '#AAAAAA',
-          'backgroundColor': '#D7DBDD',
-          'backgroundAlpha': 1,
-          //'oppositeAxis': false
-        },*/
         'chartCursor': {
           'cursorColor': '#55bb76',
           'valueBalloonsEnabled': false,
