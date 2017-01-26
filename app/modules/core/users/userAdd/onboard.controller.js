@@ -29,6 +29,7 @@ require('./_user-add.scss');
     $scope.timeoutVal = 1000;
     $scope.timer = 0;
     $scope.searchPlaceholder = $translate.instant('usersPage.convertUserSearch');
+    $scope.manageUsers = $stateParams.manageUsers;
 
     $scope.loadInternalNumberPool = loadInternalNumberPool;
     $scope.loadExternalNumberPool = loadExternalNumberPool;
@@ -160,6 +161,10 @@ require('./_user-add.scss');
           $state.go('my-company.subscriptions');
         });
       }
+    };
+
+    $scope.goToManageUsers = function () {
+      $state.go('users.manage', {});
     };
 
     /****************************** License Enforcement END *******************************/
@@ -1116,7 +1121,6 @@ require('./_user-add.scss');
           $scope.searchStr = str;
           getUnlicensedUsers();
           Analytics.trackUserOnboarding(Analytics.sections.USER_ONBOARDING.eventNames.CONVERT_USER, $state.current.name, Authinfo.getOrgId());
-
         }
       }, $scope.timeoutVal);
     }
