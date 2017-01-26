@@ -37,7 +37,7 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
   public $onInit() {}
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
-    
+
     const { cluster, hasF237FeatureToggle } = changes;
     if (hasF237FeatureToggle && hasF237FeatureToggle.currentValue) {
       this.hasF237FeatureToggle = hasF237FeatureToggle.currentValue;
