@@ -28,6 +28,14 @@
            card-threshold="6"
            ng-class="$ctrl.animation"></pg-member>
 
+      <pg-initiator
+           ng-if="$ctrl.getPageIndex() === 3"
+           on-update="$ctrl.onUpdateInitiator(initiatorType, selectedInitiators)"
+           initiator-type="$ctrl.initiatorType"
+           selected-initiators="$ctrl.selectedInitiators"
+           card-threshold="6"
+           ng-class="$ctrl.animation"></pg-initiator>
+
     </cs-setup-assistant>
   </cs-overlay-panel>
 </div>
