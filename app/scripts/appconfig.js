@@ -48,7 +48,12 @@
         //Add blob to the default angular whitelist
         $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|tel|file|blob):/);
 
-        $urlRouterProvider.otherwise('login');
+        $urlRouterProvider.otherwise(function ($injector) {
+          // inspired by https://github.com/angular-ui/ui-router/issues/600
+          // unit tests $digest not settling due to $location url changes
+          var $state = $injector.get('$state');
+          $state.go('login');
+        });
         $stateProvider
           .state('modal', {
             abstract: true,
