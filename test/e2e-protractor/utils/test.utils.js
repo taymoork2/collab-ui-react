@@ -622,6 +622,7 @@ exports.search = function (query, _searchCount) {
 
   exports.click(exports.searchbox);
   exports.clear(exports.searchField);
+  exports.waitForSpinner();
   if (query) {
     exports.sendKeys(exports.searchField, query + protractor.Key.ENTER);
     exports.expectValueToBeSet(exports.searchField, query, TIMEOUT);

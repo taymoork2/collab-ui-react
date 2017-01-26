@@ -555,6 +555,7 @@ require('./_customer-list.scss');
 
     function getManagedOrgsList(searchText) {
       vm.showManagedOrgsRefresh = true;
+      vm.orgSearchStr = searchText;
       var promiselist = { managedOrgs: PartnerService.getManagedOrgsList(searchText) };
 
       if (Authinfo.isPartnerAdmin() || Authinfo.isPartnerReadOnlyAdmin()) {
@@ -590,12 +591,20 @@ require('./_customer-list.scss');
           }
           // dont use a .finally(..) since this $q.all is returned
           // (if you .finally(..), the next `then` doesnt get called)
-          vm.showManagedOrgsRefresh = false;
+          onManagedOrgsRefreshed();
         })
         .catch(function (response) {
           Notification.errorResponse(response, 'partnerHomePage.errGetTrialsQuery');
-          vm.showManagedOrgsRefresh = false;
+          onManagedOrgsRefreshed();
         });
+    }
+
+    function onManagedOrgsRefreshed() {
+      // Make sure search string matches search in filter
+      if (vm.orgSearchStr !== vm.searchStr) {
+        getManagedOrgsList(vm.searchStr);
+      }
+      vm.showManagedOrgsRefresh = false;
     }
 
     function updateResultCount(visibleRowsData) {

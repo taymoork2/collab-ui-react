@@ -137,7 +137,7 @@
         }
       }).then(function (result) {
         hasInit = true;
-        if (result) {
+        if (result && !mixpanel.track) {
           mixpanel.init(result);
         }
       });
