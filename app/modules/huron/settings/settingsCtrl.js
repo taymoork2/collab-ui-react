@@ -10,7 +10,7 @@
   function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CeService, CallerId, Config,
       DirectoryNumberService, DialPlanService, ExternalNumberService, FeatureToggleService, HuronCustomer,
       HuntGroupServiceV2, InternationalDialing, ModalService, Notification, PstnSetupService,
-      ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction) {
+      ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction, TerminusUserDeviceE911Service, PstnServiceAddressService) {
     var vm = this;
     vm.loading = true;
 
@@ -648,7 +648,22 @@
         labelfield: 'label',
         valuefield: 'pattern',
         filter: true,
-        warnMsg: $translate.instant('settingsServiceNumber.warning')
+        warnMsg: $translate.instant('settingsServiceNumber.warning'),
+        onChange: function () {
+          getE911State(vm.model.serviceNumber.pattern).then(function (data) {
+            if (data.status === 'PENDING' && _.get(vm.model, 'serviceNumber.pattern') !== _.get(vm.previousModel, 'serviceNumber.pattern')) {
+              vm.model.serviceNumber = _.cloneDeep(vm.previousModel.serviceNumber);
+              vm.form.serviceNumber.$setPristine();
+              return ModalService.open({
+                hideDismiss: true,
+                hideTitle: true,
+                message: $translate.instant('huronSettings.e911Unavailable'),
+                dismiss: $translate.instant('common.ok'),
+                btnType: 'primary'
+              });
+            }
+          });
+        }
       },
       controller: /* @ngInject */ function ($scope) {
         _buildServiceNumberOptions($scope);
@@ -1119,6 +1134,12 @@
         };
 
         return ServiceSetup.updateSite(vm.model.site.uuid, site)
+          .then(function () {
+            return TerminusUserDeviceE911Service.update({
+              customerId: Authinfo.getOrgId(),
+              number: vm.model.serviceNumber.pattern,
+            }, { useCustomE911Address: false }).$promise;
+          })
           .catch(function (response) {
             errors.push(Notification.processErrorResponse(response, 'settingsServiceNumber.saveError'));
             return $q.reject(response);
@@ -1320,6 +1341,10 @@
                   pattern: site.emergencyCallBackNumber.pattern,
                   label: TelephoneNumberService.getDIDLabel(site.emergencyCallBackNumber.pattern)
                 };
+                vm.previousModel.serviceNumber = _.cloneDeep(vm.model.serviceNumber);
+                getE911State(site.emergencyCallBackNumber.pattern).then(function (data) {
+                  PstnServiceAddressService.setStatus(data.status);
+                });
               } else {
                 vm.model.serviceNumberWarning = true;
               }
@@ -1327,6 +1352,13 @@
             });
         }
       });
+    }
+
+    function getE911State(pattern) {
+      return TerminusUserDeviceE911Service.get({
+        customerId: Authinfo.getOrgId(),
+        number: pattern
+      }).$promise;
     }
 
     function loadAvrilVoicemailOptions() {

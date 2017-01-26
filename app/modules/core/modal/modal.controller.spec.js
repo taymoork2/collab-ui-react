@@ -8,13 +8,15 @@ describe('Controller: ModalCtrl', function () {
   var close = 'myClose';
   var dismiss = 'myDismiss';
   var btnType = 'myBtnType';
+  var hideTitle = false;
+  var hideDismiss = false;
 
   afterEach(function () {
     controller = $scope = undefined;
   });
 
   afterAll(function () {
-    title = message = close = dismiss = btnType = undefined;
+    title = message = close = dismiss = btnType = hideTitle = hideDismiss = undefined;
   });
 
   beforeEach(angular.mock.module('Core'));
@@ -25,6 +27,8 @@ describe('Controller: ModalCtrl', function () {
     $provide.value("close", close);
     $provide.value("dismiss", dismiss);
     $provide.value("btnType", btnType);
+    $provide.value("hideTitle", hideTitle);
+    $provide.value("hideDismiss", hideDismiss);
   }));
 
   beforeEach(inject(function ($rootScope, $controller) {

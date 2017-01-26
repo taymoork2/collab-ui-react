@@ -48,7 +48,9 @@ describe('Service: ModalService', function () {
         message: jasmine.any(Function),
         close: jasmine.any(Function),
         dismiss: jasmine.any(Function),
-        btnType: jasmine.any(Function)
+        btnType: jasmine.any(Function),
+        hideTitle: jasmine.any(Function),
+        hideDismiss: jasmine.any(Function)
       }
     });
   });
