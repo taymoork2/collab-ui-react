@@ -152,7 +152,7 @@ class ReleaseChannelSectionController implements ng.IComponentController {
   private setSelectedReleaseChannelOption(releaseChannel): void {
     this.releaseChannelSelected = _.find(this.releaseChannelOptions, { value: releaseChannel });
     if (!this.releaseChannelSelected ||
-      (this.type === 'cluster' && this.data.targetType === 'c_mgmt' && releaseChannel !== this.defaultReleaseChannel)) {
+      (this.type === 'cluster' && this.data.targetType === 'c_mgmt' && !this.data.resourceGroupId && releaseChannel !== this.defaultReleaseChannel)) {
       this.showResetSection = true;
       this.localizedCurrentChannelName = this.$translate.instant(`hercules.fusion.add-resource-group.release-channel.${releaseChannel}`);
     }
