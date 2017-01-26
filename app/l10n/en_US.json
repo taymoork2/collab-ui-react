@@ -1878,10 +1878,6 @@
       "pilot": "Pilot",
       "toTurnOn": "To turn on voicemail for your users, enable voicemail in <a ng-click=\"{{onclick}}\">Hybrid Call Settings</a>."
     },
-    "scheduleInfoComponent": {
-      "header": "Upgrades",
-      "headerIfF237Enabled": "Upgrades and Release Channel"
-    },
     "settings": {
       "deactivateServiceHeading": "Deactivate {{ServiceName}}",
       "deactivateService": "Deactivating {{ServiceName}} uninstalls {{ConnectorName}} from your Expressway clusters and disables the service for users.",

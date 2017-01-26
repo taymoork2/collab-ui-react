@@ -67,7 +67,7 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
     this.schedule.timeZone = this.cluster.upgradeSchedule.scheduleTimeZone;
   }
 
-  public findResourceGroupName = () => {
+  private findResourceGroupName = () => {
     return this.FusionClusterService.getResourceGroups()
       .then((response) => {
         let group: any = _.find(response.groups, { id: this.cluster.resourceGroupId });
