@@ -61,7 +61,7 @@ class CsvDownloadCtrl implements ng.IComponentController {
     private Analytics,
     private CsvDownloadService,
     private Notification: Notification,
-    private FeatureToggleService
+    private FeatureToggleService,
   ) {
   }
 

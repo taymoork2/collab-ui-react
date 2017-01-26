@@ -46,7 +46,7 @@ export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
 
   public constructor(
     params: IHybridCardParams,
-    private FusionClusterStatesService
+    private FusionClusterStatesService,
   ) {
     super(params);
     this.service = params.service;

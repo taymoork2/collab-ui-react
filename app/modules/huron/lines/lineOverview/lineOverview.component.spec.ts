@@ -39,7 +39,7 @@ describe('Component: lineOverview', () => {
       '$state',
       'LineOverviewService',
       'DirectoryNumberOptionsService',
-      'CallerIDService'
+      'CallerIDService',
     );
 
     this.existingLinePrimary = existingLinePrimary;

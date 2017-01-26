@@ -15,7 +15,7 @@ describe('Service: LineOverviewService', () => {
       'CallerIDService',
       '$rootScope',
       '$scope',
-      '$q'
+      '$q',
     );
 
     this.line = new Line({

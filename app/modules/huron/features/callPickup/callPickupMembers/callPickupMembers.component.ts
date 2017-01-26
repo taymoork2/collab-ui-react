@@ -47,7 +47,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
 
       let numbersPromise = this.CallPickupGroupService.getMemberNumbers(member.uuid);
       this.FeatureMemberService.getMemberPicture(member.uuid).then(
-        avatar => memberData.picturePath = avatar.thumbnailSrc
+        avatar => memberData.picturePath = avatar.thumbnailSrc,
       );
       let scope = this;
       numbersPromise

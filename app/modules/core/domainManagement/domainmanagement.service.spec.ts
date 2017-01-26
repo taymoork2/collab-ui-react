@@ -198,7 +198,7 @@ describe('DomainManagementService', () => {
           expect(data.domain).toBe(domain);
 
           return true;
-        }
+        },
       ).respond({});
 
     //when('POST', url).respond({});
@@ -245,7 +245,7 @@ describe('DomainManagementService', () => {
           expect(data.domain).toBe(domain);
 
           return true;
-        }
+        },
       ).respond(500, 'error-in-request', null, 'error');
 
     //when('POST', url).respond({});
@@ -275,7 +275,7 @@ describe('DomainManagementService', () => {
           expect(data.domain).toBe(domain);
 
           return true;
-        }
+        },
       ).respond({});
 
     //when('POST', url).respond({});

@@ -19,7 +19,7 @@ export class NumberService {
   constructor(
     private $resource: ng.resource.IResourceService,
     private Authinfo,
-    private HuronConfig
+    private HuronConfig,
   ) {
     this.numberResource = <INumberResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/numbers');
   }

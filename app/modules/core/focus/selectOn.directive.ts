@@ -21,7 +21,7 @@ export class SelectOn implements ng.IDirective {
     } else {
       select(true);
     }
-  };
+  }
 
   /* @ngInject */
   public static directive(

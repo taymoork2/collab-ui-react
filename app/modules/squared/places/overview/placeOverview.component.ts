@@ -159,7 +159,7 @@ class PlaceOverview implements ng.IComponentController {
       .catch((error) => {
           this.Notification.errorResponse(error, 'placesPage.failedToSaveChanges');
           return this.$q.reject(error);
-        }
+        },
       );
   }
 

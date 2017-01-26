@@ -66,7 +66,7 @@ describe('Controller: MySubscriptionCtrl', function () {
         '$q',
         'Authinfo',
         'DigitalRiverService',
-        'Notification'
+        'Notification',
       );
       this.getDigitalRiverSubscriptionsUrlDefer = this.$q.defer();
       spyOn(this.Authinfo, 'isOnline').and.returnValue(true);

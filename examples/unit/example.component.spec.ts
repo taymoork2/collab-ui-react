@@ -10,7 +10,7 @@ describe('Component: Example', () => {
     this.initModules(exampleModule);
     this.injectDependencies(
       '$q',
-      'ExampleService'
+      'ExampleService',
     );
 
     spyOn(this.$state, 'go').and.callThrough();

@@ -65,7 +65,7 @@ class HybridServiceClusterListCtrl implements ng.IComponentController {
         });
     }
 
-    private updateClusters = () => {
+    private updateClusters() {
         this.FusionClusterService.setClusterAllowListInfoForExpressway(this.ClusterService.getClustersByConnectorType(this.connectorType))
             .then((clusters) => {
                 this.clusterList = clusters;
@@ -73,10 +73,9 @@ class HybridServiceClusterListCtrl implements ng.IComponentController {
             .catch(() => {
                 this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
             });
+    }
 
-    };
-
-    private goToSidepanel = (clusterId: string) => {
+    private goToSidepanel(clusterId: string) {
         this.$state.go('cluster-details', {
             clusterId: clusterId,
             connectorType: this.connectorType,

@@ -45,7 +45,7 @@ export class SharedLinePlace {
 
   constructor(obj: {
     uuid: string | null | undefined,
-    displayName?: string | null | undefined
+    displayName?: string | null | undefined,
   }) {
     this.uuid = obj.uuid;
     this.displayName = obj.displayName;

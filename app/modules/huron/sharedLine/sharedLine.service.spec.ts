@@ -8,7 +8,7 @@ describe('Service: SharedLineService', () => {
       '$httpBackend',
       'Authinfo',
       'HuronConfig',
-      'SharedLineService'
+      'SharedLineService',
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
 

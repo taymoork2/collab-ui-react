@@ -42,7 +42,7 @@ describe('Service: callPickupService', () => {
         this.$httpBackend.expectPOST(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/features/callpickups?wide=true').respond(200);
         this.CallPickupGroupService.saveCallPickupGroup(cp).then(
           successSpy,
-          failureSpy
+          failureSpy,
         );
         this.$httpBackend.flush();
         expect(successSpy).toHaveBeenCalled();
@@ -53,7 +53,7 @@ describe('Service: callPickupService', () => {
         this.$httpBackend.expectPOST(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/features/callpickups?wide=true').respond(500);
         this.CallPickupGroupService.saveCallPickupGroup(cp).then(
          successSpy,
-          failureSpy
+          failureSpy,
         );
         this.$httpBackend.flush();
         expect(successSpy).not.toHaveBeenCalled();
@@ -77,7 +77,7 @@ describe('Service: callPickupService', () => {
       this.$httpBackend.expectPUT(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/features/callpickups/' + cp.uuid + '?wide=true').respond(200);
       this.CallPickupGroupService.updateCallPickup(cp.uuid, cp).then(
         successSpy,
-        failureSpy
+        failureSpy,
       );
       this.$httpBackend.flush();
       expect(successSpy).toHaveBeenCalled();
@@ -88,7 +88,7 @@ describe('Service: callPickupService', () => {
       this.$httpBackend.expectPUT(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/features/callpickups/' + cp.uuid + '?wide=true').respond(500);
       this.CallPickupGroupService.updateCallPickup(cp.uuid, cp).then(
         successSpy,
-        failureSpy
+        failureSpy,
       );
       this.$httpBackend.flush();
       expect(successSpy).not.toHaveBeenCalled();
@@ -101,7 +101,7 @@ describe('Service: callPickupService', () => {
       this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/features/callpickups?wide=true').respond(200);
       this.CallPickupGroupService.getListOfPickupGroups().then(
         successSpy,
-        failureSpy
+        failureSpy,
       );
       this.$httpBackend.flush();
       expect(successSpy).toHaveBeenCalled();
@@ -112,7 +112,7 @@ describe('Service: callPickupService', () => {
       this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/features/callpickups?wide=true').respond(500);
       this.CallPickupGroupService.getListOfPickupGroups().then(
         successSpy,
-        failureSpy
+        failureSpy,
       );
       this.$httpBackend.flush();
       expect(successSpy).not.toHaveBeenCalled();
@@ -125,7 +125,7 @@ describe('Service: callPickupService', () => {
       this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/features/callpickups/' + cp.uuid + '?wide=true').respond(200);
       this.CallPickupGroupService.getCallPickupGroup(cp.uuid).then(
         successSpy,
-        failureSpy
+        failureSpy,
       );
       this.$httpBackend.flush();
       expect(successSpy).toHaveBeenCalled();
@@ -136,7 +136,7 @@ describe('Service: callPickupService', () => {
       this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/features/callpickups/' + cp.uuid + '?wide=true').respond(500);
       this.CallPickupGroupService.getCallPickupGroup(cp.uuid).then(
         successSpy,
-        failureSpy
+        failureSpy,
       );
       this.$httpBackend.flush();
       expect(successSpy).not.toHaveBeenCalled();
@@ -149,7 +149,7 @@ describe('Service: callPickupService', () => {
       this.$httpBackend.expectDELETE(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/features/callpickups/' + cp.uuid + '?wide=true').respond(200);
       this.CallPickupGroupService.deletePickupGroup(cp.uuid).then(
         successSpy,
-        failureSpy
+        failureSpy,
       );
       this.$httpBackend.flush();
       expect(successSpy).toHaveBeenCalled();
@@ -160,7 +160,7 @@ describe('Service: callPickupService', () => {
       this.$httpBackend.expectDELETE(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/features/callpickups/' + cp.uuid + '?wide=true').respond(500);
       this.CallPickupGroupService.deletePickupGroup(cp.uuid).then(
        successSpy,
-        failureSpy
+        failureSpy,
       );
       this.$httpBackend.flush();
       expect(successSpy).not.toHaveBeenCalled();

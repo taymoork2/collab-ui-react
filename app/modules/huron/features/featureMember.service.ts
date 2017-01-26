@@ -12,7 +12,7 @@ export class FeatureMemberService {
     private HuronConfig,
     private Authinfo,
     private $http: ng.IHttpService,
-    private MemberService: MemberService
+    private MemberService: MemberService,
   ) {}
 
   private PLACE: string = 'PROFILE_PLACE';

@@ -72,7 +72,7 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
         saveNumbers: [],
       };
       scope.FeatureMemberService.getMemberPicture(member.uuid).then(
-        avatar => memberData.picturePath = avatar.thumbnailSrc
+        avatar => memberData.picturePath = avatar.thumbnailSrc,
       );
       scope.selectedMembers.push(memberData);
     });
