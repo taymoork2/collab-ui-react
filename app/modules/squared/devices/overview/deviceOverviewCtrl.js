@@ -105,8 +105,10 @@
       }).$promise.then(function (info) {
         deviceOverview.emergencyAddress = info.e911Address;
         deviceOverview.emergencyAddressStatus = info.status;
-      }).finally(function () {
+      }).then(function () {
         deviceOverview.isE911Available = true;
+      }).catch(function () {
+        deviceOverview.e911NotFound = true;
       });
     }
 

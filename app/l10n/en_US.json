@@ -1509,6 +1509,7 @@
     "retrieveKemFail": "Failed to retrieve key expansion module count.",
     "emergencyTitle": "Emergency Services",
     "editEmergencyServices": "Edit Emergency Services",
+    "emergencyServicesNotFound": "Emergency Services address not found.",
     "callbackNumber": "Callback Number",
     "serviceAddress": "Service Address",
     "servicesDesc": "Emergency Services requires a street address where this device is located, and must be associated with a managed callback number that is used if an emergency call is disconnected.",
