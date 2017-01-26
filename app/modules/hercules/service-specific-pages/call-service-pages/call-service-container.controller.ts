@@ -32,7 +32,7 @@ export class CallServiceContainerController extends ExpresswayContainerControlle
               ServiceDescriptor,
               ServiceStateChecker,
               USSService, ) {
-    super($modal, $state, ClusterService, Notification, ServiceDescriptor, ServiceStateChecker, USSService,  ['squared-fusion-uc'], 'c_ucmc');
+    super($modal, $state, ClusterService, Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['squared-fusion-uc'], 'c_ucmc');
     this.addConnectIfEnabled();
   }
 

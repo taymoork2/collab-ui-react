@@ -22,7 +22,7 @@ export abstract class ExpresswayContainerController {
     this.ClusterService.subscribe('data', this.updateNotifications.bind(this));
   }
 
-  protected updateNotifications(): void {
+  private updateNotifications(): void {
     this.ServiceStateChecker.checkState(this.connectorType, this.servicesId[0]);
   }
 
