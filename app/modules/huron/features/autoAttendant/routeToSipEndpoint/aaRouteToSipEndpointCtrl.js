@@ -37,7 +37,7 @@
         entry = _.get(vm.menuKeyEntry, 'actions[0].queueSettings.fallback', vm.menuKeyEntry);
       }
       if (_.isEmpty(entry.actions[0].getValue())) {
-        vm.sipInput = 'sip';
+        vm.sipInput = 'sip:';
       } else {
         vm.sipInput = entry.actions[0].getValue();
       }
