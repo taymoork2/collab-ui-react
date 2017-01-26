@@ -238,13 +238,10 @@
       </div>
     </cs-sp-section>
     <cs-sp-section ng-show="deviceOverview.showE911">
-      <div ng-show="!deviceOverview.isE911Available">
-        <i class="icon icon-spinner"></i>
-      </div>
-      <div ng-show="deviceOverview.isE911Available">
+      <div>
         <div class="section-title-row">
           <span class="section-name" translate="spacesPage.emergencyTitle"></span>
-          <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="deviceOverview.hideE911Edit">
+          <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="deviceOverview.hideE911Edit && !deviceOverview.e911NotFound">
             <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
               <i class="icon icon-three-dots"></i>
             </button>
@@ -253,17 +250,26 @@
             </ul>
           </span>
         </div>
-        <div class="form-group">
+        <div ng-if="deviceOverview.e911NotFound">
+          <div class="warning">
+            <div class="cs-input__messages">
+              <div class="message" translate="spacesPage.emergencyServicesNotFound"></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" ng-if="!deviceOverview.e911NotFound">
           <label class="col-sm-4 control-label" translate="spacesPage.callbackNumber"></label>
-          <div class="col-sm-8">
+          <div class="col-sm-8" cs-loader ng-hide="deviceOverview.isE911Available"></div>
+          <div class="col-sm-8" ng-show="deviceOverview.isE911Available">
             <p class="form-control-static line-row">
               <span class="form-control-static line-row">{{deviceOverview.emergencyCallbackNumber}}</span>
             </p>
           </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" ng-if="!deviceOverview.e911NotFound">
           <label class="col-sm-4 control-label" translate="spacesPage.serviceAddress"></label>
-          <div class="col-sm-8" >
+          <div class="col-sm-8" cs-loader ng-hide="deviceOverview.isE911Available"></div>
+          <div class="col-sm-8" ng-show="deviceOverview.isE911Available">
             <span class="form-control-static">{{deviceOverview.emergencyAddress.address1 | uppercase}}, {{deviceOverview.emergencyAddress.address2 | uppercase}}</span>
             <span class="form-control-static">{{deviceOverview.emergencyAddress.city | uppercase}}, {{deviceOverview.emergencyAddress.state | uppercase}} {{deviceOverview.emergencyAddress.zip}}</span>
           </div>
