@@ -12,7 +12,6 @@
     vm.readCerts = readCerts;
     vm.enableEmailSendingToUser = false;
     vm.squaredFusionEc = false;
-    vm.OrgId = Authinfo.getOrgId();
     vm.squaredFusionEcEntitled = Authinfo.isFusionEC();
     vm.localizedServiceName = $translate.instant('hercules.serviceNames.squared-fusion-uc');
     vm.localizedConnectorName = $translate.instant('hercules.connectorNames.squared-fusion-uc');
@@ -47,24 +46,14 @@
             Notification.success('hercules.notifications.connect.connectEnabled');
           })
           .catch(function (response) {
+            vm.squaredFusionEc = false;
             Notification.errorWithTrackingId(response, 'hercules.errors.failedToEnableConnect');
           });
       } else {
         ServiceDescriptor.disableService('squared-fusion-ec').then(function () {
           Notification.success('hercules.notifications.connect.connectDisabled');
           if (hasVoicemailFeatureToggle) {
-            UCCService.getOrgVoicemailConfiguration(vm.OrgId).then(function (data) {
-              if (data.voicemailOrgEnableInfo.orgHybridVoicemailEnabled) {
-                UCCService.disableHybridVoicemail(vm.OrgId).then(function () {
-                  Notification.success('hercules.settings.voicemail.disableDescription');
-                })
-                  .catch(function (response) {
-                    Notification.errorWithTrackingId(response, 'hercules.voicemail.voicemailDisableError');
-                  });
-              }
-            });
-
-
+            vm.disableVoicemail(Authinfo.getOrgId());
           }
         }).catch(function (response) {
           Notification.errorWithTrackingId(response, 'hercules.error.failedToDisableConnect');
@@ -72,14 +61,30 @@
       }
     };
 
+    vm.disableVoicemail = function (orgId) {
+      UCCService.getOrgVoicemailConfiguration(orgId)
+        .then(function (data) {
+          if (data.voicemailOrgEnableInfo.orgHybridVoicemailEnabled) {
+            UCCService.disableHybridVoicemail(orgId)
+              .then(function () {
+                Notification.success('hercules.settings.voicemail.disableDescription');
+              })
+            .catch(function (response) {
+              Notification.errorWithTrackingId(response, 'hercules.voicemail.voicemailDisableError');
+            });
+          }
+        });
+    };
+
     vm.loading = true;
-    USSService.getOrg(Authinfo.getOrgId()).then(function (res) {
-      vm.loading = false;
-      vm.sipDomain = res.sipDomain;
-      vm.org = res || {};
-    }, function () {
+    USSService.getOrg(Authinfo.getOrgId())
+      .then(function (res) {
+        vm.loading = false;
+        vm.sipDomain = res.sipDomain;
+        vm.org = res || {};
+      }, function () {
       //  if (err) return notification.notify(err);
-    });
+      });
 
     vm.updateSipDomain = function () {
       vm.savingSip = true;
@@ -117,7 +122,8 @@
             return cert;
           }
         }
-      }).result.then(readCerts);
+      }).result
+        .then(readCerts);
     };
 
     function readCerts() {

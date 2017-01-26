@@ -15,12 +15,7 @@ describe('Component: HybridVoicemailCtrl ', () => {
     Notification = _Notification_;
   }));
 
-  // function initSpies() {
-  //  // spyOn(HybridVoicemailCtrl, 'toggleVoicemail');
-  //   spyOn(Notification, 'errorWithTrackingId');
-  // }
-
-  it('shows Success notification when HybridVoiceMail is disabled', () => {
+  it('should show Success notification when HybridVoiceMail is disabled', () => {
     spyOn(Notification, 'success');
     let ctrl = $componentController('hybridVoicemailSettings');
     ctrl.toggleVoicemail(false);
@@ -28,7 +23,7 @@ describe('Component: HybridVoicemailCtrl ', () => {
     expect(Notification.success.calls.count()).toBe(1);
   });
 
-  it('shows Success notification when HybridVoiceMail is enabled', () => {
+  it('should show Success notification when HybridVoiceMail is enabled', () => {
     spyOn(Notification, 'success');
     let ctrl = $componentController('hybridVoicemailSettings');
     ctrl.toggleVoicemail(true);
