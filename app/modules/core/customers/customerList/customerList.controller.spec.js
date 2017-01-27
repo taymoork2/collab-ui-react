@@ -221,7 +221,8 @@ describe('Controller: CustomerListCtrl', function () {
         customerId: testOrg.customerOrgId,
         customerName: testOrg.customerName,
         customerEmail: testOrg.customerEmail,
-        customerCommunicationLicenseIsTrial: testOrg.communications.isTrial
+        customerCommunicationLicenseIsTrial: testOrg.communications.isTrial,
+        customerRoomSystemsLicenseIsTrial: true
       });
     });
 
@@ -233,7 +234,8 @@ describe('Controller: CustomerListCtrl', function () {
         customerId: testOrg.customerOrgId,
         customerName: testOrg.customerName,
         customerEmail: testOrg.customerEmail,
-        customerCommunicationLicenseIsTrial: testOrg.communications.isTrial
+        customerCommunicationLicenseIsTrial: testOrg.communications.isTrial,
+        customerRoomSystemsLicenseIsTrial: true
       });
     });
   });
@@ -412,7 +414,8 @@ describe('Controller: CustomerListCtrl', function () {
         customerId: org.customerOrgId,
         customerName: org.customerName,
         customerEmail: org.customerEmail,
-        customerCommunicationLicenseIsTrial: true
+        customerCommunicationLicenseIsTrial: true,
+        customerRoomSystemsLicenseIsTrial: true
       });
     });
 
@@ -432,7 +435,8 @@ describe('Controller: CustomerListCtrl', function () {
         customerId: org.customerOrgId,
         customerName: org.customerName,
         customerEmail: org.customerEmail,
-        customerCommunicationLicenseIsTrial: false
+        customerCommunicationLicenseIsTrial: false,
+        customerRoomSystemsLicenseIsTrial: true
       });
     });
 
@@ -449,7 +453,8 @@ describe('Controller: CustomerListCtrl', function () {
         customerId: org.customerOrgId,
         customerName: org.customerName,
         customerEmail: org.customerEmail,
-        customerCommunicationLicenseIsTrial: true
+        customerCommunicationLicenseIsTrial: true,
+        customerRoomSystemsLicenseIsTrial: true
       });
     });
 
@@ -470,7 +475,8 @@ describe('Controller: CustomerListCtrl', function () {
         customerId: org.customerOrgId,
         customerName: org.customerName,
         customerEmail: org.customerEmail,
-        customerCommunicationLicenseIsTrial: false
+        customerCommunicationLicenseIsTrial: false,
+        customerRoomSystemsLicenseIsTrial: false
       });
     });
   });

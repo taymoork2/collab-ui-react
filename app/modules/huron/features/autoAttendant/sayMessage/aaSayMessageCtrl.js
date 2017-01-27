@@ -65,16 +65,9 @@
     vm.isMessageInputOnly = isMessageInputOnly;
     vm.updateVoiceOption = updateVoiceOption;
 
-    vm.isMediaUploadToggle = isMediaUploadToggle;
+    vm.isMediaUploadToggle = false;
 
     /////////////////////
-
-    //the media upload only is set for the say message action,
-    //not for phone menu, dial by ext, or submenu at this point
-    //and is also feature toggled
-    function isMediaUploadToggle() {
-      return AACommonService.isMediaUploadToggle();
-    }
 
     function setVoiceOptions() {
       vm.voiceOptions = _.sortBy(AALanguageService.getVoiceOptions(vm.languageOption), properties.LABEL);
@@ -121,7 +114,7 @@
     }
 
     function populateUiModel() {
-      if (!isMediaUploadToggle()) {
+      if (!vm.isMediaUploadToggle) {
         vm.messageInput = vm.actionEntry.getValue();
       }
 
@@ -170,7 +163,7 @@
     }
 
     function saveUiModel() {
-      if (!isMediaUploadToggle()) {
+      if (!vm.isMediaUploadToggle) {
         vm.actionEntry.setValue(vm.messageInput);
       }
 
@@ -209,7 +202,7 @@
 
     function createMenuEntry() {
       var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      var type = AACommonService.isMediaUploadToggle ? actionType.PLAY : actionType.SAY;
+      var type = vm.isMediaUploadToggle ? actionType.PLAY : actionType.SAY;
       menuEntry.addAction(createSayAction(type));
       return menuEntry;
     }
@@ -341,7 +334,10 @@
       } else if ($scope.menuKeyIndex && $scope.menuKeyIndex > -1) {
         vm.sayMessageType = sayMessageType.MENUKEY;
       }
-
+      //the media upload only is set for the say message action,
+      //not for phone menu, dial by ext, or submenu at this point
+      //and is also feature toggled
+      vm.isMediaUploadToggle = AACommonService.isMediaUploadToggle();
       setActionEntry();
       populateUiModel();
     }

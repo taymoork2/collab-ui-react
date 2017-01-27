@@ -588,4 +588,74 @@ describe('orgService', function () {
     httpBackend.flush();
   });
 
+  describe('updateDisplayName()', function () {
+    beforeEach(function () {
+      this.patchRequest = httpBackend.expectPATCH(UrlConfig.getAdminServiceUrl() + '/customers/123/displayName', {
+        displayName: 'new display name'
+      }).respond({
+        status: 'SUCCESS',
+      });
+    });
+
+    it('should save successfully', function () {
+      var promise = Orgservice.updateDisplayName('123', 'new display name');
+      httpBackend.flush();
+
+      expect(promise).toBeResolved();
+    });
+
+    it('should reject if update is not successful', function () {
+      this.patchRequest.respond({
+        status: 'DUPLICATE',
+      });
+      var promise = Orgservice.updateDisplayName('123', 'new display name');
+      httpBackend.flush();
+
+      expect(promise).toBeRejectedWith('helpdesk.org.duplicateName');
+    });
+
+    it('should reject on error', function () {
+      this.patchRequest.respond(500);
+      var promise = Orgservice.updateDisplayName('123', 'new display name');
+      httpBackend.flush();
+
+      expect(promise).toBeRejected();
+    });
+  });
+
+  describe('validateDisplayName()', function () {
+    beforeEach(function () {
+      this.patchRequest = httpBackend.expectPATCH(UrlConfig.getAdminServiceUrl() + '/customers/123/displayName?verify=true', {
+        displayName: 'new display name'
+      }).respond({
+        status: 'ALLOWED',
+      });
+    });
+
+    it('should resolve true if validate successfully', function () {
+      var promise = Orgservice.validateDisplayName('123', 'new display name');
+      httpBackend.flush();
+
+      expect(promise).toBeResolvedWith(true);
+    });
+
+    it('should resolve false if validate unsuccessfully', function () {
+      this.patchRequest.respond({
+        status: 'DUPLICATE',
+      });
+      var promise = Orgservice.validateDisplayName('123', 'new display name');
+      httpBackend.flush();
+
+      expect(promise).toBeResolvedWith(false);
+    });
+
+    it('should reject on error', function () {
+      this.patchRequest.respond(500);
+      var promise = Orgservice.validateDisplayName('123', 'new display name');
+      httpBackend.flush();
+
+      expect(promise).toBeRejected();
+    });
+  });
+
 });

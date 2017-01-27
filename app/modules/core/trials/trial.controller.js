@@ -5,7 +5,7 @@
     .controller('TrialCtrl', TrialCtrl);
 
   /* @ngInject */
-  function TrialCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, EmailService, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService, ValidationService) {
+  function TrialCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService, ValidationService) {
     var vm = this;
 
     var _careDefaultQuantity = 15;
@@ -580,8 +580,7 @@
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
-        placesEnabled: FeatureToggleService.supports(FeatureToggleService.features.csdmPstn),
-        atlasCreateTrialBackendEmail: FeatureToggleService.atlasCreateTrialBackendEmailGetStatus()
+        placesEnabled: FeatureToggleService.supports(FeatureToggleService.features.csdmPstn)
       };
       if (!vm.isNewTrial()) {
         promises.tcHasService = TrialContextService.trialHasService(vm.currentTrial.customerOrgId);
@@ -603,7 +602,6 @@
           var initResults = (vm.isExistingOrg()) ? getExistingOrgInitResults(results, vm.hasCallEntitlement, vm.preset, vm.paidServices) : getNewOrgInitResults(results, vm.hasCallEntitlement, vm.stateDefaults);
           _.merge(vm, initResults);
           if (vm.isNewTrial()) {
-            vm.atlasCreateTrialBackendEmailEnabled = results.atlasCreateTrialBackendEmail;
             vm.placesEnabled = results.placesEnabled;
           }
           updateTrialService(_messageTemplateOptionId);
@@ -871,20 +869,6 @@
             customerName: vm.details.customerName
           });
           return $q.reject(response);
-        }).then(function (response) {
-          // suppress email if webex trial is enabled (more appropriately
-          // handled by the backend process once provisioning is complete)
-          if (!vm.webexTrial.enabled && !vm.atlasCreateTrialBackendEmailEnabled) {
-            return EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
-              vm.details.licenseDuration, Authinfo.getOrgId())
-              .catch(function (response) {
-                Notification.errorResponse(response, 'didManageModal.emailFailText');
-              })
-              .then(function () {
-                return response;
-              });
-          }
-          return response;
         }).then(function (response) {
           vm.customerOrgId = response.data.customerOrgId;
           return saveTrialPstn(vm.customerOrgId, response.data.customerName, response.data.customerEmail);

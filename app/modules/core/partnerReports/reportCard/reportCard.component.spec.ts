@@ -175,7 +175,7 @@ describe('Component: reportCard', () => {
 
   describe('donut chart, labels, and dropdown:', function () {
     // html constants
-    const dropdownClick: string = 'div.select-list div.dropdown a.select-toggle';
+    const dropdownClick: string = 'div.select-list div.dropdown .select-toggle';
     const hiddenSelect: string = 'select.hidden-select option';
     const dropdownOptions: string = 'ul.select-options li a';
     const threeDots: string = '.icon.icon-three-dots.export-dots';

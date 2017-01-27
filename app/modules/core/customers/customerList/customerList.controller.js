@@ -739,9 +739,9 @@ require('./_customer-list.scss');
       angular.element('.open').removeClass('open');
     }
 
-    function getIsTrial(org) {
+    function getIsTrial(org, type) {
       if (org.isPartner) return false;
-      return _.get(org, 'communications.isTrial', true);
+      return _.get(org, type + '.isTrial', true);
     }
 
     function addNumbers(org) {
@@ -752,7 +752,8 @@ require('./_customer-list.scss');
               customerId: org.customerOrgId,
               customerName: org.customerName,
               customerEmail: org.customerEmail,
-              customerCommunicationLicenseIsTrial: getIsTrial(org)
+              customerCommunicationLicenseIsTrial: getIsTrial(org, 'communications'),
+              customerRoomSystemsLicenseIsTrial: getIsTrial(org, 'roomSystems')
             });
           } else {
             return $state.go('didadd', {

@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($q, $scope, $state, $translate, $window, Analytics, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialContextService, TrialPstnService, TrialService, ValidationService, Orgservice) {
+  function TrialAddCtrl($q, $scope, $state, $translate, $window, Analytics, Config, FeatureToggleService, HuronCustomer, Notification, TrialContextService, TrialPstnService, TrialService, ValidationService, Orgservice) {
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
     var _careDefaultQuantity = 15;
@@ -500,7 +500,6 @@
         atlasContextServiceTrials: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         placesEnabled: FeatureToggleService.supports(FeatureToggleService.features.csdmPstn),
-        atlasCreateTrialBackendEmail: FeatureToggleService.atlasCreateTrialBackendEmailGetStatus(),
         atlasTrialsShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus()
       })
         .then(function (results) {
@@ -513,7 +512,6 @@
           vm.messageTrial.enabled = true;
           vm.meetingTrial.enabled = true;
           vm.showContextServiceTrial = true;
-          vm.atlasCreateTrialBackendEmailEnabled = results.atlasCreateTrialBackendEmail;
           vm.atlasTrialsShipDevicesEnabled = results.atlasTrialsShipDevices;
           updateTrialService(messageTemplateOptionId);
 
@@ -737,21 +735,6 @@
         })
         .then(function (response) {
           vm.customerOrgId = response.data.customerOrgId;
-          return response;
-        })
-        .then(function (response) {
-          // suppress email if webex trial is enabled (more appropriately
-          // handled by the backend process once provisioning is complete)
-          if (!vm.webexTrial.enabled && !vm.atlasCreateTrialBackendEmailEnabled) {
-            return EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
-              vm.details.licenseDuration, Authinfo.getOrgId())
-              .catch(function (response) {
-                Notification.errorResponse(response, 'didManageModal.emailFailText');
-              })
-              .then(function () {
-                return response;
-              });
-          }
           return response;
         })
         .then(function (response) {

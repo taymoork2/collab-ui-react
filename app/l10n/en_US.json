@@ -157,7 +157,10 @@
       "bulkLabel": "Export and import users with a CSV file",
       "bulkDetails": "Best method for adding and editing up to {{maxUsersInCSV}} users at the same time.",
       "advancedLabel": "Enable directory synchronization",
-      "advancedDetails": "Synchronize users from Active Directory"
+      "advancedDetails": "Synchronize users from Active Directory.",
+      "convertLabel": "Convert/Claim Users",
+      "convertDetails": "Search for users who have signed up on their own for Cisco Spark and convert them into your company.",
+      "convertUnavailable": "There are no users to convert."
     },
     "ad": {
       "adLabel": "Active Directory",
@@ -1104,6 +1107,7 @@
     "remove": "Remove",
     "releaseChannel": "Release Channel",
     "rename": "Rename",
+    "required": "Required",
     "reset": "Reset",
     "resources": "Resources",
     "retry": "Retry",
@@ -1508,6 +1512,7 @@
     "retrieveKemFail": "Failed to retrieve key expansion module count.",
     "emergencyTitle": "Emergency Services",
     "editEmergencyServices": "Edit Emergency Services",
+    "emergencyServicesNotFound": "Emergency Services address not found.",
     "callbackNumber": "Callback Number",
     "serviceAddress": "Service Address",
     "servicesDesc": "Emergency Services requires a street address where this device is located, and must be associated with a managed callback number that is used if an emergency call is disconnected.",
@@ -3867,7 +3872,8 @@
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
-    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
+    "e911Unavailable": "The number you have selected is currently unavailable due to the Emergency Service Address associated with it is processing. Check back later."
   },
   "bulkEnableVm": {
     "enableCompanyVoicemail": "Turning On Company Voicemail",
@@ -4121,7 +4127,9 @@
     "cloudOpAdmin": "Cloud Operations Administrator",
     "fullAdmin": "Full administrator privileges",
     "readonlyAdmin": "Read-only administrator privileges",
+    "readonlyAdminTooltip": "Read-only view of the portal. No changes will be accepted.",
     "partialAdmin": "Some administrator privileges",
+    "partialAdminError": "At least one administrator privilege must be selected",
     "noAdmin": "No administrator privileges",
     "salesAdmin": "Sales Administrator",
     "userAdmin": "User Administrator",
@@ -5887,7 +5895,9 @@
     "atlas-portal.reports": "Reports",
     "atlas-portal.billing": "Billing",
     "atlas-portal.partner.helpdesk": "Help Desk Support",
+    "atlas-portal.partner.helpdeskTooltip": "Access to Help Desk",
     "atlas-portal.partner.orderadmin": "Order Admin Support",
+    "atlas-portal.partner.orderadminTooltip": "Access to Order Admin",
     "atlas-portal.application": "Application",
     "atlas-portal.partner.salesadmin": "Sales Admin",
     "id_full_admin": "Full Admin",
@@ -5896,6 +5906,7 @@
     "ciscouc.devops": "Spark Call Devops",
     "ciscouc.devsupport": "Spark Call Dev Support",
     "compliance": "Compliance Officer",
+    "complianceTooltip": "Access to Activity Reports",
     "ciscouc.phonelogaccess": "Spark Call Phone Log Access",
     "ciscouc.phonesupport": "Spark Call Phone Support"
   },
@@ -6136,6 +6147,12 @@
         "delivered": "Email was delivered.",
         "unsubscribed": "Email can not be delivered because the user unsubscribed."
       }
+    },
+    "org": {
+      "duplicateName": "Organization name already in use",
+      "validationFailure": "Unable to validate",
+      "editNameSuccess": "Organization name successfully updated.",
+      "editNameFailure": "Failed to update customer name."
     }
   },
   "activation": {

@@ -28,6 +28,7 @@
 
     function init() {
       vm.loadingInit = true;
+      vm.addressStatus = PstnServiceAddressService.getStatus();
       return PstnServiceAddressService.getAddress(Authinfo.getOrgId())
         .then(function (address) {
           if (address) {
@@ -54,7 +55,7 @@
 
     // Show modify button if address is valid and we can't save
     function hasModify() {
-      return vm.isValid && !hasSave();
+      return vm.isValid && vm.addressStatus !== 'PENDING' && !hasSave();
     }
 
     // Show validate button if address is not valid
@@ -91,6 +92,7 @@
         })
         .then(function () {
           Notification.success('settingsServiceAddress.saveSuccess');
+          vm.addressStatus = "PENDING";
           origAddress = angular.copy(vm.address);
           vm.addressFound = false;
         })

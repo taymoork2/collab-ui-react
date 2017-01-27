@@ -18,6 +18,12 @@
     };
     FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
       vm.showTimezoneAndVoicemail = vm.isTimezoneAndVoicemail(pstnEnabled);
+      if (!vm.showTimezoneAndVoicemail) {
+        vm.model.site.preferredLanguage = {
+          label: "English (United States)",
+          value: "en_US"
+        };
+      }
     });
     vm.NATIONAL = 'national';
     vm.LOCAL = 'local';

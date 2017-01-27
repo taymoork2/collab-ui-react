@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: TrialCtrl:', function () {
-  var controller, helpers, $controller, $scope, $state, $q, $translate, $window, $httpBackend, Authinfo, Analytics, Config, Notification, TrialService, TrialContextService, TrialPstnService, HuronCustomer, EmailService, FeatureToggleService, Orgservice;
+  var controller, helpers, $controller, $scope, $state, $q, $translate, $window, $httpBackend, Authinfo, Analytics, Config, Notification, TrialService, TrialContextService, TrialPstnService, HuronCustomer, FeatureToggleService, Orgservice;
 
   var stateParams = {};
   var addContextSpy, removeContextSpy, addWatchSpy;
@@ -24,7 +24,7 @@ describe('Controller: TrialCtrl:', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _$q_, _$translate_, _$window_, _$httpBackend_, _Analytics_, _Authinfo_, _Config_, _EmailService_, _Notification_, _TrialService_, _TrialContextService_, _TrialPstnService_, _HuronCustomer_, _FeatureToggleService_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _$q_, _$translate_, _$window_, _$httpBackend_, _Analytics_, _Authinfo_, _Config_, _Notification_, _TrialService_, _TrialContextService_, _TrialPstnService_, _HuronCustomer_, _FeatureToggleService_, _Orgservice_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $state = _$state_;
@@ -40,7 +40,6 @@ describe('Controller: TrialCtrl:', function () {
     HuronCustomer = _HuronCustomer_;
     FeatureToggleService = _FeatureToggleService_;
     Orgservice = _Orgservice_;
-    EmailService = _EmailService_;
     TrialPstnService = _TrialPstnService_;
     Config = _Config_;
 
@@ -59,7 +58,6 @@ describe('Controller: TrialCtrl:', function () {
     spyOn(TrialContextService, 'trialHasService').and.returnValue(false);
     spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'atlasCreateTrialBackendEmailGetStatus').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(true));
@@ -85,8 +83,6 @@ describe('Controller: TrialCtrl:', function () {
     $httpBackend
       .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null?disableCache=false')
       .respond({});
-
-    spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.resolve());
   }));
 
   function initController(params) {
@@ -95,7 +91,6 @@ describe('Controller: TrialCtrl:', function () {
       $scope: $scope,
       $translate: $translate,
       $stateParams: stateParams,
-      EmailService: EmailService,
       TrialService: TrialService,
       TrialContextService: TrialContextService,
       Orgservice: Orgservice,
@@ -776,35 +771,6 @@ describe('Controller: TrialCtrl:', function () {
         });
       });
 
-      describe('with atlas-webex-trial enabled', function () {
-        beforeEach(function () {
-          controller.callTrial.enabled = false;
-          controller.pstnTrial.enabled = false;
-          controller.webexTrial.enabled = true;
-          controller.startTrial(callback);
-          $scope.$apply();
-        });
-
-        it('should not send an email', function () {
-          expect(EmailService.emailNotifyTrialCustomer).not.toHaveBeenCalled();
-        });
-      });
-
-      describe('with atlas-webex-trial disabled and backend email feature-toggle enabled', function () {
-        beforeEach(function () {
-          controller.atlasCreateTrialBackendEmailEnabled = true;
-          controller.callTrial.enabled = false;
-          controller.pstnTrial.enabled = false;
-          controller.webexTrial.enabled = false;
-          controller.startTrial(callback);
-          $scope.$apply();
-        });
-
-        it('should not send an email', function () {
-          expect(EmailService.emailNotifyTrialCustomer).not.toHaveBeenCalled();
-        });
-      });
-
       describe('with addNumbers callback', function () {
         beforeEach(function () {
           controller.callTrial.enabled = false;
@@ -1266,35 +1232,6 @@ describe('Controller: TrialCtrl:', function () {
 
         it('should have a customer org id set', function () {
           expect(controller.customerOrgId).toBeDefined();
-        });
-      });
-
-      describe('with atlas-webex-trial enabled', function () {
-        beforeEach(function () {
-          controller.callTrial.enabled = false;
-          controller.pstnTrial.enabled = false;
-          controller.webexTrial.enabled = true;
-          controller.startTrial(callback);
-          $scope.$apply();
-        });
-
-        it('should not send an email', function () {
-          expect(EmailService.emailNotifyTrialCustomer).not.toHaveBeenCalled();
-        });
-      });
-
-      describe('with atlas-webex-trial disabled and backend email feature-toggle enabled', function () {
-        beforeEach(function () {
-          controller.atlasCreateTrialBackendEmailEnabled = true;
-          controller.callTrial.enabled = false;
-          controller.pstnTrial.enabled = false;
-          controller.webexTrial.enabled = false;
-          controller.startTrial(callback);
-          $scope.$apply();
-        });
-
-        it('should not send an email', function () {
-          expect(EmailService.emailNotifyTrialCustomer).not.toHaveBeenCalled();
         });
       });
 

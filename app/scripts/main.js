@@ -46,6 +46,8 @@
     'dragularModule',
     require('modules/core/analytics'),
     require('modules/core/featureToggle').default,
+    require('modules/core/focus').default,
+    require('modules/core/inlineEditText').default,
     require('modules/core/scripts/services/org.service'),
     require('modules/core/scripts/services/userlist.service'),
     require('modules/core/users/userCsv/userCsv.service'),
