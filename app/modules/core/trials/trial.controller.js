@@ -600,9 +600,6 @@
 
           var initResults = (vm.isExistingOrg()) ? getExistingOrgInitResults(results, vm.hasCallEntitlement, vm.preset, vm.paidServices) : getNewOrgInitResults(results, vm.hasCallEntitlement, vm.stateDefaults);
           _.merge(vm, initResults);
-          if (vm.isNewTrial()) {
-            vm.placesEnabled = true;
-          }
           updateTrialService(_messageTemplateOptionId);
           vm.paidServicesForDisplay = getPaidServicesForDisplay(Authinfo.getOrgId(), Authinfo.getOrgName());
         })
@@ -663,7 +660,7 @@
     }
 
     function toggleTrial() {
-      var newTrialPstnAdditonalTest = (vm.roomSystemTrial.enabled && vm.placesEnabled);
+      var newTrialPstnAdditonalTest = (vm.roomSystemTrial.enabled && vm.isNewTrial());
       if (vm.isEditTrial()) {
         newTrialPstnAdditonalTest = true;
       }
