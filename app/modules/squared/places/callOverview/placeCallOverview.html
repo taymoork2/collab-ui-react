@@ -1,6 +1,6 @@
 <cs-sp-buttons ng-class="{invisible: !$ctrl.onPrefLanguageChange}">
   <button cs-btn loading="$ctrl.placeCallOverviewSaveInProcess" class="btn btn--primary" ng-click="$ctrl.savePlaceCallOverview()" ng-disabled="$ctrl.placeCallOverviewSaveInProcess" type="click">
-    <span translate="common.save"></span>PrefLang
+    <span translate="common.save"></span>
   </button>
   <button cs-btn ng-click="$ctrl.onCancelPlaceCallOverview()">
     <span translate="common.cancel"></span>
@@ -13,7 +13,7 @@
     </section-title>
     <p>{{$ctrl.currentPlace.sipUrl}}</p>
   </cs-sp-section>
-  <cs-sp-section ng-if="$ctrl.hasSparkCall">
+  <cs-sp-section ng-if="$ctrl.hasSparkCall && $ctrl.isUserLocaleFT2Enabled">
     <div class="section-title-row">
       <span class="section-name" translate="directoryNumberPanel.preferredLanguage"></span>
     </div>

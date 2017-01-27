@@ -4109,7 +4109,11 @@
     "failedToUploadLogs": "Failed to upload logs. Reason:",
     "deleteATAConfText": "Are you sure you want to delete Port 1?",
     "deleteDeviceType": "Delete {{deviceType}}",
-    "analog": "Analog Telephone"
+    "analog": "Analog Telephone",
+    "preferredLanguage": "Preferred Language",
+    "preferredLanguageDescription": "Choose the preferred language for this place. This will override the default organization setting.",
+    "preferredLanguagePlaceholder": "Select your language",
+    "organizationSetting": "Organization Setting - "
   },
   "ataSettings": {
     "analog": "Analog Telephone",
@@ -5443,7 +5447,10 @@
     "deletePlaceConfText": "Are you sure you want to delete {{ placeName }}?",
     "failedToSaveChanges": "Failed to save changes to place. Reason:",
     "failedToDelete": "Failed to delete place. Reason:",
-    "placesCallOverviewSaveSuccess": "Places call overview saved successfully"
+    "placesCallOverviewSaveSuccess": "Places call overview saved successfully",
+    "failedToFetchCmiPlacesInfo": "Failed to fetch CMI places info. Reason:",
+    "failedToFetchSiteLanguages": "Failed to fetch CMI languages. Reason:",
+    "failedToFetchSiteLevelLanguage": "Failed to fetch CMI site level language. Reason:"
   },
   "linesPage": {
     "manageLines": "Numbers",
