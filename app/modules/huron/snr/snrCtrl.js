@@ -5,7 +5,7 @@
     .module('Huron')
     .controller('SingleNumberReachInfoCtrl', SingleNumberReachInfoCtrl);
 
-  function SingleNumberReachInfoCtrl($scope, $stateParams, $timeout, RemoteDestinationService, TelephonyInfoService, TelephoneNumberService, Notification, $translate, DialPlanService, Authinfo) {
+  function SingleNumberReachInfoCtrl($scope, $stateParams, $timeout, $modal, RemoteDestinationService, TelephonyInfoService, TelephoneNumberService, Notification, $translate, DialPlanService, Authinfo) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.saveSingleNumberReach = saveSingleNumberReach;
@@ -16,6 +16,10 @@
 
     vm.callDestInputs = ['external', 'uri', 'custom'];
     vm.getRegionCode = getRegionCode;
+    vm.showRemove = false;
+
+    vm.remove = remove;
+    vm.checkSnr = checkSnr;
 
     function getRegionCode() {
       return DialPlanService.getCustomerVoice(Authinfo.getOrgId());
@@ -80,6 +84,7 @@
           value: '20000'
         };
       }
+      vm.showRemove = checkSnr();
     }
 
     function resetForm() {
@@ -94,6 +99,21 @@
     function reset() {
       resetForm();
       init();
+    }
+
+    function checkSnr() {
+      return (!vm.snrInfo.singleNumberReachEnabled && vm.snrInfo.remoteDestinations && vm.snrInfo.remoteDestinations.length > 0 && vm.snrInfo.remoteDestinations[0].destination !== null);
+    }
+
+    function remove() {
+      $modal.open({
+        templateUrl: 'modules/huron/snr/snrDeleteConfirmation.tpl.html',
+        scope: $scope,
+        type: 'dialog'
+      }).result.then(function () {
+        deleteRemoteDestinationInfo(vm.currentUser);
+        resetForm();
+      });
     }
 
     /*
@@ -163,7 +183,8 @@
     function updateRemoteDestinationInfo(user, destination, answerTooLateTimer) {
       var rdBean = {
         'destination': removePhoneNumberFormatting(destination.phoneNumber),
-        'answerTooLateTimer': answerTooLateTimer
+        'answerTooLateTimer': answerTooLateTimer,
+        'enableMobileConnect': (vm.snrInfo.singleNumberReachEnabled) ? "true" : "false"
       };
       var result = {
         msg: null,
@@ -178,7 +199,7 @@
         function () {
           vm.snrInfo.answerTooLateTimer = answerTooLateTimer;
           TelephonyInfoService.updateSnr(vm.snrInfo);
-
+          vm.snrInfo.destination = vm.snrInfo.remoteDest.phoneNumber;
           result.msg = $translate.instant('singleNumberReachPanel.success');
           result.type = 'success';
           Notification.notify([result.msg], result.type);
@@ -190,15 +211,10 @@
 
     function saveSingleNumberReach() {
       if (_.isArray(vm.snrInfo.remoteDestinations) && vm.snrInfo.remoteDestinations.length > 0) {
-        if (!vm.snrInfo.singleNumberReachEnabled) {
-          deleteRemoteDestinationInfo(vm.currentUser).then(function () {
-            resetForm();
-          });
-        } else {
-          updateRemoteDestinationInfo(vm.currentUser, vm.snrInfo.remoteDest, vm.snrWaitSeconds.value).then(function () {
-            resetForm();
-          });
-        }
+        updateRemoteDestinationInfo(vm.currentUser, vm.snrInfo.remoteDest, vm.snrWaitSeconds.value)
+        .then(function () {
+          resetForm();
+        });
       } else if (vm.snrInfo.singleNumberReachEnabled) {
         createRemoteDestinationInfo(vm.currentUser, vm.snrInfo.remoteDest, vm.snrWaitSeconds.value)
           .then(function () {
