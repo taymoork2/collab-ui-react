@@ -154,7 +154,6 @@
       locationSharing: 'location-sharing',
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
-      csdmPstn: 'csdm-pstn',
       csdmATA: 'csdm-ata',
       csdmHybridCall: 'csdm-hybrid-call',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',

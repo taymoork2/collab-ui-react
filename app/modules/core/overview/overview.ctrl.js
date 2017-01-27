@@ -208,10 +208,7 @@ require('./_overview.scss');
       });
     }
 
-    FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
-      forwardEvent('licenseEventHandler', Authinfo.getLicenses(), pstnEnabled);
-    });
-
+    forwardEvent('licenseEventHandler', Authinfo.getLicenses());
 
     vm.statusPageUrl = UrlConfig.getStatusPageUrl();
 

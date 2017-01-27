@@ -30,13 +30,10 @@ require('./_places.scss');
           var ataPromise = FeatureToggleService.csdmATAGetStatus().then(function (result) {
             vm.showATA = result;
           });
-          var pstnPromise = FeatureToggleService.csdmPstnGetStatus().then(function (result) {
-            vm.showPstn = result && Authinfo.isSquaredUC();
-          });
           var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
             vm.csdmHybridCallFeature = feature;
           });
-          $q.all([darlingPromise, ataPromise, pstnPromise, hybridPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
+          $q.all([darlingPromise, ataPromise, hybridPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
             vm.addPlaceIsDisabled = false;
           });
         }
@@ -195,7 +192,7 @@ require('./_places.scss');
               },
               'addDeviceFlow.chooseDeviceType': {
                 nextOptions: {
-                  cloudberry: vm.showPstn ? 'addDeviceFlow.editServices' : 'addDeviceFlow.showActivationCode',
+                  cloudberry: 'addDeviceFlow.editServices',
                   huron: 'addDeviceFlow.addLines'
                 }
               },

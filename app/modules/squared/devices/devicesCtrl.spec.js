@@ -183,7 +183,6 @@ describe('Controller: DevicesCtrl', function () {
     beforeEach(function () {
       spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(true));
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(true));
-      spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.resolve(true));
       spyOn(FeatureToggleService, 'atlasDeviceExportGetStatus').and.returnValue($q.resolve(true));
       spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
     });

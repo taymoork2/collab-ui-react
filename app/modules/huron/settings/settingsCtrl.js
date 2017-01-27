@@ -17,11 +17,9 @@
     vm.NATIONAL = 'national';
     vm.LOCAL = 'local';
     vm.callDateTimeFormat = false;
-    vm.isRegionAndVoicemail = function (enabled) {
-      return Authinfo.getLicenses().filter(function (license) {
-        return enabled ? (license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
-      }).length > 0;
-    };
+    vm.showRegionAndVoicemail = Authinfo.getLicenses().filter(function (license) {
+      return license.licenseType === Config.licenseTypes.COMMUNICATION;
+    }).length > 0;
 
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
@@ -1906,10 +1904,6 @@
     }
 
     function loadFeatureToggles() {
-      FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
-        vm.showRegionAndVoicemail = vm.isRegionAndVoicemail(pstnEnabled);
-      });
-
       FeatureToggleService.supports(FeatureToggleService.features.huronDateTimeEnable).then(function (result) {
         vm.callDateTimeFormat = result;
       });

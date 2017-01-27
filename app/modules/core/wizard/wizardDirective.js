@@ -49,7 +49,7 @@ require('./_wizard.scss');
   }
 
   /* @ngInject */
-  function WizardCtrl($controller, $modal, $rootScope, $scope, $state, $stateParams, $translate, Authinfo, Config, ModalService, PromiseHook, ServiceSetup, SessionStorage, FeatureToggleService) {
+  function WizardCtrl($controller, $modal, $rootScope, $scope, $state, $stateParams, $translate, Authinfo, Config, ModalService, PromiseHook, ServiceSetup, SessionStorage) {
     var vm = this;
     vm.current = {};
 
@@ -98,15 +98,9 @@ require('./_wizard.scss');
     vm.firstTimeSetup = true;
     vm.showSkipTabBtn = false;
 
-    vm.isTimezoneAndVoicemail = function (enabled) {
-      return Authinfo.getLicenses().filter(function (license) {
-        return enabled ? (license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
-      }).length > 0;
-    };
-
-    FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
-      vm.showTimezoneAndVoicemail = vm.isTimezoneAndVoicemail(pstnEnabled);
-    });
+    vm.showTimezoneAndVoicemail = Authinfo.getLicenses().filter(function (license) {
+      return license.licenseType === Config.licenseTypes.COMMUNICATION;
+    }).length > 0;
 
     // If tabs change (feature support in SetupWizard) and a step is not defined, re-initialize
     $scope.$watchCollection('tabs', function (tabs) {
