@@ -1,12 +1,13 @@
+@import 'styles/toolkit/colors';
+
 hybrid-voicemail-user-section {
   display: block;
 
   .helptext {
     font-style: italic;
-    font-size: small;
 
     a {
-      color: #049FD9;
+      color: $color-primary-base;
     }
   }
 }
