@@ -50,15 +50,6 @@
             Notification.errorWithTrackingId(error, 'hercules.genericFailure');
           });
       }
-      vm.releaseChannel = $translate.instant('hercules.fusion.add-resource-group.release-channel.' + vm.cluster.releaseChannel);
-      if (vm.cluster.resourceGroupId) {
-        findResourceGroupName(vm.cluster.resourceGroupId)
-          .then(function (name) {
-            vm.resourceGroupName = name;
-          });
-      } else {
-        vm.resourceGroupName = undefined;
-      }
 
       var isUpgrading = vm.cluster.aggregates.upgradeState === 'upgrading';
       var isUpgradingManagement = vm.managementCluster.aggregates.upgradeState === 'upgrading';
@@ -122,17 +113,6 @@
       vm.showManagementUpgradeProgress = vm.fakeManagementUpgrade || isUpgradingManagement || vm.managementUpgradeJustFinished;
     }, true);
 
-    function findResourceGroupName(groupId) {
-      return FusionClusterService.getResourceGroups()
-        .then(function (response) {
-          var group = _.find(response.groups, { id: groupId });
-          if (group) {
-            return group.name;
-          }
-          return undefined;
-        });
-    }
-
     function showUpgradeDialog(servicesId, connectorType, availableVersion) {
       $modal.open({
         templateUrl: 'modules/hercules/software-upgrade/software-upgrade-dialog.html',
@@ -175,17 +155,9 @@
     }
 
     function buildCluster() {
-      vm.schedule = {};
       FusionClusterService.get(vm.clusterId)
         .then(function (cluster) {
           vm.hosts = FusionClusterService.buildSidepanelConnectorList(cluster, vm.connectorType);
-          vm.schedule.dateTime = FusionClusterService.formatTimeAndDate(cluster.upgradeSchedule);
-          vm.schedule.urgentScheduleTime = FusionClusterService.formatTimeAndDate({
-            scheduleTime: cluster.upgradeSchedule.urgentScheduleTime,
-            // Simulate every day
-            scheduleDays: { length: 7 },
-          });
-          vm.schedule.timeZone = cluster.upgradeSchedule.scheduleTimeZone;
         });
     }
     buildCluster();

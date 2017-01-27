@@ -171,7 +171,8 @@
           response.data.items = [];
         }
         if (response.data.items.length > 0) {
-          missingDays = checkIfMissingDays(response.data.items, start, end, missingDaysDeferred);
+          //missingDays = checkIfMissingDays(response.data.items, start, end, missingDaysDeferred);
+          missingDays = checkMissingDays2(missingDaysDeferred);
         }
         if (missingDays) {
           fillEmptyDays(response.data.items, start, end);
@@ -179,6 +180,22 @@
         return reduceAllData(response.data.items, granularity);
       }, function (reject) {
         return $q.reject(analyseReject(reject));
+      });
+    }
+
+    function checkMissingDays2(missingDaysDeferred) {
+      var url = "http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/device/data_availability?interval=day&from=2017-01-09&to=2017-01-12";
+      return $http.get(url).then(function (response) {
+        var items = response.data.items; // .available
+        var missingDays = _.filter(items, (function (item) {
+          return (item.available === false);
+        }));
+        $log.warn("AVAILABILITY", items);
+        $log.warn("Missing days", missingDays);
+        missingDaysDeferred.resolve({
+          missingDays: 42
+        });
+        return missingDays.length > 0;
       });
     }
 
@@ -212,42 +229,44 @@
       });
     }
 
-    function checkIfMissingDays(items, start, end, missingDaysDeferred) {
-      //var first = moment(start);
-      var last = moment(end);
-      var current = moment(start);
-
-      var correctDays = [];
-      while (current.isBefore(last)) {
-        correctDays.push(current.format('YYYYMMDD'));
-        current.add(1, 'days');
-      }
-      correctDays.push(last.format('YYYYMMDD'));
-      //$log.info('correctDays', correctDays);
-
-      //$log.info('checkIfMissingDays', first.format('YYYYMMDD') + ' - ' + last.format('YYYYMMDD'));
-      //current = first;
-      var reducedDays = _.chain(items).reduce(function (result, item) {
-        if (!result[item.date]) {
-          //$log.info('reduce_day', item.date);
-          result[item.date] = item.date;
-        }
-        return result;
-      }, {})
-      .map(function (value) {
-        return value.toString();
-      }).value();
-      var diff = _.differenceWith(correctDays, reducedDays, _.isEqual);
-      //$log.info('diff', diff);
-      if (diff.length > 0) {
-        missingDaysDeferred.resolve({
-          missingDays: diff
-        });
-        return true;
-      } else {
-        return false;
-      }
-    }
+    // function checkIfMissingDays(items, start, end, missingDaysDeferred) {
+    //   //var first = moment(start);
+    //   var last = moment(end);
+    //   var current = moment(start);
+    //
+    //   //getDataAvailability();
+    //
+    //   var correctDays = [];
+    //   while (current.isBefore(last)) {
+    //     correctDays.push(current.format('YYYYMMDD'));
+    //     current.add(1, 'days');
+    //   }
+    //   correctDays.push(last.format('YYYYMMDD'));
+    //   //$log.info('correctDays', correctDays);
+    //
+    //   //$log.info('checkIfMissingDays', first.format('YYYYMMDD') + ' - ' + last.format('YYYYMMDD'));
+    //   //current = first;
+    //   var reducedDays = _.chain(items).reduce(function (result, item) {
+    //     if (!result[item.date]) {
+    //       //$log.info('reduce_day', item.date);
+    //       result[item.date] = item.date;
+    //     }
+    //     return result;
+    //   }, {})
+    //   .map(function (value) {
+    //     return value.toString();
+    //   }).value();
+    //   var diff = _.differenceWith(correctDays, reducedDays, _.isEqual);
+    //   //$log.info('diff', diff);
+    //   if (diff.length > 0) {
+    //     missingDaysDeferred.resolve({
+    //       missingDays: diff
+    //     });
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // }
 
     function analyseReject(reject) {
       if (reject.status === -1) {
