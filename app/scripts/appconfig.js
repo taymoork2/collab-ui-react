@@ -3166,7 +3166,7 @@
             templateUrl: 'modules/sunlight/details/details.tpl.html'
           })
           .state('care.Details', {
-            url: '/careDetails',
+            url: '/services/careDetails',
             parent: 'care.DetailsBase',
             views: {
               'header': {
