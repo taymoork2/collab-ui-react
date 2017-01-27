@@ -1574,9 +1574,9 @@
       "modalCTA": "Export to CSV",
       "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s",
       "userNotFound": "Not found",
-      "readingUserStatuses": "Reading user statuses...",
-      "readingConnectors": "Reading cluster assignments...",
-      "prepareFile": "Preparing export file...",
+      "readingUserStatuses": "Reading user statuses…",
+      "readingConnectors": "Reading cluster assignments…",
+      "prepareFile": "Preparing export file…",
       "pleaseWait": "Please wait"
     },
     "overview": {
