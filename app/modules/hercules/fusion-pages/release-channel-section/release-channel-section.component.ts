@@ -146,7 +146,11 @@ class ReleaseChannelSectionController implements ng.IComponentController {
   }
 
   public isExpresswayClusterSettings(): boolean {
-    return this.type === 'cluster' && !this.data.resourceGroupId && this.data.targetType === 'c_mgmt';
+    return this.type === 'cluster' && this.data.targetType === 'c_mgmt';
+  }
+
+  public isUnassignedExpresswayClusterSettings(): boolean {
+    return this.isExpresswayClusterSettings() && !this.data.resourceGroupId;
   }
 
   private setSelectedReleaseChannelOption(releaseChannel): void {
