@@ -22,7 +22,7 @@
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
 
- // the CE action verb is 'route'
+ // the CE action verb is 'routeToSipEndpoint'
     var routeToSipEndpoint = 'routeToSipEndpoint';
 
     var fromRouteCall = false;
