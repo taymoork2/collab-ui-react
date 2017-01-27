@@ -275,18 +275,10 @@ require('./_customer-list.scss');
       setNotesTextOrder();
       initColumns();
 
-      var promises = {
-        atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
-        careTrials: FeatureToggleService.atlasCareTrialsGetStatus()
-      };
-      $q.all(promises)
-      .then(function (results) {
-        vm.isCareEnabled = results.careTrials;
+      FeatureToggleService.atlasCareTrialsGetStatus().then(function (result) {
+        vm.isCareEnabled = result;
         if (!vm.isCareEnabled) {
           _.remove(vm.filter.options, { value: 'care' });
-        }
-        if (!results.atlasDarling) {
-          _.remove(vm.filter.options, { value: 'sparkBoard' });
         }
       })
       .finally(function () {

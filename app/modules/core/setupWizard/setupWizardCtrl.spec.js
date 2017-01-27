@@ -37,7 +37,6 @@ describe('SetupWizardCtrl', function () {
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.resolve(false));
-    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.resolve(false));
     spyOn(Orgservice, 'getAdminOrgUsage').and.returnValue($q.resolve(usageFixture));
   }));
@@ -247,7 +246,6 @@ describe('SetupWizardCtrl', function () {
 
   describe('When there are only shared device licenses', function () {
     beforeEach(function () {
-      FeatureToggleService.atlasDarlingGetStatus = jasmine.createSpy().and.returnValue($q.resolve(true));
       Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.resolve(usageOnlySharedDevicesFixture));
 
       initController();

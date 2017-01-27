@@ -576,7 +576,6 @@
       vm.hasCallEntitlement = Authinfo.isSquaredUC() || vm.isNewTrial();
       var promises = {
         atlasCareCallbackTrials: FeatureToggleService.atlasCareCallbackTrialsGetStatus(),
-        atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; })
@@ -589,7 +588,6 @@
           vm.showRoomSystems = true;
           vm.showContextServiceTrial = true;
           vm.showCare = results.ftCareTrials;
-          vm.sbTrial = results.atlasDarling;
           vm.isCallBackEnabled = results.atlasCareCallbackTrials;
           vm.atlasTrialsShipDevicesEnabled = results.ftShipDevices;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;
@@ -1193,7 +1191,7 @@
     function getNewOrgInitResults(results, hasCallEntitlement, stateDefaults) {
       var initResults = {};
       _.set(initResults, 'roomSystemTrial.enabled', true);
-      _.set(initResults, 'sparkBoardTrial.enabled', results.atlasDarling);
+      _.set(initResults, 'sparkBoardTrial.enabled', true);
       _.set(initResults, 'webexTrial.enabled', true);
       _.set(initResults, 'meetingTrial.enabled', true);
       _.set(initResults, 'callTrial.enabled', hasCallEntitlement);
