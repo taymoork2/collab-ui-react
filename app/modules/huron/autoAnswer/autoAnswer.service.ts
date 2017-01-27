@@ -1,11 +1,13 @@
-import { LineConsumerType } from './../lines/services';
-import { AutoAnswerPhone, AutoAnswerMember, AutoAnswer } from './autoAnswer';
+import { LineConsumerType } from 'modules/huron/lines/services';
+import { AutoAnswerPhone, AutoAnswerMember, AutoAnswer } from 'modules/huron/autoAnswer';
 
 export interface IAutoAnswerResource extends ng.resource.IResourceClass<ng.resource.IResource<AutoAnswer>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<ISetAutoAnswer>>;
 }
 
 export class AutoAnswerConst {
+  public static PHONES = 'phones';
+  public static MEMBER  = 'member';
   public static ENABLED = 'enabled';
   public static SPEAKERPHONE = 'AUTO_ANSWER_WITH_SPEAKERPHONE';
   public static HEADSET = 'AUTO_ANSWER_WITH_HEADSET';
@@ -57,7 +59,7 @@ export class AutoAnswerService {
       numberId: _numberId,
     }).$promise.then(data => {
         let autoAnswer = new AutoAnswer();
-        let phoneList: Array<IAutoAnswerPhone> = _.get(data, 'phones', []);
+        let phoneList: Array<IAutoAnswerPhone> = _.get(data, AutoAnswerConst.PHONES, []);
         autoAnswer.phones = _.map(_.filter(phoneList, (phone) => { return phone.autoAnswer.supported === 'true'; }), (supportedPhone) => {
           let label = _.first(this.DeviceService.getTags(this.DeviceService.decodeHuronTags(supportedPhone.description))) as string;
           if (!label || label === '') {
@@ -73,7 +75,7 @@ export class AutoAnswerService {
               mode: supportedPhone.autoAnswer.enabled === 'true' ? supportedPhone.autoAnswer.mode : undefined });
         });
 
-        autoAnswer.member = new AutoAnswerMember(_.get(data, 'member'));
+        autoAnswer.member = new AutoAnswerMember(_.get(data, AutoAnswerConst.MEMBER));
         return autoAnswer;
       }
     );

@@ -1,9 +1,9 @@
-import { LineOverviewData } from './index';
-import { Line, LineConsumerType } from '../services';
-import { CallForward } from '../../callForward';
-import { AutoAnswerConst, AutoAnswer, AutoAnswerPhone, AutoAnswerMember } from '../../autoAnswer';
-import { SharedLine, SharedLinePlace, SharedLineUser, SharedLinePhone } from '../../sharedLine';
-import { Member } from '../../members';
+import { LineOverviewData } from 'modules/huron/lines/lineOverview/index';
+import { Line, LineConsumerType } from 'modules/huron/lines/services';
+import { CallForward } from 'modules/huron/callForward';
+import { AutoAnswerConst, AutoAnswer, AutoAnswerPhone, AutoAnswerMember } from 'modules/huron/autoAnswer';
+import { SharedLine, SharedLinePlace, SharedLineUser, SharedLinePhone } from 'modules/huron/sharedLine';
+import { Member } from 'modules/huron/members';
 
 describe('Service: LineOverviewService', () => {
   beforeEach(function () {
@@ -101,7 +101,7 @@ describe('Service: LineOverviewService', () => {
 
     let autoAnswerRead = getJSONFixture('huron/json/autoAnswer/autoAnswer.json');
     let autoAnswerData: AutoAnswer = new AutoAnswer();
-    _.forEach(_.get(autoAnswerRead, 'phones', []), (phone: AutoAnswerPhone) => {
+    _.forEach(_.get(autoAnswerRead, AutoAnswerConst.PHONES, []), (phone: AutoAnswerPhone) => {
       autoAnswerData.phones.push(
             new AutoAnswerPhone({
               uuid: phone.uuid,
@@ -111,7 +111,7 @@ describe('Service: LineOverviewService', () => {
               enabled: phone.enabled,
               mode: phone.enabled ? phone.mode : undefined }));
       });
-    autoAnswerData.member = new AutoAnswerMember(_.get(autoAnswerRead, 'member'));
+    autoAnswerData.member = new AutoAnswerMember(_.get(autoAnswerRead, AutoAnswerConst.MEMBER));
     this.autoAnswer = autoAnswerData;
 
     this.callForward = new CallForward();

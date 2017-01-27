@@ -1,6 +1,6 @@
-import { LineConsumerType } from './../lines/services';
-import { AutoAnswer, AutoAnswerPhone, AutoAnswerMember } from './autoAnswer';
-import { AutoAnswerConst, ISetAutoAnswer } from './autoAnswer.service';
+import { LineConsumerType } from 'modules/huron/lines/services';
+import { AutoAnswer, AutoAnswerPhone, AutoAnswerMember } from 'modules/huron/autoAnswer/autoAnswer';
+import { AutoAnswerConst, ISetAutoAnswer } from 'modules/huron/autoAnswer/autoAnswer.service';
 
 describe('Service: AutoAnswerService', () => {
   beforeEach(function () {
@@ -16,7 +16,7 @@ describe('Service: AutoAnswerService', () => {
     this.getAutoAnswerResponse = getJSONFixture('huron/json/autoAnswer/autoAnswerGetResponse.json');
     this.autoAnswerRead = getJSONFixture('huron/json/autoAnswer/autoAnswer.json');
     this.autoAnswerData = new AutoAnswer();
-    _.forEach(_.get(this.autoAnswerRead, 'phones', []), (phone: AutoAnswerPhone) => {
+    _.forEach(_.get(this.autoAnswerRead, AutoAnswerConst.PHONES, []), (phone: AutoAnswerPhone) => {
       this.autoAnswerData.phones.push(
             new AutoAnswerPhone({
               uuid: phone.uuid,
@@ -26,7 +26,7 @@ describe('Service: AutoAnswerService', () => {
               enabled: phone.enabled,
               mode: phone.enabled ? phone.mode : undefined }));
       });
-    this.autoAnswerData.member = new AutoAnswerMember(_.get(this.autoAnswerRead, 'member'));
+    this.autoAnswerData.member = new AutoAnswerMember(_.get(this.autoAnswerRead, AutoAnswerConst.MEMBER));
 
     this.getAutoAnswerNoEnabledPhoneResponse = getJSONFixture('huron/json/autoAnswer/autoAnswerNoEnabledPhoneGetResponse.json');
     this.autoAnswerNoEnabledPhoneData = _.cloneDeep(this.autoAnswerData);

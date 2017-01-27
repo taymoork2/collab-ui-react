@@ -1,12 +1,12 @@
-import { CallForward } from '../../callForward';
-import { LineService, LineConsumerType, LINE_CHANGE, Line } from '../services';
-import { LineOverviewService, LineOverviewData } from './index';
-import { DirectoryNumberOptionsService, Availability, ExternalNumberType, Pattern } from '../../directoryNumber';
-import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
-import { Member, MemberService } from '../../members';
-import { SharedLine, SharedLineService } from '../../sharedLine';
+import { CallForward } from 'modules/huron/callForward';
+import { LineService, LineConsumerType, LINE_CHANGE, Line } from 'modules/huron/lines/services';
+import { LineOverviewService, LineOverviewData } from 'modules/huron/lines/lineOverview/index';
+import { DirectoryNumberOptionsService, Availability, ExternalNumberType, Pattern } from 'modules/huron/directoryNumber';
+import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
+import { Member, MemberService } from 'modules/huron/members';
+import { SharedLine, SharedLineService } from 'modules/huron/sharedLine';
 import { Notification } from 'modules/core/notifications';
-import { AutoAnswerService } from '../../autoAnswer';
+import { AutoAnswerService } from 'modules/huron/autoAnswer';
 
 class LineOverview implements ng.IComponentController {
   private ownerType: string;

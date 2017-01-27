@@ -1,5 +1,5 @@
-import { LineConsumerType, Line } from '../services';
-import { CallForward } from '../../callForward';
+import { LineConsumerType, Line } from 'modules/huron/lines/services';
+import { CallForward } from 'modules/huron/callForward';
 
 describe('Component: lineOverview', () => {
   const BUTTON_SAVE = '.button-container .btn--primary';

@@ -1,10 +1,10 @@
-import { LineService, LineConsumerType, Line } from '../services';
-import { HuronSiteService } from '../../sites';
-import { CallForward, CallForwardAll, CallForwardBusy, CallForwardService } from '../../callForward';
-import { SharedLine, SharedLineService, SharedLinePhone, SharedLinePhoneListItem } from '../../sharedLine';
-import { Member } from '../../members';
-import { ICallerID, CallerIDService } from '../../callerId';
-import { AutoAnswer, AutoAnswerService } from '../../autoAnswer';
+import { LineService, LineConsumerType, Line } from 'modules/huron/lines/services';
+import { HuronSiteService } from 'modules/huron/sites';
+import { CallForward, CallForwardAll, CallForwardBusy, CallForwardService } from 'modules/huron/callForward';
+import { SharedLine, SharedLineService, SharedLinePhone, SharedLinePhoneListItem } from 'modules/huron/sharedLine';
+import { Member } from 'modules/huron/members';
+import { ICallerID, CallerIDService } from 'modules/huron/callerId';
+import { AutoAnswer, AutoAnswerService } from 'modules/huron/autoAnswer';
 
 export class LineOverviewData {
   public line: Line;

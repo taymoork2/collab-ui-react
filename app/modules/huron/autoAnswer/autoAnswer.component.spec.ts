@@ -1,6 +1,6 @@
-import autoAnswerModule from './index';
-import { AutoAnswerConst } from './autoAnswer.service';
-import { AutoAnswer } from './autoAnswer';
+import autoAnswerModule from 'modules/huron/autoAnswer/index';
+import { AutoAnswerConst } from 'modules/huron/autoAnswer/autoAnswer.service';
+import { AutoAnswer } from 'modules/huron/autoAnswer/autoAnswer';
 
 describe('Component: autoAnswer', () => {
   const AUTO_ANSWER_TITLE = '#autoAnswerTitle';

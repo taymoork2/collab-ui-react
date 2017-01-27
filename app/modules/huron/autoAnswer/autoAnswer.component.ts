@@ -1,7 +1,7 @@
-import { IOption } from './../dialing/dialing.service';
-import { AutoAnswerMember, AutoAnswerPhone } from './autoAnswer';
-import { AutoAnswerConst } from './autoAnswer.service';
-import { MemberType, USER_REAL_USER } from '../members';
+import { IOption } from 'modules/huron/dialing/dialing.service';
+import { AutoAnswerMember, AutoAnswerPhone } from 'modules/huron/autoAnswer';
+import { AutoAnswerConst } from 'modules/huron/autoAnswer/autoAnswer.service';
+import { MemberType, USER_REAL_USER } from 'modules/huron/members';
 
 export class AutoAnswerCtrl implements ng.IComponentController {
   public onChangeFn: Function;
@@ -12,6 +12,7 @@ export class AutoAnswerCtrl implements ng.IComponentController {
   public autoAnswerPhoneOptions: IOption[];
   public autoAnswerPhoneSelected: IOption | undefined;
   public autoAnswerMode: string | null | undefined;
+  private phoneList: Array<AutoAnswerPhone>;
 
   /* @ngInject */
   constructor (
@@ -22,39 +23,16 @@ export class AutoAnswerCtrl implements ng.IComponentController {
     this.autoAnswerNoSupportedPhone = false;
     this.autoAnswerEnabledForSharedLineMemberMsg = '';
     this.autoAnswerEnabled = false;
+    this.phoneList = [];
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
     let autoAnswerChanges = changes['autoAnswer'];
     if (autoAnswerChanges) {
-      if (_.isUndefined(autoAnswerChanges.currentValue) || _.isNull(autoAnswerChanges.currentValue)) {
-            this.autoAnswerNoSupportedPhone = true;
-            return;
-      }
+      this.processPhoneListChange(autoAnswerChanges);
 
-      let phoneList: Array<AutoAnswerPhone> = autoAnswerChanges.currentValue.phones;
-      if (_.isUndefined(phoneList) || _.isNull(phoneList) || phoneList.length === 0) {
-        this.autoAnswerNoSupportedPhone = true;
-        return;
-      }
-
-      this.convertAutoAnswerPhonesToOptionsArray(phoneList as Array<AutoAnswerPhone>);
-
-      let autoAnswerPhone: AutoAnswerPhone = _.find(phoneList, AutoAnswerConst.ENABLED);
-      if (autoAnswerPhone) {
-        this.autoAnswerEnabled = true;
-        this.autoAnswerPhoneSelected = _.find(this.autoAnswerPhoneOptions, { value: autoAnswerPhone.uuid });
-        this.autoAnswerMode = autoAnswerPhone.mode;
-      } else {
-        this.autoAnswerEnabled = false;
-        this.autoAnswerMode = undefined;
-        this.autoAnswerPhoneSelected = (phoneList.length === 1) ? this.autoAnswerPhoneOptions[0] : undefined ;
-      }
-
-      let member: AutoAnswerMember = autoAnswerChanges.currentValue.member;
-      let enabledForSharedLineMember: boolean = autoAnswerChanges.currentValue.enabledForSharedLineMember;
-      if (member && enabledForSharedLineMember) {
-        this.autoAnswerEnabledForSharedLineMemberMsg = this.getCustomSharedLineMemberWarningMsg(member);
+      if (!this.autoAnswerNoSupportedPhone) {
+        this.processAutoAnswerSelectionChange(autoAnswerChanges);
       }
     }
   }
@@ -83,6 +61,24 @@ export class AutoAnswerCtrl implements ng.IComponentController {
     }
   }
 
+  private processPhoneListChange(autoAnswerChanges: ng.IChangesObject): void {
+      if (_.isUndefined(autoAnswerChanges.currentValue) || _.isNull(autoAnswerChanges.currentValue)) {
+            this.autoAnswerNoSupportedPhone = true;
+            return;
+      }
+
+      let _phoneList: Array<AutoAnswerPhone> = autoAnswerChanges.currentValue.phones;
+      if (_.isUndefined(_phoneList) || _.isNull(_phoneList) || _phoneList.length === 0) {
+        this.autoAnswerNoSupportedPhone = true;
+        return;
+      }
+
+      if (!_.isEqual(this.phoneList, _phoneList)) {
+        this.convertAutoAnswerPhonesToOptionsArray(_phoneList as Array<AutoAnswerPhone>);
+        this.phoneList = _phoneList;
+      }
+  }
+
   private convertAutoAnswerPhonesToOptionsArray(autoAnswerPhones: Array<AutoAnswerPhone>): void {
     this.autoAnswerPhoneOptions = _.map(autoAnswerPhones, (phone) => {
       return { label: phone.description,
@@ -97,6 +93,24 @@ export class AutoAnswerCtrl implements ng.IComponentController {
           type: MemberType.USER_PLACE,
           name: sharedLineMemeber.displayName };
     return this.$translate.instant('autoAnswerPanel.userSharedLineDescription', memberInfo);
+  }
+
+  private processAutoAnswerSelectionChange(autoAnswerChanges: ng.IChangesObject): void {
+      let autoAnswerPhone: AutoAnswerPhone = _.find(this.phoneList, AutoAnswerConst.ENABLED);
+      if (autoAnswerPhone) {
+        this.autoAnswerEnabled = true;
+        this.autoAnswerPhoneSelected = _.find(this.autoAnswerPhoneOptions, { value: autoAnswerPhone.uuid });
+        this.autoAnswerMode = autoAnswerPhone.mode;
+      } else {
+        this.autoAnswerEnabled = false;
+        this.autoAnswerMode = undefined;
+        this.autoAnswerPhoneSelected = (this.phoneList.length === 1) ? this.autoAnswerPhoneOptions[0] : undefined ;
+      }
+
+      let member: AutoAnswerMember = autoAnswerChanges.currentValue.member;
+      if (member && autoAnswerChanges.currentValue.enabledForSharedLineMember) {
+        this.autoAnswerEnabledForSharedLineMemberMsg = this.getCustomSharedLineMemberWarningMsg(member);
+      }
   }
 
   private change(uuid: string | undefined, enabled: boolean, mode: string | null | undefined): void {
