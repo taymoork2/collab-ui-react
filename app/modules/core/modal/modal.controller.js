@@ -1,8 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .controller('ModalCtrl', ModalCtrl);
+  module.exports = ModalCtrl;
 
   /* @ngInject */
   function ModalCtrl(title, message, close, dismiss, btnType, hideTitle, hideDismiss) {

@@ -1,52 +1,60 @@
 'use strict';
 
+var testModule = require('./index').default;
+
 describe('Controller: ModalCtrl', function () {
-  var controller, $scope;
 
-  var title = 'myTitle';
-  var message = 'myMessage';
-  var close = 'myClose';
-  var dismiss = 'myDismiss';
-  var btnType = 'myBtnType';
-  var hideTitle = false;
-  var hideDismiss = false;
+  function init() {
+    var _this = this;
 
-  afterEach(function () {
-    controller = $scope = undefined;
-  });
+    _this.data = {
+      title: 'myTitle',
+      message: 'myMessage',
+      close: 'myClose',
+      dismiss: 'myDismiss',
+      btnType: 'myBtnType',
+      hideTitle: false,
+      hideDismiss: false
+    };
 
-  afterAll(function () {
-    title = message = close = dismiss = btnType = hideTitle = hideDismiss = undefined;
-  });
+    this.initModules(testModule, function ($provide) {
+      $provide.value("title", _this.data.title);
+      $provide.value("message", _this.data.message);
+      $provide.value("close", _this.data.close);
+      $provide.value("dismiss", _this.data.dismiss);
+      $provide.value("btnType", _this.data.btnType);
+      $provide.value("hideTitle", _this.data.hideTitle);
+      $provide.value("hideDismiss", _this.data.hideDismiss);
+    });
+    this.injectDependencies(
+      '$rootScope',
+      '$controller'
+    );
 
-  beforeEach(angular.mock.module('Core'));
+    initController.apply(_this);
+  }
 
-  beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("title", title);
-    $provide.value("message", message);
-    $provide.value("close", close);
-    $provide.value("dismiss", dismiss);
-    $provide.value("btnType", btnType);
-    $provide.value("hideTitle", hideTitle);
-    $provide.value("hideDismiss", hideDismiss);
-  }));
-
-  beforeEach(inject(function ($rootScope, $controller) {
-    $scope = $rootScope.$new();
-
-    controller = $controller('ModalCtrl', {
-      $scope: $scope
+  function initController() {
+    this.$scope = this.$rootScope.$new();
+    this.controller = this.$controller('ModalCtrl', {
+      $scope: this.$scope
     });
 
-    $scope.$apply();
-  }));
+    this.$scope.$apply();
+  }
+
+  beforeEach(init);
+
+  ///////////////////
 
   it('should set provided values', function () {
-    expect(controller.title).toEqual(title);
-    expect(controller.message).toEqual(message);
-    expect(controller.close).toEqual(close);
-    expect(controller.dismiss).toEqual(dismiss);
-    expect(controller.btnType).toEqual(btnType);
+    expect(this.controller.title).toEqual(this.data.title);
+    expect(this.controller.message).toEqual(this.data.message);
+    expect(this.controller.close).toEqual(this.data.close);
+    expect(this.controller.dismiss).toEqual(this.data.dismiss);
+    expect(this.controller.btnType).toEqual(this.data.btnType);
+    expect(this.controller.hideTitle).toEqual(this.data.hideTitle);
+    expect(this.controller.hideDismiss).toEqual(this.data.hideDismiss);
   });
 
 });

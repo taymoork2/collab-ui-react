@@ -12,6 +12,7 @@
     require('modules/core/auth/user').default,
     require('modules/core/auth/auth'),
     require('modules/core/auth/token.service'),
+    require('modules/core/modal').default,
     'core.body',
     'core.languages',
     'core.localize',
