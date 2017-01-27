@@ -1,17 +1,17 @@
 'use strict';
 
 describe('Controller: TrialCtrl:', function () {
-  var controller, helpers, $controller, $scope, $state, $q, $translate, $window, $httpBackend, Authinfo, Analytics, Config, Notification, TrialService, TrialContextService, TrialPstnService, HuronCustomer, FeatureToggleService, Orgservice;
+  var controller, helpers, $controller, $scope, $state, $q, $translate, $window, $httpBackend, Authinfo, Analytics, Config, Notification, TrialService, TrialContextService, TrialPstnService, HuronCountryService, HuronCustomer, FeatureToggleService, Orgservice;
 
   var stateParams = {};
   var addContextSpy, removeContextSpy, addWatchSpy;
   var trialEditResponse = getJSONFixture('core/json/trials/trialEditResponse.json');
   var purchasedCustomerData = getJSONFixture('core/json/customers/customerWithLicensesNoTrial.json');
   var purchasedWithTrialCustomerData = getJSONFixture('core/json/customers/customerWithLicensesAndTrial.json');
-
+  var countryList = getJSONFixture('core/json/trials/countryList.json');
 
   afterEach(function () {
-    controller = helpers = $controller = $scope = $state = $q = $translate = $window = $httpBackend = Analytics = Authinfo = Config = Notification = TrialService = TrialContextService = HuronCustomer = FeatureToggleService = Orgservice = undefined;
+    controller = helpers = $controller = $scope = $state = $q = $translate = $window = $httpBackend = Analytics = Authinfo = Config = Notification = TrialService = TrialContextService = HuronCustomer = HuronCountryService = FeatureToggleService = Orgservice = undefined;
   });
 
   afterAll(function () {
@@ -24,7 +24,7 @@ describe('Controller: TrialCtrl:', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _$q_, _$translate_, _$window_, _$httpBackend_, _Analytics_, _Authinfo_, _Config_, _Notification_, _TrialService_, _TrialContextService_, _TrialPstnService_, _HuronCustomer_, _FeatureToggleService_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _$q_, _$translate_, _$window_, _$httpBackend_, _Analytics_, _Authinfo_, _Config_, _Notification_, _TrialService_, _TrialContextService_, _TrialPstnService_, _HuronCountryService_, _HuronCustomer_, _FeatureToggleService_, _Orgservice_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $state = _$state_;
@@ -42,6 +42,7 @@ describe('Controller: TrialCtrl:', function () {
     Orgservice = _Orgservice_;
     TrialPstnService = _TrialPstnService_;
     Config = _Config_;
+    HuronCountryService = _HuronCountryService_;
 
 
     spyOn(Notification, 'success');
@@ -73,6 +74,8 @@ describe('Controller: TrialCtrl:', function () {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
 
+    spyOn(HuronCountryService, 'getCountryList').and.returnValue($q.resolve(countryList));
+
     $httpBackend
       .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null?disableCache=false')
       .respond({});
@@ -89,6 +92,7 @@ describe('Controller: TrialCtrl:', function () {
       Orgservice: Orgservice,
       Notification: Notification,
       HuronCustomer: HuronCustomer,
+      HuronCountryService: HuronCountryService,
       FeatureToggleService: FeatureToggleService,
     });
     helpers = controller._helpers;

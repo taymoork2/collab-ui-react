@@ -3583,7 +3583,11 @@
     "roomSystem": "Room Device",
     "deviceBasedServices": "Device-based Services",
     "call": "Call",
-    "activeServicesInformation": "These services are already purchased."
+    "activeServicesInformation": "These services are already purchased.",
+    "regionalSettings": "Regional Settings",
+    "defaultCountry": "Default Country",
+    "defaultCountryDesc": "Specify the country to set the correct dial tone on user devices.",
+    "defaultCountryPlaceholder": "Select your country"
   },
   "trialModal": {
     "addTrial": {
