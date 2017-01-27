@@ -1,6 +1,7 @@
 import './_mySubscription.scss';
 import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { Notification } from 'modules/core/notifications';
+import { OnlineUpgradeService, IBmmpAttr } from 'modules/online/upgrade/upgrade.service';
 
 const baseCategory = {
   label: undefined,
@@ -30,6 +31,7 @@ class MySubscriptionCtrl {
   public isSharedMeetingsEnabled: boolean;
   public temporarilyOverrideSharedMeetingsFeatureToggle = { default: true, defaultValue: true };
   public temporarilyOverrideSharedMeetingsReportsFeatureToggle = { default: false, defaultValue: true };
+  public bmmpAttr: IBmmpAttr;
 
   /* @ngInject */
   constructor(
@@ -40,6 +42,7 @@ class MySubscriptionCtrl {
     private Config,
     private FeatureToggleService,
     private DigitalRiverService: DigitalRiverService,
+    private OnlineUpgradeService: OnlineUpgradeService,
     private Notification: Notification,
     private Orgservice,
     private ServiceDescriptor,
@@ -64,11 +67,7 @@ class MySubscriptionCtrl {
 
     this.isOnline = Authinfo.isOnline();
 
-    if (this.isOnline) {
-      this.initIframe();
-    } else {
-      this.hybridServicesRetrieval();
-    }
+    this.hybridServicesRetrieval();
     this.subscriptionRetrieval();
     this.initFeatures();
   }
@@ -99,16 +98,6 @@ class MySubscriptionCtrl {
     }
   }
 
-  private initIframe(): void {
-    this.loading = true;
-    this.DigitalRiverService.getSubscriptionsUrl().then((subscriptionsUrl) => {
-      this.digitalRiverSubscriptionsUrl = subscriptionsUrl;
-    }).catch((response) => {
-      this.loading = false;
-      this.Notification.errorWithTrackingId(response, 'subscriptions.loadError');
-    });
-  }
-
   private upgradeTrialUrl(subId) {
     return this.$http.get(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/' + subId).then((response) => {
       if (response.data) {
@@ -133,29 +122,14 @@ class MySubscriptionCtrl {
     return undefined;
   }
 
-  private getProductInstanceId(subId) {
-    return this.$http.get<any>(this.UrlConfig.getAdminServiceUrl() + 'commerce/productinstances?ciUUID=' + this.Authinfo.getUserId()).then((response) => {
-      let productInstanceId = _.get<string>(response, 'data.productGroups[0].productInstance[0].productInstanceId');
-      if (productInstanceId) {
-        return productInstanceId;
-      } else {
-        return this.emptyOnlineProductInstance();
-      }
+  private getChangeSubURL(): ng.IPromise<string> {
+    return this.DigitalRiverService.getSubscriptionsUrl().then((subscriptionsUrl) => {
+      return subscriptionsUrl;
     }).catch((error) => {
-      return this.productInstanceErrorResponse(error, subId);
+      this.loading = false;
+      this.Notification.errorWithTrackingId(error, 'subscriptions.loadError');
+      return '';
     });
-  }
-
-  private productInstanceErrorResponse(error, subId) {
-    this.Notification.errorWithTrackingId(error, 'subscriptions.onlineProductInstanceError', {
-      trialId: subId,
-    });
-    return this.emptyOnlineTrialUrl();
-  }
-
-  private emptyOnlineProductInstance() {
-    this.productInstanceFailed = true;
-    return undefined;
   }
 
   private broadcastSingleSubscription(subscription, trialUrl)  {
@@ -218,6 +192,7 @@ class MySubscriptionCtrl {
           viewAll: false,
           upgradeTrialUrl: undefined,
           productInstanceId: undefined,
+          changeplanOverride: undefined,
         };
         if (subscription.subscriptionId && (subscription.subscriptionId !== 'unknown')) {
           newSubscription.subscriptionId = subscription.subscriptionId;
@@ -307,20 +282,43 @@ class MySubscriptionCtrl {
       });
 
       _.forEach(this.subscriptionDetails, (subscription: any) => {
-        if (subscription.isTrial && this.isOnline) {
-          this.upgradeTrialUrl(subscription.internalSubscriptionId).then((response) => {
-            if (response && this.subscriptionDetails.length === 1) {
-              this.getProductInstanceId(subscription.internalSubscriptionId).then((prodResponse) => {
-                if (prodResponse) {
-                  this.subscriptionDetails[0].productInstanceId = prodResponse;
-                  this.broadcastSingleSubscription(this.subscriptionDetails[0], response);
-                }
-              });
-            }
-            subscription.upgradeTrialUrl = response;
-          });
-        } else if (this.subscriptionDetails.length === 1) {
-          this.broadcastSingleSubscription(this.subscriptionDetails[0], undefined);
+        if (subscription.isOnline) {
+          if (subscription.isTrial) {
+            this.upgradeTrialUrl(subscription.internalSubscriptionId).then((response) => {
+              if (response && this.subscriptionDetails.length === 1) {
+                this.OnlineUpgradeService.getProductInstanceId(this.Authinfo.getUserId()).then((prodResponse) => {
+                  if (prodResponse) {
+                    this.subscriptionDetails[0].productInstanceId = prodResponse;
+                    this.bmmpAttr = {
+                      subscriptionId: this.subscriptionDetails[0].internalSubscriptionId,
+                      productInstanceId: this.subscriptionDetails[0].productInstanceId,
+                      changeplanOverride: '',
+                    };
+                    this.broadcastSingleSubscription(this.subscriptionDetails[0], response);
+                  }
+                });
+              }
+              subscription.upgradeTrialUrl = response;
+            });
+          } else {
+            this.OnlineUpgradeService.getProductInstanceId(this.Authinfo.getUserId()).then((prodResponse) => {
+              if (prodResponse) {
+                this.subscriptionDetails[0].productInstanceId = prodResponse;
+                this.getChangeSubURL().then((urlResponse) => {
+                  if (urlResponse) {
+                    this.subscriptionDetails[0].changeplanOverride = urlResponse;
+                    this.bmmpAttr = {
+                      subscriptionId: this.subscriptionDetails[0].internalSubscriptionId,
+                      productInstanceId: this.subscriptionDetails[0].productInstanceId,
+                      changeplanOverride: urlResponse,
+                    };
+
+                    this.broadcastSingleSubscription(this.subscriptionDetails[0], undefined);
+                  }
+                });
+              }
+            });
+          }
         }
       });
     });

@@ -18,6 +18,7 @@ describe('Component: upgradeModal', () => {
     spyOn(this.Auth, 'logout');
     spyOn(this.Notification, 'success');
     spyOn(this.OnlineUpgradeService, 'getSubscriptionId').and.returnValue('123');
+    spyOn(this.OnlineUpgradeService, 'getProductInstanceId').and.returnValue(this.$q.when('987'));
     spyOn(this.OnlineUpgradeService, 'cancelSubscriptions').and.returnValue(this.$q.resolve());
     spyOn(this.OnlineUpgradeService, 'dismissModal');
 
@@ -25,7 +26,8 @@ describe('Component: upgradeModal', () => {
   });
 
   it('should have a subscriptionId', function () {
-    expect(this.controller.subscriptionId).toEqual('123');
+    expect(this.controller.bmmpAttr.subscriptionId).toEqual('123');
+    expect(this.controller.bmmpAttr.productInstanceId).toEqual('987');
   });
 
   it('should successfuly cancel subscriptions', function () {

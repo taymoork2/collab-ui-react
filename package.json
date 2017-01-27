@@ -66,7 +66,7 @@
     "angularjs-slider": "5.9.0",
     "angularjs-toaster": "~1.2.0",
     "api-check": "~7.5.0",
-    "bmmp": "=0.0.1",
+    "bmmp": "=0.0.4",
     "bootstrap-sass": "3.3.5",
     "bootstrap-tokenfield": "~0.12.0",
     "clipboard": "~1.5.5",
