@@ -1578,7 +1578,11 @@
       "modalNote": "Note: The more users included, the longer the report takes to generate.",
       "modalCTA": "Export to CSV",
       "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s",
-      "userNotFound": "Not found"
+      "userNotFound": "Not found",
+      "readingUserStatuses": "Reading user statuses…",
+      "readingConnectors": "Reading cluster assignments…",
+      "prepareFile": "Preparing export file…",
+      "pleaseWait": "Please wait"
     },
     "overview": {
       "activated": "Activated",

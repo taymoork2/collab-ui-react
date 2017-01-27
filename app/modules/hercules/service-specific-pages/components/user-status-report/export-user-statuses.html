@@ -16,13 +16,21 @@
           type="checkbox"
           id="{{'ckid_' + item.id + '_' + item.stateType}}"
           name="{{item.stateType}}"
-          ng-disabled="item.unselectable"
+          ng-disabled="item.unselectable || exportUserStatusesCtrl.exportingUserStatusReport"
           ng-model="exportUserStatusesCtrl.statusTypes[serviceIndex][itemIndex].selected"
           cs-input-label="{{item.text}}: {{item.count}}">
       </div>
     </div>
-   </form>
-    <p><strong translate="hercules.export.modalNote"></strong></p>
+  </form>
+  <p ng-if="!exportUserStatusesCtrl.exportingUserStatusReport"><strong translate="hercules.export.modalNote"></strong></p>
+  <div ng-if="exportUserStatusesCtrl.exportingUserStatusReport">
+    <div class="progressbar-info export-user-statuses-progress-info">
+      <span class="progressbar-label">{{exportUserStatusesCtrl.progress.message}}</span>
+      <span class="progressbar-progress" ng-if="exportUserStatusesCtrl.progress.current > 0">{{exportUserStatusesCtrl.progress.current}} / {{exportUserStatusesCtrl.progress.total}}</span>
+      <span class="progressbar-progress" ng-if="exportUserStatusesCtrl.progress.current === 0" translate="hercules.export.pleaseWait"></span>
+    </div>
+    <progressbar max="exportUserStatusesCtrl.progress.total" value="exportUserStatusesCtrl.progress.current"></progressbar>
+  </div>
 </div>
 
 <div class="modal-footer">
@@ -33,8 +41,7 @@
   </button>
   <button
     cs-btn
-    ng-disabled="exportUserStatusesCtrl.nothingToExport()"
-    loading="exportUserStatusesCtrl.exportingUserStatusReport"
+    ng-disabled="exportUserStatusesCtrl.nothingToExport() || exportUserStatusesCtrl.exportingUserStatusReport"
     class="btn btn--primary"
     ng-click="exportUserStatusesCtrl.exportCSV()">
       <span translate="hercules.export.modalCTA"></span>
