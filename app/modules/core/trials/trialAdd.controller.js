@@ -499,7 +499,6 @@
         atlasCareCallbackTrials: FeatureToggleService.atlasCareCallbackTrialsGetStatus(),
         atlasContextServiceTrials: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
-        placesEnabled: FeatureToggleService.supports(FeatureToggleService.features.csdmPstn),
         atlasTrialsShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus()
       })
         .then(function (results) {
@@ -539,7 +538,6 @@
 
           meetingModal.enabled = true;
 
-          vm.placesEnabled = results.placesEnabled;
           setDeviceModal();
         })
         .finally(function () {
@@ -628,10 +626,10 @@
     }
 
     function toggleTrial() {
-      if (!vm.callTrial.enabled && !(vm.roomSystemTrial.enabled && vm.placesEnabled)) {
+      if (!vm.callTrial.enabled && !vm.roomSystemTrial.enabled) {
         vm.pstnTrial.enabled = false;
       }
-      if ((vm.callTrial.enabled || (vm.roomSystemTrial.enabled && vm.placesEnabled)) && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
+      if ((vm.callTrial.enabled || vm.roomSystemTrial.enabled) && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
         vm.pstnTrial.enabled = true;
       }
 
@@ -738,7 +736,7 @@
           return response;
         })
         .then(function (response) {
-          if (vm.placesEnabled ? (vm.callTrial.enabled || vm.roomSystemTrial.enabled) : vm.callTrial.enabled) {
+          if (vm.callTrial.enabled || vm.roomSystemTrial.enabled) {
             return HuronCustomer.create(vm.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
                 Notification.errorResponse(response, 'trialModal.squareducError');

@@ -8,10 +8,6 @@ require('./_setup-wizard.scss');
 
   function SetupWizardCtrl($scope, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, Utils) {
 
-    FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
-      $scope.pstnEnabled = pstnEnabled;
-    });
-
     $scope.tabs = [];
     var tabs = [{
       name: 'planReview',
@@ -116,7 +112,7 @@ require('./_setup-wizard.scss');
 
     function showCallSettings() {
       return Authinfo.getLicenses().filter(function (license) {
-        return license.licenseType === Config.licenseTypes.COMMUNICATION || ($scope.pstnEnabled && license.licenseType === Config.licenseTypes.SHARED_DEVICES);
+        return license.licenseType === Config.licenseTypes.COMMUNICATION || license.licenseType === Config.licenseTypes.SHARED_DEVICES;
       }).length > 0;
     }
 

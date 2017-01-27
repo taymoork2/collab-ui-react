@@ -38,11 +38,7 @@ describe('Controller: TrialAddCtrl', function () {
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
-      if (param == 'csdm-pstn') {
-        return $q.resolve(false);
-      } else {
-        fail('the following toggle wasn\'t expected ' + param);
-      }
+      fail('the following toggle wasn\'t expected ' + param);
     });
 
     spyOn(Notification, 'success');

@@ -26,7 +26,6 @@ describe('Controller: PlacesCtrl', function () {
     spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({}));
     spyOn(Userservice, 'getUser');
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve());
-    spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve());
   }

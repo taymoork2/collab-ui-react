@@ -62,12 +62,7 @@ describe('Controller: TrialCtrl:', function () {
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
-      if (param == 'csdm-pstn') {
-        return $q.resolve(false);
-      } else {
-        fail('the following toggle wasn\'t expected' + param); //taking control of which toggles this controller are using (explicit or implicit)
-      }
-      return $q.resolve(false);
+      fail('the following toggle wasn\'t expected' + param); //taking control of which toggles this controller are using (explicit or implicit)
     });
     spyOn(Orgservice, 'getAdminOrgAsPromise').and.returnValue($q.resolve({
       data: {
@@ -1189,7 +1184,7 @@ describe('Controller: TrialCtrl:', function () {
       controller.roomSystemTrial.enabled = true;
       $scope.$apply();
       $scope.$digest();
-      expect(controller.pstnTrial.enabled).toBeFalsy();
+      expect(controller.pstnTrial.enabled).toBeTruthy();
     });
 
     it('should have call trial and not skip pstn after watch', function () {

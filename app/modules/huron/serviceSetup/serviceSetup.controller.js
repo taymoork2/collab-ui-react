@@ -11,20 +11,12 @@
     CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction,
     PstnSetupService, Orgservice, FeatureToggleService, Config) {
     var vm = this;
-    vm.isTimezoneAndVoicemail = function (enabled) {
+    vm.isTimezoneAndVoicemail = function () {
       return Authinfo.getLicenses().filter(function (license) {
-        return enabled ? (license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
+        return license.licenseType === Config.licenseTypes.COMMUNICATION;
       }).length > 0;
     };
-    FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
-      vm.showTimezoneAndVoicemail = vm.isTimezoneAndVoicemail(pstnEnabled);
-      if (!vm.showTimezoneAndVoicemail) {
-        vm.model.site.preferredLanguage = {
-          label: "English (United States)",
-          value: "en_US"
-        };
-      }
-    });
+    vm.showTimezoneAndVoicemail = vm.isTimezoneAndVoicemail();
     vm.NATIONAL = 'national';
     vm.LOCAL = 'local';
     var DEFAULT_SITE_INDEX = '000001';
@@ -108,6 +100,13 @@
       regionCode: '',
       initialRegionCode: ''
     };
+
+    if (!vm.showTimezoneAndVoicemail) {
+      vm.model.site.preferredLanguage = {
+        label: "English (United States)",
+        value: "en_US"
+      };
+    }
 
     vm.firstTimeSetup = $state.current.data.firstTimeSetup;
     vm.hasVoicemailService = false;

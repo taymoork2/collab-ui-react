@@ -579,8 +579,7 @@
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
-        adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
-        placesEnabled: FeatureToggleService.supports(FeatureToggleService.features.csdmPstn)
+        adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; })
       };
       if (!vm.isNewTrial()) {
         promises.tcHasService = TrialContextService.trialHasService(vm.currentTrial.customerOrgId);
@@ -602,7 +601,7 @@
           var initResults = (vm.isExistingOrg()) ? getExistingOrgInitResults(results, vm.hasCallEntitlement, vm.preset, vm.paidServices) : getNewOrgInitResults(results, vm.hasCallEntitlement, vm.stateDefaults);
           _.merge(vm, initResults);
           if (vm.isNewTrial()) {
-            vm.placesEnabled = results.placesEnabled;
+            vm.placesEnabled = true;
           }
           updateTrialService(_messageTemplateOptionId);
           vm.paidServicesForDisplay = getPaidServicesForDisplay(Authinfo.getOrgId(), Authinfo.getOrgName());
@@ -664,22 +663,6 @@
     }
 
     function toggleTrial() {
-      /* ALINA PR NOTE: Refactoring logic here.  Previously:
-        FOR TrialAdd:
-          if (!vm.callTrial.enabled && !(vm.roomSystemTrial.enabled && vm.placesEnabled)) {
-            vm.pstnTrial.enabled = false;
-          }
-          if ((vm.callTrial.enabled || (vm.roomSystemTrial.enabled && vm.placesEnabled)) && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
-            vm.pstnTrial.enabled = true;
-          }
-        FOR  TrialEdit:
-          if (!vm.callTrial.enabled) {
-            vm.pstnTrial.enabled = false;
-          }
-          if (vm.callTrial.enabled && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
-            vm.pstnTrial.enabled = true;
-          }
-      */
       var newTrialPstnAdditonalTest = (vm.roomSystemTrial.enabled && vm.placesEnabled);
       if (vm.isEditTrial()) {
         newTrialPstnAdditonalTest = true;
