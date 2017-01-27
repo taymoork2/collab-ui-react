@@ -414,15 +414,17 @@
     // }
 
     function pickDateBucket(item, granularity) {
-      var day = item.date.toString();
-      var formattedDate = day.substr(0, 4) + '-' + day.substr(4, 2) + '-' + day.substr(6, 2);
+      //var day = item.date.toString();
+      // var formattedDate = day.substr(0, 4) + '-' + day.substr(4, 2) + '-' + day.substr(6, 2);
       //$log.info('pickDateBucket', formattedDate);
-      var date = moment(formattedDate).startOf(granularity);
+      //var date = moment(formattedDate).startOf(granularity);
+      var date = moment(item.date).startOf(granularity);
       switch (granularity) {
         case 'day':
           return date.format('YYYYMMDD');
         case 'week':
-          return moment(formattedDate).startOf('isoWeek').format('YYYYMMDD');
+          //return moment(formattedDate).startOf('isoWeek').format('YYYYMMDD');
+          return moment(item.date).startOf('isoWeek').format('YYYYMMDD');
         case 'month':
           return date.format('YYYYMMDD');
       }
