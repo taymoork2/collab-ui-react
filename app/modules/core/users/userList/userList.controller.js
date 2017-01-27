@@ -225,7 +225,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     }
 
     function loadedAllUsers() {
-      return (_.size($scope.userList.allUsers) >= $scope.totalUsersExpected) || $scope.tooManyUsers;
+      return (_.size($scope.userList.allUsers) >= $scope.totalUsersExpected);
     }
 
     // returns true if there is any more data to load from the server
