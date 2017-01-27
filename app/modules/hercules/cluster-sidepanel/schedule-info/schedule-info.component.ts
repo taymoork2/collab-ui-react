@@ -14,9 +14,9 @@ interface ICluster {
 }
 
 interface ISchedule {
-  dateTime?: string;
-  urgentScheduleTime?: string;
-  timeZone?: string;
+  dateTime: string;
+  urgentScheduleTime: string;
+  timeZone: string;
 }
 
 export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController {
@@ -26,7 +26,7 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
   public hasF237FeatureToggle: boolean = false;
   public releaseChannelName: string;
   public resourceGroupName: string;
-  public schedule: ISchedule = {};
+  public schedule: ISchedule | {} = {};
 
   /* @ngInject */
   constructor(
@@ -49,7 +49,7 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
       this.buildSchedule();
       if (this.hasF237FeatureToggle) {
         this.findResourceGroupName()
-          .then((resourceGroupName) => {
+          .then(resourceGroupName => {
             this.resourceGroupName = resourceGroupName;
           });
       }
@@ -58,13 +58,15 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
   }
 
   private buildSchedule = () => {
-    this.schedule.dateTime = this.FusionClusterService.formatTimeAndDate(this.cluster.upgradeSchedule);
-    this.schedule.urgentScheduleTime = this.FusionClusterService.formatTimeAndDate({
-      scheduleTime: this.cluster.upgradeSchedule.urgentScheduleTime,
-      // Simulate every day
-      scheduleDays: { length: 7 },
-    });
-    this.schedule.timeZone = this.cluster.upgradeSchedule.scheduleTimeZone;
+    this.schedule = {
+      dateTime: this.FusionClusterService.formatTimeAndDate(this.cluster.upgradeSchedule),
+      urgentScheduleTime: this.FusionClusterService.formatTimeAndDate({
+        scheduleTime: this.cluster.upgradeSchedule.urgentScheduleTime,
+        // Simulate every day
+        scheduleDays: { length: 7 },
+      }),
+      timeZone: this.cluster.upgradeSchedule.scheduleTimeZone,
+    };
   }
 
   private findResourceGroupName = () => {

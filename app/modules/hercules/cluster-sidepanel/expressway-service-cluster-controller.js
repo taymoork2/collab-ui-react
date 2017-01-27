@@ -178,12 +178,6 @@
       }
     };
 
-    vm.goToExpresswaySettings = function () {
-      $state.go('expressway-settings', {
-        id: vm.clusterId,
-      });
-    };
-
     function openDeleteConfirm() {
       $modal.open({
         resolve: {

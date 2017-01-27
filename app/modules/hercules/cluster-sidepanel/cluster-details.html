@@ -82,9 +82,9 @@
               translate-values="{ManagementConnector: clusterDetailsCtrl.localizedManagementConnectorName, CiscoCollaborationCloud: clusterDetailsCtrl.localizedCCCName}"></span>
       </p>
     </div>
-    <div class="edit-cluster-link">
+    <div class="edit-cluster-link small">
       <a translate="hercules.softwareUpgrade.editSettingsLink"
-         ng-click="clusterDetailsCtrl.goToExpresswaySettings()"></a>
+         ui-sref="expressway-settings({id: clusterDetailsCtrl.clusterId})"></a>
     </div>
   </cs-sp-section>
 
