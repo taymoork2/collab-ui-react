@@ -464,7 +464,6 @@
           getAdminOrgError = true;
           return err;
         }),
-        sbTrial: FeatureToggleService.atlasDarlingGetStatus()
       };
 
       $q.all(promises)
@@ -483,7 +482,6 @@
           vm.showCare = results.ftCareTrials;
           vm.careTrial.enabled = vm.preset.care;
           vm.isCallBackEnabled = results.ftCallBackEnabled;
-          vm.sbTrial = results.sbTrial;
           updateTrialService(_messageTemplateOptionId);
 
           // To determine whether to display the ship devices page
