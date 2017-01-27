@@ -49,7 +49,8 @@
             customerId: vm.currentCustomer.customerOrgId,
             customerName: vm.currentCustomer.customerName,
             customerEmail: vm.currentCustomer.customerEmail,
-            customerCommunicationLicenseIsTrial: getCommTrial(vm.currentCustomer)
+            customerCommunicationLicenseIsTrial: getCommTrial(vm.currentCustomer, 'communications'),
+            customerRoomSystemsLicenseIsTrial: getCommTrial(vm.currentCustomer, 'roomSystems')
           });
         } else {
           return $state.go('didadd', {
@@ -59,11 +60,11 @@
       });
     }
 
-    function getCommTrial(org) {
+    function getCommTrial(org, type) {
       if (org.isPartner) {
         return false;
       }
-      return _.get(org, 'communications.isTrial', true);
+      return _.get(org, type + '.isTrial', true);
     }
   }
 })();

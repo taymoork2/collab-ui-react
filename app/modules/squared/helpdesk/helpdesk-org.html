@@ -10,9 +10,15 @@
 
   <div class="row full">
     <div class="details-column columns large-4 medium-5">
-
-      <h3 ng-class="{'pointer': helpdeskOrgCtrl.supportsExtendedInformation}" ng-click="helpdeskOrgCtrl.openExtendedInformation()">{{helpdeskOrgCtrl.org.displayName}}</h3>
-
+      <cr-inline-edit-text
+        class="h3"
+        value="helpdeskOrgCtrl.org.displayName"
+        on-save="helpdeskOrgCtrl.updateDisplayName(newValue)"
+        validation-messages="helpdeskOrgCtrl.editOrgValidationMessages"
+        async-validators="helpdeskOrgCtrl.editOrgAsyncValidators"
+        is-text-clickable="helpdeskOrgCtrl.supportsExtendedInformation"
+        on-text-click="helpdeskOrgCtrl.openExtendedInformation()">
+      </cr-inline-edit-text>
       <hr>
 
       <div class="customer-or-partner">

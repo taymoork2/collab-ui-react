@@ -863,7 +863,8 @@
       DomainManagementService.getVerifiedDomains().then(function (response) {
         var verifiedDomains = _.chain(response)
           .filter({ 'status': VERIFIED })
-          .pick('text');
+          .map('text')
+          .value();
         verifiedDomains = verifiedDomains.length > 0 ? verifiedDomains : ['.*'];
         var config = { 'allowedOrigins': verifiedDomains };
         SunlightConfigService.updateChatConfig(config);

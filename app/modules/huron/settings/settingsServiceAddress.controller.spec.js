@@ -69,6 +69,7 @@ describe('Controller: SettingsServiceAddressCtrl', function () {
     controller.save();
     $scope.$apply();
     $timeout.flush();
+    controller.addressStatus = 'COMPLETE';
 
     expect(PstnServiceAddressService.updateAddress).toHaveBeenCalled();
     expect(controller.hasModify()).toEqual(true);

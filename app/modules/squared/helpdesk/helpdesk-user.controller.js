@@ -6,7 +6,7 @@
     .controller('HelpdeskUserController', HelpdeskUserController);
 
   /* @ngInject */
-  function HelpdeskUserController($modal, $q, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, FusionUtils) {
+  function HelpdeskUserController($modal, $q, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, FusionUtils, ClusterService, Userservice, ResourceGroupService, UCCService) {
     var vm = this;
     var SUPPRESSED_STATE = {
       LOADING: 'loading',
@@ -309,8 +309,15 @@
       return deferred.promise;
     }
 
+    function resetEmailStatus() {
+      // reset property to remove any previous display value
+      vm.user.lastEmailStatus = null;
+    }
+
     function refreshEmailStatus(email) {
       var lastEmailStatus = {};
+
+      resetEmailStatus();
 
       // notes:
       // - even though we retrieve user details from 'getUser()', we fetch a user's email
@@ -379,12 +386,18 @@
             switch (status.serviceId) {
               case 'squared-fusion-cal':
                 vm.hybridServicesCard.cal.status = status;
+                vm.hybridServicesCard.cal.preferredWebExSiteName = Userservice.getPreferredWebExSiteForCalendaring(vm.user);
                 break;
               case 'squared-fusion-gcal':
                 vm.hybridServicesCard.gcal.status = status;
                 break;
               case 'squared-fusion-uc':
                 vm.hybridServicesCard.uc.status = status;
+                if (vm.hybridServicesCard.uc.status.state === 'error' || vm.hybridServicesCard.uc.status.state === 'activated') {
+                  UCCService.getUserDiscovery(vm.userId, vm.orgId).then(function (userDiscovery) {
+                    vm.hybridServicesCard.uc.directoryUri = userDiscovery.directoryURI;
+                  });
+                }
                 break;
               case 'squared-fusion-ec':
                 vm.hybridServicesCard.ec.status = status;
@@ -392,6 +405,16 @@
             }
             if (status.lastStateChange) {
               status.lastStateChangeText = FusionUtils.getTimeSinceText(status.lastStateChange);
+            }
+            if (status.connectorId) {
+              ClusterService.getConnector(status.connectorId).then(function (connector) {
+                status.homedConnector = connector;
+              });
+            }
+            if (status.resourceGroupId) {
+              ResourceGroupService.get(status.resourceGroupId, vm.orgId).then(function (resourceGroup) {
+                status.resourceGroup = resourceGroup;
+              });
             }
           });
         }, vm._helpers.notifyError);

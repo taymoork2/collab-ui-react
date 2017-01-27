@@ -43,7 +43,7 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(this.FeatureToggleService, 'getFeatureForUser').and.returnValue(this.$q.when(function () { return true; }));
     spyOn(this.FeatureToggleService, 'getFeaturesForUser').and.returnValue(this.$q.when(function () { return _this.featureToggles; }));
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
-    spyOn(this.FeatureToggleService, 'atlasSMPGetStatus').and.returnValue(this.$q.when(false));
+    spyOn(this.FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue(this.$q.when(false));
     spyOn(this.Authinfo, 'isCSB').and.returnValue(false);
 
     spyOn(this.Notification, 'success');
@@ -102,8 +102,7 @@ describe('Controller: UserOverviewCtrl', function () {
       initController.apply(this);
       expect(this.FeatureToggleService.getFeaturesForUser).toHaveBeenCalled();
       expect(this.Authinfo.isSquaredTeamMember).toHaveBeenCalled();
-      expect(this.controller.isSharedMultiPartyEnabled).toBeFalsy();
-
+      expect(this.controller.isSharedMeetingsEnabled).toBeTruthy();
     });
 
     it('should not set trainSiteNames list by default', function () {

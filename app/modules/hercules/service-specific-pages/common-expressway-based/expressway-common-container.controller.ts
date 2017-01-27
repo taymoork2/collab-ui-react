@@ -35,7 +35,7 @@ export abstract class ExpresswayContainerController {
       this.$modal.open({
         resolve: {
           connectorType: () => this.connectorType,
-          servicesId: () => this.servicesId[0],
+          serviceId: () => this.servicesId[0],
           firstTimeSetup: true,
         },
         controller: 'AddResourceController',

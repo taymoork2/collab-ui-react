@@ -21,6 +21,12 @@
         controllerAs: 'modal',
         type: 'dialog',
         resolve: {
+          hideDismiss: function () {
+            return options.hideDismiss || false;
+          },
+          hideTitle: function () {
+            return options.hideTitle || false;
+          },
           title: function () {
             return options.title || $translate.instant('common.modal');
           },

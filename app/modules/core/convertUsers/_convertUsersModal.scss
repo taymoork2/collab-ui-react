@@ -1,6 +1,19 @@
 @import 'styles/toolkit/spacing';
 @import 'styles/toolkit/colors';
 
+cr-convert-users-modal {
+  height: 100%;
+
+  .manage-users-dialog {
+    // 100% - header - footer
+    height: calc(100% - 160px);
+
+    .ui-grid-cell, .ui-grid-header-cell {
+      min-width: vr-adjust(400);
+    }
+  }
+}
+
 .convert-users {
   #convertCancelButton {
     margin-right: 10px;

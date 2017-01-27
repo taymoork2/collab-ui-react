@@ -7,7 +7,7 @@ require('./_user-manage.scss');
     .controller('UserManageOrgController', UserManageOrgController);
 
   /* @ngInject */
-  function UserManageOrgController($state, $stateParams, Analytics, UserCsvService, OnboardService) {
+  function UserManageOrgController($state, $stateParams, Analytics, UserCsvService, OnboardService, Orgservice) {
     var vm = this;
 
     vm.onInit = onInit;
@@ -17,12 +17,17 @@ require('./_user-manage.scss');
     vm.onNext = onNext;
     vm.cancelModal = cancelModal;
     vm.isOverExportThreshold = !!$stateParams.isOverExportThreshold;
+    vm.convertableUsers = false;
 
     vm.onInit();
 
     //////////////////
     function onInit() {
-
+      Orgservice.getUnlicensedUsers(function (data) {
+        if (data.success && data.totalResults > 0) {
+          vm.convertableUsers = true;
+        }
+      });
     }
 
     function cancelModal() {
@@ -45,6 +50,12 @@ require('./_user-manage.scss');
         case 'advanced':
           Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.INSTALL_CONNECTOR, Analytics.sections.ADD_USERS.uploadMethods.SYNC);
           $state.go('users.manage.advanced.add.ob.installConnector');
+          break;
+
+        case 'convert':
+          $state.go('users.convert', {
+            manageUsers: true
+          });
           break;
       }
     }

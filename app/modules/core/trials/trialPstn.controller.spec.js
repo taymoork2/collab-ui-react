@@ -119,15 +119,16 @@ describe('Controller: TrialPstnCtrl', function () {
     $scope.trial.details.customerName = customerName;
     $scope.trial.details.customerEmail = customerEmail;
 
+    spyOn(PstnSetupService, 'getResellerV2').and.returnValue($q.resolve());
+    spyOn(PstnSetupService, 'listResellerCarriers');
+    spyOn(PstnSetupService, 'listDefaultCarriers');
+
     controller = $controller('TrialPstnCtrl', {
       $scope: $scope,
       TrialPstnService: TrialPstnService,
     });
 
     trials = TrialPstnService.getData();
-
-    spyOn(PstnSetupService, 'listResellerCarriers');
-    spyOn(PstnSetupService, 'listDefaultCarriers');
 
     $scope.$apply();
   }));

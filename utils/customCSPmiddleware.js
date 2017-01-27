@@ -38,6 +38,7 @@ module.exports = csp({
       'https://*.ciscospark.com',
       'https://*.huron-dev.com',
       'https://*.huron-int.com',
+      'https://*.sparkc-eu.com',
       'https://*.huron.uno',
       'https://*.statuspage.io',
       'https://*.wbx2.com',

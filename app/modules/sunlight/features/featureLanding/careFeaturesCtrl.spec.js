@@ -118,7 +118,7 @@ describe('Care Feature Ctrl should ', function () {
       deleteFeatureId: featureTobBeDeleted.templateId,
       deleteFeatureType: featureTobBeDeleted.featureType
     });
-    expect(controller.listOfFeatures).not.toEqual(jasmine.arrayContaining([featureTobBeDeleted]));
+    expect(controller.filteredListOfFeatures).not.toEqual(jasmine.arrayContaining([featureTobBeDeleted]));
   });
 
   it('able to receive the CARE_FEATURE_DELETED event when template gets deleted and change pageState to NewFeature when no templates to show', function () {
@@ -133,7 +133,7 @@ describe('Care Feature Ctrl should ', function () {
       deleteFeatureId: featureTobBeDeleted.templateId,
       deleteFeatureType: featureTobBeDeleted.featureType
     });
-    expect(controller.listOfFeatures).not.toEqual(jasmine.arrayContaining([featureTobBeDeleted]));
+    expect(controller.filteredListOfFeatures).not.toEqual(jasmine.arrayContaining([featureTobBeDeleted]));
     expect(controller.pageState).toEqual('NewFeature');
   });
 
@@ -143,8 +143,8 @@ describe('Care Feature Ctrl should ', function () {
     $scope.$apply();
     $timeout.flush();
     controller.setFilter('chat');
-    expect(controller.listOfFeatures.length).toEqual(3);
-    expect(controller.listOfFeatures[0].name).toEqual('Sunlight Dev Template');
+    expect(controller.filteredListOfFeatures.length).toEqual(3);
+    expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
   });
 
   it('should filter a list of Callback templates', function () {
@@ -153,8 +153,8 @@ describe('Care Feature Ctrl should ', function () {
     $scope.$apply();
     $timeout.flush();
     controller.setFilter('callback');
-    expect(controller.listOfFeatures.length).toEqual(3);
-    expect(controller.listOfFeatures[0].name).toEqual('Sunlight Callback Dev Template');
+    expect(controller.filteredListOfFeatures.length).toEqual(3);
+    expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Callback Dev Template');
   });
 
   it('should filter all the templates', function () {
@@ -163,7 +163,7 @@ describe('Care Feature Ctrl should ', function () {
     $scope.$apply();
     $timeout.flush();
     controller.setFilter('all');
-    expect(controller.listOfFeatures.length).toEqual(templateList.length);
+    expect(controller.filteredListOfFeatures.length).toEqual(templateList.length);
   });
 
   it('should filter the list of templates to zero length', function () {
@@ -172,7 +172,7 @@ describe('Care Feature Ctrl should ', function () {
     $scope.$apply();
     $timeout.flush();
     controller.setFilter('XX');
-    expect(controller.listOfFeatures.length).toEqual(0);
+    expect(controller.filteredListOfFeatures.length).toEqual(0);
   });
 
   it('set the view to searched data and the chat template should come first and then callback template', function () {
@@ -181,9 +181,9 @@ describe('Care Feature Ctrl should ', function () {
     $scope.$apply();
     $timeout.flush();
     controller.searchData('Dev');
-    expect(controller.listOfFeatures.length).toEqual(2);
-    expect(controller.listOfFeatures[0].name).toEqual('Sunlight Dev Template');
-    expect(controller.listOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');
+    expect(controller.filteredListOfFeatures.length).toEqual(2);
+    expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
+    expect(controller.filteredListOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');
   });
 
   it('set the view to the searched data which is case insensitive and the chat template should come first and then callback template', function () {
@@ -192,13 +192,13 @@ describe('Care Feature Ctrl should ', function () {
     $scope.$apply();
     $timeout.flush();
     controller.searchData('Dev');
-    expect(controller.listOfFeatures.length).toEqual(2);
-    expect(controller.listOfFeatures[0].name).toEqual('Sunlight Dev Template');
-    expect(controller.listOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');
+    expect(controller.filteredListOfFeatures.length).toEqual(2);
+    expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
+    expect(controller.filteredListOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');
     controller.searchData('dev');
-    expect(controller.listOfFeatures.length).toEqual(2);
-    expect(controller.listOfFeatures[0].name).toEqual('Sunlight Dev Template');
-    expect(controller.listOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');
+    expect(controller.filteredListOfFeatures.length).toEqual(2);
+    expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
+    expect(controller.filteredListOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');
   });
 
   it('should filter the searched data from the list of Chat templates only', function () {
@@ -208,8 +208,8 @@ describe('Care Feature Ctrl should ', function () {
     $timeout.flush();
     controller.searchData('Dev');
     controller.setFilter('chat');
-    expect(controller.listOfFeatures.length).toEqual(1);
-    expect(controller.listOfFeatures[0].name).toEqual('Sunlight Dev Template');
+    expect(controller.filteredListOfFeatures.length).toEqual(1);
+    expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
   });
 
   it('should filter the searched data from the list of Callback templates only', function () {
@@ -219,8 +219,8 @@ describe('Care Feature Ctrl should ', function () {
     $timeout.flush();
     controller.searchData('Dev');
     controller.setFilter('callback');
-    expect(controller.listOfFeatures.length).toEqual(1);
-    expect(controller.listOfFeatures[0].name).toEqual('Sunlight Callback Dev Template');
+    expect(controller.filteredListOfFeatures.length).toEqual(1);
+    expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Callback Dev Template');
   });
 
 });

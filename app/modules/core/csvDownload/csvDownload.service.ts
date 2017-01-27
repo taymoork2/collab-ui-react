@@ -232,7 +232,7 @@ export class CsvDownloadService {
   }
 
   private exportUserCsv(fileName: string, newUserExportToggle: boolean): ng.IPromise<any> {
-    if (newUserExportToggle) {
+    if (newUserExportToggle || this.Authinfo.isCisco()) {
       // new Export API
       return this.newExportUserCsv(fileName);
     } else {

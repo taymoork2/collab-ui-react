@@ -48,6 +48,22 @@
               cs-input-label="{{::'userManage.org.advancedLabel'|translate}}"
               cs-input-help-text="{{::'userManage.org.advancedDetails'|translate}}">
           </li>
+          <li>
+            <input cs-input ng-if="umoc.convertableUsers"
+              type="radio"
+              ng-model="umoc.manageType"
+              id="org-convert"
+              ng-value="'convert'"
+              cs-input-label="{{::'userManage.org.convertLabel'|translate}}"
+              cs-input-help-text="{{::'userManage.org.convertDetails'|translate}}">
+            <input cs-input ng-if="!umoc.convertableUsers" disabled
+              type="radio"
+              ng-model="umoc.manageType"
+              id="org-convert"
+              ng-value="'convert'"
+              cs-input-label="{{::'userManage.org.convertLabel'|translate}}"
+              cs-input-help-text="{{::'userManage.org.convertUnavailable'|translate}}">
+          </li>
         </ul>
       </div>
     </div>
