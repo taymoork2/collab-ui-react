@@ -26,11 +26,13 @@ export class CalendarServiceContainerController extends ExpresswayContainerContr
   /* @ngInject */
   constructor($modal,
               $state: ng.ui.IStateService,
+              ClusterService,
               Notification: Notification,
               private $translate: ng.translate.ITranslateService,
               ServiceDescriptor,
+              ServiceStateChecker,
               USSService, ) {
-    super($modal, $state, Notification, ServiceDescriptor, USSService, ['squared-fusion-cal'], 'c_cal');
+    super($modal, $state, ClusterService, Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['squared-fusion-cal'], 'c_cal');
   }
 
 }
