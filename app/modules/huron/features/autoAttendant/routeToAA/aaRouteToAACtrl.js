@@ -103,8 +103,10 @@
         uiCombinedMenu = uiModel[$scope.schedule];
         vm.menuEntry = uiCombinedMenu.entries[$scope.index];
         conditionalAction = _.get(vm.menuEntry, 'actions[0]', '');
-        if (!conditionalAction) {
+        if (!conditionalAction || conditionalAction.getName() !== conditional) {
           conditionalAction = AutoAttendantCeMenuModelService.newCeActionEntry(conditional, '');
+          vm.menuEntry.actions[0] = conditionalAction;
+
         }
         if (!$scope.fromFallback) {
           if (!conditionalAction.then) {

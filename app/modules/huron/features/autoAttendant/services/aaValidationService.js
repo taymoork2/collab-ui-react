@@ -214,6 +214,10 @@
       var action = conditionalMenu.actions[0];
       var validAction = true;
 
+      if (_.get(action, 'name', '') !== 'conditional') {
+        return true;
+      }
+
       if (_.isEmpty(action.if.rightCondition)) {
         validAction = false;
         AANotificationService.error(errMissingIfVariableMsg, {

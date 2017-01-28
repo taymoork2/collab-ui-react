@@ -136,7 +136,8 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
       aa_menu_id: menuId,
       aa_index: index,
       aa_key_index: keyIndex,
-      aa_from_route_call: false
+      aa_from_route_call: false,
+      aa_from_decision: false
     });
   }));
 
@@ -248,7 +249,8 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         aa_menu_id: menuId,
         aa_index: index,
         aa_key_index: keyIndex,
-        aa_from_route_call: false
+        aa_from_route_call: false,
+        aa_from_decision: false
       });
 
       $scope.$apply();
@@ -267,7 +269,8 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         aa_menu_id: menuId,
         aa_index: index,
         aa_key_index: keyIndex,
-        aa_from_route_call: true
+        aa_from_route_call: true,
+        aa_from_decision: false
       });
 
       $scope.$apply();
@@ -286,7 +289,8 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         aa_menu_id: menuId,
         aa_index: index,
         aa_key_index: keyIndex,
-        aa_from_route_call: true
+        aa_from_route_call: true,
+        aa_from_decision: false
       });
 
       controller.languageOption.value = "de_DE";
@@ -310,7 +314,8 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         aa_menu_id: menuId,
         aa_index: index,
         aa_key_index: keyIndex,
-        aa_from_route_call: false
+        aa_from_route_call: false,
+        aa_from_decision: false
       });
 
 

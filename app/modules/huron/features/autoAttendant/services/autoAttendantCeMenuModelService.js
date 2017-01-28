@@ -426,7 +426,7 @@
       try {
         action.description = JSON.parse(action.description);
       } catch (exception) {
-        action.description = '';
+        return;
       }
       cesLanguageVoice(action, inAction.routeToQueue);
       cesMaxWaitTime(action, inAction.routeToQueue);
@@ -488,14 +488,6 @@
           action.level = 0;
         }
         menuEntry.addAction(action);
-      } else if (!_.isUndefined(inAction.routeToCollectedNumber)) {
-        action = new Action('routeToCollectedNumber', '');
-        setDescription(action, inAction.routeToCollectedNumber);
-        menuEntry.addAction(action);
-      } else if (!_.isUndefined(inAction.routeToDialedMailbox)) {
-        action = new Action('routeToDialedMailbox', '');
-        setDescription(action, inAction.routeToDialedMailbox);
-        menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.disconnect)) {
         action = new Action('disconnect', '');
         if (!_.isUndefined(inAction.disconnect.treatment)) {
@@ -506,10 +498,6 @@
         if (!_.isUndefined(inAction.disconnect.description)) {
           action.setDescription(inAction.disconnect.description);
         }
-        menuEntry.addAction(action);
-      } else if (!_.isUndefined(inAction.routeToDialed)) {
-        action = new Action('routeToDialed', '');
-        setDescription(action, inAction.routeToDialed);
         menuEntry.addAction(action);
       } else if (_.has(inAction, 'runActionsOnInput')) {
         action = new Action('runActionsOnInput', '');
@@ -564,6 +552,9 @@
       } else if (!_.isUndefined(inAction.routeToQueue)) {
         //this occurs on the way in from the db
         action = makeRouteToQueue(inAction);
+        if (!action) {
+          return;
+        }
         menuEntry.addAction(action);
       } else if (inAction.conditional) {
         var exp;
@@ -592,6 +583,9 @@
         }
         if (inAction.conditional.true[0].routeToQueue) {
           action.then = makeRouteToQueue(inAction.conditional.true[0]);
+          if (!action.then) {
+            return;
+          }
         }
 
         menuEntry.addAction(action);
@@ -606,7 +600,7 @@
       }
     }
     function parseLeftRightExpression(expression) {
-      /* expression looks like: "var func=function() {if(this['Original-Caller-Number'] in ['987','2387','292874']) {return true;} return false;};"
+      /* expression looks like: var func=function() {if(this['Original-Caller-Number'] === 'Seattle Phone2' || this['Original-Caller-Number'] === 'Seattle Phone1') {return true;} return false;};"
        *
        * grab the stuff btw the brackets
        */
@@ -615,9 +609,24 @@
 
       var pieces = [];
 
-      /* remove brackets and single quotes */
+      /* remove brackets and single quotes Only save one bracketed item*/
       pieces[0] = inBrackets[0].replace(/[[\]']/g, '');
-      pieces[1] = inBrackets[1].replace(/[[\]']/g, '');
+      // pieces[1] = inBrackets[1].replace(/[[\]']/g, '');
+
+      var btwQuotes = expression.match(/'[^']+'/g);
+
+      if (btwQuotes.length < 2) {
+        return pieces;
+      }
+      pieces[1] = '';
+
+      for (var i = 1; i < btwQuotes.length - 1; i += 2) {
+        pieces[1] += btwQuotes[1] + ",";
+      }
+
+      pieces[1] += btwQuotes[btwQuotes.length - 1];
+
+      pieces[1] = pieces[1].replace(/[[\]']/g, '');
 
       return pieces;
 
@@ -659,6 +668,19 @@
         }
       }
     }
+    /*
+    * construct ces definition of Moh from db
+    */
+    function constructCesMoh(parsedDescription) {
+      var musicOnHold = parsedDescription;
+      var playAction = new Action('play', musicOnHold.queueMoH);
+      playAction.setDescription(musicOnHold.description.musicOnHoldDescription);
+
+      musicOnHold = new CeMenuEntry();
+      musicOnHold.addAction(playAction);
+      return musicOnHold;
+    }
+
 
     /*
     * write initial announcement to db
@@ -709,18 +731,6 @@
           action.queueSettings = {};
         }
       }
-    }
-
-    /*
-    * construct ces definition of Moh from db
-    */
-    function constructCesMoh(parsedDescription) {
-      var musicOnHold = parsedDescription;
-      var playAction = new Action('play', musicOnHold.queueMoH);
-      playAction.setDescription(musicOnHold.description.musicOnHoldDescription);
-      musicOnHold = new CeMenuEntry();
-      musicOnHold.addAction(playAction);
-      return musicOnHold;
     }
 
     /*
@@ -1214,11 +1224,27 @@
       var out;
       var list;
 
-      var arry = _.toArray(action.if.rightCondition.split(","));
+      // right condition looks like: 'Seattle Phone2, Seattle Phone1'
 
-      list = JSON.stringify(arry).replace(/"/g, "'");
+      var pieces = action.if.rightCondition.split(",");
 
-      out = "var func=function() {if(this['" + action.if.leftCondition + "'] in " + list + ") {return true;} return false;};";
+      if (pieces.length === 0) {
+        return {};
+      }
+
+      // leftCondition looks like: 'Original-Caller-Number'
+
+      list = "this['" + action.if.leftCondition + "'] === '" + pieces[0].trim() + "'";
+
+      if (pieces.length > 1) {
+        for (var i = 1; i < pieces.length - 1; i++) {
+          list = list + " || this['" + action.if.leftCondition + "'] === '" + pieces[i].trim() + "'";
+        }
+        list = list + " || this['" + action.if.leftCondition + "'] === '" + pieces[pieces.length - 1].trim() + "'";
+      }
+
+      out = "var func=function() {if(" + list + ") {return true;} return false;};";
+      // out will look like: var func=function() {if(this['Original-Caller-Number'] === 'Seattle Phone2' || this['Original-Caller-Number'] === ' Seattle Phone1') {return true;} return false;};
 
       return out;
 
@@ -1238,8 +1264,15 @@
 
     }
 
+    function createFalseObj() {
+      var out = {};
+      out.route = {};
+      out.route.destination = '+17655328423';
+      return out;
+    }
 
     function createConditional(action) {
+
       var out = {};
       var tag;
 
@@ -1250,6 +1283,7 @@
       out.expression = createInListObj(action);
 
       out.true = [];
+      out.false = [];
 
       switch (action.then.name) {
         case 'route':
@@ -1263,6 +1297,7 @@
       }
 
       out.true.push(createObj(tag, action));
+      out.false.push(createFalseObj());
 
       return out;
 

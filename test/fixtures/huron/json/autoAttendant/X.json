@@ -49,83 +49,6 @@
           "ceid": "3333"
         }
       }, {
-      "conditional": {
-        "expression":"var func = function () { if(this['Original-Caller-Number'] === '4252201227,234857732', '12345678'){return true;} return false;};",
-        "true":[
-          {
-            "route":{
-              "destination":"+14254458476"
-            }
-          }
-       ]
-      }
-    }, {
-      "conditional": {
-        "expression":"var func = function () { if(this['Original-Caller-Number'] === '4252201227'){return true;} return false;};",
-        "true":[
-          {
-            "routeToHuntGroup":{ 
-              "id":"hunt group id"
-            }
-          } 
-       ]
-      }
-    },  {
-      "conditional": {
-        "expression":"var func = function () { if(this['Original-Caller-Number'] === '4252201227'){return true;} return false;};",
-        "true":[
-          {
-            "goto":{ 
-              "ceid":"goto ceid"
-            }
-          } 
-       ]
-      }
-    },  {
-      "conditional": {
-        "expression":"var func = function () { if(this['Original-Caller-Number'] === '4252201227'){return true;} return false;};",
-        "true":[
-          {
-            "routeToUser":{ 
-              "id":"RouteToUserId"
-            }
-          } 
-       ]
-      }
-    },  {
-      "conditional": {
-        "expression":"var func = function () { if(this['Original-Caller-Number'] === '4252201227'){return true;} return false;};",
-        "true":[
-          {
-            "routeToVoiceMail":{ 
-              "id":"routeToVoiceMailId"
-            }
-          } 
-       ]
-      }
-    },  {
-      "conditional": {
-        "expression":"var func = function () { if(this['Original-Caller-Number'] === '4252201227'){return true;} return false;};",
-        "true":[{
-          "routeToQueue": { 
-            "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}",
-            "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
-            "queueMoH": "http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav",
-            "queueInitialAnnouncement": "",
-            "queuePeriodicAnnouncements": [{
-              "queuePeriodicAnnouncement": "",
-              "queuePeriodicAnnouncementInterval": "45"
-            }],
-            "queueMaxTime": 15,
-            "queueFallback": {
-              "disconnect": {
-                "treatment": "none"
-              }
-            }
-          }
-        }]
-      }
-    },   {
         "runActionsOnInput": {
           "description": "{\"uploadFile\":\"testFile.wav\"}",
           "inputType": 4,
@@ -156,8 +79,21 @@
               }
             }]
           }]
+        } 
+    }, {
+      "conditional": {
+        "if": {
+          "leftCondition": "left conditional expression",
+          "rightCondition": "right conditional expression"
+        },
+        "then": {
+          "routeToVoiceMail": {
+            "id": "5991528f-d5c9-461a-b95f-a1e533dea0fc",
+            "description": ""
+          }
         }
-      }, {
+      }
+    }, {
       "routeToQueue": {
         "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}",
         "id": "c7e06eee-dcdd-44c8-a2f1-9980323fcb04",
@@ -228,10 +164,10 @@
           }
         }
       }
-    }]
+    } 
+    ] 
     }]
   },
-
   "ceWelcomeNoDescription": {
     "callExperienceName": "AA Welcome",
     "assignedResources": [{

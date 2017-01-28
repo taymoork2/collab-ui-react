@@ -3,7 +3,7 @@
 describe('Controller: AACallerInputCtrl', function () {
   var featureToggleService;
   var aaCommonService;
-
+  var aaQueueService;
   var controller;
   var AAUiModelService, AutoAttendantCeMenuModelService;
   var $rootScope, $scope;
@@ -11,6 +11,10 @@ describe('Controller: AACallerInputCtrl', function () {
   var aaUiModel = {
     openHours: {}
   };
+  var queue = [{
+    queueName: "queueyLewis",
+    queueUrl: "and/the/news",
+  }];
 
   var schedule = 'openHours';
   var index = '0';
@@ -18,7 +22,7 @@ describe('Controller: AACallerInputCtrl', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, $q, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_, _AACommonService_) {
+  beforeEach(inject(function ($controller, _$rootScope_, $q, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_, _AACommonService_, _QueueHelperService_) {
 
     $rootScope = _$rootScope_;
     $scope = $rootScope;
@@ -33,6 +37,7 @@ describe('Controller: AACallerInputCtrl', function () {
 
     featureToggleService = _FeatureToggleService_;
     aaCommonService = _AACommonService_;
+    aaQueueService = _QueueHelperService_;
 
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
@@ -187,5 +192,37 @@ describe('Controller: AACallerInputCtrl', function () {
     });
   });
 
+  describe('list Queues', function () {
+    beforeEach(inject(function ($q) {
+      spyOn(aaQueueService, 'listQueues').and.returnValue($q.when(queue));
+      aaCommonService.setRouteQueueToggle(true);
+    }));
 
+    it('should add the Queue option to the dropdown', function () {
+      var c, action;
+      var menu = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      action = AutoAttendantCeMenuModelService.newCeActionEntry('conditional', '');
+
+      action.if = {};
+
+      action.if.leftCondition = 'Original-Remote-Party-ID';
+      action.if.rightCondition = 'Hello world';
+
+      menu.addAction(action);
+
+      aaUiModel['openHours'].addEntryAt(index, menu);
+
+      c = controller('AADecisionCtrl', {
+        $scope: $scope
+      });
+
+      $scope.$apply();
+      var routeToQ = _.find(c.thenOptions, { 'value': 'routeToQueue' });
+
+      expect(routeToQ).toBeDefined();
+
+      expect(c.queues[0].description).toEqual("queueyLewis");
+      expect(c.queues[0].id).toEqual("news");
+    });
+  });
 });
