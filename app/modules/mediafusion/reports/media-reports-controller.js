@@ -248,12 +248,6 @@
       }, function () {
         Notification.error('mediaFusion.genericError');
       });
-
-      MediaReportsService.getHostedOnPremisesTooltip(vm.timeSelected).then(function (response) {
-        vm.onPremisesTooltipOptions = MediaSneekPeekResourceService.getHostedOnPremisesSneekPeekValues(response, vm.onprem, vm.clusterId, vm.clusterOptions);
-      }, function () {
-        Notification.error('mediaFusion.genericError');
-      });
     }
 
     function setUtilizationData() {

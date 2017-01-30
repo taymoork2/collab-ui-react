@@ -151,7 +151,6 @@ describe('Controller:MediaReportsController', function () {
       spyOn(MediaReportsService, 'getTotalCallsData').and.callThrough();
       spyOn(MediaReportsService, 'getClusterAvailabilityData').and.callThrough();
       spyOn(MediaReportsService, 'getClusterAvailabilityTooltip').and.callThrough();
-      spyOn(MediaReportsService, 'getHostedOnPremisesTooltip').and.callThrough();
       spyOn(MediaReportsService, 'getUtilizationData').and.callThrough();
       spyOn(MediaReportsService, 'getAvailabilityData').and.callThrough();
       spyOn(MediaReportsService, 'getCallVolumeData').and.callThrough();
@@ -160,7 +159,6 @@ describe('Controller:MediaReportsController', function () {
       expect(MediaReportsService.getTotalCallsData).toHaveBeenCalled();
       expect(MediaReportsService.getClusterAvailabilityData).toHaveBeenCalled();
       expect(MediaReportsService.getClusterAvailabilityTooltip).not.toHaveBeenCalled();
-      expect(MediaReportsService.getHostedOnPremisesTooltip).not.toHaveBeenCalled();
       expect(MediaReportsService.getUtilizationData).toHaveBeenCalled();
       expect(MediaReportsService.getAvailabilityData).toHaveBeenCalled();
       expect(MediaReportsService.getCallVolumeData).toHaveBeenCalled();
@@ -197,17 +195,13 @@ describe('Controller:MediaReportsController', function () {
 
     it('setSneekPeekData should call MediaReportsService and MediaSneekPeekResourceService', function () {
       spyOn(MediaReportsService, 'getClusterAvailabilityTooltip').and.callThrough();
-      spyOn(MediaReportsService, 'getHostedOnPremisesTooltip').and.callThrough();
       spyOn(MediaSneekPeekResourceService, 'getClusterAvailabilitySneekPeekValues').and.returnValue({
         values: ["dummyCluster"]
       });
-      spyOn(MediaSneekPeekResourceService, 'getHostedOnPremisesSneekPeekValues').and.returnValue();
       controller.setSneekPeekData();
       httpMock.flush();
       expect(MediaReportsService.getClusterAvailabilityTooltip).toHaveBeenCalled();
-      expect(MediaReportsService.getHostedOnPremisesTooltip).toHaveBeenCalled();
       expect(MediaSneekPeekResourceService.getClusterAvailabilitySneekPeekValues).toHaveBeenCalled();
-      expect(MediaSneekPeekResourceService.getHostedOnPremisesSneekPeekValues).toHaveBeenCalled();
     });
 
     it('should call dummysetUtilizationData for setUtilizationData when there is no data', function () {
