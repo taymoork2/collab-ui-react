@@ -102,7 +102,8 @@
     }
 
     function checkSnr() {
-      return (!vm.snrInfo.singleNumberReachEnabled && vm.snrInfo.remoteDestinations && vm.snrInfo.remoteDestinations.length > 0 && vm.snrInfo.remoteDestinations[0].destination !== null);
+      var remoteDestination = _.get(vm.snrInfo, 'remoteDestinations', []);
+      return (!vm.snrInfo.singleNumberReachEnabled && remoteDestination.length > 0 && remoteDestination[0].destination !== null);
     }
 
     function remove() {
@@ -210,7 +211,7 @@
     }
 
     function saveSingleNumberReach() {
-      if (_.isArray(vm.snrInfo.remoteDestinations) && vm.snrInfo.remoteDestinations.length > 0) {
+      if (_.isArray(vm.snrInfo.remoteDestinations) && _.get(vm.snrInfo, 'remoteDestinations', []).length > 0) {
         updateRemoteDestinationInfo(vm.currentUser, vm.snrInfo.remoteDest, vm.snrWaitSeconds.value)
         .then(function () {
           resetForm();

@@ -117,7 +117,7 @@ require('./_line-settings.scss');
     vm.getUserList = getUserList;
     vm.init = init;
 
-    // Flag to disable and add "loading" animation to Save button while line settings being saved
+    // Flag to disable and add 'loading' animation to Save button while line settings being saved
     vm.saveInProcess = false;
 
     vm.disassociateSharedLineUser = disassociateSharedLineUser;
@@ -345,7 +345,7 @@ require('./_line-settings.scss');
         // Can't remove primary line
         vm.showActions = true;
 
-        if (vm.telephonyInfo.currentDirectoryNumber.userDnUuid === "none") {
+        if (vm.telephonyInfo.currentDirectoryNumber.userDnUuid === 'none') {
           TelephonyInfoService.resetCurrentUser(vm.telephonyInfo.currentDirectoryNumber.uuid);
           vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
         }
@@ -372,7 +372,7 @@ require('./_line-settings.scss');
     // triggers UI changes to show or hide DID and DN elements
     function toggleShowExtensions() {
       return DialPlanService.getCustomerDialPlanDetails().then(function (response) {
-        if (response.extensionGenerated === "true") {
+        if (response.extensionGenerated === 'true') {
           vm.showExtensions = false;
           vm.internalNumberLabel = $translate.instant('directoryNumberPanel.externalNumberLabel');
         } else {
@@ -389,7 +389,7 @@ require('./_line-settings.scss');
       if (vm.showExtensions === false) {
         var dnLength = vm.assignedInternalNumber.pattern.length;
         // if the internalNumber was changed, find a matching DID and set the externalNumber to match
-        if (modifiedFieldName === "internalNumber") {
+        if (modifiedFieldName === 'internalNumber') {
           var matchingDid = _.find(vm.externalNumberPool, function (extNum) {
             return extNum.pattern.substr(-dnLength) === vm.assignedInternalNumber.pattern;
           });
@@ -399,7 +399,7 @@ require('./_line-settings.scss');
           }
         }
         // if the externalNumber was changed, find a matching DN and set the internalNumber to match
-        if (modifiedFieldName === "externalNumber") {
+        if (modifiedFieldName === 'externalNumber') {
           assignedExternalNumberChange();
           var matchingDn = _.find(vm.internalNumberPool, {
             pattern: vm.assignedExternalNumber.pattern.substr(-dnLength)
@@ -409,7 +409,7 @@ require('./_line-settings.scss');
           }
         }
       } else {
-        if (modifiedFieldName === "externalNumber") {
+        if (modifiedFieldName === 'externalNumber') {
           assignedExternalNumberChange();
         }
       }
@@ -419,7 +419,7 @@ require('./_line-settings.scss');
       //variable to set ESN for voicemail if the primary has changed
       var esn = vm.telephonyInfo.esn;
       var companyNumberObj = null;
-      vm.saveInProcess = true; // Set flag for "Save" button behavior
+      vm.saveInProcess = true; // Set flag for 'Save' button behavior
 
       var callForwardSet = processCallForward();
       if (callForwardSet === true) {
@@ -502,18 +502,18 @@ require('./_line-settings.scss');
             .then(function () {
               TelephonyInfoService.getUserDnInfo(vm.currentUser.id)
                 .then(function () {
-                  if (vm.telephonyInfo.currentDirectoryNumber.userDnUuid === "none") {
+                  if (vm.telephonyInfo.currentDirectoryNumber.userDnUuid === 'none') {
                     TelephonyInfoService.resetCurrentUser(vm.telephonyInfo.currentDirectoryNumber.uuid);
                     vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
                   }
                 });
               Notification.success('directoryNumberPanel.success');
-              vm.saveInProcess = false; // Set flag for "Save" button behavior
+              vm.saveInProcess = false; // Set flag for 'Save' button behavior
               resetForm();
             })
             .catch(function (response) {
               Notification.errorResponse(response, 'directoryNumberPanel.error');
-              vm.saveInProcess = false; // Set flag for "Save" button behavior
+              vm.saveInProcess = false; // Set flag for 'Save' button behavior
             });
         } else { // new line
           SharedLineInfoService.getUserLineCount(vm.currentUser.id)
@@ -548,7 +548,7 @@ require('./_line-settings.scss');
                         $state.go('user-overview.communication.directorynumber', {
                           directoryNumber: vm.directoryNumber
                         });
-                        vm.saveInProcess = false; // Set flag for "Save" button behavior
+                        vm.saveInProcess = false; // Set flag for 'Save' button behavior
                       });
                   });
               } else {
@@ -556,7 +556,7 @@ require('./_line-settings.scss');
                   user: name
                 });
                 $state.go('user-overview.communication');
-                vm.saveInProcess = false; // Set flag for "Save" button behavior
+                vm.saveInProcess = false; // Set flag for 'Save' button behavior
               }
             })
             .catch(function (response) {
@@ -1205,12 +1205,12 @@ require('./_line-settings.scss');
       if (!directLineUserName) {
         directLineUserName = name;
       }
-      if (vm.assignedExternalNumber.uuid !== "none") {
+      if (vm.assignedExternalNumber.uuid !== 'none') {
         vm.callerIdOptions.unshift(CallerId.constructCallerIdOption(directLine_label, directLine_type, directLineUserName, vm.assignedExternalNumber.pattern, null));
       }
       // Set the current caller ID selection
-      if (vm.callerIdInfo.callerIdSelection.value.externalCallerIdType === directLine_type) {
-        if (vm.assignedExternalNumber.uuid !== "none") {
+      if (_.get(vm.callerIdInfo, 'callerIdSelection.value.externalCallerIdType', '') === directLine_type) {
+        if (vm.assignedExternalNumber.uuid !== 'none') {
           vm.callerIdInfo.callerIdSelection = CallerId.getCallerIdOption(vm.callerIdOptions, directLine_type);
         } else {
           vm.callerIdInfo.callerIdSelection = CallerId.getCallerIdOption(vm.callerIdOptions, blockedCallerId_type);
