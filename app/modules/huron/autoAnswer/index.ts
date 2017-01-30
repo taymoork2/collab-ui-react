@@ -1,11 +1,11 @@
-import 'modules/huron/autoAnswer/_auto-answer.scss';
-import { AutoAnswerComponent } from 'modules/huron/autoAnswer/autoAnswer.component';
-import { AutoAnswerService } from 'modules/huron/autoAnswer/autoAnswer.service';
+import './_auto-answer.scss';
+import { AutoAnswerComponent } from './autoAnswer.component';
+import { AutoAnswerService } from './autoAnswer.service';
 
 import lineService from 'modules/huron/lines/services';
 
-export * from 'modules/huron/autoAnswer/autoAnswer.service';
-export * from 'modules/huron/autoAnswer/autoAnswer';
+export * from './autoAnswer.service';
+export * from './autoAnswer';
 
 export default angular
   .module('huron.auto-answer', [

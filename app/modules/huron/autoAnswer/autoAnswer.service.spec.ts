@@ -1,6 +1,6 @@
 import { LineConsumerType } from 'modules/huron/lines/services';
-import { AutoAnswer, AutoAnswerPhone, AutoAnswerMember } from 'modules/huron/autoAnswer/autoAnswer';
-import { AutoAnswerConst, ISetAutoAnswer } from 'modules/huron/autoAnswer/autoAnswer.service';
+import { AutoAnswer, AutoAnswerPhone, AutoAnswerMember } from './autoAnswer';
+import { AutoAnswerConst, ISetAutoAnswer } from './autoAnswer.service';
 
 describe('Service: AutoAnswerService', () => {
   beforeEach(function () {

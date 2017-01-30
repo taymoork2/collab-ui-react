@@ -1,6 +1,6 @@
 import { IOption } from 'modules/huron/dialing/dialing.service';
-import { AutoAnswerMember, AutoAnswerPhone } from 'modules/huron/autoAnswer';
-import { AutoAnswerConst } from 'modules/huron/autoAnswer/autoAnswer.service';
+import { AutoAnswerMember, AutoAnswerPhone } from './autoAnswer';
+import { AutoAnswerConst } from './autoAnswer.service';
 import { MemberType, USER_REAL_USER } from 'modules/huron/members';
 import { LineConsumerType } from 'modules/huron/lines/services/line.service';
 

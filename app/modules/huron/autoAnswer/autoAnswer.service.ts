@@ -1,5 +1,5 @@
 import { LineConsumerType } from 'modules/huron/lines/services';
-import { AutoAnswerPhone, AutoAnswerMember, AutoAnswer } from 'modules/huron/autoAnswer';
+import { AutoAnswerPhone, AutoAnswerMember, AutoAnswer } from './autoAnswer';
 
 export interface IAutoAnswerResource extends ng.resource.IResourceClass<ng.resource.IResource<AutoAnswer>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<ISetAutoAnswer>>;
