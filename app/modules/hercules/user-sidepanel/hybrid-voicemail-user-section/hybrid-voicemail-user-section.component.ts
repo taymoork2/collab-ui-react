@@ -1,4 +1,4 @@
-import { UCCService } from 'modules/hercules/services/ucc-service.ts';
+import { UCCService } from 'modules/hercules/services/ucc-service';
 
 class HybridVoicemailUserSectionCtrl implements ng.IComponentController {
 

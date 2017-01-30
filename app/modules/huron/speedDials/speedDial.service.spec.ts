@@ -6,7 +6,7 @@ describe('Service: SpeedDialService', () => {
       'Authinfo',
       'HuronConfig',
       '$q',
-      'SpeedDialService'
+      'SpeedDialService',
     );
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');

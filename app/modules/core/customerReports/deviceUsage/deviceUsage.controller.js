@@ -303,16 +303,16 @@ require('modules/core/reports/amcharts-export.scss');
     }
 
     function fillInStats(data) {
-      var stats = DeviceUsageTotalService.extractStats(data);
-      vm.totalDuration = secondsTohhmmss(stats.totalDuration);
-      vm.noOfCalls = stats.noOfCalls;
-      vm.noOfDevices = stats.noOfDevices;
+      DeviceUsageTotalService.extractStats(data).then(function (stats) {
+        vm.totalDuration = secondsTohhmmss(stats.totalDuration);
+        vm.noOfCalls = stats.noOfCalls;
+        vm.noOfDevices = stats.noOfDevices;
 
-      vm.mostUsedDevices = [];
-      vm.leastUsedDevices = [];
-
-      resolveDeviceData(stats.most, vm.mostUsedDevices)
-        .then(resolveDeviceData(stats.least, vm.leastUsedDevices));
+        vm.mostUsedDevices = [];
+        vm.leastUsedDevices = [];
+        resolveDeviceData(stats.most, vm.mostUsedDevices)
+          .then(resolveDeviceData(stats.least, vm.leastUsedDevices));
+      });
     }
 
     function resolveDeviceData(stats, target) {

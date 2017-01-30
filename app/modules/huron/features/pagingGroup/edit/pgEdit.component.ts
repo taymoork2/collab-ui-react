@@ -26,7 +26,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
   private userCount: number;
   private placeCount: number;
 
-  //Search 
+  //Search
   private listOfDisplayMembers: IMemberWithPicture[] = [];
   private searchStr: string;
 

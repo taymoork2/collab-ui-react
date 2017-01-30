@@ -21,7 +21,7 @@ export class FocusOn implements ng.IDirective {
     } else {
       focus(true);
     }
-  };
+  }
 
   /* @ngInject */
   public static directive(

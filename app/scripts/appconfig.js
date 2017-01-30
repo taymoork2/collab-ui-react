@@ -2516,6 +2516,21 @@
               }
             }
           })
+          .state('callpickupedit', {
+            url: '/features/pi/edit',
+            parent: 'main',
+            template: '<call-pickup-setup-assistant></call-pickup-setup-assistant>',
+            params: {
+              feature: null
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/callPickup'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            }
+          })
           .state('huronCallPark', {
             url: '/huronCallPark',
             parent: 'hurondetails',

@@ -31,7 +31,7 @@ export class CallServiceContainerController extends ExpresswayContainerControlle
               private $translate: ng.translate.ITranslateService,
               ServiceDescriptor,
               ServiceStateChecker,
-              USSService, ) {
+              USSService ) {
     super($modal, $state, ClusterService, Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['squared-fusion-uc'], 'c_ucmc');
     this.addConnectIfEnabled();
   }

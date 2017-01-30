@@ -7,7 +7,7 @@ class SubscriptionUpgradeButton implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private BmmpService: BmmpService
+    private BmmpService: BmmpService,
   ) {}
 
   public $onInit(): void {

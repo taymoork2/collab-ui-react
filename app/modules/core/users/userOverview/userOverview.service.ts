@@ -249,7 +249,7 @@ export class UserOverviewService {
       let ciTrainSiteNames = userData.user.trainSiteNames.filter(
         (chkSiteUrl) => {
           return this.WebExUtilsFact.isCIEnabledSite(chkSiteUrl);
-        }
+        },
       );
       userData.user.trainSiteNames = (0 < ciTrainSiteNames.length) ? ciTrainSiteNames : [];
     }

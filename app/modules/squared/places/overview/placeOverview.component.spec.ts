@@ -117,7 +117,7 @@ describe('placeOverview component', () => {
               currentStateName: jasmine.anything(),
               wizardState: jasmine.anything(),
 
-            }
+            },
           );
         });
       });
@@ -162,7 +162,7 @@ describe('placeOverview component', () => {
               currentStateName: jasmine.anything(),
               wizardState: jasmine.anything(),
 
-            }
+            },
           );
         });
       });
@@ -229,7 +229,7 @@ describe('placeOverview component', () => {
           history: jasmine.anything(),
           currentStateName: jasmine.anything(),
           wizardState: jasmine.anything(),
-        }
+        },
       );
     });
   });

@@ -241,6 +241,10 @@ require('./_feature-landing.scss');
         $state.go('huronPagingGroupEdit', {
           feature: feature
         });
+      } else if (feature.filterValue === 'PI') {
+        $state.go('callpickupedit', {
+          feature: feature
+        });
       }
     };
 

@@ -49,7 +49,7 @@ export class HuronSiteService {
   constructor(
     private $resource: ng.resource.IResourceService,
     private Authinfo,
-    private HuronConfig
+    private HuronConfig,
   ) {
     this.huronSiteService = <ISiteResource>this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sites/:siteId');
   }

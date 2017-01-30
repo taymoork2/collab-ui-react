@@ -21,7 +21,7 @@ export class Member {
     lastName?: string | undefined,
     userName?: string | undefined,
     displayName?: string | undefined,
-    numbers: Array<Line>
+    numbers: Array<Line>,
   }) {
     this.uuid = obj.uuid;
     this.type = obj.type;

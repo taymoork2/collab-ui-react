@@ -89,7 +89,6 @@
       deferred.promise.then(function () {
         setTotalCallsData();
         setAvailabilityData();
-        setSneekPeekData();
         setClusterAvailability();
         setUtilizationData();
         setCallVolumeData();
@@ -236,6 +235,7 @@
           vm.clusterAvailability = vm.noData;
         } else {
           vm.clusterAvailability = response.data.availabilityPercent + vm.percentage;
+          setSneekPeekData();
         }
       });
     }
@@ -245,12 +245,6 @@
         vm.availabilityTooltipOptions = MediaSneekPeekResourceService.getClusterAvailabilitySneekPeekValues(response, vm.Map, vm.clusterAvailability, vm.clusterId);
         vm.availabilityTooltipOptions['tooltipModel'] = vm.availabilityTooltipOptions.values[0];
         vm.availabilityTooltipOptions['tooltipClickHandler'] = clusterUpdateFromTooltip;
-      }, function () {
-        Notification.error('mediaFusion.genericError');
-      });
-
-      MediaReportsService.getHostedOnPremisesTooltip(vm.timeSelected).then(function (response) {
-        vm.onPremisesTooltipOptions = MediaSneekPeekResourceService.getHostedOnPremisesSneekPeekValues(response, vm.onprem, vm.clusterId, vm.clusterOptions);
       }, function () {
         Notification.error('mediaFusion.genericError');
       });

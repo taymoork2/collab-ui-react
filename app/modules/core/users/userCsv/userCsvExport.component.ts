@@ -44,10 +44,10 @@ class UserCsvExportController implements ng.IComponentController {
     this.exportFilename = this.$translate.instant('usersPage.csvFilename');
 
     this.eventListeners.push(
-      this.$rootScope.$on('csv-download-request-started', (): void => { this.onCsvDownloadRequestStarted(); })
+      this.$rootScope.$on('csv-download-request-started', (): void => { this.onCsvDownloadRequestStarted(); }),
     );
     this.eventListeners.push(
-      this.$rootScope.$on('csv-download-request-completed', (): void => { this.onCsvDownloadRequestCompleted(); })
+      this.$rootScope.$on('csv-download-request-completed', (): void => { this.onCsvDownloadRequestCompleted(); }),
     );
   }
 

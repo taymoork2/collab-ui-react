@@ -39,7 +39,7 @@ namespace domainManagement {
           });
           this._error = err;
           this._adding = false;
-        }
+        },
       );
     }
 
@@ -57,7 +57,7 @@ namespace domainManagement {
         status,
         startLog,
         1,
-        data
+        data,
       );
     }
 

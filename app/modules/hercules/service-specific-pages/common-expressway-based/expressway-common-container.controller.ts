@@ -15,7 +15,7 @@ export abstract class ExpresswayContainerController {
               private ServiceStateChecker,
               protected USSService,
               protected servicesId: string[],
-              private connectorType: string, ) {
+              private connectorType: string ) {
     this.firstTimeSetup();
     this.extractSummary();
     this.subscribeStatusesSummary = this.USSService.subscribeStatusesSummary('data', this.extractSummary.bind(this));
