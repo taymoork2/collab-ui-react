@@ -5657,6 +5657,8 @@
     "addMemberLabel": "Add & Search Members",
     "successSave": "'{{huntGroupName}}' hunt group has been created successfully",
     "successUpdate": "'{{huntGroupName}}' hunt group has been updated successfully",
+    "errorNamePattern": "May only contain alphanumeric, space, period, underscore and dash.",
+    "errorNameMaxLength": "Must contain a maximum of 50 characters.",
     "errorSave": "Failed to create the '{{huntGroupName}}' Hunt Group",
     "errorUpdate": "Failed to update the '{{huntGroupName}}' Hunt Group",
     "numberLabel": "Select Numbers",
