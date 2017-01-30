@@ -1678,6 +1678,8 @@
       "uninstalling": "Uninstalling",
       "running": "Running",
       "has_alarms": "Alarms",
+      "has_warning_alarms": "Alarms",
+      "has_error_alarms": "Alarms",
       "upgrading": "Upgrading",
       "upgraded": "Upgraded",
       "pending": "Pending",

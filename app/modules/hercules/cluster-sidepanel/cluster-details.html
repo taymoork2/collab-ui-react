@@ -99,10 +99,7 @@
                ui-sref="management-connector-details({host: host.hostname, hostSerial: connector.hostSerial, clusterId: clusterDetailsCtrl.clusterId, connectorType: 'c_mgmt'})"
             >
               <i class="icon icon-circle status-indicator"
-                 ng-class="clusterDetailsCtrl.getSeverity(connector.state).cssClass"
-                 ng-if="!clusterDetailsCtrl.hasConnectorAlarm(connector)"></i>
-              <i class="icon icon-circle status-indicator danger"
-                 ng-if="clusterDetailsCtrl.hasConnectorAlarm(connector)" ></i>
+                 ng-class="clusterDetailsCtrl.getSeverity(connector).cssClass"></i>
               <span class="feature-name">{{clusterDetailsCtrl.localizedManagementConnectorName}}</span>
               <span ng-if="connector.connectorType !== 'c_mgmt'" class="feature-name">{{clusterDetailsCtrl.localizedConnectorName}}</span>
               <span class="feature-status">{{connector.runningVersion}}</span>
@@ -111,11 +108,7 @@
             <a ng-if="connector.connectorType !== 'c_mgmt'"
                ui-sref="cluster-details.host-details({host: host.hostname, hostSerial: connector.hostSerial, clusterId: clusterDetailsCtrl.clusterId, connectorType: connector.connectorType})"
             >
-              <i class="icon icon-circle status-indicator"
-                 ng-class="clusterDetailsCtrl.getSeverity(connector.state).cssClass"
-                 ng-if="!clusterDetailsCtrl.hasConnectorAlarm(connector)"></i>
-              <i class="icon icon-circle status-indicator danger"
-                 ng-if="clusterDetailsCtrl.hasConnectorAlarm(connector)" ></i>
+              <i class="icon icon-circle status-indicator" ng-class="clusterDetailsCtrl.getSeverity(connector).cssClass"></i>
               <span class="feature-name">{{clusterDetailsCtrl.localizedConnectorName}}</span>
               <span class="feature-status">{{connector.runningVersion}}</span>
               <i class="feature-status feature-arrow"></i>

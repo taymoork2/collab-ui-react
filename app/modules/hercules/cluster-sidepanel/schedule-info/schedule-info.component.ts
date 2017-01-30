@@ -32,6 +32,8 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
   constructor(
     private $translate: ng.translate.ITranslateService,
     private FusionClusterService,
+    private ResourceGroupService,
+    private $q: ng.IQService,
   ) {}
 
   public $onInit() {}
@@ -70,16 +72,14 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
   }
 
   private findResourceGroupName = () => {
-    return this.FusionClusterService.getResourceGroups()
-      .then((response) => {
-        let group: any = _.find(response.groups, { id: this.cluster.resourceGroupId });
-        if (group) {
-          return group.name;
-        }
-        return undefined;
+    if (!this.cluster.resourceGroupId) {
+      return this.$q.resolve(undefined);
+    }
+    return this.ResourceGroupService.get(this.cluster.resourceGroupId)
+      .then((group) => {
+        return group.name;
       });
   }
-
 }
 
 export class ScheduleInfoSectionComponent implements ng.IComponentOptions {

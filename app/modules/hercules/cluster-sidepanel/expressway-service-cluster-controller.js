@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceClusterController', ExpresswayServiceClusterController);
 
   /* @ngInject */
-  function ExpresswayServiceClusterController($scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout, hasF237FeatureToggle, FusionClusterService, Notification, $window) {
+  function ExpresswayServiceClusterController($scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout, hasF237FeatureToggle, FusionClusterService, Notification, $window, FusionClusterStatesService) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.clusterId;
@@ -17,13 +17,12 @@
     vm.localizedManagementConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
     vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
     vm.localizedCCCName = $translate.instant('common.ciscoCollaborationCloud');
-    vm.getSeverity = ClusterService.getRunningStateSeverity;
+    vm.getSeverity = FusionClusterStatesService.getSeverity;
     vm.route = FusionUtils.connectorType2RouteName(vm.connectorType);
     vm.showUpgradeDialog = showUpgradeDialog;
     vm.fakeUpgrade = false;
     vm.fakeManagementUpgrade = false;
     vm.hasF237FeatureToggle = hasF237FeatureToggle;
-    vm.hasConnectorAlarm = hasConnectorAlarm;
     vm.openDeleteConfirm = openDeleteConfirm;
     vm.goToExpressway = goToExpressway;
 
@@ -161,14 +160,6 @@
         });
     }
     buildCluster();
-
-    function hasConnectorAlarm(connector) {
-      if (connector.alarms.length > 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }
 
     vm.sortConnectors = function (connector) {
       if (connector.connectorType === 'c_mgmt') {

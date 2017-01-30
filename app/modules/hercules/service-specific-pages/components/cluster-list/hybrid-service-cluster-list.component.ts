@@ -10,7 +10,7 @@ class HybridServiceClusterListCtrl implements ng.IComponentController {
 
     public clusterList: any = {};
     public clusterListGridOptions = {};
-    public getSeverity = this.ClusterService.getRunningStateSeverity;
+    public getSeverity = this.FusionClusterStatesService.getSeverity;
 
     private serviceId: string;
     private connectorType: string;
@@ -24,6 +24,7 @@ class HybridServiceClusterListCtrl implements ng.IComponentController {
         private ClusterService,
         private FusionClusterService,
         private FusionUtils,
+        private FusionClusterStatesService,
     ) {  }
 
     public $onInit() {
