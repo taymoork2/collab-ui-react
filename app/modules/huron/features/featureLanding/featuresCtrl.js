@@ -102,8 +102,14 @@ require('./_feature-landing.scss');
       color: 'people'
     };
 
-    FeatureToggleService.supports(FeatureToggleService.features.huronCallPickup).then(function (result) {
-      if (result) {
+    var featureTogglePromises = [];
+    var callPickupPromise = FeatureToggleService.supports(FeatureToggleService.features.huronCallPickup);
+    var pagingGroupPromise = FeatureToggleService.supports(FeatureToggleService.features.huronPagingGroup);
+
+    featureTogglePromises.push(callPickupPromise);
+    featureTogglePromises.push(pagingGroupPromise);
+    $q.all(featureTogglePromises).then(function (data) {
+      if (data[0] === true) {
         var pi = {
           name: $translate.instant('callPickup.title'),
           filterValue: 'PI'
@@ -111,10 +117,7 @@ require('./_feature-landing.scss');
         vm.features.push(piFeature);
         vm.filters.push(pi);
       }
-    });
-
-    FeatureToggleService.supports(FeatureToggleService.features.huronPagingGroup).then(function (result) {
-      if (result) {
+      if (data[1] === true) {
         var pg = {
           name: $translate.instant('pagingGroup.title'),
           filterValue: 'PG'
@@ -136,7 +139,6 @@ require('./_feature-landing.scss');
       var featuresPromises = getListOfFeatures();
 
       handleFeaturePromises(featuresPromises);
-
       $q.all(featuresPromises).then(function () {
         showNewFeaturePageIfNeeded();
       });
