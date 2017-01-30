@@ -1,17 +1,18 @@
 ## Setup the environment
 
 * On macOS: install Xcode toolchain: `xcode-select --install`
-* Project requires node v6 and npm v3.
+* Project requires node v6 and npm v3+.
 * Use [nvm](https://github.com/creationix/nvm) to manage your node versions
   * `nvm install lts/boron` to install the latest [LTS](https://github.com/nodejs/LTS) version
-  * `nvm ls-remote` to see list of available versions
+  * `nvm ls` to see list of locally available versions
+  * `nvm ls-remote` to see list of installable versions
 * `npm install` to install project dependencies (need to rerun after branch updates for new dependencies)
 * `npm start` or `npm run serve` to serve the dev application
 
 #### Alternative node/npm installation
 * If you dislike the convenience of a node version manager, you can install node/npm directly
-* Install `node`: `brew tap homebrew/versions && brew install node`
-* Install npm: `brew install npm && npm install -g npm`
+* Install `node v6`: `brew install node@6` (macOS)
+* But please note that you are on your own if you go this route (no support)
 
 #### Alternative project dependencies installation
 * `setup.sh` facilitates dependency installation for Jenkins builds by using checksums and archiving last good dependencies
