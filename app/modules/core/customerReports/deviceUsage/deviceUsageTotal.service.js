@@ -255,7 +255,7 @@
         totalDuration: calculateTotal(accounts).totalDuration
       };
       //$log.info('Extracted stats:', stats);
-      return stats;
+      return $q.resolve(stats);
     }
 
     function calculateTotal(accounts) {
