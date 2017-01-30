@@ -16,11 +16,12 @@ export class TOSService {
     private MeService: IMeService,
     private UserPreferencesService: UserPreferencesService,
     private $q: ng.IQService,
+    private Config,
   ) {
   }
 
   public hasAcceptedTOS(): ng.IPromise<boolean> {
-    if (this.hasAcceptedToS) {
+    if (this.hasAcceptedToS || this.Config.isE2E()) {
       // skip testing if we already know we've accepted it
       return this.$q.resolve(true);
     } else {
