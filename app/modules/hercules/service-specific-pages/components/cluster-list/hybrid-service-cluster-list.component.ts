@@ -23,8 +23,8 @@ class HybridServiceClusterListCtrl implements ng.IComponentController {
         private $stateParams: IClusterIdStateParam,
         private ClusterService,
         private FusionClusterService,
-        private FusionUtils,
         private FusionClusterStatesService,
+        private FusionUtils,
     ) {  }
 
     public $onInit() {
