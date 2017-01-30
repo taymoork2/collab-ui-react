@@ -37,7 +37,6 @@ describe('SetupWizardCtrl', function () {
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.resolve(false));
-    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.resolve(false));
     spyOn(Orgservice, 'getAdminOrgUsage').and.returnValue($q.resolve(usageFixture));
   }));
@@ -92,8 +91,8 @@ describe('SetupWizardCtrl', function () {
   describe('When all toggles are false (and Authinfo.isSetupDone is false as well)', function () {
     beforeEach(initController);
 
-    it('the wizard should have 4 macro-level steps', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    it('the wizard should have 5 macro-level steps', function () {
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
 
     it('planReview should have a single substep', function () {
@@ -120,7 +119,7 @@ describe('SetupWizardCtrl', function () {
     });
 
     it('the wizard should not have the finish step', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings']);
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings']);
     });
   });
 
@@ -172,8 +171,8 @@ describe('SetupWizardCtrl', function () {
       initController();
     });
 
-    it('the wizard should have 4 tabs', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    it('the wizard should have 5 tabs', function () {
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
 
   });
@@ -185,7 +184,7 @@ describe('SetupWizardCtrl', function () {
     });
 
     it('the wizard should have 5 tabs', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
     });
 
   });
@@ -197,8 +196,8 @@ describe('SetupWizardCtrl', function () {
       initController();
     });
 
-    it('the wizard should have the 6 steps', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'addUsers', 'finish']);
+    it('the wizard should have the 7 steps', function () {
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'addUsers', 'finish']);
     });
 
     it('careSettings should have a single substep', function () {
@@ -212,8 +211,8 @@ describe('SetupWizardCtrl', function () {
       initController();
     });
 
-    it('the wizard should have the 5 steps', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'finish']);
+    it('the wizard should have the 6 steps', function () {
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'finish']);
     });
   });
 
@@ -224,8 +223,8 @@ describe('SetupWizardCtrl', function () {
       initController();
     });
 
-    it('the wizard should have the 4 steps', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
+    it('the wizard should have the 5 steps', function () {
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
     });
   });
 
@@ -240,21 +239,20 @@ describe('SetupWizardCtrl', function () {
       initController();
     });
 
-    it('the wizard should have 4 tabs', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    it('the wizard should have 5 tabs', function () {
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
   });
 
   describe('When there are only shared device licenses', function () {
     beforeEach(function () {
-      FeatureToggleService.atlasDarlingGetStatus = jasmine.createSpy().and.returnValue($q.resolve(true));
       Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.resolve(usageOnlySharedDevicesFixture));
 
       initController();
     });
 
-    it('the wizard should have 3 tabs', function () {
-      expectStepOrder(['planReview', 'enterpriseSettings', 'finish']);
+    it('the wizard should have 4 tabs', function () {
+      expectStepOrder(['planReview', 'serviceSetup', 'enterpriseSettings', 'finish']);
       expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl']);
     });
   });

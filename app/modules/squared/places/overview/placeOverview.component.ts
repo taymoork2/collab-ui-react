@@ -11,7 +11,6 @@ interface IPlace {
   url?: string;
   entitlements?: Array<any>;
   displayName?: string;
-  sipUrl?: string;
 }
 
 class PlaceOverview implements ng.IComponentController {
@@ -26,7 +25,6 @@ class PlaceOverview implements ng.IComponentController {
   private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;
   private adminUserDetails;
-  private pstnFeatureIsEnabledPromise: Promise<boolean> = this.FeatureToggleService.csdmPstnGetStatus();
 
   /* @ngInject */
   constructor(private $q: ng.IQService,
@@ -86,7 +84,7 @@ class PlaceOverview implements ng.IComponentController {
       this.csdmHybridCallFeature = feature;
     });
 
-    this.$q.all([ataPromise, this.pstnFeatureIsEnabledPromise, hybridPromise, this.fetchDetailsForLoggedInUser()]).finally(() => {
+    this.$q.all([ataPromise, hybridPromise, this.fetchDetailsForLoggedInUser()]).finally(() => {
       this.generateCodeIsDisabled = false;
     });
   }
@@ -112,17 +110,13 @@ class PlaceOverview implements ng.IComponentController {
   private loadActions(): void {
     this.actionList = [];
     if (this.currentPlace.type === 'cloudberry') {
-      this.pstnFeatureIsEnabledPromise.then((result) => {
-        this.showPstn = result && this.Authinfo.isSquaredUC();
-        if (result) {
-          this.actionList = [{
-            actionKey: 'usersPreview.editServices',
-            actionFunction: () => {
-              this.editCloudberryServices();
-            },
-          }];
-        }
-      });
+      this.showPstn = this.Authinfo.isSquaredUC();
+      this.actionList = [{
+        actionKey: 'usersPreview.editServices',
+        actionFunction: () => {
+          this.editCloudberryServices();
+        },
+      }];
     }
   }
 

@@ -97,6 +97,8 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     $scope.onManageUsers = onManageUsers;
     $scope.sortDirection = sortDirection;
 
+    vm.useAtlasNewUserExport = false;
+
     ////////////////
     var eventListeners = [];
     var isOnlineOrg;
@@ -132,9 +134,15 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       if (Authinfo.isCisco()) {
         $scope.isNotDirSyncOrException = true;
       } else {
-        FeatureToggleService.supportsDirSync().then(function (enabled) {
-          $scope.isNotDirSyncOrException = !enabled;
-        });
+        FeatureToggleService.supportsDirSync()
+          .then(function (enabled) {
+            $scope.isNotDirSyncOrException = !enabled;
+          });
+
+        FeatureToggleService.atlasNewUserExportGetStatus()
+          .then(function (enabled) {
+            vm.useAtlasNewUserExport = enabled;
+          });
       }
     }
 
@@ -217,7 +225,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     }
 
     function loadedAllUsers() {
-      return _.size($scope.userList.allUsers) >= $scope.totalUsersExpected;
+      return (_.size($scope.userList.allUsers) >= $scope.totalUsersExpected);
     }
 
     // returns true if there is any more data to load from the server
@@ -341,8 +349,9 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
             }
 
             if (!$scope.obtainedTotalUserCount) {
-              if (Authinfo.isCisco()) { // allow Cisco org (even > 10K) to export new CSV format
-                $scope.totalUsers = CsvDownloadService.userExportThreshold;
+              if (Authinfo.isCisco()) {
+                // allow Cisco org (even > 10K) to export new CSV format
+                $scope.totalUsers = CsvDownloadService.USER_EXPORT_THRESHOLD;
                 $scope.obtainedTotalUserCount = true;
               } else {
                 UserListService.getUserCount()
@@ -353,12 +362,12 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
                   .catch(function (response) {
                     Log.debug('Failed to get User Count. Status: ' + response);
                     // can't determine number of users, so assume over threshold
-                    $scope.totalUsers = CsvDownloadService.userExportThreshold;
+                    $scope.totalUsers = CsvDownloadService.USER_EXPORT_THRESHOLD;
                     $scope.obtainedTotalUserCount = false;
                   });
               }
             }
-            deferred.reject(data);
+            deferred.resolve();
           }, $scope.searchStr);
       }
       return deferred.promise;
@@ -656,9 +665,15 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     }
 
     function onManageUsers() {
+
+      var overThreshold =
+        ($scope.totalUsers >= CsvDownloadService.USER_EXPORT_THRESHOLD) &&
+        !Authinfo.isCisco() &&
+        !vm.useAtlasNewUserExport;
+
       $state.go('users.manage', {
         // todo - this can be removed once we start using the new export API
-        isOverExportThreshold: ($scope.totalUsers >= CsvDownloadService.userExportThreshold)
+        isOverExportThreshold: overThreshold
       });
     }
 

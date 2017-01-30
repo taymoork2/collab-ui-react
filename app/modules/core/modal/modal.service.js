@@ -1,8 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .factory('ModalService', ModalService);
+  module.exports = ModalService;
 
   /* @ngInject */
   function ModalService($modal, $translate) {

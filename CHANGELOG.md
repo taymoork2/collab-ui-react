@@ -1,3 +1,72 @@
+<a name="1.0.2"></a>
+## [1.0.2](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/compare/v1.0.1...v1.0.2) (2017-01-27)
+
+
+### Bug Fixes
+
+* **huron:** add event listener to feature toggle service to react to base domain change. ([aea0d54](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/aea0d54))
+* AUTOATTN945 and AUTOATTN952 ([d51e432](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/d51e432))
+* **care:** remove care trials feature flag from admin specific flows ([ed7d6e7](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/ed7d6e7))
+* **core:** ATLAS-939 - Update user roles ([ec965c0](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/ec965c0))
+* **core:** Ensure warning dialogs are correctly displayed ([ff723c7](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/ff723c7))
+* **core:** Fix for displaying userOverview side panel when no invitations exist ([8bf6603](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/8bf6603))
+* **cust:** remove reference to atlas-customer-list-update from CustomerSubscriptions ([d60940a](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/d60940a))
+* **devices:** Remove unused state property ([e0b79be](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/e0b79be))
+* **devices:** Remove use of PSTN feature toggle ([6c351c4](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/6c351c4))
+* **devices:** Remove use of PSTN feature toggle ([2d6fcf8](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/2d6fcf8))
+* **HDS:** Fixing issue where the Add Resource modal would open on service setup. ([8fe4d83](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/8fe4d83))
+* **helpdesk:** f2853 - handle HTTP 200 with empty payloads gracefully ([453274c](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/453274c))
+* **hercules:** More compact cluster side panel & link to clusters page ([8edd920](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/8edd920))
+* **hercules:** Notifications were not calculated in the Hybrid Call / Calendar settings pages. ([41d3e36](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/41d3e36))
+* **hercules:** Notifications were not calculated in the Hybrid Call / Calendar settings pages. ([0dbd33c](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/0dbd33c))
+* **Hercules:** Correcting feature toggle for hybrid voicemail component ([6fe5100](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/6fe5100))
+* **Hercules:** Missing “Add Resource” modal launch when going to the service specific cluster lists for the first time. ([02915b7](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/02915b7))
+* **Hercules:** Removing translation keys that were no longer needed. ([89de245](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/89de245))
+* **lineSettings:** wrong attibute for disable ([9b102b8](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/9b102b8))
+* **mediafusion:** fix 3 months availability ([49764d8](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/49764d8))
+* **Shared Meetings Feature Cleanup:** Defaulting Shared Meetings Toggle for GA Release ([3c6d86e](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/3c6d86e))
+* **sunlight:** fix incorrect unit tests ([3cd7ecc](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/3cd7ecc))
+* **Sunlight:** Feature flag for InboundCallFeature set properly ([e7abc37](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/e7abc37))
+* **trial:** Add text for SparkBoard qty error ([11ac8e8](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/11ac8e8))
+
+
+### Features
+
+* **aria:** add ng-aria support ([022f760](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/022f760))
+* **core:** add the ESLint rule atlas-ui/no-useless-coercion ([9c22483](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/9c22483))
+* **core:** add the ESLint rule atlas-ui/prefer-q-resolve ([9fe1752](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/9fe1752))
+* **core:** Adding a toggle for the new Alpha release channel to the org overview ([de059c6](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/de059c6))
+* **core:** exportCsv uses new export API for feature-toggled orgs ([b95e929](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/b95e929))
+* **core:** Make Cisco use new CSV download without feature toggle ([6e819e5](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/6e819e5))
+* **core:** Modifying report.service unit tests to not depend on momentjs to pass. ([802b6b0](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/802b6b0))
+* **core:** US7032 - Convert users from 'Manage Users' model ([22b5b72](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/22b5b72))
+* **HDS:** Added upgrade scheduling logic to the side panel. ([fd540db](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/fd540db))
+* **HDS:** Fixed logic error for scheduling. ([ac4b6fd](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/ac4b6fd))
+* **HDS:** Performed some cleanup based on PR feedback. ([fcb92cf](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/fcb92cf))
+* **helpdesk:** add patch/validate org name ([137c03f](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/137c03f))
+* **helpdesk:** f2853 - show only latest mailgun event value ([67de3df](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/67de3df))
+* **helpdesk:** Improving the Hybrid Services card on the users page. Show the same information as in the user side panel ([b7f569f](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/b7f569f))
+* **helpdesk,user:** add helper link clearing unsubscribes and complaints ([c7df24e](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/c7df24e))
+* **hercules:** Adding dummy functions to UCC Service in preparation for Hybrid Voicemail support. ([b0c3709](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/b0c3709))
+* **hercules:** Adding link from the cluster side panel to the cluster settings page. ([a2e969b](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/a2e969b))
+* **hercules:** change the notification for unassigned clusters featuring the wrong release channel ([77f4b18](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/77f4b18))
+* **hercules:** Hybrid coivemail section in user sidepanel ([cf3435f](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/cf3435f))
+* **hercules:** Improve the user status export (added resource group column and progress bar) ([63ba6d3](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/63ba6d3))
+* **Hercules:** Internationalization of the user sidepanel hybrid voicemail component. ([c998fae](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/c998fae))
+* **Hercules:** Using the toolkit's way of doing a compact side panel feature. ([2ce23b7](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/2ce23b7))
+* **inlineEditText:** add new component for an inline edit text field ([364a8db](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/364a8db))
+* **media service:** real time zoom ([464c67f](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/464c67f))
+* **media service:** real time zoom ([791b6eb](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/791b6eb))
+* **places:** replace editableInput with new inlineEditText component ([925d3df](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/925d3df))
+* **release-channel-section:** be more explicit about the default release channel ([9c4f6fa](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/9c4f6fa))
+* **release-channel-section:** show reset section when an unassigned cluster doesn’t have the default RC ([538eb87](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/538eb87))
+* **services-overview:** move the setup button to the bottom of the cards ([ab1b325](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/ab1b325))
+* **services-overview:** redesign cards footer and hybrid gcal card ([321a393](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/321a393))
+* **sunlight:** customer info screen changes for callback template ([171d055](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/171d055))
+* **sunlight:** sync verified domains with care ([afc7f44](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/commit/afc7f44))
+
+
+
 <a name="1.0.1"></a>
 ## [1.0.1](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/compare/v1.0.0...v1.0.1) (2017-01-21)
 

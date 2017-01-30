@@ -28,14 +28,8 @@ require('./_devices.scss');
         }
 
         function fetchAsyncSettings() {
-          var darlingPromise = FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
-            vm.showDarling = result;
-          });
           var ataPromise = FeatureToggleService.csdmATAGetStatus().then(function (result) {
             vm.showATA = result;
-          });
-          var pstnPromise = FeatureToggleService.csdmPstnGetStatus().then(function (result) {
-            vm.showPstn = result && Authinfo.isSquaredUC();
           });
           var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
             vm.csdmHybridCallFeature = feature;
@@ -43,7 +37,7 @@ require('./_devices.scss');
           var personalPromise = FeatureToggleService.cloudberryPersonalModeGetStatus().then(function (result) {
             vm.showPersonal = result;
           });
-          $q.all([darlingPromise, ataPromise, pstnPromise, hybridPromise, personalPromise, fetchDetailsForLoggedInUser()]).finally(function () {
+          $q.all([ataPromise, hybridPromise, personalPromise, fetchDetailsForLoggedInUser()]).finally(function () {
             vm.addDeviceIsDisabled = false;
           });
 
@@ -203,7 +197,6 @@ require('./_devices.scss');
             data: {
               function: "addDevice",
               showATA: vm.showATA,
-              showDarling: vm.showDarling,
               admin: vm.adminUserDetails,
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
               title: "addDeviceWizard.newDevice",
@@ -241,7 +234,7 @@ require('./_devices.scss');
               'addDeviceFlow.chooseSharedSpace': {
                 nextOptions: {
                   cloudberry_existing: 'addDeviceFlow.showActivationCode',
-                  cloudberry_create: vm.showPstn ? 'addDeviceFlow.editServices' : 'addDeviceFlow.showActivationCode',
+                  cloudberry_create: 'addDeviceFlow.editServices',
                   huron_existing: 'addDeviceFlow.showActivationCode',
                   huron_create: 'addDeviceFlow.addLines'
                 }

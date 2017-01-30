@@ -56,11 +56,6 @@ export class ServicesOverviewCtrl {
         this.forwardEvent('hybridDataSecurityToggleEventHandler', supports);
       });
 
-    this.FeatureToggleService.supports(FeatureToggleService.features.csdmPstn)
-      .then(supports => {
-        this.forwardEvent('csdmPstnFeatureToggleEventHandler', supports);
-      });
-
     this.FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)
       .then(supports => {
         this.forwardEvent('googleCalendarFeatureToggleEventHandler', supports);

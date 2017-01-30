@@ -75,6 +75,7 @@
     require('modules/core/users').default,
     require('modules/core/csvDownload').default,
     require('modules/core/l10n/languages'),
+    require('modules/core/modal').default,
     require('modules/core/notifications').default,
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/healthMonitor/healthService'),

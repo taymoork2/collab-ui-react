@@ -1,17 +1,11 @@
 import { IUser, UserPreferencesService, IMeService } from 'modules/core/auth/user/index';
-
-interface IToolkitModalSettings extends ng.ui.bootstrap.IModalSettings {
-  type: string;
-}
-interface IToolkitModalService extends ng.ui.bootstrap.IModalService {
-  open(options: IToolkitModalSettings): ng.ui.bootstrap.IModalServiceInstance;
-}
+import { IToolkitModalService, IToolkitModalServiceInstance } from 'modules/core/modal';
 
 //////////////////////////
 
 export class TOSService {
 
-  private tosModal: ng.ui.bootstrap.IModalServiceInstance;
+  private tosModal: IToolkitModalServiceInstance;
   private user: IUser;
   private hasAcceptedToS: boolean = false;
 

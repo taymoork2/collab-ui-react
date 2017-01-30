@@ -28,7 +28,7 @@
     function setUtilizationGraph(response, utilizationChart, clusterSelected, clusterId, daterange, clusterMap) {
       var isDummy = false;
       var data = response.graphData;
-      var graphs = getClusterName(response.graphs, clusterMap, clusterSelected, clusterId);
+      var graphs = getClusterName(response.graphs, clusterMap);
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       } else {
@@ -148,7 +148,7 @@
       var cluster = _.replace(clusterSelected, /\s/g, '_');
       dateLabel = _.replace(dateLabel, /\s/g, '_');
       var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + dateLabel + '_' + new Date();
-      if (!isDummy) {
+      if (!isDummy && clusterSelected === allClusters) {
         graphs.push({
           'title': 'All',
           'id': 'all',
@@ -200,7 +200,7 @@
       }
     }
 
-    function getClusterName(graphs, clusterMap, clusterSelected, clusterId) {
+    function getClusterName(graphs, clusterMap) {
       var tempData = [];
       _.forEach(graphs, function (value) {
         var clusterName = _.findKey(clusterMap, function (val) {
@@ -208,9 +208,6 @@
         });
         if (!_.isUndefined(clusterName)) {
           value.title = clusterName;
-          if (allClusters !== clusterId && clusterSelected !== value.title) {
-            value.lineAlpha = 0.2;
-          }
           value.balloonText = '<span class="graph-text">' + value.title + ' ' + utilization + ' <span class="graph-number">[[value]]</span></span>';
           value.lineThickness = 2;
         }

@@ -576,11 +576,9 @@
       vm.hasCallEntitlement = Authinfo.isSquaredUC() || vm.isNewTrial();
       var promises = {
         atlasCareCallbackTrials: FeatureToggleService.atlasCareCallbackTrialsGetStatus(),
-        atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
-        adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
-        placesEnabled: FeatureToggleService.supports(FeatureToggleService.features.csdmPstn)
+        adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; })
       };
       if (!vm.isNewTrial()) {
         promises.tcHasService = TrialContextService.trialHasService(vm.currentTrial.customerOrgId);
@@ -590,7 +588,6 @@
           vm.showRoomSystems = true;
           vm.showContextServiceTrial = true;
           vm.showCare = results.ftCareTrials;
-          vm.sbTrial = results.atlasDarling;
           vm.isCallBackEnabled = results.atlasCareCallbackTrials;
           vm.atlasTrialsShipDevicesEnabled = results.ftShipDevices;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;
@@ -601,9 +598,6 @@
 
           var initResults = (vm.isExistingOrg()) ? getExistingOrgInitResults(results, vm.hasCallEntitlement, vm.preset, vm.paidServices) : getNewOrgInitResults(results, vm.hasCallEntitlement, vm.stateDefaults);
           _.merge(vm, initResults);
-          if (vm.isNewTrial()) {
-            vm.placesEnabled = results.placesEnabled;
-          }
           updateTrialService(_messageTemplateOptionId);
           vm.paidServicesForDisplay = getPaidServicesForDisplay(Authinfo.getOrgId(), Authinfo.getOrgName());
         })
@@ -664,23 +658,7 @@
     }
 
     function toggleTrial() {
-      /* ALINA PR NOTE: Refactoring logic here.  Previously:
-        FOR TrialAdd:
-          if (!vm.callTrial.enabled && !(vm.roomSystemTrial.enabled && vm.placesEnabled)) {
-            vm.pstnTrial.enabled = false;
-          }
-          if ((vm.callTrial.enabled || (vm.roomSystemTrial.enabled && vm.placesEnabled)) && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
-            vm.pstnTrial.enabled = true;
-          }
-        FOR  TrialEdit:
-          if (!vm.callTrial.enabled) {
-            vm.pstnTrial.enabled = false;
-          }
-          if (vm.callTrial.enabled && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
-            vm.pstnTrial.enabled = true;
-          }
-      */
-      var newTrialPstnAdditonalTest = (vm.roomSystemTrial.enabled && vm.placesEnabled);
+      var newTrialPstnAdditonalTest = (vm.roomSystemTrial.enabled && vm.isNewTrial());
       if (vm.isEditTrial()) {
         newTrialPstnAdditonalTest = true;
       }
@@ -1210,7 +1188,7 @@
     function getNewOrgInitResults(results, hasCallEntitlement, stateDefaults) {
       var initResults = {};
       _.set(initResults, 'roomSystemTrial.enabled', true);
-      _.set(initResults, 'sparkBoardTrial.enabled', results.atlasDarling);
+      _.set(initResults, 'sparkBoardTrial.enabled', true);
       _.set(initResults, 'webexTrial.enabled', true);
       _.set(initResults, 'meetingTrial.enabled', true);
       _.set(initResults, 'callTrial.enabled', hasCallEntitlement);

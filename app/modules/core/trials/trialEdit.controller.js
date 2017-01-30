@@ -458,14 +458,12 @@
         ftContextServ: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
         tcHasService: TrialContextService.trialHasService(vm.currentTrial.customerOrgId),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
-        placesEnabled: FeatureToggleService.supports(FeatureToggleService.features.csdmPstn),
         ftCallBackEnabled: FeatureToggleService.atlasCareCallbackTrialsGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function (err) {
           getAdminOrgError = true;
           return err;
         }),
-        sbTrial: FeatureToggleService.atlasDarlingGetStatus()
       };
 
       $q.all(promises)
@@ -484,8 +482,6 @@
           vm.showCare = results.ftCareTrials;
           vm.careTrial.enabled = vm.preset.care;
           vm.isCallBackEnabled = results.ftCallBackEnabled;
-          vm.sbTrial = results.sbTrial;
-          vm.placesEnabled = results.placesEnabled;
           updateTrialService(_messageTemplateOptionId);
 
           // To determine whether to display the ship devices page
@@ -537,18 +533,14 @@
     }
 
     function isPstn() {
-      if (vm.placesEnabled) {
-        return ((!vm.preset.call && !vm.preset.roomSystems) && (hasEnabledCallTrial() || hasEnabledRoomSystemTrial()));
-      } else {
-        return hasEnabledCallTrial();
-      }
+      return ((!vm.preset.call && !vm.preset.roomSystems) && (hasEnabledCallTrial() || hasEnabledRoomSystemTrial()));
     }
 
     function toggleTrial() {
-      if (!vm.callTrial.enabled && !(vm.roomSystemTrial.enabled && vm.placesEnabled)) {
+      if (!vm.callTrial.enabled && !vm.roomSystemTrial.enabled) {
         vm.pstnTrial.enabled = false;
       }
-      if ((vm.callTrial.enabled || (vm.roomSystemTrial.enabled && vm.placesEnabled)) && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
+      if ((vm.callTrial.enabled || vm.roomSystemTrial.enabled) && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
         vm.pstnTrial.enabled = true;
       }
       setViewState('trialEdit.call', canAddDevice());
@@ -674,7 +666,7 @@
         })
         .then(function (response) {
           vm.customerOrgId = response.data.customerOrgId;
-          if ((vm.placesEnabled ? (vm.callTrial.enabled || vm.roomSystemTrial.enabled) : vm.callTrial.enabled) && (vm.placesEnabled ? (!vm.preset.call || !vm.preset.roomSystems) : !vm.preset.call)) {
+          if ((vm.callTrial.enabled || vm.roomSystemTrial.enabled) && (!vm.preset.call || !vm.preset.roomSystems)) {
             return HuronCustomer.create(response.data.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
                 Notification.errorResponse(response, 'trialModal.squareducError');

@@ -256,7 +256,6 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
     spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(true);
-    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.resolve(true));
     spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.resolve(1));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));

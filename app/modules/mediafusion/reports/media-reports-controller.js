@@ -38,6 +38,7 @@
     vm.cloud_calls_heading = $translate.instant('mediaFusion.metrics.cloudcalls');
     vm.redirected_calls_heading = $translate.instant('mediaFusion.metrics.redirectedcalls');
     vm.cluster_availability_heading = $translate.instant('mediaFusion.metrics.clusteravailability');
+    vm.customPlaceholder = $translate.instant('mediaFusion.report.custom');
 
     vm.hosted_heading = vm.on_prem_calls_heading;
     vm.redirected_heading = vm.cloud_calls_heading;
@@ -125,7 +126,12 @@
         startTime: data.data.startTime,
         endTime: data.data.endTime
       };
+      vm.timeSelected.label = vm.customPlaceholder;
       timeUpdate();
+    });
+
+    $scope.$on('$destroy', function () {
+      $interval.cancel(interval);
     });
 
     function timeUpdate() {
@@ -251,7 +257,7 @@
     }
 
     function setUtilizationData() {
-      MediaReportsService.getUtilizationData(vm.timeSelected, vm.allClusters).then(function (response) {
+      MediaReportsService.getUtilizationData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
           setDummyUtilization();
         } else {
