@@ -4246,7 +4246,8 @@
     "report" : {
       "title": "Hybrid Media",
       "adoption-title": "Adoption",
-      "resources-title": "Resources"
+      "resources-title": "Resources",
+      "custom": "Custom"
     },
     "settings": {
       "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
