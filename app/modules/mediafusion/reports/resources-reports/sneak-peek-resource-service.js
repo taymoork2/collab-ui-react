@@ -20,7 +20,7 @@
         cluster_name = _.findKey(clusterMap, function (clusterValue) {
           return clusterValue === val.cluster;
         });
-        if (val.value !== 100 && cluster_name !== "" && cluster_name !== null && !_.isUndefined(cluster_name)) {
+        if (cluster_name !== "" && cluster_name !== null && !_.isUndefined(cluster_name)) {
           values.push({ key: cluster_name, value: val.value });
         }
       });

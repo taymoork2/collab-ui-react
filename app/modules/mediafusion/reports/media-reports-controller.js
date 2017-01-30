@@ -251,7 +251,7 @@
     }
 
     function setUtilizationData() {
-      MediaReportsService.getUtilizationData(vm.timeSelected, vm.allClusters).then(function (response) {
+      MediaReportsService.getUtilizationData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
           setDummyUtilization();
         } else {
