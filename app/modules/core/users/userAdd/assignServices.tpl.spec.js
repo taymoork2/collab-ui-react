@@ -122,7 +122,6 @@ describe('assignServices', function () {
     authinfo.updateAccountInfo(accountData);
 
     spyOn(_Orgservice_, 'getUnlicensedUsers');
-    spyOn(_FeatureToggleService_, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.resolve(false));
     spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.resolve(getLicensesUsage));
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.resolve(false));
 

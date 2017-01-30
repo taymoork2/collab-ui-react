@@ -95,36 +95,21 @@ describe('Controller: Care Reports Controller', function () {
     SunlightReportService.getReportingData.calls.reset();
   });
 
-  describe('CareReportsController - Callback feature enabled', function () {
-    it('should default to all contact types', function (done) {
-      spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(false));
-      spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.resolve(true));
-      $timeout(function () {
-        expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'all', true]);
-        expect(controller.mediaTypeOptions[2].name).toEqual('callback');
-        done();
-      }, 100);
-      $timeout.flush();
-    });
-  });
-
   describe('CareReportsController - Care Inbound feature enabled', function () {
     it('should default to all contact types', function (done) {
       spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(true));
-      spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.resolve(false));
       $timeout(function () {
         expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'all', true]);
-        expect(controller.mediaTypeOptions[2].name).toEqual('voice');
+        expect(controller.mediaTypeOptions[3].name).toEqual('voice');
         done();
       }, 100);
       $timeout.flush();
     });
   });
 
-  describe('CareReportsController - Inbound and Callback disabled', function () {
+  describe('CareReportsController - Inbound disabled', function () {
     it('should default to chat contact type', function (done) {
       spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(false));
-      spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.resolve(false));
       $timeout(function () {
         expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'chat', true]);
         done();
@@ -141,12 +126,11 @@ describe('Controller: Care Reports Controller', function () {
     });
 
     it('should show two media type options', function () {
-      expect(controller.mediaTypeOptions.length).toEqual(2);
+      expect(controller.mediaTypeOptions.length).toEqual(3);
     });
 
     it('should make calls to data services with correct options', function (done) {
       spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(false));
-      spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.resolve(false));
       $timeout(function () {
         expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([0]);
         expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'chat', true]);

@@ -2,7 +2,7 @@
 
 describe('Care Feature Ctrl should ', function () {
 
-  var controller, $filter, $q, $rootScope, $state, $scope, $timeout, Authinfo, CareFeatureList, Log, Notification, deferred, callbackDeferred, $translate, FeatureToggleService;
+  var controller, $filter, $q, $rootScope, $state, $scope, $timeout, Authinfo, CareFeatureList, Log, Notification, deferred, callbackDeferred, $translate;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('Test-Org-Id')
   };
@@ -29,7 +29,7 @@ describe('Care Feature Ctrl should ', function () {
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
-  beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _$timeout_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_, _$translate_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _$timeout_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_, _$translate_) {
     $rootScope = _$rootScope_;
     $filter = _$filter_;
     $q = _$q_;
@@ -41,14 +41,12 @@ describe('Care Feature Ctrl should ', function () {
     CareFeatureList = _CareFeatureList_;
     Log = _Log_;
     Notification = _Notification_;
-    FeatureToggleService = _FeatureToggleService_;
 
     //create mock deferred object which will be used to return promises
     deferred = $q.defer();
     callbackDeferred = $q.defer();
     spyOn(CareFeatureList, 'getChatTemplates').and.returnValue(deferred.promise);
     spyOn(CareFeatureList, 'getCallbackTemplates').and.returnValue(callbackDeferred.promise);
-    FeatureToggleService.atlasCareCallbackTrialsGetStatus = jasmine.createSpy('atlasCareCallbackTrialsGetStatus').and.returnValue($q.resolve(true));
 
     spyOn($state, 'go');
 
@@ -61,8 +59,7 @@ describe('Care Feature Ctrl should ', function () {
       CareFeatureList: CareFeatureList,
       Log: Log,
       Notification: Notification,
-      $translate: $translate,
-      FeatureToggleService: FeatureToggleService
+      $translate: $translate
     });
   }));
 
