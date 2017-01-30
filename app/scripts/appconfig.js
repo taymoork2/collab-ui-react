@@ -2506,12 +2506,12 @@
           })
           .state('huronCallPickup', {
             url: '/callPickup',
-            parent: 'main',
+            parent: 'hurondetails',
             template: '<call-pickup-setup-assistant></call-pickup-setup-assistant>',
             resolve: {
               lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
                 return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/callPickup'], loadModuleAndResolve($ocLazyLoad, resolve));
+                  require(['modules/huron/features/callPickup/callPickupSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
                 });
               }
             }
@@ -2526,7 +2526,7 @@
             resolve: {
               lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
                 return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/callPickup'], loadModuleAndResolve($ocLazyLoad, resolve));
+                  require(['modules/huron/features/callPickup/callPickupSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
                 });
               }
             }
