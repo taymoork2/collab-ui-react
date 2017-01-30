@@ -2648,8 +2648,9 @@
             controllerAs: 'resourceList',
             parent: 'main',
             resolve: {
-              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
+              },
               },
             }
           })
@@ -2661,8 +2662,8 @@
             controllerAs: 'clusterSettings',
             parent: 'main',
             resolve: {
-              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
               },
             }
           })
@@ -2969,32 +2970,35 @@
               },
             },
           })
-         .state('cluster-details', {
-           parent: 'sidepanel',
-           views: {
-             'sidepanel@': {
-               template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>'
-             },
-             'header@cluster-details': {
-               templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'
-             }
-           },
-           data: {
-             displayName: 'Overview'
-           },
-           params: {
-             clusterId: null,
-             connectorType: null
-           },
-           resolve: {
-             id: /* @ngInject */ function ($stateParams) {
-               return $stateParams.clusterId;
-             },
-             connectorType: /* @ngInject */ function ($stateParams) {
-               return $stateParams.connectorType;
-             },
-           }
-         })
+          .state('cluster-details', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle"></cluster-sidepanel-overview>'
+              },
+              'header@cluster-details': {
+                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'
+              }
+            },
+            data: {
+              displayName: 'Overview'
+            },
+            params: {
+              clusterId: null,
+              connectorType: null
+            },
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+              connectorType: /* @ngInject */ function ($stateParams) {
+                return $stateParams.connectorType;
+              },
+              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
+              },
+            }
+          })
           .state('management-connector-details', {
             parent: 'sidepanel',
             views: {
@@ -3059,8 +3063,8 @@
             controllerAs: 'rgsCtrl',
             parent: 'main',
             resolve: {
-              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
               }
             }
           });

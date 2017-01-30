@@ -299,7 +299,7 @@
       $window.open("https://" + encodeURIComponent(vm.hostname) + "/fusionregistration");
     };
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
+    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
       .then(function (support) {
         if (support) {
           ResourceGroupService.getAllAsOptions().then(function (options) {

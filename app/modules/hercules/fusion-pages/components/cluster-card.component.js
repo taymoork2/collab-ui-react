@@ -22,13 +22,13 @@
     ctrl.goToExpressway = goToExpressway;
     ctrl.openDeleteConfirm = openDeleteConfirm;
     ctrl.formatTimeAndDate = FusionClusterService.formatTimeAndDate;
-    ctrl.hasF237FeatureToggle = false;
+    ctrl.hasResourceGroupFeatureToggle = false;
     ctrl.getLocalizedReleaseChannel = FusionUtils.getLocalizedReleaseChannel;
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
+    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
       .then(function (supported) {
         if (supported) {
-          ctrl.hasF237FeatureToggle = true;
+          ctrl.hasResourceGroupFeatureToggle = true;
         }
       });
 

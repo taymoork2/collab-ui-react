@@ -6,13 +6,13 @@
     .controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController);
 
   /* @ngInject */
-  function ExpresswayClusterSettingsController($stateParams, FusionClusterService, Notification, $modal, $translate, ResourceGroupService, hasF237FeatureToggle) {
+  function ExpresswayClusterSettingsController($stateParams, FusionClusterService, Notification, $modal, $translate, ResourceGroupService, hasResourceGroupFeatureToggle) {
     var vm = this;
     // Simple values
     vm.backUrl = 'cluster-list';
     vm.enabledServices = [];
     vm.newClusterName = '';
-    vm.showResourceGroups = hasF237FeatureToggle;
+    vm.showResourceGroups = hasResourceGroupFeatureToggle;
     // Translations
     vm.upgradeSchedule = {
       title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader'
