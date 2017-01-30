@@ -1,4 +1,4 @@
-import { LineOverviewData } from 'modules/huron/lines/lineOverview/index';
+import { LineOverviewData } from './index';
 import { Line, LineConsumerType } from 'modules/huron/lines/services';
 import { CallForward } from 'modules/huron/callForward';
 import { AutoAnswerConst, AutoAnswer, AutoAnswerPhone, AutoAnswerMember } from 'modules/huron/autoAnswer';

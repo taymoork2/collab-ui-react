@@ -1,5 +1,5 @@
-import { LineOverviewComponent } from 'modules/huron/lines/lineOverview/lineOverview.component';
-import { LineOverviewService } from 'modules/huron/lines/lineOverview/lineOverview.service';
+import { LineOverviewComponent } from './lineOverview.component';
+import { LineOverviewService } from './lineOverview.service';
 import lineService from 'modules/huron/lines/services';
 import directoryNumber from 'modules/huron/directoryNumber';
 import callForward from 'modules/huron/callForward';

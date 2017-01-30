@@ -1,6 +1,6 @@
 import { CallForward } from 'modules/huron/callForward';
 import { LineService, LineConsumerType, LINE_CHANGE, Line } from 'modules/huron/lines/services';
-import { LineOverviewService, LineOverviewData } from 'modules/huron/lines/lineOverview/index';
+import { LineOverviewService, LineOverviewData } from './index';
 import { DirectoryNumberOptionsService, Availability, ExternalNumberType, Pattern } from 'modules/huron/directoryNumber';
 import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { Member, MemberService } from 'modules/huron/members';
