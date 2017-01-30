@@ -3282,7 +3282,7 @@
   "autoAnswerPanel": {
     "title": "Auto Answer",
     "description": "Enable to choose which devices to automatically answer this line when a call comes in.",
-    "userSharedLineDescription": "This line is shared, setting auto answer for this user will turn it off for the {{type}}, {{name}}",
+    "userSharedLineDescription": "This line is shared, setting auto answer for this {{ownerType}} will turn it off for the {{type}}, {{name}}",
     "multiDeviceLineDescription": "If auto answer is set, the call will be answered by the selected phone. Other phones will not ring.",
     "speaker": "Speaker",
     "headset": "Headset",

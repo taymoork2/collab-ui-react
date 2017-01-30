@@ -40,10 +40,11 @@ describe('Service: AutoAnswerService', () => {
   });
 
   it('should get AutoAnswer data for a place and line and filter out phones that do not support AutoAnswer', function () {
+    this.autoAnswerData.ownerType = LineConsumerType.PLACES;
     this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/places/12345/numbers/0000000/features/autoanswers')
       .respond(200, this.getAutoAnswerResponse);
     this.AutoAnswerService.getSupportedPhonesAndMember(LineConsumerType.PLACES, '12345', '0000000').then(response => {
-      expect(response).toEqual(jasmine.objectContaining(this.autoAnswerData));
+      expect(response).toEqual(this.autoAnswerData);
     });
     this.$httpBackend.flush();
   });
@@ -53,7 +54,7 @@ describe('Service: AutoAnswerService', () => {
     this.AutoAnswerService.setAutoAnswer(updatedAutoAnswerPhones, this.autoAnswerData.phones[1].uuid, true, AutoAnswerConst.SPEAKERPHONE);
     let updatePayload: ISetAutoAnswer = {
       phoneUuid: updatedAutoAnswerPhones[1].uuid,
-      enabled: 'true',
+      enabled: true,
       mode: updatedAutoAnswerPhones[1].mode,
     };
 
@@ -70,7 +71,7 @@ describe('Service: AutoAnswerService', () => {
     this.AutoAnswerService.setAutoAnswer(updatedAutoAnswerPhones, this.autoAnswerData.phones[0].uuid, true, AutoAnswerConst.HEADSET);
     let updatePayload: ISetAutoAnswer = {
       phoneUuid: updatedAutoAnswerPhones[0].uuid,
-      enabled: 'true',
+      enabled: true,
       mode: updatedAutoAnswerPhones[0].mode,
     };
 
@@ -87,7 +88,7 @@ describe('Service: AutoAnswerService', () => {
     this.AutoAnswerService.setAutoAnswer(updatedAutoAnswerPhones, this.autoAnswerData.phones[0].uuid, false, undefined);
     let updatePayload: ISetAutoAnswer = {
       phoneUuid: updatedAutoAnswerPhones[0].uuid,
-      enabled: 'false',
+      enabled: false,
       mode: undefined,
     };
 
@@ -100,17 +101,18 @@ describe('Service: AutoAnswerService', () => {
   });
 
   it('should enable AutoAnswer for user where there is none enabled previously', function () {
+    this.autoAnswerNoEnabledPhoneData.ownerType = LineConsumerType.USERS;
     this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/users/12345/numbers/0000000/features/autoanswers')
       .respond(200, this.getAutoAnswerNoEnabledPhoneResponse);
     this.AutoAnswerService.getSupportedPhonesAndMember(LineConsumerType.USERS, '12345', '0000000').then(response => {
-      expect(response).toEqual(jasmine.objectContaining(this.autoAnswerNoEnabledPhoneData));
+      expect(response).toEqual(this.autoAnswerNoEnabledPhoneData);
     });
 
     let updatedAutoAnswerPhones: Array<AutoAnswerPhone> = _.cloneDeep(this.autoAnswerNoEnabledPhoneData.phones);
     this.AutoAnswerService.setAutoAnswer(updatedAutoAnswerPhones, this.autoAnswerNoEnabledPhoneData.phones[1].uuid, true, AutoAnswerConst.SPEAKERPHONE);
     let updatePayload: ISetAutoAnswer = {
       phoneUuid: updatedAutoAnswerPhones[1].uuid,
-      enabled: 'true',
+      enabled: true,
       mode: updatedAutoAnswerPhones[1].mode,
     };
 

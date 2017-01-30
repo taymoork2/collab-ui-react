@@ -15,7 +15,7 @@ describe('Component: autoAnswer', () => {
   const AUTO_ANSWER_ENABLED_FOR_SHARED_LINE_MEMBER_WARNING_MSG = '#sharedline-member-warning';
   const AUTO_ANSWER_NO_SUPPORTED_DEVICE_WARNING = '#no-supported-device-warning';
   const PHONE_1_TAG = 'pregoldintsl (Cisco 8845 SIP)';
-  const PHONE_2_TAG = 'CISCO 8845 (74:a0:7f:c0:b8:8e)';
+  const PHONE_2_TAG = 'pregoldints2 (Cisco 8845 SIP)';
   const autoAnswer = getJSONFixture('huron/json/autoAnswer/autoAnswer.json');
 
   beforeEach(function() {
@@ -57,17 +57,9 @@ describe('Component: autoAnswer', () => {
 
     it('should not display dropdown options, radio buttons when toggle is turned off', function() {
       this.view.find(AUTO_ANSWER_ENABLED_TOGGLE).click();
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
-          this.$scope.autoAnswer.phones[0].uuid,
-          false,
-          this.$scope.autoAnswer.phones[0].mode
-      );
+      expect(this.$scope.onChangeFn.calls.mostRecent().args[0]).toEqual(this.$scope.autoAnswer.phones[0].uuid);
+      expect(this.$scope.onChangeFn.calls.mostRecent().args[1]).toBeFalsy();
 
-      this.$scope.autoAnswer.phones[0].enabled = false;
-      this.$scope.autoAnswer.phones[0].mode = undefined;
-      this.$scope.$apply();
-      expect(this.controller.autoAnswerPhoneSelected).toBeUndefined();
-      expect(this.controller.autoAnswerMode).toBeUndefined();
       expect(this.view.find(AUTO_ANSWER_TITLE)).toExist();
       expect(this.view.find(AUTO_ANSWER_ENABLED_TOGGLE)).not.toBeChecked();
       expect(this.view.find(AUTO_ANSWER_DESCRIPTION)).toExist();
@@ -168,8 +160,8 @@ describe('Component: autoAnswer', () => {
     expect(this.view.find(AUTO_ANSWER_ENABLED_TOGGLE)).toBeChecked();
     expect(this.view.find(AUTO_ANSWER_PHONE_SELECT).find(DROPDOWN_OPTIONS).get(0)).toHaveText(PHONE_1_TAG);
     expect(this.view.find(AUTO_ANSWER_PHONE_SELECT).find(DROPDOWN_OPTIONS).get(1)).toHaveText(PHONE_2_TAG);
-    expect(this.controller.autoAnswerPhoneSelected).toBeUndefined();
-    expect(this.view.find(AUTO_ANSWER_MODE_SPEAKER_RADIO)).not.toBeChecked();
+    expect(this.controller.autoAnswerPhoneSelected.label).toEqual(PHONE_1_TAG);
+    expect(this.view.find(AUTO_ANSWER_MODE_SPEAKER_RADIO)).toBeChecked();
     expect(this.view.find(AUTO_ANSWER_MODE_HEADSET_RADIO)).not.toBeChecked();
     expect(this.view.find(AUTO_ANSWER_MULTI_DEVICE_WARNING_MSG)).toExist();
     expect(this.view.find(AUTO_ANSWER_PHONE_LABEL)).not.toExist();

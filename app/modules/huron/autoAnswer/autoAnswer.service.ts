@@ -15,7 +15,7 @@ export class AutoAnswerConst {
 
 export interface ISetAutoAnswer {
   phoneUuid: string;
-  enabled: string;
+  enabled: boolean;
   mode: string | undefined;
 }
 
@@ -25,8 +25,8 @@ export interface IAutoAnswerPhone {
   description: string;
   model: string;
   autoAnswer: {
-    supported: string;
-    enabled: string;
+    supported: boolean;
+    enabled: boolean;
     mode: string;
   };
 }
@@ -59,23 +59,23 @@ export class AutoAnswerService {
       numberId: _numberId,
     }).$promise.then(data => {
         let autoAnswer = new AutoAnswer();
+        autoAnswer.ownerType = _type as string;
+
         let phoneList: Array<IAutoAnswerPhone> = _.get(data, AutoAnswerConst.PHONES, []);
-        autoAnswer.phones = _.map(_.filter(phoneList, (phone) => { return phone.autoAnswer.supported === 'true'; }), (supportedPhone) => {
-          let label = _.first(this.DeviceService.getTags(this.DeviceService.decodeHuronTags(supportedPhone.description))) as string;
-          if (!label || label === '') {
-            let macAddress: string = this.convertNameToMacAddress(supportedPhone.name);
-            label = supportedPhone.model + ' (' + macAddress + ')';
-          }
+        autoAnswer.phones = _.map(_.filter(phoneList, (phone) => { return phone.autoAnswer.supported === true ; }), (supportedPhone) => {
           return new AutoAnswerPhone({
               uuid: supportedPhone.uuid,
               name: supportedPhone.name,
-              description: label,
+              description: _.first(this.DeviceService.getTags(this.DeviceService.decodeHuronTags(supportedPhone.description))) as string,
               model: supportedPhone.model,
-              enabled: supportedPhone.autoAnswer.enabled === 'true' ? true : false,
-              mode: supportedPhone.autoAnswer.enabled === 'true' ? supportedPhone.autoAnswer.mode : undefined });
+              enabled: supportedPhone.autoAnswer.enabled,
+              mode: supportedPhone.autoAnswer.enabled === true ? supportedPhone.autoAnswer.mode : undefined });
         });
 
-        autoAnswer.member = new AutoAnswerMember(_.get(data, AutoAnswerConst.MEMBER));
+        let member = _.get(data, AutoAnswerConst.MEMBER);
+        if (!_.isUndefined(member) && !_.isNull(member)) {
+          autoAnswer.member = new AutoAnswerMember(member);
+        }
         return autoAnswer;
       }
     );
@@ -87,9 +87,9 @@ export class AutoAnswerService {
       let updateAutoAnswerData: ISetAutoAnswer | undefined ;
 
       if (currEnabledPhone) {
-        updateAutoAnswerData = { phoneUuid: currEnabledPhone.uuid, enabled: 'true', mode: currEnabledPhone.mode };
+        updateAutoAnswerData = { phoneUuid: currEnabledPhone.uuid, enabled: true, mode: currEnabledPhone.mode };
       } else if (origEnabledPhone) {
-        updateAutoAnswerData = { phoneUuid: origEnabledPhone.uuid, enabled: 'false', mode: undefined };
+        updateAutoAnswerData = { phoneUuid: origEnabledPhone.uuid, enabled: false, mode: undefined };
       }
 
       return updateAutoAnswerData;
@@ -132,28 +132,4 @@ export class AutoAnswerService {
     }, data).$promise;
   }
 
-  public convertNameToMacAddress(_name: string): string {
-    const HURON_DEVICE_NAME_PREFIX = 'SEP';
-    const COLON_SKIP_CHARACTERS = 2;
-    const MAC_LENGTH = 12;
-
-    let macAddress: string = _name;
-
-    if (_.startsWith(_name, HURON_DEVICE_NAME_PREFIX)) {
-      macAddress = macAddress.substring(HURON_DEVICE_NAME_PREFIX.length);
-    }
-
-    macAddress = _.replace(_.toLower(macAddress), ':', '');
-
-    if (macAddress.length > MAC_LENGTH) {
-      macAddress = macAddress.substring(0, MAC_LENGTH);
-    }
-
-    let i: number;
-    for (i = COLON_SKIP_CHARACTERS; i < macAddress.length; i = i + 1 + COLON_SKIP_CHARACTERS) {
-      macAddress = macAddress.substring(0, i) + ':' + macAddress.substring(i, macAddress.length);
-    }
-
-    return macAddress;
-  }
 }

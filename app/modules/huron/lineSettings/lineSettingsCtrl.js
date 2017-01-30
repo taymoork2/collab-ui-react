@@ -1245,7 +1245,7 @@ require('./_line-settings.scss');
               }
 
               if (!_.isUndefined(data.phones) && !_.isNull(data.phones) && Array.isArray(data.phones) && data.phones.length !== 0) {
-                vm.origAutoAnswerPhone = data.phones;
+                vm.origAutoAnswerPhones = _.cloneDeep(data.phones);
               }
             }
           });
