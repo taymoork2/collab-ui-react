@@ -1769,6 +1769,7 @@
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
       "enableServiceFailure": "Adding the {{serviceName}} failed.",
       "failedToEnableConnect": "Could not enable Call Service Connect.",
+      "failedToDisableConnect": "Could not disable Call Service Connect.",
       "sipDomainSaved": "SIP Destination saved successfully.",
       "sipDomainInvalid": "Could not save SIP Destination. Try again later.",
       "invalidEmail": "Please enter a list of comma-separated email addresses"
@@ -1907,6 +1908,16 @@
       "oneButtonToPushIntervalSecondaryLabel": "minutes before the meeting",
       "oneButtonToPushIntervalMinutesSavingSuccess": "Early join time was successfully saved.",
       "oneButtonToPushIntervalMinutesSavingError": "Could not save the change to early join time. Try again later.",
+      "voicemail": {
+        "heading": "Voicemail",
+        "description": "Allow users in your organization to access on-premise voicemail by using the Cisco Spark app.",
+        "enableDescription": "All users with both Hybrid Call Service Aware and Connect can use voicemail now",
+        "disableDescription": "Voicemail is disabled for all users",
+        "voicemailDisabled": "To enable voicemail Call Service Connect needs to be turned on.",
+        "voicemailStatusError": "Unable to get voicemail status",
+        "voicemailEnableError": "Could not enable voicemail",
+        "voicemailDisableError": "Could not disable voicemail"
+      },
       "documentation": {
         "heading": "Documentation and Software",
         "help": "Visit <a href=\"{{helpLink}}\" target=\"_blank\">Help Central</a> for further information about {{localizedServiceName}}.",
@@ -2017,7 +2028,9 @@
       },
       "connect": {
         "title": "Enable Call Service Connect for Users",
-        "navigateToUsers": "You have successfully configured Call Service Connect. Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Connect for your users. Make sure you selected the applicable method in Expressway to create CTI remote devices for your users. "
+        "navigateToUsers": "You have successfully configured Call Service Connect. Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Connect for your users. Make sure you selected the applicable method in Expressway to create CTI remote devices for your users. ",
+        "connectEnabled": "Call Service Connect has been enabled",
+        "connectDisabled": "Call Service Connect has been disabled"
       },
       "scheduleUpgrade": {
         "title": "Acknowledge the Scheduled Upgrade",
