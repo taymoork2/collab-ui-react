@@ -6,7 +6,7 @@
   .controller('AADecisionCtrl', AADecisionCtrl);
 
   /* @ngInject */
-  function AADecisionCtrl($scope, $translate, QueueHelperService, AACommonService, AAUiModelService, AutoAttendantCeMenuModelService) {
+  function AADecisionCtrl($scope, $translate/* , QueueHelperService */, AACommonService, AAUiModelService, AutoAttendantCeMenuModelService) {
 
     var vm = this;
 
@@ -170,6 +170,9 @@
       }
 
     }
+    /* No support for Queues as of this story US260317
+     *
+
     function getQueues() {
       return QueueHelperService.listQueues().then(function (aaQueueList) {
         if (aaQueueList.length > 0) {
@@ -187,6 +190,8 @@
         }
       });
     }
+    */
+
 
     function sortAndSetActionType() {
       vm.thenOptions.sort(AACommonService.sortByProperty('label'));
@@ -203,11 +208,14 @@
     }
 
     function init() {
-      if (AACommonService.isRouteQueueToggle()) {
-        getQueues().finally(activate);
-      } else {
-        activate();
-      }
+      /* no support for Queues as of this story.
+       * if (AACommonService.isRouteQueueToggle()) {
+       *
+       * getQueues().finally(activate);
+       * } else {
+       */
+      activate();
+      /* } */
     }
 
     init();

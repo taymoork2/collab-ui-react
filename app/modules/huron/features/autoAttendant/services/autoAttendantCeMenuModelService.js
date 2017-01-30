@@ -611,7 +611,6 @@
 
       /* remove brackets and single quotes Only save one bracketed item*/
       pieces[0] = inBrackets[0].replace(/[[\]']/g, '');
-      // pieces[1] = inBrackets[1].replace(/[[\]']/g, '');
 
       var btwQuotes = expression.match(/'[^']+'/g);
 
@@ -652,22 +651,6 @@
       }
     }
 
-    /*
-    *write Moh  to db
-    */
-    function cesMoh(action, inAction) {
-      if (action) {
-        try {
-          inAction.description = JSON.parse(inAction.description);
-          if (_.isUndefined(action.queueSettings)) {
-            action.queueSettings = {};
-          }
-          action.queueSettings.musicOnHold = constructCesMoh(inAction);
-        } catch (exception) {
-          action.queueSettings = {};
-        }
-      }
-    }
     /*
     * construct ces definition of Moh from db
     */
@@ -727,6 +710,22 @@
             action.queueSettings = {};
           }
           action.queueSettings.fallback = constructCesFallback(inAction);
+        } catch (exception) {
+          action.queueSettings = {};
+        }
+      }
+    }
+    /*
+    *write Moh  to db
+    */
+    function cesMoh(action, inAction) {
+      if (action) {
+        try {
+          inAction.description = JSON.parse(inAction.description);
+          if (_.isUndefined(action.queueSettings)) {
+            action.queueSettings = {};
+          }
+          action.queueSettings.musicOnHold = constructCesMoh(inAction);
         } catch (exception) {
           action.queueSettings = {};
         }
@@ -1232,6 +1231,8 @@
         return {};
       }
 
+      pieces = _.compact(pieces);
+
       // leftCondition looks like: 'Original-Caller-Number'
 
       list = "this['" + action.if.leftCondition + "'] === '" + pieces[0].trim() + "'";
@@ -1266,8 +1267,8 @@
 
     function createFalseObj() {
       var out = {};
-      out.route = {};
-      out.route.destination = '+17655328423';
+      out.say = {};
+      out.say.value = '';
       return out;
     }
 

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: AACallerInputCtrl', function () {
+describe('Controller: AADecisionCtrl', function () {
   var featureToggleService;
   var aaCommonService;
   var aaQueueService;
@@ -192,7 +192,9 @@ describe('Controller: AACallerInputCtrl', function () {
     });
   });
 
-  describe('list Queues', function () {
+  /* No support for queueing */
+
+  xdescribe('list Queues', function () {
     beforeEach(inject(function ($q) {
       spyOn(aaQueueService, 'listQueues').and.returnValue($q.when(queue));
       aaCommonService.setRouteQueueToggle(true);
@@ -225,4 +227,5 @@ describe('Controller: AACallerInputCtrl', function () {
       expect(c.queues[0].id).toEqual("news");
     });
   });
+
 });
