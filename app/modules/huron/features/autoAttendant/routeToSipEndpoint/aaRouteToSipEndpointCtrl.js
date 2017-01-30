@@ -11,8 +11,7 @@
     var vm = this;
     vm.model = {};
 
-    vm.uniqueCtrlIdentifer = '';
-    vm.sipInput = '';
+    vm.model.sipInput = '';
     vm.uiMenu = {};
     vm.menuEntry = {
       entries: []
@@ -21,13 +20,21 @@
 
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
+    vm.isSipValid = isSipValid;
 
- // the CE action verb is 'routeToSipEndpoint'
+    // the CE action verb is 'routeToSipEndpoint'
     var routeToSipEndpoint = 'routeToSipEndpoint';
 
     var fromRouteCall = false;
 
     /////////////////////
+
+    function isSipValid() {
+      if (vm.model.sipInput == '' || vm.model.sipInput == 'sip:') {
+        return false;
+      }
+      return true;
+    }
 
     function populateUiModel() {
       var entry;
@@ -37,22 +44,22 @@
         entry = _.get(vm.menuKeyEntry, 'actions[0].queueSettings.fallback', vm.menuKeyEntry);
       }
       if (_.isEmpty(entry.actions[0].getValue())) {
-        vm.sipInput = 'sip:';
+        vm.model.sipInput = 'sip:';
       } else {
-        vm.sipInput = entry.actions[0].getValue();
+        vm.model.sipInput = entry.actions[0].getValue();
       }
     }
 
     function saveUiModel() {
       AACommonService.setPhoneMenuStatus(true);
+      AACommonService.setSipStatus(isSipValid());
       var entry;
-
       if (fromRouteCall) {
         entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
       } else {
         entry = _.get(vm.menuKeyEntry, 'actions[0].queueSettings.fallback', vm.menuKeyEntry);
       }
-      entry.actions[0].setValue(vm.sipInput);
+      entry.actions[0].setValue(vm.model.sipInput);
     }
 
     function activate() {
@@ -70,7 +77,6 @@
             vm.menuEntry.addAction(action);
           } else {
             if (!(vm.menuEntry.actions[0].getName() === routeToSipEndpoint)) {
-              // make sure action is External Number not AA, HG, User, etc
               vm.menuEntry.actions[0].setName(routeToSipEndpoint);
               vm.menuEntry.actions[0].setValue('');
               vm.menuEntry.actions[0].setDescription('');

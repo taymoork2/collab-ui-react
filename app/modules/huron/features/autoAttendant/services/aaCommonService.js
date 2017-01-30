@@ -15,6 +15,7 @@
     var aaCENumberStatus = false;
     var aaMediaUploadStatus = false;
     var aaQueueSettingsStatus = false;
+    var aaSipStatus = false;
     var routeQueueToggle = false;
     var mediaUploadToggle = false;
     var callerInputToggle = false;
@@ -29,6 +30,7 @@
       setPhoneMenuStatus: setPhoneMenuStatus,
       setCallerInputStatus: setCallerInputStatus,
       setActionStatus: setActionStatus,
+      setSipStatus: setSipStatus,
       setDialByExtensionStatus: setDialByExtensionStatus,
       setCENumberStatus: setCENumberStatus,
       setMediaUploadStatus: setMediaUploadStatus,
@@ -66,7 +68,7 @@
     }
 
     function isValid() {
-      return !_.size(invalidList);
+      return (!_.size(invalidList) && aaSipStatus);
     }
 
     function getInvalid(which) {
@@ -93,6 +95,10 @@
     }
     function setMediaUploadStatus(status) {
       aaMediaUploadStatus = status;
+    }
+
+    function setSipStatus(status) {
+      aaSipStatus = status;
     }
     function resetFormStatus() {
       aaSayMessageForm = false;

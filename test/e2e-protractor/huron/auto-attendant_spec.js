@@ -227,6 +227,38 @@ describe('Huron Auto Attendant', function () {
       utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')), "This is a phone menu say");
 
     });
+
+    it('should add route to SIP number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+
+      utils.click(autoattendant.repeatPlus);
+      //Add Route to SIP Number
+      utils.click(autoattendant.phoneMenuKeys.last());
+      utils.click(autoattendant.phoneMenuKeyOptions.last().all(by.tagName('li')).last());
+      utils.click(autoattendant.phoneMenuAction.last());
+      utils.click(autoattendant.phoneMenuActionOptions.last().element(by.linkText('Route to SIP Endpoint')));
+      utils.click(autoattendant.phoneMenuActionTargets.last().element(by.css('input.aa-sip-input')));
+
+      // a bad external number should not allow save
+      utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.css('input.aa-sip-input')), "1111111111");
+
+      utils.expectIsDisabled(autoattendant.saveButton);
+
+      // but a good phone number should be able to be saved
+      utils.clear(autoattendant.phoneMenuActionTargets.last().element(by.css('input.aa-sip-input')));
+      utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.css('input.aa-sip-input')), "test@sip.com");
+
+      // save and assert successful update message
+
+      utils.expectIsEnabled(autoattendant.saveButton);
+
+      utils.click(autoattendant.saveButton);
+
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+
+      utils.expectIsDisabled(autoattendant.saveButton);
+
+    }, 120000);
+
     it('should delete one Phone Menu Repeat from the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       //Delete one repeatMenu
