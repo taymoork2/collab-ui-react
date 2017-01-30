@@ -175,7 +175,7 @@
         'balloon': baseVariables['balloon'],
         'autoMarginOffset': 25,
         'autoMargins': false,
-        'marginLeft': 40,
+        'marginLeft': 70,
         'marginTop': 60,
         'marginRight': 60,
         'usePrefixes': true,
@@ -215,7 +215,7 @@
           'updateOnReleaseOnly': true
         },
         'valueScrollbar': {
-          'offset': 35,
+          'offset': 3,
           'color': '#AAAAAA',
           'backgroundColor': '#ffffff',
           'backgroundAlpha': 1,
@@ -229,6 +229,8 @@
         'type': 'gantt',
         'pathToImages': amchartsImages,
         'theme': 'light',
+        'autoMargins': false,
+        'marginLeft': 95,
         'marginRight': 70,
         'balloonDateFormat': 'JJ:NN',
         'columnWidth': 0.035,
