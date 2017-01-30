@@ -89,7 +89,6 @@
       deferred.promise.then(function () {
         setTotalCallsData();
         setAvailabilityData();
-        setSneekPeekData();
         setClusterAvailability();
         setUtilizationData();
         setCallVolumeData();
@@ -236,6 +235,7 @@
           vm.clusterAvailability = vm.noData;
         } else {
           vm.clusterAvailability = response.data.availabilityPercent + vm.percentage;
+          setSneekPeekData();
         }
       });
     }

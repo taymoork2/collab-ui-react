@@ -159,8 +159,8 @@ describe('Controller:MediaReportsController', function () {
       httpMock.flush();
       expect(MediaReportsService.getTotalCallsData).toHaveBeenCalled();
       expect(MediaReportsService.getClusterAvailabilityData).toHaveBeenCalled();
-      expect(MediaReportsService.getClusterAvailabilityTooltip).toHaveBeenCalled();
-      expect(MediaReportsService.getHostedOnPremisesTooltip).toHaveBeenCalled();
+      expect(MediaReportsService.getClusterAvailabilityTooltip).not.toHaveBeenCalled();
+      expect(MediaReportsService.getHostedOnPremisesTooltip).not.toHaveBeenCalled();
       expect(MediaReportsService.getUtilizationData).toHaveBeenCalled();
       expect(MediaReportsService.getAvailabilityData).toHaveBeenCalled();
       expect(MediaReportsService.getCallVolumeData).toHaveBeenCalled();
