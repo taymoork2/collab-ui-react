@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# jenkins env vars
-source ./.jenkins-build-env-vars
-
 # import helper functions
 source ./bin/include/pid-helpers
 source ./bin/include/setup-helpers
