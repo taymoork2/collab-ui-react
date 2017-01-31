@@ -1,16 +1,4 @@
-interface IAlarm {
-  id: string;
-  firstReported: number;
-  lastReported: number;
-  severity: string;
-  title: string;
-  description: string;
-  solution: string;
-  solutionReplacementValues?: Array<{
-    text: string,
-    link: string,
-  }>;
-}
+import { IAlarm } from 'modules/hercules/herculesInterfaces';
 
 export class AlarmListSectionComponentCtrl implements ng.IComponentController {
 

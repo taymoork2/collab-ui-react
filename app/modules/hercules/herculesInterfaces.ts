@@ -1,5 +1,4 @@
 /* FMS's cluster representation, the v1 API  */
-
 export interface IClusterV1 {
   url: string;
   id: string;
@@ -13,4 +12,18 @@ export interface IClusterV1 {
   upgradeSchedule: any;
   resourceGroupId: string;
   aggregates: any;
+}
+
+export interface IAlarm {
+  id: string;
+  firstReported: number;
+  lastReported: number;
+  severity: string;
+  title: string;
+  description: string;
+  solution: string;
+  solutionReplacementValues?: Array<{
+    text: string,
+    link: string,
+  }>;
 }
