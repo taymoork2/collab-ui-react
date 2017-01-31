@@ -51,6 +51,8 @@
         refreshDelay: 540000 // 9 mins
       },
 
+      idleTabTimeout: 1200000, //20 mins
+
       siteDomainUrl: {
         webexUrl: '.webex.com'
       },

@@ -73,7 +73,7 @@
               Log.debug('Sending "customer logged in" metrics');
               LogMetricsService.logMetrics('Customer logged in', LogMetricsService.getEventType('customerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
             }
-
+            $rootScope.$broadcast('LOGIN');
             $state.go(state, params);
           }
         }).catch(function () {
