@@ -9,7 +9,7 @@ describe('Service: AutoAnswerService', () => {
       '$httpBackend',
       'Authinfo',
       'HuronConfig',
-      'AutoAnswerService'
+      'AutoAnswerService',
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
 

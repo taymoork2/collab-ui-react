@@ -12,7 +12,7 @@ export class AutoAnswerPhone {
     description: string,
     model: string,
     enabled: boolean,
-    mode: string | undefined
+    mode: string | undefined,
   }) {
     this.uuid = obj.uuid;
     this.name = obj.name;
@@ -37,7 +37,7 @@ export class AutoAnswerMember {
     lastName?: string | null,
     userName?: string | null,
     displayName?: string | null,
-    type?: string | null
+    type?: string | null,
   } = {
     uuid: null,
     firstName: null,

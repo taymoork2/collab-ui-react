@@ -77,7 +77,7 @@ export class AutoAnswerService {
           autoAnswer.member = new AutoAnswerMember(member);
         }
         return autoAnswer;
-      }
+      },
     );
   }
 

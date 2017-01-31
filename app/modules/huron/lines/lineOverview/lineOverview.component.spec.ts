@@ -41,7 +41,7 @@ describe('Component: lineOverview', () => {
       'LineOverviewService',
       'DirectoryNumberOptionsService',
       'CallerIDService',
-      'FeatureToggleService'
+      'FeatureToggleService',
     );
 
     this.existingLinePrimary = existingLinePrimary;

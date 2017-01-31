@@ -21,7 +21,7 @@ describe('Component: autoAnswer', () => {
   beforeEach(function() {
     this.initModules(autoAnswerModule);
     this.injectDependencies(
-      '$scope'
+      '$scope',
     );
 
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
@@ -77,7 +77,7 @@ describe('Component: autoAnswer', () => {
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
           this.$scope.autoAnswer.phones[0].uuid,
           this.$scope.autoAnswer.phones[0].enabled,
-          AutoAnswerConst.HEADSET
+          AutoAnswerConst.HEADSET,
       );
 
       this.$scope.autoAnswer.phones[0].mode = AutoAnswerConst.HEADSET;
@@ -102,7 +102,7 @@ describe('Component: autoAnswer', () => {
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
           this.$scope.autoAnswer.phones[1].uuid,
           true,
-          AutoAnswerConst.SPEAKERPHONE
+          AutoAnswerConst.SPEAKERPHONE,
       );
 
       this.$scope.autoAnswer.phones[0].enabled = false;
