@@ -1,0 +1,42 @@
+[{
+    "name": "INTELEPEER",
+    "logoSrc": "images/carriers/logo_intelepeer.svg",
+    "logoAlt": "IntelePeer",
+    "docSrc": "docs/carriers/IntelePeerVoicePackage.pdf",
+    "features": [
+        "intelepeerFeatures.feature1",
+        "intelepeerFeatures.feature2",
+        "intelepeerFeatures.feature3",
+        "intelepeerFeatures.feature4"
+    ]
+}, {
+    "name": "TATA",
+    "logoSrc": "images/carriers/logo_tata_comm.svg",
+    "logoAlt": "Tata",
+    "docSrc": "",
+    "features": [
+        "tataFeatures.feature1",
+        "tataFeatures.feature2",
+        "tataFeatures.feature3",
+        "tataFeatures.feature4",
+        "tataFeatures.feature5"
+    ]
+}, {
+    "name": "THINKTEL",
+    "logoSrc": "images/carriers/logo_thinktel.svg",
+    "logoAlt": "ThinkTel",
+    "docSrc": "",
+    "features": []
+},{
+    "name": "TELSTRA",
+    "logoSrc": "images/carriers/logo_telstra.svg",
+    "logoAlt": "Telstra",
+    "docSrc": "",
+    "features": []
+}, {
+    "name": "WESTUC",
+    "logoSrc": "images/carriers/logo_westuc.jpg",
+    "logoAlt": "West Corporation",
+    "docSrc": "",
+    "features": []
+}]

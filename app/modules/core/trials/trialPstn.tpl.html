@@ -13,13 +13,22 @@
   <form id="callTrialForm" class="trial-modal" name="trialForm" novalidate>
 
     <!-- provider selection -->
-    <div class="cs-form__section">
-      <div class="section__info">
-        <h4 class="section__title" translate="trialModal.pstn.pstnProvider"></h4>
+    <div ng-if="!pstnTrial.ftHuronSupportThinktel">
+      <div class="cs-form__section">
+        <div class="section__info">
+          <h4 class="section__title" translate="trialModal.pstn.pstnProvider"></h4>
+        </div>
+        <div class="section__content">
+          <formly-form model="pstnTrial.pstn.providerSelection" fields="pstnTrial.pstnProviderField"></formly-form>
+        </div>
       </div>
-      <div class="section__content">
-        <formly-form model="pstnTrial.pstn.providerSelection" fields="pstnTrial.pstnProviderField"></formly-form>
-      </div>
+    </div>
+    <div ng-if="pstnTrial.ftHuronSupportThinktel">
+      <uc-pstn-providers
+        on-change-fn="pstnTrial.onProviderChange()"
+        on-ready-fn="pstnTrial.onProviderReady()">
+      </uc-pstn-providers>
+      <hr>
     </div>
 
     <!-- manual number entry -->
@@ -110,7 +119,12 @@
         </form>
         <h6 translate="trialModal.pstn.numbers"></h6>
         <div class="did-input">
-          <cs-token-field tokens="pstnTrial.unsavedTokens" tokenfieldid="pstnTrial.tokenFieldId" tokenoptions="pstnTrial.tokenOptions" tokenmethods="pstnTrial.tokenMethods"></cs-token-field>
+          <cs-token-field
+            tokens="pstnTrial.unsavedTokens"
+            tokenfieldid="pstnTrial.tokenFieldId"
+            tokenoptions="pstnTrial.tokenOptions"
+            tokenmethods="pstnTrial.tokenMethods">
+          </cs-token-field>
         </div>
       </div>
     </div>

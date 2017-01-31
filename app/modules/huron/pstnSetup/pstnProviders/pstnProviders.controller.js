@@ -5,11 +5,14 @@
     .controller('PstnProvidersCtrl', PstnProvidersCtrl);
 
   /* @ngInject */
-  function PstnProvidersCtrl($q, $translate, $state, PstnSetup, PstnSetupService, PstnServiceAddressService, Notification) {
+  function PstnProvidersCtrl($q, $translate, $state, PstnSetup, PstnSetupService, PstnServiceAddressService, Notification, FeatureToggleService) {
     var vm = this;
     vm.providers = [];
     vm.loading = true;
     vm.selectProvider = selectProvider;
+    vm.onProviderReady = onProviderReady;
+    vm.onProviderChange = onProviderChange;
+    vm.ftThinkTel = false; //feature toggle is used in tpl.html
 
     init();
 
@@ -124,6 +127,17 @@
     }
 
     function init() {
+      FeatureToggleService.supports(FeatureToggleService.features.huronSupportThinktel).then(function (ftThinkTel) {
+        vm.ftThinkTel = ftThinkTel;
+        if (!vm.ftThinkTel) {
+          initOriginal();
+        }
+      }).catch(function () {
+        initOriginal();
+      });
+    }
+
+    function initOriginal() {
       $q.all([initCarriers(), initSites()])
         .then(processSelectedProviders)
         .finally(function () {
@@ -184,6 +198,18 @@
         });
       }
       vm.providers.push(carrierObj);
+    }
+
+    function onProviderReady() {
+      if (PstnSetup.isCarrierExists() && PstnSetup.getCarriers().length === 1) {
+        goToNumbers();
+      } else {
+        vm.loading = false;
+      }
+    }
+
+    function onProviderChange() {
+      goToNumbers();
     }
   }
 })();

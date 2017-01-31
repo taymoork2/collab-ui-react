@@ -6,20 +6,22 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetupService, TelephoneNumberService, PstnSetupStatesService, TrialPstnService) {
+  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, TrialPstnService, PstnSetupStatesService, FeatureToggleService) {
     var vm = this;
 
     var NXX = 'nxx';
     var NXX_EMPTY = '--';
     var MAX_CARRIER_CNT = 50;
+    var pstnTokenLimit = 10;
+    var SELECT = '';
 
     vm.parentTrialData = $scope.$parent.trialData;
     vm.trialData = TrialPstnService.getData();
     vm.customerId = Authinfo.getOrgId();
-    var pstnTokenLimit = 10;
     vm.SWIVEL = 'SWIVEL';
     vm.providerImplementation = vm.SWIVEL;
     vm.carrierCnt = 0;
+    vm.ftHuronSupportThinktel = false;
 
     vm.getStateInventory = getStateInventory;
     vm.onAreaCodeChange = onAreaCodeChange;
@@ -29,6 +31,8 @@
     vm.skip = skip;
     vm.disableNextButton = disableNextButton;
     vm._getCarriers = _getCarriers;
+    vm.onProviderChange = onProviderChange;
+    vm.onProviderReady = onProviderReady;
 
     vm.pstn = {
       stateOptions: [],
@@ -143,6 +147,11 @@
     function init() {
       _setupResellers();
 
+      SELECT = $translate.instant('common.select');
+      FeatureToggleService.supports(FeatureToggleService.features.huronSupportThinktel).then(function (results) {
+        vm.ftHuronSupportThinktel = results;
+      });
+
       PstnSetupStatesService.getStateProvinces().then(function (states) {
         vm.pstn.stateOptions = states;
       });
@@ -167,6 +176,19 @@
           reinitTokens();
         }
       }, 100);
+    }
+
+    function onProviderChange() {
+      vm.trialData.details.pstnProvider = PstnSetup.getProvider();
+      vm.providerImplementation = vm.trialData.details.pstnProvider.apiImplementation;
+      resetNumberSearch();
+    }
+
+    function onProviderReady() {
+      if (PstnSetup.getCarriers().length === 1) {
+        vm.trialData.details.pstnProvider = PstnSetup.getCarriers()[0];
+        vm.providerImplementation = vm.trialData.details.pstnProvider.apiImplementation;
+      }
     }
 
     function _setupResellers() {
@@ -437,6 +459,17 @@
       vm.trialData.details.pstnNumberInfo.numbers = [];
       vm.trialData.details.swivelNumbers = [];
       vm.invalidCount = 0;
+      $('#didAddField').tokenfield('setTokens', ',');
     }
+
+    function resetNumberSearch() {
+      vm.trialData.details.pstnNumberInfo.state = SELECT;
+      vm.trialData.details.pstnNumberInfo.areaCode = SELECT;
+      vm.pstn.areaCodeEnable = false;
+      vm.trialData.details.pstnNumberInfo.nxx = '--';
+      vm.pstn.nxxEnable = false;
+      resetNumbers();
+    }
+
   }
 })();
