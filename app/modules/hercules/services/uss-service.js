@@ -19,7 +19,6 @@
       getOrg: getOrg,
       updateOrg: updateOrg,
       getStatusesSummary: getStatusesSummary,
-      getStatuses: getStatuses,
       subscribeStatusesSummary: hub.on,
       getStatusesForUserInOrg: getStatusesForUserInOrg,
       extractSummaryForAService: extractSummaryForAService,
@@ -32,15 +31,16 @@
       getUserCountFromResourceGroup: getUserCountFromResourceGroup,
       getUserJournal: getUserJournal,
       notifyReadOnlyLaunch: notifyReadOnlyLaunch,
+      getAllStatuses: getAllStatuses
     };
 
     CsdmPoller.create(fetchStatusesSummary, hub);
 
     return service;
 
-    function statusesParameterRequestString(serviceId, state, offset, limit) {
-      var statefilter = state ? "&state=" + state : "";
-      return 'serviceId=' + serviceId + statefilter + '&offset=' + offset + '&limit=' + limit + '&entitled=true';
+    function statusesParameterRequestString(serviceId, state, limit) {
+      var statefilter = state ? '&state=' + state : '';
+      return 'serviceId=' + serviceId + statefilter + '&limit=' + limit + '&entitled=true';
     }
 
     function fetchStatusesSummary() {
@@ -134,10 +134,24 @@
       return cachedUserStatusSummary;
     }
 
-    function getStatuses(serviceId, state, offset, limit) {
+    function getAllStatuses(serviceId, state) {
+      return recursivelyReadStatuses(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses?' + statusesParameterRequestString(serviceId, state, 10000));
+    }
+
+    function recursivelyReadStatuses(statusesUrl) {
       return $http
-        .get(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses?' + statusesParameterRequestString(serviceId, state, offset, limit))
-        .then(extractData);
+        .get(statusesUrl)
+        .then(extractData)
+        .then(function (response) {
+          if (response.paging.next) {
+            return recursivelyReadStatuses(response.paging.next)
+              .then(function (statuses) {
+                return response.userStatuses.concat(statuses);
+              });
+          } else {
+            return response.userStatuses;
+          }
+        });
     }
 
     function extractSummaryForAService(servicesId) {

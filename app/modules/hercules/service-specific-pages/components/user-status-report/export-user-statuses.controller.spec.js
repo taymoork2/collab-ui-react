@@ -49,10 +49,9 @@ describe('ExportUserStatusesController', function () {
     }];
 
     USSService = {
-      getStatuses: function () {
-        return $q.resolve({
-          // 51 to be over numberOfUsersPrCiRequest (which should be 50)
-          userStatuses: _.range(51).map(function (item, i) {
+      getAllStatuses: function () {
+        return $q.resolve(
+          _.range(51).map(function (item, i) {
             return {
               userId: 'DEADBEEF' + i,
               orgId: '0FF1CE',
@@ -61,14 +60,11 @@ describe('ExportUserStatusesController', function () {
               entitled: true,
               state: 'notActivated'
             };
-          }),
-          paging: {
-            pages: 1
-          }
-        });
+          })
+        );
       }
     };
-    sinon.spy(USSService, 'getStatuses');
+    sinon.spy(USSService, 'getAllStatuses');
 
     ClusterService = {
       getConnector: function (id) {
@@ -142,7 +138,7 @@ describe('ExportUserStatusesController', function () {
     it('should call USSService.getStatuses', function () {
       vm.exportCSV();
       $rootScope.$apply();
-      expect(USSService.getStatuses.called).toBe(true);
+      expect(USSService.getAllStatuses.called).toBe(true);
     });
     it('should call ClusterService.getConnector if there at least one connectorId', function () {
       vm.exportCSV();
