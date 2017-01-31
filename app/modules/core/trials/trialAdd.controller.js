@@ -623,10 +623,10 @@
     }
 
     function toggleTrial() {
-      if (!vm.callTrial.enabled && !vm.roomSystemTrial.enabled) {
+      if (!vm.callTrial.enabled && !vm.roomSystemTrial.enabled && !vm.sparkBoardTrial.enabled) {
         vm.pstnTrial.enabled = false;
       }
-      if ((vm.callTrial.enabled || vm.roomSystemTrial.enabled) && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
+      if ((vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled) && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
         vm.pstnTrial.enabled = true;
       }
 
@@ -733,7 +733,7 @@
           return response;
         })
         .then(function (response) {
-          if (vm.callTrial.enabled || vm.roomSystemTrial.enabled) {
+          if (vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled) {
             return HuronCustomer.create(vm.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
                 Notification.errorResponse(response, 'trialModal.squareducError');

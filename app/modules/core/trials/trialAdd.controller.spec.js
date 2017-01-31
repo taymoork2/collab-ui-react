@@ -114,6 +114,7 @@ describe('Controller: TrialAddCtrl', function () {
     controller.pstnTrial.enabled = true;
     controller.callTrial.enabled = false;
     controller.roomSystemTrial.enabled = false;
+    controller.sparkBoardTrial.enabled = false;
     $scope.$apply();
     expect(controller.pstnTrial.enabled).toBeFalsy();
   });
@@ -147,6 +148,7 @@ describe('Controller: TrialAddCtrl', function () {
       beforeEach(function () {
         controller.callTrial.enabled = false;
         controller.roomSystemTrial.enabled = false;
+        controller.sparkBoardTrial.enabled = false;
         controller.pstnTrial.enabled = false;
         controller.startTrial();
         $scope.$apply();
@@ -165,6 +167,7 @@ describe('Controller: TrialAddCtrl', function () {
       beforeEach(function () {
         controller.callTrial.enabled = false;
         controller.roomSystemTrial.enabled = false;
+        controller.sparkBoardTrial.enabled = false;
         controller.pstnTrial.enabled = false;
         controller.startTrial(callback);
         $scope.$apply();
@@ -183,6 +186,7 @@ describe('Controller: TrialAddCtrl', function () {
       beforeEach(function () {
         controller.callTrial.enabled = false;
         controller.roomSystemTrial.enabled = false;
+        controller.sparkBoardTrial.enabled = false;
         controller.pstnTrial.enabled = false;
         controller.startTrial();
         $scope.$apply();
@@ -274,11 +278,13 @@ describe('Controller: TrialAddCtrl', function () {
       it('should return false when only sparkboardTrial is enabled', function () {
         controller.sparkBoardTrial.enabled = true;
         controller.roomSystemTrial.enabled = false;
+        controller.sparkBoardTrial.enabled = false;
         expect(controller.hasUserServices()).toBeFalsy();
       });
 
       it('should return false when no services are enabled', function () {
         controller.roomSystemTrial.enabled = false;
+        controller.sparkBoardTrial.enabled = false;
         $scope.$apply();
         expect(controller.hasUserServices()).toBeFalsy();
       });
@@ -296,6 +302,7 @@ describe('Controller: TrialAddCtrl', function () {
         controller.contextTrial.enabled = true;
         controller.callTrial.enabled = false;
         controller.roomSystemTrial.enabled = false;
+        controller.sparkBoardTrial.enabled = false;
         controller.startTrial();
         $scope.$apply();
         expect(TrialContextService.addService).toHaveBeenCalled();
@@ -307,6 +314,7 @@ describe('Controller: TrialAddCtrl', function () {
         controller.contextTrial.enabled = true;
         controller.callTrial.enabled = false;
         controller.roomSystemTrial.enabled = false;
+        controller.sparkBoardTrial.enabled = false;
         controller.startTrial();
         $scope.$apply();
         expect(TrialContextService.addService).toHaveBeenCalled();
@@ -327,6 +335,7 @@ describe('Controller: TrialAddCtrl', function () {
         controller.contextTrial.enabled = false;
         controller.callTrial.enabled = false;
         controller.roomSystemTrial.enabled = false;
+        controller.sparkBoardTrial.enabled = false;
         controller.startTrial();
         $scope.$apply();
       });
