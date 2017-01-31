@@ -33,7 +33,6 @@ describe('Controller: TrialAddCtrl', function () {
     addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.resolve());
 
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {

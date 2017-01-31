@@ -8,7 +8,6 @@
     var features = {
       dirSync: 'atlas-dir-sync',
       atlasCareTrials: 'atlas-care-trials',
-      atlasCareCallbackTrials: 'atlas-care-callback-trials',
       atlasCareInboundTrials: 'atlas-care-inbound-trials',
       atlasContextServiceTrials: 'atlas-context-service-trials',
       atlasDataRetentionSettings: 'atlas-data-retention-settings',

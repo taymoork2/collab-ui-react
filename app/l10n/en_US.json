@@ -333,7 +333,7 @@
       "deleteUserDnFallbackError": "entitlement update failed. The user's directory number is used as the fallback destination for Hunt Group(s).",
       "other": "not entitled, status: {{status}}"
     },
-    "enableCareInformationText": "Select Message and Call to enable Care."
+    "enableCareInformationText": "Select Message to enable Care."
   },
   "usersPreview": {
     "groupPreview": "Group:",

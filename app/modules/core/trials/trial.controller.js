@@ -41,7 +41,6 @@
     vm.showRoomSystems = false;
     vm.showContextServiceTrial = false;
     vm.showCare = false;
-    vm.isCallBackEnabled = false;
     vm.paidServicesForDisplay = null;
 
     vm.messageTrial = vm.trialData.trials.messageTrial;
@@ -199,10 +198,10 @@
       },
       expressionProperties: {
         'templateOptions.required': function () {
-          return (vm.messageTrial.enabled && (!vm.isCallBackEnabled || vm.callTrial.enabled)); // Since, it depends on Message and Call Offer
+          return (vm.messageTrial.enabled && vm.callTrial.enabled); // Since, it depends on Message and Call Offer
         },
         'templateOptions.disabled': function () {
-          return messageOfferDisabledExpression() || (vm.isCallBackEnabled && callOfferDisabledExpression()) || vm.preset.care;
+          return messageOfferDisabledExpression() || callOfferDisabledExpression() || vm.preset.care;
         },
         'data.paid': function () {
           return vm.careTrial.paid;
@@ -575,7 +574,6 @@
       var overrideTestOrg = false;
       vm.hasCallEntitlement = Authinfo.isSquaredUC() || vm.isNewTrial();
       var promises = {
-        atlasCareCallbackTrials: FeatureToggleService.atlasCareCallbackTrialsGetStatus(),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; })
@@ -588,7 +586,6 @@
           vm.showRoomSystems = true;
           vm.showContextServiceTrial = true;
           vm.showCare = results.ftCareTrials;
-          vm.isCallBackEnabled = results.atlasCareCallbackTrials;
           vm.atlasTrialsShipDevicesEnabled = results.ftShipDevices;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;
           overrideTestOrg = results.ftShipDevices;
