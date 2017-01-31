@@ -5,6 +5,15 @@
     .module('HDS')
     .controller('HDSSettingsController', HDSSettingsController);
 
+  //////////////////////////////////////////////////////////////
+  // TODO: remove this notes section innfuture
+  // --- Service Status ---
+  // Trial/Production mode -- Ok
+  // Trial Domain
+  // Production Domain
+  // # of resource nodes
+  // # of trial users
+  //////////////////////////////////////////////////////////////
   /* @ngInject */
   function HDSSettingsController($modal) {
     var vm = this;

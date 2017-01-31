@@ -5,22 +5,32 @@
   <h5 class="modal-title" translate="hds.editTrialUsers.modalTitle"></h5>
 </div>
 
-<div class="modal-body">
-  <h4 translate="hds.editTrialUsers.modalHeadingAddUser"></h5>
-  <p translate="hds.editTrialUsers.modalAddUserDesc1"></p>
-  <p translate="hds.editTrialUsers.modalAddUserDesc2"></p>
-  <p translate="hds.editTrialUsers.modalAddUserDesc3"></p>
+<div class="modal-body hds-email-input">
+  <h5 translate="hds.editTrialUsers.modalHeading"></h5>
   <br/>
-  <h4 translate="hds.editTrialUsers.modalHeadingRemoveUser"></h5>
-  <p translate="hds.editTrialUsers.modalRemoveUserDesc1"></p>
-  <p translate="hds.editTrialUsers.modalRemoveUserDesc2"></p>
-  <p translate="hds.editTrialUsers.modalRemoveUserDesc3"></p>
+  <p translate="hds.editTrialUsers.modalDesc"></p>
+  <br/>
+  <tags-input add-on-blur="true"
+              on-tag-added="editTrialUsersCtrl.addUser()"
+              on-tag-removed="editTrialUsersCtrl.removeUser()"
+              placeholder={{editTrialUsersCtrl.localizedAddEmailWatermark}}
+              ng-model="editTrialUsersCtrl.emailTrialUsers"
+              type="email"
+              max-tags="6" enforce-max-tags
+              allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
+  <div ng-if="editTrialUsersCtrl.getNumUsersInTagField() > editTrialUsersCtrl.maxTrialUsers">
+    <p translate="hds.editTrialUsers.tooManyUsers" translate-values="{ maxUsers: editTrialUsersCtrl.maxTrialUsers }"></p></span>
+  </div>
 </div>
-
 <div class="modal-footer">
   <button
     class="btn"
     ng-click="$dismiss()"
-    translate="common.close">
+    translate="common.cancel">
+  </button>
+  <button
+    class="btn btn--primary" 
+    ng-click="editTrialUsersCtrl.saveTrialUsers(); $dismiss();"
+    translate="common.save">
   </button>
 </div>

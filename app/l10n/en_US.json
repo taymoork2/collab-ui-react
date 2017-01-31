@@ -2269,23 +2269,18 @@
       "editTrialUsers": "Edit Users in Trial"
     },
     "addTrialUsers": {
-      "modalTitle": "Assign Data Security to Users",
-      "modalHeading": "Manually Assign Users",
-      "modalDesc": "Enter the email addresses of the users that will be assigned to the Data Security Service",
+      "modalTitle": "Add Users to Trial Mode",
+      "modalHeading": "Add Users",
+      "modalDesc": "Enter the email addresses of the users that will be assigned to the Hybrid Data Security Service.",
       "emailNotificationsWatermark": "Email addresses",
-      "emailExample": "For example: John Doe john.doe@email.com, Kate Williams kate.williams@email.com",
-      "modalSST": "Start Service Trial"
+      "emailExample": "For example: john.doe@email.com",
+      "modalSST": "Add Users"
     },
     "editTrialUsers": {
-      "modalTitle": "Edit Data Security Trial Users",
-      "modalHeadingAddUser": "To Add Users to this Service Trial",
-      "modalAddUserDesc1": "&bull; Go to the Users page",
-      "modalAddUserDesc2": "&bull; Search for the user you want to add to this Trial, and upon finding them, select the user (by clicking the row)",
-      "modalAddUserDesc3": "&bull; Navigate to Hybrid Services and then assign them to the Data Security Service Trial by flipping the Service toggle ON",
-      "modalHeadingRemoveUser": "To Remove a User from this Service Trial",
-      "modalRemoveUserDesc1": "&bull; Go to the Users page",
-      "modalRemoveUserDesc2": "&bull; Search for the user you want to remove from this Trial, and upon finding them, select the user (by clicking the row). If necessary, you can <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">download your Service Trial Users</a> for reference.",
-      "modalRemoveUserDesc3": "&bull; Navigate to Hybrid Services and then assign them to the Data Security Service Trial by flipping the Service toggle ON"
+      "modalTitle": "Edit Users in Trial Mode",
+      "modalHeading": "Edit Users",
+      "tooManyUsers": "<i class='icon icon-error'></i> The user list exceeds the limit of {{maxUsers}}. Please remove users till within the limit.",
+      "modalDesc": "To remove a user click the X in the user's field and they will be removed from the Hybrid Data Security Service."
     },
     "resources" : {
       "page_title": "Hybrid Data Security Service",
