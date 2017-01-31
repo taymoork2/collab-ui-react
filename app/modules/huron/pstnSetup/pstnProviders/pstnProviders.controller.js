@@ -52,8 +52,7 @@
       }
     }
 
-    function initCustomer(customer) {
-      PstnSetup.setIsTrial(_.get(customer, 'trial', false));
+    function initCustomer() {
       PstnSetup.setCustomerExists(true);
     }
 

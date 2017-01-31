@@ -24,7 +24,7 @@
           hostname: 'doesnothavecalendar.example.org'
         }]
       }];
-      spyOn(MediaClusterServiceV2, 'getAll').and.returnValue($q.when(
+      spyOn(MediaClusterServiceV2, 'getAll').and.returnValue($q.resolve(
         clusters
       ));
       AddResourceCommonServiceV2.updateClusterLists();
@@ -33,7 +33,7 @@
     });
     it('MediaClusterServiceV2 createClusterV2 should be called for addRedirectTargetClicked', function () {
       httpBackend.when('POST', "https://hercules-integration.wbx2.com/v1/organizations/orgId/allowedRedirectTargets").respond({});
-      spyOn(MediaClusterServiceV2, 'createClusterV2').and.returnValue($q.when({
+      spyOn(MediaClusterServiceV2, 'createClusterV2').and.returnValue($q.resolve({
         data: {
           id: "12345"
         } }));

@@ -3,7 +3,7 @@
 describe('Controller: DeviceOverviewCtrl', function () {
   var $scope, $controller, $state, controller, $httpBackend;
   var $q, CsdmConfigService, CsdmDeviceService, Authinfo, Notification;
-  var RemoteSupportModal, HuronConfig, FeatureToggleService, Userservice;
+  var RemoteSupportModal, HuronConfig, FeatureToggleService, Userservice, CsdmHuronDeviceService;
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
@@ -42,7 +42,15 @@ describe('Controller: DeviceOverviewCtrl', function () {
       name: "Texas",
       abbreviation: "TX"
     }]);
+    $httpBackend.whenGET('https://cmi.huron-int.com/api/v1/voice/customers/sites').respond([]);
+    spyOn(CsdmHuronDeviceService, 'getLinesForDevice').and.returnValue($q.resolve([]));
+    spyOn(CsdmHuronDeviceService, 'getDeviceInfo').and.returnValue($q.resolve({}));
   }
+
+  CsdmHuronDeviceService = {
+    getLinesForDevice: {},
+    getDeviceInfo: {}
+  };
 
   var $stateParams = {
     currentDevice: {
@@ -52,7 +60,8 @@ describe('Controller: DeviceOverviewCtrl', function () {
       cisUuid: 2,
       huronId: 3,
       kem: []
-    }
+    },
+    huronDeviceService: CsdmHuronDeviceService
   };
 
   function initController() {
@@ -308,10 +317,10 @@ describe('Huron Device', function () {
     }]);
     countries = getJSONFixture('huron/json/settings/countries.json');
 
-    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timeZone));
-    spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.when(countries));
-    spyOn($stateParams.huronDeviceService, 'setTimezoneForDevice').and.returnValue($q.when(true));
-    spyOn($stateParams.huronDeviceService, 'setCountryForDevice').and.returnValue($q.when(true));
+    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.resolve(timeZone));
+    spyOn(ServiceSetup, 'getSiteCountries').and.returnValue($q.resolve(countries));
+    spyOn($stateParams.huronDeviceService, 'setTimezoneForDevice').and.returnValue($q.resolve(true));
+    spyOn($stateParams.huronDeviceService, 'setCountryForDevice').and.returnValue($q.resolve(true));
 
 
   }

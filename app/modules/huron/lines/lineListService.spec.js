@@ -32,9 +32,9 @@ describe('Service: LineListService', function () {
     LineListService = _LineListService_;
     PstnSetupService = _PstnSetupService_;
 
-    spyOn(PstnSetupService, 'listPendingOrdersWithDetail').and.returnValue($q.when());
+    spyOn(PstnSetupService, 'listPendingOrdersWithDetail').and.returnValue($q.resolve());
     spyOn(PstnSetupService, 'translateStatusMessage');
-    spyOn(ExternalNumberService, 'isTerminusCustomer').and.returnValue($q.when());
+    spyOn(ExternalNumberService, 'isTerminusCustomer').and.returnValue($q.resolve());
   }));
 
   afterEach(function () {
@@ -80,7 +80,7 @@ describe('Service: LineListService', function () {
     });
 
     it('should set search criteria pending and return pending orders', function () {
-      PstnSetupService.listPendingOrdersWithDetail.and.returnValue($q.when(pendingLines));
+      PstnSetupService.listPendingOrdersWithDetail.and.returnValue($q.resolve(pendingLines));
       PstnSetupService.translateStatusMessage.and.returnValue('Order cannot be fulfilled for trials');
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=userid-asc').respond(lines);
       $scope.$apply();
@@ -90,7 +90,7 @@ describe('Service: LineListService', function () {
     });
 
     it('should set search criteria all and include pending orders', function () {
-      PstnSetupService.listPendingOrdersWithDetail.and.returnValue($q.when(pendingLines));
+      PstnSetupService.listPendingOrdersWithDetail.and.returnValue($q.resolve(pendingLines));
       PstnSetupService.translateStatusMessage.and.returnValue('Order cannot be fulfilled for trials');
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=userid-asc').respond(lines);
       $scope.$apply();
@@ -100,7 +100,7 @@ describe('Service: LineListService', function () {
     });
 
     it('should set search criteria to pending and and return nothing if lines is empty', function () {
-      PstnSetupService.listPendingOrdersWithDetail.and.returnValue($q.when(pendingLines));
+      PstnSetupService.listPendingOrdersWithDetail.and.returnValue($q.resolve(pendingLines));
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=userid-asc').respond([]);
       $scope.$apply();
       LineListService.getLineList(0, 100, 'userid', '-asc', '', 'pending').then(function (response) {
@@ -131,7 +131,7 @@ describe('Service: LineListService', function () {
     it('should remove any lines that already exist in the overall list and replace them', function () {
       var exisitingLines = lines.concat(formattedPendingLines);
       var length = exisitingLines.length;
-      PstnSetupService.listPendingOrdersWithDetail.and.returnValue($q.when(pendingLines));
+      PstnSetupService.listPendingOrdersWithDetail.and.returnValue($q.resolve(pendingLines));
       PstnSetupService.translateStatusMessage.and.returnValue('Order cannot be fulfilled for trials');
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=100&order=userid-asc').respond(formattedPendingLines);
       $scope.$apply();

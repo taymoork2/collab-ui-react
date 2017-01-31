@@ -18,7 +18,7 @@ describe('Controller: LineExportCtrl', function () {
     spyOn(Notification, 'errorResponse');
     spyOn(Notification, 'error');
 
-    spyOn(LineListService, 'exportCSV').and.returnValue($q.when(linesExport));
+    spyOn(LineListService, 'exportCSV').and.returnValue($q.resolve(linesExport));
 
     controller = $controller('LineExportCtrl', {
       $scope: $scope

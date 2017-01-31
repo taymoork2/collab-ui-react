@@ -22,8 +22,8 @@ describe('controller: AddComponentCtrl', function () {
   }
 
   function initSpies() {
-    spyOn(ComponentsService, 'getGroupComponents').and.returnValue($q.when());
-    spyOn(ComponentsService, 'addComponent').and.returnValue($q.when());
+    spyOn(ComponentsService, 'getGroupComponents').and.returnValue($q.resolve());
+    spyOn(ComponentsService, 'addComponent').and.returnValue($q.resolve());
   }
 
   function initController() {

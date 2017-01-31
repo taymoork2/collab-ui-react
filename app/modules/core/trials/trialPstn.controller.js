@@ -11,6 +11,7 @@
 
     var NXX = 'nxx';
     var NXX_EMPTY = '--';
+    var MAX_CARRIER_CNT = 50;
 
     vm.parentTrialData = $scope.$parent.trialData;
     vm.trialData = TrialPstnService.getData();
@@ -18,6 +19,7 @@
     var pstnTokenLimit = 10;
     vm.SWIVEL = 'SWIVEL';
     vm.providerImplementation = vm.SWIVEL;
+    vm.carrierCnt = 0;
 
     vm.getStateInventory = getStateInventory;
     vm.onAreaCodeChange = onAreaCodeChange;
@@ -139,6 +141,8 @@
     init();
 
     function init() {
+      _setupResellers();
+
       TerminusStateService.query().$promise.then(function (states) {
         vm.pstn.stateOptions = states;
       });
@@ -163,6 +167,20 @@
           reinitTokens();
         }
       }, 100);
+    }
+
+    function _setupResellers() {
+      if (!vm.trialData.reseller) {
+        PstnSetupService.getResellerV2().then(function () {
+          vm.trialData.reseller = true;
+        }).catch(function () {
+          PstnSetupService.createResellerV2().then(function () {
+            vm.trialData.reseller = true;
+          }).catch(function (response) {
+            Notification.errorResponse(response, 'pstnSetup.resellerCreateError');
+          });
+        });
+      }
     }
 
     function skip(skipped) {
@@ -354,15 +372,33 @@
       return vm.invalidCount <= 0;
     }
 
-    function _getCarriers(localScope) {
+    function _listCarriers(localScope) {
       PstnSetupService.listResellerCarriers().then(function (carriers) {
-        _showCarriers(carriers, localScope);
-      })
-        .catch(function () {
+        if (_.isArray(carriers) && carriers.length > 0) {
+          _showCarriers(carriers, localScope);
+        } else {
           PstnSetupService.listDefaultCarriers().then(function (carriers) {
             _showCarriers(carriers, localScope);
           });
+        }
+      }).catch(function () {
+        PstnSetupService.listDefaultCarriers().then(function (carriers) {
+          _showCarriers(carriers, localScope);
         });
+      });
+    }
+
+    function _getCarriers(localScope) {
+      if (!vm.trialData.reseller) {
+        $timeout(function () {
+          if (vm.carrierCnt < MAX_CARRIER_CNT) {
+            vm.carrierCnt++;
+            _getCarriers(localScope);
+          }
+        }, 100);
+      } else {
+        _listCarriers(localScope);
+      }
     }
 
     function _showCarriers(carriers, localScope) {

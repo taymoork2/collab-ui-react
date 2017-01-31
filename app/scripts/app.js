@@ -57,6 +57,12 @@
   /* eslint-enable no-unused-expressions */
   /** end Mixpanel **/
 
+  /** start UserAgent Detections **/
+  if (window.navigator.userAgent.indexOf('QtCarBrowser') > -1) {
+    $('<div class="unsupported-browser" translate="errors.unsupportedUserAgent">You are using an <strong>unsupported</strong> internet browser.</div>').appendTo('body');
+  }
+  /** end UserAgent Detections and Support **/
+
   require('./app.dependencies');
 
   angular.module('atlas.templates', []);
@@ -72,7 +78,10 @@
     require('modules/core/auth/token.service'),
     require('modules/core/config/config'),
     require('modules/core/featureToggle').default,
+    require('modules/core/users').default,
+    require('modules/core/csvDownload').default,
     require('modules/core/l10n/languages'),
+    require('modules/core/modal').default,
     require('modules/core/notifications').default,
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/healthMonitor/healthService'),
@@ -96,6 +105,7 @@
     'ct.ui.router.extras.sticky',
     'ct.ui.router.extras.previous',
     'ngAnimate',
+    require('angular-aria'),
     'ngCookies',
     'ngResource',
     'ngSanitize',

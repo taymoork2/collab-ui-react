@@ -58,7 +58,7 @@
         on-feature-click="customerOverview.goToSubview(feature, { isTrial: true })">
       </feature-list>
     </cs-sp-section>
-    <cs-sp-section ng-if="customerOverview.newCustomerViewToggle && customerOverview.freeOrPaidServices.length">
+    <cs-sp-section ng-if="customerOverview.freeOrPaidServices.length">
       <section-title
         title-key="customerPage.services">
       </section-title>
@@ -84,7 +84,6 @@
         </ul>
       </div>
     </cs-sp-section>
-    <trial-webex-overview ng-if="!customerOverview.newCustomerViewToggle"></trial-webex-overview>
     <uc-external-number-overview ng-if="customerOverview.isSquaredUC"></uc-external-number-overview>
     <cs-sp-section>
       <div class="section-title-row">

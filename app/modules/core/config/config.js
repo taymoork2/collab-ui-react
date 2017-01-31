@@ -73,7 +73,7 @@
       },
 
       licenseModel: {
-        cloudSharedMeeting: 'Cloud Shared Meeting',
+        cloudSharedMeeting: 'cloud shared meeting',
         hosts: 'hosts'
       },
 
@@ -408,7 +408,7 @@
         'huntgroups',
         'huronCallPark',
         'huronCallPickup',
-        'huronPickupGroupEdit',
+        'callpickupedit',
         'hurondetails',
         'huronfeatures',
         'huronHuntGroup',

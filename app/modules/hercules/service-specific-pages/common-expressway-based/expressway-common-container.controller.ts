@@ -9,14 +9,21 @@ export abstract class ExpresswayContainerController {
   /* @ngInject */
   constructor(private $modal,
               private $state: ng.ui.IStateService,
+              private ClusterService,
               private Notification: Notification,
               protected ServiceDescriptor,
+              private ServiceStateChecker,
               protected USSService,
               protected servicesId: string[],
-              private connectorType: string, ) {
+              private connectorType: string ) {
     this.firstTimeSetup();
     this.extractSummary();
     this.subscribeStatusesSummary = this.USSService.subscribeStatusesSummary('data', this.extractSummary.bind(this));
+    this.ClusterService.subscribe('data', this.updateNotifications.bind(this));
+  }
+
+  private updateNotifications(): void {
+    this.ServiceStateChecker.checkState(this.connectorType, this.servicesId[0]);
   }
 
   public extractSummary(): void {
@@ -35,7 +42,7 @@ export abstract class ExpresswayContainerController {
       this.$modal.open({
         resolve: {
           connectorType: () => this.connectorType,
-          servicesId: () => this.servicesId[0],
+          serviceId: () => this.servicesId[0],
           firstTimeSetup: true,
         },
         controller: 'AddResourceController',

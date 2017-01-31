@@ -6,7 +6,7 @@
     <span translate="homePage.convertUsers"></span>
   </h3>
 </div>
-<div class="modal-body">
+<div class="modal-body" ng-class="{'manage-users-dialog': manageUsers}">
   <p class="explanation"><span translate="homePage.convertUsersText"></span></p>
   <h4 translate="homePage.unlicensedUsers"></h4>
   <span class="spinner-example--large" ng-show="!showSearch">
@@ -31,6 +31,7 @@
   </div>
 </div>
 <div class="modal-footer">
+  <button ng-if="manageUsers" type="button" id="btnBack" class="btn" ng-click="goToManageUsers()"><span translate="common.back"></span></button>
   <button id="convertNextButton" class="btn btn--lg btn--primary pull-right" ng-click="saveConvertList()" ng-disabled="convertDisabled()">
     <span translate="homePage.nextBtn"></span>
   </button>

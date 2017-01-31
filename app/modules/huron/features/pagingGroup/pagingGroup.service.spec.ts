@@ -10,7 +10,7 @@ describe('Service: PagingGroupService', () => {
       '$httpBackend',
       'PagingGroupService',
       'Authinfo',
-      'HuronConfig'
+      'HuronConfig',
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
     successSpy = jasmine.createSpy('success');
@@ -27,7 +27,7 @@ describe('Service: PagingGroupService', () => {
       this.$httpBackend.expectGET(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups').respond(200);
       this.PagingGroupService.getListOfPagingGroups().then(
         successSpy,
-        failureSpy
+        failureSpy,
       );
       this.$httpBackend.flush();
       expect(successSpy).toHaveBeenCalled();
@@ -38,7 +38,7 @@ describe('Service: PagingGroupService', () => {
       this.$httpBackend.expectGET(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups').respond(500);
       this.PagingGroupService.getListOfPagingGroups().then(
         successSpy,
-        failureSpy
+        failureSpy,
       );
       this.$httpBackend.flush();
       expect(successSpy).not.toHaveBeenCalled();
@@ -51,7 +51,7 @@ describe('Service: PagingGroupService', () => {
       this.$httpBackend.expectGET(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups/' + pg.groupId).respond(200);
       this.PagingGroupService.getPagingGroup(pg.groupId).then(
         successSpy,
-        failureSpy
+        failureSpy,
       );
       this.$httpBackend.flush();
       expect(successSpy).toHaveBeenCalled();
@@ -62,7 +62,7 @@ describe('Service: PagingGroupService', () => {
       this.$httpBackend.expectGET(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups/' + pg.groupId).respond(500);
       this.PagingGroupService.getPagingGroup(pg.groupId).then(
         successSpy,
-        failureSpy
+        failureSpy,
       );
       this.$httpBackend.flush();
       expect(successSpy).not.toHaveBeenCalled();
@@ -75,7 +75,7 @@ describe('Service: PagingGroupService', () => {
       this.$httpBackend.expectPOST(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups').respond(200);
       this.PagingGroupService.savePagingGroup(pg).then(
         successSpy,
-        failureSpy
+        failureSpy,
       );
       this.$httpBackend.flush();
       expect(successSpy).toHaveBeenCalled();
@@ -86,7 +86,7 @@ describe('Service: PagingGroupService', () => {
       this.$httpBackend.expectPOST(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups').respond(500);
       this.PagingGroupService.savePagingGroup(pg).then(
         successSpy,
-        failureSpy
+        failureSpy,
       );
       this.$httpBackend.flush();
       expect(successSpy).not.toHaveBeenCalled();
@@ -100,7 +100,7 @@ describe('Service: PagingGroupService', () => {
       this.$httpBackend.expectPUT(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups/' + pg.groupId).respond(200);
       this.PagingGroupService.updatePagingGroup(pg).then(
         successSpy,
-        failureSpy
+        failureSpy,
       );
       this.$httpBackend.flush();
       expect(successSpy).toHaveBeenCalled();
@@ -111,7 +111,7 @@ describe('Service: PagingGroupService', () => {
       this.$httpBackend.expectPUT(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups/' + pg.groupId).respond(500);
       this.PagingGroupService.updatePagingGroup(pg).then(
         successSpy,
-        failureSpy
+        failureSpy,
       );
       this.$httpBackend.flush();
       expect(successSpy).not.toHaveBeenCalled();
@@ -124,7 +124,7 @@ describe('Service: PagingGroupService', () => {
       this.$httpBackend.expectDELETE(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups/' + pg.groupId).respond(200);
       this.PagingGroupService.deletePagingGroup(pg.groupId).then(
         successSpy,
-        failureSpy
+        failureSpy,
       );
       this.$httpBackend.flush();
       expect(successSpy).toHaveBeenCalled();
@@ -135,7 +135,7 @@ describe('Service: PagingGroupService', () => {
       this.$httpBackend.expectDELETE(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups/' + pg.groupId).respond(500);
       this.PagingGroupService.deletePagingGroup(pg.groupId).then(
         successSpy,
-        failureSpy
+        failureSpy,
       );
       this.$httpBackend.flush();
       expect(successSpy).not.toHaveBeenCalled();

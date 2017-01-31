@@ -22,16 +22,20 @@ class CustomerReportsHeaderCtrl {
           });
         }
       }
-      if (Authinfo.isCare() && features.care) {
+      if (Authinfo.isCare()) {
         this.headerTabs.push({
           title: $translate.instant('reportsPage.careTab'),
           state: 'reports.care',
         });
       }
-      if (features.deviceUsage) {
+      this.headerTabs.push({
+        title: $translate.instant('reportsPage.usageReports.usageReportTitle'),
+        state: 'reports.device-usage',
+      });
+      if (features.deviceUsageV2) {
         this.headerTabs.push({
-          title: $translate.instant('reportsPage.usageReports.usageReportTitle'),
-          state: 'reports.device-usage',
+          title: 'Device Usage V2',
+          state: 'reports.device-usage-v2',
         });
       }
     });
@@ -47,9 +51,8 @@ class CustomerReportsHeaderCtrl {
   private webex: boolean = false;
   private promises: any = {
     mf: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneOneGetStatus(),
-    care: this.FeatureToggleService.atlasCareTrialsGetStatus(),
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
-    deviceUsage: this.FeatureToggleService.atlasDeviceUsageReportGetStatus(),
+    deviceUsageV2: this.FeatureToggleService.atlasDeviceUsageReportV2GetStatus(),
   };
 
   private checkWebex (): void {

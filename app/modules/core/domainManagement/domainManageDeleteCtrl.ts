@@ -53,7 +53,7 @@ namespace domainManagement {
               data: { domain: this._domainToDelete.text, action: 'unverify', error: err },
             });
             this._error = err;
-          }
+          },
         );
       } else {
         this.DomainManagementService.unclaimDomain(this._domainToDelete.text).then(
@@ -73,7 +73,7 @@ namespace domainManagement {
               data: { domain: this._domainToDelete.text, action: 'unclaim', error: err },
             });
             this._error = err;
-          }
+          },
         );
       }
     }
@@ -112,7 +112,7 @@ namespace domainManagement {
         status,
         startLog,
         1,
-        data
+        data,
       );
     }
   }

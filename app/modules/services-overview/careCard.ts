@@ -22,17 +22,13 @@ export class ServicesOverviewCareCard extends ServicesOverviewCard {
     return [];
   }
 
-  public careFeatureToggleEventHandler(hasFeature: boolean) {
-    this.display = hasFeature;
-  }
-
   /* @ngInject */
   public constructor(Authinfo) {
     super({
       active: Authinfo.isAllowedState('care'),
       cardClass: 'care-bar',
       description: 'servicesOverview.cards.care.description',
-      display: false,
+      display: true,
       icon: 'icon-circle-contact-centre',
       name: 'servicesOverview.cards.care.title',
     });

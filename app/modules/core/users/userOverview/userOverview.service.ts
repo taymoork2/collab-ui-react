@@ -211,6 +211,10 @@ export class UserOverviewService {
                 });
             }
           }
+        })
+        .catch(() => {
+          // user has no invitations.
+          return this.$q.resolve();
         });
     }
     return promise.then(() => userData);
@@ -245,7 +249,7 @@ export class UserOverviewService {
       let ciTrainSiteNames = userData.user.trainSiteNames.filter(
         (chkSiteUrl) => {
           return this.WebExUtilsFact.isCIEnabledSite(chkSiteUrl);
-        }
+        },
       );
       userData.user.trainSiteNames = (0 < ciTrainSiteNames.length) ? ciTrainSiteNames : [];
     }

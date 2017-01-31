@@ -9,9 +9,11 @@
 
   /* @ngInject */
 
-  function CareSetupAssistantCtrl($modal, $scope, $state, $timeout, $translate, $window, Authinfo, CTService, Notification, SunlightConfigService, $stateParams, LogMetricsService) {
+  function CareSetupAssistantCtrl($modal, $scope, $state, $stateParams, $timeout, $translate, $window, Authinfo, CTService, DomainManagementService, LogMetricsService, Notification, SunlightConfigService) {
     var vm = this;
     init();
+
+    var VERIFIED = 'verified';
 
     vm.type = $stateParams.type;
 
@@ -34,6 +36,9 @@
     vm.animation = 'slide-left';
     vm.submitChatTemplate = submitChatTemplate;
     vm.isEditFeature = $stateParams.isEditFeature;
+
+    // Sync Verified Domains with care
+    vm.syncDomains = syncDomains;
 
     // Setup Assistant pages with index
     vm.states = {};
@@ -138,6 +143,13 @@
       dictionaryType: {
         fieldSet: 'cisco.base.ccc.pod',
         fieldName: 'cccCustom'
+      }
+    }, {
+      id: 'reason',
+      text: $translate.instant('careChatTpl.typeReason'),
+      dictionaryType: {
+        fieldSet: 'cisco.base.ccc.pod',
+        fieldName: 'cccChatReason'
       }
     }];
 
@@ -400,10 +412,10 @@
                   value: vm.getCategoryTypeObject('customerInfo')
                 }, {
                   name: 'label',
-                  value: $translate.instant('careChatTpl.defaultEmailText')
+                  value: $translate.instant('careChatTpl.defaultPhoneText')
                 }, {
                   name: 'hintText',
-                  value: $translate.instant('careChatTpl.defaultEmail')
+                  value: $translate.instant('careChatTpl.defaultPhoneHintText')
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('phone'),
@@ -438,13 +450,13 @@
                   value: vm.getCategoryTypeObject('requestInfo')
                 }, {
                   name: 'label',
-                  value: $translate.instant('careChatTpl.defaultQuestionText')
+                  value: $translate.instant('careChatTpl.additionalDetails')
                 }, {
                   name: 'hintText',
-                  value: $translate.instant('careChatTpl.field3HintText')
+                  value: $translate.instant('careChatTpl.additionalDetailsAbtIssue')
                 }, {
                   name: 'type',
-                  value: vm.getTypeObject('email'),
+                  value: vm.getTypeObject('reason'),
                   categoryOptions: ''
                 }]
               }
@@ -497,6 +509,7 @@
 
     vm.singleLineValidationMessage = CTService.getValidationMessages(0, vm.lengthConstants.singleLineMaxCharLimit);
     vm.multiLineValidationMessage = CTService.getValidationMessages(0, vm.lengthConstants.multiLineMaxCharLimit);
+
 
     vm.overview = {
       customerInformation: 'circle-user',
@@ -728,6 +741,7 @@
     }
 
     vm.activeItem = undefined;
+    vm.activeItemName = undefined;
 
     /**
      * Utility Methods Section
@@ -777,6 +791,10 @@
 
     vm.setActiveItem = function (val) {
       vm.activeItem = vm.getFieldByName(val.toString());
+    };
+
+    vm.isSecondFieldForCallBack = function () {
+      return vm.type === vm.mediaTypes.callback && vm.activeItemName === 'field2';
     };
 
     vm.isDynamicFieldType = function (val) {
@@ -835,9 +853,22 @@
     }
 
     function submitChatTemplate() {
+      syncDomains();
       vm.creatingChatTemplate = true;
       if ($stateParams.isEditFeature) editChatTemplate();
       else createChatTemplate();
+    }
+
+    function syncDomains() {
+      DomainManagementService.getVerifiedDomains().then(function (response) {
+        var verifiedDomains = _.chain(response)
+          .filter({ 'status': VERIFIED })
+          .map('text')
+          .value();
+        verifiedDomains = verifiedDomains.length > 0 ? verifiedDomains : ['.*'];
+        var config = { 'allowedOrigins': verifiedDomains };
+        SunlightConfigService.updateChatConfig(config);
+      });
     }
 
     function createChatTemplate() {

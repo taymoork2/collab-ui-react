@@ -59,6 +59,10 @@
 }
 
 .sq-devices-page-overview, .sq-devices-emergency-services {
+  .internal-link {
+    color: $gray-dark-1;
+  }
+
   .dropdown-menu li {
     min-width: 190px !important;
     width: auto;
@@ -275,53 +279,6 @@
 
   a {
     font-size: 0.7rem;
-  }
-}
-
-/* widgets */
-.editable-input {
-  padding-top: 5px;
-
-  &,
-  .read-only-value,
-  form {
-    display: flex;
-    align-items: center;
-  }
-
-  i,
-  input {
-    font-size: 22px;
-  }
-
-  i {
-    color: #999;
-    cursor: pointer;
-  }
-
-  i:hover,
-  .read-only-value:hover i {
-    color: #000;
-  }
-
-  .read-only-value span {
-    cursor: pointer;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-
-  input {
-    width: 320px;
-  }
-
-  .read-only-value span {
-    max-width: 320px;
-  }
-
-  .read-only-value span,
-  input {
-    padding-right: 10px;
   }
 }
 

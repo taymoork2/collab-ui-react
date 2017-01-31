@@ -246,7 +246,7 @@
 
     function extractStats(reduced, count) {
       var accounts = extractAndSortAccounts(reduced);
-      var n = count || 5;
+      var n = count || 50;
       var stats = {
         most: _.take(accounts, n),
         least: _.takeRight(accounts, n).reverse(),
@@ -255,7 +255,7 @@
         totalDuration: calculateTotal(accounts).totalDuration
       };
       //$log.info('Extracted stats:', stats);
-      return stats;
+      return $q.resolve(stats);
     }
 
     function calculateTotal(accounts) {

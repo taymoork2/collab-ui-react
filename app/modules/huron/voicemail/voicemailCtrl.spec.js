@@ -83,7 +83,7 @@ describe('Controller: VoicemailInfoCtrl', function () {
     describe('enable voicemail', function () {
       beforeEach(function () {
         controller.enableVoicemail = true;
-        spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.when(directoryInfo));
+        spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.resolve(directoryInfo));
 
       });
 
@@ -122,7 +122,7 @@ describe('Controller: VoicemailInfoCtrl', function () {
 
     describe('disable voicemail', function () {
       beforeEach(function () {
-        spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.when(directoryInfo));
+        spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.resolve(directoryInfo));
         TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoWithVoicemail);
         $scope.$broadcast('telephonyInfoUpdated');
         $scope.$apply();
@@ -159,7 +159,7 @@ describe('Controller: VoicemailInfoCtrl', function () {
       });
 
       it('should notify on success', function () {
-        spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.when(directoryInfoBusy));
+        spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.resolve(directoryInfoBusy));
         $httpBackend.whenPUT(url).respond(200);
         controller.saveVoicemail();
         $httpBackend.flush();
@@ -167,7 +167,7 @@ describe('Controller: VoicemailInfoCtrl', function () {
       });
 
       it('should notify on success', function () {
-        spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.when(directoryInfoCFA));
+        spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.resolve(directoryInfoCFA));
         $httpBackend.whenPUT(url).respond(200);
         controller.saveVoicemail();
         $httpBackend.flush();

@@ -25,7 +25,7 @@ export class DirectoryNumberOptionsService {
   constructor(
     private $resource: ng.resource.IResourceService,
     private Authinfo,
-    private HuronConfig
+    private HuronConfig,
   ) {
     this.internalNumbersOptions = this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberpools/:internalNumberId');
     this.externalNumbersOptions = this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/externalnumberpools/:externalNumberId');

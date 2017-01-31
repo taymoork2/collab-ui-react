@@ -13,6 +13,7 @@ export class HuronCompassService {
     private Config,
     private UrlConfig,
     private $http,
+    private $rootScope: ng.IScope,
   ) {}
 
   public defaultDomain() {
@@ -41,6 +42,7 @@ export class HuronCompassService {
         } else {
           let orgSettings: any = JSON.parse(last<string>(res.data.orgSettings));
           this.baseDomain = get(orgSettings, HuronCompassService.SPARK_CALL_BASE_DOMAIN, this.defaultDomain());
+          this.$rootScope.$emit('COMPASS_BASE_DOMAIN_CHANGED', this.baseDomain);
         }
         return authData;
       })

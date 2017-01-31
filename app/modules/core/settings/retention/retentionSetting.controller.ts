@@ -10,12 +10,12 @@ namespace globalsettings {
 
     public initialRetention: {
       value: string,
-      label: string
+      label: string,
     };
 
     public selectedRetention: {
       value: string,
-      label: string
+      label: string,
     };
 
     public retentionOptions = [{

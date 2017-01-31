@@ -7,7 +7,7 @@ describe('Service: MyCompanyOrdersService', () => {
       '$httpBackend',
       'Authinfo',
       'MyCompanyOrdersService',
-      'UrlConfig'
+      'UrlConfig',
     );
     spyOn(this.Authinfo, 'getCustomerId').and.returnValue('12345');
 

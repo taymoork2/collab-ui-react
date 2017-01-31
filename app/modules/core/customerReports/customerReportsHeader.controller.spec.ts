@@ -43,13 +43,13 @@ describe('Controller: Customer Reports Ctrl', function () {
     WebexReportService = {
       initReportsObject: function () {},
     };
+
+    spyOn(this.FeatureToggleService, 'atlasDeviceUsageReportV2GetStatus').and.returnValue(this.$q.when(false));
   });
 
   describe('when all featuretoggles return false and there are no webex sites', function () {
     beforeEach(function () {
       spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneOneGetStatus').and.returnValue(this.$q.when(false));
-      spyOn(this.FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(this.$q.when(false));
-      spyOn(this.FeatureToggleService, 'atlasDeviceUsageReportGetStatus').and.returnValue(this.$q.when(false));
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(false));
 
       let WebExApiGatewayService: any = {
@@ -76,16 +76,15 @@ describe('Controller: Customer Reports Ctrl', function () {
       expect(this.controller.pageTitle).toEqual('reportsPage.pageTitle');
     });
 
-    it('should only display spark reports tab', function () {
-      expect(this.controller.headerTabs).toEqual([headerTabs[0]]);
+    it('should only display spark and care reports tab', function () {
+      expect(this.controller.headerTabs).toEqual([headerTabs[0], headerTabs[3], headerTabs[4]]);
     });
+
   });
 
   describe('when all featuretoggles return true and there are webex sites', function () {
     beforeEach(function () {
       spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneOneGetStatus').and.returnValue(this.$q.when(true));
-      spyOn(this.FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(this.$q.when(true));
-      spyOn(this.FeatureToggleService, 'atlasDeviceUsageReportGetStatus').and.returnValue(this.$q.when(true));
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(true));
 
       let WebExApiGatewayService = {

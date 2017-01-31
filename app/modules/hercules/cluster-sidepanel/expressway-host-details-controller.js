@@ -6,12 +6,12 @@
     .controller('ExpresswayHostDetailsController', ExpresswayHostDetailsController);
 
   /* @ngInject */
-  function ExpresswayHostDetailsController($scope, $stateParams, ClusterService, $translate, $modal) {
+  function ExpresswayHostDetailsController($scope, $stateParams, ClusterService, $translate, $modal, FusionClusterStatesService) {
     var cluster;
     var vm = this;
     vm.deleteHost = deleteHost;
 
-    vm.getSeverity = ClusterService.getRunningStateSeverity;
+    vm.getSeverity = FusionClusterStatesService.getSeverity;
 
     $scope.$watch(function () {
       return ClusterService.getCluster($stateParams.connectorType, $stateParams.clusterId);

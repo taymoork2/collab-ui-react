@@ -1,0 +1,47 @@
+@import 'styles/toolkit/colors';
+@import 'styles/toolkit/spacing';
+
+.inline-edit-text {
+  &,
+  .inline-edit-text-flex {
+    display: flex;
+    align-items: center;
+    overflow-x: hidden;
+
+    &,
+    .cs-input-group {
+      flex: 1 1 0;
+    }
+
+    &.input-wrapper {
+      align-items: flex-start;
+    }
+  }
+
+  .read-only-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: inherit;
+  }
+
+  form {
+    margin: 0;
+  }
+
+  .cs-input-group,
+  input {
+    margin: 0 0.5rem 0 0;
+  }
+
+  .icon-edit {
+    cursor: pointer;
+    color: $gray-light-1;
+    @include vr-spacing(ml, .25);
+    font-size: rem-calc(20);
+    &:hover,
+    &:focus {
+      color: $color-primary;
+    }
+  }
+}

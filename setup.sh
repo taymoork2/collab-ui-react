@@ -109,13 +109,6 @@ echo "Install all dependencies..."
 npm install || exit $?
 
 # npm install succeeded
-# - make a tar archive of the npm-shrinkwrap.json file, and rm older versions
-npm shrinkwrap --dev
-mv_npm_shrinkwrap_file
-rm_all_but_last 1 .cache/npm-shrinkwrap-for-*.json
-mk_npm_shrinkwrap_tar
-rm_all_but_last 1 .cache/npm-shrinkwrap-for-*.tar.gz
-
 # - make a tar archive of the npm deps, and rm older versions
 mk_npm_deps_tar
 rm_all_but_last 1 .cache/npm-deps-for-*.tar.gz

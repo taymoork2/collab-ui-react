@@ -1,12 +1,5 @@
 import { TOSService } from './termsOfService.service';
-
-interface IToolkitModalSettings extends ng.ui.bootstrap.IModalSettings {
-  type: string;
-}
-
-interface IToolkitModalService extends ng.ui.bootstrap.IModalService {
-  open(options: IToolkitModalSettings): ng.ui.bootstrap.IModalServiceInstance;
-}
+import { IToolkitModalService } from 'modules/core/modal';
 
 class TermsOfServiceCtrl implements ng.IComponentController {
   public hasReadAggreement: boolean = false;

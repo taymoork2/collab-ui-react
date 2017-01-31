@@ -39,8 +39,8 @@ describe('components:showComponents', function () {
       ComponentsService: ComponentsService
     });
     $scope.comp = controller;
-    spyOn(controller, 'addComponent').and.returnValue($q.when(true));
-    spyOn(controller, 'updateComponent').and.returnValue($q.when({}));
+    spyOn(controller, 'addComponent').and.returnValue($q.resolve(true));
+    spyOn(controller, 'updateComponent').and.returnValue($q.resolve({}));
     var template = $templateCache.get('modules/gss/components/components.tpl.html');
     view = $compile(angular.element(template))($scope);
     $scope.$apply();

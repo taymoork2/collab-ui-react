@@ -1,9 +1,11 @@
 'use strict';
 
+var csvDownloadModule = require('modules/core/csvDownload').default;
+
 describe('Template: assignDnAndDirectLinesModal', function () {
 
   function init() {
-    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp');
+    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp', csvDownloadModule);
     this.injectDependencies('$httpBackend', '$q', '$previousState', 'Orgservice', 'FeatureToggleService', 'CsvDownloadService', 'WebExUtilsFact');
     initDependencySpies.apply(this);
     this.compileView('OnboardCtrl', 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html');
@@ -24,9 +26,8 @@ describe('Template: assignDnAndDirectLinesModal', function () {
     }.bind(this));
 
     spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.when(false));
-    spyOn(this.FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(this.$q.when(true));
     spyOn(this.FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue(this.$q.when(true));
-    spyOn(this.FeatureToggleService, 'atlasSMPGetStatus').and.returnValue(this.$q.when(false));
+    spyOn(this.FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue(this.$q.when(false));
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
     spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.when(this.mock.fusionServices));
     spyOn(this.Orgservice, 'getUnlicensedUsers');

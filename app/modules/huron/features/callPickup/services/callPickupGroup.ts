@@ -6,6 +6,11 @@ export const USER = 'USER';
 export interface IPickupGroup extends ng.resource.IResource<IPickupGroup> {
   name: string;
   members: Array<string>;
+  numbers: Array<any>;
+  notificationTimer: number | undefined;
+  playSound: boolean | true;
+  displayCallingPartyId: boolean | true;
+  displayCalledPartyId: boolean | true;
 }
 
 export interface IMemberNumber extends ng.resource.IResource<IMemberNumber> {

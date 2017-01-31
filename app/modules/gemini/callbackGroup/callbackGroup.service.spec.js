@@ -129,11 +129,12 @@ describe('Service: cbgService', function () {
   });
 
   it('should return correct response info in getHistories', function () {
-    var url = UrlConfig.getGeminiUrl() + 'activityLogs/' + customerId + '/' + groupId + '/Callback%20Group';
+    var groupName = 'groupName';
+    var url = UrlConfig.getGeminiUrl() + 'activityLogs/' + customerId + '/' + groupId + '/Callback%20Group/' + groupName;
     mockResponse.content.data.body = preData.getHistories;
     $httpBackend.expectGET(url).respond(200, mockResponse);
 
-    cbgService.getHistories(customerId, groupId).then(function (res) {
+    cbgService.getHistories(customerId, groupId, groupName).then(function (res) {
       expect(res.content.data.body.length).toBe(3);
     });
     $httpBackend.flush();
@@ -159,6 +160,18 @@ describe('Service: cbgService', function () {
 
     cbgService.cbgsExportCSV(customerId).then(function (res) {
       expect(res.length).toEqual(4);
+    });
+    $httpBackend.flush();
+  });
+
+  it('should return correct download URL', function () {
+    mockResponse.content.data.returnCode = 0;
+    mockResponse.content.data.body = 'https://atlascca1.qa.webex.com';
+    var url = UrlConfig.getGeminiUrl() + 'callbackgroup/countryRegionTemplate';
+    $httpBackend.expectGET(url).respond(200, mockResponse);
+
+    cbgService.getDownloadCountryUrl().then(function (res) {
+      expect(res.content.data.body).toBe('https://atlascca1.qa.webex.com');
     });
     $httpBackend.flush();
   });

@@ -14,16 +14,21 @@ require('./_user-preview.scss');
     vm.service = '';
     vm.sites = [];
     vm.siteUrls = [];
-    $scope.isSharedMultiPartyEnabled = false;
+    $scope.isSharedMeetingsEnabled = false;
+    $scope.temporarilyOverrideSharedMeetingsFeatureToggle = { default: true, defaultValue: true };
 
     init();
 
     ////////////////
 
     function init() {
-      FeatureToggleService.atlasSMPGetStatus().then(function (smpStatus) {
-        $scope.isSharedMultiPartyEnabled = smpStatus;
-      });
+      if (_.get($scope, 'temporarilyOverrideSharedMeetingsFeatureToggle.default') === true) {
+        $scope.isSharedMeetingsEnabled = _.get($scope, 'temporarilyOverrideSharedMeetingsFeatureToggle.defaultValue');
+      } else {
+        FeatureToggleService.atlasSharedMeetingsGetStatus().then(function (smpStatus) {
+          $scope.isSharedMeetingsEnabled = smpStatus;
+        });
+      }
 
       if ($stateParams.service) {
         vm.service = $stateParams.service;
@@ -49,13 +54,13 @@ require('./_user-preview.scss');
         $state.go('users.list');
       };
 
-      $scope.isSharedMultiPartyLicense = function (siteUrl) {
+      $scope.isSharedMeetingsLicense = function (siteUrl) {
         var service = _.find(vm.sites, { license: { siteUrl: siteUrl } });
-        return _.get(service, 'license.licenseModel') === Config.licenseModel.cloudSharedMeeting;
+        return _.lowerCase(_.get(service, 'license.licenseModel', '')) === Config.licenseModel.cloudSharedMeeting;
       };
 
       $scope.determineLicenseType = function (siteUrl) {
-        return $scope.isSharedMultiPartyLicense(siteUrl) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.namedLicenses');
+        return $scope.isSharedMeetingsLicense(siteUrl) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.namedLicenses');
       };
     }
   }

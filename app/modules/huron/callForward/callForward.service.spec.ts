@@ -8,7 +8,7 @@ describe('Service: CallForwardService', () => {
       '$httpBackend',
       'Authinfo',
       'HuronConfig',
-      'CallForwardService'
+      'CallForwardService',
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
 

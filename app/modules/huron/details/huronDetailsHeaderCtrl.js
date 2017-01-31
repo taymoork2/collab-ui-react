@@ -6,14 +6,14 @@
     .controller('HuronDetailsHeaderCtrl', HuronDetailsHeaderCtrl);
 
   /* @ngInject */
-  function HuronDetailsHeaderCtrl(Authinfo, FeatureToggleService, Config) {
+  function HuronDetailsHeaderCtrl(Authinfo, Config) {
     var vm = this;
     vm.title = 'huronDetails.title';
     vm.back = false;
 
-    function showFeatureTab(pstnEnabled) {
+    function showFeatureTab() {
       return Authinfo.getLicenses().filter(function (license) {
-        return !pstnEnabled || (license.licenseType === Config.licenseTypes.COMMUNICATION);
+        return license.licenseType === Config.licenseTypes.COMMUNICATION;
       }).length > 0;
     }
 
@@ -24,13 +24,11 @@
       title: 'huronDetails.settingsTitle',
       state: 'huronsettings'
     }];
-    FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
-      if (showFeatureTab(pstnEnabled)) {
-        vm.tabs.splice(1, 0, {
-          title: 'huronDetails.featuresTitle',
-          state: 'huronfeatures'
-        });
-      }
-    });
+    if (showFeatureTab()) {
+      vm.tabs.splice(1, 0, {
+        title: 'huronDetails.featuresTitle',
+        state: 'huronfeatures'
+      });
+    }
   }
 })();

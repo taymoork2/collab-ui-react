@@ -14,7 +14,7 @@ describe('Component: sharedLine', () => {
     this.injectDependencies(
       '$scope',
       '$timeout',
-      '$q'
+      '$q',
     );
 
     this.$scope.getUserList = jasmine.createSpy('getUserList').and.returnValue(this.$q.when([]));

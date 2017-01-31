@@ -34,7 +34,7 @@ describe('controller: CreateIncidentCtrl', function () {
   }
 
   function initSpies() {
-    spyOn(IncidentsService, 'createIncident').and.returnValue($q.when());
+    spyOn(IncidentsService, 'createIncident').and.returnValue($q.resolve());
     spyOn($state, 'go');
   }
 

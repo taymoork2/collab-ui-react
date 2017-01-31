@@ -18,6 +18,11 @@
       </div>
   </div>
   <a ng-if="settingsServiceAddress.hasModify()" href ng-click="settingsServiceAddress.modify()" translate="common.modify"></a>
+  <div ng-class="{warning: settingsServiceAddress.addressStatus === 'PENDING'}">
+    <div class="cs-input__messages">
+      <div class="message">{{::'serviceAddress.pending' | translate}}</div>
+    </div>
+  </div>
   <div ng-if="settingsServiceAddress.hasValidate()" class="service-address-buttons">
     <button ng-click="settingsServiceAddress.validate()" ng-disabled="settingsServiceAddress.form.$invalid" class="btn--primary" cs-btn loading="settingsServiceAddress.loadingValidate"><span translate="common.submit"></span></button>
     <button ng-click="settingsServiceAddress.cancelEdit()"><span translate="common.cancel"></span></button>

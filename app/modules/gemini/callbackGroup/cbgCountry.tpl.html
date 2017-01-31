@@ -1,0 +1,64 @@
+<div class="side-panel-country">
+  <div class="medium-8">
+    <cs-select
+      multi="true"
+      filter="true"
+      options="$ctrl.options"
+      ng-model="$ctrl.selected"
+      singular="Country/Region"
+      plural="Countries/Regions"
+      placeholder="$ctrl.selectPlaceholder"
+    ></cs-select>
+  </div>
+
+  <div class="ui-mt medium-12">
+    <div class="gemini-select-country">
+
+      <div class="pull-left upload-file-box" ng-if="!$ctrl.isCsvValid">
+        <span class="btn" translate="gemini.cbgs.importCsv"></span>
+        <input
+          class="country-upload-input"
+          id="upload"
+          name="upload"
+          type="file"
+          cr-file-read
+          file="$ctrl.model.file"
+          file-name="$ctrl.model.fileName"
+          file-max-size="10"
+          file-max-size-error="$ctrl.onFileSizeError()"
+          file-type="text/csv, application/csv, application/vnd.ms-excel"
+          file-suffix="csv"
+          file-type-error="$ctrl.onFileTypeError()"/>
+      </div>
+      <div ng-if="$ctrl.isCsvValid" class="pull-left">
+        <span title="{{$ctrl.model.fullFileName}}">{{$ctrl.model.fileName}}</span>
+        <button type="button" ng-click="$ctrl.onResetFile()" class="btn--none">
+          <small class="icon icon-exit"></small>
+        </button>
+      </div>
+
+      <a class="btn btn--none" download="ccaportal_regions_template.xls" ng-if="$ctrl.downloadUrl" ng-href="{{$ctrl.downloadUrl}}"><small translate="gemini.cbgs.downloadCsv" class="color-primary-base"></small></a>
+
+    </div>
+  </div>
+
+  <div ng-if="$ctrl.selected.length > 0">
+    <h4 class="ui-mt">
+      <small>{{::'gemini.cbgs.selectedCountry' | translate}}</small>
+    </h4>
+  </div>
+
+  <div ng-if="$ctrl.selected.length == 0">
+    <h3 class="ui-mt">
+      <small>{{::'gemini.cbgs.request.countryDisplayNull' | translate}}</small>
+    </h3>
+    <h5><small>{{::'gemini.cbgs.requestTip' | translate}}</small></h5>
+  </div>
+
+  <div class="tag-container edit-country ui-mt">
+      <span class="tag tag-country" ng-repeat="val in $ctrl.selected">
+        <span>{{val.label}}</span>
+        <i class="icon icon-close" ng-click="$ctrl.onDelSelected(val.label)"></i>
+      </span>
+  </div>
+</div>

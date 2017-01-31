@@ -42,7 +42,7 @@ namespace domainManagement {
             isLoaded: true,
             domain: 'example.com',
           },
-          domain
+          domain,
         );
 
         expect(ctrl.domain).toBe(domain);
@@ -59,7 +59,7 @@ namespace domainManagement {
         DomainManagementService.verifyDomain = sinon.stub().returns(deferred.promise);
         DomainManagementService.getToken = sinon.stub().returns($q.resolve('faketoken'));
         ctrl = domainManagementVerifyCtrlFactory(
-          DomainManagementService, user, domain, false
+          DomainManagementService, user, domain, false,
         );
 
         ctrl.verify();
@@ -85,7 +85,7 @@ namespace domainManagement {
             isLoaded: true,
             domain: 'example.com',
           },
-          domain
+          domain,
         );
 
         ctrl.learnMore();
@@ -104,7 +104,7 @@ namespace domainManagement {
               isLoaded: true,
               domain: 'example.com',
             },
-            domain
+            domain,
           );
 
           expect(ctrl.operationAllowed).toBeFalsy();
@@ -119,7 +119,7 @@ namespace domainManagement {
               isLoaded: true,
               domain: 'example.com',
             },
-            domain
+            domain,
           );
 
           expect(ctrl.operationAllowed).toBeTruthy();
@@ -134,7 +134,7 @@ namespace domainManagement {
               isLoaded: true,
               domain: 'example.com',
             },
-            domain
+            domain,
           );
 
           expect(ctrl.operationAllowed).toBeFalsy();
@@ -152,7 +152,7 @@ namespace domainManagement {
               isLoaded: true,
               domain: 'example.com',
             },
-            domain
+            domain,
           );
         });
 
@@ -171,6 +171,6 @@ namespace domainManagement {
         });
       })
       ;
-    }
+    },
   );
 }

@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($q, $scope, $state, $translate, $window, Analytics, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialContextService, TrialPstnService, TrialService, ValidationService, Orgservice) {
+  function TrialAddCtrl($q, $scope, $state, $translate, $window, Analytics, Config, FeatureToggleService, HuronCustomer, Notification, TrialContextService, TrialPstnService, TrialService, ValidationService, Orgservice) {
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
     var _careDefaultQuantity = 15;
@@ -498,28 +498,23 @@
         atlasCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         atlasCareCallbackTrials: FeatureToggleService.atlasCareCallbackTrialsGetStatus(),
         atlasContextServiceTrials: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
-        atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
-        placesEnabled: FeatureToggleService.supports(FeatureToggleService.features.csdmPstn),
-        atlasCreateTrialBackendEmail: FeatureToggleService.atlasCreateTrialBackendEmailGetStatus(),
         atlasTrialsShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus()
       })
         .then(function (results) {
           vm.showRoomSystems = true;
           vm.roomSystemTrial.enabled = true;
-          vm.sparkBoardTrial.enabled = results.atlasDarling;
+          vm.sparkBoardTrial.enabled = true;
           vm.webexTrial.enabled = true; // TODO: we enable globally by defaulting to 'true' here, but will revisit and refactor codepaths in a subsequent PR
           vm.callTrial.enabled = vm.hasCallEntitlement;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;
           vm.messageTrial.enabled = true;
           vm.meetingTrial.enabled = true;
           vm.showContextServiceTrial = true;
-          vm.atlasCreateTrialBackendEmailEnabled = results.atlasCreateTrialBackendEmail;
           vm.atlasTrialsShipDevicesEnabled = results.atlasTrialsShipDevices;
           updateTrialService(messageTemplateOptionId);
 
           vm.showCare = results.atlasCareTrials;
           vm.careTrial.enabled = results.atlasCareTrials;
-          vm.sbTrial = results.atlasDarling;
           vm.isCallBackEnabled = results.atlasCareCallbackTrials;
           // TODO: US12063 overrides using this var but requests code to be left in for now
           //var devicesModal = _.find(vm.trialStates, {
@@ -541,7 +536,6 @@
 
           meetingModal.enabled = true;
 
-          vm.placesEnabled = results.placesEnabled;
           setDeviceModal();
         })
         .finally(function () {
@@ -630,10 +624,10 @@
     }
 
     function toggleTrial() {
-      if (!vm.callTrial.enabled && !(vm.roomSystemTrial.enabled && vm.placesEnabled)) {
+      if (!vm.callTrial.enabled && !vm.roomSystemTrial.enabled) {
         vm.pstnTrial.enabled = false;
       }
-      if ((vm.callTrial.enabled || (vm.roomSystemTrial.enabled && vm.placesEnabled)) && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
+      if ((vm.callTrial.enabled || vm.roomSystemTrial.enabled) && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
         vm.pstnTrial.enabled = true;
       }
 
@@ -740,22 +734,7 @@
           return response;
         })
         .then(function (response) {
-          // suppress email if webex trial is enabled (more appropriately
-          // handled by the backend process once provisioning is complete)
-          if (!vm.webexTrial.enabled && !vm.atlasCreateTrialBackendEmailEnabled) {
-            return EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
-              vm.details.licenseDuration, Authinfo.getOrgId())
-              .catch(function (response) {
-                Notification.errorResponse(response, 'didManageModal.emailFailText');
-              })
-              .then(function () {
-                return response;
-              });
-          }
-          return response;
-        })
-        .then(function (response) {
-          if (vm.callTrial.enabled) {
+          if (vm.callTrial.enabled || vm.roomSystemTrial.enabled) {
             return HuronCustomer.create(vm.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
                 Notification.errorResponse(response, 'trialModal.squareducError');

@@ -355,7 +355,7 @@ describe('Service: ServiceSetup', function () {
   describe('getSiteLanguages', function () {
     beforeEach(function () {
       $httpBackend.expectGET('modules/huron/serviceSetup/siteLanguages.json').respond(getJSONFixture('huron/json/settings/languages.json'));
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     });
 
     it('should get site default languages & additional languages since userlocale2 feature toggle was enabled', function () {
@@ -372,7 +372,7 @@ describe('Service: ServiceSetup', function () {
     });
 
     it('should get site default languages only since userlocale2 feature toggle was disabled', function () {
-      FeatureToggleService.supports = jasmine.createSpy().and.returnValue($q.when(false));
+      FeatureToggleService.supports = jasmine.createSpy().and.returnValue($q.resolve(false));
       ServiceSetup.getSiteLanguages().then(function (response) {
         expect(response).toBeDefined();
         expect(response.length).toBe(2);

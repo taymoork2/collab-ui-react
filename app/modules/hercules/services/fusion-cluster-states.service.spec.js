@@ -25,9 +25,18 @@ describe('Service: FusionClusterStatesService', function () {
       expect(severity).toBe(0);
     });
 
-    it('should return 3 for the \'has_alarms\' state', function () {
+    it('should return 2 for the \'has_warning_alarms\' state', function () {
       var connector = {
-        alarms: [{}],
+        alarms: [{ severity: 'warning' }, { severity: 'alert' }],
+        state: 'running'
+      };
+      var severity = FusionClusterStatesService.getStateSeverity(connector);
+      expect(severity).toBe(2);
+    });
+
+    it('should return 3 for the \'has_error_alarms\' state', function () {
+      var connector = {
+        alarms: [{ severity: 'critical' }, { severity: 'error' }],
         state: 'running'
       };
       var severity = FusionClusterStatesService.getStateSeverity(connector);

@@ -14,7 +14,6 @@
 
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
-    vm.showDarling = wizardData.showDarling;
     vm.showATA = wizardData.showATA;
     vm.selectedDeviceType = null;
     vm.isLoading = false;

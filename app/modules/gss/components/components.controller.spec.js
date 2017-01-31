@@ -31,7 +31,7 @@ describe('controller:ComponentsCtrl', function () {
     });
 
     spyOn(ComponentsService, 'getComponents').and.callThrough();
-    spyOn(GSSService, 'getServiceId').and.returnValue($q.when({}));
+    spyOn(GSSService, 'getServiceId').and.returnValue($q.resolve({}));
     spyOn($modal, 'open').and.returnValue({
       result: $q.resolve()
     });

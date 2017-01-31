@@ -133,6 +133,11 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
         routerState: 'calendar-service.list',
       };
       this.active = filterAndGetEnabledService(servicesStatuses, service);
+      // Setup mode = no service is enabled
+      this.setupMode = !this.active && !this.googleActive;
+      if (!this.setupMode) {
+        this.cardClass += ' large';
+      }
       // We can stop loading now because we know we have the results for both services
       this.loading = false;
     });

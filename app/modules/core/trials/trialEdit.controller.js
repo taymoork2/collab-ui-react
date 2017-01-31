@@ -464,7 +464,6 @@
           getAdminOrgError = true;
           return err;
         }),
-        sbTrial: FeatureToggleService.atlasDarlingGetStatus()
       };
 
       $q.all(promises)
@@ -483,7 +482,6 @@
           vm.showCare = results.ftCareTrials;
           vm.careTrial.enabled = vm.preset.care;
           vm.isCallBackEnabled = results.ftCallBackEnabled;
-          vm.sbTrial = results.sbTrial;
           updateTrialService(_messageTemplateOptionId);
 
           // To determine whether to display the ship devices page
@@ -534,17 +532,21 @@
       }
     }
 
+    function isPstn() {
+      return ((!vm.preset.call && !vm.preset.roomSystems) && (hasEnabledCallTrial() || hasEnabledRoomSystemTrial()));
+    }
+
     function toggleTrial() {
-      if (!vm.callTrial.enabled) {
+      if (!vm.callTrial.enabled && !vm.roomSystemTrial.enabled) {
         vm.pstnTrial.enabled = false;
       }
-      if (vm.callTrial.enabled && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
+      if ((vm.callTrial.enabled || vm.roomSystemTrial.enabled) && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
         vm.pstnTrial.enabled = true;
       }
       setViewState('trialEdit.call', canAddDevice());
       setViewState('trialEdit.webex', hasEnabledWebexTrial());
-      setViewState('trialEdit.pstn', hasEnabledCallTrial());
-      setViewState('trialEdit.emergAddress', hasEnabledCallTrial());
+      setViewState('trialEdit.pstn', isPstn());
+      setViewState('trialEdit.emergAddress', isPstn());
 
       addRemoveStates();
 
@@ -664,7 +666,7 @@
         })
         .then(function (response) {
           vm.customerOrgId = response.data.customerOrgId;
-          if (vm.callTrial.enabled && !vm.preset.call) {
+          if ((vm.callTrial.enabled || vm.roomSystemTrial.enabled) && (!vm.preset.call || !vm.preset.roomSystems)) {
             return HuronCustomer.create(response.data.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
                 Notification.errorResponse(response, 'trialModal.squareducError');

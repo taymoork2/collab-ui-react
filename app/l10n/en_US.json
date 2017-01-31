@@ -157,7 +157,10 @@
       "bulkLabel": "Export and import users with a CSV file",
       "bulkDetails": "Best method for adding and editing up to {{maxUsersInCSV}} users at the same time.",
       "advancedLabel": "Enable directory synchronization",
-      "advancedDetails": "Synchronize users from Active Directory"
+      "advancedDetails": "Synchronize users from Active Directory.",
+      "convertLabel": "Convert/Claim Users",
+      "convertDetails": "Search for users who have signed up on their own for Cisco Spark and convert them into your company.",
+      "convertUnavailable": "There are no users to convert."
     },
     "ad": {
       "adLabel": "Active Directory",
@@ -490,6 +493,7 @@
     "startSearching": "To begin, search for an organization",
     "noSearchResults": "Search yielded no results",
     "allowBetaChannels": "Allow Beta Release Channel",
+    "allowAlphaChannels": "Allow Alpha Release Channel",
     "allowLatestChannels": "Allow Latest Release Channel",
     "releaseChannelToggleSuccess": "Allow Release Channel update successful",
     "releaseChannelToggleFailure": "Allow Release Channel update failed. Please try again later.",
@@ -640,6 +644,7 @@
     "media_type_all": "All Contact Types",
     "media_type_chat": "Chat",
     "media_type_callback": "Callback",
+    "media_type_voice": "Inbound Call",
     "taskDataGetError": "There was an error while loading the {{dataType}} data.",
     "tableDataGetError": "There was an error while loading the detailed efficient user data."
   },
@@ -1102,6 +1107,7 @@
     "remove": "Remove",
     "releaseChannel": "Release Channel",
     "rename": "Rename",
+    "required": "Required",
     "reset": "Reset",
     "resources": "Resources",
     "retry": "Retry",
@@ -1374,7 +1380,8 @@
     "warning": {
       "siteSteering": "First digit of Voicemail Access Prefix conflicts with the first digit of an internal extension range. If you use this prefix, it may cause a delay when dialing extensions starting with the same number.",
       "outboundDialDigit": "Outbound Dial Digit conflicts with the first digit of an internal extension range. If you use this digit, it may cause a delay when dialing extensions starting with the same number.",
-      "localDialing": "To use local dialing, you must setup your PSTN service. Contact your partner admin to begin PSTN service setup."
+      "localDialing": "To use local dialing, you must setup your PSTN service. Contact your partner admin to begin PSTN service setup.",
+      "outboundDialing": "The outbound dial digit is only applicable when using a PSTN service. Contact your partner admin to begin PSTN setup."
     },
     "saveModal": {
       "title": "Dial Plan Settings",
@@ -1461,6 +1468,7 @@
     "serverDown": "Authorization failed. Server may be down, please contact system administrator. You will automatically be logged out in a few seconds.",
     "expired": "Your session is expired or unauthorized. You will automatically be logged out in a few seconds. Please login again to continue using the service.",
     "unsupported": "You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.",
+    "unsupportedUserAgent": "You are using an unsupported internet browser",
     "statusError": "Request failed with status: {{status}}.",
     "csvError": "Export failed.",
     "videoError": "There is a problem with the video you are trying to play.",
@@ -1505,6 +1513,7 @@
     "retrieveKemFail": "Failed to retrieve key expansion module count.",
     "emergencyTitle": "Emergency Services",
     "editEmergencyServices": "Edit Emergency Services",
+    "emergencyServicesNotFound": "Emergency Services address not found.",
     "callbackNumber": "Callback Number",
     "serviceAddress": "Service Address",
     "servicesDesc": "Emergency Services requires a street address where this device is located, and must be associated with a managed callback number that is used if an emergency call is disconnected.",
@@ -1570,7 +1579,11 @@
       "modalNote": "Note: The more users included, the longer the report takes to generate.",
       "modalCTA": "Export to CSV",
       "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s",
-      "userNotFound": "Not found"
+      "userNotFound": "Not found",
+      "readingUserStatuses": "Reading user statuses…",
+      "readingConnectors": "Reading cluster assignments…",
+      "prepareFile": "Preparing export file…",
+      "pleaseWait": "Please wait"
     },
     "overview": {
       "activated": "Activated",
@@ -1666,6 +1679,8 @@
       "uninstalling": "Uninstalling",
       "running": "Running",
       "has_alarms": "Alarms",
+      "has_warning_alarms": "Alarms",
+      "has_error_alarms": "Alarms",
       "upgrading": "Upgrading",
       "upgraded": "Upgraded",
       "pending": "Pending",
@@ -1757,6 +1772,7 @@
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
       "enableServiceFailure": "Adding the {{serviceName}} failed.",
       "failedToEnableConnect": "Could not enable Call Service Connect.",
+      "failedToDisableConnect": "Could not disable Call Service Connect.",
       "sipDomainSaved": "SIP Destination saved successfully.",
       "sipDomainInvalid": "Could not save SIP Destination. Try again later.",
       "invalidEmail": "Please enter a list of comma-separated email addresses"
@@ -1796,6 +1812,7 @@
       "action": "Action"
     },
     "softwareUpgrade": {
+      "editSettingsLink": "Edit cluster settings",
       "softwareUpgrade": "Software Upgrade",
       "currentVersion": "Current Version",
       "newVersion": "New Version",
@@ -1866,6 +1883,14 @@
       "clusters-title-spark-hybrid-datasecurity": "HDS Clusters",
       "status-title": "Service Status"
     },
+    "hybridVoicemailUserSection": {
+      "automaticallyEnabled": "Voicemail is automatically enabled when Call Service Connect is enabled.",
+      "description": "Users can check their voicemail directly from Cisco Spark.",
+      "header": "Voicemail",
+      "on": "On",
+      "pilot": "Pilot",
+      "toTurnOn": "To turn on voicemail for your users, enable voicemail in <a ng-click=\"{{onclick}}\">Hybrid Call Settings</a>."
+    },
     "settings": {
       "deactivateServiceHeading": "Deactivate {{ServiceName}}",
       "deactivateService": "Deactivating {{ServiceName}} uninstalls {{ConnectorName}} from your Expressway clusters and disables the service for users.",
@@ -1886,6 +1911,16 @@
       "oneButtonToPushIntervalSecondaryLabel": "minutes before the meeting",
       "oneButtonToPushIntervalMinutesSavingSuccess": "Early join time was successfully saved.",
       "oneButtonToPushIntervalMinutesSavingError": "Could not save the change to early join time. Try again later.",
+      "voicemail": {
+        "heading": "Voicemail",
+        "description": "Allow users in your organization to access on-premise voicemail by using the Cisco Spark app.",
+        "enableDescription": "All users with both Hybrid Call Service Aware and Connect can use voicemail now",
+        "disableDescription": "Voicemail is disabled for all users",
+        "voicemailDisabled": "To enable voicemail Call Service Connect needs to be turned on.",
+        "voicemailStatusError": "Unable to get voicemail status",
+        "voicemailEnableError": "Could not enable voicemail",
+        "voicemailDisableError": "Could not disable voicemail"
+      },
       "documentation": {
         "heading": "Documentation and Software",
         "help": "Visit <a href=\"{{helpLink}}\" target=\"_blank\">Help Central</a> for further information about {{localizedServiceName}}.",
@@ -1996,7 +2031,9 @@
       },
       "connect": {
         "title": "Enable Call Service Connect for Users",
-        "navigateToUsers": "You have successfully configured Call Service Connect. Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Connect for your users. Make sure you selected the applicable method in Expressway to create CTI remote devices for your users. "
+        "navigateToUsers": "You have successfully configured Call Service Connect. Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Connect for your users. Make sure you selected the applicable method in Expressway to create CTI remote devices for your users. ",
+        "connectEnabled": "Call Service Connect has been enabled",
+        "connectDisabled": "Call Service Connect has been disabled"
       },
       "scheduleUpgrade": {
         "title": "Acknowledge the Scheduled Upgrade",
@@ -2013,8 +2050,8 @@
         "description": "You need at least one verified domain to use call services. Add domains under settings."
       },
       "release-channel": {
-        "title": "Default Release Channel",
-        "description": "Some clusters not assigned to resource groups do not have the right default release channel. <a ng-click=\"{{onclick}}\">Fix now</a>."
+        "title": "\"{{name}}\" Release Channel",
+        "description": "\"{{name}}\" is using a different release channel ({{current}}) than the default one ({{default}}). <a ng-click=\"{{onclick}}\">Change the release channel</a> to avoid inconsistencies with Hybrid Services."
       },
       "user-activation-errors": {
         "title": "Activation Error",
@@ -2121,9 +2158,11 @@
           "stable": "Stable",
           "stableHelpText": "The official release software for Hybrid Services",
           "beta": "Beta",
-          "betaHelpText": "Use this channel so that users can test new features before they are released.",
+          "betaHelpText": "Use this channel so that users can test new features before they are released",
+          "alpha": "Alpha",
+          "alphaHelpText": "Internal early adopters",
           "latest": "Latest",
-          "latestHelpText": "For developers and early adopters",
+          "latestHelpText": "For developers only",
           "error": "Could not create the Resource Group",
           "saveReleaseChannelSuccess": "Release Channel updated successfully.",
           "saveReleaseChannelError": "Could Not save Release Channel. Try again later."
@@ -2147,8 +2186,6 @@
     },
     "resourceGroupSettings": {
       "pageTitle": "{{groupName}} Settings",
-      "releaseChannelHeader": "Release Channel",
-      "releaseChannelDescription": "Select the release channel for all Hybrid Services running in this group.",
       "clustersHeader": "Clusters",
       "clustersAssign": "Assign Clusters",
       "clustersDescription": "Add one or more existing Expressway clusters to this group.",
@@ -2188,7 +2225,8 @@
       "releaseChannelTip": "To change the release channel for this cluster, assign it to a resource group with the preferred release channel.",
       "releaseChannelSaved": "Release channel saved successfully",
       "orgHasNoAccessToChannel": "The resource group is configured with the “{{currentReleaseChannel}}” release channel, which is no longer available to your organization. Set the release channel to “{{stableReleaseChannel}}” to restore service.",
-      "setToStable": "Set to {{stableReleaseChannel}}"
+      "clusterHasNotTheDefault": "This Expressway cluster uses a release channel that is different than the default one. Choose the default release channel ({{releaseChannel}}) to avoid inconsistencies with Hybrid Services.",
+      "setTo": "Set to {{releaseChannel}}"
     },
     "changeReleaseChannelDialog": {
       "title": "Change Release Channel",
@@ -2281,7 +2319,8 @@
         "complete-registration": "Go to your Hybrid Data Security admin to complete the registration.",
         "registration-timeout": "The registration timed out. Please remove this cluster and register the Hybrid Data Security node again.",
         "registration-timeout-extended": "The registration timed out. Please remove this cluster and register the Hybrid Data Security node again in the Add Resource dialog."
-      }
+      },
+      "upgradeScheduleSubHeader": "Upgrade Schedule"
     },
     "serviceName" : "Hybrid Data Security",
     "serviceStatus": {
@@ -2302,39 +2341,44 @@
       "pending": "Pending",
       "initializing": "Initializing",
       "not_operational": "Not Operational",
-      "nonodes": "No Nodes Registered"
+      "nonodes": "No Nodes Registered",
+      "not_registered": "Registration not completed",
+      "urgentUpgradeAvailable": "Urgent upgrade available",
+      "registrationTimeout": "Registration timeout"
     },
-    "settings": {
-      "servicestatusTitle": "Service Status",
-      "serviceTrialModeTitle": "Trial Mode",
-      "serviceTrialModeDesc": "Trial Started Month DD, YYYY at HH:MM PM",
-      "serviceProductionModeTitle": "Production Mode",
-      "serviceProductionModeDesc": "In this mode all users in your org will use this service",
-      "addTrialUsers": "Add Trial Users",
-      "editTrialUsers": "Edit Users in Trial"
+    "softwareUpgrade": {
+      "explanation": "You are about to upgrade {{connectorType}} to version {{newVersion}} on all nodes in your Hybrid Data Security cluster"
     },
-    "addTrialUsers": {
-      "modalTitle": "Assign Data Security to Users",
-      "modalHeading": "Manually Assign Users",
-      "modalDesc": "Enter the email addresses of the users that will be assigned to the Data Security Service",
-      "emailNotificationsWatermark": "Email addresses",
-      "emailExample": "For example: John Doe john.doe@email.com, Kate Williams kate.williams@email.com",
-      "modalSST": "Start Service Trial"
-    },
-    "editTrialUsers": {
-      "modalTitle": "Edit Data Security Trial Users",
-      "modalHeadingAddUser": "To Add Users to this Service Trial",
-      "modalAddUserDesc1": "&bull; Go to the Users page",
-      "modalAddUserDesc2": "&bull; Search for the user you want to add to this Trial, and upon finding them, select the user (by clicking the row)",
-      "modalAddUserDesc3": "&bull; Navigate to Hybrid Services and then assign them to the Data Security Service Trial by flipping the Service toggle ON",
-      "modalHeadingRemoveUser": "To Remove a User from this Service Trial",
-      "modalRemoveUserDesc1": "&bull; Go to the Users page",
-      "modalRemoveUserDesc2": "&bull; Search for the user you want to remove from this Trial, and upon finding them, select the user (by clicking the row). If necessary, you can <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">download your Service Trial Users</a> for reference.",
-      "modalRemoveUserDesc3": "&bull; Navigate to Hybrid Services and then assign them to the Data Security Service Trial by flipping the Service toggle ON"
-    },
-    "resources" : {
+    "resources": {
+      "settings": {
+        "servicestatusTitle": "Service Status",
+        "serviceTrialModeTitle": "Trial Mode",
+        "serviceTrialModeDesc": "Trial Started Month DD, YYYY at HH:MM PM",
+        "serviceProductionModeTitle": "Production Mode",
+        "serviceProductionModeDesc": "In this mode all users in your org will use this service",
+        "addTrialUsers": "Add Trial Users",
+        "editTrialUsers": "Edit Users in Trial"
+      },
+      "addTrialUsers": {
+        "modalTitle": "Assign Data Security to Users",
+        "modalHeading": "Manually Assign Users",
+        "modalDesc": "Enter the email addresses of the users that will be assigned to the Data Security Service",
+        "emailNotificationsWatermark": "Email addresses",
+        "emailExample": "For example: John Doe john.doe@email.com, Kate Williams kate.williams@email.com",
+        "modalSST": "Start Service Trial"
+      },
+      "editTrialUsers": {
+        "modalTitle": "Edit Data Security Trial Users",
+        "modalHeadingAddUser": "To Add Users to this Service Trial",
+        "modalAddUserDesc1": "&bull; Go to the Users page",
+        "modalAddUserDesc2": "&bull; Search for the user you want to add to this Trial, and upon finding them, select the user (by clicking the row)",
+        "modalAddUserDesc3": "&bull; Navigate to Hybrid Services and then assign them to the Data Security Service Trial by flipping the Service toggle ON",
+        "modalHeadingRemoveUser": "To Remove a User from this Service Trial",
+        "modalRemoveUserDesc1": "&bull; Go to the Users page",
+        "modalRemoveUserDesc2": "&bull; Search for the user you want to remove from this Trial, and upon finding them, select the user (by clicking the row). If necessary, you can <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">download your Service Trial Users</a> for reference.",
+        "modalRemoveUserDesc3": "&bull; Navigate to Hybrid Services and then assign them to the Data Security Service Trial by flipping the Service toggle ON"
+      },
       "page_title": "Hybrid Data Security Service",
-      "add-resource-button": "Add Resource",
       "genericError": "An unexpected error occurred. Please try again later.",
       "loading": "Loading",
       "connectors": {
@@ -2354,8 +2398,8 @@
         "goToHost": "Go to Host",
         "hosts": "Hosts",
         "nodes": "Nodes"
-      }
     }
+   }
   },
   "ediscovery": {
     "browserTabHeaderTitle": "Spark Activity Reports",
@@ -3095,6 +3139,11 @@
     "fallbackTimer.validation.error": "Must be a number between {{min}} and {{max}}"
   },
   "callPickup": {
+    "nameLabel": "Call Pickup Name",
+    "memberLabel": "Call Pickup Members",
+    "successUpdate": "'{{callPickupName}}' Call pickup has been updated successfully",
+    "errorUpdate": "Failed to update the '{{callPickupName}}' Call Pickup",
+    "saveLabel": "Do you want to save your changes?",
     "title": "Call Pickup",
     "code": "PI",
     "modalDescription": "Call Pickup feature allows users to pick up incoming calls within a group of users.",
@@ -3118,7 +3167,19 @@
     "minMemberWarning": "You need to select at least one line for each member",
     "memberWarning": "Member already added to another call pickup group. Do you wish to continue?",
     "duplicateNameWarning": "A pickup group by same name already exists",
-    "removeMember": "Remove Member"
+    "removeMember": "Remove Member",
+    "memberTitle": "Members",
+    "nameTitle": "Call Pickup Settings",
+    "notificationTitle": "Notifications",
+    "notificationTimer": "Notification Timer",
+    "timerHint": "Set the duration of time the call rings before notifying pickup group.",
+    "pickupHint": "Pickup Notifications",
+    "pickupNotification": "Call pickup notification behavior and pickup experience on members' device.",
+    "notificationTimer.validation.error": "Must be a number between 1 and 120",
+    "notificationTimerSeconds": "Seconds",
+    "calledParty": "Display called party's information",
+    "callingParty": "Display calling party's information",
+    "playSound": "Play Sound"
   },
   "pagingGroup": {
     "title": "Paging Group",
@@ -3393,6 +3454,7 @@
     "swivel": "SWIVEL",
     "swivelAddError": "Failed to add {{number}}.",
     "swivelDuplicateError": "Failed to add {{number}}. Number already exists.",
+    "resellerCreateError": "Failed to create Reseller",
     "customerCreateError": "Failed to create customer with the carrier.",
     "customerUpdateError": "Failed to update customer with the carrier.",
     "siteCreateError": "Failed to create the service address.",
@@ -3526,6 +3588,7 @@
     "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
     "invalidTrialRoomSystemQuantity": "Number of Licenses should be between 1 and 20.",
+    "invalidTrialSparkBoardQuantity": "Number of Licenses should be between 1 and 20.",
     "invalidTrialCareQuantity": "Number of Licenses must be between 1 and message license quantity or maximum 50.",
     "careLicenseCountExceedsTotalCount": "Care license requested is more than the message license quantity.",
     "individualUserServices": "Individual User Services",
@@ -3869,7 +3932,8 @@
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
-    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
+    "e911Unavailable": "The number you have selected is currently unavailable due to the Emergency Service Address associated with it is processing. Check back later."
   },
   "bulkEnableVm": {
     "enableCompanyVoicemail": "Turning On Company Voicemail",
@@ -3997,7 +4061,6 @@
       "deskPhoneExamplesExtra": "e.g. 8845, 8865, 8800 or Analog Telephone Adapter port",
       "deskPhoneLicenseWarning": "Your organization must purchase Cisco Spark Call licenses first. Contact your partner or Cisco Sales for more information.",
       "roomSystem": "Room Device",
-      "roomSystemExamples": "DX, MX and SX series",
       "roomSystemExamplesExpanded": "Cisco Spark Board, DX, MX and SX series",
       "roomSystemLicenseWarning": "Your organization must purchase Cisco Spark Room Device licenses first. Contact your partner or Cisco Sales for more information."
     },
@@ -4123,7 +4186,9 @@
     "cloudOpAdmin": "Cloud Operations Administrator",
     "fullAdmin": "Full administrator privileges",
     "readonlyAdmin": "Read-only administrator privileges",
+    "readonlyAdminTooltip": "Read-only view of the portal. No changes will be accepted.",
     "partialAdmin": "Some administrator privileges",
+    "partialAdminError": "At least one administrator privilege must be selected",
     "noAdmin": "No administrator privileges",
     "salesAdmin": "Sales Administrator",
     "userAdmin": "User Administrator",
@@ -4231,16 +4296,17 @@
       "nodes": "Nodes"
     },
     "sipconfiguration": {
-      "success": "UC SIP Trunk saved successfully.",
-      "title": "UC SIP Trunk",
-      "description": "Enter the SIP trunk address to connect Hybrid Media Cluster to your Unified Communications Manager. This connection provides optimized video callback.",
+      "success": "Unified CM SIP Trunk saved successfully.",
+      "title": "Unified CM SIP Trunk",
+      "description": "Enter the SIP trunk address to connect the Hybrid Media cluster to your Unified Communications Manager. This connection provides optimized video callback.",
       "placeholder": "Enter the SIP trunk address...",
       "example": "Example: sips://203.0.113.0:5062"
     },
     "report" : {
       "title": "Hybrid Media",
       "adoption-title": "Adoption",
-      "resources-title": "Resources"
+      "resources-title": "Resources",
+      "custom": "Custom"
     },
     "settings": {
       "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
@@ -5207,7 +5273,9 @@
     "sorryMessage": "Sorry, something went wrong ",
     "reloadMessage": "Please try reloading the page",
     "chatTemplateCode": "Ch",
+    "chatMediaType": "Chat",
     "callbackTemplateCode": "Ca",
+    "callbackMediaType": "Callback",
     "newFeatures": {
       "newFeatureButtonText": "New",
       "newCareTemplateModalTitle": "Create New Care Template",
@@ -5383,6 +5451,7 @@
     "overviewDesc": "Toggle cards to customize what screens you want your customer to see on contacting Care",
     "overviewDesc_callback": "Toggle cards to customize what screens you want your customer to see when requesting a callback from customer care",
     "customerInfoDesc": "This is the screen a customer fills in to start chat with an agent",
+    "customerInfoDesc_callback": "This is the screen a customer fills in to request a callback from an agent",
     "customerInfoToggleTooltipMessage": "This screen is required for this template and cannot be disabled.",
     "feedbackDesc": "This screen is used to collect feedback from a customer after the chat ends",
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
@@ -5418,7 +5487,12 @@
     "defaultNameHint": "",
     "defaultEmailText": "Email",
     "defaultEmail": "e.g. abc@xyz.com",
+    "defaultPhoneText": "Phone Number",
+    "defaultPhoneHintText": "234-555-6789",
     "defaultQuestionText": "How may I assist you?",
+    "additionalDetails": "Additional Details",
+    "additionalDetailsAbtIssue": "Describe the issue you are experiencing",
+    "labelCallBackBtn": "Request Callback",
     "optionalText": "(Optional)",
     "field3HintText": "Select from the list or type",
     "defaultTypeMessageText": "Type your message and press enter",
@@ -5460,6 +5534,7 @@
     "typeId": "Id",
     "typePhone": "Phone",
     "typeCustom": "Custom",
+    "typeReason": "Reason",
     "ctValidation": {
       "errorChar250": "Character length cannot be more than 250.",
       "errorChar50": "Character length cannot be more than 50.",
@@ -5513,7 +5588,19 @@
     "chatting": "Chatting",
     "chattingMessage": "You are chatting with our Agent",
     "downloadEmbedCode": "Download Embed Code",
-    "embedCodeWarnMsg": "It is important to verify all domains where you want to use chat bubble. You will not be able to embed chat bubble on unverified domains.",
+    "embed-code": {
+      "no-verified-domains" : {
+        "warn": "There are no verified domains for your organization. Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains."
+      },
+      "verified-domains": {
+        "info": "These are the verified domains for your organization:",
+        "warn": "Care templates will not appear on unverified domains. Go to Settings page to add and verify domains."
+      },
+      "domain-fetch-error" : {
+        "info": "There was an error while loading the verified domains for your organization. Please try again.",
+        "warn": "Care templates work on any domains by default. Go to Settings page to add and verify domains in order to restrict them to work only for your organization's domains."
+      }
+    },
     "embedCodeFor": "Embed Code for ",
     "embedCodeWarnMsg_callback": "It is important to verify all domains where you want to use callback template. You will not be able to embed callback template on unverified domains.",
     "configureOrgLogoMsg": "Go to Settings page to modify your organization logo"
@@ -5597,6 +5684,8 @@
     "addMemberLabel": "Add & Search Members",
     "successSave": "'{{huntGroupName}}' hunt group has been created successfully",
     "successUpdate": "'{{huntGroupName}}' hunt group has been updated successfully",
+    "errorNamePattern": "May only contain alphanumeric, space, period, underscore and dash.",
+    "errorNameMaxLength": "Must contain a maximum of 50 characters.",
     "errorSave": "Failed to create the '{{huntGroupName}}' Hunt Group",
     "errorUpdate": "Failed to update the '{{huntGroupName}}' Hunt Group",
     "numberLabel": "Select Numbers",
@@ -5830,6 +5919,7 @@
     "purchase": "Purchase",
     "changePlan": "Change Plan",
     "onlineTrialUpgradeUrlError": "Unable to retrieve purchase url for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
+    "onlineProductInstanceError": "Unable to retrieve product instance for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
     "loadError": "An error occurred while loading subscriptions.",
     "licenseTypes": {
       "MS": "Standard Team Rooms",
@@ -5867,7 +5957,9 @@
     "atlas-portal.reports": "Reports",
     "atlas-portal.billing": "Billing",
     "atlas-portal.partner.helpdesk": "Help Desk Support",
+    "atlas-portal.partner.helpdeskTooltip": "Access to Help Desk",
     "atlas-portal.partner.orderadmin": "Order Admin Support",
+    "atlas-portal.partner.orderadminTooltip": "Access to Order Admin",
     "atlas-portal.application": "Application",
     "atlas-portal.partner.salesadmin": "Sales Admin",
     "id_full_admin": "Full Admin",
@@ -5876,6 +5968,7 @@
     "ciscouc.devops": "Spark Call Devops",
     "ciscouc.devsupport": "Spark Call Dev Support",
     "compliance": "Compliance Officer",
+    "complianceTooltip": "Access to Activity Reports",
     "ciscouc.phonelogaccess": "Spark Call Phone Log Access",
     "ciscouc.phonesupport": "Spark Call Phone Support"
   },
@@ -6093,9 +6186,13 @@
     "editAdminEmailSuccess": "Admin email was updated successfully.",
     "editAdminEmailFailure": "Failed to update admin email.",
     "userStatusEventLog": "User Status Event Log",
-    "lastEmailSent": "Last Email Sent",
+    "lastEmailEvent": "Last Email Event",
     "clearBounce": "Clear Bounce",
     "clearBounceSuccess": "Bounce cleared successfully. Try resending invite.",
+    "clearUnsubscribe": "Clear Unsubscribe",
+    "clearUnsubscribeSuccess": "Unsubscribe cleared successfully. Try resending invite.",
+    "clearComplaint": "Clear Complaint",
+    "clearComplaintSuccess": "Complaint cleared successfully. Try resending invite.",
     "emailStatuses": {
       "accepted": "Pending Delivery",
       "rejected": "Rejected",
@@ -6112,6 +6209,12 @@
         "delivered": "Email was delivered.",
         "unsubscribed": "Email can not be delivered because the user unsubscribed."
       }
+    },
+    "org": {
+      "duplicateName": "Organization name already in use",
+      "validationFailure": "Unable to validate",
+      "editNameSuccess": "Organization name successfully updated.",
+      "editNameFailure": "Failed to update customer name."
     }
   },
   "activation": {
@@ -6193,7 +6296,8 @@
     "isRunning": "An export task is already running. Please try again later.",
     "inProgress": "Background task 'Export {{type}} list' is running...",
     "success": "Your {{type}} list has been compiled and your download has started.",
-    "error": "Export user reports failed."
+    "error": "Export user reports failed.",
+    "unsupported": "Unsupported Export Type Requested"
   },
   "servicesOverview": {
     "title": "Services",
@@ -6212,6 +6316,7 @@
       "meeting": {
         "title": "Meeting",
         "description": "WebEx Meeting Center and Cisco Spark configurations for your organization and individuals.",
+        "SPDescription": "WebEx Meeting Center and Cisco Spark configurations.",
         "pmrText": "Configure your Personal Meeting Room"
       },
       "call": {
@@ -6339,6 +6444,8 @@
       "overview": "Overview",
       "openedOn": "Opened on",
       "moveSite": "Move Site",
+      "moveFrom": "move from",
+      "siteMoved": "Site Moved",
       "placeholder-text": "All",
       "importCsv": "Import CSV",
       "title": "Callback Groups",
@@ -6346,6 +6453,9 @@
       "remedyTicket": "Remedy Ticket",
       "reqSubmission": "Request Submission",
       "approveCbg": "Approve Callback Group",
+      "requestCountry": "Select countries and regions",
+      "requestTip": "Select or import countries and regions to add to this Callback Group.",
+      "selectedCountry": "Selected countries and regions",
       "editCountry": "Edit Countries and Regions",
       "downloadCsv": "Download CSV Template",
       "csvFilename": "exported_callbackGroup.csv",
@@ -6358,6 +6468,9 @@
       "cancelSubmissionMsg": "The associated remedy ticket will be deleted from the system.",
       "declineDialogNote": "Note: Explanation appears as a comment in the Callback Group history",
       "approveMsg": "If you proceed, the system will automatically updates the callback group with the selected countries",
+      "cancelSubmissionMsg": "A request has been submitted.",
+      "cancelSubmissionLink": "Cancel request",
+      "rejectSubmissionMsg": "A request has been rejected.",
       "field": {
         "sites": "Site URL",
         "status_": "Status",
@@ -6380,10 +6493,10 @@
         "button": "Request",
         "modalTitle": "Request Callback Group",
         "groupName": "Naming",
-        "groupCountries": "Countries",
+        "groupCountries": "Countries and Regions",
         "labelCustomer": "Customer Name",
         "customerPlaceholder": "Who is this callback group for?",
-        "labelCustomerAttr": "Partner CB Group Name",
+        "labelCustomerAttr": "Partner CB Group Name (optional)",
         "customerAttrPlaceholder": "Enter a shorter name for quick reference",
         "labelCountries": "Selected Countries and Regions",
         "countriesPlaceholder": "Search to add a country",

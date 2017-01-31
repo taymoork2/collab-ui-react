@@ -4,7 +4,7 @@ describe('Component: pgName', () => {
   beforeEach(function () {
     this.initModules('huron.paging-group.name');
     this.injectDependencies(
-      '$scope'
+      '$scope',
     );
     this.$scope.onUpdate = jasmine.createSpy('onUpdate');
   });

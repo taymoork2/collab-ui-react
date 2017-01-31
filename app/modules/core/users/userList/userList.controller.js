@@ -1,4 +1,5 @@
 require('./_user-list.scss');
+var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service').CsvDownloadService;
 
 (function () {
   'use strict';
@@ -9,7 +10,7 @@ require('./_user-list.scss');
 
   /* @ngInject */
   function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Auth, Config, FeatureToggleService,
-    Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, CsvDownloadService) {
+    Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils) {
 
     var vm = this;
 
@@ -96,6 +97,8 @@ require('./_user-list.scss');
     $scope.onManageUsers = onManageUsers;
     $scope.sortDirection = sortDirection;
 
+    vm.useAtlasNewUserExport = false;
+
     ////////////////
     var eventListeners = [];
     var isOnlineOrg;
@@ -131,9 +134,15 @@ require('./_user-list.scss');
       if (Authinfo.isCisco()) {
         $scope.isNotDirSyncOrException = true;
       } else {
-        FeatureToggleService.supportsDirSync().then(function (enabled) {
-          $scope.isNotDirSyncOrException = !enabled;
-        });
+        FeatureToggleService.supportsDirSync()
+          .then(function (enabled) {
+            $scope.isNotDirSyncOrException = !enabled;
+          });
+
+        FeatureToggleService.atlasNewUserExportGetStatus()
+          .then(function (enabled) {
+            vm.useAtlasNewUserExport = enabled;
+          });
       }
     }
 
@@ -190,7 +199,7 @@ require('./_user-list.scss');
         $scope.gridApi.infiniteScroll.resetScroll();
       } else if (!isMoreDataToLoad()) {
         // no more data to load, so don't waste time
-        return $q.when();
+        return $q.resolve();
       }
 
       $scope.gridRefresh = true; // show spinning icon
@@ -216,7 +225,7 @@ require('./_user-list.scss');
     }
 
     function loadedAllUsers() {
-      return _.size($scope.userList.allUsers) >= $scope.totalUsersExpected;
+      return (_.size($scope.userList.allUsers) >= $scope.totalUsersExpected);
     }
 
     // returns true if there is any more data to load from the server
@@ -340,28 +349,25 @@ require('./_user-list.scss');
             }
 
             if (!$scope.obtainedTotalUserCount) {
-              if (Authinfo.isCisco()) { // allow Cisco org (even > 10K) to export new CSV format
-                $scope.totalUsers = CsvDownloadService.userExportThreshold;
+              if (Authinfo.isCisco()) {
+                // allow Cisco org (even > 10K) to export new CSV format
+                $scope.totalUsers = CsvDownloadService.USER_EXPORT_THRESHOLD;
                 $scope.obtainedTotalUserCount = true;
               } else {
                 UserListService.getUserCount()
                   .then(function (count) {
-                    if (_.isNull(count) || _.isNaN(count) || count === -1) {
-                      // can't determine number of users, so assume over threshold
-                      count = CsvDownloadService.userExportThreshold;
-                    }
                     $scope.totalUsers = count;
                     $scope.obtainedTotalUserCount = true;
                   })
                   .catch(function (response) {
                     Log.debug('Failed to get User Count. Status: ' + response);
                     // can't determine number of users, so assume over threshold
-                    $scope.totalUsers = CsvDownloadService.userExportThreshold;
+                    $scope.totalUsers = CsvDownloadService.USER_EXPORT_THRESHOLD;
                     $scope.obtainedTotalUserCount = false;
                   });
               }
             }
-            deferred.reject(data);
+            deferred.resolve();
           }, $scope.searchStr);
       }
       return deferred.promise;
@@ -659,8 +665,15 @@ require('./_user-list.scss');
     }
 
     function onManageUsers() {
+
+      var overThreshold =
+        ($scope.totalUsers >= CsvDownloadService.USER_EXPORT_THRESHOLD) &&
+        !Authinfo.isCisco() &&
+        !vm.useAtlasNewUserExport;
+
       $state.go('users.manage', {
-        isOverExportThreshold: ($scope.totalUsers >= CsvDownloadService.userExportThreshold)
+        // todo - this can be removed once we start using the new export API
+        isOverExportThreshold: overThreshold
       });
     }
 

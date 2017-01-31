@@ -39,7 +39,7 @@ describe('Controller: DevicesCtrlHuron', function () {
 
     poller = {
       fetch: function () {
-        return $q.when();
+        return $q.resolve();
       },
       getDeviceList: function () {
         return null;
@@ -49,10 +49,10 @@ describe('Controller: DevicesCtrlHuron', function () {
       }
     };
 
-    spyOn(_CsdmDeviceService_, 'fetchDevicesForUser').and.returnValue($q.when({}));
+    spyOn(_CsdmDeviceService_, 'fetchDevicesForUser').and.returnValue($q.resolve({}));
     spyOn(CsdmHuronUserDeviceService, 'create').and.returnValue(poller);
-    spyOn(poller, 'getDeviceList').and.returnValue($q.when(deviceList));
-    spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(false));
+    spyOn(poller, 'getDeviceList').and.returnValue($q.resolve(deviceList));
+    spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(false));
     spyOn(Userservice, 'getUser');
     spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(true);
 
@@ -68,14 +68,14 @@ describe('Controller: DevicesCtrlHuron', function () {
   }
 
   it('should be created successfully', function () {
-    spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(false));
     initController();
     expect(controller).toBeDefined();
   });
 
   describe('activate() method', function () {
     beforeEach(function () {
-      spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.when(true));
+      spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
       initController();
     });
 
@@ -124,11 +124,11 @@ describe('Controller: DevicesCtrlHuron', function () {
 
   describe('showDeviceDetails() method', function () {
     beforeEach(function () {
-      spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.when(true));
+      spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
       initController();
     });
     it('should call $state.go', function () {
-      spyOn($state, 'go').and.returnValue($q.when());
+      spyOn($state, 'go').and.returnValue($q.resolve());
       controller.showDeviceDetails('currentDevice');
       expect($state.go).toHaveBeenCalled();
     });
@@ -136,7 +136,7 @@ describe('Controller: DevicesCtrlHuron', function () {
 
   describe('showGenerateOtpButton()', function () {
     beforeEach(function () {
-      spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.when(true));
+      spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
       initController();
     });
     it('should be false when not entitled to huron', function () {
@@ -211,7 +211,7 @@ describe('Controller: DevicesCtrlHuron', function () {
 
     describe('with showPersonal toggle', function () {
       beforeEach(function () {
-        spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.when(true));
+        spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
         initController();
         initCurrentUserAndResetUser();
       });
@@ -242,7 +242,7 @@ describe('Controller: DevicesCtrlHuron', function () {
 
     describe('without showPersonal toggle', function () {
       beforeEach(function () {
-        spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.when(false));
+        spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(false));
         initController();
         initCurrentUserAndResetUser();
       });

@@ -26,7 +26,7 @@ describe('Huron Setup Assistant Ctrl', function () {
     spyOn($state, 'go');
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
-    spyOn(HuntGroupService, 'saveHuntGroup').and.returnValue($q.when());
+    spyOn(HuntGroupService, 'saveHuntGroup').and.returnValue($q.resolve());
 
     controller = $controller('HuntGroupSetupAssistantCtrl', {
       $scope: $scope,
@@ -48,7 +48,7 @@ describe('Huron Setup Assistant Ctrl', function () {
     expect(controller.nextButton(0)).toEqual(true);
   });
 
-  it("should enable next button when not null on second pagee", function () {
+  it("should enable next button when not null on second page", function () {
     expect(controller.nextButton(1)).toEqual(false);
     controller.selectedPilotNumbers.push(testGroupNumber);
     expect(controller.nextButton(1)).toEqual(true);

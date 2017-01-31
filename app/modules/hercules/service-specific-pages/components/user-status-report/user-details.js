@@ -32,17 +32,21 @@
       return UrlConfig.getDomainManagementUrl(orgId) + 'Machines?filter=' + multipleUserFilter(machineIds);
     }
 
-    function getCSVColumnHeaders() {
-      return [$translate.instant('common.user'),
+    function getCSVColumnHeaders(includeResourceGroupColumn) {
+      var columnHeaders = [$translate.instant('common.user'),
         $translate.instant('common.type'),
         $translate.instant('cloudExtensions.cluster'),
         $translate.instant('cloudExtensions.status'),
         $translate.instant('cloudExtensions.details'),
         $translate.instant('common.id'),
         $translate.instant('common.service')];
+      if (includeResourceGroupColumn) {
+        columnHeaders.splice(3, 0, $translate.instant('hercules.resourceGroups.resourceGroupHeading'));
+      }
+      return columnHeaders;
     }
 
-    function addMachineRows(orgId, statuses, userRows) {
+    function addMachineRows(orgId, statuses, userRows, progress) {
       var machineIds = _.map(statuses, 'userId');
       if (_.size(machineIds) === 0) {
         return $q.resolve(userRows);
@@ -57,11 +61,12 @@
               return getRow(machine, status);
             });
           }
+          progress.current += machineRows.length;
           return userRows.concat(machineRows);
         });
     }
 
-    function getUsers(orgId, statuses) {
+    function getUsers(orgId, statuses, progress, includeResourceGroupColumn) {
       var userIds = _.map(statuses, 'userId');
       var potentialMachineStatuses = [];
       return $http.get(userUrl(orgId, userIds))
@@ -71,20 +76,21 @@
           _.forEach(statuses, function (status) {
             var user = _.find(data.Resources, { id: status.userId });
             if (user) {
-              userRows.push(getRow(user, status));
+              userRows.push(getRow(user, status, includeResourceGroupColumn));
+              progress.current += 1;
             } else {
               potentialMachineStatuses.push(status);
             }
           });
           return userRows;
         }).then(function (userRows) {
-          return addMachineRows(orgId, potentialMachineStatuses, userRows);
+          return addMachineRows(orgId, potentialMachineStatuses, userRows, progress);
         });
     }
 
-    function getRow(userOrMachine, status) {
+    function getRow(userOrMachine, status, includeResourceGroupColumn) {
       // Same shape as getCSVColumnHeaders!
-      return [
+      var row = [
         getUserName(userOrMachine),
         getType(userOrMachine),
         status.connector ? status.connector.cluster_name + ' (' + status.connector.host_name + ')' : '',
@@ -93,6 +99,10 @@
         status.userId,
         status.serviceId === 'squared-fusion-uc' ? $translate.instant('hercules.serviceNames.squared-fusion-uc.full') : $translate.instant('hercules.serviceNames.' + status.serviceId)
       ];
+      if (includeResourceGroupColumn) {
+        row.splice(3, 0, status.resourceGroup ? status.resourceGroup.name : '');
+      }
+      return row;
     }
 
     function getUserName(userOrMachine) {

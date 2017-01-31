@@ -29,8 +29,8 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     QueueHelperService = _QueueHelperService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
-    spyOn(QueueHelperService, 'listQueues').and.returnValue($q.when(queues));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
+    spyOn(QueueHelperService, 'listQueues').and.returnValue($q.resolve(queues));
 
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();

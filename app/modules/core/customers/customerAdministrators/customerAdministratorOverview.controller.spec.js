@@ -20,7 +20,7 @@ describe('Controller: customerAdministratorOverviewCtrl', function () {
       customerOrgId: '5555-6666',
     };
 
-    spyOn(CustomerAdministratorService, 'getCustomerAdmins').and.returnValue($q.when({
+    spyOn(CustomerAdministratorService, 'getCustomerAdmins').and.returnValue($q.resolve({
       data: {
         totalResults: 2
       }

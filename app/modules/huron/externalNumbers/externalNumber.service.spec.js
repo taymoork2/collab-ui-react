@@ -77,12 +77,12 @@ describe('Service: ExternalNumberService', function () {
     allNumbers = pendingNumbers.concat(externalNumbers);
     pendingList = pendingNumbers.concat(pendingOrders);
 
-    spyOn(PstnSetupService, 'listPendingNumbers').and.returnValue($q.when(pendingList));
-    spyOn(PstnSetupService, 'isCarrierSwivel').and.returnValue($q.when(false));
-    spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.when());
+    spyOn(PstnSetupService, 'listPendingNumbers').and.returnValue($q.resolve(pendingList));
+    spyOn(PstnSetupService, 'isCarrierSwivel').and.returnValue($q.resolve(false));
+    spyOn(PstnSetupService, 'getCustomerV2').and.returnValue($q.resolve());
     spyOn(PstnSetupService, 'deleteNumber');
     spyOn(ExternalNumberPool, 'deletePool');
-    spyOn(ExternalNumberPool, 'getExternalNumbers').and.returnValue($q.when(externalNumbers));
+    spyOn(ExternalNumberPool, 'getExternalNumbers').and.returnValue($q.resolve(externalNumbers));
     spyOn($translate, 'instant');
   }));
 
@@ -134,7 +134,7 @@ describe('Service: ExternalNumberService', function () {
 
   it('should only retrieve external numbers if not a terminus customer', function () {
     $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customerId + '/numbers?type=external').respond(numberResponse);
-    PstnSetupService.getCustomer.and.returnValue($q.reject());
+    PstnSetupService.getCustomerV2.and.returnValue($q.reject());
 
     ExternalNumberService.refreshNumbers(customerId);
     $httpBackend.flush();
@@ -182,7 +182,7 @@ describe('Service: ExternalNumberService', function () {
   it('should get unassigned numbers that aren\'t pending', function () {
     var unassignedAndPendingNumbers = unassignedNumbers.concat(pendingNumbers);
     var externalNumbers = unassignedAndPendingNumbers.concat(assignedNumbers);
-    ExternalNumberPool.getExternalNumbers.and.returnValue($q.when(externalNumbers));
+    ExternalNumberPool.getExternalNumbers.and.returnValue($q.resolve(externalNumbers));
 
     ExternalNumberService.refreshNumbers();
 
@@ -235,7 +235,7 @@ describe('Service: ExternalNumberService', function () {
 
   it('should delete numbers from cmi instead of Terminus', function () {
     $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customerId + '/numbers?type=external').respond(numberResponse);
-    PstnSetupService.getCustomer.and.returnValue($q.reject());
+    PstnSetupService.getCustomerV2.and.returnValue($q.reject());
 
     ExternalNumberService.deleteNumber(customerId, externalNumber);
     $httpBackend.flush();
@@ -253,20 +253,20 @@ describe('Service: ExternalNumberService', function () {
 
     it('should return true for no Terminus customer and has no numbers', function () {
       $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customerId + '/numbers?type=external').respond(noNumberResponse);
-      PstnSetupService.getCustomer.and.returnValue($q.reject());
+      PstnSetupService.getCustomerV2.and.returnValue($q.reject());
       var value = ExternalNumberService.isTerminusCustomer(customerId);
       $httpBackend.flush();
-      $q.when(value).then(function (response) {
+      $q.resolve(value).then(function (response) {
         expect(response).toBe(true);
       });
     });
 
     it('should return false for no Terminus customer and has numbers', function () {
       $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customerId + '/numbers?type=external').respond(numberResponse);
-      PstnSetupService.getCustomer.and.returnValue($q.reject());
+      PstnSetupService.getCustomerV2.and.returnValue($q.reject());
       var value = ExternalNumberService.isTerminusCustomer(customerId);
       $httpBackend.flush();
-      $q.when(value).then(function (response) {
+      $q.resolve(value).then(function (response) {
         expect(response).toBe(false);
       });
     });

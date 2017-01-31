@@ -20,7 +20,7 @@ describe('Service: Huron Customer', function () {
     HuronConfig = _HuronConfig_;
     PstnSetupService = _PstnSetupService_;
 
-    spyOn(PstnSetupService, 'listResellerCarriers').and.returnValue($q.when());
+    spyOn(PstnSetupService, 'listResellerCarriers').and.returnValue($q.resolve());
   }));
 
   afterEach(function () {
@@ -48,7 +48,7 @@ describe('Service: Huron Customer', function () {
     });
 
     it('should update voice customer when one pstn reseller carrier is found', function () {
-      PstnSetupService.listResellerCarriers.and.returnValue($q.when([{
+      PstnSetupService.listResellerCarriers.and.returnValue($q.resolve([{
         name: 'AUDP_INT'
       }]));
       $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/common/customers').respond(201);

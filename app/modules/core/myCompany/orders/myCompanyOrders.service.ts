@@ -17,7 +17,7 @@ export class MyCompanyOrdersService {
   constructor(
     private $resource: ng.resource.IResourceService,
     private Authinfo,
-    private UrlConfig
+    private UrlConfig,
   ) {
     this.ordersService = this.$resource(this.UrlConfig.getAdminServiceUrl() + 'commerce/purchaseorders/customer/:customerId');
   }

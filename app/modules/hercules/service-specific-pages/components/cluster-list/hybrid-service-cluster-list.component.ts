@@ -10,7 +10,7 @@ class HybridServiceClusterListCtrl implements ng.IComponentController {
 
     public clusterList: any = {};
     public clusterListGridOptions = {};
-    public getSeverity = this.ClusterService.getRunningStateSeverity;
+    public getSeverity = this.FusionClusterStatesService.getSeverity;
 
     private serviceId: string;
     private connectorType: string;
@@ -23,13 +23,12 @@ class HybridServiceClusterListCtrl implements ng.IComponentController {
         private $stateParams: IClusterIdStateParam,
         private ClusterService,
         private FusionClusterService,
+        private FusionClusterStatesService,
         private FusionUtils,
-        private ServiceStateChecker,
     ) {  }
 
     public $onInit() {
         this.connectorType = this.FusionUtils.serviceId2ConnectorType(this.serviceId);
-        this.ServiceStateChecker.checkState(this.connectorType, this.serviceId);
         this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
 
         this.clusterListGridOptions = {
@@ -67,8 +66,7 @@ class HybridServiceClusterListCtrl implements ng.IComponentController {
         });
     }
 
-    private updateClusters = () => {
-        this.ServiceStateChecker.checkState(this.connectorType, this.serviceId);
+    private updateClusters() {
         this.FusionClusterService.setClusterAllowListInfoForExpressway(this.ClusterService.getClustersByConnectorType(this.connectorType))
             .then((clusters) => {
                 this.clusterList = clusters;
@@ -76,10 +74,9 @@ class HybridServiceClusterListCtrl implements ng.IComponentController {
             .catch(() => {
                 this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
             });
+    }
 
-    };
-
-    private goToSidepanel = (clusterId: string) => {
+    private goToSidepanel(clusterId: string) {
         this.$state.go('cluster-details', {
             clusterId: clusterId,
             connectorType: this.connectorType,

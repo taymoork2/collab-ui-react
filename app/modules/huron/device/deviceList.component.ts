@@ -15,7 +15,7 @@ class DeviceList implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $translate: ng.translate.ITranslateService
+    private $translate: ng.translate.ITranslateService,
   ) {}
 
   public $onInit(): void {

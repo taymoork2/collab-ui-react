@@ -1,47 +1,13 @@
 <div ui-view="header"></div>
 
 <cs-sp-container class="hercules-fix-paragraphs hercules-settings-table">
-  <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0">
-    <div class="section-title-row section-name" translate="hercules.alarms.alarms"></div>
-    <div class="feature-list" ng-if="clusterDetailsCtrl.cluster.aggregates.alarms.length > 0">
-      <ul>
-        <li class="feature" ng-repeat="alarm in clusterDetailsCtrl.cluster.aggregates.alarms" ng-class="{'list-item': !$first}">
-          <a ui-sref="cluster-details.alarm-details({alarm: alarm})">
-            <i class="icon icon-error red status-icon"></i>
-            <span class="feature-name">{{alarm.title}}</span>
-            <i class="feature-arrow"></i>
-          </a>
-        </li>
-      </ul>
-    </div>
-    <p ng-if="clusterDetailsCtrl.cluster.aggregates.alarms.length === 0" translate="hercules.alarms.noAlarms"></p>
-  </cs-sp-section>
 
-  <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0 && clusterDetailsCtrl.hasF237FeatureToggle && clusterDetailsCtrl.resourceGroupName">
-    <div class="section-title-row section-name" translate="hercules.resourceGroups.resourceGroupHeading"></div>
-    <p>{{clusterDetailsCtrl.resourceGroupName}}</p>
-  </cs-sp-section>
+  <alarm-list-section alarms="clusterDetailsCtrl.cluster.aggregates.alarms"
+                      ng-if="clusterDetailsCtrl.cluster.connectors.length > 0"></alarm-list-section>
 
-  <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0 && clusterDetailsCtrl.hasF237FeatureToggle">
-    <div class="section-title-row section-name" translate="common.releaseChannel"></div>
-    <p>{{clusterDetailsCtrl.releaseChannel}}</p>
-  </cs-sp-section>
-
-  <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0 && clusterDetailsCtrl.schedule">
-    <div class="section-title-row section-name" translate="hercules.expresswayClusterSettings.upgradeScheduleSubHeader"></div>
-    <p>
-      <span>{{clusterDetailsCtrl.schedule.dateTime}}, </span>
-      <span>{{clusterDetailsCtrl.schedule.timeZone}}</span>
-    </p>
-  </cs-sp-section>
-
-  <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0 && clusterDetailsCtrl.schedule">
-    <div class="section-title-row section-name" translate="hercules.fusion.urgentUpgrade.title"></div>
-    <p>
-      <span>{{clusterDetailsCtrl.schedule.urgentScheduleTime}}, </span>
-      <span>{{clusterDetailsCtrl.schedule.timeZone}}</span>
-    </p>
-  </cs-sp-section>
+  <schedule-info-section cluster="clusterDetailsCtrl.cluster"
+                         has-f237-feature-toggle="clusterDetailsCtrl.hasF237FeatureToggle"
+                         ng-if="clusterDetailsCtrl.cluster.connectors.length > 0"></schedule-info-section>
 
   <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0">
     <div class="section-title-row section-name" translate="hercules.softwareUpgrade.softwareUpgrade"></div>
@@ -116,6 +82,10 @@
               translate-values="{ManagementConnector: clusterDetailsCtrl.localizedManagementConnectorName, CiscoCollaborationCloud: clusterDetailsCtrl.localizedCCCName}"></span>
       </p>
     </div>
+    <div class="edit-cluster-link small">
+      <a translate="hercules.softwareUpgrade.editSettingsLink"
+         ui-sref="expressway-settings({id: clusterDetailsCtrl.clusterId})"></a>
+    </div>
   </cs-sp-section>
 
   <cs-sp-section ng-if="clusterDetailsCtrl.cluster.connectors.length > 0">
@@ -129,10 +99,7 @@
                ui-sref="management-connector-details({host: host.hostname, hostSerial: connector.hostSerial, clusterId: clusterDetailsCtrl.clusterId, connectorType: 'c_mgmt'})"
             >
               <i class="icon icon-circle status-indicator"
-                 ng-class="clusterDetailsCtrl.getSeverity(connector.state).cssClass"
-                 ng-if="!clusterDetailsCtrl.hasConnectorAlarm(connector)"></i>
-              <i class="icon icon-circle status-indicator danger"
-                 ng-if="clusterDetailsCtrl.hasConnectorAlarm(connector)" ></i>
+                 ng-class="clusterDetailsCtrl.getSeverity(connector).cssClass"></i>
               <span class="feature-name">{{clusterDetailsCtrl.localizedManagementConnectorName}}</span>
               <span ng-if="connector.connectorType !== 'c_mgmt'" class="feature-name">{{clusterDetailsCtrl.localizedConnectorName}}</span>
               <span class="feature-status">{{connector.runningVersion}}</span>
@@ -141,11 +108,7 @@
             <a ng-if="connector.connectorType !== 'c_mgmt'"
                ui-sref="cluster-details.host-details({host: host.hostname, hostSerial: connector.hostSerial, clusterId: clusterDetailsCtrl.clusterId, connectorType: connector.connectorType})"
             >
-              <i class="icon icon-circle status-indicator"
-                 ng-class="clusterDetailsCtrl.getSeverity(connector.state).cssClass"
-                 ng-if="!clusterDetailsCtrl.hasConnectorAlarm(connector)"></i>
-              <i class="icon icon-circle status-indicator danger"
-                 ng-if="clusterDetailsCtrl.hasConnectorAlarm(connector)" ></i>
+              <i class="icon icon-circle status-indicator" ng-class="clusterDetailsCtrl.getSeverity(connector).cssClass"></i>
               <span class="feature-name">{{clusterDetailsCtrl.localizedConnectorName}}</span>
               <span class="feature-status">{{connector.runningVersion}}</span>
               <i class="feature-status feature-arrow"></i>

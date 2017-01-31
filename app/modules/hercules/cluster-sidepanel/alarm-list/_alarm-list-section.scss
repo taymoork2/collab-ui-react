@@ -1,0 +1,27 @@
+@import 'styles/toolkit/colors';
+
+alarm-list-section {
+  display: block;
+
+  .icon {
+    padding-top: 10px;
+    padding-right: 8px;
+  }
+
+  .icon-priority {
+    color: $color-alerts-base;
+  }
+
+  .icon-error {
+    color: $color-alerts-base;
+  }
+
+  .icon-warning {
+    color: $color-attention-base;
+  }
+
+  .icon-info {
+    color: $color-attention-base;
+  }
+
+}
