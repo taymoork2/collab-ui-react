@@ -143,7 +143,7 @@
         .get(statusesUrl)
         .then(extractData)
         .then(function (response) {
-          if (response.paging.next) {
+          if (response.paging && response.paging.next) {
             return recursivelyReadStatuses(response.paging.next)
               .then(function (statuses) {
                 return response.userStatuses.concat(statuses);
