@@ -2943,16 +2943,14 @@
               },
             },
           })
-          .state('cluster-details', {
+         .state('cluster-details', {
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                controllerAs: 'clusterDetailsCtrl',
-                controller: 'ExpresswayServiceClusterController',
-                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-details.html'
+                template: '<cluster-sidepanel-overview></cluster-sidepanel-overview>'
               },
               'header@cluster-details': {
-                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-header.html'
+                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'
               }
             },
             data: {
@@ -2962,17 +2960,12 @@
               clusterId: null,
               connectorType: null
             },
-            resolve: {
-              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
-              },
-            }
           })
           .state('management-connector-details', {
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                templateUrl: 'modules/hercules/cluster-sidepanel/management-connector-details.html',
+                templateUrl: 'modules/hercules/cluster-sidepanel/host-details/management-connector-details.html',
                 controller: 'ExpresswayHostDetailsController',
                 controllerAs: 'hostDetailsCtrl'
               }
@@ -2988,7 +2981,7 @@
             }
           })
           .state('cluster-details.alarm-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details.html',
+            templateUrl: 'modules/hercules/cluster-sidepanel/alarms-details/alarm-details.html',
             controller: 'ExpresswayAlarmController',
             controllerAs: 'alarmCtrl',
             data: {
@@ -3000,7 +2993,7 @@
             }
           })
           .state('cluster-details.host-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/host-details.html',
+            templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
             controller: 'ExpresswayHostDetailsController',
             controllerAs: 'hostDetailsCtrl',
             data: {
