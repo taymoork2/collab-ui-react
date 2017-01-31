@@ -806,7 +806,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.template.configuration.pages.customerInformation.enabled).toBe(true);
       expect(controller.template.configuration.pages.agentUnavailable.enabled).toBe(false);
       expect(controller.template.configuration.pages.offHours.enabled).toBe(true);
-      expect(controller.template.configuration.pages.callbackConfirmation.enabled).toBe(false);
+      expect(controller.template.configuration.pages.callbackConfirmation.enabled).toBe(true);
     });
   });
 
