@@ -243,6 +243,13 @@ describe('Service: UserOverviewService', () => {
         this.$httpBackend.flush();
         expect(promise).toBeResolved();
       });
+
+      it('should not fail if user has no invitations', function () {
+        this.updatedUser.entitlements = undefined;
+        this.invitationsGetSpy.respond(404);
+        let promise = this.UserOverviewService.getUser('userid');
+        expect(promise).toBeResolved();
+      });
     });
 
   });

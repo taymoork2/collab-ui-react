@@ -34,7 +34,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
     TokenService = _TokenService_;
     $q = _$q_;
 
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(WebExSiteRowService, 'getConferenceServices');
     spyOn(WebExSiteRowService, 'configureGrid');
     spyOn(WebExSiteRowService, 'getGridOptions').and.returnValue(fakeGridOptions);

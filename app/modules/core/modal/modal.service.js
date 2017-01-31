@@ -1,8 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .factory('ModalService', ModalService);
+  module.exports = ModalService;
 
   /* @ngInject */
   function ModalService($modal, $translate) {
@@ -21,6 +20,12 @@
         controllerAs: 'modal',
         type: 'dialog',
         resolve: {
+          hideDismiss: function () {
+            return options.hideDismiss || false;
+          },
+          hideTitle: function () {
+            return options.hideTitle || false;
+          },
           title: function () {
             return options.title || $translate.instant('common.modal');
           },

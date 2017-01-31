@@ -24,7 +24,7 @@ class DirectoryNumber implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $translate: ng.translate.ITranslateService
+    private $translate: ng.translate.ITranslateService,
   ) {
     this.inputPlaceholder = this.$translate.instant('directoryNumberPanel.searchNumber');
     this.placeholder = this.$translate.instant('directoryNumberPanel.chooseNumber');

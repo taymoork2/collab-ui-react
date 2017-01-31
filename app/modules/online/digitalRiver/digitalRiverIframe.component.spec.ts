@@ -7,7 +7,7 @@ describe('Component: digitalRiverIframe', () => {
       '$httpBackend',
       '$q',
       '$scope',
-      'DigitalRiverService'
+      'DigitalRiverService',
     );
     this.logoutDefer = this.$q.defer();
     spyOn(this.DigitalRiverService, 'logout').and.returnValue(this.logoutDefer.promise);

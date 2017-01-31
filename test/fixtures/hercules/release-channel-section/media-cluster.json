@@ -1,0 +1,65 @@
+{
+  "id": "1459b096-e285-4a10-95f2-7763dc935a85",
+  "name": "JFR",
+  "connectors": [
+    {
+      "id": "mf_mgmt@47e3e787ec8c4ee5b169e1413896c5e3",
+      "connectorType": "mf_mgmt",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "10.47.33.173",
+      "hostSerial": "47e3e787ec8c4ee5b169e1413896c5e3",
+      "alarms": [],
+      "runningVersion": "2017.01.12.576",
+      "registered": true,
+      "connectorStatus": {
+        "operational": true,
+        "services": {
+          "cloud": [],
+          "onprem": []
+        }
+      }
+    }
+  ],
+  "releaseChannel": "stable",
+  "provisioning": [
+    {
+      "connectorType": "mf_mgmt",
+      "provisionedVersion": "2017.01.12.576",
+      "availableVersion": "2017.01.12.576",
+      "availablePackageIsUrgent": false
+    }
+  ],
+  "registered": true,
+  "targetType": "mf_mgmt",
+  "upgradeSchedule": {
+    "scheduleDays": [
+      "sunday",
+      "saturday",
+      "tuesday",
+      "friday",
+      "wednesday",
+      "thursday",
+      "monday"
+    ],
+    "scheduleTime": "03:00",
+    "scheduleTimeZone": "America/Los_Angeles",
+    "moratoria": [],
+    "nextUpgradeWindow": {
+      "startTime": "2017-01-27T11:00:54.337Z",
+      "endTime": "2017-01-27T12:00:54.337Z"
+    }
+  },
+  "servicesStatuses": [
+    {
+      "serviceId": "squared-fusion-media",
+      "state": {
+        "name": "running",
+        "severity": 0,
+        "label": "ok",
+        "cssClass": "success"
+      },
+      "total": 1
+    }
+  ]
+}

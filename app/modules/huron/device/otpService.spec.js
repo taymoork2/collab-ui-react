@@ -33,28 +33,6 @@ describe('Service: OtpService', function () {
     expect(OtpService).toBeDefined();
   });
 
-  describe('loadOtps function', function () {
-    it('should exist', function () {
-      expect(OtpService.loadOtps).toBeDefined();
-    });
-
-    it('should return 1 OTP', function () {
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/common/customers/1/users/1/otp').respond(200, getJSONFixture('huron/json/device/otps.json'));
-      OtpService.loadOtps('1').then(function (data) {
-        expect(data.length).toEqual(1);
-      });
-      $httpBackend.flush();
-    });
-
-    it('should not return invalid OTPs', function () {
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/common/customers/1/users/1/otp').respond(200, getJSONFixture('huron/json/device/invalidOtps.json'));
-      OtpService.loadOtps('1').then(function (data) {
-        expect(data.length).toEqual(0);
-      });
-      $httpBackend.flush();
-    });
-  });
-
   describe('generateOtp function', function () {
     it('should exist', function () {
       expect(OtpService.generateOtp).toBeDefined();

@@ -9,7 +9,11 @@
   <div class="header-info">
     <div class="header-info-wrap">
       <div class="header-title">
-        <sq-editable-input ng-model="$ctrl.currentPlace.displayName" sq-save="$ctrl.save(newText)"></sq-editable-input>
+        <cr-inline-edit-text
+          class="place-header-title-edit"
+          value="$ctrl.currentPlace.displayName"
+          on-save="$ctrl.save(newValue)">
+        </cr-inline-edit-text>
       </div>
     </div>
   </div>

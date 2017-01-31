@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var angularResourceModule = require('angular-resource');
+  var angularTranslateModule = require('angular-translate');
   var authModule = require('modules/core/auth/auth');
   var configModule = require('modules/core/config/config');
   var urlConfigModule = require('modules/core/config/urlConfig');
@@ -10,6 +12,8 @@
 
   module.exports = angular
     .module('core.org', [
+      angularResourceModule,
+      angularTranslateModule,
       authModule,
       authinfoModule,
       configModule,
@@ -21,7 +25,7 @@
     .name;
 
   /* @ngInject */
-  function Orgservice($http, $q, Auth, Authinfo, Config, Log, UrlConfig, Utils) {
+  function Orgservice($http, $q, $resource, $translate, Auth, Authinfo, Config, Log, UrlConfig, Utils) {
     var service = {
       getOrg: getOrg,
       getAdminOrg: getAdminOrg,
@@ -42,7 +46,9 @@
       getEftSetting: getEftSetting,
       setEftSetting: setEftSetting,
       validateSiteUrl: validateSiteUrl,
-      setHybridServiceReleaseChannelEntitlement: setHybridServiceReleaseChannelEntitlement
+      setHybridServiceReleaseChannelEntitlement: setHybridServiceReleaseChannelEntitlement,
+      updateDisplayName: updateDisplayName,
+      validateDisplayName: validateDisplayName
     };
 
     var savedOrgSettingsCache = [];
@@ -132,7 +138,7 @@
     function getAdminOrgUsage(oid) {
       var orgId = oid || Authinfo.getOrgId();
       var adminUrl = UrlConfig.getAdminServiceUrl() + 'customers/' + orgId + '/usage';
-      return $http.get(adminUrl);
+      return $http.get(adminUrl, { cache: true });
     }
 
     function getLicensesUsage() {
@@ -446,6 +452,39 @@
           isValid: isValid
         };
       });
+    }
+
+    function patchDisplayName(orgId, displayName, isValidate) {
+      var customerDisplayNameResource = $resource(UrlConfig.getAdminServiceUrl() + '/customers/:customerId/displayName', {}, {
+        patch: {
+          method: 'PATCH'
+        }
+      });
+      return customerDisplayNameResource.patch({
+        customerId: orgId,
+        verify: isValidate
+      }, {
+        displayName: displayName
+      }).$promise;
+    }
+
+    function updateDisplayName(orgId, displayName) {
+      return patchDisplayName(orgId, displayName)
+        .then(function (response) {
+          var status = _.get(response, 'status');
+          if (status === 'DUPLICATE') {
+            return $q.reject($translate.instant('helpdesk.org.duplicateName'));
+          } else if (status !== 'SUCCESS') {
+            return $q.reject(response);
+          }
+        });
+    }
+
+    function validateDisplayName(orgId, displayName) {
+      return patchDisplayName(orgId, displayName, true)
+        .then(function (response) {
+          return _.get(response, 'status') === 'ALLOWED';
+        });
     }
   }
 })();

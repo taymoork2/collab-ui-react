@@ -54,7 +54,7 @@ class LaunchAdvancedSettingsController {
           state.onEnter();
         }
         this.$scope.$apply();
-      }
+      },
     );
   }
 
@@ -231,5 +231,5 @@ angular
       return {
         open: open,
       };
-    }
+    },
   );

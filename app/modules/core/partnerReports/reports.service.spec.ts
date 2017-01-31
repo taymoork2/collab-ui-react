@@ -19,13 +19,40 @@ describe('Service: Report Service', () => {
     this.initModules('Core', 'Huron');
     this.injectDependencies('$httpBackend', '$q', 'CommonReportService', 'ReportService');
 
-    spyOn(this.CommonReportService, 'returnErrorCheck').and.callFake((error, message, response) => {
+    spyOn(this.CommonReportService, 'returnErrorCheck').and.callFake((error: any, message: string, response: any): any => {
       expect(error).toEqual(rejectError);
-      expect(message).not.toBe(undefined);
+      expect(message).toEqual(jasmine.any(String));
       return response;
     });
-    jasmine.clock().install();
-    jasmine.clock().mockDate(new Date(2016, 10, 2));
+
+    spyOn(this.CommonReportService, 'getModifiedDate').and.callFake((date: string, filter: ITimespan): string => {
+      expect(filter).toEqual(jasmine.any(Object));
+      let dateArray: Array<any> = _.cloneDeep(defaults.returnGraph);
+      let dateIndex: number = 0;
+
+      _.forEach(dateArray, (item: any, index: number) => {
+        if (item.fullDate === date) {
+          dateIndex = index;
+        }
+      });
+
+      return dateArray[dateIndex].date;
+    });
+
+    spyOn(this.CommonReportService, 'getReturnGraph').and.callFake((filter: ITimespan, date: string, graphItem: any): Array<any> => {
+      expect(filter).toEqual(jasmine.any(Object));
+      expect(date).toEqual(jasmine.any(String));
+      let dateArray: Array<any> = _.cloneDeep(defaults.returnGraph);
+      let graph: Array<any> = [];
+
+      _.forEach(dateArray, (item: any): void => {
+        let newItem = _.cloneDeep(graphItem);
+        newItem.date = item.date;
+        graph.push(newItem);
+      });
+
+      return graph;
+    });
   });
 
   afterEach(function () {
@@ -52,7 +79,7 @@ describe('Service: Report Service', () => {
       });
     });
 
-    xit('should getActiveUserData for an existing customer', function () {
+    it('should getActiveUserData for an existing customer', function () {
       let popData = _.cloneDeep(activeUserData.activePopResponse);
       _.forEach(popData, (data) => {
         data.color = undefined;
@@ -113,7 +140,7 @@ describe('Service: Report Service', () => {
   });
 
   describe('Media Quality Services', function () {
-    xit('should get MediaQuality Metrics', function () {
+    it('should get MediaQuality Metrics', function () {
       spyOn(this.CommonReportService, 'getPartnerReport').and.returnValue(this.$q.when({
         data: mediaQualityData.mediaQualityAPI,
       }));

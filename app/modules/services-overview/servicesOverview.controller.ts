@@ -44,11 +44,6 @@ export class ServicesOverviewCtrl {
 
     this.loadHybridServicesStatuses();
 
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasCareTrials)
-      .then(supports => {
-        this.forwardEvent('careFeatureToggleEventHandler', supports);
-      });
-
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasPMRonM2)
       .then(supports => {
         if (supports) {
@@ -59,11 +54,6 @@ export class ServicesOverviewCtrl {
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridDataSecurity)
       .then(supports => {
         this.forwardEvent('hybridDataSecurityToggleEventHandler', supports);
-      });
-
-    this.FeatureToggleService.supports(FeatureToggleService.features.csdmPstn)
-      .then(supports => {
-        this.forwardEvent('csdmPstnFeatureToggleEventHandler', supports);
       });
 
     this.FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar)

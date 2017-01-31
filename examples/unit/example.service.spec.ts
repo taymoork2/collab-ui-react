@@ -5,7 +5,7 @@ describe('Service: ExampleService', () => {
     this.initModules(exampleModule);
     this.injectDependencies(
       '$httpBackend',
-      'ExampleService'
+      'ExampleService',
     );
   });
   afterEach(function () {

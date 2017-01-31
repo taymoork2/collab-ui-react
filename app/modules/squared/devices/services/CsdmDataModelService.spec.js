@@ -1010,8 +1010,7 @@ describe('Service: CsdmDataModelService', function () {
           "url": "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/aaaaaa-ed35-4e00-a20d-d4d3519efb4f",
           "createTime": "2016-09-15T01:12:01.105Z",
           "description": "[\"one\", \"two\", \"three\"]",
-          "product": "SX10",
-          "state": "CLAIMED"
+          "product": "SX10"
         };
 
         $httpBackend.expectGET(devicesUrl).respond(devicesWithOneAdded);

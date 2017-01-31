@@ -11,6 +11,10 @@ describe(' sunlightReportService', function () {
   var weeklyOrgStats = dummyStats.weeklyOrgStats;
   var overviewStats = dummyStats.overviewStats;
 
+  var allUserFifteenMinutesStats = dummyStats.reportUsersFifteenMinutesStats;
+  var allUserHourlyStats = dummyStats.reportUsersHourlyStats;
+  var ciUserStats = dummyStats.ciUserStats;
+
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('676a82cd-64e9-4ebd-933c-4dce087a02bd')
   };
@@ -53,6 +57,20 @@ describe(' sunlightReportService', function () {
           return [200, []];
         }
       });
+    $httpBackend.whenGET(/.*\/all_user_stats.*/g)
+      .respond(function (method, url, data, headers, params) {
+        if (params.viewType === 'fifteen_minutes') {
+          return [200, allUserFifteenMinutesStats];
+        } else if (params.viewType === 'hourly') {
+          return [200, allUserHourlyStats];
+        } else {
+          return [200, []];
+        }
+      });
+    $httpBackend.whenGET(/.*filter=entitlements.*/g)
+      .respond(function () {
+        return [200, ciUserStats];
+      });
   }));
 
   beforeEach(inject(function ($rootScope, $q) {
@@ -81,6 +99,11 @@ describe(' sunlightReportService', function () {
     });
     $httpBackend.flush();
 
+    sunlightReportService.getStats('all_user_stats', config).then(function (response) {
+      expect(response.data.data.length).toBe(10);
+      expect(response.data.metadata.jobName).toBe('user_contact_stats_fifteen_minutes');
+    });
+    $httpBackend.flush();
   });
 
   it('should get stats for org for given hourly viewType and time range', function () {
@@ -98,6 +121,11 @@ describe(' sunlightReportService', function () {
     });
     $httpBackend.flush();
 
+    sunlightReportService.getStats('all_user_stats', config).then(function (response) {
+      expect(response.data.data.length).toBe(3);
+      expect(response.data.metadata.jobName).toBe('user_contact_stats_hourly');
+    });
+    $httpBackend.flush();
   });
 
   it('should get stats for org for given daily viewType and time range', function () {
@@ -166,6 +194,41 @@ describe(' sunlightReportService', function () {
       _.each(response, function (reportData) {
         expect(moment(reportData.createdTime, 'MMM DD', true).isValid()).toBe(true);
       });
+    });
+    $httpBackend.flush();
+  });
+
+  it('should get the aggregated data based on userId', function (onSuccess, onError) {
+    sunlightReportService.getAllUsersAggregatedData('all_user_stats', 1, 'chat').then(function (aggregatedData) {
+      expect(aggregatedData.length).toBe(4);
+
+      expect(aggregatedData[0].avgCsatScore).toBe('-');
+      expect(aggregatedData[0].contactsHandled).toBe(1);
+      expect(aggregatedData[0].contactsAssigned).toBe(0);
+      expect(aggregatedData[0].handleTime).toBe(0);
+      expect(aggregatedData[0].displayName).toBe('A GT user5');
+
+      expect(aggregatedData[1].avgCsatScore).toBe(3.67);
+      expect(aggregatedData[1].contactsHandled).toBe(3);
+      expect(aggregatedData[1].contactsAssigned).toBe(4);
+      expect(aggregatedData[1].handleTime).toBe(27887);
+      expect(aggregatedData[1].displayName).toBe('display GT User 4');
+
+      expect(aggregatedData[2].avgCsatScore).toBe(4);
+      expect(aggregatedData[2].contactsHandled).toBe(7);
+      expect(aggregatedData[2].contactsAssigned).toBe(10);
+      expect(aggregatedData[2].handleTime).toBe(401973);
+      expect(aggregatedData[2].displayName).toBe('A GT user5');
+
+      expect(aggregatedData[3].avgCsatScore).toBe(4);
+      expect(aggregatedData[3].contactsHandled).toBe(0);
+      expect(aggregatedData[3].contactsAssigned).toBe(0);
+      expect(aggregatedData[3].handleTime).toBe(0);
+      expect(aggregatedData[3].displayName).toBe('sunlight-user1@outlook.com');
+
+      onSuccess(aggregatedData);
+    }, function () {
+      onError();
     });
     $httpBackend.flush();
   });

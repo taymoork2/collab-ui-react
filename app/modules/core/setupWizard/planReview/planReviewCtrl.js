@@ -55,22 +55,24 @@
       maxServiceRows: maxServiceRows
     };
     vm.isCareEnabled = false;
+    vm.isSharedMeetingsEnabled = false;
+    vm.temporarilyOverrideSharedMeetingsFeatureToggle = { default: true, defaultValue: true };
 
     //TODO this function has to be removed when atlas-care-trials feature is removed
     vm.getGridColumnClassName = function () {
       return vm.isCareEnabled ? 'small-3' : 'small-4';
     };
 
-    vm.isSharedMultiPartyLicense = function (service) {
-      return _.get(service, 'license.licenseModel') === Config.licenseModel.cloudSharedMeeting;
+    vm.isSharedMeetingsLicense = function (service) {
+      return _.lowerCase(_.get(service, 'license.licenseModel', '')) === Config.licenseModel.cloudSharedMeeting;
     };
 
     vm.determineLicenseType = function (service) {
-      return vm.isSharedMultiPartyLicense(service) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.namedLicenses');
+      return vm.isSharedMeetingsLicense(service) ? $translate.instant('firstTimeWizard.sharedLicenses') : $translate.instant('firstTimeWizard.namedLicenses');
     };
 
     vm.generateLicenseTooltip = function (service) {
-      return vm.isSharedMultiPartyLicense(service) ? '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.sharedLicenseTooltip') + '</div>' : '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.namedLicenseTooltip') + '</div>';
+      return vm.isSharedMeetingsLicense(service) ? '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.sharedLicenseTooltip') + '</div>' : '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.namedLicenseTooltip') + '</div>';
     };
 
     init();
@@ -89,13 +91,15 @@
 
     function init() {
 
-      FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
-        vm.isCareEnabled = careStatus && Authinfo.isCare();
-      });
+      vm.isCareEnabled = Authinfo.isCare();
 
-      FeatureToggleService.atlasSMPGetStatus().then(function (smpStatus) {
-        vm.isSharedMultiPartyEnabled = smpStatus;
-      });
+      if (_.get(vm, 'temporarilyOverrideSharedMeetingsFeatureToggle.default') === true) {
+        vm.isSharedMeetingsEnabled = _.get(vm, 'temporarilyOverrideSharedMeetingsFeatureToggle.defaultValue');
+      } else {
+        FeatureToggleService.atlasSharedMeetingsGetStatus().then(function (smpStatus) {
+          vm.isSharedMeetingsEnabled = smpStatus;
+        });
+      }
 
       vm.messagingServices.services = Authinfo.getMessageServices() || [];
       _.forEach(vm.messagingServices.services, function (service) {
@@ -130,26 +134,33 @@
       });
 
       vm.hasAdvancedLicenses = function () {
-        _.each(vm.confServices.services, function (service) {
-          if (_.has(service, 'license.siteUrl')) {
-            return true;
+        return _.some(vm.confServices.services, function (service) {
+          return _.has(service, 'license.siteUrl');
+        });
+      };
+
+      vm.hasBasicLicenses = function () {
+        return _.some(vm.confServices.services, function (service) {
+          return !_.has(service, 'license.siteUrl');
+        });
+      };
+
+      /* TODO: Refactor this functions into MultipleSubscriptions Controller */
+      vm.selectedSubscriptionHasBasicLicenses = function (subscriptionId) {
+        return _.some(vm.confServices.services, function (service) {
+          if (_.get(service, 'license.billingServiceId') === subscriptionId) {
+            return !_.has(service, 'license.siteUrl');
           }
         });
       };
 
+      /* TODO: Refactor this functions into MultipleSubscriptions Controller */
       vm.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
-        var hasAdvancedLicense = false;
-        var advancedLicensesInSubscription = [];
-        if (vm.hasAdvancedLicenses) {
-          advancedLicensesInSubscription = _.filter(vm.confServices.services, { license: { billingServiceId: subscriptionId } });
-          _.each(advancedLicensesInSubscription, function (subscription) {
-            if (_.has(subscription, 'license.siteUrl')) {
-              hasAdvancedLicense = true;
-            }
-          });
-        }
-
-        return hasAdvancedLicense;
+        return _.some(vm.confServices.services, function (service) {
+          if (_.get(service, 'license.billingServiceId') === subscriptionId) {
+            return _.has(service, 'license.siteUrl');
+          }
+        });
       };
 
       vm.commServices.services = Authinfo.getCommunicationServices() || [];
@@ -220,6 +231,18 @@
             vm.sites[service.license.siteUrl].push(service);
           }
         }
+      });
+
+      vm.sitesBasedOnBillingId = {};
+      _.forEach(vm.sites, function (services) {
+        _.forEach(services, function (service) {
+          if (_.has(service, 'license.billingServiceId')) {
+            if (!vm.sitesBasedOnBillingId[service.license.billingServiceId]) {
+              vm.sitesBasedOnBillingId[service.license.billingServiceId] = [];
+            }
+            vm.sitesBasedOnBillingId[service.license.billingServiceId].push(service);
+          }
+        });
       });
 
       if (Object.prototype.toString.call(vm.cmrServices.services) == '[object Array]') {

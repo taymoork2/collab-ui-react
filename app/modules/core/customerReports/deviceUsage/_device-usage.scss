@@ -5,6 +5,7 @@
   background-color: $gray-light-2;
 }
 .device-usage-report-pages {
+  @import 'least-most.scss';
   position: relative;
   .customer-report-filter {
     width: 12.5rem;

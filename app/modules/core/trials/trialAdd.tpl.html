@@ -22,6 +22,14 @@
       </div>
     </div>
 
+    <!-- regional settings -->
+    <trial-regional-settings
+      cr-feature-toggle feature-show="huron-federated-spark-call"
+      default-country="trial.details.country"
+      default-country-list="trial.defaultCountryList"
+      on-change-fn="trial.setDefaultCountry(country)">
+    </trial-regional-settings>
+
     <!-- trial services -->
     <div class="cs-form__section">
       <div class="section__info">
@@ -52,7 +60,7 @@
         <div class="sub-section" ng-if="trial.showRoomSystems">
           <h5 class="sub-section__label" translate="subscriptions.room"></h5>
           <formly-form model="trial.roomSystemTrial" fields="trial.roomSystemFields"></formly-form>
-          <formly-form model="trial.sparkBoardTrial" fields="trial.sparkBoardFields" ng-if="trial.sbTrial"></formly-form>
+          <formly-form model="trial.sparkBoardTrial" fields="trial.sparkBoardFields"></formly-form>
         </div>
       </div>
     </div>

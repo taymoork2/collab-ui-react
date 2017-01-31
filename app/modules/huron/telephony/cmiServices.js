@@ -11,7 +11,6 @@
     .factory('ActivationCodeEmailService', ActivationCodeEmailService)
     .factory('DidAddEmailService', DidAddEmailService)
     .factory('IdentityOTPService', IdentityOTPService)
-    .factory('UserOTPService', UserOTPService)
     .factory('LineResource', LineService)
     .factory('RemoteDestinationService', RemoteDestinationService)
     .factory('UserDirectoryNumberService', UserDirectoryNumberService)
@@ -75,14 +74,6 @@
   /* @ngInject */
   function IdentityOTPService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/identity/users/otp', {}, {});
-  }
-
-  /* @ngInject */
-  function UserOTPService($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/common/customers/:customerId/users/:userId/otp', {
-      customerId: '@customerId',
-      userId: "@userId"
-    }, {});
   }
 
   /* @ngInject */

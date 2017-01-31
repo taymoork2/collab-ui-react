@@ -23,7 +23,9 @@ stats.json
 .sauce
 .sonar
 .tmp
+.history
 .vscode
+.history
 yarn.lock
 
 build
@@ -31,7 +33,8 @@ coverage
 dist
 plato
 screenshots
-typings
+typings/index.d.ts
+typings/globals
 /ts/*manifest.txt
 flist-split.*.karma.shim.js
 karma.conf.local.js

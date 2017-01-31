@@ -10,7 +10,8 @@
       <p class="sub-section__label" translate="hercules.settings.call.domainVerification"></p>
       <div class="hercules-connect-setting"
          ng-controller="DomainManagementCtrl as dv"
-         ng-include="'modules/core/domainManagement/domainManagement.tpl.html'"></div>
+         ng-include="'modules/core/domainManagement/domainManagement.tpl.html'">
+      </div>
     </div>
   </setting-section>
 
@@ -18,47 +19,44 @@
     <div class="sub-section">
       <p class="sub-section__label" translate="hercules.serviceNames.squared-fusion-ec"></p>
       <p translate="hercules.settings.call.connect"></p>
-            <cs-toggle-switch ng-click="callServiceSettings.storeEc(true)"
-                              ng-model="callServiceSettings.squaredFusionEc"
-                              toggle-id="squaredFusionEc-toggler" size="small">
-            </cs-toggle-switch>
+      <cs-toggle-switch ng-model="callServiceSettings.squaredFusionEc"
+                        toggle-id="squaredFusionEc-toggler"
+                        cs-change="callServiceSettings.storeEc(callServiceSettings.squaredFusionEc)"
+                        size="small">
+      </cs-toggle-switch>
     </div>
     <div class="sub-section" ng-if="callServiceSettings.squaredFusionEc">
       <div class="hercules-sip-settings">
-      <p class="sub-section__description">
-        <span class="sub-section__label" translate="hercules.settings.call.sipDomainHeading"></span>
-        <i tooltip="{{'hercules.settings.call.sipDomainButtonTooltip' | translate}}"
-           tooltip-placement="right"
-           tooltip-trigger="mouseenter"
-           class="icon icon-information sip-domain-icon"></i>
-      </p>
+        <p class="sub-section__description">
+          <span class="sub-section__label" translate="hercules.settings.call.sipDomainHeading"></span>
+          <i tooltip="{{'hercules.settings.call.sipDomainButtonTooltip' | translate}}"
+             tooltip-placement="right"
+             tooltip-trigger="mouseenter"
+             class="icon icon-information sip-domain-icon">
+          </i>
+        </p>
         <div class="row">
           <div class="columns medium-8">
-      <form name="inputSipDestinationForm" ng-submit="callServiceSettings.updateSipDomain()"
-            class="hercules-sip-destination-table">
-
-        <input ng-disabled="callServiceSettings.savingSip"
-               placeholder="{{'hercules.settings.call.sipDomainPlaceholder' | translate}} "
-               class="form-control"
-               id="sipDomain"
-               type="text"
-               ng-model="callServiceSettings.org.sipDomain"
-               required/>
-
-        <button type="button"
-                class="btn btn--primary"
-                id="updateSipDomain"
-                ng-click="callServiceSettings.updateSipDomain()"
-                ng-disabled="inputSipDestinationForm.$invalid || callServiceSettings.savingSip">
-          <span translate="common.save"></span>
-        </button>
-        <span class=right ng-show="callServiceSettings.savingSip">
+            <form name="inputSipDestinationForm" ng-submit="callServiceSettings.updateSipDomain()" class="hercules-sip-destination-table">
+              <input ng-disabled="callServiceSettings.savingSip"
+                     placeholder="{{'hercules.settings.call.sipDomainPlaceholder' | translate}} "
+                     class="form-control" id="sipDomain"
+                     type="text"
+                     ng-model="callServiceSettings.org.sipDomain"
+                     required/>
+              <button type="button"
+                      class="btn btn--primary"
+                      id="updateSipDomain"
+                      ng-click="callServiceSettings.updateSipDomain()"
+                      ng-disabled="inputSipDestinationForm.$invalid || callServiceSettings.savingSip">
+                <span translate="common.save"></span>
+              </button>
+              <span class=right ng-show="callServiceSettings.savingSip">
                 <i class="icon icon-spinner"/>
-        </span>
-      </form>
-
-      <p><em><span translate="hercules.settings.call.sipDomainExample"></span></em></p>
-        </div>
+              </span>
+            </form>
+            <p><em><span translate="hercules.settings.call.sipDomainExample"></span></em></p>
+          </div>
         </div>
       </div>
     </div>
@@ -73,69 +71,71 @@
         <hr>
         <table class="table table-striped">
           <tbody>
-          <tr data-ng-repeat="cert in callServiceSettings.formattedCertificateList">
-            <td>
-              <em translate="hercules.settings.call.certificatesEmailAddress"></em>
-              <br>
-              <em translate="hercules.settings.call.certificatesCommonName"></em>
-              <br>
-              <em translate="hercules.settings.call.certificatesOrganizationalUnit"></em>
-              <br>
-              <em translate="hercules.settings.call.certificatesOrganization"></em>
-              <br>
-              <em translate="hercules.settings.call.certificatesLocality"></em>
-              <br>
-              <em translate="hercules.settings.call.certificatesStateOrProvince"></em>
-              <br>
-              <em translate="hercules.settings.call.certificatesCountry"></em>
-              <br>
-              <em translate="hercules.settings.call.certificatesCreated"></em>
-              <br>
-              <em translate="hercules.settings.call.certificatesExpires"></em>
-            </td>
-            <td>
-              <span>{{cert.emailAddress}}</span>
-              <br>
-              <span>{{cert.commonName}}</span>
-              <br>
-              <span>{{cert.organizationalUnit}}</span>
-              <br>
-              <span>{{cert.organization}}</span>
-              <br>
-              <span>{{cert.locality}}</span>
-              <br>
-              <span>{{cert.stateAndProvince}}</span>
-              <br>
-              <span>{{cert.country}}</span>
-              <br>
-              <span>{{cert.created | date:'fullDate'}}</span>
-              <br>
-              <span>{{cert.expires | date:'fullDate'}}</span>
-            </td>
-            <td>
-              <i class="icon icon-trash icon-lg trash-icon right"
-               ng-click="callServiceSettings.confirmCertDelete(cert)"
-               popover-trigger="mouseenter"
-               popover-placement="left"
-               popover="{{'hercules.settings.call.certificateDeleteTooltip' | translate}}">
-              </i>
-            </td>
-          </tr>
+            <tr data-ng-repeat="cert in callServiceSettings.formattedCertificateList">
+              <td>
+                <em translate="hercules.settings.call.certificatesEmailAddress"></em>
+                <br>
+                <em translate="hercules.settings.call.certificatesCommonName"></em>
+                <br>
+                <em translate="hercules.settings.call.certificatesOrganizationalUnit"></em>
+                <br>
+                <em translate="hercules.settings.call.certificatesOrganization"></em>
+                <br>
+                <em translate="hercules.settings.call.certificatesLocality"></em>
+                <br>
+                <em translate="hercules.settings.call.certificatesStateOrProvince"></em>
+                <br>
+                <em translate="hercules.settings.call.certificatesCountry"></em>
+                <br>
+                <em translate="hercules.settings.call.certificatesCreated"></em>
+                <br>
+                <em translate="hercules.settings.call.certificatesExpires"></em>
+              </td>
+              <td>
+                <span>{{cert.emailAddress}}</span>
+                <br>
+                <span>{{cert.commonName}}</span>
+                <br>
+                <span>{{cert.organizationalUnit}}</span>
+                <br>
+                <span>{{cert.organization}}</span>
+                <br>
+                <span>{{cert.locality}}</span>
+                <br>
+                <span>{{cert.stateAndProvince}}</span>
+                <br>
+                <span>{{cert.country}}</span>
+                <br>
+                <span>{{cert.created | date:'fullDate'}}</span>
+                <br>
+                <span>{{cert.expires | date:'fullDate'}}</span>
+              </td>
+              <td>
+                <i class="icon icon-trash icon-lg trash-icon right"
+                   ng-click="callServiceSettings.confirmCertDelete(cert)"
+                   popover-trigger="mouseenter"
+                   popover-placement="left"
+                   popover="{{'hercules.settings.call.certificateDeleteTooltip' | translate}}">
+                </i>
+              </td>
+            </tr>
           </tbody>
         </table>
         <hr>
       </div>
       <button class="btn btn--primary"
-            name="file"
-            accept=".pem, .crt, .der"
-            ngf-select="callServiceSettings.uploadCert($file, $event)"
-            ng-model="certFile"
-            loading="callServiceSettings.uploadingCert"
-            translate="hercules.settings.call.certificatesUpload">
-    </button>
+        name="file"
+        accept=".pem, .crt, .der"
+        ngf-select="callServiceSettings.uploadCert($file, $event)"
+        ng-model="certFile"
+        loading="callServiceSettings.uploadingCert"
+        translate="hercules.settings.call.certificatesUpload">
+      </button>
     </div>
   </setting-section>
-
+  <hybrid-voicemail-settings is-call-service-connect-enabled="callServiceSettings.squaredFusionEc"
+                             ng-if="callServiceSettings.hasVoicemailFeatureToggle">
+  </hybrid-voicemail-settings>
   <deactivate-section service-id="'squared-fusion-uc'"></deactivate-section>
   <documentation-section service-id="'squared-fusion-uc'"></documentation-section>
 </div>

@@ -23,7 +23,7 @@
         <div class="tag-container" ng-show="deviceOverview.currentDevice.tags && deviceOverview.currentDevice.tags.length > 0">
         <span class="tag" ng-repeat="tag in deviceOverview.currentDevice.tags">
           <span ng-bind-html="tag"></span>
-          <i class="icon icon-close" ng-click="deviceOverview.removeTag(tag)"></i>
+          <i class="icon icon-close" ng-show="!deviceOverview.currentDevice.isHuronDevice || !$first" ng-click="deviceOverview.removeTag(tag)"></i>
         </span>
         </div>
         <div class="tag-container">
@@ -113,7 +113,7 @@
           </ul>
         </span>
       </div>
-      <div class="form-group" ng-show="deviceOverview.shouldShowLines()">
+      <div class="form-group">
         <label class="col-sm-4 control-label">Lines</label>
         <div class="col-sm-8" cs-loader ng-hide="deviceOverview.linesAreLoaded"></div>
         <div class="col-sm-8" ng-show="deviceOverview.linesAreLoaded">
@@ -156,7 +156,7 @@
         </div>
       </div>
 
-      <div class="form-group" ng-show="deviceOverview.timeZone">
+      <div class="form-group" ng-show="deviceOverview.currentDevice.isHuronDevice">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.timeZone"></label>
         <div class="col-sm-8" cs-loader ng-hide="deviceOverview.tzIsLoaded"></div>
         <div class="col-sm-3" ng-show="deviceOverview.tzIsLoaded">
@@ -227,24 +227,21 @@
       <div class="form-group" ng-show="deviceOverview.currentDevice.hasAdvancedSettings" cr-feature-toggle feature-show="atlas-devices-advanced-settings">
         <label class="col-sm-4 control-label" translate="spacesPage.advancedSettings.advancedSettings"></label>
         <div class="col-sm-8">
-          <a sq-click-promise="deviceOverview.showAdvancedSettingsDialog()" translate="spacesPage.advancedSettings.launchAdvancedSettings"></a>
+          <a sq-click-promise="deviceOverview.showAdvancedSettingsDialog()" class="internal-link" translate="spacesPage.advancedSettings.launchAdvancedSettings"></a>
         </div>
       </div>
       <div class="form-group" ng-show="deviceOverview.currentDevice.hasRemoteSupport">
         <label class="col-sm-4 control-label" translate="spacesPage.ciscoSupport"></label>
         <div class="col-sm-8">
-          <a sq-click-promise="deviceOverview.showRemoteSupportDialog()" translate="spacesPage.remoteAccessKey"></a>
+          <a sq-click-promise="deviceOverview.showRemoteSupportDialog()" class="internal-link" translate="spacesPage.remoteAccessKey"></a>
         </div>
       </div>
     </cs-sp-section>
     <cs-sp-section ng-show="deviceOverview.showE911">
-      <div ng-show="!deviceOverview.isE911Available">
-        <i class="icon icon-spinner"></i>
-      </div>
-      <div ng-show="deviceOverview.isE911Available">
+      <div>
         <div class="section-title-row">
           <span class="section-name" translate="spacesPage.emergencyTitle"></span>
-          <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="deviceOverview.hideE911Edit">
+          <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="deviceOverview.hideE911Edit && !deviceOverview.e911NotFound">
             <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
               <i class="icon icon-three-dots"></i>
             </button>
@@ -253,17 +250,26 @@
             </ul>
           </span>
         </div>
-        <div class="form-group">
+        <div ng-if="deviceOverview.e911NotFound">
+          <div class="warning">
+            <div class="cs-input__messages">
+              <div class="message" translate="spacesPage.emergencyServicesNotFound"></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" ng-if="!deviceOverview.e911NotFound">
           <label class="col-sm-4 control-label" translate="spacesPage.callbackNumber"></label>
-          <div class="col-sm-8">
+          <div class="col-sm-8" cs-loader ng-hide="deviceOverview.isE911Available"></div>
+          <div class="col-sm-8" ng-show="deviceOverview.isE911Available">
             <p class="form-control-static line-row">
               <span class="form-control-static line-row">{{deviceOverview.emergencyCallbackNumber}}</span>
             </p>
           </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" ng-if="!deviceOverview.e911NotFound">
           <label class="col-sm-4 control-label" translate="spacesPage.serviceAddress"></label>
-          <div class="col-sm-8" >
+          <div class="col-sm-8" cs-loader ng-hide="deviceOverview.isE911Available"></div>
+          <div class="col-sm-8" ng-show="deviceOverview.isE911Available">
             <span class="form-control-static">{{deviceOverview.emergencyAddress.address1 | uppercase}}, {{deviceOverview.emergencyAddress.address2 | uppercase}}</span>
             <span class="form-control-static">{{deviceOverview.emergencyAddress.city | uppercase}}, {{deviceOverview.emergencyAddress.state | uppercase}} {{deviceOverview.emergencyAddress.zip}}</span>
           </div>

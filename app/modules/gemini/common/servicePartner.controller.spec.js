@@ -20,7 +20,7 @@ describe('controller: servicePartnerCtrl', function () {
   }
 
   function initSpec() {
-    spyOn(Notification, 'error').and.returnValue($q.when());
+    spyOn(Notification, 'error').and.returnValue($q.resolve());
     spyOn(gemService, 'getSpData').and.returnValue(defer.promise);
   }
 

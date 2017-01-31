@@ -2,7 +2,7 @@
 
 describe('Controller: AASayMessageCtrl', function () {
   var controller;
-  var AAUiModelService, AutoAttendantCeMenuModelService;
+  var AAUiModelService, AutoAttendantCeMenuModelService, AACommonService;
   var $rootScope, $scope;
 
   var aaUiModel = {
@@ -44,13 +44,15 @@ describe('Controller: AASayMessageCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function (_$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _AACommonService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    AACommonService = _AACommonService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+    spyOn(AACommonService, 'isMediaUploadToggle').and.returnValue(true);
 
     $scope.schedule = schedule;
     $scope.index = index;
@@ -99,10 +101,10 @@ describe('Controller: AASayMessageCtrl', function () {
     });
 
     describe('saveUiModel', function () {
-      it('should write say action to the model', function () {
+      it('should write play action to the model', function () {
         var message = "This is a test.";
         var voice = "Veronica";
-        controller.messageInput = message;
+        controller.actionEntry.value = message;
         controller.voiceOption.value = voice;
         controller.saveUiModel();
         $scope.$apply();
@@ -170,7 +172,7 @@ describe('Controller: AASayMessageCtrl', function () {
       it('should write say action to the model', function () {
         var message = "This is a test.";
         var voice = "Veronica";
-        controller.messageInput = message;
+        controller.actionEntry.value = message;
         controller.voiceOption.value = voice;
         controller.saveUiModel();
         $scope.$apply();
@@ -304,12 +306,11 @@ describe('Controller: AASayMessageCtrl', function () {
         expect(controller.messageInput).not.toBeTruthy();
 
         var message = "This is a test.";
-        controller.messageInput = message;
+        controller.actionEntry.value = message;
         controller.saveUiModel();
 
         var submenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         expect(controller).toBeDefined();
-        expect(controller.messageInput).toEqual(message);
         expect(submenu['headers'][0]['actions'].length).toEqual(1);
         expect(submenu['headers'][0]['actions'][0].name).toEqual('play');
         expect(submenu['headers'][0]['actions'][0].value).toEqual(message);
@@ -400,12 +401,11 @@ describe('Controller: AASayMessageCtrl', function () {
         expect(controller.messageInput).not.toBeTruthy();
 
         var message = "This is a test.";
-        controller.messageInput = message;
+        controller.actionEntry.value = message;
         controller.saveUiModel();
         $scope.$apply();
 
         expect(controller).toBeDefined();
-        expect(controller.messageInput).toEqual(message);
         expect(aaUiModel[schedule]['entries'][index]['entries'][keyIndex]['actions'].length).toEqual(2);
         expect(aaUiModel[schedule]['entries'][index]['entries'][keyIndex]['actions'][0].name).toEqual('play');
         expect(aaUiModel[schedule]['entries'][index]['entries'][keyIndex]['actions'][0].value).toEqual(message);
@@ -435,12 +435,5 @@ describe('Controller: AASayMessageCtrl', function () {
       });
       $scope.$apply();
     }));
-
-    describe('setActionEntry', function () {
-      it('should read existing say action for phone menu', function () {
-        expect(controller).toBeDefined();
-        expect(controller.messageInput).toEqual(valueInput);
-      });
-    });
   });
 });

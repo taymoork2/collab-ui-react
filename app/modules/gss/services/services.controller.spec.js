@@ -33,9 +33,9 @@ describe('controller: GSSServicesCtrl', function () {
   }
 
   function initSpies() {
-    spyOn(GSSService, 'getServices').and.returnValue($q.when());
+    spyOn(GSSService, 'getServices').and.returnValue($q.resolve());
     spyOn($modal, 'open').and.returnValue({
-      result: $q.when()
+      result: $q.resolve()
     });
     spyOn($state, 'go');
     spyOn($scope, '$emit').and.callThrough();

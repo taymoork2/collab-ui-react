@@ -10,7 +10,7 @@ class DigitalRiverIframe implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $sce: ng.ISCEService,
-    private DigitalRiverService: DigitalRiverService
+    private DigitalRiverService: DigitalRiverService,
   ) {}
 
   public $onChanges(changes: { [property: string]: ng.IChangesObject }): void {

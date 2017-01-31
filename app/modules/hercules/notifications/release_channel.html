@@ -1,3 +1,10 @@
-<strong><span translate="hercules.notifications.release-channel.title"></span></strong>
+<strong><span
+  translate="hercules.notifications.release-channel.title"
+  translate-value-name="{{notification.data.clusterName}}"
+  translate-compil></span></strong>
 <p><span translate="hercules.notifications.release-channel.description"
-         translate-value-onclick="notificationController.fixClusters(notification.data)" translate-compile></span></p>
+         translate-value-name="{{notification.data.clusterName}}"
+         translate-value-current="{{notification.data.currentReleaseChannel}}"
+         translate-value-default="{{notification.data.defaultReleaseChannel}}"
+         translate-value-onclick="notificationController.goToClusterSettings(notification.data.clusterId)"
+         translate-compile></span></p>

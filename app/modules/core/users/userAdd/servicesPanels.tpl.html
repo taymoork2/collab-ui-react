@@ -52,14 +52,13 @@
       <div id="messaging" class="small-4 columns column-paid">
         <div class="entitle-check-grp" ng-repeat="msgFeature in messageFeatures">
           <div ng-if="msgFeature.licenses">
-            <div ng-if="!isSharedMultiPartyEnabled" class="item-license" translate="onboardModal.message"></div>
-            <div ng-if="isSharedMultiPartyEnabled" class="item-mtg-license" translate="onboardModal.message"></div>
+            <div ng-class="{'item-license': !isSharedMeetingsEnabled, 'item-mtg-license': isSharedMeetingsEnabled}" translate="onboardModal.message"></div>
             <div class="ckbx" id="paidMsg" ng-if="checkMessageVisibility(msgFeature.licenses, multipleSubscriptions.selectedSubscription)">
               <div class="cs-checkbox-group">
                 <input
                   cs-input
                   type="checkbox"
-                  ng-if="!isSharedMultiPartyEnabled"
+                  ng-if="!isSharedMeetingsEnabled"
                   ng-model="radioStates.msgRadio"
                   ng-disabled="disableCheckbox(msgFeature.licenses)"
                   ng-change="checkLicenseAvailability('MESSAGING', radioStates.msgRadio)"
@@ -69,32 +68,32 @@
                 <input
                   cs-input
                   type="checkbox"
-                  ng-if="isSharedMultiPartyEnabled"
+                  ng-if="isSharedMeetingsEnabled"
                   ng-model="radioStates.msgRadio"
                   ng-disabled="disableCheckbox(msgFeature.licenses)"
                   ng-change="checkLicenseAvailability('MESSAGING', radioStates.msgRadio)"
                   id="paid-msg"
                   name="paid-msg"
-                  cs-input-label="{{::onboardModal.paidCiscoSparkMessaging | translate}}">
-                <span ng-if="isSharedMultiPartyEnabled" class="license-entity under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
+                  cs-input-label="{{::'onboardModal.paidCiscoSparkMessaging' | translate}}">
+                <span ng-if="isSharedMeetingsEnabled" class="license-entity under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
               </div>
             </div>
             <div ng-if="msgFeature.licenses.length > 1">
                 <div class="onboard-fieldset"
                   ng-show="multipleSubscriptions.showLicenses(license.billingServiceId, license.isTrial)"
                   ng-repeat="license in msgFeature.licenses | filter:isSubscribeable | orderBy:'billingServiceId'">
-                  <cs-checkbox ckid="{{license.licenseId}}" ng-model="license.model" ng-if="!isSharedMultiPartyEnabled"
+                  <cs-checkbox ckid="{{license.licenseId}}" ng-model="license.model" ng-if="!isSharedMeetingsEnabled"
                   label="{{license.billingServiceId}}"></cs-checkbox>
-                  <cs-checkbox ckid="{{license.licenseId}}" ng-model="license.model" ng-if="isSharedMultiPartyEnabled"
+                  <cs-checkbox ckid="{{license.licenseId}}" ng-model="license.model" ng-if="isSharedMeetingsEnabled"
                   label="{{'onboardModal.paidCiscoSparkMessaging' | translate}}"></cs-checkbox>
-                  <span ng-if="isSharedMultiPartyEnabled" class="license-entity under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
+                  <span ng-if="isSharedMeetingsEnabled" class="license-entity under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
                 </div>
             </div>
           </div>
         </div>
       </div>
       <!-- MEETING SERVICES PANEL -->
-      <div id="conference" ng-if="!isSharedMultiPartyEnabled" class="small-4 columns column-paid">
+      <div id="conference" ng-if="!isSharedMeetingsEnabled" class="small-4 columns column-paid">
         <div ng-if="confChk" class="item-license" translate="onboardModal.meeting"></div>
         <div class="entitle-check-grp" ng-repeat="lic in allLicenses">
           <div class="ckbx" id="paidMtg" ng-show="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial)" ng-if="!lic.site">
@@ -142,11 +141,11 @@
         </div>
       </div>
       <!-- START - Shared Multi Party enabled -->
-      <div id="conference" ng-if="isSharedMultiPartyEnabled" class="small-4 columns column-paid">
-        <div class="item-mtg-license" ng-if="hasBasicLicenses" translate="firstTimeWizard.basicMeetings"></div>
+      <div id="conference" ng-if="isSharedMeetingsEnabled" class="small-4 columns column-paid">
+        <div class="item-mtg-license item-space" ng-if="selectedSubscriptionHasBasicLicenses(multipleSubscriptions.selectedSubscription)" translate="firstTimeWizard.basicMeetings"></div>
         <div class="entitle-check-grp" ng-repeat="lic in basicLicenses">
-          <div class="ckbx" id="paidMtg" ng-show="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial)" ng-if="!lic.site">
-            <div class="cs-checkbox-group">
+          <div class="ckbx license-space" id="paidMtg" ng-show="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial)" ng-if="!lic.site">
+            <div>
               <input
                 cs-input
                 type="checkbox"
@@ -168,10 +167,10 @@
         </div>
         <div class="item-mtg-license item-space" ng-if="selectedSubscriptionHasAdvancedLicenses(multipleSubscriptions.selectedSubscription)" translate="firstTimeWizard.advancedMeetings"></div>
         <div class="entitle-check-grp" ng-repeat="lic in advancedLicenses">
-          <div class="item-mtg license-space" ng-if="lic.site">
-            <div ng-show="multipleSubscriptions.showLicenses(cfLic.billing, cfLic.isTrial)" ng-repeat="cfLic in lic.confLic">
+          <div class="item-mtg" ng-if="lic.site">
+            <div class="license-space" ng-show="multipleSubscriptions.showLicenses(cfLic.billing, cfLic.isTrial)" ng-repeat="cfLic in lic.confLic">
               <div ng-if="lic.isCISite">
-                <input 
+                <input
                   cs-input
                   type="checkbox"
                   id="{{cfLic.licenseId}}"
@@ -194,7 +193,7 @@
               </div>
               <div ng-if="!lic.isCISite" class="item-webex">
                 <span>WebEx {{cfLic.label}}</span><br>
-                <span class="sub-item">
+                <span class="license-siteUrl">
                   <a target="_blank"
                     href= "{{lic.siteAdminUrl}}"
                     id="{{lic.siteUrl}}_siteAdminUrl">
@@ -204,18 +203,18 @@
               </div>
               <div ng-show="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial)">
                 <span class="under-label-reposition license-siteUrl" ng-if="lic.isCISite">{{lic.site}}</span>
-                <span ng-if="!lic.isCISite">{{lic.site}}</span>
+                <span class="license-siteUrl" ng-if="!lic.isCISite">{{lic.site}}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
       <!-- END - Shared Multi Party enabled -->
-      
+
       <!-- CALL SERVICES PANEL -->
       <div id="communication" class="small-4 columns column-paid">
-        <div ng-if="!isSharedMultiPartyEnabled" class="item-license" translate="onboardModal.call"></div>
-        <div ng-if="isSharedMultiPartyEnabled" class="item-mtg-license" translate="onboardModal.call"></div>
+        <div ng-if="!isSharedMeetingsEnabled" class="item-license" translate="onboardModal.call"></div>
+        <div ng-if="isSharedMeetingsEnabled" class="item-mtg-license" translate="onboardModal.call"></div>
         <div class="entitle-check-grp"
              ng-show="multipleSubscriptions.showLicenses(commFeature.license.billingServiceId, commFeature.license.isTrial)"
              ng-repeat="commFeature in communicationFeatures"
@@ -226,7 +225,7 @@
                 cs-input
                 type="checkbox"
                 id="{{commFeature.license.licenseId}}"
-                ng-if="!isSharedMultiPartyEnabled"
+                ng-if="!isSharedMeetingsEnabled"
                 ng-change="checkLicenseAvailability('COMMUNICATION', radioStates.commRadio)"
                 ng-model="radioStates.commRadio"
                 ng-disabled="hybridCallServiceAware"
@@ -235,12 +234,12 @@
                 cs-input
                 type="checkbox"
                 id="{{commFeature.license.licenseId}}"
-                ng-if="isSharedMultiPartyEnabled"
+                ng-if="isSharedMeetingsEnabled"
                 ng-change="checkLicenseAvailability('COMMUNICATION', radioStates.commRadio)"
                 ng-model="radioStates.commRadio"
                 ng-disabled="hybridCallServiceAware"
-                cs-input-label="{{::onboardModal.paidSparkCall | translate}}">
-              <span ng-if="isSharedMultiPartyEnabled" class="license-entity under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
+                cs-input-label="{{::'onboardModal.paidSparkCall' | translate}}">
+              <span ng-if="isSharedMeetingsEnabled" class="license-entity under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
             </div>
             <div ng-if="disableCommFeatureAssignment()">
               <div>
@@ -269,11 +268,11 @@
                 ng-model="radioStates.careRadio"
                 cs-input-label="{{::care.label | translate}}"
                 ng-disabled="!enableCareService">
-              <span ng-if="isSharedMultiPartyEnabled" class="license-entity under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
+              <span ng-if="isSharedMeetingsEnabled" class="license-entity under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
             </div>
           </div>
         </div>
-        <label ng-show="isCallBackEnabled" class="care-information-text" translate="onboardModal.enableCareInformationText"></label>
+        <label class="care-information-text" translate="onboardModal.enableCareInformationText"></label>
       </div>
     </div>
 </div>

@@ -54,19 +54,19 @@ describe('Template: partnerProfile', function () {
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
     spyOn(Notification, 'errorResponse');
-    spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.when());
+    spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.resolve());
     spyOn(UserListService, 'listPartners');
-    spyOn(BrandService, 'getLogoUrl').and.returnValue($q.when());
-    spyOn(WebexClientVersion, 'getWbxClientVersions').and.returnValue($q.when());
-    spyOn(WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue($q.when());
-    spyOn(WebexClientVersion, 'getTemplate').and.returnValue($q.when());
+    spyOn(BrandService, 'getLogoUrl').and.returnValue($q.resolve());
+    spyOn(WebexClientVersion, 'getWbxClientVersions').and.returnValue($q.resolve());
+    spyOn(WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue($q.resolve());
+    spyOn(WebexClientVersion, 'getTemplate').and.returnValue($q.resolve());
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback({
         success: true,
         orgSettings: {}
       });
     });
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(Authinfo, 'isPartner');
   }
 

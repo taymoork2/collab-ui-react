@@ -34,7 +34,8 @@
       isDisplayableService: _isDisplayableService,
       calculatePurchaseStatus: _calculatePurchaseStatus,
       calculateTotalLicenses: _calculateTotalLicenses,
-      countUniqueServices: _countUniqueServices
+      countUniqueServices: _countUniqueServices,
+      isServiceManagedByCurrentPartner: isServiceManagedByCurrentPartner
     };
 
     var factory = {
@@ -55,6 +56,7 @@
       getSiteUrls: getSiteUrls,
       isLicenseTypeAny: isLicenseTypeAny,
       getTrialMeetingServices: getTrialMeetingServices,
+      canAdminTrial: canAdminTrial,
       helpers: helpers
     };
 
@@ -289,12 +291,7 @@
       }
     }
 
-    function getLicense(licenses, offerCode, customerListToggle) {
-      if (!customerListToggle) {
-        return _.find(licenses, {
-          offerName: offerCode
-        }) || {};
-      }
+    function getLicense(licenses, offerCode) {
       var offers = _.filter(licenses, {
         offerName: offerCode
       });
@@ -364,13 +361,13 @@
       rowData.notes = notes;
     }
 
-    function loadRetrievedDataToList(list, isTrialData, isCareEnabled, customerListToggle) {
+    function loadRetrievedDataToList(list, isTrialData, isCareEnabled) {
       return _.map(list, function (customer) {
-        return massageDataForCustomer(customer, isTrialData, isCareEnabled, customerListToggle);
+        return massageDataForCustomer(customer, isTrialData, isCareEnabled);
       });
     }
 
-    function massageDataForCustomer(customer, isTrialData, isCareEnabled, customerListToggle) {
+    function massageDataForCustomer(customer, isTrialData, isCareEnabled) {
       var edate = moment(customer.startDate).add(customer.trialPeriod, 'days').format('MMM D, YYYY');
       var dataObj = {
         trialId: customer.trialId,
@@ -386,6 +383,7 @@
         licenses: 0,
         deviceLicenses: 0,
         licenseList: [],
+        orderedServices: {},
         messaging: null,
         conferencing: null,
         communications: null,
@@ -437,18 +435,18 @@
       };
 
       // havent figured out what this is doing yet...
-      dataObj.sparkConferencing = initializeService(customer.licenses, Config.offerCodes.CF, serviceEntry, customerListToggle);
-      dataObj.communications = initializeService(customer.licenses, Config.offerCodes.CO, serviceEntry, customerListToggle);
-      dataObj.webexEventCenter = initializeService(customer.licenses, Config.offerCodes.EC, serviceEntry, customerListToggle);
-      dataObj.webexEEConferencing = initializeService(customer.licenses, Config.offerCodes.EE, serviceEntry, customerListToggle);
-      dataObj.webexMeetingCenter = initializeService(customer.licenses, Config.offerCodes.MC, serviceEntry, customerListToggle);
-      dataObj.messaging = initializeService(customer.licenses, Config.offerCodes.MS, serviceEntry, customerListToggle);
-      dataObj.webexSupportCenter = initializeService(customer.licenses, Config.offerCodes.SC, serviceEntry, customerListToggle);
-      dataObj.roomSystems = initializeService(customer.licenses, Config.offerCodes.SD, serviceEntry, customerListToggle);
-      dataObj.sparkBoard = initializeService(customer.licenses, Config.offerCodes.SB, serviceEntry, customerListToggle);
-      dataObj.webexTrainingCenter = initializeService(customer.licenses, Config.offerCodes.TC, serviceEntry, customerListToggle);
-      dataObj.webexCMR = initializeService(customer.licenses, Config.offerCodes.CMR, serviceEntry, customerListToggle);
-      dataObj.care = initializeService(customer.licenses, Config.offerCodes.CDC, serviceEntry, customerListToggle);
+      dataObj.sparkConferencing = initializeService(customer.licenses, Config.offerCodes.CF, serviceEntry);
+      dataObj.communications = initializeService(customer.licenses, Config.offerCodes.CO, serviceEntry);
+      dataObj.webexEventCenter = initializeService(customer.licenses, Config.offerCodes.EC, serviceEntry);
+      dataObj.webexEEConferencing = initializeService(customer.licenses, Config.offerCodes.EE, serviceEntry);
+      dataObj.webexMeetingCenter = initializeService(customer.licenses, Config.offerCodes.MC, serviceEntry);
+      dataObj.messaging = initializeService(customer.licenses, Config.offerCodes.MS, serviceEntry);
+      dataObj.webexSupportCenter = initializeService(customer.licenses, Config.offerCodes.SC, serviceEntry);
+      dataObj.roomSystems = initializeService(customer.licenses, Config.offerCodes.SD, serviceEntry);
+      dataObj.sparkBoard = initializeService(customer.licenses, Config.offerCodes.SB, serviceEntry);
+      dataObj.webexTrainingCenter = initializeService(customer.licenses, Config.offerCodes.TC, serviceEntry);
+      dataObj.webexCMR = initializeService(customer.licenses, Config.offerCodes.CMR, serviceEntry);
+      dataObj.care = initializeService(customer.licenses, Config.offerCodes.CDC, serviceEntry);
 
       // 12/17/2015 - Timothy Trinh
       // setting conferencing to sparkConferencing for now to preserve how
@@ -457,12 +455,52 @@
 
       dataObj.purchased = _calculatePurchaseStatus(dataObj);
 
-      dataObj.totalLicenses = _calculateTotalLicenses(dataObj, isCareEnabled, customerListToggle);
+      dataObj.totalLicenses = _calculateTotalLicenses(dataObj, isCareEnabled);
       dataObj.uniqueServiceCount = _countUniqueServices(dataObj);
 
+      dataObj.orderedServices = _getOrderedServices(dataObj, isCareEnabled);
 
       setNotesSortOrder(dataObj);
       return dataObj;
+    }
+
+    // The information provided by this function will be used in displaying the service icons on the customer list page.
+    function _getOrderedServices(data, isCareEnabled) {
+      var servicesToProcess = ['messaging', 'conferencing', 'communications', 'webexEEConferencing',
+        'roomSystems', 'sparkBoard', 'care'];
+      var servicesManagedByCurrentPartner = [];
+      var servicesManagedByAnotherPartner = [];
+
+      _.forEach(servicesToProcess, function (service) {
+        var serviceToAdd = service;
+        if (service === 'webexEEConferencing') {
+          serviceToAdd = 'webex';
+        }
+        if (service !== 'care' || (service === 'care' && isCareEnabled)) {
+          if (isServiceManagedByCurrentPartner(data[service])) {
+            servicesManagedByCurrentPartner.push(serviceToAdd);
+          } else {
+            servicesManagedByAnotherPartner.push(serviceToAdd);
+          }
+        }
+      });
+
+      return { servicesManagedByCurrentPartner: servicesManagedByCurrentPartner,
+        servicesManagedByAnotherPartner: servicesManagedByAnotherPartner };
+    }
+
+    function isServiceManagedByCurrentPartner(serviceObj) {
+      var currentPartnerId = Authinfo.getPrimaryEmail();
+      var currentPartnerOrgId = Authinfo.getOrgId();
+
+      var isInCurrentPartnerOrg = serviceObj.partnerOrgId === currentPartnerOrgId;
+      var isCurrentPartnerId = serviceObj.partnerEmail === currentPartnerId;
+      var isNotLicensed = serviceObj.volume === undefined && Object.keys(serviceObj).length === 4;
+      if (isInCurrentPartnerOrg || isCurrentPartnerId || isNotLicensed) {
+        return true;
+      }
+
+      return false;
     }
 
     function _calculatePurchaseStatus(customerData) {
@@ -474,8 +512,8 @@
     }
 
 
-    function _calculateTotalLicenses(customerData, isCareEnabled, customerListToggle) {
-      if (customerData.purchased || customerData.isPartner || customerListToggle) {
+    function _calculateTotalLicenses(customerData, isCareEnabled) {
+      if (customerData.purchased || customerData.isPartner) {
         return _.sumBy(customerData.licenseList, function (license) {
           if (!helpers.isDisplayableService(license, { isTrial: undefined, isShowCMR: false, isCareEnabled: isCareEnabled })) {
             return 0;
@@ -510,8 +548,8 @@
       return count;
     }
 
-    function initializeService(licenses, offerCode, serviceEntry, customerListToggle) {
-      var licensesGotten = getLicense(licenses, offerCode, customerListToggle);
+    function initializeService(licenses, offerCode, serviceEntry) {
+      var licensesGotten = getLicense(licenses, offerCode);
       if (!_.isArray(licensesGotten)) {
         _.assign(licensesGotten, serviceEntry);
         setServiceSortOrder(licensesGotten);
@@ -841,6 +879,21 @@
         result = _.sortBy(_.union(freeServices, paidServices), 'order');
       }
       return result;
+    }
+
+    function canAdminTrial(licenseList) {
+      // no trials -- can't admin.
+      // right now all services in trial are managed by the same org. So - one matches => all match.
+      // it is possible that partnerOrg is null. In that case -- check email
+      return !!_.find(licenseList, function (license) {
+        var partnerOrgId = _.get(license, 'partnerOrgId');
+        if (license.isTrial) {
+          if (_.isNil(partnerOrgId)) {
+            return _.get(license, 'partnerEmail') === Authinfo.getPrimaryEmail();
+          }
+          return partnerOrgId === Authinfo.getOrgId();
+        }
+      });
     }
 
     function getSiteUrls(customerId) {

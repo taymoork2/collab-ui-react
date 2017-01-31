@@ -307,14 +307,41 @@
       return enableT30UnifiedAdmin;
     }; // getEnableT30UnifiedAdmin()
 
+    obj.getOrgWebexLicenses = function (orgInfo) {
+      var orgWebexLicenses = [];
+
+      if (null != orgInfo) {
+        var customerInfo = _.get(orgInfo, 'data.customers[0]');
+        var custLicenses = customerInfo.licenses;
+        var custSubscriptions = customerInfo.subscriptions;
+
+        if (null != custLicenses) {
+          orgWebexLicenses = orgWebexLicenses.concat(custLicenses);
+        } else if (null != custSubscriptions) {
+          custSubscriptions.forEach(
+            function (custSubscription) {
+              var subscriptionLicenses = custSubscription.licenses;
+
+              if (null != subscriptionLicenses) {
+                orgWebexLicenses = orgWebexLicenses.concat(subscriptionLicenses);
+              }
+            }
+          );
+        }
+      }
+
+      return orgWebexLicenses;
+    }; // getOrgWebexLicenses()
+
     obj.getAllSitesWebexLicenseInfo = function () {
       var deferredGetWebexLicenseInfo = $q.defer();
 
       Auth.getCustomerAccount(Authinfo.getOrgId()).then(
         function getValidLicensesSuccess(response) {
-          var licenses = _.get(response, 'data.customers[0].licenses');
-          // var funcName = "getValidLicensesSuccess()";
-          // var logMsg = "";
+          var funcName = "getValidLicensesSuccess()";
+          var logMsg = "";
+
+          var licenses = obj.getOrgWebexLicenses(response);
 
           // logMsg = funcName + ": " + "\n" +
           //   "licenses=" + JSON.stringify(licenses);
@@ -322,28 +349,35 @@
 
           var allSitesLicenseInfo = [];
 
-          licenses.forEach(
-            function checkLicense(license) {
-              if (
-                ("CONFERENCING" == license.licenseType) ||
-                ("CMR" == license.licenseType)
-              ) {
+          if (0 >= licenses.size) {
+            logMsg = funcName + "\n" +
+              "ERROR - no org licenses found in Atlas!" + "\n" +
+              "licenses=" + JSON.stringify(licenses);
+            $log.log(logMsg);
+          } else {
+            licenses.forEach(
+              function checkLicense(license) {
+                if (
+                  ("CONFERENCING" == license.licenseType) ||
+                  ("CMR" == license.licenseType)
+                ) {
 
-                var capacity = license.capacity;
-                var licenseFields = license.licenseId.split("_");
-                var webexSite = licenseFields[licenseFields.length - 1];
-                var offerCode = licenseFields[0];
+                  var capacity = license.capacity;
+                  var licenseFields = license.licenseId.split("_");
+                  var webexSite = licenseFields[licenseFields.length - 1];
+                  var offerCode = licenseFields[0];
 
-                var licenseInfo = {
-                  'webexSite': webexSite,
-                  'offerCode': offerCode,
-                  'capacity': capacity,
-                };
+                  var licenseInfo = {
+                    'webexSite': webexSite,
+                    'offerCode': offerCode,
+                    'capacity': capacity,
+                  };
 
-                allSitesLicenseInfo.push(licenseInfo);
-              }
-            } // checkLicense()
-          ); // licenses.forEach()
+                  allSitesLicenseInfo.push(licenseInfo);
+                }
+              } // checkLicense()
+            ); // licenses.forEach()
+          }
 
           if (0 < allSitesLicenseInfo.length) {
             deferredGetWebexLicenseInfo.resolve(allSitesLicenseInfo);
@@ -414,7 +448,7 @@
           timeout: 250
         });
 
-        promise = $q.when(jqpromise); //convert into angularjs promise
+        promise = $q.resolve(jqpromise); //convert into angularjs promise
       }
 
       return promise;

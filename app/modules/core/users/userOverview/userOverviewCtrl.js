@@ -4,9 +4,9 @@
   module.exports = UserOverviewCtrl;
 
   /* @ngInject */
-  function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window,
-                            Authinfo, Config, FeatureToggleService, Notification, SunlightConfigService,
-                            Userservice, UserOverviewService) {
+  function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window, $q,
+    Authinfo, Config, FeatureToggleService, Notification, SunlightConfigService,
+    Userservice, UserOverviewService) {
     var vm = this;
 
     vm.currentUser = $stateParams.currentUser;
@@ -31,7 +31,8 @@
     vm.isValidThumbnail = Userservice.isValidThumbnail;
     vm.clickService = clickService;
     vm.actionList = [];
-    vm.isSharedMultiPartyEnabled = false;
+    vm.isSharedMeetingsEnabled = false;
+    vm.temporarilyOverrideSharedMeetingsFeatureToggle = { default: true, defaultValue: true };
 
     var msgState = {
       name: $translate.instant('onboardModal.message'),
@@ -77,16 +78,19 @@
       });
 
       vm.services = [];
-      FeatureToggleService.atlasSMPGetStatus()
-        .then(function (smpStatus) {
-          vm.isSharedMultiPartyEnabled = smpStatus;
-          initServices();
-        })
-        .then(function () {
-          initActionList();
-          updateUserTitleCard();
-          getUserFeatures();
+
+      if (_.get(vm, 'temporarilyOverrideSharedMeetingsFeatureToggle.default') === true) {
+        vm.isSharedMeetingsEnabled = _.get(vm, 'temporarilyOverrideSharedMeetingsFeatureToggle.defaultValue', false);
+      } else {
+        FeatureToggleService.atlasSharedMeetingsGetStatus().then(function (smpStatus) {
+          vm.isSharedMeetingsEnabled = smpStatus;
         });
+      }
+
+      initServices();
+      initActionList();
+      updateUserTitleCard();
+      getUserFeatures();
     }
 
     function getCurrentUser() {
@@ -108,6 +112,7 @@
         action.actionFunction = goToEditService;
       }
       vm.actionList.push(action);
+      return $q.resolve();
     }
 
     function goToEditService() {
@@ -151,10 +156,10 @@
     function getUserFeatures() {
       // to see user features, you must either be a support member or a team member
       if (!canQueryUserFeatures()) {
-        return;
+        return $q.resolve();
       }
 
-      FeatureToggleService.getFeaturesForUser(vm.currentUser.id).then(function (response) {
+      return FeatureToggleService.getFeaturesForUser(vm.currentUser.id).then(function (response) {
         vm.features = [];
         _.forEach(_.get(response, 'developer'), function (el) {
           if (el.val !== 'false' && el.val !== '0') {
@@ -194,6 +199,8 @@
       if (!vm.subTitleCard && vm.titleCard != vm.currentUser.userName) {
         vm.subTitleCard = vm.currentUser.userName;
       }
+
+      return $q.resolve();
     }
 
     function enableAuthCodeLink() {
@@ -219,7 +226,7 @@
       if (vm.currentUser.hasEntitlement('cloudmeetings')) {
         confState.actionAvailable = getDisplayableServices('CONFERENCING') || _.isArray(vm.currentUser.trainSiteNames);
         if (vm.currentUser.trainSiteNames) {
-          confState.detail = vm.isSharedMultiPartyEnabled ? $translate.instant('onboardModal.paidAdvancedConferencing') : $translate.instant('onboardModal.paidConfWebEx');
+          confState.detail = vm.isSharedMeetingsEnabled ? $translate.instant('onboardModal.paidAdvancedConferencing') : $translate.instant('onboardModal.paidConfWebEx');
         }
       } else if (vm.currentUser.hasEntitlement('squared-syncup')) {
         if (hasLicense('CF')) {

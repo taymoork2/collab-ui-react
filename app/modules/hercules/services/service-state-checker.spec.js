@@ -43,10 +43,6 @@ xdescribe('ServiceStateChecker', function () {
 
     ClusterService = {
       getClustersByConnectorType: sinon.stub(),
-      getRunningStateSeverity: sinon.stub().returns({
-        label: 'ok',
-        value: 0,
-      }),
     };
 
     DomainManagementService = {
@@ -235,7 +231,7 @@ xdescribe('ServiceStateChecker', function () {
       }]);
 
       USSService.getOrgId.returns('orgId');
-      USSService.getOrg.returns($q.when({}));
+      USSService.getOrg.returns($q.resolve({}));
 
       ServiceDescriptor.isServiceEnabled = function (type, cb) {
         cb(null, true);

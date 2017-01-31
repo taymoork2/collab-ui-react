@@ -23,15 +23,15 @@ require('./_wizard.scss');
         }
 
         if (_.has(scope, name)) {
-          promises.push($q.when(scope[name]()));
+          promises.push($q.resolve(scope[name]()));
           return;
         } else if (tabControllerAs || subTabControllerAs) {
           if (_.has(scope, tabControllerAs + '.' + name)) {
-            promises.push($q.when(scope[tabControllerAs][name]()));
+            promises.push($q.resolve(scope[tabControllerAs][name]()));
             return;
           }
           if (_.has(scope, subTabControllerAs + '.' + name)) {
-            promises.push($q.when(scope[subTabControllerAs][name]()));
+            promises.push($q.resolve(scope[subTabControllerAs][name]()));
             return;
           }
         }
@@ -97,6 +97,10 @@ require('./_wizard.scss');
 
     vm.firstTimeSetup = true;
     vm.showSkipTabBtn = false;
+
+    vm.showTimezoneAndVoicemail = Authinfo.getLicenses().filter(function (license) {
+      return license.licenseType === Config.licenseTypes.COMMUNICATION;
+    }).length > 0;
 
     // If tabs change (feature support in SetupWizard) and a step is not defined, re-initialize
     $scope.$watchCollection('tabs', function (tabs) {
@@ -281,7 +285,7 @@ require('./_wizard.scss');
 
     function nextStep() {
       var subTabControllerAs = _.isUndefined(getSubTab()) ? undefined : getSubTab().controllerAs;
-      if (getTab().name === 'serviceSetup' && getStep().name === 'init' && vm.firstTimeSetup) {
+      if (getTab().name === 'serviceSetup' && getStep().name === 'init' && vm.firstTimeSetup && vm.showTimezoneAndVoicemail) {
         return ModalService.open({
           title: $translate.instant('common.warning'),
           message: $translate.instant('serviceSetupModal.saveCallSettingsExtensionLengthAllowed'),

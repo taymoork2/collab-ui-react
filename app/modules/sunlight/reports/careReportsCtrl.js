@@ -3,17 +3,21 @@
 
   angular.module('Sunlight').controller('CareReportsController', CareReportsController);
   /* @ngInject */
-  function CareReportsController($timeout, $translate, CardUtils, CareReportsService, DummyCareReportService, FeatureToggleService, Notification, ReportConstants, SunlightReportService) {
+  function CareReportsController($log, $q, $scope, $timeout, $translate, CardUtils, CareReportsService, DrillDownReportProps, DummyCareReportService, FeatureToggleService, Notification, ReportConstants, SunlightReportService) {
     var vm = this;
     var REFRESH = 'refresh';
     var SET = 'set';
     var EMPTY = 'empty';
 
     vm.dataStatus = REFRESH;
+    vm.tableDataStatus = EMPTY;
     vm.snapshotDataStatus = REFRESH;
     vm.taskIncomingDescription = "";
     vm.taskTimeDescription = "";
     vm.averageCsatDescription = "";
+
+    vm.tableData = [];
+    vm.tableDataPromise = undefined;
 
     vm.allReports = 'all';
     vm.engagement = 'engagement';
@@ -43,12 +47,26 @@
         description: $translate.instant('careReportsPage.' + name + '2'),
         taskStatus: $translate.instant('careReportsPage.' + name + 'TaskStatus'),
         intervalTxt: $translate.instant('careReportsPage.' + name + 'Interval'),
-        categoryAxisTitle: $translate.instant('careReportsPage.' + name + 'CategoryAxis')
+        categoryAxisTitle: $translate.instant('careReportsPage.' + name + 'CategoryAxis'),
+        drilldownTitle: $translate.instant('careReportsPage.' + name + 'DrilldownTitle'),
+        drilldownDescription: $translate.instant('careReportsPage.' + name + 'DrilldownDescription'),
       };
     });
 
     vm.timeSelected = vm.timeOptions[0];
+
+    function timeSelected() {
+      return vm.timeSelected;
+    }
+
+    vm.taskIncomingDrilldownProps = DrillDownReportProps.taskIncomingDrilldownProps(timeSelected);
+
+    vm.avgCsatDrilldownProps = DrillDownReportProps.avgCsatDrilldownProps(timeSelected);
+
+    vm.taskTimeDrilldownProps = DrillDownReportProps.taskTimeDrilldownProps(timeSelected);
+
     vm.filtersUpdate = filtersUpdate;
+    vm.inboundCallFeature = false;
 
     var mediaTypes = ['all', 'chat', 'callback'];
     vm.mediaTypeOptions = _.map(mediaTypes, function (name, i) {
@@ -60,19 +78,57 @@
     });
 
     vm.mediaTypeSelected = vm.mediaTypeOptions[1];
-
     vm.callbackFeature = false;
-
     function filtersUpdate() {
       vm.dataStatus = REFRESH;
       vm.snapshotDataStatus = REFRESH;
+      vm.tableDataStatus = EMPTY;
+      vm.tableData = [];
       setFilterBasedTextForCare();
 
       showReportsWithDummyData();
+
+      collapseDrilldownReports();
       var promise = showReportsWithRealData();
       resizeCards();
       delayedResize();
       return promise;
+    }
+
+    function saveReportingAndUserData(mergedData) {
+      if (mergedData && mergedData.length > 0) {
+        vm.tableDataStatus = SET;
+      } else {
+        vm.tableDataStatus = EMPTY;
+      }
+      vm.tableData = mergedData;
+      return $q.resolve(vm.tableData);
+    }
+
+    function getTableData(onSuccess, onError) {
+      return SunlightReportService.getAllUsersAggregatedData('all_user_stats', vm.timeSelected.value, vm.mediaTypeSelected.name)
+        .then(saveReportingAndUserData)
+        .then(onSuccess, onError)
+        .finally(function () {
+          vm.tableDataPromise = undefined;
+        });
+    }
+
+    vm.showTable = function (onSuccess, onError) {
+      if (vm.tableDataStatus === SET) {
+        onSuccess(vm.tableData);
+        return $q.resolve(vm.tableData);
+      } else if (vm.tableDataPromise) {
+        return vm.tableDataPromise.then(onSuccess, onError);
+      } else {
+        vm.tableDataPromise = getTableData(onSuccess, onError);
+        return vm.tableDataPromise;
+      }
+    };
+
+    function collapseDrilldownReports() {
+      $log.info("Sending Broadcast to reset...");
+      $scope.$broadcast(DrillDownReportProps.broadcastReset, {});
     }
 
     function setFilterBasedTextForCare() {
@@ -165,6 +221,19 @@
       CardUtils.resize(500);
     }
 
+    function enableReportingFilters() {
+      if (vm.inboundCallFeature) {
+        mediaTypes.push("voice");
+      }
+      vm.mediaTypeOptions = _.map(mediaTypes, function (name, i) {
+        return {
+          value: i,
+          name: name,
+          label: $translate.instant('careReportsPage.media_type_' + name)
+        };
+      });
+    }
+
     function resetCards(filter) {
       if (vm.currentFilter !== filter) {
         vm.displayEngagement = false;
@@ -180,16 +249,15 @@
       resizeCards();
       delayedResize();
     }
-
     $timeout(function () {
-      FeatureToggleService.atlasCareCallbackTrialsGetStatus()
-        .then(function (enabled) {
-          vm.callbackFeature = enabled;
-          if (vm.callbackFeature) {
-            vm.mediaTypeSelected = vm.mediaTypeOptions[0];
-          }
-          filtersUpdate();
-        });
+      FeatureToggleService.atlasCareInboundTrialsGetStatus().then(function (enabled) {
+        vm.inboundCallFeature = enabled;
+        if (vm.inboundCallFeature) {
+          vm.mediaTypeSelected = vm.mediaTypeOptions[0];
+        }
+        enableReportingFilters();
+        filtersUpdate();
+      });
     }, 30);
   }
 })();

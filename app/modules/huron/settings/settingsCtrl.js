@@ -10,18 +10,16 @@
   function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CeService, CallerId, Config,
       DirectoryNumberService, DialPlanService, ExternalNumberService, FeatureToggleService, HuronCustomer,
       HuntGroupServiceV2, InternationalDialing, ModalService, Notification, PstnSetupService,
-      ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction) {
+      ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction, TerminusUserDeviceE911Service, PstnServiceAddressService) {
     var vm = this;
     vm.loading = true;
 
     vm.NATIONAL = 'national';
     vm.LOCAL = 'local';
     vm.callDateTimeFormat = false;
-    vm.isRegionAndVoicemail = function (enabled) {
-      return Authinfo.getLicenses().filter(function (license) {
-        return enabled ? (license.licenseType !== Config.licenseTypes.SHARED_DEVICES || license.licenseType === Config.licenseTypes.COMMUNICATION) : true;
-      }).length > 0;
-    };
+    vm.showRegionAndVoicemail = Authinfo.getLicenses().filter(function (license) {
+      return license.licenseType === Config.licenseTypes.COMMUNICATION;
+    }).length > 0;
 
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
@@ -648,7 +646,22 @@
         labelfield: 'label',
         valuefield: 'pattern',
         filter: true,
-        warnMsg: $translate.instant('settingsServiceNumber.warning')
+        warnMsg: $translate.instant('settingsServiceNumber.warning'),
+        onChange: function () {
+          getE911State(vm.model.serviceNumber.pattern).then(function (data) {
+            if (data.status === 'PENDING' && _.get(vm.model, 'serviceNumber.pattern') !== _.get(vm.previousModel, 'serviceNumber.pattern')) {
+              vm.model.serviceNumber = _.cloneDeep(vm.previousModel.serviceNumber);
+              vm.form.serviceNumber.$setPristine();
+              return ModalService.open({
+                hideDismiss: true,
+                hideTitle: true,
+                message: $translate.instant('huronSettings.e911Unavailable'),
+                dismiss: $translate.instant('common.ok'),
+                btnType: 'primary'
+              });
+            }
+          });
+        }
       },
       controller: /* @ngInject */ function ($scope) {
         _buildServiceNumberOptions($scope);
@@ -1054,7 +1067,7 @@
     function updateVoicemailTimeZone() {
       if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled &&
         (_.get(vm, 'model.site.timeZone.id') !== _.get(vm, 'model.voicemailTimeZone.id'))) {
-        return $q.when(true)
+        return $q.resolve(true)
           .then(function () {
             return updateVoicemailUserTemplate();
           });
@@ -1062,7 +1075,7 @@
     }
 
     function updateSiteVoicemailNumber(siteData) {
-      if (!_.isEmpty(siteData)) {
+      if (!_.isEmpty(siteData) && ServiceSetup.sites.length !== 0) {
         return ServiceSetup.updateSite(ServiceSetup.sites[0].uuid, siteData)
           .then(function () {
             // Set the new site voicemail pilot number
@@ -1107,7 +1120,7 @@
             return $q.reject(response);
           });
       } else {
-        return $q.when();
+        return $q.resolve();
       }
     }
 
@@ -1119,6 +1132,12 @@
         };
 
         return ServiceSetup.updateSite(vm.model.site.uuid, site)
+          .then(function () {
+            return TerminusUserDeviceE911Service.update({
+              customerId: Authinfo.getOrgId(),
+              number: vm.model.serviceNumber.pattern,
+            }, { useCustomE911Address: false }).$promise;
+          })
           .catch(function (response) {
             errors.push(Notification.processErrorResponse(response, 'settingsServiceNumber.saveError'));
             return $q.reject(response);
@@ -1320,6 +1339,10 @@
                   pattern: site.emergencyCallBackNumber.pattern,
                   label: TelephoneNumberService.getDIDLabel(site.emergencyCallBackNumber.pattern)
                 };
+                vm.previousModel.serviceNumber = _.cloneDeep(vm.model.serviceNumber);
+                getE911State(site.emergencyCallBackNumber.pattern).then(function (data) {
+                  PstnServiceAddressService.setStatus(data.status);
+                });
               } else {
                 vm.model.serviceNumberWarning = true;
               }
@@ -1327,6 +1350,13 @@
             });
         }
       });
+    }
+
+    function getE911State(pattern) {
+      return TerminusUserDeviceE911Service.get({
+        customerId: Authinfo.getOrgId(),
+        number: pattern
+      }).$promise;
     }
 
     function loadAvrilVoicemailOptions() {
@@ -1607,7 +1637,7 @@
     }
 
     function saveVoicemailNumber() {
-      return $q.when(true)
+      return $q.resolve(true)
         .then(showDisableVoicemailWarning)
         .then(updateCustomerVoicemail)
         .then(updateSite)
@@ -1620,7 +1650,7 @@
     }
 
     function saveExternalNumbers() {
-      return $q.when(true)
+      return $q.resolve(true)
         .then(releaseCallerIdNumber)
         .then(saveVoicemailNumber)
         .then(saveCallerId)
@@ -1636,7 +1666,7 @@
     }
 
     function saveInternalNumberRanges() {
-      return $q.when(true)
+      return $q.resolve(true)
         .then(function () {
           var promises = [];
           var hasNewInternalNumberRange = false;
@@ -1701,7 +1731,7 @@
       var newCallerIdNumber = _.find(vm.allExternalNumbers, function (externalNumber) {
         return externalNumber.pattern === rawPattern;
       });
-      return $q.when(true)
+      return $q.resolve(true)
         .then(function () {
           if (vm.model.callerId.callerIdEnabled && (vm.model.callerId.callerIdName && vm.model.callerId.callerIdNumber)) {
             if (!(savedModel.callerId.callerIdEnabled) ||
@@ -1712,7 +1742,7 @@
                 pattern: rawPattern
               };
 
-              return $q.when(true)
+              return $q.resolve(true)
                 .then(deleteCallerId)
                 .then(function () {
                   return CallerId.saveCompanyNumber(data);
@@ -1743,7 +1773,7 @@
               }
             }
           } else if (!_.isEmpty(_.get(vm, 'model.callerId.externalNumber.uuid'))) {
-            return $q.when(true)
+            return $q.resolve(true)
               .then(deleteCallerId)
               .then(clearCallerIdFields);
           }
@@ -1758,7 +1788,7 @@
         restriction: INTERNATIONAL_DIALING
       };
 
-      return $q.when(true)
+      return $q.resolve(true)
         .then(InternationalDialing.isDisableInternationalDialing)
         .then(function (isSaveDisabled) {
           if (!isSaveDisabled) {
@@ -1769,7 +1799,7 @@
     }
 
     function updateVoicemailToEmail() {
-      return $q.when(true)
+      return $q.resolve(true)
         .then(function () {
           if (shouldUpdateVoicemailToEmail()) {
             return VoicemailMessageAction.update(vm.model.companyVoicemail.voicemailToEmail, vm.voicemailUserTemplate.objectId, vm.voicemailMessageAction.objectId)
@@ -1874,10 +1904,6 @@
     }
 
     function loadFeatureToggles() {
-      FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
-        vm.showRegionAndVoicemail = vm.isRegionAndVoicemail(pstnEnabled);
-      });
-
       FeatureToggleService.supports(FeatureToggleService.features.huronDateTimeEnable).then(function (result) {
         vm.callDateTimeFormat = result;
       });

@@ -47,7 +47,7 @@ describe('Controller: AAScheduleInfoCtrl', function () {
     AAICalService = _AAICalService_;
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
-    spyOn(AACalendarService, 'readCalendar').and.returnValue($q.when());
+    spyOn(AACalendarService, 'readCalendar').and.returnValue($q.resolve());
     spyOn(AAICalService, 'getDefaultRange').and.returnValue(defaultRange);
     spyOn(AAICalService, 'getHoursRanges').and.returnValue(angular.copy(openhours));
     controller = $controller('AAScheduleInfoCtrl as vm', {

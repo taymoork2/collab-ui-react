@@ -1,14 +1,7 @@
 import { IPagingGroup, IMemberData, IMemberWithPicture, PLACE, USER } from 'modules/huron/features/pagingGroup/pagingGroup';
 import { PagingGroupService } from 'modules/huron/features/pagingGroup/pagingGroup.service';
 import { USER_REAL_USER } from 'modules/huron/members';
-
-interface IToolkitModalSettings extends ng.ui.bootstrap.IModalSettings {
-  type: string;
-}
-
-interface IToolkitModalService extends ng.ui.bootstrap.IModalService {
-  open(options: IToolkitModalSettings): ng.ui.bootstrap.IModalServiceInstance;
-}
+import { IToolkitModalService } from 'modules/core/modal';
 
 class PgSetupAssistantCtrl implements ng.IComponentController {
 

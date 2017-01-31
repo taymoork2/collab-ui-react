@@ -70,7 +70,7 @@ describe('Controller: AAHelpCtrl', function () {
 
   describe('sendMetrics', function () {
     beforeEach(function () {
-      spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
+      spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve({}));
     });
 
     it('should send metrics if metrics are defined', function () {

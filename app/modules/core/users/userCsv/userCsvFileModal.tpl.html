@@ -19,8 +19,7 @@
       <div class="box center">
         <div class="box-content" ng-class="{'disabled': csv.isCsvValid}">
           <cr-user-csv-export is-over-export-threshold="csv.isOverExportThreshold"
-                              on-status-change="csv.onExportDownloadStatus(isExporting, dataUrl)"
-                              use-csv-download-directive="true">
+                              on-status-change="csv.onExportDownloadStatus(isExporting, dataUrl)">
           </cr-user-csv-export>
           <div class="disable-mask" ng-click="" ng-if="csv.isCsvValid"></div>
         </div>

@@ -1,4 +1,4 @@
-<cs-card id="{{::$ctrl.options.id}}" class="large" ng-class="{'hideCard': !$ctrl.show, 'report-box': !$ctrl.isTable(), 'report-card': $ctrl.isTable()}">
+<cs-card id="{{::$ctrl.options.id}}" class="large" ng-class="{'hideCard': !$ctrl.show, 'report-box': !$ctrl.isTable(), 'report-card': $ctrl.isTable(), 'long-card': $ctrl.lowerTooltip && $ctrl.labels}">
   <article>
     <header>
       <span class='report-section-header' translate="{{::$ctrl.options.headerTitle}}"></span>
@@ -45,16 +45,16 @@
           <span translate='reportsPage.noCustomerData'></span>
         </h3>
       </div>
-      <div class="row" ng-if="$ctrl.isSet() && $ctrl.labels" ng-class="{'line-labels': !$ctrl.isDonut() && $ctrl.labels}">
+      <div class="row label-row" ng-if="$ctrl.isSet() && $ctrl.labels" ng-class="{'line-labels': !$ctrl.isDonut() && $ctrl.labels}">
         <div ng-repeat="label in $ctrl.labels" class="columns medium-4 label-display" ng-click="label.click()" ng-class="{'label-click': label.click}">
           <p class="label-number" ng-class="$ctrl.getClass(label)">{{label.number}}</p>
           <span class="label-text" translate='{{::label.text}}'></span>
         </div>
       </div>
-      <div class="row" ng-if="$ctrl.tooltip">
+      <div class="row" ng-if="$ctrl.lowerTooltip && $ctrl.isSet() && $ctrl.labels">
         <div class="columns tooltip-column">
-          <span class="tooltip-title" translate="{{::$ctrl.tooltip.title}}"></span>
-          <i class="icon icon-information tooltip-icon" tooltip="{{::$ctrl.getTranslation($ctrl.tooltip.text)}}" tooltip-trigger="mouseenter" tooltip-animation="true"></i>
+          <span class="tooltip-title" translate="{{::$ctrl.lowerTooltip.title}}"></span>
+          <i class="icon icon-information tooltip-icon" tooltip="{{::$ctrl.getTranslation($ctrl.lowerTooltip.text)}}" tooltip-trigger="mouseenter" tooltip-animation="true"></i>
         </div>
       </div>
 

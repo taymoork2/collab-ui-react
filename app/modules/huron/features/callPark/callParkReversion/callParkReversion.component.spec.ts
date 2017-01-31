@@ -7,7 +7,7 @@ describe('Component: callParkReversion', () => {
   beforeEach(function() {
     this.initModules('huron.call-park-reversion');
     this.injectDependencies(
-      '$scope'
+      '$scope',
     );
     this.$scope.onMemberRemovedFn = jasmine.createSpy('onMemberRemovedFn');
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');

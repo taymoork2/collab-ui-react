@@ -7,7 +7,7 @@ export class DigitalRiverService {
   constructor(
     private $document: ng.IDocumentService,
     private $http: ng.IHttpService,
-    private UrlConfig
+    private UrlConfig,
   ) {}
 
   public getOrderHistoryUrl(): ng.IPromise<string> {

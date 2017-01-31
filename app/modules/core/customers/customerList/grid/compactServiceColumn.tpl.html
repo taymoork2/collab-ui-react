@@ -1,12 +1,11 @@
 <div class="ui-grid-cell-contents align-left icon-column" ng-click="grid.appScope.partnerClicked(row.entity.customerOrgId)" ng-class="{'selected' : row.isSelected}">
   <div ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList)">
-    <cr-service-column-icon row="row.entity" type="messaging"></cr-service-column-icon>
-    <cr-service-column-icon row="row.entity" type="conferencing"></cr-service-column-icon>
-    <cr-service-column-icon row="row.entity" type="communications"></cr-service-column-icon>
-    <cr-service-column-icon row="row.entity" type="webex"></cr-service-column-icon>
-    <cr-service-column-icon row="row.entity" type="roomSystems"></cr-service-column-icon>
-    <cr-service-column-icon row="row.entity" type="sparkBoard"></cr-service-column-icon>
-    <cr-service-column-icon ng-hide="!grid.appScope.isCareEnabled" row="row.entity" type="care"></cr-service-column-icon>
+    <ng-repeat ng-repeat="type in row.entity.orderedServices.servicesManagedByCurrentPartner">
+      <cr-service-column-icon row="row.entity" type={{type}}></cr-service-column-icon>
+    </ng-repeat>
+    <ng-repeat ng-repeat="type in row.entity.orderedServices.servicesManagedByAnotherPartner">
+      <cr-service-column-icon row="row.entity" type={{type}}></cr-service-column-icon>
+    </ng-repeat>
   </div>
   <span ng-if="!grid.appScope.isLicenseInfoAvailable(row.entity.licenseList)" translate="common.notAvailable"></span>
 </div>

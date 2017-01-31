@@ -8,7 +8,7 @@ describe('Component: RenameAndDeregisterClusterSection ', () => {
         this.initModules(renameAndDeregisterClusterSection);
         this.injectDependencies(
             'FusionClusterService',
-            'Notification'
+            'Notification',
         );
     });
 

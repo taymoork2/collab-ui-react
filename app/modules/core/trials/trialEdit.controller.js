@@ -17,7 +17,6 @@
     vm.showRoomSystems = false;
     vm.showContextServiceTrial = false;
     vm.showCare = false;
-    vm.isCallBackEnabled = false;
     var _messageTemplateOptionId = 'messageTrial';
     var _careDefaultQuantity = 15;
 
@@ -177,10 +176,10 @@
       },
       expressionProperties: {
         'templateOptions.required': function () {
-          return (vm.messageTrial.enabled && (!vm.isCallBackEnabled || vm.callTrial.enabled)); // Since, it depends on Message and Call Offer
+          return (vm.messageTrial.enabled && vm.callTrial.enabled); // Since, it depends on Message and Call Offer
         },
         'templateOptions.disabled': function () {
-          return messageOfferDisabledExpression() || (vm.isCallBackEnabled && callOfferDisabledExpression()) || vm.preset.care;
+          return messageOfferDisabledExpression() || callOfferDisabledExpression() || vm.preset.care;
         }
       }
     }, {
@@ -458,13 +457,11 @@
         ftContextServ: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
         tcHasService: TrialContextService.trialHasService(vm.currentTrial.customerOrgId),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
-        ftCallBackEnabled: FeatureToggleService.atlasCareCallbackTrialsGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function (err) {
           getAdminOrgError = true;
           return err;
         }),
-        sbTrial: FeatureToggleService.atlasDarlingGetStatus()
       };
 
       $q.all(promises)
@@ -482,8 +479,6 @@
           vm.preset.context = results.tcHasService;
           vm.showCare = results.ftCareTrials;
           vm.careTrial.enabled = vm.preset.care;
-          vm.isCallBackEnabled = results.ftCallBackEnabled;
-          vm.sbTrial = results.sbTrial;
           updateTrialService(_messageTemplateOptionId);
 
           // To determine whether to display the ship devices page
@@ -534,17 +529,21 @@
       }
     }
 
+    function isPstn() {
+      return ((!vm.preset.call && !vm.preset.roomSystems && !vm.preset.sparkBoard) && (hasEnabledCallTrial() || hasEnabledRoomSystemTrial()));
+    }
+
     function toggleTrial() {
-      if (!vm.callTrial.enabled) {
+      if (!vm.callTrial.enabled && !vm.roomSystemTrial.enabled & !vm.sparkBoardTrial.enabled) {
         vm.pstnTrial.enabled = false;
       }
-      if (vm.callTrial.enabled && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
+      if ((vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled) && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
         vm.pstnTrial.enabled = true;
       }
       setViewState('trialEdit.call', canAddDevice());
       setViewState('trialEdit.webex', hasEnabledWebexTrial());
-      setViewState('trialEdit.pstn', hasEnabledCallTrial());
-      setViewState('trialEdit.emergAddress', hasEnabledCallTrial());
+      setViewState('trialEdit.pstn', isPstn());
+      setViewState('trialEdit.emergAddress', isPstn());
 
       addRemoveStates();
 
@@ -664,7 +663,7 @@
         })
         .then(function (response) {
           vm.customerOrgId = response.data.customerOrgId;
-          if (vm.callTrial.enabled && !vm.preset.call) {
+          if ((vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled) && (!vm.preset.call || !vm.preset.roomSystems || !vm.preset.vm.sparkBoard)) {
             return HuronCustomer.create(response.data.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
                 Notification.errorResponse(response, 'trialModal.squareducError');

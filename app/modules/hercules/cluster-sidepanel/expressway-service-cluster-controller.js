@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceClusterController', ExpresswayServiceClusterController);
 
   /* @ngInject */
-  function ExpresswayServiceClusterController($scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout, hasF237FeatureToggle, FusionClusterService, Notification, $window) {
+  function ExpresswayServiceClusterController($scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout, hasF237FeatureToggle, FusionClusterService, Notification, $window, FusionClusterStatesService) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.clusterId;
@@ -17,13 +17,12 @@
     vm.localizedManagementConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
     vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
     vm.localizedCCCName = $translate.instant('common.ciscoCollaborationCloud');
-    vm.getSeverity = ClusterService.getRunningStateSeverity;
+    vm.getSeverity = FusionClusterStatesService.getSeverity;
     vm.route = FusionUtils.connectorType2RouteName(vm.connectorType);
     vm.showUpgradeDialog = showUpgradeDialog;
     vm.fakeUpgrade = false;
     vm.fakeManagementUpgrade = false;
     vm.hasF237FeatureToggle = hasF237FeatureToggle;
-    vm.hasConnectorAlarm = hasConnectorAlarm;
     vm.openDeleteConfirm = openDeleteConfirm;
     vm.goToExpressway = goToExpressway;
 
@@ -49,15 +48,6 @@
           .catch(function (error) {
             Notification.errorWithTrackingId(error, 'hercules.genericFailure');
           });
-      }
-      vm.releaseChannel = $translate.instant('hercules.fusion.add-resource-group.release-channel.' + vm.cluster.releaseChannel);
-      if (vm.cluster.resourceGroupId) {
-        findResourceGroupName(vm.cluster.resourceGroupId)
-          .then(function (name) {
-            vm.resourceGroupName = name;
-          });
-      } else {
-        vm.resourceGroupName = undefined;
       }
 
       var isUpgrading = vm.cluster.aggregates.upgradeState === 'upgrading';
@@ -122,17 +112,6 @@
       vm.showManagementUpgradeProgress = vm.fakeManagementUpgrade || isUpgradingManagement || vm.managementUpgradeJustFinished;
     }, true);
 
-    function findResourceGroupName(groupId) {
-      return FusionClusterService.getResourceGroups()
-        .then(function (response) {
-          var group = _.find(response.groups, { id: groupId });
-          if (group) {
-            return group.name;
-          }
-          return undefined;
-        });
-    }
-
     function showUpgradeDialog(servicesId, connectorType, availableVersion) {
       $modal.open({
         templateUrl: 'modules/hercules/software-upgrade/software-upgrade-dialog.html',
@@ -175,28 +154,12 @@
     }
 
     function buildCluster() {
-      vm.schedule = {};
       FusionClusterService.get(vm.clusterId)
         .then(function (cluster) {
           vm.hosts = FusionClusterService.buildSidepanelConnectorList(cluster, vm.connectorType);
-          vm.schedule.dateTime = FusionClusterService.formatTimeAndDate(cluster.upgradeSchedule);
-          vm.schedule.urgentScheduleTime = FusionClusterService.formatTimeAndDate({
-            scheduleTime: cluster.upgradeSchedule.urgentScheduleTime,
-            // Simulate every day
-            scheduleDays: { length: 7 },
-          });
-          vm.schedule.timeZone = cluster.upgradeSchedule.scheduleTimeZone;
         });
     }
     buildCluster();
-
-    function hasConnectorAlarm(connector) {
-      if (connector.alarms.length > 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }
 
     vm.sortConnectors = function (connector) {
       if (connector.connectorType === 'c_mgmt') {

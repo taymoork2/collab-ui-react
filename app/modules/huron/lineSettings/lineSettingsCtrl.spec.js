@@ -4,8 +4,8 @@ describe('Controller: LineSettingsCtrl', function () {
   var controller, $scope, $state, $stateParams, $rootScope, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, ServiceSetup;
   var currentUser, directoryNumber, getDirectoryNumber, getDirectoryNumberBusy, getDirectoryNumberBusyNewLine, internalNumbers, simultaneousCall,
     externalNumbers, telephonyInfoWithVoicemail, telephonyInfoVoiceOnly, telephonyInfoVoiceOnlyShared, telephonyInfoSecondLine,
-    modalDefer;
-  var UserListService, SharedLineInfoService, CallerId, companyNumber, DeviceService, DialPlanService;
+    modalDefer, autoAnswer;
+  var UserListService, SharedLineInfoService, CallerId, companyNumber, DeviceService, DialPlanService, FeatureToggleService, AutoAnswerService;
   var userList = [];
   var sharedLineUsers = [];
   var sharedLineEndpoints = [];
@@ -30,7 +30,7 @@ describe('Controller: LineSettingsCtrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$rootScope_, _$state_, $controller, _$q_, _$modal_, _Notification_, _DirectoryNumber_, _TelephonyInfoService_, _LineSettings_, _HuronAssignedLine_, _HuronUser_, _ServiceSetup_,
-    _UserListService_, _SharedLineInfoService_, _CallerId_, _DeviceService_, _DialPlanService_) {
+    _UserListService_, _SharedLineInfoService_, _CallerId_, _DeviceService_, _DialPlanService_, _FeatureToggleService_, _AutoAnswerService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -48,6 +48,8 @@ describe('Controller: LineSettingsCtrl', function () {
     CallerId = _CallerId_;
     DeviceService = _DeviceService_;
     DialPlanService = _DialPlanService_;
+    FeatureToggleService = _FeatureToggleService_;
+    AutoAnswerService = _AutoAnswerService_;
 
     $scope.sort = {
       by: 'name',
@@ -79,6 +81,8 @@ describe('Controller: LineSettingsCtrl', function () {
     selectedUsers = getJSONFixture('huron/json/sharedLine/selectedUser.json');
     //SharedLine
 
+    autoAnswer = getJSONFixture('huron/json/autoAnswer/autoAnswer.json');
+
     $stateParams = {
       currentUser: currentUser,
       directoryNumber: directoryNumber
@@ -86,44 +90,48 @@ describe('Controller: LineSettingsCtrl', function () {
 
     // Wow too many services need to refactor controller
     spyOn(TelephonyInfoService, 'getInternalNumberPool').and.returnValue(internalNumbers);
-    spyOn(TelephonyInfoService, 'loadInternalNumberPool').and.returnValue($q.when(internalNumbers));
+    spyOn(TelephonyInfoService, 'loadInternalNumberPool').and.returnValue($q.resolve(internalNumbers));
     spyOn(TelephonyInfoService, 'getExternalNumberPool').and.returnValue(externalNumbers);
-    spyOn(TelephonyInfoService, 'loadExternalNumberPool').and.returnValue($q.when(externalNumbers));
+    spyOn(TelephonyInfoService, 'loadExternalNumberPool').and.returnValue($q.resolve(externalNumbers));
     spyOn(TelephonyInfoService, 'getTelephonyInfo').and.returnValue(telephonyInfoWithVoicemail);
-    spyOn(TelephonyInfoService, 'getUserDnInfo').and.returnValue($q.when());
+    spyOn(TelephonyInfoService, 'getUserDnInfo').and.returnValue($q.resolve());
 
-    spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.when(getDirectoryNumber));
+    spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.resolve(getDirectoryNumber));
 
-    spyOn(LineSettings, 'updateLineSettings').and.returnValue($q.when());
-    spyOn(LineSettings, 'changeInternalLine').and.returnValue($q.when());
-    spyOn(LineSettings, 'addNewLine').and.returnValue($q.when());
-    spyOn(LineSettings, 'getSimultaneousCalls').and.returnValue($q.when(simultaneousCall));
-    spyOn(LineSettings, 'updateSimultaneousCalls').and.returnValue($q.when());
-    spyOn(LineSettings, 'disassociateInternalLine').and.returnValue($q.when());
-    spyOn(LineSettings, 'addExternalLine').and.returnValue($q.when());
-    spyOn(LineSettings, 'changeExternalLine').and.returnValue($q.when());
-    spyOn(LineSettings, 'deleteExternalLine').and.returnValue($q.when());
+    spyOn(LineSettings, 'updateLineSettings').and.returnValue($q.resolve());
+    spyOn(LineSettings, 'changeInternalLine').and.returnValue($q.resolve());
+    spyOn(LineSettings, 'addNewLine').and.returnValue($q.resolve());
+    spyOn(LineSettings, 'getSimultaneousCalls').and.returnValue($q.resolve(simultaneousCall));
+    spyOn(LineSettings, 'updateSimultaneousCalls').and.returnValue($q.resolve());
+    spyOn(LineSettings, 'disassociateInternalLine').and.returnValue($q.resolve());
+    spyOn(LineSettings, 'addExternalLine').and.returnValue($q.resolve());
+    spyOn(LineSettings, 'changeExternalLine').and.returnValue($q.resolve());
+    spyOn(LineSettings, 'deleteExternalLine').and.returnValue($q.resolve());
 
-    spyOn(HuronUser, 'updateDtmfAccessId').and.returnValue($q.when());
-    spyOn(ServiceSetup, 'listSites').and.returnValue($q.when([]));
-    spyOn(CallerId, 'loadCompanyNumbers').and.returnValue($q.when(companyNumber));
+    spyOn(HuronUser, 'updateDtmfAccessId').and.returnValue($q.resolve());
+    spyOn(ServiceSetup, 'listSites').and.returnValue($q.resolve([]));
+    spyOn(CallerId, 'loadCompanyNumbers').and.returnValue($q.resolve(companyNumber));
     spyOn(CallerId, 'getCallerIdOption').and.returnValue(callerIdSelection);
-    spyOn(DeviceService, 'listDevices').and.returnValue($q.when(userDevices));
-    spyOn(DialPlanService, 'getCustomerDialPlanDetails').and.returnValue($q.when({
+    spyOn(DeviceService, 'listDevices').and.returnValue($q.resolve(userDevices));
+    spyOn(DialPlanService, 'getCustomerDialPlanDetails').and.returnValue($q.resolve({
       extensionGenerated: "false"
     }));
     //Sharedline
-    spyOn(UserListService, 'listUsers').and.returnValue($q.when(userList));
-    spyOn(SharedLineInfoService, 'loadSharedLineUsers').and.returnValue($q.when(sharedLineUsers));
-    spyOn(SharedLineInfoService, 'loadSharedLineUserDevices').and.returnValue($q.when(sharedLineEndpoints));
-    spyOn(SharedLineInfoService, 'addSharedLineUser').and.returnValue($q.when(sharedLineUsers));
-    spyOn(SharedLineInfoService, 'disassociateSharedLineUser').and.returnValue($q.when());
-    spyOn(SharedLineInfoService, 'associateLineEndpoint').and.returnValue($q.when());
-    spyOn(SharedLineInfoService, 'disassociateLineEndpoint').and.returnValue($q.when());
+    spyOn(UserListService, 'listUsers').and.returnValue($q.resolve(userList));
+    spyOn(SharedLineInfoService, 'loadSharedLineUsers').and.returnValue($q.resolve(sharedLineUsers));
+    spyOn(SharedLineInfoService, 'loadSharedLineUserDevices').and.returnValue($q.resolve(sharedLineEndpoints));
+    spyOn(SharedLineInfoService, 'addSharedLineUser').and.returnValue($q.resolve(sharedLineUsers));
+    spyOn(SharedLineInfoService, 'disassociateSharedLineUser').and.returnValue($q.resolve());
+    spyOn(SharedLineInfoService, 'associateLineEndpoint').and.returnValue($q.resolve());
+    spyOn(SharedLineInfoService, 'disassociateLineEndpoint').and.returnValue($q.resolve());
     spyOn(SharedLineInfoService, 'getSharedLineDevices').and.callThrough();
-    spyOn(SharedLineInfoService, 'updateLineEndpoint').and.returnValue($q.when());
+    spyOn(SharedLineInfoService, 'updateLineEndpoint').and.returnValue($q.resolve());
 
     //Sharedline
+
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+    spyOn(AutoAnswerService, 'getSupportedPhonesAndMember').and.returnValue($q.resolve(autoAnswer));
+    spyOn(AutoAnswerService, 'updateAutoAnswer').and.returnValue($q.resolve());
 
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
@@ -142,7 +150,8 @@ describe('Controller: LineSettingsCtrl', function () {
       HuronAssignedLine: HuronAssignedLine,
       HuronUser: HuronUser,
       UserListService: UserListService,
-      SharedLineInfoService: SharedLineInfoService
+      SharedLineInfoService: SharedLineInfoService,
+      FeatureToggleService: FeatureToggleService
     });
 
     controller.callerIdInfo.callerIdSelection = callerIdSelection;
@@ -280,7 +289,7 @@ describe('Controller: LineSettingsCtrl', function () {
 
   describe('callforward behavior with voicemail enabled', function () {
     it('should be busy with voicemail', function () {
-      DirectoryNumber.getDirectoryNumber.and.returnValue($q.when(getDirectoryNumberBusyNewLine));
+      DirectoryNumber.getDirectoryNumber.and.returnValue($q.resolve(getDirectoryNumberBusyNewLine));
       controller.init();
       $scope.$apply();
       expect(controller.cfModel.forward).toBe('busy');
@@ -289,7 +298,7 @@ describe('Controller: LineSettingsCtrl', function () {
     });
 
     it('should be busy with a number', function () {
-      DirectoryNumber.getDirectoryNumber.and.returnValue($q.when(getDirectoryNumberBusy));
+      DirectoryNumber.getDirectoryNumber.and.returnValue($q.resolve(getDirectoryNumberBusy));
       controller.init();
       $scope.$apply();
       expect(controller.cfModel.forward).toBe('busy');
@@ -301,7 +310,7 @@ describe('Controller: LineSettingsCtrl', function () {
   describe('callforward behavior with voicemail disabled', function () {
     it('should default to no call forward', function () {
       TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoVoiceOnly);
-      DirectoryNumber.getDirectoryNumber.and.returnValue($q.when(getDirectoryNumberBusyNewLine));
+      DirectoryNumber.getDirectoryNumber.and.returnValue($q.resolve(getDirectoryNumberBusyNewLine));
       controller.init();
       $scope.$apply();
       expect(controller.cfModel.forward).toBe('none');
@@ -310,7 +319,7 @@ describe('Controller: LineSettingsCtrl', function () {
 
     it('should default to busy with a number', function () {
       TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoVoiceOnly);
-      DirectoryNumber.getDirectoryNumber.and.returnValue($q.when(getDirectoryNumberBusy));
+      DirectoryNumber.getDirectoryNumber.and.returnValue($q.resolve(getDirectoryNumberBusy));
       controller.init();
       $scope.$apply();
       expect(controller.cfModel.forward).toBe('busy');
@@ -349,7 +358,7 @@ describe('Controller: LineSettingsCtrl', function () {
       $scope.$apply();
       controller.cfModel.forward = 'none';
       controller.selectedUsers.push(selectedUsers[0]);
-      spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.when(2));
+      spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.resolve(2));
     });
 
     it('should show error on updateLineEndpoint call failure', function () {
@@ -367,7 +376,7 @@ describe('Controller: LineSettingsCtrl', function () {
       $scope.$apply();
       controller.cfModel.forward = 'none';
       controller.selectedUsers.push(selectedUsers[0]);
-      spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.when(2));
+      spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.resolve(2));
       controller.saveLineSettings();
     });
 
@@ -409,7 +418,7 @@ describe('Controller: LineSettingsCtrl', function () {
       controller.cfModel.forward = 'none';
       controller.init();
       $scope.$apply();
-      spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.when(2));
+      spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.resolve(2));
       controller.selectedUsers = [];
       controller.devices = angular.copy(sharedLineEndpoints);
       controller.sharedLineUsers.push(sharedLineUsers[0]);
@@ -438,7 +447,7 @@ describe('Controller: LineSettingsCtrl', function () {
   describe('Remove SharedLine Users', function () {
     beforeEach(function () {
       controller.cfModel.forward = 'none';
-      spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.when(2));
+      spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.resolve(2));
       controller.selectedUsers.push(selectedUsers[0]);
       controller.devices = sharedLineEndpoints;
       var user = {
@@ -457,7 +466,7 @@ describe('Controller: LineSettingsCtrl', function () {
   describe('Remove SharedLine Member', function () {
     beforeEach(function () {
       controller.cfModel.forward = 'none';
-      spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.when(2));
+      spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.resolve(2));
       controller.selectedUsers.push(selectedUsers[0]);
       controller.devices = sharedLineEndpoints;
       modalDefer = $q.defer();
@@ -506,7 +515,7 @@ describe('Controller: LineSettingsCtrl', function () {
   describe('addSharedLineUsersError', function () {
     beforeEach(function () {
       controller.cfModel.forward = 'none';
-      spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.when(controller.maxlines));
+      spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.resolve(controller.maxlines));
       controller.selectedUsers.push(selectedUsers[0]);
       controller.saveLineSettings();
       $scope.$apply();
@@ -581,7 +590,7 @@ describe('Controller: LineSettingsCtrl', function () {
 
     it('should return true when loadInternalNumberPool fails and the line is new', function () {
       TelephonyInfoService.getInternalNumberPool.and.returnValue([]);
-      DirectoryNumber.getDirectoryNumber.and.returnValue($q.when(getDirectoryNumberBusyNewLine));
+      DirectoryNumber.getDirectoryNumber.and.returnValue($q.resolve(getDirectoryNumberBusyNewLine));
       TelephonyInfoService.loadInternalNumberPool.and.returnValue($q.reject(errorResponse));
       controller.init();
       $scope.$apply();
@@ -615,6 +624,17 @@ describe('Controller: LineSettingsCtrl', function () {
       expect(controller.assignedInternalNumber.pattern).toEqual('1234');
       expect(controller.telephonyInfo.steeringDigit).toEqual('9');
       expect(controller.checkDnOverlapsSteeringDigit()).toBeFalsy();
+    });
+  });
+
+  describe('autoAnswer', function () {
+    it('should set autoAnswerFeatureToggleEnabled to false when FeatureTogglerService returns false', function () {
+      TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoVoiceOnly);
+      FeatureToggleService.supports.and.returnValue($q.resolve(false));
+      controller.init();
+      $scope.$apply();
+      expect(FeatureToggleService.supports).toHaveBeenCalledWith('huron-auto-answer');
+      expect(controller.autoAnswerFeatureToggleEnabled).toBeFalsy();
     });
   });
 });

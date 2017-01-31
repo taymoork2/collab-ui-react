@@ -282,14 +282,16 @@ describe('ClusterService', function () {
       }));
     });
 
-    it('should merge all alarms and override the state if there are alarms', function () {
+    it('should merge all alarms and override the state with "has_warning_alarms" if there are warning alarms', function () {
       var response = org([
         cluster([
           connector('c_mgmt', {
-            alarms: 2
+            alarms: 2,
+            alarmsSeverity: 'alert'
           }),
           connector('c_mgmt', {
             alarms: 1,
+            alarmsSeverity: 'warning',
             hostname: 'host2.example.com'
           })
         ])
@@ -306,7 +308,36 @@ describe('ClusterService', function () {
       var originalCluster = response.clusters[0];
       var managementCluster = clusterCache.c_mgmt[originalCluster.id];
       expect(managementCluster.aggregates.alarms.length).toBe(3);
-      expect(managementCluster.aggregates.state).toBe('has_alarms');
+      expect(managementCluster.aggregates.state).toBe('has_warning_alarms');
+    });
+
+    it('should merge all alarms and override the state with "has_warning_alarms" if there are warning alarms', function () {
+      var response = org([
+        cluster([
+          connector('c_mgmt', {
+            alarms: 2,
+            alarmsSeverity: 'error'
+          }),
+          connector('c_mgmt', {
+            alarms: 1,
+            alarmsSeverity: 'critical',
+            hostname: 'host2.example.com'
+          })
+        ])
+      ]);
+      $httpBackend
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
+        .respond(response);
+
+      var callback = sinon.stub();
+      ClusterService.fetch().then(callback);
+      $httpBackend.flush();
+
+      var clusterCache = callback.getCall(0).args[0];
+      var originalCluster = response.clusters[0];
+      var managementCluster = clusterCache.c_mgmt[originalCluster.id];
+      expect(managementCluster.aggregates.alarms.length).toBe(3);
+      expect(managementCluster.aggregates.state).toBe('has_error_alarms');
     });
 
     it('should merge running states', function () {
@@ -558,22 +589,6 @@ describe('ClusterService', function () {
     });
   });
 
-  describe('.getRunningStateSeverity', function () {
-    it('should have an idea of which state is more critical than another', function () {
-      var severity = ClusterService.getRunningStateSeverity('not_installed');
-      expect(severity.label).toBeDefined();
-      expect(severity.value).toBeDefined();
-      expect(severity.label).toBe('neutral');
-      expect(severity.value).toBe(1);
-    });
-
-    it('should default to error when the state is no known', function () {
-      var severity = ClusterService.getRunningStateSeverity('platypus');
-      expect(severity.label).toBe('error');
-      expect(severity.value).toBe(3);
-    });
-  });
-
   describe('.upgradeSoftware', function () {
     it('should upgrade software using the correct backend', function () {
       $httpBackend
@@ -716,7 +731,8 @@ describe('ClusterService', function () {
     options = options || {};
     var alarms = _.map(_.range(options.alarms || 0), function () {
       return {
-        title: _.uniqueId('alarm_')
+        title: _.uniqueId('alarm_'),
+        severity: options.alarmsSeverity ? options.alarmsSeverity : 'critical',
       };
     });
     return {

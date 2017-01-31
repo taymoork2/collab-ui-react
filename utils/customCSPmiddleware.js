@@ -38,6 +38,7 @@ module.exports = csp({
       'https://*.ciscospark.com',
       'https://*.huron-dev.com',
       'https://*.huron-int.com',
+      'https://*.sparkc-eu.com',
       'https://*.huron.uno',
       'https://*.statuspage.io',
       'https://*.wbx2.com',
@@ -61,6 +62,7 @@ module.exports = csp({
       'http://dev-admin.ciscospark.com:8080',
       'http://dpm.demdex.net', // Adobe DTM Omniture
       'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
+      'https://*.clouddrive.com' // CSV download
     ],
     fontSrc: [
       '\'self\'',

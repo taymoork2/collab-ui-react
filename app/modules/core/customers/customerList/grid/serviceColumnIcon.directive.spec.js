@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Directive: crServiceColumnIcon', function () {
-  var $compile, scope, element;
+  var $compile, Authinfo, scope, element;
 
   afterEach(function () {
     if (element) {
@@ -12,10 +12,14 @@ describe('Directive: crServiceColumnIcon', function () {
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
-  beforeEach(inject(function (_$compile_, $rootScope) {
+  beforeEach(inject(function (_$compile_, _Authinfo_, $rootScope) {
     $compile = _$compile_;
+    Authinfo = _Authinfo_;
     scope = $rootScope.$new();
     scope.mockData = getJSONFixture('core/json/customers/customer.json');
+
+    spyOn(Authinfo, 'getOrgId').and.returnValue("partner-org-id");
+    spyOn(Authinfo, 'getPrimaryEmail').and.returnValue("partner@company.com");
   }));
 
   function compileDirective(columnType) {
@@ -25,31 +29,41 @@ describe('Directive: crServiceColumnIcon', function () {
     return element;
   }
 
-  function verifyTooltip(tooltipHtml, statusType, serviceType) {
+  function verifyTooltip(tooltipHtml, statusType, serviceType, isManagedByOthers) {
     expect(tooltipHtml.find('.service-name').text()).toEqual('customerPage.' + serviceType);
     if (statusType !== 'free') {
       expect(tooltipHtml.find('.tooltip-qty').text()).toEqual('customerPage.quantityWithValue');
     }
     expect(tooltipHtml.find('.service-status i').attr('class')).toContain(statusType);
     expect(tooltipHtml.find('.tooltip-status').text()).toEqual('customerPage.' + statusType);
+    if (isManagedByOthers) {
+      expect(tooltipHtml.find('.tooltip-anotherPartner').text()).toEqual('customerPage.anotherPartner');
+    } else {
+      expect(tooltipHtml.find('.tooltip-anotherPartner').text()).toEqual('');
+    }
   }
 
-  it('should properly compile an expired tooltip', function () {
+  it('should properly compile an expired tooltip with communications service', function () {
     var tooltipHtml = $(compileDirective('communications').children().attr('tooltip-html-unsafe'));
     verifyTooltip(tooltipHtml, 'expired', 'call');
   });
 
-  it('should properly compile a trial tooltip', function () {
+  it('should properly compile a trial tooltip with roomSystems service', function () {
     var tooltipHtml = $(compileDirective('roomSystems').children().attr('tooltip-html-unsafe'));
     verifyTooltip(tooltipHtml, 'trial', 'roomSystem');
   });
 
-  it('should properly compile an active tooltip', function () {
-    var tooltipHtml = $(compileDirective('conferencing').children().attr('tooltip-html-unsafe'));
-    verifyTooltip(tooltipHtml, 'purchased', 'meeting');
+  it('should properly compile an trial tooltip with sparkBoard service', function () {
+    var tooltipHtml = $(compileDirective('sparkBoard').children().attr('tooltip-html-unsafe'));
+    verifyTooltip(tooltipHtml, 'trial', 'sparkBoard', true);
   });
 
-  it('should properly compile a free tooltip', function () {
+  it('should properly compile an active tooltip with conferencing service', function () {
+    var tooltipHtml = $(compileDirective('conferencing').children().attr('tooltip-html-unsafe'));
+    verifyTooltip(tooltipHtml, 'purchased', 'meeting', true);
+  });
+
+  it('should properly compile a free tooltip with messaging service', function () {
     var tooltipHtml = $(compileDirective('messaging').children().attr('tooltip-html-unsafe'));
     verifyTooltip(tooltipHtml, 'free', 'message');
   });
@@ -64,5 +78,6 @@ describe('Directive: crServiceColumnIcon', function () {
     expect(tooltipHtml.find('.tooltip-block .tooltip-qty').text()).toEqual('customerPage.quantityWithValue');
     expect(tooltipHtml.find('.tooltip-block i').attr('class')).toContain('trial');
     expect(tooltipHtml.find('.tooltip-block .tooltip-status').text()).toEqual('customerPage.trial');
+    expect(tooltipHtml.find('.tooltip-anotherPartner').text()).toEqual('');
   });
 });
