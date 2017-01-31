@@ -3,7 +3,7 @@
 
   describe('Template: customerList.tpl.html', function () {
     var $scope, $compile, $templateCache, $q, $controller, controller, view;
-    var Authinfo, customerListToggle, Orgservice, PartnerService, FeatureToggleService, TrialService, trialForPaid;
+    var Authinfo, Orgservice, PartnerService, FeatureToggleService, trialForPaid;
     var ADD_BUTTON = '#addTrial';
     var SEARCH_FILTER = '#searchFilter';
 
@@ -18,7 +18,7 @@
     beforeEach(angular.mock.module('Huron'));
     beforeEach(angular.mock.module('Sunlight'));
 
-    beforeEach(inject(function ($rootScope, _$compile_, _$templateCache_, _$controller_, _$q_, _Authinfo_, _Orgservice_, _PartnerService_, _FeatureToggleService_, _TrialService_) {
+    beforeEach(inject(function ($rootScope, _$compile_, _$templateCache_, _$controller_, _$q_, _Authinfo_, _Orgservice_, _PartnerService_, _FeatureToggleService_) {
       $scope = $rootScope.$new();
       $compile = _$compile_;
       $templateCache = _$templateCache_;
@@ -26,7 +26,6 @@
       Authinfo = _Authinfo_;
       PartnerService = _PartnerService_;
       Orgservice = _Orgservice_;
-      TrialService = _TrialService_;
       FeatureToggleService = _FeatureToggleService_;
       $q = _$q_;
       $scope.timeoutVal = 1;
@@ -37,11 +36,7 @@
 
       trialForPaid = false;
 
-      customerListToggle = false;
 
-      spyOn(TrialService, 'getTrialsList').and.returnValue($q.resolve({
-        data: {}
-      }));
       spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.resolve({
         data: {}
       }));
@@ -55,7 +50,6 @@
       });
       spyOn(Authinfo, 'isCare').and.returnValue(true);
       spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(true));
-      spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(false));
     }));
 
     describe('Add trial button', function () {
@@ -83,7 +77,6 @@
     function initAndCompile() {
       controller = $controller('CustomerListCtrl', {
         $scope: $scope,
-        customerListToggle: customerListToggle,
         trialForPaid: trialForPaid
       });
       $scope.customerList = controller;

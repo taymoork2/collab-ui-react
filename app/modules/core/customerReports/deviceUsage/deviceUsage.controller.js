@@ -9,18 +9,12 @@ require('modules/core/reports/amcharts-export.scss');
     .controller('DeviceUsageCtrl', DeviceUsageCtrl);
 
   /* @ngInject */
-  function DeviceUsageCtrl($log, $q, $translate, $scope, DeviceUsageTotalService, DeviceUsageGraphService, DeviceUsageDateService, DeviceUsageExportService, Notification, DeviceUsageSplunkMetricsService, ReportConstants, deviceUsageFeatureToggle, $state, $modal) {
+  function DeviceUsageCtrl($state, $log, $q, $translate, $scope, DeviceUsageService, DeviceUsageTotalService, DeviceUsageGraphService, DeviceUsageDateService, DeviceUsageExportService, Notification, DeviceUsageSplunkMetricsService, ReportConstants, $modal) {
     var vm = this;
     var amChart;
     var apiToUse = 'backend';
     var missingDays;
     var dateRange;
-
-    if (!deviceUsageFeatureToggle) {
-      // simulate a 404
-      $log.warn("State not allowed.");
-      $state.go('login');
-    }
 
     // Models Selection
     vm.modelsSelected = [];
@@ -70,6 +64,12 @@ require('modules/core/reports/amcharts-export.scss');
 
     vm.init = init;
     vm.timeUpdate = timeUpdate;
+
+    // Preliminary beta functionality
+    if ($state.current.name === 'reports.device-usage-v2') {
+      apiToUse = 'local';
+      DeviceUsageTotalService = DeviceUsageService;
+    }
 
     vm.tabs = [
       {
@@ -245,7 +245,7 @@ require('modules/core/reports/amcharts-export.scss');
       amChart.validateData();
       amChart.animateAgain();
       vm.showDevices = false;
-      fillInStats(data);
+      fillInStats(data, dateRange.start, dateRange.end);
     }
 
     function loadChartDataForDeviceType(data) {
@@ -302,17 +302,17 @@ require('modules/core/reports/amcharts-export.scss');
       $scope.$apply();
     }
 
-    function fillInStats(data) {
-      var stats = DeviceUsageTotalService.extractStats(data);
-      vm.totalDuration = secondsTohhmmss(stats.totalDuration);
-      vm.noOfCalls = stats.noOfCalls;
-      vm.noOfDevices = stats.noOfDevices;
+    function fillInStats(data, start, end) {
+      DeviceUsageTotalService.extractStats(data, start, end).then(function (stats) {
+        vm.totalDuration = secondsTohhmmss(stats.totalDuration);
+        vm.noOfCalls = stats.noOfCalls;
+        vm.noOfDevices = stats.noOfDevices;
 
-      vm.mostUsedDevices = [];
-      vm.leastUsedDevices = [];
-
-      resolveDeviceData(stats.most, vm.mostUsedDevices)
-        .then(resolveDeviceData(stats.least, vm.leastUsedDevices));
+        vm.mostUsedDevices = [];
+        vm.leastUsedDevices = [];
+        resolveDeviceData(stats.most, vm.mostUsedDevices)
+          .then(resolveDeviceData(stats.least, vm.leastUsedDevices));
+      });
     }
 
     function resolveDeviceData(stats, target) {

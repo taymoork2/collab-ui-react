@@ -6,10 +6,12 @@
       controller: LeastUsedCtrl,
       templateUrl: 'modules/core/customerReports/deviceUsage/leastMostUsedDevices.component.html',
       bindings: {
-        usedDevices: '<'
+        usedDevices: '<',
+        title: '<'
       }
     });
     /* @ngInject */
   function LeastUsedCtrl() {
+    //var vm = this;
   }
 }());

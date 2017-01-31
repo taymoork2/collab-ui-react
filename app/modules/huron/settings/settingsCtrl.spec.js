@@ -7,7 +7,7 @@ describe('Controller: HuronSettingsCtrl', function () {
   var HuronCustomer, ServiceSetup, CallerId, HuronConfig, InternationalDialing, VoicemailMessageAction;
   var modalDefer, customer, timezones, timezone, voicemailCustomer, internalNumberRanges, languages, avrilSites;
   var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction, countries;
-  var $rootScope, didVoicemailCustomer, FeatureToggleService;
+  var $rootScope, didVoicemailCustomer, FeatureToggleService, TerminusUserDeviceE911Service;
   var controller, compile, styleSheet, element, window;
 
   beforeEach(angular.mock.module('Huron'));
@@ -15,7 +15,7 @@ describe('Controller: HuronSettingsCtrl', function () {
 
   beforeEach(inject(function (_$rootScope_, _$q_, _$httpBackend_, _ExternalNumberService_, _DialPlanService_,
     _PstnSetupService_, _ModalService_, _Notification_, _HuronCustomer_, _ServiceSetup_, _InternationalDialing_, _Authinfo_, _HuronConfig_,
-    _CallerId_, _VoicemailMessageAction_, $compile, _FeatureToggleService_) {
+    _CallerId_, _VoicemailMessageAction_, $compile, _FeatureToggleService_, _TerminusUserDeviceE911Service_) {
 
     $q = _$q_;
     $rootScope = _$rootScope_;
@@ -35,6 +35,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     CallerId = _CallerId_;
     VoicemailMessageAction = _VoicemailMessageAction_;
     FeatureToggleService = _FeatureToggleService_;
+    TerminusUserDeviceE911Service = _TerminusUserDeviceE911Service_;
     window = window || {};
 
     modalDefer = $q.defer();
@@ -74,6 +75,7 @@ describe('Controller: HuronSettingsCtrl', function () {
       }
     }));
     spyOn(DialPlanService, 'updateCustomerVoice').and.returnValue($q.resolve());
+    spyOn(TerminusUserDeviceE911Service, 'update').and.returnValue($q.resolve());
     spyOn(ServiceSetup, 'listSites').and.callFake(function () {
       ServiceSetup.sites = sites;
       return $q.resolve();

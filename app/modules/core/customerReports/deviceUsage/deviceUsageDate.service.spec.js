@@ -44,6 +44,18 @@ describe('DeviceUsageDateService', function () {
       expect(dateRange.end).toEqual("2016-09-30"); // last day in Sept
     });
 
+    it('return start and end date for last 6 months', function () {
+      var dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(6, 'month');
+      expect(dateRange.start).toEqual('2016-04-01');
+      expect(dateRange.end).toEqual('2016-09-30');
+    });
+
+    it('return start and end date for last 12 months', function () {
+      var dateRange = DeviceUsageDateService.getDateRangeForLastNTimeUnits(12, 'month');
+      expect(dateRange.start).toEqual('2015-10-01');
+      expect(dateRange.end).toEqual('2016-09-30');
+    });
+
   });
 
 });

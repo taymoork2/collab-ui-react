@@ -11,7 +11,9 @@
       getAddress: getAddress,
       updateAddress: updateAddress,
       listCustomerSites: listCustomerSites,
-      createCustomerSite: createCustomerSite
+      createCustomerSite: createCustomerSite,
+      getStatus: getStatus,
+      setStatus: setStatus
     };
 
     // Mapping of terminus to huron address object keys
@@ -35,6 +37,8 @@
       serviceState: 'state',
       serviceZip: 'zip'
     };
+
+    var addressStatus;
 
     return service;
 
@@ -114,6 +118,14 @@
             return formatAddressFromServiceAddress(serviceAddress);
           }
         });
+    }
+
+    function getStatus() {
+      return addressStatus;
+    }
+
+    function setStatus(status) {
+      addressStatus = status;
     }
 
     function listCustomerSites(customerId) {

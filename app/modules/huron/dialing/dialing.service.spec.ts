@@ -11,7 +11,7 @@ describe('Service: DialingService', () => {
       '$state',
       '$q',
       'DialingService',
-      'FeatureToggleService'
+      'FeatureToggleService',
     );
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');

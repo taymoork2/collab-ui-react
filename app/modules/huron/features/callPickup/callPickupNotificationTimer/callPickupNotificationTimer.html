@@ -1,0 +1,14 @@
+<div ng-form="$ctrl.piNotificationTimerForm" class="call-pickup-notification-form large-6">
+  <input
+      cs-input
+      type="number"
+      name="notificationTimer"
+      ng-model="$ctrl.notificationTimer"
+      ng-change="$ctrl.onNotificationTimerChange()"
+      cs-input-secondary-label="{{:: 'callPickup.notificationTimerSeconds' | translate}}"
+      cs-input-messages="$ctrl.errorMessages"
+      ng-class="{'error': $ctrl.isError}"
+      ng-min="1"
+      ng-max="120"
+      >
+</div>

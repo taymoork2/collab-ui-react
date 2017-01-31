@@ -12,7 +12,7 @@
         <li class="feature" ng-repeat="site in userOverview.currentUser.trainSiteNames">
           <a id="{{site}}" ui-sref="user-overview.conferencing.webex({site:site})" ng-if="isValidConferenceSerivce(site)">
             <span class="feature-name">{{site}}</span>
-            <span class="badge badge-reposition" ng-if="isSharedMultiPartyEnabled">{{determineLicenseType(site)}}</span>
+            <span class="badge badge-reposition" ng-if="isSharedMeetingsEnabled">{{determineLicenseType(site)}}</span>
             <i class="feature-arrow"></i>
           </a>
         </li>

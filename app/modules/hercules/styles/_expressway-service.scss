@@ -291,6 +291,10 @@ Special stuff currently used for out own mail input field...
   }
 }
 
+.export-user-statuses-progress-info {
+  padding-bottom: 0.5rem;
+}
+
 .hercules-capitalize {
   text-transform: capitalize;
 }
@@ -299,6 +303,12 @@ Special stuff currently used for out own mail input field...
   margin-bottom: 20px;
 }
 
+.edit-cluster-link {
+  text-align: right;
+  a {
+    color: $color-primary-base;
+  }
+}
 
 .hercules-upload-key-modal {
 

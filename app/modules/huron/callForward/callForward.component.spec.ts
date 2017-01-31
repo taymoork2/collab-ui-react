@@ -15,7 +15,7 @@ describe('Component: callForward', () => {
   beforeEach(function() {
     this.initModules(callForwardModule);
     this.injectDependencies(
-      '$scope'
+      '$scope',
     );
     this.$scope.voicemailEnabled = true;
     this.$scope.callForward = new CallForward();

@@ -57,10 +57,10 @@
            translate="firstTimeWizard.startYourTrial"
            translate-values="{days: planReview.trial.trialPeriod}"></div>
         <div ng-class="{'column-paid' : !planReview.messagingServices.isNewTrial, 'column-trial' : planReview.messagingServices.isNewTrial}">
-          <div ng-if="planReview.messagingServices.services.length > 0  && !planReview.isSharedMultiPartyEnabled" class="item-license">
+          <div ng-if="planReview.messagingServices.services.length > 0  && !planReview.isSharedMeetingsEnabled" class="item-license">
             <span translate="firstTimeWizard.message"></span>
           </div>
-          <div ng-if="planReview.messagingServices.services.length > 0  && planReview.isSharedMultiPartyEnabled" class="item-msg-license">
+          <div ng-if="planReview.messagingServices.services.length > 0  && planReview.isSharedMeetingsEnabled" class="item-msg-license">
             <span translate="firstTimeWizard.message"></span>
           </div>
           <div class="item-paid"
@@ -68,14 +68,14 @@
              ng-repeat="service in planReview.messagingServices.services">
             <div ng-if="service.license.isTrial || planReview.messagingServices.isNewTrial"
                class="badge badge-warning" translate="firstTimeWizard.trial"></div>
-            <div class="quantity" ng-if="!planReview.isSharedMultiPartyEnabled">
+            <div class="quantity" ng-if="!planReview.isSharedMeetingsEnabled">
               <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
               <span>{{service.license.volume}}</span>
             </div>
-            <div ng-if="planReview.isSharedMultiPartyEnabled" class="item-webex"
+            <div ng-if="planReview.isSharedMeetingsEnabled" class="item-webex"
               translate="onboardModal.paidCiscoSparkMessaging">
             </div>
-            <div class="quantity-msg-details" ng-if="planReview.isSharedMultiPartyEnabled">
+            <div class="quantity-msg-details" ng-if="planReview.isSharedMeetingsEnabled">
                 <span class="license-type">{{service.license.volume}} {{planReview.determineLicenseType(service)}}</span>
             </div>
           </div>
@@ -86,22 +86,22 @@
            translate="firstTimeWizard.startYourTrial" translate-values="{days: planReview.trial.trialPeriod}">
         </div>
         <div ng-class="{'column-mtg' : !planReview.confServices.isNewTrial, 'column-trial' : planReview.confServices.isNewTrial}">
-          <div ng-if="planReview.confServices.services.length > 0 && !planReview.isSharedMultiPartyEnabled" class="item-license">
+          <div ng-if="planReview.confServices.services.length > 0 && !planReview.isSharedMeetingsEnabled" class="item-license">
             <span translate="firstTimeWizard.meeting"></span>
           </div>
-          <div ng-if="planReview.selectedSubscriptionHasBasicLicenses(multipleSubscriptions.selectedSubscription) && planReview.isSharedMultiPartyEnabled" class="item-mtg-license">
+          <div ng-if="planReview.selectedSubscriptionHasBasicLicenses(multipleSubscriptions.selectedSubscription) && planReview.isSharedMeetingsEnabled" class="item-mtg-license">
             <span translate="firstTimeWizard.basicMeetings"></span>
           </div>
           <div ng-repeat="service in planReview.confServices.services" ng-hide="service.license.offerName !== 'CF'">
             <!-- show license details for standard 25-party meetings-->
             <div class="item-paid" ng-show="multipleSubscriptions.showLicenses(service.license.billingServiceId, service.license.isTrial)">
               <div ng-if="service.license.isTrial || planReview.confServices.isNewTrial" class="badge badge-warning" translate="firstTimeWizard.trial"></div>
-              <div ng-if="planReview.isSharedMultiPartyEnabled" translate="firstTimeWizard.meetingsInSpark"></div>
-              <div ng-if="!planReview.isSharedMultiPartyEnabled" class="quantity">
+              <div ng-if="planReview.isSharedMeetingsEnabled" translate="firstTimeWizard.meetingsInSpark"></div>
+              <div ng-if="!planReview.isSharedMeetingsEnabled" class="quantity">
                 <span translate="firstTimeWizard.quantity"></span>
                 <span>{{service.license.volume}}</span>
               </div>
-              <div class="quantity-mtg-details" ng-if="planReview.isSharedMultiPartyEnabled">
+              <div class="quantity-mtg-details" ng-if="planReview.isSharedMeetingsEnabled">
                 <span class="license-type">{{service.license.volume}} {{planReview.determineLicenseType(service)}}</span>
                 <span class="license-entity-tooltip">
                   <i class="icon icon-info" tooltip-trigger="mouseenter" tooltip-placement="bottom-left" tooltip-animation="false"
@@ -112,11 +112,11 @@
             </div>
           </div>
           <!-- START Darling: Shared Mult-Party Licenses functionality -->
-          <div ng-if="planReview.selectedSubscriptionHasAdvancedLicenses(multipleSubscriptions.selectedSubscription) && planReview.isSharedMultiPartyEnabled" class="item-mtg-license">
+          <div ng-if="planReview.selectedSubscriptionHasAdvancedLicenses(multipleSubscriptions.selectedSubscription) && planReview.isSharedMeetingsEnabled" class="item-mtg-license">
             <span translate="firstTimeWizard.advancedMeetings"></span>
           </div>
           <div class="item-mtg"
-             ng-show="multipleSubscriptions.showLicenses(services[0].license.billingServiceId, services[0].license.isTrial) && planReview.isSharedMultiPartyEnabled"
+             ng-show="multipleSubscriptions.showLicenses(services[0].license.billingServiceId, services[0].license.isTrial) && planReview.isSharedMeetingsEnabled"
              ng-repeat="services in planReview.sitesBasedOnBillingId">
             <div class="sub-item" ng-repeat="service in services">
               <div ng-if="service.license.isTrial || planReview.confServices.isNewTrial"
@@ -144,7 +144,7 @@
           </div>
           <!-- END Darling: Shared Mult-Party Licenses functionality -->
           <div class="item-mtg"
-             ng-show="multipleSubscriptions.showLicenses(services[0].license.billingServiceId, services[0].license.isTrial) && !planReview.isSharedMultiPartyEnabled"
+             ng-show="multipleSubscriptions.showLicenses(services[0].license.billingServiceId, services[0].license.isTrial) && !planReview.isSharedMeetingsEnabled"
              ng-repeat="(siteUrl,services) in planReview.sites">
             <div class="sub-line"></div>
             {{siteUrl}}
@@ -175,10 +175,10 @@
            translate="firstTimeWizard.startYourTrial"
            translate-values="{days: planReview.trial.trialPeriod}"></div>
         <div ng-class="{'column-paid' : !planReview.commServices.isNewTrial, 'column-trial' : planReview.commServices.isNewTrial}">
-          <div ng-if="planReview.commServices.services.length > 0 && !planReview.isSharedMultiPartyEnabled" class="item-license">
+          <div ng-if="planReview.commServices.services.length > 0 && !planReview.isSharedMeetingsEnabled" class="item-license">
             <span translate="firstTimeWizard.call"></span>
           </div>
-          <div ng-if="planReview.commServices.services.length > 0 && planReview.isSharedMultiPartyEnabled" class="item-call-license">
+          <div ng-if="planReview.commServices.services.length > 0 && planReview.isSharedMeetingsEnabled" class="item-call-license">
             <span translate="firstTimeWizard.call"></span>
           </div>
           <div class="item-paid"
@@ -186,14 +186,14 @@
              ng-repeat="service in planReview.commServices.services">
             <div ng-if="service.license.isTrial || planReview.commServices.isNewTrial"
                class="badge badge-warning" translate="firstTimeWizard.trial"></div>
-            <div class="quantity" ng-if="!planReview.isSharedMultiPartyEnabled">
+            <div class="quantity" ng-if="!planReview.isSharedMeetingsEnabled">
               <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
               <span>{{service.license.volume}}</span>
             </div>
-            <div ng-if="planReview.isSharedMultiPartyEnabled" class="item-webex"
+            <div ng-if="planReview.isSharedMeetingsEnabled" class="item-webex"
               translate="onboardModal.paidCiscoSparkMessaging">
             </div>
-            <div class="quantity-call-details" ng-if="planReview.isSharedMultiPartyEnabled">
+            <div class="quantity-call-details" ng-if="planReview.isSharedMeetingsEnabled">
                 <span class="license-type">{{planReview.determineLicenseType(service)}}</span>
             </div>
           </div>

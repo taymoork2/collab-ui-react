@@ -57,6 +57,9 @@ describe('Controller: UserRolesCtrl', function () {
       form: {
         displayName: {
           $setValidity: jasmine.createSpy('$setValidity')
+        },
+        partialAdmin: {
+          $setValidity: jasmine.createSpy('$setValidity')
         }
       }
     };
@@ -169,12 +172,14 @@ describe('Controller: UserRolesCtrl', function () {
         $scope.formUserData.displayName = '';
         $scope.checkAdminDisplayName();
         expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith("notblank", false);
+        expect($scope.rolesEdit.form.partialAdmin.$setValidity).toHaveBeenCalledWith("noSelection", false);
       });
 
       it('should invalidate display name if not first name, last name and display name are all blank', function () {
         $scope.formUserData.displayName = 'DN';
         $scope.checkAdminDisplayName();
         expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith("notblank", true);
+        expect($scope.rolesEdit.form.partialAdmin.$setValidity).toHaveBeenCalledWith("noSelection", false);
       });
     });
 
@@ -190,6 +195,7 @@ describe('Controller: UserRolesCtrl', function () {
         $scope.formUserData.displayName = '';
         $scope.checkAdminDisplayName();
         expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith("notblank", true);
+        expect($scope.rolesEdit.form.partialAdmin.$setValidity).toHaveBeenCalledWith("noSelection", true);
       });
     });
 

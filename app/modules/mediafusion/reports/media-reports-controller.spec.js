@@ -118,6 +118,7 @@ describe('Controller:MediaReportsController', function () {
       spyOn(MediaReportsService, 'getAvailabilityData').and.returnValue($q.resolve(clusteravailabilityData));
       spyOn(MediaReportsService, 'getUtilizationData').and.returnValue($q.resolve(utilizationGraphData));
       controller.clusterUpdate();
+      httpMock.flush();
       expect(MediaReportsService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
       expect(MediaReportsService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
       expect(MediaReportsService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
@@ -150,7 +151,6 @@ describe('Controller:MediaReportsController', function () {
       spyOn(MediaReportsService, 'getTotalCallsData').and.callThrough();
       spyOn(MediaReportsService, 'getClusterAvailabilityData').and.callThrough();
       spyOn(MediaReportsService, 'getClusterAvailabilityTooltip').and.callThrough();
-      spyOn(MediaReportsService, 'getHostedOnPremisesTooltip').and.callThrough();
       spyOn(MediaReportsService, 'getUtilizationData').and.callThrough();
       spyOn(MediaReportsService, 'getAvailabilityData').and.callThrough();
       spyOn(MediaReportsService, 'getCallVolumeData').and.callThrough();
@@ -158,8 +158,7 @@ describe('Controller:MediaReportsController', function () {
       httpMock.flush();
       expect(MediaReportsService.getTotalCallsData).toHaveBeenCalled();
       expect(MediaReportsService.getClusterAvailabilityData).toHaveBeenCalled();
-      expect(MediaReportsService.getClusterAvailabilityTooltip).toHaveBeenCalled();
-      expect(MediaReportsService.getHostedOnPremisesTooltip).toHaveBeenCalled();
+      expect(MediaReportsService.getClusterAvailabilityTooltip).not.toHaveBeenCalled();
       expect(MediaReportsService.getUtilizationData).toHaveBeenCalled();
       expect(MediaReportsService.getAvailabilityData).toHaveBeenCalled();
       expect(MediaReportsService.getCallVolumeData).toHaveBeenCalled();
@@ -174,7 +173,7 @@ describe('Controller:MediaReportsController', function () {
       };
       spyOn(MediaReportsService, 'getTotalCallsData').and.returnValue($q.resolve(response));
       controller.setTotalCallsData();
-      httpMock.flush();
+      httpMock.verifyNoOutstandingExpectation();
       expect(MediaReportsService.getTotalCallsData).toHaveBeenCalled();
       expect(controller.onprem).toBe(20);
       expect(controller.cloud).toBe(30);
@@ -196,15 +195,13 @@ describe('Controller:MediaReportsController', function () {
 
     it('setSneekPeekData should call MediaReportsService and MediaSneekPeekResourceService', function () {
       spyOn(MediaReportsService, 'getClusterAvailabilityTooltip').and.callThrough();
-      spyOn(MediaReportsService, 'getHostedOnPremisesTooltip').and.callThrough();
-      spyOn(MediaSneekPeekResourceService, 'getClusterAvailabilitySneekPeekValues').and.returnValue();
-      spyOn(MediaSneekPeekResourceService, 'getHostedOnPremisesSneekPeekValues').and.returnValue();
+      spyOn(MediaSneekPeekResourceService, 'getClusterAvailabilitySneekPeekValues').and.returnValue({
+        values: ["dummyCluster"]
+      });
       controller.setSneekPeekData();
       httpMock.flush();
       expect(MediaReportsService.getClusterAvailabilityTooltip).toHaveBeenCalled();
-      expect(MediaReportsService.getHostedOnPremisesTooltip).toHaveBeenCalled();
       expect(MediaSneekPeekResourceService.getClusterAvailabilitySneekPeekValues).toHaveBeenCalled();
-      expect(MediaSneekPeekResourceService.getHostedOnPremisesSneekPeekValues).toHaveBeenCalled();
     });
 
     it('should call dummysetUtilizationData for setUtilizationData when there is no data', function () {

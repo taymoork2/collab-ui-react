@@ -1,5 +1,7 @@
 'use strict';
 
+var testModule = require('./index').default;
+
 describe('Service: ModalService', function () {
   var ModalService, $modal;
 
@@ -18,7 +20,7 @@ describe('Service: ModalService', function () {
     myTitle = myMessage = myClose = myDismiss = myType = mySize = undefined;
   });
 
-  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module(testModule));
 
   beforeEach(inject(function (_ModalService_, _$modal_) {
     ModalService = _ModalService_;
@@ -48,7 +50,9 @@ describe('Service: ModalService', function () {
         message: jasmine.any(Function),
         close: jasmine.any(Function),
         dismiss: jasmine.any(Function),
-        btnType: jasmine.any(Function)
+        btnType: jasmine.any(Function),
+        hideTitle: jasmine.any(Function),
+        hideDismiss: jasmine.any(Function)
       }
     });
   });

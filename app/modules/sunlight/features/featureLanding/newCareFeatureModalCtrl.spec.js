@@ -38,8 +38,8 @@ describe('Controller: NewCareFeatureModalCtrl', function () {
     expect(modalFake.dismiss).toHaveBeenCalledWith("cancel");
   });
 
-  it("feature list to have care", function () {
-    expect($scope.features.length).toEqual(1);
+  it("feature list to have care - chat and callback", function () {
+    expect($scope.features.length).toEqual(2);
   });
 
 });

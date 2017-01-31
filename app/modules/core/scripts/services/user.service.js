@@ -31,7 +31,8 @@
       isValidThumbnail: isValidThumbnail,
       getFullNameFromUser: getFullNameFromUser,
       getPrimaryEmailFromUser: getPrimaryEmailFromUser,
-      getUserLicence: getUserLicence
+      getUserLicence: getUserLicence,
+      getPreferredWebExSiteForCalendaring: getPreferredWebExSiteForCalendaring,
     };
 
     var _helpers = {
@@ -567,7 +568,7 @@
       if ((userStatus === 'pending' || userStatus === 'error') && !isHuronUser(entitlements)) {
         return sendSparkWelcomeEmail(userEmail, userName);
       } else if (isHuronUser(entitlements) && !dirsyncEnabled) {
-        return HuronUser.sendWelcomeEmail(userEmail, userName, uuid, Authinfo.getOrgId(), false);
+        return HuronUser.sendWelcomeEmail(userEmail, userName, uuid, Authinfo.getOrgId());
       }
       return $q.reject('invitation not sent');
     }
@@ -626,6 +627,17 @@
       }
 
       return primaryEmail;
+    }
+
+    function getPreferredWebExSiteForCalendaring(user) {
+      if (!_.isEmpty(user.userPreferences)) {
+        var name = _.find(user.userPreferences, function (userPreference) {
+          return userPreference.indexOf('calSvcPreferredWebexSite') > 0;
+        });
+        if (_.isString(name)) {
+          return name.substring(name.indexOf(':') + 1).replace(/"/g, '');
+        }
+      }
     }
   }
 

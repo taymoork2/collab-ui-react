@@ -36,7 +36,10 @@ class MySubscriptionCtrl {
   public productInstanceFailed = false;
   public loading = false;
   public digitalRiverSubscriptionsUrl: string;
-  public isSharedMultiPartyReportsEnabled: boolean;
+  public isSharedMeetingsReportsEnabled: boolean;
+  public isSharedMeetingsEnabled: boolean;
+  public temporarilyOverrideSharedMeetingsFeatureToggle = { default: true, defaultValue: true };
+  public temporarilyOverrideSharedMeetingsReportsFeatureToggle = { default: false, defaultValue: true };
 
   /* @ngInject */
   constructor(
@@ -80,18 +83,30 @@ class MySubscriptionCtrl {
     this.initFeatures();
   }
 
-  public isSharedMultiPartyLicense(subscription) {
-    return _.get(subscription, 'offers[0].licenseModel') === this.Config.licenseModel.cloudSharedMeeting;
+  public isSharedMeetingsLicense(subscription) {
+    return _.lowerCase(_.get(subscription, 'offers[0].licenseModel', '')) === this.Config.licenseModel.cloudSharedMeeting;
   }
 
   public determineLicenseType(subscription) {
-    return this.isSharedMultiPartyLicense(subscription) ? this.$translate.instant('firstTimeWizard.sharedLicenses') : this.$translate.instant('firstTimeWizard.namedLicenses');
+    return this.isSharedMeetingsLicense(subscription) ? this.$translate.instant('firstTimeWizard.sharedLicenses') : this.$translate.instant('firstTimeWizard.namedLicenses');
   }
 
-  private initFeatures() {
-    this.FeatureToggleService.atlasSmpReportsGetStatus().then((smpReportsStatus) => {
-        this.isSharedMultiPartyReportsEnabled = smpReportsStatus;
-    });
+  private initFeatures(): void {
+    if (this.temporarilyOverrideSharedMeetingsFeatureToggle.default === true) {
+      this.isSharedMeetingsEnabled = this.temporarilyOverrideSharedMeetingsFeatureToggle.defaultValue;
+    } else {
+      this.FeatureToggleService.atlasSharedMeetingsGetStatus().then((smpStatus) => {
+        this.isSharedMeetingsEnabled = smpStatus;
+      });
+    }
+
+    if (this.temporarilyOverrideSharedMeetingsReportsFeatureToggle.default) {
+      this.isSharedMeetingsReportsEnabled = this.temporarilyOverrideSharedMeetingsReportsFeatureToggle.defaultValue;
+    } else {
+      this.FeatureToggleService.atlasSharedMeetingsReportsGetStatus().then((smpReportsStatus) => {
+        this.isSharedMeetingsReportsEnabled = smpReportsStatus;
+      });
+    }
   }
 
   private initIframe(): void {

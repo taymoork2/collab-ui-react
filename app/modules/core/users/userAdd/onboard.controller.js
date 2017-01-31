@@ -29,6 +29,7 @@ require('./_user-add.scss');
     $scope.timeoutVal = 1000;
     $scope.timer = 0;
     $scope.searchPlaceholder = $translate.instant('usersPage.convertUserSearch');
+    $scope.manageUsers = $stateParams.manageUsers;
 
     $scope.loadInternalNumberPool = loadInternalNumberPool;
     $scope.loadExternalNumberPool = loadExternalNumberPool;
@@ -53,7 +54,7 @@ require('./_user-add.scss');
     $scope.dirSyncConnectorDownload = "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/DirectoryConnector.zip";
 
     var isFTW = false;
-    $scope.isSharedMultiPartyEnabled = false;
+    $scope.isSharedMeetingsEnabled = false;
     $scope.isReset = false;
     $scope.showExtensions = true;
     $scope.isResetEnabled = false;
@@ -93,15 +94,16 @@ require('./_user-add.scss');
     var currentUserHasCall = false;
 
     $scope.isCareEnabled = Authinfo.isCare();
-    $scope.isCareCallBackEnabled = false;
     $scope.enableCareService = true;
-    FeatureToggleService.atlasCareCallbackTrialsGetStatus().then(function (callBackStatus) {
-      $scope.isCareCallBackEnabled = callBackStatus;
-    });
 
-    FeatureToggleService.atlasSMPGetStatus().then(function (smpStatus) {
-      $scope.isSharedMultiPartyEnabled = smpStatus;
-    });
+    $scope.sharedMeetingsFeatureDefaultToggle = { default: true, defaultValue: true };
+    if (_.get($scope, 'sharedMeetingsFeatureDefaultToggle.default')) {
+      $scope.isSharedMeetingsEnabled = _.get($scope, 'sharedMeetingsFeatureDefaultToggle.defaultValue');
+    } else {
+      FeatureToggleService.atlasSharedMeetingsGetStatus().then(function (smpStatus) {
+        $scope.isSharedMeetingsEnabled = smpStatus;
+      });
+    }
 
     $scope.controlCare = controlCare;
 
@@ -155,6 +157,10 @@ require('./_user-add.scss');
           $state.go('my-company.subscriptions');
         });
       }
+    };
+
+    $scope.goToManageUsers = function () {
+      $state.go('users.manage', {});
     };
 
     /****************************** License Enforcement END *******************************/
@@ -804,16 +810,16 @@ require('./_user-add.scss');
       });
     };
 
-    $scope.isSharedMultiPartyLicense = function (license) {
-      return _.get(license, 'confLic[0].licenseModel') === Config.licenseModel.cloudSharedMeeting;
+    $scope.isSharedMeetingsLicense = function (license) {
+      return _.lowerCase(_.get(license, 'confLic[0].licenseModel', '')) === Config.licenseModel.cloudSharedMeeting;
     };
 
     $scope.determineLicenseType = function (license) {
-      return $scope.isSharedMultiPartyLicense(license) ? $translate.instant('firstTimeWizard.sharedLicense') : $translate.instant('firstTimeWizard.namedLicense');
+      return $scope.isSharedMeetingsLicense(license) ? $translate.instant('firstTimeWizard.sharedLicense') : $translate.instant('firstTimeWizard.namedLicense');
     };
 
     $scope.generateLicenseTooltip = function (license) {
-      return $scope.isSharedMultiPartyLicense(license) ? '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.sharedLicenseTooltip') + '</div>' : '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.namedLicenseTooltip') + '</div>';
+      return $scope.isSharedMeetingsLicense(license) ? '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.sharedLicenseTooltip') + '</div>' : '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.namedLicenseTooltip') + '</div>';
     };
 
     $scope.isSubscribeable = function (license) {
@@ -1111,7 +1117,6 @@ require('./_user-add.scss');
           $scope.searchStr = str;
           getUnlicensedUsers();
           Analytics.trackUserOnboarding(Analytics.sections.USER_ONBOARDING.eventNames.CONVERT_USER, $state.current.name, Authinfo.getOrgId());
-
         }
       }, $scope.timeoutVal);
     }
@@ -2576,13 +2581,11 @@ require('./_user-add.scss');
     }
 
     function controlCare() {
-      if ($scope.isCareCallBackEnabled) {
-        if ($scope.radioStates.msgRadio && $scope.radioStates.commRadio) {
-          $scope.enableCareService = true;
-        } else {
-          $scope.enableCareService = false;
-          $scope.radioStates.careRadio = false;
-        }
+      if ($scope.radioStates.msgRadio) {
+        $scope.enableCareService = true;
+      } else {
+        $scope.enableCareService = false;
+        $scope.radioStates.careRadio = false;
       }
     }
 

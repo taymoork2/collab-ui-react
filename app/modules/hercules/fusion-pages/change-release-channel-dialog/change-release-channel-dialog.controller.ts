@@ -14,7 +14,7 @@ export class ChangeReleaseChannelDialogController {
     private type: ResourceType,
     private FusionClusterService,
     private Notification,
-    private ResourceGroupService
+    private ResourceGroupService,
   ) {}
 
   public confirmChange() {

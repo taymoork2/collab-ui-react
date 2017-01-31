@@ -175,7 +175,7 @@
         'balloon': baseVariables['balloon'],
         'autoMarginOffset': 25,
         'autoMargins': false,
-        'marginLeft': 40,
+        'marginLeft': 70,
         'marginTop': 60,
         'marginRight': 60,
         'usePrefixes': true,
@@ -215,7 +215,7 @@
           'updateOnReleaseOnly': true
         },
         'valueScrollbar': {
-          'offset': 35,
+          'offset': 3,
           'color': '#AAAAAA',
           'backgroundColor': '#ffffff',
           'backgroundAlpha': 1,
@@ -229,6 +229,8 @@
         'type': 'gantt',
         'pathToImages': amchartsImages,
         'theme': 'light',
+        'autoMargins': false,
+        'marginLeft': 95,
         'marginRight': 70,
         'balloonDateFormat': 'JJ:NN',
         'columnWidth': 0.035,
@@ -247,9 +249,8 @@
         'categoryAxis': catAxis,
         'segmentsField': 'segments',
         'colorField': 'color',
-        'startField': 'start',
-        'endField': 'end',
-        'durationField': 'duration',
+        'startDateField': 'startTime',
+        'endDateField': 'endTime',
         'dataProvider': data,
         'valueScrollbar': {
           'autoGridCount': true,
@@ -258,13 +259,6 @@
           'backgroundAlpha': 1,
           'updateOnReleaseOnly': true
         },
-        /*'chartScrollbar': {
-          'offset': 15,
-          'color': '#AAAAAA',
-          'backgroundColor': '#D7DBDD',
-          'backgroundAlpha': 1,
-          //'oppositeAxis': false
-        },*/
         'chartCursor': {
           'cursorColor': '#55bb76',
           'valueBalloonsEnabled': false,

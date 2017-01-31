@@ -244,9 +244,9 @@
       return sequence;
     }
 
-    function extractStats(reduced, count) {
+    function extractStats(reduced) {
       var accounts = extractAndSortAccounts(reduced);
-      var n = count || 5;
+      var n = 20;
       var stats = {
         most: _.take(accounts, n),
         least: _.takeRight(accounts, n).reverse(),
@@ -255,7 +255,7 @@
         totalDuration: calculateTotal(accounts).totalDuration
       };
       //$log.info('Extracted stats:', stats);
-      return stats;
+      return $q.resolve(stats);
     }
 
     function calculateTotal(accounts) {

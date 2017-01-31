@@ -4,17 +4,13 @@
   module.exports = FeatureToggleService;
 
   /* @ngInject */
-  function FeatureToggleService($http, $q, $resource, $state, Authinfo, HuronConfig, UrlConfig, Orgservice) {
+  function FeatureToggleService($http, $q, $resource, $rootScope, $state, Authinfo, HuronConfig, UrlConfig, Orgservice) {
     var features = {
       requireAcceptTos: 'atlas-tos-required',
       dirSync: 'atlas-dir-sync',
       atlasCareTrials: 'atlas-care-trials',
-      atlasCareCallbackTrials: 'atlas-care-callback-trials',
       atlasCareInboundTrials: 'atlas-care-inbound-trials',
       atlasContextServiceTrials: 'atlas-context-service-trials',
-      atlasCreateTrialBackendEmail: 'atlas-create-trial-backend-email',
-      atlasCustomerListUpdate: 'atlas-customer-list-update',
-      atlasDarling: 'atlas-darling',
       atlasDataRetentionSettings: 'atlas-data-retention-settings',
       atlasDevicesAdvancedSettings: 'atlas-devices-advanced-settings',
       atlasDeviceExport: 'atlas-device-export',
@@ -29,7 +25,6 @@
       atlasNewCiDataModel: 'atlas-new-ci-data-model',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
       atlasNewUserExport: 'atlas-new-user-export',
-      atlasNotifyPartnerTrialExtBackendEmail: 'atlas-notify-partner-trial-ext-backend-email',
       atlasNurturingEmails: 'atlas-nurturing-emails',
       atlasPinSettings: 'atlas-pin-settings',
       atlasPMRonM2: 'atlas-pmr-on-m2',
@@ -38,10 +33,11 @@
       atlasComplianceRole: 'atlas-compliance-role',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
-      atlasSMP: 'atlas-smp',
-      atlasSmpReports: 'atlas-smp-reports',
+      atlasSharedMeetings: 'atlas-shared-meetings',
+      atlasSharedMeetingsReports: 'atlas-shared-meetings-reports',
+      atlasSuppressOnboardingEmail: 'atlas-suppress-onboarding-email',
       atlasTrialsShipDevices: 'atlasTrialsShipDevices',
-      atlasDeviceUsageReport: 'atlas-device-usage-report',
+      atlasDeviceUsageReportV2: 'atlas-device-usage-report-v2',
       atlasStartTrialForPaid: 'atlas-start-trial-for-paid',
       androidAddGuestRelease: 'android-add-guest-release',
       androidDirectUpload: 'android-direct-upload',
@@ -158,7 +154,6 @@
       locationSharing: 'location-sharing',
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
-      csdmPstn: 'csdm-pstn',
       csdmATA: 'csdm-ata',
       csdmHybridCall: 'csdm-hybrid-call',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
@@ -169,34 +164,18 @@
       atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',
       avrilVmEnable: 'avril-vm-enable',
       avrilVoicemaill1249: 'avril-voicemail-l1249',
-      cloudberryPersonalMode: 'ce-enable-personal-mode'
+      cloudberryPersonalMode: 'ce-enable-personal-mode',
+      autoAnswer: 'huron-auto-answer',
+      huronFederatedSparkCall: 'huron-federated-spark-call',
     };
 
     var toggles = {};
 
     // returns huron feature toggle value for the given user or user's org
-    var huronUserResource = $resource(HuronConfig.getMinervaUrl() + '/features/users/:userId/developer/:featureName', {
-      userId: '@userId',
-      featureName: '@featureName'
-    },
-      {
-        get: {
-          method: 'GET',
-          cache: true
-        }
-      });
+    var huronUserResource;
 
     // returns huron feature toggle value for the given customer; must be full admin or partner admin for the customer
-    var huronCustomerResource = $resource(HuronConfig.getMinervaUrl() + '/features/customers/:customerId/developer/:featureName', {
-      customerId: '@customerId',
-      featureName: '@featureName'
-    },
-      {
-        get: {
-          method: 'GET',
-          cache: true
-        }
-      });
+    var huronCustomerResource;
 
     var orgResource = $resource(UrlConfig.getFeatureUrl() + '/features/rules/:id', {
       id: '@id'
@@ -245,6 +224,13 @@
     return service;
 
     function init() {
+      setHuronUserResource(HuronConfig.getMinervaUrl());
+      setHuronCustomerResource(HuronConfig.getMinervaUrl());
+      // setup listener
+      $rootScope.$on('COMPASS_BASE_DOMAIN_CHANGED', function () {
+        setHuronUserResource(HuronConfig.getMinervaUrl());
+        setHuronCustomerResource(HuronConfig.getMinervaUrl());
+      });
       return _.reduce(features, function (status, feature, key) {
         status[key + 'GetStatus'] = function () {
           return supports(features[key]);
@@ -472,6 +458,33 @@
         feature.val = false;
       }
     }
+
+    function setHuronUserResource() {
+      huronUserResource = $resource(HuronConfig.getMinervaUrl() + '/features/users/:userId/developer/:featureName', {
+        userId: '@userId',
+        featureName: '@featureName'
+      },
+        {
+          get: {
+            method: 'GET',
+            cache: true
+          }
+        });
+    }
+
+    function setHuronCustomerResource() {
+      huronCustomerResource = $resource(HuronConfig.getMinervaUrl() + '/features/customers/:customerId/developer/:featureName', {
+        customerId: '@customerId',
+        featureName: '@featureName'
+      },
+        {
+          get: {
+            method: 'GET',
+            cache: true
+          }
+        });
+    }
+
   }
 
 })();

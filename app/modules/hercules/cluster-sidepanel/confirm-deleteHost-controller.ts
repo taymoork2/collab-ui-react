@@ -11,7 +11,7 @@ export class ConfirmDeleteHostController implements IConfirmDeleteHostController
     private Notification: Notification,
     private hostSerial: string,
     private $state: ng.ui.IStateService,
-    private connectorType: string
+    private connectorType: string,
   ) {}
 
   public removeHost(): void {
@@ -25,7 +25,7 @@ export class ConfirmDeleteHostController implements IConfirmDeleteHostController
             this.$state.go('calendar-service.list');
           }
           this.Notification.success('hercules.deleteClusterNodeDialog.successNodeRemoval');
-        }
+        },
       )
       .catch( (error) => {
         this.Notification.errorWithTrackingId(error, 'hercules.deleteClusterNodeDialog.failedNodeRemoval');

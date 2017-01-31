@@ -113,10 +113,10 @@ describe('Partner Service -', function () {
   });
 
   it('should successfully return the corresponding license object or an empty object from calling getLicense', function () {
-    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.MS)).toEqual(testData.licenses[0]);
-    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CF)).toEqual(testData.licenses[1]);
-    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CO)).toEqual(testData.licenses[2]);
-    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CDC)).toEqual(testData.licenses[6]);
+    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.MS)[0]).toEqual(testData.licenses[0]);
+    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CF)[0]).toEqual(testData.licenses[1]);
+    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CO)[0]).toEqual(testData.licenses[2]);
+    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CDC)[0]).toEqual(testData.licenses[6]);
   });
 
   it('should successfully return a boolean on whether or not a license is available from calling isLicenseInfoAvailable', function () {
@@ -343,7 +343,9 @@ describe('Partner Service -', function () {
       beforeEach(function () {
         licenses = _.cloneDeep(testData.licenses);
       });
-
+      afterEach(function () {
+        licenses = null;
+      });
       it('should return a list of meeting and webex for services for trials', function () {
         licenses.push({
           licenseId: 'EE_abdd0d28-a886-452a-b2b0-97861baa2a54',

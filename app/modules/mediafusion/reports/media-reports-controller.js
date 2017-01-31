@@ -38,14 +38,15 @@
     vm.cloud_calls_heading = $translate.instant('mediaFusion.metrics.cloudcalls');
     vm.redirected_calls_heading = $translate.instant('mediaFusion.metrics.redirectedcalls');
     vm.cluster_availability_heading = $translate.instant('mediaFusion.metrics.clusteravailability');
+    vm.customPlaceholder = $translate.instant('mediaFusion.report.custom');
 
     vm.hosted_heading = vm.on_prem_calls_heading;
     vm.redirected_heading = vm.cloud_calls_heading;
 
     vm.Map = {};
 
-    vm.displayAdoption = true;
-    vm.displayResources = false;
+    vm.displayAdoption = false;
+    vm.displayResources = true;
 
     vm.changeTabs = changeTabs;
     vm.setRefreshInterval = setRefreshInterval;
@@ -80,18 +81,18 @@
     }];
     vm.timeSelected = vm.timeOptions[0];
 
-    loadAdaptionDatas();
     setRefreshInterval();
     getCluster();
+    timeUpdate();
 
     function loadResourceDatas() {
-      setTotalCallsData().then(function () {
-        setSneekPeekData();
+      deferred.promise.then(function () {
+        setTotalCallsData();
+        setAvailabilityData();
+        setClusterAvailability();
+        setUtilizationData();
+        setCallVolumeData();
       });
-      setClusterAvailability();
-      setUtilizationData();
-      setCallVolumeData();
-      setAvailabilityData();
     }
 
     function loadAdaptionDatas() {
@@ -112,14 +113,10 @@
       loadResourceDatas();
     }
 
-    function clusterUpdateFromTooltip(selectedCluster) {
-      vm.clusterSelected = selectedCluster;
-      clusterUpdate();
-    }
-
     $scope.$on('clusterClickEvent', function (event, data) {
       if (vm.clusterSelected === vm.allClusters) {
-        clusterUpdateFromTooltip(data.data);
+        vm.clusterSelected = data.data;
+        clusterUpdate();
       }
     });
 
@@ -128,7 +125,12 @@
         startTime: data.data.startTime,
         endTime: data.data.endTime
       };
+      vm.timeSelected.label = vm.customPlaceholder;
       timeUpdate();
+    });
+
+    $scope.$on('$destroy', function () {
+      $interval.cancel(interval);
     });
 
     function timeUpdate() {
@@ -170,7 +172,6 @@
     }
 
     function setTotalCallsData() {
-      var deferred = $q.defer();
       MediaReportsService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
         if (vm.clusterId === vm.allClusters) {
           if (response === vm.ABORT) {
@@ -222,9 +223,7 @@
             vm.total = vm.onprem + vm.cloud;
           }
         }
-        deferred.resolve();
       });
-      return deferred.promise;
     }
 
     function setClusterAvailability() {
@@ -236,6 +235,7 @@
           vm.clusterAvailability = vm.noData;
         } else {
           vm.clusterAvailability = response.data.availabilityPercent + vm.percentage;
+          setSneekPeekData();
         }
       });
     }
@@ -243,19 +243,15 @@
     function setSneekPeekData() {
       MediaReportsService.getClusterAvailabilityTooltip(vm.timeSelected).then(function (response) {
         vm.availabilityTooltipOptions = MediaSneekPeekResourceService.getClusterAvailabilitySneekPeekValues(response, vm.Map, vm.clusterAvailability, vm.clusterId);
-      }, function () {
-        Notification.error('mediaFusion.genericError');
-      });
-
-      MediaReportsService.getHostedOnPremisesTooltip(vm.timeSelected).then(function (response) {
-        vm.onPremisesTooltipOptions = MediaSneekPeekResourceService.getHostedOnPremisesSneekPeekValues(response, vm.onprem, vm.clusterId, vm.clusterOptions);
+        vm.availabilityTooltipOptions['tooltipModel'] = vm.availabilityTooltipOptions.values[0];
+        vm.availabilityTooltipOptions['tooltipClickHandler'] = clusterUpdateFromTooltip;
       }, function () {
         Notification.error('mediaFusion.genericError');
       });
     }
 
     function setUtilizationData() {
-      MediaReportsService.getUtilizationData(vm.timeSelected, vm.allClusters).then(function (response) {
+      MediaReportsService.getUtilizationData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
           setDummyUtilization();
         } else {
@@ -370,6 +366,19 @@
 
     function isRefresh(tab) {
       return tab === vm.REFRESH;
+    }
+
+    function clusterUpdateFromTooltip() {
+      vm.selectedClusterSneakPeek = vm.availabilityTooltipOptions['tooltipModel'];
+      var selectedCluster = vm.selectedClusterSneakPeek;
+      selectedCluster = selectedCluster.split('.').join('');
+      selectedCluster = selectedCluster.substring(0, selectedCluster.lastIndexOf('  '));
+      _.forEach(vm.clusterOptions, function (val) {
+        selectedCluster = _.includes(val, selectedCluster) ? val : selectedCluster;
+      });
+      vm.selectedClusterSneakPeek = vm.availabilityTooltipOptions.values[0];
+      vm.clusterSelected = selectedCluster;
+      clusterUpdate();
     }
   }
 })();

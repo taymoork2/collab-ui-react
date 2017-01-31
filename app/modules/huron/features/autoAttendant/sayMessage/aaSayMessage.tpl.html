@@ -1,4 +1,4 @@
-<div ng-if="!aaSay.isMediaUploadToggle()">
+<div ng-if="!aaSay.isMediaUploadToggle">
   <div ng-if="!aaSay.isMessageInputOnly()" id ="say" class="panel aa-message-panel">
     <div class="row">
       <div class="small-12 columns">
@@ -29,7 +29,7 @@
     <textarea class="aa-message-textarea" aa-keypress ng-change="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index + menuKeyIndex }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" rows="4" cols="31" maxlength="2000"></textarea>
   </div>
 </div>
-<div ng-if="aaSay.isMediaUploadToggle()">
+<div ng-if="aaSay.isMediaUploadToggle">
   <div ng-if="!aaSay.isMessageInputOnly()" id ="say" class="panel aa-message-panel">
     <div class="row">
       <div class="large-6 small-12 columns aa-message-select-list">

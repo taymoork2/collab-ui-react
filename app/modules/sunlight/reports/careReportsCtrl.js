@@ -69,10 +69,6 @@
     vm.inboundCallFeature = false;
 
     var mediaTypes = ['all', 'chat', 'callback'];
-    //check if inbound-call feature flag is enabled
-    if (vm.inboundCallFeature) {
-      mediaTypes.push("voice");
-    }
     vm.mediaTypeOptions = _.map(mediaTypes, function (name, i) {
       return {
         value: i,
@@ -225,6 +221,19 @@
       CardUtils.resize(500);
     }
 
+    function enableReportingFilters() {
+      if (vm.inboundCallFeature) {
+        mediaTypes.push("voice");
+      }
+      vm.mediaTypeOptions = _.map(mediaTypes, function (name, i) {
+        return {
+          value: i,
+          name: name,
+          label: $translate.instant('careReportsPage.media_type_' + name)
+        };
+      });
+    }
+
     function resetCards(filter) {
       if (vm.currentFilter !== filter) {
         vm.displayEngagement = false;
@@ -241,15 +250,12 @@
       delayedResize();
     }
     $timeout(function () {
-      $q.all({
-        callbackFeature: FeatureToggleService.atlasCareCallbackTrialsGetStatus(),
-        inboundCallFeature: FeatureToggleService.atlasCareInboundTrialsGetStatus()
-      }).then(function (results) {
-        vm.callbackFeature = results.callbackFeature;
-        vm.inboundCallFeature = results.inboundCallFeature;
-        if (vm.callbackFeature || vm.inboundCallFeature) {
+      FeatureToggleService.atlasCareInboundTrialsGetStatus().then(function (enabled) {
+        vm.inboundCallFeature = enabled;
+        if (vm.inboundCallFeature) {
           vm.mediaTypeSelected = vm.mediaTypeOptions[0];
         }
+        enableReportingFilters();
         filtersUpdate();
       });
     }, 30);

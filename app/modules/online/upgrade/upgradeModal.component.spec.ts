@@ -11,7 +11,7 @@ describe('Component: upgradeModal', () => {
       '$state',
       'Auth',
       'Notification',
-      'OnlineUpgradeService'
+      'OnlineUpgradeService',
     );
 
     spyOn(this.$state, 'go');

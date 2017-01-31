@@ -54,14 +54,15 @@
     }
 
     function isInAllowedList(url) {
-      var found = _.find(allowedList, function (p) {
+      var foundInAllowList = _.find(allowedList, function (p) {
         return _.includes(url, p);
       });
-      if (found) {
-        return true;
-      } else {
-        return false;
-      }
+      return foundInAllowList || isUpdatingSelfInCI(url);
+    }
+
+    function isUpdatingSelfInCI(url) {
+      var Authinfo = $injector.get('Authinfo');
+      return _.includes(url, 'identity/scim/' + Authinfo.getOrgId() + '/v1/Users/' + Authinfo.getUserId());
     }
   }
 

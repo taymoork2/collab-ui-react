@@ -16,8 +16,6 @@
     // Initialize filtered arrays for translation directives
     vm.filteredUnassignedNumbers = [];
 
-    vm.showPstnSetup = false;
-
     vm.assignedModel = '';
     vm.unassignedModel = '';
     vm.loading = false;

@@ -14,7 +14,7 @@ export class MemberService {
   constructor(
     private $resource: ng.resource.IResourceService,
     private Authinfo,
-    private HuronConfig
+    private HuronConfig,
   ) {
     this.memberResource = <IMemberResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/members');
   }

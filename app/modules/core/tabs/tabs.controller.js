@@ -18,8 +18,8 @@
     function setActiveTab() {
       resetActiveTabState();
       var tab = _.find(vm.tabs, function (tab) {
-        return matchesLocationPath(tab.link) || _.some(tab.subPages, function (subTab) {
-          return matchesLocationPath(subTab.link);
+        return matchesLocationPath(tab.link) || subLocationPath(tab.link) || _.some(tab.subPages, function (subTab) {
+          return matchesLocationPath(subTab.link) || subLocationPath(subTab.link);
         });
       });
 
@@ -34,6 +34,25 @@
 
     function matchesLocationPath(path) {
       return Utils.comparePaths(path, $location.path());
+    }
+
+    // Checks whether location.path is a sublocation (child page) of one of the tabs
+    function subLocationPath(path) {
+      var locationPath = $location.path();
+      if (!locationPath) {
+        return false;
+      }
+
+      if (_.startsWith(locationPath, '/') || _.startsWith(locationPath, '#')) {
+        locationPath = locationPath.substring(1);
+      }
+
+      var index = locationPath.indexOf('/');
+      if (index > 0) {
+        locationPath = locationPath.substring(0, index);
+      }
+
+      return Utils.comparePaths(path, locationPath);
     }
 
     function resetActiveTabState() {

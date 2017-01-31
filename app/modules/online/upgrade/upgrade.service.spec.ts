@@ -12,7 +12,7 @@ describe('Service: OnlineUpgradeService', () => {
       '$modal',
       'Authinfo',
       'OnlineUpgradeService',
-      'UrlConfig'
+      'UrlConfig',
     );
 
     spyOn(this.Authinfo, 'isOnline');

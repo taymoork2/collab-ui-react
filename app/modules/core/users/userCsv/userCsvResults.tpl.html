@@ -73,7 +73,7 @@
                 tooltip-placement="top"></span>
         </p>
         <div class="error-download" ng-disabled="$ctrl.csvData.model.isProcessing">
-          <csv-download type="error" filename="errors.csv" no-icon analytics-eventname="{{$ctrl.analyticsEventNames.DOWNLOAD_ERRORS}}"
+          <csv-download type="error" filename="errors.csv" no-icon="true" analytics-eventname="{{$ctrl.DOWNLOAD_ERRORS}}"
                         anchor-text="{{::'userManage.bulk.import.exportErrors'|translate}}"></csv-download>
         </div>
       </div>

@@ -17,6 +17,7 @@
     vm.notes = [];
     vm.histories = [];
     vm.loading = true;
+    vm.hisLoading = true;
     vm.$onInit = $onInit;
     vm.onApprove = onApprove;
     vm.onDecline = onDecline;
@@ -30,12 +31,10 @@
 
 
     function $onInit() {
-      $state.current.data.displayName = $translate.instant('gemini.cbgs.overview');
-
       getNotes();
-      getHistories();
       getRemedyTicket();
       getCurrentCallbackGroup();
+      $state.current.data.displayName = $translate.instant('gemini.cbgs.overview');
     }
 
     function onCancelSubmission() {
@@ -100,12 +99,15 @@
           }
           vm.model = resJson.body;
           var status = vm.model.status;
-          vm.isShowCommplet = (status === 'A');
+          vm.isShowReject = status === 'R';
+          vm.isShowCommplet = (gemService.isAvops() && status === 'A');
           vm.model.isEdit = !(status === 'S' || status === 'A');
           vm.isShowDeclineApprove = (gemService.isAvops() && status === 'S');
           vm.isShowCancelSubmission = (gemService.isServicePartner() && (status === 'S'));
           vm.model.status_ = (vm.model.status ? $translate.instant('gemini.cbgs.field.status.' + vm.model.status) : '');
           vm.loading = false;
+
+          getHistories();
         })
         .catch(function (err) {
           Notification.errorResponse(err, 'errors.statusError', { status: err.status });
@@ -136,14 +138,23 @@
     }
 
     function getHistories() {
-      cbgService.getHistories(vm.customerId, groupId)
+      cbgService.getHistories(vm.customerId, groupId, vm.model.groupName)
         .then(function (res) {
           var resJson = _.get(res.content, 'data');
           if (resJson.returnCode) {
             Notification.notify(gemService.showError(resJson.returnCode));
             return;
           }
+          vm.hisLoading = false;
           vm.allHistories = resJson.body;
+          _.forEach(vm.allHistories, function (item) {
+            if (item.action === 'submit_cg_move_site') {
+              var moveSiteMsg = item.siteID + ' ' + $translate.instant('gemini.cbgs.moveFrom') + ' ' + item.objectName + ' to ' + item.objectID;
+              item.objectName = '';
+              item.moveSiteMsg = moveSiteMsg;
+              item.action = $translate.instant('gemini.cbgs.siteMoved');
+            }
+          });
           vm.histories = (_.size(vm.allHistories) <= showHistoriesNum ? vm.allHistories : _.slice(vm.allHistories, 0, showHistoriesNum));
           vm.isShowAllHistories = (_.size(vm.allHistories) > showHistoriesNum);
         });

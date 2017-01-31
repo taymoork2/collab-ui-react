@@ -7,7 +7,7 @@ describe('Service: DirectoryNumberOptionsService', () => {
       '$httpBackend',
       'Authinfo',
       'HuronConfig',
-      'DirectoryNumberOptionsService'
+      'DirectoryNumberOptionsService',
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
 

@@ -22,7 +22,7 @@ describe('Component: directoryNumber', () => {
     this.initModules('huron.directory-number');
     this.injectDependencies(
       '$scope',
-      '$timeout'
+      '$timeout',
     );
     this.$scope.internalRefreshFn = jasmine.createSpy('internalRefreshFn');
     this.$scope.externalRefreshFn = jasmine.createSpy('externalRefreshFn');
@@ -65,7 +65,7 @@ describe('Component: directoryNumber', () => {
       this.view.find(INTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(1).click();
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
         this.controller.internalOptions[1].value,
-        this.controller.externalOptions[0].value
+        this.controller.externalOptions[0].value,
       );
     });
 
@@ -86,7 +86,7 @@ describe('Component: directoryNumber', () => {
       this.view.find(EXTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(1).click();
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
         this.controller.internalOptions[0].value,
-        this.controller.externalOptions[1].value
+        this.controller.externalOptions[1].value,
       );
     });
 
@@ -120,14 +120,14 @@ describe('Component: directoryNumber', () => {
       this.view.find(INTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(1).click(); // has matching externalNumber
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
         this.controller.internalOptions[1].value,
-        this.controller.externalOptions[2].value
+        this.controller.externalOptions[2].value,
       );
 
       this.$scope.onChangeFn.calls.reset();
       this.view.find(INTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(2).click(); // does not have matching externalNumber
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
         this.controller.internalOptions[2].value,
-        this.controller.externalOptions[2].value // not updated because no matching pattern
+        this.controller.externalOptions[2].value, // not updated because no matching pattern
       );
     });
 
@@ -135,7 +135,7 @@ describe('Component: directoryNumber', () => {
       this.view.find(INTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(2).click(); // does not have matching externalNumber
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
         this.controller.internalOptions[2].value,
-        this.controller.externalOptions[0].value // not defined because no matching pattern and never set
+        this.controller.externalOptions[0].value, // not defined because no matching pattern and never set
       );
     });
 
