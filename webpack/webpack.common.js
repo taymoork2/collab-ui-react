@@ -14,7 +14,6 @@ module.exports = (function makeWebpackConfig() {
   config.context = path.resolve('./app');
 
   config.entry = {
-    detectUserAgent: ['../unsupported/detectUserAgent'],
     preload: ['scripts/preload'],
     app: ['bootstrap'],
     styles: ['styles/app'],
