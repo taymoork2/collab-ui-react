@@ -148,4 +148,13 @@ export class FeatureMemberService {
   public getMemberSuggestions(hint: string): ng.IPromise<Member[]> {
     return this.MemberService.getMemberList(hint, false);
   }
+
+  public getMachineAcct(uuid: string): ng.IPromise<any> {
+    let domainMgmtUrl = this.UrlConfig.getDomainManagementUrl(this.Authinfo.getOrgId()) + 'Machines/' + uuid;
+
+    return this.$http.get(domainMgmtUrl, {}).then((response) => {
+      return _.get(response, 'data');
+    });
+  }
+
 }

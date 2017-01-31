@@ -47,10 +47,10 @@
       </div>
       <div class="section__content">
         <div class="pg-search-add">
-          <input id="paging-group-member" type="text" ng-click="$ctrl.resetFilter()" ng-model="$ctrl.memberName"class="cs-input" ng-change="$ctrl.fetchMembers()"
-            typeahead="mem as $ctrl.getDisplayNameInDropdown(mem) for mem in $ctrl.availableMembers | limitTo:10" typeahead-template-url="userTemplate.html"
+          <input id="paging-group-member" type="text" ng-click="$ctrl.resetFilter()" ng-model="$ctrl.memberName"class="cs-input"
+            typeahead="mem as $ctrl.getDisplayNameInDropdown(mem) for mem in $ctrl.fetchMembers($viewValue) | limitTo:10" typeahead-template-url="userTemplate.html"
             typeahead-on-select="$ctrl.selectMembers($item)" placeholder="{{:: 'pagingGroup.editMemberPlaceholder' | translate}}"
-            typeahead-min-length="3" typeahead-wait-ms="200">
+            typeahead-min-length="3" typeahead-wait-ms="300">
           <div class="search-member">
             <i class="icon icon-search"></i>
             <input id="search-member-box" type="text" placeholder="{{'pagingGroup.search' | translate}}" ng-model="$ctrl.searchStr" ng-change="$ctrl.filterList()">
