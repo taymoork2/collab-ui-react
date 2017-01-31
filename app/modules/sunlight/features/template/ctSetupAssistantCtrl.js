@@ -483,8 +483,9 @@
               timezone: vm.scheduleTimeZone.value
             }
           },
+          // NOTE: Do NOT disable callbackConfirmation page as it is required in Bubble app.
           callbackConfirmation: {
-            enabled: false,
+            enabled: true,
             fields: {
               callbackConfirmationMessage: {
                 displayText: "Your callback request has been received."
