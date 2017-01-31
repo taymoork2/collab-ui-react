@@ -2,13 +2,13 @@
   <button type="button" class="close" ng-click="$dismiss()">
     <span class="sr-only" translate="common.close"></span>
   </button>
-  <h5 class="modal-title" translate="hds.editTrialUsers.modalTitle"></h5>
+  <h5 class="modal-title" translate="hds.resources.editTrialUsers.modalTitle"></h5>
 </div>
 
 <div class="modal-body hds-email-input">
-  <h5 translate="hds.editTrialUsers.modalHeading"></h5>
+  <h5 translate="hds.resources.editTrialUsers.modalHeading"></h5>
   <br/>
-  <p translate="hds.editTrialUsers.modalDesc"></p>
+  <p translate="hds.resources.editTrialUsers.modalDesc"></p>
   <br/>
   <tags-input add-on-blur="true"
               on-tag-added="editTrialUsersCtrl.addUser()"
@@ -19,7 +19,7 @@
               max-tags="6" enforce-max-tags
               allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
   <div ng-if="editTrialUsersCtrl.getNumUsersInTagField() > editTrialUsersCtrl.maxTrialUsers">
-    <p translate="hds.editTrialUsers.tooManyUsers" translate-values="{ maxUsers: editTrialUsersCtrl.maxTrialUsers }"></p></span>
+    <p translate="hds.resources.editTrialUsers.tooManyUsers" translate-values="{ maxUsers: editTrialUsersCtrl.maxTrialUsers }"></p></span>
   </div>
 </div>
 <div class="modal-footer">

@@ -6,7 +6,7 @@
     .controller('HDSSettingsController', HDSSettingsController);
 
   //////////////////////////////////////////////////////////////
-  // TODO: remove this notes section innfuture
+  // TODO: remove this notes section in future when backend APIs ready
   // --- Service Status ---
   // Trial/Production mode -- Ok
   // Trial Domain
@@ -23,7 +23,7 @@
     vm.openEditTrialUsersModal = openEditTrialUsersModal;
 
     vm.servicestatus = {
-      title: 'hds.settings.servicestatusTitle'
+      title: 'hds.resources.settings.servicestatusTitle'
     };
 
     var DEFAULT_SERVICE_MODE = vm.TRIAL;

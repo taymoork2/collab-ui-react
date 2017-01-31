@@ -8,8 +8,8 @@
   /* @ngInject */
   function EditTrialUsersController($translate, MailValidatorService, Notification) {
     var vm = this;
-    vm.emailTrialUsers = ["user1@cisco.com", "user2@cisco.com", "user3@cisco.com", "user4@cisco.com", "user5@cisco.com"];
-    vm.localizedAddEmailWatermark = $translate.instant('hds.addTrialUsers.emailNotificationsWatermark');
+    vm.emailTrialUsers = ["user1@cisco.com", "user2@cisco.com", "user3@cisco.com", "user4@cisco.com", "user5@cisco.com"]; // TODO: rm data when APIs ready
+    vm.localizedAddEmailWatermark = $translate.instant('hds.resources.addTrialUsers.emailNotificationsWatermark');
     vm.localizedAddEmailWatermark = "add new ...";
     vm.hasTrialUsers = true;
     vm.removeUser = removeUser;
