@@ -1,11 +1,12 @@
 <div ui-view="header"></div>
 
-<cs-sp-container class="hercules-fix-paragraphs hercules-settings-table">
+<cs-sp-container class="hercules-fix-paragraphs">
 
   <alarm-list-section alarms="$ctrl.cluster.aggregates.alarms"
                       ng-if="!$ctrl.isEmptyExpresswayCluster()"></alarm-list-section>
 
   <schedule-info-section cluster="$ctrl.cluster"
+                         cluster-type="$ctrl.clusterType"
                          has-f237-feature-toggle="$ctrl.hasF237FeatureToggle"
                          ng-if="!$ctrl.isEmptyExpresswayCluster()"></schedule-info-section>
 
@@ -16,7 +17,7 @@
   <hybrid-services-node-list cluster="$ctrl.cluster"
                              connector-type="$ctrl.connectorType"
                              ng-if="!$ctrl.isEmptyExpresswayCluster()"></hybrid-services-node-list>
-øløl
+
   <complete-registration-or-remove-expressway
                          cluster="$ctrl.cluster"
                          connector-type="$ctrl.connectorType"

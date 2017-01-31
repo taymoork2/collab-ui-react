@@ -1,6 +1,6 @@
 import { IClusterV1 } from 'modules/hercules/herculesInterfaces';
 
-interface IClusterIdStateParam extends ng.ui.IStateParamsService {
+interface IClusterSidepanelStateParam extends ng.ui.IStateParamsService {
   clusterId: string;
   connectorType: string;
 }
@@ -9,14 +9,15 @@ class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
 
   private clusterId: string;
   private connectorType: string;
-  private hasF237FeatureToggle = false;
+  private hasF237FeatureToggle: boolean = false;
   private cluster: IClusterV1;
-  private managementCluster: IClusterV1;
+
+  public clusterType: string;
 
   /* @ngInject */
   constructor(
     private $scope: ng.IScope,
-    private $stateParams: IClusterIdStateParam,
+    private $stateParams: IClusterSidepanelStateParam,
     private ClusterService,
     private FeatureToggleService,
   ) {
@@ -33,13 +34,9 @@ class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
     this.connectorType = this.$stateParams.connectorType;
 
     this.$scope.$watch(() => {
-      return [
-        this.ClusterService.getCluster(this.connectorType, this.clusterId),
-        this.ClusterService.getCluster('c_mgmt', this.clusterId),
-      ];
+      return this.ClusterService.getCluster(this.connectorType, this.clusterId);
     }, newValue => {
-      this.cluster = newValue[0];
-      this.managementCluster = newValue[1];
+      this.cluster = newValue;
     }, true);
   }
 
@@ -52,4 +49,7 @@ class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
 export class ClusterSidepanelOverviewComponent implements ng.IComponentOptions {
   public controller = ClusterSidepanelOverviewCtrl;
   public templateUrl = 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview.html';
+  public bindings = {
+    clusterType: '<',
+  };
 }

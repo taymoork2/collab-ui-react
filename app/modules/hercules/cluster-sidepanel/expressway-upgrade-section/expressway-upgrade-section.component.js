@@ -28,8 +28,6 @@
     vm.$onChanges = $onChanges;
 
     function $onInit() {
-
-
       $scope.$watch(function () {
         return [
           ClusterService.getCluster(vm.connectorType, vm.clusterId),

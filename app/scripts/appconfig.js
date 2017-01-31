@@ -2944,23 +2944,23 @@
             },
           })
          .state('cluster-details', {
-            parent: 'sidepanel',
-            views: {
-              'sidepanel@': {
-                template: '<cluster-sidepanel-overview></cluster-sidepanel-overview>'
-              },
-              'header@cluster-details': {
-                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'
-              }
-            },
-            data: {
-              displayName: 'Overview'
-            },
-            params: {
-              clusterId: null,
-              connectorType: null
-            },
-          })
+           parent: 'sidepanel',
+           views: {
+             'sidepanel@': {
+               template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'"></cluster-sidepanel-overview>'
+             },
+             'header@cluster-details': {
+               templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'
+             }
+           },
+           data: {
+             displayName: 'Overview'
+           },
+           params: {
+             clusterId: null,
+             connectorType: null
+           },
+         })
           .state('management-connector-details', {
             parent: 'sidepanel',
             views: {

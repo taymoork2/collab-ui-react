@@ -9,6 +9,7 @@ interface ISchedule {
 export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController {
 
   private cluster: IClusterV1;
+  public clusterType: string;
 
   public hasF237FeatureToggle: boolean = false;
   public releaseChannelName: string;
@@ -72,6 +73,7 @@ export class ScheduleInfoSectionComponent implements ng.IComponentOptions {
   public templateUrl = 'modules/hercules/cluster-sidepanel/schedule-info/schedule-info.html';
   public bindings = {
     cluster: '<',
+    clusterType: '<',
     hasF237FeatureToggle: '<',
   };
 }
