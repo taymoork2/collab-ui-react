@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($q, $scope, $state, $translate, $window, Analytics, Config, FeatureToggleService, HuronCustomer, Notification, TrialContextService, TrialPstnService, TrialService, ValidationService, Orgservice) {
+  function TrialAddCtrl($q, $scope, $state, $translate, $window, Analytics, Config, FeatureToggleService, HuronCountryService, HuronCustomer, Notification, TrialContextService, TrialPstnService, TrialService, ValidationService, Orgservice) {
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
     var _careDefaultQuantity = 15;
@@ -61,6 +61,7 @@
     vm.devicesModal = _.find(vm.trialStates, {
       name: 'trialAdd.call'
     });
+    vm.setDefaultCountry = setDefaultCountry;
 
     function validateField($viewValue, scope, key, uniqueFlag, errorMsg) {
       // Show loading glyph
@@ -495,7 +496,8 @@
       $q.all({
         atlasCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         atlasContextServiceTrials: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
-        atlasTrialsShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus()
+        atlasTrialsShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),
+        huronCountryList: HuronCountryService.getCountryList(),
       })
         .then(function (results) {
           vm.showRoomSystems = true;
@@ -508,6 +510,7 @@
           vm.meetingTrial.enabled = true;
           vm.showContextServiceTrial = true;
           vm.atlasTrialsShipDevicesEnabled = results.atlasTrialsShipDevices;
+          vm.defaultCountryList = results.huronCountryList;
           updateTrialService(messageTemplateOptionId);
 
           vm.showCare = results.atlasCareTrials;
@@ -809,8 +812,13 @@
       $state.modal.dismiss();
       sendToAnalytics(Analytics.eventNames.CANCEL_MODAL);
     }
+
     function sendToAnalytics(eventName, extraData) {
       Analytics.trackTrialSteps(eventName, vm.trialData, extraData);
+    }
+
+    function setDefaultCountry(country) {
+      vm.details.country = country;
     }
   }
 })();

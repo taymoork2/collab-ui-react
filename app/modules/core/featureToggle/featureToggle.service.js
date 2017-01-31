@@ -164,7 +164,8 @@
       avrilVmEnable: 'avril-vm-enable',
       avrilVoicemaill1249: 'avril-voicemail-l1249',
       cloudberryPersonalMode: 'ce-enable-personal-mode',
-      autoAnswer: 'huron-auto-answer'
+      autoAnswer: 'huron-auto-answer',
+      huronFederatedSparkCall: 'huron-federated-spark-call',
     };
 
     var toggles = {};
