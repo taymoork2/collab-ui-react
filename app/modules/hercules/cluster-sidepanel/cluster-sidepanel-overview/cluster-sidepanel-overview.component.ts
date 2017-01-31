@@ -33,11 +33,13 @@ class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
     this.clusterId = this.$stateParams.clusterId;
     this.connectorType = this.$stateParams.connectorType;
 
-    this.$scope.$watch(() => {
-      return this.ClusterService.getCluster(this.connectorType, this.clusterId);
-    }, newValue => {
-      this.cluster = newValue;
-    }, true);
+    if (this.clusterId && this.connectorType) {
+      this.$scope.$watch(() => {
+        return this.ClusterService.getCluster(this.connectorType, this.clusterId);
+      }, newValue => {
+        this.cluster = newValue;
+      }, true);
+    }
   }
 
   public isEmptyExpresswayCluster(): boolean {

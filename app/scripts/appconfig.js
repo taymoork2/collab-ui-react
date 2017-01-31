@@ -2980,8 +2980,20 @@
               connectorType: 'c_mgmt'
             }
           })
+          .state('management-connector-details.alarm-details', {
+            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details/alarm-details.html',
+            controller: 'ExpresswayAlarmController',
+            controllerAs: 'alarmCtrl',
+            data: {
+              displayName: 'Alarm Details'
+            },
+            params: {
+              alarm: null,
+              host: null
+            }
+          })
           .state('cluster-details.alarm-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/alarms-details/alarm-details.html',
+            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details/alarm-details.html',
             controller: 'ExpresswayAlarmController',
             controllerAs: 'alarmCtrl',
             data: {

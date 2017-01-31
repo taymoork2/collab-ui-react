@@ -8,9 +8,6 @@
           <a ng-if="connector.connectorType === 'c_mgmt'"
              ui-sref="management-connector-details({host: host.hostname, hostSerial: connector.hostSerial, clusterId: $ctrl.cluster.id, connectorType: 'c_mgmt'})"
           >
-            <!--<i class="icon icon-circle status-indicator"-->
-               <!--ng-class="$ctrl.getSeverity(connector.state).cssClass"-->
-               <!--ng-if="!$ctrl.hasConnectorAlarm(connector)"></i>-->
             <i class="icon icon-circle status-indicator"
                ng-class="$ctrl.getSeverity(connector).cssClass"></i>
             <i class="icon icon-circle status-indicator danger"
@@ -24,11 +21,6 @@
              ui-sref="cluster-details.host-details({host: host.hostname, hostSerial: connector.hostSerial, clusterId: $ctrl.cluster.id, connectorType: connector.connectorType})"
           >
             <i class="icon icon-circle status-indicator" ng-class="$ctrl.getSeverity(connector).cssClass"></i>
-            <!--<i class="icon icon-circle status-indicator"-->
-               <!--ng-class="$ctrl.getSeverity(connector.state).cssClass"-->
-               <!--ng-if="!$ctrl.hasConnectorAlarm(connector)"></i>-->
-            <!--<i class="icon icon-circle status-indicator danger"-->
-               <!--ng-if="$ctrl.hasConnectorAlarm(connector)" ></i>-->
             <span class="feature-name">{{$ctrl.localizedConnectorName}}</span>
             <span class="feature-status">{{connector.runningVersion}}</span>
             <i class="feature-status feature-arrow"></i>
