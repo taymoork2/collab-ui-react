@@ -4,7 +4,7 @@
   angular.module('Hercules')
     .component('clusterCard', {
       bindings: {
-        cluster: '<'
+        cluster: '<',
       },
       templateUrl: 'modules/hercules/fusion-pages/components/cluster-card.html',
       controller: ClusterCardController,
@@ -16,6 +16,7 @@
 
     ctrl.countHosts = countHosts;
     ctrl.getHostnames = getHostnames;
+    ctrl.openNodes = openNodes;
     ctrl.openService = openService;
     ctrl.openSettings = openSettings;
     ctrl.hasServices = hasServices;
@@ -23,13 +24,16 @@
     ctrl.openDeleteConfirm = openDeleteConfirm;
     ctrl.formatTimeAndDate = FusionClusterService.formatTimeAndDate;
     ctrl.hasResourceGroupFeatureToggle = false;
+    ctrl.hasNodesViewFeatureToggle = false;
     ctrl.getLocalizedReleaseChannel = FusionUtils.getLocalizedReleaseChannel;
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
       .then(function (supported) {
-        if (supported) {
-          ctrl.hasResourceGroupFeatureToggle = true;
-        }
+        ctrl.hasResourceGroupFeatureToggle = supported;
+      });
+    FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView)
+      .then(function (supported) {
+        ctrl.hasNodesViewFeatureToggle = supported;
       });
 
     function getHostnames(cluster) {
@@ -70,9 +74,25 @@
       }
     }
 
+    function openNodes(type, id) {
+      if (type === 'c_mgmt') {
+        $state.go('expressway-page.nodes', {
+          id: id
+        });
+      } else if (type === 'mf_mgmt') {
+        $state.go('mediafusion-nodes', {
+          id: id
+        });
+      } else if (type === 'hds_app') {
+        $state.go('hds-cluster-nodes', {
+          id: id
+        });
+      }
+    }
+
     function openSettings(type, id) {
       if (type === 'c_mgmt') {
-        $state.go('expressway-settings', {
+        $state.go('expressway-page.settings', {
           id: id
         });
       } else if (type === 'mf_mgmt') {

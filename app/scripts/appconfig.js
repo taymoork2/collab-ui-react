@@ -2651,19 +2651,48 @@
               hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
               },
-              },
             }
           })
           // Cluster settings
-          .state('expressway-settings', {
-            url: '/services/cluster/expressway/:id/settings',
-            templateUrl: 'modules/hercules/fusion-pages/expressway-settings.html',
-            controller: 'ExpresswayClusterSettingsController',
-            controllerAs: 'clusterSettings',
+          .state('expressway-page', {
+            abstract: true,
+            url: '/services/cluster/expressway/:id',
+            controller: 'ExpresswayClusterPageController',
+            controllerAs: 'vm',
             parent: 'main',
+            templateUrl: 'modules/hercules/expressway-cluster-page/expressway-cluster-page.html',
             resolve: {
               hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
+              hackishWayOfPassingNameUpdateUp: function () {
+                return {};
+              }
+            }
+          })
+          .state('expressway-page.settings', {
+            url: '/settings',
+            views: {
+              expresswayPageView: {
+                controller: 'ExpresswayClusterSettingsController',
+                controllerAs: 'clusterSettings',
+                templateUrl: 'modules/hercules/fusion-pages/expressway-settings.html',
+              }
+            }
+          })
+          .state('expressway-page.nodes', {
+            url: '/nodes',
+            views: {
+              expresswayPageView: {
+                template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+              }
+            },
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
               },
             }
           })

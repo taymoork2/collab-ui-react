@@ -161,6 +161,7 @@
       csdmATA: 'csdm-ata',
       csdmHybridCall: 'csdm-hybrid-call',
       atlasF237ResourceGroup: 'atlas-f237-resource-group',
+      atlasHybridNodesView: 'atlas-hybrid-nodes-view',
       atlasHybridVoicemail: 'atlas-hybrid-voicemail',
       gemServicesTab: 'gem-services-tab',
       gemCCA: 'gem-cloud-connected-audio',

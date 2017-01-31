@@ -2,7 +2,7 @@
   <article>
     <header>
       <h4>{{::$ctrl.cluster.name}}</h4>
-      <div ng-if="!$ctrl.cluster.isEmptyExpresswayCluster" class="cluster-list-hosts" tooltip-html-unsafe="{{$ctrl.getHostnames($ctrl.cluster)}}" tooltip-trigger="mouseenter" tooltip-placement="bottom">
+      <div ng-if="!$ctrl.cluster.isEmptyExpresswayCluster && !$ctrl.hasNodesViewFeatureToggle" class="cluster-list-hosts" tooltip-html-unsafe="{{$ctrl.getHostnames($ctrl.cluster)}}" tooltip-trigger="mouseenter" tooltip-placement="bottom">
         <div translate="hercules.fusion.list.nodes" translate-values="{count: $ctrl.countHosts($ctrl.cluster)}" translate-interpolation="messageformat"></div>
       </div>
     </header>
@@ -52,7 +52,11 @@
         </div>
       </div>
     </div>
-    <footer ng-if="!$ctrl.cluster.isEmptyExpresswayCluster">
+    <footer ng-if="!$ctrl.cluster.isEmptyExpresswayCluster && !$ctrl.hasNodesViewFeatureToggle">
+      <a ng-click="$ctrl.openSettings($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.settings"></a>
+    </footer>
+    <footer class="double-footer" ng-if="!$ctrl.cluster.isEmptyExpresswayCluster && $ctrl.hasNodesViewFeatureToggle">
+      <a ng-click="$ctrl.openNodes($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.nodesBtn"></a>
       <a ng-click="$ctrl.openSettings($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.settings"></a>
     </footer>
 

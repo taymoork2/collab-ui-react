@@ -434,7 +434,8 @@
         'services-overview',
         'resource-group-settings',
         'cluster-list',
-        'hds.settings', //Temporary  entitlement until updated in org setting
+        'expressway-page',
+        'hds.settings', // Temporary  entitlement until updated in org setting
         'hds',
         'hds.list',
         'hds-cluster-details',
@@ -453,14 +454,14 @@
         'add-resource',
         'call-service',
         'cluster-list',
-        'expressway-settings',
+        'expressway-page',
         'services-overview',
       ],
       'squared-fusion-cal': [
         'add-resource',
         'calendar-service',
         'cluster-list',
-        'expressway-settings',
+        'expressway-page',
         'services-overview',
       ],
       'squared-fusion-gcal': [
@@ -511,7 +512,7 @@
         'cluster-list',
         'devices',
         'places',
-        'expressway-settings',
+        'expressway-page',
         'fusion',
         'hurondetails',
         'huronsettings',

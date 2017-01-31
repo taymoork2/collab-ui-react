@@ -1,0 +1,39 @@
+@import 'styles/toolkit/colors';
+
+hybrid-services-nodes-page {
+  display: block;
+
+  .spinner-container {
+    margin-top: 2rem;
+  }
+
+  table thead tr {
+    border-bottom: 1px solid transparent;
+  }
+
+  table tbody tr {
+    border-bottom: 1px solid $gray-light-2;
+  }
+
+  table thead tr th {
+    font-size: 16px;
+    color: $gray-dark-2;
+    background-color: $gray-light-4;
+    border-right: 1px solid $gray-light-3;
+
+    &:last-child {
+      border: 0;
+    }
+  }
+
+  table thead tr th,
+  table tbody tr td {
+    padding: 10px 16px 10px 20px;
+    line-height: 1.5rem;
+  }
+
+  .hostname {
+    color: $gray-dark-3;
+    background-color: $gray-light-2;
+  }
+}
