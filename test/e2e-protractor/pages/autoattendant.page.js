@@ -136,7 +136,7 @@ var AutoAttendantPage = function () {
   this.decisionCallerNumberTextArea = element.all(by.name('callerNumberCalled')).first();
 
   this.decisionThen = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="thenDecision"] + div a.select-toggle'));
-  this.decisionThenDropDownOptions = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="thenDecision"] + div div.dropdown-menu')).all(by.tagName('li')).get(3);
+  this.decisionThenDropDownOptions = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.css('select[name="thenDecision"] + div div.dropdown-menu')).all(by.tagName('li')).get(2);
   this.decisionPhoneNumber = element(by.css('div.aa-panel-body[name="Decision"]')).element(by.name('phoneinput'));
 
   this.callerInputFirst = element.all(by.css('div.aa-panel-body[name="Caller Input"]')).all(by.cssContainingText("h3", "Caller Input")).first();
