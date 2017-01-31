@@ -15,14 +15,14 @@ describe('UserListCtrl: Ctrl', function () {
       CUSTOMER: 2
     };
 
-    this.photoUsers = getJSONFixture('core/json/users/userlist.controller.json');
-    this.currentUser = getJSONFixture('core/json/currentUser.json');
-    this.listUsers = getJSONFixture('core/json/users/listUsers.json');
-    this.listUsersMore = getJSONFixture('core/json/users/listUsersMore.json');
-    this.listAdmins = getJSONFixture('core/json/users/listAdmins.json');
-    this.listAdminsMore = getJSONFixture('core/json/users/listAdminsMore.json');
-    this.listPartners = getJSONFixture('core/json/users/listPartners.json');
-    this.getOrgJson = getJSONFixture('core/json/organizations/Orgservice.json').getOrg;
+    this.photoUsers = _.clone(getJSONFixture('core/json/users/userlist.controller.json'));
+    this.currentUser = _.clone(getJSONFixture('core/json/currentUser.json'));
+    this.listUsers = _.clone(getJSONFixture('core/json/users/listUsers.json'));
+    this.listUsersMore = _.clone(getJSONFixture('core/json/users/listUsersMore.json'));
+    this.listAdmins = _.clone(getJSONFixture('core/json/users/listAdmins.json'));
+    this.listAdminsMore = _.clone(getJSONFixture('core/json/users/listAdminsMore.json'));
+    this.listPartners = _.clone(getJSONFixture('core/json/users/listPartners.json'));
+    this.getOrgJson = _.clone(getJSONFixture('core/json/organizations/Orgservice.json')).getOrg;
   }
 
   function initDependencySpies() {
@@ -49,10 +49,10 @@ describe('UserListCtrl: Ctrl', function () {
       } else {
         response = startIndex > 0 ? _this.listUsersMore : _this.listUsers;
       }
-      callback(_.extend(response, successData), 200, searchStr);
+      callback(_.assignIn({}, response, successData), 200, searchStr);
     });
     spyOn(this.UserListService, 'listPartners').and.callFake(function (orgId, callback) {
-      callback(_.extend(_this.listPartners, successData), 200);
+      callback(_.assignIn({}, _this.listPartners, successData), 200);
     });
     spyOn(this.UserListService, 'getUserCount').and.returnValue(this.$q.resolve(100));
     spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback) {
@@ -129,17 +129,14 @@ describe('UserListCtrl: Ctrl', function () {
     });
 
     it('should populate list with users, admins, and partners when querying from 0 index', function () {
-      var _this = this;
-      var promise = this.$scope.getUserList()
-        .then(function () {
-          expect(_this.$scope.userList.allUsers).toEqual(_this.listUsers.Resources);
-          expect(_this.$scope.userList.adminUsers).toEqual(_this.listAdmins.Resources);
-          expect(_this.$scope.userList.partnerUsers).toEqual(_this.listPartners.partners);
-        });
-      expect(promise).toBeResolved();
+      expect(this.$scope.userList.allUsers).toEqual(this.listUsers.Resources);
+      expect(this.$scope.userList.adminUsers).toEqual(this.listAdmins.Resources);
+      expect(this.$scope.userList.partnerUsers).toEqual(this.listPartners.partners);
+      expect(this.UserListService.listUsers).toHaveBeenCalledTimes(2); // for getUsers() and getAdmins()
+      expect(this.$scope.allowLoadMoreData).toEqual(false); // should be false after totalResults are returned
     });
 
-    it('should return additional pages of data when they exist', function () {
+    it('should allow more data to load until totalResults is reached', function () {
       var _this = this;
 
       var scrollingListUsers = this.listUsers.Resources.concat(this.listUsersMore.Resources);
@@ -147,13 +144,38 @@ describe('UserListCtrl: Ctrl', function () {
       var scrollingListAdmins = this.listAdmins.Resources.concat(this.listAdminsMore.Resources);
       this.listAdmins.totalResults = _.size(scrollingListAdmins);
 
-      var promise = this.$scope.getUserList(100)
+      expect(this.$scope.allowLoadMoreData).toEqual(false);
+      var promise = this.$scope.getUserList()
+        .then(function () {
+          expect(_this.$scope.userList.allUsers).toEqual(_this.listUsers.Resources);
+          expect(_this.$scope.userList.adminUsers).toEqual(_this.listAdmins.Resources);
+          expect(_this.$scope.userList.partnerUsers).toEqual(_this.listPartners.partners);
+        });
+      expect(promise).toBeResolved();
+
+      expect(this.$scope.allowLoadMoreData).toEqual(true); // totalResults is 4, but only returned 2
+
+      promise = this.$scope.getUserList(100) // > 0
         .then(function () {
           expect(_this.$scope.userList.allUsers).toEqual(scrollingListUsers);
           expect(_this.$scope.userList.adminUsers).toEqual(scrollingListAdmins);
           expect(_this.$scope.userList.partnerUsers).toEqual(_this.listPartners.partners);
         });
       expect(promise).toBeResolved();
+      expect(this.$scope.allowLoadMoreData).toEqual(false); // have returned all 4 results
+    });
+
+    it('should not allow more data to load if an error occurs while listing users', function () {
+      this.UserListService.listUsers.and.callFake(function (startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins) {
+        callback({
+          success: !!getAdmins, // true for admins, false for users
+        });
+      });
+
+      expect(this.$scope.allowLoadMoreData).toEqual(false);
+      var promise = this.$scope.getUserList();
+      expect(promise).toBeRejected();
+      expect(this.$scope.allowLoadMoreData).toEqual(false); // does not continue to load data from `gridApi.infiniteScroll.on.needLoadMoreData`
     });
   });
 
@@ -231,6 +253,10 @@ describe('UserListCtrl: Ctrl', function () {
 
   describe('getUserList sort event', function () {
     beforeEach(function () {
+      // set totalResults greater than response so sortDirection() triggers listUsers()
+      this.listUsers = _.assignIn({}, this.listUsers, {
+        totalResults: '4',
+      });
       initController.apply(this);
     });
 
