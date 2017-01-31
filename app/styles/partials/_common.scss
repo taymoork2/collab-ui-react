@@ -112,11 +112,15 @@ a[href='http://www.amcharts.com/javascript-charts/'] {
 }
 
 .messagebox-backdrop {
-  background-image: url('../images/bg_3515.jpg');
+  background-image: url('../images/spaceballs-bg.png');
 
   .message-box::before {
-    background-image: url('../images/bg_3515.jpg');
+    background-image: url('../images/spaceballs-bg.png');
   }
+}
+
+.messagebox-backdrop__footer, .messagebox-backdrop__footer > div > a {
+    color: $gray-light-1;
 }
 
 .actions-menu.open .dropdown-menu,

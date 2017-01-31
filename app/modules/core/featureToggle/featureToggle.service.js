@@ -6,7 +6,6 @@
   /* @ngInject */
   function FeatureToggleService($http, $q, $resource, $rootScope, $state, Authinfo, HuronConfig, UrlConfig, Orgservice) {
     var features = {
-      requireAcceptTos: 'atlas-tos-required',
       dirSync: 'atlas-dir-sync',
       atlasCareTrials: 'atlas-care-trials',
       atlasCareCallbackTrials: 'atlas-care-callback-trials',
@@ -36,6 +35,7 @@
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasSharedMeetings: 'atlas-shared-meetings',
       atlasSharedMeetingsReports: 'atlas-shared-meetings-reports',
+      atlasSuppressOnboardingEmail: 'atlas-suppress-onboarding-email',
       atlasTrialsShipDevices: 'atlasTrialsShipDevices',
       atlasDeviceUsageReportV2: 'atlas-device-usage-report-v2',
       atlasStartTrialForPaid: 'atlas-start-trial-for-paid',
