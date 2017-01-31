@@ -1468,7 +1468,6 @@
     "serverDown": "Authorization failed. Server may be down, please contact system administrator. You will automatically be logged out in a few seconds.",
     "expired": "Your session is expired or unauthorized. You will automatically be logged out in a few seconds. Please login again to continue using the service.",
     "unsupported": "You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.",
-    "unsupportedUserAgent": "You are using an unsupported internet browser",
     "statusError": "Request failed with status: {{status}}.",
     "csvError": "Export failed.",
     "videoError": "There is a problem with the video you are trying to play.",
