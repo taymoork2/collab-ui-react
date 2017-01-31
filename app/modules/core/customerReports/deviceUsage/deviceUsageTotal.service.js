@@ -244,9 +244,9 @@
       return sequence;
     }
 
-    function extractStats(reduced, count) {
+    function extractStats(reduced) {
       var accounts = extractAndSortAccounts(reduced);
-      var n = count || 50;
+      var n = 20;
       var stats = {
         most: _.take(accounts, n),
         least: _.takeRight(accounts, n).reverse(),
