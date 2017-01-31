@@ -195,17 +195,15 @@
       }).$promise
         .then(function (remoteDestinationInfo) {
           var snrInfo = angular.copy(telephonyInfo.snrInfo);
+          snrInfo.remoteDestinations = null;
+          snrInfo.singleNumberReachEnabled = false;
           if (remoteDestinationInfo) {
             snrInfo.remoteDestinations = remoteDestinationInfo;
-            if (remoteDestinationInfo !== null && remoteDestinationInfo !== undefined && remoteDestinationInfo.length > 0) {
-              snrInfo.singleNumberReachEnabled = true;
+            if (remoteDestinationInfo !== undefined && remoteDestinationInfo.length > 0) {
+              snrInfo.singleNumberReachEnabled = (remoteDestinationInfo[0].enableMobileConnect === "true");
               snrInfo.destination = remoteDestinationInfo[0].destination;
               snrInfo.answerTooLateTimer = remoteDestinationInfo[0].answerTooLateTimer;
-            } else {
-              snrInfo.singleNumberReachEnabled = false;
             }
-          } else {
-            snrInfo.remoteDestinations = null;
           }
           updateSnr(snrInfo);
         })
