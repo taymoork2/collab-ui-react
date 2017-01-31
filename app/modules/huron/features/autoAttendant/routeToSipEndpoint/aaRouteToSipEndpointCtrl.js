@@ -10,6 +10,7 @@
 
     var vm = this;
     vm.model = {};
+    vm.uniqueCtrlIdentifer = '';
 
     vm.model.sipInput = '';
     vm.uiMenu = {};
@@ -30,10 +31,9 @@
     /////////////////////
 
     function isSipValid() {
-      if (vm.model.sipInput == '' || vm.model.sipInput == 'sip:') {
-        return false;
-      }
-      return true;
+      var pattern = new RegExp("@");
+      var result = pattern.test(vm.model.sipInput);
+      return result;
     }
 
     function populateUiModel() {
@@ -52,7 +52,6 @@
 
     function saveUiModel() {
       AACommonService.setPhoneMenuStatus(true);
-      AACommonService.setSipStatus(isSipValid());
       var entry;
       if (fromRouteCall) {
         entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
@@ -62,8 +61,22 @@
       entry.actions[0].setValue(vm.model.sipInput);
     }
 
-    function activate() {
+    $scope.$watch('aaRouteToSip.model.sipInput', function () {
+      if (isSipValid()) {
+        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
+      } else {
+        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, false);
+      }
+    });
 
+    $scope.$on(
+      "$destroy",
+      function () {
+        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
+      }
+    );
+
+    function activate() {
       if ($scope.fromRouteCall) {
         var ui = AAUiModelService.getUiModel();
         vm.uiMenu = ui[$scope.schedule];
@@ -83,6 +96,9 @@
               delete vm.menuEntry.actions[0].queueSettings;
             }
           }
+          vm.menuEntry.routeToId = $scope.$id;
+          // used by aaValidationService to identify this menu
+          vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, vm.menuEntry.routeToId);
         }
 
       } else {
@@ -94,7 +110,11 @@
           var action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToSipEndpoint, '');
           vm.menuKeyEntry.addAction(action);
         }
+        vm.menuKeyEntry.routeToId = $scope.$id;
 
+        // used by aaValidationService to identify this menu
+
+        vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, vm.menuKeyEntry.routeToId);
       }
 
       if ($scope.fromFallback) {

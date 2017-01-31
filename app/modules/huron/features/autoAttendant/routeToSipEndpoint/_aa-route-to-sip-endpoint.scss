@@ -1,3 +1,12 @@
 .aa-sip-input {
   width: 100%;
 }
+
+.error {
+  border-color: $color-alerts-base;
+  background-color: $color-alerts-lighter;
+}
+
+.err-msg {
+   color: $color-alerts-base;
+}

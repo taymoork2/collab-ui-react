@@ -638,7 +638,7 @@
         FeatureToggleService.supports(FeatureToggleService.features.huronAAClioMedia).then(function (result) {
           AACommonService.setClioToggle(result);
         });
-        FeatureToggleService.supports(FeatureToggleService.features.huronAASIPEndpoint).then(function (result) {
+        FeatureToggleService.supports(FeatureToggleService.features.huronAARouteRoom).then(function (result) {
           AACommonService.setRouteSIPAddressToggle(result);
         });
       }();
