@@ -1,0 +1,38 @@
+<!-- header -->
+<div class="modal-header">
+  <button
+    type="button"
+    class="close"
+    ng-click="$dismiss()">
+  </button>
+  <h3 class="modal-title" translate="addDeviceWizard.confirmRoomDeviceOnly.roomDeviceOnly"></h3>
+</div>
+
+<!-- body -->
+<div
+  class="modal-body">
+  <p>
+    <span translate="addDeviceWizard.confirmRoomDeviceOnly.noSparkCallService"></span>
+  </p>
+  <br>
+  <p>
+    <span translate="addDeviceWizard.confirmRoomDeviceOnly.roomDeviceOnlyExplanation"></span>
+  </p>
+</div>
+
+<!-- footer -->
+<div
+  class="modal-footer">
+  <button
+    class="btn"
+    ng-click="$dismiss()">
+    <span
+      translate="common.cancel">
+    </span>
+  </button>
+  <button
+    class="btn btn--negative"
+    sq-click-promise="confirmRoomDeviceOnly.next()" >
+    <span translate="common.ok"></span>
+  </button>
+</div>

@@ -393,6 +393,19 @@
               wizard: null
             }
           })
+          .state('addDeviceFlow.confirmRoomDeviceOnly', {
+            parent: 'modalDialog',
+            views: {
+              'modal@': {
+                controller: 'ConfirmRoomDeviceOnlyCtrl',
+                controllerAs: 'confirmRoomDeviceOnly',
+                templateUrl: 'modules/squared/devices/addDeviceNew/ConfirmRoomDeviceOnlyTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
           .state('addDeviceFlow.chooseDeviceType', {
             parent: 'modal',
             views: {
