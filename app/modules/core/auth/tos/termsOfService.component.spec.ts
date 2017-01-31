@@ -33,7 +33,7 @@ describe('TermsOfService', () => {
     spyOn(this.TOSService, 'acceptTOS').and.returnValue(this.$q.when());
     spyOn(this.TOSService, 'hasAcceptedTOS').and.returnValue(false);
     this.$window.frames['tos-frame'] = {
-      document: '<html><head><body></body></head></html>',
+      document: document.implementation.createHTMLDocument('tos-frame'),
     };
   }
 
@@ -89,6 +89,12 @@ describe('TermsOfService', () => {
       spyOn(this.controller, 'disagree');
     });
 
+    it('should have content in the ToS iframe', function () {
+      let iframeDoc = <Document>this.$window.frames['tos-frame'].document;
+      let iframe = $(iframeDoc);
+      expect(iframe.find('.heading img')).toExist();
+    });
+
     it('should have Agree and Disagree buttons', function () {
       expect(this.view.find(DISAGREE_BTN).find(AGREE_BTN_TEXT)).toHaveLength(1);
       expect(this.view.find(AGREE_BTN).find(DISAGREE_BTN_TEXT)).toHaveLength(1);
@@ -117,6 +123,28 @@ describe('TermsOfService', () => {
       expect(btn).not.toBeDisabled();
       btn.click();
       expect(this.controller.agree).toHaveBeenCalled();
+    });
+
+    // note - this test does not work in PhantomJS :(
+    xit('should only enable Accept button when user has scrolled to bottom of ToS', function () {
+      let btn = this.view.find(AGREE_BTN);
+
+      expect(this.controller.hasReadAggreement).toBeFalsy();
+      expect(btn).toBeDisabled();
+
+      // trigger a scroll event to recalc if we have scrolled to the bottom
+      // since iframe container height will be bigger then the content height (0),
+      // this acts as if the user scrolled to the bottom of the ToS
+      this.view.find('.tos-container').height(500);
+      let frame = this.$window.frames['tos-frame'];
+      let iframeDoc = <Document>frame.document;
+      let scrollEvent = iframeDoc.createEvent( 'CustomEvent' ); // MUST be 'CustomEvent'
+      scrollEvent.initCustomEvent('scroll', false, false, null);
+      iframeDoc.dispatchEvent(scrollEvent);
+
+      expect(this.controller.hasReadAggreement).toBeTruthy();
+      expect(btn).not.toBeDisabled();
+
     });
   });
 });
