@@ -16,10 +16,9 @@
               placeholder={{editTrialUsersCtrl.localizedAddEmailWatermark}}
               ng-model="editTrialUsersCtrl.emailTrialUsers"
               type="email"
-              max-tags="6" enforce-max-tags
               allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
-  <div ng-if="editTrialUsersCtrl.getNumUsersInTagField() > editTrialUsersCtrl.maxTrialUsers">
-    <p translate="hds.resources.editTrialUsers.tooManyUsers" translate-values="{ maxUsers: editTrialUsersCtrl.maxTrialUsers }"></p></span>
+  <div ng-if="editTrialUsersCtrl.getNumUsersInTagField() >= editTrialUsersCtrl.maxTrialUsers">
+    <p translate="hds.resources.editTrialUsers.tooManyUsers"></p></span>
   </div>
 </div>
 <div class="modal-footer">

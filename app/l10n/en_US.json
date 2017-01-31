@@ -2369,7 +2369,7 @@
       "editTrialUsers": {
         "modalTitle": "Edit Users in Trial Mode",
         "modalHeading": "Edit Users",
-        "tooManyUsers": "<i class='icon icon-error'></i> The user list exceeds the limit of {{maxUsers}}. Please remove users till within the limit.",
+        "tooManyUsers": "<i class='icon icon-error'></i> Max number of users reached, delete existing users to add more.",
         "modalDesc": "To remove a user click the X in the user's field and they will be removed from the Hybrid Data Security Service."
       },
       "page_title": "Hybrid Data Security Service",
