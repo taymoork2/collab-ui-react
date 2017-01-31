@@ -58,6 +58,8 @@
     var VM_SPARKPHONE = 'SparkPhoneVM';
     var VM_PHONE = 'PhoneVM';
     var VM_SPARK = 'SparkVM';
+    var VM_E = 'VM_E';
+    var VM_E_PT = "VM_E_PT";
     var DEFAULT_DIAL_HABIT = vm.NATIONAL;
 
     var savedModel = null;
@@ -152,6 +154,7 @@
         companyVoicemailEnabled: false,
         companyVoicemailNumber: NO_VOICEMAIL_NUMBER,
         voicemailToEmail: false,
+        voicemailEmailOptions: VM_E,
         voicemailOptions: VM_SPARK,
         externalVoicemail: false
       },
@@ -954,6 +957,57 @@
       }
     });
 
+    FeatureToggleService.supports(FeatureToggleService.features.avrilVmEnable)
+      .then(function (result) {
+        if (result) {
+          vm.companyVoicemailSelection.splice(vm.companyVoicemailSelection.length - 1, 1, {
+            model: vm.model.companyVoicemail,
+            key: 'voicemailToEmail',
+            type: 'cs-input',
+            templateOptions: {
+              label: $translate.instant('serviceSetupModal.voicemailToEmailLabel'),
+              type: 'checkbox',
+            },
+            hideExpression: function () {
+              return !vm.model.companyVoicemail.companyVoicemailEnabled;
+            }
+          }, {
+            className: 'medium-12',
+            fieldGroup: [{
+              key: 'emailAttachment',
+              type: 'radio',
+              className: 'voicemail-email-spacing',
+              templateOptions: {
+                model: 'voicemailEmailOptions',
+                label: $translate.instant('serviceSetupModal.EmailNotificationAttached'),
+                value: VM_E
+              },
+              hideExpression: function () {
+                return !(vm.model.companyVoicemail.companyVoicemailEnabled && vm.model.companyVoicemail.voicemailToEmail);
+              }
+            }, {
+              key: 'vmSecureWarning',
+              template: '<div class="warning-padding"><p class="row columns warning terminus-warning indent-area-code"><i class="icon icon-warning"></i>' + $translate.instant('serviceSetupModal.voicemailToEmailAttachmentText') + '</p></div>',
+              hideExpression: function () {
+                return !(vm.model.companyVoicemail.companyVoicemailEnabled && vm.model.companyVoicemail.voicemailToEmail && vm.model.companyVoicemail.voicemailEmailOptions === VM_E);
+              }
+            }]
+          }, {
+            key: 'emailNoAttachment',
+            type: 'radio',
+            className: 'medium-12 voicemail-email-spacing save-popup-margin',
+            templateOptions: {
+              model: 'voicemailEmailOptions',
+              label: $translate.instant('serviceSetupModal.EmailNotificationWithoutAttached'),
+              value: VM_E_PT
+            },
+            hideExpression: function () {
+              return !(vm.model.companyVoicemail.companyVoicemailEnabled && vm.model.companyVoicemail.voicemailToEmail);
+            }
+          });
+        }
+      });
+
     init();
 
     function clearCallerIdFields() {
@@ -1376,6 +1430,11 @@
         vm.model.companyVoicemail.voicemailOptions = VM_SPARK;
       } else if (features.VM2T) {
         vm.model.companyVoicemail.voicemailOptions = VM_PHONE;
+      }
+      if (features.VM2E) {
+        vm.model.companyVoicemail.voicemailEmailOptions = VM_E;
+      } else if (features.VM2E_PT) {
+        vm.model.companyVoicemail.voicemailEmailOptions = VM_E_PT;
       }
     }
 
@@ -1818,7 +1877,8 @@
       if (vm.voicemailAvrilCustomer) {
         var featureOptions = {
           features: {
-            VM2E: vm.model.companyVoicemail.voicemailToEmail,
+            VM2E: false,
+            VM2E_PT: false,
             VM2T: true,
             VM2S: false
           }
@@ -1842,10 +1902,28 @@
               break;
             }
           }
+          if (vm.model.companyVoicemail.voicemailToEmail) {
+            switch (vm.model.companyVoicemail.voicemailEmailOptions) {
+              case VM_E : {
+                featureOptions.features.VM2E = true;
+                featureOptions.features.VM2E_PT = false;
+                break;
+              }
+              case VM_E_PT : {
+                featureOptions.features.VM2E_PT = true;
+                featureOptions.features.VM2E = false;
+                break;
+              }
+            }
+          } else {
+            featureOptions.features.VM2E_PT = false;
+            featureOptions.features.VM2E = false;
+          }
         } else {
           featureOptions.features.VM2S = false;
           featureOptions.features.VM2T = false;
           featureOptions.features.VM2E = false;
+          featureOptions.features.VM2E_PT = false;
         }
         return ServiceSetup.updateAvrilSite(ServiceSetup.sites[0].uuid, featureOptions);
       } else {
