@@ -92,7 +92,7 @@
     }
 
     function checkMissingDays2(missingDaysDeferred, start, end) {
-      var url = getBaseOrgUrl + "reports/device/data_availability?interval=day&from=" + start + "&to=" + end;
+      var url = getBaseOrgUrl() + "reports/device/data_availability?interval=day&from=" + start + "&to=" + end;
       return $http.get(url).then(function (response) {
         var items = response.data.items; // .available
         var missingDays = _.filter(items, (function (item) {
