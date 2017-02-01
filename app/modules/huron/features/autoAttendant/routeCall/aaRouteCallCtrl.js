@@ -87,11 +87,6 @@
     }
 
     function setUpFeatureToggles() {
-      if (AACommonService.isRouteQueueToggle()) {
-        getQueues().finally(sortAndSetActionType);
-      } else {
-        sortAndSetActionType();
-      }
 
       if (AACommonService.isRouteSIPAddressToggle()) {
         vm.options.push({
@@ -99,6 +94,13 @@
           "value": 'routeToSipEndpoint'
         });
       }
+
+      if (AACommonService.isRouteQueueToggle()) {
+        getQueues().finally(sortAndSetActionType);
+      } else {
+        sortAndSetActionType();
+      }
+
     }
 
     function activate() {

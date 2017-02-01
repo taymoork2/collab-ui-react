@@ -19,19 +19,20 @@
     };
     vm.menuKeyEntry = {};
 
-    vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
     vm.isSipValid = isSipValid;
+    vm.routeToSipPlaceHolder = $translate.instant('autoAttendant.routeToSipPlaceHolder');
 
     // the CE action verb is 'routeToSipEndpoint'
     var routeToSipEndpoint = 'routeToSipEndpoint';
 
     var fromRouteCall = false;
-    vm.routeToSipPlaceHolder = $translate.instant('autoAttendant.routeToSipPlaceHolder');
+    var sipInitial = "sip:";
+
     /////////////////////
 
     function isSipValid() {
-      var pattern = new RegExp("@");
+      var pattern = new RegExp("^[A-Za-z0-9]@[A-Za-z0-9]");
       var result = pattern.test(vm.model.sipInput);
       return result;
     }
@@ -44,7 +45,7 @@
         entry = _.get(vm.menuKeyEntry, 'actions[0].queueSettings.fallback', vm.menuKeyEntry);
       }
       if (_.isEmpty(entry.actions[0].getValue())) {
-        vm.model.sipInput = 'sip:';
+        vm.model.sipInput = sipInitial;
       } else {
         vm.model.sipInput = entry.actions[0].getValue();
       }
@@ -53,6 +54,13 @@
     function saveUiModel() {
       AACommonService.setPhoneMenuStatus(true);
       var entry;
+
+      if (isSipValid()) {
+        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
+      } else {
+        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, false);
+      }
+
       if (fromRouteCall) {
         entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
       } else {
@@ -60,14 +68,6 @@
       }
       entry.actions[0].setValue(vm.model.sipInput);
     }
-
-    $scope.$watch('aaRouteToSip.model.sipInput', function () {
-      if (isSipValid()) {
-        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
-      } else {
-        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, false);
-      }
-    });
 
     $scope.$on(
       "$destroy",

@@ -2890,7 +2890,8 @@
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "routeCallPopover": "Select how to route call.",
     "selectPlaceHolder": "Search or Select",
-    "routeToSipPlaceHolder": "For SIP URI Routing, 'SIP:' is assumed and not necessary to include. Formatting example: '1-555-123-4567@voip-provider.example.net'.",
+    "validSip": "Enter a valid SIP address",
+    "routeToSipPlaceHolder": "Eg:'85673765@voip-provider.example.net'",
     "selectNumberPlaceHolder": "Search or Select a Number",
     "inputPlaceHolder": "Start typing here",
     "sayMessage": "Message",
@@ -2899,7 +2900,6 @@
     "sayMessageVoice": "Voice",
     "sayMessageInvalidChar": "Invalid character. Character '{{char}}' is not allowed.",
     "messageType": "Message Type",
-    "sipAddressPlaceholder": "Sip Address",
     "destinationHelpMessage": "Choose where to route an unanswered call after a set period of waiting time.",
     "destinationLabel": "Destination",
     "destinations": {
