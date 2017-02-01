@@ -5197,7 +5197,11 @@
   "processOrderPage": {
     "errOrgCreation": "Your order is being processed. Please check back after 24 hours.",
     "info": "Status",
-    "wait": "Please wait while we redirect you"
+    "wait": "Please wait while we redirect you",
+    "modalTitle": "Location of PSTN Calling Service",
+    "modalDesc": "Please enter the country where the majority of telephones for your Spark Call service will be located.",
+    "countrySelectLabel": "Please enter the country where your PSTN Service is located",
+    "countrySelectPlaceholder": "Select a country"
   },
   "countries": {
     "greatBritain": "United Kingdom",

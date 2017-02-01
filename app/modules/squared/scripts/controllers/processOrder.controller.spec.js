@@ -21,7 +21,8 @@ describe('Controller: ProcessorderCtrl', function () {
 
   function initSpies() {
     spyOn($location, 'search').and.returnValue({
-      enc: 'fake-encrypted-payload'
+      enc: 'fake-encrypted-payload',
+      call: 'false'
     });
     spyOn(Orgservice, 'createOrg');
     spyOn(Auth, 'logoutAndRedirectTo');
@@ -54,7 +55,7 @@ describe('Controller: ProcessorderCtrl', function () {
       });
 
       it('should call "Orgservice.createOrg()" with "enc" parameter from the browser\'s location', function () {
-        expect(Orgservice.createOrg).toHaveBeenCalledWith('fake-encrypted-payload');
+        expect(Orgservice.createOrg).toHaveBeenCalledWith('fake-encrypted-payload', undefined);
       });
     });
 
@@ -86,7 +87,7 @@ describe('Controller: ProcessorderCtrl', function () {
           expect(ModalService.open).toHaveBeenCalledWith({
             title: 'processOrderPage.info',
             message: 'processOrderPage.errOrgCreation',
-            dismiss: false,
+            hideDismiss: true,
           });
         });
       });

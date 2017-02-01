@@ -18,7 +18,7 @@
         templateUrl: 'modules/core/modal/modal.tpl.html',
         controller: 'ModalCtrl',
         controllerAs: 'modal',
-        type: 'dialog',
+        type: options.type || 'dialog',
         resolve: {
           hideDismiss: function () {
             return options.hideDismiss || false;

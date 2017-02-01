@@ -277,11 +277,15 @@
         });
     }
 
-    function createOrg(enc) {
+    function createOrg(enc, country) {
       var orgUrl = UrlConfig.getAdminServiceUrl() + 'organizations';
       var orgRequest = {
-        'encryptedQueryString': enc
+        encryptedQueryString: enc,
       };
+      // only set 'country' property if passed in (otherwise, it is safe left as undefined)
+      if (country) {
+        _.set(orgRequest, 'country', _.get(country, 'id', 'US'));
+      }
       return Auth.setAccessToken().then(function () {
         return $http.post(orgUrl, orgRequest).then(function (response) {
           return response.data;
