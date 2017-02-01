@@ -72,8 +72,16 @@ describe('Component: callPickupSetupAssistant', () => {
       expect(this.controller.form.$invalid).toBeTruthy();
     });
 
-    it('should set form to invalid is name is invalid', function () {
+    it('should set form to invalid if name is invalid', function () {
       this.controller.callPickup.name = '';
+      this.controller.checkForChanges();
+      this.$timeout.flush();
+      this.$timeout.verifyNoPendingTasks();
+      expect(this.controller.form.$invalid).toBeTruthy();
+    });
+
+    it('should set form to invalid if notification timer is not between 1 and 120', function () {
+      this.isNotificationTimerValid = false;
       this.controller.checkForChanges();
       this.$timeout.flush();
       this.$timeout.verifyNoPendingTasks();

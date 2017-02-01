@@ -27,7 +27,6 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
   public saveInProcess: boolean = false;
   public form: ng.IFormController;
   public originalCallPickupGroup: IPickupGroup;
-
   private callPickupProperties: Array<string> = ['name', 'notificationTimer', 'playSound', 'displayCallingPartyId', 'displayCalledPartyId'];
   /* @ngInject */
   constructor(private $timeout: ng.ITimeoutService,
@@ -331,11 +330,12 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
   private checkForChanges(): void {
     let scope = this;
     this.$timeout(function () {
-      if ( !scope.checkNameValidity() || !scope.checkMemberValidity() ) {
-        scope.form.$invalid = true;
+      if (!scope.checkNameValidity() || !scope.checkMemberValidity()) {
+        scope.form.$setValidity('', false, scope.form);
       } else if (scope.CallPickupGroupService.matchesOriginalConfig(scope.callPickup)) {
         scope.resetForm();
       } else {
+        scope.form.$setValidity('', true, scope.form);
         scope.form.$setDirty();
       }
     });
