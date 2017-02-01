@@ -18,7 +18,7 @@
             "lastName": "Doe",
             "userName": "johndoe@lost.com",
             "displayName": null,
-            "type": "USER_REAL_USER",
+            "type": "PROFILE_REAL_USER",
             "uuid": "15ce5a48-9e2f-49ec-b13f-ad49ef87ce5d"
             },
   "enabledForSharedLineMember": false
