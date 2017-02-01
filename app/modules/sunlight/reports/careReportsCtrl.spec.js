@@ -140,7 +140,6 @@ describe('Controller: Care Reports Controller', function () {
     });
   });
 
-
   describe('CareReportsController - Init', function () {
     it('should show five time options', function () {
       expect(controller).toBeDefined();
@@ -236,7 +235,6 @@ describe('Controller: Care Reports Controller', function () {
         done();
       };
       controller.showTable(testOnSuccess, notCalled, controller.mediaTypeSelected, controller.timeSelected);
-      //expect(SunlightReportService.getAllUsersAggregatedData).toHaveBeenCalled();
       expect(SunlightReportService.getAllUsersAggregatedData.calls.argsFor(0)).toEqual(['all_user_stats', 0, 'chat']);
       deferredReportingData.resolve(allUserFifteenMinutesStats.data);
       deferredTableData.resolve(ciUserStats);
@@ -304,7 +302,6 @@ describe('Controller: Care Reports Controller', function () {
       deferredTableData.resolve(ciUserStats);
       $scope.$digest();
     });
-
 
     it('should fetch data afresh, if media type or time filters are updated', function (done) {
 

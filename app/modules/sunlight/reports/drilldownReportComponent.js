@@ -1,6 +1,3 @@
-/**
- * Created by bijnair on 06/01/17.
- */
 (function () {
   'use strict';
 
@@ -9,6 +6,7 @@
     var dd = this;
     dd.gridData = [];
     $scope.gridData = dd.gridData;
+    var RESIZE_DELAY_IN_MS = 100;
 
     dd.$onInit = function () {
 
@@ -157,7 +155,7 @@
     };
 
     dd.resizeCards = function () {
-      CardUtils.resize(100);
+      CardUtils.resize(RESIZE_DELAY_IN_MS);
     };
 
     dd.resetCurrentPage = function () {

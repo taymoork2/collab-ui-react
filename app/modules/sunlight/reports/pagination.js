@@ -15,7 +15,6 @@ angular.module('Sunlight.tabindex', [])
     };
   });
 
-
 angular.module('Sunlight.paging', [])
   .factory('slPaging', function ($parse) {
     return {
@@ -104,7 +103,6 @@ angular.module('Sunlight.paging', [])
       }
     };
   });
-
 
 angular.module('Sunlight.pagination', ['Sunlight.paging', 'Sunlight.tabindex', 'atlas.templates']).controller('SlPaginationController',
   function ($scope, $attrs, $parse, slPaging, slPaginationConfig) {

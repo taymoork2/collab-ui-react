@@ -41,10 +41,9 @@ describe('paging factory', function () {
     slPaging.create(ctrl, $scope, attrs);
   }));
 
-  afterAll(function () {
+  afterEach(function () {
     $rootScope = $scope = ctrl = attrs = undefined;
   });
-
 
   describe('init', function () {
     var ngModelCtrl, config;
@@ -55,6 +54,10 @@ describe('paging factory', function () {
         foo: 'bar',
         itemsPerPage: 12
       };
+    });
+
+    afterEach(function () {
+      ngModelCtrl = config = undefined;
     });
 
     describe('without itemsPerPage', function () {
@@ -197,6 +200,10 @@ describe('paging factory', function () {
         };
       });
 
+      afterEach(function () {
+        evt = undefined;
+      });
+
       it('should prevent default behavior', function () {
         $scope.selectPage(12, evt);
 
@@ -304,7 +311,6 @@ describe('paging factory', function () {
   });
 });
 
-
 describe('Pagination controller test', function () {
   var $rootScope, $parse, slPaging, slPaginationConfig, elementDef, $compile, element;
 
@@ -322,7 +328,7 @@ describe('Pagination controller test', function () {
     $rootScope.$digest();
   }));
 
-  afterAll(function () {
+  afterEach(function () {
     $rootScope = $parse = slPaging = slPaginationConfig = elementDef = $compile = element = undefined;
   });
 
@@ -398,8 +404,8 @@ describe('Pagination controller test', function () {
     $rootScope.$digest();
 
     expect(getPaginationBarSize()).toBe(5);
-    expect(getPaginationEl(0).hasClass("icon-chevron-left")).toBe(true);
-    expect(getPaginationEl(-1).hasClass("icon-chevron-right")).toBe(true);
+    expect(getPaginationEl(0).hasClass('icon-chevron-left')).toBe(true);
+    expect(getPaginationEl(-1).hasClass('icon-chevron-right')).toBe(true);
   });
 
   it('does not "break" when `total-items` is undefined', function () {
@@ -441,8 +447,8 @@ describe('Pagination controller test', function () {
 
     it('contains maxsize + 2 button elements', function () {
       expect(getPaginationBarSize()).toBe($rootScope.maxSize + 2);
-      expect(getPaginationEl(0).hasClass("icon-chevron-left")).toBe(true);
-      expect(getPaginationEl(-1).hasClass("icon-chevron-right")).toBe(true);
+      expect(getPaginationEl(0).hasClass('icon-chevron-left')).toBe(true);
+      expect(getPaginationEl(-1).hasClass('icon-chevron-right')).toBe(true);
     });
 
     it('shows the page number even if it can\'t be shown in the middle', function () {
@@ -493,8 +499,8 @@ describe('Pagination controller test', function () {
       $rootScope.maxSize = 0;
       $rootScope.$digest();
       expect(getPaginationBarSize()).toBe(2);
-      expect(getPaginationEl(0).hasClass("icon-chevron-left")).toBe(true);
-      expect(getPaginationEl(-1).hasClass("icon-chevron-right")).toBe(true);
+      expect(getPaginationEl(0).hasClass('icon-chevron-left')).toBe(true);
+      expect(getPaginationEl(-1).hasClass('icon-chevron-right')).toBe(true);
     });
   });
 

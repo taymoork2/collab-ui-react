@@ -16,7 +16,7 @@
         ng-change="dd.resizeCards()"></input>
     </div>
     <div class="care-table-wrapper">
-      <div ng-if="dd.isDataAvailable()" class="grid" ui-grid="dd.props.table.gridOptions"  ui-grid-pagination></div>
+      <div ng-if="dd.isDataAvailable()" class="grid" ui-grid="dd.props.table.gridOptions" ui-grid-pagination></div>
     </div>
     <div class="table-spinner" ng-if="dd.isDataRefreshing()">
       <i class='icon icon-spinner icon-2x'></i>
