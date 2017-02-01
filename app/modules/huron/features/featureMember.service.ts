@@ -5,6 +5,11 @@ export interface IFeatureMemberPicture {
   thumbnailSrc: string | undefined;
 }
 
+export class MemberTypeConst {
+  public static PLACE: string = 'PROFILE_PLACE';
+  public static USER: string  = 'PROFILE_REAL_USER';
+}
+
 export class FeatureMemberService {
   /* @ngInject */
   constructor(
@@ -14,9 +19,6 @@ export class FeatureMemberService {
     private $http: ng.IHttpService,
     private MemberService: MemberService,
   ) {}
-
-  private PLACE: string = 'PROFILE_PLACE';
-  private USER: string  = 'PROFILE_REAL_USER';
 
   public getMemberPicture(memberId: string): ng.IPromise<IFeatureMemberPicture> {
     let scimUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + memberId;
@@ -101,14 +103,14 @@ export class FeatureMemberService {
     }
     let name = '';
 
-    if (member.type === USER_REAL_USER || member.type === this.USER) {
+    if (member.type === USER_REAL_USER || member.type === MemberTypeConst.USER) {
       let firstLastName = this.getFirstLastName(member);
       if (firstLastName !== '') {
         name = (firstLastName + ' (' + this.getUserName(member) + ')');
       } else {
         name = this.getUserName(member);
       }
-    } else if ((member.type === USER_PLACE || member.type === this.PLACE) && member.displayName) {
+    } else if ((member.type === USER_PLACE || member.type === MemberTypeConst.PLACE) && member.displayName) {
       name = member.displayName;
     }
     return name;
@@ -123,13 +125,13 @@ export class FeatureMemberService {
       return '';
     }
     let name = '';
-    if (member.type === USER_REAL_USER || member.type === this.USER ) {
+    if (member.type === USER_REAL_USER || member.type === MemberTypeConst.USER ) {
       if (this.getFirstLastName(member) !== '') {
         name = (this.getFirstLastName(member));
       } else {
         name = (member.displayName) ? member.displayName : '';
       }
-    } else if ((member.type === USER_PLACE || member.type === this.PLACE) && member.displayName) {
+    } else if ((member.type === USER_PLACE || member.type === MemberTypeConst.PLACE) && member.displayName) {
       name = member.displayName;
     }
     return name;
@@ -140,7 +142,7 @@ export class FeatureMemberService {
       return '';
     }
 
-    return (member.type === USER_REAL_USER || member.type === this.USER ) ? 'user' : 'place';
+    return (member.type === USER_REAL_USER || member.type === MemberTypeConst.USER ) ? 'user' : 'place';
   }
 
   public getMemberSuggestions(hint: string): ng.IPromise<Member[]> {

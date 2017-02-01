@@ -49,6 +49,7 @@ export class AutoAnswerService {
       {
         update: updateAction,
       });
+
   }
 
   public getSupportedPhonesAndMember(_type: LineConsumerType, _typeId: string, _numberId: string): ng.IPromise<AutoAnswer> {
@@ -63,10 +64,15 @@ export class AutoAnswerService {
 
         let phoneList: Array<IAutoAnswerPhone> = _.get(data, AutoAnswerConst.PHONES, []);
         autoAnswer.phones = _.map(_.filter(phoneList, (phone) => { return phone.autoAnswer.supported === true ; }), (supportedPhone) => {
+          let label = _.first(this.DeviceService.getTags(this.DeviceService.decodeHuronTags(supportedPhone.description))) as string;
+          if (!label || label === '') {
+            let macAddress: string = this.convertNameToMacAddress(supportedPhone.name);
+            label = supportedPhone.model + ' (' + macAddress + ')';
+          }
           return new AutoAnswerPhone({
               uuid: supportedPhone.uuid,
               name: supportedPhone.name,
-              description: _.first(this.DeviceService.getTags(this.DeviceService.decodeHuronTags(supportedPhone.description))) as string,
+              description: label,
               model: supportedPhone.model,
               enabled: supportedPhone.autoAnswer.enabled,
               mode: supportedPhone.autoAnswer.enabled === true ? supportedPhone.autoAnswer.mode : undefined });
@@ -132,4 +138,28 @@ export class AutoAnswerService {
     }, data).$promise;
   }
 
+  public convertNameToMacAddress(_name: string): string {
+    const HURON_DEVICE_NAME_PREFIX = 'SEP';
+    const COLON_SKIP_CHARACTERS = 2;
+    const MAC_LENGTH = 12;
+
+    let macAddress: string = _name;
+
+    if (_.startsWith(_name, HURON_DEVICE_NAME_PREFIX)) {
+      macAddress = macAddress.substring(HURON_DEVICE_NAME_PREFIX.length);
+    }
+
+    macAddress = _.replace(_.toLower(macAddress), ':', '');
+
+    if (macAddress.length > MAC_LENGTH) {
+      macAddress = macAddress.substring(0, MAC_LENGTH);
+    }
+
+    let i: number;
+    for (i = COLON_SKIP_CHARACTERS; i < macAddress.length; i = i + 1 + COLON_SKIP_CHARACTERS) {
+      macAddress = macAddress.substring(0, i) + ':' + macAddress.substring(i, macAddress.length);
+    }
+
+    return macAddress;
+  }
 }

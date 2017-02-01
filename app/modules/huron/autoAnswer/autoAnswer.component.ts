@@ -1,8 +1,9 @@
 import { IOption } from 'modules/huron/dialing/dialing.service';
 import { AutoAnswerMember, AutoAnswerPhone } from './autoAnswer';
 import { AutoAnswerConst } from './autoAnswer.service';
-import { MemberType, USER_REAL_USER } from 'modules/huron/members';
+import { MemberType } from 'modules/huron/members';
 import { LineConsumerType } from 'modules/huron/lines/services/line.service';
+import { MemberTypeConst } from 'modules/huron/features/featureMember.service';
 
 export class AutoAnswerCtrl implements ng.IComponentController {
   public onChangeFn: Function;
@@ -81,12 +82,12 @@ export class AutoAnswerCtrl implements ng.IComponentController {
       let member: AutoAnswerMember = autoAnswerChanges.currentValue.member;
       if (member && autoAnswerChanges.currentValue.enabledForSharedLineMember) {
         let _ownerType = (autoAnswerChanges.currentValue.ownerType === LineConsumerType.USERS) ? MemberType.USER_REAL_USER : MemberType.USER_PLACE;
-        let _shareMemberType = (member.type === USER_REAL_USER) ? MemberType.USER_REAL_USER : MemberType.USER_PLACE;
-        let _memberName = (member.type === USER_REAL_USER) ? (member.firstName + ' ' + member.lastName) : member.displayName;
+        let _shareMemberType = (member.type === MemberTypeConst.USER) ? MemberType.USER_REAL_USER : MemberType.USER_PLACE;
+        let _memberName = (member.type === MemberTypeConst.USER) ? (member.firstName + ' ' + member.lastName) : member.displayName;
         let _memberInfo = {
           ownerType: _ownerType,
           type: _shareMemberType,
-          name: _memberName };
+          name: (_memberName && _.trim(_memberName)) ? _memberName : member.userName };
         this.autoAnswerEnabledForSharedLineMemberMsg = this.$translate.instant(
           'autoAnswerPanel.userSharedLineDescription', _memberInfo);
       } else {
