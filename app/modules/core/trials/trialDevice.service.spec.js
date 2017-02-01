@@ -35,12 +35,13 @@ describe('Service: Trial Device Service:', function () {
       });
     });
 
-    it('should have a longer list for CISCO_SX10 and CISCO_DX80 which contain for example "Germany"', function () {
+    it('should have a longer list for CISCO_SX10 and CISCO_DX80 which contain for example "Croatia"', function () {
       var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'CISCO_DX80']);
       expect(countries.length).toBeGreaterThan(1);
       expect(countries).toContain({
-        country: 'Germany',
+        country: 'Croatia',
       });
+
     });
 
     it('should contain only US for MX300', function () {
