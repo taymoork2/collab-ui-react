@@ -7,10 +7,12 @@
 .footer-section{
 	min-height: 40px;
 	font-size: 0.9rem;
+
+	.footer-value{
+	    color: #5ca4e5;
+    }
 }
-.footer-value{
-	color: #5ca4e5;
-}
+
 .sneak-peek-filter{
 	width: rem-calc(220);
     margin: 0 auto;

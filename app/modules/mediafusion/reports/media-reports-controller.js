@@ -50,7 +50,8 @@
     vm.Map = {};
     vm.cloudparticipants = {
       isShow: '',
-      value: ''
+      value: '',
+      footerDesc: vm.cloud_participants_heading
     };
 
     vm.displayAdoption = false;
