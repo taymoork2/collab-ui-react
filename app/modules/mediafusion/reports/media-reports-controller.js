@@ -381,11 +381,7 @@
     function clusterUpdateFromTooltip() {
       vm.selectedClusterSneakPeek = vm.availabilityTooltipOptions['tooltipModel'];
       var selectedCluster = vm.selectedClusterSneakPeek;
-      selectedCluster = selectedCluster.split('.').join('');
       selectedCluster = selectedCluster.substring(0, selectedCluster.lastIndexOf('  '));
-      _.forEach(vm.clusterOptions, function (val) {
-        selectedCluster = _.includes(val, selectedCluster) ? val : selectedCluster;
-      });
       vm.selectedClusterSneakPeek = vm.availabilityTooltipOptions.values[0];
       vm.clusterSelected = selectedCluster;
       clusterUpdate();

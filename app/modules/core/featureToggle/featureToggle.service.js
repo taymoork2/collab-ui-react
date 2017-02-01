@@ -21,6 +21,7 @@
       atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list',
       atlasMediaServiceMetrics: 'atlas-media-service-metrics',
       atlasMediaServiceMetricsMilestoneOne: 'atlas-media-service-metrics-milestone-one',
+      atlasMediaServiceMetricsMilestoneTwo: 'atlas-media-service-metrics-milestone-two',
       atlasMediaServicePhaseTwo: 'atlas-media-service-phase-two',
       atlasNewCiDataModel: 'atlas-new-ci-data-model',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
