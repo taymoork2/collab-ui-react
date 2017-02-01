@@ -15,6 +15,7 @@ export class TOSService {
     private Authinfo,
     private MeService: IMeService,
     private UserPreferencesService: UserPreferencesService,
+    private FeatureToggleService,
     private $q: ng.IQService,
     private Config,
   ) {
@@ -25,11 +26,24 @@ export class TOSService {
       // skip testing if we already know we've accepted it
       return this.$q.resolve(true);
     } else {
-      return this.fetchUser()
-        .then(() => {
-          this.hasAcceptedToS = this.Authinfo.isPartnerAdmin() ||
-            (this.user && this.UserPreferencesService.hasPreference(this.user, UserPreferencesService.USER_PREF_TOS));
-          return this.hasAcceptedToS;
+      return this.FeatureToggleService.requireAcceptTosGetStatus()
+        .then((requireTos) => {
+          if (requireTos) {
+            return this.fetchUser()
+              .then(() => {
+                this.hasAcceptedToS = this.Authinfo.isPartnerAdmin() ||
+                  (this.user && this.UserPreferencesService.hasPreference(this.user, UserPreferencesService.USER_PREF_TOS));
+                return this.hasAcceptedToS;
+              });
+          } else {
+            // accepting the TOS isn't required, so just assume they have
+            this.hasAcceptedToS = true;
+            return this.hasAcceptedToS;
+          }
+        })
+        .catch(() => {
+          // if there is an error, assume they accepted ToS
+          return true;
         });
     }
   }

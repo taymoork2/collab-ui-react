@@ -6,13 +6,18 @@
     .controller('VoicemailInfoCtrl', VoicemailInfoCtrl);
 
   /* @ngInject */
-  function VoicemailInfoCtrl($scope, $stateParams, $translate, $modal, UserServiceCommon, TelephonyInfoService, Notification, DirectoryNumber) {
+  function VoicemailInfoCtrl($scope, $stateParams, $translate, $modal, UserServiceCommon, TelephonyInfoService, FeatureToggleService, Notification, DirectoryNumber) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.saveVoicemail = saveVoicemail;
     vm.reset = reset;
     vm.directoryNumber = DirectoryNumber.getNewDirectoryNumber();
     vm.saveInProcess = false;
+
+    vm.voicemailAvrilCustomer = false;
+    FeatureToggleService.supports(FeatureToggleService.features.avrilVmEnable).then(function (result) {
+      vm.voicemailAvrilCustomer = result;
+    });
 
     init();
 

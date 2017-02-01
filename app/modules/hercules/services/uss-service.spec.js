@@ -243,7 +243,7 @@ describe('Service: USSService', function () {
   describe('getStatuses', function () {
     it('should work', function () {
       $httpBackend
-        .when('GET', rootPath + 'orgs/456/userStatuses?serviceId=squared-fusion-cal&offset=0&limit=100&entitled=true')
+        .when('GET', rootPath + 'orgs/456/userStatuses?serviceId=squared-fusion-cal&limit=10000&entitled=true')
         .respond({
           userStatuses: [{
             userId: '123',
@@ -266,9 +266,9 @@ describe('Service: USSService', function () {
           }]
         });
 
-      USSService.getStatuses('squared-fusion-cal', null, 0, 100)
-        .then(function (response) {
-          expect(response.userStatuses.length).toEqual(2);
+      USSService.getAllStatuses('squared-fusion-cal', null)
+        .then(function (userStatuses) {
+          expect(userStatuses.length).toEqual(2);
         });
       $httpBackend.flush();
     });

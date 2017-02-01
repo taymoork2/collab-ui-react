@@ -68,6 +68,9 @@
 
     function getUsers(orgId, statuses, progress, includeResourceGroupColumn) {
       var userIds = _.map(statuses, 'userId');
+      if (_.size(userIds) === 0) {
+        return $q.resolve([]);
+      }
       var potentialMachineStatuses = [];
       return $http.get(userUrl(orgId, userIds))
         .then(function (response) {

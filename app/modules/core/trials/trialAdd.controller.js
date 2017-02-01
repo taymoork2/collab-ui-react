@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($q, $scope, $state, $translate, $window, Analytics, Config, FeatureToggleService, HuronCustomer, Notification, TrialContextService, TrialPstnService, TrialService, ValidationService, Orgservice) {
+  function TrialAddCtrl($q, $scope, $state, $translate, $window, Analytics, Config, FeatureToggleService, HuronCountryService, HuronCustomer, Notification, TrialContextService, TrialPstnService, TrialService, ValidationService, Orgservice) {
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
     var _careDefaultQuantity = 15;
@@ -25,7 +25,6 @@
     vm.customerOrgId = undefined;
     vm.showRoomSystems = false;
     vm.showCare = false;
-    vm.isCallBackEnabled = false;
     vm.details = vm.trialData.details;
     vm.messageTrial = vm.trialData.trials.messageTrial;
     vm.meetingTrial = vm.trialData.trials.meetingTrial;
@@ -62,6 +61,7 @@
     vm.devicesModal = _.find(vm.trialStates, {
       name: 'trialAdd.call'
     });
+    vm.setDefaultCountry = setDefaultCountry;
 
     function validateField($viewValue, scope, key, uniqueFlag, errorMsg) {
       // Show loading glyph
@@ -345,11 +345,10 @@
       },
       expressionProperties: {
         'templateOptions.required': function () {
-          return (vm.messageTrial.enabled && (!vm.isCallBackEnabled || vm.callTrial.enabled)); // Since, it depends on Message and Call Offer
+          return (vm.messageTrial.enabled && vm.callTrial.enabled); // Since, it depends on Message and Call Offer
         },
         'templateOptions.disabled': function () {
-          return vm.messageOfferDisabledExpression()
-            || (vm.isCallBackEnabled && vm.callOfferDisabledExpression());
+          return vm.messageOfferDisabledExpression() || vm.callOfferDisabledExpression();
         }
       }
     }, {
@@ -496,9 +495,9 @@
     function init() {
       $q.all({
         atlasCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
-        atlasCareCallbackTrials: FeatureToggleService.atlasCareCallbackTrialsGetStatus(),
         atlasContextServiceTrials: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
-        atlasTrialsShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus()
+        atlasTrialsShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),
+        huronCountryList: HuronCountryService.getCountryList(),
       })
         .then(function (results) {
           vm.showRoomSystems = true;
@@ -511,11 +510,11 @@
           vm.meetingTrial.enabled = true;
           vm.showContextServiceTrial = true;
           vm.atlasTrialsShipDevicesEnabled = results.atlasTrialsShipDevices;
+          vm.defaultCountryList = results.huronCountryList;
           updateTrialService(messageTemplateOptionId);
 
           vm.showCare = results.atlasCareTrials;
           vm.careTrial.enabled = results.atlasCareTrials;
-          vm.isCallBackEnabled = results.atlasCareCallbackTrials;
           // TODO: US12063 overrides using this var but requests code to be left in for now
           //var devicesModal = _.find(vm.trialStates, {
           //  name: 'trialAdd.call'
@@ -624,10 +623,10 @@
     }
 
     function toggleTrial() {
-      if (!vm.callTrial.enabled && !vm.roomSystemTrial.enabled) {
+      if (!vm.callTrial.enabled && !vm.roomSystemTrial.enabled && !vm.sparkBoardTrial.enabled) {
         vm.pstnTrial.enabled = false;
       }
-      if ((vm.callTrial.enabled || vm.roomSystemTrial.enabled) && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
+      if ((vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled) && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
         vm.pstnTrial.enabled = true;
       }
 
@@ -734,7 +733,7 @@
           return response;
         })
         .then(function (response) {
-          if (vm.callTrial.enabled || vm.roomSystemTrial.enabled) {
+          if (vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled) {
             return HuronCustomer.create(vm.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
                 Notification.errorResponse(response, 'trialModal.squareducError');
@@ -813,8 +812,13 @@
       $state.modal.dismiss();
       sendToAnalytics(Analytics.eventNames.CANCEL_MODAL);
     }
+
     function sendToAnalytics(eventName, extraData) {
       Analytics.trackTrialSteps(eventName, vm.trialData, extraData);
+    }
+
+    function setDefaultCountry(country) {
+      vm.details.country = country;
     }
   }
 })();

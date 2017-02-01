@@ -195,14 +195,19 @@
       HelpdeskService.getServiceOrders(orgId).then(function (orders) {
         var orderingSystemTypes = {
           APP_DIRECT: 'Partner Marketplace',
+          IBM: 'Partner Marketplace',
           ATLAS_TRIALS: 'Partner-Led Trial',
           CCW: 'Cisco Commerce',
+          CCW_CSB: 'Cisco Commerce',
           CISCO_ONLINE_OPC: 'Cisco Online Trial',
           DIGITAL_RIVER: 'Cisco Online Marketplace'
         };
         vm.orderSystems = [];
         _.forEach(orders, function (order) {
-          vm.orderSystems.push(orderingSystemTypes[order.orderingTool] || order.orderingTool);
+          if (order.orderingTool) {
+            vm.orderingTool = order.orderingTool.toUpperCase();
+          }
+          vm.orderSystems.push(orderingSystemTypes[vm.orderingTool] || order.orderingTool);
         });
       }, vm._helpers.notifyError);
     }

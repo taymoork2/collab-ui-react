@@ -1,11 +1,12 @@
 'use strict';
 
 describe('Controller: TrialAddCtrl', function () {
-  var controller, $httpBackend, $q, $scope, $state, $translate, Analytics, FeatureToggleService, HuronCustomer, Notification, Orgservice, TrialContextService, TrialPstnService, TrialService;
+  var controller, $httpBackend, $q, $scope, $state, $translate, Analytics, FeatureToggleService, HuronCountryService, HuronCustomer, Notification, Orgservice, TrialContextService, TrialPstnService, TrialService;
   var addContextSpy;
+  var countryList = getJSONFixture('core/json/trials/countryList.json');
 
   afterEach(function () {
-    controller = $httpBackend = $q = $scope = $state = $translate = Analytics = FeatureToggleService = HuronCustomer = Notification = Orgservice = TrialContextService = TrialPstnService = TrialService = undefined;
+    controller = $httpBackend = $q = $scope = $state = $translate = Analytics = FeatureToggleService = HuronCountryService = HuronCustomer = Notification = Orgservice = TrialContextService = TrialPstnService = TrialService = undefined;
     addContextSpy = undefined;
   });
 
@@ -14,7 +15,7 @@ describe('Controller: TrialAddCtrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Core'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$q_, _$state_, _$translate_, _Analytics_, _FeatureToggleService_, _HuronCustomer_, _Notification_, _Orgservice_, _TrialContextService_, _TrialPstnService_, _TrialService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$q_, _$state_, _$translate_, _Analytics_, _FeatureToggleService_, _HuronCountryService_, _HuronCustomer_, _Notification_, _Orgservice_, _TrialContextService_, _TrialPstnService_, _TrialService_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     $q = _$q_;
@@ -28,12 +29,12 @@ describe('Controller: TrialAddCtrl', function () {
     TrialContextService = _TrialContextService_;
     TrialPstnService = _TrialPstnService_;
     Analytics = _Analytics_;
+    HuronCountryService = _HuronCountryService_;
 
     $state.modal = jasmine.createSpyObj('modal', ['close']);
     addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.resolve());
 
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
@@ -48,6 +49,7 @@ describe('Controller: TrialAddCtrl', function () {
     spyOn($state, 'go');
     spyOn(TrialService, 'getDeviceTrialsLimit');
     spyOn(Analytics, 'trackTrialSteps');
+    spyOn(HuronCountryService, 'getCountryList').and.returnValue($q.resolve(countryList));
 
     $httpBackend
       .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null?disableCache=false')
@@ -112,6 +114,7 @@ describe('Controller: TrialAddCtrl', function () {
     controller.pstnTrial.enabled = true;
     controller.callTrial.enabled = false;
     controller.roomSystemTrial.enabled = false;
+    controller.sparkBoardTrial.enabled = false;
     $scope.$apply();
     expect(controller.pstnTrial.enabled).toBeFalsy();
   });
@@ -145,6 +148,7 @@ describe('Controller: TrialAddCtrl', function () {
       beforeEach(function () {
         controller.callTrial.enabled = false;
         controller.roomSystemTrial.enabled = false;
+        controller.sparkBoardTrial.enabled = false;
         controller.pstnTrial.enabled = false;
         controller.startTrial();
         $scope.$apply();
@@ -163,6 +167,7 @@ describe('Controller: TrialAddCtrl', function () {
       beforeEach(function () {
         controller.callTrial.enabled = false;
         controller.roomSystemTrial.enabled = false;
+        controller.sparkBoardTrial.enabled = false;
         controller.pstnTrial.enabled = false;
         controller.startTrial(callback);
         $scope.$apply();
@@ -181,6 +186,7 @@ describe('Controller: TrialAddCtrl', function () {
       beforeEach(function () {
         controller.callTrial.enabled = false;
         controller.roomSystemTrial.enabled = false;
+        controller.sparkBoardTrial.enabled = false;
         controller.pstnTrial.enabled = false;
         controller.startTrial();
         $scope.$apply();
@@ -272,11 +278,13 @@ describe('Controller: TrialAddCtrl', function () {
       it('should return false when only sparkboardTrial is enabled', function () {
         controller.sparkBoardTrial.enabled = true;
         controller.roomSystemTrial.enabled = false;
+        controller.sparkBoardTrial.enabled = false;
         expect(controller.hasUserServices()).toBeFalsy();
       });
 
       it('should return false when no services are enabled', function () {
         controller.roomSystemTrial.enabled = false;
+        controller.sparkBoardTrial.enabled = false;
         $scope.$apply();
         expect(controller.hasUserServices()).toBeFalsy();
       });
@@ -294,6 +302,7 @@ describe('Controller: TrialAddCtrl', function () {
         controller.contextTrial.enabled = true;
         controller.callTrial.enabled = false;
         controller.roomSystemTrial.enabled = false;
+        controller.sparkBoardTrial.enabled = false;
         controller.startTrial();
         $scope.$apply();
         expect(TrialContextService.addService).toHaveBeenCalled();
@@ -305,6 +314,7 @@ describe('Controller: TrialAddCtrl', function () {
         controller.contextTrial.enabled = true;
         controller.callTrial.enabled = false;
         controller.roomSystemTrial.enabled = false;
+        controller.sparkBoardTrial.enabled = false;
         controller.startTrial();
         $scope.$apply();
         expect(TrialContextService.addService).toHaveBeenCalled();
@@ -325,6 +335,7 @@ describe('Controller: TrialAddCtrl', function () {
         controller.contextTrial.enabled = false;
         controller.callTrial.enabled = false;
         controller.roomSystemTrial.enabled = false;
+        controller.sparkBoardTrial.enabled = false;
         controller.startTrial();
         $scope.$apply();
       });

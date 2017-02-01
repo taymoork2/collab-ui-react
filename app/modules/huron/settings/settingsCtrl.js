@@ -1075,7 +1075,7 @@
     }
 
     function updateSiteVoicemailNumber(siteData) {
-      if (!_.isEmpty(siteData)) {
+      if (!_.isEmpty(siteData) && ServiceSetup.sites.length !== 0) {
         return ServiceSetup.updateSite(ServiceSetup.sites[0].uuid, siteData)
           .then(function () {
             // Set the new site voicemail pilot number

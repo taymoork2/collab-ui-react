@@ -62,6 +62,14 @@ describe('Service: UserDetails', function () {
       $httpBackend.flush();
     });
 
+    it('when there are no user statuses returned (stale UI)', function () {
+      var simulatedResponse = [];
+      UserDetails.getUsers('5632-f806-org', simulatedResponse, progress)
+        .then(function (userRows) {
+          expect(userRows.length).toEqual(0);
+        });
+    });
+
     it('also shows the status description in the Activated state', function () {
       $httpBackend
         .when('GET', 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111"')

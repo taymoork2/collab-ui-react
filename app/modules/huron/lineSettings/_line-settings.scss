@@ -20,3 +20,21 @@
 .top-padding-section-title {
   padding-top: 20px;
 }
+
+#auto-answer-sp {
+  .side-panel-section {
+    margin-top: 20px;
+
+    .cs-form {
+      margin-bottom: 0;
+    }
+
+    .cs-form__section {
+      .section__title {
+        font-size: 1.25rem;
+      }
+      padding-bottom: 0;
+      border: transparent;
+    }
+  }
+}

@@ -6,9 +6,9 @@
   /* @ngInject */
   function FeatureToggleService($http, $q, $resource, $rootScope, $state, Authinfo, HuronConfig, UrlConfig, Orgservice) {
     var features = {
+      requireAcceptTos: 'atlas-tos-required',
       dirSync: 'atlas-dir-sync',
       atlasCareTrials: 'atlas-care-trials',
-      atlasCareCallbackTrials: 'atlas-care-callback-trials',
       atlasCareInboundTrials: 'atlas-care-inbound-trials',
       atlasContextServiceTrials: 'atlas-context-service-trials',
       atlasDataRetentionSettings: 'atlas-data-retention-settings',
@@ -163,7 +163,9 @@
       atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',
       avrilVmEnable: 'avril-vm-enable',
       avrilVoicemaill1249: 'avril-voicemail-l1249',
-      cloudberryPersonalMode: 'ce-enable-personal-mode'
+      cloudberryPersonalMode: 'ce-enable-personal-mode',
+      autoAnswer: 'huron-auto-answer',
+      huronFederatedSparkCall: 'huron-federated-spark-call',
     };
 
     var toggles = {};

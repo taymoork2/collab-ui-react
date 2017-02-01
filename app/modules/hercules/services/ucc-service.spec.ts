@@ -27,7 +27,7 @@ describe('UCCService', () => {
 
   function mockDependencies($provide) {
     let Authinfo = {
-      getOrgId: sinon.stub().returns(orgId),
+      getOrgId: jasmine.createSpy('getOrgId').and.returnValue(orgId),
     };
     $provide.value('Authinfo', Authinfo);
   }

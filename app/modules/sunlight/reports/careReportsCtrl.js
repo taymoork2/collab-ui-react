@@ -68,7 +68,7 @@
     vm.filtersUpdate = filtersUpdate;
     vm.inboundCallFeature = false;
 
-    var mediaTypes = ['all', 'chat'];
+    var mediaTypes = ['all', 'chat', 'callback'];
     vm.mediaTypeOptions = _.map(mediaTypes, function (name, i) {
       return {
         value: i,
@@ -222,9 +222,6 @@
     }
 
     function enableReportingFilters() {
-      if (vm.callbackFeature) {
-        mediaTypes.push("callback");
-      }
       if (vm.inboundCallFeature) {
         mediaTypes.push("voice");
       }
@@ -253,13 +250,9 @@
       delayedResize();
     }
     $timeout(function () {
-      $q.all({
-        callbackFeature: FeatureToggleService.atlasCareCallbackTrialsGetStatus(),
-        inboundCallFeature: FeatureToggleService.atlasCareInboundTrialsGetStatus()
-      }).then(function (results) {
-        vm.callbackFeature = results.callbackFeature;
-        vm.inboundCallFeature = results.inboundCallFeature;
-        if (vm.callbackFeature || vm.inboundCallFeature) {
+      FeatureToggleService.atlasCareInboundTrialsGetStatus().then(function (enabled) {
+        vm.inboundCallFeature = enabled;
+        if (vm.inboundCallFeature) {
           vm.mediaTypeSelected = vm.mediaTypeOptions[0];
         }
         enableReportingFilters();

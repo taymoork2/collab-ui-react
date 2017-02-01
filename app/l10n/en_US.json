@@ -333,7 +333,7 @@
       "deleteUserDnFallbackError": "entitlement update failed. The user's directory number is used as the fallback destination for Hunt Group(s).",
       "other": "not entitled, status: {{status}}"
     },
-    "enableCareInformationText": "Select Message and Call to enable Care."
+    "enableCareInformationText": "Select Message to enable Care."
   },
   "usersPreview": {
     "groupPreview": "Group:",
@@ -1468,7 +1468,6 @@
     "serverDown": "Authorization failed. Server may be down, please contact system administrator. You will automatically be logged out in a few seconds.",
     "expired": "Your session is expired or unauthorized. You will automatically be logged out in a few seconds. Please login again to continue using the service.",
     "unsupported": "You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.",
-    "unsupportedUserAgent": "You are using an unsupported internet browser",
     "statusError": "Request failed with status: {{status}}.",
     "csvError": "Export failed.",
     "videoError": "There is a problem with the video you are trying to play.",
@@ -3279,6 +3278,15 @@
     "customNumberValidation": "Field can contain digits 0 to 9 and +. For example: +15556667777.",
     "saveConfirmation": "Do you want to save your changes?"
   },
+  "autoAnswerPanel": {
+    "title": "Auto Answer",
+    "description": "Enable to choose which devices to automatically answer this line when a call comes in.",
+    "userSharedLineDescription": "This line is shared, setting auto answer for this {{ownerType}} will turn it off for the {{type}}, {{name}}",
+    "multiDeviceLineDescription": "If auto answer is set, the call will be answered by the selected phone. Other phones will not ring.",
+    "speaker": "Speaker",
+    "headset": "Headset",
+    "noSupportedDevices": "No supported devices"
+  },
   "sharedLinePanel": {
     "title": "Shared Line",
     "description": "Simultaneously ring other users' lines when this line is called.",
@@ -3574,7 +3582,11 @@
     "roomSystem": "Room Device",
     "deviceBasedServices": "Device-based Services",
     "call": "Call",
-    "activeServicesInformation": "These services are already purchased."
+    "activeServicesInformation": "These services are already purchased.",
+    "regionalSettings": "Regional Settings",
+    "defaultCountry": "Default Country",
+    "defaultCountryDesc": "Specify the country to set the correct dial tone on user devices.",
+    "defaultCountryPlaceholder": "Select your country"
   },
   "trialModal": {
     "addTrial": {

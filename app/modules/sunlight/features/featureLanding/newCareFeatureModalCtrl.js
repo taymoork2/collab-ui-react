@@ -6,7 +6,7 @@
         .controller('NewCareFeatureModalCtrl', NewCareFeatureModalCtrl);
 
     /* @ngInject */
-  function NewCareFeatureModalCtrl($modalInstance, $scope, $state, Authinfo, FeatureToggleService) {
+  function NewCareFeatureModalCtrl($modalInstance, $scope, $state, Authinfo) {
     var vm = $scope;
 
     vm.features = [];
@@ -29,13 +29,8 @@
 
     if (Authinfo.isCare()) {
       vm.features.push(careChatService);
+      vm.features.push(careCallbackService);
     }
-
-    FeatureToggleService.atlasCareCallbackTrialsGetStatus().then(function (result) {
-      if (result) {
-        vm.features.push(careCallbackService);
-      }
-    });
 
     vm.ok = ok;
     vm.cancel = cancel;
