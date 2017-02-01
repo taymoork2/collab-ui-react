@@ -23,8 +23,8 @@
       return wizardData.function !== 'addDevice';
     };
 
-    vm.hideCancelButton = vm.isNewPlaceFlow();
-    vm.hideBackButton = !vm.isNewPlaceFlow();
+    vm.hideCancelButton = vm.isNewPlaceFlow() || vm.showPersonal;
+    vm.hideBackButton = !vm.isNewPlaceFlow() && !vm.showPersonal;
 
     vm.next = function () {
       if (vm.selectedDeviceType) {

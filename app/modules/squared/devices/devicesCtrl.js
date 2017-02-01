@@ -299,7 +299,7 @@ require('./_devices.scss');
                 }
               },
               'addDeviceFlow.chooseDeviceType': {
-                next: {
+                nextOptions: {
                   cloudberry: 'addDeviceFlow.editServices',
                   huron: 'addDeviceFlow.addLines'
                 }

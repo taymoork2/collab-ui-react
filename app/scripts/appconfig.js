@@ -487,8 +487,6 @@
           .state('addDeviceFlow.showActivationCode', {
             parent: 'modal',
             params: {
-              currentUser: {},
-              activationCode: {},
               wizard: null
             },
             views: {
