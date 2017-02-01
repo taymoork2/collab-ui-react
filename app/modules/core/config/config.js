@@ -437,6 +437,7 @@
         'huronlines',
         'huronnewfeature',
         'huronsettings',
+        'huronsettingsnew',
         'huntgroupedit',
         'intercomgroups',
         'mediaonhold',

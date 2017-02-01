@@ -1,0 +1,43 @@
+<div ng-form="$ctrl.dialingForm">
+  <h5 class="title-margin-bottom" translate="serviceSetupModal.dialing"></h5>
+  <div class="cs-radio-group">
+    <input
+      cs-input
+      type="radio"
+      id="nationalDialing"
+      name="dialingRadio"
+      value="national"
+      ng-model="$ctrl.dialingHabit"
+      ng-change="$ctrl.onDialingHabitChanged(value)"
+      cs-input-label="{{:: 'serviceSetupModal.nationalDialingTitle' | translate}}"
+      cs-input-help-text="{{:: 'serviceSetupModal.nationalDialingDesc' | translate}}">
+    <input
+      cs-input
+      type="radio"
+      id="localDialing"
+      name="dialingRadio"
+      value="local"
+      ng-model="$ctrl.dialingHabit"
+      ng-change="$ctrl.onDialingHabitChanged(value)"
+      cs-input-label="{{:: 'serviceSetupModal.localDialingTitle' | translate}}"
+      cs-input-help-text="{{:: 'serviceSetupModal.localDialingDesc' | translate}}"
+      ng-disabled="!$ctrl.isTerminusCustomer">
+  </div>
+  <div class="indent-area-code" ng-if="$ctrl.isTerminusCustomer">
+    <input
+      cs-input
+      type="text"
+      id="areacode-input"
+      name="areacode-input"
+      ng-model="$ctrl.regionCode"
+      ng-change="$ctrl.onRegionCodeChanged()"
+      ng-pattern="/^[0-9]*$/"
+      ng-disabled="$ctrl.dialingHabit === 'national'"
+      ng-required="$ctrl.dialingHabit === 'local'"
+      cs-input-group-size="medium-3"
+      cs-input-label="{{:: 'serviceSetupModal.localDialingNumberTitle' | translate}}"
+      cs-input-messages="$ctrl.messages"
+      validate-dialing-area-code>
+  </div>
+  <p class="row full columns warning terminus-warning indent-area-code" ng-if="!$ctrl.isTerminusCustomer"><i class="icon icon-warning"></i>{{::'serviceSetupModal.warning.localDialing' | translate}}</p>
+</div>

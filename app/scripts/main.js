@@ -61,6 +61,7 @@
     require('modules/core/trials/regionalSettings').default,
     require('modules/core/trials/emergencyServices').default,
     require('modules/huron/countries').default,
+    require('modules/huron/settings').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('phone', require('google-libphonenumber'))
@@ -88,7 +89,7 @@
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
     require('modules/huron/autoAnswer').default,
-    require('modules/huron/cos').default,
+    require('modules/huron/settings').default,
     require('modules/huron/pstn').default,
     require('modules/huron/pstn/pstnProviders').default,
     require('modules/huron/overview').default,

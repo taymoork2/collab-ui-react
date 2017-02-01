@@ -1,0 +1,64 @@
+<div ng-form="$ctrl.extensionRangeForm" class="extension-range">
+  <label class="control-label" translate="serviceSetupModal.internalExtensionRange"></label>
+  <p class="description-block" translate="serviceSetupModal.internalNumberRangeDescription" translate-values="{ length: {{$ctrl.site.extensionLength}} }"></p>
+  <div ng-repeat="range in $ctrl.numberRanges track by $index" class="extension-range-container">
+    <input
+      cs-input
+      type="text"
+      id="beginRange{{$index}}"
+      name="beginRange{{$index}}"
+      ng-model="range.beginNumber"
+      ng-model-options="{
+        updateOn: 'default blur',
+        debounce: { 'default': 600, 'blur': 0 }
+      }"
+      ng-pattern="/^[0-9]*$/"
+      ng-maxlength="$ctrl.site.extensionLength"
+      ng-minlength="$ctrl.site.extensionLength"
+      cs-input-messages="$ctrl.messages"
+      cs-input-warning="$ctrl.steeringDigitOverlap(range)"
+      cs-input-warning-message="{{::'directoryNumberPanel.steeringDigitOverlapWarning' | translate}}"
+      cs-input-group-size="medium-3"
+      validate-extension-range-length="beginNumber"
+      validate-extension-single-number="beginNumber"
+      validate-extension-less-than
+      required>
+    <span class="range-to" translate="serviceSetupModal.to"></span>
+    <input
+      cs-input
+      type="text"
+      id="endRange{{$index}}"
+      name="endRange{{$index}}"
+      ng-model="range.endNumber"
+      ng-model-options="{
+        updateOn: 'default blur',
+        debounce: { 'default': 600, 'blur': 0 }
+      }"
+      ng-pattern="/^[0-9]*$/"
+      ng-maxlength="$ctrl.site.extensionLength"
+      ng-minlength="$ctrl.site.extensionLength"
+      cs-input-messages="$ctrl.messages"
+      cs-input-warning="$ctrl.steeringDigitOverlap(range)"
+      cs-input-warning-message="{{::'directoryNumberPanel.steeringDigitOverlapWarning' | translate}}"
+      cs-input-group-size="medium-3"
+      validate-extension-range-length="endNumber"
+      validate-extension-single-number="endNumber"
+      validate-extension-greater-than
+      validate-extension-overlap
+      required>
+    <i
+      ng-if="$ctrl.showTrashCan()"
+      class="icon icon-trash trash-icon"
+      ng-click="$ctrl.removeExtensionRange(range)"
+      role="button">
+    </i>
+  </div>
+  <div class="row">
+    <button
+      class="btn-sm btn-link"
+      ng-click="$ctrl.addExtensionRange()"
+      translate="serviceSetupModal.addMoreExtensionRanges"
+      ng-disabled="$ctrl.extensionRangeForm.$invalid">
+    </button>
+  </div>
+</div>

@@ -2674,6 +2674,17 @@
             controller: 'HuronSettingsCtrl',
             controllerAs: 'settings',
           })
+          // TODO (jlowery): rename the huronsettingsnew to huronsettings state when sparkCallTenDigitExt is removed.
+          .state('huronsettingsnew', {
+            url: '/settingsnew',
+            parent: 'hurondetails',
+            template: '<uc-settings ftsw="false"></uc-settings>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require(['modules/huron/settings'], done);
+              }),
+            },
+          })
           .state('users.enableVoicemail', {
             parent: 'modal',
             views: {

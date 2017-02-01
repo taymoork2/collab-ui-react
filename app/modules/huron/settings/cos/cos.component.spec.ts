@@ -11,7 +11,7 @@ describe('Component: classOfService', () => {
 
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     this.compileComponent('ucCosForm', {
-      inputModel: 'restrictions',
+      cosRestrictions: 'restrictions',
       onChangeFn: 'onChangeFn(restrictions)',
     });
 

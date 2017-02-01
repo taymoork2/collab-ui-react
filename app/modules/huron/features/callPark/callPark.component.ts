@@ -58,7 +58,7 @@ class CallParkCtrl implements ng.IComponentController {
     .finally( () => this.isLoading = false);
 
     this.HuronSiteService.listSites().then(sites => {
-      this.HuronSiteService.getSite(sites[0].uuid).then(site => {
+      this.HuronSiteService.getSite(_.get<string>(sites[0], 'uuid')).then(site => {
         this.extensionLength = site.extensionLength;
       });
     });

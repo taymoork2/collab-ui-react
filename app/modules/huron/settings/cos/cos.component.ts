@@ -1,7 +1,5 @@
 class ClassOfService implements ng.IComponentController {
-
-  private inputModel;
-  private cosRestrictions;
+  public cosRestrictions;
   public premiumNumbers;
   private NATIONAL_CALLS = 'DIALINGCOSTAG_NATIONAL';
   private INTERNATIONAL_CALLS = 'DIALINGCOSTAG_INTERNATIONAL';
@@ -11,14 +9,6 @@ class ClassOfService implements ng.IComponentController {
 
   /* @ngInject */
   constructor() {}
-
-  public $onInit() {
-    this.cosRestrictions = this.inputModel;
-  }
-
-  public $onChanges(changes): void {
-    this.cosRestrictions = _.get(changes['inputModel'], 'currentValue');
-  }
 
   public getTitle(restriction): string {
     switch (restriction) {
@@ -51,25 +41,26 @@ class ClassOfService implements ng.IComponentController {
   }
 
   public onChange(value): void {
-    let indexnumber = _.findIndex(this.cosRestrictions, function(restriction) {
+    let indexnumber = _.findIndex(this.cosRestrictions, restriction => {
       return _.get(restriction, 'restriction', '') === value.restriction;
     });
 
-    this.cosRestrictions.splice(indexnumber, 1, value);
+    let clone = _.cloneDeep(this.cosRestrictions);
+    clone.splice(indexnumber, 1, value);
 
     this.onChangeFn({
-      restrictions: this.cosRestrictions,
+      restrictions: clone,
     });
   }
 }
 
 export class ClassOfServiceComponent implements ng.IComponentOptions {
   public controller = ClassOfService;
-  public templateUrl = 'modules/huron/cos/cos.component.html';
+  public templateUrl = 'modules/huron/settings/cos/cos.component.html';
   public bindings = {
     env: '@',
     onChangeFn: '&',
-    inputModel: '<',
+    cosRestrictions: '<',
     premiumNumbers: '<',
   };
 }

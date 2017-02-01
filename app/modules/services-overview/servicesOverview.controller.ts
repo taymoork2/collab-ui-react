@@ -78,6 +78,10 @@ export class ServicesOverviewCtrl {
         this.forwardEvent('privateTrunkFeatureToggleEventHandler', supports);
       });
 
+    this.FeatureToggleService.supports(FeatureToggleService.features.sparkCallTenDigitExt)
+      .then(supports => {
+        this.forwardEvent('sparkCallTenDigitExtFeatureToggleEventhandler', supports);
+      });
   }
 
   public getHybridCards() {

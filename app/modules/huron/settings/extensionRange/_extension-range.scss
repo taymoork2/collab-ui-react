@@ -1,0 +1,32 @@
+@import 'styles/toolkit/spacing';
+
+.extension-range-container {
+  display: flex;
+
+  .range-to {
+    @include vr-spacing(mt, 0.4);
+    @include vr-spacing(ml, 0.5);
+    @include vr-spacing(mr, 0.5);
+  }
+
+  .cs-input-group {
+    @include vr-spacing(mb, 0.2);
+  }
+
+  .trash-icon {
+    @include vr-spacing(mt, 0.3);
+    @include vr-spacing(ml, 0.5);
+
+    font-size: 1.7rem;
+    color: $gray-light-1;
+    cursor: pointer;
+
+    &:hover {
+      color: $color-primary-base;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
