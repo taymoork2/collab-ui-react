@@ -60,20 +60,17 @@ class HybridServiceClusterListCtrl implements ng.IComponentController {
                 }
             },
         };
-
-        this.ClusterService.subscribe('data', this.updateClusters, {
+        this.ClusterService.subscribe('data', () => {
+            this.FusionClusterService.setClusterAllowListInfoForExpressway(this.ClusterService.getClustersByConnectorType(this.connectorType))
+              .then((clusters) => {
+                  this.clusterList = clusters;
+              })
+              .catch(() => {
+                  this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
+              });
+        }, {
             scope: this.$scope,
         });
-    }
-
-    private updateClusters() {
-        this.FusionClusterService.setClusterAllowListInfoForExpressway(this.ClusterService.getClustersByConnectorType(this.connectorType))
-            .then((clusters) => {
-                this.clusterList = clusters;
-            })
-            .catch(() => {
-                this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
-            });
     }
 
     private goToSidepanel(clusterId: string) {
