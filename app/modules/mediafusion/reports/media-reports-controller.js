@@ -32,18 +32,22 @@
     vm.noData = $translate.instant('mediaFusion.metrics.nodata');
     vm.percentage = $translate.instant('mediaFusion.metrics.percentage');
 
-    vm.total_calls_heading = $translate.instant('mediaFusion.metrics.total_calls');
-    vm.on_prem_calls_heading = $translate.instant('mediaFusion.metrics.onpremcalls');
-    vm.hosted_calls_heading = $translate.instant('mediaFusion.metrics.hostedcalls');
-    vm.cloud_calls_heading = $translate.instant('mediaFusion.metrics.cloudcalls');
+    vm.total_participants_heading = $translate.instant('mediaFusion.metrics.total_participants');
+    vm.on_prem_participants_heading = $translate.instant('mediaFusion.metrics.onprem_participants');
+    vm.cloud_participants_heading = $translate.instant('mediaFusion.metrics.cloud_participants');
+    vm.cloud_calls_heading = $translate.instant('mediaFusion.metrics.cloud_calls');
     vm.redirected_calls_heading = $translate.instant('mediaFusion.metrics.redirectedcalls');
-    vm.cluster_availability_heading = $translate.instant('mediaFusion.metrics.clusteravailability');
+    vm.cluster_availability_heading = $translate.instant('mediaFusion.metrics.overAllAvailability');
     vm.customPlaceholder = $translate.instant('mediaFusion.report.custom');
 
-    vm.hosted_heading = vm.on_prem_calls_heading;
+    vm.hosted_heading = vm.on_prem_participants_heading;
     vm.redirected_heading = vm.cloud_calls_heading;
 
     vm.Map = {};
+    vm.cloudparticipants = {
+      isShow: '',
+      value: ''
+    };
 
     vm.displayAdoption = false;
     vm.displayResources = true;
@@ -103,11 +107,11 @@
     function clusterUpdate() {
       if (vm.clusterSelected !== vm.allClusters) {
         vm.clusterId = vm.Map[vm.clusterSelected];
-        vm.hosted_heading = vm.hosted_calls_heading;
+        vm.hosted_heading = vm.on_prem_participants_heading;
         vm.redirected_heading = vm.redirected_calls_heading;
       } else {
         vm.clusterId = vm.allClusters;
-        vm.hosted_heading = vm.on_prem_calls_heading;
+        vm.hosted_heading = vm.on_prem_participants_heading;
         vm.redirected_heading = vm.cloud_calls_heading;
       }
       loadResourceDatas();
@@ -180,11 +184,14 @@
             vm.onprem = vm.noData;
             vm.cloud = vm.noData;
             vm.total = vm.noData;
-          } else if (_.isUndefined(response.data.callsOnPremise) && !_.isUndefined(response.data.callsOverflow)) {
+          } else if (_.isUndefined(response.data.callsOnPremise) && !_.isUndefined(response.data.cloudCalls)) {
             vm.onprem = vm.noData;
             vm.cloud = response.data.callsOverflow;
-            vm.total = vm.cloud;
-          } else if (!_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.callsOverflow)) {
+            vm.cloudcalls = response.data.cloudCalls;
+            vm.cloudparticipants.isShow = true;
+            vm.cloudparticipants.value = vm.cloudcalls;
+            vm.total = vm.cloudcalls;
+          } else if (!_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.cloudCalls)) {
             vm.onprem = response.data.callsOnPremise;
             vm.cloud = vm.noData;
             vm.total = vm.onprem;
@@ -195,7 +202,10 @@
           } else {
             vm.onprem = response.data.callsOnPremise;
             vm.cloud = response.data.callsOverflow;
-            vm.total = vm.onprem + vm.cloud;
+            vm.cloudcalls = response.data.cloudCalls;
+            vm.total = vm.onprem + vm.cloudcalls;
+            vm.cloudparticipants.isShow = true;
+            vm.cloudparticipants.value = vm.cloudcalls;
           }
 
         } else {
