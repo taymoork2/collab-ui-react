@@ -26,6 +26,7 @@
       // Disallow all webex.com domains except for identity.webex.com subdomain
       buildBlacklistedDomainWithWhitelistedSubdomainRegex('webex.com', ['identity']),
       buildBlacklistedDomainRegex('webexconnect.com'),
+      buildBlacklistedDomainRegex('ciscoccservice.com'),
     ];
 
     return interceptor;

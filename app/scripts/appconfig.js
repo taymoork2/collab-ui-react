@@ -2786,7 +2786,7 @@
             views: {
               'contextServiceView': {
                 templateUrl: 'modules/context/fields/hybrid-context-fields.html',
-                controller: 'HybridContextFieldsController',
+                controller: 'HybridContextFieldsCtrl',
                 controllerAs: 'contextFields',
               },
             },
@@ -2797,7 +2797,7 @@
             views: {
               'contextServiceView': {
                 templateUrl: 'modules/context/fieldsets/hybrid-context-fieldsets.html',
-                controller: 'HybridContextFieldsetsController',
+                controller: 'HybridContextFieldsetsCtrl',
                 controllerAs: 'contextFieldsets',
               },
             },

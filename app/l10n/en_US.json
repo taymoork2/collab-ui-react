@@ -2334,20 +2334,21 @@
       }
     },
     "dictionary": {
-      "welcome": "Welcome to the Context Dictionary"
-    }
-  },
-  "context": {
-    "pageTitle": "Hybrid Context Service",
-    "clusters": {
-      "listing": {
-        "no_clusters_heading": "No Context clusters registered yet",
-        "no_clusters_text": "Register for Context Service through your on-premise application.",
-        "learn_how": "Learn How."
+      "welcome": "Welcome to the Context Dictionary",
+      "fieldPage": {
+        "fieldId": "Field ID",
+        "dataType":"Data Type",
+        "classification": "Data Privacy",
+        "searchable": "Searchable",
+        "lastUpdated":"Date Updated",
+        "startSearching": "To begin, search for a field",
+        "noSearchResults": "Search yielded no results",
+        "fieldReadFailed": "Unable to retrieve fields. Refresh your browser to try again.",
+        "piiEncrypted": "PII Encrypted",
+        "encrypted": "Non-PII Encrypted",
+        "unencrypted": "Unencrypted",
+        "dateFormat": "MM/dd/yyyy"
       }
-    },
-    "dictionary": {
-      "welcome": "Welcome to the Context Dictionary"
     }
   },
   "hds": {

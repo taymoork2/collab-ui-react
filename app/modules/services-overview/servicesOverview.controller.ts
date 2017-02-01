@@ -37,7 +37,6 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewHybridAndGoogleCalendarCard(this.$state, this.$q, this.$modal, this.Authinfo, this.CloudConnectorService, this.FusionClusterStatesService),
       new ServicesOverviewHybridCalendarCard(this.Authinfo, this.FusionClusterStatesService),
       new ServicesOverviewHybridCallCard(this.Authinfo, this.FusionClusterStatesService),
-      new ServicesOverviewHybridContextCard(this.FusionClusterStatesService),
       new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.FusionClusterStatesService),
       new ServicesOverviewHybridDataSecurityCard(this.FusionClusterStatesService),
       new ServicesOverviewHybridContextCard(this.FusionClusterStatesService),
