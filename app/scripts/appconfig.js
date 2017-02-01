@@ -1412,6 +1412,16 @@
               }
             }
           })
+          .state('reports.mediaservice', {
+            url: '/reports/mediaservice',
+            views: {
+              'tabContent': {
+                controllerAs: 'nav',
+                controller: 'MediaReportsController',
+                templateUrl: 'modules/mediafusion/reports/media-reports-phase-two.html'
+              }
+            }
+          })
           .state('reports.care', {
             url: '/reports/care',
             views: {
