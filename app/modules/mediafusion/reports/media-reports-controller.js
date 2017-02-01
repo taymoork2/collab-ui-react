@@ -207,9 +207,6 @@
             vm.cloud = vm.noData;
             vm.total = vm.noData;
           } else {
-            /*vm.onprem = 5;
-            vm.cloud = 2;
-            vm.cloudcalls = 4;*/
             vm.onprem = response.data.callsOnPremise;
             vm.cloud = response.data.callsOverflow;
             vm.cloudcalls = response.data.cloudCalls;
