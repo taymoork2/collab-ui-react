@@ -15,7 +15,7 @@ class CustomerReportsHeaderCtrl {
             title: $translate.instant('mediaFusion.report.title'),
             state: 'reports.media',
           });
-        } else if (features.mfmilestonetwo) {
+        } else if (features.mfMilestoneTwo) {
           this.headerTabs.push({
             title: $translate.instant('mediaFusion.report.title'),
             state: 'reports.mediaservice',
@@ -56,7 +56,7 @@ class CustomerReportsHeaderCtrl {
   private webex: boolean = false;
   private promises: any = {
     mf: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneOneGetStatus(),
-    mfmilestonetwo: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneTwoGetStatus(),
+    mfMilestoneTwo: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneTwoGetStatus(),
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
     deviceUsageV2: this.FeatureToggleService.atlasDeviceUsageReportV2GetStatus(),
   };
