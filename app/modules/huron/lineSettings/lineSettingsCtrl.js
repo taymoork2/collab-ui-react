@@ -123,7 +123,7 @@ require('./_line-settings.scss');
     vm.disassociateSharedLineUser = disassociateSharedLineUser;
 
     vm.callForwardInputs = ['external', 'uri', 'custom'];
-    vm.callerIdInputs = ['external', 'custom'];
+    vm.callerIdInputs = ['external'];
     vm.getRegionCode = getRegionCode;
     vm.setAllForward = setAllForward;
     vm.setInternalForward = setInternalForward;
