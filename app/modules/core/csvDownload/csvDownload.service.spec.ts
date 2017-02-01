@@ -10,6 +10,7 @@ describe('CsvDownloadService', () => {
       '$httpBackend',
       '$window',
       '$q',
+      '$timeout',
       'UserCsvService',
       'CsvDownloadService',
       'UrlConfig',
@@ -164,7 +165,13 @@ describe('CsvDownloadService', () => {
         location: 'http://example.com/getUserReport',
       });
 
-      this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, {
+      this.getUserReportRUNNING = {
+        processStatus: 'RUNNING',
+        message: 'Checking if to userExport-test.tar.gz exists',
+        context: {},
+      };
+
+      this.getUserReportCOMPLETE = {
         processStatus: 'COMPLETE',
         message: 'Users exported to userExport-test.tar.gz',
         context: {
@@ -172,7 +179,18 @@ describe('CsvDownloadService', () => {
           checksum: '7c706d76bbb1c5dd48ac148d5eda0fe5',
           fileUrl: 'https://storage101.example.com/userExport-b15ef877-901d-4a73-bab1-ed91670422b6.tar.gz',
         },
-      });
+      };
+
+      this.getUserReportFAILED = {
+        processStatus: 'FAILED',
+        message: 'Failed getting userExport-test.tar.gz',
+        context: {},
+      };
+
+      this.getUserReportINVALID = {
+        message: 'Unknown status',
+        context: {},
+      };
 
       // define the dummy tar.gz file to return
       let base64 = require('base64-js');
@@ -181,51 +199,120 @@ describe('CsvDownloadService', () => {
       );
       this.blobData = new Blob([tgz], { type: 'application/x-gzip' });
 
-      this.$httpBackend.expectGET('https://storage101.example.com/userExport-b15ef877-901d-4a73-bab1-ed91670422b6.tar.gz').respond(200, this.blobData);
-      this.$httpBackend.whenDELETE('http://example.com/getUserReport').respond(204);
-
       this.extractTarServiceSpy = spyOn(this.ExtractTarService, 'extractFile').and.callFake(() => {
         // return a Blob containing dummy data. We don't care what is in the data, just
         // that it is a Blob
         return this.$q.resolve(this.blobData);
       });
+
     });
 
-    it('should get user export file using the report API', function (done) {
-      let promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true)
-        .then((dataUrl) => {
-          expect(dataUrl).toContain('blob:http://');
-        })
-        .finally(() => {
-          _.defer(done);
-        });
-      this.$httpBackend.flush();
-      expect(promise).toBeResolved();
-    });
-
-    it('should always get user export file using the report API when Cicso org', function (done) {
-      spyOn(this.Authinfo, 'isCisco').and.returnValue(true);
-      let promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', false)
-        .then((dataUrl) => {
-          expect(dataUrl).toContain('blob:http://');
-        })
-        .finally(() => {
-          _.defer(done);
-        });
-      this.$httpBackend.flush();
-      expect(promise).toBeResolved();
-    });
-
-    it('should reject promise if there was a problem extracting the file', function () {
-      this.extractTarServiceSpy.and.callFake(() => {
-        return this.$q.reject('extract failed');
-      });
+    it('should keep asking for user report until COMPLETE', function () {
+      this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportRUNNING);
 
       let promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true);
       this.$httpBackend.flush();
-      expect(promise).toBeRejectedWith('extract failed');
+
+      // respond with a second Running
+      this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportRUNNING);
+      this.$timeout.flush();
+      this.$httpBackend.flush();
+
+      // respond with Complete and finialize processing
+      this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportCOMPLETE);
+      this.$httpBackend.expectGET('https://storage101.example.com/userExport-b15ef877-901d-4a73-bab1-ed91670422b6.tar.gz').respond(200, this.blobData);
+      this.$httpBackend.expectDELETE('http://example.com/getUserReport').respond(204);
+
+      this.$timeout.flush();
+      this.$httpBackend.flush();
+
+      expect(promise).toBeResolved();
     });
 
+    it('should reject promise if FAILURE is returned', function () {
+      this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportRUNNING);
+
+      let promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true);
+      this.$httpBackend.flush();
+
+      // respond with FAILED
+      this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportFAILED);
+      this.$timeout.flush();
+      this.$httpBackend.flush();
+
+      expect(promise).toBeRejectedWith(this.getUserReportFAILED);
+    });
+
+    it('should reject promise if processStatus returns something unsuported', function () {
+      this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportINVALID);
+
+      let promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true);
+      this.$httpBackend.flush();
+
+      expect(promise).toBeRejectedWith(this.getUserReportINVALID);
+    });
+
+    it('should reject promise if fetching processStatus returns HTTP error code', function () {
+      this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportRUNNING);
+
+      let promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true);
+      this.$httpBackend.flush();
+
+      // respond with an HTTP error code
+      this.$httpBackend.expectGET('http://example.com/getUserReport').respond(503);
+      this.$timeout.flush();
+      this.$httpBackend.flush();
+
+      expect(promise).toBeRejectedWith(jasmine.objectContaining({ status: 503 }));
+    });
+
+    describe('successfully returned data', function () {
+
+      beforeEach(function () {
+        this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportCOMPLETE);
+        this.$httpBackend.expectGET('https://storage101.example.com/userExport-b15ef877-901d-4a73-bab1-ed91670422b6.tar.gz').respond(200, this.blobData);
+      });
+
+      it('should get user export file using the report API', function (done) {
+        this.$httpBackend.expectDELETE('http://example.com/getUserReport').respond(204);
+
+        let promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true)
+          .then((dataUrl) => {
+            expect(dataUrl).toContain('blob:http://');
+          })
+          .finally(() => {
+            _.defer(done);
+          });
+        this.$httpBackend.flush();
+        expect(promise).toBeResolved();
+      });
+
+      it('should always get user export file using the report API when Cicso org', function (done) {
+        this.$httpBackend.expectDELETE('http://example.com/getUserReport').respond(204);
+
+        spyOn(this.Authinfo, 'isCisco').and.returnValue(true);
+        let promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', false)
+          .then((dataUrl) => {
+            expect(dataUrl).toContain('blob:http://');
+          })
+          .finally(() => {
+            _.defer(done);
+          });
+        this.$httpBackend.flush();
+        expect(promise).toBeResolved();
+      });
+
+      it('should reject promise if there was a problem extracting the file', function () {
+        this.extractTarServiceSpy.and.callFake(() => {
+          return this.$q.reject('extract failed');
+        });
+
+        let promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true);
+        this.$httpBackend.flush();
+        expect(promise).toBeRejectedWith('extract failed');
+      });
+
+    });
   });
 
   describe('Browser: IE specific tests', () => {
