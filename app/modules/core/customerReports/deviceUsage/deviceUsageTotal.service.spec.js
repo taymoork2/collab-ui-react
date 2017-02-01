@@ -64,7 +64,7 @@ describe('DeviceUsageTotalService', function () {
       var expectedFullResult = [
         {
           "callCount": 10,
-          "totalDuration": "0.03",
+          "totalDuration": 100,
           "pairedCount": 10,
           "deviceCategories": {
             "ce": {
@@ -106,6 +106,7 @@ describe('DeviceUsageTotalService', function () {
               "pairedCount": 4
             }
           },
+          "totalDurationY": "0.03",
           "time": "2016-10-01"
         }
       ];
@@ -216,7 +217,7 @@ describe('DeviceUsageTotalService', function () {
       var expectedFullResult = [
         {
           "callCount": 2,
-          "totalDuration": "1.00", // hours
+          "totalDuration": 3600,
           "pairedCount": 2,
           "deviceCategories": {
             "ce": {
@@ -240,6 +241,7 @@ describe('DeviceUsageTotalService', function () {
               "pairedCount": 1
             }
           },
+          "totalDurationY": "1.00",
           "time": "2016-10-01"
         }
       ];
