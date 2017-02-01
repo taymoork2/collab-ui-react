@@ -46,7 +46,7 @@ export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
 
   public constructor(
     params: IHybridCardParams,
-    private FusionClusterStatesService
+    private FusionClusterStatesService,
   ) {
     super(params);
     this.service = params.service;
@@ -60,6 +60,7 @@ export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
       routerState: this.routerState,
     };
     this.active = filterAndGetEnabledService(servicesStatuses, this.service);
+    this.setupMode = !this.active;
     this.loading = false;
   }
 }

@@ -76,8 +76,8 @@
       return $http.get(url).then(extractData);
     }
 
-    function getHistories(customerId, ccaGroupId) {
-      var url = URL.activityLogs + '/' + customerId + '/' + ccaGroupId + '/Callback%20Group';
+    function getHistories(customerId, ccaGroupId, groupName) {
+      var url = URL.activityLogs + '/' + customerId + '/' + ccaGroupId + '/Callback%20Group/' + groupName;
       return $http.get(url).then(extractData);
     }
 

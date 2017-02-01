@@ -202,7 +202,8 @@
         valueField: 'average_util',
         dashLength: 4,
         lineColor: chartColors.grayLightTwo,
-        showBalloon: false
+        showBalloon: false,
+        isDummy: true
       });
       return dummyGraph;
     }
@@ -259,6 +260,8 @@
         title: 'Cluster',
         valueField: 'particpant_count',
         lineColor: chartColors.grayLightTwo,
+        showBalloon: false,
+        isDummy: true
       });
       return dummyGraph;
     }

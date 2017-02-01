@@ -38,11 +38,11 @@ describe('Controller: UserRolesCtrl', function () {
     });
 
     spyOn(Userservice, 'patchUserRoles').and.callFake(function () {
-      return $q.when({ data: { userResponse: [currentUser] } });
+      return $q.resolve({ data: { userResponse: [currentUser] } });
     });
 
     spyOn(Userservice, 'updateUserProfile').and.callFake(function () {
-      return $q.when({ data: currentUser });
+      return $q.resolve({ data: currentUser });
     });
 
   }));
@@ -56,6 +56,9 @@ describe('Controller: UserRolesCtrl', function () {
     $scope.rolesEdit = {
       form: {
         displayName: {
+          $setValidity: jasmine.createSpy('$setValidity')
+        },
+        partialAdmin: {
           $setValidity: jasmine.createSpy('$setValidity')
         }
       }
@@ -169,12 +172,14 @@ describe('Controller: UserRolesCtrl', function () {
         $scope.formUserData.displayName = '';
         $scope.checkAdminDisplayName();
         expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith("notblank", false);
+        expect($scope.rolesEdit.form.partialAdmin.$setValidity).toHaveBeenCalledWith("noSelection", false);
       });
 
       it('should invalidate display name if not first name, last name and display name are all blank', function () {
         $scope.formUserData.displayName = 'DN';
         $scope.checkAdminDisplayName();
         expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith("notblank", true);
+        expect($scope.rolesEdit.form.partialAdmin.$setValidity).toHaveBeenCalledWith("noSelection", false);
       });
     });
 
@@ -190,6 +195,7 @@ describe('Controller: UserRolesCtrl', function () {
         $scope.formUserData.displayName = '';
         $scope.checkAdminDisplayName();
         expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith("notblank", true);
+        expect($scope.rolesEdit.form.partialAdmin.$setValidity).toHaveBeenCalledWith("noSelection", true);
       });
     });
 
@@ -372,38 +378,38 @@ describe('Controller: UserRolesCtrl', function () {
       it('should have spark.synckms role when already present', function () {
 
         var expectedRoles = [
-          Object({
+          {
             roleName: 'Full_Admin',
             roleState: 'ACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Readonly_Admin',
             roleState: 'INACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Sales_Admin',
             roleState: 'INACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Billing',
             roleState: 'INACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Support',
             roleState: 'INACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Reports',
             roleState: 'INACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Help_Desk',
             roleState: 'INACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Spark_SyncKms',
             roleState: 'ACTIVE'
-          })
+          }
         ];
 
         // set user to full admin.
@@ -427,38 +433,38 @@ describe('Controller: UserRolesCtrl', function () {
       it('should not have spark.synckms role when not already present', function () {
 
         var expectedRoles = [
-          Object({
+          {
             roleName: 'Full_Admin',
             roleState: 'ACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Readonly_Admin',
             roleState: 'INACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Sales_Admin',
             roleState: 'INACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Billing',
             roleState: 'INACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Support',
             roleState: 'INACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Reports',
             roleState: 'INACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Help_Desk',
             roleState: 'INACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Spark_SyncKms',
             roleState: 'INACTIVE'
-          })
+          }
         ];
 
         // set user to full admin.
@@ -482,42 +488,42 @@ describe('Controller: UserRolesCtrl', function () {
       it('should have orderadmin and helpdesk role when already present', function () {
 
         var expectedRoles = [
-          Object({
+          {
             roleName: 'Full_Admin',
             roleState: 'ACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Readonly_Admin',
             roleState: 'INACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Sales_Admin',
             roleState: 'INACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Billing',
             roleState: 'INACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Support',
             roleState: 'INACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Reports',
             roleState: 'INACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Help_Desk',
             roleState: 'ACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Order_Admin',
             roleState: 'ACTIVE'
-          }),
-          Object({
+          },
+          {
             roleName: 'Spark_SyncKms',
             roleState: 'INACTIVE'
-          })
+          }
         ];
 
         expect($scope.rolesObj.adminRadioValue).not.toEqual(1);

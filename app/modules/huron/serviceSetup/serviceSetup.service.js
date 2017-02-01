@@ -147,7 +147,7 @@
             internalNumberRange.uuid = headers('location').split("/").pop();
           }).$promise;
         } else {
-          return $q.when();
+          return $q.resolve();
         }
       },
 
@@ -162,7 +162,7 @@
             internalNumberRange.uuid = headers('location').split("/").pop();
           }).$promise;
         } else {
-          return $q.when();
+          return $q.resolve();
         }
       },
 
@@ -261,7 +261,7 @@
             restrictionId: cosUuid
           }, cosType).$promise;
         } else {
-          return $q.when();
+          return $q.resolve();
         }
       },
 

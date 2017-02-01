@@ -36,7 +36,7 @@ describe('Component: pgMember', () => {
       '$scope',
       '$q',
       'FeatureMemberService',
-      'Notification'
+      'Notification',
     );
 
     this.$scope.onUpdate = jasmine.createSpy('onUpdate');

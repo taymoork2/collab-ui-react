@@ -67,6 +67,10 @@ describe(' sunlightReportService', function () {
           return [200, []];
         }
       });
+    $httpBackend.whenGET(/.*filter=entitlements.*/g)
+      .respond(function () {
+        return [200, ciUserStats];
+      });
   }));
 
   beforeEach(inject(function ($rootScope, $q) {
@@ -195,9 +199,7 @@ describe(' sunlightReportService', function () {
   });
 
   it('should get the aggregated data based on userId', function (onSuccess, onError) {
-    sunlightReportService.getReportingData('all_user_stats', 0, 'chat').then(function (reportUserData) {
-      expect(reportUserData.length).toBe(5);
-      var aggregatedData = sunlightReportService.getAllUsersAggregatedData(reportUserData, ciUserStats);
+    sunlightReportService.getAllUsersAggregatedData('all_user_stats', 1, 'chat').then(function (aggregatedData) {
       expect(aggregatedData.length).toBe(4);
 
       expect(aggregatedData[0].avgCsatScore).toBe('-');

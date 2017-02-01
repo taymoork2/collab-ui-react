@@ -53,6 +53,10 @@
     }
 
     &.service-setup-extension {
+      .cs-input-deprecated {
+        width: 9rem;
+      }
+
       .formly-field-group {
         margin-bottom: 10px;
       }

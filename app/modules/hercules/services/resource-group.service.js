@@ -70,7 +70,7 @@
         .then(function (data) {
           var allowedChannels = [];
           _.forEach(data.releaseChannels, function (channel) {
-            if (channel.entitled === true) {
+            if (channel.entitled) {
               allowedChannels.push(channel.channel);
             }
           });

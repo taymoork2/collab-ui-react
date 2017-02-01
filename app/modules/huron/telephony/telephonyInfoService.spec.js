@@ -52,9 +52,9 @@ describe('Service: TelephonyInfoService', function () {
     });
     cosRestrictions = getJSONFixture('huron/json/telephonyInfo/userCosRestrictions.json');
 
-    spyOn(ServiceSetup, 'listSites').and.returnValue($q.when([]));
-    spyOn(DirectoryNumber, 'getAlternateNumbers').and.returnValue($q.when([]));
-    spyOn(HuronCustomer, 'get').and.returnValue($q.when(customer));
+    spyOn(ServiceSetup, 'listSites').and.returnValue($q.resolve([]));
+    spyOn(DirectoryNumber, 'getAlternateNumbers').and.returnValue($q.resolve([]));
+    spyOn(HuronCustomer, 'get').and.returnValue($q.resolve(customer));
     spyOn(Authinfo, 'getOrgId').and.returnValue('1');
     spyOn(InternationalDialing, 'listCosRestrictions');
     spyOn(InternationalDialing, 'isDisableInternationalDialing');
@@ -68,7 +68,7 @@ describe('Service: TelephonyInfoService', function () {
   describe('getInternationalDialing():', function () {
     it('should call get COS restrictions when NOT hiding international dialing', function () {
       InternationalDialing.isDisableInternationalDialing.and.returnValue(false);
-      InternationalDialing.listCosRestrictions.and.returnValue($q.when(cosRestrictions));
+      InternationalDialing.listCosRestrictions.and.returnValue($q.resolve(cosRestrictions));
 
       TelephonyInfoService.getInternationalDialing();
       $rootScope.$apply();
@@ -217,7 +217,7 @@ describe('Service: TelephonyInfoService', function () {
 
     it('should accept an object', function () {
       var cosRestrictions = getJSONFixture('huron/json/user/cosRestrictionsObject.json');
-      InternationalDialing.listCosRestrictions.and.returnValue($q.when(cosRestrictions));
+      InternationalDialing.listCosRestrictions.and.returnValue($q.resolve(cosRestrictions));
       TelephonyInfoService.getUserInternationalDialingDetails();
       $rootScope.$apply();
       expect(TelephonyInfoService.getTelephonyInfo().internationalDialingStatus).toEqual('internationalDialingPanel.alwaysAllow');

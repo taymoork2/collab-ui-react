@@ -73,7 +73,7 @@
       },
 
       licenseModel: {
-        cloudSharedMeeting: 'Cloud Shared Meeting',
+        cloudSharedMeeting: 'cloud shared meeting',
         hosts: 'hosts'
       },
 
@@ -401,18 +401,18 @@
         'autoattendant',
         'callpark',
         'callparkedit',
-        'callpickups',
+        'callPickupSetupAssistant',
+        'callpickupedit',
         'device-overview',
         'devices',
         'didadd',
         'huntgroups',
         'huronCallPark',
-        'huronCallPickup',
-        'huronPickupGroupEdit',
         'hurondetails',
         'huronfeatures',
         'huronHuntGroup',
         'huronPagingGroup',
+        'huronCallPickup',
         'huronPagingGroupEdit',
         'huronlines',
         'huronnewfeature',
@@ -421,6 +421,7 @@
         'intercomgroups',
         'mediaonhold',
         'paginggroups',
+        'pickupGroups',
         'place-overview',
         'places',
         'services-overview',

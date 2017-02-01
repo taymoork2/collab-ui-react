@@ -17,7 +17,8 @@
     }
 
     function renderBalloon(graphDataItem) {
-      var totalDuration = secondsTohhmmss(parseFloat(graphDataItem.dataContext.totalDuration) * 3600);
+      //var totalDuration = secondsTohhmmss(parseFloat(graphDataItem.dataContext.totalDuration) * 3600);
+      var totalDuration = secondsTohhmmss(parseFloat(graphDataItem.dataContext.totalDuration));
       var text = '<div><h5>' + $translate.instant('reportsPage.usageReports.callDuration') + ' : ' + totalDuration + '</h5>';
       text = text + $translate.instant('reportsPage.usageReports.callCount') + ' : ' + graphDataItem.dataContext.callCount + ' <br/> ';
       return text;
@@ -41,7 +42,8 @@
     }
 
     function getLabel(item) {
-      return secondsTohhmmss(parseFloat(item.dataContext.totalDuration) * 3600);
+      //return secondsTohhmmss(parseFloat(item.dataContext.totalDuration) * 3600);
+      return secondsTohhmmss(parseFloat(item.dataContext.totalDuration));
     }
 
     function getLineChart() {

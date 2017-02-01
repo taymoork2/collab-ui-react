@@ -2,7 +2,7 @@
 
 describe('Care Feature Ctrl should ', function () {
 
-  var controller, $filter, $q, $rootScope, $state, $scope, $timeout, Authinfo, CareFeatureList, Log, Notification, deferred, callbackDeferred;
+  var controller, $filter, $q, $rootScope, $state, $scope, $timeout, Authinfo, CareFeatureList, Log, Notification, deferred, callbackDeferred, $translate;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('Test-Org-Id')
   };
@@ -29,7 +29,7 @@ describe('Care Feature Ctrl should ', function () {
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
-  beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _$timeout_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _$timeout_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_, _$translate_) {
     $rootScope = _$rootScope_;
     $filter = _$filter_;
     $q = _$q_;
@@ -37,6 +37,7 @@ describe('Care Feature Ctrl should ', function () {
     $timeout = _$timeout_;
     $scope = _$rootScope_.$new();
     Authinfo = _Authinfo_;
+    $translate = _$translate_;
     CareFeatureList = _CareFeatureList_;
     Log = _Log_;
     Notification = _Notification_;
@@ -46,6 +47,7 @@ describe('Care Feature Ctrl should ', function () {
     callbackDeferred = $q.defer();
     spyOn(CareFeatureList, 'getChatTemplates').and.returnValue(deferred.promise);
     spyOn(CareFeatureList, 'getCallbackTemplates').and.returnValue(callbackDeferred.promise);
+
     spyOn($state, 'go');
 
     controller = $controller('CareFeaturesCtrl', {
@@ -56,7 +58,8 @@ describe('Care Feature Ctrl should ', function () {
       Authinfo: Authinfo,
       CareFeatureList: CareFeatureList,
       Log: Log,
-      Notification: Notification
+      Notification: Notification,
+      $translate: $translate
     });
   }));
 
@@ -112,7 +115,7 @@ describe('Care Feature Ctrl should ', function () {
       deleteFeatureId: featureTobBeDeleted.templateId,
       deleteFeatureType: featureTobBeDeleted.featureType
     });
-    expect(controller.listOfFeatures).not.toEqual(jasmine.arrayContaining([featureTobBeDeleted]));
+    expect(controller.filteredListOfFeatures).not.toEqual(jasmine.arrayContaining([featureTobBeDeleted]));
   });
 
   it('able to receive the CARE_FEATURE_DELETED event when template gets deleted and change pageState to NewFeature when no templates to show', function () {
@@ -127,17 +130,94 @@ describe('Care Feature Ctrl should ', function () {
       deleteFeatureId: featureTobBeDeleted.templateId,
       deleteFeatureType: featureTobBeDeleted.featureType
     });
-    expect(controller.listOfFeatures).not.toEqual(jasmine.arrayContaining([featureTobBeDeleted]));
+    expect(controller.filteredListOfFeatures).not.toEqual(jasmine.arrayContaining([featureTobBeDeleted]));
     expect(controller.pageState).toEqual('NewFeature');
   });
 
-  it('set the view to searched data', function () {
+  it('should filter a list of Chat templates', function () {
     deferred.resolve(getTemplatesSuccess('chat', templateList));
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
     $scope.$apply();
     $timeout.flush();
-    controller.searchData(templateList[0].name);
-    expect(controller.listOfFeatures).toEqual([templateList[0]]);
+    controller.setFilter('chat');
+    expect(controller.filteredListOfFeatures.length).toEqual(3);
+    expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
+  });
+
+  it('should filter a list of Callback templates', function () {
+    deferred.resolve(getTemplatesSuccess('chat', templateList));
+    callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    $scope.$apply();
+    $timeout.flush();
+    controller.setFilter('callback');
+    expect(controller.filteredListOfFeatures.length).toEqual(3);
+    expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Callback Dev Template');
+  });
+
+  it('should filter all the templates', function () {
+    deferred.resolve(getTemplatesSuccess('chat', templateList));
+    callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    $scope.$apply();
+    $timeout.flush();
+    controller.setFilter('all');
+    expect(controller.filteredListOfFeatures.length).toEqual(templateList.length);
+  });
+
+  it('should filter the list of templates to zero length', function () {
+    deferred.resolve(getTemplatesSuccess('chat', templateList));
+    callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    $scope.$apply();
+    $timeout.flush();
+    controller.setFilter('XX');
+    expect(controller.filteredListOfFeatures.length).toEqual(0);
+  });
+
+  it('set the view to searched data and the chat template should come first and then callback template', function () {
+    deferred.resolve(getTemplatesSuccess('chat', templateList));
+    callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    $scope.$apply();
+    $timeout.flush();
+    controller.searchData('Dev');
+    expect(controller.filteredListOfFeatures.length).toEqual(2);
+    expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
+    expect(controller.filteredListOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');
+  });
+
+  it('set the view to the searched data which is case insensitive and the chat template should come first and then callback template', function () {
+    deferred.resolve(getTemplatesSuccess('chat', templateList));
+    callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    $scope.$apply();
+    $timeout.flush();
+    controller.searchData('Dev');
+    expect(controller.filteredListOfFeatures.length).toEqual(2);
+    expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
+    expect(controller.filteredListOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');
+    controller.searchData('dev');
+    expect(controller.filteredListOfFeatures.length).toEqual(2);
+    expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
+    expect(controller.filteredListOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');
+  });
+
+  it('should filter the searched data from the list of Chat templates only', function () {
+    deferred.resolve(getTemplatesSuccess('chat', templateList));
+    callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    $scope.$apply();
+    $timeout.flush();
+    controller.searchData('Dev');
+    controller.setFilter('chat');
+    expect(controller.filteredListOfFeatures.length).toEqual(1);
+    expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
+  });
+
+  it('should filter the searched data from the list of Callback templates only', function () {
+    deferred.resolve(getTemplatesSuccess('chat', templateList));
+    callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    $scope.$apply();
+    $timeout.flush();
+    controller.searchData('Dev');
+    controller.setFilter('callback');
+    expect(controller.filteredListOfFeatures.length).toEqual(1);
+    expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Callback Dev Template');
   });
 
 });

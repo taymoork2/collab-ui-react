@@ -696,10 +696,6 @@
             controllerAs: 'overview',
             parent: 'main',
             resolve: {
-              // TODO Need to be removed once Care is graduated on atlas.
-              hasCareFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials);
-              },
               hasGoogleCalendarFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesGoogleCalendar);
               }
@@ -953,6 +949,9 @@
                   }
                 }
               }
+            },
+            params: {
+              manageUsers: false
             }
           })
           .state('users.convert.services', {
@@ -1429,16 +1428,20 @@
               'tabContent': {
                 controllerAs: 'deviceUsage',
                 controller: 'DeviceUsageCtrl',
-                templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html',
-                resolve: {
-                  deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                    return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
-                  }
-                }
+                templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html'
               }
             }
           })
-
+          .state('reports.device-usage-v2', {
+            url: '/reports/device/usagev2',
+            views: {
+              'tabContent': {
+                controllerAs: 'deviceUsage',
+                controller: 'DeviceUsageCtrl',
+                templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html',
+              }
+            }
+          })
           .state('reports.webex', {
             url: '/reports/webex',
             views: {
@@ -1865,10 +1868,6 @@
               filter: null
             },
             resolve: {
-              customerListToggle: /* @ngInject */ function () {
-                // TODO:  remove this once the controllers are refactored
-                return true;
-              },
               trialForPaid: function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
               }
@@ -1895,10 +1894,6 @@
                 function orgCallback(data) {
                   defer.resolve(data);
                 }
-              },
-              newCustomerViewToggle: /* @ngInject */ function () {
-                // TODO:  remove this once the controllers are refactored
-                return true;
               },
               trialForPaid: function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasStartTrialForPaid);
@@ -2364,7 +2359,8 @@
               customerId: {},
               customerName: {},
               customerEmail: {},
-              customerCommunicationLicenseIsTrial: {}
+              customerCommunicationLicenseIsTrial: {},
+              customerRoomSystemsLicenseIsTrial: {}
             },
             views: {
               'modal@': {
@@ -2510,12 +2506,27 @@
           })
           .state('huronCallPickup', {
             url: '/callPickup',
-            parent: 'main',
+            parent: 'hurondetails',
             template: '<call-pickup-setup-assistant></call-pickup-setup-assistant>',
             resolve: {
               lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
                 return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/features/callPickup'], loadModuleAndResolve($ocLazyLoad, resolve));
+                  require(['modules/huron/features/callPickup/callPickupSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            }
+          })
+          .state('callpickupedit', {
+            url: '/features/pi/edit',
+            parent: 'main',
+            template: '<call-pickup-setup-assistant></call-pickup-setup-assistant>',
+            params: {
+              feature: null
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/callPickup/callPickupSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
                 });
               }
             }
@@ -2599,7 +2610,7 @@
         $stateProvider
           .state('services-overview', {
             url: '/services',
-            templateUrl: 'modules/services-overview/overview.html',
+            templateUrl: 'modules/services-overview/services-overview.html',
             controller: 'ServicesOverviewCtrl',
             controllerAs: 'servicesOverviewCtrl',
             parent: 'main'
@@ -2630,7 +2641,7 @@
             }
           })
           .state('hds', {
-            templateUrl: 'modules/hds/resources/overview.html',
+            templateUrl: 'modules/hds/resources/hybrid-data-security-container.html',
             controller: 'HDSServiceController',
             controllerAs: 'hdsServiceController',
             parent: 'main',
@@ -2925,7 +2936,12 @@
                 controller: 'CallServiceSettingsController',
                 templateUrl: 'modules/hercules/service-settings/call-service-settings.html'
               }
-            }
+            },
+            resolve: {
+              hasVoicemailFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridVoicemail);
+              },
+            },
           })
           .state('cluster-details', {
             parent: 'sidepanel',
@@ -3150,7 +3166,7 @@
             templateUrl: 'modules/sunlight/details/details.tpl.html'
           })
           .state('care.Details', {
-            url: '/careDetails',
+            url: '/services/careDetails',
             parent: 'care.DetailsBase',
             views: {
               'header': {

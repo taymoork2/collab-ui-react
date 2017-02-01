@@ -85,6 +85,15 @@
                 translate="hercules.activationStatus.{{helpdeskUserCtrl.hybridServicesCard.cal.status.collapsedState}}"></span>
           <span ng-if="helpdeskUserCtrl.hybridServicesCard.cal.status.lastStateChangeText">{{helpdeskUserCtrl.hybridServicesCard.cal.status.lastStateChangeText}}</span>
           <span ng-if="helpdeskUserCtrl.hybridServicesCard.cal.status.state === 'error'">- {{helpdeskUserCtrl.hybridServicesCard.cal.status.description.defaultMessage}}</span>
+          <div ng-if="helpdeskUserCtrl.hybridServicesCard.cal.preferredWebExSiteName">
+            <span>{{'hercules.cloudExtensions.preferredWebExSite' | translate}}: {{helpdeskUserCtrl.hybridServicesCard.cal.preferredWebExSiteName}}</span>
+          </div>
+          <div ng-if="helpdeskUserCtrl.hybridServicesCard.cal.status.homedConnector">
+            <span>{{'cloudExtensions.cluster' | translate}}: {{helpdeskUserCtrl.hybridServicesCard.cal.status.homedConnector.cluster_name}} ({{helpdeskUserCtrl.hybridServicesCard.cal.status.homedConnector.host_name}})</span>
+          </div>
+          <div ng-if="helpdeskUserCtrl.hybridServicesCard.cal.status.resourceGroup">
+            <span>{{'hercules.resourceGroups.resourceGroupHeading' | translate}}: {{helpdeskUserCtrl.hybridServicesCard.cal.status.resourceGroup.name}}</span>
+          </div>
         </div>
         <div ng-if="helpdeskUserCtrl.hybridServicesCard.gcal.entitled">
           <h5 translate="overview.cards.hybrid.services.squared-fusion-gcal"></h5>
@@ -103,6 +112,15 @@
                 translate="hercules.activationStatus.{{helpdeskUserCtrl.hybridServicesCard.uc.status.collapsedState}}"></span>
           <span ng-if="helpdeskUserCtrl.hybridServicesCard.uc.status.lastStateChangeText">{{helpdeskUserCtrl.hybridServicesCard.uc.status.lastStateChangeText}}</span>
           <span ng-if="helpdeskUserCtrl.hybridServicesCard.uc.status.state === 'error'">- {{helpdeskUserCtrl.hybridServicesCard.uc.status.description.defaultMessage}}</span>
+          <div ng-if="helpdeskUserCtrl.hybridServicesCard.uc.directoryUri">
+            <span>{{'cloudExtensions.sipUri' | translate}}: {{helpdeskUserCtrl.hybridServicesCard.uc.directoryUri}}</span>
+          </div>
+          <div ng-if="helpdeskUserCtrl.hybridServicesCard.uc.status.homedConnector">
+            <span>{{'cloudExtensions.cluster' | translate}}: {{helpdeskUserCtrl.hybridServicesCard.uc.status.homedConnector.cluster_name}} ({{helpdeskUserCtrl.hybridServicesCard.uc.status.homedConnector.host_name}})</span>
+          </div>
+          <div ng-if="helpdeskUserCtrl.hybridServicesCard.uc.status.resourceGroup">
+            <span>{{'hercules.resourceGroups.resourceGroupHeading' | translate}}: {{helpdeskUserCtrl.hybridServicesCard.uc.status.resourceGroup.name}}</span>
+          </div>
         </div>
         <div ng-if="helpdeskUserCtrl.hybridServicesCard.ec.entitled">
           <h5 translate="hercules.serviceNames.squared-fusion-ec"></h5>

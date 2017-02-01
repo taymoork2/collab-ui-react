@@ -91,12 +91,10 @@ describe('Controller: DevicesCtrl', function () {
     var adminOrgId;
     var isEntitledToHuron;
     var isEntitledToRoomSystem;
-    var showDarling;
     var showATA;
     beforeEach(function () {
       isEntitledToHuron = true;
       isEntitledToRoomSystem = true;
-      showDarling = true;
       showATA = true;
       firstName = 'firstName';
       userCisUuid = 'userCisUuid';
@@ -115,7 +113,6 @@ describe('Controller: DevicesCtrl', function () {
       spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
       spyOn($state, 'go');
       controller.adminFirstName = firstName;
-      controller.showDarling = showDarling;
       controller.adminUserDetails = {
         firstName: adminFirstName,
         lastName: adminLastName,
@@ -134,7 +131,6 @@ describe('Controller: DevicesCtrl', function () {
       var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
       expect(wizardState.title).toBe('addDeviceWizard.newDevice');
       expect(wizardState.function).toBe('addDevice');
-      expect(wizardState.showDarling).toBe(showDarling);
       expect(wizardState.showATA).toBe(showATA);
       expect(wizardState.admin.firstName).toBe(adminFirstName);
       expect(wizardState.admin.lastName).toBe(adminLastName);
@@ -160,7 +156,6 @@ describe('Controller: DevicesCtrl', function () {
       var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
       expect(wizardState.title).toBe('addDeviceWizard.newDevice');
       expect(wizardState.function).toBe('addDevice');
-      expect(wizardState.showDarling).toBe(showDarling);
       expect(wizardState.showATA).toBe(showATA);
       expect(wizardState.admin.firstName).toBe(adminFirstName);
       expect(wizardState.admin.lastName).toBe(adminLastName);
@@ -181,15 +176,13 @@ describe('Controller: DevicesCtrl', function () {
 
   describe('Feature toggle loading', function () {
     beforeEach(function () {
-      spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
-      spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.when(true));
-      spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.when(true));
-      spyOn(FeatureToggleService, 'atlasDeviceExportGetStatus').and.returnValue($q.when(true));
-      spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.when(true));
+      spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(true));
+      spyOn(FeatureToggleService, 'atlasDeviceExportGetStatus').and.returnValue($q.resolve(true));
+      spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
     });
 
     it('should resolve toggle loading', function () {
-      spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.when(true));
+      spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(true));
       controller = $controller('DevicesCtrl', {
         $scope: $scope,
         $state: $state,

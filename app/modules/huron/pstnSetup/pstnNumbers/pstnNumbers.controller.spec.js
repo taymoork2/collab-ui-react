@@ -122,17 +122,18 @@ describe('Controller: PstnNumbersCtrl', function () {
     PstnSetup.setCustomerName(customer.name);
     PstnSetup.setProvider(customerCarrierList[0]);
 
-    spyOn(PstnSetupService, 'releaseCarrierInventory').and.returnValue($q.when());
-    spyOn(PstnSetupService, 'getCarrierInventory').and.returnValue($q.when(response));
-    spyOn(PstnSetupService, 'getCarrierTollFreeInventory').and.returnValue($q.when(response));
+    spyOn(PstnSetupService, 'releaseCarrierInventory').and.returnValue($q.resolve());
+    spyOn(PstnSetupService, 'releaseCarrierInventoryV2').and.returnValue($q.resolve());
+    spyOn(PstnSetupService, 'getCarrierInventory').and.returnValue($q.resolve(response));
+    spyOn(PstnSetupService, 'getCarrierTollFreeInventory').and.returnValue($q.resolve(response));
     spyOn(PstnSetup, 'getServiceAddress').and.returnValue(serviceAddress);
     spyOn(Notification, 'error');
     spyOn($state, 'go');
     spyOn(TerminusStateService, 'query').and.returnValue({
-      '$promise': $q.when(states)
+      '$promise': $q.resolve(states)
     });
     spyOn($translate, 'instant').and.callThrough();
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
 
     controller = compileTemplate();
   }));

@@ -6,10 +6,9 @@
     .factory('OtpService', OtpService);
 
   /* @ngInject */
-  function OtpService($rootScope, Authinfo, UserOTPService, HuronUser) {
+  function OtpService($rootScope, HuronUser) {
 
     var service = {
-      loadOtps: loadOtps,
       hyphenateOtp: hyphenateOtp,
       generateOtp: generateOtp,
       convertExpiryTime: convertExpiryTime
@@ -17,30 +16,6 @@
 
     return service;
     /////////////////////
-
-    function loadOtps(userUuid) {
-      return UserOTPService.query({
-        customerId: Authinfo.getOrgId(),
-        userId: userUuid
-      }).$promise
-        .then(function (otps) {
-          var otpList = [];
-          for (var i = 0; i < otps.length; i++) {
-            if (otps[i].expires.status === "valid") {
-              var otp = {
-                code: otps[i].activationCode,
-                friendlyCode: hyphenateOtp(otps[i].activationCode),
-                expiresOn: otps[i].expires.time,
-                friendlyExpiresOn: convertExpiryTime(otps[i].expires.time),
-                valid: otps[i].expires.status
-              };
-
-              otpList.push(otp);
-            }
-          }
-          return otpList;
-        });
-    }
 
     function generateOtp(userName) {
       var otp = {};

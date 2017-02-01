@@ -1,0 +1,31 @@
+ {"url" : "/customers/{customerId}/places/{placeId}/numbers/{numberId}/features/autoanswers",
+  "phones": [{
+              "uuid": "45ce5a48-9e2f-49ec-b13f-ad49ef87ce5d",
+              "name": "SEP74A02FC0B88D",
+              "description": "['pregoldintsl (Cisco 8845 SIP)','office (Cisco 8845 SIP)','home (Cisco 8845 SIP)']",
+              "model": "CISCO 8845",
+              "autoAnswer": {
+                    "supported": true,
+                    "enabled": true,
+                    "mode": "AUTO_ANSWER_WITH_SPEAKERPHONE"
+              }},
+             {
+              "uuid": "15ce5a48-9e2f-49ec-b13f-ad49ef87ce5d",
+              "name": "SEP74A07FC0B88E",
+              "description": "['pregoldints2 (Cisco 8845 SIP)','office (Cisco 8845 SIP)','home (Cisco 8845 SIP)']",
+              "model": "CISCO 8845",
+              "autoAnswer": {
+                    "supported": true,
+                    "enabled": false,
+                    "mode": null
+              }
+            }],
+  "member": {
+            "firstName": "John",
+            "lastName": "Doe",
+            "userName": "johndoe@lost.com",
+            "displayName": null,
+            "type": "USER_REAL_USER",
+            "uuid": "15ce5a48-9e2f-49ec-b13f-ad49ef87ce5d"
+            }
+}

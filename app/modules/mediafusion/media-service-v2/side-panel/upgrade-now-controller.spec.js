@@ -42,7 +42,7 @@ describe('Controller: UpgradeNowControllerV2', function () {
   });
 
   it('check if upgrade is called', function () {
-    spyOn(MediaClusterServiceV2, 'upgradeCluster').and.returnValue($q.when());
+    spyOn(MediaClusterServiceV2, 'upgradeCluster').and.returnValue($q.resolve());
     controller.upgrade();
     expect(MediaClusterServiceV2.upgradeCluster).toHaveBeenCalled();
     expect(controller.saving).toBe(true);
@@ -51,7 +51,7 @@ describe('Controller: UpgradeNowControllerV2', function () {
 
   it('check if upgradeCluster is called with  clusterId', function () {
 
-    spyOn(MediaClusterServiceV2, 'upgradeCluster').and.returnValue($q.when());
+    spyOn(MediaClusterServiceV2, 'upgradeCluster').and.returnValue($q.resolve());
     controller.upgrade();
     expect(MediaClusterServiceV2.upgradeCluster).toHaveBeenCalledWith(clusterId);
   });

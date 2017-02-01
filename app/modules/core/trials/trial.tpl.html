@@ -24,6 +24,14 @@
         <formly-form model="trial.details" fields="trial.custInfoFields"></formly-form>
       </div>
     </div>
+    <!-- regional settings -->
+    <trial-regional-settings
+      cr-feature-toggle feature-show="huron-federated-spark-call"
+      ng-if="trial.isNewTrial()"
+      default-country="trial.details.country"
+      default-country-list="trial.defaultCountryList"
+      on-change-fn="trial.setDefaultCountry(country)">
+    </trial-regional-settings>
      <!-- trial services -->
     <div class="cs-form__section">
       <div class="section__info">
@@ -60,7 +68,7 @@
             <formly-form model="trial.roomSystemTrial" fields="trial.roomSystemFields" hide-directive="ng-show">
             </formly-form>
           </div>
-          <div ng-if="!trial.sparkBoardFields[0].data.paid && trial.sbTrial">
+          <div ng-if="!trial.sparkBoardFields[0].data.paid">
             <formly-form model="trial.sparkBoardTrial" fields="trial.sparkBoardFields" hide-directive="ng-show" >
             </formly-form>
           </div>
@@ -68,18 +76,21 @@
       </div>
     </div>
       <!-- paid services: TODO: refactor as a component -->
-    <div class="cs-form__section" ng-if="trial.getPaidServicesForDisplay().length">
+    <div class="cs-form__section" ng-if="trial.paidServicesForDisplay.length">
       <div class="section__info">
         <h4  translate="partnerHomePage.activeServices"></h4>
         <p class="cs-input__help-text" translate="partnerHomePage.activeServicesInformation"></p>
       </div>
       <!-- paid services: TODO: refactor as a component -->
       <div class="section__content">
-        <div class="sub-section" ng-repeat="trial in trial.getPaidServicesForDisplay()">
-          <input type="checkbox" checked  disabled="disabled">
-          <label class="cs-checkbox disabled" for="messageTrial" ng-class="{disabled: disabledBool}">
-            <span >{{::trial.label}} </span>&nbsp;&nbsp;&nbsp;<span translate="common.quantity"></span>: {{::trial.qty}}
-          </label>
+        <div class="sub-section" ng-repeat="item in trial.paidServicesForDisplay">
+          <h5 class="sub-section__label" translate="trials.managedBy" translate-values="{ org: item.org }"></h5>
+          <div class="sub-section" ng-repeat="paidService in item.services">
+            <input type="checkbox" checked  disabled="disabled">
+            <label class="cs-checkbox disabled" for="messageTrial" ng-class="{disabled: disabledBool}">
+              <span >{{::paidService.label}} </span>&nbsp;&nbsp;&nbsp;<span translate="common.quantity"></span>: {{::paidService.qty}}
+            </label>
+          </div>
         </div>
       </div>
     </div>

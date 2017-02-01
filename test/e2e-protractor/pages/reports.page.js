@@ -82,7 +82,7 @@ var ReportsPage = function () {
 
   // Average CSAT
   this.averageCsatHeader = element(by.cssContainingText('.report-section-header', 'Customer Satisfaction'));
-  this.averageCsatDescription = element(by.cssContainingText('.report-description', 'The graph depicts the customer satisfaction rating for today. Hover over the trend line to know the average customer satisfaction rating during a one hour time interval.​​'));
+  this.averageCsatDescription = element(by.cssContainingText('.report-description', 'The graph depicts the customer satisfaction rating for today. Hover over the trend line to know the average customer satisfaction rating during a one hour time interval.'));
   this.averageCsatGraph = element(by.id('averageCsatDiv'));
 
   this.showHideActiveVisibility = function (show, hide, partner) {

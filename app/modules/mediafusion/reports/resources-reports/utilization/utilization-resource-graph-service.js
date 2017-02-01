@@ -3,7 +3,7 @@
 
   angular.module('Mediafusion').service('UtilizationResourceGraphService', UtilizationResourceGraphService);
   /* @ngInject */
-  function UtilizationResourceGraphService(CommonReportsGraphService, chartColors, $translate) {
+  function UtilizationResourceGraphService(CommonReportsGraphService, chartColors, $translate, $rootScope) {
 
     var utilizationdiv = 'utilizationdiv';
     var GUIDEAXIS = 'guideaxis';
@@ -15,6 +15,12 @@
     var allClusters = $translate.instant('mediaFusion.metrics.allclusters');
     var utilization = $translate.instant('mediaFusion.metrics.utilization');
 
+    var zoomedEndTime = null;
+    var zoomedStartTime = null;
+
+    var timeDiff = null;
+    var dateSelected = null;
+
     return {
       setUtilizationGraph: setUtilizationGraph
     };
@@ -22,19 +28,27 @@
     function setUtilizationGraph(response, utilizationChart, clusterSelected, clusterId, daterange, clusterMap) {
       var isDummy = false;
       var data = response.graphData;
-      var graphs = getClusterName(response.graphs, clusterMap, clusterSelected, clusterId);
+      var graphs = getClusterName(response.graphs, clusterMap);
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       } else {
-        if (data[0].colorTwo === chartColors.grayLightTwo) {
+        if (graphs[0].isDummy) {
           isDummy = true;
+        }
+        if (clusterId !== allClusters && !isDummy) {
+          var cluster = _.find(graphs, function (value) {
+            return value.valueField === clusterId;
+          });
+          if (_.isUndefined(cluster)) {
+            return undefined;
+          }
         }
         var startDuration = 1;
         if (!data[0].balloon) {
           startDuration = 0;
         }
 
-        utilizationChart = createutilizationGraph(data, graphs, clusterSelected, daterange);
+        utilizationChart = createutilizationGraph(data, graphs, clusterSelected, daterange, isDummy);
         utilizationChart.dataProvider = data;
         utilizationChart.graphs = graphs;
         utilizationChart.startDuration = startDuration;
@@ -56,11 +70,12 @@
       }
     }
 
-    function createutilizationGraph(data, graphs, clusterSelected, daterange) {
+    function createutilizationGraph(data, graphs, clusterSelected, daterange, isDummy) {
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       }
       var valueAxes = [CommonReportsGraphService.getBaseVariable(GUIDEAXIS)];
+      dateSelected = daterange;
       valueAxes[0].integersOnly = true;
       valueAxes[0].axisAlpha = 0.5;
       valueAxes[0].axisColor = '#1C1C1C';
@@ -84,16 +99,31 @@
       var dateLabel = daterange.label;
       var dateValue = daterange.value;
 
-      if (dateValue === 0) {
-        catAxis.minPeriod = '1mm';
-      } else if (dateValue === 1) {
-        catAxis.minPeriod = '10mm';
-      } else if (dateValue === 2) {
-        catAxis.minPeriod = 'hh';
-      } else if (dateValue === 3) {
-        catAxis.minPeriod = '3hh';
+      if (_.isUndefined(daterange.value)) {
+        timeDiff = Math.floor(moment(dateSelected.endTime).diff(moment(dateSelected.startTime)) / 60000);
+        if (timeDiff <= 240) {
+          catAxis.minPeriod = '1mm';
+        } else if (timeDiff > 240 && timeDiff <= 1440) {
+          catAxis.minPeriod = '10mm';
+        } else if (timeDiff > 1440 && timeDiff <= 10080) {
+          catAxis.minPeriod = 'hh';
+        } else if (timeDiff > 10080 && timeDiff <= 43200) {
+          catAxis.minPeriod = '3hh';
+        } else if (timeDiff > 43200) {
+          catAxis.minPeriod = '8hh';
+        }
       } else {
-        catAxis.minPeriod = '8hh';
+        if (dateValue === 0) {
+          catAxis.minPeriod = '1mm';
+        } else if (dateValue === 1) {
+          catAxis.minPeriod = '10mm';
+        } else if (dateValue === 2) {
+          catAxis.minPeriod = 'hh';
+        } else if (dateValue === 3) {
+          catAxis.minPeriod = '3hh';
+        } else if (dateValue === 4) {
+          catAxis.minPeriod = '8hh';
+        }
       }
 
       var startDuration = 1;
@@ -118,12 +148,24 @@
       var cluster = _.replace(clusterSelected, /\s/g, '_');
       dateLabel = _.replace(dateLabel, /\s/g, '_');
       var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + dateLabel + '_' + new Date();
+      if (!isDummy && clusterSelected === allClusters) {
+        graphs.push({
+          'title': 'All',
+          'id': 'all',
+          'bullet': 'square',
+          'bulletSize': 10,
+          'lineColor': '#000000',
+          'hidden': true
+        });
 
-      graphs.push({
-        'title': 'All',
-        'id': 'all'
-      });
-
+        graphs.push({
+          'title': 'None',
+          'id': 'none',
+          'bullet': 'square',
+          'bulletSize': 10,
+          'lineColor': '#000000'
+        });
+      }
       var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       chartData.legend = CommonReportsGraphService.getBaseVariable(LEGEND);
       chartData.legend.labelText = '[[title]]';
@@ -139,12 +181,26 @@
 
 
       var chart = AmCharts.makeChart(utilizationdiv, chartData);
-      chart.addListener('rendered', zoomChart);
-      zoomChart(chart);
+      chart.addListener('zoomed', handleZoom);
       return chart;
     }
 
-    function getClusterName(graphs, clusterMap, clusterSelected, clusterId) {
+    // this method is called each time the selected period of the chart is changed
+    function handleZoom(event) {
+      zoomedStartTime = event.startDate;
+      zoomedEndTime = event.endDate;
+      var selectedTime = {
+        startTime: zoomedStartTime,
+        endTime: zoomedEndTime
+      };
+      if ((_.isUndefined(dateSelected.value) && zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime) || (zoomedStartTime !== dateSelected.startTime && zoomedEndTime !== dateSelected.endTime)) {
+        $rootScope.$broadcast('zoomedTime', {
+          data: selectedTime
+        });
+      }
+    }
+
+    function getClusterName(graphs, clusterMap) {
       var tempData = [];
       _.forEach(graphs, function (value) {
         var clusterName = _.findKey(clusterMap, function (val) {
@@ -152,9 +208,6 @@
         });
         if (!_.isUndefined(clusterName)) {
           value.title = clusterName;
-          if (allClusters !== clusterId && clusterSelected !== value.title) {
-            value.lineAlpha = 0.2;
-          }
           value.balloonText = '<span class="graph-text">' + value.title + ' ' + utilization + ' <span class="graph-number">[[value]]</span></span>';
           value.lineThickness = 2;
         }
@@ -174,16 +227,22 @@
       return tempData;
     }
 
-    function zoomChart(chart) {
-      chart.zoomToIndexes(chart.dataProvider.length - 40, chart.dataProvider.length - 1);
-    }
-
     function legendHandler(evt) {
-      var state = evt.dataItem.hidden;
       if (evt.dataItem.id === 'all') {
         _.forEach(evt.chart.graphs, function (graph) {
           if (graph.id != 'all') {
-            evt.chart[state ? 'hideGraph' : 'showGraph'](graph);
+            evt.chart.showGraph(graph);
+          } else if (graph.id === 'all') {
+            evt.chart.hideGraph(graph);
+          }
+
+        });
+      } else if (evt.dataItem.id === 'none') {
+        _.forEach(evt.chart.graphs, function (graph) {
+          if (graph.id != 'all') {
+            evt.chart.hideGraph(graph);
+          } else if (graph.id === 'all') {
+            evt.chart.showGraph(graph);
           }
         });
       }

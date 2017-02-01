@@ -52,7 +52,7 @@
   }
 
   .helpdesk-details {
-    h3 {
+    h3, .h3 {
       color: $gray-dark-4;
       margin-bottom: 1rem;
       word-wrap: break-word;
@@ -380,6 +380,7 @@
   }
 
   .search-results {
+    padding-top: 1rem;
     .icon-org-search {
       font-size: 1rem;
       border: 1px solid;

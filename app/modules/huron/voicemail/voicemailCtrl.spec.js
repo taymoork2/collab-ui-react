@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: VoicemailInfoCtrl', function () {
-  var controller, $scope, $stateParams, $httpBackend, $modal, $q, TelephonyInfoService, Notification, HuronConfig, modalDefer, UserServiceCommon, DirectoryNumber, LineSettings;
+  var controller, $scope, $stateParams, $httpBackend, $modal, $q, TelephonyInfoService, FeatureToggleService, Notification, HuronConfig, modalDefer, UserServiceCommon, DirectoryNumber, LineSettings;
 
   var currentUser = getJSONFixture('core/json/currentUser.json');
   var telephonyInfoWithVoice = getJSONFixture('huron/json/telephonyInfo/voiceEnabled.json');
@@ -19,7 +19,7 @@ describe('Controller: VoicemailInfoCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$modal_, _$q_, _TelephonyInfoService_, _Notification_, _HuronConfig_, _UserServiceCommon_, _DirectoryNumber_, _LineSettings_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$modal_, _$q_, _TelephonyInfoService_, _FeatureToggleService_, _Notification_, _HuronConfig_, _UserServiceCommon_, _DirectoryNumber_, _LineSettings_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     TelephonyInfoService = _TelephonyInfoService_;
@@ -31,6 +31,7 @@ describe('Controller: VoicemailInfoCtrl', function () {
     $q = _$q_;
     modalDefer = $q.defer();
     UserServiceCommon = _UserServiceCommon_;
+    FeatureToggleService = _FeatureToggleService_;
 
     $stateParams = {
       currentUser: currentUser
@@ -43,6 +44,8 @@ describe('Controller: VoicemailInfoCtrl', function () {
       result: modalDefer.promise
     });
     spyOn(UserServiceCommon, 'update').and.callThrough();
+
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
 
     controller = $controller('VoicemailInfoCtrl', {
       $scope: $scope,
@@ -83,7 +86,7 @@ describe('Controller: VoicemailInfoCtrl', function () {
     describe('enable voicemail', function () {
       beforeEach(function () {
         controller.enableVoicemail = true;
-        spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.when(directoryInfo));
+        spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.resolve(directoryInfo));
 
       });
 
@@ -122,7 +125,7 @@ describe('Controller: VoicemailInfoCtrl', function () {
 
     describe('disable voicemail', function () {
       beforeEach(function () {
-        spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.when(directoryInfo));
+        spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.resolve(directoryInfo));
         TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoWithVoicemail);
         $scope.$broadcast('telephonyInfoUpdated');
         $scope.$apply();
@@ -159,7 +162,7 @@ describe('Controller: VoicemailInfoCtrl', function () {
       });
 
       it('should notify on success', function () {
-        spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.when(directoryInfoBusy));
+        spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.resolve(directoryInfoBusy));
         $httpBackend.whenPUT(url).respond(200);
         controller.saveVoicemail();
         $httpBackend.flush();
@@ -167,7 +170,7 @@ describe('Controller: VoicemailInfoCtrl', function () {
       });
 
       it('should notify on success', function () {
-        spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.when(directoryInfoCFA));
+        spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.resolve(directoryInfoCFA));
         $httpBackend.whenPUT(url).respond(200);
         controller.saveVoicemail();
         $httpBackend.flush();

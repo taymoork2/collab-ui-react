@@ -134,5 +134,27 @@
     "date": ""
   },
   "usageOptions": ["weeklyUsage", "monthlyUsage", "threeMonthUsage"],
-  "altUsageOptions": ["dailyUsage", "weeklyUsage"]
+  "altUsageOptions": ["dailyUsage", "weeklyUsage"],
+  "returnGraph": [{
+    "date": "Oct 26",
+    "fullDate": "2016-10-26T00:45:00.000Z"
+  }, {
+    "date": "Oct 27",
+    "fullDate": "2016-10-27T00:45:00.000Z"
+  }, {
+    "date": "Oct 28",
+    "fullDate": "2016-10-28T00:45:00.000Z"
+  }, {
+    "date": "Oct 29",
+    "fullDate": "2016-10-29T00:45:00.000Z"
+  }, {
+    "date": "Oct 30",
+    "fullDate": "2016-10-30T00:45:00.000Z"
+  },  {
+    "date": "Oct 31",
+    "fullDate": "2016-10-31T00:45:00.000Z"
+  },{
+    "date": "Nov 01",
+    "fullDate": "2016-11-01T00:45:00.000Z"
+  }]
 }

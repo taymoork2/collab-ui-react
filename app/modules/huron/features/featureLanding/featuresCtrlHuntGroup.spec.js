@@ -67,7 +67,7 @@ describe('Features Controller', function () {
     spyOn(CallParkService, 'getCallParkList').and.returnValue(getDeferred.promise);
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue(getDeferred.promise);
     spyOn(CallPickupGroupService, 'getListOfPickupGroups').and.returnValue(getDeferred.promise);
-    spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue($q.when());
+    spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue($q.resolve());
     spyOn(AAModelService, 'newAAModel').and.returnValue(getDeferred.promise);
     spyOn(FeatureToggleService, 'supports').and.returnValue(getDeferred.promise);
     spyOn($state, 'go');

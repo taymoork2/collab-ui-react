@@ -18,7 +18,7 @@ export class LineService {
   constructor(
     private $resource: ng.resource.IResourceService,
     private Authinfo,
-    private HuronConfig
+    private HuronConfig,
   ) {
 
     let updateAction: ng.resource.IActionDescriptor = {

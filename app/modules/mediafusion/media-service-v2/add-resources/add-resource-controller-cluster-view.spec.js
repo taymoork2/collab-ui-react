@@ -40,7 +40,7 @@
     });
 
     it('AddResourceCommonServiceV2.redirectPopUpAndClose should be called for redirectToTargetAndCloseWindowClicked', function () {
-      spyOn(AddResourceCommonServiceV2, 'addRedirectTargetClicked').and.returnValue($q.when());
+      spyOn(AddResourceCommonServiceV2, 'addRedirectTargetClicked').and.returnValue($q.resolve());
       spyOn(AddResourceCommonServiceV2, 'redirectPopUpAndClose').and.returnValue(redirectTargetPromise);
       controller.redirectToTargetAndCloseWindowClicked();
       httpBackend.flush();

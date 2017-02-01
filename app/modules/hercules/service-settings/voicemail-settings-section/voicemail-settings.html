@@ -1,0 +1,16 @@
+<setting-section setting="$ctrl.voicemailSection" class="needs-border-top">
+  <div class="sub-section">
+    <h5 class="sub-section__label" translate="hercules.settings.voicemail.heading"></h5>
+    <p class="sub-section__description" translate="hercules.settings.voicemail.description">
+    </p>
+    <cs-toggle-switch ng-model="$ctrl.voicemailToggle"
+                      toggle-id="voicemail-toggle"
+                      is-disabled="{{!$ctrl.isCallServiceConnectEnabled}}"
+                      cs-change="$ctrl.toggleVoicemail($ctrl.voicemailToggle)"
+                      size="small">
+    </cs-toggle-switch>
+    <p class="body-small" ng-if= "!$ctrl.isCallServiceConnectEnabled" translate="hercules.settings.voicemail.voicemailDisabled"></p>
+
+  </div>
+</setting-section>
+

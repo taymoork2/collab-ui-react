@@ -32,18 +32,18 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
 
     modalDefer = $q.defer();
     spyOn($state, 'go');
-    spyOn(ExternalNumberService, 'deleteNumber').and.returnValue($q.when());
-    spyOn(ExternalNumberService, 'isTerminusCustomer').and.returnValue($q.when());
-    spyOn(ExternalNumberService, 'getAssignedNumbersV2').and.returnValue($q.when(externalNumbers));
-    spyOn(ExternalNumberService, 'getUnassignedNumbersV2').and.returnValue($q.when());
-    spyOn(ExternalNumberService, 'getPendingNumbersAndOrders').and.returnValue($q.when());
+    spyOn(ExternalNumberService, 'deleteNumber').and.returnValue($q.resolve());
+    spyOn(ExternalNumberService, 'isTerminusCustomer').and.returnValue($q.resolve());
+    spyOn(ExternalNumberService, 'getAssignedNumbersV2').and.returnValue($q.resolve(externalNumbers));
+    spyOn(ExternalNumberService, 'getUnassignedNumbersV2').and.returnValue($q.resolve());
+    spyOn(ExternalNumberService, 'getPendingNumbersAndOrders').and.returnValue($q.resolve());
 
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise
     });
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
-    spyOn(DialPlanService, 'getCustomerDialPlanCountryCode').and.returnValue($q.when('+1'));
+    spyOn(DialPlanService, 'getCustomerDialPlanCountryCode').and.returnValue($q.resolve('+1'));
 
     controller = $controller('ExternalNumberDetailCtrl', {
       $scope: $scope
@@ -87,7 +87,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     }, {
       'number': '000'
     }]);
-    ExternalNumberService.getAssignedNumbersV2.and.returnValue($q.when(newNumbers));
+    ExternalNumberService.getAssignedNumbersV2.and.returnValue($q.resolve(newNumbers));
     controller.listPhoneNumbers();
     $scope.$apply();
     expect(controller.assignedNumbers.length).toEqual(4);
@@ -112,7 +112,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
   });
 
   it('should delete number on modal close', function () {
-    ExternalNumberService.getAssignedNumbersV2.and.returnValue($q.when(externalNumbers[1]));
+    ExternalNumberService.getAssignedNumbersV2.and.returnValue($q.resolve(externalNumbers[1]));
     controller.deleteNumber(externalNumbers[0]);
     modalDefer.resolve();
     $scope.$apply();

@@ -7,7 +7,7 @@ describe('Component: sectionTitle', () => {
   beforeEach(function () {
     this.initModules('Core');
     this.injectDependencies(
-      '$scope'
+      '$scope',
     );
   });
 

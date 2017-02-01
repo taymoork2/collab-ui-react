@@ -1,0 +1,147 @@
+{
+  "graphData": [
+    {
+     "time": "2016-09-19T08:05:51Z"
+    },
+    {
+      "time": "2016-09-19T08:10:00Z",
+      "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": 2,
+      "fc0a6cc1-98e6-42d8-b366-d6e82e426c17": 5,
+      "548d05ce-99ac-4d78-a926-3f18afd88064": 9,
+      "8909455b-3018-44c6-adfd-2840978bb5c1": 5,
+      "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d": 9,
+      "539ac9e5-943e-4e96-bfc5-b12cac060bcc": 2,
+      "7b315667-1808-40c8-b263-a9c2f9782b16": 1,
+      "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678": 2,
+      "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7": 2,
+      "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3": 7,
+      "ca110bd3-4043-41af-9ec6-f67d6feba2bb": 2
+    },
+    {
+      "time": "2016-09-19T08:20:00Z",
+      "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3": 7,
+      "ca110bd3-4043-41af-9ec6-f67d6feba2bb": 2,
+      "548d05ce-99ac-4d78-a926-3f18afd88064": 1,
+      "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": 2,
+      "fc0a6cc1-98e6-42d8-b366-d6e82e426c17": 55,
+      "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7": 2,
+      "539ac9e5-943e-4e96-bfc5-b12cac060bcc": 2,
+      "8909455b-3018-44c6-adfd-2840978bb5c1": 4,
+      "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d": 9,
+      "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678": 2,
+      "7b315667-1808-40c8-b263-a9c2f9782b16": 9
+    },
+    {
+      "time": "2016-09-19T08:30:00Z",
+      "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678": 2,
+      "7b315667-1808-40c8-b263-a9c2f9782b16": 9,
+      "548d05ce-99ac-4d78-a926-3f18afd88064": 1,
+      "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3": 8,
+      "ca110bd3-4043-41af-9ec6-f67d6feba2bb": 2,
+      "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d": 8,
+      "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7": 2,
+      "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": 2,
+      "fc0a6cc1-98e6-42d8-b366-d6e82e426c17": 58,
+      "8909455b-3018-44c6-adfd-2840978bb5c1": 4,
+      "539ac9e5-943e-4e96-bfc5-b12cac060bcc": 2
+    },
+    {
+      "time": "2016-09-19T08:40:00Z",
+      "8909455b-3018-44c6-adfd-2840978bb5c1": 4,
+      "539ac9e5-943e-4e96-bfc5-b12cac060bcc": 2,
+      "548d05ce-99ac-4d78-a926-3f18afd88064": 9,
+      "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678": 1,
+      "7b315667-1808-40c8-b263-a9c2f9782b16": 9,
+      "fc0a6cc1-98e6-42d8-b366-d6e82e426c17": 56,
+      "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d": 9,
+      "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3": 7,
+      "ca110bd3-4043-41af-9ec6-f67d6feba2bb": 2,
+      "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": 2,
+      "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7": 2
+    },
+    
+    {
+      "time": "2016-09-19T23:40:00Z",
+      "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678": 2,
+      "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7": 2,
+      "548d05ce-99ac-4d78-a926-3f18afd88064": 11,
+      "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3": 7,
+      "539ac9e5-943e-4e96-bfc5-b12cac060bcc": 2,
+      "ca110bd3-4043-41af-9ec6-f67d6feba2bb": 2,
+      "e93ded4f-7a3b-4a46-b517-3cc5b565f9cc": 2,
+      "fc0a6cc1-98e6-42d8-b366-d6e82e426c17": 59,
+      "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": 3,
+      "7b315667-1808-40c8-b263-a9c2f9782b16": 9,
+      "8909455b-3018-44c6-adfd-2840978bb5c1": 4,
+      "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d": 8
+    },
+    {
+      "time": "2016-09-19T23:50:00Z",
+      "8909455b-3018-44c6-adfd-2840978bb5c1": 4,
+      "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d": 15,
+      "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3": 7,
+      "539ac9e5-943e-4e96-bfc5-b12cac060bcc": 2,
+      "e93ded4f-7a3b-4a46-b517-3cc5b565f9cc": 2,
+      "fc0a6cc1-98e6-42d8-b366-d6e82e426c17": 56,
+      "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678": 1,
+      "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7": 2,
+      "ca110bd3-4043-41af-9ec6-f67d6feba2bb": 2,
+      "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": 2,
+      "548d05ce-99ac-4d78-a926-3f18afd88064": 9,
+      "7b315667-1808-40c8-b263-a9c2f9782b16": 9
+    },
+    {
+     "time": "2016-09-20T08:05:51Z"
+    }
+  ],
+  "graphs": [
+    {
+      "title": "7b315667-1808-40c8-b263-a9c2f9782b16",
+      "valueField": "7b315667-1808-40c8-b263-a9c2f9782b16"
+    },
+    {
+      "title": "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef",
+      "valueField": "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef"
+    },
+    {
+      "title": "8909455b-3018-44c6-adfd-2840978bb5c1",
+      "valueField": "8909455b-3018-44c6-adfd-2840978bb5c1"
+    },
+    {
+      "title": "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7",
+      "valueField": "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7"
+    },
+    {
+      "title": "e93ded4f-7a3b-4a46-b517-3cc5b565f9cc",
+      "valueField": "e93ded4f-7a3b-4a46-b517-3cc5b565f9cc"
+    },
+    {
+      "title": "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3",
+      "valueField": "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3"
+    },
+    {
+      "title": "548d05ce-99ac-4d78-a926-3f18afd88064",
+      "valueField": "548d05ce-99ac-4d78-a926-3f18afd88064"
+    },
+    {
+      "title": "ca110bd3-4043-41af-9ec6-f67d6feba2bb",
+      "valueField": "ca110bd3-4043-41af-9ec6-f67d6feba2bb"
+    },
+    {
+      "title": "fc0a6cc1-98e6-42d8-b366-d6e82e426c17",
+      "valueField": "fc0a6cc1-98e6-42d8-b366-d6e82e426c17"
+    },
+    {
+      "title": "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d",
+      "valueField": "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d"
+    },
+    {
+      "title": "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678",
+      "valueField": "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678"
+    },
+    {
+      "title": "539ac9e5-943e-4e96-bfc5-b12cac060bcc",
+      "valueField": "539ac9e5-943e-4e96-bfc5-b12cac060bcc"
+    }
+  ]
+}

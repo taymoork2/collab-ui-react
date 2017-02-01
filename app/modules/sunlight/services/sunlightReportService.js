@@ -40,8 +40,7 @@
       getStats: getStats,
       getReportingData: getReportingData,
       getOverviewData: getOverviewData,
-      getAllUsersAggregatedData: getAllUsersAggregatedData,
-      getCareUsers: getCareUsers
+      getAllUsersAggregatedData: getAllUsersAggregatedData
     };
 
     return service;
@@ -54,7 +53,27 @@
       return $http.get(UrlConfig.getScimUrl(Authinfo.getOrgId()) + encodeURI('?filter=entitlements eq cloud-contact-center'));
     }
 
-    function getAllUsersAggregatedData(aggregatedUserData, ciUserData) {
+    function getAllUsersAggregatedData(reportName, timeSelected, mediaType) {
+      return getReportingData(reportName, timeSelected, mediaType)
+        .then(addUserDataToReportingData);
+    }
+
+    function addUserDataToReportingData(reportingUserData) {
+      if (reportingUserData && reportingUserData.length > 0) {
+        return getCareUsers()
+          .then(function (ciUsersData) {
+            if (_.isEmpty(_.get(ciUsersData, 'data.Resources'))) {
+              return [];
+            } else {
+              return mergeReportingAndUserData(reportingUserData, ciUsersData);
+            }
+          });
+      } else {
+        return $q.resolve([]);
+      }
+    }
+
+    function mergeReportingAndUserData(aggregatedUserData, ciUserData) {
       var careUserIDNameMap = getCareUserIDNameMap(ciUserData);
       return finalAggregatedData(aggregatedUserData, careUserIDNameMap);
     }

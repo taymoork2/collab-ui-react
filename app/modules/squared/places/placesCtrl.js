@@ -24,19 +24,13 @@ require('./_places.scss');
         }
 
         function fetchAsyncSettings() {
-          var darlingPromise = FeatureToggleService.atlasDarlingGetStatus().then(function (result) {
-            vm.showDarling = result;
-          });
           var ataPromise = FeatureToggleService.csdmATAGetStatus().then(function (result) {
             vm.showATA = result;
-          });
-          var pstnPromise = FeatureToggleService.csdmPstnGetStatus().then(function (result) {
-            vm.showPstn = result && Authinfo.isSquaredUC();
           });
           var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
             vm.csdmHybridCallFeature = feature;
           });
-          $q.all([darlingPromise, ataPromise, pstnPromise, hybridPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
+          $q.all([ataPromise, hybridPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
             vm.addPlaceIsDisabled = false;
           });
         }
@@ -169,7 +163,6 @@ require('./_places.scss');
           var wizardState = {
             data: {
               function: "addPlace",
-              showDarling: vm.showDarling,
               showATA: vm.showATA,
               admin: vm.adminUserDetails,
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
@@ -195,7 +188,7 @@ require('./_places.scss');
               },
               'addDeviceFlow.chooseDeviceType': {
                 nextOptions: {
-                  cloudberry: vm.showPstn ? 'addDeviceFlow.editServices' : 'addDeviceFlow.showActivationCode',
+                  cloudberry: 'addDeviceFlow.editServices',
                   huron: 'addDeviceFlow.addLines'
                 }
               },

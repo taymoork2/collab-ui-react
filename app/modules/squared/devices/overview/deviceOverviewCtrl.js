@@ -6,7 +6,7 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo, FeatureToggleService, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal, LaunchAdvancedSettingsModal, ServiceSetup, KemService, TerminusUserDeviceE911Service, EmergencyServicesService, AtaDeviceModal) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal, LaunchAdvancedSettingsModal, ServiceSetup, KemService, TerminusUserDeviceE911Service, EmergencyServicesService, AtaDeviceModal) {
     var deviceOverview = this;
     var huronDeviceService = $stateParams.huronDeviceService;
     deviceOverview.linesAreLoaded = false;
@@ -15,13 +15,8 @@
     deviceOverview.country = "";
     deviceOverview.selectedCountry = "";
     deviceOverview.hideE911Edit = true;
-    deviceOverview.shouldShowLines = function () {
-      return deviceOverview.currentDevice.isHuronDevice || deviceOverview.showPstn;
-    };
 
     function init() {
-      fetchFeatureToggles();
-
       displayDevice($stateParams.currentDevice);
 
       CsdmDataModelService.reloadItem($stateParams.currentDevice).then(function (updatedDevice) {
@@ -42,15 +37,13 @@
           KemService.getKemOption(deviceOverview.currentDevice.addOnModuleCount) : '';
       }
 
-      if (deviceOverview.shouldShowLines()) {
-        if (!deviceOverview.huronPollInterval) {
-          deviceOverview.huronPollInterval = $interval(pollLines, 30000);
-          $scope.$on("$destroy", function () {
-            $interval.cancel(deviceOverview.huronPollInterval);
-          });
-        }
-        pollLines();
+      if (!deviceOverview.huronPollInterval) {
+        deviceOverview.huronPollInterval = $interval(pollLines, 30000);
+        $scope.$on("$destroy", function () {
+          $interval.cancel(deviceOverview.huronPollInterval);
+        });
       }
+      pollLines();
 
       if (deviceOverview.currentDevice.isHuronDevice) {
         if (!deviceOverview.tzIsLoaded) {
@@ -105,14 +98,10 @@
       }).$promise.then(function (info) {
         deviceOverview.emergencyAddress = info.e911Address;
         deviceOverview.emergencyAddressStatus = info.status;
-      }).finally(function () {
+      }).then(function () {
         deviceOverview.isE911Available = true;
-      });
-    }
-
-    function fetchFeatureToggles() {
-      FeatureToggleService.csdmPstnGetStatus().then(function (result) {
-        deviceOverview.showPstn = result && Authinfo.isSquaredUC();
+      }).catch(function () {
+        deviceOverview.e911NotFound = true;
       });
     }
 

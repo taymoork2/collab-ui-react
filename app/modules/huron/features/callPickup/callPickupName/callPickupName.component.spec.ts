@@ -17,8 +17,9 @@ describe('Component: callPickupName', () => {
     this.compileComponent('callPickupName', {
       onUpdate: 'onUpdate(name, isValid)',
       callPickupName: 'callPickupName',
+      isNew: 'isNew',
     });
-
+    this.$scope.isNew = true;
     this.$scope.callPickupName = '';
     this.$scope.$apply();
   }

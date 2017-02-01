@@ -1,7 +1,7 @@
-import notifications from './index';
+import notificationsModule from './index';
 
 describe('Service: Notification', function () {
-  beforeEach(angular.mock.module(notifications));
+  beforeEach(angular.mock.module(notificationsModule));
 
   let Notification, toaster, Config, $timeout, $log, timeoutPromise;
 

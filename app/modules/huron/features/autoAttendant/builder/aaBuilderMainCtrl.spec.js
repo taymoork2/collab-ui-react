@@ -115,15 +115,15 @@ describe('Controller: AABuilderMainCtrl', function () {
     spyOn($state, 'go');
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     spyOn(AAUiModelService, 'initUiModel');
-    spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.when($stateParams.aaName));
+    spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.resolve($stateParams.aaName));
     spyOn(AutoAttendantCeMenuModelService, 'clearCeMenuMap');
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timeZone));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.resolve(timeZone));
     spyOn(ServiceSetup, 'listSites').and.callFake(function () {
       ServiceSetup.sites = [sysModel.site];
-      return $q.when();
+      return $q.resolve();
     });
-    spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(sysModel.site));
+    spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(sysModel.site));
     spyOn($rootScope, '$broadcast').and.callThrough();
 
     controller = $controller('AABuilderMainCtrl as vm', {
@@ -273,7 +273,7 @@ describe('Controller: AABuilderMainCtrl', function () {
         workingResources: [],
         failedResources: ["9999999991"]
       };
-      spyOn(AANumberAssignmentService, 'setAANumberAssignmentWithErrorDetail').and.returnValue($q.when(resources));
+      spyOn(AANumberAssignmentService, 'setAANumberAssignmentWithErrorDetail').and.returnValue($q.resolve(resources));
 
       controller.saveAANumberAssignmentWithErrorDetail();
 
@@ -292,13 +292,13 @@ describe('Controller: AABuilderMainCtrl', function () {
     var aaNameChangedSpy;
 
     beforeEach(function () {
-      createCeSpy = spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
-      updateCeSpy = spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
+      createCeSpy = spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.resolve(angular.copy(rawCeInfo)));
+      updateCeSpy = spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.resolve(angular.copy(rawCeInfo)));
       spyOn(AANotificationService, 'success');
       spyOn(AANotificationService, 'error');
       spyOn(AANotificationService, 'errorResponse');
       spyOn($scope.vm, 'saveUiModel');
-      spyOn(AANumberAssignmentService, 'setAANumberAssignment').and.returnValue($q.when());
+      spyOn(AANumberAssignmentService, 'setAANumberAssignment').and.returnValue($q.resolve());
 
       spyOn(AADependencyService, 'notifyAANameChange');
       aaNameChangedSpy = spyOn(AATrackChangeService, 'isChanged').and.returnValue(false);
@@ -423,7 +423,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     var readCe;
 
     beforeEach(function () {
-      readCe = spyOn(AutoAttendantCeService, 'readCe').and.returnValue($q.when(angular.copy(aCe)));
+      readCe = spyOn(AutoAttendantCeService, 'readCe').and.returnValue($q.resolve(angular.copy(aCe)));
       spyOn($scope.vm, 'populateUiModel');
       spyOn(AANotificationService, 'error');
       spyOn(AANotificationService, 'errorResponse');
@@ -773,7 +773,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   describe('setLoadingDone', function () {
 
     beforeEach(function () {
-      spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
+      spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve({}));
     });
 
     it('should set the vm.loading to false', function () {

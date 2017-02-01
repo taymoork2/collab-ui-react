@@ -12,7 +12,7 @@ export interface ICardStatus {
 
 export enum CardType {
   cloud,
-  hybrid
+  hybrid,
 }
 
 export interface ICardParams {
@@ -24,20 +24,22 @@ export interface ICardParams {
   icon?: string;
   name: string;
   template?: string;
+  setupMode?: boolean;
 }
 
 export abstract class ServicesOverviewCard {
 
-  private cardClass: string;
   private cardType: CardType;
   private description: string;
   private icon: string;
   private template: string;
+  public cardClass: string;
   public active: boolean;
   public display: boolean;
   public loading = true;
   public name: string;
   public status: ICardStatus;
+  public setupMode: boolean;
 
   public showStatus() {
     return !this.loading && this.active && !!(this.status && this.status.status);
@@ -56,6 +58,7 @@ export abstract class ServicesOverviewCard {
     icon = '',
     name,
     template = 'modules/services-overview/card.tpl.html',
+    setupMode = false,
   }: ICardParams) {
     this.active = active;
     this.cardClass = cardClass;
@@ -65,5 +68,6 @@ export abstract class ServicesOverviewCard {
     this.icon = icon;
     this.name = name;
     this.template = template;
+    this.setupMode = setupMode;
   }
 }

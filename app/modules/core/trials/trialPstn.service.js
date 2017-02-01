@@ -33,6 +33,7 @@
         type: Config.offerTypes.pstn,
         enabled: false,
         skipped: false,
+        reseller: false,
         details: {
           isTrial: true,
           pstnProvider: {},
@@ -49,6 +50,7 @@
             nxx: {},
             numbers: []
           },
+          pstnOrderData: [],
           emergAddr: {
             streetAddress: '',
             unit: '',
@@ -80,9 +82,9 @@
         _trialData.details.pstnContractInfo.companyName = customerName;
       }
       return createPstnCustomerV2(customerOrgId)
-        .then(_.partial(reserveNumbersWithCustomer, customerOrgId))
-        .then(_.partial(orderNumbers, customerOrgId))
-        .then(_.partial(createCustomerSite, customerOrgId));
+        .then(_.partial(createCustomerSite, customerOrgId))
+        .then(_.partial(reserveNumbersWithCustomerV2, customerOrgId))
+        .then(_.partial(orderNumbersV2, customerOrgId));
     }
 
     function reserveNumbers() {
@@ -101,14 +103,24 @@
       }
     }
 
-    function reserveNumbersWithCustomer(customerOrgId) {
+    function reserveNumbersWithCustomerV2(customerOrgId) {
       if (_trialData.details.pstnProvider.apiImplementation !== "SWIVEL") {
-        return PstnSetupService.reserveCarrierInventory(
+        return PstnSetupService.reserveCarrierInventoryV2(
           customerOrgId,
           _trialData.details.pstnProvider.uuid,
           _trialData.details.pstnNumberInfo.numbers,
           true
-        ).catch(function (response) {
+        ).then(function (reservationData) {
+          var order = {
+            data: {
+              numbers: reservationData.numbers
+            },
+            numberType: PstnSetupService.NUMTYPE_DID,
+            orderType: PstnSetupService.NUMBER_ORDER,
+            reservationId: reservationData.uuid
+          };
+          _trialData.details.pstnOrderData.push(order);
+        }).catch(function (response) {
           Notification.errorResponse(response, 'trialModal.pstn.error.reserveFail');
           return $q.reject(response);
         });
@@ -153,6 +165,16 @@
         customerOrgId,
         _trialData.details.pstnProvider.uuid,
         _trialData.details.pstnNumberInfo.numbers
+      ).catch(function (response) {
+        Notification.errorResponse(response, 'trialModal.pstn.error.orderFail');
+        return $q.reject(response);
+      });
+    }
+
+    function orderNumbersV2(customerOrgId) {
+      return PstnSetupService.orderNumbersV2(
+        customerOrgId,
+        _trialData.details.pstnOrderData
       ).catch(function (response) {
         Notification.errorResponse(response, 'trialModal.pstn.error.orderFail');
         return $q.reject(response);

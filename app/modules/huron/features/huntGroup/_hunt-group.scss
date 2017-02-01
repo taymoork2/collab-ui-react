@@ -8,6 +8,10 @@
     }
   }
 
+  .typeahead-large.error input {
+    background-color: inherit;
+  }
+
   .panel-content {
     flex: 1;
     height: calc(100vh - #{$top-bar-height + $overlay-panel-height});
@@ -17,4 +21,6 @@
     align-content: center;
     align-items: center;
   }
+
 }
+

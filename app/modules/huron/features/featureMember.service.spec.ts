@@ -45,7 +45,7 @@ describe('Service: FeatureService', () => {
       'FeatureMemberService',
       'Authinfo',
       'UrlConfig',
-      'MemberService'
+      'MemberService',
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
     this.getMemberListDefer = this.$q.defer();

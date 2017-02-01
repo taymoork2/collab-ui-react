@@ -18,6 +18,7 @@ describe('Controller: CallServiceSettingsController', function () {
     $scope = $rootScope.$new();
     controller = $controller('CallServiceSettingsController', {
       $scope: $scope,
+      hasVoicemailFeatureToggle: true,
     });
     $scope.$apply();
   }));

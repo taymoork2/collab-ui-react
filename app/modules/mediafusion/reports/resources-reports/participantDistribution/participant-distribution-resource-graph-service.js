@@ -21,19 +21,28 @@
     function setParticipantDistributionGraph(response, participantDistributionChart, clusterSelected, clusterId, daterange, clusterMap) {
       var isDummy = false;
       var data = response.graphData;
-      var graphs = getClusterName(response.graphs, clusterMap, clusterSelected, clusterId);
+      var graphs = getClusterName(response.graphs, clusterMap);
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       } else {
-        if (data[0].colorTwo === chartColors.grayLightTwo) {
+        if (graphs[0].isDummy) {
           isDummy = true;
         }
+        if (clusterId !== vm.allClusters && !isDummy) {
+          var cluster = _.find(graphs, function (value) {
+            return value.valueField === clusterId;
+          });
+          if (_.isUndefined(cluster)) {
+            return undefined;
+          }
+        }
+
         var startDuration = 1;
         if (!data[0].balloon) {
           startDuration = 0;
         }
 
-        participantDistributionChart = createParticipantDistributionGraph(data, graphs, clusterSelected, daterange);
+        participantDistributionChart = createParticipantDistributionGraph(data, graphs, clusterSelected, daterange, isDummy);
         participantDistributionChart.dataProvider = data;
         participantDistributionChart.graphs = graphs;
         participantDistributionChart.startDuration = startDuration;
@@ -55,7 +64,7 @@
       }
     }
 
-    function createParticipantDistributionGraph(data, graphs, clusterSelected, daterange) {
+    function createParticipantDistributionGraph(data, graphs, clusterSelected, daterange, isDummy) {
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       }
@@ -103,7 +112,7 @@
       };
       var exportFields = [];
       _.forEach(graphs, function (value) {
-        columnNames[value.valueField] = value.title;
+        columnNames[value.valueField] = value.title + ' ' + 'Participants';
       });
       for (var key in columnNames) {
         exportFields.push(key);
@@ -112,10 +121,24 @@
       dateLabel = _.replace(dateLabel, /\s/g, '_');
       var ExportFileName = 'MediaService_ParticipantDistribution_' + cluster + '_' + dateLabel + '_' + new Date();
 
-      graphs.push({
-        'title': 'All',
-        'id': 'all'
-      });
+      if (!isDummy && clusterSelected === vm.allClusters) {
+        graphs.push({
+          'title': 'All',
+          'id': 'all',
+          'bullet': 'square',
+          'bulletSize': 10,
+          'lineColor': '#000000',
+          'hidden': true
+        });
+
+        graphs.push({
+          'title': 'None',
+          'id': 'none',
+          'bullet': 'square',
+          'bulletSize': 10,
+          'lineColor': '#000000'
+        });
+      }
 
       var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
@@ -137,7 +160,7 @@
       return chart;
     }
 
-    function getClusterName(graphs, clusterMap, clusterSelected, clusterId) {
+    function getClusterName(graphs, clusterMap) {
       var tempData = [];
       _.forEach(graphs, function (value) {
         var clusterName = _.findKey(clusterMap, function (val) {
@@ -145,9 +168,6 @@
         });
         if (!_.isUndefined(clusterName)) {
           value.title = clusterName;
-          if (vm.allClusters !== clusterId && clusterSelected !== value.title) {
-            value.lineAlpha = 0.2;
-          }
           value.balloonText = '<span class="graph-text">' + value.title + ' ' + ' <span class="graph-number">[[value]]</span></span>';
           value.lineThickness = 2;
         }
@@ -165,11 +185,21 @@
     }
 
     function legendHandler(evt) {
-      var state = evt.dataItem.hidden;
       if (evt.dataItem.id === 'all') {
         _.forEach(evt.chart.graphs, function (graph) {
           if (graph.id != 'all') {
-            evt.chart[state ? 'hideGraph' : 'showGraph'](graph);
+            evt.chart.showGraph(graph);
+          } else if (graph.id === 'all') {
+            evt.chart.hideGraph(graph);
+          }
+
+        });
+      } else if (evt.dataItem.id === 'none') {
+        _.forEach(evt.chart.graphs, function (graph) {
+          if (graph.id != 'all') {
+            evt.chart.hideGraph(graph);
+          } else if (graph.id === 'all') {
+            evt.chart.showGraph(graph);
           }
         });
       }

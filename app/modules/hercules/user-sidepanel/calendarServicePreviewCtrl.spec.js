@@ -33,14 +33,14 @@ describe('Directive Controller: CalendarServicePreviewCtrl', function () {
     spyOn(Notification, 'success');
     spyOn(Notification, 'notify');
     spyOn(Userservice, 'isInvitePending').and.returnValue(false);
-    spyOn(Orgservice, 'getOrg').and.returnValue($q.when({}));
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'calsvcShowPreferredSiteNameGetStatus').and.returnValue($q.when(true));
-    spyOn(ResourceGroupService, 'getAllAsOptions').and.returnValue($q.when(resourceGroupsAsOptions));
-    spyOn(ResourceGroupService, 'resourceGroupHasEligibleCluster').and.returnValue($q.when(true));
-    spyOn(USSService, 'getStatusesForUser').and.returnValue($q.when(userStatuses));
-    spyOn(USSService, 'refreshEntitlementsForUser').and.returnValue($q.when({}));
-    spyOn(USSService, 'getUserProps').and.returnValue($q.when(userProps));
+    spyOn(Orgservice, 'getOrg').and.returnValue($q.resolve({}));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'calsvcShowPreferredSiteNameGetStatus').and.returnValue($q.resolve(true));
+    spyOn(ResourceGroupService, 'getAllAsOptions').and.returnValue($q.resolve(resourceGroupsAsOptions));
+    spyOn(ResourceGroupService, 'resourceGroupHasEligibleCluster').and.returnValue($q.resolve(true));
+    spyOn(USSService, 'getStatusesForUser').and.returnValue($q.resolve(userStatuses));
+    spyOn(USSService, 'refreshEntitlementsForUser').and.returnValue($q.resolve({}));
+    spyOn(USSService, 'getUserProps').and.returnValue($q.resolve(userProps));
   }));
 
   function initController() {
@@ -92,7 +92,7 @@ describe('Directive Controller: CalendarServicePreviewCtrl', function () {
   });
 
   it('should show the unknown state and an error toaster if the service is entitled and no status is found for the service after refresh in USS', function () {
-    USSService.getStatusesForUser.and.returnValue($q.when([]));
+    USSService.getStatusesForUser.and.returnValue($q.resolve([]));
     initController();
     expect($scope.extension.entitled).toBeTruthy();
     expect($scope.extension.status.state).toBe('unknown');
@@ -116,7 +116,7 @@ describe('Directive Controller: CalendarServicePreviewCtrl', function () {
   });
 
   it('should change the extensionId when toggling between calendar types', function () {
-    ResourceGroupService.getAllAsOptions.and.returnValue($q.when([{ label: 'Test Group', value: '1234' }]));
+    ResourceGroupService.getAllAsOptions.and.returnValue($q.resolve([{ label: 'Test Group', value: '1234' }]));
     $stateParams.extensions = [{ id: 'squared-fusion-gcal', enabled: true, isSetup: true }, { id: 'squared-fusion-cal', enabled: true, isSetup: true }];
     initController();
 

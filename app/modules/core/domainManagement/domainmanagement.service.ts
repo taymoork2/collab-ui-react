@@ -3,7 +3,7 @@ class DomainManagementService {
   private _domainList: Array<{
     text: string,
     token: string,
-    status: string
+    status: string,
   }> = [];
 
   private _domainListLoaded: boolean = false;
@@ -65,7 +65,7 @@ class DomainManagementService {
   public get domainList(): Array<{
     text: string,
     token: string,
-    status: string
+    status: string,
   }> {
     return this._domainList;
   }

@@ -35,11 +35,10 @@ describe('SetupWizardCtrl', function () {
       licenseType: 'SHARED_DEVICES'
     }]);
 
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.when(false));
-    spyOn(Orgservice, 'getAdminOrgUsage').and.returnValue($q.when(usageFixture));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.resolve(false));
+    spyOn(Orgservice, 'getAdminOrgUsage').and.returnValue($q.resolve(usageFixture));
   }));
 
   function _expectStepIndex(step, index) {
@@ -92,8 +91,8 @@ describe('SetupWizardCtrl', function () {
   describe('When all toggles are false (and Authinfo.isSetupDone is false as well)', function () {
     beforeEach(initController);
 
-    it('the wizard should have 4 macro-level steps', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    it('the wizard should have 5 macro-level steps', function () {
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
 
     it('planReview should have a single substep', function () {
@@ -120,7 +119,7 @@ describe('SetupWizardCtrl', function () {
     });
 
     it('the wizard should not have the finish step', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings']);
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings']);
     });
   });
 
@@ -150,9 +149,9 @@ describe('SetupWizardCtrl', function () {
       }]);
       FeatureToggleService.supports.and.callFake(function (val) {
         if (val === FeatureToggleService.features.atlasSipUriDomain) {
-          return $q.when(true);
+          return $q.resolve(true);
         }
-        return $q.when(false);
+        return $q.resolve(false);
       });
       initController();
     });
@@ -168,12 +167,12 @@ describe('SetupWizardCtrl', function () {
 
   describe('When dirsync is enabled', function () {
     beforeEach(function () {
-      FeatureToggleService.supportsDirSync.and.returnValue($q.when(true));
+      FeatureToggleService.supportsDirSync.and.returnValue($q.resolve(true));
       initController();
     });
 
-    it('the wizard should have 4 tabs', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    it('the wizard should have 5 tabs', function () {
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
 
   });
@@ -185,7 +184,7 @@ describe('SetupWizardCtrl', function () {
     });
 
     it('the wizard should have 5 tabs', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
     });
 
   });
@@ -194,12 +193,11 @@ describe('SetupWizardCtrl', function () {
     beforeEach(function () {
       Authinfo.isCare.and.returnValue(true);
       Authinfo.isCSB.and.returnValue(false);
-      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
       initController();
     });
 
-    it('the wizard should have the 6 steps', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'addUsers', 'finish']);
+    it('the wizard should have the 7 steps', function () {
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'addUsers', 'finish']);
     });
 
     it('careSettings should have a single substep', function () {
@@ -210,25 +208,23 @@ describe('SetupWizardCtrl', function () {
   describe('When Authinfo.isCare is enabled ', function () {
     beforeEach(function () {
       Authinfo.isCare.and.returnValue(true);
-      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
       initController();
     });
 
-    it('the wizard should have the 5 steps', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'finish']);
+    it('the wizard should have the 6 steps', function () {
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'finish']);
     });
   });
 
   describe('When Authinfo.isCare is enabled and not first time setup', function () {
     beforeEach(function () {
       Authinfo.isCare.and.returnValue(true);
-      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
       Authinfo.isSetupDone.and.returnValue(true);
       initController();
     });
 
-    it('the wizard should have the 4 steps', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
+    it('the wizard should have the 5 steps', function () {
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
     });
   });
 
@@ -236,28 +232,27 @@ describe('SetupWizardCtrl', function () {
     beforeEach(function () {
       FeatureToggleService.supports.and.callFake(function (val) {
         if (val === FeatureToggleService.features.atlasSipUriDomainEnterprise) {
-          return $q.when(true);
+          return $q.resolve(true);
         }
-        return $q.when(false);
+        return $q.resolve(false);
       });
       initController();
     });
 
-    it('the wizard should have 4 tabs', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    it('the wizard should have 5 tabs', function () {
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
   });
 
   describe('When there are only shared device licenses', function () {
     beforeEach(function () {
-      FeatureToggleService.atlasDarlingGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
-      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.when(usageOnlySharedDevicesFixture));
+      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.resolve(usageOnlySharedDevicesFixture));
 
       initController();
     });
 
-    it('the wizard should have 3 tabs', function () {
-      expectStepOrder(['planReview', 'enterpriseSettings', 'finish']);
+    it('the wizard should have 4 tabs', function () {
+      expectStepOrder(['planReview', 'serviceSetup', 'enterpriseSettings', 'finish']);
       expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl']);
     });
   });
@@ -271,9 +266,8 @@ describe('SetupWizardCtrl', function () {
       }]);
       Authinfo.isCare.and.returnValue(true);
 
-      FeatureToggleService.supports.and.returnValue($q.when(true));
-      FeatureToggleService.supportsDirSync.and.returnValue($q.when(true));
-      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
+      FeatureToggleService.supports.and.returnValue($q.resolve(true));
+      FeatureToggleService.supportsDirSync.and.returnValue($q.resolve(true));
 
       initController();
     });

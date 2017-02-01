@@ -31,7 +31,7 @@
       beforeEach(function () {
         spyOn(CiService, 'getCiAdmins');
         spyOn(CiService, 'getCiNonAdmins');
-        spyOn(SyncService, 'getSyncStatus').and.returnValue($q.when());
+        spyOn(SyncService, 'getSyncStatus').and.returnValue($q.resolve());
       });
 
       it('should initialize user with adminTypes.read', function () {
@@ -46,7 +46,7 @@
         spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
         spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(false);
         spyOn(Authinfo, 'isHelpDeskUser').and.returnValue(true);
-        spyOn(CiService, 'isOrgManager').and.returnValue($q.when(true));
+        spyOn(CiService, 'isOrgManager').and.returnValue($q.resolve(true));
 
         initController();
 
@@ -56,10 +56,10 @@
       it('should initialize user with adminTypes.org with non-org-manager Customer Admin', function () {
         spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
         spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
-        spyOn(CiService, 'hasRole').and.returnValue($q.when());
+        spyOn(CiService, 'hasRole').and.returnValue($q.resolve());
         spyOn(Authinfo, 'isWebexSquared').and.returnValue(true);
         spyOn(Authinfo, 'isWebexMessenger').and.returnValue(true);
-        spyOn(CiService, 'isOrgManager').and.returnValue($q.when(false));
+        spyOn(CiService, 'isOrgManager').and.returnValue($q.resolve(false));
         initController();
         expect(ctrl.adminType).toBe(ctrl.adminTypes.org);
       });
@@ -67,10 +67,10 @@
       it('should initialize user with adminTypes.ops with Customer Admin & Org Manager', function () {
         spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
         spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
-        spyOn(CiService, 'hasRole').and.returnValue($q.when());
+        spyOn(CiService, 'hasRole').and.returnValue($q.resolve());
         spyOn(Authinfo, 'isWebexSquared').and.returnValue(true);
         spyOn(Authinfo, 'isWebexMessenger').and.returnValue(true);
-        spyOn(CiService, 'isOrgManager').and.returnValue($q.when(true));
+        spyOn(CiService, 'isOrgManager').and.returnValue($q.resolve(true));
         initController();
         expect(ctrl.adminType).toBe(ctrl.adminTypes.ops);
       });
@@ -95,7 +95,7 @@
         function () {
           spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
           spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
-          spyOn(CiService, 'hasRole').and.returnValue($q.when());
+          spyOn(CiService, 'hasRole').and.returnValue($q.resolve());
           spyOn(Authinfo, 'isWebexSquared').and.returnValue(false);
           spyOn(Notification, 'error');
 
@@ -126,7 +126,7 @@
         spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
         spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(false);
         spyOn(Authinfo, 'isHelpDeskUser').and.returnValue(true);
-        spyOn(CiService, 'isOrgManager').and.returnValue($q.when(false));
+        spyOn(CiService, 'isOrgManager').and.returnValue($q.resolve(false));
         spyOn(Notification, 'error');
 
         initController();

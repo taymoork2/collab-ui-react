@@ -1,5 +1,19 @@
-<div class="typeahead-large typeahead-large__no-icon">
-  <input class="form-control" placeholder="{{:: 'huronHuntGroup.namePlaceholder' | translate}}"
-         ng-model="huntGroupSA.huntGroupName" ng-keypress="huntGroupSA.enterNextPage($event.keyCode)" focus-on>
+<div class="typeahead-large typeahead-large__no-icon" 
+  ng-form="huntGroupSA.huntGroupForm" 
+  ng-class="{'error': huntGroupSA.huntGroupForm.huntGroupName.$dirty && huntGroupSA.huntGroupForm.huntGroupName.$invalid}">
+  <input name="huntGroupName"
+    placeholder="{{:: 'huronHuntGroup.namePlaceholder' | translate}}"
+    ng-model="huntGroupSA.huntGroupName"
+    ng-pattern="huntGroupSA.huntGroupNamePattern"
+    ng-maxlength="huntGroupSA.huntGroupNameMaxLength"
+    ng-keypress="huntGroupSA.enterNextPage($event.keyCode)"
+    ng-required required focus-on>
   <p class="input-description" translate="huronHuntGroup.nameHint"></p>
+  <div class="cs-input__messages" ng-messages="huntGroupSA.huntGroupForm.huntGroupName.$error" ng-messages-multiple role="alert"
+    ng-show="huntGroupSA.huntGroupForm.huntGroupName.$invalid">
+    <div class="message" ng-message="pattern" translate="huronHuntGroup.errorNamePattern"></div>
+    <div class="message" ng-message="maxlength" translate="huronHuntGroup.errorNameMaxLength"></div>
+    <div class="message" ng-message="required" translate="common.required"></div>
+  </div>
 </div>
+
