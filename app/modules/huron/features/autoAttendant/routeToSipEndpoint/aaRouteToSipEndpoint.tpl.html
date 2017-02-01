@@ -1,6 +1,6 @@
 <form novalidate name = "aaRouteToSip.routeSipForm">
 <div ng-class ="{'error': !aaRouteToSip.isSipValid() && aaRouteToSip.routeSipForm.routeToSipInput.$dirty}">
-<input class="aa-sip-input" aa-keypress ng-change="aaRouteToSip.saveUiModel(); aaRouteToSip.isSipValid();" ng-required = "true" ng-model="aaRouteToSip.model.sipInput" type="text" id="routeToSipInput{{ schedule + index + menuKeyIndex }}" name="routeToSipInput" placeholder="aaRouteToQueue.routeToSipPlaceHolder"></input>
+<input cs-input class="aa-sip-input" aa-keypress ng-change="aaRouteToSip.saveUiModel(); aaRouteToSip.isSipValid();" ng-required = "true" ng-model="aaRouteToSip.model.sipInput" type="text" id="routeToSipInput{{ schedule + index + menuKeyIndex }}" name="routeToSipInput" placeholder="{{ :: 'autoAttendant.routeToSipPlaceHolder' | translate }}"></input>
 <span ng-hide="aaRouteToSip.isSipValid()" class ="cs-input__messages">Enter a valid Sip Address</span>
 </div>
 </form>

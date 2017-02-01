@@ -6,7 +6,7 @@
     .controller('AARouteToSipEndpointCtrl', AARouteToSipEndpointCtrl);
 
   /* @ngInject */
-  function AARouteToSipEndpointCtrl($scope, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
+  function AARouteToSipEndpointCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
 
     var vm = this;
     vm.model = {};
@@ -27,7 +27,7 @@
     var routeToSipEndpoint = 'routeToSipEndpoint';
 
     var fromRouteCall = false;
-
+    vm.routeToSipPlaceHolder = $translate.instant('autoAttendant.routeToSipPlaceHolder');
     /////////////////////
 
     function isSipValid() {
