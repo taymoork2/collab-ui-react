@@ -2363,12 +2363,13 @@
         "modalHeading": "Add Users",
         "modalDesc": "Enter the email addresses of the users that will be assigned to the Hybrid Data Security Service.",
         "emailNotificationsWatermark": "Email addresses",
-        "emailExample": "For example: john.doe@email.com",
+        "emailExample": "For example: john.doe@example.com",
         "modalSST": "Add Users"
       },
       "editTrialUsers": {
         "modalTitle": "Edit Users in Trial Mode",
         "modalHeading": "Edit Users",
+        "emailNotificationsWatermark": "add new ...",
         "tooManyUsers": "<i class='icon icon-error'></i> Max number of users reached, delete existing users to add more.",
         "modalDesc": "To remove a user click the X in the user's field and they will be removed from the Hybrid Data Security Service."
       },

@@ -30,7 +30,7 @@
       it('addUser should notify success for valid emailTrialUsers', function () {
         initController();
         var emails = [{
-          "text": "abc@cisco.com"
+          text: 'abc@cisco.com'
         }];
         ctrl.emailTrialUsers = emails;
         spyOn(Notification, 'success');

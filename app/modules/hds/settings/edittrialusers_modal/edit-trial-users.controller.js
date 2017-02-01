@@ -9,9 +9,9 @@
   function EditTrialUsersController($translate, MailValidatorService, Notification) {
     var vm = this;
     vm.emailTrialUsers = ["user1@cisco.com", "user2@cisco.com", "user3@cisco.com", "user4@cisco.com", "user5@cisco.com"]; // TODO: rm data when APIs ready
-    vm.localizedAddEmailWatermark = $translate.instant('hds.resources.addTrialUsers.emailNotificationsWatermark');
-    vm.localizedAddEmailWatermark = "add new ...";
+    vm.localizedAddEmailWatermark = $translate.instant('hds.resources.editTrialUsers.emailNotificationsWatermark');
     vm.hasTrialUsers = true;
+    vm.savingEmail = false;
     vm.removeUser = removeUser;
     vm.addUser = addUser;
     vm.saveTrialUsers = saveTrialUsers;
