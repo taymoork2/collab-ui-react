@@ -136,6 +136,11 @@
               extension.status = _.find(userStatuses, function (status) {
                 return extension.id === status.serviceId;
               });
+              if (extension.status && extension.status.messages && extension.status.state !== 'error') {
+                extension.status.hasWarnings = _.some(extension.status.messages, function (message) {
+                  return message.severity === "warn";
+                });
+              }
             });
             delayedUpdateStatusForUser();
           }).catch(function (response) {

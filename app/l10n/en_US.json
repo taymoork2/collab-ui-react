@@ -2255,6 +2255,14 @@
         "RemoveUserResourceGroup": "Resource group changed",
         "SetUserStatus": "User status updated"
       }
+    },
+    "userStatusMessages": {
+      "c_cal": {
+        "exampleWarning": {
+          "title": "This is a title test! Should see {{yalla}} here.",
+          "description": "This is a description with a timestamp: {{timestamp}}."
+        }
+      }
     }
   },
   "hds": {

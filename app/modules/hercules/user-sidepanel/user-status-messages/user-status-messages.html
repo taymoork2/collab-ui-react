@@ -1,0 +1,11 @@
+<div class="row" ng-repeat="message in $ctrl.messages">
+  <div class="icon-column">
+    <i class="icon" ng-class="message.iconClass"></i>
+  </div>
+  <div class="message-column">
+    <span class="message-title">{{message.title}}</span>
+    <p>
+      {{message.description}}
+    </p>
+  </div>
+</div>

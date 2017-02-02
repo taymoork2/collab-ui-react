@@ -6,7 +6,7 @@
     .service('USSService', USSService);
 
   /* @ngInject */
-  function USSService($http, UrlConfig, Authinfo, CsdmPoller, CsdmHubFactory) {
+  function USSService($http, UrlConfig, Authinfo, CsdmPoller, CsdmHubFactory, $translate, FusionUtils) {
     var cachedUserStatusSummary = [];
 
     var USSUrl = UrlConfig.getUssUrl() + 'uss/api/v1';
@@ -110,12 +110,8 @@
 
     function getStatusesForUserInOrg(userId, orgId) {
       return $http
-        .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userStatuses?userId=' + userId)
-        .then(function (res) {
-          return _.filter(res.data.userStatuses, function (nugget) {
-            return nugget.entitled || (nugget.entitled === false && nugget.state != 'deactivated');
-          });
-        });
+        .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userStatuses?includeMessages=true&entitled=true&userId=' + userId)
+        .then(extractAndTweakUserStatuses);
     }
 
     function getOrg(orgId) {
@@ -135,7 +131,8 @@
     }
 
     function getAllStatuses(serviceId, state) {
-      return recursivelyReadStatuses(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses?' + statusesParameterRequestString(serviceId, state, 10000));
+      return recursivelyReadStatuses(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses?includeMessages=true&' + statusesParameterRequestString(serviceId, state, 10000))
+        .then(extractAndTweakUserStatuses);
     }
 
     function recursivelyReadStatuses(statusesUrl) {
@@ -210,6 +207,64 @@
 
     function notifyReadOnlyLaunch() {
       return $http.post(USSUrl + '/internals/actions/invalidateUser/invoke');
+    }
+
+    function extractAndTweakUserStatuses(res) {
+      var userStatuses = res.data ? res.data.userStatuses : res;
+      _.forEach(userStatuses, function (userStatus) {
+        if (userStatus.messages && userStatus.messages.length > 0) {
+          userStatus.messages = _.sortBy(userStatus.messages, function (message) {
+            return getMessageSortOrder(message.severity);
+          });
+          _.forEach(userStatus.messages, function (message) {
+            var translateReplacements = convertToTranslateReplacements(message.replacementValues);
+            message.title = translateWithFallback(message.key + '.title', message.title, translateReplacements);
+            message.description = translateWithFallback(message.key + '.description', message.description, translateReplacements);
+            message.iconClass = getMessageIconClass(message.severity);
+          });
+        }
+      });
+      return userStatuses;
+    }
+
+    function translateWithFallback(messageKey, fallback, translateReplacements) {
+      var translationKey = 'hercules.userStatusMessages.' + messageKey;
+      var translation = $translate.instant(translationKey, translateReplacements);
+      return translation === translationKey ? fallback : translation;
+    }
+
+    function convertToTranslateReplacements(messageReplacementValues) {
+      if (messageReplacementValues) {
+        var translateReplacements = {};
+        _.forEach(messageReplacementValues, function (replacementValue) {
+          translateReplacements[replacementValue.key] = replacementValue.type === 'timestamp' ? FusionUtils.getLocalTimestamp(replacementValue.value) : replacementValue.value;
+        });
+        return translateReplacements;
+      } else {
+        return undefined;
+      }
+    }
+
+    function getMessageIconClass(severity) {
+      switch (severity) {
+        case 'error':
+          return 'icon-error';
+        case 'warn':
+          return 'icon-warning';
+        default:
+          return 'icon-info';
+      }
+    }
+
+    function getMessageSortOrder(severity) {
+      switch (severity) {
+        case 'error':
+          return 0;
+        case 'warn':
+          return 1;
+        default:
+          return 2;
+      }
     }
   }
 }());
