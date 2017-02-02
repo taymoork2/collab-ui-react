@@ -579,7 +579,7 @@
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
-        huronCountryList: HuronCountryService.getCountryList(),
+        huronCountryList: getCountryList(),
       };
       if (!vm.isNewTrial()) {
         promises.tcHasService = TrialContextService.trialHasService(vm.currentTrial.customerOrgId);
@@ -620,6 +620,20 @@
           }
 
           toggleTrial();
+        });
+    }
+
+    function getCountryList() {
+      return FeatureToggleService.huronFederatedSparkCallGetStatus()
+        .then(function (supported) {
+          if (supported) {
+            return HuronCountryService.getCountryList()
+              .catch(function () {
+                return [];
+              });
+          } else {
+            return [];
+          }
         });
     }
 

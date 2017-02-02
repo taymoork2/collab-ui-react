@@ -64,6 +64,7 @@ describe('Controller: TrialCtrl:', function () {
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
       fail('the following toggle wasn\'t expected' + param); //taking control of which toggles this controller are using (explicit or implicit)
     });
+    spyOn(FeatureToggleService, 'huronFederatedSparkCallGetStatus').and.returnValue($q.resolve(true));
     spyOn(Orgservice, 'getAdminOrgAsPromise').and.returnValue($q.resolve({
       data: {
         success: true,
