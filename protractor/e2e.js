@@ -87,7 +87,7 @@ function sauceStop() {
 
 function setEnv() {
   if (args.sauce) {
-    process.env.SC_TUNNEL_IDENTIFIER = tunnelUuid || (tunnelUuid = uuid.v4());
+    process.env.SAUCE__TUNNEL_ID = tunnelUuid || (tunnelUuid = uuid.v4());
   }
   if (args.prod) {
     dotenv.config({
