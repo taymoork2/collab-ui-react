@@ -26,6 +26,7 @@
     ctrl.hasResourceGroupFeatureToggle = false;
     ctrl.hasNodesViewFeatureToggle = false;
     ctrl.getLocalizedReleaseChannel = FusionUtils.getLocalizedReleaseChannel;
+    ctrl.hybridServicesComparator = FusionUtils.hybridServicesComparator;
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
       .then(function (supported) {
