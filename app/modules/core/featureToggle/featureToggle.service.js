@@ -11,6 +11,7 @@
       atlasCareTrials: 'atlas-care-trials',
       atlasCareInboundTrials: 'atlas-care-inbound-trials',
       atlasContextServiceTrials: 'atlas-context-service-trials',
+      atlasDarling: 'atlas-darling',
       atlasDataRetentionSettings: 'atlas-data-retention-settings',
       atlasDevicesAdvancedSettings: 'atlas-devices-advanced-settings',
       atlasDeviceExport: 'atlas-device-export',

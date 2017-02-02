@@ -496,13 +496,14 @@
       $q.all({
         atlasCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         atlasContextServiceTrials: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
+        atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         atlasTrialsShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),
         huronCountryList: HuronCountryService.getCountryList(),
       })
         .then(function (results) {
           vm.showRoomSystems = true;
           vm.roomSystemTrial.enabled = true;
-          vm.sparkBoardTrial.enabled = true;
+          vm.sparkBoardTrial.enabled = results.atlasDarling;
           vm.webexTrial.enabled = true; // TODO: we enable globally by defaulting to 'true' here, but will revisit and refactor codepaths in a subsequent PR
           vm.callTrial.enabled = vm.hasCallEntitlement;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;
@@ -515,6 +516,7 @@
 
           vm.showCare = results.atlasCareTrials;
           vm.careTrial.enabled = results.atlasCareTrials;
+          vm.sbTrial = results.atlasDarling;
           // TODO: US12063 overrides using this var but requests code to be left in for now
           //var devicesModal = _.find(vm.trialStates, {
           //  name: 'trialAdd.call'
