@@ -2665,7 +2665,7 @@
             url: '/hds/resources',
             views: {
               'fullPane': {
-                templateUrl: 'modules/hds/resources/cluster-list.html'
+                template: '<hds-service-cluster-list service-id="\'spark-hybrid-datasecurity\'"></hds-service-cluster-list>'
               }
             },
             resolve: {
