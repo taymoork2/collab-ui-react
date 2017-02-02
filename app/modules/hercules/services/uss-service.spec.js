@@ -78,7 +78,7 @@ describe('Service: USSService', function () {
               {
                 key: 'c_cal.warn',
                 title: 'warn title',
-                severity: 'warn',
+                severity: 'warning',
                 description: 'warn description'
               },
               {

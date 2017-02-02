@@ -160,7 +160,7 @@
       switch (severity) {
         case 'error':
           return $translate.instant('common.error');
-        case 'warn':
+        case 'warning':
           return $translate.instant('common.warning');
         default:
           return $translate.instant('common.info');

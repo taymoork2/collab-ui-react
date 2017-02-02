@@ -138,7 +138,7 @@
               });
               if (extension.status && extension.status.messages && extension.status.state !== 'error') {
                 extension.status.hasWarnings = _.some(extension.status.messages, function (message) {
-                  return message.severity === "warn";
+                  return message.severity === 'warning';
                 });
               }
             });

@@ -249,7 +249,7 @@
       switch (severity) {
         case 'error':
           return 'icon-error';
-        case 'warn':
+        case 'warning':
           return 'icon-warning';
         default:
           return 'icon-info';
@@ -260,7 +260,7 @@
       switch (severity) {
         case 'error':
           return 0;
-        case 'warn':
+        case 'warning':
           return 1;
         default:
           return 2;
