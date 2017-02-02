@@ -56,6 +56,12 @@
       });
     }
 
+    vm.getRooms = function () {
+      vm.deviceName = undefined;
+      vm.place = undefined;
+      return vm.rooms;
+    };
+
     vm.selectPlace = function ($item) {
       vm.place = $item;
       vm.deviceName = $item.displayName;
