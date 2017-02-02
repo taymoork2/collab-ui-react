@@ -2969,36 +2969,37 @@
               },
             },
           })
-          .state('cluster-details', {
-            parent: 'sidepanel',
-            views: {
-              'sidepanel@': {
-                controllerAs: 'clusterDetailsCtrl',
-                controller: 'ExpresswayServiceClusterController',
-                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-details.html'
-              },
-              'header@cluster-details': {
-                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-header.html'
-              }
-            },
-            data: {
-              displayName: 'Overview'
-            },
-            params: {
-              clusterId: null,
-              connectorType: null
-            },
-            resolve: {
-              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
-              },
-            }
-          })
+         .state('cluster-details', {
+           parent: 'sidepanel',
+           views: {
+             'sidepanel@': {
+               template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>'
+             },
+             'header@cluster-details': {
+               templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'
+             }
+           },
+           data: {
+             displayName: 'Overview'
+           },
+           params: {
+             clusterId: null,
+             connectorType: null
+           },
+           resolve: {
+             id: /* @ngInject */ function ($stateParams) {
+               return $stateParams.clusterId;
+             },
+             connectorType: /* @ngInject */ function ($stateParams) {
+               return $stateParams.connectorType;
+             },
+           }
+         })
           .state('management-connector-details', {
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                templateUrl: 'modules/hercules/cluster-sidepanel/management-connector-details.html',
+                templateUrl: 'modules/hercules/cluster-sidepanel/host-details/management-connector-details.html',
                 controller: 'ExpresswayHostDetailsController',
                 controllerAs: 'hostDetailsCtrl'
               }
@@ -3013,8 +3014,20 @@
               connectorType: 'c_mgmt'
             }
           })
+          .state('management-connector-details.alarm-details', {
+            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details/alarm-details.html',
+            controller: 'ExpresswayAlarmController',
+            controllerAs: 'alarmCtrl',
+            data: {
+              displayName: 'Alarm Details'
+            },
+            params: {
+              alarm: null,
+              host: null
+            }
+          })
           .state('cluster-details.alarm-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details.html',
+            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details/alarm-details.html',
             controller: 'ExpresswayAlarmController',
             controllerAs: 'alarmCtrl',
             data: {
@@ -3026,7 +3039,7 @@
             }
           })
           .state('cluster-details.host-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/host-details.html',
+            templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
             controller: 'ExpresswayHostDetailsController',
             controllerAs: 'hostDetailsCtrl',
             data: {

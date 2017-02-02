@@ -30,7 +30,7 @@
 
     function deleteHost() {
       $modal.open({
-        templateUrl: 'modules/hercules/cluster-sidepanel/confirm-deleteHost-dialog.html',
+        templateUrl: 'modules/hercules/cluster-sidepanel/host-details/confirm-deleteHost-dialog.html',
         type: 'dialog',
         controller: 'ConfirmDeleteHostController',
         controllerAs: 'confirmDeleteHostDialog',
