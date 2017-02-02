@@ -40,12 +40,12 @@
         case 'running':
           break;
         case 'not_installed':
+        case 'not_configured':
           value = 1;
           break;
         case 'disabled':
         case 'downloading':
         case 'installing':
-        case 'not_configured':
         case 'uninstalling':
         case 'registered':
         case 'has_warning_alarms':
