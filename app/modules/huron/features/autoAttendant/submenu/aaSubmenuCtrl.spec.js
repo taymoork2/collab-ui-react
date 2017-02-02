@@ -51,25 +51,27 @@ describe('Controller: AASubmenuCtrl', function () {
   }
 
   var sortedOptions = [{
-    "name": 'phoneMenuDialExt',
+    "label": 'autoAttendant.actionSayMessage',
   }, {
-    "name": 'phoneMenuGoBack',
+    "label": 'autoAttendant.phoneMenuDialExt',
   }, {
-    "name": 'phoneMenuRepeatMenu',
+    "label": 'autoAttendant.phoneMenuGoBack',
   }, {
-    "name": 'phoneMenuRouteAA',
+    "label": 'autoAttendant.phoneMenuRepeatMenu',
   }, {
-    "name": 'phoneMenuRouteHunt',
+    "label": 'autoAttendant.phoneMenuRouteAA',
   }, {
-    "name": 'phoneMenuRouteMailbox',
+    "label": 'autoAttendant.phoneMenuRouteHunt',
   }, {
-    "name": 'phoneMenuRouteQueue',
+    "label": 'autoAttendant.phoneMenuRouteQueue',
   }, {
-    "name": 'phoneMenuRouteToExtNum',
+    "label": 'autoAttendant.phoneMenuRouteToExtNum',
   }, {
-    "name": 'phoneMenuRouteUser',
+    "label": 'autoAttendant.phoneMenuRouteToSipEndpoint'
   }, {
-    "name": 'phoneMenuSayMessage',
+    "label": 'autoAttendant.phoneMenuRouteUser',
+  }, {
+    "label": 'autoAttendant.phoneMenuRouteVM',
   }];
 
   beforeEach(angular.mock.module('uc.autoattendant'));
@@ -92,6 +94,7 @@ describe('Controller: AASubmenuCtrl', function () {
     $scope.queues = JSON.stringify(queues);
 
     spyOn(AACommonService, 'isRouteQueueToggle').and.returnValue(true);
+    spyOn(AACommonService, 'isRouteSIPAddressToggle').and.returnValue(true);
 
     controller = $controller('AASubmenuCtrl', {
       $scope: $scope
@@ -282,7 +285,7 @@ describe('Controller: AASubmenuCtrl', function () {
 
     it('should sort options', function () {
       for (var i = 0; i < sortedOptions.length; i++) {
-        expect(controller.keyActions[i].name).toEqual(sortedOptions[i].name);
+        expect(controller.keyActions[i].label).toEqual(sortedOptions[i].label);
       }
     });
   });
