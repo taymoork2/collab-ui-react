@@ -17,9 +17,8 @@ class PlaceCallOverview implements ng.IComponentController {
   public directoryNumbers: Line[];
   public preferredLanguageOptions: any[];
   public preferredLanguage: any;
-  public sitePreferredLanguage: string;
-  public placesPreferredLanguage: string;
-  public organizationLanguage: any;
+  private placesPreferredLanguage: string;
+  private defaultPreferredLanugage: string;
   public plIsLoaded: boolean = false;
   public placeCallOverviewSaveInProcess: boolean = false;
   public onPrefLanguageChange: boolean = false;
@@ -135,7 +134,6 @@ class PlaceCallOverview implements ng.IComponentController {
   }
 
   private initPreferredLanguage(): void {
-    this.sitePreferredLanguage = '';
     this.isUserLocaleFT2Enabled = false;
     this.FeatureToggleService.supports(
       this.FeatureToggleService.features.huronUserLocale2
@@ -143,8 +141,7 @@ class PlaceCallOverview implements ng.IComponentController {
       this.isUserLocaleFT2Enabled = isUserLocaleFT2Enabled;
       if (isUserLocaleFT2Enabled) {
         this.PlaceCallOverviewService.getSiteLevelLanguage().then(result => {
-          this.sitePreferredLanguage = result;
-          this.initPlacesPreferredLanguage();
+          this.initPlacesPreferredLanguage(result);
         })
         .catch((error) => {
           this.Notification.errorResponse(error, 'placesPage.failedToFetchSiteLevelLanguage');
@@ -153,15 +150,16 @@ class PlaceCallOverview implements ng.IComponentController {
     });
   }
 
-  private initPlacesPreferredLanguage(): void {
+  private initPlacesPreferredLanguage(sitePreferredLanguage): void {
     this.preferredLanguageOptions = [];
     this.PlaceCallOverviewService.getSiteLanguages().then(languages => {
       this.PlaceCallOverviewService.getCmiPlaceInfo(this.currentPlace.cisUuid).then(result => {
-        this.organizationLanguage = this.getPreferredLanguage(languages, this.sitePreferredLanguage);
-        this.preferredLanguageOptions.push(this.defaultPreferredLanguage(this.organizationLanguage['label']));
+        let organizationLanguage = this.getPreferredLanguage(languages, sitePreferredLanguage);
+        this.defaultPreferredLanugage = this.defaultPreferredLanguage(organizationLanguage['label']);
+        this.preferredLanguageOptions.push(this.defaultPreferredLanugage);
         this.preferredLanguageOptions = this.preferredLanguageOptions.concat(languages);
-        this.preferredLanguage = result['preferredLanguage'] ? this.getPreferredLanguage(languages, result['preferredLanguage']) : this.defaultPreferredLanguage(this.organizationLanguage['label']);
         this.placesPreferredLanguage = result['preferredLanguage'];
+        this.preferredLanguage = this.placesPreferredLanguage ? this.getPreferredLanguage(languages, this.placesPreferredLanguage) : this.defaultPreferredLanugage;
         this.plIsLoaded = true;
       })
       .catch((error) => {
@@ -197,6 +195,7 @@ class PlaceCallOverview implements ng.IComponentController {
       let prefLang = this.preferredLanguage.value ? this.preferredLanguage.value : null;
       this.PlaceCallOverviewService.updateCmiPlaceInfo(this.currentPlace.cisUuid, prefLang)
         .then(() => {
+          this.placesPreferredLanguage = prefLang;
           this.Notification.success('placesPage.placesCallOverviewSaveSuccess');
         })
         .catch(error => {
@@ -210,7 +209,9 @@ class PlaceCallOverview implements ng.IComponentController {
 
   public onCancelPlaceCallOverview(): void {
     if (!_.isEqual(this.preferredLanguage.value, this.placesPreferredLanguage)) {
-      this.preferredLanguage = this.getPreferredLanguage(this.preferredLanguageOptions, this.placesPreferredLanguage);
+      this.preferredLanguage = this.placesPreferredLanguage ?
+                                this.getPreferredLanguage(this.preferredLanguageOptions, this.placesPreferredLanguage) :
+                                this.defaultPreferredLanugage;
     }
     this.onPrefLanguageChange = false;
   }

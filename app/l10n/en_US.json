@@ -5447,10 +5447,10 @@
     "deletePlaceConfText": "Are you sure you want to delete {{ placeName }}?",
     "failedToSaveChanges": "Failed to save changes to place. Reason:",
     "failedToDelete": "Failed to delete place. Reason:",
-    "placesCallOverviewSaveSuccess": "Places call overview saved successfully",
-    "failedToFetchCmiPlacesInfo": "Failed to fetch CMI places info. Reason:",
-    "failedToFetchSiteLanguages": "Failed to fetch CMI languages. Reason:",
-    "failedToFetchSiteLevelLanguage": "Failed to fetch CMI site level language. Reason:"
+    "placesCallOverviewSaveSuccess": "Call overview saved successfully",
+    "failedToFetchCmiPlacesInfo": "Failed to fetch places info. Reason:",
+    "failedToFetchSiteLanguages": "Failed to fetch languages. Reason:",
+    "failedToFetchSiteLevelLanguage": "Failed to fetch site level language. Reason:"
   },
   "linesPage": {
     "manageLines": "Numbers",

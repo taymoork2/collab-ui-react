@@ -12,6 +12,38 @@
       </feature-list>
     </cs-sp-section>
 
+<<<<<<< f836b3cb9f25813c0a1f0216dd1739851fec4318
+=======
+    <cs-sp-section ng-if="$ctrl.currentPlace.type === 'cloudberry' && $ctrl.showPstn !== true">
+      <div class="section-title-row">
+        <span class="section-name" translate="spacesPage.informationHeader"></span>
+      </div>
+      <div class="form-group" ng-show="$ctrl.currentPlace.sipUrl">
+        <label class="col-sm-4 control-label" translate="deviceOverviewPage.sipUrl"></label>
+        <div class="col-sm-8">
+          <p class="form-control-static" title="{{$ctrl.currentPlace.sipUrl}}">{{$ctrl.currentPlace.sipUrl}}</p>
+        </div>
+      </div>
+    </cs-sp-section>
+    <cs-sp-section ng-if="$ctrl.currentPlace.type === 'cloudberry' && $ctrl.isUserLocaleFT2Enabled">
+      <div class="section-title-row">
+        <span class="section-name" translate="deviceOverviewPage.preferredLanguage"></span>
+      </div>
+      <p class="description-block" translate="deviceOverviewPage.preferredLanguageDescription"></p>
+      <div cs-loader ng-hide="$ctrl.plIsLoaded"></div>
+      <div ng-show="$ctrl.plIsLoaded">
+        <cs-select
+          name="languageSelect"
+          ng-model="$ctrl.preferredLanguage"
+          options="$ctrl.preferredLanguageOptions"
+          labelfield="label"
+          valuefield="value"
+          filter="false"
+          on-change-fn="$ctrl.onPrefLanguageChange=true"
+        ></cs-select>
+      </div>
+    </cs-sp-section>
+>>>>>>> feat(PlacesSetting) - Code review & bug fixes
     <cs-sp-section>
       <uc-device-list
         owner-type="place"
