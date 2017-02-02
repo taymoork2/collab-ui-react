@@ -1,7 +1,7 @@
 export class ClusterSettingsLinkCtrl implements ng.IComponentController {
 
   private clusterId: string;
-  private clusterType: string; // One of: c_mgmt, mf_mgmt, hds_app
+  private clusterType: 'c_mgmt' | 'mf_mgmt' | 'hds_app';
 
   /* @ngInject */
   constructor(
@@ -28,11 +28,9 @@ export class ClusterSettingsLinkCtrl implements ng.IComponentController {
 
 export class ClusterSettingsLinkComponent implements ng.IComponentOptions {
   public controller = ClusterSettingsLinkCtrl;
-  public template = [
-      '<div class="small">',
-         '<a translate="hercules.softwareUpgrade.editSettingsLink" ng-click="$ctrl.goToClusterSettings()"></a>',
-      '</div>',
-  ].join('');
+  public template = `<div class="small">
+  <a translate="hercules.softwareUpgrade.editSettingsLink" ng-click="$ctrl.goToClusterSettings()"></a>
+</div>`;
   public bindings = {
     clusterId: '<',
     clusterType: '<',

@@ -2947,7 +2947,7 @@
            parent: 'sidepanel',
            views: {
              'sidepanel@': {
-               template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'"></cluster-sidepanel-overview>'
+               template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>'
              },
              'header@cluster-details': {
                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'
@@ -2960,6 +2960,14 @@
              clusterId: null,
              connectorType: null
            },
+           resolve: {
+             id: /* @ngInject */ function ($stateParams) {
+               return $stateParams.clusterId;
+             },
+             connectorType: /* @ngInject */ function ($stateParams) {
+               return $stateParams.connectorType;
+             },
+           }
          })
           .state('management-connector-details', {
             parent: 'sidepanel',
