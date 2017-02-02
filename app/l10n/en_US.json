@@ -2045,7 +2045,8 @@
       "configure-connector": {
         "title": "Configure and Start the Connector",
         "description": "Your Cisco Expressway is registered for Hybrid Services.",
-        "action": "Next, configure the Connector on the Expressway."
+        "action": "Next, configure the Connector on the Expressway.",
+        "action-in-grid": "Go to the Expressway to configure."
       },
       "no-domain-verified": {
         "title": "Verify a Domain",
