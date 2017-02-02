@@ -5,7 +5,7 @@
   var $scope;
   var ctrl;
 
-  describe('Controller: AddTrialUsersController', function () {
+  describe('Controller: EditTrialUsersController', function () {
     beforeEach(angular.mock.module('Hercules'));
     beforeEach(angular.mock.module('HDS'));
 
@@ -39,19 +39,7 @@
         //expect(Notification.success).toHaveBeenCalled();
         expect(ctrl.savingEmail).toBe(true);
       });
-      // TODO: we will add more when bacn end API is clear
-      /*it('addUser should notify error for invalid emailTrialUsers', function () {
-        var emails = [{
-          "text": "abc"
-        }];
-        spyOn(Notification, 'error');
-        spyOn(MailValidatorService, 'isValidEmailCsv').and.returnValue(false);
-        ctrl.emailTrialUsers = emails;
-        ctrl.savingEmail = false;
-        ctrl.addUser();
-        //expect(Notification.error).toHaveBeenCalled();
-        expect(ctrl.savingEmail).toBe(false);
-      });*/
+      // TODO: we will add more when back end API is clear
 
     });
   });

@@ -9,7 +9,7 @@
   function AddTrialUsersController($translate, MailValidatorService, Notification) {
     var vm = this;
     vm.emailTrialUsers = '';
-    vm.localizedAddEmailWatermark = $translate.instant('hds.addTrialUsers.emailNotificationsWatermark');
+    vm.localizedAddEmailWatermark = $translate.instant('hds.resources.addTrialUsers.emailNotificationsWatermark');
     vm.savingEmail = false;
     vm.addUser = addUser;
     vm.removeUser = removeUser;

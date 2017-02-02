@@ -14,8 +14,8 @@
             name="trialServiceModeRadio"
             id="trialService"
             value="{{::hdsSettings.TRIAL}}"
-            cs-input-label="{{:: 'hds.settings.serviceTrialModeTitle' | translate}}"
-            cs-input-help-text="{{:: 'hds.settings.serviceTrialModeDesc' | translate}}">
+            cs-input-label="{{:: 'hds.resources.settings.serviceTrialModeTitle' | translate}}"
+            cs-input-help-text="{{:: 'hds.resources.settings.serviceTrialModeDesc' | translate}}">
           <input
             cs-input
             type="radio"
@@ -23,18 +23,18 @@
             id="productionService"
             name="productionServiceModeRadio"
             value="{{::hdsSettings.PRODUCTION}}"
-            cs-input-label="{{:: 'hds.settings.serviceProductionModeTitle' | translate}}"
-            cs-input-help-text="{{:: 'hds.settings.serviceTrialModeDesc' | translate}}">
+            cs-input-label="{{:: 'hds.resources.settings.serviceProductionModeTitle' | translate}}"
+            cs-input-help-text="{{:: 'hds.resources.settings.serviceTrialModeDesc' | translate}}">
         </div>
         <button class="btn btn--people"
                 ng-show="hdsSettings.model.serviceMode === hdsSettings.TRIAL"
                 ng-click="hdsSettings.openAddTrialUsersModal()"
-                translate="hds.settings.addTrialUsers">
+                translate="hds.resources.settings.addTrialUsers">
         </button>
         <button class="btn btn--people"
                 ng-show="hdsSettings.model.serviceMode === hdsSettings.TRIAL"
                 ng-click="hdsSettings.openEditTrialUsersModal()"
-                translate="hds.settings.editTrialUsers">
+                translate="hds.resources.settings.editTrialUsers">
         </button>
       </div>
     </setting-section>
