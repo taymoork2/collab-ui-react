@@ -498,7 +498,7 @@
         atlasContextServiceTrials: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         atlasTrialsShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),
-        huronCountryList: HuronCountryService.getCountryList(),
+        huronCountryList: getCountryList(),
       })
         .then(function (results) {
           vm.showRoomSystems = true;
@@ -560,6 +560,20 @@
           //spark board licence quantity
           vm.sparkBoardFields[1].model.quantity = vm.sparkBoardTrial.enabled ? _roomSystemDefaultQuantity : 0;
           toggleTrial();
+        });
+    }
+
+    function getCountryList() {
+      return FeatureToggleService.huronFederatedSparkCallGetStatus()
+        .then(function (supported) {
+          if (supported) {
+            return HuronCountryService.getCountryList()
+              .catch(function () {
+                return [];
+              });
+          } else {
+            return [];
+          }
         });
     }
 
