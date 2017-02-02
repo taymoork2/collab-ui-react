@@ -27,7 +27,9 @@
         </div>
         <div class="errorBox" ng-hide="choosePlace.hasRooms || choosePlace.isExistingCollapsed || !choosePlace.placesLoaded">
           <i class="icon icon-warning"></i>
-          <span translate="addDeviceWizard.chooseSharedSpace.noExistingPlaces"></span>
+          <span translate="addDeviceWizard.chooseSharedSpace.noExistingPlaces" ng-if="choosePlace.showPersonal"></span>
+          <span translate="addDeviceWizard.chooseSharedSpace.noExistingHuronPlaces" ng-if="choosePlace.deviceType === 'huron'"></span>
+          <span translate="addDeviceWizard.chooseSharedSpace.noExistingCloudberryPlaces" ng-if="choosePlace.deviceType === 'cloudberry'"></span>
         </div>
       </div>
       <div class="typeButtonWrapper">
@@ -47,12 +49,13 @@
   <div class="chooseExistingPlace" ng-hide="choosePlace.isExistingCollapsed || !choosePlace.hasRooms || !choosePlace.placesLoaded">
     <form class="chooseExistingPlaceForm" onsubmit="$('#next-button').click()">
       <h4 translate="addDeviceWizard.chooseSharedSpace.whichPlace"></h4>
-      <p ng-show="choosePlace.deviceType === 'huron'" translate="addDeviceWizard.chooseSharedSpace.existingDeskPhonePlaceInstructions"></p>
-      <p ng-hide="choosePlace.deviceType === 'huron'" translate="addDeviceWizard.chooseSharedSpace.existingCollaborationDevicePlaceInstructions"></p>
+      <p ng-show="choosePlace.deviceType === 'huron' && !choosePlace.showPersonal" translate="addDeviceWizard.chooseSharedSpace.existingDeskPhonePlaceInstructions"></p>
+      <p ng-show="choosePlace.deviceType !== 'huron' && !choosePlace.showPersonal" translate="addDeviceWizard.chooseSharedSpace.existingCollaborationDevicePlaceInstructions"></p>
+      <p ng-show="choosePlace.showPersonal" translate="addDeviceWizard.chooseSharedSpace.existingPlaceInstructions"></p>
       <div>
         <input type="text"
                ng-model="choosePlace.selected"
-               typeahead="room for room in choosePlace.rooms | filter:$viewValue | limitTo:6"
+               typeahead="room for room in choosePlace.getRooms() | filter:$viewValue | limitTo:6"
                typeahead-template-url="placeTemplate.html"
                typeahead-on-select="choosePlace.selectPlace($item)"
                placeholder="{{'addDeviceWizard.chooseSharedSpace.selectPlace' | translate}}"
@@ -70,7 +73,7 @@
   <div class="createNewPlace" ng-hide="choosePlace.isNewCollapsed">
     <form name="placeForm" class="createNewPlaceForm" onsubmit="$('#next-button').click()">
       <h4 translate="addDeviceWizard.chooseSharedSpace.placeLocation"></h4>
-      <p>{{ choosePlace.localizedCreateInstructions() }}</p>
+      <p translate="addDeviceWizard.chooseSharedSpace.newPlaceInstructions"></p>
       <div class="newPlaceSpacing" ng-show="choosePlace.onlyNew()"></div>
       <div class="cs-input-group" ng-class="{'error': placeForm.newPlace.$invalid && placeForm.newPlace.$touched}">
         <input
@@ -78,7 +81,7 @@
             type="text"
             id="newPlace"
             name="newPlace"
-            focus-on="true"
+            focus-on
             ng-model="choosePlace.deviceName"
             placeholder="{{'addDeviceWizard.chooseSharedSpace.insertRoomName' | translate}}"
             class="form-control"

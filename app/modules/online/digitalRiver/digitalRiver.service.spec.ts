@@ -7,7 +7,7 @@ describe('Service: DigitalRiverService', () => {
       '$document',
       '$httpBackend',
       'DigitalRiverService',
-      'UrlConfig'
+      'UrlConfig',
     );
     spyOn(this.$document, 'prop');
   });

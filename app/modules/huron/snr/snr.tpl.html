@@ -40,13 +40,17 @@
           <span class="snr-wait-seconds-label" translate="singleNumberReachPanel.snrSeconds"></span>
         </div>
       </div>
-
       <div ng-show="false">
         <p class="text-muted" translate="singleNumberReachPanel.snrNote"></p>
         <br>
         <cs-radiobutton choice="snr.snrLineOption" options="snr.snrOptions" label="label" value="line"></cs-radiobutton><br>
         <div ng-show="snr.snrLineOption !== 'all'">
         </div>
+      </div>
+      <div ng-if="snr.showRemove">
+        <p class="snr-description" translate="singleNumberReachPanel.snrOffDescription"></p>
+        <span class="snr-description"> {{snr.snrInfo.destination}}. </span>
+        <a id="remove" ng-click="snr.remove()" translate="singleNumberReachPanel.remove"></a>
       </div>
     </cs-sp-section>
   </cs-sp-container>

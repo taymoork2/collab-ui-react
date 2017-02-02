@@ -9,7 +9,7 @@ describe('Component: simultaneousCalls', () => {
   beforeEach(function () {
     this.initModules(simultaneousCallsModule);
     this.injectDependencies(
-      '$scope'
+      '$scope',
     );
     this.$scope.incomingCallMaximum = 2;
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');

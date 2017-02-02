@@ -43,10 +43,6 @@ xdescribe('ServiceStateChecker', function () {
 
     ClusterService = {
       getClustersByConnectorType: sinon.stub(),
-      getRunningStateSeverity: sinon.stub().returns({
-        label: 'ok',
-        value: 0,
-      }),
     };
 
     DomainManagementService = {

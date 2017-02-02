@@ -6,7 +6,7 @@
       .controller('CareFeaturesCtrl', CareFeaturesCtrl);
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, FeatureToggleService) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification) {
     var vm = this;
     vm.init = init;
     var pageStates = {
@@ -55,21 +55,17 @@
       color: 'alerts',
       data: []
     }];
-    vm.filters = [];
-    FeatureToggleService.atlasCareCallbackTrialsGetStatus().then(function (result) {
-      if (result) {
-        vm.filters = [{
-          name: $translate.instant('common.all'),
-          filterValue: 'all'
-        }, {
-          name: $translate.instant('sunlightDetails.chatMediaType'),
-          filterValue: 'chat'
-        }, {
-          name: $translate.instant('sunlightDetails.callbackMediaType'),
-          filterValue: 'callback'
-        }];
-      }
-    });
+    vm.filters = [{
+      name: $translate.instant('common.all'),
+      filterValue: 'all'
+    }, {
+      name: $translate.instant('sunlightDetails.chatMediaType'),
+      filterValue: 'chat'
+    }, {
+      name: $translate.instant('sunlightDetails.callbackMediaType'),
+      filterValue: 'callback'
+    }];
+
     init();
 
     function init() {

@@ -63,7 +63,7 @@ namespace domainManagement {
         status,
         startLog,
         1,
-        data
+        data,
       );
     }
   }

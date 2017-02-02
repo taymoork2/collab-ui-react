@@ -1,0 +1,34 @@
+<cs-sp-section>
+
+  <div ng-if="$ctrl.hasF237FeatureToggle"
+       class="section-title-row feature-inline">
+    <span class="section-name"
+          translate="common.releaseChannel"></span>
+    <span class="feature-name">{{$ctrl.releaseChannelName}}</span>
+  </div>
+
+  <div ng-if="$ctrl.hasF237FeatureToggle && $ctrl.resourceGroupName"
+       class="section-title-row feature-inline">
+    <span class="section-name"
+          translate="hercules.resourceGroups.resourceGroupHeading"></span>
+    <span class="feature-name">{{$ctrl.resourceGroupName}}</span>
+  </div>
+
+  <div ng-if="$ctrl.schedule"
+       class="section-title-row feature-inline">
+    <span class="section-name"
+          translate="hercules.expresswayClusterSettings.upgradeScheduleSubHeader"></span>
+    <span class="feature-name">{{$ctrl.schedule.dateTime}}, {{$ctrl.schedule.timeZone}}</span>
+  </div>
+
+  <div ng-if="$ctrl.schedule"
+       class="section-title-row feature-inline">
+    <span class="section-name"
+          translate="hercules.fusion.urgentUpgrade.title"></span>
+    <span class="feature-name">{{$ctrl.schedule.urgentScheduleTime}}, {{$ctrl.schedule.timeZone}}</span>
+  </div>
+
+  <cluster-settings-link cluster-id="$ctrl.cluster.id"
+                         cluster-type="$ctrl.clusterType"></cluster-settings-link>
+
+</cs-sp-section>

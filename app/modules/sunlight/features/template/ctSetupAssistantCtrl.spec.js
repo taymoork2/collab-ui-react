@@ -145,6 +145,7 @@ describe('Care Setup Assistant Ctrl', function () {
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorWithTrackingId');
     spyOn(LogMetricsService, 'logMetrics').and.callFake(function () {});
+    spyOn(SunlightConfigService, 'updateChatConfig');
     $stateParams = {
       template: undefined,
       isEditFeature: false
@@ -805,48 +806,42 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.template.configuration.pages.customerInformation.enabled).toBe(true);
       expect(controller.template.configuration.pages.agentUnavailable.enabled).toBe(false);
       expect(controller.template.configuration.pages.offHours.enabled).toBe(true);
-      expect(controller.template.configuration.pages.callbackConfirmation.enabled).toBe(false);
+      expect(controller.template.configuration.pages.callbackConfirmation.enabled).toBe(true);
     });
   });
 
   describe('Syncing verified domains with care', function () {
     beforeEach(inject(intializeCtrl));
-    it('when the org has no verified domains', function (done) {
+    it('when the org has no verified domains', function () {
       spyOn(DomainManagementService, 'getVerifiedDomains').and.callFake(function () {
         var data = [{
           "text": "ccservice.com",
           "status": "pending"
         }];
-        var deferred = $q.defer();
-        deferred.resolve(data);
-        return deferred.promise;
+        return $q.resolve(data);
       });
-      done();
       controller.syncDomains();
+      $scope.$apply();
       expect(SunlightConfigService.updateChatConfig).toHaveBeenCalledWith({ "allowedOrigins": [".*"] });
     });
-    it('when the org has verified domains', function (done) {
+    it('when the org has verified domains', function () {
       spyOn(DomainManagementService, 'getVerifiedDomains').and.callFake(function () {
         var data = [{
           "text": "ccservice.com",
           "status": "verified"
         }];
-        var deferred = $q.defer();
-        deferred.resolve(data);
-        return deferred.promise;
+        return $q.resolve(data);
       });
-      done();
       controller.syncDomains();
+      $scope.$apply();
       expect(SunlightConfigService.updateChatConfig).toHaveBeenCalledWith({ "allowedOrigins": ["ccservice.com"] });
     });
-    it('when the domain management service call fails', function (done) {
+    it('when the domain management service call fails', function () {
       spyOn(DomainManagementService, 'getVerifiedDomains').and.callFake(function () {
-        var deferred = $q.defer();
-        deferred.reject({});
-        return deferred.promise;
+        return $q.reject({});
       });
-      done();
       controller.syncDomains();
+      $scope.$apply();
       expect(SunlightConfigService.updateChatConfig).not.toHaveBeenCalled();
     });
   });

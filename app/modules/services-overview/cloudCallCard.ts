@@ -22,23 +22,11 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
     return [];
   }
 
-  private showFeatureTab(pstnEnabled: boolean) {
+  private showFeatureTab() {
     return this.Authinfo.getLicenses()
       .filter((license) => {
-        return !pstnEnabled || (license.licenseType === this.Config.licenseTypes.COMMUNICATION);
+        return license.licenseType === this.Config.licenseTypes.COMMUNICATION;
       }).length > 0;
-  }
-
-  public csdmPstnFeatureToggleEventHandler(pstnEnabled: boolean) {
-    this.active = pstnEnabled ? this.Authinfo.isAllowedState('huronsettings') : this.Authinfo.isSquaredUC();
-    if (this.showFeatureTab(pstnEnabled)) {
-      this._buttons.splice(1, 0, {
-        name: 'servicesOverview.cards.call.buttons.features',
-        routerState: 'huronfeatures',
-        buttonClass: 'btn-link',
-      });
-    }
-    this.loading = false;
   }
 
   /* @ngInject */
@@ -53,5 +41,13 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
       icon: 'icon-circle-call',
       name: 'servicesOverview.cards.call.title',
     });
+    if (this.showFeatureTab()) {
+      this._buttons.splice(1, 0, {
+        name: 'servicesOverview.cards.call.buttons.features',
+        routerState: 'huronfeatures',
+        buttonClass: 'btn-link',
+      });
+    }
+    this.loading = false;
   }
 }

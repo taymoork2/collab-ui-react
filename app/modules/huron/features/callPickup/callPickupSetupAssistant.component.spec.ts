@@ -2,8 +2,11 @@ describe('Component: callPickupSetupAssistant', () => {
 
   let member = getJSONFixture('huron/json/features/callPickup/member.json');
   let members = [member];
+  let updateCallPickup = getJSONFixture('huron/json/features/callPickup/callPickup.json');
+  let callpickupgroup = getJSONFixture('huron/json/features/callPickup/callPickupGroup.json');
   let pickup = getJSONFixture('huron/json/features/callPickup/pickup.json');
   let saveFailureResp = getJSONFixture('huron/json/features/callPickup/errorResponse.json');
+  let updateFailureResp = getJSONFixture('huron/json/features/callPickup/errorResponse.json');
   let saveNumbers = ['a0a2ee69-82f4-43d1-8d1d-c0d47c65a975', 'a0a2ee69-82f4-43d1-8d1d-c0d47c65a976'];
   beforeEach(function () {
     this.initModules('huron.call-pickup.setup-assistant');
@@ -17,24 +20,74 @@ describe('Component: callPickupSetupAssistant', () => {
       '$scope',
       'Notification',
       'CallPickupGroupService',
+      'FeatureMemberService',
     );
     spyOn(this.Notification, 'success');
     spyOn(this.Notification, 'error');
-
     spyOn(this.$state, 'go');
 
     this.saveCallPickupDefer = this.$q.defer();
     spyOn(this.CallPickupGroupService, 'saveCallPickupGroup').and.returnValue(this.saveCallPickupDefer.promise);
 
+    this.updateCallPickupDefer = this.$q.defer();
+    spyOn(this.CallPickupGroupService, 'updateCallPickup').and.returnValue(this.updateCallPickupDefer.promise);
+
     this.listCallPickupDefer = this.$q.defer();
     spyOn(this.CallPickupGroupService, 'getListOfPickupGroups').and.returnValue(this.listCallPickupDefer.promise);
 
+    this.getMemberPictureDefer = this.$q.defer();
+    spyOn(this.FeatureMemberService, 'getMemberPicture').and.returnValue(this.getMemberPictureDefer.promise);
+
+    this.getCallPickupDefer = this.$q.defer();
+    spyOn(this.CallPickupGroupService, 'getCallPickupGroup').and.returnValue(this.getCallPickupDefer.promise);
+    this.getCallPickupDefer.resolve(callpickupgroup);
+
+    this.getNumbersDefer = this.$q.defer();
+    spyOn(this.CallPickupGroupService, 'getMemberNumbers').and.returnValue(this.getNumbersDefer.promise);
     this.$timeout.flush();
   });
 
   function initComponent() {
     this.compileComponent('callPickupSetupAssistant', {});
   }
+
+  describe('check for changes call pickup', () => {
+    let originalName;
+
+    beforeEach(initComponent);
+
+    beforeEach(function () {
+      originalName = this.controller.callPickup.name;
+    });
+
+    afterEach(function () {
+      this.controller.callPickup.name = originalName;
+    });
+
+    it('should set form to invalid if name is empty', function () {
+      this.controller.callPickup.name = '';
+      this.controller.checkForChanges();
+      this.$timeout.flush();
+      this.$timeout.verifyNoPendingTasks();
+      expect(this.controller.form.$invalid).toBeTruthy();
+    });
+
+    it('should set form to invalid if name is invalid', function () {
+      this.controller.callPickup.name = '';
+      this.controller.checkForChanges();
+      this.$timeout.flush();
+      this.$timeout.verifyNoPendingTasks();
+      expect(this.controller.form.$invalid).toBeTruthy();
+    });
+
+    it('should set form to invalid if notification timer is not between 1 and 120', function () {
+      this.isNotificationTimerValid = false;
+      this.controller.checkForChanges();
+      this.$timeout.flush();
+      this.$timeout.verifyNoPendingTasks();
+      expect(this.controller.form.$invalid).toBeTruthy();
+    });
+  });
 
   describe('lastIndex', () => {
     beforeEach(initComponent);
@@ -209,20 +262,56 @@ describe('Component: callPickupSetupAssistant', () => {
     });
   });
 
+  describe('setNotifications', () => {
+    beforeEach(initComponent);
+
+    it('should change notification settings', function () {
+      let originalCP = this.controller.callPickup;
+      this.controller.setNotifications(true, true, true);
+      expect(this.controller.callPickup.playSound).toEqual(true);
+      expect(this.controller.callPickup.displayCalledPartyId).toEqual(true);
+      expect(this.controller.callPickup.displayCallingPartyId).toEqual(true);
+      this.controller.callPickup = originalCP;
+    });
+  });
+
   describe('onUpdateName', () => {
     beforeEach(initComponent);
 
     it('should change name and isNameValid', function () {
-      this.controller.onUpdateName('name', true, true);
+      this.controller.onUpdateName('name', true);
       expect(this.controller.name).toEqual('name');
       expect(this.controller.isNameValid).toBeTruthy();
     });
   });
 
+  describe('setCallPickupName', () => {
+    beforeEach(initComponent);
+
+    it('should change name and isNameValid', function () {
+      let originalCP = this.controller.callPickup;
+      this.controller.setCallPickupName('test', true);
+      expect(this.controller.callPickup.name).toEqual('test');
+      expect(this.controller.isNameValid).toBeTruthy();
+      this.controller.callPickup = originalCP;
+    });
+  });
+
+  describe('onCancel', () => {
+    beforeEach(initComponent);
+
+    it('should reset form', function () {
+      spyOn(this.controller, 'resetForm');
+      this.controller.onCancel();
+      expect(this.controller.resetForm).toHaveBeenCalled();
+    });
+});
+
   describe('onUpdateMember', () => {
     beforeEach(initComponent);
 
-    it('should update members and isMemberValid', function() {
+    it('should update members and isMemberValid', function () {
+      spyOn(this.controller, 'checkForChanges').and.callFake(function () { });
       this.controller.onUpdateMember(members, true);
       expect(this.controller.selectedMembers).toEqual(members);
       expect(this.controller.isValidMember).toBeTruthy();
@@ -256,14 +345,7 @@ describe('Component: callPickupSetupAssistant', () => {
   describe('saveCallPickupGroup', () => {
     beforeEach(initComponent);
 
-    it('should save uuid for all numbers in save numbers', function() {
-      this.controller.selectedMembers = member;
-      this.controller.saveCallPickup();
-      this.$timeout.flush();
-      expect(this.controller.saveNumbers[0]).toEqual(saveNumbers[0]);
-    });
-
-    it('should call successSave when callpickup is saved', function() {
+    it('should call successSave when callpickup is saved', function () {
       this.saveCallPickupDefer.resolve(pickup);
       this.controller.name = pickup.name ;
       this.controller.saveNumbers = saveNumbers;
@@ -280,6 +362,26 @@ describe('Component: callPickupSetupAssistant', () => {
       this.controller.saveCallPickup();
       this.$timeout.flush();
       expect(this.Notification.error).toHaveBeenCalledWith('callPickup.errorSave', { message: 'A group with this name already exists.' });
+      expect(this.$state.go).not.toHaveBeenCalledWith('huronfeatures');
+    });
+  });
+
+  describe('update call pickup', () => {
+    beforeEach(initComponent);
+
+    it('should call success updated when callpickup is updated', function () {
+      this.updateCallPickupDefer.resolve(updateCallPickup);
+      this.controller.updateCallPickup();
+      this.$timeout.flush();
+      expect(this.Notification.success).toHaveBeenCalledWith('callPickup.successUpdate', { callPickupName: updateCallPickup.name });
+      expect(this.$state.go).toHaveBeenCalledWith('huronfeatures');
+    });
+
+    it('should call error notification if save fails', function () {
+      this.updateCallPickupDefer.reject(updateFailureResp);
+      this.controller.updateCallPickup();
+      this.$timeout.flush();
+      expect(this.Notification.error).toHaveBeenCalledWith('callPickup.errorUpdate', { message: 'A group with this name already exists.' });
       expect(this.$state.go).not.toHaveBeenCalledWith('huronfeatures');
     });
   });

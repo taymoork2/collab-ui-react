@@ -8,10 +8,6 @@ require('./_setup-wizard.scss');
 
   function SetupWizardCtrl($scope, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, Utils) {
 
-    FeatureToggleService.supports(FeatureToggleService.features.csdmPstn).then(function (pstnEnabled) {
-      $scope.pstnEnabled = pstnEnabled;
-    });
-
     $scope.tabs = [];
     var tabs = [{
       name: 'planReview',
@@ -116,7 +112,7 @@ require('./_setup-wizard.scss');
 
     function showCallSettings() {
       return Authinfo.getLicenses().filter(function (license) {
-        return license.licenseType === Config.licenseTypes.COMMUNICATION || ($scope.pstnEnabled && license.licenseType === Config.licenseTypes.SHARED_DEVICES);
+        return license.licenseType === Config.licenseTypes.COMMUNICATION || license.licenseType === Config.licenseTypes.SHARED_DEVICES;
       }).length > 0;
     }
 
@@ -168,26 +164,22 @@ require('./_setup-wizard.scss');
         });
       }
 
-      FeatureToggleService.atlasDarlingGetStatus().then(function (toggle) {
-        if (toggle) {
-          Orgservice.getAdminOrgUsage()
-            .then(function (subscriptions) {
-              var licenseTypes = Utils.getDeepKeyValues(subscriptions, 'licenseType');
-              if (_.without(licenseTypes, Config.licenseTypes.SHARED_DEVICES).length === 0) {
-                $scope.tabs = _.reject($scope.tabs, function (tab) {
-                  return tab.name === 'messagingSetup' || tab.name === 'addUsers';
-                });
-                $scope.tabs = _.each($scope.tabs, function (tab) {
-                  if (tab.name === 'enterpriseSettings') {
-                    tab.steps = _.reject(tab.steps, function (step) {
-                      return step.name === 'init' || step.name === 'exportMetadata' || step.name === 'importIdp' || step.name === 'testSSO';
-                    });
-                  }
+      Orgservice.getAdminOrgUsage()
+        .then(function (subscriptions) {
+          var licenseTypes = Utils.getDeepKeyValues(subscriptions, 'licenseType');
+          if (_.without(licenseTypes, Config.licenseTypes.SHARED_DEVICES).length === 0) {
+            $scope.tabs = _.reject($scope.tabs, function (tab) {
+              return tab.name === 'messagingSetup' || tab.name === 'addUsers';
+            });
+            $scope.tabs = _.each($scope.tabs, function (tab) {
+              if (tab.name === 'enterpriseSettings') {
+                tab.steps = _.reject(tab.steps, function (step) {
+                  return step.name === 'init' || step.name === 'exportMetadata' || step.name === 'importIdp' || step.name === 'testSSO';
                 });
               }
             });
-        }
-      });
+          }
+        });
 
       FeatureToggleService.atlasPMRonM2GetStatus().then(function (response) {
         if (response) {

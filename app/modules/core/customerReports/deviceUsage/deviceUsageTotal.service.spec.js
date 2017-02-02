@@ -7,6 +7,7 @@ describe('DeviceUsageTotalService', function () {
   var DeviceUsageTotalService;
 
   var day1 = 20161001;
+  var $scope;
 
   afterAll(function () {
     day1 = undefined;
@@ -16,8 +17,9 @@ describe('DeviceUsageTotalService', function () {
     DeviceUsageTotalService = undefined;
   });
 
-  beforeEach(inject(function (_DeviceUsageTotalService_) {
+  beforeEach(inject(function (_DeviceUsageTotalService_, _$rootScope_) {
     DeviceUsageTotalService = _DeviceUsageTotalService_;
+    $scope = _$rootScope_.$new();
   }));
 
   describe('reducing the raw data', function () {
@@ -62,7 +64,7 @@ describe('DeviceUsageTotalService', function () {
       var expectedFullResult = [
         {
           "callCount": 10,
-          "totalDuration": "0.03",
+          "totalDuration": 100,
           "pairedCount": 10,
           "deviceCategories": {
             "ce": {
@@ -104,6 +106,7 @@ describe('DeviceUsageTotalService', function () {
               "pairedCount": 4
             }
           },
+          "totalDurationY": "0.03",
           "time": "2016-10-01"
         }
       ];
@@ -180,7 +183,11 @@ describe('DeviceUsageTotalService', function () {
         }
       ];
 
-      var stats = DeviceUsageTotalService.extractStats(accounts);
+      var stats;
+      DeviceUsageTotalService.extractStats(accounts).then(function (data) {
+        stats = data;
+      });
+      $scope.$apply();
       expect(stats.totalDuration).toEqual(280);
       expect(stats.noOfCalls).toEqual(2 * 7);
       expect(stats.noOfDevices).toEqual(7);
@@ -210,7 +217,7 @@ describe('DeviceUsageTotalService', function () {
       var expectedFullResult = [
         {
           "callCount": 2,
-          "totalDuration": "1.00", // hours
+          "totalDuration": 3600,
           "pairedCount": 2,
           "deviceCategories": {
             "ce": {
@@ -234,6 +241,7 @@ describe('DeviceUsageTotalService', function () {
               "pairedCount": 1
             }
           },
+          "totalDurationY": "1.00",
           "time": "2016-10-01"
         }
       ];

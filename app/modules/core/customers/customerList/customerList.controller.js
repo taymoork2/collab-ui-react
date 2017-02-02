@@ -19,7 +19,6 @@ require('./_customer-list.scss');
     vm.isOrgSetup = isOrgSetup;
     vm.isPartnerAdminWithCallOrRooms = isPartnerAdminWithCallOrRooms;
     vm.isOwnOrg = isOwnOrg;
-    vm.setFilter = setFilter;
     vm.getSubfields = getSubfields;
     vm.filterAction = filterAction;
     vm.modifyManagedOrgs = modifyManagedOrgs;
@@ -46,12 +45,11 @@ require('./_customer-list.scss');
     vm.convertStatusToInt = convertStatusToInt;
 
     vm.exportType = $rootScope.typeOfExport.CUSTOMER;
+    vm.activeFilter = 'all';
     vm.filterList = _.debounce(filterAction, vm.timeoutVal);
 
     vm.featureTrialForPaid = trialForPaid;
-    // expecting this guy to be unset on init, and set every time after
-    // check resetLists fn to see how its being used
-    vm.activeFilter = 'all';
+
     vm.filter = {
       selected: [],
       placeholder: $translate.instant('customerPage.filterSelectPlaceholder'),
@@ -275,18 +273,10 @@ require('./_customer-list.scss');
       setNotesTextOrder();
       initColumns();
 
-      var promises = {
-        atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
-        careTrials: FeatureToggleService.atlasCareTrialsGetStatus()
-      };
-      $q.all(promises)
-      .then(function (results) {
-        vm.isCareEnabled = results.careTrials;
+      FeatureToggleService.atlasCareTrialsGetStatus().then(function (result) {
+        vm.isCareEnabled = result;
         if (!vm.isCareEnabled) {
           _.remove(vm.filter.options, { value: 'care' });
-        }
-        if (!results.atlasDarling) {
-          _.remove(vm.filter.options, { value: 'sparkBoard' });
         }
       })
       .finally(function () {
@@ -485,19 +475,10 @@ require('./_customer-list.scss');
       return rows;
     }
 
-    function setFilter(filter) {
-      vm.activeFilter = filter || 'all';
-      if (filter === 'trials') {
-        vm.gridOptions.data = vm.trialsList;
-      } else {
-        vm.gridOptions.data = vm.managedOrgsList;
-      }
-    }
-
     function filterAction(value) {
       vm.searchStr = value;
       resetLists().then(function () {
-        setFilter(vm.activeFilter);
+        vm.gridOptions.data = vm.managedOrgsList;
       });
     }
 
@@ -748,9 +729,9 @@ require('./_customer-list.scss');
       angular.element('.open').removeClass('open');
     }
 
-    function getIsTrial(org) {
+    function getIsTrial(org, type) {
       if (org.isPartner) return false;
-      return _.get(org, 'communications.isTrial', true);
+      return _.get(org, type + '.isTrial', true);
     }
 
     function addNumbers(org) {
@@ -761,7 +742,8 @@ require('./_customer-list.scss');
               customerId: org.customerOrgId,
               customerName: org.customerName,
               customerEmail: org.customerEmail,
-              customerCommunicationLicenseIsTrial: getIsTrial(org)
+              customerCommunicationLicenseIsTrial: getIsTrial(org, 'communications'),
+              customerRoomSystemsLicenseIsTrial: getIsTrial(org, 'roomSystems')
             });
           } else {
             return $state.go('didadd', {

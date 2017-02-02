@@ -483,8 +483,9 @@
               timezone: vm.scheduleTimeZone.value
             }
           },
+          // NOTE: Do NOT disable callbackConfirmation page as it is required in Bubble app.
           callbackConfirmation: {
-            enabled: false,
+            enabled: true,
             fields: {
               callbackConfirmationMessage: {
                 displayText: "Your callback request has been received."
@@ -863,7 +864,8 @@
       DomainManagementService.getVerifiedDomains().then(function (response) {
         var verifiedDomains = _.chain(response)
           .filter({ 'status': VERIFIED })
-          .pick('text');
+          .map('text')
+          .value();
         verifiedDomains = verifiedDomains.length > 0 ? verifiedDomains : ['.*'];
         var config = { 'allowedOrigins': verifiedDomains };
         SunlightConfigService.updateChatConfig(config);

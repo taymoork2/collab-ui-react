@@ -91,13 +91,13 @@ describe('Controller: DevicesCtrl', function () {
     var adminOrgId;
     var isEntitledToHuron;
     var isEntitledToRoomSystem;
-    var showDarling;
     var showATA;
+    var showPersonal;
     beforeEach(function () {
       isEntitledToHuron = true;
       isEntitledToRoomSystem = true;
-      showDarling = true;
       showATA = true;
+      showPersonal = true;
       firstName = 'firstName';
       userCisUuid = 'userCisUuid';
       email = 'email@address.com';
@@ -108,14 +108,13 @@ describe('Controller: DevicesCtrl', function () {
       adminUserName = 'adminUserName';
       adminCisUuid = 'adminCisUuid';
       adminOrgId = 'adminOrgId';
-      spyOn(controller, 'isEntitledToHuron').and.returnValue(isEntitledToHuron);
+      spyOn(controller, 'isOrgEntitledToHuron').and.returnValue(isEntitledToHuron);
       spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(isEntitledToRoomSystem);
       spyOn(Authinfo, 'getUserId').and.returnValue(userCisUuid);
       spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(email);
       spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
       spyOn($state, 'go');
       controller.adminFirstName = firstName;
-      controller.showDarling = showDarling;
       controller.adminUserDetails = {
         firstName: adminFirstName,
         lastName: adminLastName,
@@ -124,44 +123,19 @@ describe('Controller: DevicesCtrl', function () {
         cisUuid: adminCisUuid,
         organizationId: adminOrgId
       };
+      controller.showATA = showATA;
+      controller.showPersonal = showPersonal;
+      controller.startAddDeviceFlow();
+      $scope.$apply();
     });
 
     it('should set the wizardState with correct fields for the wizard if places toggle is on', function () {
-      controller.showATA = showATA;
-      controller.startAddDeviceFlow();
-      $scope.$apply();
       expect($state.go).toHaveBeenCalled();
       var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
       expect(wizardState.title).toBe('addDeviceWizard.newDevice');
       expect(wizardState.function).toBe('addDevice');
-      expect(wizardState.showDarling).toBe(showDarling);
       expect(wizardState.showATA).toBe(showATA);
-      expect(wizardState.admin.firstName).toBe(adminFirstName);
-      expect(wizardState.admin.lastName).toBe(adminLastName);
-      expect(wizardState.admin.displayName).toBe(adminDisplayName);
-      expect(wizardState.admin.userName).toBe(adminUserName);
-      expect(wizardState.admin.cisUuid).toBe(adminCisUuid);
-      expect(wizardState.admin.organizationId).toBe(adminOrgId);
-      expect(wizardState.isEntitledToHuron).toBe(isEntitledToHuron);
-      expect(wizardState.isEntitledToRoomSystem).toBe(isEntitledToRoomSystem);
-      expect(wizardState.account.organizationId).toBe(orgId);
-      expect(wizardState.recipient.displayName).toBe(adminDisplayName);
-      expect(wizardState.recipient.firstName).toBe(firstName);
-      expect(wizardState.recipient.cisUuid).toBe(userCisUuid);
-      expect(wizardState.recipient.email).toBe(email);
-      expect(wizardState.recipient.organizationId).toBe(adminOrgId);
-    });
-
-    it('should set the wizardState with correct fields for the wizard if places toggle is off', function () {
-      controller.showATA = showATA;
-      controller.startAddDeviceFlow();
-      $scope.$apply();
-      expect($state.go).toHaveBeenCalled();
-      var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
-      expect(wizardState.title).toBe('addDeviceWizard.newDevice');
-      expect(wizardState.function).toBe('addDevice');
-      expect(wizardState.showDarling).toBe(showDarling);
-      expect(wizardState.showATA).toBe(showATA);
+      expect(wizardState.showPersonal).toBe(showPersonal);
       expect(wizardState.admin.firstName).toBe(adminFirstName);
       expect(wizardState.admin.lastName).toBe(adminLastName);
       expect(wizardState.admin.displayName).toBe(adminDisplayName);
@@ -181,9 +155,7 @@ describe('Controller: DevicesCtrl', function () {
 
   describe('Feature toggle loading', function () {
     beforeEach(function () {
-      spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(true));
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(true));
-      spyOn(FeatureToggleService, 'csdmPstnGetStatus').and.returnValue($q.resolve(true));
       spyOn(FeatureToggleService, 'atlasDeviceExportGetStatus').and.returnValue($q.resolve(true));
       spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
     });

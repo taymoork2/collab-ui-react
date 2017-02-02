@@ -8,8 +8,11 @@ eg. `npm start -- --noopen` passes the `--noopen` argument to our `start` task
 
 #### Common build arguments
 
-* `--nolint` to prevent lint loaders during build
-* `--noopen` to stop a new window on `serve`
+* `lite-server` arguments
+  * `--noopen` to stop a new window on `serve`
+
+* `webpack` arguments must be prefixed with `env.`
+  * `--env.nolint` to prevent lint loaders during build
 
 #### Common test arguments
 

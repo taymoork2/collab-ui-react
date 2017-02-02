@@ -9,6 +9,7 @@
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
     vm.deviceType = wizardData.account.deviceType;
+    vm.showPersonal = wizardData.showPersonal;
     var minlength = 3;
     var maxlength = 64;
 
@@ -30,37 +31,42 @@
 
     init();
 
-    vm.localizedCreateInstructions = function () {
-      if (vm.deviceType === 'huron') {
-        return $translate.instant('placesPage.placesDefinition');
-      }
-      return $translate.instant('addDeviceWizard.chooseSharedSpace.newPlaceInstructions');
-    };
-
     function loadList() {
-      if (vm.deviceType == 'cloudberry') {
-        CsdmDataModelService.getPlacesMap().then(function (placesList) {
-          vm.rooms = _(placesList).filter(function (place) {
-            return _.isEmpty(place.devices) && place.type == 'cloudberry';
-          }).sortBy('displayName').value();
-          vm.hasRooms = vm.rooms.length > 0;
-          vm.placesLoaded = true;
-        });
+      var filterFunction;
+      if (vm.showPersonal) {
+        filterFunction = function (place) {
+          return (_.isEmpty(place.devices) && place.type == 'cloudberry')
+            || place.type == 'huron';
+        };
       } else {
-        CsdmDataModelService.getPlacesMap().then(function (placesList) {
-          vm.rooms = _(placesList).filter(function (place) {
+        if (vm.deviceType == 'cloudberry') {
+          filterFunction = function (place) {
+            return _.isEmpty(place.devices) && place.type == 'cloudberry';
+          };
+        } else {
+          filterFunction = function (place) {
             return place.type == 'huron';
-          }).sortBy('displayName').value();
-          vm.hasRooms = vm.rooms.length > 0;
-          vm.placesLoaded = true;
-        });
+          };
+        }
       }
+      CsdmDataModelService.getPlacesMap().then(function (placesList) {
+        vm.rooms = _(placesList).filter(filterFunction).sortBy('displayName').value();
+        vm.hasRooms = vm.rooms.length > 0;
+        vm.placesLoaded = true;
+      });
     }
+
+    vm.getRooms = function () {
+      vm.deviceName = undefined;
+      vm.place = undefined;
+      return vm.rooms;
+    };
 
     vm.selectPlace = function ($item) {
       vm.place = $item;
       vm.deviceName = $item.displayName;
       vm.selected = $item.displayName;
+      vm.deviceType = $item.type;
     };
 
     vm.existing = function () {
@@ -99,11 +105,11 @@
     };
 
     vm.next = function () {
-      var nextOption = vm.deviceType;
+      var nextOption = vm.showPersonal ? '' : (vm.deviceType + '_');
       if (wizardData.function == 'addPlace') {
-        nextOption += '_' + 'create';
+        nextOption += 'create';
       } else {
-        nextOption += '_' + (vm.radioSelect || 'existing');
+        nextOption += (vm.radioSelect || 'existing');
       }
       var cisUuid;
       if (vm.place) {
@@ -114,7 +120,8 @@
         account: {
           name: vm.deviceName,
           cisUuid: cisUuid,
-          type: 'shared'
+          type: 'shared',
+          deviceType: vm.deviceType
         }
       }, nextOption);
     };

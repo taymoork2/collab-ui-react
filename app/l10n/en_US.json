@@ -157,7 +157,10 @@
       "bulkLabel": "Export and import users with a CSV file",
       "bulkDetails": "Best method for adding and editing up to {{maxUsersInCSV}} users at the same time.",
       "advancedLabel": "Enable directory synchronization",
-      "advancedDetails": "Synchronize users from Active Directory"
+      "advancedDetails": "Synchronize users from Active Directory.",
+      "convertLabel": "Convert Users",
+      "convertDetails": "Search for users who have signed up on their own for Cisco Spark and convert them into your company.",
+      "convertUnavailable": "There are no users to convert."
     },
     "ad": {
       "adLabel": "Active Directory",
@@ -330,7 +333,7 @@
       "deleteUserDnFallbackError": "entitlement update failed. The user's directory number is used as the fallback destination for Hunt Group(s).",
       "other": "not entitled, status: {{status}}"
     },
-    "enableCareInformationText": "Select Message and Call to enable Care."
+    "enableCareInformationText": "Select Message to enable Care."
   },
   "usersPreview": {
     "groupPreview": "Group:",
@@ -1104,6 +1107,7 @@
     "remove": "Remove",
     "releaseChannel": "Release Channel",
     "rename": "Rename",
+    "required": "Required",
     "reset": "Reset",
     "resources": "Resources",
     "retry": "Retry",
@@ -1344,12 +1348,15 @@
     "singleNumberRangeError": "Extension Ranges cannot begin and end with the same number.",
     "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines.",
     "voicemailToEmailLabel": "Voicemail to Email",
+    "EmailNotificationAttached": "Email Notification with Attachment",
+    "EmailNotificationWithoutAttached": "Email Notification without Attachment",
     "voicemailToPhoneLabel": "Voicemail to Phone",
     "phoneVoicemailAddedCostText": "Using this number incurs a usage cost.",
     "voicemailToSparkLabel": "Voicemail to Spark",
     "voicemailToSparkAndPhoneLabel": "Voicemail to Spark and Phone",
     "messageWaitingIndicatorText": "The Message Waiting Indicator (MWI) continues to blink until users access their voicemails from their phones.",
     "voicemailToEmailHelpText": "Warning: Voicemail attachments sent via email are not secure.",
+    "voicemailToEmailAttachmentText": "Voicemail attachments sent via email are not secure.",
     "voicemailNumberCostHelpText" : "Using this number incurs a usage cost",
     "voicemailToEmailGetError": "Failed to get voicemail to email settings.",
     "voicemailToEmailUpdateError": "Failed to update voicemail to email settings.",
@@ -1508,6 +1515,7 @@
     "retrieveKemFail": "Failed to retrieve key expansion module count.",
     "emergencyTitle": "Emergency Services",
     "editEmergencyServices": "Edit Emergency Services",
+    "emergencyServicesNotFound": "Emergency Services address not found.",
     "callbackNumber": "Callback Number",
     "serviceAddress": "Service Address",
     "servicesDesc": "Emergency Services requires a street address where this device is located, and must be associated with a managed callback number that is used if an emergency call is disconnected.",
@@ -1573,7 +1581,11 @@
       "modalNote": "Note: The more users included, the longer the report takes to generate.",
       "modalCTA": "Export to CSV",
       "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s",
-      "userNotFound": "Not found"
+      "userNotFound": "Not found",
+      "readingUserStatuses": "Reading user statuses…",
+      "readingConnectors": "Reading cluster assignments…",
+      "prepareFile": "Preparing export file…",
+      "pleaseWait": "Please wait"
     },
     "overview": {
       "activated": "Activated",
@@ -1669,6 +1681,8 @@
       "uninstalling": "Uninstalling",
       "running": "Running",
       "has_alarms": "Alarms",
+      "has_warning_alarms": "Alarms",
+      "has_error_alarms": "Alarms",
       "upgrading": "Upgrading",
       "upgraded": "Upgraded",
       "pending": "Pending",
@@ -1760,6 +1774,7 @@
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
       "enableServiceFailure": "Adding the {{serviceName}} failed.",
       "failedToEnableConnect": "Could not enable Call Service Connect.",
+      "failedToDisableConnect": "Could not disable Call Service Connect.",
       "sipDomainSaved": "SIP Destination saved successfully.",
       "sipDomainInvalid": "Could not save SIP Destination. Try again later.",
       "invalidEmail": "Please enter a list of comma-separated email addresses"
@@ -1799,6 +1814,7 @@
       "action": "Action"
     },
     "softwareUpgrade": {
+      "editSettingsLink": "Edit cluster settings",
       "softwareUpgrade": "Software Upgrade",
       "currentVersion": "Current Version",
       "newVersion": "New Version",
@@ -1897,6 +1913,16 @@
       "oneButtonToPushIntervalSecondaryLabel": "minutes before the meeting",
       "oneButtonToPushIntervalMinutesSavingSuccess": "Early join time was successfully saved.",
       "oneButtonToPushIntervalMinutesSavingError": "Could not save the change to early join time. Try again later.",
+      "voicemail": {
+        "heading": "Voicemail",
+        "description": "Allow users in your organization to access on-premise voicemail by using the Cisco Spark app.",
+        "enableDescription": "All users with both Hybrid Call Service Aware and Connect can use voicemail now",
+        "disableDescription": "Voicemail is disabled for all users",
+        "voicemailDisabled": "To enable voicemail Call Service Connect needs to be turned on.",
+        "voicemailStatusError": "Unable to get voicemail status",
+        "voicemailEnableError": "Could not enable voicemail",
+        "voicemailDisableError": "Could not disable voicemail"
+      },
       "documentation": {
         "heading": "Documentation and Software",
         "help": "Visit <a href=\"{{helpLink}}\" target=\"_blank\">Help Central</a> for further information about {{localizedServiceName}}.",
@@ -2007,7 +2033,9 @@
       },
       "connect": {
         "title": "Enable Call Service Connect for Users",
-        "navigateToUsers": "You have successfully configured Call Service Connect. Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Connect for your users. Make sure you selected the applicable method in Expressway to create CTI remote devices for your users. "
+        "navigateToUsers": "You have successfully configured Call Service Connect. Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Connect for your users. Make sure you selected the applicable method in Expressway to create CTI remote devices for your users. ",
+        "connectEnabled": "Call Service Connect has been enabled",
+        "connectDisabled": "Call Service Connect has been disabled"
       },
       "scheduleUpgrade": {
         "title": "Acknowledge the Scheduled Upgrade",
@@ -2017,7 +2045,8 @@
       "configure-connector": {
         "title": "Configure and Start the Connector",
         "description": "Your Cisco Expressway is registered for Hybrid Services.",
-        "action": "Next, configure the Connector on the Expressway."
+        "action": "Next, configure the Connector on the Expressway.",
+        "action-in-grid": "Go to the Expressway to configure."
       },
       "no-domain-verified": {
         "title": "Verify a Domain",
@@ -2334,23 +2363,19 @@
         "editTrialUsers": "Edit Users in Trial"
       },
       "addTrialUsers": {
-        "modalTitle": "Assign Data Security to Users",
-        "modalHeading": "Manually Assign Users",
-        "modalDesc": "Enter the email addresses of the users that will be assigned to the Data Security Service",
+        "modalTitle": "Add Users to Trial Mode",
+        "modalHeading": "Add Users",
+        "modalDesc": "Enter the email addresses of the users that will be assigned to the Hybrid Data Security Service.",
         "emailNotificationsWatermark": "Email addresses",
-        "emailExample": "For example: John Doe john.doe@email.com, Kate Williams kate.williams@email.com",
-        "modalSST": "Start Service Trial"
+        "emailExample": "For example: john.doe@example.com",
+        "modalSST": "Add Users"
       },
       "editTrialUsers": {
-        "modalTitle": "Edit Data Security Trial Users",
-        "modalHeadingAddUser": "To Add Users to this Service Trial",
-        "modalAddUserDesc1": "&bull; Go to the Users page",
-        "modalAddUserDesc2": "&bull; Search for the user you want to add to this Trial, and upon finding them, select the user (by clicking the row)",
-        "modalAddUserDesc3": "&bull; Navigate to Hybrid Services and then assign them to the Data Security Service Trial by flipping the Service toggle ON",
-        "modalHeadingRemoveUser": "To Remove a User from this Service Trial",
-        "modalRemoveUserDesc1": "&bull; Go to the Users page",
-        "modalRemoveUserDesc2": "&bull; Search for the user you want to remove from this Trial, and upon finding them, select the user (by clicking the row). If necessary, you can <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">download your Service Trial Users</a> for reference.",
-        "modalRemoveUserDesc3": "&bull; Navigate to Hybrid Services and then assign them to the Data Security Service Trial by flipping the Service toggle ON"
+        "modalTitle": "Edit Users in Trial Mode",
+        "modalHeading": "Edit Users",
+        "emailNotificationsWatermark": "add new ...",
+        "tooManyUsers": "<i class='icon icon-error'></i> Max number of users reached, delete existing users to add more.",
+        "modalDesc": "To remove a user click the X in the user's field and they will be removed from the Hybrid Data Security Service."
       },
       "page_title": "Hybrid Data Security Service",
       "genericError": "An unexpected error occurred. Please try again later.",
@@ -3087,6 +3112,11 @@
     "fallbackTimer.validation.error": "Must be a number between {{min}} and {{max}}"
   },
   "callPickup": {
+    "nameLabel": "Call Pickup Name",
+    "memberLabel": "Call Pickup Members",
+    "successUpdate": "'{{callPickupName}}' Call pickup has been updated successfully",
+    "errorUpdate": "Failed to update the '{{callPickupName}}' Call Pickup",
+    "saveLabel": "Do you want to save your changes?",
     "title": "Call Pickup",
     "code": "PI",
     "modalDescription": "Call Pickup feature allows users to pick up incoming calls within a group of users.",
@@ -3110,7 +3140,19 @@
     "minMemberWarning": "You need to select at least one line for each member",
     "memberWarning": "Member already added to another call pickup group. Do you wish to continue?",
     "duplicateNameWarning": "A pickup group by same name already exists",
-    "removeMember": "Remove Member"
+    "removeMember": "Remove Member",
+    "memberTitle": "Members",
+    "nameTitle": "Call Pickup Settings",
+    "notificationTitle": "Notifications",
+    "notificationTimer": "Notification Timer",
+    "timerHint": "Set the duration of time the call rings before notifying pickup group.",
+    "pickupHint": "Pickup Notifications",
+    "pickupNotification": "Call pickup notification behavior and pickup experience on members' device.",
+    "notificationTimer.validation.error": "Must be a number between 1 and 120",
+    "notificationTimerSeconds": "Seconds",
+    "calledParty": "Display called party's information",
+    "callingParty": "Display calling party's information",
+    "playSound": "Play Sound"
   },
   "pagingGroup": {
     "title": "Paging Group",
@@ -3236,6 +3278,15 @@
     "customNumberValidation": "Field can contain digits 0 to 9 and +. For example: +15556667777.",
     "saveConfirmation": "Do you want to save your changes?"
   },
+  "autoAnswerPanel": {
+    "title": "Auto Answer",
+    "description": "Enable to choose which devices to automatically answer this line when a call comes in.",
+    "userSharedLineDescription": "This line is shared, setting auto answer for this {{ownerType}} will turn it off for the {{type}}, {{name}}",
+    "multiDeviceLineDescription": "If auto answer is set, the call will be answered by the selected phone. Other phones will not ring.",
+    "speaker": "Speaker",
+    "headset": "Headset",
+    "noSupportedDevices": "No supported devices"
+  },
   "sharedLinePanel": {
     "title": "Shared Line",
     "description": "Simultaneously ring other users' lines when this line is called.",
@@ -3249,6 +3300,10 @@
     "title": "Single Number Reach",
     "description": "Single Number Reach (SNR) enables you to have incoming calls ring the extension and other lines that you specify here at the same time.",
     "description2": "Turn on Single Number Reach and specify the lines that you want to ring at the same time.",
+    "snrOffDescription": "Single Number Reach is currently disabled. The Destination is set to ",
+    "deleteConfirmMsg": "Are you sure you want to delete?",
+    "confirmDelete": "Confirm Delete",
+    "remove": "Remove",
     "snrRemoteDestinationNumber": "When the line is called, the following phone number will ring at the same time:",
     "snrRemoteDestinationNumberPlaceholder": "Enter Number",
     "snrWaitSeconds": "Indicate how long you want all lines to ring before the call is forwarded to your work voicemail.",
@@ -3527,7 +3582,11 @@
     "roomSystem": "Room Device",
     "deviceBasedServices": "Device-based Services",
     "call": "Call",
-    "activeServicesInformation": "These services are already purchased."
+    "activeServicesInformation": "These services are already purchased.",
+    "regionalSettings": "Regional Settings",
+    "defaultCountry": "Default Country",
+    "defaultCountryDesc": "Specify the country to set the correct dial tone on user devices.",
+    "defaultCountryPlaceholder": "Select your country"
   },
   "trialModal": {
     "addTrial": {
@@ -3863,7 +3922,8 @@
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
-    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
+    "e911Unavailable": "The number you have selected is currently unavailable due to the Emergency Service Address associated with it is processing. Check back later."
   },
   "bulkEnableVm": {
     "enableCompanyVoicemail": "Turning On Company Voicemail",
@@ -3982,6 +4042,10 @@
   "addDeviceWizard": {
     "newDevice": "New Device",
     "newCode": "New Code",
+    "confirmRoomDeviceOnly": {
+      "roomDeviceOnly": "Room Device activation only",
+      "noSparkCallService": "This user doesn't have Spark Call service."
+    },
     "chooseDeviceType": {
       "deviceType": "What kind of device do you want to set up?",
       "deviceTypeInstructions": "A new device requires a unique activation code to be input during setup. What kind of device do you want to activate?",
@@ -3991,7 +4055,6 @@
       "deskPhoneExamplesExtra": "e.g. 8845, 8865, 8800 or Analog Telephone Adapter port",
       "deskPhoneLicenseWarning": "Your organization must purchase Cisco Spark Call licenses first. Contact your partner or Cisco Sales for more information.",
       "roomSystem": "Room Device",
-      "roomSystemExamples": "DX, MX and SX series",
       "roomSystemExamplesExpanded": "Cisco Spark Board, DX, MX and SX series",
       "roomSystemLicenseWarning": "Your organization must purchase Cisco Spark Room Device licenses first. Contact your partner or Cisco Sales for more information."
     },
@@ -4016,7 +4079,7 @@
       "emailExample": "e.g. johnsmith@example.com",
       "invalidEmailAddress": "Invalid Email Address",
       "noUserFound": "No users found with Cisco Spark Call service",
-      "userMissesUcEntitlement": "User is missing a Cisco Spark Call license."
+      "noSparkCallWarning": "This user doesn't have Spark Call service. They can still activate a room device and make calls using Spark or SIP addresses. However, for phone dialling and desk phones, you need to give them the Spark Call service from the Users page."
     },
     "chooseSharedSpace": {
       "existingOrNewPlace": "Assign to an existing place or a new place?",
@@ -4024,15 +4087,18 @@
       "existingOrNewPlaceCollaborationDeviceInstructions": "Select existing place if the previous code for this place has been lost or has expired.",
       "existingPlace": "Existing Place",
       "whichPlace": "Which existing place will the device be assigned to?",
-      "existingDeskPhonePlaceInstructions": "Select from the below places. Only Cisco Spark Call places are shown since desk phones and room devices cannot share the same place.",
-      "existingCollaborationDevicePlaceInstructions": "Only empty Cisco Spark Room Device places are shown since there is a maximum of one room device in a place, and desk phones and room devices cannot share the same place.",
+      "existingDeskPhonePlaceInstructions": "Select from the below places. Only desk phone places are shown since desk phones and room devices cannot share the same place.",
+      "existingCollaborationDevicePlaceInstructions": "Only empty room device places are shown since there is a maximum of one room device in a place, and desk phones and room devices cannot share the same place.",
+      "existingPlaceInstructions": "A room device place can only contain one device, so existing room device places with an activated device will not be shown.",
       "selectPlace": "Search for a place",
       "newPlace": "New Place",
       "placeLocation": "Where will this device be located?",
       "newPlaceInstructions": "What would you like to call the place that this device will be assigned to?",
       "newPlaceOnlyInstructions": "What would you like to call the place that this room device will be assigned to? A place represents a physical location such as a meeting room, a lobby or a factory floor.",
       "insertRoomName": "Insert name of device location, e.g. 'Reception' or 'Boardroom'",
-      "noExistingPlaces": "There is no Cisco Spark Call place in your organization. Create a new place instead."
+      "noExistingPlaces": "There is no Cisco Spark place in your organization. Create a new place instead.",
+      "noExistingHuronPlaces": "There is no desk phone place in your organization. Create a new place instead.",
+      "noExistingCloudberryPlaces": "There is no room device place in your organization. Create a new place instead."
     },
     "newSharedSpace": {
       "title": "Add Place",
@@ -4065,6 +4131,7 @@
       "activationCode": "Activation Code",
       "plugInDeskPhone": "Share this code with the person setting up the desk phone belonging to <b>{{belongsTo}}</b>, or enter or scan it yourself when prompted by the device.",
       "plugInDeskPhoneExtra": "Share this code with the person setting up the desk phone (or analog telephone adapter port) belonging to <b>{{belongsTo}}</b>, or enter or scan it yourself when prompted by the device.",
+      "plugInPersonal": "Share this code with the person setting up the device belonging to <b>{{belongsTo}}</b>, or enter or scan it yourself when prompted by the device.",
       "plugInRoomSystem": "Share this code with the person setting up the room device belonging to <b>{{belongsTo}}</b>, or enter or scan it yourself when prompted by the device.",
       "onceActivePersonalDevice": "Once the device has been successfully activated, you will be able to find and configure it in Users or Devices.",
       "onceActiveSharedDevice": "Once the device has been successfully activated, you will be able to find and configure it in Places or Devices.",
@@ -4117,12 +4184,24 @@
     "cloudOpAdmin": "Cloud Operations Administrator",
     "fullAdmin": "Full administrator privileges",
     "readonlyAdmin": "Read-only administrator privileges",
+    "readonlyAdminTooltip": "Read-only view of the portal. No changes will be accepted.",
     "partialAdmin": "Some administrator privileges",
+    "partialAdminError": "At least one administrator privilege must be selected",
     "noAdmin": "No administrator privileges",
     "salesAdmin": "Sales Administrator",
     "userAdmin": "User Administrator",
     "billingAdmin": "Billing Administrator",
     "supportAdmin": "Support Administrator",
+    "analytics": "Analytics & Reports",
+    "assignRoles": "Assign Roles",
+    "userManagement": "User Management",
+    "customerManagement": "Customer Management",
+    "companyPolicyTemplates": "Company Policy & Templates",
+    "supportMetrics": "Support Metrics & Notifications",
+    "licensesAndUpgrades": "Licenses & Upgrades",
+    "overviewReports": "Overview & Reports",
+    "organizationManagement": "Organization Management",
+    "trialsManagement": "Trials Management",
     "save": "Save",
     "roles": "Roles",
     "helpdesk": "Help Desk",
@@ -4234,7 +4313,8 @@
     "report" : {
       "title": "Hybrid Media",
       "adoption-title": "Adoption",
-      "resources-title": "Resources"
+      "resources-title": "Resources",
+      "custom": "Custom"
     },
     "settings": {
       "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
@@ -4275,6 +4355,7 @@
       "callLocalCluster": "Calls local to cluster",
       "callRedirectedCluster": "Calls redirected by cluster",
       "availabilityOfCluster": "Cluster Availability",
+      "overAllAvailability": "Overall Availability",
       "availabilityOfHost": "Node Availability",
       "legendcallLocal": "Hosted On Premises",
       "legendcallReject": "Overflowed to Cloud",
@@ -4296,6 +4377,10 @@
       "cloudcalls": "Overflowed to Cloud",
       "hostedcalls": "Hosted by this Cluster",
       "redirectedcalls": "Redirected by this Cluster",
+      "total_participants": "Total Participants",
+      "cloud_calls": "Overflow to Cloud",
+      "cloud_participants": "cloud participants",
+      "onprem_participants": "Participants On-Premises",
       "nodata": "Data Not Available",
       "allclusters": "All Clusters",
       "percentage": "%",
@@ -5612,6 +5697,8 @@
     "addMemberLabel": "Add & Search Members",
     "successSave": "'{{huntGroupName}}' hunt group has been created successfully",
     "successUpdate": "'{{huntGroupName}}' hunt group has been updated successfully",
+    "errorNamePattern": "May only contain alphanumeric, space, period, underscore and dash.",
+    "errorNameMaxLength": "Must contain a maximum of 50 characters.",
     "errorSave": "Failed to create the '{{huntGroupName}}' Hunt Group",
     "errorUpdate": "Failed to update the '{{huntGroupName}}' Hunt Group",
     "numberLabel": "Select Numbers",
@@ -5883,7 +5970,9 @@
     "atlas-portal.reports": "Reports",
     "atlas-portal.billing": "Billing",
     "atlas-portal.partner.helpdesk": "Help Desk Support",
+    "atlas-portal.partner.helpdeskTooltip": "Access to Help Desk",
     "atlas-portal.partner.orderadmin": "Order Admin Support",
+    "atlas-portal.partner.orderadminTooltip": "Access to Order Admin",
     "atlas-portal.application": "Application",
     "atlas-portal.partner.salesadmin": "Sales Admin",
     "id_full_admin": "Full Admin",
@@ -5892,6 +5981,7 @@
     "ciscouc.devops": "Spark Call Devops",
     "ciscouc.devsupport": "Spark Call Dev Support",
     "compliance": "Compliance Officer",
+    "complianceTooltip": "Access to Activity Reports",
     "ciscouc.phonelogaccess": "Spark Call Phone Log Access",
     "ciscouc.phonesupport": "Spark Call Phone Support"
   },
@@ -6132,6 +6222,12 @@
         "delivered": "Email was delivered.",
         "unsubscribed": "Email can not be delivered because the user unsubscribed."
       }
+    },
+    "org": {
+      "duplicateName": "Organization name already in use",
+      "validationFailure": "Unable to validate",
+      "editNameSuccess": "Organization name successfully updated.",
+      "editNameFailure": "Failed to update customer name."
     }
   },
   "activation": {

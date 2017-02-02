@@ -29,6 +29,7 @@ require('./_user-add.scss');
     $scope.timeoutVal = 1000;
     $scope.timer = 0;
     $scope.searchPlaceholder = $translate.instant('usersPage.convertUserSearch');
+    $scope.manageUsers = $stateParams.manageUsers;
 
     $scope.loadInternalNumberPool = loadInternalNumberPool;
     $scope.loadExternalNumberPool = loadExternalNumberPool;
@@ -93,11 +94,7 @@ require('./_user-add.scss');
     var currentUserHasCall = false;
 
     $scope.isCareEnabled = Authinfo.isCare();
-    $scope.isCareCallBackEnabled = false;
     $scope.enableCareService = true;
-    FeatureToggleService.atlasCareCallbackTrialsGetStatus().then(function (callBackStatus) {
-      $scope.isCareCallBackEnabled = callBackStatus;
-    });
 
     $scope.sharedMeetingsFeatureDefaultToggle = { default: true, defaultValue: true };
     if (_.get($scope, 'sharedMeetingsFeatureDefaultToggle.default')) {
@@ -160,6 +157,10 @@ require('./_user-add.scss');
           $state.go('my-company.subscriptions');
         });
       }
+    };
+
+    $scope.goToManageUsers = function () {
+      $state.go('users.manage', {});
     };
 
     /****************************** License Enforcement END *******************************/
@@ -1116,7 +1117,6 @@ require('./_user-add.scss');
           $scope.searchStr = str;
           getUnlicensedUsers();
           Analytics.trackUserOnboarding(Analytics.sections.USER_ONBOARDING.eventNames.CONVERT_USER, $state.current.name, Authinfo.getOrgId());
-
         }
       }, $scope.timeoutVal);
     }
@@ -2054,7 +2054,7 @@ require('./_user-add.scss');
     };
 
     $scope.getServiceName = function (service) {
-      for (var i = 0; i < $rootScope.services.length; i++) {
+      for (var i = 0; i < _.get($rootScope, 'services', []).length; i++) {
         var svc = $rootScope.services[i];
         if (svc.serviceId === service) {
           return svc.displayName;
@@ -2581,13 +2581,11 @@ require('./_user-add.scss');
     }
 
     function controlCare() {
-      if ($scope.isCareCallBackEnabled) {
-        if ($scope.radioStates.msgRadio && $scope.radioStates.commRadio) {
-          $scope.enableCareService = true;
-        } else {
-          $scope.enableCareService = false;
-          $scope.radioStates.careRadio = false;
-        }
+      if ($scope.radioStates.msgRadio) {
+        $scope.enableCareService = true;
+      } else {
+        $scope.enableCareService = false;
+        $scope.radioStates.careRadio = false;
       }
     }
 

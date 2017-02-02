@@ -10,6 +10,7 @@ describe('CsvDownloadService', () => {
       '$httpBackend',
       '$window',
       '$q',
+      '$timeout',
       'UserCsvService',
       'CsvDownloadService',
       'UrlConfig',
@@ -164,7 +165,13 @@ describe('CsvDownloadService', () => {
         location: 'http://example.com/getUserReport',
       });
 
-      this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, {
+      this.getUserReportRUNNING = {
+        processStatus: 'RUNNING',
+        message: 'Checking if to userExport-test.tar.gz exists',
+        context: {},
+      };
+
+      this.getUserReportCOMPLETE = {
         processStatus: 'COMPLETE',
         message: 'Users exported to userExport-test.tar.gz',
         context: {
@@ -172,47 +179,140 @@ describe('CsvDownloadService', () => {
           checksum: '7c706d76bbb1c5dd48ac148d5eda0fe5',
           fileUrl: 'https://storage101.example.com/userExport-b15ef877-901d-4a73-bab1-ed91670422b6.tar.gz',
         },
-      });
+      };
+
+      this.getUserReportFAILED = {
+        processStatus: 'FAILED',
+        message: 'Failed getting userExport-test.tar.gz',
+        context: {},
+      };
+
+      this.getUserReportINVALID = {
+        message: 'Unknown status',
+        context: {},
+      };
 
       // define the dummy tar.gz file to return
       let base64 = require('base64-js');
       let tgz: any = base64.toByteArray(
-        `H4sIAAAAAAAAAO2VS4/aMBCA98yvsHLa1TppHtC9UmCrrbRUq0U9V0MyC4a81k6A/PvaPLaQgEAqag+d72DGM7bn4XHAVZ7JAqOfpUKpnFAtbq6O67nu53abuRvqv37H9ZgXuEHHb7sPbZ+5XhA8BDfMvX4oTUpVgLxx/9hXPbkrhPY3+CqkKth3SJA/w04aCJXHUG0mP3RjsG+DT48JiJjdvuJ7KSRGd3qVxLDIpF5XJmOUWwV7FinyPsQxG6FciBDZlyXImqqfpalezJ+qsRQR0zZMI5Af9tvHVTiFdIJ3fIhYiHTC/A57AVlUfJSDnJst8VYcolIwwRbnFuQyFKET3kuYiQJV4fndiYncCbPEOmvXrcj5G8QKD8ZCltthPT/uKDjj6MB+0stvsTWUvJelqPjYjF53ufIdXEGSx2gOOaU+dnTdTWsodHlRF7DIKm71p1IoZmQdeWgmSsv3UMSgbCPaJgPbOyxVcEmpNmcXWT7VbbT1qp0YX6wHUvcNexVhmKm5sNbRiBR0UzXCcIzomDCcWhju6YT34ugJ3S5PEOk+tYzM1vJBumZY35Q9NbZz19UYWwNYiIi/lEk+Fym31lM2YluFxaN8I3XV/m3tXXujD3bt9qZfXOOijyovi5TzmUiSypll01R19/ef0p9p2N2x70vsyqV+sXKzrT6/NDzTCQnoIu51n23+o2yop2xdWENVjpdQOUp/N6qD1E4ajpzbeEj/+gNOEARBEARBEARBEARBEARBEARBEARBEMR/zy+fWpDEACgAAA==`
+        `H4sIAAAAAAAAAO2VS4/aMBCA98yvsHLa1TppHtC9UmCrrbRUq0U9V0MyC4a81k6A/PvaPLaQgEAqag+d72DGM7bn4XHAVZ7JAqOfpUKpnFAtbq6O67nu53abuRvqv37H9ZgXuEHHb7sPbZ+5XhA8BDfMvX4oTUpVgLxx/9hXPbkrhPY3+CqkKth3SJA/w04aCJXHUG0mP3RjsG+DT48JiJjdvuJ7KSRGd3qVxLDIpF5XJmOUWwV7FinyPsQxG6FciBDZlyXImqqfpalezJ+qsRQR0zZMI5Af9tvHVTiFdIJ3fIhYiHTC/A57AVlUfJSDnJst8VYcolIwwRbnFuQyFKET3kuYiQJV4fndiYncCbPEOmvXrcj5G8QKD8ZCltthPT/uKDjj6MB+0stvsTWUvJelqPjYjF53ufIdXEGSx2gOOaU+dnTdTWsodHlRF7DIKm71p1IoZmQdeWgmSsv3UMSgbCPaJgPbOyxVcEmpNmcXWT7VbbT1qp0YX6wHUvcNexVhmKm5sNbRiBR0UzXCcIzomDCcWhju6YT34ugJ3S5PEOk+tYzM1vJBumZY35Q9NbZz19UYWwNYiIi/lEk+Fym31lM2YluFxaN8I3XV/m3tXXujD3bt9qZfXOOijyovi5TzmUiSypll01R19/ef0p9p2N2x70vsyqV+sXKzrT6/NDzTCQnoIu51n23+o2yop2xdWENVjpdQOUp/N6qD1E4ajpzbeEj/+gNOEARBEARBEARBEARBEARBEARBEARBEMR/zy+fWpDEACgAAA==`,
       );
       this.blobData = new Blob([tgz], { type: 'application/x-gzip' });
 
-      this.$httpBackend.expectGET('https://storage101.example.com/userExport-b15ef877-901d-4a73-bab1-ed91670422b6.tar.gz').respond(200, this.blobData);
-      this.$httpBackend.whenDELETE('http://example.com/getUserReport').respond(204);
-    });
-
-    it('should get user export file using the report API', function (done) {
-      spyOn(this.ExtractTarService, 'extractFile').and.callFake(() => {
+      this.extractTarServiceSpy = spyOn(this.ExtractTarService, 'extractFile').and.callFake(() => {
         // return a Blob containing dummy data. We don't care what is in the data, just
         // that it is a Blob
         return this.$q.resolve(this.blobData);
       });
 
-      let promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true)
-        .then((dataUrl) => {
-          expect(dataUrl).toContain('blob:http://');
-        })
-        .finally(() => {
-          _.defer(done);
-        });
-      this.$httpBackend.flush();
-      expect(promise).toBeResolved();
     });
 
-    it('should reject promise if there was a problem extracting the file', function () {
-      spyOn(this.ExtractTarService, 'extractFile').and.callFake(() => {
-        return this.$q.reject('extract failed');
-      });
+    it('should keep asking for user report until COMPLETE', function () {
+      this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportRUNNING);
 
       let promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true);
       this.$httpBackend.flush();
-      expect(promise).toBeRejectedWith('extract failed');
+
+      // respond with a second Running
+      this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportRUNNING);
+      this.$timeout.flush();
+      this.$httpBackend.flush();
+
+      // respond with Complete and finialize processing
+      this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportCOMPLETE);
+      this.$httpBackend.expectGET('https://storage101.example.com/userExport-b15ef877-901d-4a73-bab1-ed91670422b6.tar.gz').respond(200, this.blobData);
+      this.$httpBackend.expectDELETE('http://example.com/getUserReport').respond(204);
+
+      this.$timeout.flush();
+      this.$httpBackend.flush();
+
+      expect(promise).toBeResolved();
     });
 
+    it('should reject promise if FAILURE is returned', function () {
+      this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportRUNNING);
+
+      let promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true);
+      this.$httpBackend.flush();
+
+      // respond with FAILED
+      this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportFAILED);
+      this.$timeout.flush();
+      this.$httpBackend.flush();
+
+      expect(promise).toBeRejectedWith(this.getUserReportFAILED);
+    });
+
+    it('should reject promise if processStatus returns something unsuported', function () {
+      this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportINVALID);
+
+      let promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true);
+      this.$httpBackend.flush();
+
+      expect(promise).toBeRejectedWith(this.getUserReportINVALID);
+    });
+
+    it('should reject promise if fetching processStatus returns HTTP error code', function () {
+      this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportRUNNING);
+
+      let promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true);
+      this.$httpBackend.flush();
+
+      // respond with an HTTP error code
+      this.$httpBackend.expectGET('http://example.com/getUserReport').respond(503);
+      this.$timeout.flush();
+      this.$httpBackend.flush();
+
+      expect(promise).toBeRejectedWith(jasmine.objectContaining({ status: 503 }));
+    });
+
+    describe('successfully returned data', function () {
+
+      beforeEach(function () {
+        this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportCOMPLETE);
+        this.$httpBackend.expectGET('https://storage101.example.com/userExport-b15ef877-901d-4a73-bab1-ed91670422b6.tar.gz').respond(200, this.blobData);
+      });
+
+      it('should get user export file using the report API', function (done) {
+        this.$httpBackend.expectDELETE('http://example.com/getUserReport').respond(204);
+
+        let promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true)
+          .then((dataUrl) => {
+            expect(dataUrl).toContain('blob:http://');
+          })
+          .finally(() => {
+            _.defer(done);
+          });
+        this.$httpBackend.flush();
+        expect(promise).toBeResolved();
+      });
+
+      it('should always get user export file using the report API when Cicso org', function (done) {
+        this.$httpBackend.expectDELETE('http://example.com/getUserReport').respond(204);
+
+        spyOn(this.Authinfo, 'isCisco').and.returnValue(true);
+        let promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', false)
+          .then((dataUrl) => {
+            expect(dataUrl).toContain('blob:http://');
+          })
+          .finally(() => {
+            _.defer(done);
+          });
+        this.$httpBackend.flush();
+        expect(promise).toBeResolved();
+      });
+
+      it('should reject promise if there was a problem extracting the file', function () {
+        this.extractTarServiceSpy.and.callFake(() => {
+          return this.$q.reject('extract failed');
+        });
+
+        let promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true);
+        this.$httpBackend.flush();
+        expect(promise).toBeRejectedWith('extract failed');
+      });
+
+    });
   });
 
   describe('Browser: IE specific tests', () => {

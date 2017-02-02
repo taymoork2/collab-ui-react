@@ -263,6 +263,25 @@
       expect(hasActiveTab('tabMenu')).toBeFalsy();
     });
 
+    it('should update active tab on state change location matches as a childpage', function () {
+      spyOn(Authinfo, 'isAllowedState').and.returnValue(true);
+      $location.path.and.returnValue('tab1Path/childPage');
+      initTabsController();
+      broadcastEvent('$stateChangeSuccess');
+
+      expect(hasActiveTab('tab1')).toBeTruthy();
+      expect(hasActiveTab('tabMenu')).toBeFalsy();
+    });
+
+    it('should not set tab1 as active tab on state change when childpage url is incorrect', function () {
+      spyOn(Authinfo, 'isAllowedState').and.returnValue(true);
+      $location.path.and.returnValue('childPage/tab1Path');
+      initTabsController();
+      broadcastEvent('$stateChangeSuccess');
+
+      expect(hasActiveTab('tab1')).toBeFalsy();
+    });
+
     it('should clear active tab on state change ', function () {
       spyOn(Authinfo, 'isAllowedState').and.returnValue(true);
       $location.path.and.returnValue('tab1Path');
@@ -287,6 +306,27 @@
       broadcastEvent('$stateChangeSuccess');
       expect(hasActiveTab('tab1')).toBeFalsy();
       expect(hasActiveTab('tabMenu')).toBeTruthy();
+    });
+
+    it('should update active subPage tab on state change location match to childpage', function () {
+      spyOn(Authinfo, 'isAllowedState').and.returnValue(true);
+      $location.path.and.returnValue('dummy-path');
+      initTabsController();
+
+      $location.path.and.returnValue('subTab1Path/childpage');
+      broadcastEvent('$stateChangeSuccess');
+      expect(hasActiveTab('tab1')).toBeFalsy();
+      expect(hasActiveTab('tabMenu')).toBeTruthy();
+    });
+
+    it('should not set tabMenu as active subPage tab on state change when childpage location is setup incorrectly', function () {
+      spyOn(Authinfo, 'isAllowedState').and.returnValue(true);
+      $location.path.and.returnValue('dummy-path');
+      initTabsController();
+
+      $location.path.and.returnValue('childpage/subTab1Path');
+      broadcastEvent('$stateChangeSuccess');
+      expect(hasActiveTab('tabMenu')).toBeFalsy();
     });
 
     describe('tab structure change', function () {

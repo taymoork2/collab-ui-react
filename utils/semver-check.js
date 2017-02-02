@@ -17,9 +17,9 @@ if (isWindows) {
 }
 cp.stdout.on('data', function (data) {
   var npmVersion = getParsedVersion(data.toString());
-  var isNpmValid = (npmVersion > 2) && (npmVersion < 4);
+  var isNpmValid = npmVersion >= 3;
   if (!isNpmValid) {
-    console.log('npm should be version 3 - current is:', npmVersion);
+    console.log('npm should be version >= 3 - current is:', npmVersion);
     console.log('https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/blob/master/docs/setup.md');
     process.exit(1);
   }

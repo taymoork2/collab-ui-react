@@ -7,7 +7,7 @@ describe('Component: myCompanyOrders', () => {
       '$q',
       'DigitalRiverService',
       'MyCompanyOrdersService',
-      'Notification'
+      'Notification',
     );
 
     let purchaseOrdersList: IOrderDetail[] = [{

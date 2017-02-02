@@ -4,8 +4,8 @@ describe('Controller: LineSettingsCtrl', function () {
   var controller, $scope, $state, $stateParams, $rootScope, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, ServiceSetup;
   var currentUser, directoryNumber, getDirectoryNumber, getDirectoryNumberBusy, getDirectoryNumberBusyNewLine, internalNumbers, simultaneousCall,
     externalNumbers, telephonyInfoWithVoicemail, telephonyInfoVoiceOnly, telephonyInfoVoiceOnlyShared, telephonyInfoSecondLine,
-    modalDefer;
-  var UserListService, SharedLineInfoService, CallerId, companyNumber, DeviceService, DialPlanService;
+    modalDefer, autoAnswer;
+  var UserListService, SharedLineInfoService, CallerId, companyNumber, DeviceService, DialPlanService, FeatureToggleService, AutoAnswerService;
   var userList = [];
   var sharedLineUsers = [];
   var sharedLineEndpoints = [];
@@ -30,7 +30,7 @@ describe('Controller: LineSettingsCtrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$rootScope_, _$state_, $controller, _$q_, _$modal_, _Notification_, _DirectoryNumber_, _TelephonyInfoService_, _LineSettings_, _HuronAssignedLine_, _HuronUser_, _ServiceSetup_,
-    _UserListService_, _SharedLineInfoService_, _CallerId_, _DeviceService_, _DialPlanService_) {
+    _UserListService_, _SharedLineInfoService_, _CallerId_, _DeviceService_, _DialPlanService_, _FeatureToggleService_, _AutoAnswerService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -48,6 +48,8 @@ describe('Controller: LineSettingsCtrl', function () {
     CallerId = _CallerId_;
     DeviceService = _DeviceService_;
     DialPlanService = _DialPlanService_;
+    FeatureToggleService = _FeatureToggleService_;
+    AutoAnswerService = _AutoAnswerService_;
 
     $scope.sort = {
       by: 'name',
@@ -78,6 +80,8 @@ describe('Controller: LineSettingsCtrl', function () {
     sharedLineEndpoints = getJSONFixture('huron/json/sharedLine/sharedDevices.json');
     selectedUsers = getJSONFixture('huron/json/sharedLine/selectedUser.json');
     //SharedLine
+
+    autoAnswer = getJSONFixture('huron/json/autoAnswer/autoAnswer.json');
 
     $stateParams = {
       currentUser: currentUser,
@@ -125,6 +129,10 @@ describe('Controller: LineSettingsCtrl', function () {
 
     //Sharedline
 
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+    spyOn(AutoAnswerService, 'getSupportedPhonesAndMember').and.returnValue($q.resolve(autoAnswer));
+    spyOn(AutoAnswerService, 'updateAutoAnswer').and.returnValue($q.resolve());
+
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
     spyOn(Notification, 'errorResponse');
@@ -142,7 +150,8 @@ describe('Controller: LineSettingsCtrl', function () {
       HuronAssignedLine: HuronAssignedLine,
       HuronUser: HuronUser,
       UserListService: UserListService,
-      SharedLineInfoService: SharedLineInfoService
+      SharedLineInfoService: SharedLineInfoService,
+      FeatureToggleService: FeatureToggleService
     });
 
     controller.callerIdInfo.callerIdSelection = callerIdSelection;
@@ -615,6 +624,17 @@ describe('Controller: LineSettingsCtrl', function () {
       expect(controller.assignedInternalNumber.pattern).toEqual('1234');
       expect(controller.telephonyInfo.steeringDigit).toEqual('9');
       expect(controller.checkDnOverlapsSteeringDigit()).toBeFalsy();
+    });
+  });
+
+  describe('autoAnswer', function () {
+    it('should set autoAnswerFeatureToggleEnabled to false when FeatureTogglerService returns false', function () {
+      TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoVoiceOnly);
+      FeatureToggleService.supports.and.returnValue($q.resolve(false));
+      controller.init();
+      $scope.$apply();
+      expect(FeatureToggleService.supports).toHaveBeenCalledWith('huron-auto-answer');
+      expect(controller.autoAnswerFeatureToggleEnabled).toBeFalsy();
     });
   });
 });

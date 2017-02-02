@@ -91,7 +91,6 @@ describe('OnboardCtrl: Ctrl', function () {
 
     spyOn(this.FeatureToggleService, 'getFeaturesForUser').and.returnValue(this.mock.getMyFeatureToggles);
     spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.when(false));
-    spyOn(this.FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue(this.$q.when(true));
     spyOn(this.FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue(this.$q.when(false));
     spyOn(this.TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue(this.$q.when(this.mock.sites));
     spyOn(this.ServiceSetup, 'listSites').and.returnValue(this.$q.when(this.mock.sites));
@@ -374,7 +373,7 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(this.$scope.messageFeatures[1].licenses[0].model).toEqual(true);
         expect(this.$scope.radioStates.msgRadio).toEqual(true);
         expect(this.$scope.radioStates.careRadio).toEqual(false);
-        expect(this.$scope.enableCareService).toEqual(false);
+        expect(this.$scope.enableCareService).toEqual(true);
       });
     });
   });
@@ -812,17 +811,20 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(this.$scope.radioStates.careRadio).toBe(false);
         expect(this.$scope.enableCareService).toBe(true);
       });
-      it('should disable care, when message or call is unchecked', function () {
+      it('should disable care, when message is unchecked', function () {
         this.$scope.radioStates.msgRadio = false;
         this.$scope.radioStates.commRadio = true;
         this.$scope.controlCare();
         expect(this.$scope.radioStates.careRadio).toBe(false);
         expect(this.$scope.enableCareService).toBe(false);
+
+        //call is optional. Care should be enabled when message is enabled
         this.$scope.radioStates.msgRadio = true;
         this.$scope.radioStates.commRadio = false;
         this.$scope.controlCare();
         expect(this.$scope.radioStates.careRadio).toBe(false);
-        expect(this.$scope.enableCareService).toBe(false);
+        expect(this.$scope.enableCareService).toBe(true);
+
         this.$scope.radioStates.msgRadio = true;
         this.$scope.radioStates.commRadio = true;
         this.$scope.controlCare();
@@ -1114,6 +1116,18 @@ describe('OnboardCtrl: Ctrl', function () {
       var billingServiceId = 'SubCt31test20161222111';
       var result = this.$scope.selectedSubscriptionHasAdvancedLicenses(billingServiceId);
       expect(result).toEqual(true);
+    });
+  });
+
+  describe('opening convert users in the manage users model', function () {
+    it('should go to users.manage when gotToManageUsers() is called', function () {
+      this.$stateParams.manageUsers = true;
+      initController.apply(this);
+      this.$scope.$apply();
+
+      expect(this.$scope.manageUsers).toBeTruthy();
+      this.$scope.goToManageUsers();
+      expect(this.$state.go).toHaveBeenCalledWith('users.manage', {});
     });
   });
 

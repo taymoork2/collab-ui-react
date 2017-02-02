@@ -16,7 +16,7 @@ describe('Component: pgSetupAssistant', () => {
       'PagingGroupService',
       'HuronConfig',
       'Authinfo',
-      'Notification'
+      'Notification',
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
     spyOn(this.$state, 'go');

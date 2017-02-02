@@ -30,6 +30,10 @@
         code: 'BE'
       },
       {
+        country: 'Bulgaria',
+        code: 'BG'
+      },
+      {
         country: 'Canada',
         code: 'CA'
       },
@@ -44,6 +48,10 @@
       {
         country: 'Costa Rica',
         code: 'CR'
+      },
+      {
+        country: 'Croatia',
+        code: 'HR'
       },
       {
         country: 'Cyprus',
@@ -152,7 +160,7 @@
     ];
     var _countries = {
       US: ['United States'],
-      ROLLOUT1: ['United States', 'Australia', 'Austria', 'Belgium', 'Canada', 'Cyprus', 'Czech Republic',
+      ROLLOUT1: ['United States', 'Australia', 'Austria', 'Belgium', 'Bulgaria', 'Canada', 'Croatia', 'Cyprus', 'Czech Republic',
         'Denmark', 'Estonia', 'Finland', 'France', 'Germany', 'Hungary', 'Ireland', 'Italy', 'Latvia', 'Lithuania', 'Luxembourg', 'Netherlands', 'Norway', 'Poland',
         'Portugal', 'Romania', 'Slovakia', 'Slovenia', 'Spain', 'Sweden', 'Switzerland', 'Ukraine', 'United Kingdom']
     };

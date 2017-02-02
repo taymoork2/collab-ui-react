@@ -4,7 +4,7 @@ export class BmmpService  {
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
-    private UrlConfig
+    private UrlConfig,
   ) {}
 
   public init(): void {

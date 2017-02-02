@@ -9,10 +9,8 @@
       requireAcceptTos: 'atlas-tos-required',
       dirSync: 'atlas-dir-sync',
       atlasCareTrials: 'atlas-care-trials',
-      atlasCareCallbackTrials: 'atlas-care-callback-trials',
       atlasCareInboundTrials: 'atlas-care-inbound-trials',
       atlasContextServiceTrials: 'atlas-context-service-trials',
-      atlasCreateTrialBackendEmail: 'atlas-create-trial-backend-email',
       atlasDarling: 'atlas-darling',
       atlasDataRetentionSettings: 'atlas-data-retention-settings',
       atlasDevicesAdvancedSettings: 'atlas-devices-advanced-settings',
@@ -24,6 +22,7 @@
       atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list',
       atlasMediaServiceMetrics: 'atlas-media-service-metrics',
       atlasMediaServiceMetricsMilestoneOne: 'atlas-media-service-metrics-milestone-one',
+      atlasMediaServiceMetricsMilestoneTwo: 'atlas-media-service-metrics-milestone-two',
       atlasMediaServicePhaseTwo: 'atlas-media-service-phase-two',
       atlasNewCiDataModel: 'atlas-new-ci-data-model',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
@@ -38,6 +37,7 @@
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasSharedMeetings: 'atlas-shared-meetings',
       atlasSharedMeetingsReports: 'atlas-shared-meetings-reports',
+      atlasSuppressOnboardingEmail: 'atlas-suppress-onboarding-email',
       atlasTrialsShipDevices: 'atlasTrialsShipDevices',
       atlasDeviceUsageReportV2: 'atlas-device-usage-report-v2',
       atlasStartTrialForPaid: 'atlas-start-trial-for-paid',
@@ -155,7 +155,6 @@
       locationSharing: 'location-sharing',
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
-      csdmPstn: 'csdm-pstn',
       csdmATA: 'csdm-ata',
       csdmHybridCall: 'csdm-hybrid-call',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
@@ -166,7 +165,9 @@
       atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',
       avrilVmEnable: 'avril-vm-enable',
       avrilVoicemaill1249: 'avril-voicemail-l1249',
-      cloudberryPersonalMode: 'ce-enable-personal-mode'
+      cloudberryPersonalMode: 'ce-enable-personal-mode',
+      autoAnswer: 'huron-auto-answer',
+      huronFederatedSparkCall: 'huron-federated-spark-call',
     };
 
     var toggles = {};

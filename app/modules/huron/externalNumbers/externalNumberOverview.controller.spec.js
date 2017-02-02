@@ -100,7 +100,8 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         customerId: controller.currentCustomer.customerOrgId,
         customerName: controller.currentCustomer.customerName,
         customerEmail: controller.currentCustomer.customerEmail,
-        customerCommunicationLicenseIsTrial: true
+        customerCommunicationLicenseIsTrial: true,
+        customerRoomSystemsLicenseIsTrial: true
       });
     });
 
@@ -120,7 +121,8 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         customerId: controller.currentCustomer.customerOrgId,
         customerName: controller.currentCustomer.customerName,
         customerEmail: controller.currentCustomer.customerEmail,
-        customerCommunicationLicenseIsTrial: false
+        customerCommunicationLicenseIsTrial: false,
+        customerRoomSystemsLicenseIsTrial: true
       });
     });
 
@@ -137,7 +139,8 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         customerId: controller.currentCustomer.customerOrgId,
         customerName: controller.currentCustomer.customerName,
         customerEmail: controller.currentCustomer.customerEmail,
-        customerCommunicationLicenseIsTrial: true
+        customerCommunicationLicenseIsTrial: true,
+        customerRoomSystemsLicenseIsTrial: true
       });
     });
 
@@ -158,7 +161,8 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         customerId: controller.currentCustomer.customerOrgId,
         customerName: controller.currentCustomer.customerName,
         customerEmail: controller.currentCustomer.customerEmail,
-        customerCommunicationLicenseIsTrial: false
+        customerCommunicationLicenseIsTrial: false,
+        customerRoomSystemsLicenseIsTrial: false
       });
     });
   });

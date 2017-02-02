@@ -11,7 +11,7 @@ describe('Component: pgNumber setup', () => {
       '$httpBackend',
       'Authinfo',
       'HuronConfig',
-      'PagingNumberService'
+      'PagingNumberService',
     );
     this.compileComponent('pgNumber', {
       pagingGroupNumber: 'pagingGroupNumber',

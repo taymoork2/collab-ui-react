@@ -28,6 +28,9 @@
       });
       var personalPromise = FeatureToggleService.cloudberryPersonalModeGetStatus().then(function (result) {
         vm.showPersonal = result;
+        if (shouldLoadPersonalDevices()) {
+          activate();
+        }
       });
       $q.all([ataPromise, personalPromise, fetchDetailsForLoggedInUser()]).finally(function () {
         vm.generateCodeIsDisabled = false;
@@ -52,11 +55,11 @@
       return userDetailsDeferred.promise;
     }
 
-    vm.isEntitledToRoomSystem = function () {
+    vm.isOrgEntitledToRoomSystem = function () {
       return Authinfo.isDeviceMgmt();
     };
 
-    vm.isEntitledToHuron = function () {
+    vm.isOrgEntitledToHuron = function () {
       return _.filter(Authinfo.getLicenses(), function (l) {
         return l.licenseType === 'COMMUNICATION';
       }).length > 0;
@@ -109,8 +112,9 @@
           function: 'addDevice',
           title: 'addDeviceWizard.newDevice',
           showATA: vm.showATA,
-          isEntitledToHuron: vm.isEntitledToHuron(),
-          isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
+          showPersonal: vm.showPersonal,
+          isEntitledToHuron: vm.isOrgEntitledToHuron(),
+          isEntitledToRoomSystem: vm.isOrgEntitledToRoomSystem(),
           admin: vm.adminUserDetails,
           account: {
             cisUuid: vm.currentUser.id,
@@ -118,7 +122,8 @@
             username: vm.currentUser.userName,
             organizationId: vm.currentUser.meta.organizationID,
             type: 'personal',
-            deviceType: vm.showPersonal ? undefined : 'huron'
+            deviceType: vm.showPersonal ? undefined : 'huron',
+            isEntitledToHuron: isCurrentUserEntitledToHuron()
           },
           recipient: {
             cisUuid: vm.currentUser.id,
@@ -129,18 +134,27 @@
           }
         },
         history: [],
-        currentStateName: vm.showPersonal ? 'addDeviceFlow.chooseDeviceType' : 'addDeviceFlow.showActivationCode',
+        currentStateName: vm.isOrgEntitledToHuron() && !isCurrentUserEntitledToHuron()
+          ? 'addDeviceFlow.confirmRoomDeviceOnly'
+          : 'addDeviceFlow.showActivationCode',
         wizardState: {
-          'addDeviceFlow.chooseDeviceType': {
+          'addDeviceFlow.confirmRoomDeviceOnly': {
             next: 'addDeviceFlow.showActivationCode'
-          }
+          },
+          'addDeviceFlow.showActivationCode': {}
         }
       };
       var wizard = WizardFactory.create(wizardState);
-      $state.go(vm.showPersonal ? 'addDeviceFlow.chooseDeviceType' : 'addDeviceFlow.showActivationCode', {
+      $state.go(wizard.state().currentStateName, {
         wizard: wizard
       });
     };
+
+    function isCurrentUserEntitledToHuron() {
+      return _.some(vm.currentUser.entitlements, function (entitlement) {
+        return entitlement === Config.entitlements.huron;
+      });
+    }
 
     function activate() {
       vm.csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
@@ -154,12 +168,12 @@
       });
     }
 
-    function isHuronEnabled() {
-      return isEntitled(Config.entitlements.huron);
+    function shouldLoadPersonalDevices() {
+      vm.currentUser = $stateParams.currentUser;
+      return vm.currentUser && (isEntitled(Config.entitlements.huron) || vm.showPersonal);
     }
 
     function isEntitled(ent) {
-      vm.currentUser = $stateParams.currentUser;
       if (vm.currentUser && vm.currentUser.entitlements) {
         for (var i = 0; i < vm.currentUser.entitlements.length; i++) {
           var svc = vm.currentUser.entitlements[i];
@@ -172,26 +186,21 @@
     }
 
     $scope.$on('deviceDeactivated', function () {
-      if (isHuronEnabled()) {
+      if (shouldLoadPersonalDevices()) {
         activate();
       }
     });
 
     $scope.$on('otpGenerated', function () {
-      if (isHuronEnabled()) {
+      if (shouldLoadPersonalDevices()) {
         activate();
       }
     });
 
     $scope.$on('entitlementsUpdated', function () {
-      if (isHuronEnabled()) {
+      if (shouldLoadPersonalDevices()) {
         activate();
       }
     });
-
-    if (isHuronEnabled()) {
-      activate();
-    }
-
   }
 })();

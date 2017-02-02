@@ -41,7 +41,7 @@ export class ExtractTarService {
               },
               (error) => {
                 reject(error);
-              }
+              },
             );
           }
         };

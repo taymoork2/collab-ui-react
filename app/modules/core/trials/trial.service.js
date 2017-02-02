@@ -150,6 +150,7 @@
         customerName: data.details.customerName,
         customerEmail: data.details.customerEmail,
         trialPeriod: data.details.licenseDuration,
+        country: _.get(data.details.country, 'id', 'US'),
         dealId: data.trials.deviceTrial.shippingInfo.dealId,
         startDate: new Date(),
         details: _getDetails(data),
@@ -302,6 +303,7 @@
         customerEmail: '',
         licenseDuration: 90,
         dealId: '',
+        country: '',
         licenseCount: 100
       };
 

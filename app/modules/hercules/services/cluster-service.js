@@ -6,7 +6,7 @@
     .service('ClusterService', ClusterService);
 
   /* @ngInject */
-  function ClusterService($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo) {
+  function ClusterService($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, FusionClusterStatesService) {
     var clusterCache = {
       c_mgmt: {},
       c_ucmc: {},
@@ -22,7 +22,6 @@
       getCluster: getCluster,
       getClustersByConnectorType: getClustersByConnectorType,
       getConnector: getConnector,
-      getRunningStateSeverity: getRunningStateSeverity,
       subscribe: hub.on,
       upgradeSoftware: upgradeSoftware,
       mergeRunningState: mergeRunningState,
@@ -41,65 +40,20 @@
 
     function overrideStateIfAlarms(connector) {
       if (connector.alarms.length > 0) {
-        connector.state = 'has_alarms';
+        connector.state = _.some(connector.alarms, function (alarm) {
+          return alarm.severity === 'critical' || alarm.severity === 'error';
+        }) ? 'has_error_alarms' : 'has_warning_alarms';
       }
       return connector;
     }
 
-    function getRunningStateSeverity(state) {
-      // we give a severity and a weight to all possible states
-      // this has to be synced with the server generating the API consumed
-      // by the general overview page (state of Call connectors, etc.)
-      var label, value, cssClass;
-      switch (state) {
-        case 'running':
-          label = 'ok';
-          value = 0;
-          cssClass = 'success';
-          break;
-        case 'not_installed':
-        case 'not_registered':
-          label = 'neutral';
-          value = 1;
-          cssClass = 'disabled';
-          break;
-        case 'disabled':
-        case 'downloading':
-        case 'installing':
-        case 'not_configured':
-        case 'uninstalling':
-        case 'registered':
-        case 'initializing':
-          label = 'warning';
-          value = 2;
-          cssClass = 'warning';
-          break;
-        case 'has_alarms':
-        case 'offline':
-        case 'stopped':
-        case 'not_operational':
-        case 'unknown':
-        case 'registrationTimeout':
-        default:
-          label = 'error';
-          value = 3;
-          cssClass = 'danger';
-      }
-
-      return {
-        label: label,
-        value: value,
-        cssClass: cssClass,
-      };
-    }
-
     function getMostSevereRunningState(previous, connector) {
-      var stateSeverity = getRunningStateSeverity(connector.state);
-      if (stateSeverity.value > previous.stateSeverityValue) {
+      var severity = FusionClusterStatesService.getSeverity(connector);
+      if (severity.severity > previous.stateSeverityValue) {
         return {
           state: connector.state,
-          stateSeverity: stateSeverity.label,
-          stateSeverityValue: stateSeverity.value
+          stateSeverity: severity.label,
+          stateSeverityValue: severity.severity
         };
       } else {
         return previous;

@@ -10,7 +10,7 @@
     PstnSetup.setCustomerId($stateParams.customerId);
     PstnSetup.setCustomerName($stateParams.customerName);
     PstnSetup.setCustomerEmail($stateParams.customerEmail);
-    PstnSetup.setIsTrial($stateParams.customerCommunicationLicenseIsTrial);
+    PstnSetup.setIsTrial($stateParams.customerCommunicationLicenseIsTrial && $stateParams.customerRoomSystemsLicenseIsTrial);
 
     if (!PstnSetup.isResellerExists()) {
       PstnSetupService.getResellerV2().then(function () {

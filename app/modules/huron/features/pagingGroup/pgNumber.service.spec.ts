@@ -11,7 +11,7 @@ describe('Component: pgNumber service', () => {
       '$httpBackend',
       'PagingNumberService',
       'Authinfo',
-      'HuronConfig'
+      'HuronConfig',
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
   });
