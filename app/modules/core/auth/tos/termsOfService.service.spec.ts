@@ -12,6 +12,7 @@ describe('TOSService', () => {
       '$modal',
       'UserPreferencesService',
       'Authinfo',
+      'FeatureToggleService',
     );
 
     this.meData = {
@@ -26,6 +27,8 @@ describe('TOSService', () => {
 
     spyOn(this.$modal, 'open').and.returnValue(this.mockTosModal);
     spyOn(this.TOSService, 'dismissModal').and.callThrough();
+
+    this.FeatureToggleService.requireAcceptTosGetStatus = jasmine.createSpy('requireAcceptTosGetStatus').and.returnValue(this.$q.resolve(true));
 
     installPromiseMatchers();
   });

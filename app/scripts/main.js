@@ -54,7 +54,9 @@
     require('modules/core/users/userCsv/userCsv.service'),
     require('modules/core/cards').default,
     require('modules/core/window').default,
-    require('modules/online/digitalRiver').default // TODO make core.myCompany independent module
+    require('modules/online/digitalRiver').default, // TODO make core.myCompany independent module
+    require('modules/core/trials/regionalSettings').default,
+    require('modules/huron/countries').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('phone', require('google-libphonenumber'))
@@ -81,6 +83,7 @@
     'huron.bulk-enable-vm',
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
+    require('modules/huron/autoAnswer').default,
   ]);
 
   angular.module('Hercules', ['Core', 'Squared', 'core.onboard', 'ngTagsInput']);

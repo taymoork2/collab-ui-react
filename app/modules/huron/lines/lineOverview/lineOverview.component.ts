@@ -1,11 +1,12 @@
-import { CallForward } from '../../callForward';
-import { LineService, LineConsumerType, LINE_CHANGE, Line } from '../services';
+import { CallForward } from 'modules/huron/callForward';
+import { LineService, LineConsumerType, LINE_CHANGE, Line } from 'modules/huron/lines/services';
 import { LineOverviewService, LineOverviewData } from './index';
-import { DirectoryNumberOptionsService, Availability, ExternalNumberType, Pattern } from '../../directoryNumber';
-import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
-import { Member, MemberService } from '../../members';
-import { SharedLine, SharedLineService } from '../../sharedLine';
+import { DirectoryNumberOptionsService, Availability, ExternalNumberType, Pattern } from 'modules/huron/directoryNumber';
+import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
+import { Member, MemberService } from 'modules/huron/members';
+import { SharedLine, SharedLineService } from 'modules/huron/sharedLine';
 import { Notification } from 'modules/core/notifications';
+import { AutoAnswerService } from 'modules/huron/autoAnswer';
 
 class LineOverview implements ng.IComponentController {
   private ownerType: string;
@@ -20,6 +21,7 @@ class LineOverview implements ng.IComponentController {
   public showActions: boolean = false;
   public deleteConfirmation: string;
   public deleteSharedLineMessage: string;
+  public autoAnswerFeatureToggleEnabled: boolean = false;
 
   // Directory Number properties
   public esnPrefix: string;
@@ -46,6 +48,8 @@ class LineOverview implements ng.IComponentController {
     private Notification: Notification,
     private SharedLineService: SharedLineService,
     private CsdmDataModelService,
+    private AutoAnswerService: AutoAnswerService,
+    private FeatureToggleService,
   ) { }
 
   public $onInit(): void {
@@ -85,6 +89,10 @@ class LineOverview implements ng.IComponentController {
       Availability.UNASSIGNED,  // Only get unassigned numbers
       ExternalNumberType.DID,   // Only get standard PSTN numbers. No toll free.
       ).then(numbers => this.externalNumbers = numbers);
+
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.autoAnswer).then((autoAnswerEnabled) => {
+      this.autoAnswerFeatureToggleEnabled = autoAnswerEnabled;
+    });
   }
 
   public setDirectoryNumbers(internalNumber: string, externalNumber: string): void {
@@ -120,6 +128,11 @@ class LineOverview implements ng.IComponentController {
     _.set(this.lineOverviewData, 'callerId.customCallerIdNumber', callerIdNumber);
     _.set(this.lineOverviewData, 'callerId.externalCallerIdType', _.get(callerIdSelected, 'value'));
     _.set(this.lineOverviewData, 'callerId.companyNumber', companyNumber);
+    this.checkForChanges();
+  }
+
+  public setAutoAnswer(phoneId, enabled, mode): void {
+    this.AutoAnswerService.setAutoAnswer(this.lineOverviewData.autoAnswer.phones, phoneId, enabled, mode);
     this.checkForChanges();
   }
 

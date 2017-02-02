@@ -2054,7 +2054,7 @@ require('./_user-add.scss');
     };
 
     $scope.getServiceName = function (service) {
-      for (var i = 0; i < $rootScope.services.length; i++) {
+      for (var i = 0; i < _.get($rootScope, 'services', []).length; i++) {
         var svc = $rootScope.services[i];
         if (svc.serviceId === service) {
           return svc.displayName;

@@ -5,7 +5,7 @@
     .controller('TrialCtrl', TrialCtrl);
 
   /* @ngInject */
-  function TrialCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService, ValidationService) {
+  function TrialCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, HuronCountryService, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService, ValidationService) {
     var vm = this;
 
     var _careDefaultQuantity = 15;
@@ -564,6 +564,7 @@
     vm.devicesModal = _.find(vm.trialStates, {
       name: 'trial.call'
     });
+    vm.setDefaultCountry = setDefaultCountry;
 
     init();
 
@@ -574,9 +575,11 @@
       var overrideTestOrg = false;
       vm.hasCallEntitlement = Authinfo.isSquaredUC() || vm.isNewTrial();
       var promises = {
+        atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
-        adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; })
+        adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
+        huronCountryList: HuronCountryService.getCountryList(),
       };
       if (!vm.isNewTrial()) {
         promises.tcHasService = TrialContextService.trialHasService(vm.currentTrial.customerOrgId);
@@ -586,12 +589,14 @@
           vm.showRoomSystems = true;
           vm.showContextServiceTrial = true;
           vm.showCare = results.ftCareTrials;
+          vm.sbTrial = results.atlasDarling;
           vm.atlasTrialsShipDevicesEnabled = results.ftShipDevices;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;
           overrideTestOrg = results.ftShipDevices;
           isTestOrg = _.get(results.adminOrg, 'data.isTestOrg', false);
           vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
           vm.devicesModal.enabled = vm.canSeeDevicePage;
+          vm.defaultCountryList = results.huronCountryList;
 
           var initResults = (vm.isExistingOrg()) ? getExistingOrgInitResults(results, vm.hasCallEntitlement, vm.preset, vm.paidServices) : getNewOrgInitResults(results, vm.hasCallEntitlement, vm.stateDefaults);
           _.merge(vm, initResults);
@@ -1185,7 +1190,7 @@
     function getNewOrgInitResults(results, hasCallEntitlement, stateDefaults) {
       var initResults = {};
       _.set(initResults, 'roomSystemTrial.enabled', true);
-      _.set(initResults, 'sparkBoardTrial.enabled', true);
+      _.set(initResults, 'sparkBoardTrial.enabled', results.atlasDarling);
       _.set(initResults, 'webexTrial.enabled', true);
       _.set(initResults, 'meetingTrial.enabled', true);
       _.set(initResults, 'callTrial.enabled', hasCallEntitlement);
@@ -1277,6 +1282,10 @@
             return TrialPstnService.createPstnEntity(customerOrgId, customerName);
           }
         });
+    }
+
+    function setDefaultCountry(country) {
+      vm.details.country = country;
     }
   }
 })();

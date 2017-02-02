@@ -48,7 +48,12 @@
         //Add blob to the default angular whitelist
         $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|tel|file|blob):/);
 
-        $urlRouterProvider.otherwise('login');
+        $urlRouterProvider.otherwise(function ($injector) {
+          // inspired by https://github.com/angular-ui/ui-router/issues/600
+          // unit tests $digest not settling due to $location url changes
+          var $state = $injector.get('$state');
+          $state.go('login');
+        });
         $stateProvider
           .state('modal', {
             abstract: true,
@@ -1409,6 +1414,16 @@
                 controllerAs: 'nav',
                 controller: 'MediaReportsController',
                 templateUrl: 'modules/mediafusion/reports/media-reports.html'
+              }
+            }
+          })
+          .state('reports.mediaservice', {
+            url: '/reports/mediaservice',
+            views: {
+              'tabContent': {
+                controllerAs: 'nav',
+                controller: 'MediaReportsController',
+                templateUrl: 'modules/mediafusion/reports/media-reports-phase-two.html'
               }
             }
           })
@@ -3166,7 +3181,7 @@
             templateUrl: 'modules/sunlight/details/details.tpl.html'
           })
           .state('care.Details', {
-            url: '/careDetails',
+            url: '/services/careDetails',
             parent: 'care.DetailsBase',
             views: {
               'header': {

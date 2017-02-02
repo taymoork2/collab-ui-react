@@ -245,7 +245,7 @@ require('modules/core/reports/amcharts-export.scss');
       amChart.validateData();
       amChart.animateAgain();
       vm.showDevices = false;
-      fillInStats(data);
+      fillInStats(data, dateRange.start, dateRange.end);
     }
 
     function loadChartDataForDeviceType(data) {
@@ -302,8 +302,8 @@ require('modules/core/reports/amcharts-export.scss');
       $scope.$apply();
     }
 
-    function fillInStats(data) {
-      DeviceUsageTotalService.extractStats(data).then(function (stats) {
+    function fillInStats(data, start, end) {
+      DeviceUsageTotalService.extractStats(data, start, end).then(function (stats) {
         vm.totalDuration = secondsTohhmmss(stats.totalDuration);
         vm.noOfCalls = stats.noOfCalls;
         vm.noOfDevices = stats.noOfDevices;

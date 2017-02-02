@@ -5,107 +5,6 @@
     .module('Core')
     .service('DeviceUsageService', DeviceUsageService);
 
-
-/*
-  Hente alle modeller gitt kategorier:
-    api/v1/organization/{orgId}/reports/device/models?categories=ce,sparkboard
-  {
-    "items":[
-    {
-      "category":"sparkboard",
-      "model":"SparkBoard 55"
-    },
-    {
-      "category":"ce",
-      "model":"Super Duper CE"
-    }
-    ...
-  ]
-  }
-
-
-  Hente data til "Room Device Usage" graf:
-    api/v1/organization/{orgId}/reports/device/usage?interval=day&from=2017-01-13&to=2017-01-19&categories=ce,sparkboard&models=SparkBoard%2055
-  {
-    "items":[
-    {
-      "date":"2017-01-13",
-      "accountId":"*",
-      "category":"ce",
-      "model":"Super Duper CE",
-      "countryCode":"NO",
-      "callsTotal":11,
-      "callsTotalDuration":123
-    },
-    ...
-    {
-      "date":"2017-01-19",
-      "accountId":"*",
-      "category":"sparkboard",
-      "model":"SparkBoard 55",
-      "countryCode":"US",
-      "callsTotal":10,
-      "callsTotalDuration":2123
-    },
-    ...
-  ]
-  }
-
-
-  Hente data til 10 least eller most for en gitt månedsrange:
-    api/v1/organization/{orgId}/reports/device/usage?interval=month&from=2017-01-01&to=2017-01-01&accounts=__&categories=ce,sparkboard&models=SparkBoard%2055&orderBy=callsTotalDuration&sortAsc=false&limit=5&excludeUnused=false
-  {
-    "items":[
-    {
-      "date":"2017-01-01",
-      "accountId":"de5a2942-d5f5-40f4-a747-19f0ccfdd9cf",
-      "category":"ce",
-      "model":"Super Duper CE",
-      "countryCode":"NO",
-      "callsTotal":10,
-      "callsTotalDuration":2123
-    },
-    {
-      "date":"2017-01-01",
-      "accountId":"ce681234-d5f5-40f4-a747-19f0ccfdd9aa",
-      "category":"sparkboard",
-      "model":"SparkBoard 55",
-      "countryCode":"US",
-      "callsTotal":11,
-      "callsTotalDuration":123
-    },
-    ... 3 more
-  ]
-  }
-
-
-  Hente informasjon om manglende data:
-    api/v1/organization/{orgId}/reports/device/data_availability?interval=day&from=2017-01-01&to=2017-01-31
-    {
-      "items":[
-        {
-          "date":"2017-01-01",
-          "available":true
-        },
-        {
-          "date":"2017-01-02",
-          "available":false
-        },
-        ... 29 more
-      ]
-    }
-
-
-  Export:
-    api/v1/organization/{orgId}/reports/device/usage/export?interval=day&from=2017-01-01&to=2017-01-31&accounts=__&categories=ce,sparkboard&models=__
-
-  CSV:
-    ...
-
-
-  */
-
-
   /* @ngInject */
   function DeviceUsageService($log, $q, $timeout, $http, DeviceUsageMockData, UrlConfig, Authinfo) {
     var localUrlBase = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
@@ -119,10 +18,6 @@
 
     // legg til models, fjerne missingDaysDeferred
     function getDataForRange(start, end, granularity, deviceCategories, api, missingDaysDeferred) {
-
-      // TODO: Remove hardcoded dates when new backend has data
-      start = '2017-01-09';
-      end = '2017-01-12';
 
       var startDate = moment(start);
       var endDate = moment(end);
@@ -155,6 +50,15 @@
 
     }
 
+    // Preliminary support both local and "prod" urls
+    function getBaseOrgUrl(api) {
+      if (_.isUndefined(api)) {
+        return localUrlBase + '/' + Authinfo.getOrgId() + "/";
+      } else {
+        return urlBase + '/' + Authinfo.getOrgId() + "/";
+      }
+    }
+
     function doRequest(url, granularity, start, end, missingDaysDeferred) {
       var deferred = $q.defer();
       var timeout = {
@@ -172,7 +76,7 @@
         }
         if (response.data.items.length > 0) {
           //missingDays = checkIfMissingDays(response.data.items, start, end, missingDaysDeferred);
-          missingDays = checkMissingDays2(missingDaysDeferred);
+          missingDays = checkMissingDays2(missingDaysDeferred, start, end);
         }
         if (missingDays) {
           fillEmptyDays(response.data.items, start, end);
@@ -183,8 +87,8 @@
       });
     }
 
-    function checkMissingDays2(missingDaysDeferred) {
-      var url = "http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/device/data_availability?interval=day&from=2017-01-09&to=2017-01-12";
+    function checkMissingDays2(missingDaysDeferred, start, end) {
+      var url = getBaseOrgUrl() + "reports/device/data_availability?interval=day&from=" + start + "&to=" + end;
       return $http.get(url).then(function (response) {
         var items = response.data.items; // .available
         var missingDays = _.filter(items, (function (item) {
@@ -328,8 +232,7 @@
         // }
         return result;
       }, {}).map(function (value, key) {
-        //$log.warn("Anders:", value);
-        //value.totalDuration = (value.totalDuration / 3600).toFixed(2);
+        value.totalDurationY = (value.totalDuration / 3600).toFixed(2);
         var timeFormatted = key.substr(0, 4) + '-' + key.substr(4, 2) + '-' + key.substr(6, 2);
         value.time = timeFormatted;
         return value;
@@ -338,56 +241,40 @@
       return reduced;
     }
 
-    // function extractAndSortAccounts(reduced) {
-    //   //$log.info("sequence before sorting", reduced);
-    //   var sequence = _.chain(reduced).map(function (value) {
-    //     return value.accountIds;
-    //   })
-    //     .reduce(function (result, value) {
-    //       _.each(value, function (item) {
-    //         if (!result[item.accountId]) {
-    //           result[item.accountId] = {
-    //             callCount: item.callCount,
-    //             pairedCount: item.pairedCount,
-    //             totalDuration: item.totalDuration
-    //           };
-    //         } else {
-    //           result[item.accountId].callCount += item.callCount;
-    //           result[item.accountId].pairedCount += item.pairedCount;
-    //           result[item.accountId].totalDuration += item.totalDuration;
-    //         }
-    //       });
-    //       return result;
-    //     }, {})
-    //     .map(function (value, key) {
-    //       value.accountId = key;
-    //       return value;
-    //     })
-    //     .orderBy(['totalDuration'], ['desc'])
-    //     .value();
-    //
-    //   //$log.info('sequence after sorting', sequence);
-    //   return sequence;
-    // }
+    function extractStats(reduced, start, end) {
 
-    function extractStats(reduced, count) {
-      //var accounts = extractAndSortAccounts(reduced);
-      var accounts = reduced;
+      var accounts = reduced; // old V1 API compatibility
+      $log.info("extractStats, reduced=", reduced);
+      $log.info("extractStats, accounts=", accounts);
 
-      $log.warn("EXTRACT STARTS accounts", accounts);
-      var n = count || 3;
+      var deferredAll = $q.defer();
+
       var stats = {
-        most: _.take(accounts, n),
-        least: _.takeRight(accounts, n).reverse(),
-        noOfDevices: accounts.length,
-        //noOfCalls: calculateTotal(accounts).noOfCalls,
+        most: [],
+        least: [],
+        noOfDevices: "???",
         noOfCalls: calculateTotalNoOfCalls(reduced),
-        //totalDuration: calculateTotal(accounts).totalDuration
         totalDuration: calculateTotalDuration(reduced)
-
       };
-      $log.info('Extracted stats:', stats);
-      return stats;
+      var limit = 20;
+      $q.all([getLeast(start, end, limit), getMost(start, end, limit)]).then(function (leastMost) {
+        stats.least = leastMost[0];
+        stats.most = leastMost[1];
+
+        // Preliminary compatibility with V1
+        _.each(stats.least, function (item) {
+          item.totalDuration = item.callDuration;
+        });
+
+        // Preliminary compatibility with V1
+        _.each(stats.most, function (item) {
+          item.totalDuration = item.callDuration;
+        });
+
+        deferredAll.resolve(stats);
+      });
+
+      return deferredAll.promise;
     }
 
     function calculateTotalNoOfCalls(data) {
@@ -398,20 +285,23 @@
 
     function calculateTotalDuration(data) {
       return _.sumBy(data, function (item) {
-        return item.totalDuration;// / 3600;
+        return item.totalDuration;
       });
     }
 
-    // function calculateTotal(accounts) {
-    //   var duration = 0;
-    //   var noOfCalls = 0;
-    //   _.each(accounts, function (a) {
-    //     $log.warn("calculateTotal", a);
-    //     duration += a.totalDuration;
-    //     noOfCalls += a.callCount;
-    //   });
-    //   return { totalDuration: duration, noOfCalls: noOfCalls };
-    // }
+    function getLeast(start, end, limit) {
+      var url = getBaseOrgUrl() + "reports/device/usage?interval=day&from=" + start + "&to=" + end + "&accounts=__&categories=aggregate&models=aggregate&orderBy=callDuration&sortAsc=true&limit=" + limit;
+      return $http.get(url).then(function (response) {
+        return response.data.items;
+      });
+    }
+
+    function getMost(start, end, limit) {
+      var url = getBaseOrgUrl() + "reports/device/usage?interval=day&from=" + start + "&to=" + end + "&accounts=__&categories=aggregate&models=aggregate&orderBy=callDuration&sortAsc=false&limit=" + limit;
+      return $http.get(url).then(function (response) {
+        return response.data.items;
+      });
+    }
 
     function pickDateBucket(item, granularity) {
       //var day = item.date.toString();

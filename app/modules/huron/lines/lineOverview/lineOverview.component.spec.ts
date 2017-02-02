@@ -1,9 +1,10 @@
-import { LineConsumerType, Line } from '../services';
-import { CallForward } from '../../callForward';
+import { LineConsumerType, Line } from 'modules/huron/lines/services';
+import { CallForward } from 'modules/huron/callForward';
 
 describe('Component: lineOverview', () => {
   const BUTTON_SAVE = '.button-container .btn--primary';
   const BUTTON_CANCEL = '.button-container button:not(.btn--primary)';
+  const AUTO_ANSWER = 'uc-auto-answer';
 
   let existingLinePrimary: Line = {
     uuid: '0000',
@@ -40,6 +41,7 @@ describe('Component: lineOverview', () => {
       'LineOverviewService',
       'DirectoryNumberOptionsService',
       'CallerIDService',
+      'FeatureToggleService',
     );
 
     this.existingLinePrimary = existingLinePrimary;
@@ -77,6 +79,9 @@ describe('Component: lineOverview', () => {
   }
 
   describe('existing line with primary = true', () => {
+    beforeEach(function () {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
+    });
     beforeEach(initComponent);
     beforeEach(function () {
       this.$scope.numberId = this.existingLinePrimary.uuid;
@@ -108,6 +113,11 @@ describe('Component: lineOverview', () => {
       expect(this.view.find(BUTTON_CANCEL)).not.toExist();
     });
 
+    it('should have autoanswer section if huron-auto-answer feature toggle is on', function () {
+      expect(this.FeatureToggleService.supports).toHaveBeenCalledWith('huron-auto-answer');
+      expect(this.view.find(AUTO_ANSWER)).toExist();
+    });
+
     it('should show save and cancel buttons when form is dirty', function () {
       this.controller.form.$setDirty();
       this.$scope.$apply();
@@ -118,6 +128,9 @@ describe('Component: lineOverview', () => {
   });
 
   describe('new line', () => {
+    beforeEach(function () {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
+    });
     beforeEach(initComponent);
     beforeEach(function () {
       this.lineOverview = {
@@ -151,6 +164,19 @@ describe('Component: lineOverview', () => {
       this.view.find(BUTTON_SAVE).click();
       this.saveDefer.resolve();
       expect(this.LineOverviewService.save).toHaveBeenCalledWith(LineConsumerType.PLACES, '007', undefined, this.lineOverview, []);
+    });
+
+  });
+
+  describe('auto answer', () => {
+    beforeEach(function () {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(false));
+    });
+    beforeEach(initComponent);
+
+    it('should have not autoanswer section if huron-auto-answer feature toggle is off', function () {
+      expect(this.FeatureToggleService.supports).toHaveBeenCalledWith('huron-auto-answer');
+      expect(this.view.find(AUTO_ANSWER)).not.toExist();
     });
 
   });

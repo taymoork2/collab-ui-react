@@ -6,10 +6,12 @@
   /* @ngInject */
   function FeatureToggleService($http, $q, $resource, $rootScope, $state, Authinfo, HuronConfig, UrlConfig, Orgservice) {
     var features = {
+      requireAcceptTos: 'atlas-tos-required',
       dirSync: 'atlas-dir-sync',
       atlasCareTrials: 'atlas-care-trials',
       atlasCareInboundTrials: 'atlas-care-inbound-trials',
       atlasContextServiceTrials: 'atlas-context-service-trials',
+      atlasDarling: 'atlas-darling',
       atlasDataRetentionSettings: 'atlas-data-retention-settings',
       atlasDevicesAdvancedSettings: 'atlas-devices-advanced-settings',
       atlasDeviceExport: 'atlas-device-export',
@@ -20,6 +22,7 @@
       atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list',
       atlasMediaServiceMetrics: 'atlas-media-service-metrics',
       atlasMediaServiceMetricsMilestoneOne: 'atlas-media-service-metrics-milestone-one',
+      atlasMediaServiceMetricsMilestoneTwo: 'atlas-media-service-metrics-milestone-two',
       atlasMediaServicePhaseTwo: 'atlas-media-service-phase-two',
       atlasNewCiDataModel: 'atlas-new-ci-data-model',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
@@ -162,7 +165,9 @@
       atlasHerculesGoogleCalendar: 'atlas-hercules-google-calendar',
       avrilVmEnable: 'avril-vm-enable',
       avrilVoicemaill1249: 'avril-voicemail-l1249',
-      cloudberryPersonalMode: 'ce-enable-personal-mode'
+      cloudberryPersonalMode: 'ce-enable-personal-mode',
+      autoAnswer: 'huron-auto-answer',
+      huronFederatedSparkCall: 'huron-federated-spark-call',
     };
 
     var toggles = {};

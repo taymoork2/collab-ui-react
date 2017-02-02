@@ -203,7 +203,7 @@
         }
         return result;
       }, {}).map(function (value, key) {
-        value.totalDuration = (value.totalDuration / 3600).toFixed(2);
+        value.totalDurationY = (value.totalDuration / 3600).toFixed(2);
         var timeFormatted = key.substr(0, 4) + '-' + key.substr(4, 2) + '-' + key.substr(6, 2);
         value.time = timeFormatted;
         return value;
@@ -244,9 +244,9 @@
       return sequence;
     }
 
-    function extractStats(reduced, count) {
+    function extractStats(reduced) {
       var accounts = extractAndSortAccounts(reduced);
-      var n = count || 50;
+      var n = 20;
       var stats = {
         most: _.take(accounts, n),
         least: _.takeRight(accounts, n).reverse(),

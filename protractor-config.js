@@ -23,9 +23,9 @@ var E2E_FAIL_RETRY = appConfig.e2eFailRetry;
 var NEWLINE = '\n';
 
 var maxInstances;
-if (process.env.SAUCE_MAX_INSTANCES) {
-  maxInstances = process.env.SAUCE_MAX_INSTANCES;
-} else if (process.env.SAUCE_USERNAME) {
+if (process.env.SAUCE__MAX_INSTANCES) {
+  maxInstances = process.env.SAUCE__MAX_INSTANCES;
+} else if (process.env.SAUCE__USERNAME) {
   maxInstances = 10;
 } else {
   maxInstances = 1;
@@ -38,15 +38,15 @@ exports.config = {
     jenkins: gatingSuites,
   }),
 
-  sauceUser: process.env.SAUCE_USERNAME,
-  sauceKey: process.env.SAUCE_ACCESS_KEY,
-  sauceAgent: process.env.SAUCE_USERNAME ? agent : undefined,
-  directConnect: !process.env.SAUCE_USERNAME,
+  sauceUser: process.env.SAUCE__USERNAME,
+  sauceKey: process.env.SAUCE__ACCESS_KEY,
+  sauceAgent: process.env.SAUCE__USERNAME ? agent : undefined,
+  directConnect: !process.env.SAUCE__USERNAME,
 
   capabilities: {
     browserName: 'chrome',
     screenResolution: '1680x1050',
-    platform: process.env.SAUCE_USERNAME ? 'Windows 7' : undefined,
+    platform: process.env.SAUCE__USERNAME ? 'Windows 7' : undefined,
     tunnelIdentifier: process.env.SC_TUNNEL_IDENTIFIER,
     name: 'wx2-admin-web-client',
     build: process.env.BUILD_NUMBER,
@@ -88,7 +88,7 @@ exports.config = {
     global._ = require('lodash');
     browser.ignoreSynchronization = true;
 
-    global.isSauce = !!(process.env.SAUCE_USERNAME && process.env.SAUCE_USERNAME.length > 0);
+    global.isSauce = !!(process.env.SAUCE__USERNAME && process.env.SAUCE__USERNAME.length > 0);
     global.isProductionBackend = !!args.productionBackend;
     global.log = new Logger();
 
@@ -304,8 +304,9 @@ function Logger() {
   return log;
 }
 
+// TODO: rip this out if no longer needed
 function mkProxyAgent() {
-  if (process.env.SAUCE_ENABLE_WEB_PROXY === 'false') {
+  if (process.env.SAUCE__ENABLE_WEB_PROXY === 'false') {
     return;
   }
   return new HttpsProxyAgent(process.env.http_proxy || 'http://proxy.esl.cisco.com:80');

@@ -11,7 +11,7 @@ require('./_line-settings.scss');
   function LineSettingsCtrl($scope, $state, $stateParams, $timeout, $translate, $q, $modal, Notification,
       DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser,
       UserListService, SharedLineInfoService, CallerId, DialPlanService,
-      ExternalNumberPool, TelephoneNumberService, Authinfo) {
+      ExternalNumberPool, TelephoneNumberService, Authinfo, AutoAnswerService, FeatureToggleService) {
     var vm = this;
 
     vm.actionList = [{
@@ -97,6 +97,16 @@ require('./_line-settings.scss');
     };
     // end SharedLine Info ---
 
+    var lines = require('modules/huron/lines/services');
+    vm.autoAnswerFeatureToggleEnabled = false;
+    vm.autoAnswer = {
+      phones: [],
+      member: {},
+      enabledForSharedLineMember: false,
+    };
+    vm.origAutoAnswerPhones = [];
+    vm.setAutoAnswer = setAutoAnswer;
+
     var name = getUserName(vm.currentUser.name, vm.currentUser.userName);
 
     vm.isSingleDevice = isSingleDevice;
@@ -107,13 +117,13 @@ require('./_line-settings.scss');
     vm.getUserList = getUserList;
     vm.init = init;
 
-    // Flag to disable and add "loading" animation to Save button while line settings being saved
+    // Flag to disable and add 'loading' animation to Save button while line settings being saved
     vm.saveInProcess = false;
 
     vm.disassociateSharedLineUser = disassociateSharedLineUser;
 
     vm.callForwardInputs = ['external', 'uri', 'custom'];
-    vm.callerIdInputs = ['external', 'custom'];
+    vm.callerIdInputs = ['external'];
     vm.getRegionCode = getRegionCode;
     vm.setAllForward = setAllForward;
     vm.setInternalForward = setInternalForward;
@@ -295,6 +305,7 @@ require('./_line-settings.scss');
           initCallerId().then(function () {
             defer.resolve();
           });
+          initAutoAnswer();
         });
 
         if (typeof vm.telephonyInfo.alternateDirectoryNumber.uuid !== 'undefined' && vm.telephonyInfo.alternateDirectoryNumber.uuid !== '') {
@@ -334,7 +345,7 @@ require('./_line-settings.scss');
         // Can't remove primary line
         vm.showActions = true;
 
-        if (vm.telephonyInfo.currentDirectoryNumber.userDnUuid === "none") {
+        if (vm.telephonyInfo.currentDirectoryNumber.userDnUuid === 'none') {
           TelephonyInfoService.resetCurrentUser(vm.telephonyInfo.currentDirectoryNumber.uuid);
           vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
         }
@@ -361,7 +372,7 @@ require('./_line-settings.scss');
     // triggers UI changes to show or hide DID and DN elements
     function toggleShowExtensions() {
       return DialPlanService.getCustomerDialPlanDetails().then(function (response) {
-        if (response.extensionGenerated === "true") {
+        if (response.extensionGenerated === 'true') {
           vm.showExtensions = false;
           vm.internalNumberLabel = $translate.instant('directoryNumberPanel.externalNumberLabel');
         } else {
@@ -378,7 +389,7 @@ require('./_line-settings.scss');
       if (vm.showExtensions === false) {
         var dnLength = vm.assignedInternalNumber.pattern.length;
         // if the internalNumber was changed, find a matching DID and set the externalNumber to match
-        if (modifiedFieldName === "internalNumber") {
+        if (modifiedFieldName === 'internalNumber') {
           var matchingDid = _.find(vm.externalNumberPool, function (extNum) {
             return extNum.pattern.substr(-dnLength) === vm.assignedInternalNumber.pattern;
           });
@@ -388,7 +399,7 @@ require('./_line-settings.scss');
           }
         }
         // if the externalNumber was changed, find a matching DN and set the internalNumber to match
-        if (modifiedFieldName === "externalNumber") {
+        if (modifiedFieldName === 'externalNumber') {
           assignedExternalNumberChange();
           var matchingDn = _.find(vm.internalNumberPool, {
             pattern: vm.assignedExternalNumber.pattern.substr(-dnLength)
@@ -398,7 +409,7 @@ require('./_line-settings.scss');
           }
         }
       } else {
-        if (modifiedFieldName === "externalNumber") {
+        if (modifiedFieldName === 'externalNumber') {
           assignedExternalNumberChange();
         }
       }
@@ -408,7 +419,7 @@ require('./_line-settings.scss');
       //variable to set ESN for voicemail if the primary has changed
       var esn = vm.telephonyInfo.esn;
       var companyNumberObj = null;
-      vm.saveInProcess = true; // Set flag for "Save" button behavior
+      vm.saveInProcess = true; // Set flag for 'Save' button behavior
 
       var callForwardSet = processCallForward();
       if (callForwardSet === true) {
@@ -474,6 +485,13 @@ require('./_line-settings.scss');
               }
             }));
 
+          if (!_.isEqual(vm.origAutoAnswerPhones, vm.autoAnswer.phones)) {
+            var updateData = AutoAnswerService.createUpdateAutoAnswerPayload(vm.origAutoAnswerPhones, vm.autoAnswer.phones);
+            if (!_.isUndefined(updateData) && !_.isNull(updateData)) {
+              promises.push(AutoAnswerService.updateAutoAnswer(lines.LineConsumerType.USERS, vm.currentUser.id, vm.telephonyInfo.currentDirectoryNumber.uuid, updateData));
+            }
+          }
+
           $q.all(promises)
             .then(function () {
               //Change dtmfid in voicemail if the primary line has changed
@@ -484,18 +502,18 @@ require('./_line-settings.scss');
             .then(function () {
               TelephonyInfoService.getUserDnInfo(vm.currentUser.id)
                 .then(function () {
-                  if (vm.telephonyInfo.currentDirectoryNumber.userDnUuid === "none") {
+                  if (vm.telephonyInfo.currentDirectoryNumber.userDnUuid === 'none') {
                     TelephonyInfoService.resetCurrentUser(vm.telephonyInfo.currentDirectoryNumber.uuid);
                     vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
                   }
                 });
               Notification.success('directoryNumberPanel.success');
-              vm.saveInProcess = false; // Set flag for "Save" button behavior
+              vm.saveInProcess = false; // Set flag for 'Save' button behavior
               resetForm();
             })
             .catch(function (response) {
               Notification.errorResponse(response, 'directoryNumberPanel.error');
-              vm.saveInProcess = false; // Set flag for "Save" button behavior
+              vm.saveInProcess = false; // Set flag for 'Save' button behavior
             });
         } else { // new line
           SharedLineInfoService.getUserLineCount(vm.currentUser.id)
@@ -530,7 +548,7 @@ require('./_line-settings.scss');
                         $state.go('user-overview.communication.directorynumber', {
                           directoryNumber: vm.directoryNumber
                         });
-                        vm.saveInProcess = false; // Set flag for "Save" button behavior
+                        vm.saveInProcess = false; // Set flag for 'Save' button behavior
                       });
                   });
               } else {
@@ -538,7 +556,7 @@ require('./_line-settings.scss');
                   user: name
                 });
                 $state.go('user-overview.communication');
-                vm.saveInProcess = false; // Set flag for "Save" button behavior
+                vm.saveInProcess = false; // Set flag for 'Save' button behavior
               }
             })
             .catch(function (response) {
@@ -1187,12 +1205,12 @@ require('./_line-settings.scss');
       if (!directLineUserName) {
         directLineUserName = name;
       }
-      if (vm.assignedExternalNumber.uuid !== "none") {
+      if (vm.assignedExternalNumber.uuid !== 'none') {
         vm.callerIdOptions.unshift(CallerId.constructCallerIdOption(directLine_label, directLine_type, directLineUserName, vm.assignedExternalNumber.pattern, null));
       }
       // Set the current caller ID selection
-      if (vm.callerIdInfo.callerIdSelection.value.externalCallerIdType === directLine_type) {
-        if (vm.assignedExternalNumber.uuid !== "none") {
+      if (_.get(vm.callerIdInfo, 'callerIdSelection.value.externalCallerIdType', '') === directLine_type) {
+        if (vm.assignedExternalNumber.uuid !== 'none') {
           vm.callerIdInfo.callerIdSelection = CallerId.getCallerIdOption(vm.callerIdOptions, directLine_type);
         } else {
           vm.callerIdInfo.callerIdSelection = CallerId.getCallerIdOption(vm.callerIdOptions, blockedCallerId_type);
@@ -1210,6 +1228,33 @@ require('./_line-settings.scss');
         overlaps = true;
       }
       return overlaps;
+    }
+
+    function initAutoAnswer() {
+      FeatureToggleService.supports(FeatureToggleService.features.autoAnswer).then(function (autoAnswerEnabled) {
+        vm.autoAnswerFeatureToggleEnabled = autoAnswerEnabled;
+
+        if (autoAnswerEnabled) {
+          AutoAnswerService.getSupportedPhonesAndMember(lines.LineConsumerType.USERS, vm.currentUser.id, vm.telephonyInfo.currentDirectoryNumber.uuid)
+          .then(function (data) {
+            vm.autoAnswer = data;
+
+            if (!_.isUndefined(data) && !_.isNull(data)) {
+              if (!_.isUndefined(data.member) && !_.isNull(data.member) && data.member.uuid !== vm.currentUser.id) {
+                vm.autoAnswer.enabledForSharedLineMember = true;
+              }
+
+              if (!_.isUndefined(data.phones) && !_.isNull(data.phones) && Array.isArray(data.phones) && data.phones.length !== 0) {
+                vm.origAutoAnswerPhones = _.cloneDeep(data.phones);
+              }
+            }
+          });
+        }
+      });
+    }
+
+    function setAutoAnswer(phoneId, enabled, mode) {
+      AutoAnswerService.setAutoAnswer(vm.autoAnswer.phones, phoneId, enabled, mode);
     }
 
     init();

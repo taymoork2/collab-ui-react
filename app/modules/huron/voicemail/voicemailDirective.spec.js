@@ -4,8 +4,13 @@ describe('Directive: ucVoicemail', function () {
   beforeEach(function () {
     this.initModules('Huron', 'Sunlight');
     this.injectDependencies('TelephonyInfoService');
+    this.injectDependencies('FeatureToggleService');
+    this.injectDependencies(
+      '$q'
+    );
     this.telephonyInfoWithVoice = getJSONFixture('huron/json/telephonyInfo/voiceEnabled.json');
     spyOn(this.TelephonyInfoService, 'getTelephonyInfo').and.returnValue(this.telephonyInfoWithVoice);
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
     this.compileComponent('ucVoicemail');
   });
 

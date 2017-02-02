@@ -6,33 +6,55 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const loaders = require('./loaders');
 const _ = require('lodash');
 
-const prodWebpack = merge.smart(commonWebpack, {
-  devtool: false,
-  module: {
-    loaders: [_.merge(loaders.scss, {
-      loader: ExtractTextPlugin.extract('style', 'css?sourceMap!postcss!sass'),
-    })],
-  },
-  output: {
-    publicPath: '/',
-    filename: 'js/[name].[hash].js',
-    chunkFilename: 'js/[name].[hash].js',
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: 'index.html',
-      inject: 'body',
-      ngStrictDi: '',
-    }),
-    new ExtractTextPlugin('styles/[name].[hash].css', {
-      allChunks: true,
-    }),
-    new webpack.NoErrorsPlugin(),
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin({
-      mangle: false,
-    }),
-  ],
-});
+function webpackConfig(env) {
+  const commonWebpackConfig = commonWebpack(env);
+  // TODO: overriding sass loader config via 'merge.smart' doesn't work as expected
+  // - for now, we override here as a pre-step before the merge operation
+  function patchScssLoader(conf) {
+    const scssLoaderRule = _.find(conf.module.rules, loaders.scss);
+    // removes 'style-loader'
+    const scssLoaders = _.tail(scssLoaderRule.use);
+    const cssLoader = _.find(scssLoaders, {
+      loader: 'css-loader',
+    });
+    // minimize css for dist output
+    _.set(cssLoader, 'options.minimize', true);
+    // replace current loaders with ExtractTextPlugin
+    scssLoaderRule.use = ExtractTextPlugin.extract({
+      fallbackLoader: 'style-loader',
+      loader: scssLoaders,
+    });
+  }
+  patchScssLoader(commonWebpackConfig);
 
-module.exports = prodWebpack;
+  const prodWebpack = merge.smart(commonWebpackConfig, {
+    devtool: false,
+    output: {
+      publicPath: '/',
+      filename: 'js/[name].[hash].js',
+      chunkFilename: 'js/[name].[hash].js',
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: 'index.html',
+        inject: 'body',
+        ngStrictDi: '',
+      }),
+      new ExtractTextPlugin({
+        filename: 'styles/[name].[hash].css',
+        allChunks: true,
+      }),
+      new webpack.NoEmitOnErrorsPlugin(),
+      new webpack.optimize.UglifyJsPlugin({
+        mangle: false,
+      }),
+    ],
+    stats: {
+      children: false, // hide output from children plugins
+    },
+  });
+
+  return prodWebpack;
+}
+
+module.exports = webpackConfig;
