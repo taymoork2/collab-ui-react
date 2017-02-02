@@ -32,9 +32,17 @@
     /////////////////////
 
     function isSipValid() {
-      var pattern = new RegExp("^[^@]+[@].*");
+      var pattern = new RegExp(/^([a-zA-Z0-9:.]+)@([a-zA-Z0-9.]+)\.([a-z]{3,7})$/g);
       var result = pattern.test(vm.model.sipInput);
+
+      if (result) {
+        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
+      } else {
+        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, false);
+      }
+
       return result;
+
     }
 
     function populateUiModel() {
@@ -55,12 +63,6 @@
     function saveUiModel() {
       AACommonService.setPhoneMenuStatus(true);
       var entry;
-
-      if (isSipValid()) {
-        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
-      } else {
-        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, false);
-      }
 
       if (fromRouteCall) {
         entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
