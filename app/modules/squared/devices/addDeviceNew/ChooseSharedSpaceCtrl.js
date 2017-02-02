@@ -22,7 +22,7 @@
     vm.selected = null;
     vm.radioSelect = null;
     vm.placesLoaded = false;
-    vm.rooms = undefined;
+    var rooms = undefined;
     vm.hasRooms = undefined;
 
     function init() {
@@ -50,8 +50,17 @@
         }
       }
       CsdmDataModelService.getPlacesMap().then(function (placesList) {
-        vm.rooms = _(placesList).filter(filterFunction).sortBy('displayName').value();
-        vm.hasRooms = vm.rooms.length > 0;
+        rooms = _(placesList)
+          .filter(filterFunction)
+          .map(function (place) {
+            place.readablePlaceType = place.type === 'huron'
+              ? $translate.instant('machineTypes.room')
+              : $translate.instant('machineTypes.lyra_space');
+            return place;
+          })
+          .sortBy('displayName')
+          .value();
+        vm.hasRooms = rooms.length > 0;
         vm.placesLoaded = true;
       });
     }
@@ -59,7 +68,7 @@
     vm.getRooms = function () {
       vm.deviceName = undefined;
       vm.place = undefined;
-      return vm.rooms;
+      return rooms;
     };
 
     vm.selectPlace = function ($item) {

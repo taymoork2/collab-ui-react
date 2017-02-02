@@ -60,7 +60,12 @@
                typeahead-on-select="choosePlace.selectPlace($item)"
                placeholder="{{'addDeviceWizard.chooseSharedSpace.selectPlace' | translate}}"
                typeahead-wait-ms="500"/>
-        <script type="text/ng-template" id="placeTemplate.html">
+        <script type="text/ng-template" id="placeTemplate.html" ng-if="choosePlace.showPersonal">
+          <a>
+            <span ng-bind-html="match.label.displayName + ' (' + match.label.readablePlaceType + ')' | typeaheadHighlight:query" ></span>
+          </a>
+        </script>
+        <script type="text/ng-template" id="placeTemplate.html" ng-if="!choosePlace.showPersonal">
           <a>
             <span ng-bind-html="match.label.displayName | typeaheadHighlight:query" ></span>
           </a>
