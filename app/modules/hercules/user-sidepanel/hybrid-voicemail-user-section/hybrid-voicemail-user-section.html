@@ -4,17 +4,9 @@
     <span class="section-name"
           translate="hercules.hybridVoicemailUserSection.header"></span>
     <cs-toggle-switch size="small"
-                      ng-if="$ctrl.isEnabledOrgWide && !$ctrl.callServiceConnectEnabledForUser"
-                      is-disabled="true"></cs-toggle-switch>
-    <cs-toggle-switch size="small"
-                      ng-if="$ctrl.isEnabledOrgWide && $ctrl.callServiceConnectEnabledForUser"
-                      ng-model="$ctrl.callServiceConnectEnabledForUser"
-                      is-disabled="true"></cs-toggle-switch>
-    <cs-toggle-switch size="small"
-                      ng-if="!$ctrl.isEnabledOrgWide"
-                      is-disabled="true"></cs-toggle-switch>
+                      is-disabled="true"
+                      ng-model="$ctrl.voicemailEnabledForUser"></cs-toggle-switch>
   </div>
-
   <div class="extension-description"
        translate="hercules.hybridVoicemailUserSection.description"></div>
 
@@ -33,7 +25,7 @@
 
   <div ng-if="!$ctrl.callServiceConnectEnabledForUser">
     <p translate="hercules.hybridVoicemailUserSection.automaticallyEnabled"
-       class="helptext"></p>
+       class="helptext small"></p>
   </div>
 
   <div ng-if="!$ctrl.isEnabledOrgWide && $ctrl.callServiceConnectEnabledForUser">

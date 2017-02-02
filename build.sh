@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# jenkins env vars
-source ./.jenkins-build-env-vars
-
 # import helper functions
 source ./bin/include/pid-helpers
 source ./bin/include/setup-helpers
@@ -99,7 +96,7 @@ function do_webpack {
     local webpack_exit_code
     export npm_lifecycle_event="build"
     while true; do
-        time nice -10 webpack --bail --progress --profile --nolint
+        time nice -10 webpack --bail --progress --profile --env.nolint
         webpack_exit_code=$?
         if [ "$webpack_exit_code" -ne 132 -a \
             "$webpack_exit_code" -ne 137 -a \

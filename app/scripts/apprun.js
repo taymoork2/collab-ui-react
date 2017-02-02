@@ -126,7 +126,7 @@
       PreviousState.setParams(fromParams);
 
       // Add Body Class to the $rootScope on stateChange
-      $rootScope.bodyClass = _.get(toState, 'data.bodyClass') || toState.name.replace(/\./g, '-') + '-state';
+      $rootScope.bodyClass = _.get(toState, 'data.bodyClass') || _.replace(toState.name, /\./g, '-') + '-state';
     });
 
     function getFromStandardGetParams(url) {

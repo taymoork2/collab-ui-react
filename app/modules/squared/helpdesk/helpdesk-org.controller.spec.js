@@ -442,19 +442,19 @@ describe('Controller: HelpdeskOrgController', function () {
     });
 
     it('shows name based on one known orderingTool code', function () {
-      sinon.stub(HelpdeskService, 'getServiceOrders').returns(q.resolve([{ "orderingTool": "APP_DIRECT" }]));
-      $scope.$apply();
-      orgController.findServiceOrders("12345");
-      expect(orgController.orderSystems.length).toBe(1);
-      expect(orgController.orderSystems).toEqual(["Partner Marketplace"]);
-    });
-
-    it('shows names based on two known orderingTool codes', function () {
-      sinon.stub(HelpdeskService, 'getServiceOrders').returns(q.resolve([{ "orderingTool": "DIGITAL_RIVER" }, { "orderingTool": "CCW" }]));
+      sinon.stub(HelpdeskService, 'getServiceOrders').returns(q.resolve([{ "orderingTool": "APP_DIRECT" }, { "orderingTool": "Ibm" }]));
       $scope.$apply();
       orgController.findServiceOrders("12345");
       expect(orgController.orderSystems.length).toBe(2);
-      expect(orgController.orderSystems).toEqual(["Cisco Online Marketplace", "Cisco Commerce"]);
+      expect(orgController.orderSystems).toEqual(["Partner Marketplace", "Partner Marketplace"]);
+    });
+
+    it('shows names based on two known orderingTool codes', function () {
+      sinon.stub(HelpdeskService, 'getServiceOrders').returns(q.resolve([{ "orderingTool": "DIGITAL_RIVER" }, { "orderingTool": "CCW" }, { "orderingTool": "CCW_CSB" }]));
+      $scope.$apply();
+      orgController.findServiceOrders("12345");
+      expect(orgController.orderSystems.length).toBe(3);
+      expect(orgController.orderSystems).toEqual(["Cisco Online Marketplace", "Cisco Commerce", "Cisco Commerce"]);
     });
 
     it('shows actual value from service order if unknown orderingTool code', function () {

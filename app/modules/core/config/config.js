@@ -483,6 +483,7 @@
         'metrics',
         'reports.metrics',
         'reports.media',
+        'reports.mediaservice',
         'services-overview',
         'cluster-list',
       ],

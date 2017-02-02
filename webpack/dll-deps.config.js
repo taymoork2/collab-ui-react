@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const commonWebpack = require('./webpack.common.js');
+const commonWebpack = require('./webpack.common.js')(process.env);
 
 // notes:
 // - appContextRootDir: './app'

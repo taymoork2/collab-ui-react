@@ -50,7 +50,7 @@ describe('Service: Metrics Reports Service', function () {
     MetricsReportService = _MetricsReportService_;
     Notification = _Notification_;
 
-    spyOn(Notification, 'notify');
+    spyOn(Notification, 'errorWithTrackingId');
 
     var baseUrl = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId();
     callVolumeUrl = baseUrl + '/call_volume/?relativeTime=1d';
@@ -93,12 +93,13 @@ describe('Service: Metrics Reports Service', function () {
 
     it('should notify an error for call volume data failure', function () {
       $httpBackend.whenGET(callVolumeUrl).respond(500, error);
+      expect(Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
 
       MetricsReportService.getCallVolumeData(timeFilter, allClusters).then(function (response) {
         expect(response).toEqual({
           graphData: []
         });
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });
 
       $httpBackend.flush();
@@ -121,13 +122,14 @@ describe('Service: Metrics Reports Service', function () {
 
     it('should notify an error for percentage utilization failure', function () {
       $httpBackend.whenGET(UtilizationUrl).respond(500, error);
+      expect(Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
 
       MetricsReportService.getUtilizationData(timeFilter, allClusters).then(function (response) {
         expect(response).toEqual({
           graphData: [],
           graphs: []
         });
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });
 
       $httpBackend.flush();
@@ -147,10 +149,11 @@ describe('Service: Metrics Reports Service', function () {
 
     it('should notify an error for cluster availability data failure', function () {
       $httpBackend.whenGET(clusterAvailabilityUrl).respond(500, error);
+      expect(Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
 
       MetricsReportService.getAvailabilityData(timeFilter, allClusters).then(function (response) {
         expect(response).toEqual([]);
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });
 
       $httpBackend.flush();
@@ -170,10 +173,11 @@ describe('Service: Metrics Reports Service', function () {
 
     it('should notify an error for total number of calls failure', function () {
       $httpBackend.when('GET', /^\w+.*/).respond(500, error);
+      expect(Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
 
       MetricsReportService.getTotalCallsData(timeFilter, sampleClusters).then(function (response) {
         expect(response).toEqual([]);
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });
 
       $httpBackend.flush();
@@ -193,10 +197,11 @@ describe('Service: Metrics Reports Service', function () {
 
     it('should notify an error for cluster availability percentage failure', function () {
       $httpBackend.whenGET(availabilityCard).respond(500, error);
+      expect(Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
 
       MetricsReportService.getClusterAvailabilityData(timeFilter, allClusters).then(function (response) {
         expect(response).toEqual([]);
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });
 
       $httpBackend.flush();

@@ -81,7 +81,7 @@
             'labelPosition': 'top',
             'id': 'video',
             'title': $translate.instant('reportsPage.usageReports.callDuration'),
-            'valueField': 'totalDuration',
+            'valueField': 'totalDurationY',
             'lineThickness': 2,
             'fillAlphas': 0.6,
             'lineAlpha': 0.0,

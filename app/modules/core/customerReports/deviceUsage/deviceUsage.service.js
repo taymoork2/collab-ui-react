@@ -19,10 +19,6 @@
     // legg til models, fjerne missingDaysDeferred
     function getDataForRange(start, end, granularity, deviceCategories, api, missingDaysDeferred) {
 
-      // TODO: Remove hardcoded dates when new backend has data
-      start = '2017-01-09';
-      end = '2017-01-12';
-
       var startDate = moment(start);
       var endDate = moment(end);
       var now = moment();
@@ -236,6 +232,7 @@
         // }
         return result;
       }, {}).map(function (value, key) {
+        value.totalDurationY = (value.totalDuration / 3600).toFixed(2);
         var timeFormatted = key.substr(0, 4) + '-' + key.substr(4, 2) + '-' + key.substr(6, 2);
         value.time = timeFormatted;
         return value;
@@ -259,8 +256,8 @@
         noOfCalls: calculateTotalNoOfCalls(reduced),
         totalDuration: calculateTotalDuration(reduced)
       };
-
-      $q.all([getLeast(start, end), getMost(start, end)]).then(function (leastMost) {
+      var limit = 20;
+      $q.all([getLeast(start, end, limit), getMost(start, end, limit)]).then(function (leastMost) {
         stats.least = leastMost[0];
         stats.most = leastMost[1];
 
@@ -292,15 +289,15 @@
       });
     }
 
-    function getLeast(start, end) {
-      var url = getBaseOrgUrl() + "reports/device/usage?interval=day&from=" + start + "&to=" + end + "&accounts=__&categories=aggregate&models=aggregate&orderBy=callDuration&sortAsc=true&limit=5";
+    function getLeast(start, end, limit) {
+      var url = getBaseOrgUrl() + "reports/device/usage?interval=day&from=" + start + "&to=" + end + "&accounts=__&categories=aggregate&models=aggregate&orderBy=callDuration&sortAsc=true&limit=" + limit;
       return $http.get(url).then(function (response) {
         return response.data.items;
       });
     }
 
-    function getMost(start, end) {
-      var url = getBaseOrgUrl() + "reports/device/usage?interval=day&from=" + start + "&to=" + end + "&accounts=__&categories=aggregate&models=aggregate&orderBy=callDuration&sortAsc=false&limit=5";
+    function getMost(start, end, limit) {
+      var url = getBaseOrgUrl() + "reports/device/usage?interval=day&from=" + start + "&to=" + end + "&accounts=__&categories=aggregate&models=aggregate&orderBy=callDuration&sortAsc=false&limit=" + limit;
       return $http.get(url).then(function (response) {
         return response.data.items;
       });
