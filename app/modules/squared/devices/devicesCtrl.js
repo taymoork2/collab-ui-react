@@ -110,18 +110,18 @@ require('./_devices.scss');
           return CsdmDataModelService.hasLoadedAllDeviceSources();
         };
 
-        vm.isEntitledToRoomSystem = function () {
+        vm.isOrgEntitledToRoomSystem = function () {
           return Authinfo.isDeviceMgmt();
         };
 
-        vm.isEntitledToHuron = function () {
+        vm.isOrgEntitledToHuron = function () {
           return _.filter(Authinfo.getLicenses(), function (l) {
             return l.licenseType === 'COMMUNICATION';
           }).length > 0;
         };
 
         vm.isEntitled = function () {
-          return vm.isEntitledToRoomSystem() || vm.isEntitledToHuron();
+          return vm.isOrgEntitledToRoomSystem() || vm.isOrgEntitledToHuron();
         };
 
         vm.deviceList = function () {
@@ -192,16 +192,17 @@ require('./_devices.scss');
           }]
         };
 
-        vm.wizardWithPlaces = function () {
+        var wizardWithoutPersonal = function () {
           return {
             data: {
               function: "addDevice",
               showATA: vm.showATA,
+              showPersonal: false,
               admin: vm.adminUserDetails,
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
               title: "addDeviceWizard.newDevice",
-              isEntitledToHuron: vm.isEntitledToHuron(),
-              isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
+              isEntitledToHuron: vm.isOrgEntitledToHuron(),
+              isEntitledToRoomSystem: vm.isOrgEntitledToRoomSystem(),
               account: {
                 organizationId: Authinfo.getOrgId()
               },
@@ -218,7 +219,7 @@ require('./_devices.scss');
             wizardState: {
               'addDeviceFlow.chooseDeviceType': {
                 nextOptions: {
-                  cloudberry: vm.showPersonal ? 'addDeviceFlow.chooseAccountType' : 'addDeviceFlow.chooseSharedSpace',
+                  cloudberry: 'addDeviceFlow.chooseSharedSpace',
                   huron: 'addDeviceFlow.chooseAccountType'
                 }
               },
@@ -257,8 +258,72 @@ require('./_devices.scss');
           };
         };
 
+        var wizardWithPersonal = function () {
+          return {
+            data: {
+              function: "addDevice",
+              showATA: vm.showATA,
+              showPersonal: true,
+              admin: vm.adminUserDetails,
+              csdmHybridCallFeature: vm.csdmHybridCallFeature,
+              title: "addDeviceWizard.newDevice",
+              isEntitledToHuron: vm.isOrgEntitledToHuron(),
+              isEntitledToRoomSystem: vm.isOrgEntitledToRoomSystem(),
+              account: {
+                organizationId: Authinfo.getOrgId()
+              },
+              recipient: {
+                cisUuid: Authinfo.getUserId(),
+                displayName: vm.adminUserDetails.displayName,
+                email: Authinfo.getPrimaryEmail(),
+                organizationId: vm.adminUserDetails.organizationId,
+                firstName: vm.adminFirstName
+              }
+            },
+            history: [],
+            currentStateName: 'addDeviceFlow.chooseAccountType',
+            wizardState: {
+              'addDeviceFlow.chooseAccountType': {
+                nextOptions: {
+                  shared: 'addDeviceFlow.chooseSharedSpace',
+                  personal: 'addDeviceFlow.choosePersonal'
+                }
+              },
+              'addDeviceFlow.choosePersonal': {
+                next: 'addDeviceFlow.showActivationCode'
+              },
+              'addDeviceFlow.chooseSharedSpace': {
+                nextOptions: {
+                  existing: 'addDeviceFlow.showActivationCode',
+                  create: 'addDeviceFlow.chooseDeviceType'
+                }
+              },
+              'addDeviceFlow.chooseDeviceType': {
+                nextOptions: {
+                  cloudberry: 'addDeviceFlow.editServices',
+                  huron: 'addDeviceFlow.addLines'
+                }
+              },
+              'addDeviceFlow.editServices': {
+                nextOptions: {
+                  sparkCall: 'addDeviceFlow.addLines',
+                  sparkCallConnect: 'addDeviceFlow.callConnectOptions',
+                  sparkOnly: 'addDeviceFlow.showActivationCode'
+                }
+              },
+              'addDeviceFlow.addLines': {
+                next: 'addDeviceFlow.showActivationCode'
+              },
+              'addDeviceFlow.callConnectOptions': {
+                next: 'addDeviceFlow.showActivationCode'
+              },
+              'addDeviceFlow.showActivationCode': {}
+            }
+          };
+        };
+
         vm.startAddDeviceFlow = function () {
-          var wizard = WizardFactory.create(vm.wizardWithPlaces());
+          var wizard = WizardFactory.create(vm.showPersonal ? wizardWithPersonal() : wizardWithoutPersonal());
           $state.go(wizard.state().currentStateName, {
             wizard: wizard
           });

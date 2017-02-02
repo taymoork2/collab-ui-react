@@ -4046,6 +4046,10 @@
   "addDeviceWizard": {
     "newDevice": "New Device",
     "newCode": "New Code",
+    "confirmRoomDeviceOnly": {
+      "roomDeviceOnly": "Room Device activation only",
+      "noSparkCallService": "This user doesn't have Spark Call service."
+    },
     "chooseDeviceType": {
       "deviceType": "What kind of device do you want to set up?",
       "deviceTypeInstructions": "A new device requires a unique activation code to be input during setup. What kind of device do you want to activate?",
@@ -4079,7 +4083,7 @@
       "emailExample": "e.g. johnsmith@example.com",
       "invalidEmailAddress": "Invalid Email Address",
       "noUserFound": "No users found with Cisco Spark Call service",
-      "userMissesUcEntitlement": "User is missing a Cisco Spark Call license."
+      "noSparkCallWarning": "This user doesn't have Spark Call service. They can still activate a room device and make calls using Spark or SIP addresses. However, for phone dialling and desk phones, you need to give them the Spark Call service from the Users page."
     },
     "chooseSharedSpace": {
       "existingOrNewPlace": "Assign to an existing place or a new place?",
@@ -4087,15 +4091,18 @@
       "existingOrNewPlaceCollaborationDeviceInstructions": "Select existing place if the previous code for this place has been lost or has expired.",
       "existingPlace": "Existing Place",
       "whichPlace": "Which existing place will the device be assigned to?",
-      "existingDeskPhonePlaceInstructions": "Select from the below places. Only Cisco Spark Call places are shown since desk phones and room devices cannot share the same place.",
-      "existingCollaborationDevicePlaceInstructions": "Only empty Cisco Spark Room Device places are shown since there is a maximum of one room device in a place, and desk phones and room devices cannot share the same place.",
+      "existingDeskPhonePlaceInstructions": "Select from the below places. Only desk phone places are shown since desk phones and room devices cannot share the same place.",
+      "existingCollaborationDevicePlaceInstructions": "Only empty room device places are shown since there is a maximum of one room device in a place, and desk phones and room devices cannot share the same place.",
+      "existingPlaceInstructions": "A room device place can only contain one device, so existing room device places with an activated device will not be shown.",
       "selectPlace": "Search for a place",
       "newPlace": "New Place",
       "placeLocation": "Where will this device be located?",
       "newPlaceInstructions": "What would you like to call the place that this device will be assigned to?",
       "newPlaceOnlyInstructions": "What would you like to call the place that this room device will be assigned to? A place represents a physical location such as a meeting room, a lobby or a factory floor.",
       "insertRoomName": "Insert name of device location, e.g. 'Reception' or 'Boardroom'",
-      "noExistingPlaces": "There is no Cisco Spark Call place in your organization. Create a new place instead."
+      "noExistingPlaces": "There is no Cisco Spark place in your organization. Create a new place instead.",
+      "noExistingHuronPlaces": "There is no desk phone place in your organization. Create a new place instead.",
+      "noExistingCloudberryPlaces": "There is no room device place in your organization. Create a new place instead."
     },
     "newSharedSpace": {
       "title": "Add Place",
@@ -4128,6 +4135,7 @@
       "activationCode": "Activation Code",
       "plugInDeskPhone": "Share this code with the person setting up the desk phone belonging to <b>{{belongsTo}}</b>, or enter or scan it yourself when prompted by the device.",
       "plugInDeskPhoneExtra": "Share this code with the person setting up the desk phone (or analog telephone adapter port) belonging to <b>{{belongsTo}}</b>, or enter or scan it yourself when prompted by the device.",
+      "plugInPersonal": "Share this code with the person setting up the device belonging to <b>{{belongsTo}}</b>, or enter or scan it yourself when prompted by the device.",
       "plugInRoomSystem": "Share this code with the person setting up the room device belonging to <b>{{belongsTo}}</b>, or enter or scan it yourself when prompted by the device.",
       "onceActivePersonalDevice": "Once the device has been successfully activated, you will be able to find and configure it in Users or Devices.",
       "onceActiveSharedDevice": "Once the device has been successfully activated, you will be able to find and configure it in Places or Devices.",
