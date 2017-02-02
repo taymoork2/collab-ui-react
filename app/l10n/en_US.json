@@ -2337,6 +2337,19 @@
       "welcome": "Welcome to the Context Dictionary"
     }
   },
+  "context": {
+    "pageTitle": "Hybrid Context Service",
+    "clusters": {
+      "listing": {
+        "no_clusters_heading": "No Context clusters registered yet",
+        "no_clusters_text": "Register for Context Service through your on-premise application.",
+        "learn_how": "Learn How."
+      }
+    },
+    "dictionary": {
+      "welcome": "Welcome to the Context Dictionary"
+    }
+  },
   "hds": {
     "pageTitle": "Hybrid Data Security",
     "genericError": "An unexpected error occurred. Please try again later.",
