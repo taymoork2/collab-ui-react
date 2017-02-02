@@ -304,7 +304,6 @@ function Logger() {
   return log;
 }
 
-// TODO: rip this out if no longer needed
 function mkProxyAgent() {
   if (process.env.SAUCE__ENABLE_WEB_PROXY === 'false') {
     return;
