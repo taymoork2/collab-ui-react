@@ -68,6 +68,10 @@
       @include vr-spacing(mb, 2.75);
     }
 
+    .voicemail-email-spacing {
+      @include vr-spacing(pl, 2);
+    }
+    
     .voicemail-spacing-helptext {
       @include vr-spacing(pl, 2);
       @include vr-spacing(mb, 1.5);
@@ -80,6 +84,10 @@
 
     .no-padding {
       padding: 0;
+    }
+
+    .warning-padding {
+      padding-left: 30px;
     }
 
     .no-border {

@@ -3,7 +3,6 @@
 
   describe('App Run', function () {
     var $rootScope, $httpBackend, $q, $state, Authinfo, HealthService, TrackingId, TOSService;
-
     beforeEach(angular.mock.module('wx2AdminWebClientApp'));
 
     beforeEach(inject(function (_$rootScope_, _$httpBackend_, _$q_, _$state_, _Authinfo_, _HealthService_, _TrackingId_, _TOSService_) {
@@ -46,7 +45,7 @@
       it('should clear the trackingId on every successful state change', function () {
         expect(TrackingId.get()).toBeDefined();
 
-        goToState('login');
+        $rootScope.$emit('$stateChangeSuccess', {}, {}, {}, {});
 
         expect(TrackingId.clear).toHaveBeenCalled();
         expect(TrackingId.get()).toBeUndefined();

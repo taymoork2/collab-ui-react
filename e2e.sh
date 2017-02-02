@@ -1,6 +1,5 @@
 #!/bin/bash
 
-set -x
 if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
     >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."
     exit 1
@@ -9,9 +8,14 @@ fi
 # import helper functions
 source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/pid-helpers"
 source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/curl-api-helpers"
+source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/env-var-helpers"
 
-# import jenkins env variables
-source "${WX2_ADMIN_WEB_CLIENT_HOME}/.jenkins-build-env-vars"
+# notes:
+# - inject build env vars if running this script in a dev environment
+# - on jenkins, the necessary env vars will already have been injected as a pre-build step
+if ! is_ci; then
+    inj_build_env_vars_for "dev"
+fi
 
 # Cleanup tcp processed from previous jobs
 kill_wait "lite-server"

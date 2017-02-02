@@ -50,6 +50,7 @@ describe('Controller: Customer Reports Ctrl', function () {
   describe('when all featuretoggles return false and there are no webex sites', function () {
     beforeEach(function () {
       spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneOneGetStatus').and.returnValue(this.$q.when(false));
+      spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneTwoGetStatus').and.returnValue(this.$q.when(false));
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(false));
 
       let WebExApiGatewayService: any = {
@@ -85,6 +86,7 @@ describe('Controller: Customer Reports Ctrl', function () {
   describe('when all featuretoggles return true and there are webex sites', function () {
     beforeEach(function () {
       spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneOneGetStatus').and.returnValue(this.$q.when(true));
+      spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneTwoGetStatus').and.returnValue(this.$q.when(false));
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(true));
 
       let WebExApiGatewayService = {

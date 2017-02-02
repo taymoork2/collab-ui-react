@@ -5,14 +5,13 @@ if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
     exit 1
 fi
 
-source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/sauce-results-helpers"
 source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/env-var-helpers"
 
 function ex_usage {
-    echo "usage: $(basename "$0") <unauthenticated_sauce_link>"
+    echo "usage: $(basename "$0") (nightly|pipeline)"
     echo ""
     echo "ex."
-    echo "  $(basename "$0") http://saucelabs.com/jobs/deadbeef3502489cbb640d8d5fffc3ab"
+    echo "  $(basename "$0") pipeline"
     exit 1
 }
 
@@ -25,9 +24,5 @@ if [[ "$1" == "--help" \
     exit 1
 fi
 
-if ! is_ci; then
-    echo "Warning: using limited-privilege Sauce creds (NOT compatible with urls from CI builds)."
-    inj_build_env_vars_for "dev"
-fi
-
-mk_proper_sauce_link "$1"
+print_build_env_vars_for "$1"
+exit $?
