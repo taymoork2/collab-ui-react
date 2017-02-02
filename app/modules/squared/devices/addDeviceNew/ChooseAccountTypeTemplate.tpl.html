@@ -40,10 +40,17 @@
 </div>
 <div class="modal-footer">
   <button
-      id="back-button"
-      class="btn"
-      sq-click-promise="chooseAccountType.back()"
-      translate="common.back">
+    class="btn"
+    ng-hide="chooseAccountType.hideBackButton"
+    sq-click-promise="chooseAccountType.back()"
+    translate="common.back">
+  </button>
+  <button
+    type="button"
+    class="btn"
+    ng-hide="chooseAccountType.hideCancelButton"
+    ng-click="$dismiss()"
+    translate="common.cancel">
   </button>
   <button
       cs-btn

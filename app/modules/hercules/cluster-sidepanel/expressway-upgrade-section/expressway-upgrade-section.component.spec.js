@@ -2,8 +2,7 @@
 
 describe('Controller: ExpresswayServiceClusterController', function () {
 
-
-  var controller, $controller, $scope, $q, clusterServiceMock, fusionClusterServiceMock;
+  var controller, $componentController, $scope, clusterServiceMock;
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Hercules'));
@@ -11,10 +10,9 @@ describe('Controller: ExpresswayServiceClusterController', function () {
   beforeEach(initController);
 
 
-  function dependencies($rootScope, _$controller_, _$q_) {
+  function dependencies($rootScope, _$componentController_) {
     $scope = $rootScope.$new();
-    $controller = _$controller_;
-    $q = _$q_;
+    $componentController = _$componentController_;
   }
 
   function initController() {
@@ -33,26 +31,14 @@ describe('Controller: ExpresswayServiceClusterController', function () {
       getCluster: changing
     };
 
-    fusionClusterServiceMock = {
-      get: sinon.stub().returns($q.resolve({
-        upgradeSchedule: {
-          scheduleTimeZone: 'Europe: Magdeburg'
-        }
-      })),
-      buildSidepanelConnectorList: sinon.stub().returns(),
-      formatTimeAndDate: sinon.stub().returns()
-    };
-
-    controller = $controller('ExpresswayServiceClusterController', {
+    controller = $componentController('expresswayUpgradeSection', {
       $scope: $scope,
-      hasF237FeatureToggle: true,
       ClusterService: clusterServiceMock,
-      FusionClusterService: fusionClusterServiceMock,
-      $stateParams: {
-        connectorType: 'c_cal',
-        clusterId: '12345678-abcd'
-      }
+    }, {
+      clusterId: '12345678-abcd',
+      connectorType: 'c_mgmt',
     });
+    controller.$onInit();
     $scope.$apply();
   }
 

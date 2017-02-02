@@ -9,12 +9,14 @@
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
     vm.showATA = wizardData.showATA;
+    vm.showPersonal = wizardData.showPersonal;
     vm.failure = false;
     vm.account = {
       name: wizardData.account.name,
       type: wizardData.account.type,
       deviceType: wizardData.account.deviceType,
-      cisUuid: wizardData.account.cisUuid
+      cisUuid: wizardData.account.cisUuid,
+      isEntitledToHuron: wizardData.account.isEntitledToHuron
     };
 
     vm.hideBackButton = wizardData.function === 'showCode';
@@ -28,6 +30,31 @@
     };
     vm.qrCode = undefined;
     vm.timeLeft = '';
+    if (vm.account.type === 'personal') {
+      if (vm.showPersonal) {
+        if (vm.account.isEntitledToHuron) {
+          vm.showPersonalText = true;
+        } else {
+          vm.showCloudberryText = true;
+        }
+      } else {
+        if (vm.showATA) {
+          vm.showHuronWithATAText = true;
+        } else {
+          vm.showHuronWithoutATAText = true;
+        }
+      }
+    } else {
+      if (vm.account.deviceType === 'huron') {
+        if (vm.showATA) {
+          vm.showHuronWithATAText = true;
+        } else {
+          vm.showHuronWithoutATAText = true;
+        }
+      } else {
+        vm.showCloudberryText = true;
+      }
+    }
 
     vm.createActivationCode = function () {
       vm.isLoading = true;

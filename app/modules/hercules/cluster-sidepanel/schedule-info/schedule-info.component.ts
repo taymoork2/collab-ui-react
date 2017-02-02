@@ -1,17 +1,4 @@
-interface ICluster {
-  url: string;
-  id: string;
-  name: string;
-  connectors: any;
-  releaseChannel: string;
-  provisioning: any;
-  registered: boolean;
-  targetType: string;
-  upgradeScheduleUrl: string;
-  upgradeSchedule: any;
-  resourceGroupId: string;
-  aggregates: any;
-}
+import { IClusterV1 } from 'modules/hercules/herculesInterfaces';
 
 interface ISchedule {
   dateTime: string;
@@ -21,7 +8,8 @@ interface ISchedule {
 
 export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController {
 
-  private cluster: ICluster;
+  private cluster: IClusterV1;
+  public clusterType: string;
 
   public hasF237FeatureToggle: boolean = false;
   public releaseChannelName: string;
@@ -85,6 +73,7 @@ export class ScheduleInfoSectionComponent implements ng.IComponentOptions {
   public templateUrl = 'modules/hercules/cluster-sidepanel/schedule-info/schedule-info.html';
   public bindings = {
     cluster: '<',
+    clusterType: '<',
     hasF237FeatureToggle: '<',
   };
 }
