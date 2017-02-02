@@ -2891,7 +2891,7 @@
     "routeCallPopover": "Select how to route call.",
     "selectPlaceHolder": "Search or Select",
     "validSip": "Enter a valid SIP address",
-    "routeToSipPlaceHolder": "Eg:'85673765@voip-provider.example.net'",
+    "routeToSipPlaceHolder": "Eg:x-x-xxx-xxxx@voip-provider.eg.net",
     "selectNumberPlaceHolder": "Search or Select a Number",
     "inputPlaceHolder": "Start typing here",
     "sayMessage": "Message",

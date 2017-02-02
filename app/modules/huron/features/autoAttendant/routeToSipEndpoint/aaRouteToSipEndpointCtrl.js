@@ -32,7 +32,7 @@
     /////////////////////
 
     function isSipValid() {
-      var pattern = new RegExp("^[A-Za-z0-9]@[A-Za-z0-9]");
+      var pattern = new RegExp("^[^@]+[@].*");
       var result = pattern.test(vm.model.sipInput);
       return result;
     }
@@ -46,6 +46,7 @@
       }
       if (_.isEmpty(entry.actions[0].getValue())) {
         vm.model.sipInput = sipInitial;
+        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, false);
       } else {
         vm.model.sipInput = entry.actions[0].getValue();
       }

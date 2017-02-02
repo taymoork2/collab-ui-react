@@ -104,26 +104,23 @@ describe('Controller: AARouteToSipEndpointCtrl', function () {
     });
 
     describe('saveUiModel', function () {
-      it('should write UI entry back into UI model', function () {
-
-        var controller = $controller('AARouteToSipEndpointCtrl', {
+      var sipInput, controller;
+      beforeEach(function () {
+        sipInput = 'sip:shwegupt@go.webex.com';
+        controller = $controller('AARouteToSipEndpointCtrl', {
           $scope: $scope
         });
 
-        var sipInput = 'sip:shwegupt@go.webex.com';
         controller.model.sipInput = sipInput;
+      });
+
+      it('should write UI entry back into UI model', function () {
         controller.saveUiModel();
         $scope.$apply();
         expect(controller.menuKeyEntry.actions[0].value).toEqual(sipInput);
       });
 
       it('should write UI entry back into UI model when SIP number changes', function () {
-        var controller = $controller('AARouteToSipEndpointCtrl', {
-          $scope: $scope
-        });
-
-        var sipInput = 'sip:shwegupt@go.webex.com';
-        controller.model.sipInput = sipInput;
         controller.saveUiModel();
         $scope.$apply();
 
