@@ -82,7 +82,7 @@ exports.config = {
 
   // A base URL for your application under test. Calls to protractor.get()
   // with relative paths will be prepended with this.
-  baseUrl: process.env.LAUNCH_URL || 'http://127.0.0.1:8000',
+  baseUrl: getLaunchUrl(args),
 
   onPrepare: function () {
     global._ = require('lodash');
@@ -309,4 +309,14 @@ function mkProxyAgent() {
     return;
   }
   return new HttpsProxyAgent(process.env.http_proxy || 'http://proxy.esl.cisco.com:80');
+}
+
+function getLaunchUrl(args) {
+  if (args.prod) {
+    return 'https://admin.ciscospark.com';
+  }
+  if (args.int) {
+    return 'https://int-admin.ciscospark.com';
+  }
+  return 'http://127.0.0.1:8000';
 }
