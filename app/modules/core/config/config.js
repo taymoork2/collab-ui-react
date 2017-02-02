@@ -497,6 +497,12 @@
       ],
       'cloud-contact-center': [
         'care',
+      ],
+      'contact-center-context': [
+        'context-settings',
+        'context-fields',
+        'context-fieldsets',
+        'context-resources'
       ]
     };
 

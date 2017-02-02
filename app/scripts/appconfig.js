@@ -2653,6 +2653,54 @@
               },
             }
           })
+          // hybrid context
+          .state('context', {
+            templateUrl: 'modules/context/container/hybrid-context-container.html',
+            controller: 'HybridContextContainerController',
+            controllerAs: 'vm',
+            parent: 'main',
+            resolve: {
+              hasContactCenterContextFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext);
+              }
+            }
+          })
+          .state('context-resources', {
+            url: '/services/context',
+            parent: 'context',
+            views: {
+              'contextServiceView': {
+                templateUrl: 'modules/context/resources/hybrid-context-resources.html'
+              }
+            },
+            resolve: {
+              hasContactCenterContextFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext);
+              }
+            }
+          })
+          .state('context-fields', {
+            url: '/services/context/fields',
+            parent: 'context',
+            views: {
+              'contextServiceView': {
+                templateUrl: 'modules/context/fields/hybrid-context-fields.html',
+                controller: 'HybridContextFieldsController',
+                controllerAs: 'contextFields',
+              }
+            }
+          })
+          .state('context-fieldsets', {
+            url: '/services/context/fieldsets',
+            parent: 'context',
+            views: {
+              'contextServiceView': {
+                templateUrl: 'modules/context/fieldsets/hybrid-context-fieldsets.html',
+                controller: 'HybridContextFieldsetsController',
+                controllerAs: 'contextFieldsets',
+              }
+            }
+          })
           // Cluster settings and nodes
           .state('expressway-cluster', {
             abstract: true,
