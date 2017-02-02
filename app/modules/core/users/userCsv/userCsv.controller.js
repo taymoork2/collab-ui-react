@@ -9,8 +9,8 @@ require('./_user-csv.scss');
 
   /* @ngInject */
   function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState, $stateParams,
-                       Analytics, Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
-                       Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService) {
+    Analytics, Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
+    Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService) {
     // variables
     var vm = this;
     vm.licenseUnavailable = false;
@@ -103,10 +103,12 @@ require('./_user-csv.scss');
     vm.model.templateAnchorText = $translate.instant("firstTimeWizard.downloadStep");
 
     // watches
-    $scope.$watchCollection(function () {
+    $scope.$watch(function () {
       return vm.model.file;
-    }, function () {
-      $timeout(vm.validateCsv);
+    }, function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        $timeout(vm.validateCsv);
+      }
     });
 
     // see if there is already a download started. if so, continue with that download
@@ -134,21 +136,35 @@ require('./_user-csv.scss');
     vm.validateCsv = function () {
       setUploadProgress(0);
       vm.isCsvValid = false;
-      if (vm.model.file) {
-        setUploadProgress(0);
-        csvUsersArray = $.csv.toArrays(vm.model.file);
-        if (_.isArray(csvUsersArray) && csvUsersArray.length > 0 && _.isArray(csvUsersArray[0])) {
-          if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) > -1) {
-            csvHeaders = csvUsersArray.shift();
-            if (csvUsersArray.length > 0 && csvUsersArray.length <= maxUsers) {
-              vm.isCsvValid = true;
+      try {
+        if (vm.model.file) {
+          // only validate if there is a file to test
+          csvUsersArray = $.csv.toArrays(vm.model.file);
+          if (_.isArray(csvUsersArray) && csvUsersArray.length > 0 && _.isArray(csvUsersArray[0])) {
+            if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) > -1) {
+              csvHeaders = csvUsersArray.shift();
+              if (csvUsersArray.length > 0 && csvUsersArray.length <= maxUsers) {
+                vm.isCsvValid = true;
+              } else {
+                warnCsvUserCount();
+                vm.resetFile();
+              }
             } else {
-              warnCsvUserCount();
+              Notification.error('firstTimeWizard.uploadCsvBadHeaders');
+              vm.resetFile();
             }
+          } else {
+            Notification.error('firstTimeWizard.uploadCsvBadFormat');
+            vm.resetFile();
           }
         }
+      } catch (e) {
+        Notification.error('firstTimeWizard.uploadCsvBadFormat');
+        vm.resetFile();
+      } finally {
         setUploadProgress(100);
       }
+
     };
 
     var rootState = $previousState.get().state.name;
