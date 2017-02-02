@@ -3,13 +3,17 @@
 
   angular.module('Mediafusion').service('ParticipantDistributionResourceGraphService', ParticipantDistributionResourceGraphService);
   /* @ngInject */
-  function ParticipantDistributionResourceGraphService(CommonReportsGraphService, chartColors, $translate) {
+  function ParticipantDistributionResourceGraphService(CommonReportsGraphService, chartColors, $translate, $rootScope) {
 
     var vm = this;
-    var participantDistributiondiv = 'participantDistributiondiv';
+    vm.participantDistributiondiv = 'participantDistributiondiv';
     vm.GUIDEAXIS = 'guideaxis';
     vm.AXIS = 'axis';
     vm.LEGEND = 'legend';
+    vm.timeDiff = null;
+    vm.dateSelected = null;
+    vm.zoomedEndTime = null;
+    vm.zoomedStartTime = null;
 
     vm.timeStamp = $translate.instant('mediaFusion.metrics.timeStamp');
     vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
@@ -68,6 +72,7 @@
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       }
+      vm.dateSelected = daterange;
       var valueAxes = [CommonReportsGraphService.getBaseVariable(vm.GUIDEAXIS)];
       valueAxes[0].integersOnly = true;
       valueAxes[0].axisAlpha = 0.5;
@@ -90,16 +95,31 @@
       var dateLabel = daterange.label;
       var dateValue = daterange.value;
 
-      if (dateValue === 0) {
-        catAxis.minPeriod = '1mm';
-      } else if (dateValue === 1) {
-        catAxis.minPeriod = '10mm';
-      } else if (dateValue === 2) {
-        catAxis.minPeriod = 'hh';
-      } else if (dateValue === 3) {
-        catAxis.minPeriod = '3hh';
+      if (_.isUndefined(dateValue)) {
+        vm.timeDiff = Math.floor(moment(vm.dateSelected.endTime).diff(moment(vm.dateSelected.startTime)) / 60000);
+        if (vm.timeDiff <= 240) {
+          catAxis.minPeriod = '1mm';
+        } else if (vm.timeDiff > 240 && vm.timeDiff <= 1440) {
+          catAxis.minPeriod = '10mm';
+        } else if (vm.timeDiff > 1440 && vm.timeDiff <= 10080) {
+          catAxis.minPeriod = 'hh';
+        } else if (vm.timeDiff > 10080 && vm.timeDiff <= 43200) {
+          catAxis.minPeriod = '3hh';
+        } else if (vm.timeDiff > 43200) {
+          catAxis.minPeriod = '8hh';
+        }
       } else {
-        catAxis.minPeriod = '8hh';
+        if (dateValue === 0) {
+          catAxis.minPeriod = '1mm';
+        } else if (dateValue === 1) {
+          catAxis.minPeriod = '10mm';
+        } else if (dateValue === 2) {
+          catAxis.minPeriod = 'hh';
+        } else if (dateValue === 3) {
+          catAxis.minPeriod = '3hh';
+        } else if (dateValue === 4) {
+          catAxis.minPeriod = '8hh';
+        }
       }
 
       var startDuration = 1;
@@ -154,10 +174,26 @@
       }];
 
 
-      var chart = AmCharts.makeChart(participantDistributiondiv, chartData);
-      chart.addListener('rendered', zoomChart);
-      zoomChart(chart);
+      var chart = AmCharts.makeChart(vm.participantDistributiondiv, chartData);
+      // listen for zoomed event and call "handleZoom" method
+      chart.addListener('zoomed', handleZoom);
       return chart;
+    }
+
+    // this method is called each time the selected period of the chart is changed
+    function handleZoom(event) {
+      vm.zoomedStartTime = event.startDate;
+      vm.zoomedEndTime = event.endDate;
+      var selectedTime = {
+        startTime: vm.zoomedStartTime,
+        endTime: vm.zoomedEndTime
+      };
+
+      if ((_.isUndefined(vm.dateSelected.value) && vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime) || (vm.zoomedStartTime !== vm.dateSelected.startTime && vm.zoomedEndTime !== vm.dateSelected.endTime)) {
+        $rootScope.$broadcast('zoomedTime', {
+          data: selectedTime
+        });
+      }
     }
 
     function getClusterName(graphs, clusterMap) {
@@ -178,10 +214,6 @@
       });
       tempData = _.sortBy(tempData, 'title');
       return tempData;
-    }
-
-    function zoomChart(chart) {
-      chart.zoomToIndexes(chart.dataProvider.length - 40, chart.dataProvider.length - 1);
     }
 
     function legendHandler(evt) {

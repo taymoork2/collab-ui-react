@@ -152,8 +152,8 @@
         } else {
           return returnData;
         }
-      }, function (response) {
-        return returnErrorCheck(response, $translate.instant('mediaFusion.metrics.overallCallVolumeGraphError'), returnData);
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallCallVolumeGraphError'), returnData);
       });
     }
 
@@ -172,7 +172,7 @@
           return returnData;
         }
       }, function (error) {
-        return returnErrorCheck(error, 'Participant Distribution data not returned for customer.', $translate.instant('mediaFusion.metrics.overallParticipantDistributionGraphError'), returnData);
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallParticipantDistributionGraphError'), returnData);
       });
     }
 
@@ -186,8 +186,8 @@
         } else {
           return returnData;
         }
-      }, function (response) {
-        return returnErrorCheck(response, $translate.instant('mediaFusion.metrics.overallAvailabilityGraphError'), returnData);
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallAvailabilityGraphError'), returnData);
       });
     }
 

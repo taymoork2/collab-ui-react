@@ -143,5 +143,124 @@
       "title": "539ac9e5-943e-4e96-bfc5-b12cac060bcc",
       "valueField": "539ac9e5-943e-4e96-bfc5-b12cac060bcc"
     }
-  ]
+  ],
+
+  "participantdistributionresponse": [
+    {
+     "time": "2016-09-19T08:05:51Z"
+    },
+    {
+      "time": "2016-09-19T08:10:00Z",
+      "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": 2,
+      "fc0a6cc1-98e6-42d8-b366-d6e82e426c17": 5,
+      "548d05ce-99ac-4d78-a926-3f18afd88064": 9,
+      "8909455b-3018-44c6-adfd-2840978bb5c1": 5,
+      "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d": 9,
+      "539ac9e5-943e-4e96-bfc5-b12cac060bcc": 2,
+      "7b315667-1808-40c8-b263-a9c2f9782b16": 1,
+      "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678": 2,
+      "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7": 2,
+      "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3": 7,
+      "ca110bd3-4043-41af-9ec6-f67d6feba2bb": 2
+    },
+    {
+      "time": "2016-09-19T08:20:00Z",
+      "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3": 7,
+      "ca110bd3-4043-41af-9ec6-f67d6feba2bb": 2,
+      "548d05ce-99ac-4d78-a926-3f18afd88064": 1,
+      "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": 2,
+      "fc0a6cc1-98e6-42d8-b366-d6e82e426c17": 55,
+      "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7": 2,
+      "539ac9e5-943e-4e96-bfc5-b12cac060bcc": 2,
+      "8909455b-3018-44c6-adfd-2840978bb5c1": 4,
+      "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d": 9,
+      "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678": 2,
+      "7b315667-1808-40c8-b263-a9c2f9782b16": 9
+    },
+    {
+      "time": "2016-09-19T08:30:00Z",
+      "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678": 2,
+      "7b315667-1808-40c8-b263-a9c2f9782b16": 9,
+      "548d05ce-99ac-4d78-a926-3f18afd88064": 1,
+      "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3": 8,
+      "ca110bd3-4043-41af-9ec6-f67d6feba2bb": 2,
+      "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d": 8,
+      "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7": 2,
+      "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": 2,
+      "fc0a6cc1-98e6-42d8-b366-d6e82e426c17": 58,
+      "8909455b-3018-44c6-adfd-2840978bb5c1": 4,
+      "539ac9e5-943e-4e96-bfc5-b12cac060bcc": 2
+    },
+    {
+      "time": "2016-09-19T08:40:00Z",
+      "8909455b-3018-44c6-adfd-2840978bb5c1": 4,
+      "539ac9e5-943e-4e96-bfc5-b12cac060bcc": 2,
+      "548d05ce-99ac-4d78-a926-3f18afd88064": 9,
+      "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678": 1,
+      "7b315667-1808-40c8-b263-a9c2f9782b16": 9,
+      "fc0a6cc1-98e6-42d8-b366-d6e82e426c17": 56,
+      "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d": 9,
+      "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3": 7,
+      "ca110bd3-4043-41af-9ec6-f67d6feba2bb": 2,
+      "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": 2,
+      "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7": 2
+    },
+    {
+      "time": "2016-09-19T23:40:00Z",
+      "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678": 2,
+      "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7": 2,
+      "548d05ce-99ac-4d78-a926-3f18afd88064": 11,
+      "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3": 7,
+      "539ac9e5-943e-4e96-bfc5-b12cac060bcc": 2,
+      "ca110bd3-4043-41af-9ec6-f67d6feba2bb": 2,
+      "e93ded4f-7a3b-4a46-b517-3cc5b565f9cc": 2,
+      "fc0a6cc1-98e6-42d8-b366-d6e82e426c17": 59,
+      "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": 3,
+      "7b315667-1808-40c8-b263-a9c2f9782b16": 9,
+      "8909455b-3018-44c6-adfd-2840978bb5c1": 4,
+      "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d": 8
+    },
+    {
+      "time": "2016-09-19T23:50:00Z",
+      "8909455b-3018-44c6-adfd-2840978bb5c1": 4,
+      "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d": 15,
+      "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3": 7,
+      "539ac9e5-943e-4e96-bfc5-b12cac060bcc": 2,
+      "e93ded4f-7a3b-4a46-b517-3cc5b565f9cc": 2,
+      "fc0a6cc1-98e6-42d8-b366-d6e82e426c17": 56,
+      "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678": 1,
+      "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7": 2,
+      "ca110bd3-4043-41af-9ec6-f67d6feba2bb": 2,
+      "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": 2,
+      "548d05ce-99ac-4d78-a926-3f18afd88064": 9,
+      "7b315667-1808-40c8-b263-a9c2f9782b16": 9
+    },
+    {
+     "time": "2016-09-20T08:05:51Z"
+    }
+  ],
+  "clusterIdToNameMap": {
+    "CME_DEV": "c5e99d2a-14da-4f11-b0ab-8ca92a694efa",
+    "SJC Test Cluster": "3d980e8d-149d-4fc7-8600-5bb2c3d9866f",
+    "MF_Auto_Corp2": "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d",
+    "Seong_Cluster": "1a389872-c966-47c3-9091-dd27ad8b36d3",
+    "Lin cluster A": "ca110bd3-4043-41af-9ec6-f67d6feba2bb",
+    "eshak-health-monitoring-cluster": "f13fc659-be54-4ee5-9dfe-280b2d7eccff",
+    "Demo_cluster": "548d05ce-99ac-4d78-a926-3f18afd88064",
+    "sj-mf-dev-test-eshak": "dbc05f22-89bd-443b-b0fd-b5e159c9d690",
+    "Bangalore Integration 12": "33ca05bd-2404-48f4-b8a9-b3a0a64b9002",
+    "MF_TEAM_SJ": "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678",
+    "MF_TEAM_SJ_2": "93aa715f-500b-4aee-b37b-65eeba1097fb",
+    "Reachability": "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7",
+    "MFA Integration": "3441c4e0-47ec-41dd-865a-b9bc241f2a92",
+    "MF_TEST_AUTO1": "e0573cd6-f5a0-4259-a9f6-30c810e3ffe7",
+    "suresh_dev": "aa218f70-9302-4e18-9c48-6404a3d89886",
+    "San Jose - Auto 1": "b4242ba8-0220-4986-9a0d-fec8ed575f9b",
+    "Bangalore Integration": "fa8ea85d-6f7a-43ea-833d-297f62dc3e84",
+    "MF_TEAM": "539ac9e5-943e-4e96-bfc5-b12cac060bcc",
+    "sx-controller": "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3",
+    "Seattle_Alpha": "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef",
+    "PATLURI_ECP_DMZ_PHASE2": "f7057c86-cb3d-4644-bee1-47ed94b04404",
+    "suresh_test_cluster": "7df3b18c-8143-479a-b288-7d581a0f66ea"
+  }
 }
