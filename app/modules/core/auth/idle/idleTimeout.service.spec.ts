@@ -2,7 +2,7 @@ import idleTimeoutModule from './index';
 
 describe('Service: IdleTimeoutService: ', function () {
 
-  let Auth, FeatureToggleService, IdleTimeoutService, Config, $rootScope, $timeout, $log, $q, $window, $document;
+  let Auth, FeatureToggleService, IdleTimeoutService, Log, Config, $rootScope, $timeout,  $q, $window, $document;
 
   beforeEach(() => {
     angular.mock.module(idleTimeoutModule);
@@ -18,10 +18,10 @@ describe('Service: IdleTimeoutService: ', function () {
   });
 
   afterEach(() => {
-    Auth = FeatureToggleService = IdleTimeoutService = Config = $timeout = $rootScope =  $log = $q = $window = $document = undefined;
+    Auth = FeatureToggleService = IdleTimeoutService = Config = Log = $timeout = $rootScope = $q = $window = $document = undefined;
   });
 
-  function dependencies(_$document_, _$log_, _$q_, _$rootScope_, _$timeout_, _$window_, _Auth_,  _Config_, _FeatureToggleService_, _IdleTimeoutService_) {
+  function dependencies(_$document_, _$q_, _$rootScope_, _$timeout_, _$window_, _Auth_, _Config_, _FeatureToggleService_, _IdleTimeoutService_, _Log_) {
     IdleTimeoutService = _IdleTimeoutService_;
     Auth = _Auth_;
     Config = _Config_;
@@ -30,12 +30,12 @@ describe('Service: IdleTimeoutService: ', function () {
     $window = _$window_;
     $rootScope = _$rootScope_;
     $document = _$document_;
-    $log = _$log_;
+    Log = _Log_;
     $q = _$q_;
   }
 
   function initSpies() {
-    spyOn($log, 'debug');
+    spyOn(Log, 'debug');
     spyOn(Auth, 'logout').and.returnValue($q.resolve({}));
     spyOn(Auth, 'isLoggedIn').and.returnValue(true);
     spyOn($window.localStorage, 'setItem');
@@ -45,14 +45,14 @@ describe('Service: IdleTimeoutService: ', function () {
   describe('Should with FT disabled:', () => {
     it('start the timer on init', () => {
       IdleTimeoutService.init();
-      expect($log.debug).toHaveBeenCalledWith('Starting Tab Timer');
+      expect(Log.debug).toHaveBeenCalledWith('Starting Tab Timer');
     });
 
     it('not wire events on login', () => {
       IdleTimeoutService.init();
       $rootScope.$broadcast('LOGIN');
       $rootScope.$digest();
-      expect($log.debug).not.toHaveBeenCalledWith('Wiring up events');
+      expect(Log.debug).not.toHaveBeenCalledWith('Wiring up events');
     });
   });
 
@@ -65,7 +65,7 @@ describe('Service: IdleTimeoutService: ', function () {
     });
 
     it('wire events on login', () => {
-      expect($log.debug).toHaveBeenCalledWith('Wiring up events');
+      expect(Log.debug).toHaveBeenCalledWith('Wiring up events');
 
     });
 
@@ -73,26 +73,24 @@ describe('Service: IdleTimeoutService: ', function () {
       $timeout.flush();
       expect(Auth.logout).toHaveBeenCalled();
     });
-
-    it('log user out ONLY after the timeout expires', () => {
-      expect($log.debug).toHaveBeenCalledWith('Starting Tab Timer');
+    // idleTabTimeout: 1200000, //20 mins
+    it('log user out ONLY after the timeout expires without user action', () => {
+      expect(Log.debug).toHaveBeenCalledWith('Starting Tab Timer');
       expect(Auth.logout).not.toHaveBeenCalled();
-      $timeout.flush();
-      expect($log.debug).not.toHaveBeenCalledWith('broadcasting to keep alive');
+      $timeout.flush(1100000);
+      expect(Auth.logout).not.toHaveBeenCalled();
+      $timeout.flush(100000);
+      expect(Log.debug).not.toHaveBeenCalledWith('broadcasting to keep alive');
       expect(Auth.logout).toHaveBeenCalled();
-    });
-
-    it('not reset the timer without user action', () => {
-
-      expect($log.debug).toHaveBeenCalledWith('Starting Tab Timer');
-      expect($log.debug).not.toHaveBeenCalledWith('broadcasting to keep alive');
     });
 
     it('reset the timer with user action', () => {
       let element = angular.element(IdleTimeoutService.$document);
-      expect($log.debug).toHaveBeenCalledWith('Starting Tab Timer');
+      expect(Log.debug).toHaveBeenCalledWith('Starting Tab Timer');
+      $timeout.flush(1100000);
       element.triggerHandler('keydown');
-      expect($log.debug).toHaveBeenCalledWith('broadcasting to keep alive');
+      $timeout.flush(100000);
+      expect(Log.debug).toHaveBeenCalledWith('broadcasting to keep alive');
       expect(Auth.logout).not.toHaveBeenCalled();
     });
   });
