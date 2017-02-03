@@ -211,20 +211,25 @@
 
     function extractAndTweakUserStatuses(res) {
       var userStatuses = res.data ? res.data.userStatuses : res;
-      _.forEach(userStatuses, function (userStatus) {
-        if (userStatus.messages && userStatus.messages.length > 0) {
-          userStatus.messages = _.sortBy(userStatus.messages, function (message) {
-            return getMessageSortOrder(message.severity);
-          });
-          _.forEach(userStatus.messages, function (message) {
-            var translateReplacements = convertToTranslateReplacements(message.replacementValues);
-            message.title = translateWithFallback(message.key + '.title', message.title, translateReplacements);
-            message.description = translateWithFallback(message.key + '.description', message.description, translateReplacements);
-            message.iconClass = getMessageIconClass(message.severity);
-          });
-        }
-      });
-      return userStatuses;
+      return _.chain(userStatuses)
+        .map(function (userStatus) {
+          if (_.size(userStatus.messages) > 0) {
+            userStatus.messages = _.chain(userStatus.messages)
+              .sortBy(function (message) {
+                return getMessageSortOrder(message.severity);
+              })
+              .map(function (message) {
+                var translateReplacements = convertToTranslateReplacements(message.replacementValues);
+                message.title = translateWithFallback(message.key + '.title', message.title, translateReplacements);
+                message.description = translateWithFallback(message.key + '.description', message.description, translateReplacements);
+                message.iconClass = getMessageIconClass(message.severity);
+                return message;
+              })
+              .value();
+          }
+          return userStatus;
+        })
+        .value();
     }
 
     function translateWithFallback(messageKey, fallback, translateReplacements) {
@@ -234,15 +239,10 @@
     }
 
     function convertToTranslateReplacements(messageReplacementValues) {
-      if (messageReplacementValues) {
-        var translateReplacements = {};
-        _.forEach(messageReplacementValues, function (replacementValue) {
-          translateReplacements[replacementValue.key] = replacementValue.type === 'timestamp' ? FusionUtils.getLocalTimestamp(replacementValue.value) : replacementValue.value;
-        });
+      return _.reduce(messageReplacementValues, function (translateReplacements, replacementValue) {
+        translateReplacements[replacementValue.key] = replacementValue.type === 'timestamp' ? FusionUtils.getLocalTimestamp(replacementValue.value) : replacementValue.value;
         return translateReplacements;
-      } else {
-        return undefined;
-      }
+      }, {});
     }
 
     function getMessageIconClass(severity) {
