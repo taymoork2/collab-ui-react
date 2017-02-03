@@ -1,30 +1,26 @@
 describe('tabindex toggle directive', function () {
-  var $rootScope, element, $compile;
   beforeEach(angular.mock.module('Sunlight.tabindex'));
-  beforeEach(inject(function (_$compile_, _$rootScope_) {
-    $rootScope = _$rootScope_;
-    $compile = _$compile_;
-    element = $compile('<a href sl-tabindex-toggle ng-disabled="disabled">foo</a>')($rootScope);
-    $rootScope.$digest();
+  beforeEach((function () {
+    this.compileTemplate('<a href sl-tabindex-toggle ng-disabled="disabled">foo</a>');
   }));
 
   afterAll(function () {
-    $rootScope = element = $compile = undefined;
+    this.$scope = undefined;
   });
 
   it('should toggle the tabindex on disabled toggle', function () {
-    expect(element).toBeDefined();
-    expect(element.prop('tabindex')).toBe(0);
+    expect(this.view).toBeDefined();
+    expect(this.view.prop('tabindex')).toBe(0);
 
-    $rootScope.disabled = true;
-    $rootScope.$digest();
+    this.$scope.disabled = true;
+    this.$scope.$digest();
 
-    expect(element.prop('tabindex')).toBe(-1);
+    expect(this.view.prop('tabindex')).toBe(-1);
 
-    $rootScope.disabled = false;
-    $rootScope.$digest();
+    this.$scope.disabled = false;
+    this.$scope.$digest();
 
-    expect(element.prop('tabindex')).toBe(0);
+    expect(this.view.prop('tabindex')).toBe(0);
   });
 });
 
@@ -312,32 +308,34 @@ describe('paging factory', function () {
 });
 
 describe('Pagination controller test', function () {
-  var $rootScope, $parse, slPaging, slPaginationConfig, elementDef, $compile, element;
-
+  var $parse, slPaging, slPaginationConfig, elementDef, view, $rootScope, $scope;
   beforeEach(angular.mock.module('Sunlight.pagination'));
-  beforeEach(inject(function (_$rootScope_, _$parse_, _slPaging_, _slPaginationConfig_, _$compile_) {
+  beforeEach(inject(function (_$parse_, _slPaging_, _slPaginationConfig_, _$rootScope_) {
     $rootScope = _$rootScope_;
     $rootScope.currentPage = 1;
     $rootScope.total = 200;
+
+    elementDef = '<div sl-pagination total-items="total" items-per-page="5" max-size="3" previous-text="Previous;" next-text="Next" ng-model="currentPage">  </div>';
+    this.compileTemplate(elementDef);
+    view = this.view;
+    this.$scope.currentPage = $rootScope.currentPage;
+    this.$scope.total = $rootScope.total;
+    $scope = this.$scope;
     $parse = _$parse_;
     slPaginationConfig = _slPaginationConfig_;
     slPaging = _slPaging_;
-    $compile = _$compile_;
-    elementDef = '<div sl-pagination total-items="total" items-per-page="5" max-size="3" previous-text="Previous;" next-text="Next" ng-model="currentPage">  </div>';
-    element = $compile(elementDef)($rootScope);
-    $rootScope.$digest();
   }));
 
   afterEach(function () {
-    $rootScope = $parse = slPaging = slPaginationConfig = elementDef = $compile = element = undefined;
+    this.$scope = $parse = slPaging = slPaginationConfig = elementDef = view = $rootScope = $scope = undefined;
   });
 
   function getPaginationBarSize() {
-    return element.find('button').length;
+    return view.find('button').length;
   }
 
   function getPaginationEl(index) {
-    return element.find('button').eq(index);
+    return view.find('button').eq(index);
   }
 
   function getPaginationSpanEl(elem, index) {
@@ -349,14 +347,13 @@ describe('Pagination controller test', function () {
   }
 
   function updateCurrentPage(value) {
-    $rootScope.currentPage = value;
-    $rootScope.$digest();
+    $scope.currentPage = value;
+    $scope.$digest();
   }
 
-  it('some test', function () {
-    expect($compile).toBeDefined();
-    expect($rootScope).toBeDefined();
-    expect(element).toBeDefined();
+  it('Basic test', function () {
+    expect(this.$scope).toBeDefined();
+    expect(view).toBeDefined();
     expect($parse).toBeDefined();
     expect(slPaginationConfig).toBeDefined();
     expect(slPaging).toBeDefined();
@@ -368,40 +365,40 @@ describe('Pagination controller test', function () {
 
   it('has the number of the page as text in each page item', function () {
     for (var i = 1; i <= 3; i++) {
-      expect(getPaginationSpanEl(element, i).text().trim()).toEqual('' + i);
+      expect(getPaginationSpanEl(view, i).text().trim()).toEqual('' + i);
     }
   });
 
   it('changes currentPage if a page link is clicked', function () {
     clickPaginationEl(2);
-    expect($rootScope.currentPage).toBe(2);
+    expect(this.$scope.currentPage).toBe(2);
   });
 
   it('changes currentPage if the "previous" link is clicked', function () {
     clickPaginationEl(0);
-    expect($rootScope.currentPage).toBe(1);
+    expect(this.$scope.currentPage).toBe(1);
   });
 
   it('changes currentPage if the "next" link is clicked', function () {
     clickPaginationEl(-1);
-    expect($rootScope.currentPage).toBe(2);
+    expect(this.$scope.currentPage).toBe(2);
   });
 
   it('does not change the current page on "previous" click if already at first page', function () {
     updateCurrentPage(1);
     clickPaginationEl(0);
-    expect($rootScope.currentPage).toBe(1);
+    expect(this.$scope.currentPage).toBe(1);
   });
 
   it('does not change the current page on "next" click if already at last page', function () {
     updateCurrentPage(5);
     clickPaginationEl(-1);
-    expect($rootScope.currentPage).toBe(6);
+    expect(this.$scope.currentPage).toBe(6);
   });
 
   it('changes the number of pages when `total-items` changes', function () {
-    $rootScope.total = 78;
-    $rootScope.$digest();
+    this.$scope.total = 78;
+    this.$scope.$digest();
 
     expect(getPaginationBarSize()).toBe(5);
     expect(getPaginationEl(0).hasClass('icon-chevron-left')).toBe(true);
@@ -409,8 +406,8 @@ describe('Pagination controller test', function () {
   });
 
   it('does not "break" when `total-items` is undefined', function () {
-    $rootScope.total = undefined;
-    $rootScope.$digest();
+    this.$scope.total = undefined;
+    this.$scope.$digest();
 
     expect(getPaginationBarSize()).toBe(3);
     expect(getPaginationEl(0).attr('disabled')).toBeDefined();
@@ -419,8 +416,8 @@ describe('Pagination controller test', function () {
   });
 
   it('does not "break" when `total-items` is negative', function () {
-    $rootScope.total = -1;
-    $rootScope.$digest();
+    this.$scope.total = -1;
+    this.$scope.$digest();
 
     expect(getPaginationBarSize()).toBe(3);
     expect(getPaginationEl(0).attr('disabled')).toBeDefined();
@@ -429,24 +426,25 @@ describe('Pagination controller test', function () {
   });
 
   it('does not change the current page when `total-items` changes but is valid', function () {
-    $rootScope.currentPage = 1;
-    $rootScope.total = 18;
-    $rootScope.$digest();
+    this.$scope.currentPage = 1;
+    this.$scope.total = 18;
+    this.$scope.$digest();
 
-    expect($rootScope.currentPage).toBe(1);
+    expect(this.$scope.currentPage).toBe(1);
   });
 
   describe('with `max-size` option', function () {
     beforeEach(function () {
-      $rootScope.total = 98;
-      $rootScope.currentPage = 3;
-      $rootScope.maxSize = 5;
-      element = $compile('<div sl-pagination total-items="total" ng-model="currentPage" max-size="maxSize"></div>')($rootScope);
-      $rootScope.$digest();
+      this.$scope.total = 98;
+      this.$scope.currentPage = 3;
+      this.$scope.maxSize = 5;
+      elementDef = '<div sl-pagination total-items="total" ng-model="currentPage" max-size="maxSize"></div>';
+      this.compileTemplate(elementDef);
+      view = this.view;
     });
 
     it('contains maxsize + 2 button elements', function () {
-      expect(getPaginationBarSize()).toBe($rootScope.maxSize + 2);
+      expect(getPaginationBarSize()).toBe(this.$scope.maxSize + 2);
       expect(getPaginationEl(0).hasClass('icon-chevron-left')).toBe(true);
       expect(getPaginationEl(-1).hasClass('icon-chevron-right')).toBe(true);
     });
@@ -463,41 +461,41 @@ describe('Pagination controller test', function () {
       updateCurrentPage(6);
       clickPaginationEl(-1);
 
-      expect($rootScope.currentPage).toBe(7);
+      expect(this.$scope.currentPage).toBe(7);
       expect(getPaginationEl(3)).toHaveClass('btn--primary');
-      expect(getPaginationEl(3).text().trim()).toBe('' + $rootScope.currentPage);
+      expect(getPaginationEl(3).text().trim()).toBe('' + this.$scope.currentPage);
     });
 
     it('shows the page number in middle after the prev link is clicked', function () {
       updateCurrentPage(7);
       clickPaginationEl(0);
 
-      expect($rootScope.currentPage).toBe(6);
+      expect(this.$scope.currentPage).toBe(6);
       expect(getPaginationEl(3)).toHaveClass('btn--primary');
-      expect(getPaginationEl(3).text().trim()).toBe('' + $rootScope.currentPage);
+      expect(getPaginationEl(3).text().trim()).toBe('' + this.$scope.currentPage);
     });
 
     it('changes pagination bar size when max-size value changed', function () {
-      $rootScope.maxSize = 7;
-      $rootScope.$digest();
+      this.$scope.maxSize = 7;
+      this.$scope.$digest();
       expect(getPaginationBarSize()).toBe(9);
     });
 
     it('sets the pagination bar size to num-pages, if max-size is greater than num-pages ', function () {
-      $rootScope.maxSize = 15;
-      $rootScope.$digest();
+      this.$scope.maxSize = 15;
+      this.$scope.$digest();
       expect(getPaginationBarSize()).toBe(12);
     });
 
     it('should not change value of max-size expression, if max-size is greater than num-pages ', function () {
-      $rootScope.maxSize = 15;
-      $rootScope.$digest();
-      expect($rootScope.maxSize).toBe(15);
+      this.$scope.maxSize = 15;
+      this.$scope.$digest();
+      expect(this.$scope.maxSize).toBe(15);
     });
 
     it('should not display page numbers, if max-size is zero', function () {
-      $rootScope.maxSize = 0;
-      $rootScope.$digest();
+      this.$scope.maxSize = 0;
+      this.$scope.$digest();
       expect(getPaginationBarSize()).toBe(2);
       expect(getPaginationEl(0).hasClass('icon-chevron-left')).toBe(true);
       expect(getPaginationEl(-1).hasClass('icon-chevron-right')).toBe(true);
@@ -506,11 +504,12 @@ describe('Pagination controller test', function () {
 
   describe('with just boundary & number links', function () {
     beforeEach(function () {
-      $rootScope.directions = false;
-      $rootScope.total = 100;
-      $rootScope.currentPage = 7;
-      element = $compile('<div sl-pagination boundary-links="true" direction-links="directions" total-items="total" ng-model="currentPage"></div>')($rootScope);
-      $rootScope.$digest();
+      this.$scope.directions = false;
+      this.$scope.total = 100;
+      this.$scope.currentPage = 7;
+      elementDef = '<div sl-pagination boundary-links="true" direction-links="directions" total-items="total" ng-model="currentPage"></div>';
+      this.compileTemplate(elementDef);
+      view = this.view;
     });
 
     it('contains number of pages + 2 button elements', function () {
@@ -535,5 +534,4 @@ describe('Pagination controller test', function () {
       expect(getPaginationEl(-1).attr('disabled')).toBeDefined();
     });
   });
-
 });
