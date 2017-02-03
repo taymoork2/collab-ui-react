@@ -74,6 +74,8 @@
 
     vm.isDisabled = isDisabled;
 
+    vm.MAX_FILE_SIZE_IN_BYTES = 120 * 1024 * 1024;
+
     var mohPlayAction = undefined;
     var fallbackAction = undefined;
     var paAction = undefined;

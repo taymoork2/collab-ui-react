@@ -62,25 +62,18 @@
     var savedActionEntry = undefined;
     var uniqueCtrlIdentifier = 'mediaUploadCtrl' + AACommonService.getUniqueId();
     var mediaResources = AAMediaUploadService.getResources(uniqueCtrlIdentifier);
-    var MAX_FILE_SIZE_IN_B = 5 * 1024 * 1024;
 
     //////////////////////////////////////////////////////
 
     function upload(file) {
       if (file) {
         if (AAMediaUploadService.validateFile(file.name)) {
-          if ($scope.aaMediaUploadSize) {
-            if (file.size <= $scope.aaMediaUploadSize) {
-              standardUpload(file);
-            } else {
-              AANotificationService.error('autoAttendant.fileUploadSizeIncorrect');
-            }
+          if (file.size <= $scope.aaFileSize) {
+            standardUpload(file);
           } else {
-            if (file.size <= MAX_FILE_SIZE_IN_B) {
-              standardUpload(file);
-            } else {
-              AANotificationService.error('autoAttendant.fileUploadSizeIncorrect');
-            }
+            AANotificationService.error('autoAttendant.fileUploadSizeIncorrect', {
+              fileSize: $scope.aaFileSize / 1024 / 1024 // convert bytes to MB sent
+            });
           }
         } else {
           AANotificationService.error('fileUpload.errorFileType');

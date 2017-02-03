@@ -15,7 +15,7 @@
         schedule: '@aaSchedule',
         menuId: '@aaMenuId',
         index: '=aaIndex',
-        aaMediaUploadSize: '=aaFileSize',
+        aaFileSize: '@aaMediaUploadSize',
         isMenuHeader: '@aaMenuHeader',
         menuKeyIndex: '@aaKeyIndex',
         fromSubMenu: '@aaFromSubMenu',
