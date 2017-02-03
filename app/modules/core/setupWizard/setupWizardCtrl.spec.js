@@ -6,6 +6,9 @@ describe('SetupWizardCtrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
   var $controller, $scope, $q, Authinfo, FeatureToggleService, Orgservice;
+  var $state;
+
+  var enabledFeatureToggles = [];
 
   var usageFixture = getJSONFixture('core/json/organizations/usage.json');
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
@@ -18,24 +21,28 @@ describe('SetupWizardCtrl', function () {
     usageFixture = usageOnlySharedDevicesFixture = undefined;
   });
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _Authinfo_, _FeatureToggleService_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$state_, _Authinfo_, _FeatureToggleService_, _Orgservice_) {
     $scope = $rootScope.$new();
     $q = _$q_;
+    $state = _$state_;
     $controller = _$controller_;
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
     Orgservice = _Orgservice_;
 
+    enabledFeatureToggles = [];
+
     spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
     spyOn(Authinfo, 'isSetupDone').and.returnValue(false);
-    spyOn(Authinfo, 'isSquaredUC').and.returnValue(false);
     spyOn(Authinfo, 'isCSB').and.returnValue(true);
     spyOn(Authinfo, 'isCare').and.returnValue(false);
     spyOn(Authinfo, 'getLicenses').and.returnValue([{
       licenseType: 'SHARED_DEVICES'
     }]);
 
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'supports').and.callFake(function (feature) {
+      return $q.resolve(_.includes(enabledFeatureToggles, feature));
+    });
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.resolve(false));
     spyOn(Orgservice, 'getAdminOrgUsage').and.returnValue($q.resolve(usageFixture));
@@ -123,36 +130,11 @@ describe('SetupWizardCtrl', function () {
     });
   });
 
-  describe('When Authinfo.isSquaredUC is true and addClaimSipUrl is false', function () {
+  describe('When has COMMUNICATION license', function () {
     beforeEach(function () {
-      Authinfo.isSquaredUC.and.returnValue(true);
       Authinfo.getLicenses.and.returnValue([{
         licenseType: 'COMMUNICATION'
       }]);
-      initController();
-    });
-
-    it('the wizard should have the 5 steps', function () {
-      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
-    });
-
-    it('serviceSetup should have a single substep', function () {
-      expectSubStepOrder('serviceSetup', ['init']);
-    });
-  });
-
-  describe('When Authinfo.isSquaredUC is true and addClaimSipUrl is true', function () {
-    beforeEach(function () {
-      Authinfo.isSquaredUC.and.returnValue(true);
-      Authinfo.getLicenses.and.returnValue([{
-        licenseType: 'COMMUNICATION'
-      }]);
-      FeatureToggleService.supports.and.callFake(function (val) {
-        if (val === FeatureToggleService.features.atlasSipUriDomain) {
-          return $q.resolve(true);
-        }
-        return $q.resolve(false);
-      });
       initController();
     });
 
@@ -183,7 +165,7 @@ describe('SetupWizardCtrl', function () {
       initController();
     });
 
-    it('the wizard should have 5 tabs', function () {
+    it('the wizard should have 6 tabs', function () {
       expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
     });
 
@@ -228,22 +210,6 @@ describe('SetupWizardCtrl', function () {
     });
   });
 
-  describe('When dirsync is enabled', function () {
-    beforeEach(function () {
-      FeatureToggleService.supports.and.callFake(function (val) {
-        if (val === FeatureToggleService.features.atlasSipUriDomainEnterprise) {
-          return $q.resolve(true);
-        }
-        return $q.resolve(false);
-      });
-      initController();
-    });
-
-    it('the wizard should have 5 tabs', function () {
-      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
-    });
-  });
-
   describe('When there are only shared device licenses', function () {
     beforeEach(function () {
       Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.resolve(usageOnlySharedDevicesFixture));
@@ -260,7 +226,6 @@ describe('SetupWizardCtrl', function () {
   describe('When everything is true', function () {
     beforeEach(function () {
       Authinfo.isSetupDone.and.returnValue(true);
-      Authinfo.isSquaredUC.and.returnValue(true);
       Authinfo.getLicenses.and.returnValue([{
         licenseType: 'COMMUNICATION'
       }]);
@@ -307,6 +272,79 @@ describe('SetupWizardCtrl', function () {
     $scope.$apply();
     expectStepOrder(['enterpriseSettings']);
     expectSubStepOrder('enterpriseSettings', ['init', 'exportMetadata', 'importIdp', 'testSSO']);
+  });
+
+  describe('atlasFTSWRemoveUsersSSO feature test', function () {
+    beforeEach(function () {
+      Authinfo.isCSB.and.returnValue(false); // why isn't this default for testing?
+    });
+
+    describe('firstTimeSetup is false', function () {
+      describe('does not support consolidated first time setup wizard', function () {
+        beforeEach(initController);
+
+        it('the wizard should have 6 tabs', function () {
+          expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
+        });
+
+        it('enterpriseSettings should have all steps', function () {
+          expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
+        });
+      });
+
+      describe('supports consolidated first time setup wizard', function () {
+        beforeEach(function () {
+          enabledFeatureToggles = [
+            FeatureToggleService.features.atlasFTSWRemoveUsersSSO,
+          ];
+          initController();
+        });
+
+        it('the wizard should not have addUsers tab', function () {
+          expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
+        });
+
+        it('enterpriseSettings should still have all steps', function () {
+          expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
+        });
+      });
+    });
+
+    describe('firstTimeSetup is true', function () {
+      beforeEach(function () {
+        _.set($state, 'current.data.firstTimeSetup', true);
+      });
+
+      describe('does not support consolidated first time setup wizard', function () {
+        beforeEach(initController);
+
+        it('the wizard should have 6 tabs', function () {
+          expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
+        });
+
+        it('enterpriseSettings should have all steps', function () {
+          expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
+        });
+      });
+
+      describe('supports consolidated first time setup wizard', function () {
+        beforeEach(function () {
+          enabledFeatureToggles = [
+            FeatureToggleService.features.atlasFTSWRemoveUsersSSO,
+          ];
+          initController();
+        });
+
+        it('the wizard should not have addUsers tab', function () {
+          expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
+        });
+
+        it('enterpriseSettings should only have sip uri step', function () {
+          expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl']);
+        });
+      });
+    });
+
   });
 
 });

@@ -16,7 +16,9 @@
           dismiss: function () {},
           link: function () {
             $state.go('setupwizardmodal', {
-              currentTab: 'enterpriseSettings'
+              currentTab: 'enterpriseSettings',
+              currentStep: 'enterpriseSipUrl',
+              onlyShowSingleTab: true,
             });
           },
           linkText: 'homePage.goSetupCloudSipUri',

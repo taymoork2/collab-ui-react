@@ -18,6 +18,7 @@
       atlasDeviceExport: 'atlas-device-export',
       atlasEdiscovery: 'atlas-ediscovery',
       atlasEmailStatus: 'atlas-email-status',
+      atlasFTSWRemoveUsersSSO: 'atlas-ftsw-remove-users-sso',
       atlasHelpDeskExt: 'atlas-helpdesk-extended-information',
       atlasHelpDeskOrderSearch: 'atlas-helpdesk-order-search',
       atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list',

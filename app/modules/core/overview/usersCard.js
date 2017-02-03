@@ -71,7 +71,8 @@
         card.showSSOSettings = function () {
           $state.go('setupwizardmodal', {
             currentTab: 'enterpriseSettings',
-            currentStep: 'init'
+            currentStep: 'init',
+            onlyShowSingleTab: true,
           });
         };
 
