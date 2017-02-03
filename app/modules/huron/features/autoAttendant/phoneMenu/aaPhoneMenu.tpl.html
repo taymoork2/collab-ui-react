@@ -10,7 +10,7 @@
         <div class="small-9 columns">
           <cs-select ng-model="keyAction.action" valuefield="name" labelfield="label" options="aaPhoneMenu.keyActions" placeholder="aaPhoneMenu.actionPlaceholder" on-change-fn="aaPhoneMenu.keyActionChanged($index, keyAction.action)" class="aa-pm-action-select" icon="icon-chevron-down">
           </cs-select>
-          <div ng-switch="keyAction.action.name" class="aa-pm-action">
+          <div ng-switch="keyAction.action.name" class="aa-pm-action"> 
             <aa-route-to-user ng-switch-when="phoneMenuRouteUser" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-user>
             <aa-route-to-user ng-switch-when="phoneMenuRouteMailbox" voicemail=true aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-user>
             <aa-route-to-aa ng-switch-when="phoneMenuRouteAA" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-aa>
@@ -20,6 +20,7 @@
             <aa-say-message ng-switch-when="phoneMenuSayMessage" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-say-message>
             <!--- submenu is not handled by switch statement; see ng-if on row below -->
             <aa-route-to-queue ng-switch-when="phoneMenuRouteQueue" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}" aa-queues="{{aaPhoneMenu.queues}}"></aa-route-to-queue>
+            <aa-route-to-sip-endpoint ng-switch-when="phoneMenuRouteToSipEndpoint" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-sip-endpoint>
           </div>
         </div>
         <div class="small-1 columns">
