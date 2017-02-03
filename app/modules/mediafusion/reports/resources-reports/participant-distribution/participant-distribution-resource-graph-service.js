@@ -159,7 +159,6 @@
           'lineColor': '#000000'
         });
       }
-
       var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
       chartData.legend.labelText = '[[title]]';
@@ -204,8 +203,13 @@
         });
         if (!_.isUndefined(clusterName)) {
           value.title = clusterName;
-          value.balloonText = '<span class="graph-text">' + value.title + ' ' + ' <span class="graph-number">[[value]]</span></span>';
+          //var bullet = "bullet" + clusterName;
+          var description = "call_redirect" + clusterName;
+          value.bulletField = "round";
+          value.descriptionField = description;
+          value.balloonText = '<span class="graph-text">' + value.descriptionField + ' ' + ' <span class="graph-number">[[value]]</span></span>';
           value.lineThickness = 2;
+          //value.balloonText = "[[descriptionField]][[valueField]]";
         }
         if (value.title !== value.valueField) {
           value.connect = false;
