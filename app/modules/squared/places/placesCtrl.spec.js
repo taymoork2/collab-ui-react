@@ -75,7 +75,7 @@ describe('Controller: PlacesCtrl', function () {
         cisUuid: adminCisUuid,
         organizationId: adminOrgId
       };
-      spyOn(controller, 'isEntitledToHuron').and.returnValue(isEntitledToHuron);
+      spyOn(controller, 'isOrgEntitledToHuron').and.returnValue(isEntitledToHuron);
       spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(isEntitledToRoomSystem);
       spyOn(Authinfo, 'getUserId').and.returnValue(userCisUuid);
       spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(email);

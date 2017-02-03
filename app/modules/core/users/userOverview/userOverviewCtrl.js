@@ -22,7 +22,6 @@
     vm.dirsyncEnabled = false;
     vm.isCSB = Authinfo.isCSB();
     vm.hasAccount = Authinfo.hasAccount();
-    vm.isSquaredUC = Authinfo.isSquaredUC();
     vm.isFusion = Authinfo.isFusion();
     vm.isFusionCal = Authinfo.isFusionCal();
     vm.enableAuthCodeLink = enableAuthCodeLink;
@@ -91,6 +90,15 @@
       initActionList();
       updateUserTitleCard();
       getUserFeatures();
+      FeatureToggleService.cloudberryPersonalModeGetStatus().then(function (enablePersonalCloudberry) {
+        vm.showDevices = currentUserIsSquaredUC() || (enablePersonalCloudberry && Authinfo.isDeviceMgmt());
+      });
+    }
+
+    function currentUserIsSquaredUC() {
+      return _.some(vm.currentUser.entitlements, function (entitlement) {
+        return entitlement === Config.entitlements.huron;
+      });
     }
 
     function getCurrentUser() {

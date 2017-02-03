@@ -9,11 +9,10 @@ require('modules/core/reports/amcharts-export.scss');
     .controller('DeviceUsageCtrl', DeviceUsageCtrl);
 
   /* @ngInject */
-  function DeviceUsageCtrl($state, $log, $q, $translate, $scope, DeviceUsageService, DeviceUsageTotalService, DeviceUsageGraphService, DeviceUsageDateService, DeviceUsageExportService, Notification, DeviceUsageSplunkMetricsService, ReportConstants, $modal) {
+  function DeviceUsageCtrl($state, $log, $translate, $scope, DeviceUsageService, DeviceUsageTotalService, DeviceUsageGraphService, DeviceUsageDateService, DeviceUsageExportService, Notification, DeviceUsageSplunkMetricsService, ReportConstants, $modal) {
     var vm = this;
     var amChart;
     var apiToUse = 'backend';
-    var missingDays;
     var dateRange;
 
     // Models Selection
@@ -227,25 +226,29 @@ require('modules/core/reports/amcharts-export.scss');
     }
 
     function loadChartData(data, title) {
-      if (data.length === 0) {
+      var missingDays = data.missingDays;
+      var reportItems = data.reportItems;
+      if (reportItems.length === 0) {
         vm.noDataForRange = true;
         var warning = 'No report data available for : \n' + dateRange.start + ' to ' + dateRange.end;
         Notification.notify([warning], 'warning');
       } else {
         vm.noDataForRange = false;
       }
-      vm.reportData = data;
-      amChart.dataProvider = data;
+      vm.reportData = reportItems;
+      amChart.dataProvider = reportItems;
       if (title) {
-        amChart.categoryAxis.title = title;
-        if (missingDays) {
-          amChart.categoryAxis.title += missingDays;
+        if (missingDays.count > 0) {
+          var missingDaysWarning = $translate.instant('reportsPage.usageReports.missingDays', { nbrOfMissingDays: missingDays.count });
+          amChart.categoryAxis.title = title + missingDaysWarning;
+        } else {
+          amChart.categoryAxis.title = title;
         }
       }
       amChart.validateData();
       amChart.animateAgain();
       vm.showDevices = false;
-      fillInStats(data, dateRange.start, dateRange.end);
+      fillInStats(reportItems, dateRange.start, dateRange.end);
     }
 
     function loadChartDataForDeviceType(data) {
@@ -254,41 +257,24 @@ require('modules/core/reports/amcharts-export.scss');
     }
 
     function loadLastWeek(dates) {
-      missingDays = null;
-      var missingDaysDeferred = $q.defer();
-      missingDaysDeferred.promise.then(handleMissingDays);
       vm.loading = true;
-      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'day', ['ce', 'sparkboard'], apiToUse, missingDaysDeferred).then(function (data) {
+      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'day', ['ce', 'sparkboard'], apiToUse).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last7Days'));
       }, handleReject);
     }
 
     function loadLastMonth(dates) {
-      missingDays = null;
-      var missingDaysDeferred = $q.defer();
-      missingDaysDeferred.promise.then(handleMissingDays);
       vm.loading = true;
-      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'week', ['ce', 'sparkboard'], apiToUse, missingDaysDeferred).then(function (data) {
+      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'week', ['ce', 'sparkboard'], apiToUse).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last4Weeks'));
       }, handleReject);
     }
 
     function loadLast3Months(dates) {
-      missingDays = null;
-      var missingDaysDeferred = $q.defer();
-      missingDaysDeferred.promise.then(handleMissingDays);
       vm.loading = true;
-      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'month', ['ce', 'sparkboard'], apiToUse, missingDaysDeferred).then(function (data) {
+      DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'month', ['ce', 'sparkboard'], apiToUse).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last3Months'));
       }, handleReject);
-    }
-
-    function handleMissingDays(info) {
-      //$log.info('missingDays', info);
-      var nbrOfMissingDays = info.missingDays.length;
-      var warning = $translate.instant('reportsPage.usageReports.missingDays', { nbrOfMissingDays: nbrOfMissingDays }); //' (Data missing for ' + nbrOfMissingDays + ' days)';
-      missingDays = warning;
-      //Notification.notify([warning], 'warning');
     }
 
     function rollOverGraphItem(event) {

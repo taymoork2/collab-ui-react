@@ -175,7 +175,11 @@
     }
 
     function healthMonitor(callback) {
-      $http.get(healthUrl)
+      $http.get(healthUrl,
+        {
+          // statuspage.io doesn't play nice w/ our oauth header, so we unset it specifically here
+          headers: { Authorization: undefined }
+        })
         .success(function (data, status) {
           data = _.isObject(data) ? data : {};
           data.success = true;
@@ -193,7 +197,11 @@
         totalWarning = 0,
         totalDanger = 0;
 
-      return $http.get(healthUrl)
+      return $http.get(healthUrl,
+        {
+          // statuspage.io doesn't play nice w/ our oauth header, so we unset it specifically here
+          headers: { Authorization: undefined }
+        })
         .then(function (response) {
           var length = response.data.components.length;
           var healthStatus;

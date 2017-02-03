@@ -5,6 +5,15 @@
     .module('HDS')
     .controller('HDSSettingsController', HDSSettingsController);
 
+  //////////////////////////////////////////////////////////////
+  // TODO: remove this notes section in future when backend APIs ready
+  // --- Service Status ---
+  // Trial/Production mode -- Ok
+  // Trial Domain
+  // Production Domain
+  // # of resource nodes
+  // # of trial users
+  //////////////////////////////////////////////////////////////
   /* @ngInject */
   function HDSSettingsController($modal) {
     var vm = this;
@@ -14,7 +23,7 @@
     vm.openEditTrialUsersModal = openEditTrialUsersModal;
 
     vm.servicestatus = {
-      title: 'hds.settings.servicestatusTitle'
+      title: 'hds.resources.settings.servicestatusTitle'
     };
 
     var DEFAULT_SERVICE_MODE = vm.TRIAL;

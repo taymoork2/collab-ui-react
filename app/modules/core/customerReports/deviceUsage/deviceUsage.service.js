@@ -6,7 +6,7 @@
     .service('DeviceUsageService', DeviceUsageService);
 
   /* @ngInject */
-  function DeviceUsageService($log, $q, $timeout, $http, DeviceUsageMockData, UrlConfig, Authinfo) {
+  function DeviceUsageService($log, $q, $timeout, $http, UrlConfig, Authinfo) {
     var localUrlBase = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';
 
@@ -14,37 +14,44 @@
     var csdmUrl = csdmUrlBase + '/' + Authinfo.getOrgId() + '/places/';
 
     var timeoutInMillis = 20000;
-    var intervalType = 'day'; // Used as long as week and month is not implemented
 
-    // legg til models, fjerne missingDaysDeferred
-    function getDataForRange(start, end, granularity, deviceCategories, api, missingDaysDeferred) {
+    function getDataForRange(start, end, granularity, deviceCategories, api) {
 
       var startDate = moment(start);
       var endDate = moment(end);
       var now = moment();
 
       if (startDate.isValid() && endDate.isValid() && startDate.isBefore(endDate) && endDate.isBefore(now)) {
-        if (api === 'mock') {
-          return DeviceUsageMockData.getRawDataPromise(start, end).then(function (data) {
-            return reduceAllData(data, granularity);
-          });
-          //reports/device/usage?interval=day&from=2017-01-10&to=2017-01-11&categories=sparkboard
-        } else if (api === 'local') {
+        if (api === 'local') {
           var url = localUrlBase + '/' + Authinfo.getOrgId() + '/reports/device/usage?';
-          url = url + 'interval=' + intervalType; // As long week and month is not implemented
+          url = url + 'interval=day'; // As long week and month is not implemented
           url = url + '&from=' + start + '&to=' + end;
           url = url + '&categories=' + deviceCategories.join();
           //url = url + '&accounts=aggregate';
-          url = url + '&models=__'; //&accounts=__&countryCodes=__';
-          return doRequest(url, granularity, start, end, missingDaysDeferred);
+          url = url + '&models=__';
+          return getUsageData(url, granularity)
+            .then(function (res) {
+              return addMissingDaysInfo(res, start, end);
+            })
+            .then(function (res) {
+              res.reportItems = reduceAllData(res.reportItems, granularity);
+              return res;
+            });
         } else {
           url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/usage?';
-          url = url + 'interval=' + intervalType; // As long week and month is not implemented
+          url = url + 'interval=day'; // As long week and month is not implemented
           url = url + '&from=' + start + '&to=' + end;
           url = url + '&categories=' + deviceCategories.join();
           //url = url + '&accounts=aggregate';
-          url = url + '&models=__'; //&accounts=__&countryCodes=__';
-          return doRequest(url, granularity, start, end, missingDaysDeferred);
+          url = url + '&models=__';
+          return getUsageData(url, granularity)
+            .then(function (res) {
+              return addMissingDaysInfo(res, start, end);
+            })
+            .then(function (res) {
+              res.reportItems = reduceAllData(res.reportItems, granularity);
+              return res;
+            });
         }
       }
 
@@ -59,7 +66,7 @@
       }
     }
 
-    function doRequest(url, granularity, start, end, missingDaysDeferred) {
+    function getUsageData(url) {
       var deferred = $q.defer();
       var timeout = {
         timeout: deferred.promise
@@ -69,108 +76,59 @@
       }, timeoutInMillis);
 
       return $http.get(url, timeout).then(function (response) {
-        //$log.info('#items', response.data.items.length);
-        var missingDays = false;
         if (!response.data.items) {
           response.data.items = [];
         }
-        if (response.data.items.length > 0) {
-          //missingDays = checkIfMissingDays(response.data.items, start, end, missingDaysDeferred);
-          missingDays = checkMissingDays2(missingDaysDeferred, start, end);
-        }
-        if (missingDays) {
-          fillEmptyDays(response.data.items, start, end);
-        }
-        return reduceAllData(response.data.items, granularity);
+        return response.data.items;
       }, function (reject) {
         return $q.reject(analyseReject(reject));
       });
     }
 
-    function checkMissingDays2(missingDaysDeferred, start, end) {
+    function addMissingDaysInfo(usageData, start, end) {
+      return getMissingDays(start, end).then(function (missingDays) {
+        $log.warn("missingDays", missingDays);
+        var current = moment(start);
+        var final = moment(end);
+        while (current.isSameOrBefore(final)) {
+          var day = current.format('YYYY-MM-DD');
+          $log.warn("day", day);
+          if (isDayMissing(missingDays, day)) {
+            $log.warn("Adding missing day", day);
+            usageData.push({
+              time: day,
+              totalDuration: 0,
+              callCount: 0
+            });
+          }
+          current.add(1, 'days');
+        }
+        if (missingDays.length > 0) {
+          return { reportItems: usageData, missingDays: { missingDays: true, count: missingDays.length } };
+        } else {
+          return { reportItems: usageData, missingDays: { missingDays: false } };
+        }
+      });
+
+    }
+
+    function isDayMissing(missingDays, currentDay) {
+      var dateMissing = _.find(missingDays, function (missingDay) {
+        return (moment(missingDay.date).format("YYYYMMDD") == (moment(currentDay).format("YYYYMMDD")));
+      });
+      return dateMissing != undefined;
+    }
+
+    function getMissingDays(start, end) {
       var url = getBaseOrgUrl() + "reports/device/data_availability?interval=day&from=" + start + "&to=" + end;
       return $http.get(url).then(function (response) {
         var items = response.data.items; // .available
         var missingDays = _.filter(items, (function (item) {
           return (item.available === false);
         }));
-        $log.warn("AVAILABILITY", items);
-        $log.warn("Missing days", missingDays);
-        missingDaysDeferred.resolve({
-          missingDays: 42
-        });
-        return missingDays.length > 0;
+        return missingDays;
       });
     }
-
-    function fillEmptyDays(items, start, end) {
-      //$log.info('fillEmptyDays', start + ' - ' + end);
-      //$log.info('fillEmptyDays', items);
-      var daysNeeded = {};
-      var current = moment(start);
-      var final = moment(end);
-      while (current.isBefore(final)) {
-        daysNeeded[current.format('YYYYMMDD')] = true;
-        current.add(1, 'days');
-      }
-      daysNeeded[final.format('YYYYMMDD')] = true;
-      //$log.info('daysNeeded', daysNeeded);
-      _.each(items, function (day) {
-        if (daysNeeded[day.date.toString()]) {
-          daysNeeded[day.date.toString()] = false;
-        }
-      });
-      //$log.info('daysNeeded', daysNeeded);
-      _.each(daysNeeded, function (dn, day) {
-        if (dn) {
-          items.push({
-            date: day,
-            callDuration: 0,
-            //pairedCount: 0,
-            callCount: 0
-          });
-        }
-      });
-    }
-
-    // function checkIfMissingDays(items, start, end, missingDaysDeferred) {
-    //   //var first = moment(start);
-    //   var last = moment(end);
-    //   var current = moment(start);
-    //
-    //   //getDataAvailability();
-    //
-    //   var correctDays = [];
-    //   while (current.isBefore(last)) {
-    //     correctDays.push(current.format('YYYYMMDD'));
-    //     current.add(1, 'days');
-    //   }
-    //   correctDays.push(last.format('YYYYMMDD'));
-    //   //$log.info('correctDays', correctDays);
-    //
-    //   //$log.info('checkIfMissingDays', first.format('YYYYMMDD') + ' - ' + last.format('YYYYMMDD'));
-    //   //current = first;
-    //   var reducedDays = _.chain(items).reduce(function (result, item) {
-    //     if (!result[item.date]) {
-    //       //$log.info('reduce_day', item.date);
-    //       result[item.date] = item.date;
-    //     }
-    //     return result;
-    //   }, {})
-    //   .map(function (value) {
-    //     return value.toString();
-    //   }).value();
-    //   var diff = _.differenceWith(correctDays, reducedDays, _.isEqual);
-    //   //$log.info('diff', diff);
-    //   if (diff.length > 0) {
-    //     missingDaysDeferred.resolve({
-    //       missingDays: diff
-    //     });
-    //     return true;
-    //   } else {
-    //     return false;
-    //   }
-    // }
 
     function analyseReject(reject) {
       if (reject.status === -1) {
@@ -188,9 +146,7 @@
         if (typeof result[date] === 'undefined') {
           result[date] = {
             callCount: 0,
-            totalDuration: 0,
-            deviceCategories: {}
-            //accountIds: {}
+            totalDuration: 0
           };
         }
         if (_.isNil(item.callCount) || _.isNaN(item.callCount)) {
@@ -204,32 +160,7 @@
         }
 
         result[date].callCount += item.callCount;
-        result[date].totalDuration += item.callDuration; //totalDuration;
-
-        // if (!result[date].deviceCategories[item.category]) {
-        //   result[date].deviceCategories[item.category] = {
-        //     deviceCategory: item.category,
-        //     totalDuration: item.callDuration,
-        //     callCount: item.callCount,
-        //   };
-        // } else {
-        //   result[date].deviceCategories[item.category].totalDuration += item.callDuration;
-        //   result[date].deviceCategories[item.category].callCount += item.callCount;
-        //   //result[date].deviceCategories[item.category].pairedCount += item.pairedCount;
-        // }
-
-        // if (item.accountId && !result[date].accountIds[item.accountId]) {
-        //   result[date].accountIds[item.accountId] = {
-        //     accountId: item.accountId,
-        //     totalDuration: item.callDuration,
-        //     callCount: item.callCount,
-        //     //pairedCount: item.pairedCount
-        //   };
-        // } else if (item.accountId) {
-        //   result[date].accountIds[item.accountId].totalDuration += item.callDuration;
-        //   result[date].accountIds[item.accountId].callCount += item.callCount;
-        //   //result[date].accountIds[item.accountId].pairedCount += item.pairedCount;
-        // }
+        result[date].totalDuration += item.callDuration;
         return result;
       }, {}).map(function (value, key) {
         value.totalDurationY = (value.totalDuration / 3600).toFixed(2);
@@ -237,18 +168,11 @@
         value.time = timeFormatted;
         return value;
       }).value();
-      $log.warn('reduceAll', reduced);
       return reduced;
     }
 
     function extractStats(reduced, start, end) {
-
-      var accounts = reduced; // old V1 API compatibility
-      $log.info("extractStats, reduced=", reduced);
-      $log.info("extractStats, accounts=", accounts);
-
       var deferredAll = $q.defer();
-
       var stats = {
         most: [],
         least: [],
@@ -290,14 +214,14 @@
     }
 
     function getLeast(start, end, limit) {
-      var url = getBaseOrgUrl() + "reports/device/usage?interval=day&from=" + start + "&to=" + end + "&accounts=__&categories=aggregate&models=aggregate&orderBy=callDuration&sortAsc=true&limit=" + limit;
+      var url = getBaseOrgUrl() + "reports/device/usage/aggregate?interval=day&from=" + start + "&to=" + end + "&accounts=__&orderBy=callDuration&sortAsc=true&excludeUnused=true&limit=" + limit;
       return $http.get(url).then(function (response) {
         return response.data.items;
       });
     }
 
     function getMost(start, end, limit) {
-      var url = getBaseOrgUrl() + "reports/device/usage?interval=day&from=" + start + "&to=" + end + "&accounts=__&categories=aggregate&models=aggregate&orderBy=callDuration&sortAsc=false&limit=" + limit;
+      var url = getBaseOrgUrl() + "reports/device/usage/aggregate?interval=day&from=" + start + "&to=" + end + "&accounts=__&orderBy=callDuration&sortAsc=false&limit=" + limit;
       return $http.get(url).then(function (response) {
         return response.data.items;
       });

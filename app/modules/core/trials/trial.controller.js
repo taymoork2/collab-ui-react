@@ -575,10 +575,11 @@
       var overrideTestOrg = false;
       vm.hasCallEntitlement = Authinfo.isSquaredUC() || vm.isNewTrial();
       var promises = {
+        atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
-        huronCountryList: HuronCountryService.getCountryList(),
+        huronCountryList: getCountryList(),
       };
       if (!vm.isNewTrial()) {
         promises.tcHasService = TrialContextService.trialHasService(vm.currentTrial.customerOrgId);
@@ -588,6 +589,7 @@
           vm.showRoomSystems = true;
           vm.showContextServiceTrial = true;
           vm.showCare = results.ftCareTrials;
+          vm.sbTrial = results.atlasDarling;
           vm.atlasTrialsShipDevicesEnabled = results.ftShipDevices;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;
           overrideTestOrg = results.ftShipDevices;
@@ -618,6 +620,20 @@
           }
 
           toggleTrial();
+        });
+    }
+
+    function getCountryList() {
+      return FeatureToggleService.huronFederatedSparkCallGetStatus()
+        .then(function (supported) {
+          if (supported) {
+            return HuronCountryService.getCountryList()
+              .catch(function () {
+                return [];
+              });
+          } else {
+            return [];
+          }
         });
     }
 
@@ -1188,7 +1204,7 @@
     function getNewOrgInitResults(results, hasCallEntitlement, stateDefaults) {
       var initResults = {};
       _.set(initResults, 'roomSystemTrial.enabled', true);
-      _.set(initResults, 'sparkBoardTrial.enabled', true);
+      _.set(initResults, 'sparkBoardTrial.enabled', results.atlasDarling);
       _.set(initResults, 'webexTrial.enabled', true);
       _.set(initResults, 'meetingTrial.enabled', true);
       _.set(initResults, 'callTrial.enabled', hasCallEntitlement);

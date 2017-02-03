@@ -40,10 +40,12 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
   describe('Initialization', function () {
     it('sets all the necessary fields', function () {
       var title = 'title';
+      var showPersonal = true;
       var deviceType = 'testDevice';
       var accountType = 'testAccount';
       var deviceName = 'deviceName';
       var displayName = 'displayName';
+      var isEntitledToHuron = true;
       var email = 'email@address.com';
       var userCisUuid = 'userCisUuid';
       var userFirstName = 'userFirstName';
@@ -53,11 +55,13 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
           return {
             data: {
               title: title,
+              showPersonal: showPersonal,
               account: {
                 deviceType: deviceType,
                 type: accountType,
                 name: deviceName,
-                cisUuid: place.cisUuid
+                cisUuid: place.cisUuid,
+                isEntitledToHuron: isEntitledToHuron
               },
               recipient: {
                 displayName: displayName,
@@ -72,10 +76,12 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       initController();
 
       expect(controller.title).toBe(title);
+      expect(controller.showPersonal).toBe(showPersonal);
       expect(controller.account.deviceType).toBe(deviceType);
       expect(controller.account.type).toBe(accountType);
       expect(controller.account.name).toBe(deviceName);
       expect(controller.account.cisUuid).toBe(place.cisUuid);
+      expect(controller.account.isEntitledToHuron).toBe(isEntitledToHuron);
       expect(controller.selectedUser.nameWithEmail).toBe(displayName + ' (' + email + ')');
       expect(controller.selectedUser.email).toBe(email);
       expect(controller.selectedUser.cisUuid).toBe(userCisUuid);
@@ -117,6 +123,160 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
     it('controller has the sendActivationEmail function', function () {
       expect(controller.sendActivationCodeEmail).toBeDefined();
+    });
+
+    describe('correct texts are displayed', function () {
+      var showPersonal;
+      var showATA;
+      var accountType;
+      var deviceType;
+      var isEntitledToHuron;
+      beforeEach(function () {
+        stateParams.wizard = {
+          state: function () {
+            return {
+              data: {
+                showPersonal: showPersonal,
+                showATA: showATA,
+                account: {
+                  type: accountType,
+                  deviceType: deviceType,
+                  isEntitledToHuron: isEntitledToHuron
+                },
+                recipient: {}
+              }
+            };
+          }
+        };
+      });
+
+      describe('and account type is personal', function () {
+        beforeEach(function () {
+          accountType = 'personal';
+        });
+
+        describe('when showPersonal is on', function () {
+          beforeEach(function () {
+            showPersonal = true;
+          });
+
+          describe('and isEntitledToHuron is false', function () {
+            beforeEach(function () {
+              isEntitledToHuron = false;
+              initController();
+            });
+
+            it('only text for Cloudberry is shown', function () {
+              expect(controller.showPersonalText).toBeFalsy();
+              expect(controller.showHuronWithATAText).toBeFalsy();
+              expect(controller.showHuronWithoutATAText).toBeFalsy();
+              expect(controller.showCloudberryText).toBeTruthy();
+            });
+          });
+
+          describe('and isEntitledToHuron is true', function () {
+            beforeEach(function () {
+              isEntitledToHuron = true;
+              initController();
+            });
+
+            it('only text for personal is shown', function () {
+              expect(controller.showPersonalText).toBeTruthy();
+              expect(controller.showHuronWithATAText).toBeFalsy();
+              expect(controller.showHuronWithoutATAText).toBeFalsy();
+              expect(controller.showCloudberryText).toBeFalsy();
+            });
+          });
+        });
+
+        describe('when showPersonal is off', function () {
+          beforeEach(function () {
+            showPersonal = false;
+          });
+
+          describe('and showATA is on', function () {
+            beforeEach(function () {
+              showATA = true;
+              initController();
+            });
+
+            it('only text for huron with ATA is shown', function () {
+              expect(controller.showPersonalText).toBeFalsy();
+              expect(controller.showHuronWithATAText).toBeTruthy();
+              expect(controller.showHuronWithoutATAText).toBeFalsy();
+              expect(controller.showCloudberryText).toBeFalsy();
+            });
+          });
+
+          describe('and showATA is off', function () {
+            beforeEach(function () {
+              showATA = false;
+              initController();
+            });
+
+            it('only text for huron without ATA is shown', function () {
+              expect(controller.showPersonalText).toBeFalsy();
+              expect(controller.showHuronWithATAText).toBeFalsy();
+              expect(controller.showHuronWithoutATAText).toBeTruthy();
+              expect(controller.showCloudberryText).toBeFalsy();
+            });
+          });
+        });
+      });
+
+      describe('and account type is shared', function () {
+        beforeEach(function () {
+          accountType = 'shared';
+        });
+
+        describe('and deviceType is cloudberry', function () {
+          beforeEach(function () {
+            deviceType = 'cloudberry';
+            initController();
+          });
+
+          it('only text for Cloudberry is shown', function () {
+            expect(controller.showPersonalText).toBeFalsy();
+            expect(controller.showHuronWithATAText).toBeFalsy();
+            expect(controller.showHuronWithoutATAText).toBeFalsy();
+            expect(controller.showCloudberryText).toBeTruthy();
+          });
+        });
+
+        describe('and deviceType is huron', function () {
+          beforeEach(function () {
+            deviceType = 'huron';
+          });
+
+          describe('and showATA is on', function () {
+            beforeEach(function () {
+              showATA = true;
+              initController();
+            });
+
+            it('only text for huron with ATA is shown', function () {
+              expect(controller.showPersonalText).toBeFalsy();
+              expect(controller.showHuronWithATAText).toBeTruthy();
+              expect(controller.showHuronWithoutATAText).toBeFalsy();
+              expect(controller.showCloudberryText).toBeFalsy();
+            });
+          });
+        });
+
+        describe('and showATA is off', function () {
+          beforeEach(function () {
+            showATA = false;
+            initController();
+          });
+
+          it('only text for huron without ATA is shown', function () {
+            expect(controller.showPersonalText).toBeFalsy();
+            expect(controller.showHuronWithATAText).toBeFalsy();
+            expect(controller.showHuronWithoutATAText).toBeTruthy();
+            expect(controller.showCloudberryText).toBeFalsy();
+          });
+        });
+      });
     });
   });
 

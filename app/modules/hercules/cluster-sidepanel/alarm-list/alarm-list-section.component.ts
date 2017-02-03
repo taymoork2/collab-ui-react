@@ -1,20 +1,9 @@
-interface IAlarm {
-  id: string;
-  firstReported: number;
-  lastReported: number;
-  severity: string;
-  title: string;
-  description: string;
-  solution: string;
-  solutionReplacementValues?: Array<{
-    text: string,
-    link: string,
-  }>;
-}
+import { IAlarm } from 'modules/hercules/herculesInterfaces';
 
 export class AlarmListSectionComponentCtrl implements ng.IComponentController {
 
   public alarms: Array<IAlarm>;
+  private connectorType: string;
 
   private severityIconMap = {
     critical: 'icon icon-error',
@@ -24,7 +13,9 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
   };
 
   /* @ngInject */
-  constructor() {}
+  constructor(
+    private $state: ng.ui.IStateService,
+  ) {}
 
   public $onInit() {}
 
@@ -57,6 +48,18 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
     return this.severityIconMap[severity];
   }
 
+  public goToAlarm(alarm: any): void {
+    if (this.connectorType === 'c_mgmt') {
+      this.$state.go('management-connector-details.alarm-details', {
+        alarm: alarm,
+      });
+    } else {
+      this.$state.go('cluster-details.alarm-details', {
+        alarm: alarm,
+      });
+    }
+  }
+
 }
 
 export class AlarmListSectionComponent implements ng.IComponentOptions {
@@ -64,5 +67,6 @@ export class AlarmListSectionComponent implements ng.IComponentOptions {
   public templateUrl = 'modules/hercules/cluster-sidepanel/alarm-list/alarm-list-section.html';
   public bindings = {
     alarms: '<',
+    connectorType: '<',
   };
 }

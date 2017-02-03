@@ -1,0 +1,13 @@
+@import 'styles/toolkit/colors';
+
+cluster-settings-link {
+
+  display: block;
+  text-align: right;
+  margin-top: 1.5rem;
+
+  a {
+    color: $color-primary-base !important;
+  }
+
+}

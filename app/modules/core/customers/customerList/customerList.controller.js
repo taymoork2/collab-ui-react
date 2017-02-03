@@ -19,7 +19,6 @@ require('./_customer-list.scss');
     vm.isOrgSetup = isOrgSetup;
     vm.isPartnerAdminWithCallOrRooms = isPartnerAdminWithCallOrRooms;
     vm.isOwnOrg = isOwnOrg;
-    vm.setFilter = setFilter;
     vm.getSubfields = getSubfields;
     vm.filterAction = filterAction;
     vm.modifyManagedOrgs = modifyManagedOrgs;
@@ -46,12 +45,11 @@ require('./_customer-list.scss');
     vm.convertStatusToInt = convertStatusToInt;
 
     vm.exportType = $rootScope.typeOfExport.CUSTOMER;
+    vm.activeFilter = 'all';
     vm.filterList = _.debounce(filterAction, vm.timeoutVal);
 
     vm.featureTrialForPaid = trialForPaid;
-    // expecting this guy to be unset on init, and set every time after
-    // check resetLists fn to see how its being used
-    vm.activeFilter = 'all';
+
     vm.filter = {
       selected: [],
       placeholder: $translate.instant('customerPage.filterSelectPlaceholder'),
@@ -477,19 +475,10 @@ require('./_customer-list.scss');
       return rows;
     }
 
-    function setFilter(filter) {
-      vm.activeFilter = filter || 'all';
-      if (filter === 'trials') {
-        vm.gridOptions.data = vm.trialsList;
-      } else {
-        vm.gridOptions.data = vm.managedOrgsList;
-      }
-    }
-
     function filterAction(value) {
       vm.searchStr = value;
       resetLists().then(function () {
-        setFilter(vm.activeFilter);
+        vm.gridOptions.data = vm.managedOrgsList;
       });
     }
 

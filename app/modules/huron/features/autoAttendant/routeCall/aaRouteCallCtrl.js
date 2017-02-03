@@ -86,16 +86,30 @@
       setSelects();
     }
 
-    function activate() {
-      var ui = AAUiModelService.getUiModel();
-      vm.menuEntry = ui[$scope.schedule].entries[$scope.index];
+    function setUpFeatureToggles() {
+
+      if (AACommonService.isRouteSIPAddressToggle()) {
+        vm.options.push({
+          "label": $translate.instant('autoAttendant.phoneMenuRouteToSipEndpoint'),
+          "value": 'routeToSipEndpoint'
+        });
+      }
+
       if (AACommonService.isRouteQueueToggle()) {
         getQueues().finally(sortAndSetActionType);
       } else {
         sortAndSetActionType();
       }
+
+    }
+
+    function activate() {
+      var ui = AAUiModelService.getUiModel();
+      vm.menuEntry = ui[$scope.schedule].entries[$scope.index];
+      setUpFeatureToggles();
     }
 
     activate();
   }
+
 })();

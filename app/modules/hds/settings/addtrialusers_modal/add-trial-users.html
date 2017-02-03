@@ -2,13 +2,13 @@
   <button type="button" class="close" ng-click="$dismiss()">
     <span class="sr-only" translate="common.close"></span>
   </button>
-  <h5 class="modal-title" translate="hds.addTrialUsers.modalTitle"></h5>
+  <h5 class="modal-title" translate="hds.resources.addTrialUsers.modalTitle"></h5>
 </div>
 
-<div class="modal-body">
-  <h5 translate="hds.addTrialUsers.modalHeading"></h5>
+<div class="modal-body hds-email-input">
+  <h5 translate="hds.resources.addTrialUsers.modalHeading"></h5>
   <br/>
-  <p translate="hds.addTrialUsers.modalDesc"></p>
+  <p translate="hds.resources.addTrialUsers.modalDesc"></p>
   <br/>
   <tags-input add-on-blur="true"
               on-tag-added="addTrialUsersCtrl.addUser()"
@@ -17,7 +17,7 @@
               ng-model="addTrialUsersCtrl.emailTrialUsers"
               type="email"
               allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
-  <i class="sub-section__description">{{'hds.addTrialUsers.emailExample' | translate}}</i>
+  <i class="sub-section__description">{{'hds.resources.addTrialUsers.emailExample' | translate}}</i>
 </div>
 
 <div class="modal-footer">
@@ -26,6 +26,6 @@
     ng-disabled="!addTrialUsersCtrl.savingEmail"
     class="btn btn--primary"
     ng-click="addTrialUsersCtrl.saveTrialUsers();$dismiss()">
-      <span translate="hds.addTrialUsers.modalSST"></span>
+      <span translate="hds.resources.addTrialUsers.modalSST"></span>
   </button>
 </div>
