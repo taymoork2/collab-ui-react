@@ -69,18 +69,30 @@
     function upload(file) {
       if (file) {
         if (AAMediaUploadService.validateFile(file.name)) {
-          if (file.size <= MAX_FILE_SIZE_IN_B) {
-            if (isOverwrite()) {
-              confirmOverwrite(file);
+          if ($scope.aaMediaUploadSize) {
+            if (file.size <= $scope.aaMediaUploadSize) {
+              standardUpload(file);
             } else {
-              continueUpload(file);
+              AANotificationService.error('autoAttendant.fileUploadSizeIncorrect');
             }
           } else {
-            AANotificationService.error('autoAttendant.fileUploadSizeIncorrect');
+            if (file.size <= MAX_FILE_SIZE_IN_B) {
+              standardUpload(file);
+            } else {
+              AANotificationService.error('autoAttendant.fileUploadSizeIncorrect');
+            }
           }
         } else {
           AANotificationService.error('fileUpload.errorFileType');
         }
+      }
+    }
+
+    function standardUpload(file) {
+      if (isOverwrite()) {
+        confirmOverwrite(file);
+      } else {
+        continueUpload(file);
       }
     }
 
