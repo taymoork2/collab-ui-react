@@ -1572,7 +1572,8 @@
       "removeSectionHeader": "Remove",
       "removeSectionBody": "Remove this node from Cisco Collaboration Cloud.",
       "localizedConnectorAndHostHeader": "{{connectorName}} on {{hostname}}",
-      "actions": "Actions"
+      "actions": "Actions",
+      "no_nodes": "No nodes registered."
     },
     "export": {
       "modalTitle": "User Status Report",

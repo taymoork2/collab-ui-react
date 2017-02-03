@@ -2681,8 +2681,11 @@
             url: '/hds/resources',
             views: {
               'fullPane': {
-                template: '<hds-service-cluster-list service-id="\'spark-hybrid-datasecurity\'"></hds-service-cluster-list>'
+                template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'"></hybrid-service-cluster-list>'
               }
+            },
+            params: {
+              clusterId: null,
             },
             resolve: {
               hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
@@ -2709,30 +2712,46 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                controllerAs: 'hdsSidepanelClusterController',
-                controller: 'HDSSidepanelClusterController',
-                templateUrl: 'modules/hds/cluster-sidepanel/cluster-details.html'
+                template: '<cluster-sidepanel-overview cluster-type="\'hds_app\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>',
               },
               'header@hds-cluster-details': {
-                templateUrl: 'modules/hds/cluster-sidepanel/cluster-header.html'
-              }
+                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
+              },
             },
             data: {
               displayName: 'Overview'
             },
             params: {
-              clusterId: null
+              clusterId: null,
+              connectorType: null,
             },
             resolve: {
-              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+              connectorType: /* @ngInject */ function ($stateParams) {
+                return $stateParams.connectorType;
               },
             }
           })
+          .state('hds-cluster-details.host-details', {
+            templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
+            controller: 'ExpresswayHostDetailsController',
+            controllerAs: 'hostDetailsCtrl',
+            data: {
+              displayName: 'Node'
+            },
+            params: {
+              host: null,
+              hostSerial: null,
+              clusterId: null,
+              connectorType: null
+            }
+          })
           .state('hds-cluster-details.alarm-details', {
-            templateUrl: 'modules/hds/cluster-sidepanel/alarm-details.html',
-            controller: 'HDSAlarmController',
-            controllerAs: 'hdsAlarmController',
+            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details/alarm-details.html',
+            controller: 'ExpresswayAlarmController',
+            controllerAs: 'alarmCtrl',
             data: {
               displayName: 'Alarm Details'
             },

@@ -3,11 +3,11 @@ import { IClusterV1 } from 'modules/hercules/herculesInterfaces';
 class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
 
   private clusterId: string;
-  private connectorType: string;
   private hasF237FeatureToggle: boolean = false;
   private cluster: IClusterV1;
 
   public clusterType: string;
+  public connectorType: string;
 
   /* @ngInject */
   constructor(
@@ -31,8 +31,16 @@ class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
     }
   }
 
-  public isEmptyExpresswayCluster() {
-    return this.cluster.targetType === 'c_mgmt' && this.cluster.connectors.length === 0;
+  public isExpresswayCluster() {
+    return this.cluster && this.cluster.targetType === 'c_mgmt';
+  }
+
+  public isHDSCluster() {
+    return this.cluster && this.cluster.targetType === 'hds_app';
+  }
+
+  public hasConnectors() {
+    return this.cluster && this.cluster.connectors.length > 0;
   }
 
 }

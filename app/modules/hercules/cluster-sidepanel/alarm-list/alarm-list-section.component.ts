@@ -53,8 +53,12 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
       this.$state.go('management-connector-details.alarm-details', {
         alarm: alarm,
       });
-    } else {
+    } else if (this.connectorType === 'c_cal' || this.connectorType === 'c_ucmc') {
       this.$state.go('cluster-details.alarm-details', {
+        alarm: alarm,
+      });
+    } else if (this.connectorType === 'hds_app') {
+      this.$state.go('hds-cluster-details.alarm-details', {
         alarm: alarm,
       });
     }
