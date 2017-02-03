@@ -3,12 +3,13 @@
 describe('Controller:MediaReportsController', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var controller, $scope, httpMock, $stateParams, $q, $translate, $timeout, $interval, Log, Config, MediaClusterServiceV2, Notification, UtilizationResourceGraphService, MediaReportsService, MediaReportsDummyGraphService, AvailabilityResourceGraphService, CallVolumeResourceGraphService, MediaSneekPeekResourceService;
+  var controller, $scope, httpMock, $stateParams, $q, $translate, $timeout, $interval, Log, Config, MediaClusterServiceV2, Notification, UtilizationResourceGraphService, ParticipantDistributionResourceGraphService, MediaReportsService, MediaReportsDummyGraphService, AvailabilityResourceGraphService, CallVolumeResourceGraphService, MediaSneekPeekResourceService;
 
   var callVolumeData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeData.json');
   var clusteravailabilityData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityData.json');
   var callVolumeGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeGraphData.json');
   var utilizationGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/UtilizationGraphData.json');
+  var participantDistributionGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/ParticipantDistributionGraphData.json');
 
   var timeOptions = [{
     value: 0,
@@ -29,7 +30,7 @@ describe('Controller:MediaReportsController', function () {
 
   var allClusters = 'mediaFusion.metrics.allclusters';
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$stateParams_, _$timeout_, _$translate_, _MediaClusterServiceV2_, _$q_, _UtilizationResourceGraphService_, _Notification_, _MediaReportsDummyGraphService_, _MediaReportsService_, _$interval_, _Log_, _Config_, _AvailabilityResourceGraphService_, _CallVolumeResourceGraphService_, _MediaSneekPeekResourceService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$stateParams_, _$timeout_, _$translate_, _MediaClusterServiceV2_, _$q_, _UtilizationResourceGraphService_, _ParticipantDistributionResourceGraphService_, _Notification_, _MediaReportsDummyGraphService_, _MediaReportsService_, _$interval_, _Log_, _Config_, _AvailabilityResourceGraphService_, _CallVolumeResourceGraphService_, _MediaSneekPeekResourceService_) {
     $scope = $rootScope.$new();
 
     $stateParams = _$stateParams_;
@@ -44,6 +45,7 @@ describe('Controller:MediaReportsController', function () {
     MediaReportsDummyGraphService = _MediaReportsDummyGraphService_;
     Notification = _Notification_;
     UtilizationResourceGraphService = _UtilizationResourceGraphService_;
+    ParticipantDistributionResourceGraphService = _ParticipantDistributionResourceGraphService_;
     MediaReportsService = _MediaReportsService_;
     AvailabilityResourceGraphService = _AvailabilityResourceGraphService_;
     CallVolumeResourceGraphService = _CallVolumeResourceGraphService_;
@@ -61,6 +63,9 @@ describe('Controller:MediaReportsController', function () {
     spyOn(UtilizationResourceGraphService, 'setUtilizationGraph').and.returnValue({
       'dataProvider': utilizationGraphData
     });
+    spyOn(ParticipantDistributionResourceGraphService, 'setParticipantDistributionGraph').and.returnValue({
+      'dataProvider': participantDistributionGraphData
+    });
     httpMock.when('GET', /^\w+.*/).respond({});
 
     controller = $controller('MediaReportsController', {
@@ -73,6 +78,7 @@ describe('Controller:MediaReportsController', function () {
       $q: $q,
       MediaReportsDummyGraphService: MediaReportsDummyGraphService,
       UtilizationResourceGraphService: UtilizationResourceGraphService,
+      ParticipantDistributionResourceGraphService: ParticipantDistributionResourceGraphService,
       MediaReportsService: MediaReportsService,
       AvailabilityResourceGraphService: AvailabilityResourceGraphService,
       CallVolumeResourceGraphService: CallVolumeResourceGraphService,
@@ -93,15 +99,18 @@ describe('Controller:MediaReportsController', function () {
       spyOn(MediaReportsService, 'getCallVolumeData').and.returnValue($q.resolve(callVolumeGraphData));
       spyOn(MediaReportsService, 'getAvailabilityData').and.returnValue($q.resolve(clusteravailabilityData));
       spyOn(MediaReportsService, 'getUtilizationData').and.returnValue($q.resolve(utilizationGraphData));
+      spyOn(MediaReportsService, 'getParticipantDistributionData').and.returnValue($q.resolve(participantDistributionGraphData));
       $timeout(function () {
 
         expect(MediaReportsService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0]);
         expect(MediaReportsService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0]);
         expect(MediaReportsService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0]);
+        expect(MediaReportsService.getParticipantDistributionData).toHaveBeenCalledWith(timeOptions[0]);
 
         expect(CallVolumeResourceGraphService.setCallVolumeGraph).toHaveBeenCalled();
         expect(AvailabilityResourceGraphService.setAvailabilityGraph).toHaveBeenCalled();
         expect(UtilizationResourceGraphService.setUtilizationGraph).toHaveBeenCalled();
+        expect(ParticipantDistributionResourceGraphService.setParticipantDistributionGraph).toHaveBeenCalled();
 
       }, 30);
     });
@@ -117,11 +126,13 @@ describe('Controller:MediaReportsController', function () {
       spyOn(MediaReportsService, 'getCallVolumeData').and.returnValue($q.resolve(callVolumeGraphData));
       spyOn(MediaReportsService, 'getAvailabilityData').and.returnValue($q.resolve(clusteravailabilityData));
       spyOn(MediaReportsService, 'getUtilizationData').and.returnValue($q.resolve(utilizationGraphData));
+      spyOn(MediaReportsService, 'getParticipantDistributionData').and.returnValue($q.resolve(participantDistributionGraphData));
       controller.clusterUpdate();
       httpMock.flush();
       expect(MediaReportsService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
       expect(MediaReportsService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
       expect(MediaReportsService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
+      expect(MediaReportsService.getParticipantDistributionData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
     });
   });
 
@@ -152,6 +163,7 @@ describe('Controller:MediaReportsController', function () {
       spyOn(MediaReportsService, 'getClusterAvailabilityData').and.callThrough();
       spyOn(MediaReportsService, 'getClusterAvailabilityTooltip').and.callThrough();
       spyOn(MediaReportsService, 'getUtilizationData').and.callThrough();
+      spyOn(MediaReportsService, 'getParticipantDistributionData').and.callThrough();
       spyOn(MediaReportsService, 'getAvailabilityData').and.callThrough();
       spyOn(MediaReportsService, 'getCallVolumeData').and.callThrough();
       controller.changeTabs(false, true);
@@ -160,6 +172,7 @@ describe('Controller:MediaReportsController', function () {
       expect(MediaReportsService.getClusterAvailabilityData).toHaveBeenCalled();
       expect(MediaReportsService.getClusterAvailabilityTooltip).not.toHaveBeenCalled();
       expect(MediaReportsService.getUtilizationData).toHaveBeenCalled();
+      expect(MediaReportsService.getParticipantDistributionData).toHaveBeenCalled();
       expect(MediaReportsService.getAvailabilityData).toHaveBeenCalled();
       expect(MediaReportsService.getCallVolumeData).toHaveBeenCalled();
     });
@@ -214,6 +227,18 @@ describe('Controller:MediaReportsController', function () {
       expect(MediaReportsDummyGraphService.dummyUtilizationData).toHaveBeenCalled();
       expect(MediaReportsDummyGraphService.dummyUtilizationGraph).toHaveBeenCalled();
       expect(UtilizationResourceGraphService.setUtilizationGraph).toHaveBeenCalled();
+    });
+
+    it('should call dummysetParticipantDistribution for setDummyParticipantDistribution when there is no data', function () {
+      spyOn(MediaReportsService, 'getParticipantDistributionData').and.callThrough();
+      spyOn(MediaReportsDummyGraphService, 'dummyParticipantDistributionData').and.callThrough();
+      spyOn(MediaReportsDummyGraphService, 'dummyParticipantDistributionGraph').and.callThrough();
+      controller.changeTabs(false, true);
+      httpMock.flush();
+      expect(MediaReportsService.getParticipantDistributionData).toHaveBeenCalled();
+      expect(MediaReportsDummyGraphService.dummyParticipantDistributionData).toHaveBeenCalled();
+      expect(MediaReportsDummyGraphService.dummyParticipantDistributionGraph).toHaveBeenCalled();
+      expect(ParticipantDistributionResourceGraphService.setParticipantDistributionGraph).toHaveBeenCalled();
     });
 
     it('it should call dummysetAvailabilityData for setAvailabilityData when response has no data', function () {
