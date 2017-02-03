@@ -203,7 +203,7 @@
         });
         if (!_.isUndefined(clusterName)) {
           value.title = clusterName;
-          value.balloonText = '<span class="graph-text">' + value.descriptionField + ' ' + ' <span class="graph-number">[[value]]</span></span>';
+          value.balloonText = '<span class="graph-text">' + value.title + ' ' + ' <span class="graph-number">[[value]]</span></span>';
           value.lineThickness = 2;
         }
         if (value.title !== value.valueField) {
