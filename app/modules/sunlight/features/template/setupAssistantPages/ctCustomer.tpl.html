@@ -76,8 +76,8 @@
                 ng-model="attribute.value"
                 cs-input
                 name="{{attribute.name }}"
-                cs-input-messages="careSetupAssistant.singleLineValidationMessage"
-                ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit"
+                cs-input-messages="careSetupAssistant.singleLineValidationMessage50"
+                ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit50"
                 ng-model-options="{ allowInvalid: true }"
                 ng-disabled="careSetupAssistant.isSecondFieldForCallBack() && attribute.name === 'hintText'"
               />
@@ -129,8 +129,8 @@
                         type="text"
                         ng-keypress="careSetupAssistant.onEnterKey($event)"
                         ng-model="careSetupAssistant.categoryOptionTag"
-                        cs-input-messages="careSetupAssistant.singleLineValidationMessage"
-                        ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit"
+                        cs-input-messages="careSetupAssistant.singleLineValidationMessage50"
+                        ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit50"
                 />
                 <div class="category-tokens">
                   <cs-token-field
@@ -150,8 +150,8 @@
                       ng-model="careSetupAssistant.template.configuration.pages.customerInformation.fields.welcomeHeader.attributes[1].value"
                       cs-input
                       name="orgText"
-                      cs-input-messages="careSetupAssistant.singleLineValidationMessage"
-                      ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit"
+                      cs-input-messages="careSetupAssistant.singleLineValidationMessage50"
+                      ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit50"
                       ng-model-options="{ allowInvalid: true }"
                 />
               </div>

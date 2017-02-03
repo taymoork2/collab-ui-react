@@ -31,7 +31,8 @@
 
     function getLengthValidationConstants() {
       return {
-        singleLineMaxCharLimit: 50,
+        singleLineMaxCharLimit25: 25,
+        singleLineMaxCharLimit50: 50,
         multiLineMaxCharLimit: 250,
         empty: 0
       };

@@ -336,9 +336,6 @@
         },
         chatStatusMessages: {
           messages: {
-            bubbleTitleMessage: {
-              displayText: $translate.instant('careChatTpl.bubbleTitleMessage')
-            },
             connectingMessage: {
               displayText: $translate.instant('careChatTpl.connectingMessage')
             },
@@ -508,7 +505,8 @@
 
     vm.getDefaultTemplate();
 
-    vm.singleLineValidationMessage = CTService.getValidationMessages(0, vm.lengthConstants.singleLineMaxCharLimit);
+    vm.singleLineValidationMessage25 = CTService.getValidationMessages(0, vm.lengthConstants.singleLineMaxCharLimit25);
+    vm.singleLineValidationMessage50 = CTService.getValidationMessages(0, vm.lengthConstants.singleLineMaxCharLimit50);
     vm.multiLineValidationMessage = CTService.getValidationMessages(0, vm.lengthConstants.multiLineMaxCharLimit);
 
 
@@ -570,7 +568,7 @@
     }
 
     vm.validateNameLength = function () {
-      return vm.template.name.length == vm.lengthConstants.empty || isValidMultilineField(vm.template.name);
+      return vm.template.name.length == vm.lengthConstants.empty || isValidField(vm.template.name, vm.lengthConstants.multiLineMaxCharLimit);
     };
 
     vm.isNamePageValid = function () {
@@ -585,21 +583,17 @@
       return false;
     }
 
-    function isValidSinglelineField(fieldDisplayText) {
-      return (fieldDisplayText.length <= vm.lengthConstants.singleLineMaxCharLimit);
-    }
-
-    function isValidMultilineField(fieldDisplayText) {
-      return (fieldDisplayText.length <= vm.lengthConstants.multiLineMaxCharLimit);
+    function isValidField(fieldDisplayText, maxCharLimit) {
+      return (fieldDisplayText.length <= maxCharLimit);
     }
 
     function isAgentUnavailablePageValid() {
-      return isValidMultilineField(vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText);
+      return isValidField(vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText, vm.lengthConstants.multiLineMaxCharLimit);
     }
 
     function isOffHoursPageValid() {
       setOffHoursWarning();
-      if (isValidMultilineField(vm.template.configuration.pages.offHours.message) && vm.isBusinessDaySelected) {
+      if (isValidField(vm.template.configuration.pages.offHours.message, vm.lengthConstants.multiLineMaxCharLimit) && vm.isBusinessDaySelected) {
         setOffHoursData();
         return true;
       }
@@ -607,25 +601,15 @@
     }
 
     function isFeedbackPageValid() {
-      return (isValidMultilineField(vm.template.configuration.pages.feedback.fields.feedbackQuery.displayText)
-      && isValidSinglelineField(vm.template.configuration.pages.feedback.fields.comment.displayText));
-    }
-
-    function isBubbleTitleValid(chatStatusMessagesObj) {
-      if (chatStatusMessagesObj.bubbleTitleMessage) {
-        return isValidSinglelineField(chatStatusMessagesObj.bubbleTitleMessage.displayText);
-      }
-      return true;
+      return (isValidField(vm.template.configuration.pages.feedback.fields.feedbackQuery.displayText, vm.lengthConstants.multiLineMaxCharLimit)
+      && isValidField(vm.template.configuration.pages.feedback.fields.comment.displayText, vm.lengthConstants.singleLineMaxCharLimit50));
     }
 
     function isStatusMessagesPageValid() {
       var chatStatusMessagesObj = vm.template.configuration.chatStatusMessages.messages;
-      return isValidSinglelineField(chatStatusMessagesObj.connectingMessage.displayText)
-      && isBubbleTitleValid(chatStatusMessagesObj)
-      && isValidSinglelineField(chatStatusMessagesObj.waitingMessage.displayText)
-      && isValidSinglelineField(chatStatusMessagesObj.enterRoomMessage.displayText)
-      && isValidSinglelineField(chatStatusMessagesObj.leaveRoomMessage.displayText)
-      && isValidSinglelineField(chatStatusMessagesObj.chattingMessage.displayText);
+      return isValidField(chatStatusMessagesObj.waitingMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit25)
+      && isValidField(chatStatusMessagesObj.leaveRoomMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit25)
+      && isValidField(chatStatusMessagesObj.chattingMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit25);
     }
 
     vm.isTypeDuplicate = false;
@@ -660,14 +644,14 @@
     }
 
     function areAllFixedFieldsValid() {
-      return isValidSinglelineField(vm.getAttributeParam('value', 'header', 'welcomeHeader'))
-          && isValidSinglelineField(vm.getAttributeParam('value', 'organization', 'welcomeHeader'));
+      return isValidField(vm.getAttributeParam('value', 'header', 'welcomeHeader'), vm.lengthConstants.singleLineMaxCharLimit50)
+          && isValidField(vm.getAttributeParam('value', 'organization', 'welcomeHeader'), vm.lengthConstants.singleLineMaxCharLimit50);
     }
 
     function areAllDynamicFieldsValid() {
       return _.reduce(_.map(nonHeaderFieldNames, function (fieldName) {
-        return isValidSinglelineField(vm.getAttributeParam('value', 'label', fieldName))
-                && isValidSinglelineField(vm.getAttributeParam('value', 'hintText', fieldName));
+        return isValidField(vm.getAttributeParam('value', 'label', fieldName), vm.lengthConstants.singleLineMaxCharLimit50)
+                && isValidField(vm.getAttributeParam('value', 'hintText', fieldName), vm.lengthConstants.singleLineMaxCharLimit50);
       }), function (x, y) { return x && y; }, true);
     }
 
@@ -880,7 +864,7 @@
         })
         .catch(function (response) {
           handleChatTemplateError();
-          Notification.errorWithTrackingId(response, vm.getLocalisedText('careChatTpl.createChatTemplateFailureText'));
+          Notification.errorWithTrackingId(response, vm.getLocalisedText('careChatTpl.createTemplateFailureText'));
         });
     }
 
@@ -892,7 +876,7 @@
         })
         .catch(function (response) {
           handleChatTemplateError();
-          Notification.errorWithTrackingId(response, vm.getLocalisedText('careChatTpl.editChatTemplateFailureText'));
+          Notification.errorWithTrackingId(response, vm.getLocalisedText('careChatTpl.editTemplateFailureText'));
         });
     }
 
@@ -900,7 +884,7 @@
       vm.creatingChatTemplate = false;
       var responseTemplateId = response.headers('Location').split('/').pop();
       $state.go('care.Features');
-      var successMsg = vm.type === vm.mediaTypes.chat ? 'careChatTpl.createSuccessText' : 'careChatTpl.createSuccessText_callback';
+      var successMsg = 'careChatTpl.createSuccessText';
       Notification.success(successMsg, {
         featureName: vm.template.name
       });
@@ -911,7 +895,7 @@
     function handleChatTemplateEdit(response, templateId) {
       vm.creatingChatTemplate = false;
       $state.go('care.Features');
-      var successMsg = vm.type === vm.mediaTypes.chat ? 'careChatTpl.editSuccessText' : 'careChatTpl.editSuccessText_callback';
+      var successMsg = 'careChatTpl.editSuccessText';
       Notification.success(successMsg, {
         featureName: vm.template.name
       });

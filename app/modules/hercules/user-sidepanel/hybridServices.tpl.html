@@ -9,6 +9,7 @@
            ui-sref="user-overview.hybrid-services-{{extension.id}}({extensionId: extension.id, extensions: hybridServicesCtrl.extensions})">
           <i class="feature-icon" ng-class="hybridServicesCtrl.extensionIcon(extension.id)"></i>
           <span class="feature-name" translate="hercules.serviceNames.{{extension.id}}"></span>
+          <span class="feature-status has-warnings-icon" ng-if="extension.entitled && extension.status && extension.status.hasWarnings"><i class="icon icon-warning"></i></span>
           <span class="feature-status" ng-class="extension.status ? 'status-' + hybridServicesCtrl.getStatus(extension.status) : ''"
                 ng-show="extension.status && extension.entitled && !hybridServicesCtrl.isInvitePending"
                 id="{{extension.id}}-status"

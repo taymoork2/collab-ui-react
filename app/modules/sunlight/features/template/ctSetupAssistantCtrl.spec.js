@@ -713,40 +713,22 @@ describe('Care Setup Assistant Ctrl', function () {
     beforeEach(function () {
       controller.currentState = controller.states[CHAT_STATUS_MESSAGES_PAGE_INDEX];
     });
-    it("if bubble title field is missing it should continue", function () {
-      controller.template.configuration.chatStatusMessages.messages.connectingMessage.displayText = "Connecting Message";
-      controller.template.configuration.chatStatusMessages.messages.bubbleTitleMessage = undefined;
-      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = "Waiting Message";
-      controller.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText = "Enter Room Message";
-      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = "Left Room Message";
-      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = "Chatting Message";
-      checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, true);
-    });
     it("should have previous and next button enabled", function () {
-      controller.template.configuration.chatStatusMessages.messages.connectingMessage.displayText = "Connecting Message";
-      controller.template.configuration.chatStatusMessages.messages.bubbleTitleMessage.displayText = "Click here to chat with Customer Care";
       controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = "Waiting Message";
-      controller.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText = "Enter Room Message";
       controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = "Left Room Message";
       controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = "Chatting Message";
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, true);
     });
-    it("should have next button disabled if all the status messages are more than 50 characters", function () {
-      controller.template.configuration.chatStatusMessages.messages.connectingMessage.displayText = Array(60).join("n");
-      controller.template.configuration.chatStatusMessages.messages.bubbleTitleMessage.displayText = Array(51).join("n");
-      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = Array(60).join("n");
-      controller.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText = Array(60).join("n");
-      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = Array(60).join("n");
-      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(60).join("n");
+    it("should have next button disabled if all the status messages are more than 25 characters", function () {
+      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = Array(30).join("n");
+      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = Array(30).join("n");
+      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(30).join("n");
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, false);
     });
-    it("should have next button disabled if any of the status messages are more than 50 characters", function () {
-      controller.template.configuration.chatStatusMessages.messages.connectingMessage.displayText = "Connecting Message";
-      controller.template.configuration.chatStatusMessages.messages.bubbleTitleMessage.displayText = "Click here to chat with Customer Care";
+    it("should have next button disabled if any of the status messages are more than 25 characters", function () {
       controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = "Waiting Message";
-      controller.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText = "Enter Room Message";
       controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = "Left Room Message";
-      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(60).join("n");
+      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(30).join("n");
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, false);
     });
   });
