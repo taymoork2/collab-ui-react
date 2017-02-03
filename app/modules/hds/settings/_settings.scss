@@ -5,3 +5,41 @@
     font-size: 2rem;
   }
 }
+
+// the code is shared with app/modules/hercules/email-notifications-section/_email-notifications-section.scss
+.hds-email-input {
+  tags-input.ng-invalid .tags {
+    border-color: $color-alerts-base;
+    box-shadow: none;
+  }
+
+  .tags {
+    border-radius: 4px;
+    box-shadow: none;
+    border-color: $gray-light-2;
+
+    &:hover {
+      border-color: $gray-light-1;
+    }
+
+    &.focused {
+      box-shadow: none;
+      border-color: $color-primary-darker;
+    }
+
+    .tag-item {
+      background: $brand-primary-light;
+      border: 0;
+      color: $brand-white;
+      line-height: 24px;
+
+      .remove-button {
+        color: $brand-white;
+      }
+    }
+
+    .input.invalid-tag {
+      color: $brand-danger;
+    }
+  }
+}

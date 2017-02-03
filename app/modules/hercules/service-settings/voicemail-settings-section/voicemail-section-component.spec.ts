@@ -17,7 +17,11 @@ describe('Component: HybridVoicemailCtrl ', () => {
 
   it('should show Success notification when HybridVoiceMail is disabled', () => {
     spyOn(Notification, 'success');
-    let ctrl = $componentController('hybridVoicemailSettings');
+    let ctrl = $componentController('hybridVoicemailSettings', {
+      UCCService: {
+        enableHybridVoicemail: jasmine.createSpy('enableHybridVoicemail').and.returnValue($q.resolve()),
+      },
+    });
     ctrl.toggleVoicemail(false);
     $scope.$apply();
     expect(Notification.success.calls.count()).toBe(1);
@@ -25,7 +29,11 @@ describe('Component: HybridVoicemailCtrl ', () => {
 
   it('should show Success notification when HybridVoiceMail is enabled', () => {
     spyOn(Notification, 'success');
-    let ctrl = $componentController('hybridVoicemailSettings');
+    let ctrl = $componentController('hybridVoicemailSettings', {
+      UCCService: {
+        disableHybridVoicemail: jasmine.createSpy('disableHybridVoicemail').and.returnValue($q.resolve()),
+      },
+    });
     ctrl.toggleVoicemail(true);
     $scope.$apply();
     expect(Notification.success.calls.count()).toBe(1);

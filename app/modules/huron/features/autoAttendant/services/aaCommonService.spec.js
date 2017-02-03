@@ -170,6 +170,14 @@
         AACommonService.setCallerInputToggle(true);
         expect(AACommonService.isCallerInputToggle()).toBeTruthy();
       });
+      it('setRouteSIPAddressToggle should set to false', function () {
+        AACommonService.setRouteSIPAddressToggle(false);
+        expect(AACommonService.isRouteSIPAddressToggle()).toBeFalsy();
+      });
+      it('setRouteSIPAddressToggle should set to true', function () {
+        AACommonService.setRouteSIPAddressToggle(true);
+        expect(AACommonService.isRouteSIPAddressToggle()).toBeTruthy();
+      });
       it('setMediaUploadToggle should set to false', function () {
         AACommonService.setMediaUploadToggle(false);
         expect(AACommonService.isMediaUploadToggle()).toBeFalsy();

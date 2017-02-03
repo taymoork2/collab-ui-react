@@ -1722,6 +1722,7 @@
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
       "squared-fusion-ec": "Call Service Connect",
+      "squared-fusion-ec.full": "Call Service Connect",
       "squared-fusion-mgmt": "Expressway Management Service  "
     },
     "hybridServiceNames": {
@@ -2045,7 +2046,8 @@
       "configure-connector": {
         "title": "Configure and Start the Connector",
         "description": "Your Cisco Expressway is registered for Hybrid Services.",
-        "action": "Next, configure the Connector on the Expressway."
+        "action": "Next, configure the Connector on the Expressway.",
+        "action-in-grid": "Go to the Expressway to configure."
       },
       "no-domain-verified": {
         "title": "Verify a Domain",
@@ -2362,23 +2364,19 @@
         "editTrialUsers": "Edit Users in Trial"
       },
       "addTrialUsers": {
-        "modalTitle": "Assign Data Security to Users",
-        "modalHeading": "Manually Assign Users",
-        "modalDesc": "Enter the email addresses of the users that will be assigned to the Data Security Service",
+        "modalTitle": "Add Users to Trial Mode",
+        "modalHeading": "Add Users",
+        "modalDesc": "Enter the email addresses of the users that will be assigned to the Hybrid Data Security Service.",
         "emailNotificationsWatermark": "Email addresses",
-        "emailExample": "For example: John Doe john.doe@email.com, Kate Williams kate.williams@email.com",
-        "modalSST": "Start Service Trial"
+        "emailExample": "For example: john.doe@example.com",
+        "modalSST": "Add Users"
       },
       "editTrialUsers": {
-        "modalTitle": "Edit Data Security Trial Users",
-        "modalHeadingAddUser": "To Add Users to this Service Trial",
-        "modalAddUserDesc1": "&bull; Go to the Users page",
-        "modalAddUserDesc2": "&bull; Search for the user you want to add to this Trial, and upon finding them, select the user (by clicking the row)",
-        "modalAddUserDesc3": "&bull; Navigate to Hybrid Services and then assign them to the Data Security Service Trial by flipping the Service toggle ON",
-        "modalHeadingRemoveUser": "To Remove a User from this Service Trial",
-        "modalRemoveUserDesc1": "&bull; Go to the Users page",
-        "modalRemoveUserDesc2": "&bull; Search for the user you want to remove from this Trial, and upon finding them, select the user (by clicking the row). If necessary, you can <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">download your Service Trial Users</a> for reference.",
-        "modalRemoveUserDesc3": "&bull; Navigate to Hybrid Services and then assign them to the Data Security Service Trial by flipping the Service toggle ON"
+        "modalTitle": "Edit Users in Trial Mode",
+        "modalHeading": "Edit Users",
+        "emailNotificationsWatermark": "add new ...",
+        "tooManyUsers": "<i class='icon icon-error'></i> Max number of users reached, delete existing users to add more.",
+        "modalDesc": "To remove a user click the X in the user's field and they will be removed from the Hybrid Data Security Service."
       },
       "page_title": "Hybrid Data Security Service",
       "genericError": "An unexpected error occurred. Please try again later.",
@@ -2534,7 +2532,9 @@
     "uploadPrompt": "Drag and drop a file or use the",
     "fileBrowser": "file browser",
     "uploadCsvEmpty": "Please upload a valid CSV.",
+    "uploadCsvBadFormat": "CSV is not in correct format",
     "csvFileTypeError": "Please upload a valid file type.",
+    "uploadCsvBadHeaders": "Missing required headers in CSV",
     "csvMaxSizeError": "File size is above the maximum of 10 MB.",
     "csvMaxLinesError": "The CSV contains more users than the maximum allowed. Please reduce the number of users to {{max}} or less and upload the CSV again.",
     "processCsvStep": "Processing CSV",
@@ -2860,6 +2860,7 @@
     "phoneMenuRouteAA": "Route to Auto Attendant",
     "phoneMenuGoBack": "Go Back",
     "phoneMenuRouteQueue": "Queue Call",
+    "phoneMenuRouteToSipEndpoint": "Route to SIP Endpoint",
     "phoneMenuListening": "While listening for the following user input",
     "phoneMenuRepeatOnce": "Once",
     "phoneMenuRepeatTwice": "Twice",
@@ -2892,6 +2893,8 @@
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "routeCallPopover": "Select how to route call.",
     "selectPlaceHolder": "Search or Select",
+    "validSip": "Enter a valid SIP address",
+    "routeToSipPlaceHolder": "Eg:x-x-xxx-xxxx@voip-provider.eg.net",
     "selectNumberPlaceHolder": "Search or Select a Number",
     "inputPlaceHolder": "Start typing here",
     "sayMessage": "Message",
@@ -4045,6 +4048,10 @@
   "addDeviceWizard": {
     "newDevice": "New Device",
     "newCode": "New Code",
+    "confirmRoomDeviceOnly": {
+      "roomDeviceOnly": "Room Device activation only",
+      "noSparkCallService": "This user doesn't have Spark Call service."
+    },
     "chooseDeviceType": {
       "deviceType": "What kind of device do you want to set up?",
       "deviceTypeInstructions": "A new device requires a unique activation code to be input during setup. What kind of device do you want to activate?",
@@ -4078,7 +4085,7 @@
       "emailExample": "e.g. johnsmith@example.com",
       "invalidEmailAddress": "Invalid Email Address",
       "noUserFound": "No users found with Cisco Spark Call service",
-      "userMissesUcEntitlement": "User is missing a Cisco Spark Call license."
+      "noSparkCallWarning": "This user doesn't have Spark Call service. They can still activate a room device and make calls using Spark or SIP addresses. However, for phone dialling and desk phones, you need to give them the Spark Call service from the Users page."
     },
     "chooseSharedSpace": {
       "existingOrNewPlace": "Assign to an existing place or a new place?",
@@ -4086,15 +4093,18 @@
       "existingOrNewPlaceCollaborationDeviceInstructions": "Select existing place if the previous code for this place has been lost or has expired.",
       "existingPlace": "Existing Place",
       "whichPlace": "Which existing place will the device be assigned to?",
-      "existingDeskPhonePlaceInstructions": "Select from the below places. Only Cisco Spark Call places are shown since desk phones and room devices cannot share the same place.",
-      "existingCollaborationDevicePlaceInstructions": "Only empty Cisco Spark Room Device places are shown since there is a maximum of one room device in a place, and desk phones and room devices cannot share the same place.",
+      "existingDeskPhonePlaceInstructions": "Select from the below places. Only desk phone places are shown since desk phones and room devices cannot share the same place.",
+      "existingCollaborationDevicePlaceInstructions": "Only empty room device places are shown since there is a maximum of one room device in a place, and desk phones and room devices cannot share the same place.",
+      "existingPlaceInstructions": "A room device place can only contain one device, so existing room device places with an activated device will not be shown.",
       "selectPlace": "Search for a place",
       "newPlace": "New Place",
       "placeLocation": "Where will this device be located?",
       "newPlaceInstructions": "What would you like to call the place that this device will be assigned to?",
       "newPlaceOnlyInstructions": "What would you like to call the place that this room device will be assigned to? A place represents a physical location such as a meeting room, a lobby or a factory floor.",
       "insertRoomName": "Insert name of device location, e.g. 'Reception' or 'Boardroom'",
-      "noExistingPlaces": "There is no Cisco Spark Call place in your organization. Create a new place instead."
+      "noExistingPlaces": "There is no Cisco Spark place in your organization. Create a new place instead.",
+      "noExistingHuronPlaces": "There is no desk phone place in your organization. Create a new place instead.",
+      "noExistingCloudberryPlaces": "There is no room device place in your organization. Create a new place instead."
     },
     "newSharedSpace": {
       "title": "Add Place",
@@ -4127,6 +4137,7 @@
       "activationCode": "Activation Code",
       "plugInDeskPhone": "Share this code with the person setting up the desk phone belonging to <b>{{belongsTo}}</b>, or enter or scan it yourself when prompted by the device.",
       "plugInDeskPhoneExtra": "Share this code with the person setting up the desk phone (or analog telephone adapter port) belonging to <b>{{belongsTo}}</b>, or enter or scan it yourself when prompted by the device.",
+      "plugInPersonal": "Share this code with the person setting up the device belonging to <b>{{belongsTo}}</b>, or enter or scan it yourself when prompted by the device.",
       "plugInRoomSystem": "Share this code with the person setting up the room device belonging to <b>{{belongsTo}}</b>, or enter or scan it yourself when prompted by the device.",
       "onceActivePersonalDevice": "Once the device has been successfully activated, you will be able to find and configure it in Users or Devices.",
       "onceActiveSharedDevice": "Once the device has been successfully activated, you will be able to find and configure it in Places or Devices.",
@@ -4360,8 +4371,10 @@
       "unavailableTitle": "Unavailable",
       "partialTitle": "Partially Available",
       "utilizationTitle": "Percentage Utilization",
+      "participantDistributionTitle": "Participant Distribution",
       "clusteravailability": "Cluster Availability",
       "overallUtilizationGraphError": "There was an error while loading detailed utilization data",
+      "overallParticipantDistributionGraphError": "There was an error while loading detailed participant distribution data",
       "overallCallVolumeGraphError": "There was an error while loading total number of calls",
       "overallAvailabilityGraphError": "There was an error while loading detailed availability data",
       "overallAverageUtilizationGraphError": "There was an error while loading Average/Peak utilization data",
@@ -5284,6 +5297,7 @@
     "chatMediaType": "Chat",
     "callbackTemplateCode": "Ca",
     "callbackMediaType": "Callback",
+    "chatPlusCallbackMediaType": "Chat+Callback",
     "newFeatures": {
       "newFeatureButtonText": "New",
       "newCareTemplateModalTitle": "Create New Care Template",
@@ -5438,6 +5452,7 @@
     "failedToLoad": "Failed to load {{ featureText }}(s).",
     "chatTemplate": "chat template",
     "chatTemplate_callback": "callback template",
+    "chatTemplate_chatPlusCallback": "chat+callback template",
     "namePlaceholder": "Name the Chat Template",
     "namePlaceholder_callback": "Name the Callback Template",
     "nameHint": "Enter a name for you to identify this chat template",

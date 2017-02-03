@@ -1,19 +1,19 @@
-interface IClusterIdStateParam extends ng.ui.IStateParamsService {
+export interface IClusterIdStateParam extends ng.ui.IStateParamsService {
     clusterId?: any;
 }
 
-interface IGridApiScope extends ng.IScope {
+export interface IGridApiScope extends ng.IScope {
     gridApi?: any;
 }
 
-class HybridServiceClusterListCtrl implements ng.IComponentController {
+export class HybridServiceClusterListCtrl implements ng.IComponentController {
 
     public clusterList: any = {};
     public clusterListGridOptions = {};
     public getSeverity = this.FusionClusterStatesService.getSeverity;
 
-    private serviceId: string;
-    private connectorType: string;
+    protected serviceId: string;
+    protected connectorType: string;
 
     /* @ngInject */
     constructor(
@@ -21,7 +21,7 @@ class HybridServiceClusterListCtrl implements ng.IComponentController {
         private $scope: IGridApiScope,
         private $state: ng.ui.IStateService,
         private $stateParams: IClusterIdStateParam,
-        private ClusterService,
+        protected ClusterService,
         private FusionClusterService,
         private FusionClusterStatesService,
         private FusionUtils,
@@ -32,7 +32,6 @@ class HybridServiceClusterListCtrl implements ng.IComponentController {
     public $onInit() {
         this.connectorType = this.FusionUtils.serviceId2ConnectorType(this.serviceId);
         this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
-
         this.clusterListGridOptions = {
             data: '$ctrl.clusterList',
             enableSorting: false,
@@ -67,7 +66,7 @@ class HybridServiceClusterListCtrl implements ng.IComponentController {
         });
     }
 
-    private updateClusters() {
+    protected updateClusters() {
         this.FusionClusterService.setClusterAllowListInfoForExpressway(this.ClusterService.getClustersByConnectorType(this.connectorType))
           .then((clusters) => {
               this.clusterList = clusters;
@@ -86,7 +85,7 @@ class HybridServiceClusterListCtrl implements ng.IComponentController {
 
 }
 
-class HybridServiceClusterListComponent implements ng.IComponentOptions {
+export class HybridServiceClusterListComponent implements ng.IComponentOptions {
     public controller = HybridServiceClusterListCtrl;
     public templateUrl = 'modules/hercules/service-specific-pages/components/cluster-list/hybrid-service-cluster-list.html';
     public bindings = {

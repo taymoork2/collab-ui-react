@@ -12,6 +12,13 @@
     vm.radioSelect = null;
     vm.isLoading = false;
 
+    vm.isNewPlaceFlow = function () {
+      return wizardData.function !== 'addDevice';
+    };
+
+    vm.hideBackButton = vm.isNewPlaceFlow() || wizardData.showPersonal;
+    vm.hideCancelButton = !vm.isNewPlaceFlow() && !wizardData.showPersonal;
+
     vm.personal = function () {
       vm.radioSelect = 'personal';
     };

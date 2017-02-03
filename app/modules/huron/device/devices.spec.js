@@ -101,14 +101,14 @@ describe('Controller: DevicesCtrlHuron', function () {
       expect(poller.getDeviceList.calls.count()).toEqual(2);
     });
 
-    it('should not call activate when Huron entitlement is removed', function () {
+    it('should still call activate when Huron entitlement is removed', function () {
       poller.getDeviceList.calls.reset();
 
       $stateParams.currentUser.entitlements = ["squared-room-moderation", "webex-messenger", "squared-call-initiation", "webex-squared", "squared-syncup"];
       $scope.$broadcast('entitlementsUpdated');
       $scope.$apply();
 
-      expect(poller.getDeviceList.calls.count()).toEqual(0);
+      expect(poller.getDeviceList.calls.count()).toEqual(1);
     });
 
     it('should not call activate when currentUser is not defined', function () {
@@ -184,6 +184,7 @@ describe('Controller: DevicesCtrlHuron', function () {
         displayName: displayName,
         id: userCisUuid,
         userName: userName,
+        entitlements: ['ciscouc'],
         emails: [{
           primary: true,
           value: email
@@ -220,6 +221,7 @@ describe('Controller: DevicesCtrlHuron', function () {
         var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
         expect(wizardState.title).toBe('addDeviceWizard.newDevice');
         expect(wizardState.showATA).toBe(showATA);
+        expect(wizardState.showPersonal).toBe(true);
         expect(wizardState.admin.firstName).toBe(adminFirstName);
         expect(wizardState.admin.lastName).toBe(adminLastName);
         expect(wizardState.admin.displayName).toBe(adminDisplayName);
@@ -232,6 +234,7 @@ describe('Controller: DevicesCtrlHuron', function () {
         expect(wizardState.account.name).toBe(displayName);
         expect(wizardState.account.organizationId).toBe(orgId);
         expect(wizardState.account.username).toBe(userName);
+        expect(wizardState.account.isEntitledToHuron).toBe(true);
         expect(wizardState.recipient.displayName).toBe(displayName);
         expect(wizardState.recipient.firstName).toBe(firstName);
         expect(wizardState.recipient.cisUuid).toBe(userCisUuid);
@@ -252,6 +255,7 @@ describe('Controller: DevicesCtrlHuron', function () {
         var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
         expect(wizardState.title).toBe('addDeviceWizard.newDevice');
         expect(wizardState.showATA).toBe(showATA);
+        expect(wizardState.showPersonal).toBe(false);
         expect(wizardState.admin.firstName).toBe(adminFirstName);
         expect(wizardState.admin.lastName).toBe(adminLastName);
         expect(wizardState.admin.displayName).toBe(adminDisplayName);
@@ -264,6 +268,7 @@ describe('Controller: DevicesCtrlHuron', function () {
         expect(wizardState.account.cisUuid).toBe(userCisUuid);
         expect(wizardState.account.organizationId).toBe(orgId);
         expect(wizardState.account.username).toBe(userName);
+        expect(wizardState.account.isEntitledToHuron).toBe(true);
         expect(wizardState.recipient.displayName).toBe(displayName);
         expect(wizardState.recipient.firstName).toBe(firstName);
         expect(wizardState.recipient.cisUuid).toBe(userCisUuid);

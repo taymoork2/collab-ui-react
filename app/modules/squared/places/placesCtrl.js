@@ -71,11 +71,11 @@ require('./_places.scss');
           return vm.placesLoaded;
         };
 
-        vm.isEntitledToRoomSystem = function () {
+        vm.isOrgEntitledToRoomSystem = function () {
           return Authinfo.isDeviceMgmt();
         };
 
-        vm.isEntitledToHuron = function () {
+        vm.isOrgEntitledToHuron = function () {
           return _.filter(Authinfo.getLicenses(), function (l) {
             return l.licenseType === 'COMMUNICATION';
           }).length > 0;
@@ -167,8 +167,8 @@ require('./_places.scss');
               admin: vm.adminUserDetails,
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
               title: 'addDeviceWizard.newSharedSpace.title',
-              isEntitledToHuron: vm.isEntitledToHuron(),
-              isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
+              isEntitledToHuron: vm.isOrgEntitledToHuron(),
+              isEntitledToRoomSystem: vm.isOrgEntitledToRoomSystem(),
               account: {
                 type: 'shared',
                 organizationId: Authinfo.getOrgId()
