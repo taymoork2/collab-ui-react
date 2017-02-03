@@ -87,14 +87,12 @@
 
     function addMissingDaysInfo(usageData, start, end) {
       return getMissingDays(start, end).then(function (missingDays) {
-        $log.warn("missingDays", missingDays);
         var current = moment(start);
         var final = moment(end);
         while (current.isSameOrBefore(final)) {
           var day = current.format('YYYY-MM-DD');
-          $log.warn("day", day);
           if (isDayMissing(missingDays, day)) {
-            $log.warn("Adding missing day", day);
+            //$log.warn("Adding missing day", day);
             usageData.push({
               time: day,
               totalDuration: 0,

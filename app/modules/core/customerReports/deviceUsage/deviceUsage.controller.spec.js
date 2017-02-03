@@ -57,7 +57,7 @@ describe('Controller: DeviceUsageCtrl', function () {
       sinon.stub(DeviceUsageTotalService, 'getDataForRange');
       var deviceData = {
         reportItems: [
-          { whatever: 42 }
+          { totalDuration: 42 }
         ],
         missingDays: false
       };
@@ -158,6 +158,8 @@ describe('Controller: DeviceUsageCtrl', function () {
     amChart.categoryAxis = {};
     amChart.validateData = function () {};
     amChart.animateAgain = function () {};
+    amChart.valueAxes = [];
+    amChart.valueAxes[0] = {};
     return amChart;
   };
 });

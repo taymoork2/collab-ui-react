@@ -203,13 +203,8 @@
         });
         if (!_.isUndefined(clusterName)) {
           value.title = clusterName;
-          //var bullet = "bullet" + clusterName;
-          var description = "call_redirect" + clusterName;
-          value.bulletField = "round";
-          value.descriptionField = description;
-          value.balloonText = '<span class="graph-text">' + value.descriptionField + ' ' + ' <span class="graph-number">[[value]]</span></span>';
+          value.balloonText = '<span class="graph-text">' + value.title + ' ' + ' <span class="graph-number">[[value]]</span></span>';
           value.lineThickness = 2;
-          //value.balloonText = "[[descriptionField]][[valueField]]";
         }
         if (value.title !== value.valueField) {
           value.connect = false;
