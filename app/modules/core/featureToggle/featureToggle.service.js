@@ -170,6 +170,7 @@
       cloudberryPersonalMode: 'ce-enable-personal-mode',
       autoAnswer: 'huron-auto-answer',
       huronFederatedSparkCall: 'huron-federated-spark-call',
+      sparkCallTenDigitExt: 'i751-10d-ext',
     };
 
     var toggles = {};
