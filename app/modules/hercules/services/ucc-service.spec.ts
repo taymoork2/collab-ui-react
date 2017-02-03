@@ -5,6 +5,7 @@ describe('UCCService', () => {
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module(mockDependencies));
 
+  let voicemailBaseUrl = 'https://ucc-integration.wbx2.com/voicemail/api/v1';
   let userId: any = '5505f959-6d2f-4771-8f41-53b072335dbb';
   let orgId: any = 'fe5acf7a-6246-484f-8f43-3e8c910fc50d';
   let service: any | UCCService;
@@ -42,6 +43,21 @@ describe('UCCService', () => {
     let providedOrgId = 'funkSchmunk';
     $httpBackend.expectGET(`https://ucc-integration.wbx2.com/ucm-service/api/v1/userDiscovery/${providedOrgId}/${userId}`).respond([]);
     service.getUserDiscovery(userId, providedOrgId);
+  });
+
+  it('should call the correct backend when reading org level hybrid voicemail status', () => {
+    $httpBackend.expectGET(`${voicemailBaseUrl}/vmOrgStatus/${orgId}/`).respond([]);
+    service.getOrgVoicemailConfiguration(orgId);
+  });
+
+  it('should call the correct backend when enabling hybrid voicemail', () => {
+    $httpBackend.expectPOST(`${voicemailBaseUrl}/vmOrgStatus/${orgId}/`).respond([]);
+    service.enableHybridVoicemail(orgId);
+  });
+
+  it('should call the correct backend when disabling hybrid voicemail', () => {
+    $httpBackend.expectPOST(`${voicemailBaseUrl}/vmOrgStatus/${orgId}/`).respond([]);
+    service.disableHybridVoicemail(orgId);
   });
 
 });

@@ -403,21 +403,5 @@
     "status": "warn",
     "emailSubscribers": "kjetil@example.org"
   }],
-  "servicesFormatted": [{
-    "id": "squared-fusion-mgmt",
-    "enabled": true,
-    "acknowledged": true,
-    "emailSubscribers": "",
-    "label": "overview.cards.hybrid.services.squared-fusion-mgmt",
-    "status": "warn",
-    "healthStatus": "warning"
-  }, {
-    "id": "squared-fusion-cal",
-    "enabled": true,
-    "acknowledged": true,
-    "emailSubscribers": "kjetil@example.org",
-    "label": "overview.cards.hybrid.services.squared-fusion-cal",
-    "status": "warn",
-    "healthStatus": "warning"
-  }]
+  "servicesFormatted": ["hercules.serviceNames.squared-fusion-uc.full", "hercules.serviceNames.squared-fusion-cal"]
 }

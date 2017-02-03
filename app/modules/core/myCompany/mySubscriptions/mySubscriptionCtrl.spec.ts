@@ -39,7 +39,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     FeatureToggleService = _FeatureToggleService_;
     $q = _$q_;
 
-    spyOn(ServiceDescriptor, 'servicesInOrg').and.returnValue($q.when(data.servicesResponse));
+    spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.when(data.servicesResponse));
     spyOn(FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasSharedMeetingsReportsGetStatus').and.returnValue($q.when(false));
     spyOn(rootScope, '$broadcast').and.callThrough();

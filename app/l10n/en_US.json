@@ -1722,6 +1722,7 @@
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
       "squared-fusion-ec": "Call Service Connect",
+      "squared-fusion-ec.full": "Call Service Connect",
       "squared-fusion-mgmt": "Expressway Management Service  "
     },
     "hybridServiceNames": {
@@ -4370,8 +4371,10 @@
       "unavailableTitle": "Unavailable",
       "partialTitle": "Partially Available",
       "utilizationTitle": "Percentage Utilization",
+      "participantDistributionTitle": "Participant Distribution",
       "clusteravailability": "Cluster Availability",
       "overallUtilizationGraphError": "There was an error while loading detailed utilization data",
+      "overallParticipantDistributionGraphError": "There was an error while loading detailed participant distribution data",
       "overallCallVolumeGraphError": "There was an error while loading total number of calls",
       "overallAvailabilityGraphError": "There was an error while loading detailed availability data",
       "overallAverageUtilizationGraphError": "There was an error while loading Average/Peak utilization data",

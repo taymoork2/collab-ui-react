@@ -28,8 +28,6 @@ export class UCCService {
   private uccUrl: string;
   private hybridVoicemailUrl: string;
 
-  private hybridVoicemailHasBeenEnabled = false; // Hard coded for now, remove once API is online.
-
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
@@ -55,42 +53,32 @@ export class UCCService {
   }
 
   public getOrgVoicemailConfiguration(orgId?: string): ng.IPromise<IVoicemailOrgEnableInfo> {
-    // See https://wiki.cisco.com/display/WX2/Voicemail+Org+Enable+APIs
     if (_.isUndefined(orgId)) {
       orgId = this.Authinfo.getOrgId();
     }
-    return this.$q.resolve({ // replace with GET to this.hybridVoicemailUrl + /vmOrgStatus/{orgId}
-      voicemailOrgEnableInfo: {
-        orgId: orgId,
-        orgHybridVoicemailEnabled: this.hybridVoicemailHasBeenEnabled,
-        orgSparkVoicemailEnabled: false,
-        orgVoicemailStatus: 'ENABLED',
-      },
-    });
+    return this.$http.get(`${this.hybridVoicemailUrl}/vmOrgStatus/${orgId}/`)
+      .then(this.extractData);
   }
 
-  public enableHybridVoicemail(orgId?: string): ng.IPromise<any> {
+  public enableHybridVoicemail(orgId?: string): ng.IPromise<IVoicemailOrgEnableInfo> {
     return this.setOrgVoicemailConfiguration(true, orgId);
   }
 
-  public disableHybridVoicemail(orgId?: string): ng.IPromise<any> {
+  public disableHybridVoicemail(orgId?: string): ng.IPromise<IVoicemailOrgEnableInfo> {
     return this.setOrgVoicemailConfiguration(false, orgId);
   }
 
   private setOrgVoicemailConfiguration(enable: boolean, orgId?: string): ng.IPromise<IVoicemailOrgEnableInfo> {
-    // See https://wiki.cisco.com/display/WX2/Voicemail+Org+Enable+APIs
     if (_.isUndefined(orgId)) {
       orgId = this.Authinfo.getOrgId();
     }
-    this.hybridVoicemailHasBeenEnabled = enable;
-    return this.$q.resolve({ // replace with POST to this.hybridVoicemailUrl + /vmOrgStatus/{orgId}
+    return this.$http.post(`${this.hybridVoicemailUrl}/vmOrgStatus/${orgId}/`, {
       voicemailOrgEnableInfo: {
-        orgId: orgId,
-        orgHybridVoicemailEnabled: true,
-        orgSparkVoicemailEnabled: false,
-        orgVoicemailStatus: 'ENABLED',
+        orgHybridVoicemailEnabled: enable,
       },
-    });
+    })
+      .then(this.extractData);
+
   }
 
   public getUserVoicemailInfo(userId: string, orgId?: string): ng.IPromise<IVmInfo> {
