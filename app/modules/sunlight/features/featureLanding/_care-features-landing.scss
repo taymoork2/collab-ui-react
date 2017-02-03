@@ -17,7 +17,7 @@
     display: block;
     height: 2rem;
     width: 2rem;
-    line-height: 2rem;
+    line-height: 2.3rem;
     border-radius: 50%;
     background-color: $gray-light-4;
     text-align: center;
@@ -66,6 +66,10 @@
 
   .card-icon-color-Ca {
     color: $color-alerts-base;
+  }
+
+  .card-icons-inline {
+    display: inline-flex;
   }
 
   .spinner-icon {
