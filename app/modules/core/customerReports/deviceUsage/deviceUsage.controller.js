@@ -239,7 +239,9 @@ require('modules/core/reports/amcharts-export.scss');
       vm.loading = true;
       DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'day', ['ce', 'sparkboard'], apiToUse).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last7Days'));
-        getModelsForRange(dates.start, dates.end).then(modelsForRange);
+        if ($state.current.name === 'reports.device-usage-v2') {
+          getModelsForRange(dates.start, dates.end).then(modelsForRange);
+        }
       }, handleReject);
     }
 
@@ -247,7 +249,9 @@ require('modules/core/reports/amcharts-export.scss');
       vm.loading = true;
       DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'week', ['ce', 'sparkboard'], apiToUse).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last4Weeks'));
-        getModelsForRange(dates.start, dates.end).then(modelsForRange);
+        if ($state.current.name === 'reports.device-usage-v2') {
+          getModelsForRange(dates.start, dates.end).then(modelsForRange);
+        }
       }, handleReject);
     }
 
@@ -255,7 +259,9 @@ require('modules/core/reports/amcharts-export.scss');
       vm.loading = true;
       DeviceUsageTotalService.getDataForRange(dates.start, dates.end, 'month', ['ce', 'sparkboard'], apiToUse).then(function (data) {
         loadChartData(data, $translate.instant('reportsPage.usageReports.last3Months'));
-        getModelsForRange(dates.start, dates.end).then(modelsForRange);
+        if ($state.current.name === 'reports.device-usage-v2') {
+          getModelsForRange(dates.start, dates.end).then(modelsForRange);
+        }
       }, handleReject);
     }
 
@@ -365,9 +371,7 @@ require('modules/core/reports/amcharts-export.scss');
     };
 
     function getModelsForRange(start, end) {
-      if ($state.current.name === 'reports.device-usage-v2') {
-        return DeviceUsageModelService.getModelsForRange(start, end, 'day', ['ce', 'SparkBoard'], 'local');
-      }
+      return DeviceUsageModelService.getModelsForRange(start, end, 'day', ['ce', 'SparkBoard'], 'local');
     }
 
     function modelsForRange(items) {
