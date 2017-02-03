@@ -56,7 +56,7 @@
           'minPeriod': 'DD',
           'parseDates': true,
           'autoGridCount': true,
-          'title': 'Last 7 Days',
+          //'title': 'Last 7 Days',
           'centerLabels': true,
           'equalSpacing': true
         },
@@ -89,8 +89,7 @@
             'bulletColor': '#ffffff',
             'bulletBorderAlpha': 1,
             'useLineColorForBulletBorder': true,
-            'labelFunction': getLabel,
-            'labelOffset': -2
+            'labelFunction': getLabel
           }
         ],
         'guides': [

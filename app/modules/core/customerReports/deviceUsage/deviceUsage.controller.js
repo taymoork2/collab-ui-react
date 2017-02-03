@@ -236,7 +236,10 @@ require('modules/core/reports/amcharts-export.scss');
         vm.noDataForRange = false;
       }
       vm.reportData = reportItems;
+      var max = _.maxBy(reportItems, 'totalDuration').totalDuration;
+      amChart.valueAxes[0].maximum = (max / 3600) * 1.1;
       amChart.dataProvider = reportItems;
+
       if (title) {
         if (missingDays.count > 0) {
           var missingDaysWarning = $translate.instant('reportsPage.usageReports.missingDays', { nbrOfMissingDays: missingDays.count });
