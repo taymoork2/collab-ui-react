@@ -5297,6 +5297,7 @@
     "chatMediaType": "Chat",
     "callbackTemplateCode": "Ca",
     "callbackMediaType": "Callback",
+    "chatPlusCallbackMediaType": "Chat+Callback",
     "newFeatures": {
       "newFeatureButtonText": "New",
       "newCareTemplateModalTitle": "Create New Care Template",
@@ -5451,6 +5452,7 @@
     "failedToLoad": "Failed to load {{ featureText }}(s).",
     "chatTemplate": "chat template",
     "chatTemplate_callback": "callback template",
+    "chatTemplate_chatPlusCallback": "chat+callback template",
     "namePlaceholder": "Name the Chat Template",
     "namePlaceholder_callback": "Name the Callback Template",
     "nameHint": "Enter a name for you to identify this chat template",

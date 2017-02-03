@@ -11,6 +11,7 @@
     var service = {
       getChatTemplates: getChatTemplates,
       getCallbackTemplates: getCallbackTemplates,
+      getChatPlusCallbackTemplates: getChatPlusCallbackTemplates,
       getTemplate: getTemplate,
       formatTemplates: formatTemplates,
       deleteTemplate: deleteTemplate,
@@ -30,6 +31,13 @@
       return ConfigTemplateService.query({
         orgId: Authinfo.getOrgId(),
         mediaType: 'callback'
+      }).$promise;
+    }
+
+    function getChatPlusCallbackTemplates() {
+      return ConfigTemplateService.query({
+        orgId: Authinfo.getOrgId(),
+        mediaType: 'chatPlusCallback'
       }).$promise;
     }
 
@@ -77,6 +85,7 @@
       var formattedList = _.map(list, function (tpl) {
         tpl.featureType = feature.name;
         tpl.color = feature.color;
+        tpl.icons = feature.icons;
         return tpl;
       });
       return orderByCardName(formattedList);

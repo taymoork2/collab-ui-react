@@ -10,6 +10,7 @@
       dirSync: 'atlas-dir-sync',
       atlasCareTrials: 'atlas-care-trials',
       atlasCareInboundTrials: 'atlas-care-inbound-trials',
+      atlasCareChatPlusCallbackTrials: 'atlas-care-chatPlusCallback-trials',
       atlasContextServiceTrials: 'atlas-context-service-trials',
       atlasDarling: 'atlas-darling',
       atlasDataRetentionSettings: 'atlas-data-retention-settings',
