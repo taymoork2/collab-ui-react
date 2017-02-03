@@ -13,8 +13,6 @@
     var vm = this;
     init();
 
-    var VERIFIED = 'verified';
-
     vm.type = $stateParams.type;
 
     vm.mediaTypes = {
@@ -36,9 +34,6 @@
     vm.animation = 'slide-left';
     vm.submitChatTemplate = submitChatTemplate;
     vm.isEditFeature = $stateParams.isEditFeature;
-
-    // Sync Verified Domains with care
-    vm.syncDomains = syncDomains;
 
     // Setup Assistant pages with index
     vm.states = {};
@@ -854,22 +849,10 @@
     }
 
     function submitChatTemplate() {
-      syncDomains();
+      DomainManagementService.syncDomainsWithCare();
       vm.creatingChatTemplate = true;
       if ($stateParams.isEditFeature) editChatTemplate();
       else createChatTemplate();
-    }
-
-    function syncDomains() {
-      DomainManagementService.getVerifiedDomains().then(function (response) {
-        var verifiedDomains = _.chain(response)
-          .filter({ 'status': VERIFIED })
-          .map('text')
-          .value();
-        verifiedDomains = verifiedDomains.length > 0 ? verifiedDomains : ['.*'];
-        var config = { 'allowedOrigins': verifiedDomains };
-        SunlightConfigService.updateChatConfig(config);
-      });
     }
 
     function createChatTemplate() {

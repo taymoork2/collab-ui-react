@@ -3,7 +3,7 @@
 describe('Care Setup Assistant Ctrl', function () {
 
   var controller, $scope, $modal, $q, CTService, getLogoDeferred, getLogoUrlDeferred, SunlightConfigService, $state, $stateParams, LogMetricsService;
-  var Notification, $translate, DomainManagementService, _scomUrl, $httpBackend;
+  var Notification, $translate, _scomUrl, $httpBackend;
 
   var escapeKey = 27;
   var templateName = 'Atlas UT Template';
@@ -101,7 +101,7 @@ describe('Care Setup Assistant Ctrl', function () {
   var defaultTimings = businessHours.defaultTimings;
 
   afterEach(function () {
-    controller = $scope = $modal = $q = CTService = getLogoDeferred = getLogoUrlDeferred = SunlightConfigService = $state = $stateParams = LogMetricsService = DomainManagementService = undefined;
+    controller = $scope = $modal = $q = CTService = getLogoDeferred = getLogoUrlDeferred = SunlightConfigService = $state = $stateParams = LogMetricsService = undefined;
     Notification = $translate = undefined;
   });
 
@@ -117,7 +117,7 @@ describe('Care Setup Assistant Ctrl', function () {
 
   var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$translate_,
     _$window_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_,
-                                _LogMetricsService_, _DomainManagementService_, UrlConfig, _$httpBackend_) {
+                                _LogMetricsService_, UrlConfig, _$httpBackend_) {
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
     $q = _$q_;
@@ -128,7 +128,6 @@ describe('Care Setup Assistant Ctrl', function () {
     Notification = _Notification_;
     $stateParams = _$stateParams_;
     LogMetricsService = _LogMetricsService_;
-    DomainManagementService = _DomainManagementService_;
     _scomUrl = UrlConfig.getScomUrl() + '/' + OrgId;
     $httpBackend = _$httpBackend_;
 
@@ -809,41 +808,4 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.template.configuration.pages.callbackConfirmation.enabled).toBe(true);
     });
   });
-
-  describe('Syncing verified domains with care', function () {
-    beforeEach(inject(intializeCtrl));
-    it('when the org has no verified domains', function () {
-      spyOn(DomainManagementService, 'getVerifiedDomains').and.callFake(function () {
-        var data = [{
-          "text": "ccservice.com",
-          "status": "pending"
-        }];
-        return $q.resolve(data);
-      });
-      controller.syncDomains();
-      $scope.$apply();
-      expect(SunlightConfigService.updateChatConfig).toHaveBeenCalledWith({ "allowedOrigins": [".*"] });
-    });
-    it('when the org has verified domains', function () {
-      spyOn(DomainManagementService, 'getVerifiedDomains').and.callFake(function () {
-        var data = [{
-          "text": "ccservice.com",
-          "status": "verified"
-        }];
-        return $q.resolve(data);
-      });
-      controller.syncDomains();
-      $scope.$apply();
-      expect(SunlightConfigService.updateChatConfig).toHaveBeenCalledWith({ "allowedOrigins": ["ccservice.com"] });
-    });
-    it('when the domain management service call fails', function () {
-      spyOn(DomainManagementService, 'getVerifiedDomains').and.callFake(function () {
-        return $q.reject({});
-      });
-      controller.syncDomains();
-      $scope.$apply();
-      expect(SunlightConfigService.updateChatConfig).not.toHaveBeenCalled();
-    });
-  });
-
 });
