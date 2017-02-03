@@ -85,13 +85,15 @@ describe('Service: UserDetails', function () {
         state: 'activated',
         serviceId: 'squared-fusion-cal',
         connector: { cluster_name: 'Tom is Awesome Cluster', host_name: 'cool.cisco.com' },
-        description: {
-          defaultMessage: 'WebEx is not configured'
-        }
+        messages: [{
+          key: 'tull',
+          severity: 'error',
+          description: 'WebEx is not configured'
+        }]
       }];
       UserDetails.getUsers('5632-f806-org', simulatedResponse, progress)
         .then(function (userRows) {
-          expectUserRow(userRows[0], 'sparkuser1@gmail.com', 'common.user', 'Tom is Awesome Cluster (cool.cisco.com)', 'activated', 'WebEx is not configured', '111', 'squared-fusion-cal');
+          expectUserRow(userRows[0], 'sparkuser1@gmail.com', 'common.user', 'Tom is Awesome Cluster (cool.cisco.com)', 'activated', 'common.error: WebEx is not configured', '111', 'squared-fusion-cal');
         });
       $httpBackend.flush();
     });
@@ -110,15 +112,16 @@ describe('Service: UserDetails', function () {
         entitled: true,
         state: 'error',
         serviceId: 'squared-fusion-cal',
-        description: {
+        messages: [{
           key: '987',
-          defaultMessage: 'The request failed. The SMTP address has no mailbox associated with it.'
-        }
+          severity: 'warning',
+          description: 'The request failed. The SMTP address has no mailbox associated with it.'
+        }]
       }];
       UserDetails.getUsers('5632-f806-org', simulatedResponse, progress)
         .then(function (userRows) {
           expectUserRow(userRows[0], 'sparkuser1@gmail.com', 'common.user', '', 'error',
-            'The request failed. The SMTP address has no mailbox associated with it.', '111', 'squared-fusion-cal');
+            'common.warning: The request failed. The SMTP address has no mailbox associated with it.', '111', 'squared-fusion-cal');
         });
       $httpBackend.flush();
     });

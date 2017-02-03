@@ -146,6 +146,9 @@
     };
 
     var refreshUserInUss = function () {
+      if ($scope.isInvitePending) {
+        return;
+      }
       USSService.refreshEntitlementsForUser($scope.currentUser.id).catch(function (response) {
         Notification.errorWithTrackingId(response, 'hercules.userSidepanel.refreshUserFailed');
       }).finally(function () {

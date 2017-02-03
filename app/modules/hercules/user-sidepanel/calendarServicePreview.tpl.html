@@ -70,21 +70,7 @@
         </div>
       </div>
 
-      <div ng-if="extension.currentUserEntitled && extension.status && extension.status.state === 'error' && extension.status.description"
-           class="error-message">
-         <i class="icon icon-error"></i>
-         <p class="message">
-          {{extension.status.description.defaultMessage}}
-         </p>
-      </div>
-
-      <div ng-if="extension.currentUserEntitled && extension.status && extension.status.state !== 'error' && extension.status.description"
-           class="info-message">
-        <i class="icon icon-info"></i>
-        <p class="message">
-          {{extension.status.description.defaultMessage}}
-        </p>
-      </div>
+      <user-status-messages ng-if="extension.currentUserEntitled && extension.status" messages="extension.status.messages"></user-status-messages>
 
       <div
         ng-if="isInvitePending && extension.entitled"
