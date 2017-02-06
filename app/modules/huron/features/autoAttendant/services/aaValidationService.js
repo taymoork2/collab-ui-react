@@ -225,7 +225,7 @@
           at: _.indexOf(conditionalMenus, conditionalMenu) + 1
         });
       }
-      if (_.isEmpty(action.then.value)) {
+      if (!action.then || _.isEmpty(action.then.value)) {
         validAction = false;
         AANotificationService.error(errMissingThenVariableMsg, {
           schedule: translatedLabel,

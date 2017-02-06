@@ -152,7 +152,7 @@
       if (AACommonService.isDecisionToggle()) {
         vm.options.push({
           title: $translate.instant('autoAttendant.actionDecision'),
-          title1: $translate.instant('autoAttendant.actionIfDecision'),
+          ifTitle: $translate.instant('autoAttendant.actionIfDecision'),
           controller: 'AADecisionCtrl as aaDecisionCtrl',
           url: 'modules/huron/features/autoAttendant/decision/aaDecision.tpl.html',
           hint: $translate.instant('autoAttendant.actionDecisionHint'),

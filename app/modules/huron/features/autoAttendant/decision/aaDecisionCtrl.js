@@ -100,10 +100,10 @@
     }];
 
     vm.setIfDecision = setIfDecision;
-    vm.save = save;
+    vm.update = update;
 
     /////////////////////
-    function save(which) {
+    function update(which) {
 
       AACommonService.setDecisionStatus(true);
 

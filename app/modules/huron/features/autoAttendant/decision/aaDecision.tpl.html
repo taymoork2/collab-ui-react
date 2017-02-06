@@ -6,29 +6,29 @@
   <div ng-switch="aaDecisionCtrl.ifOption.value">
     <p ng-if="aaDecisionCtrl.ifOption.value != 'callerReturned' && aaDecisionCtrl.ifOption.value != ''" translate="autoAttendant.actionIs"></p> 
     <div ng-switch-when="Original-Caller-Number">
-      <textarea class="aa-decision-textarea" aa-keypress ng-change="aaDecisionCtrl.save('Original-Caller-Number')" ng-model="aaDecisionCtrl.ifOption.buffer" type="text" id="aaDecisionCallerNumber{{ schedule + index }}" name="callerNumberCalled" }}" rows="4" maxlength="2000"></textarea>
+      <textarea class="aa-decision-textarea" aa-keypress ng-change="aaDecisionCtrl.update('Original-Caller-Number')" ng-model="aaDecisionCtrl.ifOption.buffer" type="text" id="aaDecisionCallerNumber{{ schedule + index }}" name="callerNumberCalled" }}" rows="4" maxlength="2000"></textarea>
       <p class="cs-input__help-text" translate="autoAttendant.callerNumberInfo"></p>
     </div>
     <div ng-switch-when="Original-Called-Number">
-      <textarea class="aa-decision-textarea" aa-keypress ng-change="aaDecisionCtrl.save('Original-Called-Number')" ng-model="aaDecisionCtrl.ifOption.buffer" type="text" id="aaDecisionNumberDialed{{ schedule + index }}" name="callerNumberDialed" }}" rows="4" maxlength="2000"></textarea>
+      <textarea class="aa-decision-textarea" aa-keypress ng-change="aaDecisionCtrl.update('Original-Called-Number')" ng-model="aaDecisionCtrl.ifOption.buffer" type="text" id="aaDecisionNumberDialed{{ schedule + index }}" name="callerNumberDialed" }}" rows="4" maxlength="2000"></textarea>
       <p class="cs-input__help-text" translate="autoAttendant.callerNumberInfo"></p>
     </div>
     <div ng-switch-when="Original-Remote-Party-ID">
-      <textarea class="aa-decision-textarea" aa-keypress ng-change="aaDecisionCtrl.save('Original-Remote-Party-ID')" ng-model="aaDecisionCtrl.ifOption.buffer" type="text" id="aaDecisionCallerNamed{{ schedule + index }}" name="callerNamed" }}" rows="4" maxlength="2000"></textarea>
+      <textarea class="aa-decision-textarea" aa-keypress ng-change="aaDecisionCtrl.update('Original-Remote-Party-ID')" ng-model="aaDecisionCtrl.ifOption.buffer" type="text" id="aaDecisionCallerNamed{{ schedule + index }}" name="callerNamed" }}" rows="4" maxlength="2000"></textarea>
       <p class="cs-input__help-text" translate="autoAttendant.callerNameInfo"></p>
     </div>
     <div ng-switch-when="Original-Caller-Country-Code">
-      <textarea class="aa-decision-textarea" aa-keypress ng-change="aaDecisionCtrl.save('Original-Caller-Country-Code')" ng-model="aaDecisionCtrl.ifOption.buffer" type="text" id="aaDecisionCountryCode{{ schedule + index }}" name="countryCode" }}" rows="4" maxlength="2000"></textarea>
+      <textarea class="aa-decision-textarea" aa-keypress ng-change="aaDecisionCtrl.update('Original-Caller-Country-Code')" ng-model="aaDecisionCtrl.ifOption.buffer" type="text" id="aaDecisionCountryCode{{ schedule + index }}" name="countryCode" }}" rows="4" maxlength="2000"></textarea>
       <p class="cs-input__help-text" translate="autoAttendant.countryCodeInfo"></p>
     </div>
     <div ng-switch-when="Original-Caller-Area-Code">
-      <textarea class="aa-decision-textarea" aa-keypress ng-change="aaDecisionCtrl.save('Original-Caller-Area-Code')" ng-model="aaDecisionCtrl.ifOption.buffer" type="text" id="aaDecisionAreaCode{{ schedule + index }}" name="areaCode" }}" rows="4" maxlength="2000"></textarea>
+      <textarea class="aa-decision-textarea" aa-keypress ng-change="aaDecisionCtrl.update('Original-Caller-Area-Code')" ng-model="aaDecisionCtrl.ifOption.buffer" type="text" id="aaDecisionAreaCode{{ schedule + index }}" name="areaCode" }}" rows="4" maxlength="2000"></textarea>
       <p class="cs-input__help-text" translate="autoAttendant.areaCodeInfo"></p>
     </div>
     <!-- not implemented as yet -->
     <div ng-switch-when="callerReturned">
       <p translate="autoAttendant.callerReturnedWhen"></p>
-      <cs-select options="aaDecisionCtrl.callerReturnedOptions" ng-model="aaDecisionCtrl.callerReturnedOption" icon="icon-chevron-down" labelfield="label" valuefield="value" ng-change="aaDecisionCtrl.save(0)"></cs-select> 
+      <cs-select options="aaDecisionCtrl.callerReturnedOptions" ng-model="aaDecisionCtrl.callerReturnedOption" icon="icon-chevron-down" labelfield="label" valuefield="value" ng-change="aaDecisionCtrl.update(0)"></cs-select> 
     </div> 
   </div>
   <div class="row aa-flex-row aa-then">

@@ -18,6 +18,7 @@ describe('Controller: AADecisionCtrl', function () {
 
   var schedule = 'openHours';
   var index = '0';
+  var menu, action;
 
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
@@ -43,12 +44,19 @@ describe('Controller: AADecisionCtrl', function () {
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
-    spyOn(featureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(featureToggleService, 'supports').and.returnValue($q.resolve(true));
 
     aaCommonService.resetFormStatus();
 
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+    menu = AutoAttendantCeMenuModelService.newCeMenuEntry();
+    action = AutoAttendantCeMenuModelService.newCeActionEntry('conditional', '');
+    action.if = {};
+    menu.addAction(action);
+
+    aaUiModel['openHours'].addEntryAt(0, menu);
 
     $scope.schedule = schedule;
     $scope.index = index;
@@ -63,14 +71,18 @@ describe('Controller: AADecisionCtrl', function () {
     aaCommonService = null;
     controller = null;
     aaUiModel = null;
+    menu = null;
+    action = null;
+
   });
 
   describe('add conditional action', function () {
     it('should add decision action object menuEntry', function () {
       var c;
+
       var menu = AutoAttendantCeMenuModelService.newCeMenuEntry();
 
-      aaUiModel['openHours'].addEntryAt(index, menu);
+      aaUiModel['openHours'].addEntryAt(0, menu);
 
       c = controller('AADecisionCtrl', {
         $scope: $scope
@@ -83,16 +95,10 @@ describe('Controller: AADecisionCtrl', function () {
   });
   describe('add If ', function () {
     it('should set the If option ', function () {
-      var c, action;
-      var menu = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      action = AutoAttendantCeMenuModelService.newCeActionEntry('conditional', '');
-      action.if = {};
+      var c;
+
       action.if.leftCondition = 'Original-Remote-Party-ID';
       action.if.rightCondition = 'Hello world';
-
-      menu.addAction(action);
-
-      aaUiModel['openHours'].addEntryAt(index, menu);
 
       c = controller('AADecisionCtrl', {
         $scope: $scope
@@ -106,9 +112,7 @@ describe('Controller: AADecisionCtrl', function () {
   });
   describe('add then ', function () {
     it('should set the then option ', function () {
-      var c, action;
-      var menu = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      action = AutoAttendantCeMenuModelService.newCeActionEntry('conditional', '');
+      var c;
       action.if = {};
       action.if.leftCondition = 'Original-Remote-Party-ID';
       action.if.rightCondition = 'Hello world';
@@ -117,10 +121,6 @@ describe('Controller: AADecisionCtrl', function () {
 
       action.then.name = 'goto';
       action.then.value = 'Demo AA';
-
-      menu.addAction(action);
-
-      aaUiModel['openHours'].addEntryAt(index, menu);
 
       c = controller('AADecisionCtrl', {
         $scope: $scope
@@ -134,18 +134,12 @@ describe('Controller: AADecisionCtrl', function () {
 
     });
   });
-  describe('save ', function () {
-    it('should the conditional from ifOption buffer', function () {
-      var c, action;
-      var menu = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      action = AutoAttendantCeMenuModelService.newCeActionEntry('conditional', '');
+  describe('update', function () {
+    it('should set the action entry from the ifOption buffer', function () {
+      var c;
       action.if = {};
       action.if.leftCondition = 'Original-Remote-Party-ID';
       action.if.rightCondition = 'Hello world';
-
-      menu.addAction(action);
-
-      aaUiModel['openHours'].addEntryAt(index, menu);
 
       c = controller('AADecisionCtrl', {
         $scope: $scope
@@ -156,7 +150,7 @@ describe('Controller: AADecisionCtrl', function () {
       var b = _.find(c.ifOptions, { 'value': 'Original-Remote-Party-ID' });
       b.buffer = "Hello world";
 
-      c.save('Original-Remote-Party-ID');
+      c.update('Original-Remote-Party-ID');
 
       expect(c.actionEntry.if.rightCondition).toEqual(b.buffer);
 
@@ -164,16 +158,10 @@ describe('Controller: AADecisionCtrl', function () {
   });
   describe('set IfDecision', function () {
     it('should the conditional from ifOption value', function () {
-      var c, action;
-      var menu = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      action = AutoAttendantCeMenuModelService.newCeActionEntry('conditional', '');
+      var c;
       action.if = {};
       action.if.leftCondition = 'Original-Remote-Party-ID';
       action.if.rightCondition = 'Hello world';
-
-      menu.addAction(action);
-
-      aaUiModel['openHours'].addEntryAt(index, menu);
 
       c = controller('AADecisionCtrl', {
         $scope: $scope
@@ -196,7 +184,7 @@ describe('Controller: AADecisionCtrl', function () {
 
   xdescribe('list Queues', function () {
     beforeEach(inject(function ($q) {
-      spyOn(aaQueueService, 'listQueues').and.returnValue($q.when(queue));
+      spyOn(aaQueueService, 'listQueues').and.returnValue($q.resolve(queue));
       aaCommonService.setRouteQueueToggle(true);
     }));
 

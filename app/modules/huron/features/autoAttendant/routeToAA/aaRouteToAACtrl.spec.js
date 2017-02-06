@@ -139,7 +139,7 @@ describe('Controller: AARouteToAACtrl', function () {
 
       });
 
-      it('should conditional action with then clause', function () {
+      it('should create a conditional action with a "then" clause', function () {
 
         var controller = $controller('AARouteToAACtrl', {
           $scope: $scope

@@ -495,7 +495,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.decisionThenDropDownOptions);
 
       utils.wait(autoattendant.decisionPhoneNumber, 12000);
-      utils.sendKeys(autoattendant.decisionPhoneNumber, "2068559752");
+      utils.sendKeys(autoattendant.decisionPhoneNumber, "2065551234");
  
     });
 
