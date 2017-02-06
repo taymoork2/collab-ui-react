@@ -1,6 +1,18 @@
 <div class="fusion-cluster-settings">
   <div class="cs-form">
     <email-notifications-section service-id="'squared-fusion-media'"></email-notifications-section>
+    <setting-section setting="mediaServiceSettings.sipRegistration" class="needs-border-top">
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="mediaFusion.sipconfiguration.title"></h5>
+          <p class="sub-section__description" translate="mediaFusion.sipconfiguration.description"></p>
+          <cs-toggle-switch ng-model="$ctrl.enableEmailSendingToUser"
+                      ng-click="$ctrl.setEnableEmailSendingToUser()"
+                      toggle-id="toggleEnableEmailSendingToUser"
+                      name="toggleEnableEmailSendingToUser"
+                      size="small">
+           </cs-toggle-switch>
+        </div>
+      </setting-section>
     <deactivate-section service-id="'squared-fusion-media'" deactivate-modal-options="mediaServiceSettings.deactivateModalOptions"></deactivate-section>
     <documentation-section service-id="'squared-fusion-media'"></documentation-section>
   </div>

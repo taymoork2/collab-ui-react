@@ -14,6 +14,10 @@
       title: 'common.general'
     };
 
+    vm.sipRegistration = {
+      title: 'mediaFusion.sipconfiguration.title'
+    };
+
     vm.deactivateModalOptions = {
       templateUrl: 'modules/mediafusion/media-service-v2/settings/confirm-disable-dialog.html',
       controller: 'DisableMediaServiceController',
