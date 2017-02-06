@@ -198,8 +198,8 @@
       return placesUrl + device.cisUuid;
     }
 
-    function createCsdmPlace(name, entitlements, directoryNumber, externalNumber) {
-      return CsdmPlaceService.createCsdmPlace(name, entitlements, directoryNumber, externalNumber)
+    function createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps) {
+      return CsdmPlaceService.createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts, ussProps)
         .then(addPlaceToDataModel);
     }
 

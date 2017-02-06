@@ -8,7 +8,7 @@ require('../devices/_devices.scss');
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($q, $scope, $state, $templateCache, $translate, CsdmDataModelService, Userservice, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService) {
+      function ($q, $scope, $state, $templateCache, $translate, CsdmDataModelService, Userservice, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptor) {
         var vm = this;
 
         vm.data = [];
@@ -31,7 +31,16 @@ require('../devices/_devices.scss');
           var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
             vm.csdmHybridCallFeature = feature;
           });
-          $q.all([ataPromise, hybridPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
+          var placeCalendarPromise = FeatureToggleService.csdmPlaceCalendarGetStatus().then(function (feature) {
+            vm.csdmHybridCalendarFeature = feature;
+          });
+          var anyCalendarEnabledPromise = ServiceDescriptor.getServices().then(function (services) {
+            var anyEnabledCalendarService = _.chain(ServiceDescriptor.filterEnabledServices(services)).filter(function (service) {
+              return service.id === '' || service.id === '';
+            }).some();
+            vm.hybridCalendarEnabledOnOrg = !!anyEnabledCalendarService;
+          });
+          $q.all([ataPromise, hybridPromise, placeCalendarPromise, anyCalendarEnabledPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
             vm.addPlaceIsDisabled = false;
           });
         }
@@ -167,6 +176,8 @@ require('../devices/_devices.scss');
               showATA: vm.showATA,
               admin: vm.adminUserDetails,
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
+              csdmHybridCalendarFeature: vm.csdmHybridCalendarFeature,
+              hybridCalendarEnabledOnOrg: vm.hybridCalendarEnabledOnOrg,
               title: 'addDeviceWizard.newSharedSpace.title',
               isEntitledToHuron: vm.isOrgEntitledToHuron(),
               isEntitledToRoomSystem: vm.isOrgEntitledToRoomSystem(),
@@ -198,12 +209,18 @@ require('../devices/_devices.scss');
                   sparkCall: 'addDeviceFlow.addLines',
                   sparkCallConnect: 'addDeviceFlow.callConnectOptions',
                   sparkOnly: 'addDeviceFlow.showActivationCode',
+                  sparkOnlyAndCalendar: 'addDeviceFlow.editCalendarService',
                 },
               },
               'addDeviceFlow.callConnectOptions': {
                 next: 'addDeviceFlow.showActivationCode',
+                calendar: 'addDeviceFlow.editCalendarService',
               },
               'addDeviceFlow.addLines': {
+                next: 'addDeviceFlow.showActivationCode',
+                calendar: 'addDeviceFlow.editCalendarService',
+              },
+              'addDeviceFlow.editCalendarService': {
                 next: 'addDeviceFlow.showActivationCode',
               },
             },

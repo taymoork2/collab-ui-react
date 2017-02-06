@@ -450,6 +450,8 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
     var noTypeExistingUserUnentitled;
     var expectedEmailInfo;
     var entitlements;
+    var externalIdentifiers;
+    var ussProps;
 
     beforeEach(function () {
       cisUuid = 'testId';
@@ -464,6 +466,8 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
       userEmail = 'user@example.org';
       userFirstName = 'userFirstName';
       entitlements = ['something', 'else'];
+      externalIdentifiers = [{ type: 'squared-fusion-cal', GUID: 'test@example.com' }];
+      ussProps = [{ resourceGroup: '' }];
 
       cloudberryNewPlace = {
         state: function () {
@@ -477,6 +481,8 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
                 entitlements: entitlements,
                 directoryNumber: directoryNumber,
                 externalNumber: externalNumber,
+                externalCalendarIdentifier: externalIdentifiers[0],
+                ussProps: ussProps,
               },
               recipient: {
                 organizationId: userOrgId,
@@ -631,7 +637,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         });
 
         it('creates a new place and otp', function () {
-          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber);
+          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber, externalIdentifiers, ussProps);
           expect(CsdmDataModelService.createCodeForExisting).toHaveBeenCalledWith(cisUuid);
           expect(controller.qrCode).toBeTruthy();
           expect(controller.activationCode).toBe(activationCode);

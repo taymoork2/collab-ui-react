@@ -21,7 +21,23 @@
 
   .callServiceTitle {
     flex-basis: 30%;
+    width: 60%;
     display: flex;
     align-items: baseline;
   }
+  .callServiceControls {
+     flex-basis: 100%;
+    //display: flex;
+  }
+  .calendarServiceControls{
+
+  }
+  .calendarServiceControls #email {
+    width: 100%;
+  }
+}
+
+.modal-content #edit-calendar-modal {
+  margin-left: 0;
+  margin-right: 0;
 }

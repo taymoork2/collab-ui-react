@@ -512,6 +512,17 @@
               },
             },
           })
+          .state('addDeviceFlow.editCalendarService', {
+            parent: 'modal',
+            params: {
+              wizard: null
+            },
+            views: {
+              'modal@': {
+                template: '<edit-calendar-service id="edit-calendar-modal" class="modal-content" dismiss="$dismiss()"></edit-calendar-service>',
+              }
+            }
+          })
           .state('addDeviceFlow.callConnectOptions', {
             parent: 'modal',
             params: {
