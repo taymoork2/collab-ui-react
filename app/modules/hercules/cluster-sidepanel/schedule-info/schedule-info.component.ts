@@ -66,6 +66,11 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
     return this.ResourceGroupService.get(this.cluster.resourceGroupId)
       .then(group => group.name);
   }
+
+  public hasUrgentUpgradeSchedule = () => {
+    return this.cluster && this.cluster.upgradeSchedule && this.cluster.upgradeSchedule.urgentScheduleTime;
+  }
+
 }
 
 export class ScheduleInfoSectionComponent implements ng.IComponentOptions {
