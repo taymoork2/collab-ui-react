@@ -54,17 +54,6 @@
                 translate-value-onclick="hdsSettings.addResource()"
                 translate-compile>
             </p>
-            <p ng-if="hdsSettings.numTrialUsers > 0" class="sub-section__description" translate="hds.resources.settings.serviceUserDesc"
-                translate-values="{users : hdsSettings.numTrialUsers}"
-                translate-value-onclick="hdsSettings.openAddTrialUsersModal()"
-                translate-value-onclick1="hdsSettings.openEditTrialUsersModal()"
-                translate-compile>
-            </p>
-            <p ng-if="hdsSettings.numTrialUsers <= 0" class="sub-section__description" translate="hds.resources.settings.serviceUser0Desc"
-                translate-values="{users : hdsSettings.numTrialUsers}"
-                translate-value-onclick="hdsSettings.openAddTrialUsersModal()"
-                translate-compile>
-            </p>
         </div>
       </div>
     </setting-section>
