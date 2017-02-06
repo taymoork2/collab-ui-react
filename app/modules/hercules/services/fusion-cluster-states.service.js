@@ -8,12 +8,12 @@
   /* @ngInject */
   function FusionClusterStatesService() {
     return {
-      getStateSeverity: getStateSeverity,
-      getSeverityLabel: getSeverityLabel,
-      getMergedUpgradeState: getMergedUpgradeState,
       getMergedStateSeverity: getMergedStateSeverity,
-      getStatusIndicatorCSSClass: getStatusIndicatorCSSClass,
+      getMergedUpgradeState: getMergedUpgradeState,
       getSeverity: getSeverity,
+      getSeverityLabel: getSeverityLabel,
+      getStateSeverity: getStateSeverity,
+      getStatusIndicatorCSSClass: getStatusIndicatorCSSClass,
     };
 
     ////////////////

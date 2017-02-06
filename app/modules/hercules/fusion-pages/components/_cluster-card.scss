@@ -130,6 +130,18 @@ cluster-card {
       }
     }
 
+    .double-footer {
+      display: flex;
+
+      a {
+        flex: 1 0 50%;
+
+        &:first-child {
+          border-right: 1px solid $gray-light-3;
+        }
+      }
+    }
+
     &.card-c_mgmt {
       header::after {
         border-top-color: $color-cta-base;

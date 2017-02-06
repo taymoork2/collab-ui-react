@@ -11,7 +11,7 @@ describe('Component: autoAnswer', () => {
   const AUTO_ANSWER_MODE_SPEAKER_RADIO = '#autoAnswerSpeaker';
   const AUTO_ANSWER_MODE_HEADSET_RADIO = '#autoAnswerHeadset';
   const AUTO_ANSWER_PHONE_LABEL = '#autoAnswerDevice';
-  const AUTO_ANSWER_MULTI_DEVICE_WARNING_MSG = '#multi-device-warning';
+  const AUTO_ANSWER_MULTI_DEVICE_INFO = '#multi-device-info';
   const AUTO_ANSWER_ENABLED_FOR_SHARED_LINE_MEMBER_WARNING_MSG = '#sharedline-member-warning';
   const AUTO_ANSWER_NO_SUPPORTED_DEVICE_WARNING = '#no-supported-device-warning';
   const PHONE_1_TAG = 'pregoldintsl (Cisco 8845 SIP)';
@@ -49,7 +49,7 @@ describe('Component: autoAnswer', () => {
       expect(this.controller.autoAnswerPhoneSelected.label).toEqual(PHONE_1_TAG);
       expect(this.view.find(AUTO_ANSWER_MODE_SPEAKER_RADIO)).toBeChecked();
       expect(this.view.find(AUTO_ANSWER_MODE_HEADSET_RADIO)).not.toBeChecked();
-      expect(this.view.find(AUTO_ANSWER_MULTI_DEVICE_WARNING_MSG)).toExist();
+      expect(this.view.find(AUTO_ANSWER_MULTI_DEVICE_INFO)).toExist();
       expect(this.view.find(AUTO_ANSWER_PHONE_LABEL)).not.toExist();
       expect(this.view.find(AUTO_ANSWER_ENABLED_FOR_SHARED_LINE_MEMBER_WARNING_MSG)).not.toExist();
       expect(this.view.find(AUTO_ANSWER_NO_SUPPORTED_DEVICE_WARNING)).not.toExist();
@@ -66,7 +66,7 @@ describe('Component: autoAnswer', () => {
       expect(this.view.find(AUTO_ANSWER_PHONE_SELECT)).not.toExist();
       expect(this.view.find(AUTO_ANSWER_MODE_SPEAKER_RADIO)).not.toExist();
       expect(this.view.find(AUTO_ANSWER_MODE_HEADSET_RADIO)).not.toExist();
-      expect(this.view.find(AUTO_ANSWER_MULTI_DEVICE_WARNING_MSG)).not.toExist();
+      expect(this.view.find(AUTO_ANSWER_MULTI_DEVICE_INFO)).not.toExist();
       expect(this.view.find(AUTO_ANSWER_PHONE_LABEL)).not.toExist();
       expect(this.view.find(AUTO_ANSWER_ENABLED_FOR_SHARED_LINE_MEMBER_WARNING_MSG)).not.toExist();
       expect(this.view.find(AUTO_ANSWER_NO_SUPPORTED_DEVICE_WARNING)).not.toExist();
@@ -91,7 +91,7 @@ describe('Component: autoAnswer', () => {
       expect(this.controller.autoAnswerPhoneSelected.label).toEqual(PHONE_1_TAG);
       expect(this.view.find(AUTO_ANSWER_MODE_SPEAKER_RADIO)).not.toBeChecked();
       expect(this.view.find(AUTO_ANSWER_MODE_HEADSET_RADIO)).toBeChecked();
-      expect(this.view.find(AUTO_ANSWER_MULTI_DEVICE_WARNING_MSG)).toExist();
+      expect(this.view.find(AUTO_ANSWER_MULTI_DEVICE_INFO)).toExist();
       expect(this.view.find(AUTO_ANSWER_PHONE_LABEL)).not.toExist();
       expect(this.view.find(AUTO_ANSWER_ENABLED_FOR_SHARED_LINE_MEMBER_WARNING_MSG)).not.toExist();
       expect(this.view.find(AUTO_ANSWER_NO_SUPPORTED_DEVICE_WARNING)).not.toExist();
@@ -119,7 +119,7 @@ describe('Component: autoAnswer', () => {
       expect(this.controller.autoAnswerPhoneSelected.label).toEqual(PHONE_2_TAG);
       expect(this.view.find(AUTO_ANSWER_MODE_SPEAKER_RADIO)).toBeChecked();
       expect(this.view.find(AUTO_ANSWER_MODE_HEADSET_RADIO)).not.toBeChecked();
-      expect(this.view.find(AUTO_ANSWER_MULTI_DEVICE_WARNING_MSG)).toExist();
+      expect(this.view.find(AUTO_ANSWER_MULTI_DEVICE_INFO)).toExist();
       expect(this.view.find(AUTO_ANSWER_PHONE_LABEL)).not.toExist();
       expect(this.view.find(AUTO_ANSWER_ENABLED_FOR_SHARED_LINE_MEMBER_WARNING_MSG)).not.toExist();
       expect(this.view.find(AUTO_ANSWER_NO_SUPPORTED_DEVICE_WARNING)).not.toExist();
@@ -136,7 +136,7 @@ describe('Component: autoAnswer', () => {
     expect(this.view.find(AUTO_ANSWER_PHONE_SELECT)).not.toExist();
     expect(this.view.find(AUTO_ANSWER_MODE_SPEAKER_RADIO)).not.toExist();
     expect(this.view.find(AUTO_ANSWER_MODE_HEADSET_RADIO)).not.toExist();
-    expect(this.view.find(AUTO_ANSWER_MULTI_DEVICE_WARNING_MSG)).not.toExist();
+    expect(this.view.find(AUTO_ANSWER_MULTI_DEVICE_INFO)).not.toExist();
     expect(this.view.find(AUTO_ANSWER_PHONE_LABEL)).not.toExist();
     expect(this.view.find(AUTO_ANSWER_ENABLED_FOR_SHARED_LINE_MEMBER_WARNING_MSG)).not.toExist();
     expect(this.view.find(AUTO_ANSWER_NO_SUPPORTED_DEVICE_WARNING)).toExist();
@@ -163,7 +163,7 @@ describe('Component: autoAnswer', () => {
     expect(this.controller.autoAnswerPhoneSelected.label).toEqual(PHONE_1_TAG);
     expect(this.view.find(AUTO_ANSWER_MODE_SPEAKER_RADIO)).toBeChecked();
     expect(this.view.find(AUTO_ANSWER_MODE_HEADSET_RADIO)).not.toBeChecked();
-    expect(this.view.find(AUTO_ANSWER_MULTI_DEVICE_WARNING_MSG)).toExist();
+    expect(this.view.find(AUTO_ANSWER_MULTI_DEVICE_INFO)).toExist();
     expect(this.view.find(AUTO_ANSWER_PHONE_LABEL)).not.toExist();
     expect(this.view.find(AUTO_ANSWER_ENABLED_FOR_SHARED_LINE_MEMBER_WARNING_MSG)).toExist();
     expect(this.view.find(AUTO_ANSWER_NO_SUPPORTED_DEVICE_WARNING)).not.toExist();
@@ -181,7 +181,7 @@ describe('Component: autoAnswer', () => {
     expect(this.view.find(AUTO_ANSWER_PHONE_SELECT)).not.toExist();
     expect(this.view.find(AUTO_ANSWER_MODE_SPEAKER_RADIO)).toBeChecked();
     expect(this.view.find(AUTO_ANSWER_MODE_HEADSET_RADIO)).not.toBeChecked();
-    expect(this.view.find(AUTO_ANSWER_MULTI_DEVICE_WARNING_MSG)).not.toExist();
+    expect(this.view.find(AUTO_ANSWER_MULTI_DEVICE_INFO)).not.toExist();
     expect(this.view.find(AUTO_ANSWER_PHONE_LABEL)).toHaveText(PHONE_1_TAG);
     expect(this.view.find(AUTO_ANSWER_ENABLED_FOR_SHARED_LINE_MEMBER_WARNING_MSG)).not.toExist();
     expect(this.view.find(AUTO_ANSWER_NO_SUPPORTED_DEVICE_WARNING)).not.toExist();

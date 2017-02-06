@@ -170,9 +170,9 @@
     };
 
     var readResourceGroups = function () {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
+      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
         .then(function (supported) {
-          $scope.atlasF237ResourceGroupsFeatureToggle = supported;
+          $scope.resourceGroupsFeatureToggle = supported;
           if (supported) {
             ResourceGroupService.getAllAsOptions().then(function (options) {
               if (options.length > 0) {
@@ -325,7 +325,7 @@
 
     $scope.selectedCalendarTypeChanged = function (type) {
       $scope.extension.id = type;
-      if ($scope.atlasF237ResourceGroupsFeatureToggle) {
+      if ($scope.resourceGroupsFeatureToggle) {
         $scope.resourceGroup.updateShow();
       }
       $scope.calendarType.init();

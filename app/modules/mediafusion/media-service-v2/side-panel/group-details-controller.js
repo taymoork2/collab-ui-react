@@ -42,7 +42,7 @@
         }
 
         function openSettings(type, id) {
-          $state.go('mediafusion-settings', {
+          $state.go('mediafusion-cluster.settings', {
             id: id
           });
         }

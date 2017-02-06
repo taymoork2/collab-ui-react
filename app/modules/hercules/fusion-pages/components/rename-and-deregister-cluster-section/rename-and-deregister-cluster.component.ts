@@ -4,7 +4,7 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
 
   private clusterId: string;
   private cluster: any;
-  private onNameUpdate;
+  private onNameUpdate: Function;
   private deregisterModalOptions: any;
   private defaultDeregisterModalOptions: any = {
     resolve: {
@@ -56,17 +56,17 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
     }
   }
 
-  public saveClusterName(): void {
-    if (this.clusterName === '') {
+  public saveClusterName(clusterName): void {
+    if (clusterName === '') {
       this.Notification.error('hercules.renameAndDeregisterComponent.clusterNameCannotByEmpty');
       return;
     }
 
     this.savingNameState = true;
-    this.FusionClusterService.setClusterName(this.clusterId, this.clusterName)
-      .then((result) => {
+    this.FusionClusterService.setClusterName(this.clusterId, clusterName)
+      .then(() => {
         this.Notification.success('hercules.renameAndDeregisterComponent.clusterNameSaved');
-        this.onNameUpdate(result);
+        this.onNameUpdate({ name: clusterName });
       })
       .catch((error) => {
         this.Notification.errorWithTrackingId(error, 'hercules.renameAndDeregisterComponent.clusterNameCannotBeSaved');

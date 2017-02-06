@@ -3,7 +3,7 @@
 describe('Care Setup Assistant Ctrl', function () {
 
   var controller, $scope, $modal, $q, CTService, getLogoDeferred, getLogoUrlDeferred, SunlightConfigService, $state, $stateParams, LogMetricsService;
-  var Notification, $translate, DomainManagementService, _scomUrl, $httpBackend;
+  var Notification, $translate, _scomUrl, $httpBackend;
 
   var escapeKey = 27;
   var templateName = 'Atlas UT Template';
@@ -66,6 +66,12 @@ describe('Care Setup Assistant Ctrl', function () {
         name: 'type',
         value: { id: 'name' }
       }]
+    },
+    'field4': {
+      attributes: [{
+        name: 'type',
+        value: { id: 'phone' }
+      }]
     } };
   var customerInfoWithLongAttributeValue = {
     'welcomeHeader': {
@@ -101,7 +107,7 @@ describe('Care Setup Assistant Ctrl', function () {
   var defaultTimings = businessHours.defaultTimings;
 
   afterEach(function () {
-    controller = $scope = $modal = $q = CTService = getLogoDeferred = getLogoUrlDeferred = SunlightConfigService = $state = $stateParams = LogMetricsService = DomainManagementService = undefined;
+    controller = $scope = $modal = $q = CTService = getLogoDeferred = getLogoUrlDeferred = SunlightConfigService = $state = $stateParams = LogMetricsService = undefined;
     Notification = $translate = undefined;
   });
 
@@ -117,7 +123,7 @@ describe('Care Setup Assistant Ctrl', function () {
 
   var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$translate_,
     _$window_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_,
-                                _LogMetricsService_, _DomainManagementService_, UrlConfig, _$httpBackend_) {
+                                _LogMetricsService_, UrlConfig, _$httpBackend_) {
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
     $q = _$q_;
@@ -128,7 +134,6 @@ describe('Care Setup Assistant Ctrl', function () {
     Notification = _Notification_;
     $stateParams = _$stateParams_;
     LogMetricsService = _LogMetricsService_;
-    DomainManagementService = _DomainManagementService_;
     _scomUrl = UrlConfig.getScomUrl() + '/' + OrgId;
     $httpBackend = _$httpBackend_;
 
@@ -713,40 +718,22 @@ describe('Care Setup Assistant Ctrl', function () {
     beforeEach(function () {
       controller.currentState = controller.states[CHAT_STATUS_MESSAGES_PAGE_INDEX];
     });
-    it("if bubble title field is missing it should continue", function () {
-      controller.template.configuration.chatStatusMessages.messages.connectingMessage.displayText = "Connecting Message";
-      controller.template.configuration.chatStatusMessages.messages.bubbleTitleMessage = undefined;
-      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = "Waiting Message";
-      controller.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText = "Enter Room Message";
-      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = "Left Room Message";
-      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = "Chatting Message";
-      checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, true);
-    });
     it("should have previous and next button enabled", function () {
-      controller.template.configuration.chatStatusMessages.messages.connectingMessage.displayText = "Connecting Message";
-      controller.template.configuration.chatStatusMessages.messages.bubbleTitleMessage.displayText = "Click here to chat with Customer Care";
       controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = "Waiting Message";
-      controller.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText = "Enter Room Message";
       controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = "Left Room Message";
       controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = "Chatting Message";
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, true);
     });
-    it("should have next button disabled if all the status messages are more than 50 characters", function () {
-      controller.template.configuration.chatStatusMessages.messages.connectingMessage.displayText = Array(60).join("n");
-      controller.template.configuration.chatStatusMessages.messages.bubbleTitleMessage.displayText = Array(51).join("n");
-      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = Array(60).join("n");
-      controller.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText = Array(60).join("n");
-      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = Array(60).join("n");
-      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(60).join("n");
+    it("should have next button disabled if all the status messages are more than 25 characters", function () {
+      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = Array(30).join("n");
+      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = Array(30).join("n");
+      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(30).join("n");
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, false);
     });
-    it("should have next button disabled if any of the status messages are more than 50 characters", function () {
-      controller.template.configuration.chatStatusMessages.messages.connectingMessage.displayText = "Connecting Message";
-      controller.template.configuration.chatStatusMessages.messages.bubbleTitleMessage.displayText = "Click here to chat with Customer Care";
+    it("should have next button disabled if any of the status messages are more than 25 characters", function () {
       controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = "Waiting Message";
-      controller.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText = "Enter Room Message";
       controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = "Left Room Message";
-      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(60).join("n");
+      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(30).join("n");
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, false);
     });
   });
@@ -775,7 +762,7 @@ describe('Care Setup Assistant Ctrl', function () {
   describe('For callback media', function () {
     beforeEach(inject(intializeCtrl));
     beforeEach(function () {
-      controller.type = 'callback';
+      controller.selectedMediaType = 'callback';
       controller.setStates();
       controller.setOverviewCards();
       controller.getDefaultTemplate();
@@ -810,39 +797,51 @@ describe('Care Setup Assistant Ctrl', function () {
     });
   });
 
-  describe('Syncing verified domains with care', function () {
+  describe('For chat plus callback selected media type', function () {
     beforeEach(inject(intializeCtrl));
-    it('when the org has no verified domains', function () {
-      spyOn(DomainManagementService, 'getVerifiedDomains').and.callFake(function () {
-        var data = [{
-          "text": "ccservice.com",
-          "status": "pending"
-        }];
-        return $q.resolve(data);
-      });
-      controller.syncDomains();
-      $scope.$apply();
-      expect(SunlightConfigService.updateChatConfig).toHaveBeenCalledWith({ "allowedOrigins": [".*"] });
+    beforeEach(function () {
+      controller.selectedMediaType = 'chatPlusCallback';
+      controller.setStates();
+      controller.setOverviewCards();
+      controller.getDefaultTemplate();
     });
-    it('when the org has verified domains', function () {
-      spyOn(DomainManagementService, 'getVerifiedDomains').and.callFake(function () {
-        var data = [{
-          "text": "ccservice.com",
-          "status": "verified"
-        }];
-        return $q.resolve(data);
-      });
-      controller.syncDomains();
-      $scope.$apply();
-      expect(SunlightConfigService.updateChatConfig).toHaveBeenCalledWith({ "allowedOrigins": ["ccservice.com"] });
+
+    it('the page order should be as expected', function () {
+      expect(controller.states).toEqual([
+        'name',
+        'overview',
+        'customerInformationChat',
+        'agentUnavailable',
+        'feedback',
+        'profile',
+        'chatStatusMessages',
+        'customerInformationCallback',
+        'offHours',
+        'summary'
+      ]);
     });
-    it('when the domain management service call fails', function () {
-      spyOn(DomainManagementService, 'getVerifiedDomains').and.callFake(function () {
-        return $q.reject({});
-      });
-      controller.syncDomains();
-      $scope.$apply();
-      expect(SunlightConfigService.updateChatConfig).not.toHaveBeenCalled();
+
+    it('the overview page should have expected cards', function () {
+      expect(controller.overviewCards).toEqual([
+        'customerInformationChat',
+        'agentUnavailable',
+        'feedback',
+        'customerInformationCallback',
+        'offHours'
+      ]);
+    });
+
+    it('default template should be of type chatPlusCallback', function () {
+      expect(controller.template.configuration.mediaType).toEqual('chatPlusCallback');
+    });
+
+    it('should initialize only customer info & off-hours cards as enabled', function () {
+      expect(controller.template.configuration.pages.customerInformationChat.enabled).toBe(true);
+      expect(controller.template.configuration.pages.customerInformationCallback.enabled).toBe(true);
+      expect(controller.template.configuration.pages.agentUnavailable.enabled).toBe(true);
+      expect(controller.template.configuration.pages.offHours.enabled).toBe(true);
+      expect(controller.template.configuration.pages.callbackConfirmation.enabled).toBe(true);
+      expect(controller.template.configuration.pages.feedback.enabled).toBe(true);
     });
   });
 

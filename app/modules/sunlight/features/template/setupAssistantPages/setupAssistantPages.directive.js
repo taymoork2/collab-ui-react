@@ -23,7 +23,9 @@
 
   function createSetupAssistantPageDirective(pageFile) {
     var directive = {
-      link: function () {},
+      link: function ($scope, element, $attributes) {
+        $scope.careSetupAssistant.cardMode = $attributes.mode;
+      },
       templateUrl: 'modules/sunlight/features/template/setupAssistantPages/' + pageFile,
       restrict: 'EA',
       scope: false
