@@ -7,7 +7,8 @@
       <div class="care-card-report">
         <p class="report-description">{{nav.averageCsatDescription}}</p>
         <div id="averageCsatDiv" class="areachart"></div>
-        <drilldown-report props="nav.avgCsatDrilldownProps"  callback="nav.showTable(onSuccess, onError)"></drilldown-report>
+        <drilldown-report props="nav.avgCsatDrilldownProps"
+          callback="nav.showTable(onSuccess, onError, nav.mediaTypeSelected, nav.timeSelected)"></drilldown-report>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.dataStatus)">
           <i class='icon icon-spinner icon-2x'></i>
         </div>
