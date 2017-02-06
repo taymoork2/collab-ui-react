@@ -13,13 +13,18 @@
     </section-title>
     <p>{{$ctrl.currentPlace.sipUrl}}</p>
   </cs-sp-section>
-  <cs-sp-section ng-if="$ctrl.hasSparkCall && $ctrl.isUserLocaleFT2Enabled">
+  <cs-sp-section>
     <div class="section-title-row">
       <span class="section-name" translate="directoryNumberPanel.preferredLanguage"></span>
     </div>
-    <p class="description-block" translate="directoryNumberPanel.preferredLanguageDescription"></p>
-    <div class="" cs-loader ng-hide="$ctrl.plIsLoaded"></div>
-    <div class="" ng-show="$ctrl.plIsLoaded">
+    <p class="description-block" 
+      ng-show="$ctrl.hasSparkCall"
+      translate="directoryNumberPanel.preferredLanguageDescription"></p>
+    <p class="description-block" 
+      ng-hide="$ctrl.hasSparkCall"
+      translate="directoryNumberPanel.preferredLanguageDescriptionForCloudberryDevice"></p> 
+    <div cs-loader ng-if="$ctrl.hasSparkCall" ng-hide="$ctrl.plIsLoaded"></div>
+    <div ng-if="$ctrl.hasSparkCall" ng-show="$ctrl.plIsLoaded && $ctrl.isUserLocaleFT2Enabled">
       <cs-select
         name="languageSelect"
         ng-model="$ctrl.preferredLanguage"

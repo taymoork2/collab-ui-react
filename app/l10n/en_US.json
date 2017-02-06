@@ -3321,7 +3321,8 @@
     "preferredLanguage": "Preferred Language",
     "preferredLanguageDescription": "Choose the preferred language for this place. This will override the default organization setting.",
     "preferredLanguagePlaceholder": "Select your language",
-    "organizationSetting": "Organization Setting - "
+    "organizationSetting": "Organization Setting - ",
+    "preferredLanguageDescriptionForCloudberryDevice": "Configure preferred language on the room’s device page."
   },
   "callForwardPanel": {
     "title": "Call Forwarding",
