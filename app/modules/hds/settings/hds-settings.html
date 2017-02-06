@@ -3,43 +3,73 @@
     <email-notifications-section service-id="'spark-hybrid-datasecurity'"></email-notifications-section>
 
     <!-- Service Status -->
-    <!-- (copied from) local dialing selection -->
     <setting-section setting="hdsSettings.servicestatus" class="needs-border-top">
       <div class="sub-section">
-        <div class="cs-radio-group" form="settings.form" name="dialingHabit">
-          <input
-            cs-input
-            type="radio"
-            ng-model="hdsSettings.model.serviceMode"
-            name="trialServiceModeRadio"
-            id="trialService"
-            value="{{::hdsSettings.TRIAL}}"
-            cs-input-label="{{:: 'hds.resources.settings.serviceTrialModeTitle' | translate}}"
-            cs-input-help-text="{{:: 'hds.resources.settings.serviceTrialModeDesc' | translate}}">
-          <input
-            cs-input
-            type="radio"
-            ng-model="hdsSettings.model.serviceMode"
-            id="productionService"
-            name="productionServiceModeRadio"
-            value="{{::hdsSettings.PRODUCTION}}"
-            cs-input-label="{{:: 'hds.resources.settings.serviceProductionModeTitle' | translate}}"
-            cs-input-help-text="{{:: 'hds.resources.settings.serviceTrialModeDesc' | translate}}">
+        <div ng-if="hdsSettings.model.serviceMode === hdsSettings.PRE_TRIAL">
+            <h5 class="sub-section__label" translate="hds.resources.settings.servicePreTrialModeTitle"></h5>
+            <p class="sub-section__description" translate="hds.resources.settings.serviceNodeDesc"
+                translate-values="{nodes : hdsSettings.numTrialUsers}"
+                translate-value-onclick="hdsSettings.openEditTrialUsersModal()"
+                translate-compile>
+            </p>
+            <button class="btn btn--people"
+                    ng-disabled="hdsSettings.numResourceNodes <= 0"
+                    ng-click="hdsSettings.startTrial()"
+                    translate="hds.resources.settings.servicePreTrialModeTitle">
+            </button>
         </div>
-        <button class="btn btn--people"
-                ng-show="hdsSettings.model.serviceMode === hdsSettings.TRIAL"
-                ng-click="hdsSettings.openAddTrialUsersModal()"
-                translate="hds.resources.settings.addTrialUsers">
-        </button>
-        <button class="btn btn--people"
-                ng-show="hdsSettings.model.serviceMode === hdsSettings.TRIAL"
-                ng-click="hdsSettings.openEditTrialUsersModal()"
-                translate="hds.resources.settings.editTrialUsers">
-        </button>
+        <div ng-if="hdsSettings.model.serviceMode === hdsSettings.TRIAL">
+            <h5 class="sub-section__label" translate="hds.resources.settings.serviceTrialModeTitle"></h5>
+            <p class="sub-section__description" translate="hds.resources.settings.serviceDomainDesc"
+                translate-values="{trial : hdsSettings.trialDomain, prod : hdsSettings.prodDomain}">
+            </p>
+            <p class="sub-section__description" translate="hds.resources.settings.serviceNodeDesc"
+                translate-values="{nodes : hdsSettings.numResourceNodes}"
+                translate-value-onclick="hdsSettings.addResource()"
+                translate-compile>
+            </p>
+            <p ng-if="hdsSettings.numTrialUsers > 0" class="sub-section__description" translate="hds.resources.settings.serviceUserDesc"
+                translate-values="{users : hdsSettings.numTrialUsers}"
+                translate-value-onclick="hdsSettings.openAddTrialUsersModal()"
+                translate-value-onclick1="hdsSettings.openEditTrialUsersModal()"
+                translate-compile>
+            </p>
+            <p ng-if="hdsSettings.numTrialUsers <= 0" class="sub-section__description" translate="hds.resources.settings.serviceUser0Desc"
+                translate-values="{users : hdsSettings.numTrialUsers}"
+                translate-value-onclick="hdsSettings.openAddTrialUsersModal()"
+                translate-compile>
+            </p>
+
+            <h5 class="sub-section__label" translate="hds.resources.settings.serviceProductionModeTitle"></h5>
+            <p class="sub-section__description" translate="hds.resources.settings.serviceProdMoveDesc"></p>
+            <button class="btn btn--people"
+                    ng-click="hdsSettings.moveToProduction()"
+                    translate="hds.resources.settings.moveToProduction">
+            </button>
+        </div>
+        <div ng-if="hdsSettings.model.serviceMode === hdsSettings.PRODUCTION">
+            <h5 class="sub-section__label" translate="hds.resources.settings.serviceProductionModeTitle"></h5>
+            <p class="sub-section__description" translate="hds.resources.settings.serviceNodeDesc"
+                translate-values="{nodes : hdsSettings.numResourceNodes}"
+                translate-value-onclick="hdsSettings.addResource()"
+                translate-compile>
+            </p>
+            <p ng-if="hdsSettings.numTrialUsers > 0" class="sub-section__description" translate="hds.resources.settings.serviceUserDesc"
+                translate-values="{users : hdsSettings.numTrialUsers}"
+                translate-value-onclick="hdsSettings.openAddTrialUsersModal()"
+                translate-value-onclick1="hdsSettings.openEditTrialUsersModal()"
+                translate-compile>
+            </p>
+            <p ng-if="hdsSettings.numTrialUsers <= 0" class="sub-section__description" translate="hds.resources.settings.serviceUser0Desc"
+                translate-values="{users : hdsSettings.numTrialUsers}"
+                translate-value-onclick="hdsSettings.openAddTrialUsersModal()"
+                translate-compile>
+            </p>
+        </div>
       </div>
     </setting-section>
-    
-    <documentation-section service-id="'spark-hybrid-datasecurity'"></documentation-section>
+
     <deactivate-section service-id="'spark-hybrid-datasecurity'"></deactivate-section>
+    <documentation-section service-id="'spark-hybrid-datasecurity'"></documentation-section>
   </div>
 </div>
