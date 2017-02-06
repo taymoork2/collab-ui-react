@@ -6,6 +6,7 @@ class HybridDataSecurityClusterSettingsPageCtrl implements ng.IComponentControll
 
   /* @ngInject */
   constructor(
+    private $rootScope: ng.IRootScopeService,
     private $stateParams: ng.ui.IStateParamsService,
     private FusionClusterService,
   ) {}
@@ -22,6 +23,10 @@ class HybridDataSecurityClusterSettingsPageCtrl implements ng.IComponentControll
       });
   }
 
+  /* Callback function used by <rename-and-deregister-cluster-section>  */
+  public nameUpdated(name) {
+    this.$rootScope.$emit('cluster-name-update', name);
+  }
 }
 
 export class HybridDataSecurityClusterSettingsPageComponent implements ng.IComponentOptions {

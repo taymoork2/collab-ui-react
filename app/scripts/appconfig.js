@@ -2668,9 +2668,6 @@
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
-              hackishWayOfPassingNameUpdateUp: function () {
-                return {};
-              }
             }
           })
           .state('expressway-cluster.nodes', {
