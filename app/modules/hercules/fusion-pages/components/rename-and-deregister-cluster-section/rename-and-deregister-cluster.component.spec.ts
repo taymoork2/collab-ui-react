@@ -63,8 +63,7 @@ describe('Component: RenameAndDeregisterClusterSection ', () => {
         it ('should show an error when trying to save an empty cluster name', function() {
             spyOn(Notification, 'error');
             let ctrl = $componentController('renameAndDeregisterClusterSection', null, bindings);
-            ctrl.clusterName = '';
-            ctrl.saveClusterName();
+            ctrl.saveClusterName('');
             expect(Notification.error.calls.count()).toBe(1);
         });
 

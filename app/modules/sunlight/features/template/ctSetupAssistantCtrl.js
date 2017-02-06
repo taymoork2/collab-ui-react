@@ -13,13 +13,12 @@
     var vm = this;
     init();
 
-    var VERIFIED = 'verified';
-
-    vm.type = $stateParams.type;
+    vm.selectedMediaType = $stateParams.type;
 
     vm.mediaTypes = {
       chat: 'chat',
-      callback: 'callback'
+      callback: 'callback',
+      chatPlusCallback: 'chatPlusCallback'
     };
     vm.cancelModal = cancelModal;
     vm.evalKeyPress = evalKeyPress;
@@ -36,22 +35,23 @@
     vm.animation = 'slide-left';
     vm.submitChatTemplate = submitChatTemplate;
     vm.isEditFeature = $stateParams.isEditFeature;
-
-    // Sync Verified Domains with care
-    vm.syncDomains = syncDomains;
+    vm.getCustomerInformationFormFields = getCustomerInformationFormFields;
+    vm.getLocalisedText = getLocalisedText;
+    vm.getCustomerInformationBtnClass = getCustomerInformationBtnClass;
+    vm.getTitle = getTitle;
 
     // Setup Assistant pages with index
     vm.states = {};
 
     vm.setStates = function () {
-      vm.states = CTService.getStatesBasedOnType(vm.type);
+      vm.states = CTService.getStatesBasedOnType(vm.selectedMediaType);
     };
 
     vm.setStates();
 
     vm.overviewCards = {};
     vm.setOverviewCards = function () {
-      vm.overviewCards = CTService.getOverviewPageCards(vm.type);
+      vm.overviewCards = CTService.getOverviewPageCards(vm.selectedMediaType);
     };
     vm.setOverviewCards();
 
@@ -181,13 +181,11 @@
         id: typeId
       });
     };
-    vm.overlayTitle = vm.type === vm.mediaTypes.chat ? $translate.instant('careChatTpl.createTitle') :
-        $translate.instant('careChatTpl.createCallbackTitle');
 
     //Template related constants  variables used after editing template
     if ($stateParams.isEditFeature) {
       var config = $stateParams.template.configuration;
-      vm.type = config.mediaType;
+      vm.selectedMediaType = config.mediaType;
       if (config.mediaType) {
         if (config.mediaType === vm.mediaTypes.chat) {
           vm.selectedTemplateProfile = config.mediaSpecificConfiguration.useOrgProfile ?
@@ -294,6 +292,26 @@
                   value: vm.getTypeObject('category'),
                   categoryOptions: ''
                 }]
+              },
+
+              'field4': {
+                attributes: [{
+                  name: 'required',
+                  value: 'optional'
+                }, {
+                  name: 'category',
+                  value: vm.getCategoryTypeObject('requestInfo')
+                }, {
+                  name: 'label',
+                  value: $translate.instant('careChatTpl.additionalDetails')
+                }, {
+                  name: 'hintText',
+                  value: $translate.instant('careChatTpl.additionalDetailsAbtIssue')
+                }, {
+                  name: 'type',
+                  value: vm.getTypeObject('reason'),
+                  categoryOptions: ''
+                }]
               }
             }
           },
@@ -336,9 +354,6 @@
         },
         chatStatusMessages: {
           messages: {
-            bubbleTitleMessage: {
-              displayText: $translate.instant('careChatTpl.bubbleTitleMessage')
-            },
             connectingMessage: {
               displayText: $translate.instant('careChatTpl.connectingMessage')
             },
@@ -496,19 +511,283 @@
       }
     };
 
+    var defaultChatPlusCallBackTemplate = {
+      name: '',
+      configuration: {
+        mediaType: vm.mediaTypes.chatPlusCallback,
+        mediaSpecificConfiguration: {
+          useOrgProfile: true,
+          displayText: vm.orgName,
+          orgLogoUrl: vm.logoUrl,
+          useAgentRealName: false
+        },
+        pages: {
+          customerInformationChat: {
+            enabled: true,
+            fields: {
+              'welcomeHeader': {
+                attributes: [{
+                  name: 'header',
+                  value: $translate.instant('careChatTpl.defaultWelcomeText')
+                }, {
+                  name: 'organization',
+                  value: vm.orgName
+                }]
+              },
+              'field1': {
+                attributes: [{
+                  name: 'required',
+                  value: 'required'
+                }, {
+                  name: 'category',
+                  value: vm.getCategoryTypeObject('customerInfo')
+                }, {
+                  name: 'label',
+                  value: $translate.instant('careChatTpl.defaultNameText')
+                }, {
+                  name: 'hintText',
+                  value: $translate.instant('careChatTpl.defaultNameHint')
+                }, {
+                  name: 'type',
+                  value: vm.getTypeObject('name'),
+                  categoryOptions: ''
+                }]
+              },
+
+              'field2': {
+                attributes: [{
+                  name: 'required',
+                  value: 'required'
+                }, {
+                  name: 'category',
+                  value: vm.getCategoryTypeObject('customerInfo')
+                }, {
+                  name: 'label',
+                  value: $translate.instant('careChatTpl.defaultEmailText')
+                }, {
+                  name: 'hintText',
+                  value: $translate.instant('careChatTpl.defaultEmail')
+                }, {
+                  name: 'type',
+                  value: vm.getTypeObject('email'),
+                  categoryOptions: ''
+                }]
+              },
+
+              'field3': {
+                attributes: [{
+                  name: 'required',
+                  value: 'optional'
+                }, {
+                  name: 'category',
+                  value: vm.getCategoryTypeObject('requestInfo')
+                }, {
+                  name: 'label',
+                  value: $translate.instant('careChatTpl.defaultQuestionText')
+                }, {
+                  name: 'hintText',
+                  value: $translate.instant('careChatTpl.field3HintText')
+                }, {
+                  name: 'type',
+                  value: vm.getTypeObject('category'),
+                  categoryOptions: ''
+                }]
+              },
+              'field4': {
+                attributes: [{
+                  name: 'required',
+                  value: 'optional'
+                }, {
+                  name: 'category',
+                  value: vm.getCategoryTypeObject('requestInfo')
+                }, {
+                  name: 'label',
+                  value: $translate.instant('careChatTpl.additionalDetails')
+                }, {
+                  name: 'hintText',
+                  value: $translate.instant('careChatTpl.additionalDetailsAbtIssue')
+                }, {
+                  name: 'type',
+                  value: vm.getTypeObject('reason'),
+                  categoryOptions: ''
+                }]
+              }
+            }
+          },
+          customerInformationCallback: {
+            enabled: true,
+            fields: {
+              'welcomeHeader': {
+                attributes: [{
+                  name: 'header',
+                  value: $translate.instant('careChatTpl.defaultWelcomeText')
+                }, {
+                  name: 'organization',
+                  value: vm.orgName
+                }]
+              },
+              'field1': {
+                attributes: [{
+                  name: 'required',
+                  value: 'required'
+                }, {
+                  name: 'category',
+                  value: vm.getCategoryTypeObject('customerInfo')
+                }, {
+                  name: 'label',
+                  value: $translate.instant('careChatTpl.defaultNameText')
+                }, {
+                  name: 'hintText',
+                  value: $translate.instant('careChatTpl.defaultNameHint')
+                }, {
+                  name: 'type',
+                  value: vm.getTypeObject('name'),
+                  categoryOptions: ''
+                }]
+              },
+              'field2': {
+                attributes: [{
+                  name: 'required',
+                  value: 'required'
+                }, {
+                  name: 'category',
+                  value: vm.getCategoryTypeObject('customerInfo')
+                }, {
+                  name: 'label',
+                  value: $translate.instant('careChatTpl.defaultPhoneText')
+                }, {
+                  name: 'hintText',
+                  value: $translate.instant('careChatTpl.defaultPhoneHintText')
+                }, {
+                  name: 'type',
+                  value: vm.getTypeObject('phone'),
+                  categoryOptions: ''
+                }]
+              },
+              'field3': {
+                attributes: [{
+                  name: 'required',
+                  value: 'optional'
+                }, {
+                  name: 'category',
+                  value: vm.getCategoryTypeObject('requestInfo')
+                }, {
+                  name: 'label',
+                  value: $translate.instant('careChatTpl.defaultQuestionText')
+                }, {
+                  name: 'hintText',
+                  value: $translate.instant('careChatTpl.field3HintText')
+                }, {
+                  name: 'type',
+                  value: vm.getTypeObject('category'),
+                  categoryOptions: ''
+                }]
+              },
+              'field4': {
+                attributes: [{
+                  name: 'required',
+                  value: 'optional'
+                }, {
+                  name: 'category',
+                  value: vm.getCategoryTypeObject('requestInfo')
+                }, {
+                  name: 'label',
+                  value: $translate.instant('careChatTpl.additionalDetails')
+                }, {
+                  name: 'hintText',
+                  value: $translate.instant('careChatTpl.additionalDetailsAbtIssue')
+                }, {
+                  name: 'type',
+                  value: vm.getTypeObject('reason'),
+                  categoryOptions: ''
+                }]
+              }
+            }
+          },
+          agentUnavailable: {
+            enabled: true,
+            fields: {
+              agentUnavailableMessage: {
+                displayText: $translate.instant('careChatTpl.agentUnavailableMessage')
+              }
+            }
+          },
+          offHours: {
+            enabled: true,
+            message: $translate.instant('careChatTpl.offHoursDefaultMessage'),
+            schedule: {
+              businessDays: _.map(_.filter(vm.days, 'isSelected'), 'label'),
+              open24Hours: true,
+              timings: {
+                startTime: vm.timings.startTime.label,
+                endTime: vm.timings.endTime.label
+              },
+              timezone: vm.scheduleTimeZone.value
+            }
+          },
+          callbackConfirmation: {
+            enabled: true,
+            fields: {
+              callbackConfirmationMessage: {
+                displayText: "Your callback request has been received."
+              }
+            }
+          },
+          feedback: {
+            enabled: true,
+            fields: {
+              feedbackQuery: {
+                displayText: $translate.instant('careChatTpl.feedbackQuery')
+              },
+              comment: {
+                displayText: $translate.instant('careChatTpl.ratingComment'),
+                dictionaryType: {
+                  fieldSet: 'cisco.base.ccc.pod',
+                  fieldName: 'cccRatingComments'
+                }
+              }
+            }
+          }
+        },
+        chatStatusMessages: {
+          messages: {
+            bubbleTitleMessage: {
+              displayText: $translate.instant('careChatTpl.bubbleTitleMessage')
+            },
+            connectingMessage: {
+              displayText: $translate.instant('careChatTpl.connectingMessage')
+            },
+            waitingMessage: {
+              displayText: $translate.instant('careChatTpl.waitingMessage')
+            },
+            enterRoomMessage: {
+              displayText: $translate.instant('careChatTpl.enterRoomMessage')
+            },
+            leaveRoomMessage: {
+              displayText: $translate.instant('careChatTpl.leaveRoomMessage')
+            },
+            chattingMessage: {
+              displayText: $translate.instant('careChatTpl.chattingMessage')
+            }
+          }
+        }
+      }
+    };
+
     vm.template = {};
 
     vm.getDefaultTemplate = function () {
-      if (vm.type == vm.mediaTypes.chat) {
-        vm.template = defaultChatTemplate;
-      } else if (vm.type == vm.mediaTypes.callback) {
-        vm.template = defaultCallBackTemplate;
+      switch (vm.selectedMediaType) {
+        case vm.mediaTypes.chat: vm.template = defaultChatTemplate; break;
+        case vm.mediaTypes.callback: vm.template = defaultCallBackTemplate; break;
+        case vm.mediaTypes.chatPlusCallback: vm.template = defaultChatPlusCallBackTemplate; break;
       }
     };
 
     vm.getDefaultTemplate();
 
-    vm.singleLineValidationMessage = CTService.getValidationMessages(0, vm.lengthConstants.singleLineMaxCharLimit);
+    vm.singleLineValidationMessage25 = CTService.getValidationMessages(0, vm.lengthConstants.singleLineMaxCharLimit25);
+    vm.singleLineValidationMessage50 = CTService.getValidationMessages(0, vm.lengthConstants.singleLineMaxCharLimit50);
     vm.multiLineValidationMessage = CTService.getValidationMessages(0, vm.lengthConstants.multiLineMaxCharLimit);
 
 
@@ -570,7 +849,7 @@
     }
 
     vm.validateNameLength = function () {
-      return vm.template.name.length == vm.lengthConstants.empty || isValidMultilineField(vm.template.name);
+      return vm.template.name.length == vm.lengthConstants.empty || isValidField(vm.template.name, vm.lengthConstants.multiLineMaxCharLimit);
     };
 
     vm.isNamePageValid = function () {
@@ -585,21 +864,17 @@
       return false;
     }
 
-    function isValidSinglelineField(fieldDisplayText) {
-      return (fieldDisplayText.length <= vm.lengthConstants.singleLineMaxCharLimit);
-    }
-
-    function isValidMultilineField(fieldDisplayText) {
-      return (fieldDisplayText.length <= vm.lengthConstants.multiLineMaxCharLimit);
+    function isValidField(fieldDisplayText, maxCharLimit) {
+      return (fieldDisplayText.length <= maxCharLimit);
     }
 
     function isAgentUnavailablePageValid() {
-      return isValidMultilineField(vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText);
+      return isValidField(vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText, vm.lengthConstants.multiLineMaxCharLimit);
     }
 
     function isOffHoursPageValid() {
       setOffHoursWarning();
-      if (isValidMultilineField(vm.template.configuration.pages.offHours.message) && vm.isBusinessDaySelected) {
+      if (isValidField(vm.template.configuration.pages.offHours.message, vm.lengthConstants.multiLineMaxCharLimit) && vm.isBusinessDaySelected) {
         setOffHoursData();
         return true;
       }
@@ -607,30 +882,20 @@
     }
 
     function isFeedbackPageValid() {
-      return (isValidMultilineField(vm.template.configuration.pages.feedback.fields.feedbackQuery.displayText)
-      && isValidSinglelineField(vm.template.configuration.pages.feedback.fields.comment.displayText));
-    }
-
-    function isBubbleTitleValid(chatStatusMessagesObj) {
-      if (chatStatusMessagesObj.bubbleTitleMessage) {
-        return isValidSinglelineField(chatStatusMessagesObj.bubbleTitleMessage.displayText);
-      }
-      return true;
+      return (isValidField(vm.template.configuration.pages.feedback.fields.feedbackQuery.displayText, vm.lengthConstants.multiLineMaxCharLimit)
+      && isValidField(vm.template.configuration.pages.feedback.fields.comment.displayText, vm.lengthConstants.singleLineMaxCharLimit50));
     }
 
     function isStatusMessagesPageValid() {
       var chatStatusMessagesObj = vm.template.configuration.chatStatusMessages.messages;
-      return isValidSinglelineField(chatStatusMessagesObj.connectingMessage.displayText)
-      && isBubbleTitleValid(chatStatusMessagesObj)
-      && isValidSinglelineField(chatStatusMessagesObj.waitingMessage.displayText)
-      && isValidSinglelineField(chatStatusMessagesObj.enterRoomMessage.displayText)
-      && isValidSinglelineField(chatStatusMessagesObj.leaveRoomMessage.displayText)
-      && isValidSinglelineField(chatStatusMessagesObj.chattingMessage.displayText);
+      return isValidField(chatStatusMessagesObj.waitingMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit25)
+      && isValidField(chatStatusMessagesObj.leaveRoomMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit25)
+      && isValidField(chatStatusMessagesObj.chattingMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit25);
     }
 
     vm.isTypeDuplicate = false;
 
-    var nonHeaderFieldNames = _.filter(_.keys(vm.template.configuration.pages.customerInformation.fields),
+    var nonHeaderFieldNames = _.filter(_.keys(getCustomerInformationFormFields()),
         function (name) { return (name !== "welcomeHeader"); });
 
     function getConfiguredTypes() {
@@ -660,14 +925,14 @@
     }
 
     function areAllFixedFieldsValid() {
-      return isValidSinglelineField(vm.getAttributeParam('value', 'header', 'welcomeHeader'))
-          && isValidSinglelineField(vm.getAttributeParam('value', 'organization', 'welcomeHeader'));
+      return isValidField(vm.getAttributeParam('value', 'header', 'welcomeHeader'), vm.lengthConstants.singleLineMaxCharLimit50)
+          && isValidField(vm.getAttributeParam('value', 'organization', 'welcomeHeader'), vm.lengthConstants.singleLineMaxCharLimit50);
     }
 
     function areAllDynamicFieldsValid() {
       return _.reduce(_.map(nonHeaderFieldNames, function (fieldName) {
-        return isValidSinglelineField(vm.getAttributeParam('value', 'label', fieldName))
-                && isValidSinglelineField(vm.getAttributeParam('value', 'hintText', fieldName));
+        return isValidField(vm.getAttributeParam('value', 'label', fieldName), vm.lengthConstants.singleLineMaxCharLimit50)
+                && isValidField(vm.getAttributeParam('value', 'hintText', fieldName), vm.lengthConstants.singleLineMaxCharLimit50);
       }), function (x, y) { return x && y; }, true);
     }
 
@@ -749,11 +1014,11 @@
      */
 
     vm.getFieldByName = function (fieldName) {
-      return vm.template.configuration.pages.customerInformation.fields[fieldName];
+      return getCustomerInformationFormFields()[fieldName];
     };
 
     vm.getAttributeByName = function (attributeName, fieldName) {
-      var fields = vm.template.configuration.pages.customerInformation.fields;
+      var fields = getCustomerInformationFormFields();
       var field = _.get(fields, fieldName);
       if (field) {
         return _.find(field.attributes, {
@@ -795,11 +1060,11 @@
     };
 
     vm.isSecondFieldForCallBack = function () {
-      return vm.type === vm.mediaTypes.callback && vm.activeItemName === 'field2';
+      return vm.selectedMediaType === vm.mediaTypes.callback && vm.activeItemName === 'field2';
     };
 
     vm.isDynamicFieldType = function (val) {
-      return typeof val !== 'undefined' && vm.template.configuration.pages.customerInformation.fields.hasOwnProperty(val.toString());
+      return typeof val !== 'undefined' && getCustomerInformationFormFields().hasOwnProperty(val.toString());
     };
 
     vm.isStaticFieldType = function (val) {
@@ -854,22 +1119,10 @@
     }
 
     function submitChatTemplate() {
-      syncDomains();
+      DomainManagementService.syncDomainsWithCare();
       vm.creatingChatTemplate = true;
       if ($stateParams.isEditFeature) editChatTemplate();
       else createChatTemplate();
-    }
-
-    function syncDomains() {
-      DomainManagementService.getVerifiedDomains().then(function (response) {
-        var verifiedDomains = _.chain(response)
-          .filter({ 'status': VERIFIED })
-          .map('text')
-          .value();
-        verifiedDomains = verifiedDomains.length > 0 ? verifiedDomains : ['.*'];
-        var config = { 'allowedOrigins': verifiedDomains };
-        SunlightConfigService.updateChatConfig(config);
-      });
     }
 
     function createChatTemplate() {
@@ -880,7 +1133,7 @@
         })
         .catch(function (response) {
           handleChatTemplateError();
-          Notification.errorWithTrackingId(response, vm.getLocalisedText('careChatTpl.createChatTemplateFailureText'));
+          Notification.errorWithTrackingId(response, vm.getLocalisedText('careChatTpl.createTemplateFailureText'));
         });
     }
 
@@ -892,7 +1145,7 @@
         })
         .catch(function (response) {
           handleChatTemplateError();
-          Notification.errorWithTrackingId(response, vm.getLocalisedText('careChatTpl.editChatTemplateFailureText'));
+          Notification.errorWithTrackingId(response, vm.getLocalisedText('careChatTpl.editTemplateFailureText'));
         });
     }
 
@@ -900,18 +1153,17 @@
       vm.creatingChatTemplate = false;
       var responseTemplateId = response.headers('Location').split('/').pop();
       $state.go('care.Features');
-      var successMsg = vm.type === vm.mediaTypes.chat ? 'careChatTpl.createSuccessText' : 'careChatTpl.createSuccessText_callback';
+      var successMsg = 'careChatTpl.createSuccessText';
       Notification.success(successMsg, {
         featureName: vm.template.name
       });
       CTService.openEmbedCodeModal(responseTemplateId, vm.template.name);
-
     }
 
     function handleChatTemplateEdit(response, templateId) {
       vm.creatingChatTemplate = false;
       $state.go('care.Features');
-      var successMsg = vm.type === vm.mediaTypes.chat ? 'careChatTpl.editSuccessText' : 'careChatTpl.editSuccessText_callback';
+      var successMsg = 'careChatTpl.editSuccessText';
       Notification.success(successMsg, {
         featureName: vm.template.name
       });
@@ -966,11 +1218,37 @@
       });
     }
 
-    vm.getLocalisedText = function (name) {
-      switch (vm.type) {
-        case 'chat': return $translate.instant(name);
-        case 'callback': return $translate.instant(name + '_' + vm.type);
+    function getCustomerInformationBtnClass() {
+      var type = (vm.cardMode) ? vm.cardMode : vm.selectedMediaType;
+      switch (type) {
+        case 'chat': return 'start-chat';
+        case 'callback': return 'actionBtn';
       }
-    };
+    }
+
+    function getCustomerInformationFormFields() {
+      if (vm.selectedMediaType !== vm.mediaTypes.chatPlusCallback) {
+        return vm.template.configuration.pages.customerInformation.fields;
+      }
+      var type = (vm.cardMode) ? vm.cardMode : vm.selectedMediaType;
+      switch (type) {
+        case 'callback': return vm.template.configuration.pages.customerInformationCallback.fields;
+        default: return vm.template.configuration.pages.customerInformationChat.fields;
+      }
+    }
+
+    function getLocalisedText(name) {
+      var type = (vm.cardMode) ? vm.cardMode : vm.selectedMediaType;
+      return $translate.instant(name + '_' + type);
+    }
+
+    function getTitle() {
+      if (vm.isEditFeature) {
+        return $translate.instant('careChatTpl.editTitle_' + vm.selectedMediaType);
+      } else {
+        return $translate.instant('careChatTpl.createTitle_' + vm.selectedMediaType);
+      }
+    }
+
   }
 })();

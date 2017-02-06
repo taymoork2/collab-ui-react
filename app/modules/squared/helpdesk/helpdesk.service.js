@@ -289,7 +289,7 @@
       if (useMock()) {
         return deferredResolve(filterRelevantServices(HelpdeskMockData.hybridServices));
       }
-      return ServiceDescriptor.servicesInOrg(orgId, true).then(filterRelevantServices);
+      return ServiceDescriptor.servicesInOrg(orgId).then(filterRelevantServices);
     }
 
     var filterRelevantServices = function (services) {

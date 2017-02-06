@@ -106,6 +106,12 @@
       line-height: 24px;
     }
   }
+
+  .has-warnings-icon {
+    color: $brand-warning-dark;
+    position: relative;
+    top: 2px;
+  }
 }
 
 .cloud-extension-label {

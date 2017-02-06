@@ -1,8 +1,11 @@
 var _ = require('lodash');
-var webpackConfig = require('./webpack.config');
 var args = require('yargs').argv;
 var shimFile = args.shimFile || './karma/karma.shim.default.js';
 var shimFileName = _.last(shimFile.split('/'));
+
+// populate node env like webpack env args
+_.assignIn(process.env, args.env);
+var webpackConfig = require('./webpack.config.js')(process.env);
 
 module.exports = function (config) {
   var _config = {

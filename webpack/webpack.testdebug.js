@@ -1,11 +1,18 @@
 const merge = require('webpack-merge');
-const testWebpackConfig = require('./webpack.test');
+const testWebpack = require('./webpack.test');
+const loaders = require('./loaders');
+const _ = require('lodash');
 
-const testDebugConfig = merge.smart(testWebpackConfig, {
-  devtool: 'inline-source-map',
-  module: {
-    postLoaders: [],
-  },
-});
+function webpackConfig(env) {
+  const testWebpackConfig = testWebpack(env);
 
-module.exports = testDebugConfig;
+  _.remove(testWebpackConfig.module.rules, loaders.instrument);
+
+  const testDebugConfig = merge.smart(testWebpackConfig, {
+    devtool: 'inline-source-map',
+  });
+
+  return testDebugConfig;
+}
+
+module.exports = webpackConfig;

@@ -13,7 +13,6 @@
     vm.featureId = $stateParams.deleteFeatureId;
     vm.featureName = $stateParams.deleteFeatureName;
     vm.featureType = $stateParams.deleteFeatureType;
-    vm.featureText = vm.featureType === 'Ch' ? $translate.instant('careChatTpl.chatTemplate') : '';
 
     function deleteFeature() {
       vm.deleteBtnDisabled = true;
@@ -38,8 +37,7 @@
       $timeout(function () {
         $rootScope.$broadcast('CARE_FEATURE_DELETED');
         Notification.success('careChatTpl.deleteSuccessText', {
-          featureName: vm.featureName,
-          featureText: vm.featureText
+          featureName: vm.featureName
         });
         reInstantiateMasonry();
       }, 250);
@@ -51,11 +49,10 @@
       if (_.isFunction($scope.$dismiss)) {
         $scope.$dismiss();
       }
-      Log.warn('Failed to delete the ' + vm.featureText + ' with name: ' + vm.featureName + ' and id:' + vm.featureId);
+      Log.warn('Failed to delete template with name: ' + vm.featureName + ' and id:' + vm.featureId);
 
       var error = $translate.instant('careChatTpl.deleteFailedText', {
-        featureName: vm.featureName,
-        featureText: vm.featureText
+        featureName: vm.featureName
       });
       Notification.errorWithTrackingId(response, error);
     }

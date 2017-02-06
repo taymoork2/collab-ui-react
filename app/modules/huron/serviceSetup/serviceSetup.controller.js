@@ -1122,7 +1122,7 @@
     }
 
     function initNext() {
-      if (vm.form.$invalid) {
+      if (_.get(vm, 'form.$invalid', false)) {
         Notification.error('serviceSetupModal.fieldValidationFailed');
         return $q.reject('Field validation failed.');
       }

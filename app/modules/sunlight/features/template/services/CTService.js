@@ -31,7 +31,8 @@
 
     function getLengthValidationConstants() {
       return {
-        singleLineMaxCharLimit: 50,
+        singleLineMaxCharLimit25: 25,
+        singleLineMaxCharLimit50: 50,
         multiLineMaxCharLimit: 250,
         empty: 0
       };
@@ -238,6 +239,13 @@
           return ['customerInformation',
             'offHours'
           ];
+        case 'chatPlusCallback':
+          return ['customerInformationChat',
+            'agentUnavailable',
+            'feedback',
+            'customerInformationCallback',
+            'offHours'
+          ];
         default:
           return [];
       }
@@ -260,6 +268,18 @@
           return ['name',
             'overview',
             'customerInformation',
+            'offHours',
+            'summary'
+          ];
+        case 'chatPlusCallback':
+          return ['name',
+            'overview',
+            'customerInformationChat',
+            'agentUnavailable',
+            'feedback',
+            'profile',
+            'chatStatusMessages',
+            'customerInformationCallback',
             'offHours',
             'summary'
           ];

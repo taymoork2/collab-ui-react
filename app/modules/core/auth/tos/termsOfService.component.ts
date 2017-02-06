@@ -3,6 +3,12 @@ import { IToolkitModalService } from 'modules/core/modal';
 
 class TermsOfServiceCtrl implements ng.IComponentController {
   public hasReadAggreement: boolean = false;
+  public scrollData = {
+    iframeHeight: 0,
+    curPos: 0,
+    bottomPos: 0,
+    bodyHeight: 0,
+  };
 
   /* @ngInject */
   constructor(
@@ -14,6 +20,7 @@ class TermsOfServiceCtrl implements ng.IComponentController {
     private $window: ng.IWindowService,
     private $scope: ng.IScope,
     private $log: ng.ILogService,
+    private $element,
   ) { }
 
   private getScrollY(doc: Document) {
@@ -41,13 +48,13 @@ class TermsOfServiceCtrl implements ng.IComponentController {
     // scrolling is handled by the PDF viewer, which could be different on every platform.
     // let tosUrl = 'http://www.cisco.com/c/dam/en_us/about/doing_business/legal/docs/universal-cloud-terms.pdf';
     // let tosHtml = `
-        // <html>
-        //   <body>
-        //       <object data="${tosUrl}" type="application/pdf">
-        //           <embed src="${tosUrl}" type="application/pdf" />
-        //       </object>
-        //   </body>
-        // </html>
+    // <html>
+    //   <body>
+    //       <object data="${tosUrl}" type="application/pdf">
+    //           <embed src="${tosUrl}" type="application/pdf" />
+    //       </object>
+    //   </body>
+    // </html>
     // `;
     // let tosStyle = `
     // <style>
@@ -61,18 +68,19 @@ class TermsOfServiceCtrl implements ng.IComponentController {
     let iframeDoc = <Document>this.$window.frames['tos-frame'].document;
     let iframe = $(iframeDoc);
     let style = $(tosStyle);
+    iframeDoc.open();
+    iframeDoc.close();
     iframe.find('head').append(style);
     iframe.find('body').append(tosHtml);
 
-    let self = this;
     iframe.scroll(() => {
-      let iframeHeight = $('#tos-frame-id').height();
-      let curPos = self.getScrollY(iframeDoc);
-      let bottomPos = curPos + iframeHeight;
-      let bodyHeight = iframe.height();
+      this.scrollData.iframeHeight = _.ceil(this.$element.find('.tos-container').height());
+      this.scrollData.curPos = _.ceil(this.getScrollY(iframeDoc));
+      this.scrollData.bodyHeight = _.floor(iframe.height());
+      this.scrollData.bottomPos = _.ceil(this.scrollData.curPos + this.scrollData.iframeHeight);
 
-      if (bottomPos >= bodyHeight) {
-        self.hasReadAggreement = true;
+      if (this.scrollData.bottomPos >= this.scrollData.bodyHeight) {
+        this.hasReadAggreement = true;
       }
       this.$scope.$apply();
     });

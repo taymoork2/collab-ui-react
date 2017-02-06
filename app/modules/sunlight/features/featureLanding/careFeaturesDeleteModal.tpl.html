@@ -4,19 +4,17 @@
       <span class="sr-only" translate="common.close"></span>
     </button>
     <p class="h3 modal-title"
-       translate="careChatTpl.deleteAction"
-       translate-values="{featureText : careFeaturesDeleteCtrl.featureText}"></p>
+       translate="careChatTpl.deleteAction"></p>
   </div>
   <div class="modal-body ct-confirmation-body">
     <p><span class="ct-confirmation-message"
              translate="careChatTpl.deleteFeatureTextConfirmation"
-             translate-values="{featureName : careFeaturesDeleteCtrl.featureName, featureText : careFeaturesDeleteCtrl.featureText }"></span></p>
+             translate-values="{featureName : careFeaturesDeleteCtrl.featureName}"></span></p>
   </div>
   <div class="modal-footer">
     <button id="cancelDeleteFeature" class="btn" ng-click="$dismiss();" translate="common.cancel" ng-disabled="careFeaturesDeleteCtrl.deleteBtnDisabled"></button>
     <button id="deleteFeature" class="btn btn--negative" loading="careFeaturesDeleteCtrl.deleteBtnDisabled" cs-btn type="button" ng-click="careFeaturesDeleteCtrl.deleteFeature();">
-      <span translate="careChatTpl.deleteAction"
-            translate-values="{featureText : careFeaturesDeleteCtrl.featureText}"></span>
+      <span translate="careChatTpl.deleteAction"></span>
     </button>
   </div>
 </div>

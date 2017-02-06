@@ -56,7 +56,7 @@
           'minPeriod': 'DD',
           'parseDates': true,
           'autoGridCount': true,
-          'title': 'Last 7 Days',
+          //'title': 'Last 7 Days',
           'centerLabels': true,
           'equalSpacing': true
         },
@@ -81,7 +81,7 @@
             'labelPosition': 'top',
             'id': 'video',
             'title': $translate.instant('reportsPage.usageReports.callDuration'),
-            'valueField': 'totalDuration',
+            'valueField': 'totalDurationY',
             'lineThickness': 2,
             'fillAlphas': 0.6,
             'lineAlpha': 0.0,
@@ -89,8 +89,7 @@
             'bulletColor': '#ffffff',
             'bulletBorderAlpha': 1,
             'useLineColorForBulletBorder': true,
-            'labelFunction': getLabel,
-            'labelOffset': -2
+            'labelFunction': getLabel
           }
         ],
         'guides': [

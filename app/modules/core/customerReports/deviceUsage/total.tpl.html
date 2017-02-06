@@ -4,7 +4,7 @@
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
         <cs-select id="timeFilter" name="timeFilter" class="customer-report-filter" ng-model="deviceUsage.timeSelected" options="deviceUsage.timeOptions" on-change-fn="deviceUsage.timeUpdate()"></cs-select>
-        <cs-select class="model-filter" ng-if="deviceUsage.modelOptions.length > 0" ng-model="deviceUsage.modelsSelected" options="deviceUsage.modelOptions" placeholder="deviceUsage.selectModelsPlaceholder" multi="true" singular="Model" plural="Models"></cs-select>
+        <cs-select class="model-filter" on-change-fn="deviceUsage.modelsChanged()" ng-if="deviceUsage.modelOptions.length > 0 && deviceUsage.showModels" ng-model="deviceUsage.modelsSelected" options="deviceUsage.modelOptions" placeholder="deviceUsage.selectModelsPlaceholder" multi="true" singular="Model" plural="Models"></cs-select>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
 

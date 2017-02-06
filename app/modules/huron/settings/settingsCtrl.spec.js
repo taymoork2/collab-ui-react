@@ -444,6 +444,16 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
     });
 
+    it('should load Avril site to Email response and set the Voicemail Email Options', function () {
+      controller.model.companyVoicemail.companyVoicemailEnabled = true;
+      controller.model.companyVoicemail.voicemailToEmail = true;
+      controller.save();
+      $scope.$apply();
+
+      expect(ServiceSetup.getAvrilSite).toHaveBeenCalled();
+      expect(controller.model.companyVoicemail.voicemailEmailOptions).toEqual('VM_E_PT');
+    });
+
     it('should load Avril Voicemail response and Set Voicemail Options', function () {
       controller.model.companyVoicemail.companyVoicemailEnabled = true;
       controller.save();
