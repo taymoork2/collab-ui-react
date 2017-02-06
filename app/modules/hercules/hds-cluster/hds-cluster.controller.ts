@@ -1,4 +1,4 @@
-export class ExpresswayClusterPageController {
+export class HDSClusterController {
   public tabs: any[] = [];
   public localizedTitle: string;
   public backUrl: string = 'cluster-list';
@@ -6,11 +6,9 @@ export class ExpresswayClusterPageController {
 
   /* @ngInject */
   constructor(
-    private $scope: ng.IScope,
     private $translate: ng.translate.ITranslateService,
     private $stateParams: ng.ui.IStateParamsService,
     private FusionClusterService,
-    private hackishWayOfPassingNameUpdateUp: any,
     private hasNodesViewFeatureToggle: boolean,
   ) {
     this.FusionClusterService.get(this.$stateParams['id'])
@@ -23,22 +21,16 @@ export class ExpresswayClusterPageController {
         if (this.hasNodesViewFeatureToggle) {
           this.tabs = [{
             title: this.$translate.instant('common.nodes'),
-            state: 'expressway-page.nodes',
+            state: 'hds-cluster.nodes',
           }, {
             title: this.$translate.instant('common.settings'),
-            state: 'expressway-page.settings',
+            state: 'hds-cluster.settings',
           }];
         }
       });
-
-    this.$scope.$watch(() => this.hackishWayOfPassingNameUpdateUp.name, (newValue, oldValue) => {
-      if (newValue !== oldValue) {
-        this.name = newValue;
-      }
-    });
   }
 }
 
 angular
   .module('Hercules')
-  .controller('ExpresswayClusterPageController', ExpresswayClusterPageController);
+  .controller('HDSClusterController', HDSClusterController);

@@ -77,15 +77,15 @@
 
     function openNodes(type, id) {
       if (type === 'c_mgmt') {
-        $state.go('expressway-page.nodes', {
+        $state.go('expressway-cluster.nodes', {
           id: id
         });
       } else if (type === 'mf_mgmt') {
-        $state.go('mediafusion-nodes', {
+        $state.go('mediafusion-cluster.nodes', {
           id: id
         });
       } else if (type === 'hds_app') {
-        $state.go('hds-cluster-nodes', {
+        $state.go('hds-cluster.nodes', {
           id: id
         });
       }
@@ -93,15 +93,15 @@
 
     function openSettings(type, id) {
       if (type === 'c_mgmt') {
-        $state.go('expressway-page.settings', {
+        $state.go('expressway-cluster.settings', {
           id: id
         });
       } else if (type === 'mf_mgmt') {
-        $state.go('mediafusion-settings', {
+        $state.go('mediafusion-cluster.settings', {
           id: id
         });
       } else if (type === 'hds_app') {
-        $state.go('hds-cluster-settings', {
+        $state.go('hds-cluster.settings', {
           id: id
         });
       }
