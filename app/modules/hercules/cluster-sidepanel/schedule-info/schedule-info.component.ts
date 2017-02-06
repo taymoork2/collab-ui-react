@@ -68,7 +68,7 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
   }
 
   public hasUrgentUpgradeSchedule = () => {
-    return this.clusterType === 'c_mgmt';
+    return this.cluster && this.cluster.upgradeSchedule && this.cluster.upgradeSchedule.urgentScheduleTime;
   }
 
 }
