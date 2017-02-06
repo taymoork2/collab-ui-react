@@ -3,23 +3,18 @@ import { IClusterV1 } from 'modules/hercules/herculesInterfaces';
 class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
 
   private clusterId: string;
-  private connectorType: string;
-  private hasF237FeatureToggle: boolean = false;
+
   private cluster: IClusterV1;
+  public hasResourceGroupFeatureToggle: boolean = false;
 
   public clusterType: string;
+  public connectorType: string;
 
   /* @ngInject */
   constructor(
     private $scope: ng.IScope,
     private ClusterService,
-    private FeatureToggleService,
-  ) {
-    this.FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
-      .then(supported => {
-        this.hasF237FeatureToggle = supported;
-      });
-  }
+  ) {}
 
   public $onInit() {
     if (this.clusterId && this.connectorType) {
@@ -31,10 +26,17 @@ class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
     }
   }
 
-  public isEmptyExpresswayCluster() {
-    return this.cluster.targetType === 'c_mgmt' && this.cluster.connectors.length === 0;
+  public isExpresswayCluster() {
+    return this.cluster && this.cluster.targetType === 'c_mgmt';
   }
 
+  public isHDSCluster() {
+    return this.cluster && this.cluster.targetType === 'hds_app';
+  }
+
+  public hasConnectors() {
+    return this.cluster && this.cluster.connectors.length > 0;
+  }
 }
 
 export class ClusterSidepanelOverviewComponent implements ng.IComponentOptions {
@@ -44,5 +46,6 @@ export class ClusterSidepanelOverviewComponent implements ng.IComponentOptions {
     clusterType: '<',
     clusterId: '<',
     connectorType: '<',
+    hasResourceGroupFeatureToggle: '<',
   };
 }

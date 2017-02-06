@@ -189,7 +189,7 @@
     };
 
     var readResourceGroups = function () {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
+      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
         .then(function (supported) {
           if (supported) {
             ResourceGroupService.getAllAsOptions().then(function (options) {

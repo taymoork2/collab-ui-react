@@ -130,7 +130,7 @@ require('modules/core/reports/amcharts-export.scss');
         }
         return result;
       }, {}).map(function (value, key) {
-        value.totalDuration = (value.totalDuration / 3600).toFixed(2);
+        value.totalDurationY = (value.totalDuration / 3600).toFixed(2);
         value.time = key;
         return value;
       }).value();

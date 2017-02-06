@@ -1,6 +1,10 @@
 <div>
   <div class="ct-title">
-    <span class="h3" translate="careChatTpl.customerInfo"></span>
+    <span class="h3" ng-if="careSetupAssistant.selectedMediaType === careSetupAssistant.mediaTypes.chatPlusCallback">
+      {{careSetupAssistant.getLocalisedText('careChatTpl.customerInfo')}}
+    </span>
+    <span class="h3" ng-if="!(careSetupAssistant.selectedMediaType === careSetupAssistant.mediaTypes.chatPlusCallback)" translate='careChatTpl.customerInformation'>
+    </span>
   </div>
   <div class="h5 ct-title-desc">{{careSetupAssistant.getLocalisedText('careChatTpl.customerInfoDesc')}}</div>
 
@@ -15,14 +19,14 @@
             <label title="{{careSetupAssistant.getAttributeParam('value', 'header', 'welcomeHeader')}}"
                    class="welcomeText textOverflow">{{careSetupAssistant.getAttributeParam('value', 'header', 'welcomeHeader')}}</label>
             <label title="{{careSetupAssistant.orgName}}"
-                   class="orgText textOverflow">{{careSetupAssistant.template.configuration.pages.customerInformation.fields.welcomeHeader.attributes[1].value}}</label>
+                   class="orgText textOverflow">{{careSetupAssistant.getCustomerInformationFormFields().welcomeHeader.attributes[1].value}}</label>
           </header>
 
           <section>
             <ct-customer-form
               ct-model='careSetupAssistant',
               media-type-attr="careSetupAssistant.type",
-              fields='careSetupAssistant.template.configuration.pages.customerInformation.fields'
+              fields='careSetupAssistant.getCustomerInformationFormFields()'
               ignore-fields='["welcomeHeader"]'
               type-attr='type'
               label-attr='label'
@@ -31,14 +35,12 @@
             </ct-customer-form>
           </section>
 
-          <footer class="ct-footer" ng-show="{{careSetupAssistant.type === 'chat'}}">
-            <label class="h5 typeText" translate="careChatTpl.defaultTypeMessageText"></label>
-          </footer>
-
-          <div ng-show="{{careSetupAssistant.type === 'callback'}}">
-            <a href="" class="btn btn--medium disabled actionBtn ct-flex-center" translate="careChatTpl.labelCallBackBtn"></a>
+          <div>
+            <a href="" class="btn btn--medium disabled ct-flex-center" 
+            ng-class="careSetupAssistant.getCustomerInformationBtnClass()" 
+            translate="{{careSetupAssistant.getLocalisedText('careChatTpl.customerInfoBtnText')}}">
+            </a>
           </div>
-
 
         </article>
       </cs-card>
@@ -147,7 +149,7 @@
                <input id="orgText"
                       class="h5 inputField ct-attribute-field-textbox large-11"
                       type="text"
-                      ng-model="careSetupAssistant.template.configuration.pages.customerInformation.fields.welcomeHeader.attributes[1].value"
+                      ng-model="careSetupAssistant.getCustomerInformationFormFields().welcomeHeader.attributes[1].value"
                       cs-input
                       name="orgText"
                       cs-input-messages="careSetupAssistant.singleLineValidationMessage50"

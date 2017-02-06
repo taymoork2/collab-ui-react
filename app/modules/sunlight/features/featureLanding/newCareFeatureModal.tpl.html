@@ -7,11 +7,11 @@
 <div class="modal-body">
   <div class="care-new-feature-modal" ng-if="!loading">
     <button ng-repeat="feature in features" ng-click="ok((feature.id))" ng-if="features.length !== 0">
-      <div class="feature-icon-container">
-          <label class="feature-icon-circle feature-icon-color-care">
-              <i class="icon {{feature.icon}}"></i>
+        <div class="feature-icon-container">
+          <label class="feature-icon-circle feature-icon-color-care" ng-repeat="ftIcon in feature.icons">
+              <i class="icon {{ftIcon}}"></i>
           </label>
-      </div>
+        </div>
       <h4 class="feature-label-container">
         <strong>{{feature.label | translate}}</strong>
       </h4>

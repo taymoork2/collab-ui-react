@@ -1,13 +1,9 @@
-/**
- * Created by bijnair on 11/01/17.
- */
-
 'use strict';
 
 describe('drilldownReports Controller Positive Test cases', function () {
   var $componentController, $log, ReportConstants, $timeout, CardUtils, $rootScope;
   var $scope, ddController, callbackSpy;
-  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$componentController_, _$log_, _ReportConstants_, _$timeout_, _CardUtils_, _$rootScope_) {
     $componentController = _$componentController_;
@@ -68,6 +64,10 @@ describe('drilldownReports Controller Positive Test cases', function () {
     $log.warn($rootScope);
   });
 
+  afterEach(function () {
+    $componentController = $log = ReportConstants = $timeout = CardUtils = $rootScope = $scope = ddController = callbackSpy = undefined;
+  });
+
   it('Binding Props and caallback test', function () {
 
     $log.warn("Controller......", ddController);
@@ -84,15 +84,6 @@ describe('drilldownReports Controller Positive Test cases', function () {
     ddController.callback();
     expect(callbackSpy).toHaveBeenCalled();
   });
-
-  //it('Refresh Testing via broadcast', function () {
-  //  ddController.toggleDrilldownReport();
-  //  var display = ddController.display();
-  //  $scope.$broadcast("DummyResetString", {});
-  //  $scope.$digest();
-  //  expect(ddController.display()).toBe(!display);
-  //  $log.warn($rootScope);
-  //});
 
   it('Toggle Drilldown Report test', function () {
     var display = ddController.display();

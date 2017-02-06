@@ -24,7 +24,7 @@
 
     function init() {
 
-      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
+      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
         .then(function (supported) {
           if (!supported) {
             $stateParams.wizard.next();

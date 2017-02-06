@@ -6,7 +6,7 @@
         .controller('NewCareFeatureModalCtrl', NewCareFeatureModalCtrl);
 
     /* @ngInject */
-  function NewCareFeatureModalCtrl($modalInstance, $scope, $state, Authinfo) {
+  function NewCareFeatureModalCtrl($modalInstance, $scope, $state, $timeout, Authinfo, FeatureToggleService) {
     var vm = $scope;
 
     vm.features = [];
@@ -16,7 +16,7 @@
       code: 'sunlightDetails.chatTemplateCode',
       label: 'sunlightDetails.newFeatures.chatType',
       description: 'sunlightDetails.newFeatures.selectCHDesc',
-      icon: 'icon-message'
+      icons: ['icon-message']
     };
 
     var careCallbackService = {
@@ -24,12 +24,27 @@
       code: 'sunlightDetails.callbackTemplateCode',
       label: 'sunlightDetails.newFeatures.callbackType',
       description: 'sunlightDetails.newFeatures.selectCADesc',
-      icon: 'icon-calls'
+      icons: ['icon-calls']
+    };
+
+    var careChatCallbackService = {
+      id: 'ChCa',
+      code: 'sunlightDetails.chatTemplateCode',
+      label: 'sunlightDetails.newFeatures.chatPlusCallbackType',
+      description: 'sunlightDetails.newFeatures.selectCHCADesc',
+      icons: ['icon-message', 'icon-calls']
     };
 
     if (Authinfo.isCare()) {
       vm.features.push(careChatService);
       vm.features.push(careCallbackService);
+      $timeout(function () {
+        FeatureToggleService.atlasCareChatPlusCallbackTrialsGetStatus().then(function (enabled) {
+          if (enabled) {
+            vm.features.push(careChatCallbackService);
+          }
+        });
+      }, 30);
     }
 
     vm.ok = ok;
@@ -43,6 +58,10 @@
       } else if (featureId === 'Ca') {
         $state.go('care.setupAssistant', {
           type: 'callback'
+        });
+      } else if (featureId === 'ChCa') {
+        $state.go('care.setupAssistant', {
+          type: 'chatPlusCallback'
         });
       }
       $modalInstance.close(featureId);

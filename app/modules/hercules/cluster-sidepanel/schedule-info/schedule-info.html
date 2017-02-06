@@ -1,13 +1,13 @@
 <cs-sp-section>
 
-  <div ng-if="$ctrl.hasF237FeatureToggle"
+  <div ng-if="$ctrl.hasResourceGroupFeatureToggle"
        class="section-title-row feature-inline">
     <span class="section-name"
           translate="common.releaseChannel"></span>
     <span class="feature-name">{{$ctrl.releaseChannelName}}</span>
   </div>
 
-  <div ng-if="$ctrl.hasF237FeatureToggle && $ctrl.resourceGroupName"
+  <div ng-if="$ctrl.hasResourceGroupFeatureToggle && $ctrl.resourceGroupName"
        class="section-title-row feature-inline">
     <span class="section-name"
           translate="hercules.resourceGroups.resourceGroupHeading"></span>
@@ -21,7 +21,7 @@
     <span class="feature-name">{{$ctrl.schedule.dateTime}}, {{$ctrl.schedule.timeZone}}</span>
   </div>
 
-  <div ng-if="$ctrl.schedule"
+  <div ng-if="$ctrl.schedule && $ctrl.hasUrgentUpgradeSchedule()"
        class="section-title-row feature-inline">
     <span class="section-name"
           translate="hercules.fusion.urgentUpgrade.title"></span>
