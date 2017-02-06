@@ -631,6 +631,7 @@
 
       AACommonService.setClioToggle(featureToggleDefault);
       AACommonService.setRouteQueueToggle(featureToggleDefault);
+      AACommonService.setRouteSIPAddressToggle(featureToggleDefault);
       return function () {
         FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload).then(function (result) {
           AACommonService.setMediaUploadToggle(result);
@@ -640,6 +641,9 @@
         });
         FeatureToggleService.supports(FeatureToggleService.features.huronAAClioMedia).then(function (result) {
           AACommonService.setClioToggle(result);
+        });
+        FeatureToggleService.supports(FeatureToggleService.features.huronAARouteRoom).then(function (result) {
+          AACommonService.setRouteSIPAddressToggle(result);
         });
       }();
     }

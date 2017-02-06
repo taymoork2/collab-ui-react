@@ -41,6 +41,7 @@
     'ui.grid.selection',
     'ui.grid.saveState',
     'ui.grid.infiniteScroll',
+    'ui.grid.pagination',
     'timer',
     'toaster',
     'rzModule',
@@ -54,7 +55,9 @@
     require('modules/core/users/userCsv/userCsv.service'),
     require('modules/core/cards').default,
     require('modules/core/window').default,
-    require('modules/online/digitalRiver').default // TODO make core.myCompany independent module
+    require('modules/online/digitalRiver').default, // TODO make core.myCompany independent module
+    require('modules/core/trials/regionalSettings').default,
+    require('modules/huron/countries').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('phone', require('google-libphonenumber'))
@@ -75,12 +78,13 @@
     'uc.autoattendant',
     'ngIcal',
     'huron.paging-group',
-    'huron.call-pickup',
+    'huron.call-pickup.setup-assistant',
     'huron.telephoneNumber',
     'huron.call-park',
     'huron.bulk-enable-vm',
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
+    require('modules/huron/autoAnswer').default,
   ]);
 
   angular.module('Hercules', ['Core', 'Squared', 'core.onboard', 'ngTagsInput']);
@@ -97,8 +101,11 @@
 
   angular.module('Sunlight', [
     'Core',
-    'CareDetails'
+    'CareDetails',
+    'Sunlight.pagination'
   ]);
+
+  angular.module('Context', ['Core']);
 
   angular.module('GSS', ['Core']);
 
@@ -116,6 +123,7 @@
     'WebExApp',
     'Messenger',
     'Sunlight',
+    'Context',
     'GSS',
     'oc.lazyLoad',
     'Gemini'

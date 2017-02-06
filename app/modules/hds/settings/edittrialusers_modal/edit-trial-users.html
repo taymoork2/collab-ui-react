@@ -2,25 +2,34 @@
   <button type="button" class="close" ng-click="$dismiss()">
     <span class="sr-only" translate="common.close"></span>
   </button>
-  <h5 class="modal-title" translate="hds.editTrialUsers.modalTitle"></h5>
+  <h5 class="modal-title" translate="hds.resources.editTrialUsers.modalTitle"></h5>
 </div>
 
-<div class="modal-body">
-  <h4 translate="hds.editTrialUsers.modalHeadingAddUser"></h5>
-  <p translate="hds.editTrialUsers.modalAddUserDesc1"></p>
-  <p translate="hds.editTrialUsers.modalAddUserDesc2"></p>
-  <p translate="hds.editTrialUsers.modalAddUserDesc3"></p>
+<div class="modal-body hds-email-input">
+  <h5 translate="hds.resources.editTrialUsers.modalHeading"></h5>
   <br/>
-  <h4 translate="hds.editTrialUsers.modalHeadingRemoveUser"></h5>
-  <p translate="hds.editTrialUsers.modalRemoveUserDesc1"></p>
-  <p translate="hds.editTrialUsers.modalRemoveUserDesc2"></p>
-  <p translate="hds.editTrialUsers.modalRemoveUserDesc3"></p>
+  <p translate="hds.resources.editTrialUsers.modalDesc"></p>
+  <br/>
+  <tags-input add-on-blur="true"
+              on-tag-added="editTrialUsersCtrl.addUser()"
+              on-tag-removed="editTrialUsersCtrl.removeUser()"
+              placeholder={{editTrialUsersCtrl.localizedAddEmailWatermark}}
+              ng-model="editTrialUsersCtrl.emailTrialUsers"
+              type="email"
+              allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
+  <div ng-if="editTrialUsersCtrl.getNumUsersInTagField() >= editTrialUsersCtrl.maxTrialUsers">
+    <p translate="hds.resources.editTrialUsers.tooManyUsers"></p></span>
+  </div>
 </div>
-
 <div class="modal-footer">
   <button
     class="btn"
     ng-click="$dismiss()"
-    translate="common.close">
+    translate="common.cancel">
+  </button>
+  <button
+    class="btn btn--primary" 
+    ng-click="editTrialUsersCtrl.saveTrialUsers(); $dismiss();"
+    translate="common.save">
   </button>
 </div>

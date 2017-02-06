@@ -47,7 +47,7 @@
       help: $translate.instant('autoAttendant.routeCallMenuHelp'),
       metric: 'Route-Call-Title',
       showHelpLink: false,
-      actions: ['route', 'goto', 'routeToUser', 'routeToVoiceMail', 'routeToHuntGroup', 'routeToQueue']
+      actions: ['route', 'goto', 'routeToUser', 'routeToVoiceMail', 'routeToHuntGroup', 'routeToQueue', 'routeToSipEndpoint']
     }];
 
     vm.actionPlaceholder = $translate.instant("autoAttendant.actionPlaceholder");

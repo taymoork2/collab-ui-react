@@ -1,0 +1,10 @@
+PROJ__BUILD_ENV=dev
+
+# env vars for use with 'build.sh'
+BUILD_TAG=dev
+BUILD_NUMBER=0
+
+# env vars for use with 'e2e.sh'
+SAUCE__MAX_INSTANCES=2
+SAUCE__USERNAME=atlas-web-limited
+SAUCE__ACCESS_KEY=b99c8bc7-4a28-4d87-8cd8-eba7c688d48c

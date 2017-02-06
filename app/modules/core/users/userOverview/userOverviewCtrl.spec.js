@@ -44,6 +44,7 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(this.FeatureToggleService, 'getFeaturesForUser').and.returnValue(this.$q.when(function () { return _this.featureToggles; }));
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
     spyOn(this.FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue(this.$q.when(false));
+    spyOn(this.FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue(this.$q.when(false));
     spyOn(this.Authinfo, 'isCSB').and.returnValue(false);
 
     spyOn(this.Notification, 'success');

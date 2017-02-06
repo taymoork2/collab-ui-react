@@ -4,7 +4,7 @@
   angular.module('Hercules')
     .component('clusterCard', {
       bindings: {
-        cluster: '<'
+        cluster: '<',
       },
       templateUrl: 'modules/hercules/fusion-pages/components/cluster-card.html',
       controller: ClusterCardController,
@@ -16,20 +16,25 @@
 
     ctrl.countHosts = countHosts;
     ctrl.getHostnames = getHostnames;
+    ctrl.openNodes = openNodes;
     ctrl.openService = openService;
     ctrl.openSettings = openSettings;
     ctrl.hasServices = hasServices;
     ctrl.goToExpressway = goToExpressway;
     ctrl.openDeleteConfirm = openDeleteConfirm;
     ctrl.formatTimeAndDate = FusionClusterService.formatTimeAndDate;
-    ctrl.hasF237FeatureToggle = false;
+    ctrl.hasResourceGroupFeatureToggle = false;
+    ctrl.hasNodesViewFeatureToggle = false;
     ctrl.getLocalizedReleaseChannel = FusionUtils.getLocalizedReleaseChannel;
+    ctrl.hybridServicesComparator = FusionUtils.hybridServicesComparator;
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
+    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
       .then(function (supported) {
-        if (supported) {
-          ctrl.hasF237FeatureToggle = true;
-        }
+        ctrl.hasResourceGroupFeatureToggle = supported;
+      });
+    FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView)
+      .then(function (supported) {
+        ctrl.hasNodesViewFeatureToggle = supported;
       });
 
     function getHostnames(cluster) {
@@ -67,20 +72,40 @@
         });
       } else if (serviceId === 'squared-fusion-media') {
         $state.go('media-service-v2.list');
+      } else if (serviceId === 'spark-hybrid-datasecurity') {
+        $state.go('hds.list', {
+          'clusterId': clusterId,
+        });
+      }
+    }
+
+    function openNodes(type, id) {
+      if (type === 'c_mgmt') {
+        $state.go('expressway-cluster.nodes', {
+          id: id
+        });
+      } else if (type === 'mf_mgmt') {
+        $state.go('mediafusion-cluster.nodes', {
+          id: id
+        });
+      } else if (type === 'hds_app') {
+        $state.go('hds-cluster.nodes', {
+          id: id
+        });
       }
     }
 
     function openSettings(type, id) {
       if (type === 'c_mgmt') {
-        $state.go('expressway-settings', {
+        $state.go('expressway-cluster.settings', {
           id: id
         });
       } else if (type === 'mf_mgmt') {
-        $state.go('mediafusion-settings', {
+        $state.go('mediafusion-cluster.settings', {
           id: id
         });
       } else if (type === 'hds_app') {
-        $state.go('hds-cluster-settings', {
+        $state.go('hds-cluster.settings', {
           id: id
         });
       }

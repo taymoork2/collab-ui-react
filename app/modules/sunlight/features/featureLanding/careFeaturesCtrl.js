@@ -6,7 +6,8 @@
       .controller('CareFeaturesCtrl', CareFeaturesCtrl);
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, FeatureToggleService) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils,
+                            CareFeatureList, CTService, Log, Notification, FeatureToggleService) {
     var vm = this;
     vm.init = init;
     var pageStates = {
@@ -45,6 +46,7 @@
       i18n: 'careChatTpl.chatTemplate',
       isEmpty: false,
       color: 'primary',
+      icons: ['icon-message'],
       data: []
     }, {
       name: 'Ca',
@@ -53,24 +55,40 @@
       i18n: 'careChatTpl.chatTemplate',
       isEmpty: false,
       color: 'alerts',
+      icons: ['icon-phone'],
       data: []
     }];
-    vm.filters = [];
-    FeatureToggleService.atlasCareCallbackTrialsGetStatus().then(function (result) {
-      if (result) {
-        vm.filters = [{
-          name: $translate.instant('common.all'),
-          filterValue: 'all'
-        }, {
-          name: $translate.instant('sunlightDetails.chatMediaType'),
-          filterValue: 'chat'
-        }, {
-          name: $translate.instant('sunlightDetails.callbackMediaType'),
-          filterValue: 'callback'
-        }];
+
+    vm.filters = [{
+      name: $translate.instant('common.all'),
+      filterValue: 'all'
+    }, {
+      name: $translate.instant('sunlightDetails.chatMediaType'),
+      filterValue: 'chat'
+    }, {
+      name: $translate.instant('sunlightDetails.callbackMediaType'),
+      filterValue: 'callback'
+    }];
+
+    FeatureToggleService.atlasCareChatPlusCallbackTrialsGetStatus().then(function (enabled) {
+      if (enabled) {
+        vm.features.push({
+          name: 'ChCa',
+          getFeature: CareFeatureList.getChatPlusCallbackTemplates,
+          formatter: CareFeatureList.formatTemplates,
+          i18n: 'careChatTpl.chatTemplate',
+          isEmpty: false,
+          color: 'cta',
+          icons: ['icon-message', 'icon-phone'],
+          data: []
+        });
+        vm.filters.push({
+          name: $translate.instant('sunlightDetails.chatPlusCallbackMediaType'),
+          filterValue: 'chatPlusCallback'
+        });
       }
+      init();
     });
-    init();
 
     function init() {
       vm.pageState = pageStates.loading;

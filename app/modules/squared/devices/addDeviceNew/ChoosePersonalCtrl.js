@@ -63,10 +63,10 @@
           vm.noResults = _.isEmpty(userList);
           deferred.resolve(userList);
         };
-        if (vm.deviceType === 'huron') {
-          UserListService.listUsers(0, 10, null, null, callback, searchString, false, 'ciscouc');
-        } else {
+        if (wizardData.showPersonal) {
           UserListService.listUsers(0, 10, null, null, callback, searchString, false);
+        } else {
+          UserListService.listUsers(0, 10, null, null, callback, searchString, false, 'ciscouc');
         }
       } else {
         deferred.resolve([]);
@@ -75,8 +75,11 @@
     };
 
     function selectUser($item) {
-      if (vm.deviceType === 'huron' && !_.includes($item.entitlements, 'ciscouc')) {
+      if (_.includes($item.entitlements, 'ciscouc')) {
+        vm.isEntitledToHuron = true;
+      } else {
         vm.userError = true;
+        vm.isEntitledToHuron = false;
       }
       vm.cisUuid = $item.id;
       vm.userName = $item.userName;
@@ -91,7 +94,8 @@
         account: {
           name: vm.displayName,
           cisUuid: vm.cisUuid,
-          username: vm.userName
+          username: vm.userName,
+          isEntitledToHuron: vm.isEntitledToHuron
         },
         recipient: {
           displayName: vm.displayName,
@@ -108,7 +112,7 @@
     };
 
     vm.isNameValid = function () {
-      if (vm.cisUuid && !vm.userError) {
+      if (vm.cisUuid) {
         return true;
       }
     };

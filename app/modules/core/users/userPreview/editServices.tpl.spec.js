@@ -28,7 +28,6 @@ describe('Template: editServices', function () {
       }
     }.bind(this));
     spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.resolve(false));
-    spyOn(this.FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasSharedMeetingsGetStatus').and.returnValue(this.$q.when(false));
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
     spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.resolve(this.mock.fusionServices));

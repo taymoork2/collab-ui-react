@@ -295,7 +295,17 @@
       populateFallbackDropDown();
     }
 
+    function setFeatureToggles() {
+      if (AACommonService.isRouteSIPAddressToggle()) {
+        vm.destinationOptions.push({
+          label: $translate.instant('autoAttendant.phoneMenuRouteToSipEndpoint'),
+          action: 'routeToSipEndpoint'
+        });
+      }
+    }
+
     function populateUiModel() {
+      setFeatureToggles();
       populateScope();
       setUpEntry();
       initializeView();

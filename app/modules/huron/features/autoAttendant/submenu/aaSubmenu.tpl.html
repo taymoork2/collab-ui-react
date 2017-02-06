@@ -12,7 +12,7 @@
     <div class="small-9 columns">
       <cs-select ng-model="submenuKeyAction.action" valuefield="name" labelfield="label" options="aaSubmenu.keyActions" placeholder="aaSubmenu.actionPlaceholder" on-change-fn="aaSubmenu.keyActionChanged($index, submenuKeyAction.action)" class="aa-sm-action-select" icon="icon-chevron-down">
       </cs-select>
-      <div ng-switch="submenuKeyAction.action.name" class="aa-sm-action">
+       <div ng-switch="submenuKeyAction.action.name" class="aa-sm-action">
         <aa-route-to-user ng-switch-when="phoneMenuRouteUser" aa-schedule="{{schedule}}" aa-menu-id="{{aaSubmenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-user>
         <aa-route-to-user ng-switch-when="phoneMenuRouteMailbox" voicemail=true aa-schedule="{{schedule}}" aa-menu-id="{{aaSubmenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-user>
         <aa-route-to-aa ng-switch-when="phoneMenuRouteAA" aa-schedule="{{schedule}}" aa-menu-id="{{aaSubmenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-aa>
@@ -21,6 +21,7 @@
         <aa-route-to-ext-num ng-switch-when="phoneMenuRouteToExtNum" aa-schedule="{{schedule}}" aa-menu-id="{{aaSubmenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-ext-num>
         <aa-say-message ng-switch-when="phoneMenuSayMessage" aa-schedule="{{schedule}}" aa-from-sub-menu="true" aa-menu-id="{{aaSubmenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-say-message>
         <aa-route-to-queue ng-switch-when="phoneMenuRouteQueue" aa-schedule="{{schedule}}" aa-menu-id="{{aaSubmenu.menuId}}" aa-index="index" aa-key-index="{{$index}}" aa-queues="{{aaSubmenu.queues}}"></aa-route-to-queue>
+        <aa-route-to-sip-endpoint ng-switch-when="phoneMenuRouteToSipEndpoint" aa-schedule="{{schedule}}" aa-menu-id="{{aaSubmenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-sip-endpoint>
       </div>
     </div>
     <div class="small-1 columns">

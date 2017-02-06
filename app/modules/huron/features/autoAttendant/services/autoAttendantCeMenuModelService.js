@@ -547,7 +547,10 @@
         if (!_.isUndefined(inAction.goto.description)) {
           setDescription(action, inAction.goto.description);
         }
-
+        menuEntry.addAction(action);
+      } else if (!_.isUndefined(inAction.routeToSipEndpoint)) {
+        action = new Action('routeToSipEndpoint', inAction.routeToSipEndpoint.url);
+        setDescription(action, inAction.routeToSipEndpoint);
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.routeToQueue)) {
         //this occurs on the way in from the db
@@ -756,6 +759,8 @@
       } else {
         if (_.isEqual(fallbackName, 'goto')) {
           action = new Action(fallbackName, fallback[fallbackName].ceid);
+        } else if (_.isEqual(fallbackName, 'routeToSipEndpoint')) {
+          action = new Action(fallbackName, fallback[fallbackName].url);
         } else if (_.isEqual(fallbackName, 'route')) {
           action = new Action(fallbackName, fallback[fallbackName].destination);
         } else {
@@ -1201,6 +1206,8 @@
               newActionArray[i][actionName].ceid = menuEntry.actions[0].getValue();
             } else if (actionName === 'routeToHuntGroup') {
               newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
+            } else if (actionName === 'routeToSipEndpoint') {
+              newActionArray[i][actionName].url = menuEntry.actions[0].getValue();
             } else if (actionName === 'routeToQueue') {
               newActionArray[i][actionName] = populateRouteToQueue(menuEntry.actions[0]);
             } else if (actionName === 'runActionsOnInput') {
@@ -1347,6 +1354,8 @@
           newActionArray[i][actionName].id = val;
         } else if (actionName === 'goto') {
           newActionArray[i][actionName].ceid = val;
+        } else if (actionName === 'routeToSipEndpoint') {
+          newActionArray[i][actionName].url = val;
         } else if (actionName === 'routeToQueue') {
           newActionArray[i][actionName] = populateRouteToQueue(actions[i]);
         } else if (actionName === 'disconnect') {
@@ -1400,6 +1409,8 @@
           fallbackAction[destinationName] = { destination: destination.value, description: destination.description };
         } else if (destinationName === 'goto') {
           fallbackAction[destinationName] = { ceid: destination.value, description: destination.description };
+        } else if (destinationName === 'routeToSipEndpoint') {
+          fallbackAction[destinationName] = { url: destination.value, description: destination.description };
         } else {
           fallbackAction[destinationName] = { id: destination.value, description: destination.description };
         }

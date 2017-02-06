@@ -2,7 +2,8 @@
 
 describe('Care Feature Ctrl should ', function () {
 
-  var controller, $filter, $q, $rootScope, $state, $scope, $timeout, Authinfo, CareFeatureList, Log, Notification, deferred, callbackDeferred, $translate, FeatureToggleService;
+  var controller, $filter, $q, $rootScope, $state, $scope, $timeout, Authinfo, CareFeatureList,
+    Log, Notification, deferred, callbackDeferred, chatPlusCallbackDeferred, $translate, FeatureToggleService;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('Test-Org-Id')
   };
@@ -29,7 +30,9 @@ describe('Care Feature Ctrl should ', function () {
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
-  beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _$timeout_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_, _$translate_, _FeatureToggleService_) {
+
+  beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _$timeout_, _Authinfo_,
+                              _CareFeatureList_, _Notification_, _Log_, _$translate_, _FeatureToggleService_) {
     $rootScope = _$rootScope_;
     $filter = _$filter_;
     $q = _$q_;
@@ -46,10 +49,12 @@ describe('Care Feature Ctrl should ', function () {
     //create mock deferred object which will be used to return promises
     deferred = $q.defer();
     callbackDeferred = $q.defer();
+    chatPlusCallbackDeferred = $q.defer();
     spyOn(CareFeatureList, 'getChatTemplates').and.returnValue(deferred.promise);
     spyOn(CareFeatureList, 'getCallbackTemplates').and.returnValue(callbackDeferred.promise);
-    FeatureToggleService.atlasCareCallbackTrialsGetStatus = jasmine.createSpy('atlasCareCallbackTrialsGetStatus').and.returnValue($q.resolve(true));
-
+    spyOn(CareFeatureList, 'getChatPlusCallbackTemplates').and.returnValue(chatPlusCallbackDeferred.promise);
+    FeatureToggleService.atlasCareChatPlusCallbackTrialsGetStatus =
+      jasmine.createSpy('atlasCareChatPlusCallbackTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn($state, 'go');
 
     controller = $controller('CareFeaturesCtrl', {
@@ -70,6 +75,7 @@ describe('Care Feature Ctrl should ', function () {
     expect(controller.pageState).toEqual('Loading');
     deferred.resolve(getTemplatesSuccess('chat', templateList));
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
     $timeout.flush();
     expect(controller.pageState).toEqual('ShowFeatures');
@@ -87,6 +93,7 @@ describe('Care Feature Ctrl should ', function () {
     expect(controller.pageState).toEqual('Loading');
     deferred.resolve(getTemplatesSuccess('chat', emptyListOfCTs));
     callbackDeferred.resolve(getTemplatesSuccess('callback', emptyListOfCTs));
+    chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', emptyListOfCTs));
     $scope.$apply();
     $timeout.flush();
     expect(controller.pageState).toEqual('NewFeature');
@@ -95,6 +102,7 @@ describe('Care Feature Ctrl should ', function () {
   it('able to call delete function and inturn the $state service ', function () {
     deferred.resolve(getTemplatesSuccess('chat', templateList));
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
     $timeout.flush();
     var featureTobBeDeleted = templateList[0];
@@ -109,6 +117,7 @@ describe('Care Feature Ctrl should ', function () {
   it('able to receive the CARE_FEATURE_DELETED event when template gets deleted and template should be deleted from local copy', function () {
     deferred.resolve(getTemplatesSuccess('chat', templateList));
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
     $timeout.flush();
     var featureTobBeDeleted = templateList[0];
@@ -124,6 +133,7 @@ describe('Care Feature Ctrl should ', function () {
   it('able to receive the CARE_FEATURE_DELETED event when template gets deleted and change pageState to NewFeature when no templates to show', function () {
     deferred.resolve(getTemplatesSuccess('chat', [justOneChatTemplate]));
     callbackDeferred.resolve(getTemplatesSuccess('callback', emptyListOfCTs));
+    chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', emptyListOfCTs));
     $scope.$apply();
     $timeout.flush();
     var featureTobBeDeleted = justOneChatTemplate;
@@ -140,6 +150,7 @@ describe('Care Feature Ctrl should ', function () {
   it('should filter a list of Chat templates', function () {
     deferred.resolve(getTemplatesSuccess('chat', templateList));
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
     $timeout.flush();
     controller.setFilter('chat');
@@ -150,6 +161,7 @@ describe('Care Feature Ctrl should ', function () {
   it('should filter a list of Callback templates', function () {
     deferred.resolve(getTemplatesSuccess('chat', templateList));
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
     $timeout.flush();
     controller.setFilter('callback');
@@ -157,9 +169,21 @@ describe('Care Feature Ctrl should ', function () {
     expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Callback Dev Template');
   });
 
+  it('should filter a list of Chat+Callback templates', function () {
+    deferred.resolve(getTemplatesSuccess('chat', templateList));
+    callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
+    $scope.$apply();
+    $timeout.flush();
+    controller.setFilter('chatPlusCallback');
+    expect(controller.filteredListOfFeatures.length).toEqual(3);
+    expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Chat+Callback Dev Template');
+  });
+
   it('should filter all the templates', function () {
     deferred.resolve(getTemplatesSuccess('chat', templateList));
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
     $timeout.flush();
     controller.setFilter('all');
@@ -169,6 +193,7 @@ describe('Care Feature Ctrl should ', function () {
   it('should filter the list of templates to zero length', function () {
     deferred.resolve(getTemplatesSuccess('chat', templateList));
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
     $timeout.flush();
     controller.setFilter('XX');
@@ -178,32 +203,38 @@ describe('Care Feature Ctrl should ', function () {
   it('set the view to searched data and the chat template should come first and then callback template', function () {
     deferred.resolve(getTemplatesSuccess('chat', templateList));
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
     $timeout.flush();
     controller.searchData('Dev');
-    expect(controller.filteredListOfFeatures.length).toEqual(2);
+    expect(controller.filteredListOfFeatures.length).toEqual(3);
     expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
     expect(controller.filteredListOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');
+    expect(controller.filteredListOfFeatures[2].name).toEqual('Sunlight Chat+Callback Dev Template');
   });
 
   it('set the view to the searched data which is case insensitive and the chat template should come first and then callback template', function () {
     deferred.resolve(getTemplatesSuccess('chat', templateList));
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
     $timeout.flush();
     controller.searchData('Dev');
-    expect(controller.filteredListOfFeatures.length).toEqual(2);
+    expect(controller.filteredListOfFeatures.length).toEqual(3);
     expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
     expect(controller.filteredListOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');
+    expect(controller.filteredListOfFeatures[2].name).toEqual('Sunlight Chat+Callback Dev Template');
     controller.searchData('dev');
-    expect(controller.filteredListOfFeatures.length).toEqual(2);
+    expect(controller.filteredListOfFeatures.length).toEqual(3);
     expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
     expect(controller.filteredListOfFeatures[1].name).toEqual('Sunlight Callback Dev Template');
+    expect(controller.filteredListOfFeatures[2].name).toEqual('Sunlight Chat+Callback Dev Template');
   });
 
   it('should filter the searched data from the list of Chat templates only', function () {
     deferred.resolve(getTemplatesSuccess('chat', templateList));
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
     $timeout.flush();
     controller.searchData('Dev');
@@ -215,12 +246,25 @@ describe('Care Feature Ctrl should ', function () {
   it('should filter the searched data from the list of Callback templates only', function () {
     deferred.resolve(getTemplatesSuccess('chat', templateList));
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
     $scope.$apply();
     $timeout.flush();
     controller.searchData('Dev');
     controller.setFilter('callback');
     expect(controller.filteredListOfFeatures.length).toEqual(1);
     expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Callback Dev Template');
+  });
+
+  it('should filter the searched data from the list of Chat+Callback templates only', function () {
+    deferred.resolve(getTemplatesSuccess('chat', templateList));
+    callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
+    chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
+    $scope.$apply();
+    $timeout.flush();
+    controller.searchData('Dev');
+    controller.setFilter('chatPlusCallback');
+    expect(controller.filteredListOfFeatures.length).toEqual(1);
+    expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Chat+Callback Dev Template');
   });
 
 });

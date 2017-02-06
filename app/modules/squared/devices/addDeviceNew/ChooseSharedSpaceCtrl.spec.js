@@ -56,10 +56,16 @@ describe('ChooseSharedSpaceCtrl: Ctrl', function () {
     var deviceDisplayName;
     var deviceCisUuid;
     var deviceType;
+    var radioSelect;
     beforeEach(function () {
       deviceDisplayName = 'deviceDisplayName';
       deviceCisUuid = 'deviceCisUuid';
       deviceType = 'deviceType';
+      radioSelect = 'radioSelect';
+      spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({}));
+    });
+
+    it('should set the wizardState with correct fields for show activation code modal without personal, without addPlace and without radioSelect', function () {
       $stateParams.wizard = {
         state: function () {
           return {
@@ -72,21 +78,106 @@ describe('ChooseSharedSpaceCtrl: Ctrl', function () {
         },
         next: function () {}
       };
-      spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({}));
       initController();
       controller.deviceName = deviceDisplayName;
       controller.place = { cisUuid: deviceCisUuid };
       spyOn($stateParams.wizard, 'next');
       controller.next();
       $scope.$apply();
-    });
-
-    it('should set the wizardState with correct fields for show activation code modal', function () {
       expect($stateParams.wizard.next).toHaveBeenCalled();
       var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
       expect(wizardState.account.type).toBe('shared');
       expect(wizardState.account.name).toBe(deviceDisplayName);
       expect(wizardState.account.cisUuid).toBe(deviceCisUuid);
+      var nextOptions = $stateParams.wizard.next.calls.mostRecent().args[1];
+      expect(nextOptions).toBe(deviceType + '_existing');
+    });
+
+    it('should set the wizardState with correct fields for show activation code modal without personal and with addPlace', function () {
+      $stateParams.wizard = {
+        state: function () {
+          return {
+            data: {
+              function: 'addPlace',
+              account: {
+                deviceType: deviceType
+              }
+            }
+          };
+        },
+        next: function () {}
+      };
+      initController();
+      controller.deviceName = deviceDisplayName;
+      controller.place = { cisUuid: deviceCisUuid };
+      spyOn($stateParams.wizard, 'next');
+      controller.next();
+      $scope.$apply();
+      expect($stateParams.wizard.next).toHaveBeenCalled();
+      var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
+      expect(wizardState.account.type).toBe('shared');
+      expect(wizardState.account.name).toBe(deviceDisplayName);
+      expect(wizardState.account.cisUuid).toBe(deviceCisUuid);
+      var nextOptions = $stateParams.wizard.next.calls.mostRecent().args[1];
+      expect(nextOptions).toBe(deviceType + '_create');
+    });
+
+    it('should set the wizardState with correct fields for show activation code modal without personal, without addPlace and with radioSelect', function () {
+      $stateParams.wizard = {
+        state: function () {
+          return {
+            data: {
+              account: {
+                deviceType: deviceType
+              }
+            }
+          };
+        },
+        next: function () {}
+      };
+      initController();
+      controller.deviceName = deviceDisplayName;
+      controller.place = { cisUuid: deviceCisUuid };
+      spyOn($stateParams.wizard, 'next');
+      controller.radioSelect = radioSelect;
+      controller.next();
+      $scope.$apply();
+      expect($stateParams.wizard.next).toHaveBeenCalled();
+      var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
+      expect(wizardState.account.type).toBe('shared');
+      expect(wizardState.account.name).toBe(deviceDisplayName);
+      expect(wizardState.account.cisUuid).toBe(deviceCisUuid);
+      var nextOptions = $stateParams.wizard.next.calls.mostRecent().args[1];
+      expect(nextOptions).toBe(deviceType + '_' + radioSelect);
+    });
+
+    it('should set the wizardState with correct fields for show activation code modal with personal, without addPlace and without radioSelect', function () {
+      $stateParams.wizard = {
+        state: function () {
+          return {
+            data: {
+              account: {
+                deviceType: deviceType
+              },
+              showPersonal: true
+            }
+          };
+        },
+        next: function () {}
+      };
+      initController();
+      controller.deviceName = deviceDisplayName;
+      controller.place = { cisUuid: deviceCisUuid };
+      spyOn($stateParams.wizard, 'next');
+      controller.next();
+      $scope.$apply();
+      expect($stateParams.wizard.next).toHaveBeenCalled();
+      var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
+      expect(wizardState.account.type).toBe('shared');
+      expect(wizardState.account.name).toBe(deviceDisplayName);
+      expect(wizardState.account.cisUuid).toBe(deviceCisUuid);
+      var nextOptions = $stateParams.wizard.next.calls.mostRecent().args[1];
+      expect(nextOptions).toBe('existing');
     });
   });
 });

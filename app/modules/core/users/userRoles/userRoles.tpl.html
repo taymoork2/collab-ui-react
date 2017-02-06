@@ -66,7 +66,7 @@
                   ng-click="clearCheckboxes();"
                   ng-disabled="isEditingSelf">
                 <i
-                  tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-check'></i>User Management</li><li><i class='icon icon-check'></i>Company Policy & Templates</li><li><i class='icon icon-check'></i>Analytics & Reports</li><li><i class='icon icon-check'></i>Support Metrics & Notifications</li><li><i class='icon icon-check'></i>Licenses & Upgrades</li><li><i class='icon icon-check'></i>Assign Roles</li></ul>"
+                  tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-check'></i>{{::'rolesPanel.userManagement' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.companyPolicyTemplates' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.analytics' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.supportMetrics' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.licensesAndUpgrades' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.assignRoles' | translate}}</li></ul>"
                   tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
               </div>
 
@@ -81,7 +81,7 @@
                   cs-input-label="{{readonlyAdmin.label}}"
                   ng-click="clearCheckboxes();"
                   ng-disabled="isEditingSelf">
-                <i tooltip="{{'rolesPanel.readonlyAdminTooltip' | translate}}" tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
+                <i tooltip="{{::'rolesPanel.readonlyAdminTooltip' | translate}}" tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
               </div>
 
               <div class="admin-options" id="partial-admin-options">
@@ -102,7 +102,7 @@
                             label="{{'rolesPanel.salesAdmin' | translate}}" ng-model="rolesObj.salesAdminValue"
                             ng-click="partialCheckboxes();" isdisabled="isEditingSelf"></cs-checkbox>
                 <i
-                  tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-check'></i>Customer Management</li><li><i class='icon icon-check'></i>Overview & Reports</li><li><i class='icon icon-remove'></i>Organization Management</li><li><i class='icon icon-check'></i>Trials Management</li></ul>"
+                  tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-check'></i>{{::'rolesPanel.customerManagement' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.overviewReports' | translate}}</li><li><i class='icon icon-remove'></i>{{::'rolesPanel.organizationManagement' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.trialsManagement' | translate}}</li></ul>"
                   tooltip-placement="right" tooltip-trigger="mouseenter"
                   class="icon icon-information role-information"></i>
               </div>
@@ -111,7 +111,7 @@
                             ng-model="rolesObj.userAdminValue" ng-click="partialCheckboxes();"
                             isdisabled="isEditingSelf"></cs-checkbox>
                 <i
-                  tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-check'></i>User Management</li><li><i class='icon icon-check'></i>Company Policy & Templates</li><li><i class='icon icon-check'></i>Analytics & Reports</li><li><i class='icon icon-check'></i>Support Metrics & Notifications</li><li><i class='icon icon-check'></i>Licenses & Upgrades</li><li><i class='icon icon-remove'></i>Assign Roles</li></ul>"
+                  tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-check'></i>{{::'rolesPanel.userManagement' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.companyPolicyTemplates' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.analytics' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.supportMetrics' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.licensesAndUpgrades' | translate}}</li><li><i class='icon icon-remove'></i>{{::'rolesPanel.assignRoles' | translate}}</li></ul>"
                   tooltip-placement="right" tooltip-trigger="mouseenter"
                   class="icon icon-information role-information"></i>
               </div>
@@ -120,7 +120,7 @@
                             label="{{'rolesPanel.billingAdmin' | translate}}" ng-model="rolesObj.billingAdminValue"
                             ng-click="partialCheckboxes();" isdisabled="isEditingSelf"></cs-checkbox>
                 <i
-                  tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-remove'></i>User Management</li><li><i class='icon icon-remove'></i>Company Policy & Templates</li><li><i class='icon icon-remove'></i>Analytics & Reports</li><li><i class='icon icon-remove'></i>Support Metrics & Notifications</li><li><i class='icon icon-check'></i>Licenses & Upgrades</li><li><i class='icon icon-remove'></i>Assign Roles</li></ul>"
+                  tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-remove'></i>{{::'rolesPanel.userManagement' | translate}}</li><li><i class='icon icon-remove'></i>{{::'rolesPanel.companyPolicyTemplates' | translate}}</li><li><i class='icon icon-remove'></i>{{::'rolesPanel.analytics' | translate}}</li><li><i class='icon icon-remove'></i>{{::'rolesPanel.supportMetrics' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.licensesAndUpgrades' | translate}}</li><li><i class='icon icon-remove'></i>{{::'rolesPanel.assignRoles' | translate}}</li></ul>"
                   tooltip-placement="right" tooltip-trigger="mouseenter"
                   class="icon icon-information role-information"></i>
               </div>
@@ -129,7 +129,7 @@
                             label="{{'rolesPanel.supportAdmin' | translate}}" ng-model="rolesObj.supportAdminValue"
                             ng-click="partialCheckboxes();" isdisabled="isEditingSelf"></cs-checkbox>
                 <i
-                  tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-remove'></i>User Management</li><li><i class='icon icon-remove'></i>Company Policy & Templates</li><li><i cass='icon icon-check'></i>Analytics & Reports</li><li><i class='icon icon-check'></i>Support Metrics & Notifications</li><li><i class='icon icon-remove'></i>Licenses & Upgrades</li><li><i class='icon icon-remove'></i>Assign Roles</li></ul>"
+                  tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-remove'></i>{{::'rolesPanel.userManagement' | translate}}</li><li><i class='icon icon-remove'></i>{{::'rolesPanel.companyPolicyTemplates' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.analytics' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.supportMetrics' | translate}}</li><li><i class='icon icon-remove'></i>{{::'rolesPanel.licensesAndUpgrades' | translate}}</li><li><i class='icon icon-remove'></i>{{::'rolesPanel.assignRoles' | translate}}</li></ul>"
                   tooltip-placement="right" tooltip-trigger="mouseenter"
                   class="icon icon-information role-information"></i>
               </div>
@@ -143,7 +143,7 @@
                             label="{{'ciRoles.atlas-portal.partner.helpdesk' | translate}}"
                             ng-model="rolesObj.helpdeskValue"
                             isdisabled="isEditingSelf" ng-click="helpdeskOnCheckedHandler()"></cs-checkbox>
-                <i tooltip="{{'ciRoles.atlas-portal.partner.helpdeskTooltip' | translate}}" tooltip-placement="right" tooltip-trigger="mouseenter"
+                <i tooltip="{{::'ciRoles.atlas-portal.partner.helpdeskTooltip' | translate}}" tooltip-placement="right" tooltip-trigger="mouseenter"
                   class="icon icon-information role-information"></i>
               </div>
               <div class="admin-options" ng-if="showOrderAdminRole">
@@ -151,7 +151,7 @@
                             label="{{'ciRoles.atlas-portal.partner.orderadmin' | translate}}"
                             ng-model="rolesObj.orderAdminValue"
                             isdisabled="isEditingSelf" ng-click="orderadminOnCheckedHandler()"></cs-checkbox>
-                <i tooltip="{{'ciRoles.atlas-portal.partner.orderadminTooltip' | translate}}" tooltip-placement="right" tooltip-trigger="mouseenter"
+                <i tooltip="{{::'ciRoles.atlas-portal.partner.orderadminTooltip' | translate}}" tooltip-placement="right" tooltip-trigger="mouseenter"
                   class="icon icon-information role-information"></i>
               </div>
             </div>
@@ -164,7 +164,7 @@
                             label="{{'ciRoles.compliance' | translate}}"
                             ng-model="rolesObj.complianceValue"
                             isdisabled="isEditingSelf"></cs-checkbox>
-                <i tooltip="{{'ciRoles.complianceTooltip' | translate}}" tooltip-placement="right" tooltip-trigger="mouseenter"
+                <i tooltip="{{::'ciRoles.complianceTooltip' | translate}}" tooltip-placement="right" tooltip-trigger="mouseenter"
                   class="icon icon-information role-information"></i>
               </div>
             </div>

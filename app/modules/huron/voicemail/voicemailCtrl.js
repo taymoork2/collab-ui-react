@@ -6,13 +6,22 @@
     .controller('VoicemailInfoCtrl', VoicemailInfoCtrl);
 
   /* @ngInject */
-  function VoicemailInfoCtrl($scope, $stateParams, $translate, $modal, UserServiceCommon, TelephonyInfoService, Notification, DirectoryNumber) {
+  function VoicemailInfoCtrl($scope, $stateParams, $translate, $modal, UserServiceCommon, TelephonyInfoService, FeatureToggleService, Notification, DirectoryNumber) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.saveVoicemail = saveVoicemail;
     vm.reset = reset;
     vm.directoryNumber = DirectoryNumber.getNewDirectoryNumber();
     vm.saveInProcess = false;
+
+    var VOICEMAIL = 'VOICEMAIL';
+    var AVRIL = "AVRIL";
+    var VOICE = "VOICE";
+
+    vm.voicemailAvrilCustomer = false;
+    FeatureToggleService.supports(FeatureToggleService.features.avrilVmEnable).then(function (result) {
+      vm.voicemailAvrilCustomer = result;
+    });
 
     init();
 
@@ -41,12 +50,24 @@
       var voicemailEnabled = false;
       if (vm.telephonyInfo.services !== null && vm.telephonyInfo.services.length > 0) {
         for (var j = 0; j < vm.telephonyInfo.services.length; j++) {
-          if (vm.telephonyInfo.services[j] === 'VOICEMAIL') {
+          if (vm.telephonyInfo.services[j] === VOICEMAIL) {
             voicemailEnabled = true;
           }
         }
       }
       return voicemailEnabled;
+    }
+
+    function isAvrilServiceExist() {
+      var avrilServiceExist = false;
+      if (vm.telephonyInfo.services !== null && vm.telephonyInfo.services.length > 0) {
+        for (var j = 0; j < vm.telephonyInfo.services.length; j++) {
+          if (vm.telephonyInfo.services[j] === AVRIL) {
+            avrilServiceExist = true;
+          }
+        }
+      }
+      return avrilServiceExist;
     }
 
     function saveVoicemail() {
@@ -62,7 +83,13 @@
 
       if (vm.enableVoicemail) {
         if (!isVoicemailEnabled()) {
-          vm.telephonyInfo.services.push('VOICEMAIL');
+          vm.telephonyInfo.services.push(VOICEMAIL);
+        }
+
+        if (vm.voicemailAvrilCustomer) {
+          if (!isAvrilServiceExist()) {
+            vm.telephonyInfo.services.push(AVRIL);
+          }
         }
 
         voicemailPayload.voicemail = {
@@ -75,11 +102,13 @@
           scope: $scope,
           type: 'dialog'
         }).result.then(function () {
+          var filteredServices = [];
           for (var j = 0; j < vm.telephonyInfo.services.length; j++) {
-            if (vm.telephonyInfo.services[j] === 'VOICEMAIL') {
-              vm.telephonyInfo.services.splice(j, 1);
+            if ((vm.telephonyInfo.services[j] !== VOICEMAIL) && (vm.telephonyInfo.services[j] !== AVRIL)) {
+              filteredServices.push(vm.telephonyInfo.services[j]);
             }
           }
+          vm.telephonyInfo.services = filteredServices;
           updateVoicemail(voicemailPayload, result);
         }, function () {
           vm.reset();
@@ -93,10 +122,10 @@
 
       //VOICE service is required for voicemail enable/disable so add it
       var hasVoiceService = _.find(voicemailPayload.services, function (service) {
-        return service === 'VOICE';
+        return service === VOICE;
       });
       if (!hasVoiceService) {
-        voicemailPayload.services.push('VOICE');
+        voicemailPayload.services.push(VOICE);
       }
 
       UserServiceCommon.update({

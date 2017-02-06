@@ -54,9 +54,9 @@ describe('Controller: TrialEditCtrl:', function () {
     removeContextSpy = spyOn(TrialContextService, 'removeService').and.returnValue($q.resolve());
     spyOn(TrialContextService, 'trialHasService').and.returnValue(false);
     spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'atlasCareCallbackTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
       fail('the following toggle wasn\'t expected' + param); //taking control of which toggles this controller are using (explicit or implicit)
     });

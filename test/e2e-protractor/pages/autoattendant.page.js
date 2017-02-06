@@ -32,6 +32,8 @@ var AutoAttendantPage = function () {
   this.periodicSec = element(by.linkText('45'));
   this.periodicSecOption = element(by.id('periodicSecId')).all(by.tagName('li'));
 
+  this.routeToSipEndpoint = element.all(by.name('destinationSelect')).first();
+
   this.searchBox = element(by.id('searchFilter'));
   this.aaTitle = element(by.tagName('aa-builder-name-edit'));
   this.autoAttendantDevLink = element(by.css('a[href*="#/hurondetails/features"]'));

@@ -1,0 +1,40 @@
+<cs-sp-container class="hercules-settings-table">
+  <cs-sp-section>
+    <div class="section-title-row section-name">
+      {{alarmCtrl.alarm.title}}
+    </div>
+    <table>
+      <tbody>
+      <tr>
+        <td translate="hercules.alarms.severity"></td>
+        <td>
+          <i class="icon icon-circle status-indicator" ng-class="alarmCtrl.getAlarmSeverityCssClass(alarm.severity)"></i>
+          <span translate="{{'hercules.alarms.' + alarmCtrl.alarm.severity}}"></span>
+        </td>
+      </tr>
+      <tr>
+        <td translate="hercules.alarms.firstReported"></td>
+        <td><span>{{alarmCtrl.parseDate(alarmCtrl.alarm.firstReported) | date : 'medium'}}</span></td>
+      </tr>
+      <tr>
+        <td translate="hercules.alarms.lastReported"></td>
+        <td><span>{{alarmCtrl.parseDate(alarmCtrl.alarm.lastReported) | date : 'medium'}}</span></td>
+      </tr>
+      </tbody>
+    </table>
+  </cs-sp-section>
+  <cs-sp-section>
+    <div class="section-title-row section-name" translate="hercules.alarms.description"></div>
+    <p>
+      {{alarmCtrl.alarm.description}}
+    </p>
+  </cs-sp-section>
+  <cs-sp-section ng-if="alarmCtrl.alarm.solution">
+    <div class="section-title-row section-name" translate="hercules.alarms.action"></div>
+    <p>
+      <span ng-repeat="element in alarmCtrl.alarm.alarmSolutionElements"><a ng-if="element.link"
+                                                                            target="_blank"
+                                                                            href="{{element.link}}">{{element.text}}</a>{{!element.link ? element.text : ''}}</span>
+    </p>
+  </cs-sp-section>
+</cs-sp-container>

@@ -8,16 +8,6 @@ const baseCategory = {
   borders: false,
 };
 
-// hybrid service types
-const fusionUC = 'squared-fusion-uc';
-const fusionEC = 'squared-fusion-ec';
-const fusionCAL = 'squared-fusion-cal';
-const fusionMGT = 'squared-fusion-mgmt';
-
-// hybrid service weight/status
-const serviceStatusWeight: Array<String> = [ 'undefined', 'ok', 'warn', 'error' ];
-const serviceStatusToCss: Array<String> = [ 'warning', 'success', 'warning', 'danger' ];
-
 // icon classes
 const messageClass = 'icon-message';
 const meetingRoomClass = 'icon-meeting-room';
@@ -337,41 +327,20 @@ class MySubscriptionCtrl {
   }
 
   private hybridServicesRetrieval() {
-    this.ServiceDescriptor.servicesInOrg(this.Authinfo.getOrgId(), true)
+    this.ServiceDescriptor.getServices()
       .then(services => {
-        if (_.isArray(services)) {
-          let callServices = _.filter<any>(services, (service) => {
-            return service.id === fusionUC || service.id === fusionEC;
-          });
-          let filteredServices = _.filter<any>(services, (service) => {
-            return service.id === fusionCAL || service.id === fusionMGT;
-          });
-
-          if (callServices.length > 0) {
-            let callService = {
-              id: fusionUC,
-              enabled: _.every(callServices, {
-                enabled: true,
-              }),
-              status: _.reduce(callServices, (result: String, serv) => {
-                return serviceStatusWeight.indexOf(serv.status) > serviceStatusWeight.indexOf(result) ? serv.status : result;
-              }, serviceStatusWeight[1]),
-            };
-
-            if (callService.enabled) {
-              filteredServices.push(callService);
-            }
+        return this.ServiceDescriptor.filterEnabledServices(services);
+      })
+      .then(enabledServices => {
+        return _.map(enabledServices, (service: any) => {
+          if (service.id === 'squared-fusion-uc' || service.id === 'squared-fusion-ec') {
+            return this.$translate.instant(`hercules.serviceNames.${service.id}.full`);
           }
-
-          _.forEach(filteredServices, (service: any) => {
-            service.label = this.$translate.instant('overview.cards.hybrid.services.' + service.id);
-            service.healthStatus = serviceStatusToCss[serviceStatusWeight.indexOf(service.status)] || serviceStatusToCss[0];
-          });
-
-          if (_.isArray(filteredServices) && filteredServices.length > 0) {
-            this.hybridServices = filteredServices;
-          }
-        }
+          return this.$translate.instant(`hercules.serviceNames.${service.id}`);
+        });
+      })
+      .then(humanReadableServices => {
+        this.hybridServices = humanReadableServices;
       });
   }
 }

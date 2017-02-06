@@ -192,8 +192,8 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       if (startIndex === 0) {
         // clear out any old user list data since we are regetting from the start
         $scope.allowLoadMoreData = false;
-        $scope.userList.allUsers.length = 0;
-        $scope.userList.adminUsers.length = 0;
+        $scope.userList.allUsers = [];
+        $scope.userList.adminUsers = [];
         $scope.totalUsersExpected = Number.MAX_VALUE;
         $scope.totalAdminUsersExpected = Number.MAX_VALUE;
         $scope.gridApi.infiniteScroll.resetScroll();
@@ -213,11 +213,14 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         getOrg: getOrg()
       };
 
-      return $q.all(promises).then(function () {
-        $scope.gridRefresh = false;
-        $scope.gridApi.infiniteScroll.dataLoaded();
-        $scope.allowLoadMoreData = isMoreDataToLoad();
-      });
+      return $q.all(promises)
+        .then(function () {
+          $scope.gridApi.infiniteScroll.dataLoaded();
+          $scope.allowLoadMoreData = isMoreDataToLoad();
+        })
+        .finally(function () {
+          $scope.gridRefresh = false;
+        });
     }
 
     function loadedAllAdmins() {
@@ -346,6 +349,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
                 Log.debug('Query existing users failed. Status: ' + status);
                 Notification.error('usersPage.userListError');
               }
+              deferred.reject(data);
             }
 
             if (!$scope.obtainedTotalUserCount) {

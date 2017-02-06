@@ -29,7 +29,7 @@ class CallPickupNotificationTimerCtrl implements ng.IComponentController {
       this.piNotificationTimerForm.$setValidity('', false, this.piNotificationTimerForm);
     }
     this.onChangeFn({
-      notificationTimer : this.notificationTimer,
+      notificationTimer: this.notificationTimer,
     });
   }
 

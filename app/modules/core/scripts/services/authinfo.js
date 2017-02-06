@@ -482,6 +482,9 @@
       isWebexMessenger: function () {
         return isEntitled(Config.entitlements.messenger);
       },
+      isContactCenterContext: function () {
+        return isEntitled(Config.entitlements.context);
+      },
       isCare: function () {
         return isEntitled(Config.entitlements.care);
       },

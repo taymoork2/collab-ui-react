@@ -16,18 +16,14 @@
       .then(function (data) {
         return data.expresswayClusterReleaseChannel;
       });
-    var f237Promise = FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+    var resourceGroupFeatureTogglePromise = FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
 
     function checkState(connectorType, serviceId) {
       if (checkIfFusePerformed()) {
-        if (checkIfConnectorsConfigured(connectorType)) {
-          checkDomainVerified(serviceId);
-          checkUserStatuses(serviceId);
-          checkCallServiceConnect(serviceId);
-        } else {
-          // When connector state changes back to i.e. "not_configure", clean up the service notifications
-          removeAllServiceAndUserNotifications();
-        }
+        checkDomainVerified(serviceId);
+        checkUserStatuses(serviceId);
+        checkCallServiceConnect(serviceId);
+        removeAllServiceAndUserNotifications();
       }
       checkUnassignedClusters();
     }
@@ -86,24 +82,6 @@
         return false;
       } else {
         NotificationService.removeNotification('fuseNotPerformed');
-        return true;
-      }
-    }
-
-    function checkIfConnectorsConfigured(connectorType) {
-      var clusters = ClusterService.getClustersByConnectorType(connectorType);
-      var areAllConnectorsConfigured = _.every(clusters, function (cluster) {
-        return allConnectorsConfigured(cluster, connectorType);
-      });
-      if (!areAllConnectorsConfigured) {
-        NotificationService.addNotification(
-          NotificationService.types.TODO,
-          'configureConnectors',
-          2,
-          'modules/hercules/notifications/configure_connectors.html', allExpresswayServices);
-        return false;
-      } else {
-        NotificationService.removeNotification('configureConnectors');
         return true;
       }
     }
@@ -257,19 +235,8 @@
       });
     }
 
-    function allConnectorsConfigured(cluster, connectorType) {
-      return _.chain(cluster.connectors)
-        .filter(function (connector) {
-          return connector.connectorType === connectorType;
-        })
-        .every(function (connector) {
-          return connector.state !== 'not_configured' && connector.state !== 'not_installed';
-        })
-        .value();
-    }
-
     function checkUnassignedClusters() {
-      f237Promise
+      resourceGroupFeatureTogglePromise
         .then(function (support) {
           return support ? defaultReleaseChannelPromise : $q.reject();
         })

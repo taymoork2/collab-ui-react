@@ -1,9 +1,10 @@
-import { LineService, LineConsumerType, Line } from '../services';
-import { HuronSiteService } from '../../sites';
-import { CallForward, CallForwardAll, CallForwardBusy, CallForwardService } from '../../callForward';
-import { SharedLine, SharedLineService, SharedLinePhone, SharedLinePhoneListItem } from '../../sharedLine';
-import { Member } from '../../members';
-import { ICallerID, CallerIDService } from '../../callerId';
+import { LineService, LineConsumerType, Line } from 'modules/huron/lines/services';
+import { HuronSiteService } from 'modules/huron/sites';
+import { CallForward, CallForwardAll, CallForwardBusy, CallForwardService } from 'modules/huron/callForward';
+import { SharedLine, SharedLineService, SharedLinePhone, SharedLinePhoneListItem } from 'modules/huron/sharedLine';
+import { Member } from 'modules/huron/members';
+import { ICallerID, CallerIDService } from 'modules/huron/callerId';
+import { AutoAnswer, AutoAnswerService } from 'modules/huron/autoAnswer';
 
 export class LineOverviewData {
   public line: Line;
@@ -11,6 +12,7 @@ export class LineOverviewData {
   public sharedLines: SharedLine[];
   public callerId: ICallerID;
   public companyNumbers: any;
+  public autoAnswer: AutoAnswer;
 }
 
 export class LineOverviewService {
@@ -27,6 +29,7 @@ export class LineOverviewService {
     private HuronSiteService: HuronSiteService,
     private CallForwardService: CallForwardService,
     private SharedLineService: SharedLineService,
+    private AutoAnswerService: AutoAnswerService,
     private Notification,
     private $q: ng.IQService,
     private CallerIDService: CallerIDService,
@@ -41,6 +44,7 @@ export class LineOverviewService {
     promises.push(this.getSharedLines(consumerType, ownerId, numberId));
     promises.push(this.getCallerId(consumerType, ownerId, numberId));
     promises.push(this.listCompanyNumbers());
+    promises.push(this.getAutoAnswerSupportedDeviceAndMember(consumerType, ownerId, numberId));
     return this.$q.all(promises).then( (data) => {
       if (this.errors.length > 0) {
         this.Notification.notify(this.errors, 'error');
@@ -51,6 +55,7 @@ export class LineOverviewService {
       lineOverviewData.sharedLines = data[2];
       lineOverviewData.callerId = data[3];
       lineOverviewData.companyNumbers = data[4];
+      lineOverviewData.autoAnswer = data[5];
       this.lineOverviewDataCopy = this.cloneLineOverviewData(lineOverviewData);
       return lineOverviewData;
     });
@@ -141,6 +146,14 @@ export class LineOverviewService {
             promises.push(this.updateSharedLinePhoneList(consumerType, ownerId, numberId, sharedLine.uuid, updatedPhoneList));
           }
         });
+      }
+
+      // update auto answer members
+      if (!_.isEqual(data.autoAnswer, this.lineOverviewDataCopy.autoAnswer)) {
+        let updateData = this.AutoAnswerService.createUpdateAutoAnswerPayload(this.lineOverviewDataCopy.autoAnswer.phones, data.autoAnswer.phones);
+        if (!_.isUndefined(updateData) && !_.isNull(updateData)) {
+          promises.push(this.AutoAnswerService.updateAutoAnswer(consumerType, ownerId, numberId, updateData!));
+        }
       }
 
       return this.$q.all(promises).then( () => {
@@ -250,6 +263,20 @@ export class LineOverviewService {
           return callerIdRes;
         });
     }
+  }
+
+  private getAutoAnswerSupportedDeviceAndMember(consumerType: LineConsumerType, ownerId: string, numberId: string): ng.IPromise<AutoAnswer> {
+    if (!numberId) {
+      return this.$q.resolve({});
+    } else {
+      return this.AutoAnswerService.getSupportedPhonesAndMember(consumerType, ownerId, numberId)
+        .then ( autoAnswerRes => {
+          if (!_.isUndefined(autoAnswerRes) && !_.isNull(autoAnswerRes) && !_.isUndefined(autoAnswerRes.member) &&
+              !_.isNull(autoAnswerRes.member) && autoAnswerRes.member.uuid !== ownerId) {
+            autoAnswerRes.enabledForSharedLineMember = true;
+          }
+          return autoAnswerRes;
+    }); }
   }
 
   private listCompanyNumbers() {

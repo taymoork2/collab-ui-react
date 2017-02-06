@@ -1,0 +1,37 @@
+@import 'styles/toolkit/colors';
+
+.auto-answer {
+  .auto-answer-title {
+    float: left;
+  }
+  .toggle-switch {
+    float: right;
+  }
+  .icon-info, .icon-warning {
+    top: 0.1rem;
+    margin-right: 0.25rem;
+    float: left;
+  }
+  .icon-info {
+    color: $color-primary-light;
+  }
+  .icon-warning {
+    color: $brand-warning;
+  }
+  #sharedline-member-warning, #multi-device-info,
+  #no-supported-device-warning {
+    width: 90%;
+    float: left;
+    margin-bottom: 1rem;
+    p {
+      line-height: 1.5;
+      padding-top: 0;
+    }
+  }
+  #autoAnswerDevice {
+    margin-bottom: 1rem;
+    p {
+      padding-top: 0;
+    }
+  }
+}

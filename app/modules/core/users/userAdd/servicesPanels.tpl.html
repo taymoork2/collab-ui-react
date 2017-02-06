@@ -170,7 +170,7 @@
           <div class="item-mtg" ng-if="lic.site">
             <div class="license-space" ng-show="multipleSubscriptions.showLicenses(cfLic.billing, cfLic.isTrial)" ng-repeat="cfLic in lic.confLic">
               <div ng-if="lic.isCISite">
-                <input 
+                <input
                   cs-input
                   type="checkbox"
                   id="{{cfLic.licenseId}}"
@@ -210,7 +210,7 @@
         </div>
       </div>
       <!-- END - Shared Multi Party enabled -->
-      
+
       <!-- CALL SERVICES PANEL -->
       <div id="communication" class="small-4 columns column-paid">
         <div ng-if="!isSharedMeetingsEnabled" class="item-license" translate="onboardModal.call"></div>
@@ -272,7 +272,7 @@
             </div>
           </div>
         </div>
-        <label ng-show="isCallBackEnabled" class="care-information-text" translate="onboardModal.enableCareInformationText"></label>
+        <label class="care-information-text" translate="onboardModal.enableCareInformationText"></label>
       </div>
     </div>
 </div>

@@ -26,7 +26,6 @@
       values = _.orderBy(values, ['value'], ['asc']);
       _.forEach(values, function (clusterList) {
         var c_name = clusterList.key;
-        c_name = (c_name.length > 17) ? c_name.substring(0, 17) + ".." : c_name;
         valuesArray.push(c_name + " " + " " + clusterList.value + "%");
       });
 

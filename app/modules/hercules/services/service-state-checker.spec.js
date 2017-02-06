@@ -53,7 +53,7 @@ xdescribe('ServiceStateChecker', function () {
     FeatureToggleService = {
       features: {
         atlasSipUriDomainEnterprise: '',
-        atlasF237ResourceGroups: '',
+        atlasF237ResourceGroup: '',
       },
       supports: jasmine.createSpy(),
     };

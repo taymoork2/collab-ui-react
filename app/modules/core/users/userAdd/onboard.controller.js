@@ -94,11 +94,7 @@ require('./_user-add.scss');
     var currentUserHasCall = false;
 
     $scope.isCareEnabled = Authinfo.isCare();
-    $scope.isCareCallBackEnabled = false;
     $scope.enableCareService = true;
-    FeatureToggleService.atlasCareCallbackTrialsGetStatus().then(function (callBackStatus) {
-      $scope.isCareCallBackEnabled = callBackStatus;
-    });
 
     $scope.sharedMeetingsFeatureDefaultToggle = { default: true, defaultValue: true };
     if (_.get($scope, 'sharedMeetingsFeatureDefaultToggle.default')) {
@@ -2058,7 +2054,7 @@ require('./_user-add.scss');
     };
 
     $scope.getServiceName = function (service) {
-      for (var i = 0; i < $rootScope.services.length; i++) {
+      for (var i = 0; i < _.get($rootScope, 'services', []).length; i++) {
         var svc = $rootScope.services[i];
         if (svc.serviceId === service) {
           return svc.displayName;
@@ -2585,13 +2581,11 @@ require('./_user-add.scss');
     }
 
     function controlCare() {
-      if ($scope.isCareCallBackEnabled) {
-        if ($scope.radioStates.msgRadio && $scope.radioStates.commRadio) {
-          $scope.enableCareService = true;
-        } else {
-          $scope.enableCareService = false;
-          $scope.radioStates.careRadio = false;
-        }
+      if ($scope.radioStates.msgRadio) {
+        $scope.enableCareService = true;
+      } else {
+        $scope.enableCareService = false;
+        $scope.radioStates.careRadio = false;
       }
     }
 

@@ -5,8 +5,9 @@
 </div>
 <div class="modal-body choose-device-type device-wizard">
   <div>
-    <h4 ng-if="!chooseDeviceType.isNewPlaceFlow()" translate="addDeviceWizard.chooseDeviceType.deviceType"></h4>
-    <h4 ng-if="chooseDeviceType.isNewPlaceFlow()"
+    <h4 ng-hide="chooseDeviceType.isNewPlaceFlow() || chooseDeviceType.showPersonal"
+        translate="addDeviceWizard.chooseDeviceType.deviceType"></h4>
+    <h4 ng-show="chooseDeviceType.isNewPlaceFlow() || chooseDeviceType.showPersonal"
         translate="addDeviceWizard.chooseDeviceType.deviceTypeNewPlace"></h4>
     <p class="wizardDescription" translate="addDeviceWizard.chooseDeviceType.deviceTypeInstructions"></p>
     <div class="typeChoice">

@@ -3,18 +3,16 @@ const _ = require('lodash');
 const args = require('yargs').argv;
 const path = require('path');
 const loaders = require('./loaders');
-const autoprefixer = require('autoprefixer');
 // const StyleLintPlugin = require('stylelint-webpack-plugin');
 
 const host = args.host || '127.0.0.1';
 const port = args.port || '8000';
 
-module.exports = (function makeWebpackConfig() {
+function webpackConfig(env) {
   const config = {};
   config.context = path.resolve('./app');
 
   config.entry = {
-    detectUserAgent: ['../unsupported/detectUserAgent'],
     preload: ['scripts/preload'],
     app: ['bootstrap'],
     styles: ['styles/app'],
@@ -30,9 +28,7 @@ module.exports = (function makeWebpackConfig() {
   config.devtool = 'eval';
 
   config.module = {
-    preLoaders: [],
-    postLoaders: [],
-    loaders: _.flatten([
+    rules: _.flatten([
       loaders.js,
       loaders.ts,
       loaders.scss,
@@ -51,34 +47,10 @@ module.exports = (function makeWebpackConfig() {
     ],
   };
 
-  if (!args.nolint) {
-    config.module.preLoaders.push(loaders.eslint);
-    config.module.preLoaders.push(loaders.tslint);
+  if (!env.nolint) {
+    config.module.rules.push(loaders.eslint);
+    config.module.rules.push(loaders.tslint);
   }
-
-  config.eslint = {
-    failOnError: true,
-  };
-
-  config.tslint = {
-    emitErrors: true,
-    failOnHint: true,
-  };
-
-  config.postcss = [
-    autoprefixer({
-      browsers: ['last 2 version'],
-    }),
-  ];
-
-  config.sassLoader = {
-    sourceComments: true,
-    includePaths: [
-      path.resolve('./app'),
-      path.resolve('node_modules/bootstrap-sass/assets/stylesheets'),
-      path.resolve('node_modules/foundation-sites/scss'),
-    ],
-  };
 
   config.plugins = [
     new webpack.ProvidePlugin({
@@ -97,7 +69,7 @@ module.exports = (function makeWebpackConfig() {
   ];
 
   // Activate once IntelliJ / WebStorm supports stylelint
-  // if (!args.nolint) {
+  // if (!env.nolint) {
   //   config.plugins.push(new StyleLintPlugin({
   //     configFile: '.stylelintrc.js',
   //     failOnError: true,
@@ -105,7 +77,7 @@ module.exports = (function makeWebpackConfig() {
   // }
 
   config.resolve = {
-    extensions: ['', '.ts', '.js', '.json', '.css', '.scss', '.html'],
+    extensions: ['.ts', '.js', '.json', '.css', '.scss', '.html'],
     alias: {
       // App aliases (used by ProvidePlugin)
       clipboard: 'clipboard/dist/clipboard.js',
@@ -119,11 +91,14 @@ module.exports = (function makeWebpackConfig() {
       imagesloaded: 'imagesloaded/imagesloaded.pkgd.js',
       'masonry-layout': 'masonry-layout/dist/masonry.pkgd.js',
     },
-    root: [
+    modules: [
       path.resolve('./app'),
       path.resolve('./test'),
+      'node_modules',
     ],
   };
 
   return config;
-}());
+}
+
+module.exports = webpackConfig;

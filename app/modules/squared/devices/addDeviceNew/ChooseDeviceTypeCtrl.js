@@ -15,6 +15,7 @@
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
     vm.showATA = wizardData.showATA;
+    vm.showPersonal = wizardData.showPersonal;
     vm.selectedDeviceType = null;
     vm.isLoading = false;
 
@@ -22,8 +23,8 @@
       return wizardData.function !== 'addDevice';
     };
 
-    vm.hideCancelButton = vm.isNewPlaceFlow();
-    vm.hideBackButton = !vm.isNewPlaceFlow();
+    vm.hideCancelButton = vm.isNewPlaceFlow() || vm.showPersonal;
+    vm.hideBackButton = !vm.isNewPlaceFlow() && !vm.showPersonal;
 
     vm.next = function () {
       if (vm.selectedDeviceType) {
