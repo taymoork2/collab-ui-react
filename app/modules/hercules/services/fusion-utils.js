@@ -7,6 +7,10 @@
 
   /*@ngInject*/
   function FusionUtils($translate) {
+    // Visual order to respect accross Atlas UI
+    var orderedConnectors = ['c_mgmt', 'c_cal', 'c_ucmc', 'mf_mgmt', 'hds_app'];
+    var orderedServices = ['squared-fusion-mgmt', 'squared-fusion-cal', 'squared-fusion-gcal', 'squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-media', 'spark-hybrid-datasecurity'];
+
     return {
       connectorType2RouteName: connectorType2RouteName,
       connectorType2ServicesId: connectorType2ServicesId,
@@ -14,7 +18,9 @@
       serviceId2Icon: serviceId2Icon,
       getLocalizedReleaseChannel: getLocalizedReleaseChannel,
       getTimeSinceText: getTimeSinceText,
-      getLocalTimestamp: getLocalTimestamp
+      getLocalTimestamp: getLocalTimestamp,
+      hybridServicesComparator: hybridServicesComparator,
+      hybridConnectorsComparator: hybridConnectorsComparator,
     };
 
     //////////
@@ -107,6 +113,28 @@
         timezone = 'UTC';
       }
       return moment(timestamp).local().tz(timezone).format(format || 'LLL (z)');
+    }
+
+    function hybridServicesComparator(serviceType1, serviceType2) {
+      if (serviceType1 === serviceType2) {
+        return 0;
+      }
+      if (_.indexOf(orderedServices, serviceType1) < _.indexOf(orderedServices, serviceType2)) {
+        return -1;
+      } else {
+        return 1;
+      }
+    }
+
+    function hybridConnectorsComparator(connectorType1, connectorType2) {
+      if (connectorType1 === connectorType2) {
+        return 0;
+      }
+      if (_.indexOf(orderedConnectors, connectorType1) < _.indexOf(orderedConnectors, connectorType2)) {
+        return -1;
+      } else {
+        return 1;
+      }
     }
   }
 }());

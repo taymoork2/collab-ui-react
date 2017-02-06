@@ -1,13 +1,8 @@
 <div class="fusion-cluster-settings">
-
-  <cs-page-header title="{{$ctrl.localizedTitle}}" back="true" back-url="$ctrl.backUrl"></cs-page-header>
-
-    <rename-and-deregister-cluster-section
-      service-id="'spark-hybrid-datasecurity'"
-      cluster="$ctrl.cluster"
-      show-rename-section="true"
-      on-name-update="$ctrl.nameUpdated()">
-    </rename-and-deregister-cluster-section>
-
-  </div>
+  <rename-and-deregister-cluster-section
+    service-id="'spark-hybrid-datasecurity'"
+    cluster="$ctrl.cluster"
+    show-rename-section="true"
+    on-name-update="$ctrl.nameUpdated()">
+  </rename-and-deregister-cluster-section>
 </div>

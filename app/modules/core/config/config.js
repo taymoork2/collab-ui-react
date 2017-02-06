@@ -434,11 +434,12 @@
         'services-overview',
         'resource-group-settings',
         'cluster-list',
-        'hds.settings', //Temporary  entitlement until updated in org setting
+        'expressway-cluster',
+        'hds.settings', // Temporary  entitlement until updated in org setting
         'hds',
         'hds.list',
         'hds-cluster-details',
-        'hds-cluster-settings',
+        'hds-cluster',
       ],
       'spark-room-system': [
         'addDeviceFlow',
@@ -453,14 +454,14 @@
         'add-resource',
         'call-service',
         'cluster-list',
-        'expressway-settings',
+        'expressway-cluster',
         'services-overview',
       ],
       'squared-fusion-cal': [
         'add-resource',
         'calendar-service',
         'cluster-list',
-        'expressway-settings',
+        'expressway-cluster',
         'services-overview',
       ],
       'squared-fusion-gcal': [
@@ -473,7 +474,8 @@
         'organization',
       ],
       'spark-hybrid-datasecurity': [
-        'hds.settings'
+        'hds.settings',
+        'hds-cluster',
       ],
       'squared-fusion-media': [
         'add-resource',
@@ -481,7 +483,7 @@
         'connector-details-v2',
         'media-service',
         'media-service-v2',
-        'mediafusion-settings',
+        'mediafusion-cluster',
         'metrics',
         'reports.metrics',
         'reports.media',
@@ -511,7 +513,7 @@
         'cluster-list',
         'devices',
         'places',
-        'expressway-settings',
+        'expressway-cluster',
         'fusion',
         'hurondetails',
         'huronsettings',

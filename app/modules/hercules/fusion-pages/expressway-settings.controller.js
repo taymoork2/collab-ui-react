@@ -6,13 +6,11 @@
     .controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController);
 
   /* @ngInject */
-  function ExpresswayClusterSettingsController($stateParams, FusionClusterService, Notification, $modal, $translate, ResourceGroupService, hasF237FeatureToggle) {
+  function ExpresswayClusterSettingsController($stateParams, FusionClusterService, Notification, $modal, $translate, ResourceGroupService, hackishWayOfPassingNameUpdateUp, hasResourceGroupFeatureToggle) {
     var vm = this;
     // Simple values
-    vm.backUrl = 'cluster-list';
     vm.enabledServices = [];
-    vm.newClusterName = '';
-    vm.showResourceGroups = hasF237FeatureToggle;
+    vm.showResourceGroups = hasResourceGroupFeatureToggle;
     // Translations
     vm.upgradeSchedule = {
       title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader'
@@ -37,10 +35,6 @@
     function loadCluster(clusterId) {
       refreshClusterData(clusterId)
         .then(function (cluster) {
-          vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {
-            clusterName: cluster.name
-          });
-          vm.newClusterName = vm.cluster.name;
           vm.enabledServices = _.map(cluster.provisioning, 'connectorType');
 
           if (vm.showResourceGroups) {
@@ -222,8 +216,8 @@
     }
 
     /* Callback function used by <rename-and-deregister-cluster-section>  */
-    function nameUpdated() {
-      loadCluster($stateParams.id);
+    function nameUpdated(name) {
+      hackishWayOfPassingNameUpdateUp.name = name;
     }
   }
 })();

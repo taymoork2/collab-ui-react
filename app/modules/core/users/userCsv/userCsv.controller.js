@@ -47,8 +47,8 @@ require('./_user-csv.scss');
     FeatureToggleService.supportsDirSync().then(function (enabled) {
       vm.isDirSyncEnabled = enabled;
     });
-    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups).then(function (enabled) {
-      vm.isAtlasF237ResourceGroupsEnabled = enabled;
+    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup).then(function (enabled) {
+      vm.hasResourceGroupFeatureToggle = enabled;
     });
 
     var csvPromiseChain = $q.resolve();
@@ -68,7 +68,7 @@ require('./_user-csv.scss');
             isCalendarOrCallServiceEntitled = true;
           }
         });
-        vm.handleHybridServicesResourceGroups = isCalendarOrCallServiceEntitled && vm.isAtlasF237ResourceGroupsEnabled;
+        vm.handleHybridServicesResourceGroups = isCalendarOrCallServiceEntitled && vm.hasResourceGroupFeatureToggle;
       }
     });
     var bulkStartLog = null;

@@ -6,7 +6,6 @@
       bindings: {
         clusterId: '<',
         connectorType: '<',
-
       },
       controller: expresswayUpgradeSectionCtrl,
       templateUrl: 'modules/hercules/cluster-sidepanel/expressway-upgrade-section/expressway-upgrade-section.html',

@@ -1088,6 +1088,7 @@
     "new": "New",
     "next": "Next",
     "no": "No",
+    "nodes": "Nodes",
     "none": "None",
     "notAvailable": "N/A",
     "notSet": "Not set",
@@ -2100,6 +2101,7 @@
         "users": "Users",
         "release-channel": "Release Channel",
         "nodes": "{count, plural, one{# Node} other{# Nodes}}",
+        "nodesBtn": "Nodes",
         "settings": "Settings",
         "all": "All",
         "add-resource": "Add Resource",
@@ -2259,6 +2261,13 @@
         "RemoveUserResourceGroup": "Resource group changed",
         "SetUserStatus": "User status updated"
       }
+    },
+    "nodesPage": {
+      "connectors": "Connectors",
+      "status": "Status",
+      "serial": "Serial",
+      "version": "Version",
+      "loadingError": "Could not load the cluster data"
     }
   },
   "hds": {
