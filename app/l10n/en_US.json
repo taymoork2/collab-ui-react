@@ -3279,6 +3279,18 @@
     "showLess": "Show less",
     "localDialing": "Local Dialing"
   },
+  "preferredLanguage": {
+    "title": "Preferred Language",
+    "description": "Choose the preferred language for this place. This will override the default organization setting.",
+    "placeholder": "Select your language",
+    "organizationSettingLabel": "Organization Setting - ",
+    "descriptionForCloudberryDevice": "Configure preferred language on the room’s device page.",
+    "placesCallOverviewSaveSuccess": "Preferred Language saved successfully",
+    "failedToSaveChanges": "Failed to save preferred Language. Reason:",
+    "failedToFetchCmiPlacesInfo": "Failed to fetch places info. Reason:",
+    "failedToFetchSiteLanguages": "Failed to fetch languages. Reason:",
+    "failedToFetchSiteLevelLanguage": "Failed to fetch site level language. Reason:"
+  },
   "directoryNumberPanel": {
     "title": "Line Configuration",
     "success": "Line configuration saved successfully",
@@ -3317,12 +3329,7 @@
     "updateLineError": "Could not update details for this line.",
     "createSharedLinesError": "Could not create shared line.",
     "deleteSharedLineError": "Could not delete shared line member.",
-    "updateSharedLinePhoneError": "Could not update shared line phone list.",
-    "preferredLanguage": "Preferred Language",
-    "preferredLanguageDescription": "Choose the preferred language for this place. This will override the default organization setting.",
-    "preferredLanguagePlaceholder": "Select your language",
-    "organizationSetting": "Organization Setting - ",
-    "preferredLanguageDescriptionForCloudberryDevice": "Configure preferred language on the room’s device page."
+    "updateSharedLinePhoneError": "Could not update shared line phone list."
   },
   "callForwardPanel": {
     "title": "Call Forwarding",
@@ -5447,11 +5454,7 @@
     "deletePlace": "Delete Place",
     "deletePlaceConfText": "Are you sure you want to delete {{ placeName }}?",
     "failedToSaveChanges": "Failed to save changes to place. Reason:",
-    "failedToDelete": "Failed to delete place. Reason:",
-    "placesCallOverviewSaveSuccess": "Call overview saved successfully",
-    "failedToFetchCmiPlacesInfo": "Failed to fetch places info. Reason:",
-    "failedToFetchSiteLanguages": "Failed to fetch languages. Reason:",
-    "failedToFetchSiteLevelLanguage": "Failed to fetch site level language. Reason:"
+    "failedToDelete": "Failed to delete place. Reason:"
   },
   "linesPage": {
     "manageLines": "Numbers",

@@ -1,8 +1,8 @@
 <cs-sp-buttons ng-class="{invisible: !$ctrl.onPrefLanguageChange}">
-  <button cs-btn loading="$ctrl.placeCallOverviewSaveInProcess" class="btn btn--primary" ng-click="$ctrl.savePlaceCallOverview()" ng-disabled="$ctrl.placeCallOverviewSaveInProcess" type="click">
+  <button cs-btn loading="$ctrl.prefLanguageSaveInProcess" class="btn btn--primary" ng-click="$ctrl.savePreferredLanguage()" ng-disabled="$ctrl.prefLanguageSaveInProcess" type="click">
     <span translate="common.save"></span>
   </button>
-  <button cs-btn ng-click="$ctrl.onCancelPlaceCallOverview()">
+  <button cs-btn ng-click="$ctrl.onCancelPreferredLanguage()">
     <span translate="common.cancel"></span>
   </button>
 </cs-sp-buttons>
@@ -13,29 +13,17 @@
     </section-title>
     <p>{{$ctrl.currentPlace.sipUrl}}</p>
   </cs-sp-section>
-  <cs-sp-section>
-    <div class="section-title-row">
-      <span class="section-name" translate="directoryNumberPanel.preferredLanguage"></span>
-    </div>
-    <p class="description-block" 
-      ng-show="$ctrl.hasSparkCall"
-      translate="directoryNumberPanel.preferredLanguageDescription"></p>
-    <p class="description-block" 
-      ng-hide="$ctrl.hasSparkCall"
-      translate="directoryNumberPanel.preferredLanguageDescriptionForCloudberryDevice"></p> 
-    <div cs-loader ng-if="$ctrl.hasSparkCall" ng-hide="$ctrl.plIsLoaded"></div>
-    <div ng-if="$ctrl.hasSparkCall" ng-show="$ctrl.plIsLoaded && $ctrl.isUserLocaleFT2Enabled">
-      <cs-select
-        name="languageSelect"
-        ng-model="$ctrl.preferredLanguage"
-        options="$ctrl.preferredLanguageOptions"
-        labelfield="label"
-        valuefield="value"
-        filter="false"
-        on-change-fn="$ctrl.onPrefLanguageChange=true"
-      ></cs-select>
-    </div>
-  </cs-sp-section>
+  <uc-preferred-language
+    cr-feature-toggle feature-show="huron-l10n-user-locale-2"
+    places-id="$ctrl.currentPlace.cisUuid"
+    has-spark-call="$ctrl.hasSparkCall"
+    on-pref-language-change="$ctrl.onPrefLanguageChange"
+    pref-language-save-in-process="$ctrl.prefLanguageSaveInProcess"
+    places-preferred-language="$crtl.placesPreferredLanguage"
+    default-preferred-lanugage="$ctrl.defaultPreferredLanugage"
+    preferred-language="$ctrl.preferredLanguage"
+    preferred-language-options="$crtrl.preferredLanguageOptions">
+  </uc-preferred-language>
   <cs-sp-section ng-if="$ctrl.hasSparkCall">
     <section-title
       title-key="directoryNumberPanel.directNumbers"
@@ -46,7 +34,7 @@
       directory-number-sref="place-overview.communication.line-overview({numberId: directoryNumber.uuid})"
       line-threshold="5"
       voicemail-enabled="$ctrl.voicemailEnabled"
-      on-directory-number-click="$ctrl.onCancelPlaceCallOverview()">
+      on-directory-number-click="$ctrl.onCancelPreferredLanguage()">
     </directory-number-list>
   </cs-sp-section>
   <cs-sp-section ng-if="$ctrl.hasSparkCall">
