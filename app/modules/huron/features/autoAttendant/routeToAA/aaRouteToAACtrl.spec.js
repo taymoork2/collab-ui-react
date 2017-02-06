@@ -223,7 +223,7 @@ describe('Controller: AARouteToAACtrl', function () {
       });
     });
 
-    describe('fromPhoneMenu_Queue_Fallback', function () {
+    describe('PhoneMenu Queue Fallback', function () {
       it('should be able to create new AA entry from Queue Fallback of PhoneMenu', function () {
 
         var disconnect = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', '');
