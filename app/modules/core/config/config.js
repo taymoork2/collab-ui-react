@@ -525,7 +525,7 @@
         'huronsettings',
         'media-service',
         'media-service-v2',
-        'mediafusion-settings',
+        'mediafusion-cluster',
         'overview',
         'reports',
         'services-overview',
