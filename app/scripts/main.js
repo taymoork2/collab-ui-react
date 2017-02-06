@@ -105,6 +105,8 @@
     'Sunlight.pagination'
   ]);
 
+  angular.module('Context', ['Core']);
+
   angular.module('GSS', ['Core']);
 
   angular.module('Gemini', ['Core']);
@@ -121,6 +123,7 @@
     'WebExApp',
     'Messenger',
     'Sunlight',
+    'Context',
     'GSS',
     'oc.lazyLoad',
     'Gemini'

@@ -1605,7 +1605,7 @@
       "confirmationDialogBody": "Are you sure you want to remove this node?",
       "successNodeRemoval": "Node removed successfully.",
       "failedNodeRemoval": "Failed to remove node."
-  },
+    },
     "addResourceDialog": {
       "title": "{{ServiceName}} Setup",
       "alreadyBeenSetupTitle": "Add Expressway Cluster",
@@ -1733,7 +1733,8 @@
       "squared-fusion-cal": "Hybrid Calendar Service",
       "squared-fusion-gcal": "Hybrid Calendar (Google)",
       "spark-hybrid-datasecurity": "Hybrid Data Security",
-      "squared-fusion-media": "Hybrid Media Service"
+      "squared-fusion-media": "Hybrid Media Service",
+      "hybrid-context": "Hybrid Context Service"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
@@ -2269,6 +2270,19 @@
       "serial": "Serial",
       "version": "Version",
       "loadingError": "Could not load the cluster data"
+    }
+  },
+  "context": {
+    "pageTitle": "Hybrid Context Service",
+    "clusters": {
+      "listing": {
+        "no_clusters_heading": "No Context clusters registered yet",
+        "no_clusters_text": "Register for Context Service through your on-premise application.",
+        "learn_how": "Learn How."
+      }
+    },
+    "dictionary": {
+      "welcome": "Welcome to the Context Dictionary"
     }
   },
   "hds": {
@@ -6439,10 +6453,12 @@
         }
       },
       "hybridContext": {
-        "title": "Context",
-        "description": "Enables a storage service that provides a repository of customer journey data for Cisco Contact Center customers.",
+        "title": "Hybrid Context",
+        "description": "Stores Cisco Customer Care customer journey data in the cloud.",
         "buttons": {
-          "settings": "Settings"
+          "resources": "Resources",
+          "fields": "Fields",
+          "fieldsets": "Fieldsets"
         }
       }
     },

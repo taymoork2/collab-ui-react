@@ -497,6 +497,12 @@
       ],
       'cloud-contact-center': [
         'care',
+      ],
+      'contact-center-context': [
+        'context-settings',
+        'context-fields',
+        'context-fieldsets',
+        'context-resources'
       ]
     };
 
@@ -519,7 +525,7 @@
         'huronsettings',
         'media-service',
         'media-service-v2',
-        'mediafusion-settings',
+        'mediafusion-cluster',
         'overview',
         'reports',
         'services-overview',
