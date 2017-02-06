@@ -8,7 +8,7 @@
       <tr>
         <td translate="hercules.alarms.severity"></td>
         <td>
-          <i class="icon icon-circle status-indicator" ng-class="alarmCtrl.alarm.severity == 'warning' ? 'warning' : 'danger'"></i>
+          <i class="icon icon-circle status-indicator" ng-class="alarmCtrl.getAlarmSeverityCssClass(alarm.severity)"></i>
           <span translate="{{'hercules.alarms.' + alarmCtrl.alarm.severity}}"></span>
         </td>
       </tr>
