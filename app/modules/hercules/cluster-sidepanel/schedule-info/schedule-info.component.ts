@@ -11,7 +11,7 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
   private cluster: IClusterV1;
   public clusterType: string;
 
-  public hasF237FeatureToggle: boolean = false;
+  public hasResourceGroupFeatureToggle: boolean = false;
   public releaseChannelName: string;
   public resourceGroupName: string;
   public schedule: ISchedule | {} = {};
@@ -28,16 +28,16 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
 
-    const { cluster, hasF237FeatureToggle } = changes;
-    if (hasF237FeatureToggle && hasF237FeatureToggle.currentValue) {
-      this.hasF237FeatureToggle = hasF237FeatureToggle.currentValue;
+    const { cluster, hasResourceGroupFeatureToggle } = changes;
+    if (hasResourceGroupFeatureToggle && hasResourceGroupFeatureToggle.currentValue) {
+      this.hasResourceGroupFeatureToggle = hasResourceGroupFeatureToggle.currentValue;
     }
 
     if (cluster && cluster.currentValue) {
       this.cluster = cluster.currentValue;
       this.releaseChannelName = this.$translate.instant('hercules.fusion.add-resource-group.release-channel.' + this.cluster.releaseChannel);
       this.buildSchedule();
-      if (this.hasF237FeatureToggle) {
+      if (this.hasResourceGroupFeatureToggle) {
         this.findResourceGroupName()
           .then(resourceGroupName => {
             this.resourceGroupName = resourceGroupName;
@@ -66,6 +66,11 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
     return this.ResourceGroupService.get(this.cluster.resourceGroupId)
       .then(group => group.name);
   }
+
+  public hasUrgentUpgradeSchedule = () => {
+    return this.cluster && this.cluster.upgradeSchedule && this.cluster.upgradeSchedule.urgentScheduleTime;
+  }
+
 }
 
 export class ScheduleInfoSectionComponent implements ng.IComponentOptions {
@@ -74,6 +79,6 @@ export class ScheduleInfoSectionComponent implements ng.IComponentOptions {
   public bindings = {
     cluster: '<',
     clusterType: '<',
-    hasF237FeatureToggle: '<',
+    hasResourceGroupFeatureToggle: '<',
   };
 }

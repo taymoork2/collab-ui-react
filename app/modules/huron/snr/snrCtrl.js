@@ -168,7 +168,7 @@
       },
         function () {
           vm.snrInfo.remoteDest.phoneNumber = null;
-          vm.snrInfo.remoteDestinations = null;
+          vm.snrInfo.remoteDestinations = [];
           vm.snrInfo.singleNumberReachEnabled = false;
           TelephonyInfoService.updateSnr(vm.snrInfo);
 

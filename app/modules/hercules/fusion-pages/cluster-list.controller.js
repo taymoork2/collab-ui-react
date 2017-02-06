@@ -6,9 +6,9 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $modal, $state, $translate, Authinfo, Config, hasF237FeatureToggle, FusionClusterService, Notification, WizardFactory) {
+  function FusionClusterListController($filter, $modal, $state, $translate, Authinfo, Config, hasResourceGroupFeatureToggle, FusionClusterService, Notification, WizardFactory) {
     var vm = this;
-    if (hasF237FeatureToggle) {
+    if (hasResourceGroupFeatureToggle) {
       var groupsCache = [];
       vm.displayedGroups = groupsCache;
     } else {
@@ -16,7 +16,7 @@
       vm.displayedClusters = clustersCache;
     }
 
-    vm.showResourceGroups = hasF237FeatureToggle;
+    vm.showResourceGroups = hasResourceGroupFeatureToggle;
     vm.loading = true;
     vm.backState = 'services-overview';
     vm.openAllGroups = false;
@@ -37,7 +37,7 @@
     refreshList();
 
     function refreshList() {
-      if (hasF237FeatureToggle) {
+      if (hasResourceGroupFeatureToggle) {
         loadResourceGroups();
       } else {
         loadClusters();
@@ -126,7 +126,7 @@
     }
 
     function updateFilters() {
-      if (hasF237FeatureToggle) {
+      if (hasResourceGroupFeatureToggle) {
         vm.placeholder.count = _.reduce(groupsCache, function (acc, entry) {
           if (entry.groups) {
             acc = acc + _.reduce(entry.groups, function (a, group) {
@@ -157,7 +157,7 @@
     }
 
     function setFilter(filter) {
-      if (hasF237FeatureToggle) {
+      if (hasResourceGroupFeatureToggle) {
         if (filter.filterValue === 'all') {
           vm.displayedGroups = _.map(groupsCache, function (group) {
             group.display = true;
@@ -180,7 +180,7 @@
 
     function searchData(searchStr) {
       vm.openAllGroups = searchStr !== '';
-      if (hasF237FeatureToggle) {
+      if (hasResourceGroupFeatureToggle) {
         if (searchStr === '') {
           vm.displayedGroups = groupsCache;
         } else {

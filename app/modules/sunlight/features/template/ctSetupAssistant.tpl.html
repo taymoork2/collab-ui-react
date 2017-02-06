@@ -1,6 +1,6 @@
 <div class="careChatSetup">
     <cs-overlay-panel class="care-chat overlay-panel typeahead-group"
-                      overlay-title={{careSetupAssistant.isEditFeature?careSetupAssistant.getLocalisedText('careChatTpl.editTitle'):careSetupAssistant.getLocalisedText('careChatTpl.createTitle')}}
+                      overlay-title={{careSetupAssistant.getTitle()}}
                       close="careSetupAssistant.cancelModal()" ng-keyup="careSetupAssistant.evalKeyPress($event.keyCode)">
     <cs-setup-assistant previous="careSetupAssistant.previousButton()" next="careSetupAssistant.nextButton()" previous-fn="careSetupAssistant.previousPage()" next-fn="careSetupAssistant.nextPage()">
       <form name="careChatSetupForm" class="sa-form">
@@ -21,6 +21,14 @@
           ng-switch-when = "customerInformation"
           ng-class="careChatSA.animation"></div>
 
+        <div ct-customer mode="chat"
+          ng-switch-when = "customerInformationChat"
+          ng-class="careChatSA.animation"></div>
+
+        <div ct-customer mode="callback"
+          ng-switch-when = "customerInformationCallback"
+          ng-class="careChatSA.animation"></div>
+ 
         <div ct-feedback
           ng-switch-when = "feedback"
           ng-class="careChatSA.animation"></div>

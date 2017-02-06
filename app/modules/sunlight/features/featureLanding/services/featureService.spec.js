@@ -52,6 +52,14 @@
      done();
    });
 
+   it('should be able to get list of chat+callback templates for a given org', function (done) {
+     $httpBackend.expectGET(getTemplatesUrl).respond(200, getTemplates('chatPlusCallback', templateList));
+     careFeatureService.getChatTemplates().then(function (list) {
+       expect(angular.equals(list, getTemplates('chatPlusCallback', templateList))).toBeTruthy();
+     });
+     done();
+   });
+
    it('should fail to get list of templates when server gives an error', function (done) {
      $httpBackend.expectGET(getTemplatesUrl).respond(500);
      careFeatureService.getChatTemplates().then(function () {}, function (response) {

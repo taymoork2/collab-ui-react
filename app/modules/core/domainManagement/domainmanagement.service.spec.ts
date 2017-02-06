@@ -10,6 +10,9 @@ describe('DomainManagementService', () => {
         getOrgId: () => {
           return 'mockOrgId';
         },
+        isCare: () => {
+          return false;
+        },
       };
 
       $provide.value('Authinfo', Authinfo);
@@ -30,7 +33,6 @@ describe('DomainManagementService', () => {
   });
 
   it('should produce a list of domains with tokens for the pending.', done => {
-
     let orgId = 'mockOrgId';
     let scomUrl = UrlConfig.getScomUrl() + '/' + orgId;
 
@@ -127,6 +129,7 @@ describe('DomainManagementService', () => {
     let url = UrlConfig.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Verify/invoke';
     let domain = 'super.example.com';
     let token = 'mock-token';
+
     //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._domainList.push({ text: domain, status: 'pending', token: token });
     $httpBackend.expectPOST(url, (data: any) => {
@@ -145,6 +148,7 @@ describe('DomainManagementService', () => {
     }, err => {
       fail(err);
     });
+
     $httpBackend.flush();
   });
 
@@ -212,6 +216,7 @@ describe('DomainManagementService', () => {
     }, () => {
       fail();
     });
+
     $httpBackend.flush();
     //$rootScope.$digest();
 
@@ -297,5 +302,89 @@ describe('DomainManagementService', () => {
 
     //noinspection TypeScriptUnresolvedVariable
     expect(DomainManagementService._enforceUsersInVerifiedAndClaimedDomains).toBe(false);
+  });
+});
+
+describe('Syncing verified domains with care', function () {
+
+  beforeEach(angular.mock.module('Core'));
+
+  let $httpBackend, DomainManagementService: any, UrlConfig, Authinfo, $rootScope, scomUrl, sunlightConfigUrl;
+
+  beforeEach(() => {
+    angular.mock.module($provide => {
+      Authinfo = {
+        getOrgId: () => {
+          return 'mockOrgId';
+        },
+        isCare: () => {
+          return true;
+        },
+      };
+
+      $provide.value('Authinfo', Authinfo);
+    });
+  });
+
+  beforeEach(inject(($injector, _DomainManagementService_, _UrlConfig_, _$rootScope_) => {
+    UrlConfig = _UrlConfig_;
+    DomainManagementService = _DomainManagementService_;
+    $httpBackend = $injector.get('$httpBackend');
+    $httpBackend.when('GET', 'l10n/en_US.json').respond({});
+    $rootScope = _$rootScope_;
+    scomUrl = _UrlConfig_.getScomUrl() + '/mockOrgId';
+    sunlightConfigUrl = _UrlConfig_.getSunlightConfigServiceUrl() + '/organization/mockOrgId/chat';
+  }));
+
+  afterEach(() => {
+    setTimeout($httpBackend.verifyNoOutstandingExpectation, 0);
+    setTimeout($httpBackend.verifyNoOutstandingRequest, 0);
+  });
+  it('when the org has no verified domains', function () {
+    $httpBackend.expectGET(scomUrl)
+      .respond({ pendingDomains : ['pending1.grodum.org'] });
+
+    $httpBackend
+      .expectPUT(sunlightConfigUrl, (data: any) => {
+        data = JSON.parse(data);
+        expect(data).not.toBeNull();
+        expect(data.allowedOrigins.length).toBe(1);
+        expect(data.allowedOrigins[0]).toBe('.*');
+        return true;
+      }).respond({});
+
+    DomainManagementService.syncDomainsWithCare();
+
+    $httpBackend.flush();
+  });
+  it('when the org has verified domains', function () {
+    let domain = 'verified1.grodum.org';
+
+    $httpBackend.expectGET(scomUrl)
+      .respond({ verifiedDomains : [domain] });
+
+    $httpBackend
+      .expectPUT(sunlightConfigUrl, (data: any) => {
+        data = JSON.parse(data);
+        expect(data).not.toBeNull();
+        expect(data.allowedOrigins.length).toBe(1);
+        expect(data.allowedOrigins[0]).toBe(domain);
+        return true;
+      }).respond({});
+
+    DomainManagementService.syncDomainsWithCare();
+
+    $httpBackend.flush();
+  });
+  it('when the domain management service call fails', function () {
+
+    $httpBackend.expectGET(scomUrl).respond(400);
+
+    DomainManagementService.syncDomainsWithCare();
+
+    $httpBackend.flush();
+
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
   });
 });

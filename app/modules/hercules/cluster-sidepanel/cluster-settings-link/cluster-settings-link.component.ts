@@ -10,15 +10,15 @@ export class ClusterSettingsLinkCtrl implements ng.IComponentController {
 
   public goToClusterSettings(): void {
     if (this.clusterType === 'c_mgmt') {
-      this.$state.go('expressway-settings', {
+      this.$state.go('expressway-cluster.settings', {
         id: this.clusterId,
       });
     } else if (this.clusterType === 'mf_mgmt') {
-      this.$state.go('mediafusion-settings', {
+      this.$state.go('mediafusion-cluster.settings', {
         id: this.clusterId,
       });
     } else if (this.clusterType === 'hds_app') {
-      this.$state.go('hds-cluster-settings', {
+      this.$state.go('hds-cluster.settings', {
         id: this.clusterId,
       });
     }

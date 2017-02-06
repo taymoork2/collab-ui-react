@@ -87,7 +87,6 @@
       daysNeeded[final.format('YYYYMMDD')] = true;
       //$log.info('daysNeeded', daysNeeded);
       _.each(items, function (day) {
-        $log.warn("day", day);
         if (daysNeeded[day.date.toString()]) {
           daysNeeded[day.date.toString()] = false;
         }

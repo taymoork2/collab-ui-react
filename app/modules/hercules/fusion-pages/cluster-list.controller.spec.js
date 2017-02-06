@@ -25,7 +25,7 @@ describe('Controller: FusionClusterListController', function () {
 
   function initController() {
     controller = $controller('FusionClusterListController', {
-      hasF237FeatureToggle: false,
+      hasResourceGroupFeatureToggle: false,
     });
   }
 

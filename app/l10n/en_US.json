@@ -1088,6 +1088,7 @@
     "new": "New",
     "next": "Next",
     "no": "No",
+    "nodes": "Nodes",
     "none": "None",
     "notAvailable": "N/A",
     "notSet": "Not set",
@@ -1572,7 +1573,8 @@
       "removeSectionHeader": "Remove",
       "removeSectionBody": "Remove this node from Cisco Collaboration Cloud.",
       "localizedConnectorAndHostHeader": "{{connectorName}} on {{hostname}}",
-      "actions": "Actions"
+      "actions": "Actions",
+      "no_nodes": "No nodes registered."
     },
     "export": {
       "modalTitle": "User Status Report",
@@ -1603,7 +1605,7 @@
       "confirmationDialogBody": "Are you sure you want to remove this node?",
       "successNodeRemoval": "Node removed successfully.",
       "failedNodeRemoval": "Failed to remove node."
-  },
+    },
     "addResourceDialog": {
       "title": "{{ServiceName}} Setup",
       "alreadyBeenSetupTitle": "Add Expressway Cluster",
@@ -1722,6 +1724,7 @@
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
       "squared-fusion-ec": "Call Service Connect",
+      "squared-fusion-ec.full": "Call Service Connect",
       "squared-fusion-mgmt": "Expressway Management Service  "
     },
     "hybridServiceNames": {
@@ -1730,7 +1733,8 @@
       "squared-fusion-cal": "Hybrid Calendar Service",
       "squared-fusion-gcal": "Hybrid Calendar (Google)",
       "spark-hybrid-datasecurity": "Hybrid Data Security",
-      "squared-fusion-media": "Hybrid Media Service"
+      "squared-fusion-media": "Hybrid Media Service",
+      "hybrid-context": "Hybrid Context Service"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
@@ -2099,6 +2103,7 @@
         "users": "Users",
         "release-channel": "Release Channel",
         "nodes": "{count, plural, one{# Node} other{# Nodes}}",
+        "nodesBtn": "Nodes",
         "settings": "Settings",
         "all": "All",
         "add-resource": "Add Resource",
@@ -2258,6 +2263,26 @@
         "RemoveUserResourceGroup": "Resource group changed",
         "SetUserStatus": "User status updated"
       }
+    },
+    "nodesPage": {
+      "connectors": "Connectors",
+      "status": "Status",
+      "serial": "Serial",
+      "version": "Version",
+      "loadingError": "Could not load the cluster data"
+    }
+  },
+  "context": {
+    "pageTitle": "Hybrid Context Service",
+    "clusters": {
+      "listing": {
+        "no_clusters_heading": "No Context clusters registered yet",
+        "no_clusters_text": "Register for Context Service through your on-premise application.",
+        "learn_how": "Learn How."
+      }
+    },
+    "dictionary": {
+      "welcome": "Welcome to the Context Dictionary"
     }
   },
   "hds": {
@@ -4370,8 +4395,10 @@
       "unavailableTitle": "Unavailable",
       "partialTitle": "Partially Available",
       "utilizationTitle": "Percentage Utilization",
+      "participantDistributionTitle": "Participant Distribution",
       "clusteravailability": "Cluster Availability",
       "overallUtilizationGraphError": "There was an error while loading detailed utilization data",
+      "overallParticipantDistributionGraphError": "There was an error while loading detailed participant distribution data",
       "overallCallVolumeGraphError": "There was an error while loading total number of calls",
       "overallAvailabilityGraphError": "There was an error while loading detailed availability data",
       "overallAverageUtilizationGraphError": "There was an error while loading Average/Peak utilization data",
@@ -5294,14 +5321,17 @@
     "chatMediaType": "Chat",
     "callbackTemplateCode": "Ca",
     "callbackMediaType": "Callback",
+    "chatPlusCallbackMediaType": "Chat+Callback",
     "newFeatures": {
       "newFeatureButtonText": "New",
       "newCareTemplateModalTitle": "Create New Care Template",
       "noCareFeatures": "Care Features are not available for the current login",
-      "selectCHDesc": "Configure this template to customize the experience for your customers when they contact your agents via chat.",
-      "selectCADesc": "Configure this template to customize the experience for your customers when they request a callback from your agents.",
+      "selectCHDesc": "This template gives your customers the ability to contact your agents via chat.",
+      "selectCADesc": "This template gives your customers the ability to request a callback from your agents.",
+      "selectCHCADesc": "This template gives your customers the option to contact your agents via chat or request a callback.",
       "chatType": "Chat",
-      "callbackType": "Callback"
+      "callbackType": "Callback",
+      "chatPlusCallbackType": "Chat+Callback"
     },
     "settings": {
       "setUpCare": "Care",
@@ -5433,42 +5463,48 @@
   "careChatTpl": {
     "editAction": "Edit",
     "deleteAction": "Delete",
-    "deleteFeatureTextConfirmation": "Are you sure you want to delete the {{ featureName }} {{featureText}}?",
-    "createSuccessText": "{{ featureName }} chat template has been created successfully",
-    "createChatTemplateFailureText": "Failed to create chat template.",
-    "editSuccessText": "{{ featureName }} chat template has been updated successfully",
-    "editChatTemplateFailureText": "Failed to edit {{ featureName }} chat template.",
-    "createSuccessText_callback": "{{ featureName }} callback template has been created successfully",
-    "createTemplateFailureText_callback": "Failed to create callback template.",
-    "editSuccessText_callback": "{{ featureName }} callback template has been updated successfully",
-    "editTemplateFailureText_callback": "Failed to edit {{ featureName }} callback template.",
-    "deleteSuccessText": "{{ featureName }} {{ featureText }} has been deleted successfully",
-    "deleteFailedText": "Failed to delete {{ featureName }} {{ featureText }}.",
+    "deleteFeatureTextConfirmation": "Are you sure you want to delete the {{ featureName }} template?",
+    "createSuccessText": "{{ featureName }} template has been created successfully.",
+    "createTemplateFailureText": "Failed to create Care template.",
+    "editSuccessText": "{{ featureName }} template has been updated successfully.",
+    "editTemplateFailureText": "Failed to edit {{ featureName }} template.",
+    "deleteSuccessText": "{{ featureName }} template has been deleted successfully.",
+    "deleteFailedText": "Failed to delete {{ featureName }} template.",
     "messageError": "Message {{ message }}",
     "failedToLoad": "Failed to load {{ featureText }}(s).",
     "chatTemplate": "chat template",
     "chatTemplate_callback": "callback template",
-    "namePlaceholder": "Name the Chat Template",
-    "namePlaceholder_callback": "Name the Callback Template",
-    "nameHint": "Enter a name for you to identify this chat template",
-    "nameHint_callback": "Enter a name for you to identify this callback template",
-    "createTitle": "Create Chat Template",
-    "editTitle": "Edit Chat Template",
+    "namePlaceholder": "Name the Template",
+    "nameHint": "Enter a name for you to identify this template",
+    "createTitle_chat": "Create Chat Template",
+    "editTitle_chat": "Edit Chat Template",
+    "chatTemplate_chatPlusCallback": "chat+callback template",
     "createTitle_callback": "Create Callback Template",
     "editTitle_callback": "Edit Callback Template",
-    "profile": "Chat Template Profile",
-    "overview": "Chat Template Overview",
-    "overview_callback": "Callback Template Overview",
-    "chatStatusMessages": "Chat Status Messages",
-    "customerInfo": "Customer Info Screen",
-    "feedback": "Feedback Screen",
-    "agentUnavailable": "Agent Unavailable",
-    "offHours": "Off-Hours",
+    "createTitle_chatPlusCallback": "Create Chat+Callback Template",
+    "editTitle_chatPlusCallback": "Edit Chat+Callback Template",
+    "profile_chat": "Branding and Identity",
+    "profile_callback": "Branding and Identity",
+    "profile_chatPlusCallback": "Chat Branding and Identity",
+    "overview": "Template Overview",
+    "chatStatusMessages": "Status Messages",
+    "customerInformation": "Customer Information",
+    "customerInfo_chat": "Customer Information for Chat",
+    "customerInfo_callback": "Customer Information for Callback",
+    "feedback_chat": "Feedback",
+    "feedback_chatPlusCallback": "Chat Feedback",
+    "agentUnavailable_chat": "Agent Unavailable",
+    "agentUnavailable_callback": "Agent Unavailable",
+    "agentUnavailable_chatPlusCallback": "Agent Unavailable for Chat",
+    "offHours_chat": "Off-Hours",
+    "offHours_callback": "Off-Hours",
+    "offHours_chatPlusCallback": "Global Off-Hours",
     "embedCode": "Embed Code",
     "profileDesc": "Configure how you want the organization and user profile to be represented for your company",
-    "overviewDesc": "Toggle cards to customize what screens you want your customer to see on contacting Care",
+    "overviewDesc_chat": "Toggle cards to customize what screens you want your customer to see when requesting a chat from customer care",
     "overviewDesc_callback": "Toggle cards to customize what screens you want your customer to see when requesting a callback from customer care",
-    "customerInfoDesc": "This is the screen a customer fills in to start chat with an agent",
+    "overviewDesc_chatPlusCallback": "Toggle cards to customize what screens you want your customer to see when requesting a chat or callback from customer care",
+    "customerInfoDesc_chat": "This is the screen a customer fills in to start chat with an agent",
     "customerInfoDesc_callback": "This is the screen a customer fills in to request a callback from an agent",
     "customerInfoToggleTooltipMessage": "This screen is required for this template and cannot be disabled.",
     "feedbackDesc": "This screen is used to collect feedback from a customer after the chat ends",
@@ -5484,13 +5520,13 @@
     "offHoursWarningMessage": "Please Enter Off Hours Message",
     "offHoursDayWarningMessage": "Please Select a Day",
     "chatStringsDesc": "These strings appear in the UI based on different scenarios",
-    "chatStatusMessagesDesc": "Configure status messages which your customer sees on chat bubble",
+    "chatStatusMessagesDesc": "Configure status messages which your customer sees during the chat",
     "cancelHeader": "Cancel",
     "ctCreation": "Creation",
     "ctEditing": "Editing",
-    "ctCreationBody": "chat template creation",
-    "ctEditBody": "editing of the chat template",
-    "ctCreationMessage": "This chat template will not be saved.",
+    "ctCreationBody": "template creation",
+    "ctEditBody": "editing this template",
+    "ctCreationMessage": "This template will not be saved.",
     "ctEditMessage": "Changes will not be saved.",
     "cancelDialog": "Are you sure you want to cancel {{bodyMessage}}? {{trailingMessage}}",
     "confirmButton": "Cancel {{cancelProcess}}",
@@ -5510,7 +5546,8 @@
     "defaultQuestionText": "How may I assist you?",
     "additionalDetails": "Additional Details",
     "additionalDetailsAbtIssue": "Describe the issue you are experiencing",
-    "labelCallBackBtn": "Request Callback",
+    "customerInfoBtnText_chat": "Start Chat",
+    "customerInfoBtnText_callback": "Request Callback",
     "optionalText": "(Optional)",
     "field3HintText": "Select from the list or type",
     "defaultTypeMessageText": "Type your message and press enter",
@@ -5562,33 +5599,49 @@
     },
     "ctOverview": {
       "customerInformation": {
-        "title": "Customer Info",
-        "desc": "This is the screen a customer fills in to start chat with an agent",
+        "title_chat": "Customer Information",
+        "title_callback": "Customer Information",
+        "desc_chat": "This is the screen a customer fills in to start chat with an agent",
         "desc_callback": "This is the screen a customer fills in to request a callback from an agent"
       },
       "agentUnavailable": {
-        "title": "Agent Unavailable",
-        "desc": "This screen is shown to a customer when no agent is available to assist"
+        "title_chat": "Agent Unavailable",
+        "title_chatPlusCallback": "Agent Unavailable for Chat",
+        "desc": "This screen is shown to a customer when no agent is available to assist",
+        "desc_chat": "This screen is shown to a customer when no agent is available to assist",
+        "desc_chatPlusCallback": "This screen is shown to a customer when no agent is available to assist"
       },
       "offHours": {
-        "title": "Off-Hours",
-        "desc": "This screen is shown to a customer during business off-hours",
-        "desc_callback": "This screen is shown to a customer during business off-hours"
+        "title_chat": "Off-Hours",
+        "title_callback": "Off-Hours",
+        "title_chatPlusCallback": "Global Off-Hours",
+        "desc_chat": "This screen is shown to a customer during business off-hours",
+        "desc_callback": "This screen is shown to a customer during business off-hours",
+        "desc_chatPlusCallback": "This screen is shown to a customer during business off-hours and is applicable to both chat and callback"
       },
       "feedback": {
-        "title": "Feedback",
-        "desc": "This screen is used to collect feedback from a customer after the chat ends"
+        "title_chat": "Feedback",
+        "title_callback": "Feedback",
+        "title_chatPlusCallback": "Chat Feedback",
+        "desc_chat": "This screen is used to collect feedback from a customer after the chat ends",
+        "desc_chatPlusCallback": "This screen is used to collect feedback from a customer after the chat ends"
+      },
+      "customerInformationChat": {
+        "title_chatPlusCallback": "Customer Information for Chat",
+        "desc_chatPlusCallback": "This is the screen a customer fills in to start chat with an agent"
+      },
+      "customerInformationCallback": {
+        "title_chatPlusCallback": "Customer Information for Callback",
+        "desc_chatPlusCallback": "This is the screen a customer fills in to request a callback from an agent"
       }
     },
     "summary": "Summary",
-    "summaryDesc": "You have configured the chat template. Click Finish to save the configuration and generate embed code so you can start using this chat template on your organization website.",
-    "editSummaryDesc": "You have edited the chat template. Click Finish to save the configuration so you can start using the new version of this chat template on your organization website.",
+    "summaryDesc": "You have configured the template. Click Finish to save the configuration and generate embed code so you can start using this template on your organization website.",
+    "editSummaryDesc": "You have edited the template. Click Finish to save the configuration so you can start using the new version of this template on your organization website.",
     "editCodeWarnMsg2Line1": "It can take up to 15 minutes for the chat template changes to be reflected.",
     "editCodeWarnMsg2Line2":"Open the chat template in a new browser tab after this time to view the changes.",
     "summaryDesc_callback": "You have configured the callback template. Click Finish to save the configuration and generate embed code so you can start using this callback template on your organization website.",
     "editSummaryDesc_callback": "You have edited the callback template. Click Finish to save the configuration so you can start using the new version of this callback template on your organization website.",
-    "editCodeWarnMsg2Line1_callback": "It can take up to 15 minutes for the callback template changes to be reflected.",
-    "editCodeWarnMsg2Line2_callback":"Open the callback template in a new browser tab after this time to view the changes.",
     "copyEmbedCode": "Copy Embed Code",
     "errorCreateChatTemplate": "Error generating embed code, please try again.",
     "agentUnavailableMessage": "Sorry, we are unavailable at the moment. Please try again later.",
@@ -5598,13 +5651,13 @@
     "connecting": "Connecting",
     "connectingMessage": "Connecting you to an Agent",
     "waiting": "Waiting",
-    "waitingMessage": "Waiting for an Agent to join...",
+    "waitingMessage": "Waiting for an Agent...",
     "enterRoom": "Entered the Room",
     "enterRoomMessage": "Agent has entered the chat room",
     "leaveRoom": "Left the Room",
-    "leaveRoomMessage": "Agent has left the chat room",
+    "leaveRoomMessage": "Agent has left the chat",
     "chatting": "Chatting",
-    "chattingMessage": "You are chatting with our Agent",
+    "chattingMessage": "Chatting with an Agent",
     "downloadEmbedCode": "Download Embed Code",
     "embed-code": {
       "no-verified-domains" : {
@@ -6400,10 +6453,12 @@
         }
       },
       "hybridContext": {
-        "title": "Context",
-        "description": "Enables a storage service that provides a repository of customer journey data for Cisco Contact Center customers.",
+        "title": "Hybrid Context",
+        "description": "Stores Cisco Customer Care customer journey data in the cloud.",
         "buttons": {
-          "settings": "Settings"
+          "resources": "Resources",
+          "fields": "Fields",
+          "fieldsets": "Fieldsets"
         }
       }
     },
