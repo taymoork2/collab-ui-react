@@ -6,17 +6,14 @@ export class MediafusionClusterController {
 
   /* @ngInject */
   constructor(
-    private $translate: ng.translate.ITranslateService,
     private $stateParams: ng.ui.IStateParamsService,
+    private $translate: ng.translate.ITranslateService,
     private FusionClusterService,
     private hasNodesViewFeatureToggle: boolean,
   ) {
     this.FusionClusterService.get(this.$stateParams['id'])
       .then(cluster => {
-        this.name = cluster.name;
-        this.localizedTitle = this.$translate.instant('hercules.expresswayClusterSettings.pageTitle', {
-          clusterName: this.name,
-        });
+        this.updateName(cluster.name);
         // Don't show any tabs if the "Nodes" one is not available
         if (this.hasNodesViewFeatureToggle) {
           this.tabs = [{
@@ -28,6 +25,12 @@ export class MediafusionClusterController {
           }];
         }
       });
+  }
+
+  public updateName(name: string): void {
+    this.localizedTitle = this.$translate.instant('hercules.expresswayClusterSettings.pageTitle', {
+      clusterName: name,
+    });
   }
 }
 

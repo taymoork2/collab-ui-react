@@ -6,19 +6,16 @@ export class ExpresswayClusterController {
 
   /* @ngInject */
   constructor(
+    private $rootScope: ng.IRootScopeService,
     private $scope: ng.IScope,
-    private $translate: ng.translate.ITranslateService,
     private $stateParams: ng.ui.IStateParamsService,
+    private $translate: ng.translate.ITranslateService,
     private FusionClusterService,
-    private hackishWayOfPassingNameUpdateUp: any,
     private hasNodesViewFeatureToggle: boolean,
   ) {
     this.FusionClusterService.get(this.$stateParams['id'])
       .then(cluster => {
-        this.name = cluster.name;
-        this.localizedTitle = this.$translate.instant('hercules.expresswayClusterSettings.pageTitle', {
-          clusterName: this.name,
-        });
+        this.updateName(cluster.name);
         // Don't show any tabs if the "Nodes" one is not available
         if (this.hasNodesViewFeatureToggle) {
           this.tabs = [{
@@ -31,10 +28,16 @@ export class ExpresswayClusterController {
         }
       });
 
-    this.$scope.$watch(() => this.hackishWayOfPassingNameUpdateUp.name, (newValue, oldValue) => {
-      if (newValue !== oldValue) {
-        this.name = newValue;
-      }
+    const deregister = this.$rootScope.$on('cluster-name-update', (_event, name) => {
+      this.updateName(name);
+    });
+
+    this.$scope.$on('$destroy', deregister);
+  }
+
+  public updateName(name: string): void {
+    this.localizedTitle = this.$translate.instant('hercules.expresswayClusterSettings.pageTitle', {
+      clusterName: name,
     });
   }
 }

@@ -6,17 +6,16 @@ export class HDSClusterController {
 
   /* @ngInject */
   constructor(
-    private $translate: ng.translate.ITranslateService,
+    private $rootScope: ng.IRootScopeService,
+    private $scope: ng.IScope,
     private $stateParams: ng.ui.IStateParamsService,
+    private $translate: ng.translate.ITranslateService,
     private FusionClusterService,
     private hasNodesViewFeatureToggle: boolean,
   ) {
     this.FusionClusterService.get(this.$stateParams['id'])
       .then(cluster => {
-        this.name = cluster.name;
-        this.localizedTitle = this.$translate.instant('hercules.expresswayClusterSettings.pageTitle', {
-          clusterName: this.name,
-        });
+        this.updateName(cluster.name);
         // Don't show any tabs if the "Nodes" one is not available
         if (this.hasNodesViewFeatureToggle) {
           this.tabs = [{
@@ -28,6 +27,18 @@ export class HDSClusterController {
           }];
         }
       });
+
+    const deregister = this.$rootScope.$on('cluster-name-update', (_event, name) => {
+      this.updateName(name);
+    });
+
+    this.$scope.$on('$destroy', deregister);
+  }
+
+  public updateName(name: string): void {
+    this.localizedTitle = this.$translate.instant('hercules.expresswayClusterSettings.pageTitle', {
+      clusterName: name,
+    });
   }
 }
 

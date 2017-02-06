@@ -6,7 +6,7 @@
     .controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController);
 
   /* @ngInject */
-  function ExpresswayClusterSettingsController($stateParams, FusionClusterService, Notification, $modal, $translate, ResourceGroupService, hackishWayOfPassingNameUpdateUp, hasResourceGroupFeatureToggle) {
+  function ExpresswayClusterSettingsController($rootScope, $stateParams, FusionClusterService, Notification, $modal, $translate, ResourceGroupService, hasResourceGroupFeatureToggle) {
     var vm = this;
     // Simple values
     vm.enabledServices = [];
@@ -217,7 +217,7 @@
 
     /* Callback function used by <rename-and-deregister-cluster-section>  */
     function nameUpdated(name) {
-      hackishWayOfPassingNameUpdateUp.name = name;
+      $rootScope.$emit('cluster-name-update', name);
     }
   }
 })();
