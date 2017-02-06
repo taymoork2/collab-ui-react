@@ -7,13 +7,18 @@
   .toggle-switch {
     float: right;
   }
-  .icon-warning {
+  .icon-info, .icon-warning {
     top: 0.1rem;
-    color: $brand-warning;
     margin-right: 0.25rem;
     float: left;
   }
-  #sharedline-member-warning, #multi-device-warning,
+  .icon-info {
+    color: $color-primary-light;
+  }
+  .icon-warning {
+    color: $brand-warning;
+  }
+  #sharedline-member-warning, #multi-device-info,
   #no-supported-device-warning {
     width: 90%;
     float: left;

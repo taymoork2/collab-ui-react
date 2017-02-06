@@ -3,8 +3,9 @@ import { IClusterV1 } from 'modules/hercules/herculesInterfaces';
 class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
 
   private clusterId: string;
-  private hasF237FeatureToggle: boolean = false;
+
   private cluster: IClusterV1;
+  public hasResourceGroupFeatureToggle: boolean = false;
 
   public clusterType: string;
   public connectorType: string;
@@ -13,13 +14,7 @@ class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
   constructor(
     private $scope: ng.IScope,
     private ClusterService,
-    private FeatureToggleService,
-  ) {
-    this.FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
-      .then(supported => {
-        this.hasF237FeatureToggle = supported;
-      });
-  }
+  ) {}
 
   public $onInit() {
     if (this.clusterId && this.connectorType) {
@@ -42,7 +37,6 @@ class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
   public hasConnectors() {
     return this.cluster && this.cluster.connectors.length > 0;
   }
-
 }
 
 export class ClusterSidepanelOverviewComponent implements ng.IComponentOptions {
@@ -52,5 +46,6 @@ export class ClusterSidepanelOverviewComponent implements ng.IComponentOptions {
     clusterType: '<',
     clusterId: '<',
     connectorType: '<',
+    hasResourceGroupFeatureToggle: '<',
   };
 }

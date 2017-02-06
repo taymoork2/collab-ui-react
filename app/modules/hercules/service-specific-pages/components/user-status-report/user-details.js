@@ -98,7 +98,7 @@
         getType(userOrMachine),
         status.connector ? status.connector.cluster_name + ' (' + status.connector.host_name + ')' : '',
         $translate.instant('hercules.activationStatus.' + USSService.decorateWithStatus(status)),
-        status.description ? status.description.defaultMessage : '',
+        flattenMessages(status.messages),
         status.userId,
         status.serviceId === 'squared-fusion-uc' ? $translate.instant('hercules.serviceNames.squared-fusion-uc.full') : $translate.instant('hercules.serviceNames.' + status.serviceId)
       ];
@@ -135,6 +135,31 @@
           return $translate.instant('machineTypes.robot');
         default:
           return '';
+      }
+    }
+
+    function flattenMessages(messages) {
+      if (!messages || messages.length === 0) {
+        return '';
+      }
+      return _.chain(messages)
+        .map(function (message) {
+          var severity = translateSeverity(message.severity);
+          var title = message.title ? message.title + ' - ' : '';
+          return severity + ': ' + title + message.description;
+        })
+        .join(' | ')
+        .value();
+    }
+
+    function translateSeverity(severity) {
+      switch (severity) {
+        case 'error':
+          return $translate.instant('common.error');
+        case 'warning':
+          return $translate.instant('common.warning');
+        default:
+          return $translate.instant('common.info');
       }
     }
   }

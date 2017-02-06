@@ -1,0 +1,22 @@
+<div ng-if="$ctrl.loading" class="text-center spinner-container">
+  <i class="icon icon-spinner icon-2x"></i>
+</div>
+<table ng-if="!$ctrl.loading">
+  <thead>
+    <tr>
+      <th scope="col" translate="hercules.nodesPage.connectors"></th>
+      <th scope="col" translate="hercules.nodesPage.status"></th>
+      <th scope="col" translate="hercules.nodesPage.version"></th>
+    </tr>
+  </thead>
+  <tbody ng-repeat="node in $ctrl.data.nodes | orderBy:'name'">
+    <tr class="hostname">
+      <td colspan="4">{{node.name}}</td>
+    </tr>
+    <tr ng-repeat="connector in node.connectors | orderBy:'connectorType':false:$ctrl.hybridConnectorsComparator">
+      <td>{{connector.service}}</td>
+      <td><span class="icon icon-circle status-indicator" ng-class="connector.status.cssClass"></span> {{connector.statusName}}</td>
+      <td>{{connector.version}}</td>
+    </tr>
+  </tbody>
+</table>

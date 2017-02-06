@@ -76,8 +76,7 @@ describe('Care Feature Delete Ctrl', function () {
     $scope.$apply();
     $timeout.flush();
     expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
-      featureName: $stateParams.deleteFeatureName,
-      featureText: jasmine.any(String)
+      featureName: $stateParams.deleteFeatureName
     });
   });
 

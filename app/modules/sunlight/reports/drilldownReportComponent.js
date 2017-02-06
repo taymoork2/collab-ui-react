@@ -1,6 +1,3 @@
-/**
- * Created by bijnair on 06/01/17.
- */
 (function () {
   'use strict';
 
@@ -9,6 +6,7 @@
     var dd = this;
     dd.gridData = [];
     $scope.gridData = dd.gridData;
+    var RESIZE_DELAY_IN_MS = 100;
 
     dd.$onInit = function () {
 
@@ -36,8 +34,13 @@
             enableColumnMenus: false,
             enableHorizontalScrollbar: 0,
             enableVerticalScrollbar: 0,
+            paginationPageSize: 5,
+            enablePaginationControls: false,
             onRegisterApi: onRegisterApi,
             columnDefs: dd.props.table.columnDefs
+          },
+          pagination: {
+            maxPages: 3
           }
         },
         title: ''
@@ -73,9 +76,10 @@
       }
     };
 
-    dd.onGetDataError = function () {
-      dd.setDataError();
-      return $q.reject();
+    dd.onGetDataError = function (err) {
+      if (_.get(err, 'reason') !== 'filtersChanged') {
+        dd.setDataError();
+      }
     };
 
     dd.onGetDataSuccess = function (data) {
@@ -84,7 +88,6 @@
       } else {
         dd.setData(data);
       }
-      return $q.resolve(data);
     };
 
     dd.refreshData = function () {
@@ -100,6 +103,7 @@
     dd.resetDrilldownView = function () {
       dd.setDataEmpty();
       dd.setDisplay(false);
+      dd.resetCurrentPage();
     };
 
     dd.display = function () {
@@ -150,9 +154,16 @@
       CardUtils.resize();
     };
 
+    dd.resizeCards = function () {
+      CardUtils.resize(RESIZE_DELAY_IN_MS);
+    };
+
+    dd.resetCurrentPage = function () {
+      dd.props.table.gridOptions.paginationCurrentPage = 1;
+    };
   }
 
-  angular.module('Core').component('drilldownReport', {
+  angular.module('Sunlight').component('drilldownReport', {
     controller: DrilldownReportController,
     bindings: {
       props: '=',

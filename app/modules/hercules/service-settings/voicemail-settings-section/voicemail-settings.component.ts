@@ -43,6 +43,7 @@ class HybridVoicemailCtrl implements ng.IComponentController {
           this.Notification.success('hercules.settings.voicemail.enableDescription');
         })
         .catch((response) => {
+          this.voicemailToggle = !this.voicemailToggle;
           this.Notification.errorWithTrackingId(response, 'hercules.settings.voicemail.voicemailEnableError');
         });
     } else {
@@ -50,6 +51,7 @@ class HybridVoicemailCtrl implements ng.IComponentController {
         .then(() => {
           this.Notification.success('hercules.settings.voicemail.disableDescription');
         }).catch((response) => {
+          this.voicemailToggle = !this.voicemailToggle;
           this.Notification.errorWithTrackingId(response, 'hercules.settings.voicemail.voicemailDisableError');
         });
     }

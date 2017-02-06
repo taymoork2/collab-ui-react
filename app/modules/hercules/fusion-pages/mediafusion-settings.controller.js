@@ -6,9 +6,8 @@
     .controller('MediafusionClusterSettingsController', MediafusionClusterSettingsController);
 
   /* @ngInject */
-  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, Notification, MediaClusterServiceV2, hasMFFeatureToggle) {
+  function MediafusionClusterSettingsController($stateParams, FusionClusterService, Notification, MediaClusterServiceV2, hasMFFeatureToggle) {
     var vm = this;
-    vm.backUrl = 'cluster-list';
     vm.saveSipTrunk = saveSipTrunk;
     vm.hasMFFeatureToggle = hasMFFeatureToggle;
     //vm.sipurlconfiguration = '';
@@ -46,11 +45,6 @@
           });
           vm.cluster = cluster;
           vm.clusters = clusters;
-          if (vm.cluster) {
-            vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {
-              clusterName: cluster.name
-            });
-          }
           if (cluster && cluster.connectors && cluster.connectors.length === 0) {
             /* We have cluster data, but there are no nodes. Let's use the default deregistration dialog.  */
             vm.deregisterModalOptions = undefined;
@@ -73,12 +67,5 @@
             Notification.errorWithTrackingId(err, 'hercules.genericFailure');
           });
     }
-
-    /* Callback function used by <rename-and-deregister-cluster-section>  */
-    vm.nameUpdated = function () {
-      loadCluster($stateParams.id);
-    };
-
-
   }
 })();

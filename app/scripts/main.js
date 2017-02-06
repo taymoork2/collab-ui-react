@@ -41,6 +41,7 @@
     'ui.grid.selection',
     'ui.grid.saveState',
     'ui.grid.infiniteScroll',
+    'ui.grid.pagination',
     'timer',
     'toaster',
     'rzModule',
@@ -100,7 +101,8 @@
 
   angular.module('Sunlight', [
     'Core',
-    'CareDetails'
+    'CareDetails',
+    'Sunlight.pagination'
   ]);
 
   angular.module('GSS', ['Core']);
