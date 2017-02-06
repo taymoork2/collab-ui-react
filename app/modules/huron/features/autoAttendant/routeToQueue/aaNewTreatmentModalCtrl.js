@@ -153,8 +153,12 @@
         return;
       }
 
+      if (_.indexOf(vm.periodicSeconds, 5) === -1) {
+        vm.periodicSeconds.splice(0, 1, 5);
+      }
+
       if (_.indexOf(vm.periodicSeconds, 0) === -1) {
-        vm.periodicSeconds.splice(0, 1, 0);
+        vm.periodicSeconds.splice(0, 0, 0);
       }
 
       if (_.isEqual(vm.periodicMinute, 5)) {
@@ -215,6 +219,7 @@
         vm.periodicMinute = vm.periodicMinutes[0];
         vm.periodicSecond = vm.periodicSeconds[8];
       }
+      vm.periodicSeconds.splice(0, 1);
     }
 
     function populateMaxWaitTime() {

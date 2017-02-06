@@ -156,27 +156,39 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     describe('Periodic Announcement', function () {
       beforeEach(function () {
       });
-      it("length of periodic minutes and seconds", function () {
+      it('length of periodic minutes and seconds', function () {
         expect(controller).toBeDefined();
         expect(controller.periodicMinutes.length).toEqual(6);
-        expect(controller.periodicSeconds.length).toEqual(12);
+        expect(controller.periodicSeconds.length).toEqual(11);
       });
 
-      it("changedPeriodicMinValue funtion call with periodicMinute as 0", function () {
+      it('changedPeriodicMinValue funtion call with periodicMinute as 0', function () {
         controller.periodicMinute = fakePeriodicMinute[0];
         controller.changedPeriodicMinValue();
         expect(controller.isDisabled()).toBe(false);
       });
-      it("changedPeriodicMinValue function call with periodicMinute and periodicSecond as 0", function () {
+      it('changedPeriodicMinValue function call with periodicMinute and periodicSecond as 0', function () {
         controller.periodicMinute = fakePeriodicMinute[0];
         controller.periodicSecond = fakePeriodicSecond[0];
         controller.changedPeriodicMinValue();
         expect(controller.periodicSecond.label).toEqual(controller.periodicSeconds[0]);
       });
-      it("changedPeriodicMinValue function call with periodicMinute as 5", function () {
+      it('changedPeriodicMinValue function call with periodicMinute as 5', function () {
         controller.periodicMinute = 5;
         controller.changedPeriodicMinValue();
         expect(controller.isDisabled()).toBe(true);
+      });
+
+      it('start up periodicMinValue should not allow 0 minutes 0 seconds', function () {
+        expect(controller.periodicSeconds).not.toContain(0);
+        expect(controller.periodicSeconds[0]).toEqual(5);
+      });
+
+      it('changed periodicMinValue should adjust changes', function () {
+        controller.periodicMinute = 1;
+        controller.changedPeriodicMinValue();
+        expect(controller.periodicSeconds[0]).toEqual(0);
+        expect(controller.periodicSeconds.length).toEqual(12);
       });
     });
 
