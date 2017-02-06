@@ -239,6 +239,13 @@
           return ['customerInformation',
             'offHours'
           ];
+        case 'chatPlusCallback':
+          return ['customerInformationChat',
+            'agentUnavailable',
+            'feedback',
+            'customerInformationCallback',
+            'offHours'
+          ];
         default:
           return [];
       }
@@ -261,6 +268,18 @@
           return ['name',
             'overview',
             'customerInformation',
+            'offHours',
+            'summary'
+          ];
+        case 'chatPlusCallback':
+          return ['name',
+            'overview',
+            'customerInformationChat',
+            'agentUnavailable',
+            'feedback',
+            'profile',
+            'chatStatusMessages',
+            'customerInformationCallback',
             'offHours',
             'summary'
           ];

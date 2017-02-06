@@ -66,6 +66,12 @@ describe('Care Setup Assistant Ctrl', function () {
         name: 'type',
         value: { id: 'name' }
       }]
+    },
+    'field4': {
+      attributes: [{
+        name: 'type',
+        value: { id: 'phone' }
+      }]
     } };
   var customerInfoWithLongAttributeValue = {
     'welcomeHeader': {
@@ -756,7 +762,7 @@ describe('Care Setup Assistant Ctrl', function () {
   describe('For callback media', function () {
     beforeEach(inject(intializeCtrl));
     beforeEach(function () {
-      controller.type = 'callback';
+      controller.selectedMediaType = 'callback';
       controller.setStates();
       controller.setOverviewCards();
       controller.getDefaultTemplate();
@@ -790,4 +796,53 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.template.configuration.pages.callbackConfirmation.enabled).toBe(true);
     });
   });
+
+  describe('For chat plus callback selected media type', function () {
+    beforeEach(inject(intializeCtrl));
+    beforeEach(function () {
+      controller.selectedMediaType = 'chatPlusCallback';
+      controller.setStates();
+      controller.setOverviewCards();
+      controller.getDefaultTemplate();
+    });
+
+    it('the page order should be as expected', function () {
+      expect(controller.states).toEqual([
+        'name',
+        'overview',
+        'customerInformationChat',
+        'agentUnavailable',
+        'feedback',
+        'profile',
+        'chatStatusMessages',
+        'customerInformationCallback',
+        'offHours',
+        'summary'
+      ]);
+    });
+
+    it('the overview page should have expected cards', function () {
+      expect(controller.overviewCards).toEqual([
+        'customerInformationChat',
+        'agentUnavailable',
+        'feedback',
+        'customerInformationCallback',
+        'offHours'
+      ]);
+    });
+
+    it('default template should be of type chatPlusCallback', function () {
+      expect(controller.template.configuration.mediaType).toEqual('chatPlusCallback');
+    });
+
+    it('should initialize only customer info & off-hours cards as enabled', function () {
+      expect(controller.template.configuration.pages.customerInformationChat.enabled).toBe(true);
+      expect(controller.template.configuration.pages.customerInformationCallback.enabled).toBe(true);
+      expect(controller.template.configuration.pages.agentUnavailable.enabled).toBe(true);
+      expect(controller.template.configuration.pages.offHours.enabled).toBe(true);
+      expect(controller.template.configuration.pages.callbackConfirmation.enabled).toBe(true);
+      expect(controller.template.configuration.pages.feedback.enabled).toBe(true);
+    });
+  });
+
 });
