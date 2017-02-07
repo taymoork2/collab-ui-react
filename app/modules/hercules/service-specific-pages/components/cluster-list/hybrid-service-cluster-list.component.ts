@@ -67,7 +67,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
   }
 
   protected updateClusters() {
-    if (this.serviceId === 'squared-fusion-calendar' || this.serviceId === 'squared-fusion-uc') {
+    if (this.serviceId === 'squared-fusion-cal' || this.serviceId === 'squared-fusion-uc') {
       this.FusionClusterService.setClusterAllowListInfoForExpressway(this.ClusterService.getClustersByConnectorType(this.connectorType))
         .then((clusters) => {
           this.clusterList = clusters;
