@@ -13,6 +13,12 @@
     var _trialCallData = TrialCallService.getData();
     var _trialRoomSystemData = TrialRoomSystemService.getData();
     var _trialDeviceData = TrialDeviceService.getData();
+    // used if the default contry list associated with the device needs to be patched
+    // with a different value like in case of a feature toggle. If there are no shipping FTs - should be empty
+    var _shipCountryListReplacement = [{
+      default: TrialDeviceService.listTypes.ROLLOUT2,
+      override: TrialDeviceService.listTypes.US_ONLY
+    }];
     vm.deviceLimit = TrialDeviceService.getDeviceLimit();
 
     var trialStartDate = _.get($stateParams, 'currentTrial.startDate');
@@ -683,7 +689,7 @@
       .map(function (device) {
         return device.model.model;
       }).value();
-      return TrialDeviceService.getCountries(selectedDevices);
+      return TrialDeviceService.getCountries(selectedDevices, _shipCountryListReplacement);
     }
 
     function init() {
@@ -699,6 +705,12 @@
         }).catch(function () {
           vm.showNewRoomSystems = true;
         });
+
+      FeatureToggleService.atlasPhonesCanadaGetStatus().then(function (result) {
+        if (result) {
+          _shipCountryListReplacement = [];
+        }
+      });
 
       vm.canAddMoreDevices = vm.isEditing && vm.hasExistingDevices();
       if (!_.isUndefined(limitsPromise)) {

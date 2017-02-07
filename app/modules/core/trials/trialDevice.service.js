@@ -162,7 +162,8 @@
       US: ['United States'],
       ROLLOUT1: ['United States', 'Australia', 'Austria', 'Belgium', 'Bulgaria', 'Canada', 'Croatia', 'Cyprus', 'Czech Republic',
         'Denmark', 'Estonia', 'Finland', 'France', 'Germany', 'Hungary', 'Ireland', 'Italy', 'Latvia', 'Lithuania', 'Luxembourg', 'Netherlands', 'Norway', 'Poland',
-        'Portugal', 'Romania', 'Slovakia', 'Slovenia', 'Spain', 'Sweden', 'Switzerland', 'Ukraine', 'United Kingdom']
+        'Portugal', 'Romania', 'Slovakia', 'Slovenia', 'Spain', 'Sweden', 'Switzerland', 'Ukraine', 'United Kingdom'],
+      ROLLOUT2: ['United States', 'Canada']
     };
 
     var _deviceLimit = {
@@ -227,15 +228,21 @@
       }
     };
 
+    var listTypes = {
+      ROLLOUT1: 'ROLLOUT1',
+      ROLLOUT2: 'ROLLOUT2',
+      US_ONLY: 'US'
+    };
+
     var countryListTypes = {
       US_ONLY: 'US',
       CISCO_SX10: 'ROLLOUT1',
       CISCO_DX80: 'ROLLOUT1',
       CISCO_MX300: 'US',
-      CISCO_8865: 'US',
-      CISCO_8845: 'US',
-      CISCO_8841: 'US',
-      CISCO_7841: 'US'
+      CISCO_8865: 'ROLLOUT2',
+      CISCO_8845: 'ROLLOUT2',
+      CISCO_8841: 'ROLLOUT2',
+      CISCO_7841: 'ROLLOUT2',
     };
 
 
@@ -247,7 +254,8 @@
       getCountries: getCountries,
       canAddDevice: canAddDevice,
       getCountryCodeByName: getCountryCodeByName,
-      getDeviceLimit: getDeviceLimit
+      getDeviceLimit: getDeviceLimit,
+      listTypes: listTypes,
     };
 
     return service;
@@ -290,12 +298,19 @@
       return _trialData.limitsPromise;
     }
 
-    function getCountries(deviceArray) {
+    function getCountries(deviceArray, replacementArray) {
+      // replacementArray used in cases when the contry list association for device(s)
+      // needs to be temporarily changed for example in case of a feature
       if (!deviceArray || deviceArray.length === 0) {
         deviceArray = ['US_ONLY'];
       }
       var countryLists = _.map(deviceArray, function (device) {
-        return _countries[countryListTypes[device]] || _countries.US;
+        //get country lists with patched replacements if any
+        var countryListName = _.chain(replacementArray)
+        .find({ default: countryListTypes[device] })
+        .get('override', countryListTypes[device])
+        .value();
+        return _countries[countryListName] || _countries.US;
       });
       return _.map(_.intersection.apply(null, countryLists), function (country) {
         return { country: country };
