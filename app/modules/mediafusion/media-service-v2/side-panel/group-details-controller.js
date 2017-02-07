@@ -74,7 +74,7 @@
             numberOfHosts: _.size(vm.cluster.aggregates.hosts),
             clusterStatus: vm.cluster.aggregates.state,
             showUpgradeWarning: function () {
-              return vm.softwareUpgrade.isUpgradeAvailable && !vm.softwareUpgrade.hasUpgradeWarning;
+              return vm.softwareUpgrade.isUpgradeAvailable && vm.softwareUpgrade.hasUpgradeWarning;
             }
           };
 
