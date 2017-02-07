@@ -7,12 +7,11 @@
   <div class="typeahead-large">
     <input id="numberInput" ng-model="$ctrl.pagingGroupNumber"
            ng-class="{'error': $ctrl.errorNumberInput}"
-           ng-change="$ctrl.fetchNumbers()"
-           typeahead="num for num in $ctrl.availableNumbers | limitTo:10"
+           typeahead="num for num in $ctrl.fetchNumbers() | limitTo:10"
            typeahead-on-select="$ctrl.selectNumber($item)"
            typeahead-template-url="numberTemplate.html"
            placeholder="{{:: 'pagingGroup.numberPlaceholder' | translate}}"
-           typeahead-min-length="3" typeahead-wait-ms="500" focus-on/>
+           typeahead-min-length="3" typeahead-wait-ms="200" focus-on/>
     <p class="input-description" translate="pagingGroup.numberHint"></p>
   </div>
 </div>
