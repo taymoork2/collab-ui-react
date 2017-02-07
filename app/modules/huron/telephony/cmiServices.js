@@ -534,7 +534,10 @@
       get: {
         method: 'GET',
         transformResponse: transformEnvelope
-      }
+      },
+      update: {
+        method: 'PUT'
+      },
     });
   }
 
