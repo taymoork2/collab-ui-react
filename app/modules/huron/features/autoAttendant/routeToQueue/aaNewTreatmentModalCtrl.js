@@ -75,6 +75,8 @@
 
     vm.isDisabled = isDisabled;
 
+    vm.MAX_FILE_SIZE_IN_BYTES = 120 * 1024 * 1024;
+
     var mohPlayAction = undefined;
     var fallbackAction = undefined;
     var paAction = undefined;
@@ -96,6 +98,7 @@
       updateLanguageVoice();
       updateMaxWaitTime();
       updatePeriodicTime();
+      updateFallback();
       autoValidate();
       AACommonService.setQueueSettingsStatus(true);
       $modalInstance.close();
@@ -107,6 +110,12 @@
       }
       if (_.isEqual(vm.musicOnHold, DEFAULT_MOH)) {
         defaultMoh();
+      }
+    }
+
+    function updateFallback() {
+      if (vm.destination.action === 'disconnect') {
+        vm.menuEntry.actions[0].queueSettings.fallback.actions[0] = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', '');
       }
     }
 
@@ -168,8 +177,12 @@
         return;
       }
 
+      if (_.indexOf(vm.periodicSeconds, 5) === -1) {
+        vm.periodicSeconds.splice(0, 1, 5);
+      }
+
       if (_.indexOf(vm.periodicSeconds, 0) === -1) {
-        vm.periodicSeconds.splice(0, 1, 0);
+        vm.periodicSeconds.splice(0, 0, 0);
       }
 
       if (_.isEqual(vm.periodicMinute, 5)) {
@@ -233,6 +246,7 @@
         vm.periodicMinute = vm.periodicMinutes[0];
         vm.periodicSecond = vm.periodicSeconds[8];
       }
+      vm.periodicSeconds.splice(0, 1);
     }
 
     function populateMaxWaitTime() {
