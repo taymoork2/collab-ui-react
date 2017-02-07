@@ -1666,7 +1666,7 @@
     },
     "clusters": {
       "listing": {
-        "no_clusters_heading": "No Cisco Expressway clusters registered",
+        "no_clusters_heading": "No clusters registered",
         "no_clusters_text": "See required actions above and documentation to get started."
       }
     },
@@ -1691,6 +1691,7 @@
       "initializing": "Initializing",
       "not_operational": "Not operational",
       "not_registered": "Registration not completed",
+      "no_nodes_registered": "No Nodes Registered",
       "urgentUpgradeAvailable": "Urgent upgrade available",
       "registrationTimeout": "Registration timeout"
     },
@@ -4452,7 +4453,7 @@
       "pending": "Pending",
       "initializing": "Initializing",
       "not_operational": "Not Operational",
-      "nonodes": "No Nodes Registered"
+      "no_nodes_registered": "No Nodes Registered"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
@@ -4460,10 +4461,6 @@
       "errorMessage": "Unable delete {{groupName}}."
     },
     "clusters": {
-      "listing": {
-        "no_clusters_heading": "No Media Service clusters registered",
-        "no_clusters_text": "See required actions above and documentation to get started."
-      },
       "deregisterCancel": "Cancel",
       "deregisterConfirm": "Confirm",
       "deregisterErrorHeader": "Unexpected Error",

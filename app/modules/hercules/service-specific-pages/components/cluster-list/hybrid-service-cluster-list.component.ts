@@ -67,7 +67,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
   }
 
   protected updateClusters() {
-    if (this.serviceId === 'squared-fusion-calendar' || this.serviceId === 'squared-fusion-uc') {
+    if (this.serviceId === 'squared-fusion-cal' || this.serviceId === 'squared-fusion-uc') {
       this.FusionClusterService.setClusterAllowListInfoForExpressway(this.ClusterService.getClustersByConnectorType(this.connectorType))
         .then((clusters) => {
           this.clusterList = clusters;
@@ -75,17 +75,17 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
         .catch(() => {
           this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
         });
-    } else if (this.serviceId === 'spark-hybrid-datasecurity') {
-      this.clusterList = this.ClusterService.getClustersByConnectorType('hds_app');
-      this.clusterList.sort(this.sortByProperty('name'));
+    } else if (this.serviceId === 'spark-hybrid-datasecurity' || this.serviceId === 'squared-fusion-media') {
+      this.clusterList = this.ClusterService.getClustersByConnectorType(this.connectorType);
     }
-
+    this.clusterList.sort(this.sortByProperty('name'));
   }
 
   private goToSidepanel(clusterId: string) {
     let routeMap = {
       'squared-fusion-cal': 'cluster-details',
       'squared-fusion-uc': 'cluster-details',
+      'squared-fusion-media': 'connector-details-v2',
       'spark-hybrid-datasecurity': 'hds-cluster-details',
     };
 

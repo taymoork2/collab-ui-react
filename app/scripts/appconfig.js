@@ -3221,7 +3221,7 @@
         $stateProvider
         //V2 API changes
           .state('media-service-v2', {
-            templateUrl: 'modules/mediafusion/media-service-v2/overview.html',
+            templateUrl: 'modules/mediafusion/media-service-v2/media-service-overview.html',
             controller: 'MediaServiceControllerV2',
             controllerAs: 'med',
             parent: 'main'
@@ -3230,9 +3230,12 @@
             url: '/mediaserviceV2',
             views: {
               'fullPane': {
-                templateUrl: 'modules/mediafusion/media-service-v2/resources/cluster-list.html'
+                template: '<hybrid-service-cluster-list service-id="\'squared-fusion-media\'"></hybrid-service-cluster-list>'
               }
-            }
+            },
+            params: {
+              clusterId: null,
+            },
           })
           .state('media-service-v2.settings', {
             url: '/mediaserviceV2/settings',
@@ -3260,9 +3263,8 @@
               displayName: 'Overview'
             },
             params: {
-              clusterName: {},
-              nodes: {},
-              cluster: {}
+              clusterId: {},
+              connectorType: {},
             }
           })
           .state('connector-details-v2.alarm-details', {

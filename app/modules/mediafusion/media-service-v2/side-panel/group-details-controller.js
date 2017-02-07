@@ -5,31 +5,24 @@
     .controller('GroupDetailsControllerV2',
 
       /* @ngInject */
-      function ($scope, $translate, MediaClusterServiceV2, $stateParams, $modal, $state, $timeout, FusionUtils) {
+      function ($scope, $translate, $stateParams, $modal, $state, $timeout, FusionUtils, ClusterService) {
 
         var vm = this;
         vm.displayName = null;
         vm.nodeList = null;
-        vm.clusterDetail = null;
         vm.openSettings = openSettings;
         vm.fakeUpgrade = false;
         vm.dateTime = null;
 
+        vm.clusterId = $stateParams.clusterId;
+        vm.connectorType = $stateParams.connectorType;
+        vm.cluster = ClusterService.getCluster(vm.connectorType, vm.clusterId);
 
-        if (!angular.equals($stateParams.clusterName, {})) {
-          vm.displayName = $stateParams.clusterName;
-        }
-
-        if (!angular.equals($stateParams.nodes, {})) {
-          vm.nodeList = $stateParams.nodes;
-        }
-
-        if (!angular.equals($stateParams.cluster, {})) {
-          vm.clusterDetail = $stateParams.cluster;
-          vm.dateTime = textForTime(vm.clusterDetail.upgradeSchedule.scheduleTime);
-          if ($stateParams.cluster) {
-            vm.releaseChannel = FusionUtils.getLocalizedReleaseChannel(vm.clusterDetail.releaseChannel);
-          }
+        if (vm.cluster) {
+          vm.displayName = vm.cluster.name;
+          vm.nodeList = vm.cluster.connectors;
+          vm.dateTime = textForTime(vm.cluster.upgradeSchedule.scheduleTime);
+          vm.releaseChannel = FusionUtils.getLocalizedReleaseChannel(vm.cluster.releaseChannel);
         }
 
         function textForTime(time) {
@@ -68,7 +61,7 @@
         // Changes for Upgrade now
         var promise = null;
         $scope.$watch(function () {
-          return MediaClusterServiceV2.getCluster(vm.clusterDetail.id);
+          return ClusterService.getCluster(vm.connectorType, vm.cluster.id);
         }, function (newValue) {
           vm.cluster = newValue;
           vm.nodeList = vm.cluster.connectors;
@@ -118,12 +111,12 @@
           $modal.open({
             resolve: {
               clusterId: function () {
-                return vm.clusterDetail.id;
+                return vm.cluster.id;
               }
             },
             type: 'small',
             controller: 'UpgradeNowControllerV2',
-            controllerAs: "upgradeClust",
+            controllerAs: 'upgradeClust',
             templateUrl: 'modules/mediafusion/media-service-v2/side-panel/upgrade-now-cluster-dialog.html'
           });
 

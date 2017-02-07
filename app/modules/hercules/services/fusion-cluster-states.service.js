@@ -42,6 +42,7 @@
           break;
         case 'not_installed':
         case 'not_configured':
+        case 'no_nodes_registered':
           value = 1;
           break;
         case 'disabled':

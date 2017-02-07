@@ -21,14 +21,14 @@
   </cs-sp-section>
 
   <cs-sp-section>
-    <div ng-if="groupDetails.clusterDetail.upgradeSchedule">
+    <div ng-if="groupDetails.cluster.upgradeSchedule">
       <strong>
         <div class="section-title-row section-name" translate="mediaFusion.clusters.upgradeSchedule">
         </div>
       </strong>
       <div>
         <span>
-            {{groupDetails.dateTime}} <span translate="mediaFusion.clusters.everyDay"/> {{groupDetails.clusterDetail.upgradeSchedule.scheduleTimeZone}}
+            {{groupDetails.dateTime}} <span translate="mediaFusion.clusters.everyDay"/> {{groupDetails.cluster.upgradeSchedule.scheduleTimeZone}}
         </span>
       </div>
     </div>
@@ -45,7 +45,7 @@
 
   </cs-sp-section>
 
-  <cs-sp-section ng-if="groupDetails.clusterDetail.releaseChannel != 'latest' && groupDetails.nodeList.length > 0">
+  <cs-sp-section ng-if="groupDetails.cluster.releaseChannel != 'latest' && groupDetails.nodeList.length > 0">
     <strong>
       <div class="section-title-row section-name" translate="mediaFusion.upgradeClusters.sw-upgrade-title">
       </div>
@@ -94,7 +94,7 @@
       <ul>
         <li class="feature" ng-repeat="ecp in groupDetails.nodeList" ng-class="{'list-item': !$first}">
           <a
-            ui-sref="connector-details-v2.host-details({clusterId: groupDetails.clusterDetail.id, connector: ecp, hostLength: groupDetails.nodeList.length, selectedCluster: groupDetails.clusterDetail})">
+            ui-sref="connector-details-v2.host-details({clusterId: groupDetails.cluster.id, connector: ecp, hostLength: groupDetails.nodeList.length, selectedCluster: groupDetails.cluster})">
             <span class="feature-name">{{ecp.hostname}}</span>
             <span ng-if="ecp.state == 'has_alarms'"  class="yellow">
               <i class="icon icon-circle status-indicator warning" />
@@ -117,7 +117,7 @@
         </li>
       </ul>
     </div>
-    <p ng-if="groupDetails.nodeList.length == 0" translate="mediaFusion.serviceStatus.nonodes"></p>
+    <p ng-if="groupDetails.nodeList.length == 0" translate="mediaFusion.serviceStatus.no_nodes_registered"></p>
   </cs-sp-section>
 
   <cs-sp-section>
@@ -125,7 +125,7 @@
       <div class="section-title-row section-name" translate="mediaFusion.clusters.clusterSettings"></div>
     </strong>
     <div>
-      <a href ng-click="groupDetails.openSettings(groupDetails.clusterDetail.type, groupDetails.clusterDetail.id)"
+      <a href ng-click="groupDetails.openSettings(groupDetails.cluster.type, groupDetails.cluster.id)"
         style="color:#049FD9"> {{groupDetails.displayName}}
       </a>
     </div>
