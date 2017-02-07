@@ -44,7 +44,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     close: jasmine.createSpy('modalInstance.close'),
     dismiss: jasmine.createSpy('modalInstance.dismiss')
   };
-  var VALUE = "value";
+  var VALUE = 'value';
   var DEFAULT_MOH = 'musicOnHoldDefault';
   var CUSTOM_MOH = 'musicOnHoldUpload';
   var CISCO_STD_MOH_URL = 'http://hosting.tropo.com/5046133/www/audio/CiscoMoH.wav';
@@ -149,7 +149,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
       expect(controller).toBeDefined();
     });
 
-    it("default value of minute should be 15.", function () {
+    it('default value of minute should be 15.', function () {
       expect(controller.maxWaitTime).toEqual(15);
     });
 
@@ -203,13 +203,13 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
           expect(controller.destinationOptions[i].label).toEqual(sortedOptions[i].label);
         }
       });
-      it("default value of fallback Actions should be set", function () {
+      it('default value of fallback Actions should be set', function () {
         expect(controller.maxWaitTime).toEqual(15);
         var fallbackAction = controller.menuEntry.actions[0].queueSettings.fallback.actions[0];
         var fallbackActionDescription = fallbackAction.getDescription();
         expect(fallbackActionDescription).toEqual('');
       });
-      it(" value of maxTime shoulb be 15", function () {
+      it(' value of maxTime shoulb be 15', function () {
         controller.ok();
         var maxWaitTime = controller.menuEntry.actions[0].queueSettings.maxWaitTime;
         expect(maxWaitTime).toEqual(15);
@@ -301,15 +301,15 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         aa_from_route_call: true
       });
 
-      controller.languageOption.value = "de_DE";
-      controller.voiceOption.value = "Anna";
+      controller.languageOption.value = 'de_DE';
+      controller.voiceOption.value = 'Anna';
 
       controller.ok();
       $scope.$apply();
 
       var queueSettings = _.get(controller.menuEntry, 'actions[0].queueSettings');
-      expect(angular.equals(queueSettings.language, "de_DE")).toBe(true);
-      expect(angular.equals(queueSettings.voice, "Anna")).toBe(true);
+      expect(angular.equals(queueSettings.language, 'de_DE')).toBe(true);
+      expect(angular.equals(queueSettings.voice, 'Anna')).toBe(true);
     });
   });
 
@@ -343,7 +343,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   });
 
   describe('ok', function () {
-    it("ok function call results in closing the Modal.", function () {
+    it('ok function call results in closing the Modal.', function () {
       controller.ok();
       expect(modalFake.close).toHaveBeenCalled();
     });

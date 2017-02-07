@@ -3,8 +3,8 @@ import { IClusterV1 } from 'modules/hercules/herculesInterfaces';
 export class NodeListComponentCtrl implements ng.IComponentController {
 
   private cluster: IClusterV1;
-  private connectorType;
   private hosts;
+  public connectorType;
   public getSeverity = this.FusionClusterStatesService.getSeverity;
   public localizedManagementConnectorName = this.$translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
   public localizedConnectorName = this.$translate.instant(`hercules.connectorNameFromConnectorType.${this.connectorType}`);
@@ -17,10 +17,12 @@ export class NodeListComponentCtrl implements ng.IComponentController {
   ) {}
 
   public $onInit() {
-    this.FusionClusterService.get(this.cluster.id)
-      .then(cluster => {
-        this.hosts = this.FusionClusterService.buildSidepanelConnectorList(cluster, this.connectorType);
-      });
+    if (this.cluster) {
+      this.FusionClusterService.get(this.cluster.id)
+        .then(cluster => {
+          this.hosts = this.FusionClusterService.buildSidepanelConnectorList(cluster, this.connectorType);
+        });
+    }
   }
 
   public sortConnectors(connector1): number {
@@ -29,6 +31,10 @@ export class NodeListComponentCtrl implements ng.IComponentController {
     } else {
       return 1;
     }
+  }
+
+  public hasConnectors = () => {
+    return this.cluster && this.cluster.connectors.length > 0;
   }
 
 }

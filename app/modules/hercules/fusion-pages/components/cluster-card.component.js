@@ -73,7 +73,9 @@
       } else if (serviceId === 'squared-fusion-media') {
         $state.go('media-service-v2.list');
       } else if (serviceId === 'spark-hybrid-datasecurity') {
-        $state.go('hds.list');
+        $state.go('hds.list', {
+          'clusterId': clusterId,
+        });
       }
     }
 

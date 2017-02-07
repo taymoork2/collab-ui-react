@@ -30,6 +30,7 @@
   .cs-loading {
     display: inline;
     padding-left: 1rem;
+    line-height: 2rem;
   }
 
   .feature-list-loader {
@@ -111,6 +112,15 @@
     color: $brand-warning-dark;
     position: relative;
     top: 2px;
+  }
+
+  .last-state-change-timestamp {
+    line-height: normal;
+    color: $gray-dark;
+  }
+
+  .normal-line-height {
+    line-height: normal;
   }
 }
 
