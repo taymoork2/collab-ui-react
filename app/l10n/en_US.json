@@ -2918,7 +2918,7 @@
     "routeCallPopover": "Select how to route call.",
     "selectPlaceHolder": "Search or Select",
     "validSip": "Enter a valid SIP address",
-    "routeToSipPlaceHolder": "Eg:x-x-xxx-xxxx@voip-provider.eg.net",
+    "routeToSipPlaceHolder": "sip:x-xx-xxxx@voip-provider.eg.net",
     "selectNumberPlaceHolder": "Search or Select a Number",
     "inputPlaceHolder": "Start typing here",
     "sayMessage": "Message",

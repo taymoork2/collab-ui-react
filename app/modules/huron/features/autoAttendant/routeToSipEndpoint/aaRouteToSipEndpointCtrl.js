@@ -19,9 +19,14 @@
     };
     vm.menuKeyEntry = {};
 
-    vm.saveUiModel = saveUiModel;
-    vm.isSipValid = isSipValid;
+    vm.updateUiModel = updateUiModel;
     vm.routeToSipPlaceHolder = $translate.instant('autoAttendant.routeToSipPlaceHolder');
+    vm.errorMessages = {
+      required: 'This field is required.',
+      minlength: 'Input is too short to be a valid sip uri.',
+      maxlength: 'Input is too long to be a valid sip uri.',
+      pattern: 'Input is not a valid sip uri. E.g. "sip:x-x-xxx-xxxx@voip-provider.eg.net"'
+    };
 
     // the CE action verb is 'routeToSipEndpoint'
     var routeToSipEndpoint = 'routeToSipEndpoint';
@@ -30,20 +35,6 @@
     var sipInitial = "sip:";
 
     /////////////////////
-
-    function isSipValid() {
-      var pattern = new RegExp(/^([a-zA-Z0-9:.]+)@([a-zA-Z0-9.]+)\.([a-z]{3,7})$/g);
-      var result = pattern.test(vm.model.sipInput);
-
-      if (result) {
-        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
-      } else {
-        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, false);
-      }
-
-      return result;
-
-    }
 
     function populateUiModel() {
       var entry;
@@ -60,10 +51,22 @@
       }
     }
 
-    function saveUiModel() {
+    function setValidStatus() {
+      if (vm.aaRouteToSipForm.$valid) {
+        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
+      } else {
+        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, false);
+      }
       AACommonService.setPhoneMenuStatus(true);
-      var entry;
+    }
 
+    function updateUiModel() {
+      setValidStatus();
+      saveUiModel();
+    }
+
+    function saveUiModel() {
+      var entry;
       if (fromRouteCall) {
         entry = _.get(vm.menuEntry, 'actions[0].queueSettings.fallback', vm.menuEntry);
       } else {
