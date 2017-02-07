@@ -3,7 +3,7 @@
 user-status-messages {
   .icon {
     position: absolute;
-    top: 4px;
+    top: 3px;
   }
 
   .icon-error {
@@ -22,13 +22,17 @@ user-status-messages {
     padding-top: 0.5rem;
   }
 
+  .last-row {
+    padding-bottom: 0.5rem;
+  }
+
   .icon-column {
-    width: 2rem;
+    width: 1.75rem;
     position: relative;
   }
 
   .message-column {
-    padding-left: 2rem;
+    padding-left: 1.75rem;
   }
 
   .message-title {

@@ -129,6 +129,11 @@
       word-wrap: break-word;
     }
 
+    .details-value-large {
+      color: $gray-dark-1;
+      word-wrap: break-word;
+    }
+
     .cs-card-layout.cs-card-block {
       padding-right: 0;
       padding-left: 1.5rem;
@@ -573,6 +578,22 @@
     .red {
       color: $color-alerts-base;
     }
+
+    .icon-error {
+      color: $color-alerts-base;
+      padding-right: 5px;
+    }
+
+    .icon-warning {
+      color: $color-attention-base;
+      padding-right: 5px;
+    }
+
+    .icon-info {
+      color: $color-primary-base;
+      margin: 0;
+      padding-right: 5px;
+    }
   }
 
   .cta-base {
@@ -721,8 +742,22 @@
   }
 }
 
+@media only screen and (max-width: 1280px) {
+  .helpdesk-details {
+    .details-value-large {
+      margin-top: -1rem;
+      margin-bottom: 1rem;
+      width: 100%;
+      display: block;
+    }
+  }
+}
+
 @media only screen and (max-width: 1024px) {
   .helpdesk-details {
+    .details-heading {
+      width: 100%;
+    }
     .details-value {
       margin-top: -1rem;
       margin-bottom: 1rem;
