@@ -10,7 +10,8 @@
   function HuronSettingsCtrl($q, $scope, $state, $translate, Authinfo, CeService, CallerId, Config,
       DirectoryNumberService, DialPlanService, ExternalNumberService, FeatureToggleService, HuronCustomer,
       HuntGroupServiceV2, InternationalDialing, ModalService, Notification, PstnSetupService,
-      ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction, TerminusUserDeviceE911Service, PstnServiceAddressService) {
+      ServiceSetup, TelephoneNumberService, ValidationService, VoicemailMessageAction, TerminusUserDeviceE911Service,
+      PstnServiceAddressService, CustomerCosRestrictionServiceV2) {
     var vm = this;
     vm.loading = true;
 
@@ -91,6 +92,7 @@
     vm.loadAvrilVoicemailOptions = loadAvrilVoicemailOptions;
     vm.loadPreferredLanguageOptions = loadPreferredLanguageOptions;
     vm.loadSite = loadSite;
+    vm.setCustomerCosRestrictions = setCustomerCosRestrictions;
 
     vm.processing = false;
     vm.hasVoicemailService = false;
@@ -166,7 +168,8 @@
       voicemailTimeZone: undefined,
       disableExtensions: false,
       dialingHabit: DEFAULT_DIAL_HABIT,
-      regionCode: ''
+      regionCode: '',
+      cosRestrictions: [],
     };
 
     vm.previousModel = _.cloneDeep(vm.model);
@@ -1649,16 +1652,35 @@
     }
 
     function loadInternationalDialing() {
-      return ServiceSetup.listCosRestrictions().then(function (cosRestriction) {
+      return FeatureToggleService.supports(FeatureToggleService.features.huronCustomerCos)
+        .then(function (enabled) {
+          if (enabled) {
+            return CustomerCosRestrictionServiceV2.get({
+              customerId: Authinfo.getOrgId()
+            }).$promise.then(function (cosRestrictions) {
+              vm.previousModel.cosRestrictions = vm.model.cosRestrictions = _.forEach(cosRestrictions.restrictions, function (restriction) {
+                if (_.has(restriction, 'url')) {
+                  delete restriction['url'];
+                }
 
-        if (_.get(cosRestriction, 'restrictions[0].restriction') === INTERNATIONAL_DIALING) {
-          vm.model.internationalDialingEnabled = false;
-          vm.model.internationalDialingUuid = cosRestriction.restrictions[0].uuid;
-        } else {
-          vm.model.internationalDialingEnabled = true;
-          vm.model.internationalDialingUuid = null;
-        }
-      });
+                if (_.has(restriction, 'uuid')) {
+                  delete restriction['uuid'];
+                }
+              });
+            });
+          } else {
+            return ServiceSetup.listCosRestrictions()
+              .then(function (cosRestriction) {
+                if (_.get(cosRestriction, 'restrictions[0].restriction') === INTERNATIONAL_DIALING) {
+                  vm.model.internationalDialingEnabled = false;
+                  vm.model.internationalDialingUuid = cosRestriction.restrictions[0].uuid;
+                } else {
+                  vm.model.internationalDialingEnabled = true;
+                  vm.model.internationalDialingUuid = null;
+                }
+              });
+          }
+        });
     }
 
     function loadCompanyInfo() {
@@ -1843,16 +1865,27 @@
     }
 
     function saveInternationalDialing() {
-      var cosType = {
-        restriction: INTERNATIONAL_DIALING
-      };
+      return FeatureToggleService.supports(FeatureToggleService.features.huronCustomerCos)
+        .then(function (enabled) {
+          if (enabled) {
+            return CustomerCosRestrictionServiceV2.update({
+              customerId: Authinfo.getOrgId()
+            }, {
+              restrictions: vm.model.cosRestrictions
+            });
+          } else {
+            var cosType = {
+              restriction: INTERNATIONAL_DIALING
+            };
 
-      return $q.resolve(true)
-        .then(InternationalDialing.isDisableInternationalDialing)
-        .then(function (isSaveDisabled) {
-          if (!isSaveDisabled) {
-            return ServiceSetup.updateCosRestriction(vm.model.internationalDialingEnabled, vm.model.internationalDialingUuid, cosType)
-              .then(loadInternationalDialing);
+            return $q.resolve(true)
+              .then(InternationalDialing.isDisableInternationalDialing)
+              .then(function (isSaveDisabled) {
+                if (!isSaveDisabled) {
+                  return ServiceSetup.updateCosRestriction(vm.model.internationalDialingEnabled, vm.model.internationalDialingUuid, cosType)
+                    .then(loadInternationalDialing);
+                }
+              });
           }
         });
     }
@@ -2102,6 +2135,7 @@
       vm.model.showServiceAddress = savedModel.showServiceAddress;
       vm.model.serviceNumber = savedModel.serviceNumber;
       vm.model.serviceNumberWarning = savedModel.serviceNumberWarning;
+      vm.model.cosRestrictions = savedModel.cosRestrictions;
     }
 
     $scope.$watchCollection(function () {
@@ -2404,6 +2438,10 @@
           vm.model.companyVoicemail.externalVoicemail = false;
         }
       }
+    }
+
+    function setCustomerCosRestrictions(restrictions) {
+      vm.model.cosRestrictions = restrictions;
     }
 
     $scope.$watchCollection(function () {

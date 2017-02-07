@@ -146,4 +146,12 @@
       margin-right: 0.25rem;
     }
   }
+  .cos-style {
+    .title-margin-bottom {
+      @include vr-spacing(mb, 1);
+    }
+    .switch-bottom-margin {
+      @include vr-spacing(mb, 2);
+    }
+  }
 }
