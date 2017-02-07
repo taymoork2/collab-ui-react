@@ -594,6 +594,10 @@
       margin: 0;
       padding-right: 5px;
     }
+
+    .last-status-message {
+      padding-bottom: 0.75rem;
+    }
   }
 
   .cta-base {
@@ -746,7 +750,7 @@
   .helpdesk-details {
     .details-value-large {
       margin-top: -1rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
       width: 100%;
       display: block;
     }
@@ -760,7 +764,7 @@
     }
     .details-value {
       margin-top: -1rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
       width: 100%;
       display: block;
     }
@@ -876,7 +880,7 @@
 
   .details-value-device {
     margin-top: -1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     width: 100%;
     display: block;
   }

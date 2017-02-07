@@ -153,7 +153,7 @@
                     ng-class="helpdeskUserCtrl.hybridServicesCard.uc.status.state === 'error' ? 'helpdesk-red' : ''"
                     translate="hercules.activationStatus.{{helpdeskUserCtrl.hybridServicesCard.uc.status.collapsedState}}"></span>
               <span ng-if="helpdeskUserCtrl.hybridServicesCard.uc.status.lastStateChangeText">{{helpdeskUserCtrl.hybridServicesCard.uc.status.lastStateChangeText}}</span>
-              <div ng-if="helpdeskUserCtrl.hybridServicesCard.uc.status" ng-repeat="message in helpdeskUserCtrl.hybridServicesCard.uc.status.messages">
+              <div ng-if="helpdeskUserCtrl.hybridServicesCard.uc.status" ng-repeat="message in helpdeskUserCtrl.hybridServicesCard.uc.status.messages" ng-class="{'last-status-message': $last}">
                 <span ng-if="message.title"><i class="icon" ng-class="message.iconClass"></i> {{::message.title}} - </span>
                 <span><i ng-if="!message.title" class="icon" ng-class="message.iconClass"></i> {{::message.description}}</span>
               </div>
