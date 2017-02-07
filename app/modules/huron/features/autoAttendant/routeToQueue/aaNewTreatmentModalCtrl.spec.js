@@ -209,10 +209,21 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         var fallbackActionDescription = fallbackAction.getDescription();
         expect(fallbackActionDescription).toEqual('');
       });
-      it(' value of maxTime shoulb be 15', function () {
+      it('value of maxTime should be 15', function () {
         controller.ok();
         var maxWaitTime = controller.menuEntry.actions[0].queueSettings.maxWaitTime;
         expect(maxWaitTime).toEqual(15);
+      });
+
+      it('should verify the disconnect action is applied after an update', function () {
+        expect(controller.menuEntry.actions[0].queueSettings.fallback.actions[0].name).toEqual('disconnect');
+        controller.destination.action = 'goto';
+        controller.menuEntry.actions[0].queueSettings.fallback.actions[0] = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
+        controller.ok();
+        expect(controller.menuEntry.actions[0].queueSettings.fallback.actions[0].name).not.toBe('disconnect');
+        controller.destination.action = 'disconnect';
+        controller.ok();
+        expect(controller.menuEntry.actions[0].queueSettings.fallback.actions[0].name).toEqual('disconnect');
       });
     });
 

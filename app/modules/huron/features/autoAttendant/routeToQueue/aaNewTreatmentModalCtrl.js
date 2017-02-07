@@ -91,6 +91,7 @@
       updateLanguageVoice();
       updateMaxWaitTime();
       updatePeriodicTime();
+      updateFallback();
       autoValidate();
       AACommonService.setQueueSettingsStatus(true);
       $modalInstance.close();
@@ -102,6 +103,12 @@
       }
       if (_.isEqual(vm.musicOnHold, DEFAULT_MOH)) {
         defaultMoh();
+      }
+    }
+
+    function updateFallback() {
+      if (vm.destination.action === 'disconnect') {
+        vm.menuEntry.actions[0].queueSettings.fallback.actions[0] = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', '');
       }
     }
 
