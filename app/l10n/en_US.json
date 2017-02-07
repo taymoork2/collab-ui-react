@@ -1763,7 +1763,8 @@
       "c_cal": "Calendar Connector",
       "c_ucmc": "Call Connector",
       "c_mgmt": "Management Connector",
-      "hds_app": "Hybrid Data Security Connector"
+      "mg_mgmt": "Media Connector",
+      "hds_app": "Data Security Connector"
     },
     "serviceNameFromConnectorType": {
       "c_cal": "Calendar Service",
@@ -2283,6 +2284,7 @@
       "status": "Status",
       "serial": "Serial",
       "version": "Version",
+      "noNodes": "No nodes were found",
       "loadingError": "Could not load the cluster data"
     }
   },
