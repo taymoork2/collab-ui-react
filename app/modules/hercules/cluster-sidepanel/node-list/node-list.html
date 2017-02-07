@@ -1,6 +1,9 @@
 <cs-sp-section>
   <div class="section-title-row section-name" translate="hercules.connectors.hosts"></div>
-  <div class="feature-list">
+  <div class="feature-list" ng-if="!$ctrl.hasConnectors()">
+    <p translate="hercules.connectors.no_nodes"></p>
+  </div>
+  <div class="feature-list" ng-if="$ctrl.hasConnectors()">
     <div ng-repeat="host in $ctrl.hosts | orderBy: 'hostname'">
       <h6 class="feature">{{host.hostname}}</h6>
       <ul>
@@ -17,8 +20,16 @@
             <span class="feature-status">{{connector.runningVersion}}</span>
             <i class="feature-status feature-arrow"></i>
           </a>
-          <a ng-if="connector.connectorType !== 'c_mgmt'"
+          <a ng-if="connector.connectorType == 'c_ucmc' || connector.connectorType == 'c_cal'"
              ui-sref="cluster-details.host-details({host: host.hostname, hostSerial: connector.hostSerial, clusterId: $ctrl.cluster.id, connectorType: connector.connectorType})"
+          >
+            <i class="icon icon-circle status-indicator" ng-class="$ctrl.getSeverity(connector).cssClass"></i>
+            <span class="feature-name">{{$ctrl.localizedConnectorName}}</span>
+            <span class="feature-status">{{connector.runningVersion}}</span>
+            <i class="feature-status feature-arrow"></i>
+          </a>
+          <a ng-if="connector.connectorType == 'hds_app'"
+             ui-sref="hds-cluster-details.host-details({host: host.hostname, hostSerial: connector.hostSerial, clusterId: $ctrl.cluster.id, connectorType: connector.connectorType})"
           >
             <i class="icon icon-circle status-indicator" ng-class="$ctrl.getSeverity(connector).cssClass"></i>
             <span class="feature-name">{{$ctrl.localizedConnectorName}}</span>

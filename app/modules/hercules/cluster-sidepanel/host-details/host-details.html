@@ -34,7 +34,7 @@
     </div>
   </cs-sp-section>
 
-  <alarm-list-section alarms="hostDetailsCtrl.host.alarms"></alarm-list-section>
+  <alarm-list-section alarms="hostDetailsCtrl.host.alarms" connector-type="hostDetailsCtrl.host.connectorType"></alarm-list-section>
 
   <cs-sp-section ng-if="hostDetailsCtrl.host.state === 'offline'">
     <div class="section-title-row section-name" translate="hercules.connectors.removeSectionHeader"></div>
