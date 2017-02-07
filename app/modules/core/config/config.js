@@ -52,6 +52,7 @@
       },
 
       idleTabTimeout: 1200000, //20 mins
+      idleTabKeepAliveEvent: 'IDLE_TIMEOUT_KEEP_ALIVE',
 
       siteDomainUrl: {
         webexUrl: '.webex.com',

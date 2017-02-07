@@ -5,13 +5,13 @@ var testModule = require('./auth');
 describe('Auth Service', function () {
   beforeEach(angular.mock.module(testModule));
 
-  var Auth, Authinfo, $httpBackend, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig, WindowLocation, TokenService;
+  var Auth, Authinfo, $httpBackend, SessionStorage, $rootScope, $state, $q, OAuthConfig, Storage, UrlConfig, WindowLocation, TokenService;
 
   afterEach(function () {
-    Auth = Authinfo = $httpBackend = SessionStorage = $rootScope = $state = $q = OAuthConfig = UrlConfig = WindowLocation = TokenService = undefined;
+    Auth = Authinfo = $httpBackend = SessionStorage = $rootScope = $state = $q = OAuthConfig = Storage = UrlConfig = WindowLocation = TokenService = undefined;
   });
 
-  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _SessionStorage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
+  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _SessionStorage_, _Storage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
     $q = _$q_;
     Auth = _Auth_;
     $state = _$state_;
@@ -21,6 +21,7 @@ describe('Auth Service', function () {
     OAuthConfig = _OAuthConfig_;
     $httpBackend = _$httpBackend_;
     SessionStorage = _SessionStorage_;
+    Storage = _Storage_;
     TokenService = _TokenService_;
     WindowLocation = _WindowLocation_;
 
@@ -450,6 +451,15 @@ describe('Auth Service', function () {
       expect(promise).toBeResolved();  // seems unnecessary, but should be the same promise returned from logoutAndRedirectTo()
       expect(Auth.logoutAndRedirectTo.calledWith('logoutUrl')).toBe(true);
       expect(TokenService.triggerGlobalLogout).toHaveBeenCalled(); // should only be called after logout (token revocation)
+    });
+    it('should set the message in the local storage if it has been passed in', function () {
+      TokenService.triggerGlobalLogout.and.callThrough();
+      OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
+      Auth.logoutAndRedirectTo = sinon.stub().returns($q.resolve());
+      var promise = Auth.logout('still there');
+      expect(promise).toBeResolved();
+      expect(TokenService.triggerGlobalLogout).toHaveBeenCalled(); // should only be called after logout (token revocation)
+      expect(Storage.get('loginMessage')).toBe('still there');
     });
   });
 

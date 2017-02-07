@@ -161,11 +161,11 @@
         .catch(logErrorAndReject('Failed to obtain oauth access token'));
     }
 
-    function logout() {
+    function logout(loginMessage) {
       var redirectUrl = OAuthConfig.getLogoutUrl();
       return service.logoutAndRedirectTo(redirectUrl)
         .finally(function () {
-          return TokenService.triggerGlobalLogout();
+          return TokenService.triggerGlobalLogout(loginMessage);
         });
     }
 

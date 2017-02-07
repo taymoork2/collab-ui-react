@@ -6,7 +6,8 @@
     "license": "By using Cisco Spark Services you accept the Terms of Service and Privacy Statement.",
     "tos": "Terms of Service",
     "privacy": "Privacy Statement",
-    "copyright": "Cisco and/or affiliates. All rights reserved."
+    "copyright": "Cisco and/or affiliates. All rights reserved.",
+    "expired": "Your session has expired due to inactivity."
   },
   "termsOfService": {
     "title": "Terms of Service",
