@@ -116,7 +116,7 @@
 
     .details-heading {
       color: $gray-dark-4;
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
     }
 
     .details-value {
@@ -774,9 +774,13 @@
     .cs-card {
       padding: 0;
       width: 100%;
-
       article {
         width: 100%;
+      }
+      section {
+        .last-status-message {
+          padding-bottom: 0;
+        }
       }
     }
   }
