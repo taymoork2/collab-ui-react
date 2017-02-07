@@ -57,6 +57,7 @@ module.exports = {
       message: 'Select the module affected by this change (use * for none):\n',
       choices: [
         'core',
+        'context',
         'devices',
         'ediscovery',
         'helpdesk',

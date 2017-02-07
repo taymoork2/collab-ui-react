@@ -2648,22 +2648,97 @@
             controllerAs: 'resourceList',
             parent: 'main',
             resolve: {
-              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
               },
             }
           })
-          // Cluster settings
-          .state('expressway-settings', {
-            url: '/services/cluster/expressway/:id/settings',
-            templateUrl: 'modules/hercules/fusion-pages/expressway-settings.html',
-            controller: 'ExpresswayClusterSettingsController',
-            controllerAs: 'clusterSettings',
+          // hybrid context
+          .state('context', {
+            templateUrl: 'modules/context/container/hybrid-context-container.html',
+            controller: 'HybridContextContainerController',
+            controllerAs: 'vm',
             parent: 'main',
             resolve: {
-              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              hasContactCenterContextFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext);
+              }
+            }
+          })
+          .state('context-resources', {
+            url: '/services/context',
+            parent: 'context',
+            views: {
+              'contextServiceView': {
+                templateUrl: 'modules/context/resources/hybrid-context-resources.html'
+              }
+            },
+            resolve: {
+              hasContactCenterContextFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.contactCenterContext);
+              }
+            }
+          })
+          .state('context-fields', {
+            url: '/services/context/fields',
+            parent: 'context',
+            views: {
+              'contextServiceView': {
+                templateUrl: 'modules/context/fields/hybrid-context-fields.html',
+                controller: 'HybridContextFieldsController',
+                controllerAs: 'contextFields',
+              }
+            }
+          })
+          .state('context-fieldsets', {
+            url: '/services/context/fieldsets',
+            parent: 'context',
+            views: {
+              'contextServiceView': {
+                templateUrl: 'modules/context/fieldsets/hybrid-context-fieldsets.html',
+                controller: 'HybridContextFieldsetsController',
+                controllerAs: 'contextFieldsets',
+              }
+            }
+          })
+          // Cluster settings and nodes
+          .state('expressway-cluster', {
+            abstract: true,
+            url: '/services/cluster/expressway/:id',
+            controller: 'ExpresswayClusterController',
+            controllerAs: 'vm',
+            parent: 'main',
+            templateUrl: 'modules/hercules/expressway-cluster/expressway-cluster.html',
+            resolve: {
+              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
               },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
+            }
+          })
+          .state('expressway-cluster.nodes', {
+            url: '/nodes',
+            views: {
+              expresswayPageView: {
+                template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+              }
+            },
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
+              },
+            }
+          })
+          .state('expressway-cluster.settings', {
+            url: '/settings',
+            views: {
+              expresswayPageView: {
+                controller: 'ExpresswayClusterSettingsController',
+                controllerAs: 'clusterSettings',
+                templateUrl: 'modules/hercules/fusion-pages/expressway-settings.html',
+              }
             }
           })
           .state('hds', {
@@ -2681,8 +2756,11 @@
             url: '/hds/resources',
             views: {
               'fullPane': {
-                template: '<hds-service-cluster-list service-id="\'spark-hybrid-datasecurity\'"></hds-service-cluster-list>'
+                template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'"></hybrid-service-cluster-list>'
               }
+            },
+            params: {
+              clusterId: null,
             },
             resolve: {
               hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
@@ -2709,30 +2787,46 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                controllerAs: 'hdsSidepanelClusterController',
-                controller: 'HDSSidepanelClusterController',
-                templateUrl: 'modules/hds/cluster-sidepanel/cluster-details.html'
+                template: '<cluster-sidepanel-overview cluster-type="\'hds_app\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>',
               },
               'header@hds-cluster-details': {
-                templateUrl: 'modules/hds/cluster-sidepanel/cluster-header.html'
-              }
+                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
+              },
             },
             data: {
               displayName: 'Overview'
             },
             params: {
-              clusterId: null
+              clusterId: null,
+              connectorType: null,
             },
             resolve: {
-              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+              connectorType: /* @ngInject */ function ($stateParams) {
+                return $stateParams.connectorType;
               },
             }
           })
+          .state('hds-cluster-details.host-details', {
+            templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
+            controller: 'ExpresswayHostDetailsController',
+            controllerAs: 'hostDetailsCtrl',
+            data: {
+              displayName: 'Node'
+            },
+            params: {
+              host: null,
+              hostSerial: null,
+              clusterId: null,
+              connectorType: null
+            }
+          })
           .state('hds-cluster-details.alarm-details', {
-            templateUrl: 'modules/hds/cluster-sidepanel/alarm-details.html',
-            controller: 'HDSAlarmController',
-            controllerAs: 'hdsAlarmController',
+            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details/alarm-details.html',
+            controller: 'ExpresswayAlarmController',
+            controllerAs: 'alarmCtrl',
             data: {
               displayName: 'Alarm Details'
             },
@@ -2741,20 +2835,76 @@
               host: null
             }
           })
-          .state('hds-cluster-settings', {
-            url: '/services/cluster/hds/:id/settings',
-            template: '<hybrid-data-security-cluster-settings></hybrid-data-security-cluster-settings>',
+          .state('hds-cluster', {
+            abstract: true,
+            url: '/services/cluster/hds/:id',
+            controller: 'HDSClusterController',
+            controllerAs: 'vm',
             parent: 'main',
+            templateUrl: 'modules/hercules/hds-cluster/hds-cluster.html',
+            resolve: {
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
+            }
           })
-          .state('mediafusion-settings', {
-            url: '/services/cluster/mediafusion/:id/settings',
-            templateUrl: 'modules/hercules/fusion-pages/mediafusion-settings.html',
-            controller: 'MediafusionClusterSettingsController',
-            controllerAs: 'clusterSettings',
+          .state('hds-cluster.nodes', {
+            url: '/nodes',
+            views: {
+              expresswayPageView: {
+                template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+              }
+            },
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
+              },
+            }
+          })
+          .state('hds-cluster.settings', {
+            url: '/settings',
+            views: {
+              expresswayPageView: {
+                template: '<hybrid-data-security-cluster-settings></hybrid-data-security-cluster-settings>',
+              }
+            }
+          })
+          .state('mediafusion-cluster', {
+            abstract: true,
+            url: '/services/cluster/mediafusion/:id',
+            controller: 'MediafusionClusterController',
+            controllerAs: 'vm',
             parent: 'main',
+            templateUrl: 'modules/hercules/mediafusion-cluster/mediafusion-cluster.html',
             resolve: {
               hasMFFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
+              },
+              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
+              },
+            }
+          })
+          .state('mediafusion-cluster.nodes', {
+            url: '/nodes',
+            views: {
+              expresswayPageView: {
+                template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+              }
+            },
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
+              },
+            }
+          })
+          .state('mediafusion-cluster.settings', {
+            url: '/settings',
+            views: {
+              expresswayPageView: {
+                templateUrl: 'modules/hercules/fusion-pages/mediafusion-settings.html',
+                controller: 'MediafusionClusterSettingsController',
+                controllerAs: 'clusterSettings',
               }
             }
           })
@@ -2969,32 +3119,35 @@
               },
             },
           })
-         .state('cluster-details', {
-           parent: 'sidepanel',
-           views: {
-             'sidepanel@': {
-               template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>'
-             },
-             'header@cluster-details': {
-               templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'
-             }
-           },
-           data: {
-             displayName: 'Overview'
-           },
-           params: {
-             clusterId: null,
-             connectorType: null
-           },
-           resolve: {
-             id: /* @ngInject */ function ($stateParams) {
-               return $stateParams.clusterId;
-             },
-             connectorType: /* @ngInject */ function ($stateParams) {
-               return $stateParams.connectorType;
-             },
-           }
-         })
+          .state('cluster-details', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-resource-group-feature-toggle="$resolve.hasResourceGroupFeatureToggle"></cluster-sidepanel-overview>'
+              },
+              'header@cluster-details': {
+                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'
+              }
+            },
+            data: {
+              displayName: 'Overview'
+            },
+            params: {
+              clusterId: null,
+              connectorType: null
+            },
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+              connectorType: /* @ngInject */ function ($stateParams) {
+                return $stateParams.connectorType;
+              },
+              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
+              },
+            }
+          })
           .state('management-connector-details', {
             parent: 'sidepanel',
             views: {
@@ -3059,8 +3212,8 @@
             controllerAs: 'rgsCtrl',
             parent: 'main',
             resolve: {
-              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              hasResourceGroupFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
               }
             }
           });

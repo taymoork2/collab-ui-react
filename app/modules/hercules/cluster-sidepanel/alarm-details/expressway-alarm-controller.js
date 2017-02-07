@@ -6,12 +6,16 @@
     .controller('ExpresswayAlarmController', ExpresswayAlarmController);
 
   /* @ngInject */
-  function ExpresswayAlarmController($stateParams) {
+  function ExpresswayAlarmController($stateParams, FusionClusterStatesService) {
     var vm = this;
     vm.alarm = $stateParams.alarm;
+
+    vm.getAlarmSeverityCssClass = FusionClusterStatesService.getAlarmSeverityCssClass;
+
     vm.parseDate = function (timestamp) {
       return new Date(Number(timestamp) * 1000);
     };
+
     if (vm.alarm.solution) {
       vm.alarm.alarmSolutionElements = [];
       if (_.size(vm.alarm.solutionReplacementValues) > 0) {

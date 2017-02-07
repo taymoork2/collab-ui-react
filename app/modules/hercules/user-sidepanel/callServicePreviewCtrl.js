@@ -120,7 +120,6 @@
         if ($scope.callServiceAware.status && $scope.callServiceAware.status.lastStateChange) {
           $scope.callServiceAware.status.lastStateChangeText = FusionUtils.getTimeSinceText($scope.callServiceAware.status.lastStateChange);
         }
-
         if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.connectorId) {
           ClusterService.getConnector($scope.callServiceConnect.status.connectorId).then(function (connector) {
             $scope.callServiceConnect.homedConnector = connector;
@@ -189,7 +188,7 @@
     };
 
     var readResourceGroups = function () {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
+      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup)
         .then(function (supported) {
           if (supported) {
             ResourceGroupService.getAllAsOptions().then(function (options) {

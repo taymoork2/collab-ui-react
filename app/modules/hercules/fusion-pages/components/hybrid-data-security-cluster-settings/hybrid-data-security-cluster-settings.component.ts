@@ -1,25 +1,18 @@
 class HybridDataSecurityClusterSettingsPageCtrl implements ng.IComponentController {
 
-  public localizedTitle: string;
-  public backUrl: string = 'cluster-list';
   public cluster: any;
 
   private clusterId: string;
 
   /* @ngInject */
   constructor(
-    private $stateParams,
-    private $translate: ng.translate.ITranslateService,
+    private $rootScope: ng.IRootScopeService,
+    private $stateParams: ng.ui.IStateParamsService,
     private FusionClusterService,
-  ) {
-  }
+  ) {}
 
   public $onInit() {
-    this.clusterId = this.$stateParams.id;
-    this.loadCluster();
-  }
-
-  public nameUpdated(): void {
+    this.clusterId = this.$stateParams['id'];
     this.loadCluster();
   }
 
@@ -27,12 +20,13 @@ class HybridDataSecurityClusterSettingsPageCtrl implements ng.IComponentControll
     return this.FusionClusterService.get(this.clusterId)
       .then((cluster) => {
         this.cluster = cluster;
-        this.localizedTitle = this.$translate.instant('hercules.expresswayClusterSettings.pageTitle', {
-          clusterName: this.cluster.name,
-        });
       });
   }
 
+  /* Callback function used by <rename-and-deregister-cluster-section>  */
+  public nameUpdated(name) {
+    this.$rootScope.$emit('cluster-name-update', name);
+  }
 }
 
 export class HybridDataSecurityClusterSettingsPageComponent implements ng.IComponentOptions {

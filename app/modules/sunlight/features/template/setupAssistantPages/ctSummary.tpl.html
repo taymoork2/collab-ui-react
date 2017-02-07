@@ -2,9 +2,8 @@
     <i class="icon icon-circle-check-mark-success icon-5x success-icon"></i>
     <div class="h4 description">
         {{
-        careSetupAssistant.isEditFeature ?
-        careSetupAssistant.getLocalisedText('careChatTpl.editSummaryDesc') :
-        careSetupAssistant.getLocalisedText('careChatTpl.summaryDesc')
+        (careSetupAssistant.isEditFeature ?
+        'careChatTpl.editSummaryDesc' : 'careChatTpl.summaryDesc') | translate
         }}
     </div>
     <button loading="careSetupAssistant.creatingChatTemplate"
@@ -19,8 +18,8 @@
       <i class="icon icon-warning"></i>
       </div>
       <div>
-        <div>{{careSetupAssistant.getLocalisedText('careChatTpl.editCodeWarnMsg2Line1')}}</div>
-        <div>{{careSetupAssistant.getLocalisedText('careChatTpl.editCodeWarnMsg2Line2')}}</div>
+        <div>{{:: 'careChatTpl.editCodeWarnMsg2Line1' | translate }}</div>
+        <div>{{:: 'careChatTpl.editCodeWarnMsg2Line2' | translate }}</div>
       </div>
     </div>
     <div class="h6 retry-message" ng-if="careSetupAssistant.saveCTErrorOccurred">

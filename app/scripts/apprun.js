@@ -5,7 +5,7 @@
 
   /* @ngInject */
   function wx2AdminWebClientApp($animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config,
-    HealthService, Localize, Log, LogMetricsService, OnlineUpgradeService, PreviousState, SessionStorage,
+    HealthService, IdleTimeoutService, Localize, Log, LogMetricsService, OnlineUpgradeService, PreviousState, SessionStorage,
     TokenService, TrackingId, Utils, TOSService) {
     //Expose the localize service globally.
     $rootScope.Localize = Localize;
@@ -27,6 +27,8 @@
 
     TokenService.init();
     TokenService.setAuthorizationHeader();
+
+    IdleTimeoutService.init();
 
     Config.setTestEnvConfig($location.search()['test-env-config']);
 

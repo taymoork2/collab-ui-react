@@ -5,7 +5,7 @@
 </div>
 <div ng-class="{'row' : !fromNewTreatment}">
   <div ng-switch="aaMessageType.messageOption.value" class="large-12 small-12 columns aa-message-only-type">
-    <aa-media-upload ng-switch-when="uploadFile" id="mediaUploadInput{{ schedule + index + menuKeyIndex }}" name="mediaUploadInput" ng-model="aaMessageType.actionEntry" aa-from-sub-menu={{fromSubMenu}} aa-media-type="{{ type }}" aa-index="index" aa-schedule="{{schedule}}" aa-key-index="{{menuKeyIndex}}" aa-menu-header="{{isMenuHeader}}" aa-menu-id="{{menuId}}"></aa-media-upload>
+    <aa-media-upload ng-switch-when="uploadFile" id="mediaUploadInput{{ schedule + index + menuKeyIndex }}" name="mediaUploadInput" ng-model="aaMessageType.actionEntry" aa-from-sub-menu={{fromSubMenu}} aa-media-type="{{ type }}" aa-index="index" aa-schedule="{{schedule}}" aa-key-index="{{menuKeyIndex}}" aa-menu-header="{{isMenuHeader}}" aa-menu-id="{{menuId}}" aa-media-upload-size="{{ :: aaMessageType.MAX_FILE_SIZE_IN_BYTES }}"></aa-media-upload>
     <textarea ng-switch-when="sayMessage" class="aa-message-type-textarea" aa-keypress ng-change="aaMessageType.saveUiModel()" ng-model="aaMessageType.messageInput" type="text" id="messageType{{ schedule + index + menuKeyIndex }}" name="messageInput" placeholder="{{ :: aaMessageType.messageInputPlaceholder }}" rows="4" maxlength="2000"></textarea>
   </div>
 </div>

@@ -16,7 +16,7 @@
       .then(function (data) {
         return data.expresswayClusterReleaseChannel;
       });
-    var f237Promise = FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+    var resourceGroupFeatureTogglePromise = FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroup);
 
     function checkState(connectorType, serviceId) {
       if (checkIfFusePerformed()) {
@@ -236,7 +236,7 @@
     }
 
     function checkUnassignedClusters() {
-      f237Promise
+      resourceGroupFeatureTogglePromise
         .then(function (support) {
           return support ? defaultReleaseChannelPromise : $q.reject();
         })

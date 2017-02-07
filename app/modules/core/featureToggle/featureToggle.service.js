@@ -21,6 +21,7 @@
       atlasHelpDeskExt: 'atlas-helpdesk-extended-information',
       atlasHelpDeskOrderSearch: 'atlas-helpdesk-order-search',
       atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list',
+      atlasIdleLogout: 'atlas-idle-logout',
       atlasMediaServiceMetrics: 'atlas-media-service-metrics',
       atlasMediaServiceMetricsMilestoneOne: 'atlas-media-service-metrics-milestone-one',
       atlasMediaServiceMetricsMilestoneTwo: 'atlas-media-service-metrics-milestone-two',
@@ -62,6 +63,7 @@
       calsvcOneButtonToPushInterval: 'calsvc-OneButtonToPush-interval',
       clientRingbackV2: 'client-ringback-v2',
       console: 'console',
+      contactCenterContext: 'contact-center-context',
       deleteContent: 'delete-content',
       disableCacheForFeatures: 'disableCacheForFeatures',
       enforceSparkContentEncryption: 'enforce-spark-content-encryption',
@@ -159,7 +161,8 @@
       webexCSV: 'webex-CSV',
       csdmATA: 'csdm-ata',
       csdmHybridCall: 'csdm-hybrid-call',
-      atlasF237ResourceGroups: 'atlas-f237-resource-group',
+      atlasF237ResourceGroup: 'atlas-f237-resource-group',
+      atlasHybridNodesView: 'atlas-hybrid-nodes-view',
       atlasHybridVoicemail: 'atlas-hybrid-voicemail',
       gemServicesTab: 'gem-services-tab',
       gemCCA: 'gem-cloud-connected-audio',
@@ -170,6 +173,7 @@
       cloudberryPersonalMode: 'ce-enable-personal-mode',
       autoAnswer: 'huron-auto-answer',
       huronFederatedSparkCall: 'huron-federated-spark-call',
+      sparkCallTenDigitExt: 'i751-10d-ext',
     };
 
     var toggles = {};
