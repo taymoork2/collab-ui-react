@@ -50,6 +50,7 @@ class LineOverview implements ng.IComponentController {
     private CsdmDataModelService,
     private AutoAnswerService: AutoAnswerService,
     private FeatureToggleService,
+    private $q,
   ) { }
 
   public $onInit(): void {
@@ -223,17 +224,31 @@ class LineOverview implements ng.IComponentController {
       templateUrl: 'modules/huron/lines/lineOverview/lineDelete.html',
       scope: this.$scope,
       type: 'dialog',
-    }).result.then( () => {
+    }).result.then(() => {
       if (!this.lineOverviewData.line.primary) {
-        return this.LineService.deleteLine(this.consumerType, this.ownerId, this.lineOverviewData.line.uuid)
-          .then( () => {
+        return this.deleteSharedLines().then(() => {
+          return this.LineService.deleteLine(this.consumerType, this.ownerId, this.lineOverviewData.line.uuid)
+          .then(() => {
             this.$scope.$emit(LINE_CHANGE);
             this.Notification.success('directoryNumberPanel.disassociationSuccess');
             this.$state.go(this.$state.$current.parent.name);
           })
-          .catch( (response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'));
+          .catch((response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'));
+        })
+        .catch((response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'));
       }
     });
+  }
+
+  public deleteSharedLines() {
+    let promises: Array<ng.IPromise<any>> = [];
+    let lines: SharedLine[] = _.reject(this.lineOverviewData.sharedLines, (member) => {
+      return _.get(member, 'primary') || _.get(member, 'uuid') === this.ownerId;
+    });
+    _.forEach(lines, (member) => {
+      promises.push(this.SharedLineService.deleteSharedLine(this.consumerType, this.ownerId, this.lineOverviewData.line.uuid, member.uuid));
+    });
+    return this.$q.all(promises);
   }
 
   public isCloudberryPlace(): boolean {

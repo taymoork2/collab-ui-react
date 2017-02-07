@@ -1,13 +1,14 @@
 import { SpeedDialService, ISpeedDial } from './speedDial.service';
 import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { Notification } from 'modules/core/notifications';
-
+import { HuronCustomerService } from 'modules/huron/customer/customer.service';
 interface IValidationMessages {
   required: string;
   pattern: string;
 }
 
 const SPEED_DIAL_LIMIT = 125;
+const inputs: string[] = ['external', 'uri', 'custom'];
 class SpeedDialCtrl implements ng.IComponentController {
   private ownerId: string;
   private ownerType: string;
@@ -22,6 +23,10 @@ class SpeedDialCtrl implements ng.IComponentController {
   private numberMessages: IValidationMessages;
   private actionList: IActionItem[];
   private actionListCopy: IActionItem[] = [];
+ // private
+  private callDest: any;
+  private callDestInputs: string[];
+  public form: ng.IFormController;
 
   /* @ngInject */
   constructor(
@@ -30,7 +35,15 @@ class SpeedDialCtrl implements ng.IComponentController {
     private dragularService,
     private Notification: Notification,
     private SpeedDialService: SpeedDialService,
+    private TelephoneNumberService,
+    private $timeout,
+    private HuronCustomerService: HuronCustomerService,
+
   ) {
+    this.callDestInputs = inputs;
+    this.firstReordering = true;
+    this.editing = false;
+    this.reordering = false;
 
     this.SpeedDialService.getSpeedDials(this.ownerType, this.ownerId).then((data) => {
       this.speedDialList = data.speedDials;
@@ -58,6 +71,7 @@ class SpeedDialCtrl implements ng.IComponentController {
     });
     this.actionList = _.cloneDeep(this.actionListCopy);
   }
+
   public reachSpeedDialLimit() {
     return this.speedDialList.length >= SPEED_DIAL_LIMIT;
   }
@@ -67,9 +81,17 @@ class SpeedDialCtrl implements ng.IComponentController {
       index: this.speedDialList.length + 1,
       label: '',
       number: '',
+      callDest: undefined,
     };
     this.speedDialList.push(sd);
     this.setEdit(sd);
+    this.$timeout(function () {
+      $('#sd-' + sd.index).focus();
+    }, 100);
+  }
+
+  public setSpeedDial(model) {
+    this.callDest = model;
   }
 
   public save(): void {
@@ -79,9 +101,13 @@ class SpeedDialCtrl implements ng.IComponentController {
       });
       sd.edit = false;
       sd.label = this.newLabel;
+      this.newNumber = this.callDest.phoneNumber;
+      if (this.TelephoneNumberService.validateDID(this.callDest.phoneNumber)) {
+        this.newNumber = this.TelephoneNumberService.getDIDValue(this.callDest.phoneNumber);
+      } else if (this.callDest.phoneNumber.indexOf('@') === -1) {
+        this.newNumber = _.replace(this.callDest.phoneNumber, /-/g, '');
+      }
       sd.number = this.newNumber.replace(/ /g, '');
-      this.newLabel = '';
-      this.newNumber = '';
     } else if (this.reordering) {
       this.updateIndex();
       this.copyList = undefined;
@@ -92,7 +118,7 @@ class SpeedDialCtrl implements ng.IComponentController {
       this.actionList = _.cloneDeep(this.actionListCopy);
     }, () => {
       this.Notification.error('speedDials.speedDialChangesFailed');
-      if (_.has(this, 'id')) {
+      if (_.has(this, 'ownerId')) {
         this.SpeedDialService.getSpeedDials(this.ownerType, this.ownerId).then((data) => {
           this.speedDialList = data.speedDials;
         }).catch(() => {
@@ -119,6 +145,7 @@ class SpeedDialCtrl implements ng.IComponentController {
       }
       this.newLabel = '';
       this.newNumber = '';
+      this.callDest = 'undefined';
     } else if (this.reordering) {
       this.speedDialList.length = 0;
       Array.prototype.push.apply(this.speedDialList, angular.copy(this.copyList));
@@ -145,12 +172,20 @@ class SpeedDialCtrl implements ng.IComponentController {
       });
     }
   }
+
   public setEdit(sd: ISpeedDial): void {
-    this.editing = true;
-    sd.edit = true;
-    this.newLabel = sd.label;
-    this.newNumber = sd.number;
-    this.actionList = [];
+    if (_.isObject(sd) && _.has(sd, 'label') && _.has(sd, 'number')) {
+      this.editing = true;
+      sd.edit = true;
+      this.newLabel = sd.label;
+      if (sd.number) {
+        this.callDest = this.TelephoneNumberService.getDestinationObject(sd.number);
+      }
+    }
+  }
+
+  public getRegionCode() {
+    return this.HuronCustomerService.getVoiceCustomer();
   }
 
   public delete(sd): void {
