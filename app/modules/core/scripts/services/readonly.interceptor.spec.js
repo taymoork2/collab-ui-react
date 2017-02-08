@@ -18,7 +18,7 @@ describe('ReadonlyInterceptor', function () {
     //TODO: Reintroduce test of logging...
     beforeEach(function () {
       Authinfo.isReadOnlyAdmin = sinon.stub().returns(true);
-      Authinfo.getOrgId = sinon.stub().returns('fe5acf7a-6246-484f-8f43-3e8c910fc50d');
+      Authinfo.getUserOrgId = sinon.stub().returns('fe5acf7a-6246-484f-8f43-3e8c910fc50d');
       Authinfo.getUserId = sinon.stub().returns('09bd9c92-bdd0-4dfb-832d-618494246be5');
       Notification.notifyReadOnly = sinon.spy();
     });
