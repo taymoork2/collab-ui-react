@@ -12,7 +12,7 @@ describe('Service: FusionClusterService', function () {
     $q = _$q_;
     FusionClusterService = _FusionClusterService_;
     USSService = _USSService_;
-    spyOn(USSService, 'getUserCountFromResourceGroup').and.returnValue($q.resolve({ numberOfUsers: 0 }));
+    spyOn(USSService, 'getUserPropsSummary').and.returnValue($q.resolve({ numberOfUsers: 0 }));
   }
 
   function mockDependencies($provide) {
