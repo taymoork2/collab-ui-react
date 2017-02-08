@@ -6052,11 +6052,13 @@
   },
   "myCompanyOrders": {
     "numberHeader": "Order Number",
-    "descriptionHeader": "Order Detail",
+    "descriptionHeader": "Product Name",
     "priceHeader": "Price",
     "dateHeader": "Order Date",
     "actionsHeader": "Actions",
+    "statusHeader": "Status",
     "downloadPdf": "Download PDF",
+    "overview": "This table shows payment history for invoices charged through the Cisco Online Marketplace only. Cisco and Cisco Partner invoices are not listed here.",
     "loadError": "An error occurred while loading order history."
   },
   "ciRoles": {
