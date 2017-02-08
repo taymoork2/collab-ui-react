@@ -1,5 +1,5 @@
 <form novalidate name = "aaRouteToSip.routeSipForm">
-<div ng-class ="{'error': !aaRouteToSip.isSipValid() && aaRouteToSip.routeSipForm.routeToSipInput.$dirty}">
+<div ng-class ="{'aa-route-to-sip-error': !aaRouteToSip.isSipValid() && aaRouteToSip.routeSipForm.routeToSipInput.$dirty}">
 <input cs-input class="aa-sip-input" aa-keypress ng-change="aaRouteToSip.saveUiModel();" ng-required = "true" ng-model="aaRouteToSip.model.sipInput" type="text" id="routeToSipInput{{ schedule + index + menuKeyIndex }}" name="routeToSipInput" placeholder="{{ :: 'autoAttendant.routeToSipPlaceHolder' | translate }}"></input>
 <span ng-hide="aaRouteToSip.isSipValid()" class ="cs-input__messages" translate="autoAttendant.validSip"></span>
 </div>

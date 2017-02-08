@@ -201,6 +201,8 @@
     WebexAdvancedEditUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
     WebexAdvancedHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
     WebClientUrl: 'https://web.ciscospark.com/',
+    ArgonautReportSizeUrl: 'https://argonaut-a.wbx2.com/argonaut/api/v1/compliance/report/size',
+    ArgonautReportUrl: 'https://argonaut-a.wbx2.com/argonaut/api/v1/compliance/report',
     AndroidStoreUrl: 'http://cs.co/sqandroid',
     ItunesStoreUrl: 'http://cs.co/sqios',
     SquaredAppUrl: 'squared://',

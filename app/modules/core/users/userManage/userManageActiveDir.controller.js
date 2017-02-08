@@ -7,7 +7,7 @@ require('./_user-manage.scss');
     .controller('UserManageActiveDirController', UserManageActiveDirController);
 
   /* @ngInject */
-  function UserManageActiveDirController($state, $stateParams, $modal, $resource, UrlConfig, Authinfo, UserCsvService, OnboardService, Notification) {
+  function UserManageActiveDirController($state, $modal, $resource, UrlConfig, Authinfo, UserCsvService, OnboardService, Notification) {
     var vm = this;
 
     vm.onInit = onInit;
@@ -16,7 +16,6 @@ require('./_user-manage.scss');
     vm.manageType = 'manual';
     vm.maxUsersInCSV = UserCsvService.maxUsersInCSV;
     vm.maxUsersInManual = OnboardService.maxUsersInManual;
-    vm.isOverExportThreshold = !!$stateParams.isOverExportThreshold;
 
     var dirSyncResource = $resource(UrlConfig.getAdminServiceUrl() + 'organization/:customerId/dirsync/mode?enabled=false', {
       customerId: '@customerId'

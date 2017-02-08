@@ -253,6 +253,8 @@
         @include vr-spacing(pr, 1);
         @include vr-spacing(pt, 0.5);
         @include vr-spacing(pb, 0.25);
+        
+        min-width: 200px;
       }
 
       .subscription-id {

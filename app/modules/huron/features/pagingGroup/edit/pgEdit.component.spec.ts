@@ -5,7 +5,6 @@ describe('Component: pgEdit', () => {
   const NAME_INPUT = 'input#paging-group-name';
   const SAVE_BUTTON = 'button.btn.btn--primary.ng-isolate-scope';
   const CANCEL_BUTTON = 'button.ng-binding';
-  const MEMBER_INPUT = 'input#paging-group-member';
   const SEARCH_INPUT = 'input#search-member-box';
 
   let getNumberSuggestionsFailureResp = {
@@ -62,6 +61,16 @@ describe('Component: pgEdit', () => {
     statusText: 'Not Found',
   };
 
+  let getMachineAcctResponse = {
+    id: 'fake-userid',
+    schemas: [],
+    name: '',
+    entitlements: [],
+    displayName: '',
+    machineType: 'room',
+    meta: {},
+  };
+
   beforeEach(function () {
     this.initModules('huron.paging-group.edit');
     this.injectDependencies(
@@ -104,6 +113,9 @@ describe('Component: pgEdit', () => {
 
     this.getMemberPictureDefer = this.$q.defer();
     spyOn(this.FeatureMemberService, 'getMemberPicture').and.returnValue(this.getMemberPictureDefer.promise);
+
+    this.getMachineAcctDefer = this.$q.defer();
+    spyOn(this.FeatureMemberService, 'getMachineAcct').and.returnValue(this.getMachineAcctDefer.promise);
 
   });
 
@@ -276,8 +288,10 @@ describe('Component: pgEdit', () => {
       this.getUserDefer.resolve(userResponse);
       this.getPlaceDefer.resolve(placeResponse);
       this.$scope.$apply();
-      this.view.find(MEMBER_INPUT).val('por').change();
+      this.controller.memberName = 'por';
       this.getMemberListDefer.resolve(membersList);
+      this.getMachineAcctDefer.resolve(getMachineAcctResponse);
+      this.controller.fetchMembers();
       this.$scope.$apply();
       expect(this.controller.availableMembers.length).toEqual(3);
     });

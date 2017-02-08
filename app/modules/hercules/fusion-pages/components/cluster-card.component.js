@@ -64,17 +64,19 @@
     function openService(serviceId, clusterId) {
       if (serviceId === 'squared-fusion-uc') {
         $state.go('call-service.list', {
-          'clusterId': clusterId
+          clusterId: clusterId
         });
       } else if (serviceId === 'squared-fusion-cal') {
         $state.go('calendar-service.list', {
-          'clusterId': clusterId
+          clusterId: clusterId
         });
       } else if (serviceId === 'squared-fusion-media') {
-        $state.go('media-service-v2.list');
+        $state.go('media-service-v2.list', {
+          clusterId: clusterId,
+        });
       } else if (serviceId === 'spark-hybrid-datasecurity') {
         $state.go('hds.list', {
-          'clusterId': clusterId,
+          clusterId: clusterId,
         });
       }
     }

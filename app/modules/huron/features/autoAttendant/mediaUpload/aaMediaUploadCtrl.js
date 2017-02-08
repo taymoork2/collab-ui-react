@@ -7,6 +7,7 @@
   /* @ngInject */
   function AAMediaUploadCtrl($scope, $translate, Upload, ModalService, AANotificationService, AACommonService, AAMediaUploadService, AAUiModelService, AutoAttendantCeMenuModelService, Analytics, CryptoJS, Authinfo, AAMetricNameService) {
     var vm = this;
+    var conditional = 'conditional';
 
     vm.uploadFile = '';
     vm.uploadDate = '';
@@ -62,25 +63,30 @@
     var savedActionEntry = undefined;
     var uniqueCtrlIdentifier = 'mediaUploadCtrl' + AACommonService.getUniqueId();
     var mediaResources = AAMediaUploadService.getResources(uniqueCtrlIdentifier);
-    var MAX_FILE_SIZE_IN_B = 5 * 1024 * 1024;
 
     //////////////////////////////////////////////////////
 
     function upload(file) {
       if (file) {
         if (AAMediaUploadService.validateFile(file.name)) {
-          if (file.size <= MAX_FILE_SIZE_IN_B) {
-            if (isOverwrite()) {
-              confirmOverwrite(file);
-            } else {
-              continueUpload(file);
-            }
+          if (file.size <= $scope.aaFileSize) {
+            standardUpload(file);
           } else {
-            AANotificationService.error('autoAttendant.fileUploadSizeIncorrect');
+            AANotificationService.error('autoAttendant.fileUploadSizeIncorrect', {
+              fileSize: $scope.aaFileSize / 1024 / 1024 // convert bytes to MB sent
+            });
           }
         } else {
           AANotificationService.error('fileUpload.errorFileType');
         }
+      }
+    }
+
+    function standardUpload(file) {
+      if (isOverwrite()) {
+        confirmOverwrite(file);
+      } else {
+        continueUpload(file);
       }
     }
 
@@ -374,7 +380,12 @@
         var ui = AAUiModelService.getUiModel();
         var uiMenu = ui[$scope.schedule];
         vm.menuEntry = uiMenu.entries[$scope.index];
-        queueAction = vm.menuEntry.actions[0];
+        queueAction = _.get(vm.menuEntry, 'actions[0]');
+
+        if (_.get(queueAction, 'name') === conditional) {
+          queueAction = queueAction.then;
+        }
+
         sourceMenu = queueAction.queueSettings[$scope.type];
         vm.actionEntry = getAction(sourceMenu);
       }

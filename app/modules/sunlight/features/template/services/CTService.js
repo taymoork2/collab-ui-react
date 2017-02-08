@@ -230,21 +230,24 @@
     function getOverviewPageCards(mediaType) {
       switch (mediaType) {
         case 'chat':
-          return ['customerInformation',
-            'agentUnavailable',
-            'offHours',
-            'feedback'
+          return [
+            { name: 'customerInformation', mediaIcons: [] },
+            { name: 'agentUnavailable', mediaIcons: [] },
+            { name: 'offHours', mediaIcons: [] },
+            { name: 'feedback', mediaIcons: [] },
           ];
         case 'callback':
-          return ['customerInformation',
-            'offHours'
+          return [
+            { name: 'customerInformation', mediaIcons: [] },
+            { name: 'offHours', mediaIcons: [] }
           ];
         case 'chatPlusCallback':
-          return ['customerInformationChat',
-            'agentUnavailable',
-            'feedback',
-            'customerInformationCallback',
-            'offHours'
+          return [
+            { name: 'customerInformationChat', mediaIcons: ['icon-message'] },
+            { name: 'agentUnavailable', mediaIcons: ['icon-message'] },
+            { name: 'feedback', mediaIcons: ['icon-message'] },
+            { name: 'customerInformationCallback', mediaIcons: ['icon-phone'] },
+            { name: 'offHours', mediaIcons: ['icon-message', 'icon-phone'] }
           ];
         default:
           return [];

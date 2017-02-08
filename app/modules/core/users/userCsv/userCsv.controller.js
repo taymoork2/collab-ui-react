@@ -8,7 +8,7 @@ require('./_user-csv.scss');
     .controller('UserCsvCtrl', UserCsvCtrl);
 
   /* @ngInject */
-  function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState, $stateParams,
+  function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState,
     Analytics, Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
     Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService) {
     // variables
@@ -17,7 +17,6 @@ require('./_user-csv.scss');
     vm.isCancelledByUser = false;
     vm.isExporting = false;
     vm.isCsvValid = false;
-    vm.isOverExportThreshold = !!$stateParams.isOverExportThreshold;
     vm.handleHybridServicesResourceGroups = false;
     vm.hybridServicesUserProps = [];
 
