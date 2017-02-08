@@ -2756,7 +2756,7 @@
             url: '/hds/resources',
             views: {
               'fullPane': {
-                template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'"></hybrid-service-cluster-list>'
+                template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>'
               }
             },
             params: {
@@ -2765,7 +2765,10 @@
             resolve: {
               hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
-              }
+              },
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
             }
           })
           .state('hds.settings', {
@@ -3230,12 +3233,17 @@
             url: '/mediaserviceV2',
             views: {
               'fullPane': {
-                template: '<hybrid-service-cluster-list service-id="\'squared-fusion-media\'"></hybrid-service-cluster-list>'
+                template: '<hybrid-service-cluster-list service-id="\'squared-fusion-media\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>'
               }
             },
             params: {
               clusterId: null,
             },
+            resolve: {
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+            }
           })
           .state('media-service-v2.settings', {
             url: '/mediaserviceV2/settings',
