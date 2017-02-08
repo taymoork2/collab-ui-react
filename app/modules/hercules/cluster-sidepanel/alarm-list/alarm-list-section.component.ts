@@ -4,6 +4,7 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
 
   public alarms: Array<IAlarm>;
   private connectorType: string;
+  private newPanel: string;
 
   private severityIconMap = {
     critical: 'icon icon-error',
@@ -17,10 +18,7 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
     private $state: ng.ui.IStateService,
   ) {}
 
-  public $onInit() {}
-
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
-
     const { alarms } = changes;
     if (alarms && alarms.currentValue) {
       this.alarms = this.sortAlarmsBySeverity(alarms.currentValue);
@@ -28,7 +26,6 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
   }
 
   public sortAlarmsBySeverity(alarms: Array<IAlarm>): Array<IAlarm> {
-
     enum SortOrder {
       'critical' = 0,
       'error' = 1,
@@ -49,7 +46,11 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
   }
 
   public goToAlarm(alarm: any): void {
-    if (this.connectorType === 'c_mgmt') {
+    if (this.newPanel === 'true') {
+      this.$state.go('expressway-connector-sidepanel.alarm-details', {
+        alarm: alarm,
+      });
+    } else if (this.connectorType === 'c_mgmt') {
       this.$state.go('management-connector-details.alarm-details', {
         alarm: alarm,
       });
@@ -72,5 +73,6 @@ export class AlarmListSectionComponent implements ng.IComponentOptions {
   public bindings = {
     alarms: '<',
     connectorType: '<',
+    newPanel: '<',
   };
 }

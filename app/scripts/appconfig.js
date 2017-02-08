@@ -1306,7 +1306,7 @@
               },
               'header@organization-overview': {
                 templateUrl: 'modules/core/organizations/organizationOverview/organizationHeader.tpl.html'
-              }
+              },
             },
             params: {
               currentOrganization: null
@@ -2725,6 +2725,40 @@
               },
             },
           })
+          .state('expressway-connector-sidepanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<expressway-connector-sidepanel connector="$resolve.connector"></expressway-connector-sidepanel>',
+              },
+              'header@expressway-connector-sidepanel': {
+                templateUrl: 'modules/hercules/expressway-connector-sidepanel/expressway-connector-sidepanel-header.html'
+              },
+            },
+            // If data not present, $state.current.data.displayName inside the component has no effect
+            data: {},
+            params: {
+              connector: null
+            },
+            resolve: {
+              connector: /* @ngInject */ function ($stateParams) {
+                return $stateParams.connector;
+              },
+            }
+          })
+          .state('expressway-connector-sidepanel.alarm-details', {
+            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            // If data not present, $state.current.data.displayName inside the component has no effect
+            data: {},
+            params: {
+              alarm: null,
+            },
+            resolve: {
+              alarm: /* @ngInject */ function ($stateParams) {
+                return $stateParams.alarm;
+              },
+            }
+          })
           .state('hds', {
             templateUrl: 'modules/hds/resources/hybrid-data-security-container.html',
             controller: 'HDSServiceController',
@@ -2811,15 +2845,16 @@
             }
           })
           .state('hds-cluster-details.alarm-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details/alarm-details.html',
-            controller: 'ExpresswayAlarmController',
-            controllerAs: 'alarmCtrl',
-            data: {
-              displayName: 'Alarm Details'
-            },
+            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            // If data not present, $state.current.data.displayName inside the component has no effect
+            data: {},
             params: {
               alarm: null,
-              host: null
+            },
+            resolve: {
+              alarm: /* @ngInject */ function ($stateParams) {
+                return $stateParams.alarm;
+              },
             }
           })
           .state('hds-cluster', {
@@ -3133,27 +3168,29 @@
             }
           })
           .state('management-connector-details.alarm-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details/alarm-details.html',
-            controller: 'ExpresswayAlarmController',
-            controllerAs: 'alarmCtrl',
-            data: {
-              displayName: 'Alarm Details'
-            },
+            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            // If data not present, $state.current.data.displayName inside the component has no effect
+            data: {},
             params: {
               alarm: null,
-              host: null
+            },
+            resolve: {
+              alarm: /* @ngInject */ function ($stateParams) {
+                return $stateParams.alarm;
+              },
             }
           })
           .state('cluster-details.alarm-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details/alarm-details.html',
-            controller: 'ExpresswayAlarmController',
-            controllerAs: 'alarmCtrl',
-            data: {
-              displayName: 'Alarm Details'
-            },
+            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            // If data not present, $state.current.data.displayName inside the component has no effect
+            data: {},
             params: {
               alarm: null,
-              host: null
+            },
+            resolve: {
+              alarm: /* @ngInject */ function ($stateParams) {
+                return $stateParams.alarm;
+              },
             }
           })
           .state('cluster-details.host-details', {

@@ -1763,7 +1763,7 @@
       "c_cal": "Calendar Connector",
       "c_ucmc": "Call Connector",
       "c_mgmt": "Management Connector",
-      "mg_mgmt": "Media Connector",
+      "mf_mgmt": "Media Connector",
       "hds_app": "Data Security Connector"
     },
     "serviceNameFromConnectorType": {
@@ -2284,8 +2284,12 @@
       "status": "Status",
       "serial": "Serial",
       "version": "Version",
-      "noNodes": "No nodes were found",
-      "loadingError": "Could not load the cluster data"
+      "noNodes": "No nodes found",
+      "loadingError": "Could not load cluster data"
+    },
+    "expresswayConnectorSidepanel": {
+      "overview": "Overview",
+      "alarmDetails": "Alarm Details"
     }
   },
   "context": {

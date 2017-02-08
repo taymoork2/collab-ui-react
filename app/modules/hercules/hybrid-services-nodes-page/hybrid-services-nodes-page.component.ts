@@ -1,13 +1,26 @@
 import { Notification } from 'modules/core/notifications';
+import { IAlarm, IConnector } from 'modules/hercules/herculesInterfaces';
+
+interface ISimplifiedConnector {
+  id: string;
+  alarms: IAlarm[];
+  connectorType: string;
+  service: string;
+  statusName: string;
+  status: string;
+  version: string;
+}
 
 class HybridServicesNodesPageCtrl implements ng.IComponentController {
   public data: any;
-  public loading = true;
   public gridOptions = {};
+  public loading = true;
+  public openedConnector: any;
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
+    private $state: ng.ui.IStateService,
     private FusionClusterService,
     private FusionClusterStatesService,
     private FusionUtils,
@@ -16,7 +29,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     this.hybridConnectorsComparator = this.hybridConnectorsComparator.bind(this);
   }
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
     let clusterId = changes['clusterId'];
     if (clusterId && clusterId.currentValue) {
       this.loadCluster(clusterId.currentValue);
@@ -25,6 +38,17 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
 
   public hybridConnectorsComparator(a, b) {
     return this.FusionUtils.hybridConnectorsComparator(a.value, b.value);
+  }
+
+  public openSidepanel(connector: ISimplifiedConnector) {
+    this.openedConnector = connector;
+    this.$state.go('expressway-connector-sidepanel', {
+      connector: connector,
+    });
+  }
+
+  public isSidepanelOpen(connector) {
+    return this.openedConnector === connector;
   }
 
   private loadCluster(id) {
@@ -45,13 +69,16 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     const result = {
       name: cluster.name,
       nodes: _.chain(cluster.connectors)
-        .reduce((acc, connector: any) => {
+        .reduce((acc, connector: IConnector) => {
           const hostname = connector.hostname;
-          const simplifiedConnector = {
+          const mergedStatus = this.FusionClusterStatesService.getMergedStateSeverity([connector]);
+          const simplifiedConnector: ISimplifiedConnector = {
+            id: connector.id,
+            alarms: connector.alarms,
             connectorType: connector.connectorType,
             service: this.$translate.instant(`hercules.connectorNameFromConnectorType.${connector.connectorType}`),
-            statusName: this.$translate.instant(`hercules.status.${connector.state}`),
-            status: this.FusionClusterStatesService.getMergedStateSeverity([connector]),
+            statusName: this.$translate.instant(`hercules.status.${mergedStatus.name}`),
+            status: mergedStatus,
             version: connector.runningVersion,
           };
           if (acc[hostname]) {
