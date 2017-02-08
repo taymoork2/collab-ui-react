@@ -82,6 +82,7 @@
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       huronPagingGroup: 'huronPagingGroup',
+      huronSupportForThinktel: 'huron-support-for-thinktel',
       huronNetworkLocale: 'huron-l10n-network-locale',
       huronUserLocale: 'huron-l10n-user-locale',
       huronUserLocale2: 'huron-l10n-user-locale-2',
