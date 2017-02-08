@@ -4117,11 +4117,7 @@
     "failedToUploadLogs": "Failed to upload logs. Reason:",
     "deleteATAConfText": "Are you sure you want to delete Port 1?",
     "deleteDeviceType": "Delete {{deviceType}}",
-    "analog": "Analog Telephone",
-    "preferredLanguage": "Preferred Language",
-    "preferredLanguageDescription": "Choose the preferred language for this place. This will override the default organization setting.",
-    "preferredLanguagePlaceholder": "Select your language",
-    "organizationSetting": "Organization Setting - "
+    "analog": "Analog Telephone"
   },
   "ataSettings": {
     "analog": "Analog Telephone",
