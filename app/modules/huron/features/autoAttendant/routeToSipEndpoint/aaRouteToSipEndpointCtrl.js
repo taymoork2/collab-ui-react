@@ -22,10 +22,10 @@
     vm.updateUiModel = updateUiModel;
     vm.routeToSipPlaceHolder = $translate.instant('autoAttendant.routeToSipPlaceHolder');
     vm.errorMessages = {
-      required: 'This field is required.',
-      minlength: 'Input is too short to be a valid sip uri.',
-      maxlength: 'Input is too long to be a valid sip uri.',
-      pattern: 'Input is not a valid sip uri. E.g. "sip:x-x-xxx-xxxx@voip-provider.eg.net"'
+      required: $translate.instant('common.invalidRequired'),
+      minlength: $translate.instant('autoAttendant.routeToSipInputShort'),
+      maxlength: $translate.instant('autoAttendant.routeToSipInputLong'),
+      pattern: $translate.instant('autoAttendant.routeToSipInputInvalid'),
     };
 
     // the CE action verb is 'routeToSipEndpoint'
@@ -52,11 +52,7 @@
     }
 
     function setValidStatus() {
-      if (vm.aaRouteToSipForm.$valid) {
-        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
-      } else {
-        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, false);
-      }
+      AACommonService.setIsValid(vm.uniqueCtrlIdentifer, vm.aaRouteToSipForm.$valid);
       AACommonService.setPhoneMenuStatus(true);
     }
 
