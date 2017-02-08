@@ -116,4 +116,8 @@ export class PlaceCallOverviewService {
         return _.cloneDeep(placeCallOverviewData);
     }
 
+    public checkForChanges(currentValue, baseValue): boolean {
+        return _.isEqual(currentValue, baseValue);
+    }
+
 }
